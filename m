@@ -1,147 +1,95 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1512EE981
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7D92EE981;
+	Wed, 18 Jun 2025 15:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750259535; cv=none; b=JS0fh2Fp1LpoERo1LGLLpm1STNytKJur/xBjQ5iWfpIt/aN9wTYoJTSXIuBAUTzrsdWWgN+Y0lThboAQzMBPjWX5zNGJHxuVjj1KCs/RhBeyN5XUWRJve0VclsMPIk7BiaJhtjcqVjqba5ouppujAZyfLiGu+f8E9IHgNKZpxjI=
+	t=1750259571; cv=none; b=aO/1UU5Y9enzqJ9L3pCcHN0MsHOGPc0N2LxruF2rZd72PneYfyHwp+6PLOHJ6yNkNfZECwBR7/AOV9RUirzGb4yW7bivHXtM01RvyhZd5DP7Y2WEKNc0YgkaR7h61iKVntFuYdslCIBHBfkVFST1KPYWsLhMkFsd6tX9CyoQ/aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750259535; c=relaxed/simple;
-	bh=S9CRGFxZrsWQiCny4A4jtEs+ZyqisFVOoxUZS4pQsAE=;
+	s=arc-20240116; t=1750259571; c=relaxed/simple;
+	bh=ZwBQMyQEJS/RXHKpxFJsZskhbkcyOpp55zZF15F1NGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pDU7Furn19ERUVZGs2dpgtEYQNCQvQAVzD16lzjA0PKDX453LzdpWXHotgLVlD0mTpjQGxnu1X5yV2De3w94NMm9gmodoWvAe/8OG2nl736p39tCyShX49FZTONhTdc4NNmlHq4oPiO5H9oT+Zntxy1+jaGzwvs5o6T+2PYlik0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hXnkgei+; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=RxTDoV8x9PmbvvUfBnxPmexcBB8xdgdtI+H7215uYtvKr9hy2YNkMgIjXYz7BmFIxbhKM/+B7XeAXYzmFjyvCJaIqgcFrHtbof9RM2ton3MmBPAugYmdjHZvBk4dyucdCyuj80jrbxUDb3UXMzlRK6KRRe7ra7mJ2vYNeadGR6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVowrAVH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hXnkgei+"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so70935436d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1750259531; x=1750864331; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8w7ovcA+eQ/2b8rTRZRntXptSXxd0DShnhC4amsa/B0=;
-        b=hXnkgei+GvAnXgvPWlRXZmB61e4NSw3VNV7hgtaLxE37zsDxFdKtJ/JVtovewvFlxP
-         BRigJGwouWNb/jP/l5rLf6wklgPEEtMX9ykrmBG8tArz+bONfw1mrWhNYGLV9tdhK17h
-         QMdRvlVoIAy+mnhBaSseAQhT7y4WICxcEY4Zt3drIDPdh/Grd/Fk8tFRPEL0UcHcRWug
-         QO7j1LyEhOfWZICyHdg3sqcsZVzOzj4lzY+RT6eA4BKvPh7Sus3QQPCOsjOue5nmHGje
-         e5mGy9ggdOQg0cQlN+wwwAtOaTW197HmFDXjOCmWVNrbLCdYKO8gXYtCHMZ+0K7jLewd
-         ZDPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750259531; x=1750864331;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8w7ovcA+eQ/2b8rTRZRntXptSXxd0DShnhC4amsa/B0=;
-        b=b5njkICUM0P5e/+LU/zoH/MWIvE7XNgtEsZ193Zeek18lyF5t2aFijZvoByXr6PNpU
-         Lmu3SNHrAeY3JkQDrHPQ2VM7BcinCGPhi9AxOZC808LeFYY5FSyaPIHE6G4ANnUs2Y+t
-         jaYbu8U4YrmAwKxW1h2XybPqSBkAumIeC2NLwOnYMhOtIhNokOAS2gOa5Ifv/rL+9QjN
-         2fUmeFJsBq5GcB2sRsxtcK1WhFiD5hZsf3sGHFmosXL0DCGTZDPPr0r8PISMPSLJSpHj
-         qnvmk0bCd7/l7DFNbB+jrPPFfpbUy6coK7Djp9eVuoiRqfNv/ilUTzEV0kOXYxZOq0za
-         3KVA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9kxRarSesmpevPfHb9i0xXvdxNMKSolc+lNJ2XXXc20nBkNSvja1F2jDniWO76IlpP8Yjr1Z16ySJIIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+MfPYF2s4H52SekqZKUx8gQvxJNtMf68lZ9vCk3wQZMWxAYj7
-	H0Z9rwpDyBGeSBqV/Kc6agxwQWPco1uWTYg85HjGKXW45OkgiUmF/KauFIvbfTj8qpI=
-X-Gm-Gg: ASbGncvN5fa+B4UNAA63Nxb0eFUCguhthZPHurSPHacd4jHcxwYlXBIEoRwN7hztku/
-	GgvCDqZ5FmRN5WmH1efEFMiHX0o9eQAE4pw3bN1ujDRfJ7QgIpBAQh4FIrJ+XywUzvl9f/rN3uB
-	00r9mM8numyrQtPbsA8jWHQvpwSUEoDSVg2t52atqNCcO+TAOBTQbUHp56xbZxQwvGUl/UyCnRG
-	v078ZZon0wLQyWUdv11SScVlXNpXFiJvwvsxMTYa6WQECI0Kej06/fE2EjWjePqICrSPmdHtKpi
-	0sDtJDSAoBE/7Ho97gQai5tXQpmgfYy1qS8R3F+TNukEzw0PelHM24lgyprEy+XdT8G2
-X-Google-Smtp-Source: AGHT+IHofhP9BiiWq9pfl7Z5RgEudETJ5GYEen3cpQ0dOiuu8S3eCNtXQb4YOLf1G9jX/1/pyfy2rg==
-X-Received: by 2002:a05:6214:570d:b0:6e8:fbb7:6760 with SMTP id 6a1803df08f44-6fb47725d95mr260081446d6.1.1750259530934;
-        Wed, 18 Jun 2025 08:12:10 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:cf64])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb4cca79bcsm45456016d6.6.2025.06.18.08.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 08:12:10 -0700 (PDT)
-Date: Wed, 18 Jun 2025 10:12:06 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Shivank Garg <shivankg@amd.com>
-Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz,
-	willy@infradead.org, akpm@linux-foundation.org, shuah@kernel.org,
-	pbonzini@redhat.com, brauner@kernel.org, viro@zeniv.linux.org.uk,
-	ackerleytng@google.com, paul@paul-moore.com, jmorris@namei.org,
-	serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com,
-	tabba@google.com, vannapurve@google.com, chao.gao@intel.com,
-	bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
-	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com,
-	thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com,
-	jgg@nvidia.com, kalyazin@amazon.com, peterx@redhat.com,
-	jack@suse.cz, rppt@kernel.org, hch@infradead.org,
-	cgzones@googlemail.com, ira.weiny@intel.com, rientjes@google.com,
-	roypat@amazon.co.uk, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	kent.overstreet@linux.dev, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, chao.p.peng@intel.com, amit@infradead.org,
-	ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com,
-	gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com,
-	papaluri@amd.com, yuzhao@google.com, suzuki.poulose@arm.com,
-	quic_eberman@quicinc.com, aneeshkumar.kizhakeveetil@arm.com,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [RFC PATCH v8 4/7] mm/mempolicy: Export memory policy symbols
-Message-ID: <aFLXRtCDfoNzQym6@gourry-fedora-PF4VCD3F>
-References: <20250618112935.7629-1-shivankg@amd.com>
- <20250618112935.7629-5-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVowrAVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DEB8C4CEE7;
+	Wed, 18 Jun 2025 15:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750259570;
+	bh=ZwBQMyQEJS/RXHKpxFJsZskhbkcyOpp55zZF15F1NGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IVowrAVHzk2g4J4LtkAn2aPxALuxfaKumyjdR3NhjEob/iI21g3LhnFszAr7i12DM
+	 MdSrIguJLpUkfUxbvcQaKFsUHuDWJk6B36iPvi8cgq85bVADl5AGX0hOvDLV9lnJAy
+	 xAi4CXM0QkL87Kmo5qjsDS+vUssy27RU39Ivsh7G8Z++YDpNmYjMCndMos8M8NKvxZ
+	 3/cK9XheizwZwu10ZbWeH+4Daj4/vQDC1/+1NlvLhi11UqyItI2AyhsZeZTpC4i22Q
+	 GtnZpGYwE0v7Hy5sFETYHOBehWrcNfIl7QfpWN2znWBDckCNr3JhOPbezRYNHn2SCf
+	 JvgArh0dLWiCg==
+Date: Wed, 18 Jun 2025 11:12:49 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>, perex@perex.cz, tiwai@suse.com,
+	yuehaibing@huawei.com, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.15 101/110] ALSA: seq: Remove unused
+ snd_seq_queue_client_leave_cells
+Message-ID: <aFLXcQc6Wg41gPSJ@lappy>
+References: <20250601232435.3507697-1-sashal@kernel.org>
+ <20250601232435.3507697-101-sashal@kernel.org>
+ <aDznZgej_QbaalP0@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250618112935.7629-5-shivankg@amd.com>
+In-Reply-To: <aDznZgej_QbaalP0@gallifrey>
 
-On Wed, Jun 18, 2025 at 11:29:32AM +0000, Shivank Garg wrote:
-> KVM guest_memfd wants to implement support for NUMA policies just like
-> shmem already does using the shared policy infrastructure. As
-> guest_memfd currently resides in KVM module code, we have to export the
-> relevant symbols.
-> 
-> In the future, guest_memfd might be moved to core-mm, at which point the
-> symbols no longer would have to be exported. When/if that happens is
-> still unclear.
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->  mm/mempolicy.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 3b1dfd08338b..d98243cdf090 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -354,6 +354,7 @@ struct mempolicy *get_task_policy(struct task_struct *p)
->  
->  	return &default_policy;
->  }
-> +EXPORT_SYMBOL_GPL(get_task_policy);
->  
->  static const struct mempolicy_operations {
->  	int (*create)(struct mempolicy *pol, const nodemask_t *nodes);
-> @@ -487,6 +488,7 @@ void __mpol_put(struct mempolicy *pol)
->  		return;
->  	kmem_cache_free(policy_cache, pol);
->  }
-> +EXPORT_SYMBOL_GPL(__mpol_put);
->  
+On Sun, Jun 01, 2025 at 11:51:02PM +0000, Dr. David Alan Gilbert wrote:
+>* Sasha Levin (sashal@kernel.org) wrote:
+>
+>Hi Sasha,
+>
+>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>>
+>> [ Upstream commit 81ea9e92941091bb3178d49e63b13bf4df2ee46b ]
+>>
+>> The last use of snd_seq_queue_client_leave_cells() was removed in 2018
+>> by
+>> commit 85d59b57be59 ("ALSA: seq: Remove superfluous
+>> snd_seq_queue_client_leave_cells() call")
+>>
+>> Remove it.
+>>
+>> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+>> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+>> Link: https://patch.msgid.link/20250502235219.1000429-4-linux@treblig.org
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>
+>> NO This commit should not be backported to stable kernel trees for
+>> several reasons:
+>
+>I'd agree with that big fat NO - unless it makes your life easier backporting
+>a big pile of other stuff.
+>I'm a bit curious about:
+>  a) How it got picked up by autosel - I'm quite careful not to include
+>     'fixes' tags to avoid them getting picked up.
 
-I'm concerned that get_task_policy doesn't actually increment the policy
-refcount - and mpol_cond_put only decrements the refcount for shared
-policies (vma policies) - while __mpol_put decrements it unconditionally.
+autosel does it's analysis based on LLMs rather than just commit tags.
 
-If you look at how get_task_policy is used internally to mempolicy,
-you'll find that it either completes the operation in the context of the
-task lock (allocation time) or it calls mpol_get afterwards.
+>  b) Given it's got a big fat no, why is it posted here?
 
-Exporting this as-is creates a triping hazard, if only because get/put
-naming implies reference counting.
+I was trying to be too smart :)
 
-~Gregory
+My scripts got confused by the "YES" later on in the explanation.
+
+Now dropped!
+
+-- 
+Thanks,
+Sasha
