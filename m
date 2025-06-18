@@ -1,152 +1,119 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17CB1714B7
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FD51EF091
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750224161; cv=none; b=o1LhOf/aNSx7edOJyV93oddVQ0BfuJELHItdSgCeqQ6WwfNfoO7tYuRjxY2Ggbx7iX9RG4xWxngBByTiYscLg9BCm+xBFtWD7CEmJUGIc0AD91vBhAZE3EbrmCG75zo4eg0oNTY2RSSv3+fZ0WtPkKF5bUbnek84tgwnApjN/9Q=
+	t=1750224258; cv=none; b=uZr2aOeWT9wDCkr8kYiuTuqWgec8RNsTGlsbFF3za++cwLN5/i2Eexdl3D2h+2wkxrd4jNPJA96vczbSZXt039+SdiykaMn+cTgaeRBCqALkObp6U5C4r1WcS2DAgme1jaM3VhGvGhbcyADX4vjFc6DQGLAqoFL4KRhoab2SLxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750224161; c=relaxed/simple;
-	bh=zNSLyQ418h7s2pWnKQbVJL3Hx6AjPoaLpAlu4+qN/Q4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RdihDWaY881y1tQl+0RXYVE2yPZvja4NsavFTarzSxtCRB8W3w2IS5dmf7zj4ZFlfJN/P+XE7m3nvo70a0DO+wJr3APJmVxelep3YlGDmPaMe8mI7Wo2GCro9eZe+nj5G9cuUQcizA+CZgx83EcjQyOm44ExplDjQT1wZZC6zwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kfse6n61; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750224258; c=relaxed/simple;
+	bh=CjftUrHfuTNnLmkXf91akeBADK/18bO2WwdPuXaL3V8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hSGf5PM6A2qUzdOP5MHMYYinNfemrVwCT9ACFi0XpnFaz0Hq/cmDrLJwrJ6ygN8P/URBiUcNisrwplSkqDqfGqDJaQ94y06B9A4Dy8gBlrYP/IvPQH2PYyr4v1Kodzfa3LYUGvaI2VO4gcjtDbXxgIhxl6kfnrWO6d5zi35wboA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=WJXMWXOH; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kfse6n61"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1Q6eH015543
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:22:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rfTFGFpiffzYmC6fjsBnbW+eD86WS8MQlLmrP9ufxVM=; b=kfse6n61g+u1w6r/
-	lmrZunITbmNH5P24rjw+yVDEdLVaen0WDglvkS1lQl0glQsN8l4/qlEMrP0FO+vp
-	pjt1SS/sVrzHODJ9Ba7ICZ0fsAAHEVlTOvU8Gx2Sc7yozk0Taniq6DyUzloOSC/u
-	B4zJl9fRoZ7v8e7+W/D445s6GqGj57NNNb2iMySg1U55alWtZON1P8GZlJJ66y+c
-	JSs7aqdEjqL70zHXBq/sSRYa6PXTl3kycNKo5RRjDruJdagck0cwWwYIt2Uy2M5t
-	GBL8KKXXTAep6Aa53nVRzXf3SgsdHG3K5zxGtUmiYAVP7w82rbtsD+4Th6RjFP9R
-	RAEH1g==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfjvnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:22:38 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7394772635dso4775733b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:22:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="WJXMWXOH"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54e98f73850so6132573e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750224255; x=1750829055; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Z4TSLN8JZPIMvLRhF9VLnkxWZBX3eFV9ERu7o6ArDg=;
+        b=WJXMWXOHm/s4/nSrJXVlhkMhDNznxmdjWA2qdr59YKj5gsW8m96PrRbxTCnN/xH5qU
+         r7BO5sl5xBYIwElh1Wjk6ABH0hKnP37PKJEqrTxLbFpXw6P3v9PCHCqWE7oo+Pj0de6V
+         vPyIu0+zZllELc2w3aFHaxr2t3ddp0iYO0vXbfCWBI3gURRZv7QTbWFT9owlc7NrB368
+         nggVODsa2loHMzLRrns72tsNiPzhkTxxwJIeXpQX0/CzqP+yJounHlOcAgIA0CdIe3AE
+         hc3shf8r//Og+dI+yvlhpzbtQtd/Spzc078HjPTvi+mLe2zCeL1u2MyNx6tRLcsMbyGE
+         iS4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750224157; x=1750828957;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rfTFGFpiffzYmC6fjsBnbW+eD86WS8MQlLmrP9ufxVM=;
-        b=ZHks2GAriL2v5gdXZXw/nMRxYCj8LiHXyb9i9knA00FPVVm7j1mG9DfFWjix0oennU
-         +Hw1P7rVz9AZbkAIaE9caUxGjqIySu8KtJJK4mfTRAj2Jc5OeJYXVA3b2IBXBV6uwnba
-         /Ex+jkgbmI2n/MImZaapJg+julZ5Jjx4kgwnjJgKxKX6wthbdVv7sWJSWF8hYLS2Gb0X
-         ucJVMPdKLNokuPcU5CqGFQFEGNFFPYIZHCByU5rutYeMDAqYYlu9/ou5XuOGrhDDzWIt
-         FGJxJLYZQEHYf3XPNgjf37+1OR+Z1859TbgA4m2Alp7r+tjGIKtEiA7R45/T/P7gNfIL
-         bONw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoElFlnaIPuBRHs4T3MWqw9rM9TyC2mRNdS1SCVxiS1ughu9mDEnpZY4ex2MCCyRb9fYJolPq4CTijNn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhcjMCuluZeuQVMcULgk3tnhvIl0oY+NXN6WxdL6xdqNrho6cI
-	YSp6XB1mc5Uhj2LigfJzgot/pZVVKDHfrg+942DXMy8M4AqsCkIs6AYgPH7z9ICEWmgilzsaabp
-	X4+FE+kjBqk8DYjKSGCWvCs9l32fEhZWYxw3KDQ/gwcqSw3LODdkHQQb/+JO5YDiRu7vO2lZJmV
-	Q=
-X-Gm-Gg: ASbGncvTt2C8C07OmcL23lYL1n12GjgIRABdX2rVvRZwE2Msje/6v294vxHAvTT292U
-	g4j00+9jUQK5yCuLaDzW2rrHjUoWN8NAarfNuREoJY/ZWGZHxh/mo6TKJVojB91ocSXUAO0jse7
-	SOPADDf/RmKzQOMqKJtLSV5vD/RZvRXrziO1/Mx6RmqY1XKgvMoZYIXEmXg5dWfCM97g2JKBlwg
-	dBm9u+VWfbmDTj/yNg56+qA3Z+Qu9TmyAdnv+UIy8/2OWgopx3hvhGDrmav6V2ltK7K1tIQW1CL
-	wn4T8slAESZyFpoxfwvy9E71MeAdPlq/IzsNiYzOLnvIUcCcUusOqA==
-X-Received: by 2002:a05:6a00:1255:b0:748:33f3:8da3 with SMTP id d2e1a72fcca58-7489d0335f6mr21012550b3a.19.1750224157580;
-        Tue, 17 Jun 2025 22:22:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEwXyKvQ8Xiz0pixedDfbHKQlZlOr+c8lkODmf6tgRR9I5uagxkblxgMGrvDShoOMlSPgKJOA==
-X-Received: by 2002:a05:6a00:1255:b0:748:33f3:8da3 with SMTP id d2e1a72fcca58-7489d0335f6mr21012515b3a.19.1750224157157;
-        Tue, 17 Jun 2025 22:22:37 -0700 (PDT)
-Received: from [10.92.170.132] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890082b10sm10373395b3a.105.2025.06.17.22.22.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 22:22:36 -0700 (PDT)
-Message-ID: <948e0112-1ba0-40b7-acd7-19fa9d93559c@oss.qualcomm.com>
-Date: Wed, 18 Jun 2025 10:52:32 +0530
+        d=1e100.net; s=20230601; t=1750224255; x=1750829055;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Z4TSLN8JZPIMvLRhF9VLnkxWZBX3eFV9ERu7o6ArDg=;
+        b=O/2B6aEEM8UJqSKgmyFJnPJsuErLopN5UsrASo7xn2+LK0N/4vW2PI72rFz69Vqw/W
+         o6vcnse5wYhPKj0V7WylbEKOuRcQXs+Te5u4iCj3jQgI6EBSePc6obqKlmrGM2BRM8QS
+         C01r6J0ruAO+TrrH5gt4HCcP5vgQ6qhfTXJUhbZiHmPIaRwjPkXep9yLjoEDcnpRMLbT
+         pA0Sxo/9npKVcpGIB/2lM5+amfbCkXsQdZ8lAf1A1h5APBjqOynQhUCfwObLMQblMrs0
+         BY5h7/xyu8kngQ+PZxgTcbI+UIuHGUxY+325/mgNnrDIZ/BAC+h8Z+sqq8J2T6out2CU
+         mG2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXKGgdzTRpJo75b83ghDzazn3oyesEtFPwUzixzDF50elCS1Fmo9Pz77Vid6yyXaE0+kyeDwG/L10OikYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6o2MxYeSNAzTX+Lr3bg++BMr7iJPWblSz3PQ59WkfwChLL/yI
+	Cc/f1CSkR6ytjy8dd586yjepCzR5y02uethm9yuPdw8CxHDTE6mpIJVhsgkeCFMGTwhj5IDLHxD
+	cOLy6J1bbg6Xtr1ZFrSxfArSRZd48zfR4I5VX3rurug==
+X-Gm-Gg: ASbGncvA5UEi3pLunEd50c1cBlHh8p7p1CT07fDoPedCI1YHFIWW/umHq1QzaJMAMNv
+	kVwpI14ND4p6J5PwKyApQqVjoHYsKrKqK6+ooNRV7QlmKIbsmcKSXhTVNRxfKoUKYGkU+fmjPfG
+	qh3yi/ibWeTC0YgTBZfwqbkSq6BjnsESaO0wHi2mkm2g==
+X-Google-Smtp-Source: AGHT+IFwL9G1DHBfI/lVr74bMBkL3ROv8/Gb0OUH3lB+sHfgk3+LXmQwxwY2JVd0OZNae9e8E+jgY8I9Gk7tR0VNm6E=
+X-Received: by 2002:a05:6512:3b0f:b0:553:abbb:c530 with SMTP id
+ 2adb3069b0e04-553b6f49986mr4356712e87.56.1750224255114; Tue, 17 Jun 2025
+ 22:24:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: dwc3: qcom: Don't leave BCR asserted
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250604060019.2174029-1-krishna.kurapati@oss.qualcomm.com>
- <20250606001139.jaods5yefjccqni2@synopsys.com>
- <b8f5c24b-d9f2-4a3f-9dda-183dff203003@oss.qualcomm.com>
-Content-Language: en-US
-From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-In-Reply-To: <b8f5c24b-d9f2-4a3f-9dda-183dff203003@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA0MyBTYWx0ZWRfX3V7XWRyD6Per
- Ze/rpzF+84epPjBOJJcLgTAedvuI2L8P6KON0DBgQwrtcESFj0BPsH6/ras/680DIYAdbMbqPnZ
- xj6+izZub8B8BEbQHgM3jTuhCLhI7MZOCmZ6bPFPhiQaoxcN1HwIq1qLWBcbAJDlsjt/lY4r4+T
- 9gG6GbXbV+hNcBdmgKbNXo720gNI2dMZV9zAnKB5wvY9/KJmKO5erJ+6M5kH+5zYfZ77EjcZXX6
- jXhoSNtHD0IyuEKKlGDLHFxoy1F1CW1rXaqa8oyqqPYqf/SBdBcEkyR9HMDVKGlSuBxfl/u+/uN
- a3JKIAYX8slnKwMieOvHa6LQ9Uct7LuN0lVynzyUELL0Ijhdo/LJaoN7ke0e1V5KEOGbiWBtJv+
- 3PixoEGnsrbqlVaI6RlFmALqAC+Vhxj7KyPSoXprtAmyNkUinJGxBB6zsLGLG0wxWtXeJ7gP
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68524d1e cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=6Q_x32ss1i95r1sQoNUA:9
- a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-GUID: DW2zwiP8rY9Nfi5HCSQSteuN0I96D2YM
-X-Proofpoint-ORIG-GUID: DW2zwiP8rY9Nfi5HCSQSteuN0I96D2YM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=432
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180043
+References: <20250611062238.636753-1-apatel@ventanamicro.com>
+ <20250611062238.636753-13-apatel@ventanamicro.com> <87ldpvirl2.ffs@tglx>
+In-Reply-To: <87ldpvirl2.ffs@tglx>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 18 Jun 2025 10:54:02 +0530
+X-Gm-Features: AX0GCFuqAwxb7NkJo6ROc36kRxrpGi8zqYIq4k-XKsi8PzPM1EcP4vkMM19V2qo
+Message-ID: <CAK9=C2UCpth4GQ_q2OMwndBeZKf9e_bsoHXaKJW0cNzTWggNUg@mail.gmail.com>
+Subject: Re: [PATCH v5 12/23] irqchip: Add driver for the RPMI system MSI
+ service group
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 13, 2025 at 9:03=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Wed, Jun 11 2025 at 11:52, Anup Patel wrote:
+> > +     ret =3D rpmi_sysmsi_set_msi_target(priv, hwirq, msg);
+> > +     if (ret) {
+> > +             dev_warn(priv->dev, "Failed to set target for hwirq %lu (=
+error %d)\n",
+> > +                      hwirq, ret);
+>
+> Just let stick it out. You have 100 characters ...
 
+Okay, I will update.
 
-On 6/18/2025 2:58 AM, Konrad Dybcio wrote:
-> On 6/6/25 2:11 AM, Thinh Nguyen wrote:
->> On Wed, Jun 04, 2025, Krishna Kurapati wrote:
->>> Leaving the USB BCR asserted prevents the associated GDSC to turn on. This
->>> blocks any subsequent attempts of probing the device, e.g. after a probe
->>> deferral, with the following showing in the log:
->>>
->>> [    1.332226] usb30_prim_gdsc status stuck at 'off'
->>>
->>> Leave the BCR deasserted when exiting the driver to avoid this issue.
->>>
->>> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
->>
->> Is this a fix? Does this need to be backported to stable?
-> 
-> yes and "might as well" - this file was re-made last cycle and this
-> patch won't apply without the recent
-> 
-> e33ebb133a24 ("usb: dwc3: qcom: Use bulk clock API and devres")
-> 
+>
+> > +     }
+> > +}
+>
+> Other than that:
+>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> under the assumption that this goes all through either the RISC-V or the
+> mailbox tree.
+>
 
-I sent the patch on top of usb-next. Perhaps when I made this patch, the 
-above mentioned patch was already present.
+IMO, this series should go through the RISC-V tree but I am fine
+with the mailbox tree as well.
 
-Thanks for the review. Will send a v2 with cc'ing stable and adding a 
-fixes tag.
-
-Regards,
-Krishna,
-
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> Konrad
+Best Regards,
+Anup
