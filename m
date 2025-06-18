@@ -1,129 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD7F28B503;
-	Wed, 18 Jun 2025 12:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F09B258CD0;
+	Wed, 18 Jun 2025 12:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250403; cv=none; b=FcJnSAA6mdZayYs5IXzqv3vWwNum3w9ZQ6A8/wVUyG0L6easi66/EU7QtiRH5bH6x6BnhqZYkfs3pjThAEyW5noUjaDZCD8MCCtd6fziBcQSVp7i+Y3XxGlRfybOE/j7H6EaDRyR772wsNO6dIsSQGt8La6Q7LqHAsJx3Hziuxs=
+	t=1750250425; cv=none; b=GVqFqoHQUjzgtDHsHu8go2u6ZZ71z0/DoK32NZsyjv3H4KK0yxcan12qet+cWbbL3VrMAaMDylMmbiwsLd8/KXPFD9SmsXjVEQh+qUv5q1qzOj9eCXH2eKcurSoMFXDjsqlFix7y6U2TeqF6/7cAV+qalhiKKPGEATcKuOL4Bxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250403; c=relaxed/simple;
-	bh=gtPi66+hfTTTDE0soYLd3r6RNixK6xtDDPTsnM7s8AI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pLVub+NWSnVH+ybUNqqywbHW80gtjY2APuxyodM1XFOokLrhjUDtT2lWekq989wu7I9Q+p1rYXzqUUI3Qejbn9wEI6/tsfO+OUnOPgquhjzcyeja/3kKGciiz4zZAJzA8TAe2hLpthUaeXBmGrhqpGnURHTUyIAyCfB+EOCfrf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsTR72qF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750250425; c=relaxed/simple;
+	bh=lKJkRX5S1J6VtzITZ5xzBjEBLhnqYUnVxruczGLyT08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QpBrawzBhEZTLwy7FJuYvlWdZA4Sdd8eL8og4KKA1BkRsAWXdfD2vfggr5jcGigNrTAMNApIHMGyEOMljSVllZ+8ROXro+lDyVJZi9GPIDOXzJu/OM52qxDoNaT+X9vaUdJo+x7XbsxDUjI/2zdLYetVU4hqmlXsTxcKexiP5d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T35oes2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsTR72qF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750250402; x=1781786402;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gtPi66+hfTTTDE0soYLd3r6RNixK6xtDDPTsnM7s8AI=;
-  b=KsTR72qFfNWvN2A7jU/fDRFJEgUkNcdaOI+rd9dr9Fv0ehyjk2rxgBwR
-   WgOkP1lu38JxZuwjwDYRAc19bMdGzUtR72YNV33S7vLR24kJlK4vXoZYY
-   xExR1sP6TAV7OuSVrHcmXwXtv5LPwQ1U0T73dxfq8tQx/nd0vmGji+ErS
-   ZOQ5IYgGkAlVumG6hdXLpfz1NCgIH5la7eJB5zdxsWXwVJ2fdYO4q+wwN
-   bmTHQeZ9P+t2JZYfwKyeWKhkNTHTnsVMGKcGNQAYWP7BCb3c91epInDX7
-   p4YLCGmcEaxFU6wb+YNmbaMO42qKN78+9EWTD3GvHBq/yk41h7jjPDdCK
-   g==;
-X-CSE-ConnectionGUID: 9bJXNDKMTd+RvM01ZtThag==
-X-CSE-MsgGUID: oF6zxxobRoufNIAB+wLCtw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="51690100"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="51690100"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:40:01 -0700
-X-CSE-ConnectionGUID: Aj2E/VTBRu++q7aFtIp7iQ==
-X-CSE-MsgGUID: nCSKsEt0RXaxnLgpFD+xMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="150262264"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:39:53 -0700
-Message-ID: <27b983f2-a6da-4b2c-a5d4-c84e2c80f193@intel.com>
-Date: Wed, 18 Jun 2025 20:39:50 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T35oes2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6CDC4CEE7;
+	Wed, 18 Jun 2025 12:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750250424;
+	bh=lKJkRX5S1J6VtzITZ5xzBjEBLhnqYUnVxruczGLyT08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T35oes2Fkomfh40d6u66VAQWgiTTkCCDSuXaUmP9wZj+ZvbxEJppK5DeCdXziOEhg
+	 3HEpnVRqlDeTIAfAtsfh8HKcdGHc7Uqpj6S6eN2INZPxSjVIwS2jXPoJjuaciRncRy
+	 Xxm82+PegCaah7+5vTiKGWtGcO+DjQzVo+ZUt7AqelZLpBZY33KdEBNwB5Uaq1WxK2
+	 eOMNofrX6l+G0WeTImkNi69icQxs5GeLX0ZqZP3QGnVRWs1KH+cTaMtewy/RNj2FaO
+	 2cqyu3Mxebizp7QLsFdK6B8Fb+28XA5K2+Ds9lwEFxz13m0Kvrv1ACzaUaSh3pE8vU
+	 lxd9Pi9CUntEQ==
+Date: Wed, 18 Jun 2025 13:40:19 +0100
+From: Simon Horman <horms@kernel.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+	Breno Leitao <leitao@debian.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Ignacio Encinas Rubio <ignacio@iencinas.com>,
+	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
+	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: Re: [PATCH v5 05/15] tools: ynl_gen_rst.py: make the index parser
+ more generic
+Message-ID: <20250618124019.GQ1699@horms.kernel.org>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+ <1cd8b28bfe159677b8a8b1228b04ba2919c8aee8.1750146719.git.mchehab+huawei@kernel.org>
+ <20250617115927.GK5000@horms.kernel.org>
+ <20250618085735.7f9aa5a6@foz.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
-To: Adrian Hunter <adrian.hunter@intel.com>, Tony Luck <tony.luck@intel.com>,
- pbonzini@redhat.com, seanjc@google.com
-Cc: vannapurve@google.com, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- kai.huang@intel.com, reinette.chatre@intel.com,
- tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
- isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
- <20250618120806.113884-3-adrian.hunter@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250618120806.113884-3-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618085735.7f9aa5a6@foz.lan>
 
-On 6/18/2025 8:08 PM, Adrian Hunter wrote:
-> Skip clearing a private page if it is marked as poisoned.
+On Wed, Jun 18, 2025 at 08:57:35AM +0200, Mauro Carvalho Chehab wrote:
+> Em Tue, 17 Jun 2025 12:59:27 +0100
+> Simon Horman <horms@kernel.org> escreveu:
 > 
-> The machine check architecture may have the capability to recover from
-> memory corruption in SEAM non-root (i.e. TDX VM guest) mode.  In that
-> case the page is marked as poisoned, and the TDX Module puts the TDX VM
-> into a FATAL error state where the only operation permitted is to tear it
-> down.
+> > On Tue, Jun 17, 2025 at 10:02:02AM +0200, Mauro Carvalho Chehab wrote:
+> > > It is not a good practice to store build-generated files
+> > > inside $(srctree), as one may be using O=<BUILDDIR> and even
+> > > have the Kernel on a read-only directory.
+> > > 
+> > > Change the YAML generation for netlink files to allow it
+> > > to parse data based on the source or on the object tree.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > >  tools/net/ynl/pyynl/ynl_gen_rst.py | 22 ++++++++++++++++------
+> > >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+> > > index 7bfb8ceeeefc..b1e5acafb998 100755
+> > > --- a/tools/net/ynl/pyynl/ynl_gen_rst.py
+> > > +++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+> > > @@ -365,6 +365,7 @@ def parse_arguments() -> argparse.Namespace:
+> > >  
+> > >      parser.add_argument("-v", "--verbose", action="store_true")
+> > >      parser.add_argument("-o", "--output", help="Output file name")
+> > > +    parser.add_argument("-d", "--input_dir", help="YAML input directory")
+> > >  
+> > >      # Index and input are mutually exclusive
+> > >      group = parser.add_mutually_exclusive_group()
+> > > @@ -405,11 +406,14 @@ def write_to_rstfile(content: str, filename: str) -> None:
+> > >      """Write the generated content into an RST file"""
+> > >      logging.debug("Saving RST file to %s", filename)
+> > >  
+> > > +    dir = os.path.dirname(filename)
+> > > +    os.makedirs(dir, exist_ok=True)
+> > > +
+> > >      with open(filename, "w", encoding="utf-8") as rst_file:
+> > >          rst_file.write(content)  
+> > 
+> > Hi Mauro,
+> > 
+> > With this patch applied I see the following, which did not happen before.
 > 
-> During tear down, reclaimed pages are cleared which, in some cases,  helps
-> to avoid integrity violation or TD bit mismatch detection when later being
-> read using a shared HKID.
-> 
-> However a poisoned page will never be allocated again, so clearing is not
-> necessary, and in any case poisoned pages should not be touched.
-> 
-> Note that while it is possible that memory corruption arises from integrity
-> violation which could be cleared by MOVDIR64B, that is not necessarily the
-> cause of the machine check.
-> 
-> Suggested-by: Kai Huang <kai.huang@intel.com>
-> Fixes: 8d032b683c299 ("KVM: TDX: create/destroy VM structure")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->   arch/x86/kvm/vmx/tdx.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 457f91b95147..f4263f7a3924 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
->   	void *dest = page_to_virt(page);
->   	unsigned long i;
->   
-> -	/*
-> -	 * The page could have been poisoned.  MOVDIR64B also clears
-> -	 * the poison bit so the kernel can safely use the page again.
-> -	 */
-> +	/* Machine check handler may have poisoned the page */
+> Thanks! this was an intermediate step. I'll just drop this patch and
+> fix conflicts at the next version.
 
-This doesn't read correct. The page is not poisoned by the machine check 
-handler. Machine check handler just marks the page as poisoned.
-
-With it fixed,
-
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-
-> +	if (PageHWPoison(page))
-> +		return;
-> +
->   	for (i = 0; i < PAGE_SIZE; i += 64)
->   		movdir64b(dest + i, zero_page);
->   	/*
-
+Likewise, thanks.
