@@ -1,108 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4C41E0E14;
-	Wed, 18 Jun 2025 09:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D21E0E14
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239526; cv=none; b=Fk3tQHK0mhVe7F1qNGCjJEIi7kr3dmtMsoPW6jGWDIT3dtLVm+U5NcmZi7vfvIHIzg0jJjX/gl/IN/K2/69WIWIN7FgiRATSQ/MezASiLA0ObzEbn2JoxrnRy4SzMwrBX2H2WV06ZV9YDNXsLnoabom+DVIF9y/+exBtu8gUg2k=
+	t=1750239556; cv=none; b=h6AtMWtCUyahMf5BoWHnTZzEYiqBCWczIgY/tvq6RUVKY7/qN+TRHdadjv+xcj5lXL6MhqH6aIjnZXGe/+x0a7gihT+tq13sP6GMJ9YbxKBGV77z7Ov2w31CqSvW4TLsis3w6xCaeChOileAfkSpWtrfYfG5afJuOBkHFtz9Jdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239526; c=relaxed/simple;
-	bh=Dk4yynuLUZzdLhb5FVHjc9U3LZysX6xe3JJlSsT39M8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A5jbpp/8DWqOLDJe3HGPkYHEJJrhH/RSAtMLIi5x8MfKEbI/9750wfXspPNXvKwwzANDTPX7f6jYwENRJVhUilslStECNEQI6fLjEGSEIxLqCe7OLKHknwAqbUBtkeRFY9OfwG7yMPKI+xwaSVFtwUkiXmHeUN6Zs1Uyi0hxCCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDAMDTLM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750239556; c=relaxed/simple;
+	bh=YUggoR187y24+mpnfBDPskA4yZEGsh0T2wbx9RjKmmI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fDS9jRcTVKNOCwQg+R7X+HRNTwyRlcRSUOvZ04LOp/0/xEXAmOWJyqaxkb5BFNQDPbzSSnNbA/6URyho9wD5bUA7w3DXVYXuzksJmCcRLHFMZTFLI8WU69SRvYHDFQtrskivFEEB/OfTCCS3hRrcVi+mCpWy3zquC8PFnnaKoR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cvfK7hgB; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDAMDTLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA3AC4CEE7;
-	Wed, 18 Jun 2025 09:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750239526;
-	bh=Dk4yynuLUZzdLhb5FVHjc9U3LZysX6xe3JJlSsT39M8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nDAMDTLM1J0youlb6K3un6RIsegAIe71aAVZKYlZNqCocGSR1R4PGVdnOydOBOIsi
-	 EaVptVlHCw/gjGeceazkbSOUt01S2EhCdYXpBsw78uvD1o0CVJnVf15FhCbqRpdKVN
-	 4+JeXwh/gKjy88xTZZVaKQSj1PTL2COk76mN+pYDnRCc7+pIyQuNf8qGW9ZWYfdVm0
-	 +UclJJlLzHN3EAfbl6leKnMXLxYz3I/cgnylMcgqGnkhcWk7K26SYeKj4fWNM2zoyl
-	 6+Szq0KbGRb8q6pIKRaO+P6UzhwFFv03vuj1NlnwL+fU8LIUMFFv6K1MoFNlo/cXm+
-	 nMOFBPg4llGtQ==
-Date: Wed, 18 Jun 2025 11:38:40 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, dri-devel@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: types: add Opaque::from_raw
-Message-ID: <aFKJILuksX90AJHc@pollux>
-References: <20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com>
- <aFFzi88miMbCZ0yQ@pollux>
- <aFJx2IqLfCjWsbVv@google.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cvfK7hgB"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so469417b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750239553; x=1750844353; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gXRO5EKnkAxok5EOtq3Fx6436ytc5fPcTfeu9ljY/iM=;
+        b=cvfK7hgBOSau+R9Q9b85VjECCLEAxjv0o84W3sxgNyOwOFYjCqYxWhWaRkHsP5G/xV
+         3TmJn0c1OP5LDq5sKfS7cO68O1/xn6CkesYKfetJVFhLm1gIMdcwxsn5Wk3JQOjUmuZX
+         HTTZ9Bg9tCOlDVFcKGVjEvbu9p8/7++gxaQ6PevEpFlB/ZRrWanlyd3zCgmniUWCBXkI
+         kXzIfCHdtN6ujDLRQRk1uLBouHrMwAlnAO8l+/WHmEljnnqBzNJeyTnA9OWXnXUJz4E1
+         j+he2CPohMoxVDDwN9jHes6yf4L/99woXZj54W4Tnygok6nTezGXRvFoXzV4GOQAsP6w
+         Letg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750239553; x=1750844353;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gXRO5EKnkAxok5EOtq3Fx6436ytc5fPcTfeu9ljY/iM=;
+        b=JcZdI2HmfSanL2pmumNs5Ym8gDCaHT68fUE0LnzxSadOzRNHtvAtvTXEdae3f5RDZ3
+         pUGbySfagjliNMzokvuKMxNkyebxG3zadE+wV5FZlMlpeAEZ8DRFkDsjBm8ijPa3hrnn
+         EIrpNOVQp/U1kbLLplseQ5DK/ux7r8LR28M5VGqJofXgFrauoZgvUE5gERjwxecqqcLg
+         rdXUc0tFwK+HK31tOPXjhOoLjhcbDwMlvd5whGti3u0LXnHchXyu37AqvGA3jT7un8ih
+         6oehGn0BX2Ipc8kdq2pOf975QOpebxkv3hJ781lYbxg/Wm1C7pV5+8Nc6virfT8sdFr1
+         plPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1LZKEyoFDaMts268B+yZst1rnV9GOOB9P2BOufAtFhd1W2aZ8xO0lSAbBp2Rob+pXbHu9HTVJizCa//M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhvYVNs7CsLH3YMlPxykW+37nG1+rvgah5payzdMVG145VE1B7
+	baDo5bjmRuuOhuLZnr/tWXTFe+CPGD3i1QDG14/kCFDjB7zzWbsw7Y6Q5I0oTTtXb60=
+X-Gm-Gg: ASbGncsVZmp1tIkM6W9Yif6B+U6tz2eWN1nBzb0XuNvic2S2hgxAc3GE9hHIpm3g5sF
+	5r+EWXdO/TJsHE9+dKwv9b9S8M8eeXOQSYBlkX+ua4WugPxEoEgLZxQBfCc3h/+2Efqb46WF/PA
+	AG5dYEl20sXs/tDo8ZR65qPPobrsDnkCMj7gM0cCaG3+7lhb2Mcg49tRuPH7mpWxDrf8qIctAKQ
+	ZvWWNEEqSVyvyqsEdIFsiKylutj1kuMb1bPTomZlSCeOgIC7ooPvZCpneUBUe50BnyncaY10sni
+	8CCeQCl03Vf36+rCR2wpg8Ga+JJIX4XFrw9oWvkKA9HagxpTDwXw20Mh+UzRfw1k0Go2c6pwDYz
+	Z6nP4AAn+Ce/rCQ==
+X-Google-Smtp-Source: AGHT+IFCFuw1k7cB6Zq/g8s1AUp4inslPIr/YJO1ohnxm7OL2XrQfxvmgjd2EoXEb/NYEjL5Le3l1Q==
+X-Received: by 2002:a05:6a00:1251:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-748e6ffabcamr2801322b3a.8.1750239552619;
+        Wed, 18 Jun 2025 02:39:12 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.11])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b04e4sm10496615b3a.121.2025.06.18.02.39.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 18 Jun 2025 02:39:12 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+Date: Wed, 18 Jun 2025 17:39:06 +0800
+Message-ID: <20250618093906.23048-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <58f9d004-918d-4f66-85e7-d090db0af5de@redhat.com>
+References: <58f9d004-918d-4f66-85e7-d090db0af5de@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFJx2IqLfCjWsbVv@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 07:59:20AM +0000, Alice Ryhl wrote:
-> On Tue, Jun 17, 2025 at 03:54:19PM +0200, Danilo Krummrich wrote:
-> > On Tue, Jun 17, 2025 at 01:36:47PM +0000, Alice Ryhl wrote:
-> > > Since commit b20fbbc08a36 ("rust: check type of `$ptr` in
-> > > `container_of!`") we have enforced that the field pointer passed to
-> > > container_of! must match the declared field. This caused mismatches when
-> > > using a pointer to bindings::x for fields of type Opaque<bindings::x>.
-> > > 
-> > > This situation encourages the user to simply pass field.cast() to the
-> > > container_of! macro, but this is not great because you might
-> > > accidentally pass a *mut bindings::y when the field type is
-> > > Opaque<bindings::x>, which would be wrong.
-> > > 
-> > > To help catch this kind of mistake, add a new Opaque::from_raw that
-> > > wraps a raw pointer in Opaque without changing the inner type.
+On Wed, 18 Jun 2025 10:54:38 +0200, david@redhat.com wrote:
+ 
+> On 18.06.25 08:11, lizhe.67@bytedance.com wrote:
+> > On Tue, 17 Jun 2025 15:47:09 +0200, david@redhat.com wrote:
+> >   
+> >>> How do you think of this implementation?
+> >>>
+> >>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >>> index 242b05671502..eb91f99ea973 100644
+> >>> --- a/include/linux/mm.h
+> >>> +++ b/include/linux/mm.h
+> >>> @@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
+> >>>           return folio_large_nr_pages(folio);
+> >>>    }
+> >>>    
+> >>> +/*
+> >>> + * folio_remaining_pages - Counts the number of pages from a given
+> >>> + * start page to the end of the folio.
+> >>> + *
+> >>> + * @folio: Pointer to folio
+> >>> + * @start_page: The starting page from which to begin counting.
+> >>> + *
+> >>> + * Returned number includes the provided start page.
+> >>> + *
+> >>> + * The caller must ensure that @start_page belongs to @folio.
+> >>> + */
+> >>> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> >>> +               struct page *start_page)
+> >>> +{
+> >>> +       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
+> >>> +}
+> >>> +
+> >>>    /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+> >>>    #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+> >>>    #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
+> >>> diff --git a/mm/gup.c b/mm/gup.c
+> >>> index 15debead5f5b..14ae2e3088b4 100644
+> >>> --- a/mm/gup.c
+> >>> +++ b/mm/gup.c
+> >>> @@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
+> >>>    
+> >>>           if (folio_test_large(folio))
+> >>>                   nr = min_t(unsigned int, npages - i,
+> >>> -                          folio_nr_pages(folio) - folio_page_idx(folio, next));
+> >>> +                          folio_remaining_pages(folio, next));
+> >>>    
+> >>>           *ntails = nr;
+> >>>           return folio;
+> >>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> >>> index b2fc5266e3d2..34e85258060c 100644
+> >>> --- a/mm/page_isolation.c
+> >>> +++ b/mm/page_isolation.c
+> >>> @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+> >>>                                   return page;
+> >>>                           }
+> >>>    
+> >>> -                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
+> >>> +                       skip_pages = folio_remaining_pages(folio, page);
+> >>>                           pfn += skip_pages - 1;
+> >>>                           continue;
+> >>>                   }
+> >>> ---
+> >>
+> >> Guess I would have pulled the "min" in there, but passing something like
+> >> ULONG_MAX for the page_isolation case also looks rather ugly.
 > > 
-> > The patch does more than that, it also adds a hint to container_of!() and fixes
-> > up two occurences. I feel like we should split it up.
+> > Yes, the page_isolation case does not require the 'min' logic. Since
+> > there are already places in the current kernel code where
+> > folio_remaining_pages() is used without needing min, we could simply
+> > create a custom wrapper function based on folio_remaining_pages() only
+> > in those specific scenarios where min is necessary.
 > 
-> I think they go together pretty naturally, but I can split it if you
-> insist.
-
-Nah, it's also fine for me to keep it as is, but in that case we should also
-mention the other changes in the commit message.
-
-> > > +    /// The opposite operation of [`Opaque::raw_get`].
-> > > +    pub const fn from_raw(this: *const T) -> *const Self {
-> > 
-> > Do we want to name this from_raw()? Usually from_raw() methods return either
-> > Self or &'a Self.
-> > 
-> > Maybe something like cast_from() and rename raw_get() to cast_into()? I think
-> > the latter may be confusing anyways, since it sounds like it would do somthing
-> > with reference counting.
+> I would just do something like that, removing gup_folio_range_next() completely.
 > 
-> The name raw_get() mirrors the stdlib function UnsafeCell::raw_get().
-> The stdlib uses this naming because in Rust the word "get" normally has
-> nothing to do with reference counting - outside of the kernel, we use
-> "clone" for incrementing refcounts and nobody would ever call it "get".
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 98a606908307b..6c224b1c6c169 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1995,6 +1995,32 @@ static inline long folio_nr_pages(const struct folio *folio)
+>   	return folio_large_nr_pages(folio);
+>   }
+>   
+> +/**
+> + * folio_remaining_pages - The remaining number of pages in the folio.
+> + * @folio: The folio.
+> + * @page: The folio page to start the counting.
+> + * @max_npages: Limit how far to count.
+> + *
+> + * The returned number will include the provided page.
+> + *
+> + * The caller must ensure that @page belongs to @folio. When setting
+> + * @max_npages to ULONG_MAX, the parameter is effectively ignored.
+> + *
+> + * Return: The remaining number of pages, limited by @max_npages.
+> + */
+> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> +		struct page *page, unsigned long max_npages)
+> +{
+> +	unsigned long nr;
+> +
+> +	if (!folio_test_large(folio))
+> +		return 1;
+> +	nr = folio_large_nr_pages(folio) - folio_page_idx(folio, page);
+> +	if (__builtin_constant_p(max_npages) && max_npages == ULONG_MAX)
+> +		return nr;
+> +	return min_t(unsigned long, nr, max_npages);
+> +}
+> +
+>   /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+>   #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+>   #define MAX_FOLIO_NR_PAGES	(1UL << PUD_ORDER)
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 6888e871a74a9..3385428d028f6 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -234,21 +234,6 @@ void folio_add_pin(struct folio *folio)
+>   	}
+>   }
+>   
+> -static inline struct folio *gup_folio_range_next(struct page *start,
+> -		unsigned long npages, unsigned long i, unsigned int *ntails)
+> -{
+> -	struct page *next = nth_page(start, i);
+> -	struct folio *folio = page_folio(next);
+> -	unsigned int nr = 1;
+> -
+> -	if (folio_test_large(folio))
+> -		nr = min_t(unsigned int, npages - i,
+> -			   folio_nr_pages(folio) - folio_page_idx(folio, next));
+> -
+> -	*ntails = nr;
+> -	return folio;
+> -}
+> -
+>   static inline struct folio *gup_folio_next(struct page **list,
+>   		unsigned long npages, unsigned long i, unsigned int *ntails)
+>   {
+> @@ -356,11 +341,13 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
+>   				      bool make_dirty)
+>   {
+>   	unsigned long i;
+> -	struct folio *folio;
+>   	unsigned int nr;
+>   
+>   	for (i = 0; i < npages; i += nr) {
+> -		folio = gup_folio_range_next(page, npages, i, &nr);
+> +		struct page *next = nth_page(page, i);
+> +		struct folio *folio = page_folio(next);
+> +
+> +		nr = folio_remaining_pages(folio, next, npages - i);
+>   		if (make_dirty && !folio_test_dirty(folio)) {
+>   			folio_lock(folio);
+>   			folio_mark_dirty(folio);
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index ece3bfc56bcd5..6f75defb38d73 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+>   				return page;
+>   			}
+>   
+> -			skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
+> +			skip_pages = folio_remaining_pages(folio, page, ULONG_MAX);
+>   			pfn += skip_pages - 1;
+>   			continue;
+>   		}
+> -- 
+> 
+> 
+> But up to you, anything with such a helper function makes the code easier to digest.
 
-Yeah, I'm aware. The main reason I proposed cast_into() is that it would fit
-much better with the newly introduced cast_from() (in case we go with that
-name).
+Thank you. This implementation looks better. Please allow me to
+integrate this patch into my patchset.
 
-I'm happy with other proposals too, I just think that from_raw() would be a bit
-inconsistent with how we use this name otherwise.
-
-> That said, it may still be worth to rename the method. Thoughts?
-
-I think it'd be good if it aligns naming wise with its counter part added in
-this patch and I don't see this happening with raw_get(). :-)
+Thanks,
+Zhe
