@@ -1,264 +1,146 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D4D8635D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234143; cv=none; b=ajNUWuTK20pLneT7Olbs85qgO8K9xizhjhkT1y926iKlXcupujHMNVewjt5p+RLNbRucl4e9XzGaO2oFtxCzevgUvQGOwMCAZSutHBPLYGZNKQUv+VwfWi0iIPqdXGBpqYWs0nil4EPXcVc+r0jtr8g/DCVWrnAfN0FdAUlhBco=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234143; c=relaxed/simple;
-	bh=ScXhqfgyNqXHnvVJ96/aS6ruxg2KUkRH395D0lQcAMU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=StBF69xY2NKJIH9Yk+8PlNMhpf5dyhRe2OGCaGmA26DFKHRAsG8l8D9X+QGum6HZtwvj+Cyjfo70v2cdR+rpyGke99AJNca+o1lr+Q1po0D/9N3AtBs/bID2IxgqlCDYBbOTgtACf5L0iMaZrGmtgFWUo0bvLvj72jG1BfEtOCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bMbwq1nVJzKHNV7
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:08:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 9A81A1A0E9C
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:08:57 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP1 (Coremail) with SMTP id cCh0CgDHd3gXdFJoJRB_Pg--.33489S2;
-	Wed, 18 Jun 2025 16:08:57 +0800 (CST)
-Subject: Re: [PATCH 3/4] mm/shmem, swap: improve mthp swapin process
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Matthew Wilcox <willy@infradead.org>,
- Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
- Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250617183503.10527-1-ryncsn@gmail.com>
- <20250617183503.10527-4-ryncsn@gmail.com>
- <06bf5a2f-6687-dc24-cdb2-408faf413dd4@huaweicloud.com>
- <CAMgjq7CicJC8JbZ41ccvZwwVSsPftj8DUX06x=dNmKu-18HS2w@mail.gmail.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <8419f066-fdfb-4ccb-14cf-27a3139fe713@huaweicloud.com>
-Date: Wed, 18 Jun 2025 16:08:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42FE8635D;
+	Wed, 18 Jun 2025 08:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750234183; cv=fail; b=pE81/nvDqqWw5swoZigHe7QgW62OuVBTzA1s01w42TlvF/qOB7cEfgylMZHcgGoUsGCTbYXDzIQRq8gor92XH5v08yhU1A5CqGimaSds5WN6FagxpEsZFMhtSEtbTBjXXfYsfgcjC5DfU9RD42rhG5Wv3FEYo3r4qvMGWvswWsE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750234183; c=relaxed/simple;
+	bh=SW6dSSWkr317uYEFMQlacj1rdkK84mwiVQ/FLBWrJPE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sbODIQ0SJYA5TkrMGiONVGG1i6YYI0qKuY+VawximLFiCLf4m7Mm6AEaOuGyjlLrRLo/Lr1UThZzVpj4MtSFeagu0SevhAIhJjvt/i3UOveG0B7qIXQbdMzR19YS4bUc8jYWgO/HIdG6vgVM4rhG6GlDDXx3GGCBuNt9pZvPB60=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oaTkkggP; arc=fail smtp.client-ip=40.107.94.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oaTkkggP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TgzzAHuthoN36g4hArttZtKhwKhJZXDsi7DY0hepCLR76odoLJLKt7bbVTe/k24z5h6P7FD7PMJwo6NL4qTfp0SxE74zTsFvDFSlxMRu2EgXpRnLObRJmu7EtExk/QrCCqiPzqnfRTSZz8T7Di/xplmWIOJp/Ah0mlV5n7viu55hwp8B+SKxcjuG5m8QQJGM02y1lz1l7XIF9/tSQkXGtVmtoYTAg8wKKt/d668+emSzFb8dE1k3R86NzbdMy+CjgqqjK5bza77qBqETO0a4mPPfxWt3JQ7i1UA2aoi8OP8iTlkeVtTbae2IYXlLJVAwY+pZGQbSVu8w92kiA7tqBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PL+212zrru5RUqVZnlMUVEbIp0GGA/DKS75nDb5eszs=;
+ b=M1GCL/CKJE7O/oWGPFdS85sLwaOz9q7WWYxwM5lk4nsQWD55hvptOngqj/KhY4yeAnZie6TrFywKV3mDZ8lsIdXWRfX+lEJ+HzYPjZZOILO6+pR81lAvzPk2y2B9o1mshRPgFG2rvogFJ8TrESKyyBu5+kuPJNK52yNwvy1FN6jjwsi1p0GRhXB7KJMe4c51o+/+bgsKwm9mWHZuwno0+NSj1in5YI85EmD1hgSaNUIIAECFeWOdNaK0FzE6oyLWRwvcVcYlv869kIwnVBt1KJIBxhjIOa52Z+wGmAmfJ17NRBaBCaByqb3XNevMfRZlNROsph2B+JHJ6iZUBXnU3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PL+212zrru5RUqVZnlMUVEbIp0GGA/DKS75nDb5eszs=;
+ b=oaTkkggPSfd7T0pjBmQc3IIFeBkMD43u4N51ra3NXv7R84Gty0R0uy83H7KWCNPNzzOHC6u5/6IdJvpPmpD+YoQLe6xfF5EgtM+3Z8DUFF444hdxopopDsrXruLyjIiCspAN3n2KjFGxHYjswOO/ItG/yxsb7HXP3eJmdJ0svlM=
+Received: from MN2PR22CA0010.namprd22.prod.outlook.com (2603:10b6:208:238::15)
+ by DM4PR12MB5843.namprd12.prod.outlook.com (2603:10b6:8:66::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
+ 2025 08:09:38 +0000
+Received: from BL02EPF00021F69.namprd02.prod.outlook.com
+ (2603:10b6:208:238:cafe::bd) by MN2PR22CA0010.outlook.office365.com
+ (2603:10b6:208:238::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Wed,
+ 18 Jun 2025 08:09:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL02EPF00021F69.mail.protection.outlook.com (10.167.249.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 08:09:38 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 18 Jun
+ 2025 03:09:36 -0500
+Received: from xhdlc201964.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 18 Jun 2025 03:09:33 -0500
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<mani@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [PATCH v3 0/2] Add support for AMD Versal Gen 2 MDB PCIe RP PERST#
+Date: Wed, 18 Jun 2025 13:39:29 +0530
+Message-ID: <20250618080931.2472366-1-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMgjq7CicJC8JbZ41ccvZwwVSsPftj8DUX06x=dNmKu-18HS2w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHd3gXdFJoJRB_Pg--.33489S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKFWUJF13XrWxZryDXr4Dtwb_yoWxKrWfpF
-	yIgFn3tFWkXry2kw42qw10qry3W34rWF15Ja43C3WfZas0yr1IkryUJw18CFy8CryDAay0
-	qF17K3sI9Fn8taDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.musham@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F69:EE_|DM4PR12MB5843:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00d66620-5e0e-4c2e-4577-08ddae3f785f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dFrqCjgAb5dGnPQDAjSpzzY9oQtr2RJLqU3E9cbhdV/74kCOjpw9PSCnGE0U?=
+ =?us-ascii?Q?h5jK7xxkS1AhbuDKYBdcbQ9Ay6ofOFX+f2Lv5ImKT395Z9gb8QNG1s3a2wbr?=
+ =?us-ascii?Q?MeRQ7HfDD79aOy7Juky+eXoYYMNkE1rmc6HAlug+1FU5i7YohSS2BEc24jgk?=
+ =?us-ascii?Q?hOWZuUyI8lrBUzkz0nzWZFJNA6WXQ9fd4AeCWISb9WsfEDUIQD/SIuNvHTVq?=
+ =?us-ascii?Q?4baVHR4skvk3+uOELGUu6YR5Gg15XCMPM02rG1qOpahunnJq/A5NwtRdy6fT?=
+ =?us-ascii?Q?49LYiilwckkJXV072OQO00G6Z0+s2K2nq4+BDJGXT9Q8mHF93UzCDeFankK7?=
+ =?us-ascii?Q?wfcz1eTk2qrjOB94UmmjCe58XeC15qOecxurOmUI+YyyiY1/ERGP9Sw+ebrE?=
+ =?us-ascii?Q?NJhtaghBF5Q5ut+Z5BluZRE9/7KsSh+ADL0IIHb/fTcdEgIOzTkVYxvqoxX+?=
+ =?us-ascii?Q?8f7Zdkj5msoXwyuZAk/+weqj1vQLTUV5D6c/B1Pg/pTrzdVrHg5ICTSJHo5Z?=
+ =?us-ascii?Q?hdgm+bbK8M9JFHwO7Q3Ws967+CEYMAgvhSJKFSwr47acG4rd9012h+6NUbzk?=
+ =?us-ascii?Q?kewEDN3OOZM4sW8n8SWKRze0cAWIcboVQuRDPpXM4VZ2KvyHgyYUsphPz+EU?=
+ =?us-ascii?Q?Kvtbs6jFhdXt50vKVUA5j1ZBxR0xHfCmMudbR8ZnzpXQVgGkLdanxoESbFAp?=
+ =?us-ascii?Q?dlzpup7k0J67kDpVtBnNWMqeYgeOWz7DkYdbAp0mgI11sD+KXXBfgxRY9+Eo?=
+ =?us-ascii?Q?kGbEgtl41P7fqcolNbMyk4/JpNDSJke+MzWZs9qbyA0MPBBK7h+g5qPmfoWr?=
+ =?us-ascii?Q?8YDyZw84BdMjuUOGEjG9gk5wZHEBj3cPqkNapI5777y2RaJD7tdMmpGIwZU9?=
+ =?us-ascii?Q?QGoR3g571nv9Qqi5UjQxNLxNRL4ID9y3MD6dD8oJW0cTPYyEC8pXKpBz/Cov?=
+ =?us-ascii?Q?1L+b3iDd9CMX8EzSw1gTLfT0uBM3UdW03b8j7lRLq7LEQ/jpoSyEu0vVasPL?=
+ =?us-ascii?Q?f1YAIYUdCPPR0YCjsIVTjbRpjnNO6AnFhoS8ywJvS0SDbxx4NhaMW/cKbH4B?=
+ =?us-ascii?Q?U6BxCkrEZdIJRWqq8lIBNYjkh1a0drjBLtf5No7kWuZ7QW/PtWi1uRsskrww?=
+ =?us-ascii?Q?ltex8XA62uYu1FLzwYciGuXo8oyR0O+ZoatMf3jxUkR1DsAlQ5MvZ7kxUf5E?=
+ =?us-ascii?Q?TOl/6koCgWqVcmCfDjhkPQ0G9LR0B31Zot/K6RKmMLwhDng+309XIqlVfWkx?=
+ =?us-ascii?Q?44o/2EpDrdSkBY/L7ci0sxz9H8IxN8bYk6qKoa9N+XwoPNX/IeAdpkzVeT4w?=
+ =?us-ascii?Q?mn5HpP4bI3jgAqwlYtCcdaqVH5TESS6eelV/OUacF9jwmHa+xAblgLyBNnwJ?=
+ =?us-ascii?Q?UNX9nTmkXh9vC2Umn9lJyAuO4kk8eAlG7aTwSGgRXfWF2NxVf0Nd24PKVF6S?=
+ =?us-ascii?Q?+yghp5DH+uTOcBfu/yqXNmjIoFbDWhFeEHzR+d8XCky8vAMSlLrt2PCyflJd?=
+ =?us-ascii?Q?e4kuYs1ze3+PzGmFdxwfTEjA6Qy8YtLAqaVg?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 08:09:38.1729
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00d66620-5e0e-4c2e-4577-08ddae3f785f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F69.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5843
 
+Add reset-gpios property to PCI bridge node
 
+Add support for PCIe Root Port PERST# signal handling
 
-on 6/18/2025 2:50 PM, Kairui Song wrote:
-> On Wed, Jun 18, 2025 at 2:27 PM Kemeng Shi <shikemeng@huaweicloud.com> wrote:
->> on 6/18/2025 2:35 AM, Kairui Song wrote:
->>> From: Kairui Song <kasong@tencent.com>
->>>
->>> Tidy up the mTHP swapin workflow. There should be no feature change, but
->>> consolidates the mTHP related check to one place so they are now all
->>> wrapped by CONFIG_TRANSPARENT_HUGEPAGE, and will be trimmed off by
->>> compiler if not needed.
->>>
->>> Signed-off-by: Kairui Song <kasong@tencent.com>
->>> ---
->>>  mm/shmem.c | 175 ++++++++++++++++++++++++-----------------------------
->>>  1 file changed, 78 insertions(+), 97 deletions(-)
->>>
->>> diff --git a/mm/shmem.c b/mm/shmem.c
->>> index 0ad49e57f736..46dea2fa1b43 100644
->>> --- a/mm/shmem.c
->>> +++ b/mm/shmem.c
->>
->> ...
->>
->>> @@ -2283,110 +2306,66 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->>>       /* Look it up and read it in.. */
->>>       folio = swap_cache_get_folio(swap, NULL, 0);
->>>       if (!folio) {
->>> -             int nr_pages = 1 << order;
->>> -             bool fallback_order0 = false;
->>> -
->>>               /* Or update major stats only when swapin succeeds?? */
->>>               if (fault_type) {
->>>                       *fault_type |= VM_FAULT_MAJOR;
->>>                       count_vm_event(PGMAJFAULT);
->>>                       count_memcg_event_mm(fault_mm, PGMAJFAULT);
->>>               }
->>> -
->>> -             /*
->>> -              * If uffd is active for the vma, we need per-page fault
->>> -              * fidelity to maintain the uffd semantics, then fallback
->>> -              * to swapin order-0 folio, as well as for zswap case.
->>> -              * Any existing sub folio in the swap cache also blocks
->>> -              * mTHP swapin.
->>> -              */
->>> -             if (order > 0 && ((vma && unlikely(userfaultfd_armed(vma))) ||
->>> -                               !zswap_never_enabled() ||
->>> -                               non_swapcache_batch(swap, nr_pages) != nr_pages))
->>> -                     fallback_order0 = true;
->>> -
->>> -             /* Skip swapcache for synchronous device. */
->>> -             if (!fallback_order0 && data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
->>> -                     folio = shmem_swap_alloc_folio(inode, vma, index, swap, order, gfp);
->>> +             /* Try direct mTHP swapin bypassing swap cache and readahead */
->>> +             if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
->>> +                     swap_order = order;
->>> +                     folio = shmem_swapin_direct(inode, vma, index,
->>> +                                                 swap, &swap_order, gfp);
->>>                       if (!IS_ERR(folio)) {
->>>                               skip_swapcache = true;
->>>                               goto alloced;
->>>                       }
->>> -
->>> -                     /*
->>> -                      * Fallback to swapin order-0 folio unless the swap entry
->>> -                      * already exists.
->>> -                      */
->>> +                     /* Fallback if order > 0 swapin failed with -ENOMEM */
->>>                       error = PTR_ERR(folio);
->>>                       folio = NULL;
->>> -                     if (error == -EEXIST)
->>> +                     if (error != -ENOMEM || !swap_order)
->>>                               goto failed;
->>>               }
->>> -
->>>               /*
->>> -              * Now swap device can only swap in order 0 folio, then we
->>> -              * should split the large swap entry stored in the pagecache
->>> -              * if necessary.
->>> +              * Try order 0 swapin using swap cache and readahead, it still
->>> +              * may return order > 0 folio due to raced swap cache.
->>>                */
->>> -             split_order = shmem_split_large_entry(inode, index, swap, gfp);
->>> -             if (split_order < 0) {
->>> -                     error = split_order;
->>> -                     goto failed;
->>> -             }
->>> -
->>> -             /*
->>> -              * If the large swap entry has already been split, it is
->>> -              * necessary to recalculate the new swap entry based on
->>> -              * the old order alignment.
->>> -              */
->>> -             if (split_order > 0) {
->>> -                     pgoff_t offset = index - round_down(index, 1 << split_order);
->>> -
->>> -                     swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
->>> -             }
->>> -
->> For fallback order 0, we always call shmem_swapin_cluster() before but we will call
->> shmem_swap_alloc_folio() now. It seems fine to me. Just point this out for others
->> to recheck this.
-> 
-> It's an improvement, I forgot to mention that in the commit message.
-> Readahead is a burden for SWP_SYNCHRONOUS_IO devices so calling
-> shmem_swap_alloc_folio is better. I'll update the commit message.
-> 
->>> -             /* Here we actually start the io */
->>>               folio = shmem_swapin_cluster(swap, gfp, info, index);
->>>               if (!folio) {
->>>                       error = -ENOMEM;
->>>                       goto failed;
->>>               }
->>> -     } else if (order > folio_order(folio)) {
->>> -             /*
->>> -              * Swap readahead may swap in order 0 folios into swapcache
->>> -              * asynchronously, while the shmem mapping can still stores
->>> -              * large swap entries. In such cases, we should split the
->>> -              * large swap entry to prevent possible data corruption.
->>> -              */
->>> -             split_order = shmem_split_large_entry(inode, index, swap, gfp);
->>> -             if (split_order < 0) {
->>> -                     folio_put(folio);
->>> -                     folio = NULL;
->>> -                     error = split_order;
->>> -                     goto failed;
->>> -             }
->>> -
->>> -             /*
->>> -              * If the large swap entry has already been split, it is
->>> -              * necessary to recalculate the new swap entry based on
->>> -              * the old order alignment.
->>> -              */
->>> -             if (split_order > 0) {
->>> -                     pgoff_t offset = index - round_down(index, 1 << split_order);
->>> -
->>> -                     swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
->>> -             }
->>> -     } else if (order < folio_order(folio)) {
->>> -             swap.val = round_down(swp_type(swap), folio_order(folio));
->>>       }
->>> -
->>>  alloced:
->>> +     /*
->>> +      * We need to split an existing large entry if swapin brought in a
->>> +      * smaller folio due to various of reasons.
->>> +      *
->>> +      * And worth noting there is a special case: if there is a smaller
->>> +      * cached folio that covers @swap, but not @index (it only covers
->>> +      * first few sub entries of the large entry, but @index points to
->>> +      * later parts), the swap cache lookup will still see this folio,
->>> +      * And we need to split the large entry here. Later checks will fail,
->>> +      * as it can't satisfy the swap requirement, and we will retry
->>> +      * the swapin from beginning.
->>> +      */
->>> +     swap_order = folio_order(folio);
->>> +     if (order > swap_order) {
->>> +             error = shmem_split_swap_entry(inode, index, swap, gfp);
->>> +             if (error)
->>> +                     goto failed_nolock;
->>> +     }
->>> +
->>> +     index = round_down(index, 1 << swap_order);
->>> +     swap.val = round_down(swap.val, 1 << swap_order);
->>> +
->>
->> If swap entry order is reduced but index and value keep unchange,
->> the shmem_split_swap_entry() will split the reduced large swap entry
->> successfully but index and swap.val will be incorrect beacuse of wrong
->> swap_order. We can catch unexpected order and swap entry in
->> shmem_add_to_page_cache() and will retry the swapin, but this will
->> introduce extra cost.
->>
->> If we return order of entry which is splited in shmem_split_swap_entry()
->> and update index and swap.val with returned order, we can avoid the extra
->> cost for mentioned racy case.
-> 
-> The swap_order here is simply the folio's order, so doing this
-> round_down will get the swap entry and index that will be covered by
-> this folio. (the later folio->swap.val != swap.val ensures the values
-> are valid here).
-> 
-> Remember the previous patch mentioned that, we may see the shmem
-> mapping's entry got split but still seeing a large folio here. With
-> current design, shmem_add_to_page_cache can still succeed as it should
-> be, but if we round_down with the returned order of
-> shmem_split_swap_entry, it will fail.
-My bad... Thanks for explanation. The calculation looks fine to me.
-> 
-> So I think to make it better to keep it this way, and besides, the
-> next patch makes use of this for sanity checks and reducing false
-> positives of swap cache lookups.
-> 
+Sai Krishna Musham (2):
+  dt-bindings: PCI: amd-mdb: Add reset-gpios property for PCIe RP PERST#
+    handling
+  PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
+
+ .../bindings/pci/amd,versal2-mdb-host.yaml    | 26 +++++++++++
+ drivers/pci/controller/dwc/pcie-amd-mdb.c     | 45 ++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
 
