@@ -1,63 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61230155382;
-	Wed, 18 Jun 2025 05:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4422155382;
+	Wed, 18 Jun 2025 05:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750225333; cv=none; b=nJVKM9tmGOx4G6AwU+Ww3XvZwspLlcclsixz3ylI55z5VYbsJKXPKPrazzCnBpklb95/AzZWEbtlRrqQ7QfTLdAC63ldMMoUsRrT3gOsk/P3kGvyGqHeEr3+7xOXGzGYZu0tY4+AP5trmslIKJcb6tTUrwsZfvdcg0Ep1KDWlvc=
+	t=1750225394; cv=none; b=uSwLFLsAFZcGmOa3h5JMyvOJFxq8YDcfRUEJ1pOYAGuEbfStlOvD5pyy1DJ8xXkldxm2APg6JvY2qslTemfGDR3ZxwPKNOUFz+0Y4j0UuZMTiRPLXkJKNJSsNIey4s21OtLh0Dg1NuwlK4wlGK8C7iUJKcVVt9r+hh9P+1r6XlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750225333; c=relaxed/simple;
-	bh=OtuSUIPkuDfD+m/LFZSpCE5C0F4fUZi6lEJGSacNoEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSVyQnDTNc9pElbr004VBJ9B5P5YQohH27K6QsvN2CI0n+obOuTUJCj70S+F/wZxevzcABdo9dYpmlyOKPLE11hL/Wbs9EeG6S9NFHiIooBdJLQPi4+EuiRaRfuNYTJL/7xLJKO7W34uZDPQpjgVkQpFbuQq9LGfiGDhASez4fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uq/SPm2q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750225394; c=relaxed/simple;
+	bh=0JQBsfmNYdQa/0IV4/qsPNFTRadbSDZ3GVaBCtE0Z3g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sfwjc9O2V1rYinbxhH4f91IUWviTc06cUuB+GPpiyhUwxEqxXaG6YyhCPgoScK5P8cA6wmNa3YMHYo1BhTb++/jdFb5vWpDeqwjpDGu2mK5ct6rVYlbZiIh3fp7l/TabOMhUqmIDQEr27BqE4EicPvB2q2oWmqWfSBg6ja1YpEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Wm3GtEC8; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uq/SPm2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69479C4CEE7;
-	Wed, 18 Jun 2025 05:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750225332;
-	bh=OtuSUIPkuDfD+m/LFZSpCE5C0F4fUZi6lEJGSacNoEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uq/SPm2qjo+ZZi2ErBZ0be/ltUASToUVv/GOVUmbaJd1z5pIxao/j+QYwbO8zbADT
-	 sI9xZAPee2wef6mHyWWImgJ6pkOLyclopmrKn1uc27Fqy5p/hkdCDL9sj7OMzQwHPu
-	 /T1z262dWNLzeIBBn5zIB2Iz+8vYrybrzTrPmHzo=
-Date: Wed, 18 Jun 2025 07:42:08 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ronald Warsow <rwarsow@gmx.de>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
-Message-ID: <2025061848-clinic-revered-e216@gregkh>
-References: <20250617152451.485330293@linuxfoundation.org>
- <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Wm3GtEC8"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55I5h68Z13672511, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1750225386; bh=24qWcAQa2eW2xtwkeq0PwRXckxE/cms8HYXVdLi4u1Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=Wm3GtEC8ePyPtE0awr1yJ7MdPWh7d8+GZbVEQK7k4+r2nl9ChJTpz3zYJ5wHVrXST
+	 UYAE86a+kGWxGo0XcO44fRCq4VOXWpNStqg3Rh+yhKskYAhYfABNsChkRQWL2dJmA4
+	 XqXl/34fMP2ZqQ2GqyC/K4w8Exe6RvwLezQsnhZ971KEnYm2GFJviiYdyAXTeRoZfo
+	 0sh29GdotETp9Pai3D9iH2kDL6ejowrVknIlVLe//KDDin1CwfzgpVqFXAcnTBLYdQ
+	 EmuBDMFdujYWxLOXtNyWf08PWwn/uNjjZRlBKayPT1HXx2Qv9MGXkiMIKJGkT+xE+S
+	 Tv4mg/Xo++hDg==
+Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55I5h68Z13672511
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Jun 2025 13:43:06 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 18 Jun 2025 13:43:12 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 18 Jun 2025 13:43:11 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 18 Jun 2025 13:43:11 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in `_rtl_pci_rx_interrupt()`.
+Thread-Topic: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in
+ `_rtl_pci_rx_interrupt()`.
+Thread-Index: AQHb3q3lAKJwiCeNiES7NMfEqP2rpbQIalBQ
+Date: Wed, 18 Jun 2025 05:43:11 +0000
+Message-ID: <1b7f0d569bd74b5ca606c1eb9d57e4b1@realtek.com>
+References: <20250616105631.444309-4-fourier.thomas@gmail.com>
+In-Reply-To: <20250616105631.444309-4-fourier.thomas@gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
 
-On Tue, Jun 17, 2025 at 08:27:03PM +0200, Ronald Warsow wrote:
-> Hi Greg
-> 
-> Kernel panic here on x86_64 (RKL, Intel 11th Gen. CPU)
-> 
-> all others kernels were okay. nothing was changed in my compile config.
-> 
-> Tested-by: Ronald Warsow <rwarsow@gmx.de>
+Thomas Fourier <fourier.thomas@gmail.com> wrote:
+> The function `_rtl_pci_init_one_rxdesc()` can fail even when the new
+> `skb` is passed because of a DMA mapping error.  If it fails, the `skb`
+> is not saved in the rx ringbuffer and thus lost.
+>=20
+> Compile tested only
+>=20
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
 
-Any chance you can use 'git bisect' to find the offending commit?
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-thanks,
-
-greg k-h
