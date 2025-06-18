@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21642FEE1E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9F62ED15B;
+	Wed, 18 Jun 2025 16:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265458; cv=none; b=fenxCi1o84EH0AekfJ8EZir4Xpe09zzfH97yh+QeQhShyIb2jcj8GxkE4wZnnyR7YPEb3CN13keGTx9YCpSwi4GQdNY7co0nYVeQ8yiRPrmzSbsbHf5IPTwImsKmYWWI2NnZ20VLDlZ5C3aMjHSwz/04sNpwCze8joSHDRmi+a8=
+	t=1750265493; cv=none; b=fZ5opCLGTopZ30q5NEFzvq9ixZ70SzAPAx9khV4AZwirWg+gzBZQ4li8qqVTEEWqp6y4iRO26ezKSwI/RQit3SbQAx++MprGyCOxffHFo1iRCKnNlVTotU28BCqvrUEbPFR/N3/g8Srere8a7ADgMIWcxZzRJEEuOzALEixKcJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265458; c=relaxed/simple;
-	bh=AGjxQLLZ51lsyG9UJkIXZW70rGMweAmu+h8b725a/2M=;
+	s=arc-20240116; t=1750265493; c=relaxed/simple;
+	bh=XMO9fKp20Q7DTaYszCjqBD1MVCHKlOCMtsj8qLUYrFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crthrhoi9gJZjFY6Gin/iG70KgFuo5dNOZVESyKYX6mE6AUdWsN9YikVEwUxrdT098qfN+VhdERz1FolHMQqvfUcYmdLKaRQs2DzDT7Mb54lDK8txOcLGGbVeSXBknLHJvWRP5CrYz1ktJnc7dghScZPnS5ljH3EKmom3BsUJTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccC9dfvR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KM15dJCOkvDbFodrjbBYgYvR0h4w2GvryXwH7NNzyQym6P62eA2VVb1VtBsgUNaNXcr22ExvdSgwcr4KVtVsQtDACOCXnHzQU54kIbX14w83RLlkIvPs6VTidsC8sqsXvuWifp//vyRM9qdpNOtv6jhjPuDGMnJz2nQHXKiUyVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3PwePHC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccC9dfvR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E70CC4CEE7;
-	Wed, 18 Jun 2025 16:50:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3PwePHC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF16BC4CEE7;
+	Wed, 18 Jun 2025 16:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750265458;
-	bh=AGjxQLLZ51lsyG9UJkIXZW70rGMweAmu+h8b725a/2M=;
+	s=k20201202; t=1750265492;
+	bh=XMO9fKp20Q7DTaYszCjqBD1MVCHKlOCMtsj8qLUYrFY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ccC9dfvRgMR5VhC8Vi7ZnKgP99rAi1QnYKpJYUJ1/X0piDuDhgFbCEtAXhH8gowLX
-	 8N4VtBGD05e2ORIFn9FdvXITzjYkQFmVicEsnDH+Y13VZXPGmmQEMq6QHOfBlD7aww
-	 uJ5516zSiAm0z81hx1BFF03nPhpC9BpdNXMzX1b8gfNyTLCh/xCUs0gkLCwgiMv+F1
-	 8p6BQnCmX1n/+hUY/gtakqkeRNhnGORf6NbrNru2x2n64QMgTW9AoJv9FH2bsE0T5L
-	 A4u7CuT8GLEzx3tr2Wn/RvssUktIymmqulyj3vpS5Ds+VN/X1B3q67d3LHx9sQ6t48
-	 S3eFk+0mT6+Iw==
-Date: Wed, 18 Jun 2025 19:50:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] MAINTAINERS: add further init files to mm init block
-Message-ID: <aFLubPfiO5hqfhCe@kernel.org>
-References: <20250617174538.188977-1-lorenzo.stoakes@oracle.com>
- <20250617161800.84fe3274a9ed3c9049dde2ab@linux-foundation.org>
+	b=E3PwePHCrYicZteOg5yu8/BY+j2hHrTdssFE0f+Ro8l3ul8oGL9SsMfvRRiLrVkID
+	 bQ9cfpAv/a+h0V0/ciauddxBFhvKcdien7r2zWbKhDQtF/bkTCfsAZxvpGsCJ+KsVK
+	 0dnHZKjK6Pplnsq6l0bo4JvWa3zc+QuVUV9vxw3tqmNWKJ13prh3b1b5HHp5kIPII7
+	 +G5gNulRan00ZWgmAr9NU8KezJsDvkIGVYGNVAsQui4v/T+tRJTh5EDGYdDIIzDHXi
+	 BXKECJe7kb8dwmEXvK84tgn/v8cBF4cWiuRNS0bmhvKEbABz4j29UTelti9oisNAtu
+	 8uIYM9W6541bg==
+Date: Wed, 18 Jun 2025 17:51:27 +0100
+From: Simon Horman <horms@kernel.org>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, yuehaibing@huawei.com,
+	zhangchangzhong@huawei.com, linux-rdma@vger.kernel.org,
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net/smc: remove unused input parameters in
+ smc_buf_get_slot
+Message-ID: <20250618165127.GU1699@horms.kernel.org>
+References: <20250618103342.1423913-1-wangliang74@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,68 +48,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617161800.84fe3274a9ed3c9049dde2ab@linux-foundation.org>
+In-Reply-To: <20250618103342.1423913-1-wangliang74@huawei.com>
 
-On Tue, Jun 17, 2025 at 04:18:00PM -0700, Andrew Morton wrote:
-> On Tue, 17 Jun 2025 18:45:38 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+On Wed, Jun 18, 2025 at 06:33:42PM +0800, Wang Liang wrote:
+> The input parameter "compressed_bufsize" of smc_buf_get_slot is unused,
+> remove it.
 > 
-> > These files comprise the bootmem info logic which is initialised on startup
-> > and also memory tests that are run on startup and as such this seems the
-> > most appropriate section for them.
-> > 
-> > ...
-> >
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15679,8 +15679,11 @@ S:	Maintained
-> >  F:	Documentation/core-api/boot-time-mm.rst
-> >  F:	Documentation/core-api/kho/bindings/memblock/*
-> >  F:	include/linux/memblock.h
-> > +F:	mm/bootmem_info.c
-> >  F:	mm/memblock.c
-> > +F:	mm/memtest.c
-> >  F:	mm/mm_init.c
-> > +F:	mm/rodata_test.c
-> >  F:	tools/testing/memblock/
-> >  
-> 
-> Doesn't this want T: entries for 
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git#fixes
-> git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git#for-next
+> Signed-off-by: Wang Liang <wangliang74@huawei.com>
 
-A long overdue indeed:
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-From 4d0b56ca0bbfe161c07e284163582180d4dfb749 Mon Sep 17 00:00:00 2001
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Wed, 18 Jun 2025 19:47:52 +0300
-Subject: [PATCH] MAINTAINERS: add tree entry to mm init block
-
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cba00609855b..b1e6f242b972 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15678,6 +15678,8 @@ MEMBLOCK AND MEMORY MANAGEMENT INITIALIZATION
- M:	Mike Rapoport <rppt@kernel.org>
- L:	linux-mm@kvack.org
- S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git for-next
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git fixes
- F:	Documentation/core-api/boot-time-mm.rst
- F:	Documentation/core-api/kho/bindings/memblock/*
- F:	include/linux/memblock.h
-
-base-commit: 75856c59ae536a369ac79c1b8f5f5c002a9f5c70
--- 
-2.47.2
-
- 
-
--- 
-Sincerely yours,
-Mike.
