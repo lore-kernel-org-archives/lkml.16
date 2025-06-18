@@ -1,310 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011005.outbound.protection.outlook.com [52.101.125.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA071DF968
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236885; cv=none; b=p9E+iRPCwpw3vHNLHwpRxxSrapy7+I3hx40rSQCLVKxurRtapUaET51ICWnqWabhN1StnhfLIFbjIaWYiv76a5tg6UR9/a3Cq/133EDwevAa6m0ejxXaD4TE4fMGY2k318DZGHfpPO4oTFs0JktK+TUgXqUR1K31FfQIJhNKZNc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236885; c=relaxed/simple;
-	bh=VQGX59JbhGX6UWZ9ws6mzn2PEWEVhZGZh0oSJnxPfMg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YFub2bL+n876PXj8jmRz75hssrn/IGzdOQeuwgRAvIk8469ahKkGoWRwxmQasPu8KuOqQUnJPb7ZO8IFtRZuMEfkItVxmw+0pKb9rw3O/kppBYVFMudS0/tTWSJQRUuDH1xRDTy/BYbF1RHO5/R/ahkoMY9wJsrTVNXP4zAnaJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E8SBDmCQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CC41DF968;
+	Wed, 18 Jun 2025 08:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750236900; cv=fail; b=gsYTAhLH4uS33Sl3ISjIUarpexzS3bWoTGMZuk+q6g4xvsKBNdRnyo3rHHEo3l15O+knO6w91N7at11MjiIbuJIq8y07ueHcKznFJUr7tdcJEI2zNA7CGu86fPUW8eQUKQgf5oRF3twg186f+EaZyhQkBdMbX4GY/ogKpOyu/L8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750236900; c=relaxed/simple;
+	bh=aKsYTrv9piq7TbC0eqxjbTawv9mQdOnnE5B1IX/ZwFg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BP7WT+Pb75sI/OKdujgBfVbiE6WFtDecQqst/Uo05moP4guePMMugZOrv16lehnENcMiMe9CW7PXcXSX9eV4l/TdmnchsmE+9QKNuK6hjP20FCmrtzdmKTn2hBEmWLsoNUfgqKddvtxv0GUpnVyhpktVk3USPM8aGcXPY1/D8vQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=veFcK6le; arc=fail smtp.client-ip=52.101.125.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E8SBDmCQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750236882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=d/nghTGDTYOnDsynCfFezJUuOXV1tIgNlMUFaPY/hgs=;
-	b=E8SBDmCQ7AmiFAGd1puoxJN49GISRact7/3jComkZu1CnMpaG8/f/j195QsZ7G1VPphZ38
-	u5W6TGyQ3X4Yu57zN3HioR/TO+UkFZsfYJmWa+DbHKHbEHKM+ldDHQ9DlMvi4eF2Ob3//R
-	BpBs0g/9XaU1g+nIOgGH9pGnP4bwnVo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-557-1tVYTI9aNZu0AkH9STzmBQ-1; Wed, 18 Jun 2025 04:54:41 -0400
-X-MC-Unique: 1tVYTI9aNZu0AkH9STzmBQ-1
-X-Mimecast-MFC-AGG-ID: 1tVYTI9aNZu0AkH9STzmBQ_1750236880
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso2993553f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:54:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750236880; x=1750841680;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=d/nghTGDTYOnDsynCfFezJUuOXV1tIgNlMUFaPY/hgs=;
-        b=WQBMhAUonVUljwS5aExUR9N9G6PcDFzF3RW7RaAMn/noGTbwJnXaBmwWi7tcxhEFxI
-         dNa3GQgn55/oubPFOMl4Yjs0oN5eM3vUfXVgNIv2yZAMwDDtbqpCWr10WglSIgMYGDGW
-         qQ5s9uRvbcnwkZlxlgTId/IadoXO2BXoY9MJcNrEwxiGui+l0pDNcrnhY+ZDr95IvxMv
-         1YoseOeWWO33Fcu3fnhfFlHvBFFMeW9p9LJUdJeBnGG53cu9QLSeI5lWHED3RkZjj78K
-         TZWtcwXNDm5Ol99on95sLZ2S/qh4JKpizYlrgTENyDoiB4u4adee14OKIbHeU7vWL04n
-         e1Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcnMD5z9kCTziF7VdEqmz2ilJYZjOEOETd5DJKY7DS+tuYWCuZA+FW2QoZzGMQH3j43aZ0zlFX3RSFyGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRkL3nOuU9hg/4CjZidBa+XrTU7AV2XBDUZRy5q2jwURGF5vIP
-	SlBHmncNCTLbdklREnFaPk5XZJxDI3g0P+I0h4xV5zvdClHSTUJ6tiIEWcruulMUC0qn32pJysD
-	OpINJyvGb+pZ6XSzj2kEA4VfOh3Op3iPEvlDr+Z7vHqoSWlhfazUh5YJV4nDsaiIpoA==
-X-Gm-Gg: ASbGncvfSVCUzmEIyvbGcR3m6YupYLBJzNu+0LwzOHQnnqdBB058tx7ELfPEif55m8w
-	CBrcTWuyz+Tj6WcPsXUqYPu3GKRczutD0rhYXnWgEmqHu3uC1976LdWRjhNgtyfUDEWGvUmF8Tz
-	eF1NCxcIevPp799BtU4v+MPDRwX9drIrscx62lCCSUM1HdBS7dfPZHc4ODsbE56gJJvyVflyr4/
-	9RFv70q+XWP4rHWoN/Em9dnnYUM05jlyEQOZ7LIcND3AO3rixskQgHW950VZLwFyLSY462O1LNb
-	83CXNog6+YJ+NIWgQwzs6L4BBrkvegfrxv4oXgpP4TPX4XMH8rmbtC/HHkPkJ3uEd5pMzQ3Xty+
-	TWKxK9X/a+mlN1W7f7k3jVFBAc1v2196EcUdZDglrPrrW3EM=
-X-Received: by 2002:a05:6000:2504:b0:3a4:f435:5801 with SMTP id ffacd0b85a97d-3a572371781mr13218829f8f.17.1750236879963;
-        Wed, 18 Jun 2025 01:54:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECGT6yHM/551JPnGWgCimCdk1Q7WAgaERtkxVM1QlBZ7xwWWlzCpkF3RK3HUAnQpq+qIMu5w==
-X-Received: by 2002:a05:6000:2504:b0:3a4:f435:5801 with SMTP id ffacd0b85a97d-3a572371781mr13218811f8f.17.1750236879514;
-        Wed, 18 Jun 2025 01:54:39 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a547d2sm16662553f8f.19.2025.06.18.01.54.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 01:54:39 -0700 (PDT)
-Message-ID: <58f9d004-918d-4f66-85e7-d090db0af5de@redhat.com>
-Date: Wed, 18 Jun 2025 10:54:38 +0200
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="veFcK6le"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q5kJOzLue7qSe76NG0vMwQMGzxfKhpyl/fA7NivBYI9DhFPwzp0o0QNf1IaaDU1EeE6Ek7wrIwelpmFs1kHvlW6qQ1S7OTgaYfx2fmmKYB3alqLljd2oHInBr3A0Za9dbyQYltseHqJnTo0eErouQ8ZcW7e4HQiiGAXvGirk7T8Z6l1iaVcmlGtnU/eK09OFx2Um+cPWV4zKCQTCharVXaeceud+ti2uNVwMxu3hAKJkRFFM1Me7WjIIxxOfDbWjs/85HBViQU+2XqwUn0B306lW+hDtD/4schkwpGTpTXaPKKT0w7lW3BBY/MybeX1dAz15akyZxjPU9aigQwSTlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aKsYTrv9piq7TbC0eqxjbTawv9mQdOnnE5B1IX/ZwFg=;
+ b=AgLhFH4iudMX2BM2z1Cf1ful7FEKaw/LPp2hZ9gFU6LRWwrbk0GK+BQtW8nErH6RNTfmaPldGQZeZKNsciqYZJn9Z3P19RVOZPtp9gckrKa1kd4hc2gPHtL3RU8dZf2GP7ct+mWi+XXeIwkOsEqBbpZIiNJdn3W4iCM0Sw8y+Rs6Zu7+2yW700gxsdVyj9ILaruYVsxmFExw917MJRAFYOn9ynK06rUKChGleYlmIu8a7mF7tJC1Zc4669Cd15fD7JKm6e5Tb4Xc/kx1taOW2+mWP47olMbQbDLYp5Tcg3JADxyhurbnVa6N4s94m8VpTfCIIkdV1TcDUDprPZhWtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aKsYTrv9piq7TbC0eqxjbTawv9mQdOnnE5B1IX/ZwFg=;
+ b=veFcK6le5d+BCZo6NOJO3NzS0D5RvwrVtojF8CNFSFgtipRoaBDMFGO6JOY0Zr6SQgFZyh4GvmsUNLgpLZ2ERp4nzIzxsF94gdgIuR5Yp4hjQszqCIePqWdnhPrT8t77NPRh1zWLJvhdQnAtlrzXhtbI67Ea0dKcO2doOrM7p+0=
+Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com (2603:1096:604:3a0::6)
+ by TYYPR01MB8136.jpnprd01.prod.outlook.com (2603:1096:400:111::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.33; Wed, 18 Jun
+ 2025 08:54:54 +0000
+Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com
+ ([fe80::40e:e798:1aea:ca82]) by OSCPR01MB14647.jpnprd01.prod.outlook.com
+ ([fe80::40e:e798:1aea:ca82%3]) with mapi id 15.20.8857.016; Wed, 18 Jun 2025
+ 08:54:54 +0000
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "robh@kernel.org"
+	<robh@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"john.madieu@gmail.com" <john.madieu@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+Subject: RE: [PATCH v2 2/3] arm64: dts: renesas: r9a09g047: Add GBETH nodes
+Thread-Topic: [PATCH v2 2/3] arm64: dts: renesas: r9a09g047: Add GBETH nodes
+Thread-Index: AQHb2phembLNMWmxOU6Ev4btdVwaP7QHhMwAgAEifKA=
+Date: Wed, 18 Jun 2025 08:54:54 +0000
+Message-ID:
+ <OSCPR01MB14647A762408F08501D4A20DDFF72A@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com>
+ <20250611061609.15527-3-john.madieu.xa@bp.renesas.com>
+ <CAMuHMdXEL17KruAigL2Le+9ATLWo7hQqGZjaEsFKpDt7pQr_8g@mail.gmail.com>
+In-Reply-To:
+ <CAMuHMdXEL17KruAigL2Le+9ATLWo7hQqGZjaEsFKpDt7pQr_8g@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSCPR01MB14647:EE_|TYYPR01MB8136:EE_
+x-ms-office365-filtering-correlation-id: 0051a07e-8ac9-481a-9f24-08ddae45cb73
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dDdoVVJqUXRNMUMrUTZzZytSaEhraFcydXo4RDRpNmlVdStEdGR3MzM2S1Mw?=
+ =?utf-8?B?cHNiVkkzNEd0bGd1ME5jTU9xWDdJb1ZYOUJiNENCZVVMcFBjbnU0MmtXSHR3?=
+ =?utf-8?B?dVJVV0d0QzBVYi9ESTY5Z3NHSTBBZmlFZ05OUjRzandTVHhJTUFCREpmVlRQ?=
+ =?utf-8?B?bnlwVXpZWmdKWmkwcDNZNys2ak5qa25wK3BIaGZCb3JGYisyNERIcTEweis0?=
+ =?utf-8?B?VWVaNitMci94MEVDck1DUnBVbEhQR1JuelMzR0MxV1ozMkVSYTZFV1VBd0E2?=
+ =?utf-8?B?UFNzRkhpMCtRVW1SaDhFdFN6ZWdPYTdpcDZrKzNLMkE3UXZJNjFxWjRyc3Z4?=
+ =?utf-8?B?ZDQrOUh0TUpha2pRUVhLNDV0MWZpankxbzB2ZUlDNmJIRG1scUIybUt5UGQ3?=
+ =?utf-8?B?SGFYTWQvb2dkMDJjaW1SNmliSFpZeExnY2s3Mmp6cVNiUE5JT1lmU2xrOHk1?=
+ =?utf-8?B?VVJsYjhWcVMwKzNvd2Z4aEF5SFJPQlJIU2dWMm5Za2U2MWNWcGt2M3crRjRv?=
+ =?utf-8?B?OG56cDV4dHNZSU1NQytMU1ljQ04zVTk2UVljOFNaenM5UjJFTDFwQVpsUG1E?=
+ =?utf-8?B?MXNaam5rd05nU2F2eVdCUkptTkdtOFRENnRZbVNWaG9GNWRSMnNqQlNnaFh6?=
+ =?utf-8?B?MldsVGNQd1FoelRVaG11a24vZFo5cFNxSzRESDNlbVF0ZzVuRzByYXB1OHZh?=
+ =?utf-8?B?RG43dWpYY0JXd2N1ZVk3VUxlMHVTYnd2Qkhlekk2N1dXQUhJcVB1YXg3YmY1?=
+ =?utf-8?B?ZXhIOGV6RDduR1h2OTcrdlVRY3BLRGJ1aHZDSXNMaTRDSWs5dGNLVS9kTWRz?=
+ =?utf-8?B?c2JqYW9lN2lkamF2S2RVOERXeFFUVWMwQXJGclY2Z2ZFY0tWNlVySk1CSzRH?=
+ =?utf-8?B?SWRhbW5xWi80UHlvYzVlZGlNdFVyVDFINHExRFpiYlFzUDI2RUlDd3paVGFs?=
+ =?utf-8?B?WDgxYngvbCt0bGZrWVMvRmh1RmZxNlJTVW0zdEtJTngxVlFZd0ZmQSt2Smx4?=
+ =?utf-8?B?VkROM3VzTHdYR21tODNXTXJsWGtTZmFKSGdFU0VxMWxERUp5MHFFRzBiVkRJ?=
+ =?utf-8?B?R2NUakFwR1lEdVhETlhBcnpqdytaWFBsRDNMKzM2eDdzUE8xd0pWV1BjaGR3?=
+ =?utf-8?B?cm5SMnVra0hJb2FPYVk1RTJpNjJxTXl2Q3NybnRPZTZxY3ZhNEpWN1MrT2pU?=
+ =?utf-8?B?RVkrcmZDdks4OEsyWllOWkJrRlBIVUVtTkhReXhSZEMzWlF3YW1KZ3UxdVB6?=
+ =?utf-8?B?cGY0TWNXQnloSXhiNERlSG9FWmoydjdXTytHWFp0eS84d3RsNXN1cE5yOXVy?=
+ =?utf-8?B?NW5ockVodzh5SGYxMmNpZmNhZDlnRDNnN01GT3lVcWl1ekowbWc5NlM0RG1C?=
+ =?utf-8?B?L0dWSDcveUdvbytkOHFjV1IvMnJSWEt2ZmFueDVuK1VIM3dYSTNuMjFjNllq?=
+ =?utf-8?B?OHZvZVZYZEt4WFg3NkxnbVlxbHBSZ0hHR0ZlK0hjWXRGbUR3UmkvS1dJYmE5?=
+ =?utf-8?B?elBFQ0tMWXgxS0NSNU40NzN5dVVSWVBadWtsVS82SjlFQkRzZ0o0Y1Jac0M4?=
+ =?utf-8?B?clU1SUU5dXlOQzNNdi9JUUdOYlgyOEE2cXp3WjJnZy84VDBqdkR6NTBWZk1B?=
+ =?utf-8?B?Z3hBN3dVMXZwZEhmcGxvRUh5dnI0cTJNQmhnN0daeGtaNm12VFFyNVhUWDdx?=
+ =?utf-8?B?c050dGVmTFFxZ0cwMUQzSy9JaVhxUW8yemtKUWN2akdYUXNoRDlUcG5mVGMv?=
+ =?utf-8?B?d2IrbHNLTG5ZeFdoU3dWNS90TzRDSkMzaUhkT1o3MG1qMzJkcllKYXNHUkp0?=
+ =?utf-8?B?YUI3aFFvSkpnRWZhUEMxTUx6TVltTExRanNraDJIUk5lYVlCYnlDL0d1QWJI?=
+ =?utf-8?B?czdhWmpsWVpWdmhSSFVBODV5S1ZZeWc5T3JyMUYwWVZ3bGtRbVl4ckVGd2dv?=
+ =?utf-8?B?VFJZQzlCS2k3ZmV3VWcySHNHY3hiR2VTME15aDVhTURKV2FUeExjZVJvaTFm?=
+ =?utf-8?B?djVnR1R0V293PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSCPR01MB14647.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZEJkNWhQVzlqTDczaDRtMkgraGl2N1JYUlNFcmRrTDNqWVFBV2dDWG5YS2t2?=
+ =?utf-8?B?bVJqZ0ZqUkJlN0M5NlNvSWczWnRKZFJkaUthaG9ybysyRWdGVnhWQm5WMzUz?=
+ =?utf-8?B?NXhENHphUmp6b0htYXEvZFNRVE5CdEc4OFI3TDhiS1hPM1ZDaDRhQ3cvVEVw?=
+ =?utf-8?B?bXREdjA4SWtMend4OUd5bWk0cmtzTEdLUXNwNzRqeVg4RzhZK2s3bVRMWDQ1?=
+ =?utf-8?B?eGxTRXFDUFAxNGVQMkJDbzJMdG05Ym55Q3NlNGhVSDZ1c2krVWh6SHdHNDVV?=
+ =?utf-8?B?Ylk0VVoyK2ZtUUVtNXp1NHkrQ05iS3ZLbzZxb2p0allDbDdtNC9nUW5ZazZz?=
+ =?utf-8?B?TFd3Y2tyTFlTTU96bFR4K2RZamVQWmErUm93OFlmcFBkZS9iOFIvQVFtbzlN?=
+ =?utf-8?B?dHRsT1lTVjYvZnpLYVR4QnJVSU9XSG5mTythV0x4WjBHQzkzVEVSSnhpalZh?=
+ =?utf-8?B?QWZnODB5am01OW1zd2N3Q25GODZqajFkVkZRa3dHeFpCY2lib3psbHkwNHVj?=
+ =?utf-8?B?WTdWU3Q1VFpBZE1GVFN1WVp6VEhMVUF2R0s4b3d2OVpiR2VJQ2FGSkRmZU11?=
+ =?utf-8?B?andGUDNtbVB1bklkWlZ0bVhhemJWemc4alpRYSs1YUxlS1R4TGZGQmZFSWJD?=
+ =?utf-8?B?YUV4TXU3c200Rytwa2Z0L0hvMTJsTS9oQmNCQ0RkRGJqMzRMK0E3OEJMcUxN?=
+ =?utf-8?B?cEpwdENsRGtBU0pXZzMxN1REdUgySHZNMmYyTzFJOWNZS1hGRENRZlhnY25a?=
+ =?utf-8?B?Y0Vmek4yQ2J6b0s4QlRFQUhGVFpSY0J0V21ibUlFVEpUWHV2NlZGNkcxNG9F?=
+ =?utf-8?B?STVwVDUxckxZU20raVF1RzlicFF3UlBjb2VQSFhMWDY3UkY5WUJDL1VacDk1?=
+ =?utf-8?B?NVM2MlcwTDFTbkErTlhOMVhzZkhhalQzTUx0SHpMbC82Y3VDVnFpSmNyK0Q5?=
+ =?utf-8?B?RG9pbDRIa0hVa29FNHRwNmdUUGhzZEg4REhtQTlmOXorVEE1OEl0S3pmOEpN?=
+ =?utf-8?B?MXZwTXV3SDVIdXdJbWxJNFBXcTZHeWZGbFZzMVZ2VjhSY242K3FVVjZOR21n?=
+ =?utf-8?B?bkJTUmhxOTQxTk5pRjJDSFZlaEZoMkxWZmpOVFJDMHRYbFBnZHhFYTU5TUNO?=
+ =?utf-8?B?ZTB5cVlyNGVsV3I3SEpTeDJpdWxMYjlvTU4xQjN6TGlqbVZQZ3MzRFpPenZY?=
+ =?utf-8?B?SXFMRWtWcFpkYmJnRUN5Q2RxTXJDeUp3YXZvcG1RUm1kOXI1VjlZNitJTTFo?=
+ =?utf-8?B?L1FrTXBjYjJDRXVkSENtSGF2RTM2bGtnV2JXNjJpZ0N2V3VFeWwvenRjQ2tZ?=
+ =?utf-8?B?eEh3MWF6WHU3UFNwWjcvbFZIOXRaZWxVdHFETm54RjI5Z2JqTFgrZnpOOXoz?=
+ =?utf-8?B?RzZpdkR0ZkVZWitmQmU1d1FWVDh1Yi9LcTlpdk1lNGJVQWFPZ3lydy9DTENI?=
+ =?utf-8?B?T1VnSUc2QUdEOXVIZ1FuNy9OR0ZVYTRXajNEVUR1U1VkVUJTallwZGhmZzZT?=
+ =?utf-8?B?Sk5Zcm1aWWR1NFE4ZnNaUkpzNzJSTTJsSDROVVFncnAwNGp1b3hhYTQyeE1w?=
+ =?utf-8?B?UXN2cmVYcnJWMjBRMUw4TkFFRFVvWHZCenV1ZEZTYXJsQW1FbThwbG42MlJv?=
+ =?utf-8?B?dHZmcDMvUHVnbkVqMW5NRkxoeVNNZVQ3MmNhdCtmS2Zlc3RTWG5Bb1ZlbkF5?=
+ =?utf-8?B?SUpaTFFvZmE3WkVEL2FQZGNOaDVyNUkweStCTzZmMFJKOVNCbnh6QlUydUVC?=
+ =?utf-8?B?OGJJRWpIQ3pDN2FGaDZMeEJObkQ3akpzZndxTVFHSnJ0TnRBbVFVODlBdkti?=
+ =?utf-8?B?NW82c2tYV2RCZjlQbWhpdFA2Kzk0Tjlka2Z1L0xXWnRxTWorTHR6ZHRzZUJZ?=
+ =?utf-8?B?ZFc2THlJNFJsL0ZKTjlOSXJZS290dXdJR04raGdtRStiNlZma0RaQkJQSEZL?=
+ =?utf-8?B?OEZpY0xYaHZvNWFXSXYxaVpKdVlxemFFQVJNSWZOUUpxRjVqRXNwcmhjTnR0?=
+ =?utf-8?B?dndOTUZkK0JGV212UFJLeXViYW5SQmtkKzdoOGF2dm9RdEdLa3MzWWJmSGpW?=
+ =?utf-8?B?T09IaWl6Y2tYdW5qOWk3NXR6L1dZYjNSR3RWKzJuNkgvc3l1MFlLK3FqSmpn?=
+ =?utf-8?Q?zmcBSHdKe+4lfRcmlC7uOmCXP?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for
- large folio
-To: lizhe.67@bytedance.com
-Cc: akpm@linux-foundation.org, alex.williamson@redhat.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- peterx@redhat.com
-References: <ce2af146-499b-4fce-8095-6c5471fdf288@redhat.com>
- <20250618061143.6470-1-lizhe.67@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250618061143.6470-1-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSCPR01MB14647.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0051a07e-8ac9-481a-9f24-08ddae45cb73
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 08:54:54.5187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: l0pMgqjW/pK10k1/K1+vI9aYd/96C3trYLwQE+kzcqto/qxPmQ6HOSfUeAh3hMnAQESeZr7sZdkkmvj6RI9aBpTtQ1KzUqB871e+m3yCz2Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB8136
 
-On 18.06.25 08:11, lizhe.67@bytedance.com wrote:
-> On Tue, 17 Jun 2025 15:47:09 +0200, david@redhat.com wrote:
->   
->>> How do you think of this implementation?
->>>
->>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>> index 242b05671502..eb91f99ea973 100644
->>> --- a/include/linux/mm.h
->>> +++ b/include/linux/mm.h
->>> @@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
->>>           return folio_large_nr_pages(folio);
->>>    }
->>>    
->>> +/*
->>> + * folio_remaining_pages - Counts the number of pages from a given
->>> + * start page to the end of the folio.
->>> + *
->>> + * @folio: Pointer to folio
->>> + * @start_page: The starting page from which to begin counting.
->>> + *
->>> + * Returned number includes the provided start page.
->>> + *
->>> + * The caller must ensure that @start_page belongs to @folio.
->>> + */
->>> +static inline unsigned long folio_remaining_pages(struct folio *folio,
->>> +               struct page *start_page)
->>> +{
->>> +       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
->>> +}
->>> +
->>>    /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
->>>    #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
->>>    #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
->>> diff --git a/mm/gup.c b/mm/gup.c
->>> index 15debead5f5b..14ae2e3088b4 100644
->>> --- a/mm/gup.c
->>> +++ b/mm/gup.c
->>> @@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
->>>    
->>>           if (folio_test_large(folio))
->>>                   nr = min_t(unsigned int, npages - i,
->>> -                          folio_nr_pages(folio) - folio_page_idx(folio, next));
->>> +                          folio_remaining_pages(folio, next));
->>>    
->>>           *ntails = nr;
->>>           return folio;
->>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
->>> index b2fc5266e3d2..34e85258060c 100644
->>> --- a/mm/page_isolation.c
->>> +++ b/mm/page_isolation.c
->>> @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
->>>                                   return page;
->>>                           }
->>>    
->>> -                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
->>> +                       skip_pages = folio_remaining_pages(folio, page);
->>>                           pfn += skip_pages - 1;
->>>                           continue;
->>>                   }
->>> ---
->>
->> Guess I would have pulled the "min" in there, but passing something like
->> ULONG_MAX for the page_isolation case also looks rather ugly.
-> 
-> Yes, the page_isolation case does not require the 'min' logic. Since
-> there are already places in the current kernel code where
-> folio_remaining_pages() is used without needing min, we could simply
-> create a custom wrapper function based on folio_remaining_pages() only
-> in those specific scenarios where min is necessary.
-
-I would just do something like that, removing gup_folio_range_next() completely.
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 98a606908307b..6c224b1c6c169 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1995,6 +1995,32 @@ static inline long folio_nr_pages(const struct folio *folio)
-  	return folio_large_nr_pages(folio);
-  }
-  
-+/**
-+ * folio_remaining_pages - The remaining number of pages in the folio.
-+ * @folio: The folio.
-+ * @page: The folio page to start the counting.
-+ * @max_npages: Limit how far to count.
-+ *
-+ * The returned number will include the provided page.
-+ *
-+ * The caller must ensure that @page belongs to @folio. When setting
-+ * @max_npages to ULONG_MAX, the parameter is effectively ignored.
-+ *
-+ * Return: The remaining number of pages, limited by @max_npages.
-+ */
-+static inline unsigned long folio_remaining_pages(struct folio *folio,
-+		struct page *page, unsigned long max_npages)
-+{
-+	unsigned long nr;
-+
-+	if (!folio_test_large(folio))
-+		return 1;
-+	nr = folio_large_nr_pages(folio) - folio_page_idx(folio, page);
-+	if (__builtin_constant_p(max_npages) && max_npages == ULONG_MAX)
-+		return nr;
-+	return min_t(unsigned long, nr, max_npages);
-+}
-+
-  /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
-  #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
-  #define MAX_FOLIO_NR_PAGES	(1UL << PUD_ORDER)
-diff --git a/mm/gup.c b/mm/gup.c
-index 6888e871a74a9..3385428d028f6 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -234,21 +234,6 @@ void folio_add_pin(struct folio *folio)
-  	}
-  }
-  
--static inline struct folio *gup_folio_range_next(struct page *start,
--		unsigned long npages, unsigned long i, unsigned int *ntails)
--{
--	struct page *next = nth_page(start, i);
--	struct folio *folio = page_folio(next);
--	unsigned int nr = 1;
--
--	if (folio_test_large(folio))
--		nr = min_t(unsigned int, npages - i,
--			   folio_nr_pages(folio) - folio_page_idx(folio, next));
--
--	*ntails = nr;
--	return folio;
--}
--
-  static inline struct folio *gup_folio_next(struct page **list,
-  		unsigned long npages, unsigned long i, unsigned int *ntails)
-  {
-@@ -356,11 +341,13 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
-  				      bool make_dirty)
-  {
-  	unsigned long i;
--	struct folio *folio;
-  	unsigned int nr;
-  
-  	for (i = 0; i < npages; i += nr) {
--		folio = gup_folio_range_next(page, npages, i, &nr);
-+		struct page *next = nth_page(page, i);
-+		struct folio *folio = page_folio(next);
-+
-+		nr = folio_remaining_pages(folio, next, npages - i);
-  		if (make_dirty && !folio_test_dirty(folio)) {
-  			folio_lock(folio);
-  			folio_mark_dirty(folio);
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index ece3bfc56bcd5..6f75defb38d73 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
-  				return page;
-  			}
-  
--			skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
-+			skip_pages = folio_remaining_pages(folio, page, ULONG_MAX);
-  			pfn += skip_pages - 1;
-  			continue;
-  		}
--- 
-
-
-But up to you, anything with such a helper function makes the code easier to digest.
-
--- 
-Cheers,
-
-David / dhildenb
-
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhr
+Lm9yZz4NCj4gU2VudDogVHVlc2RheSwgSnVuZSAxNywgMjAyNSA1OjMyIFBNDQo+IFRvOiBKb2hu
+IE1hZGlldSA8am9obi5tYWRpZXUueGFAYnAucmVuZXNhcy5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjIgMi8zXSBhcm02NDogZHRzOiByZW5lc2FzOiByOWEwOWcwNDc6IEFkZCBHQkVUSA0K
+PiBub2Rlcw0KPiANCj4gSGkgSm9obiwNCj4gDQo+IE9uIFdlZCwgMTEgSnVuIDIwMjUgYXQgMTE6
+MDEsIEpvaG4gTWFkaWV1IDxqb2huLm1hZGlldS54YUBicC5yZW5lc2FzLmNvbT4NCj4gd3JvdGU6
+DQo+ID4gQWRkIEdCRVRIIG5vZGVzIHRvIFJaL0czRSAoUjlBMDlHMDQ3KSBTb0MgRFRTSS4NCj4g
+Pg0KPiA+IFJldmlld2VkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+
+DQo+ID4gVGVzdGVkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogSm9obiBNYWRpZXUgPGpvaG4ubWFkaWV1LnhhQGJwLnJlbmVzYXMu
+Y29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPiANCj4gPiAtLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjlhMDlnMDQ3LmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3JlbmVzYXMvcjlhMDlnMDQ3LmR0c2kNCj4gPiBAQCAtNzU5LDYgKzc1OSwyMTMg
+QEAgY3NpMmNydTogZW5kcG9pbnRAMCB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICAgICAg
+ICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBldGgwOiBldGhlcm5ldEAxNWMzMDAw
+MCB7DQo+IA0KPiBbLi4uXQ0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtZGlvIHsN
+Cj4gDQo+IFlvdSBwcm9iYWJseSB3YW50IHRvIGFkZCBhIGxhYmVsIChtZGlvMCkgaGVyZS4uLg0K
+PiANCg0KTm90ZWQuDQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAic25wcyxkd21hYy1tZGlvIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+fTsNCj4gDQo+ID4gKyAgICAgICAgICAgICAgIGV0aDE6IGV0aGVybmV0QDE1YzQwMDAwIHsNCj4g
+DQo+IFsuLi5dDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG1kaW8gew0KPiANCj4g
+Li4uIGFuZCBoZXJlIChtZGlvMSksIGZvciBlYXNpZXIgY29uZmlndXJhdGlvbiBvZiB0aGUgUEhZ
+IGluIHRoZSBib2FyZC0NCj4gc3BlY2lmaWMgRFRTLg0KPiANCg0KTm90ZWQuDQoNCldpbGwgYWRk
+cmVzcyB0aGF0IGluIHYzLg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gInNucHMsZHdtYWMtbWRpbyI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIH07DQo+IA0KPiBUaGUgcmVzdCBMR1RNLCBzbw0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0
+dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4gDQo+IEdye29ldGplLGVldGlu
+Z31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQoNClJlZ2FyZHMs
+DQpKb2huDQoNCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBM
+aW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0NCj4gbTY4ay5vcmcNCj4gDQo+IEluIHBl
+cnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxm
+IGEgaGFja2VyLg0KPiBCdXQgd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qg
+c2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcNCj4gbGlrZSB0aGF0Lg0KPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
