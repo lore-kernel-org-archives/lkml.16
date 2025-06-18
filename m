@@ -1,235 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C318B25B1C5;
-	Wed, 18 Jun 2025 08:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149202556E;
+	Wed, 18 Jun 2025 08:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750237015; cv=none; b=UwdSE7XY6TkGp5q2+fIwrjGo/HJ+OMytLKeWUMiSOfToY+QVfEwiHG3xlaH8PgTdwZWUCaF8gxvfCC74UKrhIcKoNUqt3+q2w3DD6KiuqxAZP/10DSkxX179b/jb8IpadDc/ZoJxoMO0QUUI1zBlS7Rqc7M0GDZpe3fLRV7jLd4=
+	t=1750237081; cv=none; b=lIxOWiYcfxaGgre+nkt4adGmG8H2/OMwnGgbGjB0yRVnUoR6RfIGV9G0a6gX+TfFTjFi9LZNj/zXeH+MS8Iz5v2W1peWioUbk3GZJm2LGMgFzaJOL/lUEwhTquXCfUbDkUav4zkwAbYWQe93ZfDFpKMcDyNWA5TRB/d9JofeayI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750237015; c=relaxed/simple;
-	bh=9To1BSpsPsNIGrHogpM+R444lxBSfMxpMbu2q+8LxE4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pB9mafOcHPup0eUOTgXc5MG2jWbJBHpQ0RnYkNbiI+lwjXk1Gm4MHNTreaJtqqVRS3eNf75uC1IlSuhjjvqBg7GYqebyiEPORdjtAfQMwmMuIBDXDLlGcIwYhZRIGBlGq2H9j7cA3PqmYltjmk9ag3dN/mmbUN8IhgNvQ4Xnnh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMctd6GXjz6L570;
-	Wed, 18 Jun 2025 16:52:09 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6CD6B140426;
-	Wed, 18 Jun 2025 16:56:49 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 18 Jun
- 2025 10:56:48 +0200
-Date: Wed, 18 Jun 2025 09:56:46 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ivan Vecera <ivecera@redhat.com>
-CC: <netdev@vger.kernel.org>, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko
-	<jiri@resnulli.us>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Prathosh Satish
-	<Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson
-	<shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, Michal Schmidt <mschmidt@redhat.com>, Petr Oros
-	<poros@redhat.com>
-Subject: Re: [PATCH net-next v11 03/14] dpll: Add basic Microchip ZL3073x
- support
-Message-ID: <20250618095646.00004595@huawei.com>
-In-Reply-To: <20250616201404.1412341-4-ivecera@redhat.com>
-References: <20250616201404.1412341-1-ivecera@redhat.com>
-	<20250616201404.1412341-4-ivecera@redhat.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750237081; c=relaxed/simple;
+	bh=wqrA8bKqxtN3oLYl0+ONBhmLPe1OSnjffCbLNpdz1kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oYpiFv4AMdSfu7o3vO4dsiHAEwVQCByld9LkM86jRNhGF0xfpMsnWl7L5M4NBFFREQzkVY46GBLX6fjIWNyac74acLBDajHdio29183ou1DdlD9lVOgMAzQQssmeu2NS2vtkX5t/joBGs2OFClCOoj1fiKOlewtwdNRwXPrxBN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Th1bX929; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th1bX929"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6783DC4CEE7;
+	Wed, 18 Jun 2025 08:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750237080;
+	bh=wqrA8bKqxtN3oLYl0+ONBhmLPe1OSnjffCbLNpdz1kg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Th1bX929khRVUWpVsv5RPOq70HqpzMbAWPN0PsLo7//IZKJRWrBq+Fe3HVWzymrwK
+	 hK9f/BQi1o15BjH9kDRRIb37zeNnkzM5o+8ONhM6EfYMXfgh647tIrhZYqoU/IG1qB
+	 dP0mL9tuETQEAx4YKjkemIc+afhaLP0HxT0YDkByN+dVXT/upjq4C9A62gjZUwK3ic
+	 n0j7st3u4XQ5KfMVaE9seunzMCMmPWWzesgCUAFf21lscBqYYMhoCuMIi9KmhmCJQi
+	 ogMKEpFQ02H+zlKYVdKw8ExRS+AVjMc6t/nGrIUPR+cg19J5mh4bMFE4G8PCW1fROb
+	 7mxTqxBNPFTuQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRocJ-000000002S6-0sc6;
+	Wed, 18 Jun 2025 10:57:59 +0200
+Date: Wed, 18 Jun 2025 10:57:59 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH ath-next v3 5/6] wifi: ath11k: choose default PM policy
+ for hibernation
+Message-ID: <aFJ_l_BbjxXDBJDD@hovoldconsulting.com>
+References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
+ <20250328-ath11k-bring-hibernation-back-v3-5-23405ae23431@quicinc.com>
+ <d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com>
+ <aFJ-SwT1g500h3kC@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFJ-SwT1g500h3kC@hovoldconsulting.com>
 
-On Mon, 16 Jun 2025 22:13:53 +0200
-Ivan Vecera <ivecera@redhat.com> wrote:
-
-> Microchip Azurite ZL3073x represents chip family providing DPLL
-> and optionally PHC (PTP) functionality. The chips can be connected
-> be connected over I2C or SPI bus.
+On Wed, Jun 18, 2025 at 10:52:27AM +0200, Johan Hovold wrote:
+> On Wed, Jun 18, 2025 at 02:15:04AM +0200, Konrad Dybcio wrote:
+> > On 3/28/25 6:32 AM, Baochen Qiang wrote:
+> > > Now WoWLAN mode is chosen for those machines listed in the quirk table.
+> > > This works for suspend (S3) but breaks for hibernation (S4), because
+> > > WoWLAN mode requires WLAN power to be sustained, which is not the case
+> > > during hibernation. For hibernation, the default mode should be used.
+> > > 
+> > > Register a PM notifier with which kernel can notify us of the actual PM
+> > > operation: if system is going to suspend, the original PM policy is
+> > > honored; while if it is hibernation, overwrite it with default policy.
+> > > 
+> > > To summarize: for suspend (S3), WoWLAN mode is chosen for machines listed
+> > > in the quirk table, non-WoWLAN mode for others; for hibernation (S4),
+> > > non-WoWLAN mode is chosen for all.
+> > > 
+> > > Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+> > > 
+> > > Tested-by: Takashi Iwai <tiwai@suse.de>
+> > > Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+> > > ---
+> > 
+> > I've bisected the following splat to this patch, still happening on
+> > linux-next/master, WCN6855 + SC8280XP CRD, 100% reproducibility 
 > 
-> They have the following characteristics:
-> * up to 5 separate DPLL units (channels)
-> * 5 synthesizers
-> * 10 input pins (references)
-> * 10 outputs
-> * 20 output pins (output pin pair shares one output)
-> * Each reference and output can operate in either differential or
->   single-ended mode (differential mode uses 2 pins)
-> * Each output is connected to one of the synthesizers
-> * Each synthesizer is driven by one of the DPLL unit
+> WFIW, I'm not seeing this with 6.16-rc2 (which has this patch) on either
+> the X13s or sc8280xp-crd (ath11k now fails to resume on the latter
+> because of missing regulatory data, but that appears to be a separate
+> regression).
+
+Scratch that bit about failing to resume, it's just a warning that's
+new.
+
+> > [root@sc8280xp-crd ~]# echo mem > /sys/power/state 
+> > [   20.267830] fb0: Framebuffer is not in virtual address space.
+> > [   39.863070] PM: suspend entry (s2idle)
+> > [   39.908067] Filesystems sync: 0.035 seconds
+> > [   39.934453] ------------[ cut here ]------------
+> > [   39.939259] Invalid notifier called!
+> > [   39.939268] WARNING: CPU: 5 PID: 513 at kernel/notifier.c:79 notifier_call_chain+0x84/0x1a4
+> > [   39.951566] Modules linked in:
+> > [   39.954732] CPU: 5 UID: 0 PID: 513 Comm: bash Not tainted 6.14.0-rc4longbois-01215-g32d93b51bc7e #12177
 > 
-> The device uses 7-bit addresses and 8-bits values. It exposes 8-, 16-,
-> 32- and 48-bits registers in address range <0x000,0x77F>. Due to 7bit
-> addressing, the range is organized into pages of 128 bytes, with each
-> page containing a page selector register at address 0x7F.
-> For reading/writing multi-byte registers, the device supports bulk
-> transfers.
+> 6.14?
 > 
-> Add basic functionality to access device registers and probe
-> functionality for both I2C and SPI cases.
-> 
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-A few trivial drive by comments.
+> > [   39.964396] Hardware name: Qualcomm QRD, BIOS 6.0.230525.BOOT.MXF.1.1.c1-00114-MAKENA-1 05/25/2023
 
-> diff --git a/drivers/dpll/zl3073x/i2c.c b/drivers/dpll/zl3073x/i2c.c
-> new file mode 100644
-> index 0000000000000..bca1cd729895c
-> --- /dev/null
-> +++ b/drivers/dpll/zl3073x/i2c.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "core.h"
-> +
-> +static int zl3073x_i2c_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct zl3073x_dev *zldev;
-> +
-> +	zldev = zl3073x_devm_alloc(dev);
-> +	if (IS_ERR(zldev))
-> +		return PTR_ERR(zldev);
-> +
-> +	zldev->regmap = devm_regmap_init_i2c(client, &zl3073x_regmap_config);
-> +	if (IS_ERR(zldev->regmap)) {
-> +		dev_err_probe(dev, PTR_ERR(zldev->regmap),
-> +			      "Failed to initialize regmap\n");
-> +		return PTR_ERR(zldev->regmap);
-As below.
-
-> +	}
-
-> diff --git a/drivers/dpll/zl3073x/spi.c b/drivers/dpll/zl3073x/spi.c
-> new file mode 100644
-> index 0000000000000..219676da71b78
-> --- /dev/null
-> +++ b/drivers/dpll/zl3073x/spi.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#include "core.h"
-> +
-> +static int zl3073x_spi_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct zl3073x_dev *zldev;
-> +
-> +	zldev = zl3073x_devm_alloc(dev);
-> +	if (IS_ERR(zldev))
-> +		return PTR_ERR(zldev);
-> +
-> +	zldev->regmap = devm_regmap_init_spi(spi, &zl3073x_regmap_config);
-> +	if (IS_ERR(zldev->regmap)) {
-> +		dev_err_probe(dev, PTR_ERR(zldev->regmap),
-> +			      "Failed to initialize regmap\n");
-> +		return PTR_ERR(zldev->regmap);
-
-return dev_err_probe();
-One of it's biggest advantages is that dev_err_probe() returns the
-ret value passed in avoiding duplication like this and saving
-a few lines of code each time.
-
-> +	}
-> +
-> +	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
-> +}
-> +
-> +static const struct spi_device_id zl3073x_spi_id[] = {
-> +	{
-> +		.name = "zl30731",
-> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30731],
-
-Not my subsystem so up to you, but in general over time we've found that
-an enum + array tends to bring few benefits over appropriately named
-zl30731_chip_info separate structures.
-
-> +	},
-> +	{
-> +		.name = "zl30732",
-> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30732],
-> +	},
-> +	{
-> +		.name = "zl30733",
-> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30733],
-> +	},
-> +	{
-> +		.name = "zl30734",
-> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30734],
-> +	},
-> +	{
-> +		.name = "zl30735",
-> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30735]
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
-> +
-> +static const struct of_device_id zl3073x_spi_of_match[] = {
-> +	{
-> +		.compatible = "microchip,zl30731",
-> +		.data = &zl3073x_chip_info[ZL30731]
-> +	},
-> +	{
-> +		.compatible = "microchip,zl30732",
-> +		.data = &zl3073x_chip_info[ZL30732]
-> +	},
-> +	{
-> +		.compatible = "microchip,zl30733",
-> +		.data = &zl3073x_chip_info[ZL30733]
-> +	},
-> +	{
-> +		.compatible = "microchip,zl30734",
-> +		.data = &zl3073x_chip_info[ZL30734]
-> +	},
-> +	{
-> +		.compatible = "microchip,zl30735",
-> +		.data = &zl3073x_chip_info[ZL30735]
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, zl3073x_spi_of_match);
-> +
-> +static struct spi_driver zl3073x_spi_driver = {
-> +	.driver = {
-> +		.name = "zl3073x-spi",
-> +		.of_match_table = zl3073x_spi_of_match,
-> +	},
-> +	.probe = zl3073x_spi_probe,
-> +	.id_table = zl3073x_spi_id,
-> +};
-> +module_spi_driver(zl3073x_spi_driver);
-> +
-> +MODULE_AUTHOR("Ivan Vecera <ivecera@redhat.com>");
-> +MODULE_DESCRIPTION("Microchip ZL3073x SPI driver");
-> +MODULE_IMPORT_NS("ZL3073X");
-> +MODULE_LICENSE("GPL");
-
+Johan
