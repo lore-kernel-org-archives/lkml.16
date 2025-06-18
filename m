@@ -1,135 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D8D3085C7;
-	Wed, 18 Jun 2025 19:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96D33085A0;
+	Wed, 18 Jun 2025 19:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273308; cv=none; b=dAXUi9/1Qh33LJRR8qOQsQ5hEMZeYtkGvxlWelvOCYxCQNVIl0owirkk5O87dgzBEFFcBCUdHLqEv0XbhuyMNVpEA/bP9yCic3Pm8prv95PqoMipTLTRlKBhb3xknmrfxj6tzTjmCg1x8fBGUjsJhQBG7S+N0Oga+SuCIZ8dBMU=
+	t=1750273605; cv=none; b=Y40O9PRbdfhCdC81WShxxTw6Lo3Sbo1ELTmQNXDad9UkQFvcj55qzlgvu5DcnVg3pL/qfh6ehLjqBM4CHnaq/rQpDTxIMOLTo9gQzTWnXghy0pfC7tzG9nrthTO3CfuzY6vD7q6nrmEIubOHs2Y9YgKYqchBOwV527V/l8mD7fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273308; c=relaxed/simple;
-	bh=+KcHMYRo/RJ8EBPeL+YSCOGo7cPihC08cm5ZqMYgQMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IG0YMNjcarjoQiRwuzXaxP2oSfLVWILGPwSgqhFCUcudLFNGxuLiJPfop+2fpLx1HMteHeY3lDLjsnnWHuyc5jVa5ry4vQFf7/2ONWx9Svt6qvkzBp0erflWSS4MaLK5NWfV/ZXvJQ8mxkTfn9CK9wpz74+wmOeiOduq55I5DWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIUbZUIf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750273605; c=relaxed/simple;
+	bh=EHmiysc4K5wFAmpABIog2DSAWbEeaG2Fbtlw/lbgzZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UoM1xuEYH6OtiRLUzkUw0GexjaNXRg0dYWb2iIyz6w2LsE6Qq118xMuOk2e6Ku9YK9iZ0TsiqjaN+6XRadBGFiyB9aWA61FGY9Cd/kw8PMjM3Th+PH/cuSX+T3l9sKK32trWuuWnh0dwI/VXRtCVmDlprufS7eDgSV9rSQs7/iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYRg7pu4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIUbZUIf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8753C4CEE7;
-	Wed, 18 Jun 2025 19:01:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYRg7pu4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 456D9C4CEE7;
+	Wed, 18 Jun 2025 19:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750273307;
-	bh=+KcHMYRo/RJ8EBPeL+YSCOGo7cPihC08cm5ZqMYgQMQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aIUbZUIfrIdiBvY7idLtRJUkaYJ/xfiqwwQy1OIAx52V25PKkcPJxJguQWRzuJpqj
-	 ZNkzWYcW1f3fbhWO2Ifn4bIqQ3Qc0WSETv37uz/c6+kReljDLKiRamHSOzWV7NoBwr
-	 yM0rznDrbbdHO4p8NdjbNFaZ2IkKFuFze+Iv3Symvxv0E9OqhZyhx99BFyxVL7iuP9
-	 R64qMpQuljf5g6JkieRXZRRtqJrl4SuGUMJNMnfm/PVWMRTKx+QBO2LizPLw5AJYqz
-	 RGDkV2KIFBK0hXOskyjmT6FsqVAMyalrPDSyK+RXe0Zv2DKjNee4pwjVrpykcIQeFF
-	 wtNZo2r7FTkCg==
-Date: Wed, 18 Jun 2025 14:01:46 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	christophe leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-Message-ID: <20250618190146.GA1213349@bhelgaas>
+	s=k20201202; t=1750273605;
+	bh=EHmiysc4K5wFAmpABIog2DSAWbEeaG2Fbtlw/lbgzZU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MYRg7pu4mQudGg+o8zANIqWe0R7Pm6I4h4TpH/dIyr/1nXcV9nhP3VfyyUIf7QYeE
+	 OYEURR5eikNl/sNhlmL/oEbLZyB4x0GEtwjFUXrInYlQKkqalRgXDF7rScgsuNiWUR
+	 b5Hfp1JJr2kZehk6dDnu2/zEsiXo/2iQBXh4yo8L/wQhvGSDQcoqhDSJOcURga3+bf
+	 zQ6WTsXVHPGaH2MDHDgW20iTyyHr8EEEE9IGqs0TLhA9wcsqx3Jo9v3aRPVA2+JHRB
+	 neanNkD++1zYD/8LqqekBtJ6cT/hGWTCxS87iDBksYJ5TOg7YmNuIi47sJ8vT3IZIp
+	 q3YZrcLXjmiGg==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6060a70ba80so441eaf.2;
+        Wed, 18 Jun 2025 12:06:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMOS4m6apZ8acPX2DMTFS1Leuw6AbGpOK5ZJjnPK3V0Uy0u9k+JMUC1g7qqiR+enIzvfDPta700uifvOhw@vger.kernel.org, AJvYcCXppFvSjHf9sWp0es41v6b62hBv15qJPzp38sk7I4WBrl8pk8+JlEbEDNh6ykDkW0v3b5PUsv/9UdWx@vger.kernel.org, AJvYcCXpqJ8FlMnvK/VaTx//dFoFp3c89PmJOzlOR5yNQiS7e7BqDRaJ+ZYorQXL4bUBQYgNddPTGfS0wQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqJoXg4c9K+dLcN+x4O71AA5XB5q6jWaR/CJu1U62mKXiQ55IA
+	BHds1VGDD/VlJX5DtPAWX43HlUWtLwNEXhSuEVOTWpjvHbtOzpU39Ll/uJakbzYQIaBFa0Zk2wD
+	Y0SFHsgPZcVYQYIN+zGHGJBs5I3q0hPs=
+X-Google-Smtp-Source: AGHT+IFDAhZp4oOZmcVULYoPnu3Ouw/DcQLKRdnhxYk96qIBfbDhtVKhqkWyeJRSQzQaJkZHv0Pl/v4xe0PLXQADyAU=
+X-Received: by 2002:a05:6820:823:b0:611:2c55:3a4f with SMTP id
+ 006d021491bc7-6112c553b7emr5048981eaf.2.1750273604624; Wed, 18 Jun 2025
+ 12:06:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <300098407.1310656.1750265939231.JavaMail.zimbra@raptorengineeringinc.com>
+References: <20250526113057.3086513-1-zhenglifeng1@huawei.com> <9c82abca-0772-444c-8122-59a953c83984@huawei.com>
+In-Reply-To: <9c82abca-0772-444c-8122-59a953c83984@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 18 Jun 2025 21:06:32 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hyMANsOwskEUi1c3XB+heE6z0_-Dk1nqnw-SbZ0dM3zA@mail.gmail.com>
+X-Gm-Features: AX0GCFu09GYGv3-1LtFQtFZlu_rSLSPXEyv-4bIne3RWnOaGRgRR2K9KgIagK-A
+Message-ID: <CAJZ5v0hyMANsOwskEUi1c3XB+heE6z0_-Dk1nqnw-SbZ0dM3zA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] cpufreq: CPPC: Some optimizations for cppc_cpufreq.c.
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>, viresh.kumar@linaro.org
+Cc: robert.moore@intel.com, lenb@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
->  state
+On Tue, Jun 17, 2025 at 4:33=E2=80=AFAM zhenglifeng (A) <zhenglifeng1@huawe=
+i.com> wrote:
+>
+> Gentle ping.
+>
+> On 2025/5/26 19:30, Lifeng Zheng wrote:
+> > This patch series makes some minor optimizations for cppc_cpufreq.c to
+> > makes codes cleaner.
+> >
+> > Lifeng Zheng (3):
+> >   cpufreq: CPPC: Remove cpu_data_list
+> >   cpufreq: CPPC: Return void in populate_efficiency_class()
+> >   cpufreq: CPPC: Remove forward declaration of
+> >     cppc_cpufreq_register_em()
+> >
+> >  drivers/cpufreq/cppc_cpufreq.c | 59 +++++++++-------------------------
+> >  include/acpi/cppc_acpi.h       |  1 -
+> >  2 files changed, 15 insertions(+), 45 deletions(-)
 
-Weird wrapping of last word of subject to here.
+I've started to process this because it has been sent to linux-acpi
+and then I realized that Viresh should take it, but since I've applied
+it already, I may as well queue it up for 6.17.
 
-> The PCIe specification allows three attention indicator states,
-> on, off, and blink.  Enable all three states instead of basic
-> on / off control.
-> 
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-> ---
->  drivers/pci/hotplug/pnv_php.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-> index 0ceb4a2c3c79..c3005324be3d 100644
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -440,10 +440,23 @@ static int pnv_php_get_adapter_state(struct hotplug_slot *slot, u8 *state)
->  	return ret;
->  }
->  
-> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8 *state)
-> +{
-> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
-> +	struct pci_dev *bridge = php_slot->pdev;
-> +	u16 status;
-> +
-> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
-> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
+Viresh, please let me know if you have any concerns about it.
 
-Should be able to do this with FIELD_GET().
-
-Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
-log doesn't mention it, and as far as I can tell, this would be the
-only driver to do that.  Most expose only the attention status (0=off,
-1=on, 2=identify/blink).
-
-> +	return 0;
-> +}
-> +
-> +
->  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
->  {
->  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->  
-> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
-
-This is a change worth noting.  Previously we didn't read the AIC
-state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
-keep track of whatever had been previously set via
-pnv_php_set_attention_state().
-
-Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
-that php_slot->attention_state is still needed at all.
-
-Previously, the user could write any value at all to the sysfs
-"attention" file and then read that same value back.  After this
-patch, the user can still write anything, but reads will only return
-values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
-
->  	*state = php_slot->attention_state;
->  	return 0;
->  }
-> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot *slot, u8 state)
->  	mask = PCI_EXP_SLTCTL_AIC;
->  
->  	if (state)
-> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
-> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
-
-This changes the behavior in some cases:
-
-  write 0: previously turned indicator off, now writes reserved value
-  write 2: previously turned indicator on, now sets to blink
-  write 3: previously turned indicator on, now turns it off
-
->  	else
->  		new = PCI_EXP_SLTCTL_ATTN_IND_OFF;
->  
-> -- 
-> 2.39.5
+Thanks!
