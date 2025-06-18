@@ -1,251 +1,406 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2052.outbound.protection.outlook.com [40.92.40.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E3328DB62
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750263270; cv=none; b=engQIogw9TJGdKt3R5o7jMSJ8NL9a7sronPv4iXyy+Omeal9JHiUF+nmNBSS9vs0hIRbnF6O6cxYCu/hyPCDC1GpeAYDQ4dl7pszdxoNG6NHM0H3V41bTCp5IFf0DJFTYxQEDNxcFiw0bHBH6itSKpLH+/HUU33tWSTfM6iJZ3Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750263270; c=relaxed/simple;
-	bh=SqqhJ8mOIg55dmbqfeFWD5nnZuIaSJAzk6LWwq97lSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZoV8QR39KCuJ2WU3Yvok1/O/MIzMm+Lhbb6ro3zbxXuCkkvi0DHGyMrR0coUBAUoRrNQZjLl4sh1F9XBm5kAjoG+CCs+7XEsVWVl4Hr7DN4IxUN3DUnGPnDDd7KM9UK1IjMeDoP35KhURxGS5HQ96r3fZGnKqBsU2PfP8POEeOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XXL2Zy4A; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93808261584;
+	Wed, 18 Jun 2025 16:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750263442; cv=fail; b=h3U3Dp1AWHxeTjGO45GMhGV9Lpe8SLvS5TKjHJ4Q61xghyC3zlBCL4d57/4N/xLUmPJkyZorByJDC4FfIVroq5CYEC13BAZMdKSi1arMMinTOOaMZvxFhDrYMH9AN6c3Z9XHevKAUwvf4VrvwRYt6APB1+fAQ1oP4LpJmWdXu84=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750263442; c=relaxed/simple;
+	bh=iDihDCCiPKnzrl5H7Qa+uc8McXJUHlJtaUacNVdTnco=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=X8DbydNwxyizt7/ujOTi6ZWk7d+3Rq0plEkH+XhXVSX3a/2+p4Fm2Hxm4YJtQA33+Y+2wTokPBbSbs4c4R4hLci4TWTDo8ZUZlCdXHyeD8bas+5YRsSmlS7g6GICG63z2jQImq3hweIE+78ndoi2ET6JKBlJd5F/tpY6qmC8xH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=W+U9E+cJ; arc=fail smtp.client-ip=40.92.40.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XXL2Zy4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750263267;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qv6rWz3G7zQ3HwLveL9JzkEtus+WQoTHanBk5L+liRk=;
-	b=XXL2Zy4AHVH4qFDXFHhKEMJV3NEDMog8o1H81HPE939lL/7AT5iDz9gmXBOcWo7zkmFKQI
-	L+LXYgUF/2mS9Rau1IgnoYtIhtWClhgCQkOKDxsflDbzBMJYDM+treyEWdmCwlVpAj778C
-	W6koVWqV42XU51PWTBYH0NK6eyRqkjo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-UUJ4GFUQOuGVTp0nxH150A-1; Wed, 18 Jun 2025 12:14:26 -0400
-X-MC-Unique: UUJ4GFUQOuGVTp0nxH150A-1
-X-Mimecast-MFC-AGG-ID: UUJ4GFUQOuGVTp0nxH150A_1750263265
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso46585275e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:14:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750263265; x=1750868065;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qv6rWz3G7zQ3HwLveL9JzkEtus+WQoTHanBk5L+liRk=;
-        b=ssOfXlovhtQESRtfgaF0jhQDPZZFpB7PJFDRRauQFHfLX0SG8pjpvJhCZFnG6zSj/E
-         z+aT81WniniC5WxdR+U1JgPydYuolyHXafmiYHaP0BUeFJWNpL99gsuscgMEu/Htea39
-         VrLl+7etose/q6RBbPz0G6EHW/m4pc9CuleYxtJJiZtMKLRlnS9lQqgrv05CMB5dtB3s
-         9Mt4A2SUY+uKP/AcSs8eScUDjFolfSnF0UtnYmPaM/5/wyXztK+YokXqLuP0K+87i/GZ
-         9bDGfcl4eCIGZfqih9uJReGjGl3/E7Qi/mKhlD3g64vuNJE552XoIPAae2uiIDZq2eAi
-         So4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVVlmCcIlqGe2e1gpzgzuLhTRXpglH/8LFsygnLCx+Edbzkd0ObBKKiYWEB8ZNDqAw/fxwAEU4WC1T3LWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeM2CEtdJRB90YPw5kyrWp9IC+trruDNYu+f28P1fe9vcjgx6q
-	KXF35unvfanQsx0UncZOWJg5EC3oOOJQNvJiM0J5PjY1Mu6Qvmr7Xdd3JcSFEtUVoeCSTaFFVBP
-	T8jIDMs5ifMuf8AVE7VCDR6yFigIO0MEv04eWX1qYO+wbOukEOM2UkOjR0rJB0PB5lQ==
-X-Gm-Gg: ASbGncvBEufDaPsEzDXKEMTLB2D3KPHk31K4xtS/RC2qxs05uYfknpEO1dIRhrfT0Gx
-	qADwL82GLAULJtWX5ZHEeCmCp3PjAY6V2ZVbeGSTpdvXbyxIRZoCU2mJYom0X6wxdry8Z/G4YWp
-	pit/Sxg/ipZ6Sf+9zaZXkfNINttlD636XJCGykbcDo5hKESjwq4dWpkg75QQrPcD+ODw2I36RHj
-	IFBsImjnmi2wu5uK0hjds1ht+N0x3e5FuLvFQyzsupRua7dBVfvsm6erlIvw3RowJ91dWL2FE3F
-	evw6PlHv9JkjKWYr63nXaso/ALu2gx8BmnsbD+mChyx2UiXieiBd13fXFg2wUZumHYSUImU9Vrj
-	HOlEdgh+7AtN6a/gv07QIyZmTmYAkKtIYizB8YrLwn6x+KDM=
-X-Received: by 2002:a05:600c:a089:b0:441:d4e8:76cd with SMTP id 5b1f17b1804b1-4533cb55c28mr171957925e9.29.1750263264608;
-        Wed, 18 Jun 2025 09:14:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9DGEuzgpP2c+6KXNCStjPN6PpIwlpQzQ+R7yaqZtF8tW81pjSe7ZCl5P8XepH5ib4ANXh/A==
-X-Received: by 2002:a05:600c:a089:b0:441:d4e8:76cd with SMTP id 5b1f17b1804b1-4533cb55c28mr171957635e9.29.1750263264182;
-        Wed, 18 Jun 2025 09:14:24 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97abf6sm1813025e9.6.2025.06.18.09.14.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 09:14:23 -0700 (PDT)
-Message-ID: <738669ec-a9e5-4ba1-85a7-605cb4132d05@redhat.com>
-Date: Wed, 18 Jun 2025 18:14:22 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="W+U9E+cJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xCItztMDoyeR6zgHJ4cMVsaAL9XjSYcZNhl9k+sp1Ryj55uvDGBhi6XLc6DV7hemS1X+9qb44SjV+ayzueaCW8g2I4dixn4DlELc1GM68e51Rpc/rdxbw1GXioVw6tZbhkd15xiJ8M5kdJw1T7jJ2h7H/JnAk0WZDa+b+STBMkXA+Kpf/3fqg78xo3PsEwUzjXGhhjVcnMuOLB9BWd5TziwZCrr0hBDH+yNCjK8Ex9OIz9j/xHYqyvkJojTeDRPTrGAW+kQt/VB8srkxaCr3udTWpr810kMY0tqeLLZ8wE4kAHlRLp1fU1K18dlD6GAttYwV/B3xheW8px1CnFoNmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8cjIleXG4Q7HdRagOrJoC/WeS4RGW4yTAB0jIgATd+0=;
+ b=DZuE2ecUIeKUUUirNK2c3I96tN3tfuKLLTZRfHIJ8/ieN0N3tV/ONU6E7joc02BPIeQv31oG3dOsSFKL6K/UMMxuogl1Ef4k72oTRT3YQvyJE/KUsdKia1K8QKgOWSsLst6oyKUSN2x9teIuBHTm2CPAfW+myxJFc7rvT9XeAxkGvLMq16zBElNS/LCRIIRlZOBzabYN6uQk/EbcrItheQOIK6e456ZkeLR8t4wQsmOHmpCOrkwxtjP7O7wmxZuG1mv/TGO1pEA9Dhk5QpEFgHA9VaoCBkKswS0QPEhiiQ5QqMJHx9x/Fj4VbHbEFOYO9e4cHersVwZ5QmxXZNn6uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8cjIleXG4Q7HdRagOrJoC/WeS4RGW4yTAB0jIgATd+0=;
+ b=W+U9E+cJuwLJXA2TKfevXRN7Yx79ylT3cnDZpfBOGDknTuiMjzLH8ppUlaszNIS6lD2GY6XrOQVVOM+5iclZ9kXU6bEXdw0gkBbRQq4nax505keEbhMmXlp9FvGDEPfk9lPxZQjZooVrtzAdq4EIbYahcGluyMNMvFFdtLQlInUEQegGvxSfJFQolbYlM6+jiyck31HxmpTRdg7II+7MFgfk/86sEdykke3UkB0PolDGMpT+129vEbUIjwUL+NOEhQeBEEY6blV95DBnEcUYpiJvofo8scsvfC9uNRA6z7xqWrvptZTA80lBiGU18ko+BswLo0FV+YTsnjGEaUTN1g==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SA1PR02MB8462.namprd02.prod.outlook.com (2603:10b6:806:1f6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
+ 2025 16:17:14 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 16:17:14 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "alok.a.tiwari@oracle.com"
+	<alok.a.tiwari@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de"
+	<bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "mingo@redhat.com"
+	<mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
+	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
+	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: RE: [PATCH hyperv-next v3 01/15] Documentation: hyperv: Confidential
+ VMBus
+Thread-Topic: [PATCH hyperv-next v3 01/15] Documentation: hyperv: Confidential
+ VMBus
+Thread-Index: AQHb1Om8kxZiEqbHQkyJmXiTdU7CVrQJGpfg
+Date: Wed, 18 Jun 2025 16:17:14 +0000
+Message-ID:
+ <SN6PR02MB41579F133A5B33420C21B348D472A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250604004341.7194-1-romank@linux.microsoft.com>
+ <20250604004341.7194-2-romank@linux.microsoft.com>
+In-Reply-To: <20250604004341.7194-2-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8462:EE_
+x-ms-office365-filtering-correlation-id: 0b28f2a5-4eb3-4f37-8692-08ddae83969f
+x-ms-exchange-slblob-mailprops:
+ AZnQBsB9XmrJ3OdcGJgulPpe6kFhF3ONEEaRWwuhQQ2+vLifJ73KSBLhr7mYR6ttRQRqP+VRWZUNtw81zTCIkCGYaqkBrYuefIvpzn0Y7u7RVEUcgzDrUxSqfa8/T8+FpeEtaBOWY6K4vQfKbVi0efiYDeyO338bmmgOlpa4Umau5qGPih0t6zrF60tUwzccyI5onDf7y7YT3KPtIbFHl9Njn+ieQbkyNRteqeJgt/jw/LwchdxW5CwjupHmzOeXpJqcxqEPHe+fwBnSiYORc3SS++FoLn8iQRGFBb4+dETZ6Xkyir2OF1EUzV6UI+QqRhermQkMsliQj2Y4ukYncHJSQO/r32ErYw1C9f8SEF76V/JlzsmO5vkeN3VSLo+mJBjxEbGm5s4g7w8cUSy06ezl+i3L4SgBZth5ISM9A6QynMF/L1H8/0Ycckf/W3NvzHHFtzJD34vcsjJYqS3hpzuOd6UuciIOK0whqmsRBLdc7bFdRzrrVqwDX9yV5My0iLKbIGQnVBcBGfDHa8/uvSvB2p6LPLwDwdBBDuSt5WZzh88b2imSpevNsOFRuXn/SoLmfVRRtyQsXAKYVqkYVbzQoX4y6H1MMkpLi/OUCoZmC6Vc+U3f5We8y/Xvwjvlv+OqxZamd7YluHPVzkAA4D1MuPe6URYZkdiAb2vqM+OeTAEChsBQRHkkXj12bI/hPJBEBL5S95yCJiPNTItB7G/bRWzeBmCZAKe9qufHOzPf01nAQ6eBFOUEIqcvUubaxBHf46JkosA=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|19110799006|8062599006|15080799009|8060799009|12121999007|3412199025|440099028|40105399003|19111999003|10035399007|12091999003|102099032|56899033;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?SwmzAqjDKdunEb12wC7nJqQa4hMQkei3dIyNhgM/q3IzDWd92hWUxqBl8zIh?=
+ =?us-ascii?Q?6dwc/+muSW3/oAbQgOIHeMkf86wOuyyKBrqCXKRKw0T28rgOrHBZAJiI39Mj?=
+ =?us-ascii?Q?f9GYp1LgX4MoiJx2s3dezb/ahDA0h46PMGPP6T3yMcwWRrhTmzQrKqwRQzPL?=
+ =?us-ascii?Q?eNaOSp9X71xkv0plnofmNkAjCvhRKH5BJcXLdZ7bdjIG/wESXWp9JHNT6DBl?=
+ =?us-ascii?Q?CbVcF7HudKf4yq2gE3KnVk2jtvJRY46N9YM/m8u5uJ34y9CxigpjyEPX0urQ?=
+ =?us-ascii?Q?cpyLArLQqxU2j44/Dx9u7LNiEeokWzhdJDIY6Eb08WFbgHjHi2iSlIVy24rR?=
+ =?us-ascii?Q?UbsyM/J1lMLEjzGtk64gewUtf2+KO49pn69LsLdArbjGNO3TSdZM7iuHjrsh?=
+ =?us-ascii?Q?6yssHwStSLMJcuImFbHPGxcNYzhWBOhnWmwNtuQToOxEnwiiVNKmBPBj59O3?=
+ =?us-ascii?Q?m3pwQK83afoDP7lyv9Wft822ERvqfYI+NQI5l+7yEu9/FUngHzY/tsX2YFPp?=
+ =?us-ascii?Q?gOCJdEv02yIrebg3XsQm9l/1sfJVRxs4Jf1Q1qR29SZo55InjDf1vcIX1O/3?=
+ =?us-ascii?Q?E+Lnk/sm3hSGDLqH5mhKc80roiCujH02ctzMj+ZWcBgQTbEFpxbPI7sLAWv0?=
+ =?us-ascii?Q?C3D3uR0fWspF9udW1nDRHpq1PzZJZsuwxozYBMGSW0aKl8tZl4j7EbXtoqyl?=
+ =?us-ascii?Q?xlQLM0XTOtKGWxMCIRbWI2OaF3TiX6ZReF/FXvaRkYGB2PWznpS5hNERqGOV?=
+ =?us-ascii?Q?sMRk8zBPy9+bwgZEuBn/vvPEoFslGgSx0zwFOW3aYkwlW/ONNRK/BYHfvBlH?=
+ =?us-ascii?Q?PPzr8NoOyZSoeczCpURWrUl81GyjcDaXqCzCZQ0TscVb2QaruuJ30LOCWFIM?=
+ =?us-ascii?Q?zpxcswJqo7tj5d3Kr1Edatf2yNjF0FYksJopIaBzTu18qhlWqu0rVzuyp8Ve?=
+ =?us-ascii?Q?GW3dg7hBo9D7OxdQyRo0yB7JH51LkEoWueUUAaxack0AIFgZnYoQI43aAZVE?=
+ =?us-ascii?Q?S0HgPMrvD+KWILxN6L1SDxnS/mpKnjrwd5n8tM65vymhd0LB/jQFFGeAWk7M?=
+ =?us-ascii?Q?oV+cxx4CHCJVjpA2BkENTLAjoBiyrQbivMMTeuFF6sVRVs8nsIOUfEThUHZM?=
+ =?us-ascii?Q?iYP7WO+M7AILqTXZayJQM4fEayWYAAVQsPNMulCleL74hSZ3s9Tr17pW3VPo?=
+ =?us-ascii?Q?3Wo9zuDv+HxbQtw/E5zSnSBh7G+kJd3HBgJSO/3IcyZSQF9+I2CXa1po9pe+?=
+ =?us-ascii?Q?7E2wJ18bLw8SK4UL5BT+?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?3eZYFKleMeY9YMtHZ6tjPwio0f2QE2oiVeNjsEC+DYmQ1oNg0Be4oAm/T7E2?=
+ =?us-ascii?Q?sIzfdtiVJTvtfsszFFGamRBVZCFzUj1CBY+ouWLfwHrB/fi7IAztmnauKTsX?=
+ =?us-ascii?Q?42VkIlsVhkEhA+boKubDtz+VdWiGble5tMMp+ha+sdGM7T1qIzVYsR92kWzP?=
+ =?us-ascii?Q?+ZydAvQT9JlmG/SSwudSByoC3HCQDm6z9sNuA2hfrcK87BVUdxcA0Y+gp2uW?=
+ =?us-ascii?Q?flvnRSTKEzwT5ZAOjnmyJgXox0fXL+gyuEI1PIzdNlCx3HAgFr5XlnUnlFts?=
+ =?us-ascii?Q?m1uUzx0JfDKL8/vkaNxNxo48gCFClvfaN8UQnTABu7X3E7WjvW+Y3PrW5Zen?=
+ =?us-ascii?Q?WGjpFLXpTzWNNC4QVQ2z8gR/SUCvywZyctQKD45v/sqvcvueAztciTMdk436?=
+ =?us-ascii?Q?GoPg7kI7LkHTDHzUnNOyUDShS8MNFCsIB9bfDeQ6IruO/IUntm9t7kNDeZvf?=
+ =?us-ascii?Q?XA/ugPSgGg8axnfbv8PSgOC5YUSiROj9v+Lv9vRCF0MJWhroFTy++PI/15BU?=
+ =?us-ascii?Q?cJw7PSVkE+Tjvo+aSLl1oyvywrkiYnKEiRccJLtC6o6WQ5E0Qsd7vAKslIwv?=
+ =?us-ascii?Q?sBdNno4ZMN4AMdjMS1AUPldOUXvaIaQGbsonvT0aZ6XEY9EivYcIoCz4GY2L?=
+ =?us-ascii?Q?I0aEjvIx9iU6EvYhzT8jfw6o3si3eMhZdI4e4++pXaV1d7LWNTzsBdDwz2Ci?=
+ =?us-ascii?Q?OXmNlUPytsSBk+wUbHPwJS2wwzjYJifq9r2EPMTU+ENR5t3xZ61agFzZBd4U?=
+ =?us-ascii?Q?9rZkfGbu7TMFGoBVw97dOfTRQh1IQUlz56EY7BSuHIKmXU35fIqVpNeousLn?=
+ =?us-ascii?Q?DmdwBHrUbpFWc9gyPcmhiN77FqU8xczzaihHxOq0arhTmziNnZllgeFqP0+k?=
+ =?us-ascii?Q?iIfy7EnQEk2WM7p5qbisN8srNHC2JFVklC1dy52eep92amcnl7ySfRQjqIrM?=
+ =?us-ascii?Q?wsiSfZ5x4Q6qpnb8dCT/EnqJ5ciE+WsmWVkIVt8KNcNxvCXIYN/oZdleha5Z?=
+ =?us-ascii?Q?HbXouj7NUQMLcfV9m/DIz++RN73I1hmNP17f2xo/0Wr0AJdJXuVUPhvihuEC?=
+ =?us-ascii?Q?CYyo1fgjNOIfAxYsce7HkVtx5pGtiPMInR+dqKy7uymIGVZkc2CGvQgiEwOq?=
+ =?us-ascii?Q?bwiGAmBEPeAUOyKq5gND5ecT+jDwqS1VIi0VuyvTJg+mlh4o46/hZNo6PcVA?=
+ =?us-ascii?Q?2TEPR5rdYsWxIfrIpD5krjOgV9AYBzQ72rm+6pPqvTAIkT8JyKEGcw78p1Q?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] khugepaged: Optimize
- __collapse_huge_page_copy_succeeded() for large folios by PTE batching
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250618102607.10551-1-dev.jain@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250618102607.10551-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b28f2a5-4eb3-4f37-8692-08ddae83969f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 16:17:14.7075
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8462
 
-On 18.06.25 12:26, Dev Jain wrote:
-> Use PTE batching to optimize __collapse_huge_page_copy_succeeded().
-> 
-> On arm64, suppose khugepaged is scanning a pte-mapped 2MB THP for collapse.
-> Then, calling ptep_clear() for every pte will cause a TLB flush for every
-> contpte block. Instead, clear_full_ptes() does a
-> contpte_try_unfold_partial() which will flush the TLB only for the (if any)
-> starting and ending contpte block, if they partially overlap with the range
-> khugepaged is looking at.
-> 
-> For all arches, there should be a benefit due to batching atomic operations
-> on mapcounts due to folio_remove_rmap_ptes().
-> 
-> No issues were observed with mm-selftests.
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, June 3, 2025 =
+5:43 PM
+>=20
+> Define what the confidential VMBus is and describe what advantages
+> it offers on the capable hardware.
+>=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 > ---
->   mm/khugepaged.c | 31 +++++++++++++++++++++++--------
->   1 file changed, 23 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index d45d08b521f6..649ccb2670f8 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -700,12 +700,14 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->   						spinlock_t *ptl,
->   						struct list_head *compound_pagelist)
->   {
-> +	unsigned long end = address + HPAGE_PMD_SIZE;
->   	struct folio *src, *tmp;
-> -	pte_t *_pte;
-> +	pte_t *_pte = pte;
->   	pte_t pteval;
-> +	int nr_ptes;
->   
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> -	     _pte++, address += PAGE_SIZE) {
-> +	do {
-> +		nr_ptes = 1;
->   		pteval = ptep_get(_pte);
->   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
->   			add_mm_counter(vma->vm_mm, MM_ANONPAGES, 1);
-> @@ -719,23 +721,36 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->   				ksm_might_unmap_zero_page(vma->vm_mm, pteval);
->   			}
->   		} else {
-> +			const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +			int max_nr_ptes;
-> +			bool is_large;
+>  Documentation/virt/hyperv/coco.rst | 125 ++++++++++++++++++++++++++++-
+>  1 file changed, 124 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/virt/hyperv/coco.rst b/Documentation/virt/hype=
+rv/coco.rst
+> index c15d6fe34b4e..b4904b64219d 100644
+> --- a/Documentation/virt/hyperv/coco.rst
+> +++ b/Documentation/virt/hyperv/coco.rst
+> @@ -178,7 +178,7 @@ These Hyper-V and VMBus memory pages are marked as
+> decrypted:
+>=20
+>  * VMBus monitor pages
+>=20
+> -* Synthetic interrupt controller (synic) related pages (unless supplied =
+by
+> +* Synthetic interrupt controller (SynIC) related pages (unless supplied =
+by
+>    the paravisor)
+>=20
+>  * Per-cpu hypercall input and output pages (unless running with a paravi=
+sor)
+> @@ -258,3 +258,126 @@ normal page fault is generated instead of #VC or #V=
+E, and the page-fault-
+>  based handlers for load_unaligned_zeropad() fixup the reference. When th=
+e
+>  encrypted/decrypted transition is complete, the pages are marked as "pre=
+sent"
+>  again. See hv_vtom_clear_present() and hv_vtom_set_host_visibility().
+> +
+> +Confidential VMBus
+> +------------------
 
-folio_test_large() should be cheap, no need for the temporary variable 
-(the compiler will likely optimize this either way).
+Maybe put this section immediately after the "Guest communication with
+Hyper-V" section, since it is an extension of that topic. Then leave the
+load_unaligned_zeropad() section as last.
 
 > +
->   			struct page *src_page = pte_page(pteval);
->   
->   			src = page_folio(src_page);
-> -			if (!folio_test_large(src))
-> +			is_large = folio_test_large(src);
-> +			if (!is_large)
->   				release_pte_folio(src);
+> +The confidential VMBus enables the confidential guest not to interact wi=
+th the
+> +untrusted host partition and the untrusted hypervisor. Instead, the gues=
+t relies
+> +on the trusted paravisor to communicate with the devices processing sens=
+itive
+> +data. The hardware (SNP or TDX) encrypts the guest memory and the regist=
+er state
+> +while measuring the paravisor image using the platform security processo=
+r to
+> +ensure trusted and confidential computing.
 > +
-> +			max_nr_ptes = (end - address) >> PAGE_SHIFT;
-> +			if (is_large && max_nr_ptes != 1)
-> +				nr_ptes = folio_pte_batch(src, address, _pte,
-> +							  pteval, max_nr_ptes,
-> +							  flags, NULL, NULL, NULL);
-
-Starting to wonder if we want a simplified, non-inlined version of 
-folio_pte_batch() in mm/util.c (e.g., without the 3 NULL parameters), 
-renaming existing folio_pte_batch to __folio_pte_batch() and only using 
-it where required (performance like in fork/zap, or because the other 
-parameters are relevant).
-
-Let me see if I find time for a quick patch later. Have to look at what 
-other similar code needs.
-
+> +Confidential VMBus provides a secure communication channel between the g=
+uest and
+> +the paravisor, ensuring that sensitive data is protected from  hyperviso=
+r-level
+> +access through memory encryption and register state isolation.
 > +
->   			/*
->   			 * ptl mostly unnecessary, but preempt has to
->   			 * be disabled to update the per-cpu stats
->   			 * inside folio_remove_rmap_pte().
->   			 */
->   			spin_lock(ptl);
+> +The unencrypted data never leaves the VM=20
 
-Existing code: The PTL locking should just be moved outside of the loop.
+Is this statement really true? The VM contains both the guest and the parav=
+isor,
+so it's also a statement about the paravisor. I don't know what the paravis=
+or
+does for channels it is just proxying. Presumably it must communicate the
+unencrypted data to the host.
 
-> -			ptep_clear(vma->vm_mm, address, _pte);
-> -			folio_remove_rmap_pte(src, src_page, vma);
-> +			clear_full_ptes(vma->vm_mm, address, _pte, nr_ptes, false);
+> +so neither the host partition nor the
+> +hypervisor can access it at all. In addition to that, the guest only nee=
+ds to
+> +establish a VMBus connection with the paravisor for the channels that pr=
+ocess
+> +sensitive data, and the paravisor abstracts the details of communicating=
+ with
+> +the specific devices away.
+> +
+> +Confidential VMBus is an extension of Confidential Computing (CoCo) VMs
+> +(a.k.a. "Isolated" VMs in Hyper-V terminology). Without Confidential VMB=
+us,
+> +guest VMBus device drivers (the "VSC"s in VMBus terminology) communicate
+> +with VMBus servers (the VSPs) running on the Hyper-V host. The
+> +communication must be through memory that has been decrypted so the
+> +host can access it. With Confidential VMBus, one or more of the VSPs res=
+ide
+> +in the trusted paravisor layer in the guest VM. Since the paravisor laye=
+r also
+> +operates in encrypted memory, the memory used for communication with
+> +such VSPs does not need to be decrypted and thereby exposed to the
+> +Hyper-V host. The paravisor is responsible for communicating securely
+> +with the Hyper-V host as necessary. In some cases (e.g. time synchonizat=
+ion,
+> +key-value pairs exchange
 
-Starting to wonder if we want a shortcut
+I'm not sure about key-value pairs exchange. I thought the whole point of
+KVP is to communicate information between the guest and the host.
 
-#define clear_ptes(__mm, __addr, __pte, __nr_ptes) \
-	clear_full_ptes(__mm, __addr, __pte, __nr_ptes, false)
+> +) the unencrypted data doesn't need to be communicated
+> +with the host at all, and a conventional VMBus connection suffices.
+> +
+> +Here is the data flow for a conventional VMBus connection and the Confid=
+ential
+> +VMBus connection (C stands for the client or VSC, S for the server or VS=
+P):
+> +
+> ++---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> +|               |       |                 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+                |
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> ++----- C -------+       +-----------------+        +------- S ------+
+> +       ||                                                   ||
+> +       ||                                                   ||
+> ++------||------------------ VMBus --------------------------||------+
+> +|                     Interrupts, MMIO                              |
+> ++-------------------------------------------------------------------+
+> +
+> ++---- GUEST --------------- VTL0 ------+               +-- DEVICE --+
+> +|                                      |               |            |
+> +| +- PARAVISOR --------- VTL2 -----+   |               |            |
+> +| |     +-- VMBus Relay ------+    =3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D            |
+> +| |     |   Interrupts, MMIO  |    |   |               |            |
+> +| |     +-------- S ----------+    |   |               +------------+
+> +| |               ||               |   |
+> +| +---------+     ||               |   |
+> +| |  Linux  |     ||    OpenHCL    |   |
+> +| |  kernel |     ||               |   |
+> +| +---- C --+-----||---------------+   |
+> +|       ||        ||                   |
+> ++-------++------- C -------------------+               +------------+
+> +        ||                                             |    HOST    |
+> +        ||                                             +---- S -----+
+> ++-------||----------------- VMBus ---------------------------||-----+
+> +|                     Interrupts, MMIO                              |
+> ++-------------------------------------------------------------------+
+> +
+> +An implementation of the VMBus relay that offers the Confidential VMBus =
+channels
+> +is available in the OpenVMM project as a part of the OpenHCL paravisor. =
+Please
+> +refer to https://openvmm.dev/guide/ for more
+> +information about the OpenHCL paravisor.
+> +
+> +A guest that is running with a paravisor must determine at runtime if
+> +Confidential VMBus is supported by the current paravisor. It does so by =
+first
+> +trying to establish a Confidential VMBus connection with the paravisor u=
+sing
+> +standard mechanisms where the memory remains encrypted. If this succeeds=
+,
+> +then the guest can proceed to use Confidential VMBus. If it fails, then =
+the
+> +guest must fallback to establishing a non-Confidential VMBus connection =
+with
+> +the Hyper-V host.
+> +
+> +Confidential VMBus is a characteristic of the VMBus connection as a whol=
+e,
+> +and of each VMBus channel that is created. When a Confidential VMBus
+> +connection is established, the paravisor provides the guest the message-=
+passing
+> +path that is used for VMBus device creation and deletion, and it provide=
+s a
+> +per-CPU synthetic interrupt controller (SynIC) just like the SynIC that =
+is
+> +offered by the Hyper-V host. Each VMBus device that is offered to the gu=
+est
+> +indicates the degree to which it participates in Confidential VMBus. The=
+ offer
+> +indicates if the device uses encrypted ring buffers, and if the device u=
+ses
+> +encrypted memory for DMA that is done outside the ring buffer. These set=
+tings
+> +may be different for different devices using the same Confidential VMBus
+> +connection.
+> +
+> +Although these settings are separate, in practice it'll always be encryp=
+ted
+> +ring buffer only or both encrypted ring buffer and external data. If a c=
+hannel
 
-> +			folio_remove_rmap_ptes(src, src_page, nr_ptes, vma);
->   			spin_unlock(ptl);
-> -			free_folio_and_swap_cache(src);
-> +			free_swap_cache(src);
-> +			folio_put_refs(src, nr_ptes);
->   		}
-> -	}
-> +	} while (_pte += nr_ptes, address += nr_ptes * PAGE_SIZE, address != end);
->   
->   	list_for_each_entry_safe(src, tmp, compound_pagelist, lru) {
->   		list_del(&src->lru);
+s/ring buffer only or both/ring buffer only, or both/
 
-I think this should just work.
+> +is offered by the paravisor with confidential VMBus, the ring buffer can=
+ always
+> +be encrypted since it's strictly for communication between the VTL2 para=
+visor
+> +and the VTL0 guest. However, other memory regions are often used for e.g=
+. DMA,
+> +so they need to be accessible by the underlying hardware, and must be un=
+encrypted
+> +(unless the device supports encrypted memory). Currently, there are no a=
+ny VSPs
 
--- 
-Cheers,
+s/no any/not any/
 
-David / dhildenb
+> +in OpenHCL that support encrypted external memory, but we will use it in=
+ the
+
+Avoid personal pronouns like "we".  Suggest this, or something similar:
+
+"but future versions are expected to enable this capability."
+
+> +future.
+> +
+> +Because some devices on a Confidential VMBus may require decrypted ring =
+buffers
+> +and DMA transfers, the guest must interact with two SynICs -- the one pr=
+ovided
+> +by the paravisor and the one provided by the Hyper-V host when Confident=
+ial
+> +VMBus is not offered. Interrupts are always signaled by the paravisor Sy=
+nIC, but
+> +the guest must check for messages and for channel interrupts on both Syn=
+ICs.
+> +
+> +In the case of a confidential VM,
+
+I think you mean "In the case of confidential VMBus,"
+
+> +regular SynIC access by the guest is
+> +intercepted by the paravisor (this includes various MSRs such as the SIM=
+P and
+> +SIEFP, as well as hypercalls like HvPostMessage and HvSignalEvent). If t=
+he guest
+> +actually wants to communicate with the hypervisor, it has to use special=
+ mechanisms
+> +(GHCB page on SNP, or tdcall on TDX). Messages will always be one or the=
+ other:
+> +with confidential VMBus, all messages use the paravisor SynIC,
+
+This statement seems to contradict the statement in the previous paragraph,=
+ and
+the code. If all messages use the paravisor SynIC when Confidential VMBus i=
+s used,
+why must the guest check for messages on both SynICs?
+
+> +otherwise they all
+> +use the hypervisor SynIC. For interrupt signaling, though, some channels=
+ may be
+> +running on the host (non-confidential, using the VMBus relay) and use th=
+e hypervisor
+> +SynIC, and some on the paravisor and use its SynIC. The RelIDs are coord=
+inated by
+> +the OpenHCL VMBus server and are guaranteed to be unique regardless of w=
+hether
+> +the channel originated on the host or the paravisor.
+> --
+> 2.43.0
 
