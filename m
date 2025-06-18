@@ -1,103 +1,131 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124016B3B7;
-	Wed, 18 Jun 2025 19:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942982192FC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276213; cv=none; b=nKImttBosMJ1UDGR7sVFFjgw9fhnaw72wDlFmolcn31919sEZQaTwZiHU9cFngnbCT7ZVbz9sNAaCOJxFV7W6sZEc8xBNDlRFxrbtgCdq3gpWG0uctW1KLvWe8PKKCFaI7gLwVqBp/At0Ee0afXca/Ua5bu9688rbfXRwFIyqKU=
+	t=1750276213; cv=none; b=bnsjfGvoq6qv9R9295IiYENViE5wFvxV+IEmkFQAneCN5swYZgw9ZKLvmySkSV4M6jgRx8QQu+v2qKryz+F6jYNQRDopE0FQlHijWM9Q+lAwMQ0rirjG4GqkEtgSdk+FRqUc/kBKP9lQMVzcevZ+P3WvlPPoIMPPzuG1h7997MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750276213; c=relaxed/simple;
-	bh=aBchKFwWyd0GBQrBmRwyjrarHmeV8MYL0+Muw8PbLVc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=sPPQ2LKtKymIM0DL2ckTlY5Ha3iIb0GOupD2xJSoUKRDALd4uQt2kGag7g+fvPxQjsgVz5xM1aV+ykG+V0hdPTPmien0w3So8cxQM5zb4jZjF856PrV4qdh04fRakvWDrUlxzmCR/vBhcxt7YB66Dx3KaYtM3F+LiHI+rOFswSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=ukt6ydpv; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	bh=luoJ2EhFdNRnqQJG9cSh5+lCaNdS01/9QmmpcN3PjGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VhtViDTFHUb1XTl+3ol9PIbCzpccwz5OMepTtNjcuknxbwM6O1DaMD1nfpScvrWhp0HO54/HsOUW1A6Lp5vFvfTJUcnq0wezuyHoDhwrczNCqoM7VlpNwTgpk7qcvRmW2t4UpKhEsWFwm+YcWDG/AVpNL0Ks49/nhhTYnHOSp5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hDnOKgRN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="ukt6ydpv"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 8755B82885CC;
-	Wed, 18 Jun 2025 14:50:10 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id Cw-X6kyH1lKl; Wed, 18 Jun 2025 14:50:07 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 8C6468288C8B;
-	Wed, 18 Jun 2025 14:50:07 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 8C6468288C8B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750276207; bh=Z2GNqX+0k7pSprsF3zD6eUV76u17QucYwCVB/IypEPg=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=ukt6ydpvmsUs2h/99SLAygWrJTQV0Ww6DXrosK8GMRLMAerec2PGtn9yFicY4Jg7n
-	 aLvcdn0yDsl7P566v8caiKvJlkMp7ugpGCRe0D3vwPChJvq8sseALw4qMB9QMPMIu5
-	 vbhjym68Cv4y1g3DhNg2OwHReQLe2nBGDL53GYbQ=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id aOfRNJqAxjHk; Wed, 18 Jun 2025 14:50:07 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 11E5E828884B;
-	Wed, 18 Jun 2025 14:50:07 -0500 (CDT)
-Date: Wed, 18 Jun 2025 14:50:04 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>, 
-	Lukas Wunner <lukas@wunner.de>
-Message-ID: <1957898084.1311382.1750276204022.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <20250618194400.GA1219576@bhelgaas>
-References: <20250618194400.GA1219576@bhelgaas>
-Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
- broken
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hDnOKgRN"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IFv3Kv019267
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Eb0PR7MC8vATjVfhJQjNH3z5UBkyJTka8cUrPI6EnrQ=; b=hDnOKgRNDff/Lyaw
+	quOkZ8IaI5VQYSbR6zgdrzmzL9ZzoMT3n9PDasulA3H8vuV9yVM9bDkjTutLKlIp
+	cG4bra97nsK3EVP++Y2r9jhzwqHwGsR4/cYkni9bvcEhCg13DVs9DlDR6/7P3OZu
+	wtBKcA/ojneNcgQLpnanKt605HR0zMGoQA3h/7Ig+mzgEfydcTA7vcmf5rp0FEXQ
+	gRCVyZpgiVNbAsDnB/AQfD38TM6PuoWaha/4wVq/asD38Plw/yMT1CtUk5IVryHp
+	0VLNfxQ4Pt1L8b/9GEm0mExQGcumVzVgtDiTRLrvOC02LF1EGjUlr7XMQQotDnqX
+	gBpn6A==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hd5jnx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:10 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d3eeb07a05so811785a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750276209; x=1750881009;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eb0PR7MC8vATjVfhJQjNH3z5UBkyJTka8cUrPI6EnrQ=;
+        b=TZfih8Q7nxp3JyJxXVIx0iWhOlR3xnvA95SdkMbA5AQ6/L+MzCoI1qtFdTE9FRmt+l
+         8UIvd54ovTvmMva1pbzAMB48Y7Mh60ODppDIA9U0Osr4kymz9WHUyB54HzVrh1O/m2LX
+         Hak6EILqnquZxyHuhzogQfkrmQ2ySauetxChB0LHF59ly10A/hB7OCqnBdwNIn6C3fF2
+         2Qgxxlm+JUo6le/f9PWhYJ6KrIlyp3/FSYQiF37mUrr23zvgGJ0CWB2vypPa8riBinxP
+         cIHcBjDvoxohLaDWKj2p3hkxnourjd+gSzttTfu6f8JDX7RZGYiju+PwpDMKNqjyh8ep
+         3YTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWH0kTEdxxavOYglNlDN3vhXkvBKqFXoZBF4m9doaXCmbnl4i9vEeVou+mg0I2FIogdeJ95j1vLVVICoFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMptIZnnTln9I3vVwzX8yB263t+cZFAYwWp/1ObXofwZB/N2Ia
+	+nM0LMq28chTfpM3OGxJQB2a/JBS3ZIrgywPeJVtZCoSi2bP2TgQmawAsEMxk5xzcLt1OlHPzw9
+	etSVtQZRU+awVV342aFJe2WAemk6319v5NsnzhwMUwVEO13M3/tpS5uryh9CtQ8ucjSA=
+X-Gm-Gg: ASbGncuymtAioM1/Ee3x8CvL23iTz3xCsQviTdnRRsnhLRhYKBEEy6X+bfhxMZ9s0NA
+	+NwKjgxJeukip1CbUcXe3DP9M0B9Qt4QwLUv/ZjG9NNYfk1kGfG/WCmwxnCkmhsB8O7E8yyGZw/
+	6HvOPU1vHllyA5H+W1dB/uHe/RWwMNFNvLGAptOocfIssHX5HoL2Fw1L+5wXNnHwVpmxBfrFVWa
+	sniIRkiMAv4ph7tmj0ZjdL4MmD5HxL1gFRvOfLxIgfuKIa3Bre4fKXb/WD1WPGHOl0fCfnlQhTL
+	x7NlBmQNYRYVWncN0WljdxwaKzaP8yhMQS3d4QLzgaM60IIk6w7gf7NOSHC6+pG+uy7vs+pvw+O
+	If38=
+X-Received: by 2002:a05:620a:414a:b0:7cd:4a08:ea12 with SMTP id af79cd13be357-7d3dddd3dcamr452894485a.0.1750276209389;
+        Wed, 18 Jun 2025 12:50:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFL3SJd4iFzCwT5g6MhwkHB+B/Bg64lwAFozgDBTuMDs9zJo+cDkA5jqPxifdTnFFGAD0h1eQ==
+X-Received: by 2002:a05:620a:414a:b0:7cd:4a08:ea12 with SMTP id af79cd13be357-7d3dddd3dcamr452892985a.0.1750276208907;
+        Wed, 18 Jun 2025 12:50:08 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec81c0135sm1090314466b.47.2025.06.18.12.50.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 12:50:08 -0700 (PDT)
+Message-ID: <f2b806af-510c-4f33-a4be-9c84a37cd247@oss.qualcomm.com>
+Date: Wed, 18 Jun 2025 21:50:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sar2130p: use TAG_ALWAYS for MDSS's
+ mdp0-mem path
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250618-sar2130p-fix-mdss-v1-0-78c2fb9e9fba@oss.qualcomm.com>
+ <20250618-sar2130p-fix-mdss-v1-1-78c2fb9e9fba@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250618-sar2130p-fix-mdss-v1-1-78c2fb9e9fba@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Work around switches with broken
-Thread-Index: ea0P+zxqpWPDRHdRnJt8G7RzFtnFrw==
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE2OCBTYWx0ZWRfX3v58OEvNpRw8
+ EgrcjuC/sA7RRF/pSQXzz8Ch6rKOAUsIFpNVa/+TnKCuBDfT+7JBYZP7ZjhyMdcEHlKAtLZrjZ8
+ sWfjmnvFlQ6T8adSBn1T6ciGBmrZ1pQnqIBxMOQ0Pc7gezLFaMAbq4NfmhSZ6oyNefXtY3sjmb8
+ FVZ4kN0ZaeMWBWj+yOc1mYKQX2k64eJQQEFB5PkweToTiXtKXNl2Dq4Rq1LznIUdqSmaw/W9iTP
+ SBn7X/quqBaLaWabxF7KBqjSG9KXrjUHQbi/EFZ8516DnLK+M/AMOQVeqWTcy0FfhrLYYmO7W+T
+ d2VDbq0nn7oOmXvaL+Z8Amoyfp4XXKzK/BXcHi0wlLB8a1PcOP89PceGlHiGo9SKz1eCQ0ojo5w
+ g+ddBlpDYOsFLrz5ySBH3ZcTHf0FBxLDEb4AGW3y5aNg4+BbpHSpcMqaJdBvbM/KRikFAa/h
+X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=68531872 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=LxG8ozSyjN6uvR1bqNQA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: cirymbGVCrDE2FGtreGdnTufoM_kWpWR
+X-Proofpoint-GUID: cirymbGVCrDE2FGtreGdnTufoM_kWpWR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 mlxlogscore=763 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506180168
 
-
-
------ Original Message -----
-> From: "Bjorn Helgaas" <helgaas@kernel.org>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>, "Lukas Wunner" <lukas@wunner.de>
-> Sent: Wednesday, June 18, 2025 2:44:00 PM
-> Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with broken
-
-> [+cc Lukas, pciehp expert]
+On 6/18/25 7:49 PM, Dmitry Baryshkov wrote:
+> Switch the main memory interconnect of the MDSS device to use
+> QCOM_ICC_TAG_ALWAYS instead of _ACTIVE_ONLY.
 > 
-> On Wed, Jun 18, 2025 at 11:56:54AM -0500, Timothy Pearson wrote:
->>  presence detection
-> 
-> (subject/commit wrapping seems to be on all of these patches)
-> 
->> The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
->> was observed to incorrectly assert the Presence Detect Set bit in its
->> capabilities when tested on a Raptor Computing Systems Blackbird system,
->> resulting in the hot insert path never attempting a rescan of the bus
->> and any downstream devices not being re-detected.
-> 
-> Seems like this switch supports standard PCIe hotplug?  Quite a bit of
-> this driver looks similar to things in pciehp.  Is there some reason
-> we can't use pciehp directly?  Maybe pciehp could work if there were
-> hooks for the PPC-specific bits?
+> Fixes: 541d0b2f4dcd ("arm64: dts: qcom: sar2130p: add display nodes")
+> Suggested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
 
-While that is a good long term goal that Raptor is willing to work toward, it is non-trivial and will require buy-in from other stakeholders (e.g. IBM).  If practical, I'd like to get this series merged first, to fix the broken hotplug on our hardware that is deployed worldwide, then in parallel see what can be done to merge PowerNV support into pciehp.  Would that work?
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
