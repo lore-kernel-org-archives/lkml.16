@@ -1,134 +1,122 @@
-Received: from pmxout1.rz.tu-bs.de (pmxout1.rz.tu-bs.de [134.169.4.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3957030E85E;
-	Thu, 19 Jun 2025 18:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483A528DF0F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750357321; cv=none; b=kLW0fElX96Cykqy7Q5y1cr4whOBeFkjIOIo4XWT8/DRpvnvTWeItri8C/Rn+/OHkoPjcF1q8aSeYht6Cq0gxjAGpeqVY0AtXY62zYV75tZlqiLHJS/D0vt93tmrr168nC8ftwqtMwe2qtZ0o2mpJo6Ap/p5U5rx40zbG5hRgmig=
+	t=1750357392; cv=none; b=cImvj1zdVQFn8gmxR1/KMjJldQHU4AFRRoTwOUI3NVBhWuVXo0c1QYWd5I7K/RR7iDip0B6GMrubZ5KK+WrwpkNI/Fa6ksQVfP/Td0nVL0ikcU/OzylXth6esWqNB3u7nnjdu1htReht1NVdJhx12+XExVrATkdf4vAht3RZqno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750357321; c=relaxed/simple;
-	bh=CkNoFT5ffgvUGTHoy9QzeulxFQ+RkKqe2v/CRKEUFy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uHikV9IDKu++jNEDsk60ER2XzwLJ/QW9b7bv6jKTjIjUJ/UxZ3UjC0MU0KOCshKp+jPBxm+8C1zUxVLPVPox7GN/0Zi0bd3tjvWS0HFJo3Zv3JCnX0t43Z2mW//ne5rSc1Q7SPy6MdGTFrKPY2EyR/bUg34KsmTyEP3Y3qLCffo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=o/xAKfJ/; arc=none smtp.client-ip=134.169.4.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
+	s=arc-20240116; t=1750357392; c=relaxed/simple;
+	bh=6EM7W6Px13BkrnxhIGCscRQju3/pLtXfaLISOGXj2DA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BEXTrAielfuKFkF7b5cPPZFqRD1ZuHMvAclPpk8MaSK0V4KezpaSFWuekG3iRW6e7irbPqotT88OA8e5ziy6J1xrN2WGyxyvm7YA3K7PR2cKQeILn8b1KX2DXxP8oB/Ddk1GOuMdgDuZyO342TXEsv56kFhGUDotcX9QgXmF0aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fjPAo/pS; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="o/xAKfJ/"
-Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
-	by pmxout1.rz.tu-bs.de (Postfix) with ESMTPS id 24C294E07C4;
-	Thu, 19 Jun 2025 20:21:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
-	s=exchange_neu; t=1750357317;
-	bh=CkNoFT5ffgvUGTHoy9QzeulxFQ+RkKqe2v/CRKEUFy8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To:From;
-	b=o/xAKfJ//VE0Fr/dnumBKDrb5x/N7ISP9f0OUQksx3Fq4OE5mq6Bls0HhCJ3b2K+2
-	 4soMApCbSt620DL+ovmwg2j0ugPwJ5ydQkVqWK5lXPr+LbHzAukjbFbnTV3jb34jXR
-	 O8Z5+ZY20SGNHsQg9DIxyMULa92S4fC6SaPo12dnOZFTQgqtk41V/UiNzaFVm1WLoR
-	 iQu5LRztBuJzkEf9c9u8mh1y2cbVJAI3Lzz/fgSElUB1YbMSw26oecT04HkJeguUx0
-	 BYuf0hzz6oIlNadh289J72+G01VjXHmrjoXQp5wy1JAU/x48vgYm5A7yBKNMqJfKVj
-	 TUlrQ72xQDoAw==
-Received: from [192.168.178.23] (134.169.9.110) by Hermes02.ad.tu-bs.de
- (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 19 Jun
- 2025 20:21:56 +0200
-Message-ID: <7097cd74-45b5-4092-b96e-b16769fa68f4@tu-bs.de>
-Date: Thu, 19 Jun 2025 20:21:50 +0200
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fjPAo/pS"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b31aecc78a3so185981a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750357389; x=1750962189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6wn2R/tcCHSpRThGeyczBO7p55CHFgEwb59xkAN4huA=;
+        b=fjPAo/pSOSRGjK4d985pyzt4e4r7fMh40FvjG3FlS8VINRnX9cqfMUEHh0KcZxBNaA
+         EIQFzIIH53FXkCU/JfrJtCbRr6jhFAQdGXWrbsEoVP7dvIskTwroqlTXQCt3zNAx2fuP
+         WUTItT0dzkosv+NhySf5kgLp5Lc9w75Gts3VM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750357389; x=1750962189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6wn2R/tcCHSpRThGeyczBO7p55CHFgEwb59xkAN4huA=;
+        b=q0Nd5MQQQIKeODp8CW0kUS4dqIcpAE4vPtVR91WCLu2TWGCt8yax2Jpb6f6YR/v7g2
+         2zqPSxOZj7GtpSoJ0YTMNa+giVEMQPnT5bwym6Qu8UjNW4hxbosu6+cVHM00CVONKCRJ
+         zBAr/zpnpDPpM3NiDkVJXYWhTeFc9U9nE11tdBU8sMRV4Bs/r7gtC+//5g3kJ//sItfs
+         ZJT1P7QnjUCnsIIXWAz+Q0cwAyEMZJ1ldk9TQ5R+qmH8yY9FjIo63xl10aSDCJpR6wUz
+         +8Q34jZF8KZI8DyCqiXmPFd0MnnsmuXcLtbg2ANrQ+XEZNl5WqkA/ZhI5rQSCuUhgd83
+         f98A==
+X-Forwarded-Encrypted: i=1; AJvYcCVUaHi488Teq2Ms/hjFok1nOEDT3dE8Lhe2Xy0PkOX57QbIjVHLf9iKjvwp7nrsq2NQ4L9tm9v97bXy9Dg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVJwYK3nP9zCZUE0QNGWU6Im822BV+E0n3mNudtKZeIz5kPagr
+	w/J2FWi8A+rvuq3KHY5Yegwb70UwBU1nJK14pqfD0oLQR+FtB/GNPBbA3uSRB1/+TGqHhM0xgdM
+	mc80RnxwCKuzdE1Pyp8YgQta929tTN6K3qJmPYib4
+X-Gm-Gg: ASbGncvy680MjMgiLfPClTusfakXCJ6PfsoAAcZBV7XAP1Vvl+FEupClSBTp+Hxe5JQ
+	OjshDyvYW8uD7/crRNUvNOiao2tn9CXV0Ns7xtufMnc1pn6+0OFXc0Kmk2Ve0YVC6+VTpV2ZdNi
+	u0Oldwt4SuNDCD4i3Ko/IK3HhnrfeUnWuobsRG4SCY2foQrUy6n4Xw0Q==
+X-Google-Smtp-Source: AGHT+IFSj1i5cMc91WlmDpNumVdtdb8Ld/9OiYqe+qTePMX50c4RyMW+w6PNGPiUCp7f20XynJdqwZhRDrpoEUBp4ag=
+X-Received: by 2002:a17:90b:57ee:b0:312:ec:411a with SMTP id
+ 98e67ed59e1d1-3159d8c6488mr131664a91.3.1750357389545; Thu, 19 Jun 2025
+ 11:23:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-To: Alan Stern <stern@rowland.harvard.edu>
-CC: Andrea Parri <parri.andrea@gmail.com>, Peter Zijlstra
-	<peterz@infradead.org>, Will Deacon <will@kernel.org>, Boqun Feng
-	<boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, David Howells
-	<dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget
-	<luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>, Akira
- Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, Joel
- Fernandes <joelagnelf@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <lkmm@lists.linux.dev>,
-	<hernan.poncedeleon@huaweicloud.com>, <jonas.oberhauser@huaweicloud.com>,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
- <aEwHufdehlQnBX7g@andrea> <9264df13-36db-4b25-b2c4-7a9701df2f4d@tu-bs.de>
- <aE-3_mJPjea62anv@andrea>
- <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
- <aFF3NSJD6PBMAYGY@andrea> <595209ed-2074-46da-8f57-be276c2e383b@tu-bs.de>
- <6ac81900-873e-415e-b5b2-96e9f7689468@rowland.harvard.edu>
- <c97665c6-2d8b-49ae-acc5-be5be04f0093@tu-bs.de>
- <a0887a91-468c-43ff-872e-c4c4e23b26dd@rowland.harvard.edu>
-Content-Language: en-US
-From: Thomas Haas <t.haas@tu-bs.de>
-In-Reply-To: <a0887a91-468c-43ff-872e-c4c4e23b26dd@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Hermes11.ad.tu-bs.de (134.169.4.139) To
- Hermes02.ad.tu-bs.de (134.169.4.130)
+References: <20250606165756.1531164-1-dregan@broadcom.com> <8734c9z2ye.fsf@bootlin.com>
+ <CAA_RMS7EB2v_h44Ysdoe0=WjC+T4G_5_4O-9DbCBE5OyRNArkg@mail.gmail.com> <87h60dmn86.fsf@bootlin.com>
+In-Reply-To: <87h60dmn86.fsf@bootlin.com>
+From: David Regan <dregan@broadcom.com>
+Date: Thu, 19 Jun 2025 11:23:03 -0700
+X-Gm-Features: Ac12FXwY4L3iGAb6y8Z7xuuGcl1xTOk1NYTk9evRoC8IYcMVu9a22ogFJ9qGxfY
+Message-ID: <CAA_RMS5a4kB0=P+XSS_-zL+KmP2YqSSQghb=c6UvvxQg16FiQw@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: nand: brcmnand: fix mtd corrected bits stat
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: David Regan <dregan@broadcom.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, 
+	bcm-kernel-feedback-list@broadcom.com, 
+	William Zhang <william.zhang@broadcom.com>, Anand Gore <anand.gore@broadcom.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Kamal Dasu <kamal.dasu@broadcom.com>, 
+	Dan Beygelman <dan.beygelman@broadcom.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
+	rafal@milecki.pl, computersforpeace@gmail.com, frieder.schrempf@kontron.de, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, 
+	Boris Brezillon <bbrezillon@kernel.org>, kdasu.kdev@gmail.com, 
+	JaimeLiao <jaimeliao.tw@gmail.com>, Adam Borowski <kilobyte@angband.pl>, 
+	Jonas Gorski <jonas.gorski@gmail.com>, dgcbueu@gmail.com, dregan@mail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi   Miqu=C3=A8l,
 
+On Wed, Jun 18, 2025 at 2:07=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+>
+> Hello David
 
-On 19.06.25 19:56, Alan Stern wrote:
-> On Thu, Jun 19, 2025 at 04:59:38PM +0200, Thomas Haas wrote:
->>
->>
->> On 19.06.25 16:32, Alan Stern wrote:
->>> On Thu, Jun 19, 2025 at 04:27:56PM +0200, Thomas Haas wrote:
->>>> I support this endeavor, but from the Dartagnan side :).
->>>> We already support MSA in real C/Linux code and so extending our supported
->>>> Litmus fragment to MSA does not sound too hard to me.
->>>> We are just missing a LKMM cat model that supports MSA.
->>>
->>> To me, it doesn't feel all that easy.  I'm not even sure where to start
->>> changing the LKMM.\
->>>
->>> Probably the best way to keep things organized would be to begin with
->>> changes to the informal operational model and then figure out how to
->>> formalize them.  But what changes are needed to the operational model?
->>>
->>> Alan
->>
->> Of course, the difficult part is to get the model right. Maybe I shouldn't
->> have said that we are "just" missing the model :).
->> I'm only saying that we already have some tooling to validate changes to the
->> formal model.
->>
->> I think it makes sense to first play around with the tooling and changes to
->> the formal model to just get a feeling of what can go wrong and what needs
->> to go right. Then it might become more clear on how the informal operational
->> model needs to change.
->>
->> A good starting point might be to lift the existing ARM8 MSA litmus tests to
->> corresponding C/LKMM litmus tests and go from there.
->> If the informal operational model fails to explain them, then it needs to
->> change. This goes only one way though: if ARM permits a behavior then so
->> should LKMM. If ARM does not, then it is not so clear if LKMM should or not.
-> 
-> Okay, that seems reasonable.
-> 
-> BTW, I don't want to disagree with what you wrote ... but doesn't your
-> last paragraph contradict the paragraph before it?  Is starting with the
-> various MSA litmus tests and seeing how the operational model fails to
-> explain them not the opposite of first playing around with the tooling
-> and changes to the formal model?
-> 
-> Alan
+...
 
-I would rather see the approaches as complementary.
-If you lift ARM tests to LKMM tests, you can use them to reason about 
-both the informal operational model and the formal axiomatic model.
-I mean, there are going to be litmus tests that show behavior that 
-should reasonably be forbidden on all platforms, and trying to adapt the 
-formal LKMM to also forbid them seems like a good exercise.
-Even if it turns out that the changes are unsound, I think you will end 
-up with better understanding, no?
+> So far the reporting looks good (and the nandflipbits output looks
+> correct as well).
+>
+> > [  676.408441] mtd_nandbiterrs: Inserted biterror @ 2/5
+> > [  676.413411] mtd_nandbiterrs: rewrite page
+> > [  676.418122] mtd_nandbiterrs: read_page
+> > [  676.422267] mtd_nandbiterrs: verify_page
+> > [  676.426194] mtd_nandbiterrs: Error: page offset 0, expected 25, got =
+00
+> > [  676.432727] mtd_nandbiterrs: Error: page offset 1, expected a5, got =
+00
+> > [  676.439260] mtd_nandbiterrs: Error: page offset 2, expected 65, got =
+05
+> > [  676.445868] mtd_nandbiterrs: ECC failure, read data is incorrect
+> > despite read success
+>
+> Here however there is something wrong. We do expect a read failure,
+> instead of returning wrong data. There is still a problem, I do not know
+> if this problem was there before though, but this must be fixed.
+>
 
-Either way, I'm just suggesting possible ways to start but I myself 
-don't have the time (right now) to get this project going.
+Thank you for highlighting this issue, I will investigate.
 
-Thomas
+>
+> Hello Florian, if you have time, I'd welcome you opinion on this patch :)
+>
+> Cheers,
+> Miqu=C3=A8l
+
+Thanks!
+
+-Dave
