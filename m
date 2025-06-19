@@ -1,145 +1,86 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5086E230BF2;
-	Thu, 19 Jun 2025 07:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59584231837;
+	Thu, 19 Jun 2025 07:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319757; cv=none; b=WXrY04R3PhY69a6AGBOufBIHn2uuDpFgslrJa3Ak4JvIpkqcWmJjX06cFHGrZrP/cn2Xp9+XcfrJrwIOKQE/zH38JnN+HrWtoNOBs87yL/c7WHZMOWMprrSt8XNfQdLsGo6fGnFxu1sdZVdvn3QtDV384CdItyswLXlxXnjv/Fo=
+	t=1750319780; cv=none; b=H1f0WBlqfqIy8neAqCPj03mY9u+WeDQ4Kt1ucxZAFOLbP2SwG/ITIVMNYtSCyT0f4BZEFFeY1dutq9pLuHVY0GN5ngqPfiXKW/ZHqaVr6G0j9YkNJc9NEsif8N7HFFrwo9+XW3z9/RQgi+CvjaDx3rQn76E0s7SGXFVFgc2nouA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319757; c=relaxed/simple;
-	bh=CpwCTD9AnUzXrbQp+d9zubfUboByeErtnwKYNnZJ0Js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Bk6nq/XDDpRoEUdifEzir/5K2HaspSu2TCQDTciRj0relt0QT3SYUGQHjBmQxsgCFOKJerNKmsoEV86RpVtww9/QzJe3+u3Z203ahX8PuxxlxF8YkqfgXqR9xAM87Tem1CzCGnZ/pV5cWszFjvgTbxcloKsIQK+JsqJlJ4X7vlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aAk3ld15; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750319780; c=relaxed/simple;
+	bh=UCfSw+yCArYJHPSyAoRS84vmU7QunFE9AYu4txg8Quo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=opLrKSCWV9ViMm9EkMRoGNUG9tdn8e21j51cSfu/y2Y1pfYsSZmCJDzIGBbrF3xA+y8FrmWUJ/hqGtrUoCYWtDuOAkFpyvllDgxaN7xgDymqYpHRRqQ51m2Hfor/IxBJ6KRrPOFoBMLub1w4lKW7ekX/RtmRXA2JAXocv9xHW3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KKIK2SLb; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aAk3ld15"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55J7tlWX336308;
-	Thu, 19 Jun 2025 02:55:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750319747;
-	bh=bKV7bT5H8Ss8TSiS7uA6G43ZL43gAMDND/KK9ixN5Mw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=aAk3ld15E3n6L6zqIsqMRoNXNgNjmPwnDcRR7GNPYGAIkeCz0LbMUH6NEMZ6ro2kb
-	 907wITu307DEzC9OxvXV/FyErbsVKvS9mrgXQA1UXLhUziedAPXHz+f0rzA6Cl4T8M
-	 /58xKvPW2uDjRGpQ1rcTrgADVd55jbZC5stGAaY8=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55J7tlTr3513825
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 19 Jun 2025 02:55:47 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
- Jun 2025 02:55:47 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 19 Jun 2025 02:55:47 -0500
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55J7th2X764414;
-	Thu, 19 Jun 2025 02:55:44 -0500
-Message-ID: <28c88a78-fe34-4595-b260-c6cc40897bc1@ti.com>
-Date: Thu, 19 Jun 2025 13:25:43 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KKIK2SLb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Xk3lGqy9F+weq12Ohy6zQegZ0lkVzClQ/YdIVJy2EqI=; b=KKIK2SLbn3naev7zUk4Z+9u4+5
+	2GkAhj3EpJauuizn7W5A9KkP6dzLw11G0j0KecXFcdv0W3pRaY4lda6sMMclwVbFu5Wn/j21ggfzW
+	cZTUkYZ3CciIBw8DhDQYTv1BgKPmN23CMXbNpv2HMyUCK4fCn2ISm0KkNgvhawiHYLRKXRG26t0mw
+	3LVSmLlB9EVMaEYk+v9YXqO5xXQgvP10/KwEI4ON7rQ1mLLHPVk4W82K2LaOM8+Fgmw75/PDNr95+
+	4kjEOIGbQKUAV8do5KkQC4zQdt/IU67o4VzTVkgmcBMLObTK9BIRwver4nBm06FHWBK/9wceDW8z6
+	PjS3iHwQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSA84-00000004NNX-1S5v;
+	Thu, 19 Jun 2025 07:56:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 392CD307FB7; Thu, 19 Jun 2025 09:56:11 +0200 (CEST)
+Date: Thu, 19 Jun 2025 09:56:11 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 05/14] unwind_user/deferred: Add unwind cache
+Message-ID: <20250619075611.GX1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.603778772@goodmis.org>
+ <20250618141345.GR1613376@noisy.programming.kicks-ass.net>
+ <20250618113359.585b3770@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase
- tag to "pcie0_ep"
-To: Hrushikesh Salunke <h-salunke@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <s-vadapalli@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <danishanwar@ti.com>
-References: <20250610054920.2395509-1-h-salunke@ti.com>
- <98e04654-a693-494d-9f60-930b6a4cd84a@ti.com>
- <b24a97fc-8dac-443b-aec7-317b9e393f2d@ti.com>
- <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618113359.585b3770@gandalf.local.home>
 
+On Wed, Jun 18, 2025 at 11:33:59AM -0400, Steven Rostedt wrote:
+> On Wed, 18 Jun 2025 16:13:45 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 
-
-On 12/06/25 15:46, Hrushikesh Salunke wrote:
+> > > +		info->cache = kzalloc(struct_size(cache, entries, UNWIND_MAX_ENTRIES),
+> > > +				      GFP_KERNEL);  
+> > 
+> > And now you're one 'long' larger than a page. Surely that's a crap size
+> > for an allocator?
 > 
+> Bah, Ingo suggested to put the counter in the allocation and I didn't think
+> about the size going over the page. Good catch!
 > 
-> On 11/06/25 14:17, Hrushikesh Salunke wrote:
->>
->>
->> On 11/06/25 14:14, Vignesh Raghavendra wrote:
->>>
->>>
->>> On 10/06/25 11:19, Hrushikesh Salunke wrote:
->>>> AM64X SoC has one instance of PCIe which is PCIe0. To support PCIe boot
->>>> on AM64X SoC, PCIe0 needs to be in endpoint mode and it needs to be
->>>> functional at all stages of PCIe boot process. Thus add the
->>>> "bootph-all" boot phase tag to "pcie0_ep" device tree node.
->>>>
->>>> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
->>>> ---
->>>> This patch is based on commit
->>>> 475c850a7fdd Add linux-next specific files for 20250606
->>>>
->>>> Changes since v1
->>>> As per feedback from Nishanth, changed the position of "bootph-all"
->>>> tag, according to ordering rules for device tree properties.
->>>>
->>>> v1 : https://lore.kernel.org/
->>>> all/20250609115930.w2s6jzg7xii55dlu@speckled/
->>>>
->>>>   arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
->>>>   1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso b/
->>>> arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>> index 432751774853..a7e8d4ea98ac 100644
->>>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>> @@ -46,6 +46,7 @@ pcie0_ep: pcie-ep@f102000 {
->>>>           max-functions = /bits/ 8 <1>;
->>>>           phys = <&serdes0_pcie_link>;
->>>>           phy-names = "pcie-phy";
->>>> +        bootph-all;
->>>>           ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
->>>>       };
->>>>   };
->>>
->>> Are the patches for PCIe boot support merged to U-Boot or such other
->>> bootloader repo?
->>> No, they are not in the U-Boot yet. I will be posting patches for PCIe
->> boot support for U-Boot this week.
->>
-> 
-> I have posted Patch series for the PCIe boot support in Uboot.
+> Since it can make one per task, it may be good to make this into a
+> kmemcache.
 
-
-Great, but dont you need bootph-all in dependent nodes as well such as
-serdes0_pcie_link pcie0_ctrl? how does this work otherwise?
-
-> 
-> 1.https://patchwork.ozlabs.org/project/uboot/
-> patch/20250612084910.3457060-1-h-salunke@ti.com/
-> 2. https://patchwork.ozlabs.org/project/uboot/
-> cover/20250612085023.3457117-1-h-salunke@ti.com/
-> 3. https://patchwork.ozlabs.org/project/uboot/
-> cover/20250612085534.3457522-1-h-salunke@ti.com/
-> 
-> 
-> Regards,
-> Hrushikesh.
-
--- 
-Regards
-Vignesh
-https://ti.com/opensource
-
+Well, the trivial solution is to make it 511 and call it a day. Don't
+make things complicated if you don't have to.
