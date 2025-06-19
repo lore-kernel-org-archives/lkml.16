@@ -1,114 +1,74 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E1C22539D;
-	Thu, 19 Jun 2025 11:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5269D22539D;
+	Thu, 19 Jun 2025 11:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332350; cv=none; b=nhRHwz/IMAeCk+zpaKnYS8YmuGcoTiJNDwk1N6ACH/exyJG8oW8USXWiDCgS7SiCuPMWNRQUcJ5tGFV1cn7HfBqax8onuG95pnQLxNTUZYUZSazMYjdJ8MoZpVxODQIe4oxoslEcmNiMxGEQ4PEdsIWJ3KNzDM0A+xa58GauEio=
+	t=1750332409; cv=none; b=dve5xSHyuhjZQVnEl3VAG1CELIk046a6tJYEs5NpAHnKY+GzmX2VgWLu7LJ0e9WatlgClQVGuUN/RMHhUPmaV6cyJjgtTZYIcdzorkGCxCb6JlY8TpwxL6H/870553dHhxptSkrjIxSFIKTODHR/8+xRu3bme0XnY2oR9DHV2jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332350; c=relaxed/simple;
-	bh=i0izfvAJyCKLVIQ9k2OFX5GZwef7xZQk0VXehAX65nQ=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=q+UwFsNr5k6HL6sMO1dFOho9+gXDHdxXno6WXEPJV5a9e5S8q5mEBRS6FFxB6k2Mb2Hd4o6DMrPRP48iasMFACF07IYFhZQHP0C3Ukw3g+vcWrZA4Wj7fkCdQL/lujtjKzzLXZS7S9Lmai7CQ0NWdZ5jGOFpjxgADh+vpBAPtP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gv8fC/B+; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750332409; c=relaxed/simple;
+	bh=YiyRb7pucNT3+6sXw2ZPl1qiFdH+sijuowL1VDYl3BM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=r+6BREcLPRVpElaGD9lG39fe+56jYZL0K1bnXyTKUJ3sbUdUlj4ZDkFK8GD7DtwJDRzPAY421/xD2h6LnpWTE/oPCpjb8PGGLAP4vWgSEItXUS/KA75fO3ZWVWAPxv7txJ91hCJnoIUlFKt6er6b6NC2q/xdKqTANi3eoVQTYx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGWRVZe1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gv8fC/B+"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235ef62066eso8861095ad.3;
-        Thu, 19 Jun 2025 04:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750332348; x=1750937148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=euBuSVlRflY4WIoq5zaHnD8P2J7lITtd19RhSQX9cwU=;
-        b=gv8fC/B+/J/aGkQ5tn0z7PD/Uq2AaYc0kJP2R46Wjx4QXWoq1aVxCIfliGJ4q95XyX
-         zQiVlbf7WO5t1kb56neK5hMgTe4ShBNZpKMsyYw4nNioz9vnWeoe5iC9hqpxC535lFNa
-         dbk3xze5SWNPSG0YesrBox3n/DCtPvozXD0EbXJSeOdi7P1Ec4+P8dywQ2RF5mWXyvNe
-         emAYz1K0JXr3qlpbrNLmWaHawVNRTNGj6j8TWUUbKcvciNu/vtBI8tvejhkdeGSJkN5e
-         sZV0nPpX5zyflakPNU2ZEckOnXQUVnsBwxv6R9bQkb1mMjYyqsur0SniT/ezxsCnN0fJ
-         7zhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750332348; x=1750937148;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=euBuSVlRflY4WIoq5zaHnD8P2J7lITtd19RhSQX9cwU=;
-        b=gl4swwSHQqRI+7pMiOvalkg27ZtWx4p7MqusitbMiK6h+IEqGz02ixouJlRYafz2+h
-         bfdjhctBqfpl/JLQyyA1ASKD9nADB59T6JwUjrgh6kAaob/LiG1DRM7i4bTRZ40hirgS
-         BbbfUm+kf3FFdVYHTce+EfQ5H8gycNU5RMzr6Y9HkKTW2MCBaUWbm2MgONDkB5GGG99c
-         aCFPJtsyBnJUjDuEffKFaGMoXD1Xr0DLTzzBN3jB9xnhlpAhmvtCmSEJN4vzes3TSaZU
-         Q36wE4qjyAGW95Bj42uQckOXy0dLPRtFZ+nvFJ7L2qwy3Z29tnPpQRbuqSzFXXdRpZYe
-         YxqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWq6cmPWLKEx3K0jHpuVkN/8+mvuSoZxgiF5/kdmO/7TQwsk7lgOlng3HRsNf+rSL3P3bSa64w8Az2geE=@vger.kernel.org, AJvYcCXnA/OEzb0FvBjVuaGQEDBPDj7jgULduYRl/3c+EDvZptogLb+vDPd/RQpaGM2ANTc4Sw9Z7TKs1O6/TA3ba8o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqPiSn6Qq/XEDGqMg0nJuGtSYSCnn+Xb3wA6qZGZoSoSeBC7ao
-	BH+dsZsVocIqSCwjpDv5Ycy1+JLhrqrB0iMBqq5Z1tM++YveUaI7NTl2
-X-Gm-Gg: ASbGncujKT+FLdoqQF/wda3a//Gth6cglAsv9LhhVmYd09RZEkyK39Hiq1ls0WzzSPJ
-	Ba7fovpyGHNii4UM2JeWGBdlyPOA3lEcZSXzUj4hFPMN77oHVz/T2hykZL+ekvxjgwmWQW78o2u
-	XAWFLBOlGjdTybDJzC9HomRDl0y+Wn9OnCgzH6l5PQTxCevB+Z4DvXBII3mWMa6naMsYG0uvyAb
-	lijRZ34bRbN6ytw4N94PhyPqg5S6XxVsHnkNQpRZhqt0mzv6CJnV+5yqWeODtjh0201GdMSWTmB
-	ScbgkMZ+Io+YW8apUurWnbhdojZuJUhRT9csItC1nxhuQhV9rGuGSfMg8BC0EyjfUy/SoXfkwBw
-	fa+SN5D5/v6igdst1X5/XXV+w4VLRlC1kB53I/wK3qJHoczpL+nc=
-X-Google-Smtp-Source: AGHT+IHMrb6gIJY17p87seGqfpNAzxyeWFXKunrBPvaNaPvE4IkCuWrXclktERXTgd768DiC41/d4Q==
-X-Received: by 2002:a17:902:d4ca:b0:232:11e7:47c4 with SMTP id d9443c01a7336-2366b3501d6mr325152125ad.15.1750332348235;
-        Thu, 19 Jun 2025 04:25:48 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a4278sm117969175ad.78.2025.06.19.04.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 04:25:47 -0700 (PDT)
-Date: Thu, 19 Jun 2025 20:25:35 +0900 (JST)
-Message-Id: <20250619.202535.960773899864219488.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, ojeda@kernel.org,
- aliceryhl@google.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com,
- boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org,
- gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
- lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
- sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods
- as_micros_ceil and as_millis
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <87o6uk859b.fsf@kernel.org>
-References: <nGua2ftAnkipxGpZlW-9RYB0309pR0BxmzzR1rUx-LWFRRaiuycAACIWx6mPAp9PQcxmF5d1xC14XIu5flxBiA==@protonmail.internalid>
-	<20250617144155.3903431-2-fujita.tomonori@gmail.com>
-	<87o6uk859b.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGWRVZe1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D299C4CEEA;
+	Thu, 19 Jun 2025 11:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750332408;
+	bh=YiyRb7pucNT3+6sXw2ZPl1qiFdH+sijuowL1VDYl3BM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=rGWRVZe1Jq0LFnj/uHkCyf65/ZmMVek9uGDJO2sdON4Q5sqap09KnZe1E5WMa8trC
+	 k82LUXqM6AW0D7jyid1Pj1mhBwxPayfKs0KUwZA1kgwG+A6sm+Izqwx93NCVxbLk/j
+	 2CNCZSS7sosAEuiJITueiPzgUzDd6q8vjVK8WOS4znY9tDxUxORGhI/ETCA7WZHsDX
+	 7J1Nqn2QjHJ6hoKktlYSdsI37cqteX2vBZAVGW6+E5QPIwdbisB9bM7Wy3Gij7noOI
+	 3LKvlSiARObPkAy/oqu8x+jYUpjA73q/oNJ3AhuuSq6ahvATRjfTSGggqFiEbfuXjD
+	 Tu5aei6AOKlIw==
+From: Lee Jones <lee@kernel.org>
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Andy Shevchenko <andy@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+ Gatien Chevallier <gatien.chevallier@foss.st.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, 
+ linux-iio@vger.kernel.org, =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Olivier Moysan <olivier.moysan@foss.st.com>, 
+ Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+In-Reply-To: <20250610124855.269158-6-antonio.borneo@foss.st.com>
+References: <20250610124855.269158-6-antonio.borneo@foss.st.com>
+Subject: Re: (subset) [PATCH 5/5] mfd: stm32-timers: Fix build warnings
+ about export.h
+Message-Id: <175033240599.700502.13443689743832586360.b4-ty@kernel.org>
+Date: Thu, 19 Jun 2025 12:26:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-On Thu, 19 Jun 2025 11:12:00 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
-
->> Rename the Delta struct's methods as_micros_ceil() and as_millis() to
->> into_micros_ceil() and into_millis() respectively, for consistency
->> with the naming of other methods.
->>
->> Fix the commit 2ed94606a0fe ("rust: time: Rename Delta's methods from
->> as_* to into_*"), wasn't applied as expected, due to the conflict with
->> the commit 1b7bbd597527 ("rust: time: Avoid 64-bit integer division on
->> 32-bit architectures").
->>
->> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+On Tue, 10 Jun 2025 14:48:55 +0200, Antonio Borneo wrote:
+> After commit a934a57a42f6 ("scripts/misc-check: check missing #include
+> <linux/export.h> when W=1") and commit 7d95680d64ac ("scripts/misc-check:
+> check unnecessary #include <linux/export.h> when W=1") we get the build
+> warning with W=1:
 > 
-> Sorry for messing up your patch. Since we have no rules against rebasing
-> rust-timekeeping and the PR is a few weeks down the road, I will just go
-> back and fix the original patch. Keep commit history clean.
+> drivers/mfd/stm32-timers.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> 
+> [...]
 
-I think it would be easier to resolve conflicts by applying the typed
-clock sources patchset and the patchset to convert hrtimer first, and
-then applying the division patch.
+Applied, thanks!
 
-Then please ignore this and apply only the second patch in this
-patchset.
+[5/5] mfd: stm32-timers: Fix build warnings about export.h
+      commit: cf5d2f2deaee5dbfcac2db8758c3e6e0864a0c86
 
-Let me know if you need any help.
+--
+Lee Jones [李琼斯]
 
-
-Thanks!
