@@ -1,149 +1,128 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0DD132103
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64FF229B29
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333281; cv=none; b=KepWs871viExpfXYJKP9ucTLI3xBU5duwiTMK+IF4li70ybFsEGGYio0qjVHCEURKdUSBqsXjSO3D3VzYMC+7djPW79FgnvPCBs0rpVN87cAjhuss8G9d7LQzXgQDiRJTD9bTsbqGhw25O4KzqmwW5Yo1eRtsF2EEtRBNu2PclE=
+	t=1750333298; cv=none; b=Fj+eWL4kzDKIf9i2XwiJOs2YpPG8HoreKpeQEovQOrd9XazviM0t92gXs+Xhs0+Oy6LDmBpOuOzVnyz5AQQ8MvfCkBYgTXR8ffZLBhsaWMvVi+prwFoLtHIePSLh1dEWKA4iPqtsVFBjhOmFb0ApeiXpvuAH7ICWOYr1ZoRDUnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333281; c=relaxed/simple;
-	bh=aZ7rsXK+pQ63res4/2ZuCtjBRras3Ceyq6psDA84uRc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=kjHQ7VMKCKcM+Vo1OsSiAmbowDDVw966xuD4H5yZIAt3J1Hy33J1N1Efp5CF69mya0AWZ5Lwpv+XD51aEX0cDMwWnUj6w1XAxbp1Sndk/Nm0k6C51DSZTKP7neXBXmyQHYL0BCuwnbU+ibop60kpvs25i6EYmf/X7NU1GZN8kVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=P92wfx2k; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1750333298; c=relaxed/simple;
+	bh=FNkRJbjUbXtGGE6vjhHrYlnt1hp6guFu6M6ANMABhwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=utPGtyw+7Wio4VW8bKBQcmrpoGpQgKQsRRio8bI+vj70KBRDZTTjg1Fs1RKcYusuwAf/WLz/rFKDj6RUIFO1TtJOXH2TL+T9qVkEDRsKItwWLbk+N8d9hZIkzX6jNWeg4XwlYeZRKKVC+lYQc9bqFBux3E9Mj3+kqrtZTXMp/vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FeJazXEM; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="P92wfx2k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FeJazXEM"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e82596e88c4so652705276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750333294; x=1750938094; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Gg7ntijtB80tv+b2enRtRMmTEicRNdW1NiQNVbSDNo=;
+        b=FeJazXEMOjHde4QHNCFjVSVDnhPcE6Xy0G5YeyvdEcbZ8YEaokBq+Ys4zrqtht0bdR
+         5TLVJQvgAjU7sKdEdpz2j4e0JtpV0eScMMbx3TU02Csu072OndkAQyvVCPOsuxDGNWJM
+         r7ujWsdP7Ick8ifhdGDIF0NDBpGQ1Y/jWzT6rPAcn8cI5nC5+fqizuHgIGKY2AbpbV+w
+         mVB5qoRSBMGugRh1RlaUovWtwgmSmyvvXr2yloHc0Q8rc+9u48IQa89nnaCCaIT73VO1
+         5l7wR7bnZhLx9eyvpmsdnlIi5nLVS2vkt5ahMEfIMqoe637wU1NZFEY+LyDLxj2IK5hx
+         BeWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750333294; x=1750938094;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Gg7ntijtB80tv+b2enRtRMmTEicRNdW1NiQNVbSDNo=;
+        b=C8Jx4BvyAG/z92JJQ+3pxOoNUa/4OKbFJH5ArdcnM/3XOPWXsK8N0bVLj+JjrLrFrt
+         8Hpdk9rubIjv0iwSbYVX0n+Zq/u0A3x8w2WG2gtUAdU3JDRpRx7Yx9Om8bkdtFp3WrvF
+         OihNMWXG+zOrf9csz2q23E7C+vBXJGkIBCAdBbNnQpDo1DaZQaDSFmQ82gXiCfmM35X3
+         6TYLTWYcE/HNe5fq642JtRrqsdoi10n/zxBJJ9JT5iL37eDzopCKcR75nYHpTLjrnEJl
+         Gh1e9uQXksbqaJ7jwTYd5gR3N9Di8o4uMo2xYWcQHaPvZN4idMpFN8/S+eMszLUpZ1jm
+         16bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOOeL9woCl4S5kAhE7Yvh0iEVUP4Vitxi9c9rHQVjwzhm1X2AeLzBtly6bBAS5t8w9sCr7ghnd2BUHy4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEwqcYBtomhDrlgnDJCWLetXodvTI6pPX1Umhj1tS7+5QHWtnr
+	IWexkf5j+xitqM2zSmC+tm+Y1Mg81EV3v32iqlOsqz+Xvh4a8xAS92nM356veHMPq0pyM++SMAp
+	T22uBp+35gjNeVI5U3e63KrUoWtcUxIdZVQuRXRbYHZukLAZ0FrCTrOA=
+X-Gm-Gg: ASbGncspjh1a/OlIKlXrtNju/gqnGePMf+UOdmvTlqCKiO61hZeoAo7YaLZcBcRWokp
+	/6xYUJOEmcFiITtsr/bUH5EXEpjcudo5E/G4CFQ5iye2nUL0lTF7vLMgAz3L6enQtSiMyXh8e1O
+	KdC9eNqO0013Y/6QoERiJuuqv1riw+aw7XlTq1yDgkAVOH
+X-Google-Smtp-Source: AGHT+IESytQv1SK+Cd0PiaLJS4H3+JL25iRqvMAyP4xLxjP0vD5U9p3Ec+J/uOKogngm7hlSby5T2PNl/VdbIi6REWE=
+X-Received: by 2002:a05:6902:1b8e:b0:e81:9d60:93a4 with SMTP id
+ 3f1490d57ef6-e822acac581mr30264102276.10.1750333293696; Thu, 19 Jun 2025
+ 04:41:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1750333273;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UlxTUj5Ir+oO3iGWYKmoJ9ycuaXkjQkkYTvLvsQbhwI=;
-	b=P92wfx2kjqVESzvsjtMDG06Ohguto8BeIB3FFHgIMXvCnwAQj49+r7N2yWFEA4MI6m4Q59
-	shyyFpYG9kEpxklcX2EbTabMIHxV0RJH4z6DOP5bnrtIWy7KlMqWw0cUYlovxX2Y3O0vaJ
-	IDWXdqxT98Ge7B7XTe7HuYVWBLXeC+TscRPYns1xaFP4vdI7g2Itwx2jK7hjZCwm2e4BFd
-	VAsBsm1t5U6vOFMINsb/VMqcX71NMDHyU/QfKac88/qitTP5aYH8q9p7cWoKujwJUj79Nv
-	+TvErZLKsDYOSXadvbF9iz7EaVd7Xrun7+xwJqCDCW3lR6wLDt88+H0abmFNvA==
-Content-Type: multipart/signed;
- boundary=b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 19 Jun 2025 13:41:03 +0200
-Message-Id: <DAQHCWR6W4LD.2Q1H9B9JO2LJZ@cknow.org>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS'
- panel description
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Olivier Benjamin" <olivier.benjamin@bootlin.com>, "Heiko Stuebner"
- <heiko@sntech.de>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
-References: <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
- <DAQEX04P5320.CQDU7SL7AV4A@cknow.org> <5461462.0VBMTVartN@phil>
- <c26ce505-343a-4759-90b5-a026c66979c7@bootlin.com>
-In-Reply-To: <c26ce505-343a-4759-90b5-a026c66979c7@bootlin.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+References: <20250523134025.75130-1-ulf.hansson@linaro.org> <fd4cfe7a-e29b-4237-b82f-48354deead3b@ideasonboard.com>
+In-Reply-To: <fd4cfe7a-e29b-4237-b82f-48354deead3b@ideasonboard.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 19 Jun 2025 13:40:57 +0200
+X-Gm-Features: AX0GCFuFeZwy4zEBgov1_20jiDIxj_2DarP8G86PtCbzf_bxqvHrj-WuuKyOtBY
+Message-ID: <CAPDyKFpprO=HGuiHX3MQ_+m1YRnaWG=XwCx8-fSdXak8VBDUbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/21] pmdomain: Add generic ->sync_state() support to genpd
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>, 
+	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
+	Michal Simek <michal.simek@amd.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-
-On Thu Jun 19, 2025 at 12:47 PM CEST, Olivier Benjamin wrote:
-> On 6/19/25 12:31, Heiko Stuebner wrote:
->> Am Donnerstag, 19. Juni 2025, 11:46:15 Mitteleurop=C3=A4ische Sommerzeit=
- schrieb Diederik de Haas:
->>> On Thu Jun 19, 2025 at 7:21 AM CEST, Olivier Benjamin wrote:
->>> Thanks for working on upstreaming PPP things :-)
->>>
-> My pleasure. I also have
-> https://lore.kernel.org/linux-rockchip/20250509-camera-v3-0-dab2772d229a@=
-bootlin.com/
-> pending =3D )
-
-Happy about that too, but I 'happen' to research DSI connected displays
-(for other devices), so I felt comfortable to chime in with that.
-I haven't looked at camera stuff yet (and it's not high on my prio
-list), so hopefully others will chime in for that :-)
-
->>>> Fix a few issues in the panel section of the PinePhone Pro DTS:
->>>>    - add the second part of the Himax HX8394 LCD panel controller
->>>>      compatible
->>>>    - as proposed by Diederik de Haas, reuse the mipi_out and ports
->>>>      definitions from rk3399-base.dtsi instead of redefining them
->>>>    - add a pinctrl for the LCD_RST signal for LCD1, derived from
->>>>      LCD1_RST, which is on GPIO4_D1, as documented on pages 11
->>>>      and 16 of the PinePhone Pro schematic
->>>>
->>>> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
->>=20
->>>> +	lcd {
->>>> +		lcd_reset_pin: reset-pin {
->>>
->>> I don't know if there's a 'hard rule' for it, but I'd recommend to use
->>> ``lcd1_rst_pin: lcd1-rst-pin {`` as that would match the naming from
->>> the schematics. I realize that some but not all (other) pinctrl nodes
->>> follow that 'rule', but it helps with traceability.
->>=20
->> not a "hard" rule, but a strong preference.
->> I.e. we want people to ideally be able to just hit search in the
->> schematics PDFs for the name they saw in the devicetree.
->>=20
->> But following the schematic names, is the general goal.
->>=20
-> Very fair. I used "lcd_reset" because even the schematic is not super=20
-> clear: it uses "LCD_RST" on page 16 and LCD1_RST on pages 11 and 16.
-
-AIUI, the GPIO pin (GPIO4_D1) is labeled LCD1_RST and on page 16 you can
-see that is connected to LCD_RST from BL102-G39-1FR.
-The definition here is about the GPIO pin, hence LCD1_RST.
-The other part of my suggestion was related to another 'convention':
-the name and label/phandle are the same with ``s/-/_/`` (and 'reset-pin'
-is not specific enough; there are a number of reset pins).
-
-Afaic you don't need to mention that I suggested the mipi_out related
-changes; the reason to do that (unneeded redefinition of already defined
-things), is.
-
-Cheers,
-  Diederik=20
-=20
->> If this stays the only suggestion though, I can fix that when
->> applying. Or you can send a v3 - up to you :-)
->>=20
-> I'll correct to lcd1_rst_pin and send a v3 (most likely later today)
+On Fri, 13 Jun 2025 at 12:33, Tomi Valkeinen
+<tomi.valkeinen@ideasonboard.com> wrote:
 >
->>>> +			rockchip,pins =3D <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
->>>> +		};
->>>> +	};
->>>> +
->>>>   	leds {
->>>>   		red_led_pin: red-led-pin {
->>>>   			rockchip,pins =3D <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
->>>
->>> Otherwise,
->>>
->>> Reviewed-by: Diederik de Haas <didi.debian@cknow.org>
->>>
+> Hi Ulf,
+>
+> On 23/05/2025 16:39, Ulf Hansson wrote:
+> > Changes in v2:
+> >       - Well, quite a lot as I discovered various problems when doing
+> >       additional testing of corner-case. I suggest re-review from scratch,
+> >       even if I decided to keep some reviewed-by tags.
+> >       - Added patches to allow some drivers that needs to align or opt-out
+> >       from the new common behaviour in genpd.
+> >
+> > If a PM domain (genpd) is powered-on during boot, there is probably a good
+> > reason for it. Therefore it's known to be a bad idea to allow such genpd to be
+> > powered-off before all of its consumer devices have been probed. This series
+> > intends to fix this problem.
+> >
+> > We have been discussing these issues at LKML and at various Linux-conferences
+> > in the past. I have therefore tried to include the people I can recall being
+> > involved, but I may have forgotten some (my apologies), feel free to loop them
+> > in.
+> >
+> > I have tested this with QEMU with a bunch of local test-drivers and DT nodes.
+> > Let me know if you want me to share this code too.
+> >
+> > Please help review and test!
+>
+> I tested this Renesas white-hawk board, and it hangs at boot. With
+> earlycon, I captured with/without boot logs, attached.
+>
+> The hang case doesn't look very healthy with all these: "kobject:
+> '(null)' ((____ptrval____)): is not initialized, yet kobject_get() is
+> being called."
 
---b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b
-Content-Type: application/pgp-signature; name="signature.asc"
+Tomi, thanks a lot for helping out with testing!
 
------BEGIN PGP SIGNATURE-----
+rcar_gen4_sysc_pd_init() calls pm_genpd_init() and
+of_genpd_add_provider_onecell().
 
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaFP3UgAKCRDXblvOeH7b
-bi9DAP9ZolhYlKXrTz+ChkMa/hViAuhi8CvNP7H+iQUeMfPungEAvGMwNigMNSff
-1ZcRaGagcoiWom9lXI7yxhvd5TpmGws=
-=K75Z
------END PGP SIGNATURE-----
+rcar_gen4_sysc_pd_init() is an early_initcall, which I guess is the
+reason for these problems, as the genpd_provider_bus has not been
+registered that early (it's done at core_initcall)
 
---b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b--
+Do you think it would be possible to move rcar_gen4_sysc_pd_init() to
+a postcore/arch_initcall?
+
+Kind regards
+Uffe
