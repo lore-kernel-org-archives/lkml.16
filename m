@@ -1,33 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351B63085B2;
-	Thu, 19 Jun 2025 16:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350443; cv=none; b=RIhp0MR3p2/qTLViOCRxWwAUYUL6+EuY3cMJ2yAW3WJnKk+U2xKhI36Jv8Wob9uTBGULY+NemvV/KDiDS1UBVA9zZrkIkoCma06t+SJI2nkjxs42ejDo6NspEJq4hkPAM6sFZk5UorOq3WF8S38szPKKO/hQD3YlTzhORJixoj4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350443; c=relaxed/simple;
-	bh=ut7sBnFRrF7Mqh47DfQbuG68oA6w2Zz7sw0xx8b8S6g=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7B33085B2;
+	Thu, 19 Jun 2025 16:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750350501; cv=pass; b=hOIfSfy/gqEWJZOgplWHfDEh4EtsWetcw21+zS6mY0THm+4xOwVbzBCUCLN2+28t7sKpfM2bhInYfU5beQ+yWIjpUbMbBJ/X62VE/44+sWMyw3cScWUPxT6as3jW2lku0Nn2KkUi/t+GNSTkbgOINSFdFwlJCBqSwmAazGHzPJA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750350501; c=relaxed/simple;
+	bh=0A5Hirrm/1Adlqdoo/cMvx+fh1eWGCy/X/w+oEcbnGc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VnWSQqLk18jJ7qSCMaaiB09q4D7ARe7X9lmQRNb0U6cLl5yuDoaX44NBwLeWllXDk26kdVq+UU1S6H1SBxc1zcBDwn351GnUZh3mWIJjSsMCAkxxXN12M3JdvzEVPd9FmqW5J/54pQt8PsX31rrh6bXdap15UDpzmRxol7dTBYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJEkvDDr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NusWCvnuylRvhy+GYXNdjY+tBvvwxxb7pGUgiYUy31L1tvSeejx6epGoy0Mok3ti43v9xoeTnBtzDVMBwquhZ9JIq+qqukFVNc/oiW9xiyMI7e0aC5vPIUva+lyaF8bze43jfOHahnCfa3hr5A2FkwKrYHHm7pf9vea0K8ooebo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=dvQ7yEn2; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJEkvDDr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761E3C4CEEA;
-	Thu, 19 Jun 2025 16:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750350442;
-	bh=ut7sBnFRrF7Mqh47DfQbuG68oA6w2Zz7sw0xx8b8S6g=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FJEkvDDruVAykG1bun51wz0patqolTYo6wGXEy+dzHZmtcmsQ03UAy0Hm012GEORL
-	 MSkpczCrEztNz3k8osJYKaEU7TilWHQtsqxDtRfQwmGJEg7g2CTARWQXiozKWmcdRv
-	 zEjeKFP9QQSXBIHpssKwJVBMMQeVZYKjfz6LAMv1P6YKm4quJWyRkV2RehkBNPxoyW
-	 KNd0bgGglA7uKKPW3KU6iO6kypXn4fCiJpYsCJovkmacX6fAol55yKd4bflvCVh5Fy
-	 eFF1WCzTwIoPaPVhHPtQz5MtMu/61p5uL/OXiAucZlelZw5ThyCNIim78dB3k2FiiK
-	 Ufs/LrsP7yquw==
-Message-ID: <c5e3b6fc-e9dc-4551-b632-25dd2db9ec08@kernel.org>
-Date: Thu, 19 Jun 2025 18:27:18 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="dvQ7yEn2"
+ARC-Seal: i=1; a=rsa-sha256; t=1750350477; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cv7cshst83TrnjaCmvllkmN1E3sluuWfbFU/aFnHdPxoIiZ74Loz0kiUfgovvgZ9sJYPLVZZ5KaCsNfmfW/eD4viLVe3FzHDtRCrLauA6KTwCPETGX6LMA+xfQWDd/8+AjJwT6ATyCi6mJUwnB067uUd3H/aKvuOEef0p2yENNY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750350477; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rVGVg+OYlp1Qk6fmw5rcJaBayL/Ch3LmOzOtD7sBbTQ=; 
+	b=B0fqkAYa1GChomZVAEO8hfuVtA/6ws8c7t3h8M1AMqoAjq7gj9nw2PVe8pTi9l1if57Q9V1dfbjTA8gXgrjMOPTMmc8xyQE9IgicFCC2pty4fyQcBfXe9BDZJNR/vOJ9NmbER7U2d12zDxTtQ6yfZ7H+j/HR7Z8PZQ9Skg1GPWU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
+	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750350477;
+	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=rVGVg+OYlp1Qk6fmw5rcJaBayL/Ch3LmOzOtD7sBbTQ=;
+	b=dvQ7yEn2PkcD9rwE4l1CKHMASbvPLEKc8iMdkF4UT5JFyJbQth2T7ltguaEV52P+
+	w6omdqpFnEr5iFwF9Bq66ybOCsFCGpaWNv0ptKQhpWkcujvJm6vvRypW8BxGu7AXeKT
+	k9M6aG032aBMEPm9XL3CX86YUj+7zt54lbzahZHM=
+Received: by mx.zohomail.com with SMTPS id 1750350476585176.7450336893728;
+	Thu, 19 Jun 2025 09:27:56 -0700 (PDT)
+Message-ID: <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
+Date: Thu, 19 Jun 2025 18:27:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,30 +45,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
-Subject: Re: [PATCH 1/3] module: move 'struct module_use' to internal.h
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Brendan Higgins <brendan.higgins@linux.dev>,
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-References: <20250612-kunit-ifdef-modules-v1-0-fdccd42dcff8@linutronix.de>
- <20250612-kunit-ifdef-modules-v1-1-fdccd42dcff8@linutronix.de>
+Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com
+References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+ <20250619131232.69208-4-benjamin.gaignard@collabora.com>
+ <20250619134752.GB1643390@ziepe.ca>
 Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <20250612-kunit-ifdef-modules-v1-1-fdccd42dcff8@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <20250619134752.GB1643390@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 12/06/2025 16.53, Thomas WeiÃschuh wrote:
-> The struct was moved to the public header file in
-> commit c8e21ced08b3 ("module: fix kdb's illicit use of struct module_use.").
-> Back then the structure was used outside of the module core.
-> Nowadays this is not true anymore, so the structure can be made internal.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
+Le 19/06/2025 à 15:47, Jason Gunthorpe a écrit :
+> On Thu, Jun 19, 2025 at 03:12:24PM +0200, Benjamin Gaignard wrote:
+>
+>> +static struct iommu_domain *vsi_iommu_domain_alloc_paging(struct device *dev)
+>> +{
+>> +	struct vsi_iommu *iommu = vsi_iommu_get_from_dev(dev);
+>> +	struct vsi_iommu_domain *vsi_domain;
+>> +
+>> +	vsi_domain = kzalloc(sizeof(*vsi_domain), GFP_KERNEL);
+>> +	if (!vsi_domain)
+>> +		return NULL;
+>> +
+>> +	vsi_domain->dma_dev = iommu->dev;
+>> +	iommu->domain = &vsi_identity_domain;
+> ?? alloc paging should not change the iommu.
+>
+> Probably this belongs in vsi_iommu_probe_device if the device starts
+> up in an identity translation mode.
+
+Your are right it useless here, I will remove it.
+
+>
+>> +static u32 *vsi_dte_get_page_table(struct vsi_iommu_domain *vsi_domain, dma_addr_t iova)
+>> +{
+>> +	u32 *page_table, *dte_addr;
+>> +	u32 dte_index, dte;
+>> +	phys_addr_t pt_phys;
+>> +	dma_addr_t pt_dma;
+>> +
+>> +	assert_spin_locked(&vsi_domain->dt_lock);
+>> +
+>> +	dte_index = vsi_iova_dte_index(iova);
+>> +	dte_addr = &vsi_domain->dt[dte_index];
+>> +	dte = *dte_addr;
+>> +	if (vsi_dte_is_pt_valid(dte))
+>> +		goto done;
+>> +
+>> +	page_table = (u32 *)iommu_alloc_pages_sz(GFP_ATOMIC | GFP_DMA32, SPAGE_SIZE);
+> Unnecessary casts are not the kernel style, I saw a couple others too
+>
+> Ugh. This ignores the gfp flags that are passed into map because you
+> have to force atomic due to the spinlock that shouldn't be there :(
+> This means it does not set GFP_KERNEL_ACCOUNT when required. It would
+> be better to continue to use the passed in GFP flags but override them
+> to atomic mode.
+
+I will add a gfp_t parameter and use it like that:
+page_table = iommu_alloc_pages_sz(gfp | GFP_ATOMIC | GFP_DMA32, SPAGE_SIZE);
+
+>
+>> +static int vsi_iommu_identity_attach(struct iommu_domain *domain,
+>> +				     struct device *dev)
+>> +{
+>> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
+>> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+>> +	unsigned long flags;
+>> +	int ret;
+>> +
+>> +	if (WARN_ON(!iommu))
+>> +		return -ENODEV;
+> These WARN_ON's should be removed. ops are never called by the core
+> without a probed device.
+
+ok
+
+>
+>> +static int vsi_iommu_attach_device(struct iommu_domain *domain,
+>> +				   struct device *dev)
+>> +{
+>> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
+>> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+>> +	unsigned long flags;
+>> +	int ret;
+>> +
+>> +	if (WARN_ON(!iommu))
+>> +		return -ENODEV;
+>> +
+>> +	/* iommu already attached */
+>> +	if (iommu->domain == domain)
+>> +		return 0;
+>> +
+>> +	ret = vsi_iommu_identity_attach(&vsi_identity_domain, dev);
+>> +	if (ret)
+>> +		return ret;
+> Hurm, this is actually quite bad, now that it is clear the HW is in an
+> identity mode it is actually a security problem for VFIO to switch the
+> translation to identity during attach_device. I'd really prefer new
+> drivers don't make this mistake.
+>
+> It seems the main thing motivating this is the fact a linked list has
+> only a single iommu->node so you can't attach the iommu to both the
+> new/old domain and atomically update the page table base.
+>
+> Is it possible for the HW to do a blocking behavior? That would be an
+> easy fix.. You should always be able to force this by allocating a
+> shared top page table level during probe time and making it entirely
+> empty while staying always in the paging mode. Maybe there is a less
+> expensive way.
+>
+> Otherwise you probably have work more like the other drivers and
+> allocate a struct for each attachment so you can have the iommu
+> attached two domains during the switch over and never drop to an
+> identity mode.
+
+I will remove the switch to identity domain and it will works fine.
+
+>
+>> +	iommu->domain = domain;
+>> +
+>> +	spin_lock_irqsave(&vsi_domain->iommus_lock, flags);
+>> +	list_add_tail(&iommu->node, &vsi_domain->iommus);
+>> +	spin_unlock_irqrestore(&vsi_domain->iommus_lock, flags);
+>> +
+>> +	ret = pm_runtime_get_if_in_use(iommu->dev);
+>> +	if (!ret || WARN_ON_ONCE(ret < 0))
+>> +		return 0;
+> This probably should have a comment, is the idea the resume will setup
+> the domain? How does locking of iommu->domain work in that case?
+>
+> Maybe the suspend resume paths should be holding the group mutex..
+>
+>> +	ret = vsi_iommu_enable(iommu);
+>> +	if (ret)
+>> +		WARN_ON(vsi_iommu_identity_attach(&vsi_identity_domain, dev));
+> Is this necessary though? vsi_iommu_enable failure cases don't change
+> the HW, and a few lines above was an identity_attach. Just delay
+> setting iommu->domain until it succeeds, and this is a simple error.
+
+I think I will change vsi_iommu_enable() prototype to:
+static int vsi_iommu_enable(struct vsi_iommu *iommu, struct iommu_domain *domain)
+and do iommu->domain = domain; at the end of the function if everything goes correctly.
+
+
+> iommu->domain = domain;
+>
+>
+>> +static struct iommu_ops vsi_iommu_ops = {
+>> +	.identity_domain = &vsi_identity_domain,
+> Add:
+>
+>    .release_domain = &vsi_identity_domain,
+>
+> Which will cause the core code to automatically run through to
+> vsi_iommu_disable() prior to calling vsi_iommu_release_device(), which
+> will avoid UAF problems.
+>
+> Also, should the probe functions be doing some kind of validation that
+> there is only one struct device attached?
+
+which kind of validation ?
+
+>
+> Jason
