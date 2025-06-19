@@ -1,76 +1,77 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8F321FF4E;
-	Thu, 19 Jun 2025 12:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7824821FF4E
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334624; cv=none; b=QVKhbGGSD2fr5Ny9WCYcYyfAilaPKZSlHCvYSncKKMd+TRyke0OLasPbm/dG8Sl/xo2lnjOY1SL6WmLtx80g+SiRelJH5lAUeDikvvvnTc+JVVqQW2183CEpYwhDI+C4FVb5y7j5QpICaImVkO/TjLtbDyetaFEtxSkBT7IyY0I=
+	t=1750334631; cv=none; b=NUWWaazq4dtoZINFTQIMbvUNMD8Ejel+RiOPJAQeqXE3/GZ/tByAfHdUoqlQQ7J3biFJBAp+NNxvn2nGshQ5UhqMrr4Bcfv84z3HdommFLUVebNdx3JFQxXdhSftLwfLiiZuLmu5Snz/m5SX9V2iYKouTmcSNDCO/1dtUFNdI1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334624; c=relaxed/simple;
-	bh=032EOE3JfPpptoyB/kdOX7ovRnOD3oMGpL43P9g44pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ako25OcEkmHCxbgYc+w/8xLP/Eya174SzEXxI7vFK7Wxw6u2Ih5OTLj22xDEUhcFKc4R5r0osrMuG0XeQlWIqipIlPYgptahlF+XGI9P5Fj2d4bYoda8k1BxT1g7VJA1yc5AVCp4gz2871L9eaZfDkKEBEAdMsork+DKzT/0AVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmYtYljV; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750334631; c=relaxed/simple;
+	bh=BYv1wKzoEogSiFAnybZR9Kuco3a8+54+9dV70GXXuV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iXxEpCQQMw2R88nEOBAbf7AtE4grJJIq84BNyAjTFQ05Rc6zoAiTVRkYa7q3cJ77hthGKx34BwoeAe6o30Oey8mKK5mf7EpQhGlhzBLlNzKec+px97QFN6eC0nCXRdLsN+Mffj8na9U7AkLtmoi791skVCGC4CMvfTIEkFw7QXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oKYlR/i3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmYtYljV"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23694cec0feso6903885ad.2;
-        Thu, 19 Jun 2025 05:03:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750334622; x=1750939422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GN05iZ9JjCWlPcMkETDxHecu9RgOSJlmZglV/hDkh9A=;
-        b=CmYtYljV6t4/NqJ8rYocV9UtcSHzFOejW+UkawLYBFLcrYaaB4B9i7KcGosICJZWfN
-         U74qMT2NADYuJFwpqQkgG71B6PN2re8WvWJwyvkdJdOGcrMM3Gsa3uwA5/4+nzrgsYrm
-         WldFFjf7FY8ApD59qrI+C3qTLgIK/4WvN1A+JxSgyjkWEKh1CGP97ATTsp7Ut6UUUzI3
-         ROA3Hnj7doDs3wMkgHn+urslGKUmOKdu3N2LUmPlwRWToQAvfIzlCUYuF9zZSDNG9Trh
-         +EBgpU/WPPX7oPBYHNni/ZvWEQj30geljMTiabr/opxbYG2PdkY6ynCE9qARYgUaeEb+
-         FWZg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oKYlR/i3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J6fcp5026180
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:03:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=5nn72h/qaf4NeAzriwbTHooNzuUElEUmweZ
+	aL3/DEzs=; b=oKYlR/i3W5WhSERMx040GTIyHrcKJiIpOXI2fhxUvVBrvvcuP3O
+	0qGVI32ia2XWmlAfvXkEkV3KG7jUT7meC0Eo/jsC7N9uW+hEupA6EqONx43PDDTB
+	QTNZNUOGpgu/iotcyYZG2587HqCtUUu+LbYMKe1Fa7rT8IX4iXRiAJGCWCm2XTmf
+	5TJjnmJz8psoEE250vpieSv9tso1AqhL/3UTGz+Ibfh+EyEmXbcd2Znig5+L9q3f
+	0DAjaxI5wL6lEEkDjaeCgS0V04fxwVElZeWCJO06Bv1NdCSc1PY3dFIKEKckR3/a
+	do9Sgzz3XOs3YA7gcvwUKvD6O07KwV5+58Q==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f7ftuq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:03:47 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-748e1e474f8so1079691b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:03:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750334622; x=1750939422;
+        d=1e100.net; s=20230601; t=1750334627; x=1750939427;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GN05iZ9JjCWlPcMkETDxHecu9RgOSJlmZglV/hDkh9A=;
-        b=RhbJOvGEMm5qqKL8/aQSg185Bpmth+kuy6ytuUiRWL/jsuFY8adzeB/e7idluChgf3
-         2nGla4Q6ckh3+gG6FL4PcY4bQOBj7qJV+iFa9pzbiy6A2nd16ZKfB9ZZIwvO+V4krrRh
-         Z2y3dZIIQ1A7Z1qLykH29z6IRVTd1fssaQ9fw2Fcvm9+bbl3xMQSXVMsuG/TuxnCemfl
-         ijCll8tFxc49i+gaLR8zeyEdOwuewMkZAsQMabDdfKJsQnB00B1TfPhjtluwE7vGRP3U
-         qRpgoDO2Lcgf47F50bjJJBIIxSRGmtrsr8WjXWjeWnv/H7nmoQEuMadBkoUZLxNA6ePl
-         mwUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrrJxww6OfrkNgyWef078Mbo4xfvRbM/XD15/W2BXQx3Xi96twhakdnAHrwsyybLhv9m1jCAXEGwjLfJo=@vger.kernel.org, AJvYcCXKj6btDvXN8gqtouYeWTCDXEfji2IrgJ0Bl5JSh3ezf3j1INRGakAMgWRJyLM0vUF708o0qlpY5WaJKA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxei4GHGxMe7t74aYHLFab/4NET9op2iyPzZzIpXbJNj9wRM+WE
-	Lk1SaeVB5qyDer3X2FEpKVvYw32fRQoOsvlbTAZ83nJjub5xlGqZh3Tbtzs3PIyz
-X-Gm-Gg: ASbGncvq4o9d2EE4YY9ZePkP7UzfkIoI3Wjoukl9oSrS6+RnPQx2G5PIriktRALm8dJ
-	n7qGYzIeXRXLG9dBD1SYqCdrTWiU7q8k9aNqCfWLkHlcV/XB+wVP18tDc+I7xdYlCmfIN0bluzj
-	L8RQV79qYfQWvo3tdb7TXCGl9gY9rAmd9Egh4aBAtMrEs270/++JTUCp/g7lrLZU2+YG1opGoLr
-	rI6V73lg/llpZvA3j8oFqlJSLVtjAdPjxTmdC66/L9kCY67F+F0/prf5Q+JHTJkJUprmATnJWmQ
-	9OiSQJnQtyWtS37/QGpwlAyleq2k2VbFkitmF0IvYrnRUTWk1D+JoWx3eQgeVdg1rzh4ioDfMsx
-	B4j1Kr/HJZdqep6sqEe0j
-X-Google-Smtp-Source: AGHT+IFVMPL4iOLl0fq0NP8WifVvbMjfb/4BmsQnkmDJ80I1T4gI1rIgBo0OxdZUiQ7xi32ZHB+pmg==
-X-Received: by 2002:a17:902:fcc3:b0:235:6aa:1675 with SMTP id d9443c01a7336-2366b14d39cmr215385935ad.52.1750334622471;
-        Thu, 19 Jun 2025 05:03:42 -0700 (PDT)
-Received: from avinash-INBOOK-Y2-PLUS.. ([2401:4900:88e2:4433:2a7d:bb88:9d3c:be74])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23699a73732sm46079105ad.145.2025.06.19.05.03.38
+        bh=5nn72h/qaf4NeAzriwbTHooNzuUElEUmweZaL3/DEzs=;
+        b=MoxS3dZXpzTCOC5b5vJiELoV46lInNIEgBnmNPVxTa7d4zwbG0YLDyYe1/ms+UPp7e
+         bcj8QRuhAKaWeVH7RgcxdjyvL/bPCa/vMXMDTWb5UOcYTDpeVUdByGqk4GTM8qo/8LgR
+         uDXsqnp8xvNwm+c4j4AmaA9pE4C63yNlxelfxSHvr2/gTfNwywR0OW0klMfq/IzmvGlu
+         e5UV8u0gsHsGzY/wp8nDPdwXGCB8gvULh+fve97C+ySWTRVAw/tplAkHJwsNbgiFqrzz
+         K9R1v3iJ8t0sJ6cQKhxi7yxLgNOnG2AYakHygMlF0LWDYMRbJJ2P6Cje40qxBPdZbV9O
+         8CFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnamCTWwppteue+6H/pfu779Jjk/K0tGuKdaJ+eQJGzl1gv/mVmQG0LOhFiOLPBCEGfS0IYFzaRSzYhpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpsS4MQecNt1ukXdq3tNggH7YlF8koZwqc5aTUgpq++y5Bglz4
+	mHqW8U9c7aB86UQ0OMmktsWqRDA0pH1YUozvbCJRiq/3PW1Xt91+iA2gSn04dinVa1fmykfy8X4
+	NldWp3ACEH/eIp0FdRFnqksvt/Wp2jjW8oSbRIcnEyJVMccCOjgcxgewpsgA6/Ke/dcA=
+X-Gm-Gg: ASbGncsSRFMAcj586zhg71vqKcmVaJt2O3BYw8AXasfrNH9wIoeyvtrSmZ9wVawJS4T
+	0DjUxQGcxWoGHWZWY/3+obX4v6am5UKol+jmI/pjunrKCH8+khA2CiB5Nh9gLoJSPU4CgTJi+NR
+	OvFrgYyXLbRCt3aRl2n2tM2lYa6rgU4cqbJk5sDm9aNr1WiBGFoHb7bI2i3R73mXBSDy6tQbL9I
+	CPzbnO+gxuy55CyEfbzoz5qHdPKxOeGa7o4LroAreClYYKhrF55rvRZ1jz4AaYBlGUJLG+2i+fq
+	YV/AUSMQtJ1gzYK3yFvPugSy2zwm7kwuxKmMpwAxSeAnYWnDi5Y=
+X-Received: by 2002:a05:6a00:4b4a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7489cfc2784mr27835389b3a.2.1750334626449;
+        Thu, 19 Jun 2025 05:03:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhH0iV1FehZN/HsECMB0SAFpUyNm20MWg0wM1POjItQCw6FXfAX2uMuWWmq9njzsMHDO4LkA==
+X-Received: by 2002:a05:6a00:4b4a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7489cfc2784mr27835345b3a.2.1750334625933;
+        Thu, 19 Jun 2025 05:03:45 -0700 (PDT)
+Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d2554sm13500312b3a.170.2025.06.19.05.03.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 05:03:42 -0700 (PDT)
-From: Abinash Singh <abinashlalotra@gmail.com>
-X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
-To: aaro.koskinen@iki.fi,
-	andreas@kemnade.info,
-	khilman@baylibre.com,
-	rogerq@kernel.org,
-	tony@atomide.com
-Cc: lee@kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abinash Singh <abinashsinghlalotra@gmail.com>
-Subject: [PATCH v2] mfd: twl4030-irq: remove redundant 'node' variable
-Date: Thu, 19 Jun 2025 17:33:15 +0530
-Message-ID: <20250619120315.125620-1-abinashsinghlalotra@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 19 Jun 2025 05:03:45 -0700 (PDT)
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prashanth K <prashanth.k@oss.qualcomm.com>
+Subject: [PATCH] usb: dwc3: gadget: Remove duplicate check while setting xfer resource
+Date: Thu, 19 Jun 2025 17:33:39 +0530
+Message-Id: <20250619120339.847708-1-prashanth.k@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,43 +79,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEwMCBTYWx0ZWRfX5OZ+fIZzJR/0
+ aIB+BMDihbnEzNG89iMh8os53B4zpznLczOYaq9VcHz7EbQn5ZzhxCPogojw30X9hXISnD3W1w3
+ ix+dg5MfK/puUB0C+w3byh8WZp/i/SWNl0U6SK9MVxXfLcBkVDG6fGn9nppI2JxaIUfT6f15GOi
+ /385MSCmLpohQaEDOev6yt+CyYED4aszipAxGCdcAXkUMcbbByxZXACEpWjrPgCKBmnQ0yGeNTq
+ UpQVXihYcbbEpiyUyQZOA5XR0QnOuMwiOIHxqI8Yw+Rn+ecagT7gwiVOtMcc3y1fuaWHVngDfq+
+ 6ajf/VIzc0D0VH4BtmnFthqqf9KwFyesbs+NKjuD9fmo9MVlMmfqoz7XbdJjeR0UicwbySmKsUV
+ ic86VPVXb4kmsmNeAW1MyjPQ0MaTI8BglnZXk/BuGu43/oqYR/jvPwxaOrRSihYZbAKpEDp5
+X-Proofpoint-GUID: 6RwicSEXrWhyIBzaKhVqP2BI0vMXRKS0
+X-Proofpoint-ORIG-GUID: 6RwicSEXrWhyIBzaKhVqP2BI0vMXRKS0
+X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=6853fca3 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=Ue6Mik-S3He3DxBvPj4A:9
+ a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_04,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxlogscore=849 bulkscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506190100
 
-The local variable 'node' was used only once to retrieve dev->of_node
-in a call to irq_domain_create_legacy(). This patch inlines the usage
-and removes the redundant variable, improving code clarity.
+Remove the duplicate check for DWC3_EP_RESOURCE_ALLOCATED flag,
+as its already checked inside dwc3_gadget_set_xfer_resource()
 
-No functional change intended.
-
-Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
-
+Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
 ---
-v2 : Corrected the author Name
-I am sorry for that .
----
- drivers/mfd/twl4030-irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/usb/dwc3/gadget.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
-index 232c2bfe8c18..a2ab5deef9e2 100644
---- a/drivers/mfd/twl4030-irq.c
-+++ b/drivers/mfd/twl4030-irq.c
-@@ -676,7 +676,6 @@ int twl4030_init_irq(struct device *dev, int irq_num)
- 	static struct irq_chip	twl4030_irq_chip;
- 	int			status, i;
- 	int			irq_base, irq_end, nr_irqs;
--	struct			device_node *node = dev->of_node;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 321361288935..e45f7cb17d72 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -924,11 +924,9 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+ 	if (ret)
+ 		return ret;
  
- 	/*
- 	 * TWL core and pwr interrupts must be contiguous because
-@@ -691,7 +690,7 @@ int twl4030_init_irq(struct device *dev, int irq_num)
- 		return irq_base;
- 	}
+-	if (!(dep->flags & DWC3_EP_RESOURCE_ALLOCATED)) {
+-		ret = dwc3_gadget_set_xfer_resource(dep);
+-		if (ret)
+-			return ret;
+-	}
++	ret = dwc3_gadget_set_xfer_resource(dep);
++	if (ret)
++		return ret;
  
--	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, irq_base, 0,
-+	irq_domain_create_legacy(of_fwnode_handle(dev->of_node), nr_irqs, irq_base, 0,
- 				 &irq_domain_simple_ops, NULL);
- 
- 	irq_end = irq_base + TWL4030_CORE_NR_IRQS;
+ 	if (!(dep->flags & DWC3_EP_ENABLED)) {
+ 		struct dwc3_trb	*trb_st_hw;
 -- 
-2.43.0
+2.25.1
 
