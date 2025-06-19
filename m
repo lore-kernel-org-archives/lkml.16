@@ -1,145 +1,144 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4FC20C480;
-	Thu, 19 Jun 2025 07:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C011A2632;
+	Thu, 19 Jun 2025 07:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319160; cv=none; b=UXXxCPZ4G0QrYZadV2uj8P57Cr8NALYejSfEmjqLyeVhg/Ywd9j/rOT0UdPem7tkEOVLQNhglmoX9Qu0CcQIjGFZzPLFn6AdAg0UkPA2u+MfFB6NfRByTtWUZGdWoNimbrvF1JxRrm1yAac4EsnpOwhhARDQ+nfHHd19mNMF+Fo=
+	t=1750319229; cv=none; b=mL2lqhU6AHUEXBFsZTzgMR0ggo2+YNgsn+LLR5jNsIWqia61qlDqQbca2iBaB9ZrVfAAR1IzO/sFI64xppHuIYK0OJwYGSs+7z/K53TFpunIUjsvehbmB29ZqN0cwOouGbMLofpAtE7dmlRTS1zwfspCQE3bdDvhyiDnAue7qqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319160; c=relaxed/simple;
-	bh=L7M1r3hXW846r86reJZJKNbDYYbqOkSgw23MVbxAEB0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=psSZVKBvzoOZQ8T/JvlaO8aA7/9TVnjHWcD5qKjOYlxWPkeDxm+DDea+VJG0fKPLIcl6cyyPX85cprHYoYZa3EYOZf1wLEMAxnlv7VXVD3zG9gcp3p2whdMKXzAyymKBLTiHijruFqekvulbtzBlVKovg+t3XlXUiQ0RA5w8V00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bNCKB38PnzvZMY;
-	Thu, 19 Jun 2025 15:43:42 +0800 (CST)
-Received: from kwepemo500015.china.huawei.com (unknown [7.202.194.227])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37B5014011F;
-	Thu, 19 Jun 2025 15:45:55 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemo500015.china.huawei.com
- (7.202.194.227) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Jun
- 2025 15:45:54 +0800
-From: z30015464 <zhongxuan2@huawei.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<stephen@networkplumber.org>, <dsahern@gmail.com>
-CC: <gaoxingwang1@huawei.com>, <yanan@huawei.com>, <tangce1@huawei.com>
-Subject: [Issue] iproute2: coredump problem with command ip link xstats
-Date: Thu, 19 Jun 2025 15:45:52 +0800
-Message-ID: <20250619074552.1775627-1-zhongxuan2@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1750319229; c=relaxed/simple;
+	bh=m8L0B5r5UqVt92IJSeeKTS2UGbxaqNEBCnEUz11hDc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MnY093ONvYpYFUWIGVhhXpM4OQnJQBTn0nliGTx7za0ATv/fxEBnrH7tURiP+JMMy3lIRwPI2fFgx73oDUYISbCIUNYKLR4s5i0ZpQe4WFcX1KEOm4dQHEqIaU/L2tkZbjfq4ulK2vs1bSmTRDlF9ivReakvd9Ds6A+vugYoirs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BQohErDd; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BQohErDd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1750319221;
+	bh=0tEHb1ckfuwZJAmh8Sa7b0HkTWtQOHH25+P5khzmMqo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=BQohErDdgc1TRfI4mx8r+1oaSzhi9PdqePZqHU5VNoGflVNfAYhjo5bJ5KfA2ldt8
+	 6B91skJfoBUh6NLzIDgYkLMAHZwAotVlvW43kq/TozbHmkvgD8Q3GDfGfcb+Y4/aJu
+	 NBZyQJZXmCHIASpwO9KDGaL/JSjQWuMD1M0qN030=
+X-QQ-mid: zesmtpgz9t1750319217t3101341a
+X-QQ-Originating-IP: 9zXuvjAgzDTQIkjZ9rjrZ0zSambbCqCCLXTWWMFRLZI=
+Received: from mail-yw1-f169.google.com ( [209.85.128.169])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 19 Jun 2025 15:46:55 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14689093333625918728
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7113ac6d4b3so5049207b3.3;
+        Thu, 19 Jun 2025 00:46:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUO/ZuXQS4KjEXUchnpULlfiVcCjR2pClIm/Fvv9WCj6f/hsBBIPMfQ5ziKR/Pgo9G4IDUoAs1Z03t5PL8ulY6I@vger.kernel.org, AJvYcCUzDelJpzCj9N5RUeDNJZ6SW+P6uWzdy8ZCxuUJHIPgDZ/wEw9I+oaclPO9wWuHr1EjgOXxl6JISOirw7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhtQQHZeNr/ZieiPftkc911D2sKGidyGD0jntqsiL08QOYyoFL
+	Oh5DkVJW6pgeSaqhk7X7mC8pgi1CPRrPi+BXzT9BFa1frUghhYLqsqR/CgnG/JlRaL27z5bTWPj
+	+ye+zRn7eyLx/qQ6MXd5Jv3Q1NgCPWv4=
+X-Google-Smtp-Source: AGHT+IGDJ5INl7g7v3aPIzD3hVjJa6I2rLo/PSwMtulgBz5JPXsZ6+6q34dBrokpAe5x6f+npaFv0NpFedAIMP/Jm3M=
+X-Received: by 2002:a05:690c:6e05:b0:70e:128c:3005 with SMTP id
+ 00721157ae682-711754df646mr280859027b3.21.1750319214312; Thu, 19 Jun 2025
+ 00:46:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250610020758.2798787-2-chenlinxuan@uniontech.com> <6972404e-0237-47b9-8e3e-15551bea3440@linuxfoundation.org>
+In-Reply-To: <6972404e-0237-47b9-8e3e-15551bea3440@linuxfoundation.org>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Thu, 19 Jun 2025 15:46:43 +0800
+X-Gmail-Original-Message-ID: <13ECF01EAD109F46+CAC1kPDPg0AN9Ft3SNM6JDcZf=XD1oinqeAMzuRpZF3nzemZ=Kg@mail.gmail.com>
+X-Gm-Features: AX0GCFvajF8SQjwuml0LDznUZ5ejqurKaUHkMxf-frX4DNDamf3oI29oqUlnZ0U
+Message-ID: <CAC1kPDPg0AN9Ft3SNM6JDcZf=XD1oinqeAMzuRpZF3nzemZ=Kg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] selftests: Suppress unused variable warning
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Miklos Szeredi <mszeredi@redhat.com>, Jan Kara <jack@suse.cz>, 
+	zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemo500015.china.huawei.com (7.202.194.227)
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NSSdk1DMx7alhgRA2r2kob7lGPdrVPmBKtopjge7tpmqegvEHVl/Ghwa
+	bJQXkLi4pRgdNvVDW1mXa2+AgtpBTKf1bsKelK8wTXSlntjOISOtiYnkGfegZGt+PsG1OVn
+	wGAPgnjBSw5thmwRqjBDQbLTPLSXqkZe3Vb4136ygPi/exBcFvcpQRr1KVxK9j9ULpXGlox
+	Eb8UNVv+9e8Hmmi31OiIZa3xQKzCc4yk077LTcBAbxmnJggH5LbO8k4P1Xjx6U/fzCp7JhB
+	9FGOjpQOdh7qaVlPTt+5zjqKX/BoXL6rHNSAlxRdid2aa/GM3MsHydnRRAnyIhYMsaRWTGO
+	1Pnhe+2kTEP0hIjepxKaBnVR6Kl+TDJz6gyXmJx0nnzr0ChicP9A/6uz6SP1qNTXwV8fdzs
+	87SqjREz21QrzzDQQXIYCj7N3tlrHI5q6FvRTTzbFi2XJf/uSN3D8fGh+ayME7iM0DGoaiP
+	Z+HRdULsb59PLknUn91KM4B0w2l3tjLSV1eWRBgMfKeTRFys0on4lWZivAOrRdaAqVAi2BL
+	HNjZAFHHrju6rCsepMpiJ40XVMfVt2NdnVoGAn2cFy2uX94xDd+Qf0lJ/GNdd9qNa6TtzpX
+	etYP5BXBboldaf4p3cIwt4PUeV57NmTsYEvJpSRXbz6rv3gEC+iUOq3QTnihtBEQWMGTk7w
+	pnRaAVZxx7uQXmRl9lYrgM+AoGMv5+jzkBGZA1rWXQSyxqoIyL0J+wfwBoSAGvsWFAfg1+N
+	o/5HMprZ5bkQJBTqrNqKv5ecbfiyWAiveuGmWPj2ADfc7vt+EKp5RGdXPC2H+ul1Kk8pvix
+	EAGQbSS8BOku//GI8HhRWD3VHFO2aUnU83KTajVNas90b0OwZjrcn4Fq+3GhjYMnstkKFFs
+	rnAXzb3NHNV7HLbQSgh/KAyDIkCpxBTAy4wxaqI3SSnqPpPVnKxuofOJeCCUNiCi6MkNC/w
+	piUntL892sLtHmRxxiqCtNTRm1YWzOw9Z0CWcEKD7Ii4d0AE2NVaYDmVa4hl2mWDnSz6ENd
+	vaXwBOmzFemOexfzRhyXtjcCjrWBguWvwd9UNpbDMcyogHzUwuYURiUfzVKCQuEamhBYUhL
+	nQ1c9ZX2SnHHo/8+7hFDFg=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-Hello everyone,=0D
-=0D
-I having an issues while using iprute2 6.15.0. When I created a bond and in=
-tended to use 'ip link xstats' command to query extended information, a sta=
-ck overflow occurred, followed by a coredump. I couldn't identify the root =
-cause through the code and need some help.=0D
-=0D
-Example:=0D
-ifconfig eth1 up=0D
-modprobe bonding mode=3D4 max_bonds=3D1 lacp_rate=3D1 miimon=3D100=0D
-ip addr add 7.7.0.100/24 dev bond0=0D
-ip link xstats type bond dev bond0=0D
-=0D
-Here is the result:=0D
-[root@localhost /]# ip link xstats type bond=0D
-bond0=0D
-                    LACPDU Rx 0=0D
-                    LACPDU Tx 0=0D
-                    LACPDU Unknown type Rx 0=0D
-                    LACPDU Illegal Rx 0=0D
-                    Marker Rx 0=0D
-                    Marker Tx 0=0D
-                    Marker response Rx 0=0D
-                    Marker response Tx 0=0D
-                    Marker unknown type Rx 0=0D
-*** stack smashing detected ***: terminated=0D
-Aborted (core dumped)=0D
-=0D
-Here is the result with valgrind:=0D
-[root@localhost /]# valgrind ip link xstats type bond dev bond0=0D
-=3D=3D242893=3D=3D Memcheck, a memory error detector=0D
-=3D=3D242893=3D=3D Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward=
- et al.=0D
-=3D=3D242893=3D=3D Using Valgrind-3.22.0 and LibVEX; rerun with -h for copy=
-right info=0D
-=3D=3D242893=3D=3D Command: ip link xstats type bond dev bond0=0D
-=3D=3D242893=3D=3D=0D
-bond0=0D
-                    LACPDU Rx 0=0D
-                    LACPDU Tx 0=0D
-                    LACPDU Unknown type Rx 0=0D
-                    LACPDU Illegal Rx 0=0D
-                    Marker Rx 0=0D
-                    Marker Tx 0=0D
-                    Marker response Rx 0=0D
-                    Marker response Tx 0=0D
-                    Marker unknown type Rx 0=0D
-*** stack smashing detected ***: terminated=0D
-=3D=3D242893=3D=3D=0D
-=3D=3D242893=3D=3D Process terminating with default action of signal 6 (SIG=
-ABRT)=0D
-=3D=3D242893=3D=3D    at 0x498AB5C: __pthread_kill_implementation (pthread_=
-kill.c:44)=0D
-=3D=3D242893=3D=3D    by 0x493CF45: raise (raise.c:26)=0D
-=3D=3D242893=3D=3D    by 0x492733B: abort (abort.c:79)=0D
-=3D=3D242893=3D=3D    by 0x49281A8: __libc_message.cold (libc_fatal.c:152)=
-=0D
-=3D=3D242893=3D=3D    by 0x4A1621A: __fortify_fail (fortify_fail.c:24)=0D
-=3D=3D242893=3D=3D    by 0x4A17435: __stack_chk_fail (stack_chk_fail.c:24)=
-=0D
-=3D=3D242893=3D=3D    by 0x157A81: bond_print_stats_attr (iplink_bond.c:877=
-)=0D
-=3D=3D242893=3D=3D    by 0x157B02: bond_print_xstats (iplink_bond.c:895)=0D
-=3D=3D242893=3D=3D    by 0x1846A9: rtnl_dump_filter_l (libnetlink.c:926)=0D
-=3D=3D242893=3D=3D    by 0x185A01: rtnl_dump_filter_nc (libnetlink.c:969)=0D
-=3D=3D242893=3D=3D    by 0x16B0BF: iplink_ifla_xstats (iplink_xstats.c:71)=
-=0D
-=3D=3D242893=3D=3D    by 0x118C3C: do_cmd (ip.c:131)=0D
-=3D=3D242893=3D=3D=0D
-=3D=3D242893=3D=3D HEAP SUMMARY:=0D
-=3D=3D242893=3D=3D     in use at exit: 33,878 bytes in 4 blocks=0D
-=3D=3D242893=3D=3D   total heap usage: 8 allocs, 4 frees, 66,755 bytes allo=
-cated=0D
-=3D=3D242893=3D=3D=0D
-=3D=3D242893=3D=3D LEAK SUMMARY:=0D
-=3D=3D242893=3D=3D    definitely lost: 0 bytes in 0 blocks=0D
-=3D=3D242893=3D=3D    indirectly lost: 0 bytes in 0 blocks=0D
-=3D=3D242893=3D=3D      possibly lost: 0 bytes in 0 blocks=0D
-=3D=3D242893=3D=3D    still reachable: 33,878 bytes in 4 blocks=0D
-=3D=3D242893=3D=3D         suppressed: 0 bytes in 0 blocks=0D
-=3D=3D242893=3D=3D Rerun with --leak-check=3Dfull to see details of leaked =
-memory=0D
-=3D=3D242893=3D=3D=0D
-=3D=3D242893=3D=3D For lists of detected and suppressed errors, rerun with:=
- -s=0D
-=3D=3D242893=3D=3D ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 f=
-rom 0)=0D
-Aborted (core dumped)=0D
-=0D
-Through gdb debugging, __stack_chk_fail was triggered after the end of func=
-tion bond_print_stats_attr function.=0D
-I first found this issue in version 6.6.0. After replacing package 6.15.0, =
-the issue still persists. =0D
-I also tried version 5.15.0 but there was no abnormality.=0D
-Maybe some modifications triggered this issue, but I cannot found the cause=
-. I hope to get some helps.=0D
-=0D
-Thank you very much.=0D
-=0D
-=0D
-=0D
+On Thu, Jun 19, 2025 at 5:23=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.o=
+rg> wrote:
+>
+> On 6/9/25 20:07, Chen Linxuan wrote:
+> > When running `make kselftest`, the following compilation warning was en=
+countered:
+> >
+> > mount-notify_test.c: In function =E2=80=98fanotify_rmdir=E2=80=99:
+> > mount-notify_test.c:490:17: warning: ignoring return value of =E2=80=98=
+chdir=E2=80=99 declared with attribute =E2=80=98warn_unused_result=E2=80=99=
+ [-Wunused-result]
+> >    490 |                 chdir("/");
+> >        |                 ^~~~~~~~~~
+> >
+> > This patch addresses the warning by
+> > explicitly suppressing the unused result of the `chdir` function.
+> >
+> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> > ---
+> >   .../selftests/filesystems/mount-notify/mount-notify_test.c    | 4 +++=
+-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-not=
+ify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_=
+test.c
+> > index 63ce708d93ed0..34afe27b7978f 100644
+> > --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
+t.c
+> > +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
+t.c
+> > @@ -465,7 +465,9 @@ TEST_F(fanotify, rmdir)
+> >       ASSERT_GE(ret, 0);
+> >
+> >       if (ret =3D=3D 0) {
+> > -             chdir("/");
+> > +             // Suppress -Wunused-result
+> > +             // Ref: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D66=
+425#c34
+> > +             (void) !chdir("/");
+>
+> Why not fix the problem the right way by checking the return value.
+> Suppressing the error isn't useful.
+
+The code is already handling cleanup in error cases,
+and I don't think checking the result of chdir would be useful here.
+
+>
+>
+> >               unshare(CLONE_NEWNS);
+> >               mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
+> >               umount2("/a", MNT_DETACH);
+>
+> thanks,
+> -- Shuah
+>
+>
