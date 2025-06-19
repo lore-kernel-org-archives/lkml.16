@@ -1,29 +1,29 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE9517A305;
-	Thu, 19 Jun 2025 14:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44141AF0B5;
+	Thu, 19 Jun 2025 14:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344496; cv=none; b=tLguDJwvRwNsGVP1btf29MPsVo1r7Ea/iECcOfGBVfQ7ms/TkyDEnTNwqgjt6uiEghGYLAmH596hFfRTirGupEkjVgrBYLA5q37tDtRG6IUc4qUuNTwWYP4lFoeff9yQHJxa1ZuANXkDjgryTWC0rTlyH44y7PfvmugXPj6EA9A=
+	t=1750344497; cv=none; b=Iob3goA6rAbm0gV0rsFidQ7aqPckz5gSuLxvyHiccMkYc5iNMBy1P1PhSIaS/JZY95vYPna2IL4uyLoKGyfU75UW9QtahMJE+L55dteKWp+0XVnOHAP+eELJ7NyvcBqwxf3eRQGd6dpLfWVE0jWKbEJmjmEk7I2xf/rqdarx98g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344496; c=relaxed/simple;
-	bh=Fes2A/ORnekr5nBCW52fV6M/20Ly4jSsrXiQGz/y1LY=;
+	s=arc-20240116; t=1750344497; c=relaxed/simple;
+	bh=YjMS2CcpuzRSbboHGnLRakfRmitcWwOqCbDpXu5+n/c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V5gYgiEdVBvoa3jxRsUddnF9GvHhqwfFgrylEQWURy1/pffmSFGCVOtjqw/RzsYrGOzyvb9q66EWr0HWmL82BT4JObE9HcbFMRKTFIU4/y+QxGQ2+TyZopEJH+jSaBO9r22O9aR/ADulo+8RjTsN7xU7ZfnRlgd3TsXGELasAMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=Dnc7OqXLD97nvkfLxtBHtbf8vGSE+HeiqMNRDY9t/OODpTL9Oh+CO1Kx16udywBGSZPG5oBUFAPRuT3vIb15JFCJNbF2XHieYj1BB7us9VP6eVJRnkNcTtCZQbBPF0nYpG8ip1veiPb6mIot8C4fMePFVJlhl8xV+6zWi0b18+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bNNh80kkDz28fRW;
-	Thu, 19 Jun 2025 22:45:44 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bNNf26wL3zRk5T;
+	Thu, 19 Jun 2025 22:43:54 +0800 (CST)
 Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5E7A21A016C;
-	Thu, 19 Jun 2025 22:48:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D6A8B180B6A;
+	Thu, 19 Jun 2025 22:48:11 +0800 (CST)
 Received: from localhost.localdomain (10.90.31.46) by
  kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 19 Jun 2025 22:48:08 +0800
+ 15.2.1544.11; Thu, 19 Jun 2025 22:48:11 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
@@ -32,9 +32,9 @@ CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
 	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
 	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH V3 net-next 1/8] net: hns3: fix spelling mistake "reg_um" -> "reg_num"
-Date: Thu, 19 Jun 2025 22:40:50 +0800
-Message-ID: <20250619144057.2587576-2-shaojijie@huawei.com>
+Subject: [PATCH V3 net-next 5/8] net: hns3: set the freed pointers to NULL when lifetime is not end
+Date: Thu, 19 Jun 2025 22:40:54 +0800
+Message-ID: <20250619144057.2587576-6-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250619144057.2587576-1-shaojijie@huawei.com>
 References: <20250619144057.2587576-1-shaojijie@huawei.com>
@@ -49,70 +49,89 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  kwepemk100013.china.huawei.com (7.202.194.61)
 
-There are spelling mistakes in hclgevf_get_regs. Fix them.
+From: Jian Shen <shenjian15@huawei.com>
 
+There are several pointers are freed but not set to NULL,
+and their lifetime is not end immediately. To avoid misusing
+there wild pointers, set them to NULL.
+
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
 ---
- .../hisilicon/hns3/hns3vf/hclgevf_regs.c      | 27 ++++++++++---------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ChangeLog:
+v2 -> v3:
+  - Remove unnecessary pointer set to NULL operation, suggested by Simon Horman.
+  v2: https://lore.kernel.org/all/20250617010255.1183069-1-shaojijie@huawei.com/
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 ++++
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_regs.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_regs.c
-index 7d9d9dbc7560..9de01e344e27 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_regs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_regs.c
-@@ -127,37 +127,38 @@ void hclgevf_get_regs(struct hnae3_handle *handle, u32 *version,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index e0a2ca21ee46..9d7c9523c9e1 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5208,6 +5208,7 @@ static void hclge_fd_free_node(struct hclge_dev *hdev,
+ {
+ 	hlist_del(&rule->rule_node);
+ 	kfree(rule);
++	rule = NULL;
+ 	hclge_sync_fd_state(hdev);
+ }
  
- 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
- 	struct hnae3_queue *tqp;
--	int i, j, reg_um;
-+	int i, j, reg_num;
- 	u32 *reg = data;
- 
- 	*version = hdev->fw_version;
- 	reg += hclgevf_reg_get_header(reg);
- 
- 	/* fetching per-VF registers values from VF PCIe register space */
--	reg_um = ARRAY_SIZE(cmdq_reg_addr_list);
--	reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_CMDQ, reg_um, reg);
--	for (i = 0; i < reg_um; i++)
-+	reg_num = ARRAY_SIZE(cmdq_reg_addr_list);
-+	reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_CMDQ, reg_num, reg);
-+	for (i = 0; i < reg_num; i++)
- 		*reg++ = hclgevf_read_dev(&hdev->hw, cmdq_reg_addr_list[i]);
- 
--	reg_um = ARRAY_SIZE(common_reg_addr_list);
--	reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_COMMON, reg_um, reg);
--	for (i = 0; i < reg_um; i++)
-+	reg_num = ARRAY_SIZE(common_reg_addr_list);
-+	reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_COMMON, reg_num, reg);
-+	for (i = 0; i < reg_num; i++)
- 		*reg++ = hclgevf_read_dev(&hdev->hw, common_reg_addr_list[i]);
- 
--	reg_um = ARRAY_SIZE(ring_reg_addr_list);
-+	reg_num = ARRAY_SIZE(ring_reg_addr_list);
- 	for (j = 0; j < hdev->num_tqps; j++) {
--		reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_RING, reg_um, reg);
-+		reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_RING, reg_num, reg);
- 		tqp = &hdev->htqp[j].q;
--		for (i = 0; i < reg_um; i++)
-+		for (i = 0; i < reg_num; i++)
- 			*reg++ = readl_relaxed(tqp->io_base -
- 					       HCLGEVF_TQP_REG_OFFSET +
- 					       ring_reg_addr_list[i]);
+@@ -5232,6 +5233,7 @@ static void hclge_update_fd_rule_node(struct hclge_dev *hdev,
+ 		new_rule->rule_node.pprev = old_rule->rule_node.pprev;
+ 		memcpy(old_rule, new_rule, sizeof(*old_rule));
+ 		kfree(new_rule);
++		new_rule = NULL;
+ 		break;
+ 	case HCLGE_FD_DELETED:
+ 		hclge_fd_dec_rule_cnt(hdev, old_rule->location);
+@@ -8521,6 +8523,7 @@ static void hclge_update_mac_node(struct hclge_mac_node *mac_node,
+ 		if (mac_node->state == HCLGE_MAC_TO_ADD) {
+ 			list_del(&mac_node->node);
+ 			kfree(mac_node);
++			mac_node = NULL;
+ 		} else {
+ 			mac_node->state = HCLGE_MAC_TO_DEL;
+ 		}
+@@ -9151,6 +9154,7 @@ static void hclge_uninit_vport_mac_list(struct hclge_vport *vport,
+ 		case HCLGE_MAC_TO_ADD:
+ 			list_del(&mac_node->node);
+ 			kfree(mac_node);
++			mac_node = NULL;
+ 			break;
+ 		}
  	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index e3f86638540b..3ffd47b30ad3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -933,6 +933,7 @@ static void hclgevf_update_mac_node(struct hclgevf_mac_addr_node *mac_node,
+ 		if (mac_node->state == HCLGEVF_MAC_TO_ADD) {
+ 			list_del(&mac_node->node);
+ 			kfree(mac_node);
++			mac_node = NULL;
+ 		} else {
+ 			mac_node->state = HCLGEVF_MAC_TO_DEL;
+ 		}
+@@ -2395,6 +2396,7 @@ static int hclgevf_init_msi(struct hclgevf_dev *hdev)
+ 					sizeof(int), GFP_KERNEL);
+ 	if (!hdev->vector_irq) {
+ 		devm_kfree(&pdev->dev, hdev->vector_status);
++		hdev->vector_status = NULL;
+ 		pci_free_irq_vectors(pdev);
+ 		return -ENOMEM;
+ 	}
+@@ -2408,6 +2410,8 @@ static void hclgevf_uninit_msi(struct hclgevf_dev *hdev)
  
--	reg_um = ARRAY_SIZE(tqp_intr_reg_addr_list);
-+	reg_num = ARRAY_SIZE(tqp_intr_reg_addr_list);
- 	for (j = 0; j < hdev->num_msi_used - 1; j++) {
--		reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_TQP_INTR, reg_um, reg);
--		for (i = 0; i < reg_um; i++)
-+		reg += hclgevf_reg_get_tlv(HCLGEVF_REG_TAG_TQP_INTR,
-+					   reg_num, reg);
-+		for (i = 0; i < reg_num; i++)
- 			*reg++ = hclgevf_read_dev(&hdev->hw,
- 						  tqp_intr_reg_addr_list[i] +
- 						  HCLGEVF_RING_INT_REG_OFFSET * j);
+ 	devm_kfree(&pdev->dev, hdev->vector_status);
+ 	devm_kfree(&pdev->dev, hdev->vector_irq);
++	hdev->vector_status = NULL;
++	hdev->vector_irq = NULL;
+ 	pci_free_irq_vectors(pdev);
+ }
+ 
 -- 
 2.33.0
 
