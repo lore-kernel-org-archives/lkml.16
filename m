@@ -1,137 +1,89 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D40D218596
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C0D21D3C5;
+	Thu, 19 Jun 2025 07:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319459; cv=none; b=PuOIIFUbIsPmC2igh+2arB4pL1q6cuWGB/ON2Yf4Cb9/DkQvZNwwAACy+N69VZnmAaRXpeUJ83qzG6mmnPUG8BC5faXXiknFyY0PeowdUibKlH2IuMsVp9MOh4pzwDeaHBAZSmnYFKVWdCqt4ZF8Iw1vxpU/TTfI9vlhgiOukZQ=
+	t=1750319473; cv=none; b=SoVyz6SQsKGKLVjJJkDzi+VDfE4YM+Ec2ObUDr0PWSJ031IUVV0ro6DQbzlmVyd/0BOeiIz++9r+Z508hfUO9iwZU5NsdAYWtmyP/93bpJK5VeJ3ofE1HlhzSdv4ctI7kd0AxBRA2de9wbM2W9giuqMB9XISx64nolBavlZfJiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319459; c=relaxed/simple;
-	bh=Yl8ZMK/InaII2S7K0R9C8tOqy/Pjo3fKr59rSyEHJuY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M0DI3H7ss6kT9CDgBaPiuNWaKq/FtLQvvdC87Kao2Pe/KKgtY0nXvudd+2wW0zcz58VK4PMIMWiISjoTGkNS8MxmdWfY7g1RJRZqIm+0t7y4AUDd0wi74KkT5uNRbDBreTQglBj48jTFIUhycuY4DZz87vpNdjXmLeY5uTYvi0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TS6JyfHC; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750319473; c=relaxed/simple;
+	bh=irOtMSTe18Nj09WUURiqFn7bJc2qntAyYH0FgwppccE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=foS4jk1cFkQMECCfDha3Q17usvFHcl60av0y8bBcOMouTsKDTJVNvmLp6JW8cwmiWopgRuzOH0JVx8YLCclxupVXnjk8RgxDLQZPCbF7s7uLUngEVprOc9pcgUUJb6h5gvB1KU9XYO7OBZc36ceNklsyRMVrHCPhcg/QwCkJjgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hHL1ioCg; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TS6JyfHC"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750319452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JrEolSLr9rS694/buurKuGKr9Kz5LTg/bHMzqLtVbKI=;
-	b=TS6JyfHCbzrj7VtKpBz2h6nit/kNbnVqVyvIuoI1fQRh+tgTp5PwxYOHlrHmeAG5oIcEji
-	ZdzSeffaQx5APrc4nlE+ENAMfb3Zj0FVMBbOYQHCHMnvNq8RYbT0EVQ+BF+XGiMB2OEz7e
-	LGpCYjrY/j/+DgfRmoK++1jhr5bwAvQ=
-From: Ye Liu <ye.liu@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ye Liu <liuye@kylinos.cn>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Rik van Riel <riel@surriel.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/rmap: Add NULL checks for rmap_walk_control callbacks
-Date: Thu, 19 Jun 2025 15:50:40 +0800
-Message-Id: <20250619075040.796047-1-ye.liu@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hHL1ioCg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=h6iVXO5KbYXdSc5S3Hf3L8++PkcBN/CgVnLY1g8EcyI=; b=hHL1ioCgzjArqd4YP/LoPeLWB0
+	yTxZ5UB/w3Jlv19XgSk0QS3Z7n0UVw0RsfAzzvTSBSpxGXupcNaKq/Eb7hd9T03xFmCQOSpzzhxTY
+	gph+gB/bxs1pgeW9Yz21aW0m18KHRzJC/iZTvG+ht9a9GRJID3zWpCx44RAP4Pz6YlmvJ/+G7UGsD
+	ErSH+pEE2SvJ+2BZFcc6F4XSef1uZ/CkmexP3l3Z83deYVNf4cNiGmn3EwC7rZoXMshBsJEBHsko+
+	Je4wG5QwBLey/EVpqBJO41rgDcC1kUx5Tf385J+YJcKmURlQSFBhPwDPrGuyoFiRVA/pwEJ7i7djE
+	3gLQ8jFQ==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSA36-00000004NLc-2jLK;
+	Thu, 19 Jun 2025 07:51:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5B7993088F2; Thu, 19 Jun 2025 09:51:03 +0200 (CEST)
+Date: Thu, 19 Jun 2025 09:51:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
+ support
+Message-ID: <20250619075103.GV1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.261095906@goodmis.org>
+ <20250618134758.GK1613376@noisy.programming.kicks-ass.net>
+ <20250618111840.24a940f6@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618111840.24a940f6@gandalf.local.home>
 
-From: Ye Liu <liuye@kylinos.cn>
+On Wed, Jun 18, 2025 at 11:18:40AM -0400, Steven Rostedt wrote:
+> On Wed, 18 Jun 2025 15:47:58 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
+> > 
+> > > +#ifndef arch_unwind_user_init
+> > > +static inline void arch_unwind_user_init(struct unwind_user_state *state, struct pt_regs *reg) {}
+> > > +#endif
+> > > +
+> > > +#ifndef arch_unwind_user_next
+> > > +static inline void arch_unwind_user_next(struct unwind_user_state *state) {}
+> > > +#endif  
+> > 
+> > The purpose of these arch hooks is so far mysterious. No comments, no
+> > changelog, no nothing.
+> 
+> I'll add comments.
 
-Add NULL pointer checks for rmap_one callback in rmap_walk operations
-to prevent potential NULL pointer dereferences. Also clean up some
-code by removing redundant comments and caching folio_nr_pages().
-
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
----
- mm/ksm.c  |  2 +-
- mm/rmap.c | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 18b3690bb69a..22ad069d1860 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -3068,7 +3068,7 @@ void rmap_walk_ksm(struct folio *folio, struct rmap_walk_control *rwc)
- 			if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
- 				continue;
- 
--			if (!rwc->rmap_one(folio, vma, addr, rwc->arg)) {
-+			if (rwc->rmap_one && !rwc->rmap_one(folio, vma, addr, rwc->arg)) {
- 				anon_vma_unlock_read(anon_vma);
- 				return;
- 			}
-diff --git a/mm/rmap.c b/mm/rmap.c
-index fb63d9256f09..17d43d104a0d 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1202,8 +1202,7 @@ int mapping_wrprotect_range(struct address_space *mapping, pgoff_t pgoff,
- 	if (!mapping)
- 		return 0;
- 
--	__rmap_walk_file(/* folio = */NULL, mapping, pgoff, nr_pages, &rwc,
--			 /* locked = */false);
-+	__rmap_walk_file(NULL, mapping, pgoff, nr_pages, &rwc, false);
- 
- 	return state.cleaned;
- }
-@@ -2806,6 +2805,7 @@ static void rmap_walk_anon(struct folio *folio,
- 	struct anon_vma *anon_vma;
- 	pgoff_t pgoff_start, pgoff_end;
- 	struct anon_vma_chain *avc;
-+	unsigned long nr_pages;
- 
- 	if (locked) {
- 		anon_vma = folio_anon_vma(folio);
-@@ -2817,13 +2817,13 @@ static void rmap_walk_anon(struct folio *folio,
- 	if (!anon_vma)
- 		return;
- 
-+	nr_pages = folio_nr_pages(folio);
- 	pgoff_start = folio_pgoff(folio);
--	pgoff_end = pgoff_start + folio_nr_pages(folio) - 1;
-+	pgoff_end = pgoff_start + nr_pages - 1;
- 	anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root,
- 			pgoff_start, pgoff_end) {
- 		struct vm_area_struct *vma = avc->vma;
--		unsigned long address = vma_address(vma, pgoff_start,
--				folio_nr_pages(folio));
-+		unsigned long address = vma_address(vma, pgoff_start, nr_pages);
- 
- 		VM_BUG_ON_VMA(address == -EFAULT, vma);
- 		cond_resched();
-@@ -2831,7 +2831,7 @@ static void rmap_walk_anon(struct folio *folio,
- 		if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
- 			continue;
- 
--		if (!rwc->rmap_one(folio, vma, address, rwc->arg))
-+		if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
- 			break;
- 		if (rwc->done && rwc->done(folio))
- 			break;
-@@ -2894,7 +2894,7 @@ static void __rmap_walk_file(struct folio *folio, struct address_space *mapping,
- 		if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
- 			continue;
- 
--		if (!rwc->rmap_one(folio, vma, address, rwc->arg))
-+		if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
- 			goto done;
- 		if (rwc->done && rwc->done(folio))
- 			goto done;
--- 
-2.25.1
-
+How about you introduce the hooks when they're actually needed instead?
