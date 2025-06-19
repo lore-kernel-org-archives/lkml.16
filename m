@@ -1,303 +1,197 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE12E2AF1C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928E92AF1C;
+	Thu, 19 Jun 2025 17:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750354685; cv=none; b=SMtPfnlSO4ALL8h8tdEyoMIXw2mzvFfiDHAvMdOhgoehiFV3eJR2SUTmXKThQrSWClivR8qWxu/yX4LXsz/XclZSfDN9MJSfSay4XptTGoxhcxBKdXmO6MhiokPwgLDTbGABTAyQd3y/d5RHxR1cj1bDOb0oeXnX/NTKX/Ngu6E=
+	t=1750354758; cv=none; b=DYePTf9r/+mkBDN3Emtacn2qeQfVf6F4YuAdVbsiM5+5UhJSx2mHWEyozRrLqD9rFFsOTybL+9v3klcuTx4vryn++/OZzzWwhLejoXJak55qH+dZCi/xKE8Ici3zv9XDpHdNWNosEhB2ERll10S3L8DGnOZd+XglCoUOlOSHDK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750354685; c=relaxed/simple;
-	bh=wJ2RP3i1uLLappsSXNlTZWygk+cqf/HjTLFXPZbL5QQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jx7SDpD+Uk2bQ2N6RLps8Y2XGRDPfZO6YMUlQFL2uuuEmPfUZUE/8tO4DAZdl3IO23Y68UCOXjsxoFjDoA6sgh0k7UjWAZrjzgaz+Yk+hMycYjcFaislJZhoXkW0NOiLv/mUVdLkrM1DlGsHrJ101m8l7uL79XucyUl19apJVjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFzeyS96; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750354758; c=relaxed/simple;
+	bh=pRBStzprMVQpdd4OIP73O35IQskVrjlp0foBBFOYXLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sPhyixErgAjnaLDv5vSB78U+KnQ5D/0Is4tQThKk0lKdEixXlACHbcx6Dk57wqa+o1e4uqemrRJRT9BpRC+8SaPYLRR2KZFLFK7G/lEYldOpoISej0YHPkz3eIaDgXAOzyDL19xyxsNJFTbFiTD3lYfg+o94mdwjJbMkhXYjzgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8ScjhxR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFzeyS96"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b43cce9efso8997021fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750354682; x=1750959482; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OdG1ig0yFjbOMH8OBAS6HhXXXjRpyHtMI1DOQoERDrE=;
-        b=UFzeyS96qKiMxwp7voM321JSnUei23ksHK+InWccgkpzxl1m5pciCVoHh5+XR1iN7P
-         78njFyK/HTu247b+8c5Vni/PGYz3L6+78GO+Ecz74Jz80lnGGSjiXAxqtN02dNJOJTCs
-         AFIXgyntp5mKIFcrZ81NlE3uf3KJImKFE/SqKmCyd8WJAqN1Sf3oB9UqIzK6Og7bkR4/
-         TFYH8b1u6cfBJC9VwSl7tcciCoaozhrxw2nGTiJ6BjEagi2fSC+wuMLQwnhTP+fE0cP5
-         JpjZrJmOwCjRayOmj7wjuzIeVXcFIJEB/HL4s6d9VkQbkQIMHl06O1b6804NgINO4Xe8
-         pdxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750354682; x=1750959482;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OdG1ig0yFjbOMH8OBAS6HhXXXjRpyHtMI1DOQoERDrE=;
-        b=q1d/BrBQtUBfY5ZPeIUZvvqLlFyWj1QDnaip99yK1odnZES1qkhF+nJ8FMSDityZpG
-         jmBm1gCa/L+9WeHWlekNEXXdolec2NAN9HA1AiL8maZVmxH+9M9rmKq+45NUk35e4pRI
-         oRBrfgrIcJ9tigxJAgaHRMbxxycrVXX7nPRruTnQR//gzWJ2aExShPweL7n5eTB1Ww1q
-         qL8ZhqUJY55duUmX4ZZ4hkK10K1CzL7Wo5ZJc54msAY4tc/byvrXIB15BkJMjcHRXLZr
-         jJIfxXwAcbz0pLLMDKlBukxwwFNQWz5VrLVlq6kD7/VZPov5ogBSy51EtxvjbEiPog7W
-         UVdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVLWhb+yH1tBhYu+xIqUykMbiC1BTlwayn4F5dcygk13CziZMfSjWrJBuRBH+ehcYtprYNbOLk1SK4VxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2wVTM0J7oj8bSO+i12lG1/mgpqGY842Cv2Fl77jY+Q5BDRMCM
-	KEKNla190GYYaEfdnnVOML67WREFC53Y5f5dKm+syRz85UjDQ6MmWmr85fNRqjJ1E3hkVDqqCUh
-	OExNSvTvwjhr2DwOpY1VaHrVO029wvZLrWmqd4yqqhA==
-X-Gm-Gg: ASbGncuZrFp8UiIp+x1ADQ3/JrvJK/nl28JRkJaT6vkpk/blKsdOZHRnM000cQ//mGK
-	StSjSRWjcKFcl5fTOqSZm9RaiGPXu6mx+FxJUDC1OIGVPoUaJMo3I8pslfLx8dnuDK/CcjJ2kv7
-	YMoUpHAs/LjBF3youZMZlrnjGutEEXcgDagM9gTeisYxg0/EEBIWV85A==
-X-Google-Smtp-Source: AGHT+IGu6221iPW6oxvUGCbZQXXQ9dxx5ctEWKGgVDVNy08hC2dJP7oYCDEECAJXpZDHuJbmyho2N7bh3Zzk0fTJDdA=
-X-Received: by 2002:a05:651c:20db:20b0:32b:9792:1887 with SMTP id
- 38308e7fff4ca-32b97921bbfmr531101fa.11.1750354681442; Thu, 19 Jun 2025
- 10:38:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8ScjhxR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2DEC4CEF0;
+	Thu, 19 Jun 2025 17:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750354758;
+	bh=pRBStzprMVQpdd4OIP73O35IQskVrjlp0foBBFOYXLM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q8ScjhxR+n6D1FFXxPcmAsOicx5kvxOnV/MBY1d5+9OzyDoR9ByqLqF8OQsepE1vZ
+	 pQA9jF0scj8TlOPcaY+B7xXddCNBSr5ARGkpENx96GxUAkLu74C4oa7RAhGZ9v230Z
+	 orB2u90kOoFN8z8IGbpEsuNVMvGiUOc6eCmCNQAftzLmh12MHe6hVDJ/9kh6iHrfkl
+	 2dFR0gO+jExeLcciK2ZfvoIsS35RyX1vEhDv2tSWxXv4YrO8iLDlA5EbVS5DCkm63h
+	 6qk4C9x+spijKTjg8XToKwj9MPIEF+R+z6+NqCo/3RGuxejNa51/zhpOXQ7NII2Es4
+	 Ti4aMrVmU7WWQ==
+Message-ID: <81bd7bd3-46c8-45c0-8266-44316597a406@kernel.org>
+Date: Thu, 19 Jun 2025 19:39:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617183503.10527-1-ryncsn@gmail.com> <20250617183503.10527-5-ryncsn@gmail.com>
- <a9a2e167-1617-7f7c-22ed-f949afcbe656@huaweicloud.com>
-In-Reply-To: <a9a2e167-1617-7f7c-22ed-f949afcbe656@huaweicloud.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Fri, 20 Jun 2025 01:37:24 +0800
-X-Gm-Features: AX0GCFtTNLBEfqVpt2YEbWVNb5mcsPO2dq58xPj-PqUjG_DyYgyvi4VjVt-QlJU
-Message-ID: <CAMgjq7CyXG5Mp-frdYU=D-66yPrYMLKSPqxBgq6r4WV__H4W0w@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm/shmem, swap: avoid false positive swap cache lookup
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: reset: eswin: Documentation for
+ eic7700 SoC
+To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ huangyifeng@eswincomputing.com
+References: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+ <20250619080012.1300-1-dongxuyang@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250619080012.1300-1-dongxuyang@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 9:28=E2=80=AFAM Kemeng Shi <shikemeng@huaweicloud.c=
-om> wrote:
->
->
->
-> on 6/18/2025 2:35 AM, Kairui Song wrote:
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > If the shmem read request's index points to the middle of a large swap
-> > entry, shmem swap in does the swap cache lookup use the large swap
-> > entry's starting value (the first sub swap entry of this large entry).
-> > This will lead to false positive lookup result if only the first few
-> > swap entries are cached, but the requested swap entry pointed by index
-> > is uncached.
-> >
-> > Currently shmem will do a large entry split then retry the swapin from
-> > beginning, which is a waste of CPU and fragile. Handle this correctly.
-> >
-> > Also add some sanity checks to help understand the code and ensure
-> > things won't go wrong.
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  mm/shmem.c | 61 ++++++++++++++++++++++++++----------------------------
-> >  1 file changed, 29 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/mm/shmem.c b/mm/shmem.c
-> > index 46dea2fa1b43..0bc30dafad90 100644
-> > --- a/mm/shmem.c
-> > +++ b/mm/shmem.c
-> > @@ -1977,12 +1977,12 @@ static struct folio *shmem_alloc_and_add_folio(=
-struct vm_fault *vmf,
-> >
-> >  static struct folio *shmem_swapin_direct(struct inode *inode,
-> >               struct vm_area_struct *vma, pgoff_t index,
-> > -             swp_entry_t entry, int *order, gfp_t gfp)
-> > +             swp_entry_t swap_entry, swp_entry_t swap,
-> > +             int *order, gfp_t gfp)
-> >  {
-> >       struct shmem_inode_info *info =3D SHMEM_I(inode);
-> >       int nr_pages =3D 1 << *order;
-> >       struct folio *new;
-> > -     pgoff_t offset;
-> >       void *shadow;
-> >
-> >       /*
-> > @@ -2003,13 +2003,11 @@ static struct folio *shmem_swapin_direct(struct=
- inode *inode,
-> >                */
-> >               if ((vma && userfaultfd_armed(vma)) ||
-> >                   !zswap_never_enabled() ||
-> > -                 non_swapcache_batch(entry, nr_pages) !=3D nr_pages) {
-> > -                     offset =3D index - round_down(index, nr_pages);
-> > -                     entry =3D swp_entry(swp_type(entry),
-> > -                                       swp_offset(entry) + offset);
-> > +                 non_swapcache_batch(swap_entry, nr_pages) !=3D nr_pag=
-es) {
-> >                       *order =3D 0;
-> >                       nr_pages =3D 1;
-> >               } else {
-> > +                     swap.val =3D swap_entry.val;
-> >                       gfp_t huge_gfp =3D vma_thp_gfp_mask(vma);
-> >
-> >                       gfp =3D limit_gfp_mask(huge_gfp, gfp);
-> > @@ -2021,7 +2019,7 @@ static struct folio *shmem_swapin_direct(struct i=
-node *inode,
-> >               return ERR_PTR(-ENOMEM);
-> >
-> >       if (mem_cgroup_swapin_charge_folio(new, vma ? vma->vm_mm : NULL,
-> > -                                        gfp, entry)) {
-> > +                                        gfp, swap)) {
-> >               folio_put(new);
-> >               return ERR_PTR(-ENOMEM);
-> >       }
-> > @@ -2036,17 +2034,17 @@ static struct folio *shmem_swapin_direct(struct=
- inode *inode,
-> >        * In this case, shmem_add_to_page_cache() will help identify the
-> >        * concurrent swapin and return -EEXIST.
-> >        */
-> > -     if (swapcache_prepare(entry, nr_pages)) {
-> > +     if (swapcache_prepare(swap, nr_pages)) {
-> >               folio_put(new);
-> >               return ERR_PTR(-EEXIST);
-> >       }
-> >
-> >       __folio_set_locked(new);
-> >       __folio_set_swapbacked(new);
-> > -     new->swap =3D entry;
-> > +     new->swap =3D swap;
-> >
-> > -     memcg1_swapin(entry, nr_pages);
-> > -     shadow =3D get_shadow_from_swap_cache(entry);
-> > +     memcg1_swapin(swap, nr_pages);
-> > +     shadow =3D get_shadow_from_swap_cache(swap);
-> >       if (shadow)
-> >               workingset_refault(new, shadow);
-> >       folio_add_lru(new);
-> > @@ -2278,20 +2276,21 @@ static int shmem_swapin_folio(struct inode *ino=
-de, pgoff_t index,
-> >       struct mm_struct *fault_mm =3D vma ? vma->vm_mm : NULL;
-> >       struct shmem_inode_info *info =3D SHMEM_I(inode);
-> >       int error, nr_pages, order, swap_order;
-> > +     swp_entry_t swap, swap_entry;
-> >       struct swap_info_struct *si;
-> >       struct folio *folio =3D NULL;
-> >       bool skip_swapcache =3D false;
-> > -     swp_entry_t swap;
-> > +     pgoff_t offset;
-> >
-> >       VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
-> > -     swap =3D radix_to_swp_entry(*foliop);
-> > +     swap_entry =3D radix_to_swp_entry(*foliop);
-> >       *foliop =3D NULL;
-> >
-> > -     if (is_poisoned_swp_entry(swap))
-> > +     if (is_poisoned_swp_entry(swap_entry))
-> >               return -EIO;
-> >
-> > -     si =3D get_swap_device(swap);
-> > -     order =3D shmem_swap_check_entry(mapping, index, swap);
-> > +     si =3D get_swap_device(swap_entry);
-> > +     order =3D shmem_swap_check_entry(mapping, index, swap_entry);
-> >       if (unlikely(!si)) {
-> >               if (order < 0)
-> >                       return -EEXIST;
-> > @@ -2303,7 +2302,9 @@ static int shmem_swapin_folio(struct inode *inode=
-, pgoff_t index,
-> >               return -EEXIST;
-> >       }
-> >
-> > -     /* Look it up and read it in.. */
-> > +     /* @index may points to the middle of a large entry, get the real=
- swap value first */
-> > +     offset =3D index - round_down(index, 1 << order);
-> > +     swap.val =3D swap_entry.val + offset;
-> >       folio =3D swap_cache_get_folio(swap, NULL, 0);
-> >       if (!folio) {
-> >               /* Or update major stats only when swapin succeeds?? */
-> > @@ -2315,7 +2316,7 @@ static int shmem_swapin_folio(struct inode *inode=
-, pgoff_t index,
-> >               /* Try direct mTHP swapin bypassing swap cache and readah=
-ead */
-> >               if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
-> >                       swap_order =3D order;
-> > -                     folio =3D shmem_swapin_direct(inode, vma, index,
-> > +                     folio =3D shmem_swapin_direct(inode, vma, index, =
-swap_entry,
-> >                                                   swap, &swap_order, gf=
-p);
-> >                       if (!IS_ERR(folio)) {
-> >                               skip_swapcache =3D true;
-> > @@ -2338,28 +2339,25 @@ static int shmem_swapin_folio(struct inode *ino=
-de, pgoff_t index,
-> >               }
-> >       }
-> >  alloced:
-> > +     swap_order =3D folio_order(folio);
-> > +     nr_pages =3D folio_nr_pages(folio);
-> > +
-> > +     /* The swap-in should cover both @swap and @index */
-> > +     swap.val =3D round_down(swap.val, nr_pages);
-> > +     VM_WARN_ON_ONCE(swap.val > swap_entry.val + offset);
-> > +     VM_WARN_ON_ONCE(swap.val + nr_pages <=3D swap_entry.val + offset)=
-;> +
-> >       /*
-> >        * We need to split an existing large entry if swapin brought in =
-a
-> >        * smaller folio due to various of reasons.
-> > -      *
-> > -      * And worth noting there is a special case: if there is a smalle=
-r
-> > -      * cached folio that covers @swap, but not @index (it only covers
-> > -      * first few sub entries of the large entry, but @index points to
-> > -      * later parts), the swap cache lookup will still see this folio,
-> > -      * And we need to split the large entry here. Later checks will f=
-ail,
-> > -      * as it can't satisfy the swap requirement, and we will retry
-> > -      * the swapin from beginning.
-> >        */
-> > -     swap_order =3D folio_order(folio);
-> > +     index =3D round_down(index, nr_pages);
-> >       if (order > swap_order) {
-> > -             error =3D shmem_split_swap_entry(inode, index, swap, gfp)=
-;
-> > +             error =3D shmem_split_swap_entry(inode, index, swap_entry=
-, gfp);
-> >               if (error)
-> >                       goto failed_nolock;
-> >       }
-> >
-> > -     index =3D round_down(index, 1 << swap_order);
-> > -     swap.val =3D round_down(swap.val, 1 << swap_order);
-> > -
-> >       /* We have to do this with folio locked to prevent races */
-> >       folio_lock(folio);
-> >       if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
-> > @@ -2372,7 +2370,6 @@ static int shmem_swapin_folio(struct inode *inode=
-, pgoff_t index,
-> >               goto failed;
-> >       }
-> >       folio_wait_writeback(folio);
-> > -     nr_pages =3D folio_nr_pages(folio);
-> >
-> >       /*
-> >        * Some architectures may have to restore extra metadata to the
-> >
-> The patch look good to me, just some small suggestion.
-> I think the name "swap" and "swap_entry" is not good enough. Maybe someth=
-ing
-> like "index_entry" and "align_entry" will be more clean.
+On 19/06/2025 10:00, dongxuyang@eswincomputing.com wrote:
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#reset-cells':
+> +    const: 2
 
-Thanks, very good suggestion, I prefer index_entry then.
+What is the meaning of the cells?
 
-> Besides we pass "swap" and "order" already, we can calculate swap_entry e=
-asily
-> and the code will be more easy to understand.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#reset-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/reset/eswin,eic7700-reset.h>
+> +
+> +    reset-controller@51828000 {
+> +        compatible = "eswin,eic7700-reset";
+> +        reg = <0x51828000 0x80000>;
+> +        #reset-cells = <2>;
+> +    };
+> diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
+> new file mode 100644
+> index 000000000000..8c3aa3c87ea4
+> --- /dev/null
 
-True, I'm not sure if the compiler is smart enough to avoid a
-round_down here, the inlined function can be optimized better with
-parameters.
+> +++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
+> @@ -0,0 +1,460 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
 
-> Not a big deal anyway, so:
-> Reviewed-by: Kemeng Shi <shikemeng@huaweicloud.com>
->
+2025
 
-Thanks again!
+> + *
+> + * Device Tree binding constants for EIC7700 reset controller.
+> + *
+> + * Authors:
+> + *	Yifeng Huang <huangyifeng@eswincomputing.com>
+> + *	Xuyang Dong <dongxuyang@eswincomputing.com>
+> + */
+> +
+> +#ifndef __DT_ESWIN_EIC7700_RESET_H__
+> +#define __DT_ESWIN_EIC7700_RESET_H__
+> +
+> +#define SNOC_RST_CTRL 0
+> +#define GPU_RST_CTRL 1
+> +#define DSP_RST_CTRL 2
+> +#define D2D_RST_CTRL 3
+> +#define DDR_RST_CTRL 4
+> +#define TCU_RST_CTRL 5
+> +#define NPU_RST_CTRL 6
+> +#define HSPDMA_RST_CTRL 7
+> +#define PCIE_RST_CTRL 8
+> +#define I2C_RST_CTRL 9
+> +#define FAN_RST_CTRL 10
+> +#define PVT_RST_CTRL 11
+> +#define MBOX_RST_CTRL 12
+> +#define UART_RST_CTRL 13
+
+
+...
+
+> +
+> +/*TIMER1*/
+> +#define SW_TIMER1_RSTN_0 0
+> +#define SW_TIMER1_RSTN_1 1
+> +#define SW_TIMER1_RSTN_2 2
+> +#define SW_TIMER1_RSTN_3 3
+> +#define SW_TIMER1_RSTN_4 4
+> +#define SW_TIMER1_RSTN_5 5
+> +#define SW_TIMER1_RSTN_6 6
+> +#define SW_TIMER1_RSTN_7 7
+> +#define SW_TIMER1_PRSTN 8
+> +
+> +/*TIMER2*/
+> +#define SW_TIMER2_RSTN_0 0
+> +#define SW_TIMER2_RSTN_1 1
+> +#define SW_TIMER2_RSTN_2 2
+> +#define SW_TIMER2_RSTN_3 3
+> +#define SW_TIMER2_RSTN_4 4
+> +#define SW_TIMER2_RSTN_5 5
+> +#define SW_TIMER2_RSTN_6 6
+> +#define SW_TIMER2_RSTN_7 7
+> +#define SW_TIMER2_PRSTN 8
+
+That's unreadable - missing indent before the value. Ids equal to block
+number are not useful anyway.
+
+The problem is: you still do not use this as an ABI. No driver usage at
+all and (comment which I repeat very often) no point to add it to the
+bindings. Look at other bindings how this is supposed to look like.
+
+
+Best regards,
+Krzysztof
