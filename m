@@ -1,63 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C579D26FA58
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E828B26FA58;
+	Thu, 19 Jun 2025 14:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341993; cv=none; b=ZXhnkwCgreAHfk9CYJNelotKz2VRKcXfiNsMUeuCqlKnqUjNtru5AnRzr4JzD4FLZc5+Vkh/6A0cXtWnwl6kVR8qy5JXYGe4RCag+Mv+HvsTN9wD8CxJkWmd8Mb5OzoDTc0/F/ZglicEAXN80GNvDLJJQEc8vCo/hMEkPUTjiKk=
+	t=1750342008; cv=none; b=LSnhSUBwYEgcErXRLg9WohNJHzI5BKT3gIWiCXqQdaD5epqBjSs6pB9La91q0027bSaKahlsLWMmOD6DSHkLs65KonFB2EYktfl5JuNO0bnGXeXWhmr/2ogKw40Keo+gwdr36XDZUCgywRClmpDnn6+cDhg/Nyx0QKiMfCsdUlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341993; c=relaxed/simple;
-	bh=mNbUYvZReUbPX24HxzYrXfLJ05cI+cpHUEK2EdjWNwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qrax5fMaERgkw8QEOwYvKnPDgq00JsN6RCjmBGzfUkyQQTo8qx0Aa+8P2gwqIFZ+JPJaElF32ibPj/9pLfVNcz8M3AUdyxaDpFyuYe2I4XCgV9j3IVwz6tAjxLUTn4QQkrEYtSNlV0eoGuq7zT3SEFclSny1YL9HiuqOugDYP6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iY0MnNz5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750342008; c=relaxed/simple;
+	bh=NYBkuq0cnX17OM4U0p5kofF8HhaPNGilDGSLVZI+Bz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fe1nBp0cAw3mwvut5CcAIpLVuk75xZ9YTyOp1MTUR3P2wnQF/IJsOUKF3tljdN3zvruNCyzQFh9fKcdqSM/0qtQDzOkdcfkFOKaa6xKvXiNf+9qaxIkj/OBX5ZC56Q8wWQhFHEf1OY1irIalbThSt1LXVhZSVOHUjoKw39ipql8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=iQPG8qTL; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iY0MnNz5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750341990;
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="iQPG8qTL"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bNMq55XVsz9tFm;
+	Thu, 19 Jun 2025 16:06:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1750342001;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3rFJy2cGcGcOiZjoBdoVKK7T7Guml8LSC5Piayfcnbo=;
-	b=iY0MnNz5eSrovEfeuGN0vCMRNu9fU59ciQAtrXaf2d+9mQqTuFFmVaUVMdL98O0aBuf95r
-	6ORXNl7sH22FfmtF4pAbK4nAlCPvnzgfPFIR4xgGfDd8JWpDOyRI1ZyUPUqmjPdTjcfd2d
-	x4gSMmCJfmvQ6decHUtDkEOjr6aBfd0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-3-prla-sTlMFOhS4rQhKUc6A-1; Thu,
- 19 Jun 2025 10:06:24 -0400
-X-MC-Unique: prla-sTlMFOhS4rQhKUc6A-1
-X-Mimecast-MFC-AGG-ID: prla-sTlMFOhS4rQhKUc6A_1750341982
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C77C1800283;
-	Thu, 19 Jun 2025 14:06:22 +0000 (UTC)
-Received: from fedora (unknown [10.45.226.41])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2F38F19560A3;
-	Thu, 19 Jun 2025 14:06:17 +0000 (UTC)
-Received: by fedora (sSMTP sendmail emulation); Thu, 19 Jun 2025 16:06:16 +0200
-From: "Jerome Marchand" <jmarchan@redhat.com>
-To: bpf@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PGfE/9y3eqH7Zr/2zxMvSStMMitvqBr+4f1cr+9I1IM=;
+	b=iQPG8qTLKrmvkILdtOt3CNspdU0SD0GDyKlQ1BnXkMRLG6VW3EIIHcadxZg0n1z+nwrAyq
+	R4IvC2brbZ5iWgAopHBw1lM3sSkmqy/JMOa292dYp4Vtdo/sc9ZbWxjuO/3Go9ze3EGS7A
+	U1sz4UdgszLlEAVHlbk9T3wwZcRNL9soG2XaxRRNBz4rByuaApK8WHuqvQRP1SASzVMjZK
+	UY1LJ/B5uK1mJkAeZn+tFe96gnpAJJt26s7Ojsy9JKJrt22zBCAEx8B0BBFY7srZ0mAk5/
+	cCn4h3IBEDbjWk/+6xQm7rM9F7xIukfa+ikRRmcheTsWqEhEEF5U8VNi5VR4jQ==
+From: Brahmajit Das <listout@listout.xyz>
+To: linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jerome Marchand <jmarchan@redhat.com>
-Subject: [PATCH v3 2/2] selftests/bpf: Convert test_sysctl to prog_tests
-Date: Thu, 19 Jun 2025 16:06:03 +0200
-Message-ID: <20250619140603.148942-3-jmarchan@redhat.com>
-In-Reply-To: <20250619140603.148942-1-jmarchan@redhat.com>
-References: <20250619140603.148942-1-jmarchan@redhat.com>
+	linux-btrfs@vger.kernel.org
+Cc: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	kees@kernel.org
+Subject: [PATCH] btrfs: replace deprecated strcpy with strscpy
+Date: Thu, 19 Jun 2025 19:36:23 +0530
+Message-ID: <20250619140623.3139-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,126 +50,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Rspamd-Queue-Id: 4bNMq55XVsz9tFm
 
-Convert test_sysctl test to prog_tests with minimal change to the
-tests themselves.
+strcpy is deprecated due to lack of bounds checking. This patch replaces
+strcpy with strscpy, the recommended alternative for null terminated
+strings, to follow best practices.
 
-Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
+There are instances where strscpy cannot be used such as where both the
+source and destination are character pointers. In that instance we can
+use scnprintf or a memcpy.
+
+No functional changes intended.
+
+Link: https://github.com/KSPP/linux/issues/88
+
+Signed-off-by: Brahmajit Das <listout@listout.xyz>
 ---
- tools/testing/selftests/bpf/.gitignore        |  1 -
- tools/testing/selftests/bpf/Makefile          |  5 +--
- .../bpf/{ => prog_tests}/test_sysctl.c        | 37 ++++---------------
- 3 files changed, 10 insertions(+), 33 deletions(-)
- rename tools/testing/selftests/bpf/{ => prog_tests}/test_sysctl.c (98%)
+ fs/btrfs/ioctl.c   | 2 +-
+ fs/btrfs/send.c    | 2 +-
+ fs/btrfs/volumes.c | 2 +-
+ fs/btrfs/xattr.c   | 5 +++--
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
-index e2a2c46c008b1..3d8378972d26c 100644
---- a/tools/testing/selftests/bpf/.gitignore
-+++ b/tools/testing/selftests/bpf/.gitignore
-@@ -21,7 +21,6 @@ test_lirc_mode2_user
- flow_dissector_load
- test_tcpnotify_user
- test_libbpf
--test_sysctl
- xdping
- test_cpp
- *.d
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 66bb50356be08..53dc08d905bd1 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -70,7 +70,7 @@ endif
- # Order correspond to 'make run_tests' order
- TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_progs \
- 	test_sockmap \
--	test_tcpnotify_user test_sysctl \
-+	test_tcpnotify_user \
- 	test_progs-no_alu32
- TEST_INST_SUBDIRS := no_alu32
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 913acef3f0a9..203f309f00b1 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -4200,7 +4200,7 @@ static int btrfs_ioctl_set_fslabel(struct file *file, void __user *arg)
+ 	}
  
-@@ -215,7 +215,7 @@ ifeq ($(VMLINUX_BTF),)
- $(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
- endif
+ 	spin_lock(&fs_info->super_lock);
+-	strcpy(super_block->label, label);
++	strscpy(super_block->label, label);
+ 	spin_unlock(&fs_info->super_lock);
+ 	ret = btrfs_commit_transaction(trans);
  
--# Define simple and short `make test_progs`, `make test_sysctl`, etc targets
-+# Define simple and short `make test_progs`, `make test_maps`, etc targets
- # to build individual tests.
- # NOTE: Semicolon at the end is critical to override lib.mk's default static
- # rule for binaries.
-@@ -324,7 +324,6 @@ NETWORK_HELPERS := $(OUTPUT)/network_helpers.o
- $(OUTPUT)/test_sockmap: $(CGROUP_HELPERS) $(TESTING_HELPERS)
- $(OUTPUT)/test_tcpnotify_user: $(CGROUP_HELPERS) $(TESTING_HELPERS) $(TRACE_HELPERS)
- $(OUTPUT)/test_sock_fields: $(CGROUP_HELPERS) $(TESTING_HELPERS)
--$(OUTPUT)/test_sysctl: $(CGROUP_HELPERS) $(TESTING_HELPERS)
- $(OUTPUT)/test_tag: $(TESTING_HELPERS)
- $(OUTPUT)/test_lirc_mode2_user: $(TESTING_HELPERS)
- $(OUTPUT)/xdping: $(TESTING_HELPERS)
-diff --git a/tools/testing/selftests/bpf/test_sysctl.c b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-similarity index 98%
-rename from tools/testing/selftests/bpf/test_sysctl.c
-rename to tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-index bcdbd27f22f08..273dd41ca09e4 100644
---- a/tools/testing/selftests/bpf/test_sysctl.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-@@ -1,22 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2019 Facebook
- 
--#include <fcntl.h>
--#include <stdint.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <string.h>
--#include <unistd.h>
--
--#include <linux/filter.h>
--
--#include <bpf/bpf.h>
--#include <bpf/libbpf.h>
--
--#include <bpf/bpf_endian.h>
--#include "bpf_util.h"
-+#include "test_progs.h"
- #include "cgroup_helpers.h"
--#include "testing_helpers.h"
- 
- #define CG_PATH			"/foo"
- #define MAX_INSNS		512
-@@ -1608,26 +1594,19 @@ static int run_tests(int cgfd)
- 	return fails ? -1 : 0;
- }
- 
--int main(int argc, char **argv)
-+void test_sysctl(void)
+diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
+index 2891ec4056c6..66ee9e1b1e96 100644
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -758,7 +758,7 @@ static int send_header(struct send_ctx *sctx)
  {
--	int cgfd = -1;
--	int err = 0;
-+	int cgfd;
+ 	struct btrfs_stream_header hdr;
  
- 	cgfd = cgroup_setup_and_join(CG_PATH);
--	if (cgfd < 0)
--		goto err;
-+	if (!ASSERT_OK_FD(cgfd < 0, "create_cgroup"))
-+		goto out;
+-	strcpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
++	strscpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
+ 	hdr.version = cpu_to_le32(sctx->proto);
+ 	return write_buf(sctx->send_filp, &hdr, sizeof(hdr),
+ 					&sctx->send_off);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 89835071cfea..ec5304f19ac2 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
+ 	u32 size_bp = size_buf;
  
--	/* Use libbpf 1.0 API mode */
--	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
-+	if (!ASSERT_OK(run_tests(cgfd), "run_tests"))
-+		goto out;
+ 	if (!flags) {
+-		strcpy(bp, "NONE");
++		memcpy(bp, "NONE", 4);
+ 		return;
+ 	}
  
--	if (run_tests(cgfd))
--		goto err;
--
--	goto out;
--err:
--	err = -1;
- out:
- 	close(cgfd);
- 	cleanup_cgroup_environment();
--	return err;
-+	return;
- }
+diff --git a/fs/btrfs/xattr.c b/fs/btrfs/xattr.c
+index 3e0edbcf73e1..6b3485112840 100644
+--- a/fs/btrfs/xattr.c
++++ b/fs/btrfs/xattr.c
+@@ -12,6 +12,7 @@
+ #include <linux/posix_acl_xattr.h>
+ #include <linux/iversion.h>
+ #include <linux/sched/mm.h>
++#include <linux/string.h>
+ #include "ctree.h"
+ #include "fs.h"
+ #include "messages.h"
+@@ -516,8 +517,8 @@ static int btrfs_initxattrs(struct inode *inode,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		strcpy(name, XATTR_SECURITY_PREFIX);
+-		strcpy(name + XATTR_SECURITY_PREFIX_LEN, xattr->name);
++		scnprintf(name, sizeof(name), "%s%s", XATTR_SECURITY_PREFIX,
++			  xattr->name);
+ 
+ 		if (strcmp(name, XATTR_NAME_CAPS) == 0)
+ 			clear_bit(BTRFS_INODE_NO_CAP_XATTR, &BTRFS_I(inode)->runtime_flags);
 -- 
-2.49.0
+2.50.0
 
