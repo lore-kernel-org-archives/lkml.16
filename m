@@ -1,58 +1,58 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D262288C2C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7208B28B4F2
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345041; cv=none; b=JakQsLrjFMXjCqDoCQ1frDzSYR/n9on8fLfck/+3IEKHvqTCG5WWKcCmCrngQfJ8i9UpjDPFSKTc/H9UOtP2gB/Bii7Sh+4/DYIkP4HdUfQBDtc4r9yhBvDKJxC/LOGVNE56Fgd29r11HK6cNFywBivhpGW+e4BKSn5eOLOND0U=
+	t=1750345040; cv=none; b=jRr/omXXoDEnPUudVsntanNhXHkOkERJz70I1Vh8/3kAHOdq4MygPnB1aM7v0fYYhXOwqjQy02qcZIsAOvxoTCXgpQGh7NHWY4oOvLpkDWJHyt3yoJcGvC16uJ5Zb8mi/Ki4owgJm4dgQxo0NQ1I4ovxzr3yINRT2BxYnMO8+OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345041; c=relaxed/simple;
-	bh=eOvrWZYs7cpkr1jC2F6FHT95SEh0+ql4jGl77Y1613Y=;
+	s=arc-20240116; t=1750345040; c=relaxed/simple;
+	bh=SgcRfC4aLbauEp7YDUkXfpOYuYCnNeh7MBOxK1mnaao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IR3JtXUqZxH8gyyZn0FI9F4vEK+mM/K93e1cHPAT2KjR8h3n8IwUUn1cKOwYekr6s9MpS2jdgdD2rBHqC/ZH1MYpeNyAh08l2nUSEuGORsNjfddDKKfWFwYLt1sJqdQu3dzHQAp9uBGqTDBRGFI45rc9RtuLs++P/PBYXagvOYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ndEjMbuN; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=HZ8OKFpzGyvDjwr/PlfoJvv0t10stlR/Fvp+Bxn39loqTeeYacvvM9at7uHtnhMkJZR0/p4zTXxD1iWh5NVmjzbVWy8tjIx+9B0TMuA/df12ffFWcy+quGQ1uJKje0pjNVX0Aoe/efDYRSbjeSvi9xAX14XIEqLbNjByUVbIOtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VhPh6gpP; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ndEjMbuN"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMn3w029814;
-	Thu, 19 Jun 2025 14:57:11 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VhPh6gpP"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMdn4014981;
+	Thu, 19 Jun 2025 14:57:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=OcrmH
-	Vb9VrydAGeRz/jWkrVwwnwuG5f1aGkxLUAikyo=; b=ndEjMbuN3hIDsqGX5HoP/
-	VfhgWsp0jWkPZ3cR2MVPEHYowji9myC/luYtBciJeCYnwnPIFb0z/Dy+Hyy3ylBv
-	Jc6mL9Bu2yBPzEV2CDxdXivM8vgBuc9kMP4VpBu4I43niDptT4FkCoW6OHn334jP
-	IHaiMwwZ3ZehN4oJjlxk088WVKM3zIiirmMa2VqlsWj6J0HBvFPAWaGpkpqvqrLm
-	I8HSw4SHdFns/Gq1qWY8Mxl2Ib+EKPvEgzfbf7sHGrefRpdq5of2zIXy07bHKd1p
-	+2m+En3PazsGWw3QBedyYg6vxqqoFjVyrrOyw2XTK+56I/fQTXoqVbZqtPKKEDSh
-	g==
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=W91GK
+	Csq6/X9c64SiyrF6Zzc+6MbOcraJ+NMsQwVfGU=; b=VhPh6gpP/Yx7SKt2NhC5z
+	LynDUGAcELynE8+5hMfvnr+bMSm+nEw+y6wTnnPn7Umtx+hZEQUqgPklP/jY11nA
+	28FUGk+BzUZx1XKEzPRCkqP5L1UyU0Jv6GXZRR99ZD8I4Ote+qzgckIVA3BxYwtp
+	3MjI/E2ub8hd82DQ6Ft9sJVMaomRFhrPvmaEqFXd5Gi6MJeGc6rP/DIqm2MDFl3G
+	ntRrWCsuzuBwfOzFfbOvsqFopw015UR6IJcCphQtVLVdISA8A678c9W8okVgPCzz
+	sJxGNdX1OxuuOAsbAoCvM27WQcGMYgHxtpwcotwSRLaIt3Lhx6XnHTumrpqMn3Xc
+	A==
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47b23xwjxj-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4t4ar-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:10 +0000 (GMT)
+	Thu, 19 Jun 2025 14:57:08 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDNXfu022847;
-	Thu, 19 Jun 2025 14:57:09 GMT
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDLUju022936;
+	Thu, 19 Jun 2025 14:57:07 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8dxk-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8dwf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:09 +0000
+	Thu, 19 Jun 2025 14:57:07 +0000
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0JN008257;
-	Thu, 19 Jun 2025 14:57:09 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0JJ008257;
+	Thu, 19 Jun 2025 14:57:06 GMT
 Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-154-180-74.vpn.oracle.com [10.154.180.74])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-8;
-	Thu, 19 Jun 2025 14:57:08 +0000
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-6;
+	Thu, 19 Jun 2025 14:57:06 +0000
 From: Alexandre Chartre <alexandre.chartre@oracle.com>
 To: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org,
         peterz@infradead.org
 Cc: alexandre.chartre@oracle.com
-Subject: [RFC PATCH v2 07/17] objtool: Store instruction disassembly result
-Date: Thu, 19 Jun 2025 16:56:49 +0200
-Message-ID: <20250619145659.1377970-8-alexandre.chartre@oracle.com>
+Subject: [RFC PATCH v2 05/17] objtool: Print symbol during disassembly
+Date: Thu, 19 Jun 2025 16:56:47 +0200
+Message-ID: <20250619145659.1377970-6-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
 References: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
@@ -70,149 +70,283 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 sp
  adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506190124
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfX14uYeiE2SPSd +/6YVCo8MCzJjFMLxP1fKXUtlMegAZN60rfP6TM2lBXrzmaWwyScFi1JMY3HtUUEO85y5OXL+rq w6CQsfwjROAGagmz4Wb0dzIoG1Ufq1CZWuPnfjCadyI7NBByre+7MYhC8/mp37htEPky/Rs6jv8
- C3sAc9zRWOw+o8Ibh4Sqsx31peOvPTiKBcBizuDWCtqVQO4zI93WPR7X7aUh7Vics6TXiu7+Tzn EaXqsSGtUNwn4jQUPoMSj7fSfj3qmy14ZbEL6uCCIwfcEUvpntNZYDUUozvQbo+hgsMH63BtROG XKMajysWhFLqYrXVh1LtGtoA/MqMWaLVraOrSwTTS77+HvceSxh3UgfBlSjRI2zwdk0gWY0QgKQ
- X58JlfeNujKQczsHXmquqismoZXcIwMcfCMBWomhdtWr1WHMB4TU7ZXXhdNaoF4mLIvhh8xu
-X-Authority-Analysis: v=2.4 cv=DM2P4zNb c=1 sm=1 tr=0 ts=68542547 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=jcmHYjYDc9FjrwFKAggA:9 cc=ntf awl=host:13207
-X-Proofpoint-GUID: NoTd7VEjyzEpCzMTRqlM9jHc9ZFdJL0x
-X-Proofpoint-ORIG-GUID: NoTd7VEjyzEpCzMTRqlM9jHc9ZFdJL0x
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfXyLESDSrI/bwm ZpZC5fmH56IvMcGK6HRXeN0geIVMDUF2lB/dFqcuiAIoEn6dPNECoed/r52sp6czgVMnzTwY6Hf HbxOEGsuePxg+jf5WbEr4xkiGRe421MaSZCOR0migt4Rfr4yjEw8sX8f2/R43OohZn/LUvWdNXD
+ /b52365gwuaGfj33uL2ZIKQldYjxnGSTe955E4ah/wYr5SMZWs8TkZfqP3C+Nuu9ToUfbuMUQb0 Ixowvk00NdkaMbiYQ4sdpkLZ2wpqMs1WM7SHGXiDOLElpW+H5Edni8/rXP9xpfMGObmWXv7R7mj TeO3k0ek53cWGuyTguh31yruF8iss9VOeEnFEYCY2VvPUnEL8mkrjwuCYpENAgQW3JQ2aJ8onWN
+ IEfBKA76GGXGJ8vAWmedWF+VuSB5vx0sUW7w2vdIPVK3c0VK2fYksx4JRaXlEfNRtQVxvZ4Y
+X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=68542544 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=zIsJDVpacxTNcREixn4A:9 cc=ntf awl=host:13207
+X-Proofpoint-GUID: BzYGDTfcqkRGztY91Z7o9GS5bR8LSucs
+X-Proofpoint-ORIG-GUID: BzYGDTfcqkRGztY91Z7o9GS5bR8LSucs
 
-When disassembling an instruction store the result instead of directly
-printing it.
+Print symbols referenced during disassembly instead of just printing
+raw addresses. Also handle address relocation.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- tools/objtool/disas.c | 78 +++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 72 insertions(+), 6 deletions(-)
+ tools/objtool/arch/loongarch/decode.c |  7 +++
+ tools/objtool/arch/powerpc/decode.c   |  7 +++
+ tools/objtool/arch/x86/decode.c       | 14 +++++
+ tools/objtool/check.c                 |  9 ---
+ tools/objtool/disas.c                 | 89 +++++++++++++++++++++++++++
+ tools/objtool/include/objtool/arch.h  |  2 +
+ tools/objtool/include/objtool/check.h |  9 +++
+ tools/objtool/include/objtool/warn.h  | 12 ++++
+ 8 files changed, 140 insertions(+), 9 deletions(-)
 
-diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
-index 91d23f7518e3..fbec062f40eb 100644
---- a/tools/objtool/disas.c
-+++ b/tools/objtool/disas.c
-@@ -12,9 +12,16 @@
- #include <linux/string.h>
- #include <tools/dis-asm-compat.h>
+diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+index 5bf383e7e2e5..09c43f008c9a 100644
+--- a/tools/objtool/arch/loongarch/decode.c
++++ b/tools/objtool/arch/loongarch/decode.c
+@@ -28,6 +28,13 @@ bool arch_pc_relative_reloc(struct reloc *reloc)
+ 	return false;
+ }
  
-+/*
-+ * Size of the buffer for storing the result of disassembling
-+ * a single instruction.
-+ */
-+#define DISAS_RESULT_SIZE	1024
-+
- struct disas_context {
- 	struct objtool_file *file;
- 	struct instruction *insn;
-+	char result[DISAS_RESULT_SIZE];
- 	disassembler_ftype disassembler;
- 	struct disassemble_info info;
- };
-@@ -22,6 +29,60 @@ struct disas_context {
- #define DINFO_FPRINTF(dinfo, ...)	\
- 	((*(dinfo)->fprintf_func)((dinfo)->stream, __VA_ARGS__))
- 
-+
-+static int disas_result_fprintf(struct disas_context *dctx,
-+				const char *fmt, va_list ap)
++unsigned long arch_pc_relative_offset(struct instruction *insn,
++				      struct reloc *reloc)
 +{
-+	char *buf = dctx->result;
-+	size_t avail, len;
-+
-+	len = strlen(buf);
-+	if (len >= DISAS_RESULT_SIZE - 1) {
-+		WARN_FUNC(dctx->insn->sec, dctx->insn->offset,
-+			  "disassembly buffer is full");
-+		return -1;
-+	}
-+	avail = DISAS_RESULT_SIZE - len;
-+
-+	len = vsnprintf(buf + len, avail, fmt, ap);
-+	if (len < 0 || len >= avail) {
-+		WARN_FUNC(dctx->insn->sec, dctx->insn->offset,
-+			  "disassembly buffer is truncated");
-+		return -1;
-+	}
-+
++	/* no PC relative relocation */
 +	return 0;
 +}
 +
-+static int disas_fprintf(void *stream, const char *fmt, ...)
-+{
-+	va_list arg;
-+	int rv;
-+
-+	va_start(arg, fmt);
-+	rv = disas_result_fprintf(stream, fmt, arg);
-+	va_end(arg);
-+
-+	return rv;
-+}
-+
-+/*
-+ * For init_disassemble_info_compat().
-+ */
-+static int disas_fprintf_styled(void *stream,
-+				enum disassembler_style style,
-+				const char *fmt, ...)
-+{
-+	va_list arg;
-+	int rv;
-+
-+	va_start(arg, fmt);
-+	rv = disas_result_fprintf(stream, fmt, arg);
-+	va_end(arg);
-+
-+	return rv;
-+}
-+
- static void disas_print_address(bfd_vma addr, struct disassemble_info *dinfo)
+ bool arch_callee_saved_reg(unsigned char reg)
  {
- 	struct disas_context *dctx = dinfo->application_data;
-@@ -147,9 +208,8 @@ struct disas_context *disas_context_create(struct objtool_file *file)
- 	dctx->file = file;
- 	dinfo = &dctx->info;
- 
--	init_disassemble_info_compat(dinfo, stdout,
--				     (fprintf_ftype)fprintf,
--				     fprintf_styled);
-+	init_disassemble_info_compat(dinfo, dctx,
-+				     disas_fprintf, disas_fprintf_styled);
- 
- 	dinfo->read_memory_func = buffer_read_memory;
- 	dinfo->print_address_func = disas_print_address;
-@@ -196,6 +256,11 @@ void disas_context_destroy(struct disas_context *dctx)
- 	free(dctx);
+ 	switch (reg) {
+diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
+index 3c6fced37bcc..9c3f49c45587 100644
+--- a/tools/objtool/arch/powerpc/decode.c
++++ b/tools/objtool/arch/powerpc/decode.c
+@@ -20,6 +20,13 @@ unsigned long arch_dest_reloc_offset(int addend)
+ 	return addend;
  }
  
-+static char *disas_result(struct disas_context *dctx)
++unsigned long arch_pc_relative_offset(struct instruction *insn,
++				      struct reloc *reloc)
 +{
-+	return dctx->result;
++	/* no PC relative relocation */
++	return 0;
++}
++
+ bool arch_callee_saved_reg(unsigned char reg)
+ {
+ 	return false;
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 3c85506f9414..6a39cc619d63 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -103,6 +103,20 @@ bool arch_pc_relative_reloc(struct reloc *reloc)
+ 	return false;
+ }
+ 
++unsigned long arch_pc_relative_offset(struct instruction *insn,
++				      struct reloc *reloc)
++{
++	/*
++	 * Relocation information for a RIP-relative instruction is
++	 * based on the RIP value at the end of the instruction. So
++	 * to get the effective relocated address, the reference has
++	 * to be adjusted with the number of bytes between the
++	 * relocation offset and the end of the instruction.
++	 */
++	return reloc_addend(reloc) +
++		insn->offset + insn->len - reloc_offset(reloc);
++}
++
+ #define ADD_OP(op) \
+ 	if (!(op = calloc(1, sizeof(*op)))) \
+ 		return -1; \
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 8ba69e0c273b..a4d0a6c62bc0 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -132,15 +132,6 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
+ 	for (insn = next_insn_same_sec(file, insn); insn;		\
+ 	     insn = next_insn_same_sec(file, insn))
+ 
+-static inline struct symbol *insn_call_dest(struct instruction *insn)
+-{
+-	if (insn->type == INSN_JUMP_DYNAMIC ||
+-	    insn->type == INSN_CALL_DYNAMIC)
+-		return NULL;
+-
+-	return insn->_call_dest;
+-}
+-
+ static inline struct reloc *insn_jump_table(struct instruction *insn)
+ {
+ 	if (insn->type == INSN_JUMP_DYNAMIC ||
+diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
+index 9fead6281102..91d23f7518e3 100644
+--- a/tools/objtool/disas.c
++++ b/tools/objtool/disas.c
+@@ -14,10 +14,96 @@
+ 
+ struct disas_context {
+ 	struct objtool_file *file;
++	struct instruction *insn;
+ 	disassembler_ftype disassembler;
+ 	struct disassemble_info info;
+ };
+ 
++#define DINFO_FPRINTF(dinfo, ...)	\
++	((*(dinfo)->fprintf_func)((dinfo)->stream, __VA_ARGS__))
++
++static void disas_print_address(bfd_vma addr, struct disassemble_info *dinfo)
++{
++	struct disas_context *dctx = dinfo->application_data;
++	struct instruction *insn = dctx->insn;
++	struct objtool_file *file = dctx->file;
++	struct instruction *jump_dest;
++	struct symbol *call_dest;
++	unsigned long offset;
++	struct reloc *reloc;
++	bool is_reloc;
++	char symstr[1024];
++	char *str;
++
++	/*
++	 * If the instruction is a call/jump and it references a
++	 * destination then this is likely the address we are looking
++	 * up. So check it first.
++	 */
++	jump_dest = insn->jump_dest;
++	if (jump_dest && jump_dest->sym && jump_dest->offset == addr) {
++		sprint_name(symstr, jump_dest->sym->name, jump_dest->offset - jump_dest->sym->offset);
++		DINFO_FPRINTF(dinfo, "%lx <%s>", addr, symstr);
++		return;
++	}
++
++	/*
++	 * Assume the address is a relocation if it points to the next
++	 * instruction.
++	 */
++	is_reloc = (addr == insn->offset + insn->len);
++
++	/*
++	 * The call destination offset can be the address we are looking
++	 * up, or 0 if there is a relocation.
++	 */
++	call_dest = insn_call_dest(insn);
++	if (call_dest) {
++		if (call_dest->offset == addr) {
++			DINFO_FPRINTF(dinfo, "%lx <%s>", addr, call_dest->name);
++			return;
++		}
++		if (call_dest->offset == 0 && is_reloc) {
++			DINFO_FPRINTF(dinfo, "%s", call_dest->name);
++			return;
++		}
++	}
++
++	if (!is_reloc) {
++		DINFO_FPRINTF(dinfo, "0x%lx", addr);
++		return;
++	}
++
++	/*
++	 * If this is a relocation, check if we have relocation information
++	 * for this instruction.
++	 */
++	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
++					 insn->offset, insn->len);
++	if (!reloc) {
++		DINFO_FPRINTF(dinfo, "0x%lx", addr);
++		return;
++	}
++
++	if (arch_pc_relative_reloc(reloc))
++		offset = arch_pc_relative_offset(insn, reloc);
++	else
++		offset = reloc_addend(reloc);
++
++	/*
++	 * If the relocation symbol is a section name (for example ".bss")
++	 * then we try to further resolve the name.
++	 */
++	if (reloc->sym->type == STT_SECTION) {
++		str = offstr(reloc->sym->sec, reloc->sym->offset + offset);
++		DINFO_FPRINTF(dinfo, "%s", str);
++		free(str);
++	} else {
++		sprint_name(symstr, reloc->sym->name, offset);
++		DINFO_FPRINTF(dinfo, "%s", symstr);
++	}
 +}
 +
  /*
-  * Disassemble a single instruction. Return the size of the instruction.
+  * Initialize disassemble info arch, mach (32 or 64-bit) and options.
   */
-@@ -206,6 +271,7 @@ static size_t disas_insn(struct disas_context *dctx,
- 	struct disassemble_info *dinfo = &dctx->info;
+@@ -66,6 +152,7 @@ struct disas_context *disas_context_create(struct objtool_file *file)
+ 				     fprintf_styled);
  
- 	dctx->insn = insn;
-+	dctx->result[0] = '\0';
+ 	dinfo->read_memory_func = buffer_read_memory;
++	dinfo->print_address_func = disas_print_address;
+ 	dinfo->application_data = dctx;
  
  	/*
+@@ -118,6 +205,8 @@ static size_t disas_insn(struct disas_context *dctx,
+ 	disassembler_ftype disasm = dctx->disassembler;
+ 	struct disassemble_info *dinfo = &dctx->info;
+ 
++	dctx->insn = insn;
++
+ 	/*
  	 * Set the disassembler buffer to read data from the section
-@@ -229,10 +295,10 @@ static void disas_func(struct disas_context *dctx, struct symbol *func)
- 	printf("%s:\n", func->name);
- 	sym_for_each_insn(dctx->file, func, insn) {
- 		addr = insn->offset;
--		printf(" %6lx:  %s+0x%-6lx      ",
--		       addr, func->name, addr - func->offset);
- 		disas_insn(dctx, insn);
--		printf("\n");
-+		printf(" %6lx:  %s+0x%-6lx      %s\n",
-+		       addr, func->name, addr - func->offset,
-+		       disas_result(dctx));
- 	}
- 	printf("\n");
+ 	 * containing the instruction to disassemble.
+diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
+index 19b1dec2db15..baa6eee1977f 100644
+--- a/tools/objtool/include/objtool/arch.h
++++ b/tools/objtool/include/objtool/arch.h
+@@ -97,6 +97,8 @@ bool arch_is_embedded_insn(struct symbol *sym);
+ int arch_rewrite_retpolines(struct objtool_file *file);
+ 
+ bool arch_pc_relative_reloc(struct reloc *reloc);
++unsigned long arch_pc_relative_offset(struct instruction *insn,
++				      struct reloc *reloc);
+ 
+ unsigned int arch_reloc_size(struct reloc *reloc);
+ unsigned long arch_jump_table_sym_offset(struct reloc *reloc, struct reloc *table);
+diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
+index 5290ac1ebbc1..4adbcd760c6f 100644
+--- a/tools/objtool/include/objtool/check.h
++++ b/tools/objtool/include/objtool/check.h
+@@ -115,6 +115,15 @@ static inline bool is_jump(struct instruction *insn)
+ 	return is_static_jump(insn) || is_dynamic_jump(insn);
  }
+ 
++static inline struct symbol *insn_call_dest(struct instruction *insn)
++{
++	if (insn->type == INSN_JUMP_DYNAMIC ||
++	    insn->type == INSN_CALL_DYNAMIC)
++		return NULL;
++
++	return insn->_call_dest;
++}
++
+ struct instruction *find_insn(struct objtool_file *file,
+ 			      struct section *sec, unsigned long offset);
+ 
+diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
+index cb8fe846d9dd..125093d568be 100644
+--- a/tools/objtool/include/objtool/warn.h
++++ b/tools/objtool/include/objtool/warn.h
+@@ -17,6 +17,18 @@
+ 
+ extern const char *objname;
+ 
++static inline int sprint_name(char *str, const char *name, unsigned long offset)
++{
++	int len;
++
++	if (offset)
++		len = sprintf(str, "%s+0x%lx", name, offset);
++	else
++		len = sprintf(str, "%s", name);
++
++	return len;
++}
++
+ static inline char *offstr(struct section *sec, unsigned long offset)
+ {
+ 	bool is_text = (sec->sh.sh_flags & SHF_EXECINSTR);
 -- 
 2.43.5
 
