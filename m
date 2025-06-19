@@ -1,92 +1,131 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A7E21E091
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283AF264638;
+	Thu, 19 Jun 2025 08:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322504; cv=none; b=nYJTa+y4nbMKVaKw+y0PmNom8HHQ2Xs2EB6lGAlrRXHAvnN41jYKepsZiZjKO2+Ojem90mMX79sYGfIZ8SM+MLQFj541fAZ0KV6FsWnUJuYwNMH9MIGuBoe4CIylhkdgLtGJ5on6cti9JOZ7qVExHFE79hJG81kRXFckxl8wJzw=
+	t=1750322550; cv=none; b=ePqdSfPbKxbkbfnbHyqPHNmsWOWDfNcdFhg0Jni8YphW7G/dAc9beyC22bzOtB9WMgNBINLUpPig5UDetY8SDq6cjHr5uvaMcUAG8WHGgOPVs5cNwBiWx+oV//ryl60MCWgAv+APSAfqVaFF5rlkooUQb1lih+U+5Ik+ZX3T9Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322504; c=relaxed/simple;
-	bh=n/3JI9hpwUNX1wRMtpySGbKxpzNwm/24BRDXUmlzv08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X90hLCsLRIPp/gS7trKzYbQzZZgn0h/okeK/bmPTQRTce1UamVnySJFO2dhy82xOEfMperFnoKEJx2UxEBDsXwijqSjuaUJM6bYLclBKLcIEr2oVtdoFthGEhYeEIZ93eGSxesSb/+Hom9GdXWwZjUMEak+tsjljUfMj1FHCDRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zNCrB10v; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750322550; c=relaxed/simple;
+	bh=3VFuG2FOQta3qfo/tXfeyceWpM2CtNcoqXoxG/UtwWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FYDCydWsCcZHM6bs4ztQXS+x2V51A3WCpfWBlYG0V10ELhXoTBg+0wIxRIPdcpHJbuWvxrqU6yJaTHIZlmxlElm9x5LncCt8fmy/Uv2IX6kEHPcUgpr8HvAsJHkJp1eS4FKJdWaLYcrajTgCf7UUZC+4wzUoE6AtnMhcs7HcXmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SErdEUma; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNCrB10v"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54998f865b8so378613e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750322501; x=1750927301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n/3JI9hpwUNX1wRMtpySGbKxpzNwm/24BRDXUmlzv08=;
-        b=zNCrB10vTbnnjpLM9SrZ7zvfJ1MMlIjC0So6wbKQbA1hpQ4zv+oSCCri3SPd/PUCPy
-         hJnynzeKKl/5PfuD1pSipTuRZpdA8F+o26aXN+vYn6YUAi9F4RAnw4UYV6sfQ1IO7a+4
-         JE+OcK6RbXh9NvKjszgRams/pD9C5mmr5ri+95kMpVYR+hWOf9zDPmV0YXmZaPMmn2DV
-         BhbiuKdOJEE9t492VXtTkJ58v9qt55I2+kMB6ZOU7plBZXssjLvigrC4JaGT5Q9X+mGB
-         SJW1RSv5zWAorcsQ7MgClmVHjqJJEnFyZPSYRzaTM5mZF4UWURGLCaFNw98MJS68+Qw6
-         yjow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750322501; x=1750927301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n/3JI9hpwUNX1wRMtpySGbKxpzNwm/24BRDXUmlzv08=;
-        b=vQQ/v4oFUSSiGXlrqi/6AKjnIqS47JcX01UQGjDrXckHHmjHE/0iT6J1ofVFio2NKg
-         umCCooKjiyn/mzQRH+7VDZVHT8UaByuqrT36MhJ9xb0UQ/Dq9sjyJYGCj2iJDMYLn2xc
-         9fsr49fogoFoEYGtRdnwQLqOLYgQdLOlAT6rZb9kbTxypo8DugFvYlCcDaF2bpmhF+Jo
-         HMuNRdob30DyQtzgU0fJ2JBvtX8PhFog9tska3RjEJwFM6JACmVcIwCzUGsAlEFgZckY
-         Lg0fvw8dO3XkOEnRS9DnTmK2gRgNAlJ02afH4/kGGQLtvtPaKym6hoC7pFe5iaL/esTS
-         NtYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVH9QFUA922dPiZu6hjNfPsA6iv77IFj6ekMtOukYqBVhJK0NeVdGgCE6Emk7rCdKvgO3d4xB+R/fzp3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW1Y1CoJHLs6D6FPteza2zbJaTBLGMD6M3WV4804TU9A9j08a8
-	0OHZFdzJYKEDYbg91oQ9i2I+UvrF7kK5CahrN/ZbuM+tMlxXoepi7fj/xFaAOuTQceyYEvPEDL7
-	CVfbkSkldfprHJ+bbRjZXfpX4++DINA+n3UXEmpqnOw==
-X-Gm-Gg: ASbGncvv8gGIt8a3+9hXhqorPcxAxp5KVpBo5vWUi/GOa5Ww46t2mFe+2sBJ8lhWsNU
-	6H6J7GxnfMSEGEiT6WVRZ2s6mMJ/eWaMiuwXKeFaee0d7QXQXqWq8Xeg20uDBJbOTD2lyYjpksa
-	PgD2NWFBTnagaoWTV9EdjPaCW2ac6EQIr+0ianJjQnRmg=
-X-Google-Smtp-Source: AGHT+IHVGgFPaQG0OhPXqsCqY9LUDkKPUDQE3Jy/DgzWX341H6DxvHpFRsv8n2zH9CF8v26QIPfqbwftMAeHyo7UZV4=
-X-Received: by 2002:a05:6512:b9e:b0:553:a64a:18b0 with SMTP id
- 2adb3069b0e04-553b6f3ed33mr5548057e87.42.1750322500571; Thu, 19 Jun 2025
- 01:41:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SErdEUma"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FBBC4CEEA;
+	Thu, 19 Jun 2025 08:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750322549;
+	bh=3VFuG2FOQta3qfo/tXfeyceWpM2CtNcoqXoxG/UtwWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SErdEUmaRiXUtAdabhdTNYYV8q5kEViKHeMvbdP07i8SdJqnyGDweje7/hf5ob2r1
+	 Y7GakfurOZd/kO55Uuejfbjb1S87B2AsLMEOZS16N3PqMiLkRzq0uK6SYLU7qgvTU/
+	 SVw+UbeIJFOnBUY3xSh5j8mzLsb/i9WbBp9W6Nyzn5AswOiCpHExDyjKEa4xghVxhq
+	 qVMVSR8Ah8c9+Gp0UD1wpCI2KA3aEvgMXWU2aB9vqWItkHQLyOH3Ng4vCX7N4MSO38
+	 GNkOCm/RoBAbDnsH25JuklGSA+93rTqS16MvDDHIq0NGhvg1unBUyT6Up6WtuKaRQA
+	 0XljRO/7NmUxw==
+Date: Thu, 19 Jun 2025 10:42:14 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Hugh Dickins <hughd@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: change vm_get_page_prot() to accept vm_flags_t
+ argument
+Message-ID: <20250619-unwiederholbar-addition-6875c99fe08d@brauner>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
- <CAMRc=MeTmwgbHv9R_=GFmjkAV4Nvc-SeSCOz1k6pnGUrF+R9Mg@mail.gmail.com>
- <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
- <CAMRc=Me8KZPU_KbbifL-j74GMPSuDgmmacw9g1UEfy=zeGyZcw@mail.gmail.com>
- <CACRpkdYUr+82AKndieXm24Eg1-HY4LyfKZ9J_kTFKT1Nyyju1A@mail.gmail.com> <CAMRc=Meq9+hnmvjXnq-YUJRPOOBvAV+pjHQ25k1wgFqV30Vo=A@mail.gmail.com>
-In-Reply-To: <CAMRc=Meq9+hnmvjXnq-YUJRPOOBvAV+pjHQ25k1wgFqV30Vo=A@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 19 Jun 2025 10:41:29 +0200
-X-Gm-Features: AX0GCFu8Dbo5pcDv8ujsp9IKLDaddp4Y2N5p47cQpThWdtIAL2mf912Bw-JLnyM
-Message-ID: <CACRpkdYNRC14d-jBbJy9-0OfdXR2anUJ6osw+DWsLNPf4VymnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Introduce HDP support for STM32MP platforms
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
 
-On Thu, Jun 19, 2025 at 9:21=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, Jun 18, 2025 at 08:42:52PM +0100, Lorenzo Stoakes wrote:
+> We abstract the type of the VMA flags to vm_flags_t, however in may places
+> it is simply assumed this is unsigned long, which is simply incorrect.
+> 
+> At the moment this is simply an incongruity, however in future we plan to
+> change this type and therefore this change is a critical requirement for
+> doing so.
+> 
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  arch/arm64/mm/mmap.c                       | 2 +-
+>  arch/powerpc/include/asm/book3s/64/pkeys.h | 3 ++-
+>  arch/sparc/mm/init_64.c                    | 2 +-
+>  arch/x86/mm/pgprot.c                       | 2 +-
+>  include/linux/mm.h                         | 4 ++--
+>  include/linux/pgtable.h                    | 2 +-
+>  tools/testing/vma/vma_internal.h           | 2 +-
+>  7 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+> index c86c348857c4..08ee177432c2 100644
+> --- a/arch/arm64/mm/mmap.c
+> +++ b/arch/arm64/mm/mmap.c
+> @@ -81,7 +81,7 @@ static int __init adjust_protection_map(void)
+>  }
+>  arch_initcall(adjust_protection_map);
+>  
+> -pgprot_t vm_get_page_prot(unsigned long vm_flags)
+> +pgprot_t vm_get_page_prot(vm_flags_t vm_flags)
+>  {
+>  	ptdesc_t prot;
+>  
+> diff --git a/arch/powerpc/include/asm/book3s/64/pkeys.h b/arch/powerpc/include/asm/book3s/64/pkeys.h
+> index 5b178139f3c0..6f2075636591 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pkeys.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pkeys.h
+> @@ -4,8 +4,9 @@
+>  #define _ASM_POWERPC_BOOK3S_64_PKEYS_H
+>  
+>  #include <asm/book3s/64/hash-pkey.h>
+> +#include <linux/mm_types.h>
+>  
+> -static inline u64 vmflag_to_pte_pkey_bits(u64 vm_flags)
+> +static inline u64 vmflag_to_pte_pkey_bits(vm_flags_t vm_flags)
 
-> Sorry I didn't notice this one. But I see you already responded that
-> you pulled my PR from today. Should I ignore it?
+If you change vm_flags_t to u64 you probably want to compile with some
+of these integer truncation options when you're doing the conversion.
+Because otherwise you risk silently truncating the upper 32bits when
+assigning to a 32bit variable. We've had had a patch series that almost
+introduced a very subtle bug when it tried to add the first flag outside
+the 32bit range in the lookup code a while ago. That series never made
+it but it just popped back into my head when I read your series.
 
-Yeah ignore it, let's use your PR instead.
-
-Yours,
-Linus Walleij
+Acked-by: Christian Brauner <brauner@kernel.org>
