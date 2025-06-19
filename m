@@ -1,102 +1,79 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106BD21D3E4;
-	Thu, 19 Jun 2025 10:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB4F224227;
+	Thu, 19 Jun 2025 10:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750329589; cv=none; b=j2VjOcRHJDnedgtN0htyj5zDJr9o7PjCce/lrN9usSGg85bGZ3rZB5L4o6dvddT1MSoFvrLEVbTuzCDmvRej8WH/Scy9IcdoWCL84TNqXA0Tw2YbBZylicifb6urMPOv8S3+W0+E9R//ln1mCZB0vrFQl5pVlyohF5cVqg97dQc=
+	t=1750329606; cv=none; b=Y1o0p93ECNMIs9oYQheQuFCW3exnoBiU7VpsoCsQpjothFLwA71ng/POjDOR1j7hCO+uZVyBKX91YSSRcKyEmWIjwuBaq75AITldmRNfqT/TomC0Zv6RMMxddW6qmf7dNzZX1+Is8sVbzMz6zjbfjxmIXMCoRGjUfwGlIBSZ8Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750329589; c=relaxed/simple;
-	bh=DMAtv+adek9drvhyTukAZ0+GBN9EpBhmKsZ/5dLozBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BSVROdRlNsms4ZI3ZVjRXlpesVVEKXt4/KdKg/YgAptDmBl+XGFxs5p6uuxFz1sgUrmSvaXqbPkBT0mraXwDeUwP6Ot8zG/cb6JpmGcFqKqfqvrDGKlVk4I9hz0XW6eB+LnJc3rxIbOxsQ5sOg+XqlOL7Tt7SLN1sS40giiokds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=faya4tNl; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750329606; c=relaxed/simple;
+	bh=nntOW/P5iGDCWsOWzk1HoLNiFqAj5krOk873NBh3xys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7jdOMgAN7D80ebWtrw0NsLZ4gNXAOzsYx2kKenzJey/xywRKwMf1pyJBkB2FrupsPY1gAsU9q8TiC4e/HR+mQxSHHF3OK0+4AMtp4+lNT79IHpL0UMdiYIbGzw4RoVUahrBJV2BiSK/KID7pB1o3FF1GYfPxuEBwKfohujlXc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YZctAzzL; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="faya4tNl"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55JAdSQd588824;
-	Thu, 19 Jun 2025 05:39:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750329568;
-	bh=tlRjm8eym2T9Hx/fyDaiY5Go0jYo5ZoRNES0P1c6pcM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=faya4tNlxHcgR0iN7NSGved1dittEmBomwKRYY1tsZ1dX7O2cqrTRP2yaLYKF4rv/
-	 8Vi0asnBam87XcKjMUq/lMIfgzQRY2vSH5gxDEAsK5Nk7btALkowj7KSXRgVuknjjs
-	 leX7ONT0oDAqw0KEZJ2CQvdFXnqSnD/rqrdezWm0=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55JAdRbU3819668
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 19 Jun 2025 05:39:28 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
- Jun 2025 05:39:27 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 19 Jun 2025 05:39:27 -0500
-Received: from [172.24.227.4] (hp-z2-tower.dhcp.ti.com [172.24.227.4])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55JAdN4r1220846;
-	Thu, 19 Jun 2025 05:39:24 -0500
-Message-ID: <b446e04f-0c4a-4cce-8330-0b7bc1e330dc@ti.com>
-Date: Thu, 19 Jun 2025 16:09:22 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YZctAzzL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nntOW/P5iGDCWsOWzk1HoLNiFqAj5krOk873NBh3xys=; b=YZctAzzLpoDxOnzb14Pro3peMI
+	XvjAGHaTK9JTW/16WWu9v/Hltm8e0T4M4hvapVZde6mVrufyjuFf5c9cDA2V70otQ3F3vxvnseJkq
+	BpxHT8RxjinEyZgrmP2001WwYLJRgoPaOLCmhDn7TNZacWJv96F40VxslyBxjKm6+2zAe0SFHRx6q
+	xuYRDcYSgPNgwmpfA4cIgHfX1SEjXqIEylqEn7GWGQE5Bmm4/ImH/LvFZpiNOz/Ij1nLwoccabEd3
+	EcHNurT+CIMzPCwWHVOjM+tOArDy1hbn6qvH6FbeIb2GaPvudbJMj7UbIVGgtuO+OKaWJUhcUdhU3
+	4D0kuJXw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSCgS-00000004PyM-3ueU;
+	Thu, 19 Jun 2025 10:39:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3C1CD30890E; Thu, 19 Jun 2025 12:39:51 +0200 (CEST)
+Date: Thu, 19 Jun 2025 12:39:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250619103951.GJ1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.938845449@goodmis.org>
+ <20250619085717.GB1613376@noisy.programming.kicks-ass.net>
+ <FCBAD96C-AD1B-4144-91D2-2A48EDA9B6CC@goodmis.org>
+ <20250619093226.GH1613200@noisy.programming.kicks-ass.net>
+ <80DBA3D8-5B52-43DB-8234-EAC51D0FC0E1@goodmis.org>
+ <20250619094505.GC1613376@noisy.programming.kicks-ass.net>
+ <66A7F6C1-3693-4F76-A513-7CBBE3154B06@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-am69-sk: Add idle-states for remaining
- SERDES instances
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <danishanwar@ti.com>, <srk@ti.com>,
-        Hrushikesh Salunke <h-salunke@ti.com>
-References: <20250609115921.2380611-1-h-salunke@ti.com>
- <ec2c7fab-6f4d-4163-90a9-16dddec80adb@ti.com>
- <afb54fe8-a271-4074-8249-669219954c4c@ti.com>
-Content-Language: en-US
-From: Hrushikesh Salunke <h-salunke@ti.com>
-In-Reply-To: <afb54fe8-a271-4074-8249-669219954c4c@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66A7F6C1-3693-4F76-A513-7CBBE3154B06@goodmis.org>
 
+On Thu, Jun 19, 2025 at 06:19:28AM -0400, Steven Rostedt wrote:
 
+> We currently care about x86-64, arm64, ppc 64 and s390. I'm assuming
+> they all have a proper 64 bit cmpxchg.
 
-On 19/06/25 11:35, Siddharth Vadapalli wrote:
-> On Wed, Jun 11, 2025 at 06:23:24PM +0530, Siddharth Vadapalli wrote:
->> On Mon, Jun 09, 2025 at 05:29:21PM +0530, Hrushikesh Salunke wrote:
->>> In AM69 SoC there are 4 instances of the 4 lane SERDES. So in
->>> "serdes_ln_ctrl" node there are total 16 entries in "mux-reg-mask"
->>> property. But "idle-states" is defined only for the lanes of first two
->>> SERDES instances. For completeness, set the "idle-states" of lanes of
->>> remaining SERDES instances to a default value of "unused".
->>>
->>> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
->>
->> Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> 
-> I failed to notice that this change will introduce a regression on
-> AM69-SK for CPSW AND Display which rely on the SERDES Lane Mapping for
-> SERDES2 and SERDES4 being at their reset value of "zero". This patch
-> should be fixed by updating it to the following:
-> 
-> 	<J784S4_SERDES2_LANE0_IP2_UNUSED>, <J784S4_SERDES2_LANE1_IP2_UNUSED>,
-> 	<J784S4_SERDES2_LANE2_QSGMII_LANE1>, <J784S4_SERDES2_LANE3_QSGMII_LANE2>,
-> 	<J784S4_SERDES4_LANE0_EDP_LANE0>, <J784S4_SERDES4_LANE1_EDP_LANE1>,
-> 	<J784S4_SERDES4_LANE2_EDP_LANE2>, <J784S4_SERDES4_LANE3_EDP_LANE3>;
-> 
-> 
-
-Thanks for noticing this Siddharth. I will correct this and post the v2
-for this patch.
-
-Regards,
-Hrushikesh
+They do. The only 64bit architecture that does not is HPPA IIRC.
