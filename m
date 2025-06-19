@@ -1,67 +1,69 @@
-Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
+Received: from mail-ot1-f99.google.com (mail-ot1-f99.google.com [209.85.210.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C71C17A30F
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681EA221F2D
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750361279; cv=none; b=tkIDLE3l5KvRc16d4v90drdea7bhS7aCrhWsnkD38iQdvodC7nc0/kgbmKnx3aDWy5WEUSWowZhKKuIBvof2YpIAWyY2rfIwL/e+vXpESKa9330Un0da/z751y357E1AXmH259upGP/s1dXHT4T/IoNuhguuZJnU+F+2pHWfZEM=
+	t=1750361280; cv=none; b=V+2vxyaXmfzUbEW/rcrqmj5sK66tNb7qpnwoIbLNsVRX6omQ6jqEay3i5Ln8t8RQQhU/E33srIP3S7gGiio6jICAxpiIqeYvW0+C3zK3UV1/f20uD7s9NZrYwkoSFiS0TMjqXahYg0VVKi0RtaSVkVdn94U/5YZRTJp/+HiGrgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750361279; c=relaxed/simple;
-	bh=sijI63S00ZgLzoop5Ca6++6nAMYhSyYN82X6IBrZOM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E7YebFU4V/MDnKneeXRaO+0NvgzPEh9Y4YOWQW8l8bUdQmxwROUaR9V68bcAosknAiCYOnpNGJVeki0KljDH2MG/taVRaAu6VxQb6zK7XYCnuWgJTLsD5qsSn4h7sr1YcLplJVLlkXLRKKEQW2f6V/OheHi+JH9z56nGNTuhdU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Ud5etnuA; arc=none smtp.client-ip=209.85.219.97
+	s=arc-20240116; t=1750361280; c=relaxed/simple;
+	bh=K4VZVi3xDLWT0DEl3LNGUBjrD17+mi5NFECXhkIiWrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gtsCWwM3pY1lfr83RC5sfzBxcG5Hd87v43wYkN6VlDIwJMyoUr18qPNtiMuJLPGRP8IU9Dylbmn7qLbMVKC0WeQjgLk930s/6bZvwcHyu8/DYAOdZ/vlPNu8b5orp1NSpshGPSe2uw8JkMU3pF0xD9QhiMTolU2N8lLNz6Q24Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=N0R2zRDu; arc=none smtp.client-ip=209.85.210.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Ud5etnuA"
-Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-6f2b58f0d09so1238876d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:27:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="N0R2zRDu"
+Received: by mail-ot1-f99.google.com with SMTP id 46e09a7af769-735a5c85281so220101a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1750361276; x=1750966076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UgbxT3rUHbJcwXp+d4U0s8gCt8pvR9AU1IXgLNjEg00=;
-        b=Ud5etnuAFg21/3ql02kuJSUljsqKzAeZ0DCGWdyOWTJYz9kEhQQG8Baf60AVfCcf6R
-         9UgVg2Nzl7xAhI3eSH6qiE9Fw1KZRDp67Em2P3eXYq6wtvc8RcPG070krEZXIqXxibal
-         /OoR14V4CHN6To0O275iNfbbtIBR2Uflj5MEM+MxH7YzGphdujNkj1jkmWrnwlvJrY4r
-         eUmaj+Cgs/6n1f9Tq0TCgs5Dj/Xrn2r91tnCvNYnFxtyTVtrJZSJi/VyXB8EluAXJbFn
-         acWY2aTqNc37YfIeWTKo8DhOR58rtGooyZDUqrG7G+ymFlEretM6754Gps4yA114P6vz
-         IoDw==
+        d=purestorage.com; s=google2022; t=1750361277; x=1750966077; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pd50J9nYsG0TeiIeJPqTSZq8OKqwb6u/EH2G1EHnbLs=;
+        b=N0R2zRDuoRfzgfUiO1AcWFzICfQ3al3GoC94JDFHhiABvJd5154MlbhJm9MDthWHGU
+         WiSAJGST5UQXcWz+uDSOquTk3dscvMlcMsMrgsMj/MS1xmir6HPpvlE0eoarK4ALIt66
+         jUQV8oDZkm2ThMXGcQJTY6EIw5rrZcLP0wVu1kDOku1p4miBTc41fbHQLI3XzMUhxG7J
+         lvHoM0S4QjRz8CjJ9xxnDuLdu+3eNtczDXBMkSGNKsQDY1W/hLLLgX9fg3l7tM4QDyyW
+         UXkPVeevwhCItJZNCfxPX/Y7zZOVH3WgczUz7MORJJKvxEqy7Jy6S4ynv76c53SBqYeF
+         6rsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750361276; x=1750966076;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UgbxT3rUHbJcwXp+d4U0s8gCt8pvR9AU1IXgLNjEg00=;
-        b=PwHkXRzswvAE4VXGzn+9enPqMVTB2H6zwYFTpYYB+m2oRHUC0zOuiK1Y7iGVBRE8c3
-         ChmAfH45X3Pv1T/tohpQFJImi26mcpqcwbE3uK02kdrVDE/HRugm7UqzDxDNdJ5ee4Ge
-         bbNu1MA0VEUPD+FebRb0gfHFiObFM5mmb+QYBSlzVJxjEh0xQ/MzOq0GO3niy6nL7u1w
-         k8CRWeBmxXSoSNz9KyJYMJS/BeJ4tRBG7mpzx3QEryGRq7K7j985ekfJj1Uo3iIC7Img
-         Y0Z1mq2lcNXO6ydvQcQODGsaVANlr/aaKA0yHPIT0TXuHAhFz1xtq5tbBamdtsLgmNgI
-         fj2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW5xXkQpVwyiItwbUrvN47gaUaoXl0qxvFEOYIdZrUx21iUDXgvLce7HWMDdHHqreo3OZVU/72RdvRs8gA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6BHtlfM3LdpExvWiJcAi/EGyOKjfxZGMJ1DsdUR16SoRXCpYz
-	5uOslUKtFL/xphd5ENBIt9UBq/bgolUsboc3gsz/4//ZTC8qX5hBVaJeujfS5dXmnYGBVdRiUk4
-	rACQQzeQObetE0k3f99OinQlsOl5+IWQckdUVynaCuAIi9KG2txCN
-X-Gm-Gg: ASbGncs/ELZwvdslQ3g4OiYDT/ykQ3dILA1bnPudImeAED6veFlSj7WeiGVOEG9jgLJ
-	gj8HBiwrwimkxipuUMtz452tnELjCBosYB0BPf6wJRHYBBPvB4v3cxv/6XQHbzJKGlVsFdjq0ce
-	bBNkKrVNBCNdZwdFyIkIUpz+p8JosJZqs1E47gGoWni16qUDp0lmJycK0haEuMASlK5WJVH/KC9
-	KNI/97kMdhGyVfAyRJWVtJ86dDkPCztBySM/3DvwAvg5HadwBwe7+NMt6MG+6QWr/tDYjHe0mBy
-	/3Ilv/anhPk5n8wGOU2/j8c9aqsEkH0m2+GgErSA
-X-Google-Smtp-Source: AGHT+IHz10o1j4yWo0MElDZwSQq9lzFuxMzdz16AoaaK4BkVl1R49On+ZMbhjl9V+Kl3D2KIomY0GccVT6QO
-X-Received: by 2002:a0c:f096:0:10b0:6fa:b8a1:abaa with SMTP id 6a1803df08f44-6fd0a2ff22bmr2120546d6.0.1750361276346;
-        Thu, 19 Jun 2025 12:27:56 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6fd095627c8sm299176d6.70.2025.06.19.12.27.56
+        d=1e100.net; s=20230601; t=1750361277; x=1750966077;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pd50J9nYsG0TeiIeJPqTSZq8OKqwb6u/EH2G1EHnbLs=;
+        b=koQk7yllFPJ6C/WnSK8M+Tg/CJzLPmPLRFgp5fJ0HhMCe7jB9dBMZS8Sq3I3yg/m4r
+         ujUvk8sWf5ooEruuV14BBSF2Pfx3GzU5jLsXfOlUbd7tGOI+2mYEjACkR/B3CmG/gbYX
+         9YZnc2mA6qhQs2cMBgEV4Vhcu+M/VY02Dyb2IsRHetD7qv/ve6nlgfYbY9i51hJXV4F0
+         zIKBb1v65mhi+1770BQklhzGq7n0BhjRsBhVv1Dq9ioijnwFnTawgAy5xSbJerSB3a7K
+         6u9TxFgG3kOV68FsIHDbipFf/Qvul8mtXWG+2wj7TP1/7xob0A3HHonDaZrnyi7jd1UM
+         59zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUirH4k9OHAcTBdv1knWlN8n7KJ32797wChcHHtYI/uWJDi5Q6WroWQ0eousZp7UK0Vsz07WOKuBB7oP9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9gjpew3p5ii+5zRsktybFfHsxVnYIzuvbmr1urp5QbBBavJp9
+	7aXj3+b0y/7is9/8n6DkhQXHxYMEDAOeAe15zBlGv8m6nuXg8RwkEeK6GVoSzlv4XLiQuIeSGIu
+	2xswhqCxkF92hVuJ9gwTxRwDqM/r9eGjnCFRW
+X-Gm-Gg: ASbGncspISsSuWSj0UWcGkjkXajs4f/vp29HQ9Resolpm0fcsJUxeQnqKBsOkFqC/Rk
+	t2o0xEhHVRxi9PaNY86KbklzYjaHnKR03fQ1YGm0r0anbIa4PEUt8Ot9BCPVFS7LzWk+vFt/NBy
+	sVrwHMD8ypyeEK5ZD4TYzj4UkXegffiE9+uDu6e4jmmtdSaSZJws6p2lcRU+YAdrQqkkr1o/vSk
+	dZX7eLDhtEj5gN7jj9ouygkJ8vmSt14PYhBH6tJ7nNtes5efR/zYsWIIGp5kB09/4nl/miqfddE
+	3qq/Bv9YuiKKo9TnwIZVOj05P63/TcOU1ec1llMxtwuYin45isuz7F4=
+X-Google-Smtp-Source: AGHT+IFJTkxUOsR6hHqwhzCVU/31oTbq4J6u3JvNzvDfBfkf4G2km3lw6QOOl6Hu+u0klImFrFzJNZ4BngML
+X-Received: by 2002:a05:6871:205:b0:2ea:9842:68e2 with SMTP id 586e51a60fabf-2eeee56f4e5mr63594fac.10.1750361277182;
+        Thu, 19 Jun 2025 12:27:57 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2ee8a78e987sm17874fac.32.2025.06.19.12.27.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 12:27:56 -0700 (PDT)
+        Thu, 19 Jun 2025 12:27:57 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 70C423400E6;
-	Thu, 19 Jun 2025 13:27:55 -0600 (MDT)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 34E5034031F;
+	Thu, 19 Jun 2025 13:27:56 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 6B9D1E4410B; Thu, 19 Jun 2025 13:27:55 -0600 (MDT)
+	id 32ED7E4410B; Thu, 19 Jun 2025 13:27:56 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Chris Mason <clm@fb.com>,
 	Josef Bacik <josef@toxicpanda.com>,
@@ -72,10 +74,12 @@ Cc: Mark Harmstone <maharmstone@fb.com>,
 	io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 0/4] io_uring/btrfs: remove struct io_uring_cmd_data
-Date: Thu, 19 Jun 2025 13:27:44 -0600
-Message-ID: <20250619192748.3602122-1-csander@purestorage.com>
+Subject: [PATCH 1/4] btrfs/ioctl: don't skip accounting in early ENOTTY return
+Date: Thu, 19 Jun 2025 13:27:45 -0600
+Message-ID: <20250619192748.3602122-2-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250619192748.3602122-1-csander@purestorage.com>
+References: <20250619192748.3602122-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,34 +88,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-btrfs's ->uring_cmd() implementations are the only ones using io_uring_cmd_data
-to store data that lasts for the lifetime of the uring_cmd. But all uring_cmds
-have to pay the memory and CPU cost of initializing this field and freeing the
-pointer if necessary when the uring_cmd ends. There is already a pdu field in
-struct io_uring_cmd that ->uring_cmd() implementations can use for storage. The
-only benefit of op_data seems to be that io_uring initializes it, so
-->uring_cmd() can read it to tell if there was a previous call to ->uring_cmd().
+btrfs_uring_encoded_read() returns early with -ENOTTY if the uring_cmd
+is issued with IO_URING_F_COMPAT but the kernel doesn't support compat
+syscalls. However, this early return bypasses the syscall accounting.
+goto out_acct instead to ensure the syscall is counted.
 
-Introduce a flag IORING_URING_CMD_REISSUE that ->uring_cmd() implementations can
-use to tell if this is the first call to ->uring_cmd() or a reissue of the
-uring_cmd. Switch btrfs to use the pdu storage for its btrfs_uring_encoded_data.
-If IORING_URING_CMD_REISSUE is unset, allocate a new btrfs_uring_encoded_data.
-If it's set, use the existing one in op_data. Free the btrfs_uring_encoded_data
-in the btrfs layer instead of relying on io_uring to free op_data. Finally,
-remove io_uring_cmd_data since it's now unused.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Fixes: 34310c442e17 ("btrfs: add io_uring command for encoded reads (ENCODED_READ ioctl)")
+---
+ fs/btrfs/ioctl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Caleb Sander Mateos (4):
-  btrfs/ioctl: don't skip accounting in early ENOTTY return
-  io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
-  btrfs/ioctl: store btrfs_uring_encoded_data in io_btrfs_cmd
-  io_uring/cmd: remove struct io_uring_cmd_data
-
- fs/btrfs/ioctl.c             | 41 +++++++++++++++++++++++++-----------
- include/linux/io_uring/cmd.h | 11 ++--------
- io_uring/uring_cmd.c         | 14 +++---------
- io_uring/uring_cmd.h         |  1 -
- 4 files changed, 34 insertions(+), 33 deletions(-)
-
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 913acef3f0a9..ff15160e2581 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -4827,11 +4827,12 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
+ 
+ 	if (issue_flags & IO_URING_F_COMPAT) {
+ #if defined(CONFIG_64BIT) && defined(CONFIG_COMPAT)
+ 		copy_end = offsetofend(struct btrfs_ioctl_encoded_io_args_32, flags);
+ #else
+-		return -ENOTTY;
++		ret = -ENOTTY;
++		goto out_acct;
+ #endif
+ 	} else {
+ 		copy_end = copy_end_kernel;
+ 	}
+ 
 -- 
 2.45.2
 
