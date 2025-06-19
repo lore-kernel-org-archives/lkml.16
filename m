@@ -1,91 +1,108 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17D211712;
-	Thu, 19 Jun 2025 15:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B51F0992;
+	Thu, 19 Jun 2025 15:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348544; cv=none; b=a0AbplureaoF89uOC7C9BMq1xkn8u2vewHObqGGlkl5x7yDKrES5udK4uXT2YhxE/ruA42QPV8vfVDa8Ow/KGHdGsjIkygrf3H9OYU5JkzOgJYA8Mb2VIJfPMs+XLXs6iC4nlATnIeB+Xsq7RngpD9yf0bSPWSz1I2b2czYEbT4=
+	t=1750348749; cv=none; b=Mi9er9JYIcaqqpb20pFofoU1q8xPw0VcugFX5Z+xkPJqubL8fu4SFGUq8TbJUwTk9efVdKI/u/MeZ6R4JpTw6nercxrAAWoOq3ssDG4KOeW6OrZHkS7YtJgxuXyM4+BADYRd79yM/bnEcw/WNYH0cajKylB6+EgKVca9FdM9uX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348544; c=relaxed/simple;
-	bh=QIyUOZguIRDiWUeNLd3XC6ezHfJQ0hbQk0pmNBnUCQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IxwYGIYcOoJ6yeQ103zrOJcSrIFkMl/1rfpbhSZs6ofqObg6VqqfIit+4XRYb3Nc/FwrY76kXhyYk2hbhb3bwkI8QwLLCOnGJnEJf4hTSkhv2X5HiELLq2IrQehJdLYZ4E19m4s0TI9znLAipnb+paV+ulqp88+prwGqFYGisRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0uGFs3g; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750348749; c=relaxed/simple;
+	bh=woQZ6vVEELn8x2rED7MrTPUOtcE8fQHWD9x1AI6eNjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bh5bvrhvK7enBU7AaJsy4SwwT9OypVnjfJXZ2cTgVGOoXWn9kcXs71bc+RCZZCMvoViJfuvLfEnHyYv6W+vL916Ce1jUDwVeQRH4lxRdCyPLK42vtpswkSy/lsLt3fy3jJW3YA4CCRvyc9t7MAn4/aRsUrI5DyZ4oB9nmCDOI0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zWgFbHt6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t7gTRwGL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0uGFs3g"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so7209175e9.1;
-        Thu, 19 Jun 2025 08:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750348541; x=1750953341; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIyUOZguIRDiWUeNLd3XC6ezHfJQ0hbQk0pmNBnUCQw=;
-        b=G0uGFs3gzUkcf84xh5bsQgrhLO2spYNBoVgNbevQ2zhZCwMnGugxzc9SZhf9YDnix4
-         07oglKYGrs/FkMA80rbSqypfvauw/t9v8bVZrFU+mhtvtiFis+9JcDRYL7eHl/0T/Kab
-         ba/Fil5rojtQxFRdEAym90mXZKYEChJ+LMsl4MWR7FGBLu9smMdAFeC2W5X8PcXjrbLe
-         93a1eUbuvU45DZutSe89/KzW4BB4DEYOHWrdjogH8yliDQED0AkAz1EDJymd566rtnHA
-         07qAYVZJWwx2wBQQz7Jq7cKHAkaOnVgD17GZhSppQf17l7ocrxKhQmBnUggn0IkOecBH
-         CupA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750348541; x=1750953341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QIyUOZguIRDiWUeNLd3XC6ezHfJQ0hbQk0pmNBnUCQw=;
-        b=DmJEReY1QnsKe5HZMSk6TaQcYP/Rr9q/oDS0cCWktXv0PYwpM23ajXAI2rZRYUxGnS
-         c8A8ighBiiQe53v+FhvfaiJcMvkaSi7fBtTR0AIWnn8hMmepG1lYWUbY+LuoRhAGezu1
-         vm3VEhGADrqwnfNDz9zYW7wNaqNtQ70tdCMhtKQvxLb2mBLFyS8ik4LXLvym0hl2psrN
-         8qw1UIMYpQV+pMVGZTc3iRlUGm1Zj2fysDAxkf4oqlia40AmyjpK4j/klstq+7DQosXU
-         p+LXJ86LBry6npQ24go+o6Ut9KoHNXhgOmP8dnfkr4Sfe3g9QWgPcTMZNDEQehkACgDE
-         8abw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpQuTfW1in9VeELXH7GGqWy+/NqSoDnBwN7rUg3cgsHUdUULQXtG5S/kuS8cGEuN5v36/s3g+5X0Oa9BPU@vger.kernel.org, AJvYcCXs9mP6jrr/vUXcXEH3d2IMzCQrj3aAR6444H04MjDk6C6tjOkt3EA/CNli54ncxuCGd9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiFlUZjZnFhm9yAcRSsbrHcoLEUyXaXCIca9EzhL9jHlXSAWxR
-	xevB8Zif50419Z7dWEJzNBNmGOkDAN6Z997dWUKMv5RqxPdRej/iUp1BGHbdQEmgc6qbowcysHC
-	CMa/Aijebuye7lUCQaERTZTzAlmyCB1g=
-X-Gm-Gg: ASbGncudbBizFGPa7ZlLMXiC8CCoG6eBOdtUVVhD94aqnzZr8BUDfILXMU0ye2tD0eu
-	JYZYRa/uKZsAYGq88VWs/MBeAq4hIGMKJL91Joi970wCu5EPVLgsPza5OzX4LCYXWCtoegng/Td
-	GeQkOq+hMpH18Y4ZjH+23mIoIxX188KNijMYQWh33y2G2h2FhbfbOp2iru8RADyLX0W+DX9Jbe
-X-Google-Smtp-Source: AGHT+IHW6a2KI+jp4VsHi0ZEYeDsT/Y2lsvjOD+03g22TJkwn9M0TZp4i9xmRa/8PBbab4dgGPUrkl78rFHpFFPWExM=
-X-Received: by 2002:a05:6000:4305:b0:3a4:dbac:2db6 with SMTP id
- ffacd0b85a97d-3a572e553e0mr16687800f8f.49.1750348540954; Thu, 19 Jun 2025
- 08:55:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zWgFbHt6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t7gTRwGL"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750348745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YJRIKqq5GC/lr+opxe5M1YFNp8xB8Hupy6OYrK1o2zw=;
+	b=zWgFbHt6aweg/7iDtk6+ko0Z8F5Co4l3dhUabpL6EQHm1wBxMwsF1umOC7dyLWhBkOf9pe
+	rNv3Tq69H7PKgM+Mo3sxxPP6KOU5dfxdrlmDLWrET7UQLIcE8pMeBLMfKYOlCJ6IobgoaG
+	C3oR4sG1Qyeybf/9FvuO4uxGQKO4bYLSzy3HtX21YKLzj2w1VnNLpJuKHUd3Id1KrRk+cS
+	hkNaHdnTfc5ARJJCmYd1oV6eswoqSybukTxr1gx2OL8GcNAtBpwMVZQ3oZX4tQn4BwSU2e
+	7tHraqirWytWtIpHPMr2os/7+QF7vZYrs0AkRYeXS2XJ9fGnE0HzRqOiyEXHBA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750348745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YJRIKqq5GC/lr+opxe5M1YFNp8xB8Hupy6OYrK1o2zw=;
+	b=t7gTRwGLsSMLFoGSgxG9WxTGmlTlrcUy0QLyomzN3PfdAcTmX1a5uMp1yvcX5V51qu14pI
+	ogUbCQDvwayDZaDQ==
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	rtm@csail.mit.edu,
+	stable@vger.kernel.org
+Subject: [PATCH] Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
+Date: Thu, 19 Jun 2025 17:58:58 +0200
+Message-Id: <20250619155858.1249789-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619031037.39068-1-chenyuan_fl@163.com> <20250619065713.65824-1-chenyuan_fl@163.com>
-In-Reply-To: <20250619065713.65824-1-chenyuan_fl@163.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 19 Jun 2025 08:55:29 -0700
-X-Gm-Features: Ac12FXyPM2W8dKJEqsk-s6P-7UGk9obNQXSmsZPocIJbzLPWkxFoVEMObfoUG5E
-Message-ID: <CAADnVQLy0_FsjRLt2n9R0Rs90VvLQYbkSiji6usaoB_bf4+tYg@mail.gmail.com>
-Subject: Re: [PATH v2] bpftool: Fix memory leak in dump_xx_nlmsg on realloc failure
-To: chenyuan <chenyuan_fl@163.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, chenyuan <chenyuan@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 11:57=E2=80=AFPM chenyuan <chenyuan_fl@163.com> wro=
-te:
->
-> From: chenyuan <chenyuan@kylinos.cn>
->
-> In function dump_xx_nlmsg(), when realloc() fails to allocate memory,
-> the original pointer to the buffer is overwritten with NULL. This causes
-> a memory leak because the previously allocated buffer becomes unreachable
-> without being freed.
->
-> Fix: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool=
- net")
-> Signed-off-by: chenyuan <chenyuan@kylinos.cn>
+This reverts commit ad5643cf2f69 ("riscv: Define TASK_SIZE_MAX for
+__access_ok()").
 
-SOB and Author field should have full name as "First Last".
+This commit changes TASK_SIZE_MAX to be LONG_MAX to optimize access_ok(),
+because the previous TASK_SIZE_MAX (default to TASK_SIZE) requires some
+computation.
 
-pw-bot: cr
+The reasoning was that all user addresses are less than LONG_MAX, and all
+kernel addresses are greater than LONG_MAX. Therefore access_ok() can
+filter kernel addresses.
+
+Addresses between TASK_SIZE and LONG_MAX are not valid user addresses, but
+access_ok() let them pass. That was thought to be okay, because they are
+not valid addresses at hardware level.
+
+Unfortunately, one case is missed: get_user_pages_fast() happily accepts
+addresses between TASK_SIZE and LONG_MAX. futex(), for instance, uses
+get_user_pages_fast(). This causes the problem reported by Robert [1].
+
+Therefore, revert this commit. TASK_SIZE_MAX is changed to the default:
+TASK_SIZE.
+
+This unfortunately reduces performance, because TASK_SIZE is more expensive
+to compute compared to LONG_MAX. But correctness first, we can think about
+optimization later, if required.
+
+Reported-by: <rtm@csail.mit.edu>
+Closes: https://lore.kernel.org/linux-riscv/77605.1750245028@localhost/
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/riscv/include/asm/pgtable.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgta=
+ble.h
+index 438ce7df24c39..5bd5aae60d536 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -1075,7 +1075,6 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+  */
+ #ifdef CONFIG_64BIT
+ #define TASK_SIZE_64	(PGDIR_SIZE * PTRS_PER_PGD / 2)
+-#define TASK_SIZE_MAX	LONG_MAX
+=20
+ #ifdef CONFIG_COMPAT
+ #define TASK_SIZE_32	(_AC(0x80000000, UL) - PAGE_SIZE)
+--=20
+2.39.5
+
