@@ -1,69 +1,98 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916C221C9E1
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E1D278753;
+	Thu, 19 Jun 2025 15:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345330; cv=none; b=b55S8LUHXuSfH4QA2305e3IX1YSEvP5F726JsUf4PYvVQA9Vw977eBbmahxAXCfHxkpAA4e/NrgRoVq4RB2UgKlR266mhAU1BN6yWpcv9hAzFS//SrvgkrSASXVHDFx6XLG+DQrtopj/kG7awp8iNB1GJgA2l7MVZK1Beex+K/s=
+	t=1750345362; cv=none; b=TMvXbnz4LZA2WDHgnoy+lDMz13o35dYlCc1YnNXB5PzamfXbjv7UT+B2tYbe9/zp1SFlhsZvrGEyyqw7NlvcwRWtkpyc18Wkb2GFZQDDL44fS0rQN5ceeDQEK0UTxXtYPWfKtYfY3+DUOVjdKvAwuioIJxKcblyADfwpmJ+UFLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345330; c=relaxed/simple;
-	bh=IKBa4fdDM5m3n0gUqcpAHTOYK8EQ+UNtqzJMikfZ9YE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jYYEquToaTQmB8HTMO2BuljV0RC+7I922eVqP9/ouldxpaWCqffqVDbZdqHAOPftoUu5YtqzLTzemxdfjmVv5gmNVTnByUVNb4I2M8C/rC/RYmanT7hSQG66rrRYkvABsqkNEEw/jVBGnXZm9TLBvJqPhi1hbQoEMCGuoG1oqIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oCeA20lM; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750345362; c=relaxed/simple;
+	bh=WMUgOCPru52VAFqEHtr6GwXaBkUBQdB2s1jxRDDNld0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=us6XRKv1rcUQ0Ak7HuXHBfGjcBy2mGgayG37JXky3S5mTavG8kkxnKEZdvtyCmBuDjh6kjxfCVBKANJn1wDGI9UjBNBHote+OuQE5kmz1iqMcoMY8B0SXnbObr0LlxOqzrcFhqxU3RRnLNz5K7E3lwPrK1/AqoUEACXk12XfraM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YX0TziWK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oCeA20lM"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750345326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eMlnqWclCfnWGbyuoWPGL3n3kDlUTflxlSnTbzTPBEY=;
-	b=oCeA20lMKCkKaY1Yo1pocpupJzIIXMP/YluFYwXfmM5ZbMQon++axkaDkTLnT1VnqdT4Zd
-	p1aK4IFgktNTbfTz36UKIIvz5gZB2EQkpMezDn6Z1mszxPCh4UlqwhYzNGwWfpAnukdfuT
-	AfQJ4WvAkN90EwEHz7U2qOpRAqVndp4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] sparc: Remove commented out code
-Date: Thu, 19 Jun 2025 17:01:49 +0200
-Message-ID: <20250619150151.174832-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YX0TziWK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4C4C4CEEA;
+	Thu, 19 Jun 2025 15:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750345361;
+	bh=WMUgOCPru52VAFqEHtr6GwXaBkUBQdB2s1jxRDDNld0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YX0TziWK1LG1a7QkFBlLUDt9JBwOReEQ9+u42HbJfQwQFeLvUjfTgbpIedIwqhvT2
+	 IJqmHF6ev3cY1lPLf/l0TJebZiPvvp1YXfAmB7kWYNXtFJaQKyV0gz+GnlgYVWpq9W
+	 1tHjLm3EDkj/QmvXjX7lfsTq5zfABrg4eUjbIuJCFZl4iKsHdpYYLvbIAFCbteRaBr
+	 vXTKnEIXRniwycPDhoHypmCNdghR35KGofNaOBYiid1nnuLRkiNYKUbS8nmhZWuW8d
+	 uMb0oiQtuQDlpZuPqQLZn53O0B4/cdDz4G2//V8GYYoTchb7xsswUbhLbEkmiBFqtX
+	 vl+UdsYqQVbhQ==
+Date: Thu, 19 Jun 2025 16:02:36 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@collabora.com>, joro@8bytes.org,
+	will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, jgg@ziepe.ca, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v3 2/5] dt-bindings: iommu: verisilicon: Add binding for
+ VSI IOMMU
+Message-ID: <20250619-nape-iphone-0fd4f9889452@spud>
+References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+ <20250619131232.69208-3-benjamin.gaignard@collabora.com>
+ <n5ddeogrpgctrljnxjfxqaz22qfnxsgm6ro7qihbjeyhd5br44@ojlzlz7gsuzb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZsCqWODAaq6bj8Vt"
+Content-Disposition: inline
+In-Reply-To: <n5ddeogrpgctrljnxjfxqaz22qfnxsgm6ro7qihbjeyhd5br44@ojlzlz7gsuzb>
 
-The struct fields have been commented out ever since commit 1da177e4c3f4
-("Linux-2.6.12-rc2") - remove them.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/sparc/include/asm/pbm.h | 2 --
- 1 file changed, 2 deletions(-)
+--ZsCqWODAaq6bj8Vt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/sparc/include/asm/pbm.h b/arch/sparc/include/asm/pbm.h
-index 0c86261721e7..a26d9d5e0631 100644
---- a/arch/sparc/include/asm/pbm.h
-+++ b/arch/sparc/include/asm/pbm.h
-@@ -28,8 +28,6 @@
- struct linux_pbm_info {
- 	int		prom_node;
- 	char		prom_name[64];
--	/* struct linux_prom_pci_ranges	pbm_ranges[PROMREG_MAX]; */
--	/* int		num_pbm_ranges; */
- 
- 	/* Now things for the actual PCI bus probes. */
- 	unsigned int	pci_first_busno;	/* Can it be nonzero? */
--- 
-2.49.0
+On Thu, Jun 19, 2025 at 04:19:32PM +0200, Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Thu, Jun 19, 2025 at 03:12:23PM +0200, Benjamin Gaignard wrote:
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: verisilicon,iommu
+> > +      - const: rockchip,rk3588-iommu-1.2
+>=20
+> The entries should be ordered the other way around, so that the
+> "generic" compatible is the fallback. Also the 1.2 version is from
+> Verisilicon. It does not really make sense for Rockchip. So I
+> think it should look like this:
+>=20
+> properties:
+>   compatible:
+>     items:
+>       - const: rockchip,rk3588-av1-iommu
+>       - const: verisilicon,iommu-1.2
 
+If you're not sure Benjamin, please just ask questions. There's been
+like 3 versions of this patch, soon to be 4, in like 3 days, two of
+which could have been avoided if you just asked "is this what you mean"?
+
+--ZsCqWODAaq6bj8Vt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFQmjAAKCRB4tDGHoIJi
+0mu2AQDy10QjeZsSnzVsEXfW6RViKo+rWauSa17R3QQdXnwOggEArRSd9DXggCSu
++9Yh5AMC+TMbCL1HN15ms1SSzBkkVgY=
+=sX7T
+-----END PGP SIGNATURE-----
+
+--ZsCqWODAaq6bj8Vt--
