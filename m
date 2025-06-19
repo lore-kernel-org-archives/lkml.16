@@ -1,74 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63ABF229B29;
-	Thu, 19 Jun 2025 13:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83F9229B29
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338428; cv=none; b=ItAqSxvh5GnlpQNik0zPS1Q8/Bzg+wgG8khTgoIA7WK2TJ8Q/lENQJ03+nHg9+wv8/UCeY5Fu6HH5hXMjiGtTR/Mu8/szIHNpbJyo+4dhHvL9766bF4mx0qWaverYxN/r9hwJpBW3AJmM+9Dp2isNYRsK2IvO/p+QaDJZZNbZz4=
+	t=1750338505; cv=none; b=TZNpiElbQ6c43En+juMn+oARAt1F2C7pqT/jqWP/k76EIeXtTj7IWGIbOs9KccOAu2D2CPoGUEVHUWsgWTR1cGdGoOUyZm/3aEq9miDKXISoPbj7HOMlDbFkrVmdSo9kJFOw7aGNGBBgPx/UuBMKUuuBuxIYAcHta4PgZ9+DyEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338428; c=relaxed/simple;
-	bh=wYjI4NswrHuRyR7M4WS61T/lIW6CAoZV8DtQQm4+Yr4=;
+	s=arc-20240116; t=1750338505; c=relaxed/simple;
+	bh=JxZ71lGvU4o8aziGLpVVaNfk4GLuAAsnv5TJPfqIiSs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XVPC9CqfaLuIVAQ6yTiKlLWTFCV3B4GI/5NzCBxC3e9FixMudvFPriAfncKKPVASh0JGr3ZuNpZCN1yDPufTE9YG6kK/YMUZMcbVB4c/VtSa6To6SaKnwlH170HSOUF1aaTCIYShfi3ECRo09/vuWJdq5EE1CxveYZXj4XQj6E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CcqQIO0i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GgSLR3jdnSmQfHOn2C1tyKtcmDNYdD/p+XPLtGWl2DEFCLbqkCd9X36uDZSIK+E23N5KxPnzZ53BUv1IKLp2Y4reygtpkIS5NmbR2mvnKhAYpfRrJZ+yYKVAt0DpOub8P+gButUH+6v+ypTzV9mJCfxHANJuflygOkazD6RmfNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UrooQnxd; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CcqQIO0i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F05AC4CEEA;
-	Thu, 19 Jun 2025 13:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750338428;
-	bh=wYjI4NswrHuRyR7M4WS61T/lIW6CAoZV8DtQQm4+Yr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CcqQIO0ixQ7UmH0za/EE2gqtoyZC+uZYArucJRQv1GR1IbRS9bF00i6zV1fBiadZ4
-	 SrA9B6gl5G0e3uLuaZJV8pftTene3KOg/+DIj2pOZvIuT358lrVd4mqZSGq+g8DYRf
-	 GIA9aqnXbdIdZUf+Sf2IQfzsHNQq1tZMrBqor4qU=
-Date: Thu, 19 Jun 2025 15:07:05 +0200
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Roy Luo <royluo@google.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	"mathias.nyman@intel.com" <mathias.nyman@intel.com>,
-	"quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
-	"michal.pecio@gmail.com" <michal.pecio@gmail.com>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
- is being removed
-Message-ID: <2025061950-obsessed-angelic-526b@gregkh>
-References: <20250522190912.457583-1-royluo@google.com>
- <20250522190912.457583-2-royluo@google.com>
- <20250523230633.u46zpptaoob5jcdk@synopsys.com>
- <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
- <20250529011745.xkssevnj2u44dxqm@synopsys.com>
- <459184db-6fc6-453b-933d-299f827bdc55@linux.intel.com>
- <20250605001838.yw633sgpn2fr65kc@synopsys.com>
- <CA+zupgwLkq_KSN9aawNtYpHzPQpAtQ0A9EJ9iaQQ7vHUPmJohA@mail.gmail.com>
- <d7223d48-f491-494f-8feb-b92a29e9af53@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UrooQnxd"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453634d8609so983365e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750338502; x=1750943302; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qdHw6p7z6zmQz0C4ujdVdisan2PpMVfsoufPTvfXsp0=;
+        b=UrooQnxdFESEByQG3Q+wPKs77NQXt4DG6No3gCj9ll0+Rbxsw6Ho+R5XmNJwlmL6pm
+         Qi/jQlzVVJWOXrDbFm94B1grkBDofBt5MLd78uJIC7p42BXHYU5ABVagc2iA8YD/mglF
+         KFBJqQv/LOjuWAF7OZ0eWb4w60gZG3YeENmxqJuyKyw4rO2u4BbpB6NN9DWF94xmteOB
+         9sW4KYqX85AxjaQUAP4IjTvy3Punz4kPhEIEOmT8RiWBC42Npbuk2Nsoflu8ys/ZVHVZ
+         WBLdAIriF68jiOcE5uOI8bq2sWwKmwm335sJ+shMY4yKaDJ6CkDzw+bF0MN0jvWoNvju
+         nLpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750338502; x=1750943302;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdHw6p7z6zmQz0C4ujdVdisan2PpMVfsoufPTvfXsp0=;
+        b=nc31D/Rjzns9NdNjwL3oywzzcsva9GWrPEG0ia0Fziyeb8elXoTd036MrKUvJlklw5
+         9jI+07ccmCxx8wkmVINL97ckt9rvE+OUo/kXeOoe/aqnPkZDLlSXpuHKP2thIvSa4rfE
+         0R95raqzZNmjizy/jaZUEJHyMJ1Z6xF6RGKmCjmjVWh7XNxUoB+XKKGOaXH5V6JBKg9a
+         2kM2Qs5fkv2ua3et9oLOj9MiSrLXNdLrFo5na0/57xDz5m1YaNDi78Gu5H7I4Zvkv+5s
+         Lh6fKQyBclsK9tiGvtCPnaB4qz8ddGC4m4SH9cwRB5iIVi2q3Pj/H+oEwFCYzXYijsmF
+         w3cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxAtd6Lw1PrU1hVM86VjmvMVkm1bZLYnrIu9HaJG4unSozAcAsVXC92qV4qioBW1Y5uqsR/1YNsb0vcO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfQGQvCT20rpL3h7iLZhhNPsn2lOnzdIbJwwT90ntQH1RylVwz
+	K1/qcrDRJTVFMaBbVltxIByqJ3mOMoID/wk6j4K0T9BcaJdsf95zEL957fkVAR4E+lQ=
+X-Gm-Gg: ASbGncsLZnLZ+lcmHkBNTaAN0apaiIizZ02IHz5sGhSUhGLWlfFoUP3GhkeQi3GDimS
+	C5fOt5UIZEc5eqtvFrUpUaWhAdT0n+axDonY7NIyP6yIdTmSH9JVoYW8XAXdd4jdH9LMltA5oTH
+	GV0vjjQv3pwZNOjq2ftZDtd+f+FwPojrqjySRsEe15SPPipdFts7vDNHWdsqowQdeMKUYyUWjyL
+	NnzqXG0QloWZGacvckyAX2FpaJa8AQ2V2xb3HVZO6jwobjz6Fsg5jQPkpVJlENAPj++bVxKjUnk
+	pzbytAxXmBgyDRcy80tI30vYvtgz/Hh0aIvYUBuNmdP0sqO8/L4envbF6lZoST76
+X-Google-Smtp-Source: AGHT+IEGQ1yCiIqL8EMmQw2kxNWpjg07NWygAGfH9GX1YhqdFPogOWAcwOYs9H9mCLBw99s/RI+rsg==
+X-Received: by 2002:a05:6000:2310:b0:3a4:f722:f00b with SMTP id ffacd0b85a97d-3a572367c83mr15931408f8f.11.1750338501821;
+        Thu, 19 Jun 2025 06:08:21 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0d0b04sm119652365ad.247.2025.06.19.06.08.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 06:08:21 -0700 (PDT)
+Date: Thu, 19 Jun 2025 15:08:06 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: David Hildenbrand <david@redhat.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <aFQLtrSGxcscq9No@pathway.suse.cz>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <b589b96f-a771-42f1-b14a-0f90db9fb55e@redhat.com>
+ <5d037cb6-91a7-47b7-a902-c3e36f2adefb@arm.com>
+ <dc5fb92c-6636-4dce-bc66-181345f79abf@redhat.com>
+ <ihe6ueejcemrscqzuieunap6sk2z2yb7xr7szr77nue6qpcvm3@qnwvbvqlwdn5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d7223d48-f491-494f-8feb-b92a29e9af53@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ihe6ueejcemrscqzuieunap6sk2z2yb7xr7szr77nue6qpcvm3@qnwvbvqlwdn5>
 
-On Thu, Jun 19, 2025 at 03:44:25PM +0300, Mathias Nyman wrote:
-> > Thanks Thinh and Mathias for the review.
-> > Please let me know if any further changes are needed before these
-> > patches can be accepted.
-> > I just want to make sure they're still on your radar.
+On Wed 2025-06-18 19:16:00, Pedro Falcato wrote:
+> On Wed, Jun 18, 2025 at 10:44:20AM +0200, David Hildenbrand wrote:
+> > On 18.06.25 10:37, Anshuman Khandual wrote:
+> > > 
+> > > 
+> > > On 18/06/25 1:48 PM, David Hildenbrand wrote:
+> > > > On 18.06.25 06:12, Anshuman Khandual wrote:
+> > > > > Add a new format for printing page table entries.
+> > > > > 
+> > > > > Cc: Petr Mladek <pmladek@suse.com>
+> > > > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > > > Cc: Jonathan Corbet <corbet@lwn.net>
+> > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > > Cc: David Hildenbrand <david@redhat.com>
+> > > > > Cc: linux-doc@vger.kernel.org
+> > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > Cc: linux-mm@kvack.org
+> > > > > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > > > > ---
+> > > > >    Documentation/core-api/printk-formats.rst | 14 ++++++++++++++
+> > > > >    lib/vsprintf.c                            | 20 ++++++++++++++++++++
+> > > > >    mm/memory.c                               |  5 ++---
+> > > > >    scripts/checkpatch.pl                     |  2 +-
+> > > > >    4 files changed, 37 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> > > > > index 4b7f3646ec6ce..75a110b059ee1 100644
+> > > > > --- a/Documentation/core-api/printk-formats.rst
+> > > > > +++ b/Documentation/core-api/printk-formats.rst
+> > > > > @@ -689,6 +689,20 @@ Rust
+> > > > >    Only intended to be used from Rust code to format ``core::fmt::Arguments``.
+> > > > >    Do *not* use it from C.
+> > > > >    +Page Table Entry
+> > > > > +----------------
+> > > > > +
+> > > > > +::
+> > > > > +        %ppte
+> > > > > +
+> > > > > +Print standard page table entry pte_t.
+> > > > > +
+> > > > > +Passed by reference.
+> > > > 
+> > > > Curious, why the decision to pass by reference?
+> > > 
+> > > Just to make this via %p<> based address mechanism. But wondering
+> > > will it be better for the pte to be represented via value instead
+> > > of reference ?
 > > 
-> > Thanks,
-> > Roy
-> > 
+> > We commonly pass ptes to functions through value, not reference, that's why
+> > I am asking.
 > 
-> I think Greg just picked up these two.
+> 
+> All printf/printk extensions in the kernel follow %p<some letters> and use
+> pointers because %p takes pointers, so it lets us use -Wformat with no issues.
+> 
+> So yes, taking a pte_t * is required.
 
-I did, if I need to revert them, please let me know.
+Correct. But the pointer is usually needed because the %pxx format
+need to access a structure.
 
-thanks,
+Passing a pointer is another potential source of errors. I mean that
+the callers might pass an invalid pointer by mistake...
 
-greg k-h
+Another aspect is performance. It is likely not a big deal for classic
+printk() which is a slow path. But trace_printk() tries to optimize
+the speed by deferred formatting where possible, see vbin_printf()
+and bstr_printf().
+
+I think that this is not a blocker for this patchset. But you should
+know that using %pxx has a cost.
+
+Best Regards,
+Petr
