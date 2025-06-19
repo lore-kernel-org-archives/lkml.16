@@ -1,113 +1,161 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8D7258CF7;
-	Thu, 19 Jun 2025 11:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844B423B637;
+	Thu, 19 Jun 2025 12:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334362; cv=none; b=mV1nVLepeGiHPfJeM1EiKbRwYuLk00NHe5/bvP0k8glK+IF4B2+tBunOExP6gnd76AVI7xbVRHDYZ1kyp3H8ScyDAauCQWyRQg4XO5W+IiYpLqwAekOrOFrOWJEIAB8W9NpUyEoDKprtTnMamnWilVYk7VyzHVi+1k99kiXtTbI=
+	t=1750334413; cv=none; b=XBAYnp/EDcUn6Sc0EROWvay7p3NuRzva73UPMH0VmhdspjFaBKUF4pcbUsnuBMnpGGXa+isCDcuPgafF/c9s4yAAqJi3E72FU1SFvH7Xf/0AlLpc1jjuIm0urRBetSHZ0a/iCZGh2XoGpxyfipHA8PG/a2w39QrHdv8e0Ux58es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334362; c=relaxed/simple;
-	bh=iVqwSJOrUUKdU3YweV0T+6fhDKrE8tyv1LFowiLtiDA=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=B0+OR/rBrmpYHt8b/ikK81SuzvImbqQUEm4d8fCNGUtgHiGKN8F0ZK0QWQ3vJe7HkZpbVN2hH5NhRADLPySwiY632YwXRZuHFkqEgY9An1wtwj4BD7zveo0xSD3LFfWsxermlw4rW5rNYxsxV5oUlvt7PXsb579DaThRVGBFMIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bNJvQ2X10zdbfY;
-	Thu, 19 Jun 2025 19:55:14 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 75EA5180B43;
-	Thu, 19 Jun 2025 19:59:09 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 19 Jun 2025 19:59:08 +0800
-Message-ID: <5a23d321-307a-4f4a-a2cf-9c8dcf001dbb@huawei.com>
-Date: Thu, 19 Jun 2025 19:59:07 +0800
+	s=arc-20240116; t=1750334413; c=relaxed/simple;
+	bh=shAGsPRVCD9WLCfkB8/hfTQiugyQs3/hQXd6YMMUOBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHighPf2j6mtdrTSz1+pGllwxv9eG/k9izV799PlWw3+GitmSePBm8cY/16ttw/6/Tn03mWZ0XKxTyE3ntEdsyTY87gsUa+97jcrV5OLWvcTsRmZJv3HFnsXubGJLzY6g8umYPtLujo/Ov9h7DljlJpQ2WYyBr6T8UeCL4L6wN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SoQlxYpc; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SoQlxYpc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750334411; x=1781870411;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=shAGsPRVCD9WLCfkB8/hfTQiugyQs3/hQXd6YMMUOBs=;
+  b=SoQlxYpccl1LLGzUadzHJ+edvj68wuUPn3StXNPtxLSsdcR8Tzvq7+3f
+   yb024MshV8/1tdbMH0urZAxFm5w6GAzrlsugabfpcr/GeMRwTeIUzKBkd
+   u7yfM0Dl/B/wiMlDWcaDIk6oHTyhxo+ZvoSpSex7GTtajlNxv/YBOu/tD
+   gMteq36XaxyvVikWVqT57bONHpFmIHjspQnuI6ov8uIlPqZJy84w8aLH9
+   3/7+3CYf4o4nifveZDOWHg+nuXq2Mh/yD5Q6iM0NNeboopjgEWNPb4pBS
+   0R3tYmaNxBcCF7HzGerH6pVIlhZ952mDKELhQtwz+Sph/N/TQTaY0A2en
+   w==;
+X-CSE-ConnectionGUID: mJXsfn6rRf2E9prVYTkSlg==
+X-CSE-MsgGUID: t3m32DXAT3Sis6v9dd1gng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="70022710"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="70022710"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:00:11 -0700
+X-CSE-ConnectionGUID: xPDoivaZQwqnfGAstWAu6g==
+X-CSE-MsgGUID: d6i6qvTBTe2v473jPcCmuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="174245909"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 19 Jun 2025 05:00:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 35F06F0; Thu, 19 Jun 2025 15:00:03 +0300 (EEST)
+Date: Thu, 19 Jun 2025 15:00:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <aFP7wwKD_yeRRuI_@black.fi.intel.com>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <aFL7frrstgpzzgan@smile.fi.intel.com>
+ <0d437b3e-37b5-4e98-90bc-afa6c8150e77@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<michal.swiatkowski@linux.intel.com>
-Subject: Re: [PATCH V2 net-next 8/8] net: hns3: clear hns alarm: comparison of
- integer expressions of different signedness
-To: Simon Horman <horms@kernel.org>
-References: <20250617010255.1183069-1-shaojijie@huawei.com>
- <20250617010255.1183069-9-shaojijie@huawei.com>
- <20250618112924.GL1699@horms.kernel.org>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20250618112924.GL1699@horms.kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d437b3e-37b5-4e98-90bc-afa6c8150e77@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Thu, Jun 19, 2025 at 03:05:10PM +0530, Anshuman Khandual wrote:
+> On 18/06/25 11:16 PM, Andy Shevchenko wrote:
+> > On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
+> >> Add a new format for printing page table entries.
+> > 
+> >> Cc: Petr Mladek <pmladek@suse.com>
+> >> Cc: Steven Rostedt <rostedt@goodmis.org>
+> >> Cc: Jonathan Corbet <corbet@lwn.net>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: David Hildenbrand <david@redhat.com>
+> >> Cc: linux-doc@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Cc: linux-mm@kvack.org
+> > 
+> > Please. move these to be after the '---' cutter line below. Just leave SoB tag
+> > alone. This will have the same effect w/o polluting commit message.
+> > 
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> > 
+> > (somewhere here is a good place for all your Cc: tags)
+> 
+> Is not it better to also capture the Cc: list in the commit message.
 
-on 2025/6/18 19:29, Simon Horman wrote:
-> On Tue, Jun 17, 2025 at 09:02:55AM +0800, Jijie Shao wrote:
->> From: Peiyang Wang <wangpeiyang1@huawei.com>
->>
->> A static alarm exists in the hns and needs to be cleared.
-> I'm curious to know if you used a tool to flag this.
+No it's worse. One may easily get the same from lore. Can you give a good
+justification for the polluting message with 8 lines over a single line of the
+useful information, please?
 
-Sorry, the last reply was not cc to netdev...
+> Seems like such has been the practice for various patches on the MM
+> list. But not sure if that is an expected standard for all patches.
 
-Some internal tools, and then there are the compiler options, such as -Wsign-compare.
+It's not an MM subsystem.
 
->
->> The alarm is comparison of integer expressions of different
->> signedness including 's64' and 'long unsigned int',
->> 'int' and 'long unsigned int', 'u32' and 'int',
->> 'int' and 'unsigned int'.
->>
->> Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
->> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
->> ---
->>   .../hns3/hns3_common/hclge_comm_cmd.c         |  2 +-
->>   .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 22 +++++++-------
->>   .../net/ethernet/hisilicon/hns3/hns3_enet.h   |  2 +-
->>   .../ethernet/hisilicon/hns3/hns3_ethtool.c    |  4 +--
->>   .../hisilicon/hns3/hns3pf/hclge_debugfs.c     | 13 ++++----
->>   .../hisilicon/hns3/hns3pf/hclge_main.c        | 30 +++++++++----------
->>   .../hisilicon/hns3/hns3pf/hclge_mbx.c         |  7 +++--
->>   .../hisilicon/hns3/hns3pf/hclge_mdio.c        |  2 +-
->>   .../hisilicon/hns3/hns3pf/hclge_ptp.h         |  2 +-
->>   .../hisilicon/hns3/hns3vf/hclgevf_main.c      |  2 +-
->>   .../hisilicon/hns3/hns3vf/hclgevf_mbx.c       |  2 +-
->>   11 files changed, 44 insertions(+), 44 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
->> index 4ad4e8ab2f1f..37396ca4ecfc 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
->> @@ -348,7 +348,7 @@ static int hclge_comm_cmd_csq_clean(struct hclge_comm_hw *hw)
->>   static int hclge_comm_cmd_csq_done(struct hclge_comm_hw *hw)
->>   {
->>   	u32 head = hclge_comm_read_dev(hw, HCLGE_COMM_NIC_CSQ_HEAD_REG);
->> -	return head == hw->cmq.csq.next_to_use;
->> +	return head == (u32)hw->cmq.csq.next_to_use;
-> Can the type of next_to_use be changed to an unsigned type?
-> It would be nice to avoid casts.
+...
 
-Today I plan to modify the next_to_use type,
-but I found that if next_to_use is changed to u32,
-it will cause many other places to need to synchronously change the variable type.
-At a glance, there are dozens of places.
+> >> +Print standard page table entry pte_t.
+> >> +
+> >> +Passed by reference.
+> >> +
+> >> +Examples for a 64 bit page table entry, given &(u64)0xc0ffee::
+> > 
+> > What does this mean?
+> 
+> 64 bit address containing value the 0xc0ffee
 
-Therefore, I am considering whether this part can remain unchanged.
+Please, make it 64-bit address. The example as is is quite confusing.
 
-Thanks
-Jijie Shao
+> >> +        %ppte   0x00c0ffee
+> > 
+> > Can it be ever 64-bit?
+> I am sorry - did not get that. pte_t contained value can be 64
+> bits if that's what you meant.
+
+Yes, see above why I have such a question.
+
+...
+
+> >> +			spec.field_width = 10;
+> >> +			spec.precision = 8;
+> >> +			spec.base = 16;
+> >> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
+> > 
+> > Do not duplicate code we have already in the file.
+> I am sorry - did not get that. Is the above flag combination some
+> how wrong ?
+
+It's dup. Please, take your time to find the very similar piece of code in one
+of the helper functions we have.
+
+I recommend you to look at the history of the changes in this file for when the
+new specifier was added and how it is implemented.
+
+...
+
+> Could you please kindly elaborate on the code duplication problem
+> you have mentioned earlier. I might not understand your concern
+> here correctly.
+
+Just find the same or similar pieces of code elsewhere in the same file.
+Use them.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
