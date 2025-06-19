@@ -1,66 +1,67 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C1F28B518
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3D428B7D7
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344926; cv=none; b=ojRk9JpvqsvoJU0NBSs1Yyk3BX2y/kkfoFRwN7uoc04pMRpr5Ru8qsh6YHWZdghgskmzjNT0bV+yAe7yRGOwg4pDdhLFXYCPizY6gZyZunx9v9pyTFVjxl7/+BB444klEW5WVM6hAncZT01MqLqi6wKvBn82jrx+kz8ilXC2H5c=
+	t=1750344929; cv=none; b=glikKDhTxB/78v3A5JUW7WzpYPwm8wbhmRjH5DM42PyBXmBBcPVN/YPscTVDAH7Xffg9qFAsGnyr/sMNRCsSl7L/LZwWr80eC70Zw7FycI8i3cr/y67NqwaBPC5E9ZHrJTBfghyzxPNus+FSW0BBq6BnFK+oFS20jsKEklalR9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344926; c=relaxed/simple;
-	bh=OWLz8jy0aYNhz1ULgnx3Uoo5bzB1cKuLHiMXElp54PI=;
+	s=arc-20240116; t=1750344929; c=relaxed/simple;
+	bh=JemuwVrf8yUubUQ04X5WC7YM6uXAXUdph7sXz3IArE8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GQfMo7zKHUZ4GX3mCo3MJgmt6EDo6xGT3QWe97iSywCKQt1vXnVtSyVenO+W+v7TnaowlX7uk2yRpERVLDyklEDMDq9qCzHIy3H7Gskix3rthJfB1NWTWKtQNv4dPLmaCNp2bWZkp27jh8dF7eqVznj9rplMNq4nzSsNcn6svb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cAiZ0vOx; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:To:Cc; b=euSEO8r4eD0YaIubSe6iWKJtsSw8eni5EG9R2f3iLiNx4jrzGZqaiQKBTWUdGXJ2n/c0CvZChTP+FEWX6utRJNWBgsSsQ9BoOGKFg0FPWV+98VYeazAfheKv9+TWBFKlAOibRTLPI6M4a2Cz0vAg8TAkio3kbLXaxgcaTybLFpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MKQwnBo5; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAiZ0vOx"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so4316355e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKQwnBo5"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-441ab63a415so10622805e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750344922; x=1750949722; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750344925; x=1750949725; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dnf+feM05FonyZlazVIOtB30dq6CHjOa2Ov1CmFsycc=;
-        b=cAiZ0vOxo3eoBOjHhxbVtn+mmCd9v5n/dtseGM10BjPEzbC6+82oFk42xsCddDXfVA
-         hGGUP16/wJ1ubIRZor//crD8vgg0XGIBs9/XMFKZbgVM8SsxuDyf2j3vtZ2ZdFCxJbYg
-         JiSnoswoD4p43dhI+8OOMSR1oDQaCYfwP3PzzOBlPLLv04zr+GEmNBKCskgcNL6KTqSa
-         wkJoTwuapbi6ZDQmlPsBZWosFnSr0/yfabq+tm8FIDdyx8Gm+SSQ+vjnW3YDtwR631ip
-         e6swyLDqxUnkHnC2JEf0sbDTOT/sKuXR5WIj+QdZaQHfNWd1I4uh3rg3e34eJ5FzU8Gn
-         galg==
+        bh=V5fVBNslUv5VUBRyFZmw0sYPamOw5qzhbaF7o6iXTDM=;
+        b=MKQwnBo5ycoQ/UXxhYlQBsU9BNuXvxuvbtIza5uFsskVzgo/g5NUZTb0wFpwjL/vrr
+         DBbsTtYB22W29rDm8yoJXhTw4sP+yXQz1037p97ZYXPEfWLKxrBYItKDWzIekuc5Xtcr
+         Y1oidYG4RHkF3h79svdqoDjtr50NeDG1yUGq+vhWUptFOIXU8dvTiarbQcm6Yu9vOoVz
+         QHufH5OrcdelBqgsl6/p7Tql2VhUPqm9S5UTxDuJTgokZJ3Cw4sJtfpBU+RF6BXrCZJW
+         ieF9j1Aty6+dFx28iZHz4BRhRhhdDSIE20bDrl4vC6727fvafqX8XtNr9P5obdOcVydP
+         np8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344922; x=1750949722;
+        d=1e100.net; s=20230601; t=1750344925; x=1750949725;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dnf+feM05FonyZlazVIOtB30dq6CHjOa2Ov1CmFsycc=;
-        b=J1G/N7sofK+epFzbU34bwnSiSugTD5alohB/kks5wqbwn1CBzghv/piegoMsw+PhSY
-         dp8UAA7E8d5Hhy1xmZ0Hldfabo8Q6U5x53kz0ENdFT891hpfGmGUuSyeIl0SGU8l+p+Y
-         wvXUtXKgWRXXZx2cc8/M1Gc24JSJKLhSJ9R7vuQXEpuTjtn1aesTFu1pkHYx9NTlTkhj
-         yJV6S2FQV+kqYK1iU/e7aZS/qDsHNHySQgHmqse++/VXIpcnIkHHcW4BPNFy7q3MXrj/
-         DgglSh90u5p+t4CIruVE6wmZ5qxWSVetvtuFvigAV04xoQ+RIzZfcphTywXk+lkbOYnV
-         jS9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW82WYbThvF/UyA7vw9uCO66WWdg9dRziVf0yzRM+qcYxem/EIYwvuqnp/ZNu0ag6BRMmzxX1Mi9WEXG+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw38tFmSHr5FXyjP5Z7OVv/2yt0ooFBxJ13M1oOMqmVrYWw930D
-	NzHmYWutAi7vMKBmLIgHDycSh+qNjyvtL9y8Xx0D7EGvVwbUiePI3uAu7OFTTSpgVt4=
-X-Gm-Gg: ASbGncsNJM6dFmhSG4t5fETTSP4syFOyNokLgqZZEussH3HQej8zXLxoT56eiDgYQe2
-	qFvPoIKgc41kc2Z0c4L+VerH+2bjbo8b8TCmaFHAYdx1/FyZ5a+1jBHmneYUSIZ4vNH0rGyK7fc
-	UUbiIxOaDRpksP3jBVtO0bp8G5oOVv6kA6QNQQcW0Vwk1dCBWE0BkGP8dAm7/zs8sF6aB+AjJNd
-	zsp42AGFYfwjvGK46XfcA736zDPelVEZuzgn4rOS6qGHCVVDy1NT1r2J9VF7gT/8lThx1l8OlhS
-	NU1kS/C6BQrhuzAouDBcTxj4lT5V9B/ABC40l3RmN42lkqFlZpmYS6YrDeP9mU/7yH6C45KpdPL
-	NIvm50PalkqE=
-X-Google-Smtp-Source: AGHT+IH/e7xadtOoCFZYila+AAoZ9HnFHye/u22AteKbqkhelHkoFqJjVHtiDctthry8gjEGaxNFqw==
-X-Received: by 2002:a05:600c:3153:b0:442:f4a3:9388 with SMTP id 5b1f17b1804b1-45350e7c275mr122080525e9.19.1750344921855;
-        Thu, 19 Jun 2025 07:55:21 -0700 (PDT)
+        bh=V5fVBNslUv5VUBRyFZmw0sYPamOw5qzhbaF7o6iXTDM=;
+        b=HfYN+etF3sII+l8c/oZED5rQoN1R4W8UOxbHjtO1OOdVi8OynishxfUliHhhsGJSFF
+         Q9mtVAk8pCYBPPcEq5wAJdOq6F/niZs6ZFaqIXUg9WKylHeUaOm9oRM2aKFU13Q02vIo
+         Gsy1qDhglImeWlJ8oAjmT7J/FmPtsq+iWcos6yfJrSmdajyRArtCgZNGleMYraOe4Zy4
+         RYLzQIM/PH71YmQrxsZ6F21YnLtiZf6hVs0bth7nZLdd4FOt7P0eYMfvRmfGGhSzgbcz
+         gxx/FwD+Xtv8icrL+KKNgjmr0presEqDurvFSZHeE8/ATRfgdaVH92bqtNb/Bf60oOaT
+         srUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWa32UeITDHjjxJdUdggEzWkNU4izCGf1FevSFCudPlLIbamZdbPV8ryZ5KnVpRJkitA2TAp17NqHjdM8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiUkSpSCHEZy9X7X9HRsR5UmTJPT1rdlsz5R7apntlD/ZcL7cU
+	wAEnDWTEIzkvlF4wFKZeJwRqkCBDdqUhC9jpckRstOeUyoLrWNN0FddwLPe3u05CSRI=
+X-Gm-Gg: ASbGnct5bVbRUGm8ME1gBGUHRpJP5ssgpxfYOQgeLXXC2gJPF9W9wXcshps2pBsv1bj
+	Y81suKmO3DX0BdhDE6PQfQapugkcGDL5/9/+j2y2qeeF9fDLB+D+FYqlMemE6xz9qY1xzryM4G7
+	54gjTxu5Tsqr27afla77teaNgmc56BKPdYOkFV8wunkZRzAjmMSddfhVmJE6NZZpsFmPHL1YqLW
+	j+vwXh9l1CxFxMA31ItNpRr1YKnH+fML4NF1Cf+3DAhih5/ABebmbEDwZPVCvLt7jOmxFnFXLwB
+	pDu1k4S99MfyfOpwzFoEbOOT284UGzgDFe3Lf2I4Uh5zauXpEG1wPI2N23eGA+TFuP8KIR+qoWr
+	qZQCj+VMVZxhPuDwEPRg2qA==
+X-Google-Smtp-Source: AGHT+IGtKHGGVTcveyhymsAylUd1eIhqDyS+/H63/Vk/2Z2lAu24ERgJx0a95RwSPxwt7eNSWAKzyg==
+X-Received: by 2002:a05:600c:8b65:b0:44b:eb56:1d45 with SMTP id 5b1f17b1804b1-4533ca6e6a8mr234107125e9.15.1750344925237;
+        Thu, 19 Jun 2025 07:55:25 -0700 (PDT)
 Received: from toyger.tail248178.ts.net ([2a0e:c5c1:0:100:b058:b8f5:b561:423c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:55:21 -0700 (PDT)
+        Thu, 19 Jun 2025 07:55:24 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Jun 2025 16:55:12 +0200
-Subject: [PATCH 04/11] power: supply: pmi8998_charger: rename to qcom_smbx
+Date: Thu, 19 Jun 2025 16:55:14 +0200
+Subject: [PATCH 06/11] power: supply: qcom_smbx: respect battery
+ charge-term-current-microamp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-smb2-smb5-support-v1-4-ac5dec51b6e1@linaro.org>
+Message-Id: <20250619-smb2-smb5-support-v1-6-ac5dec51b6e1@linaro.org>
 References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 In-Reply-To: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -82,530 +83,59 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
  Sebastian Reichel <sebastian.reichel@collabora.com>, 
  linux-hardening@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17352;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1515;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=OWLz8jy0aYNhz1ULgnx3Uoo5bzB1cKuLHiMXElp54PI=;
- b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTR5QQWOfKw4wNukOAR+6QYsvQU/EnPxlc3j
- +oPY/FAIb6JAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0QAKCRAFgzErGV9k
- ttpQEACf/dWD6EO6igozEPvUMvpjWhziJWfMyCYyN3Ce7wq8qfmaAWS5mGMu0NcrTzRTxuxP8H1
- eOttX5MznBrgpT0Rr+Y/8TILIX0+SwOmJuSjXq7PSnC7XxQMlzL0fBRsc6pgtI1hRvpQw+CES7N
- 21ob+fiOrnzdkyV8MzVVzBhcB7nW3wHg7EuOLnHyU7rqbFso2Zj/vJOqNVhzfvv3lQ5xb8/KmvC
- hAfFabZaN7qtl5k6q0u8uRyVz3jQFQKIJiLe+YziDNSXVdvpH4tPslyl0tefnBwenARd7R/zWNc
- jja+1ON085/MuYNDFO+vlF+Fa0JodRP8/x6ODsg3JkWoGUr7OSQdSbaJK/juzMsiOql8dlQ2wcK
- BphQMVFvcV1FwniNstZo2kJrijEoXlfy20TMBBHhV0yDpR39v5LRxrEGD/OQPdkAJFMGsysf4aB
- Qwauj0q1a2xEF7qjhfyjOvHLjBU2JwBGcjiXWs0ba42Bn5btKHn1K03H7YFXCx/KY4PmFv1Q9T8
- pu0WW6ycnxPSukQ22oQCF2rMtHcfwBY9V9Q+AIokcuJYPh6m/PAbJtND0Ehy6uFKF5pNjv0ofRc
- TLYHYzy0yxRUybTNc1U+sAya7tjhW5udvsB9beAyoYwkvWP0EpuSqYs+PG2+mSbm9Qilj2dtwXt
- Md1+vvTFSV1Jvrw==
+ bh=JemuwVrf8yUubUQ04X5WC7YM6uXAXUdph7sXz3IArE8=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTRT9U4Qg9OJkb0pSzAf9sdjAQKdeIlP+DEF
+ qNb2vf0iUSJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0QAKCRAFgzErGV9k
+ trkoD/9uMDtivCbMTOrgggGTlyDa6eGLdCUlIPlMr/C7iumj9T0+pX9tt94ykFnWvge1K153/Ic
+ TFvf4k+NVmqWQqnDGZw8RvUT1B1uv58Av1/6G7HsTOxkWERwnOosXXYUk+OznOcVeAI8zFd0cg4
+ K9on/a6vvkYan6qqINynhXA/Gth3JlCwe/iImk2cx0xqioduRDFfzxcMYhQbUPqAHyvRWS9MHpM
+ Imr/3fhnenlaX13mjqfddKkhAQUeM1dE6Lq3Kc8yNXed6rBRSPnJXj82zh3ZYg8/dkzue0TLt0T
+ 8E5ydS/cMnzR0bIwT3tsuczQmDi2+E381QgV58rsVTu1joDTuVwgD6sVykud5TTOpgOJBGXjTE4
+ XlmtoBs1m5k5YkqqsLySsxPuNhm2wPq0BVj7xkUsqn8zErx73u1pPo1pCS6TEfphB8i9jJ2BKwh
+ kQ6SAoZsLK7GkQH+A/peNERM42glBRPQiFtzALsI9lumBkZ2IOcgZ9mTD3mHThukOw8yn3bTLFy
+ zc40iGbihYhOlY4NxbaCx1YF82AQjKAXO+m66co3u1cyy6E35kfuRuL/DrtIk/TUFoOl3r50LgK
+ iHWqEcym98u6mv7isjQHGUN6L8hZKRkVm/mqPOAh/wyT3HvG7coz33+0qPiYK1IZKiGCxsu+Z4F
+ lS5agEn1VU+xBsQ==
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-Prepare to add smb5 support by making variables and the file name more
-generic. Also take the opportunity to remove the "_charger" suffix since
-smb2 always refers to a charger.
+Respect the max current limit set on the battery node, one some devices
+this is set conservatively to avoid overheating since they only have a
+single charger IC (instead of two in parallel).
 
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- drivers/power/supply/Makefile                      |   2 +-
- .../supply/{qcom_pmi8998_charger.c => qcom_smbx.c} | 148 ++++++++++-----------
- 2 files changed, 75 insertions(+), 75 deletions(-)
+ drivers/power/supply/qcom_smbx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 4f5f8e3507f80da02812f0d08c2d81ddff0a272f..f943c9150b326d41ff241f82610f70298635eb08 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -119,6 +119,6 @@ obj-$(CONFIG_RN5T618_POWER)	+= rn5t618_power.o
- obj-$(CONFIG_BATTERY_ACER_A500)	+= acer_a500_battery.o
- obj-$(CONFIG_BATTERY_SURFACE)	+= surface_battery.o
- obj-$(CONFIG_CHARGER_SURFACE)	+= surface_charger.o
- obj-$(CONFIG_BATTERY_UG3105)	+= ug3105_battery.o
--obj-$(CONFIG_CHARGER_QCOM_SMB2)	+= qcom_pmi8998_charger.o
-+obj-$(CONFIG_CHARGER_QCOM_SMB2)	+= qcom_smbx.o
- obj-$(CONFIG_FUEL_GAUGE_MM8013)	+= mm8013.o
-diff --git a/drivers/power/supply/qcom_pmi8998_charger.c b/drivers/power/supply/qcom_smbx.c
-similarity index 88%
-rename from drivers/power/supply/qcom_pmi8998_charger.c
-rename to drivers/power/supply/qcom_smbx.c
-index cd3cb473c70dd1c289cc4094e74746e3c6dc16ee..b1cb925581ec6b8cfca3897be2de5b00a336c920 100644
---- a/drivers/power/supply/qcom_pmi8998_charger.c
+diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
+index fc2a8e20435639a9da4d966c43271beaeb57a03f..7fc232fa7260a7422ac12a48686cd7d396edd9a4 100644
+--- a/drivers/power/supply/qcom_smbx.c
 +++ b/drivers/power/supply/qcom_smbx.c
-@@ -361,19 +361,19 @@ enum charger_status {
- 	INHIBIT_CHARGE,
- 	DISABLE_CHARGE,
- };
- 
--struct smb2_register {
-+struct smb_init_register {
- 	u16 addr;
- 	u8 mask;
- 	u8 val;
- };
- 
- /**
-- * struct smb2_chip - smb2 chip structure
-+ * struct smb_chip - smb chip structure
-  * @dev:		Device reference for power_supply
-  * @name:		The platform device name
-- * @base:		Base address for smb2 registers
-+ * @base:		Base address for smb registers
-  * @regmap:		Register map
-  * @batt_info:		Battery data from DT
-  * @status_change_work: Worker to handle plug/unplug events
-  * @cable_irq:		USB plugin IRQ
-@@ -381,9 +381,9 @@ struct smb2_register {
-  * @usb_in_i_chan:	USB_IN current measurement channel
-  * @usb_in_v_chan:	USB_IN voltage measurement channel
-  * @chg_psy:		Charger power supply instance
-  */
--struct smb2_chip {
-+struct smb_chip {
- 	struct device *dev;
- 	const char *name;
- 	unsigned int base;
- 	struct regmap *regmap;
-@@ -398,9 +398,9 @@ struct smb2_chip {
- 
- 	struct power_supply *chg_psy;
- };
- 
--static enum power_supply_property smb2_properties[] = {
-+static enum power_supply_property smb_properties[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_CURRENT_MAX,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
-@@ -410,9 +410,9 @@ static enum power_supply_property smb2_properties[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_USB_TYPE,
- };
- 
--static int smb2_get_prop_usb_online(struct smb2_chip *chip, int *val)
-+static int smb_get_prop_usb_online(struct smb_chip *chip, int *val)
- {
- 	unsigned int stat;
- 	int rc;
- 
-@@ -430,15 +430,15 @@ static int smb2_get_prop_usb_online(struct smb2_chip *chip, int *val)
- /*
-  * Qualcomm "automatic power source detection" aka APSD
-  * tells us what type of charger we're connected to.
-  */
--static int smb2_apsd_get_charger_type(struct smb2_chip *chip, int *val)
-+static int smb_apsd_get_charger_type(struct smb_chip *chip, int *val)
- {
- 	unsigned int apsd_stat, stat;
- 	int usb_online = 0;
- 	int rc;
- 
--	rc = smb2_get_prop_usb_online(chip, &usb_online);
-+	rc = smb_get_prop_usb_online(chip, &usb_online);
- 	if (!usb_online) {
- 		*val = POWER_SUPPLY_USB_TYPE_UNKNOWN;
- 		return rc;
- 	}
-@@ -470,15 +470,15 @@ static int smb2_apsd_get_charger_type(struct smb2_chip *chip, int *val)
- 
- 	return 0;
- }
- 
--static int smb2_get_prop_status(struct smb2_chip *chip, int *val)
-+static int smb_get_prop_status(struct smb_chip *chip, int *val)
- {
- 	unsigned char stat[2];
- 	int usb_online = 0;
- 	int rc;
- 
--	rc = smb2_get_prop_usb_online(chip, &usb_online);
-+	rc = smb_get_prop_usb_online(chip, &usb_online);
- 	if (!usb_online) {
- 		*val = POWER_SUPPLY_STATUS_DISCHARGING;
- 		return rc;
- 	}
-@@ -518,9 +518,9 @@ static int smb2_get_prop_status(struct smb2_chip *chip, int *val)
- 		return rc;
- 	}
- }
- 
--static inline int smb2_get_current_limit(struct smb2_chip *chip,
-+static inline int smb_get_current_limit(struct smb_chip *chip,
- 					 unsigned int *val)
- {
- 	int rc = regmap_read(chip->regmap, chip->base + ICL_STATUS, val);
- 
-@@ -528,9 +528,9 @@ static inline int smb2_get_current_limit(struct smb2_chip *chip,
- 		*val *= CURRENT_SCALE_FACTOR;
- 	return rc;
- }
- 
--static int smb2_set_current_limit(struct smb2_chip *chip, unsigned int val)
-+static int smb_set_current_limit(struct smb_chip *chip, unsigned int val)
- {
- 	unsigned char val_raw;
- 
- 	if (val > 4800000) {
-@@ -543,24 +543,24 @@ static int smb2_set_current_limit(struct smb2_chip *chip, unsigned int val)
- 	return regmap_write(chip->regmap, chip->base + USBIN_CURRENT_LIMIT_CFG,
- 			    val_raw);
- }
- 
--static void smb2_status_change_work(struct work_struct *work)
-+static void smb_status_change_work(struct work_struct *work)
- {
- 	unsigned int charger_type, current_ua;
- 	int usb_online = 0;
- 	int count, rc;
--	struct smb2_chip *chip;
-+	struct smb_chip *chip;
- 
--	chip = container_of(work, struct smb2_chip, status_change_work.work);
-+	chip = container_of(work, struct smb_chip, status_change_work.work);
- 
--	smb2_get_prop_usb_online(chip, &usb_online);
-+	smb_get_prop_usb_online(chip, &usb_online);
- 	if (!usb_online)
- 		return;
- 
- 	for (count = 0; count < 3; count++) {
- 		dev_dbg(chip->dev, "get charger type retry %d\n", count);
--		rc = smb2_apsd_get_charger_type(chip, &charger_type);
-+		rc = smb_apsd_get_charger_type(chip, &charger_type);
- 		if (rc != -EAGAIN)
- 			break;
- 		msleep(100);
- 	}
-@@ -591,13 +591,13 @@ static void smb2_status_change_work(struct work_struct *work)
- 		current_ua = SDP_CURRENT_UA;
+@@ -583,9 +583,9 @@ static void smb_status_change_work(struct work_struct *work)
+ 	case POWER_SUPPLY_USB_TYPE_CDP:
+ 		current_ua = CDP_CURRENT_UA;
  		break;
- 	}
- 
--	smb2_set_current_limit(chip, current_ua);
-+	smb_set_current_limit(chip, current_ua);
- 	power_supply_changed(chip->chg_psy);
- }
- 
--static int smb2_get_iio_chan(struct smb2_chip *chip, struct iio_channel *chan,
-+static int smb_get_iio_chan(struct smb_chip *chip, struct iio_channel *chan,
- 			     int *val)
- {
- 	int rc;
- 	union power_supply_propval status;
-@@ -616,9 +616,9 @@ static int smb2_get_iio_chan(struct smb2_chip *chip, struct iio_channel *chan,
- 
- 	return iio_read_channel_processed(chan, val);
- }
- 
--static int smb2_get_prop_health(struct smb2_chip *chip, int *val)
-+static int smb_get_prop_health(struct smb_chip *chip, int *val)
- {
- 	int rc;
- 	unsigned int stat;
- 
-@@ -650,13 +650,13 @@ static int smb2_get_prop_health(struct smb2_chip *chip, int *val)
- 		return 0;
- 	}
- }
- 
--static int smb2_get_property(struct power_supply *psy,
-+static int smb_get_property(struct power_supply *psy,
- 			     enum power_supply_property psp,
- 			     union power_supply_propval *val)
- {
--	struct smb2_chip *chip = power_supply_get_drvdata(psy);
-+	struct smb_chip *chip = power_supply_get_drvdata(psy);
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_MANUFACTURER:
- 		val->strval = "Qualcomm";
-@@ -664,45 +664,45 @@ static int smb2_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		val->strval = chip->name;
- 		return 0;
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
--		return smb2_get_current_limit(chip, &val->intval);
-+		return smb_get_current_limit(chip, &val->intval);
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
--		return smb2_get_iio_chan(chip, chip->usb_in_i_chan,
-+		return smb_get_iio_chan(chip, chip->usb_in_i_chan,
- 					 &val->intval);
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
--		return smb2_get_iio_chan(chip, chip->usb_in_v_chan,
-+		return smb_get_iio_chan(chip, chip->usb_in_v_chan,
- 					 &val->intval);
- 	case POWER_SUPPLY_PROP_ONLINE:
--		return smb2_get_prop_usb_online(chip, &val->intval);
-+		return smb_get_prop_usb_online(chip, &val->intval);
- 	case POWER_SUPPLY_PROP_STATUS:
--		return smb2_get_prop_status(chip, &val->intval);
-+		return smb_get_prop_status(chip, &val->intval);
- 	case POWER_SUPPLY_PROP_HEALTH:
--		return smb2_get_prop_health(chip, &val->intval);
-+		return smb_get_prop_health(chip, &val->intval);
- 	case POWER_SUPPLY_PROP_USB_TYPE:
--		return smb2_apsd_get_charger_type(chip, &val->intval);
-+		return smb_apsd_get_charger_type(chip, &val->intval);
+ 	case POWER_SUPPLY_USB_TYPE_DCP:
+-		current_ua = DCP_CURRENT_UA;
++		current_ua = chip->batt_info->constant_charge_current_max_ua;
+ 		break;
+ 	case POWER_SUPPLY_USB_TYPE_SDP:
  	default:
- 		dev_err(chip->dev, "invalid property: %d\n", psp);
- 		return -EINVAL;
- 	}
- }
- 
--static int smb2_set_property(struct power_supply *psy,
-+static int smb_set_property(struct power_supply *psy,
- 			     enum power_supply_property psp,
- 			     const union power_supply_propval *val)
- {
--	struct smb2_chip *chip = power_supply_get_drvdata(psy);
-+	struct smb_chip *chip = power_supply_get_drvdata(psy);
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
--		return smb2_set_current_limit(chip, val->intval);
-+		return smb_set_current_limit(chip, val->intval);
- 	default:
- 		dev_err(chip->dev, "No setter for property: %d\n", psp);
- 		return -EINVAL;
- 	}
- }
- 
--static int smb2_property_is_writable(struct power_supply *psy,
-+static int smb_property_is_writable(struct power_supply *psy,
- 				     enum power_supply_property psp)
- {
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
-@@ -711,11 +711,11 @@ static int smb2_property_is_writable(struct power_supply *psy,
- 		return 0;
- 	}
- }
- 
--static irqreturn_t smb2_handle_batt_overvoltage(int irq, void *data)
-+static irqreturn_t smb_handle_batt_overvoltage(int irq, void *data)
- {
--	struct smb2_chip *chip = data;
-+	struct smb_chip *chip = data;
- 	unsigned int status;
- 
- 	regmap_read(chip->regmap, chip->base + BATTERY_CHARGER_STATUS_2,
- 		    &status);
-@@ -728,11 +728,11 @@ static irqreturn_t smb2_handle_batt_overvoltage(int irq, void *data)
- 
- 	return IRQ_HANDLED;
- }
- 
--static irqreturn_t smb2_handle_usb_plugin(int irq, void *data)
-+static irqreturn_t smb_handle_usb_plugin(int irq, void *data)
- {
--	struct smb2_chip *chip = data;
-+	struct smb_chip *chip = data;
- 
- 	power_supply_changed(chip->chg_psy);
- 
- 	schedule_delayed_work(&chip->status_change_work,
-@@ -740,20 +740,20 @@ static irqreturn_t smb2_handle_usb_plugin(int irq, void *data)
- 
- 	return IRQ_HANDLED;
- }
- 
--static irqreturn_t smb2_handle_usb_icl_change(int irq, void *data)
-+static irqreturn_t smb_handle_usb_icl_change(int irq, void *data)
- {
--	struct smb2_chip *chip = data;
-+	struct smb_chip *chip = data;
- 
- 	power_supply_changed(chip->chg_psy);
- 
- 	return IRQ_HANDLED;
- }
- 
--static irqreturn_t smb2_handle_wdog_bark(int irq, void *data)
-+static irqreturn_t smb_handle_wdog_bark(int irq, void *data)
- {
--	struct smb2_chip *chip = data;
-+	struct smb_chip *chip = data;
- 	int rc;
- 
- 	power_supply_changed(chip->chg_psy);
- 
-@@ -764,24 +764,24 @@ static irqreturn_t smb2_handle_wdog_bark(int irq, void *data)
- 
- 	return IRQ_HANDLED;
- }
- 
--static const struct power_supply_desc smb2_psy_desc = {
-+static const struct power_supply_desc smb_psy_desc = {
- 	.name = "pmi8998_charger",
- 	.type = POWER_SUPPLY_TYPE_USB,
- 	.usb_types = BIT(POWER_SUPPLY_USB_TYPE_SDP) |
- 		     BIT(POWER_SUPPLY_USB_TYPE_CDP) |
- 		     BIT(POWER_SUPPLY_USB_TYPE_DCP) |
- 		     BIT(POWER_SUPPLY_USB_TYPE_UNKNOWN),
--	.properties = smb2_properties,
--	.num_properties = ARRAY_SIZE(smb2_properties),
--	.get_property = smb2_get_property,
--	.set_property = smb2_set_property,
--	.property_is_writeable = smb2_property_is_writable,
-+	.properties = smb_properties,
-+	.num_properties = ARRAY_SIZE(smb_properties),
-+	.get_property = smb_get_property,
-+	.set_property = smb_set_property,
-+	.property_is_writeable = smb_property_is_writable,
- };
- 
- /* Init sequence derived from vendor downstream driver */
--static const struct smb2_register smb2_init_seq[] = {
-+static const struct smb_init_register smb_init_seq[] = {
- 	{ .addr = AICL_RERUN_TIME_CFG, .mask = AICL_RERUN_TIME_MASK, .val = 0 },
- 	/*
- 	 * By default configure us as an upstream facing port
- 	 * FIXME: This will be handled by the type-c driver
-@@ -881,19 +881,19 @@ static const struct smb2_register smb2_init_seq[] = {
- 	  .mask = FAST_CHARGE_CURRENT_SETTING_MASK,
- 	  .val = 1000000 / CURRENT_SCALE_FACTOR },
- };
- 
--static int smb2_init_hw(struct smb2_chip *chip)
-+static int smb_init_hw(struct smb_chip *chip)
- {
- 	int rc, i;
- 
--	for (i = 0; i < ARRAY_SIZE(smb2_init_seq); i++) {
-+	for (i = 0; i < ARRAY_SIZE(smb_init_seq); i++) {
- 		dev_dbg(chip->dev, "%d: Writing 0x%02x to 0x%02x\n", i,
--			smb2_init_seq[i].val, smb2_init_seq[i].addr);
-+			smb_init_seq[i].val, smb_init_seq[i].addr);
- 		rc = regmap_update_bits(chip->regmap,
--					chip->base + smb2_init_seq[i].addr,
--					smb2_init_seq[i].mask,
--					smb2_init_seq[i].val);
-+					chip->base + smb_init_seq[i].addr,
-+					smb_init_seq[i].mask,
-+					smb_init_seq[i].val);
- 		if (rc < 0)
- 			return dev_err_probe(chip->dev, rc,
- 					     "%s: init command %d failed\n",
- 					     __func__, i);
-@@ -901,9 +901,9 @@ static int smb2_init_hw(struct smb2_chip *chip)
- 
- 	return 0;
- }
- 
--static int smb2_init_irq(struct smb2_chip *chip, int *irq, const char *name,
-+static int smb_init_irq(struct smb_chip *chip, int *irq, const char *name,
- 			 irqreturn_t (*handler)(int irq, void *data))
- {
- 	int irqnum;
- 	int rc;
-@@ -923,13 +923,13 @@ static int smb2_init_irq(struct smb2_chip *chip, int *irq, const char *name,
- 
- 	return 0;
- }
- 
--static int smb2_probe(struct platform_device *pdev)
-+static int smb_probe(struct platform_device *pdev)
- {
- 	struct power_supply_config supply_config = {};
- 	struct power_supply_desc *desc;
--	struct smb2_chip *chip;
-+	struct smb_chip *chip;
- 	int rc, irq;
- 
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
-@@ -958,19 +958,19 @@ static int smb2_probe(struct platform_device *pdev)
- 		return dev_err_probe(chip->dev, PTR_ERR(chip->usb_in_i_chan),
- 				     "Couldn't get usbin_i IIO channel\n");
- 	}
- 
--	rc = smb2_init_hw(chip);
-+	rc = smb_init_hw(chip);
- 	if (rc < 0)
- 		return rc;
- 
- 	supply_config.drv_data = chip;
- 	supply_config.fwnode = dev_fwnode(&pdev->dev);
- 
--	desc = devm_kzalloc(chip->dev, sizeof(smb2_psy_desc), GFP_KERNEL);
-+	desc = devm_kzalloc(chip->dev, sizeof(smb_psy_desc), GFP_KERNEL);
- 	if (!desc)
- 		return -ENOMEM;
--	memcpy(desc, &smb2_psy_desc, sizeof(smb2_psy_desc));
-+	memcpy(desc, &smb_psy_desc, sizeof(smb_psy_desc));
- 	desc->name =
- 		devm_kasprintf(chip->dev, GFP_KERNEL, "%s-charger",
- 			       (const char *)device_get_match_data(chip->dev));
- 	if (!desc->name)
-@@ -987,9 +987,9 @@ static int smb2_probe(struct platform_device *pdev)
- 		return dev_err_probe(chip->dev, rc,
- 				     "Failed to get battery info\n");
- 
- 	rc = devm_delayed_work_autocancel(chip->dev, &chip->status_change_work,
--					  smb2_status_change_work);
-+					  smb_status_change_work);
+ 		current_ua = SDP_CURRENT_UA;
+@@ -989,8 +989,10 @@ static int smb_probe(struct platform_device *pdev)
+ 	rc = power_supply_get_battery_info(chip->chg_psy, &chip->batt_info);
  	if (rc)
  		return dev_err_probe(chip->dev, rc,
- 				     "Failed to init status change work\n");
+ 				     "Failed to get battery info\n");
++	if (chip->batt_info->constant_charge_current_max_ua == -EINVAL)
++		chip->batt_info->constant_charge_current_max_ua = DCP_CURRENT_UA;
  
-@@ -998,22 +998,22 @@ static int smb2_probe(struct platform_device *pdev)
- 				FLOAT_VOLTAGE_SETTING_MASK, rc);
- 	if (rc < 0)
- 		return dev_err_probe(chip->dev, rc, "Couldn't set vbat max\n");
- 
--	rc = smb2_init_irq(chip, &irq, "bat-ov", smb2_handle_batt_overvoltage);
-+	rc = smb_init_irq(chip, &irq, "bat-ov", smb_handle_batt_overvoltage);
- 	if (rc < 0)
- 		return rc;
- 
--	rc = smb2_init_irq(chip, &chip->cable_irq, "usb-plugin",
--			   smb2_handle_usb_plugin);
-+	rc = smb_init_irq(chip, &chip->cable_irq, "usb-plugin",
-+			   smb_handle_usb_plugin);
- 	if (rc < 0)
- 		return rc;
- 
--	rc = smb2_init_irq(chip, &irq, "usbin-icl-change",
--			   smb2_handle_usb_icl_change);
-+	rc = smb_init_irq(chip, &irq, "usbin-icl-change",
-+			   smb_handle_usb_icl_change);
- 	if (rc < 0)
- 		return rc;
--	rc = smb2_init_irq(chip, &irq, "wdog-bark", smb2_handle_wdog_bark);
-+	rc = smb_init_irq(chip, &irq, "wdog-bark", smb_handle_wdog_bark);
- 	if (rc < 0)
- 		return rc;
- 
- 	devm_device_init_wakeup(chip->dev);
-@@ -1029,24 +1029,24 @@ static int smb2_probe(struct platform_device *pdev)
- 
- 	return 0;
- }
- 
--static const struct of_device_id smb2_match_id_table[] = {
-+static const struct of_device_id smb_match_id_table[] = {
- 	{ .compatible = "qcom,pmi8998-charger", .data = "pmi8998" },
- 	{ .compatible = "qcom,pm660-charger", .data = "pm660" },
- 	{ /* sentinal */ }
- };
--MODULE_DEVICE_TABLE(of, smb2_match_id_table);
-+MODULE_DEVICE_TABLE(of, smb_match_id_table);
- 
--static struct platform_driver qcom_spmi_smb2 = {
--	.probe = smb2_probe,
-+static struct platform_driver qcom_spmi_smb = {
-+	.probe = smb_probe,
- 	.driver = {
--		.name = "qcom-pmi8998/pm660-charger",
--		.of_match_table = smb2_match_id_table,
-+		.name = "qcom-smbx-charger",
-+		.of_match_table = smb_match_id_table,
- 		},
- };
- 
--module_platform_driver(qcom_spmi_smb2);
-+module_platform_driver(qcom_spmi_smb);
- 
- MODULE_AUTHOR("Casey Connolly <casey.connolly@linaro.org>");
- MODULE_DESCRIPTION("Qualcomm SMB2 Charger Driver");
- MODULE_LICENSE("GPL");
+ 	rc = devm_delayed_work_autocancel(chip->dev, &chip->status_change_work,
+ 					  smb_status_change_work);
+ 	if (rc)
 
 -- 
 2.49.0
