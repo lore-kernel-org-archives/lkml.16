@@ -1,31 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974581401C;
-	Thu, 19 Jun 2025 01:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD960191F91;
+	Thu, 19 Jun 2025 01:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750297074; cv=none; b=Bm1cc1PWFg1OqHmU7P96Knv784ckcfmIFEuGKZbE3iAkW+ZvlZs6HmD1t84SkTaS+BfPi/SO6kMiDYlq86o5Xnv6bddU1Fe8Ei5nAiELKyV4oIzsFKNlX4LyWnCVaJatIvKC/eDpZTpXYtySIBIXxygg0Axq7dR21xSHia5OFWA=
+	t=1750297178; cv=none; b=Tx4/AZHNMj7JwoLUQ80NKp45Pzgct8M3gChuK74qcV0lysgCfGgI1uLTPRRMCxmdnoh9MEaryyvfkOb8trUTVV4MGaX9XDaF3Yt30gWbZ5cFEYMDef6EDS4fkeGc61/wzZNemlcROhYCOzlOIiq8BpSfPuyX5uQtVF0KHe7c1Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750297074; c=relaxed/simple;
-	bh=ecJCHyXQWtvYtWnqPa5n/BlodDAEwF7Ss3bcPwxT4oc=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=RrjLo9VH73vDTP5bAEttM4S0haPmkZJYlAL7BQFS9Qj1cKYupp7lVDZah4fN/Yafa1x9UIdDkFQueS5tlrYcILH818dwW5GpLLyauFcpDfkTZFYZRPEdAcGec9zqec7rwZw+IfERACMcykNcKFPcXhRzU/6QK8BYO0GQo1rwfrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THYebIHU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750297178; c=relaxed/simple;
+	bh=K8DUo9/YVURt0CuPVEJiGTxai1bzGGIZp7s3Bv/Jsp0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=NZ3EzoSRio9yuzx2Ucb13grMWvib+vlAx1O6LvcrEvBnH0l9m8PmaLM8DvoRbzzkFAE+8U2QINjBak0hX5y858h7MMZaJiBWFRFcDmMCXJ9sPrZkn0lr+VcjJ/CgjzQEaJ+YIQeej3zgcne4ny4ydgrsE/qrnbw2LBfJAbfkVD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THoDMW7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THYebIHU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE7B5C4CEE7;
-	Thu, 19 Jun 2025 01:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THoDMW7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC59C4CEE7;
+	Thu, 19 Jun 2025 01:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750297074;
-	bh=ecJCHyXQWtvYtWnqPa5n/BlodDAEwF7Ss3bcPwxT4oc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=THYebIHUEplET6ir/Wr6WdVuvILyv57hFEKH5hqn7/8jjeEDrnKD6eFKT+YUKlDC2
-	 ySKksmohmjqmAE3ce4ijj9204IHshJH/JpadZ5KLa31Utj4GIX298Y08s2WmojlWfV
-	 GgI0k8+mA264ka6nppGywQBMMH0oKnJmYk9imhirlvgJj0NdLRLICT2xx0SRpinQ/g
-	 LblsauHMp9mnq69uyJjb/eYxJguSmx7bvQ1OPBmPycAu+kQPWM/OaaeJoGqiopqmvY
-	 84QaANBEJ4avD3So1fVyQHUU8h6J9MQutWyaf0ocMx6oNaU+Nt8D7wfihXsl4lqrMs
-	 Alsc4oSHue4/g==
+	s=k20201202; t=1750297178;
+	bh=K8DUo9/YVURt0CuPVEJiGTxai1bzGGIZp7s3Bv/Jsp0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=THoDMW7dBQ7ZbKXALhVbMpagP06mJQxj3tByiVTplZ7LjA3YhZqcqPMc3cziCfiIm
+	 Z/mfsKMG7egSSVpZhbQsV4obSufTGYMmtvpwHGSyJ8XtK19XrNgrf1AcKkWoDwHbuj
+	 nqUAcNTp4iK/8hK7DyqDshhhuya/7KxTAHiGrBIkoHT5w/15sXrfkqUtc8Vtlz7D/Q
+	 57y19hb58STAOWSZUL9ApamNAvq1V46pLAsuEEEwOEI4/33/iF2SGLsSRCL1INtE6g
+	 01UsSkENpFNxzi+Azc0b4euwBQxk/VZGI1ut+ppKvgqtgSl8tBdybx0UJuuN8dyfsm
+	 UJ2OY1W46Kmcw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF5D3806649;
+	Thu, 19 Jun 2025 01:40:07 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -33,22 +36,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250521004625.1791913-1-robh@kernel.org>
-References: <20250521004625.1791913-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Convert brcm,bcm2835-cprman to DT schema
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Ray Jui <rjui@broadcom.com>, Rob Herring (Arm) <robh@kernel.org>, Scott Branden <sbranden@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>
-Date: Wed, 18 Jun 2025 18:37:52 -0700
-Message-ID: <175029707294.4372.5366260558187845088@lazor>
-User-Agent: alot/0.11
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] tcp: Remove inet_hashinfo2_free_mod()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175029720650.316257.6338936263736649985.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 01:40:06 +0000
+References: <20250617130613.498659-1-yuehaibing@huawei.com>
+In-Reply-To: <20250617130613.498659-1-yuehaibing@huawei.com>
+To: Yue Haibing <yuehaibing@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (Arm) (2025-05-20 17:46:24)
-> Convert the Broadcom BCM2835 CPRMAN clock binding to DT schema format.
-> It's a straight forward conversion.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 17 Jun 2025 21:06:13 +0800 you wrote:
+> DCCP was removed, inet_hashinfo2_free_mod() is unused now.
+> 
+> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 > ---
+>  include/net/inet_hashtables.h | 6 ------
+>  1 file changed, 6 deletions(-)
 
-Applied to clk-next
+Here is the summary with links:
+  - [net-next] tcp: Remove inet_hashinfo2_free_mod()
+    https://git.kernel.org/netdev/net-next/c/a33556940b57
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
