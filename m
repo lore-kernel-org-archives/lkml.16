@@ -1,394 +1,116 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF822222B4;
-	Thu, 19 Jun 2025 10:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E4F220F55
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750330205; cv=none; b=ObNhp3MG9uwW/KJZmDtfxIJ9d9a3Y1k0OAcEldGbaU0WaNiVDww3TNMzRu3ooVOX9Ja+IvveKE/FeI9eWcaVnajYkMHUbs55As7DvPhovuQ9dzfQ6QVAqrGdiAJB6ZRBPwPzoCBCr0M220Q4KalCcEW6ZENwtXsOc9UaHVxKF3E=
+	t=1750330259; cv=none; b=I6cIyD1Oez3lftbsZze/cD4TnnGGSX6VpeKa0Zp07yVulOmN2iBPFMQgcaO9xJCMnhDirUDIGu0HfKaU+6oHYVGHvCp0ZwbJdTZGKgImzsFySRqjIss1XQGdZSVcWViL0qiS4Acj7o7pfojX5J2SJVCseFFppfFlXB0kv5RPDo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750330205; c=relaxed/simple;
-	bh=k+42uH4kGEvnIAFTIbY686pIXTye/6Rzuy55dERd+uI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJAk2aWxA3OSW7k3+NNRxBGrejc7gU7oe8I+cYyOKDkAnYj+KA6N60FKx2VqoKbiGxqrzi/Zf5sZ3ckHUL3JsO5Lvntag7dEgXJ+swqR1ZDqGYmprOdOaJgGH97SgUc00J/tf8pK8ufsQq7ACBnzWUNFrAXDmZYlWscmGx8kGrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bNHPW07zGz6L5dv;
-	Thu, 19 Jun 2025 18:47:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 87834140275;
-	Thu, 19 Jun 2025 18:49:58 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 19 Jun
- 2025 12:49:57 +0200
-Date: Thu, 19 Jun 2025 11:49:55 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: Neeraj Kumar <s.neeraj@samsung.com>, <linux-cxl@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tongtiangen@huawei.com>, Yicong Yang <yangyicong@huawei.com>, Niyas Sait
-	<niyas.sait@huawei.com>, <ajayjoshi@micron.com>, Vandana Salve
-	<vsalve@micron.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Gregory Price"
-	<gourry@gourry.net>, Huang Ying <ying.huang@intel.com>, Vishak G
-	<vishak.g@samsung.com>, Krishna Kanth Reddy <krish.reddy@samsung.com>, Alok
- Rathore <alok.rathore@samsung.com>, <gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <20250619114955.00005e3b@huawei.com>
-In-Reply-To: <aFOLIO9JReglmE+3@phytium.com.cn>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-	<20241127163426.00004a65@huawei.com>
-	<CGME20250103053521epcas5p30cd4abba59d695664335b03ba806c56d@epcas5p3.samsung.com>
-	<1296674576.21735899902648.JavaMail.epsvc@epcpadp1new>
-	<20250115134207.00002918@huawei.com>
-	<aFOLIO9JReglmE+3@phytium.com.cn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750330259; c=relaxed/simple;
+	bh=B5nwRN0D/Gpfme4JMOlAX0pPFV8TVKGGlk+5USmaxrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g7YsadJiCFffPZ/xeQFzZ11kprdpYGBq2lL/3DmEKsQwaZK5pKaIjQCkWMvj0l2MHBt2we6IjCqah2y3msYOx1G7OQimyC2c+CPNEXanrt59sTulaR7fh5/MzIGRgSESyMh4TESKgHUrCtR9T2gyEUMyxGjjci1d5pfopTJ0in4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RJ+KtYGb; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RJ+KtYGb"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so348348f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 03:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750330256; x=1750935056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XYz7+pFibNw9xxyFYBk3NBPAjtW1pCVQhPTMzi/Ej7U=;
+        b=RJ+KtYGbiRlCIc7NstwRwj6vudYAbpelduM+WWm5g2ojqqAoifyqlOdhitio7UEwww
+         pnMdqWTdFlkLgcDI5vMgcRyKDd+Bx8Aue18sLuXXUh3SOsSOcMB6akG3GGMw/7MX63EP
+         vy9sMz3tPwSzP7pI+RIipxsHdkvCHp00o5IHKZc2zap/Tu0TZUtbGtAAPFnZKRKV/6st
+         Dwjw1QpMgmrRuDcdMbZFQROz3w3nQ3A1EJAZPo2WjUKvYRC5fyKf+T3fRUYRcHn2WU2R
+         b7GSE9mij4V38TSBWZNyx86EDkMnS/cps9aee5Ckckh2SxT85+CQuqFxAKR+0YP4vg22
+         gTwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750330256; x=1750935056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XYz7+pFibNw9xxyFYBk3NBPAjtW1pCVQhPTMzi/Ej7U=;
+        b=fbLTcIpFk2dgtwxC3RD8qKJGb5kBkn6hNWHeTsBlFR9QYW+A/NfBtq19+9+KnEeRQj
+         pIJ1SUyln7DJfvx9AtMRsB9nFpEbiEpFVJpT3BADNwiM5dYd4tBnqYulRNIhXTKmaz6E
+         Cd/HMB9moRVulom/MZjHctWaAJ3qJ1qpoy/ucGeEbDcgfR2wh8E89WQionQmb28ezt0z
+         D0swWF2ojBXfrCtw1FsprlJ12ynJQOm5hAlcrw66iCVI2LJ57MGYf+nJiICp/Hb2d0Wm
+         TJRHayAKUwSSuvWmVGWCbhENBsG96thNqIPqPFLd/6ca7QSZyU4Oj4SkruY/29SyG7Xx
+         WzPw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/aqQfDJF2q3/RtT9Fa6STzxAI/t/+1cq6wojp2uPl5KWbD4SMUVZy+i18uGqV8hJ3DSr/HR/gGB0b2YY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4wAPDt6bF68kN+IE8dUzQ6y8l2bIV9p5atk+ZvZCkY93MIvZW
+	qqXOKB8hzWEq8HwyzX2Kwx9KLY5ooc5ALVEUaBy3biTYWxxJ3oL8u7BGFdAV65XYgaHewpTilFR
+	1DYFx0Bui2NSLvdIfy0GOr2Xwdc3IlTmsBTTbg5PC
+X-Gm-Gg: ASbGnctBDkP12sl6yJe7THE2D8sRD5bX6uq0zs7rvzRWzO18m/gwsBhEHRKYbT5Z5hW
+	ywnS2iaJ3Tk+0N+HnvnJ9X92kvmjzWw6xdJLlBZ7lWyBnTrxGE1/iG6Vd5icQ7r/IvXEQ8LygO3
+	9wyRCLYNY5G79pnKhLDSvwqDTa2LYPbiUiW75WDLNDimLp8SCXaXo226MBkDfpZGg/PXAsTE8JQ
+	w==
+X-Google-Smtp-Source: AGHT+IFsqFDhKIv64ceK6XQrOc9Qsekzsih6MfirQI/OCI8WJNBcEkEExzxrQkUKIqsWyKy0KCKo5Y52KDNONSCzm6I=
+X-Received: by 2002:a5d:64cb:0:b0:3a4:d274:1d9b with SMTP id
+ ffacd0b85a97d-3a5723ad5eamr18216483f8f.25.1750330256321; Thu, 19 Jun 2025
+ 03:50:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
+ <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com> <CACQBu=UHdyxiqngiqE-5KPVyn4VFmCDapKiy2W27ic46uNO6sw@mail.gmail.com>
+In-Reply-To: <CACQBu=UHdyxiqngiqE-5KPVyn4VFmCDapKiy2W27ic46uNO6sw@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 19 Jun 2025 12:50:43 +0200
+X-Gm-Features: Ac12FXwUga8sxOhQeH5daHYwT8zCTot9A36Z2YfwsgBxPIWqgfMEo6I4tjBhdMk
+Message-ID: <CAH5fLgh5pPRrPLCWFb1+iWF5ukK7ai0vek0eU5BRsEEHtdGt=Q@mail.gmail.com>
+Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 11:59:28 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+On Thu, Jun 19, 2025 at 11:49=E2=80=AFAM Burak Emir <bqe@google.com> wrote:
+>
+> On Mon, Jun 16, 2025 at 12:49=E2=80=AFPM Alice Ryhl <aliceryhl@google.com=
+> wrote:
+> >
+> > On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wro=
+te:
+> > > +impl core::ops::DerefMut for Bitmap {
+> > > +    fn deref_mut(&mut self) -> &mut CBitmap {
+> > > +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ =
+{
+> > > +            // SAFETY: Bitmap is represented inline.
+> > > +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
+> > > +        } else {
+> > > +            // SAFETY: Bitmap is represented as array of `unsigned l=
+ong`.
+> > > +            unsafe { self.repr.ptr.as_mut() }
+> >
+> > Nit: You want NonNull::as_mut_ptr() here.
+>
+> Can you explain? That seems to be an unstable method that exists so
+> one can get pointer to slice buffer.
+>
+> The repr.ptr case is NonNull<usize>, not a slice - though "morally",
+> it is actually an owned C array.
+> Are you suggesting we could/should represent it as a Rust one?
+> However, we'd like it to use the C API to free etc.
 
-> On Wed, Jan 15, 2025 at 01:42:07PM +0000, Jonathan Cameron wrote:
-> > On Fri, 3 Jan 2025 10:57:22 +0530
-> > Neeraj Kumar <s.neeraj@samsung.com> wrote:
-> >   
-> > > On 27/11/24 04:34PM, Jonathan Cameron wrote:  
-> > > >On Thu, 21 Nov 2024 10:18:41 +0000
-> > > >Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > > >    
-> > > >> The CXL specification release 3.2 is now available under a click through at
-> > > >> https://computeexpresslink.org/cxl-specification/ and it brings new
-> > > >> shiny toys.    
-> > > >
-> > > >If anyone wants to play, basic emulation on my CXL QEMU staging tree
-> > > >https://gitlab.com/jic23/qemu/-/commit/e89b35d264c1bcc04807e7afab1254f35ffc8cb9
-> > > >
-> > > >Branch with a few other things on top is:
-> > > >https://gitlab.com/jic23/qemu/-/commits/cxl-2024-11-27
-> > > >
-> > > >Note that this currently doesn't produce real data.  I have a plan
-> > > >/ initial PoC / hack to hook that up via an addition to the QEMU cache
-> > > >plugin and an external tool to emulate the hotness tracker counting
-> > > >hardware. Will be a little while before I get that finished, so in
-> > > >a meantime the above exercises the driver.
-> > > >
-> > > >Jonathan
-> > > >    
-> > > >>
-> > > >> RFC reason
-> > > >> - Whilst trace capture with a particular configuration is potentially useful
-> > > >>   the intent is that CXL HMU units will be used to drive various forms of
-> > > >>   hotpage migration for memory tiering setups. This driver doesn't do this
-> > > >>   (yet), but rather provides data capture etc for experimentation and
-> > > >>   for working out how to mostly put the allocations in the right place to
-> > > >>   start with by tuning applications.
-> > > >>
-> > > >> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-> > > >> of this is to provide a way to establish which units of memory (typically
-> > > >> pages or larger) in CXL attached memory are hot. The implementation details
-> > > >> and algorithm are all implementation defined. The specification simply
-> > > >> describes the 'interface' which takes the form of ring buffer of hotness
-> > > >> records in a PCI BAR and defined capability, configuration and status
-> > > >> registers.
-> > > >>
-> > > >> The hardware may have constraints on what it can track, granularity etc
-> > > >> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-> > > >> trackers). Some of these constraints are discoverable from the hardware
-> > > >> registers, others such as loss of accuracy have no universally accepted
-> > > >> measures as they are typically access pattern dependent. Sadly it is
-> > > >> very unlikely any hardware will implement a truly precise tracker given
-> > > >> the large resource requirements for tracking at a useful granularity.
-> > > >>
-> > > >> There are two fundamental operation modes:
-> > > >>
-> > > >> * Epoch based. Counters are checked after a period of time (Epoch) and
-> > > >>   if over a threshold added to the hotlist.
-> > > >> * Always on. Counters run until a threshold is reached, after that the
-> > > >>   hot unit is added to the hotlist and the counter released.
-> > > >>
-> > > >> Counting can be filtered on:
-> > > >>
-> > > >> * Region of CXL DPA space (256MiB per bit in a bitmap).
-> > > >> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
-> > > >>
-> > > >> Sampling can be modified by:
-> > > >>
-> > > >> * Downsampling including potentially randomized downsampling.
-> > > >>
-> > > >> The driver presented here is intended to be useful in its own right but
-> > > >> also to act as the first step of a possible path towards hotness monitoring
-> > > >> based hot page migration. Those steps might look like.
-> > > >>
-> > > >> 1. Gather data - drivers provide telemetry like solutions to get that
-> > > >>    data. May be enhanced, for example in this driver by providing the
-> > > >>    HPA address rather than DPA Unit Address. Userspace can access enough
-> > > >>    information to do this so maybe not.
-> > > >> 2. Userspace algorithm development, possibly combined with userspace
-> > > >>    triggered migration by PA. Working out how to use different levels
-> > > >>    of constrained hardware resources will be challenging.
-> > > >> 3. Move those algorithms in kernel. Will require generalization across
-> > > >>    different hotpage trackers etc.
-> > > >>
-> > > >> So far this driver just gives access to the raw data. I will probably kick
-> > > >> of a longer discussion on how to do adaptive sampling needed to actually
-> > > >> use these units for tiering etc, sometime soon (if no one one else beats
-> > > >> me too it).  There is a follow up topic of how to virtualize this stuff
-> > > >> for memory stranding cases (VM gets a fixed mixture of fast and slow
-> > > >> memory and should do it's own tiering).
-> > > >>
-> > > >> More details in the Documentation patch but typical commands are:
-> > > >>
-> > > >> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
-> > > >>  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
-> > > >>  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
-> > > >>  hotness_granual=12    
-> > > 
-> > > Facing issue while executing perf record on x86 emulation environment using following steps
-> > > 
-> > > 1. Tried applying CHMU Patch on branch cxl-for-6.13 using b4 utility. As
-> > > base commit is not specified, with minor change able to apply patch.
-> > > Compiled kernel with CONFIG_CXL_HMU
-> > > 
-> > > 2. Compiled jic23/cxl-2024-11-27 for x86_64-softmmu
-> > > 
-> > > 3. Launched Qemu with following CXL topology along with compiled kernel
-> > > VM="-object memory-backend-ram,id=vmem1,share=on,size=512M \
-> > >      -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-> > >      -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-> > >      -device cxl-type3,bus=root_port13,volatile-memdev=vmem1,id=cxl-vmem1 \
-> > >      -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k"
-> > > 
-> > > 4. Created region and onlined this memory. Also run top utility on the newly created 
-> > > numa node using numactl -m<node> top
-> > > 
-> > > 5. Compiled and installed perf utility in qemu environment, and able to
-> > > see cxl_hmu_mem* entries in perf list
-> > > 
-> > > root@QEMUCXL2030mm:~# perf list
-> > > <snip>
-> > >   cxl_hmu_mem0.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_hmu_mem0.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_hmu_mem0.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_hmu_mem1.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_hmu_mem1.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_hmu_mem1.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
-> > >   cxl_pmu_mem0.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
-> > >   cxl_pmu_mem0.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
-> > >   cxl_pmu_mem1.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
-> > >   cxl_pmu_mem1.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
-> > > <snip>
-> > > 
-> > > 6. Tried running perf command mentioned in Documentation/trace/cxl-hmu.rst
-> > > 
-> > > root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf -v
-> > > perf version 6.12.rc5.gc198a4f4a356
-> > > root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12
-> > > event syntax error: '..ess_granual=12'
-> > >                                   \___ Unrecognized input  
-> > 
-> > This is probably my mistake when cutting and pasting the example from a terminal.
-> > Add a trailing / and something to run.
-> > 
-> >  perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/ -- sleep 10  
-> 
-> Hi Jonathan,
-> 
-> I tried to use this new command but perf shows error. 
-> 
-> Based on the change of hmu iomap_block size[1], my steps are like below:
-> 
-> step1: Create cxl region and online the numa node
-> 
-> root@ubuntu-jammy-arm64:~/tools# numactl -H
-> available: 3 nodes (0-2)
-> node 0 cpus: 0 1
-> node 0 size: 1972 MB
-> node 0 free: 1694 MB
-> node 1 cpus: 2 3
-> node 1 size: 1942 MB
-> node 1 free: 1690 MB
-> node 2 cpus:
-> node 2 size: 256 MB
-> node 2 free: 256 MB
-> node distances:
-> node   0   1   2
->   0:  10  20  20
->   1:  20  10  20
->   2:  20  20  10
-> 
-> step2: Bind this numa node to run 'ls'
-> 
-> root@ubuntu-jammy-arm64:~/tools# numactl -m 2 ls
-> build   perf.data  ndctl  perf     
-> 
-> root@ubuntu-jammy-arm64:~/tools# numastat 
->                            node0           node1           node2
-> numa_hit                  109323          141170              77
-> numa_miss                      0               0               0
-> numa_foreign                   0               0               0
-> interleave_hit               519             591               0
-> local_node                108810          139591               0
-> other_node                   513            1579              77
-> 
-> step3: Use perf tool
-> 
-> root@ubuntu-jammy-arm64:~/tools# perf -v
-> perf version 6.15.rc5.g2c3e6f60f5cf
-> 
-> root@ubuntu-jammy-arm64:~/tools# perf list | grep -i hmu
->   cxl_hmu_mem0.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw event descriptor]
-> 
-> root@ubuntu-jammy-arm64:~/tools# perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoperf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/ -- sleep 10
-> 
-This cut and paste seems to have half of two commands.  
+Sorry I meant NonNull::as_ptr() which returns a mutable pointer:
+https://doc.rust-lang.org/stable/std/ptr/struct.NonNull.html#method.as_ptr
 
-I'll just grab the second one as what I'm guessing you were running. 
-
-perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/ -- sleep 10
-
-> Error:
-> cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/H: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-> 
-> [1]:https://lore.kernel.org/linux-cxl/aFNsFI5OKrD0CWR3@phytium.com.cn/T/#u
-> 
-> Is something wrong on the CHMU interrupts?
-
-That error message is annoyingly meaningless and misleading. I think
-the perf core is assuming that any not supported error means that is the problem
-rather than something else in the command line might not be supported.
-
-It's failing because we don't support that downsampling_factor.  The format does (hence
-I think the stuff above) but the emulation doesn't. 
-
-So for now just don't specify downsampling_factor in the command line. There is
-a bug in the emulation around setting it to 1 it seems.  
-
-val = FIELD_DP64(val, CXL_CHMU0_CAP1, DOWN_SAMPLING_FACTORS, BIT(1))
-which should have been bit 0 to indicate no downsampling (comment above that is wrong too).
-
-
-Looking at the spec is rather confusing on how this is supposed to work.
-We have a bitmap that has 16 bits, each of which represents a power of 2, but
-then we have a CHMU configuration register Down-sampling factor that says
-bits 99:96 are the 'one of the 16 possible values'  I assume that means
-bit offset.
-
-I'll reply to the qemu thread to point out this bug in the capability.
-
-Jonathan
-
-
-
-> 
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > 
-> > > 
-> > > Are there any steps i am missing?
-> > > 
-> > > Regards,
-> > > Neeraj	 
-> > >   
-> > > >>
-> > > >> $perf report --dump-raw-traces
-> > > >>
-> > > >> Example output.  With a counter_width of 16 (0x10) the least significant
-> > > >> 4 bytes are the counter value and the unit index is bits 16-63.
-> > > >> Here all units are over the threshold and the indexes are 0,1,2 etc.
-> > > >>
-> > > >> . ... CXL_HMU data: size 33512 bytes
-> > > >> Header 0: units: 29c counter_width 10
-> > > >> Header 1 : deadbeef
-> > > >> 0000000000000283
-> > > >> 0000000000010364
-> > > >> 0000000000020366
-> > > >> 000000000003033c
-> > > >> 0000000000040343
-> > > >> 00000000000502ff
-> > > >> 000000000006030d
-> > > >> 000000000007031a
-> > > >>
-> > > >> Which will produce a list of hotness entries.
-> > > >> Bits[N-1:0] counter value
-> > > >> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
-> > > >>   config to get to a Host Physical Address)
-> > > >>
-> > > >> Specific RFC questions.
-> > > >> - What should be in the header added to the aux buffer.
-> > > >>   Currently just the minimum is provided. Number of records
-> > > >>   and the counter width needed to decode them.
-> > > >> - Should we reset the counters when doing sampling "-F X"
-> > > >>   If the frequency is higher than the epoch we never see any hot units.
-> > > >>   If so, when should we reset them?
-> > > >>
-> > > >> Note testing has been light and on emulation only + as perf tool is
-> > > >> a pain to build on a striped back VM,  build testing has all be on
-> > > >> arm64 so far.  The driver loads though on both arm64 and x86 so
-> > > >> any problems are likely in the perf tool arch specific code
-> > > >> which is build tested (on wrong machine)
-> > > >>
-> > > >> The QEMU emulation needs some cleanup, but I should be able to post
-> > > >> that shortly to let people actually play with this.  There are lots
-> > > >> of open questions there on how 'right' we want the emulation to be
-> > > >> and what counting uarch to emulate.
-> > > >>
-> > > >> Jonathan Cameron (4):
-> > > >>   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
-> > > >>   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
-> > > >>   perf: Add support for CXL Hotness Monitoring Units (CHMU)
-> > > >>   hwtrace: Document CXL Hotness Monitoring Unit driver
-> > > >>
-> > > >>  Documentation/trace/cxl-hmu.rst     | 197 +++++++
-> > > >>  Documentation/trace/index.rst       |   1 +
-> > > >>  drivers/cxl/Kconfig                 |   6 +
-> > > >>  drivers/cxl/Makefile                |   3 +
-> > > >>  drivers/cxl/core/Makefile           |   1 +
-> > > >>  drivers/cxl/core/core.h             |   1 +
-> > > >>  drivers/cxl/core/hmu.c              |  64 ++
-> > > >>  drivers/cxl/core/port.c             |   2 +
-> > > >>  drivers/cxl/core/regs.c             |  14 +
-> > > >>  drivers/cxl/cxl.h                   |   5 +
-> > > >>  drivers/cxl/cxlpci.h                |   1 +
-> > > >>  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
-> > > >>  drivers/cxl/hmu.h                   |  23 +
-> > > >>  drivers/cxl/pci.c                   |  26 +-
-> > > >>  tools/perf/arch/arm/util/auxtrace.c |  58 ++
-> > > >>  tools/perf/arch/x86/util/auxtrace.c |  76 +++
-> > > >>  tools/perf/util/Build               |   1 +
-> > > >>  tools/perf/util/auxtrace.c          |   4 +
-> > > >>  tools/perf/util/auxtrace.h          |   1 +
-> > > >>  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
-> > > >>  tools/perf/util/cxl-hmu.h           |  18 +
-> > > >>  21 files changed, 1748 insertions(+), 1 deletion(-)
-> > > >>  create mode 100644 Documentation/trace/cxl-hmu.rst
-> > > >>  create mode 100644 drivers/cxl/core/hmu.c
-> > > >>  create mode 100644 drivers/cxl/hmu.c
-> > > >>  create mode 100644 drivers/cxl/hmu.h
-> > > >>  create mode 100644 tools/perf/util/cxl-hmu.c
-> > > >>  create mode 100644 tools/perf/util/cxl-hmu.h
-> > > >>    
-> > > >    
-> > >   
-> >   
-> 
-> 
-
+Alice
