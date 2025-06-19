@@ -1,25 +1,48 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C10D230BF2;
-	Thu, 19 Jun 2025 07:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5086E230BF2;
+	Thu, 19 Jun 2025 07:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319736; cv=none; b=FnKwd2HhhDYlo7rHwuvL3ZYgOd5L31vUpld0V5kCfj3/Vn0D9MrDOs4BlLCQRo3xrXhpnDJpeg/UJECas6QL+tl8sQuP3uE806AWear4ocCC2lC6evv3CgzC8G/WRwP7iOBhKP6pRwmm7ANXTAF/N5Vee1j6b7GaOyxg3ZYguuw=
+	t=1750319757; cv=none; b=WXrY04R3PhY69a6AGBOufBIHn2uuDpFgslrJa3Ak4JvIpkqcWmJjX06cFHGrZrP/cn2Xp9+XcfrJrwIOKQE/zH38JnN+HrWtoNOBs87yL/c7WHZMOWMprrSt8XNfQdLsGo6fGnFxu1sdZVdvn3QtDV384CdItyswLXlxXnjv/Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319736; c=relaxed/simple;
-	bh=f4vTpMQgH6hjBMjYYSMsrAQ9uauN0x5DGtU+5NDgL4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/K/Wq6TosChnjvv9Ge57IQ0kF8E8cal1lD7RKdJI7qPGKjZQ7h4OEOdGm5ScgbyXufoGkYFVHihwdIfWrZ4641eit9MpkvFfpzkoNcbGexRRsTHDznl7FyxZR1onu9J8T064G5zvBV6JBXpYvWa4AFHUl6tt3sLpn0NDJUNhTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68ECB106F;
-	Thu, 19 Jun 2025 00:55:12 -0700 (PDT)
-Received: from [10.163.35.214] (unknown [10.163.35.214])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C8DD3F66E;
-	Thu, 19 Jun 2025 00:55:30 -0700 (PDT)
-Message-ID: <fb86e753-95c0-41bd-b8f6-ebc810cd8a94@arm.com>
-Date: Thu, 19 Jun 2025 13:25:27 +0530
+	s=arc-20240116; t=1750319757; c=relaxed/simple;
+	bh=CpwCTD9AnUzXrbQp+d9zubfUboByeErtnwKYNnZJ0Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Bk6nq/XDDpRoEUdifEzir/5K2HaspSu2TCQDTciRj0relt0QT3SYUGQHjBmQxsgCFOKJerNKmsoEV86RpVtww9/QzJe3+u3Z203ahX8PuxxlxF8YkqfgXqR9xAM87Tem1CzCGnZ/pV5cWszFjvgTbxcloKsIQK+JsqJlJ4X7vlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aAk3ld15; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aAk3ld15"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55J7tlWX336308;
+	Thu, 19 Jun 2025 02:55:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750319747;
+	bh=bKV7bT5H8Ss8TSiS7uA6G43ZL43gAMDND/KK9ixN5Mw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=aAk3ld15E3n6L6zqIsqMRoNXNgNjmPwnDcRR7GNPYGAIkeCz0LbMUH6NEMZ6ro2kb
+	 907wITu307DEzC9OxvXV/FyErbsVKvS9mrgXQA1UXLhUziedAPXHz+f0rzA6Cl4T8M
+	 /58xKvPW2uDjRGpQ1rcTrgADVd55jbZC5stGAaY8=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55J7tlTr3513825
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 19 Jun 2025 02:55:47 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
+ Jun 2025 02:55:47 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 19 Jun 2025 02:55:47 -0500
+Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55J7th2X764414;
+	Thu, 19 Jun 2025 02:55:44 -0500
+Message-ID: <28c88a78-fe34-4595-b260-c6cc40897bc1@ti.com>
+Date: Thu, 19 Jun 2025 13:25:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,186 +50,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
- ptdump_check_wx()
-To: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250609041214.285664-1-anshuman.khandual@arm.com>
- <20250612145808.GA12912@willie-the-truck>
- <5c22c792-0648-4ced-b0ed-86882610b4be@arm.com>
- <20250618113635.GA20157@willie-the-truck>
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase
+ tag to "pcie0_ep"
+To: Hrushikesh Salunke <h-salunke@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <s-vadapalli@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <danishanwar@ti.com>
+References: <20250610054920.2395509-1-h-salunke@ti.com>
+ <98e04654-a693-494d-9f60-930b6a4cd84a@ti.com>
+ <b24a97fc-8dac-443b-aec7-317b9e393f2d@ti.com>
+ <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250618113635.GA20157@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
 
-On 18/06/25 5:06 PM, Will Deacon wrote:
-> On Fri, Jun 13, 2025 at 10:39:02AM +0530, Anshuman Khandual wrote:
->>
->>
->> On 12/06/25 8:28 PM, Will Deacon wrote:
->>> On Mon, Jun 09, 2025 at 05:12:14AM +0100, Anshuman Khandual wrote:
->>>> The arm64 page table dump code can race with concurrent modification of the
->>>> kernel page tables. When a leaf entries are modified concurrently, the dump
->>>> code may log stale or inconsistent information for a VA range, but this is
->>>> otherwise not harmful.
->>>>
->>>> When intermediate levels of table are freed, the dump code will continue to
->>>> use memory which has been freed and potentially reallocated for another
->>>> purpose. In such cases, the dump code may dereference bogus addresses,
->>>> leading to a number of potential problems.
->>>>
->>>> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
->>>> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
->>>> dump")' but a same was missed for ptdump_check_wx() which faced the race
->>>> condition as well. Let's just take the memory hotplug lock while executing
->>>> ptdump_check_wx().
->>>
->>> How do other architectures (e.g. x86) handle this? I don't see any usage
->>> of {get,put}_online_mems() over there. Should this be moved into the core
->>> code?
->>
->> Memory hot remove on arm64 unmaps kernel linear and vmemmap mapping while
->> also freeing page table pages if those become empty. Although this might
->> not be true for all other architectures, which might just unmap affected
->> kernel regions but does not tear down the kernel page table.
+On 12/06/25 15:46, Hrushikesh Salunke wrote:
 > 
-> ... that sounds like something we should be able to give a definitive
-> answer to?
+> 
+> On 11/06/25 14:17, Hrushikesh Salunke wrote:
+>>
+>>
+>> On 11/06/25 14:14, Vignesh Raghavendra wrote:
+>>>
+>>>
+>>> On 10/06/25 11:19, Hrushikesh Salunke wrote:
+>>>> AM64X SoC has one instance of PCIe which is PCIe0. To support PCIe boot
+>>>> on AM64X SoC, PCIe0 needs to be in endpoint mode and it needs to be
+>>>> functional at all stages of PCIe boot process. Thus add the
+>>>> "bootph-all" boot phase tag to "pcie0_ep" device tree node.
+>>>>
+>>>> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
+>>>> ---
+>>>> This patch is based on commit
+>>>> 475c850a7fdd Add linux-next specific files for 20250606
+>>>>
+>>>> Changes since v1
+>>>> As per feedback from Nishanth, changed the position of "bootph-all"
+>>>> tag, according to ordering rules for device tree properties.
+>>>>
+>>>> v1 : https://lore.kernel.org/
+>>>> all/20250609115930.w2s6jzg7xii55dlu@speckled/
+>>>>
+>>>>   arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso b/
+>>>> arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>>> index 432751774853..a7e8d4ea98ac 100644
+>>>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>>> @@ -46,6 +46,7 @@ pcie0_ep: pcie-ep@f102000 {
+>>>>           max-functions = /bits/ 8 <1>;
+>>>>           phys = <&serdes0_pcie_link>;
+>>>>           phy-names = "pcie-phy";
+>>>> +        bootph-all;
+>>>>           ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
+>>>>       };
+>>>>   };
+>>>
+>>> Are the patches for PCIe boot support merged to U-Boot or such other
+>>> bootloader repo?
+>>> No, they are not in the U-Boot yet. I will be posting patches for PCIe
+>> boot support for U-Boot this week.
+>>
+> 
+> I have posted Patch series for the PCIe boot support in Uboot.
 
-Agreed.
 
-arch_remove_memory() is the primary arch callback which does the unmapping
-and also tearing down of the required kernel page table regions i.e linear
-and vmemmap mapping . These are the call paths that reach platform specific
-memory removal via arch_remove_memory().
+Great, but dont you need bootph-all in dependent nodes as well such as
+serdes0_pcie_link pcie0_ctrl? how does this work otherwise?
 
-A) ZONE_DEVICE
+> 
+> 1.https://patchwork.ozlabs.org/project/uboot/
+> patch/20250612084910.3457060-1-h-salunke@ti.com/
+> 2. https://patchwork.ozlabs.org/project/uboot/
+> cover/20250612085023.3457117-1-h-salunke@ti.com/
+> 3. https://patchwork.ozlabs.org/project/uboot/
+> cover/20250612085534.3457522-1-h-salunke@ti.com/
+> 
+> 
+> Regards,
+> Hrushikesh.
 
-devm_memremap_pages()
-    devm_memremap_pages_release()
-        devm_memunmap_pages()
-            memunmap_pages()
-                arch_remove_memory()
+-- 
+Regards
+Vignesh
+https://ti.com/opensource
 
-B) Normal DRAM
-
-echo 1 > /sys/devices/system/memory/memoryX/offline
-
-memory_subsys_offline()
-    device_offline()
-        memory_offline()
-            offline_memory_block()
-                remove_memory()
-                    __remove_memory()
-                        arch_remove_memory()
-
-Currently there are six platforms which enable ARCH_ENABLE_MEMORY_HOTREMOVE
-thus implementing arch_remove_memory(). Core memory hot removal process does
-not have any set expectations from these callbacks. So platforms are free to
-implement unmap and page table tearing down operation as deemed necessary.
-
-ARCH_ENABLE_MEMORY_HOTREMOVE - arm64, loongarch, powerpc, riscv, s390, x86
-ARCH_HAS_PTDUMP              - arm64, powerpc, riscv, s390, x86
-
-In summary all the platforms that support memory hot remove and ptdump do
-try and free the unmapped regions of the page table when possible. Hence
-they are indeed exposed to possible race with ptdump walk.
-
-But as mentioned earlier the callback arch_remove_memory() does not have to
-tear down the page tables. Unless there are objections from other platforms,
-standard memory hotplug lock could indeed be taken during all generic ptdump
-walk paths. 
-
-arm64
-=====
-    arch_remove_memory()
-        __remove_pages()
-            sparse_remove_section()
-                section_deactivate()
-                    depopulate_section_memmap()
-                    free_map_bootmem()
-                        vmemmap_free()              /* vmemap mapping */
-                            unmap_hotplug_range()   /* Unmap */
-                            free_empty_tables()     /* Tear down */
-
-        __remove_pgd_mapping()
-            __remove_pgd_mapping()                  /* linear Mapping */
-                unmap_hotplug_range()               /* Unmap */
-                free_empty_tables()                 /* Tear down */
-
-powerpc
-=======
-    arch_remove_memory()
-        __remove_pages()
-            sparse_remove_section()
-                    section_deactivate()
-                        depopulate_section_memmap()
-                            vmemmap_free()
-                                __vmemmap_free()            /* Hash */
-                                radix__vmemmap_free()       /* Radix */
-
-        arch_remove_linear_mapping()
-            remove_section_mapping()
-                hash__remove_section_mapping()              /* Hash */
-                radix__remove_section_mapping()             /* Radix */
-    
-riscv
-=====
-    arch_remove_memory()
-        __remove_pages()
-            sparse_remove_section()
-                    section_deactivate()
-                        depopulate_section_memmap()
-                            vmemmap_free()
-                                remove_pgd_mapping()
-
-        remove_linear_mapping()
-            remove_pgd_mapping()
-    
-remove_pgd_mapping() recursively calls remove_pxd_mapping() and
-free_pxd_table() when applicable.
-
-s390
-=====
-    arch_remove_memory()
-        __remove_pages()
-            sparse_remove_section()
-                section_deactivate()
-                    depopulate_section_memmap()
-                        vmemmap_free()
-                            remove_pagetable()
-                                modify_pagetable()
-        
-        vmem_remove_mapping()
-            vmem_remove_range()
-                remove_pagetable() 
-                        modify_pagetable()
-
-modify_pagetable() on s390 does try to tear down the page table
-when possible.
- 
-x86
-===
-    arch_remove_memory()
-        __remove_pages()
-            sparse_remove_section()
-                section_deactivate()
-                    depopulate_section_memmap()
-                    free_map_bootmem()
-                        vmemmap_free()              /* vmemap mapping */
-                            remove_pagetable()
-
-        kernel_physical_mapping_remove()            /* linear Mapping */
-            remove_pagetable()
-
-remove_pagetable() on x86 calls remove_pxd_table() followed up call
-with free_pxd_table() which does tear down the page table as well
-and hence exposed to race with PTDUMP which scans over the entire
-kernel page table.
