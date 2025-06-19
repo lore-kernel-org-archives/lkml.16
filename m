@@ -1,96 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF43123B632;
-	Thu, 19 Jun 2025 12:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E21023E33D;
+	Thu, 19 Jun 2025 12:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336528; cv=none; b=WCfBcR58BEWDafSvQb9JqEYEOeBQZLpgz4o5dSbhHlIKzheCtsrQQMHsd/lx5aVFoT+TgW7Cqxp7Hj9Ae6M0IygBx6WtAU216Bvr/Mu9rOdqE6JgpWLtneO/S2UzfTpXDB/4+sAB+PmPmjVi1Oc49g7vdj5CGhUSKQg5BAsAal8=
+	t=1750336569; cv=none; b=mGTMSG3BuA2psz81howi1myt+3/ZGiCxuIKCgeiqakQ6b4ML5Z9Trs/RFwuzwdnhs6iuSYVBcHpvroHceRRNIab1Kysl3PLMv3/ICw86JGagQdn9S1soV773tPahiH7lGIA2swbRleIM68pETmvQnBc1MDHwMw4ng4VDwyqq0zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336528; c=relaxed/simple;
-	bh=Bn9+J3djp6e6zzB94LZaGwEGJMlBp1bLCzZlmgXL2z0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JgMpUhDSHzrIsQFYZvPVe08aZXLney/vE6NTfJS/wte7aYxQ6mSrOGOF3iSfN16/wcyC2ubValVaf+MV5cUSaYVZNaTkeOsIe32gZmZsPNUh+tYG6uMgoPoPHiL1OmdZef2qsJYhSDobMzsuOrjlzWlz45tBy6s2JroHZG1sTCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE3VroGC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750336569; c=relaxed/simple;
+	bh=/VJpImzxCawSJoEGcFeP8vUU7BIQ4dI0KhLFtoTx7bc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IXrzHpB/P8PIjbN/a4UWqyAzgBdHRBAGVz/Yic35gb1cIpiOPrXDKhVP8MKpT1Zo9EVSUE9jvhu+RdvT0lbwJSvnWGgHp2zgtAR6MD62YZpjbsSPNtKwflb62tzby6A4Cx9ameXzr2L7lVBsqw/Qe+Kov+raQG4rnaTEVdjz9/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1Y/hTGy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE3VroGC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE1BC4CEEA;
-	Thu, 19 Jun 2025 12:35:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1Y/hTGy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E63BAC4CEEF;
+	Thu, 19 Jun 2025 12:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750336528;
-	bh=Bn9+J3djp6e6zzB94LZaGwEGJMlBp1bLCzZlmgXL2z0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZE3VroGCyWOwTQiIJccS1qlSCnEpdHiNFzXETZYq8qb7W4mOHM/OWmUJ2/XXUdPvU
-	 qdbnH7DyXO7G630qbNyhpj+o+DxtTO/5UHNf6Hx9EJCllhoRA+r9vpP4nbXeygwKGH
-	 7BtO2nQ/UVeUGZuudpZTJJ6xnkjgJxlrO5dtNmeQKncq3e2CfQ0gCwgSgqGnsomDny
-	 NAYZAiEJFWsn40wavJZhe1DQgTowzvHbTH2Ymed1qX7WTB7vGmAAcll/FWmaN0Zhro
-	 szcFc7vMeBYwIsBAFroub548LxZGsjnpjnke77de8D8ZWJfEqRXb17Kac4nRaen8Nf
-	 S2GDNz5oY2CNw==
-Date: Thu, 19 Jun 2025 13:35:23 +0100
-From: Simon Horman <horms@kernel.org>
-To: jiang.peng9@zte.com.cn
-Cc: pabeni@redhat.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, jiri@resnulli.us, linux@treblig.org,
-	oscmaes92@gmail.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn,
-	yang.yang29@zte.com.cn
-Subject: Re: [PATCH net] net: vlan: fix format-truncation warnings in?
- register_vlan_device
-Message-ID: <20250619123523.GK1699@horms.kernel.org>
-References: <20250619144934348-KObAuS33g0yI9ulIjMjE@zte.com.cn>
+	s=k20201202; t=1750336568;
+	bh=/VJpImzxCawSJoEGcFeP8vUU7BIQ4dI0KhLFtoTx7bc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c1Y/hTGyqUZJGUEUZUgtVqR3Lm17+BC5/oGuq7U0MY9mRxFOpx8TksxBQFWzwj+wt
+	 jEy76Nl7yxYCsizm6p1ACyoakPYuXbaHyea8vjawdVUwUEXB67cLo2mywRNSRPnZZR
+	 jLvvtZc3noD9GTNNvl/P2i9D4sEs9Glcc1Hos1IRliawpbMyMzUncJM2dRGOg1R+wi
+	 WDyRAmJPSXOpjxL5i1hijcLxC1hQjvyrbcSxVaD0s8v3p9iR2sytHkUnZOi7d/HRBt
+	 0JzkIRCsINQ33XXUgJXpOXUCnrVVnQMN3OBk33vSIgVcw/c7e0wtYxln1z+nKqk7J2
+	 Hp79FJ1Q3IldQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uSEUw-008Fdk-8C;
+	Thu, 19 Jun 2025 13:36:06 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Sairaj Kodilkar <sarunkod@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Francesco Lavra <francescolavra.fl@gmail.com>,
+	David Matlack <dmatlack@google.com>
+Subject: Re: (subset) [PATCH v3 01/62] KVM: arm64: Explicitly treat routing entry type changes as changes
+Date: Thu, 19 Jun 2025 13:36:02 +0100
+Message-Id: <175033652435.3069576.5168060744496766238.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250611224604.313496-3-seanjc@google.com>
+References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-3-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619144934348-KObAuS33g0yI9ulIjMjE@zte.com.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, pbonzini@redhat.com, joro@8bytes.org, dwmw2@infradead.org, baolu.lu@linux.intel.com, seanjc@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, sarunkod@amd.com, vasant.hegde@amd.com, mlevitsk@redhat.com, joao.m.martins@oracle.com, francescolavra.fl@gmail.com, dmatlack@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jun 19, 2025 at 02:49:34PM +0800, jiang.peng9@zte.com.cn wrote:
-> From: Peng Jiang <jiang.peng9@zte.com.cn>
+On Wed, 11 Jun 2025 15:45:04 -0700, Sean Christopherson wrote:
+> Explicitly treat type differences as GSI routing changes, as comparing MSI
+> data between two entries could get a false negative, e.g. if userspace
+> changed the type but left the type-specific data as-
 > 
-> Building with W=1 triggers format-truncation warnings in the
-> register_vlan_device function when compiled with GCC 12.3.0.
-> These warnings occur due to the use of %i and %.4i format
-> specifiers with a buffer size that might be insufficient
-> for the formatted string, potentially causing truncation.
+> Note, the same bug was fixed in x86 by commit bcda70c56f3e ("KVM: x86:
+> Explicitly treat routing entry type changes as changes").
 > 
-> The original warning trace:
-> net/8021q/vlan.c:247:17: note: 'snprintf' output between 3 and 22 bytes into a destination of size 16
-> 247 | snprintf(name, IFNAMSIZ, "%s.%i", real_dev->name, vlan_id);
-> 
-> Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
+> [...]
 
-Hi Peng Jiang,
+Applied to fixes, thanks!
 
-name is passed to alloc_netdev(). Which is a wrapper around alloc_netdev_mqs()
-which includes the following check:
+[01/62] KVM: arm64: Explicitly treat routing entry type changes as changes
+        commit: 1fbe6861a6d9a942fb8ab8677ddf1ecb86b1af60
 
-	BUG_ON(strlen(name) >= sizeof(dev->name)); 
+Cheers,
 
-And the size of dev->name is IFNAMSIZ.
-
-So while I am very pleased to see efforts to address format-truncation
-warning - indeed I have made efforts elsewhere to this end myself - I don't
-think we can solve this problem the way you propose.
-
-
-Also, I suspect any work in this area will not be a bug fix, and
-thus more appropriate to target at net-next rather than net.
-
-	Subject; [PATCH net-next]
-
-And please make sure patches for net or next-next apply against
-their target tree: this patch applies to cleanly to neither.
-
-For more information on process for networking patches please see
-https://docs.kernel.org/process/maintainer-netdev.html
-
+	M.
 -- 
-pw-bot: changes-requested
+Without deviation from the norm, progress is not possible.
 
-
-...
 
