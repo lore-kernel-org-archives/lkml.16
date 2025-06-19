@@ -1,136 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7573085B2;
-	Thu, 19 Jun 2025 16:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D251E7C32
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348862; cv=none; b=koPXd8SztQk6RgZ40pUc4pFfVwbLEwf5TVbGgNH7fnMFN99AMEHk+RCgz4V6rjq9HkaRbLVgUwIFhw08rmJnfnEKtKxz4Z79EsG77SEPVKgGgq55XzRGaVprNCXNnYU2VAYp4vxllRzTFHold/M7zGLcv1Ua7ryUHQbBkTKM904=
+	t=1750348895; cv=none; b=A1glkOtwraImdEt4rzbLmxY8QP9EpXqvhFiVugxGflkrsMhPcBeXW3r/NpeBMpU2tnf2IyWw48fVRoCdM88NoyRp0NeoXOQgQCUTVRYZS+32auaLqISMic0wLh0vIFnzpFst/DYXGW4+pDVZ5HhW7iD6R7oJ/zgqlfztdJJsQqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348862; c=relaxed/simple;
-	bh=VezOswhZtjHjhkzkvqMrgVzG9huxnG7ySdnWirVyEYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g/F+kPJFWVCorjC/cdRUztsMoYQflJtnmXbni0Jk2uhsI2h8I0QjDLh5mIVjkeykBDcswMp9rdOJHVsbf9IsOVBtzjI9pYQlVrEZkty4NiW+/eGEMxpy1BjbFM3c6Gd0C+e6F9gGwSqf8GWmCYDss+KBtTw2bP/JxCo/WdtsBH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlTbdfTm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlTbdfTm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2D0C4CEEA;
-	Thu, 19 Jun 2025 16:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750348862;
-	bh=VezOswhZtjHjhkzkvqMrgVzG9huxnG7ySdnWirVyEYA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dlTbdfTmEw8bBM8smCGbXBd5GJlOtiUmfIDuzwtyBpRPkK1t4SGMc32dkf8gxxr6Q
-	 TEY2CGOJL7KDJUcaVlMMHsfIlaJvMt/5zAytMyZYCFQ8ppvkrwI8AoDeOORnEZdDVY
-	 KLRzYIpRSzH6iQwy/4Z/SFnfbTIIMoLW1GHETD3U/8/rdXEq9zHnx81drh399CM8KT
-	 +5fkgtlRPWUE6Xhw1wEHh7NjgUjTUR9qOi02nS/GwzR/b3x1lRKNmttRku5C4wn4yc
-	 hZuqxi/Uw7vrxp+Zh4oNUGgwkPolIAWxY+gZ/uIUJLStWYOvFpbHH8ebOcrxq52Gpv
-	 zBS6iJQPsFmqw==
-Date: Thu, 19 Jun 2025 09:01:00 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- workflows@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re: [PATCH v2 3/4] scripts/misc-check: check missing #include
- <linux/export.h> when W=1
-Message-ID: <20250619090100.39e37c5a@kernel.org>
-In-Reply-To: <20250601133230.4085512-3-masahiroy@kernel.org>
-References: <20250601133230.4085512-1-masahiroy@kernel.org>
-	<20250601133230.4085512-3-masahiroy@kernel.org>
+	s=arc-20240116; t=1750348895; c=relaxed/simple;
+	bh=rx45QH0iRei07Fniv/H9HO3HlRDHtCVONgmLzkkkiJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uvOQu4/2J7gsyBYg1QczIdkZ+wvV9B2tclJTFCrPhjvQaeeBklANI3AuoJ0EbQBWmqm2fCbzs+CMex15x4Sqm31/MgdozVGTxbCnuI8KfusqQYeYjTCHYQibTLqOQPEeIeIlccXfpX4Bu5A8zgPlK7qwWjV2wlMW8EimjPwAeOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F883113E;
+	Thu, 19 Jun 2025 09:01:12 -0700 (PDT)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0185B3F66E;
+	Thu, 19 Jun 2025 09:01:30 -0700 (PDT)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH 0/2] Improve POE handling for uaccess
+Date: Thu, 19 Jun 2025 17:00:40 +0100
+Message-ID: <20250619160042.2499290-1-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun,  1 Jun 2025 22:31:29 +0900 Masahiro Yamada wrote:
-> The problem was described in commit 5b20755b7780 ("init: move THIS_MODULE
-> from <linux/export.h> to <linux/init.h>").
-> 
-> To summarize it again here: <linux/export.h> is included by most C files,
-> even though only some of them actually export symbols. This is because
-> some headers, such as include/linux/{module.h,linkage}, needlessly
-> include <linux/export.h>.
-> 
-> I have added a more detailed explanation in the comments of
-> scripts/misc-check.
-> 
-> This problem will be fixed in two steps:
-> 
->  1. Add #include <linux/export.h> to C files that use EXPORT_SYMBOL()
->  2. Remove #include <linux/export.h> from header files that do not use
->     EXPORT_SYMBOL()
-> 
-> This commit addresses step 1; scripts/misc-check will warn about *.[ch]
-> files that use EXPORT_SYMBOL() but do not include <linux/export.h>.
-> This check is only triggered when the kernel is built with W=1.
-> 
-> We need to fix 4000+ files. I hope others will help with this effort.
+This short series attempts to approach POE (Overlay) faults consistently
+w.r.t. uaccess. We currently assume that spurious Overlay faults are
+handled by retrying the access [1], but this isn't the case.
 
-IIUC you made the kernel spew nearly 5000 warnings on every W=1 build
-to "encourage" others to help fix a fairly innocuous problem. 
-I appreciate the work that goes into separating the headers but it's
-hardly urgent enough to force others to scroll thru 5k warnings.
+Patch 1 ensures that spurious Overlay faults are indeed ignored. This
+being done, it typically isn't worth using an ISB when writing to
+POR_EL0. Patch 2 removes the remaining ISB in the signal handling code.
 
-Please LMK if I'm missing some context here, otherwise I think this is
-quite antisocial behavior, and the warnings should go back to W=2 until
-someone actually cares to fix most of them.
+Patch 1 changes the fault handling logic to rely solely on POR_EL0 and
+VMA metadata to determine if a pkey fault occurred, instead of the
+Overlay bit in ESR_EL1. The rationale is detailed in that patch; it
+is worth noting that powerpc made a similar change but for a different
+reason [2].
 
-Happy to hear from others.. CC: workflows
+[1] https://lore.kernel.org/linux-arm-kernel/ZtYNGBrcE-j35fpw@arm.com/
+[2] https://lore.kernel.org/all/20200505071729.54912-3-aneesh.kumar@linux.ibm.com/
+---
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Will Deacon <will@kernel.org>
+---
 
-> diff --git a/scripts/misc-check b/scripts/misc-check
-> index 21551d721079..edc0e44d96de 100755
-> --- a/scripts/misc-check
-> +++ b/scripts/misc-check
-> @@ -9,4 +9,47 @@ check_tracked_ignored_files () {
->  		sed 's/$/: warning: ignored by one of the .gitignore files/' >&2
->  }
->  
-> +# Check for missing #include <linux/export.h>
-> +#
-> +# The rule for including <linux/export.h> is very simple:
-> +# Include <linux/export.h> only when you use EXPORT_SYMBOL(). That's it.
-> +#
-> +# However, some headers include <linux/export.h> even though they are completely
-> +# unrelated to EXPORT_SYMBOL().
-> +#
-> +# One example is include/linux/module.h. Please note <linux/module.h> and
-> +# <linux/export.h> are orthogonal. <linux/module.h> should be included by files
-> +# that can be compiled as modules. In other words, <linux/module.h> should be
-> +# included by EXPORT_SYMBOL consumers. In contrast, <linux/export.h> should be
-> +# included from EXPORT_SYMBOL providers, which may or may not be modular.
-> +# Hence, include/linux/module.h should *not* include <linux/export.h>.
-> +#
-> +# Another example is include/linux/linkage.h, which is completely unrelated to
-> +# EXPORT_SYMBOL(). Worse, it is included by most C files, which means, most C
-> +# files end up including <linux/export.h>, even though only some of them
-> +# actually export symbols. Hence, include/linux/linkage.h should *not* include
-> +# <linux/export.h>.
-> +#
-> +# Before fixing such headers, we must ensure that C files using EXPORT_SYMBOL()
-> +# include <linux/export.h> directly, since many C files currently rely on
-> +# <linux/export.h> being included indirectly (likely, via <linux/linkage> etc.).
-> +#
-> +# Therefore, this check.
-> +#
-> +# The problem is simple - the warned files use EXPORT_SYMBOL(), but do not
-> +# include <linux/export.h>. Please add #include <linux/export.h> to them.
-> +#
-> +# If the included headers are sorted alphabetically, please insert
-> +# <linux/export.h> in the appropriate position to maintain the sort order.
-> +# For this reason, this script only checks missing <linux/export.h>, but
-> +# does not automatically fix it.
-> +check_missing_include_linux_export_h () {
-> +
-> +	git -C "${srctree:-.}" grep --files-with-matches -E 'EXPORT_SYMBOL((_NS)?(_GPL)?|_GPL_FOR_MODULES)\(.*\)' \
-> +	    -- '*.[ch]' :^tools/ :^include/linux/export.h |
-> +	xargs git -C "${srctree:-.}" grep --files-without-match '#include[[:space:]]*<linux/export\.h>' |
-> +	xargs printf "%s: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing\n" >&2
-> +}
-> +
->  check_tracked_ignored_files
-> +check_missing_include_linux_export_h
+Kevin Brodsky (2):
+  arm64: poe: Handle spurious Overlay faults
+  arm64: signal: Remove ISB when resetting POR_EL0
+
+ arch/arm64/kernel/process.c |  5 +++++
+ arch/arm64/kernel/signal.c  |  7 +++++--
+ arch/arm64/mm/fault.c       | 30 +++++++++++++++++++++---------
+ 3 files changed, 31 insertions(+), 11 deletions(-)
+
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+-- 
+2.47.0
 
