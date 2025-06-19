@@ -1,186 +1,131 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3250278F4A;
-	Thu, 19 Jun 2025 13:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E59C242D6B;
+	Thu, 19 Jun 2025 13:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338741; cv=none; b=SqKTgnq3lkNMXVAKkUi7xyE9BvG2rzeGro8c7TpZ3ukJjwZ35L6ghkbwYhO4t+jwUMYWR81Kivxagkdy8eywJM1uRcCMNP6MnynlLv+kLkov5cqi7/R6PASXZuA4bnVM5vDkBreyiPQacvcTGr/VJ3eB5RFprU1UBfVS3VcMDJY=
+	t=1750338761; cv=none; b=u8ORTNZ9k9LFCGHJa2ZKP0HTMKqMAFaSj0Cw5UlQe/jT5SJTDxOxNpAAPLGHwmuY3dDaCfX+Tx+POKH5oR0ho+8NSeyJK2cZ6zSr7qyHfYFGENI4UCqbOL51Z4eB7tBc9ubUJVH4k7py4sXsr56P+k6pmhX9jHmdLqraHwu6SPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338741; c=relaxed/simple;
-	bh=ldNnVS970F2F5ruzbqCTs7m0omf/SRAAeBdBWihXSYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aI5n2OT7UaaFUmQKSGoW5cpfk26sOMjCr31oei0hcTzXO71B/AQIE5//jDq/2rRDhpZm9VCUhedCepdGszHPfpf7zwXiOkE/u38Vv+/A3k8UeZdwky7Fzktc1IFqnpBvmMB4ZpieOnjbc/eD0CcaQ8O5P29dFzyPZU5zZo7NPBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d9IP8OvT; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750338761; c=relaxed/simple;
+	bh=Ork85X//Hh9e5Enb36KwQRqXelZ7oSr9ZRWSSzEpQ7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aTq/FrHVxyD1i4jAvo4AuNnsYgHksCKxKnNRQGQfggjfgEDh4sTaXRg+fe73z59zAm+XLtcHWQj1tHlEDWJ2Vc9kVznJqH8I0ONiOMRF3VyJEyYesCuMrUMC5BQGtXRhSEggvDAQygf7nHFi62Ow09QD0KkbWpSQUdgcNXxlGMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iTr9XAn4; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9IP8OvT"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235e1d4cba0so6579885ad.2;
-        Thu, 19 Jun 2025 06:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750338739; x=1750943539; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RqWV9JP+McBtH9eFIQdmAQmPNwQM5tz55iqZfgdc/80=;
-        b=d9IP8OvT4dcPiO2jT2gn2U1/yt0ouya9UmXGyLmNGPQ+OHPQYaq35DJ41pixQdJzCZ
-         jgk4wbKBjNBxxx5uKARpVQ70xaQXuqNFRhAFm2YTfEpsclztKR6NbASOGdK2UqWtgXBB
-         A4o/ByQcURzteaQDRBQiwot5b8zuAnoKjMu5QCV/elNJS1ykM87teZ4+HS0t6cy1ER1z
-         +YkUyYfl+wG7IPZznd0yKBnVVj4nvwxMp/FmYptA983A+tKe8YC9kPbVzLklEtkxswlj
-         Vwqs28S9A9PjEpfAZWrWk6NhJa9mhPpICcdGfNCj52gtwKi/IkCJFX+WUSz5yt/sg7hg
-         eG9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750338739; x=1750943539;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RqWV9JP+McBtH9eFIQdmAQmPNwQM5tz55iqZfgdc/80=;
-        b=grDfxnnvDQQgGnbUfmRz4rWz9+6v2ZjBjrxpqNbzL+13uTUovoll3X4AnSXWpvpU8e
-         zq/9bZjdoLZVtzVRG8TULP5JiZLn7jy5/gnDOQSzhr1DYwLI1dnCtYjkyzhOHfocfOQn
-         0gKRpz+C67GUccFm4dqhoXq1vQT64NHPO4bYVVsubBcsikfH8Xmao3/KFPLYPOyrLXQ0
-         vwM7lQ/rKLzzWt0R+VSxGArilr4AfWMvTJbs4gq78C96sWKA7qHr8UU1GcO6JvpAcpW6
-         ocaMaqVRunH8MK4ysDJJyth1CS0+pzmOTCQE9KLqlxBi5Rx8oYbPHPu1raxJqvljNXfx
-         Wq9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVoWmXgLrwYTo+o6FE00sGh9eBNUhRl2LDVRXUkveWZBPnQy8MvusmN4TtOjkJ4CcH3i0njOqhvsth3Hw==@vger.kernel.org, AJvYcCW1KM6uB67MgBLvwuVyiJPTnNugd6h+m7aDO8397g0UnHX6vbpUYftT3tEJG0Rrru9OXzC/PWF0iqTxyDM+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmvs3ofFIDH8ocSPIcgcq+hePlR8Br/+0jK4T69jsZoiA9SNrv
-	7gKeKACk0tt5OEFUKxNP1E+At0lo9foUEjmb/LUkgWc5e+BdUBVQ0vUr
-X-Gm-Gg: ASbGncvfAr0WA+G6G2cd/K4qw/Dihr3PuGwvaPRwuDaSiqoA0Hitnag27q09glYBMCM
-	g0SFkjdjYNS6pFbzMgZjPkyL2bnVhBuMyRvdzsElLIMRu8tHqbOi04qxLmmmSsDmRCknSIZoryN
-	pgQ8eRz/P9CW7X/OF4w1KUupoOqxtch3juzZ16O6dUmRdJsidhX1ljE9YlR9LRs2kBHytT4KQ3g
-	0NcoZbh3Dc8XI55oezyP5S7I4s8vpjazLrDVg20lYQounWQjSoIr+mH0bk3Y/Hc1dBKgvKt4864
-	jl0mylKKswZJZP02AnvpPUfHDAfQB1Hh3FwzWRI0apIA4jb5rcgM01rRCwT0Y+jaPV7P
-X-Google-Smtp-Source: AGHT+IHpGCeQa4EgCd+bXQDWfWH00aS/Vlp+Xmg8MpVwaUtOQ6Vyja4Guh5GMlgXlnR5Y49u1nolUg==
-X-Received: by 2002:a17:903:46cb:b0:234:f182:a734 with SMTP id d9443c01a7336-2366b13c96dmr314421245ad.31.1750338739216;
-        Thu, 19 Jun 2025 06:12:19 -0700 (PDT)
-Received: from zinc ([182.216.63.93])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2366e7c0560sm100206825ad.76.2025.06.19.06.12.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 06:12:18 -0700 (PDT)
-Date: Thu, 19 Jun 2025 22:12:13 +0900
-From: Kisub Choe <kisub.choe.0x1@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: sm750fb: rename 'proc_setBLANK'
-Message-ID: <aFQMrXRzui58krqA@zinc>
-References: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
- <2025061817-jacket-nacho-50d6@gregkh>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iTr9XAn4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750338757;
+	bh=Ork85X//Hh9e5Enb36KwQRqXelZ7oSr9ZRWSSzEpQ7k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iTr9XAn4jvk5BZir348XWWxi2oAsbZH9f8i1/44hpdnevwibIx6O4tBTxRUgIKLoM
+	 Slm1yEbcZ/hQxdJ5C6+27qnwa9PLfIpphg1pLqFPlNof60zCpTn9SBHhI4tuVJsLAE
+	 5S3Fi2SZU5uY6ab1W+L1pYX+Ml+aDksUPJlfr6hVBzIn2fTZi20nuJMRAu88oitk2n
+	 VajsAfEgnomxFXn0dGdWKYBdxshHPz3ksTXz6ddkuhu99JwHLIvG2FWs3cEmZqlHdc
+	 6Irkih+YYpOwBr6BsGkFrXch1qK7Nau4oSHr2vGrAxBEf9hDmg1LtaGEUL9z7jCenx
+	 xAvAqKWWUY4gQ==
+Received: from benjamin-XPS-13-9310.. (unknown [IPv6:2a01:e0a:120:3210:ba4e:a6e2:6d63:7f02])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0FC0C17E05C1;
+	Thu, 19 Jun 2025 15:12:37 +0200 (CEST)
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: joro@8bytes.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	nicolas.dufresne@collabora.com,
+	jgg@ziepe.ca
+Cc: iommu@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	kernel@collabora.com,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH v3 0/5]  Add support for Verisilicon IOMMU used by media codec blocks
+Date: Thu, 19 Jun 2025 15:12:21 +0200
+Message-ID: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025061817-jacket-nacho-50d6@gregkh>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 04:26:10PM +0200, Greg KH wrote:
-> On Wed, Jun 18, 2025 at 11:15:55PM +0900, Kisub Choe wrote:
-> > Rename 'proc_setBLANK' to 'proc_setBLANK' to
-> 
-> That doesn't rename anything :(
-Rename 'proc_setBLANK' to 'proc_set_blank' to
-> 
-> 
-> 
-> > conform with kernel style guidelines as reported by checkpatch.pl
-> > 
-> > CHECK: Avoid CamelCase: <proc_setBLANK>
-> > 
-> > Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
-> > ---
-> >  drivers/staging/sm750fb/sm750.c | 4 ++--
-> >  drivers/staging/sm750fb/sm750.h | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-> > index 1d929aca399c..bb2ade6030c2 100644
-> > --- a/drivers/staging/sm750fb/sm750.c
-> > +++ b/drivers/staging/sm750fb/sm750.c
-> > @@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
-> >  	pr_debug("blank = %d.\n", blank);
-> >  	par = info->par;
-> >  	output = &par->output;
-> > -	return output->proc_setBLANK(output, blank);
-> > +	return output->proc_set_blank(output, blank);
-> >  }
-> >  
-> >  static int sm750fb_set_drv(struct lynxfb_par *par)
-> > @@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
-> >  	crtc->ypanstep = 1;
-> >  	crtc->ywrapstep = 0;
-> >  
-> > -	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-> > +	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-> >  				 hw_sm750le_set_blank : hw_sm750_set_blank;
-> 
-> Why do we even need this function pointer?  Why not just do the check
-> above when it is called instead of this indirection?
-> 
-> thanks,
-> 
-> greg k-h
+Hi all,
 
-Dear Greg,
+This patch series adds support for the Verisilicon IOMMU, which is found in front
+of hardware encoder and decoder blocks in several SoCs using Verisilicon IP. 
+A first implementation of this IOMMU is available on the Rockchip RK3588 SoC.
 
-Here is the updated patch with revised commit message. No code changes.
+Rockchip provides a driver for this hardware in their 6.1 kernel branch:
+https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/iommu/rockchip-iommu-av1d.c
 
-Regards,
-Kisub Choe.
+This series includes:
+- a new binding for the Verisilicon IOMMU
+- a basic driver implementation
+- DT updates for RK3588
 
-From 9c32c6f5091c8babe54bfde7b3a6de47d9026a55 Mon Sep 17 00:00:00 2001
-From: Kisub Choe <kisub.choe.0x1@gmail.com>
-Date: Wed, 18 Jun 2025 22:55:00 +0900
-Subject: [PATCH] staging: sm750fb: rename 'proc_setBLANK'
+The driver was forward-ported from Rockchip’s 6.1 implementation, 
+the prefix was renamed to vsi for generality, and several fixes were applied.
 
-Rename 'proc_setBLANK' to 'proc_set_blank' to
-conform with kernel style guidelines as reported by checkpatch.pl
+AV1 decoding was tested using the stateless VPU driver and Fluster.
+The test results show a score of 205/239, which confirms that no regressions
+were introduced by this series.
 
-CHECK: Avoid CamelCase: <proc_setBLANK>
+Feedback and testing welcome.
 
-Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
----
- drivers/staging/sm750fb/sm750.c | 4 ++--
- drivers/staging/sm750fb/sm750.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+changes in version 3:
+- Change compatible to "rockchip,rk3588-iommu-1.2"
+- Fix compatible in .yaml
+- Update DT and driver to use "rockchip,rk3588-iommu-1.2" compatible
+- Set CONFIG_VSI_IOMMU as module in defconfig
+- Create an identity domain for the driver
+- Fix double flush issue
+- Rework attach/detach logic
+- Simplify xlate function
+- Discover iommu device like done in ARM driver
+- Remove ARM_DMA_USE_IOMMU from Kconfig
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 1d929aca399c..bb2ade6030c2 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
- 	pr_debug("blank = %d.\n", blank);
- 	par = info->par;
- 	output = &par->output;
--	return output->proc_setBLANK(output, blank);
-+	return output->proc_set_blank(output, blank);
- }
- 
- static int sm750fb_set_drv(struct lynxfb_par *par)
-@@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
- 	crtc->ypanstep = 1;
- 	crtc->ywrapstep = 0;
- 
--	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-+	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
- 				 hw_sm750le_set_blank : hw_sm750_set_blank;
- 	/* chip specific phase */
- 	sm750_dev->accel.de_wait = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-diff --git a/drivers/staging/sm750fb/sm750.h b/drivers/staging/sm750fb/sm750.h
-index 9cf8b3d30aac..40051798efbf 100644
---- a/drivers/staging/sm750fb/sm750.h
-+++ b/drivers/staging/sm750fb/sm750.h
-@@ -170,7 +170,7 @@ struct lynxfb_output {
- 	 */
- 	void *priv;
- 
--	int (*proc_setBLANK)(struct lynxfb_output *output, int blank);
-+	int (*proc_set_blank)(struct lynxfb_output *output, int blank);
- };
- 
- struct lynxfb_par {
+changes in version 2:
+- Add a compatible "rockchip,rk3588-av1-iommu"
+- Fix clock-names in binding 
+- Remove "vsi_mmu" label in binding example.
+- Rework driver probe function
+- Remove double flush
+- Rework driver internal structures and avoid allocate
+  in xlate function.
+- Do not touch to VPU driver anymore (path removed)
+- Add a patch to enable the driver in arm64 defconfig
+
+Benjamin Gaignard (5):
+  dt-bindings: vendor-prefixes: Add Verisilicon
+  dt-bindings: iommu: verisilicon: Add binding for VSI IOMMU
+  iommu: Add verisilicon IOMMU driver
+  arm64: dts: rockchip: Add verisilicon IOMMU node on RK3588
+  arm64: defconfig: enable Verisilicon IOMMU
+
+ .../bindings/iommu/verisilicon,iommu.yaml     |  71 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  11 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/iommu/Kconfig                         |  11 +
+ drivers/iommu/Makefile                        |   1 +
+ drivers/iommu/vsi-iommu.c                     | 874 ++++++++++++++++++
+ 7 files changed, 971 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
+ create mode 100644 drivers/iommu/vsi-iommu.c
+
 -- 
-2.34.1
+2.43.0
 
