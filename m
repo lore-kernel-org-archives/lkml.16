@@ -1,89 +1,70 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5261DB92C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACACC226D0B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750343574; cv=none; b=FHN12jebm9ekuLHzMK3CmA0Nvk+ZwymmdkjzHmZ288j2WnutTGwaQgsCh3Yg+grPI/pDDoRrbjNf/pHbmb3Kg0ABv1TQ++pnijnqZdyudDVsLPYx+eUkeRjiUk8pSQqVg9tglEaMa0rPs0m0dDshzvtwOXCpxMAVkL7NRTM3c3k=
+	t=1750343578; cv=none; b=OWgPw+2kUistwk0Z7lxNa66MeYPg7rOwofrv1CNQw5tA2z8B/qW50Gy/ZZcSNbs4cFGWUqWT9u2Xl4h/2jEarkPrMhMvlYmfvD7ZifeAoIOjF/KnagATZNo49PusgJmDfpudgB4AVg1Z06VnKp478cGleuZ+7y+ZsIoKfjGVV2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750343574; c=relaxed/simple;
-	bh=f9InoU/zIyvqU5XW8HXwiQiJTHhL6rglkSPoRNyO+GQ=;
+	s=arc-20240116; t=1750343578; c=relaxed/simple;
+	bh=nmwWIDW+odOafOSbSvyT3m43z/PXmHJf54qTm5PFBpM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9HakoLgDp+i6rvwq5vTkdXuP9V/MvUA1SbZbW83189o98xFJPsqTemYXKUGvteYVsPmFIxPG/FEttru2sAtrOxgJa9w5opImzkJVdrD22xSWvQHxRh0zmy0UfGR3BREYaugRpCDOE4uiV1/qf5NrqC14iwE5U9BUVpXcccTadM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=GvXQchXE; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	 Content-Type:Content-Disposition:In-Reply-To; b=R149W9d8bnr/6TmwDmC7HFcdk+03cpUq1IjgBk2sW/730yaftrzlb//WFo5djahOEgSj4gSZAn11jZujISxOOfGzVKPrh6mk1SuRMhLNFjAYjh3lBt92703VYCzV+lxdj7/LI30qwQZAdU6QaJy80AIpIcHqcd4ixzmiO0SqkiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zwoy2pYl; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="GvXQchXE"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fada2dd785so9714556d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zwoy2pYl"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60d63174f05so194509eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1750343571; x=1750948371; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750343576; x=1750948376; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FOkFLnrJzZMHzNUSh+Y/TNE7FFzC3Os6Y5olMIbxKDs=;
-        b=GvXQchXEl3AWSvPRrw9kXJ5LSbai5gl1iJhKUTYSPDFknEu6VwyoY8h95pL20AuqNf
-         q48Rh2R3Wd2qq+OL5Gr4ePzvQzygkDd2piJ2NygAy0j5gNDXULMQSEYYrZn2t+hzTtVA
-         jJSaW184dqfUvXzz0nQzQAjsySZ3fKDwskAxD2Sq16E/Za5iTDrx4ZiILwOGoVtkub6g
-         2flxoGZnIcwVBXSkafstycMYf2P9A05Ah4a5ESeBE9wsXWC1MAGsDnPK10GwchPtKVwu
-         fADkoVMcCZUdrpCoZYwilXSXTawvFh6MnqnFRwFkTsj9t6fR/uk2cYRlQZD4jIhtJuhK
-         gG+Q==
+        bh=se2zPaRHsPHVWSLq2M50PUR0Qrr63lHfyYD9MBXQ1JU=;
+        b=Zwoy2pYlWFW1I+yo3I/Hv7uolO/lCEhd8dWMiun+yIBwMkDIkwqGgH0+6GWUmTlPNY
+         /hfGLemwMZ9DTFgsYjtXtLPlpNQMCC5tpSgpjiEeQ+FNM/87wdv/czr2NKrDA+WcP4PE
+         +xPIdeF3TuvDjAx0Qsq9dQSLTjQ9x2qDA53alBkgcmpgWc5f9stC2rbqcxrZQY2uGzMr
+         LpuXqr/73YtcVAqndwA6DRK3lDeHoshIl4YZmppxTLc9K+Xwn/L0ZyO3+G6DV6rZFzgU
+         mbAk/TsugUmMesYkfL4pdp/sRPgLy+78JRqcMKlC/pkAuTMtFECKeV+wNxUuRXAMcGo8
+         8UUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750343571; x=1750948371;
+        d=1e100.net; s=20230601; t=1750343576; x=1750948376;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FOkFLnrJzZMHzNUSh+Y/TNE7FFzC3Os6Y5olMIbxKDs=;
-        b=VQOGaCvaeS5A9Q0jKn3fSVb+gYck1sPLAJ11XiKQ7oiJSTZEkJvKyQa1pmWhqMDcRh
-         Hk6KOwnQ0nYoCdBms4OENRd9n5spkpr00gKxvL3B6axFwCUUwi2+MNMfdMdIK91z7KRH
-         9ZcgdDXnzVaMEeDwliB7mDbSzoknzKjnUupylK1kxGsrl0oz7eVCaxhgZ/waTM843BMV
-         GRLRNRoXOkfxWG9Ga+KAqDGnSe1FPLZtK1pyDLd6T/ZwTmcjVxMix0Fk0QK9nN1515wp
-         rP+SO40nIfe+26koqNzUfWucrDtrDcsOe3paG9oM4ymiXwy7gFZFEXOQmkdhgInOVUyF
-         Vsqw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0d38kFZCMg0qRekr5VmtQsd9Ht1JTy5Vhvoixbh2wgdQsbdFbYObv5kkIj9R8CGCVSkpDVGsgo9s1zsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAr8cSneh/bBYM/D8H1GfkhL8H7P8GfwfdRj0Bg3gP9BrvmMVe
-	+5kgBydNOGv5ICxOhFbS0dxO8n7needa+wyuzBDOKu/YeXOIozGTmC8ZAPOMcgbzsw==
-X-Gm-Gg: ASbGnctTlvxJRdXxNEmnwL5ef8kANVot6fcrnDo4DBVNMxi8/6C4yUaM38w1FdsyZOc
-	+v8XQKQHmRKIby3HnaM18Q+S2xxPH35z/K7MMKlbejU4gasCytyedt9vDNPCqSwFV29iHjl14sa
-	vXwq5cY3T4PC9QZ2P+EIYoflZEHVYFge9R35HBrmkhYSc6CIJMSuCqebEsORmtl/j9v5Se6Mklk
-	OhspjVAFxm3MeHslbvguFRJXuD4YAvK4wWI37o7DxNZn1zDZHeb2rjOFhvRUaJtPAVEGe5LhidS
-	hxwIYpFBWH4nk5j/Y9uJuY7ro6gl4orT90+bvuw5Z0WKT4fnGgDnYfFlYNkjDGQ=
-X-Google-Smtp-Source: AGHT+IHxQnCf/LYNTmc/z8v+E308ymSUGqUyJ6EPuGPk72H+rJoxyGsRQCNrsDtAHmaoQiC2Ino8aA==
-X-Received: by 2002:a05:6214:19c2:b0:6e8:98a1:3694 with SMTP id 6a1803df08f44-6fb47772defmr361361336d6.8.1750343571359;
-        Thu, 19 Jun 2025 07:32:51 -0700 (PDT)
-Received: from rowland.harvard.edu ([2601:19b:681:fd10::9ca8])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd095ca02bsm243696d6.125.2025.06.19.07.32.49
+        bh=se2zPaRHsPHVWSLq2M50PUR0Qrr63lHfyYD9MBXQ1JU=;
+        b=Op6fgrOLJA1kFFfbihlbsJG2+M8MNnTbRMCVMv9AG892oppGLu5qox9sIXVB24+XW6
+         mikeE7EOutc1Alec6k3MpazlEMzaMaU25hTGOmp6rXmAz5kD+xhERf9tQITWTRmdawU0
+         BFkw3RsGTZ1A+ojcGE8EDvMp2ECNqBeJG/u3Y1v6KfHb7/1S9yjw8ivPtKWHkqYc2/ip
+         ojtqXmGX9k8Nyegcyi38HGlrFd7Eq/0jHblnTJNpWUbf2KR70tZBeQUTz7qM+Z3IEQG4
+         GIBGCuPnQLOmy7YaxW4f4zOT8D4+GBkKLtuESU+j8GoZLNlliy5qJWprisBjZtWAGK1u
+         rYYg==
+X-Gm-Message-State: AOJu0YwF4Uh0twMfyB4zleWNhHIaeClOw8ysqgLQEGBNzyI3aWr6HCFn
+	cYOp9Zv16Y58pg/xWfuzswHvIch7S9YOg2yKa6/RKpoukSOpYxucNfOe2Cz8BwTVrwk=
+X-Gm-Gg: ASbGncsiobDhWqXYdSaiR5Dgk0DT6y0lnXeZrdn195RCkrJsxMi0opydxLOYfHiK17A
+	HLD80IoFVVxy45/9umpGSlUp5LAH8OGG7YJV85uOzn3M0FEZS4wHXHtTXDPuMqTl/2gwF2GCFZs
+	YdG4baFtLzbobG3PfFfhprSbKab5sMxV3XvS0XdmcAuw8FN7SH2xRlr8tI186AOrGp44vF+Jop8
+	Mg0t04eQUqAAf+J511FS2oYO1WB1RYYGypsFt9BmwrtoUccRXbs2gfiexoROyBif4CQwz5IIhSY
+	RfakQUNQNXrLACQB2eXAec6KW9FMmv/tl4pJkj4px7V69Jq0dktfovzeGshDe15d5RhTGA==
+X-Google-Smtp-Source: AGHT+IGaZ2fGL+aupK3bJuZPDe415AnPYcuPEQInGDzraWvR8NsbfbrInyqqD6LAZae1EYAXTK0/5g==
+X-Received: by 2002:a05:6870:468b:b0:2c2:5c26:2d8e with SMTP id 586e51a60fabf-2eaf06ae000mr13281654fac.16.1750343575695;
+        Thu, 19 Jun 2025 07:32:55 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:67e2:ece8:b2f5:738f])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eba6251d4csm354326fac.44.2025.06.19.07.32.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:32:50 -0700 (PDT)
-Date: Thu, 19 Jun 2025 10:32:47 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Thomas Haas <t.haas@tu-bs.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	lkmm@lists.linux.dev, hernan.poncedeleon@huaweicloud.com,
-	jonas.oberhauser@huaweicloud.com,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-Message-ID: <6ac81900-873e-415e-b5b2-96e9f7689468@rowland.harvard.edu>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
- <aEwHufdehlQnBX7g@andrea>
- <9264df13-36db-4b25-b2c4-7a9701df2f4d@tu-bs.de>
- <aE-3_mJPjea62anv@andrea>
- <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
- <aFF3NSJD6PBMAYGY@andrea>
- <595209ed-2074-46da-8f57-be276c2e383b@tu-bs.de>
+        Thu, 19 Jun 2025 07:32:55 -0700 (PDT)
+Date: Thu, 19 Jun 2025 17:32:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Philip Radford <philip.radford@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	cristian.marussi@arm.com, luke.parkin@arm.com
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: Add debug decrement counter
+Message-ID: <b44393b8-369b-4500-abf3-13e98624e233@suswa.mountain>
+References: <20250619122004.3705976-1-philip.radford@arm.com>
+ <20250619122004.3705976-2-philip.radford@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,19 +73,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <595209ed-2074-46da-8f57-be276c2e383b@tu-bs.de>
+In-Reply-To: <20250619122004.3705976-2-philip.radford@arm.com>
 
-On Thu, Jun 19, 2025 at 04:27:56PM +0200, Thomas Haas wrote:
-> I support this endeavor, but from the Dartagnan side :).
-> We already support MSA in real C/Linux code and so extending our supported
-> Litmus fragment to MSA does not sound too hard to me.
-> We are just missing a LKMM cat model that supports MSA.
+On Thu, Jun 19, 2025 at 12:20:01PM +0000, Philip Radford wrote:
+> Create scmi_dec_count function to decrease any of the Arm SCMI
+> debug counters
+> 
 
-To me, it doesn't feel all that easy.  I'm not even sure where to start 
-changing the LKMM.\
+Please mention that "There is already a scmi_inc_count() function but no
+decrement function."  Otherwise everyone will have to look it up to
+verify that it exists.  Please put a period on the end of your sentences.
 
-Probably the best way to keep things organized would be to begin with 
-changes to the informal operational model and then figure out how to 
-formalize them.  But what changes are needed to the operational model?
+regards,
+dan carpenter
 
-Alan
