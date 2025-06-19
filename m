@@ -1,66 +1,67 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A174728CF49
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E10728DF23
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344931; cv=none; b=d75bXzv/EEp/d20VW3jq6iZgwf29pPBCFfpBYZ/sO3cDlqTTppzTmrJBFhMgFJ6P4xqBTqHHoSEC6xqcgSUl3k6bLLK5I5A6/ATZlY5epDJiPi/JX8QwokJ1+xWNDyeMEFyQ7SaHBGvn0WFlb3DxlgyznKWAUReXxwZS0MvlvOs=
+	t=1750344935; cv=none; b=qf6Y2QT6Jn+CQsJYNl0y5LpBvSdHmsFTqFoPQvi0g3p3k6EbINW/Iu25vg2Q7oNGkdSSzVKjckhXeZ10LSEB1fdPzj4SaxoJyjFm/DNP264SmTU7kikgbsMUGVIXDcugP42z/r6cmKD5Zo4aLD9qLCPuK8rAlME0vrugUAbpd5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344931; c=relaxed/simple;
-	bh=4C4/BzYVvqykLCWqBbtexksZlDrp0KmcIoZ0MxhlLow=;
+	s=arc-20240116; t=1750344935; c=relaxed/simple;
+	bh=iDLIU8cKqvcbXUMIYZ0LyAHF4U27oo4VJDAhYAedWfo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aC/btg0ncIRa+PG1QsJHNOVszY9nLwM1L3gndG11UdGESlPBpQfm5rGutZOSHevr28r1XsvESaNdTRxdbh7Ro1K6Ylci0/PNnUl3dBb2wQEyztgYz/D7GwDZqdZCJxI8ziBRRJSxtc5C/bEp01gX/s8/wGrNkpmRfbksffVa3Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n5NbvsIW; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:To:Cc; b=E9IjrCn8QxKy1pK34hKmsT8EadpLh+zs7KXIVRBIiqtxL4J2m5GiVLC/OTD6Ul3sP7BLerrTMwdufzGaNDStssca7nBfSp6U/l38kpAjUlpH+3Cq/29C6w3NCP3eFnuSkPKsE/UVg7zs8nmsjapIp7mLm12CpTWN/WZU0W/SN7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XjycNjfh; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5NbvsIW"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f379662cso827713f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XjycNjfh"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d6ade159so6966785e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750344927; x=1750949727; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750344931; x=1750949731; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uiY+DVkF0Tx7wXnhclKSYzhcL2ot81tRcGxMxTU/GtI=;
-        b=n5NbvsIWZM5mNmIcMxSGObHD4oh/+gSoVWheGopgdWuJXJM8a8YG9YCISaLYypmqYo
-         NmBMjnWFzU6LfSv2R5f65UljTyLoqEHddG2CFmaj+iXt9oSQW4Cdi54l599H8GIP9Pe0
-         b0gJNvI5ANTlTZvClbXjzKfpcnGUNEq/zepfHDSWKkajV9v9UXouc3yfHTUL4A66aT7w
-         Gs7DY5c+JNtqSVVgTsJlhFmk0RblKTFAQC1R6jMEL76tIZ6d0UAxslSj2U44xqd3j3BT
-         /ycPkxWGFN3Fd9MjsodMRG9L/Bb4lxOQ7rXk/mYGIB8TLSwr7QMKrkawqImOo3oId/ib
-         hQbw==
+        bh=e9GucHfZPCayxh1y8Bqgadbm6OXspkCQUE4SSbOEVnA=;
+        b=XjycNjfhOvt2kNBpm+RHazbZfv9Q0LvHUmDtRIhyaXZo8JODRgLZYD4WjBzsVuktxH
+         TS/+a0im5wzY7CpSzvFxl9jkg2kSJ48xrgWVRAFIyFSfqA8dBthJvQcb4tk6ofaaz4EO
+         fdyrPALL2DbpZwmDiFHYUHlCas3WS9AA7ydMwWSLxspaTge4ikOdZYDnWzl3traVaidE
+         1ZbXx6y5AnS/nqES6y+seHadVm09zhhjBeld1mGIGD83vXQAisFrDlXhmEwegFjZn9lr
+         89b0dng7Ll88OzkYn5YnZ01TX0OMc/HeQ+MGuKUSS123cmLrcu95S98qbF48UDcrRP8w
+         m8cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344927; x=1750949727;
+        d=1e100.net; s=20230601; t=1750344931; x=1750949731;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uiY+DVkF0Tx7wXnhclKSYzhcL2ot81tRcGxMxTU/GtI=;
-        b=awCnHYTEwGlL74wW7MYL52BHQqf6TBJIGXhsf1lUU4M2gpJSR/kwtDiSLc0rsMjr4A
-         T4BBytXPl+ndfZlzELps28gctUDSlVRcwSgNTJampD0mGjh8vbKlpfXlcbKKWANcDQl4
-         bvhot2ol24Xe/8ExYo2Nn6GuVC+0cVi36F8w2X0OitEghvj1JudhCkff16Q+72RffFI1
-         hc35vsFswQhJl8f90iaBMz7MNAq6LOKKXPNYPgwufwNgbcXXiymqIcr+D8kPMwRrSxZf
-         Sh9D3bKXSDBuXkU4m8V4+o25MdN4sYXMizR5NhTb3bcUiuVRvONECLtk6BHe0fYYd47R
-         Dc1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWVYVt958BO7xWgIqr1mJfWsNQHIan9FmR8E+SkTzWuKZFS29a/4XO4zie/JLhJ0MUO90KOYy1GOz/I5Is=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7WqpewwJzk1yq2xfnRZpU36B7d4UEQ8Swh0SgZpLRta7dqoCC
-	cXBcCbn76EG45MvIuKSdoBganHJJidReKW/FRXZI5JXLtJuXhG818E0bfmeXt+UHOm8=
-X-Gm-Gg: ASbGnctYErgtm5eYAJrBVOKr1vIw3D4YPqsD5s61yqReGxSCduwxjAAwTdlGl/BPozJ
-	04vDGIAdBMauC/AgzmN6S8B1eUx12X0qo+svPIHUWrs8Y5IgfIez9PNA6QaRcDCuqrpeaLypQ3G
-	Ch1qbHNWLysvjh8LnZEdi/vOMuanMIquF5SjpxIRkUKRNwvDX6i2adU+Y1XEItyIdyKT93w8k2H
-	k0CqZL3KBykfGg/zH6yfx8cYnBrw3OhVzlQR80emBrYXAegMW3k677bnVvwbcwqxYOGB/lM4Tmv
-	tqLOILosSoaiO6vpIQDzePVM8zlXxZOePlZwaQmhHtGHsLTKqitPWvxhTLv+Viritok7QPkgizL
-	n77CyltQQGrI=
-X-Google-Smtp-Source: AGHT+IGgc5GkhPO/vj3LU4YDmcm6Dit5qWlLwjFG7XrsUFfqD8cTmVzqG/+/ie6nUOAJEDHqELYGwQ==
-X-Received: by 2002:a05:6000:2c13:b0:3a4:ef36:1f4d with SMTP id ffacd0b85a97d-3a5723a4c09mr18760617f8f.38.1750344926745;
-        Thu, 19 Jun 2025 07:55:26 -0700 (PDT)
+        bh=e9GucHfZPCayxh1y8Bqgadbm6OXspkCQUE4SSbOEVnA=;
+        b=IxdrLM196bIZwN/9CvKuSPfMSQu/llEmvuW0Gs72I3HgH0h4nYplSORiK+qrs32Ygg
+         xwa17pAOgjrzVUkVRrvXDi5aObZrCx491K9braEnu46ui9of2SkMuKC8WkALMeQKAegt
+         Bca4QbbuSph2XemgXxVnEFjZnPsdoIR9LCQ09PCuYc4ZSiNBWAuoRDl5QWrImmdUOZc0
+         i80IEUWPQWiOZFyI6K4lPJBgBJCvy/tZK7l5dFuC8t+cOnxZk415fKy8UxqoycrImFh9
+         SOtZxIof2xO+WM1IV0Y7kZ6peZgn1EjidjtPVFm16uWASoK2/IfP10JrQ0mh2WiKxiBg
+         KTpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTlaJVhZcZF2ZeJD3HcJDv8tBki1HVuA782GK4gr/wWE/1byK2CiQt5cGvuj2lGvwbEmXMAsL6GlzmQIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb+uQKoWJcWxs8FFFtT89H/+yXpFiYv+XR4US5pybainVXVFQd
+	A9NFgzCd/mqG4SkQswAM32RalRd867KASNGWM9zJnCd8p7a6Ztw0Hu3VsUWc8syZufI=
+X-Gm-Gg: ASbGncsj5MwCSQeTzlUPbt4v7JZRqs4fea0wwLJqB8tF2eoR8jKRDCRJZ6r0x/ZgwEi
+	Yp8DVO9j8jN2gbBE0WxMpNfIz60Mks5eBVoKu2d3P1A0BclrfFtC7R+oSshyUJXufJ0f66+7H3g
+	p9chyjbyPbgxsG8RmO6WXTjTqyAoscGBvt8jadtgAnm4F9U2T7EZREml8R+CVXpdHGOmBkb28Cm
+	ezMhssrHVwNdbldteAEiPFkGpPfQqfZh6+W23qBP2E5ZhxhpPm12A/6rDPefakeOk6uAfxwER+m
+	Rw73nKPEcI434YOGcyPqumxSrExg9/g0c5DwUwGcyYd0pZmrHXgy14MuXV61KmPrqBiaKn5KWC5
+	0BCU5/37V9DHIOGxcQryahA==
+X-Google-Smtp-Source: AGHT+IGGobIpKkCLpRzDl1QxoCvpwI+jTHKHBg4d9lnILMNs8XoDrDP97vfxlViyNKxyIg5xdhuMjw==
+X-Received: by 2002:a05:600c:5025:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4533cb5ddabmr223699075e9.31.1750344930711;
+        Thu, 19 Jun 2025 07:55:30 -0700 (PDT)
 Received: from toyger.tail248178.ts.net ([2a0e:c5c1:0:100:b058:b8f5:b561:423c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:55:26 -0700 (PDT)
+        Thu, 19 Jun 2025 07:55:30 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Jun 2025 16:55:15 +0200
-Subject: [PATCH 07/11] power: supply: qcom_smbx: bump up the max current
+Date: Thu, 19 Jun 2025 16:55:18 +0200
+Subject: [PATCH 10/11] MAINTAINERS: add myself as smbx charger driver
+ maintainer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-smb2-smb5-support-v1-7-ac5dec51b6e1@linaro.org>
+Message-Id: <20250619-smb2-smb5-support-v1-10-ac5dec51b6e1@linaro.org>
 References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 In-Reply-To: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -82,82 +83,52 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
  Sebastian Reichel <sebastian.reichel@collabora.com>, 
  linux-hardening@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2386;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=971;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=4C4/BzYVvqykLCWqBbtexksZlDrp0KmcIoZ0MxhlLow=;
- b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTR74CQMAmQ7VTKPiBk6x+W6w8QNhr/qM/SB
- 9TbzQLsqpeJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0QAKCRAFgzErGV9k
- tjg4D/49MaTCqWbRpdaxNKlfjLtTNMq6C9Bn1so6q9lsEIryZcn2Ooc0TMkBNln+4horde0iNNJ
- X2/ofIrJou53ToJo3p8nVgcm3F1V7K1kiEJhuaoAWV0huFC0R4EOn5MGZq4Ezs9o9uz5XiP6kQx
- 30i6f1fp0lsK1b9qFAP1JZGD3T2NYJOxNc8XhC5EOk03Rc/dHZZSgP+R8MLtTMo6kMCH4HevBg0
- QJZICJVFDAZcDJ+bDGgRLEf9ra7byCHf0xJpavDa0tGQzbCJ41HvLZBRe75gm23DF3vNEtrRcXh
- 1RGcDK4tSecPLWogN9JP5uhg+791eX4EO3JatzB3IMRdqoBRqvuaTH0PHhUfDcdhxF32Jo7hBvU
- O59D+1xqoZZXiuu0HNJvYeAj7uqXIMzrvyRcTLBsw+49l63f6CAoj9tQ6l7TE+poi3X54VfrrVo
- 50EIra7sk997D/cIaGfbrwA6DFvQfCCqDiufIl9ZIN43wPHH9I6Zbc9RhoWaiUaOZ4yZsFkrWoJ
- fs5cytgISNmqKCoPkcbYPTr5vNxwNc3YbNmO3dm9bWtiBVWof9hhTZWSwuPYIde2Gnhd3C9Fp3c
- 8miD0OTi7H6GIaYNv6++MWsbUn3bHavXZ2wKR7kw8Es65a6jPDAgFo2eKcfWYeLDPiP9LF0SPT3
- U0dZAP3PMslLCNQ==
+ bh=iDLIU8cKqvcbXUMIYZ0LyAHF4U27oo4VJDAhYAedWfo=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTSU5Fs57qbeZWVqSoR+0UKygRpv6l1Ryj9+
+ AffIy9CL9KJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0gAKCRAFgzErGV9k
+ tu2VD/0bwY7vbtIlaRWJOFEsK2l1vGsoZuolMH38cKaAlU+IG2W1Fyq7WlUOc2DUn81OGrnksUG
+ yr9FjFGovg0DW/ycFt2vSbP6LA7yLbYPanceKT5Plpoj04RZjUbpHkwBACBHVFFo9N9Hy6S+gpd
+ g4Srrq5bUjcAKOiSoJO/XIDkoxNV3rdRsJHgBwcoAlMfjoLbGM/soOrqLKhoz/JQqGJUxLsxVL+
+ 5xU/dSpdXppIkgbzQ6Bjifldq+0v1l7ScdXUTo2Buew2c8zf5nVBkeniJnZ3F6zWXwnaMfBfNBb
+ Bq0SYmvymuQeXCYEKqfIUzC+Y0XbTK04cjjeTDwswET04SL2LwBOsmOX0EBIYhum1QjaF6QiGVm
+ QJYn35ZyzKMTDoZCO/V6huqhrp8h6t9UGwVfk+YJlJp1NQgH+4sAXTaFqRQzuaUAMsN+wv3GJqV
+ kpwMVH4S21qj41ZgWQrHd+QM7Xk4I61d5mXkZt6afscFVFax4lCIRnjUWcn9NbVlACvCJ6fVsLT
+ Iwgamw41FbjE6dCtXHRuYKEcssWNZ0trX+cZZhkQyFi9pdyXHMmXQwMKIXDW6IjCsS3ry8F3Qvr
+ 61LmxgvrbQC5+ViIxKJcQzemtaZisZlI0/HzjEaCGTpCYdTVBmDtMGhV6RSh18t5bE0Dc3D2Ttx
+ c1Wm6jRS/gyDmfg==
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-I set a super conservative current limit since we lack many of the
-safety features (thermal monitoring, etc) that these drivers really
-need. However now we have a better understanding of the hardware, it's
-fine to bump this limit up a bit, devices can additionally set the max
-current via devicetree instead.
-
-Since this is common to smb2 and smb5, move this write out of the init
-sequence and into probe proper.
+Missed when this originally went upstream, add myself to the MAINTAINERS
+file for this driver.
 
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- drivers/power/supply/qcom_smbx.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
-index 7fc232fa7260a7422ac12a48686cd7d396edd9a4..d1607674d291d6ef5762d35acd3330e2116f41a3 100644
---- a/drivers/power/supply/qcom_smbx.c
-+++ b/drivers/power/supply/qcom_smbx.c
-@@ -875,16 +875,8 @@ static const struct smb_init_register smb_init_seq[] = {
- 	 */
- 	{ .addr = PRE_CHARGE_CURRENT_CFG,
- 	  .mask = PRE_CHARGE_CURRENT_SETTING_MASK,
- 	  .val = 500000 / CURRENT_SCALE_FACTOR },
--	/*
--	 * This overrides all of the current limit options exposed to userspace
--	 * and prevents the device from pulling more than ~1A. This is done
--	 * to minimise potential fire hazard risks.
--	 */
--	{ .addr = FAST_CHARGE_CURRENT_CFG,
--	  .mask = FAST_CHARGE_CURRENT_SETTING_MASK,
--	  .val = 1000000 / CURRENT_SCALE_FACTOR },
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c2b570ed5f2f28341a3bcb7b699cbb250ffa2a88..a32e53d89c29cacf6e456258c4c7c0206cf8abf2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20565,8 +20565,15 @@ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/mtd/qcom,nandc.yaml
+ F:	drivers/mtd/nand/raw/qcom_nandc.c
  
- static int smb_init_hw(struct smb_chip *chip)
- {
-@@ -1029,8 +1021,22 @@ static int smb_probe(struct platform_device *pdev)
- 		return dev_err_probe(chip->dev, rc, "Couldn't set wake irq\n");
- 
- 	platform_set_drvdata(pdev, chip);
- 
-+	/*
-+	 * This overrides all of the other current limits and is expected
-+	 * to be used for setting limits based on temperature. We set some
-+	 * relatively safe default value while still allowing a comfortably
-+	 * fast charging rate. Once temperature monitoring is hooked up we
-+	 * would expect this to be changed dynamically based on temperature
-+	 * reporting.
-+	 */
-+	rc = regmap_write(chip->regmap, chip->base + FAST_CHARGE_CURRENT_CFG,
-+			  1950000 / CURRENT_SCALE_FACTOR);
-+	if (rc < 0)
-+		return dev_err_probe(chip->dev, rc,
-+				     "Couldn't write fast charge current cfg");
++QUALCOMM SMB2 CHARGER DRIVER
++M:	Casey Connolly <casey.connolly@linaro.org>
++L:	linux-arm-msm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml
++F:	drivers/power/supply/qcom_smbx_charger.c
 +
- 	/* Initialise charger state */
- 	schedule_delayed_work(&chip->status_change_work, 0);
- 
- 	return 0;
+ QUALCOMM QSEECOM DRIVER
+ M:	Maximilian Luz <luzmaximilian@gmail.com>
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
 
 -- 
 2.49.0
