@@ -1,149 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6F827AC2D;
-	Thu, 19 Jun 2025 08:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2637A261594
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323589; cv=none; b=isLnRtpH5qshAnXruSuttZTMpLja1g21OPtEGqbCF1kj7AP4wtuBNl09H460MW+lnljtp0z4TqyJXzQZy2LHKmLFhcYPuGmvtafqE3JXip4TJ3sWOm5m5inL/kdTVjWKH3jzLJtVsTVC03aoEuiTdXJ3S96gVFr/+iUh42kT/5U=
+	t=1750323605; cv=none; b=Eu+3UvomN54hiwueW0Fq1dDxZmKt7TdR51pYXlapFoqWIBIV5ITsg1uuo1hJdUCCzvf/rDAkUPOEL62UI3ZOpuV4mJ3/h14hXeOM/d5vLf88nVwaTcz0rfLK2zA4VEZOjFaQ509p9RnCbusptQ0u+HbS2lPYFWqKiElwKXfbW1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323589; c=relaxed/simple;
-	bh=owe3gMkwVpAp73v4z8nNbjH8PCrNzNGNQ+hew74iJyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BfwsYmj1j+n0u2ebjAh4WQSgYK33uNn0nSr13NUOllnUINJZPMFWa1Jzr73BxZt6j8fxm6xLtbwIhBn1FAejHSqKHTO5U/gdfT4J26jt6K922WKXYlhGH38ZTNPpwX4Jy3A6tIBTI4sneg+wC7gnMBIxqLwH9CxjWU53oyfqvxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mb2hwxsN; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750323605; c=relaxed/simple;
+	bh=UzuK/CxyCGnL+YSPUVuW3jK4T0cRHWwLE+0svoU+I9s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hK5gLAoz6qTeOmnQUvtjU7hyTaXFOuz9loM1ee+bm9YPe+A0VwjbQvIdw8+EVicFw/YFESVAwb0VFW679zLi0L5dpBQjHx1KG5PHoJMxDoeEYhEhOPWAz06Y0Pbs7C0S7/5PgauYQfX8Vqt4Hswz5uPifcWMArCK0gUoAYunq1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbRxkQlR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mb2hwxsN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750323588; x=1781859588;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=owe3gMkwVpAp73v4z8nNbjH8PCrNzNGNQ+hew74iJyA=;
-  b=mb2hwxsNdvtTWIcknsKOzfFVDbkjjm9KEUXYAyXa8VQGaJKlWa9HSv2o
-   uOQbexo7Zl1Tp5D6SgNtGw3e9E8BH0xBjeq/PDdj0XXgOnlP4Tr2a8kU3
-   OWlkn7aDCqW6I2CQ4YDHqUxsup0MFrD6AreQwpsetDEvRb4eaCypWT17J
-   oOFq/sH5axvNPMWPCVif+yohr+GHrTfpGNJavL9WnisvML6eeRn1nK5al
-   66e5OI+FlN1/ZdI0hyCHGvvG9tyAHWe+y1tViRzknvOazziTTfsRkEQZQ
-   1s0119Xavw3FtKGXLbTsntjCgOpi9ASxVviKCZ8Ytfgo2MFqaVMz7oWqD
-   g==;
-X-CSE-ConnectionGUID: ZvUnRNk+Sx+NX94A9BQW8Q==
-X-CSE-MsgGUID: C+nKsbRVRFq0vVD0M13/vw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52714140"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="52714140"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 01:59:46 -0700
-X-CSE-ConnectionGUID: SrKtsgwhSnyhIqix8wJeYQ==
-X-CSE-MsgGUID: fD3NT5bGTWueX+jxB4MOdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="181616708"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 01:59:17 -0700
-Message-ID: <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
-Date: Thu, 19 Jun 2025 16:59:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbRxkQlR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB5FC4CEF5
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750323604;
+	bh=UzuK/CxyCGnL+YSPUVuW3jK4T0cRHWwLE+0svoU+I9s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hbRxkQlRExVDwH79ADkhlXgwcMX3ygDlcbmP6ZXM7dXQNpBpOFxP8MCYW4/6U/9F8
+	 n0Oq+kPjOZHzEhc6sLC3FXXA3c/NuLYxyphmSY8nf+gV0lnrMYYLiwa2OeKrZdD2CC
+	 GZrDq0MXa4Z0d7ZeSZ5s5vsEyfyX8yiepwCeOul1+WPaTgSgKz13GgDHKUv3bEyv+R
+	 RS6L0oORVTLA69sTfvqZJvHzZ+KCaamKmXDG8ir7W0uJkZFB7b/P+ddStsNxHBtmKB
+	 O+nf2bfMF0UezscT2RMpPEDT44te82KJWxp8Tvgoyql7A4QlB+EDP70XDhGQfqr967
+	 KvAzqsn38gkHQ==
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e819aa98e7aso508307276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:00:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0PrmC87eqc5REK+w0/NbPEC+Y8QvGxZKInYVcR/yg7seUnAWFJlRuO8Me5yN4cbc4CpZCyF2HMy8ha8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVy0jhKSrNhkltBTIQNoW7VCdGVId/BzoOPp/hdgu1Bsil9nEu
+	C+qgG5ntNtL1rZPgm1mqaw3em4NsmSoLbTtGwI7Aof4E4/e94U0IyT3TzdCbFVSmzoBtyEpH4Ga
+	6gFzAgTpSczB5/C2fZWuRGSw1NXMqgvqYhXk4Um9HcQ==
+X-Google-Smtp-Source: AGHT+IFTSpIXWJ8aJgks2cku0velW0M+JCR6Rbfmtd6WsoM033VVzHoiXCwOg94pnYfHO2hy+W/9swsQZRSpK6zIGwQ=
+X-Received: by 2002:a05:6902:2613:b0:e82:6c9b:8287 with SMTP id
+ 3f1490d57ef6-e826c9b85e4mr11134815276.9.1750323604035; Thu, 19 Jun 2025
+ 02:00:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-To: Yan Zhao <yan.y.zhao@intel.com>, Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org,
- catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org,
- dave.hansen@intel.com, david@redhat.com, dmatlack@google.com,
- dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com,
- graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, yilun.xu@intel.com, yuzenghui@huawei.com,
- zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net> <20250606-6-10-rocket-v7-2-dc16cfe6fe4e@tomeuvizoso.net>
+In-Reply-To: <20250606-6-10-rocket-v7-2-dc16cfe6fe4e@tomeuvizoso.net>
+From: Robert Foss <rfoss@kernel.org>
+Date: Thu, 19 Jun 2025 10:59:53 +0200
+X-Gmail-Original-Message-ID: <CAN6tsi4p2wuMVVvQOJ5c6ecT=x2pr2VoZhS4wH27qaR9DptQHA@mail.gmail.com>
+X-Gm-Features: AX0GCFskbG-ChYYQk7bGtKWaX4j6fsAKjpFPkM8iQ7QewPkQLLciRbSAzy_fqYo
+Message-ID: <CAN6tsi4p2wuMVVvQOJ5c6ecT=x2pr2VoZhS4wH27qaR9DptQHA@mail.gmail.com>
+Subject: Re: [PATCH v7 02/10] accel/rocket: Add a new driver for Rockchip's NPU
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>, 
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/19/2025 4:13 PM, Yan Zhao wrote:
-> On Wed, May 14, 2025 at 04:41:39PM -0700, Ackerley Tng wrote:
->> Hello,
->>
->> This patchset builds upon discussion at LPC 2024 and many guest_memfd
->> upstream calls to provide 1G page support for guest_memfd by taking
->> pages from HugeTLB.
->>
->> This patchset is based on Linux v6.15-rc6, and requires the mmap support
->> for guest_memfd patchset (Thanks Fuad!) [1].
->>
->> For ease of testing, this series is also available, stitched together,
->> at https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-support-rfc-v2
->   
-> Just to record a found issue -- not one that must be fixed.
-> 
-> In TDX, the initial memory region is added as private memory during TD's build
-> time, with its initial content copied from source pages in shared memory.
-> The copy operation requires simultaneous access to both shared source memory
-> and private target memory.
-> 
-> Therefore, userspace cannot store the initial content in shared memory at the
-> mmap-ed VA of a guest_memfd that performs in-place conversion between shared and
-> private memory. This is because the guest_memfd will first unmap a PFN in shared
-> page tables and then check for any extra refcount held for the shared PFN before
-> converting it to private.
+On Fri, Jun 6, 2025 at 8:29=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
+ wrote:
+>
+> This initial version supports the NPU as shipped in the RK3588 SoC and
+> described in the first part of its TRM, in Chapter 36.
+>
+> This NPU contains 3 independent cores that the driver can submit jobs
+> to.
+>
+> This commit adds just hardware initialization and power management.
+>
+> v2:
+> - Split cores and IOMMUs as independent devices (Sebastian Reichel)
+> - Add some documentation (Jeffrey Hugo)
+> - Be more explicit in the Kconfig documentation (Jeffrey Hugo)
+> - Remove resets, as these haven't been found useful so far (Zenghui Yu)
+> - Repack structs (Jeffrey Hugo)
+> - Use DEFINE_DRM_ACCEL_FOPS (Jeffrey Hugo)
+> - Use devm_drm_dev_alloc (Jeffrey Hugo)
+> - Use probe log helper (Jeffrey Hugo)
+> - Introduce UABI header in a later patch (Jeffrey Hugo)
+>
+> v3:
+> - Adapt to a split of the register block in the DT bindings (Nicolas
+>   Frattaroli)
+> - Move registers header to its own commit (Thomas Zimmermann)
+> - Misc. cleanups (Thomas Zimmermann and Jeff Hugo)
+> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
+> - PM improvements (Nicolas Frattaroli)
+>
+> v4:
+> - Use bulk clk API (Krzysztof Kozlowski)
+>
+> v6:
+> - Remove mention to NVDLA, as the hardware is only incidentally related
+>   (Kever Yang)
+> - Use calloc instead of GFP_ZERO (Jeff Hugo)
+> - Explicitly include linux/container_of.h (Jeff Hugo)
+> - pclk and npu clocks are now needed by all cores (Rob Herring)
+>
+> v7:
+> - Assign its own IOMMU domain to each client, for isolation (Daniel
+>   Stone and Robin Murphy)
+>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 
-I have an idea.
-
-If I understand correctly, the KVM_GMEM_CONVERT_PRIVATE of in-place 
-conversion unmap the PFN in shared page tables while keeping the content 
-of the page unchanged, right?
-
-So KVM_GMEM_CONVERT_PRIVATE can be used to initialize the private memory 
-actually for non-CoCo case actually, that userspace first mmap() it and 
-ensure it's shared and writes the initial content to it, after it 
-userspace convert it to private with KVM_GMEM_CONVERT_PRIVATE.
-
-For CoCo case, like TDX, it can hook to KVM_GMEM_CONVERT_PRIVATE if it 
-wants the private memory to be initialized with initial content, and 
-just do in-place TDH.PAGE.ADD in the hook.
-
-> Currently, we tested the initial memory region using the in-place conversion
-> version of guest_memfd as backend by modifying QEMU to add an extra anonymous
-> backend to hold the source initial content in shared memory. The extra anonymous
-> backend is freed after finishing ading the initial memory region.
-> 
-> This issue is benign for TDX, as the initial memory region can also utilize the
-> traditional guest_memfd, which only allows 4KB mappings. This is acceptable for
-> now, as the initial memory region typically involves a small amount of memory,
-> and we may not enable huge pages for ranges covered by the initial memory region
-> in the near future.
-
+Reviewed-by: Robert Foss <rfoss@kernel.org>
