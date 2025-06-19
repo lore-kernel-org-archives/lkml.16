@@ -1,273 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F051213B58B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293D13B58B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346148; cv=none; b=oTvwB5piL7nqikIpUJEgsm30Vgh/dsNnfpm1Pz6ue7IEfS/PlfQyCf72IpMM/mVhtdw0k7aUEA+EAPkngwoaawL2EmElWRZtWpExkWS/9X9g0xhR0nTxBX95aksRUPSMSt6+Th5Ho+KotyJKfGpjEeFchs+lzkYREMgKrkbEHho=
+	t=1750346166; cv=none; b=hWtnge1ZJiTHMOIdqiqueJ+qSZEFf0AGHwH8M+c43/x29Ag2NRHhAaQX9wUz1YuCeCeYv0U7GF6p17ezl/ZyawiNigUctkD8I4aZU9Pim2qU2IVfNDIdJSjcj5nkUcLun6hMHcGrx6iF5k9fMpKNKwyTWgWlu9MVLbdP+ypm9tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346148; c=relaxed/simple;
-	bh=j36Lv0XwSdPSrL89TG1Za9YH/KmyQpaNDxFLdLJkcmY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rMt1cbsXKqLuqh4KUvm3lZQmjHi4nVqaWipnjgkQg1Cu/TGyjrEVbTzmgsUFlVcIsasAwFdEzRunz0/vzIh6co1ZhZx9+0Qcs/+hHncb28a/dR80X2XnJL+fGW7Ikg3qalv1ePdgHPDyDwsDgu0rc9kk/qaVGugKdf3FD6P19As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NmDd9nam; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750346166; c=relaxed/simple;
+	bh=hHbrgbeVpKHlN1WSxEnkfCzYAmnqqiwL3EFdnvUWEZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aOjZYBRK+5vvVcb3JIIsPn9BdeioIfjzhN75QmoUVDWNaMcTngvsmsVG80XLju2aClmDKk7Ey6EgAa0CpSDUNeMi/altBoxbKe1qvvKDY/AuI5WqfV5i5+9btZdbSajBVb9sEIKJCLKmHVLmL0JNLSIEnzRKGu83n+0J41iZeNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IjdoxiO3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NmDd9nam"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750346145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nnmNnV7Z/TLBli2AzSqmjfw6jzjBv10gklg2gPq0gb0=;
-	b=NmDd9namrk7hTc5t+NI/bgKBYQafNiwbSvDmOl8l5EdWfc9zOUxKN8zH4aKukF1r56zcWC
-	eQxu77j1AO4fmegUbARr+mQtknG/xxPuG2NeVPkbbVjO/Sfy9ItMou87Ief+Njxij5wFy4
-	sBu6d6987lJjGjBjgohw+b9BsIm51XQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-g117B1HYOsyRTIz26AKkPg-1; Thu, 19 Jun 2025 11:15:44 -0400
-X-MC-Unique: g117B1HYOsyRTIz26AKkPg-1
-X-Mimecast-MFC-AGG-ID: g117B1HYOsyRTIz26AKkPg_1750346143
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so4737195e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:15:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IjdoxiO3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEdX8t016417
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EZePDO/8sG0YdU3YHcFxnAOlHbTMITMJ/juxHwf5oqs=; b=IjdoxiO3Sdncsz3Z
+	3a7hbS5ySM5j8pHpzwCcWiiJqnCwV2OlenCeS/Ixjvjk0IBAhESqWNVKRzlQTCyo
+	DuXLT/ZIoayx4YF1/LFjqc4v8q8YzZuKSBEJkB6UP6nAKyS6TMd5mwzCisDyVpJB
+	wv3nS1KtBfUZ/UwBW/JRzfirlX3CYCBwBskwXDy7B5EYmuX4k3YuZNXK8EzRcdQR
+	VbPWpmM1HuLahoOkBrLURlFq6+8VbXaDuCRjjj8iYT0Q+A75ETkRATho33Y+ciD8
+	dfrTaC48GkdRoufenasDcmU1xkUo9Hrn95L3aLVQJ2LVGbLqiwCNUkCNX0QtmW/f
+	pBidMg==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f7gcgq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:03 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2fa1a84566so584987a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:16:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346143; x=1750950943;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nnmNnV7Z/TLBli2AzSqmjfw6jzjBv10gklg2gPq0gb0=;
-        b=Ad/jFFeCkspUhvj2ZOcWTY0pJ1M0pO2xKhf8rYB+doWSxHGtO06+8eVHX4607zO8r7
-         A72adE7ckoUvv/oTRAebgdTDOYLkIR4U3A0HKDhJBZLzvacS25+FEiQT8oytWqNzqMg+
-         LJOR447MEOMRYw3P7GUUr+ZSzgD82Rh6ZfZU2kVK52+hd1ZyqvUUj7whiyuFjiMWKL6s
-         89lUcZ9BhbIQBDzTn+7jz7Z5+hVIAuJ17U4f6bkGyPQtDrJ3JXhn9Yb/XYY707KrACH9
-         o+BDKZtHCdUpjcOyCgQzAqyfAK9tI2pgFtvSSWOGAk6twmVfAIJaF3fVIJs8Fg3MfcPb
-         swIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmYt78QB8mga0kvWKNqIA6Y/rbhQ3aacLEe9YB9bJO+5j63wSpHqMHJgtzW3YxGJ5tn2rwY2SCaph7phI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwspNcfUQZRelYTmUZCGMHELZgzqXw6SFhj4SxO0iuqWadG0uRL
-	ieGlBHe+rdDVQrCFGkkeOokRKlFGkQoqUzeu6R07TiErkFe9xjyYfyjqHRexxxoyCLtbyJfAktt
-	5VWfNOv4Wj6Iq5yefZcSy0FmUTea+/xi3CI6MiYsS6dzEOoXhonO8bGG+lRltgZnG5Jlyg5s+n9
-	dA4+ZjhoRJJDUM/cDqu8WbHuhw5UeDFkFF5rh7q4aDh8Ozvpjd5g==
-X-Gm-Gg: ASbGnctzQZeaQpt0v7CcIi5Dv7u6pPzUPwRfBjlgQQyeKIzTsD32dZRPpcPnxa/Bmhn
-	W3PV3SGyhOzaQXnKFouelXHfOyvax3ABS09yJufcsP0Q9zgZedtNr8OWNHRk2rZ5bLXwWBEQab0
-	8yEpdkJEeQ+pfNwZB+ahIdm8+JX3NmLizcb7KRgBbW2AAdId5acSuunCx8eXe5zi2AVac8qx8ol
-	5sP4QMMTch0S0uqCNV2pTbxPUTji9u/m0RJChvcNdh0uAwuSLMk1/A3tit0/lE2+7alkGl6VSZF
-	kWrF0Q++Ezo2YlDarg==
-X-Received: by 2002:a05:6000:144e:b0:3a5:3b14:1ba3 with SMTP id ffacd0b85a97d-3a572e58cc9mr17568959f8f.49.1750346143196;
-        Thu, 19 Jun 2025 08:15:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE2K4PWQRzuCGry5KAaSLw6cXzGCxwA9qri8LLp3blZHp1BJwjQA2vM0xwmkkHJC9VIuXCw6A==
-X-Received: by 2002:a05:6000:144e:b0:3a5:3b14:1ba3 with SMTP id ffacd0b85a97d-3a572e58cc9mr17568863f8f.49.1750346142292;
-        Thu, 19 Jun 2025 08:15:42 -0700 (PDT)
-Received: from fedora (g3.ign.cz. [91.219.240.17])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm19617640f8f.26.2025.06.19.08.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 08:15:41 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Peter Jones
- <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, Emanuele
- Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann
- <kraxel@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi
- <bluca@debian.org>, Peter Zijlstra <peterz@infradead.org>, Matthew Garrett
- <mjg59@srcf.ucam.org>, James Bottomley
- <James.Bottomley@hansenpartnership.com>, Eric Snowberg
- <eric.snowberg@oracle.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3] x86/efi: Implement support for embedding SBAT
- data for x86
-In-Reply-To: <20250603091951.57775-1-vkuznets@redhat.com>
-References: <20250603091951.57775-1-vkuznets@redhat.com>
-Date: Thu, 19 Jun 2025 17:15:40 +0200
-Message-ID: <877c17pxsz.fsf@redhat.com>
+        d=1e100.net; s=20230601; t=1750346162; x=1750950962;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EZePDO/8sG0YdU3YHcFxnAOlHbTMITMJ/juxHwf5oqs=;
+        b=K7Ite2b0lM0aUY+rasH5vmYc3h72S8JaU9w9mu/Btx+cfC7xK9x2rSk5ueJ4tGR7+j
+         njcwEuIINWiU5eoWhGSO101YWgSWi6QHrqyyHPnxrjwv9+TH0EEyZiXmSFUB6gBJm3yy
+         Gf1KGK60uvu04+JZ/kOh0dB+66AZULbznJAQMGeBF6Xf2M+DRW+t5kKJN8CXqkikRhW8
+         w19OMILfvNynGGj4ZXRU2Hwl9r8eZBKgah9q0x7G1MA3bmiE13bFm+0KXw64W1YrJ67I
+         T0DiUA4Z6zFt9+OzO1C72V0FWbDLE1hf0JqBi6pddAQd6vrjymZ0vqgMRhGMxqKtB6u9
+         lSfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdiBsY9Wm1lVtl4QEcvmQ4prG+fKU0sL/gzc/qh4el9QvwUr+LOYxQ0ZLSWus5WtSV6IlTDJLBSR7T3Uk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/N1oQ+Bbqgol/UuQTEKeuR+gFXZppo3d+DPRlaDK8opTo1X/J
+	WmOWebojLU4WVL1kvCVsxVdheGmbZNuC0X8MyNE9Gs0MskaHbVu9Pa0AR7JBOCWJrafohHfodlS
+	BPfCS6vkI6A2mIUeHuOxTk/+LGLsiNRZS07ZB0lyCal2GDZxG06K8gFfdFIWQRIMiuY1cTP33FO
+	U=
+X-Gm-Gg: ASbGncsiHPRhbsnoankBdER02Vc0ydXjQ+dfHYDGq4idv73JlszsWlWj55MHYV81ouO
+	wYtahzl+YxgnohxCbJ/Oi1y41MDn446O9tcyjFbi/426wElYVs0c5oTeBOWwHj/XtN9sk/SRQR+
+	okG5p1zqnZ1/fOjK2JMMm3NOMJvc0CCvZ0uXnO5GZKZxOnHOxsbmYB50m1SxSrwy0wdh9i2eh+y
+	JPNGeC5z+H6i8qe4+MeyFwep18qPnJXWTYNqcOVmIA0Y63BJsBEpTUkdDLqOUpA7lPw5KBxaiNo
+	PB37m5ZeqvuDXmTGGDT3n3F95MIpFmpoRg3OsUPCzAQpdaQrtQtEUCWgGLLnFz6YleTz8fo=
+X-Received: by 2002:a05:6a20:1a87:b0:220:96:11f6 with SMTP id adf61e73a8af0-2200096124amr9755112637.37.1750346161971;
+        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHq9RjBSQThQ08iVcBCPQDNPqsFAVA47zGCGsJ+0Gyl2tT/bxkUTY09tXQ+bAqgPKlf6W6XlA==
+X-Received: by 2002:a05:6a20:1a87:b0:220:96:11f6 with SMTP id adf61e73a8af0-2200096124amr9755075637.37.1750346161503;
+        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
+Received: from [192.168.225.142] ([157.49.222.239])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a626376sm104476b3a.85.2025.06.19.08.15.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
+Message-ID: <a7626e7b-6308-c4d0-8d0a-0d80914841a0@oss.qualcomm.com>
+Date: Thu, 19 Jun 2025 20:45:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH ath-next v2] wifi: ath12k: handle regulatory hints during
+ mac registration
+Content-Language: en-US
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20250617-handle_user_regd_update_hints_during_insmod-v2-1-10a6a48efe81@oss.qualcomm.com>
+From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+In-Reply-To: <20250617-handle_user_regd_update_hints_during_insmod-v2-1-10a6a48efe81@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyNiBTYWx0ZWRfX4kUm536fO7d8
+ yzB/3fJEAM01BOO36CmE6P7INehtsGg1ExJq6OxShwtkDBgoQpumuKgwpXrlqJDFeeHVONaFgZO
+ bHxC93Syj0SPGkCOqsNkTfrnQwxW3W5j9mserj4z2T0/fYc0f6SzzPTI0zf844FyGEh/vjXXLkk
+ Kk5lTiWrO/N0D4bHcRsXNZjm8/xkuK1ElLw7HpMurZCnM4LOWsSaFy9louD2TQD0SE33Z0QM8jS
+ +q3aTRl81dVjT3hAlrXmXqXj7VCcGG+GSAT1CKYEdxclFWvzs8EvJgHJJ3fdJA4uNg1qVYAdpB/
+ xvQPSPK+HCjH8a9g2vtwFnRriQcm5gqiFZF04XMyIXNkZlXv4KpNtFSakPps8vEMAM3x5fzGnRF
+ BYASdmZPEtiCNCsD+nZjAjXDrR5PyrxjtNvr3mYuH8s4PdWdMfZS+vZ3WiFdMA/pP/hvJ+n9
+X-Proofpoint-GUID: vqtJog3SDOujhGKg7ElEqrjDpDmlKhRs
+X-Proofpoint-ORIG-GUID: vqtJog3SDOujhGKg7ElEqrjDpDmlKhRs
+X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=685429b3 cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=W/7+BeFhbfycsskxpRlngg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=oTJZ3fvRTWoEDzZ0YNoA:9
+ a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_05,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506190126
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 
-> Similar to zboot architectures, implement support for embedding SBAT data
-> for x86. Put '.sbat' section in between '.data' and '.text' as the former
-> also covers '.bss' and '.pgtable' and thus must be the last one in the
-> file.
->
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
-> The patch was previously sent as part of "[PATCH v3 0/2] efi: Add a
->  mechanism for embedding SBAT section" series. The main patch has
-> already made it upstream through Ard's 'efi' tree (see commit 0f9a1739dd0e
-> "efi: zboot specific mechanism for embedding SBAT section") but x86 part
-> is still pending. Resending so it doesn't get lost.
->
 
-I was going to ping again but while working on a (mostly unrelated)
-zboot issue:
-https://lore.kernel.org/linux-efi/20250618122008.264294-1-vkuznets@redhat.com/T/#u
+On 6/17/2025 9:05 AM, Aditya Kumar Singh wrote:
+> If a regulatory notification is there in the system while the hardware is
+> being registered, it attempts to set the new regulatory country. However,
+> ath12k currently boots with a default country derived from the BDF. If this
+> default country differs from the one provided in the notification, a race
+> condition can occur while updating the regulatory information back to
+> userspace. This potentially leads to driver having the incorrect regulatory
+> applied.
+> 
+> For example, suppose the regulatory domain for France (FR) is already
+> applied, and then the driver is loaded with a BDF that has the United
+> States (US) country programmed. When the driver finishes loading, the
+> regulatory domain shown in phyX still reflects the US regulatory settings.
+> This is incorrect, as the driver had already received a notification for
+> FR during hardware registration, but failed to process it properly due to
+> the race condition.
+> 
+> The race condition exists during driver initialization and hardware
+> registration:
+> - On driver load, the firmware sends BDF-based country regulatory rules,
+>    which are stored in default_regd via ath12k_reg_handle_chan_list().
+> 
+> - During hardware registration, a regulatory notification is triggered
+>    through:
+>      ath12k_mac_hw_register()
+>        -> ieee80211_register_hw()
+>          -> wiphy_register()
+>            -> wiphy_regulatory_register()
+>              -> reg_call_notifier()
+> 
+>    This sends a country code to the firmware, which responds with updated
+>    regulatory rules.
+> 
+> - After registration, ath12k_mac_hw_register() calls ath12k_regd_update(),
+>    which copies default_regd and passes it to the upper layers.
+> 
+> The race occurs between the firmware's response and the execution of
+> ath12k_regd_update(). If the firmware's new rules are processed before the
+> update call, the correct values are used. Otherwise, outdated boot-time
+> country settings are exposed to userspace.
+> 
+> To resolve this issue, introduce a completion mechanism within the hardware
+> group (ah). Trigger this completion whenever a regulatory change is
+> requested from the firmware. Then, in ath12k_regd_update(), wait for the
+> firmware to complete its regulatory processing before proceeding with the
+> update.
+> 
+> This ensures that during driver load, the default country is processed
+> first. However, before ath12k_regd_update() is called, the new regulatory
+> notification will have already been received by the driver. As a result, it
+> will wait for the firmware's regulatory processing to complete, and only
+> the final, correct regulatory domain will be updated to userspace.
+> 
+> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+> 
+> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 
-I noticed that in x86 SBAT patch I neglected to update optional PE
-header and '.sbat' section is accounted as part of 'SizeOfCode' instead
-of 'SizeOfInitializedData'. OVMF doesn't seem to care about the optional
-header and I don't really know who does but as the patch is not merged
-yet, I think it would be better to fix. The differential change is:
-
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index 9bea5a1e2c52..f57c45d8584a 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -78,9 +78,9 @@ optional_header:
-        .byte   0x02                            # MajorLinkerVersion
-        .byte   0x14                            # MinorLinkerVersion
- 
--       .long   ZO__data                        # SizeOfCode
-+       .long   textsize                        # SizeOfCode
- 
--       .long   ZO__end - ZO__data              # SizeOfInitializedData
-+       .long   ZO__end - textsize              # SizeOfInitializedData
-        .long   0                               # SizeOfUninitializedData
- 
-        .long   setup_size + ZO_efi_pe_entry    # AddressOfEntryPoint
-
-I'm going to send v4 with this change included.
-
->  arch/x86/boot/Makefile                 |  2 +-
->  arch/x86/boot/compressed/Makefile      |  5 +++++
->  arch/x86/boot/compressed/sbat.S        |  7 ++++++
->  arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++
->  arch/x86/boot/header.S                 | 31 ++++++++++++++++++--------
->  drivers/firmware/efi/Kconfig           |  2 +-
->  6 files changed, 44 insertions(+), 11 deletions(-)
->  create mode 100644 arch/x86/boot/compressed/sbat.S
->
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index 640fcac3af74..3f9fb3698d66 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
->  
->  SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
->  
-> -sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-> +sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
->  
->  quiet_cmd_zoffset = ZOFFSET $@
->        cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index f4f7b22d8113..3a38fdcdb9bd 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
->  vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
->  vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
->  vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
-> +vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
-> +
-> +ifdef CONFIG_EFI_SBAT
-> +$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
-> +endif
->  
->  $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
->  	$(call if_changed,ld)
-> diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
-> new file mode 100644
-> index 000000000000..838f70a997dd
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/sbat.S
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Embed SBAT data in the kernel.
-> + */
-> +	.pushsection ".sbat", "a", @progbits
-> +	.incbin CONFIG_EFI_SBAT_FILE
-> +	.popsection
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index 3b2bc61c9408..587ce3e7c504 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -43,6 +43,14 @@ SECTIONS
->  		*(.rodata.*)
->  		_erodata = . ;
->  	}
-> +#ifdef CONFIG_EFI_SBAT
-> +	.sbat : ALIGN(0x1000) {
-> +		_sbat = . ;
-> +		*(.sbat)
-> +		_esbat = ALIGN(0x1000);
-> +		. = _esbat;
-> +	}
-> +#endif
->  	.data :	ALIGN(0x1000) {
->  		_data = . ;
->  		*(.data)
-> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-> index e1f4fd5bc8ee..9bea5a1e2c52 100644
-> --- a/arch/x86/boot/header.S
-> +++ b/arch/x86/boot/header.S
-> @@ -179,15 +179,11 @@ pecompat_fstart:
->  #else
->  	.set	pecompat_fstart, setup_size
->  #endif
-> -	.ascii	".text"
-> -	.byte	0
-> -	.byte	0
-> -	.byte	0
-> -	.long	ZO__data
-> -	.long	setup_size
-> -	.long	ZO__data			# Size of initialized data
-> -						# on disk
-> -	.long	setup_size
-> +	.ascii	".text\0\0\0"
-> +	.long	textsize            		# VirtualSize
-> +	.long	setup_size			# VirtualAddress
-> +	.long	textsize			# SizeOfRawData
-> +	.long	setup_size			# PointerToRawData
->  	.long	0				# PointerToRelocations
->  	.long	0				# PointerToLineNumbers
->  	.word	0				# NumberOfRelocations
-> @@ -196,6 +192,23 @@ pecompat_fstart:
->  		IMAGE_SCN_MEM_READ		| \
->  		IMAGE_SCN_MEM_EXECUTE		# Characteristics
->  
-> +#ifdef CONFIG_EFI_SBAT
-> +	.ascii	".sbat\0\0\0"
-> +	.long	ZO__esbat - ZO__sbat            # VirtualSize
-> +	.long	setup_size + ZO__sbat           # VirtualAddress
-> +	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
-> +	.long	setup_size + ZO__sbat           # PointerToRawData
-> +
-> +	.long	0, 0, 0
-> +	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
-> +		IMAGE_SCN_MEM_READ		| \
-> +		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
-> +
-> +	.set	textsize, ZO__sbat
-> +#else
-> +	.set	textsize, ZO__data
-> +#endif
-> +
->  	.ascii	".data\0\0\0"
->  	.long	ZO__end - ZO__data		# VirtualSize
->  	.long	setup_size + ZO__data		# VirtualAddress
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index db8c5c03d3a2..16baa038d412 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -286,7 +286,7 @@ config EFI_SBAT
->  
->  config EFI_SBAT_FILE
->  	string "Embedded SBAT section file path"
-> -	depends on EFI_ZBOOT
-> +	depends on EFI_ZBOOT || (EFI_STUB && X86)
->  	help
->  	  SBAT section provides a way to improve SecureBoot revocations of UEFI
->  	  binaries by introducing a generation-based mechanism. With SBAT, older
-
--- 
-Vitaly
-
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
