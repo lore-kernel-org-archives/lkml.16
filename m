@@ -1,117 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2991528B7C1;
-	Thu, 19 Jun 2025 13:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7BC28BA8D
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341188; cv=none; b=Zk4xTDbii5Kbz/hUO4c9kemkjxIN0JANJeHKzvTua7QYzQ3xnRI7NtnUxj7uD3xofo6O5VAPWDPsfM4EuQ2oYW2Pmt0rnDZS0VrdofdoVUxiIU9G7MqIMnEEB7hn2tInfreSpLhQMA32OzRGEb24thRyUhMspDZydwP+m7rZjKY=
+	t=1750341205; cv=none; b=YfVU0VsUQlxQF1f/k2Yshcvbgs9HC+D6PVaNg+Xw0Tfci75vTg2wVXHmsi4FFs13bhO6aRT/joZonxDQL7VMWR6UlIYfkfmNObS1lG1GKVQYYPUUzwuS2nWqaXaSb7y+liebbfGHqKzhhgIGzVXNrUxx0oTIWBeDWvfjuGqel+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341188; c=relaxed/simple;
-	bh=e3IzxRN2+kK4nKfbjnHQ1KUE0dymxfbZ2bnFd+F9r7w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Liq3e/V+tdMKiI9K/lTytg3BRcztdLKjzGZM+6SBucpkxB9gjpWldxXDoKs8VhzHkrnCNlHCIWsyxmV7rh32kL2Cu/tx5OjCIm7w8lOjxzcQ5QidKjBkDwvFHfo/Jgz0FMWf/NcuLc5uOPB8EXykLrKB8Ikj+DlD6PqiWwOSNxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57F7C113E;
-	Thu, 19 Jun 2025 06:52:45 -0700 (PDT)
-Received: from usa.arm.com (GTV29432L0-2.cambridge.arm.com [10.1.31.86])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 37AB63F66E;
-	Thu, 19 Jun 2025 06:53:03 -0700 (PDT)
-From: Aishwarya <aishwarya.tcv@arm.com>
-To: quic_nitirawa@quicinc.com
-Cc: James.Bottomley@HansenPartnership.com,
-	andersson@kernel.org,
-	bvanassche@acm.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	kishon@kernel.org,
-	konrad.dybcio@oss.qualcomm.com,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-scsi@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	martin.petersen@oracle.com,
-	neil.armstrong@linaro.org,
-	quic_cang@quicinc.com,
-	quic_rdwivedi@quicinc.com,
-	vkoul@kernel.org
-Subject: Re: [PATCH V6 10/10] scsi: ufs: qcom : Refactor phy_power_on/off calls
-Date: Thu, 19 Jun 2025 14:53:02 +0100
-Message-Id: <20250619135302.9192-1-aishwarya.tcv@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250526153821.7918-11-quic_nitirawa@quicinc.com>
-References: <20250526153821.7918-11-quic_nitirawa@quicinc.com>
+	s=arc-20240116; t=1750341205; c=relaxed/simple;
+	bh=2NqneKlY33z9v6ssom6HUKNEFdIU6yvVwyJlxaLkGow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BDOtiKMXOx6ZHRuzCual8/w+UXsAd+lV8RefEmpTCq+43SoYixHfn1SCJJaxGV1RSbREtK29pFDhE+8UMsrxYjXQ1jECYrXCRTdSXVe+1RHpLKMS1jUQinQ+6Qmjxx3MfdcLrgivRijsD1v/fCSazZ5EwhpxuXsSnz7XLcvl/9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SCZPdIqd; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SCZPdIqd"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-606ddbda275so1634825a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750341202; x=1750946002; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hy3WsHb/OXL1L2Qu4iG3kEVAl7a80hJee5UYV6CVjCI=;
+        b=SCZPdIqd8fuLoyqrfgOgSWXrN1CiW5C7bFZjSKM7c3bXPf7dlKDP1CoJSO5hutiQo4
+         2D6yNgbPXB+x4ZASldELhIX5hTtdklt1Dj6ovt5py7JiEbL9XTWT6UumZCcF/gcD+Wpq
+         6XA0+ZJNWEmoxH2qDgB15viTZJy3u9UsR83GDlrJzies84ViF1jctchQMBeLYlN9ZQBS
+         66YuqhhsCH5nCIGzIwmoSvaqh0Xg7slNhsrzuM56KrEUake1F2GSrA3UEZOO6l+CyGyG
+         ZCmcYAjVswar0zU7Sh6uTFHBg8UZNxDYO+jeMV4cuxX3yeZXmasp0zuDYlIjj3CP6cjb
+         A6wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750341202; x=1750946002;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hy3WsHb/OXL1L2Qu4iG3kEVAl7a80hJee5UYV6CVjCI=;
+        b=fX6grp0zvrAyhhZ7veJECHEg1Kmcy1CukpqoMaKKm9Ywmwbe3AJ+L3Fqt+zVplgx0I
+         TBK4rsw5kDl54oyQWj0RbrzlqvwHgf0BKnuPR5qHL1wQhAibCTvSDdAZF8ghe2n11tHO
+         E2fH6FhEBr4G1w/e8BIfXvZXhOwgUqG1B7N4sFrgDR/cNZwAexl11BWOkpHOXbVBWOOP
+         OT5GW42CykNmzGBMex81myUkx8tNXC7STpRbksvIirITfu+pNh4baRK5KfJrj4Xere9U
+         j5s6T7c2yp0GiYh9rJNoPnafhKnBRDE0s9Y+qtvrMQ8uiSSBe+tF0YLDWDB/Sq06mjDw
+         IeoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrk2ZV5vzw0TL6iGVSheA74WXUqLs8rnfmCgjpMSwynT5dxVpMvsMyy0tfzqd0y0bVpmHBViM2z7U7C88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCaDl7nFBa5u4s+ktk8eamyDp4YEEE91od8YPYA5FtSMJiRtwJ
+	Rd43W1mrUEznSCaeNsU58FnogkVoJf8dSWgUZcS+Ec5cfuGZZ5bk4TyRGMRyH90yGYzMncYnVff
+	F01BcfMMuBlNkme4j1p3aSJy/NbpEMpbvw7Bb3s3+fA==
+X-Gm-Gg: ASbGnct8D4/O8oXCx2/Txt0BRT+j/csOCOvD9lDzXPJjGIUY2SHjloiJZ3Kw367NBAU
+	e+NIspkerggqIt9dK19ZEZuw3Hgm1GlObKs/DbYUKt7JL5lTn4iE20yaFOD4yBKtK8s3eqQekxS
+	3j84RosP83uUor80Qxikk/921wO3lB6HmmIrhhoUwxOCHG0rlasCGzzdQs4HvyKxWLsSbg3tEtl
+	cvAUfDDqTQ=
+X-Google-Smtp-Source: AGHT+IGxNz0ZAdeuWD3+xXQuKwQDZ26IRJrNyiFoRdmDetWtYHuyjc7xqtlrqOBhPAYdXWgvHHRJG2mKxOWzMUM7eNE=
+X-Received: by 2002:a17:907:7fa6:b0:ae0:3f20:68f8 with SMTP id
+ a640c23a62f3a-ae03f207cdamr215951966b.39.1750341202056; Thu, 19 Jun 2025
+ 06:53:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250619031942.25474-1-shijie@os.amperecomputing.com>
+In-Reply-To: <20250619031942.25474-1-shijie@os.amperecomputing.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 19 Jun 2025 15:53:10 +0200
+X-Gm-Features: AX0GCFsv5pewVhcUOfZdaWAwRIdKVrMJ79S3AakigbG_irFgG7F_9rouI3RCU4I
+Message-ID: <CAKfTPtBUJa4A2V3XR8EwYVPxiY=ENZr1=Jg5R3E75r5XnrnRPg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: set the se->vlag strictly following the paper
+To: Huang Shijie <shijie@os.amperecomputing.com>
+Cc: mingo@redhat.com, peterz@infradead.org, patches@amperecomputing.com, 
+	cl@linux.com, yang@os.amperecomputing.com, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Nitin,
+On Thu, 19 Jun 2025 at 05:20, Huang Shijie
+<shijie@os.amperecomputing.com> wrote:
+>
+> From the paper, the lag should follow the limit:
+>      -r_max < lag < max(r_max, q)
+>
+> But current code makes the lag follow the limit:
+>      -max(r_max, q) < lag < max(r_max, q)
+>
+> This patch introduces limit_hi/limit_lo/r_max, and
+> make the lag follow the paper strictly.
 
-When booting the kernel from next-20250619 on Arm64 Qualcomm boards
-(RB5 and DB845C), we observe that the baseline bootr test fails due to
-dmesg.emerg errors in our CI environment.
+We don't strictly follow the paper. Typically, paper assumes that a
+task will not run more than its slice r before deciding which task is
+the next to run. But this is not our case as we must wait for a sched
+event like the tick before picking next  task which can be longer than
+the slice r
 
-A full git bisect (log included below) points to this patch as the
-culprit. The issue was introduced sometime from tag next-20250616 in
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git.
+Side note, we don't have a fix definition of the quantum q which is
+something between 0 and a tick (and even more currently with run to
+parity) as we wait for the next the tick to pick another task
 
-This issue is not present in v6.16-rc2
+This means that a task can run a full tick period even if its slice is
+shorter than the tick period
 
-Here’s a sample of the failure observed on the RB5 board:
-lert :   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-kern  :alert :   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-kern  :alert :   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-kern  :alert : user pgtable: 4k pages, 48-bit VAs, pgdp=0000000102c4c000
-kern  :alert : [0000000000000000] pgd=0000000000000000
-kern  :emerg : Internal error: Oops: 0000000096000004 [#1]  SMP
-kern  :emerg : Code: a90157f3 aa0003f3 f90013f6 f9405c15 (f94002b6) 
-<8>[   30.933289] <LAVA_SIGNAL_TESTCASE TEST_CASE_ID=emerg RESULT=fail UNITS=lines MEASUREMENT=2>
-+ <8>[   30.943798] <LAVA_SIGNAL_ENDRUN 0_dmesg 1000325_2.4.4.1>
-set +x
-
-Git bisection log:
-git bisect start
-# status: waiting for both good and bad commits
-# good: [9afe652958c3ee88f24df1e4a97f298afce89407] Merge tag 'x86_urgent_for_6.16-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good 9afe652958c3ee88f24df1e4a97f298afce89407
-# status: waiting for bad commit, 1 good commit known
-# bad: [4325743c7e209ae7845293679a4de94b969f2bef] Add linux-next specific files for 20250617
-git bisect bad 4325743c7e209ae7845293679a4de94b969f2bef
-# good: [436c8cbbcb18deb96100cd9f33f1efedddc31d9c] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git
-git bisect good 436c8cbbcb18deb96100cd9f33f1efedddc31d9c
-# good: [183d224083773ca4a84a458fb608efecff19e19e] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
-git bisect good 183d224083773ca4a84a458fb608efecff19e19e
-# good: [1347ff0c0e510f1a6adb78259a2a0ddfac41d258] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
-git bisect good 1347ff0c0e510f1a6adb78259a2a0ddfac41d258
-# bad: [b09bd04eabb1994257f4c11d0ed25ff03517d3ec] Merge branch 'gpio/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-git bisect bad b09bd04eabb1994257f4c11d0ed25ff03517d3ec
-# good: [70bc9e18653c20fbcb47184d9498ad7bd7b7d6be] Merge branch 'togreg' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-git bisect good 70bc9e18653c20fbcb47184d9498ad7bd7b7d6be
-# bad: [3a847fb85c9d47e61ad5d9d54b762a3e99a08084] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
-git bisect bad 3a847fb85c9d47e61ad5d9d54b762a3e99a08084
-# skip: [50355ac70d4f104e2f82bfbd0658c129027ebb37] dt-bindings: phy: Convert marvell,comphy-cp110 to DT schema
-git bisect skip 50355ac70d4f104e2f82bfbd0658c129027ebb37
-# good: [acc6b0d73d902d3296d8c77878a9b508c2c6a5bf] phy: qcom-qmp-ufs: Rename qmp_ufs_power_off
-git bisect good acc6b0d73d902d3296d8c77878a9b508c2c6a5bf
-# bad: [35b629b28afd72a14ed573f1b180dc4ab1bf7e19] dt-bindings: phy: Convert ti,dm816x-usb-phy to DT schema
-git bisect bad 35b629b28afd72a14ed573f1b180dc4ab1bf7e19
-# bad: [66acaf8f6b0bcc273f8356b2a77baa90b177014c] dt-bindings: phy: Convert img,pistachio-usb-phy to DT schema
-git bisect bad 66acaf8f6b0bcc273f8356b2a77baa90b177014c
-# bad: [f151f3a6ebe184b5f8c9abe58fe2d63f9950139b] dt-bindings: phy: Convert brcm,ns2-drd-phy to DT schema
-git bisect bad f151f3a6ebe184b5f8c9abe58fe2d63f9950139b
-# bad: [77d2fa54a94574f767d5fb296b6b8e011eba0c8e] scsi: ufs: qcom : Refactor phy_power_on/off calls
-git bisect bad 77d2fa54a94574f767d5fb296b6b8e011eba0c8e
-# good: [7f600f0e193a6638135026c3718ac296ed3f5044] phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and Inline qmp_ufs_com_exit()
-git bisect good 7f600f0e193a6638135026c3718ac296ed3f5044
-# good: [a079b2d715340482e425ff136b55810ab8279800] phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
-git bisect good a079b2d715340482e425ff136b55810ab8279800
-# first bad commit: [77d2fa54a94574f767d5fb296b6b8e011eba0c8e] scsi: ufs: qcom : Refactor phy_power_on/off calls
-
-Thanks,
-Aishwarya
+>
+> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+> ---
+>  kernel/sched/fair.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 83157de5b808..102d263df330 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -694,14 +694,17 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+>   */
+>  static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> -       s64 vlag, limit;
+> +       s64 vlag, limit_hi, limit_lo, r_max;
+>
+>         WARN_ON_ONCE(!se->on_rq);
+>
+>         vlag = avg_vruntime(cfs_rq) - se->vruntime;
+> -       limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
+> +       r_max = 2 * se->slice;
+>
+> -       se->vlag = clamp(vlag, -limit, limit);
+> +       limit_hi = calc_delta_fair(max_t(u64, r_max, TICK_NSEC), se);
+> +       limit_lo = calc_delta_fair(r_max, se);
+> +
+> +       se->vlag = clamp(vlag, -limit_lo, limit_hi);
+>  }
+>
+>  /*
+> --
+> 2.40.1
+>
