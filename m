@@ -1,335 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84BC18EFD4
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE3B18EFD4;
+	Thu, 19 Jun 2025 10:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750330631; cv=none; b=BXRMrNRWoqT14LHB06Fi/uNRkBhtMiJ9JNnhxvek5oFNa03JswilZ661C+52PsToqQoOL4bUv9v3ZM7Y/nMGkY7mRbwTbH6T3OBuvdY9QuqOBvPz2PHIyaScuEmHm/mTXoN0x0yRouXrxT1gioXQtgsAeyDc9xJhLMUIUXznKkw=
+	t=1750330669; cv=none; b=Q4JktPt23wrFbgqNvnvSJXeMEbXUXjqO+W3BGDUsNX13ok71koDPrXWi0Ay6W1EHQ2Z6z8GO3F1PXSpsLvc945IdmNJiMt8drikJNze2k6ZaCUjhXGnNIlg4m3Ohf+EdFElUONR7vm8agJ8nTGpnH27g17KIAWsvcyClH7JuNmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750330631; c=relaxed/simple;
-	bh=D7zrsB5sT4VHuv9Lp6FCVWWmPaqfsothC+VrzL37ddI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CKoCxoNzchLvMP3bul6w9rEPtr+Mgt6CwrsLRoiHIhn+5O3Q3MQsti54tRLwhgYHntHANrFw4pRKqCFstC9HgFs08C5C1JwLNuWSMaa22Vyjx67Yq1VpmcEvfnPcVtIL4Ngw2kirCzxI9vWGrWFiMoqFxMNfWH7Agwz4RuTfl0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0D04113E;
-	Thu, 19 Jun 2025 03:56:47 -0700 (PDT)
-Received: from [10.57.84.221] (unknown [10.57.84.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9343F58B;
-	Thu, 19 Jun 2025 03:57:06 -0700 (PDT)
-Message-ID: <a06ab040-8ed7-4afa-9bbb-dd95b18e3b04@arm.com>
-Date: Thu, 19 Jun 2025 11:57:05 +0100
+	s=arc-20240116; t=1750330669; c=relaxed/simple;
+	bh=j5rhOpW/laBF82M2HY8CKc0EfimQr1NJoDaoSLw2njw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k6/Kl5vTZQR220MlnA7SQiiWwKyEs1Vh5iG4Hf7CrFO1uNBIepNwN5V31DI4egql5jqWjmN9SB1goDzNZhkZbkbbZtZ+eBFi4yjn94EC4mqqeh/5IvPArhMaEOwwgAqhUv0enB+uu8FqiLmsTd7LTnTd0YU7VgmQRLkMxHB/lSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TNQmYQyb; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNQmYQyb"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a52878d37aso114282f8f.2;
+        Thu, 19 Jun 2025 03:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750330665; x=1750935465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vmK1bvc5vh/SERc7Pq049o40EvKsXEw1iFHeTVG0Glo=;
+        b=TNQmYQybRYVtKIufCYFqLc1L6jDz8fkZwFcCMlkmufg23X3s6YFC7zXkTXlu+OgZwx
+         YRoRERfIFkdOfihLE8GFIILyMvVzm1a7AUToteBF+0eKmdZXf1EkV0zzzabIwfUFbV6i
+         UVNfibkczDNoYZSuKqMwGbCgxT3z81su7LhbmKckxRcNy9dDIPSwLGUW9xDyRnA4eS8n
+         8S83pycTNLdARgdqT56aZRBSEZ2051xJhRlX5PnNjqgHMb++uD9XMSnwBXlbtoKjnf80
+         bfo2j/eRp+MkhGptFReO8GI+GkMxjSNX0N79F2gF05wsuWABZ5j1eDAclNNPUTG9nWI9
+         7a4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750330665; x=1750935465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vmK1bvc5vh/SERc7Pq049o40EvKsXEw1iFHeTVG0Glo=;
+        b=ayLgMqRn++MsR+o+bdMvV5peUuzVdmPiOtDlrruJHgqWne61lGbKQDSm7v7Uwf37Qb
+         XQa4VbIMwpgn6mfzpPC+wbbObKfHNvks4vY25xErlmQV/Tti01TmvsjZwrT9rVTiRRSq
+         Qo/sjQqeQ99+bycby0+0wmyZVeu3uZ+kyyC+pDWAgeoSqE/qYDNX8wkLZX519lzYXFUx
+         i7Y9xi3JpWpWFdi757ejudEIthociRPvh50lckrfx6uf166S8G9Tew6JiGwtScLt0e1E
+         zDRu+0gz7nNGPEZMcSbSrwlncGXI4y3zQJNmEl1G/A0c8ZFvl/MilmnFPyBsdOWJ2Afv
+         KQcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOFjLpi4GsQa4/DP3JuTcJfbOisj+PCjCy9p/3Lf6t6ORVAOyhR9qP7EalMz87FKZVpApaNv1O@vger.kernel.org, AJvYcCWaK4a6M8Ur7Q4+ISOWUhQ2fryGuTFy4OJVPPst038RQy97AuT8djj0u/wOQbZAXlB7/eFN7nOn/7jw1fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywocu8oxCSjhkRMD1vjrXazPR+b+BzmXJ4LgudvIfPZW/c51JAR
+	PImFfahILWoGEEwIdw/hDuggzMBbOdU7KVd/8UUOo/L5kQXB3LitAiq8
+X-Gm-Gg: ASbGncswtxpF/9oO2M6X41mxgn3huY76SpdW4OZp6/pqilp8dCV17NAULNx3s9EKRlT
+	lvkK5XwNRUIbGUvwubeDCKzFL7r8CUj839AnSxOnxoGcPT3+i2wccCar3uXYCRVNyWm6B72vKmK
+	Fp83IvfQCy9vZLRV31UJ3J5zy9dSoFc0nYRfNGaOFYfQ5zn6xCm2rjqMWDiuiLeHqRCS6JD513s
+	0cHg+DTtKiWd2YjQP3qNVg4yy3NZD8shwOC0NVNFxmhxP1eeNoeu1aluQUpALaJwgC/UONvVb5d
+	GmdjRle2EPrE4DZkcZhKH1hOCLpJUK3Z35cPQAKMTEF+sqWNOJZdNSkK2BnKjwV8SEiQmE1AcK+
+	ETf/e0juwmyiiJ77ym/aYux7BHEncKsNEbJMO670Nta4z75J6KnQWTHTmyYjLkhAznK8ozqSong
+	I=
+X-Google-Smtp-Source: AGHT+IHhNR1Vyub4RCtWQ+nJC19r77hWU+mF/WXIXr/eAXq/yPW7ddIq3+qyBkxmJsRa7SaB+3K/mA==
+X-Received: by 2002:a5d:64e7:0:b0:3a4:dc42:a09e with SMTP id ffacd0b85a97d-3a6c98ee80dmr880624f8f.5.1750330665314;
+        Thu, 19 Jun 2025 03:57:45 -0700 (PDT)
+Received: from thomas-precision3591.home (2a01cb00014ec3008c7e3874bfd786a1.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:8c7e:3874:bfd7:86a1])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4535eac8bb6sm25078625e9.25.2025.06.19.03.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 03:57:45 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Chas Williams <3chas3@gmail.com>,
+	linux-atm-general@lists.sourceforge.net (moderated list:ATM),
+	netdev@vger.kernel.org (open list:ATM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] atm: idt77252: Add missing `dma_map_error()`
+Date: Thu, 19 Jun 2025 12:57:06 +0200
+Message-ID: <20250619105707.320393-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in
- do_sync_mmap_readahead
-Content-Language: en-GB
-To: Jan Kara <jack@suse.cz>
-Cc: akpm@linux-foundation.org, david@redhat.com, jgg@ziepe.ca,
- jhubbard@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- peterx@redhat.com, syzkaller-bugs@googlegroups.com, will@kernel.org
-References: <6852b77e.a70a0220.79d0a.0214.GAE@google.com>
- <hi6tsbuplmf6jcr44tqu6mdhtyebyqgsfif7okhnrzkcowpo4d@agoyrl4ozyth>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <hi6tsbuplmf6jcr44tqu6mdhtyebyqgsfif7okhnrzkcowpo4d@agoyrl4ozyth>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 19/06/2025 10:52, Jan Kara wrote:
-> Hi,
-> 
-> On Wed 18-06-25 05:56:30, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    bc6e0ba6c9ba Add linux-next specific files for 20250613
->> git tree:       linux-next
->> console+strace: https://syzkaller.appspot.com/x/log.txt?x=108c710c580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=2f7a2e4d17ed458f
->> dashboard link: https://syzkaller.appspot.com/bug?extid=8e4be574cb8c40140a2a
->> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c710c580000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179025d4580000
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/2430bb0465cc/disk-bc6e0ba6.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/436a39deef0a/vmlinux-bc6e0ba6.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/e314ca5b1eb3/bzImage-bc6e0ba6.xz
->>
->> The issue was bisected to:
->>
->> commit 3b61a3f08949297815b2c77ae2696f54cd339419
->> Author: Ryan Roberts <ryan.roberts@arm.com>
->> Date:   Mon Jun 9 09:27:27 2025 +0000
->>
->>     mm/filemap: allow arch to request folio size for exec memory
-> 
-> Indeed. The crash is in:
-> 
-> 	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-> 	if (vm_flags & VM_EXEC) {
-> 		/*
-> 		 * Allow arch to request a preferred minimum folio order for
-> 		 * executable memory. This can often be beneficial to
-> 		 * performance if (e.g.) arm64 can contpte-map the folio.
-> 		 * Executable memory rarely benefits from readahead, due to its
-> 		 * random access nature, so set async_size to 0.
-> 		 *
-> 		 * Limit to the boundaries of the VMA to avoid reading in any
-> 		 * pad that might exist between sections, which would be a waste
-> 		 * of memory.
-> 		 */
-> 		struct vm_area_struct *vma = vmf->vma;
-> 		unsigned long start = vma->vm_pgoff;
-> 				^^^^ here
-> which is not surprising because we've unlocked mmap_sem (or vma lock) just
-> above this if and thus vma could have been released before we got here. The
-> easiest fix is to move maybe_unlock_mmap_for_io() below this if. There's
-> nothing in there that would be problematic with the locks still held.
+The DMA map functions can fail and should be tested for errors.
 
-Thanks for the quick analysis, Jan! Ouch...
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/atm/idt77252.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This is still in mm-unstable I believe, so I'll send a fix-up patch to Andrew to
-move the unlock as you suggest.
-
-By the way, I don't think I was included on the original report; Is there a way
-I can sign up to be included on patched I authored in future?
-
-Thanks,
-Ryan
-
-> 
-> 		unsigned long end = start + ((vma->vm_end - vma->vm_start) >> PAGE_SHIFT);
-> 		unsigned long ra_end;
-> 
-> 		ra->order = exec_folio_order();
-> 		ra->start = round_down(vmf->pgoff, 1UL << ra->order);
-> 		ra->start = max(ra->start, start);
-> 		ra_end = round_up(ra->start + ra->ra_pages, 1UL << ra->order);
-> 		ra_end = min(ra_end, end);
-> 		ra->size = ra_end - ra->start;
-> 		ra->async_size = 0;
-> 	} else {
-> 
-> 								Honza
-> 
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b0a5d4580000
->> final oops:     https://syzkaller.appspot.com/x/report.txt?x=13b0a5d4580000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=15b0a5d4580000
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+8e4be574cb8c40140a2a@syzkaller.appspotmail.com
->> Fixes: 3b61a3f08949 ("mm/filemap: allow arch to request folio size for exec memory")
->>
->> ==================================================================
->> BUG: KASAN: slab-use-after-free in do_sync_mmap_readahead+0x4bf/0x830 mm/filemap.c:3282
->> Read of size 8 at addr ffff88806bda3410 by task syz-executor164/6247
->>
->> CPU: 0 UID: 0 PID: 6247 Comm: syz-executor164 Not tainted 6.16.0-rc1-next-20250613-syzkaller #0 PREEMPT(full) 
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
->> Call Trace:
->>  <TASK>
->>  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
->>  print_address_description mm/kasan/report.c:408 [inline]
->>  print_report+0xd2/0x2b0 mm/kasan/report.c:521
->>  kasan_report+0x118/0x150 mm/kasan/report.c:634
->>  do_sync_mmap_readahead+0x4bf/0x830 mm/filemap.c:3282
->>  filemap_fault+0x62c/0x1200 mm/filemap.c:3444
->>  __do_fault+0x135/0x390 mm/memory.c:5187
->>  do_read_fault mm/memory.c:5608 [inline]
->>  do_fault mm/memory.c:5742 [inline]
->>  do_pte_missing mm/memory.c:4269 [inline]
->>  handle_pte_fault mm/memory.c:6087 [inline]
->>  __handle_mm_fault+0x37ed/0x5620 mm/memory.c:6230
->>  handle_mm_fault+0x40a/0x8e0 mm/memory.c:6399
->>  faultin_page mm/gup.c:1186 [inline]
->>  __get_user_pages+0x1aef/0x30b0 mm/gup.c:1488
->>  populate_vma_page_range+0x29f/0x3a0 mm/gup.c:1922
->>  __mm_populate+0x24c/0x380 mm/gup.c:2025
->>  mm_populate include/linux/mm.h:3354 [inline]
->>  vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
->>  ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f580d0c3919
->> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
->> RSP: 002b:00007f580d07c208 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
->> RAX: ffffffffffffffda RBX: 00007f580d14d348 RCX: 00007f580d0c3919
->> RDX: 0000000001000006 RSI: 0000000000b36000 RDI: 0000200000000000
->> RBP: 00007f580d14d340 R08: 0000000000000005 R09: 0000000000000000
->> R10: 0000000000028011 R11: 0000000000000246 R12: 00007f580d11a270
->> R13: 00002000000001d8 R14: 00002000000005c0 R15: 00002000000001c0
->>  </TASK>
->>
->> Allocated by task 6247:
->>  kasan_save_stack mm/kasan/common.c:47 [inline]
->>  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
->>  unpoison_slab_object mm/kasan/common.c:319 [inline]
->>  __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:345
->>  kasan_slab_alloc include/linux/kasan.h:250 [inline]
->>  slab_post_alloc_hook mm/slub.c:4148 [inline]
->>  slab_alloc_node mm/slub.c:4197 [inline]
->>  kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4204
->>  vm_area_alloc+0x24/0x140 mm/vma_init.c:31
->>  __mmap_new_vma mm/vma.c:2452 [inline]
->>  __mmap_region mm/vma.c:2662 [inline]
->>  mmap_region+0xe0d/0x2080 mm/vma.c:2732
->>  do_mmap+0xc45/0x10d0 mm/mmap.c:561
->>  vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
->>  ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> Freed by task 6249:
->>  kasan_save_stack mm/kasan/common.c:47 [inline]
->>  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
->>  kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
->>  poison_slab_object mm/kasan/common.c:247 [inline]
->>  __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
->>  kasan_slab_free include/linux/kasan.h:233 [inline]
->>  slab_free_hook mm/slub.c:2381 [inline]
->>  slab_free_after_rcu_debug+0x129/0x2a0 mm/slub.c:4693
->>  rcu_do_batch kernel/rcu/tree.c:2582 [inline]
->>  rcu_core+0xca8/0x1710 kernel/rcu/tree.c:2838
->>  handle_softirqs+0x283/0x870 kernel/softirq.c:579
->>  __do_softirq kernel/softirq.c:613 [inline]
->>  invoke_softirq kernel/softirq.c:453 [inline]
->>  __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
->>  irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
->>  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
->>  sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
->>  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
->>
->> Last potentially related work creation:
->>  kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
->>  kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:548
->>  slab_free_hook mm/slub.c:2342 [inline]
->>  slab_free mm/slub.c:4643 [inline]
->>  kmem_cache_free+0x2f6/0x400 mm/slub.c:4745
->>  remove_vma mm/vma.c:465 [inline]
->>  vms_complete_munmap_vmas+0x626/0x8a0 mm/vma.c:1288
->>  __mmap_complete mm/vma.c:2518 [inline]
->>  __mmap_region mm/vma.c:2670 [inline]
->>  mmap_region+0x1221/0x2080 mm/vma.c:2732
->>  do_mmap+0xc45/0x10d0 mm/mmap.c:561
->>  vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> The buggy address belongs to the object at ffff88806bda33c0
->>  which belongs to the cache vm_area_struct of size 256
->> The buggy address is located 80 bytes inside of
->>  freed 256-byte region [ffff88806bda33c0, ffff88806bda34c0)
->>
->> The buggy address belongs to the physical page:
->> page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x6bda3
->> ksm flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
->> page_type: f5(slab)
->> raw: 00fff00000000000 ffff88814040ab40 ffffea0001b656c0 0000000000000003
->> raw: 0000000000000000 00000000000c000c 00000000f5000000 0000000000000000
->> page dumped because: kasan: bad access detected
->> page_owner tracks the page as allocated
->> page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5532, tgid 5532 (rm), ts 56329480650, free_ts 52472185128
->>  set_page_owner include/linux/page_owner.h:32 [inline]
->>  post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
->>  prep_new_page mm/page_alloc.c:1712 [inline]
->>  get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
->>  __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
->>  alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
->>  alloc_slab_page mm/slub.c:2451 [inline]
->>  allocate_slab+0x8a/0x3b0 mm/slub.c:2619
->>  new_slab mm/slub.c:2673 [inline]
->>  ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
->>  __slab_alloc mm/slub.c:3949 [inline]
->>  __slab_alloc_node mm/slub.c:4024 [inline]
->>  slab_alloc_node mm/slub.c:4185 [inline]
->>  kmem_cache_alloc_noprof+0x283/0x3c0 mm/slub.c:4204
->>  vm_area_dup+0x2b/0x680 mm/vma_init.c:122
->>  __split_vma+0x1a9/0xa00 mm/vma.c:512
->>  vms_gather_munmap_vmas+0x2de/0x12b0 mm/vma.c:1354
->>  __mmap_prepare mm/vma.c:2351 [inline]
->>  __mmap_region mm/vma.c:2641 [inline]
->>  mmap_region+0x71a/0x2080 mm/vma.c:2732
->>  do_mmap+0xc45/0x10d0 mm/mmap.c:561
->>  vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
->>  ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> page last free pid 5212 tgid 5212 stack trace:
->>  reset_page_owner include/linux/page_owner.h:25 [inline]
->>  free_pages_prepare mm/page_alloc.c:1248 [inline]
->>  __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
->>  __slab_free+0x326/0x400 mm/slub.c:4554
->>  qlink_free mm/kasan/quarantine.c:163 [inline]
->>  qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
->>  kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
->>  __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
->>  kasan_slab_alloc include/linux/kasan.h:250 [inline]
->>  slab_post_alloc_hook mm/slub.c:4148 [inline]
->>  slab_alloc_node mm/slub.c:4197 [inline]
->>  __do_kmalloc_node mm/slub.c:4327 [inline]
->>  __kmalloc_noprof+0x224/0x4f0 mm/slub.c:4340
->>  kmalloc_noprof include/linux/slab.h:909 [inline]
->>  tomoyo_realpath_from_path+0xe3/0x5d0 security/tomoyo/realpath.c:251
->>  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
->>  tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
->>  security_inode_getattr+0x12f/0x330 security/security.c:2377
->>  vfs_getattr fs/stat.c:259 [inline]
->>  vfs_statx_path fs/stat.c:299 [inline]
->>  vfs_statx+0x18e/0x550 fs/stat.c:356
->>  vfs_fstatat+0x118/0x170 fs/stat.c:375
->>  __do_sys_newfstatat fs/stat.c:542 [inline]
->>  __se_sys_newfstatat fs/stat.c:536 [inline]
->>  __x64_sys_newfstatat+0x116/0x190 fs/stat.c:536
->>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> Memory state around the buggy address:
->>  ffff88806bda3300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>  ffff88806bda3380: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
->>> ffff88806bda3400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>                          ^
->>  ffff88806bda3480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->>  ffff88806bda3500: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> ==================================================================
->>
->>
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->>
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->>
->> If you want syzbot to run the reproducer, reply with:
->> #syz test: git://repo/address.git branch-or-commit-hash
->> If you attach or paste a git patch, syzbot will apply it before testing.
->>
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->>
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->>
->> If you want to undo deduplication, reply with:
->> #syz undup
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index 1206ab764ba9..4217586a82d6 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 
+ 	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
+ 						 skb->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
++		return -ENOMEM;
+ 
+ 	error = -EINVAL;
+ 
+@@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+ 		paddr = dma_map_single(&card->pcidev->dev, skb->data,
+ 				       skb_end_pointer(skb) - skb->data,
+ 				       DMA_FROM_DEVICE);
++		if (dma_mapping_error(&card->pcidev->dev, paddr))
++			goto outfree;
+ 		IDT77252_PRV_PADDR(skb) = paddr;
+ 
+ 		if (push_rx_skb(card, skb, queue)) {
+-- 
+2.43.0
 
