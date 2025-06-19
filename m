@@ -1,102 +1,93 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5364A1D;
-	Thu, 19 Jun 2025 08:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BE7200127
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321859; cv=none; b=GtoGiFZMYwP5VGLhgs8mmUZOkxX5KHxokaOFrLBu/dW7gCmQRrFaIBMvqVQK89mnH+RKd8kvx8AoPuzut6VxfloShj80iU6ADDGSESgNGPl7EVVBqM1NiENmDgpWCYof5389nS1XiC5TKP9mP+8ZCovCmZ8+N+mOGSpZ9FHdV2U=
+	t=1750321945; cv=none; b=FqaSq/lP/3iMZMEXj/V1LEkN6qshSWo8wKtRv8J1Y2rD1tpVcLzxhT6Q3fnjnxz3/+qdv67F3D9eTJqtJMXwIzd84qtuy3MdA/3Zw0NxVoOfbV59Izx7AOgkIpgoSM+0WGqewzbzjNaMH4ykDM/PMdIL3zI/wz4DkNZ+sZYiSag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321859; c=relaxed/simple;
-	bh=5U1WxsatwH9pCFmpAeShXCBLm1r5I+NDtPeCRXqZVpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mRayQ9KEewVOOZ82F1EEmdPqVrKrTVox54VuE/+8g8Ofw553w4rKe8gSlA0Mbmi7rME/DBTYYIwns9uMiAYWjucd9jH3CKSQ6h9RE/wdCrzhAkTy0AR9kmjBamDACtGwkLfRTv1VZOqXgWJRP/LNlGzZBBDsiB6H6wXLkS1ZpX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0LWzaze; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750321945; c=relaxed/simple;
+	bh=veLbyqyQiNiNGf8kWYBurqlKDpBrvWeCNoEqkaERoQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDqGccA7eJXa0hKuhVo6nMyKYns9Dobe8IdrpP0Lck0dbd+iL+7jgngHMJQ/QN1LSDVMtu/zEGQgpSg4ZBiELeIDPI1kfPu7lyiII1DyV8GEy5vkNfbmsyLlATLwoRI6VSBMmRuio5V9oKzci/59AYbe6JxHVZxcb7ZP0FCwUVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfBRZZBg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0LWzaze"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf214200so4385615e9.1;
-        Thu, 19 Jun 2025 01:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750321856; x=1750926656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1T6FrQp2okPwOD58MAho0evF8YiqmPgaoUsaoWni2dg=;
-        b=K0LWzazeK2rCTbFZMcSxY6kuWtGLS9/fyl1pZ3MWCKvOlyhl6bYc+0i0MOTOLIO3hy
-         pyTiaFSexrbmGc0WgkSpS0wJ7qVImr7bt+iz7Ib4MWM8i+VUDqw7fWci4xgPCAWMq5ZF
-         ZqmGfFo2cEFgv9RYgTu7ouwE8/HpfKBZifsKoIrIgkfpQVIwcn38sfzbA039WctulEIj
-         mUdbZgcPuAqxwDN3DGtyXHRaoJtqK5YGiigNgN7XwCJvAIPyhOU44RrJ+oa+lTPGwX0g
-         yVg32fo5JlSuiajSG76wu0NukcwWXNmkiZYf/hKpVqHaIw2hPQyNN/5tgyKwk/byk+Y8
-         re8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321856; x=1750926656;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1T6FrQp2okPwOD58MAho0evF8YiqmPgaoUsaoWni2dg=;
-        b=KHm8g/5WRcHjMcj6ChtqUuKZH8MwZ02JmkGh08rbDLjhnGhnWbtYenrF4T3PpnPKyl
-         W1+cwlUxmZYTWfO701W+OxsitFXD92aAW6/ZJYroHOCT2o0NDR6IkSxh8jFcG7Iq6Diq
-         y8FOUjVFVHgGigc9NAGBV0tSRSPahfWDHLO9C54Atij+dsbhEo+iLpkcVOmZL/EmLdRb
-         1XFmH8clGQ89cu9edboKGPWmzbfnVyO8te5+H4tDXDrX9qPaSiZdUoBMNiC9lqXnyML2
-         n6uAtYzfy+zBlr+caQlFVvTwIkbTWwhb0DJujTQ6OknfjcF9L1XwcUO3PArhzK5dTE8e
-         wE5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUPKFeb/bosS0zHvDhZW3GpSgB9I/CZaq2vRAw98pn8+vzTF5R3gP6K6+ftG1yiJJgOl/dg6ed2jbg/EOVb@vger.kernel.org, AJvYcCUqx6SOE+cWG2td39lb8HC3Q88q0NozY7djxenzrshZaEbA5Z7x4Bjjig38g/HCBwrviWnPFL41ZBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdokKCCpEG1k+vnH+j+1Rcu+uPMQB8PN8NfNaGmnysf3bNsK67
-	qQ1zpJl03yPFhyqsIPZrCEwROqzxVQx+L8eLMNIM0Izq8RXP+aS894LJSSG6yp5fEWAlhw==
-X-Gm-Gg: ASbGncvdxRNwecJEbit5T3fWzaQdYv5XPME1bIRm8bKL8jT5i3Ix1Jw2wan2uQ4ck+b
-	HwlbZL44R20mExwrJBqF+ot6leE/yNZ5wVpYnJRGoiZpPgA8qh9Fe/fRdU+iXJ8QcgzYN+VdCDY
-	n5ahhyIM3QbNuGppa9pP7a0gvCdVYDH1UkwimLFZCap8evmkutpdL2ctV54eD4tmZf7shChtALp
-	ngWDNnG4M+Zg0qGui6IOFf/Jse5pQQIPRb+a/4UIK9KYcUSETpEzQS+0vkAFvpe/H+0olgO3wNy
-	Znb5y6Gcw8/lhRYGrcbTg/4pUwbLOTNZhtoECxeoWax+Kht67S9wyjXws5Bs
-X-Google-Smtp-Source: AGHT+IEQpQd/8hmEsQ9eRTPMz052eU5rjSLNmdJtdjr2u9+ZU4TSJSnOXYilvQhtflXrG48W5EC87g==
-X-Received: by 2002:a05:600c:1c02:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-4533cab540cmr174416875e9.20.1750321856202;
-        Thu, 19 Jun 2025 01:30:56 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453599c9854sm27663455e9.1.2025.06.19.01.30.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 01:30:55 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfBRZZBg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A845BC4CEEA;
+	Thu, 19 Jun 2025 08:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750321944;
+	bh=veLbyqyQiNiNGf8kWYBurqlKDpBrvWeCNoEqkaERoQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VfBRZZBg81CkJZ9QDpl4D45dW/W47hCM0epYD+mlcZs0gkILDaAtWFEVw0UAYTkh5
+	 RQVOe7/lcj94OLvrqtZB72OA+OH/FGCSQ6Tp1kFXa3qEHDIyz7Xs/iBFkGqIp6mJ4F
+	 Ty6EfEX518vZ505h+G3avKpVynfNPqVDs8bD8q2s3Z/1BE1JL0RrIVjX5YixqZKpuX
+	 g/EcOVfZZwCc8cDJ1vd5DwuRRkp13nvuFjA3QcVECJzBy3nAea7zPScgpNgVinc8T2
+	 nzlFMSp0o2v+LwtIjnig2dTY1R2bYzE6sAhn+gOIW/JB5WC7Mo5pZTOOQA6czqYPs3
+	 QlzYGaIzuuQlA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uSAh2-0000000085F-2DGF;
+	Thu, 19 Jun 2025 10:32:21 +0200
+Date: Thu, 19 Jun 2025 10:32:20 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] clk: moxart: Make read-only array div_idx static const
-Date: Thu, 19 Jun 2025 09:30:35 +0100
-Message-ID: <20250619083035.1835133-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+Message-ID: <aFPLFKMnlvtBjD1P@hovoldconsulting.com>
+References: <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com>
+ <CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com>
+ <aEnUHv8xMTDYgps9@google.com>
+ <aEsfJj35W7HQlTOH@google.com>
+ <aFKSLblsjXoMxK2W@hovoldconsulting.com>
+ <aFLy9lFYnhA918TO@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFLy9lFYnhA918TO@google.com>
 
-Don't populate the read-only array div_idx on the stack at run time,
-instead make it static const.
+On Wed, Jun 18, 2025 at 10:10:14AM -0700, Brian Norris wrote:
+> On Wed, Jun 18, 2025 at 12:17:17PM +0200, Johan Hovold wrote:
+> > On Thu, Jun 12, 2025 at 11:40:38AM -0700, Brian Norris wrote:
+> > > For the record, I was reminded that DWC/pcie-qcom does not, in fact,
+> > > support irq_chip::irq_set_affinity(), which could perhaps be a unique
+> > > factor in his systems' behavior.
+> > 
+> > No, we use the GIC ITS for the NVMe interrupts on X1E so that should
+> > not be involved here.
+> 
+> Huh, interesting callout. I had looked at trying that previously on
+> another DWC-based platform, for the same reasons noted in that
+> switchover.
+> 
+> Anyway, all I can tell you is that Alex's logs clearly showed:
+> 
+>   set affinity failed(-22)
+> 
+> for what looked like the NVMe interrupts during CPU unplug / migration.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/clk/clk-moxart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, those warnings are for wakeup enabled GPIO interrupts (e.g. the lid
+switch), which are currently partly disabled on this platform pending
+some rework of the PDC driver:
 
-diff --git a/drivers/clk/clk-moxart.c b/drivers/clk/clk-moxart.c
-index 3786a0153ad1..4d34d1d18dbd 100644
---- a/drivers/clk/clk-moxart.c
-+++ b/drivers/clk/clk-moxart.c
-@@ -58,7 +58,7 @@ static void __init moxart_of_apb_clk_init(struct device_node *node)
- 	struct clk_hw *hw;
- 	struct clk *pll_clk;
- 	unsigned int div, val;
--	unsigned int div_idx[] = { 2, 3, 4, 6, 8};
-+	static const unsigned int div_idx[] = { 2, 3, 4, 6, 8};
- 	const char *name = node->name;
- 	const char *parent_name;
- 
--- 
-2.49.0
+	602cb14e310a ("pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now")
 
+(And with the rework those warnings go away, while the IRQ suspend
+regression is still there.)
+
+Johan
