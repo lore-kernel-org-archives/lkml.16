@@ -1,114 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3195519D8BE;
-	Thu, 19 Jun 2025 17:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351A319D8BE;
+	Thu, 19 Jun 2025 17:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750355969; cv=none; b=hQMmZ4UK+ePj6Ng4d0foxPL3wFPuwG3h4/c85otiXrLXAb104dAaLB2WK1AgIGV1vlxbraq5dCeophPEVXllfFwVw10QoRtjdHv7v3NSTK/Qu4JuPbj2ht6zv1VHpKT1MrTK/i8GBAkXvTpeNOHPYhBrBU4WKNIMcRhbucFQ7J8=
+	t=1750355976; cv=none; b=teHOQNO+/8jHSIyJCGAUKEomPgHMu7wzbJDpL7HOruxsldJvfpwrQ+B0PWyHD45/Tdk8viU1RkMURFcdcdHA/8zsr4WPSgaGCPgDkzbuyfQswkVZhpo5PWloa7leJ+sLuLjieSYO3rn1pAt6krZ8d+ysLLTg7/AengpoHdDRvxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750355969; c=relaxed/simple;
-	bh=d58puvBfc5wuZvpZedp1Wh9cQYVuL5NmGhl8ie1qK+8=;
+	s=arc-20240116; t=1750355976; c=relaxed/simple;
+	bh=2U/l2PnxLrKImL4dUICzMCLm3l/pMEFrrw1mzZW2ckY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JcndU8VlRnFK5Y2X3D1sXZYPb20szZbFixIYxSRyel8hyosE7HpV8xDQvNckroiLzpBB/IySboFmy3JA142iyauU4a6BtgbGT4J3wqKY81Q0OFihH+sgCpA0dRLQtL6SUfH3J8YGqhOJbV63hbuhC6qXVqrFQEVyHIldodEb5yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4JQ0XEw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRfKGfmCzBVwDZ/ig1bnMXrskP287DKxeCgc9Po5y1JzrlIHfiD+H2X9uCOS5rUa0Q2Gw7pQKeakj5iCnVlsN+bYcsCvV5uiiSxhN/uJv8LaxvHgEbVYpzt+nektg6DLeG9HW7mkmtbHD0YekLd8BWQNEmAc+dbrKIYaXFaoMEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=YPRCtOAz; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4JQ0XEw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D627C4CEEA;
-	Thu, 19 Jun 2025 17:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750355968;
-	bh=d58puvBfc5wuZvpZedp1Wh9cQYVuL5NmGhl8ie1qK+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i4JQ0XEwdQ0RQTKhT67jP1Lb/RKD1KrfDMR2taXEOlHxCjr0qGbkC2E0twFaVtPqd
-	 PfPSntVaxXlkxwK4gDfxNjkfvREpWXG59UoAaOPFmf89kkn0QVJWCJm3Wchwks1IxC
-	 49izVI9Exx+Zs9q7eF8Lkeq/0Ku5NJpuUq8Tm+f8Q4VMqWZ3gXVggebJTSiFk2mChg
-	 9kG51CuHuO2GvnTV6xoDe+24AaA1ri1O+RBBYbKiFR1v7TyP63A1Sse8VSgjC9uunY
-	 dLSk52vqZyWY62V98Kl7S5oJvA1C8fBcsCqljAPnMTzPDL2iHXI18Krgi7tWf9i5oB
-	 AxB3G+cUJtOJA==
-Date: Thu, 19 Jun 2025 19:59:22 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: ojeda@kernel.org, Rob Herring <robh@kernel.org>, alex.gaynor@gmail.com,
-	rafael@kernel.org, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	lenb@kernel.org, wedsonaf@gmail.com, viresh.kumar@linaro.org,
-	alex.hung@amd.com, dingxiangfei2009@gmail.com
-Subject: Re: [PATCH v7 3/9] samples: rust: platform: conditionally call
- Self::properties_parse()
-Message-ID: <aFRP-vGMoZNmQZ2E@pollux>
-References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
- <20250618101325.3048187-1-igor.korotin.linux@gmail.com>
- <20250618131958.GA1550757-robh@kernel.org>
- <aFLJJkeFfHR9GB-0@pollux>
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="YPRCtOAz"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bNSzk2mVXz9sWQ;
+	Thu, 19 Jun 2025 19:59:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1750355970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q9+ckaoJjURrvPx9FWjFciiooMu/1f1K+tszFhwB17Y=;
+	b=YPRCtOAzbpVrVSksy4oKfgYloaiayN2y7SidmDGheBxq5J3+O7zAfd/jwnKXh8Hye8A4Pt
+	OlwNdjGJLDVeEyW40/L+U1xH9kINSGDkNZlrGP32v2m4gzGb6lpFUm/F4wmHg230S43+VK
+	DOR9XZazVEO1JfsWXIlqlGA+g0TyI0BvZHufa3dNiCWWeQ1DJgfyqoSCdKZzE8PyMBv7X+
+	FaUHdtGV40j7i+gzer2ofDAUOKnXpIHvk7exz9SBXhIH6LZDaKQytt0Dqm2P0TYzZDJErQ
+	7LbiqGzISPh33sfUE5CiJo21vW1ZlF24QhYvJgd/elaenldjUP8ljum+KwKkKw==
+Date: Thu, 19 Jun 2025 23:29:23 +0530
+From: Brahmajit Das <listout@listout.xyz>
+To: Mark Harmstone <mark@harmstone.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	kees@kernel.org, ailiop@suse.com
+Subject: Re: [PATCH v2] btrfs: replace deprecated strcpy with strscpy
+Message-ID: <rbjjfbhrwh4qjfj4pjhb5zzrvyddjlekfed6kfcrtuurj2ovgg@dm6xesb7nuzm>
+References: <20250619140623.3139-1-listout@listout.xyz>
+ <20250619153904.25889-1-listout@listout.xyz>
+ <b8945d37-3eb9-4ad6-b3eb-2725dbb008ad@harmstone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFLJJkeFfHR9GB-0@pollux>
+In-Reply-To: <b8945d37-3eb9-4ad6-b3eb-2725dbb008ad@harmstone.com>
+X-Rspamd-Queue-Id: 4bNSzk2mVXz9sWQ
 
-On Wed, Jun 18, 2025 at 04:11:57PM +0200, Danilo Krummrich wrote:
-> On Wed, Jun 18, 2025 at 08:19:58AM -0500, Rob Herring wrote:
-> > On Wed, Jun 18, 2025 at 11:13:25AM +0100, Igor Korotin wrote:
-> > > From: Danilo Krummrich <dakr@kernel.org>
-> > > 
-> > > Only call Self::properties_parse() when the device is compatible with
-> > > "test,rust-device".
-> > > 
-> > > Once we add ACPI support, we don't want the ACPI device to fail probing
-> > > in Self::properties_parse().
-> > > 
-> > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > 
-> > This needs your S-o-b as well since you sent the patch.
-> > 
-> > > ---
-> > >  samples/rust/rust_driver_platform.rs | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-> > > index 000bb915af60..036dd0b899b0 100644
-> > > --- a/samples/rust/rust_driver_platform.rs
-> > > +++ b/samples/rust/rust_driver_platform.rs
-> > > @@ -40,7 +40,12 @@ fn probe(
-> > >              dev_info!(dev, "Probed with info: '{}'.\n", info.0);
-> > >          }
-> > >  
-> > > -        Self::properties_parse(dev)?;
-> > > +        if dev
-> > > +            .fwnode()
-> > > +            .is_some_and(|node| node.is_compatible(c_str!("test,rust-device")))
-> > 
-> > I think you should be checking just is this ACPI or DT rather than 
-> > compatible. It's kind of an anti-pattern to test compatible in probe. 
-> > The reason is we've already matched to a compatible and have match data 
-> > to use, so we don't need to do it again. It becomes quite messy when 
-> > there are numerous possible compatibles.
+On 19.06.2025 18:06, Mark Harmstone wrote:
+> On 19/06/2025 4.39 pm, Brahmajit Das wrote:
+...
 > 
-> Yeah, that was my first approach; here's the patch from a few days ago [1].
+> Surely this doesn't compile... strscpy takes three parameters.
 > 
-> The reason why I decided against this, was that all the properties we check in
-> Self::properties_parse() in a fallible way *only* apply to the device with this
-> compatible string.
-> 
-> But I don't mind if we replace it with [1] either.
+It does, the third parameter is optional. From include/linux/string.h
 
-As mentioned, I don't mind either, so let's change it up.
+#define strscpy(dst, src, ...) \
+	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
 
-@Igor, can you please pick up the patch in [1] and at the same time drop the
-patch introducing FwNode::is_compatible() and replace node.is_compatible() with
-node.is_of_node() in this one?
+But I'm more than happy to add the third parameter.
 
-Please also remember to add your SoB to the patches not authored by yourself.
-
-Thanks,
-Danilo
-
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/commit/?h=rust/is_of_node
+-- 
+Regards,
+listout
