@@ -1,203 +1,591 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFF6219A67
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B035719DF7A;
+	Thu, 19 Jun 2025 08:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750320023; cv=none; b=mtqKsy0FemDu4ZonbNyMRgEW3y5eeIKQYZOTRCdpbm9wTW9q12dN/d3X6L7OgBU8AMzkpzVwKKax2EcNwUt8E5MIhwMUegrQABJNU2mWINY/RY4VkmnkjTKTGiIe4QnHnW26S7gczEbvG026nhDsfdTpXquwBsCDhVbyP8Ka2Ds=
+	t=1750320044; cv=none; b=m4unYqZIpIG0zlmFcDCtcwDMRr0LKbKClk2qJWBfqL7bhiFQKTu2D0T3cqSeV6icIH3f7F4AthJjuyZYxYsgbMt9FK/4jGr5cvGwAz7J0W5vIiCJzyXYrfgqo+kEMQukc/GoL5sVelPnoNJ5gGktuSXexNpNVMSZWCuIzfzMlsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750320023; c=relaxed/simple;
-	bh=wMaMYUd6M4iPUB+6W02x9RPOUf1vRDMFQbyKwn8OqgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tRiRLJaosyRDIChU5L/Tz/CtqRpfLPeHOL9fF7sEkR1qsTbHTixLQ+/qx2MkXXpMp9iV1B5lrTfpp3Bo1efXsz3V+PzuvUGRAo6X/IEDhbfhL6RK3QNUGcl+lG+LTEx4iiyNxN1U/4s8TwckpQZbWX+hiTBMbKI0H42IHpdqEOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=niyOCXat; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="niyOCXat"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J2FVXt008372
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:00:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zBolN5oacxC0P41K6szANjJ24uE94hXebudQ19uN7Vc=; b=niyOCXatXE3NVwd+
-	Rkwixu4yq9sq8U/+eSIBixS3OwlbFzGe4GgFFfmFHCs6i/wlpOBmUZ6RX5IAAuTm
-	DakOpqraIU4clXJSyAl3RygvI8raZpmB0kCqxjAPvj9RHPZbp2b6yuxikIQ5EQY5
-	dBUt9PRwY7lSQGzo2lHQa+2K2xTTpIW+gj9vlZYiYdHmcpWDUEgxIKaU63FEsLTK
-	pkOBtkAFLW08p5YWRm3pABxJ56o+hF+poh9cCLA0Mu4Dk+F27WP7ZcvmodhxwTM5
-	+rrw+7t4eDDkeZLQj9YPVCPsKzlObIHll42SgrcTSZxFk+/Yf7Rq1DV/YEL0xfYv
-	PvZbbw==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47c9krrwpk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:00:21 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-740270e168aso499540b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:00:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750320020; x=1750924820;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zBolN5oacxC0P41K6szANjJ24uE94hXebudQ19uN7Vc=;
-        b=KBuxr3iX3Q04rqqCpbtTUBRobIFp3si2ShHacWCsdlHPPkExpUMmES4LFshY6IkECS
-         Qk8QPcDYbNrhKLYvmrpmZRJd/lzA4q4HVfcjTLWIVOfC3/iiWOQqgD4Mrtk9ug7m+6qa
-         xB26xduXBdpvMyCjh+SCXiCGGibGnCk+0qYBJyfqQdH1b4Ga1ZRp45frLKPJhphAC8aL
-         QiD4lGS0qX076BuFyeM1SdmbThPVdakWc98VGO5U5g4MKBkagyHfW+MZMahqtiXbosHK
-         wyDRqnhSyK/mQdZyMtd3nv37OiHd3/Mo26IS05ca2Cc2Ietwyx+s1PXJ12hgV0dA3zFV
-         1FPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVltyekYPbhn9hn27fV827r06hM6vBwcc/yxjRdMKI940jQ+z9Vb62hrJAIrgzntRO6CAY635Sf+W6jpY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4njjo0g2LjcasfD3bcmwoPvEsS5xxXJeK1419fJ2kythAHa5o
-	+UTMlmeXpAaw0WGnRbdilt3vMxm8LsjmrKc8ujxTw99ZdNyFyjbWEY1uug1rtyL8EIDC1BBHZ+n
-	58OwQ5Ft30nqVF/0alYNcmnNOXsbNX2eQZ+kn23W0Jzh6hyfEOTBfm7w11TkBesk2D0Y=
-X-Gm-Gg: ASbGnctK1ZizZjpSdUgp+UlG0YJwXugcPm9qLFs/z8zl0LmBR5/6XghGlMpil8I0Cx8
-	QPflgoRpTWZIOHhB7sdGV63jbeFOn/YvfDBfrJNFDcN0jMxdjylhCCWJ1HUboAxQkFoww7vQsfx
-	KlatUJkziYYPey+m0fiyakq/ee0rBVxbjZk3bbMm9PUK8PYhwG0yXCCx1WilrebPuCPTKNNlqsx
-	RBOqehzJKGGeEB3Jun/Owd18i/aC2zDBVkWl9rDX1NEHVvpIh60U0YZXcpiFPW2BFjTPGD4QUkF
-	YTlkQmlEgeNPbXE5JZRVxQ4layCeWKaiaZR9QPXg1Ie6OerbuLPpfyXx2Jx4ar4kB4P74w==
-X-Received: by 2002:a05:6a00:228b:b0:748:fb7c:bbe0 with SMTP id d2e1a72fcca58-748fb7cc2d2mr2896536b3a.24.1750320020200;
-        Thu, 19 Jun 2025 01:00:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGeXph0uurb6f9i+olydyrvX72jabH9v+6bXULYDipT8b9iY6AU8w1map6IEpxVIXRkai4iyQ==
-X-Received: by 2002:a05:6a00:228b:b0:748:fb7c:bbe0 with SMTP id d2e1a72fcca58-748fb7cc2d2mr2896469b3a.24.1750320019594;
-        Thu, 19 Jun 2025 01:00:19 -0700 (PDT)
-Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900ce7adsm13061762b3a.149.2025.06.19.01.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 01:00:19 -0700 (PDT)
-Date: Thu, 19 Jun 2025 01:00:16 -0700
-From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, krishna.chundru@oss.qualcomm.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Qiang Yu <quic_qianyu@quicinc.com>,
-        Ziyue Zhang <quic_ziyuzhan@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: qcom,pcie-sc8180x: Drop unrelated
- clocks from PCIe hosts
-Message-ID: <aFPDkFUEE4BzdJh/@hu-qianyu-lv.qualcomm.com>
-References: <20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com>
- <20250521-topic-8150_pcie_drop_clocks-v1-1-3d42e84f6453@oss.qualcomm.com>
- <qri7dxwqoltam2yanxicgejjq3xprd6cunvpgukasmtt7c5lmh@ikdl24royen6>
+	s=arc-20240116; t=1750320044; c=relaxed/simple;
+	bh=Msg3IrcDsJvjEck9giSGZnpOx3G+bp6xsZ+CqzuCTgo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dsSAPtsExNanrPs9GshqYm60eTE0fscLurwo3sleQERIAA3S6v4M6ctWuNDpk1B4owSkMw1vnl56HPtYXB7rpmc0vsUcpWmQmOUrNGFP/7b6jAXBUWJZJ3i7IJmGks8huS3FnnzxBPuXM1IAyYUt29whXLL7b2ge4i2D+xVBq0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgAHppSSw1NoXc+hAA--.24322S2;
+	Thu, 19 Jun 2025 16:00:20 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v3 1/2] dt-bindings: reset: eswin: Documentation for eic7700 SoC
+Date: Thu, 19 Jun 2025 16:00:12 +0800
+Message-Id: <20250619080012.1300-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+References: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <qri7dxwqoltam2yanxicgejjq3xprd6cunvpgukasmtt7c5lmh@ikdl24royen6>
-X-Proofpoint-GUID: M5dYz6w85cEf2bgh14mae5N023MQMUkU
-X-Authority-Analysis: v=2.4 cv=UPTdHDfy c=1 sm=1 tr=0 ts=6853c395 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=3eHYEclfckd1VWwzELkA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDA2NyBTYWx0ZWRfX++Uku/pI2YA2
- kbot8j7+pNn3dmyj0/ZaQ1GydHgkhvsYzS+yRDz3MuBvrdy8O2abv0wpCvEmEE63e8cmsCr3F4S
- qKrZrLuYBemFkHjEPLdC7TQUp2C/igqJbkQwl+yntXvh5GvZDPE7bQyUo893GPVeorPT4diUyjq
- pJ9SrdxtgP5Uh9SF94wwKO7x9sZXlzW/2+QS3rZzX2nsxgR1dKGWdgGXMMTDdXCJyKopff0ghp6
- Y0M5dXyODgnMWl8MjpdHRx9rEsqWRGPm3Nsgq1/+UMO3CBEhjGcpf6sJqs19jCSaTWHDlfvSwqr
- kpN49vF+MxxwYX7NIiqhBM2s2vs8HzWor4hDw7r4YKWr/uU2rh9QdZxcq0EA2ZOvCWBhyE/Ajs7
- NzetQIJ9cuNm+qqjr7C9sJBjFgCTm579Ksqo82Mkab+5MyIXSDv657lmCkWE7MuKYz1X626w
-X-Proofpoint-ORIG-GUID: M5dYz6w85cEf2bgh14mae5N023MQMUkU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_03,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506190067
+X-CM-TRANSID:TQJkCgAHppSSw1NoXc+hAA--.24322S2
+X-Coremail-Antispam: 1UD129KBjvAXoW3Aw1xtryxKF4fWF1UXFyfCrg_yoW8Jw4kCo
+	W7KF4fXwnrtr4Ikr4DGa17W34UZry7Jw18Kry8trykAa4xtr1DGF17X3y8Xrn0qa4jgFsY
+	kw15trWDCryYkw1Dn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE-syl42
+	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
+	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
+	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUrdb1DUUUU
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Fri, Jun 13, 2025 at 02:43:38PM +0530, Manivannan Sadhasivam wrote:
-> + Krishna
-> 
-> On Wed, May 21, 2025 at 03:38:10PM +0200, Konrad Dybcio wrote:
-> > From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> > 
-> > The TBU clock belongs to the Translation Buffer Unit, part of the SMMU.
-> > The ref clock is already being driven upstream through some of the
-> > branches.
-> > 
-> 
-> Can you please cross check with the hardware programming guide (I don't have
-> access to atm) that the 'ref' clock is no longer voted by the driver?
->
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-CLKREF is required for PHY. Since it has been voted in PCIe PHY driver,
-omitting it here is reasonable.
+Add device tree binding documentation and header file for the ESWIN
+eic7700 reset controller module.
 
-- Qiang Yu
+Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+---
+ .../bindings/reset/eswin,eic7700-reset.yaml   |  42 ++
+ .../dt-bindings/reset/eswin,eic7700-reset.h   | 460 ++++++++++++++++++
+ 2 files changed, 502 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+ create mode 100644 include/dt-bindings/reset/eswin,eic7700-reset.h
 
-> - Mani
-> 
-> > Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> > ---
-> >  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml         | 14 ++++----------
-> >  1 file changed, 4 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> > index 331fc25d7a17d657d4db3863f0c538d0e44dc840..34a4d7b2c8459aeb615736f54c1971014adb205f 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> > @@ -33,8 +33,8 @@ properties:
-> >        - const: mhi # MHI registers
-> >  
-> >    clocks:
-> > -    minItems: 8
-> > -    maxItems: 8
-> > +    minItems: 6
-> > +    maxItems: 6
-> >  
-> >    clock-names:
-> >      items:
-> > @@ -44,8 +44,6 @@ properties:
-> >        - const: bus_master # Master AXI clock
-> >        - const: bus_slave # Slave AXI clock
-> >        - const: slave_q2a # Slave Q2A clock
-> > -      - const: ref # REFERENCE clock
-> > -      - const: tbu # PCIe TBU clock
-> >  
-> >    interrupts:
-> >      minItems: 8
-> > @@ -117,17 +115,13 @@ examples:
-> >                       <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> >                       <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> >                       <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-> > -                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
-> > -                     <&gcc GCC_PCIE_0_CLKREF_CLK>,
-> > -                     <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-> > +                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-> >              clock-names = "pipe",
-> >                            "aux",
-> >                            "cfg",
-> >                            "bus_master",
-> >                            "bus_slave",
-> > -                          "slave_q2a",
-> > -                          "ref",
-> > -                          "tbu";
-> > +                          "slave_q2a";
-> >  
-> >              dma-coherent;
-> >  
-> > 
-> > -- 
-> > 2.49.0
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
-> 
+diff --git a/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+new file mode 100644
+index 000000000000..b844a9c5a169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/eswin,eic7700-reset.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ESWIN EIC7700 SoC reset controller
++
++maintainers:
++  - Yifeng Huang <huangyifeng@eswincomputing.com>
++  - Xuyang Dong <dongxuyang@eswincomputing.com>
++
++description:
++  The system reset controller can be used to reset various peripheral
++  controllers in ESWIN eic7700 SoC.
++
++properties:
++  compatible:
++    const: eswin,eic7700-reset
++
++  reg:
++    maxItems: 1
++
++  '#reset-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/reset/eswin,eic7700-reset.h>
++
++    reset-controller@51828000 {
++        compatible = "eswin,eic7700-reset";
++        reg = <0x51828000 0x80000>;
++        #reset-cells = <2>;
++    };
+diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
+new file mode 100644
+index 000000000000..8c3aa3c87ea4
+--- /dev/null
++++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
+@@ -0,0 +1,460 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * Device Tree binding constants for EIC7700 reset controller.
++ *
++ * Authors:
++ *	Yifeng Huang <huangyifeng@eswincomputing.com>
++ *	Xuyang Dong <dongxuyang@eswincomputing.com>
++ */
++
++#ifndef __DT_ESWIN_EIC7700_RESET_H__
++#define __DT_ESWIN_EIC7700_RESET_H__
++
++#define SNOC_RST_CTRL 0
++#define GPU_RST_CTRL 1
++#define DSP_RST_CTRL 2
++#define D2D_RST_CTRL 3
++#define DDR_RST_CTRL 4
++#define TCU_RST_CTRL 5
++#define NPU_RST_CTRL 6
++#define HSPDMA_RST_CTRL 7
++#define PCIE_RST_CTRL 8
++#define I2C_RST_CTRL 9
++#define FAN_RST_CTRL 10
++#define PVT_RST_CTRL 11
++#define MBOX_RST_CTRL 12
++#define UART_RST_CTRL 13
++#define GPIO_RST_CTRL 14
++#define TIMER_RST_CTRL 15
++#define SSI_RST_CTRL 16
++#define WDT_RST_CTRL 17
++#define LSP_CFGRST_CTRL 18
++#define U84_RST_CTRL 19
++#define SCPU_RST_CTRL 20
++#define LPCPU_RST_CTRL 21
++#define VC_RST_CTRL 22
++#define JD_RST_CTRL 23
++#define JE_RST_CTRL 24
++#define VD_RST_CTRL 25
++#define VE_RST_CTRL 26
++#define G2D_RST_CTRL 27
++#define VI_RST_CTRL 28
++#define DVP_RST_CTRL 29
++#define ISP0_RST_CTRL 30
++#define ISP1_RST_CTRL 31
++#define SHUTTER_RST_CTRL 32
++#define VO_PHYRST_CTRL 33
++#define VO_I2SRST_CTRL 34
++#define VO_RST_CTRL 35
++#define BOOTSPI_RST_CTRL 36
++#define I2C1_RST_CTRL 37
++#define I2C0_RST_CTRL 38
++#define DMA1_RST_CTRL 39
++#define FPRT_RST_CTRL 40
++#define HBLOCK_RST_CTRL 41
++#define SECSR_RST_CTRL 42
++#define OTP_RST_CTRL 43
++#define PKA_RST_CTRL 44
++#define SPACC_RST_CTRL 45
++#define TRNG_RST_CTRL 46
++#define RESERVED 47
++#define TIMER0_RST_CTRL 48
++#define TIMER1_RST_CTRL 49
++#define TIMER2_RST_CTRL 50
++#define TIMER3_RST_CTRL 51
++#define RTC_RST_CTRL 52
++#define MNOC_RST_CTRL 53
++#define RNOC_RST_CTRL 54
++#define CNOC_RST_CTRL 55
++#define LNOC_RST_CTRL 56
++
++/*
++ * CONSUMER RESET CONTROL BIT
++ */
++/*SNOC*/
++#define SW_NOC_NSP_RSTN 0
++#define SW_NOC_CFG_RSTN 1
++#define SW_RNOC_NSP_RSTN 2
++#define SW_SNOC_TCU_ARSTN 3
++#define SW_SNOC_U84_ARSTN 4
++#define SW_SNOC_PCIET_XSRSTN 5
++#define SW_SNOC_PCIET_XMRSTN 6
++#define SW_SNOC_PCIET_PRSTN 7
++#define SW_SNOC_NPU_ARSTN 8
++#define SW_SNOC_JTAG_ARSTN 9
++#define SW_SNOC_DSPT_ARSTN 10
++#define SW_SNOC_DDRC1_P2_ARSTN 11
++#define SW_SNOC_DDRC1_P1_ARSTN 12
++#define SW_SNOC_DDRC0_P2_ARSTN 13
++#define SW_SNOC_DDRC0_P1_ARSTN 14
++#define SW_SNOC_D2D_ARSTN 15
++#define SW_SNOC_AON_ARSTN 16
++
++/*GPU*/
++#define SW_GPU_AXI_RSTN 0
++#define SW_GPU_CFG_RSTN 1
++#define SW_GPU_GRAY_RSTN 2
++#define SW_GPU_JONES_RSTN 3
++#define SW_GPU_SPU_RSTN 4
++
++/*DSP*/
++#define SW_DSP_AXI_RSTN 0
++#define SW_DSP_CFG_RSTN 1
++#define SW_DSP_DIV4_RSTN 2
++#define SW_DSP_DIV_RSTN_0 4
++#define SW_DSP_DIV_RSTN_1 5
++#define SW_DSP_DIV_RSTN_2 6
++#define SW_DSP_DIV_RSTN_3 7
++
++/*D2D*/
++#define SW_D2D_AXI_RSTN 0
++#define SW_D2D_CFG_RSTN 1
++#define SW_D2D_PRST_N 2
++#define SW_D2D_RAW_PCS_RST_N 4
++#define SW_D2D_RX_RST_N 5
++#define SW_D2D_TX_RST_N 6
++#define SW_D2D_CORE_RST_N 7
++
++/*TCU*/
++#define SW_TCU_AXI_RSTN 0
++#define SW_TCU_CFG_RSTN 1
++#define TBU_RSTN_0 4
++#define TBU_RSTN_1 5
++#define TBU_RSTN_2 6
++#define TBU_RSTN_3 7
++#define TBU_RSTN_4 8
++#define TBU_RSTN_5 9
++#define TBU_RSTN_6 10
++#define TBU_RSTN_7 11
++#define TBU_RSTN_8 12
++#define TBU_RSTN_9 13
++#define TBU_RSTN_10 14
++#define TBU_RSTN_11 15
++#define TBU_RSTN_12 16
++#define TBU_RSTN_13 17
++#define TBU_RSTN_14 18
++#define TBU_RSTN_15 19
++#define TBU_RSTN_16 20
++
++/*NPU*/
++#define SW_NPU_AXI_RSTN 0
++#define SW_NPU_CFG_RSTN 1
++#define SW_NPU_CORE_RSTN 2
++#define SW_NPU_E31CORE_RSTN 3
++#define SW_NPU_E31BUS_RSTN 4
++#define SW_NPU_E31DBG_RSTN 5
++#define SW_NPU_LLC_RSTN 6
++
++/*HSP DMA*/
++#define SW_HSP_AXI_RSTN 0
++#define SW_HSP_CFG_RSTN 1
++#define SW_HSP_POR_RSTN 2
++#define SW_MSHC0_PHY_RSTN 3
++#define SW_MSHC1_PHY_RSTN 4
++#define SW_MSHC2_PHY_RSTN 5
++#define SW_MSHC0_TXRX_RSTN 6
++#define SW_MSHC1_TXRX_RSTN 7
++#define SW_MSHC2_TXRX_RSTN 8
++#define SW_SATA_ASIC0_RSTN 9
++#define SW_SATA_OOB_RSTN 10
++#define SW_SATA_PMALIVE_RSTN 11
++#define SW_SATA_RBC_RSTN 12
++#define SW_DMA0_RST_N 13
++#define SW_HSP_DMA0_RSTN 14
++#define SW_USB0_VAUX_RSTN 15
++#define SW_USB1_VAUX_RSTN 16
++#define SW_HSP_SD1_PRSTN 17
++#define SW_HSP_SD0_PRSTN 18
++#define SW_HSP_EMMC_PRSTN 19
++#define SW_HSP_DMA_PRSTN 20
++#define SW_HSP_SD1_ARSTN 21
++#define SW_HSP_SD0_ARSTN 22
++#define SW_HSP_EMMC_ARSTN 23
++#define SW_HSP_DMA_ARSTN 24
++#define SW_HSP_ETH1_ARSTN 25
++#define SW_HSP_ETH0_ARSTN 26
++#define SW_HSP_SATA_ARSTN 27
++
++/*PCIE*/
++#define SW_PCIE_CFG_RSTN 0
++#define SW_PCIE_POWERUP_RSTN 1
++#define SW_PCIE_PERST_N 2
++
++/*I2C*/
++#define SW_I2C_RST_N_0 0
++#define SW_I2C_RST_N_1 1
++#define SW_I2C_RST_N_2 2
++#define SW_I2C_RST_N_3 3
++#define SW_I2C_RST_N_4 4
++#define SW_I2C_RST_N_5 5
++#define SW_I2C_RST_N_6 6
++#define SW_I2C_RST_N_7 7
++#define SW_I2C_RST_N_8 8
++#define SW_I2C_RST_N_9 9
++
++/*FAN*/
++#define SW_FAN_RST_N 0
++
++/*PVT*/
++#define SW_PVT_RST_N_0 0
++#define SW_PVT_RST_N_1 1
++
++/*MBOX*/
++#define SW_MBOX_RST_N_0 0
++#define SW_MBOX_RST_N_1 1
++#define SW_MBOX_RST_N_2 2
++#define SW_MBOX_RST_N_3 3
++#define SW_MBOX_RST_N_4 4
++#define SW_MBOX_RST_N_5 5
++#define SW_MBOX_RST_N_6 6
++#define SW_MBOX_RST_N_7 7
++#define SW_MBOX_RST_N_8 8
++#define SW_MBOX_RST_N_9 9
++#define SW_MBOX_RST_N_10 10
++#define SW_MBOX_RST_N_11 11
++#define SW_MBOX_RST_N_12 12
++#define SW_MBOX_RST_N_13 13
++#define SW_MBOX_RST_N_14 14
++#define SW_MBOX_RST_N_15 15
++
++/*UART*/
++#define SW_UART_RST_N_0 0
++#define SW_UART_RST_N_1 1
++#define SW_UART_RST_N_2 2
++#define SW_UART_RST_N_3 3
++#define SW_UART_RST_N_4 4
++
++/*GPIO*/
++#define SW_GPIO_RST_N_0 0
++#define SW_GPIO_RST_N_1 1
++
++/*TIMER*/
++#define SW_TIMER_RST_N 0
++
++/*SSI*/
++#define SW_SSI_RST_N_0 0
++#define SW_SSI_RST_N_1 1
++
++/*WDT*/
++#define SW_WDT_RST_N_0 0
++#define SW_WDT_RST_N_1 1
++#define SW_WDT_RST_N_2 2
++#define SW_WDT_RST_N_3 3
++
++/*LSP CFG*/
++#define SW_LSP_CFG_RSTN 0
++
++/*U84 CFG*/
++#define SW_U84_CORE_RSTN_0 0
++#define SW_U84_CORE_RSTN_1 1
++#define SW_U84_CORE_RSTN_2 2
++#define SW_U84_CORE_RSTN_3 3
++#define SW_U84_BUS_RSTN 4
++#define SW_U84_DBG_RSTN 5
++#define SW_U84_TRACECOM_RSTN 6
++#define SW_U84_TRACE_RSTN_0 8
++#define SW_U84_TRACE_RSTN_1 9
++#define SW_U84_TRACE_RSTN_2 10
++#define SW_U84_TRACE_RSTN_3 11
++
++/*SCPU*/
++#define SW_SCPU_CORE_RSTN 0
++#define SW_SCPU_BUS_RSTN 1
++#define SW_SCPU_DBG_RSTN 2
++
++/*LPCPU*/
++#define SW_LPCPU_CORE_RSTN 0
++#define SW_LPCPU_BUS_RSTN 1
++#define SW_LPCPU_DBG_RSTN 2
++
++/*VC*/
++#define SW_VC_CFG_RSTN 0
++#define SW_VC_AXI_RSTN 1
++#define SW_VC_MONCFG_RSTN 2
++
++/*JD*/
++#define SW_JD_CFG_RSTN 0
++#define SW_JD_AXI_RSTN 1
++
++/*JE*/
++#define SW_JE_CFG_RSTN 0
++#define SW_JE_AXI_RSTN 1
++
++/*VD*/
++#define SW_VD_CFG_RSTN 0
++#define SW_VD_AXI_RSTN 1
++
++/*VE*/
++#define SW_VE_AXI_RSTN 0
++#define SW_VE_CFG_RSTN 1
++
++/*G2D*/
++#define SW_G2D_CORE_RSTN 0
++#define SW_G2D_CFG_RSTN 1
++#define SW_G2D_AXI_RSTN 2
++
++/*VI*/
++#define SW_VI_AXI_RSTN 0
++#define SW_VI_CFG_RSTN 1
++#define SW_VI_DWE_RSTN 2
++
++/*DVP*/
++#define SW_VI_DVP_RSTN 0
++
++/*ISP0*/
++#define SW_VI_ISP0_RSTN 0
++
++/*ISP1*/
++#define SW_VI_ISP1_RSTN 0
++
++/*SHUTTR*/
++#define SW_VI_SHUTTER_RSTN_0 0
++#define SW_VI_SHUTTER_RSTN_1 1
++#define SW_VI_SHUTTER_RSTN_2 2
++#define SW_VI_SHUTTER_RSTN_3 3
++#define SW_VI_SHUTTER_RSTN_4 4
++#define SW_VI_SHUTTER_RSTN_5 5
++
++/*VO PHY*/
++#define SW_VO_MIPI_PRSTN 0
++#define SW_VO_PRSTN 1
++#define SW_VO_HDMI_PRSTN 3
++#define SW_HDMI_PHYCTRL_RSTN 4
++#define SW_VO_HDMI_RSTN 5
++
++/*VO I2S*/
++#define SW_VO_I2S_RSTN 0
++#define SW_VO_I2S_PRSTN 1
++
++/*VO*/
++#define SW_VO_AXI_RSTN 0
++#define SW_VO_CFG_RSTN 1
++#define SW_VO_DC_RSTN 2
++#define SW_VO_DC_PRSTN 3
++
++/*BOOTSPI*/
++#define SW_BOOTSPI_HRSTN 0
++#define SW_BOOTSPI_RSTN 1
++
++/*I2C1*/
++#define SW_I2C1_PRSTN 0
++
++/*I2C0*/
++#define SW_I2C0_PRSTN 0
++
++/*DMA1*/
++#define SW_DMA1_ARSTN 0
++#define SW_DMA1_HRSTN 1
++
++/*FPRT*/
++#define SW_FP_PRT_HRSTN 0
++
++/*HBLOCK*/
++#define SW_HBLOCK_HRSTN 0
++
++/*SECSR*/
++#define SW_SECSR_HRSTN 0
++
++/*OTP*/
++#define SW_OTP_PRSTN 0
++
++/*PKA*/
++#define SW_PKA_HRSTN 0
++
++/*SPACC*/
++#define SW_SPACC_RSTN 0
++
++/*TRNG*/
++#define SW_TRNG_HRSTN 0
++
++/*TIMER0*/
++#define SW_TIMER0_RSTN_0 0
++#define SW_TIMER0_RSTN_1 1
++#define SW_TIMER0_RSTN_2 2
++#define SW_TIMER0_RSTN_3 3
++#define SW_TIMER0_RSTN_4 4
++#define SW_TIMER0_RSTN_5 5
++#define SW_TIMER0_RSTN_6 6
++#define SW_TIMER0_RSTN_7 7
++#define SW_TIMER0_PRSTN 8
++
++/*TIMER1*/
++#define SW_TIMER1_RSTN_0 0
++#define SW_TIMER1_RSTN_1 1
++#define SW_TIMER1_RSTN_2 2
++#define SW_TIMER1_RSTN_3 3
++#define SW_TIMER1_RSTN_4 4
++#define SW_TIMER1_RSTN_5 5
++#define SW_TIMER1_RSTN_6 6
++#define SW_TIMER1_RSTN_7 7
++#define SW_TIMER1_PRSTN 8
++
++/*TIMER2*/
++#define SW_TIMER2_RSTN_0 0
++#define SW_TIMER2_RSTN_1 1
++#define SW_TIMER2_RSTN_2 2
++#define SW_TIMER2_RSTN_3 3
++#define SW_TIMER2_RSTN_4 4
++#define SW_TIMER2_RSTN_5 5
++#define SW_TIMER2_RSTN_6 6
++#define SW_TIMER2_RSTN_7 7
++#define SW_TIMER2_PRSTN 8
++
++/*TIMER3*/
++#define SW_TIMER3_RSTN_0 0
++#define SW_TIMER3_RSTN_1 1
++#define SW_TIMER3_RSTN_2 2
++#define SW_TIMER3_RSTN_3 3
++#define SW_TIMER3_RSTN_4 4
++#define SW_TIMER3_RSTN_5 5
++#define SW_TIMER3_RSTN_6 6
++#define SW_TIMER3_RSTN_7 7
++#define SW_TIMER3_PRSTN 8
++
++/*RTC*/
++#define SW_RTC_RSTN 0
++
++/*MNOC*/
++#define SW_MNOC_SNOC_NSP_RSTN 0
++#define SW_MNOC_VC_ARSTN 1
++#define SW_MNOC_CFG_RSTN 2
++#define SW_MNOC_HSP_ARSTN 3
++#define SW_MNOC_GPU_ARSTN 4
++#define SW_MNOC_DDRC1_P3_ARSTN 5
++#define SW_MNOC_DDRC0_P3_ARSTN 6
++
++/*RNOC*/
++#define SW_RNOC_VO_ARSTN 0
++#define SW_RNOC_VI_ARSTN 1
++#define SW_RNOC_SNOC_NSP_RSTN 2
++#define SW_RNOC_CFG_RSTN 3
++#define SW_MNOC_DDRC1_P4_ARSTN 4
++#define SW_MNOC_DDRC0_P4_ARSTN 5
++
++/*CNOC*/
++#define SW_CNOC_VO_CFG_RSTN 0
++#define SW_CNOC_VI_CFG_RSTN 1
++#define SW_CNOC_VC_CFG_RSTN 2
++#define SW_CNOC_TCU_CFG_RSTN 3
++#define SW_CNOC_PCIET_CFG_RSTN 4
++#define SW_CNOC_NPU_CFG_RSTN 5
++#define SW_CNOC_LSP_CFG_RSTN 6
++#define SW_CNOC_HSP_CFG_RSTN 7
++#define SW_CNOC_GPU_CFG_RSTN 8
++#define SW_CNOC_DSPT_CFG_RSTN 9
++#define SW_CNOC_DDRT1_CFG_RSTN 10
++#define SW_CNOC_DDRT0_CFG_RSTN 11
++#define SW_CNOC_D2D_CFG_RSTN 12
++#define SW_CNOC_CFG_RSTN 13
++#define SW_CNOC_CLMM_CFG_RSTN 14
++#define SW_CNOC_AON_CFG_RSTN 15
++
++/*LNOC*/
++#define SW_LNOC_CFG_RSTN 0
++#define SW_LNOC_NPU_LLC_ARSTN 1
++#define SW_LNOC_DDRC1_P0_ARSTN 2
++#define SW_LNOC_DDRC0_P0_ARSTN 3
++
++#endif /*endif __DT_ESWIN_EIC7700_RESET_H__*/
+-- 
+2.17.1
+
