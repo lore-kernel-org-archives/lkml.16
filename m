@@ -1,148 +1,108 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253D21AF0B5;
-	Thu, 19 Jun 2025 14:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C671E17A30F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750343340; cv=none; b=hwtV9oISS7KweQEVXpqtHRKKcBPi2lCHn6JRhAsnKrD9KE1cnmOjiIqz7683IMcR2Z+QU+BsoCMftK24A1riR6kN86fNGz63rKfqlDTS1BYU//XusUcK7dpz+AQdLcQAQxHc8pPk25zjHGmaZBIu7hbhXRzeIiy42Yzv11YT7xk=
+	t=1750343433; cv=none; b=oF7k7JuImv79I29CZGaS9iFB3VEoYud7YLLx18uH3IPRLmBFW5IaJprA7R7NgTndD1eVtS/Xx7upueRtUcxoBosHbI6sIEp5ANLYiQOJ9zjBFb4loke4FFJjM7X3LsFoD8BpT7MPfWpx1MngBOFPXlMHFcWIE2zotmNER9w/Z24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750343340; c=relaxed/simple;
-	bh=HJmfgzgj0ndJEaGrG8+noTDVPzF8ReijeU84n6dffYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOE7eO73DUA0jHhkzgcHTpQvpCpcV6srkw/hM4wqp2HgdssmU0ulihO+zDe7T43eY5mdHlOFvaIPQfDw0ipL1dKJm442UBGe4JJZWb8wd4hM8YTXLS5iXzey3zkycNbSwlJPmTAVh6fB6VQKCuq3Ol2hrPN+M4fglTJAWehEBvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=XWPeZLyf; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1750343433; c=relaxed/simple;
+	bh=g8haI9LrZzRAwDNpd97grl20AHL8yhseMMTWdWFnOIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K4Z61qFVijL14oTHubzXyNCfoM7apyuU72cISrw4Wzuy6z7v0FSaul+9OVDAR791UlG6hkzHFixB+lsdQ3t5nJjAvDtMr7boHB4uQBFkCwGk26UHz3xJkkJsJFe/kurwhykDIlN/FtQX+/I8bVt8FSF9dS4zaTg09yIUYVP7EDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t1YBwJqW; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="XWPeZLyf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1750343336; bh=S14nIAZKvZkp/VwnTFIYJCuXUidvu32HhMy8SRNMghs=;
-	h=From:To:Cc:Subject:Date:From:To:CC:Subject;
-	b=XWPeZLyf+OeOlBWfNzuhC15Vnxb95TmG2vo5NyCaRFC2kbC1jiYUkY0smdSnfkuFs
-	 aiBCQ2SuVwtJBj19lPaJhJlWP9IZRsQu7PL6+4CrVDG3b1lU88UjEmkUXeoAybvumU
-	 4rcOi5uhgJ01j0bek/6LpWvZgsbH4uUXgDE2WTdVgtltXmpA1UxSE9/pnJBY31N+Wd
-	 Y/5C/qRyV2BxtU/PDuvH1p7E6ub9+EdEJjOJ+Apx4G7ohUV2DsoOu770hUJRx3iaVN
-	 ZQROW8T15UrrOX4RCm662XlOqdWD1mZn8Vz9ff68GQfJbAQODbkzzWkQ+SPmfeVSQV
-	 gTfJ5FIZViFCQ==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bNNJl6ZMyz8sqg;
-	Thu, 19 Jun 2025 16:28:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3610:e200:f74c:d89c:f3eb:14e2
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3610:e200:f74c:d89c:f3eb:14e2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX19YMo4uslHrzyvMvsz98NrnEv3rvWYw/jc=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bNNJh4dDMz8spN;
-	Thu, 19 Jun 2025 16:28:52 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t1YBwJqW"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6114114daddso386250eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750343431; x=1750948231; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5qy42reb/xe10l3RYfDyIyYy8nirQQxhtcbahwdHka8=;
+        b=t1YBwJqWO2fhfQFqxtYxzcysoqOIuPzwx5ukimTkmL7N9zENC7Sv1oYi7FCk7nesgi
+         gyj8aDmhIHW+6wpD0fRB8O+adtpZOPmAxij+ssjP8sMP0rQy7kZOo7+n/lTcUr/CGjR8
+         rlIk+MA6fF2PqME2E4LKZubTkTkJTKJhawtblShVescLRCL1eTw0bmb+rKvdFbrGzBfp
+         eA3kv/WSOtdffI7NbvrtrVmdCHE1vGOUuSyeBAFLJGU6s2YSFlArFqszeUH3BB7+Qr0o
+         ibfRt0nJ23Z7CnDnQ1CgRJGOciShxo/jQK2Pyr++CPY36JK5Is+KuwQXDEM637WTOEbW
+         ebQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750343431; x=1750948231;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5qy42reb/xe10l3RYfDyIyYy8nirQQxhtcbahwdHka8=;
+        b=X91L1m3vPTKZvscv5Z/XERuEFI5HlXXgVGd7e3fq/fI37Hz3BdJXZt/G6JdfT5tum9
+         XoSmY9BcWptUYShhmR2G815qAveSCKS9U+H+5RoA1BatikwpYcau+K2l71cGFFln2XI2
+         q5GtwgYTUbzvTHFuv9eKMgfrEWXqAsqhT4h1OiN5mplKPXaE0wwrQoJO+7rStDwdljDU
+         we25n+diLTkQDrAZWWO+USXPdlqRemv+C8V2+1BniUfwTumI6CVQGh/yssrOH3lFNmGo
+         Z/PRvoektyZ6DBes26RxkKyPzE6exIMOPgpyOtOjN0Ls1y6hzUutlZ8n/wmYPc7UIH3p
+         /o6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2BAv9K5RQBC3Q8FMhcXppStG7lhSWTqZ2aWZdglZO8InPmyrxQoAf5XIvMSmW/fBBnZNQsvEKMopxx8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2BsnNOt9gcGytmmP5g+ebJQVVRD2Z2KoGCY+nXwhROd/0rNZ4
+	ydPTGiFQF/sB2Dg1UUyFkjB23msiUM6xaFszpEBWlI8cJpj9tqFTnPSMGxxhAU92qv+0v9/mdu9
+	OP0su
+X-Gm-Gg: ASbGncsmnuJHXchBznqh4ewDaWU0JtRvjH4BrvUmElUscof56gzF82xkYG5+hkgVLmH
+	KgKiB6UtSYEN838yd/hN/SAva4OqSODsZ6Eokow1oPFVGC8lD//3G/yeYe9r264B8Zy3Z8jYjMv
+	r/GBvKOoWO97s1Sf9yDr1jP7AslQLXiyaOlXU7qVFPmXY8HdGq3UofcdtpmuRAwg8hybc3EckCT
+	VmCUqx5zDwsAd1Kl+AnxXLB4CnBApJZ/oDqawb7EvwE62+ioS6WBUJ26n2Cz1y6qGHTpeFYbH/9
+	NBgVHtm0FKieQrADoTVaSc32d3qVdeMc40aI9/Ubtmwj1bbyazmTSEFPuevMH5V4w8xn/Q==
+X-Google-Smtp-Source: AGHT+IG56YN7u7s5Aa17918jH2u+v02dZCDW3BGdDf6jjau6fXqkE6EwtY5ebKvrV1h8cThc6YLJAQ==
+X-Received: by 2002:a05:6820:4ded:b0:611:471b:6439 with SMTP id 006d021491bc7-611471b6a5cmr4269454eaf.3.1750343430854;
+        Thu, 19 Jun 2025 07:30:30 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:67e2:ece8:b2f5:738f])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-61108ebd0e5sm1684222eaf.23.2025.06.19.07.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 07:30:29 -0700 (PDT)
+Date: Thu, 19 Jun 2025 17:30:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Zhe Qiao <qiaozhe@iscas.ac.cn>
+Cc: rafael@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
+	lenb@kernel.org, kwilczynski@kernel.org, sashal@kernel.org,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-Subject: [PATCH bpf-next] powerpc/bpf: Fix warning for unused ori31_emitted
-Date: Thu, 19 Jun 2025 16:26:47 +0200
-Message-ID: <20250619142647.2157017-1-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
+Subject: Re: [PATCH] Revert "PCI/ACPI: Fix allocated memory release on error
+ in pci_acpi_scan_root()"
+Message-ID: <87a513bd-096c-45ab-8f5f-a8d3d6ad6b2e@suswa.mountain>
+References: <20250619072608.2075475-1-qiaozhe@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619072608.2075475-1-qiaozhe@iscas.ac.cn>
 
-Without this, the compiler (clang21) might emit a warning under W=1
-because the variable ori31_emitted is set but never used if
-CONFIG_PPC_BOOK3S_64=n.
+On Thu, Jun 19, 2025 at 03:26:08PM +0800, Zhe Qiao wrote:
+> This reverts commit 631b2af2f35737750af284be22e63da56bf20139.
+> 
+> The reverted patch causes the 'ri->cfg' and 'root_ops' resources to be
+> released multiple times.
+> 
+> When acpi_pci_root_create() fails, these resources have already been
+> released internally by the __acpi_pci_root_release_info() function.
+> Releasing them again in pci_acpi_scan_root() leads to incorrect behavior
+> and potential memory issues.
+> 
+> We plan to resolve the issue using a more appropriate fix.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/aEmdnuw715btq7Q5@stanley.mountain/
+> Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
 
-Without this patch:
+Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-$ make -j $(nproc) W=1 ARCH=powerpc SHELL=/bin/bash arch/powerpc/net
-  [...]
-  CC      arch/powerpc/net/bpf_jit_comp.o
-  CC      arch/powerpc/net/bpf_jit_comp64.o
-../arch/powerpc/net/bpf_jit_comp64.c: In function 'bpf_jit_build_body':
-../arch/powerpc/net/bpf_jit_comp64.c:417:28: warning: variable 'ori31_emitted' set but not used [-Wunused-but-set-variable]
-  417 |         bool sync_emitted, ori31_emitted;
-      |                            ^~~~~~~~~~~~~
-  AR      arch/powerpc/net/built-in.a
+Reverting is probably the simplest option.  There is still an issue in
+the code where in acpi_pci_root_create() the goto out_release_info
+doesn't free sysdata except on the last goto.  So there is a small
+leak.  But it's probably more theoretical than real.
 
-With this patch:
-
-  [...]
-  CC      arch/powerpc/net/bpf_jit_comp.o
-  CC      arch/powerpc/net/bpf_jit_comp64.o
-  AR      arch/powerpc/net/built-in.a
-
-Fixes: dff883d9e93a ("bpf, arm64, powerpc: Change nospec to include v1 barrier")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506180402.uUXwVoSH-lkp@intel.com/
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
----
- arch/powerpc/net/bpf_jit_comp64.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
-index 3665ff8bb4bc..a25a6ffe7d7c 100644
---- a/arch/powerpc/net/bpf_jit_comp64.c
-+++ b/arch/powerpc/net/bpf_jit_comp64.c
-@@ -820,13 +820,12 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
- 		case BPF_ST | BPF_NOSPEC:
- 			sync_emitted = false;
- 			ori31_emitted = false;
--#ifdef CONFIG_PPC_E500
--			if (!bpf_jit_bypass_spec_v1()) {
-+			if (IS_ENABLED(CONFIG_PPC_E500) &&
-+			    !bpf_jit_bypass_spec_v1()) {
- 				EMIT(PPC_RAW_ISYNC());
- 				EMIT(PPC_RAW_SYNC());
- 				sync_emitted = true;
- 			}
--#endif
- 			if (!bpf_jit_bypass_spec_v4()) {
- 				switch (stf_barrier) {
- 				case STF_BARRIER_EIEIO:
-@@ -849,10 +848,10 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
- 					break;
- 				}
- 			}
--#ifdef CONFIG_PPC_BOOK3S_64
--			if (!bpf_jit_bypass_spec_v1() && !ori31_emitted)
-+			if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) &&
-+			    !bpf_jit_bypass_spec_v1() &&
-+			    !ori31_emitted)
- 				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
--#endif
- 			break;
- 
- 		/*
-
-base-commit: cd7312a78f36e981939abe1cd1f21d355e083dfe
--- 
-2.49.0
+regards,
+dan carpenter
 
