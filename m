@@ -1,128 +1,149 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FECE230BEC;
-	Thu, 19 Jun 2025 12:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C45221F3F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335332; cv=none; b=rGDpHXToLNqFPs6B5HaP/FcArL1esrQ+29H+CpNzNXI2MtztdkrO954gL6jHRPQIYNBLwM6INyiAV7tQ0ml4Y35NWc4D2jfJcfThgP1L8g6YYonmZRdxVcg92nM8z0dqeooLCd5FcWTO+2gnfkQLhVwfMTcGyL5LHiBn+iBmXDY=
+	t=1750335354; cv=none; b=qez1CcRX1qwss3nJsIsRPml4LIBN0ujH6up6lLJnhyk9vMaK/3IMyqfRbS/DWfXVIKCfcLUqD7DyW2i/3VHbemd0DdHreJdkDdd2ixpJMPLq8a1nIFWmC4QTgseRUI6TdBXHXJTKrd5VB6URtC+sGneq9fPwH4x+Eg1ZRZvXnL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335332; c=relaxed/simple;
-	bh=1ravPs/FMxL5LuoHuJXK+mU1twHGVx7Ojyt5HQnO1BM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CUFprJtoSvNYS7pXO+0CcHjnI/0ptoyjoK4JyqSz7jTlWNiA2QS4sSAz5DYORz4y/tJbxBKxSaCvhiTRHsVXX8/f7w30LMeKkdE0hZR59+nVJq5Y1N5h96rsWW4rVfNoEV1T3Lw6hct3g+7GK5QcGUeVM0MCjKWQ3BBu5nyocQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hX2FayJz; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750335354; c=relaxed/simple;
+	bh=EhQ9DWkQfqHeph/K66iF/kPgRAGjHzBTBB0sn6kSpIo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=IBD5DXzO1Ir1UHfDtfbRoU2GsbHSNQGGUGh8BmmhBmus/aEHNvudvPZT8gCPnX57KXH/UIC56QG+9kYgHF5uSjItlMtFtbr+1OCibGTKaXheyjzeKtFAG8iS5g4A5dZrwLTZKWdOc1Y94tig/lpqSrX5BXbdwMRoyakz1Kqv1PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=THkalhtq; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hX2FayJz"
-Message-ID: <ba027737-39df-4541-8fea-1c4cf489b43b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750335318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a5tu14SfjOQv5TBx7EfkgfUxq/XAyStwsImnQzyxPqY=;
-	b=hX2FayJz88BPRw7Yx23sBwK2HlaMWc7WrD5xufoIQxieXk3feCCpo6V78k6uSLItgcFPsE
-	x1fCvcVembCR3QIZ/KPkzlmeNaDJQPeBdsqKboeVHFTrRzyFjEidyBPm5dV0OqdzEGubZP
-	xApztwwVir8jr/6tE6Fqgyv28YHcjz0=
-Date: Thu, 19 Jun 2025 13:15:06 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="THkalhtq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750335353; x=1781871353;
+  h=date:from:to:cc:subject:message-id;
+  bh=EhQ9DWkQfqHeph/K66iF/kPgRAGjHzBTBB0sn6kSpIo=;
+  b=THkalhtqHszKgYK/Qxa6I8nmp0m2EQUdW/M8DCE0rhW0e+JJdOwidC60
+   ulag4NOlIO/R/GxZ5VpDOHB0qHsaH/HUHTI2dTaNoUOqUL17qbOCyD46f
+   xdMkVeYwCgy9o02RimHjaZijbF9aCJ/VctsURDY3aztO02c64XY8nrcFa
+   tdy1L+U5rP5Nz2PelBZEOyPEbW5B9RJFqm6J6ERxPsphq1+E7hWhLuQPa
+   CnMoPWY0bA3x0RIVs2e1C7Q/koUTm7crw8kKEUR8T4B3cCsOhXekIZZ4/
+   8sXNF64Osw4rrsOyO0fIJa01B36zZrvZsU7WPbabl7XbXyfxJAS3PcGCW
+   A==;
+X-CSE-ConnectionGUID: KsQQNO3fQGKNGH0Yx8bO7w==
+X-CSE-MsgGUID: wZIl1OVuRjugwSKUCVXisQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="56269751"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="56269751"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:15:53 -0700
+X-CSE-ConnectionGUID: BTN2Rqv2QaasTzhwNnESgw==
+X-CSE-MsgGUID: 5hC5MzPRS+2laiE2D4I1gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="150229563"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 19 Jun 2025 05:15:51 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSEBJ-000KjY-0w;
+	Thu, 19 Jun 2025 12:15:49 +0000
+Date: Thu, 19 Jun 2025 20:15:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 2aebf5ee43bf0ed225a09a30cf515d9f2813b759
+Message-ID: <202506192014.guILJZ9Z-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH net-next v11 13/14] dpll: zl3073x: Add support to get/set
- frequency on input pins
-To: Paolo Abeni <pabeni@redhat.com>, Ivan Vecera <ivecera@redhat.com>,
- netdev@vger.kernel.org
-Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
-References: <20250616201404.1412341-1-ivecera@redhat.com>
- <20250616201404.1412341-14-ivecera@redhat.com>
- <72bab3b2-bdd6-43f6-9243-55009f9c1071@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <72bab3b2-bdd6-43f6-9243-55009f9c1071@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 19/06/2025 12:15, Paolo Abeni wrote:
-> On 6/16/25 10:14 PM, Ivan Vecera wrote:
->> +/**
->> + * zl3073x_dpll_input_ref_frequency_get - get input reference frequency
->> + * @zldpll: pointer to zl3073x_dpll
->> + * @ref_id: reference id
->> + * @frequency: pointer to variable to store frequency
->> + *
->> + * Reads frequency of given input reference.
->> + *
->> + * Return: 0 on success, <0 on error
->> + */
->> +static int
->> +zl3073x_dpll_input_ref_frequency_get(struct zl3073x_dpll *zldpll, u8 ref_id,
->> +				     u32 *frequency)
->> +{
->> +	struct zl3073x_dev *zldev = zldpll->dev;
->> +	u16 base, mult, num, denom;
->> +	int rc;
->> +
->> +	guard(mutex)(&zldev->multiop_lock);
->> +
->> +	/* Read reference configuration */
->> +	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
->> +			   ZL_REG_REF_MB_MASK, BIT(ref_id));
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* Read registers to compute resulting frequency */
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_BASE, &base);
->> +	if (rc)
->> +		return rc;
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_MULT, &mult);
->> +	if (rc)
->> +		return rc;
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_M, &num);
->> +	if (rc)
->> +		return rc;
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_N, &denom);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* Sanity check that HW has not returned zero denominator */
->> +	if (!denom) {
->> +		dev_err(zldev->dev,
->> +			"Zero divisor for ref %u frequency got from device\n",
->> +			ref_id);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Compute the frequency */
->> +	*frequency = base * mult * num / denom;
-> 
-> As base, mult, num and denom are u16, the above looks like integer
-> overflow prone.
-> 
-> I think you should explicitly cast to u64, and possibly use a u64 frequency.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 2aebf5ee43bf0ed225a09a30cf515d9f2813b759  x86/alternatives: Fix int3 handling failure from broken text_poke array
 
-I might be a good idea to use mul_u64_u32_div together with mul_u32_u32?
-These macroses will take care of overflow on 32bit platforms as well.
+elapsed time: 1452m
 
-> 
-> /P
-> 
+configs tested: 72
+configs skipped: 126
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20250619    gcc-15.1.0
+arc                   randconfig-002-20250619    gcc-15.1.0
+arm                               allnoconfig    gcc-15.1.0
+arm                   randconfig-001-20250619    gcc-15.1.0
+arm                   randconfig-002-20250619    gcc-15.1.0
+arm                   randconfig-003-20250619    gcc-15.1.0
+arm                   randconfig-004-20250619    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250619    gcc-15.1.0
+arm64                 randconfig-002-20250619    gcc-15.1.0
+arm64                 randconfig-003-20250619    gcc-15.1.0
+arm64                 randconfig-004-20250619    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250619    gcc-8.5.0
+csky                  randconfig-002-20250619    gcc-8.5.0
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon               randconfig-001-20250619    gcc-8.5.0
+hexagon               randconfig-002-20250619    gcc-8.5.0
+i386        buildonly-randconfig-001-20250618    clang-20
+i386        buildonly-randconfig-001-20250619    clang-20
+i386        buildonly-randconfig-002-20250618    gcc-12
+i386        buildonly-randconfig-002-20250619    clang-20
+i386        buildonly-randconfig-003-20250618    clang-20
+i386        buildonly-randconfig-003-20250619    clang-20
+i386        buildonly-randconfig-004-20250618    clang-20
+i386        buildonly-randconfig-004-20250619    clang-20
+i386        buildonly-randconfig-005-20250618    clang-20
+i386        buildonly-randconfig-005-20250619    clang-20
+i386        buildonly-randconfig-006-20250618    clang-20
+i386        buildonly-randconfig-006-20250619    clang-20
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250619    gcc-8.5.0
+loongarch             randconfig-002-20250619    gcc-8.5.0
+m68k                              allnoconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                 randconfig-001-20250619    gcc-8.5.0
+nios2                 randconfig-002-20250619    gcc-8.5.0
+openrisc                          allnoconfig    clang-21
+parisc                            allnoconfig    clang-21
+parisc                randconfig-001-20250619    gcc-8.5.0
+parisc                randconfig-002-20250619    gcc-8.5.0
+powerpc                           allnoconfig    clang-21
+powerpc               randconfig-001-20250619    gcc-8.5.0
+powerpc               randconfig-002-20250619    gcc-8.5.0
+powerpc               randconfig-003-20250619    gcc-8.5.0
+powerpc64             randconfig-001-20250619    gcc-8.5.0
+powerpc64             randconfig-002-20250619    gcc-8.5.0
+powerpc64             randconfig-003-20250619    gcc-8.5.0
+riscv                             allnoconfig    clang-21
+s390                              allnoconfig    clang-21
+sh                                allnoconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                                allnoconfig    clang-21
+x86_64      buildonly-randconfig-001-20250618    clang-20
+x86_64      buildonly-randconfig-001-20250619    gcc-12
+x86_64      buildonly-randconfig-002-20250618    clang-20
+x86_64      buildonly-randconfig-002-20250619    gcc-12
+x86_64      buildonly-randconfig-003-20250618    gcc-12
+x86_64      buildonly-randconfig-003-20250619    gcc-12
+x86_64      buildonly-randconfig-004-20250618    clang-20
+x86_64      buildonly-randconfig-004-20250619    gcc-12
+x86_64      buildonly-randconfig-005-20250618    clang-20
+x86_64      buildonly-randconfig-005-20250619    gcc-12
+x86_64      buildonly-randconfig-006-20250618    gcc-12
+x86_64      buildonly-randconfig-006-20250619    gcc-12
+x86_64                                  kexec    clang-20
+x86_64                               rhel-9.4    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
