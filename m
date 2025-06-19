@@ -1,239 +1,285 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0B528DF48;
-	Thu, 19 Jun 2025 19:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF8D1E7C32;
+	Thu, 19 Jun 2025 19:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750360930; cv=none; b=fGKWD9RMyVzK9Q7V45jr05z1YdMW7f/GARIqFcD70bwfO6e1YhMrun/HPa+7J84AKBlcySfhmshi621sqpblUi2sIZrAZ12Bvhkl+HGzWw9/af2l5ONwP0nnC5TcYwG4rfiY/mCB5UxXrSbJWSQuokBKY+5f2zWNwXSsxBbHL2g=
+	t=1750360992; cv=none; b=oKVdEmXlLG00sC+jb2vfBJ1TbtrIlGHK7kXljkL9M1GV4p1tIb90v9g9Ydpiz6FDw5kqOApkUcgtJ7oCHwUvhxcQfh3qN3WMwSNZZvjuW3K/UMWcajgcZTAk+EZjXR2GAxFszP1Wpee769mwDsOs/Z9pTSrWtoIq/80/TXCduck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750360930; c=relaxed/simple;
-	bh=LcwApgCrHyyCRJ2a2GiLxcYl5o0MWSHAzQ2wvFx8Muw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F1LrU9tpLV86u0pXwVlgKqY5+G4ZLiaH2sAYl4+QFDsLFxolDnbneorRiXZIn0Bp8jVhVuF1bxRps9UEE3oGSK87lQVMJNj9rUUk4mfvPI7U+wv1u/4V8CaBosOhpjtPMGLrzBlH3pP0m3yGM58jsrxcxVrwnut6Uq4Jg6SN0h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXEnUCHo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750360992; c=relaxed/simple;
+	bh=hWCUtRBP5pq6o2kyz2fr410cxhRI4EPB8IdUqsSI9Z8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=rq7OYd0BqqaCRDQ0S1QdiWIlZS0534xnF8h8HMvDmg59u85rwOlPFA8VJrD55qg77oFLwR7veg67iR8WQpfk6i2ihhCNTRWTng5pgRieeRAp5zHZ5mfa4/vSHwPYUV+9LN9NycpIfvSp6mvxWrGCLxvWmgV+tiRj94zehnQ/i48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=I9qkUJ7D; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXEnUCHo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC34C4CEF0;
-	Thu, 19 Jun 2025 19:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750360930;
-	bh=LcwApgCrHyyCRJ2a2GiLxcYl5o0MWSHAzQ2wvFx8Muw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bXEnUCHoOEBW6mTEMAks5KvLkFh56qawoMnJm4Lu1chZFHRZ1mkUDFWyVIy9iVfSo
-	 Av2+zMNkTlD264YmAlok7fz8uZva7Y/IUglzFRjBonpKdz+SnVah+29csKVS/BOH6p
-	 bZJVaWxxXGNAbf4lcfqNjgJyc0dtyRuBjbzJNwOVWmZ4cpEFhnijLJ0q6uv1m/0M7k
-	 4hY9RPYMyxNu+e+jvrThVOPgUI4OERXfD7BUZkdh8neyZvnECOInPybo8043B2+Mjz
-	 KaweQKmbi1zfSGupVtAWc6XZUUPgLB4FQSdZ5yyLp/VYDNcb0ywrEAJ1I2xK5XPpbf
-	 wYuFi60vKIOYg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org,
-	Sohil Mehta <sohil.mehta@intel.com>
-Subject: [PATCH v2 8/9] lib/crypto: x86: move arch/x86/lib/crypto/ into lib/crypto/
-Date: Thu, 19 Jun 2025 12:19:07 -0700
-Message-ID: <20250619191908.134235-9-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250619191908.134235-1-ebiggers@kernel.org>
-References: <20250619191908.134235-1-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="I9qkUJ7D"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id EF828828818E;
+	Thu, 19 Jun 2025 14:23:01 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id gNmk7lzoMzVq; Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 96BD68288789;
+	Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 96BD68288789
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750360979; bh=qNxPNWYqbb+jXf/iAO953gQYbUx7jsGfjskPN+KhghU=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=I9qkUJ7DOEs3Wb9rxVFKyOCLB7xvM89YRoh+cik654FSQNSHsRZciqfL6ZZoCRh6l
+	 da4XtxCy3xEM0Aofe07LjU9QC1vYJCh7uqdpzoKGpNpkv1H1XgarDMJGGQamC6O4tD
+	 WK/BAfZ6D752HtPH2orH6pW+6LKWqoVwuW2YWGNc=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id l8vlh_JxzcFN; Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 5184E828818E;
+	Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Date: Thu, 19 Jun 2025 14:22:56 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <518523485.1313620.1750360976352.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <20250618191530.GA1218109@bhelgaas>
+References: <20250618191530.GA1218109@bhelgaas>
+Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection
+ and
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Topic: pci/hotplug/pnv_php: Fix surprise plug detection and
+Thread-Index: 5L5iP5Vg8cTYPISRTmSBwe4YSu25hg==
 
-From: Eric Biggers <ebiggers@google.com>
 
-Move the contents of arch/x86/lib/crypto/ into lib/crypto/x86/.
 
-The new code organization makes a lot more sense for how this code
-actually works and is developed.  In particular, it makes it possible to
-build each algorithm as a single module, with better inlining and dead
-code elimination.  For a more detailed explanation, see the patchset
-which did this for the CRC library code:
-https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
-Also see the patchset which did this for SHA-512:
-https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
+----- Original Message -----
+> From: "Bjorn Helgaas" <helgaas@kernel.org>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
+> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
+> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
+> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
+> Sent: Wednesday, June 18, 2025 2:15:30 PM
+> Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection and
 
-This is just a preparatory commit, which does the move to get the files
-into their new location but keeps them building the same way as before.
-Later commits will make the actual improvements to the way the
-arch-optimized code is integrated for each algorithm.
+> On Wed, Jun 18, 2025 at 11:58:23AM -0500, Timothy Pearson wrote:
+>>  recovery
+> 
+> Same weird subject/commit wrapping.
+> 
+>> The existing PowerNV hotplug code did not handle suprise plug events
+>> correctly, leading to a complete failure of the hotplug system after
+>> device removal and a required reboot to detect new devices.
+> 
+> s/suprise/surprise/ (also below)
+> 
+>> This comes down to two issues:
+>> 1.) When a device is suprise removed, oftentimes the bridge upstream
+>>     port will cause a PE freeze on the PHB.  If this freeze is not
+>>     cleared, the MSI interrupts from the bridge hotplug notification
+>>     logic will not be received by the kernel, stalling all plug events
+>>     on all slots associated with the PE.
+> 
+> I guess you mean the bridge *downstream* port that leads to the slot?
 
-Add a gitignore entry for the removed directory arch/x86/lib/crypto/ so
-that people don't accidentally commit leftover generated files.
+No, the upstream port leading to the PHB.  If it was just the downstream port, we'd still be receiving MSI interrupts from the bridge; the upstream PE also ends up frozen.  My best guess is that the downstream error is propagated upward by the PHB, and the hardware freezes the PE to avoid data corruption until the software (in this case the hotplug driver) can analyze the fault, see that it is expected, and thaw the PE.
 
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- arch/x86/lib/.gitignore                                       | 4 ++++
- arch/x86/lib/Makefile                                         | 2 --
- lib/crypto/Kconfig                                            | 2 +-
- lib/crypto/Makefile                                           | 1 +
- {arch/x86/lib/crypto => lib/crypto/x86}/.gitignore            | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/Kconfig               | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/Makefile              | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/blake2s-core.S        | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/blake2s-glue.c        | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/chacha-avx2-x86_64.S  | 0
- .../lib/crypto => lib/crypto/x86}/chacha-avx512vl-x86_64.S    | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/chacha-ssse3-x86_64.S | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/chacha_glue.c         | 0
- .../crypto => lib/crypto/x86}/poly1305-x86_64-cryptogams.pl   | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/poly1305_glue.c       | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/sha256-avx-asm.S      | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/sha256-avx2-asm.S     | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/sha256-ni-asm.S       | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/sha256-ssse3-asm.S    | 0
- {arch/x86/lib/crypto => lib/crypto/x86}/sha256.c              | 0
- 20 files changed, 6 insertions(+), 3 deletions(-)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/.gitignore (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/Kconfig (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/Makefile (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/blake2s-core.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/blake2s-glue.c (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/chacha-avx2-x86_64.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/chacha-avx512vl-x86_64.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/chacha-ssse3-x86_64.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/chacha_glue.c (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/poly1305-x86_64-cryptogams.pl (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/poly1305_glue.c (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/sha256-avx-asm.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/sha256-avx2-asm.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/sha256-ni-asm.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/sha256-ssse3-asm.S (100%)
- rename {arch/x86/lib/crypto => lib/crypto/x86}/sha256.c (100%)
+>> 2.) When a device is removed from a slot, regardless of suprise or
+>>     programmatic removal, the associated PHB/PE ls left frozen.
+>>     If this freeze is not cleared via a fundamental reset, skiboot
+>>     is unable to clear the freeze and cannot retrain / rescan the
+>>     slot.  This also requires a reboot to clear the freeze and redetect
+>>     the device in the slot.
+>> 
+>> Issue the appropriate unfreeze and rescan commands on hotplug events,
+>> and don't oops on hotplug if pci_bus_to_OF_node() returns NULL.
+>> 
+>> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+>> ---
+>>  arch/powerpc/kernel/pci-hotplug.c |  3 ++
+>>  drivers/pci/hotplug/pnv_php.c     | 53 ++++++++++++++++++++++++++++++-
+>>  2 files changed, 55 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/powerpc/kernel/pci-hotplug.c
+>> b/arch/powerpc/kernel/pci-hotplug.c
+>> index 9ea74973d78d..6f444d0822d8 100644
+>> --- a/arch/powerpc/kernel/pci-hotplug.c
+>> +++ b/arch/powerpc/kernel/pci-hotplug.c
+>> @@ -141,6 +141,9 @@ void pci_hp_add_devices(struct pci_bus *bus)
+>>  	struct pci_controller *phb;
+>>  	struct device_node *dn = pci_bus_to_OF_node(bus);
+>>  
+>> +	if (!dn)
+>> +		return;
+>> +
+>>  	phb = pci_bus_to_host(bus);
+>>  
+>>  	mode = PCI_PROBE_NORMAL;
+>> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+>> index bac8af3df41a..0ceb4a2c3c79 100644
+>> --- a/drivers/pci/hotplug/pnv_php.c
+>> +++ b/drivers/pci/hotplug/pnv_php.c
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/libfdt.h>
+>>  #include <linux/module.h>
+>>  #include <linux/pci.h>
+>> +#include <linux/delay.h>
+>>  #include <linux/pci_hotplug.h>
+>>  #include <linux/of_fdt.h>
+>>  
+>> @@ -474,7 +475,7 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot,
+>> bool rescan)
+>>  	struct hotplug_slot *slot = &php_slot->slot;
+>>  	uint8_t presence = OPAL_PCI_SLOT_EMPTY;
+>>  	uint8_t power_status = OPAL_PCI_SLOT_POWER_ON;
+>> -	int ret;
+>> +	int ret, i;
+>>  
+>>  	/* Check if the slot has been configured */
+>>  	if (php_slot->state != PNV_PHP_STATE_REGISTERED)
+>> @@ -532,6 +533,27 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot,
+>> bool rescan)
+>>  
+>>  	/* Power is off, turn it on and then scan the slot */
+>>  	ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+>> +	if (ret) {
+>> +		SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible
+>> frozen PHB", ret);
+>> +		SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot
+>> activation\n");
+>> +		for (i = 0; i < 3; i++) {
+>> +			/* Slot activation failed, PHB may be fenced from a prior device failure
+>> +			 * Use the OPAL fundamental reset call to both try a device reset and clear
+>> +			 * any potentially active PHB fence / freeze
+>> +			 */
+>> +			SLOT_WARN(php_slot, "Try %d...\n", i + 1);
+>> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
+>> +			msleep(250);
+> 
+> What is the source of the 250 value?  Is there a spec you can cite for
+> this?  Maybe add a #define if it makes sense?
 
-diff --git a/arch/x86/lib/.gitignore b/arch/x86/lib/.gitignore
-index 8ae0f93ecbfdd..ec2131c9fd206 100644
---- a/arch/x86/lib/.gitignore
-+++ b/arch/x86/lib/.gitignore
-@@ -1,2 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+# This now-removed directory used to contain generated files.
-+/crypto/
-+
- inat-tables.c
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 4fa5c4e1ba8a0..7cf8681cba0f2 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
- #
- # Makefile for x86 specific library files.
- #
- 
--obj-y += crypto/
--
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
- 
- # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
- KCSAN_SANITIZE_delay.o := n
-diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
-index b98543c7ef231..2460ddff967fc 100644
---- a/lib/crypto/Kconfig
-+++ b/lib/crypto/Kconfig
-@@ -209,10 +209,10 @@ source "lib/crypto/s390/Kconfig"
- endif
- if SPARC
- source "lib/crypto/sparc/Kconfig"
- endif
- if X86
--source "arch/x86/lib/crypto/Kconfig"
-+source "lib/crypto/x86/Kconfig"
- endif
- endif
- 
- endmenu
-diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
-index 748d1fc6b6be2..16f5d76d92710 100644
---- a/lib/crypto/Makefile
-+++ b/lib/crypto/Makefile
-@@ -108,5 +108,6 @@ obj-$(CONFIG_ARM64) += arm64/
- obj-$(CONFIG_MIPS) += mips/
- obj-$(CONFIG_PPC) += powerpc/
- obj-$(CONFIG_RISCV) += riscv/
- obj-$(CONFIG_S390) += s390/
- obj-$(CONFIG_SPARC) += sparc/
-+obj-$(CONFIG_X86) += x86/
-diff --git a/arch/x86/lib/crypto/.gitignore b/lib/crypto/x86/.gitignore
-similarity index 100%
-rename from arch/x86/lib/crypto/.gitignore
-rename to lib/crypto/x86/.gitignore
-diff --git a/arch/x86/lib/crypto/Kconfig b/lib/crypto/x86/Kconfig
-similarity index 100%
-rename from arch/x86/lib/crypto/Kconfig
-rename to lib/crypto/x86/Kconfig
-diff --git a/arch/x86/lib/crypto/Makefile b/lib/crypto/x86/Makefile
-similarity index 100%
-rename from arch/x86/lib/crypto/Makefile
-rename to lib/crypto/x86/Makefile
-diff --git a/arch/x86/lib/crypto/blake2s-core.S b/lib/crypto/x86/blake2s-core.S
-similarity index 100%
-rename from arch/x86/lib/crypto/blake2s-core.S
-rename to lib/crypto/x86/blake2s-core.S
-diff --git a/arch/x86/lib/crypto/blake2s-glue.c b/lib/crypto/x86/blake2s-glue.c
-similarity index 100%
-rename from arch/x86/lib/crypto/blake2s-glue.c
-rename to lib/crypto/x86/blake2s-glue.c
-diff --git a/arch/x86/lib/crypto/chacha-avx2-x86_64.S b/lib/crypto/x86/chacha-avx2-x86_64.S
-similarity index 100%
-rename from arch/x86/lib/crypto/chacha-avx2-x86_64.S
-rename to lib/crypto/x86/chacha-avx2-x86_64.S
-diff --git a/arch/x86/lib/crypto/chacha-avx512vl-x86_64.S b/lib/crypto/x86/chacha-avx512vl-x86_64.S
-similarity index 100%
-rename from arch/x86/lib/crypto/chacha-avx512vl-x86_64.S
-rename to lib/crypto/x86/chacha-avx512vl-x86_64.S
-diff --git a/arch/x86/lib/crypto/chacha-ssse3-x86_64.S b/lib/crypto/x86/chacha-ssse3-x86_64.S
-similarity index 100%
-rename from arch/x86/lib/crypto/chacha-ssse3-x86_64.S
-rename to lib/crypto/x86/chacha-ssse3-x86_64.S
-diff --git a/arch/x86/lib/crypto/chacha_glue.c b/lib/crypto/x86/chacha_glue.c
-similarity index 100%
-rename from arch/x86/lib/crypto/chacha_glue.c
-rename to lib/crypto/x86/chacha_glue.c
-diff --git a/arch/x86/lib/crypto/poly1305-x86_64-cryptogams.pl b/lib/crypto/x86/poly1305-x86_64-cryptogams.pl
-similarity index 100%
-rename from arch/x86/lib/crypto/poly1305-x86_64-cryptogams.pl
-rename to lib/crypto/x86/poly1305-x86_64-cryptogams.pl
-diff --git a/arch/x86/lib/crypto/poly1305_glue.c b/lib/crypto/x86/poly1305_glue.c
-similarity index 100%
-rename from arch/x86/lib/crypto/poly1305_glue.c
-rename to lib/crypto/x86/poly1305_glue.c
-diff --git a/arch/x86/lib/crypto/sha256-avx-asm.S b/lib/crypto/x86/sha256-avx-asm.S
-similarity index 100%
-rename from arch/x86/lib/crypto/sha256-avx-asm.S
-rename to lib/crypto/x86/sha256-avx-asm.S
-diff --git a/arch/x86/lib/crypto/sha256-avx2-asm.S b/lib/crypto/x86/sha256-avx2-asm.S
-similarity index 100%
-rename from arch/x86/lib/crypto/sha256-avx2-asm.S
-rename to lib/crypto/x86/sha256-avx2-asm.S
-diff --git a/arch/x86/lib/crypto/sha256-ni-asm.S b/lib/crypto/x86/sha256-ni-asm.S
-similarity index 100%
-rename from arch/x86/lib/crypto/sha256-ni-asm.S
-rename to lib/crypto/x86/sha256-ni-asm.S
-diff --git a/arch/x86/lib/crypto/sha256-ssse3-asm.S b/lib/crypto/x86/sha256-ssse3-asm.S
-similarity index 100%
-rename from arch/x86/lib/crypto/sha256-ssse3-asm.S
-rename to lib/crypto/x86/sha256-ssse3-asm.S
-diff --git a/arch/x86/lib/crypto/sha256.c b/lib/crypto/x86/sha256.c
-similarity index 100%
-rename from arch/x86/lib/crypto/sha256.c
-rename to lib/crypto/x86/sha256.c
--- 
-2.50.0
+It's a magic number used elsewhere in the tree, specifically by the EEH driver which also issues fundamental resets as part of its logic.  Unfortunately I don't know the origin of the magic number, and from my understanding of the PCIe specification it's probably non-critical -- long enough to be reasonably sure that the PCIe device has seen the reset strobe, but short enough not to stall the operation for an obnoxiously long interval.
 
+>> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
+>> +
+>> +			ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+> 
+> Wrap the comment and non-printk lines to fit in 80 columns like the
+> rest of the file.  Preserve the messages as-is so grep finds them
+> easily.
+> 
+> Usual multi-line comment style is:
+> 
+>  /*
+>   * Text ...
+>   */
+
+Will do.
+
+> Possibly factor this warn/reset code into a helper function to
+> unclutter pnv_php_enable()?
+
+Sure, will do.
+
+>> +			if (!ret)
+>> +				break;
+>> +		}
+>> +
+>> +		if (i >= 3)
+>> +			SLOT_WARN(php_slot, "Failed to bring slot online, aborting!\n");
+>> +	}
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> @@ -841,12 +863,41 @@ static void pnv_php_event_handler(struct work_struct
+>> *work)
+>>  	struct pnv_php_event *event =
+>>  		container_of(work, struct pnv_php_event, work);
+>>  	struct pnv_php_slot *php_slot = event->php_slot;
+>> +	struct pci_dev *pdev = php_slot->pdev;
+>> +	struct eeh_dev *edev;
+>> +	struct eeh_pe *pe;
+>> +	int i, rc;
+>>  
+>>  	if (event->added)
+>>  		pnv_php_enable_slot(&php_slot->slot);
+>>  	else
+>>  		pnv_php_disable_slot(&php_slot->slot);
+>>  
+>> +	if (!event->added) {
+>> +		/* When a device is surprise removed from a downstream bridge slot, the
+>> upstream bridge port
+>> +		 * can still end up frozen due to related EEH events, which will in turn
+>> block the MSI interrupts
+>> +		 * for slot hotplug detection.  Detect and thaw any frozen upstream PE after
+>> slot deactivation...
+>> +		 */
+> 
+> Restyle and wrap comment.
+> 
+> s/upstream bridge port/bridge downstream port/ to avoid confusion.
+
+It's the upstream port of the bridge (downstream slot of the PHB itself) that ends up as the frozen PE.
+
+>> +		edev = pci_dev_to_eeh_dev(pdev);
+>> +		pe = edev ? edev->pe : NULL;
+>> +		rc = eeh_pe_get_state(pe);
+>> +		if ((rc == -ENODEV) || (rc == -ENOENT)) {
+>> +			SLOT_WARN(php_slot, "Upstream bridge PE state unknown, hotplug detect may
+>> fail\n");
+>> +		}
+>> +		else {
+>> +			if (pe->state & EEH_PE_ISOLATED) {
+>> +				SLOT_WARN(php_slot, "Upstream bridge PE %02x frozen, thawing...\n",
+>> pe->addr);
+>> +				for (i = 0; i < 3; i++)
+>> +					if (!eeh_unfreeze_pe(pe))
+>> +						break;
+>> +				if (i >= 3)
+>> +					SLOT_WARN(php_slot, "Unable to thaw PE %02x, hotplug detect will fail!\n",
+>> pe->addr);
+>> +				else
+>> +					SLOT_WARN(php_slot, "PE %02x thawed successfully\n", pe->addr);
+>> +			}
+>> +		}
+>> +	}
+> 
+> Possibly factor this out, too.  Then pnv_php_event_handler() could
+> look simpler:
+> 
+>  if (event->added) {
+>    pnv_php_enable_slot(&php_slot->slot);
+>  } else {
+>    pnv_php_disable_slot(&php_slot->slot);
+>    <new helper to check for surprise removal>
+>  }
+
+Fair enough, will do.
+
+>  kfree(event);
+> 
+>>  	kfree(event);
+>>  }
+>>  
+>> --
+> > 2.39.5
