@@ -1,386 +1,261 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34E728C02E
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C683323536B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345886; cv=none; b=sDQHDb4j6ZdWCrUXei+Qj8tdeW4mkxBeBLCwvF54UxS2c8xuEa6wgi1pLgD8qnQvfQsWNkxUdz5IdcFCm9i1JxYFTZA9pDHfkBTSived2cGTSqgZI9V+xjqwVAkEyyEQNUmDA7ycjXXDVRIKk+m5rRFrol8gSDBp2QtUqbCS1Dg=
+	t=1750345899; cv=none; b=r2LovjwkKyfkxNsn0O95eDis8/jzLkSepBOUpKG40GJrOuvbXO8/3BZqGOg3rSThkNHuM1HbqVkDJG8NK6q7sLH/d1c0tdmkklzKUpKTqvscs8WY3fsdhOK6L8k3PI+6m5Ev8MpZzmveb+WXT/1pfuXklMQbei0V2X709rTaS1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345886; c=relaxed/simple;
-	bh=tqKJRFWo4M9VGfuvuDENffmGS3Z20jRq6zUxhulLQgE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=bXe7f6iLUbRl/CfkH5LRAmN5mxaKBoEG/Jhl6WKtdN9Jid3zWYc+u9a13RX0GS2fTAbhfgUMDwvzKd/dA5ES4uXOa2Z1sMaW+j3l5uAyJHy0o+IlRVjOyJU5GHnlvOv/XwpURrG4vzwTL3DEFGlDLO+e8Bd+tZUSgBjAv/pyuRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LoPIKRk2; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750345899; c=relaxed/simple;
+	bh=8htbHuxeV073R1YJdk2jC84NXcVju+3iR3pYFD8tCCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bk3AbXL5uZPz+MNYz5b3Qg5x0iKh9SDRQtB6Xwf/E2SRpfJIwVDqwLb8fnCmMVfiRB/vcWzlcJ3G5HhEG3hRwQqbQb3a+fYxrahmzzbRCvKBPlaTnAY+pbaLs3Bpns8xah1uKnBR6x/x6HMCNc1lSQmwhAHYZdUOJpn576UDQ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=MiCTyE13; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LoPIKRk2"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450d64026baso5733285e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:11:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="MiCTyE13"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8731c3473c3so26261339f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750345882; x=1750950682; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RqSblfyVaNLIb0ksq2WZM/4c53P9wG2ZkX/N+AT7PyM=;
-        b=LoPIKRk2EavM/ucwkyr4GT949ipTLkowlluOqV8ERAr0uC6ZvTAZLKgXSy7vQDbif0
-         kTID4mLm20PyRcXC9nzblIYxtbn5YJ/JudNZLIREdY4u9tIFcGhP4tTJV1uNuG6RkspG
-         aibnJl9+Rcz1DLxALx1uAqLAR18AjUUuAW1SM2NWRamNh4sbC3zhEx2HgdvPKeENlxcT
-         0t96Ffktp0o0NIOnUE6wNKxCSPq6ip4NWIvu6iW+cFUZLh2dHHyb5ExmaINHlEIOcYHR
-         sPcfmnNI/utB9lS9iZ3km4xxSO769tyFZTQoAuh2Yni4ovie5pQNAG0yEFLoVyn/whkX
-         BHyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750345882; x=1750950682;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=ieee.org; s=google; t=1750345895; x=1750950695; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RqSblfyVaNLIb0ksq2WZM/4c53P9wG2ZkX/N+AT7PyM=;
-        b=mZtfhUZvns0EgwxQQ4TkABaOsiZUe3fCbu74UdLUxJjfSQqzJDuQeoXHx1gkz7/DBe
-         EVWTTiaMs8iCdmlShkpU2+SFNSpRWYGAOBzTLnoRiOCKpgAHlNWi+LfuhlWUX2U5Bncy
-         zPPTh6d2xvMuAcQY73SfFjvVm0coGsGbFoXqe2ZaZZUJHR8xk3MTy2YSw8bO8JoDndZI
-         nvQoMjp63nfykFD1m4ZTkad8u8re0aY1ADmFOCW90hNBiP+V1CQObBN30jP/92ofFiQc
-         s0D8wlyLkP+tAdGrqNa88eyLdJ1A2JSkpRDUS0QoJWLRiN5LH6tcUGVLdkHEp8mX+M9O
-         FaGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRf0xqk/IMp2kpXYXbj4ekr3bkPYwCeM0ldvU2SInpGe6qMwFzOXTV7R7BTs8gz/28TeSds/dDy719EDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTJyG9KHHZc4dbZAiGhO3TrR8wDMXlvqL3CfeK4xLddHMVMTpY
-	uczxIExKvKKcdrWCPMJPx8QddCM/BeGviROik6cfBvE40xMSUcRpaYak5ZeW1uGIEOme8F1ZiUg
-	bqDh055XbClg1Un0Lxg==
-X-Google-Smtp-Source: AGHT+IGzRq3tHlg318hv4WqE3rmjTltkUE72IglWSFPJYzNK2SFRHYe7BzUKjDE/zeXMb7P6d8MT6bj6kb5o+TA=
-X-Received: from wmqe7.prod.google.com ([2002:a05:600c:4e47:b0:43d:9035:df36])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:5490:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-4533ca550e9mr217824405e9.9.1750345882498;
- Thu, 19 Jun 2025 08:11:22 -0700 (PDT)
-Date: Thu, 19 Jun 2025 15:11:13 +0000
+        bh=oFGwKffzZxxx+liHIJgaBF+mW0zmVCScmb0c46n6Kak=;
+        b=MiCTyE13EOfR3kzO4VHLNjqyM5osBbL1q3Tq/R85YdRLy4KENKLyKFk7xrSyGbXiXl
+         0zbq08VijbL0QBb7SBxekfmmReDD+iPWmkCI+bqA4g1mQu/lNQDbnHNzUk3COfCamDSp
+         4sj0daQnI101Onjd+Twe7RFmtRAARq4N99r0k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750345895; x=1750950695;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oFGwKffzZxxx+liHIJgaBF+mW0zmVCScmb0c46n6Kak=;
+        b=W8gdt+69fEK++pgbbYjbMkbEKjnOYlBW8IpoOlzlpnyvR9unf8bpmEPKtakEEoP9lA
+         nLSrdbdWP6irRaI/IcuY1CCOBj59V6Y6kvvvikFs1x9qglsnkykHnrjKdiddd8tAlnhD
+         RlUJq76NihfPqXGj5UmlAoxzOlBis2wxn28j3aw7v6WmeSTv+soiWWdMSxMmN/BZdJ+b
+         ULRsA6k8hrux/hyusVurLnYvS7h5jyr4dSkI8V1UIK97MlwpswIiCx8bHA/V10kPUgFY
+         cJaitLC0o5QEwl0xowdplKniXdjkIMxD/Fq1fna/r6gExKsFLZb9FGGzLBbPL0MaETG2
+         DQ8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSG6Uw/JUFRbvm53m+MWyUFDIxDHQrL+AzLPGvqwdVEPClN1yhCNZ8MlAq5BvckLVsJEjNbcpH/NTt2ts=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd8gFud/Ww3kE2PKJHj/EZ2rR62LXYWRRGoJAmUsIOYubTTMHY
+	Ti+X5cN/EpQkplIhLRRarrZHNtffqZsaQySWaWlzTVTKUBkU5JVbO6iUp480B15dGA==
+X-Gm-Gg: ASbGncu5jk8W2+2DaYiiT0ABiVuoDgZtr9fl55rFFd0hAKe1XyxgOoO66SNskPPNjwy
+	kGc3R+NF0OuAXbGTg557r9+9pStXBW1xq+4qSkLNYD5HifXd7wzObhFNzIAI7uHzUZf4ggPsBDt
+	27GIeoswrHtBN91IFsVDkGj5bxjnlwM9ga6bAqL308kWryPjPp8NTGosysxuDgnfccyagTN78HJ
+	b6YGyzCZOx1PPytynVT8+KIaFJjTeOD8Yx2KRu4szuKY2ffuSi68NeJZDUaLUhlJ7v1gTUkQY0A
+	p2P8Jz0Akor8CFOuTtDwcgdgVJZorYOyQSVmq87u1c4bgvEttZcNgIfJ5ue9ZMlkMyQGRGsNBOr
+	KdQLkWfJSP1r1PqmRp9o4jjWjBAoRtkA=
+X-Google-Smtp-Source: AGHT+IF6bvglZ3cpBSripQco+ttcnZ5jzG2rPUkRsO79qncZB/5WB1V0utxb8yyQkNyJncd7lYe5LA==
+X-Received: by 2002:a05:6602:6424:b0:862:fe54:df4e with SMTP id ca18e2360f4ac-875ded5d849mr2848267139f.7.1750345894752;
+        Thu, 19 Jun 2025 08:11:34 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-875d5829e9dsm302704139f.37.2025.06.19.08.11.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:11:33 -0700 (PDT)
+Message-ID: <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org>
+Date: Thu, 19 Jun 2025 10:11:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJAoVGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0NL3aLS4hLdgsS8zGRdi6QUQ5NUUzOTxEQTJaCGgqLUtMwKsGHRsbW 1AACuJxJcAAAA
-X-Change-Id: 20250619-rust-panic-8bd14e564aa4
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13497; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=tqKJRFWo4M9VGfuvuDENffmGS3Z20jRq6zUxhulLQgE=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoVCiUuM9UwU9dChnMTSwfdhQi3Ok3m+xC9ULm0
- qUNSRjNdWWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFQolAAKCRAEWL7uWMY5
- Rj8FD/kBvGs4B/2oeLUN7b++tk0Rn8WvkMVLsGgmM3gdEwqJ2Q21ExsHYnPEIdZEUtL25CEd/02
- V+1zAcfkfDMgruPKfg9jiGbu59n+XA1K7ReXfk0x4Gwpwt/jioaMY7heSR7qRlzqD08ObqwKnSK
- CojD3G2BzyU1tiGK+UY/ltWxgJxaHfaBZTKTNslqhgfps3dobUF+9WlbfsiKjaYwV0dDwejoow8
- ruPbR+xlgnV9T1HUTTCcsg4NjTJw6h1ns4tvFfBGGECiSfYqKR15TxY4l+dgQhc282ySwM+dPei
- KGBxwqMjFlnhMRr//bk/fEio0dBJH2dmIKGaj32n708fqxCKlhIWw+jgnCT3l9PRWS043Nx+QPX
- 7j7zzphnzYvEU39ovDYJ6YPw+9rKmd/Xo79GWVFJSwHbPMWkTlVjvPpOlN3+sCQzFI9baknqWfB
- YH1qNU2FPZDQ5zO3xSTVHWtzK44+nPcDTcFmT5AzKiuEOsTs1f7eE0R7WbWGsQxC/JABXXkhxl3
- 3F2gqy/QbNpmUoNnNclyzK/Q/d6fBaF/PDoCkHR+tsPQoHGKQEM79UbrOoUAjjA6GZHD5zneFka
- 7aoNEcpCQs77aFpF9DMKbvmHutyMq2aeMxN3oPg2O4Yrpss+NpqxzZQFN5kko4Dnj+AbTeRSRYh Eth7RRYHa66Xb5g==
-X-Mailer: b4 0.14.2
-Message-ID: <20250619-rust-panic-v1-1-ad1a803962e5@google.com>
-Subject: [PATCH] panic: improve panic output from Rust panics
-From: Alice Ryhl <aliceryhl@google.com>
-To: Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
+ K1
+To: Vivian Wang <wangruikang@iscas.ac.cn>, Yixun Lan <dlan@gentoo.org>,
+ Guodong Xu <guodong@riscstar.com>, Ze Huang <huangze@whut.edu.cn>,
+ spacemit@lists.linux.dev
+Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
+Content-Language: en-US
+From: Alex Elder <elder@ieee.org>
+In-Reply-To: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Rust panics currently don't provide amazing panic output. The
-information you're going to find first when looking at a crash is the
-fact that the panic happened on rust/helpers/bug.c:7, which is not
-helpful. To find the actual panic message and location, you have to look
-above the cut here line - often quite far above when other threads are
-also active.
+On 6/17/25 12:21 AM, Vivian Wang wrote:
+> The SpacemiT K1 has various static translations of DMA accesses. Add
+> these as simple-bus nodes. Devices actually using these translation will
+> be added in later patches.
+> 
+> The bus names are assigned according to consensus with SpacemiT [1].
+> 
+> [1] https://lore.kernel.org/all/CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com/
 
-Thus, change the panic logic to print the Rust panic information in a
-manner that is easier to read.
+So what you include here very closely matches what Guodong
+said in the message above.  Yours differs from his proposal
+and that makes it hard to compare them.  I have a few comments
+on that below.
 
-This patch has the pretty major disadvantage that it unconditionally
-calls panic() when a Rust panic happens. Since Rust panics currently go
-through BUG(), they are able to just kill the current task without
-killing the entire kernel. This patch loses that, and I'm open to ideas
-for how to improve that. I couldn't figure out how to get a pointer
-parameter into the BUG() infrastructure without modifying arch-specific
-code.
+> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+> ---
+> This is my concrete proposal for representing DMA translations for
+> SpacemiT K1.
 
-Sample output with this patch:
+It's worth acknowledging that this is derived from what Guodong
+proposed (it's not "your" proposal in that respect).  That said,
+yours is a more complete and "formal" RFP than what he wrote.
 
-	------------[ cut here ]------------
-	RUST PANIC: CPU: 0 PID: 1285 at drivers/android/binder/freeze.rs:212
-	Kernel panic - not syncing: attempt to subtract with overflow
-	CPU: 0 UID: 0 PID: 1285 Comm: binderLibTest Tainted: G          IOE      6.12.23-android16-5-maybe-dirty #1 5a1e41f5fb665703ee943f126e14ab83f85d9b3c
-	Tainted: [I]=FIRMWARE_WORKAROUND, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-	Hardware name: ChromiumOS crosvm, BIOS 0
-	Call Trace:
-	 <TASK>
-	 dump_stack_lvl+0x44/0xc0
-	 dump_stack+0x14/0x1b
-	 panic+0x11f/0x2e0
-	 ? _printk+0x58/0x80
-	 ? default_wake_function+0x19/0x30
-	 rust_panic+0x7e/0x80
-	 rust_begin_unwind+0x8c/0xa0
-	 ? __cfi__RNvYNCINvMs_NtNtCs3o2tGsuHyou_4core3fmt2rtNtBa_8Argument11new_displayNtNtNtBe_5panic10panic_info12PanicMessageE0INtNtNtBe_3ops8function6FnOnceTINtNtNtBe_3ptr8non_null7NonNulluEQNtBc_9FormatterEE9call_onceCsdfZWD8DztAw_6kernel+0x10/0x10
-	 _RNvNtCs3o2tGsuHyou_4core9panicking9panic_fmt+0x4e/0x50
-	 _RNvNtNtCs3o2tGsuHyou_4core9panicking11panic_const24panic_const_sub_overflow+0x40/0x40
-	 _RNvMs4_NtCsepCoEf1YMFZ_11rust_binder7processNtB5_7Process16ioctl_write_read+0x304a/0x3680
-	 ? perf_tp_event+0x21d/0x890
-	 ? kvm_sched_clock_read+0x15/0x30
-	 ? trace_call_bpf+0x144/0x1a0
-	 ? perf_trace_run_bpf_submit+0x70/0xa0
-	 ? perf_trace_sched_switch+0x17e/0x1b0
-	 ? save_fpregs_to_fpstate+0x40/0xa0
-	 ? finish_task_switch+0xad/0x330
-	 ? __schedule+0x995/0xde0
-	 ? schedule+0x6c/0xf0
-	 ? avc_has_extended_perms+0x3ec/0x5c0
-	 _RNvMs5_NtCsepCoEf1YMFZ_11rust_binder7processNtB5_7Process5ioctl+0x6d/0xa90
-	 ? ioctl_has_perm+0x122/0x170
-	 ? selinux_file_ioctl+0x330/0x570
-	 ? do_futex+0x1b1/0x2b0
-	 _RNvCsepCoEf1YMFZ_11rust_binder24rust_binder_compat_ioctl+0x1e/0x40
-	 __se_sys_ioctl+0x78/0xd0
-	 __x64_sys_ioctl+0x1c/0x40
-	 x64_sys_call+0x1878/0x2ee0
-	 do_syscall_64+0x58/0xf0
-	 ? clear_bhb_loop+0x35/0x90
-	 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-	RIP: 0033:0x71bb7b8e6497
-	Code: 00 00 00 b8 1b 00 00 00 0f 05 48 3d 01 f0 ff ff 72 09 f7 d8 89 c7 e8 e8 f7 ff ff c3 0f 1f 80 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 72 09 f7 d8 89 c7 e8 c8 f7 ff ff c3 0f 1f 80 00
-	RSP: 002b:00007ffe696e3058 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
-	RAX: ffffffffffffffda RBX: 00000000fffffff7 RCX: 000071bb7b8e6497
-	RDX: 00007ffe696e3188 RSI: 00000000c0306201 RDI: 0000000000000003
-	RBP: 00007ffe696e3130 R08: 0000000000000001 R09: 0000000000000000
-	R10: 0000000000010000 R11: 0000000000000206 R12: 0000000000000010
-	R13: 00007ffe696e3188 R14: 000071ba9b40f380 R15: 0000000000000000
-	 </TASK>
-	Kernel Offset: disabled
-	pstore: backend (ramoops) writing error (-28)
+> For context, memory on the SpacemiT K1 is split into two chunks:
+> 
+> - 0x0000_0000 to 0x8000_0000: First 2 GiB of memory
+> - 0x1_0000_0000 above: Rest of memory
+> 
+> DMA-capable devices on the K1 all have access to the lower 2G of memory
+> through an identity mapping. However, for the upper region of memory,
+> each device falls under one of six different mappings. The mappings are
+> provided in this patch as simple-bus nodes that device nodes should be
+> added to.
+> 
+> This patch is an RFC because it is not meant to be applied, or at least,
+> not certainly meant to be applied. Instead, this is an attempt to come
+> to a consensus on how these bus nodes should look like.
 
-Sample output without this patch:
+I think the above is what Krzysztof might not have seen.  Perhaps
+it could have been made more clear--maybe in the "main" description
+section (above the ---) or even the subject line.
 
-	rust_kernel: panicked at drivers/android/binder/node.rs:877:13:
-	attempt to subtract with overflow
-	------------[ cut here ]------------
-	kernel BUG at rust/helpers/bug.c:7!
-	Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-	CPU: 0 UID: 0 PID: 298 Comm: syz-executor821 Not tainted 6.12.23-syzkaller-g30b14cdad458 #0 c708c6bafa1314b3e84c64b9f03b67766970ebbd
-	Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-	RIP: 0010:rust_helper_BUG+0x8/0x10
-	Code: cc cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 b8 8d 71 4c 30 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 55 48 89 e5 <0f> 0b 66 0f 1f 44 00 00 b8 c7 b5 05 bc 90 90 90 90 90 90 90 90 90
-	RSP: 0018:ffffc9000124dab0 EFLAGS: 00010246
-	RAX: 0000000000000061 RBX: 1ffff92000249b58 RCX: 59dc727b65a9b400
-	RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
-	RBP: ffffc9000124dab0 R08: 0000000000000003 R09: 0000000000000004
-	R10: dffffc0000000000 R11: fffff52000249abc R12: 0000000000000000
-	R13: dffffc0000000000 R14: ffffc9000124dae0 R15: ffffc9000124db10
-	FS:  00005555659f6380(0000) GS:ffff8881f6e00000(0000) knlGS:0000000000000000
-	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	CR2: 00007f76714410d0 CR3: 000000012e67a000 CR4: 00000000003526b0
-	DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-	DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-	Call Trace:
-	 <TASK>
-	 _RNvCscSpY9Juk0HT_7___rustc17rust_begin_unwind+0x15b/0x160
-	 ? __cfi__RNvCscSpY9Juk0HT_7___rustc17rust_begin_unwind+0x10/0x10
-	 ? _RNvMs0_NtCshgDM7dBCdno_11rust_binder4nodeNtB5_4Node22update_refcount_locked+0x401/0x810
-	 ? __cfi__RNvXs1b_NtCs9jEwPDbx20M_4core3fmtRNtNtNtB8_5panic10panic_info9PanicInfoNtB6_7Display3fmtCs43vyB533jt3_6kernel+0x10/0x10
-	 ? __cfi__RNvMs0_NtCshgDM7dBCdno_11rust_binder4nodeNtB5_4Node22update_refcount_locked+0x10/0x10
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock+0x8c/0x120
-	 ? __cfi__raw_spin_lock+0x10/0x10
-	 _RNvNtCs9jEwPDbx20M_4core9panicking9panic_fmt+0x84/0x90
-	 ? __cfi__RNvNtCs9jEwPDbx20M_4core9panicking9panic_fmt+0x10/0x10
-	 _RNvNtNtCs9jEwPDbx20M_4core9panicking11panic_const24panic_const_sub_overflow+0xb2/0xc0
-	 ? __cfi__RNvNtNtCs9jEwPDbx20M_4core9panicking11panic_const24panic_const_sub_overflow+0x10/0x10
-	 _RNvMs3_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process10update_ref+0x17e5/0x1860
-	 ? __cfi__RNvMs3_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process10update_ref+0x10/0x10
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock+0x8c/0x120
-	 ? __cfi__raw_spin_lock+0x10/0x10
-	 ? __kasan_check_write+0x18/0x20
-	 _RNvMs2_NtCshgDM7dBCdno_11rust_binder6threadNtB5_6Thread10write_read+0x27cf/0x96a0
-	 ? __cfi__RNvMs2_NtCshgDM7dBCdno_11rust_binder6threadNtB5_6Thread10write_read+0x10/0x10
-	 ? is_bpf_text_address+0x17b/0x1a0
-	 ? is_bpf_text_address+0x17b/0x1a0
-	 ? kernel_text_address+0xa9/0xe0
-	 ? __kernel_text_address+0x11/0x40
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock_irqsave+0xaf/0x150
-	 ? is_bpf_text_address+0x17b/0x1a0
-	 ? kernel_text_address+0xa9/0xe0
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock_irqsave+0xaf/0x150
-	 ? __cfi__raw_spin_lock_irqsave+0x10/0x10
-	 ? _raw_spin_unlock_irqrestore+0x4a/0x70
-	 ? stack_depot_save_flags+0x399/0x800
-	 ? kasan_save_alloc_info+0x40/0x50
-	 ? kasan_save_track+0x4f/0x80
-	 ? kasan_save_track+0x3e/0x80
-	 ? kasan_save_alloc_info+0x40/0x50
-	 ? __kasan_kmalloc+0x96/0xb0
-	 ? __kmalloc_node_track_caller_noprof+0x1ad/0x440
-	 ? krealloc_noprof+0x8d/0x130
-	 ? rust_helper_krealloc+0x33/0xd0
-	 ? _RNvMNtNtCs43vyB533jt3_6kernel5alloc9allocatorNtB2_11ReallocFunc4call+0xaf/0x100
-	 ? _RNvMs3_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process18get_current_thread+0x715/0x1440
-	 ? _RNvMs5_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process5ioctl+0x1a9/0x2c20
-	 ? _RNvCshgDM7dBCdno_11rust_binder26rust_binder_unlocked_ioctl+0xa0/0x100
-	 ? __se_sys_ioctl+0x132/0x1b0
-	 ? __x64_sys_ioctl+0x7f/0xa0
-	 ? do_syscall_64+0x58/0xf0
-	 ? entry_SYSCALL_64_after_hwframe+0x76/0x7e
-	 ? __kasan_kmalloc+0x96/0xb0
-	 ? kasan_save_alloc_info+0x40/0x50
-	 ? __kasan_kmalloc+0x96/0xb0
-	 ? __kmalloc_node_track_caller_noprof+0x1ad/0x440
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock+0x8c/0x120
-	 ? __cfi__raw_spin_lock+0x10/0x10
-	 ? arch_scale_cpu_capacity+0x1c/0xb0
-	 ? _raw_spin_unlock+0x45/0x60
-	 ? rust_helper_spin_unlock+0x19/0x30
-	 ? _RNvMs3_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process18get_current_thread+0x934/0x1440
-	 ? __cfi___update_load_avg_cfs_rq+0x10/0x10
-	 ? update_curr+0x60d/0xc60
-	 ? arch_scale_cpu_capacity+0x1c/0xb0
-	 ? __cfi__RNvMs3_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process18get_current_thread+0x10/0x10
-	 ? update_curr_dl_se+0x10c/0xb20
-	 ? sched_clock_noinstr+0xd/0x30
-	 ? __cfi___update_load_avg_cfs_rq+0x10/0x10
-	 ? update_curr+0x60d/0xc60
-	 ? dequeue_entity+0xa9c/0x1750
-	 _RNvMs5_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process5ioctl+0x411/0x2c20
-	 ? avc_has_extended_perms+0x7c7/0xdd0
-	 ? __asan_memcpy+0x5a/0x80
-	 ? avc_has_extended_perms+0x921/0xdd0
-	 ? __cfi__RNvMs5_NtCshgDM7dBCdno_11rust_binder7processNtB5_7Process5ioctl+0x10/0x10
-	 ? do_vfs_ioctl+0xeda/0x1e30
-	 ? sched_clock+0x44/0x60
-	 ? __ia32_compat_sys_ioctl+0x850/0x850
-	 ? psi_group_change+0xb44/0x1130
-	 ? ioctl_has_perm+0x384/0x4d0
-	 ? has_cap_mac_admin+0xd0/0xd0
-	 ? __schedule+0x1463/0x1f10
-	 ? selinux_file_ioctl+0x6e0/0x1360
-	 ? __cfi_selinux_file_ioctl+0x10/0x10
-	 ? __kasan_check_write+0x18/0x20
-	 ? _raw_spin_lock_irq+0x8d/0x120
-	 ? __cfi__raw_spin_lock_irq+0x10/0x10
-	 ? __asan_memset+0x39/0x50
-	 ? ptrace_stop+0x6c9/0x8c0
-	 ? _raw_spin_unlock_irq+0x45/0x70
-	 ? ptrace_notify+0x1e8/0x270
-	 _RNvCshgDM7dBCdno_11rust_binder26rust_binder_unlocked_ioctl+0xa0/0x100
-	 ? __se_sys_ioctl+0x114/0x1b0
-	 ? __cfi__RNvCshgDM7dBCdno_11rust_binder26rust_binder_unlocked_ioctl+0x10/0x10
-	 __se_sys_ioctl+0x132/0x1b0
-	 __x64_sys_ioctl+0x7f/0xa0
-	 x64_sys_call+0x1878/0x2ee0
-	 do_syscall_64+0x58/0xf0
-	 ? clear_bhb_loop+0x35/0x90
-	 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-	RIP: 0033:0x7f76713ca249
-	Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-	RSP: 002b:00007ffe59fd2328 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-	RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f76713ca249
-	RDX: 0000200000000480 RSI: 00000000c0306201 RDI: 0000000000000004
-	RBP: 00000000000f4240 R08: 0000000000000000 R09: 00005555659f7610
-	R10: 0000000000000000 R11: 0000000000000246 R12: 00007f76714181bc
-	R13: 00007f767141309b R14: 00007ffe59fd2350 R15: 00007ffe59fd2340
-	 </TASK>
+> More specifically, I propose that the process proceeds as follows:
+> 
+> - Firstly, relevant parties agree on these bus nodes given here.
+> - After that, each time the first user of a bus appears, the series
+>    should include a patch to add the bus required for that driver.
+> - If a driver being submitted uses the same bus as another one that has
+>    been submitted but hasn't yet landed, it can depend on the bus patch
+>    from that previous series.
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- include/asm-generic/bug.h |  2 ++
- kernel/panic.c            | 18 ++++++++++++++++++
- rust/kernel/lib.rs        | 22 +++++++++++++++++++---
- 3 files changed, 39 insertions(+), 3 deletions(-)
+Getting agreement is good, but otherwise this is basically
+the process Guodong was suggesting, right?
 
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index 387720933973b6313547dc9a4431473fb6e7c85d..cfec5c3333851d57a71c431354d9da5f49d0579e 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -92,6 +92,8 @@ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
- 		       const char *fmt, ...);
- extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- 
-+void rust_panic(const char *file, int file_len, int line, void *message);
-+
- #ifndef __WARN_FLAGS
- #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
- #define __WARN_printf(taint, arg...) do {				\
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b0b9a8bf4560d5d0139dd74ee9a037bdfeb12c54..3ca4120af3acf57ddd957352ece0e6d660ccfc1e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -830,6 +830,24 @@ void __warn_printk(const char *fmt, ...)
- EXPORT_SYMBOL(__warn_printk);
- #endif
- 
-+#ifdef CONFIG_RUST
-+void rust_panic(const char *file, int file_len, int line, void *message)
-+{
-+	pr_emerg(CUT_HERE);
-+	nbcon_cpu_emergency_enter();
-+	disable_trace_on_warning();
-+	if (file)
-+		pr_emerg("RUST PANIC: CPU: %d PID: %d at %.*s:%d\n",
-+			raw_smp_processor_id(), current->pid,
-+			file_len, file, line);
-+	else
-+		pr_emerg("RUST PANIC: CPU: %d PID: %d\n",
-+			raw_smp_processor_id(), current->pid);
-+	panic("%pA\n", message);
-+}
-+EXPORT_SYMBOL(rust_panic);
-+#endif
-+
- /* Support resetting WARN*_ONCE state */
- 
- static int clear_warn_once_set(void *data, u64 val)
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c37f4da1866e993be6230bc6715841..3c01ca3449a84a7e396ab92c3a20abada83ad034 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -197,9 +197,25 @@ pub const fn as_ptr(&self) -> *mut bindings::module {
- #[cfg(not(any(testlib, test)))]
- #[panic_handler]
- fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
--    pr_emerg!("{}\n", info);
--    // SAFETY: FFI call.
--    unsafe { bindings::BUG() };
-+    use ffi::*;
-+
-+    let (file, file_len, line) = match info.location() {
-+        Some(location) => {
-+            let file = location.file();
-+            (file.as_ptr(), file.len() as c_int, location.line() as c_int)
-+        }
-+        None => (core::ptr::null(), 0, 0),
-+    };
-+
-+    match core::format_args!("{}", info.message()) {
-+        args => {
-+            let args = (&args) as *const core::fmt::Arguments<'_> as *mut c_void;
-+            // SAFETY: FFI call.
-+            unsafe { bindings::rust_panic(file, file_len, line, args) };
-+        }
-+    }
-+
-+    loop {}
- }
- 
- /// Produces a pointer to an object from a pointer to one of its fields.
+> For conventions regarding coding style, I propose that:
+> 
+> - #address-cells and #size-cells are 2 for consistency
+> - These bus nodes are put at the end of /soc, inside /soc
+> - These bus nodes are sorted alphabetically, not in vendor's order
+> - Devices are added into *-bus nodes directly, not appended towards the
+>    end with a label reference
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250619-rust-panic-8bd14e564aa4
+I do like that you're trying to be more complete and explicit
+on what you think needs agreement on.
 
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+> The K1 DMA translations are *not* interconnects, since they do not
+> provide any configuration capabilities.
+> 
+> These bus nodes names and properties are provided compliant with
+> "simple-bus" bindings, and should pass "make dtbs_check".
+> 
+> Remaining questions:
+> 
+> - Should storage-bus exist? Or should drivers under it simply specify
+>    32-bit DMA?
+
+Explicitly saying storage devices have one-to-one mapping
+seems informative, to me.
+
+> ---
+>   arch/riscv/boot/dts/spacemit/k1.dtsi | 53 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 53 insertions(+)
+
+The short summary of what differs between your proposal
+and what Guodong said is:
+- You sort nodes alphabetically, Guodong did not
+- You dropped the unit address
+- You dropped the comments he had, which indicated which
+   devices "belonged" to each mapping
+- You added a compatible property to each ("simple-bus")
+- You added an explicit (empty) ranges property to each
+- You add #address-cells and #size-cells properties, both 2
+- Your dma-ranges properties are identical to Guodong's,
+   for all nodes
+
+My comments:
+- I agree with you that a unit address doesn't really make
+   sense, because there is no meaningful ordering
+- Sorting alphabetically also makes sense to me
+- I think the comments about devices associated with each
+   mapping were informative
+
+I think Yixun should manage getting consensus on this
+(i.e., he should sign off on the RFP somehow).
+
+					-Alex
+
+> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> index c0f8c5fca975d73b6ea6886da13fcf55289cb16c..efefed21b9fa1ab9c6ac3d24cd0cca8958b85184 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> @@ -562,5 +562,58 @@ sec_uart1: serial@f0612000 {
+>   			reg-io-width = <4>;
+>   			status = "reserved"; /* for TEE usage */
+>   		};
+> +
+> +		camera-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+> +				     <0x0 0x80000000 0x1 0x00000000 0x1 0x80000000>;
+> +		};
+> +
+> +		dma-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+> +				     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
+> +		};
+> +
+> +		multimedia-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+> +				     <0x0 0x80000000 0x1 0x00000000 0x3 0x80000000>;
+> +		};
+> +
+> +		network-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+> +				     <0x0 0x80000000 0x1 0x00000000 0x0 0x80000000>;
+> +		};
+> +
+> +		pcie-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
+> +				     <0x0 0xb8000000 0x1 0x38000000 0x3 0x48000000>;
+> +		};
+> +
+> +		storage-bus {
+> +			compatible = "simple-bus";
+> +			ranges;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +		};
+>   	};
+>   };
+> 
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
+> 
+> Best regards,
 
