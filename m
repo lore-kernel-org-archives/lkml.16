@@ -1,113 +1,217 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171DE3085B2
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7C43085B2
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335084; cv=none; b=Qk/XtZ3GF9ouIm2om3f6Zpm7zzFdqbM4v5qgpKqnk2nVVoKBjteLCNKcbDT3RkaxtldAawZdrEo0aKzFJErV7LgMbnLkvIyaacuXQaVOUUPT5NOPAi7lz9ZQBavDRPElhGyqW1CzHjLn/UFb5W+y2KaDa9uTso/KikW2JWz1rc0=
+	t=1750335135; cv=none; b=N9Axymff4wEeyxkmL8NMXSw3KR9aPBR/XijFqXNyfVPQFu3Q28DPqbHRSECSKfy2bels2kv/aXa4rcAbZ8pBXL2aSCZC7Te7eqUl8Bq7q6s20+maTNuYO3smaPp+yAfePYQ2AxAkLCAXxVvLdE2oN5NZXXoWWwXE7jMqM6EFtmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335084; c=relaxed/simple;
-	bh=qiFBnZVbAiJvu7b4n8rdFDeLFoqy++xZOtXNBg1wSIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DMtLYpO/XoAdEbzIpmAAF7nD9JiM08LbsLVRKzpjdkTYIATUVVRTlRKtYq4CtWrM+RIz3gfUxo+pcjZeAXXmlYnDrdJyEj3LIo37smYs8L+gtut6yyCPIai+1hSRhuJ9sDaTMLYtbUuSaX5YcQrIvz4UsYDbS3ZVdNOZctQCM6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLsvr03h; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750335135; c=relaxed/simple;
+	bh=nYb7xQFUld7v08K+Ac/6c9QfLWUi1rCk4mHZ65TBAd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cq8/4RNpWyScg/s+C6/SidpyiPomG+R8WE7vnvjzGsPFc80nfi4a3UdMqrZsjL69EyVlW7pEIk7UpbhczQlb1nzjg2TJ9K9WE5SUESmZGeiFVdWHb75Coi18+9m+EgStrnjGTCunZIxoGpQkcSO3S7V6IPxvry65U9HsFZHQmeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gx3oG5iX; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLsvr03h"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23636167b30so7154345ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:11:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gx3oG5iX"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7d9d480e6cso642143276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:12:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750335082; x=1750939882; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B6SRE6bIgx60Vh2G3cKWwxWXV0k70mmpyo5f1tTADIM=;
-        b=PLsvr03h+3OvpTYJyin++GsZh321HA3LpQM2UuPCsxBBrDh3/286tAWmi4C0ZKgs2P
-         4+4BqJhhD14Gs/hFlLzXERDzcqV7k06hkbP4GDSE4Y5nVP0Hyiz2tGxju26IsrLW6ilc
-         D3HcHhIQh+ZynVIh9Xulrx2NEK3+KhOuG7+PLoyGBLAAPczvbrclJmkVX1X+a8nR2VC3
-         3ZnUvSOrKgC5n/61SHAqXD6MPsf5ffMt66nwoUm2q4eDrFc8PAN6Jt1XsWc9oxqBXApF
-         KYYg9UHTTgoXBlfqtE1HgN2sB8r4Gq0533q2JhKA4U5gmpmZGKL7i1h2E0BpoiZjbOYE
-         h5ow==
+        d=linaro.org; s=google; t=1750335132; x=1750939932; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y4jopdmk0/EoPtfqXFOnCJqlK5/IKjz0QIFIwGgRmIw=;
+        b=Gx3oG5iXUPx6v76gKs31xgR1/uFQErmUjxB6W3ayiYYYVxj+C/5nRJhyn6vX6FuxrH
+         lHcUCQHJOi3ZbmoT4CjfYj8XXmZxWYa/WLcdfkdbddiUf2qnYeqOd/Y1bRpd3LmgseNg
+         eTzAEdY9nBXBnAAoLWmEfMnI5E3fU6SoixB5O5MNSf3OIsENFD7C4LdbQFxSgAj4vhBb
+         7KklIMu0Kloru71ze2kxJRHUzxo365vYLObdMIJmFphF80GLhPNdaa2Xf+65YPxETcPO
+         vaVuKpvhgrZQQE9On/e/J1GqUjoS6lEc04+nxwYhlhHdRUoITnvrjibP9IlVqYlY0ikm
+         C86g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750335082; x=1750939882;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B6SRE6bIgx60Vh2G3cKWwxWXV0k70mmpyo5f1tTADIM=;
-        b=XOlDFzi67TNss4LhGtmG9kgy+tYPDCauJydd8HKWt/EOnt5ENZvAtzficAAock5/xw
-         0vVmzapvyTK+NaaHlG4bd2RzXOd4OmHE4aVcXY0g1g97c+5S9ooH+0bkOGwmaR3Ls2j7
-         bWIc3MoeJlRynQQLxO9/XauLTTie/Fz8auD2IdBcBY4Jq49XDtB5y2L1jBIJpLvPuhEZ
-         GKp6cTdUWpp2v9B+uTW7dXJHFixRxpKq0deIyqZ8bLEpS3TOob4EWbvL+CmMJHqg0zYh
-         jEe+3/u8OzS0Cttjb5/CFfidS4BVfxA5YigLSW9T+AfBhRcsZMwsLovdOPc/wIKX30lg
-         RuhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXlA0io21keNRBV8t/XBTL1QOTRrWG7pWcm+jPCbqpvfVbSYfZLgJo7+EB3cHVxwSibqcDQQe8QP22iX4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDotuGMWw+Gua7FaSThykOlHJmrcC4oshiaAf5jWboyk6MhQhm
-	eoxp+YDQ4aTsa57WI6legYg7tzaxRUP+vFGZYMP4g7/hf1xF+bdwIzHs
-X-Gm-Gg: ASbGncsVWZCHWTGCGx+28smxQvVNH80b1yhxPQI3FRImB4tdP8jgz/4HTUowk4NXkVR
-	APs76L4klP14jczycKB8y/Q5Jvy/JawyhXzjAROdWTRXDIfwVBF9oENWR9N2LbhTqLXIy80BC8m
-	yybg0UQr4zKlTcIXSbfz+7OePSWdLLYu3jIbyrCcl8QQqmxtTOK00zDjYDZ2ngJOJfpMGW/6feY
-	B+qwN/P4klMVO8lQUpSAcshZRoSTeYqQGuFnMZzE1z2S2kppkIbf9joUhvhq+nrphx7V+VZDzP5
-	tZZRc4WKJ+JH7+PrTnQzSwbkPiiHgQZzrE1foQuhsYE2xHkojIXDkbUmSDYJTriP9UmJVrNTrSw
-	kNGxZMoPJsgnmfmq5L6lg
-X-Google-Smtp-Source: AGHT+IEvdlhLCL59c6evd8bLKO2An1ebnECP+2K1HLQSf5MX8fOY246UKB0mn7G4ZlsL4wRrKX7v2A==
-X-Received: by 2002:a17:902:ecce:b0:22f:b6d6:2737 with SMTP id d9443c01a7336-2366b32e726mr366200805ad.10.1750335082365;
-        Thu, 19 Jun 2025 05:11:22 -0700 (PDT)
-Received: from avinash-INBOOK-Y2-PLUS.. ([2401:4900:88e2:4433:2a7d:bb88:9d3c:be74])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca2dasm119088105ad.206.2025.06.19.05.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 05:11:21 -0700 (PDT)
-From: Abinash Singh <abinashlalotra@gmail.com>
-X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
-To: linux-f2fs-devel@lists.sourceforge.net
-Cc: jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abinash Singh <abinashsinghlalotra@gmail.com>,
-	syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
-Subject: [PATCH v2] f2fs: fix KMSAN uninit-value in extent_info usage
-Date: Thu, 19 Jun 2025 17:39:33 +0530
-Message-ID: <20250619120933.125932-1-abinashsinghlalotra@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750335132; x=1750939932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y4jopdmk0/EoPtfqXFOnCJqlK5/IKjz0QIFIwGgRmIw=;
+        b=Ic+l3MhHMM2QZ+uzsq0ZvqM/olCVmDwfOoIgEnjferb/kzIM78j/wde6jmZWXSWAbu
+         4CPvr1B60Cl/Cyv9zRIWXsPy8QzVx3GMe+NJTWqPkeZ7dXlc/J8NC7YoR8cNd6VnIhQK
+         1+Gi1jXgupxTX4jJpGGqKUF0K+BSoL/Bzgxri9yruVXfe2jd8BMW8MXLkAFMoPlYfrxc
+         yK2H9/wgjBQ5VOvFpgk4Hj7FDfoYEFs6vafj2pYUSL3WSexIeAGuy4FES2Do4kqhniNt
+         XyVnT5D/wEVt+hCHEPpuGxUfuCFQ9pegqxDyreP2WBvX7vvDyFTGs96OXcSO4Dil3gVV
+         A1ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUIz107u74qQ/1BxfiC4xpCBmgB73n97UmIUlngC3JaOzGNs2R987SBlQdzajUqcTq04n3OBSNu0bDiXgY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh4WYo8d2rZZaf8p7LdwzL4owU8QlFxHgdJxOjOjLZRiOghmLW
+	XX+JHkmpJQuYS0NgYZm+tWxmRw5By/gLTXX1pjrDh8ZnSctAoZKTZHWKa0RfZQe0cMneWvZtwXL
+	FgD5fJPM/5zjkHZ2xtk3C+C/9gB2Sn0cR4UgkJjUm9w==
+X-Gm-Gg: ASbGncvnz/E8gtDJMJY/PVpCv4SlCso4JtJ1+rln2EfeH9kakTkSjjL2ac9CozoEOwt
+	duDJ9emPAASAsdCbC8otASjNiAtqBKIuUdE0mIC7pQDnF5jJX88L64BiS+osW+XBgSfQfifPBMo
+	aZhZkmA5cBc7BgVZv2QbFpkyO00UQtfRfIV+i4Qzup2gVKO12V81JT28Q=
+X-Google-Smtp-Source: AGHT+IEXUEZrdHXQYvHWd4YdUzyPKDHzLM3PIOd0gZanTJJ/vBF4uj1Av1R5EUDrVwtYV0jaSMvxy7uOAiPO38M6OqU=
+X-Received: by 2002:a05:6902:1021:b0:e81:77cd:1234 with SMTP id
+ 3f1490d57ef6-e822ad8ac40mr29042163276.34.1750335132387; Thu, 19 Jun 2025
+ 05:12:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616135357.3929441-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com> <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 19 Jun 2025 14:11:35 +0200
+X-Gm-Features: AX0GCFv4bu1FSlwnwPm1SssPgVOHtD4w3WZrSHj5iZrklgepWarnGSuP3oMCWZo
+Message-ID: <CAPDyKFr_oqvtRsCeak62wxw=fqadY6nuwnr0vKxsHqybTA8gzw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] PM: domains: Detach on device_unbind_cleanup()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Claudiu <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, dakr@kernel.org, 
+	len.brown@intel.com, pavel@kernel.org, jic23@kernel.org, 
+	daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com, 
+	geert@linux-m68k.org, linux-iio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-KMSAN reported a use of uninitialized value in `__is_extent_mergeable()` and
-`__is_back_mergeable()` via the read extent tree path.
+On Mon, 16 Jun 2025 at 19:14, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Mon, Jun 16, 2025 at 3:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev=
+> wrote:
+> >
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > The dev_pm_domain_attach() function is typically used in bus code along=
+side
+> > dev_pm_domain_detach(), often following patterns like:
+> >
+> > static int bus_probe(struct device *_dev)
+> > {
+> >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> >     struct bus_device *dev =3D to_bus_device(_dev);
+> >     int ret;
+> >
+> >     // ...
+> >
+> >     ret =3D dev_pm_domain_attach(_dev, true);
+> >     if (ret)
+> >         return ret;
+> >
+> >     if (drv->probe)
+> >         ret =3D drv->probe(dev);
+> >
+> >     // ...
+> > }
+> >
+> > static void bus_remove(struct device *_dev)
+> > {
+> >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> >     struct bus_device *dev =3D to_bus_device(_dev);
+> >
+> >     if (drv->remove)
+> >         drv->remove(dev);
+> >     dev_pm_domain_detach(_dev);
+> > }
+> >
+> > When the driver's probe function uses devres-managed resources that dep=
+end
+> > on the power domain state, those resources are released later during
+> > device_unbind_cleanup().
+> >
+> > Releasing devres-managed resources that depend on the power domain stat=
+e
+> > after detaching the device from its PM domain can cause failures.
+> >
+> > For example, if the driver uses devm_pm_runtime_enable() in its probe
+> > function, and the device's clocks are managed by the PM domain, then
+> > during removal the runtime PM is disabled in device_unbind_cleanup() af=
+ter
+> > the clocks have been removed from the PM domain. It may happen that the
+> > devm_pm_runtime_enable() action causes the device to be runtime-resumed=
+.
+> > If the driver specific runtime PM APIs access registers directly, this
+> > will lead to accessing device registers without clocks being enabled.
+> > Similar issues may occur with other devres actions that access device
+> > registers.
+> >
+> > Add detach_power_off member to struct dev_pm_info, to be used later in
+> > device_unbind_cleanup() as the power_off argument for
+> > dev_pm_domain_detach(). This is a preparatory step toward removing
+> > dev_pm_domain_detach() calls from bus remove functions. Since the curre=
+nt
+> > PM domain detach functions (genpd_dev_pm_detach() and acpi_dev_pm_detac=
+h())
+> > already set dev->pm_domain =3D NULL, there should be no issues with bus
+> > drivers that still call dev_pm_domain_detach() in their remove function=
+s.
+> >
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > ---
+> >
+> > Changes in v4:
+> > - save dev->power.detach_power_off in dev_pm_domain_attach() and use
+> >   it in device_unbind_cleanup() when detaching
+> > - adjusted patch description
+> >
+> > Changes in v3:
+> > - dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
+> >   and use a single function devm_pm_domain_detach()
+> >
+> > Changes in v2:
+> > - none; this patch is new
+> >
+> >  drivers/base/dd.c           | 2 ++
+> >  drivers/base/power/common.c | 3 +++
+> >  include/linux/pm.h          | 1 +
+> >  3 files changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > index b526e0e0f52d..13ab98e033ea 100644
+> > --- a/drivers/base/dd.c
+> > +++ b/drivers/base/dd.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/kthread.h>
+> >  #include <linux/wait.h>
+> >  #include <linux/async.h>
+> > +#include <linux/pm_domain.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/pinctrl/devinfo.h>
+> >  #include <linux/slab.h>
+> > @@ -552,6 +553,7 @@ static void device_unbind_cleanup(struct device *de=
+v)
+> >         dev->dma_range_map =3D NULL;
+> >         device_set_driver(dev, NULL);
+> >         dev_set_drvdata(dev, NULL);
+> > +       dev_pm_domain_detach(dev, dev->power.detach_power_off);
+> >         if (dev->pm_domain && dev->pm_domain->dismiss)
+> >                 dev->pm_domain->dismiss(dev);
+> >         pm_runtime_reinit(dev);
+> > diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> > index 781968a128ff..a8f302ed27a5 100644
+> > --- a/drivers/base/power/common.c
+> > +++ b/drivers/base/power/common.c
+> > @@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, bool p=
+ower_on)
+> >         if (!ret)
+> >                 ret =3D genpd_dev_pm_attach(dev);
+> >
+> > +       if (dev->pm_domain)
+> > +               dev->power.detach_power_off =3D power_on;
+>
+> I'm assuming that you have checked all of the users of
+> dev_pm_domain_attach() and verified that the "power off" value is the
+> same as the "power on" one for all of them.
 
-The root cause is that `get_read_extent_info()` only initializes three fields
-(`fofs`, `blk`, `len`) of `struct extent_info`, leaving the remaining fields
-uninitialized. This leads to undefined behavior when those fields are accessed
-later, especially during extent merging.
+Also note that the value only matters for the ACPI PM domain.
 
-Fix it by zero-initializing the `extent_info` struct before population.
+Genpd doesn't even take the value into account, which is the most
+common usage of this.
 
-Reported-by: syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
-Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+[...]
 
----
-v2 : Corrected Author name
----
- fs/f2fs/extent_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-index cfe925a3d555..4ce19a310f38 100644
---- a/fs/f2fs/extent_cache.c
-+++ b/fs/f2fs/extent_cache.c
-@@ -414,7 +414,7 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct folio *ifolio)
- 	struct f2fs_extent *i_ext = &F2FS_INODE(&ifolio->page)->i_ext;
- 	struct extent_tree *et;
- 	struct extent_node *en;
--	struct extent_info ei;
-+	struct extent_info ei = {0};
- 
- 	if (!__may_extent_tree(inode, EX_READ)) {
- 		/* drop largest read extent */
--- 
-2.43.0
-
+Kind regards
+Uffe
