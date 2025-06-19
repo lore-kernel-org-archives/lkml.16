@@ -1,81 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A064221720;
-	Thu, 19 Jun 2025 10:08:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747CE21E094;
+	Thu, 19 Jun 2025 10:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750327684; cv=none; b=jQb55w1M0/Tz30MRMcFFAryKASOTGamukOvMEP6Ovd3dddura1AUjmm6xUi8gtDAh4df5ux4Ugi2oDIj2X8ViBHVs6g4ifZLl9gesvq+Fp/noD6RM4dK9gddsIWd1oV64hCUkw67gep3PX/H1FfuhUJE/ITpxkZicumBOcEnUW0=
+	t=1750327779; cv=none; b=VFlyf8XcGbG1f4IeaeDUr6Sn6BDVa4ComOh06Ch6rA155juse/6d/VP+9ztl/aLpVl+pmcUPzv32mQWfgjA3e0f+4HAj971zy/y00A1H1wFzBsaiSSlkdKeTbSNiD3G8xtMvhYzLwwCpi9mBhjHyhTgM6vZaBp+UWUOxmPttYsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750327684; c=relaxed/simple;
-	bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQNN7eTldV6aAchB2yqDhRtd80lhURPfLcXmrCUxUdPjDJi69vpspjbJjn4mzWBo6pfwzPhMvDTIjfZjjkBSoiG5Al/X7DDhjWQbmuM1FQGsBfZMM8qZEH5NxqVL3uz43lDhiC381wVhH+0cFVFjuV+G37anq6uNuDk8XePqiWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGHdSlBw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750327779; c=relaxed/simple;
+	bh=WLc3BX8dey/TGHqHCL7aDNiX1X6kZBTwKfJj81g4Tk8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I4/eUz4NACdeeR6aWzzXS7bxBGmKUGxRDXKXwUKOzdZzime0g3HtaPk4msp5e6ZYzkYX3ekdTc8jjNUEEDM+/USpb03uGFrfIUkRrLNbB8imjD83DTDarNX3x2pNMIx7UtXnTDrhJzP1jBvUoQF31NOl26zURR7HQfhvTYRFfTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9zedLJq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGHdSlBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4E0C4CEEA;
-	Thu, 19 Jun 2025 10:08:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9zedLJq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F49C4CEEA;
+	Thu, 19 Jun 2025 10:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750327684;
-	bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LGHdSlBwrEsHzjTIjds3GdgqbSOvBGRbGWcTyIeGYjn7Zij0Kt0E0fuSkqYOoJh6c
-	 tBD2HahLAO6Tk/R1l44ufp801wSqoeS1YBnWvfOt5qENr4lRn/vpHUOCIb6s+S9w9l
-	 eN9JMrx/B3uYkW0q8JmMlMjS81d8qeXIRyI9+nrrlPV03ztSGr4pvSi333OVVlwUin
-	 nYrMN9OGcjted+8QLn8CJI2Ny7bPBbiQEU59pjN8a5QF34hsXyMSJpZh8DGjXT7nhv
-	 wAqiZPRrQrEm63T4s2BPfkCQjCtvKPsuENt9THhO94lZL/kOyMyPZsrI9oJ7kZMcXa
-	 FhiHzjhhLYXqw==
-From: Christian Brauner <brauner@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Pankaj Raghav <p.raghav@samsung.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	kernel@pankajraghav.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2] fs/buffer: remove comment about hard sectorsize
-Date: Thu, 19 Jun 2025 12:07:58 +0200
-Message-ID: <20250619-irreversibel-kaltfront-033771080900@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250618075821.111459-1-p.raghav@samsung.com>
-References: <20250618075821.111459-1-p.raghav@samsung.com>
+	s=k20201202; t=1750327777;
+	bh=WLc3BX8dey/TGHqHCL7aDNiX1X6kZBTwKfJj81g4Tk8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=f9zedLJq6aTadbQhi1atWiI9IZxlMZOY830en5m2VxEkXne1REgfIIBdoq3VJId/s
+	 Rlq8YS42Q5mv6M7AvVxbyDSe3e+oFtcbSlpeES0RhSYzADxkaE/crsHN8qIHeBcOdH
+	 jOXHCULC5Af1Rq+wItubUymxjfjBr++09kANQDOWHyhHsoGnIkWKlqMYHW7O5gYUbQ
+	 X8tpsHi/TG4tTTkk8vz5WDs9bhu5uMdIR/pyv9boWYqO68YKUealbkMjL6iLhFD9mj
+	 03ld2BdCoNNKz5kZOnmlLTr4MKX0SVQdGSE51P9SMCjjCUqBhlbmUxnvewk2RbdZVu
+	 hgJo3DnsHd8vw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B953806649;
+	Thu, 19 Jun 2025 10:10:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=brauner@kernel.org; h=from:subject:message-id; bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQEP6yL55wt9WxRoqzwYyPThc83Nh69KZ12rl+2OpXBQ 3md7rYfHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNJfsnIMHE/545tGxrFJIvl p9YYufmGsCf8/skjdK10Ue+HjrCS2wz/axvqdIW+BBaFLemR3CrxM0ZnWwXLovJL+wVa3SYL/cn hAwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net/mlx4_en: Remove the redundant NULL check for
+ the
+ 'my_ets' object
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175032780600.443970.13826449946822831786.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 10:10:06 +0000
+References: <20250616045034.26000-1-a.vatoropin@crpt.ru>
+In-Reply-To: <20250616045034.26000-1-a.vatoropin@crpt.ru>
+To: =?utf-8?b?0JLQsNGC0L7RgNC+0L/QuNC9INCQ0L3QtNGA0LXQuSA8YS52YXRvcm9waW5AY3Jw?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org,
+	=?utf-8?b?dC5ydT4=?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: tariqt@nvidia.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
 
-On Wed, 18 Jun 2025 09:58:21 +0200, Pankaj Raghav wrote:
-> Commit e1defc4ff0cf ("block: Do away with the notion of hardsect_size")
-> changed hardsect_size to logical block size. The comment on top still
-> says hardsect_size.
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Mon, 16 Jun 2025 04:50:44 +0000 you wrote:
+> From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 > 
-> Remove the comment as the code is pretty clear. While we are at it,
-> format the relevant code.
+> Static analysis shows that pointer "my_ets" cannot be NULL because it
+> points to the object "struct ieee_ets".
+> 
+> Remove the extra NULL check. It is meaningless and harms the readability
+> of the code.
 > 
 > [...]
 
-Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.17.misc branch should appear in linux-next soon.
+Here is the summary with links:
+  - [net-next] net/mlx4_en: Remove the redundant NULL check for the 'my_ets' object
+    https://git.kernel.org/netdev/net-next/c/f6be1f290c65
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.17.misc
-
-[1/1] fs/buffer: remove comment about hard sectorsize
-      https://git.kernel.org/vfs/vfs/c/6ae58121126d
