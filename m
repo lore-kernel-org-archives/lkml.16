@@ -1,102 +1,111 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail.burntcomma.com (unknown [62.3.69.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EC011712
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D877A23CB;
+	Thu, 19 Jun 2025 17:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750352526; cv=none; b=CvB/dlLKxAhy9e4Qd9mjRn4KJMnRI2tjOO5gUR7S8md0PlcnS9cxEUfunZ6MM7fr+G7Ci5mVGM+jkyVod12MwM3SlMdo6PVNs7ebBS2AC3sNVDFdee3GZyzPoSKv7ddodzKYJuRdfMaqRjwTGbhMARBye+gze5zOCNJviC6up6U=
+	t=1750352606; cv=none; b=ZaZYYKBNEPwP/umyYq55eE7/KwjhyZtOCn9sKXrSzQ/KmuCUmdg6v3OhBJZQPH/zdTDYwkFPOLheJAejx2KhykeEc8O6K5FPWdqLPICROc2NIc1veifFMeZ3lnju0zdMLZNdx6DyFd3s1fdv7OF4V8EfMiPWpz7EAwDhAtm9RmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750352526; c=relaxed/simple;
-	bh=lRvnDFm5hhqbK/nTs3rCjRlhuB9VhLA+5W44GAQFf1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbFvrHSWZu73j01UI+9ZPG0HW4tstWBQn9tyoG8JJtZPRMKpZ+TVwWI4GGsTSS6fM5yjjIXGXrYwcl4xKLbT1VD1nfGqEYxmz3YrbU04SWrmNuBSvekLk12tSAHBEE6MARofluWoybrCz9Uizflmt70tUJpX+rSUbAyrwOUa++0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=U8HtbL4y; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750352606; c=relaxed/simple;
+	bh=7xdCPxzJB1e5/qHFc8iHQXbuzlLFAz6G4Dm9ux1O3/c=;
+	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hgox5OlJPlYe1G9LQP3TlsW6Y2UhbRQBqlAIt9dohQj6YjFWzb51aF4lznDPsig+XQ3AAQkk/aZchzRNohF0z366vrPzRK1T5mKJXfjmV/CoBAnkNMyE4nyVv1JY4L0gZ0u6Jv510aKp+Ymi4e+snfleI01cNSomAb5jPBZm3kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=YLVRc4tJ; arc=none smtp.client-ip=62.3.69.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="U8HtbL4y"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-873501d2ca1so28317339f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750352524; x=1750957324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2iOkzX76U6MJmCoJ7ODUrEq9zUgZxIapXr2NXSPRn4k=;
-        b=U8HtbL4y0lHZhLZN6ADPn7JjUeTOkxagjBKdG9f9OtkxJd90llj5fnbLbp7qfOaXzn
-         WN67I5yxvPJnV4w+lbMmCqBNOQXSJpCwSK0bmckBFbkpoHJdSbOXKfm4ZOZj5lZBWi98
-         fEBmjnEorZwtDQXBchGdj26O1oH6krFvWOh50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750352524; x=1750957324;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2iOkzX76U6MJmCoJ7ODUrEq9zUgZxIapXr2NXSPRn4k=;
-        b=WZTNzvE8ib3a/PUB1mSjjnP6nvOKvfUBpBg8NMqo8brhhoUG08Em+NeQj68PrBP3iS
-         EKTBrEgb9ABjBbioYv6wLgl3/c8l76gVXoj5o1YF7qq495AxoJzAILKlLrL0tX+rCNLc
-         VMhNntEo8UF+8RQsY+3kXuxJAOMgRDc/ZhHjzAyYKy6jmWPB4cqel3uTtiWTfgtAu2MX
-         mFEf+zHAoPGipSzm5ajQd2jDsCHpkaDimgvDGGubl63jlyUmHWC9ypAiZ4xkCQpZE6H3
-         IeU9hLtcNF/EXj0vjLS1rDjlfS8cuLL0cE9r5WxYeT2cK3adQlfe+o9RVNcFb0ykyDu+
-         5s/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXMQnCyCzxdUrDYb5EuLKcQY+Vt2BXxatYuPiql/s4Y5+8AJuXFIFr/PohSy7dJxo0nIOuEHseO3lnn7XY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJFuyHBms0c0IoZ8uimj3zkxgNDK3RJmcA+/aQ9dObQErQjxhx
-	Yy5/HfgBEpNslGtGlzayes+1b72ncNsq8mzWAJQ3TSVOdnNmxjHFfCkE2ugaz40uDWc=
-X-Gm-Gg: ASbGncsmAJEX2ansEjcIExswgiED8ChaXj5DJun1aQGTCtgemwSYl7FpIZre98XP4Fd
-	swG/9sbERw64ncaLKMuyAW6C7jF91vpqxptLtAS2Gc2eBGkLDSocMOc5reG/LwBillgowx7qXG/
-	rcUxXdMYXE3KNhGBsqPOcdqDlKn5LYWx/+SZabYoJ9wD+YSgtufQhJ5Y66ooayh1m4ECQhDHKr4
-	MMWYLFz/XToVd8OhFIqvGR60Ibr7iaP5MpxNc0IxEErX7328fJ3lbuyxeG0zOaLdmrfjcZ7aQ2j
-	wy20tb8zwbuNI809dzV9UMzfIl671Jm7tmmFey/fAynScOxhuVCAP2TlULWHdbPuTdSAGXfuOA=
-	=
-X-Google-Smtp-Source: AGHT+IHw07yRURB4f8spZKZh12POSjAOvV/GpBlqVlkGBvvAjwlaPpAD88x6eYQ+RytrNoIzcN3SPg==
-X-Received: by 2002:a05:6602:6d12:b0:86d:9ec7:267e with SMTP id ca18e2360f4ac-875ded0e6b5mr3165124839f.4.1750352523818;
-        Thu, 19 Jun 2025 10:02:03 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8762b60fd86sm521739f.21.2025.06.19.10.02.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 10:02:03 -0700 (PDT)
-Message-ID: <72998015-c571-437b-a77a-1c49a2787fc7@linuxfoundation.org>
-Date: Thu, 19 Jun 2025 11:02:01 -0600
+	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="YLVRc4tJ"
+Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
+	by mail.burntcomma.com (Postfix) with ESMTPS id CF0482896A8;
+	Thu, 19 Jun 2025 18:03:11 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
+	s=mail; t=1750352591;
+	bh=vWnhfExwlsZUvukzyJutPT1fPw8hF7WbCkSYIyCGvjM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=YLVRc4tJOC8Ks1PBiT9IW4hydKawbAlMfEeOdEgrifAbUhTDl9kPJEVwsqjTGbjDH
+	 d5htbL3+wx7uuQI2Gev3JBJ0kieRqRXbO7taU+k+e4zYhP3RN9kLqrzbVP70lV5+N8
+	 v5iN5ocfKm7uFXC6XlcnXi00MugsJEQ/wBEvh7bc=
+Message-ID: <c278bbd3-c024-41ea-8640-d7bf7e8cff47@harmstone.com>
+Date: Thu, 19 Jun 2025 18:03:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] selftests/memfd: clean Makefile
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Shuah Khan <shuah@kernel.org>, zhanjun@uniontech.com,
- niecheng1@uniontech.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250610020559.2797938-2-chenlinxuan@uniontech.com>
- <96c46d3d-0e0a-464a-b64c-15c2a544a974@linuxfoundation.org>
- <CAC1kPDM76fLgE-cbKvMO3=B1hKhjTNMYmJw5XpOPV5UAxXx=Yg@mail.gmail.com>
+Mime-Version: 1.0
+Subject: Re: [PATCH] btrfs: replace deprecated strcpy with strscpy
+To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org
+References: <20250619140623.3139-1-listout@listout.xyz>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <CAC1kPDM76fLgE-cbKvMO3=B1hKhjTNMYmJw5XpOPV5UAxXx=Yg@mail.gmail.com>
+From: Mark Harmstone <mark@harmstone.com>
+Autocrypt: addr=mark@harmstone.com; keydata=
+ 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
+In-Reply-To: <20250619140623.3139-1-listout@listout.xyz>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/19/25 01:43, Chen Linxuan wrote:
-> On Thu, Jun 19, 2025 at 5:21 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> On 6/9/25 20:05, Chen Linxuan wrote:
->>> When writing a test for fusectl, I referred to this Makefile as a
->>> reference for creating a FUSE daemon in the selftests.
->>> While doing so, I noticed that there is a minor issue in the Makefile.
->>
->> What happens if this change isn't made?
-> 
-> Nothing will happen.
-> When I was writing tests for the fusectl filesystem in the kernel repository,
-> I came across this file as a reference.
-> Then I found that the process of passing CFLAGS was not correct.
-> So, for the reason of not wanting others to be misled again,
-> I want to update the compilation process here.
-> 
+On 19/06/2025 3.06 pm, Brahmajit Das wrote:
+> strcpy is deprecated due to lack of bounds checking. This patch replaces
+> strcpy with strscpy, the recommended alternative for null terminated
+> strings, to follow best practices.
 
-If there is no obvious reason then let's not make this change.
+I think calling strcpy "deprecated" is a bit tendentious. IMHO the way to proceed
+is to use KASAN, which catches the misuse of strcpy as well as other bugs.
 
-thanks,
--- Shuah
+> ...snip...
+
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
+>   	u32 size_bp = size_buf;
+>   
+>   	if (!flags) {
+> -		strcpy(bp, "NONE");
+> +		memcpy(bp, "NONE", 4);
+>   		return;
+>   	}
+
+These aren't equivalent. strcpy copies the source plus its trailing null - the
+equivalent would be memcpy(bp, "NONE", 4). So 4 here should really be 5 - but
+you shouldn't be hardcoding magic numbers anyway.
+
+On top of that memcpy is just as "unsafe" as strcpy, so there's no benefit to
+this particular change. gcc -O2 compiles it the same way anyway:
+https://godbolt.org/z/8fEaKTTzo
+
+Mark
