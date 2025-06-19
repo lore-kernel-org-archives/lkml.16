@@ -1,122 +1,117 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51109221286;
-	Thu, 19 Jun 2025 15:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26EE21E098;
+	Thu, 19 Jun 2025 15:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346632; cv=none; b=oqYgZ16bbfPNzT+352iToMjiapxBb8OoccNtYeCBnj2O7UTZVFQdYAtCVowK76FCYVxIDlfyzrTE/9S8u3iavPpWhAqs8LeQ2GKCUNiGRcpY8JJSwJE5pH7k/fdIW+6ZRv+cHkbo7UG5QdUOqT2Hmtala3fdyWjpEMPH/C5ZXOk=
+	t=1750346632; cv=none; b=Jg+EXKYJFsvkI8Ev06OaWxMlzuUIPh/JruExpSo2MiQkStI9QUaODIBYzByZs3Cs8hDajYd+1VrOkeM3B2HK6YnY+qMN1TiPYyfiCpCOtFgiHRhyZB8533ixQ+5b+8egGobP6Z5uwRVTBXWoe4Me5VV1fWoOVw9Htl1QvBNUWq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750346632; c=relaxed/simple;
-	bh=4hzd3qcAuOmTfwKYbHqqOWkmquvNqhOl7KGqavZ14sg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CnkKC/2ivugdQ0vP55gdVJ7bv5N/W9aviEj5tEIhoT3snBoL7+Zpq5tjx39C4len4/v9f5tFTYRGmsB/4RlKoSoIzIzuZ7cUG6Lp+djtOg+mTWsJv4qAh1tXOCqCKBJuofnUoZxRc6RRJ4bmpLydwYbJsHUr652qyaufpjOuVb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52b2290e28eso216805e0c.3;
-        Thu, 19 Jun 2025 08:23:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346630; x=1750951430;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RCVAgGYGyaa7OKZ3MWtLfwo9pA/QSxM2A/hXcp5H6SA=;
-        b=RsqnBHd8oZKi7W+jXItpSHT0suexmyw4KqnGTGK3Oo2RVnjGcZTCMk1XGXWVxMUbLd
-         OPbfuMd4tQck+4+GM8lPCHcTBUOLW7MGUIlfZYrLtJoqAMD9NtlpcAAYx7pzlXAkzMiG
-         ll80NOiFc4YX4ZxRgZGmuzmZfL2+YlfsE1Drv8URPlWCgXTYUDmgGAvgBsHaWho4F0bh
-         iz4wLcubNaX86L5e3BfAn6BvTHxV3ooeDs/jVKvJhxfNZTNlvqVUzKlO/8GRgF4qTZYc
-         VVajHCiKdTdp+PQ0G3YBMroGadqyXT/tfneHwgu13yHOuoEGoaDNmsHSdbHJKYAbAgY/
-         GJIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+D00ooeSHqeWYIy6+g04M5c2okAD8O/HCg2Lzg9YL9OnMnkGg3NLSTX6ZZPfXGGvIFXKmkdFD4Rqdxkyl@vger.kernel.org, AJvYcCVv5HHcplfHzdh6a6b6OHhxlbxZ+5vz02dH1H3pcuaUvvNjwr6l//gSRaRsQRf39K1pNurXaYcTEIE/HdrRhsltRLo=@vger.kernel.org, AJvYcCXPfJDGeOyQiJ5SfVgkf83exfTI8So1+tg1NL1DZ7BswABP65U4BhAW8XEwhn2+UFUVfRy5ZRAvDXK7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzROE3FSShhbJq+GdlIGCLAd0HU+y3wblwfFr/f/D873hGCFc/A
-	JTgPEV959aylmdqe4Ka34HGyB4oCW6RUXPk6E81GhKeRR7YjdB7GQL7OK5aMe+Nr
-X-Gm-Gg: ASbGncs3H8Tk0vT4kkvLRy85w7MLMAO+W+KkcYACRA5FDkEOcDgSA5MlzkOcUa2du21
-	VWVwRZ3JGVjvO5lmhSlp/YbzH84RvHTAhkMtZWceQb+KT2/7i5wvvw4qFlqb2+juj7GCwNbcKW6
-	5sTpSDjpJH2Wols1oG7PmahFliG5BXqeLwtnvritmEgTaIWtoKeH72QWLFeMxhLOF370AEEmyzB
-	D2R0Kploecv4J/vX80uM5ky38tA/IW6ghne8uBxgOQ4uTWr1bfVhVFoRUr9SFbKbCbVsobPDVVt
-	FUUfy08xOAyd0dCQr4/ag2QjG2jrtwGE6l1PGiviSsJKgfWV+27DVi8lIu16NG4ZAkLUuZ2TDzZ
-	bgefpAmnOR9L3q7QCwOiDE6uq
-X-Google-Smtp-Source: AGHT+IFpUjxSzr8gzGgnLVO4J/NJHpbncyrJ9huVu5olc+XkRmtzPJsGb8CS74a1kke3V+vA3VVkVA==
-X-Received: by 2002:a05:6122:370d:b0:530:7101:68eb with SMTP id 71dfb90a1353d-531495aa863mr16477345e0c.4.1750346629732;
-        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f23915d10sm1747943241.7.2025.06.19.08.23.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e8110ac0f5so242258137.0;
-        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0f25awlFvpd9RlYjyP/s72gXSfNM23U5nZZBzpOqGpJkZdm53cevP/vEJ53yn1PNsEtQfEw9ksfzyP7Fe1eW0DgI=@vger.kernel.org, AJvYcCVXZJe9SU2eGM8NednH6ECml85lzHSLsBhpD8VHgptkFQqYiBb7CMnQQzpbF8YVFtNviyFGfrXME5Wr@vger.kernel.org, AJvYcCXKTw80/gsnmX/voLxp7p2pZvYPMve+ao/uCBLeSA9LZTyDgiaLCTV6uUZ0xo8kaKQ9ZeajTSVwelMWYxIz@vger.kernel.org
-X-Received: by 2002:a05:6102:38d4:b0:4e2:a29d:ecb6 with SMTP id
- ada2fe7eead31-4e7f60eb70cmr14268555137.1.1750346629165; Thu, 19 Jun 2025
- 08:23:49 -0700 (PDT)
+	bh=SAPSibnvoFkQAm2LXXJ23uVq+hOW9HO1Q+emB1Vxlmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iY7E/KlZ3VGBnNmUpD+z2qHfzObgNDSuxsr9/ZHuCv6BNUpZmdkk6eldgGPHmkDEOYYqWphwz8zDhIGQbfrYqZxoz9QOOi1YZVjVA30nkMUiZXHTPL/xjfmz4KcVyn79daFdoc74/h+Qb9gbPX3BuISUJM7Tk+phWhalbijMtUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BnL++znr; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BnL++znr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750346630; x=1781882630;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=SAPSibnvoFkQAm2LXXJ23uVq+hOW9HO1Q+emB1Vxlmk=;
+  b=BnL++znrfUjdZu9cIrUkQTZ9ft6uwtEp8LEpxC0hhQNFECCiSjWXCfEc
+   7cJGreeQJ7/dM+R8YFg320v9T+4VztKnoTqgCkQpkBLV9jtry/xBlS8ze
+   t18GJ0ppIUoZCx+DQ4lxRqqbSTE/ts6Ir6rpf48WY1L8Uc9yspWPEHydH
+   s+NiDk6jXETC/Z3InmPT0hAL6ZVkoSsFcmeyO5oNAT+hrYym2rtn8UZJb
+   SH1CdvKecYswJb+krmvEuVXl5E1jfVg+T8g7hACpZTNGZ9zOyhkvkXoeT
+   F3hAemKfULmp3Novwtci8pWVXbcah/CEFNE68LNPlTtngooys656GukZy
+   g==;
+X-CSE-ConnectionGUID: N+pAGazjSgC08NG/EtmZ4w==
+X-CSE-MsgGUID: zwFerSJ8Q3umNwnD72DCvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="56423330"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="56423330"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 08:23:50 -0700
+X-CSE-ConnectionGUID: mBayyjwIT42xD6bdlkqaEA==
+X-CSE-MsgGUID: KWTdNev7QXe/q3ncIkseFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="151237289"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 08:23:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uSH7A-000000086Ta-2Ptv;
+	Thu, 19 Jun 2025 18:23:44 +0300
+Date: Thu, 19 Jun 2025 18:23:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, jic23@kernel.org,
+	andrew.lopes@alumni.usp.br, gustavobastos@usp.br,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	jstephan@baylibre.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer
+ infrastructure
+Message-ID: <aFQrgEw4zw9RSAO3@smile.fi.intel.com>
+References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+ <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
+ <CANZih_S9_8OdY=oKyVPBCTSTqYm_z_rkE=xbPym3uHOSsHMv6A@mail.gmail.com>
+ <aFL6PE-8KLLKZun_@smile.fi.intel.com>
+ <CANZih_QeeA_G5mFOAb=TMNYiR4eo9SUD5iW1G-5LBGL27NpTRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 19 Jun 2025 17:23:37 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVs-b2k39uTC+e31qGuqVmvFRMeMvYX5BH8V+GQ7Lkt-Q@mail.gmail.com>
-X-Gm-Features: Ac12FXwHPFsk05TRosr47sYOkoUYyYdnTZteNgXfR-AJ5EOF9bDc_k4NJOe-IrM
-Message-ID: <CAMuHMdVs-b2k39uTC+e31qGuqVmvFRMeMvYX5BH8V+GQ7Lkt-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Add initial support for RZ/N2H SoC and EVK
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANZih_QeeA_G5mFOAb=TMNYiR4eo9SUD5iW1G-5LBGL27NpTRw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Prabhakar,
+On Wed, Jun 18, 2025 at 03:20:06PM -0300, Andrew Ijano wrote:
+> On Wed, Jun 18, 2025 at 2:41 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Jun 18, 2025 at 09:24:19AM -0300, Andrew Ijano wrote:
+> > > On Wed, Jun 18, 2025 at 2:56 AM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Wed, Jun 18, 2025 at 6:17 AM Andrew Ijano <andrew.ijano@gmail.com> wrote:
+> > > > >
+> > > > > The sca3000 driver is old and could be simplified by using newer
+> > > > > infrastructure.
+> > > >
+> > > > I haven't found any reference to a base commit here. Have you
+> > > > forgotten to use --base when preparing the series?
+> > > > In any case, please clarify what this series is based on.
+> > >
+> > > Thank you for pointing this out! I think I forgot to use --base for
+> > > it. In this case, should I submit a new version of the whole patchset
+> > > with this information or is there a better way to do it?
+> >
+> > For now just reply here what is the base. I asked this question above.
+> 
+> Ok! No problem. So the base for this patchset is the commit
+> 3c23416f69f2870bea83697d7ab03c6a8497daa7.
 
-On Tue, 17 Jun 2025 at 19:20, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> This patch series adds initial support for the Renesas RZ/N2H SoC and
-> the RZ/N2H Evaluation Board (EVK). The series includes:
-> 1. An initial SoC DTSI for the RZ/N2H SoC, which includes the basic
->    configuration of the SoC blocks such as EXT CLKs, 4X CA55, SCIF,
->    CPG, GIC, and ARMv8 Timer.
-> 2. A new DTSI for the R9A09G087M44 variant of the RZ/N2H SoC, which
->    features a 4-core configuration.
-> 3. Refactoring of the RZ/T2H EVK device tree to extract common entries
->    into a new file, `rzt2h-n2h-evk-common.dtsi`, to reduce
->    duplication between the RZ/T2H and RZ/N2H EVK device trees.
-> 4. An initial device tree for the RZ/N2H EVK, which includes
->    the common entries from the previous step and sets up the board
->    model and compatible strings.
->
-> Note,
-> - I've split up this patch from original series [1] to make it easier
->   to review and apply.
-> - This patch series applied on top of the series [2].
->
-> [1] https://lore.kernel.org/all/20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-> [2] https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
->
-> v1->v2:
-> - Reordered the `l3_ca55` node and renamed it to `L3_CA55` for consistency
-> - Renamed the file to `rzt2h-n2h-evk-common.dtsi` to better reflect its
->   purpose.
-> - Updated model string to "Renesas RZ/N2H EVK Board based on r9a09g087m44"
-> - Added reviewed-by tag from Geert
+No such commit in the repository. :-(
+You are doing something interesting here [1].
 
-Thank you, both [2] and this series are good to go, once the
-updated renesas,rsci DT bindings are accepted.
+So, make sure you are based on the iio/testing or so, make sure that the base
+commit is the one that may be found on git.kernel.org. Use that in the next
+version. Due to above this version is ambiguous to even start reviewing it.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+[1] I have connected IIO subsystem as a remote, so I have access to many trees
+from kernel.org (but not to all of them).
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
