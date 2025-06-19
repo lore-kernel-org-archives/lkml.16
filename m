@@ -1,74 +1,74 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB191FAC34
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A62221883F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295093; cv=none; b=J7/ENP6ax8ERQtnS9dZYjMgg7l4W/W1k9oQFSob5bkUgrIqBRwNFd+FjcA3k20UpBEJ6UqMW1zNgytdBGwrFFlqjnx9C+l+o9UEPh0wv3JLY2j3HycTvxjoegkigMbGqvAFXOym5eJ9/E5yB6mm6ayRctb0q+OG/WWDEgSBDDZs=
+	t=1750295097; cv=none; b=V2bZ+xTVcLa94rVjvKRwNS8+cEmihSs+7Qwrsy3wGdgQORvONtJx6uGznJy6yonBrnWOYeNjt8mWCbuGOmwMo4sKfzI4fXiXQIgWXezOiJWxgWcS6hYSgjjUdZMMz/U5AqlvuaZeIvQWq/gOJtpU6XBcu6HSQSlCNpupM+C5xp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295093; c=relaxed/simple;
-	bh=YUEZeH1TUt8vhd5nOMxaCkzJVaWiSM7ZZlNxkfxZqDc=;
+	s=arc-20240116; t=1750295097; c=relaxed/simple;
+	bh=A+kgl3pP41bBhorqPw1acgSIN74xjFREHN1mNj1smKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ms47E0PbdDte5HIJTNhUNFMDoNofjCiQR5+mfoW03+SN+QJOYTzOId5ZInWy4zh+V1RVQDYGciiGtWEfC65ZoTIkVlj0QppM/y/2gTww9PcKyKSlccbX2oLoRDaHgVxX53OKx3wdFH/h02bncwHaGqf5MBap6GWD1/EHwvt6iXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWMv+dlb; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=lze/7S17z8j4r0P1GFYNmtChMmHj7IbByRFovJnhmYg+SlW7ZlF5w3lXpD8Xt/Q3Svb+DwZCZ7XvLo05TxkfajDKvIazqqfFcWVfZPOqZmqTZCCS6jEEp3ujLehv89BFoAKfeORy5wkS1UFlkX4f4eBB/SwCkFEQN3yZPliNmZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOqvdyht; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWMv+dlb"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so153043a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:04:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOqvdyht"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2360ff7ac1bso1921235ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:04:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750295092; x=1750899892; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750295095; x=1750899895; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0G7VVQnGQtrb3sGnx5GNm2Y3zP47y1QHGJfHFp/BsUc=;
-        b=GWMv+dlbqHDc90BMa0qyhxPV1l/V164WnFnh1vB4IQrSyyRC/joyjAdeSktfNd91id
-         rmFXV0gurkO8MjvvkUwsbbHXtW1KVdcJreTQSiZb1DZKUbJMmaTQxFQj8u1XN3qNG+Rd
-         V8ioiWvyu2DQEAaUb5Ene+5hBJ/kaZSKDxJqciPN0wLreH4+Vn+VXAQUxgj7wIIWbkxM
-         23Il699pFGcri7hTKb1rLv8A0e9EuQuz4s8TrXzqt1m/WXPGGOm/d5UXCjJhi5F8RaQw
-         EcIkkrIxjKXMk9XL7Fs0TBtuVzeR+hQwEvCLogcdUyF9QIIWZglegAob18Lo29y9A8Ij
-         oT3w==
+        bh=sL9evNGVpzgjwGis6FRx6Ny95Jmdu1Zd+5bgNtHIJLs=;
+        b=BOqvdyhtob3BUZvxB9gwEgNIPCT48gWbJoumTErp36Ik9X3VULJROAMw4gBfhxp94c
+         vE/nKR+N7tVTJ+ysc6/Mr3ddGutJLBPqABLulBDp+KzlERZKrdo0Hb/xrVf/JpXUH+HE
+         iQZd7k5ucQuTRbzKQRe2FZT4jy58Itig8723OTIb0paOe1bZ42Vc0MR5Qxv7SE10Yttn
+         lM8ejBQ8mM9gKr98v9zn8jgblKSm48+cyg/ofFzoPepCtmtJbBp2YkV7g9ta/hxroUwr
+         T2KMBF6vVbeQFYdYgSUHYodZq1nbwJYc95AgMz6ssBaoAfTul6QwvTP7ED8w5hryBZST
+         2UiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750295092; x=1750899892;
+        d=1e100.net; s=20230601; t=1750295095; x=1750899895;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0G7VVQnGQtrb3sGnx5GNm2Y3zP47y1QHGJfHFp/BsUc=;
-        b=NVCInRDIK32zCOFbt1J54EwuJo1KRM0v0qPFhrUQ2G51QWf+var36AMY3wSvGnd3YX
-         vYhdobHOyYDaLjz9/6TnEUmHA5U71T7UuXBZWcllW4N5F6boEFtsqPtXhaHQ++EW77jj
-         CYL5/SgVMLH5OMg+NedS9/oAezTMDA1MOscxkB7270js4T1ev6ZAaBvkqmAkCSgWWSfQ
-         5/nUIE8vVskJ9U0jeiM5+EwwNDH+4/9f+SiyyQoBLZgIddPMFXiRaFK/gxAc2bmsF3UR
-         nHyYzTF+S7Au/cWOpuQnMNdp7WxvmmJ5g4l7RPpA4lvWgeztbQ2aYAd+ttKRGX1lzM6+
-         r4cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOXPj1hSvm7HzvofLx2j1QVhNeGckkIGWNUnFZaSbyn+wNIZQfiamYB6DE2OlzI0pWgYeK9WqFEobUinc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpAjDLK5rIuuwF/Y4WtUpbLdRVTDdRWa35u/7iboTjRGdj3Ong
-	eSjMkD4nwgw7rnC2pQ60c9xje40IPXPl0qACM334GwCMaLRVKndW/++A
-X-Gm-Gg: ASbGncvu3GLsDQhyHHFybLkeZVY1AU2J7aaKiKfGEKvjknFRsHsUMJgqBDxoIBYu0rB
-	3doJA5auJVH1JNRxrc++gf71pxiPDEYRlinyTkuJ56oB73RgRptEHwVXpvPopwUPP8ohua64Ut6
-	EuKUfQVP3jmh8beyhNYE8N8JIQj5USGkhz+rNgdSga2raRBnl7oFdF5yF7vtyn8nZpcwuUrGpK/
-	7z31CaF8WdozothEdPbZGASs96T6rwW4SDlDnzW0syWRrzrbmzf+qDCFLF++pHYmgKu+HhnClWW
-	Prb5wuJdgH939UJ0SDCkz7hsswnJyTXo03j4DhoPioROeT7wWOWX8GGsPe06QbLm02aEXyv+hXX
-	PLAKPN7p3G0eIEP5Zz3xmEZGLLJznPblW
-X-Google-Smtp-Source: AGHT+IFATU8cH8BDAswTDg8t16Qex6ZAiu2Oi4jWZUV6j/DJuzeYMglD71cpXwlvvkHyyfeb+uGavw==
-X-Received: by 2002:a17:90b:268a:b0:313:283e:e881 with SMTP id 98e67ed59e1d1-313f1cc5abbmr29510777a91.11.1750295091595;
-        Wed, 18 Jun 2025 18:04:51 -0700 (PDT)
+        bh=sL9evNGVpzgjwGis6FRx6Ny95Jmdu1Zd+5bgNtHIJLs=;
+        b=U0gsJvQoghcPQVQ7g3ZjVooC5UVY4/qkrDUsA6pfPcPhlExqqOHacyq2y8N5lZEwJB
+         YoWEr3cO2eS3GS2S5EqjDvfVRR3irh6dGShCtTIj9J0PnUJ7QkaSWkEUzp0foBAgPVtY
+         Ggjh075K8e4m2mLyZGSExuKpbAOpuAed5IhedHSjfZ0aEmWrdHN59YWXzixHIvxaEJsO
+         e6j3b1rImSYXzcTRUDILiQf1EUnu8X4L3omcqgJLncasSt3WkYxPnTFD875Xng96+9g+
+         23zWR91eXtz44fhZIk06oQPRDASIX47P4vn/u8EY7L9ViQvXh0VJTrpldJPHOja+vXMD
+         m3LA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYEfVADC8Xd0jo18fQNK7iYH/Y7S6HyJLyyfjrn/fCCTwMseKFGakA/fsbE5VMbXz6ud4f0MIMonUJxY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqgPIkT/v5iRUwOxSMpeUmQLpnNogtZCXp8JH9ogdyaGJwx4z
+	vkGlXOvXJpbQ8e7KTDXSFo3Y4be5PCh3T0XP3D4KS+RGgMjnBXhREd6m
+X-Gm-Gg: ASbGnct26i6R3Op6g3GWh1abeYOFrJCK6m+vEmslgBlKk33GkLOIAq439SKgE6hC1Tw
+	PdBpCoNIshw2E38VYQDLCbLhEqsOMwF+o53Yjb6u4QnQlG/VxTE1T7j1CW9O5guzptKyOLGkd91
+	beJECl+md4rr8pgQOlS4GLYmEt1ca56o61srAEhXGysB6NhLv8zqRofa0TXq3sARetJuf3WJcun
+	PeUu8X2O99YVUgSYgD7qoGLmiZ0oloYmeCGGoJJ9EphBjupHHiZIBkBmlzu8D/y6sPktNaV4f5m
+	P8M2Mf/iaD06rAe4wQy+ap8cIrxEPIOlXMfpi7GQBcqu3etoii7Q8qtVH3wUlQ5CQ8cYvLCJTNk
+	7KalB+32PJRUlZzjhlOldymhYgofr4OkS
+X-Google-Smtp-Source: AGHT+IFO1wmuMVt89YrBHlfn8kGYjqnEwLyl+KVA4zvbu8jubm0FHxst9cUWZDZj06afHE//hnBCAw==
+X-Received: by 2002:a17:902:dacf:b0:235:e76c:4353 with SMTP id d9443c01a7336-2366b16e8edmr259851315ad.51.1750295095410;
+        Wed, 18 Jun 2025 18:04:55 -0700 (PDT)
 Received: from ikb-h07-29-noble.in.iijlab.net ([202.214.97.5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a25617asm840600a91.33.2025.06.18.18.04.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2369843f99dsm36389375ad.185.2025.06.18.18.04.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 18:04:50 -0700 (PDT)
+        Wed, 18 Jun 2025 18:04:54 -0700 (PDT)
 Received: by ikb-h07-29-noble.in.iijlab.net (Postfix, from userid 1010)
-	id 26684ED6538; Thu, 19 Jun 2025 10:04:48 +0900 (JST)
+	id 7F349ED653C; Thu, 19 Jun 2025 10:04:53 +0900 (JST)
 From: Hajime Tazaki <thehajime@gmail.com>
 To: linux-um@lists.infradead.org
 Cc: thehajime@gmail.com,
 	ricarkol@google.com,
 	Liam.Howlett@oracle.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 08/13] x86/um/vdso: nommu: vdso memory update
-Date: Thu, 19 Jun 2025 10:04:12 +0900
-Message-ID: <207204e01eab3318e475f80be9fbaece51dd13cb.1750294482.git.thehajime@gmail.com>
+Subject: [PATCH v9 10/13] um: nommu: a work around for MMU dependency to PCI driver
+Date: Thu, 19 Jun 2025 10:04:14 +0900
+Message-ID: <dce1cc8330469cca3f3e451885b7d230be57b143.1750294482.git.thehajime@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1750294482.git.thehajime@gmail.com>
 References: <cover.1750294482.git.thehajime@gmail.com>
@@ -80,70 +80,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On !MMU mode, the address of vdso is accessible from userspace.  This
-commit implements the entry point by pointing a block of page address.
+The commit 8fe743b5eba0 ("PCI: Add CONFIG_MMU dependency") restricts the
+PCI base driver to depend on MMU.  While nommu UML _can_ implement PCI
+drivers over PCI devices (e.g., virtio-pci), the current nommu UML
+doesn't implement it.
 
-This commit also add memory permission configuration of vdso page to be
-executable.
+But without PCI drivers kunit complains as config for kunit
+(arch_uml.config) defines the dependency to PCI drivers.
+
+This commit fixes the issue of this compile failures when building PCI
+drivers with nommu UML.  In particular, the fix is to undefine the
+constant PCI_IOBASE to be able to bypass pci_unmap_iospace() call.
+
+When we will support PCI drivers for nommu UML, we will refactor this
+code.
 
 Signed-off-by: Hajime Tazaki <thehajime@gmail.com>
-Signed-off-by: Ricardo Koller <ricarkol@google.com>
 ---
- arch/x86/um/vdso/vma.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/um/include/asm/dma.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/x86/um/vdso/vma.c b/arch/x86/um/vdso/vma.c
-index dc8dfb2abd80..1c8c39f87681 100644
---- a/arch/x86/um/vdso/vma.c
-+++ b/arch/x86/um/vdso/vma.c
-@@ -9,6 +9,7 @@
- #include <asm/page.h>
- #include <asm/elf.h>
- #include <linux/init.h>
-+#include <os.h>
+diff --git a/arch/um/include/asm/dma.h b/arch/um/include/asm/dma.h
+index fdc53642c718..643d74555671 100644
+--- a/arch/um/include/asm/dma.h
++++ b/arch/um/include/asm/dma.h
+@@ -4,6 +4,19 @@
  
- static unsigned int __read_mostly vdso_enabled = 1;
- unsigned long um_vdso_addr;
-@@ -21,14 +22,24 @@ static int __init init_vdso(void)
- {
- 	BUG_ON(vdso_end - vdso_start > PAGE_SIZE);
+ #include <asm/io.h>
  
--	um_vdso_addr = task_size - PAGE_SIZE;
--
- 	um_vdso = alloc_page(GFP_KERNEL);
- 	if (!um_vdso)
- 		goto oom;
- 
- 	copy_page(page_address(um_vdso), vdso_start);
- 
-+#ifdef CONFIG_MMU
-+	um_vdso_addr = task_size - PAGE_SIZE;
-+#else
-+	/* this is fine with NOMMU as everything is accessible */
-+	um_vdso_addr = (unsigned long)page_address(um_vdso);
-+	os_protect_memory((void *)um_vdso_addr, vdso_end - vdso_start, 1, 0, 1);
++/**
++ * now the PCI core driver depends on CONFIG_MMU in linus tree, nommu
++ * UML cannot build with PCI but without PCI kunit doesn't build due
++ * to the dependency to the CONFIG_VIRTIO_UML.
++ *
++ * This is a workaround to silence build failures on kunit, which is
++ * valid until nommu UML supports PCI drivers (e.g., virtio-pci) in a
++ * future.
++ */
++#ifndef CONFIG_MMU
++#undef PCI_IOBASE
 +#endif
 +
-+	pr_info("vdso_start=%lx um_vdso_addr=%lx pg_um_vdso=%lx",
-+	       (unsigned long)vdso_start, um_vdso_addr,
-+	       (unsigned long)page_address(um_vdso));
-+
- 	return 0;
+ extern unsigned long uml_physmem;
  
- oom:
-@@ -39,6 +50,7 @@ static int __init init_vdso(void)
- }
- subsys_initcall(init_vdso);
- 
-+#ifdef CONFIG_MMU
- int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- {
- 	struct vm_area_struct *vma;
-@@ -63,3 +75,4 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 
- 	return IS_ERR(vma) ? PTR_ERR(vma) : 0;
- }
-+#endif
+ #define MAX_DMA_ADDRESS (uml_physmem)
 -- 
 2.43.0
 
