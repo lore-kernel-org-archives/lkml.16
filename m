@@ -1,110 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A33085D0;
-	Thu, 19 Jun 2025 09:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19C1E3DE8
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750325481; cv=none; b=nfW4Bd2sYPECVVQ+s8PcprFKpz326htfLv8EnpU4HLJUIyT75JjCZJFI29yff+ccfhuaCDuaIblrWRnFAGEBtfiCbhXGslwRmpiCuiDhGSvxuZ67h+p0Y42WC2spBxTSX07G1Gx4bDWuZZMt/zFczSt0nNGALYdwWUGbdhxiQmY=
+	t=1750325514; cv=none; b=iLAayqgpPMkIrRXKuBdgqigk+Vm3Y/rDUzlIcoqHoAZxNtthO/e8w+5P2oSogNCs7gA0IwTciTN91aLzlb+odC7XUF/zXZVxJlywwdadJxMif0amZStzmZM26PI12eXNoFbgt/snvngKnwd6LPoWAj3DpPqXd9irRzPx/2bOfVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750325481; c=relaxed/simple;
-	bh=ef6r/imHJ3hajGEmpAtQ+y6raHXVCuay3xH3gaxqvbE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YaBN6d8qRlV18dNCo2JhK5CYgcsk9Qo6T4hjsHcwpR92QV4JRzWr6jrRZmw8LEhhEWWMrhQ13c52KI2rN8/2ou0OUH8cf4TWD5mVaCn3flLqi96MmjsxrgOvIZdkTJejmIwOX+LCan9wVUfmsK9luuHiRIvHghXr+/1ieVemOcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amN2wTZT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750325514; c=relaxed/simple;
+	bh=qzMUaqnOLX+ANKhFdcWfG2nmVXkaSn55wfgQ7HyL7TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIFdeofcJYG/F5GGlM5XCFZ353puHb5OGhnFvSdZLYtAA64ZYcp8KU8ggEBzoCe8+KIjY8vZOhMCWmGEvLZNDFKlt10EeNmM76nYzkXF3O3ewOEFNP57AjgZnPK6g+T2wVoIavST4quSpahGxxp9n/I2sKrND/mBQ8GNtrj2EmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F5hqYEBE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amN2wTZT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D2CCC4CEED;
-	Thu, 19 Jun 2025 09:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750325481;
-	bh=ef6r/imHJ3hajGEmpAtQ+y6raHXVCuay3xH3gaxqvbE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=amN2wTZTOCnGjS5pjIXKx8Dx1bQZVBOuu3rV0FOy6KQpiQpsEi9p/OcpCfnSFUEx/
-	 HE0rRNFo6T9adZ+4ypLZvy1ldorHp7QresRh9/6vWc0ega6cXw4qgmu0OTzGoB0AYN
-	 2+HHPIjaGDUXnjGymx4TOJyngtzVG1VWH7+bR7GK8y/dlsuS7vtbYWL9m3wICKUqxL
-	 PewnBulP2Gl0Wk1iPqfmapnr5I4EveS+jRbD1USuPK4PddHfETOSWGpG8MiWmgD0Ir
-	 RyxF1RjrFyGWkdueCsZGXgpzCntd/UNAEDGTuZnOMYwQdUN38Y5LCjvEmJFVKAJS9a
-	 chpnd8o5Z9+Rw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <boqun.feng@gmail.com>,  <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,
-  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
-  <bjorn3_gh@protonmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
-  <gary@garyguo.net>,  <jstultz@google.com>,
-  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
-  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
-  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
-Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
-In-Reply-To: <20250619.092816.1768105017126251956.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Thu, 19 Jun 2025 09:28:16 +0900")
-References: <aFENRtYZixePYn0XFOGCbNOkSV9338iV4jWk8XJYKI0crpf4QniT_GyZCmFuqmsKs5Cl64z8qlIK6aVfdTBjbA==@protonmail.internalid>
-	<aFJINI8ImfxMnvrx@Mac.home> <87tt4c983g.fsf@kernel.org>
-	<lliFJqf-6WmrKCArjCpOguz4jsHNtiF9GU0X4Ip5bE8NseTdlyKNH_7Bp_CyxNBD5ZR-Jbz0teNRS4UgV_7Z3g==@protonmail.internalid>
-	<20250619.092816.1768105017126251956.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 19 Jun 2025 11:31:08 +0200
-Message-ID: <87cyb084df.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F5hqYEBE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750325511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2jXjg8C8SccVbJIxPY6T+fEgjPq8rj583aQs46Ok3ck=;
+	b=F5hqYEBEQOtzKUqYezxz8rp3vV3OWtoFzQXGoot7UAgx98LNoHEchl93mvBjOSvmuO5409
+	d7oRHTfcJsCb+2IWfWXKFtUmdyzD8f0jUurD/kA13cU8AJslSPp87X15VSwAlLHDxXXPry
+	ls0qTps//wZrxuwSKOvVbvqbNJLm2Bk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-235-_XqqMhXSOeqXAk9UBgG21A-1; Thu,
+ 19 Jun 2025 05:31:46 -0400
+X-MC-Unique: _XqqMhXSOeqXAk9UBgG21A-1
+X-Mimecast-MFC-AGG-ID: _XqqMhXSOeqXAk9UBgG21A_1750325504
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27B57180028E;
+	Thu, 19 Jun 2025 09:31:44 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.16])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 04124180035C;
+	Thu, 19 Jun 2025 09:31:36 +0000 (UTC)
+Date: Thu, 19 Jun 2025 17:31:31 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: akpm@linux-foundation.org, tglx@linutronix.de, john.g.garry@oracle.com,
+	axboe@kernel.dk, linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+Subject: Re: [PATCH] lib/group_cpus: fix NULL pointer dereference from
+ group_cpus_evenly()
+Message-ID: <aFPY8zaPYO8kNRKD@fedora>
+References: <20250619082941.3741592-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619082941.3741592-1-yukuai1@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+On Thu, Jun 19, 2025 at 04:29:41PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> While testing null_blk with configfs, echo 0 > poll_queues will trigger
+> following panic:
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000010
+> Oops: Oops: 0000 [#1] SMP NOPTI
+> CPU: 27 UID: 0 PID: 920 Comm: bash Not tainted 6.15.0-02023-gadbdb95c8696-dirty #1238 PREEMPT(undef)
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.1-2.fc37 04/01/2014
+> RIP: 0010:__bitmap_or+0x48/0x70
+> Call Trace:
+>  <TASK>
+>  __group_cpus_evenly+0x822/0x8c0
+>  group_cpus_evenly+0x2d9/0x490
+>  blk_mq_map_queues+0x1e/0x110
+>  null_map_queues+0xc9/0x170 [null_blk]
+>  blk_mq_update_queue_map+0xdb/0x160
+>  blk_mq_update_nr_hw_queues+0x22b/0x560
+>  nullb_update_nr_hw_queues+0x71/0xf0 [null_blk]
+>  nullb_device_poll_queues_store+0xa4/0x130 [null_blk]
+>  configfs_write_iter+0x109/0x1d0
+>  vfs_write+0x26e/0x6f0
+>  ksys_write+0x79/0x180
+>  __x64_sys_write+0x1d/0x30
+>  x64_sys_call+0x45c4/0x45f0
+>  do_syscall_64+0xa5/0x240
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Root cause is that numgrps is set to 0, and ZERO_SIZE_PTR is returned
+> from kcalloc(), then __group_cpus_evenly() will deference the
+> ZERO_SIZE_PTR.
+> 
+> Fix the problem by checking kcalloc() return value with ZERO_OR_NULL_PTR,
+> and NULL will be returned to caller.
+> 
+> Fixes: 6a6dcae8f486 ("blk-mq: Build default queue map via group_cpus_evenly()")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  lib/group_cpus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> index ee272c4cefcc..5e243946ee4e 100644
+> --- a/lib/group_cpus.c
+> +++ b/lib/group_cpus.c
+> @@ -363,7 +363,7 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps)
+>  		goto fail_npresmsk;
+>  
+>  	masks = kcalloc(numgrps, sizeof(*masks), GFP_KERNEL);
+> -	if (!masks)
+> +	if (ZERO_OR_NULL_PTR(masks))
+>  		goto fail_node_to_cpumask;
 
-> On Wed, 18 Jun 2025 21:13:07 +0200
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->> "Boqun Feng" <boqun.feng@gmail.com> writes:
->>
->>> On Tue, Jun 17, 2025 at 05:10:42PM -0700, Boqun Feng wrote:
->>>> On Wed, Jun 18, 2025 at 08:20:53AM +0900, FUJITA Tomonori wrote:
->>>> > Prevent downstream crates or drivers from implementing `ClockSource`
->>>> > for arbitrary types, which could otherwise leads to unsupported
->>>> > behavior.
->>>> >
->>>>
->>>> Hmm.. I don't think other impl of `ClockSource` is a problem, IIUC, as
->>>> long as the ktime_get() can return a value in [0, i64::MAX). Also this
->>>> means ClockSource should be an `unsafe` trait, because the correct
->>>> implementaion relies on ktime_get() returns the correct value. This is
->>>> needed even if you sealed ClockSource trait.
->>>>
->>>> Could you drop this and fix that the ClockSource trait instead? Thanks!
->>>>
->>>
->>> For example:
->>>
->>>     /// Trait for clock sources.
->>>     ///
->>>     /// ...
->>>     /// # Safety
->>>     ///
->>>     /// Implementers must ensure `ktime_get()` return a value in [0,
->>>     //  KTIME_MAX (i.e. i64::MAX)).
->>>     pub unsafe trait ClockSource {
->>>         ...
->>>     }
->>
->> Nice catch, it definitely needs to be unsafe. We should also require
->> correlation between ID and the value fetched by `ktime_get`.
->
-> What's ID?
+I'd suggest to check 'numgrps' explicitly, which is more readable than
+ZERO_PTR.
 
 
-  pub trait ClockSource {
-      /// The kernel clock ID associated with this clock source.
-      ///
-      /// This constant corresponds to the C side `clockid_t` value.
-      const ID: bindings::clockid_t;
-
-The constant used to identify the clock source when calling into C APIs.
-
-
-Best regards,
-Andreas Hindborg
-
+Thanks,
+Ming
 
