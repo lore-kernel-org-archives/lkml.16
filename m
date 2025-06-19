@@ -1,98 +1,82 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFD82459EA;
-	Thu, 19 Jun 2025 12:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DA923B607;
+	Thu, 19 Jun 2025 12:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335959; cv=none; b=XuVkt40SAHKTMu6vNFFywebodY63fXSfnbfvZDQxrLo2zHyy3AjYX3dZdpOcpX/DvU54hnDozUq6Vu+g5sJyAarO/ob0BMvHOwM8CcNdUvU5NXEpnQYqRcqsxEfBA23BqG4B6wNowX90PbwXkWtHiM5gMQwEeaPPyNoaBoDgeik=
+	t=1750336000; cv=none; b=G6kJMmHGsEKXeschc0peyAkV6VoKV3viZ7NQgO+I5CrOHjYTgRHDsYgJPaof3h/UfSGB0LMXkUATRHtqgJkYrHh5nbjifFaR67RTUdJc0AspZ7bKymAEIaW6qkNOwjcfiTXG0mhZqtClw4p1VQ4L33jGvHIe++x1dnW7ilP3Cxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335959; c=relaxed/simple;
-	bh=nw+6paORmE3fJuO8ylVKNY7c0AcGWBN96GycDaN9lNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MgL9UFzYmj8/gaI0vgb1x+e02frUfHTD44u22RQN0VR4TSITktCouBGyOXydHF01oBZZ+LkCHfFDRaVV7Ty0cSC8jiSDYuQEJmpV0EW8Inc8PIBjCw6BWl2XP85NTy0fw9hII64Cul6UOsgRrcRQie3bQtv46S/JxweT1paC90s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e7efae1bfdso171558137.3;
-        Thu, 19 Jun 2025 05:25:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750335955; x=1750940755;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QRKDQT8PZNuVIkxqQQfCZ0RpWeCez8dwdZEAe8PYgYg=;
-        b=e8Yvs3asvys8i3HZxxcbjba8wuzJXWw4WTURm7wwBVdvPuTTlydRBPsGaFs4KUlM7v
-         SxvpzKF9dg7YKsRLtS2qmaXStk423xsUm95SA5wrl48/0TlNqCAAhde6eRU6Xh5myuCe
-         DYQyOmlTnAjq4rFTnLXQVCVZ2A8N8/ypxlCLh8OYxs9aa2EHLtv8+FIHShSV+yxqDdcz
-         Xqa+sFHp555z3GPgsR2LlrYUYvhlcWXtOVDL1DPiB86PePUIYfQDGOW8DvjHnEDnbsPN
-         Hp3/yuQIIhJ70Cpjge/A2X1PXUX/DsU34WmTVyw+Y5Q+QIZ2/RA5ALjykObmKU9eo1uK
-         u6KA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTVzI3H9CD4fss36FE0tD+tJI5gyVrzw1WfHfJulWYrNJN4I4DJDEqHDa+Y9pMHnf7A1HoaEz0LwVm@vger.kernel.org, AJvYcCW1P1faC5NLgd5kNYaEoofg0fby5HXfTn8LkYak4xLM5gSYnS+4zNm9EnToXXwlgTxPpdadajjUwYNxw4YF@vger.kernel.org, AJvYcCXcX3rXYZs5bfgHkJDHvFQajyhERLXlyHmo7atxn2B+7CSMQgFI3/rSM7cRSObvsBb50U0rabUaGBhg5ENYa561CzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUjJv462B1O7dByovK5siQzJozk5rmGXG7wT5r6RxMYwwdE/87
-	TBiGC5EeAn46SpiRTXxvkkPbRArLeVgvu3ElFWgFVT3uaKHDSXPJ6VNC+mF5u0ko
-X-Gm-Gg: ASbGncsU2KdahPraKD1e87KCkX1X2aCAspeef49QqX9GWS1FP7Cl006+mgz2VqeF4iz
-	qt9C8t2ZRN1gzIYgPZCKYZKoYn48BPb1WI1c23ivhTQkmgEiRB2+brMcmk1+VKPt2JcyS3Hp/Hp
-	9Kb4lZPYafvSvVOco2K3JS0N1vyOZdgNrTkgpDpiY1I2TzATSECB3QgQsO1eKTE52f8ERCsm0KA
-	HAIt9YbNHHgKFtf5fjGkGAJTaiEEdoUkojgoUEbuvFFFre7NB6fBLNIXfoKAjurEarkRY3WmVsP
-	kkN0UnvaMpoa5terWknO2RkmiHB50V64SRxmLfV2hEN51yDlrRHoxJeiPWMDcD9SWQCya9e9hzm
-	+Alhe4wyj7rjuv1FtoqOtFbWU
-X-Google-Smtp-Source: AGHT+IFyz5Yg/uTDzTv8rfupdZi+qtm6CmvCpnHtM1ea362AW4aA8J10dv8uyvJW7PcELXnOZyTqng==
-X-Received: by 2002:a05:6102:4b8c:b0:4e6:d94f:c197 with SMTP id ada2fe7eead31-4e7f62629b7mr15996686137.23.1750335955041;
-        Thu, 19 Jun 2025 05:25:55 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f0fb27703sm2278914241.18.2025.06.19.05.25.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 05:25:54 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87f26496daeso160231241.2;
-        Thu, 19 Jun 2025 05:25:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+AabZIe0s+K9Q4z8PgHwM2AOzsmjvsLfaKv4z6uk+QSCY9I8d49xePm9N2PVSELuRJ59X32dRENdC@vger.kernel.org, AJvYcCWWVSCU9MF87N1zSe9xWawJeatLw2QH93VU73yaP0U0JCCpnsS+r9fZ2p0o7U4POnfhDd1nF3evX33rKAfx@vger.kernel.org, AJvYcCWus4rHjQWWTvv5eL2t/o9UyqLQzUiZC2P/m+Rjv0eD0khEwedwstesG1qOy6kLMdLsIYvhTjNnnybP4zxUmT1Wyus=@vger.kernel.org
-X-Received: by 2002:a05:6102:c8f:b0:4e5:59ce:4717 with SMTP id
- ada2fe7eead31-4e7f614b8femr15344553137.9.1750335954100; Thu, 19 Jun 2025
- 05:25:54 -0700 (PDT)
+	s=arc-20240116; t=1750336000; c=relaxed/simple;
+	bh=trqYLk6JlrcRlvPKUQFNKEIS2nYRl9ZjKWbw0aBzfno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WGOQ9GiWAVkusWr80ngfI1Yw9GGI5yzFRYZ414gUJ19IMKsGPOxw/8gpvhdL5C28wG4ECqtb1XAcng2IvpMIrHsifwAXqbRU1PXbe6Uh9Rp0ced/kD2t9JBUd6fMbs2cn+xOgy1LQ3zCD+raVHhP3xuAE4ArhJ976BgxUQzUR3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqwIy/3J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqwIy/3J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DF4C4CEEA;
+	Thu, 19 Jun 2025 12:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750335998;
+	bh=trqYLk6JlrcRlvPKUQFNKEIS2nYRl9ZjKWbw0aBzfno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DqwIy/3J2fGzWlHRjlYCXDSBYDFLf/s+qtS6BJHo8ilMCRiuG4iSIzuW47OFSOl5Q
+	 YCSxHU7c5/3S9oGLTFnLDrQe88mF5W33Azjd/0UQQOJT9KQ3G/hSC1M3kBU3S55PEi
+	 PGrSDunrH8Pe5d0Sm7q/Qdhz14xHumG0Iv5fTnssbUi0+6Twt4dxkqtIpk6naK5Kxi
+	 haBoY9vp1j8wARNhNmqao0DMRyldtwbSSnkwr2vTi9BptEqDpYIKbwQvJfHGchp6Nj
+	 qUkiTLqIvHh2vq2tZgCV04BGvSWj68Y0lLGUc86WcTbC2Lc8BYEsNA0KK2IQOfQy32
+	 EL3tUduXNhwYA==
+Date: Thu, 19 Jun 2025 13:26:32 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
+Message-ID: <b7bd76b1-7467-4d1a-889c-904af250e1bd@sirena.org.uk>
+References: <20250617152419.512865572@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613135614.154100-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250613135614.154100-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250613135614.154100-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 19 Jun 2025 14:25:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW3ScFxjDbyV8Bv6q_DiA1URX_vjMgEm7vHVTtt6CC5vg@mail.gmail.com>
-X-Gm-Features: Ac12FXzTevVT1F9nmwPwzvFo3iv8JFfZZuEc_a8tX7ch1cGzxu9PI7Dt0EFhBXE
-Message-ID: <CAMuHMdW3ScFxjDbyV8Bv6q_DiA1URX_vjMgEm7vHVTtt6CC5vg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: renesas: r9a09g077: Remove
- GIC_CPU_MASK_SIMPLE() from timer node
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GJ9bzHeobwX1mbvu"
+Content-Disposition: inline
+In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
+X-Cookie: Reapply as necessary.
 
-On Fri, 13 Jun 2025 at 17:26, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The RZ/T2H SoC uses GICv3, which does not require a CPU mask in the
-> `interrupts-extended` property of the ARMv8 timer node. The CPU mask
-> macro `GIC_CPU_MASK_SIMPLE()` is only applicable to pre-GICv3 systems.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-JFTR
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--GJ9bzHeobwX1mbvu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Gr{oetje,eeting}s,
+On Tue, Jun 17, 2025 at 05:19:26PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.34 release.
+> There are 512 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-                        Geert
+Tested-by: Mark Brown <broonie@kernel.org>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--GJ9bzHeobwX1mbvu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhUAfcACgkQJNaLcl1U
+h9AWXwf9HrqcagaLyrY9nBgWA2YhZdV0NzY2ifxZNq9O4ubzhPdSKWpIlmrgf/JI
+z8D/2fIWO23snuSi5FN6oQ1aGPow+9gvWmpJ15cYcxr0U3ko2yAFA413WwVN1QH6
+Hg/HwymZaBo7cmUTHuhaH1WxOs3XRqJ3QM5ScVhQU11qLaZc+xDFvAUP4oArmPTG
+8OC0q0g95Y5887iQO3YS5KJV1ZdIdYs+RqeiKSJnEer7E4y/fvMlLwXO+uAzUb0y
+QDdVfRN2E5qebeu9eYoWs3zMcmZ2m+n8cBvti/ego+YoSa33XU8fvmAjndYWrcwV
+9NA5bxKjVbI1jAOR2RMqK5wt+y7vhQ==
+=QTEQ
+-----END PGP SIGNATURE-----
+
+--GJ9bzHeobwX1mbvu--
