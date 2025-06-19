@@ -1,1421 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011051.outbound.protection.outlook.com [40.107.74.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2117024167D;
-	Thu, 19 Jun 2025 05:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BFB23FC49;
+	Thu, 19 Jun 2025 05:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750309499; cv=fail; b=aWg/p70HNay4OK0JSju6F1KV1RMwGJmViSlrvPYHNihTMwfsVlmF4szuR7KF66M67tqs2xA7WEX6rmR2JRRVK9FHd/N6bRh0HgMyMYryiSetYt2XPnJsELV49St6D35uwBozaWToILrLkV/Pi+Nuii45BwJFrfVG2l9peToTlMc=
+	t=1750309543; cv=fail; b=qWkRL2vFAGIZsQFL3oWtimgthXZvZ3jp4GLaGNQYBAiQSCW67EqUErdhFlVTgCbGNARHDOLrhIQQBzsyiLNy9238MiLQup25OjVyLbFA1FJ2AgdMuJUEgFEJ/qgLoSO6hvv2tDljCkPc7XtsPmNrdzzqFqH+J3QkcFry2khziGM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750309499; c=relaxed/simple;
-	bh=FzGa1cF5BgK8+3Qn4FIUr4IJUcJZzVT+CQbO8TnhVMw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rydePb8Mt1u1fVyHvix87VknpGlfgUREKQV7UJ7QVnsTr7w257TUPwxjMGV9vhux19kEJjH1c2idKS0qPvU/AA8jmfNDel45ERorC1d95QDqyEeEzLJ1W54FWuW2gZ1IBTOzAMxQB/8TxMlmkTJUBxyjBHsQT6r3t6rpnovR1ro=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BLY9p/Vg; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750309543; c=relaxed/simple;
+	bh=qfpGcDmSwTcwmUz+iybfMtqqXLsKy2JfzXJmH6U2iR0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cge70lmaldPwAqujrxldM8p2KLxf2gIdKkf+Jv+dw2XOHml1MyFqcg+n0iOYSZnA0arzWhq+f7nfFJMOOApdnpLdH4RvPdZKEI7UebtRTEZgKLzUNwTUHNZFMwkGoTc+EFaasgKpYH5rbmSUL2y7fftFjxGQPi5j8KXyJNkV8i0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=BRa6KCys; arc=fail smtp.client-ip=40.107.74.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BLY9p/Vg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750309496; x=1781845496;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=FzGa1cF5BgK8+3Qn4FIUr4IJUcJZzVT+CQbO8TnhVMw=;
-  b=BLY9p/VgEoPkPmcO+ZndbB26xtCSQS42Jgx0PmkDz+pUDTOt01NEPuNw
-   tGur6uRzIntcF6E5/VQp/qd5cbXec6DN1EeLgXF9Bcme6zhLDlioiRlym
-   PMRoCyiB5uDgHJPjGH982FDc1nNcNZO09mwFyOfUeSgQyWcqJCg51OAwn
-   F2OsTazUnIsWrIDPgjCVPwKhl1BKa9HjTuFxukJRTzvr8k9bj6kRbxofI
-   VycFufDKErMzaPXgaLGM83zQKCrFYKSPzIQ0O48ffHjdN1U3QUbu1DdN0
-   i/IRs8XsRvByZZdr8BTTZVa27z3+I5+AT54AFCgu02TCo4V8fsbxCUR8z
-   g==;
-X-CSE-ConnectionGUID: H0mQxf1yTK+7zYQzgKCOiw==
-X-CSE-MsgGUID: YP0kMqGUTomKIDES6iZg1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52702249"
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="52702249"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 22:04:55 -0700
-X-CSE-ConnectionGUID: E6x8D58IQ1GqU4uBwv2LiQ==
-X-CSE-MsgGUID: lMwV3T1UTzSIk72lwdDUzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="181373673"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 22:04:55 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 18 Jun 2025 22:04:54 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 18 Jun 2025 22:04:54 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.55)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 18 Jun 2025 22:04:54 -0700
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="BRa6KCys"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PVoWNTFf6QLLsmCXEzH1yYXIdlhzP3ktglzFdiR4kckQp/g6gK82hyQKq3YXvJuGn3sCiU4Vl7l8IxA6gmh0J8Tk5IC27bzkCo5nFM8MpX7QFZ/5g1j/RTtCpLJq7WjRjLVtLRmltp6QgLSjwmfBZOhfFq8Zu9/LhwmOhjKfscarKZaagPNTsfKRv9FWWUmXgRB5duCb3Hfpr87zIc6w+RkaugB6yw/2QOCBXjSpRtxkgtdmPvxS5im6TDPJjqZG0EZXcl0foKRhG2LYcMQQHyOxA+Wvo12sy2LXfNdlFMS1UVuoXsjBeQs/vilMdTjQlgJv9A4HXy/0GI/aLIFOfg==
+ b=jhnwzGi8Vsh+oA0BIsJHlYa7msGW9qxDnX8OTc0VfYSlrKsQwGxysykpRF561aCA42lSkTo53DkG9CwcBS2kRkBkmTMuY/hgYzmJhPdYYRe3GBAxDJuli/tU9d8I+EWz8jTfCA8zqaMw2kC9DSw1mbsISZv395pQ8ViQEw4cJykFKog8n/oyesEtbauyLV5cLSk13xVUfN6Fa7tslfHV8PJfPj/BdjjckQQu4Y7Gbk3V6zSI/4+ztTcNmr3DyjzTT557RyviS3PsdIl1l4Y7uSacrFScYFLMZJ3kDoI7kQKBNxW65nVQzr1b/kVQyQK3sx23zcHLlptnJoiocNpGXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pnGeI9s0zjM/kbUsos/oi17BSerzhw4gUn9IjEQG4IY=;
- b=JdUYG1BdEhhF7rGY6QgI6wZlyiumApzOlZqlA2MP0zRW4PoylVtyMQXy40tRj7IjNV2qS1OZD40PACRswzeIim9KatV9Hvk5J9g+4ATeEKAWG2IOWTSuJEdWz4G2CznvbSXshnldNL/cbtY6aQ2KOQYqj6oZ1VReW2yKzQghElGYYpcKXnRRbTPXUyPxC31XLd/xLACaFanO7ccFwL5kxnblXvN4JFOYEOpJn/5hYcZxJbEfnR5bhZqxtovWjH6sCmBHpGKocWO5sVii/GmYS8Rs/OLqqo0qcf11UNs1MpT9fV0Ax/43G8ny9s0fkGv5aY1Xt8agWSpEWWYthdcBgg==
+ bh=qfpGcDmSwTcwmUz+iybfMtqqXLsKy2JfzXJmH6U2iR0=;
+ b=qmKBrl6rGkDKevRDTlVkB050H1S4k3houtnIJzfhnu4tWzrZR9yLXsHP5EZGt71XcF6cpT/7ZksKCBOHsMBzCier3CuWGDXppEGBipuMo6uh02wcuP817tWHF+X8fFw3/Eprv4cASIhAr3EfEDGL3W1l4yw3k6iWyE9x6g6oZaabTzq3DzSq2AIJJZcXUV11Q2Vq3Verm8IBnXjfI596xCnhdmcfr4I+fiXcW26meGR13/ZoKrLyKYrR7eSp7jxNvZLyJ0NOt6i+JbpMMjp1w2ODMFqr3eFqRZeOdVnq8qUONDggnc5Yx58KSdXYJ+8pTqy9nR+LQycClmXV3Jzoeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB6819.namprd11.prod.outlook.com (2603:10b6:930:61::16) with
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qfpGcDmSwTcwmUz+iybfMtqqXLsKy2JfzXJmH6U2iR0=;
+ b=BRa6KCys7i6LciLlQTxNLJqJvtaa0j9CHTm6oel0bYkOPt7sWx0dLDr/YAku39daxILjzji5/Xp7U0CB2TVLOFgSJ1vGxYcNPOjOK5rtgfX1xhcoomi3aUC5BCulkB/UBZo0NMii8g0Zl8r5UHo9IYen7YSSTSezUObkHtP/Qkw=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TYWPR01MB9359.jpnprd01.prod.outlook.com (2603:1096:400:1a2::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Thu, 19 Jun
- 2025 05:04:28 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
- 05:04:28 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-To: <linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, David Lechner <dlechner@baylibre.com>,
-	Peter Zijlstra <peterz@infradead.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, "Fabio M. De
- Francesco" <fabio.maria.de.francesco@linux.intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v2 8/8] cxl: Convert to ACQUIRE() for conditional rwsem locking
-Date: Wed, 18 Jun 2025 22:04:16 -0700
-Message-ID: <20250619050416.782871-9-dan.j.williams@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250619050416.782871-1-dan.j.williams@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0151.namprd03.prod.outlook.com
- (2603:10b6:a03:338::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
+ 2025 05:05:30 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
+ 05:05:30 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda
+	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert
+ Foss <rfoss@kernel.org>, laurent.pinchart
+	<laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus
+ Damm <magnus.damm@gmail.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org"
+	<linux-clk@vger.kernel.org>, Fabrizio Castro
+	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v6 1/4] clk: renesas: rzv2h-cpg: Add support for DSI
+ clocks
+Thread-Topic: [PATCH v6 1/4] clk: renesas: rzv2h-cpg: Add support for DSI
+ clocks
+Thread-Index: AQHb0YbvZKdKpGoLPEeGBmVqxN0ROrQAp8mggAUMkQCAA1B+sIABAwnQ
+Date: Thu, 19 Jun 2025 05:05:30 +0000
+Message-ID:
+ <TY3PR01MB1134657A6D7A36FC387938AF7867DA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530171841.423274-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB1134654039BA3BAB5DA8C0BB08677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CA+V-a8tSMt9SaHAdeEd4vj=QmaDz5bMd4hwJUCx_mBF8-mw2kw@mail.gmail.com>
+ <TY3PR01MB1134671558883AAE2C3E0A2C78672A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To:
+ <TY3PR01MB1134671558883AAE2C3E0A2C78672A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYWPR01MB9359:EE_
+x-ms-office365-filtering-correlation-id: d540be00-1f59-49e4-a16d-08ddaeeee9df
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ejZWVmxZSVFlTEEvY2RjNDREaExRZ1NWWlFJQXFxdStpVmFEOHdNNGpnY0JT?=
+ =?utf-8?B?SXpKRktqZlVKNGdxMjFhZWE4em5MOWlkVVZrT3NESHZzQm5VUDZrUnhXMUpu?=
+ =?utf-8?B?NGFKc2IzYitZQXcwc3ZGTjE3ZHd0Nktac3JVME5YVVg1Z2JyYkJZVFMrWEI1?=
+ =?utf-8?B?dW5FdHFYK0pEQXNkZmMzb2NIWGU3WDB4RmtEL0JCK0VDSEljaHBJcDZneWdY?=
+ =?utf-8?B?a1Q1bkFkZ3FYZFJqMFpxWGJ1L0krUCtmQWo3cmFkdWFHTHg4UGh3cnRFakxQ?=
+ =?utf-8?B?V1BPdUVBV3RoSGdKaHRBU2dyVFAzY3V0NVpaRC9OVklCb3A2RWZidURVV3p0?=
+ =?utf-8?B?bTVpVjZvR3NBTTBzTGsvbjMrVDJoNHY2UkJ2TzI1RDdoRWMyYy9pcVVRZ2Ny?=
+ =?utf-8?B?NXUrYVV4aThmVHAyS1FrMUUyb243cFhIVEEwY3A1U0JJRFlwRU9KS1BZZm1a?=
+ =?utf-8?B?Y1g4emdheFo5OFdNQlppMHVReXBQY3IyVTBOczNKazZCcVEyTzhpZGRJZzJs?=
+ =?utf-8?B?aDNjb0k1YlczTkpHREoyYW9jcStON292MmtQbW1EbVg4RUg1dWgxZkJYdkt1?=
+ =?utf-8?B?QkJLMnFEQnIxVnNOM0xoUDVXbEhNZkE2THNmQTdZNlBUMHo1WXI1bjNPTjhJ?=
+ =?utf-8?B?NGpwMUpBOUpUejB2NnRUVDJMemZYbk5Vd3R6eW45SGx5K2NTK3lVVmZHRU4r?=
+ =?utf-8?B?dUlCUElhYk9FcW12NnZLWlJWUXNFOWFWMjFnTWdjRENubllmMitRMW53cHF6?=
+ =?utf-8?B?a01LdHozM09MWTJCekp1bTVqTVBRNWxCZXRXanhpelhjQzZDcW5EQlhpQ1lP?=
+ =?utf-8?B?NXdxVkdPYzhIYTVPRkFpdkp3RHhGZlRRUWg2ai9mblVaeWljUG1MVFBBRFRx?=
+ =?utf-8?B?cXJ4aTFZR3kzWHdJV3pSc0dUQ0wxU3Nabnc3ZjhXZmY4U3JNMjBibDV2V0lo?=
+ =?utf-8?B?SHhRVTFYUTZwSnhUUmoyc2M0YjVVSmJqb0xLTzhzS3cxM0x1NDhBemU0WWxt?=
+ =?utf-8?B?b3N2Q1A0M2Q5aEFCU3NDSk5vOGZmMWQ2cnV5d3crMlNpZENvSCtkandqenZ6?=
+ =?utf-8?B?Mm1Pay9GSXVjWWs5SkhXZWx4YVJLalRrYkI0OTZ5L0xJQWtiZnkrdFZveU5u?=
+ =?utf-8?B?RUlmWUR5MnFwVktoSyszME4zTVQ1d2hNZHp4L3NFZmZOMzVUa2prVEg4VlYw?=
+ =?utf-8?B?QXlYWVFaYzY4dXBDU3V0RG5xdzk5SHZHRW04NHEvZi9ZVk4ybFFGc1dhYnVH?=
+ =?utf-8?B?K2NycXVqTkNiN0xDMVE5cjJjVURjQXdoMEVMN1lhS2tCYVN6WjVvM1NBaGdm?=
+ =?utf-8?B?bGxtSUtDZW5WODZUM2l1RG9NeHo2b0lwekdwVHZIRzU2RzVyMVlLN2c2Z0g1?=
+ =?utf-8?B?KysvZGJ6S3VHY1lzL1QySCtJaHhyNEV1SU5FMXRjR005RzlvQmgxK1ZIWnFa?=
+ =?utf-8?B?dEd5ZnBrMWc1UU1STnA4NnRmU0tpZk5VeU40MjBTbVBCWHlWV1FidExEU05U?=
+ =?utf-8?B?dkxsbHNjSjRYM09XaGpDUUEvU0pNVVo4bnBVZkNZSmllbHFjajZzaXJ4MmpJ?=
+ =?utf-8?B?a2dmdkZGZmpVVkZVRTczcTl3c21IMmpnekJXNFVBaTNlSlVLLzE2MFdzZTFo?=
+ =?utf-8?B?S3Npd1pWTzlqbUMzeWFmbTRadjlQVVdQVTVBbWROUmg3S0lIbS9CbUxDMlhY?=
+ =?utf-8?B?UFBiZzhjbXRJaklLSjFKMWk5RWs0MTI3Tng4a1VBVWhiSGdWRkd6akVkV1k4?=
+ =?utf-8?B?TjM3T3JrcGtOL2laZ3dLb1pRNEd6RG5zZjNpRjlmbUxYSHNON2pIaW1HN0gy?=
+ =?utf-8?B?bzZUVjJHUUZ1U2NzQUtjanR5VGkxQTk5N0V5WUlQSXBCaXBqYlV5K3BTQy9Y?=
+ =?utf-8?B?NzJGZDltWmFnVTBDUlV4ckhWSVEwMU1MMmd1dXV2S1NZRGRJNDEwSFVLOXEy?=
+ =?utf-8?B?djNNZHBXOWVXTmYyaFdVZTU2UnpQTnM4OUFiOVlyWVpvRmJsdTlBM0dpVWZR?=
+ =?utf-8?Q?Twcm1XX6uG3mmuuDXDVqrgzmhoeGoo=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZGgrUVV2NU9KMmNROWZ6Mi9XdDJMaXM1c2xuMGdYZkpXV1dPdzh3SGo2N2Vs?=
+ =?utf-8?B?NWg2WStld0ErelgwdkUrQm4yTjJtcjBwbjhuajFVQkVhQXhOQmxIUU5FbHlQ?=
+ =?utf-8?B?K25uZ3FwSkt5VDc5VFJvSjNadkFORzlEQnhidnVoTythbFlEQUE2SmdMbEJ0?=
+ =?utf-8?B?YjR5YXpjV3dkblVvVytRR29ZaExFTGpScUFDRVBhMjZDSFYzS05wTG9mRW9U?=
+ =?utf-8?B?UVc4OXRqWlEzYllUZXZFd3B0bVM5d09GTGF2NHpCOXpvbDRSYlhYdkFIejlF?=
+ =?utf-8?B?YllxZE1Cb1grZ2ZGSXlzemkvZ2thaUVISHY4REtyc1h2UWd2d1BlQTJjU0pT?=
+ =?utf-8?B?TmFuZjhNR1ZVYmtRc0hYejdWVENzcHFrVGFRWUlSTEl3RXRpUEhodEcvZXRy?=
+ =?utf-8?B?UTF4dWxHRHdhQjZnbEYrWXUwQmtFMk5PYWxZVGRGRlYrN0NmQkR4MUcxajlV?=
+ =?utf-8?B?Z3VvYStYejJCQVVicEJ1TlFHVzh0Tk5zQTJwUDZmSnJ0RDZQbXJaM0VkRzJI?=
+ =?utf-8?B?aG8zS1RNOGQzcnBhZEV4cit5VWZrR0h5My82Z25zNnp4eHB5TDNqQkluZzZw?=
+ =?utf-8?B?ZmhobnZGR3BERER4NisxTTAzWlFFcGtiR3lDSDkwSHhxNUY2bFVqVlhzbitB?=
+ =?utf-8?B?YTFoSE00UkdaNitwK2Y5aStXbUpWTVJ5ZHlmUklzUGxvd0pDbVNza1c3b0Yz?=
+ =?utf-8?B?MjdzVXFUK2wwUkRkZVphaG5Ja1hQbENvb3E4eWorWDhNL0YvSjk0K3BQbFcy?=
+ =?utf-8?B?L05uZmQ2NHArUnJROTFXdStUNmVuM2hPSnpBYi9PT2NxZEpTcjUvTDJkWlFU?=
+ =?utf-8?B?UVFQeENFWUxZVDZGWUhEUmU2eGozV3duZHA1RmltakZCZCt1ZG9OZDRHOC83?=
+ =?utf-8?B?MU5RcXFpV2ZzN1MvNmw3NmlyUmxCeENaSjllSmRRWEhORUdwY0FnOGw4bGhu?=
+ =?utf-8?B?MEVDTzU2YzdPUEZNSXNId1Y3QVRCZjljSVo0WFdoYi84MFM2aDNuMUdoN056?=
+ =?utf-8?B?Tm9Pb2hxM215OU00aFZabGdZdmkvbUg1U3FaMVlyTEl4amU3c3lLV284WVli?=
+ =?utf-8?B?VEgzVzQyenVyLzlTNU9JUW1PZE5mV2Q1b0d6NGZGV0U2aEVCOTdlMDkyU3U3?=
+ =?utf-8?B?ckFURDlqUUJYM2NDMlVZUmxIc1hMSGpIQUJjMFFuTHVnMkw2V2ZoSnRiYmNi?=
+ =?utf-8?B?RXgzUFR2RTkvbS8wbUlpTzMyaUxqbnNHMnpoRVZzVE4xa2sxcngvd2dubGZD?=
+ =?utf-8?B?WTk3Wmc0QkkwK0t3TEFPcFZFdTlTYkF5bmZRbi85SXJ1eVJXWXJ5RlFrdTNj?=
+ =?utf-8?B?ZlZVNDl2M1FKRnlTbzZGeU9FRzlxb1YxVHlwREF0bllpajJWZklyZFJYRzgw?=
+ =?utf-8?B?czRDNmNJQkxxdUxDakxBdmw2d2FmS29VVGRabkRXeFIydjA4dkRhd25Nc1Rx?=
+ =?utf-8?B?bFJ6aHlRclhobSsvR0RvR2tiQ1ZNWkV6MUpwSU92ZVgyTjhNWjlyMXk5eFpC?=
+ =?utf-8?B?ZyswQkZMd0dpcTZIZTZpNlY0dkhrTmxJZHFQTzlYVm5oZ0FTeTZIRFpKRXln?=
+ =?utf-8?B?cENjR3JZMG1OQkFOVlJqQXRzdXpiVkNQU2hJYWFrVGZtaC9PWGdSekRORFhq?=
+ =?utf-8?B?b3RDcTdyK24wSUpuMVBvcWZ6UXhQRnBSakhobjhXWnlNd2Q4KzBRRVdWUllT?=
+ =?utf-8?B?aVNodTZjQUNiNnd0MnIvczlUbEs2WCtoeWN6UlBnc1pFK3BuTC9oZGRvS2NM?=
+ =?utf-8?B?L3RQN1pDN2FmMVUxK3NNdEJNRGhqeS93R2VyUm9hVXVsbGtkZ0VTNE1zaEN2?=
+ =?utf-8?B?ZFRWSC92UU1qQ2dBL1VVMlh5T0sxZlp1U0MzcDJtL0dLOGRlZ290bGhORkR1?=
+ =?utf-8?B?cEI5TlZtUXVRMnk4aENHRDd1eUJ6bGhieHYxNlJHc1pNeVRsRGIwU0ZxOVZE?=
+ =?utf-8?B?Q0hhOXJGUWdIeGxNVTRNcmk1b2llbFZ4QW41T3kzajF4QzVVTWRkWUtmU3FB?=
+ =?utf-8?B?bXMvWTdNTmxLNGxDUUt0emNkdHFLNDhSSlpUUU1haFdJc1cyMkx5S2dna0lq?=
+ =?utf-8?B?SktvcWt6N2IvbjR0SzJhOGpkb0ZyMnRRTVNpTlNiMFVoTzhwcWd1L1NQak1S?=
+ =?utf-8?Q?Lue6stCk+wKpEz2JF139YeIrO?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB6819:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84c65719-9168-4b56-aeb6-08ddaeeec4a9
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?66ya+iNEozipKQ2SlnMzHwAEGbnbqqW3K/uYpWc9rymLilf9PUgmcXw03+Y4?=
- =?us-ascii?Q?EJHif9Zh09FQqKOl7K3NKGwLFKMNbAu8kqE/ZRs6ScRiuSgoRA3wTL00Tezu?=
- =?us-ascii?Q?frLF2XKVr/cyOa389/a9+iGO/un+kra0n7L/9WJdv5F7FSleeCullurV04h5?=
- =?us-ascii?Q?sNRk1p6XLXTTE/iBvNA3sk05IEfv2taI2KZNcMmheznVkzsF6QenzQbgejXg?=
- =?us-ascii?Q?ln+Z5S3AmJCzP6RD8AkM56m2pB4ast5Z+2oLbXVElVy/A58Tr3+sDT29kMwf?=
- =?us-ascii?Q?M7wd18bPuG1umDNV7zJP95aRl5obbwbmMJBPEFkRQ2OCLWiEehJia9tdEtnf?=
- =?us-ascii?Q?MfW/bbw6p9uCfqrSwdGBc2vKAGp8pIsz1q0GP0PE+bStJq6GGWAH/pu9nJU3?=
- =?us-ascii?Q?xqKbEanwNuQLyFDK9YwFBx5bBPHKetauoupQJOBA51AW9+8eXusQB3V/KfV0?=
- =?us-ascii?Q?ILadPO1dI+QamYUDLSF6b8Xm1mBssPj2dsY18fqQtPSfTjsd3x1ZVUqlfBcH?=
- =?us-ascii?Q?uVrQxjpO76VilA36H+PaXrV+2FNMpFBtrs2FHzKR6fsT6tMTZ9KQFUqlIa6B?=
- =?us-ascii?Q?eFjKrk81nX0ImnuZY7ZsVVhVOQPSCqy+9HJ/S2oLQWE/U6G9dQQTM1LdkDkN?=
- =?us-ascii?Q?gNroe5CPd2tDOhjoBGc4pKxiNye40tmsTJuEtJFxkQfkFOk+cs7HgEz9449G?=
- =?us-ascii?Q?4MIY/sJg018DykTv1FJ0lS9U/89HeK3sgrWMWgNtcn6MPh6zuyuEmwEF2Sti?=
- =?us-ascii?Q?bsILTb480wLzpRV9NQ7Ct6m4UI/poMG6bSrq1uEQCkEL6Havfb4eJQXdStpO?=
- =?us-ascii?Q?mctsZPWsdtrxdSSkewG8lFe5pnclepup7DyyPXsSz0TcBpaSfkmSfuOInMly?=
- =?us-ascii?Q?q5WWQY3lkRvYZSbYZBvg2gVpWE1aPrCwB+O/YJ1GrQ9YvuJYHIc3mYIbmGCn?=
- =?us-ascii?Q?eCmz8lsaCggPNGF9s1xEtP0CAM+BME0X6x/ag2yiZUYP3yTvR7oP/K0/UMg7?=
- =?us-ascii?Q?ZSx9GMeNaUfMPPCELXMBGb8OXGzGPft2ZMzEbul+FAfZddtb+sfa/m+W2OM2?=
- =?us-ascii?Q?R5ydPpJublFIqZyVom4cs71F0DOvKRhvVpOfJ9paNRgMz6l+AYDWxe08Ey8V?=
- =?us-ascii?Q?Zib5vq8uZdIaxwIUmfMpOIzrloWiDkEBaHWOdRy6ZM5Pqw3RrQ/wlOLR5eTe?=
- =?us-ascii?Q?guOAWoSbvfB9ErVlrN+oSfF3Cp68iD5K3vcEGj+tF/xNbih68EGe+439Z03O?=
- =?us-ascii?Q?4LbPqH+durp4kROxYV0EstKozjPisFOxzfKftcrYKAWBduuiCsz1JG15HnkM?=
- =?us-ascii?Q?/o3PCuxFgfR7AZrZNNTabqhr/IZUpQ+TEnFPri5NIQ5XTuknrJWUol17fQSm?=
- =?us-ascii?Q?IIEMQwCuJvzGPF3ZKIWn5bcfOLtsCYO2onVyftCaAquYuaFHPKkEB/j8cbQH?=
- =?us-ascii?Q?WotTbpJhJvQ=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eFIto9/9FIYipaLgosvDZFExHywGuOksk2qfunJVuxV7AmAvlkd0aFbxpZSq?=
- =?us-ascii?Q?BjcpFyVsxPGp1MRnn6IpUV48Wd9i4EmMRj6MbfVKO7pcrOJqnM81iuODIKOz?=
- =?us-ascii?Q?WrcDGM8hYnvy6Wx1xTp9wggCkTYLRgvHkP1Hie4ZBz5IuXukvJcIXJD2LFy5?=
- =?us-ascii?Q?awQzbSQfbs0HHrsuwa0balFGvsfFtye5NW8Y6jRkYy2xpQDMj9sAwhDLroSP?=
- =?us-ascii?Q?eXKvxL9shMBy4ANCYMQIaitP2w/naQevCf6NgDQxKqCsHkaaMnYOi7YmZF3u?=
- =?us-ascii?Q?HsTPmB6/F7keGQAm4Q2lA3TpSFNDf+7bpmL7bjssWOKajqO0KPzPf7BQyY3C?=
- =?us-ascii?Q?5w8jFeLhSUoZreIdI/TBqyUHhJkvSC9yvaD84tY8Tlh3RbPtMQcQd5SZ1RQj?=
- =?us-ascii?Q?AlClKy4p49QThyvnHSTjKHlhOAPIfRSKHv2ULXu/QYFoWYGYPgWLLheHKsth?=
- =?us-ascii?Q?OI3o4hJNdLiWa+ZuDOvk/WYF1We8ADFXVLn5Y2Vcub4vzuGaISQr6WAb0Cnw?=
- =?us-ascii?Q?GiuUtiUPcgtkAZS9uc3ynxabANdkIpruDBas79sz0lhSH8AKyrUi8XTmTD9q?=
- =?us-ascii?Q?z05h10wTiyLnvrrRhmAXAY0KNTUEHBzj91V2PUvCzYgwjUJcO2ZuLPfJRUBb?=
- =?us-ascii?Q?RYZ1pDRaaOLQ7AqcIWkutU4nzNHkKbXlj/9yirQUQ1ZkPMmSTGkNmCViU30M?=
- =?us-ascii?Q?X7Qa79QVdYw96zWA0Ca5PbRo0Yf1q1wSBSWtffN4gea9XqwDKyeQ/TDi5QZy?=
- =?us-ascii?Q?3VEhbILoCOf5HfXm0LIh3HZUCXuTXIILrHpjdA3a1ZcTES0qHFT8/3o9L32l?=
- =?us-ascii?Q?whD2rXnVPPBBWPD1TxgMoPrb+4gXoygFAZp66gsTY5uafB3AL0BW9nZErMXR?=
- =?us-ascii?Q?zXKRtSyxu7UfLkWhECzgog89cXHGm0aqs2uCaFpmT/fd44iEDajPINrF+xeJ?=
- =?us-ascii?Q?WlvUQfo+T28PGGyBwdnoHazBeTg9Z/4aeXq4JyFnc8CSqeWwqpdUN2C4q6B7?=
- =?us-ascii?Q?qZN0WE9epsi8vWrO1VLz3eZ/knbLEjOcLkA9HcKP8fL1jyC7p7+FVCTsF1m3?=
- =?us-ascii?Q?qjdZ+3Wnhf+JGNsVZBPMZc7a7Xrcxx5mxojYAcKzNS39HE9Ck/wc75AoecM0?=
- =?us-ascii?Q?E/jA07VFjjgCHTXtuU02evpsOPJc0KyiB3CW3xtzCrzmxfv/zmcC7Yqj9m5y?=
- =?us-ascii?Q?Hfor7gJr51kJRLBvCxOU+yuWdlOD4yc+6f4ey+7iEnQC1ZbJzurQdqM4HD33?=
- =?us-ascii?Q?BiZmzDunD9RktXMVlsoUllT61Bis4UzO4+o7HGttXnJFDbZxY9SE1al/fMWK?=
- =?us-ascii?Q?hm/4FEALgCevq0JVVF3SMQmt53y0ejBbwAF5bN3Uh/A8luQcU6SgwLdft5Oy?=
- =?us-ascii?Q?WNUI8QD0foRgY8/dLI9fWh/V2FrJfXyUIKJXzRgdJnTne646X5R+Ai5cnuKI?=
- =?us-ascii?Q?quaQgzyvuVbhOBex5f8TdclRlX2VDIhnpS/qVp0dpDtOuXpQuMl0Tpi4XYSq?=
- =?us-ascii?Q?pyWqDVDRMi6gaodKuF1tdnnfaZJiuCdjSPHWEBCmCm0ya7wsOJzyzFLP5yp6?=
- =?us-ascii?Q?b6vNP2Gv9mO3Rrt2bTUt2TLwUq+7I5wTi/RwHmnvtK/Rx7XR9xeK0ju113Mc?=
- =?us-ascii?Q?UA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84c65719-9168-4b56-aeb6-08ddaeeec4a9
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 05:04:28.4792
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d540be00-1f59-49e4-a16d-08ddaeeee9df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 05:05:30.5640
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9IvadolWnBZNomoAp4t2Ktu4/PyRM6eBMD3SGhozvi6bYaEbDnPHbid61lbz9Ckqe0VndxnaVOLU21vrZGzOlZVdLkBSAdc5/JTWbbsAI1M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6819
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: APx2kG3Qw/QFRhCAraHmZimlKcaoXRL54bBQQulSUklvf75VfZvLBpRvoqp5agVPXInkIDWYsyOw1LTMt55mqU+O3R6ef43fqS5BSeQyQ+M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB9359
 
-Use ACQUIRE() to cleanup conditional locking paths in the CXL driver
-The ACQUIRE() macro and its associated ACQUIRE_ERR() helpers, like
-scoped_cond_guard(), arrange for scoped-based conditional locking. Unlike
-scoped_cond_guard(), these macros arrange for an ERR_PTR() to be retrieved
-representing the state of the conditional lock.
-
-The goal of this conversion is to complete the removal of all explicit
-unlock calls in the subsystem. I.e. the methods to acquire a lock are
-solely via guard(), scoped_guard() (for limited cases), or ACQUIRE(). All
-unlock is implicit / scope-based. In order to make sure all lock sites are
-converted, the existing rwsem's are consolidated and renamed in 'struct
-cxl_rwsem'. While that makes the patch noisier it gives a clean cut-off
-between old-world (explicit unlock allowed), and new world (explicit unlock
-deleted).
-
-Cc: David Lechner <dlechner@baylibre.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/cdat.c   |   6 +-
- drivers/cxl/core/core.h   |  43 +++---
- drivers/cxl/core/edac.c   |  44 +++----
- drivers/cxl/core/hdm.c    |  41 +++---
- drivers/cxl/core/mbox.c   |   6 +-
- drivers/cxl/core/memdev.c |  50 +++----
- drivers/cxl/core/port.c   |  18 +--
- drivers/cxl/core/region.c | 266 +++++++++++++++-----------------------
- drivers/cxl/cxl.h         |  13 +-
- include/linux/rwsem.h     |   1 +
- 10 files changed, 206 insertions(+), 282 deletions(-)
-
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 0ccef2f2a26a..c0af645425f4 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -336,7 +336,7 @@ static int match_cxlrd_hb(struct device *dev, void *data)
- 	cxlrd = to_cxl_root_decoder(dev);
- 	cxlsd = &cxlrd->cxlsd;
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	for (int i = 0; i < cxlsd->nr_targets; i++) {
- 		if (host_bridge == cxlsd->target[i]->dport_dev)
- 			return 1;
-@@ -987,7 +987,7 @@ void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
- 	bool is_root;
- 	int rc;
- 
--	lockdep_assert_held(&cxl_dpa_rwsem);
-+	lockdep_assert_held(&cxl_rwsem.dpa);
- 
- 	struct xarray *usp_xa __free(free_perf_xa) =
- 		kzalloc(sizeof(*usp_xa), GFP_KERNEL);
-@@ -1057,7 +1057,7 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- {
- 	struct cxl_dpa_perf *perf;
- 
--	lockdep_assert_held(&cxl_dpa_rwsem);
-+	lockdep_assert_held(&cxl_rwsem.dpa);
- 
- 	perf = cxled_get_dpa_perf(cxled);
- 	if (IS_ERR(perf))
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 8a65777ef3d3..ed7d08244542 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -5,6 +5,7 @@
- #define __CXL_CORE_H__
- 
- #include <cxl/mailbox.h>
-+#include <linux/rwsem.h>
- 
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
-@@ -107,8 +108,20 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
- #define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
- #define PCI_CAP_EXP_SIZEOF		0x3c
- 
--extern struct rw_semaphore cxl_dpa_rwsem;
--extern struct rw_semaphore cxl_region_rwsem;
-+struct cxl_rwsem {
-+	/*
-+	 * All changes to HPA (interleave configuration) occur with this
-+	 * lock held for write.
-+	 */
-+	struct rw_semaphore region;
-+	/*
-+	 * All changes to a device DPA space occur with this lock held
-+	 * for write.
-+	 */
-+	struct rw_semaphore dpa;
-+};
-+
-+extern struct cxl_rwsem cxl_rwsem;
- 
- DEFINE_CLASS(
- 	cxl_decoder_detach, struct cxl_region *,
-@@ -117,22 +130,22 @@ DEFINE_CLASS(
- 		put_device(&_T->dev);
- 	},
- 	({
--		int rc = 0;
--
- 		/* when the decoder is being destroyed lock unconditionally */
--		if (mode == DETACH_INVALIDATE)
--			down_write(&cxl_region_rwsem);
--		else
--			rc = down_write_killable(&cxl_region_rwsem);
--
--		if (rc)
--			cxlr = ERR_PTR(rc);
--		else {
-+		if (mode == DETACH_INVALIDATE) {
-+			guard(rwsem_write)(&cxl_rwsem.region);
- 			cxlr = cxl_decoder_detach(cxlr, cxled, pos, mode);
--			get_device(&cxlr->dev);
-+		} else {
-+			int rc;
-+
-+			ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+			if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
-+				cxlr = ERR_PTR(rc);
-+			else
-+				cxlr = cxl_decoder_detach(cxlr, cxled, pos,
-+							  mode);
- 		}
--		up_write(&cxl_region_rwsem);
--
-+		if (!IS_ERR_OR_NULL(cxlr))
-+			get_device(&cxlr->dev);
- 		cxlr;
- 	}),
- 	struct cxl_region *cxlr, struct cxl_endpoint_decoder *cxled, int pos,
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 2cbc664e5d62..f1ebdbe222c8 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -115,10 +115,9 @@ static int cxl_scrub_get_attrbs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
- 						flags, min_cycle);
- 	}
- 
--	struct rw_semaphore *region_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_region_rwsem);
--	if (!region_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
-+		return ret;
- 
- 	cxlr = cxl_ps_ctx->cxlr;
- 	p = &cxlr->params;
-@@ -154,10 +153,9 @@ static int cxl_scrub_set_attrbs_region(struct device *dev,
- 	struct cxl_region *cxlr;
- 	int ret, i;
- 
--	struct rw_semaphore *region_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_region_rwsem);
--	if (!region_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
-+		return ret;
- 
- 	cxlr = cxl_ps_ctx->cxlr;
- 	p = &cxlr->params;
-@@ -1332,16 +1330,15 @@ cxl_mem_perform_sparing(struct device *dev,
- 	struct cxl_memdev_sparing_in_payload sparing_pi;
- 	struct cxl_event_dram *rec = NULL;
- 	u16 validity_flags = 0;
-+	int ret;
- 
--	struct rw_semaphore *region_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_region_rwsem);
--	if (!region_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return ret;
- 
--	struct rw_semaphore *dpa_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_dpa_rwsem);
--	if (!dpa_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return ret;
- 
- 	if (!cxl_sparing_ctx->cap_safe_when_in_use) {
- 		/* Memory to repair must be offline */
-@@ -1779,16 +1776,15 @@ static int cxl_mem_perform_ppr(struct cxl_ppr_context *cxl_ppr_ctx)
- 	struct cxl_memdev_ppr_maintenance_attrbs maintenance_attrbs;
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_mem_repair_attrbs attrbs = { 0 };
-+	int ret;
- 
--	struct rw_semaphore *region_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_region_rwsem);
--	if (!region_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return ret;
- 
--	struct rw_semaphore *dpa_lock __free(rwsem_read_release) =
--		rwsem_read_intr_acquire(&cxl_dpa_rwsem);
--	if (!dpa_lock)
--		return -EINTR;
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((ret = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return ret;
- 
- 	if (!cxl_ppr_ctx->media_accessible || !cxl_ppr_ctx->data_retained) {
- 		/* Memory to repair must be offline */
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index e9cb34e30248..865a71bce251 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -16,7 +16,10 @@
-  * for enumerating these registers and capabilities.
-  */
- 
--DECLARE_RWSEM(cxl_dpa_rwsem);
-+struct cxl_rwsem cxl_rwsem = {
-+	.region = __RWSEM_INITIALIZER(cxl_rwsem.region),
-+	.dpa = __RWSEM_INITIALIZER(cxl_rwsem.dpa),
-+};
- 
- static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			   int *target_map)
-@@ -214,7 +217,7 @@ void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
- {
- 	struct resource *p1, *p2;
- 
--	guard(rwsem_read)(&cxl_dpa_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.dpa);
- 	for (p1 = cxlds->dpa_res.child; p1; p1 = p1->sibling) {
- 		__cxl_dpa_debug(file, p1, 0);
- 		for (p2 = p1->child; p2; p2 = p2->sibling)
-@@ -266,7 +269,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 	struct resource *res = cxled->dpa_res;
- 	resource_size_t skip_start;
- 
--	lockdep_assert_held_write(&cxl_dpa_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.dpa);
- 
- 	/* save @skip_start, before @res is released */
- 	skip_start = res->start - cxled->skip;
-@@ -281,7 +284,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 
- static void cxl_dpa_release(void *cxled)
- {
--	guard(rwsem_write)(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
- 	__cxl_dpa_release(cxled);
- }
- 
-@@ -293,7 +296,7 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_port *port = cxled_to_port(cxled);
- 
--	lockdep_assert_held_write(&cxl_dpa_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.dpa);
- 	devm_remove_action(&port->dev, cxl_dpa_release, cxled);
- 	__cxl_dpa_release(cxled);
- }
-@@ -361,7 +364,7 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 	struct resource *res;
- 	int rc;
- 
--	lockdep_assert_held_write(&cxl_dpa_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.dpa);
- 
- 	if (!len) {
- 		dev_warn(dev, "decoder%d.%d: empty reservation attempted\n",
-@@ -470,7 +473,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- {
- 	struct device *dev = cxlds->dev;
- 
--	guard(rwsem_write)(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
- 
- 	if (cxlds->nr_partitions)
- 		return -EBUSY;
-@@ -516,9 +519,8 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 	struct cxl_port *port = cxled_to_port(cxled);
- 	int rc;
- 
--	down_write(&cxl_dpa_rwsem);
--	rc = __cxl_dpa_reserve(cxled, base, len, skipped);
--	up_write(&cxl_dpa_rwsem);
-+	scoped_guard(rwsem_write, &cxl_rwsem.dpa)
-+		rc = __cxl_dpa_reserve(cxled, base, len, skipped);
- 
- 	if (rc)
- 		return rc;
-@@ -529,7 +531,7 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
- 
- resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
- {
--	guard(rwsem_read)(&cxl_dpa_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.dpa);
- 	if (cxled->dpa_res)
- 		return resource_size(cxled->dpa_res);
- 
-@@ -540,7 +542,7 @@ resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
- {
- 	resource_size_t base = -1;
- 
--	lockdep_assert_held(&cxl_dpa_rwsem);
-+	lockdep_assert_held(&cxl_rwsem.dpa);
- 	if (cxled->dpa_res)
- 		base = cxled->dpa_res->start;
- 
-@@ -552,7 +554,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- 	struct cxl_port *port = cxled_to_port(cxled);
- 	struct device *dev = &cxled->cxld.dev;
- 
--	guard(rwsem_write)(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
- 	if (!cxled->dpa_res)
- 		return 0;
- 	if (cxled->cxld.region) {
-@@ -582,7 +584,7 @@ int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
- 	struct device *dev = &cxled->cxld.dev;
- 	int part;
- 
--	guard(rwsem_write)(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
- 	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
- 		return -EBUSY;
- 
-@@ -614,7 +616,7 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
- 	struct resource *p, *last;
- 	int part;
- 
--	guard(rwsem_write)(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
- 	if (cxled->cxld.region) {
- 		dev_dbg(dev, "decoder attached to %s\n",
- 			dev_name(&cxled->cxld.region->dev));
-@@ -842,9 +844,8 @@ static int cxl_decoder_commit(struct cxl_decoder *cxld)
- 		}
- 	}
- 
--	down_read(&cxl_dpa_rwsem);
--	setup_hw_decoder(cxld, hdm);
--	up_read(&cxl_dpa_rwsem);
-+	scoped_guard(rwsem_read, &cxl_rwsem.dpa)
-+		setup_hw_decoder(cxld, hdm);
- 
- 	port->commit_end++;
- 	rc = cxld_await_commit(hdm, cxld->id);
-@@ -882,7 +883,7 @@ void cxl_port_commit_reap(struct cxl_decoder *cxld)
- {
- 	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	/*
- 	 * Once the highest committed decoder is disabled, free any other
-@@ -1030,7 +1031,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		else
- 			cxld->target_type = CXL_DECODER_DEVMEM;
- 
--		guard(rwsem_write)(&cxl_region_rwsem);
-+		guard(rwsem_write)(&cxl_rwsem.region);
- 		if (cxld->id != cxl_num_decoders_committed(port)) {
- 			dev_warn(&port->dev,
- 				 "decoder%d.%d: Committed out of order\n",
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 81b21effe8cf..92cd3cbdd8ec 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -909,8 +909,8 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		 * translations. Take topology mutation locks and lookup
- 		 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
- 		 */
--		guard(rwsem_read)(&cxl_region_rwsem);
--		guard(rwsem_read)(&cxl_dpa_rwsem);
-+		guard(rwsem_read)(&cxl_rwsem.region);
-+		guard(rwsem_read)(&cxl_rwsem.dpa);
- 
- 		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
- 		cxlr = cxl_dpa_to_region(cxlmd, dpa);
-@@ -1265,7 +1265,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	/* synchronize with cxl_mem_probe() and decoder write operations */
- 	guard(device)(&cxlmd->dev);
- 	endpoint = cxlmd->endpoint;
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	/*
- 	 * Require an endpoint to be safe otherwise the driver can not
- 	 * be sure that the device is unmapped.
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..f5fbd34310fd 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -232,15 +232,13 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
- 	if (!port || !is_cxl_endpoint(port))
- 		return -EINVAL;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
- 		return rc;
--	}
- 
- 	if (cxl_num_decoders_committed(port) == 0) {
- 		/* No regions mapped to this memdev */
-@@ -249,8 +247,6 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
- 		/* Regions mapped, collect poison by endpoint */
- 		rc =  cxl_get_poison_by_endpoint(port);
- 	}
--	up_read(&cxl_dpa_rwsem);
--	up_read(&cxl_region_rwsem);
- 
- 	return rc;
- }
-@@ -292,19 +288,17 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
- 		return rc;
--	}
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	inject.address = cpu_to_le64(dpa);
- 	mbox_cmd = (struct cxl_mbox_cmd) {
-@@ -314,7 +308,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	};
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
-@@ -327,11 +321,8 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.length = cpu_to_le32(1),
- 	};
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
--out:
--	up_read(&cxl_dpa_rwsem);
--	up_read(&cxl_region_rwsem);
- 
--	return rc;
-+	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, "CXL");
- 
-@@ -347,19 +338,17 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
- 		return rc;
--	}
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	/*
- 	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
-@@ -378,7 +367,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
-@@ -391,11 +380,8 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.length = cpu_to_le32(1),
- 	};
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
--out:
--	up_read(&cxl_dpa_rwsem);
--	up_read(&cxl_region_rwsem);
- 
--	return rc;
-+	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_clear_poison, "CXL");
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 0f1629856380..58764d8a935b 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -30,18 +30,12 @@
-  * instantiated by the core.
-  */
- 
--/*
-- * All changes to the interleave configuration occur with this lock held
-- * for write.
-- */
--DECLARE_RWSEM(cxl_region_rwsem);
--
- static DEFINE_IDA(cxl_port_ida);
- static DEFINE_XARRAY(cxl_root_buses);
- 
- int cxl_num_decoders_committed(struct cxl_port *port)
- {
--	lockdep_assert_held(&cxl_region_rwsem);
-+	lockdep_assert_held(&cxl_rwsem.region);
- 
- 	return port->commit_end + 1;
- }
-@@ -176,7 +170,7 @@ static ssize_t target_list_show(struct device *dev,
- 	ssize_t offset;
- 	int rc;
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	rc = emit_target_list(cxlsd, buf);
- 	if (rc < 0)
- 		return rc;
-@@ -196,7 +190,7 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	/* without @cxl_dpa_rwsem, make sure @part is not reloaded */
-+	/* without @cxl_rwsem.dpa, make sure @part is not reloaded */
- 	int part = READ_ONCE(cxled->part);
- 	const char *desc;
- 
-@@ -235,7 +229,7 @@ static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *at
- {
- 	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
- 
--	guard(rwsem_read)(&cxl_dpa_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.dpa);
- 	return sysfs_emit(buf, "%#llx\n", (u64)cxl_dpa_resource_start(cxled));
- }
- static DEVICE_ATTR_RO(dpa_resource);
-@@ -560,7 +554,7 @@ static ssize_t decoders_committed_show(struct device *dev,
- {
- 	struct cxl_port *port = to_cxl_port(dev);
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	return sysfs_emit(buf, "%d\n", cxl_num_decoders_committed(port));
- }
- 
-@@ -1722,7 +1716,7 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
- 	if (xa_empty(&port->dports))
- 		return -EINVAL;
- 
--	guard(rwsem_write)(&cxl_region_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.region);
- 	for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
- 		struct cxl_dport *dport = find_dport(port, target_map[i]);
- 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 010964aa5489..a2ba19151d4f 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -141,16 +141,12 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_region_params *p = &cxlr->params;
- 	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
- 		return rc;
- 	if (cxlr->mode != CXL_PARTMODE_PMEM)
--		rc = sysfs_emit(buf, "\n");
--	else
--		rc = sysfs_emit(buf, "%pUb\n", &p->uuid);
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+		return sysfs_emit(buf, "\n");
-+	return sysfs_emit(buf, "%pUb\n", &p->uuid);
- }
- 
- static int is_dup(struct device *match, void *data)
-@@ -162,7 +158,7 @@ static int is_dup(struct device *match, void *data)
- 	if (!is_cxl_region(match))
- 		return 0;
- 
--	lockdep_assert_held(&cxl_region_rwsem);
-+	lockdep_assert_held(&cxl_rwsem.region);
- 	cxlr = to_cxl_region(match);
- 	p = &cxlr->params;
- 
-@@ -192,27 +188,22 @@ static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
- 	if (uuid_is_null(&temp))
- 		return -EINVAL;
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &region_rwsem)))
- 		return rc;
- 
- 	if (uuid_equal(&p->uuid, &temp))
--		goto out;
-+		return len;
- 
--	rc = -EBUSY;
- 	if (p->state >= CXL_CONFIG_ACTIVE)
--		goto out;
-+		return -EBUSY;
- 
- 	rc = bus_for_each_dev(&cxl_bus_type, NULL, &temp, is_dup);
- 	if (rc < 0)
--		goto out;
-+		return rc;
- 
- 	uuid_copy(&p->uuid, &temp);
--out:
--	up_write(&cxl_region_rwsem);
- 
--	if (rc)
--		return rc;
- 	return len;
- }
- static DEVICE_ATTR_RW(uuid);
-@@ -354,20 +345,17 @@ static int queue_reset(struct cxl_region *cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 	int rc;
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
- 		return rc;
- 
- 	/* Already in the requested state? */
- 	if (p->state < CXL_CONFIG_COMMIT)
--		goto out;
-+		return 0;
- 
- 	p->state = CXL_CONFIG_RESET_PENDING;
- 
--out:
--	up_write(&cxl_region_rwsem);
--
--	return rc;
-+	return 0;
- }
- 
- static int __commit(struct cxl_region *cxlr)
-@@ -375,19 +363,17 @@ static int __commit(struct cxl_region *cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 	int rc;
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
- 		return rc;
- 
- 	/* Already in the requested state? */
- 	if (p->state >= CXL_CONFIG_COMMIT)
--		goto out;
-+		return 0;
- 
- 	/* Not ready to commit? */
--	if (p->state < CXL_CONFIG_ACTIVE) {
--		rc = -ENXIO;
--		goto out;
--	}
-+	if (p->state < CXL_CONFIG_ACTIVE)
-+		return -ENXIO;
- 
- 	/*
- 	 * Invalidate caches before region setup to drop any speculative
-@@ -395,16 +381,15 @@ static int __commit(struct cxl_region *cxlr)
- 	 */
- 	rc = cxl_region_invalidate_memregion(cxlr);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	rc = cxl_region_decode_commit(cxlr);
--	if (rc == 0)
--		p->state = CXL_CONFIG_COMMIT;
-+	if (rc)
-+		return rc;
- 
--out:
--	up_write(&cxl_region_rwsem);
-+	p->state = CXL_CONFIG_COMMIT;
- 
--	return rc;
-+	return 0;
- }
- 
- static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
-@@ -437,10 +422,10 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
- 	device_release_driver(&cxlr->dev);
- 
- 	/*
--	 * With the reset pending take cxl_region_rwsem unconditionally
-+	 * With the reset pending take cxl_rwsem.region unconditionally
- 	 * to ensure the reset gets handled before returning.
- 	 */
--	guard(rwsem_write)(&cxl_region_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.region);
- 
- 	/*
- 	 * Revalidate that the reset is still pending in case another
-@@ -461,13 +446,10 @@ static ssize_t commit_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_region_params *p = &cxlr->params;
- 	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
- 		return rc;
--	rc = sysfs_emit(buf, "%d\n", p->state >= CXL_CONFIG_COMMIT);
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+	return sysfs_emit(buf, "%d\n", p->state >= CXL_CONFIG_COMMIT);
- }
- static DEVICE_ATTR_RW(commit);
- 
-@@ -491,15 +473,11 @@ static ssize_t interleave_ways_show(struct device *dev,
- {
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_region_params *p = &cxlr->params;
--	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
--	rc = sysfs_emit(buf, "%d\n", p->interleave_ways);
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if (ACQUIRE_ERR(rwsem_read_intr, &rwsem))
-+		return ACQUIRE_ERR(rwsem_read_intr, &rwsem);
-+	return sysfs_emit(buf, "%d\n", p->interleave_ways);
- }
- 
- static const struct attribute_group *get_cxl_region_target_group(void);
-@@ -534,23 +512,21 @@ static ssize_t interleave_ways_store(struct device *dev,
- 		return -EINVAL;
- 	}
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
- 		return rc;
--	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
--		rc = -EBUSY;
--		goto out;
--	}
-+
-+	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
-+		return -EBUSY;
- 
- 	save = p->interleave_ways;
- 	p->interleave_ways = val;
- 	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
--	if (rc)
-+	if (rc) {
- 		p->interleave_ways = save;
--out:
--	up_write(&cxl_region_rwsem);
--	if (rc)
- 		return rc;
-+	}
-+
- 	return len;
- }
- static DEVICE_ATTR_RW(interleave_ways);
-@@ -561,15 +537,11 @@ static ssize_t interleave_granularity_show(struct device *dev,
- {
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_region_params *p = &cxlr->params;
--	ssize_t rc;
--
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
--	rc = sysfs_emit(buf, "%d\n", p->interleave_granularity);
--	up_read(&cxl_region_rwsem);
- 
--	return rc;
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if (ACQUIRE_ERR(rwsem_read_intr, &rwsem))
-+		return ACQUIRE_ERR(rwsem_read_intr, &rwsem);
-+	return sysfs_emit(buf, "%d\n", p->interleave_granularity);
- }
- 
- static ssize_t interleave_granularity_store(struct device *dev,
-@@ -602,19 +574,15 @@ static ssize_t interleave_granularity_store(struct device *dev,
- 	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
- 		return -EINVAL;
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
- 		return rc;
--	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
--		rc = -EBUSY;
--		goto out;
--	}
-+
-+	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE)
-+		return -EBUSY;
- 
- 	p->interleave_granularity = val;
--out:
--	up_write(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+
- 	return len;
- }
- static DEVICE_ATTR_RW(interleave_granularity);
-@@ -625,17 +593,14 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_region_params *p = &cxlr->params;
- 	u64 resource = -1ULL;
--	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if (ACQUIRE_ERR(rwsem_read_intr, &rwsem))
-+		return ACQUIRE_ERR(rwsem_read_intr, &rwsem);
-+
- 	if (p->res)
- 		resource = p->res->start;
--	rc = sysfs_emit(buf, "%#llx\n", resource);
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+	return sysfs_emit(buf, "%#llx\n", resource);
- }
- static DEVICE_ATTR_RO(resource);
- 
-@@ -663,7 +628,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
- 	struct resource *res;
- 	u64 remainder = 0;
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	/* Nothing to do... */
- 	if (p->res && resource_size(p->res) == size)
-@@ -705,7 +670,7 @@ static void cxl_region_iomem_release(struct cxl_region *cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 
- 	if (device_is_registered(&cxlr->dev))
--		lockdep_assert_held_write(&cxl_region_rwsem);
-+		lockdep_assert_held_write(&cxl_rwsem.region);
- 	if (p->res) {
- 		/*
- 		 * Autodiscovered regions may not have been able to insert their
-@@ -722,7 +687,7 @@ static int free_hpa(struct cxl_region *cxlr)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	if (!p->res)
- 		return 0;
-@@ -746,15 +711,14 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
- 	if (rc)
- 		return rc;
- 
--	rc = down_write_killable(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
- 		return rc;
- 
- 	if (val)
- 		rc = alloc_hpa(cxlr, val);
- 	else
- 		rc = free_hpa(cxlr);
--	up_write(&cxl_region_rwsem);
- 
- 	if (rc)
- 		return rc;
-@@ -770,15 +734,12 @@ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
- 	u64 size = 0;
- 	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
- 		return rc;
- 	if (p->res)
- 		size = resource_size(p->res);
--	rc = sysfs_emit(buf, "%#llx\n", size);
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+	return sysfs_emit(buf, "%#llx\n", size);
- }
- static DEVICE_ATTR_RW(size);
- 
-@@ -804,26 +765,20 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
- 	struct cxl_endpoint_decoder *cxled;
- 	int rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
- 		return rc;
- 
- 	if (pos >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
- 			p->interleave_ways);
--		rc = -ENXIO;
--		goto out;
-+		return -ENXIO;
- 	}
- 
- 	cxled = p->targets[pos];
- 	if (!cxled)
--		rc = sysfs_emit(buf, "\n");
--	else
--		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
--out:
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+		return sysfs_emit(buf, "\n");
-+	return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
- }
- 
- static int check_commit_order(struct device *dev, void *data)
-@@ -938,7 +893,7 @@ cxl_port_pick_region_decoder(struct cxl_port *port,
- 	/*
- 	 * This decoder is pinned registered as long as the endpoint decoder is
- 	 * registered, and endpoint decoder unregistration holds the
--	 * cxl_region_rwsem over unregister events, so no need to hold on to
-+	 * cxl_rwsem.region over unregister events, so no need to hold on to
- 	 * this extra reference.
- 	 */
- 	put_device(dev);
-@@ -1129,7 +1084,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
- 	unsigned long index;
- 	int rc = -EBUSY;
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	cxl_rr = cxl_rr_load(port, cxlr);
- 	if (cxl_rr) {
-@@ -1239,7 +1194,7 @@ static void cxl_port_detach_region(struct cxl_port *port,
- 	struct cxl_region_ref *cxl_rr;
- 	struct cxl_ep *ep = NULL;
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	cxl_rr = cxl_rr_load(port, cxlr);
- 	if (!cxl_rr)
-@@ -2150,7 +2105,7 @@ struct cxl_region *cxl_decoder_detach(struct cxl_region *cxlr,
- {
- 	struct cxl_region_params *p;
- 
--	lockdep_assert_held_write(&cxl_region_rwsem);
-+	lockdep_assert_held_write(&cxl_rwsem.region);
- 
- 	if (!cxled) {
- 		p = &cxlr->params;
-@@ -2212,19 +2167,19 @@ static int attach_target(struct cxl_region *cxlr,
- 			 struct cxl_endpoint_decoder *cxled, int pos,
- 			 unsigned int state)
- {
--	int rc = 0;
--
--	if (state == TASK_INTERRUPTIBLE)
--		rc = down_write_killable(&cxl_region_rwsem);
--	else
--		down_write(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	int rc;
- 
--	down_read(&cxl_dpa_rwsem);
--	rc = cxl_region_attach(cxlr, cxled, pos);
--	up_read(&cxl_dpa_rwsem);
--	up_write(&cxl_region_rwsem);
-+	if (state == TASK_INTERRUPTIBLE) {
-+		ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+		if ((rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem)) == 0) {
-+			guard(rwsem_read)(&cxl_rwsem.dpa);
-+			rc = cxl_region_attach(cxlr, cxled, pos);
-+		}
-+	} else {
-+		guard(rwsem_write)(&cxl_rwsem.region);
-+		guard(rwsem_read)(&cxl_rwsem.dpa);
-+		rc = cxl_region_attach(cxlr, cxled, pos);
-+	}
- 
- 	if (rc)
- 		dev_warn(cxled->cxld.dev.parent,
-@@ -2493,7 +2448,7 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
- 		return NOTIFY_DONE;
- 
- 	/*
--	 * No need to hold cxl_region_rwsem; region parameters are stable
-+	 * No need to hold cxl_rwsem.region; region parameters are stable
- 	 * within the cxl_region driver.
- 	 */
- 	region_nid = phys_to_target_node(cxlr->params.res->start);
-@@ -2516,7 +2471,7 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
- 	int region_nid;
- 
- 	/*
--	 * No need to hold cxl_region_rwsem; region parameters are stable
-+	 * No need to hold cxl_rwsem.region; region parameters are stable
- 	 * within the cxl_region driver.
- 	 */
- 	region_nid = phys_to_target_node(cxlr->params.res->start);
-@@ -2665,17 +2620,13 @@ static ssize_t region_show(struct device *dev, struct device_attribute *attr,
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 	ssize_t rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
- 		return rc;
- 
- 	if (cxld->region)
--		rc = sysfs_emit(buf, "%s\n", dev_name(&cxld->region->dev));
--	else
--		rc = sysfs_emit(buf, "\n");
--	up_read(&cxl_region_rwsem);
--
--	return rc;
-+		return sysfs_emit(buf, "%s\n", dev_name(&cxld->region->dev));
-+	return sysfs_emit(buf, "\n");
- }
- DEVICE_ATTR_RO(region);
- 
-@@ -3014,7 +2965,7 @@ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 	struct device *dev;
- 	int i;
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	if (p->state != CXL_CONFIG_COMMIT)
- 		return -ENXIO;
- 
-@@ -3026,7 +2977,7 @@ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 	cxlr_pmem->hpa_range.start = p->res->start;
- 	cxlr_pmem->hpa_range.end = p->res->end;
- 
--	/* Snapshot the region configuration underneath the cxl_region_rwsem */
-+	/* Snapshot the region configuration underneath the cxl_rwsem.region */
- 	cxlr_pmem->nr_mappings = p->nr_targets;
- 	for (i = 0; i < p->nr_targets; i++) {
- 		struct cxl_endpoint_decoder *cxled = p->targets[i];
-@@ -3103,7 +3054,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	if (p->state != CXL_CONFIG_COMMIT)
- 		return ERR_PTR(-ENXIO);
- 
-@@ -3303,7 +3254,7 @@ static int match_region_by_range(struct device *dev, const void *data)
- 	cxlr = to_cxl_region(dev);
- 	p = &cxlr->params;
- 
--	guard(rwsem_read)(&cxl_region_rwsem);
-+	guard(rwsem_read)(&cxl_rwsem.region);
- 	if (p->res && p->res->start == r->start && p->res->end == r->end)
- 		return 1;
- 
-@@ -3363,7 +3314,7 @@ static int __construct_region(struct cxl_region *cxlr,
- 	struct resource *res;
- 	int rc;
- 
--	guard(rwsem_write)(&cxl_region_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.region);
- 	p = &cxlr->params;
- 	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
- 		dev_err(cxlmd->dev.parent,
-@@ -3499,10 +3450,10 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- 
- 	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
- 
--	down_read(&cxl_region_rwsem);
--	p = &cxlr->params;
--	attach = p->state == CXL_CONFIG_COMMIT;
--	up_read(&cxl_region_rwsem);
-+	scoped_guard(rwsem_read, &cxl_rwsem.region) {
-+		p = &cxlr->params;
-+		attach = p->state == CXL_CONFIG_COMMIT;
-+	}
- 
- 	if (attach) {
- 		/*
-@@ -3527,7 +3478,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
- 	if (!endpoint)
- 		return ~0ULL;
- 
--	guard(rwsem_write)(&cxl_region_rwsem);
-+	guard(rwsem_write)(&cxl_rwsem.region);
- 
- 	xa_for_each(&endpoint->regions, index, iter) {
- 		struct cxl_region_params *p = &iter->region->params;
-@@ -3569,30 +3520,23 @@ static int cxl_region_can_probe(struct cxl_region *cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 	int rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc) {
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem))) {
- 		dev_dbg(&cxlr->dev, "probe interrupted\n");
- 		return rc;
- 	}
- 
- 	if (p->state < CXL_CONFIG_COMMIT) {
- 		dev_dbg(&cxlr->dev, "config state: %d\n", p->state);
--		rc = -ENXIO;
--		goto out;
-+		return -ENXIO;
- 	}
- 
- 	if (test_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags)) {
- 		dev_err(&cxlr->dev,
- 			"failed to activate, re-commit region and retry\n");
--		rc = -ENXIO;
--		goto out;
-+		return -ENXIO;
- 	}
- 
--out:
--	up_read(&cxl_region_rwsem);
--
--	if (rc)
--		return rc;
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 3f1695c96abc..50799a681231 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -469,7 +469,7 @@ enum cxl_config_state {
-  * @nr_targets: number of targets
-  * @cache_size: extended linear cache size if exists, otherwise zero.
-  *
-- * State transitions are protected by the cxl_region_rwsem
-+ * State transitions are protected by cxl_rwsem.region
-  */
- struct cxl_region_params {
- 	enum cxl_config_state state;
-@@ -912,15 +912,4 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
- #endif
- 
- u16 cxl_gpf_get_dvsec(struct device *dev);
--
--static inline struct rw_semaphore *rwsem_read_intr_acquire(struct rw_semaphore *rwsem)
--{
--	if (down_read_interruptible(rwsem))
--		return NULL;
--
--	return rwsem;
--}
--
--DEFINE_FREE(rwsem_read_release, struct rw_semaphore *, if (_T) up_read(_T))
--
- #endif /* __CXL_H__ */
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index c810deb88d13..cbafdc12e743 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -244,6 +244,7 @@ DEFINE_GUARD_COND(rwsem_read, _intr, down_read_interruptible(_T), _RET == 0)
- 
- DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_write(_T))
- DEFINE_GUARD_COND(rwsem_write, _try, down_write_trylock(_T))
-+DEFINE_GUARD_COND(rwsem_write, _kill, down_write_killable(_T), _RET == 0)
- 
- /*
-  * downgrade write lock to read lock
--- 
-2.49.0
-
+SGkgUHJhYmhha2FyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJp
+anUgRGFzDQo+IFNlbnQ6IDE4IEp1bmUgMjAyNSAxNDoyNg0KPiBTdWJqZWN0OiBSRTogW1BBVENI
+IHY2IDEvNF0gY2xrOiByZW5lc2FzOiByenYyaC1jcGc6IEFkZCBzdXBwb3J0IGZvciBEU0kgY2xv
+Y2tzDQo+IA0KPiBIaSBQcmFiaGFrYXIsDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+ID4gRnJvbTogZHJpLWRldmVsIDxkcmktZGV2ZWwtYm91bmNlc0BsaXN0cy5mcmVlZGVz
+a3RvcC5vcmc+IE9uIEJlaGFsZiBPZg0KPiA+IExhZCwgUHJhYmhha2FyDQo+ID4gU2VudDogMTYg
+SnVuZSAyMDI1IDExOjQ1DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzRdIGNsazogcmVu
+ZXNhczogcnp2MmgtY3BnOiBBZGQgc3VwcG9ydCBmb3INCj4gPiBEU0kgY2xvY2tzDQo+ID4NCj4g
+PiBIaSBCaWp1LA0KPiA+DQo+ID4gVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3Lg0KPiA+DQo+ID4g
+T24gRnJpLCBKdW4gMTMsIDIwMjUgYXQgNjo1N+KAr0FNIEJpanUgRGFzIDxiaWp1LmRhcy5qekBi
+cC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gSGkgUHJhYmhha2FyLA0KPiA+ID4N
+Cj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gRnJvbTogUHJhYmhh
+a2FyIDxwcmFiaGFrYXIuY3NlbmdnQGdtYWlsLmNvbT4NCj4gPiA+ID4gU2VudDogMzAgTWF5IDIw
+MjUgMTg6MTkNCj4gPiA+IC5jYXN0cm8uanpAcmVuZXNhcy5jb20+OyBQcmFiaGFrYXIgTWFoYWRl
+diBMYWQgPHByYWJoYWthci5tYWhhZGV2LQ0KPiA+ID4gPiBsYWQucmpAYnAucmVuZXNhcy5jb20+
+DQo+ID4gPiA+IFN1YmplY3Q6IFtQQVRDSCB2NiAxLzRdIGNsazogcmVuZXNhczogcnp2MmgtY3Bn
+OiBBZGQgc3VwcG9ydCBmb3INCj4gPiA+ID4gRFNJIGNsb2Nrcw0KPiA+ID4gPg0KPiA+ID4gPiBG
+cm9tOiBMYWQgUHJhYmhha2FyIDxwcmFiaGFrYXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNhcy5j
+b20+DQo+ID4gPiA+DQo+ID4gPiA+IEFkZCBzdXBwb3J0IGZvciBQTExEU0kgYW5kIFBMTERTSSBk
+aXZpZGVyIGNsb2Nrcy4NCj4gPiA+ID4NCj4gPiA+ID4gSW50cm9kdWNlIHRoZSBgcmVuZXNhcy1y
+enYyaC1kc2kuaGAgaGVhZGVyIHRvIGNlbnRyYWxpemUgYW5kIHNoYXJlDQo+ID4gPiA+IFBMTERT
+SS1yZWxhdGVkIGRhdGEgc3RydWN0dXJlcywgbGltaXRzLCBhbmQgYWxnb3JpdGhtcyBiZXR3ZWVu
+IHRoZSBSWi9WMkggQ1BHIGFuZCBEU0kgZHJpdmVycy4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIERT
+SSBQTEwgaXMgZnVuY3Rpb25hbGx5IHNpbWlsYXIgdG8gdGhlIENQRydzIFBMTERTSSwgYnV0IGhh
+cw0KPiA+ID4gPiBzbGlnaHRseSBkaWZmZXJlbnQgcGFyYW1ldGVyIGxpbWl0cyBhbmQgb21pdHMg
+dGhlIHByb2dyYW1tYWJsZQ0KPiA+ID4gPiBkaXZpZGVyIHByZXNlbnQgaW4gQ1BHLiBUbyBlbnN1
+cmUgcHJlY2lzZSBmcmVxdWVuY3kNCj4gPiA+ID4gY2FsY3VsYXRpb25zLWVzcGVjaWFsbHkgZm9y
+IG1pbGxpSHotbGV2ZWwgYWNjdXJhY3kgbmVlZGVkIGJ5IHRoZQ0KPiA+ID4gPiBEU0kgZHJpdmVy
+LXRoZSBzaGFyZWQgYWxnb3JpdGhtDQo+ID4gYWxsb3dzIGJvdGggZHJpdmVycyB0byBjb21wdXRl
+IFBMTCBwYXJhbWV0ZXJzIGNvbnNpc3RlbnRseSB1c2luZyB0aGUgc2FtZSBsb2dpYyBhbmQgaW5w
+dXQgY2xvY2suDQo+ID4gPiA+DQo+ID4gPiA+IENvLWRldmVsb3BlZC1ieTogRmFicml6aW8gQ2Fz
+dHJvIDxmYWJyaXppby5jYXN0cm8uanpAcmVuZXNhcy5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvLmp6QHJlbmVzYXMuY29tPg0KPiA+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyDQo+ID4gPiA+IDxwcmFiaGFrYXIubWFo
+YWRldi1sYWQucmpAYnAucmVuZXNhcy5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiB2NS0+djY6
+DQo+ID4gPiA+IC0gUmVuYW1lZCBDUEdfUExMX1NUQllfU1NDR0VOX1dFTiB0byBDUEdfUExMX1NU
+QllfU1NDX0VOX1dFTg0KPiA+ID4gPiAtIFVwZGF0ZWQgQ1BHX1BMTF9DTEsxX0RJVl9LLCBDUEdf
+UExMX0NMSzFfRElWX00sIGFuZA0KPiA+ID4gPiAgIENQR19QTExfQ0xLMV9ESVZfUCBtYWNyb3Mg
+dG8gdXNlIEdFTk1BU0sNCj4gPiA+ID4gLSBVcGRhdGVkIHJlcS0+cmF0ZSBpbiByenYyaF9jcGdf
+cGxsZHNpX2Rpdl9kZXRlcm1pbmVfcmF0ZSgpDQo+ID4gPiA+IC0gRHJvcHBlZCB0aGUgY2FzdCBp
+biByenYyaF9jcGdfcGxsZHNpX2Rpdl9zZXRfcmF0ZSgpDQo+ID4gPiA+IC0gRHJvcHBlZCByenYy
+aF9jcGdfcGxsZHNpX3JvdW5kX3JhdGUoKSBhbmQgaW1wbGVtZW50ZWQNCj4gPiA+ID4gICByenYy
+aF9jcGdfcGxsZHNpX2RldGVybWluZV9yYXRlKCkgaW5zdGVhZA0KPiA+ID4gPiAtIE1hZGUgdXNl
+IG9mIEZJRUxEX1BSRVAoKQ0KPiA+ID4gPiAtIE1vdmVkIENQR19DU0RJVjEgbWFjcm8gaW4gcGF0
+Y2ggMi80DQo+ID4gPiA+IC0gRHJvcHBlZCB0d29fcG93X3MgaW4gcnp2MmhfZHNpX2dldF9wbGxf
+cGFyYW1ldGVyc192YWx1ZXMoKQ0KPiA+ID4gPiAtIFVzZWQgbXVsX3UzMl91MzIoKSB3aGlsZSBj
+YWxjdWxhdGluZyBvdXRwdXRfbSBhbmQgb3V0cHV0X2tfcmFuZ2UNCj4gPiA+ID4gLSBVc2VkIGRp
+dl9zNjQoKSBpbnN0ZWFkIG9mIGRpdjY0X3M2NCgpIHdoaWxlIGNhbGN1bGF0aW5nDQo+ID4gPiA+
+ICAgcGxsX2sNCj4gPiA+ID4gLSBVc2VkIG11bF91MzJfdTMyKCkgd2hpbGUgY2FsY3VsYXRpbmcg
+ZnZjbyBhbmQgZnZjbyBjaGVja3MNCj4gPiA+ID4gLSBSb3VuZGVkIHRoZSBmaW5hbCBvdXRwdXQg
+dXNpbmcgRElWX1U2NF9ST1VORF9DTE9TRVNUKCkNCj4gPiA+ID4NCj4gPiA+ID4gdjQtPnY1Og0K
+PiA+ID4gPiAtIE5vIGNoYW5nZXMNCj4gPiA+ID4NCj4gPiA+ID4gdjMtPnY0Og0KPiA+ID4gPiAt
+IENvcnJlY3RlZCBwYXJhbWV0ZXIgbmFtZSBpbiByenYyaF9kc2lfZ2V0X3BsbF9wYXJhbWV0ZXJz
+X3ZhbHVlcygpDQo+ID4gPiA+ICAgZGVzY3JpcHRpb24gZnJlcV9taWxsaWh6DQo+ID4gPiA+DQo+
+ID4gPiA+IHYyLT52MzoNCj4gPiA+ID4gLSBVcGRhdGUgdGhlIGNvbW1pdCBtZXNzYWdlIHRvIGNs
+YXJpZnkgdGhlIHB1cnBvc2Ugb2YgYHJlbmVzYXMtcnp2MmgtZHNpLmhgDQo+ID4gPiA+ICAgaGVh
+ZGVyDQo+ID4gPiA+IC0gVXNlZCBtdWxfdTMyX3UzMigpIGluIHJ6djJoX2NwZ19wbGxkc2lfZGl2
+X2RldGVybWluZV9yYXRlKCkNCj4gPiA+ID4gLSBSZXBsYWNlZCAqX21oeiB0byAqX21pbGxpaHog
+Zm9yIGNsYXJpdHkNCj4gPiA+ID4gLSBVcGRhdGVkIHU2NC0+dTMyIGZvciBmdmNvIGxpbWl0cw0K
+PiA+ID4gPiAtIEluaXRpYWxpemVkIHRoZSBtZW1iZXJzIGluIGRlY2xhcmF0aW9uIG9yZGVyIGZv
+cg0KPiA+ID4gPiAgIFJaVjJIX0NQR19QTExfRFNJX0xJTUlUUygpIG1hY3JvDQo+ID4gPiA+IC0g
+VXNlZCBjbGtfZGl2X21hc2soKSBpbiByenYyaF9jcGdfcGxsZHNpX2Rpdl9yZWNhbGNfcmF0ZSgp
+DQo+ID4gPiA+IC0gUmVwbGFjZWQgYHVuc2lnbmVkIGxvbmcgbG9uZ2Agd2l0aCB1NjQNCj4gPiA+
+ID4gLSBEcm9wcGVkIHJ6djJoX2NwZ19wbGxkc2lfY2xrX3JlY2FsY19yYXRlKCkgYW5kIHJldXNl
+ZA0KPiA+ID4gPiAgIHJ6djJoX2NwZ19wbGxfY2xrX3JlY2FsY19yYXRlKCkgaW5zdGVhZA0KPiA+
+ID4gPiAtIEluIHJ6djJoX2NwZ19wbGxkc2lfZGl2X3NldF9yYXRlKCkgZm9sbG93ZWQgdGhlIHNh
+bWUgc3R5bGUNCj4gPiA+ID4gICBvZiBSTVctb3BlcmF0aW9uIGFzIGRvbmUgaW4gdGhlIG90aGVy
+IGZ1bmN0aW9ucw0KPiA+ID4gPiAtIFJlbmFtZWQgcnp2MmhfY3BnX3BsbGRzaV9zZXRfcmF0ZSgp
+IHRvIHJ6djJoX2NwZ19wbGxfc2V0X3JhdGUoKQ0KPiA+ID4gPiAtIERyb3BwZWQgcnp2MmhfY3Bn
+X3BsbGRzaV9jbGtfcmVnaXN0ZXIoKSBhbmQgcmV1c2VkDQo+ID4gPiA+ICAgcnp2MmhfY3BnX3Bs
+bF9jbGtfcmVnaXN0ZXIoKSBpbnN0ZWFkDQo+ID4gPiA+IC0gQWRkZWQgYSBnYXVyZCBpbiByZW5l
+c2FzLXJ6djJoLWRzaS5oIGhlYWRlcg0KPiA+ID4gPg0KPiA+ID4gPiB2MS0+djI6DQo+ID4gPiA+
+IC0gTm8gY2hhbmdlcw0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMvY2xrL3JlbmVzYXMv
+cnp2MmgtY3BnLmMgICAgICAgfCAyNzggKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4gPiA+
+ID4gIGRyaXZlcnMvY2xrL3JlbmVzYXMvcnp2MmgtY3BnLmggICAgICAgfCAgMTMgKysNCj4gPiA+
+ID4gIGluY2x1ZGUvbGludXgvY2xrL3JlbmVzYXMtcnp2MmgtZHNpLmggfCAyMTAgKysrKysrKysr
+KysrKysrKysrKw0KPiA+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0OTIgaW5zZXJ0aW9ucygrKSwg
+OSBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gPiA+IDEwMDY0NCBpbmNsdWRlL2xpbnV4
+L2Nsay9yZW5lc2FzLSByenYyaC1kc2kuaA0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jbGsvcmVuZXNhcy9yenYyaC1jcGcuYw0KPiA+ID4gPiBiL2RyaXZlcnMvY2xrL3Jl
+bmVzYXMvcnp2MmgtY3BnLmMgaW5kZXgNCj4gPiA+ID4gNzYxZGEzYmY3N2NlLi5kNTkwZjlmNDcz
+NzEgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvY2xrL3JlbmVzYXMvcnp2MmgtY3BnLmMN
+Cj4gPiA+ID4gKysrIGIvZHJpdmVycy9jbGsvcmVuZXNhcy9yenYyaC1jcGcuYw0KPiA+ID4gPiBA
+QCAtMTQsOSArMTQsMTMgQEANCj4gPiA+ID4gICNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0K
+PiA+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiA+ID4gPiAgI2luY2x1ZGUgPGxpbnV4
+L2Nsay1wcm92aWRlci5oPg0KPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L2Nsay9yZW5lc2FzLXJ6
+djJoLWRzaS5oPg0KPiA+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gPiA+ICAj
+aW5jbHVkZSA8bGludXgvaW5pdC5oPg0KPiA+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5o
+Pg0KPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L21hdGguaD4NCj4gPiA+DQo+ID4gPg0KPiA+ID4N
+Cj4gPiA+ID4gKyAgICAgcmVxLT5yYXRlID0NCj4gPiA+ID4gKyBESVZfUk9VTkRfQ0xPU0VTVF9V
+TEwoZHNpX2RpdmlkZXJzLT5mcmVxX21pbGxpaHosDQo+ID4gPiA+ICsgTUlMTEkpOw0KPiA+ID4g
+PiArDQo+ID4gPiA+ICsgICAgIHJldHVybiAwOw0KPiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+
+ID4gPiArc3RhdGljIGludCByenYyaF9jcGdfcGxsZHNpX2Rpdl9zZXRfcmF0ZShzdHJ1Y3QgY2xr
+X2h3ICpodywNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+dW5zaWduZWQgbG9uZyByYXRlLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlKSB7DQo+ID4gPiA+ICsgICAgIHN0
+cnVjdCByenYyaF9wbGxkc2lfZGl2X2NsayAqZHNpX2RpdiA9IHRvX3BsbGRzaV9kaXZfY2xrKGh3
+KTsNCj4gPiA+ID4gKyAgICAgc3RydWN0IHJ6djJoX2NwZ19wcml2ICpwcml2ID0gZHNpX2Rpdi0+
+cHJpdjsNCj4gPiA+ID4gKyAgICAgc3RydWN0IHJ6djJoX3BsbGRzaV9wYXJhbWV0ZXJzICpkc2lf
+ZGl2aWRlcnMgPSAmcHJpdi0+cGxsZHNpX2Rpdl9wYXJhbWV0ZXJzOw0KPiA+ID4gPiArICAgICBz
+dHJ1Y3QgZGRpdiBkZGl2ID0gZHNpX2Rpdi0+ZGRpdjsNCj4gPiA+ID4gKyAgICAgY29uc3Qgc3Ry
+dWN0IGNsa19kaXZfdGFibGUgKmNsa3Q7DQo+ID4gPiA+ICsgICAgIGJvb2wgZGl2X2ZvdW5kID0g
+ZmFsc2U7DQo+ID4gPiA+ICsgICAgIHUzMiB2YWwsIHNoaWZ0LCBkaXY7DQo+ID4gPiA+ICsNCj4g
+PiA+ID4gKyAgICAgZGl2ID0gZHNpX2RpdmlkZXJzLT5jc2RpdjsNCj4gPiA+ID4gKyAgICAgZm9y
+IChjbGt0ID0gZHNpX2Rpdi0+ZHRhYmxlOyBjbGt0LT5kaXY7IGNsa3QrKykgew0KPiA+ID4gPiAr
+ICAgICAgICAgICAgIGlmIChjbGt0LT5kaXYgPT0gZGl2KSB7DQo+ID4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICBkaXZfZm91bmQgPSB0cnVlOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICAgYnJlYWs7DQo+ID4gPiA+ICsgICAgICAgICAgICAgfQ0KPiA+ID4gPiArICAgICB9DQo+ID4g
+PiA+ICsNCj4gPiA+ID4gKyAgICAgaWYgKCFkaXZfZm91bmQpDQo+ID4gPiA+ICsgICAgICAgICAg
+ICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gPg0KPiA+ID4gVGhpcyBjaGVjayBjYW4gYmUgZG9uZSBp
+biBkZXRlcm1pbmUgcmF0ZSBhbmQgY2FjaGUgdGhlIGRpdmlkZXI/Pw0KPiA+ID4NCj4gPiBPaywg
+SSdsbCBkcm9wIHRoaXMgY2hlY2sgYXMgdGhlIGRpdmlkZXIgaXMgYWxyZWFkeSBjYWNoZWQuIFRo
+ZSBmb3INCj4gPiBsb29wIGFib3ZlIGlzIHRvIGRldGVybWluZSB0aGUgdmFsIHdoaWNoIGlzIHVz
+ZWQgYmVsb3cgdG8gcHJvZ3JhbSB0aGUgcmVnaXN0ZXJzLg0KPiANCj4gSWYgeW91IGFyZSBjYWNo
+aW5nIGFjdHVhbCBkaXZpZGVyIHZhbHVlLCB0aGVuIHRoZSBjaGVjayBpcyBub3QgcmVxdWlyZWQg
+aGVyZS4NCj4gT3RoZXJ3aXNlIHRoZSBhYm92ZSBjb2RlIGlzIGZpbmUuDQo+IA0KPiBBc3N1bWUg
+dGhlIGNzZGl2IHlvdSBmb3VuZCwgaGF2ZSBubyBjb3JyZXNwb25kaW5nIG1hdGNoIGluIHRoZSB0
+YWJsZS4NCg0KDQoxKSBCeSBsb29raW5nIGF0IFJaL0czRSwgY2FuIHdlIG1ha2UgdGhpcyBjb2Rl
+IG1vcmUgc2NhbGFibGU/DQoNClJaL0czRSBoYXMgMiBQTEwtRFNJJ3MNClBMTC1EU0kxIHN1cHBv
+cnRzIERVQUwgTFZEUywgU2luZ2xlIExWRFMgYW5kIERTSQ0KUExMLURTSTIgc3VwcG9ydHMgc2lu
+Z2xlIExWRFMsICBEUEkgYW5kIERTSQ0KDQpJbiB0b3RhbCB0aGVyZSB3aWxsIGJlIDQgbGltaXQg
+dGFibGVzIChEU0ksIHNpbmdsZSBMVkRTLCBEdWFsIExWRFMgYW5kIERQSSkNCg0KQmFzZWQgb24g
+dGhlIGRpc3BsYXkgb3V0cHV0LCBlYWNoIFBMTCBuZWVkcyB0byBwaWNrIHRoZSBhcHByb3ByaWF0
+ZSBsaW1pdCB0YWJsZQ0KdG8gY29tcHV0ZSBQTEwgcGFyYW1ldGVycy4NCg0KMikgQ2FuIHdlIGRy
+b3AgRFNJIGRpdmlkZXIgbGltaXRzIGZyb20gdGhlIGxpbWl0IHRhYmxlIGFuZCB1c2UgdGhlIHZh
+bHVlcyBmcm9tIGRzaSBkaXZpZGVyIHRhYmxlDQogICBpdHNlbGYgd2hpY2ggaXMgcGFzc2VkIGlu
+IERFRl9QTExEU0lfRElWPw0KDQpOb3RlOg0KDQpMVkRTIGRvZXMgbm90IHVzZSBEU0kgZGl2aWRl
+cnMgYXMgaXQgaXMgY29ubmVjdGVkIHRvIGEgTXV4IGFuZCBhbHdheXMgaGFzIGZpeGVkIERpdmlk
+ZXIgNy4NCg0KRFBJIHVzZXMgdGhlIERTSSBkaXZpZGVyIHdpdGhvdXQgYW55IGNvbnN0cmFpbnRz
+IGxpa2UgRFNJDQoNClZpZGVvIGNsb2NrIGFuZCBEU0kgSFMgQnl0ZSBjbG9jayBtdXN0IGZvbGxv
+dyB0aGUgcmVsYXRpb25zaGlwLg0KVmlkZW8gY2xvY2sgRnJlcXVlbmN5IFtIel0gw5cgVmlkZW8g
+UGl4ZWwgQml0IERlcHRoIFtiaXRdDQo8PSBEU0kgSFMgQnl0ZSBjbG9jayBGcmVxdWVuY3kgW0h6
+XSDDlyA4IFtiaXRdIMOXIE51bWJlciBvZiBEU0kgSFMgRGF0YSBMYW5lDQoNCg0KQ2hlZXJzLA0K
+QmlqdQ0KDQoNCg0K
