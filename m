@@ -1,178 +1,201 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023117.outbound.protection.outlook.com [40.107.44.117])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86282242D81;
-	Thu, 19 Jun 2025 06:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750316273; cv=fail; b=p51x94NrH0dQgz7S9QZqC4sVeGPV7FTypVw54edSyhLA+1FeghFsDy3fN/+MVazASITZF0YMemkeoWqj+QG+v34qKBQVxsSm3jBD37+1hHwjqmPoFizqOc6rNLGO1JSo53nA7sbIL1YmciPuOMddaavjLvJwlJrxz4+07wW8cos=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750316273; c=relaxed/simple;
-	bh=y5bpmBGEIFPsEHuQJNQNj83vwroiIGjzis1YIYsIhxk=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=I8K3KF2kV/E7BDNBhAJ2jkBpp4h8RcS9/webAPpZ7PvVWw6NV1JG/dKE7yp3SYWg0gkREpXl7BHhZEljci7MHt/U8uSIPYGUYYrIHAWRQbUlwn/y5x+sFDhICYrvpQXvg/MZqFYZLZ+7d7aIEypqZpO7TGP7cTcP88DQX31YsrQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=AxmNvKlZ; arc=fail smtp.client-ip=40.107.44.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA3321B8F5;
+	Thu, 19 Jun 2025 06:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750316308; cv=none; b=ov+pFTuP45faX14lsFD3TXOH2+fi5HFQH3bY1jStFFPjOOY2EdVw584qiA110QH1RQzJFhdVTtLPg3RLgm17BwgIzvj27K3kGfd1pkKqjNTP5dke26X54KqQy+ReVqa3sIWooG18qiuJplox33WepEYYkx7SZs5CV/K9J9dYN2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750316308; c=relaxed/simple;
+	bh=tL14BD8Yh5kWnpy+bfzqyRdCOXWQ8nMEwYBpreKExhI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=bEqc+XBo1SRL1tQeEFnYxkB32W6S1r2Ty3s+jGrho0i4goVBGdhpF8jUHCLLOnY/ZNoApIVKZA/y99eVdZvHPKx7VQ8xim6gs176uFEQhjZRN7L2TgcrDzBjoagsOdUc+xtKh5IsnUwVa/5gBjqH1bBJvG1ysCIsnwx9lmBkW54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=alG2FtT3; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="AxmNvKlZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bd4A/Dem8+rB+GZlLc5PgRa2VrjpmRKRyHGzqlmOnbX1uXZZZHL0UITwxqANLepe1wnpAmu190xxWJoLOa4vz9bVjWzUSr/w0OX9ErGWpe38rRiEPjEMiYQNcgI6sl6S+w9g+RozIf6srhuJnDYuzIlWe1kcru9jpERtwacNsBAGVp+Tn8ZdFjMS58IIeyjuPxpFGFheTujyCtLSZRR4gXLYp98lCxBBqFJ5A7bpMktMp8l6WTZ6nsr9IlpXO2BYQ3ne/C5zItD7I4TFY03rKtYpormxos4Kne3tu2LGMAVNS6EPGgVEcS0EdxVTf54UyV4SHr8kkL3EqJmmiOpysA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y5bpmBGEIFPsEHuQJNQNj83vwroiIGjzis1YIYsIhxk=;
- b=h8cvLmF4w71gJPBf8SLDI3pZUDxae3n1e2iavI1UUFyft2BI6N1ELpfswZNWpadQW9UgB+5P/qy4zBmiQPD2v/YAseeQ8H80VDgAAL/06TkZkSFprtRaBJxxPdgO4Jzjr9WH6QIMqFtkSbPEF2r4ZTUtXLqI6Wrj04vxJusHZM6Lal8KzR5G4Ac9PEa8eppNNiAxr8goKN8HUPsesxRL6dMnla05KdS5Ql14arpePYKRs5uYYp6wPqBlUnh/OUQDW87U8D63Mk9CVJm5BuE+wKE11Ds2fX8hN3ivZOqoeAzLSHa1W3y5jxSPpPWMSSIegfiuLkMMuyXkWNKQzfZcRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y5bpmBGEIFPsEHuQJNQNj83vwroiIGjzis1YIYsIhxk=;
- b=AxmNvKlZn3GUlKeS4e/pPom9sbDyrHaBAc82W78wyueiZI0F1Va3v2qnGJKtXQrknEshVOu9fYUjpiNXZ/HWV0WEyotgPu3p47f0ZZRW/XaXicuhjQjT+hn/LW99TQA6qpJkC+JDMho9qyutKChDzMoRxBdI3KXw1lGhf2dlDMgUxvVVGGAgtuaKMIe5rlzxIy3JZlJa0PnW/dwUy7nnLoonjbEyO9vb3lAZftsARirkeGs5YVLCWsIYuln8Jjh1j4KSOkUNboAcuVjDmzmbJ/X0siiHaD0orsXaO4uU2c9omCELpjhoGgB/AOumso2ak5gfGGRUdQ2+V7NeRZ/cHw==
-Received: from TYSPR06MB7068.apcprd06.prod.outlook.com (2603:1096:400:466::8)
- by SEZPR06MB6303.apcprd06.prod.outlook.com (2603:1096:101:129::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Thu, 19 Jun
- 2025 06:57:46 +0000
-Received: from TYSPR06MB7068.apcprd06.prod.outlook.com
- ([fe80::e1c7:8707:7d43:bbed]) by TYSPR06MB7068.apcprd06.prod.outlook.com
- ([fe80::e1c7:8707:7d43:bbed%4]) with mapi id 15.20.8835.026; Thu, 19 Jun 2025
- 06:57:46 +0000
-From: Cool Lee <cool_lee@aspeedtech.com>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, "adrian.hunter@intel.com"
-	<adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-mmc@vger.kernel.org"
-	<linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject: RE: [PATCH 3/8] mmc: sdhci-of-aspeed: Patch HOST_CONTROL2 register
- missing after top reset
-Thread-Topic: [PATCH 3/8] mmc: sdhci-of-aspeed: Patch HOST_CONTROL2 register
- missing after top reset
-Thread-Index: AQHb3/lJBPtCuugbIEiiqOWbxb38iLQKDthg
-Date: Thu, 19 Jun 2025 06:57:45 +0000
-Message-ID:
- <TYSPR06MB7068B3BC5D9D6FA9154A3BB6957DA@TYSPR06MB7068.apcprd06.prod.outlook.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-	 <20250615035803.3752235-4-cool_lee@aspeedtech.com>
- <100bed083e9a98432888c0b1db8cbc445f96cd64.camel@codeconstruct.com.au>
-In-Reply-To:
- <100bed083e9a98432888c0b1db8cbc445f96cd64.camel@codeconstruct.com.au>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYSPR06MB7068:EE_|SEZPR06MB6303:EE_
-x-ms-office365-filtering-correlation-id: 0247710a-cf90-4621-3f11-08ddaefe9884
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?eGc1aE9ST0FHNTVEM2toNHNuRVRHQWdsck90LzA1dityU1JvVEJkdGU1RzJY?=
- =?utf-8?B?ckxZbXFYd3QyTzlSWVRrMW9nRWJpUmIxMno1dFdrSFRRNWRRRkVqMWg4d2ZD?=
- =?utf-8?B?eEF0VDRQZTRqYnB6WUd5emtYbTBxOVh1MCtJV0NmeExZd1BoU2srd1lDNjNL?=
- =?utf-8?B?QXE1UHd6TVpDcklvcGJnUzdLTVR3Y0RmUThIQnZkVWJ2c1l5ZTVNS3BjYjBx?=
- =?utf-8?B?bUdQODZpQUpaSE5UUWdKVUNsYmpzQ2luQmxJRkh0SysyZi9ybVRqdjg2MTR6?=
- =?utf-8?B?WnlxQjBBMVBlL3VaWjN4M01iL2ZZVXdrZ3VzZjkvVVdBc2kzZHJMVWVWY2d3?=
- =?utf-8?B?c1BpemloRmhJZDUxaE1XeGUrdXhUQ0t2M29sVXppMXdQdTJ0QTlWTS9xS1N6?=
- =?utf-8?B?cmlCbEFBQWJhRnZ1cnI3MXpRdkNncnMydVRkS3U0bjFQa1IvYkJzT1BwTXFs?=
- =?utf-8?B?WDlCbXpJS2dXa3NJR0dTcTNvWmdqZ0JQdllXT25mQk1SaDVoNkQ1TTNXNUVC?=
- =?utf-8?B?c2xmZGE4YjdxaWg4RlQ4TlBNZkFTYll6bi9BL2U5V0FkQnluenRsYjFOam5D?=
- =?utf-8?B?VzBkZUlJRUp6bGdKWXRURlN5Z2RFUExiNEpmVHdLMVV4alo1MklRd08zNHp3?=
- =?utf-8?B?VzVrVDlEM2hRTEJVZUR5RTZLQy83UkFuc2p5UDBkalo0WU9TV0h6anh5MVFj?=
- =?utf-8?B?cUk1Z21WalBzYzNuQjdvZXp1QS81aEdVU01mVTJrUlZhMDh3NVpwTzBoNGVy?=
- =?utf-8?B?WWV6dUZ2ZTR2dm01aThCOTJwWllDQnRzMlZEZHUzRUp1VW5oeVA0UlVqazhl?=
- =?utf-8?B?R3U5ZXBXK3oyUlRMcWxETXBEYUIxZTdVa0xjdlNmeVhmZVVmNVhTbnZ5R09L?=
- =?utf-8?B?ZUIrRjNudzhRcHRxaUJjU1lid3dYam9IKzNyeXVodUZUa0RHbDJFbFpuMVhI?=
- =?utf-8?B?THdFM2JPRXJtaUkzVnI5K2RPRW5TV3Q0dkpGbjBEZ0RpRHM3SXpVb00xSWts?=
- =?utf-8?B?bnp3U3ZROHBTRENwVFJzdy9nTzF6bSt3YVNlVXNvV1JXM3k0eE9VeXlwS1hZ?=
- =?utf-8?B?SmVYQ0IvOGhZTC8xQWJERGJmSzFrZXlhaHIrR3liT0k2WVNCcW9Ed3ZjenBI?=
- =?utf-8?B?cGhydDBuMFBRMlEyUnhSVDJxUCtYNG9KZGxNSFVCTUc4K2RETlc1VjZvS2J0?=
- =?utf-8?B?YUF6QWpiQUZMUHovbWNCSGJXWEI4UHkveHZwZUt6MmZrQmNGUDYxRmNuZTBv?=
- =?utf-8?B?R0xOZmNUdE9Ub1JROHRxNjduVVJCQWR1eW1PbVhCaUdFazVzdFBDQW5XamZB?=
- =?utf-8?B?bDZ0NHdhaDZBbFhSUUZMZk84WHJFdHNTKzZ6N3kyQ2I1K3VpNTdXZXNhR0NK?=
- =?utf-8?B?VmxtemhzaW5oMGtHbEVXdEwrSFE4cUJwSXgwYXNMWVZJak5WcXNMZitPYnp0?=
- =?utf-8?B?VGlsU3lzdnZSWmFsalI5N01uZDFmeGNXV3JkTjZjUTNTN3lBenpKY01IZ1pl?=
- =?utf-8?B?SDc2MmxPWllaaFZxRThrOWhqZnJnNXVaTEhtNllqRktKVmR4UjZTWWIzSFhH?=
- =?utf-8?B?b0l5YWNGK0lNc0haeUQ1SHFwckJFa0RYWVU5TTd4ZXAwZmFvTEl6c1l6ZHZT?=
- =?utf-8?B?UkhENkdqZU1GTkRUN0ZkT2RtTVJSY0h2Y2ZFYlE0SDBsSmFqWXF3dG1oZnRk?=
- =?utf-8?B?dmpEYzRpQlR1Z2R4K1hVS2cyR051NWNDSzVoMndVOEptY3pwQTR2elcrVGVq?=
- =?utf-8?B?Tk1DMDA1OVUxaFNseU0wdDlPT3pkUXR1OHRWMWVKSWZKanN5RUc3YWs0VzRp?=
- =?utf-8?B?OWpYaVBia0JuRlJ0WXpWd1JNLzVOK0ovajl5ZWFkVEhMd280ZVgwWVYyazVi?=
- =?utf-8?B?RmRTSURySDFrNVlFMzk1ZDM2Tm9raFFrd2xnUXRJVUpKYnl5UHlLSmZpT25Q?=
- =?utf-8?B?SHlYNkZTK3M4eEVWYlJURklZV2ZFcStEaVdFZ3ZwWE1rdVRyRHhhazBxc2Vm?=
- =?utf-8?Q?jEgpp5T5GxGUxzWts2y/N257OSXqRE=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR06MB7068.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dUtIMWlxOUVranhRSGI3aXNGMmJZc1Vtdk5oeThnRmw4VEY0bE4wQXF2SEhF?=
- =?utf-8?B?bnRZT3htditrdlByakplb0pOYjBZRmhGM1BmbFlTZXA5Z2daM0FjcER5REs0?=
- =?utf-8?B?azNYcFB4MWVSNk5MVjRPK1Q3STdXdGlPTXlUR2d0NzlUblcvbk1qUGN6L3VL?=
- =?utf-8?B?TmlJZGdlZnBkeUJXSzFjWUd0RlZXZlhSbC9ENnJaQmoweC9hcU9OMG9qdmwr?=
- =?utf-8?B?b3U5Rk4yUnVnQUxaZ1VSVi8zem9vazNpay9wV2djaVA0cjRncEo2NlNDT2ZD?=
- =?utf-8?B?TGtMWVBhZFpoTElXRlhrblhTUHRrZlkrbHMrSHlHajF4VVl5YTRtcm50NHZz?=
- =?utf-8?B?U3JweVIxMjJvOWhvS1BTOHM3QWRrQlg1TElWTE5aYloxcEh5aldiVytwVjVN?=
- =?utf-8?B?TjIzQThrQUxpb1UrbENBUjBTRzlpeFV0VklMYm5lTEd3RWZJSEdFaDBZMHBP?=
- =?utf-8?B?UkxubnVMYU8rQ1lQTk4ybm5LOGZ5ZlBjSFc5NUVtelBCOVYzY2owM012M1Jh?=
- =?utf-8?B?cTZJVXp3NVNwcUtrN1BwM2JaZThYS2ovbSswUC8yUHEwMnRyZmsrMzJQYWY0?=
- =?utf-8?B?MFk0OHZUR0srU1NMWFNCdkhUNThWSGNEamZTT1hDdUFDRjhmVE9GcElkakdr?=
- =?utf-8?B?TDFqTS9QY1NsQmcxZFhTdnNTYUNxTGtad3lzSVVrdCt5ZStkbFYwV3RZQ0du?=
- =?utf-8?B?QmRrdDFHSisySkZ1NldmcDhQeVZCSkdMOUczbXZHV2ZWZkY3Rkd4MklCMDdn?=
- =?utf-8?B?VHRCK0I1cWZyWloyK1pMSlUxcHhLVENnOG1zSHgvbmFBWTlLdm50dWhmUGxo?=
- =?utf-8?B?amEvQXJpeEZuekxTZGcyd2l5bjdVbnlaUXN4VGorTkFsOFh6SkYrbmRGb1VL?=
- =?utf-8?B?VHJDbFIwWWFGaklNRDNjb0JaQ3RyM2ZRaWlFT3R4cldaZVl4ZFFyY1ZZMmZT?=
- =?utf-8?B?UXdlaWRoOEFyNXRiazB1UWJKT1kvdHpSRm9RS3JwSFlZcG9DRVI3UGFnQ3Vh?=
- =?utf-8?B?TDZHb01WN1F6d01zQXBoRlJub2dyaldPVStxQy9keXc5SHZvRjl1cEtETFlZ?=
- =?utf-8?B?YjQ3SVRNdW0wYWxSaHNnVHk3VHRXbEVuKzB3L1J3b3VYcHorK052QWt3bUZQ?=
- =?utf-8?B?ZjRXenFVemNrckk4cG5nbDQ4QXg3dTI2Ym5oYTVKU2tocW1SZ1h5MDFxWjlH?=
- =?utf-8?B?clF0dzJGdUNkSnpLUS9ObzZNWkFvcW5nRno5ZG84TTRlUmI0SGYwUDg3VjNU?=
- =?utf-8?B?V0F4YlMxYnRqakIwb2ZKbjdpWFlGaW5XYUxEVC84ZkZXR3RzQTZZM1lTNHgw?=
- =?utf-8?B?bXN4L05DSjBuV044aGQ0TCs3WlRiM2FuMkVIamFDMXFRWVJwZjZzSWRiL2R0?=
- =?utf-8?B?QmlyQ2NSTDJza2FJOVBsYXJNK2RpVFBoSEZIeWZkeFFOZ1AyQUFYZU1La3hQ?=
- =?utf-8?B?dU1WUStIQTcrbWVOYkZkejdmbm80MzNaR21VM016V05lK2JxZEpwMmZ3N2l2?=
- =?utf-8?B?dXA4MWZNanFZVHNKeTlNUld2M0RJYjR5bVI5eHRpV0hkcWRZZURJOU9STy9U?=
- =?utf-8?B?bDZmelQydGU1anphbTUzeGFhS21Ja05ZdWFveE5pSEJ6OXdacmNNY1NoUXRm?=
- =?utf-8?B?ZVlyWHJ1TGNjN1d4U2lDRWduN3ovb3NlMDFIQmEvZ1ZMZ2Y3eDNaVlNoVjMy?=
- =?utf-8?B?RlE0aERWMU8xS3U2VWtUSVRWeE5xaENOaFM4QWJWN0ZYamlrVGphT2h6U25a?=
- =?utf-8?B?cjhwQ3VwLzRyb1JvWTVqK28zd2x2R2lqemRNbUhLWFFxMGVoTGdlSjBKb3lp?=
- =?utf-8?B?RTgzOU0xWFk0TkxUZGJydzNhSmJ1UHFmWkV4aEdYdll4UXh0WFlTczV1cFll?=
- =?utf-8?B?aWd6bS9qaWtiQ2U0VE9NOUFYbHdiYURBUDVISHM1a2VGdS9Ha2RsVlpQckRS?=
- =?utf-8?B?MVlLSzVQbTRRNU94ZEovMkxLc2FGQVpsRVFIQWJQR0Ixc2JxYkx4VTB4NkU0?=
- =?utf-8?B?ZnFJNXpZbWtrZ1FTWEpNOVdjbzU3cFM0aUZtdXU4WnVkd2pWUTVycm43bUdD?=
- =?utf-8?B?dVU2QnJEc2NlSGpiS0oxcU5KWXR3dCtza04xUmhubVlHMjZHUWV2dllKZkE5?=
- =?utf-8?Q?8EvZMHDvCOB6i6dDzF87covZC?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="alG2FtT3"
+Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
+	by mxout2.routing.net (Postfix) with ESMTP id 50A125FB6C;
+	Thu, 19 Jun 2025 06:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1750316302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=njQ31qrrY9HaE80KOkYp3xG43496qOQx+zhSn6xjDeA=;
+	b=alG2FtT3L898ztBmhlM2pSNVcjIkFUk7/1xSwM2dgG9YK2I3a0t48c4zf1DP18CV4lZJhI
+	cqhxtGUORlrTEY7zuo0CEIIN+s8RdFddsgQkMegRs9RelFqdh9G11AtkR7FfHwhbCUqP+M
+	xZWy4Bx1lY8WMMg4m782Pb82ISFh3ck=
+Received: from [127.0.0.1] (fttx-pool-80.245.76.73.bambit.de [80.245.76.73])
+	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 72C3D808E4;
+	Thu, 19 Jun 2025 06:58:20 +0000 (UTC)
+Date: Thu, 19 Jun 2025 08:58:20 +0200
+From: Frank Wunderlich <linux@fw-web.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>
+CC: Frank Wunderlich <frank-w@public-files.de>,
+ Jia-Wei Chang <jia-wei.chang@mediatek.com>,
+ Johnson Wang <johnson.wang@mediatek.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 00/13] further mt7988 devicetree work
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9cdf0624-f9bb-4b11-973e-9480fd655136@collabora.com>
+References: <20250616095828.160900-1-linux@fw-web.de> <9cdf0624-f9bb-4b11-973e-9480fd655136@collabora.com>
+Message-ID: <40C42E40-25C3-4FB2-8EB4-E7FCB677E415@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR06MB7068.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0247710a-cf90-4621-3f11-08ddaefe9884
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 06:57:46.0099
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EDE95ehxypsF9RC79lgaWeR2rtBK/doq5+ZuhvcQ3R81XyjxT+9Tbee0pMOc4DY0zoSeEgtsQ3Ulv3+s96eaaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6303
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mail-ID: 376531bd-c831-454f-b55f-f96f05563171
 
-DQo+ID4gSE9TVF9DT05UUk9MMiByZWdpc3RlciB3aWxsIGJlIGNsZWFyZWQgYWZ0ZXIgdG9wIHJl
-c2V0LCBpdCBuZWVkcyB0byBiZQ0KPiA+IHNhdmVkL3Jlc290cmVkIHdoaWxlIHJlc2V0Lg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQ29vbCBMZWUgPGNvb2xfbGVlQGFzcGVlZHRlY2guY29tPg0K
-PiANCj4gUGxlYXNlIHNxdWFzaCB0aGlzIGludG8gdGhlIGZpcnN0IHBhdGNoLg0KT2ssIEkgd2ls
-bCBkbyB0aGlzLg0KDQo+IA0KPiBBbmRyZXcNCg0K
+Am 19=2E Juni 2025 07:57:09 MESZ schrieb AngeloGioacchino Del Regno <angelo=
+gioacchino=2Edelregno@collabora=2Ecom>:
+>Il 16/06/25 11:58, Frank Wunderlich ha scritto:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>=20
+>
+>I think that this series is ready to be applied; however, I need someone =
+to take
+>the bindings before I can apply the devicetree part to the MediaTek trees=
+=2E
+
+Please wait a bit for the eth part=2E=2E=2Eseems like reserved irqs are no=
+t unusable as i thought=2E=2E=2Ei think we should upstream them too and may=
+be with different names=2E=2E=2Eas they are not fixed to function in hardwa=
+re=2E
+
+>Cheers,
+>Angelo
+>
+>
+>> This series continues mt7988 devicetree work
+>>=20
+>> - Extend cpu frequency scaling with CCI
+>> - GPIO leds
+>> - Basic network-support (ethernet controller + builtin switch + SFP Cag=
+es)
+>>=20
+>> depencies (i hope this list is complete and latest patches/series linke=
+d):
+>>=20
+>> support interrupt-names because reserved IRQs are now dropped, so index=
+ based access is now wrong
+>> https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/20250616080738=
+=2E117993-2-linux@fw-web=2Ede/
+>>=20
+>> for SFP-Function (macs currently disabled):
+>>=20
+>> PCS clearance which is a 1=2E5 year discussion currently ongoing
+>>=20
+>> e=2Eg=2E something like this (one of):
+>> * https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/202506102331=
+34=2E3588011-4-sean=2Eanderson@linux=2Edev/ (v6)
+>> * https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/202505112012=
+50=2E3789083-4-ansuelsmth@gmail=2Ecom/ (v4)
+>> * https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/ba4e359584a6=
+b3bc4b3470822c42186d5b0856f9=2E1721910728=2Egit=2Edaniel@makrotopia=2Eorg/
+>>=20
+>> full usxgmii driver:
+>> https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/07845ec900ba41=
+ff992875dce12c622277592c32=2E1702352117=2Egit=2Edaniel@makrotopia=2Eorg/
+>>=20
+>> first PCS-discussion is here:
+>> https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/8aa905080bdb67=
+60875d62cb3b2b41258837f80e=2E1702352117=2Egit=2Edaniel@makrotopia=2Eorg/
+>>=20
+>> and then dts nodes for sgmiisys+usxgmii+2g5 firmware
+>>=20
+>> when above depencies are solved the mac1/2 can be enabled and 2=2E5G ph=
+y/SFP slots will work=2E
+>>=20
+>> changes:
+>> v4:
+>>    net-binding:
+>>      - allow interrupt names and increase max interrupts to 6 because o=
+f RSS/LRO interrupts
+>>        (dropped Robs RB due to this change)
+>>=20
+>>    dts-patches:
+>>    - add interrupts for RSS/LRO and interrupt-names for ethernet node
+>>    - eth-reg and clock whitespace-fix
+>>    - comment for fixed-link on gmac0
+>>    - drop phy-mode properties as suggested by andrew
+>>    - drop phy-connection-type on 2g5 board
+>>    - reorder some properties
+>>    - update 2g5 phy node
+>>      - unit-name dec instead of hex to match reg property
+>>      - move compatible before reg
+>>      - drop phy-mode
+>>=20
+>> v3:
+>>    - dropped patches already applied (SPI+thermal)
+>>    - added soc specific cci compatible (new binding patch + changed dts=
+)
+>>    - enable 2g5 phy because driver is now merged
+>>    - add patch for cleaning up unnecessary pins
+>>    - add patch for gpio-leds
+>>    - add patch for adding ethernet aliases
+>>=20
+>> v2:
+>>    - change reg to list of items in eth binding
+>>    - changed mt7530 binding:
+>>      - unevaluatedProperties=3Dfalse
+>>      - mediatek,pio subproperty
+>>      - from patternProperty to property
+>>    - board specific properties like led function and labels moved to bp=
+i-r4 dtsi
+>>=20
+>>=20
+>> Frank Wunderlich (13):
+>>    dt-bindings: net: mediatek,net: update for mt7988
+>>    dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for
+>>      mt7988
+>>    dt-bindings: net: dsa: mediatek,mt7530: add internal mdio bus
+>>    dt-bindings: interconnect: add mt7988-cci compatible
+>>    arm64: dts: mediatek: mt7988: add cci node
+>>    arm64: dts: mediatek: mt7988: add basic ethernet-nodes
+>>    arm64: dts: mediatek: mt7988: add switch node
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: drop unused pins
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: add gpio leds
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: add aliases for ethernet
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: add sfp cages and link to gmac
+>>    arm64: dts: mediatek: mt7988a-bpi-r4: configure switch phys and leds
+>>=20
+>>   =2E=2E=2E/bindings/interconnect/mediatek,cci=2Eyaml   |  11 +-
+>>   =2E=2E=2E/bindings/net/dsa/mediatek,mt7530=2Eyaml     |  24 +-
+>>   =2E=2E=2E/devicetree/bindings/net/mediatek,net=2Eyaml |  28 +-
+>>   =2E=2E=2E/mediatek/mt7988a-bananapi-bpi-r4-2g5=2Edts  |  11 +
+>>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edts  |  19 ++
+>>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edtsi | 198 ++++++---=
+--
+>>   arch/arm64/boot/dts/mediatek/mt7988a=2Edtsi     | 307 +++++++++++++++=
+++-
+>>   7 files changed, 498 insertions(+), 100 deletions(-)
+>>=20
+>
+>
+
+
+regards Frank
