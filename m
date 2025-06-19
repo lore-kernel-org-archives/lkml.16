@@ -1,29 +1,37 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437333085D3;
-	Thu, 19 Jun 2025 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B718D2475F7;
+	Thu, 19 Jun 2025 07:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750317149; cv=none; b=YIdjGDTbL5prjsFjWDFxfmPMpKi3hE58KUNIt031HfZXoWqSvp33WlP7pi0G+XKoh5FL1IQhDFwNCOxMWd4FkZwvSiDvVoTB18HDNVhjR82gFVF0YKb3D6UWxhr0djl/37oxGCnzaiSbUbFroP38RPuGyBifID4VqUKvjeZ/YH8=
+	t=1750317169; cv=none; b=MYp8U+zBq+PV4zPTf/HSnXYJueRc52GdicNIggMyqMGCryeuZAzm0Wdr7KVj9lKguNE3p9SpgCr32j/syzFg8uzG5bVG95XdFSjmnRYNaFIHK5/dwgskdechd30vWojg32WX9++3gVKAq4CJ/t3e4iFXCALaiD4H728rNkD2zAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750317149; c=relaxed/simple;
-	bh=V3imZF6UNU74btzqmMqKebm/23xac0lFB6v3lNG6xh0=;
+	s=arc-20240116; t=1750317169; c=relaxed/simple;
+	bh=l3qlc40PN+JkLbZgh1BtdXkaI7iJLWml0rgWSurp/ak=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bFw3vHg7FF4iG2+veEkMWVn55Lx0XoBrlXVJkQjldgLlS0mXB3pszHfjKzi5PyQS+v6aIcPXxDWmLVJ2YrBld05hz1nbob1Is8TgKYhlVJf5HgI3/q5lhOINhwmCvSID6v3MB6PWIe2MpD7HXqUSN56pY1eEmgJW0PO2P7ENGdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: zesmtpsz2t1750317035tbaf4f31b
-X-QQ-Originating-IP: u6g0KYz0xwxR6Veyp07lpRmHTzkjeSVteaUPdzjxhww=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Jun 2025 15:10:33 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11891332971441617108
-Message-ID: <16608EA06321C225+af69d39b-61e7-4e9a-b382-ecf1e7f2d519@chenxiaosong.com>
-Date: Thu, 19 Jun 2025 15:10:33 +0800
+	 In-Reply-To:Content-Type; b=Y6b95OtY3RZ6r/Ed+0qxL5Yii0eLiEYnleIMxDXXnU4lrtTIV8mvpH5QwqYrlXwMtOvkiht6iEFlrQour0/8i3Ws6IDlffEm3wPPf/a7e2oXGNAytOqxptC8J6hrkCmFrPQa21f6VC55Sf1dOq7YpEeGWFo4rbyI3D4Je7Z6LOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Wx5k9B0l; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wx5k9B0l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=R7tGyFiM7WSeVH4C/w6xl3Lu9ITt8cyLFMs5e/oyiFg=; b=Wx5k9B0lMNkIdYL64vBUzPThua
+	aSU94dIXOmmKvkqQHEANa++whmR89vAWo8RM9Z0vv7SA0C2s/BiOfeb5pCmNyd8bzOXxdyfBocNd1
+	UIxpA8jvlMdolNZa2EbNoZEa4A93pdOFOkT24WjG9S0ttYYdJkI91kfr2+ZvG13Qmqx93KvzkB1Ic
+	FMfMfvVcJXvX1b2OUf+QfqT9PN3tckfYHwWyNBrd65OmPOX3974PtIe4saun4DsK5SCfHMKqEGivz
+	tkCJRIRt3dsqp6QVrK3k/69xyDOyDdxBZq3eVHG5Ri8e9H0LBt6qLzLhmDoZls28Qg+Y1YidWEZon
+	mqL84uVQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uS9Ry-00000007be1-3yJg;
+	Thu, 19 Jun 2025 07:12:43 +0000
+Message-ID: <1067bbff-be53-4bec-9cec-8a4d0f531fb7@infradead.org>
+Date: Thu, 19 Jun 2025 00:12:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,55 +39,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
-To: Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com, neilb@suse.de,
- okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- huhai@kylinos.cn, ChenXiaoSong <chenxiaosong@kylinos.cn>
-References: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
- <197b15028aa942d2812b1746aff453c4e791aa00.camel@kernel.org>
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <197b15028aa942d2812b1746aff453c4e791aa00.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MAC7MeOsTVc2RwVFMb2wjRd+0wDgH1I4iR0tmJ3I7/zm1R8LUN4r4AT3
-	LpVunoB9Wd2IF0l3GKqPJdmzaD8BE7ONiTfTHA8TnMi2adHAF3t7RgPMytzWME6bQs3SYvt
-	Ie52wnHXvrUZnpstvW5hHSeHhbf+3VOqv55JEFwrKa26iIFznvP9+aQkNzmWLn/vSs4DLuO
-	SYpy7DSCVhXr0KrBpFaml9MhULgiZAuXtbOkN9+0FFnoEoJBJ0RTPE0srreoUyPCyVsH1l4
-	XJp3JO33/KAkj+XbUeRM180ctAIuQIoW0tfJVkoYWQ8aazbBOULErQu8+Vg5aplSA7E2MPg
-	U/7YsDA2FEfxFHtHvABUzkSoJrwSkKWAKYh/Ifu58y8eNSFlX5YTr+wrofSMP4sb5yOtNew
-	ZwSPAVZBWshaz6JMixTHUIwti2CIXVrlHeHZSe3OX+myU5JmVXbGGnADV0afHJf25O95Gm+
-	fhoN1P89aUvr1OKP4wnPTFMOMCITBTznr67d84O4gt9bj79A2t6Qbp0+Gx5LwN+s71NDm8M
-	gI0/8nDKOePuzd3dMTCAufQXqY7TuaQhPIjh0ByVdAr+1gxQ7YFSTx0KZ8g3heVYDdXXGO9
-	iX6JL52f0GMhANEhsZM9sutJ3WUe0xWbpHOxZJCZfIvrYk/N9tYkGtwnhZiC5z8JvjHRDPI
-	efA12Ty3wF+UjCnZ6uW8ptYNY7ClnoVuvNjiRODhkWgEuX+0eY6cpvDZbswDwt7kKhzciCW
-	l+8y16N2PDQCQIySWAuKIkR1y+bIlf7WM5cV9+etcUv3qUVhRFpc7YWJGA8phzTG7t4Az10
-	7qEQbjycZ4u0WqvPrgZgsawnhTUhwAg9VnANZ1wBbos7pDUIOHl29K3wFMynyPMqgXfzH6q
-	9xWb2giHB4UJPBbVuLf4EbKq1pl/epRxbk8CrXSws7fmMEfyOwEsJUonJa25t4JiFgqFIpT
-	lW2de8bQDVkTiCRRhPRhL1lYg8GFpPOtJtFpp22mZoO4lsMbuPnpyFzn1nIfXZ7JaE41mOE
-	rsq60Otk0/M6ksCNLGZh/CdR4ioSmG2cb6XlRq6g==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+Subject: Re: [PATCH RFC] Documentation: typography refresh
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Documentation <linux-doc@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Federico Vaga <federico.vaga@vaga.pv.it>, Akira Yokosawa <akiyks@gmail.com>,
+ Carlos Bilbao <carlos.bilbao@kernel.org>, Avadhut Naik
+ <avadhut.naik@amd.com>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Stanislav Fomichev <sdf@google.com>, David Vernet <void@manifault.com>,
+ Miguel Ojeda <ojeda@kernel.org>, James Seo <james@equiv.tech>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20250619042318.17325-2-bagasdotme@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250619042318.17325-2-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Yes, nfsd_users is protected by the nfsd_mutex. But the following log 
-confuse me, why were they printed in a very short period when crash?
+Hi Bagas,
 
-     [24225.575708] nfsd: last server has exited, flushing export cache
-     [24225.580242] NFSD: starting 90-second grace period (net f0000030)
-     ...
-     [24225.807458] NFSD: starting 90-second grace period (net f0000030)
+On 6/18/25 9:23 PM, Bagas Sanjaya wrote:
+> At present, kernel documentation uses system serif font for body text.
+> Some people, however, objected to it and instead prefer that the
+> typography choice must be legible, consistent, and accessible (after
+> all, the audience ranges developers peeking into kernel internals to
+> ordinary users that skimmed through Documentation/admin-guide/).
+> 
+> To tackle the problem, follow Wikimedia's typography refresh [1].
+> For the font choices, instead of using web fonts as in previous
+> attempt [2], use:
+> 
+>   * Linux Libertine, Georgia, Times for serif (used in h1 and h2
+>     headings)
+>   * system font for sans-serif and monospace
+> 
+> This allows for more readability and consistency without sacrificing
 
-Why was callback_wq queued that it had already been freed? And a new 
-callback_wq was created. I’ve added some new vmcore analysis to the link:
+More readability is debatable IMO.
 
-https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
+> page load times and bandwidth, as the font choices is most likely
+> already available on many platforms.
+> 
+> The reason why serif fonts is used for headings in complement to sans
+> serif in text body is to break up visual monotony of docs page by
+> creating contrast between headings (as entry point to docs information)
+> and text body, which is important considering that kernel docs are
+> quite lengthy with many sections.
+
+It's interesting that mediawiki chose to split the serif and sans serif
+usage this way. Newspapers essentially do the opposite: use sans serif
+for headlines (mostly, not consistently) and use serif for body text.
 
 
-在 2025/6/18 19:50, Jeff Layton 写道:
-> Isn't nfsd_users protected by the nfsd_mutex? It looks like it's held
-> in all of the places this counter is accessed.
+Have you read "The Psychology of Computer Programming"?
+[https://geraldmweinberg.com/Site/Programming_Psychology.html]
+The content is very good but (at least in early editions) it was printed
+completely using a sans serif font (probably Helvetica). It's not a
+long book and I found the subject very interesting, but it took me
+forever to read it because it's (or was, don't know about the later
+editions) in sans serif typeface. I hated that part of it.
+
+So I applied this patch and tested it. It works as far as I can tell.
+I got tons of sans serif font text instead of serif font text that I
+don't care for. (I don't mind that the sidebar text is sans serif.)
+
+
+
+> For body text (excluding sidebar), it is set to #252525 on top
+> of #FFFFFF background as they have contrast ratio 15.3:1, which
+> is rated as AAA according to WCAG 2.0 section 1.4.6. Having slightly
+> off-black foreground text on white background can reduce eye strain
+> and juxtaposition on dyslexic readers.
+> 
+> This refresh only applies to default Alabaster theme.
+> 
+> [1]: https://www.mediawiki.org/wiki/Typography_refresh
+> [2]: https://lore.kernel.org/linux-doc/20231102123225.32768-1-bagasdotme@gmail.com/
+> 
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>  Documentation/conf.py                      |  5 +-
+>  Documentation/sphinx-static/typography.css | 62 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/sphinx-static/typography.css
 > 
 
+Thanks.
+
+-- 
+~Randy
 
