@@ -1,588 +1,187 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9EE2110;
-	Thu, 19 Jun 2025 13:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338054; cv=fail; b=kLg/RXEyCW4j5odbl1z5qrnQ7ugTTcPwH+Kg/zAQa+VDa94EIoNHBzN9O1BEtYJ/YoD/ywFGI1dnYwTWWpXoccFaXUzk/eYQtSw0K7zmafq7QRi+RJAfdchXGLEabxOlhgQbDLoY+2/eXwNFW4QYR5lk17GbzOO1blwblNmjfzw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338054; c=relaxed/simple;
-	bh=kaifK3L0TpyIj/27kzljSRCjAjOrdUKwMU9MhffqDKA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AtAv8Y6o1W1o2EaIfbl/WzS1GdSmlc6UNX27Mq7zF9CeyfjpFFNXsMYaGffOipdqi9kVTUSIk7ibwR1W1Ng0AvozwkHRm0aT28ZuWsuBZ49NFCyYRireC8Im/lzSbietFQ28rQ8ZXY3JtRHAq8mVZBgrlxvI0s3zOXaXSlAjyZg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UpcFu04Q; arc=fail smtp.client-ip=40.107.244.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F32B2110;
+	Thu, 19 Jun 2025 13:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750338091; cv=none; b=sRCQm3tcw0Bj2aMMyLoUScZFV2I7X0aqt4wvmADI2f/KIb79niJWqNfqrkLRmYgraOx3vixB4D7oRuc0hgT6DSGjdi87ImP4hvCz64/oHbEXZuj/ijrHWJs66CtnFzjpAc9mCnff53DZ8sjPnj6WemPFDFPy9OdWI95gcZ2FAsI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750338091; c=relaxed/simple;
+	bh=SxhBGp+LSygljmyVRwqy+hrojpylf1AOL0MWscPeuRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MiR1tzCl6xfZ4Yd12RPAtbxfW4B/qMIc32d9PLnGs+nD6aOH5y+BW7K355nmtM31ThNpKTCima0KZ0P2XwZhH1YpHprZQjLmkX1Zn1e1DaeE6rTcuYPNsRFWw13gdNUqv32aH9rNEERZPRalsTizO6pidCvSV7Yj7+QcTnMAGb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjzplcZa; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UpcFu04Q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LaBAldTlm5J/s6Slmb1HJaxdhXMXtV25mz5usUefiPwLORIxSoRqtnTT/sykdweri2Nsr15wz7bm7jphspLN2E4ZZ1i/9vaNQihsiivVKx1GB5tQUgyZa/6SCeTHUqZOrNjIKrXRQIkWjdFGckrR00XYEQepMoaktMmkt3AK7P4rVb9X4J4MICydT8vOZswG7Q+Mo09GystHJ/qZasLMXjg0/LJMs+BYgmYDGLeWSc1qWKqxSufVkwNXqNiVKphfuZaHxyOqc5s7IAKV/vC1DRDiptLjGCuBxqsJdeqb3m1ujehZIvJiSHBWrBdygjrqCU2Ha5YGmzjKuAZ41zY1CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lnNrkhLIrh/PnlsTy5PQX8eA75QOW0OKIUoqhyzumcA=;
- b=NWsff2gtHRO0CHLXQ/mQEhyJA49aUyjVGSjPeSsua4/ccpTgSyT/ri7CBV6TeoN/SJU6XHi7EUa0et0hZis5Z9Xezrqru1YLyT+uVkGVIywX8YD0rYwiQ5z/eBq8n0uWCVyvPkQJmqiwXWjxweFtoSXkoIMpFGCeUnVUy7lKMHseodVFxbmkpCF9PNCaNz9ohHmS9otfqgxzQxXS4F+NYMZOYtpdYVFRyur/mVuQJ0FVrGbORGNYb3uvfw9272TFv1qzsojXsQppP8agHFTtRcbK5ZfXmXcjmK7tIZDubDV8Ai/CE3x1xuVnIC6R4T05HrZu+1868qSJ5c16Ls3+Dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lnNrkhLIrh/PnlsTy5PQX8eA75QOW0OKIUoqhyzumcA=;
- b=UpcFu04Q5zXFVEEcAFAwLC9nCraA2fPkOKd8W/aJJ5tEZ+xFBzqkKkSr6xoLTXFXepHhA/2UZu8/SG8pBF26pMs2YKeCDdJ8r/kE3HhFAb35d7zX0tH4uCSGcxrXpRo+Dowcz8Lr8MNMO/0h2xjVJ7oy4Vmxs4UyV3OWB37HFHo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA0PR12MB8087.namprd12.prod.outlook.com (2603:10b6:208:401::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Thu, 19 Jun
- 2025 13:00:46 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
- 13:00:46 +0000
-Message-ID: <067d67e1-9a7a-4a98-8fc5-771664055ef3@amd.com>
-Date: Thu, 19 Jun 2025 08:00:44 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] media: platform: amd: Introduce amd isp4 capture
- driver
-To: "Du, Bin" <bin.du@amd.com>, mchehab@kernel.org, hverkuil@xs4all.nl,
- laurent.pinchart+renesas@ideasonboard.com, bryan.odonoghue@linaro.org,
- sakari.ailus@linux.intel.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: pratap.nirujogi@amd.com, benjamin.chan@amd.com, king.li@amd.com,
- gjorgji.rosikopulos@amd.com, Phil.Jawich@amd.com, Dominic.Antony@amd.com,
- Svetoslav.Stoilov@amd.com
-References: <20250618091959.68293-1-Bin.Du@amd.com>
- <20250618091959.68293-2-Bin.Du@amd.com>
- <0c4240bd-4918-48b3-aa8c-3860fa62db00@amd.com>
- <68f481ff-3b99-4c21-964d-edb81b34452e@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <68f481ff-3b99-4c21-964d-edb81b34452e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0151.namprd04.prod.outlook.com
- (2603:10b6:806:125::6) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjzplcZa"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2349f096605so11855045ad.3;
+        Thu, 19 Jun 2025 06:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750338089; x=1750942889; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9pLxU1+jwh6zu49kl7HHBM0U8MxQbNxmcaRxDgxffY=;
+        b=XjzplcZarUhcT4J4YexBzEkvsNzNan4AjHGzqNnLMElXJsZpEoWp0oqD50yHGFQ3Fg
+         OyUqb0rqm0LsLO+I+CfvChCbGiAJx2OhdYPM2/YsExiTJiPr7AD0d8cHOmL3il/xMEIv
+         WrFw5OWXPFSrb+vMbT1hItkcgHXGiEiJqHkiY8t/JkQGX4AdbfSF3tFwFWgVW4y3xK03
+         xoxUaR77T0tW6lOiCSpvzW99maPGoFbDGAyGIDqNxCuEA5hYDTsGlmIXrhC+SIAyLps3
+         ZYVFcGU00+i1BMgaDBKOyBfYeD9cLRESobgup50I+uw5jpIVAnoxZKZM277Q7qN9tdU2
+         /ISg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750338089; x=1750942889;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9pLxU1+jwh6zu49kl7HHBM0U8MxQbNxmcaRxDgxffY=;
+        b=lOOFxAccQeh0WOJldCuxv9OHwPp3LoBYfPIKSlKGJqvbuHMdR4hkb6q73uRRGKnvOu
+         D1OE4TFJfvsdBDfDqAvLXHHLpsZbLc+2GaXXnPCHqo7wnrnl/WWFM5i28UwourpE5ek6
+         7xXAEEu4QpwEmNNpCIl8L97i+s2w70134qy0TFr7CQuv8jW5hYNFltu7uDc3GU721Tyb
+         C7cXE+mBUIvb4zTymehlS5amnkhzMaMs4rOo70ruyAl8iA8JA4tR5DVOgeaSdF9Bhuzc
+         xo23nsHkzcdDZ+8LUfNNkhflUXBu93NttmyCq3tmz+2GiCLC42vMJWC5dUhb1Lrvhm2d
+         vJ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWpj7BiqTvJoess9icKJDx6w4L/wtIwrz6pn1FDQonHGv8roDZeOeTS2M0DQtimjkPHdCZWH5UTz3RaLA==@vger.kernel.org, AJvYcCXbJZMFeqAlJXJoPnyXudkPzLzG9W4j2xwfGkmyrOi3xYdQCDo+BBP/Kd0W1OKjfbbhnOfzZHUdDNYfl55m@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhM5uRFZRYCojDLOkXfGx6PlEwBMpP5A3IGVj4FQXbdJpxTHgZ
+	yW8NA+igktn8Zps+tVcSCHT18dsQd+kOmFsuis75r+x/umlIgpFt8My1
+X-Gm-Gg: ASbGnctjM8xifoSqzhuX79ZTl894fTMeGuq9vOYGILh3BQWXyvlp4jRuAgsLdebTD/T
+	XKDMiyVm+T4cddUFEgIZVkEU3bnQu+Ze4VIr6hQeZWfqv7IrU72rZHcS9rLcenqMNFJT/Oxo8lk
+	DUR4IdMLu3yrj6N5deY+BI2h8+oyVFQ5muOoXQ87jU613hqgk0RAowSXLmUiWm/7ai1awdMBhzF
+	DfldN1bYNL7O2drHdA71lkQIp2TT0k5mPbTBTj7gTwv93Up/i60PSkxhmpwcFUQ5MsBCB7rCPEm
+	+JJDgFMDQSvE4q7NcFeDGMBPFoSURvCAlkVMxhwGxRddlxVnTI9ZexnVI04q5e+Hpu6v1dXr2xI
+	eN1pTaU3acFGblN7SEdH3OFNz8TnI1bYj8Yg=
+X-Google-Smtp-Source: AGHT+IHuuLIjXyPZyJ7MM5V4JSpVmO9iI/QmZwAy+brms/faK6wWgf31EsgUt4DJ1y5F1I/mjAqqSg==
+X-Received: by 2002:a17:902:f790:b0:234:a033:b6f6 with SMTP id d9443c01a7336-2366b3a959dmr297305675ad.31.1750338089214;
+        Thu, 19 Jun 2025 06:01:29 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78565sm119163335ad.124.2025.06.19.06.01.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 06:01:28 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <61233ba1-e5ad-4d7a-ba31-3b5d0adcffcc@roeck-us.net>
+Date: Thu, 19 Jun 2025 06:01:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA0PR12MB8087:EE_
-X-MS-Office365-Filtering-Correlation-Id: 361575e8-7ecc-47dc-a6e6-08ddaf314e45
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dVpraXl0S1RGbVdocWF6YXFsSjh0ZmxqQUo2czVuL21NdHFvUXhrMENXTW9j?=
- =?utf-8?B?amt2RThqM0FBaW0wMGY4YjdQRHU4UlFSMk1taE1GcG5mWkczK0VJb0p1ZXdq?=
- =?utf-8?B?ajFYdjR4anZYd25IZ1lta250UWE2WWZuYkREWkMxVFhvZ1A0QlJlWURVaEFW?=
- =?utf-8?B?YTZzL1NyYmtETTJ0OGpXL2dYTHk1eENvK2hqQ3B2LzNMbHZNa0JhVytUOXRa?=
- =?utf-8?B?Q1AxekZZbjIyanljcjgrZnJTakIrNURqaDd2Z1ZOMjloYVpRT3NiOWU1VDht?=
- =?utf-8?B?bCtXU3gvd3FwZkhmd2Z6TXNqcTMwdnc0ZWQzbmNOUGRaVzVodGwyRmpzc21U?=
- =?utf-8?B?REdDa0Z4cFJBbUREQzhEa3NvUWZMU1JKUTMvZkVZcWFqbDBTZVVTUHZQY1hw?=
- =?utf-8?B?b0NqaHBmaVJiZmNWZEdha0xodFozMDFaampaR2xzdDNhZnlSaGRYVXpna3pk?=
- =?utf-8?B?NEJBekVvSnVRdXJsNTZWYi9IQ0lUTG5nNXFaa2w1NytCWWF2dDc5SEl2T0gz?=
- =?utf-8?B?SlJrTy9ZelFPSlR6ZlpGdExwQmlvNkRhN1QzcHg2MlAwNEdVVDlQMk4vcWVO?=
- =?utf-8?B?TkhjRW1HcGhiNEZGMVpYQndzcWoxRjljRjJyUk5rT3VRa0lzMHFZb3pFQ04z?=
- =?utf-8?B?aktZSmlUeG1YamdIQ0xHTVhFTXE2bXdDS1BiVVA0OGEyWG1IcDllN1hhZDlW?=
- =?utf-8?B?cW1qcHpvZGVZa0RsVmdKV1c3N013QkFTZm92bmJ6RWtiTW0zUXpTM2RNOThB?=
- =?utf-8?B?SWVQYXJ6SERCVHhiclVUKzlwN1NYYlpzZ0toQ1NOZlFySWN6VmRnM2VFSk1P?=
- =?utf-8?B?MlBWTlZWWWk3dlBBLzM1SDl5ME5pcUUvV2R3ZFIrWXJ5cmJNZHUxSm5tUnZp?=
- =?utf-8?B?VlFrTldOb0ZWZTZ6bTk3alRWUnc5Nm12M3lJSmdpb2k0QnQ5b2VKT2lRMzJU?=
- =?utf-8?B?Y1hoTTR3OUZ3ZnZLSzRTczFUQVREMERkU29Mc2NpMTdDcVEwZS84TWhtTHda?=
- =?utf-8?B?bzBKZmduT2RvalJSZEo2NzVNRzNXcXpiTmc2VWZFeEYvKzVYK2p3L1BpZy8z?=
- =?utf-8?B?QWZpQlZ2MHE4cVAybDgwcjIwWGhTUUM4RE4rbDNkMUlCLzgraS9lUmF5bkhU?=
- =?utf-8?B?M0g2Z08yWCs3NWo0NEFhTVdMbVk3VGlMeUVlMVc5UFN6dTB6ZEd4c0NWRHRI?=
- =?utf-8?B?U21VTDVTVUpnc1pLQ092VVg3ZWUvSHEyc0hCYmpPOUJva2Z4ZG80MGYwcmo2?=
- =?utf-8?B?N2ZxWU5VOU5TZ1NRbklPYjl4UFM3VUZpcWMzSzk4enJuWDNNNzBhL1I0Z1Zn?=
- =?utf-8?B?M1Q3TkNla2RhMHhSckxPREI5SWlCTzhUdkdZOEhwUnFOWXVkMHNoaVdNb0tD?=
- =?utf-8?B?QmhJYzhMZ1BEUTVLN21UTjBxSWpvYzdGM3EzN0pUNGswSk9ZaHlkdVFTSmV3?=
- =?utf-8?B?amNQRkV3UERmd1VUMGUvRlNUU294Znk0V2tKeGNPRHA1NGIrd2RBYUEvVHhB?=
- =?utf-8?B?QmlNTzV5bjNrN3hZc25XdGRYUnB5dTRjSHF5TzB6YWV0b0JmWkNYZ3RoZ2w3?=
- =?utf-8?B?UkRTQjJLVHMxQlF1V0dTOWlseEVuTFBaMi90Um0xUGc4MkFZRjRHeWVjVThK?=
- =?utf-8?B?cGxuTCsrKzVZenNJdVFFN0RHdjNmTjRGbmZhdGl4cVNSOUpVcVdFYUo3OVBB?=
- =?utf-8?B?R2dpc1hrbXkyNzAvRXBvUXo5MjhFVEROWlYxTG82QmZZNTQ4SldCZXR4a2No?=
- =?utf-8?B?clI0bkZkUDJBRkhNenpzeXVaSm5oOEN6YjRQNlBGM3lpRUJ2Qjl6a1ZIUG4r?=
- =?utf-8?B?cldjVnFoSnRNRmRaZkFFQ3hMWU1NbnZTVU9vMys3aXhxU2dpZk5Wd2k5Q0hr?=
- =?utf-8?B?eGtGTStOUWdZYmRtRWgzNWdKdVAxNmZhMG93Y0xkZzdUUnplTGNxSmt3Umpr?=
- =?utf-8?B?MlYySXRySGhrRlBqRzlCYVFGV0JCYW1mQ0MxWnVSajlUYzZoUnJqaTZmWEtW?=
- =?utf-8?B?TFZYY01GZlJRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bE9lS3lOSGJYMGVoaXBhbktiVDYvb1h0THlpemdybVJaRGE1V1pBMVRlK3Zz?=
- =?utf-8?B?WEVmZ3VwTmRScGdsSlR3M3czK3U1dWVTRG82TVkxOTlQeDRSMWdWdG1tUFhr?=
- =?utf-8?B?VDhFRlFvZGNwTmZMeTljV2QzTVR5cDB5NmtFV0VxYmdXYWZWeDBKL2kzeXNB?=
- =?utf-8?B?ZFBWS1BwcEFXR3NXSC9RWlNFaG56Z1BkNmVIeXNUY2trTGJON2R2em5aZlJq?=
- =?utf-8?B?OXJ2RW5FT2NNaEdNSHFNS1QzejJkSjkrK3lSQzZwdXlwVUx0cHVZbk13ZHBC?=
- =?utf-8?B?aUVET2grUmNjbW5mdVdUVnI0Z24vSTFQZEYwQjRQVzR6eW4wUDlEdExvQ3Uz?=
- =?utf-8?B?RlR0ejgyc1J2SjFNT2c4SzRMTnp6dGtTUDZZRW9mSWVIUy9OQit0cVl1SlZo?=
- =?utf-8?B?WGtrL1B6WVQ0bGtJb3VxbEVwKzBKV1F4eVpjMVJDdjVKWWVHaGNheW9tNzRP?=
- =?utf-8?B?L0FYa1M0UzRTc09HZVp1WHYrc0NOVTcycmcrazRsOEQzRmY1bVVyNTZKNTFY?=
- =?utf-8?B?OENMN0x6UUdlbStDa1l1RDlwTDg1NVNIQ2JBMVRFeTRFZ1lxMm1EMjRqZDh2?=
- =?utf-8?B?RlpjU3h1TVlzNVRaZ0NiTjUxSzdLeXhBZnJ1NXBrbHhoSmtFUzhmenB5Ykxl?=
- =?utf-8?B?TXkrOHdNRWJraGNFNlR2TG1USDdySWRtMS9NRHNOanVlVFZzOHJUd3hpM0Yw?=
- =?utf-8?B?dFBZY2RYemZ1MytaT0c5RkF3M1pUKzNwckF3aDMvRXFTdkRtM1dUUllENjZp?=
- =?utf-8?B?akhTd2RkUEtLRFJ4UUZIYVQwY3R2ellxSHJFd0RSdVBRdTlYbnZXVHNuVWhI?=
- =?utf-8?B?bC9DbnMra0ZVMitod2xDNHFNbHVzYzY4UEpjbTZxSHZGaFdOSmNacWhaQ1BS?=
- =?utf-8?B?cmlZOGkySjFnWEdLejRpQUdPZXNIZGRiNEdCVjNDRUZ2dURTNktUT0k2Mkl2?=
- =?utf-8?B?Ly9pWVdPS1hYWVlZcUgyMU1oTGZoQWtQcHQ1NC9NRnBaa3FpY2lmUG5VaG5Y?=
- =?utf-8?B?bXFFZExLTENjaTl6ZDR2WHhPYlhURVVlTTJhaC9oVnFpYUo4OXd1SHVTdG83?=
- =?utf-8?B?MDF5Ym1jMzFOeEpQdi9jWW5CSTBuejRRQ2o2N3o4SHE5Z25RS3JMa2IwM1Ft?=
- =?utf-8?B?N3JteHZkUkk5Nm5ZVnVwRUoxWTlwNlozMkdtMWdNR3EzSk5UYmpNUThGLzJF?=
- =?utf-8?B?dDZxaGtEeFZxUHNFZi9NaHIrRGRlZE5ZT0N2TkJIbTBTWE1ZYVVJVGpvTitJ?=
- =?utf-8?B?Q2M3djBMczBBMzBEYVpOUklFSEZmNEtXWTVaRHJkV3pKVCs4ay9nbUZZNVRG?=
- =?utf-8?B?cE5aYk03RDg1L3FsckNGdmJXb05GTTI1T0NwUWQ4MUJ0QlhEcHhFMUFJMHAv?=
- =?utf-8?B?Rm9keGZNa2ZoZjVXVS9EZ2t0QTI1K1hSaWtnbVRyeGV0ZVNIY2xGckRwcWUx?=
- =?utf-8?B?NFNhL08venpDY0RUWnNJcXBkaHM5ejBVM29pOVEwa0NLVzBNWENnNGpMRHcw?=
- =?utf-8?B?V0w4d1JBbnlFTTJ6eXZTdkFaZGRMNTR0bEtqV1JqK3F2eisvbG9aMStRRHh4?=
- =?utf-8?B?UzA1TzNPbUV2ck5abnFKcWpMdmJtN2tmSERqT01HZ3duVzlWK3pjZFJmcGVS?=
- =?utf-8?B?RDU4YitLRGlMaGpReEw5SE41ZmRDb3padDZFSTN2dUFKR2phSlhSZkZXa2FN?=
- =?utf-8?B?ck5COG8xdUxwcGhDWkQ3eUFFcmVkN1g2NzR0N1ljQ0Z5TVE0OHhocUdOd2NK?=
- =?utf-8?B?bXBFKzVnbzlJdTdIYWZ4M0FhbTlEZzlTa25ady9nVWJMQUdJajR1TnJ3MEhF?=
- =?utf-8?B?eG0vdktWUnZGWjlwcTRQSjQ4ZjcrVGI3QUVnZW9nYVBMalFtLzdYV1JTWndi?=
- =?utf-8?B?TDYxYlhIMFpob2NXNStGMDJwSFFlZ3FVNXZjRkgwR05mdkZuRDRwVUcxa1Nw?=
- =?utf-8?B?aTNkYWhiZGswaVIvajQzY3dBMVZMR0hEU1hVaUZLWWQ4UUR2NmhmSi84V200?=
- =?utf-8?B?aDRGSlNBS094dmxYYjViMlVhVjdOK3g0RU1NTHlWWFJjVFAxUkFscy9ybGY5?=
- =?utf-8?B?UStPd3JPenNWYUJqOWFpQXZqK3M4cGFBcFdWTmRLNmd3WHRUVXd4WStwSWEx?=
- =?utf-8?Q?R1QZ13A0LmiilO18pEFQQNikX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 361575e8-7ecc-47dc-a6e6-08ddaf314e45
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 13:00:46.1626
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xe+jTq44vpDwP4OY8FsHOAh9SP6MMAmibQVE9E8mH34m+WIuImMvm7bmeUuiSU4rDLGNP+SUPRhvVg+QpXqf7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8087
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [hwmon?] KMSAN: uninit-value in get_temp_cnct
+To: Marius Zachmann <mail@mariuszachmann.de>,
+ syzbot <syzbot+3bbbade4e1a7ab45ca3b@syzkaller.appspotmail.com>,
+ jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <685392a0.050a0220.216029.0168.GAE@google.com>
+ <145b2916-830b-4654-84e6-3d5c356c6283@roeck-us.net>
+ <fe5fe144dea8665f96b943e9abe58fc8be536d69.camel@mariuszachmann.de>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <fe5fe144dea8665f96b943e9abe58fc8be536d69.camel@mariuszachmann.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/19/2025 2:46 AM, Du, Bin wrote:
-> Many thx Mario for your comments, really helpful, will address all of 
-> them in the next patch.
-> Add inline for some of your comments, pls check
-> 
-> On 6/18/2025 11:58 PM, Mario Limonciello wrote:
->> On 6/18/2025 4:19 AM, Bin Du wrote:
->>> Amd isp4 capture is a v4l2 media device which implements media 
->>> controller
->>
->> AMD
->>
->>> interface.
->>> It has one sub-device (amd ISP4 sub-device) endpoint which can be 
->>> connected
->>
->> AMD
->>
->>> to a remote CSI2 TX endpoint. It supports only one physical interface 
->>> for
->>> now.
->>> Also add ISP4 driver related entry info into the MAINAINERS file
->>
->> MAINTAINERS
->>
+On 6/19/25 01:01, Marius Zachmann wrote:
+> Am Mittwoch, dem 18.06.2025 um 22:56 -0700 schrieb Guenter Roeck:
+>> On 6/18/25 21:31, syzbot wrote:
+>>> Hello,
 >>>
->>> Signed-off-by: Bin Du <Bin.Du@amd.com>
->>> Signed-off-by: Svetoslav Stoilov <Svetoslav.Stoilov@amd.com>
->>
->> Who actually developed?  If both are developers there should be a Co- 
->> developed-by tag.
->>
->>> ---
->>>   MAINTAINERS                              |  10 ++
->>>   drivers/media/platform/Kconfig           |   1 +
->>>   drivers/media/platform/Makefile          |   1 +
->>>   drivers/media/platform/amd/Kconfig       |  17 +++
->>>   drivers/media/platform/amd/Makefile      |   5 +
->>>   drivers/media/platform/amd/isp4/Makefile |  21 ++++
->>>   drivers/media/platform/amd/isp4/isp4.c   | 139 +++++++++++++++++++++++
->>>   drivers/media/platform/amd/isp4/isp4.h   |  35 ++++++
->>>   8 files changed, 229 insertions(+)
->>>   create mode 100644 drivers/media/platform/amd/Kconfig
->>>   create mode 100644 drivers/media/platform/amd/Makefile
->>>   create mode 100644 drivers/media/platform/amd/isp4/Makefile
->>>   create mode 100644 drivers/media/platform/amd/isp4/isp4.c
->>>   create mode 100644 drivers/media/platform/amd/isp4/isp4.h
+>>> syzbot found the following issue on:
 >>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 10893c91b1c1..15070afb14b5 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -1107,6 +1107,16 @@ T:    git git://git.kernel.org/pub/scm/linux/ 
->>> kernel/git/iommu/linux.git
->>>   F:    drivers/iommu/amd/
->>>   F:    include/linux/amd-iommu.h
->>> +AMD ISP4 DRIVER
->>> +M:    Bin Du <bin.du@amd.com>
->>> +M:    Nirujogi Pratap <pratap.nirujogi@amd.com>
->>> +L:    linux-media@vger.kernel.org
->>> +S:    Maintained
->>> +T:    git git://linuxtv.org/media.git
->>> +F:    drivers/media/platform/amd/Kconfig
->>> +F:    drivers/media/platform/amd/Makefile
->>> +F:    drivers/media/platform/amd/isp4/*
->>> +
->>>   AMD KFD
->>>   M:    Felix Kuehling <Felix.Kuehling@amd.com>
->>>   L:    amd-gfx@lists.freedesktop.org
->>> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/ 
->>> Kconfig
->>> index 85d2627776b6..d525c2262a7d 100644
->>> --- a/drivers/media/platform/Kconfig
->>> +++ b/drivers/media/platform/Kconfig
->>> @@ -89,5 +89,6 @@ source "drivers/media/platform/ti/Kconfig"
->>>   source "drivers/media/platform/verisilicon/Kconfig"
->>>   source "drivers/media/platform/via/Kconfig"
->>>   source "drivers/media/platform/xilinx/Kconfig"
->>> +source "drivers/media/platform/amd/Kconfig"
->>>   endif # MEDIA_PLATFORM_DRIVERS
->>> diff --git a/drivers/media/platform/Makefile b/drivers/media/ 
->>> platform/ Makefile
->>> index ace4e34483dd..9f3d1693868d 100644
->>> --- a/drivers/media/platform/Makefile
->>> +++ b/drivers/media/platform/Makefile
->>> @@ -32,6 +32,7 @@ obj-y += ti/
->>>   obj-y += verisilicon/
->>>   obj-y += via/
->>>   obj-y += xilinx/
->>> +obj-y += amd/
+>>> HEAD commit:    4774cfe3543a Merge tag 'scsi-fixes' of
+>>> git://git.kernel.or..
+>>> git tree:       upstream
+>>> console output:
+>>> https://syzkaller.appspot.com/x/log.txt?x=10e3f10c580000
+>>> kernel config:
+>>> https://syzkaller.appspot.com/x/.config?x=61539536677af51c
+>>> dashboard link:
+>>> https://syzkaller.appspot.com/bug?extid=3bbbade4e1a7ab45ca3b
+>>> compiler:       Debian clang version 20.1.6
+>>> (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian
+>>> LLD 20.1.6
+>>> userspace arch: i386
+>>>
+>>> Unfortunately, I don't have any reproducer for this issue yet.
+>>>
 >>
->> Is this whole file alphabetical?  If so this is the wrong place.
+>> It doesn't need one: The problem will be seen if the data returned
+>> from the
+>> power supply is shorter than expected. In the example below, the
+>> problem will
+>> be seen if less than NUM_TEMP_SENSORS+1 data bytes were received.
+>> One possible fix would be to record the returned data length in
+>> ccp_raw_event()
+>> and to have each caller of send_usb_cmd() check if the returned
+>> amount of data
+>> is sufficient.
 >>
->>>   # Please place here only ancillary drivers that aren't SoC-specific
->>>   # Please keep it alphabetically sorted by Kconfig name
->>> diff --git a/drivers/media/platform/amd/Kconfig b/drivers/media/ 
->>> platform/amd/Kconfig
->>> new file mode 100644
->>> index 000000000000..3b1dba0400a0
->>> --- /dev/null
->>> +++ b/drivers/media/platform/amd/Kconfig
->>> @@ -0,0 +1,17 @@
->>> +# SPDX-License-Identifier: MIT
->>> +
->>> +config AMD_ISP4
->>> +    tristate "AMD ISP4 and camera driver"
->>> +    default y
->>
->> I don't believe this should default 'y'.  Normally drivers need to be 
->> opt in.
->>
->>> +    depends on VIDEO_DEV && VIDEO_V4L2_SUBDEV_API
->>> +    select VIDEOBUF2_CORE
->>> +    select VIDEOBUF2_V4L2
->>> +    select VIDEOBUF2_MEMOPS
->>> +    select VIDEOBUF2_VMALLOC
->>> +    select VIDEOBUF2_DMA_CONTIG
->>> +    select VIDEOBUF2_DMA_SG
->>> +    help
->>> +      This is support for AMD ISP4 and camera subsystem driver.
->>> +      Say Y here to enable the ISP4 and camera device for video 
->>> capture.
->>> +      To compile this driver as a module, choose M here. The module 
->>> will
->>> +      be called amd_capture.
->>> diff --git a/drivers/media/platform/amd/Makefile b/drivers/media/ 
->>> platform/amd/Makefile
->>> new file mode 100644
->>> index 000000000000..76146efcd2bf
->>> --- /dev/null
->>> +++ b/drivers/media/platform/amd/Makefile
->>> @@ -0,0 +1,5 @@
->>> +# Copyright 2024 Advanced Micro Devices, Inc.
->>
->> 2025
->>
->>> +# add isp block
->>> +ifneq ($(CONFIG_AMD_ISP4),)
->>> +obj-y += isp4/
->>> +endif
->>> diff --git a/drivers/media/platform/amd/isp4/Makefile b/drivers/ 
->>> media/ platform/amd/isp4/Makefile
->>> new file mode 100644
->>> index 000000000000..e9e84160517d
->>> --- /dev/null
->>> +++ b/drivers/media/platform/amd/isp4/Makefile
->>> @@ -0,0 +1,21 @@
->>> +# SPDX-License-Identifier: GPL-2.0+
->>> +#
->>> +# Copyright (C) 2025 Advanced Micro Devices, Inc.
->>> +
->>> +obj-$(CONFIG_AMD_ISP4) += amd_capture.o
->>
->> As the directory is already conditional on CONFIG_AMD_ISP4 is this 
->> obj- $() needed?  Or should it really be obj-y?
->>
-> Yes, it is needed, because AMD_ISP4 is trisate in Kconfig, it can be y or m
-
-Got it, thanks for clarification.
-
+>> Guenter
 > 
->>> +amd_capture-objs := isp4.o
->>> +
->>> +ccflags-y += -I$(srctree)/drivers/media/platform/amd/isp4
->>> +ccflags-y += -I$(srctree)/include
->>> +
->>> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
->>> +    cc_stack_align := -mpreferred-stack-boundary=4
->>> +endif
->>> +
->>> +ccflags-y += $(cc_stack_align)
->>> +ccflags-y += -DCONFIG_COMPAT
->>> +ccflags-y += -Wunused-but-set-variable
->>> +ccflags-y += -Wmissing-include-dirs
->>> +ccflags-y += -Wunused-const-variable
->>> +ccflags-y += -Wmaybe-uninitialized
->>> +ccflags-y += -Wunused-value
->>
->> Do you really need to enforce all these flags just for this driver?
->>
->> Was this just for development to avoid having to remember to call the 
->> build with W=1 or CONFIG_WERROR?
->>
-> We found after patch submission, Media CI robot test will be triggered, 
-> when it builds the patch it will set these flags, so adding these flags 
-> to align with Media CI robot test to discover potential issue before 
-> submission.
+> The device should always return the same number of bytes.
 
-I believe you can just compile with CONFIG_WERROR and get same result, 
-no?  If I'm wrong, nonetheless this should be set in your external build 
-environment script not in the Makefile to be going upstream.
+The term is "should". That doesn't mean it always _does_ return the
+expected number of bytes, only that it is expected to do so.
 
+> I could zero-initialize the buffer at allocation. Then there should
+> be no uninitialized values.
+
+As long as the values are usable, sure. That would not really fix the
+protocol error, though, it would just hide it.
+
+> Also I could check the number of returned bytes in send_usb_cmd()
+> instead of having each caller checking it, and return -EIO if
+> it is not correct?
 > 
->>> diff --git a/drivers/media/platform/amd/isp4/isp4.c b/drivers/media/ 
->>> platform/amd/isp4/isp4.c
->>> new file mode 100644
->>> index 000000000000..d0be90c5ec3b
->>> --- /dev/null
->>> +++ b/drivers/media/platform/amd/isp4/isp4.c
->>> @@ -0,0 +1,139 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
->>> + */
->>> +
->>> +#include <linux/pm_runtime.h>
->>> +#include <linux/vmalloc.h>
->>> +#include <media/v4l2-ioctl.h>
->>> +
->>> +#include "isp4.h"
->>> +
->>> +#define VIDEO_BUF_NUM 5
->>> +
->>> +#define ISP4_DRV_NAME "amd_isp_capture"
->>> +
->>> +/* interrupt num */
->>> +static const u32 isp4_ringbuf_interrupt_num[] = {
->>> +    0, /* ISP_4_1__SRCID__ISP_RINGBUFFER_WPT9 */
->>> +    1, /* ISP_4_1__SRCID__ISP_RINGBUFFER_WPT10 */
->>> +    3, /* ISP_4_1__SRCID__ISP_RINGBUFFER_WPT11 */
->>> +    4, /* ISP_4_1__SRCID__ISP_RINGBUFFER_WPT12 */
->>> +};
->>> +
->>> +#define to_isp4_device(dev) \
->>> +    ((struct isp4_device *)container_of(dev, struct isp4_device, 
->>> v4l2_dev))
->>> +
->>> +static irqreturn_t isp4_irq_handler(int irq, void *arg)
->>> +{
->>> +    struct isp4_device *isp_dev = dev_get_drvdata((struct device 
->>> *)arg);
->>> +
->>> +    if (!isp_dev)
->>> +        goto error_drv_data;
->>> +
->>> +error_drv_data:
->>> +    return IRQ_HANDLED;
->>
->> In patch 5 you change this function, including dropping the goto and 
->> label.
->>
->> So I suggest that for patch 1 you KISS:
->>
->> static irqreturn_t isp4_irq_handler(int irq, void *arg)
->> {
->>      return IRQ_HANDLED;
->> }
->>
->> Then in patch 5 add the extra conditional code and real handling.
->>
->>> +}
->>> +
->>> +/*
->>> + * amd capture module
->>> + */
->>
->> Pointless comment, no?
->>
->>> +static int isp4_capture_probe(struct platform_device *pdev)
->>> +{
->>> +    struct device *dev = &pdev->dev;
->>> +    struct isp4_device *isp_dev;
->>> +
->>
->> Why newline here?
->>
->>> +    int i, irq, ret;
->>> +
->>> +    isp_dev = devm_kzalloc(&pdev->dev, sizeof(*isp_dev), GFP_KERNEL);
->>> +    if (!isp_dev)
->>> +        return -ENOMEM;
->>> +
->>> +    isp_dev->pdev = pdev;
->>> +    dev->init_name = ISP4_DRV_NAME;
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(isp4_ringbuf_interrupt_num); i++) {
->>> +        irq = platform_get_irq(pdev, isp4_ringbuf_interrupt_num[i]);
->>> +        if (irq < 0)
->>> +            return dev_err_probe(dev, -ENODEV,
->>> +                         "fail to get irq %d\n",
->>> +                         isp4_ringbuf_interrupt_num[i]);
->>> +        ret = devm_request_irq(&pdev->dev, irq, isp4_irq_handler, 0,
->>> +                       "ISP_IRQ", &pdev->dev);
->>> +        if (ret)
->>> +            return dev_err_probe(dev, ret, "fail to req irq %d\n",
->>> +                         irq);
->>> +    }
->>> +
->>> +    isp_dev->pltf_data = pdev->dev.platform_data;
->>> +
->>> +    dev_dbg(dev, "isp irq registration successful\n");
->>
->> As you have error handling in place with dev_err_probe() I think the 
->> lack of an error implies this message.  I'd say drop it.
->>
->>> +
->>> +    /* Link the media device within the v4l2_device */
->>> +    isp_dev->v4l2_dev.mdev = &isp_dev->mdev;
->>> +
->>> +    /* Initialize media device */
->>> +    strscpy(isp_dev->mdev.model, "amd_isp41_mdev",
->>> +        sizeof(isp_dev->mdev.model));
->>> +    snprintf(isp_dev->mdev.bus_info, sizeof(isp_dev->mdev.bus_info),
->>> +         "platform:%s", ISP4_DRV_NAME);
->>> +    isp_dev->mdev.dev = &pdev->dev;
->>> +    media_device_init(&isp_dev->mdev);
->>> +
->>> +    /* register v4l2 device */
->>> +    snprintf(isp_dev->v4l2_dev.name, sizeof(isp_dev->v4l2_dev.name),
->>> +         "AMD-V4L2-ROOT");
->>> +    ret = v4l2_device_register(&pdev->dev, &isp_dev->v4l2_dev);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret,
->>> +                     "fail register v4l2 device\n");
->>> +
->>> +    dev_dbg(dev, "AMD ISP v4l2 device registered\n");
->>
->> As you have error handling in place with dev_err_probe() I think the 
->> lack of an error implies this message.  I'd say drop it.
->>
->>> +
->>> +    ret = media_device_register(&isp_dev->mdev);
->>> +    if (ret) {
->>> +        dev_err(dev, "fail to register media device %d\n", ret);
->>> +        goto err_unreg_v4l2;
->>> +    }
->>> +
->>> +    platform_set_drvdata(pdev, isp_dev);
->>> +
->>> +    pm_runtime_set_suspended(dev);
->>> +    pm_runtime_enable(dev);
->>> +
->>> +    return 0;
->>> +
->>> +err_unreg_v4l2:
->>> +    v4l2_device_unregister(&isp_dev->v4l2_dev);
->>> +
->>> +    return dev_err_probe(dev, ret, "isp probe fail\n");
->>> +}
->>> +
->>> +static void isp4_capture_remove(struct platform_device *pdev)
->>> +{
->>> +    struct isp4_device *isp_dev = platform_get_drvdata(pdev);
->>> +    struct device *dev = &pdev->dev;
->>> +
->>> +    media_device_unregister(&isp_dev->mdev);
->>> +    v4l2_device_unregister(&isp_dev->v4l2_dev);
->>> +    dev_dbg(dev, "AMD ISP v4l2 device unregistered\n");
->>
->> Probably not needed message anymore, right?
->>
->>> +}
->>> +
->>> +static struct platform_driver isp4_capture_drv = {
->>> +    .probe = isp4_capture_probe,
->>> +    .remove = isp4_capture_remove,
->>> +    .driver = {
->>> +        .name = ISP4_DRV_NAME,
->>> +        .owner = THIS_MODULE,
->>> +    }
->>> +};
->>> +
->>> +module_platform_driver(isp4_capture_drv);
->>> +
->>> +MODULE_ALIAS("platform:" ISP4_DRV_NAME);
->>> +MODULE_IMPORT_NS("DMA_BUF");
->>> +
->>> +MODULE_DESCRIPTION("AMD ISP4 Driver");
->>> +MODULE_AUTHOR("Bin Du <bin.du@amd.com>");
->>> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
->>> +MODULE_LICENSE("GPL");
->>> diff --git a/drivers/media/platform/amd/isp4/isp4.h b/drivers/media/ 
->>> platform/amd/isp4/isp4.h
->>> new file mode 100644
->>> index 000000000000..27a7362ce6f9
->>> --- /dev/null
->>> +++ b/drivers/media/platform/amd/isp4/isp4.h
->>> @@ -0,0 +1,35 @@
->>> +/* SPDX-License-Identifier: GPL-2.0+ */
->>> +/*
->>> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
->>> + */
->>> +
->>> +#ifndef _ISP4_H_
->>> +#define _ISP4_H_
->>> +
->>> +#include <linux/mutex.h>
->>> +#include <media/v4l2-device.h>
->>> +#include <media/videobuf2-memops.h>
->>> +#include <media/videobuf2-vmalloc.h>
->>> +
->>> +#define ISP4_GET_ISP_REG_BASE(isp4sd) (((isp4sd))->mmio)
->>> +
->>> +struct isp4_platform_data {
->>> +    void *adev;
->>> +    void *bo;
->>> +    void *cpu_ptr;
->>
->> Will touch more on these in later patches, but I would say don't 
->> introduce them until the patch they're needed.
->>
->>> +    u64 gpu_addr;
->>> +    u32 size;
->>> +    u32 asic_type;
->>> +    resource_size_t base_rmmio_size;
->>> +};
->>> +
->>> +struct isp4_device {
->>> +    struct v4l2_device v4l2_dev;
->>> +    struct media_device mdev;
->>> +
->>> +    struct isp4_platform_data *pltf_data;
->>> +    struct platform_device *pdev;
->>> +    struct notifier_block i2c_nb;
->>> +};
->>> +
->>> +#endif /* isp4.h */
->>
->> /* ISP4_H */
->>
-> 
+
+Yes, that would be an even better fix, though I would suggest to return
+-EPROTO in that case to distinguish it from an actual i/o error.
+
+Thanks,
+Guenter
 
