@@ -1,328 +1,226 @@
-Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE95264FA0;
-	Thu, 19 Jun 2025 08:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BFF25EFBB;
+	Thu, 19 Jun 2025 08:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322037; cv=none; b=CuKQYqPRt8QAXn7vxMVYorMIvT3wKlct2cu3PBqiAVb75kgI4zzzxhNOdi4id+aFqATPyGVvha6Ir3Ry1bZJE9QeGhO+E3jDOvzxyzDVRkX4Ff6Pi5539AhsN57H2rCt/cZkVYxjG3ShSDXKlqJZFhrvIPkL6KIXIm33Md310Tk=
+	t=1750322068; cv=none; b=Yk/A62C8hPoijZ2loCAgWmeG8TiQCctxHsIP8mk6UGG0AZRHrpSrHN6zZlAmbf3CqZsHdPEOYUF7MOyfuz34cacgFrtnW1CNWEv0Gt2n/GNdXo7axeXao8PMHUGaJYCxL8e7SlbtzaeaoS5UIS9odUddDQIS0ReT5OLbiKP14eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322037; c=relaxed/simple;
-	bh=TnutbrdDTFqTAJdAvKwHWum+J/G3rqx1TRNz/WW3H2Y=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wn99mo7P7ceOXtFHpDMfh/pd/aMprkRDkdbOr+W5l6zkNy9nJsAF0OAPCwagPuzM4qWawl9prEsfvyJiprRiTqsWgKoMPw9GtSLE9ruUpzc/2SqZVuwD/QK2ilIgV4VonD3sAG5mMxwdaGSKNb+VxFXGXjCb8jtRSh/XFTBrLTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de; spf=pass smtp.mailfrom=mariuszachmann.de; dkim=pass (2048-bit key) header.d=mariuszachmann.de header.i=@mariuszachmann.de header.b=WLJCOOYR; arc=none smtp.client-ip=178.254.4.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mariuszachmann.de
+	s=arc-20240116; t=1750322068; c=relaxed/simple;
+	bh=c4M48DAPUB6EdmaCMv6HQ2OsHeYOy7PcUMGd5aRfG+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJOPg7RKTugG/GChWWSI1y+TfnljmdoyI6CEDIzJCzAVRLOyrpHVgWcPKs8zh8QsAv1IS69Guc1K3+8QA7TssJcNOXd8HO9xz4GRUBHk8W84YlFXwAqFrTfP6LRCXwapfk+DPNLdF2yAN4RfTyDO5MuYgVU92Vo4ZCh4KLZtmOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WF+wGXau; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mariuszachmann.de header.i=@mariuszachmann.de header.b="WLJCOOYR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WF+wGXau"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mariuszachmann.de; s=blu6948523; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description;
-	bh=TnutbrdDTFqTAJdAvKwHWum+J/G3rqx1TRNz/WW3H2Y=; b=WLJCOOYRm7iSJRk9HXjqVCxXYR
-	AaWHMtSh72s4laQkbikG+qgF3XFSWKogmwQdmayXzLWQ3rAvFRiJAMryAoHX9ZTIxYLwD4moAnDTa
-	GqH8DnhjcSzIwUGK92y+x5lhsH6DD1b8u1S4JxM3pX6/6eSvwmBwWe2zh61J4+ZmEqkYJLcyjcbD+
-	lLPmyjNc8drb59fiIWj7H6qSYCOrAdRUVUmh8rR7f7EthgjoGH/DRZwaYBQdxESYup2cU9SZQ8/yp
-	h6PKBQri2i7hZdd2mPFp0aC3rNp1kh166NemSdmYpaL/F7CtVt2Fqj8DTp/vs89orm+bqE1OL1x6J
-	1q2Sr+Pg==;
-Received: from [2.211.115.98] (helo=[192.168.178.20])
-	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <mail@mariuszachmann.de>)
-	id 1uSAD3-002afl-IQ;
-	Thu, 19 Jun 2025 10:01:21 +0200
-Message-ID: <fe5fe144dea8665f96b943e9abe58fc8be536d69.camel@mariuszachmann.de>
-Subject: Re: [syzbot] [hwmon?] KMSAN: uninit-value in get_temp_cnct
-From: Marius Zachmann <mail@mariuszachmann.de>
-To: Guenter Roeck <linux@roeck-us.net>, syzbot	
- <syzbot+3bbbade4e1a7ab45ca3b@syzkaller.appspotmail.com>, jdelvare@suse.com,
- 	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Date: Thu, 19 Jun 2025 10:01:21 +0200
-In-Reply-To: <145b2916-830b-4654-84e6-3d5c356c6283@roeck-us.net>
-References: <685392a0.050a0220.216029.0168.GAE@google.com>
-	 <145b2916-830b-4654-84e6-3d5c356c6283@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DsByoZYD8zFBKsiCOPlBpf2Aj97G3XGrcpCEr3Mc8Wk=; b=WF+wGXauAjTvc7esDxVuCdR2SV
+	64jbFjdk8sXoIcty5oT1C8gx/AgoyW7B6KRCUGhsMjZUeywOfKOK/nHwYFLlxnhQzzHuP6I9wVgfc
+	B7F2cLBYFeBP/Jz9/JKN4s8Y+RizMJO5pf/8H8SirFJuWyMmK3cY0D0q2UTmHzM8CV1P8z9Ms79fa
+	RvQNOi97XHkPQNplD8vzvqvVKYW1A54jJIrwNzxk9+zZRl5MsazSFz0vYqSpu/ALvDY2e8GW4Xf8g
+	zGmaxI7pD976dkTrKxEr1AQ1gVSymp3oQNediz1abz1cbEgntPnFJ+ib+it+oZDLSHxI20ZNCKa43
+	8ToYzQqQ==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSAiu-00000007uGX-3Fl2;
+	Thu, 19 Jun 2025 08:34:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B39593088F2; Thu, 19 Jun 2025 10:34:15 +0200 (CEST)
+Date: Thu, 19 Jun 2025 10:34:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.938845449@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Con-Id: 241080
-X-Con-U: 0-mail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611010428.938845449@goodmis.org>
 
-Am Mittwoch, dem 18.06.2025 um 22:56 -0700 schrieb Guenter Roeck:
-> On 6/18/25 21:31, syzbot wrote:
-> > Hello,
-> >=20
-> > syzbot found the following issue on:
-> >=20
-> > HEAD commit:=C2=A0=C2=A0=C2=A0 4774cfe3543a Merge tag 'scsi-fixes' of
-> > git://git.kernel.or..
-> > git tree:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 upstream
-> > console output:
-> > https://syzkaller.appspot.com/x/log.txt?x=3D10e3f10c580000
-> > kernel config:=C2=A0
-> > https://syzkaller.appspot.com/x/.config?x=3D61539536677af51c
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=3D3bbbade4e1a7ab45ca3b
-> > compiler:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Debian clang version 20.1=
-.6
-> > (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian
-> > LLD 20.1.6
-> > userspace arch: i386
-> >=20
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >=20
->=20
-> It doesn't need one: The problem will be seen if the data returned
-> from the
-> power supply is shorter than expected. In the example below, the
-> problem will
-> be seen if less than NUM_TEMP_SENSORS+1 data bytes were received.
-> One possible fix would be to record the returned data length in
-> ccp_raw_event()
-> and to have each caller of send_usb_cmd() check if the returned
-> amount of data
-> is sufficient.
->=20
-> Guenter
+On Tue, Jun 10, 2025 at 08:54:28PM -0400, Steven Rostedt wrote:
+> From: Josh Poimboeuf <jpoimboe@kernel.org>
+> 
+> Make unwind_deferred_request() NMI-safe so tracers in NMI context can
+> call it and safely request a user space stacktrace when the task exits.
+> 
+> A "nmi_timestamp" is added to the unwind_task_info that gets updated by
+> NMIs to not race with setting the info->timestamp.
 
-The device should always return the same number of bytes.
-I could zero-initialize the buffer at allocation. Then there should
-be no uninitialized values.
-Also I could check the number of returned bytes in send_usb_cmd()
-instead of having each caller checking it, and return -EIO if
-it is not correct?
+I feel this is missing something... or I am.
 
-Marius
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v9: https://lore.kernel.org/linux-trace-kernel/20250513223552.636076711@goodmis.org/
+> 
+> - Check for ret < 0 instead of just ret != 0 from return code of
+>   task_work_add(). Don't want to just assume it's less than zero as it
+>   needs to return a negative on error.
+> 
+>  include/linux/unwind_deferred_types.h |  1 +
+>  kernel/unwind/deferred.c              | 91 ++++++++++++++++++++++++---
+>  2 files changed, 84 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+> index 5df264cf81ad..ae27a02234b8 100644
+> --- a/include/linux/unwind_deferred_types.h
+> +++ b/include/linux/unwind_deferred_types.h
+> @@ -11,6 +11,7 @@ struct unwind_task_info {
+>  	struct unwind_cache	*cache;
+>  	struct callback_head	work;
+>  	u64			timestamp;
+> +	u64			nmi_timestamp;
+>  	int			pending;
+>  };
+>  
+> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> index b76c704ddc6d..88c867c32c01 100644
+> --- a/kernel/unwind/deferred.c
+> +++ b/kernel/unwind/deferred.c
+> @@ -25,8 +25,27 @@ static u64 get_timestamp(struct unwind_task_info *info)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  
+> -	if (!info->timestamp)
+> -		info->timestamp = local_clock();
+> +	/*
+> +	 * Note, the timestamp is generated on the first request.
+> +	 * If it exists here, then the timestamp is earlier than
+> +	 * this request and it means that this request will be
+> +	 * valid for the stracktrace.
+> +	 */
+> +	if (!info->timestamp) {
+> +		WRITE_ONCE(info->timestamp, local_clock());
+> +		barrier();
+> +		/*
+> +		 * If an NMI came in and set a timestamp, it means that
+> +		 * it happened before this timestamp was set (otherwise
+> +		 * the NMI would have used this one). Use the NMI timestamp
+> +		 * instead.
+> +		 */
+> +		if (unlikely(info->nmi_timestamp)) {
+> +			WRITE_ONCE(info->timestamp, info->nmi_timestamp);
+> +			barrier();
+> +			WRITE_ONCE(info->nmi_timestamp, 0);
+> +		}
+> +	}
+>  
+>  	return info->timestamp;
+>  }
+> @@ -103,6 +122,13 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>  
+>  	unwind_deferred_trace(&trace);
+>  
+> +	/* Check if the timestamp was only set by NMI */
+> +	if (info->nmi_timestamp) {
+> +		WRITE_ONCE(info->timestamp, info->nmi_timestamp);
+> +		barrier();
+> +		WRITE_ONCE(info->nmi_timestamp, 0);
+> +	}
+> +
+>  	timestamp = info->timestamp;
+>  
+>  	guard(mutex)(&callback_mutex);
+> @@ -111,6 +137,48 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>  	}
+>  }
+>  
+> +static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
+> +{
+> +	struct unwind_task_info *info = &current->unwind_info;
+> +	bool inited_timestamp = false;
+> +	int ret;
+> +
+> +	/* Always use the nmi_timestamp first */
+> +	*timestamp = info->nmi_timestamp ? : info->timestamp;
+> +
+> +	if (!*timestamp) {
+> +		/*
+> +		 * This is the first unwind request since the most recent entry
+> +		 * from user space. Initialize the task timestamp.
+> +		 *
+> +		 * Don't write to info->timestamp directly, otherwise it may race
+> +		 * with an interruption of get_timestamp().
+> +		 */
+> +		info->nmi_timestamp = local_clock();
+> +		*timestamp = info->nmi_timestamp;
+> +		inited_timestamp = true;
+> +	}
+> +
+> +	if (info->pending)
+> +		return 1;
+> +
+> +	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
+> +	if (ret < 0) {
+> +		/*
+> +		 * If this set nmi_timestamp and is not using it,
+> +		 * there's no guarantee that it will be used.
+> +		 * Set it back to zero.
+> +		 */
+> +		if (inited_timestamp)
+> +			info->nmi_timestamp = 0;
+> +		return ret;
+> +	}
+> +
+> +	info->pending = 1;
+> +
+> +	return 0;
+> +}
 
->=20
-> > Downloadable assets:
-> > disk image:
-> > https://storage.googleapis.com/syzbot-assets/0cb38ba04f99/disk-4774cfe3=
-.raw.xz
-> > vmlinux:
-> > https://storage.googleapis.com/syzbot-assets/ff376a7ba200/vmlinux-4774c=
-fe3.xz
-> > kernel image:
-> > https://storage.googleapis.com/syzbot-assets/570051315dbf/bzImage-4774c=
-fe3.xz
-> >=20
-> > IMPORTANT: if you fix the issue, please add the following tag to
-> > the commit:
-> > Reported-by: syzbot+3bbbade4e1a7ab45ca3b@syzkaller.appspotmail.com
-> >=20
-> > usb 7-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
-> > usb 7-1: config 0 descriptor??
-> > corsair-cpro 0003:1B1C:0C10.0017: hidraw0: USB HID v4.06 Device
-> > [HID 1b1c:0c10] on usb-dummy_hcd.6-1/input0
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > BUG: KMSAN: uninit-value in get_temp_cnct+0x1f3/0x3b0
-> > drivers/hwmon/corsair-cpro.c:497
-> > =C2=A0 get_temp_cnct+0x1f3/0x3b0 drivers/hwmon/corsair-cpro.c:497
-> > =C2=A0 ccp_probe+0x458/0x790 drivers/hwmon/corsair-cpro.c:622
-> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
-> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
-> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
-> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_set_configuration+0x3493/0x3b70
-> > drivers/usb/core/message.c:2210
-> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
-> > drivers/usb/core/generic.c:250
-> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
-> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
-> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
-> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
-> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
-> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
-> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
-> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
-> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
-> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
-> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >=20
-> > Uninit was stored to memory at:
-> > =C2=A0 get_temp_cnct+0x1ec/0x3b0 drivers/hwmon/corsair-cpro.c:496
-> > =C2=A0 ccp_probe+0x458/0x790 drivers/hwmon/corsair-cpro.c:622
-> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
-> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
-> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
-> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_set_configuration+0x3493/0x3b70
-> > drivers/usb/core/message.c:2210
-> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
-> > drivers/usb/core/generic.c:250
-> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
-> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
-> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
-> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
-> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
-> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
-> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
-> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
-> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
-> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
-> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >=20
-> > Uninit was created at:
-> > =C2=A0 slab_post_alloc_hook mm/slub.c:4154 [inline]
-> > =C2=A0 slab_alloc_node mm/slub.c:4197 [inline]
-> > =C2=A0 __do_kmalloc_node mm/slub.c:4327 [inline]
-> > =C2=A0 __kmalloc_node_track_caller_noprof+0x96d/0x12f0 mm/slub.c:4347
-> > =C2=A0 alloc_dr drivers/base/devres.c:119 [inline]
-> > =C2=A0 devm_kmalloc+0xd7/0x2f0 drivers/base/devres.c:864
-> > =C2=A0 ccp_probe+0x114/0x790 drivers/hwmon/corsair-cpro.c:596
-> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
-> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
-> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
-> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_set_configuration+0x3493/0x3b70
-> > drivers/usb/core/message.c:2210
-> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
-> > drivers/usb/core/generic.c:250
-> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
-> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
-> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
-> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
-> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
-> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
-> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
-> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
-> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
-> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
-> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
-> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
-> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
-> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
-> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
-> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
-> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
-> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
-> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
-> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
-> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
-> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >=20
-> > CPU: 0 UID: 0 PID: 5855 Comm: kworker/0:3 Not tainted 6.16.0-rc1-
-> > syzkaller-00203-g4774cfe3543a #0 PREEMPT(undef)
-> > Hardware name: Google Google Compute Engine/Google Compute Engine,
-> > BIOS Google 05/07/2025
-> > Workqueue: usb_hub_wq hub_event
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >=20
-> >=20
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ=C2=A0for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >=20
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status=C2=A0for how to communicate with syzbot.
-> >=20
-> > If the report is already addressed, let syzbot know by replying
-> > with:
-> > #syz fix: exact-commit-title
-> >=20
-> > If you want to overwrite report's subsystems, reply with:
-> > #syz set subsystems: new-subsystem
-> > (See the list of subsystem names on the web dashboard)
-> >=20
-> > If the report is a duplicate of another one, reply with:
-> > #syz dup: exact-subject-of-another-report
-> >=20
-> > If you want to undo deduplication, reply with:
-> > #syz undup
+So what's the actual problem here, something like this:
+
+  if (!info->timestamp)
+    <NMI>
+      if (!info->timestamp)
+        info->timestamp = local_clock(); /* Ta */
+    </NMI>
+      info->timestamp = local_clock();   /* Tb */
+
+And now info has Tb which is after Ta, which was recorded for the NMI
+request?
+       
+Why can't we cmpxchg_local() the thing and avoid this horrible stuff?
+
+static u64 get_timestamp(struct unwind_task_info *info)
+{
+	u64 new, old = info->timestamp;
+
+	if (old)
+		return old;
+	
+	new = local_clock();
+	old = cmpxchg_local(&info->timestamp, old, new);
+	if (old)
+		return old;
+	return new;
+}
+
+Seems simple enough; what's wrong with it?
