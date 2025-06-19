@@ -1,125 +1,183 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3705215766;
-	Thu, 19 Jun 2025 08:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D621A424;
+	Thu, 19 Jun 2025 08:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750320823; cv=none; b=g2uUGUr5NiLtj/Dm1Un1JuGJ89x/ZaZyv/a472RW/sciyJu4Gbc8dczDuRN8h5jbz1CHmat0Y7FT7CrGp5HGUXkL9GM3g5r3KqjMMIS9+bpVR6OuAy+dNqbfUgjjP5M+1Vzcdg6bdIun5w5vxPt86utI6ilsszfEEaJTkQPiWvU=
+	t=1750320881; cv=none; b=jnkiMqK+qVMHCGlFADW4tt0A4b0pp2cFGqAND5B59n3lur0AMA91h/vq1kz7kNZFP5gkjDQTUCijNHd7mLNiSjR2e4vgQyHNgdLTyEpO4qUTgsJQmWDRk4B6FYmbEIHfwrvLjoTj4k0yT++83b6Shvjvah/bA0v1gqpOiUkf9RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750320823; c=relaxed/simple;
-	bh=TOnvNAFh5loptubbVx+ifrw8+CaOXeq3Jklun6ffQ3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pU7zHpmzWKlq498dl1g9ClsCuqM+haNHkzZOoHFepFL1Fm+aLAd1z9DP2NdiIhv6wxs3iny4zWWXs78SNDlcxqcwXNBaMmUDQFUmJEk9SFczV4xxihNVFBa0f2CH7Trd349e4PCwmZldj6UAOkAwSmU1UnIzOr68qEqZOuULFME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Eue6Ooen; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750320881; c=relaxed/simple;
+	bh=4HJuJePFef9p2ELqf3SzVRO850tg1GWyQ2TzfThmE6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oIRBIrlUSfnMI4MEBZQyyyQxH2KD9F/c7e8bJf7sSiqFxKvdgOI18HoNrrajb0E0ZDlZ1eRlzvSMJbWZQsOoaR/mpnofWGS92qtegFqsUYl4n5pAp/idlOFKz9uaQI6fWJLygAR4m5uRJT7THkBwNJ/m6DXE1hdESXFuSkAFoqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRCScuqd; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Eue6Ooen"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AF2C433B5;
-	Thu, 19 Jun 2025 08:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750320818;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yX6a2kX+avN/Me66IK4ZdJGprGWZ34+Ag3m54z+SpxI=;
-	b=Eue6OoenItyJlrcTK8NqgxPTI37swvCJGgAJnJELLfqV+fYQW8Ef/A/4O+hUj/Fs9GmeKs
-	1YinOFWt6yZ6GN+aca9mfFx3psV6E0SPYS7N0rdzu7OMDQMdAUHg5K08EIBWvQvVOT9bDS
-	ttk4rJxeh5JZto5P6K5u5VVYaHE/amvOT/jBSqTCvRAJ+Fwlkq3cIyh8CPEg0+SxiNBY3U
-	ROtfmJYWC659jVw5L2J3nlpXGdwZlB+mJ4+ZCxELo6quZVZKzP0fLtGZE9R4ZO2gRbDzBD
-	2zOjaJpWPmj+vQBeoaAKdQMKWTuevNg8edK5uTNGLn3lGNMAbfPgBC2JAW45Aw==
-Date: Thu, 19 Jun 2025 10:13:34 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
- Kemnade <andreas@kemnade.info>, Roger Quadros <rogerq@kernel.org>, Russell
- King <linux@armlinux.org.uk>, Paul Barker <paul.barker@sancloud.com>, Marc
- Murphy <marc.murphy@sancloud.com>, Jason Kridner <jkridner@gmail.com>,
- Andrew Davis <afd@ti.com>, Bajjuri Praneeth <praneeth@ti.com>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/7] arm: dts: omap: Remove incorrect compatible
- strings from device trees
-Message-ID: <20250619101334.5b67741c@kmaincent-XPS-13-7390>
-In-Reply-To: <7hzfe4ok9c.fsf@baylibre.com>
-References: <20250617-bbg-v4-0-827cbd606db6@bootlin.com>
-	<20250617-bbg-v4-2-827cbd606db6@bootlin.com>
-	<7hzfe4ok9c.fsf@baylibre.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRCScuqd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750320879; x=1781856879;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4HJuJePFef9p2ELqf3SzVRO850tg1GWyQ2TzfThmE6U=;
+  b=kRCScuqdpD2i8aN/J2/WEnRUwgBy/Gv933/d4wygDccTCb6DUr4O+02l
+   MCwHMF4tpTVEfvZJpBwbamisvb/uHfRI59esyD8bzKf0XwPvHvfhwujqM
+   5E+Acu2B3NXp4NAYRpm9ncseRaVX99UIUrCb7qbQ83b0ePLbiutDoQBBI
+   MnZW+tksKEADrBaXKogpyEI1+1WULlDgJCA3oBvDWbCHH+Op75tmkv4bI
+   g1Xokg1HzOWbRkrXPfQR7CMLD4U8B+hKQLViswX97dL08om7nsPLo8MA8
+   6norZHP86Scem0JGgM0r6y/hkaaMrthIIjK70omooK7oZoGJjvmAO/mBP
+   w==;
+X-CSE-ConnectionGUID: dNObG1LyQTyfrImNPTZGkg==
+X-CSE-MsgGUID: OifD8hRDQziF40V/+K+ofw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="55197737"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="55197737"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 01:14:37 -0700
+X-CSE-ConnectionGUID: wS0++O/HRfKzXmL0I2HRjg==
+X-CSE-MsgGUID: 1GwMLCrPRHesJQpM8C7HWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="156336448"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 19 Jun 2025 01:14:31 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSAPk-000KYk-1C;
+	Thu, 19 Jun 2025 08:14:28 +0000
+Date: Thu, 19 Jun 2025 16:14:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
+	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, elbadrym@google.com, romlem@google.com,
+	anhphan@google.com, wak@google.com, yuxiaozhang@google.com,
+	BMC-SW@aspeedtech.com
+Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+Message-ID: <202506191639.jNEto4NW-lkp@intel.com>
+References: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodguthesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggrrhhordhkohhskhhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtoheprhhoghgvrhhqsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 
-Le Wed, 18 Jun 2025 13:41:19 -0700,
-Kevin Hilman <khilman@baylibre.com> a =C3=A9crit :
+Hi Jacky,
 
-> Kory Maincent <kory.maincent@bootlin.com> writes:
->=20
-> > Several device trees incorrectly included extraneous compatible strings
-> > in their compatible property lists. The policy is to only describe the
-> > specific board name and SoC name to avoid confusion.
-> >
-> > Remove these incorrect compatible strings to fix the inconsistency.
-> >
-> > Also fix board vendor prefixes for BeagleBoard variants that were
-> > incorrectly using "ti" instead of "beagle" or "seeed".
-> >
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
->=20
-> While I agree with adding the new compatibles for clarity, I question
-> removing the old ones after so much time in the kernel.=20
->=20
-> As mentioned in earlier reviews, there is other tooling outside the
-> kernel that has been built around these strings.  The one that I have in
-> mind is KernelCI based tooling that tracks boards based on compatible
-> strings.
->=20
-> While the KernelCI tooling does evolve with these kinds of kernel
-> changes, it also still builds and tests older kernels.  So if we want
-> these tools to know that "beagle,am335x-bone" on a new kernel and
-> "ti,am335x-bone" on an older stable kernel are actually the same board,
-> the tools will need to keep track of that mapping as these change.
->=20
-> So instead of removing them, can't we just make the new ones higher prio
-> than the old ones?  That way the tools can see both, and also see which
-> one is higher prio.
+kernel test robot noticed the following build errors:
 
-But we can't add something like what you describe to the bindings. I don't =
-think
-they will accept this. And if we don't align the bindings the dtbs check wi=
-ll
-complain forever.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.16-rc2 next-20250618]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> I fully realize this is not necessarily the best technical argument to
-> keeping the old and wrong names, so I will defer to DT maintainers on
-> this one.  But since it's been wrong for a long time, I'm a bit
-> reluctant to remove them completely knowing there will be external tools
-> breakage.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-phy-Add-document-for-ASPEED-PCIe-PHY/20250613-113331
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250613033001.3153637-8-jacky_chou%40aspeedtech.com
+patch subject: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+config: x86_64-randconfig-007-20250619 (https://download.01.org/0day-ci/archive/20250619/202506191639.jNEto4NW-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250619/202506191639.jNEto4NW-lkp@intel.com/reproduce)
 
-Yes, still waiting DT maintainers point of vue on this. :/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506191639.jNEto4NW-lkp@intel.com/
 
-I am wondering if I will separate my patch series, the cleaning part raises
-lots of push back.
+All errors (new ones prefixed by >>):
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+   ld: vmlinux.o: in function `arch_setup_msi_irqs':
+>> drivers/pci/msi/legacy.c:31: undefined reference to `msi_domain_first_desc'
+>> ld: drivers/pci/msi/legacy.c:31: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `arch_teardown_msi_irqs':
+   drivers/pci/msi/legacy.c:45: undefined reference to `msi_domain_first_desc'
+   ld: drivers/pci/msi/legacy.c:45: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `pci_msi_setup_check_result':
+   drivers/pci/msi/legacy.c:60: undefined reference to `msi_domain_first_desc'
+   ld: drivers/pci/msi/legacy.c:60: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `pci_msi_legacy_setup_msi_irqs':
+>> drivers/pci/msi/legacy.c:72: undefined reference to `msi_device_populate_sysfs'
+   ld: vmlinux.o: in function `pci_msi_legacy_teardown_msi_irqs':
+>> drivers/pci/msi/legacy.c:78: undefined reference to `msi_device_destroy_sysfs'
+
+
+vim +31 drivers/pci/msi/legacy.c
+
+a01e09ef123789 Thomas Gleixner 2021-12-06  18  
+a01e09ef123789 Thomas Gleixner 2021-12-06  19  int __weak arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+a01e09ef123789 Thomas Gleixner 2021-12-06  20  {
+a01e09ef123789 Thomas Gleixner 2021-12-06  21  	struct msi_desc *desc;
+a01e09ef123789 Thomas Gleixner 2021-12-06  22  	int ret;
+a01e09ef123789 Thomas Gleixner 2021-12-06  23  
+a01e09ef123789 Thomas Gleixner 2021-12-06  24  	/*
+a01e09ef123789 Thomas Gleixner 2021-12-06  25  	 * If an architecture wants to support multiple MSI, it needs to
+a01e09ef123789 Thomas Gleixner 2021-12-06  26  	 * override arch_setup_msi_irqs()
+a01e09ef123789 Thomas Gleixner 2021-12-06  27  	 */
+a01e09ef123789 Thomas Gleixner 2021-12-06  28  	if (type == PCI_CAP_ID_MSI && nvec > 1)
+a01e09ef123789 Thomas Gleixner 2021-12-06  29  		return 1;
+a01e09ef123789 Thomas Gleixner 2021-12-06  30  
+ae24e28fef1468 Thomas Gleixner 2021-12-06 @31  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
+a01e09ef123789 Thomas Gleixner 2021-12-06  32  		ret = arch_setup_msi_irq(dev, desc);
+a01e09ef123789 Thomas Gleixner 2021-12-06  33  		if (ret)
+a01e09ef123789 Thomas Gleixner 2021-12-06  34  			return ret < 0 ? ret : -ENOSPC;
+a01e09ef123789 Thomas Gleixner 2021-12-06  35  	}
+a01e09ef123789 Thomas Gleixner 2021-12-06  36  
+a01e09ef123789 Thomas Gleixner 2021-12-06  37  	return 0;
+a01e09ef123789 Thomas Gleixner 2021-12-06  38  }
+a01e09ef123789 Thomas Gleixner 2021-12-06  39  
+a01e09ef123789 Thomas Gleixner 2021-12-06  40  void __weak arch_teardown_msi_irqs(struct pci_dev *dev)
+a01e09ef123789 Thomas Gleixner 2021-12-06  41  {
+a01e09ef123789 Thomas Gleixner 2021-12-06  42  	struct msi_desc *desc;
+a01e09ef123789 Thomas Gleixner 2021-12-06  43  	int i;
+a01e09ef123789 Thomas Gleixner 2021-12-06  44  
+ae24e28fef1468 Thomas Gleixner 2021-12-06  45  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_ASSOCIATED) {
+a01e09ef123789 Thomas Gleixner 2021-12-06  46  		for (i = 0; i < desc->nvec_used; i++)
+a01e09ef123789 Thomas Gleixner 2021-12-06  47  			arch_teardown_msi_irq(desc->irq + i);
+a01e09ef123789 Thomas Gleixner 2021-12-06  48  	}
+a01e09ef123789 Thomas Gleixner 2021-12-06  49  }
+aa423ac4221abd Thomas Gleixner 2021-12-06  50  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  51  static int pci_msi_setup_check_result(struct pci_dev *dev, int type, int ret)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  52  {
+ae24e28fef1468 Thomas Gleixner 2021-12-06  53  	struct msi_desc *desc;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  54  	int avail = 0;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  55  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  56  	if (type != PCI_CAP_ID_MSIX || ret >= 0)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  57  		return ret;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  58  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  59  	/* Scan the MSI descriptors for successfully allocated ones. */
+ae24e28fef1468 Thomas Gleixner 2021-12-06  60  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_ASSOCIATED)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  61  		avail++;
+ae24e28fef1468 Thomas Gleixner 2021-12-06  62  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  63  	return avail ? avail : ret;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  64  }
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  65  
+aa423ac4221abd Thomas Gleixner 2021-12-06  66  int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+aa423ac4221abd Thomas Gleixner 2021-12-06  67  {
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  68  	int ret = arch_setup_msi_irqs(dev, nvec, type);
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  69  
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  70  	ret = pci_msi_setup_check_result(dev, type, ret);
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  71  	if (!ret)
+ffd84485e6beb9 Thomas Gleixner 2021-12-10 @72  		ret = msi_device_populate_sysfs(&dev->dev);
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  73  	return ret;
+aa423ac4221abd Thomas Gleixner 2021-12-06  74  }
+aa423ac4221abd Thomas Gleixner 2021-12-06  75  
+aa423ac4221abd Thomas Gleixner 2021-12-06  76  void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
+aa423ac4221abd Thomas Gleixner 2021-12-06  77  {
+ffd84485e6beb9 Thomas Gleixner 2021-12-10 @78  	msi_device_destroy_sysfs(&dev->dev);
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
