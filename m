@@ -1,43 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ED72BB15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6217A189905
 	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295284; cv=none; b=nhcrHweYAwFI4lQRecFj8ZBgA6o3Y7pPSg/MnGHMqXrLSa0trkxE+siJG7YpvUW/ZV1tEdfV34hrfIOsMvqI57cX93xNW5TxVX731EHhbUkyFivmDQKoRDl3WxtO3RI9eVaY8ZM+bapeUG0hUqnaxXcs/akZlTn9EjqgfLAr9HI=
+	t=1750295285; cv=none; b=pE2JRCaph8Pzpc+pn0lIJ/deKmK059k4T+8YBM7orgkeGH3//Kh3DuHD+0zXZo6gkWn0fx/PFYVKGn2hcZzVTKiBOMbLOnwZVN4nWGahhN3PGBqqiUm1RV/We6hF1CtGfHIDwWfe7Ioix82y9E89Ol8K5jpApG+KywYiWpZFius=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295284; c=relaxed/simple;
-	bh=9dx2Bp7Fz2kJQ1wK1pPMYN/B3+qfbPpYdSDnI/2M+6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WhLarzENTuBQf0A1ej/+vjTQkMq9Tt5I6gdTzl0rDhxBCVtRii6/czAwIyEsHejelfFry+Ceo9zzjht8DJyLPlDtEcX/22tLbnBlddr9Yf2moEr1gNoyOs5cfFg0nJ3taPUK45NYkXlnfMlh4rxb4EhDNf6TQqkyQ801ClXKkoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=dKJ7MWj6; arc=none smtp.client-ip=202.36.163.20
+	s=arc-20240116; t=1750295285; c=relaxed/simple;
+	bh=MS18sacHJm5wYe0QMq5lKc+9jJ/K81eew7q6JBynOZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CuSn4ZGDo9FbeKqvdShmky7Re/VXsy5RBOM7Susp+u1n8dPReFibxlb+0waM49M6UNMiWdAg+PCI8uBXlyIwUESfOMZ1M0oZn/iWpdqsgYwn9y+dd6Lv56oEXBvpXQcObsgozn0EnGi6SbM6wxM/IsWNz2kGdB63gAq9ITtLxEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=EN3P+erg; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="dKJ7MWj6"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="EN3P+erg"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4A2BB2C097B;
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 664462C0BB5;
 	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
 	s=mail181024; t=1750295278;
-	bh=d6fQpCd/tGiiYo2KaJm4qfwVgUBw7EZikZ+Ox0tD/5U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dKJ7MWj6QhTjTaV7g++zJ/GrYzFKP5aKv3p3H3OAMc7h6UZzYwlO7EtL1Y2ERj3E9
-	 s4R740jJSQ9IUn3X7LBDsGqaM2Is9Cs9SLZ/OlhHcrMKCeGSn3okk++kuxYdlY0Lvq
-	 e3EUbvtaICRjJGgwxd3khYzexH7Gv/p4cRsPlGIrutBjraEvvV9tg+FYGv6bHcRCbu
-	 dxYo4VxCkWQglTs9ETntEREx9LgE8J9AehRolUYvnSpFlGMO4DiaqdjbqPpKQG1+sS
-	 vxg10JkfeTbVUd76stKsOt+SB1H0/V+uiAsuE8bqOHVJ6EdQ5bm9t9okaHH7ixpw2R
-	 IXWrdJxp9b8Ow==
+	bh=6JmV8eEF9av+Sa6e/9Qv4UqSWGZRPCdM5w+0Gsi52gc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EN3P+ergFsI37bvkitnLnCGP9tFjJWIFKulpyzrfz37csqluptZ4Z6rEZHy5m7BdG
+	 5iJ6lX1NxMS/ZpShPKsJ5/lWm71sG+MPPj6pS0Hmyo5iN5/jyCtFF9ZUaUGU1T1gm7
+	 pPORypf55S+glvjtADyZREdQx7UNPbbg7mC9a6Ya7Scst6AF3L46fUp/vZqkFH7Ixz
+	 qQy+0QmgLW1yU1ohhdy/KC+ytXCFMlG9LKQX56XAQEYDiDeol/nKCCaEWCUANnPX5n
+	 b6wKlk9xZOv5EUhMWSrTJDP7iA9IGzxOtZjtl8duedC2jcvujCT33W2l/a2V2YeW+/
+	 mDEgJPx95j/hw==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B685362ee0000>; Thu, 19 Jun 2025 13:07:58 +1200
+	id <B685362ee0003>; Thu, 19 Jun 2025 13:07:58 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 01CE013ED6B;
+	by pat.atlnz.lc (Postfix) with ESMTP id 088C513EE9C;
 	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id F403B280993; Thu, 19 Jun 2025 13:07:57 +1200 (NZST)
+	id 08F6B280993; Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: tsbogend@alpha.franken.de,
 	robh@kernel.org,
@@ -49,10 +50,12 @@ Cc: linux-mips@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 0/4] mips: dts: Updates for RTL9300
-Date: Thu, 19 Jun 2025 13:07:50 +1200
-Message-ID: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 3/4] mips: dts: realtek: Add watchdog
+Date: Thu, 19 Jun 2025 13:07:53 +1200
+Message-ID: <20250619010754.3760612-4-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
+References: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,23 +63,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=F7/0dbhN c=1 sm=1 tr=0 ts=685362ee a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=6IFa9wvqVegA:10 a=yObgpN-EOfBVP0ifAR8A:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=F7/0dbhN c=1 sm=1 tr=0 ts=685362ee a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=6IFa9wvqVegA:10 a=jdP34snFAAAA:8 a=Wqc9ATr8DmnQzDzGyroA:9 a=3ZKOabzyN94A:10 a=od6X62Lo79dmAcA2EqDc:22 a=jlphF6vWLdwq7oh3TaWq:22
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-This is a series of small dts changes for the RTL9300 to enable various
-peripherals.
+The RTL9300 has an integrated watchdog. Add this to the devicetree.
 
-Chris Packham (4):
-  mips: dts: cameo-rtl9302c: Add switch block
-  mips: dts: realtek: Add switch interrupts
-  mips: dts: realtek: Add watchdog
-  mips: dts: realtek: Add gpio block
+This is taken from openwrt[1] the only difference is removing the
+unnecessary second cell from the interrupts.
 
- .../cameo-rtl9302c-2x-rtl8224-2xge.dts        | 96 +++++++++++++++++++
- arch/mips/boot/dts/realtek/rtl930x.dtsi       | 31 ++++++
- 2 files changed, 127 insertions(+)
+[1] - https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob;f=3Dtarge=
+t/linux/realtek/dts/rtl930x.dtsi
 
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/mips/boot/dts/realtek/rtl930x.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
+/realtek/rtl930x.dtsi
+index 74b30704f188..77a854034aba 100644
+--- a/arch/mips/boot/dts/realtek/rtl930x.dtsi
++++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
+@@ -142,6 +142,20 @@ timer0: timer@3200 {
+ 			clocks =3D <&lx_clk>;
+ 		};
+=20
++		watchdog0: watchdog@3260 {
++			compatible =3D "realtek,rtl9300-wdt";
++			reg =3D <0x3260 0xc>;
++
++			realtek,reset-mode =3D "soc";
++
++			clocks =3D <&lx_clk>;
++			timeout-sec =3D <30>;
++
++			interrupt-parent =3D <&intc>;
++			interrupt-names =3D "phase1", "phase2";
++			interrupts =3D <5>, <6>;
++		};
++
+ 		snand: spi@1a400 {
+ 			compatible =3D "realtek,rtl9301-snand";
+ 			reg =3D <0x1a400 0x44>;
 --=20
 2.49.0
 
