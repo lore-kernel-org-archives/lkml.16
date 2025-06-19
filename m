@@ -1,58 +1,58 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7208B28B4F2
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75512278753
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345040; cv=none; b=jRr/omXXoDEnPUudVsntanNhXHkOkERJz70I1Vh8/3kAHOdq4MygPnB1aM7v0fYYhXOwqjQy02qcZIsAOvxoTCXgpQGh7NHWY4oOvLpkDWJHyt3yoJcGvC16uJ5Zb8mi/Ki4owgJm4dgQxo0NQ1I4ovxzr3yINRT2BxYnMO8+OU=
+	t=1750345041; cv=none; b=b6JxprnHH1xaldLAjAIcY5E1CVaKs/4oAQEc/M6USbm2xHkPBqOKMf+wAu8FRZpr+qmZFVJ1AyzJodob0QUBq8gtvvD3/PPSY2sGRRxd+/VzQYBBHG4zyb8tB9TcEN51CahTbpgrzrjpPm3651N/eU+fdtHMHAdNi6O7qxKXklI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345040; c=relaxed/simple;
-	bh=SgcRfC4aLbauEp7YDUkXfpOYuYCnNeh7MBOxK1mnaao=;
+	s=arc-20240116; t=1750345041; c=relaxed/simple;
+	bh=8MQgTgbyU7AhoO9IKV6g0zC+wuDyROfOHHLDLTVvPTI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HZ8OKFpzGyvDjwr/PlfoJvv0t10stlR/Fvp+Bxn39loqTeeYacvvM9at7uHtnhMkJZR0/p4zTXxD1iWh5NVmjzbVWy8tjIx+9B0TMuA/df12ffFWcy+quGQ1uJKje0pjNVX0Aoe/efDYRSbjeSvi9xAX14XIEqLbNjByUVbIOtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VhPh6gpP; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=q8A6MAPSyYbvTkhIu8D1vPgq3i8nj3+uNiaxFfDbn7td3fPxggs8sTl9MEH/Vyu1SHf87J03d6gBm+Sgdio5rhhqVNP/1QGvK25bp4HV5zPF2i/sCGMyeb8vg4PzcniNUzkmcPlYwmp9orCu7uZC3bvRRpHIjP2HaOtjLip062A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=R6egBkkl; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VhPh6gpP"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMdn4014981;
-	Thu, 19 Jun 2025 14:57:09 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R6egBkkl"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMa4L029324;
+	Thu, 19 Jun 2025 14:57:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=W91GK
-	Csq6/X9c64SiyrF6Zzc+6MbOcraJ+NMsQwVfGU=; b=VhPh6gpP/Yx7SKt2NhC5z
-	LynDUGAcELynE8+5hMfvnr+bMSm+nEw+y6wTnnPn7Umtx+hZEQUqgPklP/jY11nA
-	28FUGk+BzUZx1XKEzPRCkqP5L1UyU0Jv6GXZRR99ZD8I4Ote+qzgckIVA3BxYwtp
-	3MjI/E2ub8hd82DQ6Ft9sJVMaomRFhrPvmaEqFXd5Gi6MJeGc6rP/DIqm2MDFl3G
-	ntRrWCsuzuBwfOzFfbOvsqFopw015UR6IJcCphQtVLVdISA8A678c9W8okVgPCzz
-	sJxGNdX1OxuuOAsbAoCvM27WQcGMYgHxtpwcotwSRLaIt3Lhx6XnHTumrpqMn3Xc
-	A==
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=QVIur
+	kUasTY4ql6e6cGMyBpP2U5j7bQgQX8Qgd4u2eg=; b=R6egBkklL1bzpwKn3C78T
+	gKztA+SG8yGHTaXnUMKdq3rPs87WF8YbDRqJkU1DEKCeMy+PCcu9soGoX7z1lH/9
+	8uFN3ohgjVPgYzC72eLzvp0y+JZ8JAOrEoipTeMWaAsgO8dRIsDPaN46YNCtNy/5
+	F6mybWFxYVDRRlZguP0zEK9JpN2YChTpExyrIoXBRebrtD6FxEdg4nC8FJWvA7Sj
+	EkKF3YKFJiO+ncCiynCco4eUIUIjsvV4M11adRd4ijWMDnDqWX98zD+drcKwiJuP
+	Ra7pnax1UuIg537gUFw9dWLPPLi4aqy7rvkQiQ9hvBt5SpIKUv3ZhyEWGd0KsUiE
+	w==
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4t4ar-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47b23xwjxn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:08 +0000 (GMT)
+	Thu, 19 Jun 2025 14:57:13 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDLUju022936;
-	Thu, 19 Jun 2025 14:57:07 GMT
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDPoSx022754;
+	Thu, 19 Jun 2025 14:57:12 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8dwf-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8e0h-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:07 +0000
+	Thu, 19 Jun 2025 14:57:11 +0000
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0JJ008257;
-	Thu, 19 Jun 2025 14:57:06 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0JR008257;
+	Thu, 19 Jun 2025 14:57:11 GMT
 Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-154-180-74.vpn.oracle.com [10.154.180.74])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-6;
-	Thu, 19 Jun 2025 14:57:06 +0000
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-10;
+	Thu, 19 Jun 2025 14:57:11 +0000
 From: Alexandre Chartre <alexandre.chartre@oracle.com>
 To: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org,
         peterz@infradead.org
 Cc: alexandre.chartre@oracle.com
-Subject: [RFC PATCH v2 05/17] objtool: Print symbol during disassembly
-Date: Thu, 19 Jun 2025 16:56:47 +0200
-Message-ID: <20250619145659.1377970-6-alexandre.chartre@oracle.com>
+Subject: [RFC PATCH v2 09/17] objtool: Extract code to validate instruction from the validate branch loop
+Date: Thu, 19 Jun 2025 16:56:51 +0200
+Message-ID: <20250619145659.1377970-10-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
 References: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
@@ -70,283 +70,495 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 sp
  adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506190124
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfXyLESDSrI/bwm ZpZC5fmH56IvMcGK6HRXeN0geIVMDUF2lB/dFqcuiAIoEn6dPNECoed/r52sp6czgVMnzTwY6Hf HbxOEGsuePxg+jf5WbEr4xkiGRe421MaSZCOR0migt4Rfr4yjEw8sX8f2/R43OohZn/LUvWdNXD
- /b52365gwuaGfj33uL2ZIKQldYjxnGSTe955E4ah/wYr5SMZWs8TkZfqP3C+Nuu9ToUfbuMUQb0 Ixowvk00NdkaMbiYQ4sdpkLZ2wpqMs1WM7SHGXiDOLElpW+H5Edni8/rXP9xpfMGObmWXv7R7mj TeO3k0ek53cWGuyTguh31yruF8iss9VOeEnFEYCY2VvPUnEL8mkrjwuCYpENAgQW3JQ2aJ8onWN
- IEfBKA76GGXGJ8vAWmedWF+VuSB5vx0sUW7w2vdIPVK3c0VK2fYksx4JRaXlEfNRtQVxvZ4Y
-X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=68542544 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=zIsJDVpacxTNcREixn4A:9 cc=ntf awl=host:13207
-X-Proofpoint-GUID: BzYGDTfcqkRGztY91Z7o9GS5bR8LSucs
-X-Proofpoint-ORIG-GUID: BzYGDTfcqkRGztY91Z7o9GS5bR8LSucs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfXykJoHnndy9e1 nUEdLB1yvaeVFcCpGNNE4Q6dqTdhIMLpjYh16Jo8pkssfSI300yZ3HsDZ3XjIBBIye7XDJ3Tkfv vrlONMDKySEifxH7X3uODJ27kCfsPSJiFRXI7aPWMl9jkJNsvgm3oIAnf04qatecwvVAaNE9hGP
+ GH+l/fLdZ5edCUltSLhIWylsU1r1DTnryG6ibu54P7zIn3q7RGJe5IbKPZyTyfofBJgALEn4j+a b8PemYhbOGT2WnumgYCbpOvG0n3KEGLvFWFah1Ms4GLl/8e/4YJxpZbsA8Ah/fDyy1q4V27Ejdk NObdD5Zy6ztvuC3fdvmGdiOdkRwyeZIYROle8/5wyNJaBQHjJfOOMz/HFU6Oqu8KewTZ9sSVP32
+ 25UhOoyshpxM2HhBvFBb81iLXTtgZqGoy2t2Qk0BYM4Il2SRLaqKpWTNVNbz+fM47sIqC31r
+X-Authority-Analysis: v=2.4 cv=DM2P4zNb c=1 sm=1 tr=0 ts=68542549 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=45N9rFkX92oTsxCXvtEA:9 cc=ntf awl=host:13207
+X-Proofpoint-GUID: jxs3MGk_BR9QfmYazvPPzN73sSSFv-fQ
+X-Proofpoint-ORIG-GUID: jxs3MGk_BR9QfmYazvPPzN73sSSFv-fQ
 
-Print symbols referenced during disassembly instead of just printing
-raw addresses. Also handle address relocation.
+The code to validate a branch loops through all instructions of the
+branch and validate each instruction. Move the code to validate an
+instruction to a separated function.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- tools/objtool/arch/loongarch/decode.c |  7 +++
- tools/objtool/arch/powerpc/decode.c   |  7 +++
- tools/objtool/arch/x86/decode.c       | 14 +++++
- tools/objtool/check.c                 |  9 ---
- tools/objtool/disas.c                 | 89 +++++++++++++++++++++++++++
- tools/objtool/include/objtool/arch.h  |  2 +
- tools/objtool/include/objtool/check.h |  9 +++
- tools/objtool/include/objtool/warn.h  | 12 ++++
- 8 files changed, 140 insertions(+), 9 deletions(-)
+ tools/objtool/check.c | 388 ++++++++++++++++++++++--------------------
+ 1 file changed, 206 insertions(+), 182 deletions(-)
 
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index 5bf383e7e2e5..09c43f008c9a 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -28,6 +28,13 @@ bool arch_pc_relative_reloc(struct reloc *reloc)
- 	return false;
- }
- 
-+unsigned long arch_pc_relative_offset(struct instruction *insn,
-+				      struct reloc *reloc)
-+{
-+	/* no PC relative relocation */
-+	return 0;
-+}
-+
- bool arch_callee_saved_reg(unsigned char reg)
- {
- 	switch (reg) {
-diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
-index 3c6fced37bcc..9c3f49c45587 100644
---- a/tools/objtool/arch/powerpc/decode.c
-+++ b/tools/objtool/arch/powerpc/decode.c
-@@ -20,6 +20,13 @@ unsigned long arch_dest_reloc_offset(int addend)
- 	return addend;
- }
- 
-+unsigned long arch_pc_relative_offset(struct instruction *insn,
-+				      struct reloc *reloc)
-+{
-+	/* no PC relative relocation */
-+	return 0;
-+}
-+
- bool arch_callee_saved_reg(unsigned char reg)
- {
- 	return false;
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 3c85506f9414..6a39cc619d63 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -103,6 +103,20 @@ bool arch_pc_relative_reloc(struct reloc *reloc)
- 	return false;
- }
- 
-+unsigned long arch_pc_relative_offset(struct instruction *insn,
-+				      struct reloc *reloc)
-+{
-+	/*
-+	 * Relocation information for a RIP-relative instruction is
-+	 * based on the RIP value at the end of the instruction. So
-+	 * to get the effective relocated address, the reference has
-+	 * to be adjusted with the number of bytes between the
-+	 * relocation offset and the end of the instruction.
-+	 */
-+	return reloc_addend(reloc) +
-+		insn->offset + insn->len - reloc_offset(reloc);
-+}
-+
- #define ADD_OP(op) \
- 	if (!(op = calloc(1, sizeof(*op)))) \
- 		return -1; \
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 8ba69e0c273b..a4d0a6c62bc0 100644
+index beaafa1f0323..947fe57e9a6d 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -132,15 +132,6 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
- 	for (insn = next_insn_same_sec(file, insn); insn;		\
- 	     insn = next_insn_same_sec(file, insn))
- 
--static inline struct symbol *insn_call_dest(struct instruction *insn)
--{
--	if (insn->type == INSN_JUMP_DYNAMIC ||
--	    insn->type == INSN_CALL_DYNAMIC)
--		return NULL;
--
--	return insn->_call_dest;
--}
--
- static inline struct reloc *insn_jump_table(struct instruction *insn)
- {
- 	if (insn->type == INSN_JUMP_DYNAMIC ||
-diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
-index 9fead6281102..91d23f7518e3 100644
---- a/tools/objtool/disas.c
-+++ b/tools/objtool/disas.c
-@@ -14,10 +14,96 @@
- 
- struct disas_context {
- 	struct objtool_file *file;
-+	struct instruction *insn;
- 	disassembler_ftype disassembler;
- 	struct disassemble_info info;
- };
- 
-+#define DINFO_FPRINTF(dinfo, ...)	\
-+	((*(dinfo)->fprintf_func)((dinfo)->stream, __VA_ARGS__))
-+
-+static void disas_print_address(bfd_vma addr, struct disassemble_info *dinfo)
-+{
-+	struct disas_context *dctx = dinfo->application_data;
-+	struct instruction *insn = dctx->insn;
-+	struct objtool_file *file = dctx->file;
-+	struct instruction *jump_dest;
-+	struct symbol *call_dest;
-+	unsigned long offset;
-+	struct reloc *reloc;
-+	bool is_reloc;
-+	char symstr[1024];
-+	char *str;
-+
-+	/*
-+	 * If the instruction is a call/jump and it references a
-+	 * destination then this is likely the address we are looking
-+	 * up. So check it first.
-+	 */
-+	jump_dest = insn->jump_dest;
-+	if (jump_dest && jump_dest->sym && jump_dest->offset == addr) {
-+		sprint_name(symstr, jump_dest->sym->name, jump_dest->offset - jump_dest->sym->offset);
-+		DINFO_FPRINTF(dinfo, "%lx <%s>", addr, symstr);
-+		return;
-+	}
-+
-+	/*
-+	 * Assume the address is a relocation if it points to the next
-+	 * instruction.
-+	 */
-+	is_reloc = (addr == insn->offset + insn->len);
-+
-+	/*
-+	 * The call destination offset can be the address we are looking
-+	 * up, or 0 if there is a relocation.
-+	 */
-+	call_dest = insn_call_dest(insn);
-+	if (call_dest) {
-+		if (call_dest->offset == addr) {
-+			DINFO_FPRINTF(dinfo, "%lx <%s>", addr, call_dest->name);
-+			return;
-+		}
-+		if (call_dest->offset == 0 && is_reloc) {
-+			DINFO_FPRINTF(dinfo, "%s", call_dest->name);
-+			return;
-+		}
-+	}
-+
-+	if (!is_reloc) {
-+		DINFO_FPRINTF(dinfo, "0x%lx", addr);
-+		return;
-+	}
-+
-+	/*
-+	 * If this is a relocation, check if we have relocation information
-+	 * for this instruction.
-+	 */
-+	reloc = find_reloc_by_dest_range(file->elf, insn->sec,
-+					 insn->offset, insn->len);
-+	if (!reloc) {
-+		DINFO_FPRINTF(dinfo, "0x%lx", addr);
-+		return;
-+	}
-+
-+	if (arch_pc_relative_reloc(reloc))
-+		offset = arch_pc_relative_offset(insn, reloc);
-+	else
-+		offset = reloc_addend(reloc);
-+
-+	/*
-+	 * If the relocation symbol is a section name (for example ".bss")
-+	 * then we try to further resolve the name.
-+	 */
-+	if (reloc->sym->type == STT_SECTION) {
-+		str = offstr(reloc->sym->sec, reloc->sym->offset + offset);
-+		DINFO_FPRINTF(dinfo, "%s", str);
-+		free(str);
-+	} else {
-+		sprint_name(symstr, reloc->sym->name, offset);
-+		DINFO_FPRINTF(dinfo, "%s", symstr);
-+	}
-+}
-+
- /*
-  * Initialize disassemble info arch, mach (32 or 64-bit) and options.
-  */
-@@ -66,6 +152,7 @@ struct disas_context *disas_context_create(struct objtool_file *file)
- 				     fprintf_styled);
- 
- 	dinfo->read_memory_func = buffer_read_memory;
-+	dinfo->print_address_func = disas_print_address;
- 	dinfo->application_data = dctx;
- 
- 	/*
-@@ -118,6 +205,8 @@ static size_t disas_insn(struct disas_context *dctx,
- 	disassembler_ftype disasm = dctx->disassembler;
- 	struct disassemble_info *dinfo = &dctx->info;
- 
-+	dctx->insn = insn;
-+
- 	/*
- 	 * Set the disassembler buffer to read data from the section
- 	 * containing the instruction to disassemble.
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index 19b1dec2db15..baa6eee1977f 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -97,6 +97,8 @@ bool arch_is_embedded_insn(struct symbol *sym);
- int arch_rewrite_retpolines(struct objtool_file *file);
- 
- bool arch_pc_relative_reloc(struct reloc *reloc);
-+unsigned long arch_pc_relative_offset(struct instruction *insn,
-+				      struct reloc *reloc);
- 
- unsigned int arch_reloc_size(struct reloc *reloc);
- unsigned long arch_jump_table_sym_offset(struct reloc *reloc, struct reloc *table);
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index 5290ac1ebbc1..4adbcd760c6f 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -115,6 +115,15 @@ static inline bool is_jump(struct instruction *insn)
- 	return is_static_jump(insn) || is_dynamic_jump(insn);
+@@ -3528,254 +3528,278 @@ static bool skip_alt_group(struct instruction *insn)
+ 	return alt_insn->type == INSN_CLAC || alt_insn->type == INSN_STAC;
  }
  
-+static inline struct symbol *insn_call_dest(struct instruction *insn)
-+{
-+	if (insn->type == INSN_JUMP_DYNAMIC ||
-+	    insn->type == INSN_CALL_DYNAMIC)
-+		return NULL;
+-/*
+- * Follow the branch starting at the given instruction, and recursively follow
+- * any other branches (jumps).  Meanwhile, track the frame pointer state at
+- * each instruction and validate all the rules described in
+- * tools/objtool/Documentation/objtool.txt.
+- */
+ static int validate_branch(struct objtool_file *file, struct symbol *func,
+-			   struct instruction *insn, struct insn_state state)
++			   struct instruction *insn, struct insn_state state);
 +
-+	return insn->_call_dest;
-+}
-+
- struct instruction *find_insn(struct objtool_file *file,
- 			      struct section *sec, unsigned long offset);
- 
-diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index cb8fe846d9dd..125093d568be 100644
---- a/tools/objtool/include/objtool/warn.h
-+++ b/tools/objtool/include/objtool/warn.h
-@@ -17,6 +17,18 @@
- 
- extern const char *objname;
- 
-+static inline int sprint_name(char *str, const char *name, unsigned long offset)
-+{
-+	int len;
-+
-+	if (offset)
-+		len = sprintf(str, "%s+0x%lx", name, offset);
-+	else
-+		len = sprintf(str, "%s", name);
-+
-+	return len;
-+}
-+
- static inline char *offstr(struct section *sec, unsigned long offset)
++static int validate_insn(struct objtool_file *file, struct symbol *func,
++			 struct instruction *insn, struct insn_state *statep,
++			 struct instruction *prev_insn, struct instruction *next_insn,
++			 bool *dead_end)
  {
- 	bool is_text = (sec->sh.sh_flags & SHF_EXECINSTR);
+ 	struct alternative *alt;
+-	struct instruction *next_insn, *prev_insn = NULL;
+-	struct section *sec;
+ 	u8 visited;
+ 	int ret;
+ 
+-	if (func && func->ignore)
+-		return 0;
++	/*
++	 * Any returns before the end of this function are effectively dead
++	 * ends, i.e. validate_branch() has reached the end of the branch.
++	 */
++	*dead_end = true;
+ 
+-	sec = insn->sec;
++	visited = VISITED_BRANCH << statep->uaccess;
++	if (insn->visited & VISITED_BRANCH_MASK) {
++		if (!insn->hint && !insn_cfi_match(insn, &statep->cfi))
++			return 1;
+ 
+-	while (1) {
+-		next_insn = next_insn_to_validate(file, insn);
++		if (insn->visited & visited)
++			return 0;
++	} else {
++		nr_insns_visited++;
++	}
+ 
+-		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
+-			/* Ignore KCFI type preambles, which always fall through */
+-			if (!strncmp(func->name, "__cfi_", 6) ||
+-			    !strncmp(func->name, "__pfx_", 6))
+-				return 0;
++	if (statep->noinstr)
++		statep->instr += insn->instr;
+ 
+-			if (file->ignore_unreachables)
+-				return 0;
++	if (insn->hint) {
++		if (insn->restore) {
++			struct instruction *save_insn, *i;
+ 
+-			WARN("%s() falls through to next function %s()",
+-			     func->name, insn_func(insn)->name);
+-			func->warned = 1;
++			i = insn;
++			save_insn = NULL;
+ 
+-			return 1;
+-		}
++			sym_for_each_insn_continue_reverse(file, func, i) {
++				if (i->save) {
++					save_insn = i;
++					break;
++				}
++			}
+ 
+-		visited = VISITED_BRANCH << state.uaccess;
+-		if (insn->visited & VISITED_BRANCH_MASK) {
+-			if (!insn->hint && !insn_cfi_match(insn, &state.cfi))
++			if (!save_insn) {
++				WARN_INSN(insn, "no corresponding CFI save for CFI restore");
+ 				return 1;
++			}
+ 
+-			if (insn->visited & visited)
+-				return 0;
+-		} else {
+-			nr_insns_visited++;
++			if (!save_insn->visited) {
++				/*
++				 * If the restore hint insn is at the
++				 * beginning of a basic block and was
++				 * branched to from elsewhere, and the
++				 * save insn hasn't been visited yet,
++				 * defer following this branch for now.
++				 * It will be seen later via the
++				 * straight-line path.
++				 */
++				if (!prev_insn)
++					return 0;
++
++				WARN_INSN(insn, "objtool isn't smart enough to handle this CFI save/restore combo");
++				return 1;
++			}
++
++			insn->cfi = save_insn->cfi;
++			nr_cfi_reused++;
+ 		}
+ 
+-		if (state.noinstr)
+-			state.instr += insn->instr;
++		statep->cfi = *insn->cfi;
++	} else {
++		/* XXX track if we actually changed statep->cfi */
+ 
+-		if (insn->hint) {
+-			if (insn->restore) {
+-				struct instruction *save_insn, *i;
++		if (prev_insn && !cficmp(prev_insn->cfi, &statep->cfi)) {
++			insn->cfi = prev_insn->cfi;
++			nr_cfi_reused++;
++		} else {
++			insn->cfi = cfi_hash_find_or_add(&statep->cfi);
++		}
++	}
+ 
+-				i = insn;
+-				save_insn = NULL;
++	insn->visited |= visited;
+ 
+-				sym_for_each_insn_continue_reverse(file, func, i) {
+-					if (i->save) {
+-						save_insn = i;
+-						break;
+-					}
+-				}
++	if (propagate_alt_cfi(file, insn))
++		return 1;
+ 
+-				if (!save_insn) {
+-					WARN_INSN(insn, "no corresponding CFI save for CFI restore");
+-					return 1;
+-				}
++	if (insn->alts) {
++		for (alt = insn->alts; alt; alt = alt->next) {
++			ret = validate_branch(file, func, alt->insn, *statep);
++			if (ret) {
++				BT_INSN(insn, "(alt)");
++				return ret;
++			}
++		}
++	}
+ 
+-				if (!save_insn->visited) {
+-					/*
+-					 * If the restore hint insn is at the
+-					 * beginning of a basic block and was
+-					 * branched to from elsewhere, and the
+-					 * save insn hasn't been visited yet,
+-					 * defer following this branch for now.
+-					 * It will be seen later via the
+-					 * straight-line path.
+-					 */
+-					if (!prev_insn)
+-						return 0;
++	if (skip_alt_group(insn))
++		return 0;
+ 
+-					WARN_INSN(insn, "objtool isn't smart enough to handle this CFI save/restore combo");
+-					return 1;
+-				}
++	if (handle_insn_ops(insn, next_insn, statep))
++		return 1;
+ 
+-				insn->cfi = save_insn->cfi;
+-				nr_cfi_reused++;
+-			}
++	switch (insn->type) {
+ 
+-			state.cfi = *insn->cfi;
+-		} else {
+-			/* XXX track if we actually changed state.cfi */
++	case INSN_RETURN:
++		return validate_return(func, insn, statep);
+ 
+-			if (prev_insn && !cficmp(prev_insn->cfi, &state.cfi)) {
+-				insn->cfi = prev_insn->cfi;
+-				nr_cfi_reused++;
+-			} else {
+-				insn->cfi = cfi_hash_find_or_add(&state.cfi);
+-			}
++	case INSN_CALL:
++	case INSN_CALL_DYNAMIC:
++		ret = validate_call(file, insn, statep);
++		if (ret)
++			return ret;
++
++		if (opts.stackval && func && !is_special_call(insn) &&
++		    !has_valid_stack_frame(statep)) {
++			WARN_INSN(insn, "call without frame pointer save/setup");
++			return 1;
+ 		}
+ 
+-		insn->visited |= visited;
++		break;
+ 
+-		if (propagate_alt_cfi(file, insn))
+-			return 1;
++	case INSN_JUMP_CONDITIONAL:
++	case INSN_JUMP_UNCONDITIONAL:
++		if (is_sibling_call(insn)) {
++			ret = validate_sibling_call(file, insn, statep);
++			if (ret)
++				return ret;
+ 
+-		if (insn->alts) {
+-			for (alt = insn->alts; alt; alt = alt->next) {
+-				ret = validate_branch(file, func, alt->insn, state);
+-				if (ret) {
+-					BT_INSN(insn, "(alt)");
+-					return ret;
+-				}
++		} else if (insn->jump_dest) {
++			ret = validate_branch(file, func,
++					      insn->jump_dest, *statep);
++			if (ret) {
++				BT_INSN(insn, "(branch)");
++				return ret;
+ 			}
+ 		}
+ 
+-		if (skip_alt_group(insn))
++		if (insn->type == INSN_JUMP_UNCONDITIONAL)
+ 			return 0;
+ 
+-		if (handle_insn_ops(insn, next_insn, &state))
+-			return 1;
+-
+-		switch (insn->type) {
+-
+-		case INSN_RETURN:
+-			return validate_return(func, insn, &state);
++		break;
+ 
+-		case INSN_CALL:
+-		case INSN_CALL_DYNAMIC:
+-			ret = validate_call(file, insn, &state);
++	case INSN_JUMP_DYNAMIC:
++	case INSN_JUMP_DYNAMIC_CONDITIONAL:
++		if (is_sibling_call(insn)) {
++			ret = validate_sibling_call(file, insn, statep);
+ 			if (ret)
+ 				return ret;
++		}
+ 
+-			if (opts.stackval && func && !is_special_call(insn) &&
+-			    !has_valid_stack_frame(&state)) {
+-				WARN_INSN(insn, "call without frame pointer save/setup");
+-				return 1;
+-			}
++		if (insn->type == INSN_JUMP_DYNAMIC)
++			return 0;
+ 
+-			break;
++		break;
+ 
+-		case INSN_JUMP_CONDITIONAL:
+-		case INSN_JUMP_UNCONDITIONAL:
+-			if (is_sibling_call(insn)) {
+-				ret = validate_sibling_call(file, insn, &state);
+-				if (ret)
+-					return ret;
++	case INSN_SYSCALL:
++		if (func && (!next_insn || !next_insn->hint)) {
++			WARN_INSN(insn, "unsupported instruction in callable function");
++			return 1;
++		}
+ 
+-			} else if (insn->jump_dest) {
+-				ret = validate_branch(file, func,
+-						      insn->jump_dest, state);
+-				if (ret) {
+-					BT_INSN(insn, "(branch)");
+-					return ret;
+-				}
+-			}
++		break;
+ 
+-			if (insn->type == INSN_JUMP_UNCONDITIONAL)
+-				return 0;
++	case INSN_SYSRET:
++		if (func && (!next_insn || !next_insn->hint)) {
++			WARN_INSN(insn, "unsupported instruction in callable function");
++			return 1;
++		}
+ 
++		return 0;
++
++	case INSN_STAC:
++		if (!opts.uaccess)
+ 			break;
+ 
+-		case INSN_JUMP_DYNAMIC:
+-		case INSN_JUMP_DYNAMIC_CONDITIONAL:
+-			if (is_sibling_call(insn)) {
+-				ret = validate_sibling_call(file, insn, &state);
+-				if (ret)
+-					return ret;
+-			}
++		if (statep->uaccess) {
++			WARN_INSN(insn, "recursive UACCESS enable");
++			return 1;
++		}
+ 
+-			if (insn->type == INSN_JUMP_DYNAMIC)
+-				return 0;
++		statep->uaccess = true;
++		break;
+ 
++	case INSN_CLAC:
++		if (!opts.uaccess)
+ 			break;
+ 
+-		case INSN_SYSCALL:
+-			if (func && (!next_insn || !next_insn->hint)) {
+-				WARN_INSN(insn, "unsupported instruction in callable function");
+-				return 1;
+-			}
++		if (!statep->uaccess && func) {
++			WARN_INSN(insn, "redundant UACCESS disable");
++			return 1;
++		}
+ 
+-			break;
++		if (func_uaccess_safe(func) && !statep->uaccess_stack) {
++			WARN_INSN(insn, "UACCESS-safe disables UACCESS");
++			return 1;
++		}
+ 
+-		case INSN_SYSRET:
+-			if (func && (!next_insn || !next_insn->hint)) {
+-				WARN_INSN(insn, "unsupported instruction in callable function");
+-				return 1;
+-			}
++		statep->uaccess = false;
++		break;
+ 
+-			return 0;
++	case INSN_STD:
++		if (statep->df) {
++			WARN_INSN(insn, "recursive STD");
++			return 1;
++		}
+ 
+-		case INSN_STAC:
+-			if (!opts.uaccess)
+-				break;
++		statep->df = true;
++		break;
+ 
+-			if (state.uaccess) {
+-				WARN_INSN(insn, "recursive UACCESS enable");
+-				return 1;
+-			}
++	case INSN_CLD:
++		if (!statep->df && func) {
++			WARN_INSN(insn, "redundant CLD");
++			return 1;
++		}
+ 
+-			state.uaccess = true;
+-			break;
++		statep->df = false;
++		break;
+ 
+-		case INSN_CLAC:
+-			if (!opts.uaccess)
+-				break;
++	default:
++		break;
++	}
+ 
+-			if (!state.uaccess && func) {
+-				WARN_INSN(insn, "redundant UACCESS disable");
+-				return 1;
+-			}
++	*dead_end = insn->dead_end;
+ 
+-			if (func_uaccess_safe(func) && !state.uaccess_stack) {
+-				WARN_INSN(insn, "UACCESS-safe disables UACCESS");
+-				return 1;
+-			}
++	return 0;
++}
+ 
+-			state.uaccess = false;
+-			break;
++/*
++ * Follow the branch starting at the given instruction, and recursively follow
++ * any other branches (jumps).  Meanwhile, track the frame pointer state at
++ * each instruction and validate all the rules described in
++ * tools/objtool/Documentation/objtool.txt.
++ */
++static int validate_branch(struct objtool_file *file, struct symbol *func,
++			   struct instruction *insn, struct insn_state state)
++{
++	struct instruction *next_insn, *prev_insn = NULL;
++	struct section *sec;
++	bool dead_end;
++	int ret;
+ 
+-		case INSN_STD:
+-			if (state.df) {
+-				WARN_INSN(insn, "recursive STD");
+-				return 1;
+-			}
++	if (func && func->ignore)
++		return 0;
+ 
+-			state.df = true;
+-			break;
++	sec = insn->sec;
+ 
+-		case INSN_CLD:
+-			if (!state.df && func) {
+-				WARN_INSN(insn, "redundant CLD");
+-				return 1;
+-			}
++	while (1) {
++		next_insn = next_insn_to_validate(file, insn);
+ 
+-			state.df = false;
+-			break;
++		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
++			/* Ignore KCFI type preambles, which always fall through */
++			if (!strncmp(func->name, "__cfi_", 6) ||
++			    !strncmp(func->name, "__pfx_", 6))
++				return 0;
+ 
+-		default:
+-			break;
++			if (file->ignore_unreachables)
++				return 0;
++
++			WARN("%s() falls through to next function %s()",
++			     func->name, insn_func(insn)->name);
++			func->warned = 1;
++
++			return 1;
+ 		}
+ 
+-		if (insn->dead_end)
+-			return 0;
++		ret = validate_insn(file, func, insn, &state, prev_insn, next_insn,
++				    &dead_end);
++		if (dead_end)
++			break;
+ 
+ 		if (!next_insn) {
+ 			if (state.cfi.cfa.base == CFI_UNDEFINED)
+@@ -3793,7 +3817,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 		insn = next_insn;
+ 	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int validate_unwind_hint(struct objtool_file *file,
 -- 
 2.43.5
 
