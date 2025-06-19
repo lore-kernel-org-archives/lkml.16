@@ -1,108 +1,66 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5E30E826;
-	Thu, 19 Jun 2025 23:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E482111;
+	Thu, 19 Jun 2025 23:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375493; cv=none; b=fVnuuYlFkpucctV7o+iWSnYdUJ7DMKO8djS+mAMeSnlkZmgPIUokxNOMgmbqxwPqOlUU9ZW4ZA5LS78Y9tGCYnaEjpSu57zfTbVhAqMDchFTNdsAJE0rNxt2q5kTUSdhVL0OrTOmVctQS+oklIqjmd4F1rjh2xWeEleXjUcbeCM=
+	t=1750375536; cv=none; b=fouqjtuq5dMB0PVaWHsWzbUMjIyX/DUsxjWJ20l+O4RbDRjdm5SX0eOa4gyve0nb5EWbtDN68mzykHMYIkvnqngBhin3vAXYUQ9vfrbBEj34okY4L8ScZWolrUqHSF+ZWyIqSdr6kN17pD6yr0L7n7yE5ZRZUKX5B0JmIXLPWAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375493; c=relaxed/simple;
-	bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q0c/B839/1oo8c9/eckTpilQ252uXHgsqwInbRNnk7iYPp5WR2UcQYDCk/afjwaprRiJMRrT9VX9mNdwsPhA8DoE9PBwb0DyYVX1cCvjemm1GL9GTFXGShQDdPsX+hF/xzR2twDW5OQTKsnDr6mPXO6NbXdVtbNhtZ15iLwC+0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4Y0oaeo; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750375536; c=relaxed/simple;
+	bh=NAKGMS6m18zWCX+prfX4PKPrmhVMR2C/9JIj6rSRBFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJOaxm5V6oVLFvzTyDKvOvqdRKHZh1DipxJmyiQYVf2WiqJCuZVsRtHAVwmfGDpj3U+LnYgxxa7p/lekLV/uS7C8Y3S7wr87eccD2WuzBVNX5ezIveLg7gO5+IHRdIROijTPr/nirmB6E8ObY1KeIKEqA7E0ZaObqFuATMxKn1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=I1AtB1Zn; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4Y0oaeo"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32b7fd20f99so13087511fa.0;
-        Thu, 19 Jun 2025 16:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750375490; x=1750980290; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
-        b=S4Y0oaeoR7ykzTsvl6S0j6TiPDpPiGt3uRbMFyY2dSMSUU4h0iIncYwVBTCQwUnXYv
-         Aw+TSp3PTKbQULyaBT4RxY/ut8a1f1VcdTiuiwV3TcgT6MPE9HeXAtFreEoZQ2jLdQIW
-         QrpNwyC7NqH79Cklf6RqQTeK00DQDFmE20fOiqqIGe2DxMSaGWNpHaTMUbtF0JzK8jHq
-         6k5pR6RrPPEbhtgeBGPew5C7w1doWntCoYYtkwYyZlRsWaihsV08VHSH57RUkt/wuHHj
-         T1Uisty1zpwH1pz8LaLbVje8hf9qwkbGkxKz90bmbo1Zi02SB31mHuoXrEVxHmr6Tp3A
-         IKJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750375490; x=1750980290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
-        b=Mra+Er0xcx8sEh6IywHollQaH92H87+sOigMc2txGfSFNLK+zeSh6JlhxMxIcOvL14
-         /JSicmlJZe8BUMeDe0LlAUi4durzcsM9O3rqpzoYnSoLfpHC0y+XV5MGr3U9adRcrrft
-         fui7jhwuDxIoWpEBy6qq50UVEESJMp+4BbxsjcRjmeQP1Qb3L1HhjgOxWE0iRfRXTjej
-         37ZwyYThX1pRPM9H1jaTMWF/Z+CpL6JnEcE0ofFVAHRAqJexs75z6Cu68UV/W52iZDhq
-         QXThP/LsphS+MzQ/ZaDtSacAjJjH77/1SPPWJgbjV9j3YqK6FVxHIYW/coLhCTvT0st1
-         lwdA==
-X-Forwarded-Encrypted: i=1; AJvYcCURjmT1USw4MsB53qixGBa1nJmwEWAvB3B1WpEKkUx7RAmQk9XLMnLG0EN9YMB2VQ+6Mz3vXXGlPZRkgKElqCI=@vger.kernel.org, AJvYcCX9ku8bFf8T7Xps3Z4wI41/CT/xfv/OeVeKpStJZZz0eQPlA7MFxkpLOGrcpu2qGWvnmmWvuHN0@vger.kernel.org, AJvYcCXXk4TPbRRZFkCHarwmwJSdRzVt34Bo2H8xOTufUGq6rCsuCiTVWYCibGSPszyXuhf6yHARGAxpMcixiBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX0+2feK9woEB5pAzPgAlGc3tORDqPcA6KFNsDXPALXVJbeLvg
-	JjcSVHk/awp8ctc+9JR1M3/V7jJ6QlSqte4YqfYdE/iZwzDz0R0pRNWXNj99BW7m+10aSpC3F/d
-	pCDSEMDIVJPFsXdEbGItWuiW07C6oOZ0=
-X-Gm-Gg: ASbGnctyD98TiNoS6EK8b4D8vNAP1+13jYSoUuud2579ySDk7AV8ugZtFHyjWKZRJSV
-	kD3ZTrGMlxtrp0muzhOTIAO0Th8qwHpzoTz8ulKxuXBQPI8+tDcIu8S4hshFCxjYQy5vb/B6j8W
-	IuNe3M+T6VeKz2gIJpvqGoqRnPoPfuHxt+h9qHiBRrK6xtxrhUkXOsE4yBM8rxzQglQ7gGkOqLZ
-	JhT
-X-Google-Smtp-Source: AGHT+IEI3Qcu9TZFnSMnblF2FNssNDdu/cOBp2C241F1RixgB3NEkmLB/6LjF4MFzu6x8V21HblsJ4Zska5TTyG+eYI=
-X-Received: by 2002:a05:651c:2205:b0:329:1550:1446 with SMTP id
- 38308e7fff4ca-32b9ae2ff81mr528531fa.0.1750375490094; Thu, 19 Jun 2025
- 16:24:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="I1AtB1Zn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=dhbOUaVoCD41Ka92nDatdt94zwzchaNpzX61zhjuKX4=; b=I1AtB1ZnhrSGdI7wXfyMStiVo1
+	HEy4fnyOTPpN9EqRBG+APasSXOgoJcTS3fyrmt4jTkfvLZnjVi3Nh3DYGJ1ylBOBwVpAThvyRgN8C
+	F+I9l93zDCqOqqCey/STpmUlDbdMldh9FX+v9esYl4p6EY+Z7b89nq08cCwdaL/d7m33kVy7UilpC
+	HoSyoLI8cEHpOu3tJ49x6p+W45C4/c+mloqJUvXBHcSI+8rP7+oTUb8LJlg5spR8thtED+eTb6ai8
+	l9qfLfXqNz8VUAyjsvk2KsOJB/Mqaji4l+t0x1JSZNKKBCzlZQsvhOxCsR4LE6iEPaEEopC31Kh2C
+	q25CDkEg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uSONt-000R52-2o;
+	Fri, 20 Jun 2025 07:25:18 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Jun 2025 07:25:17 +0800
+Date: Fri, 20 Jun 2025 07:25:17 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
+	linux-raid@vger.kernel.org
+Subject: Re: [v2 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
+Message-ID: <aFScXXQ6CiroBnBQ@gondor.apana.org.au>
+References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
+ <aFPbSvxCaxhFHc5s@gondor.apana.org.au>
+ <20250619161536.23338f800e313f9d84b1560c@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612.094805.256395171864740471.fujita.tomonori@gmail.com>
- <CAJ-ks9nXwBMNcZLK1uJB=qJk8KsOF7q8nYZC6qANboxmT8qFFA@mail.gmail.com>
- <CAJ-ks9mazp=gSqDEzUuh0eTvj6pBET-z2zz7XQzmu9at=4V03A@mail.gmail.com> <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
-In-Reply-To: <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 19 Jun 2025 19:24:14 -0400
-X-Gm-Features: AX0GCFuDXISYPO9gpBGBu-zV3upwFiW0N2Hohkq2DlvwSSipXAI_SsBeURhkbnI
-Message-ID: <CAJ-ks9n-iQAiwN3CVnJP164kPEgwq5nj-E5S7BnZrYdBWoo16g@mail.gmail.com>
-Subject: Re: [PATCH] rust: cast to the proper type
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: aliceryhl@google.com, tmgross@umich.edu, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
-	dakr@kernel.org, davem@davemloft.net, andrew@lunn.ch, netdev@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619161536.23338f800e313f9d84b1560c@linux-foundation.org>
 
-On Thu, Jun 19, 2025 at 6:55=E2=80=AFPM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
+On Thu, Jun 19, 2025 at 04:15:36PM -0700, Andrew Morton wrote:
 >
-> On Thu, 19 Jun 2025 11:29:56 -0400
-> Tamir Duberstein <tamird@gmail.com> wrote:
->
-> >> > >> > Fixes: f20fd5449ada ("rust: core abstractions for network PHY d=
-rivers")
-> >> > >>
-> >> > >> Does this need to be backported? If not, I wouldn't include a Fix=
-es tag.
-> >> > >
-> >> > > I'm fine with omitting it. I wanted to leave a breadcrumb to the
-> >> > > commit that introduced the current code.
-> >> >
-> >> > I also don't think this tag is necessary because this is not a bug
-> >> > fix. And since this tag points to the file's initial commit, I don't
-> >> > think it's particularly useful.
-> >>
-> >> Would you be OK stripping the tag on apply, or would you like me to se=
-nd v2?
-> >
-> > Hi Tomo, gentle ping here. Does this look reasonable to you, with the
-> > Fixes tag stripped on apply?
->
-> Yeah, if you drop the Fixes tag, it's fine by me.
+> Dunno.  I added it to mm.git and I shall drop it again if/when this
+> patch lands in linux-next via the raid tree (please).
 
-Thanks. Would you mind adding your Acked-by?
+Thanks Andrew!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
