@@ -1,124 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD3E152DE7;
-	Thu, 19 Jun 2025 18:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2885028DF06;
+	Thu, 19 Jun 2025 18:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750356031; cv=none; b=kbHwVPPP/pIDtB6t43WwodtbUzV1V1YZwJvaewwL5ESF5VE4/SPEn/bfRJ4dYP08OfqeW+YkNw5fs2D9DQjjbhyrypcPiInybICkpn+JnYz2BYW+Avee/qWnyW7qftjFrjyUFIudKy51pfzPeDf7amTVasW0lMStKfLurmShQCE=
+	t=1750356036; cv=none; b=urmQxIN/sAtDAI9qmyNeRISHAcK3fvp/GwSHs80a8I0o/ri5QEhI6/Xqusl4J8BphQKcrs5qql/MgMRc7ups0A5mHMXFGXck+IzZefEMM3A2Ece9OsLKZUVwWys6KCSZeA3TCkCl1RDnNAfSSvg5SSxSB6Ilth0FE5Hc+Hh7QFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750356031; c=relaxed/simple;
-	bh=KWJQMbX5JD4uCQEL5BpmXqyAVzFe/6rRwmcsG5G6wsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GF+ZW0kiCZFOoIdhNyPsh73cfs/1HE0UMTxMp2K+WzBNZ4FbWYor3lcpwE0fFEy9mx8SzoKcHM9p88DshBTDu7PgcGvwsjHUlAXFy9BTDZ3+PtMQjV/fgezSthSSXyoHvthRfWoF86aZp8mQ00gollB0TlVmPmnEIv1FByGXaMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SGGBeHrM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750356036; c=relaxed/simple;
+	bh=O/sgJ5DMqw0a9oBOr7HHivTt3cG4pRfBAotrHBVimfc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=m0V1qPmVIhSg01tXzJSouJiQk8fppQPaL++ENQOwz6ONBELITD5zM5PqyBhx6rOg0v5N/QRLedt3t7Uz5TDYKrfBrh1qEodAgjmPYi0XMWPix+PKuOr9V3J6k24AQupgWfR98adg5WPYYdYQKRc9/VfnFewGJ8NPQSdI1p/JR74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ttx32cRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SGGBeHrM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750356030; x=1781892030;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KWJQMbX5JD4uCQEL5BpmXqyAVzFe/6rRwmcsG5G6wsY=;
-  b=SGGBeHrMzQpRslHLMT9/XOFgEmmGs8/eXT9wneTaUJ9bvWqIJ+J50vUK
-   +ZkPKMTAY7DDYuGx6E/re3pSuCcYUYIZUE/TCYvOgsaACc84PpbjPkK6d
-   a0BVVclfTwmwr6SAai+kBC/xYWQ1vYwwfpz2AyeUeZ8dyXRnCsq3wWjaF
-   NEByxYPvj90iu0C7bUwIZo0geUd8GYRRqhr+p5iwhJCGMw7yt0oqTJbha
-   rvHrgbns8C24L8MQnA6P3d2mX6DUc1ROSoh7c8QXqO4MgOb7hnQltbfGs
-   4WGJ6Z5Gyoqap8tlN+3uy/t4D6AQbn4v6MQHdXCk83nvEdNVmm+ajhgww
-   A==;
-X-CSE-ConnectionGUID: 9JY8ZGAXRnK3lt84bSUb2Q==
-X-CSE-MsgGUID: RtkE+f9HQC+qTVoZXLGy5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="64047708"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="64047708"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:00:29 -0700
-X-CSE-ConnectionGUID: ONf8kMIbRWyfZhOBKM6CDQ==
-X-CSE-MsgGUID: egyGboLvSVi0nfLadPKJMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="150919277"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.13])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:00:19 -0700
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: laurent.pinchart@ideasonboard.com,
-	sakari.ailus@linux.intel.com
-Cc: akinobu.mita@gmail.com,
-	stanislaw.gruszka@linux.intel.com,
-	hdegoede@redhat.com,
-	arnd@arndb.de,
-	alain.volmat@foss.st.com,
-	andrzej.hajda@intel.com,
-	benjamin.mugnier@foss.st.com,
-	dave.stevenson@raspberrypi.com,
-	hansg@kernel.org,
-	hverkuil@xs4all.nl,
-	jacopo.mondi@ideasonboard.com,
-	jonas@kwiboo.se,
-	kieran.bingham@ideasonboard.com,
-	khalasa@piap.pl,
-	prabhakar.csengg@gmail.com,
-	mani@kernel.org,
-	m.felsch@pengutronix.de,
-	martink@posteo.de,
-	mattwmajewski@gmail.com,
-	matthias.fend@emfend.at,
-	mchehab@kernel.org,
-	mehdi.djait@linux.intel.com,
-	michael.riesch@collabora.com,
-	naush@raspberrypi.com,
-	nicholas@rothemail.net,
-	nicolas.dufresne@collabora.com,
-	paul.elder@ideasonboard.com,
-	dan.scally@ideasonboard.com,
-	pavel@kernel.org,
-	petrcvekcz@gmail.com,
-	rashanmu@gmail.com,
-	ribalda@chromium.org,
-	rmfrfs@gmail.com,
-	zhengsq@rock-chips.com,
-	slongerbeam@gmail.com,
-	sylvain.petinot@foss.st.com,
-	s.nawrocki@samsung.com,
-	tomi.valkeinen@ideasonboard.com,
-	umang.jain@ideasonboard.com,
-	zhi.mao@mediatek.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH v1 02/55] Documentation: media: camera-sensor: Mention v4l2_devm_sensor_clk_get() for obtaining the clock
-Date: Thu, 19 Jun 2025 19:58:55 +0200
-Message-ID: <1261f41358da597fb9900b7880618ebcc392160d.1750352394.git.mehdi.djait@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750352394.git.mehdi.djait@linux.intel.com>
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ttx32cRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF09EC4CEEA;
+	Thu, 19 Jun 2025 18:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750356035;
+	bh=O/sgJ5DMqw0a9oBOr7HHivTt3cG4pRfBAotrHBVimfc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Ttx32cRP3w7osl7k/CwbICP+rJ6OxedwmzrXHrMVPQNXKGagAIDiGvlolCKt49ETF
+	 ZI5OeCU1lN+1H+yvdP0RjirSdK6UituS28Ij4L/Pg+DC5iZI/ihNelpcDkB2bGzH10
+	 g/vQS65u7vgTYZWQKPq0y9l/ewd8nKNbQQHAuKRJZEI7jIPnqajLCGzmY4w74KqF35
+	 P8rcteyOg8DCJ7fF955X7rXzl/UnKrQuDzloOvVj4hYmuLXwRY9KsxNywviwtYtUgx
+	 +k8VRxnkrI3pTyrLDkik0wtt9J36NIQXddVPkYHxt3dVHhrnShMKxDRgQH3UdHxEiq
+	 bSKBIhEwM7OoQ==
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20250618145547.152814-1-rf@opensource.cirrus.com>
+References: <20250618145547.152814-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] ASoC: doc: cs35l56: Add CS35L63 to the list of
+ supported devices
+Message-Id: <175035603459.283252.6198544705795058801.b4-ty@kernel.org>
+Date: Thu, 19 Jun 2025 19:00:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-Add the new v4l2 helper devm_v4l2_sensor_clk_get() to Documentation. the
-helper works on both DT- and ACPI-based platforms to retrieve a
-reference to the clock producer from firmware.
+On Wed, 18 Jun 2025 15:55:47 +0100, Richard Fitzgerald wrote:
+> Add CS35L63 to the list of parts supported by the cs35l56 driver and
+> mention the CS35L63 where the text refers to the supported part numbers.
+> 
+> 
 
-Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+Applied to
 
-diff --git a/Documentation/driver-api/media/camera-sensor.rst b/Documentation/driver-api/media/camera-sensor.rst
-index c290833165e6..c82c018a5f40 100644
---- a/Documentation/driver-api/media/camera-sensor.rst
-+++ b/Documentation/driver-api/media/camera-sensor.rst
-@@ -32,7 +32,8 @@ user.
- ACPI
- ~~~~
- 
--Read the ``clock-frequency`` _DSD property to denote the frequency. The driver
-+Use ``devm_v4l2_sensor_clk_get()`` to get the clock. The function will read the
-+``clock-frequency`` _DSD property to denote the frequency. The driver
- can rely on this frequency being used.
- 
- Devicetree
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: doc: cs35l56: Add CS35L63 to the list of supported devices
+      commit: 6c5b8895c8cab4fdb496b38513ec417588b58596
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
