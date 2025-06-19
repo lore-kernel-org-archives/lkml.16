@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810032512FA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FCC253959;
 	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750315821; cv=none; b=IJy+5abq/G2ONGD0WEBQyeTmYGCoqf//gc7AMbjRTBRtk0SVSbcLHebVRiB/yVxfvGcUXi1+CvoUuHrr5XZOYBQ26nSGYyxGdBJZlVzb16Z9zydDHpBgRQeNOvaUyXNnKOBs0Bn8vF5EVHZHt84oZpXHIPqdJbRKG5OF81m11cE=
+	t=1750315821; cv=none; b=tpY8ekRtmxW5EKAyiQPYPDtAY4M5rsTnCJGD1fQAvIgqJXHZplKe9aEegaDULk7SzUu11V4QMLhB1VJRG+ZZz0HQj9ZauyY8oGw6qEsOBb+jv4lwqk0H0gzjnDLgLAXHccn0Dqv2ej30l9wsNWuXtHKQRWdhOLr7CkO4NKj55J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750315821; c=relaxed/simple;
-	bh=Eu6NvKMYNdmD8XfJnfUGiXHKuW5qDdQasrskHf5QPZ8=;
+	bh=4NisMpZH9SoZ5VV4u6jFkhlkA+lqE03MPhW7QcfYJIs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V/WgSli1eBK3ILLfdWSsZOy1RuMdFR3qHgcdcPU5F4poYA5SPb04CRzlgj86u7sifm9uBC3Fnk7E6eRTBqobU/xlc+O6hLWpkIjA5emy/yDiub2vKidWYiH4aqLnOlmNwzuJTJGt3NEY4iYXwEQOSUaY+qFS1h1ICaqKv32l3L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dq3gzpca; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GpgNsgbZFaFNTde9MBGPPeBlqP5y/L+KpaHLyEK+hghI4EtRZOZ0Hm8pNhJZEKGDETyMBfheE6vDsWaRsVfR/ns9kSgiNn0Qa8gZkr7FO3LGzlpfCSd0m4ewwEd6/n5wx5N6NULIM4qm6VLP398MxBFxlkonrIKNSV4qtVbEHZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IimrqQdi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dq3gzpca"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F3AC116D0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IimrqQdi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA05C19424;
 	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750315821;
-	bh=Eu6NvKMYNdmD8XfJnfUGiXHKuW5qDdQasrskHf5QPZ8=;
+	bh=4NisMpZH9SoZ5VV4u6jFkhlkA+lqE03MPhW7QcfYJIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dq3gzpca5BoYs3ihHNdTlUhvI/81TS2OWbjM6BidamCOFgLlMjIaaxJqmNDjd2tfd
-	 XCB8SD5BaViIQDIDL6RgOhlRTKw04oRPq+nvnpIUz3guULiIUVVtZoz5qGHDtSfH/2
-	 UqXD5qRfe1x/ilmzJOjSXAXL8YSk768MlwUrz918oxM6fMKnDSC/CunO9SyxO2dMIC
-	 gEv9gNM1LYYX1qf9PEDvr/zuF/f8CpnZkhjzDJK9xgXjsEFLXMY2MTVFMmbF5ObRyR
-	 IhQnNW4m2wiHtVsA53eGkJHIfucD0a70CpyZ15rGDEvmqpvsHbjm9AC4Pl1p1UKcgV
-	 niC7U7PgG8zTw==
+	b=IimrqQdiUejm+wBblyRRTg9HZcr+2iaV49ANTlPsNNx0zs93yGxnDtI/Cb8IeQHHx
+	 xa8pBTEpSS1n56wI4IgWeyBHCVuxHMJEPmpIG/xRn8JFtfZmJOerxntvR3gV29bV8X
+	 CYaay9TE4gQ1sHmq13+OtupdxdHXmm+As9sA16UO/JFpk93dsYGaOXUxeys4KvTJY/
+	 duNCnzf3pORXb456NAOpc9Dy6zruowkPUAxYQo/UDod1du1SZkQzQ0hK6n/iANYOy9
+	 Pm4v7KPG1+GX6YZPf1+u/zJ1+0Q5iICJCAPKhVjZP0dHoMl+HijwHPF5UGwAS/wBX6
+	 W5/BC6MlZrvJQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uS96J-00000003dHU-113E;
+	id 1uS96J-00000003dHc-1GDW;
 	Thu, 19 Jun 2025 08:50:19 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -46,7 +46,6 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Paolo Abeni" <pabeni@redhat.com>,
 	"Ruben Wauters" <rubenru09@aol.com>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
@@ -54,9 +53,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v7 15/17] docs: sphinx: add a file with the requirements for lowest version
-Date: Thu, 19 Jun 2025 08:49:08 +0200
-Message-ID: <e5666ba0c2867a0e78ff91727e827d706ce08668.1750315578.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 17/17] docs: conf.py: Check Sphinx and docutils version
+Date: Thu, 19 Jun 2025 08:49:10 +0200
+Message-ID: <8719d77d3a6ef30dff58f959dad5dd973496eeea.1750315578.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750315578.git.mchehab+huawei@kernel.org>
 References: <cover.1750315578.git.mchehab+huawei@kernel.org>
@@ -69,61 +68,89 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Those days, it is hard to install a virtual env that would
-build docs with Sphinx 3.4.3, as even python 3.13 is not
-compatible anymore with it.
+As reported by Akira, there are incompatibility issues with
+Sphinx and docutils.
 
-	/usr/bin/python3.9 -m venv sphinx_3.4.3
-	. sphinx_3.4.3/bin/activate
-	pip install -r Documentation/sphinx/min_requirements.txt
+I manually checked that before docutils 0.17.1, yaml generation
+doesn't work properly. Akira checked that 0.19 is problematic too.
 
+After check Sphinx release notes, it seems that the
+versions that are supposed to cope well together are:
+
+	========  ============  ============
+	Sphinx    Min Docutils  Max Docutils
+	Version   Version       Version
+	--------  ------------  ------------
+	< 4.0.0	  0.17.1        0.17.1
+	< 6.0.0	  0.17.1        0.18.1
+	< 7.0.0   0.18.0        0.18.1
+	>= 7.0.0  0.20.0        0.21.2
+	========  ============  ============
+
+Add a logic inside conf.py to check the above, emitting warnings
+if the docutils version don't match what is known to be supported.
+
+Reported-by: Akira Yokosawa <akiyks@gmail.com>
+Closes: https://lore.kernel.org/linux-doc/6fcb75ee-61db-4fb3-9c5f-2029a7fea4ee@gmail.com/
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/doc-guide/sphinx.rst        | 15 +++++++++++++++
- Documentation/sphinx/min_requirements.txt |  8 ++++++++
- 2 files changed, 23 insertions(+)
- create mode 100644 Documentation/sphinx/min_requirements.txt
+ Documentation/conf.py | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
-index 5a91df105141..13943eb532ac 100644
---- a/Documentation/doc-guide/sphinx.rst
-+++ b/Documentation/doc-guide/sphinx.rst
-@@ -131,6 +131,21 @@ It supports two optional parameters:
- ``--no-virtualenv``
- 	Use OS packaging for Sphinx instead of Python virtual environment.
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 5eddf5885f77..6047ec85add1 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -9,7 +9,11 @@ import os
+ import shutil
+ import sys
  
-+Installing Sphinx Minimal Version
-+---------------------------------
++import docutils
+ import sphinx
++from sphinx.util import logging
 +
-+When changing Sphinx build system, it is important to ensure that
-+the minimal version will still be supported. Nowadays, it is
-+becoming harder to do that on modern distributions, as it is not
-+possible to install with Python 3.13 and above.
-+
-+The recommended way is to use the lowest supported Python version
-+as defined at Documentation/process/changes.rst, creating
-+a venv with it with, and install minimal requirements with::
-+
-+	/usr/bin/python3.9 -m venv sphinx_min
-+	. sphinx_min/bin/activate
-+	pip install -r Documentation/sphinx/min_requirements.txt
++logger = logging.getLogger(__name__)
  
- Sphinx Build
- ============
-diff --git a/Documentation/sphinx/min_requirements.txt b/Documentation/sphinx/min_requirements.txt
-new file mode 100644
-index 000000000000..89ea36d5798f
---- /dev/null
-+++ b/Documentation/sphinx/min_requirements.txt
-@@ -0,0 +1,8 @@
-+Sphinx==3.4.3
-+jinja2<3.1
-+docutils<0.18
-+sphinxcontrib-applehelp==1.0.4
-+sphinxcontrib-devhelp==1.0.2
-+sphinxcontrib-htmlhelp==2.0.1
-+sphinxcontrib-qthelp==1.0.3
-+sphinxcontrib-serializinghtml==1.1.5
+ # If extensions (or modules to document with autodoc) are in another directory,
+ # add these directories to sys.path here. If the directory is relative to the
+@@ -21,11 +25,34 @@ from load_config import loadConfig               # pylint: disable=C0413,E0401
+ # Minimal supported version
+ needs_sphinx = "3.4.3"
+ 
+-# Get Sphinx version
+-major, minor, patch = sphinx.version_info[:3]          # pylint: disable=I1101
++# Get Sphinx and docutils versions
++sphinx_ver = sphinx.version_info[:3]          # pylint: disable=I1101
++docutils_ver = docutils.__version_info__[:3]
++
++#
++if sphinx_ver < (4, 0, 0):
++    min_docutils = (0, 16, 0)
++    max_docutils = (0, 17, 1)
++elif sphinx_ver < (6, 0, 0):
++    min_docutils = (0, 17, 0)
++    max_docutils = (0, 18, 1)
++elif sphinx_ver < (7, 0, 0):
++    min_docutils = (0, 18, 0)
++    max_docutils = (0, 18, 1)
++else:
++    min_docutils = (0, 20, 0)
++    max_docutils = (0, 21, 2)
++
++sphinx_ver_str = ".".join([str(x) for x in sphinx_ver])
++docutils_ver_str = ".".join([str(x) for x in docutils_ver])
++
++if docutils_ver < min_docutils:
++    logger.warning(f"Docutils {docutils_ver_str} is too old for Sphinx {sphinx_ver_str}. Doc generation may fail")
++elif docutils_ver > max_docutils:
++    logger.warning(f"Docutils {docutils_ver_str} could be too new for Sphinx {sphinx_ver_str}. Doc generation may fail")
+ 
+ # Include_patterns were added on Sphinx 5.1
+-if (major < 5) or (major == 5 and minor < 1):
++if sphinx_ver < (5, 1, 0):
+     has_include_patterns = False
+ else:
+     has_include_patterns = True
 -- 
 2.49.0
 
