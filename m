@@ -1,61 +1,61 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00059244699
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124D2206B7
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750359989; cv=none; b=YHmqfV9buTQSiy26qcyTA1dOoc1F2MtECXnrRqW4AkbxwKyDlwKstO8q0Q2dRplnzbTunO+f1NIJzO6WzjnLRkuej25hDcOGrFlvoKNZmVhPGJ9c4ACSlDMo9Ds09k39ECg/6M5IVB5Tpe6WOBMYeqg6/v4drHCJVTDf6Qg6qWc=
+	t=1750359988; cv=none; b=JVeYGyUQ/oiHqOkeh07+pewTk7d3YOn8CPI5r+mSm5Eyo2AtguWG+ZV9gFdFAQ2F7eZ6S0UQuzHrmRfKIVXxHHtK0Co7TwBMtI7Ng3Dld99j0mzY7jIbzayRJQ6d5p724j3iYgnawq6I0Bj4bBxDf3mBKq7DfLI1HY9vmJ7tMS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750359989; c=relaxed/simple;
-	bh=+GrIHTFuTUpROl92/5r/X+0zdXA6LqQVE3MUPwV/ZhQ=;
+	s=arc-20240116; t=1750359988; c=relaxed/simple;
+	bh=ILsscL13LJxtd5FJtJ8IdA6dNjxS9nIurbLnjjXA11s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bGAY19ny9VnDcxUnaqaXj5ZonV1IJIaF3n8KiQi6wPWxgWgiz+w9o3+JIsQvg+zz3Yl3r6Nil0t0qOpQJ6cVExQRjSZ95wE5x8mXnUbEn+5Oi/7q1u+rJbfayQVfvkLyizCYCYP3yJhkx3V5vXRQqLbPNVmtHeq8XCbVzW2aam8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lKp3Aqy9; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version:Content-Type; b=Nqornp2+Kjh9tQW/TMzYdwqvU26eVxOdapZ2wqYAFUzdwYqgSvoiPK7fEdcl5ffOiE7TvH+KRCUIVk3QonVMZ4Hc6jrLxAiYA8x10wmCea9UpGNx8KQFUAEk/y8/CH5xGatTDrqFN81VxT7PMhMWl7dUPbWVMEV+eg95S6dvQmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GDJoJwz6; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lKp3Aqy9"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a577f164c8so189828f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GDJoJwz6"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45306976410so309195e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750359986; x=1750964786; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1750359985; x=1750964785; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NUgqqS33UmS8K3d8/jSIOnq3bo+bDq+T7oLLwEj0ZMo=;
-        b=lKp3Aqy9ISgrA2MYN4wPpgQCY8dR3y7E1oG9tiby/EHHYdVoHTzLupvehs62/e2Rlj
-         eWY1GReIVY+R1f7Pe6XJC+/Yx1ITsRPk7n2JPkKa7mfox8X2q10xuC6LBWV8vKFY2pM4
-         2mQn3SMPDZgJ4zYgtgbBWXIZWRhdUB7bf6uJ50kPjPi4zOMsCBObGPzCDOFVxfh88sJn
-         UGL7R0htRV+uM4gDXEDu8d2+LGfph3gl0Hk047LlKYpEa4tVghLpzbwRKpdnVtO5hNfv
-         XYJGBR58a9yduxgzKyz2e/1UEIxmkyL23dijZiIN9Bg7Wfmb2BziH8GPK+qp3QITUQgr
-         3+CQ==
+        bh=xJ1XbwNXTcTz0Un8mjY/Dj+AmwaNTB9PlmuCT/9Ebw8=;
+        b=GDJoJwz6DO1n3Y7FKOyWpeBvF8eSR+MrVNwrFj0OjFBlTjDM5pIELgZB2318NP2QG9
+         L0FfrV6kn/1YxUf/UETItGYmaaI8Q1H00AQMBHAQPOefKPcisVh2Ga2y6bx0mK0yxbM1
+         alZfN7W0OR7GLDq1OihcW+RFzdbyvBAVqDK1t3tvbyAhDO8X3WfB/prL1KapOziGOYjm
+         7OGylwiMy9y2SubvUqEXdO58JsbuafAY+29k111xtT7aVvtMaHXu8j3RGOa5//CAjhWh
+         3DA7slmSUDf3oybzBTOkZ5HBV9Qu7wXNeJlGbTvATt5SoPaSQl/QXA3/0vyWDNO1k8Dx
+         U9DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750359986; x=1750964786;
+        d=1e100.net; s=20230601; t=1750359985; x=1750964785;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NUgqqS33UmS8K3d8/jSIOnq3bo+bDq+T7oLLwEj0ZMo=;
-        b=ESJPe3wuNKBvA16ZEcppMMXXX/dkuvsXLiq6wnqyE12Zcp+9Eq1mFWrYnmN5h6vQI4
-         54wVRA8sovxKHUwObyrQaKifxnuPzwb5ttAx9drUEe3W+NOcHz5hArWLYbfGuJemtofR
-         Am8oHf5FdVmY4OmoMVxnvIlIvb6his3PaFMdwdomMW+EP7X1/aKAcmclylkvJ4Vi17oz
-         3rdV8ESnuCpMNbv9Ji0kVIWCH4uJmGxhSP6LOUhz+rY7F7ZyWZwoKkf1yr0PLga0jly8
-         EpFo4QyU94O2Dfy8pgc1Qm1dWxSPtyFOlZnMHOxiJ7Oh58MtQaEpP8gkLqNaGZ2SvPqh
-         FWkQ==
-X-Gm-Message-State: AOJu0Yyq4Iu537x/e3DVeXgMm48arZc6PcL1Cj5DlSZS7EztX3H1taLd
-	LxWFIzHY7oG2M6MTVltolMKWLfmPOzplT3f/z9T1XqNv8sGJ0UbaHdtrF5HFXMa5CRw=
-X-Gm-Gg: ASbGncvK6foj+F92LAd59O1jPRDz28BDu36+Wazgu+c3qr3b52DtaR+eqKQChIiCqog
-	0pPzJqkXCDOy9CrukJXHnkjTj2vuZSQXJb7V1DQPG5F7rLDzYHH3Qdt1YXi8MxpMWgGH4Wyf1EU
-	4lV7Hkyq4uII6p3WW8/MGdQdxb6ALFptEMGFBGwp20/a3lLB7cLY8a3CuGqB2BuAZK0nmGI34cx
-	BQLhCoto+ZGLHmY3EJ9V7/MSwwSgiFBIotNZWtaaesAv0Nho3JOTej4WvUcgs6THn/UFiZCZVIy
-	4OV9L+s+dNpe/IoRVcWxbR/sJAreAiagxjGNlfEYErsLGkCSbO5qjssBEGbOMs1A0pwIiQ==
-X-Google-Smtp-Source: AGHT+IHuibaFNqAChrUUS/w/dvL1A03xt+pHa6kwx4Z+eNcaodjzCahV1ThOG3laDvCRTCsVwhRJtg==
-X-Received: by 2002:a05:6000:220e:b0:3a5:1306:3c30 with SMTP id ffacd0b85a97d-3a6d112f3a6mr78102f8f.0.1750359986095;
-        Thu, 19 Jun 2025 12:06:26 -0700 (PDT)
+        bh=xJ1XbwNXTcTz0Un8mjY/Dj+AmwaNTB9PlmuCT/9Ebw8=;
+        b=Qe12cURTW67ltyHDXLblzdrCNOlN5Gml+flB8w+ggDQj00RmEsLQCwUXQQJGDAkKZn
+         BKMyNiNm+sE/QNweayITLkGbRcg4fcQkSvyDg9r85pPW43sHmGwiUquPGQVyrScBiJGI
+         OVcy/Z86DTdm8LLSHOV0vB09v43PdRGsoeJhCSAeEIE3pbkPppkaurfr81YOYrwmxHf4
+         1pfOpPT9AQQ9sT5z/bSKQ2b3OG31qGGL7JGUDeoMDv2xgTMaIUcjc7R5M9EUMuTezGWo
+         ViePKwAYc3yPZtii3jY58cPTl1wcGMOhfWHNQaNffGh7BwQzkcae/bieIxmxDjgFue1F
+         3ryg==
+X-Gm-Message-State: AOJu0YxjyOnT/fVJM4NP6Ckz7E18eNltT7eue8aEXd1G/oobarqTuc+U
+	A7NLJYSZCG1qnVURGaS+sp2PBKQVv3jY8eTXqrtgn7TC5pIZQ9hfg6wTflnSt4JzLcU=
+X-Gm-Gg: ASbGncsqVtcXINpOYConl3bB7BcHvq7onTndlbP4YtLOjRXoVJj8/UmRFLopZBxYnNa
+	7Sjzdwu8SlsJPIdjToVA1NlbkF0+PKPPUfy3xcp5l3IDjCbUQpoX2I8XJYXgjm79M84547XQfft
+	3ui8Flfu75LozY/MFqlaXkva4BPjXfTnPpCwsTwB/vmQtSD7nRRUae+OxVZyVooujXeUsBj1aZ5
+	jDlcvve4/GfnsyfWlLq+sSup4WchgBUUNlnbq9j+4c7rcWuYq6bhj5utUifhECEM2JZBSAP6YHq
+	3hMM5yN3EaFXazzV77Vlr/Mz4CpTiDFF3HiKv2FMjo+ek9uQ6JO0RdF6rPN4ap1i7kNklQ==
+X-Google-Smtp-Source: AGHT+IHQG2zcbYwMwXYE5bB9wHUmYmgz/zB2Z25qG0x2H3MwJgmqDV6XnjvtVVAiFz3kAt4jB7hAcw==
+X-Received: by 2002:a05:600c:154d:b0:453:c08:a1fa with SMTP id 5b1f17b1804b1-4536478f2efmr973295e9.0.1750359984550;
+        Thu, 19 Jun 2025 12:06:24 -0700 (PDT)
 Received: from localhost ([2a02:8308:a00c:e200:5b14:46b0:5c7a:61f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f10a27sm168047f8f.14.2025.06.19.12.06.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470903asm2693935e9.40.2025.06.19.12.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 12:06:25 -0700 (PDT)
+        Thu, 19 Jun 2025 12:06:24 -0700 (PDT)
 From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
 To: linux-riscv@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH v2 3/2] RISC-V: sbi: remove sbi_ecall tracepoints
-Date: Thu, 19 Jun 2025 21:03:15 +0200
-Message-ID: <20250619190315.2603194-4-rkrcmar@ventanamicro.com>
+Subject: [PATCH v2 2/2] RISC-V: make use of variadic sbi_ecall
+Date: Thu, 19 Jun 2025 21:03:14 +0200
+Message-ID: <20250619190315.2603194-3-rkrcmar@ventanamicro.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250619190315.2603194-1-rkrcmar@ventanamicro.com>
 References: <20250619190315.2603194-1-rkrcmar@ventanamicro.com>
@@ -84,242 +84,541 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Tracepoits generate bad code in the non-trace path.
+The new sbi_ecall doesn't have to list all 8 arguments anymore, so only
+pass the actual numbers of arguments for each SBI function.
 
-The acceptable tracepoint overhead in the non-tracing path is a nop, and
-possibly a second 2 byte nop for alignment, but the actual overhead is
-way higher.  For example, the sbi_fwft_set with tracepoints:
-   0xffffffff80022ee8 <+0>:	auipc	a5,0x2cec
-   0xffffffff80022eec <+4>:	lbu	a5,1704(a5) # 0xffffffff82d0f590 <sbi_fwft_supported>
-   0xffffffff80022ef0 <+8>:	beqz	a5,0xffffffff80022fa0 <sbi_fwft_set+184>
-   0xffffffff80022ef2 <+10>:	addi	sp,sp,-48
-   0xffffffff80022ef4 <+12>:	sd	s0,32(sp)
-   0xffffffff80022ef6 <+14>:	sd	s1,24(sp)
-   0xffffffff80022ef8 <+16>:	sd	s2,16(sp)
-   0xffffffff80022efa <+18>:	sd	ra,40(sp)
-   0xffffffff80022efc <+20>:	addi	s0,sp,48
-   0xffffffff80022efe <+22>:	slli	s1,a0,0x20
-   0xffffffff80022f02 <+26>:	mv	s2,a1
-   0xffffffff80022f04 <+28>:	srli	s1,s1,0x20
-   0xffffffff80022f06 <+30>:	nop
-   0xffffffff80022f08 <+32>:	nop
-   0xffffffff80022f0c <+36>:	lui	a7,0x46574
-   0xffffffff80022f10 <+40>:	mv	a0,s1
-   0xffffffff80022f12 <+42>:	mv	a1,s2
-   0xffffffff80022f14 <+44>:	addi	a7,a7,1620 # 0x46574654
-   0xffffffff80022f18 <+48>:	li	a6,0
-   0xffffffff80022f1a <+50>:	ecall
-   0xffffffff80022f1e <+54>:	mv	s1,a0
-   0xffffffff80022f20 <+56>:	nop
-   0xffffffff80022f24 <+60>:	addiw	a0,s1,14
-   0xffffffff80022f28 <+64>:	li	a5,14
-   0xffffffff80022f2a <+66>:	bltu	a5,a0,0xffffffff80022f9a <sbi_fwft_set+178>
-   0xffffffff80022f2e <+70>:	slli	a5,a0,0x20
-   0xffffffff80022f32 <+74>:	srli	a0,a5,0x1e
-   0xffffffff80022f36 <+78>:	auipc	a5,0x1c75
-   0xffffffff80022f3a <+82>:	addi	a5,a5,-886 # 0xffffffff81c97bc0 <CSWTCH.177>
-   0xffffffff80022f3e <+86>:	add	a5,a5,a0
-   0xffffffff80022f40 <+88>:	lw	a0,0(a5)
-   0xffffffff80022f42 <+90>:	ld	ra,40(sp)
-   0xffffffff80022f44 <+92>:	ld	s0,32(sp)
-   0xffffffff80022f46 <+94>:	ld	s1,24(sp)
-   0xffffffff80022f48 <+96>:	ld	s2,16(sp)
-   0xffffffff80022f4a <+98>:	addi	sp,sp,48
-   0xffffffff80022f4c <+100>:	ret
-   [tracepoint slowpaths]
-   0xffffffff80022f9a <+178>:	li	a0,-524
-   0xffffffff80022f9e <+182>:	j	0xffffffff80022f42 <sbi_fwft_set+90>
-   0xffffffff80022fa0 <+184>:	li	a0,-95
-   0xffffffff80022fa4 <+188>:	ret
+The remaining trailing 0 are intentional as they represent an argument.
 
-Without tracepoints:
-   0xffffffff80022b40 <+0>:	addi	sp,sp,-16
-   0xffffffff80022b42 <+2>:	sd	s0,0(sp)
-   0xffffffff80022b44 <+4>:	sd	ra,8(sp)
-   0xffffffff80022b46 <+6>:	addi	s0,sp,16
-   0xffffffff80022b48 <+8>:	auipc	a5,0x2ced
-   0xffffffff80022b4c <+12>:	lbu	a5,-1464(a5) # 0xffffffff82d0f590 <sbi_fwft_supported>
-   0xffffffff80022b50 <+16>:	beqz	a5,0xffffffff80022b8e <sbi_fwft_set+78>
-   0xffffffff80022b52 <+18>:	lui	a7,0x46574
-   0xffffffff80022b56 <+22>:	slli	a0,a0,0x20
-   0xffffffff80022b58 <+24>:	srli	a0,a0,0x20
-   0xffffffff80022b5a <+26>:	addi	a7,a7,1620 # 0x46574654
-   0xffffffff80022b5e <+30>:	li	a6,0
-   0xffffffff80022b60 <+32>:	ecall
-   0xffffffff80022b64 <+36>:	li	a5,14
-   0xffffffff80022b66 <+38>:	addiw	a0,a0,14
-   0xffffffff80022b68 <+40>:	bltu	a5,a0,0xffffffff80022b88 <sbi_fwft_set+72>
-   0xffffffff80022b6c <+44>:	slli	a5,a0,0x20
-   0xffffffff80022b70 <+48>:	srli	a0,a5,0x1e
-   0xffffffff80022b74 <+52>:	auipc	a5,0x1c75
-   0xffffffff80022b78 <+56>:	addi	a5,a5,-300 # 0xffffffff81c97a48 <CSWTCH.176>
-   0xffffffff80022b7c <+60>:	add	a5,a5,a0
-   0xffffffff80022b7e <+62>:	lw	a0,0(a5)
-   0xffffffff80022b80 <+64>:	ld	ra,8(sp)
-   0xffffffff80022b82 <+66>:	ld	s0,0(sp)
-   0xffffffff80022b84 <+68>:	addi	sp,sp,16
-   0xffffffff80022b86 <+70>:	ret
-
-   0xffffffff80022b88 <+72>:	li	a0,-524
-   0xffffffff80022b8c <+76>:	j	0xffffffff80022b80 <sbi_fwft_set+64>
-   0xffffffff80022b8e <+78>:	li	a0,-95
-   0xffffffff80022b92 <+82>:	j	0xffffffff80022b80 <sbi_fwft_set+64>
-
-It would be nice if RISC-V had a way to tell compilers to generate the
-desired code, because if this issue isn't limited to ecall tracepoints,
-then disabling CONFIG_TRACEPOINTS is starting to look good. :)
+SBI 0.1 shouldn't be using the sbi_ecall, because it's only for 0.2+,
+but allow it by passing 0 is the reserved register.
 
 Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
 ---
- arch/riscv/include/asm/sbi.h   | 30 ++--------------------------
- arch/riscv/include/asm/trace.h | 36 ----------------------------------
- arch/riscv/kernel/sbi_ecall.c  | 18 -----------------
- 3 files changed, 2 insertions(+), 82 deletions(-)
+v2:
+ * add some missed trailing 0 in pmu [David]
+ * adapt to the new sbi_ecall that doesn't allow a single argument
+---
+ arch/riscv/include/asm/kvm_nacl.h |  4 +--
+ arch/riscv/kernel/cpu_ops_sbi.c   |  6 ++--
+ arch/riscv/kernel/paravirt.c      |  2 +-
+ arch/riscv/kernel/sbi.c           | 57 ++++++++++++++-----------------
+ arch/riscv/kernel/sbi_ecall.c     |  2 +-
+ arch/riscv/kernel/suspend.c       |  4 +--
+ arch/riscv/kvm/nacl.c             |  7 ++--
+ drivers/acpi/riscv/cppc.c         |  4 +--
+ drivers/perf/riscv_pmu_sbi.c      | 49 +++++++++++++-------------
+ 9 files changed, 66 insertions(+), 69 deletions(-)
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 7aff31583a3d..ffab0614d24a 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -11,7 +11,6 @@
- #include <linux/types.h>
- #include <linux/cpumask.h>
- #include <linux/jump_label.h>
--#include <linux/tracepoint-defs.h>
+diff --git a/arch/riscv/include/asm/kvm_nacl.h b/arch/riscv/include/asm/kvm_nacl.h
+index 4124d5e06a0f..5849af11c945 100644
+--- a/arch/riscv/include/asm/kvm_nacl.h
++++ b/arch/riscv/include/asm/kvm_nacl.h
+@@ -96,7 +96,7 @@ do {									\
  
- #ifdef CONFIG_RISCV_SBI
- enum sbi_ext_id {
-@@ -461,16 +460,6 @@ struct sbiret {
- 	long value;
- };
+ #define nacl_sync_hfence(__e)						\
+ 	sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_SYNC_HFENCE,		\
+-		  (__e), 0, 0, 0, 0, 0)
++		  (__e))
  
--#ifdef CONFIG_TRACEPOINTS
--DECLARE_TRACEPOINT(sbi_call);
--DECLARE_TRACEPOINT(sbi_return);
--extern void do_trace_sbi_call(int ext, int fid);
--extern void do_trace_sbi_return(int ext, long error, long value);
--#else
--static inline void do_trace_sbi_call(int ext, int fid) {};
--static inline void do_trace_sbi_return(int ext, long error, long value) {};
--#endif
--
- void sbi_init(void);
- long __sbi_base_ecall(int fid);
+ #define nacl_hfence_mkconfig(__type, __order, __vmid, __asid)		\
+ ({									\
+@@ -196,7 +196,7 @@ do {									\
  
-@@ -509,32 +498,17 @@ long __sbi_base_ecall(int fid);
- #define __sbi_ecall_constraints7  __sbi_ecall_constraints6, "r" (__a4)
- #define __sbi_ecall_constraints8  __sbi_ecall_constraints7, "r" (__a5)
+ #define nacl_sync_csr(__csr)						\
+ 	sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_SYNC_CSR,			\
+-		  (__csr), 0, 0, 0, 0, 0)
++		  (__csr))
  
--#define __sbi_ecall_trace_call() \
--	if (tracepoint_enabled(sbi_call)) \
--		do_trace_sbi_call(__ta7, __ta6)
--
--#define __sbi_ecall_trace_return() \
--	if (tracepoint_enabled(sbi_return)) \
--		do_trace_sbi_return(__ta7, __ret.error, __ret.value)
--
--/*
-- * Clear a1 to avoid leaking unrelated kernel state through tracepoints in case
-- * the register doesn't get overwritten by the ecall nor the arguments.
-- */
- #define sbi_ecall(A...) \
- ({ \
- 	CONCATENATE(__sbi_ecall_args, COUNT_ARGS(A))(A); \
--	__sbi_ecall_trace_call(); \
- 	register uintptr_t __r0 asm ("a0"); \
--	register uintptr_t __r1 asm ("a1") = 0; \
-+	register uintptr_t __r1 asm ("a1"); \
- 	CONCATENATE(__sbi_ecall_regs, COUNT_ARGS(A)); \
- 	asm volatile ("ecall" \
- 			: "=r" (__r0), "=r" (__r1) \
- 			: CONCATENATE(__sbi_ecall_constraints, COUNT_ARGS(A)) \
- 			: "memory"); \
--	struct sbiret __ret = {.error = __r0, .value = __r1}; \
--	__sbi_ecall_trace_return(); \
--	__ret; \
-+	(struct sbiret){.error = __r0, .value = __r1}; \
- })
+ /*
+  * Each ncsr_xyz() macro defined below has it's own static-branch so every
+diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
+index e6fbaaf54956..d5de532ca082 100644
+--- a/arch/riscv/kernel/cpu_ops_sbi.c
++++ b/arch/riscv/kernel/cpu_ops_sbi.c
+@@ -29,7 +29,7 @@ static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
+ 	struct sbiret ret;
  
- #ifdef CONFIG_RISCV_SBI_V01
-diff --git a/arch/riscv/include/asm/trace.h b/arch/riscv/include/asm/trace.h
-index 6151cee5450c..7c99d91fcce3 100644
---- a/arch/riscv/include/asm/trace.h
-+++ b/arch/riscv/include/asm/trace.h
-@@ -7,42 +7,6 @@
+ 	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
+-			hartid, saddr, priv, 0, 0, 0);
++			hartid, saddr, priv);
+ 	if (ret.error)
+ 		return sbi_err_map_linux_errno(ret.error);
+ 	else
+@@ -41,7 +41,7 @@ static int sbi_hsm_hart_stop(void)
+ {
+ 	struct sbiret ret;
  
- #include <linux/tracepoint.h>
+-	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP);
  
--TRACE_EVENT_CONDITION(sbi_call,
--	TP_PROTO(int ext, int fid),
--	TP_ARGS(ext, fid),
--	TP_CONDITION(ext != SBI_EXT_HSM),
--
--	TP_STRUCT__entry(
--		__field(int, ext)
--		__field(int, fid)
--	),
--
--	TP_fast_assign(
--		__entry->ext = ext;
--		__entry->fid = fid;
--	),
--
--	TP_printk("ext=0x%x fid=%d", __entry->ext, __entry->fid)
--);
--
--TRACE_EVENT_CONDITION(sbi_return,
--	TP_PROTO(int ext, long error, long value),
--	TP_ARGS(ext, error, value),
--	TP_CONDITION(ext != SBI_EXT_HSM),
--
--	TP_STRUCT__entry(
--		__field(long, error)
--		__field(long, value)
--	),
--
--	TP_fast_assign(
--		__entry->error = error;
--		__entry->value = value;
--	),
--
--	TP_printk("error=%ld value=0x%lx", __entry->error, __entry->value)
--);
--
- #endif /* _TRACE_RISCV_H */
+ 	if (ret.error)
+ 		return sbi_err_map_linux_errno(ret.error);
+@@ -54,7 +54,7 @@ static int sbi_hsm_hart_get_status(unsigned long hartid)
+ 	struct sbiret ret;
  
- #undef TRACE_INCLUDE_PATH
+ 	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
+-			hartid, 0, 0, 0, 0, 0);
++			hartid);
+ 	if (ret.error)
+ 		return sbi_err_map_linux_errno(ret.error);
+ 	else
+diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c
+index fa6b0339a65d..9d00743a96c1 100644
+--- a/arch/riscv/kernel/paravirt.c
++++ b/arch/riscv/kernel/paravirt.c
+@@ -60,7 +60,7 @@ static int sbi_sta_steal_time_set_shmem(unsigned long lo, unsigned long hi,
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_STA, SBI_EXT_STA_STEAL_TIME_SET_SHMEM,
+-			lo, hi, flags, 0, 0, 0);
++			lo, hi, flags);
+ 	if (ret.error) {
+ 		if (lo == SBI_SHMEM_DISABLE && hi == SBI_SHMEM_DISABLE)
+ 			pr_warn("Failed to disable steal-time shmem");
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index 53836a9235e3..af23b8759a13 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -57,7 +57,7 @@ static unsigned long __sbi_v01_cpumask_to_hartmask(const struct cpumask *cpu_mas
+  */
+ void sbi_console_putchar(int ch)
+ {
+-	sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, ch, 0, 0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, ch);
+ }
+ EXPORT_SYMBOL(sbi_console_putchar);
+ 
+@@ -70,7 +70,7 @@ int sbi_console_getchar(void)
+ {
+ 	struct sbiret ret;
+ 
+-	ret = sbi_ecall(SBI_EXT_0_1_CONSOLE_GETCHAR, 0, 0, 0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_0_1_CONSOLE_GETCHAR, 0);
+ 
+ 	return ret.error;
+ }
+@@ -83,7 +83,7 @@ EXPORT_SYMBOL(sbi_console_getchar);
+  */
+ void sbi_shutdown(void)
+ {
+-	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0);
+ }
+ EXPORT_SYMBOL(sbi_shutdown);
+ 
+@@ -97,9 +97,9 @@ static void __sbi_set_timer_v01(uint64_t stime_value)
+ {
+ #if __riscv_xlen == 32
+ 	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
+-		  stime_value >> 32, 0, 0, 0, 0);
++		  stime_value >> 32);
+ #else
+-	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value);
+ #endif
+ }
+ 
+@@ -107,8 +107,7 @@ static void __sbi_send_ipi_v01(unsigned int cpu)
+ {
+ 	unsigned long hart_mask =
+ 		__sbi_v01_cpumask_to_hartmask(cpumask_of(cpu));
+-	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)(&hart_mask),
+-		  0, 0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)(&hart_mask));
+ }
+ 
+ static int __sbi_rfence_v01(int fid, const struct cpumask *cpu_mask,
+@@ -126,17 +125,16 @@ static int __sbi_rfence_v01(int fid, const struct cpumask *cpu_mask,
+ 	switch (fid) {
+ 	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
+ 		sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
+-			  (unsigned long)&hart_mask, 0, 0, 0, 0, 0);
++			  (unsigned long)&hart_mask);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
+ 		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
+-			  (unsigned long)&hart_mask, start, size,
+-			  0, 0, 0);
++			  (unsigned long)&hart_mask, start, size);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
+ 		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
+ 			  (unsigned long)&hart_mask, start, size,
+-			  arg4, 0, 0);
++			  arg4);
+ 		break;
+ 	default:
+ 		pr_err("SBI call [%d]not supported in SBI v0.1\n", fid);
+@@ -180,10 +178,9 @@ static void __sbi_set_timer_v02(uint64_t stime_value)
+ {
+ #if __riscv_xlen == 32
+ 	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value,
+-		  stime_value >> 32, 0, 0, 0, 0);
++		  stime_value >> 32);
+ #else
+-	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value, 0,
+-		  0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value);
+ #endif
+ }
+ 
+@@ -193,7 +190,7 @@ static void __sbi_send_ipi_v02(unsigned int cpu)
+ 	struct sbiret ret = {0};
+ 
+ 	ret = sbi_ecall(SBI_EXT_IPI, SBI_EXT_IPI_SEND_IPI,
+-			1UL, cpuid_to_hartid_map(cpu), 0, 0, 0, 0);
++			1UL, cpuid_to_hartid_map(cpu));
+ 	if (ret.error) {
+ 		result = sbi_err_map_linux_errno(ret.error);
+ 		pr_err("%s: hbase = [%lu] failed (error [%d])\n",
+@@ -212,32 +209,32 @@ static int __sbi_rfence_v02_call(unsigned long fid, unsigned long hmask,
+ 
+ 	switch (fid) {
+ 	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
+-		ret = sbi_ecall(ext, fid, hmask, hbase, 0, 0, 0, 0);
++		ret = sbi_ecall(ext, fid, hmask, hbase);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, 0, 0);
++				size);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, arg4, 0);
++				size, arg4);
+ 		break;
+ 
+ 	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, 0, 0);
++				size);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, arg4, 0);
++				size, arg4);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, 0, 0);
++				size);
+ 		break;
+ 	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID:
+ 		ret = sbi_ecall(ext, fid, hmask, hbase, start,
+-				size, arg4, 0);
++				size, arg4);
+ 		break;
+ 	default:
+ 		pr_err("unknown function ID [%lu] for SBI extension [%d]\n",
+@@ -334,7 +331,7 @@ int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
+ 		return -EOPNOTSUPP;
+ 
+ 	ret = sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET,
+-			feature, value, flags, 0, 0, 0);
++			feature, value, flags);
+ 
+ 	return sbi_err_map_linux_errno(ret.error);
+ }
+@@ -510,8 +507,7 @@ EXPORT_SYMBOL(sbi_remote_hfence_vvma_asid);
+ 
+ static void sbi_srst_reset(unsigned long type, unsigned long reason)
+ {
+-	sbi_ecall(SBI_EXT_SRST, SBI_EXT_SRST_RESET, type, reason,
+-		  0, 0, 0, 0);
++	sbi_ecall(SBI_EXT_SRST, SBI_EXT_SRST_RESET, type, reason);
+ 	pr_warn("%s: type=0x%lx reason=0x%lx failed\n",
+ 		__func__, type, reason);
+ }
+@@ -544,8 +540,7 @@ long sbi_probe_extension(int extid)
+ {
+ 	struct sbiret ret;
+ 
+-	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, extid,
+-			0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, extid);
+ 	if (!ret.error)
+ 		return ret.value;
+ 
+@@ -607,10 +602,10 @@ int sbi_debug_console_write(const char *bytes, unsigned int num_bytes)
+ 	if (IS_ENABLED(CONFIG_32BIT))
+ 		ret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_WRITE,
+ 				num_bytes, lower_32_bits(base_addr),
+-				upper_32_bits(base_addr), 0, 0, 0);
++				upper_32_bits(base_addr));
+ 	else
+ 		ret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_WRITE,
+-				num_bytes, base_addr, 0, 0, 0, 0);
++				num_bytes, base_addr);
+ 
+ 	if (ret.error == SBI_ERR_FAILURE)
+ 		return -EIO;
+@@ -636,10 +631,10 @@ int sbi_debug_console_read(char *bytes, unsigned int num_bytes)
+ 	if (IS_ENABLED(CONFIG_32BIT))
+ 		ret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_READ,
+ 				num_bytes, lower_32_bits(base_addr),
+-				upper_32_bits(base_addr), 0, 0, 0);
++				upper_32_bits(base_addr));
+ 	else
+ 		ret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_READ,
+-				num_bytes, base_addr, 0, 0, 0, 0);
++				num_bytes, base_addr);
+ 
+ 	if (ret.error == SBI_ERR_FAILURE)
+ 		return -EIO;
 diff --git a/arch/riscv/kernel/sbi_ecall.c b/arch/riscv/kernel/sbi_ecall.c
-index b783a46fff1c..62489ffeae2c 100644
+index 2a3f31edb08f..b783a46fff1c 100644
 --- a/arch/riscv/kernel/sbi_ecall.c
 +++ b/arch/riscv/kernel/sbi_ecall.c
-@@ -2,8 +2,6 @@
- /* Copyright (c) 2024 Rivos Inc. */
- 
- #include <asm/sbi.h>
--#define CREATE_TRACE_POINTS
--#include <asm/trace.h>
- 
- long __sbi_base_ecall(int fid)
+@@ -9,7 +9,7 @@ long __sbi_base_ecall(int fid)
  {
-@@ -16,19 +14,3 @@ long __sbi_base_ecall(int fid)
+ 	struct sbiret ret;
+ 
+-	ret = sbi_ecall(SBI_EXT_BASE, fid, 0, 0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_BASE, fid);
+ 	if (!ret.error)
+ 		return ret.value;
+ 	else
+diff --git a/arch/riscv/kernel/suspend.c b/arch/riscv/kernel/suspend.c
+index 24b3f57d467f..bef83043e8c7 100644
+--- a/arch/riscv/kernel/suspend.c
++++ b/arch/riscv/kernel/suspend.c
+@@ -115,7 +115,7 @@ static int sbi_system_suspend(unsigned long sleep_type,
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_SUSP, SBI_EXT_SUSP_SYSTEM_SUSPEND,
+-			sleep_type, resume_addr, opaque, 0, 0, 0);
++			sleep_type, resume_addr, opaque);
+ 	if (ret.error)
  		return sbi_err_map_linux_errno(ret.error);
+ 
+@@ -153,7 +153,7 @@ static int sbi_suspend_finisher(unsigned long suspend_type,
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_SUSPEND,
+-			suspend_type, resume_addr, opaque, 0, 0, 0);
++			suspend_type, resume_addr, opaque);
+ 
+ 	return (ret.error) ? sbi_err_map_linux_errno(ret.error) : 0;
  }
- EXPORT_SYMBOL(__sbi_base_ecall);
--
--#ifdef CONFIG_TRACEPOINTS
--void do_trace_sbi_call(int ext, int fid)
--{
--	trace_sbi_call(ext, fid);
--}
--EXPORT_SYMBOL(do_trace_sbi_call);
--EXPORT_TRACEPOINT_SYMBOL(sbi_call);
--
--void do_trace_sbi_return(int ext, long error, long value)
--{
--	trace_sbi_return(ext, error, value);
--}
--EXPORT_SYMBOL(do_trace_sbi_return);
--EXPORT_TRACEPOINT_SYMBOL(sbi_return);
--#endif
+diff --git a/arch/riscv/kvm/nacl.c b/arch/riscv/kvm/nacl.c
+index 08a95ad9ada2..bc0ea3157645 100644
+--- a/arch/riscv/kvm/nacl.c
++++ b/arch/riscv/kvm/nacl.c
+@@ -61,7 +61,7 @@ int kvm_riscv_nacl_enable(void)
+ 	nacl = this_cpu_ptr(&kvm_riscv_nacl);
+ 
+ 	ret = sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_SET_SHMEM,
+-			nacl->shmem_phys, 0, 0, 0, 0, 0);
++			nacl->shmem_phys, 0, 0);
+ 	rc = sbi_err_map_linux_errno(ret.error);
+ 	if (rc)
+ 		return rc;
+@@ -75,7 +75,7 @@ void kvm_riscv_nacl_disable(void)
+ 		return;
+ 
+ 	sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_SET_SHMEM,
+-		  SBI_SHMEM_DISABLE, SBI_SHMEM_DISABLE, 0, 0, 0, 0);
++		  SBI_SHMEM_DISABLE, SBI_SHMEM_DISABLE, 0);
+ }
+ 
+ void kvm_riscv_nacl_exit(void)
+@@ -106,8 +106,7 @@ static long nacl_probe_feature(long feature_id)
+ 	if (!kvm_riscv_nacl_available())
+ 		return 0;
+ 
+-	ret = sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_PROBE_FEATURE,
+-			feature_id, 0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_NACL, SBI_EXT_NACL_PROBE_FEATURE, feature_id);
+ 	return ret.value;
+ }
+ 
+diff --git a/drivers/acpi/riscv/cppc.c b/drivers/acpi/riscv/cppc.c
+index 4cdff387deff..21e2051b3e35 100644
+--- a/drivers/acpi/riscv/cppc.c
++++ b/drivers/acpi/riscv/cppc.c
+@@ -53,7 +53,7 @@ static void sbi_cppc_read(void *read_data)
+ 	struct sbi_cppc_data *data = (struct sbi_cppc_data *)read_data;
+ 
+ 	data->ret = sbi_ecall(SBI_EXT_CPPC, SBI_CPPC_READ,
+-			      data->reg, 0, 0, 0, 0, 0);
++			      data->reg);
+ }
+ 
+ static void sbi_cppc_write(void *write_data)
+@@ -61,7 +61,7 @@ static void sbi_cppc_write(void *write_data)
+ 	struct sbi_cppc_data *data = (struct sbi_cppc_data *)write_data;
+ 
+ 	data->ret = sbi_ecall(SBI_EXT_CPPC, SBI_CPPC_WRITE,
+-			      data->reg, data->val, 0, 0, 0, 0);
++			      data->reg, data->val);
+ }
+ 
+ static void cppc_ffh_csr_read(void *read_data)
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 698de8ddf895..69b7948d85ca 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -303,10 +303,10 @@ static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
+-			0, cmask, 0, edata->event_idx, 0, 0);
++			0, cmask, 0, edata->event_idx, 0);
+ 	if (!ret.error) {
+ 		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+-			  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
++			  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET);
+ 	} else if (ret.error == SBI_ERR_NOT_SUPPORTED) {
+ 		/* This event cannot be monitored by any counter */
+ 		edata->event_idx = -ENOENT;
+@@ -433,7 +433,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
+ 			hwc->config >> 32);
+ #else
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
+-			cmask, cflags, hwc->event_base, hwc->config, 0);
++			cmask, cflags, hwc->event_base, hwc->config);
+ #endif
+ 	if (ret.error) {
+ 		pr_debug("Not able to find a counter for event %lx config %llx\n",
+@@ -606,7 +606,7 @@ static int pmu_sbi_snapshot_disable(void)
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM, SBI_SHMEM_DISABLE,
+-			SBI_SHMEM_DISABLE, 0, 0, 0, 0);
++			SBI_SHMEM_DISABLE, 0);
+ 	if (ret.error) {
+ 		pr_warn("failed to disable snapshot shared memory\n");
+ 		return sbi_err_map_linux_errno(ret.error);
+@@ -630,10 +630,11 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu *pmu, int cpu)
+ 	if (IS_ENABLED(CONFIG_32BIT))
+ 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+ 				cpu_hw_evt->snapshot_addr_phys,
+-				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0, 0, 0, 0);
++				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32,
++				0);
+ 	else
+ 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+-				cpu_hw_evt->snapshot_addr_phys, 0, 0, 0, 0, 0);
++				cpu_hw_evt->snapshot_addr_phys, 0, 0);
+ 
+ 	/* Free up the snapshot area memory and fall back to SBI PMU calls without snapshot */
+ 	if (ret.error) {
+@@ -667,14 +668,14 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
+ 
+ 	if (pmu_sbi_is_fw_event(event)) {
+ 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ,
+-				hwc->idx, 0, 0, 0, 0, 0);
++				hwc->idx);
+ 		if (ret.error)
+ 			return 0;
+ 
+ 		val = ret.value;
+ 		if (IS_ENABLED(CONFIG_32BIT) && sbi_v2_available && info.width >= 32) {
+ 			ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ_HI,
+-					hwc->idx, 0, 0, 0, 0, 0);
++					hwc->idx);
+ 			if (!ret.error)
+ 				val |= ((u64)ret.value << 32);
+ 			else
+@@ -717,10 +718,10 @@ static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+ 	/* There is no benefit setting SNAPSHOT FLAG for a single counter */
+ #if defined(CONFIG_32BIT)
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, hwc->idx,
+-			1, flag, ival, ival >> 32, 0);
++			1, flag, ival, ival >> 32);
+ #else
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, hwc->idx,
+-			1, flag, ival, 0, 0);
++			1, flag, ival);
+ #endif
+ 	if (ret.error && (ret.error != SBI_ERR_ALREADY_STARTED))
+ 		pr_err("Starting counter idx %d failed with error %d\n",
+@@ -746,7 +747,8 @@ static void pmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
+ 	if (sbi_pmu_snapshot_available())
+ 		flag |= SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT;
+ 
+-	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, hwc->idx, 1, flag, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
++			hwc->idx, 1, flag);
+ 	if (!ret.error && sbi_pmu_snapshot_available()) {
+ 		/*
+ 		 * The counter snapshot is based on the index base specified by hwc->idx.
+@@ -771,7 +773,7 @@ static int pmu_sbi_find_num_ctrs(void)
+ {
+ 	struct sbiret ret;
+ 
+-	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_NUM_COUNTERS, 0, 0, 0, 0, 0, 0);
++	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_NUM_COUNTERS);
+ 	if (!ret.error)
+ 		return ret.value;
+ 	else
+@@ -789,7 +791,7 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < nctr; i++) {
+-		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i, 0, 0, 0, 0, 0);
++		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i);
+ 		if (ret.error)
+ 			/* The logical counter ids are not expected to be contiguous */
+ 			continue;
+@@ -816,7 +818,7 @@ static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
+ 	 * which may include counters that are not enabled yet.
+ 	 */
+ 	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+-		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
++		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET);
+ }
+ 
+ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+@@ -837,7 +839,7 @@ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+ 	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+ 		/* No need to check the error here as we can't do anything about the error */
+ 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, i * BITS_PER_LONG,
+-				cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
++				cpu_hw_evt->used_hw_ctrs[i], flag);
+ 		if (!ret.error && sbi_pmu_snapshot_available()) {
+ 			/* Save the counter values to avoid clobbering */
+ 			for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG)
+@@ -877,8 +879,8 @@ static inline void pmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
+ 	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+ 		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
+ 		/* Start all the counters that did not overflow in a single shot */
+-		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG, ctr_start_mask,
+-			0, 0, 0, 0);
++		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START,
++			  i * BITS_PER_LONG, ctr_start_mask, 0);
+ 	}
+ 
+ 	/* Reinitialize and start all the counter that overflowed */
+@@ -889,11 +891,11 @@ static inline void pmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
+ 			max_period = riscv_pmu_ctr_get_width_mask(event);
+ 			init_val = local64_read(&hwc->prev_count) & max_period;
+ #if defined(CONFIG_32BIT)
+-			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx, 1,
+-				  flag, init_val, init_val >> 32, 0);
++			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx,
++				  1, flag, init_val, init_val >> 32);
+ #else
+-			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx, 1,
+-				  flag, init_val, 0, 0);
++			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx,
++				  1, flag, init_val);
+ #endif
+ 			perf_event_update_userpage(event);
+ 		}
+@@ -932,8 +934,9 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
+ 			sdata->ctr_values[idx] =
+ 					cpu_hw_evt->snapshot_cval_shcopy[idx + i * BITS_PER_LONG];
+ 		/* Start all the counters in a single shot */
+-		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx * BITS_PER_LONG,
+-			  cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
++		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START,
++			  idx * BITS_PER_LONG,
++			  cpu_hw_evt->used_hw_ctrs[i], flag);
+ 	}
+ }
+ 
 -- 
 2.49.0
 
