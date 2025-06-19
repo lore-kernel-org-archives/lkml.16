@@ -1,153 +1,328 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6DF27FB2A;
-	Thu, 19 Jun 2025 08:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE95264FA0;
+	Thu, 19 Jun 2025 08:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322028; cv=none; b=ec8+oqS+pIZxZQWboGuPTjYIzUR73xq+HdaXzNrG8gVaJUTkv1T+s/68f9Cjs102PupNdGCfn+0jkCtVZAgqlC1v/mBRnAOhEU0vwyONzN1kyVBnKq/G+3WHmcz5L0MdglUnaeGnAU4PWyYdk0n2NJC1JGXbyTxNAC0mCfCqeN8=
+	t=1750322037; cv=none; b=CuKQYqPRt8QAXn7vxMVYorMIvT3wKlct2cu3PBqiAVb75kgI4zzzxhNOdi4id+aFqATPyGVvha6Ir3Ry1bZJE9QeGhO+E3jDOvzxyzDVRkX4Ff6Pi5539AhsN57H2rCt/cZkVYxjG3ShSDXKlqJZFhrvIPkL6KIXIm33Md310Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322028; c=relaxed/simple;
-	bh=Wy1UKlPMJxFgQotHhYltNJD9kZi54UdcAipelI9JT1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Rjt8FjbO2oxHg91lQQbcpxWy86HsnbduVHdwCPVZXzszDX1qf75KiuFB4rNgy6YXh8TeDmb78Kwi6+KceNnd0vVowuCpF0A3rlYjCJBO/pxx1+WlMX3oLhMjKgBGNrwOdUOx62l0WOIbZzB8n4WHT20LgFypIiNoCxC+yFqMsCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Pb8k3kX/; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750322037; c=relaxed/simple;
+	bh=TnutbrdDTFqTAJdAvKwHWum+J/G3rqx1TRNz/WW3H2Y=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wn99mo7P7ceOXtFHpDMfh/pd/aMprkRDkdbOr+W5l6zkNy9nJsAF0OAPCwagPuzM4qWawl9prEsfvyJiprRiTqsWgKoMPw9GtSLE9ruUpzc/2SqZVuwD/QK2ilIgV4VonD3sAG5mMxwdaGSKNb+VxFXGXjCb8jtRSh/XFTBrLTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de; spf=pass smtp.mailfrom=mariuszachmann.de; dkim=pass (2048-bit key) header.d=mariuszachmann.de header.i=@mariuszachmann.de header.b=WLJCOOYR; arc=none smtp.client-ip=178.254.4.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mariuszachmann.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pb8k3kX/"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55J8XMQR532765;
-	Thu, 19 Jun 2025 03:33:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750322002;
-	bh=2JTcC8uoCOSM0+5JiXWDBYfybPyfdDoEoObObpyrYRk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Pb8k3kX/r1jnFe/WEbbreOL/yDgBTgd73YVFDTq4jom9bvHeiqyV2xiyuY/kzAGKF
-	 vrlEsjMc8DjztNfoMraHrUAWcUlXHw/IbFBERcJ4SiJ8LebEwy7lw0IMGcr2rSmUsE
-	 ktuVEgZPBmP1Vvk34+fQFkwbLnI2gHF7upicEKUU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55J8XMPc3732274
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 19 Jun 2025 03:33:22 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
- Jun 2025 03:33:21 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 19 Jun 2025 03:33:21 -0500
-Received: from [172.24.227.4] (hp-z2-tower.dhcp.ti.com [172.24.227.4])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55J8XHnY822301;
-	Thu, 19 Jun 2025 03:33:18 -0500
-Message-ID: <5c56f6d6-fc3e-40a1-b501-7f1054e6e408@ti.com>
-Date: Thu, 19 Jun 2025 14:03:17 +0530
+	dkim=pass (2048-bit key) header.d=mariuszachmann.de header.i=@mariuszachmann.de header.b="WLJCOOYR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=mariuszachmann.de; s=blu6948523; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description;
+	bh=TnutbrdDTFqTAJdAvKwHWum+J/G3rqx1TRNz/WW3H2Y=; b=WLJCOOYRm7iSJRk9HXjqVCxXYR
+	AaWHMtSh72s4laQkbikG+qgF3XFSWKogmwQdmayXzLWQ3rAvFRiJAMryAoHX9ZTIxYLwD4moAnDTa
+	GqH8DnhjcSzIwUGK92y+x5lhsH6DD1b8u1S4JxM3pX6/6eSvwmBwWe2zh61J4+ZmEqkYJLcyjcbD+
+	lLPmyjNc8drb59fiIWj7H6qSYCOrAdRUVUmh8rR7f7EthgjoGH/DRZwaYBQdxESYup2cU9SZQ8/yp
+	h6PKBQri2i7hZdd2mPFp0aC3rNp1kh166NemSdmYpaL/F7CtVt2Fqj8DTp/vs89orm+bqE1OL1x6J
+	1q2Sr+Pg==;
+Received: from [2.211.115.98] (helo=[192.168.178.20])
+	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <mail@mariuszachmann.de>)
+	id 1uSAD3-002afl-IQ;
+	Thu, 19 Jun 2025 10:01:21 +0200
+Message-ID: <fe5fe144dea8665f96b943e9abe58fc8be536d69.camel@mariuszachmann.de>
+Subject: Re: [syzbot] [hwmon?] KMSAN: uninit-value in get_temp_cnct
+From: Marius Zachmann <mail@mariuszachmann.de>
+To: Guenter Roeck <linux@roeck-us.net>, syzbot	
+ <syzbot+3bbbade4e1a7ab45ca3b@syzkaller.appspotmail.com>, jdelvare@suse.com,
+ 	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Date: Thu, 19 Jun 2025 10:01:21 +0200
+In-Reply-To: <145b2916-830b-4654-84e6-3d5c356c6283@roeck-us.net>
+References: <685392a0.050a0220.216029.0168.GAE@google.com>
+	 <145b2916-830b-4654-84e6-3d5c356c6283@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase
- tag to "pcie0_ep"
-To: Vignesh Raghavendra <vigneshr@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <s-vadapalli@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <danishanwar@ti.com>, Hrushikesh Salunke <h-salunke@ti.com>
-References: <20250610054920.2395509-1-h-salunke@ti.com>
- <98e04654-a693-494d-9f60-930b6a4cd84a@ti.com>
- <b24a97fc-8dac-443b-aec7-317b9e393f2d@ti.com>
- <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
- <28c88a78-fe34-4595-b260-c6cc40897bc1@ti.com>
-Content-Language: en-US
-From: Hrushikesh Salunke <h-salunke@ti.com>
-In-Reply-To: <28c88a78-fe34-4595-b260-c6cc40897bc1@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Con-Id: 241080
+X-Con-U: 0-mail
 
+Am Mittwoch, dem 18.06.2025 um 22:56 -0700 schrieb Guenter Roeck:
+> On 6/18/25 21:31, syzbot wrote:
+> > Hello,
+> >=20
+> > syzbot found the following issue on:
+> >=20
+> > HEAD commit:=C2=A0=C2=A0=C2=A0 4774cfe3543a Merge tag 'scsi-fixes' of
+> > git://git.kernel.or..
+> > git tree:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 upstream
+> > console output:
+> > https://syzkaller.appspot.com/x/log.txt?x=3D10e3f10c580000
+> > kernel config:=C2=A0
+> > https://syzkaller.appspot.com/x/.config?x=3D61539536677af51c
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=3D3bbbade4e1a7ab45ca3b
+> > compiler:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Debian clang version 20.1=
+.6
+> > (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian
+> > LLD 20.1.6
+> > userspace arch: i386
+> >=20
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >=20
+>=20
+> It doesn't need one: The problem will be seen if the data returned
+> from the
+> power supply is shorter than expected. In the example below, the
+> problem will
+> be seen if less than NUM_TEMP_SENSORS+1 data bytes were received.
+> One possible fix would be to record the returned data length in
+> ccp_raw_event()
+> and to have each caller of send_usb_cmd() check if the returned
+> amount of data
+> is sufficient.
+>=20
+> Guenter
 
+The device should always return the same number of bytes.
+I could zero-initialize the buffer at allocation. Then there should
+be no uninitialized values.
+Also I could check the number of returned bytes in send_usb_cmd()
+instead of having each caller checking it, and return -EIO if
+it is not correct?
 
-On 19/06/25 13:25, Vignesh Raghavendra wrote:
-> 
-> 
-> On 12/06/25 15:46, Hrushikesh Salunke wrote:
->>
->>
->> On 11/06/25 14:17, Hrushikesh Salunke wrote:
->>>
->>>
->>> On 11/06/25 14:14, Vignesh Raghavendra wrote:
->>>>
->>>>
->>>> On 10/06/25 11:19, Hrushikesh Salunke wrote:
->>>>> AM64X SoC has one instance of PCIe which is PCIe0. To support PCIe boot
->>>>> on AM64X SoC, PCIe0 needs to be in endpoint mode and it needs to be
->>>>> functional at all stages of PCIe boot process. Thus add the
->>>>> "bootph-all" boot phase tag to "pcie0_ep" device tree node.
->>>>>
->>>>> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
->>>>> ---
->>>>> This patch is based on commit
->>>>> 475c850a7fdd Add linux-next specific files for 20250606
->>>>>
->>>>> Changes since v1
->>>>> As per feedback from Nishanth, changed the position of "bootph-all"
->>>>> tag, according to ordering rules for device tree properties.
->>>>>
->>>>> v1 : https://lore.kernel.org/
->>>>> all/20250609115930.w2s6jzg7xii55dlu@speckled/
->>>>>
->>>>>    arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
->>>>>    1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso b/
->>>>> arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>>> index 432751774853..a7e8d4ea98ac 100644
->>>>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
->>>>> @@ -46,6 +46,7 @@ pcie0_ep: pcie-ep@f102000 {
->>>>>            max-functions = /bits/ 8 <1>;
->>>>>            phys = <&serdes0_pcie_link>;
->>>>>            phy-names = "pcie-phy";
->>>>> +        bootph-all;
->>>>>            ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
->>>>>        };
->>>>>    };
->>>>
->>>> Are the patches for PCIe boot support merged to U-Boot or such other
->>>> bootloader repo?
->>>> No, they are not in the U-Boot yet. I will be posting patches for PCIe
->>> boot support for U-Boot this week.
->>>
->>
->> I have posted Patch series for the PCIe boot support in Uboot.
-> 
-> 
-> Great, but dont you need bootph-all in dependent nodes as well such as
-> serdes0_pcie_link pcie0_ctrl? how does this work otherwise?
-> 
+Marius
 
-When booting through PCIe, ROM configures SERDES for PCIe. So we don't
-need to reconfigure it again in subsequent bootstages, we can keep
-using the same configuration. As for PCIe endpoint controller, BAR
-registers and Address Translation registers needs to be re-configured
-at each bootstage, as bootloaders at different stage are stored at
-different memory location.
-
-
->>
->> 1.https://patchwork.ozlabs.org/project/uboot/
->> patch/20250612084910.3457060-1-h-salunke@ti.com/
->> 2. https://patchwork.ozlabs.org/project/uboot/
->> cover/20250612085023.3457117-1-h-salunke@ti.com/
->> 3. https://patchwork.ozlabs.org/project/uboot/
->> cover/20250612085534.3457522-1-h-salunke@ti.com/
->>
->>
->> Regards,
->> Hrushikesh.
-> 
+>=20
+> > Downloadable assets:
+> > disk image:
+> > https://storage.googleapis.com/syzbot-assets/0cb38ba04f99/disk-4774cfe3=
+.raw.xz
+> > vmlinux:
+> > https://storage.googleapis.com/syzbot-assets/ff376a7ba200/vmlinux-4774c=
+fe3.xz
+> > kernel image:
+> > https://storage.googleapis.com/syzbot-assets/570051315dbf/bzImage-4774c=
+fe3.xz
+> >=20
+> > IMPORTANT: if you fix the issue, please add the following tag to
+> > the commit:
+> > Reported-by: syzbot+3bbbade4e1a7ab45ca3b@syzkaller.appspotmail.com
+> >=20
+> > usb 7-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
+> > usb 7-1: config 0 descriptor??
+> > corsair-cpro 0003:1B1C:0C10.0017: hidraw0: USB HID v4.06 Device
+> > [HID 1b1c:0c10] on usb-dummy_hcd.6-1/input0
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> > BUG: KMSAN: uninit-value in get_temp_cnct+0x1f3/0x3b0
+> > drivers/hwmon/corsair-cpro.c:497
+> > =C2=A0 get_temp_cnct+0x1f3/0x3b0 drivers/hwmon/corsair-cpro.c:497
+> > =C2=A0 ccp_probe+0x458/0x790 drivers/hwmon/corsair-cpro.c:622
+> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
+> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
+> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
+> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_set_configuration+0x3493/0x3b70
+> > drivers/usb/core/message.c:2210
+> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
+> > drivers/usb/core/generic.c:250
+> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
+> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
+> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
+> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
+> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
+> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
+> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
+> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >=20
+> > Uninit was stored to memory at:
+> > =C2=A0 get_temp_cnct+0x1ec/0x3b0 drivers/hwmon/corsair-cpro.c:496
+> > =C2=A0 ccp_probe+0x458/0x790 drivers/hwmon/corsair-cpro.c:622
+> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
+> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
+> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
+> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_set_configuration+0x3493/0x3b70
+> > drivers/usb/core/message.c:2210
+> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
+> > drivers/usb/core/generic.c:250
+> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
+> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
+> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
+> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
+> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
+> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
+> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
+> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >=20
+> > Uninit was created at:
+> > =C2=A0 slab_post_alloc_hook mm/slub.c:4154 [inline]
+> > =C2=A0 slab_alloc_node mm/slub.c:4197 [inline]
+> > =C2=A0 __do_kmalloc_node mm/slub.c:4327 [inline]
+> > =C2=A0 __kmalloc_node_track_caller_noprof+0x96d/0x12f0 mm/slub.c:4347
+> > =C2=A0 alloc_dr drivers/base/devres.c:119 [inline]
+> > =C2=A0 devm_kmalloc+0xd7/0x2f0 drivers/base/devres.c:864
+> > =C2=A0 ccp_probe+0x114/0x790 drivers/hwmon/corsair-cpro.c:596
+> > =C2=A0 __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
+> > =C2=A0 hid_device_probe+0x539/0xab0 drivers/hid/hid-core.c:2761
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
+> > =C2=A0 usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
+> > =C2=A0 usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_set_configuration+0x3493/0x3b70
+> > drivers/usb/core/message.c:2210
+> > =C2=A0 usb_generic_driver_probe+0xfc/0x290
+> > drivers/usb/core/generic.c:250
+> > =C2=A0 usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
+> > =C2=A0 call_driver_probe drivers/base/dd.c:-1 [inline]
+> > =C2=A0 really_probe+0x4d4/0xd90 drivers/base/dd.c:657
+> > =C2=A0 __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+> > =C2=A0 driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+> > =C2=A0 __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+> > =C2=A0 bus_for_each_drv+0x3e0/0x680 drivers/base/bus.c:462
+> > =C2=A0 __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+> > =C2=A0 device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+> > =C2=A0 bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+> > =C2=A0 device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+> > =C2=A0 usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
+> > =C2=A0 hub_port_connect drivers/usb/core/hub.c:5535 [inline]
+> > =C2=A0 hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+> > =C2=A0 port_event drivers/usb/core/hub.c:5835 [inline]
+> > =C2=A0 hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
+> > =C2=A0 process_one_work kernel/workqueue.c:3238 [inline]
+> > =C2=A0 process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
+> > =C2=A0 worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+> > =C2=A0 kthread+0xd5c/0xf00 kernel/kthread.c:464
+> > =C2=A0 ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+> > =C2=A0 ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >=20
+> > CPU: 0 UID: 0 PID: 5855 Comm: kworker/0:3 Not tainted 6.16.0-rc1-
+> > syzkaller-00203-g4774cfe3543a #0 PREEMPT(undef)
+> > Hardware name: Google Google Compute Engine/Google Compute Engine,
+> > BIOS Google 05/07/2025
+> > Workqueue: usb_hub_wq hub_event
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >=20
+> >=20
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ=C2=A0for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >=20
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status=C2=A0for how to communicate with syzbot.
+> >=20
+> > If the report is already addressed, let syzbot know by replying
+> > with:
+> > #syz fix: exact-commit-title
+> >=20
+> > If you want to overwrite report's subsystems, reply with:
+> > #syz set subsystems: new-subsystem
+> > (See the list of subsystem names on the web dashboard)
+> >=20
+> > If the report is a duplicate of another one, reply with:
+> > #syz dup: exact-subject-of-another-report
+> >=20
+> > If you want to undo deduplication, reply with:
+> > #syz undup
