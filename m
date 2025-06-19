@@ -1,97 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84CD1AA782;
-	Thu, 19 Jun 2025 14:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023381E8342
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344243; cv=none; b=EMR3TrEA2Ycayzv1G1Jq/MBqjQzLpiE8qg/nGh/9ZQtU3ahraSkj9e2dbdUVNVXcH+aveC9BjVPn2XGVVASy4c+gte7yULLDMkuORmBKHUq7x2HZhOyteEC2FO5WOJF3Yg/B4pIJmq2HXJhAwVQ4o/WjuTG+klfhpXs33+r1VDs=
+	t=1750344257; cv=none; b=gF1NcR1lWqU7Gu2GjhZB/2LkSaEWBzUQyyjnvQkYdXfRds0MsejDYcYh3X7AyKR1cmGbLynXkqtyYj3bXqCaMc7ow8b/8gsKrq+5tyFBH2xc8yAZh7uX4MIxY6Bu7KzOY6gSCb8nnHacKZk9Y5fCC46e3B3KstyeThZEh60jKFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344243; c=relaxed/simple;
-	bh=EU+XZK6yKZ4HAAQfL3WDI5g1SxC9aDlSQj1P0yXxHEg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SzGAJLkqneSAVFzjmMXkt4tevLzKNn9Q7AjsZkLxQ0nKx+wZJl/YsE/qYLVMcuM03MkinOCix4BMiaema5vcs8PIVslnpUmiCOKqAFK6Y3JzHnN1wUFxtweQCzOjwi+prVUM7Tha4PbxpqADhe26K2QdPjaOGnCXHAgDGIkl6bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC/8uKxn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750344257; c=relaxed/simple;
+	bh=XcwXvx+KTKGOkOisPCG0xqUIuO+jeGgpgekvwvZ5tBU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YWTlLgCcuydqvyCzvyvf5nR/fEdrdXXke0dYjxJInNUIa+9STRTD/QgHkBGktlXQhq0mH1bQrR6Vmb/tTihoTRitugdCKl8MU1N8Z42Gi1K7Jwccg9hbe+rzSo2NYfHIHrCVyVH8dBBQwzicwsa+nSzDYuLNIYjcxU7PGATDTJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cCZjNDD3; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC/8uKxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11EA3C4CEEA;
-	Thu, 19 Jun 2025 14:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750344243;
-	bh=EU+XZK6yKZ4HAAQfL3WDI5g1SxC9aDlSQj1P0yXxHEg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=DC/8uKxn9E77vM4Ll9/l99dtI4pdCWQ0kvWoAT3Cc4h01/cVr0tSqAnsebmA/O5y2
-	 XUXEITCJ9os4cna5QK6hfN3wkDgJmaBvHt/9oOy7nY5dNvf6R7Q+ZMLucann5D3JXn
-	 oUlK2ZZIZfW49rGlWAPKstrSlU9bdINI/V0/H2eu9qc5YBDZZjmHvqKiSLxoXG7EMh
-	 WwFliXme6Fp6fmOEazDCgax0AeIfrlLWsQ+zHg4esdQAaZLDQmIXiayTkCOnOrEtjx
-	 PxqtU7U4E6ICvMHFsOJa7LgXoX/MEf5LFBfXf84VqZrkYHDX11du6eX88Mvxl9L3W0
-	 McDXtKYhoG6tQ==
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCZjNDD3"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so636469f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750344254; x=1750949054; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EVMqsQRe9rYHlObyTkfPf+JCwJJxn0mjlS9ZABuzrNY=;
+        b=cCZjNDD3UyjYmG8rqZlmfVV/6kHzInqQg5Sh3YZx+MIwkSGPoj5I0KApQYYxXHtRin
+         CzZTLcXX43+rZ6Qma1GTvYc5cyevOA3d3+zz1wBt8YdN2icC6eFmqKl0giwvZd/xpxzV
+         9GhzIW+F15bW2ZuEeh34qaO996ZkuzSTz3pPGpRsXvl/D6X0ySjt4TphnLxnRWRKhqVh
+         RVm8qG+18ZkERbgePQnhrmfoxXeI3//rCLrJiNc52CwUqdcJ91bm4CxGDE/3Pu2jCrUg
+         V5Gq4GKOgAtbvGxnUg+i0G167Apmo75/XXSljPGiur/S/c6S6Rz263hiA5ldo+Vq72kr
+         KV0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750344254; x=1750949054;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EVMqsQRe9rYHlObyTkfPf+JCwJJxn0mjlS9ZABuzrNY=;
+        b=gzfcH+UAYC7ggCBRsY+OYV78VlJTGky+IiCusWDC0EANTHQ7jXIVyOxza9T5/GIv33
+         StNOD67/qMyfebDDWPQYVi3X3bf7qlXoxcyX1z5JhVMgys/Sa3rx+hlm4253lMAh4Ikd
+         SPWp/zTzqZCdjUmuvd9GFJoiu5Aw/hqmefcdP9cVCBGfB8NdyLVS44U0f0MO08QmP9qC
+         c8RC/GHSV3LYh37LDs3ODMI+eI0O6lhTm6u2yJ+PoD6wAoQCYVwJJ8eI/sUol+m9+gVv
+         Fky5rwCQcdBs2atFkg5Q8YpEZ4jt12Qkvh706dXJy7pO5oFfk+J5yZQZ3QI6nPQansDD
+         eKAw==
+X-Forwarded-Encrypted: i=1; AJvYcCURkXppjmQjVFBFj1/sT21m+3tGDrokQU99T1d/RKwXOwzUwiiDIpdaxEhXlNVSaWrt3OU9YrfjHNWuPYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv5mttsByh2YbkChe6ywNpLKBUzTdMKCdafHnKP+cwQfcEU+H0
+	dL26Y1mg3R1PhqD9jAqKyEesG39DjqXRTNuOtFl2B/4IWMyzuj7sdG4YR0We/yO09FGDou3wyNL
+	7pUtQgCel9bYpZrcS+s5SU7b8AVQsvsmZFay9Rsgz
+X-Gm-Gg: ASbGncs3Wol1MX7Ks5dhpT2XoAYZuzsMI6Zz2+cIrzIuwew/2izAR8vunrG3M8Kt/hK
+	6K9BWh3jMacw603cRpKypjAD9JzooNPpPTAznUkWPRDhJFZ8J5XFJWR5hoOS+IPXEAaK1UGXR0d
+	rbdGtTcyBJWwZ9aJpwqVRD2KYaBHR84RSlTKyWRsQM32ReeXt1U/pjM68rqmYPoYT7/vlzadP1o
+	YrtqW1ReSXg
+X-Google-Smtp-Source: AGHT+IFolUKIJpNOwvo6YbqeRvkbUyZ0UB57Cu3isdwLbs+TzWq4hnGEeJOT+f//vxWUlBfYnyXOTLlhgASVn3iykHg=
+X-Received: by 2002:a05:6000:290c:b0:3a4:f35b:d016 with SMTP id
+ ffacd0b85a97d-3a572367993mr16248379f8f.11.1750344254287; Thu, 19 Jun 2025
+ 07:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 19 Jun 2025 16:43:58 +0200
-Message-Id: <DAQL8YH3LDKW.341ZTFFLTTUA2@kernel.org>
-Cc: <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
- <boqun.feng@gmail.com>, <longman@redhat.com>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <dakr@kernel.org>, <thatslyude@gmail.com>
+MIME-Version: 1.0
+References: <20250619140656.498-1-work@onurozkan.dev> <20250619141401.GI1613376@noisy.programming.kicks-ass.net>
+ <20250619173344.6c72c48a@nimda.home>
+In-Reply-To: <20250619173344.6c72c48a@nimda.home>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 19 Jun 2025 16:44:01 +0200
+X-Gm-Features: Ac12FXymE55CREO4hachgxG9Df6IxIrwgv1201IJaKd3lfeHyLxcVoX1imNXr3s
+Message-ID: <CAH5fLggxqK+aZcynsq0koWZG5DD=Byc+DrqEZ9ZCr4+pdScMqQ@mail.gmail.com>
 Subject: Re: [PATCH V3] implement `ww_mutex` abstraction for the Rust tree
-From: "Benno Lossin" <lossin@kernel.org>
-To: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250619140656.498-1-work@onurozkan.dev>
-In-Reply-To: <20250619140656.498-1-work@onurozkan.dev>
+To: Onur <work@onurozkan.dev>
+Cc: Peter Zijlstra <peterz@infradead.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com, longman@redhat.com, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
+	thatslyude@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu Jun 19, 2025 at 4:06 PM CEST, Onur =C3=96zkan wrote:
-> From: onur-ozkan <work@onurozkan.dev>
+On Thu, Jun 19, 2025 at 4:33=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
 >
-> Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enable
-> deadlock-free acquisition of multiple related locks.
+> On Thu, 19 Jun 2025 16:14:01 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> The implementation abstracts `ww_mutex.h` header and wraps the existing
-> C `ww_mutex` with three main types:
->     - `WwClass` for grouping related mutexes
->     - `WwAcquireCtx` for tracking lock acquisition context
->     - `WwMutex<T>` for the actual lock
+> > On Thu, Jun 19, 2025 at 05:06:56PM +0300, Onur =C3=96zkan wrote:
+> > > +bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
+> > > +{
+> > > +   return ww_mutex_is_locked(lock);
+> > > +}
+> >
+> > Do we really need this? In general I dislike all the _is_locked()
+> > functions and would ideally like to remove them.
+> >
+> > Pretty much the only useful pattern for any of the _is_locked()
+> > functions is:
+> >
+> >   WARN_ON_ONCE(!foo_is_locked(&foo));
+> >
+> > Any other use is dodgy as heck.
+> >
+> >
 >
-> Some of the kernel's `ww_mutex` functions are implemented as `static inli=
-ne`,
-> so they are inaccessible from Rust as bindgen can't generate code on them=
-.
-> The `rust/helpers/ww_mutex.c` file provides C function wrappers around th=
-ese inline
-> implementations, so bindgen can see them and generate the corresponding R=
-ust code.
+> It's an abstraction of `ww_mutex_is_locked`. Since this is an
+> abstraction module, as long as `ww_mutex_is_locked` exists I think
+> we should keep it. FWIW it's also quite useful for tests.
 
-I don't know the design of `struct ww_mutex`, but from the code below I
-gathered that it has some special error return values that signify that
-one should release other locks.
+We're not just adding copies of all of the C methods - instead we
+focus on the things we have a use-case for. If you're using them in
+tests, then that could make sense, but otherwise you shouldn't add
+them.
 
-Did anyone think about making a more Rusty API that would allow one to
-try to lock multiple mutexes at the same time (in a specified order) and
-if it fails, it would do the resetting automatically?
-
----
-Cheers,
-Benno
-
-> Link: https://rust-for-linux.zulipchat.com/#narrow/channel/291566-Library=
-/topic/Writing.20up.20wrappers.20for.20ww_mutex.3F/with/524269974
-> Suggested-by: thatslyude@gmail.com
-> Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
-> ---
->  rust/helpers/helpers.c            |   1 +
->  rust/helpers/ww_mutex.c           |  39 +++
->  rust/kernel/error.rs              |   1 +
->  rust/kernel/sync/lock.rs          |   1 +
->  rust/kernel/sync/lock/ww_mutex.rs | 556 ++++++++++++++++++++++++++++++
->  5 files changed, 598 insertions(+)
->  create mode 100644 rust/helpers/ww_mutex.c
->  create mode 100644 rust/kernel/sync/lock/ww_mutex.rs
+Alice
