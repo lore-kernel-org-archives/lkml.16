@@ -1,226 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BFF25EFBB;
-	Thu, 19 Jun 2025 08:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D342E2609D0
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322068; cv=none; b=Yk/A62C8hPoijZ2loCAgWmeG8TiQCctxHsIP8mk6UGG0AZRHrpSrHN6zZlAmbf3CqZsHdPEOYUF7MOyfuz34cacgFrtnW1CNWEv0Gt2n/GNdXo7axeXao8PMHUGaJYCxL8e7SlbtzaeaoS5UIS9odUddDQIS0ReT5OLbiKP14eo=
+	t=1750322088; cv=none; b=MC/Ey0MNLUkRRTe5eofbvMcAArQzjBYKgIJqfglrDMTU3VqKl5OwbGsd4wqDqw8CdXWhD7e0va+h2Dq0Kcmf5qXjV0CyNYHIvSl73535XxOs6G88qQZBXahaGGTctdOvfSWpjA9Sl+9A94ODyny+N+D6i7pbHuawj78uA/qAn9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322068; c=relaxed/simple;
-	bh=c4M48DAPUB6EdmaCMv6HQ2OsHeYOy7PcUMGd5aRfG+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJOPg7RKTugG/GChWWSI1y+TfnljmdoyI6CEDIzJCzAVRLOyrpHVgWcPKs8zh8QsAv1IS69Guc1K3+8QA7TssJcNOXd8HO9xz4GRUBHk8W84YlFXwAqFrTfP6LRCXwapfk+DPNLdF2yAN4RfTyDO5MuYgVU92Vo4ZCh4KLZtmOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WF+wGXau; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750322088; c=relaxed/simple;
+	bh=j0nhDKpQpxXWzr1mFcT2IFoKimPE79WTa7ayNr/hzWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CyoopPEbVzrT2eFiVYGRozna/edOENhX67c9tLO62S5LDV78K3DQG6PKByK1PbcONYulDENZ6mg2Yq6LcfGdu6Xi+KpLEPPsCK3VZurbtiOBWzCPno6vSCXb+uYYOovgtpQAfb3NTn/iIXvyTSiPRyr8Xnst68GWK9sXmZzxYjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=V6uEHsRQ; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WF+wGXau"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DsByoZYD8zFBKsiCOPlBpf2Aj97G3XGrcpCEr3Mc8Wk=; b=WF+wGXauAjTvc7esDxVuCdR2SV
-	64jbFjdk8sXoIcty5oT1C8gx/AgoyW7B6KRCUGhsMjZUeywOfKOK/nHwYFLlxnhQzzHuP6I9wVgfc
-	B7F2cLBYFeBP/Jz9/JKN4s8Y+RizMJO5pf/8H8SirFJuWyMmK3cY0D0q2UTmHzM8CV1P8z9Ms79fa
-	RvQNOi97XHkPQNplD8vzvqvVKYW1A54jJIrwNzxk9+zZRl5MsazSFz0vYqSpu/ALvDY2e8GW4Xf8g
-	zGmaxI7pD976dkTrKxEr1AQ1gVSymp3oQNediz1abz1cbEgntPnFJ+ib+it+oZDLSHxI20ZNCKa43
-	8ToYzQqQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSAiu-00000007uGX-3Fl2;
-	Thu, 19 Jun 2025 08:34:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B39593088F2; Thu, 19 Jun 2025 10:34:15 +0200 (CEST)
-Date: Thu, 19 Jun 2025 10:34:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.938845449@goodmis.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="V6uEHsRQ"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553dceb342aso283794e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:34:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750322085; x=1750926885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j0nhDKpQpxXWzr1mFcT2IFoKimPE79WTa7ayNr/hzWs=;
+        b=V6uEHsRQQhapQjN2CsAqzBx423DW+SZb3peSYoP3+mG0rs497S+INrigilsSKZvttA
+         iuF3fd+EuOkaihTUy7IP/f52aohksq3K76/NIOrXKFo9Xg6WSmtN5PtAwKXRhaHsqDec
+         aaR77NqrmYCsn6msKJQzuDOhLrCVzSp1CXu6uUS3COCKCfLBkZ/Jfb2h4mk/vIpNnnXz
+         479SNAmbVX8lE5Rqvf8JIRKVG4cLEQQf7Y7dOZ1VmhgIuOr3SlGMij6zra4gRiv395RB
+         z3yuSWuPTfzzteuV5AlWbK92zneYc/9/tJXTU5+zGIGPm2ziDci9qY1K9UAKJiPD0j0r
+         Cfug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750322085; x=1750926885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j0nhDKpQpxXWzr1mFcT2IFoKimPE79WTa7ayNr/hzWs=;
+        b=vVdftYORMLPYXwrAnZuVKW3NBbhWUjEt2yBbx4HUD00ZAd1CY7MrREZZqWHbUha+/F
+         2qb5JW02cMASediKsCMF159zHmrWL/EZnXIaaWWqPWrtK5Mdr4yyNbYji1xNQ7rCXu2z
+         6k7smFx6pbtze6UYG0m54bel1hsRQIhHxOu4ON99giZo2oQvUs/7UpIOS2l6c7Nf3kz/
+         tdpVD0Ns2YaeWoJmMagiTpxXa6TS3AFR73azQxF9LHL7Yz14JEvkeAyNJl4K2BX809lc
+         0eRAAx68ZdpYYBZKwU2WoKlEnGvPDKZeXcJUbL/lgEMRsiro117jDssHFgYYthfSu5M0
+         QEKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUC0OJnv1T5oNeDUDDhy7cbBA9g6i6XsrDJRKwybDFRpAG9UwG31oY0bWseu4ORfPq2aK0H3DPWlC/Asq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTyJIb3nQqRC5KrI2l775uiTYRSYfV44SdQjKIaEaLUYpYPB3g
+	yZFiYAX/3f+nYzi033fGCc4dZa/DUZX+7+djggfKTgjXRIjGExaUD9Cq4viSSUp2/FeNQpYkHdn
+	wio8hFIYhER+mgGx+AmX03I0kzmsGFhfwaf2KtOmSUw==
+X-Gm-Gg: ASbGncuq7r8IE14P5I5uTsfRJZNU2GqQGBNUoRI+agWs7XqczZxo8q7K+pgGoCSWPkT
+	XeDqYAKGKQFENaZBB7pv14cltRRm1vhfud3xa4DNFojJgrN3WijrKagdv9i/27aFcg2vGTE/cMI
+	J/poQQ+6wtqldvSLvctNFhWVQ1O5Uk2rdGOat5XBQ9JS7KV0S1TIc8ITkXv2PolfBouM+eGL069
+	yTFAwfskZG3pA==
+X-Google-Smtp-Source: AGHT+IFDp85PzWD62QjUEKS6MevtLH60iV1DaBb/nwT7ioJL8BslMyztOttEsa1fNI7Da/cNBk6S/D+nhCaUS1yFP4Q=
+X-Received: by 2002:a05:6512:b26:b0:553:252f:adf3 with SMTP id
+ 2adb3069b0e04-553b6ea5ce8mr6017773e87.16.1750322084921; Thu, 19 Jun 2025
+ 01:34:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611010428.938845449@goodmis.org>
+References: <20250619-gpiochip-set-rv-gpio-v2-0-74abf689fbd8@linaro.org> <20250619-gpiochip-set-rv-gpio-v2-3-74abf689fbd8@linaro.org>
+In-Reply-To: <20250619-gpiochip-set-rv-gpio-v2-3-74abf689fbd8@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 19 Jun 2025 10:34:34 +0200
+X-Gm-Features: AX0GCFuzcvha5PSQAEYMfe3d61ki6vxUCoj5DyKshbRkn7FeS0Wil9VqaZ6ngBs
+Message-ID: <CAMRc=McmNfQHVpDtvJMJwGJmoVTkgQG6riGxfxYMed1Xre=GLg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/12] gpio: pch: use new GPIO line value setter callbacks
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 08:54:28PM -0400, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Make unwind_deferred_request() NMI-safe so tracers in NMI context can
-> call it and safely request a user space stacktrace when the task exits.
-> 
-> A "nmi_timestamp" is added to the unwind_task_info that gets updated by
-> NMIs to not race with setting the info->timestamp.
-
-I feel this is missing something... or I am.
-
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Thu, Jun 19, 2025 at 10:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
-> Changes since v9: https://lore.kernel.org/linux-trace-kernel/20250513223552.636076711@goodmis.org/
-> 
-> - Check for ret < 0 instead of just ret != 0 from return code of
->   task_work_add(). Don't want to just assume it's less than zero as it
->   needs to return a negative on error.
-> 
->  include/linux/unwind_deferred_types.h |  1 +
->  kernel/unwind/deferred.c              | 91 ++++++++++++++++++++++++---
->  2 files changed, 84 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> index 5df264cf81ad..ae27a02234b8 100644
-> --- a/include/linux/unwind_deferred_types.h
-> +++ b/include/linux/unwind_deferred_types.h
-> @@ -11,6 +11,7 @@ struct unwind_task_info {
->  	struct unwind_cache	*cache;
->  	struct callback_head	work;
->  	u64			timestamp;
-> +	u64			nmi_timestamp;
->  	int			pending;
->  };
->  
-> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-> index b76c704ddc6d..88c867c32c01 100644
-> --- a/kernel/unwind/deferred.c
-> +++ b/kernel/unwind/deferred.c
-> @@ -25,8 +25,27 @@ static u64 get_timestamp(struct unwind_task_info *info)
->  {
->  	lockdep_assert_irqs_disabled();
->  
-> -	if (!info->timestamp)
-> -		info->timestamp = local_clock();
-> +	/*
-> +	 * Note, the timestamp is generated on the first request.
-> +	 * If it exists here, then the timestamp is earlier than
-> +	 * this request and it means that this request will be
-> +	 * valid for the stracktrace.
-> +	 */
-> +	if (!info->timestamp) {
-> +		WRITE_ONCE(info->timestamp, local_clock());
-> +		barrier();
-> +		/*
-> +		 * If an NMI came in and set a timestamp, it means that
-> +		 * it happened before this timestamp was set (otherwise
-> +		 * the NMI would have used this one). Use the NMI timestamp
-> +		 * instead.
-> +		 */
-> +		if (unlikely(info->nmi_timestamp)) {
-> +			WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-> +			barrier();
-> +			WRITE_ONCE(info->nmi_timestamp, 0);
-> +		}
-> +	}
->  
->  	return info->timestamp;
->  }
-> @@ -103,6 +122,13 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  
->  	unwind_deferred_trace(&trace);
->  
-> +	/* Check if the timestamp was only set by NMI */
-> +	if (info->nmi_timestamp) {
-> +		WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-> +		barrier();
-> +		WRITE_ONCE(info->nmi_timestamp, 0);
-> +	}
-> +
->  	timestamp = info->timestamp;
->  
->  	guard(mutex)(&callback_mutex);
-> @@ -111,6 +137,48 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  	}
->  }
->  
-> +static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
-> +{
-> +	struct unwind_task_info *info = &current->unwind_info;
-> +	bool inited_timestamp = false;
-> +	int ret;
-> +
-> +	/* Always use the nmi_timestamp first */
-> +	*timestamp = info->nmi_timestamp ? : info->timestamp;
-> +
-> +	if (!*timestamp) {
-> +		/*
-> +		 * This is the first unwind request since the most recent entry
-> +		 * from user space. Initialize the task timestamp.
-> +		 *
-> +		 * Don't write to info->timestamp directly, otherwise it may race
-> +		 * with an interruption of get_timestamp().
-> +		 */
-> +		info->nmi_timestamp = local_clock();
-> +		*timestamp = info->nmi_timestamp;
-> +		inited_timestamp = true;
-> +	}
-> +
-> +	if (info->pending)
-> +		return 1;
-> +
-> +	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
-> +	if (ret < 0) {
-> +		/*
-> +		 * If this set nmi_timestamp and is not using it,
-> +		 * there's no guarantee that it will be used.
-> +		 * Set it back to zero.
-> +		 */
-> +		if (inited_timestamp)
-> +			info->nmi_timestamp = 0;
-> +		return ret;
-> +	}
-> +
-> +	info->pending = 1;
-> +
-> +	return 0;
-> +}
 
-So what's the actual problem here, something like this:
+Forgot to pick up the trailers. :/
 
-  if (!info->timestamp)
-    <NMI>
-      if (!info->timestamp)
-        info->timestamp = local_clock(); /* Ta */
-    </NMI>
-      info->timestamp = local_clock();   /* Tb */
-
-And now info has Tb which is after Ta, which was recorded for the NMI
-request?
-       
-Why can't we cmpxchg_local() the thing and avoid this horrible stuff?
-
-static u64 get_timestamp(struct unwind_task_info *info)
-{
-	u64 new, old = info->timestamp;
-
-	if (old)
-		return old;
-	
-	new = local_clock();
-	old = cmpxchg_local(&info->timestamp, old, new);
-	if (old)
-		return old;
-	return new;
-}
-
-Seems simple enough; what's wrong with it?
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
