@@ -1,256 +1,189 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2083.outbound.protection.outlook.com [40.107.94.83])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426B325B67D;
-	Thu, 19 Jun 2025 07:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750318350; cv=fail; b=Nyjok3raxbSRCZSuhWYhH3U9oFHusNtvMx8FTwbPs/xhcvApTu+e/H4q65p2QCXfqJcRqTpZZlTlWJLqO3Hkn9z5qsJ1F1U2ZTwOJkh4pzTZvLLpvxl6UPamuDfITugROjIHYZ8HAZ7OU9NmqZwQREolxOi+WJ7gA0I7t9TdPIo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750318350; c=relaxed/simple;
-	bh=WHtJPAJoAsyhjdmcdnrukpUHDmNdXt0bSrVAZCyDYz8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oRHlW6RV7S5PoTPBbp7AU6U+yECDXN1M1o1dXS0I8kQ43IhKN4OvfCo/pLacvYx/54/uuGNw6z5MwzMjJ+JGafA2O/xuLU21NGcJwwDJBKY8/aPeeRQIs3gXhVgsRepQMyaS1cHZbWzaTNN7MVAYJStzH5Y4pUKckwxw2qzTIBk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DmHaTI5j; arc=fail smtp.client-ip=40.107.94.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBF925229E;
+	Thu, 19 Jun 2025 07:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750318352; cv=none; b=amdR73yM12mDsPEOoAnFqXjBBPdUHH7SMk0Wl1exOaYm8t77pc+tY3cEGJhJPERMSuRrAOFS/rj/LKQE7OPw7l97qGQfSfqfc6PVYCdJBB0YfU0pCQy3UYDsy3c9pHzGwhiwW1a0gRkVa9tUkrMyHjc4dS2TnOvh95Aizequ15o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750318352; c=relaxed/simple;
+	bh=WZ8Q9CTvAF6JKTjlu5YiVffQn1T/qF7Cg1ysDQSQEFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7K+RH05GmsWgExdWm9TZ0qDR7a+Ua6pCU6+rkcOtL6rckk0hPPPXI/KcHswGTLnmGluKljr5SqvIFxRmdu69JPrKIial1Ns0UqVtI2+QrHIqzo5TFb5ndyhlokTQGPeNvG3/OkpCmGn/R/hnkTVObe5360wb/ZvNDdUXDaX3Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZpobqMAz; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DmHaTI5j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OMJKDkrPgRoaO68OZeiDsqqLMHPRfGUXfyXqlOj0+7fm4efPAw2GFdP2VJdxhA2dVtlhHkY5ajX5I8H7q5k7MfqwmgS+D+hS2d5TpBC9g78I7QBRFYdqpHOHrD5v2vId4Yek79VilDduSNme9ff7OS8aYlAbIdCoZQ9YhgD63T+HoQT8j+yLd6Xdi7kMMHQhkT7Lds6Wq1rO2iqmyL1QPZTOQmqcPXgSIazYCziSvrthSEW4cU1CW02qoe9JqDi+skq7+Lcp7TAWKnGj/CqIylicXdjTmlyYkhVCxRmH9geVvz7egCzhIH4ZaHxNXcRmz7wExvWT4UpFpM3bnglQnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DyAu5QLsuT5D7J4WeL4pZ2R/Mfd55tZpEG2h/AxJN3w=;
- b=XhlTAk13vthC+T3tYamE97Cll4ZKBS1MR3FAcAmufphBnd7VYFLYqnaVgj2RMbL9CpyRCdnqLkxrZkJekxDSLoz8U5aU1NtJaZ8v2fUzt9pX/J8r07vUvW6Y6CVZ1c90Mmh1eW1WrnxRklYTYdB1h5OVCJkIa5Rc9rDX52a02ZlBz1aL4Rad6E07/28G0e+YLKiK8QxgEphRWzP09LOXv9w9ziqzcGLJGFEiOZrZ5XnSV9q1MFn+4vftod0Rap8MTbcIt9mUunvFvdd51jh/5SvtAIqobLljtgRew/cB95Vsu1vonkngBfa5udzS5NZhMrmXh8Mxknq4xEO938jr3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DyAu5QLsuT5D7J4WeL4pZ2R/Mfd55tZpEG2h/AxJN3w=;
- b=DmHaTI5jJSdPZw/qgwLEm/6wS0QMQ5W9+Vbd6kIsYQgj+f+CPnyA+Mtmkzj5G4PojyfGF3bCVcNHe2OqkRhe4mPoiroflhXhnRe4UNWmFw95X0tJTZ6O++YDncF6pCT1lRer8kAd+BTbQwqFzJDHCehyF1+90JFs5xbTkdcczc0=
-Received: from CH5PR03CA0001.namprd03.prod.outlook.com (2603:10b6:610:1f1::29)
- by SJ1PR12MB6051.namprd12.prod.outlook.com (2603:10b6:a03:48a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Thu, 19 Jun
- 2025 07:32:24 +0000
-Received: from CH1PEPF0000A347.namprd04.prod.outlook.com
- (2603:10b6:610:1f1:cafe::f9) by CH5PR03CA0001.outlook.office365.com
- (2603:10b6:610:1f1::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.35 via Frontend Transport; Thu,
- 19 Jun 2025 07:32:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000A347.mail.protection.outlook.com (10.167.244.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025 07:32:23 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 19 Jun
- 2025 02:32:17 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <david@redhat.com>, <akpm@linux-foundation.org>, <brauner@kernel.org>,
-	<paul@paul-moore.com>, <rppt@kernel.org>, <viro@zeniv.linux.org.uk>
-CC: <seanjc@google.com>, <vbabka@suse.cz>, <willy@infradead.org>,
-	<pbonzini@redhat.com>, <tabba@google.com>, <afranji@google.com>,
-	<ackerleytng@google.com>, <shivankg@amd.com>, <jack@suse.cz>,
-	<hch@infradead.org>, <cgzones@googlemail.com>, <ira.weiny@intel.com>,
-	<roypat@amazon.co.uk>, <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>
-Subject: [PATCH] fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
-Date: Thu, 19 Jun 2025 07:31:37 +0000
-Message-ID: <20250619073136.506022-2-shivankg@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZpobqMAz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750318351; x=1781854351;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WZ8Q9CTvAF6JKTjlu5YiVffQn1T/qF7Cg1ysDQSQEFg=;
+  b=ZpobqMAzpgGOtpo0aiUlI7peujIkIHRs4LXIeulqSauW86XZHUurX6pi
+   KkIBJM/3YhjPR037Hu7Uf6SSNnmrkZzZObJBNybCIqyGu3m3sJQk3x/76
+   Cc0xxaTZ/L3dCOTHFlQo4I/nqfqvPm3MGppqkHr45mreSewTQfPjX0f6A
+   tNBHxfVScegICZ5e+Rnea7mQCz4ns3aaUeTNiILbHtxcQaVHd+9lwtAp1
+   +qKa7QAJYxNKwcXM0QKRgRuBs2eINFw8b2HFX1FOLqCoMXOMlxkh9J64J
+   A4t9t5yFxYABYIX86a/1t4+73pvjriD4byqm+Y/JEg2hl3gDd7JmRtjd3
+   g==;
+X-CSE-ConnectionGUID: 87GXJWUMSr2rdFCSb6NAsw==
+X-CSE-MsgGUID: aztGMdwhT12jXLMLfRUHJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="62835956"
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="62835956"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 00:32:30 -0700
+X-CSE-ConnectionGUID: bDyEDibwQGad/pPW24J89g==
+X-CSE-MsgGUID: IHl+3z3tSFCseFzbY5Dl2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="150041569"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 19 Jun 2025 00:32:27 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uS9l2-000KWI-3B;
+	Thu, 19 Jun 2025 07:32:24 +0000
+Date: Thu, 19 Jun 2025 15:32:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	kernel@pengutronix.de,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v5 2/4] clk: add TI CDCE6214 clock driver
+Message-ID: <202506191559.R9E9baqn-lkp@intel.com>
+References: <20250618-clk-cdce6214-v5-2-9938b8ed0b94@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A347:EE_|SJ1PR12MB6051:EE_
-X-MS-Office365-Filtering-Correlation-Id: 83113392-21d2-45ab-3bcc-08ddaf036ee5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014|7053199007|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NM0Kow1mtt2rVtSQlJj5W14WK/TjMdoJDJw9GayznIFlB0FqVtHH9vQfGdqE?=
- =?us-ascii?Q?xNbhLIsLCgdTx9CmZVqCLwzvjWM1FMfHyYUrBtUMM3drZHfIqsaMJmsiriyb?=
- =?us-ascii?Q?cyIFLUGcuDi3j7EyaoDBZi1JU4dYHrkgG8ycTK+H/hhazTqTPRdl/U1pIJfw?=
- =?us-ascii?Q?3AfkiKNqsHzdLdclisZ1YRHzHzfTwdvTfMk6w19KVZjGXm0TzHVYsUagiO+D?=
- =?us-ascii?Q?Q6mdFzywI71qgqIz55W+yp7W9zK8CxkzxeXJxiGkmaLbVYyP5CTpLr8Mrjx2?=
- =?us-ascii?Q?Zqze6zJtrlvuNMGG9aJBxgCkFNg6sttfzunNb+ra0KP+WH8UZdgGx4fnUvhd?=
- =?us-ascii?Q?2eeQZXrRug1eYhN3FuESk2j1EfhMxgs1kHSmtwfk+6f8LXEfIdaLDHL1UG7c?=
- =?us-ascii?Q?MFQfhatn7dg2Nzqp5FGiAN8tzCqohrvN/pXU/BMaVPKXQKLEZJ4Yzayp3rnB?=
- =?us-ascii?Q?2m4iHGEZ3m8woHcoONKoANumkVjpL6neBq+oky+1INTzHDHklDq2xw+/IZ9z?=
- =?us-ascii?Q?DOiJv72u7vrkmucysT61dJA6uTE1iq5NEstMhFqfMf/LEQrk3zjJCvbuk/t5?=
- =?us-ascii?Q?vPymRBUXC12qlxE33tu0IBs8jzMCwlYTRbdMIQmIQApACOE4uH7s36WN3K1p?=
- =?us-ascii?Q?8zKQKStCHIxMQRWrWlv59AvxiIuk9Hdu69qqoz8sDzRCrkHlC4k/haTTbLmV?=
- =?us-ascii?Q?J+0mjegcinWpyrWa5C6mRO4CF3t7ua36pakjd8NiyW+g/JplV0iVvEk0h1uQ?=
- =?us-ascii?Q?pwShGanoc0CerGH4rrhOlVlQw6OZvFZwx71rEIweraniLamETKfa9ZuRb3Lu?=
- =?us-ascii?Q?csmmyFV/5abJa/UgjmG/9wvbttrbgaG1/iHWxxHHSC8RpIPvW2q+5cA9OPEj?=
- =?us-ascii?Q?Xng83u1GfmXAPd/sa3u21hY+adlFAC2Yg2vRiPwNE2BmtWPRU5AG+ZgqW4pD?=
- =?us-ascii?Q?dBM31wrNfAqlQ9YHXHp5AQXhXHByHQDcBBoHefQXu11x3Yf7cPte4r6pksc1?=
- =?us-ascii?Q?YSjSXSH6Po0l/at+294mSb4u6wD9A9o8XfE3Z0CxMbaeSK568DvlNjQIvM1O?=
- =?us-ascii?Q?6fp5Acoag06EOnJdZaYSBnkiNLrY8mEfj985jiZXhYYKTshP4X1KwZxRV9KG?=
- =?us-ascii?Q?l7jnSyrGRM/OhczBYdrJX25Q8iRifKjDq00i0SDOk+9g8oKMUcvp5B8K6SVm?=
- =?us-ascii?Q?cAenBVgdLUpKeetM+nQq5VFRtyXJS3y66/IGPDMcnQvL+eju92QmnO2hdVfW?=
- =?us-ascii?Q?b5xY5wWapW3nzwdK+sE5jwOxT4JbMFpWnOFzxa3fMpm52wst7lVqPdr1BFTm?=
- =?us-ascii?Q?j/d0BsvFlQEsKmgdC7+3lB88bnI+M9zKc5PRvLEXZHwn2jQzOseqXPFhgv60?=
- =?us-ascii?Q?JDM5hH8Vfhb5/W0GZOzWF1yo6/1b6PrZmEg+o0GvmU624ho3NaFwxpKZrbLI?=
- =?us-ascii?Q?jbmLOen48+hoMz3RCpaVLwiB00fpxXhwpxdimMArClo9E2r3zkSm1mHZmCcm?=
- =?us-ascii?Q?sSP4pxdWgjJH2IRDUDrT2KFk//D4Y21sU3cMOdqForhmF6hIAYSzd9g1XQ?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 07:32:23.6224
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83113392-21d2-45ab-3bcc-08ddaf036ee5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A347.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6051
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618-clk-cdce6214-v5-2-9938b8ed0b94@pengutronix.de>
 
-Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
-anonymous inodes with proper security context. This replaces the current
-pattern of calling alloc_anon_inode() followed by
-inode_init_security_anon() for creating security context manually.
+Hi Sascha,
 
-This change also fixes a security regression in secretmem where the
-S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
-LSM/SELinux checks to be bypassed for secretmem file descriptors.
+kernel test robot noticed the following build warnings:
 
-As guest_memfd currently resides in the KVM module, we need to export this
-symbol for use outside the core kernel. In the future, guest_memfd might be
-moved to core-mm, at which point the symbols no longer would have to be
-exported. When/if that happens is still unclear.
+[auto build test WARNING on e04c78d86a9699d136910cfc0bdcf01087e3267e]
 
-Fixes: 2bfe15c52612 ("mm: create security context for memfd_secret inodes")
-Suggested-by: David Hildenbrand <david@redhat.com>
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
-The handling of the S_PRIVATE flag for these inodes was discussed
-extensively ([1], [2], [3]).
+url:    https://github.com/intel-lab-lkp/linux/commits/Sascha-Hauer/dt-bindings-clock-add-TI-CDCE6214-binding/20250618-172505
+base:   e04c78d86a9699d136910cfc0bdcf01087e3267e
+patch link:    https://lore.kernel.org/r/20250618-clk-cdce6214-v5-2-9938b8ed0b94%40pengutronix.de
+patch subject: [PATCH v5 2/4] clk: add TI CDCE6214 clock driver
+config: alpha-randconfig-r054-20250619 (https://download.01.org/0day-ci/archive/20250619/202506191559.R9E9baqn-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 8.5.0
 
-As per discussion [3] with Mike and Paul, KVM guest_memfd and secretmem
-results in user-visible file descriptors, so they should be subject to
-LSM/SELinux security policies rather than bypassing them with S_PRIVATE.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506191559.R9E9baqn-lkp@intel.com/
 
-[1] https://lore.kernel.org/all/b9e5fa41-62fd-4b3d-bb2d-24ae9d3c33da@redhat.com
-[2] https://lore.kernel.org/all/cover.1748890962.git.ackerleytng@google.com
-[3] https://lore.kernel.org/all/aFOh8N_rRdSi_Fbc@kernel.org
+cocci warnings: (new ones prefixed by >>)
+>> drivers/clk/clk-cdce6214.c:682:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead.
+--
+>> drivers/clk/clk-cdce6214.c:631:2-3: Unneeded semicolon
+   drivers/clk/clk-cdce6214.c:547:2-3: Unneeded semicolon
+   drivers/clk/clk-cdce6214.c:654:2-3: Unneeded semicolon
+   drivers/clk/clk-cdce6214.c:603:2-3: Unneeded semicolon
+   drivers/clk/clk-cdce6214.c:908:2-3: Unneeded semicolon
+   drivers/clk/clk-cdce6214.c:946:2-3: Unneeded semicolon
 
- fs/anon_inodes.c   | 23 ++++++++++++++++++-----
- include/linux/fs.h |  2 ++
- mm/secretmem.c     |  9 +--------
- 3 files changed, 21 insertions(+), 13 deletions(-)
+vim +682 drivers/clk/clk-cdce6214.c
 
-diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-index e51e7d88980a..ca6cfb1cd496 100644
---- a/fs/anon_inodes.c
-+++ b/fs/anon_inodes.c
-@@ -98,14 +98,25 @@ static struct file_system_type anon_inode_fs_type = {
- 	.kill_sb	= kill_anon_super,
- };
- 
--static struct inode *anon_inode_make_secure_inode(
--	const char *name,
--	const struct inode *context_inode)
-+/**
-+ * anon_inode_make_secure_inode - allocate an anonymous inode with security context
-+ * @sb:		[in]	Superblock to allocate from
-+ * @name:	[in]	Name of the class of the newfile (e.g., "secretmem")
-+ * @context_inode:
-+ *		[in]	Optional parent inode for security inheritance
-+ *
-+ * The function ensures proper security initialization through the LSM hook
-+ * security_inode_init_security_anon().
-+ *
-+ * Return:	Pointer to new inode on success, ERR_PTR on failure.
-+ */
-+struct inode *anon_inode_make_secure_inode(struct super_block *sb, const char *name,
-+					   const struct inode *context_inode)
- {
- 	struct inode *inode;
- 	int error;
- 
--	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-+	inode = alloc_anon_inode(sb);
- 	if (IS_ERR(inode))
- 		return inode;
- 	inode->i_flags &= ~S_PRIVATE;
-@@ -118,6 +129,7 @@ static struct inode *anon_inode_make_secure_inode(
- 	}
- 	return inode;
- }
-+EXPORT_SYMBOL_GPL(anon_inode_make_secure_inode);
- 
- static struct file *__anon_inode_getfile(const char *name,
- 					 const struct file_operations *fops,
-@@ -132,7 +144,8 @@ static struct file *__anon_inode_getfile(const char *name,
- 		return ERR_PTR(-ENOENT);
- 
- 	if (make_inode) {
--		inode =	anon_inode_make_secure_inode(name, context_inode);
-+		inode =	anon_inode_make_secure_inode(anon_inode_mnt->mnt_sb,
-+						     name, context_inode);
- 		if (IS_ERR(inode)) {
- 			file = ERR_CAST(inode);
- 			goto err;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index b085f161ed22..040c0036320f 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3608,6 +3608,8 @@ extern int simple_write_begin(struct file *file, struct address_space *mapping,
- extern const struct address_space_operations ram_aops;
- extern int always_delete_dentry(const struct dentry *);
- extern struct inode *alloc_anon_inode(struct super_block *);
-+struct inode *anon_inode_make_secure_inode(struct super_block *sb, const char *name,
-+					   const struct inode *context_inode);
- extern int simple_nosetlease(struct file *, int, struct file_lease **, void **);
- extern const struct dentry_operations simple_dentry_operations;
- 
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index 589b26c2d553..9a11a38a6770 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -195,18 +195,11 @@ static struct file *secretmem_file_create(unsigned long flags)
- 	struct file *file;
- 	struct inode *inode;
- 	const char *anon_name = "[secretmem]";
--	int err;
- 
--	inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-+	inode = anon_inode_make_secure_inode(secretmem_mnt->mnt_sb, anon_name, NULL);
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
- 
--	err = security_inode_init_security_anon(inode, &QSTR(anon_name), NULL);
--	if (err) {
--		file = ERR_PTR(err);
--		goto err_free_inode;
--	}
--
- 	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
- 				 O_RDWR, &secretmem_fops);
- 	if (IS_ERR(file))
+   607	
+   608	static u8 cdce6214_clk_out_get_parent(struct clk_hw *hw)
+   609	{
+   610		struct cdce6214_clock *clock = hw_to_cdce6214_clk(hw);
+   611		struct cdce6214 *priv = clock->priv;
+   612		unsigned int val, idx;
+   613	
+   614		switch (clock->index) {
+   615		case CDCE6214_CLK_OUT1:
+   616			regmap_read(priv->regmap, R56, &val);
+   617			idx = FIELD_GET(R56_CH1_MUX, val);
+   618			break;
+   619		case CDCE6214_CLK_OUT2:
+   620			regmap_read(priv->regmap, R62, &val);
+   621			idx = FIELD_GET(R62_CH2_MUX, val);
+   622			break;
+   623		case CDCE6214_CLK_OUT3:
+   624			regmap_read(priv->regmap, R67, &val);
+   625			idx = FIELD_GET(R67_CH3_MUX, val);
+   626			break;
+   627		case CDCE6214_CLK_OUT4:
+   628			regmap_read(priv->regmap, R72, &val);
+   629			idx = FIELD_GET(R72_CH4_MUX, val);
+   630			break;
+ > 631		};
+   632	
+   633		return idx;
+   634	}
+   635	
+   636	static int cdce6214_clk_out_set_parent(struct clk_hw *hw, u8 index)
+   637	{
+   638		struct cdce6214_clock *clock = hw_to_cdce6214_clk(hw);
+   639		struct cdce6214 *priv = clock->priv;
+   640	
+   641		switch (clock->index) {
+   642		case CDCE6214_CLK_OUT1:
+   643			regmap_update_bits(priv->regmap, R56, R56_CH1_MUX, FIELD_PREP(R56_CH1_MUX, index));
+   644			break;
+   645		case CDCE6214_CLK_OUT2:
+   646			regmap_update_bits(priv->regmap, R62, R62_CH2_MUX, FIELD_PREP(R62_CH2_MUX, index));
+   647			break;
+   648		case CDCE6214_CLK_OUT3:
+   649			regmap_update_bits(priv->regmap, R67, R67_CH3_MUX, FIELD_PREP(R67_CH3_MUX, index));
+   650			break;
+   651		case CDCE6214_CLK_OUT4:
+   652			regmap_update_bits(priv->regmap, R72, R72_CH4_MUX, FIELD_PREP(R72_CH4_MUX, index));
+   653			break;
+   654		};
+   655	
+   656		return 0;
+   657	}
+   658	
+   659	static const struct clk_ops cdce6214_clk_out_ops = {
+   660		.prepare = cdce6214_clk_out_prepare,
+   661		.unprepare = cdce6214_clk_out_unprepare,
+   662		.is_prepared = cdce6214_clk_out_is_prepared,
+   663		.recalc_rate = cdce6214_clk_out_recalc_rate,
+   664		.determine_rate = cdce6214_clk_out_determine_rate,
+   665		.set_rate = cdce6214_clk_out_set_rate,
+   666		.get_parent = cdce6214_clk_out_get_parent,
+   667		.set_parent = cdce6214_clk_out_set_parent,
+   668	};
+   669	
+   670	static int pll_calc_values(unsigned long parent_rate, unsigned long out,
+   671				   unsigned long *ndiv, unsigned long *num, unsigned long *den)
+   672	{
+   673		u64 a;
+   674	
+   675		if (out < CDCE6214_VCO_MIN || out > CDCE6214_VCO_MAX)
+   676			return -EINVAL;
+   677	
+   678		*den = 10000000;
+   679		*ndiv = out / parent_rate;
+   680		a = out % parent_rate;
+   681		a *= *den;
+ > 682		do_div(a, parent_rate);
+   683		*num = a;
+   684	
+   685		return 0;
+   686	}
+   687	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
