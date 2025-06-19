@@ -1,127 +1,90 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866C023D2BC
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2382A223DE7;
+	Thu, 19 Jun 2025 12:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750337033; cv=none; b=RkCNSwx5asisc3CKCT/t5rDn2bILjPfZEjPNadY4d/v9/cmQgm4OeWkv3IKxyYKhVdjJPqgoXZQKG9MFNt9Kuf6vnp2a1zZ/KyUs3ObFkIYaDC00BPXjfDvs45CmwHpfPOpu93VsA/acJKi+tR6e+17GzDte3pPxVeXJJLLn6T4=
+	t=1750337070; cv=none; b=gRE/7zkACOSExe0XiKPsd1foIaiNEPMJoe+d2tiuAiQwcrUKhpyTlgqf5Feb85Li0xHS8FD9s5itRZiHcNSm1eed7nlVPPfmjIPTZcH+3Skh10SM9QOGroaKohxPGILdQwSpXKjEoOLM1e6Pl8ExZb4wTSH6tmGSW6Qej7Q0QGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750337033; c=relaxed/simple;
-	bh=6VrA574brT6VW/4UkR55B+2t41g9GvZgzDG0MC8lqW0=;
+	s=arc-20240116; t=1750337070; c=relaxed/simple;
+	bh=YScApHOx2uO3lhS8LNVpCGv9Np1OegEyPMaxKqGyqVQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f94dwnxY0WXElMCMiCDnhuoxIOSP/oBWKZIhXYSFy7ObpOhgMk7kcZi8CPiNmNqIIS1c+DZtI54RgZ4MP0qT1QnnO57DZTeoo//4uroVc08IQ84vTv0OO8eqH8+guW7onlFCe0gOyniLKAVugYdBQAOfGzyDFdqic6H4q3K+Zvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I/Q1/tW9; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=JlQNa96uAJDLoJg0yw1i4QPB6XiEVxIx0s90t+ZMANTGzYYNkjYEp7x8F2b616B+9nzVZQ6UeiuPxjTpn/8LpYdbOaGQG+n0FPvE3t7urdT3cuWpCuaULv5VJg48qUg+8iOnX4JjTO0p9jZg75mqwPb8Bfq4uuHB2bO6qhA3L5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBNSDp56; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I/Q1/tW9"
-Message-ID: <6735a940-bce8-43f5-a6d7-7a48ace197c8@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750337019;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=88IeTx3F+Ru63iJfLhr9wYINj1DkxKZKk7DiEWTICcw=;
-	b=I/Q1/tW9NmVAli9fK97FXdwi9um9a5ePp3DzfxcTOgIiIaRm3KVi4eKOcHQmlEsE2SSas6
-	xWEE0ZVi+UrtKvHxP3GfsUSP89LWKtK3bVXi2ILF4wdjxvvXYUFUB2hsiapeswu7k39Kxb
-	MxtirJ1a9+m24g+W2b8WVPMYKOltQk8=
-Date: Thu, 19 Jun 2025 13:43:35 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBNSDp56"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750337070; x=1781873070;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YScApHOx2uO3lhS8LNVpCGv9Np1OegEyPMaxKqGyqVQ=;
+  b=UBNSDp56Rz6IQQK+YF6WdmNEDN3+nQcejzkcF1JPJ2WwzYA0jq3xszWW
+   k71bIc3pCDxkmLJqDySb88ahSgezh37+6yuCkCE7YjRpboke9MwsiKrIQ
+   qGBsbyBrdUpRc6dtmJ4EaZ3oehxYG/ycDeQH/qfLja+LE6/7NvTIKGaLN
+   nrf7I77UlL4/WHee+193Td4Z9TZ2uOnMHNiv157Gf7cyhesxqupkQKqGQ
+   xSLnOU7Pr87v4EMy9m+T94UbItXQ1TjjGXlhF2CVC0m1h3pQ183vF02g+
+   +CuR5EcAY2kQjoLFyE+y8GEi+yByiZ9tVTYMPIPyWTS5j8mOl7xO3GIxV
+   g==;
+X-CSE-ConnectionGUID: 4fAatHjsQLGxcC3UyMzYXA==
+X-CSE-MsgGUID: PJWjs/SkTlW0WUrhJR0D1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52453499"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="52453499"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:44:29 -0700
+X-CSE-ConnectionGUID: LrvhueWOSZ+lEvsaaNeByA==
+X-CSE-MsgGUID: Ccb6PrnzSmKixcH6UBlXwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="154653955"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa003.fm.intel.com with ESMTP; 19 Jun 2025 05:44:26 -0700
+Message-ID: <d7223d48-f491-494f-8feb-b92a29e9af53@linux.intel.com>
+Date: Thu, 19 Jun 2025 15:44:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next, 03/10] bng_en: Add firmware communication mechanism
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- andrew+netdev@lunn.ch, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
- vsrama-krishna.nemani@broadcom.com,
- Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
- Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
- <20250618144743.843815-4-vikas.gupta@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
+ is being removed
+To: Roy Luo <royluo@google.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
+ "quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "michal.pecio@gmail.com" <michal.pecio@gmail.com>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250522190912.457583-1-royluo@google.com>
+ <20250522190912.457583-2-royluo@google.com>
+ <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+ <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
+ <20250529011745.xkssevnj2u44dxqm@synopsys.com>
+ <459184db-6fc6-453b-933d-299f827bdc55@linux.intel.com>
+ <20250605001838.yw633sgpn2fr65kc@synopsys.com>
+ <CA+zupgwLkq_KSN9aawNtYpHzPQpAtQ0A9EJ9iaQQ7vHUPmJohA@mail.gmail.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250618144743.843815-4-vikas.gupta@broadcom.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <CA+zupgwLkq_KSN9aawNtYpHzPQpAtQ0A9EJ9iaQQ7vHUPmJohA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 18/06/2025 15:47, Vikas Gupta wrote:
-> Add support to communicate with the firmware.
-> Future patches will use these functions to send the
-> messages to the firmware.
-> Functions support allocating request/response buffers
-> to send a particular command. Each command has certain
-> timeout value to which the driver waits for response from
-> the firmware. In error case, commands may be either timed
-> out waiting on response from the firmware or may return
-> a specific error code.
+> Thanks Thinh and Mathias for the review.
+> Please let me know if any further changes are needed before these
+> patches can be accepted.
+> I just want to make sure they're still on your radar.
 > 
-> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-> ---
->   drivers/net/ethernet/broadcom/bnge/Makefile   |   3 +-
->   drivers/net/ethernet/broadcom/bnge/bnge.h     |  13 +
->   .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 503 ++++++++++++++++++
->   .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 107 ++++
->   4 files changed, 625 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
->   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> Thanks,
+> Roy
 > 
-> diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
-> index e021a14d2fa0..b296d7de56ce 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/Makefile
-> +++ b/drivers/net/ethernet/broadcom/bnge/Makefile
-> @@ -3,4 +3,5 @@
->   obj-$(CONFIG_BNGE) += bng_en.o
->   
->   bng_en-y := bnge_core.o \
-> -	    bnge_devlink.o
-> +	    bnge_devlink.o \
-> +	    bnge_hwrm.o
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> index 19d85aabab4e..8f2a562d9ae2 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> @@ -13,6 +13,8 @@ enum board_idx {
->   	BCM57708,
->   };
->   
-> +#define INVALID_HW_RING_ID      ((u16)-1)
-> +
->   struct bnge_dev {
->   	struct device	*dev;
->   	struct pci_dev	*pdev;
-> @@ -22,6 +24,17 @@ struct bnge_dev {
->   	char		board_serialno[BNGE_VPD_FLD_LEN];
->   
->   	void __iomem	*bar0;
-> +
-> +	/* HWRM members */
-> +	u16			hwrm_cmd_seq;
-> +	u16			hwrm_cmd_kong_seq;
-> +	struct dma_pool		*hwrm_dma_pool;
-> +	struct hlist_head	hwrm_pending_list;
-> +	u16			hwrm_max_req_len;
-> +	u16			hwrm_max_ext_req_len;
-> +	unsigned int		hwrm_cmd_timeout;
-> +	unsigned int		hwrm_cmd_max_timeout;
-> +	struct mutex		hwrm_cmd_lock;	/* serialize hwrm messages */
->   };
 
-It's all looks pretty similar to what is used in bnxt driver. Why do you
-duplicate the code rather then reusing (and improving) the existing one?
+I think Greg just picked up these two.
 
-I didn't look carefully, but in case it's impossible to merge hwrm code
-from bnxt, you have to make function names prepended with bnge prefix...
-
-
-
+-Mathias
