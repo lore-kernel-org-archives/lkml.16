@@ -1,50 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CA830E82E
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B30530E82E
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750360659; cv=none; b=OVhsxKC9rHx/sszGgu4iyPGiKS1lzT3iPB/yvLiSt7AYrDgji0XrL8TdLvThJ4eVz5aUMdmr/ok7l5CcEXvDzW7LGLYEkBfJyHOyUozOt/sV0T4DUHHhpGNT6vSzG+zY2yIbNractI7JMZV5X/f+/KTuYomITPM2rDQDpFdFS+o=
+	t=1750360667; cv=none; b=I85FBqot1i+Y5o6sQat9rg++RjX/atwh8zKz7kuVLA4u9LnjaYXSBMxfHfOVJU08Z2joKNxJAUhxDTk4vtwTgR4E/tgTymGHh22xhnqwLof1X786JefHwPrNI44HO72XzEbv37tgPBgh1aRaEZ4KzJtlobPhBQBGR/4F3MpBNdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750360659; c=relaxed/simple;
-	bh=ZRNWhl8tPiNTSHULKlMX4iESdr8yY7z89H/qS9FJwy0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eucO2uqHngB0UJiYCXl4v83AO4GrBU5VypKh4l/97tLG6IykS1aTXJ0tgR65AHHXNaaZjDYOFwRpk/BW0JZxPmYW+Jg/c7AUsQ7dyZtK1vKpC/wcMi/+6ZahTdoWko3YNOsuO6LG3LBvBL87gCl7lY86XzgMFLHiQwcVqC31Uwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LreQ1hQz; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1750360667; c=relaxed/simple;
+	bh=gduD5wUHpyegnOzCbwQD/ohEcVXwZ6Qjsy8tHoT5140=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aHNBKBgSESWygbWg7YEPVx+vqWoGTt3C7RAfyqGptYbo7RsxURJu1xxe9zB6Nhr2ECyvF4jD1BuN8EQynu61ouJNVCMSPAylSokXfk1MmcTgmrSy0Fq2KfGtDq+YGhHrhCprgrqaDTow77Z9iqGmzhuK5qlX4EQsd31xKYWqzV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H6R+mNLl; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LreQ1hQz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6R+mNLl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750360655;
+	s=mimecast20190719; t=1750360665;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WNxeSCCnet4CkHdiyZTAAA1x8X2Y0UCpmMOTSw5+y8Q=;
-	b=LreQ1hQzF62XPLEvRkUaS6Kiz4tkDeEla/9oyfLLrCFrWLq94EOd/tQRWtrh6EVxJz9XMZ
-	50cBa36XQi8k7UIB1+LuQuv7Vd6mrYy6PDQDm/jNZXO5L97sESx7W1+9GjQBk93eNW2Rcf
-	gl6LgPGZwCiv0sZYCR0cgKoWi94OVIA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IUZoRGl8XKKMcHwculHbrWtrVRY+BTfu98QTVEXtSWA=;
+	b=H6R+mNLl5758p1E+/hELiOb6ntWczAoegIMeXes5wOmV8PeN96UJ2ZglDEPlIVfHDJ9CWG
+	nalfiCqbxl63BOksn/D+8oHxBLnLUW6FR/v64C3cX5Kn4bYpUd+g/0HuJI5KvZTzvXua3T
+	sDH2FofSWAQfZ2FIpXzlhKiE5I7vfK8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-400-w8KCcdW6PGyi6iZAp38mQA-1; Thu,
- 19 Jun 2025 15:17:32 -0400
-X-MC-Unique: w8KCcdW6PGyi6iZAp38mQA-1
-X-Mimecast-MFC-AGG-ID: w8KCcdW6PGyi6iZAp38mQA_1750360647
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-451-f2y4jO45Nymi3edFtLyl6w-1; Thu,
+ 19 Jun 2025 15:17:43 -0400
+X-MC-Unique: f2y4jO45Nymi3edFtLyl6w-1
+X-Mimecast-MFC-AGG-ID: f2y4jO45Nymi3edFtLyl6w_1750360658
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DBFE31800287;
-	Thu, 19 Jun 2025 19:17:25 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22B8F19560B2;
+	Thu, 19 Jun 2025 19:17:37 +0000 (UTC)
 Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.132])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8720C19560A3;
-	Thu, 19 Jun 2025 19:17:14 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A25BB19560B2;
+	Thu, 19 Jun 2025 19:17:26 +0000 (UTC)
 From: Anusha Srivatsa <asrivats@redhat.com>
-Subject: [PATCH v2 00/16] Use drm_panel_get/put() in of_drm_find_panel()
- and its callers
-Date: Thu, 19 Jun 2025 14:15:52 -0500
-Message-Id: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
+Date: Thu, 19 Jun 2025 14:15:53 -0500
+Subject: [PATCH v2 01/16] drm/panel: get/put panel reference in
+ drm_panel_add/remove()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,11 +54,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOhhVGgC/3WNzQqDMBCEX0X23JQk/lR68j2KSJps6kJNZCPSI
- r57U+m1MAx8c/hmg4RMmOBabMC4UqIYMuhTAXY04YGCXGbQUteyUaW4VyL6wfE0eApumE3AZ25
- elDCuvtjKt62RFrJgZvT0OuS3PvNIaYn8Pr5W9V1/WvnfuSohhW1KjSqnVK5jdKNZzjZO0O/7/
- gFd/HAlwgAAAA==
-X-Change-ID: 20250613-b4-of_drm_find_panel_part1-ad57c4f88a0c
+Message-Id: <20250619-b4-of_drm_find_panel_part1-v2-1-0df94aecc43d@redhat.com>
+References: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
+In-Reply-To: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -90,69 +89,47 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
  linux-tegra@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>, 
  Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750360565; l=2637;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750360565; l=1124;
  i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=ZRNWhl8tPiNTSHULKlMX4iESdr8yY7z89H/qS9FJwy0=;
- b=Me2aDfseSSjZKBVpcXSnUNCCs9+uXI061gfe7inuN4RHWSfozagYa7azYKoJZFsAPN+vtWMQi
- myeZo0xBVRuAOyI4/S7anI0CzZlg6ddvE/fGlnFUC6pTGERGIA6vnNJ
+ bh=gduD5wUHpyegnOzCbwQD/ohEcVXwZ6Qjsy8tHoT5140=;
+ b=Oc8qrV8Xj2Q/G9/VWGYSxA7a4bUjy007RPXT1RvRMyIzkygFnbR0TsmFakVD8oLlQuIsxGR7A
+ XCtuG3cA2XIBC25fKaqmKD56QVrKK84HAg1Zy9PbKqqUleSQ2f/gc6A
 X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
  pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-of_drm_find_panel() returns a pointer to a panel which the caller
-holds to either do panel setup with the prepare(), enable() like
-panel helpers or for APIs like devm_drm_panel_bridge_add(),
-devm_drm_panel_bridge_add_typed() which expect a panel.
-Either way, once the driver no longer needs the panel,
-put it down with a drm_panel_put()
+Take the panel reference and put it back as required.
+drm_panel_add() and drm_panel_remove() add a panel to
+the global registry and removes a panel respectively.
+Use get() and put() helpers to keep up with refcounting.
 
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
-Changes in v2:
-- Get the missing reference in of_drm_find_panel()
-- Add changes to all drivers that call of_drm_find_panel() 
-- Link to v1: https://lore.kernel.org/r/20250604-of_drm_find_panel_part1-v1-0-c632e12e131d@redhat.com
+ drivers/gpu/drm/drm_panel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
----
-Anusha Srivatsa (16):
-      drm/panel: get/put panel reference in drm_panel_add/remove()
-      drm/panel: get the panel returned by of_drm_find_panel()
-      drm/panel/samsung-dsicm: Keep up with refcounting
-      drm/panel/sun4i: Keep up with refcounting
-      drm/panel/exynos: Keep up with refcounting
-      drm/panel/rcar_du_encoder: Keep up with refcounting
-      drm/panel/rz-du: Keep up with refcounting
-      drm/bridge/lvds-codec: Keep up with refcounting
-      drm/bridge/fsl-ldb: Keep up with refcounting.
-      drm/panel/omapdrm: Keep up with refcounting
-      drm/panel/sti: Keep up with refcounting
-      drm/drm_of: Keep up with refcounting
-      drm/fsl-dcu: Keep up with refcounting
-      drm/mcde: Keep up with refcounting
-      drm/bridge/analogix: Keep up with refcounting
-      drm/tegra: Keep up with refcounting
+diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+index 805b4151ccefd8ec0107951162c3b71446102ffb..ced6b08923b2150ebda6e1d9001517103895def1 100644
+--- a/drivers/gpu/drm/drm_panel.c
++++ b/drivers/gpu/drm/drm_panel.c
+@@ -80,6 +80,7 @@ EXPORT_SYMBOL(drm_panel_init);
+  */
+ void drm_panel_add(struct drm_panel *panel)
+ {
++	drm_panel_get(panel);
+ 	mutex_lock(&panel_lock);
+ 	list_add_tail(&panel->list, &panel_list);
+ 	mutex_unlock(&panel_lock);
+@@ -97,6 +98,7 @@ void drm_panel_remove(struct drm_panel *panel)
+ 	mutex_lock(&panel_lock);
+ 	list_del_init(&panel->list);
+ 	mutex_unlock(&panel_lock);
++	drm_panel_put(panel);
+ }
+ EXPORT_SYMBOL(drm_panel_remove);
+ 
 
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 1 +
- drivers/gpu/drm/bridge/fsl-ldb.c                   | 3 +++
- drivers/gpu/drm/bridge/lvds-codec.c                | 1 +
- drivers/gpu/drm/bridge/samsung-dsim.c              | 1 +
- drivers/gpu/drm/drm_of.c                           | 2 ++
- drivers/gpu/drm/drm_panel.c                        | 6 ++++++
- drivers/gpu/drm/exynos/exynos_drm_dpi.c            | 1 +
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c          | 1 +
- drivers/gpu/drm/mcde/mcde_dsi.c                    | 5 ++++-
- drivers/gpu/drm/omapdrm/dss/output.c               | 6 ++++--
- drivers/gpu/drm/renesas/rcar-du/rcar_du_encoder.c  | 2 ++
- drivers/gpu/drm/renesas/rz-du/rzg2l_du_encoder.c   | 1 +
- drivers/gpu/drm/sti/sti_dvo.c                      | 2 ++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c             | 2 ++
- drivers/gpu/drm/tegra/dsi.c                        | 1 +
- 15 files changed, 32 insertions(+), 3 deletions(-)
----
-base-commit: 60ba94338047bb5410a3626ced3380afe9285ed8
-change-id: 20250613-b4-of_drm_find_panel_part1-ad57c4f88a0c
-
-Best regards,
 -- 
-Anusha Srivatsa <asrivats@redhat.com>
+2.48.1
 
