@@ -1,54 +1,54 @@
 Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF8526E710;
-	Thu, 19 Jun 2025 13:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990D26FD8F;
+	Thu, 19 Jun 2025 13:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339526; cv=fail; b=AqX1k6d2jt8VQWH0LxjAZIg0nHpJqWNQxvjVr6e1/MgET96jiyqAR6F4l2YIGsESnVj1bfZzkbPX3eRHpJiExjVYMqFYmUcWFRMRqyWi1rDc1aHjExfC1hQQQgO/JYOdYNj+n42LWHlJNaACIMC5wRyiaQezujbp705vVKf1F8I=
+	t=1750339533; cv=fail; b=fiIV4FrGn/obDYvW338mNeLyBuzobV7u5ByyI/a3SEGo/fWj1Rsv9OnejJIR3oz1LpaF90Z7rHb6GsX2KCLjQRoweIy8oUsH3HR4svZqoH7WXXmLK3s6YOSMsCeJif9FJDeGE7Q9sOLwYtAGwX0fYb5tg6t1K19ZyQnSftPiEKo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339526; c=relaxed/simple;
-	bh=G6d9FVdp+KVPTgJ3+bD10jDpjrNNK7lqJHnhwqPU2qg=;
+	s=arc-20240116; t=1750339533; c=relaxed/simple;
+	bh=KrsmB99uvdvzm3gCMoMZoeYe0AfcGYFiAu957Qx6nQ4=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=uyMble/BDXSZRP+T3VHwBKE6uSC/+dLr7OQK16Z1NjBDR1ZK3H2HpKM3kI/HYLnwDDXcQXKH3FnlU8EgtEybvnXYQK1PyK7tSLMnXdUtxzGNrrKC/jK3k7yCHudftWYmmx9ulgLf2w//TSJ6iyp269O/cVB+hu0cmv78OpQwoR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZIXbNXq1; arc=fail smtp.client-ip=40.107.92.63
+	 To:Cc:MIME-Version; b=CZVUe6BljncXEacMdvZXoa+ppie/ElFefR5wLcCVnn97fnc+TIqA+QFN4OkWCU6io3Nhr6wQ8rVWIX/X7LGOjezINceIR9TjZpq5RR6aqPxtcr+h7zgB3rgYG3rk1AnSaG82nnGpPy4LM8l3sCUi/ESw5JRqUBar57E9V7VWsjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ANgGDAWY; arc=fail smtp.client-ip=40.107.92.63
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZIXbNXq1"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ANgGDAWY"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=stZZHz0YjtBbR7ZIY+32ey5kvcpgNsEZM2+QP/J/AQZRQWQrOAGz4RZaYXUf7+O4Y5X8YqXNoHhtMn53RCpXWRrB5ASW9dK7hmJOoz8Uf2FvUFs3Jq4D4PscqMw/HplRVcJfovmWNWMtDzqleyJwuBKHrm5+8oz3+RCHICmqEitlMpdt02nrW2ezj59uQRGBJyxa8Fi4Adjos0OQQLNVJ6TycaZc8JxCE5t0HnZS/Pj5AhOUQPQ4Ar7HQC0tiaJYgVQBsm035rN01c2GdfQfwS4WocGum7Ta6xqiiMzCStLsb3JUkQnP4AEv3btoCnBsb9OE25IqsBqACu8LwtHRBA==
+ b=Ta0S9LMge/EQQKtK2utX+eZ1KDrJCgeREDHGnc6jIYdEpXK1tZsFvG++EtxAyhwPUmEb2QnDaEk+8wUCXF4nALeEwKsEjwiw1OD6r1iRzgywv6rrSOGYVsAQ+xECB3GlE56VHAN44+69XH7+3T8OtCEbKyTAsSnY9U+rELS/lL2Fck1y7tjAU6qRAdG0HKu6ACz+BOqSF+00gDatRMhSVxdEAGxgIrekGZPW7jLlFHYTsr0Px/Xz+CdsLkeGm46lW5+EslWL85ndCYRuf0xiLhzzsn2XIR5/pZs5I27g+UJcG+dZq8TasaQ46RLzVh+tio5f5rqUMsYQ66/untXKvQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Uk44DU7V+4z+TfwwnC927Lj2VbAdqmocrb9J0ePCKw=;
- b=XBqn1YdKPEc1PYH1JogcczEGYy/QLLAOLB+Nx44+Jq4XEeC6A5qqAk2wJeg+YqO5YYsGtfz/sY+DcDQVfS5i6hlPLwuctRNHytTbkQvx5/NxcCyU7dsNyx4oPHx4O7pxW+Od/ZdB7/AA+SbjkFT6xYWpOA7ECejBaZ+jlL2FFQV9C5FV9RPwUj88UvrZsH2JdXeizv0ehbdC+wEeZa3+929Lt+oDSHJpFYZYB9iCFF35rrDux/kAsUhNui72PhN5UtUqBNXGvkDEt98nEBnXE3U/DOKMjcT6gDnHBjs5p1S2aLf36fW0l1OcOlMdVtN7EYpsH++8l3Pv6WixjnHfFw==
+ bh=Aid8otmZ3s8zQvCNKGNXbVGb0ujHig5G+zbKbCBMomg=;
+ b=lyxUqtL0wLsg7K5tNDfei2lNqq+qpRygqX4zz7tb5K51zX1EfquuguJg7WtGjFXzbCXLDg3NfCN3c52c2QdCuNU8yjxmbb9sZGUr8efoTsipodkD0qQf947mbmOnoEWZDiN2BME1UWlk5eaGwllM+eycvunB/YYTaKCj3JniZS3gbMwL0NMUcnQTXTr+jJhBZBimL4FAKsgpaxAlkzgFL9PfVWcE5B955Vlk+TAU6ptzZqhH9KzeHodhPuZpUwkQ5Fg43A/PPV/sO61ke4u3xXbvjlj7CXQTRSW0jIXFH+HAr17wbMHQxnfb0H8lS6ZbUV8flAUwDddGXPOnlgC9LQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Uk44DU7V+4z+TfwwnC927Lj2VbAdqmocrb9J0ePCKw=;
- b=ZIXbNXq1uPFYWMp9r2JJyuqdhjb5ONum1QjwjY4SLeuqs3ZtzzOgb+EhTOE0IgDJnb8Kpi+isFraWb1u8bRFyPXXBQe1oem/fEVFheqvdeF49/Nmjeeoq/fGX+kbWul61U8ESIpcwTPP0SjZvmu6UCVDaHqIJkqkzN+qh9Wtf9qyHXRJ94pkROqIzn6DMQqrE2VyjZ5XvUKnH/TJhh5DqP4S4JK0I6sJXBjw9lcpMQUC5y1FYF58HLrP1HIm5qGxVSmEsx7zgud/RSWJ4InyJvYgazY+C4mwPu5EjROIp+/YeEkou6Ornqq9vf1QygLMMS+veYc/AR0p4uMbqZt6aA==
+ bh=Aid8otmZ3s8zQvCNKGNXbVGb0ujHig5G+zbKbCBMomg=;
+ b=ANgGDAWYJOClnG+CyeZydLGBjkvIHMf+9gFg9mTldSskgovzl8lnjPpVnUyoY4azziEZPVmv9Hr/GMmyT+0uFl9CUqLkEjohEjheEubiC5ltjZ46j0TfBFMvsmxcRlN51VoUU0tney1f8IRL5oyBmOhDt6kwdEXFHE3sEfHJF2/G0SKAAWGdGB5x3F+AV9IivXA9ZhVYDXvZmC880/MI73Mx+Wfm6cBKpwRx8i6CHVEWVD050+1KgedWb0UduWge9cLgy0r1G/y3NxNQJwpDWjXS0mQ+svWPVP1oUImfGoH2vemMeC3LtLNqPUsI2eSMXkhIkg483m6QUhKkSluxPA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
  by DM6PR12MB4353.namprd12.prod.outlook.com (2603:10b6:5:2a6::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
- 2025 13:25:21 +0000
+ 2025 13:25:28 +0000
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
- 13:25:21 +0000
+ 13:25:28 +0000
 From: Alexandre Courbot <acourbot@nvidia.com>
-Date: Thu, 19 Jun 2025 22:24:00 +0900
-Subject: [PATCH v6 16/24] gpu: nova-core: firmware: add ucode descriptor
- used by FWSEC-FRTS
+Date: Thu, 19 Jun 2025 22:24:02 +0900
+Subject: [PATCH v6 18/24] gpu: nova-core: vbios: Add support to look up PMU
+ table in FWSEC
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-nova-frts-v6-16-ecf41ef99252@nvidia.com>
+Message-Id: <20250619-nova-frts-v6-18-ecf41ef99252@nvidia.com>
 References: <20250619-nova-frts-v6-0-ecf41ef99252@nvidia.com>
 In-Reply-To: <20250619-nova-frts-v6-0-ecf41ef99252@nvidia.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -64,11 +64,10 @@ Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
  Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
  Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
  rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>, 
- Lyude Paul <lyude@redhat.com>
+ dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>
 X-Mailer: b4 0.14.2
-X-ClientProxiedBy: TY4PR01CA0030.jpnprd01.prod.outlook.com
- (2603:1096:405:2bd::12) To CH2PR12MB3990.namprd12.prod.outlook.com
+X-ClientProxiedBy: TYCP286CA0023.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:263::10) To CH2PR12MB3990.namprd12.prod.outlook.com
  (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,165 +77,319 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM6PR12MB4353:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0624d80e-c241-408d-7d3e-08ddaf34bde3
+X-MS-Office365-Filtering-Correlation-Id: aef7c337-b87a-433f-f742-08ddaf34c1ee
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|10070799003|376014|366016|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TkxFMkVZejVMSnFvZmw2eUQ2NUN0VDIwV0tkQWRxTVIvaGFFOW9FTVdCOU56?=
- =?utf-8?B?WWk1eHZxVW5lRmhHWHQ3Y1dNaTg5RHNmcUlJdXJKNUlDa1ZhVTdSME9IY3VB?=
- =?utf-8?B?am00UmI0STJqR1pjTkhzR0k0Yi9wNjh0Tm1HZFExaUV1RmM4NWQ0bytSTU02?=
- =?utf-8?B?anlZZzJGNDNJSnU2N050R3JYU1U0ZkpoejdUMWw3VFRXWmdtWkpHdzMzbVRU?=
- =?utf-8?B?c3ZiVVplYUgrU1hGRy94QUtPQWNyQ2RkWWdhZ1QxV3lpRDRoa2xIV3RPamdM?=
- =?utf-8?B?QThHLzh5MlBwWkRYL2k4L2VSZ0hJVjcwN2NtTGpmTVBRZG1HU3N2andjZldD?=
- =?utf-8?B?a0g1WnFTeENWUXd6eisvYVA0anMyZjRsdTBsT2FpNHVyZHp1dm9jblY0NkZK?=
- =?utf-8?B?dk84YUpzbndwVW9tUzlHcktaQ0VzWDR3dHhHSGRiam1LVWxXd1ZuRFYwdGZJ?=
- =?utf-8?B?TmdpYWVFYVBGT2hTMVd4MHNLOHhNM1VQTTQ4WDYxdWp3Q2dUbFIzZ2U2Vm81?=
- =?utf-8?B?SmhQbU5OaWF5UnVhOEVoa0JORUx6SmNZbVA4ZWZwSm9KNm9lRExtb1V5Tktp?=
- =?utf-8?B?bjAwcHZHUmt4MEc0N1RDNjZyOTRwMktVS0J5T2d1WmtzRkxIcmRZeGZJSHhy?=
- =?utf-8?B?TmtQOVlPVkFabjA2aWdwcUw1ZE1uQVFSUlUvVDlaVkd6Ny9VNGg2Tkd3N0N4?=
- =?utf-8?B?aGdBcktXOTY3OWRDMVF3VU9UUkJMc1VyRi9ENEZqK0YrWm4zb2ZETFdRUjBN?=
- =?utf-8?B?UHhHd1RSekxhN3ZnSmpUSTFSbFNCS09EZnV2LzExRHk0S0FJTVNQTE0rZ3NO?=
- =?utf-8?B?MmVYMlBNYVVGY2YwSXBOR0ZDNGRaOE5pUFhPL1o0WmIwdDhPZ0xlMHZxRkZs?=
- =?utf-8?B?eitIelVzNTg2blhCdVBLOVFrSWIzSXFhelROb3ZtN09jeE4vMWwvbjhUTjcx?=
- =?utf-8?B?elBwc0p5TFhWMVRyR0Uva2UwT3NtMXZZS29tWG5QeUQ2QnRVbVFTMjExMURv?=
- =?utf-8?B?SXhqbmJBY094eXdJRktoUCs4SmpPYS9iY1RZSkJ5K1A4Zi9yUlRianFRTFoz?=
- =?utf-8?B?d0IzRE1mcVJlWmM0Wk45dnJXQWFsaGtxUFJZMHNKcUZLeHUyNkR5eFlSRmFu?=
- =?utf-8?B?aGJwRjRyOHliWmVpZzh1NHVMVmZhMC8vellnQWdrVjBidGhka3lja2c3QzNV?=
- =?utf-8?B?dmxDNFpjN2grbWVYemUwdWx4MHJFb2dQZmwxZ0d3MlVPMGxWNTFuOHhhWTNE?=
- =?utf-8?B?dzlkNHZvajJEcm1JbmhjRG5odjhWNU4yclljN0hsNWpCQUFqY3g0SnhKSWpI?=
- =?utf-8?B?R0xwdnZ3MVFkYzdFNkQyaWxaaFVLVVovaFZEMUpWcjlrYXhWNlVxNi9VaS92?=
- =?utf-8?B?cVRlaEUwemV3QUR6Vm5hSDVUOGgvRi9QdDhWNnRGcHh2RzBnTlZoa29wME5O?=
- =?utf-8?B?T2VlMlJzY3BadUQ5dGpxRWpUVmJ6Nnlmc2ZicE80T0F0MlZLcm1EU0lKWVZT?=
- =?utf-8?B?RDlncXhxeGxmeXphTXBWTnBuYlZ1KzZQYngwdWZSWTlTUmhicnNEOFZLTTE3?=
- =?utf-8?B?TnhKTy9YUEJ4THlmS050MjVKdGU3bEhKY1VXSjhlTjI0YVUzS0wzVEk2ZUl1?=
- =?utf-8?B?WDYyMC80U3NYWkQ4ZzJmUTQ0RlhiMlNJVkJQY012K1FoQmNxUzJJQkdWSDJo?=
- =?utf-8?B?RllvUjJ6aTIzeEEvZ2RmRzdZZk8vVGdGZ200OEZGd2ZjY2ZNM1hIZUNqUnV1?=
- =?utf-8?B?aGRsMmpkWElkSFJZKzkvSVpSbVpSMjd0aWkvZjYxRHd4Z2RNNmhSckJLWEFu?=
- =?utf-8?B?ckdKR24rL1VheWVIRDkzT21MaFBkaWg3eGRCY2VFaHdFSFU4TEJzeEw1WmRl?=
- =?utf-8?B?SnU5THFWbnpuZSt6ZXV1VFJxaDd3cysxZHhJL1N2N3pFSVFRa1NaazhjVnlW?=
- =?utf-8?B?Ylgyc2p2akdwUTR0RUk4VDNjTGFtUFlYMnNhbUJxRytRdkZWSlpEUEU4TXVK?=
- =?utf-8?B?OUt3aTNDYVV3PT0=?=
+	=?utf-8?B?cFZqQlF4TmlaNEt5U2JMQ2FhSkpOY3pKbHBsY2t6bis0bXhYNFZsSEJNTzFy?=
+ =?utf-8?B?ZGk3WW5wSmp3RGVJT0tteHJiUEhNSjNJd1lVVlgxTHZMbU96RnpQZFdUVGRq?=
+ =?utf-8?B?VnVINlN6MWF1ZUU3VW5yWElCUytEamxpbDRGUk5sL3BmeVJNRUZ0L2VYZHJV?=
+ =?utf-8?B?dG44UjVxd2RFd2ZPc1kxMld2V3BzU2pCUytlYXNoTDJqUFh4NzVMcSsrdW96?=
+ =?utf-8?B?ai9mRno3dDZSbmpmZjR2RWRHclJTVktBSkJQcGo4dCtzOGVJclBwUERjQXBM?=
+ =?utf-8?B?a2p2b28zZjNwb0NxWmF0VVBCTUtmOVhCclozb0wxcTZHWU1yTEtYTWRZd3hw?=
+ =?utf-8?B?Z09MTUtOSUVlc0R2SHZIRVRNa0s4VGtlMExKSHZRTmVFYW1LT2xSSTMzSlda?=
+ =?utf-8?B?TnlDY1pkUU9NTnRGWXZhbldySmdpZFdsUy9HQ1Qyei9Sd3JoME5BVzlCVk0r?=
+ =?utf-8?B?VGhkdmN3T29WT2l3dTZkb0x0eGg1YndCTTk1NzVpdjRTSjNOV2NlYmJMUkw1?=
+ =?utf-8?B?UGtqd3o3ank5U09NM0JqL0Vub2J5QnlTUzN0SHhQZmUvY09HT2FUNmdJeFFs?=
+ =?utf-8?B?aWxaMW9iYk15TnJER1I0RTlOWldGYXQ2a1BjU3VtSnFaODJ4ZHlUUmJoS09E?=
+ =?utf-8?B?ZDhOMnZhQmFxeTFsdzdQQk40bUd0dGdJU2xpaFRCYWFCYlFDVDlmQ01RUWlB?=
+ =?utf-8?B?YjN0aUpDejQwTExIRTUwTnFBM2FuZmZRZ1FSUmpLTmgvQnN2RE1Pd0lRVmtq?=
+ =?utf-8?B?NlRBaEJsdTlMRmJXY1NuY1NKU0RvZ2FzaDZZZ3BWT0s3VDN0S0F0NHpSQTBM?=
+ =?utf-8?B?T01vRXFtZ1V0ZldGaEFoNTRzWDc1dnQyTUNOaTVMUlFYVjBXMXU5UzVxTFl3?=
+ =?utf-8?B?RUxRMUtaUVFuMHJLSTJJK3ZKeDY0WTh6MExidThFMExjMkRyY1haZHJqTVdl?=
+ =?utf-8?B?cHVnbUZURVRuQTB2YlJPdjdZK0xLcm0yc3ZiOXk3SktxMis3WUM2RW4wWDhu?=
+ =?utf-8?B?d0puTzVOMktZQ1FWaHQvck1LdmdXa2ZuSmQ0c3N0RnY4M09EQnNnaEx5RUNx?=
+ =?utf-8?B?QW9pRDhuaCtNOWI4UjliUURDa1dXaElQUm41aFRmZmYyeEoxVGhCV0tsM28z?=
+ =?utf-8?B?elEvamVVZVYzSnV1UTJhR1FoNVBjbGltTG8rK0tlZjNiaTQ4SkdCN2QxekZJ?=
+ =?utf-8?B?V0dOaDlmTjdWa0QvRHdYdUIzclV3U2pUaTREV3ZQaEVLRDFBTHREbnRxaG96?=
+ =?utf-8?B?R3NmdkYweERtQU8xRVFKOEhQeHA3RGRGT0Q4ZGZWMEc1bWZrZEhpTUdNcTBJ?=
+ =?utf-8?B?UkFHVW9IUHdCZXZoZ2ZGd3EwSFByUUNJdUZSSVUzVnczajZVVU4vWkFkcE9a?=
+ =?utf-8?B?MkhMK09FaU5WVzFXRWIzSnlLNkUxMjduTmRuOTh3S1JQdzFFUmUwVVdHa3BY?=
+ =?utf-8?B?UVBCdzlzYVNXU3E5aXNzdGdiZjBOZHZ5ekxCblJjaWJCYVRVVithSXIydVR4?=
+ =?utf-8?B?UjVLazZLTmpjZWxZT2dFY1l5MUVyVkF4QkpUOFZiTHJkaTFEZEVrZllQVjNQ?=
+ =?utf-8?B?czRwQWJrVVcwNXdxdWVoNFoxUEpGbk5XaUFKWTVuN05LRlhhbDNwTnJBckZI?=
+ =?utf-8?B?cm4wRlkyYXNRcDRTTjNpUHNvUk1aYmJLZFNEUzFhMUdxUUorb2VZdTBoWnlX?=
+ =?utf-8?B?NVloVHJKOW5IcUk3MDRIQnQzUEVLZDdkM2xiQ3FLT1dJeWNaQ1RoMnIxUFI0?=
+ =?utf-8?B?VUZOYW9LVk5LZ2F6dDJabW16bWVMNmxmU3d0Vk16VUUvbWtDSGVpNWhjbVAw?=
+ =?utf-8?B?eDdFYzZBRnFUc1lhK3lrcnpySktpeVRvK011VUVZalZYU296SGRtUzRqamJD?=
+ =?utf-8?B?QmFPazgzWHJIZjQvMmFNUzREMkZpenl0SkdmUjdmdk1VQWVYY21PL2dLTktj?=
+ =?utf-8?B?aDFveFUxL2N5WVBFbFNkek5HQmRscVlrS20wT1pURC9wMk56amVydzBQakFt?=
+ =?utf-8?B?aXpwL2lHVERBPT0=?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(10070799003)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OUNBV3VCM3pxWUQ1cGNCaGs3aWxaeTY3T0tyODJCNloyYktLeEdLc0xqcUE5?=
- =?utf-8?B?QmE4cGRkY3VDT04zNmF5ZzhISmM3VGg1dkl1QXJ1cmVobmw4WStJU3pCdWRo?=
- =?utf-8?B?K0l0d3d5K2IvYVNuaFlkWDg1SEZBZjc1UUpuR3Rxc0h5bG5DZ2tINlVPQmRS?=
- =?utf-8?B?THdFQW1WY0tvSmZ1NTNOQ0g1MzNBWTRZdG1KK3h0UkRoQWJXWUVSdDhONFBr?=
- =?utf-8?B?Q3dpVENwVU5ENjljZDBzYTYrSHN6U2ZDUktPZUhFYkVpSWszUDIzWlRqbnJM?=
- =?utf-8?B?cWdqRlZSWHIyeVdmYmdKNEt2WHNQc3pqNGptT2FOcUplWTQzMlFpWndneU1p?=
- =?utf-8?B?bXl4VnZSWWNZTEp4dGp3WnloRUZvTlpuU1l1SzNka1NyVllabkp2OGlBZ0F0?=
- =?utf-8?B?L29EbzV6RnhLeWJSNFAzVmV1WVBUVU8vMlAwOVJmYlYvZzRXaHFJUXRDZ2ho?=
- =?utf-8?B?dUlRU1d5cDNyVDlKbEt2UGN4RUc5aE9Ud0N2ckozYnFEcDNQcVpiSVJTaDMy?=
- =?utf-8?B?ZGU4V0xnaWsrZG03aFFwZnRVbVBaMXhKM2wzd3J4MTkzaElUNkZmRzd2REJZ?=
- =?utf-8?B?bW8vOTRVMGdMWFdHVVBDMVdFS2FjcGo3Kzgrcm5zbjFFektDR09Pa1FSOFBo?=
- =?utf-8?B?Rm5nZXVLeHhMdUV1SUZwSEJyWEVpNzNqTGFVZWFUcnpORVJxb2pvWjhxVU5v?=
- =?utf-8?B?dEt5Vys5TEJoY0xhL1RLR2NJTnM0UmJPS1hxQWZCanRnUVJlamRLamtSMmQv?=
- =?utf-8?B?cm5OV25HTFIrdDZLSkJsUUYwTXZJaWk5U0lCM3kzemZLcjduS3VWMG8vOVds?=
- =?utf-8?B?UDMrQldwZGEyM2RsVWxOVUJVRGFWOVhFYStvNkVHak5mRHpsTzhxdm9RR3dV?=
- =?utf-8?B?TXZDeU1rSWNpT285SVhzR2FpOWRtUzAreERKT004YWlSZnN4NnhWcWtIWWFv?=
- =?utf-8?B?Si9uQ1N3Q2o5eVBKTUlsMkV6RXJyZDVDRjFxTWs4ME1LcjRtUDdhUzh4Q2NJ?=
- =?utf-8?B?VjhxM3c2emlUMU9ybTZpZGFqMVVHemZmSVdENUdQNmxtcDZVdmJSeG5RYU1J?=
- =?utf-8?B?bkQ0andBZGR4aWg5OWxzakkrYm44dDBkRFliSW5UalRVcm1xTzJUNVc1bDNG?=
- =?utf-8?B?MmVQRzhqdzNWNlh6eTJoTm5CM1JzeWRIZjJ5YStCN2grZ1N0MEs5ek1sb0xS?=
- =?utf-8?B?T3gwNW5rSExGRHNiY2J4a2JNamE4Zll1SHozTUl1RDFJOVZMR2xFd0FwNHVw?=
- =?utf-8?B?cGt2V05CZzBkUWE4RlpEMnZTK1BUVU1rNE1BQXdyNitNdlYxUVBTeWdCbmpL?=
- =?utf-8?B?dE12N3dyWEtVQndCSDRzRFhzZzJyN0RVbWxwdHRNTkJLdXVob3JCVHczUklP?=
- =?utf-8?B?SVJFWndHbU1yZGdjU3ZFTkNnUjNRanVjU3ZBTnk2ZDNYbG14NkRwY0hLK1pu?=
- =?utf-8?B?aVUwT2JhMHdBS1ZST0ZNTURTMDQ1bEJDWU9KTlhDVjVidXZYT2ZkZnliemtX?=
- =?utf-8?B?UFIyVGg0V0Y0eFhJZC9pSTREZUFCWUFkS20vZk1WMjB4UWhEUzFUQzNIdUZp?=
- =?utf-8?B?NC9QTVdMdSt3NFJ2dFZOd09oNmVkK0JUZ3Q4Skt2aUtwYzRqdC9EbS9tMnZI?=
- =?utf-8?B?YklIdXFVK1lXdVRCUjU5OEtycWhKUml4UkoyZDdYUUR2SGhwK2NURFpjR1lS?=
- =?utf-8?B?ZTg4OVZaamV1b1pYTzRVV1JFbk9oZzhwc2dkQ1VXbll4VlFzZ1J6OVhmai82?=
- =?utf-8?B?Y2xKcExLMmJ2bnI4cG1TZDZkeTdUSlZQQ0VWbVBQQjRvMTU1MjRvbHlVaXlX?=
- =?utf-8?B?eFlPbkV5L3g5WDZqaWdGaUJtNWpQNjcvN2ZDOWtibjlXZ05hQkdwZXBJL0Qr?=
- =?utf-8?B?TUNHRFlLUTYrQjgyVGg1aTJCOVk5MFFrQU84ZXB4ZDJMTmwyeW94TldzRzZK?=
- =?utf-8?B?a2pYSytpLzJPTGhUTUxad1UydHlEblZ5ZnM0czE5MTZPeWpSVXpjVnd2dHJF?=
- =?utf-8?B?eEpySC94RkIwNERmSlMvQll4MnJHUTE0Vm9jczNOR3JsaUhzTGVnd1lRb2R6?=
- =?utf-8?B?dlh6R0Y0eDJJZ1NYdWtSUnVKc0pUeHI1dnc0Sm9yU0JTS1VzQkZURW9oWnYz?=
- =?utf-8?B?dm1MQnhGeEdMc1ovNFE0WHpneGZJOWFrcWRORjVVWVNrNk1oMWNyVVg0YzNC?=
- =?utf-8?Q?14PoikOw4FrFSilH7W4DAwtktFwXc+Eakoq6kF0durzC?=
+	=?utf-8?B?OUZXTnhmNmNFYUVLUWhqOHhvZlV3eWRkempTc0h0WlpUY01VdUtGNVJnSDcv?=
+ =?utf-8?B?VmxudXB4enpZSUlPZmFOYU1XMUVIUlJyOEFNUG5RWnRRRjNTMU0zelJqUS90?=
+ =?utf-8?B?QTE0MmF2SHZHMWFTNFBkUnZFLzd0cVVSZ213cXBlZUxKUWFEY1prVlFFbnFD?=
+ =?utf-8?B?dGcyRlJ3YWZFSndEVm1ZaE9pU0JjTEwzNGVDcDRhcmw0Q3d1dkR0Y0c1dGtS?=
+ =?utf-8?B?QzFzL3hLbTBXWlZhRDV5eHRqMVQxaWZkM1A4b1F2ajMreWNNM0dSRDhtR2Ev?=
+ =?utf-8?B?cU5iaEVLaHNRalJ2V0xiVmp2OFJmYWtDVndXYzBwdVd5OU1rZC9jSFFQK0FY?=
+ =?utf-8?B?TGN5dmF0U2ZiYmF3ZkdnbjBKTmo1aHNRREpjSTBjRlJpdGNPMTVPSnJtR0ox?=
+ =?utf-8?B?R3JqV0dNU2NVVndqL2xuVGhMTmh5a2VhYU5tK0gydHVkQWVIVUxHVU9yZ0R6?=
+ =?utf-8?B?OXNndE9EdHRsUUJSeGpVZWMxZFlCK1NGS3c2bW9KSXg0NjJPSGxsdVZnWjhT?=
+ =?utf-8?B?NUs4NTY4NGZCbDV6SkpYc2V3TEpYSmkrMU12S1d5cXh0Vjgyclpsa0pYYlEr?=
+ =?utf-8?B?YlNNZzZST01NUFFPdHJPdTlOcDltTjhIcWkxLy80ZHNEdXJjRlRHZ3ArUUc0?=
+ =?utf-8?B?ZlpKcFpEYXR1STRPTzQyTnV3Qm5KOVVrQU8vNDFiZ2NTMGN1SDRyWVV4WG56?=
+ =?utf-8?B?eGVWMFVIM0tLTEpZWjJWTDFIZlpybUdlc3o3RS9mVTdZTTliRmFsNUFHclVG?=
+ =?utf-8?B?eUNxTU9mZkFHbEp1bzJQd1NwV2NGYms3dE4xYXIwSHNLQjZrWWYvSFgzVXFJ?=
+ =?utf-8?B?TjBBdU1BUjJ0K2dLcUwzVmxuQVp3K1dYdFlVdUpJaGdBOWt6TWhHZ3N5Y29J?=
+ =?utf-8?B?ak9JUlh2dkE2bVR0NUJEdjBzQ01xTEFBYlFmQWNtV2xrQXpqcVZoVlhZNm1r?=
+ =?utf-8?B?T2hCTXRaUG9ZcGxUUUhzVDdibU1mbUNJUlhMMXVLZUtCd0tQNm9GbEVSRVZn?=
+ =?utf-8?B?a0Q3cnBhWUNEZStuSHRuSnQ2emZPTjBUbXpzV3B6dUYvaVozNDRVWm9uR0VH?=
+ =?utf-8?B?S2JmVjRvZ1JzTGtRRHl2dS9XVStzZWdwWHRWUmR4ZDFzbW14T3YxRU5kcnd1?=
+ =?utf-8?B?SnF3NTRneHovallyUm5TMlYydk05M0dZQTBEZGVNcjI2V29HNmRZc2JiL01O?=
+ =?utf-8?B?L3loeU91ZHZHUnIxZko2YVRWdXZ1ZDdjcXpyU0FVYWE1UkJuV2tuWVVqNjZQ?=
+ =?utf-8?B?SXB5YlowSy83blNlbmZJWXlmbzBZT25raHREdTZLanNGWEdabnJuMU5pRGFC?=
+ =?utf-8?B?RTF3VzJxVlplNURJNmVhNTBHMGNFN2dvNlBnc3NrZzljaGE3K0xabTVNUG5L?=
+ =?utf-8?B?MzkvbE56SmtaaFpPY1BocDF6a2pKY21HL2lDQkhOelc2d3B2UElUZEtjZ0pu?=
+ =?utf-8?B?RDl5YVQzb2hpdDJpb3JodkdtdENYQlFUVTdsbTdaSGxwUnUvOEdHZWI1Tkc2?=
+ =?utf-8?B?TCtPUVgzd1M0WVFBYngxWnlvaUJlY2cwVW5VenZvMGU1VVVseXhrZkpoR2pW?=
+ =?utf-8?B?ZlNCaHlLeXhzL2RYZjFhbVc2KzYyamJLM25makZZT1o2UW4xcnlJQzJvOGRZ?=
+ =?utf-8?B?a1BZVlducXFJWnlseWxuSVNZQVBYZTdRM3BJNzhPWDQyOVpQdTEyWk1OdXNy?=
+ =?utf-8?B?ejkzTmx4L290SG5sV0Y2VElGU0dyaWNVbGpOb21LWWNMRDd3NXRrbmVGMWh4?=
+ =?utf-8?B?TkYwNEc3VUVtTWxiZXJwYTJudDRQMTRGd2F0dTM1akZZR2pqSmdFU1lYd3Rn?=
+ =?utf-8?B?eEExdis5RUZ4YmtWL2k0by9BZDBacUV2OVFnT2tVRGpqeUwzMUZPQ0lpc3dH?=
+ =?utf-8?B?RnJVcDNZS2JXaG9ZblFQR1RpU2tzbXVMRlVUeXBKZTNteFYrMmpraCt2ekFG?=
+ =?utf-8?B?SGFLQ1Q0bHhqdlZ2SGpyempIc2RrRVFaZTVkd2FiZEpibVBjMEJxV00yaW9V?=
+ =?utf-8?B?RCtjT2NjVWJBWGtURnkxRnRyVlBvYnZYOFpQdWQvQUpVRlc3WStSazAvd0NK?=
+ =?utf-8?B?c1lTZ25penRrZEw4VXZrQWxleTAvS2lnTFp4YXNPL2hXdzE3MHZQT3ZSVGpX?=
+ =?utf-8?B?a0pLa0hsY0lpTWZnWGt5eUdWc2R0cktONERwZHVFNjV0c0R6NnRtQ3NweHEy?=
+ =?utf-8?Q?SI6NiqjONtMzFYI1rxgfKhMd+cw0j02PUJaWAGkKalNW?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0624d80e-c241-408d-7d3e-08ddaf34bde3
+X-MS-Exchange-CrossTenant-Network-Message-Id: aef7c337-b87a-433f-f742-08ddaf34c1ee
 X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 13:25:21.6763
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 13:25:28.4578
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vi6EbOkPiL7ntJ+y6ZIfVDnuSTVJ9GseS3kmqern/1ms9Ut393OKeQV2NtyDv5NcSni0XGIj0AY2J5C/askUIQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ta+Vc1WbMtbnPayCkN6ybL36luhmVI7ACPdkvpY56DXRtW2UknGpHnCwWLWPRFreRmDdPIHLmcZPg8IsrMvY/w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4353
 
-FWSEC-FRTS is the first firmware we need to run on the GSP falcon in
-order to initiate the GSP boot process. Introduce the structure that
-describes it.
+From: Joel Fernandes <joelagnelf@nvidia.com>
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+The PMU table in the FWSEC image has to be located to locate the start
+of the Falcon ucode in the same or another FWSEC image. Add support for
+the same.
+
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- drivers/gpu/nova-core/firmware.rs | 45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ drivers/gpu/nova-core/vbios.rs | 179 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 177 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
-index 4b8a38358a4f6da2a4d57f8db50ea9e788c3e4b5..2f4f5c7c7902a386a44bc9cf5eb6d46375fe0e5a 100644
---- a/drivers/gpu/nova-core/firmware.rs
-+++ b/drivers/gpu/nova-core/firmware.rs
-@@ -41,6 +41,51 @@ pub(crate) fn new(dev: &device::Device, chipset: Chipset, ver: &str) -> Result<F
+diff --git a/drivers/gpu/nova-core/vbios.rs b/drivers/gpu/nova-core/vbios.rs
+index b9879590ae3aae6517683a6ed02f7f639055598e..445b7ee5893c9d16a82254e70d937a902b1d0fae 100644
+--- a/drivers/gpu/nova-core/vbios.rs
++++ b/drivers/gpu/nova-core/vbios.rs
+@@ -330,6 +330,111 @@ fn image_size_bytes(&self) -> usize {
      }
  }
  
-+/// Structure used to describe some firmwares, notably FWSEC-FRTS.
-+#[repr(C)]
-+#[derive(Debug, Clone)]
-+pub(crate) struct FalconUCodeDescV3 {
-+    /// Header defined by `NV_BIT_FALCON_UCODE_DESC_HEADER_VDESC*` in OpenRM.
-+    hdr: u32,
-+    /// Stored size of the ucode after the header.
-+    stored_size: u32,
-+    /// Offset in `DMEM` at which the signature is expected to be found.
-+    pub(crate) pkc_data_offset: u32,
-+    /// Offset after the code segment at which the app headers are located.
-+    pub(crate) interface_offset: u32,
-+    /// Base address at which to load the code segment into `IMEM`.
-+    pub(crate) imem_phys_base: u32,
-+    /// Size in bytes of the code to copy into `IMEM`.
-+    pub(crate) imem_load_size: u32,
-+    /// Virtual `IMEM` address (i.e. `tag`) at which the code should start.
-+    pub(crate) imem_virt_base: u32,
-+    /// Base address at which to load the data segment into `DMEM`.
-+    pub(crate) dmem_phys_base: u32,
-+    /// Size in bytes of the data to copy into `DMEM`.
-+    pub(crate) dmem_load_size: u32,
-+    /// Mask of the falcon engines on which this firmware can run.
-+    pub(crate) engine_id_mask: u16,
-+    /// ID of the ucode used to infer a fuse register to validate the signature.
-+    pub(crate) ucode_id: u8,
-+    /// Number of signatures in this firmware.
-+    pub(crate) signature_count: u8,
-+    /// Versions of the signatures, used to infer a valid signature to use.
-+    pub(crate) signature_versions: u16,
-+    _reserved: u16,
++/// BIOS Information Table (BIT) Header
++/// This is the head of the BIT table, that is used to locate the Falcon data.
++/// The BIT table (with its header) is in the PciAtBiosImage and the falcon data
++/// it is pointing to is in the FwSecBiosImage.
++#[derive(Debug, Clone, Copy)]
++#[expect(dead_code)]
++struct BitHeader {
++    /// 0h: BIT Header Identifier (BMP=0x7FFF/BIT=0xB8FF)
++    id: u16,
++    /// 2h: BIT Header Signature ("BIT\0")
++    signature: [u8; 4],
++    /// 6h: Binary Coded Decimal Version, ex: 0x0100 is 1.00.
++    bcd_version: u16,
++    /// 8h: Size of BIT Header (in bytes)
++    header_size: u8,
++    /// 9h: Size of BIT Tokens (in bytes)
++    token_size: u8,
++    /// 10h: Number of token entries that follow
++    token_entries: u8,
++    /// 11h: BIT Header Checksum
++    checksum: u8,
 +}
 +
-+// To be removed once that code is used.
-+#[expect(dead_code)]
-+impl FalconUCodeDescV3 {
-+    /// Returns the size in bytes of the header.
-+    pub(crate) fn size(&self) -> usize {
-+        const HDR_SIZE_SHIFT: u32 = 16;
-+        const HDR_SIZE_MASK: u32 = 0xffff0000;
++impl BitHeader {
++    fn new(data: &[u8]) -> Result<Self> {
++        if data.len() < 12 {
++            return Err(EINVAL);
++        }
 +
-+        ((self.hdr & HDR_SIZE_MASK) >> HDR_SIZE_SHIFT) as usize
++        let mut signature = [0u8; 4];
++        signature.copy_from_slice(&data[2..6]);
++
++        // Check header ID and signature
++        let id = u16::from_le_bytes([data[0], data[1]]);
++        if id != 0xB8FF || &signature != b"BIT\0" {
++            return Err(EINVAL);
++        }
++
++        Ok(BitHeader {
++            id,
++            signature,
++            bcd_version: u16::from_le_bytes([data[6], data[7]]),
++            header_size: data[8],
++            token_size: data[9],
++            token_entries: data[10],
++            checksum: data[11],
++        })
 +    }
 +}
 +
- pub(crate) struct ModInfoBuilder<const N: usize>(firmware::ModInfoBuilder<N>);
++/// BIT Token Entry: Records in the BIT table followed by the BIT header
++#[derive(Debug, Clone, Copy)]
++#[expect(dead_code)]
++struct BitToken {
++    /// 00h: Token identifier
++    id: u8,
++    /// 01h: Version of the token data
++    data_version: u8,
++    /// 02h: Size of token data in bytes
++    data_size: u16,
++    /// 04h: Offset to the token data
++    data_offset: u16,
++}
++
++// Define the token ID for the Falcon data
++const BIT_TOKEN_ID_FALCON_DATA: u8 = 0x70;
++
++impl BitToken {
++    /// Find a BIT token entry by BIT ID in a PciAtBiosImage
++    fn from_id(image: &PciAtBiosImage, token_id: u8) -> Result<Self> {
++        let header = &image.bit_header;
++
++        // Offset to the first token entry
++        let tokens_start = image.bit_offset + header.header_size as usize;
++
++        for i in 0..header.token_entries as usize {
++            let entry_offset = tokens_start + (i * header.token_size as usize);
++
++            // Make sure we don't go out of bounds
++            if entry_offset + header.token_size as usize > image.base.data.len() {
++                return Err(EINVAL);
++            }
++
++            // Check if this token has the requested ID
++            if image.base.data[entry_offset] == token_id {
++                return Ok(BitToken {
++                    id: image.base.data[entry_offset],
++                    data_version: image.base.data[entry_offset + 1],
++                    data_size: u16::from_le_bytes([
++                        image.base.data[entry_offset + 2],
++                        image.base.data[entry_offset + 3],
++                    ]),
++                    data_offset: u16::from_le_bytes([
++                        image.base.data[entry_offset + 4],
++                        image.base.data[entry_offset + 5],
++                    ]),
++                });
++            }
++        }
++
++        // Token not found
++        Err(ENOENT)
++    }
++}
++
+ /// PCI ROM Expansion Header as defined in PCI Firmware Specification.
+ /// This is header is at the beginning of every image in the set of
+ /// images in the ROM. It contains a pointer to the PCI Data Structure
+@@ -575,7 +680,8 @@ fn new(pdev: &pci::Device, data: &[u8]) -> Result<Self> {
  
- impl<const N: usize> ModInfoBuilder<N> {
+ struct PciAtBiosImage {
+     base: BiosImageBase,
+-    // PCI-AT-specific fields can be added here in the future.
++    bit_header: BitHeader,
++    bit_offset: usize,
+ }
+ 
+ struct EfiBiosImage {
+@@ -599,7 +705,7 @@ impl TryFrom<BiosImageBase> for BiosImage {
+ 
+     fn try_from(base: BiosImageBase) -> Result<Self> {
+         match base.pcir.code_type {
+-            0x00 => Ok(BiosImage::PciAt(PciAtBiosImage { base })),
++            0x00 => Ok(BiosImage::PciAt(base.try_into()?)),
+             0x03 => Ok(BiosImage::Efi(EfiBiosImage { base })),
+             0x70 => Ok(BiosImage::Nbsi(NbsiBiosImage { base })),
+             0xE0 => Ok(BiosImage::FwSec(FwSecBiosImage { base })),
+@@ -679,3 +785,72 @@ fn new(pdev: &pci::Device, data: &[u8]) -> Result<Self> {
+         })
+     }
+ }
++
++/// The PciAt BIOS image is typically the first BIOS image type found in the
++/// BIOS image chain. It contains the BIT header and the BIT tokens.
++impl PciAtBiosImage {
++    /// Find a byte pattern in a slice
++    fn find_byte_pattern(haystack: &[u8], needle: &[u8]) -> Result<usize> {
++        haystack
++            .windows(needle.len())
++            .position(|window| window == needle)
++            .ok_or(EINVAL)
++    }
++
++    /// Find the BIT header in the PciAtBiosImage
++    fn find_bit_header(data: &[u8]) -> Result<(BitHeader, usize)> {
++        let bit_pattern = [0xff, 0xb8, b'B', b'I', b'T', 0x00];
++        let bit_offset = Self::find_byte_pattern(data, &bit_pattern)?;
++        let bit_header = BitHeader::new(&data[bit_offset..])?;
++
++        Ok((bit_header, bit_offset))
++    }
++
++    /// Get a BIT token entry from the BIT table in the PciAtBiosImage
++    fn get_bit_token(&self, token_id: u8) -> Result<BitToken> {
++        BitToken::from_id(self, token_id)
++    }
++
++    /// Find the Falcon data pointer structure in the PciAtBiosImage
++    /// This is just a 4 byte structure that contains a pointer to the
++    /// Falcon data in the FWSEC image.
++    fn falcon_data_ptr(&self, pdev: &pci::Device) -> Result<u32> {
++        let token = self.get_bit_token(BIT_TOKEN_ID_FALCON_DATA)?;
++
++        // Make sure we don't go out of bounds
++        if token.data_offset as usize + 4 > self.base.data.len() {
++            return Err(EINVAL);
++        }
++
++        // read the 4 bytes at the offset specified in the token
++        let offset = token.data_offset as usize;
++        let bytes: [u8; 4] = self.base.data[offset..offset + 4].try_into().map_err(|_| {
++            dev_err!(pdev.as_ref(), "Failed to convert data slice to array");
++            EINVAL
++        })?;
++
++        let data_ptr = u32::from_le_bytes(bytes);
++
++        if (data_ptr as usize) < self.base.data.len() {
++            dev_err!(pdev.as_ref(), "Falcon data pointer out of bounds\n");
++            return Err(EINVAL);
++        }
++
++        Ok(data_ptr)
++    }
++}
++
++impl TryFrom<BiosImageBase> for PciAtBiosImage {
++    type Error = Error;
++
++    fn try_from(base: BiosImageBase) -> Result<Self> {
++        let data_slice = &base.data;
++        let (bit_header, bit_offset) = PciAtBiosImage::find_bit_header(data_slice)?;
++
++        Ok(PciAtBiosImage {
++            base,
++            bit_header,
++            bit_offset,
++        })
++    }
++}
 
 -- 
 2.49.0
