@@ -1,87 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD1720E711;
-	Thu, 19 Jun 2025 23:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BB420E711;
+	Thu, 19 Jun 2025 23:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750374938; cv=none; b=pjrIANFy1GJBxg/2mFgzNGc4rftjKL4svqHDhS8sF4xtcUrchHjXD1u8GkbFbr7cWN61SzppyP+tipyDLwD5iFJwLg/H7da1ZnqWFNceMvKfPaEfJWPuWTlg0odPx5Az635rFeWVNJvPJESYZJfvJ1CrMcPtzD+PYESXLnYg1oA=
+	t=1750375179; cv=none; b=gPglQ8qO+vyHvRvYZbyHgg9yhQYALKj2mqAiDwyfEemXM1SCb8mySoxu+nndxcytHJ4yIppKsutJubbDXbiAikhvlJfhxKM3eZENeCQKx4rtRI2kFdmxdgVQJ1+0qb+6sWFNQQPEwWz6nGLTan6X2esmAb8D2WxFy6B1cVIxbBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750374938; c=relaxed/simple;
-	bh=ypENjnXGcORJ+i/IA+BCw64f/efrS3jbVTcazOylpec=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cw7K2HaHRFHwcQNchmwnb9OvMw31xHuLzb43p+XWI2u9rdT28F8ZVy/OIyQSGH7rgS4/WvaKgCdz4yWNiTOQ8/f6gRRK48AqtqEjDQNPQryiEa+jOvptpUZPzUNJw2yhoBG4QCDIVAA2Ve2dUukZK+LrOGHBJhUPxvJn1jHz3t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XbT+WCac; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750375179; c=relaxed/simple;
+	bh=1iitjCLE0DZH0hmZdXHmHbGc0acxiTVlORAr7x2Ff2U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DUb02xl6sv+jpkpI96r73maMysJonhCLkRFvk7uJHGvlIC/8BRGtr1KFvjgN76jDJ2BHFWCzOvLsfhRA18uliW7o285k9mq2sHWXApS1pXKsuDuVzV5IcQJEskowPPKP4nLlzmjOPTg/HB1oj+Z4j+G5nqtPZDxZDNymKyTKkA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHGCIDVT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XbT+WCac"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38341C4CEEA;
-	Thu, 19 Jun 2025 23:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750374937;
-	bh=ypENjnXGcORJ+i/IA+BCw64f/efrS3jbVTcazOylpec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XbT+WCacTxbTBGEiGgxzQac8pyEV1XLnUuVgN+OPW5Z6f+UCm391ZvUntk7Dx6e/5
-	 3JeekVtCJmE3jFLRwB4JJOHF98zf7CI1XIGnFGDQHeeqeY9eVvxS65ctv5/S8z1T1C
-	 IJAEv7xel9YqA3uC55aejezeXIXqIUIvHJ3nu25k=
-Date: Thu, 19 Jun 2025 16:15:36 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Song Liu
- <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>, linux-raid@vger.kernel.org
-Subject: Re: [v2 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
-Message-Id: <20250619161536.23338f800e313f9d84b1560c@linux-foundation.org>
-In-Reply-To: <aFPbSvxCaxhFHc5s@gondor.apana.org.au>
-References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
-	<aFPbSvxCaxhFHc5s@gondor.apana.org.au>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHGCIDVT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2EB4C4CEEA;
+	Thu, 19 Jun 2025 23:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750375179;
+	bh=1iitjCLE0DZH0hmZdXHmHbGc0acxiTVlORAr7x2Ff2U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=kHGCIDVTAXuEpNeOWqvBztDwNhtbC83OdZWsNR7VxKi1DmeB59lnsfvgfRSDBi0C1
+	 DDaAdjCmRPIZs+3EMompPWmZpK2yzknxZSoWeAdGJ9z9S2lz8MKsDFgjgL/HPX0NLa
+	 HZC4N/dn7FxZj9FPVK1bqhTj21lPCWtPrZVQVi0pNSLezl+0acGbqD1uFW+MKITodj
+	 5HgaQxtTQdUABL1Pee4+F8KmHyHlFWm8U/2hNicNcM2fuTN1Ce8A8AjC/jE4s9ToKT
+	 +/XP1XOSo+Ktn1d1cM0RpT/gOkzzCs4MvoKk/cldSm9q5Rod3xhRCBFgRyh/ny5Ssk
+	 /2ZaD1IloRHYQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E3138111DD;
+	Thu, 19 Jun 2025 23:20:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [Patch net-next v3] net: mana: Record doorbell physical address
+ in PF
+ mode
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175037520700.1016629.11511793485782650744.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 23:20:07 +0000
+References: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
+To: Long Li <longli@linuxonhyperv.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
+ horms@kernel.org, kotaranov@microsoft.com, schakrabarti@linux.microsoft.com,
+ erick.archer@outlook.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, longli@microsoft.com
 
-On Thu, 19 Jun 2025 17:41:30 +0800 Herbert Xu <herbert@gondor.apana.org.au> wrote:
+Hello:
 
-> On Mon, Mar 17, 2025 at 05:02:28PM +0800, Herbert Xu wrote:
-> > Use the system-wide zero page instead of a custom zero page.
-> > 
-> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 17 Jun 2025 18:36:46 -0700 you wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Why hasn't this patch been applied yet?
+> MANA supports RDMA in PF mode. The driver should record the doorbell
+> physical address when in PF mode.
 > 
+> The doorbell physical address is used by the RDMA driver to map
+> doorbell pages of the device to user-mode applications through RDMA
+> verbs interface. In the past, they have been mapped to user-mode while
+> the device is in VF mode. With the support for PF mode implemented,
+> also expose those pages in PF mode.
+> 
+> [...]
 
-Dunno.  I added it to mm.git and I shall drop it again if/when this
-patch lands in linux-next via the raid tree (please).
+Here is the summary with links:
+  - [net-next,v3] net: mana: Record doorbell physical address in PF mode
+    https://git.kernel.org/netdev/net/c/e0fca6f2cebf
 
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-btw, I wrote a patch:
-
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: MAINTAINERS: add lib/raid6/ to "SOFTWARE RAID"
-Date: Thu Jun 19 04:13:17 PM PDT 2025
-
-Cc: Song Liu <song@kernel.org>
-Cc: Yu Kuai <yukuai3@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- MAINTAINERS |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/MAINTAINERS~a
-+++ a/MAINTAINERS
-@@ -23057,6 +23057,7 @@ F:	drivers/md/md*
- F:	drivers/md/raid*
- F:	include/linux/raid/
- F:	include/uapi/linux/raid/
-+F:	lib/raid6/
- 
- SOLIDRUN CLEARFOG SUPPORT
- M:	Russell King <linux@armlinux.org.uk>
-_
 
