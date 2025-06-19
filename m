@@ -1,117 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49719247282;
-	Thu, 19 Jun 2025 20:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47626209F2E;
+	Thu, 19 Jun 2025 20:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750364568; cv=none; b=azdwvoCVjE7X10k68Artf7ODpdqvFq5QxHx5Rf3OwP8plY5GY1QXn3XE+cUBhv1bQtefe44OvYD4Dsr/vLwuHNekXv7W1xVEDpjQEgE7qlNUidxsmBPN6Fo7We6k8kG6bswqw8Db4ghECbOLAz79DZgQilqW54M64dQigB1nnmw=
+	t=1750364605; cv=none; b=incoWNd5zt/TI1zglyNyatIE95volFpej+t8olVZboe4zHIKLeAqWZHxpytFubxbC93JWbI9xcQguQuzaLuPmloIudN+kHKYd1btlNWRHd+y7rTjUO9M8/Or0x890Djo8lHWsQiygFEF9Y319uD/PEKqus3JZ5vYGIBgckUhhbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750364568; c=relaxed/simple;
-	bh=1306ugvPqvYx0GNhUobnRO2BRmD0tvRO5GZ6dyr69A0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D33PJxQ9Z+tuoO//AkG6dXN8bYaNIBu2TRPyMqWkIcXrFqE9DH+g1TRws/UV0UNFTCAWHIk7/umZrYp46QjH4LwSpZtprge8ziehwzyYlNcSIKvt/VFml8zApWtSwYwMA7vXtSW8JZD0UGgx6npAS0K6+t8E5x+LwphLZP+hZcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h+tgCKKi; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750364605; c=relaxed/simple;
+	bh=6Z+Lr29kl/c7pwUb6n7LMj+IZOon/O/gvj2xYKSCLVc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gRb193HGnXO+rYF2TnfaKiYcaIpZUPlUzL6Wepa4U9+bQoKyv7IkWWJaSV7yGcN5FfHtkpuirFXU/XUXrLckus3eStDnRVEAdEhB+CKkTeyjOuJZRDmEWzOFP4LBuP/Y+Ylb1hv/nGj4eAy799SGrTySUwgns2QLFMuTS7e+Hb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6gszazx; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h+tgCKKi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750364567; x=1781900567;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1306ugvPqvYx0GNhUobnRO2BRmD0tvRO5GZ6dyr69A0=;
-  b=h+tgCKKinRvHLtC60qB7dF2+bk2mybbl33reQHvAUpU3nrlK+zJ2j/p+
-   Rv4x5zfdy0lAIZI/QHdagMNY79SSl63sWXA2/vUVg6WrQlUs1dEw+M1RC
-   YsyXATkQltzEn0USuIVSnA6fvZzzQxY42TNBANOqWHj5GoD8NB9Qndm5d
-   1gvaxMsd1ugxGmTeNK96KIZZbV/rsk1+iY2dZaxX9XTRZ9YmZ+zSNxjpq
-   gL/Wei/JfW0s6rU2l0EM/DdgtQB+oIuz0fT9s3rM4aH0T8XUj5WCWDcJZ
-   G8/TGD3NPbuSjmpJxhtO/V3wB7bs4AL74OI17ing8alPxHDsykeRHfr+T
-   w==;
-X-CSE-ConnectionGUID: DZC/fWJMTuaCCKfVknXyow==
-X-CSE-MsgGUID: WeITPr8tSf+dnsiUpFuliw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51852704"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="51852704"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 13:22:47 -0700
-X-CSE-ConnectionGUID: HbfmO9QBTz2wrgvuPHbqPA==
-X-CSE-MsgGUID: fjTzpWQ/Sxa+NwOTsif4Aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="155290205"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 19 Jun 2025 13:22:41 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSLmQ-000L5G-2H;
-	Thu, 19 Jun 2025 20:22:38 +0000
-Date: Fri, 20 Jun 2025 04:22:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Will McVicker <willmcvicker@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, Will McVicker <willmcvicker@google.com>,
-	Donghoon Yu <hoony.yu@samsung.com>,
-	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	John Stultz <jstultz@google.com>,
-	Youngmin Nam <youngmin.nam@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/6] clocksource/drivers/exynos_mct: Add module support
-Message-ID: <202506200445.1vdWU11a-lkp@intel.com>
-References: <20250618210851.661527-6-willmcvicker@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6gszazx"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2353a2bc210so10149625ad.2;
+        Thu, 19 Jun 2025 13:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750364603; x=1750969403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PrYGJsuypre3Z7nW8DXdS5477XT5Cbwa9Q2vGlevBAI=;
+        b=G6gszazxCA2FtijZ8gx0aV2acpV9SPWpYotDfYlgc7GEggrDFdcbW51QPVAm3KduGQ
+         krMIxnDjvu7OcYtPEGubjcekM5H3Q9hibBS9Ws/zJCNs+qkjy8svXWA6028gV26DKRDa
+         9Qgebo0RsFK1rwNx19XQBvSju1a7naV/QScT8GLJ5isbToMnhgvFEEy1gCyQmbadaGfE
+         puowqAso2Biy/FTM5APRsRBIy29yPkT++qcY0tFidxWWVT3Dt27aE7F8RC08QsUR7HAj
+         P5ZqqMwytzQ5tCfIlh3zZOnXRuWBN3xlCbq8QbFUjVuTo1lt7AvGCmeoBcmtl96Ma6eS
+         YRRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750364603; x=1750969403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PrYGJsuypre3Z7nW8DXdS5477XT5Cbwa9Q2vGlevBAI=;
+        b=FJ/r8Z6ajkCiNmRVDmLo83vy9k4RnXKDQEa3Sts/IDna6UDyNLYJu3Hp+Mx/WPi8gK
+         rQUkRDSqdGqZOtI7R9EkvQ2WBCNs71zQHW5wByDGHxp9E9KAGxbkEjv7K8WpwdycipF/
+         D5XWhXhNn7HULZc1XDjQywFgnDf4UxHrdZR8iCfDz7NcmT0izJEDW3N4hC7C8PNVXWDK
+         OXLFt3gRHd23I93u/kvars/ae1Dkoi2sdCiG3brMLChwgdsT6ncKOVH/c9g7PXjxelpL
+         zmFCyB0C+k5BVWbhGcpttGk6R5lliWycbq2hKVpBhGyjVwDiiOKd3Wv+LQAlraJVWY0v
+         D40Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpNQ/Ccj1ftQbdWjaOupevG68SHyOW7CiwgkG997i7LBuTpskgt/G6XdEWXKIIbWiElcwo4RFdFTKmm2Um@vger.kernel.org, AJvYcCXON62youYUZYUBZCcAhszj57X94TLNcBkN8ENa2lVG19nf+GFRdK5uSgdyOEK1/4J5Dwxg6KoERCpb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDDWbGK8Chaml2CxczbyMmo4YpGOETj7AiMoMi8B51TyGWxY29
+	Mkq9Fy0yOqxTOSiXayW5xFCkKUw004yyXuGiehtjKPda1sGOZqpxxTTM
+X-Gm-Gg: ASbGnct+xIWEjspouTNwJku551CfZZ4SBYZNwiUnoE6ubbdX8PZ6DGCLpZeFeVHxwjK
+	+3mt9fRpq720XrbUzPauTtzhFlz1o2LLyiUsCe76QKbzFiLGNJHp+dwV3p7zfHMjF5C868MKpfp
+	EDsApFZy9eH8m95mmj2bEzccvQXMTPvzAV2+RqHGwKSJHlqquXvMnKbqNkeAWAT/9052M8rYx1r
+	Etfn1h3qr+J9JinWu5SJ2frrypNT9znwOi6L6vKrkHt5Jp2eimp/GhmaGMC0NKVVjC+6HjROMzI
+	HC1Krc4/ElB1SGFRleDf8JMhCo2RyzcmNqCNzfv9dComQlWADRy6xIkNz24KSfE4
+X-Google-Smtp-Source: AGHT+IF1p7zbV+G1dyNemKIN5cDcN6DcrHIA3F6fwW3tefaouBCLINGO5gYdhSlmsd+cyBKasTynuQ==
+X-Received: by 2002:a17:902:e752:b0:237:cadf:9aac with SMTP id d9443c01a7336-237d98e2a87mr2436615ad.29.1750364603511;
+        Thu, 19 Jun 2025 13:23:23 -0700 (PDT)
+Received: from pop-os.. ([2401:4900:1c94:78d8:2e45:4d78:9feb:bce6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a226f64sm2707659a91.4.2025.06.19.13.23.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 13:23:23 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: bp@alien8.de
+Cc: tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abhinav Ananthu <abhinav.ogl@gmail.com>
+Subject: [PATCH] edac: Use sysfs_emit_at() in dimmdev_location_show()
+Date: Fri, 20 Jun 2025 01:51:34 +0530
+Message-Id: <20250619202133.11843-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618210851.661527-6-willmcvicker@google.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Will,
+Replace the use of scnprintf() with sysfs_emit_at() in
+dimmdev_location_show() to format the output into the sysfs buffer.
 
-kernel test robot noticed the following build warnings:
+This change improves clarity and ensures proper bounds checking in
+line with the preferred sysfs_emit() API usage for sysfs 'show'
+functions. The PAGE_SIZE check is now handled internally by the helper.
 
-[auto build test WARNING on tip/timers/core]
-[also build test WARNING on arm64/for-next/core robh/for-next linus/master v6.16-rc2 next-20250619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+No functional change intended.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Will-McVicker/of-irq-Export-of_irq_count-for-modules/20250619-051424
-base:   tip/timers/core
-patch link:    https://lore.kernel.org/r/20250618210851.661527-6-willmcvicker%40google.com
-patch subject: [PATCH 5/6] clocksource/drivers/exynos_mct: Add module support
-config: arm-multi_v7_defconfig (https://download.01.org/0day-ci/archive/20250620/202506200445.1vdWU11a-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506200445.1vdWU11a-lkp@intel.com/reproduce)
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+---
+ drivers/edac/edac_mc_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506200445.1vdWU11a-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: vmlinux: section mismatch in reference: mct_init_dt+0x164 (section: .text) -> register_current_timer_delay (section: .init.text)
->> WARNING: modpost: vmlinux: section mismatch in reference: mct_init_dt+0x178 (section: .text) -> sched_clock_register (section: .init.text)
-WARNING: modpost: vmlinux: section mismatch in reference: mct_init_dt+0x20c (section: .text) -> register_current_timer_delay (section: .init.text)
-WARNING: modpost: vmlinux: section mismatch in reference: mct_init_dt+0x220 (section: .text) -> sched_clock_register (section: .init.text)
-
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 0f338adf7d93..1b611650de3f 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -500,7 +500,7 @@ static ssize_t dimmdev_location_show(struct device *dev,
+ 	ssize_t count;
+ 
+ 	count = edac_dimm_info_location(dimm, data, PAGE_SIZE);
+-	count += scnprintf(data + count, PAGE_SIZE - count, "\n");
++	count += sysfs_emit_at(data, count, "\n");
+ 
+ 	return count;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
