@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3C0254AFE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75762586C8;
 	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750315821; cv=none; b=ZOJ+BvGTG6jv7I8WRj/nde4fxE2ZGiYVo++DbQry6u57hFUgOvV54Jq+FwpSitYkbomwDtLC+IxBcyOFeAufkUblQf5Xqrk+xnsaDWEYpvG3MyyH+1Zqyh8E1sIFAyq2ab/OFFFMB+f3nghQ84eVKkwP01Nfo9QBPtUAvset4w0=
+	t=1750315821; cv=none; b=XJtP+Luqc5iwheOMUFHskeo0oh8NkjRuuXnxLO5rkoxjsZK639VnKWnfYtrdWKeAxXthX7dd2Nf1VhdXtCyYa6AqAjVFa8YW2cepAtIoU9X0lszIRWm2Pdkxt5pN/oJZBfm9m7/TfQt7PF9cFq7MCUM+T0B0n4eHr4xYuAHPRxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750315821; c=relaxed/simple;
-	bh=EwIFpAi3HCDmOVRmQu64Rd5sg5y7yc/MvVhjn7Gv4Ig=;
+	bh=ILMkIMZRBVquHVA7G08AHG7My5iKhrMAj1qGVO2Pimg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nzktr3M/DgPZ655HNY0ysmMwNEHS47EqwXJn7hXHQOoc2JHQCFonYweiH9mxeQ1WetnL3oNOU6Gb0w+G4BtdW/O7/jvy9Hdt9kbxjXc1ZDTnj4/ANbG3CFjqJjVAK0Z8AoCVb/7vYqXBfgLJKByJhpMpRRS0Pk+UQzLlRMsJ9XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dahwDe1b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iH1hVdjufvz2M/2FwkhotmIu6TDbJg+hTfevI1sek0EEBhO6iLNmxTf1r/mUmQoO7oIkdH7jH7PAdffZwALILbOEmGZ1qsdvDOhbgwMBdvYaZmPnhO6ev67qVnN5/d3jw1+1xKiMPmZKlfQ9Y/xDeGB5hRCk3xLsZYXllU3gWcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvi+XkxJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dahwDe1b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB2DC19422;
-	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvi+XkxJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7808C4CEF2;
+	Thu, 19 Jun 2025 06:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750315821;
-	bh=EwIFpAi3HCDmOVRmQu64Rd5sg5y7yc/MvVhjn7Gv4Ig=;
+	bh=ILMkIMZRBVquHVA7G08AHG7My5iKhrMAj1qGVO2Pimg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dahwDe1b5Q4C+NkIKgGhqv3qQuLKef4DY7VmW5wYFbN+6rGOsCVZ8NXb+P1i3wtlc
-	 int0aiG1OnZk+U8wXIOjrCqpNzd2wdHV8LVCvpsQW33K+o3AM9HvmJdzSOPOUfGAfy
-	 bqTQETcvNxKu7iyqO9YcJ6JYAktiKOaI6G+wQOuRvrhZrYtBzXBgdD6WsEeUZ8JpA3
-	 ii8ZiPnue9+VC4yRyoCkBjE5jzgLn1/DL2tFF9uzbRlGUVe2OpNdy8Xp2RcRIfgj6j
-	 G19jSmMcb0yD5GfDo7mq75lOviaTbqqfyIBqKdA3PqeVhDmPX8VVG+jvSS3pqB+5lv
-	 8579pQofJmDkA==
+	b=gvi+XkxJx9NyjWH4FQuYyxCXsxOPIRBMeVLIsvasylQIsXH0LDKGZoWNdN27fTeNn
+	 D/EUm2uleq384bGoGISxwyxwR0Q9MlU1aEL/C1sT7cEOcZQL2du879XTT7FmU/6Ya4
+	 RcBo5O464qnhod6UyWxD63xCE5gw1pIeI/QrW4g+SQW92ZsTPox/SnWmAgeeTrOv7o
+	 Ixy5PraOEAatiieJQ1zaLmPtc4tEa2+k+cTekgH2dyc0kPqIWoDg2cLJ6OpajI47py
+	 GOlAoWjch2aBw8NtiO1Svf0wkKb1wDcHliTTO8PL175u7JPg0qvAnuHgKrUTQ6Ktfl
+	 hnxNnaRJjSp3g==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uS96J-00000003dHY-18hE;
-	Thu, 19 Jun 2025 08:50:19 +0200
+	id 1uS96I-00000003dGn-3qnu;
+	Thu, 19 Jun 2025 08:50:18 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
@@ -46,6 +46,8 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Paolo Abeni" <pabeni@redhat.com>,
 	"Ruben Wauters" <rubenru09@aol.com>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
@@ -53,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v7 16/17] docs: conf.py: several coding style fixes
-Date: Thu, 19 Jun 2025 08:49:09 +0200
-Message-ID: <5df3f27dde61e0d0dcdb0d74be753662890c6886.1750315578.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 04/17] tools: ynl_gen_rst.py: Split library from command line tool
+Date: Thu, 19 Jun 2025 08:48:57 +0200
+Message-ID: <4e26583ad1d8a05ba40cada4213c95120bd45efc.1750315578.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750315578.git.mchehab+huawei@kernel.org>
 References: <cover.1750315578.git.mchehab+huawei@kernel.org>
@@ -65,706 +67,860 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-conf.py is missing a SPDX header and doesn't really have
-a proper python coding style. It also has an obsolete
-commented LaTeX syntax that doesn't work anymore.
+As we'll be using the Netlink specs parser inside a Sphinx
+extension, move the library part from the command line parser.
 
-Clean it up a little bit with some help from autolints
-and manual adjustments.
+No functional changes.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/conf.py | 367 +++++++++++++++++++++---------------------
- 1 file changed, 181 insertions(+), 186 deletions(-)
+ tools/net/ynl/pyynl/lib/__init__.py      |   2 +
+ tools/net/ynl/pyynl/lib/doc_generator.py | 409 +++++++++++++++++++++++
+ tools/net/ynl/pyynl/ynl_gen_rst.py       | 361 +-------------------
+ 3 files changed, 419 insertions(+), 353 deletions(-)
+ create mode 100644 tools/net/ynl/pyynl/lib/doc_generator.py
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 6af61e26cec5..5eddf5885f77 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -1,24 +1,28 @@
--# -*- coding: utf-8 -*-
--#
--# The Linux Kernel documentation build configuration file, created by
--# sphinx-quickstart on Fri Feb 12 13:51:46 2016.
--#
--# This file is execfile()d with the current directory set to its
--# containing dir.
--#
--# Note that not all possible configuration values are present in this
--# autogenerated file.
--#
--# All configuration values have a default; values that are commented out
--# serve to show the default.
-+# SPDX-License-Identifier: GPL-2.0-only
-+# pylint: disable=C0103,C0209
+diff --git a/tools/net/ynl/pyynl/lib/__init__.py b/tools/net/ynl/pyynl/lib/__init__.py
+index 71518b9842ee..5f266ebe4526 100644
+--- a/tools/net/ynl/pyynl/lib/__init__.py
++++ b/tools/net/ynl/pyynl/lib/__init__.py
+@@ -4,6 +4,8 @@ from .nlspec import SpecAttr, SpecAttrSet, SpecEnumEntry, SpecEnumSet, \
+     SpecFamily, SpecOperation, SpecSubMessage, SpecSubMessageFormat
+ from .ynl import YnlFamily, Netlink, NlError
+ 
++from .doc_generator import YnlDocGenerator
++
+ __all__ = ["SpecAttr", "SpecAttrSet", "SpecEnumEntry", "SpecEnumSet",
+            "SpecFamily", "SpecOperation", "SpecSubMessage", "SpecSubMessageFormat",
+            "YnlFamily", "Netlink", "NlError"]
+diff --git a/tools/net/ynl/pyynl/lib/doc_generator.py b/tools/net/ynl/pyynl/lib/doc_generator.py
+new file mode 100644
+index 000000000000..839e78b39de3
+--- /dev/null
++++ b/tools/net/ynl/pyynl/lib/doc_generator.py
+@@ -0,0 +1,409 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++# -*- coding: utf-8; mode: python -*-
 +
 +"""
-+The Linux Kernel documentation build configuration file.
++    Class to auto generate the documentation for Netlink specifications.
++
++    :copyright:  Copyright (C) 2023  Breno Leitao <leitao@debian.org>
++    :license:    GPL Version 2, June 1991 see linux/COPYING for details.
++
++    This class performs extensive parsing to the Linux kernel's netlink YAML
++    spec files, in an effort to avoid needing to heavily mark up the original
++    YAML file.
++
++    This code is split in two classes:
++        1) RST formatters: Use to convert a string to a RST output
++        2) YAML Netlink (YNL) doc generator: Generate docs from YAML data
 +"""
- 
--import sys
- import os
--import sphinx
- import shutil
++
++from typing import Any, Dict, List
++import os.path
 +import sys
++import argparse
++import logging
++import yaml
 +
-+import sphinx
 +
-+# If extensions (or modules to document with autodoc) are in another directory,
-+# add these directories to sys.path here. If the directory is relative to the
-+# documentation root, use os.path.abspath to make it absolute, like shown here.
-+sys.path.insert(0, os.path.abspath("sphinx"))
++# ==============
++# RST Formatters
++# ==============
++class RstFormatters:
++    SPACE_PER_LEVEL = 4
 +
-+from load_config import loadConfig               # pylint: disable=C0413,E0401
++    @staticmethod
++    def headroom(level: int) -> str:
++        """Return space to format"""
++        return " " * (level * RstFormatters.SPACE_PER_LEVEL)
 +
-+# Minimal supported version
-+needs_sphinx = "3.4.3"
- 
- # Get Sphinx version
--major, minor, patch = sphinx.version_info[:3]
-+major, minor, patch = sphinx.version_info[:3]          # pylint: disable=I1101
- 
- # Include_patterns were added on Sphinx 5.1
- if (major < 5) or (major == 5 and minor < 1):
-@@ -26,32 +30,32 @@ if (major < 5) or (major == 5 and minor < 1):
- else:
-     has_include_patterns = True
-     # Include patterns that don't contain directory names, in glob format
--    include_patterns = ['**.rst']
-+    include_patterns = ["**.rst"]
- 
- # Location of Documentation/ directory
--doctree = os.path.abspath('.')
-+doctree = os.path.abspath(".")
- 
- # Exclude of patterns that don't contain directory names, in glob format.
- exclude_patterns = []
- 
- # List of patterns that contain directory names in glob format.
- dyn_include_patterns = []
--dyn_exclude_patterns = ['output']
-+dyn_exclude_patterns = ["output"]
- 
- # Currently, only netlink/specs has a parser for yaml.
- # Prefer using include patterns if available, as it is faster
- if has_include_patterns:
--    dyn_include_patterns.append('netlink/specs/*.yaml')
-+    dyn_include_patterns.append("netlink/specs/*.yaml")
- else:
--    dyn_exclude_patterns.append('netlink/*.yaml')
--    dyn_exclude_patterns.append('devicetree/bindings/**.yaml')
--    dyn_exclude_patterns.append('core-api/kho/bindings/**.yaml')
-+    dyn_exclude_patterns.append("netlink/*.yaml")
-+    dyn_exclude_patterns.append("devicetree/bindings/**.yaml")
-+    dyn_exclude_patterns.append("core-api/kho/bindings/**.yaml")
- 
- # Properly handle include/exclude patterns
- # ----------------------------------------
- 
 +
- def update_patterns(app):
--
-     """
-     On Sphinx, all directories are relative to what it is passed as
-     SOURCEDIR parameter for sphinx-build. Due to that, all patterns
-@@ -62,15 +66,12 @@ def update_patterns(app):
-     exclude relative patterns that start with "../".
-     """
- 
--    sourcedir = app.srcdir  # full path to the source directory
--    builddir = os.environ.get("BUILDDIR")
--
-     # setup include_patterns dynamically
-     if has_include_patterns:
-         for p in dyn_include_patterns:
-             full = os.path.join(doctree, p)
- 
--            rel_path = os.path.relpath(full, start = app.srcdir)
-+            rel_path = os.path.relpath(full, start=app.srcdir)
-             if rel_path.startswith("../"):
-                 continue
- 
-@@ -80,15 +81,17 @@ def update_patterns(app):
-     for p in dyn_exclude_patterns:
-         full = os.path.join(doctree, p)
- 
--        rel_path = os.path.relpath(full, start = app.srcdir)
-+        rel_path = os.path.relpath(full, start=app.srcdir)
-         if rel_path.startswith("../"):
-             continue
- 
-         app.config.exclude_patterns.append(rel_path)
- 
++    @staticmethod
++    def bold(text: str) -> str:
++        """Format bold text"""
++        return f"**{text}**"
 +
- # helper
- # ------
- 
 +
- def have_command(cmd):
-     """Search ``cmd`` in the ``PATH`` environment.
- 
-@@ -97,24 +100,24 @@ def have_command(cmd):
-     """
-     return shutil.which(cmd) is not None
- 
--# If extensions (or modules to document with autodoc) are in another directory,
--# add these directories to sys.path here. If the directory is relative to the
--# documentation root, use os.path.abspath to make it absolute, like shown here.
--sys.path.insert(0, os.path.abspath('sphinx'))
--from load_config import loadConfig
- 
- # -- General configuration ------------------------------------------------
- 
--# If your documentation needs a minimal Sphinx version, state it here.
--needs_sphinx = '3.4.3'
--
--# Add any Sphinx extension module names here, as strings. They can be
--# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
--# ones.
--extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
--              'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
--              'maintainers_include', 'sphinx.ext.autosectionlabel',
--              'kernel_abi', 'kernel_feat', 'translations', 'parser_yaml']
-+# Add any Sphinx extensions in alphabetic order
-+extensions = [
-+    "automarkup",
-+    "kernel_abi",
-+    "kerneldoc",
-+    "kernel_feat",
-+    "kernel_include",
-+    "kfigure",
-+    "maintainers_include",
-+    "parser_yaml",
-+    "rstFlatTable",
-+    "sphinx.ext.autosectionlabel",
-+    "sphinx.ext.ifconfig",
-+    "translations",
-+]
- 
- # Since Sphinx version 3, the C function parser is more pedantic with regards
- # to type checking. Due to that, having macros at c:function cause problems.
-@@ -189,45 +192,45 @@ autosectionlabel_maxdepth = 2
- # Load math renderer:
- # For html builder, load imgmath only when its dependencies are met.
- # mathjax is the default math renderer since Sphinx 1.8.
--have_latex =  have_command('latex')
--have_dvipng = have_command('dvipng')
-+have_latex = have_command("latex")
-+have_dvipng = have_command("dvipng")
- load_imgmath = have_latex and have_dvipng
- 
- # Respect SPHINX_IMGMATH (for html docs only)
--if 'SPHINX_IMGMATH' in os.environ:
--    env_sphinx_imgmath = os.environ['SPHINX_IMGMATH']
--    if 'yes' in env_sphinx_imgmath:
-+if "SPHINX_IMGMATH" in os.environ:
-+    env_sphinx_imgmath = os.environ["SPHINX_IMGMATH"]
-+    if "yes" in env_sphinx_imgmath:
-         load_imgmath = True
--    elif 'no' in env_sphinx_imgmath:
-+    elif "no" in env_sphinx_imgmath:
-         load_imgmath = False
-     else:
-         sys.stderr.write("Unknown env SPHINX_IMGMATH=%s ignored.\n" % env_sphinx_imgmath)
- 
- if load_imgmath:
-     extensions.append("sphinx.ext.imgmath")
--    math_renderer = 'imgmath'
-+    math_renderer = "imgmath"
- else:
--    math_renderer = 'mathjax'
-+    math_renderer = "mathjax"
- 
- # Add any paths that contain templates here, relative to this directory.
--templates_path = ['sphinx/templates']
-+templates_path = ["sphinx/templates"]
- 
- # The suffixes of source filenames that will be automatically parsed
- source_suffix = {
--        '.rst': 'restructuredtext',
--        '.yaml': 'yaml',
-+    ".rst": "restructuredtext",
-+    ".yaml": "yaml",
- }
- 
- # The encoding of source files.
--#source_encoding = 'utf-8-sig'
-+# source_encoding = 'utf-8-sig'
- 
- # The master toctree document.
--master_doc = 'index'
-+master_doc = "index"
- 
- # General information about the project.
--project = 'The Linux Kernel'
--copyright = 'The kernel development community'
--author = 'The kernel development community'
-+project = "The Linux Kernel"
-+copyright = "The kernel development community"         # pylint: disable=W0622
-+author = "The kernel development community"
- 
- # The version info for the project you're documenting, acts as replacement for
- # |version| and |release|, also used in various other places throughout the
-@@ -242,82 +245,86 @@ author = 'The kernel development community'
- try:
-     makefile_version = None
-     makefile_patchlevel = None
--    for line in open('../Makefile'):
--        key, val = [x.strip() for x in line.split('=', 2)]
--        if key == 'VERSION':
--            makefile_version = val
--        elif key == 'PATCHLEVEL':
--            makefile_patchlevel = val
--        if makefile_version and makefile_patchlevel:
--            break
--except:
-+    with open("../Makefile", encoding="utf=8") as fp:
-+        for line in fp:
-+            key, val = [x.strip() for x in line.split("=", 2)]
-+            if key == "VERSION":
-+                makefile_version = val
-+            elif key == "PATCHLEVEL":
-+                makefile_patchlevel = val
-+            if makefile_version and makefile_patchlevel:
-+                break
-+except Exception:
-     pass
- finally:
-     if makefile_version and makefile_patchlevel:
--        version = release = makefile_version + '.' + makefile_patchlevel
-+        version = release = makefile_version + "." + makefile_patchlevel
-     else:
-         version = release = "unknown version"
- 
--#
--# HACK: there seems to be no easy way for us to get at the version and
--# release information passed in from the makefile...so go pawing through the
--# command-line options and find it for ourselves.
--#
++    @staticmethod
++    def inline(text: str) -> str:
++        """Format inline text"""
++        return f"``{text}``"
 +
- def get_cline_version():
--    c_version = c_release = ''
-+    """
-+    HACK: There seems to be no easy way for us to get at the version and
-+    release information passed in from the makefile...so go pawing through the
-+    command-line options and find it for ourselves.
-+    """
 +
-+    c_version = c_release = ""
-     for arg in sys.argv:
--        if arg.startswith('version='):
-+        if arg.startswith("version="):
-             c_version = arg[8:]
--        elif arg.startswith('release='):
-+        elif arg.startswith("release="):
-             c_release = arg[8:]
-     if c_version:
-         if c_release:
--            return c_version + '-' + c_release
-+            return c_version + "-" + c_release
-         return c_version
--    return version # Whatever we came up with before
-+    return version  # Whatever we came up with before
++    @staticmethod
++    def sanitize(text: str) -> str:
++        """Remove newlines and multiple spaces"""
++        # This is useful for some fields that are spread across multiple lines
++        return str(text).replace("\n", " ").strip()
 +
- 
- # The language for content autogenerated by Sphinx. Refer to documentation
- # for a list of supported languages.
- #
- # This is also used if you do content translation via gettext catalogs.
- # Usually you set "language" from the command line for these cases.
--language = 'en'
-+language = "en"
- 
- # There are two options for replacing |today|: either, you set today to some
- # non-false value, then it is used:
--#today = ''
-+# today = ''
- # Else, today_fmt is used as the format for a strftime call.
--#today_fmt = '%B %d, %Y'
-+# today_fmt = '%B %d, %Y'
- 
- # The reST default role (used for this markup: `text`) to use for all
- # documents.
--#default_role = None
-+# default_role = None
- 
- # If true, '()' will be appended to :func: etc. cross-reference text.
--#add_function_parentheses = True
-+# add_function_parentheses = True
- 
- # If true, the current module name will be prepended to all description
- # unit titles (such as .. function::).
--#add_module_names = True
-+# add_module_names = True
- 
- # If true, sectionauthor and moduleauthor directives will be shown in the
- # output. They are ignored by default.
--#show_authors = False
-+# show_authors = False
- 
- # The name of the Pygments (syntax highlighting) style to use.
--pygments_style = 'sphinx'
-+pygments_style = "sphinx"
- 
- # A list of ignored prefixes for module index sorting.
--#modindex_common_prefix = []
-+# modindex_common_prefix = []
- 
- # If true, keep warnings as "system message" paragraphs in the built documents.
--#keep_warnings = False
-+# keep_warnings = False
- 
- # If true, `todo` and `todoList` produce output, else they produce nothing.
- todo_include_todos = False
- 
--primary_domain = 'c'
--highlight_language = 'none'
-+primary_domain = "c"
-+highlight_language = "none"
- 
- # -- Options for HTML output ----------------------------------------------
- 
-@@ -325,43 +332,45 @@ highlight_language = 'none'
- # a list of builtin themes.
- 
- # Default theme
--html_theme = 'alabaster'
-+html_theme = "alabaster"
- html_css_files = []
- 
- if "DOCS_THEME" in os.environ:
-     html_theme = os.environ["DOCS_THEME"]
- 
--if html_theme == 'sphinx_rtd_theme' or html_theme == 'sphinx_rtd_dark_mode':
-+if html_theme in ["sphinx_rtd_theme", "sphinx_rtd_dark_mode"]:
-     # Read the Docs theme
-     try:
-         import sphinx_rtd_theme
 +
-         html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
- 
-         # Add any paths that contain custom static files (such as style sheets) here,
-         # relative to this directory. They are copied after the builtin static files,
-         # so a file named "default.css" will overwrite the builtin "default.css".
-         html_css_files = [
--            'theme_overrides.css',
-+            "theme_overrides.css",
-         ]
- 
-         # Read the Docs dark mode override theme
--        if html_theme == 'sphinx_rtd_dark_mode':
-+        if html_theme == "sphinx_rtd_dark_mode":
-             try:
--                import sphinx_rtd_dark_mode
--                extensions.append('sphinx_rtd_dark_mode')
-+                import sphinx_rtd_dark_mode            # pylint: disable=W0611
++    def rst_fields(self, key: str, value: str, level: int = 0) -> str:
++        """Return a RST formatted field"""
++        return self.headroom(level) + f":{key}: {value}"
 +
-+                extensions.append("sphinx_rtd_dark_mode")
-             except ImportError:
--                html_theme == 'sphinx_rtd_theme'
-+                html_theme = "sphinx_rtd_theme"
- 
--        if html_theme == 'sphinx_rtd_theme':
--                # Add color-specific RTD normal mode
--                html_css_files.append('theme_rtd_colors.css')
-+        if html_theme == "sphinx_rtd_theme":
-+            # Add color-specific RTD normal mode
-+            html_css_files.append("theme_rtd_colors.css")
- 
-         html_theme_options = {
--            'navigation_depth': -1,
-+            "navigation_depth": -1,
-         }
- 
-     except ImportError:
--        html_theme = 'alabaster'
-+        html_theme = "alabaster"
- 
- if "DOCS_CSS" in os.environ:
-     css = os.environ["DOCS_CSS"].split(" ")
-@@ -369,14 +378,14 @@ if "DOCS_CSS" in os.environ:
-     for l in css:
-         html_css_files.append(l)
- 
--if  html_theme == 'alabaster':
-+if html_theme == "alabaster":
-     html_theme_options = {
--        'description': get_cline_version(),
--        'page_width': '65em',
--        'sidebar_width': '15em',
--        'fixed_sidebar': 'true',
--        'font_size': 'inherit',
--        'font_family': 'serif',
-+        "description": get_cline_version(),
-+        "page_width": "65em",
-+        "sidebar_width": "15em",
-+        "fixed_sidebar": "true",
-+        "font_size": "inherit",
-+        "font_family": "serif",
-     }
- 
- sys.stderr.write("Using %s theme\n" % html_theme)
-@@ -384,104 +393,79 @@ sys.stderr.write("Using %s theme\n" % html_theme)
- # Add any paths that contain custom static files (such as style sheets) here,
- # relative to this directory. They are copied after the builtin static files,
- # so a file named "default.css" will overwrite the builtin "default.css".
--html_static_path = ['sphinx-static']
-+html_static_path = ["sphinx-static"]
- 
- # If true, Docutils "smart quotes" will be used to convert quotes and dashes
- # to typographically correct entities.  However, conversion of "--" to "—"
- # is not always what we want, so enable only quotes.
--smartquotes_action = 'q'
-+smartquotes_action = "q"
- 
- # Custom sidebar templates, maps document names to template names.
- # Note that the RTD theme ignores this
--html_sidebars = { '**': ['searchbox.html', 'kernel-toc.html', 'sourcelink.html']}
-+html_sidebars = {"**": ["searchbox.html",
-+                        "kernel-toc.html",
-+                        "sourcelink.html"]}
- 
- # about.html is available for alabaster theme. Add it at the front.
--if html_theme == 'alabaster':
--    html_sidebars['**'].insert(0, 'about.html')
-+if html_theme == "alabaster":
-+    html_sidebars["**"].insert(0, "about.html")
- 
- # The name of an image file (relative to this directory) to place at the top
- # of the sidebar.
--html_logo = 'images/logo.svg'
-+html_logo = "images/logo.svg"
- 
- # Output file base name for HTML help builder.
--htmlhelp_basename = 'TheLinuxKerneldoc'
-+htmlhelp_basename = "TheLinuxKerneldoc"
- 
- # -- Options for LaTeX output ---------------------------------------------
- 
- latex_elements = {
-     # The paper size ('letterpaper' or 'a4paper').
--    'papersize': 'a4paper',
--
-+    "papersize": "a4paper",
-     # The font size ('10pt', '11pt' or '12pt').
--    'pointsize': '11pt',
--
-+    "pointsize": "11pt",
-     # Latex figure (float) alignment
--    #'figure_align': 'htbp',
--
-+    # 'figure_align': 'htbp',
-     # Don't mangle with UTF-8 chars
--    'inputenc': '',
--    'utf8extra': '',
--
-+    "inputenc": "",
-+    "utf8extra": "",
-     # Set document margins
--    'sphinxsetup': '''
-+    "sphinxsetup": """
-         hmargin=0.5in, vmargin=1in,
-         parsedliteralwraps=true,
-         verbatimhintsturnover=false,
--    ''',
--
-+    """,
-     #
-     # Some of our authors are fond of deep nesting; tell latex to
-     # cope.
-     #
--    'maxlistdepth': '10',
--
-+    "maxlistdepth": "10",
-     # For CJK One-half spacing, need to be in front of hyperref
--    'extrapackages': r'\usepackage{setspace}',
--
-+    "extrapackages": r"\usepackage{setspace}",
-     # Additional stuff for the LaTeX preamble.
--    'preamble': '''
-+    "preamble": """
-         % Use some font with UTF-8 support with XeLaTeX
-         \\usepackage{fontspec}
-         \\setsansfont{DejaVu Sans}
-         \\setromanfont{DejaVu Serif}
-         \\setmonofont{DejaVu Sans Mono}
--    ''',
-+    """,
- }
- 
- # Load kerneldoc specific LaTeX settings
--latex_elements['preamble'] += '''
-+latex_elements["preamble"] += """
-         % Load kerneldoc specific LaTeX settings
--	\\input{kerneldoc-preamble.sty}
--'''
--
--# With Sphinx 1.6, it is possible to change the Bg color directly
--# by using:
--#	\definecolor{sphinxnoteBgColor}{RGB}{204,255,255}
--#	\definecolor{sphinxwarningBgColor}{RGB}{255,204,204}
--#	\definecolor{sphinxattentionBgColor}{RGB}{255,255,204}
--#	\definecolor{sphinximportantBgColor}{RGB}{192,255,204}
--#
--# However, it require to use sphinx heavy box with:
--#
--#	\renewenvironment{sphinxlightbox} {%
--#		\\begin{sphinxheavybox}
--#	}
--#		\\end{sphinxheavybox}
--#	}
--#
--# Unfortunately, the implementation is buggy: if a note is inside a
--# table, it isn't displayed well. So, for now, let's use boring
--# black and white notes.
-+        \\input{kerneldoc-preamble.sty}
-+"""
- 
- # Grouping the document tree into LaTeX files. List of tuples
- # (source start file, target name, title,
- #  author, documentclass [howto, manual, or own class]).
- # Sorted in alphabetical order
--latex_documents = [
--]
-+latex_documents = []
- 
- # Add all other index files from Documentation/ subdirectories
--for fn in os.listdir('.'):
-+for fn in os.listdir("."):
-     doc = os.path.join(fn, "index")
-     if os.path.exists(doc + ".rst"):
-         has = False
-@@ -490,34 +474,39 @@ for fn in os.listdir('.'):
-                 has = True
-                 break
-         if not has:
--            latex_documents.append((doc, fn + '.tex',
--                                    'Linux %s Documentation' % fn.capitalize(),
--                                    'The kernel development community',
--                                    'manual'))
-+            latex_documents.append(
-+                (
-+                    doc,
-+                    fn + ".tex",
-+                    "Linux %s Documentation" % fn.capitalize(),
-+                    "The kernel development community",
-+                    "manual",
-+                )
-+            )
- 
- # The name of an image file (relative to this directory) to place at the top of
- # the title page.
--#latex_logo = None
-+# latex_logo = None
- 
- # For "manual" documents, if this is true, then toplevel headings are parts,
- # not chapters.
--#latex_use_parts = False
-+# latex_use_parts = False
- 
- # If true, show page references after internal links.
--#latex_show_pagerefs = False
-+# latex_show_pagerefs = False
- 
- # If true, show URL addresses after external links.
--#latex_show_urls = False
-+# latex_show_urls = False
- 
- # Documents to append as an appendix to all manuals.
--#latex_appendices = []
-+# latex_appendices = []
- 
- # If false, no module index is generated.
--#latex_domain_indices = True
-+# latex_domain_indices = True
- 
- # Additional LaTeX stuff to be copied to build directory
- latex_additional_files = [
--    'sphinx/kerneldoc-preamble.sty',
-+    "sphinx/kerneldoc-preamble.sty",
- ]
- 
- 
-@@ -526,12 +515,11 @@ latex_additional_files = [
- # One entry per manual page. List of tuples
- # (source start file, name, description, authors, manual section).
- man_pages = [
--    (master_doc, 'thelinuxkernel', 'The Linux Kernel Documentation',
--     [author], 1)
-+    (master_doc, "thelinuxkernel", "The Linux Kernel Documentation", [author], 1)
- ]
- 
- # If true, show URL addresses after external links.
--#man_show_urls = False
-+# man_show_urls = False
- 
- 
- # -- Options for Texinfo output -------------------------------------------
-@@ -539,11 +527,15 @@ man_pages = [
- # Grouping the document tree into Texinfo files. List of tuples
- # (source start file, target name, title, author,
- #  dir menu entry, description, category)
--texinfo_documents = [
--    (master_doc, 'TheLinuxKernel', 'The Linux Kernel Documentation',
--     author, 'TheLinuxKernel', 'One line description of project.',
--     'Miscellaneous'),
--]
-+texinfo_documents = [(
-+        master_doc,
-+        "TheLinuxKernel",
-+        "The Linux Kernel Documentation",
-+        author,
-+        "TheLinuxKernel",
-+        "One line description of project.",
-+        "Miscellaneous",
-+    ),]
- 
- # -- Options for Epub output ----------------------------------------------
- 
-@@ -554,9 +546,9 @@ epub_publisher = author
- epub_copyright = copyright
- 
- # A list of files that should not be packed into the epub file.
--epub_exclude_files = ['search.html']
-+epub_exclude_files = ["search.html"]
- 
--#=======
++
++    def rst_definition(self, key: str, value: Any, level: int = 0) -> str:
++        """Format a single rst definition"""
++        return self.headroom(level) + key + "\n" + self.headroom(level + 1) + str(value)
++
++
++    def rst_paragraph(self, paragraph: str, level: int = 0) -> str:
++        """Return a formatted paragraph"""
++        return self.headroom(level) + paragraph
++
++
++    def rst_bullet(self, item: str, level: int = 0) -> str:
++        """Return a formatted a bullet"""
++        return self.headroom(level) + f"- {item}"
++
++
++    @staticmethod
++    def rst_subsection(title: str) -> str:
++        """Add a sub-section to the document"""
++        return f"{title}\n" + "-" * len(title)
++
++
++    @staticmethod
++    def rst_subsubsection(title: str) -> str:
++        """Add a sub-sub-section to the document"""
++        return f"{title}\n" + "~" * len(title)
++
++
++    @staticmethod
++    def rst_section(namespace: str, prefix: str, title: str) -> str:
++        """Add a section to the document"""
++        return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
++
++
++    @staticmethod
++    def rst_subtitle(title: str) -> str:
++        """Add a subtitle to the document"""
++        return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
++
++
++    @staticmethod
++    def rst_title(title: str) -> str:
++        """Add a title to the document"""
++        return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
++
++
++    def rst_list_inline(self, list_: List[str], level: int = 0) -> str:
++        """Format a list using inlines"""
++        return self.headroom(level) + "[" + ", ".join(self.inline(i) for i in list_) + "]"
++
++
++    @staticmethod
++    def rst_ref(namespace: str, prefix: str, name: str) -> str:
++        """Add a hyperlink to the document"""
++        mappings = {'enum': 'definition',
++                    'fixed-header': 'definition',
++                    'nested-attributes': 'attribute-set',
++                    'struct': 'definition'}
++        if prefix in mappings:
++            prefix = mappings[prefix]
++        return f":ref:`{namespace}-{prefix}-{name}`"
++
++
++    def rst_header(self) -> str:
++        """The headers for all the auto generated RST files"""
++        lines = []
++
++        lines.append(self.rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
++        lines.append(self.rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
++
++        return "\n".join(lines)
++
++
++    @staticmethod
++    def rst_toctree(maxdepth: int = 2) -> str:
++        """Generate a toctree RST primitive"""
++        lines = []
++
++        lines.append(".. toctree::")
++        lines.append(f"   :maxdepth: {maxdepth}\n\n")
++
++        return "\n".join(lines)
++
++
++    @staticmethod
++    def rst_label(title: str) -> str:
++        """Return a formatted label"""
++        return f".. _{title}:\n\n"
++
 +# =======
- # rst2pdf
- #
- # Grouping the document tree into PDF files. List of tuples
-@@ -568,14 +560,14 @@ epub_exclude_files = ['search.html']
- # multiple PDF files here actually tries to get the cross-referencing right
- # *between* PDF files.
- pdf_documents = [
--    ('kernel-documentation', u'Kernel', u'Kernel', u'J. Random Bozo'),
-+    ("kernel-documentation", "Kernel", "Kernel", "J. Random Bozo"),
- ]
- 
- # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
- # the Docs). In a normal build, these are supplied from the Makefile via command
- # line arguments.
--kerneldoc_bin = '../scripts/kernel-doc.py'
--kerneldoc_srctree = '..'
-+kerneldoc_bin = "../scripts/kernel-doc.py"
-+kerneldoc_srctree = ".."
- 
- # ------------------------------------------------------------------------------
- # Since loadConfig overwrites settings from the global namespace, it has to be
-@@ -583,5 +575,8 @@ kerneldoc_srctree = '..'
- # ------------------------------------------------------------------------------
- loadConfig(globals())
- 
++# Parsers
++# =======
++class YnlDocGenerator:
 +
- def setup(app):
--	app.connect('builder-inited', update_patterns)
-+    """Patterns need to be updated at init time on older Sphinx versions"""
++    fmt = RstFormatters()
 +
-+    app.connect("builder-inited", update_patterns)
++    def parse_mcast_group(self, mcast_group: List[Dict[str, Any]]) -> str:
++        """Parse 'multicast' group list and return a formatted string"""
++        lines = []
++        for group in mcast_group:
++            lines.append(self.fmt.rst_bullet(group["name"]))
++
++        return "\n".join(lines)
++
++
++    def parse_do(self, do_dict: Dict[str, Any], level: int = 0) -> str:
++        """Parse 'do' section and return a formatted string"""
++        lines = []
++        for key in do_dict.keys():
++            lines.append(self.fmt.rst_paragraph(self.fmt.bold(key), level + 1))
++            if key in ['request', 'reply']:
++                lines.append(self.parse_do_attributes(do_dict[key], level + 1) + "\n")
++            else:
++                lines.append(self.fmt.headroom(level + 2) + do_dict[key] + "\n")
++
++        return "\n".join(lines)
++
++
++    def parse_do_attributes(self, attrs: Dict[str, Any], level: int = 0) -> str:
++        """Parse 'attributes' section"""
++        if "attributes" not in attrs:
++            return ""
++        lines = [self.fmt.rst_fields("attributes", self.fmt.rst_list_inline(attrs["attributes"]), level + 1)]
++
++        return "\n".join(lines)
++
++
++    def parse_operations(self, operations: List[Dict[str, Any]], namespace: str) -> str:
++        """Parse operations block"""
++        preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
++        linkable = ["fixed-header", "attribute-set"]
++        lines = []
++
++        for operation in operations:
++            lines.append(self.fmt.rst_section(namespace, 'operation', operation["name"]))
++            lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
++
++            for key in operation.keys():
++                if key in preprocessed:
++                    # Skip the special fields
++                    continue
++                value = operation[key]
++                if key in linkable:
++                    value = self.fmt.rst_ref(namespace, key, value)
++                lines.append(self.fmt.rst_fields(key, value, 0))
++            if 'flags' in operation:
++                lines.append(self.fmt.rst_fields('flags', self.fmt.rst_list_inline(operation['flags'])))
++
++            if "do" in operation:
++                lines.append(self.fmt.rst_paragraph(":do:", 0))
++                lines.append(self.parse_do(operation["do"], 0))
++            if "dump" in operation:
++                lines.append(self.fmt.rst_paragraph(":dump:", 0))
++                lines.append(self.parse_do(operation["dump"], 0))
++
++            # New line after fields
++            lines.append("\n")
++
++        return "\n".join(lines)
++
++
++    def parse_entries(self, entries: List[Dict[str, Any]], level: int) -> str:
++        """Parse a list of entries"""
++        ignored = ["pad"]
++        lines = []
++        for entry in entries:
++            if isinstance(entry, dict):
++                # entries could be a list or a dictionary
++                field_name = entry.get("name", "")
++                if field_name in ignored:
++                    continue
++                type_ = entry.get("type")
++                if type_:
++                    field_name += f" ({self.fmt.inline(type_)})"
++                lines.append(
++                    self.fmt.rst_fields(field_name, self.fmt.sanitize(entry.get("doc", "")), level)
++                )
++            elif isinstance(entry, list):
++                lines.append(self.fmt.rst_list_inline(entry, level))
++            else:
++                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)), level))
++
++        lines.append("\n")
++        return "\n".join(lines)
++
++
++    def parse_definitions(self, defs: Dict[str, Any], namespace: str) -> str:
++        """Parse definitions section"""
++        preprocessed = ["name", "entries", "members"]
++        ignored = ["render-max"]  # This is not printed
++        lines = []
++
++        for definition in defs:
++            lines.append(self.fmt.rst_section(namespace, 'definition', definition["name"]))
++            for k in definition.keys():
++                if k in preprocessed + ignored:
++                    continue
++                lines.append(self.fmt.rst_fields(k, self.fmt.sanitize(definition[k]), 0))
++
++            # Field list needs to finish with a new line
++            lines.append("\n")
++            if "entries" in definition:
++                lines.append(self.fmt.rst_paragraph(":entries:", 0))
++                lines.append(self.parse_entries(definition["entries"], 1))
++            if "members" in definition:
++                lines.append(self.fmt.rst_paragraph(":members:", 0))
++                lines.append(self.parse_entries(definition["members"], 1))
++
++        return "\n".join(lines)
++
++
++    def parse_attr_sets(self, entries: List[Dict[str, Any]], namespace: str) -> str:
++        """Parse attribute from attribute-set"""
++        preprocessed = ["name", "type"]
++        linkable = ["enum", "nested-attributes", "struct", "sub-message"]
++        ignored = ["checks"]
++        lines = []
++
++        for entry in entries:
++            lines.append(self.fmt.rst_section(namespace, 'attribute-set', entry["name"]))
++            for attr in entry["attributes"]:
++                type_ = attr.get("type")
++                attr_line = attr["name"]
++                if type_:
++                    # Add the attribute type in the same line
++                    attr_line += f" ({self.fmt.inline(type_)})"
++
++                lines.append(self.fmt.rst_subsubsection(attr_line))
++
++                for k in attr.keys():
++                    if k in preprocessed + ignored:
++                        continue
++                    if k in linkable:
++                        value = self.fmt.rst_ref(namespace, k, attr[k])
++                    else:
++                        value = self.fmt.sanitize(attr[k])
++                    lines.append(self.fmt.rst_fields(k, value, 0))
++                lines.append("\n")
++
++        return "\n".join(lines)
++
++
++    def parse_sub_messages(self, entries: List[Dict[str, Any]], namespace: str) -> str:
++        """Parse sub-message definitions"""
++        lines = []
++
++        for entry in entries:
++            lines.append(self.fmt.rst_section(namespace, 'sub-message', entry["name"]))
++            for fmt in entry["formats"]:
++                value = fmt["value"]
++
++                lines.append(self.fmt.rst_bullet(self.fmt.bold(value)))
++                for attr in ['fixed-header', 'attribute-set']:
++                    if attr in fmt:
++                        lines.append(self.fmt.rst_fields(attr,
++                                                self.fmt.rst_ref(namespace, attr, fmt[attr]),
++                                                1))
++                lines.append("\n")
++
++        return "\n".join(lines)
++
++
++    def parse_yaml(self, obj: Dict[str, Any]) -> str:
++        """Format the whole YAML into a RST string"""
++        lines = []
++
++        # Main header
++
++        family = obj['name']
++
++        lines.append(self.fmt.rst_header())
++        lines.append(self.fmt.rst_label("netlink-" + family))
++
++        title = f"Family ``{family}`` netlink specification"
++        lines.append(self.fmt.rst_title(title))
++        lines.append(self.fmt.rst_paragraph(".. contents:: :depth: 3\n"))
++
++        if "doc" in obj:
++            lines.append(self.fmt.rst_subtitle("Summary"))
++            lines.append(self.fmt.rst_paragraph(obj["doc"], 0))
++
++        # Operations
++        if "operations" in obj:
++            lines.append(self.fmt.rst_subtitle("Operations"))
++            lines.append(self.parse_operations(obj["operations"]["list"], family))
++
++        # Multicast groups
++        if "mcast-groups" in obj:
++            lines.append(self.fmt.rst_subtitle("Multicast groups"))
++            lines.append(self.parse_mcast_group(obj["mcast-groups"]["list"]))
++
++        # Definitions
++        if "definitions" in obj:
++            lines.append(self.fmt.rst_subtitle("Definitions"))
++            lines.append(self.parse_definitions(obj["definitions"], family))
++
++        # Attributes set
++        if "attribute-sets" in obj:
++            lines.append(self.fmt.rst_subtitle("Attribute sets"))
++            lines.append(self.parse_attr_sets(obj["attribute-sets"], family))
++
++        # Sub-messages
++        if "sub-messages" in obj:
++            lines.append(self.fmt.rst_subtitle("Sub-messages"))
++            lines.append(self.parse_sub_messages(obj["sub-messages"], family))
++
++        return "\n".join(lines)
++
++
++    # Main functions
++    # ==============
++
++
++    def parse_yaml_file(self, filename: str) -> str:
++        """Transform the YAML specified by filename into an RST-formatted string"""
++        with open(filename, "r", encoding="utf-8") as spec_file:
++            yaml_data = yaml.safe_load(spec_file)
++            content = self.parse_yaml(yaml_data)
++
++        return content
++
++
++    def generate_main_index_rst(self, output: str, index_dir: str) -> None:
++        """Generate the `networking_spec/index` content and write to the file"""
++        lines = []
++
++        lines.append(self.fmt.rst_header())
++        lines.append(self.fmt.rst_label("specs"))
++        lines.append(self.fmt.rst_title("Netlink Family Specifications"))
++        lines.append(self.fmt.rst_toctree(1))
++
++        index_fname = os.path.basename(output)
++        base, ext = os.path.splitext(index_fname)
++
++        if not index_dir:
++            index_dir = os.path.dirname(output)
++
++        logging.debug(f"Looking for {ext} files in %s", index_dir)
++        for filename in sorted(os.listdir(index_dir)):
++            if not filename.endswith(ext) or filename == index_fname:
++                continue
++            base, ext = os.path.splitext(filename)
++            lines.append(f"   {base}\n")
++
++        logging.debug("Writing an index file at %s", output)
++
++        return "".join(lines)
+diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+index 7bfb8ceeeefc..b5a665eeaa5a 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_rst.py
++++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+@@ -10,354 +10,17 @@
+ 
+     This script performs extensive parsing to the Linux kernel's netlink YAML
+     spec files, in an effort to avoid needing to heavily mark up the original
+-    YAML file.
+-
+-    This code is split in three big parts:
+-        1) RST formatters: Use to convert a string to a RST output
+-        2) Parser helpers: Functions to parse the YAML data structure
+-        3) Main function and small helpers
++    YAML file. It uses the library code from scripts/lib.
+ """
+ 
+-from typing import Any, Dict, List
+ import os.path
++import pathlib
+ import sys
+ import argparse
+ import logging
+-import yaml
+-
+-
+-SPACE_PER_LEVEL = 4
+-
+-
+-# RST Formatters
+-# ==============
+-def headroom(level: int) -> str:
+-    """Return space to format"""
+-    return " " * (level * SPACE_PER_LEVEL)
+-
+-
+-def bold(text: str) -> str:
+-    """Format bold text"""
+-    return f"**{text}**"
+-
+-
+-def inline(text: str) -> str:
+-    """Format inline text"""
+-    return f"``{text}``"
+-
+-
+-def sanitize(text: str) -> str:
+-    """Remove newlines and multiple spaces"""
+-    # This is useful for some fields that are spread across multiple lines
+-    return str(text).replace("\n", " ").strip()
+-
+-
+-def rst_fields(key: str, value: str, level: int = 0) -> str:
+-    """Return a RST formatted field"""
+-    return headroom(level) + f":{key}: {value}"
+-
+-
+-def rst_definition(key: str, value: Any, level: int = 0) -> str:
+-    """Format a single rst definition"""
+-    return headroom(level) + key + "\n" + headroom(level + 1) + str(value)
+-
+-
+-def rst_paragraph(paragraph: str, level: int = 0) -> str:
+-    """Return a formatted paragraph"""
+-    return headroom(level) + paragraph
+-
+-
+-def rst_bullet(item: str, level: int = 0) -> str:
+-    """Return a formatted a bullet"""
+-    return headroom(level) + f"- {item}"
+-
+-
+-def rst_subsection(title: str) -> str:
+-    """Add a sub-section to the document"""
+-    return f"{title}\n" + "-" * len(title)
+-
+-
+-def rst_subsubsection(title: str) -> str:
+-    """Add a sub-sub-section to the document"""
+-    return f"{title}\n" + "~" * len(title)
+-
+-
+-def rst_section(namespace: str, prefix: str, title: str) -> str:
+-    """Add a section to the document"""
+-    return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
+-
+-
+-def rst_subtitle(title: str) -> str:
+-    """Add a subtitle to the document"""
+-    return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
+-
+-
+-def rst_title(title: str) -> str:
+-    """Add a title to the document"""
+-    return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
+-
+-
+-def rst_list_inline(list_: List[str], level: int = 0) -> str:
+-    """Format a list using inlines"""
+-    return headroom(level) + "[" + ", ".join(inline(i) for i in list_) + "]"
+-
+-
+-def rst_ref(namespace: str, prefix: str, name: str) -> str:
+-    """Add a hyperlink to the document"""
+-    mappings = {'enum': 'definition',
+-                'fixed-header': 'definition',
+-                'nested-attributes': 'attribute-set',
+-                'struct': 'definition'}
+-    if prefix in mappings:
+-        prefix = mappings[prefix]
+-    return f":ref:`{namespace}-{prefix}-{name}`"
+-
+-
+-def rst_header() -> str:
+-    """The headers for all the auto generated RST files"""
+-    lines = []
+-
+-    lines.append(rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
+-    lines.append(rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
+-
+-    return "\n".join(lines)
+-
+-
+-def rst_toctree(maxdepth: int = 2) -> str:
+-    """Generate a toctree RST primitive"""
+-    lines = []
+-
+-    lines.append(".. toctree::")
+-    lines.append(f"   :maxdepth: {maxdepth}\n\n")
+-
+-    return "\n".join(lines)
+-
+-
+-def rst_label(title: str) -> str:
+-    """Return a formatted label"""
+-    return f".. _{title}:\n\n"
+-
+-
+-# Parsers
+-# =======
+-
+-
+-def parse_mcast_group(mcast_group: List[Dict[str, Any]]) -> str:
+-    """Parse 'multicast' group list and return a formatted string"""
+-    lines = []
+-    for group in mcast_group:
+-        lines.append(rst_bullet(group["name"]))
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_do(do_dict: Dict[str, Any], level: int = 0) -> str:
+-    """Parse 'do' section and return a formatted string"""
+-    lines = []
+-    for key in do_dict.keys():
+-        lines.append(rst_paragraph(bold(key), level + 1))
+-        if key in ['request', 'reply']:
+-            lines.append(parse_do_attributes(do_dict[key], level + 1) + "\n")
+-        else:
+-            lines.append(headroom(level + 2) + do_dict[key] + "\n")
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_do_attributes(attrs: Dict[str, Any], level: int = 0) -> str:
+-    """Parse 'attributes' section"""
+-    if "attributes" not in attrs:
+-        return ""
+-    lines = [rst_fields("attributes", rst_list_inline(attrs["attributes"]), level + 1)]
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_operations(operations: List[Dict[str, Any]], namespace: str) -> str:
+-    """Parse operations block"""
+-    preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
+-    linkable = ["fixed-header", "attribute-set"]
+-    lines = []
+-
+-    for operation in operations:
+-        lines.append(rst_section(namespace, 'operation', operation["name"]))
+-        lines.append(rst_paragraph(operation["doc"]) + "\n")
+-
+-        for key in operation.keys():
+-            if key in preprocessed:
+-                # Skip the special fields
+-                continue
+-            value = operation[key]
+-            if key in linkable:
+-                value = rst_ref(namespace, key, value)
+-            lines.append(rst_fields(key, value, 0))
+-        if 'flags' in operation:
+-            lines.append(rst_fields('flags', rst_list_inline(operation['flags'])))
+-
+-        if "do" in operation:
+-            lines.append(rst_paragraph(":do:", 0))
+-            lines.append(parse_do(operation["do"], 0))
+-        if "dump" in operation:
+-            lines.append(rst_paragraph(":dump:", 0))
+-            lines.append(parse_do(operation["dump"], 0))
+-
+-        # New line after fields
+-        lines.append("\n")
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_entries(entries: List[Dict[str, Any]], level: int) -> str:
+-    """Parse a list of entries"""
+-    ignored = ["pad"]
+-    lines = []
+-    for entry in entries:
+-        if isinstance(entry, dict):
+-            # entries could be a list or a dictionary
+-            field_name = entry.get("name", "")
+-            if field_name in ignored:
+-                continue
+-            type_ = entry.get("type")
+-            if type_:
+-                field_name += f" ({inline(type_)})"
+-            lines.append(
+-                rst_fields(field_name, sanitize(entry.get("doc", "")), level)
+-            )
+-        elif isinstance(entry, list):
+-            lines.append(rst_list_inline(entry, level))
+-        else:
+-            lines.append(rst_bullet(inline(sanitize(entry)), level))
+-
+-    lines.append("\n")
+-    return "\n".join(lines)
+-
+-
+-def parse_definitions(defs: Dict[str, Any], namespace: str) -> str:
+-    """Parse definitions section"""
+-    preprocessed = ["name", "entries", "members"]
+-    ignored = ["render-max"]  # This is not printed
+-    lines = []
+-
+-    for definition in defs:
+-        lines.append(rst_section(namespace, 'definition', definition["name"]))
+-        for k in definition.keys():
+-            if k in preprocessed + ignored:
+-                continue
+-            lines.append(rst_fields(k, sanitize(definition[k]), 0))
+-
+-        # Field list needs to finish with a new line
+-        lines.append("\n")
+-        if "entries" in definition:
+-            lines.append(rst_paragraph(":entries:", 0))
+-            lines.append(parse_entries(definition["entries"], 1))
+-        if "members" in definition:
+-            lines.append(rst_paragraph(":members:", 0))
+-            lines.append(parse_entries(definition["members"], 1))
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_attr_sets(entries: List[Dict[str, Any]], namespace: str) -> str:
+-    """Parse attribute from attribute-set"""
+-    preprocessed = ["name", "type"]
+-    linkable = ["enum", "nested-attributes", "struct", "sub-message"]
+-    ignored = ["checks"]
+-    lines = []
+-
+-    for entry in entries:
+-        lines.append(rst_section(namespace, 'attribute-set', entry["name"]))
+-        for attr in entry["attributes"]:
+-            type_ = attr.get("type")
+-            attr_line = attr["name"]
+-            if type_:
+-                # Add the attribute type in the same line
+-                attr_line += f" ({inline(type_)})"
+-
+-            lines.append(rst_subsubsection(attr_line))
+-
+-            for k in attr.keys():
+-                if k in preprocessed + ignored:
+-                    continue
+-                if k in linkable:
+-                    value = rst_ref(namespace, k, attr[k])
+-                else:
+-                    value = sanitize(attr[k])
+-                lines.append(rst_fields(k, value, 0))
+-            lines.append("\n")
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_sub_messages(entries: List[Dict[str, Any]], namespace: str) -> str:
+-    """Parse sub-message definitions"""
+-    lines = []
+-
+-    for entry in entries:
+-        lines.append(rst_section(namespace, 'sub-message', entry["name"]))
+-        for fmt in entry["formats"]:
+-            value = fmt["value"]
+-
+-            lines.append(rst_bullet(bold(value)))
+-            for attr in ['fixed-header', 'attribute-set']:
+-                if attr in fmt:
+-                    lines.append(rst_fields(attr,
+-                                            rst_ref(namespace, attr, fmt[attr]),
+-                                            1))
+-            lines.append("\n")
+-
+-    return "\n".join(lines)
+-
+-
+-def parse_yaml(obj: Dict[str, Any]) -> str:
+-    """Format the whole YAML into a RST string"""
+-    lines = []
+-
+-    # Main header
+-
+-    family = obj['name']
+-
+-    lines.append(rst_header())
+-    lines.append(rst_label("netlink-" + family))
+-
+-    title = f"Family ``{family}`` netlink specification"
+-    lines.append(rst_title(title))
+-    lines.append(rst_paragraph(".. contents:: :depth: 3\n"))
+-
+-    if "doc" in obj:
+-        lines.append(rst_subtitle("Summary"))
+-        lines.append(rst_paragraph(obj["doc"], 0))
+-
+-    # Operations
+-    if "operations" in obj:
+-        lines.append(rst_subtitle("Operations"))
+-        lines.append(parse_operations(obj["operations"]["list"], family))
+-
+-    # Multicast groups
+-    if "mcast-groups" in obj:
+-        lines.append(rst_subtitle("Multicast groups"))
+-        lines.append(parse_mcast_group(obj["mcast-groups"]["list"]))
+-
+-    # Definitions
+-    if "definitions" in obj:
+-        lines.append(rst_subtitle("Definitions"))
+-        lines.append(parse_definitions(obj["definitions"], family))
+-
+-    # Attributes set
+-    if "attribute-sets" in obj:
+-        lines.append(rst_subtitle("Attribute sets"))
+-        lines.append(parse_attr_sets(obj["attribute-sets"], family))
+-
+-    # Sub-messages
+-    if "sub-messages" in obj:
+-        lines.append(rst_subtitle("Sub-messages"))
+-        lines.append(parse_sub_messages(obj["sub-messages"], family))
+-
+-    return "\n".join(lines)
+-
+-
+-# Main functions
+-# ==============
+ 
++sys.path.append(pathlib.Path(__file__).resolve().parent.as_posix())
++from lib import YnlDocGenerator    # pylint: disable=C0413
+ 
+ def parse_arguments() -> argparse.Namespace:
+     """Parse arguments from user"""
+@@ -392,15 +55,6 @@ def parse_arguments() -> argparse.Namespace:
+     return args
+ 
+ 
+-def parse_yaml_file(filename: str) -> str:
+-    """Transform the YAML specified by filename into an RST-formatted string"""
+-    with open(filename, "r", encoding="utf-8") as spec_file:
+-        yaml_data = yaml.safe_load(spec_file)
+-        content = parse_yaml(yaml_data)
+-
+-    return content
+-
+-
+ def write_to_rstfile(content: str, filename: str) -> None:
+     """Write the generated content into an RST file"""
+     logging.debug("Saving RST file to %s", filename)
+@@ -411,7 +65,6 @@ def write_to_rstfile(content: str, filename: str) -> None:
+ 
+ def generate_main_index_rst(output: str) -> None:
+     """Generate the `networking_spec/index` content and write to the file"""
+-    lines = []
+ 
+     lines.append(rst_header())
+     lines.append(rst_label("specs"))
+@@ -426,7 +79,7 @@ def generate_main_index_rst(output: str) -> None:
+         lines.append(f"   {filename.replace('.rst', '')}\n")
+ 
+     logging.debug("Writing an index file at %s", output)
+-    write_to_rstfile("".join(lines), output)
++    write_to_rstfile(msg, output)
+ 
+ 
+ def main() -> None:
+@@ -434,10 +87,12 @@ def main() -> None:
+ 
+     args = parse_arguments()
+ 
++    parser = YnlDocGenerator()
++
+     if args.input:
+         logging.debug("Parsing %s", args.input)
+         try:
+-            content = parse_yaml_file(os.path.join(args.input))
++            content = parser.parse_yaml_file(os.path.join(args.input))
+         except Exception as exception:
+             logging.warning("Failed to parse %s.", args.input)
+             logging.warning(exception)
 -- 
 2.49.0
 
