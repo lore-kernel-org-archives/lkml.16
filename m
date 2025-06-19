@@ -1,111 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF87C21E094;
-	Thu, 19 Jun 2025 15:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3FE1917CD;
+	Thu, 19 Jun 2025 15:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346427; cv=none; b=c3K8/RE04FxZLQF3kU7kkyfaGHfW6MzhX4tby+4rjtPszl1wpEbDbnYLH3V6ViWZo83MAyD+kK/L3qVINAqN/skTl2qLSotB01u8p+cj/q4jLodyihiX1v96viihAOgId/HXStj8fG3SL3Xwu1bE370mf8LtZnm1w6zGoUp9Ef4=
+	t=1750346437; cv=none; b=txiEtq3Lby9wzcpztF2ixDiVv/UkDNSm7AAmc698y6uVfaAMixIivzvUk7f4VtsQsiglaTMEL3wvOdgMyIivT81TH6A4+mBLJgXoVLk/X0WUZz/uh9JBO0w7qsFl4Zzq1IA2Bc96UIT+AFpmb9QOchVDVHR9X1QkqVc4eKq8FlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346427; c=relaxed/simple;
-	bh=YYemg1DZbLYuOwEnTxXkp/8rM6iO4piNRQwhWzEsPyY=;
+	s=arc-20240116; t=1750346437; c=relaxed/simple;
+	bh=ScOYzWHPQH8+sx/yjMIEThr5Pi2LHGCdgt5KNkdEvRI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lFdhpm63dj67/58Y12jv2pQcJsLcT4SEGtMx/K+BEq1P+KaAcdS92mO2zxwBBtjzuRv73eDdwei/0dhFqlBpAVU+yfwSV6GJeyJl3BnTN1CXcuD5hk9NJuv1ZegaHdzK8IvWFetf0XoaQsGBmmTib86ew7uVTvF4IjFbjuKHbzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6Cge1br; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6Cge1br"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6860AC4CEEF;
-	Thu, 19 Jun 2025 15:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750346427;
-	bh=YYemg1DZbLYuOwEnTxXkp/8rM6iO4piNRQwhWzEsPyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g6Cge1br7gh3z3g/7NXWP+pIDxR0Y07FlnMCprV04fnZlHl9ztfOZ7Jed23XO+PwA
-	 YKPnTdVXfe+jqS/5fRxzvFGJJgXelgyJyVPUgCGoumCwvVLgHGPA8qgNLv6Eoal+zP
-	 naFQmYU3q55b/A1KPYDO9DinE2sCg6tp8GBI6xOGYK53wyYiyAKPi/TbZDFdA5sA+K
-	 5DARdyi30SsSAuDzSYgwrQ6XWpuBJ1SxBOTnpuHacevnZWf6yj22aubGWyIbeoY94O
-	 F8PiwN52uVLJIHJ+Hn8e8vGLdx773W+r7ou/e94Uly9UHLiiWJa2WjqPBDGPBa6lnp
-	 PmzFLFWpFV5IQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso1475280a12.1;
-        Thu, 19 Jun 2025 08:20:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9bjSYnosEb+D3de2oYgsG+JMYngzk/EcpkIN9FTRkikDWPy7sYLwS+ADc9Oaa49/bWjPleUd3j+4OJR6x@vger.kernel.org, AJvYcCWFLUD3Y3/v2Pp6VpyBYlzSWtSiTfvaTkEJBvRwSFksUbI6+XhU2yXkzs0CI18jZ1easX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV98ijHzXTpcqhPKmT6gpEjPGRS6uuV9Vtq7LIJGvCGouyuB+m
-	8x8MYn/r65P31a8C/1XjVPsS99X2Iq6b4dwkGNeESbTZ8DhUWmL68lDJsEvfkjmVNyeRsNLSRwm
-	HExuATNgRfXSM2QvjcFsQnKEzgbmCw1o=
-X-Google-Smtp-Source: AGHT+IFXK+Qw9NgGm0hee492d8UUku0ecCMsOIPbbPeNge5/EfHtOghCJ2WTuf5yJT7m69zgr05or7oou+dMn0UFtOc=
-X-Received: by 2002:a50:d00a:0:b0:609:b5e0:598a with SMTP id
- 4fb4d7f45d1cf-609b5efa3c2mr5938805a12.24.1750346425944; Thu, 19 Jun 2025
- 08:20:25 -0700 (PDT)
+	 To:Cc:Content-Type; b=eEhIKSpJMkJKbTuvCTcWhO9mnOBrgY1/kQ4M9PmEAifzwgkvBQgLishWVzYRHVDkD0qFBZPaN//swM4LFgIKHEGbQIqK0v9Y8UCQUHRS6uasmV0ADCdYyjoyXmwuesVBYNA5nEcPJw6gq+v5OhijWczkYOxpccWgNslJRM+7BSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4e77d1333aeso292632137.0;
+        Thu, 19 Jun 2025 08:20:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750346433; x=1750951233;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSkl/380e5H5cxv39S6/yq0VkCvcYJimq8W0g/WHe10=;
+        b=A0HuaEh3BiPyxf1qL3I1BVCbLPMUOL17hYnhC9QmPaFAIHk2nNY/2ABjjD+n8H0dKY
+         tqceiL+fWu2ABIq22IxO0WTM+EcMYRKf9FzRQwsb77SKpkrBgnHadupzgbKuGP8FyU2r
+         qNO9undBdhgSRcz4zH9Di1tRGi1NsoFnf6dMNhk59Ndr+V1IGltWQln2PoQ1YKfiYeAB
+         r0cswU/A3LkD7fzML59oBd2iSfqncJO7ZJ9YOyBovokFhOSHgPcwcdTs1psOPMHK32Yd
+         q/J18xuKtzaBXramq8Thlh+gvBtqiCUmaqpwN+Svw8Z0/5GcZ/coa3tGg5FyxQ1CG5XS
+         5vzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQp76DeyKeUJpufw4VKG/Mp26dGijgymQbjB/22zV200wr/lQ+MNasZMCqRL9nueOlkuuFPeVfv8VPF1dL@vger.kernel.org, AJvYcCUmjDInxlboEqZsrT3J4Mf+dbK1EUimE2jIgiqBuELmZscPef96lFNyMntlEnV9YivgiAKhu74NAW80@vger.kernel.org, AJvYcCXJWAZf8o6TToH0Bpo8jprBJErV7EDcvAsn+1LqyvKOWzeJ8Ed+AtTJqygn5QcGmI2A8hYAQ8oZXMUpOUHm/dDXRP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJgumdBBoe3B2Wo92GjtMOcEOu3SPmXC3gLru9/Sev3rGOHxyR
+	r8lSmJRPOJLnSO+n34nY3jmAxhSsjPcdByU/YKKnN0Z7pAlPwjZkln2Cnm+c3PXy
+X-Gm-Gg: ASbGncuqgo8Q4YdeG8QMJGy0+8A8sTp8VzccIIJS1QYbbrBtXuG0Xwk5iM9hxCbWLdk
+	92GkZr3ElOouifskS0Vnokc9Dm8cLQv0GubcR9MMOIfT3glzUh2wh+HWxE7S6Xr6nlSJ2RrO9bR
+	RRc+GXmrtx79KXnq93XK4Wgy5qYgQmcURzS7BUKTT0KKso8ulii9sE0FnBlJS2gqOegyoeE8uei
+	avSPuQ9ZyQa5R2duV38H7DvLi/KZT6M3DZMa/cKAliZvtl+kv2uvUr67xLZTPSp50rcJL0+VoL/
+	DV8lvu+1MaODGF6zDC03RF9Nuci6S+AlMVqDTQZ/1ST6NnfCJsrjtJRLidqu7e6Sdc6LMQmIS9U
+	Y30UODNCuKt+NwFvyXKnXvbFKmVl7
+X-Google-Smtp-Source: AGHT+IHJkNv5WxWdZgn/0MuGVp/4r8uoIrIcVhGnn2itwg7AS3ocRMykjdeQ5qYR+CcZuxPAg0rAtw==
+X-Received: by 2002:a05:6102:4424:b0:4e6:da5d:2c42 with SMTP id ada2fe7eead31-4e7f62b12d4mr16701176137.19.1750346433447;
+        Thu, 19 Jun 2025 08:20:33 -0700 (PDT)
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f0f8e8682sm2429934241.0.2025.06.19.08.20.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:20:33 -0700 (PDT)
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-531a1fad7faso238414e0c.2;
+        Thu, 19 Jun 2025 08:20:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7MQa38SRB7/ngp/rp2vy+rjaRKwxzb3u6l5W5CQb1L3h/SEn1brBCy/vSI/CaKjhhVgfUDxN55RX9NWLxw/CmGP8=@vger.kernel.org, AJvYcCW8XHyq5s7t3C6UVI00budfJjLpWD8LQbhvfqitb+U/lST8dmPGdYu+O/lp2e3H9TgG+WhLkBafAQm+2DIE@vger.kernel.org, AJvYcCWh+///RLGxWVPHE1gnHJW8TN4rqlxEathEfmfTO5zhqgURcncSxDJymWA2yCCnJEjVMnqJ8Hw4JLPK@vger.kernel.org
+X-Received: by 2002:a05:6122:3d0d:b0:520:6773:e5ea with SMTP id
+ 71dfb90a1353d-53149c507aamr16508674e0c.7.1750346432516; Thu, 19 Jun 2025
+ 08:20:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617063206.24733-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250617063206.24733-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 23:20:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6TeZpLyY19xBhVwZbQeH5gQyZZqw_xP2P9rgTyFOiHUw@mail.gmail.com>
-X-Gm-Features: AX0GCFuKQYqo1n7IN8eZ9SnbFz0JRivAai9Ek3n9r7iBcKd8_Yvi2GKDfv2Nfps
-Message-ID: <CAAhV-H6TeZpLyY19xBhVwZbQeH5gQyZZqw_xP2P9rgTyFOiHUw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617171957.162145-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250617171957.162145-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 19 Jun 2025 17:20:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXUJOh+7Za5j1OKmKsUAtAFF91=817b6XTgcHm8KkH4jg@mail.gmail.com>
+X-Gm-Features: Ac12FXwu4ud-dOAPgVZ6B87gIE8_tROCw6zpgToA0179mn-fWyXkmiQIoEVlLCI
+Message-ID: <CAMuHMdXUJOh+7Za5j1OKmKsUAtAFF91=817b6XTgcHm8KkH4jg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] arm64: dts: renesas: Refactor RZ/T2H EVK device tree
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Queued for loongarch-next, thanks.
-
-
-Huacai
-
-On Tue, Jun 17, 2025 at 2:32=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Tue, 17 Jun 2025 at 19:20, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Paul Barker <paul.barker.ct@bp.renesas.com>
 >
-> JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
-> to skip analysis/patching for the respective vulnerability, it is
-> safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
-> speculation barrier instruction for LoongArch.
+> The RZ/T2H EVK and RZ/N2H EVK are very similar boards. As there is so
+> much overlap between these parts, common device tree entries are moved
+> to the new file rzt2h-evk-common.dtsi.
 >
-> Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->
-> This is based on the latest bpf-next tree which contains the
-> prototype and caller for bpf_jit_bypass_spec_v1/v4().
->
-> By the way, it needs to update bpf-next tree before building
-> on LoongArch:
->
-> [Build Error Report] Implicit Function declaration for bpf-next tree
-> https://lore.kernel.org/bpf/d602ae87-8bed-1633-d5b6-41c5bd8bbcdc@loongson=
-.cn/
->
->  arch/loongarch/net/bpf_jit.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fa1500d4aa3e..5de8f4c44700 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
->  {
->         return true;
->  }
-> +
-> +bool bpf_jit_bypass_spec_v1(void)
-> +{
-> +       return true;
-> +}
-> +
-> +bool bpf_jit_bypass_spec_v4(void)
-> +{
-> +       return true;
-> +}
-> --
-> 2.42.0
->
->
+> v1->v2:
+> - Renamed the file to `rzt2h-n2h-evk-common.dtsi` to better reflect its
+>   purpose.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
