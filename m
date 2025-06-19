@@ -1,54 +1,54 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C651D555
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3944D634
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750292689; cv=none; b=rHCQc29sUUP1OfYFj0vj7j/sryFp9H3kPrm0rA/1SOxI5DgKQjB9X3XvO0ufKQXFBOZHt3PXBzKv5Swi0XkhFjqMyDQVRssPZHyrSatZz/LB0vE8InzkhNkC0w6Ex4NgYBdgeZTVa3wwwOpJOfs6uYkrps6oRbOVgYlvdutWi38=
+	t=1750292760; cv=none; b=rOLxCPfLj7EOzHmFJgplNOIHEYXTLOXs2JFwMGKo25uTnm1IFcOu7LPbtoWXFw69lpolHcz+JUXlM92qb4e8FHHb5IJpCUi1hp8lLA/HE0/8l17/vhlPMqPovukTJrsCrA1Tclv7YlSSV4OIilnxhW1DxXtlX92d/wvjhTRBdcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750292689; c=relaxed/simple;
-	bh=NewwN4RPE7BHdcREEHS9Gp9Bq8qzjxUMrwfsyM2ngTc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Bnleacv34h6Dk3byUo/o049wTsi0EMBcF/0vghTOnXkqQxs1djnA49eZ+FMCtbzs6Y15qDkxcNVoLelPNVuocBpdQ0pTcfTo2QA7K6zm1syc2vvOrdgEc6G8aIqxRzxBIOhf+5qOLHQ9sz9nQxZ5EAeoSSiOoIIcc2Wv1L9Fqp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fyACvprE; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1750292760; c=relaxed/simple;
+	bh=HU1E8aM3TVhNI0cCzg9X63hUgWeXgl9SyxMRZww9RJs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=XP26ei6XFQA4t96w3yyzwypWK0KsaVmtPghLMkOGahmpFmGWo/Sf4mocnKAGqymGDO0BAZLyWcfOCz4k1xzpbmOt0Woppo4PeNJU+KeQAblxoPqDsRwDq/aiFpQkU/hfglc/iisXu5VmCgsx/TLM2mofG0OQhiXSWUgFUPUoO1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XuUgUnsd; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fyACvprE"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747af0bf0ebso151340b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:24:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XuUgUnsd"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2eb60594e8so166036a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750292688; x=1750897488; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750292758; x=1750897558; darn=vger.kernel.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=GR416osTWevjir5IPTUtOXKt4AGP7e4u/2bT2JOfmqk=;
-        b=fyACvprE3nDRZIByesNRPqr7h+leucotS032elwx7SxW2zv/aKRvZQ5J/cnIvmiqTc
-         o0zF/HpiurJg08AD//d1A4eFzrtavVtNfo+KxoWddPAzAeBzfoVd0775CtLll2Q4s4tS
-         8AXN9IMjqPbcYhfVBh4WVFxb4yaTdM2npYtObVMTJbhiQteSkxEG9/5qLZu0oN1LVN5k
-         JxyA5RiTsJke7iWGrS8MU8CIZHeNbNdwXWb/Mxzw46C7lL0ujfRkCmsKfsVHp/xO6Czb
-         HweyY7HY9wd4G6/4uR1sQUeE7MYLs0wmHFnLh0v/r+rn4DFJA4Z612TZYlbfSpaTA4H1
-         gHXg==
+        bh=Bz9sQ1jYIkFwDy+0Jm9AH/eJ9D8RS+YeR4yr3JjwJe0=;
+        b=XuUgUnsd5uS9PWxcrJvHqGMDm75cy4amenZPC4wZE0vUy4P5QjERiJ9SQJ9OCEwmZh
+         vSP9iUtr1C+K++2wQtAwhnpNKwSWj4NpkWfzlLzWVrUkZGhgx5wsKvxolV9oxvi9g+9q
+         GUgJxTqKXtDN2wuMSu9Ai0coufaLPzoPMLqjj2xiH8DTlhfcAMFfHK4iMhDM+J6/Br5i
+         GNb9FVGMUFRrcai3lJz9GgU8emXoMay5IJNLP0AH4bxzjn4fRjrymiEnmGGXs+NAiFlN
+         FKo8wvLoK/cBb3d66xGVEP3W+UdU0t7/aENT+XCx12OM0zLUoEF2hRKMCKDms1Lc7Td/
+         J8vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750292688; x=1750897488;
+        d=1e100.net; s=20230601; t=1750292758; x=1750897558;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GR416osTWevjir5IPTUtOXKt4AGP7e4u/2bT2JOfmqk=;
-        b=RxpmQY+ZUgEAPVC0lyO/3vyXFG1HExML545+dqn6tYQGwj0s6MD4ei1FGZy7LyaLPX
-         hh7cDlVVSAgI6CtnR4LrO8RJt8RzArFon3qPmeUH0laUieu33Cni7nMuApDkaL8PYZUj
-         XKosu3Iai6g1idiKul5qM/UG8G1cnDwvea1Oh+VcbyQjMFTFS9vaJigq/t0LgSfpAImj
-         qTTpi7FXxTTdZkyawUSjc3+zkfHxdZcRPUUgB1K7nYZzG58/gBD8OWD65XN/51oC9tbR
-         UhDHjj4+r/e0zT9F1J6KuAckFO0ehqW4NengZ+rUi6W2qsnwDGzD98UAvgC41dbKmOzk
-         j+og==
-X-Forwarded-Encrypted: i=1; AJvYcCXvC47QLsDOVOwbhpUSjsLCxSp7gIYqF7pG8ML8CAE6CieJyRsMvkQgzlzaIL6Q+yREOW90MK1DLGdXL3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKEOZD11wCVkJeGL7y71SfMeuy7cG+Bg/RBJMP/jq3rbA3RS45
-	RGxRh/GbKQzzSeDLgWm1y/GuhFOZO6IopZGsUJI3gWtTIa28BOn2c7ik+kKjqsWvHacI8avzoWY
-	q9xyQg0KN7A==
-X-Google-Smtp-Source: AGHT+IHLowUPcLb1AsoedloUBtGHZIvYsXFAHsudDPVaZi3qGGgXzLTZOOecHMUjXB8s/QSKjkglN4btCO8q
-X-Received: from pfqf15.prod.google.com ([2002:aa7:9d8f:0:b0:747:9faf:ed39])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:418d:b0:748:e9e4:d970
- with SMTP id d2e1a72fcca58-748e9e4de0emr5691992b3a.1.1750292687648; Wed, 18
- Jun 2025 17:24:47 -0700 (PDT)
-Date: Wed, 18 Jun 2025 17:24:43 -0700
+        bh=Bz9sQ1jYIkFwDy+0Jm9AH/eJ9D8RS+YeR4yr3JjwJe0=;
+        b=oCKUoImIP5+Xj3NMnhls6b4SdThqg9kDPMMCHitbDVnFvc3gxqHL1ucqlleXB+dZNP
+         ldATcBOXsuGQxVgDF2r8bTDvddPLh/pHaW1RxXAesz4MiiPkheRFRADUodiPTQg9dhQT
+         y9LC+SFOMezSMJmEDS5xZSvjD5bCOc94bCe7RaBmI6J3aaFMuSKjA15RuIZZxMCCgyKP
+         XTtsSbo+41R/kzlRxMqPgEgSJBqX80D9APuOOMLsHazTz5BlP6Y8R9SXC7YzOGx2A9Xv
+         vkHZDlOcgVfq34PH2LfE2+uqVlmwVj7QSHCgG0xHGYci/8CluvsoDJ4Byr6PcTvrkN2e
+         0Wsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAw2A1DixJfatuFm5g+R9C4+Id4OrCz3GiLzgLHXn4hO119WVFnmPThsZMkAFBQI1Qo+yom1cEQsYugf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCpObrYA9yEP2E8R/AAJk+ZqZ0NLUog2U1Ac3DUMi71sTZJ3zN
+	nNuZrJQQkOdS+KEM9SZP9RjI7rDbsH3g/JX/iR40mLF3l1JdfcAqtoN+qGSZiprVgWHkSao5Ylm
+	VQHMv2u5b1A==
+X-Google-Smtp-Source: AGHT+IEyPukKZOVUfM8A6d07f+coolTaxEhOh98UNY0RPJ2hfefaBNkrDs16/EbZqdai7uqY6nO4GSftqohC
+X-Received: from pfblj6.prod.google.com ([2002:a05:6a00:71c6:b0:746:24d7:a6aa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:8cc6:b0:20f:94bd:eecf
+ with SMTP id adf61e73a8af0-21fbd7ffb6bmr28154130637.42.1750292758445; Wed, 18
+ Jun 2025 17:25:58 -0700 (PDT)
+Date: Wed, 18 Jun 2025 17:25:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,74 +56,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250619002443.100301-1-irogers@google.com>
-Subject: [PATCH v1] perf test: Add basic callgraph test to record testing
+Message-ID: <20250619002555.100896-1-irogers@google.com>
+Subject: [PATCH v1] perf test: Add header shell test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Give some basic perf record callgraph coverage.
+Add a shell test that sanity checks perf data and pipe mode produce
+expected header fields.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/record.sh | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/perf/tests/shell/header.sh | 74 ++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100755 tools/perf/tests/shell/header.sh
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 2022a4f739be..603fa6b79b5d 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
- . "${shelldir}"/lib/perf_has_symbol.sh
- 
- testsym="test_loop"
-+testsym2="brstack"
- 
- skip_test_missing_symbol ${testsym}
-+skip_test_missing_symbol ${testsym2}
- 
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-@@ -359,6 +361,23 @@ test_precise_max() {
-   fi
- }
- 
-+test_callgraph() {
-+  echo "Callgraph test"
-+  if ! perf record -o "${perfdata}" -g perf test -w brstack
-+  then
-+    echo "Callgraph test [Failed missing output]"
-+    err=1
-+    return
-+  fi
-+  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
-+  then
-+    echo "Callgraph test [Failed missing symbol]"
-+    err=1
-+    return
-+  fi
-+  echo "Callgraph test [Success]"
+diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
+new file mode 100755
+index 000000000000..813831cff0bd
+--- /dev/null
++++ b/tools/perf/tests/shell/header.sh
+@@ -0,0 +1,74 @@
++#!/bin/bash
++# perf header tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test_header.perf.data.XXXXX)
++script_output=$(mktemp /tmp/__perf_test_header.perf.data.XXXXX.script)
++
++cleanup() {
++  rm -f "${perfdata}"
++  rm -f "${perfdata}".old
++  rm -f "${script_output}"
++
++  trap - EXIT TERM INT
 +}
 +
- # raise the limit of file descriptors to minimum
- if [[ $default_fd_limit -lt $min_fd_limit ]]; then
-        ulimit -Sn $min_fd_limit
-@@ -374,6 +393,7 @@ test_uid
- test_leader_sampling
- test_topdown_leader_sampling
- test_precise_max
-+test_callgraph
- 
- # restore the default value
- ulimit -Sn $default_fd_limit
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++check_header_output() {
++  declare -a fields=(
++    "captured"
++    "hostname"
++    "os release"
++    "arch"
++    "cpuid"
++    "nrcpus"
++    "event"
++    "cmdline"
++    "perf version"
++    "sibling (cores|dies|threads)"
++    "sibling threads"
++    "total memory"
++  )
++  for i in "${fields[@]}"
++  do
++    if ! grep -q -E "$i" "${script_output}"
++    then
++      echo "Failed to find expect $i in output"
++      err=1
++    fi
++  done
++}
++
++test_file() {
++  echo "Test perf header file"
++
++  perf record -o "${perfdata}" -g -- perf test -w noploop
++  perf report --header-only -I -i "${perfdata}" > "${script_output}"
++  check_header_output
++
++  echo "Test perf header file [Done]"
++}
++
++test_pipe() {
++  echo "Test perf header pipe"
++
++  perf record -o - -g -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
++  check_header_output
++
++  echo "Test perf header pipe [Done]"
++}
++
++test_file
++test_pipe
++
++cleanup
++exit $err
 -- 
 2.50.0.rc2.701.gf1e915cc24-goog
 
