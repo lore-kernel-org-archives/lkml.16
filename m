@@ -1,96 +1,155 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DE520E6
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F707134BD;
+	Thu, 19 Jun 2025 00:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750291634; cv=none; b=VylvO4kDO7tas5Mx9+RxbbDLEwvXCtRo4w7gGB17N/futYgASX88G7VbtOSFXl9LgeeLF9HqiYZIW6tJ9vJZsQjaCcAXBjwcgTBua/3jnkJKICJRMNHS3hj3xZ6CM4uo7gQpKohImJ9B6bus29qps+lxx3G8rhjlBPttzGnitvg=
+	t=1750291647; cv=none; b=aaNxHZh3wNYA56C7TKHtiisq7C0ScKWOfqatB20pO2dyAfzq5IE4FVYnCwuVx7P8kPYS7BGxJBfAXI5304rCamDPYizc5I7NMmFpCPr0zWleyCENrg8w5i7yJWTuHEzAJHCFv5JebIhhQvau3UGL7Osaa0f56EuDuQsOgkTFuKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750291634; c=relaxed/simple;
-	bh=4HxLSsI8Txzwy3Dvd34KNpbd5d2YI+f70vrm5E6ZPkA=;
+	s=arc-20240116; t=1750291647; c=relaxed/simple;
+	bh=dAiU03fjIPFdubyQ+ApCYOlimY1xmbTJy992dXG7JPA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAUO9vPFfBOHacT3Eb/N1P0vhVH8ASt+fh4Fw2LvtMMcNyMVd8s+/bJ/Dw0JLLJxtuIAVdiqFT1jdPvu0+G1e9WftKPJgHVuGMbZVkn+fNvH5HlJg++Sy+pAcZls70PR03OG/tNWJhwI2ach1WUte4vItfR/WFVo7qTdAwKKzvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PWc7/Cfz; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=HK90d/RZ5nakxy8ChnsDRr/Nee3awP0hhEJXxkMX5sOiugt/BlTpMbu9QJKoKqyyrEFEw57794VOaaE8z95jOBjDfA+LGkNlRLRT+4DLfYLP/A6iN5ocFT/xOdobHtYA191S1oeRyFUUgrEgCAgz+grsp0Bh8MI8v/EQz+eITW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpaBiocc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PWc7/Cfz"
-Date: Wed, 18 Jun 2025 20:07:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750291626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TN4LO1bJYNfPoUQFGuQUYNGEvypwOvZqTrhYfCptwc0=;
-	b=PWc7/Cfz+CLd79m5ei3qSW93QKVKnoK8BebDTuty+ENe9uE/V5mAZhSUXbOiLjHyE4aSl9
-	s1BkT/HIvGTYjbKAnQYZUdiBK9kHf7FHmSBkds1rZzLh1SkNBr9bHj1qz8Z3UFKDsvzjoD
-	8eYjLAr3AvhdQed9aoza8hgIWNDnQNs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, mhocko@suse.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: rename the oldflags and parameter in
- memalloc_flags_*()
-Message-ID: <p6nr56qg7vx72qvaalrvntzstyrkt7z3fytfux5nd4wlvef462@znymqow5qjsr>
-References: <20250618070328.2192849-1-hezhongkun.hzk@bytedance.com>
- <20250618164334.54616cb2d70a1ee3c1f28a81@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpaBiocc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB5DC4CEE7;
+	Thu, 19 Jun 2025 00:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750291647;
+	bh=dAiU03fjIPFdubyQ+ApCYOlimY1xmbTJy992dXG7JPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RpaBioccwyNJNYbkYrNLGj4zErChYmfWVMZJnHq3+3BxOlkmwye2o2rwClvFNLBDJ
+	 wnUaq6bScHI2VqmzWG2xmpfvKaj/JYZCGC4SqilwBmfG93hfcy0SthQh24wNK5ggYW
+	 hb1n1l7IV6D6eCtv9K12YAC2hyCYbaqJIAHlrY6QvQOApG1zzXClb2eMZIJuuYcbF2
+	 e7q6O+rZpMmoGn9M9TWJwiBBAI+v6mN21O34m3v+86a1t+x2FA59/PimNUstyxREni
+	 DhOZh3OhlmrQUlxKC9eterk2g/YE3jUoFrvoYSDxTSpa+yhawu8BAa576KWWIUsN+y
+	 urBpAimcVxsWg==
+Date: Thu, 19 Jun 2025 02:07:17 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: linux-man@vger.kernel.org, Alexey Gladkov <legion@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] chmod.2: document fchmodat(AT_EMPTY_PATH)
+Message-ID: <k3rytfb6tjnxbwz5bxmj2q5hob6ao2qotyzees37cm36mmf3qq@b64p6fleloft>
+References: <20250619-fchmod-empty-path-v1-1-feff2c63abe4@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pn57fgp3qgeavnri"
 Content-Disposition: inline
-In-Reply-To: <20250618164334.54616cb2d70a1ee3c1f28a81@linux-foundation.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250619-fchmod-empty-path-v1-1-feff2c63abe4@cyphar.com>
 
-On Wed, Jun 18, 2025 at 04:43:34PM -0700, Andrew Morton wrote:
-> On Wed, 18 Jun 2025 15:03:28 +0800 Zhongkun He <hezhongkun.hzk@bytedance.com> wrote:
-> 
-> > The variable name oldflags can indeed be misleading, because
-> > it does not store the complete original value of flags.
-> > Instead, it records which flags from the given set are not
-> > currently set. So rename it.
-> > 
-> 
-> Your email client is mangling the patches in strange ways.  Please send
-> yourself a patch, figure out why it didn't apply?
-> 
-> > --- a/include/linux/sched/mm.h
-> > +++ b/include/linux/sched/mm.h
-> > @@ -322,21 +322,21 @@ static inline void might_alloc(gfp_t gfp_mask)
-> >  }
-> >  
-> >  /**
-> > - * memalloc_flags_save - Add a PF_* flag to current->flags, save old value
-> > + * memalloc_flags_save - Add a PF_* flag to current->flags, return saved flags mask
-> >   *
-> >   * This allows PF_* flags to be conveniently added, irrespective of current
-> >   * value, and then the old version restored with memalloc_flags_restore().
-> >   */
-> > -static inline unsigned memalloc_flags_save(unsigned flags)
-> > +static inline unsigned int memalloc_flags_save(unsigned int flags_mask)
-> >  {
-> > -	unsigned oldflags = ~current->flags & flags;
-> > -	current->flags |= flags;
-> > -	return oldflags;
-> > +	unsigned int saved_flags_mask = ~current->flags & flags_mask;
-> > +
-> > +	current->flags |= flags_mask;
-> > +	return saved_flags_mask;
-> >  }
-> >  
-> > -static inline void memalloc_flags_restore(unsigned flags)
-> > +static inline void memalloc_flags_restore(unsigned int flags_mask)
-> >  {
-> > -	current->flags &= ~flags;
-> > +	current->flags &= ~flags_mask;
-> >  }
-> 
-> I guess so.  Maybe.  A bit.  Kent, what do you think?
 
-Eesh, seems like pointless verbosity to me. Maybe don't change it if it
-doesn't need to be changed?
+--pn57fgp3qgeavnri
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: linux-man@vger.kernel.org, Alexey Gladkov <legion@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] chmod.2: document fchmodat(AT_EMPTY_PATH)
+References: <20250619-fchmod-empty-path-v1-1-feff2c63abe4@cyphar.com>
+MIME-Version: 1.0
+In-Reply-To: <20250619-fchmod-empty-path-v1-1-feff2c63abe4@cyphar.com>
+
+Hi Aleksa,
+
+On Thu, Jun 19, 2025 at 04:34:30AM +1000, Aleksa Sarai wrote:
+> The documentation and behaviour is indentical to the equivalent flag for
+> fchownat(2).
+>=20
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+> This was added back in 2023, but I forgot to send the documentation
+> patch for this and only noticed when I was trying to use it and realised
+> it wasn't in the man page -- mea culpa!
+
+Thanks!  I've applied the patch:
+<https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/com=
+mit/?h=3Dcontrib&id=3Da4535bb6ddc0c1a060cedaee86430c39f590804e>
+
+Have a lovely day!
+Alex
+
+> ---
+>  man/man2/chmod.2 | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/man/man2/chmod.2 b/man/man2/chmod.2
+> index 307589481593..671e256ba525 100644
+> --- a/man/man2/chmod.2
+> +++ b/man/man2/chmod.2
+> @@ -190,7 +190,30 @@ is absolute, then
+>  is ignored.
+>  .P
+>  .I flags
+> -can either be 0, or include the following flag:
+> +can either be 0, or include the following flags:
+> +.TP
+> +.BR AT_EMPTY_PATH " (since Linux 6.6)"
+> +.\" commit 5daeb41a6fc9d0d81cb2291884b7410e062d8fa1
+> +If
+> +.I path
+> +is an empty string, operate on the file referred to by
+> +.I dirfd
+> +(which may have been obtained using the
+> +.BR open (2)
+> +.B O_PATH
+> +flag).
+> +In this case,
+> +.I dirfd
+> +can refer to any type of file, not just a directory.
+> +If
+> +.I dirfd
+> +is
+> +.BR AT_FDCWD ,
+> +the call operates on the current working directory.
+> +This flag is Linux-specific; define
+> +.B _GNU_SOURCE
+> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
+> +to obtain its definition.
+>  .TP
+>  .B AT_SYMLINK_NOFOLLOW
+>  If
+>=20
+> ---
+> base-commit: 471c38fb3c5c53c6df2fad4a7353559b330c1323
+> change-id: 20250619-fchmod-empty-path-7680e8bb5481
+>=20
+> Best regards,
+> --=20
+> Aleksa Sarai <cyphar@cyphar.com>
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--pn57fgp3qgeavnri
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhTVLQACgkQ64mZXMKQ
+wqmmWxAAu2F2K8o8jtvmQadksYYWkWbjTcuIim2CIHgUy2XsmKEYH2G2IHnehH/l
+GdEEULookHo3RF0P1OEQA3wOhe/g3qpYFJUEv2+cCkaa1yut/v9D0JFTU6JJdKFd
+RUxMXGUFfdOd/qEAmqoOi03ukUtK0u5F/+5hPcimDslVXtKa/BRJAoG5W/KSPjzQ
+gkdHAmtGLQTulrZI9bpLzPhTEPEfyrt6cXXetxyrkT9Ij/x+JoS7IF0+j89aaOOB
+07UiZFLY3v5IgW581ahjxxNMIQ8uWDeZl3DE+SIF9zwYQpna6SiX3c5t/3PkjFey
+sxWO9RpfKCvk0QIGcHLN1acv2rBcpmsb/Rex5DLvrx/wlTYkwvCwg4yyE4IPtUMK
+kSU2QGoJjPbedivDjm+69yThHqGKdfgxLX5fPw9vqTFeloi8VExSkLiHmgHsT5jm
++/Z1Jtmfh8eJ9dnsNzzClqXgzchq7XVb6W2Q576VsfqfB+8Z6ET+W9T2wXCxfN/W
+VvBp2zz7h+LZOPy5yPytxmwoX783G45RAqzR1rRG81Zo7PSVX5Ewy8wFGuEwLnq0
+P2w7uXTQe4dbK2GTd0UQbDx+RiM3VNF6PIZt43GkParthOqMg3ARpsVoSZNLyDOl
+AW+qlR3nI38VCx6kB2ZhOjiswYlXBEb7VPMQ7UaLyHCJbP8nIHw=
+=KCyj
+-----END PGP SIGNATURE-----
+
+--pn57fgp3qgeavnri--
