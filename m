@@ -1,152 +1,113 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A287246760;
-	Thu, 19 Jun 2025 13:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117FE522A;
+	Thu, 19 Jun 2025 13:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340971; cv=none; b=SpEIQ48hoVFQN9jZM2e0a53p0COBVSTPQg9IKaa8t37oMVCo5zuJYE17vRCZ7ESPaFjchguNkBbk975s92rHJtIEpCXac7nwTKMUB93VAhQ1vuU4pS5UNh/udWei8xOadX7Q/7uNqw5RlSrkoGiWsAtfbJxuXwuo156rKhk72xI=
+	t=1750341027; cv=none; b=VULcQJFwkvf0dXoPWUx3vKBxCV33b4wMk6Fuu5bp9kwW9ksgvAT1WBaD3H2WxNMGh5EjOtcU2074O4G3u8CK6RCKtv0LvCiDyLW6fZmdH9vkBcEWAiHWIwTbGz2CFaNd1Y00KA6rpn22V/Ph5BNVWUccAphLibOd0yJz01h7o5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340971; c=relaxed/simple;
-	bh=vHMy8lfA0RvTgRqwgI8565ZKT2Th82SQ44ADnJE2z5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLgcowCkuJ9UFtLDFYd1cSPbERvyoXryBMNsxjoh5QiRsIzK7r61+53h156gNklRJIH1yNsyc4j/oSamaIvoeWq/bFVSmnkE6T1zUu9VeB3HLm9VAf6dALUivCI2PuQ7xayoT5icK9WlAg50WSwSkhggiTnz5d8kMBtOm0zZXe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIQXvTHX; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1750341027; c=relaxed/simple;
+	bh=17rqwIF9S9LIvpH8YoFd92XwGkAXj+mh597VvniVRQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rYF6Nrz/48Z+IuuIPHPl96CRZIk4FveRmZYrx6PLgfZQexbp4bynMK81okn4M3pxYbDSWZpBRV5CUb2vnqtmVo0SbHcdWQ7fxu55uIMi6AWZC18JVzRjBy7SxIDC3vl/YeYUXT1igdal2Ts4ap32/DALvP9QZQ2/yZ54O2wU61k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIQXvTHX"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso612675b3a.3;
-        Thu, 19 Jun 2025 06:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750340970; x=1750945770; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWaDkoPD+uSM9zWkt35EXFyWvonB0R9vMQAYIH1I094=;
-        b=HIQXvTHXU4MinC0ewPfDiBPlt9NxJ0N9gLLgFSCPpQbhhJSsewu6rmalzQ+QlyZbjq
-         w5QcP71Z4AW7j7OU910F8ENHa+NqnFJjG+ZIyfLImqCWQhgmkvL4ByzN7KX7+BlC5kSy
-         VEVv+XvlmFrchjbJhsVPyUx3fUv5tvPwbMmrtO10+pvCpmtAELB3ytA3LDktC417kXzD
-         fgVSYlgsAiVWT2aBr77C25qJLrJ9tgmgnbtf2+IytArtMdIwgJTtQf+lbe5vByy9VF4u
-         KNYpg3Ds72l4nakQVXGniIslbM4IxImXhKvA1xg+xUuJ8FnwNI+Cxafk+xgXmSq2Vt4e
-         cM8w==
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87f161d449dso582432241.3;
+        Thu, 19 Jun 2025 06:50:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750340970; x=1750945770;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWaDkoPD+uSM9zWkt35EXFyWvonB0R9vMQAYIH1I094=;
-        b=Xk6idt3tTDx9ftG9onXl1GsRMPSLOKo14wyA4CEmyQDYtFNh5O54c6MN78V34GhdGV
-         t73dpTnkG/Kb4yrx5AfI1RkYc6JUmADrt7OdcXYL6JCSaJ2LN9OVm6SDHR/YKk1ZhkZF
-         b16RATrAdVJmArwVkBsEUuTeOFKLnf26knaxL0Jl0Jf2m3FWq/bM1Xt48ZfSK1maY07n
-         HICEvPdjDAGHJ8nnPuRX6c9cDvIZ78BJu7M2W9y6Fn2+k9SV9Z2JRHN091HmeBEwHXnJ
-         xIXTrwvwj0iymgMvq1BQIWIv1pNAEbphsvSdW07fIdVG9hayKL6lb/deRcMGYqScXa6s
-         c4cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUb2QPlFgPl0UTfLaAemzjyVS7iGdc5gUkQJih0osS/uGMJykAKGC8OgwXgFvZ5HqOw7goStGGuLyRKsQ==@vger.kernel.org, AJvYcCXu+Pzqf9Hkck81TuOqFUaSabjykirrt9VNdgVC9dnSXiw44ps0UycSvu5tklAuU0LlCWHxAeZ0qj8neePS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnHm09tFjUa1sYppFgemaevY/0cyCQKU2Q9BeG6iWJNE3V7+Yc
-	zaPEy1alb2URAPIS3llHFpd3dFBabHfle6pcz7FCc4wYEC2YtE+3TKaG
-X-Gm-Gg: ASbGncvK6DnXZOzRsarWaImVGc8UD/nQDeEn6f6DdVKkEPGWBX/ip23jLUknSZG8uO+
-	sqPu56Jrch7VMOnvshqYVtZpSyC1bDnbcc/Qzu63KKeeg12wU65uSQ0rNUU6phRwpI372C+bu9x
-	JBe3uq904erm1Tf5nAK9bg4r6cYDeC3BW4hiyimu2ENISasxM01vlvyFx7TgHnFnga4E75woGqv
-	nocNFv0okQXqUEiVPag0yO8Ek6GGy34VA6JpntgwsK3Z1qErntoeO5YXE5E0R5ZXQro4E8SZ5B6
-	sqgmcI5Cjg3jaRCKl+A9UZbGQRS3cNn2oRyAgAF75VNK3Nrz5oCfPn1Yhw==
-X-Google-Smtp-Source: AGHT+IFwhI6f+rDnPbqksOiWdj6ftTdebu5QnmBHRMDK0BCTl0IMR+BYGJa9ss9I1NOdNDhtVR9WIQ==
-X-Received: by 2002:a05:6a00:21c3:b0:748:68dd:ecc8 with SMTP id d2e1a72fcca58-7489cfea237mr26170827b3a.22.1750340969731;
-        Thu, 19 Jun 2025 06:49:29 -0700 (PDT)
-Received: from zinc ([182.216.63.93])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748ef5890easm3377949b3a.92.2025.06.19.06.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 06:49:29 -0700 (PDT)
-Date: Thu, 19 Jun 2025 22:49:24 +0900
-From: Kisub Choe <kisub.choe.0x1@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Kisub Choe <kisub.choe.0x1@gmail.com>, sudipm.mukherjee@gmail.com,
-	teddy.wang@siliconmotion.com, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: sm750fb: rename 'proc_setBLANK'
-Message-ID: <aFQVZIXoS43iu0o5@zinc>
-References: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
- <2025061817-jacket-nacho-50d6@gregkh>
- <aFQMrXRzui58krqA@zinc>
- <2025061927-pushpin-scholar-a898@gregkh>
+        d=1e100.net; s=20230601; t=1750341023; x=1750945823;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8PA/2Orye8C3qBctW0WFI5cU4GUc9aL2SqWpOnNsdnA=;
+        b=GEgL6yCbo+zOs4laLOh0SmIc4fdy6xkWAeSpv0fTJNp77SR6j/FPIAGBX8ECeZP52/
+         /dGngZIxCMnnAbYl/1lxCM7jHDYTmyynqY4en0WtaPQCVzTM7MUzK0m6KIezIpTmnLjZ
+         5jNqHMF5hTafzyA0HdM2zwuiWJBkr7BC223rCBiik4mpdEPfGbRTot8SGrIbYvxc6iF3
+         haN2Lk/s50lFa217uWZVtqUPG82KCSuy5/b0tfIY2aq7YbxZrpR6R3KXy5O/TFxBpJn4
+         OaN8LoFxRB+v9Kfu/ipiJ6k4wfsem65/4pY8lxeuSROO/5+pIThbkNdpDygjq3tJYi7Z
+         v+Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQvr23+fed4AkzdPUp0SpjYyRdbxyY2I2VI7e2DT47prhYPW1Td6yD+TLqPSKxOriKuv8ysfaa23sfVlkQwcxBTc0=@vger.kernel.org, AJvYcCWXPy2I3XMtrQmBKw7Mttkwvf/pLHq6puHt2PUYlsg98nh65Yx0PZNtn1SEMjtXvJmX/CEBd5ugZ/xT@vger.kernel.org, AJvYcCX/vcabnIp9kc9L2UZtmLLPgYjZw46SpZxShw4A7bwmlm2X2QZpWFaWR+xmAw4vHNr+96dnfeJoNwc719L6@vger.kernel.org, AJvYcCX28EDRwksLaPGnjYOquaqgeKXGQmCgUQXGwzomvuPN9qb/mTBk6iSGmaKmV+GMk4d9SihPzT45FExR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFiWiVqFe5VwL36o/Ol3I4daz/p9LWR7pfvOwSSPJ7aX9uT7OY
+	vzm2kJ80bANCT+M92uN60NqqFlxXIFsywnqDYsPnqhmJuAmhnSt2IjN7lCJ9gbXI
+X-Gm-Gg: ASbGncsCsAPKMT1GX1fah7RQGhDh14vt55CYi71D2dpM4yPG/m1SBCp0GzFcSyCRFCb
+	h9qUuOxF5+aP1x/ZCl47KqGlkbWVk1AYruoxjzQNPFUVR7n+TrfmmB9bWaSAi694PjB5aThUe3C
+	SeOBSWEdYb5y+hXF8WMz6YL2hFSM9ccOhdRkOCy63phc3WSUFKu/fNs7sNGgQ6pH8z7RCavxfzs
+	jniLaUBG/JGkT5cpBNb8aTCi1znh7ilb2baakAm2vbJaw2Xs0xSpySIjZLuaVrYAZaFt12TuCVS
+	rZWE40wgXYLJ6BuKw+zZ8bb9TAOlsUpO7mlbCifPyxkYjkszMgFPr4BlKMoxqmVnOfewfEKcwW+
+	+sfTo3JEuvQBHZyC9IF/eD2g6
+X-Google-Smtp-Source: AGHT+IHRy1diZ85ChBfviMGFWd3DBbpClp67HtvaIidkA2DkikGzuFX7uVxfkTBj3mTP84t9kabzyQ==
+X-Received: by 2002:a05:6102:291e:b0:4e5:ade7:eb7c with SMTP id ada2fe7eead31-4e7f620796bmr15585848137.12.1750341022631;
+        Thu, 19 Jun 2025 06:50:22 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e70c5e17sm2311693137.21.2025.06.19.06.50.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 06:50:22 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e7feaae0e1so609828137.2;
+        Thu, 19 Jun 2025 06:50:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX7dr0dEGpoHw+EfwLpaeZhhyt3QTSDNZKxkMoZJu17uNe/gbAQjxzXqaCBO+CIkpNAmfgQXAFrDBQh@vger.kernel.org, AJvYcCXk2mrK7EskFraVUDKtKpXG/PjYeP9s2RwSkFB2VKA69fS2xHAiuRFqrniMJGDHtqWUo3HfGYlQqR3ZoCg+mALbeEs=@vger.kernel.org, AJvYcCXtClxbj9/o215csMD2uBJsp439mFsp9e0XDOnrB9luojwOe8i4YHwYKAN9HyWctau2kgtJLOjzj1ud@vger.kernel.org, AJvYcCXtd32Kiw1jDRoD1+2aPI/sSjelQON7iD4CqzwOzEi+3b8LjOyLpuOHufbYzKPoOakgHK5Y1zPDYlQMhYbH@vger.kernel.org
+X-Received: by 2002:a05:6102:160d:b0:4e6:df73:f147 with SMTP id
+ ada2fe7eead31-4e7f6188a81mr17457976137.11.1750341021249; Thu, 19 Jun 2025
+ 06:50:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025061927-pushpin-scholar-a898@gregkh>
+References: <20250613113839.102994-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250613113839.102994-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250613113839.102994-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 19 Jun 2025 15:50:09 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVRFUb0ht8K4ONhSn8rh7X23=vaxnZuKJ0sLFDRLwOLBA@mail.gmail.com>
+X-Gm-Features: Ac12FXy0vX9Oyxu7zFspTipfUwmgTHICoQvKiOwbL8RfYJosuAdocBaODmHex84
+Message-ID: <CAMuHMdVRFUb0ht8K4ONhSn8rh7X23=vaxnZuKJ0sLFDRLwOLBA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: i2c: renesas,riic: Document RZ/T2H support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 19, 2025 at 03:24:26PM +0200, Greg KH wrote:
-> On Thu, Jun 19, 2025 at 10:12:13PM +0900, Kisub Choe wrote:
-> > On Wed, Jun 18, 2025 at 04:26:10PM +0200, Greg KH wrote:
-> > > On Wed, Jun 18, 2025 at 11:15:55PM +0900, Kisub Choe wrote:
-> > > > Rename 'proc_setBLANK' to 'proc_setBLANK' to
-> > > 
-> > > That doesn't rename anything :(
-> > Rename 'proc_setBLANK' to 'proc_set_blank' to
-> > > 
-> > > 
-> > > 
-> > > > conform with kernel style guidelines as reported by checkpatch.pl
-> > > > 
-> > > > CHECK: Avoid CamelCase: <proc_setBLANK>
-> > > > 
-> > > > Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
-> > > > ---
-> > > >  drivers/staging/sm750fb/sm750.c | 4 ++--
-> > > >  drivers/staging/sm750fb/sm750.h | 2 +-
-> > > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-> > > > index 1d929aca399c..bb2ade6030c2 100644
-> > > > --- a/drivers/staging/sm750fb/sm750.c
-> > > > +++ b/drivers/staging/sm750fb/sm750.c
-> > > > @@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
-> > > >  	pr_debug("blank = %d.\n", blank);
-> > > >  	par = info->par;
-> > > >  	output = &par->output;
-> > > > -	return output->proc_setBLANK(output, blank);
-> > > > +	return output->proc_set_blank(output, blank);
-> > > >  }
-> > > >  
-> > > >  static int sm750fb_set_drv(struct lynxfb_par *par)
-> > > > @@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
-> > > >  	crtc->ypanstep = 1;
-> > > >  	crtc->ywrapstep = 0;
-> > > >  
-> > > > -	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-> > > > +	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-> > > >  				 hw_sm750le_set_blank : hw_sm750_set_blank;
-> > > 
-> > > Why do we even need this function pointer?  Why not just do the check
-> > > above when it is called instead of this indirection?
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > 
-> > Dear Greg,
-> > 
-> > Here is the updated patch with revised commit message. No code changes.
-> 
-> Please read the documentation for how to send an updated patch (hint, it
-> needs to be a new version).
-> 
-> Also, see my comments above about what you should do here instead of
-> just renaming the variable.  Please make that change which will remove
-> the variable entirely.
-> 
-> thanks,
-> 
-> greg k-h
+On Fri, 13 Jun 2025 at 13:40, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document support for the I2C Bus Interface (RIIC) found on the Renesas
+> RZ/T2H (R9A09G077) SoC. The RIIC IP on this SoC is similar to that on
+> the RZ/V2H(P) SoC but supports fewer interrupts, lacks FM+ support and
+> does not require resets. Due to these differences, add a new compatible
+> string `renesas,riic-r9a09g077` for the RZ/T2H SoC.
+>
+> Unlike earlier SoCs that use eight distinct interrupts, the RZ/T2H uses
+> only four, including a combined error/event interrupt. Update the binding
+> schema to reflect this interrupt layout and skip the `resets` property
+> check, as it is not required on these SoCs.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> v2->v3:
+> - Replaced Transmit Error -> `Transfer Error`
+> - Fixed the order of interrupts in the DT binding
+>   documentation to match the HW manual.
 
-Thank you for feedback.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I was wondering if you could share additional feedback regarding
-pros and cons calling a function directly based on the condition instead of the
-current implementation?
+Gr{oetje,eeting}s,
 
-Regards,
-Kisub Choe.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
