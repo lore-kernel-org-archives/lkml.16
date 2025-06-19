@@ -1,132 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CEA221FDF
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0DD132103
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333237; cv=none; b=mtivdEGVN+Cj0+yVCGHlZHE2j6PNGpSr7kUC6w/5hiqZuuxlVfbBzhMwq8nkl5DoQPmBKcVMwvmUe8MCduDVijih+AEQOvR68pEJpc2FHFpMp7G9hNskM280m+32TDnb1dMRVxIWJXuvufVgtxj0U8yTpJPmUjse+YcByhj0xRw=
+	t=1750333281; cv=none; b=KepWs871viExpfXYJKP9ucTLI3xBU5duwiTMK+IF4li70ybFsEGGYio0qjVHCEURKdUSBqsXjSO3D3VzYMC+7djPW79FgnvPCBs0rpVN87cAjhuss8G9d7LQzXgQDiRJTD9bTsbqGhw25O4KzqmwW5Yo1eRtsF2EEtRBNu2PclE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333237; c=relaxed/simple;
-	bh=fI4b0JmvmR/LKJHS4kYGRgS79fqtVDdNyB26iJdkI7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fylYRwaVH0JkndoiqiwA9upAa4Q3t6D44d9FPzaDn06ccTjyOWH8ZylHgeVM7c1fCAFkJow972HrgardsElMsSzQ2BzLLfjryActrWA/Qodix0deijomWBVCzD+k2Txd+fKYx8Jk8DL+uK/nA6kSuwhlan2VFXTuWxSGqqFW+4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNZcfN0O; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750333281; c=relaxed/simple;
+	bh=aZ7rsXK+pQ63res4/2ZuCtjBRras3Ceyq6psDA84uRc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=kjHQ7VMKCKcM+Vo1OsSiAmbowDDVw966xuD4H5yZIAt3J1Hy33J1N1Efp5CF69mya0AWZ5Lwpv+XD51aEX0cDMwWnUj6w1XAxbp1Sndk/Nm0k6C51DSZTKP7neXBXmyQHYL0BCuwnbU+ibop60kpvs25i6EYmf/X7NU1GZN8kVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=P92wfx2k; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNZcfN0O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750333234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5MqY5EbJPpgVIT/GMNbBL+m8bzhYEjTyXfnL0CxcoM=;
-	b=LNZcfN0O5EiHbj61InS26SG0DzgdUWWkci85mvoDr02Jd0QJjHDcXuzfG+DX48i/0nJxv8
-	nbpvCl16f3280jjXtn0KogAmJZy/KVQsA/eBHUWqIMCPVYoR85DHFC78sitAGwReqtsP7g
-	eGM9zD7jKB8dOuDqOW+S/QtDDyaptoA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-511-izFp95o5MFe5szRlLiozwA-1; Thu, 19 Jun 2025 07:40:33 -0400
-X-MC-Unique: izFp95o5MFe5szRlLiozwA-1
-X-Mimecast-MFC-AGG-ID: izFp95o5MFe5szRlLiozwA_1750333232
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a50049f8eeso324160f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:40:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750333232; x=1750938032;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g5MqY5EbJPpgVIT/GMNbBL+m8bzhYEjTyXfnL0CxcoM=;
-        b=BSw69vZo0orw1UAtrla9itqtuTcPRHxd+2TBgPJep7nTn4ay2bl3IpCiLswVvdYJOt
-         jPR2BcU2or/SbxbeGUE1iYtFs5n/oqWfE+Xe3YpbZWi0a/Kko/Q9uB3GbCqvVqKDUzZ4
-         exk4Gw/QHWNFCjUjJNB4HlLUnbRRJwNiosheuMrlX2Iw3gVfiyQgMWuPaWMIgnonn6cU
-         7KYjeUtsdqD9rvVL72c1b/6i2m3rFgXRN6OJypPW2nH5HyVQF6NvxmusobdH+o8pWmLA
-         UDDxSPbUj0IjxuLWhgrXhpXmWu8JVHCT2ssCi2/XHRSZBv+Zav8fYNuVgakJZXZuk5Tt
-         1dYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/88+amfMqIaj0ToqKWpQD5It0YqP0/WubKj477MKk8xNdpANJPFI+2M+dCPmIJbfyQO9eNVTUqfuSMcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvyMsDUE0RDJRCJyffEsI7NusJcN4uAUFs0BZhlpK6gnUExAor
-	3GGZ8G8USI04PBMx4IjkkbYYVFRAFFzZeFkokOMJoCb16jEQSS4pcASF+OVN/DRhcGcehms7glk
-	GtYS3helKnEsJAJGmNP7JR4I5lKGMzMCsF5g2phUEJU98DJgePSmpwQ4EVcipxDD9VA==
-X-Gm-Gg: ASbGncu3giSmua4XO4TYAb0ZJdttbK1ig8N5eB1/DujB9H4I758dSGhwmo7F3lAGJPa
-	FVs66j8Nmryiib1jjH1pUE3zcCttqOJl3VpcloWflq2U8lVpPEdQXgiALxB/sN/RfTv54qVayxj
-	3ZIGdaejWWbKAXqH02liI2fB2sLoq+D5EOafxsfNBJUv35RbY2E4wkrD10bfWdmWASTb5cUzs0y
-	3HJ56aIItNVrErT/IDDrt4x9IuDLVh3oxjljvhq2uOXVDX6FjTbTwxSZrau0IBbDXpbE5Ou36HF
-	V8VDTLNKuIzZ6cWjt1Ie85gwefGQmuKJkuYBTcpSV5Pu02MPs3NIXFkR2GloevtJ4HV7nA==
-X-Received: by 2002:a05:6000:2d0c:b0:3a5:8d0b:d0b8 with SMTP id ffacd0b85a97d-3a58d0bd1camr4831909f8f.54.1750333231806;
-        Thu, 19 Jun 2025 04:40:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkPsAM7rzvUuUIwuWTbnbsaa2hHEQ50y/ld0Zh2qJ6v7nBnPiul0WnrvWb0vFBIsYzskhEqg==
-X-Received: by 2002:a05:6000:2d0c:b0:3a5:8d0b:d0b8 with SMTP id ffacd0b85a97d-3a58d0bd1camr4831872f8f.54.1750333231356;
-        Thu, 19 Jun 2025 04:40:31 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:271a:7310:d5d8:c311:8743:3e10? ([2a0d:3344:271a:7310:d5d8:c311:8743:3e10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b28876sm19250304f8f.73.2025.06.19.04.40.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 04:40:30 -0700 (PDT)
-Message-ID: <7fce273d-06f4-498c-a36a-d6828b4d4f30@redhat.com>
-Date: Thu, 19 Jun 2025 13:40:28 +0200
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="P92wfx2k"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v11 14/14] dpll: zl3073x: Add support to get/set
- frequency on output pins
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
-Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
-References: <20250616201404.1412341-1-ivecera@redhat.com>
- <20250616201404.1412341-15-ivecera@redhat.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250616201404.1412341-15-ivecera@redhat.com>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1750333273;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UlxTUj5Ir+oO3iGWYKmoJ9ycuaXkjQkkYTvLvsQbhwI=;
+	b=P92wfx2kjqVESzvsjtMDG06Ohguto8BeIB3FFHgIMXvCnwAQj49+r7N2yWFEA4MI6m4Q59
+	shyyFpYG9kEpxklcX2EbTabMIHxV0RJH4z6DOP5bnrtIWy7KlMqWw0cUYlovxX2Y3O0vaJ
+	IDWXdqxT98Ge7B7XTe7HuYVWBLXeC+TscRPYns1xaFP4vdI7g2Itwx2jK7hjZCwm2e4BFd
+	VAsBsm1t5U6vOFMINsb/VMqcX71NMDHyU/QfKac88/qitTP5aYH8q9p7cWoKujwJUj79Nv
+	+TvErZLKsDYOSXadvbF9iz7EaVd7Xrun7+xwJqCDCW3lR6wLDt88+H0abmFNvA==
+Content-Type: multipart/signed;
+ boundary=b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Thu, 19 Jun 2025 13:41:03 +0200
+Message-Id: <DAQHCWR6W4LD.2Q1H9B9JO2LJZ@cknow.org>
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS'
+ panel description
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Olivier Benjamin" <olivier.benjamin@bootlin.com>, "Heiko Stuebner"
+ <heiko@sntech.de>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
+References: <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
+ <DAQEX04P5320.CQDU7SL7AV4A@cknow.org> <5461462.0VBMTVartN@phil>
+ <c26ce505-343a-4759-90b5-a026c66979c7@bootlin.com>
+In-Reply-To: <c26ce505-343a-4759-90b5-a026c66979c7@bootlin.com>
+X-Migadu-Flow: FLOW_OUT
+
+--b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 6/16/25 10:14 PM, Ivan Vecera wrote:
-> +static int
-> +zl3073x_dpll_output_pin_frequency_set(const struct dpll_pin *dpll_pin,
-> +				      void *pin_priv,
-> +				      const struct dpll_device *dpll,
-> +				      void *dpll_priv, u64 frequency,
-> +				      struct netlink_ext_ack *extack)
-> +{
-> +	struct zl3073x_dpll *zldpll = dpll_priv;
-> +	struct zl3073x_dev *zldev = zldpll->dev;
-> +	struct zl3073x_dpll_pin *pin = pin_priv;
-> +	struct device *dev = zldev->dev;
-> +	u32 output_n_freq, output_p_freq;
-> +	u8 out, signal_format, synth;
-> +	u32 cur_div, new_div, ndiv;
-> +	u32 synth_freq;
-> +	int rc;
-> +
-> +	out = zl3073x_output_pin_out_get(pin->id);
-> +	synth = zl3073x_out_synth_get(zldev, out);
-> +	synth_freq = zl3073x_synth_freq_get(zldev, synth);
-> +
-> +	/* Check the requested frequency divides synth frequency without
-> +	 * remainder.
-> +	 */
-> +	if (synth_freq % (u32)frequency) {
+On Thu Jun 19, 2025 at 12:47 PM CEST, Olivier Benjamin wrote:
+> On 6/19/25 12:31, Heiko Stuebner wrote:
+>> Am Donnerstag, 19. Juni 2025, 11:46:15 Mitteleurop=C3=A4ische Sommerzeit=
+ schrieb Diederik de Haas:
+>>> On Thu Jun 19, 2025 at 7:21 AM CEST, Olivier Benjamin wrote:
+>>> Thanks for working on upstreaming PPP things :-)
+>>>
+> My pleasure. I also have
+> https://lore.kernel.org/linux-rockchip/20250509-camera-v3-0-dab2772d229a@=
+bootlin.com/
+> pending =3D )
 
-As the frequency comes from user-space and is validated only the DT
-info, which in turn is AFAICS imported verbatim into the kernel, I
-*think* it would be safer to check for 0 here or at DT info load time.
+Happy about that too, but I 'happen' to research DSI connected displays
+(for other devices), so I felt comfortable to chime in with that.
+I haven't looked at camera stuff yet (and it's not high on my prio
+list), so hopefully others will chime in for that :-)
 
-/P
+>>>> Fix a few issues in the panel section of the PinePhone Pro DTS:
+>>>>    - add the second part of the Himax HX8394 LCD panel controller
+>>>>      compatible
+>>>>    - as proposed by Diederik de Haas, reuse the mipi_out and ports
+>>>>      definitions from rk3399-base.dtsi instead of redefining them
+>>>>    - add a pinctrl for the LCD_RST signal for LCD1, derived from
+>>>>      LCD1_RST, which is on GPIO4_D1, as documented on pages 11
+>>>>      and 16 of the PinePhone Pro schematic
+>>>>
+>>>> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+>>=20
+>>>> +	lcd {
+>>>> +		lcd_reset_pin: reset-pin {
+>>>
+>>> I don't know if there's a 'hard rule' for it, but I'd recommend to use
+>>> ``lcd1_rst_pin: lcd1-rst-pin {`` as that would match the naming from
+>>> the schematics. I realize that some but not all (other) pinctrl nodes
+>>> follow that 'rule', but it helps with traceability.
+>>=20
+>> not a "hard" rule, but a strong preference.
+>> I.e. we want people to ideally be able to just hit search in the
+>> schematics PDFs for the name they saw in the devicetree.
+>>=20
+>> But following the schematic names, is the general goal.
+>>=20
+> Very fair. I used "lcd_reset" because even the schematic is not super=20
+> clear: it uses "LCD_RST" on page 16 and LCD1_RST on pages 11 and 16.
 
+AIUI, the GPIO pin (GPIO4_D1) is labeled LCD1_RST and on page 16 you can
+see that is connected to LCD_RST from BL102-G39-1FR.
+The definition here is about the GPIO pin, hence LCD1_RST.
+The other part of my suggestion was related to another 'convention':
+the name and label/phandle are the same with ``s/-/_/`` (and 'reset-pin'
+is not specific enough; there are a number of reset pins).
+
+Afaic you don't need to mention that I suggested the mipi_out related
+changes; the reason to do that (unneeded redefinition of already defined
+things), is.
+
+Cheers,
+  Diederik=20
+=20
+>> If this stays the only suggestion though, I can fix that when
+>> applying. Or you can send a v3 - up to you :-)
+>>=20
+> I'll correct to lcd1_rst_pin and send a v3 (most likely later today)
+>
+>>>> +			rockchip,pins =3D <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+>>>> +		};
+>>>> +	};
+>>>> +
+>>>>   	leds {
+>>>>   		red_led_pin: red-led-pin {
+>>>>   			rockchip,pins =3D <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+>>>
+>>> Otherwise,
+>>>
+>>> Reviewed-by: Diederik de Haas <didi.debian@cknow.org>
+>>>
+
+--b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaFP3UgAKCRDXblvOeH7b
+bi9DAP9ZolhYlKXrTz+ChkMa/hViAuhi8CvNP7H+iQUeMfPungEAvGMwNigMNSff
+1ZcRaGagcoiWom9lXI7yxhvd5TpmGws=
+=K75Z
+-----END PGP SIGNATURE-----
+
+--b5fff2ebebde679f93dfaf923c9136a97ab4b047f673687733da1b95f36b--
