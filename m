@@ -1,344 +1,114 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11hn2204.outbound.protection.outlook.com [52.100.172.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE6F22539D;
-	Thu, 19 Jun 2025 11:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.100.172.204
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332311; cv=fail; b=YZeXVzab/7duIHUr1PZE6PpSp7Xp5+qI/83B6sBsmGVYtAE22If0qM54nwvYQs3ls3wH+VRoArcZ7nSNLNImKNSkn8lhGeqJPPBhKQ69rJKhdACQmk5tXYRYgrUfO0905zrAbnAAHS4aOhVNLTskVLD+8shyElezqbxRiH5v0WU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332311; c=relaxed/simple;
-	bh=hn3iX34QpRfdDdaLq8NTaA6c6RN232lHFj/uIy1XGVM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XkbS1LB16lVkurb1flzDDsBIhZr5KFs+J2EF/3zW1GS6bTe7Y3PwPzHgZZiwuwt+Vg1QdZpF/JVSYgPJRVl1xwfREMc69+FX5jsRDLLjhkTywCAUb2jPuvYXiV8SWhoImW870HVVtiwuiVGe99G4rLRH3NQb+jgFDMlZYlW6YYM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tw.synaptics.com; spf=pass smtp.mailfrom=tw.synaptics.com; dkim=pass (1024-bit key) header.d=tw.synaptics.com header.i=@tw.synaptics.com header.b=gYpXWvo6; arc=fail smtp.client-ip=52.100.172.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tw.synaptics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tw.synaptics.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E1C22539D;
+	Thu, 19 Jun 2025 11:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750332350; cv=none; b=nhRHwz/IMAeCk+zpaKnYS8YmuGcoTiJNDwk1N6ACH/exyJG8oW8USXWiDCgS7SiCuPMWNRQUcJ5tGFV1cn7HfBqax8onuG95pnQLxNTUZYUZSazMYjdJ8MoZpVxODQIe4oxoslEcmNiMxGEQ4PEdsIWJ3KNzDM0A+xa58GauEio=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750332350; c=relaxed/simple;
+	bh=i0izfvAJyCKLVIQ9k2OFX5GZwef7xZQk0VXehAX65nQ=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=q+UwFsNr5k6HL6sMO1dFOho9+gXDHdxXno6WXEPJV5a9e5S8q5mEBRS6FFxB6k2Mb2Hd4o6DMrPRP48iasMFACF07IYFhZQHP0C3Ukw3g+vcWrZA4Wj7fkCdQL/lujtjKzzLXZS7S9Lmai7CQ0NWdZ5jGOFpjxgADh+vpBAPtP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gv8fC/B+; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tw.synaptics.com header.i=@tw.synaptics.com header.b="gYpXWvo6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tDkfhfiGluDh/zV4ljGuiuq0i3QX+cR7NpvU4KQw4+ZcIvGaUzeXFUUsA1/cCVSTOdUKBk7jgHSaJAqSF+tycgmQoRWJuU2d+AVSObpbeCBX/Ni6KVktOMvGVbexjZ+TuuMv0eM2ca6TJ6tvbYoeZQSTabCCZzJRv5zh7Q1ZbSibsy5w1dewGErfoZ5Y+KtkK2qkzVLBgEKFZgQZDn6g6XOP375xJcUqBQKdQFEA3tpypFl67Q88hXBKkySrftgpHpaRwUkhsn2RTq++vaNkGV9mjBfVKROrnmWehxhE0UHwJCFDuIWgXV/Rc50S5knp+KLRNSyFd1fybLV0cgQo0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3F1bx2oesNsXHVM8JQXfco3d4kuwKfVLce8EEP2SB3A=;
- b=FUXZn5ea3pCIzWsTmgF1EyrnENOokKryXe+YPLl90RdAsXp0y258Z/i27O/joyWQSMYRVlX+tUiT7pOUnbywH8bFvC5pNmjRwoHHaXZxIk4s5lpeCxPmGdtUXvYjjulE0KGJbBj6uhJrd3NaS/6n6H7oWaj87nL4WqJpKcwON3ovMQg0fveCA9O74Zh8lq0hCt23gL5ykrX0nxlV8J5aLlfg7r0Vi9xycqGq/Ko90YdIcQ+dTAK/piR4EnaN1x4PpC9ftfwzUNOEj8imrMzqqTsEDEe3Lk/doy01kB85Swh2tzTsfDIL/ZyEjJD3FoYE6b5uDJ5oWPVXtlGbXRsJJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.147.44.87) smtp.rcpttodomain=gmail.com smtp.mailfrom=tw.synaptics.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=tw.synaptics.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tw.synaptics.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3F1bx2oesNsXHVM8JQXfco3d4kuwKfVLce8EEP2SB3A=;
- b=gYpXWvo6hKgQyvjhP1EN87vqPl/zvUj73Yi7/D7KccS/Wq+GRYR/MdyvUnXlWRST5teZlyL21Gt1+GlcrUWzK7CokiZyWfBlvmEPnOuO/dkEnF8BRlGcHwCwDF0dZJTxdSB5rwT8uyJNyMa7I2plf1sovUEsoziuOg81zO8ROYs=
-Received: from BL1P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::10)
- by PH0PR03MB6979.namprd03.prod.outlook.com (2603:10b6:510:169::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
- 2025 11:25:06 +0000
-Received: from BN2PEPF00004FC0.namprd04.prod.outlook.com
- (2603:10b6:208:2c4:cafe::de) by BL1P223CA0005.outlook.office365.com
- (2603:10b6:208:2c4::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.25 via Frontend Transport; Thu,
- 19 Jun 2025 11:25:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.147.44.87)
- smtp.mailfrom=tw.synaptics.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=tw.synaptics.com;
-Received-SPF: Pass (protection.outlook.com: domain of tw.synaptics.com
- designates 192.147.44.87 as permitted sender)
- receiver=protection.outlook.com; client-ip=192.147.44.87;
- helo=sjc1uvd-bld04.synaptics.com; pr=C
-Received: from sjc1uvd-bld04.synaptics.com (192.147.44.87) by
- BN2PEPF00004FC0.mail.protection.outlook.com (10.167.243.186) with Microsoft
- SMTP Server id 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025
- 11:25:04 +0000
-From: Marge Yang <marge.yang@tw.synaptics.com>
-To: dmitry.torokhov@gmail.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	vincent.huang@tw.synaptics.com,
-	marge.yang@tw.synaptics.com
-Cc: david.chiu@tw.synaptics.com,
-	derek.cheng@tw.synaptics.com,
-	sam.tsai@synaptics.com,
-	Marge Yang <Marge.Yang@tw.synaptics.com>
-Subject: [PATCH V1] Input: synaptics-rmi4- Add a new feature for Forcepad.
-Date: Thu, 19 Jun 2025 11:25:00 +0000
-Message-Id: <20250619112500.3213276-1-marge.yang@tw.synaptics.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gv8fC/B+"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235ef62066eso8861095ad.3;
+        Thu, 19 Jun 2025 04:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750332348; x=1750937148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=euBuSVlRflY4WIoq5zaHnD8P2J7lITtd19RhSQX9cwU=;
+        b=gv8fC/B+/J/aGkQ5tn0z7PD/Uq2AaYc0kJP2R46Wjx4QXWoq1aVxCIfliGJ4q95XyX
+         zQiVlbf7WO5t1kb56neK5hMgTe4ShBNZpKMsyYw4nNioz9vnWeoe5iC9hqpxC535lFNa
+         dbk3xze5SWNPSG0YesrBox3n/DCtPvozXD0EbXJSeOdi7P1Ec4+P8dywQ2RF5mWXyvNe
+         emAYz1K0JXr3qlpbrNLmWaHawVNRTNGj6j8TWUUbKcvciNu/vtBI8tvejhkdeGSJkN5e
+         sZV0nPpX5zyflakPNU2ZEckOnXQUVnsBwxv6R9bQkb1mMjYyqsur0SniT/ezxsCnN0fJ
+         7zhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750332348; x=1750937148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=euBuSVlRflY4WIoq5zaHnD8P2J7lITtd19RhSQX9cwU=;
+        b=gl4swwSHQqRI+7pMiOvalkg27ZtWx4p7MqusitbMiK6h+IEqGz02ixouJlRYafz2+h
+         bfdjhctBqfpl/JLQyyA1ASKD9nADB59T6JwUjrgh6kAaob/LiG1DRM7i4bTRZ40hirgS
+         BbbfUm+kf3FFdVYHTce+EfQ5H8gycNU5RMzr6Y9HkKTW2MCBaUWbm2MgONDkB5GGG99c
+         aCFPJtsyBnJUjDuEffKFaGMoXD1Xr0DLTzzBN3jB9xnhlpAhmvtCmSEJN4vzes3TSaZU
+         Q36wE4qjyAGW95Bj42uQckOXy0dLPRtFZ+nvFJ7L2qwy3Z29tnPpQRbuqSzFXXdRpZYe
+         YxqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWq6cmPWLKEx3K0jHpuVkN/8+mvuSoZxgiF5/kdmO/7TQwsk7lgOlng3HRsNf+rSL3P3bSa64w8Az2geE=@vger.kernel.org, AJvYcCXnA/OEzb0FvBjVuaGQEDBPDj7jgULduYRl/3c+EDvZptogLb+vDPd/RQpaGM2ANTc4Sw9Z7TKs1O6/TA3ba8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqPiSn6Qq/XEDGqMg0nJuGtSYSCnn+Xb3wA6qZGZoSoSeBC7ao
+	BH+dsZsVocIqSCwjpDv5Ycy1+JLhrqrB0iMBqq5Z1tM++YveUaI7NTl2
+X-Gm-Gg: ASbGncujKT+FLdoqQF/wda3a//Gth6cglAsv9LhhVmYd09RZEkyK39Hiq1ls0WzzSPJ
+	Ba7fovpyGHNii4UM2JeWGBdlyPOA3lEcZSXzUj4hFPMN77oHVz/T2hykZL+ekvxjgwmWQW78o2u
+	XAWFLBOlGjdTybDJzC9HomRDl0y+Wn9OnCgzH6l5PQTxCevB+Z4DvXBII3mWMa6naMsYG0uvyAb
+	lijRZ34bRbN6ytw4N94PhyPqg5S6XxVsHnkNQpRZhqt0mzv6CJnV+5yqWeODtjh0201GdMSWTmB
+	ScbgkMZ+Io+YW8apUurWnbhdojZuJUhRT9csItC1nxhuQhV9rGuGSfMg8BC0EyjfUy/SoXfkwBw
+	fa+SN5D5/v6igdst1X5/XXV+w4VLRlC1kB53I/wK3qJHoczpL+nc=
+X-Google-Smtp-Source: AGHT+IHMrb6gIJY17p87seGqfpNAzxyeWFXKunrBPvaNaPvE4IkCuWrXclktERXTgd768DiC41/d4Q==
+X-Received: by 2002:a17:902:d4ca:b0:232:11e7:47c4 with SMTP id d9443c01a7336-2366b3501d6mr325152125ad.15.1750332348235;
+        Thu, 19 Jun 2025 04:25:48 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a4278sm117969175ad.78.2025.06.19.04.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 04:25:47 -0700 (PDT)
+Date: Thu, 19 Jun 2025 20:25:35 +0900 (JST)
+Message-Id: <20250619.202535.960773899864219488.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, ojeda@kernel.org,
+ aliceryhl@google.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com,
+ boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org,
+ gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
+ lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
+ sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods
+ as_micros_ceil and as_millis
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <87o6uk859b.fsf@kernel.org>
+References: <nGua2ftAnkipxGpZlW-9RYB0309pR0BxmzzR1rUx-LWFRRaiuycAACIWx6mPAp9PQcxmF5d1xC14XIu5flxBiA==@protonmail.internalid>
+	<20250617144155.3903431-2-fujita.tomonori@gmail.com>
+	<87o6uk859b.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC0:EE_|PH0PR03MB6979:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 8602e713-0e1e-4a0a-0bfd-08ddaf23f0ce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|34020700016|1800799024|82310400026|12100799063;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yd0zGGRHxSkQRX3Yyv7Nx48kXFyRQPgAZqrwBa3FdbZd8SGVoGDyiDO6ZsUg?=
- =?us-ascii?Q?XbG1AEgYHlt0mTZ43T2zubz1DrkAStL8cOz9L3fjfQNFbygiBQnG672k2ccy?=
- =?us-ascii?Q?Qij+7mun2NbpikXQdU45aHryeBcMDrEqVbcmuhDDAD34DwgDLjFg2ekqJZfZ?=
- =?us-ascii?Q?D6UnLtQ6/sKVz4e2EMmAQGFFGoHfocc3aSfmDfxRx4mpyFdNSVDTH8OmsLCD?=
- =?us-ascii?Q?5m39/HJUmd5Yc4JI3pEk3H+t0zRC7w7w4nO/xZIZDlnMxcNKRtcZ5T1hjfej?=
- =?us-ascii?Q?lafdr1tpA6beiftP1wfLajCwcman1B2G293ABKTxirmG3uKrenQHYfl+7QJ4?=
- =?us-ascii?Q?mOX8VjLcm86wq6kmPPVv7xbsPgdgKvb7IzTZ3nRnuUrrs4n/m7Q5lFQcbyE9?=
- =?us-ascii?Q?ZMU18Qdgk2xZDdFLdGgO2OHjooZq4FfeodoHcLCrD+JYvzVu6Txpe5Yg5g3h?=
- =?us-ascii?Q?WbqqFQJHHckWjBxnp9wjDYExqVG+jWGA++9f5mWg4iVRABvfkawhN4BXSNvr?=
- =?us-ascii?Q?4fwrf45drDM1DSX5mRE0qyJoBjhvV6cTviFYEVGxRMEEGRNeSmxjGkFzPSJo?=
- =?us-ascii?Q?2xGqKgnCnsjjEDY0phw09FB5pSs5D1kQc8SpsTEGE+TwXJqSIgnIzDew/lKW?=
- =?us-ascii?Q?cL2nAIj6NUpnISwpn/QzRQvFBysMxNw5vSdq/3HSR94fJYID2oHiEQVrYr8G?=
- =?us-ascii?Q?LVeg/GenFlGRuuuUpzZXJ1SAWXoz2Si+71XbxP9+QUHTAuMTmLm/VcrdCaoL?=
- =?us-ascii?Q?5y/iWsomETZzMD+93S2Vuy7DImk16M+7wwFLlK2tkna5xx8SZKguyApgp7RK?=
- =?us-ascii?Q?+WLUY11vcsclVvycPH//itF/85W0b6FjlOBRLZnOSwzwMefkO0RUSEQuU6hX?=
- =?us-ascii?Q?HLVkJgbZEZT9NCo2WI4sM5K7EyoX+FQ8fT8rExrI/bRNv1lJRZVqNNKSSV9L?=
- =?us-ascii?Q?WF5sULnglOz+ruolRyNDD+L4/nguH24/IzTn2tRBz8eVbWAaz5GkmYlGhrbI?=
- =?us-ascii?Q?eHrtONcoC1YJTPsk+s8fuw32oJiOwX2+CMsxyoRCm7h4NZQnHwi2N0La2jIt?=
- =?us-ascii?Q?DVDh1QQ1um/lboR1eUcuMdXvQ0SQtOMaQNiwjReKYhxHkY3vHXpKTuK27c+3?=
- =?us-ascii?Q?R7D1RHOrEdCIJuUGMNwnt1Uz2iW55hN/Gzd2sEDu8151wey7diiso2paLQuL?=
- =?us-ascii?Q?YCz3BnH3Gaxn288vH6VY1yUA636E6IMCTbkYxo3hb09f5viLU3XXs92oczas?=
- =?us-ascii?Q?tTTZJZOBMuzd5fRVIqNvr9sNLV0dTo2Vnln3K/eD6yt5CvV437u9Cl2GqmF+?=
- =?us-ascii?Q?muNu4rZPLJ3wZL04UWlEV2gfNuvyL1c4eR7K3aaTZ56DKsfmtut/iEn6snpC?=
- =?us-ascii?Q?wl09fA9PICeOuzU6uT2txUGAcgc3Ht/rX835gly09Xnln+5ZLb4123cW63qU?=
- =?us-ascii?Q?lLRw4Nt/H2kfnH16Rt61ruwPKMgz6Ou5APCElWkuaDEvgWcj3KiroEUhsIau?=
- =?us-ascii?Q?lCTT2r+h+bxIMIUQLIyTuKF5+gnBble505fB?=
-X-Forefront-Antispam-Report:
-	CIP:192.147.44.87;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjc1uvd-bld04.synaptics.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(34020700016)(1800799024)(82310400026)(12100799063);DIR:OUT;SFP:1501;
-X-OriginatorOrg: tw.synaptics.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 11:25:04.6903
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8602e713-0e1e-4a0a-0bfd-08ddaf23f0ce
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=335d1fbc-2124-4173-9863-17e7051a2a0e;Ip=[192.147.44.87];Helo=[sjc1uvd-bld04.synaptics.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FC0.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6979
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-From: Marge Yang <Marge.Yang@tw.synaptics.com>
+On Thu, 19 Jun 2025 11:12:00 +0200
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-Forcepad devices will use F21, for click simulation
-due to lack of a metal button, so we add F21 support
-to make forcepad support click function.
+>> Rename the Delta struct's methods as_micros_ceil() and as_millis() to
+>> into_micros_ceil() and into_millis() respectively, for consistency
+>> with the naming of other methods.
+>>
+>> Fix the commit 2ed94606a0fe ("rust: time: Rename Delta's methods from
+>> as_* to into_*"), wasn't applied as expected, due to the conflict with
+>> the commit 1b7bbd597527 ("rust: time: Avoid 64-bit integer division on
+>> 32-bit architectures").
+>>
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> 
+> Sorry for messing up your patch. Since we have no rules against rebasing
+> rust-timekeeping and the PR is a few weeks down the road, I will just go
+> back and fix the original patch. Keep commit history clean.
 
-Signed-off-by: Marge Yang <Marge.Yang@tw.synaptics.com>
----
- drivers/input/rmi4/Kconfig      |   8 ++
- drivers/input/rmi4/Makefile     |   1 +
- drivers/input/rmi4/rmi_bus.c    |   3 +
- drivers/input/rmi4/rmi_driver.h |   5 ++
- drivers/input/rmi4/rmi_f21.c    | 126 ++++++++++++++++++++++++++++++++
- 5 files changed, 143 insertions(+)
- create mode 100644 drivers/input/rmi4/rmi_f21.c
+I think it would be easier to resolve conflicts by applying the typed
+clock sources patchset and the patchset to convert hrtimer first, and
+then applying the division patch.
 
-diff --git a/drivers/input/rmi4/Kconfig b/drivers/input/rmi4/Kconfig
-index c0163b983ce6..086013be6a64 100644
---- a/drivers/input/rmi4/Kconfig
-+++ b/drivers/input/rmi4/Kconfig
-@@ -82,6 +82,14 @@ config RMI4_F12
- 	  touchpads. For sensors that support relative pointing, F12 also
- 	  provides mouse input.
- 
-+config RMI4_F21
-+	bool "RMI4 Function 21 (PRESSURE)"
-+	help
-+	  Say Y here if you want to add support for RMI4 function 21.
-+
-+	  Function 21 provides buttons/pressure for RMI4 devices. This includes
-+	  support for buttons/pressure on PressurePad.
-+
- config RMI4_F30
- 	bool "RMI4 Function 30 (GPIO LED)"
- 	help
-diff --git a/drivers/input/rmi4/Makefile b/drivers/input/rmi4/Makefile
-index 02f14c846861..484b97eca025 100644
---- a/drivers/input/rmi4/Makefile
-+++ b/drivers/input/rmi4/Makefile
-@@ -8,6 +8,7 @@ rmi_core-$(CONFIG_RMI4_2D_SENSOR) += rmi_2d_sensor.o
- rmi_core-$(CONFIG_RMI4_F03) += rmi_f03.o
- rmi_core-$(CONFIG_RMI4_F11) += rmi_f11.o
- rmi_core-$(CONFIG_RMI4_F12) += rmi_f12.o
-+rmi_core-$(CONFIG_RMI4_F21) += rmi_f21.o
- rmi_core-$(CONFIG_RMI4_F30) += rmi_f30.o
- rmi_core-$(CONFIG_RMI4_F34) += rmi_f34.o rmi_f34v7.o
- rmi_core-$(CONFIG_RMI4_F3A) += rmi_f3a.o
-diff --git a/drivers/input/rmi4/rmi_bus.c b/drivers/input/rmi4/rmi_bus.c
-index 3aee04837205..47fe7a88c92b 100644
---- a/drivers/input/rmi4/rmi_bus.c
-+++ b/drivers/input/rmi4/rmi_bus.c
-@@ -360,6 +360,9 @@ static struct rmi_function_handler *fn_handlers[] = {
- #ifdef CONFIG_RMI4_F12
- 	&rmi_f12_handler,
- #endif
-+#ifdef CONFIG_RMI4_F21
-+	&rmi_f21_handler,
-+#endif
- #ifdef CONFIG_RMI4_F30
- 	&rmi_f30_handler,
- #endif
-diff --git a/drivers/input/rmi4/rmi_driver.h b/drivers/input/rmi4/rmi_driver.h
-index 3bfe9013043e..18fdf2a166d5 100644
---- a/drivers/input/rmi4/rmi_driver.h
-+++ b/drivers/input/rmi4/rmi_driver.h
-@@ -115,6 +115,10 @@ static inline int rmi_f03_overwrite_button(struct rmi_function *fn,
- static inline void rmi_f03_commit_buttons(struct rmi_function *fn) {}
- #endif
- 
-+#ifdef CONFIG_RMI4_F21
-+int rmi_f21_report_pressure(struct rmi_function *fn, int i);
-+#endif
-+
- #ifdef CONFIG_RMI4_F34
- int rmi_f34_create_sysfs(struct rmi_device *rmi_dev);
- void rmi_f34_remove_sysfs(struct rmi_device *rmi_dev);
-@@ -133,6 +137,7 @@ extern struct rmi_function_handler rmi_f01_handler;
- extern struct rmi_function_handler rmi_f03_handler;
- extern struct rmi_function_handler rmi_f11_handler;
- extern struct rmi_function_handler rmi_f12_handler;
-+extern struct rmi_function_handler rmi_f21_handler;
- extern struct rmi_function_handler rmi_f30_handler;
- extern struct rmi_function_handler rmi_f34_handler;
- extern struct rmi_function_handler rmi_f3a_handler;
-diff --git a/drivers/input/rmi4/rmi_f21.c b/drivers/input/rmi4/rmi_f21.c
-new file mode 100644
-index 000000000000..93ef2331ed16
---- /dev/null
-+++ b/drivers/input/rmi4/rmi_f21.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2012-2025 Synaptics Incorporated
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/rmi.h>
-+#include <linux/input.h>
-+#include <linux/slab.h>
-+#include "rmi_driver.h"
-+
-+#define RMI_f21_INPUT_REPORT_DATA_SIZE	6
-+#define RMI_F21_INPUT_REPORT_FORCE_CLICK_OFFSET	5
-+#define RMI_F21_TABLE_FORCE_CLICK_OFFSET	8
-+#define RMI_f21_FORCE_CLICK			0x01
-+#define RMI_f21_DATA_REGS_MAX_SIZE	19
-+#define RMI_f21_FORCEPAD_BUTTON_COUNT	1
-+
-+struct f21_data {
-+	/* Query Data */
-+	u8 data_regs[RMI_f21_DATA_REGS_MAX_SIZE];
-+	u8 input_report_data[RMI_f21_INPUT_REPORT_DATA_SIZE];
-+	struct input_dev *input;
-+	u16 key_code;
-+};
-+
-+static irqreturn_t rmi_f21_attention(int irq, void *ctx)
-+{
-+	struct rmi_function *fn = ctx;
-+	struct f21_data *f21 = dev_get_drvdata(&fn->dev);
-+	struct rmi_driver_data *drvdata = dev_get_drvdata(&fn->rmi_dev->dev);
-+	int error;
-+	bool pressed;
-+
-+	if (drvdata->attn_data.data) {
-+		if (drvdata->attn_data.size < RMI_f21_INPUT_REPORT_DATA_SIZE) {
-+			dev_warn(&fn->dev, "f21 interrupted, but data is missing\n");
-+			return IRQ_HANDLED;
-+		}
-+		memcpy(f21->input_report_data, drvdata->attn_data.data, RMI_f21_INPUT_REPORT_DATA_SIZE);
-+		drvdata->attn_data.data += RMI_f21_INPUT_REPORT_DATA_SIZE;
-+		drvdata->attn_data.size -= RMI_f21_INPUT_REPORT_DATA_SIZE;
-+
-+		pressed = !!(f21->input_report_data[RMI_F21_INPUT_REPORT_FORCE_CLICK_OFFSET] &
-+					RMI_f21_FORCE_CLICK);
-+	} else {
-+		error = rmi_read_block(fn->rmi_dev, fn->fd.data_base_addr,
-+					f21->data_regs, RMI_f21_DATA_REGS_MAX_SIZE);
-+		if (error) {
-+			dev_err(&fn->dev, "%s: Failed to read f21 data registers: %d\n",
-+				__func__, error);
-+			return IRQ_RETVAL(error);
-+		}
-+		pressed = !!(f21->data_regs[RMI_F21_TABLE_FORCE_CLICK_OFFSET] &
-+					RMI_f21_FORCE_CLICK);
-+	}
-+
-+	input_report_key(f21->input, f21->key_code, pressed);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rmi_f21_config(struct rmi_function *fn)
-+{
-+	struct f21_data *f21 = dev_get_drvdata(&fn->dev);
-+	struct rmi_driver *drv = fn->rmi_dev->driver;
-+
-+	if (!f21)
-+		return 0;
-+
-+	drv->set_irq_bits(fn->rmi_dev, fn->irq_mask);
-+
-+	return 0;
-+}
-+
-+static int rmi_f21_initialize(struct rmi_function *fn, struct f21_data *f21)
-+{
-+	struct input_dev *input = f21->input;
-+	unsigned int button = BTN_LEFT;
-+
-+	f21->key_code = button;
-+	input_set_capability(input, EV_KEY, f21->key_code);
-+	input->keycode = &(f21->key_code);
-+	input->keycodesize = sizeof(f21->key_code);
-+	input->keycodemax = RMI_f21_FORCEPAD_BUTTON_COUNT;
-+
-+	__set_bit(INPUT_PROP_BUTTONPAD, input->propbit);
-+
-+	return 0;
-+}
-+
-+static int rmi_f21_probe(struct rmi_function *fn)
-+{
-+	struct rmi_device *rmi_dev = fn->rmi_dev;
-+	struct rmi_driver_data *drv_data = dev_get_drvdata(&rmi_dev->dev);
-+	struct f21_data *f21;
-+	int error;
-+
-+	if (!drv_data->input) {
-+		dev_info(&fn->dev, "f21: no input device found, ignoring\n");
-+		return -ENXIO;
-+	}
-+
-+	f21 = devm_kzalloc(&fn->dev, sizeof(*f21), GFP_KERNEL);
-+	if (!f21)
-+		return -ENOMEM;
-+
-+	f21->input = drv_data->input;
-+
-+	error = rmi_f21_initialize(fn, f21);
-+	if (error)
-+		return error;
-+
-+	dev_set_drvdata(&fn->dev, f21);
-+	return 0;
-+}
-+
-+struct rmi_function_handler rmi_f21_handler = {
-+	.driver = {
-+		.name = "rmi4_f21",
-+	},
-+	.func = 0x21,
-+	.probe = rmi_f21_probe,
-+	.config = rmi_f21_config,
-+	.attention = rmi_f21_attention,
-+};
--- 
-2.43.0
+Then please ignore this and apply only the second patch in this
+patchset.
 
+Let me know if you need any help.
+
+
+Thanks!
