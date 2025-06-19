@@ -1,394 +1,294 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2138.outbound.protection.outlook.com [40.107.94.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39E9125D6;
-	Thu, 19 Jun 2025 00:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750293026; cv=fail; b=g/I5y1GzBHQRwtLOXwFiW+CHaq+xqgKr5rYQHl0WIps3AYOnw7kKAmwV8XV4LDljpwZxF+PkD5QRAfUIWjQDZlITbxBMfKOG9y7uZ/B6Ld4GB8GcRyAySwktSTfMnQJr3LO7SNLX+1oXLTJVfxwB+04SBw1N4NkNBC+Mupfg9as=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750293026; c=relaxed/simple;
-	bh=4THYcqMsnnMNrfMDrtlZK4EhNgXNVysh/yZwhNe3DJw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=THVdGbElf4ivqrM2RUGcTarugJqvY+hHCl3TEyn6lszWnB00HoAuRS5ck12TrShYlT/t7hj1ek5StU+GkQPsgXisLGSXVxqblzG6pUt0M7MdKjGphupztcwf58BhGP9E1rzcsWhB8bj/NfcNA70CUfxcXFu1Sb8SJgZ9ezovh5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=hsPvJtty; arc=fail smtp.client-ip=40.107.94.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E3717555
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750293232; cv=none; b=AblNAwFP4AlU7saeMRPGyD8gwR9+yG7zCeXx04mat6DwBU4Thb3ade3W81IWsyqUDL9gcCGseHC65nhwRXAHaZ+t+wVgW/mnBDDTtSMXNXddnFNCwG2Z+dj8yvBZlRm5O8J6T9K9Ug4lswLXwyJDNLu3F8KL7hy9AYDKpA4BJnE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750293232; c=relaxed/simple;
+	bh=ineObSKhjDvFrQD/iV5qZAu78NJPkSXbC3g4ZIhvhhg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HXZ6Q4hOmst27GkxuOrrXW52zfCF+yF6juQx7K/p10DgTB06gUHJkrQi+MQ8LJDF0/Swh9D2Y/yvs9Jp3rvIGZZTnjmu22E4++Vlhx4T991P6+GtdY0cAU3TPgyscwa94WPScEmWt+XFTNZPi/MLVNusomAPLwMCfiX4xlfex1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HFmOgHLM; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="hsPvJtty"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zox/Z2+u23WiziK2ebBYWPutOIJRRnEZU/820bKPDun9nkF4tr7sHKiKPGzrNpNeDwS2XQsb57aNcImD5IZZMGDjGq9An2yziiK/Vw0mU+bJD3ZICESyvo05uU8ciAud4GMX7JrTAT0vDWHbayQ6bucRMOMaTBlE658tUZ00yt3szBaZZsa3KNwu/QHJBCufh7GhhXou/f+jZLArHY/WSJrY5ZVvMvMs3HSKe90V85IVxjk7kOoJ3KWanuU9o0Qi04MzzsEQWj1ZAR98qXmxF+F3xbkH7OgBmRysj3V/7lhLcES+RQkvVpnmqJMvQA1KGJLGXzQ3zsLEpeRInYuIBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9MRRySWhi5ipHoyZOvY0XBxj1mHQmFd4II0HRZm61ik=;
- b=B97/Gihu99RiT4qTA96Ci+y+jwO80oCT4yMHU9me06LAuSdXdUXFpU/vFJvXXQcmXiAfocmkvBaO8znPiR0J7iWoFknX6aCzY7+zhr8zPJCrIta0dliUYN/3x1jEPmOh+GQ36XgQKC5ch6evXBUExoHaFzenHcKq2n8V1TIifuV0vvmgr2WvY8piubPSC95o79sDgmVjDHvjiHmgOyHTpSoMtkMj/H4vTogvzdvvXI11FQOdzI7tx2h514WHojixemmInHY7Va/3R5/zRCd7N3gGC9JBtqMcmkydbr/vota90AiPAIC9Zfc14qwRQh10yVRvI34pwMniKm1ejQ8oig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HFmOgHLM"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138c50d2a0so201869a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9MRRySWhi5ipHoyZOvY0XBxj1mHQmFd4II0HRZm61ik=;
- b=hsPvJtty745oA74QeCi2lVeuYlui2oUybUP273359hfdXOZZS++ViGi3pMkNtmot9Ckdsjmm4ZxYK/ANHbASHzWqxosT66Q7w78LI/4yygsg+jdqj5jcfcM1nIfl1xhpQyOot/f6bVjzBtmul3gRHCZghJodScUCUokrdGm7okM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
- DM8PR01MB6933.prod.exchangelabs.com (2603:10b6:8:12::20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8857.20; Thu, 19 Jun 2025 00:30:22 +0000
-Received: from LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9%4]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
- 00:30:22 +0000
-From: D Scott Phillips <scott@os.amperecomputing.com>
-To: Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bjorn
- Helgaas
- <bhelgaas@google.com>, linux-pci@vger.kernel.org, =?utf-8?Q?Micha=C5=82?=
- Winiarski
- <michal.winiarski@intel.com>, Igor Mammedov <imammedo@redhat.com>,
- linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Ilpo =?utf-8?Q?J?=
- =?utf-8?Q?=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
-Date: Wed, 18 Jun 2025 17:30:18 -0700
-Message-ID: <86plf0lgit.fsf@scott-ph-mail.amperecomputing.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: SJ0PR05CA0140.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::25) To LV2PR01MB7792.prod.exchangelabs.com
- (2603:10b6:408:14f::10)
+        d=google.com; s=20230601; t=1750293230; x=1750898030; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8ozyqP5iFd/oeF9jBfpH7lXrvTfbtA0oyt32HPKlGT4=;
+        b=HFmOgHLM3kAvl80BfGnIheZFiGGjHCkhWPsqM1GE6JD58BVMueJARqyg3RibJJw4Kz
+         rpujpncLQgrIpm/Xdrfs5dCLeKf8ELXc3DoEczQ93Api7FHZ95e6FR4YPfAWqzju4So3
+         b6og7BiXZ9lOIL25RU2NET8xTOU2S5hWhpMNQy4EFqsbFvKQF6S+t8UhUCle6EPXpieK
+         tXeN+e4N43rR2DZVXMLqQPoItDjE/eJTOmvy8ic7IXmumIO23BbCbUcw2jPHqTlmu+xS
+         Cy2Kl28/7uZGYC/6jfwvGWAP2KZKCN1KZS0yYtyLBI7GVl78hn8bEbHi86MaEaSbb/AO
+         HMmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750293230; x=1750898030;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8ozyqP5iFd/oeF9jBfpH7lXrvTfbtA0oyt32HPKlGT4=;
+        b=L4W910o8WKrvnErs7XiSvwOjfotImdpw0PYKs3CMYMD4O+F0m2V7QQWcazTcFVm7zV
+         DVCR480wz1cXnP3cd1vLl1pY2DnMKsiZmyX6pDe+PIO6UfNYg6571gzaRdXO7cdSKqf/
+         i3VxpclW3z1CZrpAd4Vayw2wXIp355gHWPmWDzMnGwfToR9zBvm6yJIKQLrizIkqk/VM
+         l62glxjUDMNjLoB9NrWGV9BWoZbnN2QjvIXVvcNqFx1H+5/9XA6MegSfyfRtv/+SCP2r
+         x1g+W86Sp4Gy/C5P33pzbFWXBKcqofmrngsSXuTGgyG6R+A0RRnaeMMkkzK+aCUQAni+
+         8Q5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVD+7KvlJzFBlZWiQ97VhRibBCE9Cy/t9veeBtbH2lCEPB4+ZslukmQMn1by1aaKhWTh8hFC0f+hHXMPeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx77OMNaWIP/btltY6EjEgmqDkyBSb05CNP/aSBrOVAG3rE4+jb
+	GGgn8f0eQn2zAyaSQTaxyXyS3mcQF2kaDSryk+Q77uZYJDur2CoN9zXuVHMNSOUqmSiXFF/Z/Fr
+	5C21nfQ==
+X-Google-Smtp-Source: AGHT+IE4nV+fwRjbWkVLABlGebYmkWBmOHP0+TxRnSyEu+WWnfKjacSS2b9nxUdjb696VzTZLdd0ybYAJ/0=
+X-Received: from pjvv5.prod.google.com ([2002:a17:90b:5885:b0:312:187d:382d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c09:b0:313:17e3:7ae0
+ with SMTP id 98e67ed59e1d1-313f1d8346bmr22826375a91.34.1750293229812; Wed, 18
+ Jun 2025 17:33:49 -0700 (PDT)
+Date: Wed, 18 Jun 2025 17:33:48 -0700
+In-Reply-To: <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|DM8PR01MB6933:EE_
-X-MS-Office365-Filtering-Correlation-Id: af4a44a2-92fe-41f3-7ac9-08ddaec879e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aC9wVFdLZWkvN3RiNWJEa1JvcFFkWUxNQ0cxOUp2NHNIdnNsU014Qit5Zm43?=
- =?utf-8?B?amxteS9scHVSeDFBamxkVWdYWGVMK2ZscW0xdWpxcVVSR0dQNVJDVVJoT3lC?=
- =?utf-8?B?eG5jOUdiSk9pOWwySU5OYXFKNmsrbnh0T3NCUitBYU5QQmo2dGpvUjVmakxM?=
- =?utf-8?B?YzEya0VIVHI1bU8xZEFZeGxodXY1dlYxQTN4QkZVQ2pzcmY3MGpia3h1WjNR?=
- =?utf-8?B?Z1BYcW1mcktCRlBvQVI3OUtKTHBFR0tma3NRWEJDR2pmaXFrY2hQNFR6V1Av?=
- =?utf-8?B?Um5GaHI2RWFETmZPM2NGdjNrQXZZaWlxTkp4cGNKamJnYWtTUkw2OU4wOXJp?=
- =?utf-8?B?c2t0Mmc1Y29wVGxadmk0KytvaXpoRVNzSGo4WThXSU1Remdoa05RU1Y4SXQ5?=
- =?utf-8?B?ZlVzcWt4MS9pV1V2NnU0KzF3bGl6bDk3bGJDbEEycmpTcUFsMEVwa0xuVUlL?=
- =?utf-8?B?aFY4VVgrK2diYkpFNjYzblg4SnpBUldGQ0o5UjM5dzdtZEVtdEUvaUdDM0Ju?=
- =?utf-8?B?NVlnQUZBWWdOV2V3OFZFcXNZc0RuSlA3Y2Y2dXdSTXdhUUFiRGVqWlI4YjZ4?=
- =?utf-8?B?eGhoaDhncTlEVEVDNVlqZ1BQU2pvLzR1OUxrUGNVV2NHUzF0ZXYvU09zKyt0?=
- =?utf-8?B?N1BqbTB1TERqSTlWSldUY0Q5SldPUjZoRU8yYy9YckZ0UTJvTjdmTEtKdENr?=
- =?utf-8?B?NjY4cUExamUwK1RWRjFna0tXRllHL2ZHT0Y4SGQ4RHJta1g2QVJiNU5la2Uz?=
- =?utf-8?B?YXlxMm5KNkdvNmlxMVRoNTlJdXdVM001UWNmb0piRUUrQ3AyaGJUR1ZlejVR?=
- =?utf-8?B?Ymo5U2dkTWd3UE91OE5ZK1NrSE9PcEd1SHR3dGpRbTYxdkY5THNRNkwyUWpo?=
- =?utf-8?B?UE9HTldnNjZCYU5nemFKT3IwNUxRazFVcFRCNEF0UmdhRjRkSkN4L2tsOGx6?=
- =?utf-8?B?OGJuSmswYkFTM3BqbVEvdi80NnRpYlBIcmdER0N1TyswbExJWU5vNlNMSGJT?=
- =?utf-8?B?N2g1bzMxQmxTVjlrcEFzTXlFaWlhSEhpbmxFUTZscXhweWdTOS9GdDBlVXNo?=
- =?utf-8?B?cDlES3RqMHlVSVdmWGZiMkNvdEFkeUhQMTlKcXNaWUd3N2dGWVVDbEdmS1NF?=
- =?utf-8?B?RThsL1BqcXIxK2hCSytiVlhRRDc3dW1Ba3V1ZHlvdHg2NVNOVG83Q0pEaUgz?=
- =?utf-8?B?ZGxGZjFSdzIvTmhkbng5R2dBaHZwOGJDd3pTMjk1V0kzZXRkK0Fqc0JNSm4v?=
- =?utf-8?B?RzZVeG52UVlkLy8yMlJRQTJkQ1Nha0pxMWcrSFpjSWRNd3RoZ010T2Eza0FV?=
- =?utf-8?B?WTRCMzMrWCtjNnduL2l6Zkx3ME1BQk55cnkzTXlVemhGeXB4RHAydzhaRVJF?=
- =?utf-8?B?ZDE1U2prUDVPbDF4Q21OMDNhbHA5c3VyTmRIb0lWU2xtaHJTWXZpQVJkTWxs?=
- =?utf-8?B?MVlUd1kzVDBQWVlHVmU4WVcwZGdwU25HRUZxWlc4MWsyZzBOeGJFaUoxSVFm?=
- =?utf-8?B?bnJ1SlBPeTVnaVBnSmZHNDZ1b1NXWEJCUXR2cnVNNVRJckNld0Mwcks2YUJD?=
- =?utf-8?B?M3pSQ3R4OGxraUtBSHF3MmlmTUZHTEQzTEdvRkRweGxGT1ZrcmwrUENvRnYr?=
- =?utf-8?B?QUJ4aFJkTitjRFpqTHB5eVdDME1tamNRc2FoOSs4clZpaktWb3l2Um9MM05z?=
- =?utf-8?B?Yk9tR1l5enZjTXk3ODh0KzVCZTZVVHhrb3Z0OVhBeWUvK0tSdG1XQVFYVlVy?=
- =?utf-8?B?N1pOUi9aQkRXNmtNSDRPWTkyemFaRUZsYXhOK0EwUEo3OWVQcDI3Rm4xS01l?=
- =?utf-8?B?ZnV2S29jcWhxWjZCUXZIeXljMEloeWVLYkRVdDJETis1THNWa0gxVHFQaEta?=
- =?utf-8?B?ZVdna212RFp5VnowUkhnbldNTFIvNWd2ZlprVEVWWktSSW0rZXB3NkE4ZWdR?=
- =?utf-8?B?VU83Wkx4K3pZbE1lbFVSSG9wNWJIN2lmekJ3VGVKLzh5akc4Q01NT3hRR3Mw?=
- =?utf-8?B?Z01sOE9aOHZnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RkZNUHJ6MzhKUTlGQTFQUm16RFI5VHJweUtBWTc1dEFxNXpzVWRkZFBGTUZZ?=
- =?utf-8?B?NStzbmVSSU1GYU9rM1J1ZG5OK3kzanBVYUNkeHVuZDVYMGMxZUhLR3hTYTli?=
- =?utf-8?B?UGxhRmZoM0IySEcxUC9IR1J5bW1MejJhZ281MEFHQ0d5eTMvdlZ5UW9SRDZ6?=
- =?utf-8?B?TDlSb1RlVlo4QUdxaXNwejlBZ3VyMldRL0JHQ1pNRGR6T1NKQXV2WjlWM0hB?=
- =?utf-8?B?SHlyNHIxMXFTUHlSTVlCVkFuNENIY00wODkvaFB1NERzaGJOV29zZGpIc1Z3?=
- =?utf-8?B?eW5kZEFpUGV2TnJHSWZCcE9EamFTZ2lZTVBJcXNIekxpbUR4T3JLVmtlNGVm?=
- =?utf-8?B?U1Y3MGpBNCtRcTllSEdhTDNFZ0NLUjR0OXd6VVJMT0tmOEpwSXlGcmxnaFlr?=
- =?utf-8?B?aUhibldRamI3TG5IajNPemVpcjNyem5nVUVuUzIxZTRxL21mUlliYmF6Qklm?=
- =?utf-8?B?cVF1WUdYOXhhY3JEUkVtWWpGMWVvNlNraXVtZ3ZscmVWY3lWK3liWWRDaVA0?=
- =?utf-8?B?VFhJZlBPOGFzc1BGUlUzR2dqNkpIanZhMHBteDJsQml6UHQwa3hUUXFIWUlN?=
- =?utf-8?B?ODYzOEtiZWdueXpDNXE3VUQ5YTREMC9ia1d6VENMM3g3MjVaTHl1UHo4d0xX?=
- =?utf-8?B?dUFiVjVnUGJSSlNROXNtSGZnRGtiVE1qd3JVbDh5S0JDZ1Z2R1lZbG51WXJQ?=
- =?utf-8?B?VDFOUmtCR1JkOXZua1ZuWUZqRFhQd011akRjREpLdjVFOUkxYysxMzBHZnVD?=
- =?utf-8?B?UkhaUEpDMDFhcnpMZExmSWYyWTN3N3h2QW41UjZCS3l1SndiMURrajM3bTlh?=
- =?utf-8?B?VTZ1K1MwNzJqdzk0UFpUTEJFZVJ0dDZCVEJTMm5peVVuL2dLZFhkK3gyblFo?=
- =?utf-8?B?Z01DaEJFQS9icVRUTHM5M29xSEVaaW5NVkdJYlk2Qmh1enoyY1RsNklud0VS?=
- =?utf-8?B?ZGhyUDhnc2JsZFFPVWJ5YXRERW5ESHZobk9oRFNwM0FVK3h3NnNKciszSlN3?=
- =?utf-8?B?eEQ4MDJ0S2lmbmpPOFNSMXFYb2tKNGlsUUtRYTlHOWh4aGFyR2VSOUNkOHJj?=
- =?utf-8?B?UnRkSWFGM2VCYitoL0tPL3B6Q0xjTFE2WDJvVnpjWEdqR01nRlR3Q2QySnlH?=
- =?utf-8?B?cllyWGxwck01MXVjMFdzbk1VaTEwY3pNNzNiM3pQVEtnZ0w3dXMvN0tsV29R?=
- =?utf-8?B?UWM1M3Jsek1KYWhRS2tITjFOaXVCREphY3EvUUtaYzBiSk1ueE0xSE1QN1A3?=
- =?utf-8?B?SHg3dEtZQmVUVmJMeEwwZ29mSzRCdmJTMHdncnNoZS9JUENLZlZzd2h4UnVx?=
- =?utf-8?B?OVhGUTgzbDVTcEtqMGgxQnkzM0dPdFB0RWM5SjNoZmo2WG5GNXZKVGVqUTMy?=
- =?utf-8?B?V2hmNzdiNXVvdGJJdjVFOGdOZGlGaGppRStPQUcwRDhGWHB4ajZaUnF6dGVw?=
- =?utf-8?B?K2RNU3U0eWJCWFVzQnNDV3lyeXI0eC9jTjZLNEYrcGM1cXhoaFd5UG5Ma1RL?=
- =?utf-8?B?azRvRitsbTArOFBhdXB4eTRFc1IzSkUzeVFjRGxYaElVaUNQdCtQNGx2RGl3?=
- =?utf-8?B?RkZRaFpoZlhZcS9BQWRWaGVxSTRRSjFYb0FJZ3huMWx1S3hpVms0TkN3WVh5?=
- =?utf-8?B?MHhya3ZucXRYTHYxWWRmazZrQml0NW1RK0FkSlhxNkZjZXVDOWJ6SVdEWkJY?=
- =?utf-8?B?QnFUN1d3dXpNNGxUWVRUSmpOWUJlaDhJQ2pBYTdXclFtM0RVVlE5YUd5MDdk?=
- =?utf-8?B?N2s2citaZjEzLzFnN0tIcHZ4R0FUQXhpdVFqMU1FRHd4Rm50eERnZExDQklS?=
- =?utf-8?B?dzA2RUlZODJuWWpSVTJyZm5ZeFM3Z0JIaUVqdDFGMEhUcExWRzgzRFgvTWhX?=
- =?utf-8?B?MlkrQmlHMzc4ZEZKcW1mQ09BVHFNOWdDN3NKdUUzdEkxZkNGS1ZZdjZnLyth?=
- =?utf-8?B?ZWhRZE5sM1h0RkpUaWtQMk9pTSt5MlIwNTJ6S1FKMFhSSWRqM05CRVlhcU15?=
- =?utf-8?B?MTRXc3A2UjdibjQrcndkR0tmZWNHRFp6WjJRM3NQVVA2clpEaytFdk1CcHcx?=
- =?utf-8?B?b256NUdNM1k2MFZyTEpSWlIrUWQ4ZUdBc3g1cllXL0dFaUVyYStUay9EM0NF?=
- =?utf-8?B?R0hMazdkcGN1ZFJqUmJLYUMyMUNBSHlKVWZaSVJBNndjRWV6ZlBweGJkTFdp?=
- =?utf-8?Q?dLuPI2NnZMDu/UF/pTWT9dE=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af4a44a2-92fe-41f3-7ac9-08ddaec879e9
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 00:30:22.2111
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZIo6mzCc+/j8fnAFUz3O+UQQLnJytOuA2SuvOYp/A44u85B18RxNJuzwFuPqTCW22rSrdCe4wO7hfOqmPnCTpxti8QnraAZEGkstd5rojMfYTzgXs4AlMPheGW3cXuLM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB6933
+Mime-Version: 1.0
+References: <20250611095158.19398-1-adrian.hunter@intel.com>
+ <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+ <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
+ <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com>
+Message-ID: <aFNa7L74tjztduT-@google.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+From: Sean Christopherson <seanjc@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+On Wed, Jun 18, 2025, Adrian Hunter wrote:
+> On 18/06/2025 09:00, Vishal Annapurve wrote:
+> > On Tue, Jun 17, 2025 at 10:50=E2=80=AFPM Adrian Hunter <adrian.hunter@i=
+ntel.com> wrote:
+> >>> Ability to clean up memslots from userspace without closing
+> >>> VM/guest_memfd handles is useful to keep reusing the same guest_memfd=
+s
+> >>> for the next boot iteration of the VM in case of reboot.
+> >>
+> >> TD lifecycle does not include reboot.  In other words, reboot is
+> >> done by shutting down the TD and then starting again with a new TD.
+> >>
+> >> AFAIK it is not currently possible to shut down without closing
+> >> guest_memfds since the guest_memfd holds a reference (users_count)
+> >> to struct kvm, and destruction begins when users_count hits zero.
+> >>
+> >=20
+> > gmem link support[1] allows associating existing guest_memfds with new
+> > VM instances.
+> >=20
+> > Breakdown of the userspace VMM flow:
+> > 1) Create a new VM instance before closing guest_memfd files.
+> > 2) Link existing guest_memfd files with the new VM instance. -> This
+> > creates new set of files backed by the same inode but associated with
+> > the new VM instance.
+>=20
+> So what about:
+>=20
+> 2.5) Call KVM_TDX_TERMINATE_VM IOCTL
+>=20
+> Memory reclaimed after KVM_TDX_TERMINATE_VM will be done efficiently,
+> so avoid causing it to be reclaimed earlier.
 
-> Resetting resource is problematic as it prevent attempting to allocate
-> the resource later, unless something in between restores the resource.
-> Similarly, if fail_head does not contain all resources that were reset,
-> those resource cannot be restored later.
->
-> The entire reset/restore cycle adds complexity and leaving resources
-> into reseted state causes issues to other code such as for checks done
-> in pci_enable_resources(). Take a small step towards not resetting
-> resources by delaying reset until the end of resource assignment and
-> build failure list (fail_head) in sync with the reset to avoid leaving
-> behind resources that cannot be restored (for the case where the caller
-> provides fail_head in the first place to allow restore somewhere in the
-> callchain, as is not all callers pass non-NULL fail_head).
->
-> The Expansion ROM check is temporarily left in place while building the
-> failure list until the upcoming change which reworks optional resource
-> handling.
->
-> Ideally, whole resource reset could be removed but doing that in a big
-> step would make the impact non-tractable due to complexity of all
-> related code.
->
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+The problem is that setting kvm->vm_dead will prevent (3) from succeeding. =
+ If
+kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not /dev/kvm=
+ the
+device, but rather devices bound to the VM) ioctls.
 
-Hi Ilpo, I'm seeing a crash on arm64 at boot that I bisected to this
-change. I don't think it's the same as the other issues reported. I've
-confirmed the crash is still there after your follow up patches.  The
-crash itself is below[1].
+I intended that behavior, e.g. to guard against userspace blowing up KVM be=
+cause
+the hkid was released, I just didn't consider the memslots angle.
 
-It looks like the problem begins when:
+The other thing I didn't consider at the time, is that vm_dead doesn't full=
+y
+protect against ioctls that are already in flight.  E.g. see commit
+17c80d19df6f ("KVM: SVM: Reject SEV{-ES} intra host migration if vCPU creat=
+ion
+is in-flight").  Though without a failure/splat of some kind, it's impossib=
+le to
+to know if this is actually a problem.  I.e. I don't think we should *entir=
+ely*
+scrap blocking ioctls just because it *might* not be perfect (we can always=
+ make
+KVM better).
 
-amdgpu_device_resize_fb_bar()
- pci_resize_resource()
-  pci_reassign_bridge_resources()
-   __pci_bus_size_bridges()
+I can think of a few options:
 
-adds pci_hotplug_io_size to `realloc_head`. The io resource allocation
-has failed earlier because the root port doesn't have an io window[2].
+ 1. Skip the vm_dead check if userspace is deleting a memslot.
+ 2. Provide a way for userspace to delete all memslots, and have that bypas=
+s
+    vm_dead.
+ 3. Delete all memslots on  KVM_TDX_TERMINATE_VM.
+ 4. Remove vm_dead and instead reject ioctls based on vm_bugged, and simply=
+ rely
+    on KVM_REQ_VM_DEAD to prevent running the guest.  I.e. tweak kvm_vm_dea=
+d()
+    to be that it only prevents running the VM, and have kvm_vm_bugged() be=
+ the
+    "something is badly broken, try to limit the damage".
 
-Then with this patch, pci_reassign_bridge_resources()'s call to
-__pci_bridge_assign_resources() now returns the io added space for
-hotplug in the `failed` list where the old code dropped it and did not.
+I'm heavily leaning toward #4.  #1 is doable, but painful.  #2 is basically=
+ #1,
+but with new uAPI.  #3 is all kinds of gross, e.g. userspace might want to =
+simply
+kill the VM and move on.  KVM would still block ioctls, but only if a bug w=
+as
+detected.  And the few use cases where KVM just wants to prevent entering t=
+he
+guest won't prevent gracefully tearing down the VM.
 
-That sends pci_reassign_bridge_resources() into the `cleanup:` path,
-where I think the cleanup code doesn't properly release the resources
-that were assigned by __pci_bridge_assign_resources() and there's a
-conflict reported in pci_claim_resource() where a restored resource is
-found as conflicting with itself:
+Hah!  And there's actually a TDX bug fix here, because "checking" for KVM_R=
+EQ_VM_DEAD
+in kvm_tdp_map_page() and tdx_handle_ept_violation() will *clear* the reque=
+st,
+which isn't what we want, e.g. a vCPU could actually re-enter the guest at =
+that
+point.
 
-> pcieport 000d:00:01.0: bridge window [mem 0x340000000000-0x340017ffffff 6=
-4bit pref]: can't claim; address conflict with PCI Bus 000d:01 [mem 0x34000=
-0000000-0x340017ffffff 64bit pref]
+This is what I'm thinking.  If I don't hate it come Friday (or Monday), I'l=
+l turn
+this patch into a mini-series and post v5.
 
-Setting `pci=3Dhpiosize=3D0` avoids this crash, as does this change:
+Adrian, does that work for you?
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 16d5d390599a..59ece11702da 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -2442,7 +2442,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bri=
-dge, unsigned long type)
- 	LIST_HEAD(saved);
- 	LIST_HEAD(added);
- 	LIST_HEAD(failed);
--	unsigned int i;
-+	unsigned int i, relevant_fails;
- 	int ret;
+---
+ arch/arm64/kvm/arm.c            |  2 +-
+ arch/arm64/kvm/vgic/vgic-init.c |  2 +-
+ arch/x86/kvm/x86.c              |  2 +-
+ include/linux/kvm_host.h        |  2 --
+ virt/kvm/kvm_main.c             | 10 +++++-----
+ 5 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index de2b4e9c9f9f..18bd80388b59 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -1017,7 +1017,7 @@ static int kvm_vcpu_suspend(struct kvm_vcpu *vcpu)
+ static int check_vcpu_requests(struct kvm_vcpu *vcpu)
+ {
+ 	if (kvm_request_pending(vcpu)) {
+-		if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu))
++		if (kvm_test_request(KVM_REQ_VM_DEAD, vcpu))
+ 			return -EIO;
 =20
- 	down_read(&pci_bus_sem);
-@@ -2490,7 +2490,16 @@ int pci_reassign_bridge_resources(struct pci_dev *br=
-idge, unsigned long type)
- 	__pci_bridge_assign_resources(bridge, &added, &failed);
- 	BUG_ON(!list_empty(&added));
+ 		if (kvm_check_request(KVM_REQ_SLEEP, vcpu))
+diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-ini=
+t.c
+index eb1205654ac8..c2033bae73b2 100644
+--- a/arch/arm64/kvm/vgic/vgic-init.c
++++ b/arch/arm64/kvm/vgic/vgic-init.c
+@@ -612,7 +612,7 @@ int kvm_vgic_map_resources(struct kvm *kvm)
+ 	mutex_unlock(&kvm->arch.config_lock);
+ out_slots:
+ 	if (ret)
+-		kvm_vm_dead(kvm);
++		kvm_vm_bugged(kvm);
 =20
--	if (!list_empty(&failed)) {
-+	relevant_fails =3D 0;
-+	list_for_each_entry(dev_res, &failed, list) {
-+		restore_dev_resource(dev_res);
-+		if (((dev_res->res->flags ^ type) & PCI_RES_TYPE_MASK) =3D=3D 0)
-+			relevant_fails++;
-+	}
-+	free_list(&failed);
-+
-+	/* Cleanup if we had failures in resources of interest */
-+	if (relevant_fails !=3D 0) {
- 		ret =3D -ENOSPC;
- 		goto cleanup;
- 	}
-@@ -2509,11 +2518,6 @@ int pci_reassign_bridge_resources(struct pci_dev *br=
-idge, unsigned long type)
- 	return 0;
+ 	mutex_unlock(&kvm->slots_lock);
 =20
- cleanup:
--	/* Restore size and flags */
--	list_for_each_entry(dev_res, &failed, list)
--		restore_dev_resource(dev_res);
--	free_list(&failed);
--
- 	/* Revert to the old configuration */
- 	list_for_each_entry(dev_res, &saved, list) {
- 		struct resource *res =3D dev_res->res;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b58a74c1722d..37f835d77b65 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10783,7 +10783,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	bool req_immediate_exit =3D false;
+=20
+ 	if (kvm_request_pending(vcpu)) {
+-		if (kvm_check_request(KVM_REQ_VM_DEAD, vcpu)) {
++		if (kvm_test_request(KVM_REQ_VM_DEAD, vcpu)) {
+ 			r =3D -EIO;
+ 			goto out;
+ 		}
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 3bde4fb5c6aa..56898e4ab524 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -853,7 +853,6 @@ struct kvm {
+ 	u32 dirty_ring_size;
+ 	bool dirty_ring_with_bitmap;
+ 	bool vm_bugged;
+-	bool vm_dead;
+=20
+ #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
+ 	struct notifier_block pm_notifier;
+@@ -893,7 +892,6 @@ struct kvm {
+=20
+ static inline void kvm_vm_dead(struct kvm *kvm)
+ {
+-	kvm->vm_dead =3D true;
+ 	kvm_make_all_cpus_request(kvm, KVM_REQ_VM_DEAD);
+ }
+=20
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index eec82775c5bf..4220579a9a74 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4403,7 +4403,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+ 	struct kvm_fpu *fpu =3D NULL;
+ 	struct kvm_sregs *kvm_sregs =3D NULL;
+=20
+-	if (vcpu->kvm->mm !=3D current->mm || vcpu->kvm->vm_dead)
++	if (vcpu->kvm->mm !=3D current->mm || vcpu->kvm->vm_bugged)
+ 		return -EIO;
+=20
+ 	if (unlikely(_IOC_TYPE(ioctl) !=3D KVMIO))
+@@ -4646,7 +4646,7 @@ static long kvm_vcpu_compat_ioctl(struct file *filp,
+ 	void __user *argp =3D compat_ptr(arg);
+ 	int r;
+=20
+-	if (vcpu->kvm->mm !=3D current->mm || vcpu->kvm->vm_dead)
++	if (vcpu->kvm->mm !=3D current->mm || vcpu->kvm->vm_bugged)
+ 		return -EIO;
+=20
+ 	switch (ioctl) {
+@@ -4712,7 +4712,7 @@ static long kvm_device_ioctl(struct file *filp, unsig=
+ned int ioctl,
+ {
+ 	struct kvm_device *dev =3D filp->private_data;
+=20
+-	if (dev->kvm->mm !=3D current->mm || dev->kvm->vm_dead)
++	if (dev->kvm->mm !=3D current->mm || dev->kvm->vm_bugged)
+ 		return -EIO;
+=20
+ 	switch (ioctl) {
+@@ -5131,7 +5131,7 @@ static long kvm_vm_ioctl(struct file *filp,
+ 	void __user *argp =3D (void __user *)arg;
+ 	int r;
+=20
+-	if (kvm->mm !=3D current->mm || kvm->vm_dead)
++	if (kvm->mm !=3D current->mm || kvm->vm_bugged)
+ 		return -EIO;
+ 	switch (ioctl) {
+ 	case KVM_CREATE_VCPU:
+@@ -5395,7 +5395,7 @@ static long kvm_vm_compat_ioctl(struct file *filp,
+ 	struct kvm *kvm =3D filp->private_data;
+ 	int r;
+=20
+-	if (kvm->mm !=3D current->mm || kvm->vm_dead)
++	if (kvm->mm !=3D current->mm || kvm->vm_bugged)
+ 		return -EIO;
+=20
+ 	r =3D kvm_arch_vm_compat_ioctl(filp, ioctl, arg);
 
-I don't know this code well enough to know if that changes is completely
-bonkers or what. Maybe a change that gets zero as pci_hotplug_io_size
-for root ports that don't have an io window would be better? Any other
-ideas, or other information about the crash that I could provide?
-Thanks,
-
-Scott
-
-[1]: Crash:
-> SError Interrupt on CPU0, code 0x00000000be000411 -- SError
-> CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.15.2+ #16 PREEMPT(un=
-def)
-> Hardware name: Adlink Ampere Altra Developer Platform/Ampere Altra Develo=
-per Platform, BIOS TianoCore 2.09.100.00 (SYS: 2.10.20221028) 04/30/2
-> Workqueue: events work_for_cpu_fn
-> pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> pc : _raw_spin_lock_irqsave+0x34/0xb0
-> lr : __wake_up+0x30/0x80
-> sp : ffff800080003e20
-> x29: ffff800080003e20 x28: ffff07ff808b0000 x27: 0000000000050260
-> x26: 0000000000000001 x25: ffffcc5decad6bd8 x24: ffffcc5decc8b5b8
-> x23: ffff080138a10000 x22: ffff080138a00000 x21: 0000000000000003
-> x20: ffff080138a14dc8 x19: 0000000000000000 x18: 006808018e775f03
-> x17: ffff3bc1330d2000 x16: ffffcc5e3a520ed8 x15: 8daad055c6e77021
-> x14: f231631cf9328575 x13: 0e51168d06a6cf91 x12: f5db8c23b764520c
-> x11: 0000000000000040 x10: 0000000000000000 x9 : ffffcc5e3a520f08
-> x8 : 0000000000002113 x7 : 0000000000000000 x6 : 0000000000000000
-> x5 : 0000000000000000 x4 : ffff800080003e08 x3 : 00000000000000c0
-> x2 : 0000000000000001 x1 : 0000000000000000 x0 : ffff080138a14dc8
-> Kernel panic - not syncing: Asynchronous SError Interrupt
-> CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.15.2+ #16 PREEMPT(un=
-def)
-> Hardware name: Adlink Ampere Altra Developer Platform/Ampere Altra Develo=
-per Platform, BIOS TianoCore 2.09.100.00 (SYS: 2.10.20221028) 04/30/2
-> Workqueue: events work_for_cpu_fn
-> Call trace:
->  show_stack+0x30/0x98 (C)
->  dump_stack_lvl+0x7c/0xa0
->  dump_stack+0x18/0x2c
->  panic+0x184/0x3c0
->  nmi_panic+0x90/0xa0
->  arm64_serror_panic+0x6c/0x90
->  do_serror+0x58/0x60
->  el1h_64_error_handler+0x38/0x60
->  el1h_64_error+0x84/0x88
->  _raw_spin_lock_irqsave+0x34/0xb0 (P)
->  amdgpu_ih_process+0xf0/0x150 [amdgpu]
->  amdgpu_irq_handler+0x34/0xa0 [amdgpu]
->  __handle_irq_event_percpu+0x60/0x248
->  handle_irq_event+0x4c/0xc0
->  handle_fasteoi_irq+0xa0/0x1c8
->  handle_irq_desc+0x3c/0x68
->  generic_handle_domain_irq+0x24/0x40
->  __gic_handle_irq_from_irqson.isra.0+0x15c/0x260
->  gic_handle_irq+0x28/0x80
->  call_on_irq_stack+0x24/0x30
->  do_interrupt_handler+0x88/0xa0
->  el1_interrupt+0x44/0xd0
->  el1h_64_irq_handler+0x18/0x28
->  el1h_64_irq+0x84/0x88
->  amdgpu_device_rreg.part.0+0x4c/0x190 [amdgpu] (P)
->  amdgpu_device_rreg+0x24/0x40 [amdgpu]
->  psp_wait_for+0x88/0xd8 [amdgpu]
->  psp_v11_0_bootloader_load_component+0x164/0x1b0 [amdgpu]
->  psp_v11_0_bootloader_load_kdb+0x20/0x40 [amdgpu]
->  psp_hw_start+0x5c/0x580 [amdgpu]
->  psp_load_fw+0x9c/0x280 [amdgpu]
->  psp_hw_init+0x44/0xa0 [amdgpu]
->  amdgpu_device_fw_loading+0xf8/0x358 [amdgpu]
->  amdgpu_device_ip_init+0x684/0x990 [amdgpu]
->  amdgpu_device_init+0xba4/0x1038 [amdgpu]
->  amdgpu_driver_load_kms+0x20/0xb8 [amdgpu]
->  amdgpu_pci_probe+0x1f8/0x7f8 [amdgpu]
->  local_pci_probe+0x44/0xb0
->  work_for_cpu_fn+0x24/0x40
->  process_one_work+0x17c/0x410
->  worker_thread+0x254/0x388
->  kthread+0x10c/0x128
->  ret_from_fork+0x10/0x20
-> Kernel Offset: 0x4c5dba380000 from 0xffff800080000000
-> PHYS_OFFSET: 0x80000000
-> CPU features: 0x0800,000042e0,01202650,8241720b
-> Memory Limit: none
-> ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
-
-[2]: boot snippet
-> ACPI: PCI Root Bridge [PCI1] (domain 000d [bus 00-ff])
-> acpi PNP0A08:01: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments =
-MSI EDR HPX-Type3]
-> acpi PNP0A08:01: _OSC: platform does not support [PCIeHotplug PME LTR DPC=
-]
-> acpi PNP0A08:01: _OSC: OS now controls [PCIeCapability]
-> acpi PNP0A08:01: FADT indicates ASPM is unsupported, using BIOS configura=
-tion
-> acpi PNP0A08:01: MCFG quirk: ECAM at [mem 0x37fff0000000-0x37ffffffffff] =
-for [bus 00-ff] with pci_32b_read_ops
-> acpi PNP0A08:01: ECAM area [mem 0x37fff0000000-0x37ffffffffff] reserved b=
-y PNP0C02:00
-> acpi PNP0A08:01: ECAM at [mem 0x37fff0000000-0x37ffffffffff] for [bus 00-=
-ff]
-> PCI host bridge to bus 000d:00
-> pci_bus 000d:00: root bus resource [mem 0x50000000-0x5fffffff window]
-> pci_bus 000d:00: root bus resource [mem 0x340000000000-0x37ffdfffffff win=
-dow]
-> pci_bus 000d:00: root bus resource [bus 00-ff]
-> pci 000d:00:00.0: [1def:e100] type 00 class 0x060000 conventional PCI end=
-point
-> pci 000d:00:01.0: [1def:e101] type 01 class 0x060400 PCIe Root Port
-> pci 000d:00:01.0: PCI bridge to [bus 01-03]
-> pci 000d:00:01.0:   bridge window [io  0xe000-0xefff]
-> pci 000d:00:01.0:   bridge window [mem 0x50000000-0x502fffff]
-> pci 000d:00:01.0:   bridge window [mem 0x340000000000-0x3400101fffff 64bi=
-t pref]
-> pci 000d:00:01.0: supports D1 D2
-> pci 000d:00:01.0: PME# supported from D0 D1 D3hot
-> ...
-> pci 000d:00:01.0: bridge window [mem 0x340000000000-0x340017ffffff 64bit =
-pref]: assigned
-> pci 000d:00:01.0: bridge window [mem 0x50000000-0x502fffff]: assigned
-> pci 000d:00:01.0: bridge window [io  size 0x1000]: can't assign; no space
-> pci 000d:00:01.0: bridge window [io  size 0x1000]: failed to assign
-> pci 000d:00:01.0: bridge window [io  size 0x1000]: can't assign; no space
-> pci 000d:00:01.0: bridge window [io  size 0x1000]: failed to assign
+base-commit: 8046d29dde17002523f94d3e6e0ebe486ce52166
+--
