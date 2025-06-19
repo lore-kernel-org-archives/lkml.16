@@ -1,63 +1,41 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394D01AA782;
-	Thu, 19 Jun 2025 14:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5753A227B83
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344189; cv=none; b=RZlaolZBBNssyNiwCjSsc8rZsgLDF7BHufOLhlQBZ+fz92HgnU/YwWNq4QEhrD0ur6/Qd64CbFZBNHYObLMIWvnZPDFBrMiBnCkwiPJNTSnSUNw24nlfnqGigAeLpCNHnBcTda59kDuCRRjjKxRje3IlY1jYaudCZ+4qoGi+5pU=
+	t=1750344200; cv=none; b=ctaSV61g/8WeR37RWaJlwzIYNVe4OK/FG0vVaKNI9L44i2hhXkDyFeYm24gT0VWGb0VsO6yeo9GAio+ju4FJMK3VErv+l9kCM0Zd+fePAtVhF9PX/D/l//AcU9iapONOB5iaGvS5h4eJV6bmjJhcorGVUkS7bIj9MAwig1cBtG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344189; c=relaxed/simple;
-	bh=/ELZptTBhqBUeDBGAiBxuTC6IoEc0cQXwy2tejgFxig=;
+	s=arc-20240116; t=1750344200; c=relaxed/simple;
+	bh=BDrXN8cEKhWfXlTshh+iy/iDJNY5nWZhoBV77lo3Y/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEUafKHcdYnm8mIpn5b25d1h/Ms0BapJ4HQUZR2DBBs0q1R5dXmfk1X/Yk69c17DhRU93wUiJuHkH6cPjPJXbc1zE3nC5BLlxDMMLBGuhFq2FtGie5tTw3WlaTWT9w2KQePOaCTjrdQT/TFhf9DI9B8AY97KbTl2rj+970PvcVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dwvJA3FN; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMm0XV4RwptvUJjiPtznl0Ljf2VDn5FZlJ79iezjBBEQIuSS0O4ivZO3zCAuq8DHViomnRDXw3rAboZIziKjnpxKXWmIrR6558iJBW56o43VKSmG7oPMb7/d3N70VfPxTT3H/faRGTpwGLV3ry6hE6r1O1GU4ZCVIf8DaxaI96Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=taUDo0WC; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dwvJA3FN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BNuxxZdvnFJv9N7bIABQrfSlQ4FsyW6sCUROC/TVYZs=; b=dwvJA3FNkttNq+bMx2HmmenkhQ
-	j8FBAiEdFQLEcocmeS5dIupozZFVjf3dlJW+dgd05mbaTedMUNbKx7l5rtBeWfm0tyHVk60+Mpr4R
-	l43CfxpcnYDkLkdu6BM9Jwp3G+JM1hMH7UBw0ELGiIGf/ZidM8OjsCOlvCQmOIFVgLjEs6aVFlyML
-	gRH+c/fdlX8MtrUw5SeZx9VDIeFLFdkdb3iSEKjRWSZJfV3DvuPfby/vHKDtjoYfnJa7MFDlr47Uu
-	qMrolJeOwIYTkTV/F73lchzfdIUF2xPRhjMRXUDspUpklFwU2vSmJOgfhWf8KK27LncNnA4o1Czup
-	9P/ClWFQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSGTg-00000004SQQ-1Keq;
-	Thu, 19 Jun 2025 14:42:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8723130890E; Thu, 19 Jun 2025 16:42:54 +0200 (CEST)
-Date: Thu, 19 Jun 2025 16:42:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Koichi Okuno <fj2767dz@fujitsu.com>, Will Deacon <will@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] perf: Fujitsu: Add the Uncore PCI PMU driver
-Message-ID: <20250619144254.GK1613376@noisy.programming.kicks-ass.net>
-References: <20250617102819.3685543-1-fj2767dz@fujitsu.com>
- <20250617102819.3685543-3-fj2767dz@fujitsu.com>
- <20250617103618.GT1613376@noisy.programming.kicks-ass.net>
- <aFQXU5rK_HJE9zq0@J2N7QTR9R3>
- <20250619140442.GH1613376@noisy.programming.kicks-ass.net>
- <aFQgVPRvbrfcUrkY@J2N7QTR9R3>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="taUDo0WC"
+Date: Thu, 19 Jun 2025 22:43:01 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750344196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9KW3ogTMNpUoc7AGxHr/wt079K5mnLuDr9bP8sPDr+Q=;
+	b=taUDo0WCH+TRlje236wmJXC0Smz+GART3fNhfyLkDplSN+xn3qokccye0V4OZb/ro1T7PW
+	Vz7h/PVoC1EY+nNKOsmJk2/xYaejOkKoqbZKInuVOmzOh1n36GfGbWYkPDYbVkKP0G9vYF
+	HYubp3NDCeyz0tiqlEjnFb7dpwnlmZg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dawei Li <dawei.li@linux.dev>
+To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	set_pte_at@outlook.com, dawei.li@linux.dev
+Subject: Re: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+Message-ID: <20250619144301.GA9575@wendao-VirtualBox>
+References: <20250609151531.22621-1-dawei.li@linux.dev>
+ <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,64 +44,215 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFQgVPRvbrfcUrkY@J2N7QTR9R3>
+In-Reply-To: <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 19, 2025 at 03:36:04PM +0100, Mark Rutland wrote:
-> On Thu, Jun 19, 2025 at 04:04:42PM +0200, Peter Zijlstra wrote:
-> > On Thu, Jun 19, 2025 at 02:57:55PM +0100, Mark Rutland wrote:
-> > > On Tue, Jun 17, 2025 at 12:36:18PM +0200, Peter Zijlstra wrote:
-> > > > On Tue, Jun 17, 2025 at 07:27:50PM +0900, Koichi Okuno wrote:
-> > > > > +	pcipmu->pmu = (struct pmu) {
-> > > > > +		.parent		= dev,
-> > > > > +		.task_ctx_nr	= perf_invalid_context,
-> > > > > +
-> > > > > +		.pmu_enable	= fujitsu_pci__pmu_enable,
-> > > > > +		.pmu_disable	= fujitsu_pci__pmu_disable,
-> > > > > +		.event_init	= fujitsu_pci__event_init,
-> > > > > +		.add		= fujitsu_pci__event_add,
-> > > > > +		.del		= fujitsu_pci__event_del,
-> > > > > +		.start		= fujitsu_pci__event_start,
-> > > > > +		.stop		= fujitsu_pci__event_stop,
-> > > > > +		.read		= fujitsu_pci__event_read,
-> > > > > +
-> > > > > +		.attr_groups	= fujitsu_pci_pmu_attr_grps,
-> > > > > +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-> > > > 
-> > > > Should these drivers not also have PERF_PMU_CAP_NO_INTERRUPT ? Per them
-> > > > being uncore they cannot generate samples.
-> > > 
-> > > These PMUs actually have an interrupt, so that might be a bit confusing.
-> > > That said, the counters seem to be 64-bit, so the interrupt doesn't seem
-> > > practically necessary today.
+Hi Arnaud, 
+Thanks for review.
+
+On Wed, Jun 18, 2025 at 03:07:36PM +0200, Arnaud POULIQUEN wrote:
+> Hello Dawei,
+> 
+> 
+> Please find a few comments below. It is not clear to me which parts of your
+> implementation are mandatory and which are optional "nice-to-have" optimizations.
+
+It's more like an improvement.
+
+> 
+> Based on (potentially erroneous) hypothesis, you will find a suggestion for an
+> alternative to the anonymous inode approach, which does not seem to be a common
+> interface.
+
+AFAIC, annoymous inode is a common interface and used extensivly in kernel development.
+Some examples below.
+
+> 
+> 
+> On 6/9/25 17:15, Dawei Li wrote:
+> > Hi,
 > > 
-> > Yeah, I saw they had an interrupt. But them being uncore they must not
-> > sample, and NO_INTERRUPT means not being able to sample.
+> > This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
+> > for rpmsg subsystem.
 > > 
-> > Naming urgh :-)
-> 
-> Yeah :)
-> 
-> FWIW, that came to mind due to:
-> 
->   https://lore.kernel.org/lkml/20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com/
-
-Oh hey, look at that.. Clearly that is still stuck in my unread pile :/
-
-> ... and if NO_INTERRUPT would be better-named as NO_SAMPLING, that might
-> be a good opportunity to clean that up.
-
-Yeah, that's more or less what it does, look at the few sites in
-perf/events/core.c that test it.
-
-> > Yeah, there's lots of cleanup to be done. Quite possibly also some
-> > unification between the various drivers.
+> > Current uAPI implementation for rpmsg ctrl & char device manipulation is
+> > abstracted in procedures below:
+> > - fd = open("/dev/rpmsg_ctrlX")
+> > - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
+> >   generated.
+> > - fd_ep = open("/dev/rpmsgY", O_RDWR) 
+> > - operations on fd_ep(write, read, poll ioctl)
+> > - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
+> > - close(fd_ep)
+> > - close(fd)
 > > 
-> > Just need someone that knows what they're doing that has spare time,
-> > know anybody like that? :-)
+> > This /dev/rpmsgY abstraction is less favorable for:
+> > - Performance issue: It's time consuming for some operations are
+> > invovled:
+> >   - Device node creation.
+> >     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
+> >     overhead is based on coordination between DEVTMPFS and userspace
+> >     tools such as udev and mdev.
+> > 
+> >   - Extra kernel-space switch cost.
+> > 
+> >   - Other major costs brought by heavy-weight logic like device_add().
 > 
-> I think a few folk likle that live in the nearest hall of mirrors...
-> 
-> If you're happy with that in concept, I can see about getting someone to
-> look at that -- the general idea has come up a few times.
+> Is this a blocker of just optimization?
 
-Sure.
+Yep, performance is one of motivations of this change.
+
+> 
+> > 
+> > - /dev/rpmsgY node can be opened only once. It doesn't make much sense
+> >     that a dynamically created device node can be opened only once.
+> 
+> 
+> I assume this is blocker with the fact that you need to open the /dev/rpmsg<x>
+> to create the endpoint.
+
+Yes. You have to open /dev/rpmsgX which is generated by legacy ioctl to
+instantiate a new endpoint.
+
+> 
+> 
+> > 
+> > - For some container application such as docker, a client can't access
+> >   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
+> >   is generated dynamically and whose existence is unknown for clients in
+> >   advance, this uAPI based on device node doesn't fit well.
+> 
+> does this could be solve in userspace parsing /sys/class/rpmsg/ directory to
+> retreive the device?
+
+Hardly, because client still can't access /dev/rpmsgX which is generated
+by host _after_ client is launched.
+
+> 
+> You could face same kind of random instantiation for serial peripherals ( UART;
+> USb, I2C,...) based on a device tree enumeration. I suppose that user space
+> use to solve this.
+> 
+> > 
+> > An anonymous inode based approach is introduced to address the issues above.
+> > Rather than generating device node and opening it, rpmsg code just creates
+> > an anonymous inode representing eptdev and return the fd to userspace.
+> 
+> A drawback is that you need to share fb passed between processes.
+
+Fd is the abstraction of an unique endpoint device, it holds true for
+both legacy and new approach.
+
+So I guess what you mean is that /dev/rpmsgX is global to all so other process
+can access it?
+
+But /dev/rpmsgX is designed to be opened only once, it's implemented as
+singleton pattern.
+
+static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+{
+...
+        if (eptdev->ept) {
+                mutex_unlock(&eptdev->ept_lock);
+                return -EBUSY;
+        }
+...
+        eptdev->ept = ept;
+...
+}
+
+[...]
+ 
+> > 	printf("loop[%d]\n", loop);
+> > 
+> > 	gettimeofday(&start, NULL);
+> > 
+> > 	while (loop--) {
+> 
+> Do you need to create /close Endpoint sevral times in your real use case with
+> high timing
+> constraint?
+
+No, it's just a silly benchmark demo, large sample reduces noise statistically.
+
+> 
+> > 		fd_info.fd = -1;
+> > 		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
+> > 		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
+> > 		if (ret < 0 || fd_info.fd < 0) {
+> > 			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
+> > 		}
+> > 
+> 
+> 
+> > 		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
+> > 		if (ret < 0) {
+> > 			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
+> > 		}
+> > 
+> > 		close(fd_info.fd);
+> 
+> It seems strange to me to use ioctl() for opening and close() for closing, from
+> a symmetry point of view.
+
+Sorry to hear that. But no, it's a pretty normal skill in kernel codebase
+, I had to copy some examples from reply to other reviewer[1].
+
+anon_inode_get_{fd,file} are used extensively in kernel for returning a new
+fd to userspace which is associated with an unique data structure in kernel
+space, in different ways:
+
+- via ioctl(), some examples are:
+
+ - KVM ioctl(s)
+   - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
+   - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
+   - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
+   - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm
+
+ - DMA buf/fence/sync ioctls
+   - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
+   - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
+   - Couples of driver implement DMA buf by using anon file _implicitly_:
+     - UDMABUF_CREATE -> udmabuf_ioctl_create
+     - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
+
+ - gpiolib ioctls:
+   - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
+   - GPIO_V2_GET_LINE_IOCTL
+
+ -  IOMMUFD ioctls:
+
+ -  VFIO Ioctls:
+
+ - ....
+
+
+- via other specific syscalls:
+ - epoll_create1
+ - bpf
+ - perf_event_open
+ - inotify_init
+ - ...
+
+[1] https://lore.kernel.org/all/20250530125008.GA5355@wendao-VirtualBox/
+
+> 
+> Regarding your implementation, I wonder if we could keep the /dev/rpmsg<x>
+> device with specific open() and close() file operations associated with your new
+> ioctl.
+> 
+> - The ioctl would create the endpoint.
+> - The open() and close() operations would simply manage the file descriptor and
+> increment/decrement a counter to prevent premature endpoint destruction.
+> 
+> 
+> Regards,
+> Arnaud
+> 
+
+[...]
+
+Thanks,
+
+	Dawei
