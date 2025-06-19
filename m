@@ -1,46 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431B525F970
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093A128B4EE
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341979; cv=none; b=HsmJtvV/AKon4/bws5Q0ooz9jo3GTp/5yw4aqduwQ5rOu7qOxrwDFVaev+bvCgYsdNQSt94nAIxMEkDo5EfD075My2e+k+5LURPKSNbBASSPn3siOLLXGSed3uD2b0m6OfN/QyzQZ4IyQV5nWC394mLNPh9MCxTxXzORXXYMP1g=
+	t=1750341983; cv=none; b=N2XfemBV1w9KMiQPhstETSV5wVC1wDlUTbCdA0P3cB0lXxVRgG01vwNRuDjbZpSnYrDb3NBpKiOi8nBpdjnryEidJ6vFDqBCtIbYIVBqkCqKvycSYLvoJDB7wlQJ0thtpE0XCKIZajxX9+Mv93wbOHky5g4N+7V3P++X/SotAJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341979; c=relaxed/simple;
-	bh=nFfYI/rXd1fAzj6l4qfTfO5yFM0HFV2xA44YFfMXIm0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C5U4oqEX7K8h5oHhmSDMj376vat9A2EVQux+NmQ+gGGB4qX2lUatECcReW9dvhVmBWEqF2gDaVvN51N5qNTNcF13IryRd705mRfSL7pJKYvjVQjI3D6CP8mizUFVoEeWGBbtuJkeZw3k1HTPbxQU3qwRqVP2dpjAY394iYqYc2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bxw1iHQT; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1750341983; c=relaxed/simple;
+	bh=ltjpKWi1t7lbiS/wQUL0JGtR6xxe81f0cE/kMQ+SMZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HXRWyUUIKRDwZxUlW+YEr8tL9aMdJrZzajo7VyL0lTxhvvC3mcieJozbnyLPZv7BHbs46DkVGKUdty1ThqSytUMCOJHuPhHWJii/hi0Kp8ZWsRs2xj3lRGxZ7tFvBjm8tphmxjp7buj2YQv1pY7hAtReqUgoNb5GOeNrPANoDRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GVdHzqxm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bxw1iHQT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVdHzqxm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750341977;
+	s=mimecast20190719; t=1750341981;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=u476X32Vev4yniOeqMRFA8gNv0bvwwmmxlvE2dQmeNY=;
-	b=Bxw1iHQTbPoHdxZQ6F9YSsrt4jvYH0ozf6V2vFPSsHgzhb5nzyqiBJvVSyAL1154SL0UGF
-	YHWAe9ZmoGiuV8XjPKY6Dp0RYDBbxRmE12ugIXxW828VkagcCbqPWrPqOmksIIxEW4sZme
-	4dTRjb9rHmYQqvUSveBaNCO+KrMWKTU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QIyeiHyJh2LLkv/UD+/4q8cYY7zOw5NP6NFKW3iCjws=;
+	b=GVdHzqxmcEDp2pejM78fTfSEPvwfjCZdWfEV/d4uWCH4tE5ZhsldixyBCueLXxTpmSfzHk
+	Ev5qZQY90ZmwA1rOkIZk9b7mqjf05WzdhKjDD3+YWEb9JC4VUPKCnKS+IbyH+EhlGhZLUs
+	SCYa+odqbGCwHBuwMsw6GNvnf6yVW5k=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-6dJBMj_cMgmW3ziJdnbxLw-1; Thu,
- 19 Jun 2025 10:06:11 -0400
-X-MC-Unique: 6dJBMj_cMgmW3ziJdnbxLw-1
-X-Mimecast-MFC-AGG-ID: 6dJBMj_cMgmW3ziJdnbxLw_1750341970
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-ltaj88ZnMCGh-96liPa8EA-1; Thu,
+ 19 Jun 2025 10:06:17 -0400
+X-MC-Unique: ltaj88ZnMCGh-96liPa8EA-1
+X-Mimecast-MFC-AGG-ID: ltaj88ZnMCGh-96liPa8EA_1750341976
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7DF01808993;
-	Thu, 19 Jun 2025 14:06:09 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2287A1809C80;
+	Thu, 19 Jun 2025 14:06:16 +0000 (UTC)
 Received: from fedora (unknown [10.45.226.41])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4C37619560B2;
-	Thu, 19 Jun 2025 14:06:04 +0000 (UTC)
-Received: by fedora (sSMTP sendmail emulation); Thu, 19 Jun 2025 16:06:03 +0200
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CCD93195609D;
+	Thu, 19 Jun 2025 14:06:11 +0000 (UTC)
+Received: by fedora (sSMTP sendmail emulation); Thu, 19 Jun 2025 16:06:10 +0200
 From: "Jerome Marchand" <jmarchan@redhat.com>
 To: bpf@vger.kernel.org
 Cc: Martin KaFai Lau <martin.lau@linux.dev>,
@@ -51,9 +53,11 @@ Cc: Martin KaFai Lau <martin.lau@linux.dev>,
 	Eduard Zingerman <eddyz87@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	Jerome Marchand <jmarchan@redhat.com>
-Subject: [PATCH v3 0/2] bpf: Specify access type of bpf_sysctl_get_name args
-Date: Thu, 19 Jun 2025 16:06:01 +0200
-Message-ID: <20250619140603.148942-1-jmarchan@redhat.com>
+Subject: [PATCH v3 1/2] bpf: Specify access type of bpf_sysctl_get_name args
+Date: Thu, 19 Jun 2025 16:06:02 +0200
+Message-ID: <20250619140603.148942-2-jmarchan@redhat.com>
+In-Reply-To: <20250619140603.148942-1-jmarchan@redhat.com>
+References: <20250619140603.148942-1-jmarchan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,41 +65,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 The second argument of bpf_sysctl_get_name() helper is a pointer to a
 buffer that is being written to. However that isn't specify in the
-prototype. Until commit 37cce22dbd51a ("bpf: verifier: Refactor helper
-access type tracking") that mistake was hidden by the way the verifier
-treated helper accesses. Since then, the verifier, working on wrong
-infromation from the prototype, can make faulty optimization that
-would had been caught by the test_sysctl selftests if it was run by
-the CI.
+prototype.
 
-The first patch fixes bpf_sysctl_get_name prototype.
+Until commit 37cce22dbd51a ("bpf: verifier: Refactor helper access
+type tracking"), all helper accesses were considered as a possible
+write access by the verifier, so no big harm was done. However, since
+then, the verifier might make wrong asssumption about the content of
+that address which might lead it to make faulty optimizations (such as
+removing code that was wrongly labeled dead). This is what happens in
+test_sysctl selftest to the tests related to sysctl_get_name.
 
-The second patch converts the test_sysctl to prog_tests so that it
-will be run by the CI and catch similar issues in the future.
+Add MEM_WRITE flag the second argument of bpf_sysctl_get_name().
 
-Changes in v3:
- - Use ASSERT* macro instead of CHECK_FAIL.
- - Remove useless code.
+Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
+---
+ kernel/bpf/cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
- - Replace ARG_PTR_TO_UNINIT_MEM by ARG_PTR_TO_MEM | MEM_WRITE.
- - Converts test_sysctl to prog_tests.
-
-Jerome Marchand (2):
-  bpf: Specify access type of bpf_sysctl_get_name args
-  selftests/bpf: Convert test_sysctl to prog_tests
-
- kernel/bpf/cgroup.c                           |  2 +-
- tools/testing/selftests/bpf/.gitignore        |  1 -
- tools/testing/selftests/bpf/Makefile          |  5 +--
- .../bpf/{ => prog_tests}/test_sysctl.c        | 37 ++++---------------
- 4 files changed, 11 insertions(+), 34 deletions(-)
- rename tools/testing/selftests/bpf/{ => prog_tests}/test_sysctl.c (98%)
-
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 84f58f3d028a3..76994c204b503 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -2104,7 +2104,7 @@ static const struct bpf_func_proto bpf_sysctl_get_name_proto = {
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type	= ARG_PTR_TO_CTX,
+-	.arg2_type	= ARG_PTR_TO_MEM,
++	.arg2_type	= ARG_PTR_TO_MEM | MEM_WRITE,
+ 	.arg3_type	= ARG_CONST_SIZE,
+ 	.arg4_type	= ARG_ANYTHING,
+ };
 -- 
 2.49.0
 
