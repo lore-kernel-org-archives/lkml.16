@@ -1,524 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456353085D0
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750325665; cv=fail; b=JaWf/tCzm8+keTRcByB5y9EVeOnArUCxjsrm299oKOFufZunonGBuggtbTNfeWMi65uk0YcaxQDmMeJthwf2p0xTceIeZI8TPasp3EMVlcGOxadT9S5W6eni++gPtDNnYLTHeb6I6eimBPvXX9KSLTXo+0viJXhWbYNxuNZGIvQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750325665; c=relaxed/simple;
-	bh=3MtO5bFz4n+Ac1crdNQXy/TJ1PUJgPvW7EJa12L57Nk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c+tJL+vuNbbDE1vldIBGV2jn2RRa2qZi6OgL9QPSRzzkSDKSI86+NO2E8wfEEuQreUfkPGKksS7HZ2T3pUTGATB3mSESrPBCT5EVdLy5p0IZFhTzTPe80NfJswn9cQdYEWLe+CD7mmTY6kq5ya01EKEGy0/vCZH7QFXpBqJY7hY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HOAa5dnm; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109581E3DE8;
+	Thu, 19 Jun 2025 09:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750325686; cv=none; b=uGDYww9htPwSn4j2aEWnshn/kU2DBzi8wBS4us6u/eFCBiu/0+lAlPE9owxXfso5Wcv+pMeJsDjJo5Mf7VUtAc9ZcrFIodKcb7o4zaAFv6wvjuBsyJJZ53dw9qytGw92kDQPZwiZPuuBL3cQXpTa03u/7ur/gLqKEr4wd3gMoqc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750325686; c=relaxed/simple;
+	bh=QcAYBKT1cIvdsyseoqgitnm430Vwz/EU0Tl9epGz3tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/aLUOlPU4AAbCLR838b6qJqjTslY9Q4FY95sF9qE1SoGCDhjgwR0RnjPVR6EsviNrxMog6eJ03rgOdV/YQuf8lXKj5pxuxu8VobGKqOfxMFg2r+5l20g89Ry21q1Ky3/z4TPLM/kDpZ40M5F7IoSDbrnd+aoXGmEbMp4w17DtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AS7uy+BC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HOAa5dnm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750325664; x=1781861664;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=3MtO5bFz4n+Ac1crdNQXy/TJ1PUJgPvW7EJa12L57Nk=;
-  b=HOAa5dnmRlIxbAJBtZtarREi7ZAQiQgMqsRfjv+RzAVfLywGIhSsFOSo
-   GP2b28Qxu//0xJetEF27vF0snSU7sHfXq1cXIIjbWN00dJdW6ywLOG1+j
-   MMCwCj+vyItwsgC83ZlUUBaDYO9xURsqp/b/f4KFl4VoUONVkM0+SnzNP
-   oF69TbJ+zKGUwy9irJ6jH/zugjpcJHs4F0ZoFOGC2OyKDZLyrNXBLNKhY
-   MjlmDmEsGMVa/x4ebG4hpp4e1RuMuFcVF1umWUX+35K4iVmaeIjqnAh70
-   XbhZ0eF2dGmZ1h9z6BBlX7fVDdapYRghefEABV0I879kAFSBa9qSZYl4R
-   Q==;
-X-CSE-ConnectionGUID: l9hzjlAESse4KqPAZWVdew==
-X-CSE-MsgGUID: pRcJgHeGRtWIkaDzgv5OdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52453862"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="52453862"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:34:23 -0700
-X-CSE-ConnectionGUID: wDa/qgypTNetbhDUL2Ye6A==
-X-CSE-MsgGUID: fJswQknARWuJetzF2ozOjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="151133559"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:34:22 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 19 Jun 2025 02:34:02 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 19 Jun 2025 02:34:02 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.66)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 19 Jun 2025 02:33:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gkp99soGUvwj9wcZ81U+JkvK/B50Pu9JlCPzxoSnI/AyuLq1BqFkkWDJMHpKN9TSLWDCfUWLsUh/7yO4G8Hezwx8bzaxeS5ouQLsXoFt9QpBhIIYXLu16tn2C7vmS4NuKR2cmZ1QeaGwOypBmYrReDavV2vaEfzqVz/1Yd7UHiA/zq0UFXupwr7eC1xAIjkPF+wb1oS5CvCfcDNPHcyw8lpW0uxk8GoMHsrdmPpnN803czi9MUxJLM5uTtcB3Ed+rfoGYDKDmvhU3c6GdlskOnVQLxbOvV9jThiYQqWWUkyXtBL90Mq9aVJrIzgZxX3Aj9xRYvUiASt7WB67VJFKlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jp49sEywnknba4p8c3Jc3AIlmVk232uluobCQtZxnLI=;
- b=dpdoLHDUWzT85vMThwZxaUMso7Qijv+opGzRHvPvd1++PPKEt+p1xWvXF26j9VuDKRpOueFgYIg4CSFwjDJZqxR6T69PqPITRdVY3Ct4HKg2FcH7IJSVof55TikhlajRzQEO2szmymWI2pLTX0jV8Iv+hkGj66zAO4Z1fSlj9UtFZfqMFnOsinea43SmFHJlxKcz68cVE2cUaC7dPe6o7caE3h8j9Mkd5pFGrKI5EkE+1ciGoD4GfvcL1P3E/BEiyDyCbraQOogHMZ+Jt+jaTkrVgYjSXL4pvZRk2uLn39kS8iyB9Hr+aXlSX7CDaIuIOarormDUe2d48Qvcw+NHfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN9PR11MB5530.namprd11.prod.outlook.com (2603:10b6:408:103::8)
- by PH0PR11MB5111.namprd11.prod.outlook.com (2603:10b6:510:3c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Thu, 19 Jun
- 2025 09:33:04 +0000
-Received: from BN9PR11MB5530.namprd11.prod.outlook.com
- ([fe80::13bd:eb49:2046:32a9]) by BN9PR11MB5530.namprd11.prod.outlook.com
- ([fe80::13bd:eb49:2046:32a9%5]) with mapi id 15.20.8857.022; Thu, 19 Jun 2025
- 09:33:04 +0000
-Message-ID: <af6e1d5b-84e2-4ad7-b7a4-9c3ba3bf00f5@intel.com>
-Date: Thu, 19 Jun 2025 15:02:54 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/10] drm/xe/xe_late_bind_fw: Extract and print
- version info
-To: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
-	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>, <jgg@nvidia.com>
-References: <20250618190007.2932322-1-badal.nilawar@intel.com>
- <20250618190007.2932322-10-badal.nilawar@intel.com>
- <994ba1b4-281a-46bd-9431-7bdef5970ed3@intel.com>
-Content-Language: en-US
-From: "Nilawar, Badal" <badal.nilawar@intel.com>
-In-Reply-To: <994ba1b4-281a-46bd-9431-7bdef5970ed3@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0020.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::8) To BN9PR11MB5530.namprd11.prod.outlook.com
- (2603:10b6:408:103::8)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AS7uy+BC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2AUllZ+Dj4P64TXGTgLBYOcRg8kwoj8xfoPreeFt9p4=; b=AS7uy+BCM1J7UM94lymt0Uy9Fh
+	gBOsBSpu50ONWsQL3mvwYWtZgB2yjwYNbiZQaaj9gk7avxxBDMpKJp06hhbIgwEpvCqN+ZzXCVxeo
+	26S5vH/n5cKjwCuqBabHbOauwpdTOlXDGb7YpMpq4Ax6pgGe2JqywJdchVMuRCZDvBbxSnerQv1ZB
+	Pgrne9l9lVo5bomblV8NN9CIiUs7TjB/KGuwA9PrJKCybmG9fdjNhWupmurDaQ9oeTC5XUAHeV4Hx
+	sv5SE1/q9LFW6iMxY/e7DaIJcI/34VfRNlnvznJxcyyfwwE3lkExhEx/Gkxct59YZkHWetVzobS2Y
+	55ydr8iA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSBfJ-000000084li-46D5;
+	Thu, 19 Jun 2025 09:34:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 204BE3088F2; Thu, 19 Jun 2025 11:34:37 +0200 (CEST)
+Date: Thu, 19 Jun 2025 11:34:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250619093437.GI1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.938845449@goodmis.org>
+ <20250619085717.GB1613376@noisy.programming.kicks-ass.net>
+ <FCBAD96C-AD1B-4144-91D2-2A48EDA9B6CC@goodmis.org>
+ <20250619093226.GH1613200@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|PH0PR11MB5111:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a3dce10-0ca1-453a-ee1b-08ddaf144ac5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Y1E5aWtTcG5RblFYdnNycnRmVGVidkNTZnZnSnJaZXpNSlA0Z1RPRnJwUTBG?=
- =?utf-8?B?VFh6QnhzOXpKMXYwNy9kdVZRTjhBaHBBempuVnB6eEZZRFZkZ1hlVnBCM2Jj?=
- =?utf-8?B?dHloaVNpME1kRC9FRUV0cms1S2hIZ083SW9iZFVSSnEyVmRQZXdZbjRlYVBv?=
- =?utf-8?B?aWQvRCtXRGdhek9RUlNTNnBjMVlQMmI3aFg5VGJqWnNyYkEyUEJuVlNKZnVN?=
- =?utf-8?B?Wnl4TUh5WndIS1U1ZThjVHcvL1oveU9JVlFub2cxSmN2NTQ5N3pueitxMGRY?=
- =?utf-8?B?S0N6MEdlRWl0WVFLK3VVU2Q3RUh2YzEwS20xREp3YStaZlgvckxSdStMWGxX?=
- =?utf-8?B?V3l6M054bGhtcStvMG1Zb0lad1k4N1RBNEtjcEhQV0hFZFJQMFhoeDlyYkZr?=
- =?utf-8?B?MGpHLzNNa05kdERlelR2TXRQUmFFVVRLOG83MUNJb056SnJlSXVzVTEvQ0VT?=
- =?utf-8?B?T0taWXdNcWpTWlNna0p6dGp6ckU2NzBPRis1T0JHRC95Y1NIOHlhRFd6R0VF?=
- =?utf-8?B?Tml1YnFEbmU4UFdveStDRWoyT0wvNklSVHJ0MDhqS2x2K1dpMEczZDNiUW9w?=
- =?utf-8?B?eVArd3BZZVpVODBKeUJGcXhmeE9MT0tDazVod2N1SktxM1JZTEJRaWZBSHpN?=
- =?utf-8?B?dHVzZzIrZCtDR21tcWlOMnRDUEZmT3hWUXFCUmZBSTlZY0hmRzlqeldaSHV1?=
- =?utf-8?B?TExKYUdOdWNrUVRsemhYbW9ndGxDaSszaFh2U3VmQWZxR3BQSWlGNXRMRFR1?=
- =?utf-8?B?T0k5QUZFZ0ZMUjc1SFlmMlE1Zi9GZlYxLzB0UC9pNW4yTk1nUUJZK2tTc2F4?=
- =?utf-8?B?V3AzNjRpcXdzUHQvaEhRbWEyUkQxdE1SUlNOVVBBVjQ3TTJUdjNOSVRmcUtv?=
- =?utf-8?B?RVMxelBCN09MZE0zVFM4OFdHczJmZEJzMUhQbnk0R1hwTXd2VllWWUNDRy9W?=
- =?utf-8?B?YnNrb2FqWGFuNVB1Vm03R25VTDNHTGFSZ1hoRGwwVERSYjM1TmdKTUtvdEN5?=
- =?utf-8?B?T1Y0SjNUc04renVxMkc1d2Y3WjFuN3lNT3FtVkJyeEFBa3pXSVhvVkdHR0hK?=
- =?utf-8?B?TmRIQ1N5bS9NOHV3S2NtUjZtTnpTZFUvUHlZTlJYTndaUjlmSEg1aGluR2dl?=
- =?utf-8?B?N2xSbitZWHhtSEFIdmVLRUpWVnVmcnFsaVhWeUFNNmZPNzZoN0NnUStnMkhw?=
- =?utf-8?B?bVR3cm5JWnVrUjRHV1BYR25jM3hwVTExNHlZN2tXdVArUERiVU04cFFNa0V0?=
- =?utf-8?B?T0E2NnhZZWxROHREbzRnOXhSOFVxUXhrMTdHLzVFSE1Sa3lYS0U5UU9xQVNX?=
- =?utf-8?B?OEQ1cHcrSURQYXEvTEgxR3QvTzFkM01HWlNDdk96bmxNOE5ZMlpkQWVacUpE?=
- =?utf-8?B?WVB1OEhTMDk2WS9iUlVtVEpaVUpydzYyMUxvdGl0ZHM1ZENMSStIU2xoTUh5?=
- =?utf-8?B?UFc5UEw4d0ZQWEVQZ3JZRnVWWndqT0MyZ3h1VzFHYUlZbHRMbGQxMHhtNTBh?=
- =?utf-8?B?MGR0V2NuQ0d1QVF1ZzJEUHpvd2dKSy9NSmptZ3BITXg0dzdwcVdKOXV5YlNO?=
- =?utf-8?B?dWNqbFoxQnFXRkdFV0lDZytwM1pVTkV1L2pDbDVYNUcrVWErcnY3L3BXbFRG?=
- =?utf-8?B?VmZyMkFpa1RyNy9mVDZYM1RCUm8rRFZNd2FRZ0ZaWFFiYXZvVmZrQlVDQ2VR?=
- =?utf-8?B?dndnQXRzd2FaUWZWZEhRVGl2M1ZEeEZ1TUhEOWJSS1M0ZEVKOVNBM0s5Q3Uy?=
- =?utf-8?B?a2g3S0VJaFowalhueEgvTTVSNWlQRlBsbVJLYWh3dXN5T2JrcVNwSy9QcWFk?=
- =?utf-8?B?cnJpeUFnVWkwU1B0ZVU5ck9zdmR1N0VTUVlSSkllR3A1ajErVXJKZ3lNNzJs?=
- =?utf-8?B?eGJtZXRqK3pSM09FVXpaaGtKOXY4czdOZUdsVmZodnl6Q0krdWdNZ1YwU2Rl?=
- =?utf-8?Q?OnzsQq2iLUk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VjI4UVJndkdWRm1zMkJBUGtKYVFrVWpXbVJ2Zlc0ajMxaU50ekNHZ2xQc3dX?=
- =?utf-8?B?ZmY2b0lBT0J5MWw1dnA1Z2lSUlJTVCtTWldvV2lTcFhPM3haVDZLUzZnT2h5?=
- =?utf-8?B?SnkrL2h5VnRqVDBMNksySC9kbXpJdmJLU1ZtMGtMaUNtM0QrbTJHNENlMUQy?=
- =?utf-8?B?a0F5ZnVpTkpIbmVxS1FPbldhWm1wUHVMMTk1cUZRYVpFSy9iRVVtKy8wR1Q5?=
- =?utf-8?B?bEN6YXhmRHUvQVh6ZDhTTG5UWXlFUldQcjZOL2JYSGpoQW1FUWErUVVtTGxz?=
- =?utf-8?B?QW1qNm44ZjN4M2JYbFF5L3ljdE55QkROTGNaMHJZTmkwaFZEWExINnJKVVpB?=
- =?utf-8?B?RHVKWXpjUjlHVzNYdUZkMkpMRC82dHhESzlIWFcxNVBoelFjN1dURll3a3Vr?=
- =?utf-8?B?OEc3UzBraFBwZitOcHRCbnNVMDB4K3hkRGptR2Fxc05FaEEzK0J5RzhneVZK?=
- =?utf-8?B?aFhZcmZrYVppeFlBR0dHZStWMi9pc0VtR2FwbUxoWXhvZStab0I3OGh6ZUpD?=
- =?utf-8?B?RHBqTEMyTXpzTW9BNkVVcm14a0JXNzF2KzBobks4QUxwZXFYOWRQSFE2ckda?=
- =?utf-8?B?VEpCRTFGZzVDdTJYcCtoSmZXVThkTkxsN2lmanNNNGNjYWpEMTN4bWdMdUh4?=
- =?utf-8?B?Z0R5Y3ZNRkxGNjBscW9OVG5Fd3dqRFJhZGRqUEpnR3BnUURxb0FHR0w4aSth?=
- =?utf-8?B?STl4UktTOUZSTHRPd09KakQwSkVYL2ZIRVE2NytmWVhlanVaM3BZOWYzbFUz?=
- =?utf-8?B?VUJQd1prOVM2TEdacGdYc2V2MEZNbnlFa3d1TGlTNEIwYjZhS1NiS1JrenRr?=
- =?utf-8?B?Z1NCV1orWnphS1pDZytCU0hlZWNWajNzY0xqSkJmdVZzajBsQnZhUUNQSlph?=
- =?utf-8?B?REVoTXBZL0hGT2tDZHd1aC9OUjNZNjVHQ3VncUsvcDkzMEpCSFB0TDRoREpl?=
- =?utf-8?B?Ukh6VmVKaE1tc01LQXJxM0VOU1Z0SWw5QTNFdEJoL3hZSTRSUXdTQm5UUkd0?=
- =?utf-8?B?aWpvbWQ3eWFNWWhrait4bHQwRVFIbi9HMHRZUCszaHdCdGxsM283akdQbkZ6?=
- =?utf-8?B?T3VnV2s3YTZxQjVNb24vNlJxaFd5ZEp2azRoY3R0S1ZLbVpDWStXWnJrUjgr?=
- =?utf-8?B?YVpVai9scWhaS1NZVlZ2aTJwK3h6bXRjdmdmRm9LaGw3cmVYVEJpcUR2dWY4?=
- =?utf-8?B?R0xkVnBPT2lpYWxrTzU5WU9WNkdNV1p1QVlhc2xnMUdwcjRURTIrTkQ1NDZr?=
- =?utf-8?B?L0lsY3g3ZmNqVXRic0wxMzc0RzRIc1hQQldDTDhpbzJIZmJjbUl2Wk5ab2Rt?=
- =?utf-8?B?Z3dERlJCdmNiQ2xRSTRYNmI5K1g1MWFESUhhYmxCUnRmU3l2cVp4QTZSeERL?=
- =?utf-8?B?SjJHeEVPUmtEcHJqcmZNL1pycTU5OHd5Rm5qeU9QbnV2cEcvakN6bTJNdzl1?=
- =?utf-8?B?SStyMnhCY05DTU5pdlRwc0drMktrT3ZmdkRWU1NKZm1kSy9aUzZ5Y0hBRnVO?=
- =?utf-8?B?NS90L25IcjFwV1kxM1F1ZlA0ZXZGMkxGZ3BKM2ZoZ01uR0hqYW54RnVEcHMz?=
- =?utf-8?B?bmg2OS9DRTdMT3RYOWF5WEM4SGtOc2hNN1dlaDQ1UkY3RXpxeEdFMGFpM0Fu?=
- =?utf-8?B?Umlid1hhZnlLWlBtK3FtZVlOY2FUc3hEZ25jQ2hERld6VUxud25jVU5DVFZq?=
- =?utf-8?B?Tmt3eFZaclV4d0pFYUJiMHAxR3BhSGh4TFc1NlVybDdXd24waHdUL0N2cFJ4?=
- =?utf-8?B?QTNCcVYyeXUweTZXVjZzSUlObHJkVkJGMEpaUDBIVVR2a0FOWGsyMXRyMFhG?=
- =?utf-8?B?bEpFN2VXclFZR0FqUU8zVjFLNFlDZTljcTVDc1lLREw5S3EzTFdCaWc0SjEx?=
- =?utf-8?B?cE5Qc2hYU3pITG5oZ09kNmMzQ05MK0l0OTMwWVYxVlBJOGYwUk5TRVV5aXd5?=
- =?utf-8?B?aHRad09zeFh3WVlZeVZIWFVMQVFxU3A4UVBDOFdvTlJvRzNkQWo5Tnd0dUlO?=
- =?utf-8?B?dzlrY2hHYXpsRjBBMExmWTlWUkJVa2EySHNwVjYxYVRtS2EvcjFib0ZZZmRq?=
- =?utf-8?B?OGtQYmthTHdKK1E3TlJBMzNqVmZab2x2TlRUQkt5cVFNOWpkWmY0UEJnbkZy?=
- =?utf-8?B?bVhXUjIvK2tyZ3UzcmVNa0RTZ2lnME1yTTJaRDZrcUhzcUVpTDRyZUpveVN6?=
- =?utf-8?B?clE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a3dce10-0ca1-453a-ee1b-08ddaf144ac5
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5530.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 09:33:04.7067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NwQg6tVJYIHn/MP3eMqMXDFuGPZ3L8K+sneLgd2inFGuxmdvDeD/wEh1pKj7klgo4twY4DtlIGs4LZIrJiE3jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5111
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619093226.GH1613200@noisy.programming.kicks-ass.net>
 
+On Thu, Jun 19, 2025 at 11:32:26AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 19, 2025 at 05:07:10AM -0400, Steven Rostedt wrote:
+> 
+> > Does #DB make in_nmi() true? If that's the case then we do need to handle that.
+> 
+> Yes: #DF, #MC, #BP (int3), #DB and NMI all have in_nmi() true.
 
-On 19-06-2025 03:26, Daniele Ceraolo Spurio wrote:
->
->
-> On 6/18/2025 12:00 PM, Badal Nilawar wrote:
->> Extract and print version info of the late binding binary.
->>
->> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
->> ---
->>   drivers/gpu/drm/xe/xe_late_bind_fw.c       | 132 ++++++++++++++++++++-
->>   drivers/gpu/drm/xe/xe_late_bind_fw_types.h |   3 +
->>   drivers/gpu/drm/xe/xe_uc_fw_abi.h          |  69 +++++++++++
->>   3 files changed, 203 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c 
->> b/drivers/gpu/drm/xe/xe_late_bind_fw.c
->> index 001e526e569a..f71d5825ac5b 100644
->> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
->> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
->> @@ -45,6 +45,129 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
->>       return container_of(late_bind, struct xe_device, late_bind);
->>   }
->>   +/* Refer to the "Late Bind based Firmware Layout" documentation 
->> entry for details */
->> +static int parse_cpd_header(struct xe_late_bind *late_bind, u32 fw_id,
->> +                const void *data, size_t size, const char 
->> *manifest_entry)
->
-> We'll need to try and make this common between the uc_fw code and this 
-> code to reduce duplication, but we can do that as a follow up.
+Note: these are all the from-kernel parts of those exceptions. The
+from-user side is significantly different.
 
-I agree, we should do this as follow up.
-
->
->> +{
->> +    struct xe_device *xe = late_bind_to_xe(late_bind);
->> +    const struct gsc_cpd_header_v2 *header = data;
->> +    const struct gsc_manifest_header *manifest;
->> +    const struct gsc_cpd_entry *entry;
->> +    size_t min_size = sizeof(*header);
->> +    struct xe_late_bind_fw *lb_fw;
->> +    u32 offset;
->> +    int i;
->> +
->> +    if (fw_id >= MAX_FW_ID)
->> +        return -EINVAL;
->> +    lb_fw = &late_bind->late_bind_fw[fw_id];
->> +
->> +    /* manifest_entry is mandatory */
->> +    xe_assert(xe, manifest_entry);
->> +
->> +    if (size < min_size || header->header_marker != 
->> GSC_CPD_HEADER_MARKER)
->> +        return -ENOENT;
->> +
->> +    if (header->header_length < sizeof(struct gsc_cpd_header_v2)) {
->> +        drm_err(&xe->drm, "%s late binding fw: Invalid CPD header 
->> length %u!\n",
->> +            fw_id_to_name[lb_fw->id], header->header_length);
->> +        return -EINVAL;
->> +    }
->> +
->> +    min_size = header->header_length + sizeof(struct gsc_cpd_entry) 
->> * header->num_of_entries;
->> +    if (size < min_size) {
->> +        drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
->> +            fw_id_to_name[lb_fw->id], size, min_size);
->> +        return -ENODATA;
->> +    }
->> +
->> +    /* Look for the manifest first */
->> +    entry = (void *)header + header->header_length;
->> +    for (i = 0; i < header->num_of_entries; i++, entry++)
->> +        if (strcmp(entry->name, manifest_entry) == 0)
->> +            offset = entry->offset & GSC_CPD_ENTRY_OFFSET_MASK;
->> +
->> +    if (!offset) {
->> +        drm_err(&xe->drm, "%s late binding fw: Failed to find 
->> manifest_entry\n",
->> +            fw_id_to_name[lb_fw->id]);
->> +        return -ENODATA;
->> +    }
->> +
->> +    min_size = offset + sizeof(struct gsc_manifest_header);
->> +    if (size < min_size) {
->> +        drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
->> +            fw_id_to_name[lb_fw->id], size, min_size);
->> +        return -ENODATA;
->> +    }
->> +
->> +    manifest = data + offset;
->> +
->> +    lb_fw->version.major = manifest->fw_version.major;
->> +    lb_fw->version.minor = manifest->fw_version.minor;
->> +    lb_fw->version.hotfix = manifest->fw_version.hotfix;
->> +    lb_fw->version.build = manifest->fw_version.build;
->
-> not: here you can just do:
->
->     lb_fw->version = manifest->fw_version;
->
-> since both variables are of type struct gsc_version.
-Ok
->
->> +
->> +    return 0;
->> +}
->> +
->> +/* Refer to the "Late Bind based Firmware Layout" documentation 
->> entry for details */
->> +static int parse_lb_layout(struct xe_late_bind *late_bind, u32 fw_id,
->
-> IMO it'd be cleaner to just pass xe and xe_late_bind_fw, instead of 
-> xe_late_bind and fw_id.
-> You should also be able to do a lb_fw_to_xe() call if you want with 
-> something like:
->
-> container_of(lb_fw, struct xe_device, late_bind.late_bind_fw[lb_fw->id])
-Sure.
->
->> +               const void *data, size_t size, const char *fpt_entry)
->> +{
->> +    struct xe_device *xe = late_bind_to_xe(late_bind);
->> +    const struct csc_fpt_header *header = data;
->> +    const struct csc_fpt_entry *entry;
->> +    size_t min_size = sizeof(*header);
->> +    struct xe_late_bind_fw *lb_fw;
->> +    u32 offset;
->> +    int i;
->> +
->> +    if (fw_id >= MAX_FW_ID)
->> +        return -EINVAL;
->> +
->> +    lb_fw = &late_bind->late_bind_fw[fw_id];
->> +
->> +    /* fpt_entry is mandatory */
->> +    xe_assert(xe, fpt_entry);
->> +
->> +    if (size < min_size || header->header_marker != 
->> CSC_FPT_HEADER_MARKER)
->> +        return -ENOENT;
->> +
->> +    if (header->header_length < sizeof(struct csc_fpt_header)) {
->> +        drm_err(&xe->drm, "%s late binding fw: Invalid FPT header 
->> length %u!\n",
->> +            fw_id_to_name[lb_fw->id], header->header_length);
->> +        return -EINVAL;
->> +    }
->> +
->> +    min_size = header->header_length + sizeof(struct csc_fpt_entry) 
->> * header->num_of_entries;
->> +    if (size < min_size) {
->> +        drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
->> +            fw_id_to_name[lb_fw->id], size, min_size);
->> +        return -ENODATA;
->> +    }
->> +
->> +    /* Look for the manifest first */
->
-> Here you're looking for the cpd header, not the manifest.
-Ok.
->
->> +    entry = (void *)header + header->header_length;
->> +    for (i = 0; i < header->num_of_entries; i++, entry++)
->> +        if (strcmp(entry->name, fpt_entry) == 0)
->> +            offset = entry->offset;
->> +
->> +    if (!offset) {
->> +        drm_err(&xe->drm, "%s late binding fw: Failed to find 
->> fpt_entry\n",
->> +            fw_id_to_name[lb_fw->id]);
->> +        return -ENODATA;
->> +    }
->> +
->> +    min_size = offset + sizeof(struct gsc_cpd_header_v2);
->> +    if (size < min_size) {
->> +        drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
->> +            fw_id_to_name[lb_fw->id], size, min_size);
->> +        return -ENODATA;
->> +    }
->> +
->> +    return parse_cpd_header(late_bind, fw_id, data + offset, size - 
->> offset, "LTES.man");
->> +}
->> +
->>   static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
->>   {
->>       struct xe_device *xe = late_bind_to_xe(late_bind);
->> @@ -185,8 +308,15 @@ static int __xe_late_bind_fw_init(struct 
->> xe_late_bind *late_bind, u32 fw_id)
->>           return -ENODATA;
->>       }
->>   -    lb_fw->payload_size = fw->size;
->> +    ret = parse_lb_layout(late_bind, fw_id, fw->data, fw->size, 
->> "LTES");
->> +    if (ret)
->> +        return ret;
->> +
->> +    drm_info(&xe->drm, "Using %s firmware from %s version %d.%d.%d\n",
->> +         fw_id_to_name[lb_fw->id], lb_fw->blob_path,
->> +         lb_fw->version.major, lb_fw->version.minor, 
->> lb_fw->version.hotfix);
->
-> You need to log the build number as well, as that needs to be relevant 
-> for this type of headers (we do log it for GSC for example).
-I will log build number too.
->
->>   +    lb_fw->payload_size = fw->size;
->>       memcpy(lb_fw->payload, fw->data, lb_fw->payload_size);
->>       release_firmware(fw);
->>       INIT_WORK(&lb_fw->work, late_bind_work);
->> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h 
->> b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
->> index f79f0c0b2c4a..3fc4f350c81f 100644
->> --- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
->> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
->> @@ -10,6 +10,7 @@
->>   #include <linux/mutex.h>
->>   #include <linux/types.h>
->>   #include <linux/workqueue.h>
->> +#include "xe_uc_fw_abi.h"
->>     #define MAX_PAYLOAD_SIZE (1024 * 4)
->>   @@ -41,6 +42,8 @@ struct xe_late_bind_fw {
->>       size_t payload_size;
->>       /** @late_bind_fw.work: worker to upload latebind blob */
->>       struct work_struct work;
->> +    /** @late_bind_fw.version: late binding blob manifest version */
->> +    struct gsc_version version;
->>   };
->>     /**
->> diff --git a/drivers/gpu/drm/xe/xe_uc_fw_abi.h 
->> b/drivers/gpu/drm/xe/xe_uc_fw_abi.h
->> index 87ade41209d0..13da2ca96817 100644
->> --- a/drivers/gpu/drm/xe/xe_uc_fw_abi.h
->> +++ b/drivers/gpu/drm/xe/xe_uc_fw_abi.h
->> @@ -318,4 +318,73 @@ struct gsc_manifest_header {
->>       u32 exponent_size; /* in dwords */
->>   } __packed;
->>   +/**
->> + * DOC: Late binding Firmware Layout
->> + *
->> + * The Late binding binary starts with FPT header, which contains 
->> locations
->> + * of various partitions of the binary. Here we're interested in 
->> finding out
->> + * manifest version. To the manifest version, we need to locate CPD 
->> header
->> + * one of the entry in CPD header points to manifest header. 
->> Manifest header
->> + * contains the version.
->> + *
->> + *      +================================================+
->> + *      |  FPT Header                                    |
->> + *      +================================================+
->> + *      |  FPT entries[]                                 |
->> + *      |      entry1                                    |
->> + *      |      ...                                       |
->> + *      |      entryX                                    |
->> + *      |          "LTES"                                |
->> + *      |          ...                                   |
->> + *      |          offset >-----------------------------|------o
->> + *      +================================================+ |
->> + * |
->> + *      +================================================+ |
->> + *      |  CPD Header |<-----o
->> + *      +================================================+
->> + *      |  CPD entries[]                                 |
->> + *      |      entry1                                    |
->> + *      |      ...                                       |
->> + *      |      entryX                                    |
->> + *      |          "LTES.man"                            |
->> + *      |           ...                                  |
->> + *      |           offset >----------------------------|------o
->> + *      +================================================+ |
->> + * |
->> + *      +================================================+ |
->> + *      |  Manifest Header |<-----o
->> + *      |      ...                                       |
->> + *      |      FW version                                |
->> + *      |      ...                                       |
->> + *      +================================================+
->> + */
->> +
->> +/* FPT Headers */
->> +struct csc_fpt_header {
->> +    u32 header_marker;
->> +#define CSC_FPT_HEADER_MARKER 0x54504624
->> +    u32 num_of_entries;
->> +    u8 header_version;
->> +    u8 entry_version;
->> +    u8 header_length; /* in bytes */
->> +    u8 flags;
->> +    u16 ticks_to_add;
->> +    u16 tokens_to_add;
->> +    u32 uma_size;
->> +    u32 crc32;
->> +    u16 fitc_major;
->> +    u16 fitc_minor;
->> +    u16 fitc_hotfix;
->> +    u16 fitc_build;
->
-> For other headers we grouped the version values in a gsc_version 
-> struct. So here instead of the 4 separate versions you could have:
->
-> struct gsc_version fitc_version;
->
-> Which makes it easier to read as all headers have the same type for 
-> the version. We don't read this one though, so not a blocker.
-
-Fine, I will take care of this.
-
-Badal
-
->
-> Daniele
->
->> +} __packed;
->> +
->> +struct csc_fpt_entry {
->> +    u8 name[4]; /* partition name */
->> +    u32 reserved1;
->> +    u32 offset; /* offset from beginning of CSE region */
->> +    u32 length; /* partition length in bytes */
->> +    u32 reserved2[3];
->> +    u32 partition_flags;
->> +} __packed;
->> +
->>   #endif
->
+> Ignoring #DF because that's mostly game over, you can get them all
+> nested for up to 4 (you're well aware of the normal NMI recursion
+> crap).
+> 
+> Then there is the SEV #VC stuff, which is also NMI like. So if you're a
+> CoCo-nut, you can perhaps get it up to 5.
