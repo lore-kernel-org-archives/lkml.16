@@ -1,296 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753D011712;
-	Thu, 19 Jun 2025 16:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F76C2566E6
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750351255; cv=none; b=LOIIjJP0FznlSWOhlC2aX/W50/SP+M3iR2ZCZR4IdxzWyWHmfNnuTWabSkopUgVw4CSJb3KLvSbG1qAxoohby8APzrcKdG+mPMWE+Fjb9lD7xsKDk5eaDZUGZ1aRueyiuC5qvPIFCrDp6Uqbm2bOXDHt+9f/9AEn/psGEDP8904=
+	t=1750351474; cv=none; b=radXq/OLoE9lgd8GH5kF51OFrk1lJC1uld6hd8vMhkgMlaVGERylMnlMcxEwjXv4Em03gUcTo+YL+I9kVDe6t475VkYyZF2qWjbvvyIYZwxmi+zWX0CnPGImsamKekoG25HTr2raxVmzOyhnJmmurzmdDqOiE8QhOBsyamQUfg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750351255; c=relaxed/simple;
-	bh=e6/OaL4553yoEyEI1YQCgcFaAg/t7h53fVGP1TzAl6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=krcYhj/uoA0LXdACIxZbWfjPU57ALWv16wSKeR1beiTiaZTtpGIvgaYdn2aq3nkHcaFRrnVx+smjWy+rWUYHeC2GQW302+q8UTpvDnNw2jU5X2Rhb7s4g+AOFi/hNKCW32f1clsR2cZM80htCKZmJt+SixQ9N3ZlR/oaqAue20s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlh+WopV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750351474; c=relaxed/simple;
+	bh=b/+ikzLp54Gc/0Xc09GVIw86JXBMCy4h4061cXUV7GI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DanGUrvY/NEwlirL2DvLp5NAhUvzCFhYXOH7Fd3T+K/tkGQiTZMZ+QAyrr+mqjkPqcBf2+ntNUuo7ReL301QS2Kl+nh1PvMPxTXJ8yGSZ915oB3c5w+QoDPMpoMrdc1BuIAyWS3mUypzcHphm+66PUKdx5HHUHbRxujcwwwI7dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qc2aD+Rk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYrgsVHt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qc2aD+Rk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYrgsVHt; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlh+WopV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57FBC4CEEA;
-	Thu, 19 Jun 2025 16:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750351255;
-	bh=e6/OaL4553yoEyEI1YQCgcFaAg/t7h53fVGP1TzAl6E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dlh+WopVa62wWGt18+OQnKD2UqAtSZ0rh/eJwlAKvQZgKk9BzxactlLQpLUXMEn8z
-	 yMHJpgjS1J1Lgt2A68ZzrAXGCmMjwuW+Q1V6cGA/0g7S4Cb+lRv4kSFkGigZW9thE6
-	 smS6GTKA55s/6QMLAvVRClEEBhfV6wv3B1Id6pWIDTyMfZMPpqc87ced4ai8XX1uoP
-	 i9stn9V95kO45P36szIbPhpMEXq45oLzlxE0X0VuxeJP+smguyp75tDLTEbuHy7WxN
-	 DZg8lkrAE0VrOmnsebI+4/yNt85wEN5DrKtpus1djee4/232CggNIwgbSUAcvCqNVi
-	 sA4MT1DZ6lNxQ==
-From: Jakub Kicinski <kuba@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pabeni@redhat.com
-Subject: [GIT PULL] Networking for v6.16-rc3
-Date: Thu, 19 Jun 2025 09:40:54 -0700
-Message-ID: <20250619164054.1217396-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qc2aD+Rk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYrgsVHt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qc2aD+Rk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYrgsVHt"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8ED40211E3;
+	Thu, 19 Jun 2025 16:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750351469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
+	b=qc2aD+Rkb2PqRaORoyjmyNhxNS75Ye9PVbQDebDjJb62jRi5Y97Z+GJV0ky8C/4yJNPziG
+	08GfntvK4he50AzcQjuG3U6hI3ep2ssbkqs1AY48KIg7eo6zrRObRHCARAPPnDuSLb/lih
+	x/FMHO/DgRmrdzc43iVsSFbENybe188=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750351469;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
+	b=iYrgsVHtWVTIxCiShTFdv0+Fe18Yck4+nQPXyCKlGSVE1QptSl6CQgIriuyzAP6Qmls1bk
+	QWMv31Iw3ia+OIAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qc2aD+Rk;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=iYrgsVHt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750351469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
+	b=qc2aD+Rkb2PqRaORoyjmyNhxNS75Ye9PVbQDebDjJb62jRi5Y97Z+GJV0ky8C/4yJNPziG
+	08GfntvK4he50AzcQjuG3U6hI3ep2ssbkqs1AY48KIg7eo6zrRObRHCARAPPnDuSLb/lih
+	x/FMHO/DgRmrdzc43iVsSFbENybe188=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750351469;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
+	b=iYrgsVHtWVTIxCiShTFdv0+Fe18Yck4+nQPXyCKlGSVE1QptSl6CQgIriuyzAP6Qmls1bk
+	QWMv31Iw3ia+OIAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 80C1A13721;
+	Thu, 19 Jun 2025 16:44:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id U+9qH20+VGh9SQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 19 Jun 2025 16:44:29 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 3DA56A29FA; Thu, 19 Jun 2025 18:44:29 +0200 (CEST)
+Date: Thu, 19 Jun 2025 18:44:29 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH v2 5/6] ext4/jbd2: reintroduce
+ jbd2_journal_blocks_per_page()
+Message-ID: <ugup3tdvaxgzc6agaidbdh7sdcpzcqvwzsurqkesyhsyta7q7y@h3q6mrc2jcno>
+References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
+ <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.cz:dkim];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 8ED40211E3
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-Hi Linus!
+On Wed 11-06-25 19:16:24, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> This partially reverts commit d6bf294773a4 ("ext4/jbd2: convert
+> jbd2_journal_blocks_per_page() to support large folio"). This
+> jbd2_journal_blocks_per_folio() will lead to a significant
+> overestimation of journal credits. Since we still reserve credits for
+> one page and attempt to extend and restart handles during large folio
+> writebacks, so we should convert this helper back to
+> ext4_journal_blocks_per_page().
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-The following changes since commit 27605c8c0f69e319df156b471974e4e223035378:
+Here I'm not decided. Does it make any particular sense to reserve credits
+for one *page* worth of blocks when pages don't have any particular meaning
+in our writeback code anymore? We could reserve credits just for one
+physical extent and that should be enough. For blocksize == pagesize (most
+common configs) this would be actually equivalent. If blocksize < pagesize,
+this could force us to do some more writeback retries and thus get somewhat
+higher writeback CPU overhead but do we really care for these configs?  It
+is well possible I've overlooked something and someone will spot a
+performance regression in practical setup with this in which case we'd have
+to come up with something more clever but I think it's worth it to start
+simple and complicate later.
 
-  Merge tag 'net-6.16-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-06-12 09:50:36 -0700)
+								Honza
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.16-rc3
-
-for you to fetch changes up to 16ef63acb784bd0951a08c6feb108d19d9488800:
-
-  Merge branch 'net-airoha-improve-hwfd-buffer-descriptor-queues-setup' (2025-06-19 08:42:27 -0700)
-
-----------------------------------------------------------------
-Including fixes from wireless. The ath12k fix to avoid FW crashes
-requires adding support for a number of new FW commands so
-it's quite large in terms of LoC. The rest is relatively small.
-
-Current release - fix to a fix:
-
- - ptp: fix breakage after ptp_vclock_in_use() rework
-
-Current release - regressions:
-
- - openvswitch: allocate struct ovs_pcpu_storage dynamically, static
-   allocation may exhaust module loader limit on smaller systems
-
-Previous releases - regressions:
-
- - tcp: fix tcp_packet_delayed() for peers with no selective ACK support
-
-Previous releases - always broken:
-
- - wifi: ath12k: don't activate more links than firmware supports
-
- - tcp: make sure sockets open via passive TFO have valid NAPI ID
-
- - eth: bnxt_en: update MRU and RSS table of RSS contexts on queue reset,
-   prevent Rx queues from silently hanging after queue reset
-
- - NFC: uart: set tty->disc_data only in success path
-
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-
-----------------------------------------------------------------
-Alexey Kodanev (1):
-      net: lan743x: fix potential out-of-bounds write in lan743x_ptp_io_event_clock_get()
-
-Baochen Qiang (10):
-      wifi: ath12k: parse and save hardware mode info from WMI_SERVICE_READY_EXT_EVENTID event for later use
-      wifi: ath12k: parse and save sbs_lower_band_end_freq from WMI_SERVICE_READY_EXT2_EVENTID event
-      wifi: ath12k: update freq range for each hardware mode
-      wifi: ath12k: support WMI_MLO_LINK_SET_ACTIVE_CMDID command
-      wifi: ath12k: update link active in case two links fall on the same MAC
-      wifi: ath12k: don't activate more links than firmware supports
-      wifi: ath12k: fix documentation on firmware stats
-      wifi: ath12k: avoid burning CPU while waiting for firmware stats
-      wifi: ath12k: don't use static variables in ath12k_wmi_fw_stats_process()
-      wifi: ath12k: don't wait when there is no vdev started
-
-Bjorn Andersson (1):
-      wifi: ath12k: Avoid CPU busy-wait by handling VDEV_STAT and BCN_STAT
-
-Brett Creeley (1):
-      ionic: Prevent driver/fw getting out of sync on devcmd(s)
-
-Brett Werling (1):
-      can: tcan4x5x: fix power regulator retrieval during probe
-
-Colin Ian King (1):
-      wifi: iwlwifi: Fix incorrect logic on cmd_ver range checking
-
-David Thompson (1):
-      mlxbf_gige: return EPROBE_DEFER if PHY IRQ is not available
-
-David Wei (4):
-      selftests: netdevsim: improve lib.sh include in peer.sh
-      selftests: net: add passive TFO test binary
-      selftests: net: add test for passive TFO socket NAPI ID
-      tcp: fix passive TFO socket having invalid NAPI ID
-
-Dmitry Antipov (1):
-      wifi: carl9170: do not ping device which has failed to load firmware
-
-Eric Dumazet (2):
-      net: atm: add lec_mutex
-      net: atm: fix /proc/net/atm/lec handling
-
-Grzegorz Nitka (1):
-      ice: fix eswitch code memory leak in reset scenario
-
-Haixia Qu (1):
-      tipc: fix null-ptr-deref when acquiring remote ip of ethernet bearer
-
-Hariprasad Kelam (1):
-      Octeontx2-pf: Fix Backpresure configuration
-
-Heiner Kallweit (1):
-      net: ftgmac100: select FIXED_PHY
-
-Hyunwoo Kim (1):
-      net/sched: fix use-after-free in taprio_dev_notifier
-
-Jakub Kicinski (12):
-      Merge tag 'linux-can-fixes-for-6.16-20250617' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
-      Merge branch 'bnxt_en-bug-fixes'
-      Merge branch 'ptp_vclock-fixes'
-      Merge branch 'atm-fix-uninit-and-mem-accounting-leak-in-vcc_sendmsg'
-      net: ethtool: remove duplicate defines for family info
-      Merge branch '100GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
-      Merge branch 'net-fix-passive-tfo-socket-having-invalid-napi-id'
-      eth: fbnic: avoid double free when failing to DMA-map FW msg
-      Merge branch 'with-a-mutex'
-      tools: ynl: fix mixing ops and notifications on one socket
-      Merge tag 'wireless-2025-06-18' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless
-      Merge branch 'net-airoha-improve-hwfd-buffer-descriptor-queues-setup'
-
-Johannes Berg (7):
-      wifi: remove zero-length arrays
-      wifi: mac80211: drop invalid source address OCB frames
-      wifi: mac80211: don't WARN for late channel/color switch
-      wifi: ath6kl: remove WARN on bad firmware input
-      Merge tag 'ath-current-20250617' of git://git.kernel.org/pub/scm/linux/kernel/git/ath/ath
-      wifi: iwlwifi: dvm: restore n_no_reclaim_cmds setting
-      Merge tag 'iwlwifi-fixes-2025-06-18' of https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/iwlwifi-next
-
-Kalesh AP (1):
-      bnxt_en: Fix double invocation of bnxt_ulp_stop()/bnxt_ulp_start()
-
-Krishna Kumar (1):
-      net: ice: Perform accurate aRFS flow match
-
-Krzysztof Kozlowski (1):
-      NFC: nci: uart: Set tty->disc_data only in success path
-
-Kuniyuki Iwashima (4):
-      mpls: Use rcu_dereference_rtnl() in mpls_route_input_rcu().
-      atm: atmtcp: Free invalid length skb in atmtcp_c_send().
-      atm: Revert atm_account_tx() if copy_from_iter_full() fails.
-      calipso: Fix null-ptr-deref in calipso_req_{set,del}attr().
-
-Lorenzo Bianconi (3):
-      net: airoha: Always check return value from airoha_ppe_foe_get_entry()
-      net: airoha: Compute number of descriptors according to reserved memory size
-      net: airoha: Differentiate hwfd buffer size for QDMA0 and QDMA1
-
-Meghana Malladi (1):
-      net: ti: icssg-prueth: Fix packet handling for XDP_TX
-
-Mina Almasry (1):
-      net: netmem: fix skb_ensure_writable with unreadable skbs
-
-Miri Korenblit (1):
-      wifi: iwlwifi: restore missing initialization of async_handlers_list (again)
-
-Neal Cardwell (1):
-      tcp: fix tcp_packet_delayed() for tcp_is_non_sack_preventing_reopen() behavior
-
-Pavan Chebbi (2):
-      bnxt_en: Add a helper function to configure MRU and RSS
-      bnxt_en: Update MRU and RSS table of RSS contexts on queue reset
-
-Pei Xiao (1):
-      wifi: iwlwifi: cfg: Limit cb_size to valid range
-
-Sebastian Andrzej Siewior (1):
-      openvswitch: Allocate struct ovs_pcpu_storage dynamically
-
-Shannon Nelson (1):
-      MAINTAINERS: Remove Shannon Nelson from MAINTAINERS file
-
-Simon Horman (1):
-      pldmfw: Select CRC32 when PLDMFW is selected
-
-Vitaly Lifshits (1):
-      e1000e: set fixed clock frequency indication for Nahum 11 and Nahum 13
-
-Vladimir Oltean (2):
-      ptp: fix breakage after ptp_vclock_in_use() rework
-      ptp: allow reading of currently dialed frequency to succeed on free-running clocks
-
- .mailmap                                           |   7 +-
- Documentation/netlink/specs/ethtool.yaml           |   3 +
- MAINTAINERS                                        |   5 +-
- drivers/atm/atmtcp.c                               |   4 +-
- drivers/net/can/m_can/tcan4x5x-core.c              |   9 +-
- drivers/net/ethernet/airoha/airoha_eth.c           |  27 +-
- drivers/net/ethernet/airoha/airoha_ppe.c           |   4 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  87 ++-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c      |  24 +-
- drivers/net/ethernet/faraday/Kconfig               |   1 +
- drivers/net/ethernet/intel/e1000e/netdev.c         |  14 +-
- drivers/net/ethernet/intel/e1000e/ptp.c            |   8 +-
- drivers/net/ethernet/intel/ice/ice_arfs.c          |  48 ++
- drivers/net/ethernet/intel/ice/ice_eswitch.c       |   6 +-
- .../ethernet/marvell/octeontx2/nic/otx2_common.c   |   4 +-
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c |   6 +-
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c         |   5 +-
- drivers/net/ethernet/microchip/lan743x_ptp.h       |   4 +-
- drivers/net/ethernet/pensando/ionic/ionic_main.c   |   3 +-
- drivers/net/ethernet/ti/icssg/icssg_common.c       |  19 +-
- drivers/net/wireless/ath/ath12k/core.c             |   4 +-
- drivers/net/wireless/ath/ath12k/core.h             |  10 +-
- drivers/net/wireless/ath/ath12k/debugfs.c          |  58 --
- drivers/net/wireless/ath/ath12k/debugfs.h          |   7 -
- drivers/net/wireless/ath/ath12k/mac.c              | 394 +++++++++-
- drivers/net/wireless/ath/ath12k/mac.h              |   2 +
- drivers/net/wireless/ath/ath12k/wmi.c              | 829 ++++++++++++++++++++-
- drivers/net/wireless/ath/ath12k/wmi.h              | 180 ++++-
- drivers/net/wireless/ath/ath6kl/bmi.c              |   4 +-
- drivers/net/wireless/ath/carl9170/usb.c            |  19 +-
- drivers/net/wireless/intel/iwlwifi/dvm/main.c      |   1 +
- drivers/net/wireless/intel/iwlwifi/mld/mld.c       |   1 +
- drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c   |   2 +-
- .../net/wireless/intel/iwlwifi/pcie/ctxt-info.c    |  11 +-
- drivers/ptp/ptp_clock.c                            |   3 +-
- drivers/ptp/ptp_private.h                          |  22 +-
- include/linux/atmdev.h                             |   6 +
- include/linux/ieee80211.h                          |  18 +-
- include/uapi/linux/ethtool_netlink.h               |   4 -
- include/uapi/linux/ethtool_netlink_generated.h     |   4 +-
- lib/Kconfig                                        |   1 +
- net/atm/common.c                                   |   1 +
- net/atm/lec.c                                      |  12 +-
- net/atm/raw.c                                      |   2 +-
- net/core/skbuff.c                                  |   3 -
- net/ipv4/tcp_fastopen.c                            |   3 +
- net/ipv4/tcp_input.c                               |  35 +-
- net/ipv6/calipso.c                                 |   8 +
- net/mac80211/debug.h                               |   5 +-
- net/mac80211/rx.c                                  |   4 +
- net/mac80211/tx.c                                  |  29 +-
- net/mpls/af_mpls.c                                 |   4 +-
- net/nfc/nci/uart.c                                 |   8 +-
- net/openvswitch/actions.c                          |  23 +-
- net/openvswitch/datapath.c                         |  42 +-
- net/openvswitch/datapath.h                         |   3 +-
- net/sched/sch_taprio.c                             |   6 +-
- net/tipc/udp_media.c                               |   4 +-
- tools/net/ynl/pyynl/lib/ynl.py                     |  28 +-
- .../selftests/drivers/net/netdevsim/peer.sh        |   3 +-
- tools/testing/selftests/net/.gitignore             |   1 +
- tools/testing/selftests/net/Makefile               |   2 +
- tools/testing/selftests/net/tfo.c                  | 171 +++++
- tools/testing/selftests/net/tfo_passive.sh         | 112 +++
- 64 files changed, 2090 insertions(+), 287 deletions(-)
- create mode 100644 tools/testing/selftests/net/tfo.c
- create mode 100755 tools/testing/selftests/net/tfo_passive.sh
+> ---
+>  fs/ext4/ext4_jbd2.h  | 7 +++++++
+>  fs/ext4/inode.c      | 6 +++---
+>  fs/jbd2/journal.c    | 6 ++++++
+>  include/linux/jbd2.h | 1 +
+>  4 files changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+> index 63d17c5201b5..c0ee756cb34c 100644
+> --- a/fs/ext4/ext4_jbd2.h
+> +++ b/fs/ext4/ext4_jbd2.h
+> @@ -326,6 +326,13 @@ static inline int ext4_journal_blocks_per_folio(struct inode *inode)
+>  	return 0;
+>  }
+>  
+> +static inline int ext4_journal_blocks_per_page(struct inode *inode)
+> +{
+> +	if (EXT4_JOURNAL(inode) != NULL)
+> +		return jbd2_journal_blocks_per_page(inode);
+> +	return 0;
+> +}
+> +
+>  static inline int ext4_journal_force_commit(journal_t *journal)
+>  {
+>  	if (journal)
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 67e37dd546eb..9835145b1b27 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -2556,7 +2556,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+>   */
+>  static int ext4_da_writepages_trans_blocks(struct inode *inode)
+>  {
+> -	int bpp = ext4_journal_blocks_per_folio(inode);
+> +	int bpp = ext4_journal_blocks_per_page(inode);
+>  
+>  	return ext4_meta_trans_blocks(inode,
+>  				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
+> @@ -2634,7 +2634,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+>  	ext4_lblk_t lblk;
+>  	struct buffer_head *head;
+>  	handle_t *handle = NULL;
+> -	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
+> +	int bpp = ext4_journal_blocks_per_page(mpd->inode);
+>  
+>  	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
+>  		tag = PAGECACHE_TAG_TOWRITE;
+> @@ -6255,7 +6255,7 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
+>   */
+>  int ext4_writepage_trans_blocks(struct inode *inode)
+>  {
+> -	int bpp = ext4_journal_blocks_per_folio(inode);
+> +	int bpp = ext4_journal_blocks_per_page(inode);
+>  	int ret;
+>  
+>  	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
+> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+> index d480b94117cd..7fccb425907f 100644
+> --- a/fs/jbd2/journal.c
+> +++ b/fs/jbd2/journal.c
+> @@ -84,6 +84,7 @@ EXPORT_SYMBOL(jbd2_journal_start_commit);
+>  EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
+>  EXPORT_SYMBOL(jbd2_journal_wipe);
+>  EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
+> +EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
+>  EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
+>  EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
+>  EXPORT_SYMBOL(jbd2_journal_force_commit);
+> @@ -2661,6 +2662,11 @@ int jbd2_journal_blocks_per_folio(struct inode *inode)
+>  		     inode->i_sb->s_blocksize_bits);
+>  }
+>  
+> +int jbd2_journal_blocks_per_page(struct inode *inode)
+> +{
+> +	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
+> +}
+> +
+>  /*
+>   * helper functions to deal with 32 or 64bit block numbers.
+>   */
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 43b9297fe8a7..f35369c104ba 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1724,6 +1724,7 @@ static inline int tid_geq(tid_t x, tid_t y)
+>  }
+>  
+>  extern int jbd2_journal_blocks_per_folio(struct inode *inode);
+> +extern int jbd2_journal_blocks_per_page(struct inode *inode);
+>  extern size_t journal_tag_bytes(journal_t *journal);
+>  
+>  static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
+> -- 
+> 2.46.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
