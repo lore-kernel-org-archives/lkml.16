@@ -1,107 +1,166 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647C728DF3B;
-	Thu, 19 Jun 2025 22:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095BD25E478;
+	Thu, 19 Jun 2025 22:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750373701; cv=none; b=uUR+qj6HCemisCXePLIXBNyOQW3KdGaQyOy5dAY+C7evMz4Rr3yvtGmjQHTeZI842wJmIqmOiSN8JzyANKWVNLyL7s9X/KMylGi1a0minDBKGAwJieZ0COeHGvxfUZBrMcivzNeUMyUO6SiHqRKmRTObhZhFsDS94TRljjkIEic=
+	t=1750373798; cv=none; b=uJp4OnEyHBCORJXOOLkQBzckpd9NNJ4mXWmfb5OjQCMv5QuT3M8dYyai11SEPGz/kBZfeAFmLx9segYplRtjd8pcE9fNYUWt/MzmxCS2GYYjwNKct/OqKzquBkhGVTuwng0hWDJD2W8LIZWIvsCwAwBBk81dioQEZGp4/U2HSJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750373701; c=relaxed/simple;
-	bh=6sePk+G/EKaUsxFhwpkZ3tXruwwG27Ix5uopCUKZePs=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NjfYR+zChtqMHkN5iGE4YXsL80pAFJ7qzNQMKzttfB4gDI7/ydl+WttUTrMOQuzQ2FUQGsvS4XEky8Tx0/qI9Krb7oGEKawtG0WTHwViytFPQlP/A9B+6+/saKuwgER7+p9RpmwRvwR4kqzIYV6NJyxjvziZX+0AV3/WNRH5nvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wozd3JfM; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750373798; c=relaxed/simple;
+	bh=UzPt9sdsQLdNib/j6Er/NNyzs7bxjPti+YIh2O07cks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFwvqkTWqPnHOThvLh1FlWjYVPMy9msSHwLg5H8CEwMyO+6n/WKb3DvD3l65R7V2mSCzPjhOkP8fD65OyfRxezzUTvZLUKacjFiFfMyqv50S8F3BM0v/AQT3vq5QDDhOzcQkpUeN6++p7RwYddvgY1IqREwa4JNyg5obD+eo1tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nde8eq+r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wozd3JfM"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso938641b3a.0;
-        Thu, 19 Jun 2025 15:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750373699; x=1750978499; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U5LUh+vcUEz2dsN4kFQrgT/PUHpvK2pO4wxhl19yUFE=;
-        b=Wozd3JfMotqqL63pgPsfa2tMmrqpDLQHO309SNkMKVPQLFpvbYJ/MH4n/MsjdaBH7i
-         olraWhKWi8+YubLiMkddvnMWycDTRZ8j7Maxql0YGABtdnBO7SYx4Y5kqiK1BAJi0IUk
-         6sDbT6u1dwCHnnsgC179+5BEqViZEmxPxSpjiTLdO/3xejX3yPN0wIj3AMHnF7naQekg
-         zYJWgMoEv7g835toSoj0KcDEs5laoWp2/TA4n6FvvF8IrNaAaTW6XID9IVdLKPHZyTRC
-         4fsCfRTm9V4PjNVOrg5RZwmP5PWS6nD/fD4FV18glGTSlhJOA7gOoNIJCtPVcumNjdXx
-         v5zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750373699; x=1750978499;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=U5LUh+vcUEz2dsN4kFQrgT/PUHpvK2pO4wxhl19yUFE=;
-        b=P7wBI3WwbIapD3habK2J+Gj2uQJuP1RaAdziGus/NuF3H9JcWZ7/IVJ4oIiaXupWN9
-         oR9Zw9xShF2I/TlzkYUvUR3ZrOhrK6n9KlQRpvwpnSHULJNNtECKbrfZMPXPPTZqsrMK
-         vn8MnNvRLrfTgviwnbXQ7FgBhuURBbqI7LdJp2r88rN+RydlEeKlwDAyOeIP2aQlYc+C
-         WUYmPMNmYXNdebrF60QVTqvwWVoKKVM9EEVCHP0XZduhkqvT0r9q9NR4sNEvjd6nHg2r
-         bfeVNrsuhvh0yhU+WI4xymAs9XB/ZEddYBkQzKPx9xx4mspV6mpOe1vcMEjj+Nik3/kH
-         fHKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUsZe3EflCN+pgYFErf6QmUvWm0DBnDv1qmGC8BG0OzmDhuiV22sAqDSeCXykV9FYfXMv2lZJKJ6j9EQwundk=@vger.kernel.org, AJvYcCXbzjzVQFFKNHuqGeNv4S1HL47bljwOR0gpdghB+755V5VzmmYrF/0GsaBpqy9ya2EIBLz1eaGyzsezAts=@vger.kernel.org, AJvYcCXdDfwJYNNIxxKSQxD7bBIsc7KF3V/dYnZ/HPzax2Hd5ECmXzd9mf6d8ny5qd+AB66QZliuywVt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx4JyJReWgk2/mly1vAtn/iT59y1jd4EzRE7yHf2lY/jPfZTGN
-	wGkui+ER6/VsI65hawCQen+vGaKGGhnSlmU/uolnIOuLpWwtRIyXCfqi
-X-Gm-Gg: ASbGncu95FzpYpPhFpCQfdR++3X3K6bRbQ+cWukesYaqevERpoYjISEQMBbij7iU4CD
-	6/8NbIwsR+3cVq13/thCT9QzJASa8kQalN95lg0XiPP486mzZNkEPlfSSqJ99urOuagHTNJAYf4
-	ZDscKxW1zV9UVxcwYrc/znY7yq5MpkQqidCmjFdrKR+MlteaPFNKWvwCz7WcwRqMhplbejTw5q4
-	GtgsoH9sGQsbgmD6QdfL460MhSJLvNdFqqZLN0esIghd3bu3mmyJugU4gHJR2VNiB78ErOZYx3g
-	wAqZ64DHXTJFsOGaMDTxKHW3+enoFg/ozFGtNsOzMM2S2BqsNOoENm+ZsE7u99rhKOKKKIR5KL4
-	uCWzPzTdRbntNLFKMsPacxHXxxIlXgqEaFkvQf593
-X-Google-Smtp-Source: AGHT+IGMOxrcLqORxCkCwjmK4ZO6AvSemKqlGQKHeZb8yFFS7F0PURx5NSiGPIe7ehUlW04USd49VQ==
-X-Received: by 2002:a05:6a20:3c8e:b0:204:432e:5fa4 with SMTP id adf61e73a8af0-22026eb16ddmr843061637.23.1750373699399;
-        Thu, 19 Jun 2025 15:54:59 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a66a763sm642168b3a.141.2025.06.19.15.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 15:54:59 -0700 (PDT)
-Date: Fri, 20 Jun 2025 07:54:43 +0900 (JST)
-Message-Id: <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
-To: tamird@gmail.com
-Cc: fujita.tomonori@gmail.com, aliceryhl@google.com, tmgross@umich.edu,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
- a.hindborg@kernel.org, dakr@kernel.org, davem@davemloft.net,
- andrew@lunn.ch, netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: cast to the proper type
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CAJ-ks9mazp=gSqDEzUuh0eTvj6pBET-z2zz7XQzmu9at=4V03A@mail.gmail.com>
-References: <20250612.094805.256395171864740471.fujita.tomonori@gmail.com>
-	<CAJ-ks9nXwBMNcZLK1uJB=qJk8KsOF7q8nYZC6qANboxmT8qFFA@mail.gmail.com>
-	<CAJ-ks9mazp=gSqDEzUuh0eTvj6pBET-z2zz7XQzmu9at=4V03A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nde8eq+r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4A6C4CEEA;
+	Thu, 19 Jun 2025 22:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750373797;
+	bh=UzPt9sdsQLdNib/j6Er/NNyzs7bxjPti+YIh2O07cks=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nde8eq+rYOu10Ukd5BPNu7CCiAmyo4obYligYd/Fbb0UtvZq95d7nMTUyzg4AIMAw
+	 uwSdVINM2fIP71NI+WQrf39YT169lLcV7shEmmYRGv52IvcBDUmyinKboGjTmPWjHP
+	 /8asLaV/AZr5L5cQof+/99rb4xl8/qO92UtEgliDM6bLZqiyrfhl52tA1Z7sqFeW/H
+	 uM1tExk6QNeKLJAFoWhZFAYyQnetB2OHHrBQ3pj+hgAr7nkl+Wy6lZv9SUYIWGo5+O
+	 BbcCXjKtVSHcRBsg+pMUKWU+72KRjg34ZPS3nh7ZbvT59FoY50Buh91HT5sz3j2C1i
+	 b7yt6r6mG4szg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	=?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+	linux-mips@vger.kernel.org,
+	llvm@lists.linux.dev,
+	stable@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] lib/crypto: mips/chacha: Fix clang build and remove unneeded byteswap
+Date: Thu, 19 Jun 2025 15:55:35 -0700
+Message-ID: <20250619225535.679301-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Jun 2025 11:29:56 -0400
-Tamir Duberstein <tamird@gmail.com> wrote:
+The MIPS32r2 ChaCha code has never been buildable with the clang
+assembler.  First, clang doesn't support the 'rotl' pseudo-instruction:
 
->> > >> > Fixes: f20fd5449ada ("rust: core abstractions for network PHY drivers")
->> > >>
->> > >> Does this need to be backported? If not, I wouldn't include a Fixes tag.
->> > >
->> > > I'm fine with omitting it. I wanted to leave a breadcrumb to the
->> > > commit that introduced the current code.
->> >
->> > I also don't think this tag is necessary because this is not a bug
->> > fix. And since this tag points to the file's initial commit, I don't
->> > think it's particularly useful.
->>
->> Would you be OK stripping the tag on apply, or would you like me to send v2?
-> 
-> Hi Tomo, gentle ping here. Does this look reasonable to you, with the
-> Fixes tag stripped on apply?
+    error: unknown instruction, did you mean: rol, rotr?
 
-Yeah, if you drop the Fixes tag, it's fine by me.
+Second, clang requires that both operands of the 'wsbh' instruction be
+explicitly given:
 
-Thanks,
+    error: too few operands for instruction
+
+To fix this, align the code with the real instruction set by (1) using
+the real instruction 'rotr' instead of the nonstandard pseudo-
+instruction 'rotl', and (2) explicitly giving both operands to 'wsbh'.
+
+To make removing the use of 'rotl' a bit easier, also remove the
+unnecessary special-casing for big endian CPUs at
+.Lchacha_mips_xor_bytes.  The tail handling is actually
+endian-independent since it processes one byte at a time.  On big endian
+CPUs the old code byte-swapped SAVED_X, then iterated through it in
+reverse order.  But the byteswap and reverse iteration canceled out.
+
+Tested with chacha20poly1305-selftest in QEMU using "-M malta" with both
+little endian and big endian mips32r2 kernels.
+
+Fixes: 49aa7c00eddf ("crypto: mips/chacha - import 32r2 ChaCha code from Zinc")
+Cc: stable@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505080409.EujEBwA0-lkp@intel.com/
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
+
+This applies on top of other pending lib/crypto patches and can be
+retrieved from git at:
+
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git mips-chacha-fix
+
+ lib/crypto/mips/chacha-core.S | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
+
+diff --git a/lib/crypto/mips/chacha-core.S b/lib/crypto/mips/chacha-core.S
+index 5755f69cfe007..706aeb850fb0d 100644
+--- a/lib/crypto/mips/chacha-core.S
++++ b/lib/crypto/mips/chacha-core.S
+@@ -53,21 +53,17 @@
+ #define IS_UNALIGNED	$s7
+ 
+ #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+ #define MSB 0
+ #define LSB 3
+-#define ROTx rotl
+-#define ROTR(n) rotr n, 24
+ #define	CPU_TO_LE32(n) \
+-	wsbh	n; \
++	wsbh	n, n; \
+ 	rotr	n, 16;
+ #else
+ #define MSB 3
+ #define LSB 0
+-#define ROTx rotr
+ #define CPU_TO_LE32(n)
+-#define ROTR(n)
+ #endif
+ 
+ #define FOR_EACH_WORD(x) \
+ 	x( 0); \
+ 	x( 1); \
+@@ -190,14 +186,14 @@ CONCAT3(.Lchacha_mips_xor_aligned_, PLUS_ONE(x), _b: ;) \
+ 	addu	X(D), X(N); \
+ 	xor	X(V), X(A); \
+ 	xor	X(W), X(B); \
+ 	xor	X(Y), X(C); \
+ 	xor	X(Z), X(D); \
+-	rotl	X(V), S;    \
+-	rotl	X(W), S;    \
+-	rotl	X(Y), S;    \
+-	rotl	X(Z), S;
++	rotr	X(V), 32 - S; \
++	rotr	X(W), 32 - S; \
++	rotr	X(Y), 32 - S; \
++	rotr	X(Z), 32 - S;
+ 
+ .text
+ .set	reorder
+ .set	noat
+ .globl	chacha_crypt_arch
+@@ -370,25 +366,23 @@ chacha_crypt_arch:
+ 	addu	IN, $at
+ 	addu	OUT, $at
+ 	/* First byte */
+ 	lbu	T1, 0(IN)
+ 	addiu	$at, BYTES, 1
+-	CPU_TO_LE32(SAVED_X)
+-	ROTR(SAVED_X)
+ 	xor	T1, SAVED_X
+ 	sb	T1, 0(OUT)
+ 	beqz	$at, .Lchacha_mips_xor_done
+ 	/* Second byte */
+ 	lbu	T1, 1(IN)
+ 	addiu	$at, BYTES, 2
+-	ROTx	SAVED_X, 8
++	rotr	SAVED_X, 8
+ 	xor	T1, SAVED_X
+ 	sb	T1, 1(OUT)
+ 	beqz	$at, .Lchacha_mips_xor_done
+ 	/* Third byte */
+ 	lbu	T1, 2(IN)
+-	ROTx	SAVED_X, 8
++	rotr	SAVED_X, 8
+ 	xor	T1, SAVED_X
+ 	sb	T1, 2(OUT)
+ 	b	.Lchacha_mips_xor_done
+ 
+ .Lchacha_mips_no_full_block_unaligned:
+-- 
+2.50.0
 
