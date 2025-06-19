@@ -1,63 +1,25 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65522B588;
-	Thu, 19 Jun 2025 09:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582382405EC
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750324797; cv=none; b=o0f5Mbi4LnDbxi3HUVp8weKHsGKSOuXlFou6aM4BpzHhOTv5oRooTUWT1K1mWEdRtugfwsCyhkZRIMoGSDe3p81SLBQ9dG/4viWqd9vnZPFP85bppbvHUfDo4tM1Y1V1l/ZuXkyPBZ+qRcasdc7yyhnZ33GJzbm0NpvnaSn/N2U=
+	t=1750324821; cv=none; b=qtYbBnN1qqz9zwacCYOEVyAP85vRgT5vjZoyAVFjJ2xtfYNfYTPliIW+RIAkLiASs5sJ0ifVWoay48tZFl5l/KfUB1m63ioh+mFpJ7EBp7sAK0g/EC207Zr3uVWhpH9sMAjR0KJGJVr79WvNNecdVhBRwDiF/5OqswZ2MR3VJxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750324797; c=relaxed/simple;
-	bh=wUOEYdhZ29SHwGl/xTkaVOq2FWv4Ct0fQwiuoKhEtis=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=BvO4ZXZMPbmfvR3b/GMs+QGWkA71p8CCvynP9ceWuAKjDltNwmwjr59/5DtCIMAgixhCWkK2BXlsfobSqot9ns6iJC/NZXsTs6F+J8w0ZHwCYh7frkJ1vGut+vPd26J1qDOJi4CT1Lfi1UczhlmrFlgLRjoTWhmB6T/hbLpCpwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVN8fddP; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVN8fddP"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2fb9eb54d6so107612a12.0;
-        Thu, 19 Jun 2025 02:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750324795; x=1750929595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:subject:from:reply-to:content-language
-         :to:user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v/4YlE3HAl9brMdxqBP04WkjP+nK0l6GdDNJGUg3hDA=;
-        b=RVN8fddPxQ2MhYZ3Mrj6zdMN7Fv6vgUpCuyMVKXa5MJNVwyn29n8TBxAUqjmRHjoUb
-         b+JCvLCW7DoqrsG5TjmJ68fekhb7CFvgfVQnZikJPkvhzj5J3xLYePF3NVStPNYG5lx3
-         FOlTikhoN6dKAc92iTz7w2Asg1eyANgmFvJ1sT+/Q6kDdu1J5NdK9PqG+EcVvo19jbFe
-         vW/YVSGZO3zvDYQ9a+Wf4oaQIJwURUJDHSShru04xeUW1vu2EFS72P7nCmzPCWmGyaCW
-         ZURALd1ZVSBGR63jadxW3U4PaAo9SgjgsoN7muNohszeaaB1tWTJ/a8K3Jj5CSHW/Zd8
-         l+6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750324795; x=1750929595;
-        h=content-transfer-encoding:cc:subject:from:reply-to:content-language
-         :to:user-agent:mime-version:date:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=v/4YlE3HAl9brMdxqBP04WkjP+nK0l6GdDNJGUg3hDA=;
-        b=tjcE3Wl6UiI110QUsQb8Nrs7JQ4bTtqKIIbTCXcWKvgMxJSsL0nxu8/JWlisdOJpiM
-         vEzVVOc/2CgC1UaDDrZPDwMJOOmLLTvW6IcG2R45hH4F4XEyuQAXVFUGtoAz3IbMAN0s
-         mmYeGtXi334jQxy+RIu0ODCk5UCS0TQvftMRLCFsYnQJy0HHqJI4NlVq8hGjcqoN0lKU
-         5JuhyflgWhcN9053kgImH1TDHj0Cuha1e5eCY2BmJYrFjqE/bpoC1zRZvSeC01eCQ4tn
-         vI/GqhybYBZnJncaF+9jy7pn3ezfqqlPBWsH2VOSUAPNrXKKIO19zUHTDeTybK7Q4BLT
-         9Pzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuZGvLT7yoVjW718r8XveJYIdBNV3bIgyMLXYtrf89kNTHKR3vv1LvtOh9a8llNxmrqaQG143R74sxqG0=@vger.kernel.org, AJvYcCWBbLkQqiKnh8p7tTew3Vc2dY+Wn8kXym7PnrVrxVHBsFxQoyqO1vuU1gm4lYv+ReWfuK4OL9ZYtUiH@vger.kernel.org, AJvYcCXsEEMRwnkHWm0sVIBbfSia2lD4bXqEeGS5D4pr8sfj6sJ4U40h+TVrttrr3FgBKsGbvJkCZkgQMtrSew0t@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR0Q+xHyrzuqF9GU6WGdk4HkpbDF4ErTxgDo9OXw2CWEUBda+R
-	PtqpttriWm2HoK2xGQxg8s/G/F52so9wy1xzRAOBTp8T4Ly5Tk1Eelq+
-X-Gm-Gg: ASbGncvw41r1DK1kGKO2+r7ANEjlvo5Wpic/pk3yeoTO/yG9MoNP1PvbWoZpZOAZiyX
-	EylNDeVVPUtAHpZvDhoxix9O8gyHIEktFDvp5Njg5m5pIv9udeOd6QxpTs/+peB/3Jwzr/veAQ4
-	0fu2So18xVjGR9Pu6zubqUxVkSVF6Zj6DznRj3uivFrzvZokT9x9OT5kFYeb4Q1iP773tVWBQcG
-	+7a8qBry5EoWdbtiLM7i6iPtGKr5yGwLpSDnaGSpVQ1DHiV7EcKg3yT8IaVaMEXI/cShhfY78pe
-	GSr7hN3k0Wd+OPVqLemHu4F6hFcypH9Ik5h1/Olac1pV46a/uPohUQ==
-X-Google-Smtp-Source: AGHT+IEOwVnmlW8HJGJmZZDAcMv1C94tin+GyGqBRrpDOir6cIrcvjw4rGkN6VVwGeWeSc86EeXQ9w==
-X-Received: by 2002:a17:902:c40f:b0:22e:6d69:1775 with SMTP id d9443c01a7336-2368edfcb64mr66047925ad.11.1750324794607;
-        Thu, 19 Jun 2025 02:19:54 -0700 (PDT)
-Received: from [0.0.0.0] ([2a09:bac1:3b40:120::16:1d2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3157a615170sm2229196a91.0.2025.06.19.02.19.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 02:19:53 -0700 (PDT)
-Message-ID: <9f098eab-7b98-4827-8538-3cab0e8d7c63@gmail.com>
-Date: Thu, 19 Jun 2025 17:19:32 +0800
+	s=arc-20240116; t=1750324821; c=relaxed/simple;
+	bh=xfFrk+hniYU5BoCwpn9Udt1EIwc5zRCB71cWPF4u8K0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H6eyk/EO2tQUEjT4nVYyeJJeSw4mRCwA9hljog929ZnafLyjOr97hupfvVFJx6HNLrbjj5CQsknTvFuE1Czn+i1O+2ArA7IMVWRyNg3daxE4OCJIDf8ViHNGAxLELn1RppwUUROajULQ2hXD19Cd3wV9t6r8QN2eYMPVp81DOtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A806113E;
+	Thu, 19 Jun 2025 02:19:59 -0700 (PDT)
+Received: from [10.57.84.221] (unknown [10.57.84.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B13A3F58B;
+	Thu, 19 Jun 2025 02:20:16 -0700 (PDT)
+Message-ID: <8c6f1c91-176c-4382-b631-79948e8de16f@arm.com>
+Date: Thu, 19 Jun 2025 10:20:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,71 +27,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: detlev.casanova@collabora.com
-Content-Language: en-US
-Reply-To: 20250325213303.826925-5-detlev.casanova@collabora.com
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-Subject: Re: [PATCH v4 4/6] media: rockchip: Introduce the rkvdec2 driver
-Cc: alchark@gmail.com, andrzej.p@collabora.com, cassel@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org, dmitry.perchanov@intel.com,
- dsimic@manjaro.org, ezequiel@vanguardiasur.com.ar,
- gregkh@linuxfoundation.org, heiko@sntech.de, hverkuil@xs4all.nl,
- jacopo.mondi@ideasonboard.com, jeanmichel.hautbois@ideasonboard.com,
- jonas@kwiboo.se, kernel@collabora.com, kieran.bingham@ideasonboard.com,
- krzk+dt@kernel.org, laurent.pinchart@ideasonboard.com,
+Subject: Re: [PATCH v7 2/4] arm64: Add BBM Level 2 cpu feature
+Content-Language: en-GB
+To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
+Cc: yang@os.amperecomputing.com, catalin.marinas@arm.com, will@kernel.org,
+ jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
+ maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+ james.morse@arm.com, broonie@kernel.org, ardb@kernel.org, baohua@kernel.org,
+ suzuki.poulose@arm.com, david@redhat.com, jgg@ziepe.ca, nicolinc@nvidia.com,
+ jsnitsel@redhat.com, mshavit@google.com, kevin.tian@intel.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-staging@lists.linux.dev, Jianfeng Liu <liujianfeng1994@gmail.com>,
- mchehab@kernel.org, naush@raspberrypi.com, nicolas.dufresne@collabora.com,
- robh@kernel.org, sakari.ailus@linux.intel.com,
- sebastian.reichel@collabora.com, tomi.valkeinen@ideasonboard.com,
- umang.jain@ideasonboard.com
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ iommu@lists.linux.dev
+References: <20250617095104.6772-1-miko.lenczewski@arm.com>
+ <20250617095104.6772-3-miko.lenczewski@arm.com>
+ <e40989e9-9521-4915-9bae-eb7be1d4e056@arm.com>
+ <20250619085701.GA10805@e133081.arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250619085701.GA10805@e133081.arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Detlev,
+On 19/06/2025 09:57, Mikołaj Lenczewski wrote:
+> On Wed, Jun 18, 2025 at 03:07:41PM +0100, Ryan Roberts wrote:
+>> On 17/06/2025 10:51, Mikołaj Lenczewski wrote:
+>>>  #ifdef CONFIG_ARM64_PAN
+>>>  static void cpu_enable_pan(const struct arm64_cpu_capabilities *__unused)
+>>>  {
+>>> @@ -2980,6 +3015,11 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>>>  		.matches = has_cpuid_feature,
+>>>  		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, EVT, IMP)
+>>>  	},
+>>> +	{
+>>> +		.capability = ARM64_HAS_BBML2_NOABORT,
+>>> +		.type = ARM64_CPUCAP_EARLY_LOCAL_CPU_FEATURE,
+>>> +		.matches = has_bbml2_noabort,
+>>
+>> Is there a reason you have removed the .desc from this? Without it, the kernel
+>> won't print a "detected" line when it enables the feature. Previously you had:
+>>
+>> 		.desc = "BBM Level 2 without conflict abort",
+>>
+>>> +	},
+>>>  	{
+>>>  		.desc = "52-bit Virtual Addressing for KVM (LPA2)",
+>>>  		.capability = ARM64_HAS_LPA2, 
+>>
+> 
+> Damn it! I completely forgot to birng that back. Yet another remenant of
+> the NO_BBML2_NOABORT version we had discussed in v6, because a
+> description field would have been confusing due to the double negation:
+> 
+> https://lore.kernel.org/all/83d1f7af-3dc7-45f9-94f3-8a0917c051d2@arm.com/
+> 
+> Thank you very much for spotting this Ryan! Ill return the description,
+> and respin on Monday (unless it is possible to do this as a RESEND or
+> similar, but I doubt it since this is technically a functional change) :/
+> 
 
-On Tue, 25 Mar 2025 17:22:20 -0400, Detlev Casanova wrote:
-
- >+        case RKVDEC2_ALLOC_SRAM:
- >+            virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
- >+
- >+            iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
-
-I'm testing your patch with ffmpeg patched with v4l2-request patches[1], 
-and I usually
-
-get kernel panic here. After checking rkvdec->iommu_domain before 
-running iommu_unmap,
-
-I can pass fluster ffmpeg v4l2-request test. Here is my patch based on 
-your commit:
-
-
-diff --git a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c 
-b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
-index 75768561399..122bcdcebd4 100644
---- a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
-+++ b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
-@@ -681,8 +681,8 @@ static void rkvdec2_free_rcb(struct rkvdec2_ctx *ctx)
-                 switch (ctx->rcb_bufs[i].type) {
-                 case RKVDEC2_ALLOC_SRAM:
-                         virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
--
--                       iommu_unmap(rkvdec->iommu_domain, virt_addr, 
-rcb_size);
-+                       if (rkvdec->iommu_domain)
-+ iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
-                         gen_pool_free(ctx->dev->sram_pool, virt_addr, 
-rcb_size);
-                         break;
-                 case RKVDEC2_ALLOC_DMA:
-
-
-[1] https://github.com/amazingfate/FFmpeg/commits/n6.1.1-new-patches/
-
-
-Best regards,
-
-Jianfeng
+I think probably just send out a new version.
 
