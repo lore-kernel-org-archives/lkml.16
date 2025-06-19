@@ -1,114 +1,128 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F2C261390
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF62B20E33F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750320408; cv=none; b=P0W4qwj11yNkIMBW5bTUadeiM6f9T2o6LkM1x0/u6KISnWei2f7DJJuFsHLpX8TBw4fnGA+FtgbXkl8CP5AJ0WA6Gw6oDC+PBbgRaGS+O/StvJf2GOHxgprW9hL3EE/4mYneJKGliDH2mvcI4mhj5fM48vitQGuuwZXy+f9iWqg=
+	t=1750320421; cv=none; b=B4UP3AQ/u+/5Zz8Vr3l8M3RlfJFUyUyL+z9fTkX9C7iLOXEzDYdu8A0nH4j4B2ozrkrUCIYdGAZ/C1b6KVSAnE8ulMZOcokPoEzm1ebtYfEUS8c8Jx5wGuApz0OK3Bg+8jNFUUcrn/AG9C1crryHPRAY2goXfOTHcnZg0R+QWSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750320408; c=relaxed/simple;
-	bh=a+rcVLKG5LogbRwc+21ftsMiRlVNjgK1wni99iSuW3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BUhS8BYHp6pBGQ4eduvf6yBU/3hMaIjZaxtNVDtmI+opOX5/oXdeuR8ITGzrtyNoR/VzvYkY9bzNYnQ6gA3ckTlUYsT8TqGwy83UAC9pmy8esYpQ/OzY4ULNEOsFDNxySPfbCPudhpe1pwXqjZDWyqNhgaYjEJD6aowqFENs0NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ckGS5+M0; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750320421; c=relaxed/simple;
+	bh=ve8p+S7dI1CylXMjs0YRpxXRpIWdjM1DDiCSuJN8dVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cDdmAtiCym0TOYC6EfBhG/rrsBx0zrlnbEb2qTVYDlqEdhN5RBaW0+VVa5DopEdfd2pryVDYx2v56i5qvnvt6yyCSDXeWbuwdsO8O2AVn8lPa6Pqg7KedJd7o98AF3doXh0mlcLQiFmX9UxlWQsmIogTMSg7k93rDyWXwO8/Av4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3i0KpRQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ckGS5+M0"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450dd065828so3364345e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750320403; x=1750925203; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=salczjjRssYDH2+0mmcRfcDYi7Wgd3Z2sKQXxoQU/+k=;
-        b=ckGS5+M058gnTKUMG9RLGD96zj326GLXJa9omuttPur7zjwxhgPk9TniSH8spzi2V9
-         uHXvKcgMlSmqCIwNxDDW+U2kN5aHUR68n9Kk7S7BlMG82MgeEVMm2YJbBXCHxNq+hCyE
-         UQY2qPAQegXZ1ghDFEx2J7vBVspeB6aBEC65wS2iFVt29LvxCNsh+/dsmYlvcM2O67zI
-         fU+e43gInjYIh2TxYsmEQ8fVC3O+S+MlupvQdfXWbqF8+MqWLd9NmJ2y3DTmsYV/Ku62
-         caFygxMhnvKe6VQaAPNu+IuzulGLpuiT+jDim5h9bdaWeuqIDB/Zve+b2yA7aZGaCVrc
-         5+Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750320403; x=1750925203;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=salczjjRssYDH2+0mmcRfcDYi7Wgd3Z2sKQXxoQU/+k=;
-        b=tWOEMW9k0xxTeLvGzYw0YV6jRAJ+4U1WSMTvA8vTdadtgdhuyvTBWrAsHsq2PYnrC/
-         wCeYOuJ+x1jRAukHA1Lcf6J/pGPXxiUcd6jHb7PLPHRIVFv6sDrIT/M2G3Wuat4ViOxx
-         OGtvAvsYDKHhLBhS4lgmcdqCQrxxztGoK2nXFUh7MQX/WC27AuycLUH6S10LW2Nr4WoB
-         IBiXwT2fW2RaIpNv7Q2bkEdxsTQEUCbFrd08z2dXK4HuJUOd+TYDVPZQh3cHZ9Px+ihM
-         Gj2AAm15hg5HFnR7hhHvI9BeIh5kVN1C218iVf3zmRuFO2XmLj79M+wf8cTB+u6GFRlj
-         sMGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUA7iRW6VE5unmbu88Cg1SfXa5QTUlzPbjcB0DlAcVtuX14YSeZGL3LRAKYg5DuNW5Kn8t6sZDLHe4cCbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgQPJ18JdfR61AGkwD1x82REyyvaZVgcgs3j05YDG3VJ2tWXKH
-	f6zbV6tgz5o696DiR7KICpjJqsYPsDjmheuZ3qLjgdNnyxP+F8w0WxrjuLKXaFaarVITitgTTh8
-	gDUQHNts=
-X-Gm-Gg: ASbGncsn196WO7xdS2FEJXwES8r2Uj6RmYziv28uyc/y6mijivRUL2Va8lQTQzXR/1g
-	SrMm2S4d1mpqr2FrfJJkaBA5UUPc+7zrC6Z3GSVULNRa9MuUFoPwIOgXAL1qvmRxIjyG8wCehaX
-	00OAM09iqOdr26iNZ3vbo9TJWUZA+xqUkI2SOP8iskOlL2VV60mqsQk0aSzsEbkdOp10fiw6dWF
-	c6+ymzysw1vwBMSU9f7RFjtG39grsLdrzfuAVPqWGAYkNzOZ4jTwE4ePxm0vYlhg0rq/kTjjkgt
-	hFtvm0tABSlY92UfBeeRrftSfQNodpf5gV8uHcVBbNJ19twpVD+4s2Wo2PkKqj9E8mJOTdvHcUF
-	NrD2VzyengY8ObzuOZOEO7iPKn6M=
-X-Google-Smtp-Source: AGHT+IFWX8/s2AmWjw7FnW4683L5SDBApq2DrAPvcaPvOV+s02ya9PajScAuugPZCDr89km6tcZARw==
-X-Received: by 2002:a05:600c:8b51:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-4533cad630amr205407535e9.16.1750320402887;
-        Thu, 19 Jun 2025 01:06:42 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e99cdcdsm20490695e9.34.2025.06.19.01.06.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 01:06:42 -0700 (PDT)
-Message-ID: <af44846f-8e1b-493f-8023-b96348a95df4@linaro.org>
-Date: Thu, 19 Jun 2025 09:06:41 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3i0KpRQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74173C4CEEA;
+	Thu, 19 Jun 2025 08:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750320418;
+	bh=ve8p+S7dI1CylXMjs0YRpxXRpIWdjM1DDiCSuJN8dVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g3i0KpRQRQstR8eBNxF8HAj0y+vmjoHEg88uPEs4GXm0JY8MSNdVO7wY/7P0nhA6H
+	 hrQuY/VGRQ/oTXoAp52gXdE0FdOrUdWiQ4aTy5lIfHZzS+J5+xvnV3snCauaDjjtg/
+	 SCMeH0jEPu3+RCjeUTHD2WGM4uCWAAMk6MJcVfI0oSKTLjzX8JV5Bv+FcoplpXTIEI
+	 6gsJbIz1CvXHbX2Qdv1tNZ7WK9VgkdsEn6RJC5ZluwXdnYYpusurwAqNluCDsSyYC0
+	 LqcfT0L8nPPMcyvOsm68iz6P5a+n4nSFHiXzxLBD2HKWpl3Hk0nFGvLAiLVTZJ/v77
+	 7sTftju7IUsIw==
+Date: Thu, 19 Jun 2025 11:06:53 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, nik.borisov@suse.com,
+	Lukas Bulwahn <lbulwahn@redhat.com>
+Subject: Re: double free in alternatives/retpoline
+Message-ID: <aFPFHSLd_b538ovf@kernel.org>
+References: <CAPM=9ty750Ex93+9d6DJ1hFJE8XuhXOf7Q7dgXryvhGYLwHbdg@mail.gmail.com>
+ <CAHk-=wgd=MdzRHO=bV=g0G0mMV+7ek-q2WnQ8P5sxwJdau-t=g@mail.gmail.com>
+ <CAPM=9tyG7+6ZQuBQY=nwiPxywWgVtOHus7cH-KjKMgn+0ADv8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: venus: hfi: explicitly release IRQ during
- teardown
-To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>,
- quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, mchehab@kernel.org
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250619074830.1708453-1-jorge.ramirez@oss.qualcomm.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250619074830.1708453-1-jorge.ramirez@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPM=9tyG7+6ZQuBQY=nwiPxywWgVtOHus7cH-KjKMgn+0ADv8Q@mail.gmail.com>
 
-On 19/06/2025 08:48, Jorge Ramirez-Ortiz wrote:
-> Ensure the IRQ is disabled - and all pending handlers completed - before
-> dismantling the interrupt routing and clearing related pointers.
+On Thu, Jun 19, 2025 at 01:31:19PM +1000, Dave Airlie wrote:
+> On Thu, 19 Jun 2025 at 12:33, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > [ Adding Mike Rapoport ]
+> >
+> > On Wed, 18 Jun 2025 at 19:08, Dave Airlie <airlied@gmail.com> wrote:
+> > >
+> > > I've just tried to boot Linux master with KASAN enabled on a laptop here, and it showing a slab UAF for apply_retpolines.
+> > >
+> > > I haven't had a chance to bisect yet, and unfortunately I only have a photo of the oops.
+> >
+> > Hmm.
+> >
+> > I think it's due to commit a82b26451de1 ("x86/its: explicitly manage
+> > permissions for ITS pages").
+> >
+> > Maybe I'm mis-reading it entirely, but I think that "its_fini_core()"
+> > thing is entirely bogus. It does that
+> >
+> >         kfree(its_pages.pages);
+> >
+> > but as far as I can tell, that thing is happily used later by module
+> > initialization.
+> >
+> > Freeing the pages that have been used and marked ROX sounds like it
+> > should be fine, but I think it should also do
+> >
+> >         its_pages.pages = NULL;
+> >         its_pages->num = 0;
+> >
+> > so that any subsequent user that comes along due to modules or
+> > whatever and does __its_alloc() will DTRT wrt the realloc().
+> >
+> > But I might be completely barking up the wrong tree and mis-reading
+> > things entirely. PeterZ? Mike?
 > 
-> This prevents any possibility of the interrupt triggering after the
-> handler context has been invalidated.
+> I wonder if the module code also needs the same treatment,
+
+Looking more closely, there is a typo in its_alloc(), it uses CONFIG_MODULE
+to choose an its_array to reallocate while it should have been using
+CONFIG_MODULES.
+
+Lukas Bulwahn sent a fix for that:
+
+https://lore.kernel.org/all/20250616100432.22941-1-lukas.bulwahn@redhat.com
+ 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 6455f7f751b3..4653881a4ab3 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -182,6 +182,7 @@ static void its_fini_core(void)
+>      if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
+>          its_pages_protect(&its_pages);
+>      kfree(its_pages.pages);
+> +    its_pages.pages = NULL;
+>  }
 > 
-> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
-> ---
+>  #ifdef CONFIG_MODULES
+> (1/2) Stage this hunk [y,n,q,a,d,j,J,g,/,e,p,?]? y
+> @@ -220,6 +221,8 @@ void its_free_mod(struct module *mod)
+>          execmem_free(page);
+>      }
+>      kfree(mod->arch.its_pages.pages);
+> +    mod->arch.its_pages.pages = NULL;
+> +    mod->arch.its_pages.num = 0;
+>  }
+>  #endif /* CONFIG_MODULES */
 > 
->   v2:
->      disable the handler and block until complete.
->      allow devres to release and free the allocated irq
+> boots for me, but I've no idea what is required or sufficient.
 > 
->   drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-> index b5f2ea879950..ed003adb0282 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
-> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-> @@ -1678,6 +1678,7 @@ void venus_hfi_destroy(struct venus_core *core)
->   	venus_interface_queues_release(hdev);
->   	mutex_destroy(&hdev->lock);
->   	kfree(hdev);
-> +	disable_irq(core->irq);
->   	core->ops = NULL;
->   }
->   
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Dave.
+> >
+> >              Linus
+
+-- 
+Sincerely yours,
+Mike.
