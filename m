@@ -1,170 +1,182 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26705221579
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA34220F5C;
+	Thu, 19 Jun 2025 09:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326565; cv=none; b=I7VV53tBNyUseaEJ1zmWgX4y7mFJpWxdhdyloqqzc1630ythBVNZEaMSMPvEa0lFICOwRHPieS2yyYH0iRU3siJmdBBKJVLj0F91e29rbCgjQ7zaRmHV0SmPNpHZ36RLctutXCOyWHkW0MkRk/lXiGZcM+qjz+6XzPTDkKJ1R84=
+	t=1750326606; cv=none; b=S7LX+AOxs3IfBq99K/VVA+Fm75II8vbd8d4/YqQyObyU3i9C2G0V5rZ7ugTwY5NuILZ7u3ih5eYEB/7slW/qO0XhAYO7TjGcvi3/JyV0wjQx2aG8elQBG7GCzzvYIM+Ba9fQkORnbximt37Mc2bL8FsKq8f/z0DdWfkReo/EVGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326565; c=relaxed/simple;
-	bh=3LkyeQl0t9LM+cj52xpO+Ax9lI0k6dCYkCdTOXS+hWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q7C2OBZA+k9Lar2EslzUEgHbi402qmXXwyAVs7WYC5MbF23VrsrQZCqT/vWfHpDWrFGHDCwgjN6xK76PHT/qLNSMyqKT1IzW0L49Hsw9BuBsf8mP5ek48R/+utuHysElID6Sk629YFNxixV92dSWFH+n7pQZt+FspZxzzwpH0uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PQuxVCDT; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750326606; c=relaxed/simple;
+	bh=0vDuxYtZQxMHLMyV7Fv6kyC0eDbvjTX2Uthi/5EmmbE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IUi5QXvPuF/t5RtRdS6mv9ecYlyMM3QwbVdzX98f9VCiKXg29YZ4bSVHE5mwuBQptNf9qNGbmOKnAbotRlKr+xTyyY8BZV7fIb7ttP0yjbS4WKNKpRx1fJwRhkx5O8ZPtpd4MoehzwoArm03i1GpKdE4KZ1wQ/tMbAeZo9wqQTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MUlOBaun; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQuxVCDT"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235ca5eba8cso134945ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750326562; x=1750931362; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=17oxjeeFsHFeG65L770MNpFPAUdse/NuAwqFBcFBF84=;
-        b=PQuxVCDTgWhORmrR+ZAqjQ151mrOTPmBYrhmS4vovM/Nv9PEbDz5t34HHCFxijI9mm
-         AoMwwDmkKo7sRjAXRm+uY3T2oYCPYKgFcSinlh8ag8XezsLHtXaU4ROr172WILE2I2nh
-         ojyGe5tOmRmNybjbv4b4fgAPKZmUyHZ+fdvxRxA3nV/IFiiChxuqEtta02niY+Yb5SFD
-         gRXS7ufjGxEeqozweC/UNHMlOneORaNGmao7JGAXogXkL98bHE5d6d4UN1590tWvtyKy
-         aK6+/3lGwzf5Rg3tqr3pSxypnkcKFixHGe6YdvqF0jl1c/IS71kwp+TGLb/j3tZoqcNV
-         YQgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750326562; x=1750931362;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=17oxjeeFsHFeG65L770MNpFPAUdse/NuAwqFBcFBF84=;
-        b=vsfGPSlPXi2vUNXiDHPU4mmCYKZNyY9JuBcoiDpNVYJOpW1F3gIJcfOC097p30mzqr
-         hCacASaTFpYMYeShxQYk/VE8N9r4I5wLV2lw44dZ6P1BoMxAPlJpqIiKwCIXY4ujvgSx
-         KWL1J9YjzXhJkr/LE19RW7hSGr+vF82vs8MIkDQGWl3SjztlGGitmLGcr6jG4sfSJsXF
-         YrEtr0XgOzhb+PqB2PsshK5614fjK3bNEXZfsReLAA9fKqjUJf2xdjMcaofvqY8kprCz
-         nTXSuUzfaeLaT7X2A2rm9P15i1KhVDP1kFdVObCfdrL7lAgYGDF7WqYohTn015mXwelc
-         dSog==
-X-Forwarded-Encrypted: i=1; AJvYcCWQnAAanG9U522O9R7JkHeEdepNOuX5Fz59ZClL45B2jGElPO7WrihOY2bF66YfoKs9//UZhmaF6AHNaXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKZr8bxn8UNN+AkvAwX0q3bEIbFwf+M12sn5uJmMiEasPQYYBi
-	F3XjMmtJuVZhHjEqX6VNTQfu4wxmh0JOyG9qJWmS/jGbW16i/i0H6a0GioBNlivlOA==
-X-Gm-Gg: ASbGnctU4N3T3bpiNVwb454Pv/9fe7+3lrwvHXRFlYYhvYyf7IuVY1fX6+kPgXTrB5E
-	t9RPX1oBvZlTBFi5trfwJpZuN5WAcJkYWxG0xXRvXnnB+Mz7X24qLZbolsKgsDmliaTuYjDn8kY
-	SZJWhj8ktbFiwijW641NKXj+12Z60ZHUONF5AvgRPCnOepM1nI/vg7L7d1URXHcR/mUkMMBFYR7
-	pfKUBHhwhJ+rdCBW6q0g3kVwpkgeOLlK9Ot8tSFZCqTSsoucpIMWVX/eKraUhZcEqPsYr6GcxcS
-	7Z0/fTXFefJku0tTks/D55sBN76AScl+8TZMpwyg6/2UoF/yrudc65DquSlZ/7kFs9vPFSrN8uH
-	CC724RmThINXUR8yyketI
-X-Google-Smtp-Source: AGHT+IEuCYASVN8j1eZMJIcAvoBEAqstpKSSgGIYZ2iYQuSQhTyrI+a8+/330LWZVAAW9AYW4syqlA==
-X-Received: by 2002:a17:902:fc46:b0:234:bcd0:3d6f with SMTP id d9443c01a7336-237cdfe9619mr1746815ad.1.1750326562236;
-        Thu, 19 Jun 2025 02:49:22 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb04a6sm116435595ad.178.2025.06.19.02.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 02:49:21 -0700 (PDT)
-Date: Thu, 19 Jun 2025 09:49:10 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, kevin.tian@intel.com, corbet@lwn.net,
-	will@kernel.org, bagasdotme@gmail.com, robin.murphy@arm.com,
-	joro@8bytes.org, thierry.reding@gmail.com, vdumpa@nvidia.com,
-	jonathanh@nvidia.com, shuah@kernel.org, jsnitsel@redhat.com,
-	nathan@kernel.org, peterz@infradead.org, yi.l.liu@intel.com,
-	mshavit@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v6 07/25] iommufd/access: Add internal APIs for HW queue
- to use
-Message-ID: <aFPdFnKvus57cGOU@google.com>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <64145b184a0fa7c9b60532c9b475a51625edb77c.1749884998.git.nicolinc@nvidia.com>
- <20250616133719.GC1174925@nvidia.com>
- <aFDSNYOTToFSbFA2@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MUlOBaun"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750326604; x=1781862604;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=0vDuxYtZQxMHLMyV7Fv6kyC0eDbvjTX2Uthi/5EmmbE=;
+  b=MUlOBaunB2DJEmV/ISEyG72okwgQZqYnyd0MXbyjxlRjJoRXs9LTdG5m
+   P8v4rvwW25icPhF5cXl8kgkZ54TzdeEtHgVunf0ecvnIpPMGCGebRtTQS
+   humMEPBFK1zI4vbo0jDmmMR5p/AzYyLQ2qtZWhnreqZnPT6zTUq/FUYAA
+   lm+FY9OaMF2T6e+Xm2nxSHrxMvp3q81O8YQ5rhLTTOzFw5a+mM2ZRvyK9
+   slcfZ3e//X9qwoqXQm7aTyTVwxvKxf2815PzeEkgtBWrdCDUMciz3/r4s
+   n71e5+OvJvY8qrM3G4BlXQG0fvNj4PmiV9n1Xyx/kpwaGBpWTmiHBaT+Y
+   A==;
+X-CSE-ConnectionGUID: yspTpFoXRu2EqWvWP4V1rw==
+X-CSE-MsgGUID: qEmKo79QSt+cA7OyArWlvA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="62845794"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="62845794"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:50:04 -0700
+X-CSE-ConnectionGUID: 5YNH3rbDRX+bpMvim0FPzw==
+X-CSE-MsgGUID: 0ElUZ+sbQVuiATdt8kiskQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="150153819"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:49:43 -0700
+Message-ID: <df01a89c-2510-4301-9841-de51c9062d7d@intel.com>
+Date: Thu, 19 Jun 2025 17:49:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFDSNYOTToFSbFA2@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com,
+ akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com,
+ anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com,
+ binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com,
+ chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
+ david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
+ erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+ haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+ ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+ james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
+ jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+ jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+ kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+ liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+ mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+ michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+ nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+ palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+ pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+ pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+ quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+ quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+ quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
+ richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
+ steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
+ tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
+ vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+ vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+ willy@infradead.org, yilun.xu@intel.com, yuzenghui@huawei.com,
+ zhiquan1.li@intel.com
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
+ <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
+ <9b55acfa-688e-49da-9599-f35aee351e3d@intel.com>
+ <aFPYLM8U7GhCKkRC@yzhao56-desk.sh.intel.com>
+ <30965147-24af-4dc8-aec4-781ea401a3a9@intel.com>
+Content-Language: en-US
+In-Reply-To: <30965147-24af-4dc8-aec4-781ea401a3a9@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 07:25:57PM -0700, Nicolin Chen wrote:
-> On Mon, Jun 16, 2025 at 10:37:19AM -0300, Jason Gunthorpe wrote:
-> > On Sat, Jun 14, 2025 at 12:14:32AM -0700, Nicolin Chen wrote:
-> > > Now, access->ops can be NULL, to support an internal use case for the new
-> > > HW queue object. Since an access object in this case will be allocated by
-> > > an inernal iommufd object, the refcount on the ictx should be skipped, so
-> > > as not to deadlock the release of the ictx as it would otherwise wait for
-> > > the release of the access first during the release of the internal object
-> > > that could wait for the release of ictx:
-> > >     ictx --releases--> hw_queue --releases--> access
-> > >       ^                                         |
-> > >       |_________________releases________________v
-> > > 
-> > > Add a set of lightweight internal APIs to unlink access and ictx:
-> > >     ictx --releases--> hw_queue --releases--> access
-> > > 
-> > > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> > > ---
-> > >  drivers/iommu/iommufd/iommufd_private.h |  8 ++++
-> > >  drivers/iommu/iommufd/device.c          | 59 +++++++++++++++++++++----
-> > >  2 files changed, 58 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-> > > index 4a375a8c9216..468717d5e5bc 100644
-> > > --- a/drivers/iommu/iommufd/iommufd_private.h
-> > > +++ b/drivers/iommu/iommufd/iommufd_private.h
-> > > @@ -484,6 +484,14 @@ void iopt_remove_access(struct io_pagetable *iopt,
-> > >  			struct iommufd_access *access, u32 iopt_access_list_id);
-> > >  void iommufd_access_destroy_object(struct iommufd_object *obj);
-> > >  
-> > > +/* iommufd_access for internal use */
-> > > +struct iommufd_access *iommufd_access_create_internal(struct iommufd_ctx *ictx);
-> > > +#define iommufd_access_destroy_internal(ictx, access) \
-> > > +	iommufd_object_destroy_user(ictx, &(access)->obj)
-> > 
-> > Use a static inline please
-> > 
-> > > +int iommufd_access_attach_internal(struct iommufd_access *access,
-> > > +				   struct iommufd_ioas *ioas);
-> > > +#define iommufd_access_detach_internal(access) iommufd_access_detach(access)
-> > 
-> > 
-> > >  struct iommufd_eventq {
-> > >  	struct iommufd_object obj;
-> > >  	struct iommufd_ctx *ictx;
-> > > diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-> > > index 9293722b9cff..ad33f1e41a24 100644
-> > > --- a/drivers/iommu/iommufd/device.c
-> > > +++ b/drivers/iommu/iommufd/device.c
-> > > @@ -1084,7 +1084,39 @@ void iommufd_access_destroy_object(struct iommufd_object *obj)
-> > >  	if (access->ioas)
-> > >  		WARN_ON(iommufd_access_change_ioas(access, NULL));
-> > >  	mutex_unlock(&access->ioas_lock);
-> > > -	iommufd_ctx_put(access->ictx);
-> > > +	if (access->ops)
-> > > +		iommufd_ctx_put(access->ictx);
-> > 
-> > I was hoping we could null the ictx to signal internal? That didn't
-> > work out?
+On 6/19/2025 5:45 PM, Xiaoyao Li wrote:
+> On 6/19/2025 5:28 PM, Yan Zhao wrote:
+>> On Thu, Jun 19, 2025 at 05:18:44PM +0800, Xiaoyao Li wrote:
+>>> On 6/19/2025 4:59 PM, Xiaoyao Li wrote:
+>>>> On 6/19/2025 4:13 PM, Yan Zhao wrote:
+>>>>> On Wed, May 14, 2025 at 04:41:39PM -0700, Ackerley Tng wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> This patchset builds upon discussion at LPC 2024 and many guest_memfd
+>>>>>> upstream calls to provide 1G page support for guest_memfd by taking
+>>>>>> pages from HugeTLB.
+>>>>>>
+>>>>>> This patchset is based on Linux v6.15-rc6, and requires the mmap 
+>>>>>> support
+>>>>>> for guest_memfd patchset (Thanks Fuad!) [1].
+>>>>>>
+>>>>>> For ease of testing, this series is also available, stitched 
+>>>>>> together,
+>>>>>> at
+>>>>>> https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-
+>>>>>> support-rfc-v2
+>>>>> Just to record a found issue -- not one that must be fixed.
+>>>>>
+>>>>> In TDX, the initial memory region is added as private memory during
+>>>>> TD's build
+>>>>> time, with its initial content copied from source pages in shared 
+>>>>> memory.
+>>>>> The copy operation requires simultaneous access to both shared
+>>>>> source memory
+>>>>> and private target memory.
+>>>>>
+>>>>> Therefore, userspace cannot store the initial content in shared
+>>>>> memory at the
+>>>>> mmap-ed VA of a guest_memfd that performs in-place conversion
+>>>>> between shared and
+>>>>> private memory. This is because the guest_memfd will first unmap a
+>>>>> PFN in shared
+>>>>> page tables and then check for any extra refcount held for the
+>>>>> shared PFN before
+>>>>> converting it to private.
+>>>>
+>>>> I have an idea.
+>>>>
+>>>> If I understand correctly, the KVM_GMEM_CONVERT_PRIVATE of in-place
+>>>> conversion unmap the PFN in shared page tables while keeping the 
+>>>> content
+>>>> of the page unchanged, right?
+>> However, whenever there's a GUP in TDX to get the source page, there 
+>> will be an
+>> extra page refcount.
 > 
-> access->ictx should be NULL for internal. It should have been:
-> +	if (access->ictx)
-> +		iommufd_ctx_put(access->ictx);
+> The GUP in TDX happens after the gmem converts the page to private.
+
+May it's not GUP since the page has been unmapped from userspace? (Sorry 
+that I'm not familiar with the terminology)
+
+> In the view of TDX, the physical page is converted to private already 
+> and it contains the initial content. But the content is not usable for 
+> TDX until TDX calls in-place PAGE.ADD
+> 
+>>>> So KVM_GMEM_CONVERT_PRIVATE can be used to initialize the private 
+>>>> memory
+>>>> actually for non-CoCo case actually, that userspace first mmap() it and
+>>>> ensure it's shared and writes the initial content to it, after it
+>>>> userspace convert it to private with KVM_GMEM_CONVERT_PRIVATE.
+>> The conversion request here will be declined therefore.
+>>
+>>
+>>>> For CoCo case, like TDX, it can hook to KVM_GMEM_CONVERT_PRIVATE if it
+>>>> wants the private memory to be initialized with initial content, and
+>>>> just do in-place TDH.PAGE.ADD in the hook.
+>>>
+>>> And maybe a new flag for KVM_GMEM_CONVERT_PRIVATE for user space to
+>>> explicitly request that the page range is converted to private and the
+>>> content needs to be retained. So that TDX can identify which case 
+>>> needs to
+>>> call in-place TDH.PAGE.ADD.
+>>>
+> 
 > 
 
-Ohh sorry, just saw this. +1, I too believe this is better than relying
-on access->ops being NULL.
-
-> > I would at least add a comment here this is filtering internal that
-> > doesn't have ictx. Maybe a little inline 'iommufd_access_is_internal'
-> > is appropriate. We'll be sad down the road if we need ops for
-> > internal.
-> 
-> Yea, an inline will be cleaner. Will add that.
-> 
-
-Ack.
-
-Thanks,
-Praan
