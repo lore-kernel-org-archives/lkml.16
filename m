@@ -1,90 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCEF1799F;
-	Thu, 19 Jun 2025 11:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB2A220689;
+	Thu, 19 Jun 2025 11:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750330893; cv=none; b=U9+oAkAcGhnX1Pdcn6j7ZIcUWHcf8TtigB7DXuthRlE8MU8jH8Mk78GnZ1Rc8gIYNxvuibypyfKQhqyrugLVsVBVUhRCrF+WZPTSXnnz7uqDGtnoOl61lJy1X5rEhtYyFypOWq/6VabAXNtBqR4WIGxTr3FwpAmj8TBb1TW56ls=
+	t=1750330916; cv=none; b=TReOixv5LJDOXVsFqBhC120xgEA5fvC0LbEbqwJuennv2WgYB1uDtrLd2J1DPeA3LtPX9uAUu9oOzfLyUJy/UhNparnYTPDjfBwtVnFxi/gf+o1N3lZ4ghTRsAw9XFoSZc5diM6fVrb0Br5hKMTZvwy1g/TrRy7Z18FY4ApuYNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750330893; c=relaxed/simple;
-	bh=rDmigmN49xXs0ZOjH9v39Y8p1cz3EI4TKppC8A5ZQxA=;
+	s=arc-20240116; t=1750330916; c=relaxed/simple;
+	bh=G4PuVtw9eL98kAfTasPeLhLnGyKu5ZonvAj3cQMPhBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UfVfjAtPwKVpLo8yY0wWxmV5+1V1r628HuWTfs7fX+GErM1h4ukFul/fwqBWylP9GHaoPQl4Vu+pGMIjPouUL71Ps46yRU/kRfg+/r00xCiwDk6PC3v7XPDa2ms5WGRg4Sqc64cr/cPnIlqgLqk0pC1beTEUyB6YUBJADOtcp3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoMQ81Cl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0T38K4TgrCme2zrYy6/ebctNz8/xqm5XQteEeK3Nwo8RZvZX5rn3e+qxTjz04wW+xtUK1nxLTu2g/VYASFZ9sCPGcs3l+tOV18nBbpvW7TNOW7a65oqEh7eAearMomZPsqIuFBN58krOAV/eZXJSwZU7d+f8VUNq/jwoaQYUZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T2I9HYtg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoMQ81Cl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D62DC4CEEA;
-	Thu, 19 Jun 2025 11:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750330892;
-	bh=rDmigmN49xXs0ZOjH9v39Y8p1cz3EI4TKppC8A5ZQxA=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T2I9HYtg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D60C4CEEF;
+	Thu, 19 Jun 2025 11:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750330915;
+	bh=G4PuVtw9eL98kAfTasPeLhLnGyKu5ZonvAj3cQMPhBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IoMQ81ClaVBTp7kQcn7uQPJivmnRlWWPqFzJYmXoRwpDIhLKNe8ZseCSKH58D42nQ
-	 xGAW7qCI/lAPesK05F0n70kScG9o+ZftkU2K5GKYU9biS8X6AHYhdsD2S8oSOQArmq
-	 9C3jnqq6fE9oFZMI4Seld/WQmbGrVvdfxwi1CcakXNUM9voUIEYbFBaSrvMJc/e3GG
-	 0QZCZBdWDJtcsxjdRy4GfXRCbf0P+5Zwx5CSBICvZJmA+auwqb2M+T1ddqi9F2VM2V
-	 w00NhI4ZGtEuzEp7WiCZE9TOVGDOF6v/XjicL7K4AGqyIHvztMLXrwpPJG7PEk06lE
-	 yRChYbkEztqCQ==
-Date: Thu, 19 Jun 2025 14:01:22 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Shivank Garg <shivankg@amd.com>,
-	david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com,
-	viro@zeniv.linux.org.uk, seanjc@google.com, willy@infradead.org,
-	pbonzini@redhat.com, tabba@google.com, afranji@google.com,
-	ackerleytng@google.com, jack@suse.cz, hch@infradead.org,
-	cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
-Message-ID: <aFPuAi8tPcmsbTF4@kernel.org>
-References: <20250619073136.506022-2-shivankg@amd.com>
- <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
- <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
+	b=T2I9HYtglYnIx2N/AKoJOTUlVNF8JntyC6tR0IIzbI+Fm3tCEjsMEpmZZlv7OTkpK
+	 AbXkhHEsMCH39xMf3J7agHIBF6axLV0iR5BcTEcMjYxnxct9Z8cjqhPhkjqNQZ2Uve
+	 oyw5j8Qr8vBp/4FFtEJB1kzBugA9aKsccsczCW60=
+Date: Thu, 19 Jun 2025 13:01:52 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Zongmin Zhou <min_halo@163.com>
+Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	zhouzongmin@kylinos.cn
+Subject: Re: [PATCH v2] usbip: convert to use faux_device
+Message-ID: <2025061926-paycheck-footnote-a2b8@gregkh>
+References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
+ <20250604065410.76069-1-min_halo@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250604065410.76069-1-min_halo@163.com>
 
-On Thu, Jun 19, 2025 at 12:38:25PM +0200, Christian Brauner wrote:
-> On Thu, Jun 19, 2025 at 11:13:49AM +0200, Vlastimil Babka wrote:
-> > On 6/19/25 09:31, Shivank Garg wrote:
-> > > Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
-> > > anonymous inodes with proper security context. This replaces the current
-> > > pattern of calling alloc_anon_inode() followed by
-> > > inode_init_security_anon() for creating security context manually.
-> > > 
-> > > This change also fixes a security regression in secretmem where the
-> > > S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
-> > > LSM/SELinux checks to be bypassed for secretmem file descriptors.
-> > > 
-> > > As guest_memfd currently resides in the KVM module, we need to export this
-> > 
-> > Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
-> > explicit for KVM?
+On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
+> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
 > 
-> Oh? Enlighten me about that, if you have a second, please. 
+> The vhci driver does not need to create a platform device,
+> it only did so because it was simple to do that in order to
+> get a place in sysfs to hang some device-specific attributes.
+> Now the faux device interface is more appropriate,change it
+> over to use the faux bus instead.
+> 
+> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
+> ---
+> Changes in v2:
+> - don't change faux create api,just call probe on vhci_hcd_init.
+> 
+>  drivers/usb/usbip/vhci.h             |  4 +-
+>  drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
+>  drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
+>  tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
+>  4 files changed, 72 insertions(+), 88 deletions(-)
 
-From Documentation/core-api/symbol-namespaces.rst:
+I get the following build errors from this patch:
 
-The macro takes a comma separated list of module names, allowing only those
-modules to access this symbol. Simple tail-globs are supported.
+drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
+ 1462 | static int vhci_hcd_resume(struct faux_device *fdev)
+      |            ^~~~~~~~~~~~~~~
+drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
+ 1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
+      |            ^~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-For example::
+Are you sure you tested this?
 
-  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
+thanks,
 
-will limit usage of this symbol to modules whoes name matches the given
-patterns.
-
-
--- 
-Sincerely yours,
-Mike.
+greg k-h
