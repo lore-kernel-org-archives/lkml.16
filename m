@@ -1,122 +1,111 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DDC221F2E;
-	Thu, 19 Jun 2025 15:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99E028B7F1;
+	Thu, 19 Jun 2025 15:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345844; cv=none; b=pnl1iaJGmgfx4pQ1RbI6ZY51Ul/sGKbhR0ToSaT/UwWw8R3Z4KkEEGM1hVg0vFQbU/SIziYWLp0RneSz9exmqL9MIAQBlE+/zJRKydLANhp5jtGKF9LQ4Q6IwkVDEJIq+hfeLywYse3rO2y3tvffElV4D4NkG+ed8F1qGB23Dzw=
+	t=1750345859; cv=none; b=e2I4b/zMFur3TB5GUWO/aI0muY3RlBg6plzOnm9fXrPJQ9VO063KIDHUsd1Flfce4KiXKnGUb75AXgeh6mmhWBeLtaqrPSWOfpWzG21FGv20MbPnS29DqhKFNI0dE1pErp58SARcgla+1oBIToVHaUCY+l95WRZ6zIQcPzA5R3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345844; c=relaxed/simple;
-	bh=B74LrRGlLhzrhEeUh2OsbsLoPumLrvMHAq2rt+UQCKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ecoL0c7DMf2QXcVMlf20+YVM86we2CvSB5y+dAkhrqb1Yn5kFOBO7Flwx0eVWwuCHkti/k/l/bKEq/d3FD1AUfOO19q6FZvNr5R7hqx77B1SBCys7vBVtoGSEW7vbL21jG0IpDkmQ3JLKtyKPDWP8nYfmgBL4vFwQ1/CRgLgJpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qxg9sxe0; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750345859; c=relaxed/simple;
+	bh=/9QmKk1T2GjtEd9UC/ntK7dEPc9EzgB1lhYmLYcoBTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oBLTvGW7Z4Jc8ptjTwVKlZGdfnfPIOZwzSAfmw8scOX+cjzQGNk1AfgDGmvaGZuMDrmMoS/NzX7G92Owk1DVg6fhjt/aodOJ7cYoUzn18LxcHiaDXCQCUMUAzZtYK/wyaUcGw2+Do8vvKjvNR8odYOLG0cJUbVTblziaMVGkh4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VTBTsAYk; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qxg9sxe0"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453066fad06so5376675e9.2;
-        Thu, 19 Jun 2025 08:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750345841; x=1750950641; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hSHqs5fcKnaUgEXTAM5nAdgObO19reWq7vJCpIQ8s0=;
-        b=Qxg9sxe0oA/pzDaGkot5IIJOuttVfcvoEAT/2ZH6ugI25h5ebg8W2r6BIszHc7Vot2
-         StRWTSmg8239NsDPhTkkCGp//EQkfE4TwutwGnFmRgiZomteurprFQPTyXULferaJLqM
-         0DRpcxFPeIFzgzpmuukZw2+sXADjyKBahODWRVkL4HKrP9moQKi6xRm1BwjKZMKX+ZOD
-         hqjwOXKd6veElsV65B5ybyyGqFsZqYoVLzyzKtKJXr8DIhq7TGqWnvXvLgQ8hn9X1Dhq
-         oHduP7sSUvoEqlAl2/xKzb/5SjhGpnO/+k5ESk69OZpYlT80PWwN3l24H0aysqzJa/29
-         4ZfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750345841; x=1750950641;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/hSHqs5fcKnaUgEXTAM5nAdgObO19reWq7vJCpIQ8s0=;
-        b=o808rRaXGlg/aUC9XmguZ4d+qWiCQTdG3hWq/AffNE9JgEDhapj3sh2qjAify7JzkJ
-         faxHGOl07a+UoUE5Y6Z9Vo/vA0Y/993zPVLCaFxETQkUYlH70lNFbvzeU8LrZmKxo+b6
-         ygDNA6JRlYmOd7Wowrg0FaSg3shyzWaek0sPIdNXBJhAQmA8X3Hc4I0oeKILBHWTnxYD
-         oXF6n2XTHV8N2ShM3zsHA7O0rurJ+TlpN9YHS5tPVV8QMQ25RDsB3zKvuMZ263npy5dO
-         BnsSPj5dh5EbA+oi5wobjlhRfZTVorANGtKtzII12TrVAgK2lXOdlGAvXqiklPCj0m0G
-         bhrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVngL4xqCrOVg6W/a7vFGp9zwkbZBP82zqcSPulG9bMgBMByAuKH1K/Mtol1o1DTakWf+snPhGi/R4xYvw=@vger.kernel.org, AJvYcCWkTp9Enoi7Du9nmEC9RPji56UAcn2DdbB0YAnfNlpNsxJFpKnTwIskHBBfgX0c8UOGJCRhEkAANt7vNporFajl@vger.kernel.org, AJvYcCXj7Z+ECQ9AAGRO42lC6kOQugbA0voOoczHLF3aI2aV4yKxJPp0/HIGnagDD5gEJZlGt//oWH+5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG3IotPoVU2mvtfsCGM9u3lOfvklbLSMDwIFMWQ91ysWX8dCQW
-	x4Npev3U62iKYp0RF7X0V1PoOPrm6lmqdCV7usWZJy14TCb9saBEKao5
-X-Gm-Gg: ASbGnct5wu9P7lQ0NG6TnLcVZnPu936lCcaOabjwk98jJPdKXIUXjwSAIF/IZPcw1Ug
-	UhDu8WFRXCLCPsXoyYT5HYeTXdNdX1YuAbciQjirzminW2oz89g1O7OwNgo4N63hWFQFjjkg4pV
-	CyM4ExXvookxAM64aG9zrjUQl0EffjObdHp5k7aXrZ/FXngtY5yKc5ZZd1W7KEkUtYIWIfLCLUg
-	/W8i/+jqQhYsQMxNFTRTye5E8erSFVbzhtYpcLMDvZAA2lAYthOkKA3QEP37vtXiNUeQOew4G58
-	QedGudXa4MyloIVDu4WPKANBg9b9zVYJv6fVB/mtGYG65xU12miPUZW3vWFVaIGMEiafP56hgUd
-	i9RqXDgQ=
-X-Google-Smtp-Source: AGHT+IGdagjf/6LCFK66aYCxpNQN0eFH+HGfQHm2cU/tlv4vEAzRmdtpCaQ0XggqybQ/nKuvrjTGBg==
-X-Received: by 2002:a5d:64c6:0:b0:3a3:7bad:29cb with SMTP id ffacd0b85a97d-3a572e5637dmr18567695f8f.52.1750345840897;
-        Thu, 19 Jun 2025 08:10:40 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:3038:2e0:482b:12dd:18a3:32be:7855])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45360b1ffacsm16979065e9.36.2025.06.19.08.10.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 08:10:40 -0700 (PDT)
-From: RubenKelevra <rubenkelevra@gmail.com>
-To: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	RubenKelevra <rubenkelevra@gmail.com>
-Subject: [PATCH] netfilter: ipset: fix typo in hash size macro
-Date: Thu, 19 Jun 2025 17:10:29 +0200
-Message-ID: <20250619151029.97870-1-rubenkelevra@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VTBTsAYk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=THCQxo43AHc9M+QzSpcsRgbbNjRK49mREK/7V5OhuoU=; b=VTBTsAYkcyTgk2KB1P6HqL/h3W
+	qj8u1unHK9iM+eBgJ40fd4qhGMaFNO7mLERYC97Rfz/PuGZsVq9Hnf0Az8DJy1myxGNKLZW6tEtvg
+	IcvRrdKvuWR1MI1XEjUR/uiEjYbM2qxwfhfVdzP9H/DMsEdbl8AroVdKzfJbzqf0Vuwh1++Pj4PjW
+	uE8w6vlq3SOcCPdiap3r1sxYxmN3f7byk/7kZiPnQvI0NYe0bILYK1/KWX/sr1gvhCwwV9hWauGBi
+	5qvOW6j05gGxNPaL0BE71B4zk+i4JoCwQm4JXZaL5Mgmf0HykdRQoIf3h1foxdfu+GZDGdW3afT4i
+	QME61ASA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSGuh-00000004Sbd-11r6;
+	Thu, 19 Jun 2025 15:10:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 326DA30890E; Thu, 19 Jun 2025 17:10:50 +0200 (CEST)
+Date: Thu, 19 Jun 2025 17:10:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
+ types
+Message-ID: <20250619151050.GN1613376@noisy.programming.kicks-ass.net>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-4-boqun.feng@gmail.com>
+ <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
+ <aFQQuf44uovVNFCV@Mac.home>
+ <20250619143214.GJ1613376@noisy.programming.kicks-ass.net>
+ <aFQmDoRSEmUuPIQG@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFQmDoRSEmUuPIQG@Mac.home>
 
-Rename IPSET_MIMINAL_HASHSIZE → IPSET_MINIMAL_HASHSIZE in
-ip_set_hash_gen.h, matching the header typo-fix. Keep a backward-
-compat alias in the header for out-of-tree users.
+On Thu, Jun 19, 2025 at 08:00:30AM -0700, Boqun Feng wrote:
 
-Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
----
- include/linux/netfilter/ipset/ip_set_hash.h | 4 +++-
- net/netfilter/ipset/ip_set_hash_gen.h       | 4 ++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+> > So given we build locks from atomics, this has to come from somewhere.
+> > 
+> > The simplest lock -- TAS -- is: rmw.acquire + store.release.
+> > 
+> > So while plain store.release + load.acquire might not make TSO (although
+> > IIRC ARM added variants that do just that in an effort to aid x86
+> > emulation); store.release + rmw.acquire must, otherwise we cannot
+> > satisfy that unlock+lock.
+> 
+> Make sense, so something like this in the model should work:
+> 
+> diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
+> index d7e7bf13c831..90cb6db6e335 100644
+> --- a/tools/memory-model/linux-kernel.cat
+> +++ b/tools/memory-model/linux-kernel.cat
+> @@ -27,7 +27,7 @@ include "lock.cat"
+>  (* Release Acquire *)
+>  let acq-po = [Acquire] ; po ; [M]
+>  let po-rel = [M] ; po ; [Release]
+> -let po-unlock-lock-po = po ; [UL] ; (po|rf) ; [LKR] ; po
+> +let po-unlock-lock-po = po ; (([UL] ; (po|rf) ; [LKR]) | ([Release]; (po;rf); [Acquire & RMW])) ; po
+> 
+>  (* Fences *)
+>  let R4rmb = R \ Noreturn       (* Reads for which rmb works *)
+> 
 
-diff --git a/include/linux/netfilter/ipset/ip_set_hash.h b/include/linux/netfilter/ipset/ip_set_hash.h
-index 838abab672af1..4f7ce4eff5815 100644
---- a/include/linux/netfilter/ipset/ip_set_hash.h
-+++ b/include/linux/netfilter/ipset/ip_set_hash.h
-@@ -6,7 +6,9 @@
- 
- 
- #define IPSET_DEFAULT_HASHSIZE		1024
--#define IPSET_MIMINAL_HASHSIZE		64
-+#define IPSET_MINIMAL_HASHSIZE		64
-+/* Legacy alias for the old typo – keep until v6.1 LTS (EOL: 2027-12-31) */
-+#define IPSET_MIMINAL_HASHSIZE		IPSET_MINIMAL_HASHSIZE
- #define IPSET_DEFAULT_MAXELEM		65536
- #define IPSET_DEFAULT_PROBES		4
- #define IPSET_DEFAULT_RESIZE		100
-diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
-index 5251524b96afa..785d109645fed 100644
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -1543,8 +1543,8 @@ IPSET_TOKEN(HTYPE, _create)(struct net *net, struct ip_set *set,
- 
- 	if (tb[IPSET_ATTR_HASHSIZE]) {
- 		hashsize = ip_set_get_h32(tb[IPSET_ATTR_HASHSIZE]);
--		if (hashsize < IPSET_MIMINAL_HASHSIZE)
--			hashsize = IPSET_MIMINAL_HASHSIZE;
-+		if (hashsize < IPSET_MINIMAL_HASHSIZE)
-+			hashsize = IPSET_MINIMAL_HASHSIZE;
- 	}
- 
- 	if (tb[IPSET_ATTR_MAXELEM])
--- 
-2.49.0
+I am forever struggling with cats, but that does look about right :-)
+
+> although I'm not sure whether there will be actual users that use this
+> ordering.
+
+include/asm-generic/ticket_spinlock.h comes to mind, as I thing would
+kernel/locking/qspinlock.*, no?
+
 
