@@ -1,159 +1,124 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5026FA58
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A37128B4F2;
+	Thu, 19 Jun 2025 13:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341177; cv=none; b=IyNtmg7PiePYhk2ZpseUhAdvW7O6w505MZVYuSbqLaX0/uODtMhkvVMPclAc48eL35fgeo1fomL3xdTSE8OD1QpVnfHr1IjWD6R2zwmQnUYbIxKULvg2dCMNRvEKWjy6WxytIcHyXpB0O47IRDjC6G2Cz0LSRCOXgh9SF9kPRcE=
+	t=1750341178; cv=none; b=rSn/7DtcAFXB7Lotoq4P8HIq+2crgCj13UIxPX5uOXRckKVbtmdsvDZFLJTcaCb6APIICElekmu7a1n5Zz7iDlvt9REy46ps1oiCi3nlakX1UzNS43LgTdGZ41zN7xYKq5pVWxWpmPNm1lqyQWj6Fonb5nFysB3DAcfpzcbB+N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341177; c=relaxed/simple;
-	bh=KlWCnrG2pcFyN2r4WxhaR37seXMfDMA5dGyqsjtIJgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QhlaCx5sIkKkj5vub40nZ0lxMJ3AbN/Ercp5O1aUuwD8XmKsFhq7B5U9tqmCbX8rLTnvshQmn82opfTa5pv1mGIrcorGlHAfNbufhSppu/GBynrrkEXXXEuHxPlSABg6FGd4yERtpdHTENSPr2xABo59hu8Ll3PfuPL7NU9bQ8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=av4+OmRD; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750341178; c=relaxed/simple;
+	bh=iJ6ZtPygsp8IufeVSuSqjaMqxRwGKNUtW+CxFhaNVzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeGdNGTLlk0jHCfMYJJ8QpBlGO7Uaj9l+MOstzzL7Z/WB2+WWZhDU92G59O2L6ZR2nX/74tqDgD8BD3VcYdg74MYdQ1oaUZ5W3s/Q+XekaaSATUVR/nkkOL/eVdfPDjDq8E4s0pUlSy5ym+Ra3k46LBeFr8r7/aKV71tQ3XIbzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ACbmFvYZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="av4+OmRD"
-Message-ID: <b66ab3f7-1445-48e2-b98b-7c148a2d3458@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750341162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A7YslRkGDK06+xxHmYFyQDvRKh94OPt/kpw2EYZpHxg=;
-	b=av4+OmRDusRAU3qoIwLrvCo2cha8e4GoKjxIO/QbieREwXv3XQeDOAaBm3mteisQaAyrwk
-	6EozMhcF6MxlgIHLaRVX2WKut+QcV6+z6MKbHyWT2BpxIMpwjS4x7obbrRvgDODR8nQ6y8
-	JrzkjfPbjpQenc5ejBgOFQ5lYYTuxVU=
-Date: Thu, 19 Jun 2025 14:52:32 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ACbmFvYZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76556C4CEF2;
+	Thu, 19 Jun 2025 13:52:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750341176;
+	bh=iJ6ZtPygsp8IufeVSuSqjaMqxRwGKNUtW+CxFhaNVzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ACbmFvYZWMbc+R9QA10fqT0qHnFLfzhB+kTbu4IcvhIydPGFZOHOnZypC3DQ/bZhQ
+	 ukdNlHj0Jo4RejsJ5zuYMTLUYFxo+bL5bJXIrsRBseLtNSr5UKHRT9tc90G6KrEQmQ
+	 CnH1Z7LZb5tCzgmPdzA6enE0TUkJHXE0f/9mZrqk=
+Date: Thu, 19 Jun 2025 15:52:53 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kisub Choe <kisub.choe.0x1@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] staging: sm750fb: rename 'proc_setBLANK'
+Message-ID: <2025061933-dispersal-employer-0e12@gregkh>
+References: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
+ <2025061817-jacket-nacho-50d6@gregkh>
+ <aFQMrXRzui58krqA@zinc>
+ <2025061927-pushpin-scholar-a898@gregkh>
+ <aFQVZIXoS43iu0o5@zinc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next, 08/10] bng_en: Add irq allocation support
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- andrew+netdev@lunn.ch, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
- vsrama-krishna.nemani@broadcom.com,
- Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
- Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
- <20250618144743.843815-9-vikas.gupta@broadcom.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250618144743.843815-9-vikas.gupta@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFQVZIXoS43iu0o5@zinc>
 
-On 18/06/2025 15:47, Vikas Gupta wrote:
-> Add irq allocation functions. This will help
-> to allocate IRQs to both netdev and RoCE aux devices.
+On Thu, Jun 19, 2025 at 10:49:24PM +0900, Kisub Choe wrote:
+> On Thu, Jun 19, 2025 at 03:24:26PM +0200, Greg KH wrote:
+> > On Thu, Jun 19, 2025 at 10:12:13PM +0900, Kisub Choe wrote:
+> > > On Wed, Jun 18, 2025 at 04:26:10PM +0200, Greg KH wrote:
+> > > > On Wed, Jun 18, 2025 at 11:15:55PM +0900, Kisub Choe wrote:
+> > > > > Rename 'proc_setBLANK' to 'proc_setBLANK' to
+> > > > 
+> > > > That doesn't rename anything :(
+> > > Rename 'proc_setBLANK' to 'proc_set_blank' to
+> > > > 
+> > > > 
+> > > > 
+> > > > > conform with kernel style guidelines as reported by checkpatch.pl
+> > > > > 
+> > > > > CHECK: Avoid CamelCase: <proc_setBLANK>
+> > > > > 
+> > > > > Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
+> > > > > ---
+> > > > >  drivers/staging/sm750fb/sm750.c | 4 ++--
+> > > > >  drivers/staging/sm750fb/sm750.h | 2 +-
+> > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+> > > > > index 1d929aca399c..bb2ade6030c2 100644
+> > > > > --- a/drivers/staging/sm750fb/sm750.c
+> > > > > +++ b/drivers/staging/sm750fb/sm750.c
+> > > > > @@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
+> > > > >  	pr_debug("blank = %d.\n", blank);
+> > > > >  	par = info->par;
+> > > > >  	output = &par->output;
+> > > > > -	return output->proc_setBLANK(output, blank);
+> > > > > +	return output->proc_set_blank(output, blank);
+> > > > >  }
+> > > > >  
+> > > > >  static int sm750fb_set_drv(struct lynxfb_par *par)
+> > > > > @@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
+> > > > >  	crtc->ypanstep = 1;
+> > > > >  	crtc->ywrapstep = 0;
+> > > > >  
+> > > > > -	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
+> > > > > +	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
+> > > > >  				 hw_sm750le_set_blank : hw_sm750_set_blank;
+> > > > 
+> > > > Why do we even need this function pointer?  Why not just do the check
+> > > > above when it is called instead of this indirection?
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > 
+> > > Dear Greg,
+> > > 
+> > > Here is the updated patch with revised commit message. No code changes.
+> > 
+> > Please read the documentation for how to send an updated patch (hint, it
+> > needs to be a new version).
+> > 
+> > Also, see my comments above about what you should do here instead of
+> > just renaming the variable.  Please make that change which will remove
+> > the variable entirely.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-> ---
->   drivers/net/ethernet/broadcom/bnge/bnge.h     |  3 +
->   .../net/ethernet/broadcom/bnge/bnge_resc.c    | 69 +++++++++++++++++++
->   .../net/ethernet/broadcom/bnge/bnge_resc.h    | 13 ++++
->   3 files changed, 85 insertions(+)
+> Thank you for feedback.
 > 
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> index b58d8fc6f258..3c161b1a9b62 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> @@ -172,6 +172,9 @@ struct bnge_dev {
->   #define BNGE_SUPPORTS_TPA(bd)	((bd)->max_tpa_v2)
->   
->   	u8                      num_tc;
-> +
-> +	struct bnge_irq		*irq_tbl;
-> +	u16			irqs_acquired;
->   };
->   
->   static inline bool bnge_is_roce_en(struct bnge_dev *bd)
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_resc.c b/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
-> index 68e094474822..84f91e05a2b0 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
-> @@ -326,3 +326,72 @@ int bnge_reserve_rings(struct bnge_dev *bd)
->   
->   	return rc;
->   }
-> +
-> +int bnge_alloc_irqs(struct bnge_dev *bd)
-> +{
-> +	u16 aux_msix, tx_cp, num_entries;
-> +	u16 irqs_demand, max, min = 1;
-> +	int i, rc = 0;
+> I was wondering if you could share additional feedback regarding
+> pros and cons calling a function directly based on the condition instead of the
+> current implementation?
 
-This assignment is not needed. Error paths re-assign proper error code
-while normal flow re-assigns rc to the return value of
-bnge_adjust_rings()
+I'll leave that as an exercise for the reader to complete :)
 
-> +
-> +	irqs_demand = bnge_nqs_demand(bd);
-> +	max = bnge_get_max_func_irqs(bd);
-> +	if (irqs_demand > max)
-> +		irqs_demand = max;
-> +
-> +	if (!(bd->flags & BNGE_EN_SHARED_CHNL))
-> +		min = 2;
-> +
-> +	irqs_demand = pci_alloc_irq_vectors(bd->pdev, min, irqs_demand,
-> +					    PCI_IRQ_MSIX);
-> +	aux_msix = bnge_aux_get_msix(bd);
-> +	if (irqs_demand < 0 || irqs_demand < aux_msix) {
-> +		rc = -ENODEV;
-> +		goto err_free_irqs;
-> +	}
-> +
-> +	num_entries = irqs_demand;
-> +	if (pci_msix_can_alloc_dyn(bd->pdev))
-> +		num_entries = max;
-> +	bd->irq_tbl = kcalloc(num_entries, sizeof(*bd->irq_tbl), GFP_KERNEL);
-> +	if (!bd->irq_tbl) {
-> +		rc = -ENOMEM;
-> +		goto err_free_irqs;
-> +	}
-> +
-> +	for (i = 0; i < irqs_demand; i++)
-> +		bd->irq_tbl[i].vector = pci_irq_vector(bd->pdev, i);
-> +
-> +	bd->irqs_acquired = irqs_demand;
-> +	/* Reduce rings based upon num of vectors allocated.
-> +	 * We dont need to consider NQs as they have been calculated
-> +	 * and must be more than irqs_demand.
-> +	 */
-> +	rc = bnge_adjust_rings(bd, &bd->rx_nr_rings,
-> +			       &bd->tx_nr_rings,
-> +			       irqs_demand - aux_msix, min == 1);
-> +	if (rc)
-> +		goto err_free_irqs;
-> +
-> +	tx_cp = bnge_num_tx_to_cp(bd, bd->tx_nr_rings);
-> +	bd->nq_nr_rings = (min == 1) ?
-> +		max_t(u16, tx_cp, bd->rx_nr_rings) :
-> +		tx_cp + bd->rx_nr_rings;
-> +
-> +	/* Readjust tx_nr_rings_per_tc */
-> +	if (!bd->num_tc)
-> +		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
-> +
-> +	return 0;
-> +
-> +err_free_irqs:
-> +	dev_err(bd->dev, "Failed to allocate IRQs err = %d\n", rc);
-> +	bnge_free_irqs(bd);
-> +	return rc;
-> +}
+have fun!
 
-[...]
+greg k-h
