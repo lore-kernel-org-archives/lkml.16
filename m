@@ -1,178 +1,177 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2A330E829;
-	Thu, 19 Jun 2025 18:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750359069; cv=none; b=nVDpJO3wgZMXBWR7qqQ3efv6vItdkVSI8tZHs6oZLphnqSWVBjMSZfuUZ3C9EFqMdvNwEttfPIYrt0hFcVgdVwLRHxbFgUmheWCi7V+AiLC2zfTVbgQbUKto09lULqw29B5QsH+IWFcwoLa2YUpBwQ5R7HgPPrXUPfhbgwfdUg0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750359069; c=relaxed/simple;
-	bh=V6FgTW5bpQroTIYKEuUph17GQ4t3LAmXbkQjPBSHntQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q4R0F8kJo1ruyBVFzzOHUlG3BLhhzGIcroZ1v4LpNbKK38C3CN80m2WAmgGcIU21yxsEvaMhZkAkAJnBdYgQW98peMkRuKVVtO3bm85Bnmni+wVn44wna67jP3OdUjJnCfzTqLLMBwqiNdx3E02sXdpW0glPusRSLXPoOFPRXYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgGZFW+/; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD6330E858;
+	Thu, 19 Jun 2025 18:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750359213; cv=fail; b=OX3LOuUbKq21jvYH9FKsJhRqYx9G0VbKoWL5yFXlzhc3t1vXTfkn4hoqbhbtuDLY1C9XIR+ie/s9U9JAWx3DNGpG1KMBuYXJnNOq1yKCHiVnPnmt7TDKrZHBKfdcAWKu2vwUaHWM2RTDTtu9OErGH3Nv/HJG1h3J4ewqa/Q+I04=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750359213; c=relaxed/simple;
+	bh=ZD+NEl6lXN0oesmmthhAUzMSARzCE8FbPFzFBODs2Cw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XLmgo5/xt1hUChwBSPTtl8UF+Is3AYe2FH5aUzsa/neiM+tPHjZ9cQbi7UTIswcsXUcoKmSdpAdJEcUz3yWRqzj28r+tWPqbLSinI2B6JeC767NM829R5qpXIkZYr4LYQBOCR3xCNhDG+fGFib3SJ8RdBCJpEDazr2uDoSipGSI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iUsmE9I5; arc=fail smtp.client-ip=40.107.220.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgGZFW+/"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso867689a91.0;
-        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750359067; x=1750963867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
-        b=hgGZFW+/55lw/EvxhymxJZoFdEP3/zsfgHhvIUAGiDRKuIAClK30a0MoFXnvjrAz4O
-         asOrb7ARDPhFgt0rEADY/RsJrWb9CER2eFF9xFTaOPgbBxaieWhofSy0Z1T0nA3u71nk
-         LEcV6gfU2TAg2yKLuqL1INWQNI5VrJvsVI/LPhYC0NUeA4csdtnIbikXlvHOZHPLW3Cn
-         rIh1wCSZbtrgblgvUtuuEjSsykHXsDwUxj8vItNwYPLnjKIrk4k+vzSz+W6k4jcRRhq8
-         gyjtYFu+J8rt6LzFPDPek8qELrJbaq6EcmI8hSocTPcSENQoyGkFYJF2oo2xDtXLFvdC
-         rkIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750359067; x=1750963867;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
-        b=SqbqQUmtSP+WC9JJA8lJXE7j9U0WtTMdvMwMiPN4E2aBM39Il3y5nPRtzw9h5RoBuP
-         EkcGRmCL2OBHJ/zb70U5xpXow0kLLnvNTgdYCTDKYX87d7wJedlkWgD/L9DEnqCwkhW1
-         df92ShkqyEtJrPVD2/jciIfLT3FqEKUYyu4OSn8U0/Sve1Z7BZCTdSNq8+VNy4c8TdV0
-         qRDSr56nsgZ7pcsf7qeyR4sh+Igq3QcdvyLozNE53kIgdLtOaPJxGnGr/F5UlV9ARslV
-         3N8P1U3LfsQ0BueLKmqtuGCauOITaljtRGhsW3SzZ6prVWeJad45R4W+coMlwuldDUs2
-         Q3Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNqtfW7q9coctMC6kKdd1NUa1d4ouB0BgTcF0qKY1GS44IAuaBnyA8gBbGw/IPvcBiHU1EyYaLU71W@vger.kernel.org, AJvYcCXC11SmN5R4wFL3lWl+rPVEppCA8cmO4Ga/rSe7RLGZz47UlBNww+Zh8kzEJEnDjN9JCOgMReutwUqnhoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYvNAEs8Q5/QuyPWvrgTNdbhcxvsAWSd/szYG4WgJbf9nVC38w
-	bM6otIouF1qBvZLjSJYXSpPf8lxgrMYEBMMqrtj50Q98RLEN9gtlIEMNSvwc40Wo0iQ=
-X-Gm-Gg: ASbGncuEgaMljAZP0MNFBPyRzv9GiPj8elTtQN+xc13zBJ5QH0BvJsj69O1LjS7Vb6O
-	vUOKP6wyxMSXSfSyswtgsQj+m2RzC1ZpVq6rTIDhjpBO54m+H8oDEgzkvHdYIfMGrparwnFN/01
-	hr0TjcgZtAf8QwRhUIpXYriGDPp0WxH8/J3cCgnn1NK1Q9pP72SVsADcrsNODgXpUYnx1Sk0/UR
-	ydEqbMl8mgh2l8hF7YctvRp5R8nFjnicFv0clTrOjLQDwfDgFy/W3XKtPNjV59oxDzqTs6qR715
-	LA9cY95se32arr66Hr+tHQCUFgNbEeOCMRuJ7eTb5wsse8nkc4yXVZ3inyGa+Aq8f/q7fjLbBWH
-	Oqw==
-X-Google-Smtp-Source: AGHT+IHY07cWD3/UkHvQ+C8XH2o0tDncDzeMoJCIlVijlJqxL2AQusdDBC+VP0O6B4Op+4zXXreWaQ==
-X-Received: by 2002:a17:90b:5625:b0:313:bdbf:36c0 with SMTP id 98e67ed59e1d1-3159d5779femr676440a91.0.1750359067287;
-        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
-Received: from akshayaj-lenovo.. ([2401:4900:8839:85c6:508e:51d2:91e1:30dd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71d49sm44927a91.5.2025.06.19.11.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 11:51:06 -0700 (PDT)
-From: Akshay Jindal <akshayaj.lkd@gmail.com>
-To: bhelgaas@google.com,
-	helgaas@kernel.org,
-	mani@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	kwilczynski@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	Jonathan.Cameron@huawei.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	lukas@wunner.de
-Cc: Akshay Jindal <akshayaj.lkd@gmail.com>,
-	shuah@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI/AER: Add error message when AER_MAX_MULTI_ERR_DEVICES limit is hit during AER handling
-Date: Fri, 20 Jun 2025 00:20:30 +0530
-Message-ID: <20250619185041.73240-1-akshayaj.lkd@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iUsmE9I5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rlYaVBDgkI34nD2bl8sK3nzJnD0ZL8Jj0aiTHwPrLLGtVZ1+mQBVV7q1b5FOnqyidqTU5DobAhXrYbs8DEwW/xupe7ex0U6H1SCzzbVMlIXqNInuDR7kGR43y2diiqFCRRtPUExqobI5B0MnjVm8Xl2RX+5pElNc8c3FlQpk5BDUUwjD++1ASHhl69auWQZR5j6cdp0iXGTdAI2B5aWyOBU3OyPduGklbLm6UUyUQqk93MRg/VKFBDbKCtlM/uMpOLTC+xx5QVKg3Y78vHqYlcNE+EnSnWMtDP26MaL8hG1fOeYp/ALoWJD3tUoY8Qa0z41yV043bVZAw/vtZsNw9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s6VVSCnzoXcSCZIY+NOqmj96j4hbJPY4xHkw1zYxUIc=;
+ b=m0EmyNRGLZJw35Pd0eNRLODOxxDN68isnKx1tFUx9Y2My0+3nme7BxFC27/oBQJbrwSQIb9Eu8VO6QUHEDNFQUDCSximkLpMvMXjLC1XX9eTQrqcRvR5PO/ct1+LWwiqV2oBx2v5GSXKPqvNlKKyaukbnROQYqlYDk540U53M1XMm0DreHQ+0S72lGiTuTT8D6pCUZOtLajMt+V6KEAjweb24oF9KOllwmt+bif3v24R/Y1NKCh731aKcsm8xYBxqSC3FnIWxKpE0G3avTm1tN5au+BUVl/hZ+Oq7SZjxW3o3Uzb5OX+ArLBfNrXva4sMHh5X/H6jA6901SXUriO7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s6VVSCnzoXcSCZIY+NOqmj96j4hbJPY4xHkw1zYxUIc=;
+ b=iUsmE9I5nHSBba1DAYsXHe2gStkInuNQmB89F9n7DCsu+94EyyilNL8cIZodhBMBWRB8gqz/03a/S8IKRoLbofltjZpni6FQGm4ihPkw58660Rn4su23s09B8ORvjFdpgnCTsh7nDhVmK+0AtGI5C336p6MsRBwPTHPQJVCsFX1u1JGN4cwj+e3HfPPUBRblddKJqZ1NjnjJyxGN2907rQet5+Nj83ptoTuiP7z+JyGt6eiP9i3NPAPzi41ccx1ID6htI7eWWgkmlzmY/8ju6e948ch1aek9WbS/4iEy7P6Rd4vc7HQ4qenGMO7QSEiyrxYsKNL5fxNaoVCmAxxHMw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN0PR12MB5762.namprd12.prod.outlook.com (2603:10b6:208:375::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
+ 2025 18:53:27 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
+ 18:53:27 +0000
+Date: Thu, 19 Jun 2025 15:53:25 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pranjal Shrivastava <praan@google.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
+	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
+	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+	yi.l.liu@intel.com, mshavit@google.com, zhangzekun11@huawei.com,
+	iommu@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
+	vasant.hegde@amd.com, dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v6 20/25] iommu/arm-smmu-v3-iommufd: Add hw_info to
+ impl_ops
+Message-ID: <20250619185325.GB17127@nvidia.com>
+References: <cover.1749884998.git.nicolinc@nvidia.com>
+ <f36b5e42bac83d0cdf5773cad1c3a44c3eaed396.1749884998.git.nicolinc@nvidia.com>
+ <aFP4zHIVT6epJeLb@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFP4zHIVT6epJeLb@google.com>
+X-ClientProxiedBy: MN2PR12CA0032.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::45) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB5762:EE_
+X-MS-Office365-Filtering-Correlation-Id: f644c443-dce9-47a2-4766-08ddaf62933b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PcKeHql+hkyOV7lZ7oNIQ0/VoSQNbHrbPvF6pJ8M476kI95qPPFYnEsh2Wgy?=
+ =?us-ascii?Q?rje0yVz6+6+XRhHwnMuN3L+njsNGsm4mdzwX1DGWh3AiCFWYSlbO9u17y0NU?=
+ =?us-ascii?Q?f8vyskSt0WG6g93YK99nwQBdCztLW9DWU02ykCJe9dU7+4p3HQjwniHaAB7G?=
+ =?us-ascii?Q?oH9ABjW58brfglICVPr6Vaqu7q/addqWfhNdM1a0/YqdUEG/XhfYGc0Ob8XG?=
+ =?us-ascii?Q?XFEgXdloAxmx/vIihoRIM3jmytZCvVlqDnKluqdWXQqKouO+6L0o9BgYOJI2?=
+ =?us-ascii?Q?tJMvg7+V8HC8BkbakGkKURFCsZxrujAiqzddJ9siu4fUleWJKmbx/F31VeTH?=
+ =?us-ascii?Q?FFiyLl8/er+Q8t9Kr8H9ZN3B9A13ep0/N6iqtOwt3IfXQhJ2j1CkOTueDhbd?=
+ =?us-ascii?Q?31gGE5qiLvb6Dn1kKfQxAbwTHusoq9UwmlqSdJK9Uyrpez+XkSH8StfwehZJ?=
+ =?us-ascii?Q?+ZGKQh6xuheNHd3dvaBXplEcXqpF4z3FQpSom9//oxLYB+8+TqEubirwkM0O?=
+ =?us-ascii?Q?GPFauCNees7ARDT93t4GvcwFPejyPlECk6DnjdVeiRy3PG8MceMU7CIABJf5?=
+ =?us-ascii?Q?oqKuVzffGjzwPrDat6PSN48GDMn1+QQaHvanz1FAcXyV+Jh1NQeTtMpaniP1?=
+ =?us-ascii?Q?n+ruZZWdiPiUjgrHZzP8dxR0XXvwmpZyltdHFpLgFEF+i0bGmNirJ7J+q6Uc?=
+ =?us-ascii?Q?suKHVwH0XXZxX8Lu0GfS12xCagYVog5osDNmS8oyuYfHoeuKwqjt+Ms4Rnrl?=
+ =?us-ascii?Q?qcsGrSWpTGcOjM6TeHAt58TYGzR81Kz+4v7NLp1Rpf+RpCyfl2/5+WGs3Hfc?=
+ =?us-ascii?Q?3f6XSE7uUWLQQ8lm2mDrXC7wdujfROQ4baEaUlePCnAomrz/pJ+s0PLr3LXZ?=
+ =?us-ascii?Q?4Zg6wHKoOTyHc3MNWoHen5mlImn5JD04SwP9GY0QTRtMjOgZRbNzIzr45t2f?=
+ =?us-ascii?Q?k7NfdKCzK3El2EDfG1rCm/vjwsXskqeqVmifDJCUemjkfS6Dn89Zp5bc5yvj?=
+ =?us-ascii?Q?UELHSoGLmLh7VbJe6nM1YjB1Wis3BYbLtki3zXd5z+OLVKkL2xoY+mDouHek?=
+ =?us-ascii?Q?QN6IX5i/ajGAyO6b/acmaO5r4Chl1GWl/8Av//N2+MFzHViebJ6ZWXpyOUqz?=
+ =?us-ascii?Q?Sb8grFykdCMd2fTgD9fwXSokLaGa8f1Rns+yvmAR1srVxP8AxCnZ/X1UhCGX?=
+ =?us-ascii?Q?DcszgJNbe4BJmoLKJ88R2nviCiN8cTdHgkZeSMaLJwhguYtTuzRPrw3wy1oV?=
+ =?us-ascii?Q?vX0y+rB3RiDgy0LLcafgIluHCEUcRS3uypZVGov2fxUze5OBTpx5IF6RyExb?=
+ =?us-ascii?Q?0nT46KhKI5tRAlixfF1ch9o1kk9IEdWZpelbf9gdDjyBnRSi/w8IuDH1rxDj?=
+ =?us-ascii?Q?b//lGA6RZu+ue7rq2V2NTW8JEkhVpNCNovMnNxqB455jEEYcjA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?UEOevReBZfLpSCh4SMX8emeF9IVIS8XvzSmWIPGqLP63s9r9lrfj+w9TxjOS?=
+ =?us-ascii?Q?vHNjpCySeSUMUpvU72CxnLaJIgK9aWsWkgr+a4ZY7qSqTVMJOyfcGfXUKead?=
+ =?us-ascii?Q?jdTChTBeH3oHYTSjsAJwAyehmp4wlIIB8J5Qyx01zpe7H5D8tiN/PG0F1b0b?=
+ =?us-ascii?Q?eSb68RgTOrKd9/ADO6nOMcUjZh4BXyGpFsa2IIMWtV5rzYQjBOUjK6BJJvVL?=
+ =?us-ascii?Q?46StGXePJ8GvKgaFxsSo427s+tZwqOGHsdlx2FYnNjl0HwQEwFKXxPaqBJd4?=
+ =?us-ascii?Q?zzl26SaLHWlRrKTtiziNCuqVS4j2hsCZpc5fLz1emjtqnpwrKR7F/hjgOJo0?=
+ =?us-ascii?Q?RinVqDVWaq0R09Z8P56gFiTvF1Ge6E0UMjQtnOwRAmNGBCE5HaKGogRQohD2?=
+ =?us-ascii?Q?xwVflxCRGp+gFQs+XHDr37lPhSsHE1UUKxavJ3dh8a+N++3LJYCZACwejqk/?=
+ =?us-ascii?Q?rm1C9IDsxpQ+ZnxwiJp66Aby+p3O8aDsRARdfEz8M/B7HDBBxXylakE4VOuV?=
+ =?us-ascii?Q?1VUbPhl1zcgoxyXPMvL+csnJJiF8jsu5hzYIxRIKeHExK1IZjfEiPCh32x/h?=
+ =?us-ascii?Q?SmFOmUr3MRObQcflKytfxEEq9tkIQo0bL1c+A+n2cKIEfnMBiK2qQYvfkgo5?=
+ =?us-ascii?Q?djE9ngV6FSqvNPVe069pq5jOFH1fqHmxUvTypephHNb2bBaQoVSdwXdOCy/g?=
+ =?us-ascii?Q?dbGOUMK9J2N3oRN+RKQDf5rG8Q95wiha+Wr1mNV+AuOQBvsft36Hk4L5BcSr?=
+ =?us-ascii?Q?WeQM6eylwxrBXYllbql2SJXKuulCGlCZKDGlScMsB8Uj8hJlmv23vNx7WZgZ?=
+ =?us-ascii?Q?NsEISYd+smL5pkSfxmpkbBXbQfcUVrMVCVkTyRiK35q6t664B2eppaLUYtfr?=
+ =?us-ascii?Q?qoSHh/TVREWzjubNYmlsHufpsXs9yR0EqKUDjsIyrddAs7JzXhV0izrezRrJ?=
+ =?us-ascii?Q?iM5iVrOmL5dczMY8Ax2m2sQEIkYwVsIz2ayShar/ZfHFJ26nNoLNdRfwP8vs?=
+ =?us-ascii?Q?wcT4pjwuKvoRN3z/ijQNaAumSNH7GR9YzVxhXaoRt9wp9/7zHEA9NIX9KAoW?=
+ =?us-ascii?Q?AD2iHwi72tt8yjDd1jB5DUWaG3VxmAcKtecQyDo4eCr/g6KeMI4F+leX3mss?=
+ =?us-ascii?Q?5fhcHOduTDRJkJAqwsE9HFLVnnU0MbQXeQZqb0fsvzha10ZSkRpnTLlLGJdE?=
+ =?us-ascii?Q?QHoPhGgb/pjXvehxVFEkWTfsFyg/kW6cxn60lX4oaRRWy+uZHhSF3EIZDDBa?=
+ =?us-ascii?Q?bDD8gvMBzzaSq+POlJu1VdmL/saANGksLmxYLdTiN8bXNhYZNr6+PerKgLM/?=
+ =?us-ascii?Q?1HG8wTccWhjBo1ZeXFgtxLKaC+hCTtGxAKXF0BWfbN6S315sY4vLO2CRNVRk?=
+ =?us-ascii?Q?H2x0bSxytfqKNPhhjBUplf2BQc2ljEkl4Dh3RNcFidB7DGK06qgeTGz/wDvP?=
+ =?us-ascii?Q?Kwhj8xtArnBSQNcTndwbxaH7eXl2aTHkJiJPOu1XH5cUnqSr+WlDfN8OE9TP?=
+ =?us-ascii?Q?l/4vCcrhUFWHdDsxNG2X0atxtAjgFROhte6uCrIasVMJMrDYTashIyDQfWdr?=
+ =?us-ascii?Q?vdGOA2vypo6ZNfPgj2yPAnN5L6ubBGq5IvGqigMU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f644c443-dce9-47a2-4766-08ddaf62933b
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 18:53:27.0946
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /3EpBINhL50Zf/45X2odqituZ3ZIbaC5vaDsWp2F6KlMdzQErsWhLy2nPvz4ec83
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5762
 
-When a PCIe error is detected, the root port receives the error message
-and the threaded IRQ handler, aer_isr, traverses the hierarchy downward
-from the root port. It populates the e_info->dev[] array with the PCIe
-devices that have recorded error status, so that appropriate error
-handling and recovery can be performed.
+On Thu, Jun 19, 2025 at 11:47:24AM +0000, Pranjal Shrivastava wrote:
+> I'm not sure if I get this right.. if the user (while porting a VMM or
+> something) mistakenly passes *type == IOMMU_HW_INFO_TYPE_INTEL_VTD here,
+> they'll get impl-specific info?
 
-The e_info->dev[] array is limited in size by AER_MAX_MULTI_ERR_DEVICES,
-which is currently defined as 5. If more than five devices report errors
-in the same event, the array silently truncates the list, and those
-extra devices are not included in the recovery flow.
+It should call the impl hw_info which should fail?
 
-Emit an error message when this limit is reached, fulfilling a TODO
-comment in drivers/pci/pcie/aer.c.
-/* TODO: Should print error message here? */
++static void *tegra241_cmdqv_hw_info(struct arm_smmu_device *smmu, u32 *length,
++				    u32 *type)
++{
++	if (*type != IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV)
++		return ERR_PTR(-EOPNOTSUPP);
 
-Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
----
+If impl ops is null/etc then it fails:
 
-Changes since v1:
-- Reworded commit message in imperative mood (per Shuah’s feedback)
-- Mentioned and quoted related TODO in the message
-- Updated recipient list
++             if (!impl_ops || !impl_ops->hw_info)
++                     return ERR_PTR(-EOPNOTSUPP);
 
-Testing:
-========
-Verified log in dmesg on QEMU.
+Where does IOMMU_HW_INFO_TYPE_INTEL_VTD return something?
 
-1. Following command created the required environment. As mentioned below a
-pcie-root-port and a virtio-net-pci device are used on a Q35 machine model.
-./qemu-system-x86_64 \
-	-M q35,accel=kvm \
-	-m 2G -cpu host -nographic \
-	-serial mon:stdio \
-	-kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
-	-initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.cpio.gz \
-	-append "console=ttyS0 root=/ pci=pcie_scan_all" \
-	-device pcie-root-port,id=rp0,chassis=1,slot=1 \
-	-device virtio-net-pci,bus=rp0
+> I agree in that case the impl-specific
+> driver needs to check the type, but shouldn't we simply return from here
+> itself if the type isn't arm-smmu-v3?
 
-~ # mylspci -t
--[0000:00]-+-00.0
-           +-01.0
-           +-02.0
-           +-03.0-[01]----00.0
-           +-1f.0
-           +-1f.2
-           \-1f.3
-00:03.0--> pcie-root-port
+Then how do you return IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV?
 
-2. Kernel bzImage compiled with following changes:
-	2.1 CONFIG_PCIEAER=y in config
-	2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
-	Since there is no pcie-testdev in QEMU, it is impossible to create
-	a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
-	error scenario by changing the limit to 0.
-	2.3 Log added at the required place in aer.c.
-
-3. Both correctable and uncorrectable errors were injected on
-pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
-HMP Command used are as follows:
-	3.1 pcie_aer_inject_error -c rp0 0x1
-	3.2 pcie_aer_inject_error -c rp0 0x40
-	3.3 pcie_aer_inject_error rp0 0x10
-
-Resulting dmesg:
-================
-[    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
-[   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-
- drivers/pci/pcie/aer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 70ac66188367..3995a1db5699 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
- 		/* List this device */
- 		if (add_error_device(e_info, dev)) {
- 			/* We cannot handle more... Stop iteration */
--			/* TODO: Should print error message here? */
-+			pci_err(dev, "Exceeded max allowed (%d) addition of PCIe "
-+				"devices for AER handling\n", AER_MAX_MULTI_ERR_DEVICES);
- 			return 1;
- 		}
- 
--- 
-2.43.0
-
+Jason
