@@ -1,90 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2382A223DE7;
-	Thu, 19 Jun 2025 12:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8207D35963;
+	Thu, 19 Jun 2025 12:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750337070; cv=none; b=gRE/7zkACOSExe0XiKPsd1foIaiNEPMJoe+d2tiuAiQwcrUKhpyTlgqf5Feb85Li0xHS8FD9s5itRZiHcNSm1eed7nlVPPfmjIPTZcH+3Skh10SM9QOGroaKohxPGILdQwSpXKjEoOLM1e6Pl8ExZb4wTSH6tmGSW6Qej7Q0QGo=
+	t=1750337139; cv=none; b=iY+HeKBublaZDjoFlEO9zSOFbGypTlWWzERHB1Aam+w3xmAH+0KVU5bW94jM4LM4m42yF8CRogRVS4sJA9/m1/4clkwqoknGgWR0t1oDbMFaOImfI0pDF1+UT8aLv7O2NJsSIWctgrHg1jBITHwjk7Mq2Q1nudSolwRb8B7I6ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750337070; c=relaxed/simple;
-	bh=YScApHOx2uO3lhS8LNVpCGv9Np1OegEyPMaxKqGyqVQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JlQNa96uAJDLoJg0yw1i4QPB6XiEVxIx0s90t+ZMANTGzYYNkjYEp7x8F2b616B+9nzVZQ6UeiuPxjTpn/8LpYdbOaGQG+n0FPvE3t7urdT3cuWpCuaULv5VJg48qUg+8iOnX4JjTO0p9jZg75mqwPb8Bfq4uuHB2bO6qhA3L5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBNSDp56; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750337139; c=relaxed/simple;
+	bh=KNqb7eHKDRfrbzB+nYR6iggc29bY0RRO9LiF69GOYI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nzss1yyje8DIW/+rODWIQazytSnHPmtvgmM8bt6zUmoOcZvBhn3OtQ+/XV8D/vsrHST8EBLFbbpypeB6+IEr9xlfzLMCQDeYCI9nvphDSx1iFvR7Kz8NAar3sFpYcM2JskQwe/L5U/4hNUrFp5t5lNG+aBizihhUNkUUXfJy3i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwYq1A2f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBNSDp56"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750337070; x=1781873070;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YScApHOx2uO3lhS8LNVpCGv9Np1OegEyPMaxKqGyqVQ=;
-  b=UBNSDp56Rz6IQQK+YF6WdmNEDN3+nQcejzkcF1JPJ2WwzYA0jq3xszWW
-   k71bIc3pCDxkmLJqDySb88ahSgezh37+6yuCkCE7YjRpboke9MwsiKrIQ
-   qGBsbyBrdUpRc6dtmJ4EaZ3oehxYG/ycDeQH/qfLja+LE6/7NvTIKGaLN
-   nrf7I77UlL4/WHee+193Td4Z9TZ2uOnMHNiv157Gf7cyhesxqupkQKqGQ
-   xSLnOU7Pr87v4EMy9m+T94UbItXQ1TjjGXlhF2CVC0m1h3pQ183vF02g+
-   +CuR5EcAY2kQjoLFyE+y8GEi+yByiZ9tVTYMPIPyWTS5j8mOl7xO3GIxV
-   g==;
-X-CSE-ConnectionGUID: 4fAatHjsQLGxcC3UyMzYXA==
-X-CSE-MsgGUID: PJWjs/SkTlW0WUrhJR0D1w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52453499"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="52453499"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:44:29 -0700
-X-CSE-ConnectionGUID: LrvhueWOSZ+lEvsaaNeByA==
-X-CSE-MsgGUID: Ccb6PrnzSmKixcH6UBlXwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="154653955"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa003.fm.intel.com with ESMTP; 19 Jun 2025 05:44:26 -0700
-Message-ID: <d7223d48-f491-494f-8feb-b92a29e9af53@linux.intel.com>
-Date: Thu, 19 Jun 2025 15:44:25 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwYq1A2f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7822AC4CEEA;
+	Thu, 19 Jun 2025 12:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750337138;
+	bh=KNqb7eHKDRfrbzB+nYR6iggc29bY0RRO9LiF69GOYI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iwYq1A2fmSqsQaRBsaydPOG21gcTZCtQd7cYOYCEGO+WYBLtTuJT/9uNfzsZ+9Vps
+	 uRYjx7+K7cWyyYCYOX7eUU4RfG2XNfDlCo6xWjQ7PYuRl/PzOJXe6nvvBDtX/uim+B
+	 S++kc8EQVH9INpuVvcdjMfHmT4svUZZczCZtatRH2PfF9UihMu6fU14qbAlXLb1Mpv
+	 +dGKfzMHYSWmGMR49wGjHkrOzbB14t3DjHD8EsCMEcJlsBD4d23TFosFIDV/Tlv4pf
+	 VUf6hio6bIfjEW3X23Gwmg3ePGgwhy3m5ko6QI5XDep/RFn6Qpjf0pzXz0kY1PaAl4
+	 8Snes676Vd6wg==
+Date: Thu, 19 Jun 2025 18:15:20 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Niklas Cassel <cassel@kernel.org>, lpieralisi@kernel.org, kw@linux.com, 
+	bhelgaas@google.com, heiko@sntech.de, manivannan.sadhasivam@linaro.org, 
+	yue.wang@amlogic.com, pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org, 
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <rjgmkdk33h64plssiw2euna3wo4ejw4t3gisqkt3ibco62vjin@w2yu6wnzwled>
+References: <20250510155607.390687-1-18255117159@163.com>
+ <20250510155607.390687-2-18255117159@163.com>
+ <co2q55j4mk2ux7af4sj6snnfomditwizg5jevg6oilo3luby5z@6beqtbn3l432>
+ <aEwRAZgLJUECbGz6@ryzen>
+ <1e3ba7e1-dad3-4728-85d2-276945119ab0@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
- is being removed
-To: Roy Luo <royluo@google.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
- "quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "michal.pecio@gmail.com" <michal.pecio@gmail.com>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250522190912.457583-1-royluo@google.com>
- <20250522190912.457583-2-royluo@google.com>
- <20250523230633.u46zpptaoob5jcdk@synopsys.com>
- <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
- <20250529011745.xkssevnj2u44dxqm@synopsys.com>
- <459184db-6fc6-453b-933d-299f827bdc55@linux.intel.com>
- <20250605001838.yw633sgpn2fr65kc@synopsys.com>
- <CA+zupgwLkq_KSN9aawNtYpHzPQpAtQ0A9EJ9iaQQ7vHUPmJohA@mail.gmail.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <CA+zupgwLkq_KSN9aawNtYpHzPQpAtQ0A9EJ9iaQQ7vHUPmJohA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e3ba7e1-dad3-4728-85d2-276945119ab0@163.com>
 
-> Thanks Thinh and Mathias for the review.
-> Please let me know if any further changes are needed before these
-> patches can be accepted.
-> I just want to make sure they're still on your radar.
+On Fri, Jun 13, 2025 at 11:31:01PM +0800, Hans Zhang wrote:
 > 
-> Thanks,
-> Roy
+> 
+> On 2025/6/13 19:52, Niklas Cassel wrote:
+> > On Fri, Jun 13, 2025 at 12:08:31PM +0530, Manivannan Sadhasivam wrote:
+> > > On Sat, May 10, 2025 at 11:56:06PM +0800, Hans Zhang wrote:
+> > > > Current PCIe initialization logic may leave root ports operating with
+> > > > non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> > > > configuration is handled during bus enumeration, root port MPS values
+> > > > inherited from firmware or hardware defaults might not utilize the full
+> > > > capabilities supported by the controller hardware. This can result is
+> > > > uboptimal data transfer efficiency across the PCIe hierarchy.
+> > > > 
+> > > > During host controller probing phase, when PCIe bus tuning is enabled,
+> > > > the implementation now configures root port MPS settings to their
+> > > > hardware-supported maximum values. By iterating through bridge devices
+> > > > under the root bus and identifying PCIe root ports, each port's MPS is
+> > > > set to 128 << pcie_mpss to match the device's maximum supported payload
+> > > > size.
+> > > 
+> > > I don't think the above statement is accurate. This patch is not iterating
+> > > through the bridges and you cannot identify root ports using that. What this
+> > > patch does is, it checks whether the device is root port or not and if it is,
+> > > then it sets the MPS to MPSS (hw maximum) if PCIE_BUS_TUNE_OFF is not set.
+> > 
+> > Correct.
+> > Later, when the bus is walked, if any downstream device does not support
+> > the MPS value currently configured in the root port, pci_configure_mps()
+> > will reduce the MPS in the root port to the max supported by the downstream
+> > device.
+> > 
+> > So even we start off by setting MPS in the root port to the max supported
+> > by the root port, it might get reduced later on.
+> > 
+> > 
+> 
+> Dear Mani and Niklas,
+> 
+> Is it okay to modify the commit message as follows? The last paragraph
+> remains unchanged.
+> 
+> 
+> 
+> Current PCIe initialization logic may leave root ports operating with
+> non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> configuration is handled during bus enumeration, root port MPS values
+> inherited from firmware or hardware defaults might not utilize the full
+> capabilities supported by the controller hardware. This can result in
+> suboptimal data transfer efficiency across the PCIe hierarchy.
+> 
+> During host controller probing phase, when PCIe bus tuning is enabled,
+> the implementation now configures root port MPS settings to their
+> hardware-supported maximum values. Specifically, when configuring the MPS
+> for a PCIe device, if the device is a root port and the bus tuning is not
+> disabled (PCIE_BUS_TUNE_OFF), the MPS is set to 128 << dev->pcie_mpss to
+> match the device's maximum supported payload size. The Max Read Request
+
+s/device/Root Port
+
+> Size (MRRS) is subsequently adjusted through existing companion logic to
+> maintain compatibility with PCIe specifications.
+> 
+> Note that this initial setting of the root port MPS to the maximum might
+> be reduced later during the enumeration of downstream devices if any of
+> those devices do not support the maximum MPS of the root port.
 > 
 
-I think Greg just picked up these two.
+Rest LGTM!
 
--Mathias
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
