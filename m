@@ -1,234 +1,211 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010008.outbound.protection.outlook.com [52.101.69.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF2521D5BA
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326195; cv=none; b=g+ULBI5hHdC3Okjb14oQa4PQMSkv/ngWB9GhcwmcrWnChw3WWASEpgegnVI/Rs2OLfJlOm5Hk6KeOtLe8689YWUpdcP1o6AuHfEVgO4SerYwfD2VdvJncSmgLmvhs2qmQ0DGecMn0ZgLhdaC61UKr7uNUoOGDw50ipLigiNcrAo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326195; c=relaxed/simple;
-	bh=rUDdpknfWDNkJiSZtzP/zJgRt8UmBkl0mTazM2qX9Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=quGDduAQ4fLMjtR359113wwMphc1VsBlAxWQ0cTZfD2nUrduyT6BzCmux+EfPKU4pX8WYysDtN39hCqYkoY+iZPtN1JuaV03fBqiQdwlic01p+ZlWRsLz7ot7jH+7gmUeskINOdaxHHyX+n3nGCEP0OIFQZhc4gLF+irD8v8B+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xrE2AniU; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FBA21D58C;
+	Thu, 19 Jun 2025 09:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750326205; cv=fail; b=b93UbME7J+UwjoCVv/WWOGORIdstOqKcXv7/JJzoT2v//FiK8HO9Ngz/RuX7QLXirgcIV+GjMWT9aew0PXQGFlxGbEvQF0OxZQVWy1JTiN7YVRIdojYOKlGtzoulT7dz9XgSU70HRMWb/0EqC8kdceUbvvaBs21Jnf/GZDQ0ZEM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750326205; c=relaxed/simple;
+	bh=zerzNY75hwDATH/+412+OQmSu4xRC13Nn2HZF5aTeoQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JpKbk4TtFNX9M2CfQmhrLdI3FrpXVOv9/vew6zblyeB0HKbMdu8OK//VTg0ys+PrS/n7NQWqImYJGgK1UE7xQz/PYSluzwQBErWCFzF2Jbv2+74QD33WOkoztaTY7i/mD3WMeJ+71qnR8i7Q4MzV52ryGRxjdt3VuStnr8X1qQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Dq6/o1Go; arc=fail smtp.client-ip=52.101.69.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xrE2AniU"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2348ac8e0b4so110045ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750326192; x=1750930992; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qaC15VNy2W6fdEhbxclQpnkYOQSK9bnjumzMUXgIe2M=;
-        b=xrE2AniUpDZFnQJCoiQkusoi/sCdq3m2wKLfeaUBEAaPhrCvh8xIN09dtp+f9reqrF
-         kCLtX7CZyzGR4gE++1OOGngxFoBvSOWpRqonb3m+Cap8yfn+UaH3lseJcGQwv6OXL3jR
-         uBF32kcMMyOuDwfWBLBRH7o7dGc27x8hDCqdWRhmD42GBUKrAc/wGtBewd2XTfD8qg0Z
-         n0bP9prn45O1i3KTfEbsqCh1KAe0TeSD9kq+OAMJawoEuhbHLSsr1AbloWaPYXf8cpB5
-         OA2h/j6N2N5w+XKDegnsSs3JKwPeL4ldkzgjP7Tjiia7NdjUSa0qTTfQKumAmfZ2cI4Y
-         hS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750326192; x=1750930992;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qaC15VNy2W6fdEhbxclQpnkYOQSK9bnjumzMUXgIe2M=;
-        b=EqMFgWEKYy+7CX42RjmSwEiz8yKw8htGIaEFNuFxz6FGSoBpHDzW7fYJtQ7HzACRE6
-         VlDkYtONivrCItY53R499AbdiqT1W0QAUZLCjcIwVtauycgpRhCFiwgR7mHdsFTVii/t
-         Rzn7NcKg8HGUVVfmBm6zvUB16ORgD9OCKONs+QYASKAL7rJ08nalzNxlseVG9zvXJdFx
-         tNwe2NxskRWQqNGorcNEW769yEVGMBJDgHv11pZW93+TmQogSMps1dVL5QoNVimara+A
-         M7/2IvXdOurMr57ytPnPGSlumKsT9Nazk7JA9tJjcqZlFdYJ7zyv/2hLEclggm2Tf8uC
-         pX8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWWfWjABqdLLMEbIqvWS7f4dqQfIOKLhm+Kmb8dcwmNiaqJ7nN0U7Sd8JKCmu6p4na9k0uT5Y7dkm5oW70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT3sxkgE6KtO3z1TFBKWfZ3bFCSLSYuUK97a8M90UdeGvMzFiL
-	WZ5pjhbKUyNSQ6JKM73rMPVC842Yo36UDK8X26cOr56MgawNkwmzJi6Xe7DCb7+hqQ==
-X-Gm-Gg: ASbGncs0DaxVwRCB1Zr1M6SWohAw0GKdJcAgGNqRJ+oc7PYlrh0BYcp0LQHZlvV8kvo
-	1RyFDncfEt7er3I+Cs9ZB/0xO44H75my94oWFnLRyuFjXxcE9GJ/Hcy51QDfGjMDuLnyQW3Yamf
-	u/8eu58gBJdgYRFYXhFFsUQ1GszwJkQXjW3MzETZAOl5AwZakRKu+2kt9+bCO+217nBT4y2llIZ
-	FwAKyKgzEztRwSvDRwN6eKkdJMG+tYA31zjbqk9pU9Qwc99fa7yjK0AI4hONYq3hqhuBhNGC9ms
-	kJSDl5wEYvIXYPye0hY1eT2lQYoqt7Gf0u4BWpIfnsISGPfGQGuE5WZlhSfuKWffMyzBt6Hu9tb
-	gUnKGPBdtDH6E8Cf7DBQy
-X-Google-Smtp-Source: AGHT+IF5Xbj3Phk3inMt+DC051gDXuXBtlipiWCKp5tiqrOfx50jggHB3jHa73ldHrX+V4U1FbWR2Q==
-X-Received: by 2002:a17:903:1510:b0:235:f298:cbbb with SMTP id d9443c01a7336-237cca9b5a1mr2457355ad.26.1750326191623;
-        Thu, 19 Jun 2025 02:43:11 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890082e71sm13198748b3a.107.2025.06.19.02.43.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 02:43:10 -0700 (PDT)
-Date: Thu, 19 Jun 2025 09:42:59 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v6 07/25] iommufd/access: Add internal APIs for HW queue
- to use
-Message-ID: <aFPbo6RI-D4T7nXE@google.com>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <64145b184a0fa7c9b60532c9b475a51625edb77c.1749884998.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Dq6/o1Go"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RgEHnRZX/kGMmoZT/qw3PpIszZt4icW7PnATf+ck47h03UPU5R6QOrbjm6jgitPiMQWkx4hXrg5NLJQyjUY3lYbWSHhKUO/cYeCfjljuhNaOvKmibs6Hb39OgoocgS1kEgjGCjCD+Foew03PBmt+fWLxdctnhC7ywYGP7uR4mYbjGi2z2M7sPjT3s83TLTeFIxNc3Eaar3lN9gQm2f+vSkRkI/ybsq+C9lEPLstZCU9FmIrDlkdzOXLx1jbnrEU9cO7kESEPFW166Rm3xG+IckPJSkEcG7g03t0aolpNmV5tE8mY+ZxwFdN0jXfvS+AquQDyGcZdMAm45yA5hiWx4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zSEos6hufFSU6ZooObH+vqXcw9wfHsrPdff4l56jNYs=;
+ b=t5hEkXgysJftck3hJ4AYtH9NyYdEDX4q6SAasAqn+SGnVj0TSJTcIDLh12w4Dd+ut829m3pIvZZGZ4W9ayzZNfPm0MNEfT+mSHYz5c9jmQ+9/EuG8mHZw5wtY7fY4Xbl3oZZ2oSvqk78Pjw8j2AtOckRLduWsDGAIriXcB9bNRfqzCZGNZyejpjPpEY5emjV4RNFaq1VxNULoBQjDZ0dhoOWbjK4w0vUalY38gVtuiIf7ZyjRDuyhZfzhp6iStgUhJ9zj9uzvrDEA9UMXLiqPDjV/r2iX/uluNTs/5C9qdMEmoB+ey4PIZ683B+TSn5gTEtMGDJKVlbrKJBOaKbm1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zSEos6hufFSU6ZooObH+vqXcw9wfHsrPdff4l56jNYs=;
+ b=Dq6/o1GosxVuDLMGEztt/+sScR4ZAUn//yz4f64TV6Z2gTJu8z8Whr7pO65oFHPhvlS2j0BYqsqHRF0LpmTCrQGFUHOY2209U0TlKtrs+ahrnoDWNx/w4oDbVxGg5hVl+T4EgGUbCseYuPcLcfjC6cwE/kYgrGsu5Drvm/JHJt6G6R6HsG0mKdxevXgjrh56BOKdboZiHZ6seAbhn6/SyAwFUT3AKiQwyzNtsbiqYLEBLeKp1uy1A2ulV8pTR/UWMnhzRI+mnYA/GNGuk1iiBSqb9mj/YM8A5W0bClkz/V/LQWOYSasOhgV8PtTYRrvLfeK5EMKbgSgUtrKv4h7kbg==
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
+ by PAXPR04MB9007.eurprd04.prod.outlook.com (2603:10a6:102:20f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Thu, 19 Jun
+ 2025 09:43:19 +0000
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::261e:eaf4:f429:5e1c]) by AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::261e:eaf4:f429:5e1c%7]) with mapi id 15.20.8857.021; Thu, 19 Jun 2025
+ 09:43:19 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+CC: "conor+dt@kernel.org" <conor+dt@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "broonie@kernel.org"
+	<broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Aisheng
+ Dong <aisheng.dong@nxp.com>, Ye Li <ye.li@nxp.com>, Frank Li
+	<frank.li@nxp.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: Re: [PATCH v1 1/2] dt-bindings: regulator: add PF0900 regulator
+ yaml
+Thread-Topic: Re: [PATCH v1 1/2] dt-bindings: regulator: add PF0900 regulator
+ yaml
+Thread-Index: AQHb4P6WWPWzsLvvLkuQFGvHth0szg==
+Date: Thu, 19 Jun 2025 09:43:19 +0000
+Message-ID:
+ <AS4PR04MB93861C8091257381B2BABEEBE17DA@AS4PR04MB9386.eurprd04.prod.outlook.com>
+References: <20250617102025.3455544-1-joy.zou@nxp.com>
+ <20250617102025.3455544-2-joy.zou@nxp.com>
+ <175016596600.1706958.16046350914927298265.robh@kernel.org>
+In-Reply-To: <175016596600.1706958.16046350914927298265.robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS4PR04MB9386:EE_|PAXPR04MB9007:EE_
+x-ms-office365-filtering-correlation-id: 48554734-dc34-4e4a-8957-08ddaf15b977
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Y8NRks6gdKWvQNG9vgR/MUp7XBMB8Ijqk9kx/1g36Zsgalg7MDWOMvPtKttQ?=
+ =?us-ascii?Q?BziuCavF08toI9LIIKatXFMykRPEbu477LyAMTSEU2Dc5SBLNhWJn7i+pkZS?=
+ =?us-ascii?Q?U8zBzmKgD7BEdsfLMddS6Khp8eXs6jnz6qUA16QJEDPtY8QRKKQN+CqCJUub?=
+ =?us-ascii?Q?5pkIkfZi6i4mzkWKhwivnyt3MBOhrQUBkczQSMU4VwhvyyGLmo2cuj0+PRah?=
+ =?us-ascii?Q?/sokWqnBiuw8U73Xmbkt+GTzLJSH1kq40x/z254gYuQjlugZp8YZSrMvn+A1?=
+ =?us-ascii?Q?aSot+gMlNYK/hHfi//hhW6GQX6VlFF0lyql3jBWV6G+51K+IluBSfVTACR2t?=
+ =?us-ascii?Q?FcQTDRZS6rqAIw8dpmbMneeKhNJIabLJEIhfL8zXQkhToYB1FXT2kBwu0Dwn?=
+ =?us-ascii?Q?CVxPBTUJyzE8FEL9CBFePtsyALg74zyjL6z5wg5gy3nbvkPaUaACES7bx0Sc?=
+ =?us-ascii?Q?XyMndBGNv+w0fPk4W3MQD5KzW9tvp2tKOR7HZuOGsEsTmLlWX2UAVU5siYCi?=
+ =?us-ascii?Q?pEihfXTHBy+1GhwgQyfVFAMHG//m50ye5Xa1m0MOng1MXvb4ZYhfv4HU7QAy?=
+ =?us-ascii?Q?UZuind4ukX7RwCv6YSmUyhb+pfFQskfxEkQ2fL1yF7c6Qar0Jr2h7XWqlRi8?=
+ =?us-ascii?Q?GtNUA+GdBG7M0HuN6IeG9ZaqS/T7JwIHISHLaExf1FT2aPLkwERTPgqH9Y+y?=
+ =?us-ascii?Q?WZMBJeugo5aTPNKXqabLUce4gzldCP4zaPA0WqjIB6VWaJbWeOd9VH0iZvIs?=
+ =?us-ascii?Q?FhQtiZ9/ARYK8KlSZiuAdx7qrX14oGH13U9tG4y6nPCWjWF0CSCdKZDZd+Vi?=
+ =?us-ascii?Q?Jy3rsnQcFEFEIwuxZJiz6ZA+DSj4FqFW4WGt9cUr45TguDG9Ii5C6pqVAH27?=
+ =?us-ascii?Q?TkaASmeuk0azQaYx1euKETMs3fbUuT5/TCE8LrjtRf0ILKnCOsmiSVOq4+74?=
+ =?us-ascii?Q?fN9mPv2wOOp7oa/1oyPOW1mOlbjWSdLJCduLIaIrlhL2avt/3mpcK1h3ngd8?=
+ =?us-ascii?Q?BNsd+MnCHuVKPFdgB38+BD2XT+5OsD99NC9VmogKnHEWlW/ddH/MrgTaIj5c?=
+ =?us-ascii?Q?YJz2LAvfy/vW+wLbq9S5baVGkFjxXaL8bErAaVXLyJ9s8sjRDuu6XBUjJ9cp?=
+ =?us-ascii?Q?I6JD2gfrrY7HJQ4/k8i9vAC3beQXQKJdpu38XqcdT4q9dlWGuT7Vio4V7DrH?=
+ =?us-ascii?Q?wd9yKbXkE2sYr0QNVWpSUH8juYSp1On6wF2vMfe865UUddOvWJqkMKIW2Lbz?=
+ =?us-ascii?Q?GioXPUAt+/N4V8tt2g0Mjq3ff6d14529wNDBEjncTxAOr2drFzu0DoOdkGDF?=
+ =?us-ascii?Q?370YaWu6TGt7potXeN+dC8fARG7MNr1UUIlifh/4SSHDDtPqpxjIorbzQXlQ?=
+ =?us-ascii?Q?+QXPA1uMdvLjrkpsMENFL45Ayl0yD5+0ETZ6GFLzPQqxZZwjmgFfCZrrbsXX?=
+ =?us-ascii?Q?1pVjivTDZeixnVeHgAGD34Qi4I/aD+W+dKKkKEtwNVC8OPI2CzR7Yg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?vQl/VDBsGPNTwXzXyBjLFbAYLxP3Lo5L+ZN1l2EWemob6htWDY4L2bKUuIan?=
+ =?us-ascii?Q?W021XSStZtXyAl1IAiRcM+FPj/jRMOdeUEDHOiex+HQRdnEfqa5jpr8zB16x?=
+ =?us-ascii?Q?9Dk4ykA7VozA3eduv9KN7TB0NRYLDMMbGK89Spfy0scZCCCV53am6zqAkSQI?=
+ =?us-ascii?Q?FmCAEui10Vxhz41r9s6VX/hyGlvD1Xoz8XQ2v9t3Wx+r0boGqk4LmbZduVwH?=
+ =?us-ascii?Q?Wxp+6VbYOxNxe0CayRIB90rxgqa7zi9coMGrzzICuXaGil99mjO2Vheh/V+w?=
+ =?us-ascii?Q?sA/1yFfGuMGopYDMAL41ocHV6OKkjolgHz8r1WdExef5NxlKajGW+fbobglL?=
+ =?us-ascii?Q?zk58y3Sr2yAWcttyCca/Lyw4dJmugBofJ+NEysobz+eLyPgFI3qOAEUcqVxK?=
+ =?us-ascii?Q?KUZBGHIhcAXyaveU5V9g+9aYgNJMCyJp9/hi4mKKVh4/r1EFieR87kYxdKLx?=
+ =?us-ascii?Q?+ryRYn9XuW96oZGw0lFMCPXKohPk+we6kzRkPgleWw/JiZ0vS2sGSyQamtWB?=
+ =?us-ascii?Q?EK90p15SlU2haYD9WCeT26QgKKzbFxL5PCBnOQEjz6hHv7RemvolzeEgfFuw?=
+ =?us-ascii?Q?2wspvSO+w/OKPDffNKxFNgaM+4eJUfNL9aYZKaQSTJBLLgssI05fijEerYW2?=
+ =?us-ascii?Q?ftKcvyzGDJrUL0recAZ6XwZSeQUV1+kwwGzz4pVr6MVDWDFzJnpMn0zMyKC0?=
+ =?us-ascii?Q?tUSQsx9WdRCsW0FKKz++cAo8U/cgy7CUFMYno1gCX8+gUKycfp28f7mrY8d5?=
+ =?us-ascii?Q?6LZH82XwRnSU3lgvRjJ/vbJB7RbSY+Bp1/OF7KIj/Le3YrgvT7Fx0vUJCJCo?=
+ =?us-ascii?Q?Uy5Yz/TqaXsNt/fOg2AYBSVVXBw7JDgxnSE3HOa7sPmo5VpLB+KuE5CQ7P+F?=
+ =?us-ascii?Q?k7LfIFfVHQIJJSYgDLlLdPeibbCXJClqzp0b04CVNtTM0YVo639Kd5oEgyk+?=
+ =?us-ascii?Q?jRz9iG58YpGGMQm4XeYYj4Q0o0xaBV7VWg83apkhYHsIY3DY/U0xJoR4aCWX?=
+ =?us-ascii?Q?pHQRGzBfib6Wq3N+tUjDU9jxRpaC4eMbsyqE+BwgZTp8MybwGvxSihS4a6th?=
+ =?us-ascii?Q?B20zte/7vtw8m8club7QV4II0mD0bxghp4kGJ6zYsO6M9MvoAmPKypjnYrmP?=
+ =?us-ascii?Q?qzgbPV7jm45QdeupkAz8KUCtSCak0G5Sb5Ehu1CKWiSdrSdhRBj6IMyJLb5A?=
+ =?us-ascii?Q?mvK2g+VTDyVN6oGM90ctxMyKqZhm4BjTUumQh1IGrFtEpOpPBBodrdMXjp6I?=
+ =?us-ascii?Q?qLH8bl1HmMx16A7BU23JmS2A8YGwPRQ3Ez3SD85TQ72R08c+ohCKikcLajpx?=
+ =?us-ascii?Q?WazClnrm4/24tws3uiyQTSm0K3FC5NQ+jiOQS+3TBeNwIL0/JKPXbqCqymZK?=
+ =?us-ascii?Q?LQtGdLf0oXFgB3mbz47h3w1pU/eiuJ+2FHfFCtND0cSRzFWba42jcN+PjhpD?=
+ =?us-ascii?Q?FNMYkH5zgmqGbZBDhuDwD8n4C8Gzb+zbfCsY5ijpYO6rdJIqYC1zXLkQyV2V?=
+ =?us-ascii?Q?GlmLQEAoBtrGYejn5nvoSb54xqsU0RzeaYsLKfw175yLe+OrWIr4/kzpWvmz?=
+ =?us-ascii?Q?/2a1HFAkJ0bCKU3tJHo=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64145b184a0fa7c9b60532c9b475a51625edb77c.1749884998.git.nicolinc@nvidia.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48554734-dc34-4e4a-8957-08ddaf15b977
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 09:43:19.6752
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4S71GiWVc7XT9n9t2v9+8h61vVdJeprV4/jRFKm1/MgC6JDpYylMiyR3mMWY7az9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9007
 
-On Sat, Jun 14, 2025 at 12:14:32AM -0700, Nicolin Chen wrote:
-> Now, access->ops can be NULL, to support an internal use case for the new
-> HW queue object. Since an access object in this case will be allocated by
-> an inernal iommufd object, the refcount on the ictx should be skipped, so
-> as not to deadlock the release of the ictx as it would otherwise wait for
-> the release of the access first during the release of the internal object
-> that could wait for the release of ictx:
->     ictx --releases--> hw_queue --releases--> access
->       ^                                         |
->       |_________________releases________________v
-> 
-> Add a set of lightweight internal APIs to unlink access and ictx:
->     ictx --releases--> hw_queue --releases--> access
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/iommufd/iommufd_private.h |  8 ++++
->  drivers/iommu/iommufd/device.c          | 59 +++++++++++++++++++++----
->  2 files changed, 58 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-> index 4a375a8c9216..468717d5e5bc 100644
-> --- a/drivers/iommu/iommufd/iommufd_private.h
-> +++ b/drivers/iommu/iommufd/iommufd_private.h
-> @@ -484,6 +484,14 @@ void iopt_remove_access(struct io_pagetable *iopt,
->  			struct iommufd_access *access, u32 iopt_access_list_id);
->  void iommufd_access_destroy_object(struct iommufd_object *obj);
->  
-> +/* iommufd_access for internal use */
-> +struct iommufd_access *iommufd_access_create_internal(struct iommufd_ctx *ictx);
-> +#define iommufd_access_destroy_internal(ictx, access) \
-> +	iommufd_object_destroy_user(ictx, &(access)->obj)
-> +int iommufd_access_attach_internal(struct iommufd_access *access,
-> +				   struct iommufd_ioas *ioas);
-> +#define iommufd_access_detach_internal(access) iommufd_access_detach(access)
-> +
->  struct iommufd_eventq {
->  	struct iommufd_object obj;
->  	struct iommufd_ctx *ictx;
-> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-> index 9293722b9cff..ad33f1e41a24 100644
-> --- a/drivers/iommu/iommufd/device.c
-> +++ b/drivers/iommu/iommufd/device.c
-> @@ -1084,7 +1084,39 @@ void iommufd_access_destroy_object(struct iommufd_object *obj)
->  	if (access->ioas)
->  		WARN_ON(iommufd_access_change_ioas(access, NULL));
->  	mutex_unlock(&access->ioas_lock);
-> -	iommufd_ctx_put(access->ictx);
-> +	if (access->ops)
-> +		iommufd_ctx_put(access->ictx);
 
-Purely relying on access->ops being NULL feels a bit hacky to me..
 
-> +}
-> +
-> +static struct iommufd_access *__iommufd_access_create(struct iommufd_ctx *ictx)
-> +{
-> +	struct iommufd_access *access;
-> +
-> +	/*
-> +	 * There is no uAPI for the access object, but to keep things symmetric
-> +	 * use the object infrastructure anyhow.
-> +	 */
-> +	access = iommufd_object_alloc(ictx, access, IOMMUFD_OBJ_ACCESS);
-> +	if (IS_ERR(access))
-> +		return access;
-> +
-> +	/* The calling driver is a user until iommufd_access_destroy() */
-> +	refcount_inc(&access->obj.users);
-> +	mutex_init(&access->ioas_lock);
-> +	return access;
-> +}
-> +
-> +struct iommufd_access *iommufd_access_create_internal(struct iommufd_ctx *ictx)
-> +{
-> +	struct iommufd_access *access;
-> +
-> +	access = __iommufd_access_create(ictx);
-> +	if (IS_ERR(access))
-> +		return access;
-> +	access->iova_alignment = PAGE_SIZE;
+> -----Original Message-----
+>=20
+> On Tue, 17 Jun 2025 18:20:24 +0800, Joy Zou wrote:
+> > Add device binding doc for PF0900 PMIC driver.
+> >
+> > Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> > ---
+> >  .../regulator/nxp,pf0900-regulator.yaml       | 179
+> ++++++++++++++++++
+> >  1 file changed, 179 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml
+> >
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> yamllint warnings/errors:
+> ./Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml:3=
+4
+> :8: [warning] wrong indentation: expected 8 but found 7 (indentation)
+Thanks for your reminder!
+Have run "make dt_binding_check", but didn't found this warning. Found this=
+ warning after run "pip3 install yamllint --upgrade".
+Will fix this warning!
+BR
+Joy Zou
+>=20
+> dtschema/dtc warnings/errors:
+>=20
+> doc reference errors (make refcheckdocs):
+>=20
+> See
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+w
+> ork.ozlabs.org%2Fproject%2Fdevicetree-bindings%2Fpatch%2F202506171020
+> 25.3455544-2-joy.zou%40nxp.com&data=3D05%7C02%7Cjoy.zou%40nxp.com%7
+> C4abcb4752f194f64e6a308ddada0a876%7C686ea1d3bc2b4c6fa92cd99c5c30
+> 1635%7C0%7C0%7C638857627709537961%7CUnknown%7CTWFpbGZsb3d8
+> eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoi
+> TWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DM%2BlNJ8P2aboDq82
+> htOEdzYII4fTha7wX901TorFchqo%3D&reserved=3D0
+>=20
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above error=
+(s),
+> then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>=20
+> pip3 install dtschema --upgrade
+>=20
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your sch=
+ema.
 
-Maybe setting acces->ictx = NULL; explicitly here would be a clear
-demarcation between the new API for "internal" v/s the original one.
-Else, I definitely believe we should have a comment mentioning that
-access->ictx is NULL for internal.
-
-> +
-> +	iommufd_object_finalize(ictx, &access->obj);
-> +	return access;
->  }
->  
->  /**
-> @@ -1106,11 +1138,7 @@ iommufd_access_create(struct iommufd_ctx *ictx,
->  {
->  	struct iommufd_access *access;
->  
-> -	/*
-> -	 * There is no uAPI for the access object, but to keep things symmetric
-> -	 * use the object infrastructure anyhow.
-> -	 */
-> -	access = iommufd_object_alloc(ictx, access, IOMMUFD_OBJ_ACCESS);
-> +	access = __iommufd_access_create(ictx);
->  	if (IS_ERR(access))
->  		return access;
->  
-> @@ -1122,13 +1150,10 @@ iommufd_access_create(struct iommufd_ctx *ictx,
->  	else
->  		access->iova_alignment = 1;
->  
-> -	/* The calling driver is a user until iommufd_access_destroy() */
-> -	refcount_inc(&access->obj.users);
->  	access->ictx = ictx;
->  	iommufd_ctx_get(ictx);
->  	iommufd_object_finalize(ictx, &access->obj);
->  	*id = access->obj.id;
-> -	mutex_init(&access->ioas_lock);
->  	return access;
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_access_create, "IOMMUFD");
-> @@ -1173,6 +1198,22 @@ int iommufd_access_attach(struct iommufd_access *access, u32 ioas_id)
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_access_attach, "IOMMUFD");
->  
-> +int iommufd_access_attach_internal(struct iommufd_access *access,
-> +				   struct iommufd_ioas *ioas)
-> +{
-> +	int rc;
-> +
-> +	mutex_lock(&access->ioas_lock);
-> +	if (WARN_ON(access->ioas)) {
-> +		mutex_unlock(&access->ioas_lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	rc = iommufd_access_change_ioas(access, ioas);
-> +	mutex_unlock(&access->ioas_lock);
-> +	return rc;
-> +}
-> +
->  int iommufd_access_replace(struct iommufd_access *access, u32 ioas_id)
->  {
->  	int rc;
-> -- 
-> 2.43.0
-> 
