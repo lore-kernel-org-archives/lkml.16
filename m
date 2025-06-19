@@ -1,66 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138A824166E;
-	Thu, 19 Jun 2025 08:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C4924166E;
+	Thu, 19 Jun 2025 08:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322638; cv=none; b=EngLfIcY90T2ey/xSRoCHRy/n3xF7QsKyJ05xIo6Ajq0Mc1eBIdNu/ZHwuW0NCwG9ym03gFHLJ5S+4tsD05Fih6wdS5+YIQ2K+oc+K1UD6CPjle9qCKwsS4QnqeJW2h9xD2pbZdKmhhMbpyXGC72FxEDaO6EDWkiuom9Tzd0Rnk=
+	t=1750322678; cv=none; b=udcUj8bGHhrVmq74/7nBCOXKSBYzZzz/c4jfh0XQUwBYhs9QdsX2xRPKChwxzx7mCrtJyLOafiCdcAZTEeNEh7vxMEfDWTbO3Whss2UC+m1uytI35XHFZtXCWx8NKVhWoe3AEDyOi5riQz33/6IgnHedx3ky7QHhsiChyO80EaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322638; c=relaxed/simple;
-	bh=7E7ww+LoobyNdSelS1odl2gtbJ2ZRBYhmgqDhaQPSSc=;
+	s=arc-20240116; t=1750322678; c=relaxed/simple;
+	bh=pAQIs0wPNcKspvealxxLH8x5f2oaCYdGWfWa+mZjI4M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSs8OcGkKRwet16mNOQQtecotV9d7vsw7NrfM7qEf89LWdS+PDzZq6Bo5ZnyCCxicVY+5vFRt9LUYU+fxWTTP5oQlbrV5eL1OKAZ/pNJBvKz4EIx6S5G7QbKWcdN3a3tBfL5iXkh+wZoCxkIyEED8eHmSI85rn0ZfZ46OZdcLt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTEn//C6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KxG5qoL8LDmL2rwKYve6/X3lBcw9h4yMdGGJ2LdeANUfoctr6Uk1v/9HHKdtI3EPp9kYfUAjeMxEg2/E21HpPr+URlwmDX/HYekfz68VvVBzq3Q7SuK5OLGmnOeQaIF4NfHUyVQCUOiLBiOZgZc7SjmqSPsDuqySN+/wREgECnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F714k0Pr; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTEn//C6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 203D9C4CEEA;
-	Thu, 19 Jun 2025 08:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750322637;
-	bh=7E7ww+LoobyNdSelS1odl2gtbJ2ZRBYhmgqDhaQPSSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DTEn//C66rmj2Hdt8gRRwMH+AcarNL9jQSyEkOdrH9QKnvmDi1EYn2jXdn0mS2B9C
-	 UaNUZjW99OGCp7LEO5cpX3DuioAFbRUAW8isH8ha10ze/iNotjcfK0D41+lNlTQ/7U
-	 CuHKxJnTuhZAp1edLn1Nk0nPWH6F4xaPqxii602C99ojA7Tc6wxrj40DDLMPaIhzxX
-	 iZ9V7wTLkLpNfNtJI4FjkCEkAW7J4672Kjd8ywEFPT5nMYroETTZNlc0HfBWROhgen
-	 F9cWU3iWKq1oNNlOio3xJP4XQPy409vU0GagzqYX6/uouI7aIWsuE1hUVeOCrqJHGo
-	 3eRAIydRNuVBg==
-Date: Thu, 19 Jun 2025 10:43:53 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Christian Brauner <christianvanbrauner@gmail.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [brauner-vfs:work.pidfs.xattr] [pidfs]  e3bfecb731:
- WARNING:possible_irq_lock_inversion_dependency_detected
-Message-ID: <20250619-rennpferd-annexion-f24c89ba6088@brauner>
-References: <202506191555.448b188b-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F714k0Pr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zdSTT5GIAhkhibnh3jBupBeo3fDvg6PoB7Mf0Alg2KA=; b=F714k0PrGY2UjMoRVc/fTj+mfL
+	2gUYFjFXcIEPSCzAIWCjBN4juRyyJxq1o/r9ZcKD5iLLex2ppvReauRReBsygZC4CG8hgKR7iKbqx
+	dvRgVKIlqoc41ISPLD3cJhetQ81pi1S7h4lkYoG2QMy8sxs4MMh6sPGhjD6ETav5b1UhEVPLFhbgW
+	yz5UIGtYwyS7Ihw0/bfPUi7NYFO4P6Bkaz1IwXzBc+oSUy4rqSRk0eayUfB2zixJEZe1uEhlFkRET
+	ejyWOOtBtXO2b/BqJ16PYKwDg0z7bei66XSpFdMtdi+/f0T7DRo7+6YSugk3lwp14yKg8fDKY3p8I
+	fUu3rjbg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSAsl-00000007v7W-3Pw4;
+	Thu, 19 Jun 2025 08:44:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5CD2A3088F2; Thu, 19 Jun 2025 10:44:27 +0200 (CEST)
+Date: Thu, 19 Jun 2025 10:44:27 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250619084427.GA1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.938845449@goodmis.org>
+ <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
+ <20250619043733.2a74d431@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202506191555.448b188b-lkp@intel.com>
+In-Reply-To: <20250619043733.2a74d431@batman.local.home>
 
-On Thu, Jun 19, 2025 at 03:27:28PM +0800, kernel test robot wrote:
+On Thu, Jun 19, 2025 at 04:37:33AM -0400, Steven Rostedt wrote:
+> On Thu, 19 Jun 2025 10:34:15 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
+> > Why can't we cmpxchg_local() the thing and avoid this horrible stuff?
+> > 
+> > static u64 get_timestamp(struct unwind_task_info *info)
+> > {
+> > 	u64 new, old = info->timestamp;
+> > 
+> > 	if (old)
+> > 		return old;
+> > 	
+> > 	new = local_clock();
+> > 	old = cmpxchg_local(&info->timestamp, old, new);
+> > 	if (old)
+> > 		return old;
+> > 	return new;
+> > }
+> > 
+> > Seems simple enough; what's wrong with it?
 > 
-> Hello,
-> 
-> kernel test robot noticed "WARNING:possible_irq_lock_inversion_dependency_detected" on:
-> 
-> commit: e3bfecb7310ade68457392f0e7d4c4ec22d0a401 ("pidfs: keep pidfs dentry stashed once created")
-> https://git.kernel.org/cgit/linux/kernel/git/vfs/vfs.git work.pidfs.xattr
-> 
-> in testcase: boot
-> 
-> config: x86_64-randconfig-078-20250618
-> compiler: gcc-12
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> It's a 64 bit number where most 32 bit architectures don't have any
+> decent cmpxchg on 64 bit values. That's given me hell in the ring
+> buffer code :-p
 
-The branch is irrelevant. I can delete it so it doesn't trigger kbuild.
+Do we really have to support 32bit?
+
+But IIRC a previous version of all this had a syscall counter. If you
+make this a per task syscall counter, unsigned long is plenty.
+
+I suppose that was dropped because adding that counter increment to all
+syscalls blows. But if you really want to support 32bit, that might be a
+fallback.
+
+Luckily, x86 dropped support for !CMPXCHG8B right along with !TSC. So on
+x86 we good with timestamps, even on 32bit.
