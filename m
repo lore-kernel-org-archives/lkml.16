@@ -1,341 +1,189 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011012.outbound.protection.outlook.com [40.107.130.12])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013027.outbound.protection.outlook.com [52.101.127.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7F92AF11;
-	Thu, 19 Jun 2025 02:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55578D517;
+	Thu, 19 Jun 2025 02:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.27
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750301199; cv=fail; b=KRqsvHc+O93SFAyV5CDWyuNmiNOMxofQX0w2nhcbayfGDBZGGTmp5BEadAzuDlxjWz5bsrR3d6KzfCHCVPR0SpNWGezi1Bbf6Xzo/iiGwd1ihWFQLkkxlbMOFJy6/PDzg+rdoZcgZmrf0159KvSIrmzq31HywU8PfEf0e1B63ac=
+	t=1750301291; cv=fail; b=d026/d3J3JbThNhcTsglEWt+6pI+GFGtYRQfeF862YBNkHqOQPv9NIqnAcQJRGwLWsjlNB9hmbFFfH9Vl5GKXoEdvEg91CLtz99I2BlZPPVVbHe+sjnfIjdbhKKirTos3lJx4rbKE+irGz+dYL6wg0e88DP3RakXXKpghAAKGoE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750301199; c=relaxed/simple;
-	bh=T5kyIm4BtwJtoqeGGr2jHYoNCWROfXNLSThrscQy9kc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=S+PFZlf0vNju2B+286dMR0dLhDQnqQEHgeuMWuFeh+WvFCR1tCauOHFL7biFYTSQ/mf3kuSgr5juCzSsFTgVJ/2nLdirJsuBez7RqqPrOnmYChZ9Z5Xx4l13lyy5NlfkNUIThH97Uq5DGFWhRTWQ6Ht62xCs085aSmQBAD5RRZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=e8Bxf0FA; arc=fail smtp.client-ip=40.107.130.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1750301291; c=relaxed/simple;
+	bh=t7XYE2XbTwUKfZcF7b2J/cTHSzxCHzvH60BIHzqCUwk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=foAx9byXxDowag/vTkT/81JaocazN9LAWTXm3z4XsFss1eRXGpMpmL4c205SJaOUUSd0W4qKAjkEoSV1mWVtXjbYTLzJEOKe6CpQ+57E4CaCEqaHOuy+qU3W4GpJi0xVwWlF+SXKyav/WP687UyQIRS3Cq+r1PGsVLR42uwtK08=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=W7ae5j8e; arc=fail smtp.client-ip=52.101.127.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="e8Bxf0FA"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="W7ae5j8e"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=upraSWQFU4XyapGnIzSQOGxxP5zl0L1bAExR7/Tnnsp3+kOEtsuqrmYfs188spuhdXZ44H7anhCQ/NiLrcXHuahWM6j2StZzDM8JmXfegoXd4Z+LaBP/FaekOElIw8qgp/T5cEvfS3QMxNY06JM43ytCJMZsWPOITvCa5ADAsAOv/f/r17b/sdpEY0DAfsBEOnx5S2az+rhJ7VcYvY6RPPXNsApWo4GZ70FVm3TNNQ7hTQm0o3VK5l5dwdQf+w5r9oY2fELJnuu5ZSW9vXQjZPl2X6WByxbLujEFmB1CmboA5f6ZcHiE8u/qnlWlyxqtSpPn0zQ6CcsYJF8Ft/z++g==
+ b=cNve2E/JaZOk1Eloa0g4zrzg/RvVgTbkIWUxYhF/pGO8Ql6oH2d6CSDRWNr90fxriTqWLu7bkeM5ZOxaBAWvzopJcKoPnC80xwOfM8TWMFdqumbZVzPYG3VxjaQ2SzR+HihKC08nyFjDNHTy5GiuyFkgk25mXoHKUw1oWOJR441x/KU7VZgFJOrqab9yawXSLMv7Y4bu46IMDmJtLnHqA+78eqV2UpiNr4iKiPtz+ESZBe5k6I5HgFPx3tf3WgvuBeiR9KbmIdhd8Vm+vKgon/43V/kL2RbQhTWZULfWxxqCw/D5oJLJ8rfPSEM79QssKE9sb2M9HSW+WbEtJXE4WA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vub7nWdeaA1Zju4+Oyx5pWrtmlppv3RLmCvD04FrahY=;
- b=ikDWBF16Ez8+o6vfBQJvFjrRa6n/JNjvQMqrAywM1KDKhFm0nGz5tVALtEchS4eTtwHTkWNxFz13QQ2Omrt1n80JIuo5MuPhaYFQkIi5kO02IRWsMvXrZdkst/uSc+Ig0pAHMo6IgftVYDj/Z6NA1GBtTfWkzCV19ATv/AqQBgBYoIoWwR5NlxW+FSnL53RfSv+LSArZfGrbt2ZzpBODxdT3a5Dex5YDFR+u5VqYcpjhKi5Qm+jXpIIBBYdhfMV9kHo5j6ITTR1LbWL48Gq4NKoNKmtl3jl7pHS7GW1K+YiWCM/+gB1cEyzBM9Wbv+XjFd67DziIgJUDED0hPX5Q8Q==
+ bh=Fd6aCXnMpevUINd8DmlffRlKHNE+xwuD1fVO06R6pg4=;
+ b=jlK6CVQk5DJYLOXjSu4jdQOGeidZ7Fq/Ut60g88eqSN7AkUFmzEK/pRHLXR0qPk624ymp4Z0eHzt1flWmivQV4sc6YZpbYyX4/PlN7TDWibUQxs38wSp9MvxkbmysA1LbLlMX9bn8u8Ka/Ll+df1br2vWd+LhrBs172UHjG90h9Ei+NwBqd/qA9jJ+btEA4sumQjyjtH298Ee+ipb/2+qZiLeAbI4XzTaAyDFy+BHDcxsmNHfTyPlr3rvjkA3k1I6lmCfkgpWkYEBvWRNIws5lweqd4N6uSjsO4fcCE6F/4gIGCbP0X3aV9UoaWU0Vrhny3D4pUCOe1Iyo4iAIhkWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vub7nWdeaA1Zju4+Oyx5pWrtmlppv3RLmCvD04FrahY=;
- b=e8Bxf0FAxQryF48LrQh+NBYLoLeeUUFnSywwIbBOEz4vAKOe2w38+caEdWl/jwS3hdA3CzsIA031Xyb0osT/ALkvRSokQz6oMpt7vUMe+qt/vDGFoNkbxx84PPYOdPo6furnbX/CDddUcM1L8wdmCsNq12cYJSi1Nsooynju7OoRiEWbujxDK5eG3kuDReItbje4sCzbuLG9gxm/UZf223mz4al4NT+6ojruQ1VDuU+5Pr5Y+oxDUZvMRKidAcxNI9m6gC9qSWgT+1lZ/KXM2xjV2KsRTIYnCfw1CCHYduGZSDbvA0tvZpu9US/+EpMI3GykAZtk4mgwx4rrr06OiA==
-Received: from DB9PR04MB8429.eurprd04.prod.outlook.com (2603:10a6:10:242::19)
- by AM9PR04MB8810.eurprd04.prod.outlook.com (2603:10a6:20b:409::14) with
+ bh=Fd6aCXnMpevUINd8DmlffRlKHNE+xwuD1fVO06R6pg4=;
+ b=W7ae5j8eyWpBjfjG7rx1dBYyqleWdYY+Smqnp4+W3zmUrDhZXQa1+xTcjBTYMqUhlYIUEdORpm05qtmU3GfVUP8oYEOUlSUk1tolV7susa7HrhkzESRnxdyhV7bWzfPrG7jPAs3ABADUAUuyYWbV0MxNvz/6nSjBex0lGm9qzwnBirNsTyDPu88JkrBeU/d7l83iOpoUnNcIvPuCRIVeuqrGut6rGS72GKlKgeRsh2c7X2tPXI6w0N9+SK2EXX7b4st86CPH6+3iTlCg2gbLezyFRoNKS6oXI0f1B2DlgJJUL8FuXtTFUQL0M0MU4ObQfA5AeZweMDRwK0CYR9Z4Ig==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4454.apcprd06.prod.outlook.com (2603:1096:301:8a::10)
+ by TYSPR06MB7164.apcprd06.prod.outlook.com (2603:1096:405:91::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
- 2025 02:46:21 +0000
-Received: from DB9PR04MB8429.eurprd04.prod.outlook.com
- ([fe80::2edf:edc4:794f:4e37]) by DB9PR04MB8429.eurprd04.prod.outlook.com
- ([fe80::2edf:edc4:794f:4e37%3]) with mapi id 15.20.8857.016; Thu, 19 Jun 2025
- 02:46:21 +0000
-From: Sherry Sun <sherry.sun@nxp.com>
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, "marcel@holtmann.org"
-	<marcel@holtmann.org>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-CC: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amitkumar Karwar
-	<amitkumar.karwar@nxp.com>, Manjeet Gupta <manjeet.gupta@nxp.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: RE: [PATCH v3 2/2] Bluetooth: btnxpuart: Add support for 4M baudrate
-Thread-Topic: [PATCH v3 2/2] Bluetooth: btnxpuart: Add support for 4M baudrate
-Thread-Index: AQHb4GconGpl39/tDE6+gJCceirOXbQJxP5w
-Date: Thu, 19 Jun 2025 02:46:21 +0000
-Message-ID:
- <DB9PR04MB8429D6634D666DED120EFCD5927DA@DB9PR04MB8429.eurprd04.prod.outlook.com>
-References: <20250618152113.25500-1-neeraj.sanjaykale@nxp.com>
- <20250618152113.25500-2-neeraj.sanjaykale@nxp.com>
-In-Reply-To: <20250618152113.25500-2-neeraj.sanjaykale@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB9PR04MB8429:EE_|AM9PR04MB8810:EE_
-x-ms-office365-filtering-correlation-id: d1d32966-485e-4b44-ac1d-08ddaedb798e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?jtDa++KNeUd1iSu3Iyj62+s6yxSY+m5Z1tDb7rNjmO8nHC7+lld9hbGPrCIf?=
- =?us-ascii?Q?fZgQ3gKkxhhUiVLq1+srHxPFJVNvoja3vj/7b60AqDs5/EKTouwFlimszQ6C?=
- =?us-ascii?Q?rMuS1EHKGzy/IImQKEFGr+J38fVAQDK7Sm0nMqUPs60auOZrbvBX5TDMSN6t?=
- =?us-ascii?Q?wbepA3TraDX6tV32+NSSKF79CrWJvTj7mB091790o2IJlmbAZo1XyZW3XsHj?=
- =?us-ascii?Q?pslwWzqwLR+zZVRy0Qd8D/XodNIDON0U5tDe76GkW+svfr364I8TnZGXF1Zs?=
- =?us-ascii?Q?v0GAg758PzvnzYIMsV3owmin1/QN1oakTTtY14iBWVKuUSO6LHbnDZHwFFcZ?=
- =?us-ascii?Q?UJ+i8b4y6MofSxavUMXtiEBP3uHzHBrnVENR4tH0RwoYi8dhvEsELHmbZ75K?=
- =?us-ascii?Q?xodl3ib6dUk9kZPBU4BIJ03XZUnGi3GcTw7U0IjZxK3uFmgs2QdAxxxIEwGp?=
- =?us-ascii?Q?Yt6uJCmDCRDmtmxXqsCdkVV/4X0SGwgJmcSVtvM0vfUUQ+pq9M+bdaBxQ34J?=
- =?us-ascii?Q?O8WlmBGtxkI5U5bv99scStFetB9AHQHdby9T607UJ7BkpIrJ4Y27/pYfqvwn?=
- =?us-ascii?Q?HAjozEOp8n9pvyXJgdg9/9OYHffH0Dq6+rIWKmgNejyZvPYADDQLw2KiYrku?=
- =?us-ascii?Q?A/VMIHrnjqdd7fpj1fEJdhaZCoLpqtQ/P2G13kjyU9I079uY4Wiel5sxF7DN?=
- =?us-ascii?Q?FGCI3IbXdNAOjxsOkVlX/dA2Gg1Kp3vNmEK+1W53JM7IkZgCEvFfwbCbeqth?=
- =?us-ascii?Q?of+xUh16R76o6q2gF8H53ohbdW6o9G+fCrRz/cVOlWBjECAfLqIyU0J94MMl?=
- =?us-ascii?Q?ffHef9n1X3h2CdWfxfQqYxCDvU6XeEVZp8Vuk1fW/05S+79JsOWSlNY04jJx?=
- =?us-ascii?Q?7KgJZmUeiQkZeCUJUT2d2marAGy03yfncPwPsJO1Q8OY99zxSvJ4lXMfJY34?=
- =?us-ascii?Q?w2EW0t+jz4jBuGUlOQJLVeiaNMpLSbv1g0kf2twO8TBawCnCZ/11bU6uBcvN?=
- =?us-ascii?Q?ym1sFcTHpMvKnGci59lXhyiAC5HWOzP1YahtARZYPZiC82KNktqTtuP3YbsR?=
- =?us-ascii?Q?m9jMR+LZAHDbDnrwLKPhhrfbrUnc+xRHUvt9+EuUYBi9af4Wl9nIYbw4z9Xi?=
- =?us-ascii?Q?r173O/S3GLTiDHZYX0qr/eKVQEsrg8UQRRujGh9IJi4VIMrqldD6QJS5khIO?=
- =?us-ascii?Q?2KgNUqixeb4525dHNQjMwFZBjWxPSaROZ8uTsTb8jUcZnfJJYxGMsv+19l2X?=
- =?us-ascii?Q?lK2zGtIkB6Y0E3VffqI3XApTelDNZibz24cm0ZrgevZbFbCq9DJh8s2c9qHP?=
- =?us-ascii?Q?XOX5c4LdxDfEeF6GhYzfgMcwx9DLTd2lVEkVNHC6wWFW5h5zRvC3pi6biFk+?=
- =?us-ascii?Q?C6OeQM4GIbZO35yQH2d8vwUqAwwIm9AmYtAhdbqkEIKEm9OnfFGynkVnvkUa?=
- =?us-ascii?Q?uvbcdsf315GKYmJ82z744NrVWae5oWKoBnMfcBRvmYeSdmt2/ZEOxwdXubP9?=
- =?us-ascii?Q?/e5PSXvXZp+bPBQ=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8429.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?mjSIk2V6/8GTtFaXZDLVuJno50ZGoYON6xV8O6T8QrdbQYJU07z3hchCcfoo?=
- =?us-ascii?Q?LPgO0xUAnwDE+ayg2XYRXdzlc56Luzs4kOpyHCwGELOcfmBiDhgpRPLEyzd/?=
- =?us-ascii?Q?Ojz7pxxu/hjSfbPJl095486qrUrhTx7I1Tv+qx8Hi2WtsCIGAakz6TpOZQJR?=
- =?us-ascii?Q?8umQloNCeRLGfJBDpA1F1HIC/T/g+2eKEuAMRupRrUT+OgM36O6lWCkC+ssA?=
- =?us-ascii?Q?NsdICnT8nuCrzd31alxuB3to8xT/V6pYp6y/tyOxOszexdiSKd/XK6J/FS+Q?=
- =?us-ascii?Q?gA9lRNxcA+e/ph6aCI7mFMdfuUHq1jf14kK5OVdqkEq8DqKh88SmDxgStNy9?=
- =?us-ascii?Q?5aAT1oy+jfrA+ta15SIyt4ka7MIe/om6k9t3D5nq3REuIToQRQfwoGJYHaZv?=
- =?us-ascii?Q?MoziX73eZB1sy3Fx8OnRGqZpTYIPloOQQADgk1T+ZZKWDvmW4ij/qnFJA5B1?=
- =?us-ascii?Q?ECKovQSyVP1v37ERDKm6uUndbtNQsJKS6aXL8ssLY605ymN1buAJEcKiunj8?=
- =?us-ascii?Q?ZxXr3jvIcsnPersPzzPWq0OLu5uIBL58aG2vYnXMsTRY6HICq4USQ6wtjYfm?=
- =?us-ascii?Q?9bLiDFBXFi8ALeor48nqyJL/5gmjQuf64C5Mgwu2jwVP4QNZPHIS60W84K3m?=
- =?us-ascii?Q?02UtL6oCGBHVqx0Tjdwb8E4iFTfOAXWGi/xG46JkHrfPbWOAT0g10LIRH5pL?=
- =?us-ascii?Q?AX3WZ0GaRw6MNrudF6NQbpH4s18e1ZHTi/fcZucyoOKxJocXqD84LMBIyqCO?=
- =?us-ascii?Q?g/gql0Uai28w2DKPgy1MBTho2gXOqoMlVDJfFnzVE8OMTF8uB5vc0tW3GBkl?=
- =?us-ascii?Q?80GlAC25ucAFR9bRKjN50mkaHXS4qQT/Em7INcnu7zYyYzRk6XBeWJcXNLc+?=
- =?us-ascii?Q?OKAHIYBS4ao9RsRFz/giyLxpuv4j420VCPHDUiOkG3pcmO7+C1ZqxHcZkyoF?=
- =?us-ascii?Q?46TK1dkg/ADWSlgVIWgyZzcfIKX9bGjUnz1GBrvGbev4oQZZrodvl6G6SJ9U?=
- =?us-ascii?Q?cWji7Ekuk47IWdaj0kcQBuPiPrEz7RXdbkn6LKpZ5tj+eGdE5Lz7+qHRpJg9?=
- =?us-ascii?Q?IjydIZBz2JWJNm8mI5br7iIsYHlatTGSh7ODd20v63D9savI0xZDAW8wrvq9?=
- =?us-ascii?Q?4Na70NeAqXov8QgVLhX8bomzIRKwFOt3LmWhdzNrF4CPYo+GEVsxOK1TrG9w?=
- =?us-ascii?Q?++TjOEsNX7R/JUImiwLUEivZafeN0URS3jtj4BPGfv3oiG+ZyUw6sxSE6BL5?=
- =?us-ascii?Q?d8i2Ubki8wHGTaseFc30gZyczkshy1b7bYXH//Mrk5Z9LQyqz9LvE+yG8HOH?=
- =?us-ascii?Q?/ieUIdxXsnSaIc0WdKJA4XT05L7AIH2qf4uGDLmPpuljnyjTowS9RKxnCaSG?=
- =?us-ascii?Q?HoEifNnsp1rG5bit4m77U85QaDiBzsiXmZDV0bxWGvv5h5j1h7Ep59cs+zaY?=
- =?us-ascii?Q?uaz9mRInhuC43+V25OgCY+y7j7N6FHx402pIBKDIm9tJCdXwI4K9mEWVhQAx?=
- =?us-ascii?Q?gp6qds2DvSE8kPqyv1Byzhuqmvn142k7NZbaiDTPX0AHgkhMafB7K97Wldip?=
- =?us-ascii?Q?c/YQ2Ic5SlgOKHqETn4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.32; Thu, 19 Jun
+ 2025 02:48:04 +0000
+Received: from PSAPR06MB4454.apcprd06.prod.outlook.com
+ ([fe80::ca1f:8841:8cd3:1bb0]) by PSAPR06MB4454.apcprd06.prod.outlook.com
+ ([fe80::ca1f:8841:8cd3:1bb0%6]) with mapi id 15.20.8857.020; Thu, 19 Jun 2025
+ 02:48:04 +0000
+From: Yu Jiaoliang <yujiaoliang@vivo.com>
+To: Rishi Gupta <gupt21@gmail.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-i2c@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: opensource.kernel@vivo.com
+Subject: [PATCH v1] HID: mcp-2221: Replace manual comparison with min() macro
+Date: Thu, 19 Jun 2025 10:47:41 +0800
+Message-Id: <20250619024741.5807-1-yujiaoliang@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYWPR01CA0006.jpnprd01.prod.outlook.com
+ (2603:1096:400:a9::11) To PSAPR06MB4454.apcprd06.prod.outlook.com
+ (2603:1096:301:8a::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4454:EE_|TYSPR06MB7164:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb92055c-0771-4d8b-11e7-08ddaedbb684
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AM7NjHTnIdYzqDeg3y+BTOloHLzP7bIC2v5SAI+Ae0/YBhy5vVI4SD6S0oQi?=
+ =?us-ascii?Q?B7mD7Eqvi8jHDFGeqbrxr0sav6TNfxDNtid8OJ+myKHeiBiCS/qgoflVDdRG?=
+ =?us-ascii?Q?OaWHOmMqGy375DTMptQ+qT9G4KOenFVg9o7VZR7YLFqvDcQEMh9Y8/NUss9r?=
+ =?us-ascii?Q?pVc80UjoRJwegdWcNAcyPEva4O3isrKAUzLqI42VkKlQkLLGRFTzwO3GIIA4?=
+ =?us-ascii?Q?RJhrBMzak7y2JX1TFu+sPn5VNRRCAvJK+IkYUJxts4a+tlyYrc9BCJABPHai?=
+ =?us-ascii?Q?+V7jx6QGk8ig62TEu2rQ2yQC9Zxw/6TA/NDkFisNbyiRQRML9BQb1PDmJlqy?=
+ =?us-ascii?Q?SGuQ0vtK6+eTbJKHV/4Pakd73JkjYx1gOulik+rtbp2UR3coXtRiy1uquxJH?=
+ =?us-ascii?Q?nvJByn+fbn2ev2kWvwD6Mr77Xt5PGwiOD2lh22rmDk3J6kUZG8htLqR8hF3m?=
+ =?us-ascii?Q?CT5Kx152OGLh/Zlw6p4nLZoqjdwDORjaA8XcH1RD1PfHdbpH7Co95p3iy3Lm?=
+ =?us-ascii?Q?QwFNr75O6jpLif84dtXo5zd9aRvI2CTVd/qQWA9DX8dLEnI+r99N5ZagiJbR?=
+ =?us-ascii?Q?SAgIFoLCCG4LP9DgKhUUqC4kQhStbt7rCqUx1CY7k233+IullAXIthbfyiy2?=
+ =?us-ascii?Q?fdLMzdbuyxfypE0H9ukpHKOvEB/GKbQLjtGvS/HZMUJ9H7q2peg9+LDhQ/y4?=
+ =?us-ascii?Q?cmrXn4BdwTf24llluEkek6lXG10zcU3bT0fV0P90XZQZBk9Htvg+We3u17I/?=
+ =?us-ascii?Q?VLjyAOGoMZKOyhkWWpt/5V2bXx0HhkNF0HBnZArcZZvPeWhzgexVHgP/zobd?=
+ =?us-ascii?Q?/SnrYdCMJuE1C+h0/1x+HR7Veo1qETZ4ExArTEkBMDFuM1M+ooN/gI5pNtSb?=
+ =?us-ascii?Q?ha1rI7bJePMm+6WY2qSIylMTeTWvxxte37OhAm/JNDTzpfNEKXx4zf1whgTU?=
+ =?us-ascii?Q?SPnOqwhEx4fHdh8YfwGWA36Hb1cdOAYbYqm2ftcXdOIiq4pVI8XrCfLZ+w1T?=
+ =?us-ascii?Q?Hz69ve4lAmra9+KgGXrnczqc7JeVCmXqbPGBWcG9CYFirtyAn0BOdb9Yegz3?=
+ =?us-ascii?Q?xCcF/mjt6CeOmI81Nkr1vykgxSrtbunjPmaXyTQqtPTjzjUQDDmJ/iuaGGA1?=
+ =?us-ascii?Q?LTjmzoMKG+UJx8wLlJI0+un+mdyFfqPfy9TQgotmL29cArmOBbQMjV/rxWns?=
+ =?us-ascii?Q?tEv+AijUGMRLP8wDl/wlm/PAMqllqnxRs9tKnaeycllXAUI55RdHaoCbsYAI?=
+ =?us-ascii?Q?/unYj4OPjM9sUHxZPI25Ru5Ej5pPvRFzRsTOCmeSsqBmhvCYQMbYtuKgXwOg?=
+ =?us-ascii?Q?LE+KUA0MhuhKRvyftqe6eHhhot1LMXV2oOmKzMfD0Vg+w6gOuWyM31CRkmjq?=
+ =?us-ascii?Q?29YxFP5wFNAZpyaFL0baPnQ6JtcB5XdAn6IeI1xj8xJ4+6YADmGO7Lpjdv1Q?=
+ =?us-ascii?Q?3++HUaz3JsJAwCXIAKR9YTHGKxWk6lM9S/7z1TRAW1bDLcVApXMN1w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4454.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RkTZJ/EDn4CYYsOdWsnMwVky2MmwIhYeKiVWnjysJ6s+aUJ0GcQ0fcN6HPDO?=
+ =?us-ascii?Q?unV4bIgn86PH6kmLl/lxSNAphxluDDMU18QTZnbGN/xxJFco0uBtqvoresTj?=
+ =?us-ascii?Q?KCUYDZe86uvnN3T/XWPP3/9FbUAu9o/0eVDrcWP09L81rcCujtEc9e9UfiSW?=
+ =?us-ascii?Q?hSQQboz9MoW3oCm3r7Uqbq7KEq9crIESRwsBkmYfkx19WdcFQ2yhhPWnCaGO?=
+ =?us-ascii?Q?Osev3GN6yusiOA6Ys4vqi1IwCTEu6FbbvXhrQKH045S7+9lP04A1kONGkrb0?=
+ =?us-ascii?Q?OZTbK5o9lBatjui71SoCjr0DEhgfncnBMCQ1PYSgImpcOyZQsPVmnlYRZVqm?=
+ =?us-ascii?Q?9lxTYE9X/eGFSiIGBbxVv71bjbi93VcwCKxrJPFLqk038qaICjqZKK08LI42?=
+ =?us-ascii?Q?2AsDj1EYDvj4QGTS7VRCPNqsYcEjjwJ+EiRU22wfPtBH1QfkkRlthV2woKxy?=
+ =?us-ascii?Q?mx46XVAwxgi/zEjhadjtDNG9N5dvtIizgMTGz0UTCZO4AqOpXRrXZfD7bYCe?=
+ =?us-ascii?Q?ZZQnmiNVR9a8ekcbh6QXrfIkzZfHw3gmajsWkSWy9h4oJs8Zzngv1vsAkael?=
+ =?us-ascii?Q?Kd3kTFykzxywgkm2v3mP8YNDGYNsn3y7v9TFMekcJeVA6jZ/CHz1H1h2TFCa?=
+ =?us-ascii?Q?PPEYyOxgnrH9L5vdUmaVnGA49MQsgMaYbgrHAYZwj74u+/xVYroRPhhXolYl?=
+ =?us-ascii?Q?ZojDNGFUvuPPbpSC73T8WFAVYXoz6pK3Dv8001wK67O7TRSC7W2t7crKzjnx?=
+ =?us-ascii?Q?l+/WQ4RyTw22XgOkqE8DW0Nps/Qr0gYx8FAX3LSnJvimqzrqZxJ/BCsg0JbL?=
+ =?us-ascii?Q?4I9S7DnDbB4gOUYTrbiznUU2TqP+i7GnCWeFn6T1vJlyuMSprrzAcc4dVfem?=
+ =?us-ascii?Q?4tFinFkPsCKhSQCTiz+Eczd2sy5S909rP0ejQ69hc9b/IhpYvhJleACBYZjH?=
+ =?us-ascii?Q?9bk3RunrXaFqTpcZu8fYxw4wTEucYU7adJjzasYQwK2yylUn3IcsG6wi1dyh?=
+ =?us-ascii?Q?pKTKW2Vis9tTDpvoLlh72GwfQIvF6ZfY2lOGQwuTDLWpjAGrCdJxd1cDE47V?=
+ =?us-ascii?Q?pZL/Suh8DMsuMrbczgb6GwdDafoI9K1Sxsr751sPWOVzO8j/h46GOSQjpdm5?=
+ =?us-ascii?Q?GxZXCHx81CtIV4cjl8T6r8D6tLFo5w1dJP3eE3CzpY+7ac+U4R8NEJTuDBg6?=
+ =?us-ascii?Q?Fb7spnqoFPnMx06ezY4X9v/a68x+nWXhXnc75EdHnJ5QrDLetkD89XJE0Epo?=
+ =?us-ascii?Q?bKWVNiaxZQEHALFoYf3rkOR7VdzvwsHXXZVbV6VqpGvqE3a5Zbxt3wLUIVpB?=
+ =?us-ascii?Q?g6qeOhhwdqWocCcIsIvHmw5ogqrb4vbyARzOnz4x86dnHay1wMG/PA20NYDT?=
+ =?us-ascii?Q?ioodvLbAF3V+st8Vnz/kq7B/iJJLjtipWClKYU9/fTFuxlMSgdn486npFeZ+?=
+ =?us-ascii?Q?nIbtYqrzkT9y0jmMYRVu2fr2zj/ZMkJuolHZ2nsBo9vhlIHUGqxk1zUQEt8a?=
+ =?us-ascii?Q?tG1ymlQHhgYyTUh6KN+KTGBMa8An3koYel0FS8xZMW5Hr0Vr6XkMVLD4GMjO?=
+ =?us-ascii?Q?YZxTP+PEugcplb+SdCp/fdPzev9xpc1JkwUuNiAz?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb92055c-0771-4d8b-11e7-08ddaedbb684
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4454.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8429.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1d32966-485e-4b44-ac1d-08ddaedb798e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 02:46:21.6777
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 02:48:04.2661
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kQ1qAFxyfFAwc+rvxbHZQ0KoGHXTUV6tqYEiUYV8OnNxvZQ+vlcpyYg3jCRkWBqj8Nf5lTqk4Tj/fGK1uz2Q9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8810
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rm5ov9XhQlib2h8QcznHA0ik/HnEGHRfK4jd4O81yJHTCc7ET/VSyB3HHHADnrSXDI8je5xtolhSRr3Grqe+IA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7164
 
+This improves code readability by using the standard
+kernel macro for minimal value selection while maintaining identical
+functionality.
 
+Signed-off-by: Yu Jiaoliang <yujiaoliang@vivo.com>
+---
+ drivers/hid/hid-mcp2221.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-> -----Original Message-----
-> From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> Sent: Wednesday, June 18, 2025 11:21 PM
-> To: marcel@holtmann.org; luiz.dentz@gmail.com; robh@kernel.org;
-> krzk+dt@kernel.org; conor+dt@kernel.org
-> Cc: linux-bluetooth@vger.kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Amitkumar Karwar
-> <amitkumar.karwar@nxp.com>; Neeraj Sanjay Kale
-> <neeraj.sanjaykale@nxp.com>; Sherry Sun <sherry.sun@nxp.com>; Manjeet
-> Gupta <manjeet.gupta@nxp.com>
-> Subject: [PATCH v3 2/2] Bluetooth: btnxpuart: Add support for 4M baudrate
->=20
-> This adds support for 4000000 as secondary baudrate.
->=20
-> This value is selected from device tree property "max-speed"
-> which is then used to download FW chunks, and as operational baudrate
-> after HCI initialization is done.
->=20
-> Earlier, the secondary baudrate was fixed to 3000000 in driver, but now w=
-ith
-> "max-speed" property, this secondary baudrate can be set to 4000000.
->=20
-> The secondary baudrate is set by the driver by sending a vendor command
-> (3F 09) to the firmware, with secondary baudrate parameter, in
-> nxp_post_init().
->=20
-> Any other value set for max-speed other than 3000000 or 4000000 will
-> default to 3000000, which is supported by all legacy and new NXP chipsets=
-.
->=20
-> This feature is applicable for all new V3 bootloader chips and w8987 V1
-> bootloader chip.
->=20
-> This property does not apply for w8997 compatible device, since it downlo=
-ads
-> a helper.bin FW file that sets secondary baudrate as 3000000 only.
->=20
-> The switch to 4000000 baudrate is validated using a Saleae Logic Analyzer=
- and
-> imx8m-mini with AW693 M.2 module.
->=20
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> ---
-> v2: Change DT property to 'max-speed'. (Krzysztof)
->     Add support for 4M baudrate to w8987. Update commit message.
-> (Sherry)
-> v3: Add check for 'max-speed' and set default to 3000000. (Sherry)
->     Add functional and testing details in commit message. (Paul)
-> ---
->  drivers/bluetooth/btnxpuart.c | 32 +++++++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.=
-c
-> index 6b13feed06df..a9a53e6b35cb 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -73,7 +73,8 @@
->  #define FW_AUTH_ENC		0xc0
->=20
->  #define HCI_NXP_PRI_BAUDRATE	115200
-> -#define HCI_NXP_SEC_BAUDRATE	3000000
-> +#define HCI_NXP_SEC_BAUDRATE_3M	3000000
-> +#define HCI_NXP_SEC_BAUDRATE_4M	4000000
->=20
->  #define MAX_FW_FILE_NAME_LEN    50
->=20
-> @@ -201,6 +202,7 @@ struct btnxpuart_dev {
->  	u32 new_baudrate;
->  	u32 current_baudrate;
->  	u32 fw_init_baudrate;
-> +	u32 secondary_baudrate;
->  	enum bootloader_param_change timeout_changed;
->  	enum bootloader_param_change baudrate_changed;
->  	bool helper_downloaded;
-> @@ -802,7 +804,10 @@ static bool nxp_fw_change_baudrate(struct hci_dev
-> *hdev, u16 req_len)
->  		nxpdev->fw_v3_offset_correction +=3D req_len;
->  	} else if (req_len =3D=3D sizeof(uart_config)) {
->  		uart_config.clkdiv.address =3D __cpu_to_le32(clkdivaddr);
-> -		uart_config.clkdiv.value =3D __cpu_to_le32(0x00c00000);
-> +		if (nxpdev->new_baudrate =3D=3D HCI_NXP_SEC_BAUDRATE_4M)
-> +			uart_config.clkdiv.value =3D
-> __cpu_to_le32(0x01000000);
-> +		else
-> +			uart_config.clkdiv.value =3D
-> __cpu_to_le32(0x00c00000);
->  		uart_config.uartdiv.address =3D __cpu_to_le32(uartdivaddr);
->  		uart_config.uartdiv.value =3D __cpu_to_le32(1);
->  		uart_config.mcr.address =3D __cpu_to_le32(uartmcraddr); @@
-> -966,12 +971,13 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev,
-> struct sk_buff *skb)
->  			goto free_skb;
->  		}
->  		if (nxpdev->baudrate_changed !=3D changed) {
-> +			nxpdev->new_baudrate =3D nxpdev-
-> >secondary_baudrate;
->  			if (nxp_fw_change_baudrate(hdev, len)) {
->  				nxpdev->baudrate_changed =3D changed;
->  				serdev_device_set_baudrate(nxpdev->serdev,
-> -
-> HCI_NXP_SEC_BAUDRATE);
-> +							   nxpdev-
-> >secondary_baudrate);
->  				serdev_device_set_flow_control(nxpdev-
-> >serdev, true);
-> -				nxpdev->current_baudrate =3D
-> HCI_NXP_SEC_BAUDRATE;
-> +				nxpdev->current_baudrate =3D nxpdev-
-> >secondary_baudrate;
->  			}
->  			goto free_skb;
->  		}
-> @@ -992,7 +998,7 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev,
-> struct sk_buff *skb)
->  			nxpdev->helper_downloaded =3D true;
->  			serdev_device_wait_until_sent(nxpdev->serdev, 0);
->  			serdev_device_set_baudrate(nxpdev->serdev,
-> -						   HCI_NXP_SEC_BAUDRATE);
-> +
-> HCI_NXP_SEC_BAUDRATE_3M);
->  			serdev_device_set_flow_control(nxpdev->serdev,
-> true);
->  		} else {
->  			clear_bit(BTNXPUART_FW_DOWNLOADING,
-> &nxpdev->tx_state); @@ -1216,12 +1222,13 @@ static int
-> nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
->  	}
->=20
->  	if (nxpdev->baudrate_changed !=3D changed) {
-> +		nxpdev->new_baudrate =3D nxpdev->secondary_baudrate;
->  		if (nxp_fw_change_baudrate(hdev, len)) {
->  			nxpdev->baudrate_changed =3D cmd_sent;
->  			serdev_device_set_baudrate(nxpdev->serdev,
-> -						   HCI_NXP_SEC_BAUDRATE);
-> +						   nxpdev-
-> >secondary_baudrate);
->  			serdev_device_set_flow_control(nxpdev->serdev,
-> true);
-> -			nxpdev->current_baudrate =3D
-> HCI_NXP_SEC_BAUDRATE;
-> +			nxpdev->current_baudrate =3D nxpdev-
-> >secondary_baudrate;
->  		}
->  		goto free_skb;
->  	}
-> @@ -1447,8 +1454,8 @@ static int nxp_post_init(struct hci_dev *hdev)
->  	struct btnxpuart_dev *nxpdev =3D hci_get_drvdata(hdev);
->  	struct ps_data *psdata =3D &nxpdev->psdata;
->=20
-> -	if (nxpdev->current_baudrate !=3D HCI_NXP_SEC_BAUDRATE) {
-> -		nxpdev->new_baudrate =3D HCI_NXP_SEC_BAUDRATE;
-> +	if (nxpdev->current_baudrate !=3D nxpdev->secondary_baudrate) {
-> +		nxpdev->new_baudrate =3D nxpdev->secondary_baudrate;
->  		nxp_set_baudrate_cmd(hdev, NULL);
->  	}
->  	if (psdata->cur_h2c_wakeupmode !=3D psdata->h2c_wakeupmode) @@
-> -1773,6 +1780,13 @@ static int nxp_serdev_probe(struct serdev_device
-> *serdev)
->  	if (!nxpdev->fw_init_baudrate)
->  		nxpdev->fw_init_baudrate =3D FW_INIT_BAUDRATE;
->=20
-> +	device_property_read_u32(&nxpdev->serdev->dev, "max-speed",
-> +				 &nxpdev->secondary_baudrate);
-> +	if (!nxpdev->secondary_baudrate ||
-> +	    (nxpdev->secondary_baudrate !=3D HCI_NXP_SEC_BAUDRATE_3M &&
-> +	     nxpdev->secondary_baudrate !=3D HCI_NXP_SEC_BAUDRATE_4M))
-> +		nxpdev->secondary_baudrate =3D
-> HCI_NXP_SEC_BAUDRATE_3M;
-
-Hi Neeraj,
-
-If the user sets an unsupported baud rate in dts, better to add a bt_dev_in=
-fo here to
-prompt the user that the speed set is not supported and switch to the defau=
-lt 3M.
-Otherwise, the user may think that BT is running at the max speed they set.
-
-Best Regards
-Sherry
-
-> +
->  	set_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
->=20
->  	crc8_populate_msb(crc8_table, POLYNOMIAL8);
-> --
-> 2.34.1
+diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
+index 6c0ac14f11a6..dca61fb1ac08 100644
+--- a/drivers/hid/hid-mcp2221.c
++++ b/drivers/hid/hid-mcp2221.c
+@@ -18,6 +18,7 @@
+ #include <linux/i2c.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/iio/iio.h>
++#include <linux/minmax.h>
+ #include "hid-ids.h"
+ 
+ /* Commands codes in a raw output report */
+@@ -241,10 +242,7 @@ static int mcp_i2c_write(struct mcp2221 *mcp,
+ 
+ 	idx = 0;
+ 	sent  = 0;
+-	if (msg->len < 60)
+-		len = msg->len;
+-	else
+-		len = 60;
++	len = min(msg->len, 60);
+ 
+ 	do {
+ 		mcp->txbuf[0] = type;
+@@ -271,10 +269,7 @@ static int mcp_i2c_write(struct mcp2221 *mcp,
+ 			break;
+ 
+ 		idx = idx + len;
+-		if ((msg->len - sent) < 60)
+-			len = msg->len - sent;
+-		else
+-			len = 60;
++		len = min(msg->len - sent, 60);
+ 
+ 		/*
+ 		 * Testing shows delay is needed between successive writes
+-- 
+2.34.1
 
