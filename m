@@ -1,92 +1,120 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA39DDAD;
-	Thu, 19 Jun 2025 15:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC0ADDAD
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345770; cv=none; b=bZT2xff8ku2xCowNY0Xh1O51jDC3JLBCo1tL5H/Hzm3/25asZHX3FIf7P231NqFMfj45LJYiNBqjZ1BsPsFx9WbGolmBQ2sbJ/LJj7ZtyY7OrWGtt36siPPy3kbq7KeCmfGgTp23Erc2CdyjpR/x17Y/d4590Z1p5cXWcam6tpc=
+	t=1750345785; cv=none; b=uBLuDnw3rHuIRMu9A4xTm+UxAmkuDNHx710zBZzg13b9I+QgnbgdAoLXxxWoCWEu06QDAwf2oFqdyhANdxIu0BAUT/1fdMEyeFJBp2Vn7VgXyLf/t78uFIvRvwCNWRSaSDvNv7Ubbi/yT5p3s0cXuV7bMmyf1V5oe5A8CIeA0Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345770; c=relaxed/simple;
-	bh=HEvp4fBuOrjvsapFDRXsKrviD9BOWcxkwsVTAxwlBg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=atRqwJM4Pv4tMt6qb6sENCLQHd3vdpGmXE9gC7efLGrEp6oSnXsGA3WwV/15MkHoblIHa/hZ6wJwZzb7uiln4OzylR4vdZgu8qLDVn5DKSUZ5LujVGN6IW3+g7smEM34vOM/svBemu+AykK+NAqgZ7oEVu9cWhYo61RIk1/FATM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqM7AO5U; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750345785; c=relaxed/simple;
+	bh=lCx5xNGrom/G8iFDz5pK63/T9nM9G5Kj32uUckHHDUU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LYKI1bauAst03LEA7smVofAOaHIxcf2d+36hz0Z5YprQPfsPAKCJB4OM+wcS+aM7kDD5OCsHd0FpiXjUqj9CXJ5anwAYbvrF27lmXwt1IZLXmpgPMTVgNfRkIpcTpFQZTmeIz78VBJ08K2aVblxtQUziJbEiOvPPNsePLZv7Vqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=py/zawz7; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqM7AO5U"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2366e5e4dbaso7059245ad.1;
-        Thu, 19 Jun 2025 08:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750345768; x=1750950568; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bGx01NHzknv7sazk+LVrYeoQMIf3jCaqKqqskaI1EIE=;
-        b=hqM7AO5UgFOAXp0sO3s27zW26VeJbrdkfj6U3jvOEzBBUGEWNGK7HyhF5HIDU8mJoP
-         b6KECyaLS+3NWicfrUGWn1+cOhBV80GGIGrIjLX+KyiVGTIR+hIlJKqEHgrmdSkqQIh7
-         WAImcp+T1CpC5T8CBAJBvCLUpXCcDq5Kpmq0YAmQyVVssr4o556qYgyBY2OQFe1lODwA
-         O/x0yPjdwm9QrCCCMy/+CiQU55jmBvkbtwtjZGxVrcYYaf/v6/WYv4LMDtpB2Xk9JO7H
-         IcWOkNlkOtp081jmzPfZpEdoXH9+ktJ952HMmX0EbMfNCOeM/3miW71sPLfcjy4DsPpc
-         vGIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750345768; x=1750950568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bGx01NHzknv7sazk+LVrYeoQMIf3jCaqKqqskaI1EIE=;
-        b=hPL5h5ZNB/QzHZDgFySwSHF7xpEccPDRqKiVfhWSiDQ1L030xXeMK6zLOGMDy5Oo+b
-         HpBhxNszq5tkBh2RexRcNEJGrDgJ3Vz1/zJC2FwQ9uBwdjvsJ2dmfbFDAVzZvJUvwwqZ
-         r4R4AmBWIHiIzI4DO7n6cvXxEABvgMtdK2NQFs6WHDLaMBqcg04tTvZOgtuXNPTnFLxJ
-         FJufZqetlA37v55+/ulumg5bU5CpnmkTa5svdkI/0KspNLN5knqIziqY3II8Omo9kgeW
-         Map+Y/MhtoXbG/D4SMPwkjQ84v0VuG6D6vgdge/bF9KD56GZ1Cp2nEuhsGXdYIdzF/5h
-         LlQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2hkkLIBdLLsXHfxXAlleLHQ3K4ephVTVUu8lx45+vcUwbTOA3OrpdF/XZQolBzWx1g7cRxgVceSy/srk=@vger.kernel.org, AJvYcCXbo97jSImdOMbfXacZqZ0zB8uBKJTP1fyclN3Jg3M9ad0kto3j2QDcRTZnNfizXg75VbTchYZhaImLGQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxnHMP1RlePQo3bAzFdilO8w+DUKzk38cirQ43fuFsP1wlUbJj
-	x27CBg3rcQpguNLlGgMX9cvFx172fUFQfmDY4psq7TVyD8nXtS15b3K8YYiEjvVCu5HMXIVyewZ
-	BHwepXRiPzRTktkkXg/uHtArF4I5EmcU=
-X-Gm-Gg: ASbGncvWpO6aZnvysys0DKzfGv7618acCsPZsjXkzpKIb6srIRft8iBGXdMn5Gj/rEh
-	D0shp233F1UQdUm0VnERSB4BfUvHdQPy9610An10CJUN1WNaFL2YA1AhcT+2obZ6CTG31u4Ry8m
-	RTy0auS/bvc4PHqYLtAKkxxybgVn93g/ieAA4qkJLv
-X-Google-Smtp-Source: AGHT+IEVCk58oo1QIM3vXEHImn3+adyQd1dRV6D69TpTXPNDcgqxh9l2Ve2RmgHqQ6Hj4L3GqfP4nJTdiXS6cWqY0PQ=
-X-Received: by 2002:a17:90b:3802:b0:314:2cd2:595d with SMTP id
- 98e67ed59e1d1-3158abf405amr6597387a91.8.1750345768311; Thu, 19 Jun 2025
- 08:09:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="py/zawz7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=dn
+	I0saL/VnDxGEyhN0bnHVZ0uSc84Fgmk+s6JH/vwuo=; b=py/zawz7Cz6Ky77cGm
+	ZWZW3s0GIz19TnAIgYlLoWTKOhx2Eun0i/arArOM+8Xlmxi/eYDwLwpIOVNFguUD
+	zaukyoxwKXo5Vhfyv1sphdNtizuWyuT3ibeE5xigv0pDZvgeo95NbbKKfdMizHMR
+	t0sjJPZge+0p3mJhNErBkIzNQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wAnLZ_dJ1RoTEbnAQ--.28406S4;
+	Thu, 19 Jun 2025 23:08:29 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: harry.yoo@oracle.com,
+	surenb@google.com,
+	cachen@purestorage.com
+Cc: ahuang12@lenovo.com,
+	akpm@linux-foundation.org,
+	bhe@redhat.com,
+	hch@infradead.org,
+	kent.overstreet@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lkp@intel.com,
+	mjguzik@gmail.com,
+	oe-lkp@lists.linux.dev,
+	oliver.sang@intel.com,
+	urezki@gmail.com
+Subject: Re: Kernel crash due to alloc_tag_top_users() being called when !mem_profiling_support?
+Date: Thu, 19 Jun 2025 23:08:09 +0800
+Message-Id: <20250619150809.69482-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <aFQaY4Bxle8-GT6O@harry>
+References: <aFQaY4Bxle8-GT6O@harry>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618121917.35899-1-wangyufei@vivo.com>
-In-Reply-To: <20250618121917.35899-1-wangyufei@vivo.com>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Thu, 19 Jun 2025 17:09:16 +0200
-X-Gm-Features: AX0GCFv90HHp8of5Ln8B0f_vuFAEXUVFRzBiOqVDxLWGwAmilCDyOvQ3xN-wjgw
-Message-ID: <CAMhs-H8_FUpsAQCVRxb0yKUD66gntGKi3EJ2nAYr9TmGvTEsbg@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: ralink: Use min() to simplify code in rt_timer_config()
-To: wangyufei <wangyufei@vivo.com>
-Cc: John Crispin <john@phrozen.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAnLZ_dJ1RoTEbnAQ--.28406S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr4rJr48tF4kZw13ZF4Utwb_yoW8uF47pF
+	WrX34UGFZ8Jry7CFs2gr12vry0ga1UJw15KF4Y9ryF9rnIvF4UWrWrtrWaqFyxuF98K3Za
+	qrsFyFyjk34UZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U6WlkUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBtxqmhUJTFZJAAAsF
 
-Hi,
+> On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
+> > 
+> > Hello,
+> > 
+> > for this change, we reported
+> > "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
+> > in
+> > https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
+> > 
+> > at that time, we made some tests with x86_64 config which runs well.
+> > 
+> > now we noticed the commit is in mainline now.
+> 
+> (Re-sending due to not Ccing people and the list...)
+> 
+> Hi, I'm facing the same error on my testing environment.
+> 
+> I think this is related to memory allocation profiling & code tagging
+> subsystems rather than vmalloc, so let's add related folks to Cc.
+> 
+> After a quick skimming of the code, it seems the condition
+> to trigger this is that on 1) MEM_ALLOC_PROFILING is compiled but
+> 2) not enabled by default. and 3) allocation somehow failed, calling
+> alloc_tag_top_users().
+> 
+> I see "Memory allocation profiling is not supported!" in the dmesg,
+> which means it did not alloc & inititialize alloc_tag_cttype properly,
+> but alloc_tag_top_users() tries to acquire the semaphore.
+> 
+> I think the kernel should not call alloc_tag_top_users() at all (or it
+> should return an error) if mem_profiling_support == false?
+> 
+> Does the following work on your testing environment?
+> 
+> (Only did very light testing on my QEMU, but seems to fix the issue for me.)
+> 
+> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> index d48b80f3f007..57d4d5673855 100644
+> --- a/lib/alloc_tag.c
+> +++ b/lib/alloc_tag.c
+> @@ -134,7 +134,9 @@ size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sl
+>  	struct codetag_bytes n;
+>  	unsigned int i, nr = 0;
+>  
+> -	if (can_sleep)
+> +	if (!mem_profiling_support)
+> +		return 0;
+> +	else if (can_sleep)
+>  		codetag_lock_module_list(alloc_tag_cttype, true);
+>  	else if (!codetag_trylock_module_list(alloc_tag_cttype))
+>  		return 0;
 
-On Wed, Jun 18, 2025 at 2:21=E2=80=AFPM wangyufei <wangyufei@vivo.com> wrot=
-e:
->
-> Use min() to simplify rt_timer_config() and improve its readability.
->
-> Signed-off-by: wangyufei <wangyufei@vivo.com>
-> ---
->  arch/mips/ralink/timer.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+I think you are correct, this was introduced/exposed by
+commit 780138b1 ("alloc_tag: check mem_profiling_support in alloc_tag_init")
+(Before the commit, the BUG would only be triggered when alloc_tag_init failed)
 
-I personally like the code as it is because it is more readable at
-least to my eyes :)
 
-Thanks,
-    Sergio Paracuellos
+David
+
