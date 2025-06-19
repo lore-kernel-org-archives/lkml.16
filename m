@@ -1,83 +1,66 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E4B259C87
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0061525D1E5;
+	Thu, 19 Jun 2025 07:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750318679; cv=none; b=p0TyDILZVmmWkHKJPnXGhfhcdkFkmxbBmpGn0WGzsQ5Ta6+JoFaaugOq97OMRaBp2DtYIvaCE/J73uooGsHYxGO+Ra5WWpv+n4HpCPe6MHuBvJdeMernPamz4YMRbVuLZqzH58Je9DOff0J+QdPjq92VQTTTf2mwRURpH2hyhuU=
+	t=1750318681; cv=none; b=dBxi/9l4yoqxQYjE7aEWjyV2ddagtRTFS3HIyZRbZcusuFywzqrnUXMpigA8ovIMuzbXctdq6LiDvvtWL8xrrHVcukK5pNGhn7Ik7fMEeSRvF7O4pwbtTtS7llespHiTTkKud6btqcHsMBP/7+bBqDDlpdwT2V5PSqlv0I5B6uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750318679; c=relaxed/simple;
-	bh=zDX+PlWcsR4UfnNxihTWIcFrUqZJYmaTs9MtTUbeiFs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=J6Zd0noMue1PPbMOxts4h8JWiX7MVK/Zqt4ihZeNsRGtNDwxbuKC0nOQ3JnhfcKGvRT8KfXW6ox/k1JYvoxTdqVmnGlnoodsNerx1jNB7NlXhhtBBhWZwITnNAIBgg80lgVzBc2VSYL6/le1uaueGwFs59gqwkzDGDNui/wOkPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so11103845ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:37:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750318676; x=1750923476;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWfVoIoMsVK+rb4TyBPgmxq/IT7RuCFA4UPH3rbMRs4=;
-        b=ZHoYA4IwmqFjpQC6mKbH3wIxq1x6lw+UeSQlxfybLKQuY4+4Kj7t238WII+Pgw07Qm
-         taNxrQRMHC9gcK+tq6tHvIj3IH4fadMGHCMKqc6/Wu2FxP48eW5kPnwLtF1Iix9IyCHJ
-         R+qRKwUtMQ6r+X/Ig+Ks0eg2PCebffvNYPRZLWYZB+87UnWi9ErcM1oCXFdjikS4wGhd
-         DdJPiYAjohBqArnv6pLnpL7Ca6EVpqnBzQ3MaHn3d57BPHPN+duN+X4+eLZHI4RDrmjU
-         FGEuHKYdrdcsXzJqhD5n5yrnncMlMUO4CdanUYyeujUdikYe7cK2vuDM5Kgm3pvOjRp2
-         EaHw==
-X-Gm-Message-State: AOJu0Yz1ulcQWhEhO2rTgyEEUX/iSLz9yvRAiAr4Yqhp16RivxdJv/yN
-	PUoxLGew8nriQLq2viRz5YGHJbGNrL2JJhQ1KqZxsyiuZyELi6aCdvLTJl6zhV2tyo/3hnGzceW
-	rycpH4uDM0XvY7R3AcxMwInYqJWe+Dc5pqE/1zvU+czB/+3Obsv/GwEo2yFw=
-X-Google-Smtp-Source: AGHT+IHgHskAe1UKN86wKzRZXVRWc9+LbubRQQnxUmd4HJ0Y2iJYpSOYhEYpnc0k3t2POaE+mFavufyNrS7n/Zmj6yyPH/zQj/uX
+	s=arc-20240116; t=1750318681; c=relaxed/simple;
+	bh=Ih7bC5bhYbTmRpPMZBGaJQ8Pq8M2pDgtDYMsqv5VH/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j21jaYFL9qDWC9rD3apJCnGQLDmuZ2sMLwUiqcT1JjBcVonADGEUCRewq4ONp8/xoDpKyuXhUQrKL/70Ig4lM25BKUb9S7HcG8uXF6uFvjrWEmTuG+NFG0lu5255EZdbefO7bZb194AK4zaWQRK2pXLZjSpXEi1euRBOOHl2zSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6mtIv+5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6mtIv+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A1AC4CEEF;
+	Thu, 19 Jun 2025 07:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750318680;
+	bh=Ih7bC5bhYbTmRpPMZBGaJQ8Pq8M2pDgtDYMsqv5VH/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X6mtIv+5mMpVDsOa6GEQ+nq+5YkMSPNkvlbIzQ1Ew/NGgm6t0X9yaA2YP7urhUX3b
+	 +k+jOnYNJ6PfhRyK5bKPPweQKmTevzktmft7Kp9pdNrk+RVIqQSxzRyCrP9EsnTzTD
+	 KhfnK2BJ84YxSoBjHqYKxKFXD0P/m9qxcwqvfSnw0952rqiFfh7Ks77CBnHXHwNR2v
+	 lCGolP2eW2mrFoYghhWPxBxiKbsB5TS3XtzCRvol1AV0k6bbASL22g8IyRk7HoagJz
+	 BXb9dfMxUWU4MUlQeEx2CYf6hnJU8G/T8Ox+vH8X7vekCbEPr8je3TIhn7VKurV2tV
+	 Vlse/TdsvSGbQ==
+Date: Thu, 19 Jun 2025 09:37:57 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, 
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH v5 1/4] dt-bindings: clock: add TI CDCE6214 binding
+Message-ID: <20250619-nonchalant-benign-ape-1fb180@kuoka>
+References: <20250618-clk-cdce6214-v5-0-9938b8ed0b94@pengutronix.de>
+ <20250618-clk-cdce6214-v5-1-9938b8ed0b94@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c247:0:b0:3de:281b:d0e4 with SMTP id
- e9e14a558f8ab-3de281bd3f1mr100359605ab.2.1750318676177; Thu, 19 Jun 2025
- 00:37:56 -0700 (PDT)
-Date: Thu, 19 Jun 2025 00:37:56 -0700
-In-Reply-To: <000000000000dbcd0f061f911231@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6853be54.050a0220.216029.01c0.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [wireless?] WARNING in cfg80211_scan_done
-From: syzbot <syzbot+189dcafc06865d38178d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250618-clk-cdce6214-v5-1-9938b8ed0b94@pengutronix.de>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+On Wed, Jun 18, 2025 at 11:21:12AM GMT, Sascha Hauer wrote:
+> Add device tree binding for the CDCE6214, an Ultra-Low Power Clock
+> Generator With One PLL, Four Differential Outputs, Two Inputs, and
+> Internal EEPROM.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  .../devicetree/bindings/clock/ti,cdce6214.yaml     | 60 ++++++++++++++++++++++
+>  include/dt-bindings/clock/ti,cdce6214.h            | 25 +++++++++
+>  2 files changed, 85 insertions(+)
 
-***
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Subject: Re: [syzbot] [wireless?] WARNING in cfg80211_scan_done
-Author: lizhi.xu@windriver.com
+Best regards,
+Krzysztof
 
-#syz test
-
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index e8a4fe44ec2d..bfd40797e608 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1176,10 +1176,14 @@ void cfg80211_scan_done(struct cfg80211_scan_request *request,
- 			struct cfg80211_scan_info *info)
- {
- 	struct cfg80211_scan_info old_info = request->info;
-+	struct cfg80211_scan_request *rdev_req, *rdev_int_req;
-+
-+	rdev_req = wiphy_to_rdev(request->wiphy)->scan_req;
-+	rdev_int_req = wiphy_to_rdev(request->wiphy)->int_scan_req;
- 
- 	trace_cfg80211_scan_done(request, info);
--	WARN_ON(request != wiphy_to_rdev(request->wiphy)->scan_req &&
--		request != wiphy_to_rdev(request->wiphy)->int_scan_req);
-+	WARN_ON((rdev_req && request != rdev_req) &&
-+		(rdev_int_req && request != rdev_int_req));
- 
- 	request->info = *info;
- 
