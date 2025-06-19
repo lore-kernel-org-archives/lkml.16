@@ -1,173 +1,137 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293D13B58B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4946C21CA0C;
+	Thu, 19 Jun 2025 15:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346166; cv=none; b=hWtnge1ZJiTHMOIdqiqueJ+qSZEFf0AGHwH8M+c43/x29Ag2NRHhAaQX9wUz1YuCeCeYv0U7GF6p17ezl/ZyawiNigUctkD8I4aZU9Pim2qU2IVfNDIdJSjcj5nkUcLun6hMHcGrx6iF5k9fMpKNKwyTWgWlu9MVLbdP+ypm9tY=
+	t=1750346184; cv=none; b=Mym0yARWnnWIuKrESoAHeqY8TDCJ85Ll1hphPXUpGnQevqbxPpiUvQIxKYua/s2fdlwbpsNKz27ea3+Zuig4ae3jyJebCtCSy1P3yZeMY6lepmJvdwGuulEWfdmL2OschlqMW6Jk4f4yFDhn/4OOdaJVbXFeF8hhlqF17pb63Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346166; c=relaxed/simple;
-	bh=hHbrgbeVpKHlN1WSxEnkfCzYAmnqqiwL3EFdnvUWEZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aOjZYBRK+5vvVcb3JIIsPn9BdeioIfjzhN75QmoUVDWNaMcTngvsmsVG80XLju2aClmDKk7Ey6EgAa0CpSDUNeMi/altBoxbKe1qvvKDY/AuI5WqfV5i5+9btZdbSajBVb9sEIKJCLKmHVLmL0JNLSIEnzRKGu83n+0J41iZeNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IjdoxiO3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750346184; c=relaxed/simple;
+	bh=XqbG1XOiL6qsyT/mbeOSE4rpnh2l2DOkWH/Yqj+Cv9o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ctMWdbjKAH3F+Hi2l3lxK0C26aH1tiPBQEqsYduT3bP/TABEepgfXqK1Hcab9NRQXeWIQwTR0a2Dud+HMZpnc7YA8bQpBc+xYcAuvU4qGpJQX5OFgvnqC51ZnpIz4qPPgNXT6N/8QpRZ0joYxRMz84GmOZHaY9Jq6lO0n3V+Hhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kelXxDEN; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IjdoxiO3"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEdX8t016417
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EZePDO/8sG0YdU3YHcFxnAOlHbTMITMJ/juxHwf5oqs=; b=IjdoxiO3Sdncsz3Z
-	3a7hbS5ySM5j8pHpzwCcWiiJqnCwV2OlenCeS/Ixjvjk0IBAhESqWNVKRzlQTCyo
-	DuXLT/ZIoayx4YF1/LFjqc4v8q8YzZuKSBEJkB6UP6nAKyS6TMd5mwzCisDyVpJB
-	wv3nS1KtBfUZ/UwBW/JRzfirlX3CYCBwBskwXDy7B5EYmuX4k3YuZNXK8EzRcdQR
-	VbPWpmM1HuLahoOkBrLURlFq6+8VbXaDuCRjjj8iYT0Q+A75ETkRATho33Y+ciD8
-	dfrTaC48GkdRoufenasDcmU1xkUo9Hrn95L3aLVQJ2LVGbLqiwCNUkCNX0QtmW/f
-	pBidMg==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791f7gcgq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:16:03 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2fa1a84566so584987a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:16:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346162; x=1750950962;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EZePDO/8sG0YdU3YHcFxnAOlHbTMITMJ/juxHwf5oqs=;
-        b=K7Ite2b0lM0aUY+rasH5vmYc3h72S8JaU9w9mu/Btx+cfC7xK9x2rSk5ueJ4tGR7+j
-         njcwEuIINWiU5eoWhGSO101YWgSWi6QHrqyyHPnxrjwv9+TH0EEyZiXmSFUB6gBJm3yy
-         Gf1KGK60uvu04+JZ/kOh0dB+66AZULbznJAQMGeBF6Xf2M+DRW+t5kKJN8CXqkikRhW8
-         w19OMILfvNynGGj4ZXRU2Hwl9r8eZBKgah9q0x7G1MA3bmiE13bFm+0KXw64W1YrJ67I
-         T0DiUA4Z6zFt9+OzO1C72V0FWbDLE1hf0JqBi6pddAQd6vrjymZ0vqgMRhGMxqKtB6u9
-         lSfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdiBsY9Wm1lVtl4QEcvmQ4prG+fKU0sL/gzc/qh4el9QvwUr+LOYxQ0ZLSWus5WtSV6IlTDJLBSR7T3Uk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/N1oQ+Bbqgol/UuQTEKeuR+gFXZppo3d+DPRlaDK8opTo1X/J
-	WmOWebojLU4WVL1kvCVsxVdheGmbZNuC0X8MyNE9Gs0MskaHbVu9Pa0AR7JBOCWJrafohHfodlS
-	BPfCS6vkI6A2mIUeHuOxTk/+LGLsiNRZS07ZB0lyCal2GDZxG06K8gFfdFIWQRIMiuY1cTP33FO
-	U=
-X-Gm-Gg: ASbGncsiHPRhbsnoankBdER02Vc0ydXjQ+dfHYDGq4idv73JlszsWlWj55MHYV81ouO
-	wYtahzl+YxgnohxCbJ/Oi1y41MDn446O9tcyjFbi/426wElYVs0c5oTeBOWwHj/XtN9sk/SRQR+
-	okG5p1zqnZ1/fOjK2JMMm3NOMJvc0CCvZ0uXnO5GZKZxOnHOxsbmYB50m1SxSrwy0wdh9i2eh+y
-	JPNGeC5z+H6i8qe4+MeyFwep18qPnJXWTYNqcOVmIA0Y63BJsBEpTUkdDLqOUpA7lPw5KBxaiNo
-	PB37m5ZeqvuDXmTGGDT3n3F95MIpFmpoRg3OsUPCzAQpdaQrtQtEUCWgGLLnFz6YleTz8fo=
-X-Received: by 2002:a05:6a20:1a87:b0:220:96:11f6 with SMTP id adf61e73a8af0-2200096124amr9755112637.37.1750346161971;
-        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHq9RjBSQThQ08iVcBCPQDNPqsFAVA47zGCGsJ+0Gyl2tT/bxkUTY09tXQ+bAqgPKlf6W6XlA==
-X-Received: by 2002:a05:6a20:1a87:b0:220:96:11f6 with SMTP id adf61e73a8af0-2200096124amr9755075637.37.1750346161503;
-        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
-Received: from [192.168.225.142] ([157.49.222.239])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a626376sm104476b3a.85.2025.06.19.08.15.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 08:16:01 -0700 (PDT)
-Message-ID: <a7626e7b-6308-c4d0-8d0a-0d80914841a0@oss.qualcomm.com>
-Date: Thu, 19 Jun 2025 20:45:57 +0530
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kelXxDEN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750346180;
+	bh=XqbG1XOiL6qsyT/mbeOSE4rpnh2l2DOkWH/Yqj+Cv9o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=kelXxDEN/QdNHQKOrU58SnIzr+lEWmj8NR0M3TjYD6c4pwh5GIDWFI6zPOOZq6hYe
+	 w0olGxtPwgdjA2DGyxuRYVsrbZea59M+zKjKQ9X68Iwwp7UUE90klv8B8zWX4Uaq0f
+	 YWPngXinkEPdoYEw5W0qp+lpTYMIE1P4beue8AMetujUtz74DwMlVzV7A7WRKDBZyw
+	 NB+ZWX/7jK2YuH4+hIDKk8uDDFLgl/HrabTZeSbqPRwAu/7HbSI8CSQWcpmbsA5YVb
+	 Ln1wJXr5BuZlzx+PjI38u8eaO87Ub10ebGV5WC3CdovpObP+75yuTB8+J/GtACu/BP
+	 KGwyjN9daMBqg==
+Received: from [IPv6:2606:6d00:17:b699::5ac] (unknown [IPv6:2606:6d00:17:b699::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D137217E09F0;
+	Thu, 19 Jun 2025 17:16:16 +0200 (CEST)
+Message-ID: <a66e3d27ee427710ed3de8ce89fa3aca40dced03.camel@collabora.com>
+Subject: Re: [PATCH v4 4/6] media: rockchip: Introduce the rkvdec2 driver
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Detlev Casanova <detlev.casanova@collabora.com>, 
+	20250325213303.826925-5-detlev.casanova@collabora.com
+Cc: alchark@gmail.com, andrzej.p@collabora.com, cassel@kernel.org, 
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+ dmitry.perchanov@intel.com, 	dsimic@manjaro.org,
+ ezequiel@vanguardiasur.com.ar, gregkh@linuxfoundation.org, 
+	heiko@sntech.de, hverkuil@xs4all.nl, jacopo.mondi@ideasonboard.com, 
+	jeanmichel.hautbois@ideasonboard.com, jonas@kwiboo.se,
+ kernel@collabora.com, 	kieran.bingham@ideasonboard.com, krzk+dt@kernel.org,
+ 	laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Jianfeng
+ Liu	 <liujianfeng1994@gmail.com>, mchehab@kernel.org,
+ naush@raspberrypi.com, 	robh@kernel.org, sakari.ailus@linux.intel.com,
+ sebastian.reichel@collabora.com, 	tomi.valkeinen@ideasonboard.com,
+ umang.jain@ideasonboard.com
+Date: Thu, 19 Jun 2025 11:16:15 -0400
+In-Reply-To: <5900973.DvuYhMxLoT@trenzalore>
+References: <9f098eab-7b98-4827-8538-3cab0e8d7c63@gmail.com>
+	 <5900973.DvuYhMxLoT@trenzalore>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next v2] wifi: ath12k: handle regulatory hints during
- mac registration
-Content-Language: en-US
-To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20250617-handle_user_regd_update_hints_during_insmod-v2-1-10a6a48efe81@oss.qualcomm.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250617-handle_user_regd_update_hints_during_insmod-v2-1-10a6a48efe81@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyNiBTYWx0ZWRfX4kUm536fO7d8
- yzB/3fJEAM01BOO36CmE6P7INehtsGg1ExJq6OxShwtkDBgoQpumuKgwpXrlqJDFeeHVONaFgZO
- bHxC93Syj0SPGkCOqsNkTfrnQwxW3W5j9mserj4z2T0/fYc0f6SzzPTI0zf844FyGEh/vjXXLkk
- Kk5lTiWrO/N0D4bHcRsXNZjm8/xkuK1ElLw7HpMurZCnM4LOWsSaFy9louD2TQD0SE33Z0QM8jS
- +q3aTRl81dVjT3hAlrXmXqXj7VCcGG+GSAT1CKYEdxclFWvzs8EvJgHJJ3fdJA4uNg1qVYAdpB/
- xvQPSPK+HCjH8a9g2vtwFnRriQcm5gqiFZF04XMyIXNkZlXv4KpNtFSakPps8vEMAM3x5fzGnRF
- BYASdmZPEtiCNCsD+nZjAjXDrR5PyrxjtNvr3mYuH8s4PdWdMfZS+vZ3WiFdMA/pP/hvJ+n9
-X-Proofpoint-GUID: vqtJog3SDOujhGKg7ElEqrjDpDmlKhRs
-X-Proofpoint-ORIG-GUID: vqtJog3SDOujhGKg7ElEqrjDpDmlKhRs
-X-Authority-Analysis: v=2.4 cv=FrIF/3rq c=1 sm=1 tr=0 ts=685429b3 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=W/7+BeFhbfycsskxpRlngg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=oTJZ3fvRTWoEDzZ0YNoA:9
- a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- malwarescore=0 phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506190126
+Content-Transfer-Encoding: 8bit
 
+Le jeudi 19 juin 2025 à 10:39 -0400, Detlev Casanova a écrit :
+> Hi Jianfeng,
+> 
+> This patch set is now a  bit outdated. I will soon send a new version that you 
+> can find at [1].
+> That being said, you may be right. without an iommu, it would panic here 
+> (although the iommu should really be used).
 
+Let's make sure to test it in the next series. One should be able to comment out
+the mmu node in the DT, and then it should work with CMA transparently.
 
-On 6/17/2025 9:05 AM, Aditya Kumar Singh wrote:
-> If a regulatory notification is there in the system while the hardware is
-> being registered, it attempts to set the new regulatory country. However,
-> ath12k currently boots with a default country derived from the BDF. If this
-> default country differs from the one provided in the notification, a race
-> condition can occur while updating the regulatory information back to
-> userspace. This potentially leads to driver having the incorrect regulatory
-> applied.
-> 
-> For example, suppose the regulatory domain for France (FR) is already
-> applied, and then the driver is loaded with a BDF that has the United
-> States (US) country programmed. When the driver finishes loading, the
-> regulatory domain shown in phyX still reflects the US regulatory settings.
-> This is incorrect, as the driver had already received a notification for
-> FR during hardware registration, but failed to process it properly due to
-> the race condition.
-> 
-> The race condition exists during driver initialization and hardware
-> registration:
-> - On driver load, the firmware sends BDF-based country regulatory rules,
->    which are stored in default_regd via ath12k_reg_handle_chan_list().
-> 
-> - During hardware registration, a regulatory notification is triggered
->    through:
->      ath12k_mac_hw_register()
->        -> ieee80211_register_hw()
->          -> wiphy_register()
->            -> wiphy_regulatory_register()
->              -> reg_call_notifier()
-> 
->    This sends a country code to the firmware, which responds with updated
->    regulatory rules.
-> 
-> - After registration, ath12k_mac_hw_register() calls ath12k_regd_update(),
->    which copies default_regd and passes it to the upper layers.
-> 
-> The race occurs between the firmware's response and the execution of
-> ath12k_regd_update(). If the firmware's new rules are processed before the
-> update call, the correct values are used. Otherwise, outdated boot-time
-> country settings are exposed to userspace.
-> 
-> To resolve this issue, introduce a completion mechanism within the hardware
-> group (ah). Trigger this completion whenever a regulatory change is
-> requested from the firmware. Then, in ath12k_regd_update(), wait for the
-> firmware to complete its regulatory processing before proceeding with the
-> update.
-> 
-> This ensures that during driver load, the default country is processed
-> first. However, before ath12k_regd_update() is called, the new regulatory
-> notification will have already been received by the driver. As a result, it
-> will wait for the firmware's regulatory processing to complete, and only
-> the final, correct regulatory domain will be updated to userspace.
-> 
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-> 
-> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+thanks,
+Nicolas
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+> 
+> [1]: https://gitlab.collabora.com/detlev/linux/-/tree/add-vdpu381-and-383-to-rkvdec
+> 
+> Regards,
+> Detlev
+> 
+> On Thursday, 19 June 2025 05:19:32 EDT Jianfeng Liu wrote:
+> > Hi Detlev,
+> > 
+> > On Tue, 25 Mar 2025 17:22:20 -0400, Detlev Casanova wrote:
+> >  >+        case RKVDEC2_ALLOC_SRAM:
+> >  >+            virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+> >  >+
+> >  >+            iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size)
+> > 
+> > I'm testing your patch with ffmpeg patched with v4l2-request patches[1],
+> > and I usually
+> > 
+> > get kernel panic here. After checking rkvdec->iommu_domain before
+> > running iommu_unmap,
+> > 
+> > I can pass fluster ffmpeg v4l2-request test. Here is my patch based on
+> > your commit:
+> > 
+> > 
+> > diff --git a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> > b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> > index 75768561399..122bcdcebd4 100644
+> > --- a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> > +++ b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> > @@ -681,8 +681,8 @@ static void rkvdec2_free_rcb(struct rkvdec2_ctx *ctx)
+> >                  switch (ctx->rcb_bufs[i].type) {
+> >                  case RKVDEC2_ALLOC_SRAM:
+> >                          virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+> > -
+> > -                       iommu_unmap(rkvdec->iommu_domain, virt_addr,
+> > rcb_size);
+> > +                       if (rkvdec->iommu_domain)
+> > + iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
+> >                          gen_pool_free(ctx->dev->sram_pool, virt_addr,
+> > rcb_size);
+> >                          break;
+> >                  case RKVDEC2_ALLOC_DMA:
+> > 
+> > 
+> > [1] https://github.com/amazingfate/FFmpeg/commits/n6.1.1-new-patches/
+> > 
+> > 
+> > Best regards,
+> > 
+> > Jianfeng
+> 
+> 
+> 
