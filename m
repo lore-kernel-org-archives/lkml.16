@@ -1,128 +1,151 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C2B23A564;
-	Thu, 19 Jun 2025 05:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE754A06;
+	Thu, 19 Jun 2025 05:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750310322; cv=none; b=sYvdW/2bYoLSBq62OWGNHCMs0FF3K2BZnK/Gyh+0gcDWmcHZkoA0SYU16L8UjjgmBzoKrW6mOSXzBH7ruNXkGAMsHVOQuWhCYl9GhdDD2LFFGs7MAkuQifFpdzwZSgOnEq8X60008EYEvDAfdkUeM1tcAJGt+0qov2YXjJXxFHo=
+	t=1750310477; cv=none; b=ucHDNJik3QYmCSiiFpyS3N4hSacqaCovM7ZiYCz1xxTjZUgBFc50hVeBx/hDR/Vb8LAgxAAo3nYFgGlwl5tHrJHgc+tEApYh0PpQkvjlvpI/V7E55BXck3wFqBCQVu8YCkAmPzMFxgUYgj51/Y2ejwQ9LnaY5+NeOgXBa/acZ+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750310322; c=relaxed/simple;
-	bh=/ASTVkIJ/zIGMOA+ht2vHucxDWTZ9iKbrXVkoSRNYqU=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YbBsqB5LVhGNRF9JSUmWchk6P5ojpcsSTgPMakg3kH8MBN/elWC4L2XA85f0sMa+f4+EYKN2mkpqVT4S3jkBLbcr60y9+WiMeh2SoAvrKmO2J8kwdcnfRRHi8Ptf7KiSCy+81ZOYDx4xD6R0kD5JUGvlQGbPnOPQBM0JFKnjZB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3mfhmfG; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750310477; c=relaxed/simple;
+	bh=3QWu8Tb4l4slDIS3oDPzLpLjZcpRH3sEB9kb0fbrBfM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KgN07BMpaOYb5tAu5D9M6cWwXJUL5VXC5uHETwIjMNmM834SS0JUW2Hf+SsBlvph40MXwtQZJ0aFx23F12mqLb++woNMyIhqGb4lopqHDV21jEiDscIE1zMIrUavqFlEDD+emYv6Cs0bjFpoclE7Xzib3S73OjSYZBsP6cWDjpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HKuq5902; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3mfhmfG"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23694cec0feso3945225ad.2;
-        Wed, 18 Jun 2025 22:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750310320; x=1750915120; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/ASTVkIJ/zIGMOA+ht2vHucxDWTZ9iKbrXVkoSRNYqU=;
-        b=Q3mfhmfGtcHJNG8PYlfbn80QtE7Nyx1fKhkT9Fdzth/XXo2tGy5KEtjQsAhLbh90At
-         9RX3KRh3TutljznjEbZLxtfskD1dVLI8qMZmJf4pm5PlbstEJiutGFrFleCUnvOaPhUb
-         i50qipfvUNPTli8AUaNmJwulZdBDAx9zkmkU5p9LUU7Q8pXRxKtQULIu4IJguPGofy8a
-         8fBJ72ZoxApkTd/jfKGqapyA6y+4UTsdbe0uZtI160R1/fr2cz3DZJLpGmXZxhgAKSDz
-         1nhDbr/AbzU2+ENEmxdP4ZE37Mp6mLuZOy3eqXtTITQI9WxVPyMmEwYU06NCocRMGACq
-         ywIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750310320; x=1750915120;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/ASTVkIJ/zIGMOA+ht2vHucxDWTZ9iKbrXVkoSRNYqU=;
-        b=wc1NgfClQ2wGdNqZVZxixnOHh5bPAju14TeimMU59CThksLo2pQ/ZGiUg4Mg/n7QUX
-         0rcIyFzZQh2+iR1v56lzs0mTGasi4kKBkw8IVFQ6ww08B0E6Z0bnGqPZZQUOQLC6LmCL
-         NBQcHpyvyjB3g6AvVI1UlMgV4VLpDiddEO6uHKSCfSkpH/tPqX+DFJct+VC+ov8qQjeA
-         fD0M3gj32RTvNxfuY3BKCbfmHFGt2Hl8N2exh8sMqjYXiF0SAMo7SeTJFLW9sC24nsEv
-         yGt2MQ37szVgdhv6Hbq0Hx2YF0ziyt2U6zuKXnbOME4iSUUBRQ3ZvRKbCESZPPMDuH6V
-         EZUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUw8bk2exhEDWUTJ0VZenYuWfMlKcN1MXiLEKa1SXayublEqPObzc/YmCZoOmGQvABEKSJ+a/701Gc=@vger.kernel.org, AJvYcCVaHBj0noBRPC/M4RHmV1+0J6IbG376FtQzXyMrJ3cUeqAvP/R6WPR9CA+wIkAB3o4GVEWJEuInn15Y5TG0hAg=@vger.kernel.org, AJvYcCW53POE1h296tI4l1dkKTEWXrBoUyuqwJ1A6Mra3z9XfHwSfcDkYHQUpEb60EfIbarpTYbXN8X5addkijPR@vger.kernel.org, AJvYcCWY1b1CB8ysrzVq0N6XQOqmrSRDghqt7ZO1vCixx3sX+63MADSC8bqYCXvi+G0A5yVmPJZO/XgDKQTAtjfG@vger.kernel.org, AJvYcCWoJC4jB6lRBC5+4KynCod9aqVbyN8NO1OVTgN1+a/pH/nU4xi5ZMmQQIOtuCRh6mmSim6ot9O4VlnI@vger.kernel.org, AJvYcCWvEL98zeFS/oKUdmqNriPkv4oisRO8Wx/he0BusbMCfXXbYcNhlRf6UcJ3k303B5K93saqqSKUIkepgs5dYNW7@vger.kernel.org, AJvYcCXeSvhWGA8RZp+73it3U5BJjJW1YpY7wjV5kLV4GPm0Y0IlG7pE1qSFIcBPpKyQICtWWoJv8hsqG2vn@vger.kernel.org, AJvYcCXhQ2Kw+/vQRArRKopXCSdE5E09yxZ5WJ/Hrq7IXpjBL+Y0vM9T1Kb/ZjmIHjlkqVz0XKuNnDsb@vger.kernel.org, AJvYcCXzBUjiatjDntdHoLQaGLEcLAwBvU4NGKoV1P+Z6rParO+zOpWxdTm2uCImL3FPuZCtiHuV/mHrvbw9aYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIGsyaxEhZHU4+YNUuSB4g/vKoYbKrn1C8wzvP5KLAtUIby1BA
-	Qu1jDcfTvtc9QGpna6piPvnu+ji/p25dWbcz4IdIjVp0oGRJLZNq5k8t
-X-Gm-Gg: ASbGncuCyUdKZmqGkgiSRXoxt32Oaf+ZAF314CWHiTlxBb4WtVvHrRiyttOGUPK+Cio
-	n2IWZceqRYKKuOVkqQMxSZgAOeQzcJ5kv7lCsSiZ6qN7nLS9F7fr41WgonJu48sQzqzLsJUxAKf
-	gDAGlV3K6LNmEyB0joNh3hocnNMlBDzHu5Pug4qNZ80r+OUm9CrWe85mG9Q00N8bdO9Yyq7IlCe
-	z31cfhrgk4Ew9no/N22iNLOn3mQg8C791SdCE2gZqmgAgg19xhVd7BmkER5fauAFbd3pGn0eZVW
-	q8tD8FCzyJtqqVffavx2SE8gmQywG6RjeqyyOWw7gBRcydv5vhEPlxVNqYVlXU/89ebJFIjIQ2b
-	wC/enn0d586a3dRUqsaTytSdwTi2IfIieinR66XTv
-X-Google-Smtp-Source: AGHT+IEvcoWS+/mpCBS9HRGMoVVCn5GZ2BtlFZ10WJnLh4P0CWaOXTjNBc1tb/94RF8WfyU78YJazg==
-X-Received: by 2002:a17:903:4b4c:b0:235:6e1:3edf with SMTP id d9443c01a7336-2366b122194mr301022585ad.34.1750310319710;
-        Wed, 18 Jun 2025 22:18:39 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca344sm110992075ad.203.2025.06.18.22.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 22:18:39 -0700 (PDT)
-Date: Thu, 19 Jun 2025 14:18:17 +0900 (JST)
-Message-Id: <20250619.141817.2042938522863410452.fujita.tomonori@gmail.com>
-To: tamird@gmail.com
-Cc: masahiroy@kernel.org, nathan@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, dakr@kernel.org, gregkh@linuxfoundation.org,
- rafael@kernel.org, brendan.higgins@linux.dev, davidgow@google.com,
- rmoar@google.com, bhelgaas@google.com, mcgrof@kernel.org,
- russ.weight@linux.dev, robh@kernel.org, saravanak@google.com,
- abdiel.janulgue@gmail.com, daniel.almeida@collabora.com,
- robin.murphy@arm.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
- simona@ffwll.ch, fujita.tomonori@gmail.com, nicolas.schier@linux.dev,
- frederic@kernel.org, lyude@redhat.com, tglx@linutronix.de,
- anna-maria@linutronix.de, lossin@kernel.org, kwilczynski@kernel.org,
- jstultz@google.com, sboyd@kernel.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, leitao@debian.org, viresh.kumar@linaro.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
- linux-block@vger.kernel.org, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org,
- linux-mm@kvack.org, linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
-Subject: Re: [PATCH v12 5/6] rust: enable `clippy::cast_lossless` lint
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <20250615-ptr-as-ptr-v12-5-f43b024581e8@gmail.com>
-References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
-	<20250615-ptr-as-ptr-v12-5-f43b024581e8@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HKuq5902"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6814043994;
+	Thu, 19 Jun 2025 05:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750310473;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JLmMakORo/bjvYHh1BYejrDyt6i6mfqrJjTJJ0Tsbvw=;
+	b=HKuq5902ViCbbhOdChQM+LrEMpXkWrKsQymSO8dQbIzxyRYE3nw/7iYX8nU2WAzol1eLPZ
+	Jg17EctvIU+nKZ8UkMdNSMPNnF6OYSNWJIMLa0eBr/TwttEZQSFIw+QOvLkHdjjkZpRTSu
+	wHivS2Q82cxx2wPwsN4/EMqhUOMWe+uVShWQusutjUlnbBBJULy6D8SFUHjzujVq/4bP9Z
+	uUCEDZZBW0E/zNT7K6YjVEKlvTdmnDtTBUgQ2l/QaAW1gXNEmxwhZm7V1aCZ0r7ONQILYN
+	h/h9ycMQUWBRBcdbDzkbrYev9i6l7z9BMbE9SBhi1leNG9tbPR0TQHKsRwji5A==
+From: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Date: Thu, 19 Jun 2025 07:21:05 +0200
+Subject: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS' panel
+ description
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAECeU2gC/22MwQ7CIBAFf6XZsxggUKwn/8M0ppTVbqLQACGah
+ n8Xe/Y48yZvg4SRMMG52yBioUTBN5CHDuZl8g9k5BqD5FLzXpyYy/Z2pzcmNpheadW8kAitXyP
+ uQ8uvY+OFUg7xs18X8bP/XopgnKFWZjCTk2iniw0hP8kf5/CCsdb6BfW29wSkAAAA
+X-Change-ID: 20250618-dtb_fixes-97645402512e
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Olivier Benjamin <olivier.benjamin@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdegieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetkefhvdelleeuhefgvdekveffieelhfeujefgtdejueelgfeltdefffehtddvfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgefgeemvggtfeekmedvgegvtdemfhehtggvmehffeegvdemieehkeejmehfieehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgefgeemvggtfeekmedvgegvtdemfhehtggvmehffeegvdemieehkeejmehfieehiedphhgvlhhopegludelvddrudeikedruddrvddtngdpmhgrihhlfhhrohhmpeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigq
+ dhrohgtkhgthhhipheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohephhgvihhkohesshhnthgvtghhrdguvgdprhgtphhtthhopeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomh
+X-GND-Sasl: olivier.benjamin@bootlin.com
 
-T24gU3VuLCAxNSBKdW4gMjAyNSAxNjo1NTowOSAtMDQwMA0KVGFtaXIgRHViZXJzdGVpbiA8dGFt
-aXJkQGdtYWlsLmNvbT4gd3JvdGU6DQoNCj4gQmVmb3JlIFJ1c3QgMS4yOS4wLCBDbGlwcHkgaW50
-cm9kdWNlZCB0aGUgYGNhc3RfbG9zc2xlc3NgIGxpbnQgWzFdOg0KPiANCj4+IFJ1c3SicyBgYXNg
-IGtleXdvcmQgd2lsbCBwZXJmb3JtIG1hbnkga2luZHMgb2YgY29udmVyc2lvbnMsIGluY2x1ZGlu
-Zw0KPj4gc2lsZW50bHkgbG9zc3kgY29udmVyc2lvbnMuIENvbnZlcnNpb24gZnVuY3Rpb25zIHN1
-Y2ggYXMgYGkzMjo6ZnJvbWANCj4+IHdpbGwgb25seSBwZXJmb3JtIGxvc3NsZXNzIGNvbnZlcnNp
-b25zLiBVc2luZyB0aGUgY29udmVyc2lvbiBmdW5jdGlvbnMNCj4+IHByZXZlbnRzIGNvbnZlcnNp
-b25zIGZyb20gYmVjb21pbmcgc2lsZW50bHkgbG9zc3kgaWYgdGhlIGlucHV0IHR5cGVzDQo+PiBl
-dmVyIGNoYW5nZSwgYW5kIG1ha2VzIGl0IGNsZWFyIGZvciBwZW9wbGUgcmVhZGluZyB0aGUgY29k
-ZSB0aGF0IHRoZQ0KPj4gY29udmVyc2lvbiBpcyBsb3NzbGVzcy4NCj4gDQo+IFdoaWxlIHRoaXMg
-ZG9lc24ndCBlbGltaW5hdGUgdW5jaGVja2VkIGBhc2AgY29udmVyc2lvbnMsIGl0IG1ha2VzIHN1
-Y2gNCj4gY29udmVyc2lvbnMgZWFzaWVyIHRvIHNjcnV0aW5pemUuICBJdCBhbHNvIGhhcyB0aGUg
-c2xpZ2h0IGJlbmVmaXQgb2YNCj4gcmVtb3ZpbmcgYSBkZWdyZWUgb2YgZnJlZWRvbSBvbiB3aGlj
-aCB0byBiaWtlc2hlZC4gVGh1cyBhcHBseSB0aGUNCj4gY2hhbmdlcyBhbmQgZW5hYmxlIHRoZSBs
-aW50IC0tIG5vIGZ1bmN0aW9uYWwgY2hhbmdlIGludGVuZGVkLg0KPiANCj4gTGluazogaHR0cHM6
-Ly9ydXN0LWxhbmcuZ2l0aHViLmlvL3J1c3QtY2xpcHB5L21hc3Rlci9pbmRleC5odG1sI2Nhc3Rf
-bG9zc2xlc3MgWzFdDQo+IFN1Z2dlc3RlZC1ieTogQmVubm8gTG9zc2luIDxiZW5uby5sb3NzaW5A
-cHJvdG9uLm1lPg0KPiBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvRDhPUlRYU1VU
-S0dMLjFLT0pBR0JNOEY4VE5AcHJvdG9uLm1lLw0KPiBSZXZpZXdlZC1ieTogQmVubm8gTG9zc2lu
-IDxiZW5uby5sb3NzaW5AcHJvdG9uLm1lPg0KPiBSZXZpZXdlZC1ieTogQm9xdW4gRmVuZyA8Ym9x
-dW4uZmVuZ0BnbWFpbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFRhbWlyIER1YmVyc3RlaW4gPHRh
-bWlyZEBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMSArDQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX3BhbmljX3FyLnJzICAgICAgfCA0
-ICsrLS0NCj4gIGRyaXZlcnMvZ3B1L25vdmEtY29yZS9yZWdzLnJzICAgICAgICB8IDIgKy0NCj4g
-IGRyaXZlcnMvZ3B1L25vdmEtY29yZS9yZWdzL21hY3Jvcy5ycyB8IDIgKy0NCj4gIHJ1c3QvYmlu
-ZGluZ3MvbGliLnJzICAgICAgICAgICAgICAgICB8IDEgKw0KPiAgcnVzdC9rZXJuZWwvbmV0L3Bo
-eS5ycyAgICAgICAgICAgICAgIHwgNCArKy0tDQo+ICBydXN0L3VhcGkvbGliLnJzICAgICAgICAg
-ICAgICAgICAgICAgfCAxICsNCj4gIDcgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCA2
-IGRlbGV0aW9ucygtKQ0KDQpGb3IgUEhZIHBhcnQ6DQoNCkFja2VkLWJ5OiBGVUpJVEEgVG9tb25v
-cmkgPGZ1aml0YS50b21vbm9yaUBnbWFpbC5jb20+DQo=
+Fix a few issues in the panel section of the PinePhone Pro DTS:
+  - add the second part of the Himax HX8394 LCD panel controller
+    compatible
+  - as proposed by Diederik de Haas, reuse the mipi_out and ports
+    definitions from rk3399-base.dtsi instead of redefining them
+  - add a pinctrl for the LCD_RST signal for LCD1, derived from
+    LCD1_RST, which is on GPIO4_D1, as documented on pages 11
+    and 16 of the PinePhone Pro schematic
+
+Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+---
+Small fixes to the PinePhone Pro DTS to fit bindings and
+suppress warnings at build.
+---
+Changes in v2:
+- Added the pinctrl definition for GPIO4_D1/LCD1_RST
+- Incorporated Diederik de Haas' suggestion for defining mipi_out
+- Squashed multiple patches into one
+- Link to v1: https://lore.kernel.org/r/20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com
+---
+ .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 33 +++++++++++-----------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+index 04ba4c4565d0a205e2e46d7535c6a3190993621d..98aba146749998dd5a798aabed0fe844c474d1cf 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+@@ -463,29 +463,18 @@ &io_domains {
+ };
+ 
+ &mipi_dsi {
+-	status = "okay";
+ 	clock-master;
+-
+-	ports {
+-		mipi_out: port@1 {
+-			#address-cells = <0>;
+-			#size-cells = <0>;
+-			reg = <1>;
+-
+-			mipi_out_panel: endpoint {
+-				remote-endpoint = <&mipi_in_panel>;
+-			};
+-		};
+-	};
++	status = "okay";
+ 
+ 	panel@0 {
+-		compatible = "hannstar,hsd060bhw4";
++		compatible = "hannstar,hsd060bhw4", "himax,hx8394";
+ 		reg = <0>;
+ 		backlight = <&backlight>;
+-		reset-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
+-		vcc-supply = <&vcc2v8_lcd>;
+ 		iovcc-supply = <&vcc1v8_lcd>;
+ 		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_reset_pin>;
++		reset-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&vcc2v8_lcd>;
+ 
+ 		port {
+ 			mipi_in_panel: endpoint {
+@@ -495,6 +484,12 @@ mipi_in_panel: endpoint {
+ 	};
+ };
+ 
++&mipi_out {
++	mipi_out_panel: endpoint {
++		remote-endpoint = <&mipi_in_panel>;
++	};
++};
++
+ &pmu_io_domains {
+ 	pmu1830-supply = <&vcc_1v8>;
+ 	status = "okay";
+@@ -507,6 +502,12 @@ pwrbtn_pin: pwrbtn-pin {
+ 		};
+ 	};
+ 
++	lcd {
++		lcd_reset_pin: reset-pin {
++			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	leds {
+ 		red_led_pin: red-led-pin {
+ 			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+Olivier Benjamin <olivier.benjamin@bootlin.com>
+
