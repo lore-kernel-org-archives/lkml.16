@@ -1,50 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E453221B9E0;
-	Thu, 19 Jun 2025 09:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65522B588;
+	Thu, 19 Jun 2025 09:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750324750; cv=none; b=rx9GsTzrpngaOMabmU2xITtfSIgmy3JH5wqTvHOqG6bKMJQXZgv++mj58EHYLDTajUC9TpkX3n4tQ9XLokaUWGhPZq1POv4+NHqyTS/kOQbc14M71Sea4GQ8i/BeJjOCNErGnFTBIlOTrj1S7CMeeiXK6bbd4v5Ye3p54AEFN8Y=
+	t=1750324797; cv=none; b=o0f5Mbi4LnDbxi3HUVp8weKHsGKSOuXlFou6aM4BpzHhOTv5oRooTUWT1K1mWEdRtugfwsCyhkZRIMoGSDe3p81SLBQ9dG/4viWqd9vnZPFP85bppbvHUfDo4tM1Y1V1l/ZuXkyPBZ+qRcasdc7yyhnZ33GJzbm0NpvnaSn/N2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750324750; c=relaxed/simple;
-	bh=VJC27VDTjsSTVk7DExjp2HkvIBK+06bQoOreug3AoUU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pB6hU4QQAbHM5bNRyWUxflDX6JS9upE9tMOM9KxIUqtkSiTs9X1cio0TYlJUZUC6TGEYggWZG1FXrL9d2okwTYHbLupBPg8nH9zBukkRWZrgo1sVWvCPsv5LngJfvbKnXSE0pIp+eYfVVN+W07zWRu7QoQo2UPQmYAnXt0DGtIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RuQd/kJW; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750324797; c=relaxed/simple;
+	bh=wUOEYdhZ29SHwGl/xTkaVOq2FWv4Ct0fQwiuoKhEtis=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=BvO4ZXZMPbmfvR3b/GMs+QGWkA71p8CCvynP9ceWuAKjDltNwmwjr59/5DtCIMAgixhCWkK2BXlsfobSqot9ns6iJC/NZXsTs6F+J8w0ZHwCYh7frkJ1vGut+vPd26J1qDOJi4CT1Lfi1UczhlmrFlgLRjoTWhmB6T/hbLpCpwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVN8fddP; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RuQd/kJW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750324748; x=1781860748;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=VJC27VDTjsSTVk7DExjp2HkvIBK+06bQoOreug3AoUU=;
-  b=RuQd/kJW0jy0Y0NIOEchQRmPk9pdDvzA5+cu96LaiUrnf2zAlD6ueQKw
-   xv5mdPoQfBVNpmFrfQkUyaQ0umQtPR3et704PWiZ3tUxZ2es44J0NttCc
-   /2Nooyi3yMV6KgGbpPjtM3tsRJNSyY31IEnUph4fhJAM8lRlrEPUuNGnS
-   F82pmsAL1d6tHNFqiNOjfOinrcpiP5DSHa4xbXd4z2xfyRIRfhkSPu8WX
-   MjBp6WKKyw+1TYRBXES/2iF+ANvNy4LMV/fG7M+Z0YFZ0tjBlOLZ+4f0P
-   o4ThY+WrYY8GEPNMOV2w3RwGSGEsm4Ire6K5WJzF2TWtPqHJwz1ZHzjWd
-   Q==;
-X-CSE-ConnectionGUID: 6fDERFwrRZqQHIk//1VLUw==
-X-CSE-MsgGUID: xIbmmDIzSbiyM2ct+oqyQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52437263"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="52437263"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:19:07 -0700
-X-CSE-ConnectionGUID: C2V7ck8pTYagQfSu+uBumw==
-X-CSE-MsgGUID: wzDvlGXjSMufvW0I2In1kA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="174138001"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:18:47 -0700
-Message-ID: <9b55acfa-688e-49da-9599-f35aee351e3d@intel.com>
-Date: Thu, 19 Jun 2025 17:18:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVN8fddP"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2fb9eb54d6so107612a12.0;
+        Thu, 19 Jun 2025 02:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750324795; x=1750929595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:from:reply-to:content-language
+         :to:user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v/4YlE3HAl9brMdxqBP04WkjP+nK0l6GdDNJGUg3hDA=;
+        b=RVN8fddPxQ2MhYZ3Mrj6zdMN7Fv6vgUpCuyMVKXa5MJNVwyn29n8TBxAUqjmRHjoUb
+         b+JCvLCW7DoqrsG5TjmJ68fekhb7CFvgfVQnZikJPkvhzj5J3xLYePF3NVStPNYG5lx3
+         FOlTikhoN6dKAc92iTz7w2Asg1eyANgmFvJ1sT+/Q6kDdu1J5NdK9PqG+EcVvo19jbFe
+         vW/YVSGZO3zvDYQ9a+Wf4oaQIJwURUJDHSShru04xeUW1vu2EFS72P7nCmzPCWmGyaCW
+         ZURALd1ZVSBGR63jadxW3U4PaAo9SgjgsoN7muNohszeaaB1tWTJ/a8K3Jj5CSHW/Zd8
+         l+6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750324795; x=1750929595;
+        h=content-transfer-encoding:cc:subject:from:reply-to:content-language
+         :to:user-agent:mime-version:date:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=v/4YlE3HAl9brMdxqBP04WkjP+nK0l6GdDNJGUg3hDA=;
+        b=tjcE3Wl6UiI110QUsQb8Nrs7JQ4bTtqKIIbTCXcWKvgMxJSsL0nxu8/JWlisdOJpiM
+         vEzVVOc/2CgC1UaDDrZPDwMJOOmLLTvW6IcG2R45hH4F4XEyuQAXVFUGtoAz3IbMAN0s
+         mmYeGtXi334jQxy+RIu0ODCk5UCS0TQvftMRLCFsYnQJy0HHqJI4NlVq8hGjcqoN0lKU
+         5JuhyflgWhcN9053kgImH1TDHj0Cuha1e5eCY2BmJYrFjqE/bpoC1zRZvSeC01eCQ4tn
+         vI/GqhybYBZnJncaF+9jy7pn3ezfqqlPBWsH2VOSUAPNrXKKIO19zUHTDeTybK7Q4BLT
+         9Pzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuZGvLT7yoVjW718r8XveJYIdBNV3bIgyMLXYtrf89kNTHKR3vv1LvtOh9a8llNxmrqaQG143R74sxqG0=@vger.kernel.org, AJvYcCWBbLkQqiKnh8p7tTew3Vc2dY+Wn8kXym7PnrVrxVHBsFxQoyqO1vuU1gm4lYv+ReWfuK4OL9ZYtUiH@vger.kernel.org, AJvYcCXsEEMRwnkHWm0sVIBbfSia2lD4bXqEeGS5D4pr8sfj6sJ4U40h+TVrttrr3FgBKsGbvJkCZkgQMtrSew0t@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR0Q+xHyrzuqF9GU6WGdk4HkpbDF4ErTxgDo9OXw2CWEUBda+R
+	PtqpttriWm2HoK2xGQxg8s/G/F52so9wy1xzRAOBTp8T4Ly5Tk1Eelq+
+X-Gm-Gg: ASbGncvw41r1DK1kGKO2+r7ANEjlvo5Wpic/pk3yeoTO/yG9MoNP1PvbWoZpZOAZiyX
+	EylNDeVVPUtAHpZvDhoxix9O8gyHIEktFDvp5Njg5m5pIv9udeOd6QxpTs/+peB/3Jwzr/veAQ4
+	0fu2So18xVjGR9Pu6zubqUxVkSVF6Zj6DznRj3uivFrzvZokT9x9OT5kFYeb4Q1iP773tVWBQcG
+	+7a8qBry5EoWdbtiLM7i6iPtGKr5yGwLpSDnaGSpVQ1DHiV7EcKg3yT8IaVaMEXI/cShhfY78pe
+	GSr7hN3k0Wd+OPVqLemHu4F6hFcypH9Ik5h1/Olac1pV46a/uPohUQ==
+X-Google-Smtp-Source: AGHT+IEOwVnmlW8HJGJmZZDAcMv1C94tin+GyGqBRrpDOir6cIrcvjw4rGkN6VVwGeWeSc86EeXQ9w==
+X-Received: by 2002:a17:902:c40f:b0:22e:6d69:1775 with SMTP id d9443c01a7336-2368edfcb64mr66047925ad.11.1750324794607;
+        Thu, 19 Jun 2025 02:19:54 -0700 (PDT)
+Received: from [0.0.0.0] ([2a09:bac1:3b40:120::16:1d2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3157a615170sm2229196a91.0.2025.06.19.02.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 02:19:53 -0700 (PDT)
+Message-ID: <9f098eab-7b98-4827-8538-3cab0e8d7c63@gmail.com>
+Date: Thu, 19 Jun 2025 17:19:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,100 +65,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-To: Yan Zhao <yan.y.zhao@intel.com>, Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org,
- catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org,
- dave.hansen@intel.com, david@redhat.com, dmatlack@google.com,
- dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com,
- graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, yilun.xu@intel.com, yuzenghui@huawei.com,
- zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
- <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
+To: detlev.casanova@collabora.com
 Content-Language: en-US
-In-Reply-To: <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
+Reply-To: 20250325213303.826925-5-detlev.casanova@collabora.com
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Subject: Re: [PATCH v4 4/6] media: rockchip: Introduce the rkvdec2 driver
+Cc: alchark@gmail.com, andrzej.p@collabora.com, cassel@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, dmitry.perchanov@intel.com,
+ dsimic@manjaro.org, ezequiel@vanguardiasur.com.ar,
+ gregkh@linuxfoundation.org, heiko@sntech.de, hverkuil@xs4all.nl,
+ jacopo.mondi@ideasonboard.com, jeanmichel.hautbois@ideasonboard.com,
+ jonas@kwiboo.se, kernel@collabora.com, kieran.bingham@ideasonboard.com,
+ krzk+dt@kernel.org, laurent.pinchart@ideasonboard.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-staging@lists.linux.dev, Jianfeng Liu <liujianfeng1994@gmail.com>,
+ mchehab@kernel.org, naush@raspberrypi.com, nicolas.dufresne@collabora.com,
+ robh@kernel.org, sakari.ailus@linux.intel.com,
+ sebastian.reichel@collabora.com, tomi.valkeinen@ideasonboard.com,
+ umang.jain@ideasonboard.com
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/19/2025 4:59 PM, Xiaoyao Li wrote:
-> On 6/19/2025 4:13 PM, Yan Zhao wrote:
->> On Wed, May 14, 2025 at 04:41:39PM -0700, Ackerley Tng wrote:
->>> Hello,
->>>
->>> This patchset builds upon discussion at LPC 2024 and many guest_memfd
->>> upstream calls to provide 1G page support for guest_memfd by taking
->>> pages from HugeTLB.
->>>
->>> This patchset is based on Linux v6.15-rc6, and requires the mmap support
->>> for guest_memfd patchset (Thanks Fuad!) [1].
->>>
->>> For ease of testing, this series is also available, stitched together,
->>> at https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page- 
->>> support-rfc-v2
->> Just to record a found issue -- not one that must be fixed.
->>
->> In TDX, the initial memory region is added as private memory during 
->> TD's build
->> time, with its initial content copied from source pages in shared memory.
->> The copy operation requires simultaneous access to both shared source 
->> memory
->> and private target memory.
->>
->> Therefore, userspace cannot store the initial content in shared memory 
->> at the
->> mmap-ed VA of a guest_memfd that performs in-place conversion between 
->> shared and
->> private memory. This is because the guest_memfd will first unmap a PFN 
->> in shared
->> page tables and then check for any extra refcount held for the shared 
->> PFN before
->> converting it to private.
-> 
-> I have an idea.
-> 
-> If I understand correctly, the KVM_GMEM_CONVERT_PRIVATE of in-place 
-> conversion unmap the PFN in shared page tables while keeping the content 
-> of the page unchanged, right?
-> 
-> So KVM_GMEM_CONVERT_PRIVATE can be used to initialize the private memory 
-> actually for non-CoCo case actually, that userspace first mmap() it and 
-> ensure it's shared and writes the initial content to it, after it 
-> userspace convert it to private with KVM_GMEM_CONVERT_PRIVATE.
-> 
-> For CoCo case, like TDX, it can hook to KVM_GMEM_CONVERT_PRIVATE if it 
-> wants the private memory to be initialized with initial content, and 
-> just do in-place TDH.PAGE.ADD in the hook.
+Hi Detlev,
 
-And maybe a new flag for KVM_GMEM_CONVERT_PRIVATE for user space to 
-explicitly request that the page range is converted to private and the 
-content needs to be retained. So that TDX can identify which case needs 
-to call in-place TDH.PAGE.ADD.
+On Tue, 25 Mar 2025 17:22:20 -0400, Detlev Casanova wrote:
+
+ >+        case RKVDEC2_ALLOC_SRAM:
+ >+            virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+ >+
+ >+            iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
+
+I'm testing your patch with ffmpeg patched with v4l2-request patches[1], 
+and I usually
+
+get kernel panic here. After checking rkvdec->iommu_domain before 
+running iommu_unmap,
+
+I can pass fluster ffmpeg v4l2-request test. Here is my patch based on 
+your commit:
+
+
+diff --git a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c 
+b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+index 75768561399..122bcdcebd4 100644
+--- a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
++++ b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+@@ -681,8 +681,8 @@ static void rkvdec2_free_rcb(struct rkvdec2_ctx *ctx)
+                 switch (ctx->rcb_bufs[i].type) {
+                 case RKVDEC2_ALLOC_SRAM:
+                         virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+-
+-                       iommu_unmap(rkvdec->iommu_domain, virt_addr, 
+rcb_size);
++                       if (rkvdec->iommu_domain)
++ iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
+                         gen_pool_free(ctx->dev->sram_pool, virt_addr, 
+rcb_size);
+                         break;
+                 case RKVDEC2_ALLOC_DMA:
+
+
+[1] https://github.com/amazingfate/FFmpeg/commits/n6.1.1-new-patches/
+
+
+Best regards,
+
+Jianfeng
 
