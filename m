@@ -1,146 +1,140 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624803085D7
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A1126136D;
+	Thu, 19 Jun 2025 08:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321757; cv=none; b=ArIUuIaaMgEnWUP23GizROr31mCbmeot0yWFlLu2+z0qbHeINE9VaaTQ59uFBtWv/s4FVQd03auDz1n6mSLL2GVrHDt/kMsYl3Mk8jASch0HRBsOfusbMtCu0hVoWWJo7YnoxDlbOF0XF3510/bs1quvJAfdFghlPgBriRmOOD4=
+	t=1750321810; cv=none; b=IAjQ0zk1pmgO43vLblRWuBH/caLjjW7A+XBVCCZWIPbR6ASZbJfT+lSgoCg4ifR04xMhbYEaZQKyLC/MT9iUHrxag92BC+dss4c8CBHlBN0SVOn8zkEeHZrLQqAkFYufciPQq8TM37OGaLYt+gZN4lSFLYifSISu+aZuJxOGGek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321757; c=relaxed/simple;
-	bh=8kp8MhtBooyZ24xJw3HE3NBv31unIexU5R/0rv70u4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sCUkj44zh+S+ARxtIveBShWXjfwtBzwslqJUnJauJx3QYYIQ44CbZJNWI1XH+ybMGabHiEElhOpQyO1FgpyYNOfcjjmnR9mjPbCnt6b/AtKdZHf5HNGCpmlASWrmv+Z7QIryomZzI/2obyPx08wXZW8CI3roIkRDPHQcNqCEjfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K3VXHu30; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750321810; c=relaxed/simple;
+	bh=e6K52pkiA4lbq0TxwiOJxzpreb0jdw8kCEm3dDzE+so=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DcQVR+d2LKDgRoMCbvUoSOwylS0Uon30O7l29gah7aukTFu1wbzuELrCoXrIOihJm8vpQE+csHnR/WoGVoCITcS9OccNWPh9rgi7m89u86tRIHMG6iwxmQqmIPjlqNJUmeSlNsSYtmfxc0/3N/9x1a2m/5Z0GCSoa5TYObx0lDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hW3pKRbl; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K3VXHu30"
-Message-ID: <fa3c7352-f089-4a7b-8d4b-f6d371c236ce@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750321752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LwqkJWv+ifVhzjp8MQr7Ddsa5ddsAXMB/QGydZH0ApY=;
-	b=K3VXHu30ZHT9FCDaKQNMGBS0HsUIyVXQ3ojsfC/llhBDDhO5YmRJilmvtbxDn7tI2YHgza
-	7NXVqzwdr5RZ5caKtFhe6dTZ131c57faBudgVlm5QaZXU1O7fDuW7zDudr70AQbr0i3P4+
-	GgwbfK/SEsof8nJbFMT2aExpuKLKjVI=
-Date: Thu, 19 Jun 2025 16:28:53 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hW3pKRbl"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad89333d603so91463966b.2;
+        Thu, 19 Jun 2025 01:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750321807; x=1750926607; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKn1ptPL56ANrUjI3SM/qbSzwOU3Ovzfc0dxrbHyY+o=;
+        b=hW3pKRbl6rLwYBk99tBn4ruUkxbk1UAyt8ovhcF8BmjUfra/sLzChT6P8yyC8ebSwg
+         yoAiB8pmoD+yrWGLtZYwYrfMQTz3DR6rrQzC7mtWcUTNb9xDlp6etk437fwzrYiaATL4
+         iw3sY9fik5y+LxOrR04HMh68Fo8wCmlfUiuWUIk6XPnIYC0oJO6SYSiuZRq1dwIbXm4F
+         wZp38noENZBOqhS5wzwko58Auon4aDksZFXAT/X++SxTYNMtxefs9Tit9im675BZL6Hr
+         S7gvrY52SO1lawfnyhTvgK2O8XTUx/gOxBE1ckwC1gwBoRA0DBu959K+APyyCc81B22Y
+         8+0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750321807; x=1750926607;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rKn1ptPL56ANrUjI3SM/qbSzwOU3Ovzfc0dxrbHyY+o=;
+        b=YBARnVKXjf1npJqV831g10hMecrYfIqVYyhCPq9VdwfwkCTpV1px2hQw97XcCNxXCt
+         EW/yx3ESNnnjoi+ttRLM+AxA8yQ0xMsP8puPh3phkur3fr9qzVGwO0zmqJxQeRBWiTNs
+         1LMOxd6hbTY5t3xZErmVXraGLjmKlbcNC3wuGsLtzw2e8I/UF2zaeh9TJB5nKjmxBCCr
+         2CxGTEb289cv0yQvsmMd68UOBtmKVn9Y+6d/OoDvp5BnbhUzRWk7zg8gH1HHlg6kT7wA
+         BAaXxn9g57+tzlPRwyh484luoH8AvZggPO5CBsdraiRw+ozb6N2tqVDDYg1Eq9MJM9yQ
+         SvaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGRADRJXPWx3XCRAFsRUNSTm7ZYVhAQY9HUocMaJ/2JrMvRcpzsSjaRvVbDo8P8SYRO9tGGsCQaWb7AZtX@vger.kernel.org, AJvYcCUdRY2av6XQ7MjDMJLaNeQPBmrunU7Y9AzKUiRt8hebb3KskQj/G4SK2xfC7KUFTzksU2OWxagpsLeY@vger.kernel.org, AJvYcCWbCSKQbqOm9EhDcNLK9r4LJ1pRAVfYm0NGPA6JiPHMunqCHE/jzgqDxR1bmtUcaNMynyItEcPsC8cn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3W7iIf3EiUHZqDJKUwVlocteGWKy/G8V/Yb+kVDSQu73+h5si
+	2m/iindEp00FlM+bZUlqagSkIVUvqNIkuhsLzauckbXyJYdWsf8ZI57nfDgxEdhG0JZiGe8paCk
+	7IMnZN2Mzoo/KvBfOiSKoRy8jPJz+nho=
+X-Gm-Gg: ASbGncs2jjEWDkDirOhT+PpDcAU2fKLnG/NSROKIqQSnOeQseVTNyqC7kw7YMpaATH5
+	GECYzmv9pBg3wxT2N2ffPyqcmcKUKDiC5jTf8XBtIY3UaO2LpMukCdolBfRVYyuKAoxHB0AQW0r
+	7uXp8+cZQI6tgXB+d8Z8nI/WMUYLOKkmOw1Pus0acXsIQ04g==
+X-Google-Smtp-Source: AGHT+IF0i2vkEF+jFHeW2WDp5kmVNds+1mm8/x/CqyVXx2I+yZPnhJtAh3oOECcje7sEAEEwsOb1vr6CTNHgfN4ifPE=
+X-Received: by 2002:a17:907:1b0d:b0:ade:5fb:53bd with SMTP id
+ a640c23a62f3a-adfad3c5445mr2083453666b.20.1750321806964; Thu, 19 Jun 2025
+ 01:30:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/rmap: Add NULL checks for rmap_walk_control callbacks
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ye Liu <liuye@kylinos.cn>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Rik van Riel <riel@surriel.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250619075040.796047-1-ye.liu@linux.dev>
- <9454603f-c187-4386-8244-69f304197954@arm.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ye Liu <ye.liu@linux.dev>
-In-Reply-To: <9454603f-c187-4386-8244-69f304197954@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250613130207.8560-1-victor.duicu@microchip.com>
+ <20250613130207.8560-3-victor.duicu@microchip.com> <CAHp75VdRisP+trez2Ysgrhan_zXMWsmawB3XeW+_ePsbNC4RzQ@mail.gmail.com>
+ <f980b3c1a4fbd60f70dda9670648479a38313439.camel@microchip.com>
+In-Reply-To: <f980b3c1a4fbd60f70dda9670648479a38313439.camel@microchip.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 19 Jun 2025 11:29:30 +0300
+X-Gm-Features: AX0GCFtK0ncIVhpppFTb1voQFgUUDtzpBF-GqtLcEGCIbcMStBY2pLpHDJm_GWg
+Message-ID: <CAHp75Vc2nueOycoy8+dYyQekAAMPO82wOYSVT0RZOC4yRaE5jA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] iio: temperature: add support for MCP998X
+To: Victor.Duicu@microchip.com
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, robh@kernel.org, jic23@kernel.org, 
+	andy@kernel.org, krzk+dt@kernel.org, linux-kernel@vger.kernel.org, 
+	Marius.Cristea@microchip.com, conor+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 19, 2025 at 10:22=E2=80=AFAM <Victor.Duicu@microchip.com> wrote=
+:
+> On Sat, 2025-06-14 at 00:50 +0300, Andy Shevchenko wrote:
+> > On Fri, Jun 13, 2025 at 4:02=E2=80=AFPM <victor.duicu@microchip.com> wr=
+ote:
+
+...
+
+> > > +MICROCHIP MCP9982 TEMPERATURE DRIVER
+> > > +M:     Victor Duicu <victor.duicu@microchip.com>
+> > > +L:     linux-iio@vger.kernel.org
+> > > +S:     Supported
+> > > +F:
+> > > Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982
+> > > .yaml
+> > > +F:     drivers/iio/temperature/mcp9982.c
+> >
+> > So, with the first patch only the dangling file will be present
+> > without record in MAINTAINERS. Please, make sure that your DT schema
+> > file is in MAINTAINERS.
+>
+> Are you referring here to the file sysfs-bus-iio-temperature-mcp9982?
+> This file was in v2 where there were a few custom attributes. In v3
+> I removed them, so the driver currently doesn't have custom attributes.
+> Should I had added it to the files in MAINTAINERS?
+
+You should have added the file to the MAINTAINERS in the same patch it
+appears. Not in some arbitrary change afterwards.
+
+> Isn't the yaml file sufficient to describe the devicetree? Should I
+> also add a dts file?
+
+No, this is not the point.
+
+...
+
+> > > +#define MCP9982_CHAN(index, si, __address)
+> > > ({                                          \
+> > > +       struct iio_chan_spec __chan =3D
+> > > {                                                 \
+> >
+> > Why not compound literal?
+> >
+> In v2 I used compound literal, but Jonathan suggested to add
+> the struct in the macro. After describing the reasoning, we
+> agreed to code it like this.
+
+Neither of the versions has a compound literal.
+
+> > > };
+> > >              \
+> > > +
+> > > __chan;
+> > >              \
+> > > +})
 
 
-Hi Lorenzo and Dev,
+https://gcc.gnu.org/onlinedocs/gcc/Compound-Literals.html
 
-Thanks for your feedback. I understand all your points and will drop this patch.
-
-Best regards,
-Ye Liu
-
-On 2025/6/19 16:17, Dev Jain wrote:
-> 
-> On 19/06/25 1:20 pm, Ye Liu wrote:
->> From: Ye Liu <liuye@kylinos.cn>
->>
->> Add NULL pointer checks for rmap_one callback in rmap_walk operations
->> to prevent potential NULL pointer dereferences. Also clean up some
->> code by removing redundant comments and caching folio_nr_pages().
->>
->> Signed-off-by: Ye Liu <liuye@kylinos.cn>
->> ---
-> 
-> Don't really see the point of this patch. The rmap_one call back will
-> always be there as we need a way to define how to unmap/do the reverse
-> map walk for one VMA at a time. And the folio_nr_pages() will probably
-> get cached by the compiler anyways.
-> 
->>   mm/ksm.c  |  2 +-
->>   mm/rmap.c | 14 +++++++-------
->>   2 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/mm/ksm.c b/mm/ksm.c
->> index 18b3690bb69a..22ad069d1860 100644
->> --- a/mm/ksm.c
->> +++ b/mm/ksm.c
->> @@ -3068,7 +3068,7 @@ void rmap_walk_ksm(struct folio *folio, struct rmap_walk_control *rwc)
->>               if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
->>                   continue;
->>   -            if (!rwc->rmap_one(folio, vma, addr, rwc->arg)) {
->> +            if (rwc->rmap_one && !rwc->rmap_one(folio, vma, addr, rwc->arg)) {
->>                   anon_vma_unlock_read(anon_vma);
->>                   return;
->>               }
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index fb63d9256f09..17d43d104a0d 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -1202,8 +1202,7 @@ int mapping_wrprotect_range(struct address_space *mapping, pgoff_t pgoff,
->>       if (!mapping)
->>           return 0;
->>   -    __rmap_walk_file(/* folio = */NULL, mapping, pgoff, nr_pages, &rwc,
->> -             /* locked = */false);
->> +    __rmap_walk_file(NULL, mapping, pgoff, nr_pages, &rwc, false);
->>         return state.cleaned;
->>   }
->> @@ -2806,6 +2805,7 @@ static void rmap_walk_anon(struct folio *folio,
->>       struct anon_vma *anon_vma;
->>       pgoff_t pgoff_start, pgoff_end;
->>       struct anon_vma_chain *avc;
->> +    unsigned long nr_pages;
->>         if (locked) {
->>           anon_vma = folio_anon_vma(folio);
->> @@ -2817,13 +2817,13 @@ static void rmap_walk_anon(struct folio *folio,
->>       if (!anon_vma)
->>           return;
->>   +    nr_pages = folio_nr_pages(folio);
->>       pgoff_start = folio_pgoff(folio);
->> -    pgoff_end = pgoff_start + folio_nr_pages(folio) - 1;
->> +    pgoff_end = pgoff_start + nr_pages - 1;
->>       anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root,
->>               pgoff_start, pgoff_end) {
->>           struct vm_area_struct *vma = avc->vma;
->> -        unsigned long address = vma_address(vma, pgoff_start,
->> -                folio_nr_pages(folio));
->> +        unsigned long address = vma_address(vma, pgoff_start, nr_pages);
->>             VM_BUG_ON_VMA(address == -EFAULT, vma);
->>           cond_resched();
->> @@ -2831,7 +2831,7 @@ static void rmap_walk_anon(struct folio *folio,
->>           if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
->>               continue;
->>   -        if (!rwc->rmap_one(folio, vma, address, rwc->arg))
->> +        if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
->>               break;
->>           if (rwc->done && rwc->done(folio))
->>               break;
->> @@ -2894,7 +2894,7 @@ static void __rmap_walk_file(struct folio *folio, struct address_space *mapping,
->>           if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
->>               continue;
->>   -        if (!rwc->rmap_one(folio, vma, address, rwc->arg))
->> +        if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
->>               goto done;
->>           if (rwc->done && rwc->done(folio))
->>               goto done;
+--=20
+With Best Regards,
+Andy Shevchenko
