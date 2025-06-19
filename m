@@ -1,45 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095BD25E478;
-	Thu, 19 Jun 2025 22:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF0125FA13
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750373798; cv=none; b=uJp4OnEyHBCORJXOOLkQBzckpd9NNJ4mXWmfb5OjQCMv5QuT3M8dYyai11SEPGz/kBZfeAFmLx9segYplRtjd8pcE9fNYUWt/MzmxCS2GYYjwNKct/OqKzquBkhGVTuwng0hWDJD2W8LIZWIvsCwAwBBk81dioQEZGp4/U2HSJQ=
+	t=1750373851; cv=none; b=AqWv1XTj5XKCwxg/sjHchni043wqD6MGZ8NZQUN4KJdSF1mDTHdhZnLo/3UbaDq4pkypjXAkOr1vmD31jDs+uCNRwjQs9enx6e6J1cu18rHbqMm5g7qkJNmTnWLlUC/QfelNNJDOE2wVxv7qo+h74f7OWhqqX33MWZrHrMcg4k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750373798; c=relaxed/simple;
-	bh=UzPt9sdsQLdNib/j6Er/NNyzs7bxjPti+YIh2O07cks=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFwvqkTWqPnHOThvLh1FlWjYVPMy9msSHwLg5H8CEwMyO+6n/WKb3DvD3l65R7V2mSCzPjhOkP8fD65OyfRxezzUTvZLUKacjFiFfMyqv50S8F3BM0v/AQT3vq5QDDhOzcQkpUeN6++p7RwYddvgY1IqREwa4JNyg5obD+eo1tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nde8eq+r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750373851; c=relaxed/simple;
+	bh=SDXGraCLLAGk5RchBb5Bz0yOpH1nMVaOuCpN4NHd/fg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EVWHZh22VCgDfI7NA69CSLdJOWJVnpch+7L7GW4Zfx1fAs5yyfn1RPWPHW0hAUs5K/wucsi4h1Im7pjRhKt/443mvPGrEI4f4y/r13p5YJ/rrUzAaq4hCdPHlZWAxULG0xfFp4yRnNv3fJYVQoF/770c7R4+Y6oMB4+nmg8mGec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HFe8RqZe; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nde8eq+r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4A6C4CEEA;
-	Thu, 19 Jun 2025 22:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750373797;
-	bh=UzPt9sdsQLdNib/j6Er/NNyzs7bxjPti+YIh2O07cks=;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HFe8RqZe"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 8A998C00280C;
+	Thu, 19 Jun 2025 15:51:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 8A998C00280C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1750373470;
+	bh=SDXGraCLLAGk5RchBb5Bz0yOpH1nMVaOuCpN4NHd/fg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Nde8eq+rYOu10Ukd5BPNu7CCiAmyo4obYligYd/Fbb0UtvZq95d7nMTUyzg4AIMAw
-	 uwSdVINM2fIP71NI+WQrf39YT169lLcV7shEmmYRGv52IvcBDUmyinKboGjTmPWjHP
-	 /8asLaV/AZr5L5cQof+/99rb4xl8/qO92UtEgliDM6bLZqiyrfhl52tA1Z7sqFeW/H
-	 uM1tExk6QNeKLJAFoWhZFAYyQnetB2OHHrBQ3pj+hgAr7nkl+Wy6lZv9SUYIWGo5+O
-	 BbcCXjKtVSHcRBsg+pMUKWU+72KRjg34ZPS3nh7ZbvT59FoY50Buh91HT5sz3j2C1i
-	 b7yt6r6mG4szg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	=?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-	linux-mips@vger.kernel.org,
-	llvm@lists.linux.dev,
-	stable@vger.kernel.org,
-	Eric Biggers <ebiggers@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] lib/crypto: mips/chacha: Fix clang build and remove unneeded byteswap
-Date: Thu, 19 Jun 2025 15:55:35 -0700
-Message-ID: <20250619225535.679301-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	b=HFe8RqZebwhXSGwrT22L6BOIA04MBgxQJiluz5EdXFOgbyHu+F/EMVmKTG5DVrhA4
+	 PzjCMmbo28iniqv9qcon3U+eLV/tedLhkxBzUNgOxT/n2soWMgkLhNGMYt96E4Yf7B
+	 91El35cSO8QtaxtxGaXoNby3G5Fa8NKWTJ+XK6SA=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 28CAA18000530;
+	Thu, 19 Jun 2025 15:51:10 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jeff Layton <jlayton@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] scripts/gdb: Fix dentry_name() lookup
+Date: Thu, 19 Jun 2025 15:51:05 -0700
+Message-ID: <20250619225105.320729-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,119 +53,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MIPS32r2 ChaCha code has never been buildable with the clang
-assembler.  First, clang doesn't support the 'rotl' pseudo-instruction:
+The "d_iname" member was replaced with "d_shortname.string" in the
+commit referenced in the Fixes tag. This prevented the GDB script
+"lx-mount" command to properly function:
 
-    error: unknown instruction, did you mean: rol, rotr?
+(gdb) lx-mounts
+      mount          super_block     devname pathname fstype options
+0xff11000002d21180 0xff11000002d24800 rootfs / rootfs rw 0 0
+0xff11000002e18a80 0xff11000003713000 /dev/root / ext4 rw,relatime 0 0
+Python Exception <class 'gdb.error'>: There is no member named d_iname.
+Error occurred in Python: There is no member named d_iname.
 
-Second, clang requires that both operands of the 'wsbh' instruction be
-explicitly given:
-
-    error: too few operands for instruction
-
-To fix this, align the code with the real instruction set by (1) using
-the real instruction 'rotr' instead of the nonstandard pseudo-
-instruction 'rotl', and (2) explicitly giving both operands to 'wsbh'.
-
-To make removing the use of 'rotl' a bit easier, also remove the
-unnecessary special-casing for big endian CPUs at
-.Lchacha_mips_xor_bytes.  The tail handling is actually
-endian-independent since it processes one byte at a time.  On big endian
-CPUs the old code byte-swapped SAVED_X, then iterated through it in
-reverse order.  But the byteswap and reverse iteration canceled out.
-
-Tested with chacha20poly1305-selftest in QEMU using "-M malta" with both
-little endian and big endian mips32r2 kernels.
-
-Fixes: 49aa7c00eddf ("crypto: mips/chacha - import 32r2 ChaCha code from Zinc")
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505080409.EujEBwA0-lkp@intel.com/
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 58cf9c383c5c ("dcache: back inline names with a struct-wrapped array of unsigned long")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
+ scripts/gdb/linux/vfs.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This applies on top of other pending lib/crypto patches and can be
-retrieved from git at:
-
-    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git mips-chacha-fix
-
- lib/crypto/mips/chacha-core.S | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
-
-diff --git a/lib/crypto/mips/chacha-core.S b/lib/crypto/mips/chacha-core.S
-index 5755f69cfe007..706aeb850fb0d 100644
---- a/lib/crypto/mips/chacha-core.S
-+++ b/lib/crypto/mips/chacha-core.S
-@@ -53,21 +53,17 @@
- #define IS_UNALIGNED	$s7
+diff --git a/scripts/gdb/linux/vfs.py b/scripts/gdb/linux/vfs.py
+index c77b9ce75f6d..b5fbb18ccb77 100644
+--- a/scripts/gdb/linux/vfs.py
++++ b/scripts/gdb/linux/vfs.py
+@@ -22,7 +22,7 @@ def dentry_name(d):
+     if parent == d or parent == 0:
+         return ""
+     p = dentry_name(d['d_parent']) + "/"
+-    return p + d['d_iname'].string()
++    return p + d['d_shortname']['string'].string()
  
- #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
- #define MSB 0
- #define LSB 3
--#define ROTx rotl
--#define ROTR(n) rotr n, 24
- #define	CPU_TO_LE32(n) \
--	wsbh	n; \
-+	wsbh	n, n; \
- 	rotr	n, 16;
- #else
- #define MSB 3
- #define LSB 0
--#define ROTx rotr
- #define CPU_TO_LE32(n)
--#define ROTR(n)
- #endif
- 
- #define FOR_EACH_WORD(x) \
- 	x( 0); \
- 	x( 1); \
-@@ -190,14 +186,14 @@ CONCAT3(.Lchacha_mips_xor_aligned_, PLUS_ONE(x), _b: ;) \
- 	addu	X(D), X(N); \
- 	xor	X(V), X(A); \
- 	xor	X(W), X(B); \
- 	xor	X(Y), X(C); \
- 	xor	X(Z), X(D); \
--	rotl	X(V), S;    \
--	rotl	X(W), S;    \
--	rotl	X(Y), S;    \
--	rotl	X(Z), S;
-+	rotr	X(V), 32 - S; \
-+	rotr	X(W), 32 - S; \
-+	rotr	X(Y), 32 - S; \
-+	rotr	X(Z), 32 - S;
- 
- .text
- .set	reorder
- .set	noat
- .globl	chacha_crypt_arch
-@@ -370,25 +366,23 @@ chacha_crypt_arch:
- 	addu	IN, $at
- 	addu	OUT, $at
- 	/* First byte */
- 	lbu	T1, 0(IN)
- 	addiu	$at, BYTES, 1
--	CPU_TO_LE32(SAVED_X)
--	ROTR(SAVED_X)
- 	xor	T1, SAVED_X
- 	sb	T1, 0(OUT)
- 	beqz	$at, .Lchacha_mips_xor_done
- 	/* Second byte */
- 	lbu	T1, 1(IN)
- 	addiu	$at, BYTES, 2
--	ROTx	SAVED_X, 8
-+	rotr	SAVED_X, 8
- 	xor	T1, SAVED_X
- 	sb	T1, 1(OUT)
- 	beqz	$at, .Lchacha_mips_xor_done
- 	/* Third byte */
- 	lbu	T1, 2(IN)
--	ROTx	SAVED_X, 8
-+	rotr	SAVED_X, 8
- 	xor	T1, SAVED_X
- 	sb	T1, 2(OUT)
- 	b	.Lchacha_mips_xor_done
- 
- .Lchacha_mips_no_full_block_unaligned:
+ class DentryName(gdb.Function):
+     """Return string of the full path of a dentry.
 -- 
-2.50.0
+2.43.0
 
