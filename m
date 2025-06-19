@@ -1,127 +1,108 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E135830E826;
-	Thu, 19 Jun 2025 23:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5E30E826;
+	Thu, 19 Jun 2025 23:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375483; cv=none; b=f59nDEBzzvfLHRM8YaL2aW1bIxCsGirrK3cW7BOX8vn8hVjOOfO/h4SwKLVg88EnAMnNmvZV2FOLt87WuAeyEwgdNB2/SeAl0ZpEC16VngBrk77X/TzPzQcD7dDquvYjMq1Kdo3WmGdhLey2RytTTktWfYbRXnlSkj43wI56o4U=
+	t=1750375493; cv=none; b=fVnuuYlFkpucctV7o+iWSnYdUJ7DMKO8djS+mAMeSnlkZmgPIUokxNOMgmbqxwPqOlUU9ZW4ZA5LS78Y9tGCYnaEjpSu57zfTbVhAqMDchFTNdsAJE0rNxt2q5kTUSdhVL0OrTOmVctQS+oklIqjmd4F1rjh2xWeEleXjUcbeCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375483; c=relaxed/simple;
-	bh=P6UTvzyqIRK6Pq+WtTLmPHSdW9ZmxbUT07Raf3BFBeU=;
+	s=arc-20240116; t=1750375493; c=relaxed/simple;
+	bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KHwyFTszjZGTQg3BzoBkUASnaDsuo/YgGwR3vq7jKMmW/Xr1dqVTtl38KKxWJVtufhs9Zb4SIRIOJHDJ36rLsQLI7ZNkxfdaTrDdGHrd+xP71Jyx9tkEssWm/9gj+7arzo89tpYD+6k9qt3Ti05StAWSz/wNNnzVy7xBXkgKc1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ob9gFYHG; arc=none smtp.client-ip=209.85.215.176
+	 To:Cc:Content-Type; b=Q0c/B839/1oo8c9/eckTpilQ252uXHgsqwInbRNnk7iYPp5WR2UcQYDCk/afjwaprRiJMRrT9VX9mNdwsPhA8DoE9PBwb0DyYVX1cCvjemm1GL9GTFXGShQDdPsX+hF/xzR2twDW5OQTKsnDr6mPXO6NbXdVtbNhtZ15iLwC+0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4Y0oaeo; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ob9gFYHG"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b31befde0a0so753044a12.0;
-        Thu, 19 Jun 2025 16:24:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4Y0oaeo"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32b7fd20f99so13087511fa.0;
+        Thu, 19 Jun 2025 16:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750375481; x=1750980281; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750375490; x=1750980290; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EZFGef6VU9cQVWTB1kif0wHpBB4PBFRRB0Anrm0cDew=;
-        b=Ob9gFYHGuGiUN4xtxHpIBpRupJD044GsQTuo5FeybMSVl4O465CJGfzQdoGdJbYpHF
-         s97XjIQJIDgimTzkN8TQdVyQ2IqP6RQDt64hd3oc9O/h5Q+FukO0VMTs8JAEj91bJD3v
-         q8PCoHHjH2yHbPiPbZIncboTxt9XhnGKLY/S5SIzdG0z9L4RDGkxz89JCp4LoOgNdV8j
-         P0NSBFXyKcWIA5k8kZIGBGTfbLxtHuf0QVLzaNTaHmkRgiCx4WiCGiw/1Uf3VpPc3WMw
-         s2MR/B0ZCKO8TsUyL6XYEOeEA24OGAidF1qvjSBV0nMCkdLQ9NFML//oyuMkDj4Haiu0
-         7wNw==
+        bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
+        b=S4Y0oaeoR7ykzTsvl6S0j6TiPDpPiGt3uRbMFyY2dSMSUU4h0iIncYwVBTCQwUnXYv
+         Aw+TSp3PTKbQULyaBT4RxY/ut8a1f1VcdTiuiwV3TcgT6MPE9HeXAtFreEoZQ2jLdQIW
+         QrpNwyC7NqH79Cklf6RqQTeK00DQDFmE20fOiqqIGe2DxMSaGWNpHaTMUbtF0JzK8jHq
+         6k5pR6RrPPEbhtgeBGPew5C7w1doWntCoYYtkwYyZlRsWaihsV08VHSH57RUkt/wuHHj
+         T1Uisty1zpwH1pz8LaLbVje8hf9qwkbGkxKz90bmbo1Zi02SB31mHuoXrEVxHmr6Tp3A
+         IKJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750375481; x=1750980281;
+        d=1e100.net; s=20230601; t=1750375490; x=1750980290;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EZFGef6VU9cQVWTB1kif0wHpBB4PBFRRB0Anrm0cDew=;
-        b=jvA22N1oGBpSxS4RbcDB0nyhyJig/4StX5pFCDnqGIJS7ZV1VR8S0PWrC6/r8/cf5k
-         tS3ONwp7jwOBanXLXJK3cCtX1IyDmnOeKU2YQrLs6isV9HGo7f9MUyckXNzm7KMeaIfQ
-         S5lqX+sKvv5jN2n9PUfpMakXwluAr3trlTjKXFBw5Djjg1tH6A3+n3f+oUU3C1+Ne7jA
-         Z3vD+C/7D+SZcMfJW3zq9pbg1bx7NluC0M/RXMv5p1mLNo37jl6pw0yqcKm/rWBR/uPy
-         a1bvyQdU4vLs9QmHZ4dcmxjaDxzIeu7W/qvqK217hEuhZS0VOwyQUbrQjhOm2vcmjsrr
-         dk+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU6EPm8Ky/iAMnmUgA7U6i8Xl7N0Zlv/KfgnojaGFSOVRt0yIQRXuEVZnydYqbvN7CD54usNvt5QUXdPCk=@vger.kernel.org, AJvYcCWaRjoccPipTT2Lw3BHgCgdyleI4DDIejtALpJ/jUoTyPt/BFopgkCaMIPdIwV3dbMT5Lsp3nxUToA9gA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw15ErWXwPmP33PeglPodII5DgSPik5g1Rwv9rbbw6QqKXHF3EA
-	hwyRVKlS/kEe2KerGvnqXiVGhJ6f39uxDAF9L+UetiCH5v3xUIaU3EY04U9MHwX+gx+/7Ido8OO
-	CjPNh4EMc6YVWChAtUMChDiiVrYPHVro=
-X-Gm-Gg: ASbGnctEl5CLix4jVcmFwYFyOCwPS9we/g/wsBuuiCvuC9wk6FemJ4oArs6GC/jbQio
-	TZQfYwymuTHl0bKE2nE+uhqrb4AMQ0zrOAHuCdnHH8DveI6UIXq8j6l79EM4t2LqQNc049G+Yy+
-	r3ToRtMPKN0v3I8YCxLXt489HVGh+bo81QdvywMp0Jv0ld
-X-Google-Smtp-Source: AGHT+IFo69CsTIz4zdjs3pH9+mSsnTCOc0elUjv0zJrcMu+OWWjlOCX579S3pnKcn6XvhD1V09Z7Yz5swv3bQeNU5DY=
-X-Received: by 2002:a17:90b:574d:b0:311:a561:86f3 with SMTP id
- 98e67ed59e1d1-3159d626107mr1276057a91.6.1750375480922; Thu, 19 Jun 2025
- 16:24:40 -0700 (PDT)
+        bh=WSkZDcYdQ71AgEyPhWUL2CdMzVGkRzsDFG6pJJ9m7KU=;
+        b=Mra+Er0xcx8sEh6IywHollQaH92H87+sOigMc2txGfSFNLK+zeSh6JlhxMxIcOvL14
+         /JSicmlJZe8BUMeDe0LlAUi4durzcsM9O3rqpzoYnSoLfpHC0y+XV5MGr3U9adRcrrft
+         fui7jhwuDxIoWpEBy6qq50UVEESJMp+4BbxsjcRjmeQP1Qb3L1HhjgOxWE0iRfRXTjej
+         37ZwyYThX1pRPM9H1jaTMWF/Z+CpL6JnEcE0ofFVAHRAqJexs75z6Cu68UV/W52iZDhq
+         QXThP/LsphS+MzQ/ZaDtSacAjJjH77/1SPPWJgbjV9j3YqK6FVxHIYW/coLhCTvT0st1
+         lwdA==
+X-Forwarded-Encrypted: i=1; AJvYcCURjmT1USw4MsB53qixGBa1nJmwEWAvB3B1WpEKkUx7RAmQk9XLMnLG0EN9YMB2VQ+6Mz3vXXGlPZRkgKElqCI=@vger.kernel.org, AJvYcCX9ku8bFf8T7Xps3Z4wI41/CT/xfv/OeVeKpStJZZz0eQPlA7MFxkpLOGrcpu2qGWvnmmWvuHN0@vger.kernel.org, AJvYcCXXk4TPbRRZFkCHarwmwJSdRzVt34Bo2H8xOTufUGq6rCsuCiTVWYCibGSPszyXuhf6yHARGAxpMcixiBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX0+2feK9woEB5pAzPgAlGc3tORDqPcA6KFNsDXPALXVJbeLvg
+	JjcSVHk/awp8ctc+9JR1M3/V7jJ6QlSqte4YqfYdE/iZwzDz0R0pRNWXNj99BW7m+10aSpC3F/d
+	pCDSEMDIVJPFsXdEbGItWuiW07C6oOZ0=
+X-Gm-Gg: ASbGnctyD98TiNoS6EK8b4D8vNAP1+13jYSoUuud2579ySDk7AV8ugZtFHyjWKZRJSV
+	kD3ZTrGMlxtrp0muzhOTIAO0Th8qwHpzoTz8ulKxuXBQPI8+tDcIu8S4hshFCxjYQy5vb/B6j8W
+	IuNe3M+T6VeKz2gIJpvqGoqRnPoPfuHxt+h9qHiBRrK6xtxrhUkXOsE4yBM8rxzQglQ7gGkOqLZ
+	JhT
+X-Google-Smtp-Source: AGHT+IEI3Qcu9TZFnSMnblF2FNssNDdu/cOBp2C241F1RixgB3NEkmLB/6LjF4MFzu6x8V21HblsJ4Zska5TTyG+eYI=
+X-Received: by 2002:a05:651c:2205:b0:329:1550:1446 with SMTP id
+ 38308e7fff4ca-32b9ae2ff81mr528531fa.0.1750375490094; Thu, 19 Jun 2025
+ 16:24:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619153526.297398-1-d-gole@ti.com> <c04c4bef-2773-41f7-b2e6-ea465cb9f164@ti.com>
-In-Reply-To: <c04c4bef-2773-41f7-b2e6-ea465cb9f164@ti.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 19 Jun 2025 18:24:13 -0500
-X-Gm-Features: AX0GCFsCFmvr1ko0Eirl_thlUz1P67i4l72iU7s8SzxDsIZRteoaPfVZZXkUXws
-Message-ID: <CAOCHtYhjSnypDcd5iojg_0KM9aBX6QH+0hMfauGccL6MvyLXzg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "regulator: tps65219: Add TI TPS65214 Regulator Support"
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: Dhruva Gole <d-gole@ti.com>, lgirdwood@gmail.com, broonie@kernel.org, 
-	aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com
+References: <20250612.094805.256395171864740471.fujita.tomonori@gmail.com>
+ <CAJ-ks9nXwBMNcZLK1uJB=qJk8KsOF7q8nYZC6qANboxmT8qFFA@mail.gmail.com>
+ <CAJ-ks9mazp=gSqDEzUuh0eTvj6pBET-z2zz7XQzmu9at=4V03A@mail.gmail.com> <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
+In-Reply-To: <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 19 Jun 2025 19:24:14 -0400
+X-Gm-Features: AX0GCFuDXISYPO9gpBGBu-zV3upwFiW0N2Hohkq2DlvwSSipXAI_SsBeURhkbnI
+Message-ID: <CAJ-ks9n-iQAiwN3CVnJP164kPEgwq5nj-E5S7BnZrYdBWoo16g@mail.gmail.com>
+Subject: Re: [PATCH] rust: cast to the proper type
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: aliceryhl@google.com, tmgross@umich.edu, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	dakr@kernel.org, davem@davemloft.net, andrew@lunn.ch, netdev@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 2:58=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@ti=
-.com> wrote:
+On Thu, Jun 19, 2025 at 6:55=E2=80=AFPM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
 >
-> Hi,
+> On Thu, 19 Jun 2025 11:29:56 -0400
+> Tamir Duberstein <tamird@gmail.com> wrote:
 >
-> On 6/19/25 10:35 AM, Dhruva Gole wrote:
-> > This reverts commit f1471bc435afa31c8c0c58551922830dc8f4b06b.
->
-> I will be sending a patch soon with a fix regarding the devm_kmalloc use =
-in the probe() function.
-> I'll keep looking into these bugs to see if there's anything else to fix.
->
-> > This was causing boot regressions [1] on many BeagleBoard platforms
-> > like the AM62x based BeaglePlay and PocketBeagle-2.
+> >> > >> > Fixes: f20fd5449ada ("rust: core abstractions for network PHY d=
+rivers")
+> >> > >>
+> >> > >> Does this need to be backported? If not, I wouldn't include a Fix=
+es tag.
+> >> > >
+> >> > > I'm fine with omitting it. I wanted to leave a breadcrumb to the
+> >> > > commit that introduced the current code.
+> >> >
+> >> > I also don't think this tag is necessary because this is not a bug
+> >> > fix. And since this tag points to the file's initial commit, I don't
+> >> > think it's particularly useful.
+> >>
+> >> Would you be OK stripping the tag on apply, or would you like me to se=
+nd v2?
 > >
-> > [1] https://gist.github.com/DhruvaG2000/75b7d5ced6c09d508ee0ad5ab1f1970=
-7
+> > Hi Tomo, gentle ping here. Does this look reasonable to you, with the
+> > Fixes tag stripped on apply?
+>
+> Yeah, if you drop the Fixes tag, it's fine by me.
 
-This bug is nasty... ugh! My BeaglePlay (am62) just triggered the same
-classic bug on startup.  Seems like it's related to the phase of the
-moon/etc.. Something in the PMIC doesn't like what we are doing with
-the new devices bolted on top..
-
-Here is my boot log with only f1471bc435afa31c8c0c58551922830dc8f4b06b
-reverted https://gist.github.com/RobertCNelson/745bc4f9e219be264722b2093ef0=
-3fa8
-
-So there's been 4 patches on "tps65219-regulator.c" :
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/driv=
-ers/regulator/tps65219-regulator.c?h=3Dv6.16-rc2
-
-f1471bc435afa31c8c0c58551922830dc8f4b06b regulator: tps65219: Add TI
-TPS65214 Regulator Support
-38c9f98db20a649a1f8454f507608b6aef0c9297 regulator: tps65219: Add
-support for TPS65215 Regulator IRQs
-3f2e457efdad5af4164f155bd7ac902258a9b1ce regulator: tps65219: Add
-support for TPS65215 regulator resources
-8c04144e156b49980a786e80c855e41f6c71685c regulator: tps65219: Update
-struct names
-
-Back to retesting the 3 other commits tomorrow!
-
-Fun note... I'm testing 4 PocketBeagle2 's and 2 BeaglePlays,
-depending on the day one board will trigger this bug 80% of the time,
-someday it takes hours to trigger.
-
-Regards,
-
---=20
-Robert Nelson
-https://rcn-ee.com/
+Thanks. Would you mind adding your Acked-by?
