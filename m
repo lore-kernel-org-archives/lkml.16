@@ -1,111 +1,109 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6217A189905
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CAF2BB15;
+	Thu, 19 Jun 2025 01:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295285; cv=none; b=pE2JRCaph8Pzpc+pn0lIJ/deKmK059k4T+8YBM7orgkeGH3//Kh3DuHD+0zXZo6gkWn0fx/PFYVKGn2hcZzVTKiBOMbLOnwZVN4nWGahhN3PGBqqiUm1RV/We6hF1CtGfHIDwWfe7Ioix82y9E89Ol8K5jpApG+KywYiWpZFius=
+	t=1750295442; cv=none; b=ucRqL2rkZnNqPgPJiDkMz0MuV8m8bRNNyS1eZnraSKb+wzUZ0T0VLQDmiKchlTFnIo9oV2IzcsPaHwkIt9Ji/9pMKZeum/aAYp9l7QLzykVcUuSClgzUypsl8yZZ8D1UMg9gJFx76bN8dn0S96MysBo8aUhRVoJ0GxJcFPJrDC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295285; c=relaxed/simple;
-	bh=MS18sacHJm5wYe0QMq5lKc+9jJ/K81eew7q6JBynOZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CuSn4ZGDo9FbeKqvdShmky7Re/VXsy5RBOM7Susp+u1n8dPReFibxlb+0waM49M6UNMiWdAg+PCI8uBXlyIwUESfOMZ1M0oZn/iWpdqsgYwn9y+dd6Lv56oEXBvpXQcObsgozn0EnGi6SbM6wxM/IsWNz2kGdB63gAq9ITtLxEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=EN3P+erg; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1750295442; c=relaxed/simple;
+	bh=3f/Hu88Ha+Adl0WLRJ4ljUuvhoxON8Qq+woi+kHNC90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a3FIAo/elAB1cEAd/b9g5y60kXZyPmzMF6j91HcDId/MKqRFIHWnhVht3PcxQw9wU8mY7QLqGTVNq5T0yqQJPf/8woh/VYuKysWZILAOiXnMtBbKOAtTHk38MO14XW5TeuX5lfHRlUkU2U1ECOGy0nk3zneb7uvxhi+BGTvInd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXSx9s2I; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="EN3P+erg"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 664462C0BB5;
-	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1750295278;
-	bh=6JmV8eEF9av+Sa6e/9Qv4UqSWGZRPCdM5w+0Gsi52gc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EN3P+ergFsI37bvkitnLnCGP9tFjJWIFKulpyzrfz37csqluptZ4Z6rEZHy5m7BdG
-	 5iJ6lX1NxMS/ZpShPKsJ5/lWm71sG+MPPj6pS0Hmyo5iN5/jyCtFF9ZUaUGU1T1gm7
-	 pPORypf55S+glvjtADyZREdQx7UNPbbg7mC9a6Ya7Scst6AF3L46fUp/vZqkFH7Ixz
-	 qQy+0QmgLW1yU1ohhdy/KC+ytXCFMlG9LKQX56XAQEYDiDeol/nKCCaEWCUANnPX5n
-	 b6wKlk9xZOv5EUhMWSrTJDP7iA9IGzxOtZjtl8duedC2jcvujCT33W2l/a2V2YeW+/
-	 mDEgJPx95j/hw==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B685362ee0003>; Thu, 19 Jun 2025 13:07:58 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 088C513EE9C;
-	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 08F6B280993; Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: tsbogend@alpha.franken.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	sander@svanheule.net,
-	markus.stockhausen@gmx.de
-Cc: linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/4] mips: dts: realtek: Add watchdog
-Date: Thu, 19 Jun 2025 13:07:53 +1200
-Message-ID: <20250619010754.3760612-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
-References: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXSx9s2I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750295440; x=1781831440;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3f/Hu88Ha+Adl0WLRJ4ljUuvhoxON8Qq+woi+kHNC90=;
+  b=EXSx9s2IkVY1XrBq9C79QRCVtkuVa87Y+T4EODmhjHtkGG034XIVEra6
+   VVBjXtVQNhvgeUNWi70XwD7Nabbvb0SChMLVWOx3BxZbpCXnh2JRH8RgO
+   ge1d2UUbFyw+fiOQvYfaBtzFCljURguquLiDMh6jG6/wVWT51Jkgng1hb
+   RzDrrULxPuaTm5cz0n6CWR5ePKQ/IdBcZgXIFsGnli6rYDLrFKXXqy+0C
+   bw3FQ7sbl4BUtRhecA3lqdUlaCrewegR1FY/r9zMJl6WBoZd852R76N07
+   Oe4VYJdc5zVCU1mfrgoqVS2ZYGcUe66hIMljyu6Mof0E1cVwaR+LbWww1
+   Q==;
+X-CSE-ConnectionGUID: M8ySVY4SRQ6BRPzD60E3UQ==
+X-CSE-MsgGUID: rISgKEUtTkOHC/vTTx2XDA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="40147899"
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="40147899"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 18:10:40 -0700
+X-CSE-ConnectionGUID: iY8gUImvTVO0Qcb7ebH/6w==
+X-CSE-MsgGUID: Lh6EgDSmTTys4PT+nlShYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="154269144"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 18:10:36 -0700
+Message-ID: <820b6d4f-b4b1-43fb-9829-5ff617eca5f9@linux.intel.com>
+Date: Thu, 19 Jun 2025 09:10:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=F7/0dbhN c=1 sm=1 tr=0 ts=685362ee a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=6IFa9wvqVegA:10 a=jdP34snFAAAA:8 a=Wqc9ATr8DmnQzDzGyroA:9 a=3ZKOabzyN94A:10 a=od6X62Lo79dmAcA2EqDc:22 a=jlphF6vWLdwq7oh3TaWq:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Use early_initcall() to hook bts_init()
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Andrew Zaborowski <andrew.zaborowski@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250606111606.84350-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250606111606.84350-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The RTL9300 has an integrated watchdog. Add this to the devicetree.
+Kindly ping...   Thanks.
 
-This is taken from openwrt[1] the only difference is removing the
-unnecessary second cell from the interrupts.
-
-[1] - https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob;f=3Dtarge=
-t/linux/realtek/dts/rtl930x.dtsi
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/mips/boot/dts/realtek/rtl930x.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
-/realtek/rtl930x.dtsi
-index 74b30704f188..77a854034aba 100644
---- a/arch/mips/boot/dts/realtek/rtl930x.dtsi
-+++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
-@@ -142,6 +142,20 @@ timer0: timer@3200 {
- 			clocks =3D <&lx_clk>;
- 		};
-=20
-+		watchdog0: watchdog@3260 {
-+			compatible =3D "realtek,rtl9300-wdt";
-+			reg =3D <0x3260 0xc>;
-+
-+			realtek,reset-mode =3D "soc";
-+
-+			clocks =3D <&lx_clk>;
-+			timeout-sec =3D <30>;
-+
-+			interrupt-parent =3D <&intc>;
-+			interrupt-names =3D "phase1", "phase2";
-+			interrupts =3D <5>, <6>;
-+		};
-+
- 		snand: spi@1a400 {
- 			compatible =3D "realtek,rtl9301-snand";
- 			reg =3D <0x1a400 0x44>;
---=20
-2.49.0
-
+On 6/6/2025 7:16 PM, Dapeng Mi wrote:
+> After the commit 'd971342d38bf ("perf/x86/intel: Decouple BTS
+>  initialization from PEBS initialization")' is introduced, x86_pmu.bts
+> would initialized in bts_init() which is hooked by arch_initcall().
+>
+> Whereas init_hw_perf_events() is hooked by early_initcall(). Once the
+> core PMU is initialized, nmi watchdog initialization is called
+> immediately before bts_init() is called. It leads to the BTS buffer is
+> not really initialized since bts_init() is not called and x86_pmu.bts is
+> still false at that time. Worse, BTS buffer would never be initialized
+> then unless all core PMU events are freed and reserve_ds_buffers()
+> is called again.
+>
+> Thus aligning with init_hw_perf_events(), use early_initcall() to hook
+> bts_init() to ensure x86_pmu.bts is initialized before nmi watchdog
+> initialization.
+>
+> Fixes: d971342d38bf ("perf/x86/intel: Decouple BTS initialization from PEBS initialization")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/bts.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+> index 9560f693fac0..f0d9729ed255 100644
+> --- a/arch/x86/events/intel/bts.c
+> +++ b/arch/x86/events/intel/bts.c
+> @@ -642,4 +642,4 @@ static __init int bts_init(void)
+>  
+>  	return perf_pmu_register(&bts_pmu, "intel_bts", -1);
+>  }
+> -arch_initcall(bts_init);
+> +early_initcall(bts_init);
+>
+> base-commit: e7d952cc39fca34386ec9f15f68cb2eaac01b5ae
