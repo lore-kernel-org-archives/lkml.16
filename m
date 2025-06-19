@@ -1,38 +1,62 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F124A3C;
-	Thu, 19 Jun 2025 03:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2592B4A3C;
+	Thu, 19 Jun 2025 03:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750302671; cv=none; b=IUh4AZgSGEwykL7o4oua66OT7N3qb/ww287ni8soAS+5S+ZtfS0LNfuBOjO0AJ0IMeP5OgwMZjNTwksmNQcvxpHaE8k4g2o8nArpYUL0mU1VoBgNsYopVvekMhZhS/jHdEkHQlux5PYGx7nUA9YSRr1WqeslG1xcYbbIcVfLdZ0=
+	t=1750302719; cv=none; b=udjZ2rxbfIvxAiHcprd6u0oVDBWqCD5T8iEiDivmeqs8eoiDfIc3iB5xkFYEUhzx0GmCggcdDFr0HfFo1kC/5OilP69Sdx7s5YDDpB4jVSr3ss7UZz0IZRA8TLZgtJWK7ctXKKoYLmBUCKNRvLDo8SxU5kydepYjKhNe3PzSjBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750302671; c=relaxed/simple;
-	bh=51oZ/IZDB7F4eTcBwvlqPOac0I3Sr1Bdpv7wS8vzbPY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SS8Acomn9XyxmvNIHzKMjsRflrVF5Dl0m0Rnh+N5wcEn09HHkmnw1prZVnBqu+4qMPH5HSvGcE+KULs4IjjAgk7CuVSP+fiONqUN3aGXdzgg1D/4IwTwwmIf3vGWMtNKtm65QQt/A1K0FnC9uyrM5jvSuqf7OgnWUKkgeaB7AA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kgDW3oXF; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750302719; c=relaxed/simple;
+	bh=MFAuk96MoSjlkSJYPkinU7Cnn1W/ZUDNhoAOIfyE3e0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AgsLNmAvQPy2c4ZM1f6EcRLzE9Jk+9DHxJQpTg3NxXuYyJDjIeaYjpktWTwjbRr/3q+l+R5uLSBbiAWfe1b7rz5UVqkANU/JUyYrohzE+WDzDzg2gsNYJlTXid6fDQnbjI7zbgNX19zunOTvbA7rhLIGUD/ej+3HJxqBDWWL2fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=eZ8lGZzc; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kgDW3oXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ST
-	RjQteFUZoF2HoMiQkIsJ7Znz080VPaSrZB64TS8oQ=; b=kgDW3oXF2c5Wd110nD
-	3F0z2jzbW8mqoBs9me8T0ojmZxZaJkZfDvdfxLi+1B1rNEhDq0OsP6Ug6etyVi65
-	z0J70DWpOlQaC3i56e7ryJqRJXYxbWipbS2JqESY0ei9ztOZJBmCJVO9t056lmlu
-	ZPRM0+rPLAgJsIRFD/xcCZ5ew=
-Received: from 163.com (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3P6K0f1NowTSLAQ--.64025S2;
-	Thu, 19 Jun 2025 11:10:44 +0800 (CST)
-From: chenyuan <chenyuan_fl@163.com>
-To: ast@kernel.org,
-	andrii@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenyuan_fl@163.com,
-	chenyuan <chenyuan@kylinos.cn>
-Subject: [PATCH] bpftool: Fix memory leak in dump_link_nlmsg on realloc failure
-Date: Thu, 19 Jun 2025 11:10:37 +0800
-Message-Id: <20250619031037.39068-1-chenyuan_fl@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eZ8lGZzc"
+X-UUID: 24b8967e4cbb11f0b910cdf5d4d8066a-20250619
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=aHlQ29GfE7GPw0vRvmvgfDlNtf7v7UnON80MlnW7oeY=;
+	b=eZ8lGZzcuy8e6m2wZHnWYrrZZwcx/xaIO/5d7bxCyTLUvWC3etdMmI+rP8Csh5wsZsZAr1+JyrvejzT8C0udgO31s9+F6OdPHCiVDW1UPVOkU96d63WQAECUsawOGq4f8xnOFmpUVOkvXsQ9AsPcKaCLmg/Nm4XgukoL3r4mUYs=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:244a7a8b-5348-4d61-b289-dab4917ff57c,IP:0,UR
+	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-30
+X-CID-META: VersionHash:09905cf,CLOUDID:9e972377-7521-4364-b0ef-cd7d9c0ecbde,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
+	,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 24b8967e4cbb11f0b910cdf5d4d8066a-20250619
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <kyrie.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1210089391; Thu, 19 Jun 2025 11:11:50 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 19 Jun 2025 11:11:47 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 19 Jun 2025 11:11:47 +0800
+From: Kyrie Wu <kyrie.wu@mediatek.com>
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Kyrie Wu <kyrie.wu@mediatek.com>,
+	<linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+CC: <srv_heupstream@mediatek.com>
+Subject: [PATCH v6 00/12] Enable jpeg enc & dec multi-hardwares for MT8196
+Date: Thu, 19 Jun 2025 11:11:28 +0800
+Message-ID: <20250619031142.27180-1-kyrie.wu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,52 +64,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P6K0f1NowTSLAQ--.64025S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFW5Xry7Wr4kJF1rAw13urg_yoW8Gw13pa
-	4UGa40vr15Wryru3s7Aa15ZFW3C3WxJrs5GF47A34ruryrXrsrZr18KFyFvanIgFn5XFy2
-	yr1Y9a17XF1UAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pio5d_UUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiJxpxvWhTfSNNUwAAsK
+Content-Type: text/plain
+X-MTK: N
 
-From: chenyuan <chenyuan@kylinos.cn>
+This series have the follow changing:
+Firstly fix some bugs, including resolution change handleing, stop
+streaming sw flow, fix buffer layout and clock setting to support multi-hw
+jpeg working and others.
+Secondly add mt8196 jpegdec and jpegenc compatible to support MT8196
+kernel driver.
+Lastly, Add smmu setting to support smmu and iommu at the same time.
 
-In function dump_link_nlmsg(), when realloc() fails to allocate memory,
-the original pointer to the buffer is overwritten with NULL. This causes
-a memory leak because the previously allocated buffer becomes unreachable
-without being freed.
+This series has been tested with MT8196 tast test.
+Encoding and decoding worked for this chip.
 
-Fix: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
-Signed-off-by: chenyuan <chenyuan@kylinos.cn>
+Patches 1 fix jpeg hw count setting to support different chips.
+Patches 2 fix jpeg buffer payload setting to handle buffer
+size bug while resolution changed.
+Patches 3 fix jpeg dst buffer layout.
+Patches 4 fix multi-core stop streaming flow
+Patches 5 fix multi-core clk suspend/resume setting
+Patches 6 fix decoding buffer number setting timing issue
+Patches 7 fix decoding resolution change operation
+Patches 8 fix remove buffer operation
+Patches 9-11 Adds jpeg encoder and decoder compatible.
+Patches 12 add jpeg smmu sid setting.
+
 ---
- tools/bpf/bpftool/net.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+This series patches dependent on:
+[1]
+https://patchwork.linuxtv.org/project/linux-media/patch/20250424090824.5309-1-jianhua.lin@mediatek.com/
 
-diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
-index 64f958f437b0..e00637b85e56 100644
---- a/tools/bpf/bpftool/net.c
-+++ b/tools/bpf/bpftool/net.c
-@@ -366,17 +366,18 @@ static int dump_link_nlmsg(void *cookie, void *msg, struct nlattr **tb)
- {
- 	struct bpf_netdev_t *netinfo = cookie;
- 	struct ifinfomsg *ifinfo = msg;
-+	struct ip_devname_ifindex *tmp;
- 
- 	if (netinfo->filter_idx > 0 && netinfo->filter_idx != ifinfo->ifi_index)
- 		return 0;
- 
- 	if (netinfo->used_len == netinfo->array_len) {
--		netinfo->devices = realloc(netinfo->devices,
--			(netinfo->array_len + 16) *
-+		tmp = realloc(netinfo->devices, (netinfo->array_len + 16) *
- 			sizeof(struct ip_devname_ifindex));
--		if (!netinfo->devices)
-+		if (!tmp)
- 			return -ENOMEM;
- 
-+		netinfo->devices = tmp;
- 		netinfo->array_len += 16;
- 	}
- 	netinfo->devices[netinfo->used_len].ifindex = ifinfo->ifi_index;
+Changes compared with v5:
+--reorder the patches set.
+--fix commit message of patch 1-8.
+
+Changes compared with v4:
+--fix kernel robot build errors for patch 4.
+--add reviewer for patch 1 and patch 2.
+
+Changes compared with v3:
+--change patch subject of jpeg encoder and decoder compatible.
+
+Changes compared with v2:
+--refactor smmu sid setting function interface
+--Some modifications for patch v2's review comments.
+
+Changes compared with v1:
+--refine jpeg dt-bindings for MT8196
+--optimize software code to manage jpeg HW count
+--refactor smmu sid setting function interface
+--Some modifications for patch v1's review comments.
+
+Kyrie Wu (12):
+  media: mediatek: jpeg: fix jpeg hw count setting
+  media: mediatek: jpeg: fix jpeg buffer payload setting
+  media: mediatek: jpeg: fix jpeg buffer layout
+  media: mediatek: jpeg: fix stop streaming flow for multi-core
+  media: mediatek: jpeg: fix multi-core clk suspend and resume setting
+  media: mediatek: jpeg: fix decoding buffer number setting timing issue
+  media: mediatek: jpeg: fix decoding resolution change operation
+  media: mediatek: jpeg: fix remove buffer operation for multi-core
+  media: dt-bindings: mediatek,jpeg: Add mediatek, mt8196-jpgdec
+    compatible
+  media: dt-bindings: mediatek,jpeg: Add mediatek, mt8196-jpgenc
+    compatible
+  media: mediatek: jpeg: add jpeg compatible
+  media: mediatek: jpeg: add jpeg smmu sid setting
+
+ .../media/mediatek,mt8195-jpegdec.yaml        |   8 +-
+ .../media/mediatek,mt8195-jpegenc.yaml        |   8 +-
+ .../platform/mediatek/jpeg/mtk_jpeg_core.c    | 170 +++++++++++++-----
+ .../platform/mediatek/jpeg/mtk_jpeg_core.h    |  21 ++-
+ .../platform/mediatek/jpeg/mtk_jpeg_dec_hw.c  | 112 +++++++++++-
+ .../platform/mediatek/jpeg/mtk_jpeg_enc_hw.c  | 112 +++++++++++-
+ 6 files changed, 376 insertions(+), 55 deletions(-)
+
 -- 
-2.25.1
+2.46.0
 
