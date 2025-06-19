@@ -1,306 +1,239 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891DE11712;
-	Thu, 19 Jun 2025 15:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348169; cv=fail; b=U6EZnmy4rOTfx0vp9BuYBt+W8R0l5DqZtn9lHM0dxbH/O7U3kUfbqOsNPC8KKamkQeMSbNuimmdTBMos34ikbAPmO8Ato4hHQ2x3BAjsVYgntWxFu6zMqbM3ua7Gol/4KZ8imCGN09fxF9L5Aq7QajuBcw66y/ddyGiTf6vKoM0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348169; c=relaxed/simple;
-	bh=2Cg6VxTuYmYsuGYOd3ZiggQmZWW3B9Y/rhV6v/Xl6Ow=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kcNXJWb13mVKnSDA2350QZo05mvU7nAGVpJVCtYgFIweMzwMAOxyGHkuBwXKQe8e+EANd+XB9J4TjfsJDuDajiQJPHcbTD+s1r7iGTx5wvajz7po4WQm4ynEyDCz9AVnQj3yFZASa7Lr3+8dtnCmbMIG9a0jo1hJGJ0Hhug5AbU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fwUOlOg9; arc=fail smtp.client-ip=40.107.244.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E57C11712;
+	Thu, 19 Jun 2025 15:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750348238; cv=none; b=iWZtD/OdWeumqlWR0mft6fF6IdHutxaap7ZrIjUZlXzXfJ+9tmNDkMPakXo7C4CMCkEtsC8Hp+J/UNKKtUvJZKI9KHK4IokmMFtoIJ26QvyG26O3cxeonsZNVGCrct69jr2JhsePnaskP8d44Q3ljjTq2zIYGq4dzGVvmRtSkoQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750348238; c=relaxed/simple;
+	bh=OKsVibEkSv+hfR4J2CvdJJEcDJm0d1G4pRgyEnSM5co=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jl7Lg0aSc3Hn76/ad1gysn6TqUz78OB+LvHeJRH2jdv4ZaIBPt4e7FC99MT+CKHF0IZtvdxiAOE9lf2sCfDURdByTBAnPkss0cYRkqSKAcT7qJcrJe+jAt+kOJ/P9FtZpUvWBR2aWQCzLiUosRs93rirtEsln/qw7UDxHlHZZi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Bw9meWho; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fwUOlOg9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SWHwQu6Z/h3rHIeuVz+YZTtlg0F9HnBPIimvnwD+rojMP2Bb+dV57ppAEDhhH5MH77vOGz30fGn7vUaKGZ67bet95MZsZ1BRr0VAoYcO53XNHB6X8kk1O7FnpRY7LVtK+uPz07aKcDmNBFUh02Kga7XQ0bHAofAdvIZMQ7+LxIxLSzIjp5jqrxhkp+jmHgvyJBkzcjjKsDy5YuLyIv8BBsXLudruNEs6uRhtJfCaUShbtUPradnzGgJ4OmVftcxSROAHrBK77TL+er73HVMj4h7ov6Xx64Kzi1uHBSMxNtd0gv7hdlNlWaq1SeQi6uFwzT0RfVZ1S8c3F2YEoSw79Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KhZSuJCEL5V8NZ2BiWXWtFeapylUs9beB+M2zBBb4yc=;
- b=jyxf/seTodJ3Fn9pdGT6+Ol65/duoJi+baS6ojizsy64WjQx8rYHZoeWSATs1lNiQuw6l3BqYLhE1z3esobao+yZPhklDaoQBTeBZrTtjJ4Oj1mbZDqD571zqGUx05AZxlO+ay0vmI03iuj+rHsQ6XxSd27oJDeMbWrWNI3dHjzu/pQaACRkb9Tzkh9GSUHwejeYuA5txzdTJxOWhsHbuIc0rRBMLlZbzJ6VV7KLotgSLQZ4TPwxcrl+VCBBbLb8DHTwrI7lApTpY3ZPSC4nVW+L8g6V1RwWYt4pmLLHsiHE+om8Ok7jve52iLeBAA2FJ4r1tH94JQ6IWK+2xsdcFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KhZSuJCEL5V8NZ2BiWXWtFeapylUs9beB+M2zBBb4yc=;
- b=fwUOlOg98EkRRksbkroZMuPH8eCAzsinUrtRedPxDC+wpYw4EuuB44Gwp1CMtPim8Zisd5Lb97wUBdNv6JvzxDtEYWVFJTqGl/MOEaq8igkxuyf9qzlnQXmuTqWn0AK6Cc8DDVAZG8eNq1mdh8baqvjtKcoGgp8Bpr5UKzxWlBY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
- by PH7PR12MB7356.namprd12.prod.outlook.com (2603:10b6:510:20f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
- 2025 15:49:25 +0000
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a]) by PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a%5]) with mapi id 15.20.8835.023; Thu, 19 Jun 2025
- 15:49:24 +0000
-Message-ID: <5b77d33a-5668-42bc-802d-d2c5d95c1e7e@amd.com>
-Date: Thu, 19 Jun 2025 08:49:17 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to ethtool
- NFC using Default Queue
-To: Song Yoong Siang <yoong.siang.song@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Shinas Rasheed <srasheed@marvell.com>, Kevin Tian <kevin.tian@intel.com>,
- Brett Creeley <brett.creeley@amd.com>,
- Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>,
- Joshua Hay <joshua.a.hay@intel.com>, Sasha Neftin <sasha.neftin@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jacob Keller
- <jacob.e.keller@intel.com>, Kurt Kanzenbach <kurt@linutronix.de>,
- Wojciech Drewek <wojciech.drewek@intel.com>,
- Marcin Szycik <marcin.szycik@linux.intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250619153738.2788568-1-yoong.siang.song@intel.com>
-Content-Language: en-US
-From: Brett Creeley <bcreeley@amd.com>
-In-Reply-To: <20250619153738.2788568-1-yoong.siang.song@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR03CA0095.namprd03.prod.outlook.com
- (2603:10b6:208:32a::10) To PH0PR12MB7982.namprd12.prod.outlook.com
- (2603:10b6:510:28d::5)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bw9meWho"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OKsVibEkSv+hfR4J2CvdJJEcDJm0d1G4pRgyEnSM5co=; b=Bw9meWhos1tgAIc+K/544bWYY7
+	TSrs4qSCCLwK/G59yXQbgmv2lmkCuMkvZxk0hrTtkOpznc9r9pAlYHynY14uNOPuXmJB9OwLNvUcI
+	elmJR9YNWGf2mKdlNASMm/a1xOeU4qwTD53xc4HCErLoupHHCLNV6sLfS/JKHukPTXn8u0Ne2c922
+	zlvIs92esqPKGhjpXeteV0mf8YVWXMzWxaR7TBu4Qc6iFEwFrNIuSf9SW1Pvh6LVrFCB9HWPqvWkI
+	NBuMIBtV0y3/yxRkY0iNJMEu8uJCBtlNxR6m78RVbQ/tXU7Yly1mqDneI+6opUUl0VPDw/pix9OXz
+	zQZno7uA==;
+Received: from [2001:8b0:10b:5:748f:d833:d81c:4c8f] (helo=u09cd745991455d.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSHX4-00000009LhR-2ep8;
+	Thu, 19 Jun 2025 15:50:30 +0000
+Message-ID: <b1db820e965996b4d236caf15736162f161223e6.camel@infradead.org>
+Subject: Re: [RFC PATCH 00/34] Running Qualcomm's Gunyah Guests via KVM in
+ EL1
+From: David Woodhouse <dwmw2@infradead.org>
+To: Marc Zyngier <maz@kernel.org>, Karim Manaouil
+ <karim.manaouil@linaro.org>,  Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ kvmarm@lists.linux.dev, Alexander Graf <graf@amazon.com>, Alex Elder
+ <elder@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Fuad Tabba
+ <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>, Jonathan Corbet
+ <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, Prakruthi
+ Deepak Heragu <quic_pheragu@quicinc.com>, Quentin Perret
+ <qperret@google.com>, Rob Herring <robh@kernel.org>,  Srinivas Kandagatla
+ <srini@kernel.org>, Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>, Will
+ Deacon <will@kernel.org>, Haripranesh S <haripran@qti.qualcomm.com>, Carl
+ van Schaik <cvanscha@qti.qualcomm.com>, Murali Nalajala
+ <mnalajal@quicinc.com>,  Sreenivasulu Chalamcharla
+ <sreeniva@qti.qualcomm.com>, Trilok Soni <tsoni@quicinc.com>, Stefan
+ Schmidt <stefan.schmidt@linaro.org>
+Date: Thu, 19 Jun 2025 16:50:29 +0100
+In-Reply-To: <86ikmtjy51.wl-maz@kernel.org>
+References: <20250424141341.841734-1-karim.manaouil@linaro.org>
+	 <aApaGnFPhsWBZoQ2@linux.dev> <86ikmtjy51.wl-maz@kernel.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-8oYh6WC82njjqP/La6PW"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|PH7PR12MB7356:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00fd3dd6-9073-439a-ef34-08ddaf48dd7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?alU1MmNKTmNHUlUyWVRwa0V0blpwMFc2WHRwZlMrU2VueTFJTGU0NDR3R2JX?=
- =?utf-8?B?azRiTUl1c1ZubCtqY3NvZUNCUTBRRFVOVmNKa04rb2tMMDNKQ0RBQi91QThu?=
- =?utf-8?B?bHgyNWROb0pLN3VCeWRYRm1WLzFBbzFybEFoRmR6YWlrZE5mRVN6STRkTXZl?=
- =?utf-8?B?cHVmVXZwcmpQcEZQQ0k2WklQL0d5YTFJZzlCUkJOY1FKdmk5MlZqaVZvVnln?=
- =?utf-8?B?djJNOUprYm14MlIvMTdJUzVDNHNwc25hWHZnS3pqV1ZyWUYwUlNHditIQjl4?=
- =?utf-8?B?NGljeGEwdGJMRllSRkU3YWI0RFdIYzZsempoNFQyUFNpS0RRc0JEMWlic3h1?=
- =?utf-8?B?SzI1bWF4YzRmeWhXRDRVaGJzaFR2Y3JQT2RaVHVtZnZaeGZmbkpFSWxxbStU?=
- =?utf-8?B?elBZQ29EcjRrYkR6emorUTZKT0tWS0JyaVlJdXJIQnZYSmY1bVJxNkhRZ0F0?=
- =?utf-8?B?NDI4R1doZ3FlNkE1U0hGQmVudGtjaFBCdlVrYWdpeTA3MThOMmZqdlZTMnhH?=
- =?utf-8?B?cWhBMFd0V21YUWRSaTV2cFQwT3l4ZjNHMW5zcFF4d08veHA4RFJLbUNyZmxh?=
- =?utf-8?B?Sm9NWFZqZEhMbzdia04xbUlzR0ZuMEFmU05aM2NlUGU4cU1XVzh5VXZvWkdP?=
- =?utf-8?B?ZkltditNZ0FvemM5MkZobGVCS1Z6UlMzWEhzUWxpK2I1NUFWQVZDR0F0Qlg0?=
- =?utf-8?B?anBHNmpuK0RXOUJMcWFFN0xUL2krcG5pa2lBaHhHZTVpSEJuVzl1Q0RKNHJM?=
- =?utf-8?B?S1lYcTFKY2tLdi9CUndkS25DQ2o4cURIRTc0eDFzZEd3KzNoVDE0SWlsN0lJ?=
- =?utf-8?B?eTh6SC85M1ErV3RDZ09NekNkTjJWNGUxQ0twd1cyUHVOWTQ1ZmQyKzRWUTZj?=
- =?utf-8?B?SlI3c0c5OTNwS1o4d2FqMENMZ1BJUEhCYjRhL1p2c25KOXduYi9yeS9HRkkx?=
- =?utf-8?B?KzRTemtOVUpEcy9hOHczVm5oRHJZOWR0VjZRY2F0amVjQWFmODJPeFU0K0NB?=
- =?utf-8?B?OXFNdHdSejZPaWtiNWtMY0FpVElrV0VRVUJMS2NiU25zeDdJQS95VE1SYi9r?=
- =?utf-8?B?SGlsQUY2YTN0QzBJeE1JOEp3U3Q3MHVDWFNzVWIxeDZVQVVOcE01S1pCWXRh?=
- =?utf-8?B?WUFEU1JhVXZWaFZ2ZTgvdWtCQXBFWXUvd1BPbHdpc1VuSEJkVTRzN1l6a092?=
- =?utf-8?B?RStBZUo3d1B4cTJITVVXbkh2RDNpa3lrNjhZVUE4WUJvZzB0eWxEWWU1bzli?=
- =?utf-8?B?aUhQYWw4ZDVWem1maDJHamN4OGpZVCs5UnRGbmxYRmxlVlBZcklldU54STFE?=
- =?utf-8?B?cmo4WEdmUjFKK0cyejJtaVN0VzFaRUV6UTVlc2JLOU9pcUdlOHhLY2Q1cGo5?=
- =?utf-8?B?MHlvdmpvSjdnRm40cVYybHlUT2hSRzN5KzRGQzV4TThndXhWcU9GR01MYjJm?=
- =?utf-8?B?MUM1SEJtMDlLaHRjK1pKakR4L0J4dk81Yzg4aSt1RWNOUlhrb3lQdWE1ZTA2?=
- =?utf-8?B?ajEyb3A1NkI1YVRHdHhmd2FBUVRCSDZMaFVoN2VwcmphRWxyWHhlWElKVzVo?=
- =?utf-8?B?UnFsNjZpbTNjNUlQeVl3WUUyL1RiOElvc3BiZjdxckFrWi9BMzdLb0Ztdklo?=
- =?utf-8?B?T3VLK2dVY0FTdDNzRWlpU2tKWVNCUDJVY3dlREs2bkNzSFBoQ1N4MGJqNTZI?=
- =?utf-8?B?REhLdGVTNUZmVXBkNUlROXVTUUFIaHRMMVkvRnhWR1ZqVGtrK29SdGJsaFpp?=
- =?utf-8?B?MkU2QlpTdG5RNUpKb0R1Q0IyVHgwSm5FUG96b3FMTlgzQ2ZZdmg5Q0ZrMUhK?=
- =?utf-8?B?RFJPZS9BNFh4eHl3M3RTUnZVS0JOQy9VSk1EYjNDVENLU1VCN2ZRdytycGps?=
- =?utf-8?B?UlYvNnVTQU8ycUdLR0tjUU9hZGZydTlBUDMxaWtzcW1RNnNKaS9KRm1nY0c3?=
- =?utf-8?B?MG5BZlp3dXFzQXZvc0dMYUlPZW0wU09CVnBBUy9RV2FPS2w2SmVOZS9FSTV0?=
- =?utf-8?B?MkxWRmVDaElRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NTRFT0FzVjNFL3BqVitrK1ptVlRJYk9zcG9WcUhxTlBFT2pLeU1xQ1A3aVk2?=
- =?utf-8?B?c1hoMlRvVGRHdTFaTTFUemhrWUtNUkt4SEQ2dGl3aXlUYmoxeVJ1L2plNWt4?=
- =?utf-8?B?d3djc2s3YTlEazNNWDNVNkp6UjJQNmxaeDFjVENDNXRZQm9vOEsyL2MvUWFL?=
- =?utf-8?B?Vno4RmtOY0tET3VwRWhIMEJkeDBTUWpETUphTC9iOEtNTlhBRWhNbTFTcTl5?=
- =?utf-8?B?KzZlbStWb01nS1JabmJXMGE0NDRLTE9KRGZXeVJRQWczckJUaDYrRlVXSytH?=
- =?utf-8?B?cTlmaHUxcFM0cFQ3M05SekkweWFES1RaTjg3Vlp0a3dLRlovWk5hZWhnOUNp?=
- =?utf-8?B?K2FJN2hRbDE5WjVNZTRqYUtvOGZyNlhrR1BxcWREZENMdTZ2Y1E1anpqOS9F?=
- =?utf-8?B?UEx3RTBnVktWbkpIVTJlM3IzVTJRU0dDT2tlUzRzS250VmhCSWtqaDJ2U3Zj?=
- =?utf-8?B?RUZndkREbG9GUTBzb281Rk4wOFBmZGtYWXVQdnJBa2VBY1F3aHBmTHhiTGFL?=
- =?utf-8?B?ekRlZW1sdGQzNlR0c1ZnRC9DQjQ5U1d4ZGtsd1VZa1FhYjFZaWV3ZjlVOHI4?=
- =?utf-8?B?dE41d0ptdTZIT3cvOWVxYnBqRmxITXlKa0JFUndpRmxqUnFBWE1WL3RXMUZC?=
- =?utf-8?B?M3B0bjAxRGl0cysxVzVjdExITTdJdk5iTm5RZjRKUVNKb0VEeElCVVNtdVlm?=
- =?utf-8?B?cC8vV2FHWjBIRzZySzEreU9RaVhQT3JZUHJjQ3FaZEVLc0huODBscDMwSGFa?=
- =?utf-8?B?U3k0YkNPSmIvYmNtdE5lODNOaGgvZ1Y4bnpuc2lkWWNWazRKZ2RPTStxWFpy?=
- =?utf-8?B?ZXNuanVXODUwU21lMzlXSnVVSWZPd3Y4R0ZVajE5TEVGRCt1bWp6cjVFZ2lB?=
- =?utf-8?B?dzBBNThqazJNRWl5M2J6ckFKV0xEZEovSElmWlMzTGU1bFl0MW96SGhYQ3lv?=
- =?utf-8?B?MTk5L2lXMFRUaVdTRGNrb3pFVC9NMnRJcjVUejBOUnRvUmZGcXd2eTA4V1JH?=
- =?utf-8?B?d3lSV2ZzWW1BeVJHc1p0c2gzdkNGNWoveC9FOWtCeVlUODRjRlpiOWFWZEYw?=
- =?utf-8?B?bS9NMGJVTlYrUm5Mc29vV1hKOGYyRldaOUlSVU9DR3h5SjFVcWhYbTVuRFlE?=
- =?utf-8?B?UzRvbFU2dzkyTFk0WnBhNVNpL3ZVNG04YjhEVXFGYWRVTmkySE5yWWlOcHE2?=
- =?utf-8?B?M0tCaVRkVUZML2JNMWtZSTFQS0JlOG9UZmF0Skc5Qk5ZdmhEa0ZjWkxIRGE2?=
- =?utf-8?B?QURWVmt2ZzJGQ2c2Snk4ZVZkVWRTT0FMeDFZQWRoMXdoWHBXeE81OWZ4N0M3?=
- =?utf-8?B?WUlxMlk1dDFWQ0I1dTlHK0x2WHpkMk9Fd0lIOFp0TVljVFdkVzhrVUdITFZS?=
- =?utf-8?B?WEtnOWRCUUhlRjUybEZ0Mis0K3p3eGo5a3N2QUVCNjdWY1g0cEtOOUM3cVN3?=
- =?utf-8?B?RjZ0NFNzekt0b2h2K3N1dXJXdjk4dmhiNFlPTGZQcG8yY0o0M0VYUUpwcFZS?=
- =?utf-8?B?eDR1UVo4RWVXbXBnYTFJSzcrN1hqUXdlU3dwOW9oR2o5NmFiTURXNXdRSU9E?=
- =?utf-8?B?eHR4dWU1dS8weERraUJjZ0RuMU9SbDZ5WXdkT2htMGdVQ1FsRVdZNDJGZEtV?=
- =?utf-8?B?VXJCYlFocjk2U2N6TWlzbzZYWnBKMVFCT1UzTXhVdWFwbUdBejQvM2daNlgr?=
- =?utf-8?B?LzFkY1NsSFNteHlPV3V0d1JtQzRvTFdXcjAwY2VmYU41eUkwbzlGWHllNmZz?=
- =?utf-8?B?VkJXTXltTU4vSnFQS0paRDVLNkxSOVluMW01Ymx5Zkw1L1lIeFBOT2R5ZDli?=
- =?utf-8?B?ZDFjVGd2Q1E5dHdVSUdwc29OQjJNSkdwL0JMYVNLUHBkcjRHMUg4UTZDOVpn?=
- =?utf-8?B?QnIvZGthUS9aZllZVTg4R3hYZjJJTUx3THkyejZnSDFGQ0MrSElwbzd0ejlD?=
- =?utf-8?B?Wk9IMW1nNk55aWoyaklXbk56MG9BUFBtQlVPaHRmamw3eTNNRHFZazdIOG5v?=
- =?utf-8?B?UmZISGdkdDZqVkozNWEvSTY2Sk5hdnVCaVNaMUZUNVVCNGtwNFEzempBTVJk?=
- =?utf-8?B?dndiVGdZcFdEME9zeENibUJEZ3BselpXYXpOYklCM0VXM3dWZWtZcXRKNE5L?=
- =?utf-8?Q?vR1E+5KHF0DTGRmxJRN1ZqEWI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00fd3dd6-9073-439a-ef34-08ddaf48dd7a
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:49:24.6690
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZahCakuqFJaZLNpvBEgDsejLRhe90O8ey7luah8tQFAdO94K9ZZBTLjGntCv4aoXY5jJ7m/Pkyiy45imYG4r2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7356
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-On 6/19/2025 8:37 AM, Song Yoong Siang wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Introduce support for a lowest priority wildcard (catch-all) rule in
-> ethtool's Network Flow Classification (NFC) for the igc driver. The
-> wildcard rule directs all unmatched network traffic, including traffic not
-> captured by Receive Side Scaling (RSS), to a specified queue. This
-> functionality utilizes the Default Queue feature available in I225/I226
-> hardware.
-> 
-> The implementation has been validated on Intel ADL-S systems with two
-> back-to-back connected I226 network interfaces.
-> 
-> Testing Procedure:
-> 1. On the Device Under Test (DUT), verify the initial statistic:
->     $ ethtool -S enp1s0 | grep rx_q.*packets
->          rx_queue_0_packets: 0
->          rx_queue_1_packets: 0
->          rx_queue_2_packets: 0
->          rx_queue_3_packets: 0
-> 
-> 2. From the Link Partner, send 10 ARP packets:
->     $ arping -c 10 -I enp170s0 169.254.1.2
-> 
-> 3. On the DUT, verify the packet reception on Queue 0:
->     $ ethtool -S enp1s0 | grep rx_q.*packets
->          rx_queue_0_packets: 10
->          rx_queue_1_packets: 0
->          rx_queue_2_packets: 0
->          rx_queue_3_packets: 0
-> 
-> 4. On the DUT, add a wildcard rule to route all packets to Queue 3:
->     $ sudo ethtool -N enp1s0 flow-type ether queue 3
-> 
-> 5. From the Link Partner, send another 10 ARP packets:
->     $ arping -c 10 -I enp170s0 169.254.1.2
-> 
-> 6. Now, packets are routed to Queue 3 by the wildcard (Default Queue) rule:
->     $ ethtool -S enp1s0 | grep rx_q.*packets
->          rx_queue_0_packets: 10
->          rx_queue_1_packets: 0
->          rx_queue_2_packets: 0
->          rx_queue_3_packets: 10
-> 
-> 7. On the DUT, add a EtherType rule to route ARP packet to Queue 1:
->     $ sudo ethtool -N enp1s0 flow-type ether proto 0x0806 queue 1
-> 
-> 8. From the Link Partner, send another 10 ARP packets:
->     $ arping -c 10 -I enp170s0 169.254.1.2
-> 
-> 9. Now, packets are routed to Queue 1 by the EtherType rule because it is
->     higher priority than the wildcard (Default Queue) rule:
->     $ ethtool -S enp1s0 | grep rx_q.*packets
->          rx_queue_0_packets: 10
->          rx_queue_1_packets: 10
->          rx_queue_2_packets: 0
->          rx_queue_3_packets: 10
-> 
-> 10. On the DUT, delete all the NFC rules:
->      $ sudo ethtool -N enp1s0 delete 63
->      $ sudo ethtool -N enp1s0 delete 64
-> 
-> 11. From the Link Partner, send another 10 ARP packets:
->      $ arping -c 10 -I enp170s0 169.254.1.2
-> 
-> 12. Now, packets are routed to Queue 0 because the value of Default Queue
->      is reset back to 0:
->      $ ethtool -S enp1s0 | grep rx_q.*packets
->           rx_queue_0_packets: 20
->           rx_queue_1_packets: 10
->           rx_queue_2_packets: 0
->           rx_queue_3_packets: 10
-> 
-> Co-developed-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
-> Signed-off-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
-> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
-> ---
-> V2:
->    - use Ethtool wildcard rule instead of extra uAPI (Jakub Kicinski & Jacob Keller)
->    - combine MRQC register definitions into a single location (Kurt Kanzenbach)
->    - use FIELD_PREP (Kurt Kanzenbach)
->    - use RCT rule (Wojciech Drewek)
->    - no need brackets for single line code (Wojciech Drewek)
->    - use imperative mood in commit message (Marcin Szycik)
->    - ensure igc_ prefix in function name (Marcin Szycik)
-> 
-> V1: https://patchwork.ozlabs.org/project/intel-wired-lan/cover/20240730012212.775814-1-yoong.siang.song@intel.com/
-> ---
->   drivers/net/ethernet/intel/igc/igc.h         | 15 ++++++-------
->   drivers/net/ethernet/intel/igc/igc_defines.h |  4 ++++
->   drivers/net/ethernet/intel/igc/igc_ethtool.c | 18 ++++++++++++++++
->   drivers/net/ethernet/intel/igc/igc_main.c    | 22 ++++++++++++++++++++
->   4 files changed, 52 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-> index 1525ae25fd3e..c580ecc954be 100644
-> --- a/drivers/net/ethernet/intel/igc/igc.h
-> +++ b/drivers/net/ethernet/intel/igc/igc.h
-> @@ -406,10 +406,6 @@ extern char igc_driver_name[];
->   #define IGC_FLAG_RSS_FIELD_IPV4_UDP    BIT(6)
->   #define IGC_FLAG_RSS_FIELD_IPV6_UDP    BIT(7)
-> 
-> -#define IGC_MRQC_ENABLE_RSS_MQ         0x00000002
-> -#define IGC_MRQC_RSS_FIELD_IPV4_UDP    0x00400000
-> -#define IGC_MRQC_RSS_FIELD_IPV6_UDP    0x00800000
-> -
 
-Small nit, but moving these fields seems like a separate patch since 
-moving them isn't part of the wildcard rule changes.
+--=-8oYh6WC82njjqP/La6PW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Thu, 2025-04-24 at 17:57 +0100, Marc Zyngier wrote:
+> On Thu, 24 Apr 2025 16:34:50 +0100,
+> Oliver Upton <oliver.upton@linux.dev> wrote:
+> >=20
+> > On Thu, Apr 24, 2025 at 03:13:07PM +0100, Karim Manaouil wrote:
+> > > This series introduces the capability of running Gunyah guests via KV=
+M on
+> > > Qualcomm SoCs shipped with Gunyah hypervisor [1] (e.g. RB3 Gen2).
+> > >=20
+> > > The goal of this work is to port the existing Gunyah hypervisor suppo=
+rt from a
+> > > standalone driver interface [2] to KVM, with the aim of leveraging as=
+ much of the
+> > > existing KVM infrastructure as possible to reduce duplication of effo=
+rt around
+> > > memory management (e.g. guest_memfd), irqfd, and other core component=
+s.
+> > >=20
+> > > In short, Gunyah is a Type-1 hypervisor, meaning that it runs indepen=
+dently of any
+> > > high-level OS kernel such as Linux and runs in a higher CPU privilege=
+ level than VMs.
+> > > Gunyah is shipped as firmware and guests typically talk with Gunyah v=
+ia hypercalls.
+> > > KVM is designed to run as Type-2 hypervisor. This port allows KVM to =
+run in EL1 and
+> > > serve as the interface for VM lifecycle management,while offloading v=
+irtualization
+> > > to Gunyah.
+> >=20
+> > If you're keen on running your own hypervisor then I'm sorry, you get t=
+o
+> > deal with it soup to nuts. Other hypervisors (e.g. mshv) have their own
+> > kernel drivers for managing the host / UAPI parts of driving VMs.
+> >=20
+> > The KVM arch interface is *internal* to KVM, not something to be
+> > (ab)used for cramming in a non-KVM hypervisor. KVM and other hypervisor=
+s
+> > can still share other bits of truly common infrastructure, like
+> > guest_memfd.
+> >=20
+> > I understand the value in what you're trying to do, but if you want it
+> > to smell like KVM you may as well just let the user run it at EL2.
+>=20
+> +1. KVM is not a generic interface for random third party hypervisors.
 
-Brett
+I don't think that should be true in the general case. At least, it
+depends on whether you mean the literal implementation in
+arch/arm64/kvm/ vs. the userspace API and set of ioctls on /dev/kvm.
 
->   /* RX-desc Write-Back format RSS Type's */
->   enum igc_rss_type_num {
->          IGC_RSS_TYPE_NO_HASH            = 0,
-> @@ -635,6 +631,7 @@ enum igc_filter_match_flags {
->          IGC_FILTER_FLAG_DST_MAC_ADDR =  BIT(3),
->          IGC_FILTER_FLAG_USER_DATA =     BIT(4),
->          IGC_FILTER_FLAG_VLAN_ETYPE =    BIT(5),
-> +       IGC_FILTER_FLAG_DEFAULT_QUEUE = BIT(6),
->   };
-> 
+The kernel exists to provide a coherent userspace API for all kinds of
+hardware. That's what it's *for*. It provides users with a consistent
+interface to all kinds of network cards, serial ports, etc. =E2=80=94 and t=
+hat
+includes firmware/platform features too.=20
 
-<snip>
+There's no reason that shouldn't be the same for virtualisation. If the
+kernel cannot provide an API which supports *all* kinds of
+virtualization, then it seems like we've done something wrong.
 
+On x86 we have /dev/kvm backed by different vendor-specific support for
+Intel vs. AMD. And in recent years we've retrofitted confidential
+compute to it too, with SEV-SNP, TDX, etc.
+
+We haven't resorted to saying "no, sorry, KVM doesn't support that".
+
+We shouldn't say that for Arm either.
+
+
+--=-8oYh6WC82njjqP/La6PW
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDYxOTE1NTAy
+OVowLwYJKoZIhvcNAQkEMSIEII/fZn4RSpkWjs+K1CouaBN+lFLTetGT/HGblcvfb9w1MGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAZF3UeKEp1fX1
+qb4qMwFxPp240pSrWPJnjtAd+C45wLNgy0rvxM4a/SoZW03xflK6K8Fl2sIaPepLERERF9k/SLN+
+sGKrsSCE0JHDTjq9lRalv1UHVEgnrQe9JaVa/2Jcu33rllcOv0y0v+h8xuhyEY4JoqwCwsfh2RS/
+USZn9vxQnGeHPMJrQf/+avyLlRhzalNkQKst0yavMILRv7dtNS3yZifd0zWKDbka2nLfGRASnDks
+dYRXre7Ya2jJ2HT330wE+IzCUaFxW9jVr9Cs0+ODC5NreKR7ZIfmx+/9nak7UDPY2mcArLtOEjE4
+xr0q0POAiRD76lBIZxaUir34RsV+JesrNyvTOA5Ev0X2uGiSSgcJdESLKwdePjEWbUJL+ypcCHGY
+hr7pzpHQ11iGqk8P3pX2y/kMGk1Q2RTScOpGUB0kZsR3KpH5Dlfwi8e9oikKP4dDYgq86D5lXQlr
+yNT/iOP4fEtLYBDYePqZkgXLuECgWM6R1/91np3XXQKMa0YBiRMsbm4YUcpBQFExMtSyWVLXF7dS
+pdWKfJqV3UFbFsXf7UKtLLcxmnxSaDA69q4aJG+2zoYgTz07rJT2+KKi1DWTIeezUQIVoeegb+Ln
+gxTTxHkByue0WwZXarUb40fMbnMLt3JKR42IXHV74n6fslQNv5kwC9rDvP/Kj/gAAAAAAAA=
+
+
+--=-8oYh6WC82njjqP/La6PW--
