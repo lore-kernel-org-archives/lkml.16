@@ -1,80 +1,97 @@
-Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA2417A30F;
-	Thu, 19 Jun 2025 14:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B7618E02A
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750343637; cv=none; b=bIQY3hbEEHH5lUIQo1zwRZSI9Fr1kTT3gg1dTiGhugVy2aUHIF5xhY6pokKbSqQ+9AsCTvobM+S6U1Ubc2YhSaIoKAJkgOaM5xN6rNB2jyPJp6wRKDY5y3uqJ5KqicBq7gIqcBjHgCCF0hTvh4Cq/lKAhTshtWpwHdZ2NfV0Quc=
+	t=1750343675; cv=none; b=I5tHdFDiceTS5KiSIOPGAs/rR2EMtVq8+G1Fppw/zR7BB8+9oNhY4WHiwmXMNGsJAA85Hbu/cfiDA2kdXIgMOVjzL7M+mAh5KFDEWrY9YW6DpseyxH2Y92MURPeVeb+W//426e/9PTEtwOSP8qJZKMWEnD5NPkpHQTVULcQWG9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750343637; c=relaxed/simple;
-	bh=wOZ5uTN5479Z6g69DPnz7C9RgtplSjaSC8wJO85CcYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rdUTjTFJ2PzGG8gBFcqKm5/ZvzPeQ+H1XF4+9T4xr3BgeItD0pg3+h8LBFb1m3//dJytR0kZDc3YqvXhRAZdix1qKVoijVQxWttRsVPf69H6Lyhlo7z55h+vfUuldANs71/KG4vcvbOPTm6d3BHIim4rIJb7twNiZHlkD5gkVGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=oeEkQjjr; arc=none smtp.client-ip=178.154.239.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750343675; c=relaxed/simple;
+	bh=npDsCsbC8yB4lDdI+t7kw9s48Aia79Vp0ui0m6EisQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jb8N5wCDddqZPUNWraagAxZfUbiwfvl1ZCRI261HlMBlEoxZ5Own52jKOhPC6Aa03/JDKcPTx+AEaWBwyIt9Dh9m4yvzHXSOIcsWPmHwR3byDYNmSP1nKWGPe9YcK6u+uS0UaQRi0B9A5rr3FKwNH0c16R897uXnoGYWawp4Vc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xdfldzVm; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="oeEkQjjr"
-Received: from mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:8916:0:640:ef62:0])
-	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 26AE36160A;
-	Thu, 19 Jun 2025 17:33:51 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id kXPAP38LjCg0-jyKJDS7h;
-	Thu, 19 Jun 2025 17:33:50 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750343630;
-	bh=jcxSX1TMbsEbkdeHJrOiYkZWZnk9zdTh8ILIKxpkwfs=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=oeEkQjjrKjnAvP5AOJojH7tynNWsv1Qx2eHGd3IfqmIQlkMyFfOrvmUfHn3wVM31j
-	 koc8CkTx/bcNihUK9qNc1PapNpNw3jXTj7RjYBbIS4ukuhQVPMel4MyldDGqnexYHt
-	 CpSlnxGB0NGfD1BaLAf8vky04Kj0kjICkaniJJDg=
-Authentication-Results: mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Thu, 19 Jun 2025 17:33:44 +0300
-From: Onur <work@onurozkan.dev>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com,
- longman@redhat.com, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
- a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- dakr@kernel.org, thatslyude@gmail.com
-Subject: Re: [PATCH V3] implement `ww_mutex` abstraction for the Rust tree
-Message-ID: <20250619173344.6c72c48a@nimda.home>
-In-Reply-To: <20250619141401.GI1613376@noisy.programming.kicks-ass.net>
-References: <20250619140656.498-1-work@onurozkan.dev>
-	<20250619141401.GI1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xdfldzVm"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553d52cb80dso942694e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750343671; x=1750948471; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=npDsCsbC8yB4lDdI+t7kw9s48Aia79Vp0ui0m6EisQ0=;
+        b=xdfldzVmsXsxV8SZVe6rDFWUuEhC9WEZjIOKl5aeole6QtnyWcJUJcuqL4DomesFUH
+         exgezVW6d9v1DR8X9nkBC2ZzJ0DdJsUCbgwTtml6wl0IZjdnUx3hL52oSTHrLeElznOk
+         McxFkcGl225hcHNXcb4pvBHQN/komGXsrFsW6/I7TB3y1qjOmoWJtbGlrFyh97TAkoAw
+         36PxV41Px8SlaNiWoSh2+U6ZpBp+OdZJwtkzkKfpZM+GHwoaqjfOWXLv9DLszl1n4hVw
+         EVKJhw9u5ADo0rfJ3vYwQQhPUQ7K3Shy78Ep5MKf28WH/1wz/ksL3kKjzWwq3XjAt0kV
+         emfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750343671; x=1750948471;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=npDsCsbC8yB4lDdI+t7kw9s48Aia79Vp0ui0m6EisQ0=;
+        b=NEPg8+wVFrWYb/7xhxi7YwN3NBp19KgXL2smosPAWNfT/jte6+XKnDfO7AUURvS9be
+         cjBtvAvT9bWkrvVhns5FXagBUR5gQo7usTG0qaZ6CEPy+1GU+UA4d8jfN4OPzH76xefu
+         wyb8feJztiXW8dOeb3U89fgnFAlTcXmGvBia/v7NAoG56dzSNWqOlVYE1ojAy+p2u8bW
+         S+m0D/5aPp8SoQHF631DDRy7aNVpGqF2/4nO1mcCJYsT9IiUxltLXCIps2Tq8cm6UnQJ
+         2+cKrbBQK+6wM/G3n5+1vleGMa4zhdVEqeKDFfVRW+YKjgUMId1EZ44gwa8HelsHb10Y
+         uYfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWv4uoVmu4FCMZeNyVALlR1rN8uht1v/iQVDMJctJBS4gxdGp3yOG07OmtAbavgxQn+8LpJPOs0oFUT5J8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl5zRcXont+xVZPRsQdWZNW/QKkKnAJO0h8eC9blgYIlT04IlI
+	8Ezi7WGx/nxog4B6mIS8XBsFDWEWo7bXF64o2s+GAJ52Zp/Oc8deJKu4PfNk7pg1gU3fSSrL/2r
+	+jEbuK8Bksx6SO+Irks1cEcGMTIrs+Ae7Q75QOKWTCw==
+X-Gm-Gg: ASbGncvobSUcdmQXa6XVvgpNuMVpznlmt0ChGKFaN4Ob8BsYVacXozOVxpL8SLMr0b9
+	+nCB1gXoJ+Vr/DtTS4VBaHy0Qn1grUaGiITzkcuylIjzHW6C+aiRMFPaHvFoMJfSbxlmGmqCLRB
+	8oxtL9d5Axq903Pzy0HH4aWTs1GsF/HbKq4qfJeVj8DRZ0ZQlrsPimmLNkqIVxDz6Rz/+2mtcSJ
+	iE=
+X-Google-Smtp-Source: AGHT+IGTg4fC3jUJFCbywRZz/VrLdnK1jrWH+Rcuacnc6SmvAw8kjD4XHlxnLFwvrsW49l4uIWj+tyHjhyD2bODyADw=
+X-Received: by 2002:a05:6512:3090:b0:553:cc61:170d with SMTP id
+ 2adb3069b0e04-553d97f06f4mr1085732e87.21.1750343670809; Thu, 19 Jun 2025
+ 07:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250619-gpiochip-set-rv-gpio-v2-0-74abf689fbd8@linaro.org> <20250619-gpiochip-set-rv-gpio-v2-9-74abf689fbd8@linaro.org>
+In-Reply-To: <20250619-gpiochip-set-rv-gpio-v2-9-74abf689fbd8@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 19 Jun 2025 16:34:19 +0200
+X-Gm-Features: AX0GCFubK_DwyskV-8MDyKBHZbV9NQDViI1V1zsdGePHy5OXUt193JhwAEyCNeE
+Message-ID: <CAMRc=MembHffEuLYhg6-GN9fRA2Sk5WUCsZdLOTKNtdJYqPkRw@mail.gmail.com>
+Subject: Re: [PATCH v2 09/12] gpio: reg: use new GPIO line value setter callbacks
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 16:14:01 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Jun 19, 2025 at 10:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-> On Thu, Jun 19, 2025 at 05:06:56PM +0300, Onur =C3=96zkan wrote:
-> > +bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
-> > +{
-> > +	return ww_mutex_is_locked(lock);
-> > +}
->=20
-> Do we really need this? In general I dislike all the _is_locked()
-> functions and would ideally like to remove them.
->=20
-> Pretty much the only useful pattern for any of the _is_locked()
-> functions is:
->=20
->   WARN_ON_ONCE(!foo_is_locked(&foo));
->=20
-> Any other use is dodgy as heck.
->=20
->=20
+Ah dang it, this is still not enough as there are users under
+arch/arm/ that scoop out the gpio_chip and call its set_multiple()
+callback directly. Next week, I'll just apply other patches from that
+series and resend this one corrected separately.
 
-It's an abstraction of `ww_mutex_is_locked`. Since this is an
-abstraction module, as long as `ww_mutex_is_locked` exists I think
-we should keep it. FWIW it's also quite useful for tests.
+Bartosz
