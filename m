@@ -1,168 +1,141 @@
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010001.outbound.protection.outlook.com [52.103.67.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A2B25DB0B;
-	Thu, 19 Jun 2025 07:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750318252; cv=fail; b=JLvcinDmeQtCxs1+CcrPoCscTAD0c4OP8IMjW8XUM0jN3EpuhzQBhNue+VFiqOu13zh7gMgfrczlmXjOPn899d1ftmQWageA87BKUuDq3fbTNz+GEjEh5N6nMZ98ERIAUWq1LxvBe8GPhC1i+MaTEYwp301RaUi0BMb7cjAR6b8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750318252; c=relaxed/simple;
-	bh=ldNZrW60LNT0QWgpDja2sYAYQiZSGIZ6BV1DPbR8bbs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P8Rg0j1GEDF6K2qXHZ2nQap9rpM+5bodcucy2ioRKIcU3vRnxFqv5+1BrqKeht2Tz28bH5g7t+GJ42tEVS8QDESCTNXpluEAP5+1tTMUskFTMMR+xpCbWnIhvIEr4tjs3etJVN5sZx+y8BDwt46AVAOcuO5hUmpBI1KFEz0JPw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EBTqB2yL; arc=fail smtp.client-ip=52.103.67.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBD2207DEF
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750318307; cv=none; b=nEHfKrMGcwBIJSFVzJQ2pTzo0DX5xFia8Az2AMt694zS4bxc4ZVSJ5DKyeBOodL/VmVuo7cstm2kEnU7LKxB1hkwLOh46OunZtZ9fA3lQKFom39RwvjiH3Dx0Mn8p6/DIpgLnshkUai9jgILM7QvenyZHw07CMrqHyUsYGxdogE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750318307; c=relaxed/simple;
+	bh=h/xAbTgqwuDuCs07xJgrDe0Zl4dSSM0gNNwMrlIxM4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxVfQjv+y0qhbnDGWW8doPGKTVEkODM9Zhia8jT3eBzZCNPdY1CqdNG5fXwP8dUEq5BYv90UhPG2xb5N5EJ/ZMW16HwhoXqiEy8VUmeN4Uxadb8uN3ycIHzZVTar/70iCiuc/ulFxIBlABIF7w+4WxVy0ohkTWzFaoJigI7YyI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WrsIaStf; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EBTqB2yL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dntzjtXIJXF8e+hNVlaB1EbfuAcc9JGmZqkZpuyeK/lDqaKIMm88uKUWw7afjJgc80wttIgRZoOV2+jtCwzETXlSeQC7nXt+5AHBtJ/xXtSIFo/PoXFxLDvmrDzv8vSTe97MNq2W7Q6bwwDJ36abnSKEQxgQf/TtKAeoUiGnGvuAZB0vl6P0xONGlu/QTdS9rBjIXiiRM0YFpZOQ2merzDI3ZOHu1ndeEY93iJWTAbYfcxaEBuUbcEdxmrvgULZLa4TafsaRUAnvPF0Ww/OOTmhEQc3KHSFsdslM3yYJCqD8cqp6ZYpsKBXtvtshx4XsM4S2I7GOwI9egMH3o7paCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1qFU7jFfawnZrirkptHldHvPeuUgH00LkqkjD6ZGWKQ=;
- b=W4oha5yC0zVa28XXk8GNDC8as7rIRHhOH2ehaG4PwtfIc4a+qMLKrWjvWg2uKhOPWF3KZm9b95fU0Nvvo4lWpQXxNW8RY8TWlL1r7YErnBelnkkZEy8y/1300rHIZhwKzDSqfGAlEEtvUzdZxJLB+bjMQ34fiahp+dXfoOzvsA+zpzYkJDc/oKM0nzPVO8GciugOTIfyUUbPlJHad9S/XPiR3K0lMkdgvTBOw6j6XJI+fcnpIheswow2muFWS4ItztkeWcdSOiUkTkenwn3VhykZdBG2KaeSlHMOLQGneO2TFZO9jpaO2yBrR6XdU30aU0sf4dQmlomTbaVJ7NZVEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1qFU7jFfawnZrirkptHldHvPeuUgH00LkqkjD6ZGWKQ=;
- b=EBTqB2yLq42y3fWhf8x92plCFhT9PleCXIOxsLrbISoivNWpmzs1u/N5OWxr24zKnFVN5oxeJBtsnfWHdbPUDNvbUG8KMB5zOlhp1uh7q8B6EegTqj3chtC4DSdgx1ZBumUVagYJlzFV5Qo2nZmY0W0YAcgNIwq8cXgppt9v3HEagIcpopu5OH1VglPk9jbXFt3CeFIkdcJwQo3p1v++Eqjy034A/0Xm/QGZJsAytnK2ps2pb9GYsTzGxrBPnInQwmFtWoXz5b6GfgKsaTRrBMI0QbqHhzHmiY1C9agSpLjUqwkUdLa5tJ/OJVzL4PeEhKQ12Q9jcKDZAJ8EWRqwIQ==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by PN3PPFA16F39546.INDP287.PROD.OUTLOOK.COM (2603:1096:c04:1::c6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Thu, 19 Jun
- 2025 07:30:38 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%3]) with mapi id 15.20.8857.020; Thu, 19 Jun 2025
- 07:30:37 +0000
-Message-ID:
- <MA0P287MB226203FCCC7A25D2140ACE01FE7DA@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Thu, 19 Jun 2025 15:30:31 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: dts: sophgo: sg2044: Add missing
- riscv,cbop-block-size property
-To: Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-References: <20250613074513.1683624-1-inochiama@gmail.com>
- <175013680588.1018298.10559632401541865399.b4-ty@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <175013680588.1018298.10559632401541865399.b4-ty@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR06CA0203.apcprd06.prod.outlook.com (2603:1096:4:1::35)
- To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <8ff27e79-9697-4acf-bb44-37bb743ff401@outlook.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WrsIaStf"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7426c44e014so380659b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750318304; x=1750923104; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/6HEeVYXpXU6RreyOy7zn5CfwVrX4q21JdmfX9O+7vE=;
+        b=WrsIaStflcS+BtjUi9gmFHObJuC5gl/OyoV0Lkw36FfPIqBHv5PEuCmMZ9Mpz586+9
+         5ipUOPYEaqxkOuxVxqCtpnck27Ow0XjiJElcwSYBDpbMNCd89NAYSI3ojtOGqYeKqmeD
+         pWadNSYYwoCVk5C4Nzcf8AIoE7lji+/PslNiU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750318304; x=1750923104;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/6HEeVYXpXU6RreyOy7zn5CfwVrX4q21JdmfX9O+7vE=;
+        b=i3QxGZEZ4iqX04wWHrQoQ9kCgEj1DN2mq408UjVZgt3Dm1SPJ9yl7KWWVXqHkfShXK
+         Y4MRfpzLCDH6q7LVurMP7qh23myE8GCzH9cISGp0Jaa6mbfw5avnlYfQyDPRF3ULw33i
+         HXBBEtFdTp+YNOMnrM0iEwY8IWkAe+ose4rbHP7EpCbNTgo8WD+0W9OEEmURu17rr2jI
+         ZJY1dBT9XVJ6h8J2hn2nYHR2jKOX8JagYAz0SE984Uu5GJquDwTI8UYvTpvhKRKl/DBT
+         EwC16QNnHVJqZsxIHw3Xbx+bBBuG1bqDyg17wDAS8nQM+a6xGoSdzOvMZ8oKq5dx7E8m
+         uJjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXj7SJyDsWHalnNCXAwMU473LRdCfcGne7sosSQbZROzwI7WTBtSLk7a2xu3n505a6uqwXNABttvIVueuU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDRqBLroqb3P2ncKPNRYYR7EgvaQnR6s8TnQvV0DfGrM9hIyvD
+	aw4Q4KplR6qriGdNGEL225qU9DL1OQAGuNshrgNEjEG4U1W13z50cf5vQBxtASiayA==
+X-Gm-Gg: ASbGnctzzKzDROnTb3nfxW5nDO831BpKragX69aaQgbUUYmI7BTL5PHzqHq0Jbh5kV/
+	VkoccucIlXnH3UTJ7xUTU2hKEJVVKeINjbnVaVu+skhRhRqS57Dwl7h8XMieGuvWQRm2khTAvQo
+	BW8PzC7DwLreM7zul16uUkB4PF6G4oXSBcK4UKuOvUnhVR7ynXSWgeHVgMY0JZB63xXjmbtGI2k
+	f2bXWxU32x9RA+57zPqYwsvGu+CWFUMhP0ggCu2BX6eZrVbSbdKn/4uxcBMq5ow0vMgAkTBq356
+	iMrUOSaEv6ukixMxfBoKp4XvY8Fcx1oi/BCrTwfSRfuK4vKFMcH179Tw
+X-Google-Smtp-Source: AGHT+IF0ZYZgWeMtdv/hdPMG5U98Dqrg1Jl+7X1ZOlhA9cR0wv8e8vSVU5qxSXVj3uoB4yRwTNll9A==
+X-Received: by 2002:a05:6a21:6d8c:b0:21f:53a9:b72c with SMTP id adf61e73a8af0-21fbd5d4e88mr30033304637.38.1750318304219;
+        Thu, 19 Jun 2025 00:31:44 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:10:ccaf:647f:8bd4:277f])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168d7ecsm12385185a12.64.2025.06.19.00.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 00:31:43 -0700 (PDT)
+Date: Thu, 19 Jun 2025 15:31:39 +0800
+From: Sung-Chi Li <lschyi@chromium.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] hwmon: (cros_ec) register fans into thermal
+ framework cooling devices
+Message-ID: <aFO82_5riDyC0FMs@google.com>
+References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
+ <20250512-cros_ec_fan-v3-3-a9f2b255f0cd@chromium.org>
+ <7309c804-19e3-4715-b8c9-efa31c8ea9e1@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN3PPFA16F39546:EE_
-X-MS-Office365-Filtering-Correlation-Id: 441e7282-9ad0-4720-5d81-08ddaf032f9f
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|21061999006|5072599009|8060799009|7092599006|15080799009|461199028|19110799006|6090799003|440099028|3412199025|10035399007|40105399003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cUV5YnprYzkvRXRnUklGbVAzbUhnTUxMQUZEb0wwd1lTTDlWOGRBenBRRnN2?=
- =?utf-8?B?UTBmd0dXREh5MSs1UG9VbjRhZnVZbnJabXVnajh5V010SGNTVGdjZk9pNnBN?=
- =?utf-8?B?SWtrSlJQeDZpYVFqMUFXZmI3ZUxuSEtTQmlGRXBCeHkzK3lGaExDZE1BQlZ4?=
- =?utf-8?B?RG9hMkUwUUFsL3ljbk1QRzNlcW5OQUxLbU5XSmJtb0RTcmVaV3FoalZNanM5?=
- =?utf-8?B?bzBNMmgxRE5aTjNBN2hQdDNoUGFCbUhtU3luUVFZYXBRSHFVZ21rclBXaFhC?=
- =?utf-8?B?aHdUSEEwTUVYZjlCbVB4RVU5ald5bFBEelg4S2RuTjNmc1RWK3BmUS9LNTVK?=
- =?utf-8?B?VXdzS0Z3QUkybElkdW5tb1ZPVjFyY0lSc2E0citGRDRxVnBGendWWlJwOEZU?=
- =?utf-8?B?TkRJajU4YTA1cCtrbDRmMHJUWmxDQ3ZNSTBXTGRKUEpVcEhNZFNlVEZUbW1M?=
- =?utf-8?B?T0o4Nytoa2xVZjR4V3R3N0tWUStpUng4SytlYWJHb2c2T01iUzZ4UjIySFRF?=
- =?utf-8?B?a2x5OXFOcm9zUEhZaFU0bWd6K0pTdk5EbGRWT24rSno2NS9VcXlvTXQ0N1ZV?=
- =?utf-8?B?ZCtZdEovb05QckI4VkJMbThQZWJzemFCcHNLOXJYVHMrSkJtOFN2aENPcXdJ?=
- =?utf-8?B?eUxCcHRBeW1kTXBBRDdPMk9LbG9lYUMybkcrRi9CUjRvbyt3WUlqV3ZQazZE?=
- =?utf-8?B?U0YwaHVZRlNoc3hJUHhuMHVCaUpQcElUTG5GbXZZNnByVGt5bys5WmVjakhi?=
- =?utf-8?B?T0NqMGlrYi9HT3pkN20rYWdHQzZTbnJCNXQ1aFJaNnh2c1dhTmhxSzFibHda?=
- =?utf-8?B?N3pINVRWbTM3c3l0cnEyWkNObjhFdDRsUXgxYm9KeW1XaytvUG9nZHczR3Fy?=
- =?utf-8?B?ZEszMHA0WmlJVy96a013a1kwdFArUHR2Y21CZnAvakpUTkRuYzN2eEU3Z3Zn?=
- =?utf-8?B?RFg0NDY3TXVkM0E5N2xhaU9xZFIxR2FaOWp4ejczRjFXakNrZXJMalFld2Iv?=
- =?utf-8?B?UHVWWlNXMjNLNnFqc0hYVVVvdUdYZVpka0xvVWdsK3phUTVNMDkzcWJ5ZjZK?=
- =?utf-8?B?UWNHL1psUjA4NGlRYjZ0dHdWb3lud0w0NE5HaWlESGZGb3RjbHQweGJhN2VL?=
- =?utf-8?B?TXl6MlNBcnk1bXhYcDRHbEttRE1JUHM3Z2dadzQ3UWZzYTFRK3B6SUwzZDRi?=
- =?utf-8?B?MGtKNVdCUzRqTWlFKysvR3FJY1pTTGZ1c2JtN3ZhYmRpbUlTdUJRR0pCYkRx?=
- =?utf-8?B?Q2RLd0tiVDBUK3JGRm8vUTlhUXVKQmt6bzhXalRlOGhxcStJdkNXTDhNTExp?=
- =?utf-8?B?bFVKQWhiZUhodHNYRGp5aUkyQjBiUitSMHF4c01yWFJRajlocXJwTXJ0M1F2?=
- =?utf-8?B?Wm1uaTdHc0ZJbUhmVFBRb2lwbU9iL3FkcWhUK3ZoRzREbjVTMFFUVmpRMXpK?=
- =?utf-8?B?WWlWQjVGVklSSmRQSGV4Q3hQejJxS2R6YkY3dHpvbkhCb2NmMXZqNnY4ZWZr?=
- =?utf-8?B?N0tDMXhONjQydmF6ci80STRMVDRCMTVHT0k4bThUcjFiZlhRUFpFbnVsbXZC?=
- =?utf-8?B?Ym5OSDI1RFJTYzJaMU5xWThKbnB6Z1h2QllwU1U5OERhWHZ1d21BWFpIbzZ2?=
- =?utf-8?B?TkJNcGdmbjV6RjF5Z1RrMy9LMGpEcmpJZmhGVSszMG1Ucjg1TEVTMWJibHVt?=
- =?utf-8?B?dllGNjNSTy9WT00wZVdxNUZaUUd4N3I0elF3ZEExZ29rcWtEQzdiMlJBcTU4?=
- =?utf-8?Q?hdQYiSW1eUBUQc0szbrl4odrjvrKxDmup7qqQkT?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dy8rTm05VlV0RktIdjZGSnRPNjB3Tll2eGttdGp4a0lTaTJWanI1QzFvcWFh?=
- =?utf-8?B?dTZpUEdZYXFITFJIZHdSUFB2UUI5b2pBRG1rU0NzK1hkUktlZGRzWVBoV3BR?=
- =?utf-8?B?b2FnNStwbVMwUmNCSC91c3dvOUhtdjJkVFlmLzArUjQ3amE2RzE1aXhuWHlx?=
- =?utf-8?B?c0k4b0V1WWZ5QmQ2TjgvNVkzNkZNaitBVHl3MDdtUzg5ekY0R3M5S0c2VDI2?=
- =?utf-8?B?Vmx5azYzOUtLWDY2N1IwSFREbzgyaWlEMlhIVzNFNklBNXE4N0lXK00zOVZu?=
- =?utf-8?B?Wk96WWVPMjNFMDlqRVByY2p2cDNhd1BqdGJtRVlpY2FsZUJzNWliTjExNE4x?=
- =?utf-8?B?U0RyOXgrVGdET21JQTk1bFNxR215YmVBckVtMllDY0VHS3BqcDVsUXh1UXFm?=
- =?utf-8?B?bE9uSmtxbU1JejdyMVp6bnZFcU9ybUlvbzJUMVdWckFKU2VHbFVEV0RkMEpu?=
- =?utf-8?B?UG1ST3VmcU9DNVAxeStSUFZtaGN2NnlZbkFkOHo5eVNPakVnWHltajQzcFZs?=
- =?utf-8?B?RE5Ib0lNWlZacm1SVnl1MDZuK2xRNjZ5eHZSWXUwek5GaUxJYUF5WVg2dkRP?=
- =?utf-8?B?eFVaeHhUOTU4dTd2c1c1cmhubnY4SXpsbUREUEpIZ2lqWEwvajlIY0FuYzZ2?=
- =?utf-8?B?Nnl6VXVBMzBLWTRvd09XcHlwUkY5ZHBJaERNbWNnRkQ0RVFKZHJmOGpGa1FC?=
- =?utf-8?B?NjNlNzZKYUpocDhhNUpTdFZEb0pqNG43YzhuOEJBV0owa0dyM3B2eS9NM3hh?=
- =?utf-8?B?RGNxbkdVSHl3bndITWlGbnBzM2lqcUlpUWFQNzM0Q0p1cHFkQlJZbnhzUVRK?=
- =?utf-8?B?SWRjUGZPL2RpelEwM01CUll5b01YcUhUMnBFYVpmaFhsejBBTjBvSlA3bE03?=
- =?utf-8?B?cnZQQWUxZ2hJWTh1TlZYVXhzdVBZYmx3ZnltUXNpajVQNitscWdnTHRYcWR6?=
- =?utf-8?B?TW95TURackt1N3hadWlHdEgxckwzMjJHUkdYOU50WHdQeHlUeTZBVVpQcTJj?=
- =?utf-8?B?RlVoczFleW4wUjZSRXNGZHVtOXZWUXVFbk9veFBkNUp0RHJqbG5GQmZSZzQv?=
- =?utf-8?B?NFJmbmJtUVRKdzVEeTlTQ0NROTRFcEVvT2JNSmZjTDRSWW1DRlg4OFkyb3c1?=
- =?utf-8?B?VlVEOU1WMWtBVUcrRXVQemV2KzZTVzFmS0xvamI4SnQwdzFNTFhKRlVpN2lk?=
- =?utf-8?B?Y2xhcmhqYjM5eE5jeklCYVdwSUtCU1U4cXdtaWpTUlNhN1ZVWGdqQXVGZkk2?=
- =?utf-8?B?OXN6YjM3K3h0L3piRkFmUVBSUTluNFh0SGlIOHRLTTBSaUZKNjZSQnUvV0pH?=
- =?utf-8?B?K2FOWjRLcmNWR1U2dTd1RFM5OFY4eEZRRDBwRHl0eGk0cDZ3SjBlK0R4dG1l?=
- =?utf-8?B?N0RyOEd6dXdidFNkbFR0bXpETk0xYk1uY2kxUC94Y1AxZ1NyOElZVVhmbXNP?=
- =?utf-8?B?KytkREc1a01jSUNNd3hyamFMdGRCUEZZdVFtWUg2ajdHWmQ5dWxSNVdPaERP?=
- =?utf-8?B?QytVNjBGOWo3WmRheG4wTmVpTTVheUlSSDhsS3UzbGlJK3FzWkR3S3dvS095?=
- =?utf-8?B?Vjd2WGwybWZLNTh1cUlNNllHVTU4cnhaTm1uVWxJak1qc2EzRWdhT2hhZGRY?=
- =?utf-8?B?b3lVS2NYbE53TURENVhoK25BSDYxZFRSRTljMlh5cVJvbU9kZlBSck9aK3ZJ?=
- =?utf-8?B?a2F2dXM1SHVZZlpvRmk5bEhFbzZnZ1Qzd2FIOU13NDk3OVlxYkZCTWVtcVpr?=
- =?utf-8?Q?L/RFL3nH5rTgdee5vdjV+lyGWxPURyU7Jj5X1r+?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 441e7282-9ad0-4720-5d81-08ddaf032f9f
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 07:30:37.8448
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PPFA16F39546
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7309c804-19e3-4715-b8c9-efa31c8ea9e1@t-8ch.de>
 
-Why not apply this to fixes so we can pull this soon?
+On Mon, May 12, 2025 at 09:35:47AM +0200, Thomas Weißschuh wrote:
+> On 2025-05-12 15:11:57+0800, Sung-Chi Li via B4 Relay wrote:
+> > +	if (!IS_ENABLED(CONFIG_THERMAL))
+> > +		return;
+> > +
+> > +	if (!priv->fan_control_supported)
+> > +		return;
+> > +
+> > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+> > +		if (!(priv->usable_fans & BIT(i)))
+> > +			continue;
+> > +
+> > +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
+> > +		if (!cpriv)
+> > +			return;
+> 
+> The failures are swallowed silently. They should be propagated.
+> 
 
-On 2025/6/17 13:07, Inochi Amaoto wrote:
-> On Fri, 13 Jun 2025 15:45:12 +0800, Inochi Amaoto wrote:
->> The kernel complains no "riscv,cbop-block-size" and disables the Zicbop
->> extension. Add the missing property to keep it functional.
->>
->>
-> Applied to for-next, thanks!
->
-> [1/1] riscv: dts: sophgo: sg2044: Add missing riscv,cbop-block-size property
->        https://github.com/sophgo/linux/commit/b8518378ffd3469b5ba871ee0210b3c16de45d66
->
-> Thanks,
-> Inochi
->
+After rethinking  about the logic, I think I should try and register all fans
+with best effort, so I should not return immediately; instead, I will log an
+warning log, and continue with the next fan.
+
+> > +
+> > +		type = devm_kasprintf(dev, GFP_KERNEL, "%s-fan%zu", dev_name(dev), i);
+> > +		if (!type)
+> > +			return;
+> > +
+> > +		cpriv->hwmon_priv = priv;
+> > +		cpriv->index = i;
+> > +		cdev = devm_thermal_of_cooling_device_register(dev, NULL, type, cpriv,
+> > +							       &cros_ec_thermal_cooling_ops);
+> > +		if (!cdev)
+> 
+> ..._cooling_device_register() returns an error pointer on failure, not NULL.
+> 
+
+Thank you, will use IS_ERR for checking and %pe to print error.
+
+> > +			return;
+> > +	}
+> > +}
+> > +
+> >  static int cros_ec_hwmon_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -412,6 +489,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
+> >  	cros_ec_hwmon_probe_temp_sensors(dev, priv, thermal_version);
+> >  	cros_ec_hwmon_probe_fans(priv);
+> >  	priv->fan_control_supported = cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
+> > +	cros_ec_hwmon_register_fan_cooling_devices(dev, priv);
+> >  
+> >  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
+> >  							 &cros_ec_hwmon_chip_info, NULL);
+> > 
+> > -- 
+> > 2.49.0.1015.ga840276032-goog
+> > 
+> > 
