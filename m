@@ -1,164 +1,101 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371C325D8E0
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDCC195B1A;
+	Thu, 19 Jun 2025 08:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750320301; cv=none; b=tzOW+KCqEakAN1eZEx+qn8/A42asUo0ek/pb0n/L2iKqcf6q31rfQu7Gv9EfbQbEFxYr/xJMHx8AM8Y4KylC+RC995oTCmhSRnf2FrGD8L1OE1QcqlqZ9ozUp6OpKKHof6mFQtNzr2rUQjJ04RK2vEgSa9299+aZew9oOMSb2Dk=
+	t=1750320379; cv=none; b=S4ygnWOtIMDigFGzc7RJGzKZ1HbZYRU+A7U2GoNuZXNhIHpZWhPxlkfvk45+Stln3TRCUxRmlqcGL+DOJAOY8UxOAZkPZWeZrv/CQjDMSfhmOit7SN1ZQs3vrtUDhiK0xGI6p3lY0qIv4jhr3n93ycndqGNjexdcSmf05YYkFk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750320301; c=relaxed/simple;
-	bh=kMUwQy5yS/0UyV2suBDJYNHnJnmJCAsNt2MeM163mxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGZKqxQjTgmctdt5HXrwQA535dA/jvQJxfrW29+l83AfC6Ftqfz/a2Bm0rvdRhJAtTwf/2yI62WU/6JjoIQjQAG2s2eWuseylt6A1duK9HRvPWRf3kDcDvG0ZrbgAJpo9NAI9n/LKICeZ1SgSrJzeuMu0doI6I+2u5rmKtKqjEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qV4ZAk1x; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DCwPT26y; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=F14/RhsO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=D0fulWgP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qV4ZAk1x";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DCwPT26y";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="F14/RhsO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="D0fulWgP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 10B6B1F38D;
-	Thu, 19 Jun 2025 08:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750320298; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T9tK8I/Q1RuDUNKJbS5HFbDvN87u0BlSb6P1raJhR/Y=;
-	b=qV4ZAk1xOpeep+2wuxQ9eVRiMcnmcq7d5nQk+FcnPAUvTaxCKSE3xrVAMJt03ZyMf59D8m
-	wR1bi6/sJ1X1nQU3GCVEoatGvzfxM3+s1Fqm8oyksAkyrk7iKkltWA0V2Dw6d4uMvm3F0W
-	GdMZRglRKoQ/HPiveUvlUnH4K1qkhSo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750320298;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T9tK8I/Q1RuDUNKJbS5HFbDvN87u0BlSb6P1raJhR/Y=;
-	b=DCwPT26ympUpgRDG5u31i3DmStOmi2k8OHp00O/tw2SXmu9/tGFrW9GZwqB2ebs+xKILIA
-	lPIhESnGR4YJNDCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="F14/RhsO";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=D0fulWgP
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750320297; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T9tK8I/Q1RuDUNKJbS5HFbDvN87u0BlSb6P1raJhR/Y=;
-	b=F14/RhsOG85KUrUZtUhzvqbUUmz9ZYsPR+P48pPUZh+d6cjAtMGaPxMJ5w3msp3obKCfAU
-	KeD+qUXnnVC1wHEYyj1IKRG+Msn41PZqhwPI3rK2K6TbJhmbfgZsvWO9J5RFBlbVZjYHrt
-	yxee3S1EdMWbxNruyMT2xYBFaX2sRs4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750320297;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T9tK8I/Q1RuDUNKJbS5HFbDvN87u0BlSb6P1raJhR/Y=;
-	b=D0fulWgPAXA28aOQkWf1m3PkSOVzGVFu04vFk8DFtU+htyrvU7MtKaMASx+ibAv9qf/sEh
-	Y3CUVkHsekSkgxBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 00B56136CC;
-	Thu, 19 Jun 2025 08:04:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ROUkAKnEU2g4LgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 19 Jun 2025 08:04:57 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id AD44DA29F1; Thu, 19 Jun 2025 10:04:56 +0200 (CEST)
-Date: Thu, 19 Jun 2025 10:04:56 +0200
-From: Jan Kara <jack@suse.cz>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, akpm@linux-foundation.org, 
-	tytso@mit.edu, jack@suse.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org
-Subject: Re: [PATCH 0/2] Postpone memcg reclaim to return-to-user path
-Message-ID: <bkql5n7vg7zoxxf3rwfceioenwkifw7iw4tev4jkljzkvpbrci@6uofefhkdzrx>
-References: <cover.1750234270.git.hezhongkun.hzk@bytedance.com>
- <a57jjrtddjc4wjbrrjpyhfdx475zwpuetmkibeorboo7csc7aw@foqsmf5ipr73>
+	s=arc-20240116; t=1750320379; c=relaxed/simple;
+	bh=etHDW7g1zWUaEHtig4iT8cXADS3mcF4cPIsw4O+OVSE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nMf6oHjn6/qLhU6/GumskiHA1kk/WIWGnUHiNca9ZHbacFCP+63rHb9PFNI/YbZ+hAtsfKzoMWkSuCO5y3RGfh8asxr5r9t8EDHtJvS7vSIq5RUC6bmJpU0vTf/EBwPruIZXaFQQr/DNBFePpupvyX2MHydqM1meSmi5ZKfMRj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J303qS024439;
+	Thu, 19 Jun 2025 01:05:44 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 47c8728ajy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 19 Jun 2025 01:05:44 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.57; Thu, 19 Jun 2025 01:05:29 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 19 Jun 2025 01:05:27 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <syzbot+189dcafc06865d38178d@syzkaller.appspotmail.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <johannes@sipsolutions.net>,
+        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <pabeni@redhat.com>, <syzkaller-bugs@googlegroups.com>
+Subject: [PATCH] wifi: cfg80211: Prevent comparison with invalid registered dev scan req
+Date: Thu, 19 Jun 2025 16:05:26 +0800
+Message-ID: <20250619080526.899000-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <684ba12f.a00a0220.279073.0009.GAE@google.com>
+References: <684ba12f.a00a0220.279073.0009.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a57jjrtddjc4wjbrrjpyhfdx475zwpuetmkibeorboo7csc7aw@foqsmf5ipr73>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 10B6B1F38D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.com:email];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDA2OCBTYWx0ZWRfX6+QoV88cxwnR gWXcWosrAY0C15rESqV5xBk+NCdAErCu4qGqifirw0iBsdoFo2pGigHt6jdQVEBVNDCrr9u2c6X g1lb1bRzhahs5y/CvORA08J/C5ZlOo++cR7wUvoYPxcY0RUkrfzjXM7e/RG0HJS7pyOvX0wpT/X
+ fefGS21yh9U+n1JVjLtwealyrcnGZPEGVD7vwiZaBQmt28EfwDBKxoNBK5LM+dqQ1Nay3WqreYw OY+Ift0AlurSrHkDwYh1EWvhh6M2xGATQjVaJgR/P4LdQcREXsNGhNcQy5L5evRVjp+L6jrmZdx OBvNI9CZ8yopyUZnRnNOp40EAb4PLz1y72KvjCRxtIwmlAZdsIoG8TpHKGFH3Bnr+cOzCJlAmhE
+ xDo8hX75Xf4aMtOyVk/7M8W/RO9qlh5jozUD7P+HL+wpIotFxg27Sqt2DsE+1iTurNbwcrlL
+X-Proofpoint-GUID: tBn3wSONFwH17hfwHhu2bSOh7bGluJwn
+X-Proofpoint-ORIG-GUID: tBn3wSONFwH17hfwHhu2bSOh7bGluJwn
+X-Authority-Analysis: v=2.4 cv=RpXFLDmK c=1 sm=1 tr=0 ts=6853c4d8 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=6IFa9wvqVegA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=Q5VghSMrqH2S0C6_oRoA:9 a=DcSpbTIhAlouE1Uv7lRv:22
+ a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_03,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=673
+ malwarescore=0 spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
+ definitions=main-2506190068
 
-On Wed 18-06-25 15:37:20, Shakeel Butt wrote:
-> > This is
-> > beneficial for users who perform over-max reclaim while holding multiple
-> > locks or other resources (especially resources related to file system
-> > writeback). If a task needs any of these resources, it would otherwise
-> > have to wait until the other task completes reclaim and releases the
-> > resources. Postponing reclaim to the return-to-user path helps avoid this issue.
-> > 
-> > # Background
-> > 
-> > We have been encountering an hungtask issue for a long time. Specifically,
-> > when a task holds the jbd2 handler 
-> 
-> Can you explain a bit more about jbd2 handler? Is it some global shared
-> lock or a workqueue which can only run single thread at a time.
-> Basically is there a way to get the current holder/owner of jbd2 handler
-> programmatically?
+The scan req of a registered device may have been released, so it should
+be checked to be valid before comparing it with the current req.
 
-There's a typo in the original email :). It should be "jbd2 handle". And
-that is just a reference to the currently running transaction in ext4
-filesystem. There can be always at most one running transaction in ext4
-filesystem and until the last reference is dropped it cannot commit. This
-eventually (once the transaction reaches its maximum size) blocks all the
-other modifications to the filesystem. So it is shared global resource
-that's held by the process doing reclaim.
+Reported-by: syzbot+189dcafc06865d38178d@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=189dcafc06865d38178d
+Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+---
+ net/wireless/scan.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Since there can be many holders of references to the currently running
-transaction there's no easy way to iterate processes that are holding the
-references... That being said ext4 sets current->journal_info when
-acquiring a journal handle but other filesystems use this field for other
-purposes so current->journal_info being non-NULL does not mean jbd2 handle
-is held.
-
-								Honza
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index e8a4fe44ec2d..bfd40797e608 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -1176,10 +1176,14 @@ void cfg80211_scan_done(struct cfg80211_scan_request *request,
+ 			struct cfg80211_scan_info *info)
+ {
+ 	struct cfg80211_scan_info old_info = request->info;
++	struct cfg80211_scan_request *rdev_req, *rdev_int_req;
++
++	rdev_req = wiphy_to_rdev(request->wiphy)->scan_req;
++	rdev_int_req = wiphy_to_rdev(request->wiphy)->int_scan_req;
+ 
+ 	trace_cfg80211_scan_done(request, info);
+-	WARN_ON(request != wiphy_to_rdev(request->wiphy)->scan_req &&
+-		request != wiphy_to_rdev(request->wiphy)->int_scan_req);
++	WARN_ON((rdev_req && request != rdev_req) &&
++		(rdev_int_req && request != rdev_int_req));
+ 
+ 	request->info = *info;
+ 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.43.0
+
