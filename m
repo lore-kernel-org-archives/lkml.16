@@ -1,34 +1,53 @@
-Received: from mail-m32124.qiye.163.com (mail-m32124.qiye.163.com [220.197.32.124])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7248021C9E0;
-	Thu, 19 Jun 2025 09:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CAA1E3DE8;
+	Thu, 19 Jun 2025 09:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750325879; cv=none; b=qu+rzz9PIeMp7Zxefv+7dkzbt8zM9TORpGCBO0606L6ZsN7gpnEVgW8xz9zY/fQpyEYMyykXa1hkDzCc0A5e4RXBPTWKk9nj5bzZul53RQgPx6kH99hp52FhyvbS81Y6ENzVvQE6vyhgPYTVayh3wZxiCxqour/IQK/2vkZUEro=
+	t=1750325910; cv=none; b=hlmlA/IGEu99EWaqz/q5HDin4+rIo6lvDH9LSvB9sI7OXWL141Q4F/YSISLA80EeN+nZhLhWWmW7den1khgtft2K2zU1A71T3wSzvoMxXfrRUZsge6JWEFP5CltB4u6D+kfm1f44+56+ziBsznqsdRMLCRoe3Yv3ROJ2+2cgaBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750325879; c=relaxed/simple;
-	bh=mEBTu47aw5GvM+JvGHuuz9zrHjnrCHfVaTvuFpR7CC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FKn2MKCqf4UNkWqv5L3fy6Oa4Ml82qG9T2h32fHFLQHP7UKxnbBq6NwZh94yoDeZ6uAUQsJsAppas27QckvGhQvVupct+CEPHMFOJqbPciNQhMo2GXE1945TmWW4B6vUGtiJaaq5NSB/n9a85A+hZlJpwI0ACa7ZRNMBg+tJCEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=220.197.32.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from localhost.localdomain (unknown [122.224.147.158])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 193d4dd7c;
-	Thu, 19 Jun 2025 17:32:34 +0800 (GMT+08:00)
-From: Hongbo Yao <andy.xu@hj-micro.com>
-To: bhelgaas@google.com,
-	lukas@wunner.de
-Cc: linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1750325910; c=relaxed/simple;
+	bh=zrMqYXcpt3+8hKWKWL9H+r6ZpkeEiXxfMbk+2N1urQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B5tT289lxua3NgIAlDBS60iQSoXC5AgBg0zhFXflI/fXpKjVEumfGg751e2hpgUu99TspMHB9bNVnWdZJKwAw+/oMxY/3HXhURzHzRaUrRb+ukRJVcpflNEL1lLSS2qJ1BCeNLDy9zwK7rb80jySOHJDtcMWbEujokrabOiGunA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Q41vX2XG; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Q41vX2XG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1750325856;
+	bh=oAEDq5dDKcnnS2/NFb3lJLZSim6PZMNBCCc44x/tKTk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Q41vX2XG1nUzOByycrqcBvAMn/vPcQAvh4uFnptMR1XtJKRcvdYKHRL0Zu7GvnTGi
+	 t1Dk8EAPmsZNeortwavqiRZpopaeF9TSRFu/FjmjlLP5Gy+nqL2ARMYed4IlY7pz9i
+	 u/vH6h2FGU68JWeqp5PGoXbUDCINfHMkRRreAXXs=
+X-QQ-mid: zesmtpip3t1750325846ta1212646
+X-QQ-Originating-IP: cPfN9IJ3VtsMCBPFjOYSeIoL7AU/sGrgpJdMxuk/5Fg=
+Received: from avenger-e500 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 19 Jun 2025 17:37:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6388095992895865980
+EX-QQ-RecipientCnt: 12
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: tangchengchang@huawei.com,
+	huangjunxian6@hisilicon.com,
+	jgg@ziepe.ca,
+	leon@kernel.org,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	peter.du@hj-micro.com,
-	jemma.zhang@hj-micro.com,
-	Hongbo Yao <andy.xu@hj-micro.com>
-Subject: [RFC PATCH] PCI: pciehp: Replace fixed delay with polling for slot power-off
-Date: Thu, 19 Jun 2025 17:32:28 +0800
-Message-ID: <20250619093228.283171-1-andy.xu@hj-micro.com>
-X-Mailer: git-send-email 2.43.0
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	Winston Wen <wentao@uniontech.com>,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH 6.12/6.15] RDMA/hns: initialize db in update_srq_db()
+Date: Thu, 19 Jun 2025 17:37:19 +0800
+Message-ID: <3FDAD147897E51E6+20250619093719.90186-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,169 +55,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSk4aVkJCTk8YGEhDHxgZTVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTEpVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a9787886cc303afkunm9e7d02ee206d1a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NiI6Mjo6CjEzAjc0N0o#Ix4a
-	KE4aChZVSlVKTE5LSElOTk5OT0NCVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
-	SklJVUlJT1VKT0xVSk5DWVdZCAFZQUJDSk03Bg++
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MAMW4dxoxFythkLOmcE2IVooIkFLNl2vqZWLXB/0YFDTYFWT2T4TkzGd
+	loMUW0PDHaWTvSuWPyLssjMULuQl+3Oufspl0q3n7du8kFru0FPrA83A/D5cMuCBuTz6ex5
+	OnlBF3lLtJ8B/B/gnlESEobiq+J/cd2durlac0OPt5AxIZW1+QSGxDFmzetEgogQ3PgldI4
+	jubRl8FOnNVt95k8MahauTmNjJ98grAp+UCvh0nvjGVrwdw+qx4ZI3hJAm4rcplRpo5cmPd
+	zsF7HCFWgnWadMAjstXej7qt0CelCDtIbyE7ROo0QsyjYokcgoq/Ezq6SQujGaCdMPWF7gA
+	T1409n+UhIEinTp8zIVbSJ5mf0PJmMEWbDRsQte+TkemLLhefFzydwEApwV0KI3Ba6dgd64
+	jyuRg5qyO43Bn/uP+YmdFqjy4lFKomwPdqGM5xomEZy1nnUsq8qV2Uxy9K6m+Nl8oM5uSfq
+	P0YSTpO7QUxlun/6JTqlz4TrLNF9VCCdyN9ZevjHqrpSBssJCR6J2c9mUYDYb8CMdxU4ytS
+	6OG4I4/KXzyD94n21cd0TqkPxOzdgiQVenXN3RWJ38qEvrjeocP2IMewYfyY5Gw9zRHo+Bk
+	Q5GwNozIWKxjQgZrqmoClUrJZfEm8Wnmd1ruhdcBL/jmrPJRfXAeibbZHKCdm8yIN+0UI6G
+	JFaiCPLMrlrHGkg6iAgAvfzfZ32FFYYmV6UOtANPJOT02BoQsEBGSVVgBS00eQRjcO0Q1pd
+	sgye5Lh1YhLjKYUVxX2Hdek7Unag5cky3zKFIPIv4BgjNByvXlXz/7JuydrluJaBh3IEJwQ
+	28noT7PAAS3+4U6zT+0uPKeDxYPmVJTVuW5jFGt1HCiFf1o+5fNe2xKWHFVshpaQMrrxLtS
+	Hdx4BrResuMnubSmB6djdGyxMV7Uz9313agc52KiV75a+5HLiONN7NmlaGGyqD5Ui0fNyV0
+	Jp7R1qa59YMCkz5iBNN7OB4VYhQ9F+xnb8yHxgoqlEjvqX7EYmIABHvnlfA6wtWw4DuWHUU
+	QTlz4pDo9hIa656+5vHg6vGCsAyRAIqRmnYhjwcAEpmyxMXhTNwOBgBMVgTIo=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-Fixed 1-second delay in remove_board() fails to accommodate certain
-hardware like multi-host OCP cards, which exhibit longer power-off
-latencies.
+From: Chen Linxuan <chenlinxuan@uniontech.com>
 
-Failure scenario:
-1. Software clears pending_events prematurely
-2. Hardware triggers DLLSC after software clearance
-3. Subsequent power-off process may generate AER interrupts
-4. System misinterprets residual DLLSC as valid hotplug event
+[ Upstream commit ffe1cee21f8b533ae27c3a31bfa56b8c1b27fa6e ]
 
-Fix this by replacing the fixed delay with polling for DLLLA bit in
-the link status register.
+On x86_64 with gcc version 13.3.0, I compile
+drivers/infiniband/hw/hns/hns_roce_hw_v2.c with:
 
-Logs before fix:
-[157.778307] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0001 from Slot Status
-[157.778321] pcieport 0003:00:00.0: pciehp: Slot(31): Attention button pressed
-[157.785445] pcieport 0003:00:00.0: pciehp: Slot(31): Powering off due to button press
-[157.798931] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
-[157.799263] pcieport 0003:00:00.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 2c0
-[157.799273] pcieport 000b:00:02.0: pciehp: Slot(113): Attention button pressed
-[157.800484] pcieport 000b:00:02.0: pciehp: Slot(113): Powering off due to button press
-[157.800830] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 2c0
-[162.850249] pcieport 0003:00:00.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 12e1
-[162.850251] pcieport 000b:00:02.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 12e1
-[162.850253] pcieport 0003:00:00.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0003:01:00
-[162.850254] pcieport 000b:00:02.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 000b:02:00
-[162.850278] mlx5_core 000b:02:00.1: PME# disabled
-[164.862362] mlx5_core 000b:02:00.1: E-Switch: cleanup
-[165.171541] mlx5_core 000b:02:00.1: disabling bus mastering
-[165.171591] mlx5_core 000b:02:00.0: PME# disabled
-[167.214351] mlx5_core 000b:02:00.0: E-Switch: cleanup
-[167.539871] mlx5_core 000b:02:00.0: disabling bus mastering
-[167.540342] pcieport 000b:00:02.0: pciehp: pciehp_power_off_slot: SLOTCTRL 88 write cmd 400
-[167.540345] mlx5_core 0003:01:00.1: PME# disabled
-[168.546269] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 300
-[169.590320] mlx5_core 0003:01:00.1: E-Switch: cleanup
-[169.899852] mlx5_core 0003:01:00.1: disabling bus mastering
-[169.899241] mlx5_core 0003:01:00.0: PME# disabled
-[171.870344] mlx5_core 0003:01:00.0: E-Switch: cleanup
-[172.289046] mlx5_core 0003:01:00.0: disabling bus mastering
-[172.289366] pcieport 0003:00:00.0: pciehp: pciehp_power_off_slot: SLOTCTRL 88 write cmd 400
-[172.302385] pcieport 0003:00:00.0: AER: Corrected error message received from 0003:00:00.0
-[172.302396] pcieport 000b:00:02.0: AER: Corrected error message received from 000b:00:02.0
-[172.310641] pcieport 0003:00:00.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[172.310892] pcieport 000b:00:02.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[172.310893] pcieport 0003:00:00.0:   device [0823:0110] error status/mask=00000001/0000e000
-[172.310894] pcieport 0003:00:00.0:    [ 0] RxErr
-[172.310893] pcieport 000b:00:02.0:   device [0823:0112] error status/mask=00000001/0000e000
-[172.310894] pcieport 000b:00:02.0:    [ 0] RxErr                  (First)
-[172.332915] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0100 from Slot Status
-[172.353876] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0100 from Slot Status
-[172.360212] pcieport 000b:00:02.0: pciehp: pciehp_check_link_active: lnk_status = d011
-[172.360362] pcieport 000b:00:02.0: pciehp: Slot(113): Card present
-[172.374314] pcieport 000b:00:02.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 17e1
-[172.374357] pcieport 000b:00:02.0: pciehp: pciehp_power_on_slot: SLOTCTRL 88 write cmd 0
-[172.374383] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 200
-[173.314226] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 300
-[174.111245] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0100 from Slot Status
-[174.111232] pcieport 0003:00:00.0: pciehp: pciehp_check_link_active: lnk_status = f085
-[174.111234] pcieport 0003:00:00.0: pciehp: Slot(31): Card present
-[174.117136] pcieport 0003:00:00.0: pciehp: Slot(31): Link Up
-[174.122963] pcieport 0003:00:00.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 17e1
-[174.122964] pcieport 0003:00:00.0: pciehp: pciehp_power_on_slot: SLOTCTRL 88 write cmd 0
-[174.122967] pcieport 0003:00:00.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 200
+  make defconfig
+  ./scripts/kconfig/merge_config.sh .config <(
+    echo CONFIG_COMPILE_TEST=y
+    echo CONFIG_HNS3=m
+    echo CONFIG_INFINIBAND=m
+    echo CONFIG_INFINIBAND_HNS_HIP08=m
+  )
+  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
+    drivers/infiniband/hw/hns/hns_roce_hw_v2.o
 
-Logs after fix:
-[143.610100] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
-[143.616525] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0001 from Slot Status
-[143.629921] pcieport 000b:00:02.0: pciehp: Slot(113): Attention button pressed
-[143.629923] pcieport 000b:00:02.0: pciehp: Slot(113): Powering off due to button press
-[143.629926] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 2c0
-[143.651725] pcieport 0003:00:00.0: pciehp: Slot(31): Attention button pressed
-[143.658848] pcieport 0003:00:00.0: pciehp: Slot(31): Powering off due to button press
-[143.666666] pcieport 0003:00:00.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 2c0
-[148.863526] pcieport 000b:00:02.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 12e1
-[148.870562] pcieport 0003:00:00.0: pciehp: pciehp_get_power_status: SLOTCTRL 88 value read 12e1
-[148.870572] pcieport 0003:00:00.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0003:01:00
-[148.870579] pcieport 000b:00:02.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 000b:02:00
-[148.870605] mlx5_core 0003:01:00.1: PME# disabled
-[152.536968] mlx5_core 0003:01:00.1: E-Switch: cleanup
-[152.877666] mlx5_core 0003:01:00.1: disabling bus mastering
-[152.878202] mlx5_core 0003:01:00.0: PME# disabled
-[156.592567] mlx5_core 0003:01:00.0: E-Switch: cleanup
-[156.904767] mlx5_core 0003:01:00.0: disabling bus mastering
-[156.905195] pcieport 0003:00:00.0: pciehp: pciehp_power_off_slot: SLOTCTRL 88 write cmd 400
-[156.905231] mlx5_core 000b:02:00.1: PME# disabled
-[160.360660] mlx5_core 000b:02:00.1: E-Switch: cleanup
-[161.272871] mlx5_core 000b:02:00.1: disabling bus mastering
-[161.273719] mlx5_core 000b:02:00.0: PME# disabled
-[165.028632] mlx5_core 000b:02:00.0: E-Switch: cleanup
-[165.454213] mlx5_core 000b:02:00.0: disabling bus mastering
-[165.454925] pcieport 000b:00:02.0: pciehp: pciehp_power_off_slot: SLOTCTRL 88 write cmd 400
-[165.464333] pcieport 0003:00:00.0: AER: Corrected error message received from 0003:00:00.0
-[165.478716] pcieport 000b:00:02.0: AER: Corrected error message received from 000b:00:02.0
-[165.481156] pcieport 0003:00:00.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[165.481158] pcieport 0003:00:00.0:   device [0823:0110] error status/mask=00000001/0000e000
-[165.481166] pcieport 0003:00:00.0:    [ 0] RxErr                  (First)
-[165.528873] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
-[165.535384] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0100 from Slot Status
-[165.535403] pcieport 000b:00:02.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[165.535403] pcieport 000b:00:02.0:   device [0823:0112] error status/mask=00000001/0000e000
-[165.541315] pcieport 0003:00:00.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 300
-[165.550871] pcieport 0003:00:00.0:    [ 0] RxErr                  (First)
-[165.578591] pcieport 000b:00:02.0: pciehp: pciehp_set_indicators: SLOTCTRL 88 write cmd 300
+Then I get a compile error:
 
-Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
+    CALL    scripts/checksyscalls.sh
+    DESCEND objtool
+    INSTALL libsubcmd_headers
+    CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+  In file included from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:47:
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'update_srq_db':
+  drivers/infiniband/hw/hns/hns_roce_common.h:74:17: error: 'db' is used uninitialized [-Werror=uninitialized]
+     74 |                 *((__le32 *)_ptr + (field_h) / 32) &=                          \
+        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_common.h:90:17: note: in expansion of macro '_hr_reg_clear'
+     90 |                 _hr_reg_clear(ptr, field_type, field_h, field_l);              \
+        |                 ^~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_common.h:95:39: note: in expansion of macro '_hr_reg_write'
+     95 | #define hr_reg_write(ptr, field, val) _hr_reg_write(ptr, field, val)
+        |                                       ^~~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:948:9: note: in expansion of macro 'hr_reg_write'
+    948 |         hr_reg_write(&db, DB_TAG, srq->srqn);
+        |         ^~~~~~~~~~~~
+  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:946:31: note: 'db' declared here
+    946 |         struct hns_roce_v2_db db;
+        |                               ^~
+  cc1: all warnings being treated as errors
+
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Co-developed-by: Winston Wen <wentao@uniontech.com>
+Signed-off-by: Winston Wen <wentao@uniontech.com>
+Link: https://patch.msgid.link/FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- drivers/pci/hotplug/pciehp_ctrl.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index bcc938d4420f..179ebe4f7797 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -30,6 +30,25 @@
- #define SAFE_REMOVAL	 true
- #define SURPRISE_REMOVAL false
- 
-+static void pciehp_wait_for_link_inactive(struct controller *ctrl)
-+{
-+	u16 lnk_status;
-+	int timeout = 10000, step = 20;
-+
-+	do {
-+		pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-+					  &lnk_status);
-+
-+		if (!(lnk_status & PCI_EXP_LNKSTA_DLLLA))
-+			return;
-+
-+		msleep(step);
-+		timeout -= step;
-+	} while (timeout >= 0);
-+
-+	ctrl_dbg(ctrl, "Timeout waiting for link inactive state\n");
-+}
-+
- static void set_slot_off(struct controller *ctrl)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 160e8927d364..afd2ea6da3ee 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -943,7 +943,7 @@ static void fill_wqe_idx(struct hns_roce_srq *srq, unsigned int wqe_idx)
+ static void update_srq_db(struct hns_roce_srq *srq)
  {
- 	/*
-@@ -119,8 +138,11 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
- 		 * After turning power off, we must wait for at least 1 second
- 		 * before taking any action that relies on power having been
- 		 * removed from the slot/adapter.
-+		 *
-+		 * Extended wait with polling to ensure hardware has completed
-+		 * power-off sequence.
- 		 */
--		msleep(1000);
-+		pciehp_wait_for_link_inactive(ctrl);
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(srq->ibsrq.device);
+-	struct hns_roce_v2_db db;
++	struct hns_roce_v2_db db = {};
  
- 		/* Ignore link or presence changes caused by power off */
- 		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+ 	hr_reg_write(&db, DB_TAG, srq->srqn);
+ 	hr_reg_write(&db, DB_CMD, HNS_ROCE_V2_SRQ_DB);
 -- 
-2.43.0
+2.50.0
 
