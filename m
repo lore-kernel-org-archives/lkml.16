@@ -1,293 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD2123AB85
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325D821A452;
+	Thu, 19 Jun 2025 05:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750309336; cv=none; b=lHEVVEINXn8EaKvC8VqEYdZZmj89M04W626GIactkicmHwdpELtxrlVz6FavydGXzmWCIw38RVW/7hg8wrbXg14uQugO02nMDANcIV88bfjI+u/pdWrNiCR39RVopuFUYWEittxhDV90Ic9lkSWpeYqr4NZByuvmAC1pV1AaEWY=
+	t=1750309374; cv=none; b=kOlNdhEzV7orx1V/TVOgdpdeAHG3/UsCReBJMvlYTusANW+oPz2/mvkvOhtVsnVGd4bRf+WoVBzabtXCwan3wVe1mQ8qMIAa4dh1QU2ptxWbwCSKOyzrmcJLhPBWu6KuAiiwrVGbMdUmdf2r/wXBqYUpeuh13+I3IU5KtQ6H9Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750309336; c=relaxed/simple;
-	bh=9x7iMBy5QnGQ2vLlvKMD1QiBOUQXCh07F6RetP68VRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oBE4f2dMKrRbv5dJiNZg+wEdro/a7wtisXT5n2wc+VUFeK+mwu2FJJht+iZS5kyA7UJYk4BsksVboMNvQY6UHSxI3CKXPsIS41Z/yYJJcsRLvd15aUkrNUUoYLsFxgVz0z5Lx2j5gkSPDvFv2lofX+8KWjcQDnGWNp7S2kkVvnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IWVdXBRH; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750309374; c=relaxed/simple;
+	bh=cC1gNkglobCCgQWoLRRzm+tji0YRzCCMskKW7Rup5es=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GWvMkHKNOe1w9mTA/SOxeEWIySM2JmMWyTl7CkNOj87yBRIk4jNMh9+Xw9g3yaBOrpw6DY1C439j3QbgsONWQxGzx5H4FmgVfzeABUjwqfbgBGHV1WFcHsj4JChudcZhTePhMywneyByZhLa0dhzmBIUyeMZkbTC6tuL5RgjzQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=nJlMFyh+; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IWVdXBRH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750309335; x=1781845335;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=9x7iMBy5QnGQ2vLlvKMD1QiBOUQXCh07F6RetP68VRY=;
-  b=IWVdXBRHzcPFuJ23oYLCPO6346F0K4w9CCuu6ZRzi3KPPHWU947+nIHX
-   n6gZrEd5KrJt3YQVFPHgPttvA9TKn2fyyXaSER4XvrCUsULz514BRTHl4
-   nC73rhh0RNkLhGJUVuQ4PUKDpGbO1ZwLv/giZx6kobHR0+vHnXKfec42A
-   KzZR0a3EqP/F8JxJkOHtlhXFJtNeZu3hM1Ux8aL5XsEt9PFCT5yt5hdmY
-   aIT3KSCMoPyGn35CZl9nGE7nYRAyE05NEsHemtz8yhamUTFNR3HKLZbNj
-   qrZO3IfwKtqu49MTLSHqDsMINWeDom82wE7YPywqSWhFnPutnD+rFu8DB
-   Q==;
-X-CSE-ConnectionGUID: u8ltDbHnSEyzpfI/YRGyTA==
-X-CSE-MsgGUID: 3TawHXCSQGW5wpQuPmEMXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="55181252"
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="55181252"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 22:02:14 -0700
-X-CSE-ConnectionGUID: BvCfa9TfTWq40CIerBDo4Q==
-X-CSE-MsgGUID: 8dyxdArPSsu74t9GX88vWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="181520076"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 18 Jun 2025 22:02:13 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uS7Pe-000KPo-1R;
-	Thu, 19 Jun 2025 05:02:10 +0000
-Date: Thu, 19 Jun 2025 13:02:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Penkler <dpenkler@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/staging/gpib/eastwood/fluke_gpib.c:1013:21: error: call to
- undeclared function 'ioremap'; ISO C99 and later do not support implicit
- function declarations
-Message-ID: <202506191259.pBMukkCC-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nJlMFyh+"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55J529FG1854570
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 18 Jun 2025 22:02:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55J529FG1854570
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750309332;
+	bh=nz8+KCii5aZfAsUnyh008znZgZhwquPROyRzQoxFqeU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nJlMFyh+ggWVGqIlASPvwYh5Mktn0GpAWRc4Ez52VsMr9JJFOsr68py3bAlMqCyVa
+	 iPTFNYYN9v3AZnZMbNUzpMZrF5c5KPFwyH2FOvTO/JiF4XLBMbXxRdolhMLtWb3GQ4
+	 g6U5VKe+4x9fa3SvV3nyYsYgYselIur7BeF1j8HsmaYBDzk0IiHaYi591QoRNziaPP
+	 phFigHu1V45uCzhqSqmglaZrWJNDAdwpN7T+4/+WAoRKpwykXs/PrZ5TlpJ0/bEWs8
+	 MaGPZRCuIqr7QzmC0G9Buu4oLjgHl6Xs4ww37cGZ9QI6ps7VibWf6LNW/2QiAqLtra
+	 /X+rG0AtsNaNw==
+Message-ID: <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com>
+Date: Wed, 18 Jun 2025 22:02:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 02/10] x86/fred: Pass event data to the NMI entry point
+ from KVM
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+ <20250612214849.3950094-3-sohil.mehta@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250612214849.3950094-3-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Dave,
+On 6/12/2025 2:48 PM, Sohil Mehta wrote:
+> Extend the FRED NMI entry point from KVM to take an extra argument to
+> allow KVM to invoke the FRED event dispatch framework with event data.
+> 
+> This API is used to pass the NMI-source bitmap for NMI-induced VM exits.
+> Read the VMCS exit qualification field to get the NMI-source information
+> and store it as event data precisely in the format expected by the FRED
+> event framework.
+> 
+> Read the VMCS exit qualification unconditionally since almost all
+> upcoming CPUs are expected to enable FRED and NMI-source together. In
+> the rare case that NMI-source isn't enabled, the extra VMREAD would be
+> harmless since the exit qualification is expected to be zero.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Originally-by: Zeng Guang <guang.zeng@intel.com>
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 
-FYI, the error/warning still remains.
+A couple of nits below, otherwise:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fb4d33ab452ea254e2c319bac5703d1b56d895bf
-commit: 165e8cc3cfec9ef51f3376b0d49b115294f34f3b staging: gpib: Add KBUILD files for GPIB drivers
-date:   8 months ago
-config: s390-randconfig-r132-20250619 (https://download.01.org/0day-ci/archive/20250619/202506191259.pBMukkCC-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce: (https://download.01.org/0day-ci/archive/20250619/202506191259.pBMukkCC-lkp@intel.com/reproduce)
+Reviewed-by: Xin Li (Intel) <xin@zytor.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506191259.pBMukkCC-lkp@intel.com/
+> ---
+> v7: Pass the event data from KVM only for NMI. (Sean)
+> 
+> v6: No change
+> 
+> v5: Read the VMCS exit qualification unconditionally. (Sean)
+>      Combine related patches into one.
+> ---
+>   arch/x86/entry/entry_64_fred.S |  2 +-
+>   arch/x86/include/asm/fred.h    | 11 ++++++-----
+>   arch/x86/kvm/vmx/vmx.c         |  2 +-
+>   3 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+> index 29c5c32c16c3..1c9c6e036233 100644
+> --- a/arch/x86/entry/entry_64_fred.S
+> +++ b/arch/x86/entry/entry_64_fred.S
+> @@ -93,7 +93,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>   	 * +--------+-----------------+
+>   	 */
+>   	push $0				/* Reserved, must be 0 */
+> -	push $0				/* Event data, 0 for IRQ/NMI */
+> +	push %rsi			/* Event data for NMI */
 
-All errors (new ones prefixed by >>):
+Maybe a bit more accurate?
 
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.c:10:
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.h:9:
-   In file included from include/linux/dmaengine.h:12:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.c:10:
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.h:9:
-   In file included from include/linux/dmaengine.h:12:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.c:10:
-   In file included from drivers/staging/gpib/eastwood/fluke_gpib.h:9:
-   In file included from include/linux/dmaengine.h:12:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   drivers/staging/gpib/eastwood/fluke_gpib.c:196:23: warning: variable 'nec_priv' set but not used [-Wunused-but-set-variable]
-     196 |         struct nec7210_priv *nec_priv;
-         |                              ^
->> drivers/staging/gpib/eastwood/fluke_gpib.c:1013:21: error: call to undeclared function 'ioremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1013 |         nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-         |                            ^
-   drivers/staging/gpib/eastwood/fluke_gpib.c:1013:19: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
-    1013 |         nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-         |                          ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1014 |                                    resource_size(e_priv->gpib_iomem_res));
-         |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/eastwood/fluke_gpib.c:1050:33: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
-    1050 |         e_priv->write_transfer_counter = ioremap(e_priv->write_transfer_counter_res->start,
-         |                                        ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1051 |                                                  resource_size(e_priv->write_transfer_counter_res));
-         |                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   13 warnings and 3 errors generated.
+/* Event data, NMI-source bitmap only so far */
 
+>   	push %rdi			/* fred_ss handed in by the caller */
+>   	push %rbp
+>   	pushf
+> diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+> index 552332ca060c..bccf4a3c06b8 100644
+> --- a/arch/x86/include/asm/fred.h
+> +++ b/arch/x86/include/asm/fred.h
+> @@ -66,14 +66,14 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs)
+>   
+>   void asm_fred_entrypoint_user(void);
+>   void asm_fred_entrypoint_kernel(void);
+> -void asm_fred_entry_from_kvm(struct fred_ss);
+> +void asm_fred_entry_from_kvm(struct fred_ss ss, unsigned long edata);
+>   
+>   __visible void fred_entry_from_user(struct pt_regs *regs);
+>   __visible void fred_entry_from_kernel(struct pt_regs *regs);
+>   __visible void __fred_entry_from_kvm(struct pt_regs *regs);
+>   
+>   /* Must be called from noinstr code, thus __always_inline */
+> -static __always_inline void fred_nmi_from_kvm(void)
+> +static __always_inline void fred_nmi_from_kvm(unsigned long edata)
+>   {
+>   	struct fred_ss ss = {
+>   		.ss	= __KERNEL_DS,
+> @@ -83,7 +83,7 @@ static __always_inline void fred_nmi_from_kvm(void)
+>   		.lm	= 1,
+>   	};
+>   
+> -	asm_fred_entry_from_kvm(ss);
+> +	asm_fred_entry_from_kvm(ss, edata);
+>   }
+>   
+>   static inline void fred_irq_from_kvm(unsigned int vector)
+> @@ -95,7 +95,8 @@ static inline void fred_irq_from_kvm(unsigned int vector)
+>   		.lm	= 1,
+>   	};
+>   
+> -	asm_fred_entry_from_kvm(ss);
+> +	/* Event data is always zero for IRQ */
 
-vim +/ioremap +1013 drivers/staging/gpib/eastwood/fluke_gpib.c
-
-55936779f49612 Dave Penkler 2024-09-18   973  
-55936779f49612 Dave Penkler 2024-09-18   974  static int fluke_attach_impl(gpib_board_t *board, const gpib_board_config_t *config,
-55936779f49612 Dave Penkler 2024-09-18   975  			     unsigned int handshake_mode)
-55936779f49612 Dave Penkler 2024-09-18   976  {
-55936779f49612 Dave Penkler 2024-09-18   977  	struct fluke_priv *e_priv;
-55936779f49612 Dave Penkler 2024-09-18   978  	struct nec7210_priv *nec_priv;
-55936779f49612 Dave Penkler 2024-09-18   979  	int isr_flags = 0;
-55936779f49612 Dave Penkler 2024-09-18   980  	int retval;
-55936779f49612 Dave Penkler 2024-09-18   981  	int irq;
-55936779f49612 Dave Penkler 2024-09-18   982  	struct resource *res;
-55936779f49612 Dave Penkler 2024-09-18   983  	dma_cap_mask_t dma_cap;
-55936779f49612 Dave Penkler 2024-09-18   984  
-55936779f49612 Dave Penkler 2024-09-18   985  	if (!fluke_gpib_pdev) {
-55936779f49612 Dave Penkler 2024-09-18   986  		pr_err("No gpib platform device was found, attach failed.\n");
-55936779f49612 Dave Penkler 2024-09-18   987  		return -ENODEV;
-55936779f49612 Dave Penkler 2024-09-18   988  	}
-55936779f49612 Dave Penkler 2024-09-18   989  
-55936779f49612 Dave Penkler 2024-09-18   990  	retval = fluke_generic_attach(board);
-55936779f49612 Dave Penkler 2024-09-18   991  	if (retval)
-55936779f49612 Dave Penkler 2024-09-18   992  		return retval;
-55936779f49612 Dave Penkler 2024-09-18   993  
-55936779f49612 Dave Penkler 2024-09-18   994  	e_priv = board->private_data;
-55936779f49612 Dave Penkler 2024-09-18   995  	nec_priv = &e_priv->nec7210_priv;
-55936779f49612 Dave Penkler 2024-09-18   996  	nec_priv->offset = fluke_reg_offset;
-55936779f49612 Dave Penkler 2024-09-18   997  	board->dev = &fluke_gpib_pdev->dev;
-55936779f49612 Dave Penkler 2024-09-18   998  
-55936779f49612 Dave Penkler 2024-09-18   999  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 0);
-55936779f49612 Dave Penkler 2024-09-18  1000  	if (!res) {
-55936779f49612 Dave Penkler 2024-09-18  1001  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for cb7210 gpib\n");
-55936779f49612 Dave Penkler 2024-09-18  1002  		return -ENODEV;
-55936779f49612 Dave Penkler 2024-09-18  1003  	}
-55936779f49612 Dave Penkler 2024-09-18  1004  
-55936779f49612 Dave Penkler 2024-09-18  1005  	if (request_mem_region(res->start,
-55936779f49612 Dave Penkler 2024-09-18  1006  			       resource_size(res),
-55936779f49612 Dave Penkler 2024-09-18  1007  			       fluke_gpib_pdev->name) == NULL) {
-55936779f49612 Dave Penkler 2024-09-18  1008  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f49612 Dave Penkler 2024-09-18  1009  		return -ENXIO;
-55936779f49612 Dave Penkler 2024-09-18  1010  	}
-55936779f49612 Dave Penkler 2024-09-18  1011  	e_priv->gpib_iomem_res = res;
-55936779f49612 Dave Penkler 2024-09-18  1012  
-55936779f49612 Dave Penkler 2024-09-18 @1013  	nec_priv->iobase = ioremap(e_priv->gpib_iomem_res->start,
-55936779f49612 Dave Penkler 2024-09-18  1014  				   resource_size(e_priv->gpib_iomem_res));
-55936779f49612 Dave Penkler 2024-09-18  1015  	pr_info("gpib: iobase %lx remapped to %p, length=%d\n",
-55936779f49612 Dave Penkler 2024-09-18  1016  		(unsigned long)e_priv->gpib_iomem_res->start,
-55936779f49612 Dave Penkler 2024-09-18  1017  		nec_priv->iobase, (int)resource_size(e_priv->gpib_iomem_res));
-55936779f49612 Dave Penkler 2024-09-18  1018  	if (!nec_priv->iobase) {
-55936779f49612 Dave Penkler 2024-09-18  1019  		dev_err(&fluke_gpib_pdev->dev, "Could not map I/O memory\n");
-55936779f49612 Dave Penkler 2024-09-18  1020  		return -ENOMEM;
-55936779f49612 Dave Penkler 2024-09-18  1021  	}
-55936779f49612 Dave Penkler 2024-09-18  1022  
-55936779f49612 Dave Penkler 2024-09-18  1023  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 1);
-55936779f49612 Dave Penkler 2024-09-18  1024  	if (!res) {
-55936779f49612 Dave Penkler 2024-09-18  1025  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for gpib dma port\n");
-55936779f49612 Dave Penkler 2024-09-18  1026  		return -ENODEV;
-55936779f49612 Dave Penkler 2024-09-18  1027  	}
-55936779f49612 Dave Penkler 2024-09-18  1028  	if (request_mem_region(res->start,
-55936779f49612 Dave Penkler 2024-09-18  1029  			       resource_size(res),
-55936779f49612 Dave Penkler 2024-09-18  1030  			       fluke_gpib_pdev->name) == NULL) {
-55936779f49612 Dave Penkler 2024-09-18  1031  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f49612 Dave Penkler 2024-09-18  1032  		return -ENXIO;
-55936779f49612 Dave Penkler 2024-09-18  1033  	}
-55936779f49612 Dave Penkler 2024-09-18  1034  	e_priv->dma_port_res = res;
-55936779f49612 Dave Penkler 2024-09-18  1035  
-55936779f49612 Dave Penkler 2024-09-18  1036  	res = platform_get_resource(fluke_gpib_pdev, IORESOURCE_MEM, 2);
-55936779f49612 Dave Penkler 2024-09-18  1037  	if (!res) {
-55936779f49612 Dave Penkler 2024-09-18  1038  		dev_err(&fluke_gpib_pdev->dev, "Unable to locate mmio resource for write transfer counter\n");
-55936779f49612 Dave Penkler 2024-09-18  1039  		return -ENODEV;
-55936779f49612 Dave Penkler 2024-09-18  1040  	}
-55936779f49612 Dave Penkler 2024-09-18  1041  
-55936779f49612 Dave Penkler 2024-09-18  1042  	if (request_mem_region(res->start,
-55936779f49612 Dave Penkler 2024-09-18  1043  			       resource_size(res),
-55936779f49612 Dave Penkler 2024-09-18  1044  			       fluke_gpib_pdev->name) == NULL) {
-55936779f49612 Dave Penkler 2024-09-18  1045  		dev_err(&fluke_gpib_pdev->dev, "cannot claim registers\n");
-55936779f49612 Dave Penkler 2024-09-18  1046  		return -ENXIO;
-55936779f49612 Dave Penkler 2024-09-18  1047  	}
-55936779f49612 Dave Penkler 2024-09-18  1048  	e_priv->write_transfer_counter_res = res;
-55936779f49612 Dave Penkler 2024-09-18  1049  
-55936779f49612 Dave Penkler 2024-09-18  1050  	e_priv->write_transfer_counter = ioremap(e_priv->write_transfer_counter_res->start,
-55936779f49612 Dave Penkler 2024-09-18  1051  						 resource_size(e_priv->write_transfer_counter_res));
-55936779f49612 Dave Penkler 2024-09-18  1052  	pr_info("gpib: write transfer counter %lx remapped to %p, length=%d\n",
-55936779f49612 Dave Penkler 2024-09-18  1053  		(unsigned long)e_priv->write_transfer_counter_res->start,
-55936779f49612 Dave Penkler 2024-09-18  1054  		e_priv->write_transfer_counter,
-55936779f49612 Dave Penkler 2024-09-18  1055  		(int)resource_size(e_priv->write_transfer_counter_res));
-55936779f49612 Dave Penkler 2024-09-18  1056  	if (!e_priv->write_transfer_counter) {
-55936779f49612 Dave Penkler 2024-09-18  1057  		dev_err(&fluke_gpib_pdev->dev, "Could not map I/O memory\n");
-55936779f49612 Dave Penkler 2024-09-18  1058  		return -ENOMEM;
-55936779f49612 Dave Penkler 2024-09-18  1059  	}
-55936779f49612 Dave Penkler 2024-09-18  1060  
-55936779f49612 Dave Penkler 2024-09-18  1061  	irq = platform_get_irq(fluke_gpib_pdev, 0);
-55936779f49612 Dave Penkler 2024-09-18  1062  	pr_info("gpib: irq %d\n", irq);
-55936779f49612 Dave Penkler 2024-09-18  1063  	if (irq < 0) {
-55936779f49612 Dave Penkler 2024-09-18  1064  		dev_err(&fluke_gpib_pdev->dev, "fluke_gpib: request for IRQ failed\n");
-55936779f49612 Dave Penkler 2024-09-18  1065  		return -EBUSY;
-55936779f49612 Dave Penkler 2024-09-18  1066  	}
-55936779f49612 Dave Penkler 2024-09-18  1067  	retval = request_irq(irq, fluke_gpib_interrupt, isr_flags, fluke_gpib_pdev->name, board);
-55936779f49612 Dave Penkler 2024-09-18  1068  	if (retval) {
-55936779f49612 Dave Penkler 2024-09-18  1069  		dev_err(&fluke_gpib_pdev->dev,
-55936779f49612 Dave Penkler 2024-09-18  1070  			"cannot register interrupt handler err=%d\n",
-55936779f49612 Dave Penkler 2024-09-18  1071  			retval);
-55936779f49612 Dave Penkler 2024-09-18  1072  		return retval;
-55936779f49612 Dave Penkler 2024-09-18  1073  	}
-55936779f49612 Dave Penkler 2024-09-18  1074  	e_priv->irq = irq;
-55936779f49612 Dave Penkler 2024-09-18  1075  
-55936779f49612 Dave Penkler 2024-09-18  1076  	dma_cap_zero(dma_cap);
-55936779f49612 Dave Penkler 2024-09-18  1077  	dma_cap_set(DMA_SLAVE, dma_cap);
-55936779f49612 Dave Penkler 2024-09-18  1078  	e_priv->dma_channel = dma_request_channel(dma_cap, gpib_dma_channel_filter, NULL);
-55936779f49612 Dave Penkler 2024-09-18  1079  	if (!e_priv->dma_channel) {
-55936779f49612 Dave Penkler 2024-09-18  1080  		pr_err("fluke_gpib: failed to allocate a dma channel.\n");
-55936779f49612 Dave Penkler 2024-09-18  1081  		// we don't error out here because unaccel interface will still
-55936779f49612 Dave Penkler 2024-09-18  1082  		// work without dma
-55936779f49612 Dave Penkler 2024-09-18  1083  	}
-55936779f49612 Dave Penkler 2024-09-18  1084  
-55936779f49612 Dave Penkler 2024-09-18  1085  	return fluke_init(e_priv, board, handshake_mode);
-55936779f49612 Dave Penkler 2024-09-18  1086  }
-55936779f49612 Dave Penkler 2024-09-18  1087  
-
-:::::: The code at line 1013 was first introduced by commit
-:::::: 55936779f4961299efa99a6843c8ff3b019d3858 staging: gpib: Add Fluke cda based cards GPIB driver
-
-:::::: TO: Dave Penkler <dpenkler@gmail.com>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+/* Event data not used for IRQ thus 0 */
