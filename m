@@ -1,86 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BB420E711;
-	Thu, 19 Jun 2025 23:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75D28DF2B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375179; cv=none; b=gPglQ8qO+vyHvRvYZbyHgg9yhQYALKj2mqAiDwyfEemXM1SCb8mySoxu+nndxcytHJ4yIppKsutJubbDXbiAikhvlJfhxKM3eZENeCQKx4rtRI2kFdmxdgVQJ1+0qb+6sWFNQQPEwWz6nGLTan6X2esmAb8D2WxFy6B1cVIxbBc=
+	t=1750375184; cv=none; b=HsLr92JSRj7Tmb/W68tKaHx222I0ADU+2Chn0m0TN1m/gpUMefmJgn7LShGfdLTOma99f875fY2RzA5aCYOvA7umOzYZu8qsEKSDiKdAMTXCVyRRJN1q2vth1b90M2JHqu5tAkkZK/umuLmUt6+TzrPPUepvHqtN8SKaIH/ukio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375179; c=relaxed/simple;
-	bh=1iitjCLE0DZH0hmZdXHmHbGc0acxiTVlORAr7x2Ff2U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DUb02xl6sv+jpkpI96r73maMysJonhCLkRFvk7uJHGvlIC/8BRGtr1KFvjgN76jDJ2BHFWCzOvLsfhRA18uliW7o285k9mq2sHWXApS1pXKsuDuVzV5IcQJEskowPPKP4nLlzmjOPTg/HB1oj+Z4j+G5nqtPZDxZDNymKyTKkA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHGCIDVT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750375184; c=relaxed/simple;
+	bh=qkF4P7fPLySORTd7l5qaEb+29XEJDlsACaybE1ReOoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tGmlU4O0wr6Jvc3EjeTykEZOxvT3rLjSBlFUKXUuuV3RlWl+YflxgjP4XRcK+RPncSedOliYkgArzfQTVCfTFzCD+n+eLosqpQ1bAKyjvXUN6IcjfyReX/p+N/lipRkvB9GZDtI66UO/ogW3lYAR9pKtb48IKGBQ79Qv4KsZGUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wwk4E4C2; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHGCIDVT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2EB4C4CEEA;
-	Thu, 19 Jun 2025 23:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750375179;
-	bh=1iitjCLE0DZH0hmZdXHmHbGc0acxiTVlORAr7x2Ff2U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kHGCIDVTAXuEpNeOWqvBztDwNhtbC83OdZWsNR7VxKi1DmeB59lnsfvgfRSDBi0C1
-	 DDaAdjCmRPIZs+3EMompPWmZpK2yzknxZSoWeAdGJ9z9S2lz8MKsDFgjgL/HPX0NLa
-	 HZC4N/dn7FxZj9FPVK1bqhTj21lPCWtPrZVQVi0pNSLezl+0acGbqD1uFW+MKITodj
-	 5HgaQxtTQdUABL1Pee4+F8KmHyHlFWm8U/2hNicNcM2fuTN1Ce8A8AjC/jE4s9ToKT
-	 +/XP1XOSo+Ktn1d1cM0RpT/gOkzzCs4MvoKk/cldSm9q5Rod3xhRCBFgRyh/ny5Ssk
-	 /2ZaD1IloRHYQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E3138111DD;
-	Thu, 19 Jun 2025 23:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wwk4E4C2"
+Message-ID: <5a69ba82-813e-4f6f-9f62-7d68a9c74197@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750375164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jWjprf8y6cAF4Vs6ys1NyVQMZL58pnQZ4Y/NPoHcBJ8=;
+	b=Wwk4E4C2IvGBD9QrcvoNNDOOLPT/KnHLPLgEpFIN6dxZdSEIArJKhd7PM+PP/qFm/SlN+u
+	jw5wupAx8JwpsMMEIxQcZM06V1qD4gLm3l4wJFS8WgWF4Y8HSplK7e2yE3KKMCwT80CaW7
+	x+rlS2wEUJ6DeykVAgqnr+tK0VIFYfA=
+Date: Thu, 19 Jun 2025 19:19:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [Patch net-next v3] net: mana: Record doorbell physical address
- in PF
- mode
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175037520700.1016629.11511793485782650744.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Jun 2025 23:20:07 +0000
-References: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
-To: Long Li <longli@linuxonhyperv.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
- horms@kernel.org, kotaranov@microsoft.com, schakrabarti@linux.microsoft.com,
- erick.archer@outlook.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, longli@microsoft.com
+Subject: Re: [PATCH net 4/4] net: axienet: Split into MAC and MDIO drivers
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Michal Simek <michal.simek@amd.com>, Saravana Kannan <saravanak@google.com>,
+ Leon Romanovsky <leon@kernel.org>, Dave Ertman <david.m.ertman@intel.com>,
+ linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+ linux-arm-kernel@lists.infradead.org
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
+ <20250619200537.260017-5-sean.anderson@linux.dev>
+ <20250619161030.6f14def9@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250619161030.6f14def9@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 17 Jun 2025 18:36:46 -0700 you wrote:
-> From: Long Li <longli@microsoft.com>
+On 6/19/25 19:10, Jakub Kicinski wrote:
+> On Thu, 19 Jun 2025 16:05:37 -0400 Sean Anderson wrote:
+>> Returning EPROBE_DEFER after probing a bus may result in an infinite
+>> probe loop if the EPROBE_DEFER error is never resolved. For example, if
+>> the PCS is located on another MDIO bus and that MDIO bus is missing its
+>> driver then we will always return EPROBE_DEFER. But if there are any
+>> devices on our own MDIO bus (such as PHYs), those devices will be
+>> successfully bound before we fail our own probe. This will cause the
+>> deferred probing infrastructure to continuously try to probe our device.
+>> 
+>> To prevent this, split the MAC and MDIO functionality into separate
+>> auxiliary devices. These can then be re-probed independently.
 > 
-> MANA supports RDMA in PF mode. The driver should record the doorbell
-> physical address when in PF mode.
+> There's a, pardon the expression, C++-like build failure here
+> culminating in:
 > 
-> The doorbell physical address is used by the RDMA driver to map
-> doorbell pages of the device to user-mode applications through RDMA
-> verbs interface. In the past, they have been mapped to user-mode while
-> the device is in VF mode. With the support for PF mode implemented,
-> also expose those pages in PF mode.
+> drivers/net/ethernet/xilinx/xilinx_axienet_main.c:3225:1: error: redefinition of '__exittest'
+> drivers/net/ethernet/xilinx/xilinx_axienet_main.c:3225:1: error: redefinition of '__inittest'
+> drivers/net/ethernet/xilinx/xilinx_axienet_main.c:3225:1: error: redefinition of 'init_module'
+> drivers/net/ethernet/xilinx/xilinx_axienet_main.c:3225:1: error: redefinition of 'cleanup_module'
 > 
-> [...]
+> I'm guessing the existing module_platform_driver() and the new
+> module_auxiliary_driver() don't want to be friends when this 
+> code is built as a module?
 
-Here is the summary with links:
-  - [net-next,v3] net: mana: Record doorbell physical address in PF mode
-    https://git.kernel.org/netdev/net/c/e0fca6f2cebf
+Hm, I thought I had built this as a module. I guess not. Will fix.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+--Sean
