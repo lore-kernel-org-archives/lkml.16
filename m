@@ -1,168 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A77324167D
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B1124167D;
+	Thu, 19 Jun 2025 06:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750315045; cv=none; b=ExU3qJnvsyK9UNrzVMyGnwyj9SO/31XE/7RTgTNiGFbvO6x3dHpNfaWVWUhJim2RNv0bh1zKa1ii/5J0QNQdHDx9/u1546yRZ5kdQg/o4RMSIDd3Ls5duc0VlN4UgShczNFn1ra7z5PhE425xD1ASnfMwDkgx1d7GKE7gRUHBU4=
+	t=1750315203; cv=none; b=NyF/zQ8fnha7DTNV5N2vgOQLyEuLeKSGBQu5BtHLrf+ATF3HV7tTOvFAZiNLfm9uLNNWCUJi4kF3P4Rwkev5wa1qgWeW1txRrZ7o/nWUikL+VpQ1avLGy6HGW2FMTSO4rimxE2ncYZ0salj5P2douWoEiZO4IbJ5QvPuMGF+O8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750315045; c=relaxed/simple;
-	bh=lg3ViviuHKRtuxRr6EtVrs3PYIgqIOuqD4vH6n5ib9U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gNY/j6lRFeBWXinJ0z0jhYnOLvFFl/QbGk0P6F4VGIcVHT45wRLJnjSWc9vIldBzCbklY2V/jQBba+vRrSv/IPEtLFtCf+bBlRDGYyrlq/2A61EyHsjJn8UZAdVSxcBFvyRNZJ0qJu4DfXVojGCD2QhcOkNS8giNSjJHnqCjyN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHuunBNe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750315203; c=relaxed/simple;
+	bh=4MOTPL+eD9R/a8ShunIQD4Ak8F19x2srD1y1ZM5qBns=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C5ysfBdBo1OheSibJXpw+FmDyvLQcF4w43YVa+oLhd8c43reUbANzcnAnuAPtGb6IgEvV5+kP82jUOazworh+K22Ojbvp2mKG+zNyUJveH+/fOtDHKacNXvhNkDpfmIWLDsXl5kbuUnutSrWg8QXsOVdRLHs2VLBWpjKnXqeWq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bUG5HHSY; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHuunBNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750315042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7uNMBk0wAlkZx/rfLqOzJesJna8POdoskmu3HAnO65Y=;
-	b=DHuunBNeQP2x9AzJ2u0HvsgpDBO0nyWnqHXmtQaQLgY9OE/3tkls5fXUtpVGD1lIVbnzLy
-	/L+Vscp2dTzt9wkwGlVQwwA7kDPxMfRvO1wJNtOvNleln5ZU3G7q8d3KKAp4zFZ+lwQXov
-	f+S4G8m9DwAzic1t17v9+SBctnXYmtk=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-ZZJ6UioAMYGYhxxPaGJzfA-1; Thu, 19 Jun 2025 02:37:20 -0400
-X-MC-Unique: ZZJ6UioAMYGYhxxPaGJzfA-1
-X-Mimecast-MFC-AGG-ID: ZZJ6UioAMYGYhxxPaGJzfA_1750315039
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-311f4f2e6baso462320a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:37:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750315039; x=1750919839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7uNMBk0wAlkZx/rfLqOzJesJna8POdoskmu3HAnO65Y=;
-        b=EEDoICpRrSeCqG0B/0hWux+k4pMyufjInKolMqmtzPVmZaharsaSq2DUSakFUy4shI
-         gu48myQ8vGfoQwsHj81Qn0wGATqzkXFgnGlxOIMjt5+YkHnXSHoR+UkPkP93EM0rpC/Y
-         QgVLh8DMgXWSWyXXrvqru2N/Uyk72jFgAcJxxdv7inh9Ag3NrL/5UZbqCeiekVJKxPr+
-         pbSxDpPxd8wRjiRzfPmf1EdKXcBDbyUViO8UzeSJQTaQGOgOrwaBUL3RVO+KVYpID3Eu
-         j0G3+pu/nOXIdG66E29WmzQrC5bRYgxJ71OhW4GsAXsoCf5SJ300tJKgeZ+SNc/RsNVn
-         lojA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxn5M7Ov4hMWW+fp9RBqQhrHlV51Ol7DRt3ERkNKHlT/IjNgEoq/MWBmWBB8uo+dBZiPY8l3v/vPYXQ5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJaQ1v4nFg68/X95oMhURWvzTKk3bBgzBmVzR7cbok7uZ5ClOH
-	d8rIMwOmaAsQEhEV2lwVScFUDx7vm1DRlEBnRQIurN8SfT+ZqJ3EdMQuIjl714q5FWrpmw0E7FN
-	Z29fjLffzQO/5O0xltefntloKXj1Rz3yf4C6wNyAK4yK3151e0Id7rwRl/6SEGeEZXvdvBFSCw1
-	NS/CMW4NuV8h8BvHhP+VTCmpM0ygx8ObmJmnE/IKz2
-X-Gm-Gg: ASbGncvNLjtjU2HMPV7ZzAGGDglKejXQbttisGnJTsDgb8v8hrpKBLrxPLB5f+aZRFy
-	1xT0pPTu/PHHDNELRZHG5Nm39EmX1LT862SLnkbkT2eeZc7pSUM/5Gzdw590U+b2DRIm27Uguuu
-	8x8ODqa54boOpl0LP33GuBxnbX9IAAYcdCOWxvDQ==
-X-Received: by 2002:a17:90b:528f:b0:312:2bb:aa89 with SMTP id 98e67ed59e1d1-313f1d50e08mr28234696a91.20.1750315039368;
-        Wed, 18 Jun 2025 23:37:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFX7GnjAlVhwgCg3zE5Ch7H7SHvP9QUYPvl7kO44iyN3b8BgkXc1zdxaWZ+FGkVn/hULPc5fRFcJjWwX6646bY=
-X-Received: by 2002:a17:90b:528f:b0:312:2bb:aa89 with SMTP id
- 98e67ed59e1d1-313f1d50e08mr28234671a91.20.1750315038936; Wed, 18 Jun 2025
- 23:37:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bUG5HHSY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=xp
+	tJ5nlr75MekjpYY473ZW53Q3YMWO/bs6PyrYC1z1Q=; b=bUG5HHSY7FF7NspWRv
+	PkP93TfuJt5Fv8+05P23ZTtp0G5l96uZgRXudnKAxTbtWciuhR495YBu3LotJd9c
+	TLc0A/1Y5p/tIcJGBS7qKbjAll8BWnAl56bO6LroXnI0d8USeLfzl4jLseiOu8n3
+	KKcODqiCzf7+Z22J/+kv61rr0=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD312OGsFNoUtqyAQ--.3973S11;
+	Thu, 19 Jun 2025 14:39:19 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: dmitry.baryshkov@oss.qualcomm.com,
+	heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	mripard@kernel.org,
+	naoki@radxa.com,
+	stephen@radxa.com,
+	cristian.ciocaltea@collabora.com,
+	neil.armstrong@linaro.org,
+	Laurent.pinchart@ideasonboard.com,
+	yubing.zhang@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v4 9/9] arm64: dts: rockchip: Enable DP2HDMI for ROCK 5 ITX
+Date: Thu, 19 Jun 2025 14:38:55 +0800
+Message-ID: <20250619063900.700491-10-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250619063900.700491-1-andyshrk@163.com>
+References: <20250619063900.700491-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613132023.106946-1-ryasuoka@redhat.com> <30f0ea0c-d8fb-461e-86ab-6e7677beac3c@redhat.com>
-In-Reply-To: <30f0ea0c-d8fb-461e-86ab-6e7677beac3c@redhat.com>
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Date: Thu, 19 Jun 2025 15:37:06 +0900
-X-Gm-Features: AX0GCFvSMUcq1h_W5ABI167G5MpNn8Cu_AvBDu-QBtX7eKvqtg0izjF5ovDEkb4
-Message-ID: <CAHpthZqfzOXfxzv7OTaLK0x_qro1sHKOHqPeFxwNA4_5FYQrRw@mail.gmail.com>
-Subject: Re: [PATCH drm-next] drm/bochs: Add support for drm_panic
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: kraxel@redhat.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD312OGsFNoUtqyAQ--.3973S11
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CrykKw18Xw43uF4kCF18uFg_yoW8tFW8pF
+	nF9rs5KryxuryYqw1YyF1kZF4DKrs5ua93Jr1aqry0yFW7Xas5K3WrWr9YqF1jvF1xXw4a
+	yr4kXa4j93WDXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j2XdbUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0g5xXmhTsFoIBwAAst
 
-On Thu, Jun 19, 2025 at 3:12=E2=80=AFPM Jocelyn Falempe <jfalempe@redhat.co=
-m> wrote:
->
-> On 13/06/2025 15:20, Ryosuke Yasuoka wrote:
-> > Add drm_panic moudle for bochs drm so that panic screen can be displaye=
-d
-> > on panic.
->
-> Thanks for the patch, it's simple and looks good to me.
->
-> Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
->
-> If no objections, I will push it next Monday.
->
-> Best regards,
->
-> --
->
-> Jocelyn
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Thank you Jocelyn for reviewing my patch.
-Now I found a typo in the commit message; moudle -> module.
+The HDMI0(Port next to Headphone Jack) is drived by DP1 on rk3588
+via RA620(a dp2hdmi converter).
 
-Let me fix it in v2.
+Add related dt nodes to enable it.
 
-Ryosuke
+Note: ROCKCHIP_VOP2_EP_DP1 is defined as 11 in dt-binding header,
+but it will trigger a dtc warning like "graph node unit address
+error, expected "b"" if we use it directly after endpoint, so we
+use "b" instead here.
 
-> >
-> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> > ---
-> >   drivers/gpu/drm/tiny/bochs.c | 19 +++++++++++++++++++
-> >   1 file changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.=
-c
-> > index 8706763af8fb..ed42ad5c4927 100644
-> > --- a/drivers/gpu/drm/tiny/bochs.c
-> > +++ b/drivers/gpu/drm/tiny/bochs.c
-> > @@ -19,6 +19,7 @@
-> >   #include <drm/drm_gem_shmem_helper.h>
-> >   #include <drm/drm_managed.h>
-> >   #include <drm/drm_module.h>
-> > +#include <drm/drm_panic.h>
-> >   #include <drm/drm_plane_helper.h>
-> >   #include <drm/drm_probe_helper.h>
-> >
-> > @@ -469,10 +470,28 @@ static void bochs_primary_plane_helper_atomic_upd=
-ate(struct drm_plane *plane,
-> >       bochs_hw_setformat(bochs, fb->format);
-> >   }
-> >
-> > +static int bochs_primary_plane_helper_get_scanout_buffer(struct drm_pl=
-ane *plane,
-> > +                                                       struct drm_scan=
-out_buffer *sb)
-> > +{
-> > +     struct bochs_device *bochs =3D to_bochs_device(plane->dev);
-> > +     struct iosys_map map =3D IOSYS_MAP_INIT_VADDR_IOMEM(bochs->fb_map=
-);
-> > +
-> > +     if (plane->state && plane->state->fb) {
-> > +             sb->format =3D plane->state->fb->format;
-> > +             sb->width =3D plane->state->fb->width;
-> > +             sb->height =3D plane->state->fb->height;
-> > +             sb->pitch[0] =3D plane->state->fb->pitches[0];
-> > +             sb->map[0] =3D map;
-> > +             return 0;
-> > +     }
-> > +     return -ENODEV;
-> > +}
-> > +
-> >   static const struct drm_plane_helper_funcs bochs_primary_plane_helper=
-_funcs =3D {
-> >       DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
-> >       .atomic_check =3D bochs_primary_plane_helper_atomic_check,
-> >       .atomic_update =3D bochs_primary_plane_helper_atomic_update,
-> > +     .get_scanout_buffer =3D bochs_primary_plane_helper_get_scanout_bu=
-ffer,
-> >   };
-> >
-> >   static const struct drm_plane_funcs bochs_primary_plane_funcs =3D {
-> >
-> > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
->
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+---
+
+(no changes since v3)
+
+Changes in v3:
+- Add RA620 into bridge chain.
+
+ .../boot/dts/rockchip/rk3588-rock-5-itx.dts   | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5-itx.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5-itx.dts
+index 7de17117df7ae..903ad42f97177 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5-itx.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5-itx.dts
+@@ -57,6 +57,29 @@ analog-sound {
+ 			  "Headphone", "Headphones";
+ 	};
+ 
++	bridge {
++		compatible = "radxa,ra620";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				hdmi_bridge_in: endpoint {
++					remote-endpoint = <&dp1_out_con>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				hdmi_bridge_out: endpoint {
++					remote-endpoint = <&hdmi_con_in>;
++				};
++			};
++		};
++	};
++
+ 	gpio-leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -73,6 +96,17 @@ hdd-led2 {
+ 		};
+ 	};
+ 
++	hdmi0-con {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_bridge_out>;
++			};
++		};
++	};
++
+ 	hdmi1-con {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -268,6 +302,24 @@ &cpu_l3 {
+ 	cpu-supply = <&vdd_cpu_lit_s0>;
+ };
+ 
++&dp1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&dp1m0_pins>;
++};
++
++&dp1_in {
++	dp1_in_vp2: endpoint {
++		remote-endpoint = <&vp2_out_dp1>;
++	};
++};
++
++&dp1_out {
++	dp1_out_con: endpoint {
++		remote-endpoint = <&hdmi_bridge_in>;
++	};
++};
++
+ &gpu {
+ 	mali-supply = <&vdd_gpu_s0>;
+ 	status = "okay";
+@@ -1261,3 +1313,10 @@ vp1_out_hdmi1: endpoint@ROCKCHIP_VOP2_EP_HDMI1 {
+ 		remote-endpoint = <&hdmi1_in_vp1>;
+ 	};
+ };
++
++&vp2 {
++	vp2_out_dp1: endpoint@b {
++		reg = <ROCKCHIP_VOP2_EP_DP1>;
++		remote-endpoint = <&dp1_in_vp2>;
++	};
++};
+-- 
+2.43.0
 
