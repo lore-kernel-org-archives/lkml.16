@@ -1,768 +1,88 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E70928DB50
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DFA23FC54;
+	Thu, 19 Jun 2025 14:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344935; cv=none; b=Qe11LFsFMu6ePYDUmKLvAtaGst++29gh8KX8rC+mSdHIXYUVwsPNNIi1LMnQN5mk6tHrkeMOaHZe6xJJLOR0Z+HpPwYJYLaUV0XuO0eH2JoXSePbNXhtEwwPKCGYXFbQere2THF2+JVjskUM7kmGc8BbZRdqu/U0N0oFBXSpzhs=
+	t=1750344946; cv=none; b=ARuRlXh/e6CYZQhnupED6O/a6IObEHl7irP9Vs8VfNSvXIY4vruS+QZNtzWNMVBpxqrIV1EsUiCjd5Ce2pP+d1XzanWLaU0R7f0uVatxQd4o692KFNxVJXEAQ9yUitz/aCCFqyNbvxHkhYq0AJVkLgaqb2q/3qlVq3frkrt1ifM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344935; c=relaxed/simple;
-	bh=Gh059vN04/yomWRamYHsFmOtOA8wZ9W9B2hhFqlEEeo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SgGmeJIRublGOtfGm26EGYF9DjwRaAviFZsLfe3tS+15dUYyFp3wEytNO3vRrqAqNjSg0MOA/msdcYWmEHM7CXKgBPFnkLpXPWahBNPDy7BDzSjUv49JhinrSZVlIwuhC7mIfGXa5jVjR8xcZb9P0XGBJDNqBa1zhpIuo+c5Fp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yQ4rIDwL; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750344946; c=relaxed/simple;
+	bh=ZCXeVi5NAoQxiaYJvq5NPU85M46dLEnN6Ij6bmOHHO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c2PR0ffeVbCP4coHtthClAIXZEdISuInyEE42X45lkicOUSnjuUlL7fhJnigxVTZ56XATBSE7m3m2o6jrJv4u50+fxDCN81t+pU94HdmhGM3sMUdpDfWaJzGgJgUov3PlI2dEbV5o+C5WVgeMKCfr5vvC6KwoJqY4LAVWNU8O4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjvvEUjH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yQ4rIDwL"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442fda876a6so7612105e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750344930; x=1750949730; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kPcmXvkL7pHBOkknQ/9IxvWMgzVk5GGr/MOGB3cvxGA=;
-        b=yQ4rIDwLOcc2kCj3iXnV7qqxhZAecIE1L29o1erMJT7TKW5v7v8bnQGB1ogCzmJkSj
-         SxDMVHZbj5ooSjfKcd7sRkxJm1qHSpx82V2pmI/RSRiBPQwmV4d1g65jdQ2p3AqYBc+J
-         G2o/yfcK6av2M407z3jM89reQu9qon09CouEgrwyCoDkuV0nwfhZ4+i1JNA46Ui3ri/O
-         PIY/a9ihXDTxPq+L5k8ZENAyhA3C6eKEzIEKLknJVd1OlrEOswbw2kCntIvv3uzse49t
-         CZnb6Fb1ko/v23N4wSchHhRYOTTfBqJYlgk1lrzYcjJhF92DrBmZJ6KK++Cw23yvTbGB
-         2nfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344930; x=1750949730;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kPcmXvkL7pHBOkknQ/9IxvWMgzVk5GGr/MOGB3cvxGA=;
-        b=J5Aw7d2rycPA9fCWbHTPIQPGUfe4wXbfVmbes3UhxLfB5S/JFwQIq1nG1J9k/kgG8J
-         ba65+OXyfGiinhmBef6YKwXJTPjBMKgxv39cvWdS6WZC1foM0nqtLIyCnKaMkVGsMvsW
-         8Dxt0VP6eyVdfM96SLkTp6fwVHz0HxexPn65DeDLaDGsvOD7FkA/ucOIa5sFWAIbOxy4
-         YUbOTiXh6OL6rWZ6ZibXbRwI6u7tjmZyHHz86bA/mhO+g30D58cCZpf66sgiXCSYRV1r
-         pMhV6yCzPxsXhvHf0AGRRHduBj/bAVPB8vZaatENvwU37eYveCApdSM1ZGohUIqIFtSm
-         dCIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUc93kOeQJwKTAR2wJcQ4/0RAsG0ZgXU7f5MDWQszqIcBsQ5DIpOM6/+mERRK5mxiX21U04O1uD0gGPW0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZle7HO/QWMHYm6DNziguzH07jbQR2XyqcdIyPfk/3rkNbEIZa
-	C41PSNOm54X8xKk5URpl5e86xO0CB6/RFp4ldiyLkgVtbxA60tLCuZCX6daJVdYZ2Io=
-X-Gm-Gg: ASbGncvjZZ56Rcyf0FBetLLx81PKBCfCj22cPJJeW/XbKzIBQ9VKFmRhXIEYYPE5h9W
-	rWl2aJ2Y6rR9BhN0trM584r+NJdgE/lq7r6H3pNykPIGRnHl1W9l4uwMkPvfNZIofluKAY/oBuT
-	MAVFyW25KSAoZvLxA6e3uC5w+VgKbCnBF6tiNYuN9oglELXQCDip2bTGcsEGj1VfUUKd8eKz/Cs
-	M/figDe5aXUw42O/DmjvbfQmxPnGIgJwX6XneL2YK7Sl9wRBRGRW1+HAhwjIGWI4oqkUbpPqeGy
-	WodSIT2/hGqIluEt7a8OT67yRbz613GmKvKHTIqhS21NoZ52fXfBRBsSRTTL35YTxYViMpKncB4
-	qCxbZzezxMCk=
-X-Google-Smtp-Source: AGHT+IE2ObqWoDCMO8WviqKvQwMgcBj5iUuOl3ZkQ4kc42xVydoPY8Y2WHctsPtlsRAhnSDQeaAz2A==
-X-Received: by 2002:a05:600c:1d06:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-4533caad17fmr212544145e9.18.1750344929495;
-        Thu, 19 Jun 2025 07:55:29 -0700 (PDT)
-Received: from toyger.tail248178.ts.net ([2a0e:c5c1:0:100:b058:b8f5:b561:423c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:55:28 -0700 (PDT)
-From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Jun 2025 16:55:17 +0200
-Subject: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjvvEUjH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60FFC4CEF0;
+	Thu, 19 Jun 2025 14:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750344945;
+	bh=ZCXeVi5NAoQxiaYJvq5NPU85M46dLEnN6Ij6bmOHHO4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rjvvEUjHWVl9rLIeg1IMdGFdNd+KYoSmLb0gjCRNJ3ydRW7kRFoO2XHRm8gdsvF2p
+	 FyFEs0reGeXdXuBM3o7OFimmv1c+7160wM+pbi2P+acQTRKmu0LnnG0ZxpYJsCg/6v
+	 ucXphXMhCgF3keVLw+N/1FQ9th7RuhLHVxEnN4FlPQcX4+AwqHRSUYDbn5tVXTILWm
+	 lvinXcJOkEIT2e4f2AnZm9VV4HF4cGwOWwVDW1HTavUA6B6ClO6n0iZWJAVF6sOO3a
+	 ZvskE9It4FYPMmPy+tqleWNi7dTaim827SN3Ax7ifh44yBNtElE37NwTgwIjwPPZnd
+	 mLyhS9G6WBVMg==
+Date: Thu, 19 Jun 2025 07:55:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
+ <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
+ <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/5] net/mlx5e: Add support for PCIe congestion
+ events
+Message-ID: <20250619075543.1d31f937@kernel.org>
+In-Reply-To: <20250619113721.60201-1-mbloch@nvidia.com>
+References: <20250619113721.60201-1-mbloch@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
-In-Reply-To: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- linux-hardening@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=21861;
- i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=Gh059vN04/yomWRamYHsFmOtOA8wZ9W9B2hhFqlEEeo=;
- b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTSw0XXqPOjoSVAlw5euwE4kdZqsabuq12Kh
- GTDtshaV+yJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0gAKCRAFgzErGV9k
- tq+oEACNihkZDBZL+qvvHgDjmHHest6ymBW89XRVMVtHZE56OGjjlKeQI88rHfUH6//Pryg2lav
- lPaH0yVV7EK+9WcH6fCdP8O9ZkDcDNdXL4b5LF+fWnbi5JxPbgRXcDV++b4LO4AgWGLrkN6M5w+
- PjdhVluOnbPBLOTtzqYprCysQHuw3FYxFrMJYp7AnyDlkLxzgPWSRKL5runwoBoQI25IbEyVjCX
- N0LZ+1lPjcpMu6PbcwWc4JNJGltbLEzGnH4WViKKPzv5oT95iF00MWVwxu/VoXu3WV9je1Frxi6
- AAvsNgug5svuidKfuPqZ9y7yub/8bzAb/80UG+NKc7CceUcwGJGJOQQM323HQNcrXJrvstYjXfX
- CMc4P/6HIFFMb6HtJFYUW82j+dKJ+1U5OqBgxSv7j+rgdJA2RgAfNFsvawVffMGY6a041N0RZJK
- mePkQKJAjPAGqEi0PGjTi/P2HdURUBqOGbhSGFxm4JJg+Mxo+nyfu2VwtUX9WoaFBAnTv54if7T
- xZGO5/WHEaP6qiUi5u7NA5cE0hr41xvYYvF12Bgvr8R4Yg34m5LVPDFG8R53tRN8mDi1qFPWXdU
- MAdkb9JxLZOsQ/sCx9c9UCocaYRS+nT5aPuhtH2k52dPZRgNIut6HnAeHjDGW+XWDV02etqvDGT
- ZV9f6v5iwTHVHkQ==
-X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
- fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-Introduce support for the SMB5 charger found on pm8150b and other more
-modern Qualcomm SoCs.
+On Thu, 19 Jun 2025 14:37:16 +0300 Mark Bloch wrote:
+> PCIe congestion events are events generated by the firmware when the
+> device side has sustained PCIe inbound or outbound traffic above
+> certain thresholds. The high and low threshold are hysteresis thresholds
+> to prevent flapping: once the high threshold has been reached, a low
+> threshold event will be triggered only after the bandwidth usage went
+> below the low threshold.
 
-SMB5 is largely similar to SMB2, with a few register differences. The
-main difference is the new Type-C hardware block which some registers
-are moved to.
+What are we supposed to do with a series half of which is tagged for
+one tree and half for another? If you want for some of the patches to
+go via the shared tree - you have to post them separately.
+Ideally you'd post them to the list in a combined "pull request +
+patches" format (see for example how Marc posts CAN patches, or Pablo
+posts netfilter). Once we pull that you can sent the net-next stuff
+separately as patches.
 
-Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
----
- drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++------
- 1 file changed, 314 insertions(+), 53 deletions(-)
+I feel like I just had the same exact conversation with Tariq recently.
+Really not great when same process explainer has to be given to
+multiple people from the same company :( I'd like to remind y'all that
+reading the mailing list is not optional:
 
-diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
-index 10ddd33a09599decb23c0f1ccd02fa9b56602543..d902f3f43548191d3d0310ce90e699918ed0f16f 100644
---- a/drivers/power/supply/qcom_smbx.c
-+++ b/drivers/power/supply/qcom_smbx.c
-@@ -22,18 +22,32 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
- #include <linux/workqueue.h>
- 
-+enum smb_generation {
-+	SMB2,
-+	SMB5,
-+};
-+
-+#define SMB_REG_OFFSET(smb) (smb->gen == SMB2 ? 0x600 : 0x100)
-+
- /* clang-format off */
- #define BATTERY_CHARGER_STATUS_1			0x06
- #define BATTERY_CHARGER_STATUS_MASK			GENMASK(2, 0)
- 
- #define BATTERY_CHARGER_STATUS_2			0x07
--#define CHARGER_ERROR_STATUS_BAT_OV_BIT			BIT(5)
--#define BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT		BIT(3)
--#define BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT		BIT(2)
--#define BAT_TEMP_STATUS_TOO_HOT_BIT			BIT(1)
--#define BAT_TEMP_STATUS_TOO_COLD_BIT			BIT(0)
-+#define SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT		BIT(5)
-+#define SMB2_BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT	BIT(3)
-+#define SMB2_BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT	BIT(2)
-+#define SMB2_BAT_TEMP_STATUS_TOO_HOT_BIT		BIT(1)
-+#define SMB5_CHARGER_ERROR_STATUS_BAT_OV_BIT		BIT(1)
-+#define SMB2_BAT_TEMP_STATUS_TOO_COLD_BIT		BIT(0)
-+
-+#define BATTERY_CHARGER_STATUS_7			0x0D
-+#define SMB5_BAT_TEMP_STATUS_HOT_SOFT_BIT		BIT(5)
-+#define SMB5_BAT_TEMP_STATUS_COLD_SOFT_BIT		BIT(4)
-+#define SMB5_BAT_TEMP_STATUS_TOO_HOT_BIT		BIT(3)
-+#define SMB5_BAT_TEMP_STATUS_TOO_COLD_BIT		BIT(2)
- 
- #define CHARGING_ENABLE_CMD				0x42
- #define CHARGING_ENABLE_CMD_BIT				BIT(0)
- 
-@@ -55,11 +69,14 @@
- 
- #define FLOAT_VOLTAGE_CFG				0x70
- #define FLOAT_VOLTAGE_SETTING_MASK			GENMASK(7, 0)
- 
--#define FG_UPDATE_CFG_2_SEL				0x7D
--#define SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(2)
--#define VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(1)
-+#define SMB2_FG_UPDATE_CFG_2_SEL			0x7D
-+#define SMB2_SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(2)
-+#define SMB2_VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(1)
-+
-+#define SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_REG		0x7D
-+#define SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_MASK		GENMASK(7, 0)
- 
- #define OTG_CFG						0x153
- #define OTG_EN_SRC_CFG_BIT				BIT(1)
- 
-@@ -73,36 +90,46 @@
- #define CDP_CHARGER_BIT					BIT(2)
- #define OCP_CHARGER_BIT					BIT(1)
- #define SDP_CHARGER_BIT					BIT(0)
- 
-+#define USBIN_CMD_IL					0x340
-+#define USBIN_SUSPEND_BIT				BIT(0)
-+
- #define CMD_APSD					0x341
- #define APSD_RERUN_BIT					BIT(0)
- 
-+#define CMD_ICL_OVERRIDE				0x342
-+#define ICL_OVERRIDE_BIT				BIT(0)
-+
- #define TYPE_C_CFG					0x358
-+#define APSD_START_ON_CC_BIT				BIT(7)
- #define FACTORY_MODE_DETECTION_EN_BIT			BIT(5)
- #define VCONN_OC_CFG_BIT				BIT(1)
- 
- #define USBIN_OPTIONS_1_CFG				0x362
-+#define AUTO_SRC_DETECT_BIT				BIT(3)
- #define HVDCP_EN_BIT					BIT(2)
- 
-+#define USBIN_LOAD_CFG					0x65
-+#define ICL_OVERRIDE_AFTER_APSD_BIT			BIT(4)
-+
- #define USBIN_ICL_OPTIONS				0x366
- #define USB51_MODE_BIT					BIT(1)
- #define USBIN_MODE_CHG_BIT				BIT(0)
- 
- /* PMI8998 only */
- #define TYPE_C_INTRPT_ENB_SOFTWARE_CTRL			0x368
--#define VCONN_EN_SRC_BIT				BIT(4)
-+#define SMB2_VCONN_EN_SRC_BIT				BIT(4)
- #define VCONN_EN_VALUE_BIT				BIT(3)
- #define TYPEC_POWER_ROLE_CMD_MASK			GENMASK(2, 0)
--#define UFP_EN_CMD_BIT					BIT(2)
--#define DFP_EN_CMD_BIT					BIT(1)
--#define TYPEC_DISABLE_CMD_BIT				BIT(0)
-+#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
- 
- #define USBIN_CURRENT_LIMIT_CFG				0x370
- 
- #define USBIN_AICL_OPTIONS_CFG				0x380
- #define SUSPEND_ON_COLLAPSE_USBIN_BIT			BIT(7)
- #define USBIN_AICL_START_AT_MAX_BIT			BIT(5)
-+#define USBIN_AICL_PERIODIC_RERUN_EN_BIT		BIT(4)
- #define USBIN_AICL_ADC_EN_BIT				BIT(3)
- #define USBIN_AICL_EN_BIT				BIT(2)
- #define USBIN_HV_COLLAPSE_RESPONSE_BIT			BIT(1)
- #define USBIN_LV_COLLAPSE_RESPONSE_BIT			BIT(0)
-@@ -113,15 +140,41 @@
- 
- #define USBIN_CONT_AICL_THRESHOLD_CFG			0x384
- #define USBIN_CONT_AICL_THRESHOLD_CFG_MASK		GENMASK(5, 0)
- 
--#define ICL_STATUS					0x607
-+#define ICL_STATUS(smb)					(SMB_REG_OFFSET(smb) + 0x07)
- #define INPUT_CURRENT_LIMIT_MASK			GENMASK(7, 0)
- 
--#define POWER_PATH_STATUS				0x60B
-+#define POWER_PATH_STATUS(smb)				(SMB_REG_OFFSET(smb) + 0x0B)
- #define P_PATH_USE_USBIN_BIT				BIT(4)
- #define P_PATH_VALID_INPUT_POWER_SOURCE_STS_BIT		BIT(0)
- 
-+/* 0x5xx region is PM8150b only Type-C registers */
-+
-+/* Bits 2:0 match PMI8998 TYPE_C_INTRPT_ENB_SOFTWARE_CTRL */
-+#define SMB5_TYPE_C_MODE_CFG				0x544
-+#define SMB5_EN_TRY_SNK_BIT				BIT(4)
-+#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
-+
-+#define SMB5_TYPEC_TYPE_C_VCONN_CONTROL			0x546
-+#define SMB5_VCONN_EN_ORIENTATION_BIT			BIT(2)
-+#define SMB5_VCONN_EN_VALUE_BIT				BIT(1)
-+#define SMB5_VCONN_EN_SRC_BIT				BIT(0)
-+
-+
-+#define SMB5_TYPE_C_DEBUG_ACCESS_SINK			0x54a
-+#define SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK		GENMASK(4, 0)
-+
-+#define SMB5_DEBUG_ACCESS_SRC_CFG			0x54C
-+#define SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT	BIT(0)
-+
-+#define SMB5_TYPE_C_EXIT_STATE_CFG			0x550
-+#define SMB5_BYPASS_VSAFE0V_DURING_ROLE_SWAP_BIT	BIT(3)
-+#define SMB5_SEL_SRC_UPPER_REF_BIT			BIT(2)
-+#define SMB5_EXIT_SNK_BASED_ON_CC_BIT			BIT(0)
-+
-+/* Common */
-+
- #define BARK_BITE_WDOG_PET				0x643
- #define BARK_BITE_WDOG_PET_BIT				BIT(0)
- 
- #define WD_CFG						0x651
-@@ -184,8 +237,9 @@ struct smb_chip {
- 	const char *name;
- 	unsigned int base;
- 	struct regmap *regmap;
- 	struct power_supply_battery_info *batt_info;
-+	enum smb_generation gen;
- 
- 	struct delayed_work status_change_work;
- 	int cable_irq;
- 	bool wakeup_enabled;
-@@ -195,8 +249,15 @@ struct smb_chip {
- 
- 	struct power_supply *chg_psy;
- };
- 
-+struct smb_match_data {
-+	const char *name;
-+	enum smb_generation gen;
-+	size_t init_seq_len;
-+	const struct smb_init_register __counted_by(init_seq_len) *init_seq;
-+};
-+
- static enum power_supply_property smb_properties[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_CURRENT_MAX,
-@@ -212,9 +273,9 @@ static int smb_get_prop_usb_online(struct smb_chip *chip, int *val)
- {
- 	unsigned int stat;
- 	int rc;
- 
--	rc = regmap_read(chip->regmap, chip->base + POWER_PATH_STATUS, &stat);
-+	rc = regmap_read(chip->regmap, chip->base + POWER_PATH_STATUS(chip), &stat);
- 	if (rc < 0) {
- 		dev_err(chip->dev, "Couldn't read power path status: %d\n", rc);
- 		return rc;
- 	}
-@@ -267,11 +328,37 @@ static int smb_apsd_get_charger_type(struct smb_chip *chip, int *val)
- 
- 	return 0;
- }
- 
-+/* Return 1 when in overvoltage state, else 0 or -errno */
-+static int smbx_ov_status(struct smb_chip *chip)
-+{
-+	u16 reg;
-+	u8 mask;
-+	int rc;
-+	u32 val;
-+
-+	switch (chip->gen) {
-+	case SMB2:
-+		reg = BATTERY_CHARGER_STATUS_2;
-+		mask = SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT;
-+		break;
-+	case SMB5:
-+		reg = BATTERY_CHARGER_STATUS_7;
-+		mask = SMB5_CHARGER_ERROR_STATUS_BAT_OV_BIT;
-+		break;
-+	}
-+
-+	rc = regmap_read(chip->regmap, chip->base + reg, &val);
-+	if (rc)
-+		return rc;
-+
-+	return !!(reg & mask);
-+}
-+
- static int smb_get_prop_status(struct smb_chip *chip, int *val)
- {
--	unsigned char stat[2];
-+	u32 stat;
- 	int usb_online = 0;
- 	int rc;
- 
- 	rc = smb_get_prop_usb_online(chip, &usb_online);
-@@ -279,24 +366,29 @@ static int smb_get_prop_status(struct smb_chip *chip, int *val)
- 		*val = POWER_SUPPLY_STATUS_DISCHARGING;
- 		return rc;
- 	}
- 
--	rc = regmap_bulk_read(chip->regmap,
--			      chip->base + BATTERY_CHARGER_STATUS_1, &stat, 2);
-+	rc = regmap_read(chip->regmap,
-+			      chip->base + BATTERY_CHARGER_STATUS_1, &stat);
- 	if (rc < 0) {
- 		dev_err(chip->dev, "Failed to read charging status ret=%d\n",
- 			rc);
- 		return rc;
- 	}
- 
--	if (stat[1] & CHARGER_ERROR_STATUS_BAT_OV_BIT) {
-+	rc = smbx_ov_status(chip);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* In overvoltage state */
-+	if (rc == 1) {
- 		*val = POWER_SUPPLY_STATUS_NOT_CHARGING;
- 		return 0;
- 	}
- 
--	stat[0] = stat[0] & BATTERY_CHARGER_STATUS_MASK;
-+	stat = stat & BATTERY_CHARGER_STATUS_MASK;
- 
--	switch (stat[0]) {
-+	switch (stat) {
- 	case TRICKLE_CHARGE:
- 	case PRE_CHARGE:
- 	case FAST_CHARGE:
- 	case FULLON_CHARGE:
-@@ -318,9 +410,9 @@ static int smb_get_prop_status(struct smb_chip *chip, int *val)
- 
- static inline int smb_get_current_limit(struct smb_chip *chip,
- 					 unsigned int *val)
- {
--	int rc = regmap_read(chip->regmap, chip->base + ICL_STATUS, val);
-+	int rc = regmap_read(chip->regmap, chip->base + ICL_STATUS(chip), val);
- 
- 	if (rc >= 0)
- 		*val *= CURRENT_SCALE_FACTOR;
- 	return rc;
-@@ -413,9 +505,46 @@ static int smb_get_iio_chan(struct smb_chip *chip, struct iio_channel *chan,
- 
- 	return iio_read_channel_processed(chan, val);
- }
- 
--static int smb_get_prop_health(struct smb_chip *chip, int *val)
-+static int smb5_get_prop_health(struct smb_chip *chip, int *val)
-+{
-+	int rc;
-+	unsigned int stat;
-+
-+	rc = smbx_ov_status(chip);
-+
-+	/* Treat any error as if we are in the overvoltage state */
-+	if (rc < 0)
-+		dev_err(chip->dev, "Couldn't determine overvoltage status!");
-+	if (rc) {
-+		dev_err(chip->dev, "battery over-voltage");
-+		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		return 0;
-+	}
-+
-+	rc = regmap_read(chip->regmap, chip->base + BATTERY_CHARGER_STATUS_7,
-+			 &stat);
-+	if (rc < 0) {
-+		dev_err(chip->dev, "Couldn't read charger status 7 rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	if (stat & SMB5_BAT_TEMP_STATUS_TOO_COLD_BIT)
-+		*val = POWER_SUPPLY_HEALTH_COLD;
-+	else if (stat & SMB5_BAT_TEMP_STATUS_TOO_HOT_BIT)
-+		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
-+	else if (stat & SMB5_BAT_TEMP_STATUS_COLD_SOFT_BIT)
-+		*val = POWER_SUPPLY_HEALTH_COOL;
-+	else if (stat & SMB5_BAT_TEMP_STATUS_HOT_SOFT_BIT)
-+		*val = POWER_SUPPLY_HEALTH_WARM;
-+	else
-+		*val = POWER_SUPPLY_HEALTH_GOOD;
-+
-+	return 0;
-+}
-+
-+static int smb2_get_prop_health(struct smb_chip *chip, int *val)
- {
- 	int rc;
- 	unsigned int stat;
- 
-@@ -426,34 +555,45 @@ static int smb_get_prop_health(struct smb_chip *chip, int *val)
- 		return rc;
- 	}
- 
- 	switch (stat) {
--	case CHARGER_ERROR_STATUS_BAT_OV_BIT:
-+	case SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT:
- 		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
- 		return 0;
--	case BAT_TEMP_STATUS_TOO_COLD_BIT:
-+	case SMB2_BAT_TEMP_STATUS_TOO_COLD_BIT:
- 		*val = POWER_SUPPLY_HEALTH_COLD;
- 		return 0;
--	case BAT_TEMP_STATUS_TOO_HOT_BIT:
-+	case SMB2_BAT_TEMP_STATUS_TOO_HOT_BIT:
- 		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
- 		return 0;
--	case BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT:
-+	case SMB2_BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT:
- 		*val = POWER_SUPPLY_HEALTH_COOL;
- 		return 0;
--	case BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT:
-+	case SMB2_BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT:
- 		*val = POWER_SUPPLY_HEALTH_WARM;
- 		return 0;
- 	default:
- 		*val = POWER_SUPPLY_HEALTH_GOOD;
- 		return 0;
- 	}
- }
- 
-+static int smb_get_prop_health(struct smb_chip *chip, int *val)
-+{
-+	switch (chip->gen) {
-+	case SMB2:
-+		return smb2_get_prop_health(chip, val);
-+	case SMB5:
-+		return smb5_get_prop_health(chip, val);
-+	}
-+}
-+
- static int smb_get_property(struct power_supply *psy,
- 			     enum power_supply_property psp,
- 			     union power_supply_propval *val)
- {
- 	struct smb_chip *chip = power_supply_get_drvdata(psy);
-+	int ret;
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_MANUFACTURER:
- 		val->strval = "Qualcomm";
-@@ -466,10 +606,15 @@ static int smb_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 		return smb_get_iio_chan(chip, chip->usb_in_i_chan,
- 					 &val->intval);
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
--		return smb_get_iio_chan(chip, chip->usb_in_v_chan,
-+		ret = smb_get_iio_chan(chip, chip->usb_in_v_chan,
- 					 &val->intval);
-+		if (!ret) {
-+			if (chip->gen == SMB5)
-+				val->intval *= 16;
-+		}
-+		return ret;
- 	case POWER_SUPPLY_PROP_ONLINE:
- 		return smb_get_prop_usb_online(chip, &val->intval);
- 	case POWER_SUPPLY_PROP_STATUS:
- 		return smb_get_prop_status(chip, &val->intval);
-@@ -515,14 +660,10 @@ static int smb_property_is_writable(struct power_supply *psy,
- 
- static irqreturn_t smb_handle_batt_overvoltage(int irq, void *data)
- {
- 	struct smb_chip *chip = data;
--	unsigned int status;
- 
--	regmap_read(chip->regmap, chip->base + BATTERY_CHARGER_STATUS_2,
--		    &status);
--
--	if (status & CHARGER_ERROR_STATUS_BAT_OV_BIT) {
-+	if (smbx_ov_status(chip) == 1) {
- 		/* The hardware stops charging automatically */
- 		dev_err(chip->dev, "battery overvoltage detected\n");
- 		power_supply_changed(chip->chg_psy);
- 	}
-@@ -566,9 +707,9 @@ static irqreturn_t smb_handle_wdog_bark(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
- static const struct power_supply_desc smb_psy_desc = {
--	.name = "pmi8998_charger",
-+	.name = "SMB2_charger",
- 	.type = POWER_SUPPLY_TYPE_USB,
- 	.usb_types = BIT(POWER_SUPPLY_USB_TYPE_SDP) |
- 		     BIT(POWER_SUPPLY_USB_TYPE_CDP) |
- 		     BIT(POWER_SUPPLY_USB_TYPE_DCP) |
-@@ -580,18 +721,100 @@ static const struct power_supply_desc smb_psy_desc = {
- 	.property_is_writeable = smb_property_is_writable,
- };
- 
- /* Init sequence derived from vendor downstream driver */
--static const struct smb_init_register smb_init_seq[] = {
--	{ .addr = AICL_RERUN_TIME_CFG, .mask = AICL_RERUN_TIME_MASK, .val = 0 },
-+static const struct smb_init_register smb5_init_seq[] = {
-+	{ .addr = USBIN_CMD_IL, .mask = USBIN_SUSPEND_BIT, .val = 0 },
-+	/*
-+	 * By default configure us as an upstream facing port
-+	 * FIXME: This will be handled by the type-c driver
-+	 */
-+	{ .addr = SMB5_TYPE_C_MODE_CFG,
-+	  .mask = SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
-+	  .val = SMB5_EN_TRY_SNK_BIT },
-+	{ .addr = SMB5_TYPEC_TYPE_C_VCONN_CONTROL,
-+	  .mask = SMB5_VCONN_EN_ORIENTATION_BIT | SMB5_VCONN_EN_SRC_BIT |
-+		  SMB5_VCONN_EN_VALUE_BIT,
-+	  .val = SMB2_VCONN_EN_SRC_BIT },
-+	{ .addr = SMB5_DEBUG_ACCESS_SRC_CFG,
-+	  .mask = SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT,
-+	  .val = SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT },
-+	{ .addr = SMB5_TYPE_C_EXIT_STATE_CFG,
-+	  .mask = SMB5_SEL_SRC_UPPER_REF_BIT,
-+	  .val = SMB5_SEL_SRC_UPPER_REF_BIT },
-+	/*
-+	 * Disable Type-C factory mode and stay in Attached.SRC state when VCONN
-+	 * over-current happens
-+	 */
-+	{ .addr = TYPE_C_CFG,
-+	  .mask = APSD_START_ON_CC_BIT,
-+	  .val = 0 },
-+	{ .addr = SMB5_TYPE_C_DEBUG_ACCESS_SINK,
-+	  .mask = SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK,
-+	  .val = 0x17 },
-+	/* Configure VBUS for software control */
-+	{ .addr = OTG_CFG, .mask = OTG_EN_SRC_CFG_BIT, .val = 0 },
-+	/*
-+	 * Recharge when State Of Charge drops below 98%.
-+	 */
-+	{ .addr = SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_REG,
-+	  .mask = SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_MASK,
-+	  .val = 250 },
-+	/* Enable charging */
-+	{ .addr = CHARGING_ENABLE_CMD,
-+	  .mask = CHARGING_ENABLE_CMD_BIT,
-+	  .val = CHARGING_ENABLE_CMD_BIT },
-+	/* Enable BC1P2 auto Src detect */
-+	{ .addr = USBIN_OPTIONS_1_CFG,
-+	  .mask = AUTO_SRC_DETECT_BIT,
-+	  .val = AUTO_SRC_DETECT_BIT },
-+	/* Set the default SDP charger type to a 500ma USB 2.0 port */
-+	{ .addr = USBIN_ICL_OPTIONS,
-+	  .mask = USBIN_MODE_CHG_BIT,
-+	  .val = USBIN_MODE_CHG_BIT },
-+	{ .addr = CMD_ICL_OVERRIDE,
-+	  .mask = ICL_OVERRIDE_BIT,
-+	  .val = 0 },
-+	{ .addr = USBIN_LOAD_CFG,
-+	  .mask = ICL_OVERRIDE_AFTER_APSD_BIT,
-+	  .val = 0 },
-+	/* Disable watchdog */
-+	{ .addr = SNARL_BARK_BITE_WD_CFG, .mask = 0xff, .val = 0 },
-+	{ .addr = WD_CFG,
-+	  .mask = WATCHDOG_TRIGGER_AFP_EN_BIT | WDOG_TIMER_EN_ON_PLUGIN_BIT |
-+		  BARK_WDOG_INT_EN_BIT,
-+	  .val = 0 },
-+	/*
-+	 * Enable Automatic Input Current Limit, this will slowly ramp up the current
-+	 * When connected to a wall charger, and automatically stop when it detects
-+	 * the charger current limit (voltage drop?) or it reaches the programmed limit.
-+	 */
-+	{ .addr = USBIN_AICL_OPTIONS_CFG,
-+	  .mask = USBIN_AICL_PERIODIC_RERUN_EN_BIT | USBIN_AICL_ADC_EN_BIT
-+			| USBIN_AICL_EN_BIT | SUSPEND_ON_COLLAPSE_USBIN_BIT,
-+	  .val = USBIN_AICL_PERIODIC_RERUN_EN_BIT | USBIN_AICL_ADC_EN_BIT
-+			| USBIN_AICL_EN_BIT | SUSPEND_ON_COLLAPSE_USBIN_BIT },
-+	/*
-+	 * This overrides all of the other current limit configs and is
-+	 * expected to be used for setting limits based on temperature.
-+	 * We set some relatively safe default value while still allowing
-+	 * a comfortably fast charging rate.
-+	 */
-+	{ .addr = FAST_CHARGE_CURRENT_CFG,
-+	  .mask = FAST_CHARGE_CURRENT_SETTING_MASK,
-+	  .val = 1950000 / CURRENT_SCALE_FACTOR },
-+};
-+
-+/* Init sequence derived from vendor downstream driver */
-+static const struct smb_init_register smb2_init_seq[] = {
- 	/*
- 	 * By default configure us as an upstream facing port
- 	 * FIXME: This will be handled by the type-c driver
- 	 */
- 	{ .addr = TYPE_C_INTRPT_ENB_SOFTWARE_CTRL,
--	  .mask = TYPEC_POWER_ROLE_CMD_MASK | VCONN_EN_SRC_BIT |
-+	  .mask = TYPEC_POWER_ROLE_CMD_MASK | SMB2_VCONN_EN_SRC_BIT |
- 		  VCONN_EN_VALUE_BIT,
--	  .val = VCONN_EN_SRC_BIT },
-+	  .val = SMB2_VCONN_EN_SRC_BIT },
- 	/*
- 	 * Disable Type-C factory mode and stay in Attached.SRC state when VCONN
- 	 * over-current happens
- 	 */
-@@ -603,12 +826,12 @@ static const struct smb_init_register smb_init_seq[] = {
- 	/*
- 	 * Use VBAT to determine the recharge threshold when battery is full
- 	 * rather than the state of charge.
- 	 */
--	{ .addr = FG_UPDATE_CFG_2_SEL,
--	  .mask = SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT |
--		  VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT,
--	  .val = VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT },
-+	{ .addr = SMB2_FG_UPDATE_CFG_2_SEL,
-+	  .mask = SMB2_SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT |
-+		  SMB2_VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT,
-+	  .val = SMB2_VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT },
- 	/* Enable charging */
- 	{ .addr = USBIN_OPTIONS_1_CFG, .mask = HVDCP_EN_BIT, .val = 0 },
- 	{ .addr = CHARGING_ENABLE_CMD,
- 	  .mask = CHARGING_ENABLE_CMD_BIT,
-@@ -674,19 +897,48 @@ static const struct smb_init_register smb_init_seq[] = {
- 	  .mask = PRE_CHARGE_CURRENT_SETTING_MASK,
- 	  .val = 500000 / CURRENT_SCALE_FACTOR },
- };
- 
--static int smb_init_hw(struct smb_chip *chip)
-+struct smb_match_data pmi8998_match_data = {
-+	.init_seq = smb2_init_seq,
-+	.init_seq_len = ARRAY_SIZE(smb2_init_seq),
-+	.name = "pmi8998",
-+	.gen = SMB2,
-+};
-+
-+struct smb_match_data pm660_match_data = {
-+	.init_seq = smb2_init_seq,
-+	.init_seq_len = ARRAY_SIZE(smb2_init_seq),
-+	.name = "pm660",
-+	.gen = SMB2,
-+};
-+
-+struct smb_match_data pm8150b_match_data = {
-+	.init_seq = smb5_init_seq,
-+	.init_seq_len = ARRAY_SIZE(smb5_init_seq),
-+	.name = "pm8150b",
-+	.gen = SMB5,
-+};
-+
-+struct smb_match_data pm7250b_match_data = {
-+	.init_seq = smb5_init_seq,
-+	.init_seq_len = ARRAY_SIZE(smb5_init_seq),
-+	.name = "pm7250b",
-+	.gen = SMB5,
-+};
-+
-+
-+static int smb_init_hw(struct smb_chip *chip, const struct smb_init_register *init_seq, size_t len)
- {
- 	int rc, i;
- 
--	for (i = 0; i < ARRAY_SIZE(smb_init_seq); i++) {
-+	for (i = 0; i < len; i++) {
- 		dev_dbg(chip->dev, "%d: Writing 0x%02x to 0x%02x\n", i,
--			smb_init_seq[i].val, smb_init_seq[i].addr);
-+			init_seq[i].val, init_seq[i].addr);
- 		rc = regmap_update_bits(chip->regmap,
--					chip->base + smb_init_seq[i].addr,
--					smb_init_seq[i].mask,
--					smb_init_seq[i].val);
-+					chip->base + init_seq[i].addr,
-+					init_seq[i].mask,
-+					init_seq[i].val);
- 		if (rc < 0)
- 			return dev_err_probe(chip->dev, rc,
- 					     "%s: init command %d failed\n",
- 					     __func__, i);
-@@ -721,8 +973,9 @@ static int smb_probe(struct platform_device *pdev)
- {
- 	struct power_supply_config supply_config = {};
- 	struct power_supply_desc *desc;
- 	struct smb_chip *chip;
-+	const struct smb_match_data *match_data;
- 	int rc, irq;
- 
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
-@@ -751,9 +1004,15 @@ static int smb_probe(struct platform_device *pdev)
- 		return dev_err_probe(chip->dev, PTR_ERR(chip->usb_in_i_chan),
- 				     "Couldn't get usbin_i IIO channel\n");
- 	}
- 
--	rc = smb_init_hw(chip);
-+	match_data = (const struct smb_match_data *)device_get_match_data(chip->dev);
-+
-+	chip->gen = match_data->gen;
-+
-+	dev_info(chip->dev, "Generation %s\n", chip->gen == SMB2 ? "SMB2" : "SMB5");
-+
-+	rc = smb_init_hw(chip, match_data->init_seq, match_data->init_seq_len);
- 	if (rc < 0)
- 		return rc;
- 
- 	supply_config.drv_data = chip;
-@@ -764,9 +1023,9 @@ static int smb_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	memcpy(desc, &smb_psy_desc, sizeof(smb_psy_desc));
- 	desc->name =
- 		devm_kasprintf(chip->dev, GFP_KERNEL, "%s-charger",
--			       (const char *)device_get_match_data(chip->dev));
-+			       match_data->name);
- 	if (!desc->name)
- 		return -ENOMEM;
- 
- 	chip->chg_psy =
-@@ -839,10 +1098,12 @@ static int smb_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
- static const struct of_device_id smb_match_id_table[] = {
--	{ .compatible = "qcom,pmi8998-charger", .data = "pmi8998" },
--	{ .compatible = "qcom,pm660-charger", .data = "pm660" },
-+	{ .compatible = "qcom,pmi8998-charger", .data = &pmi8998_match_data },
-+	{ .compatible = "qcom,pm660-charger", .data = &pm660_match_data },
-+	{ .compatible = "qcom,pm7250b-charger", .data = &pm7250b_match_data },
-+	{ .compatible = "qcom,pm8150b-charger", .data = &pm8150b_match_data },
- 	{ /* sentinal */ }
- };
- MODULE_DEVICE_TABLE(of, smb_match_id_table);
- 
+  Mailing list participation
+  --------------------------
+  
+  Linux kernel uses mailing lists as the primary form of communication.
+  Maintainers must be subscribed and follow the appropriate subsystem-wide
+  mailing list. Either by subscribing to the whole list or using more
+  modern, selective setup like
+  `lei <https://people.kernel.org/monsieuricon/lore-lei-part-1-getting-started>`_.
+  
+See: https://www.kernel.org/doc/html/next/maintainer/feature-and-driver-maintainers.html#mailing-list-participation
 
--- 
-2.49.0
+Then again, I guess you're not a maintainer. There are 2 maintainers
+for the driver listed and yet we get patches from a 3rd unlisted person.
 
+SMH
