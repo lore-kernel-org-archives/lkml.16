@@ -1,124 +1,91 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB192188CB1;
-	Thu, 19 Jun 2025 13:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691BD188CB1;
+	Thu, 19 Jun 2025 13:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339055; cv=none; b=aod2KpuP0HbAzjJCsjfFVbCi0pQbmXQcRGQciUhGObBGnvQ8J/ntjIeSo4xH21J9H5/0f9rXHaO9pNnnQFP/KmkYFq52ou57ZwoXopqat8TNa3puYrc37dwOQncZHksEZ1LRRM8O5Rq2UWq7AgAvd1wGuDGENDfhEzbQrAvVchQ=
+	t=1750339101; cv=none; b=kUjmeMgqQcFHPIH9VTokV/l8fBYy1SMSWjECPHuFbIIsWYobV+coX+uL0n18L6b0apYBu7vcL2oWgaVWsA8EoN3Kv1z2UKB2iib1ra0EF8jSJ2yJ4XkfCR+fkUqW6aJDJE3+MzEJck/siqbnakbOxsTk3WgRdxieikAkj9svflk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339055; c=relaxed/simple;
-	bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yb3toixsthR599C9vH20d/9mQcC6BvMCjOau5SvQi5pCZZnuRJWmHtDy7q0Cv9c1k/KORGhhucUk6wXWbQZd2QXkZ0hp3Izbseg4VUxJ2VCx8FgWeLXr1IBJ3V6SFeEbnS1/Y0KfITdgqpQcTux9y837ptkOG1jBDGpkrnng+cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kM/KoYs4; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750339101; c=relaxed/simple;
+	bh=4dfwl6njUlqczLbqzvkUfC3MkKzL/GcP/GJ8WCrZNlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hmO2yiReVF9KkRhna0oHJxosgGHqnqpUIg5Tm/JZcgp39Gu+20osbbpWfquEK6GO8/IfaJ2cbsHDXZbefqk6Dlcu9MsEFpzEbSbgWhzk2VSGoC6J7oPVwfXw2JaS/60Omn65OoyIJMNuBIdfFSRHq6QKvwdGJ1yxZqTPs6A21L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUEj4mNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kM/KoYs4"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 5BA2925EBB;
-	Thu, 19 Jun 2025 15:17:31 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id E5OwfZ29gqk2; Thu, 19 Jun 2025 15:17:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750339050; bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kM/KoYs4eRXoxD9wPSZnlO3gwu6ERpf18PsCulKGZJnbethKYhiYGZuCDv4qzhPRi
-	 d7nlpDRB5C7nzxFU8+ziAi15ImXo66IR69HGfk4srxBDisoObNf7Jppb4IT3DquhIs
-	 g6ckn6YELS3otT0mN9OWS0kFvQ7p7rwFSWjuSpfa6wJZYSqjIiNoTVyxq36kGjaEj5
-	 ct4aC1y7isC1Twhi+Vv9pjRjx/NAm2JxAWQrb40SngjmvFV7Xe8KSrbZeCePQ/ZaNr
-	 w8ZHw72cRI9koQnZ41f8nt5fHwLl15BvVkad+9k6+xap4pBxLXqhl11SI+3OXj+/ie
-	 n4UyQngXW87fw==
-Date: Thu, 19 Jun 2025 13:17:13 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
-Message-ID: <aFQN2TSjT1IOvOt3@pie.lan>
-References: <20250617162426.12629-1-ziyao@disroot.org>
- <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUEj4mNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A4B5C4CEEA;
+	Thu, 19 Jun 2025 13:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750339100;
+	bh=4dfwl6njUlqczLbqzvkUfC3MkKzL/GcP/GJ8WCrZNlU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oUEj4mNG8T8YwEU487HkN8q6zdQfCJIRrgr2fAEdLew8PhL/wm80PN6ryTnbeb62e
+	 Lkq+mAE5ZtRo5CgmlT8IVwjk72q/dyQnDOH1OELClpw2cy8UPxmL8eyu1peHnoqu6y
+	 tmYTsjEK9OZNBCm1G87Dvf/+EwUduxAwfM0HPzj8e6QeYsQYXJpMocCfbgHz+wJvWi
+	 +pxgDWmOWYyMHAcvpSsy3ahYwmjtclO/ifpCSFuPVunPvLbXoLCSr/hXSijgHTU5Kw
+	 CKEnKxxH5FHscXZLXK6nU9qirMhnDvbzjLroHwmp8v5kMXnGdPpY12XCcZjixP/hRH
+	 nxdTs+LTXiIlQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	tianshuo han <hantianshuo233@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	security@kernel.org,
+	yuxuanzhe@outlook.com,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] sunrpc: handle SVC_GARBAGE during svc auth processing as auth error
+Date: Thu, 19 Jun 2025 09:18:15 -0400
+Message-ID: <175033900601.115666.13177707398024542481.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250619-rpc-6-16-v1-1-9fd5e01637d3@kernel.org>
+References: <20250619-rpc-6-16-v1-1-9fd5e01637d3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
 
-On Thu, Jun 19, 2025 at 05:02:48PM +0800, Huacai Chen wrote:
-> Hi, Yao,
+From: Chuck Lever <chuck.lever@oracle.com>
+
+On Thu, 19 Jun 2025 06:01:55 -0400, Jeff Layton wrote:
+> tianshuo han reported a remotely-triggerable crash if the client sends a
+> kernel RPC server a specially crafted packet. If decoding the RPC reply
+> fails in such a way that SVC_GARBAGE is returned without setting the
+> rq_accept_statp pointer, then that pointer can be dereferenced and a
+> value stored there.
 > 
-> I suggest dropping the last two patches temporarily, because:
-> 1, the last two should be merged via another tree.
-> 2, the last two depend on another series which hasn't been merged now,
-> and can be squashed to that series.
-
-These are fair points, but I think including corresponding devicetree
-changes along with the binding patch helps review and proves the binding
-makes sense. it should be okay to merge only parts of a series, so I
-guess keeping the patches doesn't hurt, does it?
-
-By the way, do you prefer to wait until all fundamental drivers (clock,
-pinctrl, and reset) ready and merged, then merge the devicetree with all
-the three devices added? Or is it just fine to go part by part, with
-incremental changes to the devicetree?
-
-Best regards,
-Yao Zi
-
-> Huacai
+> If it's the first time the thread has processed an RPC, then that
+> pointer will be set to NULL and the kernel will crash. In other cases,
+> it could create a memory scribble.
 > 
-> On Wed, Jun 18, 2025 at 12:25 AM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > This series adds support for Loongson 2K0300's clock controller.
-> > Loongson 2 clock driver is prepared to support more clock variants and
-> > its flexibility is improved. All clock hardwares except the output one
-> > for GMAC module are then defined.
-> >
-> > A clock tree dump could be obtained here[1]. This series depends on v3
-> > of series "Initial support for CTCISZ Forever Pi"[2] to apply.
-> >
-> > [1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b7247
-> > [2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org/
-> >
-> > Changed from v1:
-> > - Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
-> > - Include the new binding header in MAINTAINERS
-> > - Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@disroot.org/
-> >
-> > Yao Zi (8):
-> >   dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
-> >   clk: loongson2: Allow specifying clock flags for gate clock
-> >   clk: loongson2: Support scale clocks with an alternative mode
-> >   clk: loongson2: Allow zero divisors for dividers
-> >   clk: loongson2: Avoid hardcoding firmware name of the reference clock
-> >   clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
-> >   LoongArch: dts: Add clock tree for Loongson 2K0300
-> >   LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
-> >
-> >  .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
-> >  MAINTAINERS                                   |   1 +
-> >  .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
-> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
-> >  drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++---
-> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
-> >  6 files changed, 193 insertions(+), 30 deletions(-)
-> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> >
-> > --
-> > 2.49.0
-> >
-> >
+> [...]
+
+Yesterday's version passed overnight CI testing.
+
+Applied to nfsd-fixes, thanks!
+
+[1/1] sunrpc: handle SVC_GARBAGE during svc auth processing as auth error
+      commit: 92c2969bcd57272698d5aae037f55481dcb11f2d
+
+--
+Chuck Lever
+
