@@ -1,255 +1,344 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11hn2204.outbound.protection.outlook.com [52.100.172.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D4422A80C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332259; cv=none; b=CufC+YlgR1Q2hkNgFdx+Y1mFcZD08/JnSb8yU4CT5g0EMRV6EeMQgv67TYc+yFIYsX9jieDaF7Le1VRgCPkxVfuOLL0hobTbrhzI/yk1qT3E7k9cP0f+G+ExvTWv1SVPHOqrJ4wxPcH16YOt+DeC2BKTf7IryoWSFTLLd2mtEUI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332259; c=relaxed/simple;
-	bh=nbFUlruIfhnKCgAKo39jbc7ken3leedBDx5Yo04kI8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RybXEulYjjvoYgzduXNeUDcJ2nlyJxuOp4MnjIxY3WP69M6GrNgE54DereG4QsjpFiX9EAEdRrQB4o+XdkItQD+CvknR27V+l09ELNynxnvsnV6IEMZ+8nu1afT/lRB3zmAGm7EJgnOI7hnJ34KPzdqEWuZnq07fsW+8k9wdhAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Dgpab3/G; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OGV6uCSh; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE6F22539D;
+	Thu, 19 Jun 2025 11:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.100.172.204
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750332311; cv=fail; b=YZeXVzab/7duIHUr1PZE6PpSp7Xp5+qI/83B6sBsmGVYtAE22If0qM54nwvYQs3ls3wH+VRoArcZ7nSNLNImKNSkn8lhGeqJPPBhKQ69rJKhdACQmk5tXYRYgrUfO0905zrAbnAAHS4aOhVNLTskVLD+8shyElezqbxRiH5v0WU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750332311; c=relaxed/simple;
+	bh=hn3iX34QpRfdDdaLq8NTaA6c6RN232lHFj/uIy1XGVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XkbS1LB16lVkurb1flzDDsBIhZr5KFs+J2EF/3zW1GS6bTe7Y3PwPzHgZZiwuwt+Vg1QdZpF/JVSYgPJRVl1xwfREMc69+FX5jsRDLLjhkTywCAUb2jPuvYXiV8SWhoImW870HVVtiwuiVGe99G4rLRH3NQb+jgFDMlZYlW6YYM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tw.synaptics.com; spf=pass smtp.mailfrom=tw.synaptics.com; dkim=pass (1024-bit key) header.d=tw.synaptics.com header.i=@tw.synaptics.com header.b=gYpXWvo6; arc=fail smtp.client-ip=52.100.172.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tw.synaptics.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tw.synaptics.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Dgpab3/G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OGV6uCSh"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 0254C1380645;
-	Thu, 19 Jun 2025 07:24:16 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 19 Jun 2025 07:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1750332255; x=1750418655; bh=6Z
-	9/mjif2iMkkUhK1vyWLAD+QEZ+bviX4PNajj4c42s=; b=Dgpab3/GOuMyX9/jSg
-	F3FmaXxamBjqLIYewtOB6WABjs4BGVvVkaOZWL+4mfo5626KBmc8DOtFdvRt/ABB
-	nR9TE1ZFGkSOhTeXwuZEZWH8AMPfzol/NH0OII3RoqT6QcjKxILINKMOS9WANaMJ
-	gJcN2bGS1i5WDT4JoRfJS8sQ1N4M9oqQg4pAMyFEtGJ+sygKnxxh0zqrFf4M0O0m
-	xFNWjdA30hzkZzLTTp/9IfalY8dz9NM/98+bNlqUEi7+BMFy6nuZ+HmdUMNvIc4T
-	lSIs32B4BTga3DASCiw0au1OrrCuGyarr2umSg3NzRGfSYKeKE0t9YN9akYmkW1N
-	2oUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750332255; x=
-	1750418655; bh=6Z9/mjif2iMkkUhK1vyWLAD+QEZ+bviX4PNajj4c42s=; b=O
-	GV6uCShgtArJmrkRkGok5MwtYYtMo1JAbP7jyLFIAHtpM8yS82+CBctGjw9IUowF
-	jj/oNQ27/Dt1s9rnps9nGjP8gCZHJOBEIgD8NBHQJGNQD8PMqiVl9WBOepxA01EO
-	oEMXE8IOWGKjP9ZKIrP7zkGTFklu1NbYetarcX9rGhZfY07kVGthii9C8qVhnMba
-	fB07vVj4OcQWnnonxRspksN+4XBthEHUJeEA1V2kOSoPvVx7yeYaMOnR1r7M3Qg3
-	jVOi0MmHM7Wv01GuGMwoAhI1RLJ18BYxWLUbzD/CVuVDAV9RIJIS7uj6j0dFynWq
-	0BHtDSAkdOl+MargT794g==
-X-ME-Sender: <xms:X_NTaBaPjNONpkSmIZkqi1IiS438LhkxsrpgXeCqDT2Fgr114Sq8sQ>
-    <xme:X_NTaIbMpJ8aE_eoaK2bSj1bfwvJAKhI1n9dQ9_vbKiRVevXKKpyKOsTb-sipKLTI
-    L8oY135ZBfNAw>
-X-ME-Received: <xmr:X_NTaD_R079ZGrQNRwfekWdG3r4Qp8GmvbwEyDXqFrg0dBpk9wiMHTbESixc22McbLVY_FNtxSDtJAPcWJZoGO8J6tKHChV3gSo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehfeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkgggtugesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgrrhgt
-    iiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsihgslh
-    gvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepjeehgfdvfffhffdv
-    ffdvfeefueevgefgiedukeegveffteffhffggeehueejuedunecuffhomhgrihhnpehqvg
-    hmuhdrohhrghdpghhithhhuhgsrdgtohhmpdhquhgsvghsqdhoshdrohhrghenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkh
-    esihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopeeh
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtth
-    hopeigvghnqdguvghvvghlsehlihhsthhsrdigvghnphhrohhjvggtthdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:X_NTaPodJsirzMx_MgoWinfB7dE8MWdOUpc9uL6N_5RwlfYY4xggHw>
-    <xmx:X_NTaMoj5SFrCkDBWXtK-fY6xRFAXtNbdEvMRYi_XUs1ZJosCCRT6w>
-    <xmx:X_NTaFRV1veNxV-QeZ-dsIvpzAzsoyijPZzNb0wcftXj0QpueBmCQw>
-    <xmx:X_NTaEpe-Qqz5qdkTkAEz5Xfr9e_L3TSh6dHy7gQoR0AtLmZO-9lAA>
-    <xmx:X_NTaOEcIGCXYcu7L_-ewz-G5SBed97VhGuWZdP5GMIj5W_95uyh2RHx>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 07:24:14 -0400 (EDT)
-Date: Thu, 19 Jun 2025 13:24:13 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org
-Subject: Xen PV dom0 "tried to execute NX-protected page" when running nested
- in KVM - 6.15 regression
-Message-ID: <aFPzXVl1pn1LtwoJ@mail-itl>
+	dkim=pass (1024-bit key) header.d=tw.synaptics.com header.i=@tw.synaptics.com header.b="gYpXWvo6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tDkfhfiGluDh/zV4ljGuiuq0i3QX+cR7NpvU4KQw4+ZcIvGaUzeXFUUsA1/cCVSTOdUKBk7jgHSaJAqSF+tycgmQoRWJuU2d+AVSObpbeCBX/Ni6KVktOMvGVbexjZ+TuuMv0eM2ca6TJ6tvbYoeZQSTabCCZzJRv5zh7Q1ZbSibsy5w1dewGErfoZ5Y+KtkK2qkzVLBgEKFZgQZDn6g6XOP375xJcUqBQKdQFEA3tpypFl67Q88hXBKkySrftgpHpaRwUkhsn2RTq++vaNkGV9mjBfVKROrnmWehxhE0UHwJCFDuIWgXV/Rc50S5knp+KLRNSyFd1fybLV0cgQo0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3F1bx2oesNsXHVM8JQXfco3d4kuwKfVLce8EEP2SB3A=;
+ b=FUXZn5ea3pCIzWsTmgF1EyrnENOokKryXe+YPLl90RdAsXp0y258Z/i27O/joyWQSMYRVlX+tUiT7pOUnbywH8bFvC5pNmjRwoHHaXZxIk4s5lpeCxPmGdtUXvYjjulE0KGJbBj6uhJrd3NaS/6n6H7oWaj87nL4WqJpKcwON3ovMQg0fveCA9O74Zh8lq0hCt23gL5ykrX0nxlV8J5aLlfg7r0Vi9xycqGq/Ko90YdIcQ+dTAK/piR4EnaN1x4PpC9ftfwzUNOEj8imrMzqqTsEDEe3Lk/doy01kB85Swh2tzTsfDIL/ZyEjJD3FoYE6b5uDJ5oWPVXtlGbXRsJJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.147.44.87) smtp.rcpttodomain=gmail.com smtp.mailfrom=tw.synaptics.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=tw.synaptics.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tw.synaptics.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3F1bx2oesNsXHVM8JQXfco3d4kuwKfVLce8EEP2SB3A=;
+ b=gYpXWvo6hKgQyvjhP1EN87vqPl/zvUj73Yi7/D7KccS/Wq+GRYR/MdyvUnXlWRST5teZlyL21Gt1+GlcrUWzK7CokiZyWfBlvmEPnOuO/dkEnF8BRlGcHwCwDF0dZJTxdSB5rwT8uyJNyMa7I2plf1sovUEsoziuOg81zO8ROYs=
+Received: from BL1P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::10)
+ by PH0PR03MB6979.namprd03.prod.outlook.com (2603:10b6:510:169::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
+ 2025 11:25:06 +0000
+Received: from BN2PEPF00004FC0.namprd04.prod.outlook.com
+ (2603:10b6:208:2c4:cafe::de) by BL1P223CA0005.outlook.office365.com
+ (2603:10b6:208:2c4::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.25 via Frontend Transport; Thu,
+ 19 Jun 2025 11:25:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.147.44.87)
+ smtp.mailfrom=tw.synaptics.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=tw.synaptics.com;
+Received-SPF: Pass (protection.outlook.com: domain of tw.synaptics.com
+ designates 192.147.44.87 as permitted sender)
+ receiver=protection.outlook.com; client-ip=192.147.44.87;
+ helo=sjc1uvd-bld04.synaptics.com; pr=C
+Received: from sjc1uvd-bld04.synaptics.com (192.147.44.87) by
+ BN2PEPF00004FC0.mail.protection.outlook.com (10.167.243.186) with Microsoft
+ SMTP Server id 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025
+ 11:25:04 +0000
+From: Marge Yang <marge.yang@tw.synaptics.com>
+To: dmitry.torokhov@gmail.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vincent.huang@tw.synaptics.com,
+	marge.yang@tw.synaptics.com
+Cc: david.chiu@tw.synaptics.com,
+	derek.cheng@tw.synaptics.com,
+	sam.tsai@synaptics.com,
+	Marge Yang <Marge.Yang@tw.synaptics.com>
+Subject: [PATCH V1] Input: synaptics-rmi4- Add a new feature for Forcepad.
+Date: Thu, 19 Jun 2025 11:25:00 +0000
+Message-Id: <20250619112500.3213276-1-marge.yang@tw.synaptics.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="C//JR/PbyCGvU4J9"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC0:EE_|PH0PR03MB6979:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 8602e713-0e1e-4a0a-0bfd-08ddaf23f0ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|34020700016|1800799024|82310400026|12100799063;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?yd0zGGRHxSkQRX3Yyv7Nx48kXFyRQPgAZqrwBa3FdbZd8SGVoGDyiDO6ZsUg?=
+ =?us-ascii?Q?XbG1AEgYHlt0mTZ43T2zubz1DrkAStL8cOz9L3fjfQNFbygiBQnG672k2ccy?=
+ =?us-ascii?Q?Qij+7mun2NbpikXQdU45aHryeBcMDrEqVbcmuhDDAD34DwgDLjFg2ekqJZfZ?=
+ =?us-ascii?Q?D6UnLtQ6/sKVz4e2EMmAQGFFGoHfocc3aSfmDfxRx4mpyFdNSVDTH8OmsLCD?=
+ =?us-ascii?Q?5m39/HJUmd5Yc4JI3pEk3H+t0zRC7w7w4nO/xZIZDlnMxcNKRtcZ5T1hjfej?=
+ =?us-ascii?Q?lafdr1tpA6beiftP1wfLajCwcman1B2G293ABKTxirmG3uKrenQHYfl+7QJ4?=
+ =?us-ascii?Q?mOX8VjLcm86wq6kmPPVv7xbsPgdgKvb7IzTZ3nRnuUrrs4n/m7Q5lFQcbyE9?=
+ =?us-ascii?Q?ZMU18Qdgk2xZDdFLdGgO2OHjooZq4FfeodoHcLCrD+JYvzVu6Txpe5Yg5g3h?=
+ =?us-ascii?Q?WbqqFQJHHckWjBxnp9wjDYExqVG+jWGA++9f5mWg4iVRABvfkawhN4BXSNvr?=
+ =?us-ascii?Q?4fwrf45drDM1DSX5mRE0qyJoBjhvV6cTviFYEVGxRMEEGRNeSmxjGkFzPSJo?=
+ =?us-ascii?Q?2xGqKgnCnsjjEDY0phw09FB5pSs5D1kQc8SpsTEGE+TwXJqSIgnIzDew/lKW?=
+ =?us-ascii?Q?cL2nAIj6NUpnISwpn/QzRQvFBysMxNw5vSdq/3HSR94fJYID2oHiEQVrYr8G?=
+ =?us-ascii?Q?LVeg/GenFlGRuuuUpzZXJ1SAWXoz2Si+71XbxP9+QUHTAuMTmLm/VcrdCaoL?=
+ =?us-ascii?Q?5y/iWsomETZzMD+93S2Vuy7DImk16M+7wwFLlK2tkna5xx8SZKguyApgp7RK?=
+ =?us-ascii?Q?+WLUY11vcsclVvycPH//itF/85W0b6FjlOBRLZnOSwzwMefkO0RUSEQuU6hX?=
+ =?us-ascii?Q?HLVkJgbZEZT9NCo2WI4sM5K7EyoX+FQ8fT8rExrI/bRNv1lJRZVqNNKSSV9L?=
+ =?us-ascii?Q?WF5sULnglOz+ruolRyNDD+L4/nguH24/IzTn2tRBz8eVbWAaz5GkmYlGhrbI?=
+ =?us-ascii?Q?eHrtONcoC1YJTPsk+s8fuw32oJiOwX2+CMsxyoRCm7h4NZQnHwi2N0La2jIt?=
+ =?us-ascii?Q?DVDh1QQ1um/lboR1eUcuMdXvQ0SQtOMaQNiwjReKYhxHkY3vHXpKTuK27c+3?=
+ =?us-ascii?Q?R7D1RHOrEdCIJuUGMNwnt1Uz2iW55hN/Gzd2sEDu8151wey7diiso2paLQuL?=
+ =?us-ascii?Q?YCz3BnH3Gaxn288vH6VY1yUA636E6IMCTbkYxo3hb09f5viLU3XXs92oczas?=
+ =?us-ascii?Q?tTTZJZOBMuzd5fRVIqNvr9sNLV0dTo2Vnln3K/eD6yt5CvV437u9Cl2GqmF+?=
+ =?us-ascii?Q?muNu4rZPLJ3wZL04UWlEV2gfNuvyL1c4eR7K3aaTZ56DKsfmtut/iEn6snpC?=
+ =?us-ascii?Q?wl09fA9PICeOuzU6uT2txUGAcgc3Ht/rX835gly09Xnln+5ZLb4123cW63qU?=
+ =?us-ascii?Q?lLRw4Nt/H2kfnH16Rt61ruwPKMgz6Ou5APCElWkuaDEvgWcj3KiroEUhsIau?=
+ =?us-ascii?Q?lCTT2r+h+bxIMIUQLIyTuKF5+gnBble505fB?=
+X-Forefront-Antispam-Report:
+	CIP:192.147.44.87;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjc1uvd-bld04.synaptics.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(34020700016)(1800799024)(82310400026)(12100799063);DIR:OUT;SFP:1501;
+X-OriginatorOrg: tw.synaptics.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 11:25:04.6903
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8602e713-0e1e-4a0a-0bfd-08ddaf23f0ce
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=335d1fbc-2124-4173-9863-17e7051a2a0e;Ip=[192.147.44.87];Helo=[sjc1uvd-bld04.synaptics.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF00004FC0.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6979
 
+From: Marge Yang <Marge.Yang@tw.synaptics.com>
 
---C//JR/PbyCGvU4J9
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Jun 2025 13:24:13 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org
-Subject: Xen PV dom0 "tried to execute NX-protected page" when running nested
- in KVM - 6.15 regression
+Forcepad devices will use F21, for click simulation
+due to lack of a metal button, so we add F21 support
+to make forcepad support click function.
 
-Hi,
+Signed-off-by: Marge Yang <Marge.Yang@tw.synaptics.com>
+---
+ drivers/input/rmi4/Kconfig      |   8 ++
+ drivers/input/rmi4/Makefile     |   1 +
+ drivers/input/rmi4/rmi_bus.c    |   3 +
+ drivers/input/rmi4/rmi_driver.h |   5 ++
+ drivers/input/rmi4/rmi_f21.c    | 126 ++++++++++++++++++++++++++++++++
+ 5 files changed, 143 insertions(+)
+ create mode 100644 drivers/input/rmi4/rmi_f21.c
 
-With Linux 6.15.2 I got a crash like below. It worked fine with Linux
-6.14.11. Furthermore, the failure seems to be hardware-dependent. It
-happens when running on Intel Core i9-13900H, but does not happen when
-running on Intel Xeon E5-2620v4 (in both cases QEMU uses -cpu host).
+diff --git a/drivers/input/rmi4/Kconfig b/drivers/input/rmi4/Kconfig
+index c0163b983ce6..086013be6a64 100644
+--- a/drivers/input/rmi4/Kconfig
++++ b/drivers/input/rmi4/Kconfig
+@@ -82,6 +82,14 @@ config RMI4_F12
+ 	  touchpads. For sensors that support relative pointing, F12 also
+ 	  provides mouse input.
+ 
++config RMI4_F21
++	bool "RMI4 Function 21 (PRESSURE)"
++	help
++	  Say Y here if you want to add support for RMI4 function 21.
++
++	  Function 21 provides buttons/pressure for RMI4 devices. This includes
++	  support for buttons/pressure on PressurePad.
++
+ config RMI4_F30
+ 	bool "RMI4 Function 30 (GPIO LED)"
+ 	help
+diff --git a/drivers/input/rmi4/Makefile b/drivers/input/rmi4/Makefile
+index 02f14c846861..484b97eca025 100644
+--- a/drivers/input/rmi4/Makefile
++++ b/drivers/input/rmi4/Makefile
+@@ -8,6 +8,7 @@ rmi_core-$(CONFIG_RMI4_2D_SENSOR) += rmi_2d_sensor.o
+ rmi_core-$(CONFIG_RMI4_F03) += rmi_f03.o
+ rmi_core-$(CONFIG_RMI4_F11) += rmi_f11.o
+ rmi_core-$(CONFIG_RMI4_F12) += rmi_f12.o
++rmi_core-$(CONFIG_RMI4_F21) += rmi_f21.o
+ rmi_core-$(CONFIG_RMI4_F30) += rmi_f30.o
+ rmi_core-$(CONFIG_RMI4_F34) += rmi_f34.o rmi_f34v7.o
+ rmi_core-$(CONFIG_RMI4_F3A) += rmi_f3a.o
+diff --git a/drivers/input/rmi4/rmi_bus.c b/drivers/input/rmi4/rmi_bus.c
+index 3aee04837205..47fe7a88c92b 100644
+--- a/drivers/input/rmi4/rmi_bus.c
++++ b/drivers/input/rmi4/rmi_bus.c
+@@ -360,6 +360,9 @@ static struct rmi_function_handler *fn_handlers[] = {
+ #ifdef CONFIG_RMI4_F12
+ 	&rmi_f12_handler,
+ #endif
++#ifdef CONFIG_RMI4_F21
++	&rmi_f21_handler,
++#endif
+ #ifdef CONFIG_RMI4_F30
+ 	&rmi_f30_handler,
+ #endif
+diff --git a/drivers/input/rmi4/rmi_driver.h b/drivers/input/rmi4/rmi_driver.h
+index 3bfe9013043e..18fdf2a166d5 100644
+--- a/drivers/input/rmi4/rmi_driver.h
++++ b/drivers/input/rmi4/rmi_driver.h
+@@ -115,6 +115,10 @@ static inline int rmi_f03_overwrite_button(struct rmi_function *fn,
+ static inline void rmi_f03_commit_buttons(struct rmi_function *fn) {}
+ #endif
+ 
++#ifdef CONFIG_RMI4_F21
++int rmi_f21_report_pressure(struct rmi_function *fn, int i);
++#endif
++
+ #ifdef CONFIG_RMI4_F34
+ int rmi_f34_create_sysfs(struct rmi_device *rmi_dev);
+ void rmi_f34_remove_sysfs(struct rmi_device *rmi_dev);
+@@ -133,6 +137,7 @@ extern struct rmi_function_handler rmi_f01_handler;
+ extern struct rmi_function_handler rmi_f03_handler;
+ extern struct rmi_function_handler rmi_f11_handler;
+ extern struct rmi_function_handler rmi_f12_handler;
++extern struct rmi_function_handler rmi_f21_handler;
+ extern struct rmi_function_handler rmi_f30_handler;
+ extern struct rmi_function_handler rmi_f34_handler;
+ extern struct rmi_function_handler rmi_f3a_handler;
+diff --git a/drivers/input/rmi4/rmi_f21.c b/drivers/input/rmi4/rmi_f21.c
+new file mode 100644
+index 000000000000..93ef2331ed16
+--- /dev/null
++++ b/drivers/input/rmi4/rmi_f21.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2012-2025 Synaptics Incorporated
++ */
++
++#include <linux/kernel.h>
++#include <linux/rmi.h>
++#include <linux/input.h>
++#include <linux/slab.h>
++#include "rmi_driver.h"
++
++#define RMI_f21_INPUT_REPORT_DATA_SIZE	6
++#define RMI_F21_INPUT_REPORT_FORCE_CLICK_OFFSET	5
++#define RMI_F21_TABLE_FORCE_CLICK_OFFSET	8
++#define RMI_f21_FORCE_CLICK			0x01
++#define RMI_f21_DATA_REGS_MAX_SIZE	19
++#define RMI_f21_FORCEPAD_BUTTON_COUNT	1
++
++struct f21_data {
++	/* Query Data */
++	u8 data_regs[RMI_f21_DATA_REGS_MAX_SIZE];
++	u8 input_report_data[RMI_f21_INPUT_REPORT_DATA_SIZE];
++	struct input_dev *input;
++	u16 key_code;
++};
++
++static irqreturn_t rmi_f21_attention(int irq, void *ctx)
++{
++	struct rmi_function *fn = ctx;
++	struct f21_data *f21 = dev_get_drvdata(&fn->dev);
++	struct rmi_driver_data *drvdata = dev_get_drvdata(&fn->rmi_dev->dev);
++	int error;
++	bool pressed;
++
++	if (drvdata->attn_data.data) {
++		if (drvdata->attn_data.size < RMI_f21_INPUT_REPORT_DATA_SIZE) {
++			dev_warn(&fn->dev, "f21 interrupted, but data is missing\n");
++			return IRQ_HANDLED;
++		}
++		memcpy(f21->input_report_data, drvdata->attn_data.data, RMI_f21_INPUT_REPORT_DATA_SIZE);
++		drvdata->attn_data.data += RMI_f21_INPUT_REPORT_DATA_SIZE;
++		drvdata->attn_data.size -= RMI_f21_INPUT_REPORT_DATA_SIZE;
++
++		pressed = !!(f21->input_report_data[RMI_F21_INPUT_REPORT_FORCE_CLICK_OFFSET] &
++					RMI_f21_FORCE_CLICK);
++	} else {
++		error = rmi_read_block(fn->rmi_dev, fn->fd.data_base_addr,
++					f21->data_regs, RMI_f21_DATA_REGS_MAX_SIZE);
++		if (error) {
++			dev_err(&fn->dev, "%s: Failed to read f21 data registers: %d\n",
++				__func__, error);
++			return IRQ_RETVAL(error);
++		}
++		pressed = !!(f21->data_regs[RMI_F21_TABLE_FORCE_CLICK_OFFSET] &
++					RMI_f21_FORCE_CLICK);
++	}
++
++	input_report_key(f21->input, f21->key_code, pressed);
++
++	return IRQ_HANDLED;
++}
++
++static int rmi_f21_config(struct rmi_function *fn)
++{
++	struct f21_data *f21 = dev_get_drvdata(&fn->dev);
++	struct rmi_driver *drv = fn->rmi_dev->driver;
++
++	if (!f21)
++		return 0;
++
++	drv->set_irq_bits(fn->rmi_dev, fn->irq_mask);
++
++	return 0;
++}
++
++static int rmi_f21_initialize(struct rmi_function *fn, struct f21_data *f21)
++{
++	struct input_dev *input = f21->input;
++	unsigned int button = BTN_LEFT;
++
++	f21->key_code = button;
++	input_set_capability(input, EV_KEY, f21->key_code);
++	input->keycode = &(f21->key_code);
++	input->keycodesize = sizeof(f21->key_code);
++	input->keycodemax = RMI_f21_FORCEPAD_BUTTON_COUNT;
++
++	__set_bit(INPUT_PROP_BUTTONPAD, input->propbit);
++
++	return 0;
++}
++
++static int rmi_f21_probe(struct rmi_function *fn)
++{
++	struct rmi_device *rmi_dev = fn->rmi_dev;
++	struct rmi_driver_data *drv_data = dev_get_drvdata(&rmi_dev->dev);
++	struct f21_data *f21;
++	int error;
++
++	if (!drv_data->input) {
++		dev_info(&fn->dev, "f21: no input device found, ignoring\n");
++		return -ENXIO;
++	}
++
++	f21 = devm_kzalloc(&fn->dev, sizeof(*f21), GFP_KERNEL);
++	if (!f21)
++		return -ENOMEM;
++
++	f21->input = drv_data->input;
++
++	error = rmi_f21_initialize(fn, f21);
++	if (error)
++		return error;
++
++	dev_set_drvdata(&fn->dev, f21);
++	return 0;
++}
++
++struct rmi_function_handler rmi_f21_handler = {
++	.driver = {
++		.name = "rmi4_f21",
++	},
++	.func = 0x21,
++	.probe = rmi_f21_probe,
++	.config = rmi_f21_config,
++	.attention = rmi_f21_attention,
++};
+-- 
+2.43.0
 
-The crash:
-[    1.121608] ITS: Mitigation: Aligned branch/return thunks
-[    1.122604] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point=
- registers'
-[    1.123656] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-[    1.124603] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-[    1.125603] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-[    1.126599] x86/fpu: Enabled xstate features 0x7, context size is 832 by=
-tes, using 'compacted' format.
-[    1.128391] kernel tried to execute NX-protected page - exploit attempt?=
- (uid: 0)
-[    1.128391] kernel tried to execute NX-protected page - exploit attempt?=
- (uid: 0)
-[    1.128391] BUG: unable to handle page fault for address: ffffffffc00007=
-60
-[    1.128391] #PF: supervisor instruction fetch in kernel mode
-[    1.128391] #PF: error_code(0x0011) - permissions violation
-[    1.128391] PGD 2433067 P4D 2433067 PUD 2435067 PMD 1002b7067 PTE 801000=
-01002b6067
-[    1.128391] Oops: Oops: 0011 [#1] SMP NOPTI
-[    1.128391] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.2-1.qu=
-bes.fc41.x86_64 #1 PREEMPT(full)=20
-[    1.128391] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel=
--1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
-[    1.128391] RIP: e030:0xffffffffc0000760
-[    1.128391] Code: e0 cc ff e0 cc ff e0 cc cc cc cc cc cc cc cc cc cc cc =
-cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc <ff=
-> e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff
-[    1.128391] RSP: e02b:ffffc90040003b60 EFLAGS: 00010002
-[    1.128391] RAX: ffffffff80f02190 RBX: ffffffff834da1b5 RCX: 00000000fff=
-fffff
-[    1.128391] RDX: ffffc90040003b78 RSI: 0000000000000001 RDI: ffff8881002=
-9f400
-[    1.128391] RBP: ffffc90040003b78 R08: 0000000000000000 R09: 205d3139333=
-83231
-[    1.128391] R10: 0000000000000029 R11: 000000006e72656b R12: 00000000000=
-0000a
-[    1.128391] R13: ffffffff834da1b5 R14: 0000000000000000 R15: ffff8881002=
-9f400
-[    1.128391] FS:  0000000000000000(0000) GS:ffff8881fc9c8000(0000) knlGS:=
-0000000000000000
-[    1.128391] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.128391] CR2: ffffffffc0000760 CR3: 000000000242e000 CR4: 00000000000=
-50660
-[    1.128391] Call Trace:
-[    1.128391]  <IRQ>
-[    1.128391]  ? vt_console_print+0x2e6/0x500
-[    1.128391]  ? console_emit_next_record+0x110/0x1b0
-[    1.128391]  ? console_flush_all+0x1d5/0x2a0
-[    1.128391]  ? console_unlock+0x7c/0x140
-[    1.128391]  ? vprintk_emit+0x278/0x2d0
-[    1.128391]  ? _printk+0x6b/0x90
-[    1.128391]  ? show_fault_oops+0x17c/0x1b0
-[    1.128391]  ? page_fault_oops+0x11b/0x160
-[    1.128391]  ? exc_page_fault+0x189/0x1a0
-[    1.128391]  ? asm_exc_page_fault+0x26/0x30
-[    1.128391]  ? __pfx_evtchn_fifo_clear_pending+0x10/0x10
-[    1.128391]  ? handle_percpu_irq+0x30/0x60
-[    1.128391]  ? generic_handle_irq+0x3c/0x60
-[    1.128391]  ? __evtchn_fifo_handle_events+0x1df/0x2c0
-[    1.128391]  ? xen_evtchn_do_upcall+0x6d/0xc0
-[    1.128391]  ? __xen_pv_evtchn_do_upcall+0x26/0x40
-[    1.128391]  ? xen_pv_evtchn_do_upcall+0x84/0xa0
-[    1.128391]  </IRQ>
-[    1.128391]  <TASK>
-[    1.128391]  ? exc_xen_hypervisor_callback+0x8/0x20
-[    1.128391]  ? print_bpf_insn+0x322/0xb70
-[    1.128391]  ? xen_save_fl_direct+0xf/0x20
-[    1.128391]  ? text_poke_early+0x35/0xa0
-[    1.128391]  ? print_bpf_insn+0x322/0xb70
-[    1.128391]  ? apply_retpolines+0x1ad/0x1d0
-[    1.128391]  ? print_bpf_insn+0x322/0xb70
-[    1.128391]  ? print_bpf_insn+0x331/0xb70
-[    1.128391]  ? print_bpf_insn+0x328/0xb70
-[    1.128391]  ? alternative_instructions+0x56/0x200
-[    1.128391]  ? arch_cpu_finalize_init+0x80/0x120
-[    1.128391]  ? start_kernel+0x3f5/0x490
-[    1.128391]  ? x86_64_start_reservations+0x24/0x30
-[    1.128391]  ? xen_start_kernel+0x6d7/0x6f0
-[    1.128391]  ? startup_xen+0x1b/0x20
-[    1.128391]  </TASK>
-[    1.128391] Modules linked in:
-[    1.128391] CR2: ffffffffc0000760
-[    1.128391] ---[ end trace 0000000000000000 ]---
-[    1.128391] RIP: e030:0xffffffffc0000760
-[    1.128391] Code: e0 cc ff e0 cc ff e0 cc cc cc cc cc cc cc cc cc cc cc =
-cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc <ff=
-> e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff e0 cc ff
-[    1.128391] RSP: e02b:ffffc90040003b60 EFLAGS: 00010002
-[    1.128391] RAX: ffffffff80f02190 RBX: ffffffff834da1b5 RCX: 00000000fff=
-fffff
-[    1.128391] RDX: ffffc90040003b78 RSI: 0000000000000001 RDI: ffff8881002=
-9f400
-[    1.128391] RBP: ffffc90040003b78 R08: 0000000000000000 R09: 205d3139333=
-83231
-[    1.128391] R10: 0000000000000029 R11: 000000006e72656b R12: 00000000000=
-0000a
-[    1.128391] R13: ffffffff834da1b5 R14: 0000000000000000 R15: ffff8881002=
-9f400
-[    1.128391] FS:  0000000000000000(0000) GS:ffff8881fc9c8000(0000) knlGS:=
-0000000000000000
-[    1.128391] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.128391] CR2: ffffffffc0000760 CR3: 000000000242e000 CR4: 00000000000=
-50660
-[    1.128391] Kernel panic - not syncing: Fatal exception in interrupt
-
-Full console log: https://gist.github.com/marmarek/7a4ad628c7bf76339aed79ff=
-4478f8ea
-
-Full QEMU command (if relevant) can be seen at https://openqa.qubes-os.org/=
-tests/143860/logfile?filename=3Dautoinst-log.txt
-
-At this point, I'm not even sure who to report it to... In an earlier
-attempt I've got stack trace full of ext4 functions, which is unlikely
-relevant (see revisions of the gist linked above). I'll try to bisect
-this, but due to hardware-dependent nature it will take some time as I
-have a bit limited access to that hardware.
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---C//JR/PbyCGvU4J9
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhT810ACgkQ24/THMrX
-1yzzUgf6Av5gJw8K4okkye7Visd73CpLE89qp7hDSv68SJVgW2jsr16One3mWe6P
-2jdd130SzYRE6MbdvM6Yoh0ciJdp+S2j0AT0Tkr5pFmNv/qGwd1hm1NFtq/fxnhS
-JgYW7SVMu4dJPBm8PAqxgaktcJ/DjHsXGI2YqpBXd2xENxyPzjMc4ZdNPQrf9H+I
-OOSIVYYGNNvPH2T3CSdAJ7whq8Ns8kN64NkjqsTjpKWXojKAkPLfsvneZcT8vT3s
-hIcrrvRMYJdKXUNxN56CJPVOeI/eajqY6eo7QRf3vUq20QGShrdOMGhRSpva1qHH
-4VSIfLhg/cMBJixR4xOjv4hYTXbn0w==
-=cP1H
------END PGP SIGNATURE-----
-
---C//JR/PbyCGvU4J9--
