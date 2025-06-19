@@ -1,260 +1,226 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955D822FF5E;
-	Thu, 19 Jun 2025 11:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334244; cv=none; b=N7duZPJ9NjfOAEdKCdBZ3anKPJtN9zMJIlYanxw3n7eufzWiHUAU5cHJpbkWFBMRAUbD2HJo0u8YRWNK9Q1jS1ctg3/g2GNr7QRDUR2CPvOrvq0HLMvsbOLZ1GK89Af400yR6DrOIBpWyINM5p/8M7zVxwVLuBJVM5c58oX2Bsg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334244; c=relaxed/simple;
-	bh=DR/rK5HTj+CWk3pzua5Z1Bq7gFUhrjz26jlD1PlmDUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jX9VMCs4cg7IIDkSagBEyf/ZMRKLD6dmagRgCzjUl708O1BGgbpehBrQCqvM+ujYtE4QIc/ph2KmCwxn+LdjZVkWjR1h3CpljWqjrwgO8acMKw2OaDULSnKMnO/5D2atlY+RObTL/Xxky9MKsUaQf6kWWGhSZEumLp/9bPdonKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FwF6rciV; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615CC23B621;
+	Thu, 19 Jun 2025 11:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750334258; cv=fail; b=dTI7Jrb/SJ6241Gsmwrfr6wT30k7/5BhqKvnWNEaNW3vCa7QfTOsUL7aLOC2FwwLx8XHTAp6c0JQJ0aFD8PIwv64swgnI3v37KOZgj0SsDf11CLE043+8rV/84nhbLJtI6pywKwpT41lMl7GC2AFeglrkz6PpmihqTD2t0u0I9s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750334258; c=relaxed/simple;
+	bh=K4K5S1poaLskyGgd+Pv8HKVCuHiQV2nyAKdZlZ0kJHQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=isSJZXuCBzxekKOxZDtWNcvT0nzLN+2Yke0IplZJ33vc2tFHISW/x4HRN0wNx0F9HbFhZZpEujDDxEHVXKeLAqSwoTgxkB7iAQQCavk8j1bIqcypJxlcO/CncXv+vuBkir/1YCdAjSfpmz1jZRuHnV1LWWs4NpL9wpZnVXQGYho=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wf+IsB0l; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FwF6rciV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750334234;
-	bh=DR/rK5HTj+CWk3pzua5Z1Bq7gFUhrjz26jlD1PlmDUQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FwF6rciVdJ8E6CWw8PHfonXBYZhIx242n/qAuaGVrLLGKSaZXwUPkPGH5WyuxC36X
-	 TszAddwZ75xYE/OOKKdq0+zVOOsFrc9KP90kLV/Zq0mxEyyF2Rzcz4ACTpH5zlJCzO
-	 34mzBRe/RkSOBdot2lihqN3siVwgDnyzLE+/T20ll386qT3uJR2Eg0Uz2gllUMGjkU
-	 WSW9k3YQZ2bzMByXM9/kWiEksP3U0yJbrN/TfB4RDLs+lBtRkRKuLprCkiii8aX+nK
-	 Wz1OffDaFvSD9lrMOXpoDbSRFrXKQsxu9NlWIoLoCMb1UZPnNCUoqSeAsNViOXPkd3
-	 8+eqKYLpRirbQ==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 437B917E0863;
-	Thu, 19 Jun 2025 13:57:13 +0200 (CEST)
-Date: Thu, 19 Jun 2025 13:57:09 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
- Gross <tmgross@umich.edu>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Alyssa
- Rosenzweig <alyssa@rosenzweig.io>, Lyude Paul <lyude@redhat.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>
-Subject: Re: [PATCH v2 2/2] rust: drm: Add GPUVM abstraction
-Message-ID: <20250619135709.634625e0@collabora.com>
-In-Reply-To: <F731D6F7-312D-4633-B677-69B7CC7194A6@collabora.com>
-References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
-	<20250422-gpuvm-v2-2-44d4fc25e411@collabora.com>
-	<aAgHGuzCZzh7YPz2@cassiopeiae>
-	<DBB3E8CE-19AA-437D-AF54-BF23763B254F@collabora.com>
-	<aAj7gAzFVRX3dN7L@pollux>
-	<F731D6F7-312D-4633-B677-69B7CC7194A6@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wf+IsB0l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750334258; x=1781870258;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=K4K5S1poaLskyGgd+Pv8HKVCuHiQV2nyAKdZlZ0kJHQ=;
+  b=Wf+IsB0lnIVa8KMy5Yd2qQ9Oo0TLL5/bCPiOlkTVMAntUQrrvyhXG4qj
+   5ecypY/seyehaG+4ngQPKuX+t7mZFpzAg2qMW6DApjmRWKYRTxEy6GdPf
+   wbo/jGDDsWbutsutT/71jQfZaJIAeTXn1ht6EgLFkIyxipzeUTV+tapsN
+   mcwY0afZ8gPfGMNjXNsWF2XA6W+GRSBdp3yGgxJVDYOzHSDEsjz3u2nH1
+   SO5rNVEqGZgH6n/xxQ7MagCobMNKrDyb+KIF/rgaNOpdFv69/GQzwXDwD
+   C+lYjJ3bWHpMLxu2bFA9CJN1UIcSrDvpzka5db39H8BcEoAIGk5hKIOcE
+   A==;
+X-CSE-ConnectionGUID: akyF3gUiT4qQMZ1vgrlfEA==
+X-CSE-MsgGUID: YRrz4TUkRJCwq3RQX+NW+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="64014594"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="64014594"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 04:57:37 -0700
+X-CSE-ConnectionGUID: ivUGQndaT+WCFz7PoqqzYQ==
+X-CSE-MsgGUID: 848l5QFyT1a1jf/Sz+tx2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="155191839"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 04:57:37 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 19 Jun 2025 04:57:36 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 19 Jun 2025 04:57:36 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.61)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 19 Jun 2025 04:57:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TpT8qVafk3vamEsamxkNRG3KgQFXZ006o0/cQWIPPeMoihCOulSslbPJBvsmVtZl530gOCBA8GatzaaZULbgjlktV6gb/Z1tPfJo3MJg20G5AR4F7YJBRAUFslH8hWwid8mwPBWG/x12m7vv1fLYWFYZQWlyWZPF8AT8zFYjU8O0dk1zbSkpJ/XDxMq9GiJz8XiyG6ntIb7g0eSlkPPkZIpdq48q/LMOP+I/mhkRjN8J42n2l98fPzLHZo5hlRtVe9al1pyoACHmwb6VwnS/k3BW2m+wvFnf1DctyAbCnyJzxJU+E5WJ1iIRYUKFmpZp9dwAAulOUCg3BL1TYMHrpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8hLaDEFebn+3jcMzS46ebq+E62G4EFtKHDEijKt3ABc=;
+ b=lLcqX8cMHXSN1lLluwtOdlfrKXhuPl+3BG6Dwxfkz6K5FD/2OzbzhEiN6hFX31lepjftjsKW4ycN6AVWaxZuCgu3FVtW8hyFR06PLYQ08Xed3caUb7bIbgq8Ex9LuJ8HA/xxZsoNZWcXhI7SZi9hum2GZVAap1VhP+RtM5S1dERDdgod/dkdtCQYf7Z7q9jYRJWllBeyVKudiIDRb9JFEcJW6gyYNr7HCY7dFvijYQO1ksOKH+E2DizPBx8Sdd/1LOSG6Q9YJ2xJKgWtfml+RqppqqwEFLsqIXrTHlUQfIiaCk0bkQPOgiILQH40YPd0EB+R4RX1NvB4FJuUIfq7zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3206.namprd11.prod.outlook.com (2603:10b6:a03:78::27)
+ by CH0PR11MB5249.namprd11.prod.outlook.com (2603:10b6:610:e0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
+ 2025 11:57:27 +0000
+Received: from BYAPR11MB3206.namprd11.prod.outlook.com
+ ([fe80::4001:1e6c:6f8d:469d]) by BYAPR11MB3206.namprd11.prod.outlook.com
+ ([fe80::4001:1e6c:6f8d:469d%4]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
+ 11:57:27 +0000
+Message-ID: <ccee2a0f-18fa-4037-bf97-f359e0791bf6@intel.com>
+Date: Thu, 19 Jun 2025 14:57:18 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86/mce: Fix missing address mask in recovery for
+ errors in TDX/SEAM non-root mode
+To: Dave Hansen <dave.hansen@intel.com>, Tony Luck <tony.luck@intel.com>,
+	<pbonzini@redhat.com>, <seanjc@google.com>
+CC: <vannapurve@google.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, H Peter Anvin
+	<hpa@zytor.com>, <linux-edac@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<rick.p.edgecombe@intel.com>, <kirill.shutemov@linux.intel.com>,
+	<kai.huang@intel.com>, <reinette.chatre@intel.com>, <xiaoyao.li@intel.com>,
+	<tony.lindgren@linux.intel.com>, <binbin.wu@linux.intel.com>,
+	<isaku.yamahata@intel.com>, <yan.y.zhao@intel.com>, <chao.gao@intel.com>
+References: <20250618120806.113884-1-adrian.hunter@intel.com>
+ <20250618120806.113884-2-adrian.hunter@intel.com>
+ <487c5e63-07d3-41ad-bfc0-bda14b3c435e@intel.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <487c5e63-07d3-41ad-bfc0-bda14b3c435e@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU2PR04CA0039.eurprd04.prod.outlook.com
+ (2603:10a6:10:234::14) To BYAPR11MB3206.namprd11.prod.outlook.com
+ (2603:10b6:a03:78::27)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3206:EE_|CH0PR11MB5249:EE_
+X-MS-Office365-Filtering-Correlation-Id: c32a27b1-2f3d-4eaa-0df1-08ddaf2875ff
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RkFYSWNkS0lieWJ6RjdaTjl2L2d1TllaS21TKytoMkl1VkU3OXl2VTErbVox?=
+ =?utf-8?B?ZWFjVUduKzNKMzBPSkQxSmJlUnZpdmtBeVZhTWlKZmZpbjJCaEhIanE4VWNN?=
+ =?utf-8?B?dFF1aS9TS1VtSi9iTCtDZUtUMXprWjM5Si9McVBQWEJkSUZITHpVZURpTW1Z?=
+ =?utf-8?B?dWZaWE1PNFlXb1VIa1IvYnR4N1NNVEFvd253cW9NMTN5NjgvdVNpQU9FUTM0?=
+ =?utf-8?B?cEdxK05rWE9NcEdxRTlnd0h6VVBDdVQvdzdsNlVNYnBvaU90Q3VuUlFCR3Zk?=
+ =?utf-8?B?ZkdwazFUUVVPOElqNWFmSVN4NHVEbTlteUVEU200dGtVeFBhZ01PUENVMHMz?=
+ =?utf-8?B?WXFoOWZqbjRxWHlJN0RkN2Q1YTYvRWRYN3hMdjBLZkhLVzRaRWg5K3V4dWVp?=
+ =?utf-8?B?bUVad3VkMUk1Z3Y3NHRHd05KcmRVZVhVbGd4ZFlMNFJPeHRST2xMdFR1bS95?=
+ =?utf-8?B?aVNJY2ZjM2NjdEVMdTIxWXQwakFzRnpVNVE4RTFrbWF1eG8ydTB3eUx6N3RV?=
+ =?utf-8?B?Ym02SXJNcWFjQTcxL3h6WGdCSlRoVUYzMXQ3clhDMEhmVEE3MTl6VjFWVmdi?=
+ =?utf-8?B?ZzFnM1RGNXN4VDlacUtOTXFGSFV4Tk1vb2RNV3h1aHV1bXVsUzVoSVI4WkxR?=
+ =?utf-8?B?bHplV0RLdkFIc2xrTTdtM2NucSthVER6cnNrdUljVkdycnpDQm5yQis5bEtm?=
+ =?utf-8?B?V3BGR2dtWkZxYkU0TzNhWml4S1RiQkE5ZFdNVHcyTkU3TGlzaE1NRlErVUF3?=
+ =?utf-8?B?cWR2djFBSWFiUVZWQ1p5QzBzeDV4OWdva2VqaWxOdWpYeUMxdzhiYzFIQ3lr?=
+ =?utf-8?B?RkV0SUJqbFA3R3Z0WTArZWpSM2lrTjE1VTZUNnVZbE5FQnBIVlV6SGxRK3cv?=
+ =?utf-8?B?dUx4L3VCeUZSZW5UN0tKTldLazkvM1lyS2NsUENqOWZkbTBmMEdFdUdmYWtU?=
+ =?utf-8?B?Y2pOZ2xnTkpCWHNFOVptSS83Z2R1ZSt5L1VTY0IwY2VOZ1NCZ3kwbkp5dnRz?=
+ =?utf-8?B?cEo0VkpoM05EMy9qWUFBOE12SGU3YWNjTkprOHUrMUg2Zkh0WXgwOW91aEFt?=
+ =?utf-8?B?anpleHcrNnJidXhnSElNbitGa0F4d2lRcTlyUm5OWEorUkhyM3AzZDl3eHdQ?=
+ =?utf-8?B?MC9WQndrTnNudkY4STkrR0FVZE00OE90cXRtT0JzWTBjYmlocnR3OUZEeDNK?=
+ =?utf-8?B?QWFYN2svMEt2eGlRS3I0VG9zNE0yc1g2eExpdTBkbnZZbkI4c2tmUzBlblQy?=
+ =?utf-8?B?Q2JoNVBwTFloRHRvUE9ST2lxaUVSMW4yQWJ1Mm9rcmQrVGhmaUxRNW1NWVY2?=
+ =?utf-8?B?b0RaVnZNdnZhQ3JSM0NsbVo1MXVWbGVoVlBkc2FqU2FhU0cwL21PRHRjMldQ?=
+ =?utf-8?B?YlUzUFRLSFFyQ1Z0OEhFTUdIQ01scXF2OW1Ua05CdGtpRDErLzNiVTNiZGdV?=
+ =?utf-8?B?eUhONEFxWitqNFdGdDB1VlZ2Z2dPU0xZZzBzaTVwa09mY2lhcDJSS1ZyVWhw?=
+ =?utf-8?B?TmxxQUpZM2ZNS3U2V1lWMTlUa3VQZFVieWJKNGxyWDE4bE0rSjNGL2FLVGpU?=
+ =?utf-8?B?RDBacmVZMGZLWlkzSWJrVjRacmd4NEpUOUhNZVJOVDUyU21tSGg2b00wblEr?=
+ =?utf-8?B?bVowazV2MXlWZEI3R3NBN3JDQkJIN0FEeC9XeHhJcWlLWlE5bGUveWlOR0Ja?=
+ =?utf-8?B?enpOYjBOeVZkUHVwZGNjVkkwbzVWS0NJSUFYNTJLeTZXVzJ2RXQ4LzVvMjVa?=
+ =?utf-8?B?UDlMU2RxbXlBSjdwL1hCQUZkMGlyNjRZa0ZYL0IvL3dSNUg4VndGaW5md2RZ?=
+ =?utf-8?B?eEZZS3hiYVBVTmFtc1NzZFJOclBqcDFQTE9DTHpEa3JrYk9zYU1naWEzQm1B?=
+ =?utf-8?B?WG9nOWJNSm8wdVF3eVV4UTZqRFcvclRYRndPZEpZREphNlE9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3206.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MnFOZlE1cnNqdE9OcmhIM2NTVlc2Rm5KT0pJeGx0eU1DK1RFUTZsZVRrVEcw?=
+ =?utf-8?B?NVczR084QUtHRFR5SVg3TkVMM2V3TCtsYm5XVjloRmZvZlpBNHNXSVNCT1Nh?=
+ =?utf-8?B?SUpjdEZnVlNYVmZpWmtUanhPemhTOGMvRHlFOTFvUzFvUk9USlh4ZjBEMWk1?=
+ =?utf-8?B?VEYrQk1QZjVwaHp1RTlCY1NKVTN2R3AxUW9yQ3V4eGxLQ081RU1pRkZFRFI2?=
+ =?utf-8?B?NmRIdUM2SldQYkRlbTBEZmRKeVpqajJQaUNMNEk2YVY0YzZ5bmRSaU16ZUEy?=
+ =?utf-8?B?Q0F5a1lpMHRzSlBabUFIYTRla0xTSFlYelVEeVI4dTB3ZzYwajFvV01LQ0dU?=
+ =?utf-8?B?VkRvRlduRnZzcy93RSttR0FiU3hTbWgydG1kUHRDRzQ5a1M5bHpkMmhZcHFY?=
+ =?utf-8?B?U0Z1RnpQN1h1VDhPV0tHdVlFNysyVjRCVTg3MVc2REU1S3MycUJTMm9Ld1p0?=
+ =?utf-8?B?OWdlRzZldUI4a3ZUSHUvWllzVTYxRkNXMnhOQ1JqeVVuNFhPR01hYm1UT0Zj?=
+ =?utf-8?B?bE95UkswSHdySC92eWpWd0pNc25ubkhJRlZrQjVjSHhnMXEzUGpla0R2L0Q3?=
+ =?utf-8?B?TGdCNFVTVHkrbFZXNFJneks4dC91Z2hrM1VnR1h0OERvSUl4SDdzOUkyNnpn?=
+ =?utf-8?B?dVMzaTA3VVRNcitXemF4Z1dwWHQ4LzdWdnJMZXN3SHMyYWNTdTNnRUwrM0tw?=
+ =?utf-8?B?aTZ3TlMzL2NWSHdpYU51U0pFOGZZN0crZHVrVXZGOFlSNWFMbnlXblJPSjlo?=
+ =?utf-8?B?emN5VVdPR1hFTmdQb2VXV0RaSkJiVE5aaEY0Z2lzR3lWWExDMnYxTjdOamM2?=
+ =?utf-8?B?emFWenBCZ2QyWTBRU29MUDcyZkdxVE1lUVpJbGZMbGJpWE1VcjlmSWhZdG1a?=
+ =?utf-8?B?OEI3MFBqdzJCZE1kWlJYU0dBUzA2RjhBL3ZNNnp4TkFHQ05qcSs4aWpudEd1?=
+ =?utf-8?B?TFJ1d0dhT2pJWW5LdlNtbHByRGozNDVGZ0NJNVJwRlQxYmh2NDA1MG9HZTVQ?=
+ =?utf-8?B?VnV6UzdMbWVGbjlQd0lMcUd0WlZXOVZHT3puaFVReWlFMmdiR3h0eFdOL08z?=
+ =?utf-8?B?WU9WcklIZUR5U2h4MVVVRldsRTZLMTV2SFNOS1JYL3huMUJXYWZSb3pDYUU5?=
+ =?utf-8?B?Q2doajlzclg5eTlGc2EwTHVzNTEycVkxRTNmZlBBOUkzTG1WWThEM0pTN25T?=
+ =?utf-8?B?S2cyRkwrNCt1M3BFcWNBQnZEWG1WTjhGb2NEY2p2RzUyUlhNalRCNFE2WWhH?=
+ =?utf-8?B?SFRpTmljUFg5UktEMmxWS0pFUDZKRkZMRFFjakppdEVVMVpFUStjQW1QVmRp?=
+ =?utf-8?B?cGVndjZxcU94d25mdmgxL1kyL2V3VTdTWk9jeU8rb0gzZGtHcisxck1pK3ZI?=
+ =?utf-8?B?QmNweEMzY0RvL21zcU9Ea0pIbjFGclVkWFF3cVlya0RRNThyWW1tSzd0KzJi?=
+ =?utf-8?B?WDl0cHZTV1pFQk5JU0pocFhkYnBxUjdsRC9BM2E1YzJTKzI3YWxZVXF4VDEz?=
+ =?utf-8?B?VndRTWYxWU5iWkFLT2lIMDVOUWUwQTNxays4ME1yVitrY1RxQmZPd1JWRjNa?=
+ =?utf-8?B?S0ZpTTRIZWZhM1IvdTA3OTIxRW9sZSs1UnNHNi9RR1RERUtIMFJhaGFlMnEw?=
+ =?utf-8?B?QzlZTzZiZTd0QWFxUWRWNEJZZzFDeXFJNHg1TTBrTFJGcTlMWm5FNXpEaEdy?=
+ =?utf-8?B?aW1pSGVmQ204bXJobHFHZzdnOU5qYzNWUlNiaFRSWVAzeUdESGI5NWhMTEFW?=
+ =?utf-8?B?Nkw3QWxkMXgwbm9sRFg5eDBZaWg2ZGFXNDNETjZyWk40TzhtNmIyRTByZkNu?=
+ =?utf-8?B?M2ZKUittVjQzU01Xbk1UdzdXdE5sYXhobWFlanFGTW9Ua24rRElGU1ZWbm5l?=
+ =?utf-8?B?Y1lqY2dqcVNsalUzMWErS1d2TXFvUUpVSDRZNmlFNXUzdHIwVXhDSGFJczVk?=
+ =?utf-8?B?bGNLdVBCaFdOS1BtWVROT2FYdENGTnNEb0gxMGxsRmpVRmxVRzg3ckM5Z0Vs?=
+ =?utf-8?B?emZzT1VacHUrSmJjaHRlbXB5WXpvam1nbzdSNXk4Rzlrc3B6V0IwVStZM1Uy?=
+ =?utf-8?B?VmJKcUpxVWZsYzdRQUZqUjRRdkJ2TWJXYzVhcUdlUnpLU2hPT1NXZFByYjdi?=
+ =?utf-8?B?VCtwWEtuL3VyQ2FGL3JxL1dTTm9WUTdHVExkdUxBdE5VdXNreGg1UHdTZ28w?=
+ =?utf-8?B?ZEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c32a27b1-2f3d-4eaa-0df1-08ddaf2875ff
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3206.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 11:57:27.2884
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gflt0ZJX+NYatQpRQSM3Onj45NQ3a+XAUIkoYo/eZI76dg3wI/0y7P0P+70N3102iH1Vfnn7IQzKlRJgeBoioA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5249
+X-OriginatorOrg: intel.com
 
-Hi,
+On 18/06/2025 17:55, Dave Hansen wrote:
+> On 6/18/25 05:08, Adrian Hunter wrote:
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -1665,7 +1665,8 @@ noinstr void do_machine_check(struct pt_regs *regs)
+>>  		 * be added to free list when the guest is terminated.
+>>  		 */
+>>  		if (mce_usable_address(m)) {
+>> -			struct page *p = pfn_to_online_page(m->addr >> PAGE_SHIFT);
+>> +			unsigned long pfn = (m->addr & MCI_ADDR_PHYSADDR) >> PAGE_SHIFT;
+>> +			struct page *p = pfn_to_online_page(pfn);
+> 
+> If ->addr isn't really an address that software can do much with,
+> shouldn't we mask MCI_ADDR_PHYSADDR off up front, like in mce_read_aux()?
 
-On Fri, 13 Jun 2025 13:42:59 -0300
-Daniel Almeida <daniel.almeida@collabora.com> wrote:
+Would that mean no one would know if the mce addr had KeyID bits or not?
 
-> Danilo,
->=20
->=20
-> > <snip>
-> >  =20
-> >>>> +// SAFETY: DRM GpuVmBo objects are always reference counted and the=
- get/put functions
-> >>>> +// satisfy the requirements.
-> >>>> +unsafe impl<T: DriverGpuVm> AlwaysRefCounted for GpuVmBo<T> {
-> >>>> +    fn inc_ref(&self) {
-> >>>> +        // SAFETY: The drm_gpuvm_get function satisfies the require=
-ments for inc_ref().
-> >>>> +        unsafe { bindings::drm_gpuvm_bo_get(&self.bo as *const _ as=
- *mut _) };
-> >>>> +    }
-> >>>> +
-> >>>> +    unsafe fn dec_ref(mut obj: NonNull<Self>) {
-> >>>> +        // SAFETY: drm_gpuvm_bo_put() requires holding the gpuva lo=
-ck, which is
-> >>>> +        // the dma_resv lock by default.
-> >>>> +        // The drm_gpuvm_put function satisfies the requirements fo=
-r dec_ref().
-> >>>> +        // (We do not support custom locks yet.)
-> >>>> +        unsafe {
-> >>>> +            let resv =3D (*obj.as_mut().bo.obj).resv;
-> >>>> +            bindings::dma_resv_lock(resv, core::ptr::null_mut());
-> >>>> +            bindings::drm_gpuvm_bo_put(&mut obj.as_mut().bo);
-> >>>> +            bindings::dma_resv_unlock(resv); =20
-> >>>=20
-> >>> What if the resv_lock is held already? Please also make sure to put m=
-ultiple
-> >>> unsafe calls each in a separate unsafe block. =20
-> >>=20
-> >> By whom? =20
-> >=20
-> > The lock might be held already by the driver or by TTM when things are =
-called
-> > from TTM callbacks.
-> >=20
-> > This is why GPUVM never takes locks by itself, but asserts that the cor=
-rect lock
-> > is held.
-> >=20
-> > I think we really want to get proof by the driver by providing lock gua=
-rd
-> > references.
-> >  =20
->=20
-> There doesn=E2=80=99t seem to be a solution that fits all the boxes here.
->=20
-> As you said, at this point the current status of the resv is unknown. If =
-we
-> simply assume that it is not taken, we run into the problem you pointed o=
-ut:
-> i.e.: recursive locking where ttm or some other layer has the lock alread=
-y.
->=20
-> Alternatively, if we assume that the resv must be locked in dec_ref(), th=
-en we
-> may build a lock::Guard from it and assert that it is held, but in any ca=
-se
-> it's very confusing to expect the reservation to be locked on a dec_ref()=
- call.
->=20
-> The fact that dec_ref() is placed automatically on drop will massively
-> complicate the call sites:
+> 
+> Maybe we should break it up into address and KeyID _there_.
 
-I'm digressing, but there's an aspect I found very annoying in the C
-version of the API: the fact that we have to take a BO ref, then lock,
-then release the vm_bo [1], because otherwise the vm_bo might be the
-last owner of a BO ref leading to a UAF on the lock itself. This to me,
-denotes a lifetime issue that I think would be good to address in the
-rust version of the API.
+Could we deal with any tidy-ups in separate patches?
 
-It's not exactly the same problem, but I think it comes from the same
-root issue: lax ownership definition. By that I mean it's not clear
-who's the owner and who's the owned. gem_object::gpuva::list has
-weak refs on the vm_bos contained in this list, which kinda makes sense
-because vm_bos themselves have a ref on the gem_object, and if we were
-to make this weak ref a strong ref we'd never free any of these two
-objects. The lock is also part of the BO (either the BO resv lock, or a
-custom lock), and since it's the very same lock we use to insert/remove
-vm_bos, that's problematic.
-
-If we were making the gpuvm_bo_list a separate object that's originally
-created by the BO, and then let the GPUVM layer manipulate only this
-list, it could work. Of course that means the resv lock/driver custom
-lock should come from this object too, and I'm not too sure that's an
-option when dma_buf imports are involved.
-
->=20
-> We will have to ensure that the resv is locked at all times where we inte=
-rface
-> with a GpuVmBo, because each of these points could possibly be the last a=
-ctive
-> ref. If we don't, then we've introduced a race where the list is modified=
- but
-> no lock is taken, which will be a pretty easy mistake to make. This seems=
- to
-> also be the case in C, which we should try to improve upon.
-
-Yep, with auto-unref thrown into the mix you have to be very careful on
-which paths might release the last vm_bo ref, and make sure an extra
-ref is taken on the BO, and the resv/custom lock is held when that
-happens.
-
->=20
-> My suggestion is to introduce a separate GPU-VA lock here:
->=20
-> /// A base GEM object.
-> #[repr(C)]
-> #[pin_data]
-> pub struct Object<T: DriverObject> {
->     obj: bindings::drm_gem_object,
->     // The DRM core ensures the Device exists as long as its objects exis=
-t, so we don't need to
->     // manage the reference count here.
->     dev: *const bindings::drm_device,
->     #[pin]
->     inner: T,
->     #[pin]
->     _p: PhantomPinned,
->     // Add a GPU-VA lock here <--------
-> }
->=20
-> And only support custom locks in Rust, to the detriment of the optimizati=
-on
-> where the resv is used and to the detriment of any perf improvements that
-> reusing the reservation might bring to the table.
-
-Yes, if it was only about perf optimizations, then I'd like to see
-numbers that prove taking an extra lock that's always going to be free
-in a path where you already took the BO resv lock actually makes a
-difference, and honestly, I doubt it. But my fear is that it's not so
-much about avoiding an extra lock to be taken, and more about making
-sure this list insertion/deletion doesn't race with other paths that
-are assuming that taking the resv lock is enough to guarantee exclusive
-access to this vm_bo list (I mean places outside gpuvm, in the drivers
-directly). I guess the is fixable.
-
->=20
-> Notice that this would sidestep this entire discussion: nobody else would=
- be
-> aware of this new lock so we could safely lock it in dec_ref(). We would =
-also
-> be transparently managing the locking on behalf of drivers in all the oth=
-er
-> calls where the VA list is accessed, which is another plus as I said abov=
-e.
-
-If the lock is part of the gem_object, it's not solving the problem I
-described above, because you might be taking a lock that disappears if
-you don't take a BO ref before taking the lock. In the end, that's
-still a risky business.
-
->=20
-> I understand that most C drivers do not need an extra lock, but it's gett=
-ing
-> hard to emulate this behavior in Rust.
->=20
-> Also, the fact that they don't need an extra lock does not invalidate the=
- fact
-> that it would be simply safer to have this extra lock anyways. In other w=
-ords,
-> it is still completely possible to use GPUVM without locking anything and=
- IMHO
-> we shouldn't bring this over if we can help it.
-
-Overall, I do agree with Daniel here. We'd rather think about how to
-make the C API more user-friendly by clearly defining
-ownership/lifetime before we try to add rust bindings on top.
-Deciding where the lock comes from is part of the discussion, but IMHO,
-that's not the only thing we need to sort out.
-
-I hope that me chiming in didn't make the situation worse :-/, and I'd
-be fine if someone convince me that what I complain about here is
-actually not a problem in rust :-).
-
-Regards,
-
-Boris
-
-[1]https://elixir.bootlin.com/linux/v6.15.2/source/drivers/gpu/drm/panthor/=
-panthor_mmu.c#L1090
