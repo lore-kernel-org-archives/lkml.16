@@ -1,64 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A36C2F850
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C302248AA;
+	Thu, 19 Jun 2025 23:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750376250; cv=none; b=KqC0KjHu1t79szRIUg7ai8NhU20uq98hkVBmDWwdGyKN3yCFvmaIHk+e0wSVIoIwrZrhGh446E1souBhGunI2jCoEulQaHPxGo+cm/3kinBiXAbnIQudJVY5JsibSMGmeALwgMSK5tF2o+GrBB1tr0vGx/hQfOkTgRr7qa4/itc=
+	t=1750376259; cv=none; b=OQQkODPuZ4cqBVa32Je6YmFsWuxhLgm/U7kt7/6mRdOWE0ozfBiS4TAcwigV7XnWJ+9zBRK/S5D4hAEU+ZsUvtSIPu9RQiOmPF8lIUJGCcmUWMvbJkwU4xs6HM/mGBsdWYvIrU8/R3uZmh2skUoHLS4qqhDF+CXTdhQcbGTo7+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750376250; c=relaxed/simple;
-	bh=2B3FnV7iqmSX8w+I+jGLfnh85EqqFWd7fW8sPDuwA30=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=ELH90asqP+yod0k7p3FV6LPPhm3FRir7sNiDhNx+VtBNn1HHM0noKP8SdbiAIK3Ku2Ba8uXwgMgCrS2ENiMU8ZkmQWxlW98aH8XLYAdNdeJy2iC4vb+z2HvfUdYV0um8QPTZrVUsBKvmRjGP5qkKQYk49Wv47l/GTU+KSGCq/N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3jjX7J9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750376259; c=relaxed/simple;
+	bh=nE358TQi72UPUUeLFthC8tDYL3NhT2BMlR4SjOv2OPs=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=bFmf+iTu3C50plIQVXtXKcBKfX5QcYH7AHgQJ+fpAM/bkgvzkPakySI26f1vPaYdv1X032mKCPois7Ae/ZjCarUKbu44fafodx/yrLO5CImgcKc3enXWmbw69HPGQUuXiJw6UxPvz9AYXBYBgE+nmJ3VsXlsaML00yEQi70ZQ4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1c8Bedg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3jjX7J9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE21AC4CEEA;
-	Thu, 19 Jun 2025 23:37:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1c8Bedg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC0D8C4CEEA;
+	Thu, 19 Jun 2025 23:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750376250;
-	bh=2B3FnV7iqmSX8w+I+jGLfnh85EqqFWd7fW8sPDuwA30=;
+	s=k20201202; t=1750376259;
+	bh=nE358TQi72UPUUeLFthC8tDYL3NhT2BMlR4SjOv2OPs=;
 	h=From:To:Cc:Subject:Date:From;
-	b=D3jjX7J9TG8obNmKDN+BpaWekYUjzTHajdJHTpnE+bED5sNXztqGwnQ+3Ub1ESSOe
-	 2VoPmvM8txTTgTEDpwXnGa5O4oXXFTNq0B5mtlSme4FXeTSgkmBvaiMieIIDJGkVua
-	 c+gTRL0kcf8Y+PPSF0T61OdWtFtGShZnowPtIkJ4v76gopcJm8VUtoMG/oihRVNXNB
-	 xqPIrf95qP8AL/wQplZUs9MAeUBb+ujEsBTJqgAxPCwexygrZuAovtMGyIHB9xClEF
-	 QhjehUn6U7r6vKgLyPqqPG6MYMubOfPRysgGtH+SWGllEpTYoWw5b+lGgTTT53zp6r
-	 0tOlNXXEdB4aw==
-Message-ID: <dad88a06b17b2b7e6c0146ab9292cb18.broonie@kernel.org>
+	b=V1c8BedgCt8XKDXIdSpRB4iQZLyctmlhz7MMoP8eknTJBoqdveoEQ9ZkT3pQj2t16
+	 hD0zEHwbdkbQBufcnbbcN2iZEtRrde3fxvbHO0PU5KOZqtKdiSYDBPuwAv0va5+rMJ
+	 6fsS7RjsmrbWrI4RnsSulOw9go25YuC7aR1SddkaruuGdcUx3272i9OquU7OJXwp4k
+	 F2/Gebk7L3Li3jb5us/r5lYGInvqkJfcBZ5ws5u8TqbAXAQ1HMZ9rVQav2fP1Gop+K
+	 Ukt1jbJY/joHZtSFppydo0LjjBVPpCeSa+3o9uX5/pHgoDjf3gO0MvcSp25qN/D04h
+	 LqvejIN8ca7DA==
+Message-ID: <2028a8ec593d05f1a11300d8bfb000f8.broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regulator fixes for v6.16-rc2
-Date: Fri, 20 Jun 2025 00:37:19 +0100
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.16-rc2
+Date: Fri, 20 Jun 2025 00:37:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+The following changes since commit 9f0ad43b158d07bc7144d219ceabdea36e28e392:
 
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+  spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine (2025-06-13 12:25:31 +0100)
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc2
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc2
 
-for you to fetch changes up to 8acfb165a492251a08a22a4fa6497a131e8c2609:
+for you to fetch changes up to d57e92dd660014ccac884eda616cafc7b04601e0:
 
-  regulator: fan53555: add enable_time support and soft-start times (2025-06-16 13:26:23 +0100)
-
-----------------------------------------------------------------
-regulator: Fix for v6.16
-
-One patch here from Heiko which fixes stability issues on some Rockchip
-platforms by implementing soft start support and providing startup time
-information for their regulators.
+  spi: tegra210-qspi: Remove cache operations (2025-06-13 17:30:56 +0100)
 
 ----------------------------------------------------------------
-Heiko Stuebner (1):
-      regulator: fan53555: add enable_time support and soft-start times
+spi: Fix for v6.16
 
- drivers/regulator/fan53555.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+One fix here from Thierry, fixing crashes caused by attempting to do
+cache sync operations on uncached memory on Tegra platforms.
+
+----------------------------------------------------------------
+Thierry Reding (1):
+      spi: tegra210-qspi: Remove cache operations
+
+ drivers/spi/spi-tegra210-quad.c | 14 --------------
+ 1 file changed, 14 deletions(-)
