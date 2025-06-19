@@ -1,124 +1,236 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA33D24729A
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A88245006;
+	Thu, 19 Jun 2025 19:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750360812; cv=none; b=agAanZ/duYPkftHIe6FHT/ZngZwXiGowUgyu3ZZ8X5PdwzJVKy1NBUSsC65n/buRgbnoue+ySgeZOIzTWjcwZ0YpYNHDwj9SKfhrsbmPvmp2SYY4jH5z/cW6Rd9WeQ1R6xyct5OyLxD3O5VI4QBNfCWhzH3LyePvID3YMXMWujs=
+	t=1750360927; cv=none; b=D0zUrOWkpHFRJH6FLLn3UohEwwXtaN/Zj862czC3nbFyCqv2eewT2DIKoMW6YrmWlSXfrtVgHsQ8alqWZJD0GX8ApFFWOewf4ao4JTh5SwIHlYECHGFLmukgutiYCrrTU7cfx9eaRANNuZkzWKNfoHdw1JUZsr4aP2XwfIlnfok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750360812; c=relaxed/simple;
-	bh=OUGP+9Bc5zn706e0s5SjFMKump4OS0LBSwQrlzy2aP8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WXLvbVcf4po+r+Ez7zN/xi9RJLaadRA8NBQB4nbQ2QxMG0TEOHJvUynZX2UK9BsH2mND7lQ/VdZx/LZ87Alaw7k9FOQ6Q64H7OAPrHCwFEPI3hEj+xCHdgIPZQW1M3U1Cjqn1AnnnggAZBEB7eggzTs3vpNGaQXzI0cllWBCSrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cPwtr9Iq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750360927; c=relaxed/simple;
+	bh=9UtMUWlHNA4RTeOlTBM02ODBZV5uKoJTlP1807gF6LI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YbOelD81HSReVL7tq2GSGrGth0ChmaXEZ9/tkECAWN+ma0pnUE0T7RBtHIMxIh0orqA+xmfncODmvZuHytlYIbzsLPaFUIJKQAbATfSDj9liR/lmMNlNC9wZUEqDib2ohQLDxVXoK1VPVWQr7K4qk9lKVp1JqqfJ0vTtuBuqmw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fryETMDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPwtr9Iq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750360810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=su+KvBhgSlwSz8Qo8A5gRsBfuCg0rvVY9PlXRCR9Fas=;
-	b=cPwtr9Iqc8SnD87s/tquQQSZN2tpdgpecb3tVtW/AJ2eBSIjzaKnB/t33XMMvyPlCzWLLO
-	BVOMYFQ2uubQ8NJ8azH4/uHD49DIVyKO5X4JhB/THyPSjmBTWPPj6LycrYukI+Rc+UHIGk
-	WbqoWnHK1ImfasRPGXBo2p/xNrTFpew=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-425-BrdIiTfMN9aBDxa_eKupnA-1; Thu,
- 19 Jun 2025 15:20:06 -0400
-X-MC-Unique: BrdIiTfMN9aBDxa_eKupnA-1
-X-Mimecast-MFC-AGG-ID: BrdIiTfMN9aBDxa_eKupnA_1750360802
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C9CA18002E4;
-	Thu, 19 Jun 2025 19:20:02 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.132])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E64CC19560A3;
-	Thu, 19 Jun 2025 19:19:52 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 19 Jun 2025 14:16:08 -0500
-Subject: [PATCH v2 16/16] drm/tegra: Keep up with refcounting
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fryETMDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F175C4CEF0;
+	Thu, 19 Jun 2025 19:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750360926;
+	bh=9UtMUWlHNA4RTeOlTBM02ODBZV5uKoJTlP1807gF6LI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fryETMDpfnoe2dioP1ES0reEAY0jhdCqMTATUdRbwGZqFnWXusMruMspNwESboOKR
+	 AhstF9gQCTBZvDTE3g/brKzQ8sH1nfT1ANlq5soGCvy9TqHzUKaUruWpDFxWy3sj1T
+	 9ntl5WYrs6XlnT5PkHKgQFG6ZJ8jPtwz99vLfsatgpXMSCN0myTBCMdtlWyKdVvIC2
+	 3d5eHscpPXfcqEw5jaUnBMAWDq9rUcUQImWaE1XBS4Mw14NDWHQ4l3NgXQAgt34eGz
+	 TrrjvSsyIoi0WxnDTuFJNCHr1A1MIJ/xk9KuSVXtxiqCjd6OxcmhT7pUg8/ls2Fama
+	 DGisKNf5JUIXw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v2 1/9] lib/crypto: arm: move arch/arm/lib/crypto/ into lib/crypto/
+Date: Thu, 19 Jun 2025 12:19:00 -0700
+Message-ID: <20250619191908.134235-2-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250619191908.134235-1-ebiggers@kernel.org>
+References: <20250619191908.134235-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-b4-of_drm_find_panel_part1-v2-16-0df94aecc43d@redhat.com>
-References: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
-In-Reply-To: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>, 
- Seung-Woo Kim <sw0312.kim@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Alain Volmat <alain.volmat@foss.st.com>, 
- Raphael Gallais-Pou <rgallaispou@gmail.com>, Stefan Agner <stefan@agner.ch>, 
- Alison Wang <alison.wang@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750360565; l=771;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=OUGP+9Bc5zn706e0s5SjFMKump4OS0LBSwQrlzy2aP8=;
- b=avJnxiZEciA9G70sV2NKBkfKbz54xRs+P5jyouBdV0SNcLqS3cJKy0hqVYnVWDGJW/jjQRzUq
- NDWEDyAhk60CpeImtnfvwtzvcfADtJkVdF/qIT7anuYZnwLT3jZTlf5
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-Put the panel reference back when driver is no
-longer using it.
+From: Eric Biggers <ebiggers@google.com>
 
-Patch added in v2.
+Move the contents of arch/arm/lib/crypto/ into lib/crypto/arm/.
 
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+The new code organization makes a lot more sense for how this code
+actually works and is developed.  In particular, it makes it possible to
+build each algorithm as a single module, with better inlining and dead
+code elimination.  For a more detailed explanation, see the patchset
+which did this for the CRC library code:
+https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
+Also see the patchset which did this for SHA-512:
+https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
+
+This is just a preparatory commit, which does the move to get the files
+into their new location but keeps them building the same way as before.
+Later commits will make the actual improvements to the way the
+arch-optimized code is integrated for each algorithm.
+
+Add a gitignore entry for the removed directory arch/arm/lib/crypto/ so
+that people don't accidentally commit leftover generated files.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- drivers/gpu/drm/tegra/dsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/lib/.gitignore                                      | 4 ++++
+ arch/arm/lib/Makefile                                        | 2 --
+ arch/arm/lib/crypto/.gitignore                               | 3 ---
+ lib/crypto/Kconfig                                           | 2 +-
+ lib/crypto/Makefile                                          | 2 ++
+ lib/crypto/arm/.gitignore                                    | 2 ++
+ {arch/arm/lib/crypto => lib/crypto/arm}/Kconfig              | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/Makefile             | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-core.S       | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-glue.c       | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-glue.c        | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-neon-core.S   | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/chacha-scalar-core.S | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-armv4.pl    | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-glue.c      | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256-armv4.pl      | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256-ce.S          | 0
+ {arch/arm/lib/crypto => lib/crypto/arm}/sha256.c             | 0
+ 18 files changed, 9 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/lib/.gitignore
+ delete mode 100644 arch/arm/lib/crypto/.gitignore
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/Kconfig (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/Makefile (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/blake2s-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-neon-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/chacha-scalar-core.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-armv4.pl (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/poly1305-glue.c (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256-armv4.pl (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256-ce.S (100%)
+ rename {arch/arm/lib/crypto => lib/crypto/arm}/sha256.c (100%)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index b5089b7722676cfaee5d28216af4ae706a47f895..830e90178302a76e7c091c92b66ce385ad26207e 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1523,6 +1523,7 @@ static int tegra_dsi_host_detach(struct mipi_dsi_host *host,
+diff --git a/arch/arm/lib/.gitignore b/arch/arm/lib/.gitignore
+new file mode 100644
+index 0000000000000..647d7a922e680
+--- /dev/null
++++ b/arch/arm/lib/.gitignore
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++# This now-removed directory used to contain generated files.
++/crypto/
+diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+index 91ea0e29107af..d05dd672bcd9c 100644
+--- a/arch/arm/lib/Makefile
++++ b/arch/arm/lib/Makefile
+@@ -3,12 +3,10 @@
+ # linux/arch/arm/lib/Makefile
+ #
+ # Copyright (C) 1995-2000 Russell King
+ #
  
- 	if (output->panel && &device->dev == output->panel->dev) {
- 		output->panel = NULL;
-+		drm_panel_put(output->panel);
+-obj-y += crypto/
+-
+ lib-y		:= changebit.o csumipv6.o csumpartial.o               \
+ 		   csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
+ 		   delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
+ 		   memmove.o memset.o setbit.o                        \
+ 		   strchr.o strrchr.o                                 \
+diff --git a/arch/arm/lib/crypto/.gitignore b/arch/arm/lib/crypto/.gitignore
+deleted file mode 100644
+index 12d74d8b03d0a..0000000000000
+--- a/arch/arm/lib/crypto/.gitignore
++++ /dev/null
+@@ -1,3 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-poly1305-core.S
+-sha256-core.S
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index dce127a69f131..e14bef8e87af2 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -188,11 +188,11 @@ config CRYPTO_LIB_SHA512_ARCH
+ config CRYPTO_LIB_SM3
+ 	tristate
  
- 		if (output->connector.dev)
- 			drm_helper_hpd_irq_event(output->connector.dev);
-
+ if !KMSAN # avoid false positives from assembly
+ if ARM
+-source "arch/arm/lib/crypto/Kconfig"
++source "lib/crypto/arm/Kconfig"
+ endif
+ if ARM64
+ source "arch/arm64/lib/crypto/Kconfig"
+ endif
+ if MIPS
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 4a76169de251b..ddf04e2270f1e 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -100,5 +100,7 @@ obj-$(CONFIG_MPILIB) += mpi/
+ 
+ obj-$(CONFIG_CRYPTO_SELFTESTS)			+= simd.o
+ 
+ obj-$(CONFIG_CRYPTO_LIB_SM3)			+= libsm3.o
+ libsm3-y					:= sm3.o
++
++obj-$(CONFIG_ARM) += arm/
+diff --git a/lib/crypto/arm/.gitignore b/lib/crypto/arm/.gitignore
+index 670a4d97b5684..f6c4e8ef80dae 100644
+--- a/lib/crypto/arm/.gitignore
++++ b/lib/crypto/arm/.gitignore
+@@ -1,2 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++poly1305-core.S
++sha256-core.S
+ sha512-core.S
+diff --git a/arch/arm/lib/crypto/Kconfig b/lib/crypto/arm/Kconfig
+similarity index 100%
+rename from arch/arm/lib/crypto/Kconfig
+rename to lib/crypto/arm/Kconfig
+diff --git a/arch/arm/lib/crypto/Makefile b/lib/crypto/arm/Makefile
+similarity index 100%
+rename from arch/arm/lib/crypto/Makefile
+rename to lib/crypto/arm/Makefile
+diff --git a/arch/arm/lib/crypto/blake2s-core.S b/lib/crypto/arm/blake2s-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/blake2s-core.S
+rename to lib/crypto/arm/blake2s-core.S
+diff --git a/arch/arm/lib/crypto/blake2s-glue.c b/lib/crypto/arm/blake2s-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/blake2s-glue.c
+rename to lib/crypto/arm/blake2s-glue.c
+diff --git a/arch/arm/lib/crypto/chacha-glue.c b/lib/crypto/arm/chacha-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-glue.c
+rename to lib/crypto/arm/chacha-glue.c
+diff --git a/arch/arm/lib/crypto/chacha-neon-core.S b/lib/crypto/arm/chacha-neon-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-neon-core.S
+rename to lib/crypto/arm/chacha-neon-core.S
+diff --git a/arch/arm/lib/crypto/chacha-scalar-core.S b/lib/crypto/arm/chacha-scalar-core.S
+similarity index 100%
+rename from arch/arm/lib/crypto/chacha-scalar-core.S
+rename to lib/crypto/arm/chacha-scalar-core.S
+diff --git a/arch/arm/lib/crypto/poly1305-armv4.pl b/lib/crypto/arm/poly1305-armv4.pl
+similarity index 100%
+rename from arch/arm/lib/crypto/poly1305-armv4.pl
+rename to lib/crypto/arm/poly1305-armv4.pl
+diff --git a/arch/arm/lib/crypto/poly1305-glue.c b/lib/crypto/arm/poly1305-glue.c
+similarity index 100%
+rename from arch/arm/lib/crypto/poly1305-glue.c
+rename to lib/crypto/arm/poly1305-glue.c
+diff --git a/arch/arm/lib/crypto/sha256-armv4.pl b/lib/crypto/arm/sha256-armv4.pl
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256-armv4.pl
+rename to lib/crypto/arm/sha256-armv4.pl
+diff --git a/arch/arm/lib/crypto/sha256-ce.S b/lib/crypto/arm/sha256-ce.S
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256-ce.S
+rename to lib/crypto/arm/sha256-ce.S
+diff --git a/arch/arm/lib/crypto/sha256.c b/lib/crypto/arm/sha256.c
+similarity index 100%
+rename from arch/arm/lib/crypto/sha256.c
+rename to lib/crypto/arm/sha256.c
 -- 
-2.48.1
+2.50.0
 
