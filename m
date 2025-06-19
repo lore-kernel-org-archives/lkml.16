@@ -1,71 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D5F1E3DE8;
-	Thu, 19 Jun 2025 09:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEB91E3DE8;
+	Thu, 19 Jun 2025 09:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750325934; cv=none; b=tVLg8ShEulIlNvKqPP/SJ1tTJYA382DoECzeqTbFn/jko0wpt1ISOwgq1/xycKPgsW0SNmQElZ+Hi6H0A2WWjlUo4uHklXeE8vaSPch+k2voWarU+aL2VlKmH+pxoP0F470lENCPHSeHwg5LRbuSwo/iSgLCmDkQJFA1mMtguuo=
+	t=1750326004; cv=none; b=Fwh7J3YRrv0TVXbkrFAkggPX3p+decC1nQPxgBgQGF7tTPqRIk4tyTT8ebbGHi1oCuwq45pshE3kO+goq7PqAfmiRdBZNiWvT/iiUDoA80Ul8Paib11pyVJL2cVMC6+Kl02HEmnQzJWE4HWgVjCMJJO05lPgy7lU866Dg1Nz1V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750325934; c=relaxed/simple;
-	bh=tmPwogviHT2zinOSdzIGFje8vEkoX+6eWwlv0xTMK60=;
+	s=arc-20240116; t=1750326004; c=relaxed/simple;
+	bh=fZlPKatLYwNanCWk1nXGV7+CVjeRqV2c1wAmnP45Qm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqZau5sa4UwjUj83AVnuKST1WCcKmXhOwdFG9Rvp/fdK5b0eKZYPJIL8UQT89f9TQQv5f5yn1sYUj1q6xVbBQ80jzZlSNFkDWKJSpFXRsa0/8l/2zKPrrwY7IywMF84XbtBPVcjxbR1hjQxeJWgxb9MdSqPfoDwCQ/9y+T+5DKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lrrfDgS6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgTnMOItZqceMJnARBVaC+FeMj25+24oabDzn2TYV9iLLM2XTKvYl6tL6Vg/Jto+bnQhDCBjp4arqgf0jgQAI5mC9Kj0tJIneKgvTHmv3k0Znz8ccojSntEJvUqRelqU5Xlv/Lf4cfoF7ZhqLsNHs4P3ydl7A2QuppJLTIyRCCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oLY2Jgmb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lrrfDgS6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2221EC4CEEA;
-	Thu, 19 Jun 2025 09:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750325934;
-	bh=tmPwogviHT2zinOSdzIGFje8vEkoX+6eWwlv0xTMK60=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oLY2Jgmb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A77C4CEEA;
+	Thu, 19 Jun 2025 09:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750326003;
+	bh=fZlPKatLYwNanCWk1nXGV7+CVjeRqV2c1wAmnP45Qm4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lrrfDgS6itvAmIkOVw23+q0nuVf2a2Jh2D+eFdQX8yBKxFtfwn//XfFogywS7IY0o
-	 WHn8qI7YgUg4g3gjdEBEZeDZymnkY9HRhzN9H4O+DdRwl4UaDa+HEdZsf524DsQGTs
-	 NSmkhCips6XOKaqbj5yqsfcH35fretoxGA4LCDyFnGkOCYoJ3zMcGMIKXQJNUw1T7U
-	 /818820O1TY3iPxKtPXu2GWWec42I0dwu4j2E0FNRBuPxbZjQUE+ORVGjlsDXenGsN
-	 MA9KJZPXLxQmaPIXG019HFxfmCq4Ni/Qg9pzJWM7/1VUhK5l0joxsiYj+Nmc2zFTgt
-	 RwAieXvGd7Zxw==
-Date: Thu, 19 Jun 2025 10:38:49 +0100
-From: Lee Jones <lee@kernel.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Richard Leitner <richard.leitner@linux.dev>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 03/10] media: v4l2-flash: fix flash_timeout
- comment
-Message-ID: <20250619093849.GA587864@google.com>
-References: <20250617-ov9282-flash-strobe-v5-3-9762da74d065@linux.dev>
- <175032584928.604443.15779695084855330292.b4-ty@kernel.org>
+	b=oLY2Jgmby5OXr8e6VFw0ZJRi0yWT9ESi+JJQ3OroiymaPBvBmDfMdRh0AIXs7Fxwa
+	 GO6RzZGwTEYNCFZvNVEp+oN/LkJdrZjFcv7vWwDDaG6VK4UmUiMi6ULgCqBeA38XMM
+	 m+6uYLCwzahdQ6WoOR2qITOTKl0uLZqFSvTRZqz0=
+Date: Thu, 19 Jun 2025 11:40:00 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: hsyemail2@gmail.com
+Cc: johan@kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sheng-Yuan Huang <syhuang3@nuvoton.com>
+Subject: Re: [PATCH v2 1/1] USB: serial: nct_usb_serial: add support for
+ Nuvoton USB adapter
+Message-ID: <2025061941-dexterous-basket-fc7f@gregkh>
+References: <2025060325-everyone-padlock-931a@gregkh>
+ <20250604025154.10165-1-syhuang3@nuvoton.com>
+ <20250604025154.10165-2-syhuang3@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <175032584928.604443.15779695084855330292.b4-ty@kernel.org>
+In-Reply-To: <20250604025154.10165-2-syhuang3@nuvoton.com>
 
-On Thu, 19 Jun 2025, Lee Jones wrote:
-
-> On Tue, 17 Jun 2025 09:31:37 +0200, Richard Leitner wrote:
-> > The comment for the flash_timeout setter mentioned it is the "flash
-> > duration". Fix this by changing it to "flash timeout".
-> > 
-> > 
+On Wed, Jun 04, 2025 at 10:51:54AM +0800, hsyemail2@gmail.com wrote:
+> From: Sheng-Yuan Huang <syhuang3@nuvoton.com>
 > 
-> Applied, thanks!
+> Add support for the Nuvoton USB-to-serial adapter, which provides
+> multiple serial ports over a single USB interface.
 > 
-> [03/10] media: v4l2-flash: fix flash_timeout comment
->         commit: 6012ce6b30567aa8ec8dc5b648b7841f9f74ca7c
+> The device exposes one control endpoint, one bulk-in endpoint, and
+> one bulk-out endpoint for data transfer. Port status is reported via
+> an interrupt-in or bulk-in endpoint, depending on device configuration.
+> 
+> This driver implements basic TTY operations.
+> 
+> Signed-off-by: Sheng-Yuan Huang <syhuang3@nuvoton.com>
+> ---
+>  drivers/usb/serial/nct_usb_serial.c | 1480 +++++++++++++++++++++++++++
+>  1 file changed, 1480 insertions(+)
+>  create mode 100644 drivers/usb/serial/nct_usb_serial.c
 
-I fixed the erroneous subject line on application.
+This patch does not actually allow the .c file to be built, so how was
+this tested?
 
--- 
-Lee Jones [李琼斯]
+confused,
+
+greg k-h
