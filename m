@@ -1,85 +1,159 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F172725DCF2
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5026FA58
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341149; cv=none; b=nVXwj52fwviQfRB/UCOqxEI9u4rSsdZ0cVY7GfefHt/h5L3LyN4wZ2Nytf7vYTy2tsACvSggZrU7r5Jx0PdADVdDNKnlznurB59s2exuou08Yvvyq0vnCUe1IFlYHAk+sPai3w7MwTCIeLYK1hN5jKtGyeKqdSRmXZBfQH+LOZw=
+	t=1750341177; cv=none; b=IyNtmg7PiePYhk2ZpseUhAdvW7O6w505MZVYuSbqLaX0/uODtMhkvVMPclAc48eL35fgeo1fomL3xdTSE8OD1QpVnfHr1IjWD6R2zwmQnUYbIxKULvg2dCMNRvEKWjy6WxytIcHyXpB0O47IRDjC6G2Cz0LSRCOXgh9SF9kPRcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341149; c=relaxed/simple;
-	bh=hbjFWc/M1u0JtUeGDfraCyEfZ1LuYrMt6ic+SN3g7Vs=;
+	s=arc-20240116; t=1750341177; c=relaxed/simple;
+	bh=KlWCnrG2pcFyN2r4WxhaR37seXMfDMA5dGyqsjtIJgI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVGuFI81YT+0xirKQGNtzgygq0XnylHcgbmzcaXJDnCfpChRKGj6V+TqT1xIhagMCdlulQOgY7Xn2hqpgfNYv7wl2ModG/IrW6GsCMVPsVsiooQQ+LRoVQH2XnkNzriLUqXT4KedkUjD0AzC+Z53gyEag8CU3iAsLEdJdfq96Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=h3egb6uK; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=QhlaCx5sIkKkj5vub40nZ0lxMJ3AbN/Ercp5O1aUuwD8XmKsFhq7B5U9tqmCbX8rLTnvshQmn82opfTa5pv1mGIrcorGlHAfNbufhSppu/GBynrrkEXXXEuHxPlSABg6FGd4yERtpdHTENSPr2xABo59hu8Ll3PfuPL7NU9bQ8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=av4+OmRD; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="h3egb6uK"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so779401a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750341145; x=1750945945; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=h3egb6uKzY8zyKkArGOFgTkn8A6y2C+ZjWwK2+3hW2MEVgKagYjX+n/JGSWIDHwHDf
-         pOWHM/s/rB1r1d4+F8TsRCi9TCzSySOb0z0pWuo4urkAGLInz3FIGs1ZW314flToLydc
-         6qZzu06leW0R/AMoxg3rNX3lpo830zgls3RVRO0VMLA87sCTNvDWYi9dS3yzusLc4giN
-         IVWL1boNjw4f9BGxG9DAThZsLpKy9OqVhnox/YzpqCu0i8y2+j0qmvBlx0s1BC9fivgl
-         NxM2lFnIzZ9qYjJf62+fBvoUu8/QT0CwWJk0HqL8ImpZaDG+yY58fjPJacxZSlbjWuVA
-         Lorw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750341145; x=1750945945;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=cwNAJmmSTICipyafB3H7+Aoq0Cc9dbfK98dSOvyjxGA3kRhQomfGVSVfgWQmmfS8ru
-         Wg2H+SNcKZqle4pVrfMS/7B8XA7enC6CbL6IHLBsb7+aphMFn2XgMV6MeZMWeTcT6Vyf
-         lW4aLYQbaaX+40Wwtej+sPJMOAGL9fPblD1XdnBj+07pOJP3WHbObUvci9De77nSjuAg
-         OF6KiLTVaMmExB8BDYnZYznDL9WNnljc6IkzC+hfqtr6NFB8HU/Gh7oHMBR4vq1SooBm
-         IqGbQSJ/4iwViO3Ylsu5EwnrO+brXMvWtAC54jexNS7QCtM1F0miG66V/AL1jqpj8tma
-         7yQQ==
-X-Gm-Message-State: AOJu0Yzom2OY1nZWv5fOTZ0IVQ/qK+qFatnQZHsU+nffqq49FXPaYUMo
-	liFbrc1oPUobwD/Jq3it8JsPxKQPWmSuIMI1oBE1ClP1vj9fsnnN6+AFl2BkO7nO2ps=
-X-Gm-Gg: ASbGnctj0KYLNXRRIu9w3Y0qEsVhvuRqEq84ValPSJD0rb+4uE0xDKg0EQ47xa/lFT1
-	SOyPOxub5uprqwnwJ7NFjOr0OM5OBBW+1OhaogHU6EuW0HEgYGX6ut+j0BzaVTKvUOG43zpWRh2
-	49x61IgHjv0EgB4j5D8Ei3SxrSa/+uyPT6Fx06zTtOR1eU4O+CvGdco0qAR1p27WpM3JvJkcUb8
-	XeI/2748itVsfVcnRCQv3Yguggun/I2Fcm9xteFoa1WYEivQtFN5+1u8F2Sa2ahcY1pG3xxS2NL
-	mmeclystC7gn9R5eCXzC4Ml3OEKVE8rbovZ/cFbQGIPLIB+7RMBFl1n0++nIJmhtVSXFYn74jxO
-	me9oF4AEbYTRYlVPkrgHv5ovTGZZO
-X-Google-Smtp-Source: AGHT+IGGIucBMe1Oat8JbgZ92M0GJuKp6vgypKqm2ECzF9rgqhJMaRksiSXRDwoiAj072A1XJRPzJQ==
-X-Received: by 2002:a17:90b:3c8e:b0:308:7270:d6ea with SMTP id 98e67ed59e1d1-313f1d2f830mr34871658a91.30.1750341145046;
-        Thu, 19 Jun 2025 06:52:25 -0700 (PDT)
-Received: from ?IPV6:2600:380:4914:28d6:b267:8795:894b:2061? ([2600:380:4914:28d6:b267:8795:894b:2061])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365ded130esm120190385ad.231.2025.06.19.06.52.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 06:52:23 -0700 (PDT)
-Message-ID: <53bda7f6-eaa6-467d-9998-0dfd279dff6d@kernel.dk>
-Date: Thu, 19 Jun 2025 07:52:21 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="av4+OmRD"
+Message-ID: <b66ab3f7-1445-48e2-b98b-7c148a2d3458@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750341162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A7YslRkGDK06+xxHmYFyQDvRKh94OPt/kpw2EYZpHxg=;
+	b=av4+OmRDusRAU3qoIwLrvCo2cha8e4GoKjxIO/QbieREwXv3XQeDOAaBm3mteisQaAyrwk
+	6EozMhcF6MxlgIHLaRVX2WKut+QcV6+z6MKbHyWT2BpxIMpwjS4x7obbrRvgDODR8nQ6y8
+	JrzkjfPbjpQenc5ejBgOFQ5lYYTuxVU=
+Date: Thu, 19 Jun 2025 14:52:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] lib/group_cpus: fix NULL pointer dereference from
- group_cpus_evenly()
-To: Yu Kuai <yukuai1@huaweicloud.com>, tglx@linutronix.de,
- akpm@linux-foundation.org, john.g.garry@oracle.com, ming.lei@redhat.com
-Cc: linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com
-References: <20250619132655.3318883-1-yukuai1@huaweicloud.com>
+Subject: Re: [net-next, 08/10] bng_en: Add irq allocation support
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+ vsrama-krishna.nemani@broadcom.com,
+ Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+ Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+ <20250618144743.843815-9-vikas.gupta@broadcom.com>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250619132655.3318883-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250618144743.843815-9-vikas.gupta@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
+On 18/06/2025 15:47, Vikas Gupta wrote:
+> Add irq allocation functions. This will help
+> to allocate IRQs to both netdev and RoCE aux devices.
+> 
+> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
+> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+> ---
+>   drivers/net/ethernet/broadcom/bnge/bnge.h     |  3 +
+>   .../net/ethernet/broadcom/bnge/bnge_resc.c    | 69 +++++++++++++++++++
+>   .../net/ethernet/broadcom/bnge/bnge_resc.h    | 13 ++++
+>   3 files changed, 85 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
+> index b58d8fc6f258..3c161b1a9b62 100644
+> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
+> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
+> @@ -172,6 +172,9 @@ struct bnge_dev {
+>   #define BNGE_SUPPORTS_TPA(bd)	((bd)->max_tpa_v2)
+>   
+>   	u8                      num_tc;
+> +
+> +	struct bnge_irq		*irq_tbl;
+> +	u16			irqs_acquired;
+>   };
+>   
+>   static inline bool bnge_is_roce_en(struct bnge_dev *bd)
+> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_resc.c b/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+> index 68e094474822..84f91e05a2b0 100644
+> --- a/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+> @@ -326,3 +326,72 @@ int bnge_reserve_rings(struct bnge_dev *bd)
+>   
+>   	return rc;
+>   }
+> +
+> +int bnge_alloc_irqs(struct bnge_dev *bd)
+> +{
+> +	u16 aux_msix, tx_cp, num_entries;
+> +	u16 irqs_demand, max, min = 1;
+> +	int i, rc = 0;
 
--- 
-Jens Axboe
+This assignment is not needed. Error paths re-assign proper error code
+while normal flow re-assigns rc to the return value of
+bnge_adjust_rings()
+
+> +
+> +	irqs_demand = bnge_nqs_demand(bd);
+> +	max = bnge_get_max_func_irqs(bd);
+> +	if (irqs_demand > max)
+> +		irqs_demand = max;
+> +
+> +	if (!(bd->flags & BNGE_EN_SHARED_CHNL))
+> +		min = 2;
+> +
+> +	irqs_demand = pci_alloc_irq_vectors(bd->pdev, min, irqs_demand,
+> +					    PCI_IRQ_MSIX);
+> +	aux_msix = bnge_aux_get_msix(bd);
+> +	if (irqs_demand < 0 || irqs_demand < aux_msix) {
+> +		rc = -ENODEV;
+> +		goto err_free_irqs;
+> +	}
+> +
+> +	num_entries = irqs_demand;
+> +	if (pci_msix_can_alloc_dyn(bd->pdev))
+> +		num_entries = max;
+> +	bd->irq_tbl = kcalloc(num_entries, sizeof(*bd->irq_tbl), GFP_KERNEL);
+> +	if (!bd->irq_tbl) {
+> +		rc = -ENOMEM;
+> +		goto err_free_irqs;
+> +	}
+> +
+> +	for (i = 0; i < irqs_demand; i++)
+> +		bd->irq_tbl[i].vector = pci_irq_vector(bd->pdev, i);
+> +
+> +	bd->irqs_acquired = irqs_demand;
+> +	/* Reduce rings based upon num of vectors allocated.
+> +	 * We dont need to consider NQs as they have been calculated
+> +	 * and must be more than irqs_demand.
+> +	 */
+> +	rc = bnge_adjust_rings(bd, &bd->rx_nr_rings,
+> +			       &bd->tx_nr_rings,
+> +			       irqs_demand - aux_msix, min == 1);
+> +	if (rc)
+> +		goto err_free_irqs;
+> +
+> +	tx_cp = bnge_num_tx_to_cp(bd, bd->tx_nr_rings);
+> +	bd->nq_nr_rings = (min == 1) ?
+> +		max_t(u16, tx_cp, bd->rx_nr_rings) :
+> +		tx_cp + bd->rx_nr_rings;
+> +
+> +	/* Readjust tx_nr_rings_per_tc */
+> +	if (!bd->num_tc)
+> +		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+> +
+> +	return 0;
+> +
+> +err_free_irqs:
+> +	dev_err(bd->dev, "Failed to allocate IRQs err = %d\n", rc);
+> +	bnge_free_irqs(bd);
+> +	return rc;
+> +}
+
+[...]
