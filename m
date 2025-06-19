@@ -1,147 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915827494;
-	Thu, 19 Jun 2025 15:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51109221286;
+	Thu, 19 Jun 2025 15:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346594; cv=none; b=DSMh+kxZv/k6zgEExMLwhSCXCiOIylA0+aog/vJz/92ImXocrY9mbkcOxumDbkX0XrKMQQ28bwLqYGRlx48rTfjJAdr3wihiZBCu2a0JeSzoBSmqPb9EdZtSZOGuikLf7D563c1A9PIPrxiFLlSTy98BJv08jzFPq0QJPOr7X7k=
+	t=1750346632; cv=none; b=oqYgZ16bbfPNzT+352iToMjiapxBb8OoccNtYeCBnj2O7UTZVFQdYAtCVowK76FCYVxIDlfyzrTE/9S8u3iavPpWhAqs8LeQ2GKCUNiGRcpY8JJSwJE5pH7k/fdIW+6ZRv+cHkbo7UG5QdUOqT2Hmtala3fdyWjpEMPH/C5ZXOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346594; c=relaxed/simple;
-	bh=SwDI5O+tZvIfRNuyVcMNkxY6LY3/oXoFoTGFL2+xKdU=;
+	s=arc-20240116; t=1750346632; c=relaxed/simple;
+	bh=4hzd3qcAuOmTfwKYbHqqOWkmquvNqhOl7KGqavZ14sg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YFqlSIYUZOO0bSUvZYLNh0npXpsA9880YfBGxghdwoVMXhxHuexDP+sGenfvQ2m2cstYkKI2pT99f6eIm5BAuaddlZ1v27B3f3e8ic6fMQ9yXkO4gDeezpN+4eUbxJw+TYxy1vmJS22nSeAYzoVHXE1dDxx+5PfQbPPv6qgR1qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7PDLPTH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7PDLPTH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F57C4CEF1;
-	Thu, 19 Jun 2025 15:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750346594;
-	bh=SwDI5O+tZvIfRNuyVcMNkxY6LY3/oXoFoTGFL2+xKdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g7PDLPTH86VqIWFBR/dq5nZkYzcm/0ocX6eZdxVfOS9hAmc7LcdqDA4dP0UIVrbUJ
-	 iiLvm2tsVxKjOh89r/HgntGu4MeALTZTYHM6gbQ99HrVnzkZagwL7vrdM489JXYOBv
-	 ZKIIyFu4VDB7BhR/Zn+RYe6JiZZx4Y3MmxZCJzusuQcFHgD5Qelvo6fAA7w81xXxzi
-	 Y11NFLg5IbIgyqdRLt4dsa5a3+KL3aeBn/XqdA0zatcRfu4LMoWIHrM3SufS0vzjqu
-	 Zdq0MFIEodVvwNQ8Lw88Baeo8zniUAZhxRS1gs1yqLD3MjdwNezp8MJOSw0AGpcqh8
-	 AqFlbNGwZEVgQ==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60727e46168so1623586a12.0;
-        Thu, 19 Jun 2025 08:23:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVVjWXRif/iBSxZZ4J5XyyhZQw6PBQRuoh8C0wQv4OsnNSeTX/42G8G7Xi0LRjE/A50HbGq95I2P6wz@vger.kernel.org, AJvYcCW1XVLQVZ+q1xx1TJEOJtpxvS2hvVcYo2wyXGuJNUhkJNx0hvxgZ14jC3wmHbvaVH90HXJBhydw5w01r/mK@vger.kernel.org, AJvYcCXrO7caFvvkqB5W1yx6apP1R42q92pFc+hW63Ss3i4GJjTowzTr8vI8DY/1e4VzbgT5OnAK4c+JiSjX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJxrxYMGXZ/H83avUQ3AqrXTD3WZ4p3U9l2XP2fih3QH7UaHlB
-	lvma/hOi1DBmcwXc9aoQZISj9LRl0Yx2ARIccpjvvxDkhgrEj9YDpHci5ti10rhz+T5HmBQKOXz
-	M8U2bd64s3JJ3icdhB08Xb+exLPGv8qk=
-X-Google-Smtp-Source: AGHT+IG/pZuTmErWjVZ0Wq/kq9f6qxWsOesVABoR2+f8hJPtebRo74IpJF1gGR0hdGST63n8p846BRR2Vx2xAjaeraU=
-X-Received: by 2002:a05:6402:50d1:b0:607:6324:8da2 with SMTP id
- 4fb4d7f45d1cf-608d09cf5e7mr19497555a12.24.1750346592796; Thu, 19 Jun 2025
- 08:23:12 -0700 (PDT)
+	 To:Cc:Content-Type; b=CnkKC/2ivugdQ0vP55gdVJ7bv5N/W9aviEj5tEIhoT3snBoL7+Zpq5tjx39C4len4/v9f5tFTYRGmsB/4RlKoSoIzIzuZ7cUG6Lp+djtOg+mTWsJv4qAh1tXOCqCKBJuofnUoZxRc6RRJ4bmpLydwYbJsHUr652qyaufpjOuVb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52b2290e28eso216805e0c.3;
+        Thu, 19 Jun 2025 08:23:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750346630; x=1750951430;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RCVAgGYGyaa7OKZ3MWtLfwo9pA/QSxM2A/hXcp5H6SA=;
+        b=RsqnBHd8oZKi7W+jXItpSHT0suexmyw4KqnGTGK3Oo2RVnjGcZTCMk1XGXWVxMUbLd
+         OPbfuMd4tQck+4+GM8lPCHcTBUOLW7MGUIlfZYrLtJoqAMD9NtlpcAAYx7pzlXAkzMiG
+         ll80NOiFc4YX4ZxRgZGmuzmZfL2+YlfsE1Drv8URPlWCgXTYUDmgGAvgBsHaWho4F0bh
+         iz4wLcubNaX86L5e3BfAn6BvTHxV3ooeDs/jVKvJhxfNZTNlvqVUzKlO/8GRgF4qTZYc
+         VVajHCiKdTdp+PQ0G3YBMroGadqyXT/tfneHwgu13yHOuoEGoaDNmsHSdbHJKYAbAgY/
+         GJIA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+D00ooeSHqeWYIy6+g04M5c2okAD8O/HCg2Lzg9YL9OnMnkGg3NLSTX6ZZPfXGGvIFXKmkdFD4Rqdxkyl@vger.kernel.org, AJvYcCVv5HHcplfHzdh6a6b6OHhxlbxZ+5vz02dH1H3pcuaUvvNjwr6l//gSRaRsQRf39K1pNurXaYcTEIE/HdrRhsltRLo=@vger.kernel.org, AJvYcCXPfJDGeOyQiJ5SfVgkf83exfTI8So1+tg1NL1DZ7BswABP65U4BhAW8XEwhn2+UFUVfRy5ZRAvDXK7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzROE3FSShhbJq+GdlIGCLAd0HU+y3wblwfFr/f/D873hGCFc/A
+	JTgPEV959aylmdqe4Ka34HGyB4oCW6RUXPk6E81GhKeRR7YjdB7GQL7OK5aMe+Nr
+X-Gm-Gg: ASbGncs3H8Tk0vT4kkvLRy85w7MLMAO+W+KkcYACRA5FDkEOcDgSA5MlzkOcUa2du21
+	VWVwRZ3JGVjvO5lmhSlp/YbzH84RvHTAhkMtZWceQb+KT2/7i5wvvw4qFlqb2+juj7GCwNbcKW6
+	5sTpSDjpJH2Wols1oG7PmahFliG5BXqeLwtnvritmEgTaIWtoKeH72QWLFeMxhLOF370AEEmyzB
+	D2R0Kploecv4J/vX80uM5ky38tA/IW6ghne8uBxgOQ4uTWr1bfVhVFoRUr9SFbKbCbVsobPDVVt
+	FUUfy08xOAyd0dCQr4/ag2QjG2jrtwGE6l1PGiviSsJKgfWV+27DVi8lIu16NG4ZAkLUuZ2TDzZ
+	bgefpAmnOR9L3q7QCwOiDE6uq
+X-Google-Smtp-Source: AGHT+IFpUjxSzr8gzGgnLVO4J/NJHpbncyrJ9huVu5olc+XkRmtzPJsGb8CS74a1kke3V+vA3VVkVA==
+X-Received: by 2002:a05:6122:370d:b0:530:7101:68eb with SMTP id 71dfb90a1353d-531495aa863mr16477345e0c.4.1750346629732;
+        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f23915d10sm1747943241.7.2025.06.19.08.23.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e8110ac0f5so242258137.0;
+        Thu, 19 Jun 2025 08:23:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0f25awlFvpd9RlYjyP/s72gXSfNM23U5nZZBzpOqGpJkZdm53cevP/vEJ53yn1PNsEtQfEw9ksfzyP7Fe1eW0DgI=@vger.kernel.org, AJvYcCVXZJe9SU2eGM8NednH6ECml85lzHSLsBhpD8VHgptkFQqYiBb7CMnQQzpbF8YVFtNviyFGfrXME5Wr@vger.kernel.org, AJvYcCXKTw80/gsnmX/voLxp7p2pZvYPMve+ao/uCBLeSA9LZTyDgiaLCTV6uUZ0xo8kaKQ9ZeajTSVwelMWYxIz@vger.kernel.org
+X-Received: by 2002:a05:6102:38d4:b0:4e2:a29d:ecb6 with SMTP id
+ ada2fe7eead31-4e7f60eb70cmr14268555137.1.1750346629165; Thu, 19 Jun 2025
+ 08:23:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617162426.12629-1-ziyao@disroot.org> <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
- <aFQN2TSjT1IOvOt3@pie.lan>
-In-Reply-To: <aFQN2TSjT1IOvOt3@pie.lan>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 23:23:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6EDEf3U6w5KY3R3HCAdAbqDefqpE3ktCQeQtFbDK2Ypg@mail.gmail.com>
-X-Gm-Features: AX0GCFvvW6SYVKrmH037GeOA3vr2AnqCqYBdHT4NDoXMM5cozrqAuCu19uS9S9U
-Message-ID: <CAAhV-H6EDEf3U6w5KY3R3HCAdAbqDefqpE3ktCQeQtFbDK2Ypg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+References: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 19 Jun 2025 17:23:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVs-b2k39uTC+e31qGuqVmvFRMeMvYX5BH8V+GQ7Lkt-Q@mail.gmail.com>
+X-Gm-Features: Ac12FXwHPFsk05TRosr47sYOkoUYyYdnTZteNgXfR-AJ5EOF9bDc_k4NJOe-IrM
+Message-ID: <CAMuHMdVs-b2k39uTC+e31qGuqVmvFRMeMvYX5BH8V+GQ7Lkt-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Add initial support for RZ/N2H SoC and EVK
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 9:17=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
->
-> On Thu, Jun 19, 2025 at 05:02:48PM +0800, Huacai Chen wrote:
-> > Hi, Yao,
-> >
-> > I suggest dropping the last two patches temporarily, because:
-> > 1, the last two should be merged via another tree.
-> > 2, the last two depend on another series which hasn't been merged now,
-> > and can be squashed to that series.
->
-> These are fair points, but I think including corresponding devicetree
-> changes along with the binding patch helps review and proves the binding
-> makes sense. it should be okay to merge only parts of a series, so I
-> guess keeping the patches doesn't hurt, does it?
-Yes, keeping them is just OK.
+Hi Prabhakar,
 
+On Tue, 17 Jun 2025 at 19:20, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> By the way, do you prefer to wait until all fundamental drivers (clock,
-> pinctrl, and reset) ready and merged, then merge the devicetree with all
-> the three devices added? Or is it just fine to go part by part, with
-> incremental changes to the devicetree?
-Yes, I prefer to wait until fundamental drivers are merged.
+> This patch series adds initial support for the Renesas RZ/N2H SoC and
+> the RZ/N2H Evaluation Board (EVK). The series includes:
+> 1. An initial SoC DTSI for the RZ/N2H SoC, which includes the basic
+>    configuration of the SoC blocks such as EXT CLKs, 4X CA55, SCIF,
+>    CPG, GIC, and ARMv8 Timer.
+> 2. A new DTSI for the R9A09G087M44 variant of the RZ/N2H SoC, which
+>    features a 4-core configuration.
+> 3. Refactoring of the RZ/T2H EVK device tree to extract common entries
+>    into a new file, `rzt2h-n2h-evk-common.dtsi`, to reduce
+>    duplication between the RZ/T2H and RZ/N2H EVK device trees.
+> 4. An initial device tree for the RZ/N2H EVK, which includes
+>    the common entries from the previous step and sets up the board
+>    model and compatible strings.
+>
+> Note,
+> - I've split up this patch from original series [1] to make it easier
+>   to review and apply.
+> - This patch series applied on top of the series [2].
+>
+> [1] https://lore.kernel.org/all/20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> [2] https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+>
+> v1->v2:
+> - Reordered the `l3_ca55` node and renamed it to `L3_CA55` for consistency
+> - Renamed the file to `rzt2h-n2h-evk-common.dtsi` to better reflect its
+>   purpose.
+> - Updated model string to "Renesas RZ/N2H EVK Board based on r9a09g087m44"
+> - Added reviewed-by tag from Geert
 
+Thank you, both [2] and this series are good to go, once the
+updated renesas,rsci DT bindings are accepted.
 
-Huacai
+Gr{oetje,eeting}s,
 
->
-> Best regards,
-> Yao Zi
->
-> > Huacai
-> >
-> > On Wed, Jun 18, 2025 at 12:25=E2=80=AFAM Yao Zi <ziyao@disroot.org> wro=
-te:
-> > >
-> > > This series adds support for Loongson 2K0300's clock controller.
-> > > Loongson 2 clock driver is prepared to support more clock variants an=
-d
-> > > its flexibility is improved. All clock hardwares except the output on=
-e
-> > > for GMAC module are then defined.
-> > >
-> > > A clock tree dump could be obtained here[1]. This series depends on v=
-3
-> > > of series "Initial support for CTCISZ Forever Pi"[2] to apply.
-> > >
-> > > [1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b724=
-7
-> > > [2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot=
-.org/
-> > >
-> > > Changed from v1:
-> > > - Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
-> > > - Include the new binding header in MAINTAINERS
-> > > - Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziya=
-o@disroot.org/
-> > >
-> > > Yao Zi (8):
-> > >   dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
-> > >   clk: loongson2: Allow specifying clock flags for gate clock
-> > >   clk: loongson2: Support scale clocks with an alternative mode
-> > >   clk: loongson2: Allow zero divisors for dividers
-> > >   clk: loongson2: Avoid hardcoding firmware name of the reference clo=
-ck
-> > >   clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
-> > >   LoongArch: dts: Add clock tree for Loongson 2K0300
-> > >   LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever =
-Pi
-> > >
-> > >  .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
-> > >  MAINTAINERS                                   |   1 +
-> > >  .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
-> > >  arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
-> > >  drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++-=
---
-> > >  .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
-> > >  6 files changed, 193 insertions(+), 30 deletions(-)
-> > >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> > >
-> > > --
-> > > 2.49.0
-> > >
-> > >
->
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
