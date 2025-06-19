@@ -1,87 +1,108 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from pmxout2.rz.tu-bs.de (pmxout2.rz.tu-bs.de [134.169.4.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202BE200127
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A719F3085DB;
+	Thu, 19 Jun 2025 14:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345097; cv=none; b=eaJj1EByJRtqIUgGrL5dsT22M+I1X1Qtz/EgMafILh/zGxIZGgMsfIogCmBcM0cNPGBTOR2p855wKtspV4aJd7Zs6M2e8Z/Myyn9nsfyy1MIC/YIp90m0JMUH3lV9G6cyXlwVmIF2gNG1MSYm6hT4qkKEkqL82mmfWyw+jsaALY=
+	t=1750345183; cv=none; b=AjrRndjHyPxNh8FcmovwSco94/Wod+VP/zFxaAWwO7AlGTZ87N+XIY5ALJbkC4TJGu9/FYHXgfG9D7jwQdhk9A0FIT9dF4EzUfx7YaVGKyZObRJFIBsdU2r7IvwC7VlJVuL71LVTyZb7ZfPNL5aTe0IafF8fb0M2g8VXyg2r3Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345097; c=relaxed/simple;
-	bh=GbdOj3vJ/q4X+/2t6OHFHhPM4HGzw4Vsiy/W4r3FnA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HnZwWcl9dnwsO+bh2BRx40y4rGD/h3XB4BwYhwCNwA8omY1qN1FWE04auCo+5/JKoh097rN2487ywPRhrmH6YfO7FJ983rQEKUuJ/gdF3lnOAPqUjWlcc3pQhu37lXmhxIgppgY9Pqr9fiwbSnvg300PSyfnQiRMIV2DJCMWVrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X6TZWCD9; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750345183; c=relaxed/simple;
+	bh=jDURoLRKv0+kFosAc+It0hfp7872+Y0cgSAwaCDQUYE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hoUAbDoCBjqTAHSKtjF+6qXBJQNebcQR35Gk6Fh26EcamK/z+hivBodbDGxLUtS4r6sWM2ippm2vr61R7DMX/aXh+K/IN5J6XYPHGs2GBVGyvmwioTGMNLX1ZSIv0mkpMME53W77Rp+KxCiHnJ8x302bgu4wv2hKnpN0X65ejfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=JK/5IWMS; arc=none smtp.client-ip=134.169.4.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X6TZWCD9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750345091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Q9TvMyMwPK6rkSNheoWI19m/ZeeUWO8Bp2DZADsG/EE=;
-	b=X6TZWCD90sSZM9Q89BopqjTuweQk/EkFH2qeGCVx6gRJwqh9UVXxs/umJAspInvfvCmv6q
-	iErrlFtK44z+JMMHQquSNTwlLYLWYGPAKR17sf/qIRahNysM9ew4OJk1exqvHWfQHWUA9A
-	r9uETuFTx4VXT79dDByc+7XOziT+1GU=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] alpha: Replace strcpy() with strscpy() in setup_arch()
-Date: Thu, 19 Jun 2025 16:58:04 +0200
-Message-ID: <20250619145806.174567-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="JK/5IWMS"
+Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
+	by pmxout2.rz.tu-bs.de (Postfix) with ESMTPS id 0A4994E0975;
+	Thu, 19 Jun 2025 16:59:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
+	s=exchange_neu; t=1750345180;
+	bh=jDURoLRKv0+kFosAc+It0hfp7872+Y0cgSAwaCDQUYE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To:From;
+	b=JK/5IWMSlDEADAFxylGN8xJvRyc9i7Fl8TpLa8aTFQ47/oPOPbRt5Sb3vxNc1OwXP
+	 ZCmhdV4bwWFXM6gTR5kDAsh8IPf6oSP3iVbRWzH4IBV4SYGQ6eUP/sfkoMLZUmISz2
+	 6ANNwuTVEMhjmRI+awXJu7Jao/9abL9p4MPGPE/Hq4RXQcue1Q6hXXMjkyICFu/71S
+	 Q3oBvFkAWbvyNnGwG2PaRIDEx64E8F5UXGzP705/ajkz6yssaOzTHFjyei31jt0ZG/
+	 ICR3LaN0EM4q+ow8wc6PdlCqf/Ds6AR1abUmAAnzCjoNQmlvFDYgkitEf64b5ZtlZL
+	 O99ckHvMLnYQA==
+Received: from [192.168.178.23] (134.169.9.110) by Hermes02.ad.tu-bs.de
+ (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 19 Jun
+ 2025 16:59:39 +0200
+Message-ID: <c97665c6-2d8b-49ae-acc5-be5be04f0093@tu-bs.de>
+Date: Thu, 19 Jun 2025 16:59:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
+To: Alan Stern <stern@rowland.harvard.edu>
+CC: Andrea Parri <parri.andrea@gmail.com>, Peter Zijlstra
+	<peterz@infradead.org>, Will Deacon <will@kernel.org>, Boqun Feng
+	<boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, David Howells
+	<dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget
+	<luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>, Akira
+ Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, Joel
+ Fernandes <joelagnelf@nvidia.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <lkmm@lists.linux.dev>,
+	<hernan.poncedeleon@huaweicloud.com>, <jonas.oberhauser@huaweicloud.com>,
+	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+ <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+ <aEwHufdehlQnBX7g@andrea> <9264df13-36db-4b25-b2c4-7a9701df2f4d@tu-bs.de>
+ <aE-3_mJPjea62anv@andrea>
+ <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
+ <aFF3NSJD6PBMAYGY@andrea> <595209ed-2074-46da-8f57-be276c2e383b@tu-bs.de>
+ <6ac81900-873e-415e-b5b2-96e9f7689468@rowland.harvard.edu>
+Content-Language: en-US
+From: Thomas Haas <t.haas@tu-bs.de>
+In-Reply-To: <6ac81900-873e-415e-b5b2-96e9f7689468@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Hermes05.ad.tu-bs.de (134.169.4.133) To
+ Hermes02.ad.tu-bs.de (134.169.4.130)
 
-strcpy() is deprecated; use strscpy() instead.
 
-Since the destination buffer 'command_line' has a fixed length,
-strscpy() automatically determines its size using sizeof() when the size
-argument is omitted. This makes the explicit size argument for the
-existing strscpy() call unnecessary - remove it.
 
-No functional changes intended.
+On 19.06.25 16:32, Alan Stern wrote:
+> On Thu, Jun 19, 2025 at 04:27:56PM +0200, Thomas Haas wrote:
+>> I support this endeavor, but from the Dartagnan side :).
+>> We already support MSA in real C/Linux code and so extending our supported
+>> Litmus fragment to MSA does not sound too hard to me.
+>> We are just missing a LKMM cat model that supports MSA.
+> 
+> To me, it doesn't feel all that easy.  I'm not even sure where to start
+> changing the LKMM.\
+> 
+> Probably the best way to keep things organized would be to begin with
+> changes to the informal operational model and then figure out how to
+> formalize them.  But what changes are needed to the operational model?
+> 
+> Alan
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/alpha/kernel/setup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Of course, the difficult part is to get the model right. Maybe I 
+shouldn't have said that we are "just" missing the model :).
+I'm only saying that we already have some tooling to validate changes to 
+the formal model.
 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index bebdffafaee8..8b51e6ca83d6 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -468,8 +468,8 @@ setup_arch(char **cmdline_p)
- 	/* 
- 	 * Locate the command line.
- 	 */
--	strscpy(command_line, COMMAND_LINE, sizeof(command_line));
--	strcpy(boot_command_line, command_line);
-+	strscpy(command_line, COMMAND_LINE);
-+	strscpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
- 	/* 
-@@ -511,7 +511,7 @@ setup_arch(char **cmdline_p)
- 	}
- 
- 	/* Replace the command line, now that we've killed it with strsep.  */
--	strcpy(command_line, boot_command_line);
-+	strscpy(command_line, boot_command_line);
- 
- 	/* If we want SRM console printk echoing early, do it now. */
- 	if (alpha_using_srm && srmcons_output) {
--- 
-2.49.0
+I think it makes sense to first play around with the tooling and changes 
+to the formal model to just get a feeling of what can go wrong and what 
+needs to go right. Then it might become more clear on how the informal 
+operational model needs to change.
+
+A good starting point might be to lift the existing ARM8 MSA litmus 
+tests to corresponding C/LKMM litmus tests and go from there.
+If the informal operational model fails to explain them, then it needs 
+to change. This goes only one way though: if ARM permits a behavior then 
+so should LKMM. If ARM does not, then it is not so clear if LKMM should 
+or not.
+
+Thomas
 
