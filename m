@@ -1,113 +1,119 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2261F1A3167;
-	Thu, 19 Jun 2025 08:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1121F3085D7;
+	Thu, 19 Jun 2025 08:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321149; cv=none; b=mla9yrVKuc0gaXBy40SngbIHrbz8EiMCDjYInWc+iY+B8M5QxMFJaZzDkJZ3hRHJLYHTGs6t/Yh9cMlmUCKsotk2pdKvwdQNR02UBy91oAglFhn2Ax5Wnh1kez/aLg02jtZ4ukHUe7AfhsjpU8m0S8jwOYa6sovHYAUZseJqMFI=
+	t=1750321224; cv=none; b=T30xI9gQeGkutR5+hH9+VJK2ylW7fp/ah7Pq196aOTRBHzdGxTSfCyUndHsixxMLwCHce0fXsieZPlYFcq5hvaO9suEdex1u9t6kFYr1aEQJWkFzCyV3HcPfUjcyMbbpWMMxImN2mw2Mdw85m0xXy4MHT4Z+Xd7gA35q6PNm7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321149; c=relaxed/simple;
-	bh=U24ePa0nanp05YZEOass92derLdtbGsggI2byD2tmBM=;
+	s=arc-20240116; t=1750321224; c=relaxed/simple;
+	bh=rs1SQZAjM42eP1OdPF5cxc7T68ok0Dt9YGM0X0I/GSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnVZtp1eNkMjz85qZ4heLZUBdhxY+CseZhmn/+ZoBQNGEKo6wtaI6UM3ovP6szMnkz4zcrj7Lf5CC6dZgvoC+TnrsUKU2b5cbGoDaPinqRbaAr20J6lU8Q9Ow996msiu+yTHLMbKRbog28NWlWU5Fa5fFbTMg0/72Z1O628iszU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=B9qCw9kz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gvZpsmi5; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ShzOdD6pzM9OPAFFhi+Xj1B/DwhBJpu0LsJ3cWPHdISGW3u1tqfwIy1aOm6+P4hKVrEc/+06ARQguG/j2SGtwnEJdw2ZASd80XX3PZeOxNtddF0KgOmDCEKPdJUy4Bhxhbr3L0UIxMA5a8fiwOMr/baPPnpMMBPk7pLSXRnv73Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iM39Y27l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="B9qCw9kz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gvZpsmi5"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id F24FC2540255;
-	Thu, 19 Jun 2025 04:19:05 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Thu, 19 Jun 2025 04:19:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1750321145; x=1750407545; bh=Nce9V9mRM2
-	Dk/vQPq0T79XpYK+ZRtg2BVMRFr+7euj4=; b=B9qCw9kzjn2BhntlM3xLKnxmNb
-	m9cHGLy3RwCB5qfZiLHWrl/fAKrgWrkqd/IAF5Sgcb4veDQqVJZivH+L5fDqIuwT
-	K1GW4+2iRVjONzY2R0mPK8+gIFDh8jzJrUGamfRyQssMTJvepbSX8gB4jPXmQCGy
-	rmsVfe2bBF8UJhC9ya+5JRy3PwztczLemRCbMcGfv0kGsH7UfO8nheFUJoQPuSKU
-	zniYLmoXri8ekp27DU5JQuaeat0aQP1HuHQMEiRhUBqrtp2snYtDJErwmlJ1j781
-	Z7/HV/M5buAJl0B+rwJziYkyj/qfHZ7o1JMwCyfz6vpeXe4WypRyrm9ikwlQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750321145; x=1750407545; bh=Nce9V9mRM2Dk/vQPq0T79XpYK+ZRtg2BVMR
-	Fr+7euj4=; b=gvZpsmi5hXmiCVqHO1ojuZ/mQAp442bUjo0jDx2vvtcVxdsRw2V
-	UZE+IQCWQdu9zMC2kM0Zzhv5yzXv6/IhVdzOPP4Lyrr6bJHKu+mnOqPQwjD8ZnhC
-	4xeuVLs45GeCajpVganXBWqEGDxXtjcYHaiMhNh2R7/hgOc9N7H836pX/d+EkQNd
-	Eroam3jXx1EDOmytugd91PH9YEdkTYMtUAKp/kB1iAjHW9Iobmk9ZCflIlxptI9Y
-	WUZ4nnnLUYzX7t4ZBU8l0Aum/YfODUGznxJ7v/XN4X+AAQ3k8sS1u3WZGhPC1Rho
-	8kEZTRlSIwrTlIaOTQpxvAj3ytDGt/zOakg==
-X-ME-Sender: <xms:-cdTaJwjbNZ_rfTpqbpVdf_xgZJLL-vb-SRxdDOW2tBbgyu0cx6BPw>
-    <xme:-cdTaJRtz9fG-4VC6O5W2ytvPic6mQoxp_b3FNSsPxI9kKlPOU3aS4_x6u2ac4fN0
-    kITaWBFWRL7wA>
-X-ME-Received: <xmr:-cdTaDX4lJO0j3IEwlyqhn5FuIKa4KFsQw7jd-75-ivx5o4miHXKwNdXqhzvofOjmXkz5itbu459tNkrnh5Jk3kI1hb_G34>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfmjfcu
-    oehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvdevvdelje
-    eugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
-    hmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
-    fhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopehjihhrihhslhgrsg
-    ihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:-cdTaLi4LLmXqn-Ekrly12G-ZYjJulYoGx8_7w6WT3-ohkXnQdRR0w>
-    <xmx:-cdTaLC64xv8ReoOBusJFWWTM8f_KHlBeC3c1byxzfrhadH159jkQg>
-    <xmx:-cdTaEI517RLRQ70PByQ2-yjNL1Vz9pm-sJt9brpBkl_6e0xBTqnZw>
-    <xmx:-cdTaKA-itRsbVhIuan4YBdZ7k_MAn2EbwOnnOpWjcFD5ByGB0TOKQ>
-    <xmx:-cdTaHRCR9b17WZuHewDrf2PrM0dvICyVU7ZixGSmBVfdclLRFocBgKv>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 04:19:05 -0400 (EDT)
-Date: Thu, 19 Jun 2025 10:19:03 +0200
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tty tree
-Message-ID: <2025061947-velvet-scarce-f5ab@gregkh>
-References: <20250619165607.33403e19@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iM39Y27l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF376C4CEEA;
+	Thu, 19 Jun 2025 08:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750321223;
+	bh=rs1SQZAjM42eP1OdPF5cxc7T68ok0Dt9YGM0X0I/GSI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iM39Y27luLaflYHgryXb8/VAbHnzQmHzyVsZrnjWmLzWdooBDAeiGqi+GgHNjJxvm
+	 00nQywoISyVUd/nEX3+lO3HlQJ7YLrDDdi4PN/K0odYO1fi1ny/pSvD8J7sLfxes8M
+	 h8QYlQjosPQ6KZ2wGEJImAcu7eks3bxDYzqGtWQA=
+Date: Thu, 19 Jun 2025 10:20:20 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Mark Brown <broonie@kernel.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, Willy Tarreau <w@1wt.eu>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Message-ID: <2025061907-finance-dodgy-b0ae@gregkh>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
+ <2025061858-reproduce-revolving-cae0@gregkh>
+ <1081af30-1273-4a9a-a864-f59f1cb54fd1@t-8ch.de>
+ <2025061949-epilepsy-punk-fb4e@gregkh>
+ <a757c5d9-06f4-4ed0-9de9-08edbd16134a@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250619165607.33403e19@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a757c5d9-06f4-4ed0-9de9-08edbd16134a@t-8ch.de>
 
-On Thu, Jun 19, 2025 at 04:56:07PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Jun 19, 2025 at 07:50:43AM +0200, Thomas Weißschuh wrote:
+> On 2025-06-19 06:19:52+0200, Greg Kroah-Hartman wrote:
+> > On Wed, Jun 18, 2025 at 04:15:09PM +0200, Thomas Weißschuh wrote:
+> > > On 2025-06-18 15:19:11+0200, Greg Kroah-Hartman wrote:
+> > > > On Wed, Jun 18, 2025 at 12:58:00PM +0100, Mark Brown wrote:
+> > > > > On Tue, Jun 17, 2025 at 05:15:08PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > This is the start of the stable review cycle for the 6.15.3 release.
+> > > > > > There are 780 patches in this series, all will be posted as a response
+> > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > let me know.
+> > > > > 
+> > > > > This breaks the build of the arm64 selftests due to a change in nolibc,
+> > > > > it appears that "tools/nolibc: properly align dirent buffer" is missing
+> > > > > some dependency:
+> > > > > 
+> > > > > aarch64-linux-gnu-gcc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
+> > > > > 	-include ../../../../include/nolibc/nolibc.h -I../..\
+> > > > > 	-static -ffreestanding -Wall za-fork.c /build/stage/build-work/kselftest/arm64/fp/za-fork-asm.o -o /build/stage/build-work/kselftest/arm64/fp/za-fork
+> > > > > In file included from ./../../../../include/nolibc/nolibc.h:107,
+> > > > >                  from <command-line>:
+> > > > > ./../../../../include/nolibc/dirent.h: In function ‘readdir_r’:
+> > > > > ./../../../../include/nolibc/dirent.h:62:64: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘__nolibc_aligned_as’
+> > > > >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
+> > > > >       |                                                                ^~~~~~~~~~~~~~~~~~~
+> > > > > ./../../../../include/nolibc/dirent.h:62:64: error: implicit declaration of function ‘__nolibc_aligned_as’ [-Wimplicit-function-declaration]
+> > > > > ./../../../../include/nolibc/dirent.h:62:84: error: expected expression before ‘struct’
+> > > > >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
+> > > > >       |                                                                                    ^~~~~~
+> > > > > ./../../../../include/nolibc/dirent.h:63:47: error: ‘buf’ undeclared (first use in this function)
+> > > > >    63 |         struct linux_dirent64 *ldir = (void *)buf;
+> > > > >       |                                               ^~~
+> > > > > ./../../../../include/nolibc/dirent.h:63:47: note: each undeclared identifier is reported only once for each function it appears in
+> > > > 
+> > > > Thanks for the report, I'll go drop all nolibc patches from the queues
+> > > > for now.
+> > > 
+> > > Thanks.
+> > > 
+> > > Shouldn't the bots apply prerequisite patches from the series automatically?
+> > 
+> > Hopefully yes, obviously it doesn't always work :)
 > 
-> After merging the tty tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
-> 
-> ERROR: modpost: "rsa_autoconfig" [drivers/tty/serial/8250/8250_base.ko] undefined!
-> ERROR: modpost: "rsa_reset" [drivers/tty/serial/8250/8250_base.ko] undefined!
-> ERROR: modpost: "rsa_disable" [drivers/tty/serial/8250/8250_base.ko] undefined!
-> ERROR: modpost: "rsa_enable" [drivers/tty/serial/8250/8250_base.ko] undefined!
-> 
-> Caused by commit
-> 
->   5a128fb475fb ("serial: 8250: move RSA functions to 8250_rsa.c")
-> 
-> (or its neighbours)
-> 
-> I have used the tty tree from next-20250618 for today.
+> Is there something we can do to help the tools?
 
-Jiri, can you send a patch to fix this, or should I revert the above
-commit now?
+That's up to Sasha, he has the tools that do this.
+
+> > > This patch comes from [0] and the prerequisite is in there.
+> > > 
+> > > Also all nolibc patches which should go to stable are tagged as such.
+> > > Can you configure the bots not to pick up any nolibc patches automatically?
+> > 
+> > Yes we can!  I will add the needed regex to the file:
+> > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/ignore_list
+> > should it be:
+> > 	tools/include/nolibc/*
+> > 	tools/testing/selftests/nolibc/*
+> > ?
+> 
+> Looks good, thanks.
+
+Great, I'll go make that change now.
 
 thanks,
 
