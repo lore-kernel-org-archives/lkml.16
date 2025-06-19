@@ -1,212 +1,194 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2040.outbound.protection.outlook.com [40.107.94.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1237220F55;
-	Thu, 19 Jun 2025 09:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326825; cv=none; b=Bkp8ZFyeyllvvSvruSIbMs84hf7P/o8Xprbu7RWJBWXk1/v+EMJvJJ0Qit28Gc7GQt9u1Og5oVBwsEmQTsgRhgYd3zpFeLMTUfIajheM3h5r2DnF/+2PgY/n6x7V0OdcMPEGhU0sHIpHSFCaHc3EzrF0p05ezQLPWvVvfZ8UpKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326825; c=relaxed/simple;
-	bh=aoabY3uN68FF/AqK9E73rIZP0Jr9EBrc7Uh6DHc60hk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+aTwNOM2OYF4hva4/R06uhGVGr59rcfUx2v1aJZRv7Te/gaqXz7ytNA/IMrFPX0742/C7ZR0eBm7bpEpcxeYnyRY5NOoRjreYJ7E5FnX/vljFHeMf2C0mPEHr/igHYDfzRrx3huKJ6rDyfPmkza77te+L80pwe99mGrLxvDmpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zk3pzHla; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313B0220F55;
+	Thu, 19 Jun 2025 09:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750326848; cv=fail; b=KXnfhVA40tRT4p73yJeJvNLaY/mC1ubR0RWbt9cnd/8g0/hhzch56Qvy01AwamsmuXCEt8lHvxWGYkewEM1L88LAe+4GXoYin2SSU573Ub6KNS/4X9QPQOiaweKcuBuHxEAqRtUCV3GHVnhuq6OBy9r8ufVZt9iqCn6nvgHTvMI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750326848; c=relaxed/simple;
+	bh=C9Y+BxzazJHjjxtRxKxzDwPVaBvsjnJCvrd5AcPCgdw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C4FGhkVdWLhYYHAV+Fq5v/8ilaDxtl54W/dl2HBnRh+uYifDtKgskz1V80uNWZfKht4YsZ84rvhzXQ+4e4y7t8ZCn25/TzlHeZBt6gBLfVuIeCcoy5MZvM+cl8eMDVLS6BrngvJ7SfIE2BEjoy3oHHJoEO77GXiF2sN9riPSyZY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=U8gwvysv; arc=fail smtp.client-ip=40.107.94.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zk3pzHla"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b82f3767so509248e87.3;
-        Thu, 19 Jun 2025 02:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750326822; x=1750931622; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8lxye2GX1z6QI+SRVMkfZEngbWK9B27pd3eBJcWGrlg=;
-        b=Zk3pzHlaRLH5IoKNbeMJ5Zn9Te3qy0PdSP9NsfBOwuZ01ivJ7t1ehT16xDBRyalq2J
-         uVk/7lTowQxO4L07rh94RL5k6XZ+kL0FwCzyDru1lk/CsCB3UsSesx7VKCtUoUYpNP54
-         Ojq1tlHb5QMaZ5aCO8/G+V3DxCGss8SsboVurcD1CEqvMTcngOkAWcdtOstwoTH3ACVf
-         xoTJdPi9724J7Fs+LAPfe22CSSpAimUKWoKfgerREpuKy/yAeFPc1fMW7ft0BhOkdLrw
-         H/AbhLELPDKFy46nIGihhAxCVIbW1fniOynRiByM30j5lKfqX6I3y/zgkCYvn9isqQla
-         IDqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750326822; x=1750931622;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8lxye2GX1z6QI+SRVMkfZEngbWK9B27pd3eBJcWGrlg=;
-        b=bkPoxd9sP/ofipb3d44FmrJsmR4iD6mPnzGrkRdXWYp3sdyCAfDTd9+kmvf7OKqOjh
-         5QThC8Af8sZNb2mIctjSjWfAuj09lBFJqNFDNPRIrYG+hB+ejNaNoOxG+UepV8kRIlRG
-         QVMFCqc2yUeq6u/Y9GoX+xzUfhfLE3I941H5mb722C8+jUxqSc8RmCZVoXubfpFNJFvr
-         +5pqoCagiCfjPMgn1IBiHaGWiROnYr/9B5z28z2td+3Jj8K6VEc7CcPDb4aL4bPtT1I1
-         nXrCBRE993vo4Q1KJkq+h4yyCpEh2XF/dB2nXQPwF3JTT9LgQfa10iIA23IRkoGbConp
-         Rc0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKrnKdv7XZiSyHSKmpy35dQ2espf1Lu0mUvkRsxpRodWz5ANEnAlSwjmINWlZAcZ0dMDl8Dbd2a1Ulx2E=@vger.kernel.org, AJvYcCW5FSDS8B2IRnstf2uI+ZUIfb1vgCYJUADl41ErF4lKpJUpRwtU6fNVMD4IUSqjLVto0n6AZNx2KUMV8w==@vger.kernel.org, AJvYcCWmevpONIsr2FYBLiI7RmXB+YUMPyOIErN4JZS5u2GIt0R+Zktwrmjt8RknYXozjpkQ5MFkZ8OE/mnUAQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhmMWOrs+KCb+DqJFIehXACUkYUQRp81HJC0jcjLxwX8TmAijU
-	OsoKsXH++5simM6YY8jqbx5gs3v0U2sQIma45xIsOCoU+CdkSoRJ/0Ti
-X-Gm-Gg: ASbGnct15wNR1SPSXAjBGgpHoTGCq4zCpKju5/JShPTYRgoZrMo0uhD90PrwO5ZsfkR
-	XZ3ht0qQSrNC3JC9PyVItm2Zmo2dKY5dDcw9aJOpNGoeEvfloIOj0Jhqt7AevWhTkhfR/DTOtYr
-	2kFHA7liwa97YHgxX1f1Ype3SeQ9RLk/BZQ9sW2yFOJBseK0QF4URUEhfYh6ZY+UnQmFVmaeDkC
-	06o+jATAEhkR7o3IeNLxVIX/GV6beNdKsLsrzos3Xy992P9dV85V5np8wQRjsD/v8B/+ro8Nvtw
-	JJzZ2gxYQgCbgnjK8DNdmQVBJ1zyC5PrQ6Fuozp6lYWSN5hDDD5yxOXAGkaNrJKJjr5zAu/uk7u
-	VuFR/SVsrxXM=
-X-Google-Smtp-Source: AGHT+IEJV7RqZa9E1nD948cD6oSgemriE8btKJowGkw8tp48NbrB1jrcDoGclBvee7YrwcLZgS368g==
-X-Received: by 2002:a05:6512:1049:b0:553:1f90:cca4 with SMTP id 2adb3069b0e04-553b6e74ae6mr5656846e87.13.1750326821436;
-        Thu, 19 Jun 2025 02:53:41 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1367e9sm2541889e87.79.2025.06.19.02.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 02:53:41 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 19 Jun 2025 11:53:38 +0200
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild@lists.linux.dev, Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
-	Jeremy Fitzhardinge <jeremy@goop.org>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Subject: Re: [PATCH 2/6] mm: Lock kernel page tables before entering lazy MMU
- mode
-Message-ID: <aFPeIisE3ufUGEUq@pc636>
-References: <7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev@linux.ibm.com>
- <0be7d42e-5898-4b94-829b-59c661c2f07b@suswa.mountain>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="U8gwvysv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=On99XUgng4R4rOB1G4v5HW2+wAxzxUBm6a/sceWB99lLBTnbhWYsRJqrwgh1ipItxvivkRdfmOJFLHrs2xI9RdEkadQxXMb5O+dCgdJgbSrYsvzsoApMxOs4C5Fh8d/9ypLjPGJ7lgqr/GJHB2e+1Sib/pGl5PQpvjN8cHhRjVATeI99hjWK92jSaAp20E/rLKiMEs21GTvhdVdzoH59+Eazp0SffvpE3iepULjXsbNJPifRMC9q7rW+Wf+ZIEfKrLK3qlrcXnHP25LKenylAxiGrKPKkelDNJ2wP5gpJaL6KxqXqmoYAXH4OAS7IIGBw1HliZqlJnr5ahdk0Xb2jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RCE0cu3gWQ4L1/IJVdaapBefi5BLzopF1yYXo2wzHp8=;
+ b=tr3q8+oE86rOQwwZJdF93sTKy9+IKn2uDlLO2z7v92oYvDFoIXnjPc1JarhO5p2ehJ6MOxxJONDBQFZUoZe0BZDd6E9jheUJ3KDhEKgZfIWk1zLb4igHea7BzMIMLOEexHpBFhwGq0vWTTObL+wVgvHQdeJS4o2UFcPazHLMpgaM3dMc0F8jLqQRVfyjTkCoEoOs8yRwBXf8leaV1kKe6DjaCrBHgpWWQkM/HLE3oNDb+XjcQ8XDX4kOfLGSEymVoyLdPEIbwBN5uj4HNVOQG3Ekg9RFogEtHL+xEcOGE6ssIoPocX3COnEd8aetJGrVpg7KzZhGFgSTDOb2rLjEfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RCE0cu3gWQ4L1/IJVdaapBefi5BLzopF1yYXo2wzHp8=;
+ b=U8gwvysvJ2Uwe3A0g9SX0ao7qbA2fQHKwT2FLhydciCpwKipKq6b1HhO5K++0dLkX7jb1/4GmMEf/lF52r4i3tU6sHUorABlkiyd4kvSgef1jZpVl0xoMp46zUNBh8kK/57U1026TnHV52mIEZrpo61PmQq4rr4JyHbYC8+hcpQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8)
+ by SA3PR12MB7857.namprd12.prod.outlook.com (2603:10b6:806:31e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Thu, 19 Jun
+ 2025 09:54:03 +0000
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870]) by CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870%5]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
+ 09:54:02 +0000
+Message-ID: <abf72717-f0ca-4180-9e6f-83908581cbc1@amd.com>
+Date: Thu, 19 Jun 2025 15:23:52 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+To: Vlastimil Babka <vbabka@suse.cz>, david@redhat.com,
+ akpm@linux-foundation.org, brauner@kernel.org, paul@paul-moore.com,
+ rppt@kernel.org, viro@zeniv.linux.org.uk
+Cc: seanjc@google.com, willy@infradead.org, pbonzini@redhat.com,
+ tabba@google.com, afranji@google.com, ackerleytng@google.com, jack@suse.cz,
+ hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com,
+ roypat@amazon.co.uk, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20250619073136.506022-2-shivankg@amd.com>
+ <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+Content-Language: en-US
+From: Shivank Garg <shivankg@amd.com>
+In-Reply-To: <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0034.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:273::7) To CH2PR12MB4262.namprd12.prod.outlook.com
+ (2603:10b6:610:af::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0be7d42e-5898-4b94-829b-59c661c2f07b@suswa.mountain>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4262:EE_|SA3PR12MB7857:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a734c8d-d0f1-4bb6-d9c4-08ddaf17387b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q2RLSVNPNURkL2tlUGpsbkJsd1U4aU5OcnUrWHNXWGtRdXA3OVVMUUphQmVF?=
+ =?utf-8?B?OThFdFdEdVk5d2h2eDlrbit0bzBSd1R0SVBwWEQwZ3B2STNCRis2bjVUemVN?=
+ =?utf-8?B?Z3JpcGlDYTgvN0lVNU1wbHBOaGwwWFlhM2N6cVA4NC93aWZkdFowZnVneDVz?=
+ =?utf-8?B?MHlsVFJwRG96cFJZTmtrMS8reGdPK0owczFYMnp2R2ovUDAxVmhPN1dvQXBD?=
+ =?utf-8?B?aXpreG1lRW91K3gyeS9DVW1zZnNMbFlaL0h0YXNpUUFWbFlaZTZzL3J5TDlM?=
+ =?utf-8?B?ckFBOFExamcxZWRJbFVJK2h4RGR3MHdVeDQ3emFNVWQvQVJRNU9vS0VyRTNH?=
+ =?utf-8?B?QlN4UFJLUG9yUnRRSTk4UVBwaWxMcFk3aG9RVmdLRUZqV3RvVUVBTllzRlRm?=
+ =?utf-8?B?M3JLc0UvUkpHamcwUEpYUGxLL1RoYXEwd24wUUIyTkVlY1FhQ0xaQ1hyTVVw?=
+ =?utf-8?B?d2xjV08xMmhJd2dyMkFodE1OUW84S0tMUEQyc3ArL2JKa0x2dzhCK0lVdzZR?=
+ =?utf-8?B?NzcvcmFTTTZkM1lGdlNQYVc5VlE1MHhkdktucUdzYTdRZzlDSU80WFJzVnVp?=
+ =?utf-8?B?d0Y2OEhCQ0tFMmozaTMzcmw2UDB0ekQ5MUZPOGNKWWZSWmpyMnp6dTJGRXZO?=
+ =?utf-8?B?dHVTWUpwcDBGbGZUcjNEU0Yvc01jZmZ4VWNNOGtmQnpmdnM1dEExZjZuQUsr?=
+ =?utf-8?B?SzlVaFRMRm54RWltWUZmcFJ2RGVyYU43NUozMGpubWVvanJVZ1NKTWtkOVBL?=
+ =?utf-8?B?SnhNK0xCR05VY0E5Z2ExZlF4MGQxek9WdXozeUQ1TXpvaHFieFRiRjZidktI?=
+ =?utf-8?B?YUZVblJmYkFtUXdSY1o3dFc5ZW12RXl5ZEFBWVFidldZZ1dUQWlWSFJGNi9x?=
+ =?utf-8?B?ejl0Y3cwVVlTdTBlL2d3Ui9JNjA3OGtyQnpBNUlSZms0MWlwcDhhSmJ5cUdy?=
+ =?utf-8?B?TFFJSHk0aFBBdzR2dTNTQkU3NjJyTnVqK3pMamtzRWlLcmFFQ0J4WU9kNTNn?=
+ =?utf-8?B?cUUzUVluZHV4WVdnbzB5Vko3MFBicVdlUmdYdjBDdXhTK2o5OXFFTHh6Q1Ru?=
+ =?utf-8?B?SUFqZjBwSi9ETDZacFB6ekNFOHZaWlpkN1REQWREd01WRXpTWEovUTNxNWNx?=
+ =?utf-8?B?SW1QWmVoSDBEL1RyY1lYalp1b2Zsc0hMdytWSG9mZHRobjluNnZQL1NTS0Fk?=
+ =?utf-8?B?YmxRcVBlQjNabUdYMmYrM04wOTEyZEE2THRuUUVIK0tFZE1PbnJWRmpsakU2?=
+ =?utf-8?B?dm9FR1BHQ0xKWjRDVFRvVVUrYm4xYlYxWm9NUGhLcFVQOWs5V21NVk85V296?=
+ =?utf-8?B?WC96YUhtWFM1RnBCbzhZZjBIYUFvWEowUm5aa0ZuQ1c3U3RheENWRDcyUXFX?=
+ =?utf-8?B?WkNRSXY3RU9nYXlaVk05R1VML29pUElSZ3l2Q2Z5d2pRWFhhd1pTOFo5SXVn?=
+ =?utf-8?B?Ukhad3VoYnBXbVdJTTRlZnNDbi9hUHM0aXNWNk90RnFoSjZXYTNuaVp0cDhM?=
+ =?utf-8?B?djJhS2s0dVBPVXhBZlJlekVNUmp4WDgyQVVWOGl4b3NObTBBc2QyUXhDWGty?=
+ =?utf-8?B?dC9qcHIwb1lmdFdVSXpsZG83cUI5VFIwYU9oNW44dE9jTjd1RzRDb1FaU0o2?=
+ =?utf-8?B?UFY5VXBrL3QyQ0VWVHBLbjFpODVueVFwWjFkTDUxak4wRUR0N1A5N2FnU242?=
+ =?utf-8?B?NmlkYjJtVGdkZXNhUHNBZ29jcXY0UmJJNU9XMHZ3NDZZTStLOHZJNE5IVjln?=
+ =?utf-8?B?NjJwQkg0WW9ZcVY3SElWdUZlaUVTaXUvemxzWmVlMzhYcEtNWHRSWm5NcFAv?=
+ =?utf-8?B?aDBOQkdMdEt4S0U3cGZINjVWdklkTEI2V0FLSVdRd1RSdnIrZzZkdW9VWDlv?=
+ =?utf-8?B?bFM4YTNmTjBVMEIrMlAySnNtUSs2UHlIdW45MVRLQWZ1SlB3c2VxZmFsem5s?=
+ =?utf-8?Q?sjhcMgXyBh0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4262.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MnBsTE0yWXZIYm1HNHBlZ0RRTWphamQ3NDdtMzZLcHpjQjlsd1lFTDJiMTdD?=
+ =?utf-8?B?Z3ZNTTB5dWxnWlpBV2Z0eDJtaDZxSmNFaEZBVnloMjFlWW1IVG9BVmJjRHA2?=
+ =?utf-8?B?OVpKL2ZraytnbUVObHdtaDR2RmdkVjA3VlAwTVVQSlZJUjFiRjkycXFNY3or?=
+ =?utf-8?B?ZGxEUXNUbjA0VTVVVmtEYlRXVGVDQlBicjRUN2N5YWJZeEtXQ1BuaHEraU9k?=
+ =?utf-8?B?ekdsQzZVOS91b2U2YkdHS254YzBRU01JUk91eXVTZ2JVai9OeVFUS2VtRjJY?=
+ =?utf-8?B?WjZ2U01tR3AzTEFFMlF6T1cwckkwOFJRdW5aWHVXUXVHU01ZNy8zZU1HS216?=
+ =?utf-8?B?Q1FPNndHUGg5ZTlscHI2czhyVU96d2lsc3ZBcE9oUnpqcXNFZXp0VnpCWUV0?=
+ =?utf-8?B?c2M0OEkvVTczbkIrNDFPVEk0ZTlTeXBKcG1iUDhCb1hpd09DRW1jTVpUUkd4?=
+ =?utf-8?B?alZNMnFNTWJYU0RlUExwUmVBWjF2NnN6UEdiNW9jbjBmQzE4YXRxMnJPVWFr?=
+ =?utf-8?B?SEk1Q21Dbzk1QUI1bG9RU0ZMaG1wYUlSUlNUTUVPS1daMU1sMzZZazlyMWVC?=
+ =?utf-8?B?L1BTOHpzdG1WbWdZWkNydEFrUE5Fc1JwNEtQZXAvU2xjZ3VNWkREQ2FFclhU?=
+ =?utf-8?B?R1FTSXNwS0NxNTNIc0d2OGFaUzRYTFpmOWl5cm02Z0xkY0hhZ1lsazVvS25C?=
+ =?utf-8?B?cUtackFFbFFFcUNVd0IybEY0ek5qb0FhYnZMR29VMEhxZ2pvbWNsL2VhT0Rm?=
+ =?utf-8?B?blk0UDh3SkxzVUNVNjkvSHVEV2FUUTRrTUtYNzFPcGN0ak5VZjQ2MjVxMG14?=
+ =?utf-8?B?ZklQcVE2S2h4ZDRqdnhGOFAyQlVIQUZrN21ndzh6NjdqRUJzYStFbnA5aHFW?=
+ =?utf-8?B?WXh6a1hIM0FKZFdiUlVkZ24ybmYwM2NYRkpxUERzMDhsb3lIT0dxak4va3dx?=
+ =?utf-8?B?VmNVbGJiaEUxOW1XMzRXZlprb3BFY3JZRXVGdnRpMTFGdThsUG5mMDBlVzI4?=
+ =?utf-8?B?c3F2V01RZ09WSmFCbUEyd1FkYVllQ3RDVDRTNDZNWlp2bzFUd0RjZHhqRXFx?=
+ =?utf-8?B?MHNibEl2VG9NYXVjMllLcWRzR2gwaUFDczRkZmtMcE1PcVV3OWhpa3FRYUox?=
+ =?utf-8?B?Qk00ZnJXZDVqY2hpdVZIZ1RRQ3BISG1SenJxYlkwQkJ6VTdYeEIvNndVRm41?=
+ =?utf-8?B?TnNZNWswRHNTYTJ6a1R5RG4zR3RSak54d3pPR3RkL0g1dmU4ZkhCdU1tZUxI?=
+ =?utf-8?B?UjFudHF5NVNSYUp0dUhiMnJtK084ZExRMUc4ZWZXVy96NlRYQ3hCY0RJVDIy?=
+ =?utf-8?B?ODJzMnA0dmo3T2lTMm1yOGl2QlZyeGJWMDdYalhVcXZWanRkVEt3SUlMeTI3?=
+ =?utf-8?B?YmpLdjFnQ2g1UFdvNVRTbnhjOFlTMjRDNk12OW9oWVRpc1g1NTh0S2R6cG0y?=
+ =?utf-8?B?VDRFanNHYmcyMDI3NmJKbU5RcXVGZnFtK2FHMnFubzRhTkMvWWorZ05GQXVl?=
+ =?utf-8?B?Y2tsakRZdTdTT0pib2pPSjlOQk4xeEorRG9VU3JEa1ZYNXVLOTRZTXNCK3hx?=
+ =?utf-8?B?V3JhZmpHOWdtOUhIUEJEK2tpZExtU0hscis5SDN2QStackJRU1VDWmt5c2dL?=
+ =?utf-8?B?M0tHaG15eGREakpmeTZ0OGVVaGdGNHdzVHdGTXlMeVFzeWtjUHdTSG1SRmox?=
+ =?utf-8?B?UTFjNHhCTlVwV0J3aDcxeWtNc2RNUFhHc0lRVElTWmJZaTRFK1piY0txRXdO?=
+ =?utf-8?B?SUlTWHZXclUxRXRSUzRNS3lDQlN2Q2tnL1pselk0M2VSYWRxSDV4MkM2bkxE?=
+ =?utf-8?B?REh1RDlmRmduTG5CeHYwdjJmdTlvSFlCVHNlaURyZFIzY0Y1aXhFNGg4blBr?=
+ =?utf-8?B?dVgwRzFHTUQ2UW90SWRrTG5Td1RxU1BETmlFbjNBMURlSjFjKzV0VVlkMDRn?=
+ =?utf-8?B?TlVLOXpVNXQya0hYSWFPR1N0bTRKZVZzV1ZjU2pRUHNGbU56VEpvYTRFNlFD?=
+ =?utf-8?B?Z015WjJHWUNMZ0l1T3doMkhSOUt4d21OYjJXeWZxRE9vTGpoUzlaWjV3QUtH?=
+ =?utf-8?B?dlpuK2hTTkpySTRjOHZRRUx1WXFIaDY4eFdkbGdESXFDeU1LeXlnZTJ5MUZp?=
+ =?utf-8?Q?d5M3GUqdizCXf8Iisk1TvJNSy?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a734c8d-d0f1-4bb6-d9c4-08ddaf17387b
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4262.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 09:54:02.7707
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9QieL8gFNBqmT0yJZF5164lpxs1yPpmXKAx/BSz5VLHzCAMrEJwfGlGj8ywsh2z/wgwm63p4AD2h1ggUQoQSdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7857
 
-On Wed, Jun 18, 2025 at 08:32:28PM +0300, Dan Carpenter wrote:
-> Hi Alexander,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Gordeev/mm-Cleanup-apply_to_pte_range-routine/20250613-013835
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-> patch link:    https://lore.kernel.org/r/7bd3a45dbc375dc2c15cebae09cb2bb972d6039f.1749747752.git.agordeev%40linux.ibm.com
-> patch subject: [PATCH 2/6] mm: Lock kernel page tables before entering lazy MMU mode
-> config: x86_64-randconfig-161-20250613 (https://download.01.org/0day-ci/archive/20250613/202506132017.T1l1l6ME-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> | Closes: https://lore.kernel.org/r/202506132017.T1l1l6ME-lkp@intel.com/
-> 
-> smatch warnings:
-> mm/vmalloc.c:552 vmap_pages_pte_range() warn: inconsistent returns 'global &init_mm.page_table_lock'.
-> 
-> vim +552 mm/vmalloc.c
-> 
-> 0a264884046f1ab Nicholas Piggin   2021-04-29  517  static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
-> 2ba3e6947aed9bb Joerg Roedel      2020-06-01  518  		unsigned long end, pgprot_t prot, struct page **pages, int *nr,
-> 2ba3e6947aed9bb Joerg Roedel      2020-06-01  519  		pgtbl_mod_mask *mask)
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  520  {
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  521  	pte_t *pte;
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  522  
-> db64fe02258f150 Nicholas Piggin   2008-10-18  523  	/*
-> db64fe02258f150 Nicholas Piggin   2008-10-18  524  	 * nr is a running index into the array which helps higher level
-> db64fe02258f150 Nicholas Piggin   2008-10-18  525  	 * callers keep track of where we're up to.
-> db64fe02258f150 Nicholas Piggin   2008-10-18  526  	 */
-> db64fe02258f150 Nicholas Piggin   2008-10-18  527  
-> 2ba3e6947aed9bb Joerg Roedel      2020-06-01  528  	pte = pte_alloc_kernel_track(pmd, addr, mask);
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  529  	if (!pte)
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  530  		return -ENOMEM;
-> 44562c71e2cfc9e Ryan Roberts      2025-04-22  531  
-> dac0cc793368851 Alexander Gordeev 2025-06-12  532  	spin_lock(&init_mm.page_table_lock);
-> 44562c71e2cfc9e Ryan Roberts      2025-04-22  533  	arch_enter_lazy_mmu_mode();
-> 44562c71e2cfc9e Ryan Roberts      2025-04-22  534  
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  535  	do {
-> db64fe02258f150 Nicholas Piggin   2008-10-18  536  		struct page *page = pages[*nr];
-> db64fe02258f150 Nicholas Piggin   2008-10-18  537  
-> c33c794828f2121 Ryan Roberts      2023-06-12  538  		if (WARN_ON(!pte_none(ptep_get(pte))))
-> db64fe02258f150 Nicholas Piggin   2008-10-18  539  			return -EBUSY;
-> db64fe02258f150 Nicholas Piggin   2008-10-18  540  		if (WARN_ON(!page))
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  541  			return -ENOMEM;
-> 4fcdcc12915c707 Yury Norov        2022-04-28  542  		if (WARN_ON(!pfn_valid(page_to_pfn(page))))
-> 4fcdcc12915c707 Yury Norov        2022-04-28  543  			return -EINVAL;
-> 
-> These error paths don't unlock &init_mm.page_table_lock?
-> 
-> 4fcdcc12915c707 Yury Norov        2022-04-28  544  
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  545  		set_pte_at(&init_mm, addr, pte, mk_pte(page, prot));
-> db64fe02258f150 Nicholas Piggin   2008-10-18  546  		(*nr)++;
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  547  	} while (pte++, addr += PAGE_SIZE, addr != end);
-> 44562c71e2cfc9e Ryan Roberts      2025-04-22  548  
-> 44562c71e2cfc9e Ryan Roberts      2025-04-22  549  	arch_leave_lazy_mmu_mode();
-> dac0cc793368851 Alexander Gordeev 2025-06-12  550  	spin_unlock(&init_mm.page_table_lock);
-> 2ba3e6947aed9bb Joerg Roedel      2020-06-01  551  	*mask |= PGTBL_PTE_MODIFIED;
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16 @552  	return 0;
-> ^1da177e4c3f415 Linus Torvalds    2005-04-16  553  }
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
-> 
-This patch introduce a huge performance degrade when testing this by
-the test_vmalloc.sh performance tool. We return back to a single, not
-serialized global spilock where we spend 90% of cycles:
 
-<snip>
-+   91.01%     1.67%  [kernel]          [k] _raw_spin_lock
--   89.29%    89.25%  [kernel]          [k] native_queued_spin_lock_slowpath
-     69.82% ret_from_fork_asm
-      - ret_from_fork
-         - 69.81% kthread
-            - 69.66% test_func
-               - 26.31% full_fit_alloc_test
-                  - 19.11% __vmalloc_node_noprof
-                     - __vmalloc_node_range_noprof
-                        - 13.73% vmap_small_pages_range_noflush
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-                        - 5.38% __get_vm_area_node
-                             alloc_vmap_area
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-                  - 13.32% vfree.part.0
-                     - 13.31% remove_vm_area
-                        - 13.27% __vunmap_range_noflush
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-               - 25.57% fix_size_alloc_test
-                  - 22.59% __vmalloc_node_noprof
-                     - __vmalloc_node_range_noprof
-                        - 17.34% vmap_small_pages_range_noflush
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-                        - 5.25% __get_vm_area_node
-                             alloc_vmap_area
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-                  - 11.59% vfree.part.0
-                     - remove_vm_area
-                        - 11.55% __vunmap_range_noflush
-                             _raw_spin_lock
-                             native_queued_spin_lock_slowpath
-               - 17.78% long_busy_list_alloc_test
-                  - 13.90% __vmalloc_node_noprof
-                     - __vmalloc_node_range_noprof
-                        - 9.95% vmap_small_pages_range_noflush
-                             _raw_spin_lock
-<snip>
 
-No, we can not take this patch.
+On 6/19/2025 2:43 PM, Vlastimil Babka wrote:
+> On 6/19/25 09:31, Shivank Garg wrote:
+>> Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
+>> anonymous inodes with proper security context. This replaces the current
+>> pattern of calling alloc_anon_inode() followed by
+>> inode_init_security_anon() for creating security context manually.
+>>
+>> This change also fixes a security regression in secretmem where the
+>> S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
+>> LSM/SELinux checks to be bypassed for secretmem file descriptors.
+>>
+>> As guest_memfd currently resides in the KVM module, we need to export this
+> 
+> Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
+> explicit for KVM?
+> 
 
---
-Uladzislau Rezki
+Thanks for the suggestion.
+I wasn't aware of this earlier. I think it makes sense to use it now.
+
+So, the code would look like this:
+
++EXPORT_SYMBOL_GPL_FOR_MODULES(anon_inode_make_secure_inode, "kvm");
+
+which builds fine for me. I hope this is the correct usage.
+
+Thanks,
+Shivank
