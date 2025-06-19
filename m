@@ -1,119 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C6514A4E0;
-	Thu, 19 Jun 2025 02:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A8E76034;
+	Thu, 19 Jun 2025 02:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750298705; cv=none; b=hKy9gA1NoY7mrrd+b0uAhbUCAhZesXyu6ENl+eJl/g6KNVPo5wbD66BZ3PIVmsHHae3/lbVY2896UVKPd8gZrcyUTLabf/igYb03o2RdT8Gl3nReptm0vra2LgSPjf//3/ManFzrVqntmBUDDNyJmDkvQPXgg2ngTxOoqBsKBmQ=
+	t=1750299072; cv=none; b=qK0oC/0/hEs/CZWtiNmyPVqMQmHzoeJuA2cXxwF9cS+bKI6xHGusQjQOmlL4DfISe/6COT5rvMXKWTS75SQBodvSbSwvPARi4Rz/W1GFLyYzpw7bdug1ZDtja7rv4FWY9nO50ZETYbHkIhFbs4/0uOEatNefowyeVYvLKkHJfdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750298705; c=relaxed/simple;
-	bh=IaaiI3fACwLbpIQhogak7uQ2F0Ezj93eSfpcTZk4TrI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OCfRTFInDRdwevyvhQpsQ0csKU1r9quEL6kkPHxc1Q13RekDSFUEolP/S8smicHX/B5JSDEdtfOqrfZqZQzqdgARUK0vAvHPcmHSakuZ1FRoCzutl+Hpyd/NXpEWYh58Ot7SretzROrHVZvV0dAKxAoWChi7dikpmPOU2cBeK3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Grog+5XE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750299072; c=relaxed/simple;
+	bh=MH8crp1DhW23/OKmNtZBXsV7bwbGco8MJctbSo83AO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tOo/aOQUf+CBlRxoSxbzx1qR7mCX7woRNAKjxFu1bMMnVxXp75eyjGollbJFohkQdz0etH0Ps3kcNhPjpO+JtRZzs5LKv12i90APHNa09DA2tx0Dy6cF9A1PtOhv78XyHlphuSmKPTuZCynS25BDBez5wrJ5uEw0ThQElPwaaRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6CdYxqw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Grog+5XE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E60D3C4CEE7;
-	Thu, 19 Jun 2025 02:05:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6CdYxqw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1BDC4CEE7;
+	Thu, 19 Jun 2025 02:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750298705;
-	bh=IaaiI3fACwLbpIQhogak7uQ2F0Ezj93eSfpcTZk4TrI=;
+	s=k20201202; t=1750299072;
+	bh=MH8crp1DhW23/OKmNtZBXsV7bwbGco8MJctbSo83AO4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Grog+5XEBJHGCI51zuStDEkFp8RM1HCmINdY01219b1EEKBT2nw5uj+0FmSeCETc8
-	 KzGh/RsgHSPtkplC8O67EOFTyF3E00D/bUCdMnh6+teLnh173B9aqWELetBmzx7kPD
-	 5cPMrZyBjngoXOF2wjZsD2r7wyMTn4CsXIlhOyjV8JXqNBR68Z4oTqjk7Zaig3hpB3
-	 QJvKbfpXbTJH2jMVXO/YGHjnj+MfNzOfEd4OEhrJBPe/alfAunJXMctrid3sz5zlWD
-	 We1rAxhU6ecokfmAdeQZjYhdTmaq2GDQFa4FyevqnhytrGbT7aLC/ea74ettl9pHq9
-	 BPb/ZEfBMwI8A==
-Date: Thu, 19 Jun 2025 11:05:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Tomasz Figa <tfiga@chromium.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, linux-mmc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] mtk-sd: Prevent memory corruption from DMA map failure
-Message-Id: <20250619110502.be536151c664cd4ada7d1ca7@kernel.org>
-In-Reply-To: <174972756982.3337526.6755001617701603082.stgit@mhiramat.tok.corp.google.com>
-References: <174972756982.3337526.6755001617701603082.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=W6CdYxqwN/NBljKsxlJlQh1OdGAEzo0+mfdv4gr+uFBkTq3Ih3rbplQhPvMVI6Ijq
+	 6W2sTe3RzvcnrXZGvBGR/QMmFeNp9tKQs1D3wFECVPF9oH53M8s1qaXk5DGvW4mmln
+	 lImovZffVl5q900PmwgF0tidZSOpykcCQt/jins4zwLxBPFuvsXd1w6DFv5DcS3W54
+	 PyMcTHXj/MKeuH8X+RO0u98h7UxdhnAXaYZUqzpEzQmD0zL47uKVKE2bmADoTglVPI
+	 omisZagomvBwO8IWBoG7h+UoeOZOMRELh7hCRMddk/bGYqJQkzMZ/Hu6QpV4cAOFiy
+	 GLcI/UtzZARqg==
+Date: Wed, 18 Jun 2025 19:11:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, Jason
+ Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
+ =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net 1/2] virtio-net: xsk: rx: fix the frame's length
+ check
+Message-ID: <20250618191111.29e6136e@kernel.org>
+In-Reply-To: <20250615151333.10644-2-minhquangbui99@gmail.com>
+References: <20250615151333.10644-1-minhquangbui99@gmail.com>
+	<20250615151333.10644-2-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Ping?
+On Sun, 15 Jun 2025 22:13:32 +0700 Bui Quang Minh wrote:
+> +/**
+> + * buf_to_xdp() - convert the @buf context to xdp_buff
+> + * @vi: virtnet_info struct
+> + * @rq: the receive queue struct
+> + * @buf: the xdp_buff pointer that is passed to virtqueue_add_inbuf_premapped in
+> + *       virtnet_add_recvbuf_xsk
+> + * @len: the length of received data without virtio header's length
+> + * @first_buf: this buffer is the first one or not
+> + */
+>  static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
+> -				   struct receive_queue *rq, void *buf, u32 len)
+> +				   struct receive_queue *rq, void *buf,
+> +				   u32 len, bool first_buf)
 
-I think there will be another bug which leaks the resources
-to cause this failure case. But anyway, without this fix,
-if DMA preparation fails but runs a DMA, it will overwrite
-the previous read buffer memory.
+I think Michael mention he's AFK so while we wait could you fix this
+kdoc? I'm not sure whether the kdoc is really necessary here, but if
+you want to keep it you have to document the return value:
 
-Thank you,
-
-On Thu, 12 Jun 2025 20:26:10 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> If msdc_prepare_data() fails to map the DMA region, the request is
-> not prepared for data receiving, but msdc_start_data() proceeds
-> the DMA with previous setting.
-> Since this will lead a memory corruption, we have to stop the
-> request operation soon after the msdc_prepare_data() fails to
-> prepare it.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  drivers/mmc/host/mtk-sd.c |   17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 3594010bc229..56b4999fe58f 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -834,6 +834,11 @@ static void msdc_prepare_data(struct msdc_host *host, struct mmc_data *data)
->  	}
->  }
->  
-> +static bool msdc_data_prepared(struct mmc_data *data)
-> +{
-> +	return data->host_cookie & MSDC_PREPARE_FLAG;
-> +}
-> +
->  static void msdc_unprepare_data(struct msdc_host *host, struct mmc_data *data)
->  {
->  	if (data->host_cookie & MSDC_ASYNC_FLAG)
-> @@ -1466,8 +1471,18 @@ static void msdc_ops_request(struct mmc_host *mmc, struct mmc_request *mrq)
->  	WARN_ON(!host->hsq_en && host->mrq);
->  	host->mrq = mrq;
->  
-> -	if (mrq->data)
-> +	if (mrq->data) {
->  		msdc_prepare_data(host, mrq->data);
-> +		if (!msdc_data_prepared(mrq->data)) {
-> +			/*
-> +			 * Failed to prepare DMA area, fail fast before
-> +			 * starting any commands.
-> +			 */
-> +			mrq->cmd->error = -ENOSPC;
-> +			mmc_request_done(mmc_from_priv(host), mrq);
-> +			return;
-> +		}
-> +	}
->  
->  	/* if SBC is required, we have HW option and SW option.
->  	 * if HW option is enabled, and SBC does not have "special" flags,
-> 
-
-
+Warning: drivers/net/virtio_net.c:1141 No description found for return value of 'buf_to_xdp'
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+pw-bot: cr
