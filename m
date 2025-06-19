@@ -1,253 +1,199 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F76C2566E6
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750351474; cv=none; b=radXq/OLoE9lgd8GH5kF51OFrk1lJC1uld6hd8vMhkgMlaVGERylMnlMcxEwjXv4Em03gUcTo+YL+I9kVDe6t475VkYyZF2qWjbvvyIYZwxmi+zWX0CnPGImsamKekoG25HTr2raxVmzOyhnJmmurzmdDqOiE8QhOBsyamQUfg8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750351474; c=relaxed/simple;
-	bh=b/+ikzLp54Gc/0Xc09GVIw86JXBMCy4h4061cXUV7GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DanGUrvY/NEwlirL2DvLp5NAhUvzCFhYXOH7Fd3T+K/tkGQiTZMZ+QAyrr+mqjkPqcBf2+ntNUuo7ReL301QS2Kl+nh1PvMPxTXJ8yGSZ915oB3c5w+QoDPMpoMrdc1BuIAyWS3mUypzcHphm+66PUKdx5HHUHbRxujcwwwI7dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qc2aD+Rk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYrgsVHt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qc2aD+Rk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYrgsVHt; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D15B78F39
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750351569; cv=fail; b=ow8nP734BI/dH1ejDEi8Llt1nkxV9XSga75vRFTYzOhKxI3XoFPjDtKUWHCSRIDbAOWOOBDuRNasQTLrUDStZL0W95ngDRILVDIexUBV8d7lVtYT3l2NnR1Ug6Nkdq2eck9h0F+sbEipertWJbY04kkOefs8ZTj4x3AZ0hQsugI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750351569; c=relaxed/simple;
+	bh=WCVqB6Dbuu4LaL2OwIPzHhKllIPW+cxWDFhh8F1ly+g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aOsbz1yHU49hI2AQqRwb7aQYMxHa+iQ7wxbgOWTwoXENbxg0poBIASLuY/C4L/GI87PHy1Y3IyWLP8uc7ksA3oXcMeF32WGuqkiZzXffmy2c33bZFWtALP0Am49rfPZXG/Ou1TxBhdQaC3/iwE58OhnqAfIbjP4eCWasMT+FTtM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AbZsCcUw; arc=fail smtp.client-ip=40.107.100.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qc2aD+Rk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYrgsVHt";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qc2aD+Rk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYrgsVHt"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8ED40211E3;
-	Thu, 19 Jun 2025 16:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750351469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
-	b=qc2aD+Rkb2PqRaORoyjmyNhxNS75Ye9PVbQDebDjJb62jRi5Y97Z+GJV0ky8C/4yJNPziG
-	08GfntvK4he50AzcQjuG3U6hI3ep2ssbkqs1AY48KIg7eo6zrRObRHCARAPPnDuSLb/lih
-	x/FMHO/DgRmrdzc43iVsSFbENybe188=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750351469;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
-	b=iYrgsVHtWVTIxCiShTFdv0+Fe18Yck4+nQPXyCKlGSVE1QptSl6CQgIriuyzAP6Qmls1bk
-	QWMv31Iw3ia+OIAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qc2aD+Rk;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=iYrgsVHt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750351469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
-	b=qc2aD+Rkb2PqRaORoyjmyNhxNS75Ye9PVbQDebDjJb62jRi5Y97Z+GJV0ky8C/4yJNPziG
-	08GfntvK4he50AzcQjuG3U6hI3ep2ssbkqs1AY48KIg7eo6zrRObRHCARAPPnDuSLb/lih
-	x/FMHO/DgRmrdzc43iVsSFbENybe188=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750351469;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1N/DpDRogQtGmbHByX+jvX5Z1OyNpESX58Fdy62AS+Q=;
-	b=iYrgsVHtWVTIxCiShTFdv0+Fe18Yck4+nQPXyCKlGSVE1QptSl6CQgIriuyzAP6Qmls1bk
-	QWMv31Iw3ia+OIAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 80C1A13721;
-	Thu, 19 Jun 2025 16:44:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id U+9qH20+VGh9SQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 19 Jun 2025 16:44:29 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3DA56A29FA; Thu, 19 Jun 2025 18:44:29 +0200 (CEST)
-Date: Thu, 19 Jun 2025 18:44:29 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH v2 5/6] ext4/jbd2: reintroduce
- jbd2_journal_blocks_per_page()
-Message-ID: <ugup3tdvaxgzc6agaidbdh7sdcpzcqvwzsurqkesyhsyta7q7y@h3q6mrc2jcno>
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AbZsCcUw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c1QDW21de76zZmO0SxbpGw8VnrBtzYUyIOmIlcdAQjWoe8CTY1SnNx+QlUb4wjRHJSJ0D6H9H0K3n8elnHk8PAWeY8kt6K2RMpqUUtuj859+NNRJJ/TtSFY50pn9l8KjoR6uC8g/4d4codyCTrTdY9be+H2EvZYgbbXMme4p0Qxe/6zABEEyZHPQL6VvZMmhUs+mYaHjIJPbN8EsXsfr6pfUvTmyaKH0pxuRCj5zWKA2SXySgjPwcy7GCnzLAXIf+Af6v6XHcG5IBEbzu8yFdWiNm2jbqqz/sbUYhC+izlPktgPNCmlZ6kRpOr/LJixw1KEqyUOlKmBS5sNTnhyGPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WCVqB6Dbuu4LaL2OwIPzHhKllIPW+cxWDFhh8F1ly+g=;
+ b=P1QRhyD5bX3A8hdGYBeOgLlyvhSIJ6nZBWPd9jVMQtt+uP1/XMe5Jr7RihiIm0ZVUPrv6utfBABlmnSZ2MSt0bjzkbNgIfz2v7hxI20qSFcgZkJeARsIZDrYt1jD1su6RM2UYcL8vcFzGkNaJvtXpRuNcFYyPnYt02m1LgotZP76iG5yyoUUhtiuvlQkqE7wXId7RGVf/BqafUCKa9X/aZwerC2xGf8rgD8xurE6ZdvHOVMICOixnNzA81Udc1Qi7/N0hnygWN2Zt6zX++EHiZha6cICUQazHY2ZH88654HsWIbqabdbbkrk4dINamAUuqT47WX2n5WX9gRHhEEIeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WCVqB6Dbuu4LaL2OwIPzHhKllIPW+cxWDFhh8F1ly+g=;
+ b=AbZsCcUwYnTTsahXx40tUOb8IT3NV37AHD8Aqp8slXVffGemdE/ELZ7rk+Acq6b28dvhHB+XcBP86atIeUYZT9cq0toI64M7kAZdWI2RCjVIXO2bvO7r7DlvYauYhmksg2gbF8CZDvOG/SDImo2bRoICuURQ96a6jkMXH9SL/KJKhM3Hg2kcCYvPZ8c5J3EccpDkuR5N81G7gQf3jbRZVkoX1JFBICBUPzIZValie9Rt9ETCFcv950li9zQADgHl/Kop/Q/3wO3/enbWvzamFXmnaFRtsqhJxNqSqgTAgSKUCd1rCuoiLoynGZQoIYDZo5rAzJ/9+cAl4wSMP3rxuQ==
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
+ by DM4PR12MB6448.namprd12.prod.outlook.com (2603:10b6:8:8a::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.22; Thu, 19 Jun 2025 16:46:04 +0000
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::ae1b:d89a:dfb6:37c2%3]) with mapi id 15.20.8813.024; Thu, 19 Jun 2025
+ 16:46:04 +0000
+From: Ankit Agrawal <ankita@nvidia.com>
+To: Donald Dutile <ddutile@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+CC: "maz@kernel.org" <maz@kernel.org>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "shahuang@redhat.com"
+	<shahuang@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, Krishnakant Jaju
+	<kjaju@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Vikram
+ Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>, Alistair Popple
+	<apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, Dan Williams
+	<danw@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com"
+	<coltonlewis@google.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "maobibo@loongson.cn"
+	<maobibo@loongson.cn>
+Subject: Re: [PATCH v7 4/5] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Thread-Topic: [PATCH v7 4/5] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Thread-Index: AQHb4B4TbCVSGMT9r0WVitf7qIEAIrQJHW0AgAABNgCAAUSpXIAAQ9yAgAALxX0=
+Date: Thu, 19 Jun 2025 16:46:04 +0000
+Message-ID:
+ <SA1PR12MB719922A99E16FA6BEB78ADB5B07DA@SA1PR12MB7199.namprd12.prod.outlook.com>
+References: <20250618065541.50049-1-ankita@nvidia.com>
+ <20250618065541.50049-5-ankita@nvidia.com> <aFLqiAyXZLoOTepi@arm.com>
+ <20250618163836.GA1629589@nvidia.com>
+ <SA1PR12MB7199835E63E1EF48C7C7638DB07DA@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <18151eb8-60ec-438b-b9fb-026efc8b848d@redhat.com>
+In-Reply-To: <18151eb8-60ec-438b-b9fb-026efc8b848d@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|DM4PR12MB6448:EE_
+x-ms-office365-filtering-correlation-id: 97bd0594-5d3e-4706-08d0-08ddaf50c812
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?HyZz3O4CDHXlD5yFS4FrgDhbcKmOieP0U+7aGeTx9Kw7pl1dUFtlEh+aLf?=
+ =?iso-8859-1?Q?hDozRaPufnkue/iLY9vATRYq0Ws1P1Hv7GWTOMJRFigajGNd9gJbMjj7Ba?=
+ =?iso-8859-1?Q?fiWN9tONlxX0CzIhtj5+dvDYBPmh8a0sxXaliiqFM3Kpe57rvg8EdZHj0W?=
+ =?iso-8859-1?Q?SWyRxCwvlET95rn2PSYrVT8t4CFKh54c804iRxU4xVCjZiIC3O/LgKYp+t?=
+ =?iso-8859-1?Q?wl365W08vKUt+MTp1XYXFomobboWBdP0B9FCjr816sKzjoyF2ajDYMr13b?=
+ =?iso-8859-1?Q?kzTAxMMA3Z5GcFbr9svz7Jsc7SzSP+2IPh7suPBHtbak0E3L/0DDTUfyVH?=
+ =?iso-8859-1?Q?HOHI4w9A2DiVwHUHYDmGfKSEYdnTRPiRGiXxXDeZF/qCRXBpbGZccbPgyU?=
+ =?iso-8859-1?Q?pZS7+nRfx3IUN8k4NS6rQzXniYAeTb+JVuTJOfwRntfACcEu4H2MScIJf3?=
+ =?iso-8859-1?Q?xGo0Kru8TcoG6Pxf+rJQs/QeS6+hZlMKOlljgpFb6w9OKBwZPXVs7lZfU7?=
+ =?iso-8859-1?Q?1SV4x3vDOOxssSnz/+NfFp1r7hjxKlhbPlEGU1maJsyGLWIPYRT6uD08zt?=
+ =?iso-8859-1?Q?+tUIWftmaHuQiWjNTnpLNp/a4zdHMEoBvbBEudiAYUZv7N6yIK4WZeVvJX?=
+ =?iso-8859-1?Q?pgsloj3ywCPo+EWgOI6iyiwStLQrZYIsmmVTxRqlj212JTFZJrXr6j2sfK?=
+ =?iso-8859-1?Q?wtEEqQH+lOfU9k6ha5eqcD1qN6QRJ8vg5vpdeSwWtFK2nc6wPWwuw6kOEw?=
+ =?iso-8859-1?Q?mqDmy2ibHJhlfhNKxhujhyXeXL1CsJOyGGGZWOIZB5A+GUQSHH62HNqwfG?=
+ =?iso-8859-1?Q?3L6nBAC+2AhzFUOYEK2vCOdMylIh+1ll7zTzTktfPfM0+sUQFtHdgCm3hp?=
+ =?iso-8859-1?Q?Mq7dxLHKjeiTQLYUqmKitZttSZHQqPM7X2x4LlZd5cQPwYJKjVow17itua?=
+ =?iso-8859-1?Q?SaXhGDUKbBJvSvxwepGtwmUBCW6NnTOgrG2Y8zQztVzq5F0purlgMYHA6r?=
+ =?iso-8859-1?Q?kGEZx4YnKh94QGSNkGQlqoxSQjmm3PPPHoMloNVL81AYgCM401rNVhVa/j?=
+ =?iso-8859-1?Q?D9g/QAwsCN2cd6XEr0wi55zlVr4NhapWyKTwORj2bBiTDQuDB8Gj9bcBaX?=
+ =?iso-8859-1?Q?n3auQZtUXIGETAzVKFXxAsBTIf5HtKkp29OjX3q11XOLfD/btHRNK4motv?=
+ =?iso-8859-1?Q?8rjxvR+r/aH4rYHA23vQAY0qBokpLtesQNxyM4fBYG8dBDl4k5U2kMNUtm?=
+ =?iso-8859-1?Q?YclNFRma/LNJSA2R3nAjcmPZbldG/edHFvuMl3te5F/QQkrT8zcmYqwGBi?=
+ =?iso-8859-1?Q?efyQb8I7xdkczxmZx7s8BM01Ab5viaGaO3Zhns+n4Z125sTVKNVeIInHz3?=
+ =?iso-8859-1?Q?cQFc2cA18aEKPZxP6utISAuTwBxR9DKb14LUAv3FtU/RV1vyJ5gEX8B0FE?=
+ =?iso-8859-1?Q?QiBEi06m69iXNhmE4FxkAMLJczmjcSOv2YqIVCcy+csNI6YjqCYsHXwV6b?=
+ =?iso-8859-1?Q?jZpNloNZM2IJde7lPy5wrLhr12u+4ZHef2T0bUvGBkWcb7q3RlttU5OEJi?=
+ =?iso-8859-1?Q?kKn0Vf0=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?Pp//15ChRkE6XN0FtmgKqjrxh3rAg00Ryu7307Gx1edvMloR3pAcNmCX4t?=
+ =?iso-8859-1?Q?XGIrofqNFwOviks6u7wP7eQTFnPfqqJohL+2ulS/mQkEMtoQvZulOl2rob?=
+ =?iso-8859-1?Q?euuJQGVKAxrKTXSxluFgbBRShYqkPioicTwXOgfeRqFHld4MBZ9ZVIv1F0?=
+ =?iso-8859-1?Q?618kUKk3uWXKjf/4hE00+bEulC80a8jiDkE7Bb1eCwdTehZlcinxlP5XCV?=
+ =?iso-8859-1?Q?D9YJuMTWql+MShruL9XLRoHmsJ+7u8DW9J78sfoc1EA5ZSdig7X23fWg+M?=
+ =?iso-8859-1?Q?HjaFEVC8Ph8x709pHMV7VCXZkYk3SCHWpDU3zhyEd5tlmGmetv7VdKfsqA?=
+ =?iso-8859-1?Q?L1svBvxj0NnDtOFfSYqCgknGxB++iuON7bTpv6J+T/L9wZ2J7aNvss6ikE?=
+ =?iso-8859-1?Q?dkBCbrQuGEEycmSgVVCNZPOZcqu9khIVc/PhaTAMe8O1Jb0N1pxIQaPUNi?=
+ =?iso-8859-1?Q?UcywpUqvoNpu5tn8qC7KKp2/3w1jPu12ldTi0nzBwlFhsMB1U0QrmqxETf?=
+ =?iso-8859-1?Q?OFJ49gaxTxgJLREw93pa3KpFH1Gkuikc5wo4cOqviwXNaUtgIIu0US955V?=
+ =?iso-8859-1?Q?tM0iYoCuAzQShyJORioZkJQzZMt8XNt74OooNfph4L8JX/KMtTuauH9T/U?=
+ =?iso-8859-1?Q?mX3HitIPurPb9XKSjRZsyD6/thguvd84gqaanYewdLdeO78AzlWfKo6UQq?=
+ =?iso-8859-1?Q?uoA9miVhd24PM412S3AcMYA66uoFbbv/wWTfnKJUTHg5HJ09+eu/hrGx5h?=
+ =?iso-8859-1?Q?SYmAYJFeUtbdsaJQpYR1x4vvjd/VCS1S9L4ShoLXWNvOxqhKvXsv+lVxR5?=
+ =?iso-8859-1?Q?NczfZubYXP1bNmlyPisiWyzd1drgmtPqnEiK6bL2jNhuu36Gl6cqYtlvCB?=
+ =?iso-8859-1?Q?uRNkwZSlllc51aDVWUGSoYrZrX/3V3jWIKaTPiDGkbqof8IAFCVYbukFGw?=
+ =?iso-8859-1?Q?M+pJNSLO/U6a5QTIjDkvgrIibLujAeZTE+S4P6sOPWcrVZqAkpNA9bdQJb?=
+ =?iso-8859-1?Q?AN3oMvxh2RzZ6i6Xw62Fes4lLnClkX5+9LqH0WBWZwKEID9y6ASzQxh5W2?=
+ =?iso-8859-1?Q?bv/D2dT0+R2qA/9tpGVWRbEFFRt+a6wlYv14MK7N+arKNbP6AdoLu+3gvU?=
+ =?iso-8859-1?Q?vrm37OeOUq9LHsc3+LcisaDr9uffGreQmSXfMQuyJUabzWydqUYq7c2pir?=
+ =?iso-8859-1?Q?KENibHwyKHCjXe9TfZgLWDzO/WfEQw4anjjwliti37QG1ghSTlw/Dx49Bi?=
+ =?iso-8859-1?Q?HN5G/MtX+BHpsg7wcNyt0drkTlrzqaoOQGnXjkqDSOPoSvfQz0u/dQkRaE?=
+ =?iso-8859-1?Q?2WYYDJTGiNUW12Y+jgKhMlJGdr0RV1YrAY4znR17DuK0j9joIPR6nHuMkG?=
+ =?iso-8859-1?Q?ODOH5bntlO3/5WlEhbDoNtq7ybNaSAW4qqZWiIH9edYyt/nNO23cMEsR9U?=
+ =?iso-8859-1?Q?AQt1RHyX3J6Re/c6GSfOn2tEzKwT54NXK4yGfhxvHDxSs6jpW6k2u1tPEA?=
+ =?iso-8859-1?Q?by86vMSmV2H/At1QYD9lrOxNpsQHX49XU2EBaoex/GwhlplShDEls7Iy/7?=
+ =?iso-8859-1?Q?IGh1Bqgr5fgyiqnT62+d+5Cc5FiVDs7saySmAPXEBOu2WiVdXcvGF6R0ju?=
+ =?iso-8859-1?Q?Nwy4/1IWV2txQ=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.cz:dkim];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 8ED40211E3
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97bd0594-5d3e-4706-08d0-08ddaf50c812
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 16:46:04.4841
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2jhBD8AG+lo2wac5sGaWhlFqhx6pFkBwHv/kueaUl3K+bDs9HKMDBhO9Eg/PUEKlOvEqS4r4NCXFePWSDQAT9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6448
 
-On Wed 11-06-25 19:16:24, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> This partially reverts commit d6bf294773a4 ("ext4/jbd2: convert
-> jbd2_journal_blocks_per_page() to support large folio"). This
-> jbd2_journal_blocks_per_folio() will lead to a significant
-> overestimation of journal credits. Since we still reserve credits for
-> one page and attempt to extend and restart handles during large folio
-> writebacks, so we should convert this helper back to
-> ext4_journal_blocks_per_page().
-> 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-
-Here I'm not decided. Does it make any particular sense to reserve credits
-for one *page* worth of blocks when pages don't have any particular meaning
-in our writeback code anymore? We could reserve credits just for one
-physical extent and that should be enough. For blocksize == pagesize (most
-common configs) this would be actually equivalent. If blocksize < pagesize,
-this could force us to do some more writeback retries and thus get somewhat
-higher writeback CPU overhead but do we really care for these configs?  It
-is well possible I've overlooked something and someone will spot a
-performance regression in practical setup with this in which case we'd have
-to come up with something more clever but I think it's worth it to start
-simple and complicate later.
-
-								Honza
-
-> ---
->  fs/ext4/ext4_jbd2.h  | 7 +++++++
->  fs/ext4/inode.c      | 6 +++---
->  fs/jbd2/journal.c    | 6 ++++++
->  include/linux/jbd2.h | 1 +
->  4 files changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> index 63d17c5201b5..c0ee756cb34c 100644
-> --- a/fs/ext4/ext4_jbd2.h
-> +++ b/fs/ext4/ext4_jbd2.h
-> @@ -326,6 +326,13 @@ static inline int ext4_journal_blocks_per_folio(struct inode *inode)
->  	return 0;
->  }
->  
-> +static inline int ext4_journal_blocks_per_page(struct inode *inode)
-> +{
-> +	if (EXT4_JOURNAL(inode) != NULL)
-> +		return jbd2_journal_blocks_per_page(inode);
-> +	return 0;
-> +}
-> +
->  static inline int ext4_journal_force_commit(journal_t *journal)
->  {
->  	if (journal)
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 67e37dd546eb..9835145b1b27 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -2556,7 +2556,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
->   */
->  static int ext4_da_writepages_trans_blocks(struct inode *inode)
->  {
-> -	int bpp = ext4_journal_blocks_per_folio(inode);
-> +	int bpp = ext4_journal_blocks_per_page(inode);
->  
->  	return ext4_meta_trans_blocks(inode,
->  				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
-> @@ -2634,7 +2634,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
->  	ext4_lblk_t lblk;
->  	struct buffer_head *head;
->  	handle_t *handle = NULL;
-> -	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
-> +	int bpp = ext4_journal_blocks_per_page(mpd->inode);
->  
->  	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
->  		tag = PAGECACHE_TAG_TOWRITE;
-> @@ -6255,7 +6255,7 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
->   */
->  int ext4_writepage_trans_blocks(struct inode *inode)
->  {
-> -	int bpp = ext4_journal_blocks_per_folio(inode);
-> +	int bpp = ext4_journal_blocks_per_page(inode);
->  	int ret;
->  
->  	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index d480b94117cd..7fccb425907f 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -84,6 +84,7 @@ EXPORT_SYMBOL(jbd2_journal_start_commit);
->  EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
->  EXPORT_SYMBOL(jbd2_journal_wipe);
->  EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
-> +EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
->  EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
->  EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
->  EXPORT_SYMBOL(jbd2_journal_force_commit);
-> @@ -2661,6 +2662,11 @@ int jbd2_journal_blocks_per_folio(struct inode *inode)
->  		     inode->i_sb->s_blocksize_bits);
->  }
->  
-> +int jbd2_journal_blocks_per_page(struct inode *inode)
-> +{
-> +	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
-> +}
-> +
->  /*
->   * helper functions to deal with 32 or 64bit block numbers.
->   */
-> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> index 43b9297fe8a7..f35369c104ba 100644
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -1724,6 +1724,7 @@ static inline int tid_geq(tid_t x, tid_t y)
->  }
->  
->  extern int jbd2_journal_blocks_per_folio(struct inode *inode);
-> +extern int jbd2_journal_blocks_per_page(struct inode *inode);
->  extern size_t journal_tag_bytes(journal_t *journal);
->  
->  static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>> Considering the feedback, I think we may do the following here:=0A=
+>> 1. Rename the device variable to S2_noncacheable to represent if the S2 =
+is=0A=
+>> going to be marked non cacheable. Otherwise S2 will be >mapped NORMAL.=
+=0A=
+>> 2. Detect what PFN has to be marked S2_noncacheable. If a PFN is not in =
+the=0A=
+>> kernel map, mark as S2 except for PFNMAP + VMA cacheable.=0A=
+>=A0=A0 Q: 'mark as S2 except'... should be 'mark as S2_noncacheable' ?=0A=
+=0A=
+Yeah, that's correct. Thanks for catching that.=0A=
+=0A=
+"Detect what PFN has to be marked S2_noncacheable. If a PFN is not in the=
+=0A=
+kernel map, mark as S2_noncacheable except for PFNMAP + VMA cacheable."=0A=
+=0A=
+> 3. Prohibit cacheable PFNMAP if hardware doesn't support FWB and CACHE DI=
+C.=0A=
+> 4. Prohibit S2 non cached mapping for cacheable VMA for all cases, whethe=
+r=0A=
+> pre-FWB hardware or not.=0A=
