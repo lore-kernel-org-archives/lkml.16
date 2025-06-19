@@ -1,158 +1,236 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D629227F012;
-	Thu, 19 Jun 2025 13:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E39E25C83F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340030; cv=none; b=lp4DqLScdmEWSlLV4smtNxb7Q2BVj1yemgBYSYVPRbewNJlf4c0AF+ZMdrewOC0KTAXo+Bt+uANq3kXgEGCWXnPV+9F2zaTQl1fhyAs4Li4EXjijL3B3OSgPQlfjuf8OYnrhd45T7YnkU71/dEEo2Y/1otsdKSxxVCy5qErGWWY=
+	t=1750340091; cv=none; b=Hob0Dm2XFKDaoFlu51xjtuolIB7JcyQWMU6S8NYHpr0DtUJRKV7sjWiH94wG1FPVJAoucAi9dJ8mht+ookdlgO8jrNEevbev517IGxZE3whdfum2mJL8y4UKkQdRP2grJKDZttgX1dxQOmS8Qsk6EUlaTR/ERokk6iPy4P6Z9QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340030; c=relaxed/simple;
-	bh=rDIKcSiYQJe15m1IDcOJZmDTsQ5OQbu0kf6w9A5E14s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOPBG0UtY2t0uaPdpnSlIDnN/VK6pQyi0LBv3L+3U9UhA4L49+AlTlIPykRoWO0CmO0dqgEqH2rCk7jCenOuWsXU4tb4kjVnZDK3QJJJP/4QhQ99xnQ0rePz04ZVzlwyuFPmczG049bro7fOixu/87ocNH3uxB8wpXXZmJyYKsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=du9r+xtu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k6H8SekO; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="du9r+xtu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k6H8SekO"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.phl.internal (Postfix) with ESMTP id 1423D1380546;
-	Thu, 19 Jun 2025 09:33:48 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Thu, 19 Jun 2025 09:33:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1750340028;
-	 x=1750426428; bh=8kDt3zlJ8Jp+wHdv475e9FkA0WuAIngnIKvyPPcuVz8=; b=
-	du9r+xtubVk3ZlGUMI/gYv2uEWuBgdGsGeQrc5LnXP9sqYF/JtcWebDMMfr5Ofik
-	o6yVaj7t7eUgUbjWI+QkjnfpuhPaXVDe2dLNud7kCvdYv3daxCIM76SdGtXbkNDu
-	a5IXmWxHtP3qQbiMzrocAh8wZGhUCAsQHmlNtIcWBCXxKWKplrIkFlokdDaHOmT6
-	Xd290YgA2hUEFtDKarhs1lClP1qV0LUHXun6vUx8pyUFnIGoLuby4bY0hb5zz25F
-	JrbrVrhdP6O0vTQfx5awDniTkfeXR1CFwZbYy053ZqrIr4mDI04jdn3fDpMbGEn3
-	YiU/YXZch4R54T+ps6EVuQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750340028; x=
-	1750426428; bh=8kDt3zlJ8Jp+wHdv475e9FkA0WuAIngnIKvyPPcuVz8=; b=k
-	6H8SekOvaL4IK9ddsbjtvJmZtrpsLT+BtGGRxsaqt65WGXtjuxvLb4CLVmGi4qlu
-	eEa/rGtyobXd304A4IYLZlAvTvXIzxEA5wH+/XIVt4lUlOXdJ/mFggcozXHL6EaB
-	fgjn2houQeT7WbhJgoVlG0REdp1F5VDc/m5eVMTCNwVomvWKkP1MGi1mpnFBcotB
-	f3gizsZuh7/GMEvsWh3g0/psGJvGbCRjpsUKqmqCe5+TqrhRu7BLoNlqNJ6qxwUX
-	1p/i3HEHblQHMzDl3tBdMBf2Ca5mvM1KToBHatZOrp6Xn4xXLlQy2SpFS4q8FXWT
-	OLEsgrCP//ZJ9E3Rq8kAw==
-X-ME-Sender: <xms:uxFUaBAxE4xVXIX6QBqNkoJC3xC32NZj8PJ4RYvvqn7B68iXPV5cFw>
-    <xme:uxFUaPhf9kTH0rbwptH6RC0RWBos4RH9wwOT0bHospfsUL2s2R5rWu1Lil0Shz_bx
-    IINOmZLemjUU3wpSGM>
-X-ME-Received: <xmr:uxFUaMkEIDc4LgufQW-GS8wasAOqU0-YOfUG1NVDAP67-tlZrMUIBV8eEhI_XjofETV_K4PjXj1SQ8_izwz-l83i9OxECZM3TQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehieehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhklhgrshcu
-    ufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvg
-    gthhdrshgvqeenucggtffrrghtthgvrhhnpeevteegtddvvdfhtdekgefhfeefheetheek
-    keegfeejudeiudeuleegtdehkeekteenucevlhhushhtvghrufhiiigvpedunecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrght
-    vggthhdrshgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopeht
-    ohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurd
-    gtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjuhhlihgvnhdrmhgrsh
-    hsohhtsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepshgrkhgrrhhirdgrihhl
-    uhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhgruhhrvghnthdrph
-    hinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehgrhgv
-    ghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuh
-    hsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:uxFUaLwLHjkFRPWQh42kzdFHZxtjF0tCpPdAmYvj-DtJUsueU8bSpQ>
-    <xmx:uxFUaGSr6WWzjzDqo0Y8JBna7-msqLkqx0hQVDYnJGbSrTllI6iRrQ>
-    <xmx:uxFUaOZtkI2szj8vIZyv_pqIJ42bArmQapqaqMMo3y7l9L7rn1x6Qw>
-    <xmx:uxFUaHQA4T9roLWPsmCIYWtAlgitLh12mZWRsS7ux8zY2goVDn_2sg>
-    <xmx:vBFUaNnb_SYY2du1AvVe1vNktkzJobqctXQFcnAo_K8xWL9QK6OmqOYb>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 09:33:47 -0400 (EDT)
-Date: Thu, 19 Jun 2025 15:33:45 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	"open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS" <linux-media@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
-	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v4 11/19] dt-bindings: media: i2c: max96712: add support
- for MAX96724F/R
-Message-ID: <20250619133345.GD2847778@ragnatech.se>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
- <20250618095858.2145209-12-demonsingur@gmail.com>
+	s=arc-20240116; t=1750340091; c=relaxed/simple;
+	bh=CKIZW3EachgGJ1sLkSL4h69yq80ir33gZvH+kbjywRk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=La3sMV8rw6QFJzqGjiB65wogJmVb1uzXkGQc/GGxmXvAS6wlL1MsA3fAJOCKUZrMYbTi+4TJRt343MNPZgkCWuyKl9+eQeSv+UVcQbvgg2Zue+9CBkuwjfwUgMhJjqnS9mIergB1EH2C3SweOyRZ9U6Vuex4ByWuulsxWwKbs5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uSFPb-0006RK-JX; Thu, 19 Jun 2025 15:34:39 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uSFPa-004JCY-1W;
+	Thu, 19 Jun 2025 15:34:38 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uSFPa-005lCs-1H;
+	Thu, 19 Jun 2025 15:34:38 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v1 1/1] phy: micrel: add Signal Quality Indicator (SQI) support for KSZ9477 switch PHYs
+Date: Thu, 19 Jun 2025 15:34:37 +0200
+Message-Id: <20250619133437.1373087-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250618095858.2145209-12-demonsingur@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Cosmin,
+The KSZ9477 family of switch chips integrates PHYs that support a
+Signal Quality Indicator (SQI) feature. This feature provides a
+relative measure of receive signal quality, which approximates the
+signal-to-noise ratio and can help detect degraded cabling or
+noisy environments.
 
-Thanks for your work.
+This commit implements the .get_sqi callback for these embedded PHYs
+in the Micrel PHY driver. It uses the MMD PMA/PMD device registers
+(0x01, 0xAC–0xAF) to read raw SQI values from each channel.
 
-On 2025-06-18 12:58:47 +0300, Cosmin Tanislav wrote:
-> MAX96724F/MAX96724R are a lower capability variant of the MAX96724 which
-> only support a fixed rate of 3Gbps in the forward direction.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+According to the KSZ9477S datasheet (DS00002392C), section 4.1.11:
+  - SQI registers update every 2 µs.
+  - Readings can vary significantly even in stable conditions.
+  - Averaging 30–50 samples is recommended for reliable results.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+The implementation:
+  - Averages 40 samples per channel, with 3 µs delay between reads.
+  - Polls only channel A for 100BASE-TX links.
+  - Polls all four channels (A–D) for 1000BASE-T links.
+  - Returns the *worst* quality (highest raw SQI), inverted to match
+    the Linux convention where higher SQI indicates better signal quality.
 
-> ---
->  .../devicetree/bindings/media/i2c/maxim,max96712.yaml        | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> index b345305acc4c..5dcafd46344c 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> @@ -24,12 +24,17 @@ description: |
->    MAX96712 can be paired with first-generation 3.12Gbps or 1.5Gbps GMSL1
->    serializers or operate up to 3.12Gbps with GMSL2 serializers in GMSL1 mode.
->  
-> +  MAX96724F and MAX96724R only support a fixed rate of 3Gbps in the forward
-> +  direction.
-> +
->  properties:
->    compatible:
->      items:
->        - enum:
->            - maxim,max96712
->            - maxim,max96724
-> +          - maxim,max96724f
-> +          - maxim,max96724r
->  
->    reg:
->      description: I2C device address
-> -- 
-> 2.49.0
-> 
+Since there is no direct MDIO access to the PHYs, communication occurs
+via SPI, I2C, or MDIO interfaces with the switch core, which then provides
+an emulated MDIO bus to the integrated PHYs. Due to this level of
+indirection, and the number of reads required for stable SQI sampling,
+read latency becomes noticeable.
 
+For example, on an i.MX8MP platform with a KSZ9893R switch connected
+via SPI, invoking `ethtool` to read the link status takes approximately
+200 ms when SQI support is enabled.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+
+This commit currently focuses on single-channel SQI support due to
+budget constraints that prevent immediate extension of the SQI API for
+full multichannel functionality. Despite this limitation, the feature
+still significantly improves diagnostic capabilities for users, and I
+intend to upstream it in its current form.
+---
+ drivers/net/phy/micrel.c | 112 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index d0429dc8f561..e9cd802ba994 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -2173,6 +2173,116 @@ static void kszphy_get_phy_stats(struct phy_device *phydev,
+ 	stats->rx_errors = priv->phy_stats.rx_err_pkt_cnt;
+ }
+ 
++/* Base register for Signal Quality Indicator (SQI) - Channel A
++ *
++ * MMD Address: MDIO_MMD_PMAPMD (0x01)
++ * Register:    0xAC (Channel A)
++ * Each channel has its own register:
++ *   Channel A: 0xAC
++ *   Channel B: 0xAD
++ *   Channel C: 0xAE
++ *   Channel D: 0xAF
++ */
++#define KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A	0xAC
++
++/* SQI field mask for bits [14:8]
++ *
++ * SQI indicates relative quality of the signal.
++ * A lower value indicates better signal quality.
++ * Use FIELD_GET() to extract the field.
++ */
++#define KSZ9477_MMD_SQI_MASK			GENMASK(14, 8)
++
++/* Maximum raw value of the SQI field (7 bits: bits [14:8]) */
++#define KSZ9477_MMD_SQI_MAX_VALUE		0x7F
++
++/* Delay between consecutive SQI register reads in microseconds.
++ *
++ * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
++ * The register is updated every 2 µs. Use 3 µs to avoid redundant reads.
++ */
++#define KSZ9477_MMD_SQI_READ_DELAY_US		3
++
++/* Number of SQI samples to average for a stable result.
++ *
++ * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
++ * For noisy environments, a minimum of 30–50 readings is recommended.
++ */
++#define KSZ9477_SQI_SAMPLE_COUNT		40
++
++/* Currently only Channel A is supported by the SQI API */
++#define KSZ9477_SQI_MAX_CHANNELS		1
++
++/**
++ * kszphy_get_sqi - Read and average Signal Quality Indicator (SQI)
++ * @phydev: the PHY device
++ *
++ * For 1000BASE-T, all four differential pairs (channels A–D) are polled.
++ * For 100BASE-TX, only channel A is used.
++ *
++ * SQI approximates SNR and varies with cable length, noise, etc.
++ * Lower raw values from hardware = better signal.
++ * This function inverts the value to match Linux convention:
++ * higher SQI = better signal quality.
++ *
++ * Return: SQI value (0–127), or negative errno on failure.
++ */
++static int kszphy_get_sqi(struct phy_device *phydev)
++{
++	int sum[KSZ9477_SQI_MAX_CHANNELS] = {};
++	int avg[KSZ9477_SQI_MAX_CHANNELS] = {};
++	int ch, i, val, sqi;
++	u8 channels;
++
++	/* Determine applicable channels based on link speed */
++	if (phydev->speed == SPEED_1000)
++		/* TODO: current SQI API only supports 1 channel.
++		 * In the future, we can extend it to support all 4 channels.
++		 */
++		channels = 1;
++	else if (phydev->speed == SPEED_100)
++		channels = 1;
++	else
++		return -EOPNOTSUPP;
++
++	/*
++	 * Sample and accumulate SQI readings for each channel.
++	 *
++	 * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
++	 * - The SQI register is updated every 2 µs.
++	 * - Values may fluctuate significantly, even in low-noise environments.
++	 * - For reliable estimation, average a minimum of 30–50 samples
++	 *   (recommended for noisy environments)
++	 * - In noisy environments, individual readings are highly unreliable.
++	 *
++	 * We use 40 samples per channel with a delay of 3 µs between each
++	 * read to ensure new values are captured (2 µs update interval).
++	 */
++	for (i = 0; i < KSZ9477_SQI_SAMPLE_COUNT; i++) {
++		for (ch = 0; ch < channels; ch++) {
++			val = phy_read_mmd(phydev, MDIO_MMD_PMAPMD,
++					   KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A + ch);
++			if (val < 0)
++				return val;
++
++			sqi = FIELD_GET(KSZ9477_MMD_SQI_MASK, val);
++			sum[ch] += sqi;
++		}
++		udelay(KSZ9477_MMD_SQI_READ_DELAY_US);
++	}
++
++	/* Average readings per channel */
++	for (ch = 0; ch < channels; ch++)
++		avg[ch] = sum[ch] / KSZ9477_SQI_SAMPLE_COUNT;
++
++	return avg[0]; /* Return the average for channel A */
++}
++
++static int kszphy_get_sqi_max(struct phy_device *phydev)
++{
++	return KSZ9477_MMD_SQI_MAX_VALUE;
++}
++
+ static void kszphy_enable_clk(struct phy_device *phydev)
+ {
+ 	struct kszphy_priv *priv = phydev->priv;
+@@ -5801,6 +5911,8 @@ static struct phy_driver ksphy_driver[] = {
+ 	.update_stats	= kszphy_update_stats,
+ 	.cable_test_start	= ksz9x31_cable_test_start,
+ 	.cable_test_get_status	= ksz9x31_cable_test_get_status,
++	.get_sqi	= kszphy_get_sqi,
++	.get_sqi_max	= kszphy_get_sqi_max,
+ } };
+ 
+ module_phy_driver(ksphy_driver);
 -- 
-Kind Regards,
-Niklas Söderlund
+2.39.5
+
