@@ -1,113 +1,238 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35C166F1A;
-	Thu, 19 Jun 2025 09:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCC72192F1
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750325061; cv=none; b=PKZC4USKGsZWz9bw9CPNYoMiw7ukEW0hAqOB1WrpHkbYcw2Wl+epsNfFZc3Aul6vKzZ0Hmu1VLfCbSAFEdMRGtlrnjYJfRzv1gl15wLPQYnfzmxE3Yj7Cvf+nN14+YGK/cE4YJURCV26dn0LFAdBm+A975QgJtO4sWaBOA1gjrA=
+	t=1750325175; cv=none; b=Feqqfih9S+ZxYZM13O8S9oNMUXS0u1AEEKjdkpggmezwCbDoRr0DPEac+JneO798ahOChtt/T46e7wQngUTuT0+bIWSTj57wf5v7a8N91QapHm21CNACzeZ+adksQ+gNhxLdPZh9G+nMrIAZMuboyMeGRQo+goxPvlLcWH9tFow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750325061; c=relaxed/simple;
-	bh=JbzrzqA0/p8I8EtwwZirDCjv+hDsXgCgRktfC4CCX8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EvE7UWpao8VGsbuwBIn9PAqf8ObWCTHhzhmm/ra5aY4q/OmS97Y+0Hewpscy570IeT8MOQmc+AiHXdKk0QanR7jyo52UWuvynZ5xrDCehUKer9KvY/8gk/ZW6PA0hbAyyEtNe9b0hApXKNmfxxtPZJzGGZ22cN4FgqnSudraqqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jJPrO+oy; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750325175; c=relaxed/simple;
+	bh=oePC2rsrL/0s5r5IT9EMpK1hS6g3c56JLYbSqtIXBgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T5aMW/TXmcbdzu3TPTEH1DNfH3HB7oPmNjnaE4dPsTp79+kDaFxY8bBY28x93WJa4E67f9AexUmjIbmwiBvW0s+YlGrWqh1ab9CZ8Hsg5O6xZkmE2gQ3Q5A30/tHG9Gk8PZ9Et6wVhGMbQeJhP//454aMtTwaXnTKi+OtZiHGBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=c3aw0hUu; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jJPrO+oy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2JeEE3ggrTpBGQUKEsYkqTFhXO/k+e9yZjnLbjYAA0g=; b=jJPrO+oyphGhQXrIlBketeJfcc
-	cIiw+MrKL9bpn3Ptn4rnBqLPveCu+ARDsdTDlQFCeUQND3hWkq+k80DqEvYJuhRAyTwwHJpQKfmNe
-	7Lhn1PjytOd6PIMHJ0VVsX4bCtKisbs4rL1f8UlsSfJokaga5DqKe/TW3thLjVH9maXZlKZFBTc6S
-	cGz2zm+/Gsrz7ZuP9j+/TQiETjLPmvCKLLqu38y0UoqdJEvsZaChVow7aVSoTvTZD05l7yYs1DRF4
-	xhIGnUYBdDy0Klhf6FT2Z5SArEl2t89TmMj1xHBWzB46LKxVyWzg4Xh6h9IAcebukubV4eAaZ6rdz
-	LINNUghg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSBV9-000000080wO-1Zt3;
-	Thu, 19 Jun 2025 09:24:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 74F823088F2; Thu, 19 Jun 2025 11:24:06 +0200 (CEST)
-Date: Thu, 19 Jun 2025 11:24:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250619092406.GG1613200@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.938845449@goodmis.org>
- <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
- <20250619043733.2a74d431@batman.local.home>
- <20250619084427.GA1613376@noisy.programming.kicks-ass.net>
- <20250619084813.GG1613633@noisy.programming.kicks-ass.net>
- <66B9E72C-4FDF-46DF-9231-BED06A6000D9@goodmis.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="c3aw0hUu"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so4720315e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750325171; x=1750929971; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFduEnhXUsatH/EJNhRFobWfktSYom6XTIV/7I7xFnQ=;
+        b=c3aw0hUurqqU9eqQgInBKNIeeXwf/+BZzmTAq3n1bBVxZ0jhpeaxzlqyjBI+KG/6hu
+         gFmggOJ2+aE/orW8WgqKu5+8rRzVfgDq1T75j5xfhPUr1D5HKUbBRpU4v2Xdx+8OwEuW
+         Z1RGJKwooHcvJaO4Z+ufwtEzYa72lA3DipI0FN4cyzi6MCedtRMp0fsMwBeIpvgPyII+
+         e0oSI5YQcaSs0zwHAPBYzXEHU0dnY/Y/llLSjICv9JoaoVt85zW6H+YVhl1Dh+ztZAPo
+         N1LKDim4kR8opAkzzyBxZCMplE+4v2woPJoboYCnEirtR+G0u0mqPk8ibYkXVv51kq5L
+         OEZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750325171; x=1750929971;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xFduEnhXUsatH/EJNhRFobWfktSYom6XTIV/7I7xFnQ=;
+        b=f1tx0dqfVTWqWSdfU+I9rBOmFVzcQ+h4l8OSjxKVi6R2gL2L/W90UB22LgCk8Csp7Y
+         1KzVfbvs/N1JtGZc7ARUxQy+s0lIizC4u37wKIeP1umMo/glB/IiMAN4luTb4jz2u4AW
+         8c66/p2PTJdYx/lfaS0rgVYKOFOJ7/7O9ukP+SqpNgDMiSsMpwD/xjDCll/YhcX0HT0m
+         P6O1qnjUebLHy6BqQf3odF+J4Dz5cHIcFqVxFvUHvRG99hy3t/6IrFRa9h0NqYq+dmRT
+         tHEayEDzBdthmN2T8HOHjFk/yssRfY9BSQkyifmBT53/el351WC63Nh7BGmXrrE8UZ7E
+         AggA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9KVnKYHdWa7cuc4CqoQEbuCbKQS4RFRiTkOuIunzD5xn7rS1wYtzg58MOPGGyLdoyT9N5Lrgpmd3bD9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRarMnY6i3pWvLA6Yqfk1gYoe8OVC6UytlJPBeIFP5hKDXc1uP
+	RaWF8ArFruBClnxrJRZl2PqefJPftVSm6pvhsxVcG4b7vJE/JkZObI4b6EvJWNn+lF4=
+X-Gm-Gg: ASbGncuLUp6Z8l30yYJIWPXXmu7Ztl/ysIR+cmd67gl7ysZNZ40swLKSELedlovt5tP
+	j45wJ1OYoX+xdRqCPQcbJm9vXMnr2wv0vfVyQMoait2HUL+gU3FJSjvxPkE4g10btb+8+Y6BiYM
+	5P02uMRntm/eX5p6HE27Fqg6odcAS4RiMAeysuvXW9iW0NMH9PBXhSqSfb/N5hL2ryOVrBtUAoJ
+	xozQqoZW4NdzyK6rELyijq/tNEtEHsrGDRvyu4i4Th78hMSoXH5t/GjsAU/yws/CXZdZatK5Uz+
+	e4UBU8Q1ttsaNP+gjlspwVlFwzLjVD17iSVqbbCR7TWvjG92P2+GzlKPWBeUeT6HFA==
+X-Google-Smtp-Source: AGHT+IH+rSLelUbOCvaoicNNF/CyY7wjSjbi8eWu3dGQSyY9nlmw7zz/AphopgWm6bwj3NGMdFfUkQ==
+X-Received: by 2002:a05:600c:3f07:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-4533ca7a34bmr206457105e9.4.1750325171411;
+        Thu, 19 Jun 2025 02:26:11 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.38])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e9844c3sm23119385e9.11.2025.06.19.02.26.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 02:26:11 -0700 (PDT)
+Message-ID: <9376b309-8561-4fcc-9e71-3bd03fd8f9d0@suse.com>
+Date: Thu, 19 Jun 2025 12:26:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66B9E72C-4FDF-46DF-9231-BED06A6000D9@goodmis.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 02/21] x86/virt/tdx: Enhance tdh_mem_page_aug() to
+ support huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+ "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>,
+ "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com"
+ <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+ "tabba@google.com" <tabba@google.com>, "Li, Zhiquan1"
+ <zhiquan1.li@intel.com>, "Du, Fan" <fan.du@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "michael.roth@amd.com" <michael.roth@amd.com>,
+ "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
+ "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
+ "ackerleytng@google.com" <ackerleytng@google.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+ "Peng, Chao P" <chao.p.peng@intel.com>,
+ "Annapurve, Vishal" <vannapurve@google.com>,
+ "jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>,
+ "pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030428.32687-1-yan.y.zhao@intel.com>
+ <a36db21a224a2314723f7681ad585cbbcfdc2e40.camel@intel.com>
+ <aCb/zC9dphPOuHgB@yzhao56-desk.sh.intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <aCb/zC9dphPOuHgB@yzhao56-desk.sh.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 05:10:20AM -0400, Steven Rostedt wrote:
+
+
+On 5/16/25 12:05, Yan Zhao wrote:
+> On Wed, May 14, 2025 at 02:52:49AM +0800, Edgecombe, Rick P wrote:
+>> On Thu, 2025-04-24 at 11:04 +0800, Yan Zhao wrote:
+>>> Enhance the SEAMCALL wrapper tdh_mem_page_aug() to support huge pages.
+>>>
+>>> Verify the validity of the level and ensure that the mapping range is fully
+>>> contained within the page folio.
+>>>
+>>> As a conservative solution, perform CLFLUSH on all pages to be mapped into
+>>> the TD before invoking the SEAMCALL TDH_MEM_PAGE_AUG. This ensures that any
+>>> dirty cache lines do not write back later and clobber TD memory.
+>>
+>> This should have a brief background on why it doesn't use the arg - what is
+>> deficient today. Also, an explanation of how it will be used (i.e. what types of
+>> pages will be passed)
+> Will do.
 > 
+>>>
+>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+>>> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+>>> ---
+>>>   arch/x86/virt/vmx/tdx/tdx.c | 11 ++++++++++-
+>>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+>>> index f5e2a937c1e7..a66d501b5677 100644
+>>> --- a/arch/x86/virt/vmx/tdx/tdx.c
+>>> +++ b/arch/x86/virt/vmx/tdx/tdx.c
+>>> @@ -1595,9 +1595,18 @@ u64 tdh_mem_page_aug(struct tdx_td *td, u64 gpa, int level, struct page *page, u
+>>>   		.rdx = tdx_tdr_pa(td),
+>>>   		.r8 = page_to_phys(page),
+>>>   	};
+>>> +	unsigned long nr_pages = 1 << (level * 9);
+>>> +	struct folio *folio = page_folio(page);
+>>> +	unsigned long idx = 0;
+>>>   	u64 ret;
+>>>   
+>>> -	tdx_clflush_page(page);
+>>> +	if (!(level >= TDX_PS_4K && level < TDX_PS_NR) ||
+>>> +	    (folio_page_idx(folio, page) + nr_pages > folio_nr_pages(folio)))
+>>> +		return -EINVAL;
+>>
+>> Shouldn't KVM not try to map a huge page in this situation? Doesn't seem like a
+>> job for the SEAMCALL wrapper.
+> Ok. If the decision is to trust KVM and all potential callers, it's reasonable
+> to drop those checks.
 > 
-> On June 19, 2025 4:48:13 AM EDT, Peter Zijlstra <peterz@infradead.org> wrote:
-> >On Thu, Jun 19, 2025 at 10:44:27AM +0200, Peter Zijlstra wrote:
-> >
-> >> Luckily, x86 dropped support for !CMPXCHG8B right along with !TSC. So on
-> >> x86 we good with timestamps, even on 32bit.
-> >
-> >Well, not entirely true, local_clock() is not guaranteed monotonic. So
-> >you might be in for quite a bit of hurt if you rely on that.
-> >
+>>> +
+>>> +	while (nr_pages--)
+>>> +		tdx_clflush_page(nth_page(page, idx++));
+>>
+>> clflush_cache_range() is:
+>> static void tdx_clflush_page(struct page *page)
+>> {
+>> 	clflush_cache_range(page_to_virt(page), PAGE_SIZE);
+>> }
+>>
+>> So we have loops within loops...  Better to add an arg to tdx_clflush_page() or
+>> add a variant that takes one.
+> Ok.
 > 
-> As long as it is monotonic per task. If it is not, then pretty much all tracers that use it are broken.
+> One thing to note is that even with an extra arg, tdx_clflush_page() has to call
+> clflush_cache_range() page by page because with
+> "#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)",
+> page virtual addresses are not necessarily contiguous.
+> 
+> What about Binbin's proposal [1]? i.e.,
+> 
+> while (nr_pages)
+>       tdx_clflush_page(nth_page(page, --nr_pages));
 
-It is monotonic per CPU. It says so in the comment.
+What's the problem with using:
 
-The inter-CPU drift is bounded to a tick or something.
-
-The trade-off is that it can be the same value for the majority if the
-that tick.
-
-The way that thing is set up, is that we use GTOD (HPET if your TSC is
-buggered) snapshots at ticks, set up a window to the next tick, and fill
-out with TSC deltas and a (local) monotonicity filter.
-
-So if TSC is really wild, it can hit that window boundary real quick,
-get stuck there until the next tick.
-
-Some of the early had TSC affected by DVFS, so you change CPU speed, TSC
-speed changes along with it. We sorta try and compensate for that.
-
-Anyway, welcome to the wonderful world of trying to tell time on x86 :-(
++       for (int i = 0; nr_pages; nr_pages--)
++               tdx_clflush_page(nth_page(page, i++))
 
 
-Today, most x86_64 chips made in the last few years will have relatively
-sane TSC, but still we get the rare random case it gets marked unstable
-(they're becoming few and far between though).
+The kernel now allows C99-style definition of variables inside a loop + 
+it's clear how many times the loop has to be executed.
+> 
+> [1] https://lore.kernel.org/all/a7d0988d-037c-454f-bc6b-57e71b357488@linux.intel.com/
+> 
+>>> +
+>>>   	ret = seamcall_ret(TDH_MEM_PAGE_AUG, &args);
+>>>   
+>>>   	*ext_err1 = args.rcx;
+>>
+> 
 
-x86 is one of the worst architectures in this regard -- but IIRC there
-were a few others out there. Also, virt, lets not talk about virt.
