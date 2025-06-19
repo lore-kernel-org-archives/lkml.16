@@ -1,106 +1,96 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9043242D6B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED8422F38E;
+	Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336079; cv=none; b=hL/9F0vFqUMDAcg7kNLwaR54HTEnIOtG78Qd4nXBZ65DCIAqeVPEAZkN5taQAfDrX0f8rsc4Fdr4EdKK5/lmSeMytu7ZPtd3JqgZ0MCeckojWKI9kKqswOQLets2xuI8xhDLa7Q1Lw7xBwYML6vn2C31kh4rgX1nXIP8jMsQHFM=
+	t=1750336113; cv=none; b=n+3mQkFxLzHSB4VD/KoUwxseA7Y/pgY4u9ZDRWGvUZHMFr0SWkjC8LhFsBLVCQZIEmZnLECi2YlP4vz4H0ghbzG669JR4bbTOysC0bYHguM/8+W6jvl7BtkAM4edf5F7Ixr5EUa4pKBB/IhrCOUkYyqUHsHgYrFBN2DYPygEuTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336079; c=relaxed/simple;
-	bh=cbzMsUsPFjH/2rMGqKgP6XO19JAdYjUSM9v2SbRrwWc=;
+	s=arc-20240116; t=1750336113; c=relaxed/simple;
+	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hxQZJuas9uw+AkzUj61jFh+Z+5WVp5Gxtfe9a41urPd0HnHnolx/MlMEefUz0+NrnGbuZ78ccpcfo43AMUzpEfSU9QbpMfpfG5esw4Cr6c8jmJSo9Lvua27r8glB+RD54a7JJA7wuf+vDTt5SGidN41AJOE/qjRTQxnD9bxhL08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HwPBn7fP; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=pZh57cuZJQAfbaVecOsc5URP4UzGg1UdUN/xqPawg8I2nizCe7BhngvE0QAkhIEkaJ4Bbi32LwJyMNFBtOEdjLyOcCaC4K4QlqvX9dDi5OJ92FmoxEwPNnED9Sv8pX+ouKxocU4bmP9lewY5zCCpndSV6SUm9V+RDp4IIneQk4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i50bJxBb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HwPBn7fP"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-addda47ebeaso146126166b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750336075; x=1750940875; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j+UEKtwiWU0wE/iIQJV3CPan/FwOAD8YESQu8bhnYbM=;
-        b=HwPBn7fP94CsRG+4WRfAl4lPfOzyZXHrPzSYPEO6PM1AZz08iKDJVkhyJv0reDvlrl
-         3/5PR+EOx4uG26Xz2qVDaHWG31EyGLNxVkxEW0ytaVefNxrRoxpciwufDH+YO93a1nO6
-         O/gcNHqkOiVtz1RhlyBjmXapKd/tiA0l5iQTNKEoIxZyBzhNX6ijopwaUwgULQlzNBdy
-         6iAe5Y0X1sgEUA1bz5jF7dX42I3wUqbEvZg5M8EiEVUE5S+ErOQBtnLqWWGCKSHOlMES
-         AsMz0bJmeLzLlr3R0i0K2JTM/pG90NGB53bNmXAMmnaq+jHzUpKFTJN4+KDzIPvpKp6H
-         Fq7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750336075; x=1750940875;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j+UEKtwiWU0wE/iIQJV3CPan/FwOAD8YESQu8bhnYbM=;
-        b=CscokRvxER/s4nmHlCud8wZ0gd5CLWghADLXeBLGu1Y4kGuGDgmDnagi1lJAamnOSx
-         hfbozT+hequ7pG43cUetc9LWk37ZVB2mCWAtR6SY3gpXeVZ9cpAwSe831CAzNkMCQI+H
-         MKXGFnVy6DFiJf1Uv+ngDakEc6BSlQPtagYUlYSZRHWRkoYAEbO66lx2eiehuhDzwKPN
-         gZfjnLblAwR5ovz4wKvQctEnuwj374yvB/TJp3G0qrFax+xrDKDZccrjuiYFPrKPUEne
-         iay7mL3rXeIcciYdjcDTl/CAoLnU/iLtZM2JGYPbVpOCned+gpJNWsDWe8dAQf6LTqSv
-         kn4g==
-X-Forwarded-Encrypted: i=1; AJvYcCW9jbpYbG18oj3+6agI3eABMPjgwD/7tQpM68Q+N7R6xA9l8dcEfnMVt2tKjHo4Def3iPXgNyk8vr8xfx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrkbvUXdVnNUUv91mm9w4WH8+R0Vgg5Rc8PpPj8UR87/vM6qJh
-	J3Nb4iIC4eU/g5o9FCoYPqeatOSCQVtYyvh+VLW2ugH2cgYeQq8nq7H+Ka9fCy9Kn1uiFaMIt12
-	q7Fu8Wd0jGuiBv6dyzeunE0nBvY4lAcbcj4iqUfAI+A==
-X-Gm-Gg: ASbGnctb0uXnPfhRN4rKknNi4U4guwvb33fs95UWWf6lDZKqNdBbL/fOpFOJewT91xf
-	Tk31e4tzEcB9QiIzA7+UcgibjpqtL+QJLjEubFuPr51oSbJvW+zFOdPxBUkvLK/qPxzTqBHbazS
-	kpiRpxtPEMximuqy9bV/52h14rtj84aL9FF2XJZgjcOtZNeqz5unQPF2ABUjPTxGRPnnSKbTbf
-X-Google-Smtp-Source: AGHT+IFX34/Kwk5yduxJPNyWVorPRiJ7/biEZ6yJE3vlnHjBZXcHGtAnWeiGum/vgh3RHhi1P0nCa8mVUh0YocQh7b4=
-X-Received: by 2002:a17:907:7ea8:b0:ad8:9257:5717 with SMTP id
- a640c23a62f3a-adfad35602fmr2061559366b.13.1750336074804; Thu, 19 Jun 2025
- 05:27:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i50bJxBb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58566C4CEEA;
+	Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750336113;
+	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=i50bJxBb3ciOFReU2hRo0Jm+1GasYM6SiUzjADPN//ef5khvo+Ge8snIjXAVbO4pB
+	 7lPo7e8MeatoIo6IktyGT2hSB/4Wg2zFmdUqopGWOB3t4Q6DCE9O4lSedOSKjVQr8d
+	 Y9UNVIQEldUq9OD26jRfhgW1wqVokR5FGzLB/GPZ6tTRIOMJuC0PuygmQoNBjR5gRV
+	 UgHkLAArUmpIiofiq1pRTuwEXUpwzTipUXn8P6R7r9Bv4KapZN1b3MUFSmGuPR9NDw
+	 zLRQ7qaA3z+j/XQHQgASuh5dNiH1WYczJYp5Ln5aBiWfYqbpEk0vhFGzxiotHVtuRF
+	 FYM39ksGCawkw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so1037647a12.2;
+        Thu, 19 Jun 2025 05:28:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDQzRXqIpYUMDCfM1ORDQcxVR/+aIu38frNN5QYalHtXulpx/8BjzMgTmG/eHUf2Zg9e/X80mhC2R0a/4=@vger.kernel.org, AJvYcCWeQ/DFCEGIviThTTOtaACHZkQgjsM8t96s4eEvglfIRy5kj3Q0uPbvbhEaZpsrttGCHBUrKpMefdl+SLUZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YygPYPiCGjvN/DjFvB9y4rcerkvnBQcGuxdHE7mkTmMJUsb0Zpm
+	6oIa0GFY9aiFPbqzTGlmwtnIWVKc8zLxqe7xlLpZIn+9lCxElzJP7tC8l4l+l4Fr3d7F0/qG4+s
+	flyLHD/WaWByMiaNOLgSF5IH1Xoortoc=
+X-Google-Smtp-Source: AGHT+IF85I8sP9z6G7vD5ObsF0vTNB/bVlYvJOso17+d+NgDAyNvURfjJO/e9qF6e8tKh/UFnQNS+dLD883osXpQs5Y=
+X-Received: by 2002:a05:6402:5186:b0:602:1216:fdde with SMTP id
+ 4fb4d7f45d1cf-608d08b6bc1mr18737168a12.14.1750336111892; Thu, 19 Jun 2025
+ 05:28:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613140514.2781138-1-vincent.guittot@linaro.org>
- <20250617092208.GQ1613376@noisy.programming.kicks-ass.net> <CAKfTPtA-2YjQ-9jgrAZPT6v0R5X04Q5PoZ6Pa0TzAZji3=jiyg@mail.gmail.com>
-In-Reply-To: <CAKfTPtA-2YjQ-9jgrAZPT6v0R5X04Q5PoZ6Pa0TzAZji3=jiyg@mail.gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 19 Jun 2025 14:27:43 +0200
-X-Gm-Features: AX0GCFtAPcH56Hof2PKQCiWc6onS2PCkIPD9lnQxLSv43vfSvmJv3KOKo8AJLOw
-Message-ID: <CAKfTPtCRBMYue3smo-iXEXSzeFGYSJs5mp50zwQZLRvfL-szVg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] sched/fair: Manage lag and run to parity with
- different slices
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org
+References: <20250608141509.157300-1-chenhuacai@loongson.cn> <20250616185737.GA23807@google.com>
+In-Reply-To: <20250616185737.GA23807@google.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Jun 2025 20:28:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
+X-Gm-Features: AX0GCFurjQs-cBGWxoCsgFhwNLZ8-8cvY9M4iIDvSP0-Mv6LkTl-cMO38sqU-Dg
+Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Masahiro Yamada <masahiroy@kernel.org>, 
+	linux-kbuild@vger.kernel.org, loongarch@lists.linux.dev, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 18 Jun 2025 at 09:03, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Tue, 17 Jun 2025 at 11:22, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Jun 13, 2025 at 04:05:10PM +0200, Vincent Guittot wrote:
-> > > Vincent Guittot (3):
-> > >   sched/fair: Use protect_slice() instead of direct comparison
-> > >   sched/fair: Limit run to parity to the min slice of enqueued entities
-> > >   sched/fair: Improve NO_RUN_TO_PARITY
-> >
-> > Ah. I wrote these here patches and then totally forgot about them :/.
-> > They take a different approach.
-> >
-> > The approach I took was to move decision to stick with curr after pick,
-> > instead of before it. That way we can evaluate the tree at the time of
-> > preemption.
->
-> Let me have a look at your patches
+Hi, Eric,
 
-I have looked and tested your patches but they don't solve the lag and
-run to parity issues not sur what he's going wrong. Also, my patchset
-take into account the NO_RUN_TO_PARITY case by adding a notion of
-quantum execution time which was missing until now
-Regarding the "fix delayed requeue", I already get an update of
-current before requeueing a delayed task. Do you have a use case in
-mind ?
+On Tue, Jun 17, 2025 at 2:57=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> =
+wrote:
+>
+> On Sun, Jun 08, 2025 at 10:15:09PM +0800, Huacai Chen wrote:
+> > diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/=
+crc32-loongarch.c
+> > index b37cd8537b45..db22c2ec55e2 100644
+> > --- a/arch/loongarch/lib/crc32-loongarch.c
+> > +++ b/arch/loongarch/lib/crc32-loongarch.c
+> > @@ -11,6 +11,7 @@
+> >
+> >  #include <asm/cpu-features.h>
+> >  #include <linux/crc32.h>
+> > +#include <linux/export.h>
+> >  #include <linux/module.h>
+> >  #include <linux/unaligned.h>
+>
+> You can drop the change to crc32-loongarch.c, as it would conflict with
+> https://lore.kernel.org/r/20250601224441.778374-8-ebiggers@kernel.org/ an=
+d
+> https://lore.kernel.org/r/20250612183852.114878-1-ebiggers@kernel.org/ wh=
+ich are
+> in crc-next for 6.17 and already handle this issue.
+Thank you for your suggestion. But I plan to merge this patch for
+6.16, while your commits are for 6.17, I can only keep it as is.
+
+However, the conflicts can be easily solved when Linus merges your
+code, or there is an alternative solution (if you want): update your
+patches when this one gets upstream.
+
+Huacai
 
 >
-> >
-> >
+> - Eric
