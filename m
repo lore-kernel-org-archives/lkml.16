@@ -1,140 +1,238 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B1320B80A
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC472221F26;
+	Thu, 19 Jun 2025 12:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335041; cv=none; b=lI4RcslJ0B0iN3rKq9AMvMxXEoo3sy+LbFF0jYA10ouKAz3vWqofa86Y6i+RNOOO4CbjKohUp/C62w1Bg5CvPvICVigB9nJXBJ0qwiNVVHTAeZ/yEXTW9CDdG/Xdw8zwil4HNqlb/f7dfANCCzOAPqF5HClFAoAJPSqsApsgBxE=
+	t=1750335053; cv=none; b=Ewu6oKfwiY/QHGnd7LsNcV/S9IdtDTBSZmxspe1Tp1QOh2jaVogsZzzCj0dH6xkdSbeiFwqv65XtwPtuyZT6HEqaLGVD+dmZzbzhSobGR5LXq8w0p7wreg4xPLeZnXYnqktLIy5ejVVQiWo2p0CcVN7+xv9tTvpj/3Bugn+Xt88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335041; c=relaxed/simple;
-	bh=Z1k28oh2bsjAp3J9sxhgKELPLL0pOh9fG5HeC1Y+BL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvaYu4MVZjEiP4E3GxJBkk6keA4GcYiqjD7KeTWkzywkHe9GntJlrAM7++ZSjNTKyKyt45MaV7ka7QuX0B4bAkLnNn/90lVUbXwLGtGxSmgw0eB6mOPCpORohryJmVGxPhYO13PHwgW/4QfdKiZu01mMeYd45F9dkMw1TizcWHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XyceUW0V; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XyceUW0V"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so4334875e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750335037; x=1750939837; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GdGldtwlWNchi8rv7SkT/y3UPzEmCjdby+cLRpS1Y/4=;
-        b=XyceUW0VpaBj4ARN4LGjcsntClzLyhTeF6XYjRnBXg/ncvFVA+rX4G1hPZZQZVlbKn
-         rBazKOWVMRC7YeBPdTnE214kL+1uzucYANZTGNjXccA9aFkeo3P4zCnaeASr6rNW0hQQ
-         gNITWkQAe4W7c58IIPOyxYbFo4DNMfOyWy9freQG+twEVGJaq+e3zCV4OGUMeCQwsg/b
-         3MrMq18D+xbOitATEXDFlu9JMZLK9lpyGRobniIhw8+Ulat8U5kSOaKfyNENTdMffW8r
-         Z/KigykcqXPtSPbQw85FhNFL0kKbvN/Tu/036/7+9qLIrokl3ztjUH58QGZeOt9WBMv3
-         Z9Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750335037; x=1750939837;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GdGldtwlWNchi8rv7SkT/y3UPzEmCjdby+cLRpS1Y/4=;
-        b=Zavmp0Gjt8ecr0XvZFSqzvILoPQQnVl3ThqOoB+7ZERkDwHDTiRmdZ3u9pzex8kO4B
-         8uUXUTmFDr3DR2floJ6L7bWjciU4WRxdHv44Fo3zyTFa6gWBUivscfZ/VW42E4C7a0XC
-         TihUyo/PSUYRSA2P39zK8ht7RdOc7rPgIYQxao8g8ShCCfdaOtQxG9BQYxwoeBw/uNkF
-         tS3/On1ISp6uRqiB3YBKk9pTfh4XdPPeHCfeurYKbsuAMGy3/8S3ieoBddezgYL12CN6
-         xG8V5p1rqTmCfXKTnOQgIRMV0NlxTRxxspQhL/zlsv2PI+Du0FmBne9jD7rbWzt/ZVxY
-         Qaiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpRoY31AsC7FqflO7im9XPeZiej7n6L94G5ZWe708u/NGc+L0l2QSvVBIR8IAsFYxr4mbsBZToHVr1hFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR144h2GG78gByXvByywidc3XJP45cXneYa/p8r5QL4/s0Q/se
-	UIGHROrnsQ9wefIexQiAr82XgbBaqiLoN4Gf0Hpwro9/1qynduuKub15ayQeZqzdYoQ=
-X-Gm-Gg: ASbGncuXTZjiqMTVMXHKPGqRR1nnpS204VZdrA/oC72zXI25dY8oladDQI9+IM3/FKc
-	z8jhhHBCcXTqOG5kXMH/LlBvCOXirySDcmn4LssnaYwfBtbJHDKcvZ2mZ+7UnzEtRaWbpiWwyIL
-	dG8qwIXlVDxygWSI3g0pfE9+TM6FjvDHss1+HHvHfSgGGcdRtUhD83tRDKMoQTCoFi9XaYHQNE1
-	bD4UGkuKji0B4E1n3OamY9f8p9/ugE4FnWqStiY3cHuevbI8dKA+a0XDikZGaRQN2sTkEHTeVnS
-	GaBiNeTP5L9iiHzXmzRQb2us870sfd5kzY2JP6up0uIH0MSLAaAlXOgYY4R90UnhYa2/tzrr4tQ
-	=
-X-Google-Smtp-Source: AGHT+IHGGooM/miBYffjvJ8pX+BjB/MPFrva4W86C087uwV8r28dL9eXqgzrXWtmG3yVk4veuPOJVg==
-X-Received: by 2002:a05:600c:1f94:b0:442:f956:53f9 with SMTP id 5b1f17b1804b1-4533caa6567mr222030495e9.18.1750335036830;
-        Thu, 19 Jun 2025 05:10:36 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebcecdcsm26406435e9.36.2025.06.19.05.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 05:10:36 -0700 (PDT)
-Date: Thu, 19 Jun 2025 14:10:34 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Tejun Heo <tj@kernel.org>, Waiman Long <llong@redhat.com>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
- cpuset.mems setting option
-Message-ID: <jtjtb7sn7kxl7rw7tfdo2sn73rlre4w3iuvbk5hrolyimq7ixx@mo4k6r663tx2>
-References: <aC4J9HDo2LKXYG6l@slm.duckdns.org>
- <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
- <aC90-jGtD_tJiP5K@slm.duckdns.org>
- <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
- <aDCnnd46qjAvoxZq@slm.duckdns.org>
- <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
- <x7wdhodqgp2qcwnwutuuedhe6iuzj2dqzhazallamsyzdxsf7k@n2tcicd4ai3u>
- <CACSyD1My_UJxhDHNjvRmTyNKHcxjhQr0_SH=wXrOFd+dYa0h4A@mail.gmail.com>
- <pkzbpeu7w6jc6tzijldiqutv4maft2nyfjsbmobpjfr5kkn27j@e6bflvg7mewi>
- <CACSyD1MhCaAzycSUSQfirLaLp22mcabVr3jfaRbJqFRkX2VoFw@mail.gmail.com>
+	s=arc-20240116; t=1750335053; c=relaxed/simple;
+	bh=5oDWHUZd18OQq1CL4ha9noH4a4aaK0KKcofZjfk4ELI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QgKShOXvP/d6WiRxwTo4TjrXjLNl4DYy/lhBoSfKhHvFl/T3qydOYhdbGJzB5B3TZw7BAsnTZyQkLmCFPVBPSs9l8d2jlbazGyxncQNA+ZtjEQUYMz9KIzisY440juS9GUmJHZv/xq6Kl6Fjd2NvRvDfUoZUgKKkpZTLWNscG/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2264A106F;
+	Thu, 19 Jun 2025 05:10:30 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02EB23F66E;
+	Thu, 19 Jun 2025 05:10:46 -0700 (PDT)
+Date: Thu, 19 Jun 2025 13:10:44 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Aleksandr Shubin <privatesub2@gmail.com>, linux-kernel@vger.kernel.org,
+ Conor Dooley <conor.dooley@microchip.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5p?=
+ =?UTF-8?B?Zw==?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Cheo Fusi <fusibrandon13@gmail.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <20250619131044.20b45d8d@donnerap.manchester.arm.com>
+In-Reply-To: <20250619094407c4c849f3@mail.local>
+References: <20250427142500.151925-1-privatesub2@gmail.com>
+	<20250427142500.151925-2-privatesub2@gmail.com>
+	<20250512235619.30cff739@minigeek.lan>
+	<20250619094407c4c849f3@mail.local>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nops24fazq2mqnts"
-Content-Disposition: inline
-In-Reply-To: <CACSyD1MhCaAzycSUSQfirLaLp22mcabVr3jfaRbJqFRkX2VoFw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Thu, 19 Jun 2025 11:44:07 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+
+Hi Alexandre,
+
+> On 12/05/2025 23:56:19+0100, Andre Przywara wrote:
+> > On Sun, 27 Apr 2025 17:24:53 +0300
+> > Aleksandr Shubin <privatesub2@gmail.com> wrote:
+> > 
+> > Hi,
+> >   
+> > > Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> > > controller witch is different from the previous pwm-sun4i.
+> > > 
+> > > The D1 and T113 are identical in terms of peripherals,
+> > > they differ only in the architecture of the CPU core, and
+> > > even share the majority of their DT. Because of that,
+> > > using the same compatible makes sense.
+> > > The R329 is a different SoC though, and should have
+> > > a different compatible string added, especially as there
+> > > is a difference in the number of channels.
+> > > 
+> > > D1 and T113s SoCs have one PWM controller with 8 channels.
+> > > R329 SoC has two PWM controllers in both power domains, one of
+> > > them has 9 channels (CPUX one) and the other has 6 (CPUS one).
+> > > 
+> > > Add a device tree binding for them.
+> > > 
+> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > > Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> > > ---
+> > >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 84 +++++++++++++++++++
+> > >  1 file changed, 84 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > > new file mode 100644
+> > > index 000000000000..4b25e94a8e46
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > > @@ -0,0 +1,84 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner D1, T113-S3 and R329 PWM
+> > > +
+> > > +maintainers:
+> > > +  - Aleksandr Shubin <privatesub2@gmail.com>
+> > > +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - const: allwinner,sun20i-d1-pwm
+> > > +      - items:
+> > > +          - const: allwinner,sun50i-r329-pwm
+> > > +          - const: allwinner,sun20i-d1-pwm
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  "#pwm-cells":
+> > > +    const: 3
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: Bus clock
+> > > +      - description: 24 MHz oscillator
+> > > +      - description: APB clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: bus
+> > > +      - const: hosc
+> > > +      - const: apb
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > > +  allwinner,npwms:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: The number of PWM channels configured for this instance
+> > > +    enum: [6, 8, 9]  
+> > 
+> > Do we really need to be so restrictive here? The IP has an
+> > "architectural" limit of 16 channels (due to the MMIO register layout
+> > and status/control bits usage in some registers), so can't we just leave
+> > this value to be anything between 1 and 16 here? If people configure
+> > this wrongly, it's their fault, I'd say? Without confining this further
+> > based on the respective compatible strings this enum is less useful
+> > anyway, I think. The Allwinner A523 uses the same IP, and supports all
+> > 16 channels, the V853 implements 12, that's what I quickly found
+> > already, and there might be more examples in the future, so I'd rather
+> > open this up.
+> >   
+> 
+> Do we really need this property? I feel like the number of PWM channels should be
+> something the driver could infer from the compatible string as we are going to
+> have one compatible string per SoC anyway.
+
+Well yes, this would work, but I feel like it creates unnecessary churn to
+touch the driver every time some new SoC with the same IP pops up, and
+where just the number of channels is different - see above for a list of
+SoCs we already know about, and there are more in the pipe. It also means
+stable kernels would already work.
+
+And after all the code is perfectly able to handle this: the channel
+numbers used come from the PWM users in the DT, and using non-existing
+channel numbers just would not make sense. I can run some experiments, but
+I wonder if programming an out-of-range channel would actually do anything
+harmful at all - my hunch is it would just do nothing, so there is no
+risk even if the DT specifies a wrong number.
+
+So I wonder if the channel limitation is really needed at all. If the SoC
+just implements six channels, there would simply be no pin available for
+channel #6 or #7, and no PWM user would ever request those channels.
+
+But regardless of that, I would really like to have just one fallback
+compatible string, covering all SoCs that have compatible IP.
+
+Cheers,
+Andre
 
 
---nops24fazq2mqnts
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
- cpuset.mems setting option
-MIME-Version: 1.0
+> 
+> > > +
+> > > +allOf:
+> > > +  - $ref: pwm.yaml#
+> > > +
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            const: allwinner,sun50i-r329-pwm
+> > > +
+> > > +    then:
+> > > +      required:
+> > > +        - allwinner,npwms  
+> > 
+> > Can't we just simplify this by always requiring this property? As
+> > mentioned, there will be more SoCs with different values, so just
+> > omitting this for the D1 seems odd.
+> > 
+> > Cheers,
+> > Andre
+> > 
+> >   
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - "#pwm-cells"
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - resets
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
+> > > +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
+> > > +
+> > > +    pwm: pwm@2000c00 {
+> > > +      compatible = "allwinner,sun20i-d1-pwm";
+> > > +      reg = <0x02000c00 0x400>;
+> > > +      clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
+> > > +      clock-names = "bus", "hosc", "apb";
+> > > +      resets = <&ccu RST_BUS_PWM>;
+> > > +      #pwm-cells = <0x3>;
+> > > +    };
+> > > +
+> > > +...  
+> > 
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv  
+> 
 
-On Thu, Jun 19, 2025 at 11:49:58AM +0800, Zhongkun He <hezhongkun.hzk@byted=
-ance.com> wrote:
-> In our scenario, when we shrink the allowed cpuset.mems =E2=80=94for exam=
-ple,
-> from nodes 1, 2, 3 to just nodes 2,3=E2=80=94there may still be a large n=
-umber of pages
-> residing on node 1. Currently, modifying cpuset.mems triggers synchronous=
- memory
-> migration, which results in prolonged and unacceptable service downtime u=
-nder
-> cgroup v2. This behavior has become a major blocker for us in adopting
-> cgroup v2.
->=20
-> Tejun suggested adding an interface to control the migration rate, and
-> I plan to try that later.
-
-It sounds unnecessarily not work-conserving and in principle adding
-cond_resched()s (or eventually having a preemptible kernel) should
-achieve the same. Or how would that project onto service metrics?
-(But I'm not familiar with this migration path, thus I was asking about
-the contention points.)
-
-> However, we believe that the cpuset.migrate interface in cgroup v1 is
-> also sufficient for our use case and is easier to work with.  :)
-
-Too easy I think, it'd make cpuset.mems only "advisory" constraint. (I
-know it could be justified too but perhaps not as a solution to costly
-migrations.)
-
-Michal
-
---nops24fazq2mqnts
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFP+OAAKCRB+PQLnlNv4
-CA8yAQDkZ52REH93AgKN4IVKz0LKroFqjd21SWk9JuwSDHgn+AD8CRYl7w7CtgNq
-nrZtwMOpxzenNE9b0wkmSdmWWYlidwI=
-=+giD
------END PGP SIGNATURE-----
-
---nops24fazq2mqnts--
