@@ -1,122 +1,182 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532DE634;
-	Thu, 19 Jun 2025 00:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84699634;
+	Thu, 19 Jun 2025 00:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750292904; cv=none; b=qkHpOAEYXoCyIXnTwuN6jnHDKZJ/wTxz/mN5/dDOUYewWv39s33Hul9JfPJpN/+DlHzRfSpdFx/2ya8ooeHr9gvpyTgBmuE2ha6T8On/1i+2jIvwDxMzb7LgxghudYSzdQ22G3Txn4CLqYh/0JZp9g90LCkQYXzvLnQiW2XNvvc=
+	t=1750292949; cv=none; b=bXmu0LhUTucsV8ePRKdYcXi1M89suc0dzSc4VTd2j0P/+olzExtG4yabWqRX+lYjTIyqxau/sxOriyPfw5/AJUUuynCahPQQrJMGCpha0f1qlehWBP4KFIh/00RM+eJOhnUQj9hx6vno/s1wU3yrUDa89o5b0E665NSEQrQ1nDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750292904; c=relaxed/simple;
-	bh=KtXqC96KufQRLYIs/T5e/VVYnSU6wTb08NWDK0ptBmI=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EC+sGsmxxi8vn9JknXqjlUiUmhbXEbVqEMECbFz1K9X7mjiBu1FH7WOrDKNsPt1YSysGIG/QQcXXJoPhSrBDGAP+jzT+r+a7RJ5Zhl4IS1v0S3kFIm2TifHUKOyrTKRz+RlqsDs7mWpyIIOl4Iwx55Pb8mIAI74GOaE7AZV53LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGmyOPDT; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1750292949; c=relaxed/simple;
+	bh=6pei+RlkyElO2Uh24RAFf4g7/Xewuciw1jDYZ/+HGLk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=B82cF5Oi/w8HP0zWrD9jhkUz8DhzZNH3e3c35/VSboz3aQEfCXVTZv5OGJEolC+iFkiqFU0bLCqHeag/sBAznw1S1PIYNLq1HwbDLCSWDtdc/DGnMva2zARiYt2iNDknU/gKXtL4Aj+LOV60t8E3CQQ1r2IjUS922svTAd1MGxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jppvijud; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGmyOPDT"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-748da522e79so111214b3a.1;
-        Wed, 18 Jun 2025 17:28:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jppvijud"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fb0a05b56cso4075176d6.3;
+        Wed, 18 Jun 2025 17:29:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750292902; x=1750897702; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xBNn1ZwX5lBITz0U2pqk9RXsZgVfNijNLXMYRIMOiFY=;
-        b=iGmyOPDT6gt7pTxX30mIZHd9ZUd51BsOBRMrnbGVu8lTJABaV/P4Ozm1MMozLSl8gS
-         fNXQ2IzbZQ5g9iiDYv6zGWJwEGg7+DQDUYXwcrAU7AhAK+sl/Kj8rzl/QVKVQ8Pso5UY
-         9Z24TJWYK4A9Ks7VEs81Ua32sihWbhpVaZy90EOO4G3smEtbjddgkkxB10IwQFpro+RG
-         nO44HwfMy1w96asxBPEiL0OpERWGLOJ/machGB3sbpMKV8ejpw12icsEEMoBmubXK7Qw
-         6UD7T0vJfRNiTfcKIYp15jfho9NTK1QuM0dPAwnw4SUb8c3fxJcFbpu5veJOtSIXl8fg
-         AjDA==
+        d=gmail.com; s=20230601; t=1750292946; x=1750897746; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:references:in-reply-to:message-id
+         :cc:to:from:date:mime-version:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1kVvNZNHp1yEFshwzWK0iJHRAsVEFrzGngGpDcIqaiM=;
+        b=Jppvijudkzs5aDJ5w/Zzscyb5R7ZbVYeSJPJtJzxcJTpWf0EMLUSaZUmFlhu6dTPnj
+         j8qlR8zxNJrsN5s1ymtgY97ICynF611xRjbxYRIP1RxX3K7gVWuR1dCHIPT/t3Gzli6u
+         Ug66TR2gMlGc3IF0FT3UYIfMfZRw2DjJs3UxvEqk2AoAKfiP5sFPXiy7UnjB5qsoNpJ7
+         VBTh/kfGjp9Lb5RDysqrIJrEC6IDCo6fu51uLfJzv0f11dL1aQ4/OWqC+xN+Slz8lsuV
+         Okdi2LEgwwBcWn9EXQ02QIM4CIikWtIYxu4bWu6aSjbDi7kvLZ9NgFJX4ejROVgJtN4/
+         sGpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750292902; x=1750897702;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xBNn1ZwX5lBITz0U2pqk9RXsZgVfNijNLXMYRIMOiFY=;
-        b=VjDuefgsK3NmsUcWSu7K96mdVBgmUUfRX7ADQihyfIWO0KLQkq93+Yec4XKz0CYWvz
-         P1Ey+Mq6vySyb/oe0SZS3oyi1cVUpQBJQKmwWupSrfXhEaW3b9BgPHizDdZs2EI0vbei
-         lK2LNc0cHM21shkm0yYJhS8O387NrFIGEq29ethjs0cLddrlbCDwblD+a9xs+ucJpNKg
-         zRano4jrFslqpVHno1XY/Y05wcz2qkbCK/PmfMJ1LE/Zw2UaHH4l3RL+Fy7MdiGpclDd
-         Zyysr8gk0Vtmh9Kmet5ToCYf5UrM3RYe2d3Q/tM6Cum3DoqiIVjhLbmcbwMwZQ63jrmv
-         tZeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxf1+Qvg1aMd1xjZY6yKbf+0mlriGvcbDGXaxZo09xZ+0sQqo8HzV+gZPH5qOemFL3Eop/gqj+DXoJ8cc=@vger.kernel.org, AJvYcCXNbaRVyAdtCp9/Wylv7k48z4be8gJdxB4RzfiwCcbkAvZJvfVdcnKz6ExMzE0VWP8SB1Q/K1gZUGBe+5dg3VQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWs81ADQyCeodXEQTtHXoPB1VaCd2C8FgjpQBZggeof1XOLFh7
-	IJQqa9p0oZS9xstd7e+ajI/avTXoanWeqLgMyhz7NSXqtaf9mx3kBUb8
-X-Gm-Gg: ASbGncsWFnYsuj4FoJELsKnSuiyUaSrJqJtS5uOZ2974Y9S1ClZHSYxKvBZuwSRqYvp
-	tc7v/TVnNZSJ0sVxwNpmwF9fHU2A7sYrrDTp8KhMkey9kzdofFerTdfQBy0Ua/+rXBTLJ3+6vci
-	JxQOK0cYOTCpoW+HsPRO/aMCb1hP/PgbD5RYSWmB06X3NVSWRvTWNJWQ/5Qfye8A5B+HCwyRgFo
-	bhp97MTmcMaR2BJauTuEDVdXDKxiUDfotvuY+qBlY4M8eviQGcaey8IqOZUOdKi274MNW8634//
-	yy76Kq3mNkVWYZi4q6syWpesPw8yhiZbOvc3EatQLRKK3pbAfmyd4YEaXcDPQaAEe5giM1ntXrP
-	322ExQDeeIM4v8CwkOVW96FzQwpMKC4Wg63+0OUogHTLIahNuAw4=
-X-Google-Smtp-Source: AGHT+IHG/W8QGalwUgPhpoKvQ12ryvSeTDCWtpobYi1br7xjqhqpHAmEO1/fzsSHw9f6YTTA7oQiMA==
-X-Received: by 2002:a05:6a20:a123:b0:217:4f95:6a51 with SMTP id adf61e73a8af0-21fbd7af798mr30051859637.29.1750292902507;
-        Wed, 18 Jun 2025 17:28:22 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083324sm11763024b3a.88.2025.06.18.17.28.18
+        d=1e100.net; s=20230601; t=1750292946; x=1750897746;
+        h=content-transfer-encoding:subject:references:in-reply-to:message-id
+         :cc:to:from:date:mime-version:feedback-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1kVvNZNHp1yEFshwzWK0iJHRAsVEFrzGngGpDcIqaiM=;
+        b=J/M6DiZyM9nDCktOgGJTVojEev7+KZ9N788/ZRezO9mAvGC0TkauGXSNlGaPinMsm1
+         94DgqTthCKBfviAu2wHJ48uyJZbQbQ2oq3OYxlEwCp3C9NcUuWe8zLAvcOL2q4Ymei89
+         cmn3piLU2KTCH2D2EJ+769AYoShp4NxTBzpMmG+8K/AQ/z0RqJe8ArcIDXIZYreL5bKR
+         ZFTNa/v5nInwUpoMoBGfQlvmzerL8c0V4dMQmDPxq5YD8ybaE9sVTgg9a9+IpTH3Ooic
+         cgfbhoS7sJyAU8Req+GxORmwZ+OcHa10wrvHWbzNRsEbyI2xSJGMweTiXikg01W31DLx
+         hKYg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2GfiLvlR/FSzRTZ2GGhm7Skeod/HlI6NEcHEfniFN6Uqx3s2Qp4LJF+ihKrtIc4i3cpHYuJuW3xKlpyjBvc8=@vger.kernel.org, AJvYcCXR2BkuZTXSRoRO9KjIGLDFrh+IQA8M68Gtu02AKI/A9C4xX5yMZILtwAhmYBue8siO+q5tlPoif8lDuJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR0x3KAlQMKp3ru2m1Kk42T253R4uj72eR3sSG3HuVCxty4Ltz
+	nd0QroZmuzuWp68r8oZxMqEZyQNJYqHIqk7/TNsw74D07WsIHVvKzHIy
+X-Gm-Gg: ASbGnctROY4vCOOt0BQSdKunjcP53ZVaAKQ0fwAq/xc+T0jcTrbwnr0nI9gjBXIQzxB
+	JZ+bDG7N7ihufx8CSUXFn5rNVV3aN1JAi1kgKFfBp39Su7mtiz3tyx8Fc5UU3JnDjmp8Vwbo741
+	FWBwZ1oFdHrky0Xz4f05nl/IHqJccPyF26uypzXxRyx5nN97MIT70XkIWxHr1Sa4gzAZwLAFDG2
+	H/U0sO8B8dUMy0/cNfuqlsmOkMwbQmym0XMydufbiRnHU3KSun70D6pPscYJPDdgO1rnReVKuM8
+	A3hpSWoieLMU4ocNHy2cBIZ8Zc0Rc+GtW3PiTn/RJRlsqEJWD/W46u5soZrXkU0gr3ucTfC/aZD
+	yFDhcavNKUrlURrOKfxSQUxFEdTnRsKFKB+zra3+G19MQ0kYR/rYK
+X-Google-Smtp-Source: AGHT+IH1SJEcOpceiiO4rLIB4JfTPyS+sH7ZYjy9fxFxalB8lQSSHtUJrjHp6J2hYDG1J+VT0NqohA==
+X-Received: by 2002:a05:6214:f0a:b0:6fb:17a:c428 with SMTP id 6a1803df08f44-6fb47791754mr316419626d6.16.1750292946380;
+        Wed, 18 Jun 2025 17:29:06 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0163b008sm1417106d6.125.2025.06.18.17.29.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 17:28:22 -0700 (PDT)
-Date: Thu, 19 Jun 2025 09:28:16 +0900 (JST)
-Message-Id: <20250619.092816.1768105017126251956.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: boqun.feng@gmail.com, fujita.tomonori@gmail.com, alex.gaynor@gmail.com,
- ojeda@kernel.org, aliceryhl@google.com, anna-maria@linutronix.de,
- bjorn3_gh@protonmail.com, dakr@kernel.org, frederic@kernel.org,
- gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
- lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
- sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <87tt4c983g.fsf@kernel.org>
-References: <aFENRtYZixePYn0XFOGCbNOkSV9338iV4jWk8XJYKI0crpf4QniT_GyZCmFuqmsKs5Cl64z8qlIK6aVfdTBjbA==@protonmail.internalid>
-	<aFJINI8ImfxMnvrx@Mac.home>
-	<87tt4c983g.fsf@kernel.org>
+        Wed, 18 Jun 2025 17:29:05 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 715F81200068;
+	Wed, 18 Jun 2025 20:29:05 -0400 (EDT)
+Received: from phl-imap-16 ([10.202.2.88])
+  by phl-compute-01.internal (MEProxy); Wed, 18 Jun 2025 20:29:05 -0400
+X-ME-Sender: <xms:0VlTaCaSz-Ivv1tJaTVQ5wlDECFjBkuk8ZItMp-nK19-rcTj9ychdQ>
+    <xme:0VlTaFZ6rQYuMazDL559msAJeSW-qi-jQD5XN5KlWDoy7Ae_MxaNTcctB2yglPp7K
+    SoZ0tmD_52IaJslvw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdegtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfuehoqhhunhcuhfgvnhhgfdcuoegsohhquhhnrdhfvghnghesghhmrg
+    hilhdrtghomheqnecuggftrfgrthhtvghrnhephedufeelfffghefgveejteekvedtleeg
+    fedtkedvieekgfffleelkeefhfefhfejnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedukedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvg
+    htpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphht
+    thhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    eprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhsthhulhht
+    iiesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepfhhrvgguvghrihgtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhsshhinh
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:0VlTaM-ybgaR3ZvXuLWbNDw0NpktjpGb8m35rERCg3GeZRLvWBtXaw>
+    <xmx:0VlTaEqIf8_5vv-E1YNXzzj_PFLTZQbVuaSyCsZlQcjAFAbfXJQnPA>
+    <xmx:0VlTaNpHO_rTdeNks0W6kXU_06TwgdKVIzBnjPs_BJwZx-nSqVJosA>
+    <xmx:0VlTaCQQqpfss2fHIoxUkzjW2B253wCnQm0wv_ytd8jTLFrbdQf4sQ>
+    <xmx:0VlTaNrItulI048K9shez1m09NKxBUO4bwyHih2j3qHg_2vPkGm7u2LM>
+Feedback-ID: iad51458e:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4B3FC2CC0081; Wed, 18 Jun 2025 20:29:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+MIME-Version: 1.0
+X-ThreadId: T826ff79bc45770a9
+Date: Wed, 18 Jun 2025 17:28:45 -0700
+From: "Boqun Feng" <boqun.feng@gmail.com>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, alex.gaynor@gmail.com,
+ "Miguel Ojeda" <ojeda@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>,
+ "Anna-Maria Gleixner" <anna-maria@linutronix.de>, bjorn3_gh@protonmail.com,
+ "Danilo Krummrich" <dakr@kernel.org>,
+ "Frederic Weisbecker" <frederic@kernel.org>, "Gary Guo" <gary@garyguo.net>,
+ "John Stultz" <jstultz@google.com>, linux-kernel@vger.kernel.org,
+ lossin@kernel.org, "Lyude Paul" <lyude@redhat.com>,
+ rust-for-linux@vger.kernel.org, "Stephen Boyd" <sboyd@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Trevor Gross" <tmgross@umich.edu>
+Message-Id: <cdb12bc6-2372-43b3-b4e9-a1e31e5f9903@app.fastmail.com>
+In-Reply-To: <20250617232806.3950141-1-fujita.tomonori@gmail.com>
+References: <20250617232806.3950141-1-fujita.tomonori@gmail.com>
+Subject: Re: [PATCH] rust: time: Seal the HrTimerMode trait
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Jun 2025 21:13:07 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-> "Boqun Feng" <boqun.feng@gmail.com> writes:
-> 
->> On Tue, Jun 17, 2025 at 05:10:42PM -0700, Boqun Feng wrote:
->>> On Wed, Jun 18, 2025 at 08:20:53AM +0900, FUJITA Tomonori wrote:
->>> > Prevent downstream crates or drivers from implementing `ClockSource`
->>> > for arbitrary types, which could otherwise leads to unsupported
->>> > behavior.
->>> >
->>>
->>> Hmm.. I don't think other impl of `ClockSource` is a problem, IIUC, as
->>> long as the ktime_get() can return a value in [0, i64::MAX). Also this
->>> means ClockSource should be an `unsafe` trait, because the correct
->>> implementaion relies on ktime_get() returns the correct value. This is
->>> needed even if you sealed ClockSource trait.
->>>
->>> Could you drop this and fix that the ClockSource trait instead? Thanks!
->>>
->>
->> For example:
->>
->>     /// Trait for clock sources.
->>     ///
->>     /// ...
->>     /// # Safety
->>     ///
->>     /// Implementers must ensure `ktime_get()` return a value in [0,
->>     //  KTIME_MAX (i.e. i64::MAX)).
->>     pub unsafe trait ClockSource {
->>         ...
->>     }
-> 
-> Nice catch, it definitely needs to be unsafe. We should also require
-> correlation between ID and the value fetched by `ktime_get`.
 
-What's ID?
+On Tue, Jun 17, 2025, at 4:28 PM, FUJITA Tomonori wrote:
+> Prevent downstream crates or drivers from implementing `HrTimerMode`
+> for arbitrary types, which could otherwise leads to unsupported
+> behavior.
+>
+> Introduce a `private::Sealed` trait and implement it for all types
+> that implement `HrTimerMode`.
+>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+Thanks!
+
+Regards,
+Boqun
+
+> ---
+>  rust/kernel/time/hrtimer.rs | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+>
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index a6468bc50e57..0028720cb4e9 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -442,8 +442,27 @@ fn into_nanos(self) -> i64 {
+>      }
+>  }
+> 
+> +mod private {
+> +    use crate::time::ClockSource;
+> +
+> +    pub trait Sealed {}
+> +
+> +    impl<C: ClockSource> Sealed for super::AbsoluteMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativeMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::AbsolutePinnedMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativePinnedMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::AbsoluteSoftMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativeSoftMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::AbsolutePinnedSoftMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativePinnedSoftMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::AbsoluteHardMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativeHardMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::AbsolutePinnedHardMode<C> {}
+> +    impl<C: ClockSource> Sealed for super::RelativePinnedHardMode<C> {}
+> +}
+> +
+>  /// Operational mode of [`HrTimer`].
+> -pub trait HrTimerMode {
+> +pub trait HrTimerMode: private::Sealed {
+>      /// The C representation of hrtimer mode.
+>      const C_MODE: bindings::hrtimer_mode;
+> 
+>
+> base-commit: 994393295c89711531583f6de8f296a30b0d944a
+> -- 
+> 2.43.0
