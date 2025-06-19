@@ -1,117 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2637A261594
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303F1261594;
+	Thu, 19 Jun 2025 09:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323605; cv=none; b=Eu+3UvomN54hiwueW0Fq1dDxZmKt7TdR51pYXlapFoqWIBIV5ITsg1uuo1hJdUCCzvf/rDAkUPOEL62UI3ZOpuV4mJ3/h14hXeOM/d5vLf88nVwaTcz0rfLK2zA4VEZOjFaQ509p9RnCbusptQ0u+HbS2lPYFWqKiElwKXfbW1I=
+	t=1750323611; cv=none; b=e6bHpW1Dp32CkBZok6heqoTiVi7tvVMcuiYSsgqovPDEyu4E3iOGFdivKy83n6nPkUuODSFXfoIQhxzGiUbtJnsUhgt+VTlt+n/wCUUpYFVX9L53RnR39sS3W5n9Pec+1Z9KAYKaM3ARGbFYVFwdx9H+7VBFEwApsJ3LxwoIbqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323605; c=relaxed/simple;
-	bh=UzuK/CxyCGnL+YSPUVuW3jK4T0cRHWwLE+0svoU+I9s=;
+	s=arc-20240116; t=1750323611; c=relaxed/simple;
+	bh=n6DT5bAQL+RAQCVZkU8+hke6RxMaD2RlMP22Za8Eif0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hK5gLAoz6qTeOmnQUvtjU7hyTaXFOuz9loM1ee+bm9YPe+A0VwjbQvIdw8+EVicFw/YFESVAwb0VFW679zLi0L5dpBQjHx1KG5PHoJMxDoeEYhEhOPWAz06Y0Pbs7C0S7/5PgauYQfX8Vqt4Hswz5uPifcWMArCK0gUoAYunq1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbRxkQlR; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=OiV2HooPEBGCAFVuz1OPMY67dm3bbLs7Sz3j/A+Q6mcJjxEWK4hXEius5FERD75wIJ8r9txclgitY9DMJdtCrmxQRt/pXKAvPafUqUWhUCDGcrEQdm95MBjQiodFVfDzlajSYng/w/a36qVftpnzuGbwSfsoYIM/w77LrQhiD5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KObDt8YH; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbRxkQlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB5FC4CEF5
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750323604;
-	bh=UzuK/CxyCGnL+YSPUVuW3jK4T0cRHWwLE+0svoU+I9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hbRxkQlRExVDwH79ADkhlXgwcMX3ygDlcbmP6ZXM7dXQNpBpOFxP8MCYW4/6U/9F8
-	 n0Oq+kPjOZHzEhc6sLC3FXXA3c/NuLYxyphmSY8nf+gV0lnrMYYLiwa2OeKrZdD2CC
-	 GZrDq0MXa4Z0d7ZeSZ5s5vsEyfyX8yiepwCeOul1+WPaTgSgKz13GgDHKUv3bEyv+R
-	 RS6L0oORVTLA69sTfvqZJvHzZ+KCaamKmXDG8ir7W0uJkZFB7b/P+ddStsNxHBtmKB
-	 O+nf2bfMF0UezscT2RMpPEDT44te82KJWxp8Tvgoyql7A4QlB+EDP70XDhGQfqr967
-	 KvAzqsn38gkHQ==
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e819aa98e7aso508307276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:00:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0PrmC87eqc5REK+w0/NbPEC+Y8QvGxZKInYVcR/yg7seUnAWFJlRuO8Me5yN4cbc4CpZCyF2HMy8ha8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVy0jhKSrNhkltBTIQNoW7VCdGVId/BzoOPp/hdgu1Bsil9nEu
-	C+qgG5ntNtL1rZPgm1mqaw3em4NsmSoLbTtGwI7Aof4E4/e94U0IyT3TzdCbFVSmzoBtyEpH4Ga
-	6gFzAgTpSczB5/C2fZWuRGSw1NXMqgvqYhXk4Um9HcQ==
-X-Google-Smtp-Source: AGHT+IFTSpIXWJ8aJgks2cku0velW0M+JCR6Rbfmtd6WsoM033VVzHoiXCwOg94pnYfHO2hy+W/9swsQZRSpK6zIGwQ=
-X-Received: by 2002:a05:6902:2613:b0:e82:6c9b:8287 with SMTP id
- 3f1490d57ef6-e826c9b85e4mr11134815276.9.1750323604035; Thu, 19 Jun 2025
- 02:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KObDt8YH"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450ce671a08so3027375e9.3;
+        Thu, 19 Jun 2025 02:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750323607; x=1750928407; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BMLvtRW8lP9BVVUwuPMh8xqp/K6tyZKhWFpUJL3ALEg=;
+        b=KObDt8YH3HMn60ZL8faB+4Gz+EX0KzPuXAq8CM47Kbhy7l563qYSn9WwV4rsa3w1Ll
+         vf0yT0tqWa58kT7vO5i/NiIkwHTw+JEodLaoe7JK5hxS1jp5d6yb8Mm4tsJLdoOJUW49
+         wPwRXX0LzcLl8sEPU8CuTc/mlf9JIgkwK5zXHg4zzRjxXdSB5rxtcdElnu4y/p5lb4xg
+         Tj3Cc60LpgS+0hia6vFN6xIvnqEtlRwvAcLEuII+fPPfn3DoscGJE4pzZzLjGcUFfpMy
+         wY+GZJPTIGeVjyhzw1yXwbXgCawQauumWC+TmPLB/0+yAn4DJIAj99u7LbENmGiely1P
+         z48g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750323607; x=1750928407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BMLvtRW8lP9BVVUwuPMh8xqp/K6tyZKhWFpUJL3ALEg=;
+        b=SjkSb2qwcgL1PGr6sJZCZWS5xOUGqq5DhXeOuVfXdD7clhHCYBDMd5sm5DpgJjO04B
+         YJn+LdrF/X45rb8zB2Lg92UKqVsqx3wvBEhppPheYyf7tZWcMOHKUCXhKRc4cKfpRIGM
+         MiKoqEl8DGJ3C1RF+R1PRYSMz0cU3DwS1xopNTm310jS5BJBt/E52vZnTfB5yfRJ+A4W
+         3Suh1TjtlKFEZ6ccp5I7iyEvL0qLu1+QdXqaTOHRJYYIEfuoUC8/2uamxQm4A5C+KS7Y
+         lVFUXEOpCZAEqmSnNbpZyUjZ9DTgvSl0AGXocIPpDGzKCyEPKTa3E3EVdKJu5zPdHkdp
+         Hmdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWyb0pjbMykxab2RtPFCQpmZrT0QBrV1dAMF6MWgNC8cpvkPSMhEuMX10hBk0WTpPM+KgtGUwcUX3K@vger.kernel.org, AJvYcCWAxMdYFP4kjf+JQzDFv9Vj6OR1rhGi0OgaDPJ30PzzwxT8lKYsgTQZzhdhXe2fl0LB7+HwAY9U@vger.kernel.org, AJvYcCWgEUG9OaWYxQ6corbsRyoIOEnYHpYhgJ3xjNN4UcWfBtTnvTscBIQi4X4C/CWk8SPhupgPsFprChd5rKka@vger.kernel.org, AJvYcCWv/Fl+IedIif/+eOFCMGttsKmU9lS4hKx3XM41KcFXVxAY0xQb6/dxTVjKWeKeFeu9R0/AwZNopwVpqDLEo9E20I8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys3x84n+wspTqIQB0ynqjQ9RqM1WqPW+gFj+Bx41XwpOEfmEYU
+	r72g1OBDA1/tC250aHW7srHlWhx3CcRk35YxLqFYqtL1paCET27ndMI5yAhdwxfrNmAu028qmdl
+	LzUviOHAex+Uq0bcFdoMXdE0oWMJCfjA=
+X-Gm-Gg: ASbGncvXiSskg4erDxzDKfTOdq0HLwKuu1Qw5JZXOl1YevHU6mIO+3gCW65Zq6psg65
+	4Bv7bHSgDS/EZSVaBojWGe1qmeMpEIteHGuZ+Gn1E3PXf1Ys/jA5s2Xwf1DGRQsvFcFaFfZLKOF
+	rADbMRz8HiPxZgUWwo3nnDYRSAahQiwnf5cM8LvrQ2rJIgi6RCBRiJV7SFi+Qv9nHzHOai5gmZN
+	QZS
+X-Google-Smtp-Source: AGHT+IGhu8co19gsbnewWhNefXxhKDeZw+yRoWO6wb7/e+7qCs6ACRJfdkx53ZLyixNkwCGavN9xkSNMsCx1jFBc7Uo=
+X-Received: by 2002:a05:600c:46cc:b0:453:b1c:442a with SMTP id
+ 5b1f17b1804b1-4533cb53989mr181220065e9.27.1750323607211; Thu, 19 Jun 2025
+ 02:00:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net> <20250606-6-10-rocket-v7-2-dc16cfe6fe4e@tomeuvizoso.net>
-In-Reply-To: <20250606-6-10-rocket-v7-2-dc16cfe6fe4e@tomeuvizoso.net>
-From: Robert Foss <rfoss@kernel.org>
-Date: Thu, 19 Jun 2025 10:59:53 +0200
-X-Gmail-Original-Message-ID: <CAN6tsi4p2wuMVVvQOJ5c6ecT=x2pr2VoZhS4wH27qaR9DptQHA@mail.gmail.com>
-X-Gm-Features: AX0GCFskbG-ChYYQk7bGtKWaX4j6fsAKjpFPkM8iQ7QewPkQLLciRbSAzy_fqYo
-Message-ID: <CAN6tsi4p2wuMVVvQOJ5c6ecT=x2pr2VoZhS4wH27qaR9DptQHA@mail.gmail.com>
-Subject: Re: [PATCH v7 02/10] accel/rocket: Add a new driver for Rockchip's NPU
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>, 
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org
+References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com> <20250611061609.15527-4-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250611061609.15527-4-john.madieu.xa@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 19 Jun 2025 09:59:41 +0100
+X-Gm-Features: Ac12FXxEbSDhRUhp-8lwipAqXbd42CO72LWVe4CbodNCzZQmHjti3RncJNUk7JY
+Message-ID: <CA+V-a8uizu5MCur_=g5vJyWbWSTSP2J6FkQ89JB8ges7GWdsjg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: rzg3e-smarc-som: Enable
+ eth{0-1} (GBETH) interfaces
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: andrew+netdev@lunn.ch, conor+dt@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, geert+renesas@glider.be, krzk+dt@kernel.org, 
+	kuba@kernel.org, pabeni@redhat.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	robh@kernel.org, biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org, 
+	john.madieu@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, 
+	netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 6, 2025 at 8:29=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
- wrote:
->
-> This initial version supports the NPU as shipped in the RK3588 SoC and
-> described in the first part of its TRM, in Chapter 36.
->
-> This NPU contains 3 independent cores that the driver can submit jobs
-> to.
->
-> This commit adds just hardware initialization and power management.
->
-> v2:
-> - Split cores and IOMMUs as independent devices (Sebastian Reichel)
-> - Add some documentation (Jeffrey Hugo)
-> - Be more explicit in the Kconfig documentation (Jeffrey Hugo)
-> - Remove resets, as these haven't been found useful so far (Zenghui Yu)
-> - Repack structs (Jeffrey Hugo)
-> - Use DEFINE_DRM_ACCEL_FOPS (Jeffrey Hugo)
-> - Use devm_drm_dev_alloc (Jeffrey Hugo)
-> - Use probe log helper (Jeffrey Hugo)
-> - Introduce UABI header in a later patch (Jeffrey Hugo)
->
-> v3:
-> - Adapt to a split of the register block in the DT bindings (Nicolas
->   Frattaroli)
-> - Move registers header to its own commit (Thomas Zimmermann)
-> - Misc. cleanups (Thomas Zimmermann and Jeff Hugo)
-> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
-> - PM improvements (Nicolas Frattaroli)
->
-> v4:
-> - Use bulk clk API (Krzysztof Kozlowski)
->
-> v6:
-> - Remove mention to NVDLA, as the hardware is only incidentally related
->   (Kever Yang)
-> - Use calloc instead of GFP_ZERO (Jeff Hugo)
-> - Explicitly include linux/container_of.h (Jeff Hugo)
-> - pclk and npu clocks are now needed by all cores (Rob Herring)
->
-> v7:
-> - Assign its own IOMMU domain to each client, for isolation (Daniel
->   Stone and Robin Murphy)
->
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Hi John,
 
-Reviewed-by: Robert Foss <rfoss@kernel.org>
+Thank you for the patch.
+
+On Wed, Jun 11, 2025 at 7:20=E2=80=AFAM John Madieu
+<john.madieu.xa@bp.renesas.com> wrote:
+>
+> Enable the Gigabit Ethernet Interfaces (GBETH) populated on the RZ/G3E SM=
+ARC EVK
+>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> ---
+>  .../boot/dts/renesas/rzg3e-smarc-som.dtsi     | 106 ++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi b/arch/arm6=
+4/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> index f99a09d04ddd..4b4c7f3381ad 100644
+> --- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> @@ -26,6 +26,8 @@ / {
+>         compatible =3D "renesas,rzg3e-smarcm", "renesas,r9a09g047e57", "r=
+enesas,r9a09g047";
+>
+>         aliases {
+> +               ethernet0 =3D &eth0;
+> +               ethernet1 =3D &eth1;
+>                 i2c2 =3D &i2c2;
+>                 mmc0 =3D &sdhi0;
+>                 mmc2 =3D &sdhi2;
+> @@ -77,6 +79,74 @@ &audio_extal_clk {
+>         clock-frequency =3D <48000000>;
+>  };
+>
+> +&eth0 {
+> +       phy-handle =3D <&phy0>;
+> +       phy-mode =3D "rgmii-id";
+> +
+> +       pinctrl-0 =3D <&eth0_pins>;
+> +       pinctrl-names =3D "default";
+> +       status =3D "okay";
+> +
+> +       mdio {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +               compatible =3D "snps,dwmac-mdio";
+> +
+> +               phy0: ethernet-phy@7 {
+> +                       compatible =3D "ethernet-phy-id0022.1640",
+> +                                    "ethernet-phy-ieee802.3-c22";
+> +                       reg =3D <7>;
+> +                       interrupts-extended =3D <&icu 3 IRQ_TYPE_LEVEL_LO=
+W>;
+> +                       rxc-skew-psec =3D <1400>;
+> +                       txc-skew-psec =3D <1400>;
+> +                       rxdv-skew-psec =3D <0>;
+> +                       txdv-skew-psec =3D <0>;
+> +                       rxd0-skew-psec =3D <0>;
+> +                       rxd1-skew-psec =3D <0>;
+> +                       rxd2-skew-psec =3D <0>;
+> +                       rxd3-skew-psec =3D <0>;
+> +                       txd0-skew-psec =3D <0>;
+> +                       txd1-skew-psec =3D <0>;
+> +                       txd2-skew-psec =3D <0>;
+> +                       txd3-skew-psec =3D <0>;
+> +               };
+> +       };
+> +};
+> +
+> +&eth1 {
+> +       phy-handle =3D <&phy1>;
+> +       phy-mode =3D "rgmii-id";
+> +
+> +       pinctrl-0 =3D <&eth1_pins>;
+> +       pinctrl-names =3D "default";
+> +       status =3D "okay";
+> +
+> +       mdio {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +               compatible =3D "snps,dwmac-mdio";
+> +
+> +               phy1: ethernet-phy@7 {
+> +                       compatible =3D "ethernet-phy-id0022.1640",
+> +                                    "ethernet-phy-ieee802.3-c22";
+> +                       reg =3D <7>;
+> +                       interrupts-extended =3D <&icu 16 IRQ_TYPE_LEVEL_L=
+OW>;
+> +                       rxc-skew-psec =3D <1400>;
+> +                       txc-skew-psec =3D <1400>;
+> +                       rxdv-skew-psec =3D <0>;
+> +                       txdv-skew-psec =3D <0>;
+> +                       rxd0-skew-psec =3D <0>;
+> +                       rxd1-skew-psec =3D <0>;
+> +                       rxd2-skew-psec =3D <0>;
+> +                       rxd3-skew-psec =3D <0>;
+> +                       txd0-skew-psec =3D <0>;
+> +                       txd1-skew-psec =3D <0>;
+> +                       txd2-skew-psec =3D <0>;
+> +                       txd3-skew-psec =3D <0>;
+> +               };
+> +       };
+> +};
+> +
+>  &gpu {
+>         status =3D "okay";
+>         mali-supply =3D <&reg_vdd0p8v_others>;
+> @@ -103,6 +173,42 @@ raa215300: pmic@12 {
+>  };
+>
+>  &pinctrl {
+> +       eth0_pins: eth0 {
+> +               pinmux =3D <RZG3E_PORT_PINMUX(A, 1, 1)>, /* MDC */
+> +                        <RZG3E_PORT_PINMUX(A, 0, 1)>, /* MDIO */
+> +                        <RZG3E_PORT_PINMUX(C, 2, 15)>, /* PHY_INTR (IRQ2=
+) */
+> +                        <RZG3E_PORT_PINMUX(C, 1, 1)>, /* RXD3 */
+> +                        <RZG3E_PORT_PINMUX(C, 0, 1)>, /* RXD2 */
+> +                        <RZG3E_PORT_PINMUX(B, 7, 1)>, /* RXD1 */
+> +                        <RZG3E_PORT_PINMUX(B, 6, 1)>, /* RXD0 */
+> +                        <RZG3E_PORT_PINMUX(B, 0, 1)>, /* RXC */
+> +                        <RZG3E_PORT_PINMUX(A, 2, 1)>, /* RX_CTL */
+> +                        <RZG3E_PORT_PINMUX(B, 5, 1)>, /* TXD3 */
+> +                        <RZG3E_PORT_PINMUX(B, 4, 1)>, /* TXD2 */
+> +                        <RZG3E_PORT_PINMUX(B, 3, 1)>, /* TXD1 */
+> +                        <RZG3E_PORT_PINMUX(B, 2, 1)>, /* TXD0 */
+> +                        <RZG3E_PORT_PINMUX(B, 1, 1)>, /* TXC */
+> +                        <RZG3E_PORT_PINMUX(A, 3, 1)>; /* TX_CTL */
+like RZ/V2H on RZ/G3E PFC_OEN BITS(0,1) need to be configured based on
+RGMII/MII mode?
+
+Cheers,
+Prabhakar
+
+> +       };
+> +
+> +       eth1_pins: eth1 {
+> +               pinmux =3D <RZG3E_PORT_PINMUX(D, 1, 1)>, /* MDC */
+> +                        <RZG3E_PORT_PINMUX(D, 0, 1)>, /* MDIO */
+> +                        <RZG3E_PORT_PINMUX(F, 2, 15)>, /* PHY_INTR (IRQ1=
+5) */
+> +                        <RZG3E_PORT_PINMUX(F, 1, 1)>, /* RXD3 */
+> +                        <RZG3E_PORT_PINMUX(F, 0, 1)>, /* RXD2 */
+> +                        <RZG3E_PORT_PINMUX(E, 7, 1)>, /* RXD1 */
+> +                        <RZG3E_PORT_PINMUX(E, 6, 1)>, /* RXD0 */
+> +                        <RZG3E_PORT_PINMUX(E, 0, 1)>, /* RXC */
+> +                        <RZG3E_PORT_PINMUX(D, 2, 1)>, /* RX_CTL */
+> +                        <RZG3E_PORT_PINMUX(E, 5, 1)>, /* TXD3 */
+> +                        <RZG3E_PORT_PINMUX(E, 4, 1)>, /* TXD2 */
+> +                        <RZG3E_PORT_PINMUX(E, 3, 1)>, /* TXD1 */
+> +                        <RZG3E_PORT_PINMUX(E, 2, 1)>, /* TXD0 */
+> +                        <RZG3E_PORT_PINMUX(E, 1, 1)>, /* TXC */
+> +                        <RZG3E_PORT_PINMUX(D, 3, 1)>; /* TX_CTL */
+> +       };
+> +
+>         i2c2_pins: i2c {
+>                 pinmux =3D <RZG3E_PORT_PINMUX(3, 4, 1)>, /* SCL2 */
+>                          <RZG3E_PORT_PINMUX(3, 5, 1)>; /* SDA2 */
+> --
+> 2.25.1
+>
+>
