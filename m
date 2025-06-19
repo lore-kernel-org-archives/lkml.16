@@ -1,117 +1,130 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0441B3923
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750343881; cv=none; b=RBsir+0tRS8JrEmuki0tZ8Xz4baSGEE+sLgh1Av8bymHJnp2qzTY/b3By5aB6q+Mv1RZkRqyC0QMm0xaYen//UlMDs0te/m6j7W6qjcohLnrZW7vg0jd+P02AuqvGmWsPR+RPw+/wEqxs3vC66cLkGtrtXSQRCLDCTsxm0mfr98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750343881; c=relaxed/simple;
-	bh=CpbWcAfGaHy4F+EFWUw79lU+eKjQal3fLI4YNd1mJqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqj2kEBwXufm6ZZqo9U80SjrIN7mrF6jFkkdH3nYzv3VMcEPL8s/IFpdcPmDY0ip/b1REOzRqYvKL/93JzwK4zes6lVqU+9uYiSf/7Ugu5oM6BegnLKZ8HEFYk03snZ4xrLLw/6BfVYBaBIpkgECjph9/CN8l+EGs/gXyFdxphM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GGukmmKI; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3086F1AA782;
+	Thu, 19 Jun 2025 14:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750344013; cv=pass; b=luRezDBrsKXpWFBSyBfBTpz7PRwFlXpm0ta0opnIkcV9j3oEmZ1/DHjOJ70FatecPx33jBF61lXFzx78mPte64SudvzhIQyM3UQuOQSICl9hPAlG4d+UyYbDCL5hT/Ekb1G8JKaPej6TD6/rUcCnoc00JjZdEMn2lcYZ6Q39cdw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750344013; c=relaxed/simple;
+	bh=rK9LNZ1uJ6FW1BZOrH8A8uJsqEt1nVlYhcicpVTZzhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lpTuEEJTUgDneec/YBerCUUjBf1zhF/ugaLnfQ410OcFKgy7uPUsdoAKe9jzVe/yrBQuqnda88UB70oxMnXOT5tqeb4aOWiTyn1f6EikmnnCHq4v5yRjTBAX+WyF7ohWRPBnus3oIhoQmdgCi8tvRxWEQxpTdM08kPUSeColiyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Rw2gd+L5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGukmmKI"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2e3e58edab5so263917fac.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750343878; x=1750948678; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hItRQ/EsWDhhIfBWpBCEk7E1LEl+Hcojb2DJh97cbHY=;
-        b=GGukmmKIqdIqoZEYJ7VAuPkP6w6R9fAVMs9h3seMZR72g9tmNPb1nWucOOXkvvG8AH
-         bK3x7aN05gmv+weKP6IQp1OZeonu8zL+XIVD0+i5Vcs8CYR4d8lrkBmCqid6JGvw5EKm
-         YdqJt35lDuU3OiGFNe3m5BK6WXoruC3zEqo7HQH/pxLLADP+LfE2jiYm6n0fnypb+i+h
-         ix3xGGH69E6HAhkakeKrq9ePbGL69ALZ8MhyY//tZqOjRHZ+mqVpRGoIGYOuYsqVJiiN
-         Uf/LKbOH6tKwL0WOOLTyHsEqN9kHKSYnAXQ/nDKQk+k/gPMxJ7cX6ZMs/BtBVln1cTlG
-         Vrnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750343878; x=1750948678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hItRQ/EsWDhhIfBWpBCEk7E1LEl+Hcojb2DJh97cbHY=;
-        b=n5e9bS40f+YEKZxKWrOxco48iUvyguqJm9tCjL4abROtF40m1m5xkfhsAtIL1mSzJX
-         oTGkkprpKRP6KUW+rABRzMVG9S0cOGsEd319nWzB1TVKAMWvuYrAX6ZnGnJr+5di4Z1D
-         VsGAalT2XTDn/uX/ufaVwZfTWo6AKRKEcx3Ts0lLz9M/IU7B+naMILhvAk+rQlCrolNO
-         BEFT/Bk3618AGbGVzO9dxfOU8VlDS2LkcZREULQiUQ5c6F2RwGFWH/VGI7MVFLq0EvEF
-         orA+fYoVTd6RljSuyoMPSljpezVwoMeNGP3u6vS4e3mzIWjLhmMJ20kf7PjhoFUfKWl/
-         LDQg==
-X-Gm-Message-State: AOJu0YyukZexyCz+MNGw7yV6fxnzQD2yX6tdyRfVn6xHuUS+IHKztuad
-	K3MutR2f9zpBkg6OEtHOjBAY3jRnBAovJqBsmqttYR2cilcfE4RGD6Pn8TKmdZjv0WWuYg0Ztsv
-	pKTse
-X-Gm-Gg: ASbGnctpgSScg2LGapGdnA0FCn0hPSpS3PZXm2eBkPtHnY9rprDoGBAhIn1DVLOh3Hy
-	4zol4guXHg7VCHaobuyexUPzCea45MBUxVguFqU+9NPPmH4QthMjf6c+uKzNXEORf3jWQoKRcyf
-	WPT26xXjtdDdr/kWFu0wTgc64qT2+udmhFUyfYlbs9FizEQv1Fa59SmjT1WCxTuGrqFJIrguFzP
-	1XoFueSWh420T3yQk8rfpQNApFyQcN82qTnQtjWvnKalMTPknv5dhL/dr2hvJOc0012EcBHItdO
-	AdqriyoGYG+CccUODmomiXz7jg9jUaIPf2t8bfR8mYAVueBEKHyK5o2Oeu0XLvhmBzW5BA==
-X-Google-Smtp-Source: AGHT+IF5wWj1FQ6BbyupArvuY9tJtohfhdhFBgl6f0a/VE3YSxqXuNxxcAbMe+rm13ajKH0dqzjQsg==
-X-Received: by 2002:a05:6870:d0d5:b0:2d5:2955:aa6a with SMTP id 586e51a60fabf-2eaf0830607mr11507270fac.7.1750343877826;
-        Thu, 19 Jun 2025 07:37:57 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:67e2:ece8:b2f5:738f])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eba625607dsm358428fac.45.2025.06.19.07.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:37:57 -0700 (PDT)
-Date: Thu, 19 Jun 2025 17:37:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Philip Radford <philip.radford@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	cristian.marussi@arm.com, luke.parkin@arm.com
-Subject: Re: [PATCH 4/4] firmware: arm_scmi: Add new inflight tracing
- functionality
-Message-ID: <514e4b89-d48a-41b9-bd63-0d52249bba7a@suswa.mountain>
-References: <20250619122004.3705976-1-philip.radford@arm.com>
- <20250619122004.3705976-5-philip.radford@arm.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Rw2gd+L5"
+ARC-Seal: i=1; a=rsa-sha256; t=1750343956; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Jym2lPGxuOQzgAgSAE/A8rLETWESPaEFQYYyJGHONlYevNnFsA2UCWYhu0ZeL8itUV0dlh8hFb1v5rjRnaU3RQcByUMtiYZDNHuNYI1ForkWRFD4FLfls4QVP8LQmzKVCSUDaZBd3kQPQPGIg61txn/lwGvkdLvgF83rn8DvDR4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750343956; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lNxJSadVSJIRvaEmHMmUT8LLkdzhpjlPoa29IPSlJho=; 
+	b=jErUqMNfobSAURiuvn13ZoGuHAb4QH8CiYdQERN3EDIDIEtBzoflfMW8B39oEAj7TFmbOE144dMFF9NpV6vKNQGg8SUsvVfc0lw6hy1kNZwuSyLRQqU8bJ4+jTVqD/64MphOE/GfCupsO0HAzb0bSF49tfU+zKuFBEDkLaLanoo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750343956;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=lNxJSadVSJIRvaEmHMmUT8LLkdzhpjlPoa29IPSlJho=;
+	b=Rw2gd+L5lImASQ1HKgHlzcgdsRLZ18+fXxNa6EGGKYSlvhX9ynLQE5rW4eASp7v8
+	QSbt2xeWyFdiZqGauT9ggxvclqc3XQMXBdqBBY89CArgt0gRcogHqNAXvikkSAitbSg
+	dggkYGnqm53ErY31QUUd0D2pOjqYGY9Xq+wJk8Yg=
+Received: by mx.zohomail.com with SMTPS id 175034395251629.953100317805934;
+	Thu, 19 Jun 2025 07:39:12 -0700 (PDT)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: 20250325213303.826925-5-detlev.casanova@collabora.com
+Cc: alchark@gmail.com, andrzej.p@collabora.com, cassel@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, dmitry.perchanov@intel.com,
+ dsimic@manjaro.org, ezequiel@vanguardiasur.com.ar,
+ gregkh@linuxfoundation.org, heiko@sntech.de, hverkuil@xs4all.nl,
+ jacopo.mondi@ideasonboard.com, jeanmichel.hautbois@ideasonboard.com,
+ jonas@kwiboo.se, kernel@collabora.com, kieran.bingham@ideasonboard.com,
+ krzk+dt@kernel.org, laurent.pinchart@ideasonboard.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-staging@lists.linux.dev, Jianfeng Liu <liujianfeng1994@gmail.com>,
+ mchehab@kernel.org, naush@raspberrypi.com, nicolas.dufresne@collabora.com,
+ robh@kernel.org, sakari.ailus@linux.intel.com,
+ sebastian.reichel@collabora.com, tomi.valkeinen@ideasonboard.com,
+ umang.jain@ideasonboard.com
+Subject: Re: [PATCH v4 4/6] media: rockchip: Introduce the rkvdec2 driver
+Date: Thu, 19 Jun 2025 10:39:08 -0400
+Message-ID: <5900973.DvuYhMxLoT@trenzalore>
+In-Reply-To: <9f098eab-7b98-4827-8538-3cab0e8d7c63@gmail.com>
+References: <9f098eab-7b98-4827-8538-3cab0e8d7c63@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619122004.3705976-5-philip.radford@arm.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-On Thu, Jun 19, 2025 at 12:20:04PM +0000, Philip Radford wrote:
-> Adds scmi_inflight_count function to fetch the current xfer
-> inflight count to use in trace
+Hi Jianfeng,
+
+This patch set is now a  bit outdated. I will soon send a new version that you 
+can find at [1].
+That being said, you may be right. without an iommu, it would panic here 
+(although the iommu should really be used).
+
+[1]: https://gitlab.collabora.com/detlev/linux/-/tree/add-vdpu381-and-383-to-rkvdec
+
+Regards,
+Detlev
+
+On Thursday, 19 June 2025 05:19:32 EDT Jianfeng Liu wrote:
+> Hi Detlev,
 > 
-> Signed-off-by: Philip Radford <philip.radford@arm.com>
-> ---
->  drivers/firmware/arm_scmi/common.h   |  1 +
->  drivers/firmware/arm_scmi/driver.c   | 17 +++++++++++++++--
->  drivers/firmware/arm_scmi/raw_mode.c |  5 +++--
->  3 files changed, 19 insertions(+), 4 deletions(-)
+> On Tue, 25 Mar 2025 17:22:20 -0400, Detlev Casanova wrote:
+>  >+        case RKVDEC2_ALLOC_SRAM:
+>  >+            virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+>  >+
+>  >+            iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
 > 
-> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> index ad9232c982ce..07b9e629276d 100644
-> --- a/drivers/firmware/arm_scmi/common.h
-> +++ b/drivers/firmware/arm_scmi/common.h
-> @@ -505,4 +505,5 @@ static struct platform_driver __drv = {					       \
->  void scmi_notification_instance_data_set(const struct scmi_handle *handle,
->  					 void *priv);
->  void *scmi_notification_instance_data_get(const struct scmi_handle *handle);
-> +int scmi_inflight_count(const struct scmi_handle *handle);
->  #endif /* _SCMI_COMMON_H */
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index c6657582c9ab..d128d497f96e 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -1443,7 +1443,8 @@ static int do_xfer(const struct scmi_protocol_handle *ph,
->  
->  	trace_scmi_xfer_begin(xfer->transfer_id, xfer->hdr.id,
->  			      xfer->hdr.protocol_id, xfer->hdr.seq,
-> -			      xfer->hdr.poll_completion, 0);
-> +			      xfer->hdr.poll_completion,
-> +				  scmi_inflight_count(&info->handle));
+> I'm testing your patch with ffmpeg patched with v4l2-request patches[1],
+> and I usually
+> 
+> get kernel panic here. After checking rkvdec->iommu_domain before
+> running iommu_unmap,
+> 
+> I can pass fluster ffmpeg v4l2-request test. Here is my patch based on
+> your commit:
+> 
+> 
+> diff --git a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> index 75768561399..122bcdcebd4 100644
+> --- a/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> +++ b/drivers/media/platform/rockchip/rkvdec2/rkvdec2.c
+> @@ -681,8 +681,8 @@ static void rkvdec2_free_rcb(struct rkvdec2_ctx *ctx)
+>                  switch (ctx->rcb_bufs[i].type) {
+>                  case RKVDEC2_ALLOC_SRAM:
+>                          virt_addr = (unsigned long)ctx->rcb_bufs[i].cpu;
+> -
+> -                       iommu_unmap(rkvdec->iommu_domain, virt_addr,
+> rcb_size);
+> +                       if (rkvdec->iommu_domain)
+> + iommu_unmap(rkvdec->iommu_domain, virt_addr, rcb_size);
+>                          gen_pool_free(ctx->dev->sram_pool, virt_addr,
+> rcb_size);
+>                          break;
+>                  case RKVDEC2_ALLOC_DMA:
+> 
+> 
+> [1] https://github.com/amazingfate/FFmpeg/commits/n6.1.1-new-patches/
+> 
+> 
+> Best regards,
+> 
+> Jianfeng
 
-White space is messed up.  It might be better to fold this into patch 3?
 
-regards,
-dan carpenter
+
 
