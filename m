@@ -1,101 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B0F2111;
-	Thu, 19 Jun 2025 23:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C0A2980A2;
+	Thu, 19 Jun 2025 23:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375201; cv=none; b=h1vbLa8yyrgVudMTGcp58IekyAZfajO91sHl+Qtd4YgR/wtTJpw3LwUnRrdYPTL9DXGFFRm+34vDhqaKQqgdVCTtT7FUmah5q5WxRM1V2iML1Mh6mzIVxpZikoVMtT113idYDHMAOFYFmWHBAMfWmZDlqios/ToQpAC3jgO3+6g=
+	t=1750375202; cv=none; b=Az8e9ECr9aNridRpaN1NN4NQYxXz9TSfT12iSrpkr0NmQ7RA03cGlv22vw8vqaGP4zfkiFZ3XpVQDm0hEyAf5q3eFIppgG4++1NYbY7gZVw6FTzcWQQqTSENqLIkSI9nQ50XKgfsOXnyKup5kH0xDolI57qW11fNDFnTc5uLNBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375201; c=relaxed/simple;
-	bh=j8lHpLt7QIx12mDapL4H8Ev9FToLw7SXkTFbGuqECMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z29YkMiK+yr4pOVla84p+AcReYzSpHmnMyohD/T5vlJTTi7w9vNYpEUi32ZSvTJ0so95DbnppR3E7An7p5OHQONLprpn+8mMI/Axa5ie085/zDPUxB9Phtcn8AgBJ7q/UDA8GDKATGGRzw6zW245GDRTQ6fUKI6++TKhxAtvGfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DIfz47al; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750375202; c=relaxed/simple;
+	bh=j6/M6lV5AgkmjUTUcqy+FGFH7p1rumsUY4miWwtlLPs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=r/uQMfubWQhQfCmHpm3UhtAIiL5gLnxqZb36j+pPlv9FMykSv2YbXBK1wN99Kgs32wztmRaGIe2ZT2iIH9H6ocPt0KwDmA8MmtZr2QHAy76ddwmd3SL49cxP5pkY4GjLLCePfwI5X1t5QFiBGYYOkPa1Ziy0YSODUIcdpO/8ZtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T26uVoHH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DIfz47al"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750375199; x=1781911199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j8lHpLt7QIx12mDapL4H8Ev9FToLw7SXkTFbGuqECMk=;
-  b=DIfz47alhUhI4OJVw1FaJ1TZQXo6FXOosJndC98gpaiMSHUttAX1mQxH
-   C1SVjHFLF7vLNLe7nCjo086qfPFsZOGTqQ3JJdovc4kjTsMojbcRYtzok
-   F52edTqiZ0AdqnvDrI0tiwlbn9AyjhlrJVkkaZftrZrB99dTdwqygdE0S
-   YNx/Eo1C2TCIoXtdKNZULeByPtw2YigxhiKqHNA9OVeM8cWOvrEW+VnOi
-   e2G1MfH+RPmQyjWk7ZWO7nqw752M2O+UGVvtnhj0d5GmOyxnecGlPu/pm
-   nd8vr/90714GvV+UTDfVN43cfRy9WKsjXJ1ChDJXZHdDyaOmOV1OCcktK
-   Q==;
-X-CSE-ConnectionGUID: MGR5adWiREm0rEf1qMIqkw==
-X-CSE-MsgGUID: VawCR+3HSga6y7JhdHVgxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="62896523"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="62896523"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 16:19:58 -0700
-X-CSE-ConnectionGUID: c92D4XivSke6aYKOKXOHig==
-X-CSE-MsgGUID: D4Iv79z1TQKDH2Bpi0fy4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="156559224"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 19 Jun 2025 16:19:56 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSOXy-000LAQ-00;
-	Thu, 19 Jun 2025 23:19:54 +0000
-Date: Fri, 20 Jun 2025 07:19:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sayali Lokhande <quic_sayalil@quicinc.com>, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] arm64: dts: qcom: Add eMMC support for qcs8300
-Message-ID: <202506200608.fGUpDcoG-lkp@intel.com>
-References: <20250619070224.23428-2-quic_sayalil@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T26uVoHH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35F6C4CEF8;
+	Thu, 19 Jun 2025 23:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750375202;
+	bh=j6/M6lV5AgkmjUTUcqy+FGFH7p1rumsUY4miWwtlLPs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=T26uVoHHXD8fwNi39piwckyrUqyver196+QfUiG5WkoU6Grf7ri8ozUlACNwJ/0lT
+	 rfctU19R1CfkaP+hP2HmfwFMP2xyT6wqU2tlOvZnHTHcpFrGGxRyReCnVa+aeqOokZ
+	 ltEWPtHuiBOOeV19TjLle09GgB3whTkq+ziDZP4YKmSH5RXgEHMjJdGOYR0+Ooo1XK
+	 wiFC0eX+CXHpTwkANWgUdrSmxeoeZ6FXxVxb3ysUiLyyWFsNqW0in6w7WfwLElH6KL
+	 cTKckAefKJ6tvCGB59C+SKok1T/wi9alPzkK9D226L20qz2aBECf0aDr7Sdq5hD7gs
+	 L85KdEhQAwIPQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C7E38111DD;
+	Thu, 19 Jun 2025 23:20:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619070224.23428-2-quic_sayalil@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net/smc: remove unused input parameters in
+ smc_buf_get_slot
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175037522974.1016629.11778548886817850645.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 23:20:29 +0000
+References: <20250618103342.1423913-1-wangliang74@huawei.com>
+In-Reply-To: <20250618103342.1423913-1-wangliang74@huawei.com>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, alibuda@linux.alibaba.com,
+ tonylu@linux.alibaba.com, guwen@linux.alibaba.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ yuehaibing@huawei.com, zhangchangzhong@huawei.com,
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Sayali,
+Hello:
 
-kernel test robot noticed the following build errors:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.16-rc2 next-20250619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Wed, 18 Jun 2025 18:33:42 +0800 you wrote:
+> The input parameter "compressed_bufsize" of smc_buf_get_slot is unused,
+> remove it.
+> 
+> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> ---
+>  net/smc/smc_core.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sayali-Lokhande/arm64-dts-qcom-Add-eMMC-support-for-qcs8300/20250619-150421
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250619070224.23428-2-quic_sayalil%40quicinc.com
-patch subject: [PATCH V2 1/2] arm64: dts: qcom: Add eMMC support for qcs8300
-config: arm64-randconfig-053-20250619 (https://download.01.org/0day-ci/archive/20250620/202506200608.fGUpDcoG-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.3.0
-dtschema version: 2025.3.dev28+g49451a5
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506200608.fGUpDcoG-lkp@intel.com/reproduce)
+Here is the summary with links:
+  - [net-next] net/smc: remove unused input parameters in smc_buf_get_slot
+    https://git.kernel.org/netdev/net-next/c/c3ee72ded0d2
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506200608.fGUpDcoG-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm64/boot/dts/qcom/qcs8300.dtsi:3867.19-20 syntax error
-   FATAL ERROR: Unable to parse input tree
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
