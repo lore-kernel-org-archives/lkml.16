@@ -1,188 +1,273 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251B73085D3;
-	Thu, 19 Jun 2025 15:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F051213B58B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346147; cv=none; b=ljIV5DAjD+cssciQeYBBlt9jr/R2toZmlRkcgs4xKnV7YC/Z7ZHoFhSCqpJ8fTW/SV+/FLIKA7mkBs06Im4V+F8P0rrDeOtreH/NEWFiyg4W3/gsQCBOBA8AyqN3tYdC3J8cB+TbQA/1pMSamlwg67K6dnD9tSOZRRjPGTTbFaA=
+	t=1750346148; cv=none; b=oTvwB5piL7nqikIpUJEgsm30Vgh/dsNnfpm1Pz6ue7IEfS/PlfQyCf72IpMM/mVhtdw0k7aUEA+EAPkngwoaawL2EmElWRZtWpExkWS/9X9g0xhR0nTxBX95aksRUPSMSt6+Th5Ho+KotyJKfGpjEeFchs+lzkYREMgKrkbEHho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346147; c=relaxed/simple;
-	bh=zHZPU0pQVvtvELT/A0DnUl36QCSDJghMFFVkTWTaZUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6M14oh442YbHgRRu/UEZbODUGUFkdv16enoeYd9NdLcbnM4GbOquqlDBCMdWLrGwDfJuUU0h+EvF4fjw+rly/0wdB6ziXYHGrIFAviRtS77kr80YueauNXc7ZL8vYcuEWSZSm+y60i3LWOTuGoPuBYr/OFKGUWD2p9O/ZtqibY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvI9xjt3; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750346148; c=relaxed/simple;
+	bh=j36Lv0XwSdPSrL89TG1Za9YH/KmyQpaNDxFLdLJkcmY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rMt1cbsXKqLuqh4KUvm3lZQmjHi4nVqaWipnjgkQg1Cu/TGyjrEVbTzmgsUFlVcIsasAwFdEzRunz0/vzIh6co1ZhZx9+0Qcs/+hHncb28a/dR80X2XnJL+fGW7Ikg3qalv1ePdgHPDyDwsDgu0rc9kk/qaVGugKdf3FD6P19As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NmDd9nam; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvI9xjt3"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a58ebece05so7711201cf.1;
-        Thu, 19 Jun 2025 08:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750346145; x=1750950945; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iB6NBWoWO017Q/yotmTxC8XiQqyoYl9JmICEhhvlvHU=;
-        b=gvI9xjt3Wp9ZPsDuHkv7IN2Kd0nM98jn+OKmyvsMR6UUjK1bvGRcnVIw65d9G72Mgl
-         9CvSpBQ5oVJcMusJcHl54HRkfN0pgK8JJk0kwDGO3mc/owizMzvBO+nVhKEeCnkhxcvn
-         HeNfRaO7lTG//GOqr29N/aYMIY2PjDirUg1brTWnUHSASCgNgWQW0/3+rsYRDC+3gMKf
-         6iZmc2SyZoj/1Eu3TnBfXLhqKmFGCYD2Ub3+PmZ2rm+8zOdvVFvus+J1+5Us6VK8mFPC
-         QdKV/F8l7QZj/WSXur7tBmA9WEJ5OAU1BBT/iJj8Yd6rmfsHtROlLo1NcTx9/W0TXWrT
-         LFRg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NmDd9nam"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750346145;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nnmNnV7Z/TLBli2AzSqmjfw6jzjBv10gklg2gPq0gb0=;
+	b=NmDd9namrk7hTc5t+NI/bgKBYQafNiwbSvDmOl8l5EdWfc9zOUxKN8zH4aKukF1r56zcWC
+	eQxu77j1AO4fmegUbARr+mQtknG/xxPuG2NeVPkbbVjO/Sfy9ItMou87Ief+Njxij5wFy4
+	sBu6d6987lJjGjBjgohw+b9BsIm51XQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-292-g117B1HYOsyRTIz26AKkPg-1; Thu, 19 Jun 2025 11:15:44 -0400
+X-MC-Unique: g117B1HYOsyRTIz26AKkPg-1
+X-Mimecast-MFC-AGG-ID: g117B1HYOsyRTIz26AKkPg_1750346143
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so4737195e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:15:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346145; x=1750950945;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iB6NBWoWO017Q/yotmTxC8XiQqyoYl9JmICEhhvlvHU=;
-        b=Dn8PscKQ3+8NRAgPAeA8Ew6PE/eFYYjkUKX3Dq38RvYuxJ5kR+8k1JYb8QyvhNJsbi
-         JvUkE0YQLXxarVu/7UNr1RTQaxZ94dd7upR42yClTlROMBvYZw8sgqkLAsyFZSh+7elP
-         0+nC40lYnXs0usQMTx2qwNDsMrO96/DESMx0oAfWNoUMn5BqFOitYeiDld2aV6GK5aPq
-         5eoTYT2QOC6iVjhTTVRK4vYmd3F3POXpjR9ltjPl3hvf9JnYnBlcJivrBJsG/t8qjKh+
-         AOKun8MkbQjmueAuuCVZciIl4FKT1V4TaJR8eZbtp5W1M0hqqOEeeLIF2gT70oAR7CYr
-         1MTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZSV8pHchLnAC4np4VQrwi2L5Zi4Mvd//yy+kja1UuPtgXk7QF6QQkR/ZRcj9z18eMqvQ1dWC7Fjr+7EyG/Tw=@vger.kernel.org, AJvYcCUlcF5+qzNbAbkrCV+RN066+q44rFSIEgAVUh9WwwMe2zgEpsEvz+RUDyYliXuk+60pRnNsM6EpynxT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9CXI/m1v7TiyJPhi7+UgRmgCmCm8rrdxpmdw6QZBXkdrUMK2L
-	IP8+BT3nBxk2xsTfL6KRARjiG7wkf21OaxIo2C8wSRSoN86UcdD07PoG
-X-Gm-Gg: ASbGnctw1OPCqSAkLsJoGCgKC2DwGmhkKwc577ET+UHrP6a63MufcVy6YQTI2m+QzUi
-	Vy6j9RZF6Msrq9vqQs4vHdtUeze3ue4JIiXTQKNjZdIa7tlEi8De4j7NUi0WPlMKCkeCOmIueI9
-	wVuFFg0V/pkVBM80zgmYYfvMWJaiNQ5YBnAs8+9MYvo6+0SHlIZYFAr12inyyQzt35bj4FUDFI5
-	hHqfXhHDiaeLHHIg7zK7kfZz3DUf3gEb86xcqzAbwY5dBtOEojMEOHnFIgifusvW13Lz6RYHiJ7
-	lLDm39ZB5NtLyPUGBTBCASyC3kLXlfIwMJOKAJjpM7DN/QwKHhgU7CKiFZeG1xA9vYchZeut/OD
-	WxGS12Lty6FJbS1b54wzTwtGeAKOOez1xHPeYLx51gS3/OQTdzNQX
-X-Google-Smtp-Source: AGHT+IF8vYUaxN9IXHpKW7pA/QJMa955Hnx3mIGzGHZgpjKqaBXYX9dt9SNO06zJEdxRolqCx+PzwA==
-X-Received: by 2002:ac8:58ce:0:b0:4a4:2d64:a7e4 with SMTP id d75a77b69052e-4a73c608616mr347986811cf.35.1750346144930;
-        Thu, 19 Jun 2025 08:15:44 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7784ce4d1sm443131cf.27.2025.06.19.08.15.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        d=1e100.net; s=20230601; t=1750346143; x=1750950943;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nnmNnV7Z/TLBli2AzSqmjfw6jzjBv10gklg2gPq0gb0=;
+        b=Ad/jFFeCkspUhvj2ZOcWTY0pJ1M0pO2xKhf8rYB+doWSxHGtO06+8eVHX4607zO8r7
+         A72adE7ckoUvv/oTRAebgdTDOYLkIR4U3A0HKDhJBZLzvacS25+FEiQT8oytWqNzqMg+
+         LJOR447MEOMRYw3P7GUUr+ZSzgD82Rh6ZfZU2kVK52+hd1ZyqvUUj7whiyuFjiMWKL6s
+         89lUcZ9BhbIQBDzTn+7jz7Z5+hVIAuJ17U4f6bkGyPQtDrJ3JXhn9Yb/XYY707KrACH9
+         o+BDKZtHCdUpjcOyCgQzAqyfAK9tI2pgFtvSSWOGAk6twmVfAIJaF3fVIJs8Fg3MfcPb
+         swIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmYt78QB8mga0kvWKNqIA6Y/rbhQ3aacLEe9YB9bJO+5j63wSpHqMHJgtzW3YxGJ5tn2rwY2SCaph7phI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwspNcfUQZRelYTmUZCGMHELZgzqXw6SFhj4SxO0iuqWadG0uRL
+	ieGlBHe+rdDVQrCFGkkeOokRKlFGkQoqUzeu6R07TiErkFe9xjyYfyjqHRexxxoyCLtbyJfAktt
+	5VWfNOv4Wj6Iq5yefZcSy0FmUTea+/xi3CI6MiYsS6dzEOoXhonO8bGG+lRltgZnG5Jlyg5s+n9
+	dA4+ZjhoRJJDUM/cDqu8WbHuhw5UeDFkFF5rh7q4aDh8Ozvpjd5g==
+X-Gm-Gg: ASbGnctzQZeaQpt0v7CcIi5Dv7u6pPzUPwRfBjlgQQyeKIzTsD32dZRPpcPnxa/Bmhn
+	W3PV3SGyhOzaQXnKFouelXHfOyvax3ABS09yJufcsP0Q9zgZedtNr8OWNHRk2rZ5bLXwWBEQab0
+	8yEpdkJEeQ+pfNwZB+ahIdm8+JX3NmLizcb7KRgBbW2AAdId5acSuunCx8eXe5zi2AVac8qx8ol
+	5sP4QMMTch0S0uqCNV2pTbxPUTji9u/m0RJChvcNdh0uAwuSLMk1/A3tit0/lE2+7alkGl6VSZF
+	kWrF0Q++Ezo2YlDarg==
+X-Received: by 2002:a05:6000:144e:b0:3a5:3b14:1ba3 with SMTP id ffacd0b85a97d-3a572e58cc9mr17568959f8f.49.1750346143196;
+        Thu, 19 Jun 2025 08:15:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2K4PWQRzuCGry5KAaSLw6cXzGCxwA9qri8LLp3blZHp1BJwjQA2vM0xwmkkHJC9VIuXCw6A==
+X-Received: by 2002:a05:6000:144e:b0:3a5:3b14:1ba3 with SMTP id ffacd0b85a97d-3a572e58cc9mr17568863f8f.49.1750346142292;
         Thu, 19 Jun 2025 08:15:42 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BA82F1200069;
-	Thu, 19 Jun 2025 11:15:41 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 19 Jun 2025 11:15:41 -0400
-X-ME-Sender: <xms:nSlUaIskrN58R8pfL5HcUXbdEiumOwJqeuesDalCGA3HVarVvmyARA>
-    <xme:nSlUaFeNOvpNck2jrzCPWg4LTetKM-aQVMaK8C29bgMk9ofYorlSYilskBbtliwyw
-    3Gmn_LeOdbJVgUfcA>
-X-ME-Received: <xmr:nSlUaDywfts9qXJkAqSPEMQoe1SVaa1E4BW_p8tiC1i2t22isfspKuYbeQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehkeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpefgledvudfhudfhhedugeegheekhfeileelteffgfekleegjeetueefieetudehueen
-    ucffohhmrghinheprhgvlhgvrghsvgdrshhonecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
-    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
-    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedv
-    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgrug
-    gvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlihhnuhig
-    rdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    rghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesgh
-    grrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhm
-    rghilhdrtghomh
-X-ME-Proxy: <xmx:nSlUaLNdegtaf3xa6TtwhaE9QVx0LOLdxrxkjQsJumnZV9M82BoMFw>
-    <xmx:nSlUaI97kKqOW3Jz1ZTEl1t1OU9zu2-JXHQ7WwsMcfFCSFGvg1MkrA>
-    <xmx:nSlUaDWyQdmWn8GXYlEn-B9jFQd6bol3p47FB5jr87ZtyMi-7Vjw5g>
-    <xmx:nSlUaBcQjjgb1RuxLQIQq9W7jb-vnzoQorE84AInrV4M6SHYASavZg>
-    <xmx:nSlUaKdQ1obqpDC4h0bIwoMZVevMyR3SsKD7oaRo9lMngoUJv_RfiWfS>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 11:15:41 -0400 (EDT)
-Date: Thu, 19 Jun 2025 08:15:40 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
- types
-Message-ID: <aFQpnBGrOrd3rtbF@Mac.home>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-4-boqun.feng@gmail.com>
- <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
- <aFQQuf44uovVNFCV@Mac.home>
- <20250619143214.GJ1613376@noisy.programming.kicks-ass.net>
- <aFQmDoRSEmUuPIQG@Mac.home>
- <20250619151050.GN1613376@noisy.programming.kicks-ass.net>
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm19617640f8f.26.2025.06.19.08.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 08:15:41 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Peter Jones
+ <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, Emanuele
+ Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann
+ <kraxel@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi
+ <bluca@debian.org>, Peter Zijlstra <peterz@infradead.org>, Matthew Garrett
+ <mjg59@srcf.ucam.org>, James Bottomley
+ <James.Bottomley@hansenpartnership.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3] x86/efi: Implement support for embedding SBAT
+ data for x86
+In-Reply-To: <20250603091951.57775-1-vkuznets@redhat.com>
+References: <20250603091951.57775-1-vkuznets@redhat.com>
+Date: Thu, 19 Jun 2025 17:15:40 +0200
+Message-ID: <877c17pxsz.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619151050.GN1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain
 
-On Thu, Jun 19, 2025 at 05:10:50PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 19, 2025 at 08:00:30AM -0700, Boqun Feng wrote:
-> 
-> > > So given we build locks from atomics, this has to come from somewhere.
-> > > 
-> > > The simplest lock -- TAS -- is: rmw.acquire + store.release.
-> > > 
-> > > So while plain store.release + load.acquire might not make TSO (although
-> > > IIRC ARM added variants that do just that in an effort to aid x86
-> > > emulation); store.release + rmw.acquire must, otherwise we cannot
-> > > satisfy that unlock+lock.
-> > 
-> > Make sense, so something like this in the model should work:
-> > 
-> > diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
-> > index d7e7bf13c831..90cb6db6e335 100644
-> > --- a/tools/memory-model/linux-kernel.cat
-> > +++ b/tools/memory-model/linux-kernel.cat
-> > @@ -27,7 +27,7 @@ include "lock.cat"
-> >  (* Release Acquire *)
-> >  let acq-po = [Acquire] ; po ; [M]
-> >  let po-rel = [M] ; po ; [Release]
-> > -let po-unlock-lock-po = po ; [UL] ; (po|rf) ; [LKR] ; po
-> > +let po-unlock-lock-po = po ; (([UL] ; (po|rf) ; [LKR]) | ([Release]; (po;rf); [Acquire & RMW])) ; po
-> > 
-> >  (* Fences *)
-> >  let R4rmb = R \ Noreturn       (* Reads for which rmb works *)
-> > 
-> 
-> I am forever struggling with cats, but that does look about right :-)
-> 
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 
-;-) ;-) ;-)
+> Similar to zboot architectures, implement support for embedding SBAT data
+> for x86. Put '.sbat' section in between '.data' and '.text' as the former
+> also covers '.bss' and '.pgtable' and thus must be the last one in the
+> file.
+>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+> The patch was previously sent as part of "[PATCH v3 0/2] efi: Add a
+>  mechanism for embedding SBAT section" series. The main patch has
+> already made it upstream through Ard's 'efi' tree (see commit 0f9a1739dd0e
+> "efi: zboot specific mechanism for embedding SBAT section") but x86 part
+> is still pending. Resending so it doesn't get lost.
+>
 
-> > although I'm not sure whether there will be actual users that use this
-> > ordering.
-> 
-> include/asm-generic/ticket_spinlock.h comes to mind, as I thing would
-> kernel/locking/qspinlock.*, no?
-> 
+I was going to ping again but while working on a (mostly unrelated)
+zboot issue:
+https://lore.kernel.org/linux-efi/20250618122008.264294-1-vkuznets@redhat.com/T/#u
 
-Ah, right. Although I thought users outside lock implementation would be
-nice, but you're right, we do have users. Previously our reasoning for
-correctness of this particular locking ordering kinda depends on
-per-architecture memory model reasoning, so modeling this does make
-sense.
+I noticed that in x86 SBAT patch I neglected to update optional PE
+header and '.sbat' section is accounted as part of 'SizeOfCode' instead
+of 'SizeOfInitializedData'. OVMF doesn't seem to care about the optional
+header and I don't really know who does but as the patch is not merged
+yet, I think it would be better to fix. The differential change is:
 
-Regards,
-Boqun
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 9bea5a1e2c52..f57c45d8584a 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -78,9 +78,9 @@ optional_header:
+        .byte   0x02                            # MajorLinkerVersion
+        .byte   0x14                            # MinorLinkerVersion
+ 
+-       .long   ZO__data                        # SizeOfCode
++       .long   textsize                        # SizeOfCode
+ 
+-       .long   ZO__end - ZO__data              # SizeOfInitializedData
++       .long   ZO__end - textsize              # SizeOfInitializedData
+        .long   0                               # SizeOfUninitializedData
+ 
+        .long   setup_size + ZO_efi_pe_entry    # AddressOfEntryPoint
 
-> 
+I'm going to send v4 with this change included.
+
+>  arch/x86/boot/Makefile                 |  2 +-
+>  arch/x86/boot/compressed/Makefile      |  5 +++++
+>  arch/x86/boot/compressed/sbat.S        |  7 ++++++
+>  arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++
+>  arch/x86/boot/header.S                 | 31 ++++++++++++++++++--------
+>  drivers/firmware/efi/Kconfig           |  2 +-
+>  6 files changed, 44 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/x86/boot/compressed/sbat.S
+>
+> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> index 640fcac3af74..3f9fb3698d66 100644
+> --- a/arch/x86/boot/Makefile
+> +++ b/arch/x86/boot/Makefile
+> @@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+>  
+>  SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+>  
+> -sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+> +sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+>  
+>  quiet_cmd_zoffset = ZOFFSET $@
+>        cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index f4f7b22d8113..3a38fdcdb9bd 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+>  vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+>  vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>  vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
+> +vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
+> +
+> +ifdef CONFIG_EFI_SBAT
+> +$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
+> +endif
+>  
+>  $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+>  	$(call if_changed,ld)
+> diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
+> new file mode 100644
+> index 000000000000..838f70a997dd
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/sbat.S
+> @@ -0,0 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Embed SBAT data in the kernel.
+> + */
+> +	.pushsection ".sbat", "a", @progbits
+> +	.incbin CONFIG_EFI_SBAT_FILE
+> +	.popsection
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index 3b2bc61c9408..587ce3e7c504 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -43,6 +43,14 @@ SECTIONS
+>  		*(.rodata.*)
+>  		_erodata = . ;
+>  	}
+> +#ifdef CONFIG_EFI_SBAT
+> +	.sbat : ALIGN(0x1000) {
+> +		_sbat = . ;
+> +		*(.sbat)
+> +		_esbat = ALIGN(0x1000);
+> +		. = _esbat;
+> +	}
+> +#endif
+>  	.data :	ALIGN(0x1000) {
+>  		_data = . ;
+>  		*(.data)
+> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+> index e1f4fd5bc8ee..9bea5a1e2c52 100644
+> --- a/arch/x86/boot/header.S
+> +++ b/arch/x86/boot/header.S
+> @@ -179,15 +179,11 @@ pecompat_fstart:
+>  #else
+>  	.set	pecompat_fstart, setup_size
+>  #endif
+> -	.ascii	".text"
+> -	.byte	0
+> -	.byte	0
+> -	.byte	0
+> -	.long	ZO__data
+> -	.long	setup_size
+> -	.long	ZO__data			# Size of initialized data
+> -						# on disk
+> -	.long	setup_size
+> +	.ascii	".text\0\0\0"
+> +	.long	textsize            		# VirtualSize
+> +	.long	setup_size			# VirtualAddress
+> +	.long	textsize			# SizeOfRawData
+> +	.long	setup_size			# PointerToRawData
+>  	.long	0				# PointerToRelocations
+>  	.long	0				# PointerToLineNumbers
+>  	.word	0				# NumberOfRelocations
+> @@ -196,6 +192,23 @@ pecompat_fstart:
+>  		IMAGE_SCN_MEM_READ		| \
+>  		IMAGE_SCN_MEM_EXECUTE		# Characteristics
+>  
+> +#ifdef CONFIG_EFI_SBAT
+> +	.ascii	".sbat\0\0\0"
+> +	.long	ZO__esbat - ZO__sbat            # VirtualSize
+> +	.long	setup_size + ZO__sbat           # VirtualAddress
+> +	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
+> +	.long	setup_size + ZO__sbat           # PointerToRawData
+> +
+> +	.long	0, 0, 0
+> +	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
+> +		IMAGE_SCN_MEM_READ		| \
+> +		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
+> +
+> +	.set	textsize, ZO__sbat
+> +#else
+> +	.set	textsize, ZO__data
+> +#endif
+> +
+>  	.ascii	".data\0\0\0"
+>  	.long	ZO__end - ZO__data		# VirtualSize
+>  	.long	setup_size + ZO__data		# VirtualAddress
+> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+> index db8c5c03d3a2..16baa038d412 100644
+> --- a/drivers/firmware/efi/Kconfig
+> +++ b/drivers/firmware/efi/Kconfig
+> @@ -286,7 +286,7 @@ config EFI_SBAT
+>  
+>  config EFI_SBAT_FILE
+>  	string "Embedded SBAT section file path"
+> -	depends on EFI_ZBOOT
+> +	depends on EFI_ZBOOT || (EFI_STUB && X86)
+>  	help
+>  	  SBAT section provides a way to improve SecureBoot revocations of UEFI
+>  	  binaries by introducing a generation-based mechanism. With SBAT, older
+
+-- 
+Vitaly
+
