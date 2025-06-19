@@ -1,92 +1,163 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB7A30E85D;
-	Thu, 19 Jun 2025 21:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE421E0B7
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750369860; cv=none; b=Fg7DQgWJ4E4mOJjzu7IImKhv0foOpy1KCQz1+X8+1sHN860HdbFdw0JcAqldKK0nyItqpDf0T7obasEGBUejNHskWCgIqgg0S65RS3KmjfNpRF8M7iVdvkPBLrwttiQNkAtoPgusEyr/Is7ckJs1f/XFwxIG5mEX6jfMhSPF+sw=
+	t=1750369881; cv=none; b=n9eO0ANGV46ysimU7JKr1i6j01jRNtPgvRbbXIWAu1JWGIc1JWDFHvDXBZyrWdusY0GPT7G/D9RSqo8bdSq0DaciaBTerFj4cjnNv/brLXNTBHImkyPIKlcRpu1TFs/eeKuWCrtjCGAL6fwoysqOZKV/S/oQ8mjzzmWGEpp0oUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750369860; c=relaxed/simple;
-	bh=A45MqkvigqGY87gNAFmP5A7QGENiNwBzRwE2i+XEg8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jGkKMegIrJnlR8ZoGp+X0Po4fXv6foV4SXbXt4vZvoSKglzBINCHRvjwElAG2MAdC2qsaqvSEfhZS8sYcqksFntw1rME1tNlCkQVvy5GHZ+iKhjzQizuDFXOiHaroz6thPX2x/zYlH7H57wz8aLAajDOf2wZ3J+l1d9fF6g3KyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=vwlc3ekO; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750369881; c=relaxed/simple;
+	bh=6b4xdbHAEobeRhtMS7us5of5Xvlx0zvK/T5YXduUbFw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Uwsi/SbJhRCNpMIkuZ46BfyVuSpPVhkVPZt6i6qOlbtDayRoJySpNfsUrp2tVWmcirVN2M8N4g1wEKf4GWtemHTK0OedKMuGGtcRSHd7sf/1u0vNsr8PV8X69EUARhVpt8R3nGo8/JQdikXVEBQAABE6vgHwt0JWeJTgJEKsdLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=d1Wq9FaL; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="vwlc3ekO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=p78c4pFSZsl/cYAu+NblAgf0zSrytRvAYqFqDj5uriw=; b=vwlc3ekOINkhRghcoe6/+IXwj0
-	anuJlyiboOwB4gTx5wFPmQIh8ZLldn4lTsXVOBzd9ctUvyL0EPK4ifg67GlWNWgW05W+5RhlM2fjD
-	VdjGBB4R4bPL5fcVtSa45yjp3RX6Zp1KkBZYrEiDpSXx/6e7R5Ub8tDO/bfMw/kl3ofWpV0D+xXMb
-	/mpotHo70MsV7BAIEd4WEDOVsjyCE29O9/Lwf9NZr79067oLYRGW0m74nVIOpQjxizzekTiUmgops
-	P4ol8wnMkj7mWZEYoyOj/zlvqFb+GcqtwvtroC21Nga67uaJjg46x6jZLl+uqgzL9UQSNia5BFmG7
-	LQEBK9Yg==;
-Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uSN9k-00086P-8T; Thu, 19 Jun 2025 23:50:48 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Alexey Charkov <alchark@gmail.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	kernel@collabora.com,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 0/2] RK3576 USB Enablement
-Date: Thu, 19 Jun 2025 23:50:38 +0200
-Message-ID: <175036980219.1524492.2279804764361633284.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250619-rk3576-sige5-usb-v5-0-9069a7e750e1@collabora.com>
-References: <20250619-rk3576-sige5-usb-v5-0-9069a7e750e1@collabora.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="d1Wq9FaL"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235f9ea8d08so10583305ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750369879; x=1750974679; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QNrd+Ka91X9vzoKAkMJyDjy2RBoEtHPH04v+UX5wZMw=;
+        b=d1Wq9FaLII+vaeA0Xit/A9GE3gSxdAS4R2xRlQOJWLte3rSN2shVYJDS/vVKWjQifE
+         dtWEQgMbNvJU6ZBWMMhwI84X4tNO2C1hM8EES4vWEErqoLg+sXoWOH0EJGLAmZVAMC/j
+         btge3VcybjeoCoGoTldrOdnkjheecMwg+cAl8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750369879; x=1750974679;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QNrd+Ka91X9vzoKAkMJyDjy2RBoEtHPH04v+UX5wZMw=;
+        b=AXFQ9VqM8HfFZlHeEfloes2dWHUIBj1jC68d2N99Fu068LfHzFIUf7/axjLEG6oAMX
+         7UzBqiKBOMgEB7pliQ+4RocXqAMkYlgKczoMAYL8t61YLZ+uGARxgkwojmilYozF2Cef
+         L/P9jlPbVYl63p24cX1jpgVGSyIcl4PGgh/goRf4xofXudVMRsgEQkEKFumt3IM6gsoK
+         /lxNcC20E0beGa/7vRrdkY640pNYn5HEQvsI06Nb9eCNr3tViVoZbtTZZADnXbeWssDg
+         62W7oCnbONF3M+ud/ZG3NA5hojsx4pBVuQOpx8cPkhCoXuDx4Y2IMpggGmWUXLsYbArA
+         QDqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCh2+T4nLl07o6vfBghAC8BQ/cKi/+fgy/arnz86W46cbyDaAiS07Jji0TlPhzbhS04z5pw6XOuGmz/Ks=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0nnWsaPa0UoLUvCenGJXzys1H5VrlC7kb/ypJKrzI+rt98C4S
+	O5m1i75UPOaotmjyulZ1kkZ09HM4+RC3/H8MnnfkvusTEwu/basVPJcY/TorXI0nZQ==
+X-Gm-Gg: ASbGncsa51sCnk+EWxAczKLHU15T8wH4ydDhfnqmU8HWztMHRh2EdkDa8mU0eE8/b6I
+	mV5T3Gm0V8j7WN89bslJHTyy1b9zNC6s6wC/acuwnKri6iCvfFX+G8z3nN5WUOglWaXiHPusNDJ
+	yfDZuprSjSV3D2f7a7nft1XKZhHOI/tBxcUWTe9WN8diNB8yS/EIN7S8WhL/4tIfJMR/VKVT90f
+	/ByWuirOchMYTCf26iJxfyjeAlVDLXLoBZ5RVDB53MmS+6bZAlvYwT3RNrGgnkx1zOl5nWM1LSS
+	gNW2XCwEOCW4o4OcnMNVJnTVbFHlp4DMLeF1BN0fZ73vHdzrjVYetzSGkK6xXMU0fU6F05RRJQV
+	YhkqLGYBImMuwet3plLHRFzBvLufhO2Kad/Uo
+X-Google-Smtp-Source: AGHT+IFyEOg5XEeQ+aTcGDmVsuLniEdzYWdJFqg7fVC3s9zi7nKYJdY+MpYwPbLSToYsK7tOebVQrA==
+X-Received: by 2002:a17:902:f790:b0:234:a44c:18d with SMTP id d9443c01a7336-237d97b4515mr5569825ad.22.1750369879517;
+        Thu, 19 Jun 2025 14:51:19 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d87391e5sm2605945ad.244.2025.06.19.14.51.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 14:51:18 -0700 (PDT)
+Message-ID: <7ab95eac-47c0-437b-aa45-5b2871c31a8d@broadcom.com>
+Date: Thu, 19 Jun 2025 14:51:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] scripts/gdb: fix parsing of MNT_* constants
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Tony Ambardar <tony.ambardar@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-debuggers@vger.kernel.org
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
+ <kbingham@kernel.org>, Christian Brauner <brauner@kernel.org>
+References: <20250601055027.3661480-1-tony.ambardar@gmail.com>
+ <7984ea38-20cc-49ad-ad72-c6433ad64698@oracle.com>
+ <6388ccbc-3189-46ad-a146-b6b732417a09@broadcom.com>
+Content-Language: en-US
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <6388ccbc-3189-46ad-a146-b6b732417a09@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-On Thu, 19 Jun 2025 20:36:35 +0200, Nicolas Frattaroli wrote:
-> This series is the result of what I thought would be a quick 10 minute
-> job, but turned out to be more like 3 days of pain, suffering, and
-> confusion. This should be expected with USB Type C though.
+On 6/3/25 09:17, Florian Fainelli wrote:
+> On 6/2/25 21:42, Stephen Brennan wrote:
+>> On 5/31/25 22:50, Tony Ambardar wrote:
+>>> Recently, constants in linux/mount.h were changed from integer macros
+>>> parsable by LX_VALUE() to enums which are not, thus breaking gdb python
+>>> scripts:
+>>>
+>>>    Reading symbols from vmlinux...
+>>>    Traceback (most recent call last):
+>>>      File ".../linux/vmlinux-gdb.py", line 25, in <module>
+>>>        import linux.constants
+>>>      File ".../linux/scripts/gdb/linux/constants.py", line 19, in 
+>>> <module>
+>>>        LX_MNT_NOSUID = MNT_NOSUID
+>>>    NameError: name 'MNT_NOSUID' is not defined
+>>>
+>>> Update to parse with LX_GDBPARSED(), which correctly handles enums.
+>>>
+>>> Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
+>>> Signed-off-by: Tony Ambardar <tony.ambardar@gmail.com>
+>>
+>> Hi Tony,
+>>
+>> I was totally unaware that these constants were being consumed by
+>> another debugger, and having fixed them for one, I broke them for 
+>> another!
+>>
+>> Thanks for the fix. Having read through the preprocessor magic and this
+>> change, they make sense to me. In the future, I'll be sure to make an
+>> extra check for GDB users when updating enums.
+>>
+>> Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 > 
-> The first patch in the series extends the inno usb2 PHY driver to fiddle
-> with some GRF flags in that driver when the PHY is connected to a USB
-> Type C port. Without this change, devices on USB-C simply don't
-> enumerate at all, as the state machine gets stuck waiting for vbus to go
-> low or something along those lines.
+> Not targeted to anyone in particular but this is a recurring problem, 
+> the GDB scripts are typically not part of any CI and it is not natural 
+> to grep for constant names outside of the C/Rust code where they are 
+> being used...
 > 
-> [...]
+> I suppose that QEMU it should be much easier to ensure that GDB scripts 
+> are being exercised than with my current set-up using OpenOCD + real 
+> hardware...
 
-Applied, thanks!
+And also:
 
-[2/2] arm64: dts: rockchip: enable USB on Sige5
-      commit: 64df8e2e207a2152201ef3515baacd8816c13282
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-Adapted to the other Sige5 series I just applied.
-Please double-check.
-
-
-Best regards,
+Jan, Kieran, can you please pick this up? Thanks!
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Florian
