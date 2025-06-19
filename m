@@ -1,109 +1,167 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23C623D2B0;
-	Thu, 19 Jun 2025 05:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78674242907;
+	Thu, 19 Jun 2025 05:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750311964; cv=none; b=l3sUdkEQ4nCCFqacqIW/QEc85MMlm7m75CXLCRkwRRBUAULlUQxwxLeaL03nVbzdIOeY8Cifn1G1roJHNRWaigqqVK9dqWrIxrPz9pmFzeNoFJZNM4k9o21KmiSY6LPiYQBbgPo5tDRLmEJaompmg8IhJWMrlz5wSaiPQOZ8+SY=
+	t=1750311966; cv=none; b=YtRnPl0RsWGNISKnGTVPzXysHx2pG/rUj+OpHPOwXghydyjdPUAo/sRRSlK/4UiS3zSNy0N8ggLER7PNmPit22qGq2igi1RpxXhN6CNqie4WH5vd30yiSXqDl6Ns7B43NuwwT1zD6R8u3iu79WLmnTSWPxsIIEwadS9wv5hNPDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750311964; c=relaxed/simple;
-	bh=E3WAOCfjoLZEMM2pUmkgtp7GprADNRzWcqVzCUsndrk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B9mPomcHK+BbuYZAD1HWMzHa3XVKAE3rwTZBHY8GbK7dEKZhtE+LumlGxLYB0by1cb4y9InIQjqNVbRrUsj1fC+6y63Q6IFmtB3TPI+KKz5olOSJaFEYZ+NVHu7U7ZsCMCyqsez+QNNva1Gfl6ZbfzNyA5q/5J/1ElXY3UD8HeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MroJ7T+8; arc=none smtp.client-ip=209.85.219.51
+	s=arc-20240116; t=1750311966; c=relaxed/simple;
+	bh=iKxpVFHCvmLo55+wb51riJhzDaDVFQPCtKeGf70i6D4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LKegK9popfiEdhDdQl+10Cdq6cTzI6PUPoATN+ugIQfVhEdsMO8a6KJ+b2EEoWxu58qGD+mS2vJ4FbAiqsrRjh2N/wRJGA9qNZ0U3MQWGWRmH5Ihtut/KtWNc6Qw0VhkzmEPChSPff/gYHnOQhNT8cRJdlxXW/gna+FrA/+WvmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ldCsBguG; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MroJ7T+8"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fafb6899c2so4060856d6.0;
-        Wed, 18 Jun 2025 22:46:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldCsBguG"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad8a8da2376so53728466b.3;
+        Wed, 18 Jun 2025 22:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750311962; x=1750916762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tMfUiq8pS9Cns97b04w18lZ1npqyEo3T1WCcXPPyxsQ=;
-        b=MroJ7T+8Xusf6tphmIsW1Sccztq/S2Hgr8UFlnyKoPTHGa6/LEwPYVLjEfTJd6Nrb3
-         FjUpd+YSZfo5Dt4haBzmwVl0l/c0aGxafu2wv+flaaPVCgWTxVkCBsJLBZWADz8MNwha
-         bG/LRs7NGQe2OFxeU9UdtxbDyJTllgrohh+up8KwZHby3AaqF5kAAYEEhQj2pnhKRzgs
-         Bp4TPiW4w0k5dTuSfKKfxI1x4288lyixxdymqjEnBgr1PGDxOWFfRAVtRpSgcgBWT0GJ
-         PA2rJZAbfsQtGW/hLe4M6BFqjCOt8HuKW/jk8JQaqG5OZOJo3ytl1N6QdD4iJCcb0OSh
-         fs1Q==
+        d=gmail.com; s=20230601; t=1750311963; x=1750916763; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKAUYboHkuuwUmlAEHIaacn6NB6oYrxQ9WGKRISWuqk=;
+        b=ldCsBguGGGYL9xFE+WEn44bcH4wne2TAf3ezjQ72O9a+PCxHzPch5+D3taV3y6KvCW
+         5eTsofOYthLEM4p6VkJ0xb9QHciuOauxMhkNIrItwhQ/8LGTrJQHYa4AXI1r7lisTuMx
+         idHgHFqP7XR4pguABLYzhgsBaj9HM36cgrG/hU7iDwOZH6Cs6hc1c1cY6rUsHPeUT//8
+         EAbAd1/csOMG34tCATRM6SFoOKR/1xNDCSi1GLKHAk6aOS0zMHCi9enlIXWSXkQC1sXN
+         z3s3qABUeTltAmjABIK5LV3QprwMNLSTmGOmHHuFeureo0mIGK1ygClWsLptj02WR1l5
+         wReQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750311962; x=1750916762;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tMfUiq8pS9Cns97b04w18lZ1npqyEo3T1WCcXPPyxsQ=;
-        b=niEd5YFnnS1iIP+qaw37/GL+VwYA/dBatNiRLi/jbvPwwNE1qgWNbHPoReL8WGWMRB
-         l44uloWLAuBB3xe/yWL7P6uYVri6KfWg4vyO/2l/c3l6BmyGBL/c/1oHWcpSaNJdVs/p
-         xPUofr6rqZj2upy+6xR08xlFbPawPKs7ArsjinS1lCQTpQgGsqPBKEQadZwaEG+uS+6+
-         bFgxA/QRW/HKuoFBalKPr5mMkb9SwYH6iUj6wMU0IskTkskLtcKTg86p/D4kPw5jVR8C
-         KbsUr5t9B2wASwhlGJLeBmjpnwtbXNzlwVyxKlvOWNPvYN04kvTfB3HIEEuLje8hYPBR
-         Ur9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ6pTHkRnMtao+3tGwQq7RvJJvHn5LAbVArgOX0LjT3it+r1jg/7ImnHetzphVAespcs0AeNmwvlOWpH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/vrT3iSr5GwyHoo5kkm4bPtTwsvvtu1eSD/tA3QoHBWCC7iUO
-	qWHfYON7I6OIsG8VSo+wbY6NgUDoDuJMoK0yrDyZPM8877FXEqq6At8I
-X-Gm-Gg: ASbGncvXA5Ujc9AVNorPdlIOWca6kuX8EpnBV3p93bRyecfG23HJPOIvcCEf1oT8dwj
-	cizr7P7IZjzNFrk20v7guKS65QyoRDHGtgTkAiQvRqq7n5NJ2o9xzTiAy8gtBSr90hoYGihvalZ
-	DMnAIuLWn/lljYxZUrr2Gv8To93Iw7VSDBL8tMF9QJ2Etgriyua+V4isQ4NDJkagN93/+X9oM5I
-	jJ4gkkyZusRDUc24E807GFkaj9DBtcaYG9Z4jiUeDhc0JjruGmkdPiShLyB0nFbS3KwOP0OyJ5v
-	3dG3cctSr2g8TXBUnWoGLSFUyrMwRbkjbrTGIvu7mtcNZOjPUu25NFjT9cQURrdXiQnMs+9p2/a
-	w10JfHAXyWcNYQQuJ5CH2L+JpW0kXry/ak0asW15Qb44l+glUseqlonhJ0A==
-X-Google-Smtp-Source: AGHT+IH6u9VQia+oPa6yFC+Q+CFStL6WGhlHDl5siOwIKXq/z/l53muZO8KRpxZIv1gTH6jFMB/6ew==
-X-Received: by 2002:a05:6214:d6f:b0:6e1:715f:cdf5 with SMTP id 6a1803df08f44-6fcff73b920mr33367496d6.15.1750311961767;
-        Wed, 18 Jun 2025 22:46:01 -0700 (PDT)
-Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd01639653sm3627176d6.112.2025.06.18.22.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 22:46:01 -0700 (PDT)
-From: Seungjin Bae <eeodqql09@gmail.com>
-To: Mathias Nyman <mathias.nyman@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Seungjin Bae <eeodqql09@gmail.com>
-Subject: [PATCH v3] usb: host: xhci-plat: fix incorrect type for of_match variable in xhci_plat_probe()
-Date: Thu, 19 Jun 2025 01:45:46 -0400
-Message-ID: <20250619054545.173436-2-eeodqql09@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2025061950-frown-cesarean-a1e3@gregkh>
-References: <2025061950-frown-cesarean-a1e3@gregkh>
+        d=1e100.net; s=20230601; t=1750311963; x=1750916763;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rKAUYboHkuuwUmlAEHIaacn6NB6oYrxQ9WGKRISWuqk=;
+        b=KZZb4M9yVWsrqsUfefFdJfY+NH2fTPq6JHuZv9jSlsU6iQuq4il4KMFUrG0rsP/sex
+         XLQ/qS3toNln+8+/xZYerr+kGNNtnbRuZS87CatFoipRbkIMrP355OWkqhVWVpgepSJh
+         fMEkdq0u88OUrOEz97pzT/uSJ0EYzxQkCrWXquwVegaLsQOSbNqJLNO1hoPeL6IsaAHC
+         tpFdemRS9LVbgQve+qkzmXdCARWWpk6t/6c0+szSpf2PxoAJS+XR5u/tksBYhnntDhoa
+         S+ZEGzHdjtNFRRk8S8qdiGo1+HWNnffNXTT8IddTe/ebzpqLNrpTJVADRg84U+p+R/Q0
+         b7Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeNKM2YvMjEph/yv4XBXZVX5xO9AZB9tzhZ/X5mM7h4YwMMrqYWRrAUs3z9Feg2w7uIUNAFiZd6iNRqWk=@vger.kernel.org, AJvYcCXUDEzQpcTbSeYrzFdp8bj+iVquo9qFJqGKB0TweRINVsbdilSj11i0OIWliGtnicfPdv+OukwDc9U=@vger.kernel.org, AJvYcCXlXuecJjML8ksF7BWSEPGa9DM8Ojo+h2C3xVHCfDaJDsI9EyvtvHbnB3LMFf0dtq7VvOqK50wt4WoLxf59WpGLgBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKtc7dq6eiKPcO01KrBYH2DnNqKUgeuKxNn1Bz3/cPvK5ky6TK
+	N1KMNjvnqcMXtXUzV80ignWO/nxKOxeHsqbwOgshXnc/TkN+MDG80eOwKKt99N+1RK2Fi+MnLym
+	2jx81RR4Xbto7wkl3dqe6N4EIs9UKEa4=
+X-Gm-Gg: ASbGncuSMiI7GVs+q3qOl2z0jAQYLM9SZnAewSRYdTmjJJHI4DE7Nm1axbNuPVaWlFk
+	RiC9OHIhUP+ctvcsr7/0k/DyDjD83l49BV8lqUGW2+kVp0r6HWvVY+g9lWN1EqJmc3dCtthTNxw
+	VizP60CKEi85qBvU1Yc33xd0dchp3wuhqdgn6OgV73Kw==
+X-Google-Smtp-Source: AGHT+IHqjpV+nZYSmGvYxmGFNRO50Tri+Llb+PMo2Om+LTMx4zqLyhSevKBPdts3VbuB6zf8mJvTk3wNS+h3GEbuDQI=
+X-Received: by 2002:a17:907:3d8b:b0:ad2:43b6:dd75 with SMTP id
+ a640c23a62f3a-adfad2a1ff8mr1916244766b.10.1750311962730; Wed, 18 Jun 2025
+ 22:46:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f@eucas1p2.samsung.com>
+ <20250616163831.8138-3-linux.amoon@gmail.com> <20250618115211.2239335-1-m.majewski2@samsung.com>
+In-Reply-To: <20250618115211.2239335-1-m.majewski2@samsung.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 19 Jun 2025 11:15:44 +0530
+X-Gm-Features: AX0GCFvmk_wGVlRXfnhPM_Q_4DB5diREj6R5zYA0aszITzoiDTH5uE97mHC1m7Y
+Message-ID: <CANAwSgRV=JT+qdAN=M46CZdWaSZnjazdw66fQETw7HeEcLSx8A@mail.gmail.com>
+Subject: Re: [RRC v1 2/3] thermal/drivers/exynos: Handle temperature threshold
+ interrupts and clear corresponding IRQs
+To: Mateusz Majewski <m.majewski2@samsung.com>
+Cc: alim.akhtar@samsung.com, bzolnier@gmail.com, daniel.lezcano@linaro.org, 
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, lukasz.luba@arm.com, rafael@kernel.org, 
+	rui.zhang@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-The variable `of_match` was incorrectly declared as a `bool`.
-It is assigned the return value of of_match_device(), which is a pointer of
-type `const struct of_device_id *`.
+Hi Mateusz,
 
-Fixes: 16b7e0cccb243 ("USB: xhci-plat: fix legacy PHY double init")
-Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
----
- v2 -> v3: Added version of patch and used real name
- v1 -> v2: Updated Fixes tag and corrected Signed-off-by line
+On Wed, 18 Jun 2025 at 17:22, Mateusz Majewski <m.majewski2@samsung.com> wrote:
+>
+> Hello :)
+>
+> > +#define INTSTAT_FALL2        BIT(24)
+> > +#define INTSTAT_FALL1        BIT(20)
+> > +#define INTSTAT_FALL0        BIT(16)
+> > +#define INTSTAT_RISE2        BIT(8)
+> > +#define INTSTAT_RISE1        BIT(4)
+> > +#define INTSTAT_RISE0        BIT(0)
+> > +
+> > +#define INTCLEAR_FALL2       BIT(24)
+> > +#define INTCLEAR_FALL1       BIT(20)
+> > +#define INTCLEAR_FALL0       BIT(16)
+> > +#define INTCLEAR_RISE2       BIT(8)
+> > +#define INTCLEAR_RISE1       BIT(4)
+> > +#define INTCLEAR_RISE0       BIT(0)
+>
+> > +     /* Map INTSTAT bits to INTCLEAR bits */
+> > +     if (val_irq & INTSTAT_FALL2)
+> > +             clearirq |= INTCLEAR_FALL2;
+> > +     else if (val_irq & INTSTAT_FALL1)
+> > +             clearirq |= INTCLEAR_FALL1;
+> > +     else if (val_irq & INTSTAT_FALL0)
+> > +             clearirq |= INTCLEAR_FALL0;
+> > +     else if (val_irq & INTSTAT_RISE2)
+> > +             clearirq |= INTCLEAR_RISE2;
+> > +     else if (val_irq & INTSTAT_RISE1)
+> > +             clearirq |= INTCLEAR_RISE1;
+> > +     else if (val_irq & INTSTAT_RISE0)
+> > +             clearirq |= INTCLEAR_RISE0;
+>
+> This implies that only these 6 bits are used. Is this true for all SoCs
+> supported by this driver? My understanding is that Exynos 5433 in particular
+> uses bits 7:0 for rise interrupts and 23:16 for fall interrupts. When I tested
+> this patch (both alone and the whole series) on 5433 by running some CPU load,
+> the interrupt seemed to not fire consistently:
+> /sys/class/thermal/cooling_device1/cur_state would never go above 1 (which is
+> consistent with the interrupt firing once, not getting cleared and never firing
+> again; without this patch, it consistently went up to 6) and I got a quick
+> reboot every time.
+>
+Thanks for the feedback,
 
- drivers/usb/host/xhci-plat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As per the user manual Exynos4412
+INTSTAT and INTCLEAR have a clear mapping with bits
+falling 20, 16, 12 and rising 8 4 0
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 6dab142e7278..49eb874b1d81 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -152,7 +152,7 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 	int			ret;
- 	int			irq;
- 	struct xhci_plat_priv	*priv = NULL;
--	bool			of_match;
-+	const struct of_device_id *of_match;
- 
- 	if (usb_disabled())
- 		return -ENODEV;
--- 
-2.43.0
+whereas Exyno5422 has
+INTSTAT and INTCLEAR have a clear mapping with bits
+falling 24, 20, 16, and rising 8 4 0
 
+Yes, it could differ for all the SoCs,
+I don't have the user manual or TRM for these SoCs
+to configure correctly.
+
+I tried to configure this, referring to the comment in the driver
+        /*
+         * Clear the interrupts.  Please note that the documentation for
+         * Exynos3250, Exynos4412, Exynos5250 and Exynos5260 incorrectly
+         * states that INTCLEAR register has a different placing of bits
+         * responsible for FALL IRQs than INTSTAT register.  Exynos5420
+         * and Exynos5440 documentation is correct (Exynos4210 doesn't
+         * support FALL IRQs at all).
+         */
+
+By the way, I don't see Exynos5433 and Exynos7 support
+INTSTAT and INTCLEAR registers. We are using TMU_REG_INTPEND
+ to read and update the same register.
+
+        if (data->soc == SOC_ARCH_EXYNOS5260) {
+                tmu_intstat = EXYNOS5260_TMU_REG_INTSTAT;
+                tmu_intclear = EXYNOS5260_TMU_REG_INTCLEAR;
+        } else if (data->soc == SOC_ARCH_EXYNOS7) {
+                tmu_intstat = EXYNOS7_TMU_REG_INTPEND;
+                tmu_intclear = EXYNOS7_TMU_REG_INTPEND;
+        } else if (data->soc == SOC_ARCH_EXYNOS5433) {
+                tmu_intstat = EXYNOS5433_TMU_REG_INTPEND;
+                tmu_intclear = EXYNOS5433_TMU_REG_INTPEND;
+        } else {
+                tmu_intstat = EXYNOS_TMU_REG_INTSTAT;
+                tmu_intclear = EXYNOS_TMU_REG_INTCLEAR;
+        }
+
+> Thank you,
+> Mateusz Majewski
+Thanks
+Anand
