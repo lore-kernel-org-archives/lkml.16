@@ -1,170 +1,126 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E8D137E;
-	Thu, 19 Jun 2025 00:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF3917555
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750293486; cv=none; b=gATV1phHva8NbYqj21fIMYpBYojep38Q+hK1m5I3aF5tm4XoXAqgK5lQpEmIPBWOLbSUD5KLplriav25HgjAvh5/WVdVZyK53g4C3zQGSd5pACUvHjFkTNnD5MX1fpw3j3lpxvGY8t4QNTrcexMf6RStPmIl7zOZg0jOBxfNdeA=
+	t=1750293701; cv=none; b=eWjGIyVscnC5oL0ATo6JlO390tuYHZN3FwHw6Yq13cWl1lZptoNLBl00OBr/0IpJeZiXbZXli9/YDO5sgPnz/L4IgnwVm4WdmkCzY/BQzcWYGC29dL2IwTnkXU7AhiLkg0HK7woCcFprkHQsesXte8v3pCF5gGor9TgFbbqb8P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750293486; c=relaxed/simple;
-	bh=FUV+Ha5L59rakUQc78bmuMWZrU4d94rlXYQCrQ74qSY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=B0IsnaejUEIEB9PTjIWBTkUi7ecPKJEx6ImN9gvsW37Nf+XFSPwUKALQeeLJVGgURG04zEULVOnekueOabAlTDw2Cm9dq7LvwkKYi5wUWdZqRsI/TDOHBI9PmXYVYpZVoxmEayIJho3L5qiC2img34TvA5YqoiOqJmWCn7C0fpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=fCNQwZSN; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750293701; c=relaxed/simple;
+	bh=LleIrN8MZyzl9RFR1RSUc12aKr0LN0C3UZ3CdhO3x54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c1iTK+SN7t56FG5pe0Iq6drZX2ofdNF5N6tQVZu6RVd+Dvp79XB3+ZPntCTwU4WmEohj5Ztdpe8k6e1Qx5n3+muEt2RGE5GdErfJ36fExdsvmS2kb/3zO3EtXmmMdzZjH81a1gfNBXNZ0/NWAGA1jNvLNj4pp4dj3oOQqoA3qmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iY9RjalE; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="fCNQwZSN"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id A29968287A6A;
-	Wed, 18 Jun 2025 19:38:00 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id yMleV-6kXUQY; Wed, 18 Jun 2025 19:37:57 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id CDFDB8288035;
-	Wed, 18 Jun 2025 19:37:57 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com CDFDB8288035
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750293477; bh=Q9w+b4fYJ33GmI5ccuzAIoUJBfCmv1gJrhUlRTyPCDg=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=fCNQwZSNHwvwQKBGcGpFbsyfRxDhvc9QAjlsE5UWR0Teasz5/r1ioK8ie6DjdfS28
-	 Bi3zH1vVYMzHKBpxhNyPipsRHMwkeCODPv/GoflkA5rvNwsbMsimTTkBPh6m038/V+
-	 9130BbtCYN8KH/YrwM1xX79qThIfY9aayg3bAal8=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zOSsFrDhJwnk; Wed, 18 Jun 2025 19:37:57 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 8A22E8287A6A;
-	Wed, 18 Jun 2025 19:37:57 -0500 (CDT)
-Date: Wed, 18 Jun 2025 19:37:54 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <20250618190146.GA1213349@bhelgaas>
-References: <20250618190146.GA1213349@bhelgaas>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iY9RjalE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750293699; x=1781829699;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LleIrN8MZyzl9RFR1RSUc12aKr0LN0C3UZ3CdhO3x54=;
+  b=iY9RjalEcHau+frkBAi7q26oiIVdhVsv+9M5QZKpjBhgXuqmLHXCRPy2
+   upLqOm+T8b5spZQFOrAoHR7ybpDnDOHo2GKWQKjX7xqpDnQGnijQGT/dg
+   911YQPQouy1dEbEHr27IaO51itwKjZSK0tb2Ie7TWItH4wU5d9wnoWNiO
+   J3BPh3OJsuwMziqlbAc0yHL7Z29gUD4lOwlwb5HHxEUCTJPOBM5KeOQW3
+   tRN6tXle5fCI99ezU9eQxTb7qgETjEsuOrp9ubafYt4S1I9sDPgWYnFko
+   SWVGQ+ZGnoHuLPFPOAbLLjshl6ImhYUuBlEaKn4CYO3AWLH9zmNbdKVyE
+   w==;
+X-CSE-ConnectionGUID: cKam+HgESAmhF6Q87hqt0A==
+X-CSE-MsgGUID: J4ZJIiEKSGuc25taUv4zxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63891733"
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="63891733"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 17:41:36 -0700
+X-CSE-ConnectionGUID: yRKdkERLTBavUvJPAb9d2Q==
+X-CSE-MsgGUID: ACQmw2l7RSKyL5jYmbiTAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="149903235"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 17:41:33 -0700
+Message-ID: <1bc9de32-2599-483f-8c6a-6da59f8d9549@linux.intel.com>
+Date: Thu, 19 Jun 2025 08:41:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/12] Support vector and more extended registers in
+ perf
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+ adrian.hunter@intel.com, jolsa@kernel.org,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com, zide.chen@intel.com
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
+ <60c18595-c6a8-4c39-98fe-0822755fbdb7@linux.intel.com>
+ <20250617142952.GX1613376@noisy.programming.kicks-ass.net>
+ <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
+ <1121293d-777e-4c21-b1ad-d34516d2cd3a@linux.intel.com>
+ <a116761e-30bc-49bf-a1f8-9cc0ec1faae2@linux.intel.com>
+ <4d4d1ca5-aab6-45be-9485-43c39b30fd62@linux.intel.com>
+ <5aabcb15-0def-4f73-b4dd-03c958192d67@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <5aabcb15-0def-4f73-b4dd-03c958192d67@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Enable third attention indicator
-Thread-Index: yG5gRsIlLAjK/qBNlVwR8Z2oiwzhPw==
 
 
+On 6/18/2025 9:15 PM, Liang, Kan wrote:
+>
+> On 2025-06-18 8:28 a.m., Mi, Dapeng wrote:
+>>>>>> Not sure, it eats up a whole byte. Dapeng seemed to favour separate
+>>>>>> intr/user vector width (although I'm not quite sure what the use would
+>>>>>> be).
+>>>> The reason that I prefer to add 2 separate "words" item is that user could
+>>>> sample interrupt and user space SIMD regs (but with different bit-width)
+>>>> simultaneously in theory, like "--intr-regs=YMM0, --user-regs=XMM0".
+>>> I'm not sure why the user wants a different bit-width. The
+>>> --user-regs=XMM0" doesn't seem to provide more useful information.
+>>>
+>>> Anyway, I believe the tool can handle this case. The tool can always ask
+>>> YMM0 for both --intr-regs and --user-regs, but only output the XMM0 for
+>>> --user-regs. The only drawback is that the kernel may dump extra
+>>> information for the --user-regs. I don't think it's a big problem.
+>> If we intent to handle it in user space tools, I'm not sure if user space
+>> tool can easily know which records are from user space and filter out the
+>> SIMD regs from kernel space and how complicated would the change be. IMO,
+>> adding an extra u16 "words" would be much easier and won't consume too much
+>> memory.
+> The filter is always done in kernel for --user-regs. The only difference
+> is that the YMM (after filter) will be dumped to the perf.data. The tool
+> just show the XMM registers to the end user.
 
------ Original Message -----
-> From: "Bjorn Helgaas" <helgaas@kernel.org>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
-> Sent: Wednesday, June 18, 2025 2:01:46 PM
-> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
+Ok. But there could be another case, user may want to sample some APX eGPRs
+in user space and sample SIMD regs in interrupt, like "--intr-regs=YMM0,
+--user-regs=R16", then we have to define 2 separate "words" fields.
 
-> On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
->>  state
-> 
-> Weird wrapping of last word of subject to here.
+Anyway, it looks we would define a SIMD_REGS structure like below, and I
+suppose we would create 2 instances, one is for interrupt, the other is for
+user space. It's enough.
 
-I'll need to see what's up with my git format-patch setup. Apologies for that across the multiple series.
+PERF_SAMPLE_SIMD_REGS := {
+	u16 nr_vectors;
+	u16 vector_length;
+	u16 nr_pred;
+	u16 pred_length;
+	u64 data[];
+}
 
->> The PCIe specification allows three attention indicator states,
->> on, off, and blink.  Enable all three states instead of basic
->> on / off control.
->> 
->> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
->> ---
->>  drivers/pci/hotplug/pnv_php.c | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
->> index 0ceb4a2c3c79..c3005324be3d 100644
->> --- a/drivers/pci/hotplug/pnv_php.c
->> +++ b/drivers/pci/hotplug/pnv_php.c
->> @@ -440,10 +440,23 @@ static int pnv_php_get_adapter_state(struct hotplug_slot
->> *slot, u8 *state)
->>  	return ret;
->>  }
->>  
->> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
->> *state)
->> +{
->> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->> +	struct pci_dev *bridge = php_slot->pdev;
->> +	u16 status;
->> +
->> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
->> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
-> 
-> Should be able to do this with FIELD_GET().
 
-I used the same overall structure as the pciehp_hpc driver here.  Do you want me to also fix up that driver with FIELD_GET()?
-
-> Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
-> log doesn't mention it, and as far as I can tell, this would be the
-> only driver to do that.  Most expose only the attention status (0=off,
-> 1=on, 2=identify/blink).
-> 
->> +	return 0;
->> +}
->> +
->> +
->>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
->>  {
->>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->>  
->> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
-> 
-> This is a change worth noting.  Previously we didn't read the AIC
-> state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
-> keep track of whatever had been previously set via
-> pnv_php_set_attention_state().
-> 
-> Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
-> that php_slot->attention_state is still needed at all.
-
-It probably isn't.  It's unclear why IBM took this path at all, given pciehp's attention handlers predate pnv-php's by many years.
-
-> Previously, the user could write any value at all to the sysfs
-> "attention" file and then read that same value back.  After this
-> patch, the user can still write anything, but reads will only return
-> values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
-> 
->>  	*state = php_slot->attention_state;
->>  	return 0;
->>  }
->> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
->> *slot, u8 state)
->>  	mask = PCI_EXP_SLTCTL_AIC;
->>  
->>  	if (state)
->> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
->> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
-> 
-> This changes the behavior in some cases:
-> 
->  write 0: previously turned indicator off, now writes reserved value
->  write 2: previously turned indicator on, now sets to blink
->  write 3: previously turned indicator on, now turns it off
-
-If we're looking at normalizing with pciehp with an eye toward eventually deprecating / removing pnv-php, I can't think of a better time to change this behavior.  I suspect we're the only major user of this code path at the moment, with most software expecting to see pciehp-style handling.  Thoughts?
+>
+> Thanks,
+> Kan
+>
+>
