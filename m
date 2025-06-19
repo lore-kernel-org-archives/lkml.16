@@ -1,58 +1,58 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095A928B7EE
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCBA2BD003
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345042; cv=none; b=ASqS7TrrXpdBFKEpGFdpG/+JIUTdJKPYq+B7woniOhzKjCKq0bisVMWIaR0+Pk3kF2cGrB0ATsMLypfbDGQsjzZyJEiULiNQbV6pp2vU3ZW6HYclKg5qqiMLv8zbJr8d/JVGrw4GfudjLSKb4Cun1s8MxzbFk0bC0YUwKGJ4EKU=
+	t=1750345048; cv=none; b=sCJfeXUILbaAbKqJJgBzcchzdmxtrNPozAHmEptZ7TklShpvSAKvH/bLKH7p4Ni8W7OAw36JVAXIpaPgdLYQ0/AsJW00LhPdae9El36VrTSZUrzpQX05TNkjZgCJo3/OWFjw06WTnu5ioLhMr6zKp0dfjBRX4PTXa8vI72rTeEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345042; c=relaxed/simple;
-	bh=6magznX20X0jHAhjET135FfR2VB22PddMFVzgETf9YE=;
+	s=arc-20240116; t=1750345048; c=relaxed/simple;
+	bh=xMgWuJgjZLKWrY1bhHBTjYqkbcAG5+bU5JiUnFxtCb8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B+x8DY2Uptqs4zpfnmjS/FjTIU8OoKbfl3UwKxRfwkW9nPHkymDHHrjPZWN2kp56a9GtX68edTb/JHOc8DfLag3m++WL9d+hfxmlnMbBFA9nfUSPjuR+SnRAWE9woD6arFDNydiYjUICy21V74Kl+Wn+ZFnGC3mCztk1atDjx2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LZ4PivG1; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=ASZo2kum9lTALYafdvYD+sbWucEHebHtz8V6xRvbRDb7w8zaIyeHRR77nWWrK9uYbmaLiZ/aMloXPa1s4IwfSenmCggdIMGV0g5Xd5VMWo+hl7kyrcqt37KmmwLUsFael8sLUHWHIH4vz7iJ67B5YVt+s9ItGhk/904JpbrPN78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VscYI59D; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LZ4PivG1"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMmle015142;
-	Thu, 19 Jun 2025 14:57:16 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VscYI59D"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMa4N029324;
+	Thu, 19 Jun 2025 14:57:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=yB7OG
-	taKBuPWfpEw7fdf42c6KKE62xC08NAIfuj6Rjs=; b=LZ4PivG1I2YczvvNALS6L
-	jd4og8yIoRk4gmKHSOLagJKzt88wK431xzGZw3A7AJtofGOISSmIOTYszFdoYoYU
-	TPYoOjNBxl0nDj473QeGeKSpz+CG9lv5/TmMojdD1/CKcf+vZsGp+C4fJBQiFs16
-	FLKuoAObDmhN/gB4ZkJwdUIAAWWzkl4JTf7u/pbm/nQWKfeHyW+5EtG7/6cZiK0m
-	rZxVeMByoTpLV/78cdRst9Ugrfu7NiJGxclIYVE+aCRlJCWeCyTAO9bdjp2BmEMe
-	XD3x4S2NHIp4LPJOZ6xbtzWC2IFiqFu7pREpP1OlzMlmyHnp71yONYWO465EBBJg
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=kfy2u
+	1goXYdZwWeTcMaxTAxBZxMAdwIyKd3O6MkyOvw=; b=VscYI59De250uU29zaxyB
+	12ujQIMUduhuzBBvPrJYbSeVycswrGm/jAd/YDcPOzh3kPs1zHnuNQyte2nhTfwn
+	ZpAVz3ccoWpcE6mXvZRmUHVdNdfWr2dO8g2tf8zxdzTET7ZtsI1BmaMUC+OwVWS6
+	c+mKiWQNxCnG284JXQ9OT08H/4iNoxaewmjcyuF4Ytb7bYT3ByOGhOcM5JCVBkub
+	CgpWbnFmo1Q9SFiLwJLnP45YIdY24+0zDg5SNfeVmPreGtsFa5oR9+7puaeWpClZ
+	ksr97587gFnJpGF9/foZ5hIsljoDCWkdeuhLn3QtRW7UWeMOYVBP5fVYTkapsJcY
 	Q==
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4t4b1-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47b23xwjy0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:15 +0000 (GMT)
+	Thu, 19 Jun 2025 14:57:23 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDOaYN022775;
-	Thu, 19 Jun 2025 14:57:14 GMT
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDNbXB022764;
+	Thu, 19 Jun 2025 14:57:21 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8e29-1
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8e7j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:14 +0000
+	Thu, 19 Jun 2025 14:57:21 +0000
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0JV008257;
-	Thu, 19 Jun 2025 14:57:13 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0Jh008257;
+	Thu, 19 Jun 2025 14:57:21 GMT
 Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-154-180-74.vpn.oracle.com [10.154.180.74])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-12;
-	Thu, 19 Jun 2025 14:57:13 +0000
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-18;
+	Thu, 19 Jun 2025 14:57:21 +0000
 From: Alexandre Chartre <alexandre.chartre@oracle.com>
 To: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org,
         peterz@infradead.org
 Cc: alexandre.chartre@oracle.com
-Subject: [RFC PATCH v2 11/17] objtool: Add option to trace function validation
-Date: Thu, 19 Jun 2025 16:56:53 +0200
-Message-ID: <20250619145659.1377970-12-alexandre.chartre@oracle.com>
+Subject: [RFC PATCH v2 17/17] objtool: Disassemble all alternatives when using --disas
+Date: Thu, 19 Jun 2025 16:56:59 +0200
+Message-ID: <20250619145659.1377970-18-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
 References: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
@@ -70,646 +70,261 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 sp
  adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506190124
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfX5dKKM7jDWx5y 6l4TMRubc+vA9Lq7KfcyJTLdcAEIDvWf+DBpKl3SJP0mzY2tgzuaLOMYKwkrOG32knPF8NYwQpN w+srOa/gZ5h7Wsed83xDDRrwGcdUztJNMgzC6lfumSDgSpMrBbilhtQpL6mS7tArj6qduRj/t8q
- BtsWW+xhjUV7wUJxXeEdT224GNrcqdm2kilZa+FrJAk+CAL5D6iTjLOm+cjknJBuMKD2gyaH/UY lacrvqX9XCX2CN0BSCxehJ24uWcpk8CHRvky1ZIZVttGQpSuhJGECllvrDYESfgwn1M+aQVyLun kxJQLv6IPbr9eZIV2guJC82Bd9gKOOWo+mFMvg4+sFbYpR4HCqUEJmZezJKhmywYhewpkreCgk5
- 0WKZ1/s9hgNiRKTnvA+5ZzYrEF5Pyke+jtqiqh6VKDoMciGLuyGiEOlxQQPEt623Z1ToiLd8
-X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=6854254b b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7nqSK5V4zRp-Hs5t_LEA:9 cc=ntf awl=host:13207
-X-Proofpoint-GUID: QLcWm5zjTVBn_QjFQ8HnajMeNjvRrjC4
-X-Proofpoint-ORIG-GUID: QLcWm5zjTVBn_QjFQ8HnajMeNjvRrjC4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyMiBTYWx0ZWRfXyYnicvW0KAt0 ZtNIvMXbyiNFByzyDWmyjKq3nGMouo51l0e64eCXn1nlWPLHpZZv9zL+wUzOu7I+lk9nFbWnJNr TruNkZho8PooQafNhK8ehYeMHxIkvRB8oj8uh3GptjvyxQzAAj975MWSvzGoyXk21DkZ23KJbpQ
+ nIdjd6fLMcFLp02CmYMqIYifmOudyzHVr/zS8h+X+S+CGxVbtHgfSDBBaFZjkrsZvjMyDTan34V RoknFEfq8kelOMre3cqt2hkpqjHHXjHnerncWfe8F3Appk8oGcitEZRIn79BPZnnbqiEL2kNA11 1YoJuYHu0Voox0YxwZGadkqOOaC/mpIH+4k6FcyVfWAyeHv+M1Rk/g+iKgTiJzxEQCr70BB3qN8
+ ajcefqMK+QnoQdBsYy3B0/3x8HkDFs4iH8QtHa1n8++wk8HMRFlspBmvnoGDrEjRQfVGKQnx
+X-Authority-Analysis: v=2.4 cv=DM2P4zNb c=1 sm=1 tr=0 ts=68542553 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=HvF_JEnCvTAsiACKIaMA:9 cc=ntf awl=host:13207
+X-Proofpoint-GUID: _vVKwxYErInCcwWgDQeJ77wj7YcilGg-
+X-Proofpoint-ORIG-GUID: _vVKwxYErInCcwWgDQeJ77wj7YcilGg-
 
-Add an option to trace and have information during the validation
-of specified functions. Functions are specified with the --trace
-option which can be a single function name (e.g. --trace foo to
-trace the function with the name "foo"), or a shell wildcard
-pattern (e.g. --trace foo* to trace all functions with a name
-starting with "foo").
+When using the --disas action, disassemble all code alternatives
+instead of only the default alternative.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- tools/objtool/Build                     |   1 +
- tools/objtool/builtin-check.c           |   1 +
- tools/objtool/check.c                   | 111 ++++++++++++++++++++----
- tools/objtool/disas.c                   |  83 ++++++++++++++++++
- tools/objtool/include/objtool/builtin.h |   1 +
- tools/objtool/include/objtool/check.h   |   8 +-
- tools/objtool/include/objtool/disas.h   |  11 +++
- tools/objtool/include/objtool/trace.h   |  68 +++++++++++++++
- tools/objtool/include/objtool/warn.h    |   1 +
- tools/objtool/trace.c                   |   9 ++
- 10 files changed, 275 insertions(+), 19 deletions(-)
- create mode 100644 tools/objtool/include/objtool/trace.h
- create mode 100644 tools/objtool/trace.c
+ tools/objtool/check.c                 |   8 --
+ tools/objtool/disas.c                 | 152 +++++++++++++++++++++++++-
+ tools/objtool/include/objtool/check.h |   8 ++
+ 3 files changed, 154 insertions(+), 14 deletions(-)
 
-diff --git a/tools/objtool/Build b/tools/objtool/Build
-index ee04fba8c9d1..6e62ffd40792 100644
---- a/tools/objtool/Build
-+++ b/tools/objtool/Build
-@@ -9,6 +9,7 @@ objtool-y += elf.o
- objtool-y += objtool.o
- 
- objtool-$(BUILD_DISAS) += disas.o
-+objtool-$(BUILD_DISAS) += trace.o
- 
- objtool-$(BUILD_ORC) += orc_gen.o
- objtool-$(BUILD_ORC) += orc_dump.o
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 80239843e9f0..c53d738e4fb0 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -99,6 +99,7 @@ static const struct option check_options[] = {
- 	OPT_STRING('o',  "output", &opts.output, "file", "output file name"),
- 	OPT_BOOLEAN(0,   "sec-address", &opts.sec_address, "print section addresses in warnings"),
- 	OPT_BOOLEAN(0,   "stats", &opts.stats, "print statistics"),
-+	OPT_STRING(0,    "trace", &opts.trace, "func", "trace function validation"),
- 	OPT_BOOLEAN('v', "verbose", &opts.verbose, "verbose warnings"),
- 	OPT_BOOLEAN(0,   "Werror", &opts.werror, "return error on warnings"),
- 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 413860f2d7fa..1505dc8812fb 100644
+index c7a70d47f104..fa66c8c6bf21 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2015-2017 Josh Poimboeuf <jpoimboe@redhat.com>
-  */
+@@ -25,11 +25,6 @@
+ #include <linux/static_call_types.h>
+ #include <linux/string.h>
  
-+#include <fnmatch.h>
- #include <string.h>
- #include <stdlib.h>
- #include <inttypes.h>
-@@ -14,6 +15,7 @@
- #include <objtool/disas.h>
- #include <objtool/check.h>
- #include <objtool/special.h>
-+#include <objtool/trace.h>
- #include <objtool/warn.h>
- #include <objtool/endianness.h>
- 
-@@ -35,7 +37,9 @@ static struct cfi_state init_cfi;
- static struct cfi_state func_cfi;
- static struct cfi_state force_undefined_cfi;
- 
--static size_t sym_name_max_len;
-+struct disas_context *objtool_disas_ctx;
-+
-+size_t sym_name_max_len;
- 
- struct instruction *find_insn(struct objtool_file *file,
- 			      struct section *sec, unsigned long offset)
-@@ -3512,8 +3516,10 @@ static bool skip_alt_group(struct instruction *insn)
- 	struct instruction *alt_insn = insn->alts ? insn->alts->insn : NULL;
- 
- 	/* ANNOTATE_IGNORE_ALTERNATIVE */
--	if (insn->alt_group && insn->alt_group->ignore)
-+	if (insn->alt_group && insn->alt_group->ignore) {
-+		TRACE_INSN(insn, "alt group ignored");
- 		return true;
-+	}
- 
- 	/*
- 	 * For NOP patched with CLAC/STAC, only follow the latter to avoid
-@@ -3537,6 +3543,8 @@ static bool skip_alt_group(struct instruction *insn)
- 
- static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			   struct instruction *insn, struct insn_state state);
-+static int do_validate_branch(struct objtool_file *file, struct symbol *func,
-+			      struct instruction *insn, struct insn_state state);
- 
- static int validate_insn(struct objtool_file *file, struct symbol *func,
- 			 struct instruction *insn, struct insn_state *statep,
-@@ -3558,8 +3566,10 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		if (!insn->hint && !insn_cfi_match(insn, &statep->cfi))
- 			return 1;
- 
--		if (insn->visited & visited)
-+		if (insn->visited & visited) {
-+			TRACE_INSN(insn, "already visited");
- 			return 0;
-+		}
- 	} else {
- 		nr_insns_visited++;
- 	}
-@@ -3596,8 +3606,10 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 				 * It will be seen later via the
- 				 * straight-line path.
- 				 */
--				if (!prev_insn)
-+				if (!prev_insn) {
-+					TRACE_INSN(insn, "defer restore");
- 					return 0;
-+				}
- 
- 				WARN_INSN(insn, "objtool isn't smart enough to handle this CFI save/restore combo");
- 				return 1;
-@@ -3625,13 +3637,24 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		return 1;
- 
- 	if (insn->alts) {
-+		int i, num_alts;
-+
-+		num_alts = 0;
-+		for (alt = insn->alts; alt; alt = alt->next)
-+			num_alts++;
-+
-+		i = 1;
- 		for (alt = insn->alts; alt; alt = alt->next) {
-+			TRACE_INSN(insn, "alternative %d/%d", i, num_alts);
- 			ret = validate_branch(file, func, alt->insn, *statep);
- 			if (ret) {
- 				BT_INSN(insn, "(alt)");
- 				return ret;
- 			}
-+			i++;
- 		}
-+
-+		TRACE_INSN(insn, "alternative orig");
- 	}
- 
- 	if (skip_alt_group(insn))
-@@ -3643,10 +3666,16 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 	switch (insn->type) {
- 
- 	case INSN_RETURN:
-+		TRACE_INSN(insn, "return");
- 		return validate_return(func, insn, statep);
- 
- 	case INSN_CALL:
- 	case INSN_CALL_DYNAMIC:
-+		if (insn->type == INSN_CALL)
-+			TRACE_INSN(insn, "call");
-+		else
-+			TRACE_INSN(insn, "indirect call");
-+
- 		ret = validate_call(file, insn, statep);
- 		if (ret)
- 			return ret;
-@@ -3662,13 +3691,18 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 	case INSN_JUMP_CONDITIONAL:
- 	case INSN_JUMP_UNCONDITIONAL:
- 		if (is_sibling_call(insn)) {
-+			TRACE_INSN(insn, "sibling call");
- 			ret = validate_sibling_call(file, insn, statep);
- 			if (ret)
- 				return ret;
- 
- 		} else if (insn->jump_dest) {
--			ret = validate_branch(file, func,
--					      insn->jump_dest, *statep);
-+			if (insn->type == INSN_JUMP_UNCONDITIONAL)
-+				TRACE_INSN(insn, "unconditional jump");
-+			else
-+				TRACE_INSN(insn, "jump taken");
-+
-+			ret = validate_branch(file, func, insn->jump_dest, *statep);
- 			if (ret) {
- 				BT_INSN(insn, "(branch)");
- 				return ret;
-@@ -3678,10 +3712,12 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		if (insn->type == INSN_JUMP_UNCONDITIONAL)
- 			return 0;
- 
-+		TRACE_INSN(insn, "jump not taken");
- 		break;
- 
- 	case INSN_JUMP_DYNAMIC:
- 	case INSN_JUMP_DYNAMIC_CONDITIONAL:
-+		TRACE_INSN(insn, "indirect jump");
- 		if (is_sibling_call(insn)) {
- 			ret = validate_sibling_call(file, insn, statep);
- 			if (ret)
-@@ -3694,6 +3730,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 
- 	case INSN_SYSCALL:
-+		TRACE_INSN(insn, "syscall");
- 		if (func && (!next_insn || !next_insn->hint)) {
- 			WARN_INSN(insn, "unsupported instruction in callable function");
- 			return 1;
-@@ -3702,6 +3739,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 
- 	case INSN_SYSRET:
-+		TRACE_INSN(insn, "sysret");
- 		if (func && (!next_insn || !next_insn->hint)) {
- 			WARN_INSN(insn, "unsupported instruction in callable function");
- 			return 1;
-@@ -3710,6 +3748,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		return 0;
- 
- 	case INSN_STAC:
-+		TRACE_INSN(insn, "stac");
- 		if (!opts.uaccess)
- 			break;
- 
-@@ -3722,6 +3761,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 
- 	case INSN_CLAC:
-+		TRACE_INSN(insn, "clac");
- 		if (!opts.uaccess)
- 			break;
- 
-@@ -3739,6 +3779,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 
- 	case INSN_STD:
-+		TRACE_INSN(insn, "std");
- 		if (statep->df) {
- 			WARN_INSN(insn, "recursive STD");
- 			return 1;
-@@ -3748,6 +3789,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 
- 	case INSN_CLD:
-+		TRACE_INSN(insn, "cld");
- 		if (!statep->df && func) {
- 			WARN_INSN(insn, "redundant CLD");
- 			return 1;
-@@ -3760,8 +3802,10 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
- 		break;
- 	}
- 
--	*dead_end = insn->dead_end;
-+	if (insn->dead_end)
-+		TRACE_INSN(insn, "dead end");
- 
-+	*dead_end = insn->dead_end;
- 	return 0;
- }
- 
-@@ -3771,8 +3815,8 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
-  * each instruction and validate all the rules described in
-  * tools/objtool/Documentation/objtool.txt.
-  */
--static int validate_branch(struct objtool_file *file, struct symbol *func,
--			   struct instruction *insn, struct insn_state state)
-+static int do_validate_branch(struct objtool_file *file, struct symbol *func,
-+			      struct instruction *insn, struct insn_state state)
- {
- 	struct instruction *next_insn, *prev_insn = NULL;
- 	struct section *sec;
-@@ -3784,7 +3828,10 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 	sec = insn->sec;
- 
--	while (1) {
-+	do {
-+
-+		insn->trace = 0;
-+
- 		next_insn = next_insn_to_validate(file, insn);
- 
- 		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
-@@ -3796,6 +3843,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			if (file->ignore_unreachables)
- 				return 0;
- 
-+			TRACE_INSN(insn, "falls through to next function");
-+
- 			WARN("%s() falls through to next function %s()",
- 			     func->name, insn_func(insn)->name);
- 			func->warned = 1;
-@@ -3805,10 +3854,15 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 		ret = validate_insn(file, func, insn, &state, prev_insn, next_insn,
- 				    &dead_end);
--		if (dead_end)
--			break;
- 
--		if (!next_insn) {
-+		if (!insn->trace) {
-+			if (ret)
-+				TRACE_INSN(insn, "warning (%d)", ret);
-+			else
-+				TRACE_INSN(insn, NULL);
-+		}
-+
-+		if (!dead_end && !next_insn) {
- 			if (state.cfi.cfa.base == CFI_UNDEFINED)
- 				return 0;
- 			if (file->ignore_unreachables)
-@@ -3822,7 +3876,20 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 		prev_insn = insn;
- 		insn = next_insn;
--	}
-+
-+	} while (!dead_end);
-+
-+	return ret;
-+}
-+
-+static int validate_branch(struct objtool_file *file, struct symbol *func,
-+			   struct instruction *insn, struct insn_state state)
-+{
-+	int ret;
-+
-+	trace_depth_inc();
-+	ret = do_validate_branch(file, func, insn, state);
-+	trace_depth_dec();
- 
- 	return ret;
- }
-@@ -4237,9 +4304,19 @@ static int validate_symbol(struct objtool_file *file, struct section *sec,
- 	if (opts.uaccess)
- 		state->uaccess = sym->uaccess_safe;
- 
-+	if (opts.trace && !fnmatch(opts.trace, sym->name, 0)) {
-+		trace_enable();
-+		TRACE("%s: validation begin\n", sym->name);
-+	}
-+
- 	ret = validate_branch(file, insn_func(insn), insn, *state);
- 	if (ret)
- 		BT_INSN(insn, "<=== (sym)");
-+
-+	TRACE("%s: validation %s\n\n", sym->name, ret ? "failed" : "end");
-+	trace_disable();
-+
-+
- 	return ret;
- }
- 
-@@ -4612,8 +4689,6 @@ static void free_insns(struct objtool_file *file)
- 		free(chunk->addr);
- }
- 
--static struct disas_context *objtool_disas_ctx;
+-struct alternative {
+-	struct alternative *next;
+-	struct instruction *insn;
+-};
 -
- const char *objtool_disas_insn(struct instruction *insn)
- {
- 	struct disas_context *dctx = objtool_disas_ctx;
-@@ -4635,8 +4710,10 @@ int check(struct objtool_file *file)
- 	 * disassembly context to disassemble instruction or function
- 	 * on warning or backtrace.
- 	 */
--	if (opts.verbose || opts.backtrace) {
-+	if (opts.verbose || opts.backtrace || opts.trace) {
- 		disas_ctx = disas_context_create(file);
-+		if (!disas_ctx)
-+			opts.trace = false;
- 		objtool_disas_ctx = disas_ctx;
- 	}
+ static unsigned long nr_cfi, nr_cfi_reused, nr_cfi_cache;
  
+ static struct cfi_init_state initial_func_cfi;
+@@ -131,9 +126,6 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
+ 	     insn && insn->offset >= sym->offset;			\
+ 	     insn = prev_insn_same_sec(file, insn))
+ 
+-#define sec_for_each_insn_from(file, insn)				\
+-	for (; insn; insn = next_insn_same_sec(file, insn))
+-
+ #define sec_for_each_insn_continue(file, insn)				\
+ 	for (insn = next_insn_same_sec(file, insn); insn;		\
+ 	     insn = next_insn_same_sec(file, insn))
 diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
-index 3831e46e0f35..004683c2b1ff 100644
+index 97d506afdf45..9c202feee493 100644
 --- a/tools/objtool/disas.c
 +++ b/tools/objtool/disas.c
-@@ -261,6 +261,89 @@ char *disas_result(struct disas_context *dctx)
- 	return dctx->result;
+@@ -266,6 +266,12 @@ char *disas_result(struct disas_context *dctx)
+ #define DISAS_INSN_OFFSET_SPACE		10
+ #define DISAS_INSN_SPACE		60
+ 
++#define DISAS_PRINFO(insn, depth, format, ...)				\
++	disas_print_info(stdout, insn, depth, format "\n", ##__VA_ARGS__)
++
++#define DISAS_PRINSN(dctx, insn, depth)			\
++	disas_print_insn(stdout, dctx, insn, depth, "\n")
++
+ /*
+  * Print a message in the instruction flow. If insn is not NULL then
+  * the instruction address is printed in addition of the message,
+@@ -345,6 +351,82 @@ void disas_print_insn(FILE *stream, struct disas_context *dctx,
+ 	va_end(args);
  }
  
-+
-+#define DISAS_INSN_OFFSET_SPACE		10
-+#define DISAS_INSN_SPACE		60
-+
-+/*
-+ * Print a message in the instruction flow. If insn is not NULL then
-+ * the instruction address is printed in addition of the message,
-+ * otherwise only the message is printed. In all cases, the instruction
-+ * itself is not printed.
-+ */
-+void disas_print_info(FILE *stream, struct instruction *insn, int depth,
-+		      const char *format, ...)
++static void disas_group_alt(struct disas_context *dctx,
++			    struct instruction *orig_insn)
 +{
-+	const char *addr_str;
-+	va_list args;
-+	int len;
-+	int i;
++	struct instruction *insn;
++	struct alternative *alt;
++	struct symbol *func;
++	int i, count;
++	int alt_id;
 +
-+	len = sym_name_max_len + DISAS_INSN_OFFSET_SPACE;
-+	if (insn && insn->sec) {
-+		addr_str = offstr(insn->sec, insn->offset);
-+		fprintf(stream, "%6lx:  %-*s  ", insn->offset, len, addr_str);
-+		free((char *)addr_str);
-+	} else {
-+		len += 11;
-+		fprintf(stream, "%-*s", len, "");
++	func = orig_insn->sym;
++	alt_id = orig_insn->offset;
++
++	count = 0;
++	for (alt = orig_insn->alts; alt; alt = alt->next) {
++		if (!alt->insn->alt_group)
++			/* jump alternative */
++			continue;
++
++		if (func && alt->insn->sec == func->sec)
++			/* exception handler */
++			continue;
++
++		/* count group alternatives, including fake nop */
++		count++;
 +	}
 +
-+	/* print vertical bars to show the code flow */
-+	for (i = 0; i < depth; i++)
-+		fprintf(stream, "| ");
++	i = 1;
++	for (alt = orig_insn->alts; alt; alt = alt->next) {
 +
-+	va_start(args, format);
-+	vfprintf(stream, format, args);
-+	va_end(args);
-+}
++		if (!alt->insn->alt_group)
++			continue;
 +
-+/*
-+ * Print an instruction address (offset and function), the instruction itself
-+ * and an optional message.
-+ */
-+void disas_print_insn(FILE *stream, struct disas_context *dctx,
-+		      struct instruction *insn, int depth,
-+		      const char *format, ...)
-+{
-+	char fake_nop_insn[32];
-+	const char *insn_str;
-+	bool fake_nop;
-+	va_list args;
-+	int len;
++		/*
++		 * If the alternative instruction is in the same section
++		 * as the original instruction then that's an exception
++		 * handling i.e. branch to the alternative instruction if
++		 * there is an exception.
++		 */
++		if (func && alt->insn->sec == func->sec) {
++			DISAS_PRINFO(NULL, 0,
++				    "<alternative.%x> exception handler - begin", alt_id);
++			DISAS_PRINFO(orig_insn, 1, "jmp    %lx <%s+0x%lx>",
++				    alt->insn->offset, func->name,
++				    alt->insn->offset - func->offset);
++			DISAS_PRINFO(NULL, 0,
++				    "<alternative.%x> exception handler - end", alt_id);
++			continue;
++		}
 +
-+	/*
-+	 * Alternative can insert a fake nop, sometimes with no
-+	 * associated section so nothing to disassemble.
-+	 */
-+	fake_nop = (!insn->sec && insn->type == INSN_NOP);
-+	if (fake_nop) {
-+		snprintf(fake_nop_insn, 32, "<fake nop> (%d bytes)", insn->len);
-+		insn_str = fake_nop_insn;
-+	} else {
-+		disas_insn(dctx, insn);
-+		insn_str = disas_result(dctx);
++		DISAS_PRINFO(NULL, 0,
++			    "<alternative.%x> %d/%d - begin", alt_id, i, count);
++
++		insn = alt->insn->alt_group->first_insn;
++
++		sec_for_each_insn_from(dctx->file, insn) {
++
++			if (insn->alts) {
++				DISAS_PRINFO(insn, 0,
++					     "alt group: ignore nested alternative (not supported)");
++			}
++
++			DISAS_PRINSN(dctx, insn, 1);
++
++			if (insn == insn->alt_group->last_insn ||
++			    insn == insn->alt_group->nop)
++				break;
++
++			insn = next_insn_same_sec(dctx->file, insn);
++		}
++
++		DISAS_PRINFO(NULL, 0,
++			    "<alternative.%x> %d/%d end", alt_id, i, count);
++		i++;
 +	}
-+
-+	/* print the instruction */
-+	len = (depth+1) * 2 < DISAS_INSN_SPACE ? DISAS_INSN_SPACE - (depth+1) * 2 : 1;
-+	disas_print_info(stream, insn, depth, "%-*s", len, insn_str);
-+
-+	/* print message if any */
-+	if (!format)
-+		return;
-+
-+	if (strcmp(format, "\n") == 0) {
-+		fprintf(stream, "\n");
-+		return;
-+	}
-+
-+	fprintf(stream, " - ");
-+	va_start(args, format);
-+	vfprintf(stream, format, args);
-+	va_end(args);
 +}
 +
  /*
   * Disassemble a single instruction. Return the size of the instruction.
   */
-diff --git a/tools/objtool/include/objtool/builtin.h b/tools/objtool/include/objtool/builtin.h
-index 6b08666fa69d..b3c84b6fdc5f 100644
---- a/tools/objtool/include/objtool/builtin.h
-+++ b/tools/objtool/include/objtool/builtin.h
-@@ -37,6 +37,7 @@ struct opts {
- 	const char *output;
- 	bool sec_address;
- 	bool stats;
-+	const char *trace;
- 	bool verbose;
- 	bool werror;
- };
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index f3ea144d4746..e5f97acb6252 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -64,8 +64,9 @@ struct instruction {
- 	    noendbr		: 1,
- 	    unret		: 1,
- 	    visited		: 4,
--	    no_reloc		: 1;
--		/* 10 bit hole */
-+	    no_reloc		: 1,
-+	    trace		: 1;
-+		/* 9 bit hole */
- 
- 	struct alt_group *alt_group;
- 	struct instruction *jump_dest;
-@@ -141,4 +142,7 @@ struct instruction *next_insn_same_sec(struct objtool_file *file, struct instruc
- 
- const char *objtool_disas_insn(struct instruction *insn);
- 
-+extern size_t sym_name_max_len;
-+extern struct disas_context *objtool_disas_ctx;
-+
- #endif /* _CHECK_H */
-diff --git a/tools/objtool/include/objtool/disas.h b/tools/objtool/include/objtool/disas.h
-index 1aee1fbe0bb9..5db75d06f219 100644
---- a/tools/objtool/include/objtool/disas.h
-+++ b/tools/objtool/include/objtool/disas.h
-@@ -19,6 +19,11 @@ int disas_info_init(struct disassemble_info *dinfo,
- 		    const char *options);
- size_t disas_insn(struct disas_context *dctx, struct instruction *insn);
- char *disas_result(struct disas_context *dctx);
-+void disas_print_info(FILE *stream, struct instruction *insn, int depth,
-+		      const char *format, ...);
-+void disas_print_insn(FILE *stream, struct disas_context *dctx,
-+		      struct instruction *insn, int depth,
-+		      const char *format, ...);
- 
- #else /* DISAS */
- 
-@@ -51,6 +56,12 @@ static inline char *disas_result(struct disas_context *dctx)
- 	return NULL;
+@@ -367,21 +449,79 @@ size_t disas_insn(struct disas_context *dctx, struct instruction *insn)
+ 	return disasm(insn->offset, &dctx->info);
  }
  
-+static inline void disas_print_info(FILE *stream, struct instruction *insn,
-+				    int depth, const char *format, ...) {}
-+static inline void disas_print_insn(FILE *stream, struct disas_context *dctx,
-+				    struct instruction *insn, int depth,
-+				    const char *format, ...) {}
++static void disas_jump_alt(struct disas_context *dctx, struct instruction *insn)
++{
++	struct instruction *alt_insn;
++	struct symbol *func;
++	int alt_id;
 +
- #endif /* DISAS */
++	func = insn->sym;
++	alt_id = insn->offset;
++
++	DISAS_PRINFO(NULL, 0, "<jump alternative.%x> default", alt_id);
++	DISAS_PRINSN(dctx, insn, 1);
++
++	alt_insn = insn->alts->insn;
++	if (!alt_insn) {
++		WARN_INSN(insn, "no jump alternative");
++		return;
++	}
++
++	DISAS_PRINFO(NULL, 0, "<jump alternative.%x> else", alt_id);
++
++	if (insn->type == INSN_NOP) {
++		DISAS_PRINFO(insn, 1, "jmp    %lx <%s+0x%lx>",
++			    alt_insn->offset, func->name,
++			    alt_insn->offset - func->offset);
++	} else {
++		DISAS_PRINFO(insn, 1, "nop%d", insn->len);
++	}
++
++	DISAS_PRINFO(NULL, 0, "<jump alternative.%x> end", alt_id);
++
++	if (insn->alts->next)
++		WARN_INSN(insn, "more than one jump alternatives\n");
++}
++
+ /*
+  * Disassemble a function.
+  */
+ static void disas_func(struct disas_context *dctx, struct symbol *func)
+ {
++	struct instruction *alt = NULL;
+ 	struct instruction *insn;
+-	size_t addr;
++	int alt_id = 0;
++	int depth = 0;
  
- #endif /* _DISAS_H */
-diff --git a/tools/objtool/include/objtool/trace.h b/tools/objtool/include/objtool/trace.h
-new file mode 100644
-index 000000000000..ea0904a0ce00
---- /dev/null
-+++ b/tools/objtool/include/objtool/trace.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates.
-+ */
+ 	printf("%s:\n", func->name);
+ 	sym_for_each_insn(dctx->file, func, insn) {
+-		addr = insn->offset;
+-		disas_insn(dctx, insn);
+-		printf(" %6lx:  %s+0x%-6lx      %s\n",
+-		       addr, func->name, addr - func->offset,
+-		       disas_result(dctx));
 +
-+#ifndef _TRACE_H
-+#define _TRACE_H
++		if (insn->alts) {
++			if (alt) {
++				DISAS_PRINFO(insn, 0,
++					     "alt default: ignore nested alternative (not supported)");
++			} else if (insn->alt_group) {
++				alt = insn;
++				alt_id = alt->offset;
++				DISAS_PRINFO(NULL, 0,
++					    "<alternative.%x> default - begin", alt_id);
++				depth = 1;
++			} else {
++				disas_jump_alt(dctx, insn);
++				continue;
++			}
++		}
 +
-+#include <objtool/check.h>
-+#include <objtool/disas.h>
++		DISAS_PRINSN(dctx, insn, depth);
 +
-+#ifdef DISAS
-+
-+extern bool trace;
-+extern int trace_depth;
-+
-+#define TRACE(fmt, ...)						\
-+({	if (trace)						\
-+		fprintf(stderr, fmt, ##__VA_ARGS__);		\
-+})
-+
-+#define TRACE_INSN(insn, fmt, ...)				\
-+({								\
-+	if (trace) {						\
-+		disas_print_insn(stderr, objtool_disas_ctx,	\
-+				 insn, trace_depth - 1,	\
-+				 fmt, ##__VA_ARGS__);		\
-+		fprintf(stderr, "\n");				\
-+		insn->trace = 1;				\
-+	}							\
-+})
-+
-+static inline void trace_enable(void)
-+{
-+	trace = true;
-+	trace_depth = 0;
-+}
-+
-+static inline void trace_disable(void)
-+{
-+	trace = false;
-+}
-+
-+static inline void trace_depth_inc(void)
-+{
-+	if (trace)
-+		trace_depth++;
-+}
-+
-+static inline void trace_depth_dec(void)
-+{
-+	if (trace)
-+		trace_depth--;
-+}
-+
-+#else /* DISAS */
-+
-+#define TRACE(fmt, ...)
-+#define TRACE_INSN(insn, fmt, ...)
-+
-+static inline void trace_enable(void) {}
-+static inline void trace_disable(void) {}
-+static inline void trace_depth_inc(void) {}
-+static inline void trace_depth_dec(void) {}
-+
-+#endif
-+
-+#endif /* _TRACE_H */
-diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index f001233b27df..e0b43441c577 100644
---- a/tools/objtool/include/objtool/warn.h
-+++ b/tools/objtool/include/objtool/warn.h
-@@ -109,6 +109,7 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- 		_len = (_len < 50) ? 50 - _len : 0;		\
- 		WARN("  %s: " format "  %*s%s", _str, ##__VA_ARGS__, _len, "", _istr); \
- 		free(_str);						\
-+		__insn->trace = 1;				\
- 	}							\
- })
++		if (alt && (alt->alt_group->last_insn == insn ||
++			    alt->alt_group->nop == insn)) {
++			DISAS_PRINFO(NULL, 0,
++				    "<alternative.%x> default - end", alt_id);
++			disas_group_alt(dctx, alt);
++			alt = NULL;
++			depth = 0;
++		}
+ 	}
+ 	printf("\n");
+ }
+diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
+index e5f97acb6252..748ee7631021 100644
+--- a/tools/objtool/include/objtool/check.h
++++ b/tools/objtool/include/objtool/check.h
+@@ -38,6 +38,11 @@ struct alt_group {
+ 	bool ignore;
+ };
  
-diff --git a/tools/objtool/trace.c b/tools/objtool/trace.c
-new file mode 100644
-index 000000000000..bc3113ba72fd
---- /dev/null
-+++ b/tools/objtool/trace.c
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates.
-+ */
++struct alternative {
++	struct alternative *next;
++	struct instruction *insn;
++};
 +
-+#include <objtool/trace.h>
+ #define INSN_CHUNK_BITS		8
+ #define INSN_CHUNK_SIZE		(1 << INSN_CHUNK_BITS)
+ #define INSN_CHUNK_MAX		(INSN_CHUNK_SIZE - 1)
+@@ -135,6 +140,9 @@ struct instruction *next_insn_same_sec(struct objtool_file *file, struct instruc
+ 	     insn && insn->sec == _sec;					\
+ 	     insn = next_insn_same_sec(file, insn))
+ 
++#define sec_for_each_insn_from(file, insn)				\
++	for (; insn; insn = next_insn_same_sec(file, insn))
 +
-+bool trace;
-+int trace_depth;
+ #define sym_for_each_insn(file, sym, insn)				\
+ 	for (insn = find_insn(file, sym->sec, sym->offset);		\
+ 	     insn && insn->offset < sym->offset + sym->len;		\
 -- 
 2.43.5
 
