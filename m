@@ -1,196 +1,98 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325D821A452;
-	Thu, 19 Jun 2025 05:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65B9223F422
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750309374; cv=none; b=kOlNdhEzV7orx1V/TVOgdpdeAHG3/UsCReBJMvlYTusANW+oPz2/mvkvOhtVsnVGd4bRf+WoVBzabtXCwan3wVe1mQ8qMIAa4dh1QU2ptxWbwCSKOyzrmcJLhPBWu6KuAiiwrVGbMdUmdf2r/wXBqYUpeuh13+I3IU5KtQ6H9Ng=
+	t=1750309408; cv=none; b=GsOQD8EyCk/MnXMEmZa+OVh7oIoL/vmC+V4TNxk9Y1Y0qWy5XntYBjrvirEehoeLjj9gnu41XgIHxxf69YH6Y0+iRGI+k4y28R+sToJbYogPEeXE5qnAiVsLxxUtR/JJSdldi4QkGKKY2nCSSWnrOP+pOQyOSvfp1/uPQ7XBl8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750309374; c=relaxed/simple;
-	bh=cC1gNkglobCCgQWoLRRzm+tji0YRzCCMskKW7Rup5es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GWvMkHKNOe1w9mTA/SOxeEWIySM2JmMWyTl7CkNOj87yBRIk4jNMh9+Xw9g3yaBOrpw6DY1C439j3QbgsONWQxGzx5H4FmgVfzeABUjwqfbgBGHV1WFcHsj4JChudcZhTePhMywneyByZhLa0dhzmBIUyeMZkbTC6tuL5RgjzQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=nJlMFyh+; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nJlMFyh+"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55J529FG1854570
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 18 Jun 2025 22:02:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55J529FG1854570
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750309332;
-	bh=nz8+KCii5aZfAsUnyh008znZgZhwquPROyRzQoxFqeU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nJlMFyh+ggWVGqIlASPvwYh5Mktn0GpAWRc4Ez52VsMr9JJFOsr68py3bAlMqCyVa
-	 iPTFNYYN9v3AZnZMbNUzpMZrF5c5KPFwyH2FOvTO/JiF4XLBMbXxRdolhMLtWb3GQ4
-	 g6U5VKe+4x9fa3SvV3nyYsYgYselIur7BeF1j8HsmaYBDzk0IiHaYi591QoRNziaPP
-	 phFigHu1V45uCzhqSqmglaZrWJNDAdwpN7T+4/+WAoRKpwykXs/PrZ5TlpJ0/bEWs8
-	 MaGPZRCuIqr7QzmC0G9Buu4oLjgHl6Xs4ww37cGZ9QI6ps7VibWf6LNW/2QiAqLtra
-	 /X+rG0AtsNaNw==
-Message-ID: <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com>
-Date: Wed, 18 Jun 2025 22:02:08 -0700
+	s=arc-20240116; t=1750309408; c=relaxed/simple;
+	bh=lpOfr6TnWhI+T1uO2nBTYytTQnHCKRyCvzte8mL3CNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O4gzA3lIaqYxA7zKPuGKC987yAM0z4LIro5C2HdquWhD62aXKAzUFVbktkKRgyW52AYmM4JNgGc9C37NM9ISNaxlfqs/yUypCcWZCaVV7KtBiy04dA86kuFzH5ZT87AAcOg0ZezaRlIc2RzTxwDe79M0bSi4c8RrDdmfOFApiUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-a2-68539a14f200
+From: Yunjeong Mun <yunjeong.mun@sk.com>
+To: sj@kernel.org
+Cc: damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH] samples/damon: add parameters for node0 memory usage
+Date: Thu, 19 Jun 2025 14:03:12 +0900
+Message-ID: <20250619050313.1535-1-yunjeong.mun@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 02/10] x86/fred: Pass event data to the NMI entry point
- from KVM
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250612214849.3950094-1-sohil.mehta@intel.com>
- <20250612214849.3950094-3-sohil.mehta@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20250612214849.3950094-3-sohil.mehta@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKLMWRmVeSWpSXmKPExsXC9ZZnoa7IrOAMg1tzuCye/P/NanF51xw2
+	i3tr/rNaHP76hsmBxWPTqk42j02fJrF7vNg8k9Hj8ya5AJYoLpuU1JzMstQifbsEroyZ+y+w
+	FHznqZhxaQ5zA+M3ri5GTg4JAROJaScOMsPYjROvsoLYbAIaEgcPnQSLiwgISvQ/ngEU5+Jg
+	FuhjlFh26S5YkbCAq0RPw0wWEJtFQFXi7ZJmNhCbV8BcovXDWTaIoZoSDZfuMUHEBSVOznwC
+	Vs8sIC/RvHU2M8hQCYG3rBLzb/WxQDRIShxccYNlAiPvLCQ9s5D0LGBkWsUolJlXlpuYmWOi
+	l1GZl1mhl5yfu4kRGFjLav9E72D8dCH4EKMAB6MSD6/DqqAMIdbEsuLK3EOMEhzMSiK8i0/4
+	ZQjxpiRWVqUW5ccXleakFh9ilOZgURLnNfpWniIkkJ5YkpqdmlqQWgSTZeLglGpg1Po86+e+
+	wmM7fFRcZAt0bn/+06ZumOuhYjPxixuniuJceWGGVxsMFLOrXrG1HXitIPMpunrJBO9Le/Oc
+	roQLlvAu2P9rW9nqxRedP6v85uUvc1WZWhFzienHOi+rSdE3lp5MYE6QunO+UJG9WsLj3gKp
+	OQJz9j/YPv/rbL+Uqu47Ww2tBE8XKbEUZyQaajEXFScCANi7s4coAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplluLIzCtJLcpLzFFi42LhmiGroysyKzjD4NsBJosn/3+zWnx+9prZ
+	4vDck6wWl3fNYbO4t+Y/q8Xhr2+YHNg8Nq3qBBKfJrF7vNg8k9Hj220Pj8UvPjB5fN4kF8AW
+	xWWTkpqTWZZapG+XwJUxc/8FloLvPBUzLs1hbmD8xtXFyMkhIWAi0TjxKiuIzSagIXHw0Elm
+	EFtEQFCi//EMoDgXB7NAH6PEskt3wYqEBVwlehpmsoDYLAKqEm+XNLOB2LwC5hKtH86yQQzV
+	lGi4dI8JIi4ocXLmE7B6ZgF5ieats5knMHLNQpKahSS1gJFpFaNIZl5ZbmJmjqlecXZGZV5m
+	hV5yfu4mRmDgLKv9M3EH45fL7ocYBTgYlXh4HVYFZQixJpYVV+YeYpTgYFYS4V18wi9DiDcl
+	sbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgdH28r1vzzrs5rHc
+	aCgyfPl8SYy8yBKj8O+BcxhdL+n/ufOA8XtdziO/fUt8v0fsPNyx2DbMITfn1/RvHR7r1+tW
+	t+y25K7ud5aVuv4nvSfeP+LAlpccLQfWrhFfIn9lxtNpUUc311vXrJz99eUmobtJB059MhY1
+	et7pktHrLjJ/qX5tV+v16MlKLMUZiYZazEXFiQByhXApGAIAAA==
+X-CFilter-Loop: Reflected
 
-On 6/12/2025 2:48 PM, Sohil Mehta wrote:
-> Extend the FRED NMI entry point from KVM to take an extra argument to
-> allow KVM to invoke the FRED event dispatch framework with event data.
-> 
-> This API is used to pass the NMI-source bitmap for NMI-induced VM exits.
-> Read the VMCS exit qualification field to get the NMI-source information
-> and store it as event data precisely in the format expected by the FRED
-> event framework.
-> 
-> Read the VMCS exit qualification unconditionally since almost all
-> upcoming CPUs are expected to enable FRED and NMI-source together. In
-> the rare case that NMI-source isn't enabled, the extra VMREAD would be
-> harmless since the exit qualification is expected to be zero.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Originally-by: Zeng Guang <guang.zeng@intel.com>
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+This patch changes the hard-coded quota goal metric values into sysfs
+knobs: `node0_mem_used_bp` and `node0_mem_free_bp`. These knobs
+represent the used and free memory ratio of node0 in basis points
+(bp, where 1 bp = 0.01%). As mentioned in [1], this patch is developed
+under the assumption that node0 is always the fast-tier in a two-tiers
+memory setup.
 
-A couple of nits below, otherwise:
+[1] https://lore.kernel.org/linux-mm/20250420194030.75838-8-sj@kernel.org/
 
-Reviewed-by: Xin Li (Intel) <xin@zytor.com>
+Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
+Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+---
+ samples/damon/mtier.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> ---
-> v7: Pass the event data from KVM only for NMI. (Sean)
-> 
-> v6: No change
-> 
-> v5: Read the VMCS exit qualification unconditionally. (Sean)
->      Combine related patches into one.
-> ---
->   arch/x86/entry/entry_64_fred.S |  2 +-
->   arch/x86/include/asm/fred.h    | 11 ++++++-----
->   arch/x86/kvm/vmx/vmx.c         |  2 +-
->   3 files changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-> index 29c5c32c16c3..1c9c6e036233 100644
-> --- a/arch/x86/entry/entry_64_fred.S
-> +++ b/arch/x86/entry/entry_64_fred.S
-> @@ -93,7 +93,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
->   	 * +--------+-----------------+
->   	 */
->   	push $0				/* Reserved, must be 0 */
-> -	push $0				/* Event data, 0 for IRQ/NMI */
-> +	push %rsi			/* Event data for NMI */
+diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
+index 36d2cd933f5a..f3220d6e6739 100644
+--- a/samples/damon/mtier.c
++++ b/samples/damon/mtier.c
+@@ -24,6 +24,12 @@ module_param(node1_start_addr, ulong, 0600);
+ static unsigned long node1_end_addr __read_mostly;
+ module_param(node1_end_addr, ulong, 0600);
+ 
++static unsigned long node0_mem_used_bp __read_mostly = 9970;
++module_param(node0_mem_used_bp, ulong, 0600);
++
++static unsigned long node0_mem_free_bp __read_mostly = 50;
++module_param(node0_mem_free_bp, ulong, 0600);
++
+ static int damon_sample_mtier_enable_store(
+ 		const char *val, const struct kernel_param *kp);
+ 
+@@ -112,7 +118,7 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
+ 	quota_goal = damos_new_quota_goal(
+ 			promote ? DAMOS_QUOTA_NODE_MEM_USED_BP :
+ 			DAMOS_QUOTA_NODE_MEM_FREE_BP,
+-			promote ? 9970 : 50);
++			promote ? node0_mem_used_bp : node0_mem_free_bp);
+ 	if (!quota_goal)
+ 		goto free_out;
+ 	quota_goal->nid = 0;
+-- 
+2.34.1
 
-Maybe a bit more accurate?
-
-/* Event data, NMI-source bitmap only so far */
-
->   	push %rdi			/* fred_ss handed in by the caller */
->   	push %rbp
->   	pushf
-> diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
-> index 552332ca060c..bccf4a3c06b8 100644
-> --- a/arch/x86/include/asm/fred.h
-> +++ b/arch/x86/include/asm/fred.h
-> @@ -66,14 +66,14 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs)
->   
->   void asm_fred_entrypoint_user(void);
->   void asm_fred_entrypoint_kernel(void);
-> -void asm_fred_entry_from_kvm(struct fred_ss);
-> +void asm_fred_entry_from_kvm(struct fred_ss ss, unsigned long edata);
->   
->   __visible void fred_entry_from_user(struct pt_regs *regs);
->   __visible void fred_entry_from_kernel(struct pt_regs *regs);
->   __visible void __fred_entry_from_kvm(struct pt_regs *regs);
->   
->   /* Must be called from noinstr code, thus __always_inline */
-> -static __always_inline void fred_nmi_from_kvm(void)
-> +static __always_inline void fred_nmi_from_kvm(unsigned long edata)
->   {
->   	struct fred_ss ss = {
->   		.ss	= __KERNEL_DS,
-> @@ -83,7 +83,7 @@ static __always_inline void fred_nmi_from_kvm(void)
->   		.lm	= 1,
->   	};
->   
-> -	asm_fred_entry_from_kvm(ss);
-> +	asm_fred_entry_from_kvm(ss, edata);
->   }
->   
->   static inline void fred_irq_from_kvm(unsigned int vector)
-> @@ -95,7 +95,8 @@ static inline void fred_irq_from_kvm(unsigned int vector)
->   		.lm	= 1,
->   	};
->   
-> -	asm_fred_entry_from_kvm(ss);
-> +	/* Event data is always zero for IRQ */
-
-/* Event data not used for IRQ thus 0 */
