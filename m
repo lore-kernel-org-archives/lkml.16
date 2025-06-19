@@ -1,87 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3B128C87D;
-	Thu, 19 Jun 2025 17:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902D323534D
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750353031; cv=none; b=Knt9EG+XEFYhVgJjcYYhe1qqzGkZodL4aiRQIfdx4LytAUXdCHqeJM1M2yfI8rFa7Fwxehb5UASoVIUu8GwuSEBq172E7abFoCk2chLQ5x8ICWM/J1QW01i+lbrQpGPHWdqXo5Rf6VWj10uZe3nPuAFJAWq6D/oiOvC8RMfk7II=
+	t=1750353303; cv=none; b=lE4fIpQRzbs8nN1HF82GKdFTWeUCw1ksS7rnMp42xprn4583bUEtkOcJU4UPi5O4PXkLZxRvqlE0SWMfKaEPMTfA4Ckf0m4XbINdB2+XSZrOSwrIdFexhDLBqCjTRxeBqlSYRDIpPmlwkvmef8rV657RnUlAOA8QTkzEqLsjemM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750353031; c=relaxed/simple;
-	bh=8hxDZ0YSUK5GNrtuai7MmCbxc9EplTXFmwAHYdeKd2E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oypZFTNjNQgqhl185anS9j3XfZfDq2Jnr+lB9Osrhvz5EOw4kM6LT6jqN2b1RbvzK6OZL2+AfYCqqwpnhPlgOZCbBe0fWbETThCLvbkXNEWkN1ubuUa6suEOWMf88WFPAvyINcRpjrlYMmScBGBVY1oWybZJNTge8XxNqs8In9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KToOsjIC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750353303; c=relaxed/simple;
+	bh=Lx1OZA13bxdhse2uaAcgjkf62XpWijyBrsRGvEfVBYs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=G29UuwqwG1Z64M9YrWr2v4s/OroQAuowrS3LQPGyVgdPORUwFRvPWpJmt5hKOsZgEdC7X/5/TvisF03lSGbWhUe3wogIHQEJ6fRkgaz6p30/u9XzF+iT10/nxME9DJSHNBvT5u9gpNwFwi3Dqj0cMaGO2DzQm81CmGKocdFTAgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BL56VD7M; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KToOsjIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFD5C4CEF0;
-	Thu, 19 Jun 2025 17:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750353031;
-	bh=8hxDZ0YSUK5GNrtuai7MmCbxc9EplTXFmwAHYdeKd2E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KToOsjICUEUoTbUKv8eO/Zl1IVmaG/KZnNYKRiwpw2a4YFz2QenEUH2zE38mmY42E
-	 DTetmPdRhFGWLKWEyl+Z/YuhhNN4YDmwfoGfOvvtwjBNMCyFTjCGyxuULi6P9iqry9
-	 YJ34CU9/nNHhF3KAYtLFB2N8NafC7bsa+6hmVMf78eyIa2wSF1VKHr029LlSxH6GMJ
-	 h8hBlRwdg8IdbT31lsU1xuiz1L95zSmySdV1ipqG1JJxMVtJmXEM6xHDgNKXH0hb5N
-	 8Qgk3sYIfzJiP5ZH7o+rDf2W4Xhq6t++WP7P9CRU/Wpc0OtOwala9jmdmblqxZeRgK
-	 xz5uWUol/cg4g==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 72BED5FEF5; Fri, 20 Jun 2025 01:10:28 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej@kernel.org>,
-	Samuel Holland <samuel@sholland.org>
-Cc: Andre Przywara <andre.przywara@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	devicetree@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] clk: sunxi-ng: sun55i-a523-r-ccu: Add missing PPU0 reset
-Date: Fri, 20 Jun 2025 01:10:23 +0800
-Message-Id: <20250619171025.3359384-1-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BL56VD7M"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 797EB444F8;
+	Thu, 19 Jun 2025 17:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750353293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z26vtRZXZ0iUY80hTCSWSFa/6H7qzHjCbBvSXzt6qFk=;
+	b=BL56VD7MsFg3AVIJnYbDfvhqfDtUOk/FWYOf7V94nZ4wNrjLrTCDK2X7y9nBNp9bX89CpK
+	1oNBUQqI2WjZKkTS/Cjf4B/mJFXTK/3Can7llnLWJ15cRDhx3nhMqphWSpNd/FEUyHBFsA
+	XPafdvq7hMg0cV7DmJTNj3eUGItFjfJem+lG8541D9uel3SxgWYLa9RxbB9CA6F417s+02
+	wCPXduEFvt+hqnhO1J/2736+7wsKHjwwYNg6RCkZbvMwBI19M9YZLYxyNrvELK8B13B2y9
+	vVSCMw3iVFdgiobK+qopJ6Fuj6vbft3mMQ0PRIqVVx/iI6HF3UwiWZ2Kp9471w==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Ivan Stepchenko <sid@itb.spb.ru>
+Cc: Richard Weinberger <richard@nod.at>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+In-Reply-To: <20250619145313.5823-1-sid@itb.spb.ru>
+References: <20250619145313.5823-1-sid@itb.spb.ru>
+Subject: Re: [PATCH] mtd: fix possible integer overflow in erase_xfer()
+Message-Id: <175035329221.438255.2990702769206013816.b4-ty@bootlin.com>
+Date: Thu, 19 Jun 2025 19:14:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdeitdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledvrddukeegrdduuddtrdduudejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdduuddtrdduudejpdhhvghloheplgduledvrdduieekrddurddutdeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhiugesihhtsgdrshhpsgdrrhhupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpt
+ hhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Thu, 19 Jun 2025 17:53:13 +0300, Ivan Stepchenko wrote:
+> The expression '1 << EraseUnitSize' is evaluated in int, which causes
+> a negative result when shifting by 31 - the upper bound of the valid
+> range [10, 31], enforced by scan_header(). This leads to incorrect
+> extension when storing the result in 'erase->len' (uint64_t), producing
+> a large unexpected value.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Svace.
+> 
+> [...]
 
-There is a PPU0 reset control bit in the same register as the PPU1
-reset control. This missing reset control is for the PCK-600 unit
-in the SoC. Manual tests show that the reset control indeed exists,
-and if not configured, the system will hang when the PCK-600
-registers are accessed.
+Applied to mtd/next, thanks!
 
-This series adds a reset entry for it at the end of the existing ones,
-in both the DT binding header file and the driver.
+[1/1] mtd: fix possible integer overflow in erase_xfer()
+      commit: 9358bdb9f9f54d94ceafc650deffefd737d19fdd
 
-I will take both patches through the sunxi trees since I need the
-header file change for a subsequent patch series.
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
 
-Please have a look.
-
-
-ChenYu
-
-
-Chen-Yu Tsai (2):
-  dt-bindings: reset: sun55i-a523-r-ccu: Add missing PPU0 reset
-  clk: sunxi-ng: sun55i-a523-r-ccu: Add missing PPU0 reset
-
- drivers/clk/sunxi-ng/ccu-sun55i-a523-r.c      | 1 +
- include/dt-bindings/reset/sun55i-a523-r-ccu.h | 1 +
- 2 files changed, 2 insertions(+)
-
--- 
-2.39.5
+Kind regards,
+Miquèl
 
