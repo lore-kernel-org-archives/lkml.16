@@ -1,112 +1,186 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04634242D77
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3271D555;
+	Thu, 19 Jun 2025 05:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750312082; cv=none; b=jPO2+nJilIKJ3fBDAS2nLEYSqcHYykk7rxJYzCcFxSCrbKKx0DJFjgL6F08PJNl2yx8jaMtN72mNVu/Jusx9kYkVSe14ZSNbdIc1z28DMtF/4t+5khO929+c7zohcXjbWICLzW7Z3pwxyYcP3OYUvgKbQvnvLLGEV4I3Kvdt+pw=
+	t=1750312089; cv=none; b=oq0JgNzCGIZ/fMUtE8amNhkEGH3zcm3D+SyVDr9ghaNBRCNH5OjIqCnSH1VprF/v/HNLZlx/Kc6PLafUeJFsoF/IvjhHGuMbmJ2NFTspv1k+cfgEw3HE5jfR2ua/ahkYK/juegqkzXiHzun9j4KOIgRf5Iqmf0W2/sQcI6xYyxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750312082; c=relaxed/simple;
-	bh=G1pBc79YHeOc8teFMiWj0r25pQg23ExTkVNwbJHUxeI=;
+	s=arc-20240116; t=1750312089; c=relaxed/simple;
+	bh=naO5r0xMIhdjbn0oOa+SVmj9KjDZ5worxHK7bSVntUk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uxHMu/LcZ//eHKbFu0lZUsQ0AcGKGfBJbtLm2NPRuN8atAPuDKvurgeVpQDjadj8AlfZ5J/fNneIO5+zyG4/tDVHgspoe8xILT/K+OdtGiazvx9r4vG9tauoqEHOflWuKvqhVKfAAa1ompf63RpbC9Ypyo4VRWaHi7enfx39Fjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u11Km7ns; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxtyFKOdauKgdqpLWbLmvxuGG6gOxa+SqNfWe2mTDxq9zpJBL4YO8FiO4obmJYPPiUVp135wH5/xxar2Mrh92sZ0byZn9WDG86+D8SwpudeQOGYSEuZHTCxIuU4SSuTORp3sP9qlMhQM9eXAeAGmjJfChkN7b+4I7fxmpK8Nxsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjXP7rVJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u11Km7ns"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2350b1b9129so3427355ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750312080; x=1750916880; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=w06pRHUxpM/QQNGaUX6TLUa1ZCwsg87mdzg1cVqYuMY=;
-        b=u11Km7nsRaFeAjr6NcA2cCOpcGPPe4gPB6F60BFTa2SDqFGAo/kEDOERtAErFJ7OZT
-         wqfPAFeif9DFvTX+y+awgweW1sf3x9kePNlLY7bXKapDEaGctVBYMJzrWr6uq5/WniSy
-         qEgLXfYR6pJrKhoXIr8mb+CzbIs+WI+sU4t0NdRJRQMzrQfUCSqwl1T8kWVtSZzwJUmI
-         44sQH5wDEqWGDTOIbx0Mi4GhGPCcCvKI/1iSiwCnAdXPnwiNVzT6kzxBiZ3wc+Rs9nnl
-         mBaY8iisvG2UCZMREpb2Nb1JgzHG4p76lc/k/1ApqGPj48K25lM3BWaPqyBspvvWaN+j
-         n4Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750312080; x=1750916880;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w06pRHUxpM/QQNGaUX6TLUa1ZCwsg87mdzg1cVqYuMY=;
-        b=lXWVmWd0DwrF6S0KSj90UMkHCDMUo6TKuTffLVZVuvz3hk+ro3ADKOtZzvJP8E8C7d
-         zevBqoyOAJ2WOx6yIUGtBSD2nbptf4UpQaS84uZj/PCzomTR8pg18F+CqafoWMFQm51B
-         21XUhkZyGRh8pT6EMbCEuEQDKWm0gqREX3ba+KAMeeGGJDad3oSLTNkROh5W5kBp8mWP
-         ZFIemhGqfVOr8Wbbvew1gtDQV7M3KgZhuVClyCvqWmzQBhwdWSNHil6FY0oUxR40a+AC
-         UTV5pGtBx3lxd6Eg0W2fxbNjtglB85lfMdy0bULyC6TSm90uBok7V7s5za4omJRXCQAu
-         NkvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUf/TbR66Jo0QyEYH6Bx9Msepl/sKZyf6+tbvt/hOdiMbv7kra2lWEsPBIRSFnLtH/zMzsPanJgDxJf3Ds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBz8MDeqX9JpnyFVpZTnULRYeNdT80VZO+GAd96Ph6U/ryARAV
-	agjeRngWMQEP09dsSsed3MjEtdpzjEOLr4tnvTs7btvty/kdlJZ5G7ZGYK+BcwSfKJs=
-X-Gm-Gg: ASbGnctTHO/KPuQiEgeWuk2Bq0+uzKE1rK77BmNBZBio5bRQrWUfAnC+yKdlCmjTHJO
-	wuuYIy30CZoiaOcHA6XIKMKtBN++oJp7uBBa/2/x94sYKJt89EBhUuow/Ii4dST0VnnHrdGIZ6K
-	B+DsMvLN6zUod0Fb8is/P9Z3LfW8waEX7HB1x/KlCNXwQxc5jFZqfdiKM04Pa7R93iuGycqpkd3
-	AnzCj1YTrkuTWfvRWCR+oZXLIBaT3Z2KS00AyDZkm6rAPtwaGgXBlYMQdrDo3iO7zRZF02TdyUX
-	l1Pnwg+097FXOKqgfDfoHkK8xTDlwEo8imjVkIKjSi1kseARzjYVSjjEYheQSEA=
-X-Google-Smtp-Source: AGHT+IF25Vmp36Sdt4Pjj6dvxhJMSBF+fxUEb8+u1l4GZz3Fuz0LFMidJsQ+FCmOU1nj7dvp8f6VIw==
-X-Received: by 2002:a17:902:e788:b0:235:2375:7e94 with SMTP id d9443c01a7336-2366b3c5b99mr313228455ad.24.1750312080362;
-        Wed, 18 Jun 2025 22:48:00 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c54sm12206227a12.47.2025.06.18.22.47.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 22:47:59 -0700 (PDT)
-Date: Thu, 19 Jun 2025 11:17:57 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "zhenglifeng (A)" <zhenglifeng1@huawei.com>, robert.moore@intel.com,
-	lenb@kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linuxarm@huawei.com, jonathan.cameron@huawei.com,
-	zhanjie9@hisilicon.com, lihuisong@huawei.com, yubowen8@huawei.com
-Subject: Re: [PATCH 0/3] cpufreq: CPPC: Some optimizations for cppc_cpufreq.c.
-Message-ID: <20250619054757.5nxaeckvmaiji5gn@vireshk-i7>
-References: <20250526113057.3086513-1-zhenglifeng1@huawei.com>
- <9c82abca-0772-444c-8122-59a953c83984@huawei.com>
- <CAJZ5v0hyMANsOwskEUi1c3XB+heE6z0_-Dk1nqnw-SbZ0dM3zA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjXP7rVJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCB9C4CEEA;
+	Thu, 19 Jun 2025 05:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750312088;
+	bh=naO5r0xMIhdjbn0oOa+SVmj9KjDZ5worxHK7bSVntUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IjXP7rVJ7AZnRuppJyLrpp5E8Fh+t+2oljLVnWBBBSn/d1vR0eGIWRYGA9tuTPZxk
+	 1WjJMU7H0LqXwDq8R0BlorxkYnEHHHlDMoVIzC4TN0b7sC1cULh3G+MWJHwVH7xkz9
+	 tCPMfdyKM5V0i4bvNc7Nmlusq60gK1you1vNrbR0OMNiLtHUI3nfQN0juBAxkHM6/o
+	 ts+aKMfmoW7KUXQXeNQG3kObJpnfs/6SAEy+ZvEIdSUbOESxfPgslyESbzwTawbWW0
+	 0p+BbIlpITQh6XRqByB/6dGMmYRgJ3In9Qc8ufkd7ZoKCLwjJIVuYBHy37Sjo6Og4z
+	 FW+uh64HrHsSA==
+Date: Thu, 19 Jun 2025 08:47:46 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] use vm_flags_t consistently
+Message-ID: <aFOkguMF3QJpr4VA@kernel.org>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hyMANsOwskEUi1c3XB+heE6z0_-Dk1nqnw-SbZ0dM3zA@mail.gmail.com>
+In-Reply-To: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
 
-On 18-06-25, 21:06, Rafael J. Wysocki wrote:
-> On Tue, Jun 17, 2025 at 4:33 AM zhenglifeng (A) <zhenglifeng1@huawei.com> wrote:
-> >
-> > Gentle ping.
-> >
-> > On 2025/5/26 19:30, Lifeng Zheng wrote:
-> > > This patch series makes some minor optimizations for cppc_cpufreq.c to
-> > > makes codes cleaner.
-> > >
-> > > Lifeng Zheng (3):
-> > >   cpufreq: CPPC: Remove cpu_data_list
-> > >   cpufreq: CPPC: Return void in populate_efficiency_class()
-> > >   cpufreq: CPPC: Remove forward declaration of
-> > >     cppc_cpufreq_register_em()
-> > >
-> > >  drivers/cpufreq/cppc_cpufreq.c | 59 +++++++++-------------------------
-> > >  include/acpi/cppc_acpi.h       |  1 -
-> > >  2 files changed, 15 insertions(+), 45 deletions(-)
+On Wed, Jun 18, 2025 at 08:42:51PM +0100, Lorenzo Stoakes wrote:
+> The VMA flags field vma->vm_flags is of type vm_flags_t. Right now this is
+> exactly equivalent to unsigned long, but it should not be assumed to be.
 > 
-> I've started to process this because it has been sent to linux-acpi
-> and then I realized that Viresh should take it, but since I've applied
-> it already, I may as well queue it up for 6.17.
+> Much code that references vma->vm_flags already correctly uses vm_flags_t,
+> but a fairly large chunk of code simply uses unsigned long and assumes that
+> the two are equivalent.
 > 
-> Viresh, please let me know if you have any concerns about it.
+> This series corrects that and has us use vm_flags_t consistently.
+> 
+> This series is motivated by the desire to, in a future series, adjust
+> vm_flags_t to be a u64 regardless of whether the kernel is 32-bit or 64-bit
+> in order to deal with the VMA flag exhaustion issue and avoid all the
+> various problems that arise from it (being unable to use certain features
+> in 32-bit, being unable to add new flags except for 64-bit, etc.)
+> 
+> This is therefore a critical first step towards that goal. At any rate,
+> using the correct type is of value regardless.
+> 
+> We additionally take the opportunity to refer to VMA flags as vm_flags
+> where possible to make clear what we're referring to.
+> 
+> Overall, this series does not introduce any functional change.
+> 
+> Lorenzo Stoakes (3):
+>   mm: change vm_get_page_prot() to accept vm_flags_t argument
+>   mm: update core kernel code to use vm_flags_t consistently
+>   mm: update architecture and driver code to use vm_flags_t
 
-I applied this before I saw your email.. Please keep it, I will drop it. Thanks.
+For the series
+
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+ 
+>  arch/arm/mm/fault.c                        |   2 +-
+>  arch/arm64/include/asm/mman.h              |  10 +-
+>  arch/arm64/mm/fault.c                      |   2 +-
+>  arch/arm64/mm/mmap.c                       |   2 +-
+>  arch/arm64/mm/mmu.c                        |   2 +-
+>  arch/powerpc/include/asm/book3s/64/pkeys.h |   3 +-
+>  arch/powerpc/include/asm/mman.h            |   2 +-
+>  arch/powerpc/include/asm/pkeys.h           |   4 +-
+>  arch/powerpc/kvm/book3s_hv_uvmem.c         |   2 +-
+>  arch/sparc/include/asm/mman.h              |   4 +-
+>  arch/sparc/mm/init_64.c                    |   2 +-
+>  arch/x86/kernel/cpu/sgx/encl.c             |   8 +-
+>  arch/x86/kernel/cpu/sgx/encl.h             |   2 +-
+>  arch/x86/mm/pgprot.c                       |   2 +-
+>  fs/exec.c                                  |   2 +-
+>  fs/userfaultfd.c                           |   2 +-
+>  include/linux/coredump.h                   |   2 +-
+>  include/linux/huge_mm.h                    |  12 +-
+>  include/linux/khugepaged.h                 |   4 +-
+>  include/linux/ksm.h                        |   4 +-
+>  include/linux/memfd.h                      |   4 +-
+>  include/linux/mm.h                         |  10 +-
+>  include/linux/mm_types.h                   |   2 +-
+>  include/linux/mman.h                       |   4 +-
+>  include/linux/pgtable.h                    |   2 +-
+>  include/linux/rmap.h                       |   4 +-
+>  include/linux/userfaultfd_k.h              |   4 +-
+>  include/trace/events/fs_dax.h              |   6 +-
+>  mm/debug.c                                 |   2 +-
+>  mm/execmem.c                               |   8 +-
+>  mm/filemap.c                               |   2 +-
+>  mm/gup.c                                   |   2 +-
+>  mm/huge_memory.c                           |   2 +-
+>  mm/hugetlb.c                               |   4 +-
+>  mm/internal.h                              |   4 +-
+>  mm/khugepaged.c                            |   4 +-
+>  mm/ksm.c                                   |   2 +-
+>  mm/madvise.c                               |   4 +-
+>  mm/mapping_dirty_helpers.c                 |   2 +-
+>  mm/memfd.c                                 |   8 +-
+>  mm/memory.c                                |   4 +-
+>  mm/mmap.c                                  |  16 +-
+>  mm/mprotect.c                              |   8 +-
+>  mm/mremap.c                                |   2 +-
+>  mm/nommu.c                                 |  12 +-
+>  mm/rmap.c                                  |   4 +-
+>  mm/shmem.c                                 |   6 +-
+>  mm/userfaultfd.c                           |  14 +-
+>  mm/vma.c                                   |  78 +++---
+>  mm/vma.h                                   |  16 +-
+>  mm/vmscan.c                                |   4 +-
+>  tools/testing/vma/vma.c                    | 266 ++++++++++-----------
+>  tools/testing/vma/vma_internal.h           |  12 +-
+>  53 files changed, 298 insertions(+), 297 deletions(-)
+> 
+> --
+> 2.49.0
 
 -- 
-viresh
+Sincerely yours,
+Mike.
