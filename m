@@ -1,213 +1,113 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150A822D9E9
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333740; cv=none; b=AnmaD9z7CQRLR6hDE8gXYcG+T4vlPrsGSELDfRhHMpPj754rvUMTvJfmn0wrqlZaIYnXOBpknsfCKxFRLFiYoVHQT8det20hmkC9WgqDkTv7F4f6FFTrTFiTpwHSCuWPIEJeBT/AkHwXmhpOjVpPTyGknAL8dvovdW352HW6jo0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333740; c=relaxed/simple;
-	bh=1Z6vr9+pS7XDW3jsskPuy9l9Zz87O4Y7kfJ+qbcVBrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JhAEOZXfwiYENchn24USUjGDqMRaq9R5XitldrciU0cyGyXs83ibvw4oBZdudOWs470+3BsUmvJdvNsxpKrfRrLCN2NasSKiZdcwWOeE2hV1LSkRgvcZgEs/u8eZLWJhinnRvzVO1/2KojZRa+3hhiCvUajfZ49cAoINz06Rs8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WXV+NLRd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bi8pqM55; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WXV+NLRd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bi8pqM55; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38F8221704;
+	Thu, 19 Jun 2025 11:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750333802; cv=pass; b=a+fPRWRV9XbwOWl9edQGYj+y0cwA5DMEqd5TsAJo/IKgY0uxMwzn+Gt9AAOQgB7jUyGBVI3Ue3L1ELtKABKbFtVQ0WZIMNbnCp9P1yY4m/uQlqVCbqoflw7AM0VJQm4Ox+SuMapx2UfPluaNkBfzXMoJoKb9tDCH+JI0FuJYoPo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750333802; c=relaxed/simple;
+	bh=x9mmf/4+sS8EjTOOF+TIHjEh6qmrc/lZ1PIXobh6WK4=;
+	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=eJZoszy7rR6k0MZZUI9suJv1wORAdTYy9VB2mbwBBL3gu4d5EP89N5OnQAKL4geTMvuQ6VpPN5e8wjKuRJSeklN2xzBwu8IGd49DeI8Rcu2+sRbf+JAcQOtMowPIilC4eM/WQ6n4wd1OqyhTp+W/mwUv6pCc8lbBjFV2LL0lBsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=aTb7GInj; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WXV+NLRd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bi8pqM55";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WXV+NLRd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bi8pqM55"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4CBE421221;
-	Thu, 19 Jun 2025 11:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750333735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Lt1aj+Q6ccq6O7aDE+Lq9tCSibHIyhB8GK5J4A5EHr4=;
-	b=WXV+NLRdLDzyN5dbccQQ9pvwaAAufEYDqPxhxtOTJeKprh9x2VTaJ/LwgB6drwgIKqY9HA
-	t89MmNRazhY8myYM3F7ksndvsFDAia+lnGpzg/MRrMa8rH6xy0ty5wwVaUC+/0uyWr7z8l
-	7YV+zOf3Sal+DwClGlDmqLYk9Q//1Fw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750333735;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Lt1aj+Q6ccq6O7aDE+Lq9tCSibHIyhB8GK5J4A5EHr4=;
-	b=Bi8pqM554EEIgfW9tIUR0c072TendrxTOBNl6Xi68ligRgho7sCIG/TwCdBPr+tPqFeulm
-	JNB+G4XTjCqTTDAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=WXV+NLRd;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Bi8pqM55
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750333735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Lt1aj+Q6ccq6O7aDE+Lq9tCSibHIyhB8GK5J4A5EHr4=;
-	b=WXV+NLRdLDzyN5dbccQQ9pvwaAAufEYDqPxhxtOTJeKprh9x2VTaJ/LwgB6drwgIKqY9HA
-	t89MmNRazhY8myYM3F7ksndvsFDAia+lnGpzg/MRrMa8rH6xy0ty5wwVaUC+/0uyWr7z8l
-	7YV+zOf3Sal+DwClGlDmqLYk9Q//1Fw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750333735;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Lt1aj+Q6ccq6O7aDE+Lq9tCSibHIyhB8GK5J4A5EHr4=;
-	b=Bi8pqM554EEIgfW9tIUR0c072TendrxTOBNl6Xi68ligRgho7sCIG/TwCdBPr+tPqFeulm
-	JNB+G4XTjCqTTDAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DADA4136CC;
-	Thu, 19 Jun 2025 11:48:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kbYZNSb5U2hgcQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 19 Jun 2025 11:48:54 +0000
-Message-ID: <fe8843eb-cbbb-4dae-aff9-6f08b5e0d39c@suse.cz>
-Date: Thu, 19 Jun 2025 13:48:54 +0200
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="aTb7GInj"
+ARC-Seal: i=1; a=rsa-sha256; t=1750333773; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=k2ECfxzVPE3LQGdP+afxdo2PgIFbQNaYLKpjrIynKpY3yybZYHJLxFiB/dmI8efnc8rUsIKNoNwmqPz2EPQsVULAfgO091mxnTABvvvCrSKmqben6qk4NSJSs+sScEpScGuZ6eLpwubPC3oaOrZbonPHtnN6Jh9cEJNxrk88RxU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750333773; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=MFwa0VaeKDYvJD+4TaNeC8PvG0ohNrCLdil12mUnuYE=; 
+	b=iEW5xAAgezzbdxSNsZDDk3VsivFivtHmB6Po0joThn2weblF6yQzIy1L5IIU/InlzMjKoERnoZysKA3nOopWpeP9uCrELVxC2mLS9mr5QiqoSlnlQKehI25R/SUBNYmc1a5tAhM+UCR2sybwqLItzf5Qbu6stjltqs8Rfd2lbLw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750333773;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=MFwa0VaeKDYvJD+4TaNeC8PvG0ohNrCLdil12mUnuYE=;
+	b=aTb7GInjoKUCOXMf7yztMIKG511RPdIWJjMtGuN08TR/Y1jgM1569zm5xdN3g09d
+	zLZW5wOVfmSUv/fb9z0GjJg9C2ymeJy2HAqhBfCrCGJzn66/7wD5IyxD+rzdnMIpqTH
+	wXQjkb/XSpDfK3ExgNAft8FJbMrF8CO1G5ovTuOY=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1750333771123763.0534931058979; Thu, 19 Jun 2025 04:49:31 -0700 (PDT)
+Date: Thu, 19 Jun 2025 19:49:31 +0800
+From: Li Chen <me@linux.beauty>
+To: "Catalin Marinas" <catalin.marinas@arm.com>,
+	"Will Deacon" <will@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Len Brown" <lenb@kernel.org>, "Hanjun Guo" <guohanjun@huawei.com>,
+	"Liu Wei" <liuwei09@cestc.cn>, "Ryan Roberts" <ryan.roberts@arm.com>,
+	"Andrew Morton" <akpm@linux-foundation.org>,
+	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+	"Sudeep Holla" <sudeep.holla@arm.com>,
+	"linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"linux-acpi" <linux-acpi@vger.kernel.org>
+Message-ID: <1978805cd53.d7656d5d435218.1873813773955537604@linux.beauty>
+In-Reply-To: <20250606072802.191580-1-me@linux.beauty>
+References: <20250606072802.191580-1-me@linux.beauty>
+Subject: Re: [PATCH 0/2] ACPI: Improve SPCR handling and messaging on
+ SPCR-less systems
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] mm: update architecture and driver code to use
- vm_flags_t
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "David S . Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
- David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 4CBE421221
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,oracle.com:email];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[armlinux.org.uk,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_GT_50(0.00)[64];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On 6/18/25 21:42, Lorenzo Stoakes wrote:
-> In future we intend to change the vm_flags_t type, so it isn't correct for
-> architecture and driver code to assume it is unsigned long. Correct this
-> assumption across the board.
-> 
-> Overall, this patch does not introduce any functional change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Gentle ping incase of forgotten.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+ ---- On Fri, 06 Jun 2025 15:27:43 +0800  Li Chen <me@linux.beauty> wrote --- 
+ > From: Li Chen <chenl311@chinatelecom.cn>
+ > 
+ > This small series improves the kernel behavior and output when the ACPI SPCR
+ > table is not present or not supported.
+ > 
+ > Currently, even on systems that completely lack an SPCR table, the kernel prints:
+ > "Use ACPI SPCR as default console: Yes"
+ > 
+ > Or if with acpi=nospcr:
+ > "Use ACPI SPCR as default console: No"
+ > 
+ > This may mislead users into thinking an SPCR table exists
+ > when in fact there is no such table at all. This series addresses this in two steps:
+ > 
+ > Patch 1 ensures that acpi_parse_spcr() returns -ENODEV if CONFIG_ACPI_SPCR_TABLE is disabled.
+ > 
+ > Patch 2 updates arm64 acpi_boot_table_init() to only print the SPCR console message
+ > if acpi_parse_spcr() succeeds.
+ > 
+ > This results in cleaner and more accurate boot logs on ARM64.
+ > 
+ > Tested on both SPCR-enabled and SPCR-less qemu-system arm64 virt platform. [1]
+ > 
+ > [1]: https://patchew.org/QEMU/20250528105404.457729-1-me@linux.beauty/
+ > 
+ > Li Chen (2):
+ >   ACPI: Return -ENODEV from acpi_parse_spcr() when SPCR support is
+ >     disabled
+ >   ACPI: Suppress misleading SPCR console message when SPCR table is
+ >     absent
+ > 
+ >  arch/arm64/kernel/acpi.c | 9 ++++++---
+ >  include/linux/acpi.h     | 2 +-
+ >  2 files changed, 7 insertions(+), 4 deletions(-)
+ > 
+ > -- 
+ > 2.49.0
+ > 
+ > 
 
-Thanks!
+Regards,
+Li
