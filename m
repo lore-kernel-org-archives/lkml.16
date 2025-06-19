@@ -1,66 +1,64 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E482111;
-	Thu, 19 Jun 2025 23:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A36C2F850
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375536; cv=none; b=fouqjtuq5dMB0PVaWHsWzbUMjIyX/DUsxjWJ20l+O4RbDRjdm5SX0eOa4gyve0nb5EWbtDN68mzykHMYIkvnqngBhin3vAXYUQ9vfrbBEj34okY4L8ScZWolrUqHSF+ZWyIqSdr6kN17pD6yr0L7n7yE5ZRZUKX5B0JmIXLPWAY=
+	t=1750376250; cv=none; b=KqC0KjHu1t79szRIUg7ai8NhU20uq98hkVBmDWwdGyKN3yCFvmaIHk+e0wSVIoIwrZrhGh446E1souBhGunI2jCoEulQaHPxGo+cm/3kinBiXAbnIQudJVY5JsibSMGmeALwgMSK5tF2o+GrBB1tr0vGx/hQfOkTgRr7qa4/itc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375536; c=relaxed/simple;
-	bh=NAKGMS6m18zWCX+prfX4PKPrmhVMR2C/9JIj6rSRBFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJOaxm5V6oVLFvzTyDKvOvqdRKHZh1DipxJmyiQYVf2WiqJCuZVsRtHAVwmfGDpj3U+LnYgxxa7p/lekLV/uS7C8Y3S7wr87eccD2WuzBVNX5ezIveLg7gO5+IHRdIROijTPr/nirmB6E8ObY1KeIKEqA7E0ZaObqFuATMxKn1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=I1AtB1Zn; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1750376250; c=relaxed/simple;
+	bh=2B3FnV7iqmSX8w+I+jGLfnh85EqqFWd7fW8sPDuwA30=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=ELH90asqP+yod0k7p3FV6LPPhm3FRir7sNiDhNx+VtBNn1HHM0noKP8SdbiAIK3Ku2Ba8uXwgMgCrS2ENiMU8ZkmQWxlW98aH8XLYAdNdeJy2iC4vb+z2HvfUdYV0um8QPTZrVUsBKvmRjGP5qkKQYk49Wv47l/GTU+KSGCq/N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3jjX7J9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="I1AtB1Zn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=dhbOUaVoCD41Ka92nDatdt94zwzchaNpzX61zhjuKX4=; b=I1AtB1ZnhrSGdI7wXfyMStiVo1
-	HEy4fnyOTPpN9EqRBG+APasSXOgoJcTS3fyrmt4jTkfvLZnjVi3Nh3DYGJ1ylBOBwVpAThvyRgN8C
-	F+I9l93zDCqOqqCey/STpmUlDbdMldh9FX+v9esYl4p6EY+Z7b89nq08cCwdaL/d7m33kVy7UilpC
-	HoSyoLI8cEHpOu3tJ49x6p+W45C4/c+mloqJUvXBHcSI+8rP7+oTUb8LJlg5spR8thtED+eTb6ai8
-	l9qfLfXqNz8VUAyjsvk2KsOJB/Mqaji4l+t0x1JSZNKKBCzlZQsvhOxCsR4LE6iEPaEEopC31Kh2C
-	q25CDkEg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uSONt-000R52-2o;
-	Fri, 20 Jun 2025 07:25:18 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Jun 2025 07:25:17 +0800
-Date: Fri, 20 Jun 2025 07:25:17 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
-	linux-raid@vger.kernel.org
-Subject: Re: [v2 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
-Message-ID: <aFScXXQ6CiroBnBQ@gondor.apana.org.au>
-References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
- <aFPbSvxCaxhFHc5s@gondor.apana.org.au>
- <20250619161536.23338f800e313f9d84b1560c@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3jjX7J9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE21AC4CEEA;
+	Thu, 19 Jun 2025 23:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750376250;
+	bh=2B3FnV7iqmSX8w+I+jGLfnh85EqqFWd7fW8sPDuwA30=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D3jjX7J9TG8obNmKDN+BpaWekYUjzTHajdJHTpnE+bED5sNXztqGwnQ+3Ub1ESSOe
+	 2VoPmvM8txTTgTEDpwXnGa5O4oXXFTNq0B5mtlSme4FXeTSgkmBvaiMieIIDJGkVua
+	 c+gTRL0kcf8Y+PPSF0T61OdWtFtGShZnowPtIkJ4v76gopcJm8VUtoMG/oihRVNXNB
+	 xqPIrf95qP8AL/wQplZUs9MAeUBb+ujEsBTJqgAxPCwexygrZuAovtMGyIHB9xClEF
+	 QhjehUn6U7r6vKgLyPqqPG6MYMubOfPRysgGtH+SWGllEpTYoWw5b+lGgTTT53zp6r
+	 0tOlNXXEdB4aw==
+Message-ID: <dad88a06b17b2b7e6c0146ab9292cb18.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator fixes for v6.16-rc2
+Date: Fri, 20 Jun 2025 00:37:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619161536.23338f800e313f9d84b1560c@linux-foundation.org>
 
-On Thu, Jun 19, 2025 at 04:15:36PM -0700, Andrew Morton wrote:
->
-> Dunno.  I added it to mm.git and I shall drop it again if/when this
-> patch lands in linux-next via the raid tree (please).
+The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
 
-Thanks Andrew!
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc2
+
+for you to fetch changes up to 8acfb165a492251a08a22a4fa6497a131e8c2609:
+
+  regulator: fan53555: add enable_time support and soft-start times (2025-06-16 13:26:23 +0100)
+
+----------------------------------------------------------------
+regulator: Fix for v6.16
+
+One patch here from Heiko which fixes stability issues on some Rockchip
+platforms by implementing soft start support and providing startup time
+information for their regulators.
+
+----------------------------------------------------------------
+Heiko Stuebner (1):
+      regulator: fan53555: add enable_time support and soft-start times
+
+ drivers/regulator/fan53555.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
