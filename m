@@ -1,140 +1,90 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86572222C7;
-	Thu, 19 Jun 2025 11:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6145E236A73;
+	Thu, 19 Jun 2025 11:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332816; cv=none; b=qAtTLXmAyqQ825nZeUagUeFPmZ/LtQjEFa4WwN3OR5DTwpy+WJ/JyjBKZXhfCBaYECcQJ60w39htcwLh0t/HCWrrv8U4aOeMUlTMp1AEvHx1jQngouRFHyfp0134KkR5C6ksyJoL6AS36u6lYTbyWbn/4ukJ00nMUafHe3uyLx8=
+	t=1750332842; cv=none; b=RtCqEiz/6nidUQ1MuIVTDBunadRWqPPv3zwCs1BYEgJihr5Hus6TWJvv2C6T6RediXZbi4R4zQTVWI0peyFGciqMVbYYrIbGKGLFyzMPFfjdMctuB7x7AJu0yIgvTfs2yvG1YW0ZZfL8uShgZAGkqj2sJncEpzj5Gg/mqQPPuVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332816; c=relaxed/simple;
-	bh=9V3A9jdafqL94aEYcoQ3q0iNtKNV3K4WcsQBgP2Zm/8=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oJ7YvlYoWrAK6Lrzc6WwKJXLkYboa5w34DByFndTM+BmUOrFRGlKJb52Rw641K2kiidnZU2nVEv3N+206PgmY3d7Ttd12SndCGrve4kL7/pm+ZlBToJa66pfxtmW/79VG5PpXn3Bvnx4EnKxb0shUkCf2PT6legBHvNabO1cUCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yqi33H6k; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750332842; c=relaxed/simple;
+	bh=VwmQnh86mmecCweO+pnsgNN2cDKLYEmmigNkJsNCxCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DlmZGgRmrJUEsHlaCyz6xvU+x2V5AZkHsEeLK0YU/iWDFV3vVaHY0b3+4ZjgAIb+3feS/nqVdsJCiqMHUYRx7yL0aA/+ImpywZ+UmH6d7nUvsJ6RYgkHgBLjkuwSaucyusZYe7ljb7D2x5EjCGeq/SqCV5FLYDfxU08k6KS+nns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WRFVo6do; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yqi33H6k"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-236377f00easo9646455ad.1;
-        Thu, 19 Jun 2025 04:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750332814; x=1750937614; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ojRZDlbrrzV6CB3HIog+4FXkQsvvK9WMXjw+UQ+kjSs=;
-        b=Yqi33H6kVCM+PonHtImcVeubo6lV+qlfC/xir4MWFMcLN7orxCze5q1iJZfOpB7UJt
-         pSIbOqMtMx51LGzgu0lkicyfnACUMLk0pe7hgRS0yiF0KY592Cgr7u5F7o1TvH1Bmwum
-         eZ6mes7e2w79D8aGjBzAxqH0mMnGBVlSSzywRdbRBCji2ZlgjvUcRP3KnftRD3vdbmoR
-         N376aXPJbZ3APCt7CMvHFTAeiZPdA/CydizThMhc2xlt7KszAKVMKBfCNFkKp3OmzcLn
-         VZ3Rh5RT2bxbn93jHweneyR+b//QOds0VLx9cT4lf4jyZ5JS2a4ot/2u1eBj12GhsfYX
-         yeog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750332814; x=1750937614;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ojRZDlbrrzV6CB3HIog+4FXkQsvvK9WMXjw+UQ+kjSs=;
-        b=peSNa/l1vlzaGkzfXtp33tlenlVzSnJ5LEXoxsDTc68Y4NGVaOgTDeNF08dAALrDtM
-         0qyEPZ9RyT6NQ4FFay6qpC1e5Bwi62lTw+H6QVuVpR8HiiEE1xR+kGT8qp4PxfrUIWOR
-         yz4lCjqLaB1Ell2bG8xdSLP4g1PaxuZQOxGdpLQ8ksd3x0cGh0sg+oZk6aMeFzNWBF9c
-         JOeALNDj0f+WeCMWefQ+7rYuOPwbzGbTOUt+y8wEG/qg7raY0/WXLJSReMLdYmTfOSXZ
-         O0veO0OXsau7h7nn6xVsIwtozMG+ciRMuLjMe8v6s/0JkNdHOd4D8p3ZtabanGeD5i0o
-         toBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvihEUl+KSZmNsu9nyn8smg7xjUG/YjjoVX49QDPM1IdqQkBqMTMa2lOgnODNfQIMVbVZXOZR/qKMdDZ9x+AE=@vger.kernel.org, AJvYcCVqvJVd8u1R35qXmg8jzj5rjtN34KpL9a0c65d0RWXeTfb25Uxb4R0UjmEA9EdgTTmjAYLtG6aF2z6sbZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlAdnSDO9JaxCADS5fwIRWgvy79SfTnx6pTEBCBOf6SwGzTGtM
-	CFymUlsZTu9zigPukLTVz258XsWqXmZT5nzk2BuWpO7PEmrXI8rN42Mc
-X-Gm-Gg: ASbGncvrAJ/bJT47WTzWhEi0j5xEWQtKvwc5UEHUwxmOcU35xj7YQakzmcQPIBmPT7v
-	XqnsQFjk+DrZ+pgwvFkof+TiaTJAztD3AxLhyxQnl1hY/T9XRMkBTM59NUIACQliV4C0p5Gu3tI
-	gcEjBaVoRPuhcDn3S6+9IFdm/cMyCiZo+sVVNPFBbrrIzr98P+Xf7ILZvbypxH1wx5rBIdnisG6
-	59kNyYnYKY0qxmsLOjIauShV7fGUlkIkcuNRtouUrF2BL/ZJVI2GVlFmqQSt0GPukEozsIe1SdH
-	ro0jcg0KEfPBDah6GTK/gAPPJXWADwueHdI/r7LKqgd84YYqu1xRgrnqOhuNqYfP8z0pLC1BqJd
-	hD+OZ6q/HJ2g+7exJXEy4u1cwBDPX8nPTHG6nT0ci
-X-Google-Smtp-Source: AGHT+IF2A2jRX5KagilzI6mJCQv+F8H7qR+VxAw13++/pOfRkcUUD5DYiDw8lryf+lRpOd5+NWIM7A==
-X-Received: by 2002:a17:902:fc87:b0:234:d679:72e9 with SMTP id d9443c01a7336-2366aff8c49mr372543625ad.12.1750332814240;
-        Thu, 19 Jun 2025 04:33:34 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca368sm117349015ad.201.2025.06.19.04.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 04:33:33 -0700 (PDT)
-Date: Thu, 19 Jun 2025 20:33:19 +0900 (JST)
-Message-Id: <20250619.203319.1745503493999032815.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, boqun.feng@gmail.com, alex.gaynor@gmail.com,
- ojeda@kernel.org, aliceryhl@google.com, anna-maria@linutronix.de,
- bjorn3_gh@protonmail.com, dakr@kernel.org, frederic@kernel.org,
- gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
- lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
- sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <87cyb084df.fsf@kernel.org>
-References: <lliFJqf-6WmrKCArjCpOguz4jsHNtiF9GU0X4Ip5bE8NseTdlyKNH_7Bp_CyxNBD5ZR-Jbz0teNRS4UgV_7Z3g==@protonmail.internalid>
-	<20250619.092816.1768105017126251956.fujita.tomonori@gmail.com>
-	<87cyb084df.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WRFVo6do"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750332836;
+	bh=H2AI9AZoWa/hRzsDWpMBrbrQp8NJUXeICYcsf6MSaNo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=WRFVo6doziuAy1TPdxDLZhcGVibQB6WUh4ahoYFErCT8PvP4gB3Wy5s/5LDz91MLf
+	 0AZ078R23p+8Ek9tfbjrbQtmn/yJQSyJ7/3JGSUHb+yp2d/HYQ09xiPGUTvR1aSdny
+	 koskeSLzfCsX8+dWp9N7/Scj+elnvFDD4lYYpmHu1sV3lr5ucgYgfnbVHYb6F8Br7h
+	 6aOaM5a51nNXKkpEFx6mnuQ4zlDH10XEtfqXq/1Kn7WjRyXvj2AG3LEu5LuTXgXjls
+	 GjqrmanwVJH1CTJyVprYNee7ft0HRs53Vxt+Xc/8JXy7/bgTOG1eRBwKPJeAexUurJ
+	 PLgrNkRM0yeLw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bNJQr1pp2z4x7s;
+	Thu, 19 Jun 2025 21:33:56 +1000 (AEST)
+Date: Thu, 19 Jun 2025 21:33:55 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the imx-mxs tree
+Message-ID: <20250619213355.70bc0dd0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/vsJMqrd7+7F5/r3kHT5j9Au";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, 19 Jun 2025 11:31:08 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
+--Sig_/vsJMqrd7+7F5/r3kHT5j9Au
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-> 
->> On Wed, 18 Jun 2025 21:13:07 +0200
->> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->>> "Boqun Feng" <boqun.feng@gmail.com> writes:
->>>
->>>> On Tue, Jun 17, 2025 at 05:10:42PM -0700, Boqun Feng wrote:
->>>>> On Wed, Jun 18, 2025 at 08:20:53AM +0900, FUJITA Tomonori wrote:
->>>>> > Prevent downstream crates or drivers from implementing `ClockSource`
->>>>> > for arbitrary types, which could otherwise leads to unsupported
->>>>> > behavior.
->>>>> >
->>>>>
->>>>> Hmm.. I don't think other impl of `ClockSource` is a problem, IIUC, as
->>>>> long as the ktime_get() can return a value in [0, i64::MAX). Also this
->>>>> means ClockSource should be an `unsafe` trait, because the correct
->>>>> implementaion relies on ktime_get() returns the correct value. This is
->>>>> needed even if you sealed ClockSource trait.
->>>>>
->>>>> Could you drop this and fix that the ClockSource trait instead? Thanks!
->>>>>
->>>>
->>>> For example:
->>>>
->>>>     /// Trait for clock sources.
->>>>     ///
->>>>     /// ...
->>>>     /// # Safety
->>>>     ///
->>>>     /// Implementers must ensure `ktime_get()` return a value in [0,
->>>>     //  KTIME_MAX (i.e. i64::MAX)).
->>>>     pub unsafe trait ClockSource {
->>>>         ...
->>>>     }
->>>
->>> Nice catch, it definitely needs to be unsafe. We should also require
->>> correlation between ID and the value fetched by `ktime_get`.
->>
->> What's ID?
-> 
-> 
->   pub trait ClockSource {
->       /// The kernel clock ID associated with this clock source.
->       ///
->       /// This constant corresponds to the C side `clockid_t` value.
->       const ID: bindings::clockid_t;
-> 
-> The constant used to identify the clock source when calling into C APIs.
+Hi all,
 
-Ah, I see. Sorry to ask another question, but can we require
-correlation between ID and the value fetched by `ktime_get`? The value
-fetched by ktime_get is opaque, isn't it?
+Commits
+
+  bfb861766f3f ("arm64: dts: freescale: Add the BOE av123z7m-n17 variant of=
+ the Moduline Display")
+  8c6d53ee0a19 ("arm64: dts: freescale: Add the BOE av101hdt-a10 variant of=
+ the Moduline Display")
+  844cddc2ded0 ("arm64: dts: freescale: Add the GOcontroll Moduline Display=
+ baseboard")
+  67fbe9fc5d5b ("arm64: dts: freescale: add Ka-Ro Electronics tx8p-ml81 COM=
+")
+  5f465a764523 ("arm64: dts: imx8mp: Add pinctrl config definitions")
+
+are missing a Signed-off-by from their committers.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vsJMqrd7+7F5/r3kHT5j9Au
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhT9aMACgkQAVBC80lX
+0Gxd9Qf9H65vwQPtnFeni37DOeukJURr69uiHcVzGWJXigoJpHTsWf63DUtgw8AB
+PHTDejzjOh+jjlS7UaAAUUiBNOQY/dY45WcUP3Gg4qFgxAiejl1/V5v2Xj0p+Mie
+w1HA0f7wWthlRxDXhp989rkyH0bnVF8mIXC9WW0+fLsJE/dKQ2DuXmTtVjR51zUM
+BTVHCCMEKcVs/0akblvRq7IqNEVhfHa6mMwlEtlWUVY7tLIE3OtGiWS9Db8kEGXQ
+97JzTYyIKDeob7bVIYEbGIoz6wTIA7HVBg4FRR1EFvI+VSuSsczcrin6OHNLevB3
+j4UnWvDooa3+lBXdI5XVBuJMadJhRA==
+=4g2E
+-----END PGP SIGNATURE-----
+
+--Sig_/vsJMqrd7+7F5/r3kHT5j9Au--
