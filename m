@@ -1,142 +1,148 @@
-Received: from pmxout1.rz.tu-bs.de (pmxout1.rz.tu-bs.de [134.169.4.151])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2E81B983F;
-	Thu, 19 Jun 2025 14:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253D21AF0B5;
+	Thu, 19 Jun 2025 14:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750343292; cv=none; b=Pjo+WnznqPjuqUWlyhEsS0fFgucTS113qfmvObmvpik3+9krvX7ULMKMItH79/reZCCCxQ2loR90+6QF715QIsWETLzAIhXF3EEeC2WAB5LUVRLstCcglsFaZ/1jaGR0TJLjLi6UhS5lP4j6douaG75PzyQPxWilBC4acHmEizE=
+	t=1750343340; cv=none; b=hwtV9oISS7KweQEVXpqtHRKKcBPi2lCHn6JRhAsnKrD9KE1cnmOjiIqz7683IMcR2Z+QU+BsoCMftK24A1riR6kN86fNGz63rKfqlDTS1BYU//XusUcK7dpz+AQdLcQAQxHc8pPk25zjHGmaZBIu7hbhXRzeIiy42Yzv11YT7xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750343292; c=relaxed/simple;
-	bh=LeC7NFKNGz7OIMUFGvR48t8m5EhftSVQqoGOmYxkBuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b6Uy4qP8zBy7zirI8XnFquDiyZ0ZFJpawyIe7RBmXWeSR+/h1LHd2CKcjnjR6wz+YyB1n0KPU8Cp9cpDHIql7QVQzLtHPL30zNHpMJ/z3yXAhuYImgoHuiZznDQDMdjAOisjy3h26skiwtI4dk/lmbrU3sdu1PoNfeWV68Qd5oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=L7RWwqut; arc=none smtp.client-ip=134.169.4.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
+	s=arc-20240116; t=1750343340; c=relaxed/simple;
+	bh=HJmfgzgj0ndJEaGrG8+noTDVPzF8ReijeU84n6dffYk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOE7eO73DUA0jHhkzgcHTpQvpCpcV6srkw/hM4wqp2HgdssmU0ulihO+zDe7T43eY5mdHlOFvaIPQfDw0ipL1dKJm442UBGe4JJZWb8wd4hM8YTXLS5iXzey3zkycNbSwlJPmTAVh6fB6VQKCuq3Ol2hrPN+M4fglTJAWehEBvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=XWPeZLyf; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="L7RWwqut"
-Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
-	by pmxout1.rz.tu-bs.de (Postfix) with ESMTPS id EAD024E0705;
-	Thu, 19 Jun 2025 16:28:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
-	s=exchange_neu; t=1750343282;
-	bh=LeC7NFKNGz7OIMUFGvR48t8m5EhftSVQqoGOmYxkBuw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To:From;
-	b=L7RWwqutttlhkrKfQiRYWMj+PjEOaVUm2agttnHsi0Z8EtXeIV3pew7OYGfISXDcn
-	 kct21MpH0WeWxtmjscxu4oX7W0VKxzErv9zL5T7WuJV5mPCqeS901kmvOLiW7exRz8
-	 gDrZSai42iN3KSDjy+gm8K7tkMDRfW3zsHJhBEChS6qohhHibmt93ikbMY7fX5b8Vw
-	 Hvwfb/Mk9YBYTJAVhSMkjhc6P1ysmGflZK7YioZYE6jkpeZI7R16pUm7drkZL91AGq
-	 muoTZsY7gYr+elmJnLXymSKt/QPiJfYGl4mGVXwaRW9d65Q1e/lkfC3n5GM4IlJ5dT
-	 wPFU6lEJAzJXA==
-Received: from [192.168.178.23] (134.169.9.110) by Hermes02.ad.tu-bs.de
- (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 19 Jun
- 2025 16:28:02 +0200
-Message-ID: <595209ed-2074-46da-8f57-be276c2e383b@tu-bs.de>
-Date: Thu, 19 Jun 2025 16:27:56 +0200
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="XWPeZLyf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1750343336; bh=S14nIAZKvZkp/VwnTFIYJCuXUidvu32HhMy8SRNMghs=;
+	h=From:To:Cc:Subject:Date:From:To:CC:Subject;
+	b=XWPeZLyf+OeOlBWfNzuhC15Vnxb95TmG2vo5NyCaRFC2kbC1jiYUkY0smdSnfkuFs
+	 aiBCQ2SuVwtJBj19lPaJhJlWP9IZRsQu7PL6+4CrVDG3b1lU88UjEmkUXeoAybvumU
+	 4rcOi5uhgJ01j0bek/6LpWvZgsbH4uUXgDE2WTdVgtltXmpA1UxSE9/pnJBY31N+Wd
+	 Y/5C/qRyV2BxtU/PDuvH1p7E6ub9+EdEJjOJ+Apx4G7ohUV2DsoOu770hUJRx3iaVN
+	 ZQROW8T15UrrOX4RCm662XlOqdWD1mZn8Vz9ff68GQfJbAQODbkzzWkQ+SPmfeVSQV
+	 gTfJ5FIZViFCQ==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bNNJl6ZMyz8sqg;
+	Thu, 19 Jun 2025 16:28:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3610:e200:f74c:d89c:f3eb:14e2
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3610:e200:f74c:d89c:f3eb:14e2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX19YMo4uslHrzyvMvsz98NrnEv3rvWYw/jc=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bNNJh4dDMz8spN;
+	Thu, 19 Jun 2025 16:28:52 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	bpf@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>
+Subject: [PATCH bpf-next] powerpc/bpf: Fix warning for unused ori31_emitted
+Date: Thu, 19 Jun 2025 16:26:47 +0200
+Message-ID: <20250619142647.2157017-1-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-To: Andrea Parri <parri.andrea@gmail.com>, Alan Stern
-	<stern@rowland.harvard.edu>
-CC: Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, David
- Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc
- Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, Joel
- Fernandes <joelagnelf@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <lkmm@lists.linux.dev>,
-	<hernan.poncedeleon@huaweicloud.com>, <jonas.oberhauser@huaweicloud.com>,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
- <aEwHufdehlQnBX7g@andrea> <9264df13-36db-4b25-b2c4-7a9701df2f4d@tu-bs.de>
- <aE-3_mJPjea62anv@andrea>
- <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
- <aFF3NSJD6PBMAYGY@andrea>
-Content-Language: en-US
-From: Thomas Haas <t.haas@tu-bs.de>
-In-Reply-To: <aFF3NSJD6PBMAYGY@andrea>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: Hermes03.ad.tu-bs.de (134.169.4.131) To
- Hermes02.ad.tu-bs.de (134.169.4.130)
 
+Without this, the compiler (clang21) might emit a warning under W=1
+because the variable ori31_emitted is set but never used if
+CONFIG_PPC_BOOK3S_64=n.
 
+Without this patch:
 
-On 17.06.25 16:09, Andrea Parri wrote:
->> My question is: Do we have enough general knowledge at this point about
->> how the various types of hardware handle mixed-size accesses to come up
->> with a memory model everyone can agree one?
-> 
-> You know, I can imagine a conversation along the following line if I
-> were to turn this question to certain "hardware people":
-> 
->    [Me/LKMM] People, how do you order such and those MSAs?
->     [RTL/DV] What are Linux's uses and requirements?
-> 
-> that is to say that the work mentioned is probably more "interactive"
-> and more dynamic than how your question may suggest.  ;)
-> 
-> Said this, I do like to think that we (LKMM supporters and followers)
-> have enough knowledge to approach that effort.  It would require some
-> changes to herd7 (and klitmus7), starting from teaching the tools the
-> new MSAs syntax and how to generate rf, co and other basic relations
-> (while monitoring potential non-MSA regressions).  Non-trivial maybe,
-> but seems doable.  Suffice it to say that herd7 can't currently parse
-> the following C test, but it can run its "lowerings"/assembly against
-> a bunch of hardware models and implementations, including arm64, x86,
-> powerpc and riscv!  Any volunteers with ocaml expertise interested in
-> contributing to the LKMM?  ;)
-> 
-> C C-thomas-haas
-> 
-> {
-> u32 x;
-> u16 *x_lh = x; // herd7 dialect for "... = &x;"
-> }
-> 
-> P0(u32 *x)
-> {
-> 	WRITE_ONCE(*x, 0x10001);
-> }
-> 
-> P1(u16 **x_lh, u32 *x)
-> {
-> 	u16 r0;
-> 	u32 r1;
-> 
-> 	r0 = xchg_relaxed(*x_lh, 0x2);
-> 	r1 = smp_load_acquire(x);
-> }
-> 
-> exists (1:r0=0x1 /\ 1:r1=0x2)
+$ make -j $(nproc) W=1 ARCH=powerpc SHELL=/bin/bash arch/powerpc/net
+  [...]
+  CC      arch/powerpc/net/bpf_jit_comp.o
+  CC      arch/powerpc/net/bpf_jit_comp64.o
+../arch/powerpc/net/bpf_jit_comp64.c: In function 'bpf_jit_build_body':
+../arch/powerpc/net/bpf_jit_comp64.c:417:28: warning: variable 'ori31_emitted' set but not used [-Wunused-but-set-variable]
+  417 |         bool sync_emitted, ori31_emitted;
+      |                            ^~~~~~~~~~~~~
+  AR      arch/powerpc/net/built-in.a
 
-I support this endeavor, but from the Dartagnan side :).
-We already support MSA in real C/Linux code and so extending our 
-supported Litmus fragment to MSA does not sound too hard to me.
-We are just missing a LKMM cat model that supports MSA.
+With this patch:
 
-We cannot automatically generate and run tests on real hardware though, 
-so the support in herd7 and co. is definitely needed.
+  [...]
+  CC      arch/powerpc/net/bpf_jit_comp.o
+  CC      arch/powerpc/net/bpf_jit_comp64.o
+  AR      arch/powerpc/net/built-in.a
 
+Fixes: dff883d9e93a ("bpf, arm64, powerpc: Change nospec to include v1 barrier")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506180402.uUXwVoSH-lkp@intel.com/
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+---
+ arch/powerpc/net/bpf_jit_comp64.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
+diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+index 3665ff8bb4bc..a25a6ffe7d7c 100644
+--- a/arch/powerpc/net/bpf_jit_comp64.c
++++ b/arch/powerpc/net/bpf_jit_comp64.c
+@@ -820,13 +820,12 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 		case BPF_ST | BPF_NOSPEC:
+ 			sync_emitted = false;
+ 			ori31_emitted = false;
+-#ifdef CONFIG_PPC_E500
+-			if (!bpf_jit_bypass_spec_v1()) {
++			if (IS_ENABLED(CONFIG_PPC_E500) &&
++			    !bpf_jit_bypass_spec_v1()) {
+ 				EMIT(PPC_RAW_ISYNC());
+ 				EMIT(PPC_RAW_SYNC());
+ 				sync_emitted = true;
+ 			}
+-#endif
+ 			if (!bpf_jit_bypass_spec_v4()) {
+ 				switch (stf_barrier) {
+ 				case STF_BARRIER_EIEIO:
+@@ -849,10 +848,10 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 					break;
+ 				}
+ 			}
+-#ifdef CONFIG_PPC_BOOK3S_64
+-			if (!bpf_jit_bypass_spec_v1() && !ori31_emitted)
++			if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) &&
++			    !bpf_jit_bypass_spec_v1() &&
++			    !ori31_emitted)
+ 				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
+-#endif
+ 			break;
+ 
+ 		/*
+
+base-commit: cd7312a78f36e981939abe1cd1f21d355e083dfe
 -- 
-=====================================
-
-Thomas Haas
-
-Technische Universität Braunschweig
-Institut für Theoretische Informatik
-Mühlenpfordtstr. 23, Raum IZ 343
-38106 Braunschweig | Germany
-
-t.haas@tu-braunschweig.de
-https://www.tu-braunschweig.de/tcs/team/thomas-haas
+2.49.0
 
