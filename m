@@ -1,97 +1,121 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9668BFF;
-	Thu, 19 Jun 2025 12:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0784323D2A5
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336187; cv=none; b=No3gtokMDd6Gf+sn+y0OTmoqPVVZb2yHYznCL7ZG8HQcgqvsg8meal0NnS5A5QH2qgtaeX5Gog/ZQUpTS4NNQIfONK2U0MvzaAcjQQh9+wcb5PHsX13jsSTg1IaxTtDS+585rjkj8Nhk0WEd+clgnjnLyxAw5wp5d6aYjEekfjU=
+	t=1750336190; cv=none; b=US+4Kv3rik307bdHvT4gCzYhlWOME8I7vvvMgO1IkacESGAFcOfYIbOcdpjMXdEWPP5Tw6UcCfupbTGevfYyXD9yRoY0JJtneHj2Nhs9obmO3BaZxGWwUUgtPo0X0Onu7az6ovM05l5XAZbzbg4G5ioJ5Mkkz83QzNbCmrs4cok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336187; c=relaxed/simple;
-	bh=Ly4ZqcR7RraG7tvEMyjh5wL8mbutUH1OZrzBye6fuW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DuU06znSm1a7A9FhOlTYh9FFDwl4Jmu+xytukLXupK93whGSoOHI+6KKMegCK9SOQM4BUWIcw0JCnAISOeCKn2X0WjB+xsSMVuIJd0dxM7zV6asoOdNjFi8fno2eJ758uiFRibfjq5IgYt8zUWm8WNLBQC4D7DaJ/50F5i8V0AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4c6cf5e4cd5so581266137.2;
-        Thu, 19 Jun 2025 05:29:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750336184; x=1750940984;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GOxu/NQ2NbooSdZUNrR1rVTWyLIJTvg63yGMiJNMT/k=;
-        b=SPr963jIB4ynEK7zC1iVS+pVe8uXFEySXC1MbCCdAnhv95KOBnnZDt6r+tHcON8Wor
-         4Db5a1GX0qZt1Mi7mfRIj59XXPs/aZ/i7hrmTCAHTSRRXGcZvyK2PiFLW8iCRZQurSLE
-         yuvh2cinnoty/8zyjT5xTSLxP99miT4cUXTN6N5ZnRsra3xP6DqBt0QQe+yZcPZHCeCi
-         82ivWJYXNBSNm2VIcJ5yFtfgVGhnwuF/cZkEn1GHBDiKsq25isTI9DfCo5z8WRgGe+iY
-         Gc8rdoLGb/AEVziHQFZN/r2sx5bDuiWsqa7FSIn3xL/k+BjZGJbhtz0dRZD3mcQzowrB
-         WF/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUsRq1EdWDviGKar3u3sHTuppAVacdwS3hOa352IU+OuPobJ5Gmxx55X4F4/RFtdfBXJKR+jJc6jdc3L5zu@vger.kernel.org, AJvYcCWoLM9w+ylCHPJ8E8qYmtbRkcBLst9LAPqsgw32FkQ3q8+g5qEgx4QKVt3IM0I3K8n3SXC9W7bmEfew@vger.kernel.org, AJvYcCXQYIF4wgawN8G2ioWr+5Tz4OLdoGBhEWIxU+YNbgGNP2hGCrWcPMde1+70pZoVel/x3PkGw3Qnk1bMyt4HUD9gDBM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7eIx9zjgQbtDzpwEsQvE0r3iQcrPa5Y1L+sa9xne6uxsqM8nB
-	kdWccLw4D7fTHg9j4f70F/Yfe5JbJ2X0viyxdJgGyMQkMzhpeb2BATMYsCKkm1fN
-X-Gm-Gg: ASbGncu3QitOZ3kVpidlCfrMfm3JHZSD/rY1PXtAzklAeyFu98a1r7ICn59obOvVHBs
-	ryJ1th+Iph7ZXZomWSSmlifq4CvocDI4fKilP0bzMnHkankyTVHuNR9WaxXe2cytgELQ3hcDJaN
-	U8hC9q29QVsWXKivs6DaQuRjz+LL27N6FDswI3VAdkvDb99jiETvY2X7NEJ0oWaLrgtNkfmi1yp
-	D5JHfEe3IqGlFZm60Vwfb3SkIDeoyiSaGsxAXH8emcGTPr/E2+Jm3/ZUInvomz/EOaQoNNJAapu
-	19alJfLQebqRhkvhXnOPNJWb9MsP+evz9oMTJ2LKam16oJxZEUoVyAzKRdKl/3F3gorK1dhk26X
-	XtzBx2AeQpwdLjRRuZnI4/EOH
-X-Google-Smtp-Source: AGHT+IHw0vAN7DVvaQ/5yi3qZ57KYROmjFnGFtS3HxO8cPB/Eww5w4bGS4R3ygNlhr4HYzshKBB0Gg==
-X-Received: by 2002:a05:6102:9d8:b0:4e5:9138:29ab with SMTP id ada2fe7eead31-4e7f61cec4cmr15693082137.15.1750336184136;
-        Thu, 19 Jun 2025 05:29:44 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f0f9cef4esm2354626241.5.2025.06.19.05.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 05:29:43 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e9a7bfb3c8so568561137.1;
-        Thu, 19 Jun 2025 05:29:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUPsv0fnGum5x822gGdeEYWIS7oRg10ImMg0FYbJEA7muNR8L0zWR1l/I94rTMBcT9yTvOu2Lpnhxxh@vger.kernel.org, AJvYcCUwSR33ENtqs4xJRYAxb/UX3S0woKyea69uFsAHSWM7qgSukjMSUDaKiZJSJLIbE6nm2WRLiHUsUSgRpBfp@vger.kernel.org, AJvYcCWsYso1om7M/E0B4LFEgXl/x1Esh6VEdQs1CvUW58xAR+WPaw/KU8CjbXZcWCeHdU/C7OiVzp7IIaQVw/8cqMUBEu4=@vger.kernel.org
-X-Received: by 2002:a05:6102:38d4:b0:4e7:7146:a9e with SMTP id
- ada2fe7eead31-4e7f6118447mr13184041137.6.1750336183601; Thu, 19 Jun 2025
- 05:29:43 -0700 (PDT)
+	s=arc-20240116; t=1750336190; c=relaxed/simple;
+	bh=Y5AoiQjnP+Pg5HshQ3oV3CZeG5wcMCWauCxx5g6vV38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bYecUHZV4C3isOV01Csw/l6m4/5beHJOkM05mMv3vQwcGgRAx3jRvJsnJUqOBZ1B83cfRFLcyVnjvbiSt6f2v6lL4o67eVQi4I+a/gssXGrRC+j4xRZZWKCHQ4HQYfwqUvUEEuKsOxmzxKbnYBafnX5siah9bGpm2wotZdKfaRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 423E1106F;
+	Thu, 19 Jun 2025 05:29:28 -0700 (PDT)
+Received: from [10.57.84.221] (unknown [10.57.84.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C432B3F66E;
+	Thu, 19 Jun 2025 05:29:46 -0700 (PDT)
+Message-ID: <29624f1e-de4f-492d-b54c-bb99f58b582f@arm.com>
+Date: Thu, 19 Jun 2025 13:29:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613135614.154100-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250613135614.154100-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250613135614.154100-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 19 Jun 2025 14:29:31 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXtEu6+NNZ12QgpVASNidMgxmBrc4Q_yW5qxuT=RpHf7Q@mail.gmail.com>
-X-Gm-Features: Ac12FXwjac7lvbG9dfr9r5T_EWYDrgUU3Jv3FiViSM2_pMI9aG_Eg4kUY0ep55o
-Message-ID: <CAMuHMdXtEu6+NNZ12QgpVASNidMgxmBrc4Q_yW5qxuT=RpHf7Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: r9a09g077: Sort extal_clk node
- by name
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in
+ do_sync_mmap_readahead
+Content-Language: en-GB
+To: Will Deacon <will@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, akpm@linux-foundation.org, david@redhat.com,
+ jgg@ziepe.ca, jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, peterx@redhat.com, syzkaller-bugs@googlegroups.com
+References: <6852b77e.a70a0220.79d0a.0214.GAE@google.com>
+ <hi6tsbuplmf6jcr44tqu6mdhtyebyqgsfif7okhnrzkcowpo4d@agoyrl4ozyth>
+ <a06ab040-8ed7-4afa-9bbb-dd95b18e3b04@arm.com>
+ <20250619122157.GB21372@willie-the-truck>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250619122157.GB21372@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 13 Jun 2025 at 17:41, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reorder the `extal_clk` node in the RZ/T2H SoC DTSI to maintain
-> consistent sorting by node name.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 19/06/2025 13:21, Will Deacon wrote:
+> On Thu, Jun 19, 2025 at 11:57:05AM +0100, Ryan Roberts wrote:
+>> On 19/06/2025 10:52, Jan Kara wrote:
+>>> Hi,
+>>>
+>>> On Wed 18-06-25 05:56:30, syzbot wrote:
+>>>> Hello,
+>>>>
+>>>> syzbot found the following issue on:
+>>>>
+>>>> HEAD commit:    bc6e0ba6c9ba Add linux-next specific files for 20250613
+>>>> git tree:       linux-next
+>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=108c710c580000
+>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=2f7a2e4d17ed458f
+>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=8e4be574cb8c40140a2a
+>>>> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c710c580000
+>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179025d4580000
+>>>>
+>>>> Downloadable assets:
+>>>> disk image: https://storage.googleapis.com/syzbot-assets/2430bb0465cc/disk-bc6e0ba6.raw.xz
+>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/436a39deef0a/vmlinux-bc6e0ba6.xz
+>>>> kernel image: https://storage.googleapis.com/syzbot-assets/e314ca5b1eb3/bzImage-bc6e0ba6.xz
+>>>>
+>>>> The issue was bisected to:
+>>>>
+>>>> commit 3b61a3f08949297815b2c77ae2696f54cd339419
+>>>> Author: Ryan Roberts <ryan.roberts@arm.com>
+>>>> Date:   Mon Jun 9 09:27:27 2025 +0000
+>>>>
+>>>>     mm/filemap: allow arch to request folio size for exec memory
+>>>
+>>> Indeed. The crash is in:
+>>>
+>>> 	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+>>> 	if (vm_flags & VM_EXEC) {
+>>> 		/*
+>>> 		 * Allow arch to request a preferred minimum folio order for
+>>> 		 * executable memory. This can often be beneficial to
+>>> 		 * performance if (e.g.) arm64 can contpte-map the folio.
+>>> 		 * Executable memory rarely benefits from readahead, due to its
+>>> 		 * random access nature, so set async_size to 0.
+>>> 		 *
+>>> 		 * Limit to the boundaries of the VMA to avoid reading in any
+>>> 		 * pad that might exist between sections, which would be a waste
+>>> 		 * of memory.
+>>> 		 */
+>>> 		struct vm_area_struct *vma = vmf->vma;
+>>> 		unsigned long start = vma->vm_pgoff;
+>>> 				^^^^ here
+>>> which is not surprising because we've unlocked mmap_sem (or vma lock) just
+>>> above this if and thus vma could have been released before we got here. The
+>>> easiest fix is to move maybe_unlock_mmap_for_io() below this if. There's
+>>> nothing in there that would be problematic with the locks still held.
+>>
+>> Thanks for the quick analysis, Jan! Ouch...
+>>
+>> This is still in mm-unstable I believe, so I'll send a fix-up patch to Andrew to
+>> move the unlock as you suggest.
+>>
+>> By the way, I don't think I was included on the original report; Is there a way
+>> I can sign up to be included on patched I authored in future?
+> 
+> Your address looks like it's on To:
+> 
+> https://lore.kernel.org/r/6852b77e.a70a0220.79d0a.0214.GAE@google.com
+> 
+> but maybe you redirect syzbot reports to the SP^H^HIMPORTANT folder?
 
-JFTR
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hmm... Another email fail from me I guess. I don't have any rule that I'm aware
+of and I don't see it in any of the folders that I do redirect to, nor in the
+trash. Anyway, it's almost certainly my error. Thanks for pointing it out.
 
-Gr{oetje,eeting}s,
+> 
+> Will
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
