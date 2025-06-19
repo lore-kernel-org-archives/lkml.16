@@ -1,85 +1,64 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3DA28A72D;
-	Thu, 19 Jun 2025 16:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351B63085B2;
+	Thu, 19 Jun 2025 16:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350387; cv=none; b=kA50Ot3xOmMa1QAvd6dHj1SsL12x49PUatzWAWUMA6g1+SoYh6V1RSA1BZW0y+ATdnfwxKUrfrGxRmdTByNLiiEOG4Iis7BEmbGv558+s5gPFHXqTNvduySHIgTTOIoSP4ge/p+fI0j5MMg/2KRlOWPtSUI8ZF3N5TkrFXFN9Dg=
+	t=1750350443; cv=none; b=RIhp0MR3p2/qTLViOCRxWwAUYUL6+EuY3cMJ2yAW3WJnKk+U2xKhI36Jv8Wob9uTBGULY+NemvV/KDiDS1UBVA9zZrkIkoCma06t+SJI2nkjxs42ejDo6NspEJq4hkPAM6sFZk5UorOq3WF8S38szPKKO/hQD3YlTzhORJixoj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350387; c=relaxed/simple;
-	bh=YW1WRtOgjjKeZYoFpv7wK+mazkH76ZKwJg9fzRFuC5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=doftRYf/2mjK2FmFWFvbMJotwI8wltbfxPEAEpmi+nHJUsBoWuvEiqIrnni9G39VhuLbLpEoviUQkRS25EdNZJ8lHDY3FRXKb8kK0igNogr/6HxiQOHEu/h5b2rGGB1IXNdirdiE7NyGbd2nRoh5Kss5foK1pO5ticcwTV6f3vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a6M1Y00M; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750350443; c=relaxed/simple;
+	bh=ut7sBnFRrF7Mqh47DfQbuG68oA6w2Zz7sw0xx8b8S6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VnWSQqLk18jJ7qSCMaaiB09q4D7ARe7X9lmQRNb0U6cLl5yuDoaX44NBwLeWllXDk26kdVq+UU1S6H1SBxc1zcBDwn351GnUZh3mWIJjSsMCAkxxXN12M3JdvzEVPd9FmqW5J/54pQt8PsX31rrh6bXdap15UDpzmRxol7dTBYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJEkvDDr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a6M1Y00M"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8D5211FD32;
-	Thu, 19 Jun 2025 16:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750350376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AyfZRBcndJNymTCun1FzXaI9H1cKammKl6UraztpG8E=;
-	b=a6M1Y00M/vorSU8AoR+SinbMnXrby7rSrDc1gIRp/XvYOQU8V+Q5YJqSnUNLVhQ64HrGn0
-	Xew0RWTOdCV3tPIUlS09V908Br3jehGuY5l9IoGHH9Se63DlhOQ/23PlHv9WXQ9VDTAhFL
-	vyBhrHzHMYNiyL8gTScMtMngawumi8s5T9PmrJnLNDeREvKzXw8fVMhXGxSgDcZSk9FKXl
-	LVQG0yMucqtTw9Fp9DqrhsOW9s9QqH4CxQvQiMcM8zoU6pMu2VeBKapL/y3cZPSs+n3q9s
-	t5W/WO+BDARF5gkvtP0iDz41laTe0VTPK7Yv73MovfJduR16C6mJbNemiFWJ/Q==
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kory Maincent <kory.maincent@bootlin.com>,
-	kernel test robot <lkp@intel.com>,
-	thomas.petazzoni@bootlin.com,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next] ethtool: pse-pd: Add missing linux/export.h include
-Date: Thu, 19 Jun 2025 18:25:47 +0200
-Message-ID: <20250619162547.1989468-1-kory.maincent@bootlin.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJEkvDDr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761E3C4CEEA;
+	Thu, 19 Jun 2025 16:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750350442;
+	bh=ut7sBnFRrF7Mqh47DfQbuG68oA6w2Zz7sw0xx8b8S6g=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FJEkvDDruVAykG1bun51wz0patqolTYo6wGXEy+dzHZmtcmsQ03UAy0Hm012GEORL
+	 MSkpczCrEztNz3k8osJYKaEU7TilWHQtsqxDtRfQwmGJEg7g2CTARWQXiozKWmcdRv
+	 zEjeKFP9QQSXBIHpssKwJVBMMQeVZYKjfz6LAMv1P6YKm4quJWyRkV2RehkBNPxoyW
+	 KNd0bgGglA7uKKPW3KU6iO6kypXn4fCiJpYsCJovkmacX6fAol55yKd4bflvCVh5Fy
+	 eFF1WCzTwIoPaPVhHPtQz5MtMu/61p5uL/OXiAucZlelZw5ThyCNIim78dB3k2FiiK
+	 Ufs/LrsP7yquw==
+Message-ID: <c5e3b6fc-e9dc-4551-b632-25dd2db9ec08@kernel.org>
+Date: Thu, 19 Jun 2025 18:27:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH 1/3] module: move 'struct module_use' to internal.h
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Brendan Higgins <brendan.higgins@linux.dev>,
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+References: <20250612-kunit-ifdef-modules-v1-0-fdccd42dcff8@linutronix.de>
+ <20250612-kunit-ifdef-modules-v1-1-fdccd42dcff8@linutronix.de>
+Content-Language: en-US
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250612-kunit-ifdef-modules-v1-1-fdccd42dcff8@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheplefhhefhgeevtedutdekudegjedvhffffefhhfdtgfefteduvdehgeetgedtvdelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddrrddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdpr
- hgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
 
-Fix missing linux/export.h header include in net/ethtool/pse-pd.c to resolve
-build warning reported by the kernel test robot.
+On 12/06/2025 16.53, Thomas WeiÃschuh wrote:
+> The struct was moved to the public header file in
+> commit c8e21ced08b3 ("module: fix kdb's illicit use of struct module_use.").
+> Back then the structure was used outside of the module core.
+> Nowadays this is not true anymore, so the structure can be made internal.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506200024.T3O0FWeR-lkp@intel.com/
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
- net/ethtool/pse-pd.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index 6c536dfe52da..24def9c9dd54 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -11,6 +11,7 @@
- #include "netlink.h"
- #include <linux/ethtool_netlink.h>
- #include <linux/ethtool.h>
-+#include <linux/export.h>
- #include <linux/phy.h>
- 
- struct pse_req_info {
--- 
-2.43.0
-
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
