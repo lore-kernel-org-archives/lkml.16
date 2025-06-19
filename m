@@ -1,168 +1,292 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EEC1FBE8B;
-	Thu, 19 Jun 2025 21:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEAF219307;
+	Thu, 19 Jun 2025 21:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750368353; cv=none; b=Jq5Ngz9VhErFGpF+naJ9aWuYaWx1EwSisWpzPu5AOEkA5keminAG1lbfsuY6gzQjZ4BmHamFACkwJ0POpcTrucVOH9gPhzUat5yF1bJEXnaBZors2esKcs089MgaMrBH28xwn3CtSH8c3TRLz9fbguDXKRejb/lRHSNQvAvGaYk=
+	t=1750368414; cv=none; b=t3D1z3eQNnGZebCIKQSYNzCt5nRLMEAJikG3gpS4ejjSqIvDJiioJGt/En7736IyMCTT3/RVAzEMKZcCxBpBWpKOqaDuAAWz1BYarIXCtebueRHrUHG5bs50BJNn/Rd/SKi+sT7gW6YTv4nvZwwtq085T5CPn424MX4Q8qOYEdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750368353; c=relaxed/simple;
-	bh=A8Dz1kV8B/vKnxifg5brF8+6N+EQZvca4FFY51ivExQ=;
+	s=arc-20240116; t=1750368414; c=relaxed/simple;
+	bh=zbKNU3MnTqIIMJM0WeV4xeoGOv33tL5vDWWxQxv6Xrw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A5YgcmzJs70OVLl7K7mUxLzArzVL1JuUgG83NkVSHGmvi4hN7phHisG2meQi56XG8SSzEnZ723rtjXXgsjv9rAW59GkSWwXY1xysek63TsOMnhv6SscOi2d7CJlmvLmgJu6xB4qFTwoh3evfN7YzMYuMPCFH5uoNV53e8VDKV5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLn4/fEN; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Covr0iMairfQqwwk6Z4uwtVlMnhfqAi3ahmpOmxIIqIgDIdzgV4EYiubB5uGH3VAUS3Y/2yqVIO2Dvb4rqUC4PR3EXYS9ixZFhBpKFoJuCVyW5WeKGMuMemPW4R/h6s3JfAaOkHMAYsuHhucIzFoeOBRuHMRMK+D5Kj6c8t3v3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SpKgtHkZ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLn4/fEN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750368352; x=1781904352;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A8Dz1kV8B/vKnxifg5brF8+6N+EQZvca4FFY51ivExQ=;
-  b=eLn4/fEN6Oldy4OWJD9FOHGAfQMZZdezJpb52BRUMWcU0SaR7loiYqvi
-   rOI8jthd6JKy23PO6k3FajjPbBgmbRIsjLv55xhSRt3ht83uA+TcuZPmp
-   2IwB85auNoaBY3w68nXUR1VcJlcQ5ArSVZSPO3yC49g9eHHIB21VcMmRx
-   8bt0kMBlbHe9g8CqgT1Dv68gEOjxBokC1Tis96Bodt+A4xPGfEKh/M3zp
-   FoAd0nWovFz7nbNbPE56BKsPkQNRcd3PiwFpjZgNmxcGXqKkZ0WVsGD6Y
-   fdpyEcLjvWuc8NAQgxV4SM+cSOvl7Ev/2zSvzt5GaacvIO5+nNDtq3brL
-   w==;
-X-CSE-ConnectionGUID: k4OcYtPoTnOMVpdu6nK1dQ==
-X-CSE-MsgGUID: V4DpGrmtR0qF/LW3yLU6tg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52706633"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="52706633"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 14:25:52 -0700
-X-CSE-ConnectionGUID: Kq4gUjf9S5GnDsjAJUnoCA==
-X-CSE-MsgGUID: Ya1tim+nS/iTRF9s2RnD6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="155298484"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 19 Jun 2025 14:25:47 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSMlU-000L7a-2Y;
-	Thu, 19 Jun 2025 21:25:44 +0000
-Date: Fri, 20 Jun 2025 05:25:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	andrew+netdev@lunn.ch, horms@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>,
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Subject: Re: [net-next, 08/10] bng_en: Add irq allocation support
-Message-ID: <202506200530.jiD9Txum-lkp@intel.com>
-References: <20250618144743.843815-9-vikas.gupta@broadcom.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SpKgtHkZ"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0FF5A2EC;
+	Thu, 19 Jun 2025 23:26:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750368394;
+	bh=zbKNU3MnTqIIMJM0WeV4xeoGOv33tL5vDWWxQxv6Xrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SpKgtHkZy3ujToJ8EsIEb0V4pdBrudwpbObTqpuiy56fbgva0Opcc6YsfJ4kBUpxg
+	 CWgd+kd/8mRbzZ/JEUAhtJZeLJ0dDqHz4I6XCS5JZZdLNM2g0c3IJeamuJVb3Y7VmX
+	 +xZUJGQmASsZULigUw8pHIetQBEFdRkK2/0Lo3zo=
+Date: Fri, 20 Jun 2025 00:26:30 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: sakari.ailus@linux.intel.com, akinobu.mita@gmail.com,
+	stanislaw.gruszka@linux.intel.com, hdegoede@redhat.com,
+	arnd@arndb.de, alain.volmat@foss.st.com, andrzej.hajda@intel.com,
+	benjamin.mugnier@foss.st.com, dave.stevenson@raspberrypi.com,
+	hansg@kernel.org, hverkuil@xs4all.nl, jacopo.mondi@ideasonboard.com,
+	jonas@kwiboo.se, kieran.bingham@ideasonboard.com, khalasa@piap.pl,
+	prabhakar.csengg@gmail.com, mani@kernel.org,
+	m.felsch@pengutronix.de, martink@posteo.de, mattwmajewski@gmail.com,
+	matthias.fend@emfend.at, mchehab@kernel.org,
+	michael.riesch@collabora.com, naush@raspberrypi.com,
+	nicholas@rothemail.net, nicolas.dufresne@collabora.com,
+	paul.elder@ideasonboard.com, dan.scally@ideasonboard.com,
+	pavel@kernel.org, petrcvekcz@gmail.com, rashanmu@gmail.com,
+	ribalda@chromium.org, rmfrfs@gmail.com, zhengsq@rock-chips.com,
+	slongerbeam@gmail.com, sylvain.petinot@foss.st.com,
+	s.nawrocki@samsung.com, tomi.valkeinen@ideasonboard.com,
+	umang.jain@ideasonboard.com, zhi.mao@mediatek.com,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v1 00/55] media: Add a helper for obtaining the clock
+ producer
+Message-ID: <20250619212630.GQ22102@pendragon.ideasonboard.com>
+References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618144743.843815-9-vikas.gupta@broadcom.com>
+In-Reply-To: <cover.1750352394.git.mehdi.djait@linux.intel.com>
 
-Hi Vikas,
+Hi Mehdi,
 
-kernel test robot noticed the following build warnings:
+Thank you for the patch.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc2 next-20250619]
-[cannot apply to horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Thu, Jun 19, 2025 at 07:58:53PM +0200, Mehdi Djait wrote:
+> Hello everyone,
+> 
+> Here is my v1 for the new helper v4l2_devm_sensor_clk_get()
+> 
+> Any testing of the patches is GREATLY APPRECIATED! Especially the two
+> drivers with the special ACPI case:
+> 1) OV8865
+> 2) OV2680
+> 
+> 
+> Background
+> ----------
+> 
+> A reference to the clock producer is not available to the kernel
+> in ACPI-based platforms but the sensor drivers still need them.
+> 
+> devm_clk_get() will return an error and the probe function will fail.
+> 
+> 
+> Solution
+> --------
+> 
+> Introduce a generic helper for v4l2 sensor drivers on both DT- and ACPI-based
+> platforms.
+> 
+> This helper behaves the same as clk_get_optional() except where there is
+> no clock producer like in ACPI-based platforms.
+> 
+> For ACPI-based platforms the function will read the "clock-frequency"
+> ACPI _DSD property and register a fixed frequency clock with the frequency
+> indicated in the property.
+> 
+> 
+> Solution for special ACPI case
+> ------------------------------
+> 
+> This function also handles the special ACPI-based system case where:
+> 
+> 1) The clock-frequency _DSD property is present.
+> 2) A reference to the clock producer is present, where the clock is provided
+> by a camera sensor PMIC driver (e.g. int3472/tps68470.c)
+> 
+> In this case try to set the clock-frequency value to the provided clock.
+> 
+> 
+> RFC History
+> -----------
+> 
+> RFC v4 -> RFC v5:
+> Suggested by Arnd Bergmann:
+> 	- removed IS_REACHABLE(CONFIG_COMMON_CLK). IS_REACHABLE() is actually
+> 	discouraged [1]. COFIG_COMMON_CLK is a bool, so IS_ENABLED() will be the
+> 	right solution here
+> Suggested by Hans de Goede:
+> 	- added handling for the special ACPI-based system case, where
+> 	  both a reference to the clock-provider and the _DSD
+> 	  clock-frequency are present.
+> 	- updated the function's kernel-doc and the commit msg
+> 	  to mention this special case.
+> Link RFC v4: https://lore.kernel.org/linux-media/20250321130329.342236-1-mehdi.djait@linux.intel.com/
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/Documentation/kbuild/kconfig-language.rst?h=next-20250513&id=700bd25bd4f47a0f4e02e0a25dde05f1a6b16eea
+> 
+> RFC v3 -> RFC v4:
+> Suggested by Laurent:
+> 	- removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
+> 	- changed to kasprintf() to allocate the clk name when id is NULL and
+> 	  used the __free(kfree) scope-based cleanup helper when
+> 	  defining the variable to hold the allocated name
+> Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi.djait@linux.intel.com/
+> 
+> RFC v2 -> RFC v3:
+> - Added #ifdef CONFIG_COMMON_CLK for the ACPI case
+> Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehdi.djait@linux.intel.com/
+> 
+> RFC v1 -> RFC v2:
+> Suggested by Sakari:
+>     - removed clk_name
+>     - removed the IS_ERR() check
+>     - improved the kernel-doc comment and commit msg
+> Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
+> 
+> Mehdi Djait (55):
+>   media: v4l2-common: Add a helper for obtaining the clock producer
+>   Documentation: media: camera-sensor: Mention
+>     v4l2_devm_sensor_clk_get() for obtaining the clock
+>   media: i2c: ar0521: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ds90ub913: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ds90ub960: Use the v4l2 helper for obtaining the clock
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250618144743.843815-9-vikas.gupta%40broadcom.com
-patch subject: [net-next, 08/10] bng_en: Add irq allocation support
-config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250620/202506200530.jiD9Txum-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 8.5.0
+Those two are FPD-Link serializer and deserializer drivers. I would
+leave them out, and only address camera sensors in this series, as ACPI
+integration for serdes or other kind of chips needs to be discussed
+separately.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506200530.jiD9Txum-lkp@intel.com/
+>   media: i2c: et8ek8: Use the v4l2 helper for obtaining the clock
+>   media: i2c: gc05a2: Use the v4l2 helper for obtaining the clock
+>   media: i2c: gc08a3: Use the v4l2 helper for obtaining the clock
+>   media: i2c: gc2145: Use the v4l2 helper for obtaining the clock
+>   media: i2c: hi846: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx214: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx219: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx283: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx290: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx296: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx334: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx335: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx412: Use the v4l2 helper for obtaining the clock
+>   media: i2c: imx415: Use the v4l2 helper for obtaining the clock
+>   media: i2c: max2175: Use the v4l2 helper for obtaining the clock
 
-smatch warnings:
-drivers/net/ethernet/broadcom/bnge/bnge_resc.c:347 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
+This is a tuner, I would leave it out too.
 
-vim +/irqs_demand +347 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+>   media: i2c: mt9m001: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9m111: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9m114: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9p031: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9t112: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9v032: Use the v4l2 helper for obtaining the clock
+>   media: i2c: mt9v111: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov02a10: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov2659: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov2685: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov5640: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov5645: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov5647: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov5648: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov5695: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov64a40: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov6650: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov7740: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov8856: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov8858: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov8865: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov9282: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov9640: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov9650: Use the v4l2 helper for obtaining the clock
+>   media: i2c: s5c73m3: Use the v4l2 helper for obtaining the clock
+>   media: i2c: s5k5baf: Use the v4l2 helper for obtaining the clock
+>   media: i2c: s5k6a3: Use the v4l2 helper for obtaining the clock
+>   media: i2c: st-mipid02: Use the v4l2 helper for obtaining the clock
+>   media: i2c: tc358743: Use the v4l2 helper for obtaining the clock
+>   media: i2c: tc358746: Use the v4l2 helper for obtaining the clock
 
-   329	
-   330	int bnge_alloc_irqs(struct bnge_dev *bd)
-   331	{
-   332		u16 aux_msix, tx_cp, num_entries;
-   333		u16 irqs_demand, max, min = 1;
-   334		int i, rc = 0;
-   335	
-   336		irqs_demand = bnge_nqs_demand(bd);
-   337		max = bnge_get_max_func_irqs(bd);
-   338		if (irqs_demand > max)
-   339			irqs_demand = max;
-   340	
-   341		if (!(bd->flags & BNGE_EN_SHARED_CHNL))
-   342			min = 2;
-   343	
-   344		irqs_demand = pci_alloc_irq_vectors(bd->pdev, min, irqs_demand,
-   345						    PCI_IRQ_MSIX);
-   346		aux_msix = bnge_aux_get_msix(bd);
- > 347		if (irqs_demand < 0 || irqs_demand < aux_msix) {
-   348			rc = -ENODEV;
-   349			goto err_free_irqs;
-   350		}
-   351	
-   352		num_entries = irqs_demand;
-   353		if (pci_msix_can_alloc_dyn(bd->pdev))
-   354			num_entries = max;
-   355		bd->irq_tbl = kcalloc(num_entries, sizeof(*bd->irq_tbl), GFP_KERNEL);
-   356		if (!bd->irq_tbl) {
-   357			rc = -ENOMEM;
-   358			goto err_free_irqs;
-   359		}
-   360	
-   361		for (i = 0; i < irqs_demand; i++)
-   362			bd->irq_tbl[i].vector = pci_irq_vector(bd->pdev, i);
-   363	
-   364		bd->irqs_acquired = irqs_demand;
-   365		/* Reduce rings based upon num of vectors allocated.
-   366		 * We dont need to consider NQs as they have been calculated
-   367		 * and must be more than irqs_demand.
-   368		 */
-   369		rc = bnge_adjust_rings(bd, &bd->rx_nr_rings,
-   370				       &bd->tx_nr_rings,
-   371				       irqs_demand - aux_msix, min == 1);
-   372		if (rc)
-   373			goto err_free_irqs;
-   374	
-   375		tx_cp = bnge_num_tx_to_cp(bd, bd->tx_nr_rings);
-   376		bd->nq_nr_rings = (min == 1) ?
-   377			max_t(u16, tx_cp, bd->rx_nr_rings) :
-   378			tx_cp + bd->rx_nr_rings;
-   379	
-   380		/* Readjust tx_nr_rings_per_tc */
-   381		if (!bd->num_tc)
-   382			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
-   383	
-   384		return 0;
-   385	
-   386	err_free_irqs:
-   387		dev_err(bd->dev, "Failed to allocate IRQs err = %d\n", rc);
-   388		bnge_free_irqs(bd);
-   389		return rc;
-   390	}
-   391	
+Those three drivers are for a CSI-2 to parallel or HDMI to CSI-2
+bridges, I would leave them out too.
+
+>   media: i2c: thp7312: Use the v4l2 helper for obtaining the clock
+
+And this is an external ISP, that I would also leave out for now.
+
+>   media: i2c: vd55g1: Use the v4l2 helper for obtaining the clock
+>   media: i2c: vd56g3: Use the v4l2 helper for obtaining the clock
+>   media: i2c: vgxy61: Use the v4l2 helper for obtaining the clock
+>   media: i2c: ov2680: Use the v4l2 helper for obtaining the clock
+
+All the rest should be sensors, but please double-check.
+
+For the sensor driver patches *except* ov8865 and ov2680,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> 
+>  .../driver-api/media/camera-sensor.rst        |  3 +-
+>  drivers/media/i2c/ar0521.c                    |  2 +-
+>  drivers/media/i2c/ds90ub913.c                 |  2 +-
+>  drivers/media/i2c/ds90ub960.c                 |  2 +-
+>  drivers/media/i2c/et8ek8/et8ek8_driver.c      |  2 +-
+>  drivers/media/i2c/gc05a2.c                    |  2 +-
+>  drivers/media/i2c/gc08a3.c                    |  2 +-
+>  drivers/media/i2c/gc2145.c                    |  2 +-
+>  drivers/media/i2c/hi846.c                     |  2 +-
+>  drivers/media/i2c/imx214.c                    |  2 +-
+>  drivers/media/i2c/imx219.c                    |  2 +-
+>  drivers/media/i2c/imx283.c                    |  2 +-
+>  drivers/media/i2c/imx290.c                    |  2 +-
+>  drivers/media/i2c/imx296.c                    |  2 +-
+>  drivers/media/i2c/imx334.c                    |  2 +-
+>  drivers/media/i2c/imx335.c                    |  2 +-
+>  drivers/media/i2c/imx412.c                    |  2 +-
+>  drivers/media/i2c/imx415.c                    |  2 +-
+>  drivers/media/i2c/max2175.c                   |  2 +-
+>  drivers/media/i2c/mt9m001.c                   |  2 +-
+>  drivers/media/i2c/mt9m111.c                   |  2 +-
+>  drivers/media/i2c/mt9m114.c                   |  2 +-
+>  drivers/media/i2c/mt9p031.c                   |  2 +-
+>  drivers/media/i2c/mt9t112.c                   |  2 +-
+>  drivers/media/i2c/mt9v032.c                   |  2 +-
+>  drivers/media/i2c/mt9v111.c                   |  2 +-
+>  drivers/media/i2c/ov02a10.c                   |  2 +-
+>  drivers/media/i2c/ov2659.c                    |  2 +-
+>  drivers/media/i2c/ov2680.c                    | 27 +++-------
+>  drivers/media/i2c/ov2685.c                    |  2 +-
+>  drivers/media/i2c/ov5640.c                    |  2 +-
+>  drivers/media/i2c/ov5645.c                    |  2 +-
+>  drivers/media/i2c/ov5647.c                    |  2 +-
+>  drivers/media/i2c/ov5648.c                    |  2 +-
+>  drivers/media/i2c/ov5695.c                    |  2 +-
+>  drivers/media/i2c/ov64a40.c                   |  2 +-
+>  drivers/media/i2c/ov6650.c                    |  2 +-
+>  drivers/media/i2c/ov7740.c                    |  2 +-
+>  drivers/media/i2c/ov8856.c                    |  2 +-
+>  drivers/media/i2c/ov8858.c                    |  2 +-
+>  drivers/media/i2c/ov8865.c                    | 32 ++----------
+>  drivers/media/i2c/ov9282.c                    |  2 +-
+>  drivers/media/i2c/ov9640.c                    |  2 +-
+>  drivers/media/i2c/ov9650.c                    |  2 +-
+>  drivers/media/i2c/s5c73m3/s5c73m3-core.c      |  2 +-
+>  drivers/media/i2c/s5k5baf.c                   |  2 +-
+>  drivers/media/i2c/s5k6a3.c                    |  2 +-
+>  drivers/media/i2c/st-mipid02.c                |  2 +-
+>  drivers/media/i2c/tc358743.c                  |  2 +-
+>  drivers/media/i2c/tc358746.c                  |  2 +-
+>  drivers/media/i2c/thp7312.c                   |  2 +-
+>  drivers/media/i2c/vd55g1.c                    |  2 +-
+>  drivers/media/i2c/vd56g3.c                    |  2 +-
+>  drivers/media/i2c/vgxy61.c                    |  2 +-
+>  drivers/media/v4l2-core/v4l2-common.c         | 49 +++++++++++++++++++
+>  include/media/v4l2-common.h                   | 25 ++++++++++
+>  56 files changed, 136 insertions(+), 102 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+
+Laurent Pinchart
