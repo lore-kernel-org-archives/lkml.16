@@ -1,73 +1,154 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CF265CBB;
-	Thu, 19 Jun 2025 08:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6CD264F9B;
+	Thu, 19 Jun 2025 08:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322837; cv=none; b=be+hAeoVag1nHrV4Wigt/EC08plTjvb8ek1zW8cfsajKhz0lULe3xWpdmBgai3MgbNkv+FsLSQBRtQ1bRDS3G+djJC/8v9kpV7lsVSH/d1/f4IGtvANAF/W2ES2gQBGLGS20znBLMDiOe/BkEVTQ5QL0FxC1dWQr8H0eG6gsYXA=
+	t=1750322854; cv=none; b=cjXe1hifjFx1WTbmuID//swWJA0awhZA3dtFzRonXXkMHTF6SskaI6xdy65t0huPiK2NlbZ8GwH3qIIbLxfZnAUgC4wuSC3OxUw+Cfq9Z4YG0FVY9uJqBpDSiSQkobhaHlhtKJD4wXk3W3KjJYLXeKxUQh7u1X1fEwDM53RJzQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322837; c=relaxed/simple;
-	bh=b0XWpvGm8wgW6A/uSiwkYOT2KLb+DLRb+ve9xFGOjd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hlD86U/aIWryqQnDblcvas44rqlOj3E0rG+fI8ocF5ICbDmCxKo5kvn2ZZWpS2OR2Niwkxf+EXXZFPk7C35m0HiW5JYnocb8z3sOMfDbzBYFia/2t3trJlBrhE4fcVZdY78ISjoP9GYiaXaGpjkkN7kL13FNUtBssSNY98agyjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id B99241A075C;
-	Thu, 19 Jun 2025 08:47:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id D9D8C2000D;
-	Thu, 19 Jun 2025 08:47:08 +0000 (UTC)
-Date: Thu, 19 Jun 2025 04:47:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 05/14] unwind_user/deferred: Add unwind cache
-Message-ID: <20250619044714.5e676bf3@batman.local.home>
-In-Reply-To: <20250619075611.GX1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.603778772@goodmis.org>
-	<20250618141345.GR1613376@noisy.programming.kicks-ass.net>
-	<20250618113359.585b3770@gandalf.local.home>
-	<20250619075611.GX1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750322854; c=relaxed/simple;
+	bh=Muv3gqtcZ7hc62zIDmE1fQQ1ZoJ86CDm9SrW6sUcTZk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PWxI3cGAc2OjReZcP8NDRjkki4OlpoTrEGMqm58Gsig+wHsUXKhVbZejrVY55ZVTKK6iNJjZ6hKV2ITNU0XOM1x/IfXZURBL+1cWs8RO9ITX308C1VCW4BQTkOl45MN0Lhh0arSdtTtEBmPOuffAlDnLURHGHY6FvriMo0Tc35I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7z/UCTl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7z/UCTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5549FC4CEED;
+	Thu, 19 Jun 2025 08:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750322854;
+	bh=Muv3gqtcZ7hc62zIDmE1fQQ1ZoJ86CDm9SrW6sUcTZk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r7z/UCTlF2kKrOJLPjcS28VaGPmNdHI0quGlaZX7AXDlkpOGTGgORxqixWevRwgb3
+	 rp+jMSv8m4lYokNEpVLJ59nNNT2hV0ej3enTRwsCKk3kSq+O+280ZzMW2j5f50RVkq
+	 c5N+vc83YkVj4ZM5fVVNX02cFBx9CVTvMQZqlQR54YgqjWaPAndccFF+U14uE8Odmh
+	 63Zw/cUYxJYt6ypRX7rGFFXkG9Phqm/A0QeEcPW2SHecEt6DAR842CgtOBCqq7m32M
+	 6ydKH0cBjyJhA2xb++Ial4uAkE6+G4vy17dqOCFN96V+IGWWjvDOoEVnsdiWTBkkvN
+	 ClVHVCKRinLGQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so759419a12.2;
+        Thu, 19 Jun 2025 01:47:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2JJI5Yejf89+m7Gti21SFZkgZ9ce50QTORNEe5UkmldtYyguBWBAWYsBf9pzC46cq+xd0pPY6B8YVjJIg@vger.kernel.org, AJvYcCXsjgtaKfwIIx5ykHL0u/MRGwD6OG7JimpfV9K0BpHKj3BpuqYwIK7TluBSl45Y+6el6Ho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyqVnVvyt7MGDF51pKoKKJvbDfmwWJADnL1eVlrYCZXBXa63FD
+	eT8pNcjbRtZQbHw9RUrhMyD57nOJsY7NNMEgICTLFbWnklmNqYuysZXyLQSAtd9v83tCMCMvI3R
+	w3nQ3gZpk95AVH//E1ShAXR+3PUS7lPU=
+X-Google-Smtp-Source: AGHT+IGZWCNKwnyvE35SdXS5WBk9xN3oMka8jPWIYSnikYAanhsjcXod8utMB9LTgnkHZ/IPrs0CsRlIyZwXFTkTd2w=
+X-Received: by 2002:a05:6402:2749:b0:5f7:f55a:e5e1 with SMTP id
+ 4fb4d7f45d1cf-608d0976322mr16486686a12.24.1750322852910; Thu, 19 Jun 2025
+ 01:47:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D9D8C2000D
-X-Stat-Signature: hdnso6s7b8h14ty8pwta4y6t1z4ps3a6
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18mL5Mp+KUi7te2UfafbcE31pupD+cnzTg=
-X-HE-Tag: 1750322828-715024
-X-HE-Meta: U2FsdGVkX1/6nmXO2xLOAzIpyS7FXKe4FiuacAkvz+FOe86TrNckB2C4V/DB0PqfuqCcIYSFlx7JIAKM8Sl1lCbwTmBopNN9hYbJhrGKJ5zwS8TG5y0SsSiybX4oYUoKi7R1VEG9MCmK1pnOdpwCAjSk0eObCETPMieQ2xZrRQVow61s0WfTp7bQye7vf9KsL2xFXydIb9H5q4GmlPLkjwbp9YAUOCpxoimMVgT/JuA03tf4+yQ51AIwY3pD7nI8eToHEESCgGFZljTyd6Scg1UoO07WBivLGtFmwzPTubHRHzJAav3GDewzhdMnDKrIwv+BjoYkx7qRFraknHjMtgibs3FafmEnOK8lUgMbFrK8R4fNj8SddH4rLYTGrv/c
+References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611015145.3042884-1-maobibo@loongson.cn>
+In-Reply-To: <20250611015145.3042884-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Jun 2025 16:47:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
+X-Gm-Features: AX0GCFs7PzCirFOY8JuegGHGWftfJ3eh_4ShbpIciCF89h9EWVdRzTfi6iSQ5OM
+Message-ID: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 09:56:11 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Hi, Bibo,
 
-> Well, the trivial solution is to make it 511 and call it a day. Don't
-> make things complicated if you don't have to.
+On Wed, Jun 11, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> IOCSR instruction supports 1/2/4/8 bytes access, the address should
+> be naturally aligned with its access size. Here address alignment
+> check is added in eiointc kernel emulation.
+>
+> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
+> function kvm_emu_iocsr(), remove the default case in switch case
+> statements.
+Robust code doesn't depend its callers do things right, so I suggest
+keeping the default case, which means we just add the alignment check
+here.
 
-I don't know if this is more complicated, but it should make it fit
-nicely in a page:
+And I think this patch should also Cc stable and add a Fixes tag.
 
-  /* Make the cache fit in a page */
-  #define UNWIND_MAX_ENTRIES                                      \
-        ((PAGE_SIZE - sizeof(struct unwind_cache)) / sizeof(long))
 
--- Steve
+Huacai
+
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index 8b0d9376eb54..4e9d12300cc4 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+>                 return -EINVAL;
+>         }
+>
+> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+>         vcpu->stat.eiointc_read_exits++;
+>         spin_lock_irqsave(&eiointc->lock, flags);
+>         switch (len) {
+> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+>         case 4:
+>                 ret =3D loongarch_eiointc_readl(vcpu, eiointc, addr, val)=
+;
+>                 break;
+> -       case 8:
+> +       default:
+>                 ret =3D loongarch_eiointc_readq(vcpu, eiointc, addr, val)=
+;
+>                 break;
+> -       default:
+> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, s=
+ize %d\n",
+> -                                               __func__, addr, len);
+>         }
+>         spin_unlock_irqrestore(&eiointc->lock, flags);
+>
+> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>                 return -EINVAL;
+>         }
+>
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+>         vcpu->stat.eiointc_write_exits++;
+>         spin_lock_irqsave(&eiointc->lock, flags);
+>         switch (len) {
+> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>         case 4:
+>                 ret =3D loongarch_eiointc_writel(vcpu, eiointc, addr, val=
+);
+>                 break;
+> -       case 8:
+> +       default:
+>                 ret =3D loongarch_eiointc_writeq(vcpu, eiointc, addr, val=
+);
+>                 break;
+> -       default:
+> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, s=
+ize %d\n",
+> -                                               __func__, addr, len);
+>         }
+>         spin_unlock_irqrestore(&eiointc->lock, flags);
+>
+> --
+> 2.39.3
+>
