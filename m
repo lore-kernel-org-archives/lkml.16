@@ -1,141 +1,404 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418AC2512FF
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DAD2517B9;
+	Thu, 19 Jun 2025 13:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338812; cv=none; b=HwkPqHitsMGRv+q0nuLLtPv/sQJ7Deu+uMsXXuviyzXDkOnYpbQ2ZECfopXnFt7fgDzwVx4ogQZXWXFBv3MvxdmAElhKu29NqwKwUDiJ2xM39GvwgxiBR/Yclx4A5A6CVYqEFPF+WvMpDkAgy1vAwZPEvAQBaMBGJAzgr6Q7WSM=
+	t=1750338817; cv=none; b=IRy7HBgNkfD3p5T6rIfOwjYrVsoVFAgJ2yzarwF6UbUJwUVB/P7YJEMzckw8A6X+5cmD9cxhOflQ9WVDagQMwQVIQ+hOjhuSpvJInPiEEu1JPsa5JoUecdKLJ82whof94wlJCEJD6gyIDbTWBbHbBb4gYFgtEFzEOWeuUsS9hWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338812; c=relaxed/simple;
-	bh=rml3iTKOF2Tzumhd3nX6q/FjWjEnnbnCensCbQfiEPc=;
+	s=arc-20240116; t=1750338817; c=relaxed/simple;
+	bh=UMzhY25BszJqoveXpRkXCzB+xpQQW2Fo5hssNrjtYBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pnZz5qjYOv+sbQI7PtKz+k7hLB7prUoluQE9ea9p961QCB/ZPpcheX1ocU0v8y3cMuALi4f3wSaAUuoZW/PcJ3ZK67DmhAEuotNbih8JSxmNmPXYQ8kjCE9iw3TlfUW7njkz6nQnwcikjODtB/qKq4gcx0kyM4D6+5MESvvU08I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZiwUK6U9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFfVMgJ0s/aNRZ08zif/XDV67WkJmsWj9qHEH2geOVx9xpy2zBaDwwszvSnJd/OqeRm1PT7RzqDflgeHa/0pa1N5XUz3qzc7/3q3eQGilU2C6WDYsgJAKGcTd5y7iX6Z/aQ5Hg/Jb3vwIBr/cbWYtm49F08TJPZvvJ8AG++VFuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QS7/ZF0F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZiwUK6U9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750338810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j6QZTbgBsBIWN9k4dZ6Hk3/RHB+MOYXXgpk4gPxs+OQ=;
-	b=ZiwUK6U9Dh8BXbjJ9Iir0vOTGt0Kq78Reuuwyfgect2pjqlGCdwb3RdVeRfJb+SgtkWWRX
-	SvFZ6ykq4ifbe8p45U0SfRh7xFA54ZYhdAf3U0tIrfzyoDRyZAp8xB0MBjzjtHGxXBmS8s
-	FRmlJOmdWo4FYU98y82OBpf+ewT7r1M=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-295-2FFnc4ABOKuUAJxkpsWecw-1; Thu, 19 Jun 2025 09:13:28 -0400
-X-MC-Unique: 2FFnc4ABOKuUAJxkpsWecw-1
-X-Mimecast-MFC-AGG-ID: 2FFnc4ABOKuUAJxkpsWecw_1750338807
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450787c8626so6573295e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:13:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750338807; x=1750943607;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j6QZTbgBsBIWN9k4dZ6Hk3/RHB+MOYXXgpk4gPxs+OQ=;
-        b=E/3YuvlJlx3Srym+eNs7bBQ9hXNrbvCCiyA9hWsbRTm4TnmVC1sLkGCgmIG8rBIQ/i
-         UX7xdQvkJT2QLT8KwKYM6S8hHeq8jYlJOzQ20jmNZsiEAcT7dscn5SLSiA//w8bAtG/e
-         f6XTCnuhwe6kUDey9kJXdGIedEufX5bJ8bNj52qyKIBTqtYZoro/2YXrooz3JvDi4gIX
-         0NQTsWMICuH/ggMNhr1aJ+de/EZbGYUDmlczi/+cgInq69AV0asEZ2/+rFRCaxJCzSQK
-         WUcLO/KYjrNpiwX1ib0FLDYOkFoH1AgB5NPhySXMUdQe3xaawhF7qa6tZomgcA2jpxWR
-         SfRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcv3WkTJz11klRKlWC+ZNCiApgE2lBtlMcmk1git428QQuzs+fzWtU1xYPKveCBnP51bl+HgQX04XyXuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfZkUYxhkIKfzAeQQcaB0PV+MncOHtEvPVTvrZbUbU8AtmLmrb
-	Ci1ntyCADyRI85i4tWBBq8pzigsfCw/XYLdYphWz5fwxbo7HJPbEx46cQlx2/y21GLIds/ZvrUM
-	5FclLXspurVQw1VFyHP/1WBZTjpnuZtZ0+vwvKrV56z9OEnC/uuXqYKQuoI0E2B54Eg==
-X-Gm-Gg: ASbGncvz5sjpGDmaIvx0NRS2GlgSnUSizCqzfgZYQVi+/Gzm4nF1PGeK1ulk1ZFYxAh
-	gLqnkYrjKudduajDSC3S+VcToi6B/JfieDh6r11fzxKjYLjIgNHJkS0uqO7qB1Xj2ds4/wvsBc1
-	wZS8yt1VEhy9c5fk7v9hz6gsdCusZB1u1QaffRO4iVBZ37RwIZ+dGKFjFWBleDAG/2jZl4BECsx
-	K8C5fjw2kvbXaYlt4MY/1rMY7oji+QIb8n9R+KgGp6UYShai8OojpXCIV9uzpLIHpmaDBkkIhsB
-	9pi8QE7gUyiKg22p5d35mGaIAAx1Zu6p6V1vfATDuKHSjJwPvi1+vQ==
-X-Received: by 2002:a05:600c:1c12:b0:44b:1f5b:8c85 with SMTP id 5b1f17b1804b1-4533caf5e9fmr223551275e9.13.1750338807294;
-        Thu, 19 Jun 2025 06:13:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMD/1y+DW1U7YZaLtAM718HwgsMR2hyVtSoS0D2IF1BJD9ZA4K+FKXjkc1zCzOuZWEA10NWA==
-X-Received: by 2002:a05:600c:1c12:b0:44b:1f5b:8c85 with SMTP id 5b1f17b1804b1-4533caf5e9fmr223550895e9.13.1750338806871;
-        Thu, 19 Jun 2025 06:13:26 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.47.246.160])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536087c247sm16215935e9.9.2025.06.19.06.13.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 06:13:25 -0700 (PDT)
-Date: Thu, 19 Jun 2025 15:13:21 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Kuyo Chang <kuyo.chang@mediatek.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	jstultz <jstultz@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [RFC PATCH 1/1] sched/deadline: Fix RT task potential starvation
- when expiry time passed
-Message-ID: <aFQM8TdZIIvvGv8T@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250615131129.954975-1-kuyo.chang@mediatek.com>
- <aFAyN4rfssKmbUE5@jlelli-thinkpadt14gen4.remote.csb>
- <089882f95b1b910f7feecddd0ad9b17f38394c64.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QS7/ZF0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE76C4CEEA;
+	Thu, 19 Jun 2025 13:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750338816;
+	bh=UMzhY25BszJqoveXpRkXCzB+xpQQW2Fo5hssNrjtYBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QS7/ZF0FGZ+b/BZ0wdHD3uQQHT+F90qViuAdtlUY3u+cNin+x7NvWbbkhRJRRXazD
+	 d2RxvjXI5XbMP0c61LaJuW/wA5TRVMX0zuPpJUfLyHxN5ORZzwH3lGCCpN+/Jlxrw5
+	 l8eLO2PvXbu4hCRtDsFs6j5w/iibJZPj8FymNGf7jwXOfUtnqiDjgpsBBZuc6i8oB/
+	 NstDhVN7WoL4n9eOOxiX2UOj+PfLCi8bRpKu0lIP+bPXo889kx8eLSHcgN2S+MlIAD
+	 GejAT48tX+sJN8wHnLcd25CBdrLSAlnl3AF1A0HSFH24Jy1s72de3WBBk1e20IcBH3
+	 yX/MzGsDOnm2Q==
+Date: Thu, 19 Jun 2025 15:13:34 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] drm: bridge: Add support for Solomon SSD2825
+ RGB/DSI bridge
+Message-ID: <20250619-wondrous-illegal-marten-a365a7@houat>
+References: <20250526114353.12081-1-clamor95@gmail.com>
+ <20250526114353.12081-3-clamor95@gmail.com>
+ <20250619-nondescript-holistic-ostrich-6d1efc@houat>
+ <CAPVz0n2rG+VJ5dwHmSxtzD5JtRy7p=g-gygKGUoSaECQCEkFfQ@mail.gmail.com>
+ <20250619-slim-bright-warthog-77f8ed@houat>
+ <CAPVz0n2eDciXnLOo_cEh8Hjy=hY1NW0DNRs8K5Y7d0Ey5JGbNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="6lvcbtr46n2zuyjq"
 Content-Disposition: inline
-In-Reply-To: <089882f95b1b910f7feecddd0ad9b17f38394c64.camel@mediatek.com>
+In-Reply-To: <CAPVz0n2eDciXnLOo_cEh8Hjy=hY1NW0DNRs8K5Y7d0Ey5JGbNQ@mail.gmail.com>
 
-On 18/06/25 22:20, Kuyo Chang wrote:
 
-...
+--6lvcbtr46n2zuyjq
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 2/2] drm: bridge: Add support for Solomon SSD2825
+ RGB/DSI bridge
+MIME-Version: 1.0
 
-> When dl_defer_running = 1 and the running time has been exhausted, 
-> it means that the dl_server should stop at this point.
-> However, if start_dl_timer() returns a failure, it indicates that the
-> actual time spent consuming the running time was unexpectedly long. 
->  
-> At this point, there are two options:
-> [as-is] 1. re-enqueuing the dl entity with ENQUEUE_REPLENISH will clear
-> the throttled flag 
-> and re-enqueue the dl entity to keep the fair_server running. 
-> enqueue_dl_entity(dl_se, ENQUEUE_REPLENISH);
-> => replenish_dl_entity
->   => replenish_dl_new_period(dl_se, rq);
->   => dl_se->dl_yielded = 0;
->   => dl_se->dl_throttled = 0;
-> => __enqueue_dl_entity(dl_se);
-> 
-> [to-be] 2. To avoid RT latency, the fair_server should remain throttled
-> while replenishing the dl_se. 
-> Once replenishing is complete, we can ensure that a timer is
-> successfully started. 
-> When the timer is triggered, the throttled state will be cleared,
-> ensuring that RT tasks can execute during this interval.
->  
-> It is a policy decision for dealing with the case of failure in
-> start_dl_timer().
-> The second approach is better for real-time (RT) latency in my opinion,
-> as RT tasks must be prioritized.
+On Thu, Jun 19, 2025 at 03:16:34PM +0300, Svyatoslav Ryhel wrote:
+> =D1=87=D1=82, 19 =D1=87=D0=B5=D1=80=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 15=
+:05 Maxime Ripard <mripard@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+> >
+> > On Thu, Jun 19, 2025 at 01:17:12PM +0300, Svyatoslav Ryhel wrote:
+> > > =D1=87=D1=82, 19 =D1=87=D0=B5=D1=80=D0=B2. 2025=E2=80=AF=D1=80. =D0=
+=BE 12:41 Maxime Ripard <mripard@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+> > > >
+> > > > On Mon, May 26, 2025 at 02:43:53PM +0300, Svyatoslav Ryhel wrote:
+> > > > > +static ssize_t ssd2825_dsi_host_transfer(struct mipi_dsi_host *h=
+ost,
+> > > > > +                                      const struct mipi_dsi_msg =
+*msg)
+> > > > > +{
+> > > > > +     struct ssd2825_priv *priv =3D dsi_host_to_ssd2825(host);
+> > > > > +     struct mipi_dsi_device *dsi_dev =3D priv->output.dev;
+> > > > > +     u8 buf =3D *(u8 *)msg->tx_buf;
+> > > > > +     u16 config;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     if (!priv->enabled) {
+> > > > > +             dev_err(priv->dev, "Bridge is not enabled\n");
+> > > > > +             return -ENODEV;
+> > > > > +     }
+> > > >
+> > > > Transfers can and should happen even when the bridge is disabled. T=
+he
+> > > > hardware might not permit that, but you'll need to elaborate in the
+> > > > comment about why.
+> > >
+> > > This ensures that hw was configured properly in pre_enable and since
+> > > pre_enable is void it will not return any errors if it fails.
+> >
+> > There's no relationship between the bridge pre_enable and enable hooks,
+> > and the MIPI-DSI host transfer one. It's perfectly valid to call
+> > transfer if the bridge is detached or disabled.
+>
+> That is twisted logic, but ok, fine, I don't care.
 
-OK, I think I see your points, but I am still not sure I fully
-understand the link with the issue you describe in the changelog - the
-relation with "DL replenish lagged too much", that is.
+It's not twisted. It's perfectly valid for a panel to read its revision
+at probe time, before it registers, for example.
 
-Could you please expand on the details of the situation that is opening
-up for the issue your patch is addressing? Do you know why we hit the
-corner case that causes the warning in the first place?
+It would happen before the panel is enabled, and before the bridge is
+enabled.
 
-I would like to understand exactly what we are trying to fix before
-deciding how to fix it, sorry if I am being dense. :-)
+> > > > > +     if (msg->rx_len) {
+> > > > > +             dev_warn(priv->dev, "MIPI rx is not supported\n");
+> > > > > +             return -EOPNOTSUPP;
+> > > > > +     }
+> > > > > +
+> > > > > +     guard(mutex)(&priv->mlock);
+> > > > > +
+> > > > > +     ret =3D ssd2825_read_reg(priv, SSD2825_CONFIGURATION_REG, &=
+config);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     switch (msg->type) {
+> > > > > +     case MIPI_DSI_DCS_SHORT_WRITE:
+> > > > > +     case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
+> > > > > +     case MIPI_DSI_DCS_LONG_WRITE:
+> > > > > +             config |=3D SSD2825_CONF_REG_DCS;
+> > > > > +             break;
+> > > > > +     case MIPI_DSI_GENERIC_SHORT_WRITE_0_PARAM:
+> > > > > +     case MIPI_DSI_GENERIC_SHORT_WRITE_1_PARAM:
+> > > > > +     case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
+> > > > > +     case MIPI_DSI_GENERIC_LONG_WRITE:
+> > > > > +             config &=3D ~SSD2825_CONF_REG_DCS;
+> > > > > +             break;
+> > > > > +     case MIPI_DSI_DCS_READ:
+> > > > > +     case MIPI_DSI_GENERIC_READ_REQUEST_0_PARAM:
+> > > > > +     case MIPI_DSI_GENERIC_READ_REQUEST_1_PARAM:
+> > > > > +     case MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM:
+> > > > > +     default:
+> > > > > +             return 0;
+> > > > > +     }
+> > > > > +
+> > > > > +     ret =3D ssd2825_write_reg(priv, SSD2825_CONFIGURATION_REG, =
+config);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret =3D ssd2825_write_reg(priv, SSD2825_VC_CTRL_REG, 0x0000=
+);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret =3D ssd2825_write_dsi(priv, msg->tx_buf, msg->tx_len);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     if (buf =3D=3D MIPI_DCS_SET_DISPLAY_ON) {
+> > > > > +             /*
+> > > > > +              * NOTE! This is here since it cannot be called in =
+bridge enable because
+> > > > > +              * bridge pre enable and bridge enable have no gap =
+in between.
+> > > > > +              *
+> > > > > +              * Existing framework bridge-panel seq is:
+> > > > > +              *      panel_prepare > bridge_pre_enable > bridge_=
+enable > panel_enable
+> > > > > +              *
+> > > > > +              * Using prepare_prev_first was tested, but it swit=
+ches seq like this:
+> > > > > +              *      bridge_pre_enable > panel_prepare > bridge_=
+enable > panel_enable
+> > > > > +              *
+> > > > > +              * This will not work since panel hw MUST be prepar=
+ed before bridge is
+> > > > > +              * configured. Correct seq should be:
+> > > > > +              *      panel_prepare > bridge_pre_enable > panel_e=
+nable > bridge_enable
+> > > >
+> > > > Where is that requirement coming from?
+> > >
+> > > This is how my device's (LG P895) bridge-panel combo works. Panel hw
+> > > must be enabled before bridge, then bridge hw, then panel can send
+> > > init sequence and then bridge must complete configuration.
+> >
+> > Do you have a documentation for that DSI device?
+> >
+>=20
+> No
+>=20
+> > DSI devices typically come with requirement of the power states of the
+> > lanes, that's what you want to discuss here. How we can model that in
+> > software is a discussion we need to have once we've identified what the
+> > hardware needs exactly.
+> >
+> > > > panel prepare is documented as:
+> > > >
+> > > >   The .prepare() function is typically called before the display co=
+ntroller
+> > > >   starts to transmit video data.
+> > > >
+> > > >
+> > > > And video data transmission for bridges only happen at bridge_enable
+> > > > time.
+> > > >
+> > > > So, from an API PoV, all the sequences above are correct.
+> > >
+> > > There is no way ATM for this bridge to complete configuration, there
+> > > either should be a way to swap panel_enable and bridge_enable or there
+> > > should be added an additional operation like bridge_post_enable or
+> > > smth like that for cases like here when bridge has to complete
+> > > configuration after panel init seq is sent.
+> > >
+> > > > > +              * Last two functions should be swapped related to =
+existing framework.
+> > > > > +              * I am not aware about method which allows that.
+> > > > > +              *
+> > > > > +              * Once there will be such method/flag, code below =
+should be moved into
+> > > > > +              * bridge_enable since it is basically a bridge con=
+figuration completing
+> > > > > +              * after initial panel DSI sequence is completed.
+> > > > > +              */
+> > > >
+> > > > If there's anything to fix, we should do it before introducing that
+> > > > driver.
+> > >
+> > > I just want to have a bridge my device uses to be supported by
+> > > mainline linux. I have no intention to touch any part of DRM framework
+> > > and cause instabilities, maintainers rage and hate.
+> >
+> > And I just want all drivers to behave consistently.
+> >
+>=20
+> Ye, sure.
+>=20
+> > > > > +static void ssd2825_bridge_atomic_pre_enable(struct drm_bridge *=
+bridge,
+> > > > > +                                          struct drm_atomic_stat=
+e *state)
+> > > > > +{
+> > > > > +     struct ssd2825_priv *priv =3D bridge_to_ssd2825(bridge);
+> > > > > +     struct mipi_dsi_device *dsi_dev =3D priv->output.dev;
+> > > > > +     const struct drm_crtc_state *crtc_state;
+> > > > > +     const struct drm_display_mode *mode;
+> > > > > +     struct drm_connector *connector;
+> > > > > +     struct drm_crtc *crtc;
+> > > > > +     u32 input_bus_flags =3D bridge->timings->input_bus_flags;
+> > > > > +     u16 flags =3D 0, config;
+> > > > > +     u8 pixel_format;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     if (priv->enabled)
+> > > > > +             return;
+> > > >
+> > > > What is this guarding against?
+> > >
+> > > blocks repeating ssd2825_bridge_atomic_pre_enable calls
+> >
+> > Which happens in which situation?
+> >
+> > > > > +     /* Power Sequence */
+> > > > > +     ret =3D clk_prepare_enable(priv->tx_clk);
+> > > > > +     if (ret)
+> > > > > +             dev_err(priv->dev, "error enabling tx_clk (%d)\n", =
+ret);
+> > > > > +
+> > > > > +     ret =3D regulator_bulk_enable(ARRAY_SIZE(ssd2825_supplies),=
+ priv->supplies);
+> > > > > +     if (ret)
+> > > > > +             dev_err(priv->dev, "error enabling regulators (%d)\=
+n", ret);
+> > > > > +
+> > > > > +     usleep_range(1000, 2000);
+> > > > > +
+> > > > > +     ssd2825_hw_reset(priv);
+> > > > > +
+> > > > > +     /* Perform SW reset */
+> > > > > +     ssd2825_write_reg(priv, SSD2825_OPERATION_CTRL_REG, 0x0100);
+> > > > > +
+> > > > > +     /* Set pixel format */
+> > > > > +     switch (dsi_dev->format) {
+> > > > > +     case MIPI_DSI_FMT_RGB565:
+> > > > > +             pixel_format =3D 0x00;
+> > > > > +             break;
+> > > > > +     case MIPI_DSI_FMT_RGB666_PACKED:
+> > > > > +             pixel_format =3D 0x01;
+> > > > > +             break;
+> > > > > +     case MIPI_DSI_FMT_RGB666:
+> > > > > +             pixel_format =3D 0x02;
+> > > > > +             break;
+> > > > > +     case MIPI_DSI_FMT_RGB888:
+> > > > > +     default:
+> > > > > +             pixel_format =3D 0x03;
+> > > > > +             break;
+> > > > > +     }
+> > > > > +
+> > > > > +     connector =3D drm_atomic_get_new_connector_for_encoder(stat=
+e, bridge->encoder);
+> > > > > +     crtc =3D drm_atomic_get_new_connector_state(state, connecto=
+r)->crtc;
+> > > > > +     crtc_state =3D drm_atomic_get_new_crtc_state(state, crtc);
+> > > > > +     mode =3D &crtc_state->adjusted_mode;
+> > > > > +
+> > > > > +     /* Set panel timings */
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_1,
+> > > > > +                       ((mode->vtotal - mode->vsync_end) << 8) |
+> > > > > +                       (mode->htotal - mode->hsync_end));
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_2,
+> > > > > +                       ((mode->vtotal - mode->vsync_start) << 8)=
+ |
+> > > > > +                       (mode->htotal - mode->hsync_start));
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_3,
+> > > > > +                       ((mode->vsync_start - mode->vdisplay) << =
+8) |
+> > > > > +                       (mode->hsync_start - mode->hdisplay));
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_4, m=
+ode->hdisplay);
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_5, m=
+ode->vdisplay);
+> > > > > +
+> > > > > +     if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+> > > > > +             flags |=3D SSD2825_HSYNC_HIGH;
+> > > > > +
+> > > > > +     if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+> > > > > +             flags |=3D SSD2825_VSYNC_HIGH;
+> > > > > +
+> > > > > +     if (dsi_dev->mode_flags & MIPI_DSI_MODE_VIDEO)
+> > > > > +             flags |=3D SSD2825_NON_BURST_EV;
+> > > > > +
+> > > > > +     if (input_bus_flags & DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE)
+> > > > > +             flags |=3D SSD2825_PCKL_HIGH;
+> > > > > +
+> > > > > +     ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_6, f=
+lags | pixel_format);
+> > > > > +     ssd2825_write_reg(priv, SSD2825_LANE_CONFIGURATION_REG, dsi=
+_dev->lanes - 1);
+> > > > > +     ssd2825_write_reg(priv, SSD2825_TEST_REG, 0x0004);
+> > > > > +
+> > > > > +     /* Call PLL configuration */
+> > > > > +     ssd2825_setup_pll(priv, mode);
+> > > > > +
+> > > > > +     usleep_range(10000, 11000);
+> > > > > +
+> > > > > +     config =3D SSD2825_CONF_REG_HS | SSD2825_CONF_REG_CKE | SSD=
+2825_CONF_REG_DCS |
+> > > > > +              SSD2825_CONF_REG_ECD | SSD2825_CONF_REG_EOT;
+> > > > > +
+> > > > > +     if (dsi_dev->mode_flags & MIPI_DSI_MODE_LPM)
+> > > > > +             config &=3D ~SSD2825_CONF_REG_HS;
+> > > > > +
+> > > > > +     if (dsi_dev->mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET)
+> > > > > +             config &=3D ~SSD2825_CONF_REG_EOT;
+> > > > > +
+> > > > > +     /* Initial DSI configuration register set */
+> > > > > +     ssd2825_write_reg(priv, SSD2825_CONFIGURATION_REG, config);
+> > > > > +     ssd2825_write_reg(priv, SSD2825_VC_CTRL_REG, 0);
+> > > > > +
+> > > > > +     priv->enabled =3D true;
+> > > > > +}
+> > > > > +
+> > > > > +static void ssd2825_bridge_atomic_enable(struct drm_bridge *brid=
+ge,
+> > > > > +                                      struct drm_atomic_state *s=
+tate)
+> > > > > +{
+> > > > > +     /* placeholder */
+> > > > > +}
+> > > >
+> > > > That doesn't work with any bridge or panel that doesn't require any=
+ DCS
+> > > > command to power up, unfortunately.
+> > >
+> > > Yes that is a flaw unfortunately, if you have suggestions of fixing
+> > > this just tell me.
+> >
+> > Untangle pre_enable and enable from transfer, and in enable actually
+> > enable the bridge, and it will work just fine.
+> >
+>=20
+> No it will not, I have tried and panel fails cause panel hw is init in
+> pre-enable and init sequence is sent in enable, which is expected
+> logic. Yet bridge cannot complete configuration because panel enable
+> function is called AFTER bridge enable.
 
-Thanks,
-Juri
+Then I guess we're at a dead-end now, aren't we?
 
+Maxime
+
+--6lvcbtr46n2zuyjq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFQM/QAKCRAnX84Zoj2+
+dmOMAYDBkQ/AU6SbVGx7j1UnMQ7uo36vlF+4cg19gHSUQBx2G2IJ45lY2jAQLzkp
+OKthkYkBfA3bgAe7FiSi8R8ZJW4HJVXpU9t7Lf1ys7cSO8firSd6g35JM9JfTEBi
+aH/Xm14Iyg==
+=4a1r
+-----END PGP SIGNATURE-----
+
+--6lvcbtr46n2zuyjq--
