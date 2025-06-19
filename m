@@ -1,90 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6FF30E827;
-	Thu, 19 Jun 2025 18:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B74030E820
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750356625; cv=none; b=Z1hjF83RxP3/t1zHBAEzlri0Lus+MUcDsKvB2+FZsNNPUK/lPWXWuApFbg9pRhfBWono4ccTInDzgjQNkeqmhgDp8mWiCKCh5I+t6P914GLO8tlTWR6vKM6B7ZD/vgDx+OOtUH6lGr2pAo/FMHULhOxn1HYS5z0UA4n/TRc01yY=
+	t=1750356665; cv=none; b=jEmtW3qe9jwfcQ2zbjh0KTiJ9FbKzIiig71UCIQLr+x1lgM2jdpbySHNcLvbWMamN5VY8vfe9W3KeKHrSeISnTbo2e2/94TcPdrvCgKwslvMKxs9naepd5kFG//Xooj6I9bmPnZ4XpjwtUpep8LhfPQi+yrFCPBI4m2Lk441pLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750356625; c=relaxed/simple;
-	bh=8NdxjQh1wQGIx0t1SPod5gYipeYIYwG78j5c0YMVNo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAfC8A5CVS2TmuKXI4M7SB/hOiz3oBaEGDIbrxOzKgRkIYJzYwtXwErA0i+PONr2NVH4ff44Km8iQoYzsDmT7f4+elfvbqbbh7kd4VjT7QiD8Amhuo/wFMJ21Mb0pxPkSwEEPIcNM+imh0il2KbKvLFCzOVBy9/HWqg9cbZ8IRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEL9JSGn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEL9JSGn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2409C4CEEA;
-	Thu, 19 Jun 2025 18:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750356625;
-	bh=8NdxjQh1wQGIx0t1SPod5gYipeYIYwG78j5c0YMVNo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YEL9JSGnf+xP/a34eZBVWZQH0Nat8kaYwCEiFT/WY9jnd3xnyw08D8gOZrpKMdEo/
-	 0LN4euivbYiaavwfvTV1Yl3XGYNbEg4UMnhrsdCpZCWCpK9hIpekmKrDf/VA+UV8Dw
-	 T7i7Va9fvsYrxV0NBlhs1ryZ3UvQ8hYM6OEa3mnRW0Lue/nYq9uSxxUnXtZrW5u0PI
-	 W+bANQWt/m3Qsh3PdoDIxYH05OPii2X1tvqfEl8Q7CH45c+WFAYflt29UDwGV4r+HE
-	 QWAXCQW9DOBlQtNeKD0RUDrzpUxFhmw3ZM8h9j+ACfEfg7nHg2nctZiH3Njmme2sXN
-	 sKL9vC4+e2s2g==
-Date: Thu, 19 Jun 2025 20:10:22 +0200
-From: Antoine Tenart <atenart@kernel.org>
-To: fourier.thomas@gmail.com
-Cc: Antoine Tenart <atenart@kernel.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: inside-secure: Fix `dma_unmap_sg()` nents value
-Message-ID: <itx47uifmow4fcovhritufa76pfes4zsor4ttyf2bzzoycugvc@ivv65ci3wrwq>
-References: <20250619152838.349584-1-fourier.thomas@gmail.com>
+	s=arc-20240116; t=1750356665; c=relaxed/simple;
+	bh=keMVWl3tlYdykGYVcqReAyMwGJJijPC2GIjPDK1YdeU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=m/CZvjXmOwux4/fWNgYWep/CnQ7doFgr4/8u0a4+gMoe/mPhKSlCta7BRy4aaqoE8af9scQ9TWCxyPUSxxA4yScTDYRPH+zhIJyLl70hEyU204nAuXXiMsX4qdHb55kVvGyhzKSYHZc5LuWakBYgGIfC0DsjAJhnFoDnfkaVRDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86f4e2434b6so86772339f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:11:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750356663; x=1750961463;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NR3mvQFhXoFMaL/CivSgE+Y2oira8fbZ2+vTXnKv1fU=;
+        b=qA3pH8nSqGM5TjJ+JWFbQvBIocp3xUhfAYTDGYPTe8eTMs8/KqNqRiYDmQ8NK/9KDE
+         hcdqnEBx4VVZ/zAS2I/ogqczBZRya0IzsJe2g2MqtN9sgphoNhoHpJpLsnSAxdId1GA+
+         RZpEAhI3eNzUTDJ/31ko4U0hCgDqiXpyjsYsd98TiAXaDOrfrUboS+7F27x6tR/0JBIe
+         qKeKj/OTiKQyIUddMUoLq3xVe+xhRGpsNXgu1pIPeorG0fMq7vUKS75Xdqal3VUhK4tF
+         xEsHRiJcMCXRM7ZY0PeRBSbhJU6yjOebaqPsQNe3izYlkX/Drg43rKb8zkcyODdlql1J
+         530Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWATKFEzmZ+8NLtNDty/1oVyM3O2to8n/VeOLJJWznhSNez+pDgnbIHgFOMuVPFh5FkTTbToL74by8EFds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFNsH7UuAgbhoX4m9j/r/tV/TZ+CT/TioX23Jxq8vf6hYOVhxn
+	J4Hnjht1LKe0crm900e10fuYnGDElUDvITBz5s0XUc45FU3yxE7Hgm7mpZaAh1Tx/F/8shYoy/e
+	7Ukz1aB5WIRwn5gBKsgIblKiHfa2kdudNHFLtzQnNv1hjbsriK5g/qkCv0dc=
+X-Google-Smtp-Source: AGHT+IHKsN+5EOrcnJLw0wAyYzOh5MMo46S+ZrIXZQ79V0uX7SSwP7HQzJmo3TVRbL/P+6pGCJMRhqoVVZHp//GHmyh8liW3XoRR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619152838.349584-1-fourier.thomas@gmail.com>
+X-Received: by 2002:a92:ca0e:0:b0:3dd:d6d5:2d03 with SMTP id
+ e9e14a558f8ab-3de07d50c0bmr219466345ab.11.1750356663317; Thu, 19 Jun 2025
+ 11:11:03 -0700 (PDT)
+Date: Thu, 19 Jun 2025 11:11:03 -0700
+In-Reply-To: <67b2eaf7.050a0220.173698.001f.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685452b7.a00a0220.137b3.0014.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_reconstruct_snapshots
+From: syzbot <syzbot+b4cb4a6988aced0cec4b@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-IMO the patch subject could be improved, to remove the ` and to be more
-descriptive. E.g.
+syzbot suspects this issue was fixed by commit:
 
-"crypto: inside-secure: unmap DMA buffers using the original number of entries"
+commit 757601ef853359fe2d57d75c00b5045f62efc608
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Sun Jun 8 15:40:00 2025 +0000
 
-On Thu, Jun 19, 2025 at 05:28:36PM +0200, fourier.thomas@gmail.com wrote:
-> 
-> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-> index d2b632193beb..1ef1ccfaaa95 100644
-> --- a/drivers/crypto/inside-secure/safexcel_hash.c
-> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
-> @@ -249,7 +249,10 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv,
->  	safexcel_complete(priv, ring);
->  
->  	if (sreq->nents) {
-> -		dma_unmap_sg(priv->dev, areq->src, sreq->nents, DMA_TO_DEVICE);
-> +		dma_unmap_sg(priv->dev,
-> +			     areq->src,
-> +			     sg_nents_for_len(areq->src, areq->nbytes),
-> +			     DMA_TO_DEVICE);
+    bcachefs: Don't put rhashtable on stack
 
-No need to put 'areq->src,' on a new line.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13b01d0c580000
+start commit:   128c8f96eb86 Merge tag 'drm-fixes-2025-02-14' of https://g..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e55cabe422b4fcaf
+dashboard link: https://syzkaller.appspot.com/bug?extid=b4cb4a6988aced0cec4b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d5d9b0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112099a4580000
 
->  		sreq->nents = 0;
->  	}
->  
-> @@ -497,7 +500,10 @@ static int safexcel_ahash_send_req(struct crypto_async_request *async, int ring,
->  			 DMA_FROM_DEVICE);
->  unmap_sg:
->  	if (req->nents) {
-> -		dma_unmap_sg(priv->dev, areq->src, req->nents, DMA_TO_DEVICE);
-> +		dma_unmap_sg(priv->dev,
-> +			     areq->src,
-> +			     sg_nents_for_len(areq->src, areq->nbytes),
-> +			     DMA_TO_DEVICE);
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Same here.
+#syz fix: bcachefs: Don't put rhashtable on stack
 
-Otherwise this looks good to me. With those fixed, you can add:
-
-Reviewed-by: Antoine Tenart <atenart@kernel.org>
-
-Thanks!
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
