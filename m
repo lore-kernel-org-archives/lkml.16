@@ -1,49 +1,90 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAC32A1BA;
-	Thu, 19 Jun 2025 01:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2E71A314C
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750297650; cv=none; b=Vlvd2VcwpP2PY4rMDI82L1oxXiRdPtQr19yZByyUzmGRaZ+ACJFVqXGP5SIYp7LIU4wiX23/LoG6icCWXORgHFhCEyVmIedvRU4ql09f1S9ZFm/LQio8F8qEShN+fjxuT8ETPKEFUZcBwFY9f0avyEQYh0hBZlnEfu6lJZ1kMh0=
+	t=1750297852; cv=none; b=ch9AKpUbJVbWC4JO0uzk7CuVcbRhHvMjPlt+IJFuG8yA3+yX0ZcaAG2xui7bbIpTNJmFsJKj3Qusb19Zk2WnRkEdUHi7rY8bMIBgda1OuXKF1H5ERAYQyeYGlDmtZQTV4V9wr4Zh94f7g8xWNycxWja46yfCA4P19lghfNx+35w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750297650; c=relaxed/simple;
-	bh=mgfm5mlVtu0RF55CfmQFJ9zrB5wUsUHfhsfoMVk+H74=;
+	s=arc-20240116; t=1750297852; c=relaxed/simple;
+	bh=LJIIB8Y9KBiJiHVobgfRu8lyn8BY9L9gB/pucGaNm4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+aCIPP1qczCvwKZ+mXiiwafrVprJPb4FnZnHgFobf0Drvpax2AbQzZZCCM8Xud9MFnooJDhwKo1ZYrJdcVyB7GLA9uPO2v5c8MXvoHuiUg13yNnDjk1X47HySU2YgGxAeqTFxqgGMGZ43pjklPuJ650tEaGx70GO2cyAO6Y1fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBXXrYmbFNojvp1Aw--.393S2;
-	Thu, 19 Jun 2025 09:47:18 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwD3jCYVbFNohbBXAA--.8864S2;
-	Thu, 19 Jun 2025 09:47:02 +0800 (CST)
-Date: Thu, 19 Jun 2025 09:47:00 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, tongtiangen@huawei.com,
-	Yicong Yang <yangyicong@huawei.com>,
-	Niyas Sait <niyas.sait@huawei.com>, ajayjoshi@micron.com,
-	Vandana Salve <vsalve@micron.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Gregory Price <gourry@gourry.net>,
-	Huang Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness Monitoring
- Units (CHMU)
-Message-ID: <aFNsFI5OKrD0CWR3@phytium.com.cn>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
- <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AyCuqg66h1engjT1wLE5WlFeQHXDTapMf0BXaPbX9lqmHpjiIj9d9/RFvlx/rlMsYzkgsO+t/2fHrKmKpHrRGdzBn01fPX1+PIEr/UmFxnoyeyZY/AZRtfmIuDY+rofNR590ErEPFSZ5pG6h1bcUnMZUUxpgj0m4kln4eM6O6aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=zn0uKbAg; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="zn0uKbAg"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-313f928718eso142640a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1750297851; x=1750902651; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=77PKh9SalLpybL3AAe7PoOLwMgQqtz9KiJ/uaTkWDSw=;
+        b=zn0uKbAgSrLAvfDqV19BsF/Dt/jnN/PCgcpL+67bPnrihGF53lfSk3MyzGmTDP9FHd
+         0ixUSsncp8J4U3gYoHVAcjhh1iqIYc/6J92wp45EmGAueHOjViZMFpNA690efLuVqbXw
+         qFuYkM8n1oBLBSM/+tKqTB/MlNLM5Cvzuozp2vleI57k1W8WsRMYwr9zAXa5AHatGbvi
+         +CrjzEw1U76ydJonHk9DyHLOExOGCntbzhMwUEklcl5LKtLl0xWyFkydOTuOwgw5gAhc
+         ZJgNIXWLx6VE52aRN2NbjbzdXN39R2zk5i10bzIy18Rw/SZdIOAA05b/MfADPUJUn0yf
+         VJFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750297851; x=1750902651;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=77PKh9SalLpybL3AAe7PoOLwMgQqtz9KiJ/uaTkWDSw=;
+        b=nu5FUXXxrjX9MhfgHUNSzSAWZOdAowtzqIZ6LOsSzkKVJI2/YtqhhkI47UIBsJxb+2
+         eoEUsN4bw3WPWsleQ0AV8bVKx0WwAw+cIhEYmTcrgXv7IKGw8O/iprrO5Yo8L88rWO6D
+         aVRvKlW9zhwBKKeyHapZeAEhXMJRqHDsmNIhBP6wqZzkltUJsDwODOKCt8TI7aCZHVOF
+         yWbOVQyFPwXxCqRedc6uISZDIsvyWw8HPneDxkAIjfVeRs+NDFHvRpmEJwujUMPMZ7b8
+         74GWpXT2ldmYuOdPhxXqd470Lagb45VoJfF2yrPQhenn1wRF8jRTePpnE/Pe3yPTiB6/
+         HNNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBmYfT0YEiJZh8sVEAOSO80xHCaqlTectHWX9FibkUbYPZmLOMTbDyB8aqBpol0Oqy793dVekoR+V3LHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ4L4GAhYm8Q8rR1zhbVO/rybJYXqgAwwSV4jmCSz7BWN2hPNr
+	+ylB506B4xPr/nzWS4VcPXui7Ydf18lj2ASwALMsgWv+1cnsiSo4iaEhJl3JgX/dbGQ=
+X-Gm-Gg: ASbGncuWzl64Zrn4trHrW1oLorwRZyfN7rDQaEOcxN/ry+fLequRM94d8rfXVZtqECy
+	ywMslEarJcGN67gzlQfBx9qVWQ6njMudKeV18iMH1dDzpRsJ/wOFqqqTj31H024zYFQ9XIpGv6K
+	Q8+/8fewL0qlhuXmTwD2706RJDzKOGba1QDW5u3WVK5jlMBG+gyaL26mYHqM/43cv5ueJwyj+GZ
+	0RI5Q1Shv++CJRGkkQVd5/6CEGCVIJRb0+FWl/2USRNrvh7QI/T9b6o/PoarhG+DiTav8FfHTbo
+	xQm95LBIgkiG5IH66p7ayPBMJQoPakLXqnVUyOWjF6ifm8YYN8RICbUtjwHoPWMSi/35eIk=
+X-Google-Smtp-Source: AGHT+IEH8ENEIXXiapQFn7dY5pW85bznCSDAM8YeveXgruCVaip94nhm+ZCyfl9XM7JJOLVmNJsDyw==
+X-Received: by 2002:a17:90b:586b:b0:312:39c1:c9cf with SMTP id 98e67ed59e1d1-313f1be1c89mr31855817a91.7.1750297850614;
+        Wed, 18 Jun 2025 18:50:50 -0700 (PDT)
+Received: from x1 (97-120-250-80.ptld.qwest.net. [97.120.250.80])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a226f7asm811267a91.10.2025.06.18.18.50.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 18:50:50 -0700 (PDT)
+Date: Wed, 18 Jun 2025 18:50:48 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 2/8] dt-bindings: firmware: thead,th1520: Add resets
+ for GPU clkgen
+Message-ID: <aFNs+PLgw1jqqiUm@x1>
+References: <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
+ <CGME20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2@eucas1p2.samsung.com>
+ <20250618-apr_14_for_sending-v5-2-27ed33ea5c6f@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,259 +93,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
-X-CM-TRANSID:AQAAfwD3jCYVbFNohbBXAA--.8864S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWhRxgsBrAAjs-
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKrWkCFW5KF4kXw47CrWUCFg_yoWxKF4DpF
-	W8CFWrGr48JF9F9ry3Xay5ZFn8W3Z29FyUuryIq34avFnxAFyDJF4UJayUAryrC3ykGw47
-	WF15Kr10kayYgr7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+In-Reply-To: <20250618-apr_14_for_sending-v5-2-27ed33ea5c6f@samsung.com>
 
-On Thu, Nov 21, 2024 at 10:18:42AM +0000, Jonathan Cameron wrote:
-> Basic registration using similar approach to how the CPMUs
-> are registered.
+On Wed, Jun 18, 2025 at 12:22:08PM +0200, Michal Wilczynski wrote:
+> Extend the TH1520 AON to describe the GPU clkgen reset line, required
+> for proper GPU clock and reset sequencing.
 > 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> The T-HEAD TH1520 GPU requires coordinated management of two clocks
+> (core and sys) and two resets (GPU core reset and GPU clkgen reset).
+> Only the clkgen reset is exposed at the AON level, to support SoC
+> specific initialization handled through a dedicated auxiliary power
+> sequencing driver. The GPU core reset remains described in the GPU
+> device node, as from the GPU driver's perspective, there is only a
+> single reset line [1].
+> 
+> This follows upstream maintainers' recommendations [2] to abstract SoC
+> specific details into the PM domain layer rather than exposing them to
+> drivers directly.
+> 
+> Link: https://lore.kernel.org/all/816db99d-7088-4c1a-af03-b9a825ac09dc@imgtec.com/ - [1]
+> Link: https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/ - [2]
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
->  drivers/cxl/core/Makefile |  1 +
->  drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/regs.c   | 14 +++++++++
->  drivers/cxl/cxl.h         |  4 +++
->  drivers/cxl/cxlpci.h      |  1 +
->  drivers/cxl/hmu.h         | 23 ++++++++++++++
->  drivers/cxl/pci.c         | 26 +++++++++++++++-
->  7 files changed, 132 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 9259bcc6773c..d060abb773ae 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -12,6 +12,7 @@ cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
->  cxl_core-y += hdm.o
-> +cxl_core-y += hmu.o
->  cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
-> diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
-> new file mode 100644
-> index 000000000000..3ee938bb6c05
-> --- /dev/null
-> +++ b/drivers/cxl/core/hmu.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2024 Huawei. All rights reserved. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +#include <linux/idr.h>
-> +#include <cxlmem.h>
-> +#include <hmu.h>
-> +#include <cxl.h>
-> +#include "core.h"
-> +
-> +static void cxl_hmu_release(struct device *dev)
-> +{
-> +	struct cxl_hmu *hmu = to_cxl_hmu(dev);
-> +
-> +	kfree(hmu);
-> +}
-> +
-> +const struct device_type cxl_hmu_type = {
-> +	.name = "cxl_hmu",
-> +	.release = cxl_hmu_release,
-> +};
-> +
-> +static void remove_dev(void *dev)
-> +{
-> +	device_unregister(dev);
-> +}
-> +
-> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-> +		     int assoc_id, int index)
-> +{
-> +	struct cxl_hmu *hmu;
-> +	struct device *dev;
-> +	int rc;
-> +
-> +	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
-> +	if (!hmu)
-> +		return -ENOMEM;
-> +
-> +	hmu->assoc_id = assoc_id;
-> +	hmu->index = index;
-> +	hmu->base = regs->hmu;
-> +	dev = &hmu->dev;
-> +	device_initialize(dev);
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = parent;
-> +	dev->bus = &cxl_bus_type;
-> +	dev->type = &cxl_hmu_type;
-> +	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	return devm_add_action_or_reset(parent, remove_dev, dev);
-> +
-> +err:
-> +	put_device(&hmu->dev);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
-> +
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index e1082e749c69..c12afaa6ef98 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
+> diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> index bbc183200400de7aadbb21fea21911f6f4227b09..3365124c7fd4736922717bd31caa13272f4a4ea6 100644
+> --- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> @@ -32,6 +32,13 @@ properties:
+>      items:
+>        - const: aon
 >  
-> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
-> +{
-> +	struct device *dev = map->host;
-> +	resource_size_t phys_addr;
+> +  resets:
+> +    maxItems: 1
 > +
-> +	phys_addr = map->resource;
-> +	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
-I applied CHMU patch on 6.15.0 kernel and I tried to boot the virt with
-one cxl root port and one device (jic23/cxl-2025-06-10), then the dmesg shows
-"Failed to request region 0x10210000-0x1023ffff". I guess it is caused by the
-'map->max_size'(0x30000) is large and the resource has been allocated by CPMU regs.
-I tried to change it to 0x10000, the hmu_mem0.0 could be created as normal.
-> +	if (!regs->hmu)
-> +		return -ENOMEM;
+> +  reset-names:
+> +    items:
+> +      - const: gpu-clkgen
 > +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
-> +
->  static int cxl_map_regblock(struct cxl_register_map *map)
->  {
->  	struct device *host = map->host;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 5406e3ab3d4a..8172bc1f7a8d 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -227,6 +227,9 @@ struct cxl_regs {
->  	struct_group_tagged(cxl_pmu_regs, pmu_regs,
->  		void __iomem *pmu;
->  	);
-> +	struct_group_tagged(cxl_hmu_regs, hmu_regs,
-> +		void __iomem *hmu;
-> +	);
+>    "#power-domain-cells":
+>      const: 1
 >  
->  	/*
->  	 * RCH downstream port specific RAS register
-> @@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   unsigned long map_mask);
->  int cxl_map_device_regs(const struct cxl_register_map *map,
->  			struct cxl_device_regs *regs);
-> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
->  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
->  
->  enum cxl_regloc_type;
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4da07727ab9c..71f5e9620137 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -67,6 +67,7 @@ enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_VIRT,
->  	CXL_REGLOC_RBI_MEMDEV,
->  	CXL_REGLOC_RBI_PMU,
-> +	CXL_REGLOC_RBI_HMU,
->  	CXL_REGLOC_RBI_TYPES
->  };
->  
-> diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
-> new file mode 100644
-> index 000000000000..c4798ed9764b
-> --- /dev/null
-> +++ b/drivers/cxl/hmu.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright(c) 2024 Huawei
-> + * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
-> + */
-> +#ifndef CXL_HMU_H
-> +#define CXL_HMU_H
-> +#include <linux/device.h>
-> +
-> +#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
-> +struct cxl_hmu {
-> +	struct device dev;
-> +	void __iomem *base;
-> +	int assoc_id;
-> +	int index;
-> +};
-> +
-> +#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
-> +struct cxl_hmu_regs;
-> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-> +		     int assoc_id, int idx);
-> +
-> +#endif
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 188412d45e0d..e89ea9d3f007 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -15,6 +15,7 @@
->  #include "cxlmem.h"
->  #include "cxlpci.h"
->  #include "cxl.h"
-> +#include "hmu.h"
->  #include "pmu.h"
->  
->  /**
-> @@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct cxl_dev_state *cxlds;
->  	struct cxl_register_map map;
->  	struct cxl_memdev *cxlmd;
-> -	int i, rc, pmu_count;
-> +	int i, rc, hmu_count, pmu_count;
->  	bool irq_avail;
->  
->  	/*
-> @@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		}
->  	}
->  
-> +	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
-> +	for (i = 0; i < hmu_count; i++) {
-> +		struct cxl_hmu_regs hmu_regs;
-> +
-> +		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
-> +			break;
-> +		}
-> +
-> +		rc = cxl_map_hmu_regs(&map, &hmu_regs);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
-> +			break;
-> +		}
-> +
-> +		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
-> +			break;
-> +		}
-> +	}
-> +
->  	rc = cxl_event_config(host_bridge, mds, irq_avail);
->  	if (rc)
->  		return rc;
+> 
 > -- 
-> 2.43.0
+> 2.34.1
 > 
 
+Reviewed-by: Drew Fustini <drew@pdp7.com>
+
+I'm wondering what tree this should go through. Ulf took the original
+patch that created the binding.
+
+Thanks,
+Drew
