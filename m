@@ -1,140 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B09035963;
-	Thu, 19 Jun 2025 10:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A064221720;
+	Thu, 19 Jun 2025 10:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750327674; cv=none; b=otRbLh1MVKi2+OsHt/MPwHvoaOpRf5UXxZ840DXwnrgV9Wi2OoyB3rilB8vpGkWWRGKJN8MYHHc7PIpyRjlf5CiAbUYV9cRBUqaeA7U2cF1UTwfYPcJKYINpdKScFDvm/NTIc53Cw1K9WfhVIl45xRxNRpebRJs7agk4prSzMcw=
+	t=1750327684; cv=none; b=jQb55w1M0/Tz30MRMcFFAryKASOTGamukOvMEP6Ovd3dddura1AUjmm6xUi8gtDAh4df5ux4Ugi2oDIj2X8ViBHVs6g4ifZLl9gesvq+Fp/noD6RM4dK9gddsIWd1oV64hCUkw67gep3PX/H1FfuhUJE/ITpxkZicumBOcEnUW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750327674; c=relaxed/simple;
-	bh=y84ihwLVqY+Z1Q9OZ9Yk0150Oszxpg9LZot/6iCeLl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktTcpHT0pkq8h7OobAsq5MU/Z3Q/epFWH9mj+0jEPT1Ei1cgOXiSD6ZjbACd5GnypdXxTSotaO3vQqe4BYPqVNLWNGkIO4MdZUQ9LHyMtcWOcV6BPoEqkmZvRAC1JniJ9ypIcTwPaTYmLXwDPj0NRo9epVUC5DwJ89O4oDhy1Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlG12O1r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750327684; c=relaxed/simple;
+	bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQNN7eTldV6aAchB2yqDhRtd80lhURPfLcXmrCUxUdPjDJi69vpspjbJjn4mzWBo6pfwzPhMvDTIjfZjjkBSoiG5Al/X7DDhjWQbmuM1FQGsBfZMM8qZEH5NxqVL3uz43lDhiC381wVhH+0cFVFjuV+G37anq6uNuDk8XePqiWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGHdSlBw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlG12O1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0C59C4CEEA;
-	Thu, 19 Jun 2025 10:07:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGHdSlBw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4E0C4CEEA;
+	Thu, 19 Jun 2025 10:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750327674;
-	bh=y84ihwLVqY+Z1Q9OZ9Yk0150Oszxpg9LZot/6iCeLl4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MlG12O1rSjWxnM4KDRwivPvB12BZKYoxfgdd6yq8v1FaJKIi8pCdKAXqUlkYOyC4s
-	 zViEbelUy15Gc1UA9/z9q6xa0ttTXnImDSgF8L3vu5t4mQiBpprqhWpD8bHlpWmIOH
-	 3C/xp0a4MwUVqcF8QbOtRVuHmnUx0QcckOPbp1zdlPnFAJf+mm9/9KY5GP8WLjFh3D
-	 nwUEIIVGP2MiiMZsdasqlV5cDOEhGNpDNbTxGPfzZB5fVjgqXN6AwDJHlyd0EimhPK
-	 YrzieeIgKHYbmatRXVR81PdUZfXfj/pA27XBY8k8/KsImGg8h+l6kGUL93/nCobV71
-	 38ZSIDzb1G2tg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uSCBR-000000002R1-3Y8c;
-	Thu, 19 Jun 2025 12:07:50 +0200
-Date: Thu, 19 Jun 2025 12:07:49 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Georgi Djakov <djakov@kernel.org>,
-	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] interconnect: avoid memory allocation when
- 'icc_bw_lock' is held
-Message-ID: <aFPhdWoZDOrdrbQz@hovoldconsulting.com>
-References: <20250618-icc-bw-lockdep-v2-1-3223da346765@gmail.com>
+	s=k20201202; t=1750327684;
+	bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LGHdSlBwrEsHzjTIjds3GdgqbSOvBGRbGWcTyIeGYjn7Zij0Kt0E0fuSkqYOoJh6c
+	 tBD2HahLAO6Tk/R1l44ufp801wSqoeS1YBnWvfOt5qENr4lRn/vpHUOCIb6s+S9w9l
+	 eN9JMrx/B3uYkW0q8JmMlMjS81d8qeXIRyI9+nrrlPV03ztSGr4pvSi333OVVlwUin
+	 nYrMN9OGcjted+8QLn8CJI2Ny7bPBbiQEU59pjN8a5QF34hsXyMSJpZh8DGjXT7nhv
+	 wAqiZPRrQrEm63T4s2BPfkCQjCtvKPsuENt9THhO94lZL/kOyMyPZsrI9oJ7kZMcXa
+	 FhiHzjhhLYXqw==
+From: Christian Brauner <brauner@kernel.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	kernel@pankajraghav.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v2] fs/buffer: remove comment about hard sectorsize
+Date: Thu, 19 Jun 2025 12:07:58 +0200
+Message-ID: <20250619-irreversibel-kaltfront-033771080900@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250618075821.111459-1-p.raghav@samsung.com>
+References: <20250618075821.111459-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-icc-bw-lockdep-v2-1-3223da346765@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=brauner@kernel.org; h=from:subject:message-id; bh=LjZ3u3NJvBKRYepoq/MXA3KSDEGcTVuRZrVeUc50jCI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQEP6yL55wt9WxRoqzwYyPThc83Nh69KZ12rl+2OpXBQ 3md7rYfHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNJfsnIMHE/545tGxrFJIvl p9YYufmGsCf8/skjdK10Ue+HjrCS2wz/axvqdIW+BBaFLemR3CrxM0ZnWwXLovJL+wVa3SYL/cn hAwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 09:58:31PM +0200, Gabor Juhos wrote:
-> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
-> ("interconnect: Fix locking for runpm vs reclaim") in order
-> to decouple serialization of bw aggregation from codepaths
-> that require memory allocation.
+On Wed, 18 Jun 2025 09:58:21 +0200, Pankaj Raghav wrote:
+> Commit e1defc4ff0cf ("block: Do away with the notion of hardsect_size")
+> changed hardsect_size to logical block size. The comment on top still
+> says hardsect_size.
 > 
-> However commit d30f83d278a9 ("interconnect: core: Add dynamic
-> id allocation support") added a devm_kasprintf() call into a
-> path protected by the 'icc_bw_lock' which causes this lockdep
-> warning (at least on the IPQ9574 platform):
+> Remove the comment as the code is pretty clear. While we are at it,
+> format the relevant code.
 > 
->     ======================================================
->     WARNING: possible circular locking dependency detected
->     6.15.0-next-20250529 #0 Not tainted
+> [...]
 
-> Move the memory allocation part of the code outside of the protected
-> path to eliminate the warning, and add a note about why it is moved
-> to there. Also add memory allocation failure handling, while we are
-> at it.
-> 
-> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> ---
-> Changes in v2:
->   - move memory allocation outside of icc_lock
->   - issue a warning and return without modifying the node name in case of
->     memory allocation failure, and adjust the commit description
->   - remove offered tags from Johan and Bryan
->     Note: since I was not sure that that the added WARN_ON() is a substantial
->     change or not, I have removed the offered tags intentionally to be on the
->     safe side
+Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.17.misc branch should appear in linux-next soon.
 
-Bah, what a mess (thanks for dropping the tags).
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-This dynamic id feature looks like a very ad-hoc and badly designed
-interface.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-icc_node_add() should not be allocating memory in the first place as it
-is not designed to ever fail (e.g. does not return errors).
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Generating the name could have been done as part of of
-icc_node_create_dyn() or yet another helper for the caller could have
-been added for that. In any case, it should be done before calling
-icc_node_add().
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.17.misc
 
-Perhaps the best minimal fix of the regression is to move the allocation
-into the two users of this interface. They already handle both dynamic
-and non-dynamic node allocation explicitly.
-
-Then whoever cares about this code can come up with a common interface
-for allocating the name (e.g. move it into icc_node_create_dyn() or add
-a new icc_node_init() helper or similar).
-
-> ---
->  drivers/interconnect/core.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 1a41e59c77f85a811f78986e98401625f4cadfa3..32d969c349093bc356dc66234c62484aa9b9e872 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -1022,6 +1022,21 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
->  	if (WARN_ON(node->provider))
->  		return;
->  
-> +	if (node->id >= ICC_DYN_ID_START) {
-> +		char *name;
-> +
-> +		/*
-> +		 * Memory allocation must be done outside of codepaths
-> +		 * protected by icc_bw_lock.
-> +		 */
-> +		name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
-> +				      node->name, dev_name(provider->dev));
-> +		if (WARN_ON(!name))
-> +			return;
-
-But this won't do. We'd need to return an error to the caller (even if
-this small allocation will never fail in practice).
-
-> +
-> +		node->name = name;
-> +	}
-
-Johan
+[1/1] fs/buffer: remove comment about hard sectorsize
+      https://git.kernel.org/vfs/vfs/c/6ae58121126d
