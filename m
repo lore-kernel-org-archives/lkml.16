@@ -1,152 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9D23534D
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD32230D2B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344911; cv=none; b=AP5J9eI1zF3TQs+kufUrn7Fmi31Z3Ess1a1JVnKicaJdPL6dzA3GjR3cSUzil3lrbIb/62/NoCZSrUdtJa1WzkcKvYgW2uvq8IjxKfiBAN5GFNn+j8be4ers6uutfp7S4TsM9s7pqu73mYKmuFQaLbrbRkuc3lvxpxCoioBw/sI=
+	t=1750344920; cv=none; b=VNSAX5OHbToqtfBE69vrwZ1Tf4kzAXpgIJk6FUBN+vndNZAukIJvqbqhPPEQCdkX53BlHILLG53ugjBG5BAeex3HUa+pZskhaCg2r63HUqQP0cr0/yecSsOEFQql8VT36iW+SsnJvGLx2rmCjVD1y7P1J7BmtsxjUfZs7uLEkzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344911; c=relaxed/simple;
-	bh=lSpTfIEsz9+Pa1rTiqnA01KZPNUjGiqXdkwSBDLfJFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YY4PffVBr8L0Vcu2VCu3rMnebqh2CLK1cBZaI43Xvz630KKqXK2V3WAuKoq29/Pi5fQuHbZyjaDMRLBo9xpzVnBWaVS+ECENOQ6GWcry1ecUv9MGIx2GrOsJ02sJkUiVs85wJmwVvN7DCGRAkGhXwOpzGYkDZtSHpskjPCBvWs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bJXPnl5J; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750344920; c=relaxed/simple;
+	bh=4LGiNnB42HT/satjOaXpllHvqUrhfVY8Ni1b3Yq5VS4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GKh2WOPX0fhSNtkVcZdPBxdnEUECjYwTZarIv49WDYAoDrFF6YuNYVKZ/2jJmRCVpGU4TOqlQUMvyGsAeHPU9Ryp+lxjpfpFuiGQR1Ka0aaltPhAVZ6t9FzE3TynOFV7EpNflShbL7rj6JKzDD6isMYRNgK7EgtUZxmrg9PzSyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f5Y+sFRC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bJXPnl5J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750344908;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+nIR3s6WyChuWWIwaj4SIlo+aTHkYFJ52GIb7pLAwAo=;
-	b=bJXPnl5JaymmlmghqWo5tRhPWk6hx/q8DhbX47xyvX5OoyLR/CpOQYaB77JA5aZvI0vEuo
-	wRqXyN8Yahc7f6VinmlwMkMF3W9jVBfqGC4Uy9rs/lUlkDJQw3nj/tnWhlQMWs1U+GqHPP
-	oGDE6astKiP5hKgcqHUr1xBANAXi1Hk=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-338-s41I5RFgNj6vaEJIu-NyLw-1; Thu, 19 Jun 2025 10:55:06 -0400
-X-MC-Unique: s41I5RFgNj6vaEJIu-NyLw-1
-X-Mimecast-MFC-AGG-ID: s41I5RFgNj6vaEJIu-NyLw_1750344906
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7ceb5b5140eso139346785a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f5Y+sFRC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so10571675e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750344916; x=1750949716; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4USzl16XHbjEvoqhmZEboDyYQXTg9f/7FGZf3i+x69k=;
+        b=f5Y+sFRCGXAtX7E+WgWJQ3/z/VxGBSL9+AgKoy4VRaPu79zOhybRXYGNlUe3mcH0O0
+         BIZilJlhWdTq7NizVuKIhk5X2k0tYcATpZY/aJfZ/cf0UFuv8ha4cKHMcz+/V/aUnsLW
+         eyClWvwOH2MlD2W9mRBgELI0x4enylXCq+nVEB8sGqip1Y6WMbiYf3CGtsSgo2+QmHb0
+         69T8iaCvEbi0wouWZqhFxzgzBsOXAomfyzzq3CsJi/iWr2hPUN195B+ytEqSqwthGMqm
+         ORRpxQj/VjtvZJwvfUapxq80eeaYEHrP1eonksrzqJ1+2OQHdsu8pEmTT2N7cowwLB8u
+         3Gqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344906; x=1750949706;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+nIR3s6WyChuWWIwaj4SIlo+aTHkYFJ52GIb7pLAwAo=;
-        b=seXsE7UMz9R7Mo+Jh9RC0/Iom0EBOJTFWlEorZcjRAfzpRwUjbvfqurMUsvcV9/XON
-         /F1IDgCmc6rGNEToWYRjq3z0vuDbNcfvgvscSvinNrhtuU2ELsT/ExavZ7WojBKLl0o0
-         RO+bxJyCr2XNs3m6W1B6WNsTZQJTMHf570oJtG3fZ5u0nvbSgBlwGJtnhiweNpQdYMlC
-         W2BIMuA+HPqxDQa2c2Irv8aTHDUhfC6C2tuqjAnTGAvXKL6n8L6CM7609GTrfXXkbQHP
-         C+ihAtLwFCu1ZLjp6da+8ysgqvP9SJjxv6h4FFnuJEjEXNvSKW7vpXrvg8ngU3IOmgxP
-         mN0A==
-X-Forwarded-Encrypted: i=1; AJvYcCX9DsoGWXoNZ6h6Qesu/mq2rq4LSBCvs5YaCnaiWUoJlKEcuAoE2mosfE4Lvc0KneqP5WTWTeKvYobGvpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp9oLB7F8HXNEFflybbxwVelh/7g+lqcCYJl86/uhXS9c0kgLh
-	FvkMRDGdLV18+nXLji38rXnkZDyUtpNs75rHMR9cAylMUuPCDyKNY6QfXQI21FcrouKkuVg7l1y
-	hmkY88Bjutt/Yj/v+XBg1v6suVSN6KClVqIS/8Vr39fEz4NUrkwb3pF2xHlQPloF0eQ==
-X-Gm-Gg: ASbGnct6GJpbU8BPc5Q7GP4rCQ1WVFa49y/P4TTXNn1TD66+qpUBgLep7W0fmVSmSHJ
-	N4naCRZ9TWhjmTAEkmeF4lkVYSe1VoMU43QhoTOmNrNx0Dacmy3rnBJ/Wp+Fc9L3D+Yj5+jp8RN
-	0N5yQlYpI/9ZeXGnJHD1Vnxkw2j6u7PenUTIhVxool6jm8K2/2gFUvvlt/nrw/kSRYr+O3z7Q0d
-	eECPIutqJRWNHGppX3D0J35FBscSqkd7Bsc8simWtpcrWdIxt1ACdom1CRAFzBLYzGhuxaVo2RF
-	fMSpW4kCcyzpqg==
-X-Received: by 2002:a05:620a:40cb:b0:7d0:97b1:bfa with SMTP id af79cd13be357-7d3c6c0d376mr3689365785a.8.1750344905706;
-        Thu, 19 Jun 2025 07:55:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFzfYtvhWciWVVF5GyT6JlUpid1yuToLPfDm2d7WEu2TrPd8D0c+sMxu0V7+LQLYejLfKHqA==
-X-Received: by 2002:a05:620a:40cb:b0:7d0:97b1:bfa with SMTP id af79cd13be357-7d3c6c0d376mr3689362885a.8.1750344905302;
-        Thu, 19 Jun 2025 07:55:05 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f8e5ac5esm4759385a.79.2025.06.19.07.55.04
+        d=1e100.net; s=20230601; t=1750344916; x=1750949716;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4USzl16XHbjEvoqhmZEboDyYQXTg9f/7FGZf3i+x69k=;
+        b=TQAdfV0Y/011n0LTFRpmdy3den2/7lftKmleqWRtfce/4LkyAbOzbxWdxZ+e9VYWYN
+         S5YK0XL8I/yUiEKMFfjHj69V4l2k3cXnwWJoCvHz1vczDKV/wmnhMiLwCeXngGQBWUe+
+         snqt+50hQ9Diysm+E9XYhQhpQxuScjfI9fK7vvWYbG/9cIuxviwl4WdzWKhGqJ8eqYeD
+         CGm90WQZrgEihjxv3nweMlJP+yOdypOchAaMd+X4cdhNDoO+8tKWcZ9irZPtjwWO+Cjr
+         MD0IOxwmh2GiPYxcvPl4JS8QwkxOgLT9TIcJlovweNa8h/CJ59U/0pdHvZ3NSw1luzjs
+         2NWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEt0EzeWG3eXJwUBiNzzrUXsWQ8QVlWzuCCAwL4KOOoL/LuVsOOkQryye5XB8w4oO39fR2FPpgouGXRlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsyJPAGfCF6L9mPIojPFMm0vIRGjWmUMf9JcVomSEss1e1VMzc
+	hX15YU1l/2wS57bOopDAMBhcyEOLn4U7JCdVXn+3zSCTHDyLHVzw+tHi5g8zmW0qnt8=
+X-Gm-Gg: ASbGnctHLPMd2n2e9iO8X9F98N8ulsO0ZGG4km4jzZPz7g7+u4gHNtg/Q4RIN1iVdrD
+	EtG80Ne36CjMCfqBGaSAfjsj4qIMrkcnKPLb4z6hgmW+8quqkJkz2DNw9ZGkgoKS1SO9HmZFLaj
+	VQOs8EAq7UXeRVrpI7gVXYTsLzEUlp03u11MldlH7Fu9mSJl9wVJhZv9aTGIVkQAIhhlazpdeTF
+	LgyOSTDrSAyxIAnT+HIKrpXZeCZwIfFmLAyuwHP86b4N9CwY//fiEXj40hFnhgRR/hcRRhg9FaQ
+	DshTJepNI7IBd25K6ZhDo/FvyuRll1XsujQ2kMEYc0dLfte/BFeSk2WfTh3sRCmz4CkdZiTpMG6
+	W/O4XtZixsCc=
+X-Google-Smtp-Source: AGHT+IHsS97h8hzfBpiAdoEh1bqIjuOor9mhtoQ7zk3firIt0dQex4OoKJ/uKCBlmaCVrFLgewQWYw==
+X-Received: by 2002:a05:600c:a316:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-4533d494104mr157215915e9.6.1750344915914;
+        Thu, 19 Jun 2025 07:55:15 -0700 (PDT)
+Received: from toyger.tail248178.ts.net ([2a0e:c5c1:0:100:b058:b8f5:b561:423c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:55:04 -0700 (PDT)
-Date: Thu, 19 Jun 2025 10:55:02 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aFQkxg08fs7jwXnJ@x1.local>
-References: <20250613231657.GO1174925@nvidia.com>
- <aFCVX6ubmyCxyrNF@x1.local>
- <20250616230011.GS1174925@nvidia.com>
- <aFHWbX_LTjcRveVm@x1.local>
- <20250617231807.GD1575786@nvidia.com>
- <aFH76GjnWfeHI5fA@x1.local>
- <aFLvodROFN9QwvPp@x1.local>
- <20250618174641.GB1629589@nvidia.com>
- <aFMQZru7l2aKVsZm@x1.local>
- <20250619135852.GC1643312@nvidia.com>
+        Thu, 19 Jun 2025 07:55:15 -0700 (PDT)
+From: Casey Connolly <casey.connolly@linaro.org>
+Subject: [PATCH 00/11] power: supply: pmi8998 charger improvements and smb5
+ support
+Date: Thu, 19 Jun 2025 16:55:08 +0200
+Message-Id: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250619135852.GC1643312@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMwkVGgC/x2MQQqAIBAAvxJ7TlBBib4SHdK22kMqbkUg/T3rM
+ jCHmQKMmZChbwpkvIgphiqqbcBvU1hR0FwdtNRGGtUJ3p3+YASfKcV8CKlsZ9BPdnEOapcyLnT
+ /z2F8nhc3OVlSYwAAAA==
+X-Change-ID: 20250518-smb2-smb5-support-01685eca6fbb
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ linux-hardening@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2617;
+ i=casey.connolly@linaro.org; h=from:subject:message-id;
+ bh=4LGiNnB42HT/satjOaXpllHvqUrhfVY8Ni1b3Yq5VS4=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTQYi1fZnsxW0KpR2M6N9AhTeUNpZ8R15Xsg
+ fASw6hYLiKJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0AAKCRAFgzErGV9k
+ toSNEACcVkJ5pXc4sSBzKt+AtXEXVm3KdSTMeLAl3F94K7QQsZShksHm6I1JXR99tdxwVRMLkxD
+ 0KKYMExkME3to0PIKKCN7MUXLD6HnS0JhmolahDzcEPB0QbOgEK5de5HCPw3x+jjlma6zGdC6MS
+ FVnOHqq4DEn8aTjTxQSEZ8vBqg0lEKLVpxXN+ER5Zj58O4Jnm8gj+5ZjLFCxbV0KpFIy4NKRnYg
+ BVB+JaiWkJhKT+A9bpbnDkkahP190kE55ykRlIqaHEmrwJhqj7oWGyvmDG/5fAov1lZiX8VVVsa
+ TbCnmO8nWEssBVRB6ojQoF7GOqdzRJOwgn12/dvuTa2J07Qk0Ze77MJNevZTRl/8d7EKmAsLLMf
+ HypRX+E6+4KwPa3Mh4YKwgWCAI07jpKVe5PTPqC+rda8YYbcEFL6Xpvz2pd+vt97Ku+w/abOjEk
+ LaO7qsrhZEQaEhSPqiPOwNC3Y22jFLYRDkc44f9+mT4KaTDs3kz22zxOf7OMEY01SioV+SrErHC
+ GKSamZRxFEHFuPPnH97GMxjBh/85WEwGpk0Y/MBQAcg0y6wNZPSYvXK/nV9eN6jCamg/WUDZhit
+ nWQqOyXnBCYmWMk4C6GO7TAxbSIlYydvP6GeAGB0V89ztKNa6DXDbQQgSJgJhtgmUkb2Nm9pRb7
+ gCHxlP7kXmSX5hA==
+X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-On Thu, Jun 19, 2025 at 10:58:52AM -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 18, 2025 at 03:15:50PM -0400, Peter Xu wrote:
-> > > > So I changed my mind, slightly.  I can still have the "order" parameter to
-> > > > make the API cleaner (even if it'll be a pure overhead.. because all
-> > > > existing caller will pass in PUD_SIZE as of now), 
-> > > 
-> > > That doesn't seem right, the callers should report the real value not
-> > > artifically cap it.. Like ARM does have page sizes greater than PUD
-> > > that might be interesting to enable someday for PFN users.
-> > 
-> > It needs to pass in PUD_SIZE to match what vfio-pci currently supports in
-> > its huge_fault().
-> 
-> Hm, OK that does make sense. I would add a small comment though as it
-> is not so intuitive and may not apply to something using ioremap..
+This series contains fixes and cleanups for the pmi8998 charger driver,
+as well as introducing support for the newer smb5 charger found in the
+pm8150b and other newer Qualcomm PMICs..
 
-Sure, I'll remember to add some comment if I'll go back to the old
-interface.  I hope it won't happen..
+A bug is fixed where wakeirq enable/disable refcounting wasn't respected
+when the driver was unloaded and reloaded.
 
-> 
-> > So this will introduce a new file operation that will only be used so far
-> > in VFIO, playing similar role until we start to convert many
-> > get_unmapped_area() to this one.
-> 
-> Yes, if someone wants to do a project here you can markup
-> memfds/shmem/hugetlbfs/etc/etc to define their internal folio orders
-> and hopefully ultimately remove some of that alignment logic from the
-> arch code.
+Support is added for disabling charging entirely by writing a 0 to the
+"status" register (as described in the psy documentation). This allows
+for userspace programs to manage charging, e.g. to stop at 80% capacity.
 
-I'm a bit refrained to touch all of the files just for this, but I can
-definitely add very verbose explanation into the commit log when I'll
-introduce the new API, on not only the relationship of that and the old
-APIs, also possible future works.
+The AICL re-run interval is programmed to a consistent value (3
+seconds).
 
-Besides the get_unmapped_area() -> NEW API conversions which is arch
-independent in most cases, indeed if it would be great to reduce per-arch
-alignment requirement as much as possible.  At least that should apply for
-hugetlbfs that it shouldn't be arch-dependent.  I am not sure about the
-rest, though.  For example, I see archs may treat PF_RANDOMIZE differently.
-There might be a lot of trivial details to look at.
+The battery property charge-term-current-microamp is now respected, this
+is used to program the constant charge current limit during the fast
+charging phase. This also makes it safer to increase the max current
+limit this driver originally imposed from 1A to ~2A. According to the
+PMIC docs this is easy to handle without a secondary charger chip (which
+most but not all phones have).
 
-OTOH, one other thought (which may not need to monitor all archs) is it
-does look confusing to have two layers of alignment operation, which is at
-least the case of THP right now.  So it might be good to at least punch it
-through to use vm_unmapped_area_info.align_mask / etc. if possible, to
-avoid double-padding: after all, unmapped_area() also did align paddings.
-It smells like something we overlooked when initially support THP.
+Further increasing the charge current limit would require tighter
+integration with thermal zones and a mechanism to limit the current
+when the device gets too warm (e.g. by modelling the power supply as
+a cooling device). This infrastructure is currently missing from the
+kernel.
 
-Thanks,
+---
+Casey Connolly (11):
+      dt-bindings: power: supply: qcom,pmi89980-charger: add pm8150b and 7250b
+      arm64: dts: qcom: sdm845-oneplus-*: set constant-charge-current-max-microamp
+      power: supply: qcom_pmi8998_charger: fix wakeirq
+      power: supply: pmi8998_charger: rename to qcom_smbx
+      power: supply: qcom_smbx: allow disabling charging
+      power: supply: qcom_smbx: respect battery charge-term-current-microamp
+      power: supply: qcom_smbx: bump up the max current
+      power: supply: qcom_smbx: remove unused registers
+      power: supply: qcom_smbx: add smb5 support
+      MAINTAINERS: add myself as smbx charger driver maintainer
+      power: supply: qcom_smbx: program aicl rerun time
 
--- 
-Peter Xu
+ .../power/supply/qcom,pmi8998-charger.yaml         |   2 +
+ MAINTAINERS                                        |   7 +
+ .../boot/dts/qcom/sdm845-oneplus-enchilada.dts     |   8 +
+ arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts |   8 +
+ drivers/power/supply/Makefile                      |   2 +-
+ .../supply/{qcom_pmi8998_charger.c => qcom_smbx.c} | 730 ++++++++++++---------
+ 6 files changed, 430 insertions(+), 327 deletions(-)
+---
+base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+change-id: 20250518-smb2-smb5-support-01685eca6fbb
+
+Casey Connolly <casey.connolly@linaro.org>
 
