@@ -1,98 +1,104 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E4A3085DB
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E8D221270;
+	Thu, 19 Jun 2025 15:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346281; cv=none; b=LUqIYj6toqaVqbbHCmDRZ5/70gVaCrhxrWWNOYhrb4H6h6H4RX7SgeJdo9BZ2avAItR2p+FgYKuGHv0S+35oCi8YCWl8lKKxoePwViYMlKyqRTHTRgQUzJeu6r1Xxc6GwOnghLpBskaBtN+mpW3kSKy6B3Mt4rxEo9NyBy232YU=
+	t=1750346284; cv=none; b=nUEVCmXFsi3slhzqVy05g/QiWCdf2k/Nv78SEqdFKXzByEX3leUFm23tCsa/Ye9h5qDFP2rHuB23aTju+54wefflA2WppUCx8ZECEv9hVNLA9B0CPz3lpSblgP04AT5M6fAYXR58Ks5NztX/ZZwY7VatsgvEQ6U+dCOrlsvXb+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346281; c=relaxed/simple;
-	bh=Lss/rPYLZG9odOVpBtCol6toF0P1/fBtF9QDHyljGBw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pGG9YPZeulZ788eoXBAmuz0E6r3HlYKozc1IU4j1urMhsWD4AohD4allVzJCQvsN19JiVTYs8Vsy4nJOZvbldKy+CvGuSRPlt3p6eCMhwxFm+OpQWQj7DygUC2hy5pqSnHTzJmvaUTXTYTI9Axw8xDTmPWABMBWzBfvYSkDhqW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=RMtxkTuF; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="RMtxkTuF"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d3e7641b76so58385585a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750346279; x=1750951079; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hz28kZce3rKn2T+B8sZgV0w8PzAQ2ReDHPYg2LQY5lA=;
-        b=RMtxkTuFai+MNu/IOAYhlxMYajrC4mS7EKOUyPTs2FlgSOhC4f5gJrATVxrurfOz0T
-         jRS4pTjLWpkZd7qLCXip4JRsSeiM3P6ZqbeFfY+MrNKWU+IVUnmXp0Iru7L4S7Q3UJA+
-         VDuSl99gYZsOTkIYbGdWmJbz2KZDrir8ebg8w=
+	s=arc-20240116; t=1750346284; c=relaxed/simple;
+	bh=qAmKIMry2tJjYOV/mRm6EhXtZ3wqm8lfOnhBtky/cus=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FIc3rYOOJwmdeuhirfrTUwoFjbBx8FC6rRPypVQ23UD9M4C+qmFd18CHao3DNj7MwCtX13n6qBVaUIY/JYCwnAw6ZxkhS+9ap0ITmyy9oFjby1eB3aVSo+ue9JH+l4ggUw+FNtA10cHTXMvN3D1Xa0J3/pzyldpro0C3MDs27Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9a284c225so273325137.2;
+        Thu, 19 Jun 2025 08:18:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346279; x=1750951079;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hz28kZce3rKn2T+B8sZgV0w8PzAQ2ReDHPYg2LQY5lA=;
-        b=AB57ds2TC7zKGc5FusxjVHEHSsx0RQU9zpjfTcOPMW10mVGrSooHjnpLHkqmjPFPLj
-         beT2eEeU2hMIIhrT4tGr/jjt1SzPtiyYOap++q4qPMWSbaNr8oTQD2DWrE2XaMLNxT7f
-         7XqefY62/cKRAK3ZFL3tLhOrWHjMd2D9XOzX75RT0G3DwZ+RUFRZfrnw2Ow+zZRFDHHL
-         IxPR+eUv+u/SI1Mp/0f1V0QYCKannXTO7KbyMrRo0ulMimCXLUKbPZ6jPfUBGDHwgzsI
-         NfJPS3+tQKfbXgURi63lnku+u5OOMuIWAZBbvenkT2MLRnHFblHU+L/pHjSe8UXyWdTj
-         IM/w==
-X-Forwarded-Encrypted: i=1; AJvYcCX5FS9L/bwf2TIGM1DHsAPoBaKdAOEGD5a+fmDoJqkHcZfAwChawysH2WR/BBfEIbtTolI5VnCbkQFnIXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEElbhjqMpH66ALi+WpmI6KH5urllSp1hnJDc98hz9doqKmqwk
-	jsfLxE2mtAZ6yuKoW9+G6xT7HsZCcLMISLOZZF+kcxZ+ExJv2ld9/NQdRyP8VfCkBQ==
-X-Gm-Gg: ASbGncs2wr1RYdhJt18RsQK8dML9s3Jb/QdiMrkUAbOMaRNt68ke+01lEffNPEIgDod
-	c/kdPwHRAjZb4W3dTza6Cw+CubdqGoo/lVdqAjNhNxJW3nhKDKmGLjbGcm3smtCOGsLFpPGBxZT
-	rrSNth3Hvdm/kHwjcp/8IW1ClaOE0IPHkdCi+kfy1HMINLfr46FerQDXjFIa5cdcdwr8g4QhEOc
-	YAMozxQAQxBySnOLzDCyX+OXsBztPC0Zb+JCYUOHxUUXG47uo3721cg8yDgKoMmppiYT8E+XvLj
-	8u6ywBsDadA7TgNAAIaoi0Z6AUnM5L/uM9THTIQTsAn60C2wRQzhWxU+GO0Yo5n5JpNtA1Qq3c3
-	nsx5gfQ==
-X-Google-Smtp-Source: AGHT+IEtRLEcL6c4FOyoPa6VH1mLjUTdXNOPO0QoSfcHnfta24N3guMo0jFLti3k1pcheA+EEeb6AQ==
-X-Received: by 2002:a05:620a:1a86:b0:7d3:c68e:fcf6 with SMTP id af79cd13be357-7d3c6c0dd22mr3150099885a.9.1750346278672;
-        Thu, 19 Jun 2025 08:17:58 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f8e4b8ecsm7861585a.74.2025.06.19.08.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 08:17:57 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Thu, 19 Jun 2025 11:17:56 -0400 (EDT)
-To: Vince Weaver <vincent.weaver@maine.edu>
-cc: "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-In-Reply-To: <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
-Message-ID: <52656281-ab73-baf7-0a80-ebcbe79dfca2@maine.edu>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
- <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
+        d=1e100.net; s=20230601; t=1750346281; x=1750951081;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ntk+so1xA40iJ1eMvOf2PChc0jZI6RSYBcRU/+9kzH0=;
+        b=rMomg7rUHqajlfw/wPzqy8/BjXhIfMnVOiuW9oM1JIV90vY+O/eehpwWbTHKEvTSof
+         q1iv1ctMYELn+XwLoq7Ocykl1YCNQ8zS/f9QgpW76vO7yAn2x1r/huSugsubVXGrZFdx
+         G+BqqJe0SOK8MYAMGkiBDb5afDMAXAHgHWRmOm5Mjx2pKWsJqpVvyIKl+v0EAHCtGC22
+         hNqSzrGPVcWHbCYP8bjhP5j7mdqTctMyiJX8MaU9rthwQz8y9KPyq5clfvZeKwF0ohDg
+         nMrdHmZ2uN7n3CVpsOzD/wCWYpsDqmF9JMKY/7WAOVFPqw3H6/POhQukHqtpI57jyobm
+         P+lw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+x5F3Z4GTo0bE4RBhUZR5LR5zzcXCSoVYn7H4c123CbKsT5RxwXeTZbNmqe4DUVIdgcWoDaPCRUlS@vger.kernel.org, AJvYcCU85Xk+6z+NklAmPQsLnSsAWR1KgpPlf4J/U7zQn5c8Qv1Bl+Li20/xdHrS9E0baUH1tzowBZiJblmekM1t@vger.kernel.org, AJvYcCW1ROHspX+oHLRDdSqEAb22if+A2f2+fLPnJE1yZIjnTKOS5wbiQXKR6LxKRqRXVQqqoniAnmI4gBem@vger.kernel.org, AJvYcCXR0nx660DsCuiub3UIFx8aAYZHknD58Iu03FN7BAoZGoPVIsgLycvJDSkVdZnRV7podZgY79ZN+N3hJKRlAFQxxA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7K7CfkzTIAjmKhOLBfx3HcUgZOBPhhzqVuxEfjA+4vU2/51At
+	5JvXa7B9Yn6So+v+XuXAoqtTqGA5IQ++OGqPpEs352I2rCq3IkPiJQWqgLWbHivX
+X-Gm-Gg: ASbGnctOX9TR/IpjVWEfWhYhpPh8gNo7VgeqdkKXFl0PHZBcUT6GP75Y7nIAam3T1nM
+	Gt7cuB9LPUcQ/E+8AQoI3uvieM4xC0uIbskkUMCF9HREZi9+/NLB65qSgcF8UYz1TTf+YlkzFPM
+	4x3qOm4DgDB4H4NGz7OMZYSE0NkGmkRg58A0iBHHVst7vT6TetqgzHnT4Ib/6aLiElheF/3wRba
+	mFnrrajZyeQDoqybQsAG5WrpCw9wfXDQeQYb2PPV3eU/b+jW0EoilEd6grj1aa9MU3VFQaFD3+o
+	tLZGY8fxhjbS3v1Glajbnb0X/xIpiFtTM77Y81D3NXUPyL9hAJEy3ug8bV1bRyLgq8nilOApb9h
+	/3fbeuchXIhFG0pBQRxkXxvzv
+X-Google-Smtp-Source: AGHT+IGp+rIiFVTF0qFZtbXCpbPWn8i+wOZiAFu1907kUjqNkTIVcYFBH2366sAa2GdOb3V761kF+w==
+X-Received: by 2002:a05:6102:3e07:b0:4e2:bacd:9f02 with SMTP id ada2fe7eead31-4e7f62126d6mr15054576137.16.1750346280738;
+        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f389dd153sm1199677241.22.2025.06.19.08.18.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9a284c225so273312137.2;
+        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUsUSgA6NhlCA9ZFkJsu0SpxVqPpfgQsUbCsdtSyqT2xBcyXoNveshlaicdf/wmWGaevsXiXReoK5t/eERylzrDets=@vger.kernel.org, AJvYcCVab2GRJCYUEtnVQbP7Rgqy51UvtciUgcFTdXdHJQ95PUrNa/U/rOZRWdgvpXBdOYQ192m5sdIpg23y@vger.kernel.org, AJvYcCXSjrYXpfDwdJARENkoICF5K5Dh6HronP3rawwUQPeD5CbInQkjIMXH0/HRrZuTtxtMd2sicAKPJJ35mR27@vger.kernel.org, AJvYcCXgP+0mhzs2f5St3pMkaIX2aUTDlVGP3G30qr8EMYUZEMnIG+j6EGnB0MnZU7G/VZ9POthdYV4MCstv@vger.kernel.org
+X-Received: by 2002:a05:6102:6a8c:b0:4e4:5ed0:19b2 with SMTP id
+ ada2fe7eead31-4e7f61646ecmr18359222137.9.1750346279912; Thu, 19 Jun 2025
+ 08:17:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250617155757.149597-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617155757.149597-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250617155757.149597-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 19 Jun 2025 17:17:48 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVW8oPiqUqFt573-Db3963Yawm6+sT8DAHTq-64Naegog@mail.gmail.com>
+X-Gm-Features: Ac12FXzvo_4PUAY2MpopAYSr5MVWx-2BQeRauunUyjVmJtVyUj79Za_ayKIMT50
+Message-ID: <CAMuHMdVW8oPiqUqFt573-Db3963Yawm6+sT8DAHTq-64Naegog@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] clk: renesas: r9a09g077-cpg: Add PCLKL core clock
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 18 Jun 2025, Vince Weaver wrote:
+On Tue, 17 Jun 2025 at 17:58, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add the Peripheral Module Clock L (PCLKL) for the RZ/T2H (R9A09G077) SoC.
+> PCLKL is sourced from PLL1 and runs at 62.5MHz. It is used by various
+> low-speed peripherals such as IIC and WDT.
+>
+> Also update LAST_DT_CORE_CLK to reflect the addition of PCLKL, ensuring
+> correct enumeration of core clocks exposed to the DT.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2:
+> - New patch to add PCLKL core clock.
 
-> On Wed, 18 Jun 2025, Liang, Kan wrote:
-> 
-> > No, the error message doesn't say it. Just want to check if you have
-> > extra information. Because the Topdown perf metrics is only supported on
-> > p-core. I want to understand whether the code messes up with e-core.
-> 
-> I can't easily tell from the fuzzer as it intentionally switches cores 
-> often.  I guess I could patch the kernel to report CPU when the WRMSR 
-> error triggers.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.17.
 
-I've patched the kernel to get rid of the warn_once() and added a printk
-for smp_processor_id()  (is that what I want to print?)  In any case that 
-reports the warning is happening on CPU1 which is actually a P core, not 
-an atom core.
+Gr{oetje,eeting}s,
 
-Vince Weaver
-vincent.weaver@maine.edu
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
