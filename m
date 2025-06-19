@@ -1,75 +1,94 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05BA23ED75
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D172023D2A5
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340345; cv=none; b=Sl3YB9Ja358uIxJoxf0jOUcgexF553buosS2h3XRIEovJEmMgOFbT5q1vH3J2OY9RSM/3B4P1GnWzttLzLvgrc4VxvgX5XJcUtFFt6+HoUBdH3mB/J+/Xf7fTzTOXXvI1282GqhxodAI9fB0Fxzj4MiQkF6iQtLvLLuukoQVFzw=
+	t=1750340409; cv=none; b=s8TFduOI9cFjJclQpT4RFDMvET9HN1qSDQY0VgZXLXeZ5tMm1UWzfeup7Hlq448BBFxKffZ1E6WQFx0yt+ZV4fUPyyAYL6Y7aUmLpHTkdT4J7VhNENisN9Qum/TgDZsmDXGnW3bXj2tulAK9DlnAO4bMUz67You1eFh/lNJWMlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340345; c=relaxed/simple;
-	bh=DqfOqEMuanba3jKzp2TsYhVq4131fDyHD5JlW+Fvu08=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=etn3oHE3p0uPe8oJaP60MQE6YndNmdQubUQQu8kcjKRrHz33rWptjZzFw/1QLXgXyTJx4ZoSvOESScfaGM8LlgPYq7Uzr2Pc5TUDqc7t3Nhl0N+qrb/w0GhWZ6/KD43P9jWINUzfm8MyFDS95g2PaxG0OaVYqBRRi83Ll4v7DeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc4908c4dso10148675ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750340342; x=1750945142;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zHBjuRFu7B/O4Zi/00MnQ6LJlotmIhksVHDoW3blbTM=;
-        b=AC21+VGK0Pw2UNkvtQrV2CuQ16A9xKTWUE9pNhu5TMR9uCat4HQ7Nj1a8pTOL5DH4z
-         nANcWeKG8cVQ+LBHFaMvrVqb4v0WJ+i6bjOgrMRvtGYEa9cOSxDdN/+Rt4NzWKfhMHjb
-         c4lMeVc3Q5MhKv6hpOjvnNbtOq3RrMyME6qTMIOJlp+GRGloJ2BSnIlNzem4v0mTxqeE
-         nMTpWU9qAzArt7pO3WaAlgr1/ikZ5FdqBMNSG1mj4ogCPj8lguYYdze/xPpKUDyEqO8W
-         EdEpG1KrnYQ0QuBKNp1dPRZQbRFYT+8fEBh/nYPg6HA8K5e3qeiW+L99jSS0ANytnPr/
-         TPBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXO/AAtMtZHKLiMVoHcnsCeP7wbrD1cAwNVxOJhF0mVcDOvFtilIUO87eaCs9gcWCcATyAdMOtpUc8PF8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrC0hXHzjntDLYgXA1DaJiws1TWfYdec2dlAjeatm/rjLxOmtq
-	ob0pQUen6fv3ARdqwm2ta2Pr85w9SBgYtRRHRS+4dkWrOn/KrqSql1d1DVm55fs8+tCrSnFBDph
-	WbBMXb0s3uovkT5rvAIhf55UaBO9wh8W/7VnncjWAgwVo4isMkduwNtgoq+I=
-X-Google-Smtp-Source: AGHT+IEsfeh12lDZcBGwlRcPpBeCc6WNJ8vd7YeKonwpwggwkz4FxUiu7TVoPA9Sik87D6Ud7eei9xOKyROT0OIg//ovjCpY83uG
+	s=arc-20240116; t=1750340409; c=relaxed/simple;
+	bh=AFNN1yB4RcqoBrnRVEyf/13FBByrQ/oIzN3ZyKgPTYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ciCEi9/GbRx7IDxfubUMildRTeJhhsWR0iL0z9wXrH+NSFMef9j7f1mhsD++/+mmNs2Sd9NUioBkmRlqXhQs3IpwLLJot3+a47mdjN2vmCh5cKRQOUv5p4v/iL9RYflXZ348t7Ut6A124kpVwffOUllqGjvxp40fS/amih8WQoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OgNUewMC; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OgNUewMC"
+Message-ID: <b1bc7c4e-0fe7-43ad-a061-d51964ddb668@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750340394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iitUIID32ZSrtvqzDCiNlseD6qhYfmYNxL5htoPw5bI=;
+	b=OgNUewMCfPJzyQG1U57v06Pz+4xJbqW9O0Q28bZ+DyGBUTYMSJlZDvYxu+4GnaMMHIJwAi
+	YQXXD4KNXl3CU6SaGKAOYaTjtubQ+Cj/M7rHbztyidpvMP8zSnx4ohlsH/09dGwCPtbqdi
+	K5aI88B3fFTEFgXnq6s+UAb1vWVGWaQ=
+Date: Thu, 19 Jun 2025 14:39:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a2b:b0:3dd:ce95:7f36 with SMTP id
- e9e14a558f8ab-3de07c4c2cemr250218865ab.4.1750340342662; Thu, 19 Jun 2025
- 06:39:02 -0700 (PDT)
-Date: Thu, 19 Jun 2025 06:39:02 -0700
-In-Reply-To: <20250619133753.1203-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685412f6.a00a0220.137b3.000f.GAE@google.com>
-Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in do_sync_mmap_readahead
-From: syzbot <syzbot+8e4be574cb8c40140a2a@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [net-next, 07/10] bng_en: Add resource management support
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+ vsrama-krishna.nemani@broadcom.com,
+ Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+ Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+ <20250618144743.843815-8-vikas.gupta@broadcom.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250618144743.843815-8-vikas.gupta@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On 18/06/2025 15:47, Vikas Gupta wrote:
+> Get the resources and capabilities from the firmware.
+> Add functions to manage the resources with the firmware.
+> These functions will help netdev reserve the resources
+> with the firmware before registering the device in future
+> patches. The resources and their information, such as
+> the maximum available and reserved, are part of the members
+> present in the bnge_hw_resc struct.
+> The bnge_reserve_rings() function also populates
+> the RSS table entries once the RX rings are reserved with
+> the firmware.
+> 
 
-syzbot tried to test the proposed patch but the build/boot failed:
+[...]
 
-failed to checkout kernel repo git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/master: failed to run ["git" "fetch" "--force" "6e274abda436d30078c0e5fb9703cc1905bba23f" "master"]: exit status 128
-fatal: unable to connect to git.kernel.org:
-git.kernel.org[0: 172.105.4.254]: errno=Connection refused
-git.kernel.org[1: 2600:3c04:e001:324:0:1991:8:25]: errno=Network is unreachable
+> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> index c14f03daab4b..9dd13c5219a5 100644
+> --- a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> @@ -104,4 +104,14 @@ void hwrm_req_alloc_flags(struct bnge_dev *bd, void *req, gfp_t flags);
+>   void *hwrm_req_dma_slice(struct bnge_dev *bd, void *req, u32 size,
+>   			 dma_addr_t *dma);
+>   
+> +static inline int
+> +bnge_hwrm_func_cfg_short_req_init(struct bnge_dev *bdev,
+> +				  struct hwrm_func_cfg_input **req)
+> +{
+> +	u32 req_len;
+> +
+> +	req_len = min_t(u32, sizeof(**req), bdev->hwrm_max_ext_req_len);
+> +	return __hwrm_req_init(bdev, (void **)req, HWRM_FUNC_CFG, req_len);
+> +}
+> +
 
+Could you please explain how does this suppose to work? If the size of
+request will be bigger than the max request length, the HWRM request
+will be prepared with smaller size and then partially transferred to FW?
 
-
-
-Tested on:
-
-commit:         [unknown 
-git tree:       linux-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2f7a2e4d17ed458f
-dashboard link: https://syzkaller.appspot.com/bug?extid=8e4be574cb8c40140a2a
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=127dfe82580000
-
+[...]
