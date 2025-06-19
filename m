@@ -1,76 +1,88 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E74E266580;
-	Thu, 19 Jun 2025 13:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8942125A2C8;
+	Thu, 19 Jun 2025 13:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339578; cv=none; b=trJz0NjDkP5AZXiVGrpqWkd+CSOdm+P9egw84Jawzeb5/HW7U4b4VxGH4CqqHfq5u+zNfWmiKkITvwkpUJzjpW/FQIjzBy93CrtiDLu5RfRHExS1yyDxBdYSbj9BALPAZh5/ISLfgamCb7hy0n1dNp+pD/dIOD9Ogniv7P48XWU=
+	t=1750339613; cv=none; b=QGKZ6ZdjLAoPeA+SksTo3Ss3A+4O41s5jBPUwX1WHIJboPIf5quwRoetCwjG2grBGs9+KcbHSr5G1uM5kTW8zt8Jwk5uORk7Kpo5JbX1N9/mogKvE9N7wUjMoe1tdBg1dcugyDgC0SelffIcvDRYTFdw7mEMenTOn2z1VTd40Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339578; c=relaxed/simple;
-	bh=KGEyud7L2TQo6xGQ56ztqBTO8TL7Cn2i0cLKJZ5YetI=;
+	s=arc-20240116; t=1750339613; c=relaxed/simple;
+	bh=q+uqHkfAKvy4Mf6N9v81KLtza9u4cH3BHIbiedbi4R4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izwqQ86FkwkH8aHxFsL+UUhMKX8Ce5l5VGBkIQGe5b9iVCyAspkAcuYNPkc/R+P/8zMz7eXg3oc+i3KXWfv8q7ym9W8lI2EnimDBjFudBLCTHNaWwWdfhfFJ74l/HxMRRMeWhnC5xe+ZgAJJxyI3Upd9w5XGEaMDABfgbyoXakU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H+XuEpV5; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TquBnBUnYsj2b7DDszPzeEq/I9yeuXMI5BGLJ1pvlUf6TpubMjUD3dNh+fen8j9KnmCyDskemVRqGOvV4SHb00crg7FB0pVdy7BZbnppGjnFq8wK7Bank7Iz6zqj4OsZwiRmfxPbUut6Ai/w/TqAgpvyJCm3xFH3T22jxS9Uw28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oE8KLk4w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H+XuEpV5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mUtH47jkNHTUfdWVtm4j/G1WRt46Af+dgwGJAdSFHtQ=; b=H+XuEpV5mXnE+WB6V7UySKtgBl
-	jqlZGGTOTkFX1Hbpt4yp+nmMHmGCWmKd0DiFq93xPfzIs3qKQBKIbfnSZ1KEsxoQWFzCmqv3KObQe
-	Rcoh9gz8uQYxkLVVe7rvm+q5C7K1eqkqeS9cOB2ePUwQJugdCPVGtRGRhILFu1twhnzr3lqfaccvY
-	ElgkuMCMyfpfOyDqYaESt0G6UlcGlKQ3JYo3RjG9LUfXV0WPRGyQnMhUAeREXObQ7KenW44HnFqN/
-	jGL+tnqNBWTiGWQV6TWSKY1NwF8ThwNrQIoWW5SIQ4jQTlAiCrOnAtKg8lNvUuV0fonmpm1lKmvLL
-	BkKgnqeQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSFHM-00000008p7G-1NVS;
-	Thu, 19 Jun 2025 13:26:08 +0000
-Date: Thu, 19 Jun 2025 14:26:08 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
-Message-ID: <aFQP8LzVMctf6XH5@casper.infradead.org>
-References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
- <20250618041235.1716143-2-anshuman.khandual@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oE8KLk4w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DA7C4CEEA;
+	Thu, 19 Jun 2025 13:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750339613;
+	bh=q+uqHkfAKvy4Mf6N9v81KLtza9u4cH3BHIbiedbi4R4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oE8KLk4wAQhv+DMIZJ3hHPPSv6Xdwl7VQxKWfDp+KwHErU7x3XNHNEShUUlXltmCP
+	 ASPX4NrWmAjTmxTmaCK2N+NDBBqGFEdB2FqwL5kkCroZuLWrQ4QeAxUpgtQFN6eY8/
+	 mnwxhCbk9yeiU6dGDioirxFoeHyvw6juH0RhE/QtJdiopNKyu9Bub7/Q33vnOvakgt
+	 iASXBZ+fQVq1oX175RPypsR5gX172t6EY8OiYv1Q5LOQrREQE8fqpRB902kpe9V+Lf
+	 mqqAvxy8jp6wzujEWpc1HvA41b8XUdWKIlSOtIgyz3QSpIaRBYs8IhtoD32dwKE0RE
+	 mxGqlall2jpaQ==
+Date: Thu, 19 Jun 2025 18:56:41 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	kwilczynski@kernel.org, ilpo.jarvinen@linux.intel.com, jingoohan1@gmail.com, 
+	robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] PCIe: Refactor link speed configuration with
+ unified macro
+Message-ID: <v75tmnr2lvvdgilt7se2ymbrkl7y6ieqmrjnoqmuixgtoaptxr@v4cglwz4vo2m>
+References: <20250607155545.806496-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618041235.1716143-2-anshuman.khandual@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250607155545.806496-1-18255117159@163.com>
 
-On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
-> +++ b/mm/memory.c
-> @@ -522,9 +522,8 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
->  	mapping = vma->vm_file ? vma->vm_file->f_mapping : NULL;
->  	index = linear_page_index(vma, addr);
->  
-> -	pr_alert("BUG: Bad page map in process %s  pte:%08llx pmd:%08llx\n",
-> -		 current->comm,
-> -		 (long long)pte_val(pte), (long long)pmd_val(*pmd));
-> +	pr_alert("BUG: Bad page map in process %s  pte:%ppte pmd:%ppte\n",
-> +		 current->comm, &pte, pmd);
+On Sat, Jun 07, 2025 at 11:55:42PM +0800, Hans Zhang wrote:
+> This series standardizes PCIe link speed handling across multiple drivers
+> by introducing a common conversion macro PCIE_SPEED2LNKCTL2_TLS(). The
+> changes eliminate redundant speed-to-register mappings and simplify code
+> maintenance:
+> 
+> The refactoring improves code consistency and reduces conditional
+> branching, while maintaining full backward compatibility with existing
+> speed settings.
+> 
 
-Unfortunately, the one example you've converted shows why this is a bad
-idea.  You're passing a pmd_t pointer to a function which is assuming a
-pte_t pointer.  And a pmd_t and a pte_t are sometimes different sizes!
-(eg sometimes one is 64 bit and the other 32 bit).
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-So no, NACK.
+- Mani
 
+> ---
+> Changes for v2:
+> - s/PCIE_SPEED2LNKCTL2_TLS_ENC/PCIE_SPEED2LNKCTL2_TLS
+> - The patch commit message were modified.
+> ---
+> 
+> Hans Zhang (3):
+>   PCI: Add PCIE_SPEED2LNKCTL2_TLS conversion macro
+>   PCI: dwc: Simplify link speed configuration with macro
+>   PCI/bwctrl: Replace legacy speed conversion with shared macro
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 18 +++---------------
+>  drivers/pci/pci.h                            |  9 +++++++++
+>  drivers/pci/pcie/bwctrl.c                    | 19 +------------------
+>  3 files changed, 13 insertions(+), 33 deletions(-)
+> 
+> 
+> base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+> -- 
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
