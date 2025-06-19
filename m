@@ -1,218 +1,413 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2096.outbound.protection.outlook.com [40.107.243.96])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9602A21CC64;
-	Thu, 19 Jun 2025 09:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326041; cv=fail; b=ZeWfOXqV+Il1xC+GJhOiSgz3gdcusYOacHCEd6mmN1pBKvOTdd5GBV0gmK8F4ilFhwgJfEDQ8EjjY5GdiyIZ6FXb3NVXv7sb+FLHckfHronVza5LQ81s5cwdM78gS9TT/0a29w94EPJ1GnhVrtAwF0rnwkamAr+fOzR6JcasSa0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326041; c=relaxed/simple;
-	bh=Zl0DT7n39QSp2rITWaLzs2shCVtt77V4w/sl5qq+Bk4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=E8IGmNJ+3SlFnrADVsSFUmqO5wfpPbWaZlEBQz4ZuO/yFDDx75800Ex/Zz1J+BSXV7SjzG4a38gl/RaCd3geIA6g6WIX9C0GmXGXewmSvtI4/bnftWKbOrmVqta0t5uy9+DMuxH8irUVc62jVopVBWN14O3l+oM0qDsucA2QEac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=YiFNS0xn; arc=fail smtp.client-ip=40.107.243.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0351E3DE8;
+	Thu, 19 Jun 2025 09:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750326067; cv=none; b=N8UTGsHwqefXY8jVcVGLpgjBF9Rxre5pQH/YgnzWFQsIEvOu2xTlpvN6tsh/2gqaaLCe/PNl5jEn/XQtRu5ZgXswfYr+x1sAigC4nRr/IfIZNGs4OOlHS6udgHCLl0xQDABBWUwYkVT915RlefjMUji6WazB4eBWqiEik6UoJds=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750326067; c=relaxed/simple;
+	bh=Kea1oGq0yOrLu69nIByO29Ka/lkhBMFN6/dXmxK9I0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhMHyaENubwrHuqw7jMsLrRWFfsAN71T8UhTszfvmB6BOaszCNBJgL1VpOyvd55B04HQmZYOmb4mx1af4LxSvJye7RAMGFJ1XxP7nbAXWmdXBCFoXg66wVzUMm3jeDXuwvjMhKttEzxRNpxyxn1IhBlu+jUYDdwp3n3bT5ERdAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8Y5iCsA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="YiFNS0xn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cSxBwLk4lYcha5Q1BCPX/Pg7WkS0Ytlw/2i/DdLbt8EFFd4jOPbFYLSSn7NfNWJS3Z46pTxTyhsPf/wzb3VxKEqfc5DSdwIUm6XbNBkg88vmiUxSM8//QR7RsmC06tIqtIkurrnejZCQCv4Mq6LeXTr9ndpx4KWTtK3BvteMORvvU1o7TuCQsFdF89a+pVZOhtxNWC3HsCtWgdheBaLqWsAkaBxvDpeLlOcenc+D+tQwaV4x82sbti4OXlSIoWwNZY/g15JpgYIBiheXZYY4Z6dGZgqWdT9kK1Cosvs4JNgdp8PcuqUtEIjECVvfj7mmeYZUxhdaqT78TTf+OiWcEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LqlKBw+/ecrIzOhxDzv5rDlwUr989PCXU0s7TiGRsTs=;
- b=BG2Zqf4hNpj1fkP8zIrl/HjSxQXqX9D7o0Ep+WNBGRkaOLqZdKDI3FPAOPnIpLy+IwiHJLi9tZUUDc5WxCwGpH+Dr3AZ1DQfOndxb2tO2PacpGaFn0vtdE1lPvkWk8nr5MKdfhItrLOmw3V5nnnkTix7kACO8FG0cgvTt4ip/6jNbL0tP/Ygstlp4aaW30uogQroaBcBoO2gyVUFwRvuXm0+WcZZwU93ydvFfKccJt4fCkms7oAKW2jigzT1UUYqIDWB40JQp3aT3SNuC9UEiRy8Mi0RkyaftohpvxZ8MkLiuURp/rtQ5aF8Ri/SRQS47Soyye3dxWW1yCuv3mOf2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LqlKBw+/ecrIzOhxDzv5rDlwUr989PCXU0s7TiGRsTs=;
- b=YiFNS0xnY6xOBdK9XenjhuxHR0iIlfLDaU1nhFwk+IWTOLpB83ek9aX+C/OSSiYM3F289kptMxGvfiCEtzI7uyeKvFhsgB8h/Nmkno2sjDSw75K6jEf8a4iVW9fmhvZ0Nu8RXFyZWizdI1mGzBMZhxt7hjN17QCClcROriT+qB8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
- CY3PR01MB9318.prod.exchangelabs.com (2603:10b6:930:103::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.29; Thu, 19 Jun 2025 09:40:35 +0000
-Received: from SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9]) by SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9%6]) with mapi id 15.20.8722.027; Thu, 19 Jun 2025
- 09:40:35 +0000
-Message-ID: <3be548bf-aee4-46ab-bcbf-15bf629b24da@os.amperecomputing.com>
-Date: Thu, 19 Jun 2025 15:10:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/9] KVM: Enable Nested Virt selftests
-To: Marc Zyngier <maz@kernel.org>
-Cc: Eric Auger <eauger@redhat.com>, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- suzuki.poulose@arm.com, yuzenghui@huawei.com, seanjc@google.com,
- darren@os.amperecomputing.com
-References: <20250512105251.577874-1-gankulkarni@os.amperecomputing.com>
- <92c7e99c-5574-422c-92f1-62d5cde58fec@redhat.com>
- <7bf7bd52-7553-42a7-afdb-a5e95f8699b5@os.amperecomputing.com>
- <86a56veiyy.wl-maz@kernel.org>
-Content-Language: en-US
-From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-In-Reply-To: <86a56veiyy.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXP287CA0010.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a00:49::21) To SJ2PR01MB8101.prod.exchangelabs.com
- (2603:10b6:a03:4f6::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8Y5iCsA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E180DC4CEEA;
+	Thu, 19 Jun 2025 09:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750326067;
+	bh=Kea1oGq0yOrLu69nIByO29Ka/lkhBMFN6/dXmxK9I0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z8Y5iCsAl2phyZcuyWyv8duKIXc887sVB47l6bRCpzmc4Xbr0XWbLUvt1ziZfatUi
+	 3ekTefmuEILKNt1sH/ppGjAR/JNE2A/1f/eS/cAF8/FB+NpTEnfiTDLyr6UJZTlEFp
+	 RCnLJV+gOCOc5pNY6Mxx4x6HO/9nnPAPUT/xHt5Q4P3zllQ7mZoBnbRCpAXtWFEHjI
+	 1bVbYbziUxxlyc8JgJFkXVxDcWw9Yg5ub1W6Bq1Z8qypHiM329AJRuSghjqetJh/Pk
+	 NcbJed5IR/1gIwh5JmljBkPt9Fqspue8HM0ctlOPId/AbF9yuCyQrB0pNJk91dV+Su
+	 uxHZIX0zC81GA==
+Date: Thu, 19 Jun 2025 11:41:04 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] drm: bridge: Add support for Solomon SSD2825
+ RGB/DSI bridge
+Message-ID: <20250619-nondescript-holistic-ostrich-6d1efc@houat>
+References: <20250526114353.12081-1-clamor95@gmail.com>
+ <20250526114353.12081-3-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|CY3PR01MB9318:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72a5cf0d-47b3-4f95-b492-08ddaf155730
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?am5UdU5ORFkybFplMFU3eTBrSkNLSjlnL2xWUE0yNm16RTk1Zmx0QUhHZDht?=
- =?utf-8?B?NVltS1lEYkVSNEpQK0V1WGtkeGRiYVEraWNodWJBNjBhSnVkNXoxZWdvN1dG?=
- =?utf-8?B?QjQvby82Q1ROOXl0MjAveWtVMW1CeWhPaUVkZmhtaktnNUk2Q0xSTFVGWEwr?=
- =?utf-8?B?b2hHRHo2ZmgxYUlZYld4NzRXWFBxOU1SWmtsOHM1Y0FFM0JUWXdrckdZbE9C?=
- =?utf-8?B?eFFSbFUrYk9PRW5pVkNyUVRTLzM5YmNsa2RyRWxMM1lFY0ZSd0RJRnBZVG9S?=
- =?utf-8?B?Zm5PMzJVZUg0ZFlPMUlxcG51QkRpaVVXdHI4YklJS3FldnRjeU1OdU0xTGdP?=
- =?utf-8?B?NmRBWEpDY0FNN0ZVY0hyU1lrcnRqMEYyVHVsWXlYMitUejFkZWViajhZMHY0?=
- =?utf-8?B?dHp6ZDRkRXlwcmJaQnlvQ2hMQ3ZoZ0tPM215clp4L2tjWjRPZUY3OG0zTmQy?=
- =?utf-8?B?V0oxcG9HWWxzL1ltTGJOUjBGMjlJbmJka1dYeE9kZGZZZHVXbzNuczQ5M1hh?=
- =?utf-8?B?K2hERXg5dGlTZmowanlUS3czSU9FWGRZeGp4NlFnR012MkRFRm1UcHVLdU1T?=
- =?utf-8?B?bnhRRlo0QklubmhENERUMVpTb1NrOVJyaUNGT0MwVVNqWm9MWG1QZkI2RDQx?=
- =?utf-8?B?dkZiSUhNQ1J1QVNKVkdFWkowSmFFNldaZXU2encwdWZBY0xHdHdFaU5Qenh3?=
- =?utf-8?B?L1FzcVZrdE9OYU1OYmxldzhoVjMwVEJ0cEIwa01FSXphVGpTSTVzcndlV3Vk?=
- =?utf-8?B?a0J5UFlYOW9tZFNjS014Tk1RcVIwdE5lY2NkRzVsaitaNTNzWmFKMS9DYXdO?=
- =?utf-8?B?bGtuOXNPb2RGUHJ1RlkxUjJKUldBNjh2S29ORGFjQTI3ekdlVHZEKzdhYlNj?=
- =?utf-8?B?MDhWeEFwSERTSE1GUXk2L3p5VzdsNC83QWxwMGk3cjlMd2ZZMVBLbk5NVEM0?=
- =?utf-8?B?ck9EaUtqZ2RHUHQvODdyaDZGN1k1M1R0bVBTcEVkWTdrdW5KRXJxTXhwTWxq?=
- =?utf-8?B?ZTNPaTlUcU5jbnkxU25kVUZPNmhSbzdPZUMxVHZQN0M0a3g5RitRYzZCT1NE?=
- =?utf-8?B?TC9BTnNwbFVhQ1VNam9PbkVoeHRSNWM3bmhZQVdSZk8zQ2s1OUpQM09XdTFw?=
- =?utf-8?B?NlprY21nYTFoUktQTlNXakJNaFk3bEtIS0UvYjUyd3R0ZjZRYVhSaWd0Um5x?=
- =?utf-8?B?dVk4d3ZxZjZqaDBIbFRDWGFrUUhpaTJ0VW8vb1BLME5KWEI1VTV6S1I4d3hz?=
- =?utf-8?B?REJ1cHAyQzZLWDFUVFRVVk1uMVZ6ek51Wm1jKzdneFB1ZnJ4STBxTEhScktk?=
- =?utf-8?B?Yi9EN0pIYzFFSTdxaHlocVZNUEJaVnArLzFJdnUybVNkTFUrNGVpTUpVbnJl?=
- =?utf-8?B?S0kvZ0VWOG9PeDRtd2dDUlNXOEZpR2tEcHJWWHZkVERSSWtobmFnZ0RLQXpp?=
- =?utf-8?B?TFk5enR0S1lEaGREb1FGQ3hFdTBaV1NqSnJ3S1FFdWR1Zk1rMGNYQlJaS3RH?=
- =?utf-8?B?c2dKRi9sQ2d4WmZzdkxYZ3RXdGdKaTAvZ0w5b1ZBdzlrZnVsemw1TjBKOERn?=
- =?utf-8?B?bjE5RHJNOEZNRlRuSnI5UFNpcks5dXRycHU2Zys5TElMNklzeGdMR3BRcU9p?=
- =?utf-8?B?bEdYNnVuL0F0VnZsMGZON3YrMyt2MGVmdmw0WHg1bGsxakhncWFHOHBDMXJr?=
- =?utf-8?B?V3E1YXJhTGpoQ3BMa1lFcjZyOHM1OFdBZzZFeEJscHEzYnBpSU1BbW41SXp6?=
- =?utf-8?B?NDltY0xLN21Oc0pRc2dWbERBMzF3bEFQUFNzRkFrYmprdEFaMXpWSlRHL1F3?=
- =?utf-8?B?NzlaVCtOTG1qQi9yNHhnZ3lxVDdDU0NSUzNCMGJ6ajJWVXpneEFFZFpyQzNy?=
- =?utf-8?B?cjRzV3NWL3hwZU9CNk1mbjkvMHVpTUUvYldtRU9Ib3M3WXgwZ2RqUkQzOVRZ?=
- =?utf-8?Q?dqQEDsXmbno=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UTMvQzVSYXlZR1c0enltM3V0d1NpaklJMFN2bDV3U0d6WENBMGZpNmk0YVhM?=
- =?utf-8?B?ZGYzT1E0S2FkdG90SDN5dW10WEl5bU1EeVJvc0c1NGxKaUQxVmdjRUpnUSti?=
- =?utf-8?B?TzUyYnJ6VlZuSmZudzVwaHp5dW05ODNpQzdQSHNDd0s5OTdGRXpWdndLMTVq?=
- =?utf-8?B?OXNUeitkYllKU3FTTGMvL3hpQ1ZpUjhBZUJVYVJoNENWbE5ZQXlwYnNWMy9D?=
- =?utf-8?B?cFJWZHlOb25DbUZvK2s5RG0wazdjT1IwT01oZ2ZBV2hpN3NWVFZ5UG5RUHMz?=
- =?utf-8?B?QTlreGNrNkR5M2RxclorUnNYL2t2a0prWXAvSFBtV2E5eXNrdU5wcDNCTnZi?=
- =?utf-8?B?TXRDaXhsbjJ4eWozV3RWbjFaN1RueW84Uk13VU9FK1d0d3o0REJLNEFKNGha?=
- =?utf-8?B?UHVIRE1IWWRncmthZ091em5kUWpiZVM0TkNkajB3ZGgycmRTRlpacXdBMW9V?=
- =?utf-8?B?eGJSdmVtU1JjOUtSdC9CL0k1Y2pqaXZhYjVwaHMwemdUZ1g0aFlxTUpYQ0tI?=
- =?utf-8?B?WE5rOHdsQk1uMlJZam1MbkxWbXpRN0RoMXl1ZGJyUUFMeExQTW1pbytKYzhQ?=
- =?utf-8?B?eVY5ZUFUeWVXYUdVYnl5eHNTcFZnQzRlT2Z2V0NiMlA0NWhDYjk3Mkl2UGNa?=
- =?utf-8?B?SmcyblUrUmUyVzExWFhjUWtWTlY3UUYrMlJPRWs4QWlseXZYY2xEMmZsNDZw?=
- =?utf-8?B?WEw1QUh5Q2hVd0w3UEJMejlmd0ZGM2Z6VTBNci9TbWhuS2VybXQ3b3RYMUtZ?=
- =?utf-8?B?UjJGVTQyUWtJODVNQXl3d2JFYlpzdXlFYTljTmdKZEluMnNvelU4MTFlTllV?=
- =?utf-8?B?V1Fmckt6UnhXU3k0WmdxK0ROZ0NYMjRUUmVzK3FFcWUzdDJPRitTVXRIUWI5?=
- =?utf-8?B?R2tnWTA3Mm1OMkVZUzExNTlBRlErSlVZc05GNzk3MFAyMEZUamoyTDVzQXEx?=
- =?utf-8?B?K2I1TDNhMjZZaHJsN1lZTGtRNlFoMVpZZis2U1RmQnBvN0tIWGhleWhYWENQ?=
- =?utf-8?B?czBYWnhqYjZOYy9WYzA4aW52aDcwaWFyckNEN2RTMnh1VjFGQXY1U1lzdnhD?=
- =?utf-8?B?STRBdzNKRlBSeDVRZmoyNG04c3pmNm5IRHR4eU1CNFFRakQ1VXlWbkFnRjAy?=
- =?utf-8?B?MHNPYytNZkVhUFUvQkpRcm4vblBlQ1ljTURpd3VCUVFNRERyVDI1UzhiUHo1?=
- =?utf-8?B?bFZnbC8zQVU3Y1g0bUpIcktZN1NrcVdDMjVQMmg1OThNRWlTRXo2QkVWMWVB?=
- =?utf-8?B?ZVYrZDRQR3RDdUhzbk1PT2FRbHI3d1N3MFR3L3hyUWw0YkJ0bk1aSm9oVjNx?=
- =?utf-8?B?bmpXOVQrZ2M3anB5WGlkVk92R210UGxqUVRLbDVEcnRWTGRSSzRDdk5hSlBi?=
- =?utf-8?B?UUJBdkF3dWRXNjcrU0hUenRxTytRYWhzWmpwRCtPRUxlTlRiLzZ5VTREOW9P?=
- =?utf-8?B?WFd2em83QVJad1Fjanlqb1ZzZVgyQmEzV0hjUjliM0RVYThMVXIzU3NGWmZt?=
- =?utf-8?B?a2NEVUVRY1hMdGc3bjJwWFNNMjJOOGFIZWRiVXozcEhzazRIbjdnaHFBRkFK?=
- =?utf-8?B?bjBpZVZIU2FuYWdiaE9zT29kSnVmTWlTNkl0bjYyQXNwcGhGNUtJeVV2UFI5?=
- =?utf-8?B?aThac2N4RmU1RWhwTGhPTkZJaHpvODkxRW5qdUE0bjVDWlhsdUlMa0QrQWRz?=
- =?utf-8?B?MlNoVXQ3T2NPNUpCTHAxbjdkNUd4Y0w3ME5vN0QyTEpFWWt5eFZCZWlCYzlI?=
- =?utf-8?B?cnBXSmRWVWkxengyNmR0eHFmcXdPZFlHOWtBT2U4Z2VIZnNSNU0yOVdUWkg1?=
- =?utf-8?B?eFphOTZUNnIwMW9vTFZVTHhkUjBvdVNXejQ4eC9NVW8yQVo1ZEF4NlZUZWhD?=
- =?utf-8?B?NkI4L2Y2Vzh3RFhIZG5LVFVRcHl1NHpZWEc2cEM4Q1M4aWpVQldiWVloYWJ5?=
- =?utf-8?B?K082bHEycGFrREI0MVBtVTNlei9wKzRtRHFoWTFIdGVOck5yZGpKcEZPYXVT?=
- =?utf-8?B?R2dLNmpPTE15TTFjTVBZOWRPMlRLWkx0NjN3UU5sTHIrbm9sWEkxQkJYQXVy?=
- =?utf-8?B?Y0gxZWxkcWh1TFY5d1ZFNy9EQ2tIV2FvVzJLUndWSEpOUDhWT2MvdXAvZzFz?=
- =?utf-8?B?RVN6elBxMXJhdlBkQllkRUYyYmFqWEszeFZoMEhTcGx0eFM3UzcrRDd3eTQv?=
- =?utf-8?Q?yA4Noj3NuMPJ+Sx/oaktDpc=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72a5cf0d-47b3-4f95-b492-08ddaf155730
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 09:40:34.9747
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l4OIEDwkTjCMgGU2r6KMrgXhHG/6leStmDfcksvrMm+QST3lU3GlaXsZRBIi+3NIcPFY7Rcl9QMmL+tRzGcubtmlHUhxkVK3YYdQ8JwBAFk7JB9UuQjtfrtJm2RZDQXq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR01MB9318
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="gif2fpgroucfpfxk"
+Content-Disposition: inline
+In-Reply-To: <20250526114353.12081-3-clamor95@gmail.com>
 
 
-[Sorry for late reply]
+--gif2fpgroucfpfxk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v6 2/2] drm: bridge: Add support for Solomon SSD2825
+ RGB/DSI bridge
+MIME-Version: 1.0
 
-On 5/29/2025 5:18 PM, Marc Zyngier wrote:
-> On Thu, 29 May 2025 11:29:58 +0100,
-> Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
->>
->>
->> Hi Eric,
->>
->> On 5/28/2025 6:58 PM, Eric Auger wrote:
->>> Hi Ganapatrao,
->>>
->>> On 5/12/25 12:52 PM, Ganapatrao Kulkarni wrote:
->>>> This patch series makes the selftest work with NV enabled. The guest code
->>>> is run in vEL2 instead of EL1. We add a command line option to enable
->>>> testing of NV. The NV tests are disabled by default.
->>>
->>> For commodity, I would add in the coverletter that for all tests
->>> enhanced with vEL2 testing "-g 1" option shall be added to force that mode.
->>
->> Sure, will do.
->>
->>>
->>> I don't really get how you chose tests capable to run at vEL2 and
->>> excluded others? Wouldn't it make sense to have a way to run all tests
->>> in either mode?
->> There is no selection as such. I have worked on around 50% of the tests and sent for the early review.
->> Yes, almost all tests can/should run in vEL2 except few.
-> 
-> Define EL2. You are so far assuming a E2H RES1 guest, and I don't see
-> anything that is even trying E2H RES0. After all the complaining that
+On Mon, May 26, 2025 at 02:43:53PM +0300, Svyatoslav Ryhel wrote:
+> +static ssize_t ssd2825_dsi_host_transfer(struct mipi_dsi_host *host,
+> +					 const struct mipi_dsi_msg *msg)
+> +{
+> +	struct ssd2825_priv *priv = dsi_host_to_ssd2825(host);
+> +	struct mipi_dsi_device *dsi_dev = priv->output.dev;
+> +	u8 buf = *(u8 *)msg->tx_buf;
+> +	u16 config;
+> +	int ret;
+> +
+> +	if (!priv->enabled) {
+> +		dev_err(priv->dev, "Bridge is not enabled\n");
+> +		return -ENODEV;
+> +	}
 
-Sure, I will mention that default test code runs in EL2 with E2H enabled.
-The tests code is in vEL2 with E2H RES1 by default, since host is booted with VHE.
+Transfers can and should happen even when the bridge is disabled. The
+hardware might not permit that, but you'll need to elaborate in the
+comment about why.
 
-> E2H0 wasn't initially supported, this is a bit... disappointing.
-IIRC, I was mentioning about L1 switching between arch mmu table and guest mmu table(VMID 0).
-I don't remember why It was switching.
-  > 
-> Also, running EL2 is the least of our worries, because that's pretty
-> easy to deal with. It is running at EL1/0 when EL2 is present that is
-> interesting, and I see no coverage on that front.
+> +	if (msg->rx_len) {
+> +		dev_warn(priv->dev, "MIPI rx is not supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	guard(mutex)(&priv->mlock);
+> +
+> +	ret = ssd2825_read_reg(priv, SSD2825_CONFIGURATION_REG, &config);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (msg->type) {
+> +	case MIPI_DSI_DCS_SHORT_WRITE:
+> +	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
+> +	case MIPI_DSI_DCS_LONG_WRITE:
+> +		config |= SSD2825_CONF_REG_DCS;
+> +		break;
+> +	case MIPI_DSI_GENERIC_SHORT_WRITE_0_PARAM:
+> +	case MIPI_DSI_GENERIC_SHORT_WRITE_1_PARAM:
+> +	case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
+> +	case MIPI_DSI_GENERIC_LONG_WRITE:
+> +		config &= ~SSD2825_CONF_REG_DCS;
+> +		break;
+> +	case MIPI_DSI_DCS_READ:
+> +	case MIPI_DSI_GENERIC_READ_REQUEST_0_PARAM:
+> +	case MIPI_DSI_GENERIC_READ_REQUEST_1_PARAM:
+> +	case MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM:
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	ret = ssd2825_write_reg(priv, SSD2825_CONFIGURATION_REG, config);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ssd2825_write_reg(priv, SSD2825_VC_CTRL_REG, 0x0000);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ssd2825_write_dsi(priv, msg->tx_buf, msg->tx_len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (buf == MIPI_DCS_SET_DISPLAY_ON) {
+> +		/*
+> +		 * NOTE! This is here since it cannot be called in bridge enable because
+> +		 * bridge pre enable and bridge enable have no gap in between.
+> +		 *
+> +		 * Existing framework bridge-panel seq is:
+> +		 *	panel_prepare > bridge_pre_enable > bridge_enable > panel_enable
+> +		 *
+> +		 * Using prepare_prev_first was tested, but it switches seq like this:
+> +		 *	bridge_pre_enable > panel_prepare > bridge_enable > panel_enable
+> +		 *
+> +		 * This will not work since panel hw MUST be prepared before bridge is
+> +		 * configured. Correct seq should be:
+> +		 *	panel_prepare > bridge_pre_enable > panel_enable > bridge_enable
 
-Sorry, I did not get this comment fully.
-When we run selftest on Host with -g option, the guest code will run in vEL2 as L1.
-This is implemented as per comment in V1.
+Where is that requirement coming from?
 
-When we run same selftest from L1 shell, then guest_code will be running in EL0/1 like running from L0.
+panel prepare is documented as:
 
--- 
-Thanks,
-Gk
+  The .prepare() function is typically called before the display controller
+  starts to transmit video data.
+
+
+And video data transmission for bridges only happen at bridge_enable
+time.
+
+So, from an API PoV, all the sequences above are correct.
+
+> +		 * Last two functions should be swapped related to existing framework.
+> +		 * I am not aware about method which allows that.
+> +		 *
+> +		 * Once there will be such method/flag, code below should be moved into
+> +		 * bridge_enable since it is basically a bridge configuration completing
+> +		 * after initial panel DSI sequence is completed.
+> +		 */
+
+If there's anything to fix, we should do it before introducing that
+driver.
+
+> +static void ssd2825_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+> +					     struct drm_atomic_state *state)
+> +{
+> +	struct ssd2825_priv *priv = bridge_to_ssd2825(bridge);
+> +	struct mipi_dsi_device *dsi_dev = priv->output.dev;
+> +	const struct drm_crtc_state *crtc_state;
+> +	const struct drm_display_mode *mode;
+> +	struct drm_connector *connector;
+> +	struct drm_crtc *crtc;
+> +	u32 input_bus_flags = bridge->timings->input_bus_flags;
+> +	u16 flags = 0, config;
+> +	u8 pixel_format;
+> +	int ret;
+> +
+> +	if (priv->enabled)
+> +		return;
+
+What is this guarding against?
+
+> +	/* Power Sequence */
+> +	ret = clk_prepare_enable(priv->tx_clk);
+> +	if (ret)
+> +		dev_err(priv->dev, "error enabling tx_clk (%d)\n", ret);
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ssd2825_supplies), priv->supplies);
+> +	if (ret)
+> +		dev_err(priv->dev, "error enabling regulators (%d)\n", ret);
+> +
+> +	usleep_range(1000, 2000);
+> +
+> +	ssd2825_hw_reset(priv);
+> +
+> +	/* Perform SW reset */
+> +	ssd2825_write_reg(priv, SSD2825_OPERATION_CTRL_REG, 0x0100);
+> +
+> +	/* Set pixel format */
+> +	switch (dsi_dev->format) {
+> +	case MIPI_DSI_FMT_RGB565:
+> +		pixel_format = 0x00;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB666_PACKED:
+> +		pixel_format = 0x01;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB666:
+> +		pixel_format = 0x02;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB888:
+> +	default:
+> +		pixel_format = 0x03;
+> +		break;
+> +	}
+> +
+> +	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
+> +	crtc = drm_atomic_get_new_connector_state(state, connector)->crtc;
+> +	crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
+> +	mode = &crtc_state->adjusted_mode;
+> +
+> +	/* Set panel timings */
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_1,
+> +			  ((mode->vtotal - mode->vsync_end) << 8) |
+> +			  (mode->htotal - mode->hsync_end));
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_2,
+> +			  ((mode->vtotal - mode->vsync_start) << 8) |
+> +			  (mode->htotal - mode->hsync_start));
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_3,
+> +			  ((mode->vsync_start - mode->vdisplay) << 8) |
+> +			  (mode->hsync_start - mode->hdisplay));
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_4, mode->hdisplay);
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_5, mode->vdisplay);
+> +
+> +	if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+> +		flags |= SSD2825_HSYNC_HIGH;
+> +
+> +	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+> +		flags |= SSD2825_VSYNC_HIGH;
+> +
+> +	if (dsi_dev->mode_flags & MIPI_DSI_MODE_VIDEO)
+> +		flags |= SSD2825_NON_BURST_EV;
+> +
+> +	if (input_bus_flags & DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE)
+> +		flags |= SSD2825_PCKL_HIGH;
+> +
+> +	ssd2825_write_reg(priv, SSD2825_RGB_INTERFACE_CTRL_REG_6, flags | pixel_format);
+> +	ssd2825_write_reg(priv, SSD2825_LANE_CONFIGURATION_REG, dsi_dev->lanes - 1);
+> +	ssd2825_write_reg(priv, SSD2825_TEST_REG, 0x0004);
+> +
+> +	/* Call PLL configuration */
+> +	ssd2825_setup_pll(priv, mode);
+> +
+> +	usleep_range(10000, 11000);
+> +
+> +	config = SSD2825_CONF_REG_HS | SSD2825_CONF_REG_CKE | SSD2825_CONF_REG_DCS |
+> +		 SSD2825_CONF_REG_ECD | SSD2825_CONF_REG_EOT;
+> +
+> +	if (dsi_dev->mode_flags & MIPI_DSI_MODE_LPM)
+> +		config &= ~SSD2825_CONF_REG_HS;
+> +
+> +	if (dsi_dev->mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET)
+> +		config &= ~SSD2825_CONF_REG_EOT;
+> +
+> +	/* Initial DSI configuration register set */
+> +	ssd2825_write_reg(priv, SSD2825_CONFIGURATION_REG, config);
+> +	ssd2825_write_reg(priv, SSD2825_VC_CTRL_REG, 0);
+> +
+> +	priv->enabled = true;
+> +}
+> +
+> +static void ssd2825_bridge_atomic_enable(struct drm_bridge *bridge,
+> +					 struct drm_atomic_state *state)
+> +{
+> +	/* placeholder */
+> +}
+
+That doesn't work with any bridge or panel that doesn't require any DCS
+command to power up, unfortunately.
+
+> +static void ssd2825_bridge_atomic_disable(struct drm_bridge *bridge,
+> +					  struct drm_atomic_state *state)
+> +{
+> +	struct ssd2825_priv *priv = bridge_to_ssd2825(bridge);
+> +	int ret;
+> +
+> +	if (!priv->enabled)
+> +		return;
+> +
+> +	msleep(100);
+> +
+> +	/* Exit DSI configuration register set */
+> +	ssd2825_write_reg(priv, SSD2825_CONFIGURATION_REG,
+> +			  SSD2825_CONF_REG_ECD | SSD2825_CONF_REG_EOT);
+> +	ssd2825_write_reg(priv, SSD2825_VC_CTRL_REG, 0);
+> +
+> +	/* HW disable */
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 1);
+> +	usleep_range(5000, 6000);
+> +
+> +	ret = regulator_bulk_disable(ARRAY_SIZE(ssd2825_supplies),
+> +				     priv->supplies);
+> +	if (ret < 0)
+> +		dev_err(priv->dev, "error disabling regulators (%d)\n", ret);
+> +
+> +	clk_disable_unprepare(priv->tx_clk);
+> +
+> +	priv->enabled = false;
+> +}
+> +
+> +static int ssd2825_bridge_attach(struct drm_bridge *bridge, struct drm_encoder *encoder,
+> +				 enum drm_bridge_attach_flags flags)
+> +{
+> +	struct ssd2825_priv *priv = bridge_to_ssd2825(bridge);
+> +
+> +	return drm_bridge_attach(bridge->encoder, priv->output.bridge, bridge,
+> +				 flags);
+> +}
+> +
+> +static enum drm_mode_status
+> +ssd2825_bridge_mode_valid(struct drm_bridge *bridge,
+> +			  const struct drm_display_info *info,
+> +			  const struct drm_display_mode *mode)
+> +{
+> +	if (mode->hdisplay > 1366)
+> +		return MODE_H_ILLEGAL;
+> +
+> +	if (mode->vdisplay > 1366)
+> +		return MODE_V_ILLEGAL;
+> +
+> +	return MODE_OK;
+> +}
+> +
+> +static bool ssd2825_mode_fixup(struct drm_bridge *bridge,
+> +			       const struct drm_display_mode *mode,
+> +			       struct drm_display_mode *adjusted_mode)
+> +{
+> +	/* Default to positive sync */
+> +
+> +	if (!(adjusted_mode->flags &
+> +	      (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_NHSYNC)))
+> +		adjusted_mode->flags |= DRM_MODE_FLAG_PHSYNC;
+> +
+> +	if (!(adjusted_mode->flags &
+> +	      (DRM_MODE_FLAG_PVSYNC | DRM_MODE_FLAG_NVSYNC)))
+> +		adjusted_mode->flags |= DRM_MODE_FLAG_PVSYNC;
+> +
+> +	return true;
+> +}
+> +
+> +static const struct drm_bridge_funcs ssd2825_bridge_funcs = {
+> +	.attach = ssd2825_bridge_attach,
+> +	.mode_valid = ssd2825_bridge_mode_valid,
+> +	.mode_fixup = ssd2825_mode_fixup,
+> +
+> +	.atomic_pre_enable = ssd2825_bridge_atomic_pre_enable,
+> +	.atomic_enable = ssd2825_bridge_atomic_enable,
+> +	.atomic_disable = ssd2825_bridge_atomic_disable,
+> +
+> +	.atomic_reset = drm_atomic_helper_bridge_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+> +};
+> +
+> +static const struct drm_bridge_timings default_ssd2825_timings = {
+> +	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE
+> +		 | DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE
+> +		 | DRM_BUS_FLAG_DE_HIGH,
+> +};
+> +
+> +static int ssd2825_probe(struct spi_device *spi)
+> +{
+> +	struct ssd2825_priv *priv;
+> +	struct device *dev = &spi->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int ret;
+> +
+> +	/* Driver supports only 8 bit 3 Wire mode */
+> +	spi->bits_per_word = 9;
+> +
+> +	ret = spi_setup(spi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+
+devm_drm_bridge_alloc()
+
+> +	spi_set_drvdata(spi, priv);
+> +	priv->spi = spi;
+> +
+> +	dev_set_drvdata(dev, priv);
+> +	priv->dev = dev;
+
+spi_set_drvdata and dev_set_drvdata are doing the same thing here.
+
+Maxime
+
+--gif2fpgroucfpfxk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFPbKwAKCRAnX84Zoj2+
+diB2AYCG7blGb/jNwt79YqDiXbKiSCGuqM51+CeIZ2l3gU0JVeqR17TfIbhPYp/5
+dbcgsw4BgOwDnI9X2uxwBgQHy9iXgxgYw2DNPB9dQhRm0VKurWVoIjpYlmBFrStS
+AknexqWYBw==
+=PvzH
+-----END PGP SIGNATURE-----
+
+--gif2fpgroucfpfxk--
