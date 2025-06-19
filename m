@@ -1,82 +1,212 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E124231837;
-	Thu, 19 Jun 2025 07:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C10D230BF2;
+	Thu, 19 Jun 2025 07:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319669; cv=none; b=S0XazqmdmohGnEkYLhT+wLjt6V9p9Gh8LjJ5+WqMwwvOtyzz5lvINxznU4JrcCxE6HKCxTfDxZ6ZNVeLhi5fQVbZ7X6rbOnplTRlChXI7PvrGMlvvx+H7EW+DqCFhhZ3am6XuOXwggZhFefNc8ndnJNoa4WhRVytfe3YkmkwRHg=
+	t=1750319736; cv=none; b=FnKwd2HhhDYlo7rHwuvL3ZYgOd5L31vUpld0V5kCfj3/Vn0D9MrDOs4BlLCQRo3xrXhpnDJpeg/UJECas6QL+tl8sQuP3uE806AWear4ocCC2lC6evv3CgzC8G/WRwP7iOBhKP6pRwmm7ANXTAF/N5Vee1j6b7GaOyxg3ZYguuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319669; c=relaxed/simple;
-	bh=tOP+atBabNbGYR6Z5UrZUndGasMZB1gx4wcd4JLCyQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsyYHIbYl5zZVRSta3iZXW1neG/JpqI+2Yz2wpaLiwM5vu/txh6Mu9NNyr9rE0QaFvpH3sKnu7w4Six054U9xd3YgYb50W/hYkzGKCR/BCSD7GVvMmeedqUAv6F0qrynBvVDxh+0u8wZIiseQMzZGi5/UOsLyvxNquBBYLPw0FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n8CwOEx5; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n8CwOEx5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tOP+atBabNbGYR6Z5UrZUndGasMZB1gx4wcd4JLCyQQ=; b=n8CwOEx5xmk1bo/UbhRnasul0x
-	GhWHnaA4nhO0UImFeIG2Xac9nbtU3soSoP5eOKEcRDtJJFGBiveO0tdPm2PDb2gCIckD72g/xh92/
-	SOFCAbhuWBUbIrAdc0SHXeWqTz7tR6LIIWBqlaZHhl0FxnPpQSPcTFepsgxK2tih0LyAIiD97bCMv
-	5KmyBSMZMaNDnz/k02dj/s+i+os2ND1JfXT009E+6QtssDwjI2I5UNmOjzow7YxMiHrcPdBvWQuey
-	qUvVDKHjj8Ot0jpXbEn3/2iTHXuDUhucTnhSIIPtUu33VfbNKSIdIX50PdSLDGSlLsWmmpbVvVPhi
-	cz9VUqqQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSA6E-00000007iD3-1eGm;
-	Thu, 19 Jun 2025 07:54:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 674DF307FB7; Thu, 19 Jun 2025 09:54:17 +0200 (CEST)
-Date: Thu, 19 Jun 2025 09:54:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250619075417.GW1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.433111891@goodmis.org>
- <20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
- <20250618112939.76f4bb87@gandalf.local.home>
+	s=arc-20240116; t=1750319736; c=relaxed/simple;
+	bh=f4vTpMQgH6hjBMjYYSMsrAQ9uauN0x5DGtU+5NDgL4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X/K/Wq6TosChnjvv9Ge57IQ0kF8E8cal1lD7RKdJI7qPGKjZQ7h4OEOdGm5ScgbyXufoGkYFVHihwdIfWrZ4641eit9MpkvFfpzkoNcbGexRRsTHDznl7FyxZR1onu9J8T064G5zvBV6JBXpYvWa4AFHUl6tt3sLpn0NDJUNhTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68ECB106F;
+	Thu, 19 Jun 2025 00:55:12 -0700 (PDT)
+Received: from [10.163.35.214] (unknown [10.163.35.214])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C8DD3F66E;
+	Thu, 19 Jun 2025 00:55:30 -0700 (PDT)
+Message-ID: <fb86e753-95c0-41bd-b8f6-ebc810cd8a94@arm.com>
+Date: Thu, 19 Jun 2025 13:25:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618112939.76f4bb87@gandalf.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
+ ptdump_check_wx()
+To: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250609041214.285664-1-anshuman.khandual@arm.com>
+ <20250612145808.GA12912@willie-the-truck>
+ <5c22c792-0648-4ced-b0ed-86882610b4be@arm.com>
+ <20250618113635.GA20157@willie-the-truck>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250618113635.GA20157@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 11:29:39AM -0400, Steven Rostedt wrote:
 
-> Note, a request from the gcc folks is to add a system call that gives the
-> user space application a backtrace from its current location. This can be
-> handy for debugging as it would be similar to how we use dump_stack().
 
-That makes very little sense to me; apps can typically unwind themselves
-just fine, no? In fact, they can use DWARFs and all that.
+On 18/06/25 5:06 PM, Will Deacon wrote:
+> On Fri, Jun 13, 2025 at 10:39:02AM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 12/06/25 8:28 PM, Will Deacon wrote:
+>>> On Mon, Jun 09, 2025 at 05:12:14AM +0100, Anshuman Khandual wrote:
+>>>> The arm64 page table dump code can race with concurrent modification of the
+>>>> kernel page tables. When a leaf entries are modified concurrently, the dump
+>>>> code may log stale or inconsistent information for a VA range, but this is
+>>>> otherwise not harmful.
+>>>>
+>>>> When intermediate levels of table are freed, the dump code will continue to
+>>>> use memory which has been freed and potentially reallocated for another
+>>>> purpose. In such cases, the dump code may dereference bogus addresses,
+>>>> leading to a number of potential problems.
+>>>>
+>>>> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
+>>>> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
+>>>> dump")' but a same was missed for ptdump_check_wx() which faced the race
+>>>> condition as well. Let's just take the memory hotplug lock while executing
+>>>> ptdump_check_wx().
+>>>
+>>> How do other architectures (e.g. x86) handle this? I don't see any usage
+>>> of {get,put}_online_mems() over there. Should this be moved into the core
+>>> code?
+>>
+>> Memory hot remove on arm64 unmaps kernel linear and vmemmap mapping while
+>> also freeing page table pages if those become empty. Although this might
+>> not be true for all other architectures, which might just unmap affected
+>> kernel regions but does not tear down the kernel page table.
+> 
+> ... that sounds like something we should be able to give a definitive
+> answer to?
 
-Also, how about we don't make thing complicated and not confuse comments
-with things like this? Focus on the deferred stuff (that's what these
-patches are about) -- and then return-to-user is the one and only place
-that makes sense.
+Agreed.
+
+arch_remove_memory() is the primary arch callback which does the unmapping
+and also tearing down of the required kernel page table regions i.e linear
+and vmemmap mapping . These are the call paths that reach platform specific
+memory removal via arch_remove_memory().
+
+A) ZONE_DEVICE
+
+devm_memremap_pages()
+    devm_memremap_pages_release()
+        devm_memunmap_pages()
+            memunmap_pages()
+                arch_remove_memory()
+
+B) Normal DRAM
+
+echo 1 > /sys/devices/system/memory/memoryX/offline
+
+memory_subsys_offline()
+    device_offline()
+        memory_offline()
+            offline_memory_block()
+                remove_memory()
+                    __remove_memory()
+                        arch_remove_memory()
+
+Currently there are six platforms which enable ARCH_ENABLE_MEMORY_HOTREMOVE
+thus implementing arch_remove_memory(). Core memory hot removal process does
+not have any set expectations from these callbacks. So platforms are free to
+implement unmap and page table tearing down operation as deemed necessary.
+
+ARCH_ENABLE_MEMORY_HOTREMOVE - arm64, loongarch, powerpc, riscv, s390, x86
+ARCH_HAS_PTDUMP              - arm64, powerpc, riscv, s390, x86
+
+In summary all the platforms that support memory hot remove and ptdump do
+try and free the unmapped regions of the page table when possible. Hence
+they are indeed exposed to possible race with ptdump walk.
+
+But as mentioned earlier the callback arch_remove_memory() does not have to
+tear down the page tables. Unless there are objections from other platforms,
+standard memory hotplug lock could indeed be taken during all generic ptdump
+walk paths. 
+
+arm64
+=====
+    arch_remove_memory()
+        __remove_pages()
+            sparse_remove_section()
+                section_deactivate()
+                    depopulate_section_memmap()
+                    free_map_bootmem()
+                        vmemmap_free()              /* vmemap mapping */
+                            unmap_hotplug_range()   /* Unmap */
+                            free_empty_tables()     /* Tear down */
+
+        __remove_pgd_mapping()
+            __remove_pgd_mapping()                  /* linear Mapping */
+                unmap_hotplug_range()               /* Unmap */
+                free_empty_tables()                 /* Tear down */
+
+powerpc
+=======
+    arch_remove_memory()
+        __remove_pages()
+            sparse_remove_section()
+                    section_deactivate()
+                        depopulate_section_memmap()
+                            vmemmap_free()
+                                __vmemmap_free()            /* Hash */
+                                radix__vmemmap_free()       /* Radix */
+
+        arch_remove_linear_mapping()
+            remove_section_mapping()
+                hash__remove_section_mapping()              /* Hash */
+                radix__remove_section_mapping()             /* Radix */
+    
+riscv
+=====
+    arch_remove_memory()
+        __remove_pages()
+            sparse_remove_section()
+                    section_deactivate()
+                        depopulate_section_memmap()
+                            vmemmap_free()
+                                remove_pgd_mapping()
+
+        remove_linear_mapping()
+            remove_pgd_mapping()
+    
+remove_pgd_mapping() recursively calls remove_pxd_mapping() and
+free_pxd_table() when applicable.
+
+s390
+=====
+    arch_remove_memory()
+        __remove_pages()
+            sparse_remove_section()
+                section_deactivate()
+                    depopulate_section_memmap()
+                        vmemmap_free()
+                            remove_pagetable()
+                                modify_pagetable()
+        
+        vmem_remove_mapping()
+            vmem_remove_range()
+                remove_pagetable() 
+                        modify_pagetable()
+
+modify_pagetable() on s390 does try to tear down the page table
+when possible.
+ 
+x86
+===
+    arch_remove_memory()
+        __remove_pages()
+            sparse_remove_section()
+                section_deactivate()
+                    depopulate_section_memmap()
+                    free_map_bootmem()
+                        vmemmap_free()              /* vmemap mapping */
+                            remove_pagetable()
+
+        kernel_physical_mapping_remove()            /* linear Mapping */
+            remove_pagetable()
+
+remove_pagetable() on x86 calls remove_pxd_table() followed up call
+with free_pxd_table() which does tear down the page table as well
+and hence exposed to race with PTDUMP which scans over the entire
+kernel page table.
