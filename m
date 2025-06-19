@@ -1,92 +1,103 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A50C54764;
-	Thu, 19 Jun 2025 04:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D28207A27;
+	Thu, 19 Jun 2025 04:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750305655; cv=none; b=r5JQHZBruFxVD7ZofprDoNUvcAJaQNHWr8mjhHIyO1n+AhQlOunfC3DetejAyhq9p9ICHsp8oKkiP7UL5j+pxivIZQnPmREBgkkSs/E6iOO8aUeiWnP7BqkELvdoep1LNZ6kFC1HRvZYLmg1DHV2XbWPxkgoxjKP2QTs3IOdWsg=
+	t=1750305667; cv=none; b=dnDfU2Ja9atPn/Skx7T9vP1mBEc7zR0OYU0f2cEw7stobA9x4sWucKWOsCwRu7VbWPBEt3izTPiXgZxGiu+0fnw4AiP9Waceqp6nAgR14fKCDQZQG9LYeJQNNT+G39YWrk3iegn1/DBnB9iHy9txSm85EAGtrMcV1C2595eFK14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750305655; c=relaxed/simple;
-	bh=M72OOni9nuPjXpXI7PBkMS4QekjBamZtmQ/ypweMgrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJRKCNzULEhVjRJ0PXMKG94PyBCncn1CnSSwEqwB80ay3wqQSK5uMAal65WPhlk/cPE5mOvlqe8OYgBMNwFhsM2nwQMeyE4SRlph938RpoaZ6Gwlo34NUIkyuycSqBDLeiOcvkhRjvIjRYATprQDbnsdFYannbjyf2r0EHCMoFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ax1QfBig; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750305667; c=relaxed/simple;
+	bh=uzfB+BZlFnvaD08LGcyN98GOijg8o/DIDcLcrxwZEog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GI/oqusZ6yJNKgELGLYWNhw+ETdCDJ8AmIDOcsVYf8jl4DkN8aDCWmUo4Sa6aALiveMK4639ZXIaqai+nSmGSqbPXTImdU64WUFCb+tPmB7GuQ7Sj3mzqa6XE5xNmCUoRw8N6gpT9/ZDqpC15pyutTM24TDU27qUa/Klhz2Rq9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dL5pI0S1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ax1QfBig"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2f0faeb994so463473a12.0;
-        Wed, 18 Jun 2025 21:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750305653; x=1750910453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ooLg2AVXWoHfrdwnF2kQOLZWKgxHASVc333apUAQwo8=;
-        b=Ax1QfBigNk4RZ1UmJFVlabGnuUWLkpt8FdzOkop/1p3kq2R8tddTCJ7e9kqFnABpbJ
-         wZbofp2wF5VGlm/LugL3yDgUwrjLAsV//KJPZlP5yV8aDooRre+EZHbgW0v7sW0QM26l
-         02KD5xQ7QqtnR5h6DLvW4Cs3/npeQWRRBhH2cUYzlA0rLYHVYIrZ0cPbuNCzvMT+8By6
-         QjmTYMv+tCtbYLaEpTPfcxBLGsNzMUsuHh4yVm21AT36+i4mLHMkxdd2NqyYFJUoObOe
-         Ny5bp/ujmGsGAJaGdKuJ2AM///MTncbdV3/rD7097c44qqSGSyHnEBHetfpn/2BNwb6K
-         9FfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750305653; x=1750910453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ooLg2AVXWoHfrdwnF2kQOLZWKgxHASVc333apUAQwo8=;
-        b=HC057l4jmkoV5ZBlvGuiVKduwNK916tEAbCSeVL5LYkaOrm/Xn0aUYy0Vo1ZDnNwAu
-         T8rUOdD2yuhPRdf4rcSct/6aUPqjf90+100O7qAsSEIXRfOZ8EjG0AYfMDjAO81aSUow
-         sdsJjnpTk5urqYkrgwVYwLdi8kNjf113QpyT6rUhqTTK7rAS4hYS5smT7Vy6HDiM85dh
-         0OEaRwzklN8UpQ5/lTm7SXvAyrchkwTjRufj7e2bxGMcafIQtg2s2+IjLn7BMg2C5isP
-         4lLpJ0JnweKlkJkPjpny74mLKwll9fe2ltkxwW6BLtJx2FD7dFvUKjkCOecRbrh/PU6g
-         vqwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVImX9hhZoxvirqTstQnRmjorYHWoMyZ5PLGMgqcLVBdy1SKKw9QuquNuEby3iA8a7wHQ3nrhvPvPdpss=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8qdK1C/PgmcvQKomvq1CE7Tmo9ff7AnHzpSnKrmqoPqUwJ80a
-	N3mPT8Xy+8var8BZoxctWLIqGSnY5pqhzopTQdW/QUb7Gk+bC8lvsx9e51E1wqbExaaz28Q84dA
-	y9XgJGKL+DS+mEdD3U7hamyBMhOQa6Yw=
-X-Gm-Gg: ASbGncsiNDOE8Fnb0nKuCP0KVhWKltLg6gpRvEoWniwMZ19WYRusd3qpuqMzWs9QeOd
-	0N4we7A/srWCc9z/zVegW9MbZbgS0kaHc7FC4ooDWMj29QckjMc2fYo00MWTYaUYQVPbPg7qVvV
-	NxtZorUzIA2o2Z958J6btJKqojDQOR0Qy/D8S4Mwj0T2uxe+48BwE=
-X-Google-Smtp-Source: AGHT+IG4EU24MbNMPr1LqaZXbbwlqMD6VU21vOqudKWNrsgMI3HV8ZjJnMiFWZ6++l/Uxsh8s0fM9lgO7FagKkqrGHE=
-X-Received: by 2002:a17:90b:264b:b0:313:db0b:75e3 with SMTP id
- 98e67ed59e1d1-313f1e6f3fcmr32108934a91.35.1750305653447; Wed, 18 Jun 2025
- 21:00:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dL5pI0S1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F3EC4CEEA;
+	Thu, 19 Jun 2025 04:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750305666;
+	bh=uzfB+BZlFnvaD08LGcyN98GOijg8o/DIDcLcrxwZEog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dL5pI0S1hAuBwv9hHH7stkQ2KhBOeyWRS+A3iGg7A0hVNlQTRmHKYyWBWobk3hZAc
+	 WG5wxRDchXmvSRdf+dAC08yEu8D8AaBNF0lzbyzuAfkh/FqOnHyaUDgxI2BXdQ+y2X
+	 qltLHtdTbVtXoSQMN7y9tyXZW9HZ9TDzO3gM1//s=
+Date: Thu, 19 Jun 2025 06:01:03 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Seungjin Bae <eeodqql09@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: host: xhci-plat: fix incorrect type for of_match
+ variable in xhci_plat_probe()
+Message-ID: <2025061950-frown-cesarean-a1e3@gregkh>
+References: <2025061804-existing-taking-1f9c@gregkh>
+ <20250618192713.20668-2-eeodqql09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <OSBPR01MB1670AB9E2C07690BF71FA6F5BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB1670AB9E2C07690BF71FA6F5BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Thu, 19 Jun 2025 06:00:42 +0200
-X-Gm-Features: AX0GCFsl2J-hW1BVYjyXsA5gwVtQQxvOUc1dZ9TUS7d3oNWcCyLT-hblWsMnL4Y
-Message-ID: <CAMhs-H-KGBumYbxojg-GM+bQPow4umM1va862o5_qEcDM2P1kA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] MIPS: ralink: some build fixes
-To: Shiji Yang <yangshiji66@outlook.com>
-Cc: linux-mips@vger.kernel.org, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, John Crispin <john@phrozen.org>, 
-	Mieczyslaw Nalewaj <namiltd@yahoo.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618192713.20668-2-eeodqql09@gmail.com>
 
-On Wed, Jun 18, 2025 at 5:40=E2=80=AFPM Shiji Yang <yangshiji66@outlook.com=
-> wrote:
->
-> This patch series fixes some MIPS Ralink platform compilation issues
-> founded on the OpenWrt distribution 6.12 kernel[1].
->
-> [1] https://github.com/openwrt/openwrt/pull/18654
->
-> Mieczyslaw Nalewaj (2):
->   MIPS: ralink: add missing header include
->   MIPS: pci-rt2880: make pcibios_init() static
->
->  arch/mips/pci/pci-rt2880.c | 2 +-
->  arch/mips/ralink/irq.c     | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
+On Wed, Jun 18, 2025 at 03:27:14PM -0400, Seungjin Bae wrote:
+> From: pip-izony <eeodqql09@gmail.com>
 
-Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+This line doesn't match up with:
+
+> 
+> The variable `of_match` was incorrectly declared as a `bool`.
+> It is assigned the return value of of_match_device(), which is a pointer of
+> type `const struct of_device_id *`.
+> 
+> Fixes: 16b7e0cccb243 ("USB: xhci-plat: fix legacy PHY double init")
+> 
+> Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
+
+That line :(
+
+Also, no need for a blank line after Fixes:
+
+Also:
+
+> ---
+>  drivers/usb/host/xhci-plat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 6dab142e7278..49eb874b1d81 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -152,7 +152,7 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
+>  	int			ret;
+>  	int			irq;
+>  	struct xhci_plat_priv	*priv = NULL;
+> -	bool			of_match;
+> +	const struct of_device_id *of_match;
+>  
+>  	if (usb_disabled())
+>  		return -ENODEV;
+> -- 
+> 2.43.0
+> 
+> Hello Greg,
+> 
+> Thank you for your review and the helpful feedback.
+> 
+> I've corrected Signed-off-by line to use my real name.
+> I also updated Fixes tag in the commit.
+> 
+> Regarding the original issue:
+> I'm not exactly sure why the compiler didn't catch this,
+> but I assume implicit casting from pointer to bool is allowed in this context.
+
+That info should go below the --- line, and this is a version 2 of this
+change, right?  Take a look at the kernel documentation for how to
+number your patch revisions.
+
+thanks,
+
+greg k-h
