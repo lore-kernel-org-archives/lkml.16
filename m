@@ -1,124 +1,146 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A993085D7;
-	Thu, 19 Jun 2025 08:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624803085D7
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321578; cv=none; b=gpH3szABGgQJ+DUgH1GTq/rkxJ3o6RTWMj0cMTfRCD1Dtn/nmDflniTKMAtK96H2nX4ltH4ARNSNrwy/E6QxBOkdGwxmWJwRexvx7FeJ5MCZrSUWP2934vObm4T7es1kOLL9MGoVh9hPwZLc93/v3mnxp7ryWXgylu3jXmc86y0=
+	t=1750321757; cv=none; b=ArIUuIaaMgEnWUP23GizROr31mCbmeot0yWFlLu2+z0qbHeINE9VaaTQ59uFBtWv/s4FVQd03auDz1n6mSLL2GVrHDt/kMsYl3Mk8jASch0HRBsOfusbMtCu0hVoWWJo7YnoxDlbOF0XF3510/bs1quvJAfdFghlPgBriRmOOD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321578; c=relaxed/simple;
-	bh=joblJuM3YJrC3NH4fp8pNVtiViql4YenRSFoWywNdnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TmoEo0t3D3/iFMfF5nBffK27mYxNMm4IVIj2cJnyUmkvuXHlxRl/YTlVHioMgBUvHtJSFfo4FfxlYW+Kluha5vF3Eg9TabydEdYYc8nqoSXmW9i5R+XS0lXGw3kqehHoy9VqMz8nZcme1d3zkiDGXn4QZp2Ms8EZ99zsM6YzBXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSN8V4Hv; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750321757; c=relaxed/simple;
+	bh=8kp8MhtBooyZ24xJw3HE3NBv31unIexU5R/0rv70u4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sCUkj44zh+S+ARxtIveBShWXjfwtBzwslqJUnJauJx3QYYIQ44CbZJNWI1XH+ybMGabHiEElhOpQyO1FgpyYNOfcjjmnR9mjPbCnt6b/AtKdZHf5HNGCpmlASWrmv+Z7QIryomZzI/2obyPx08wXZW8CI3roIkRDPHQcNqCEjfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K3VXHu30; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSN8V4Hv"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so443597f8f.2;
-        Thu, 19 Jun 2025 01:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750321574; x=1750926374; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0QAsYOvosi5fcQ7ZHm7kVrA3Pm0vHCmDptHz6MIxTc=;
-        b=mSN8V4HvSTq97dQSzbffC4r+QT+nJLi6UZmRrlEI1esD0WaiKfXw9x3lecyRIFmbJx
-         mBCH72AORZjzsUgiEjqVgYb9tmxQEene9FTHZR0r5OZ3TwJYQwhz2mL+fZKAsDuSzHCw
-         u6U5DZ6Y1jdv9/wqsH28f7hn1CyWea4RfdxL6JHtVqaecvZPJMC75eCHpTV7vWpN/qaU
-         STgga3UUt5dzDtTweCTEFuDFtSOrxPQeIs2n9ayrfsZCh/VynS5UpoXOc6sADy/DQSJz
-         uzIF/R5hSfE4KuClj4b42Ie8uenFuNfYB6HiL+BtCwIBTJMgID+1qd/q0sIwGFcIrgls
-         QpNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321574; x=1750926374;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B0QAsYOvosi5fcQ7ZHm7kVrA3Pm0vHCmDptHz6MIxTc=;
-        b=vPs6RhtYeXeQ0x02icvj0cd6S63CGfDV6ObHBMuWdnjg493hY11qbysrulmFuVa45A
-         TyENgTwPgkwiSKzcZBKSg9nm46TfAsWcJeBrKWFnbXh9BYCNUtwnGLTNyQedjOIbae30
-         YIkQ/PK7tZFsa8hFv6luEt3kwPUd9iRaKqDzrLHd6DlKAe+VacEn0H2r6vh3loLH0xu5
-         42Jen7p2wIiguEfqIGZGPxu7ObjxVDzisbOk0lkLADDLpIJqz56oixuoyCcHocRLWfeh
-         onEj6PXmhtBVFrpvbOK4OIf5TMTYooifB6Xj2YoeA+TDMFY2wjSJavGRNqNWgpEsnTQU
-         lk6A==
-X-Forwarded-Encrypted: i=1; AJvYcCU98uNcdoUWDYv1fPj5Bcqwuit9PeOvtdNl6UQCpLxHcEAEWKhL427Ef1ImhnFXYX8PoQDHfU3qDf9dojqxuNU=@vger.kernel.org, AJvYcCWs06JISII6fnOIMvezt7q4JwbKlB/FtXVUgbdTwu7dBSbF2mwMQrJQO8N3d5rcN80CcdZPsYKC1BGP04k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxycdCQ/jeFYS5faU0aOqbKK+T6SrxQ/PifjuPX8P7qeuSfG/nh
-	Sj+YbtRa+Y42SMnDAiwxf8YMGuzq8lEuZYCuHjsJFVZx7WaLPl7oWokE
-X-Gm-Gg: ASbGnct9ZyRwO66Ae4CsTn1dC+Rq9taM8/VZnc/8N7JrUGpM7NJ3JnL0uj3WbvvEbYa
-	McnWI/QpdTtYGIBX6HYGLAjvqNyT5kRxVq+2cTDSTftoDleQWL64iSpTE97dD336ETwqIaOojl0
-	ZwllRfdw2izYgpcwz8CY4GRov04GxrlqHgTfB+p9O4Sc6OFO2us8F3kJF4eS4kz+FvA3Q2iiDrw
-	3rdIw+xM1Yx+XGU/+E2Q3QgU6/JY/JulWRJv6vcIvxYxcFbmnO7Owzi8a2q14Pn9VoW0dHpq6BH
-	ozjXIaI7+O3P8CCAjtpSxqxl/beOiXi/NQAMjrljxux5KBk0F3NCJu9SknqX
-X-Google-Smtp-Source: AGHT+IGWTFmrBJA8zRQdgBQJ3AummUbiD7FB3vTuifAlQScjEa7PD5GnrcF+/Dd8m8wX0HdejVRe9A==
-X-Received: by 2002:a05:6000:4027:b0:3a4:fb33:85ce with SMTP id ffacd0b85a97d-3a572e8cd99mr17166579f8f.46.1750321574491;
-        Thu, 19 Jun 2025 01:26:14 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453607d8971sm8605895e9.23.2025.06.19.01.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 01:26:14 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] wifi: brcmfmac: Make read-only array cfg_offset static const
-Date: Thu, 19 Jun 2025 09:25:54 +0100
-Message-ID: <20250619082554.1834654-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K3VXHu30"
+Message-ID: <fa3c7352-f089-4a7b-8d4b-f6d371c236ce@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750321752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LwqkJWv+ifVhzjp8MQr7Ddsa5ddsAXMB/QGydZH0ApY=;
+	b=K3VXHu30ZHT9FCDaKQNMGBS0HsUIyVXQ3ojsfC/llhBDDhO5YmRJilmvtbxDn7tI2YHgza
+	7NXVqzwdr5RZ5caKtFhe6dTZ131c57faBudgVlm5QaZXU1O7fDuW7zDudr70AQbr0i3P4+
+	GgwbfK/SEsof8nJbFMT2aExpuKLKjVI=
+Date: Thu, 19 Jun 2025 16:28:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH] mm/rmap: Add NULL checks for rmap_walk_control callbacks
+To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Ye Liu <liuye@kylinos.cn>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Rik van Riel <riel@surriel.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250619075040.796047-1-ye.liu@linux.dev>
+ <9454603f-c187-4386-8244-69f304197954@arm.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <9454603f-c187-4386-8244-69f304197954@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Don't populate the read-only array cfg_offset on the stack at run time,
-instead make it static const.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- .../broadcom/brcm80211/brcmfmac/pcie.c        | 24 ++++++++++---------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+Hi Lorenzo and Dev,
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-index 8f97562811d7..9747928a3650 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-@@ -654,17 +654,19 @@ brcmf_pcie_select_core(struct brcmf_pciedev_info *devinfo, u16 coreid)
- static void brcmf_pcie_reset_device(struct brcmf_pciedev_info *devinfo)
- {
- 	struct brcmf_core *core;
--	u16 cfg_offset[] = { BRCMF_PCIE_CFGREG_STATUS_CMD,
--			     BRCMF_PCIE_CFGREG_PM_CSR,
--			     BRCMF_PCIE_CFGREG_MSI_CAP,
--			     BRCMF_PCIE_CFGREG_MSI_ADDR_L,
--			     BRCMF_PCIE_CFGREG_MSI_ADDR_H,
--			     BRCMF_PCIE_CFGREG_MSI_DATA,
--			     BRCMF_PCIE_CFGREG_LINK_STATUS_CTRL2,
--			     BRCMF_PCIE_CFGREG_RBAR_CTRL,
--			     BRCMF_PCIE_CFGREG_PML1_SUB_CTRL1,
--			     BRCMF_PCIE_CFGREG_REG_BAR2_CONFIG,
--			     BRCMF_PCIE_CFGREG_REG_BAR3_CONFIG };
-+	static const u16 cfg_offset[] = {
-+		BRCMF_PCIE_CFGREG_STATUS_CMD,
-+		BRCMF_PCIE_CFGREG_PM_CSR,
-+		BRCMF_PCIE_CFGREG_MSI_CAP,
-+		BRCMF_PCIE_CFGREG_MSI_ADDR_L,
-+		BRCMF_PCIE_CFGREG_MSI_ADDR_H,
-+		BRCMF_PCIE_CFGREG_MSI_DATA,
-+		BRCMF_PCIE_CFGREG_LINK_STATUS_CTRL2,
-+		BRCMF_PCIE_CFGREG_RBAR_CTRL,
-+		BRCMF_PCIE_CFGREG_PML1_SUB_CTRL1,
-+		BRCMF_PCIE_CFGREG_REG_BAR2_CONFIG,
-+		BRCMF_PCIE_CFGREG_REG_BAR3_CONFIG
-+	};
- 	u32 i;
- 	u32 val;
- 	u32 lsc;
--- 
-2.49.0
+Thanks for your feedback. I understand all your points and will drop this patch.
 
+Best regards,
+Ye Liu
+
+On 2025/6/19 16:17, Dev Jain wrote:
+> 
+> On 19/06/25 1:20 pm, Ye Liu wrote:
+>> From: Ye Liu <liuye@kylinos.cn>
+>>
+>> Add NULL pointer checks for rmap_one callback in rmap_walk operations
+>> to prevent potential NULL pointer dereferences. Also clean up some
+>> code by removing redundant comments and caching folio_nr_pages().
+>>
+>> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+>> ---
+> 
+> Don't really see the point of this patch. The rmap_one call back will
+> always be there as we need a way to define how to unmap/do the reverse
+> map walk for one VMA at a time. And the folio_nr_pages() will probably
+> get cached by the compiler anyways.
+> 
+>>   mm/ksm.c  |  2 +-
+>>   mm/rmap.c | 14 +++++++-------
+>>   2 files changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/mm/ksm.c b/mm/ksm.c
+>> index 18b3690bb69a..22ad069d1860 100644
+>> --- a/mm/ksm.c
+>> +++ b/mm/ksm.c
+>> @@ -3068,7 +3068,7 @@ void rmap_walk_ksm(struct folio *folio, struct rmap_walk_control *rwc)
+>>               if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
+>>                   continue;
+>>   -            if (!rwc->rmap_one(folio, vma, addr, rwc->arg)) {
+>> +            if (rwc->rmap_one && !rwc->rmap_one(folio, vma, addr, rwc->arg)) {
+>>                   anon_vma_unlock_read(anon_vma);
+>>                   return;
+>>               }
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index fb63d9256f09..17d43d104a0d 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1202,8 +1202,7 @@ int mapping_wrprotect_range(struct address_space *mapping, pgoff_t pgoff,
+>>       if (!mapping)
+>>           return 0;
+>>   -    __rmap_walk_file(/* folio = */NULL, mapping, pgoff, nr_pages, &rwc,
+>> -             /* locked = */false);
+>> +    __rmap_walk_file(NULL, mapping, pgoff, nr_pages, &rwc, false);
+>>         return state.cleaned;
+>>   }
+>> @@ -2806,6 +2805,7 @@ static void rmap_walk_anon(struct folio *folio,
+>>       struct anon_vma *anon_vma;
+>>       pgoff_t pgoff_start, pgoff_end;
+>>       struct anon_vma_chain *avc;
+>> +    unsigned long nr_pages;
+>>         if (locked) {
+>>           anon_vma = folio_anon_vma(folio);
+>> @@ -2817,13 +2817,13 @@ static void rmap_walk_anon(struct folio *folio,
+>>       if (!anon_vma)
+>>           return;
+>>   +    nr_pages = folio_nr_pages(folio);
+>>       pgoff_start = folio_pgoff(folio);
+>> -    pgoff_end = pgoff_start + folio_nr_pages(folio) - 1;
+>> +    pgoff_end = pgoff_start + nr_pages - 1;
+>>       anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root,
+>>               pgoff_start, pgoff_end) {
+>>           struct vm_area_struct *vma = avc->vma;
+>> -        unsigned long address = vma_address(vma, pgoff_start,
+>> -                folio_nr_pages(folio));
+>> +        unsigned long address = vma_address(vma, pgoff_start, nr_pages);
+>>             VM_BUG_ON_VMA(address == -EFAULT, vma);
+>>           cond_resched();
+>> @@ -2831,7 +2831,7 @@ static void rmap_walk_anon(struct folio *folio,
+>>           if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
+>>               continue;
+>>   -        if (!rwc->rmap_one(folio, vma, address, rwc->arg))
+>> +        if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
+>>               break;
+>>           if (rwc->done && rwc->done(folio))
+>>               break;
+>> @@ -2894,7 +2894,7 @@ static void __rmap_walk_file(struct folio *folio, struct address_space *mapping,
+>>           if (rwc->invalid_vma && rwc->invalid_vma(vma, rwc->arg))
+>>               continue;
+>>   -        if (!rwc->rmap_one(folio, vma, address, rwc->arg))
+>> +        if (rwc->rmap_one && !rwc->rmap_one(folio, vma, address, rwc->arg))
+>>               goto done;
+>>           if (rwc->done && rwc->done(folio))
+>>               goto done;
