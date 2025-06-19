@@ -1,268 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191A835963;
-	Thu, 19 Jun 2025 10:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED86421FF46;
+	Thu, 19 Jun 2025 10:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750327287; cv=none; b=QENeFgCHEcnVz/JroAXgImvWwRYtWwfk5iqrwzkmIOWZBeTgKPRMYSPj/K7BOfhr2uIk8hcwK5DVdZPK1a+dXzwfG4fTxxYc2piodqBbsqgToBAAq+DMmVwTQsr9VC+taiUq+/9MJhYWmqY6XPy3avn1qVNKohL59PDdupoiDiQ=
+	t=1750327321; cv=none; b=eZ8zu01lpIL2K32resoSPDVvGwPR84SxP4uUEjd3VSqNsXUs8h9efE1LlD1sxNQ22IFbWJWkmRUksF5Djst6E1N9p3P5rtK1dbgxFP5z99008ltThlM56n7lbVhMZutyguozZJzAuoPZ19sHjNTLpDNAkgInUDrJjA+KDTQm8ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750327287; c=relaxed/simple;
-	bh=iH2r4/nOdisJ4ji3r1eyCc2glfT0fNCXVE6J/1rZ5yI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OstHINpAaXz//PkcyelxbJ2xeXLpuga13oJfcGKC5eLgF8ZbfRkAG8BLCGf6jge9T6qrPnDVLHeiebVthnfEUbDTGy/zmibnS2EqLk7S/TJml5M1zziQWV2sstVZqFYNWPUqbWBmRu1+1FlHYZ7txMy+bzYunMPQ09Efc0AWDhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXHujRx2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750327321; c=relaxed/simple;
+	bh=ST7t5hzEmHpR1U7XOZYCbUQ0PiUyXNCZEROguPp1Y5I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R3KUX7/KClhRbxgw3hFvpCurS3oKeST1YGSN38wascw/7qtp9Vdb5zrXvYolCvK6dlnTxZ585P4OE2zZJEYq0+mU6i26QI7GvBd8nl1l8M14p5WmDvzzXPQ0E9Efk1wgBMDt9zVcIphvLrKB7zjeKCNXNg+zZw+xcsZxs5GAkO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjfjdPwW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXHujRx2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55811C4CEEA;
-	Thu, 19 Jun 2025 10:01:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjfjdPwW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED462C4CEEA;
+	Thu, 19 Jun 2025 10:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750327286;
-	bh=iH2r4/nOdisJ4ji3r1eyCc2glfT0fNCXVE6J/1rZ5yI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXHujRx2ZkIBQtDu3BCwhIEOlxLAAhZslA2k8hvv/w+RV1qJk+INWsQWw7hjGmorg
-	 ZKXxRWlfbSSUJkgxKd3Z4h3Eyy8dmr53NXMxneA8z0sxE7/0PHAH2FiShO1lPmMYHy
-	 S6qpJul6haD3AGvM9bFOxuQKeKC+qDIyZ0VmrUuQ6NzNnea5UQPbAiSDenDCEL/b1L
-	 Swb7ukZt0FWOJuQYKjwCtnNygvmB59Ll6oM+55xVCRnT/H8Gg0S2IpQDUXEs6cm0RB
-	 VUSC5YBYxIplToSY7nX+ponT5m0bRT0I1suIaehY1eUxSQSv79Y2NsktyXBrb0UYJI
-	 s7COAQxIknpjQ==
-Date: Thu, 19 Jun 2025 12:01:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Song Liu <song@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, 
-	mattbobrowski@google.com, amir73il@gmail.com, gregkh@linuxfoundation.org, tj@kernel.org, 
-	daan.j.demeyer@gmail.com
-Subject: Re: [PATCH bpf-next 1/4] kernfs: Add __kernfs_xattr_get for RCU
- protected access
-Message-ID: <20250619-kaulquappen-absagen-27377e154bc0@brauner>
-References: <20250618233739.189106-1-song@kernel.org>
- <20250618233739.189106-2-song@kernel.org>
+	s=k20201202; t=1750327320;
+	bh=ST7t5hzEmHpR1U7XOZYCbUQ0PiUyXNCZEROguPp1Y5I=;
+	h=From:Date:Subject:To:Cc:From;
+	b=CjfjdPwWXxGaNBeJ+CX9Mue6JIDQMzvchdJgrnAxR7QPmL6c4joD61endYe3543Ik
+	 gpA5VvwnIdHpqG/QkiDs62n49i2HzE9fq3/HHeMcD36tihJO8/72n+4nYMked5AMU2
+	 GSXUGVOOhqtrPB2O44zz6PrX11Mbzl6jOeSBSITkGQERXO/woAp5uskR9iLExkuUmQ
+	 grAER8HkUrz0P1AyGF3uZYiI2PntiCvU/n3XMo+DPfiUDOoLjeDtH+l4VXWZPA/YFf
+	 cUTvTkoNANYCqn+Z93LUcrE4rvjCYKPT9XI8Ayu6jEuw3JNRYAw1jOKZp60uQ+MamN
+	 vOCOb/v713Brg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 19 Jun 2025 06:01:55 -0400
+Subject: [PATCH] sunrpc: handle SVC_GARBAGE during svc auth processing as
+ auth error
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="m55nvctvuaufcxua"
-Content-Disposition: inline
-In-Reply-To: <20250618233739.189106-2-song@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250619-rpc-6-16-v1-1-9fd5e01637d3@kernel.org>
+X-B4-Tracking: v=1; b=H4sIABLgU2gC/3WMQQ6CMBBFr0Jm7Rim1hZYeQ/jAsoAjQbI1DQaw
+ t0t7Ex0+X7+ewsEFs8BqmwB4eiDn8YEdMjADfXYM/o2MahcnXNDFmV2aJAMOmdrdeLSlYYg3Wf
+ hzr/21PWWePDhOcl7L0fa1h+RSEiYk2bdFG1NbC93lpEfx0l62CpR/TNVMkutLZumK0jpL3Nd1
+ w91wdWO2wAAAA==
+X-Change-ID: 20250617-rpc-6-16-cc7a23e9c961
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: tianshuo han <hantianshuo233@gmail.com>, 
+ Linus Torvalds <torvalds@linuxfoundation.org>, security@kernel.org, 
+ yuxuanzhe@outlook.com, Jiri Slaby <jirislaby@kernel.org>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2580; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ST7t5hzEmHpR1U7XOZYCbUQ0PiUyXNCZEROguPp1Y5I=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoU+AWlnSJkXb6un5sNyYXhumRHc2/lPyes8pY0
+ UiTMCUN1+eJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFPgFgAKCRAADmhBGVaC
+ FW/WD/wJNfu2nSoAIJzPaPpZzuPwhmrgUqYxxqvRPbq98C3XExKSG140sg2rK8O0nTAbD5Ba1bb
+ S/zrVIvZGMzkGyKRyVd9pbCVGisn0yeZfUbdFHHJAUJ4poxzhpu7s5PHz/qbnelRgUIqKUxWuhb
+ sHtY2/0mXYB3c+tGPQGQtkVnRP/zMTK4jlQPHpTeu9zCQ+iYrTNCI4TfeSwUMCXrLav0Z8lf0OZ
+ kFg9XpcASsaASZXMmxzS2n1weEEjqe9kklz9RumM3RLKTbnl1Lfc0fg3KnCYk/0Poucmr/ibcMq
+ ScwilME5he3bc13qohoNLfjkke4VIHqywJnmMj2pBag6E+U5CZORCa1wJwpyvVpSE7663XlWxje
+ 0DceA/A8j3G9p2TWkGbNghx6m39vLJdZ839S27SbO0BURRVwRmI+ayp0+e87F/tuaiPqIQ+0Acd
+ dU3X3o8txF7wnb/N0Vj9kRnJeK4ofH086YeIK6NaeLumlYffeu9ihsNeUON3TgXH35RDfJuXpoi
+ MvFFQ5q/EY+V4it5d2nHUpOsmsX0xNmWMsaA2wLDBf3REyYQW/NnwQeTrRTMq5qrwSs7pBY82jJ
+ MezH6QMhjI1aOQqf2LxpgB5ptaItfHMvo1dE+H/AYvnMWEK2lxe005ZR7Iqf9N8IG84z7gvNjgf
+ UbWdD2zC9s0q1ew==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+tianshuo han reported a remotely-triggerable crash if the client sends a
+kernel RPC server a specially crafted packet. If decoding the RPC reply
+fails in such a way that SVC_GARBAGE is returned without setting the
+rq_accept_statp pointer, then that pointer can be dereferenced and a
+value stored there.
 
---m55nvctvuaufcxua
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+If it's the first time the thread has processed an RPC, then that
+pointer will be set to NULL and the kernel will crash. In other cases,
+it could create a memory scribble.
 
-On Wed, Jun 18, 2025 at 04:37:36PM -0700, Song Liu wrote:
-> Existing kernfs_xattr_get() locks iattr_mutex, so it cannot be used in
-> RCU critical sections. Introduce __kernfs_xattr_get(), which reads xattr
-> under RCU read lock. This can be used by BPF programs to access cgroupfs
-> xattrs.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  fs/kernfs/inode.c      | 14 ++++++++++++++
->  include/linux/kernfs.h |  2 ++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-> index b83054da68b3..0ca231d2012c 100644
-> --- a/fs/kernfs/inode.c
-> +++ b/fs/kernfs/inode.c
-> @@ -302,6 +302,20 @@ int kernfs_xattr_get(struct kernfs_node *kn, const char *name,
->  	return simple_xattr_get(&attrs->xattrs, name, value, size);
->  }
->  
-> +int __kernfs_xattr_get(struct kernfs_node *kn, const char *name,
-> +		       void *value, size_t size)
-> +{
-> +	struct kernfs_iattrs *attrs;
-> +
-> +	WARN_ON_ONCE(!rcu_read_lock_held());
-> +
-> +	attrs = rcu_dereference(kn->iattr);
-> +	if (!attrs)
-> +		return -ENODATA;
+The server sunrpc code treats a SVC_GARBAGE return from svc_authenticate
+or pg_authenticate as if it should send a GARBAGE_ARGS reply. RFC 5531
+says that if authentication fails that the RPC should be rejected
+instead with a status of AUTH_ERR.
 
-Hm, that looks a bit silly. Which isn't your fault. I'm looking at the
-kernfs code that does the xattr allocations and I think that's the
-origin of the silliness. It uses a single global mutex for all kernfs
-users thus serializing all allocations for kernfs->iattr. That seems
-crazy but maybe I'm missing a good reason.
+Handle a SVC_GARBAGE return as an AUTH_ERROR, with a reason of
+AUTH_BADCRED instead of returning GARBAGE_ARGS in that case. This
+sidesteps the whole problem of touching the rpc_accept_statp pointer in
+this situation and avoids the crash.
 
-I'm appending a patch to remove that mutex. @Greg, @Tejun, can you take
-a look whether that makes sense to you. Then I can take that patch and
-you can build yours on top of the series and I'll pick it all up in one
-go.
-
-You should then just use READ_ONCE(kn->iattr) or the
-kernfs_iattrs_noalloc(kn) helper in your kfunc.
-
---m55nvctvuaufcxua
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment;
-	filename="0001-kernfs-remove-iattr_mutex.patch"
-
-From bdc53435a1cd5c456dc28d8239eff0e7fa4e8dda Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 19 Jun 2025 11:50:26 +0200
-Subject: [PATCH] kernfs: remove iattr_mutex
-
-All allocations of struct kernfs_iattrs are serialized through a global
-mutex. Simply do a racy allocation and let the first one win. I bet most
-callers are under inode->i_rwsem anyway and it wouldn't be needed but
-let's not require that.
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 29cd2927fb91 ("SUNRPC: Fix encoding of accepted but unsuccessful RPC replies")
+Reported-by: tianshuo han <hantianshuo233@gmail.com>
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Note, that this uses kfree() for the kmem cache allocation.
-That's been possible for a while now but not everyone knows about it
-yet so I'm pointing it out explicitly.
+This should be more correct. Unfortunately, I don't know of any
+testcases for low-level RPC error handling. That seems like something
+that would be nice to do with pynfs or similar though.
 ---
- fs/kernfs/inode.c | 74 +++++++++++++++++++++++++----------------------
- 1 file changed, 40 insertions(+), 34 deletions(-)
+ net/sunrpc/svc.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-index b83054da68b3..f4b73b9482b7 100644
---- a/fs/kernfs/inode.c
-+++ b/fs/kernfs/inode.c
-@@ -24,45 +24,46 @@ static const struct inode_operations kernfs_iops = {
- 	.listxattr	= kernfs_iop_listxattr,
- };
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 939b6239df8ab6229ce34836d77d3a6b983fbbb7..99050ab1435148ac5d52b697ab1a771b9e948143 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1375,7 +1375,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ 	case SVC_OK:
+ 		break;
+ 	case SVC_GARBAGE:
+-		goto err_garbage_args;
++		rqstp->rq_auth_stat = rpc_autherr_badcred;
++		goto err_bad_auth;
+ 	case SVC_SYSERR:
+ 		goto err_system_err;
+ 	case SVC_DENIED:
+@@ -1516,14 +1517,6 @@ svc_process_common(struct svc_rqst *rqstp)
+ 	*rqstp->rq_accept_statp = rpc_proc_unavail;
+ 	goto sendit;
  
--static struct kernfs_iattrs *__kernfs_iattrs(struct kernfs_node *kn, int alloc)
-+static struct kernfs_iattrs *__kernfs_iattrs(struct kernfs_node *kn, bool alloc)
- {
--	static DEFINE_MUTEX(iattr_mutex);
--	struct kernfs_iattrs *ret;
-+	struct kernfs_iattrs *ret __free(kfree) = NULL;
-+	struct kernfs_iattrs *attr;
- 
--	mutex_lock(&iattr_mutex);
-+	attr = READ_ONCE(kn->iattr);
-+	if (attr || !alloc)
-+		return attr;
- 
--	if (kn->iattr || !alloc)
--		goto out_unlock;
+-err_garbage_args:
+-	svc_printk(rqstp, "failed to decode RPC header\n");
 -
--	kn->iattr = kmem_cache_zalloc(kernfs_iattrs_cache, GFP_KERNEL);
--	if (!kn->iattr)
--		goto out_unlock;
-+	ret = kmem_cache_zalloc(kernfs_iattrs_cache, GFP_KERNEL);
-+	if (!ret)
-+		return NULL;
- 
- 	/* assign default attributes */
--	kn->iattr->ia_uid = GLOBAL_ROOT_UID;
--	kn->iattr->ia_gid = GLOBAL_ROOT_GID;
+-	if (serv->sv_stats)
+-		serv->sv_stats->rpcbadfmt++;
+-	*rqstp->rq_accept_statp = rpc_garbage_args;
+-	goto sendit;
 -
--	ktime_get_real_ts64(&kn->iattr->ia_atime);
--	kn->iattr->ia_mtime = kn->iattr->ia_atime;
--	kn->iattr->ia_ctime = kn->iattr->ia_atime;
--
--	simple_xattrs_init(&kn->iattr->xattrs);
--	atomic_set(&kn->iattr->nr_user_xattrs, 0);
--	atomic_set(&kn->iattr->user_xattr_size, 0);
--out_unlock:
--	ret = kn->iattr;
--	mutex_unlock(&iattr_mutex);
--	return ret;
-+	ret->ia_uid = GLOBAL_ROOT_UID;
-+	ret->ia_gid = GLOBAL_ROOT_GID;
-+
-+	ktime_get_real_ts64(&ret->ia_atime);
-+	ret->ia_mtime = ret->ia_atime;
-+	ret->ia_ctime = ret->ia_atime;
-+
-+	simple_xattrs_init(&ret->xattrs);
-+	atomic_set(&ret->nr_user_xattrs, 0);
-+	atomic_set(&ret->user_xattr_size, 0);
-+
-+	/* If someone raced us, recognize it. */
-+	if (!try_cmpxchg(&kn->iattr, &attr, ret))
-+		return READ_ONCE(kn->iattr);
-+
-+	return no_free_ptr(ret);
- }
- 
- static struct kernfs_iattrs *kernfs_iattrs(struct kernfs_node *kn)
- {
--	return __kernfs_iattrs(kn, 1);
-+	return __kernfs_iattrs(kn, true);
- }
- 
- static struct kernfs_iattrs *kernfs_iattrs_noalloc(struct kernfs_node *kn)
- {
--	return __kernfs_iattrs(kn, 0);
-+	return __kernfs_iattrs(kn, false);
- }
- 
- int __kernfs_setattr(struct kernfs_node *kn, const struct iattr *iattr)
-@@ -141,9 +142,9 @@ ssize_t kernfs_iop_listxattr(struct dentry *dentry, char *buf, size_t size)
- 	struct kernfs_node *kn = kernfs_dentry_node(dentry);
- 	struct kernfs_iattrs *attrs;
- 
--	attrs = kernfs_iattrs(kn);
-+	attrs = kernfs_iattrs_noalloc(kn);
- 	if (!attrs)
--		return -ENOMEM;
-+		return -ENODATA;
- 
- 	return simple_xattr_list(d_inode(dentry), &attrs->xattrs, buf, size);
- }
-@@ -166,9 +167,10 @@ static inline void set_inode_attr(struct inode *inode,
- 
- static void kernfs_refresh_inode(struct kernfs_node *kn, struct inode *inode)
- {
--	struct kernfs_iattrs *attrs = kn->iattr;
-+	struct kernfs_iattrs *attrs;
- 
- 	inode->i_mode = kn->mode;
-+	attrs = kernfs_iattrs_noalloc(kn);
- 	if (attrs)
- 		/*
- 		 * kernfs_node has non-default attributes get them from
-@@ -306,7 +308,9 @@ int kernfs_xattr_set(struct kernfs_node *kn, const char *name,
- 		     const void *value, size_t size, int flags)
- {
- 	struct simple_xattr *old_xattr;
--	struct kernfs_iattrs *attrs = kernfs_iattrs(kn);
-+	struct kernfs_iattrs *attrs;
-+
-+	attrs = kernfs_iattrs(kn);
- 	if (!attrs)
- 		return -ENOMEM;
- 
-@@ -345,8 +349,9 @@ static int kernfs_vfs_user_xattr_add(struct kernfs_node *kn,
- 				     struct simple_xattrs *xattrs,
- 				     const void *value, size_t size, int flags)
- {
--	atomic_t *sz = &kn->iattr->user_xattr_size;
--	atomic_t *nr = &kn->iattr->nr_user_xattrs;
-+	struct kernfs_iattrs *attr = kernfs_iattrs_noalloc(kn);
-+	atomic_t *sz = &attr->user_xattr_size;
-+	atomic_t *nr = &attr->nr_user_xattrs;
- 	struct simple_xattr *old_xattr;
- 	int ret;
- 
-@@ -384,8 +389,9 @@ static int kernfs_vfs_user_xattr_rm(struct kernfs_node *kn,
- 				    struct simple_xattrs *xattrs,
- 				    const void *value, size_t size, int flags)
- {
--	atomic_t *sz = &kn->iattr->user_xattr_size;
--	atomic_t *nr = &kn->iattr->nr_user_xattrs;
-+	struct kernfs_iattrs *attr = kernfs_iattrs(kn);
-+	atomic_t *sz = &attr->user_xattr_size;
-+	atomic_t *nr = &attr->nr_user_xattrs;
- 	struct simple_xattr *old_xattr;
- 
- 	old_xattr = simple_xattr_set(xattrs, full_name, value, size, flags);
+ err_system_err:
+ 	if (serv->sv_stats)
+ 		serv->sv_stats->rpcbadfmt++;
+
+---
+base-commit: 9afe652958c3ee88f24df1e4a97f298afce89407
+change-id: 20250617-rpc-6-16-cc7a23e9c961
+
+Best regards,
 -- 
-2.47.2
+Jeff Layton <jlayton@kernel.org>
 
-
---m55nvctvuaufcxua--
