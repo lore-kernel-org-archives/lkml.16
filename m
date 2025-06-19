@@ -1,86 +1,100 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7C321931E
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6432E26528B;
+	Thu, 19 Jun 2025 08:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321232; cv=none; b=M4xjnxC3369NLN5B+L3tBHmOqRXHyeaRdUnp0tTtLk00c3Fl5KDPRVYyBXJdqTBWrmYLNN1BzS/MZ8g4CYydZhXkyiut3b49CmZzp72yRO6QhMZKA91NzK1y9DDbZi/Q//Udy/MvUkrpFFuzIxdDhB374GUYjYk9ecztggoA3D8=
+	t=1750321235; cv=none; b=uph66fumjhecBkYrhhfHIVgiE2i0CPjUMwBeV02MmGTb/lu50pZjnirfolw0G1OxJ1JhmfGLj2B5mdN38XIoy0A7hw8ty/mdKGeGC7rdSu/vnoXra0ZlzXcrX8kyHSaXAu91fVJP0WNQrONZepJlay3WE5NqEJNQjl5dMhqyGoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321232; c=relaxed/simple;
-	bh=cWBHqkKiS7RP9IZhf0JnGzgpy8YIgcFAm3ITjn3BpzE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pPLUfIYH9rRCbLoRXvylKbBHH2t/7CZHVUa4EwM14TH0Ie37a7vVSGEQ2AHocZbPaGlvcmqVNA6dQwi2Hp+D8ek39jxx3HxSZ/FEkmeI8eMaTtEu0z9usueDu3ATjeQBD9LPK/eYaV4pTdeT7xNGBaEElDPvOsjRETeZqkrgrvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd051e8e5so4948275ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:20:30 -0700 (PDT)
+	s=arc-20240116; t=1750321235; c=relaxed/simple;
+	bh=EgxCdCrhAJ9RY/w6TgbM74DLG5HeaAAQPQvwKpWlaLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gQTVkynQgNzscOhLZWxfMpOKqfM9w6p39dEvTJLXjxvB0tcto/XQMP/TFmbrowUGxWHtTGINWi5ulB7s3Jgm0u+BE0i/Q7Vme8pwlPlvV0in88PdENIagXkFY0Zxep6IBVcPekF4OY47kLklm95cIQHamdshNEogeifi2U0/Bc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VUExpgCa; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUExpgCa"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450ce671a08so2761175e9.3;
+        Thu, 19 Jun 2025 01:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750321231; x=1750926031; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pki03gT1X1YzuKfpbdeTT2NdVOKEL87eulb7qk78kEs=;
+        b=VUExpgCaTcLdDeLYOfPDHxh9bQbq12rAQLt8CDgJiEqdvqz9ayUZGmtnBVbRejXYyZ
+         H+GO2XdhH3jRpN5ODxmYJkuIKD+votu3JO5MYaCZ3KaBuCYTxiy9z8rhPwHvMobkRiBU
+         SmcvlqbSpvi4Jl+kKrW4H2zQF++qFuTrBIxPV7W4k26k+mAMs2VuaoeS9T0My+wsjMSx
+         iybTDP5Zf2dfeIcy32UuYXogJ59fXP7MdxmpQnwqAWogA5dn0ZNX+rT6qaUuwXykcjMS
+         wMvlBY7QW7j8oNKDGPHG+7zu46MH+nJRKpDZPrm1Dn5U6QRRotCgZdCDUEssJBAz4ueQ
+         cgJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321230; x=1750926030;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Kj47JIn7RotE7ZzkA/g+sSblwgqxbu68sprIKcbjRbo=;
-        b=LWLaY//Th18GwBEQ3AwWZg5ySgig7fyPFmAGTcXHdZxuW4T60LTS2HrgOUDcK9z8ED
-         YcTpRZcDYwWFlxYMO7US5cJ/fpF/9HiOPqBrSqhffgtejOowYJwVkrnCsOEBEy2CihQc
-         es9YBYeJjkY8zCLo64f1Z0lkUHCUc1rK05VQS0a+rFtqr5l7IGiwheWvFX+79kv0UFAg
-         5OmuwaRgQN3ZqLqabHvBWlYIS2RG9xJYfEZmb7SmFtO2UkGcob8uwAUvd8Zn/eac4EtJ
-         jl5yrZ34TzGZgr7P5bMLcDMlVGgb4pB4/7gopp6vHV8FODgQ5SH8tmvEudmRFOWo4k/S
-         0doQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIKyaRkI2QtvWRH8nUCzmyzYv2fQBO0cvVOy9OYOX7GJer1OjX/BUZrqDRVgyoCr6abrfo2uPo8IMLOXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8kR20HnMgxSbJ/sV9Aj0MlR/MV7Imsea11JMQwf4sReoLIViE
-	59w5QDwmwWLkDUEY5AaW9i/OKTCc6e8qWIzQ/9RRLPVL0in+4C8Tkvwth+5+PtQAzZc9RU0OQaH
-	MGES1R0hfv5Im7bytB7B5WefLtOv6Gj1v8XbCvgWFB5n2fssl718o9UtlDPo=
-X-Google-Smtp-Source: AGHT+IHekSLhE6eISN7XxCtRns/xqlyr1Tj56eRlcX7tBt2H9/1SWPRiHsc2bTLYO5oi+XCIY9MsM/AbXn4X37PJlgKrThzFHql6
+        d=1e100.net; s=20230601; t=1750321231; x=1750926031;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pki03gT1X1YzuKfpbdeTT2NdVOKEL87eulb7qk78kEs=;
+        b=COfLP9exkG/9LJbx1977EZaABeY5+2IZvf+xbrOW9yDtHZGPZPnHYQCXGiQCswSomF
+         omNqNoVY4eHDF35vGy0qRq1fNVhHZyv3Ge76/4UkB6ZhhLISyKoK6/T6mnoyYI6OZMuU
+         H4GPOegYTBJQMO1mS36xI08lo3w04lZRbKPM6Hsuez3/rZWHZBa0kaihCNBhfUP03EPI
+         T5mc8tOkfHG0hzDOsHtC9JdE4iV18RXM8u8GJXHMZPvGWN9deIw7316+j5ABANnrlcIj
+         CvxDs9LsB6ruuarAplj+JZDGI2XzgHMp4NnpGlG/OHekHLuEZNk8dlnETGIWp6CpKC69
+         iVfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCIWdN4vVwoOYhX/6EQRIzbbzIFBsrjKl+Lxpt5vuECbvlUuuOFh1N74Vw2xNI7wLMXIsP8k3CmhIan3g=@vger.kernel.org, AJvYcCXNmY8Iehrse9nFPWQq/3PFngSD57OmGVN/rSwyBNI91rn1KuvGjfz28cUlkjSCRwGyd7bV/c1GwuSFnnhwveA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLdwq/9WlyiAsK7TYtUR/lDrzbeVYetGCN9Btsg4/9jGXlSGX1
+	0LPkZvYH8YTjL/tbs6W34KZAOc3Xb8uUmkUSqxMDh0CQbyU6EdB9LlQ5
+X-Gm-Gg: ASbGncuVU2RSgwfoxb5etRZ7m9LiGTFopsjuekAmKXORleZGNQ+anfIldNSM4nyuNUA
+	yj7Hmv0JSfMWYWLxxvjC2usDzuFzEVM7mfYOr+7b/xNYjDQk6RlgaWAF0aRNrNJozUkUug265tk
+	dmr0M8mfvCXNcajg0Z/OEqxGKxzygYD4SMhyzt/k/GnzUhXMezIpaC48FVeFVCvDS7d3FBVF8fI
+	VKaQ/NlgFnb8MuYKTTUlmqcZJ+wVh5YVajkg1mN+wmGrL/SPWdPrdmy57X3LBRsuvTNVD7A4PWk
+	rlPpQGm5WfOAdO6aS4FlvCYwMP1M9b76tnXJHlU8MDwlVulewTzAYnX7tWtf
+X-Google-Smtp-Source: AGHT+IHBETxa/0ep34g4jXorSLAAvGUjs5el+pd3xXbuTb2u9h6HMFdh9M7fitPzbY3gq3z1MXzylQ==
+X-Received: by 2002:a05:600c:8b2a:b0:440:61eb:2ce5 with SMTP id 5b1f17b1804b1-4533cb488b5mr206420795e9.17.1750321231352;
+        Thu, 19 Jun 2025 01:20:31 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4535e97ac0fsm21574075e9.3.2025.06.19.01.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 01:20:30 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Jeff Johnson <jjohnson@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] wifi: ath11k: Make read-only const array svc_id static const
+Date: Thu, 19 Jun 2025 09:20:10 +0100
+Message-ID: <20250619082010.1834109-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cda8:0:b0:3dc:8b29:30b1 with SMTP id
- e9e14a558f8ab-3de07d50d7amr207885085ab.14.1750321230259; Thu, 19 Jun 2025
- 01:20:30 -0700 (PDT)
-Date: Thu, 19 Jun 2025 01:20:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6853c84e.050a0220.216029.01cb.GAE@google.com>
-Subject: [syzbot] Monthly netfilter report (Jun 2025)
-From: syzbot <syzbot+listd62d23e3f9e32ca7ceb0@syzkaller.appspotmail.com>
-To: kadlec@netfilter.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, pablo@netfilter.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello netfilter maintainers/developers,
+Don't populate the read-only array svc_id on the stack at run time,
+instead make it static const.
 
-This is a 31-day syzbot report for the netfilter subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/netfilter
-
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 10 issues are still open and 185 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 512     Yes   INFO: rcu detected stall in addrconf_rs_timer (6)
-                  https://syzkaller.appspot.com/bug?extid=fecf8bd19c1f78edb255
-<2> 173     Yes   INFO: rcu detected stall in gc_worker (3)
-                  https://syzkaller.appspot.com/bug?extid=eec403943a2a2455adaa
-<3> 93      Yes   INFO: rcu detected stall in NF_HOOK (2)
-                  https://syzkaller.appspot.com/bug?extid=34c2df040c6cfa15fdfe
-<4> 2       No    WARNING: refcount bug in nf_nat_masq_schedule
-                  https://syzkaller.appspot.com/bug?extid=e178f373ec62758ea18b
-
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/net/wireless/ath/ath11k/htc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/drivers/net/wireless/ath/ath11k/htc.c b/drivers/net/wireless/ath/ath11k/htc.c
+index 23054ab29a5e..4571d01cc33d 100644
+--- a/drivers/net/wireless/ath/ath11k/htc.c
++++ b/drivers/net/wireless/ath/ath11k/htc.c
+@@ -497,7 +497,7 @@ static u8 ath11k_htc_get_credit_allocation(struct ath11k_htc *htc,
+ static int ath11k_htc_setup_target_buffer_assignments(struct ath11k_htc *htc)
+ {
+ 	struct ath11k_htc_svc_tx_credits *serv_entry;
+-	u32 svc_id[] = {
++	static const u32 svc_id[] = {
+ 		ATH11K_HTC_SVC_ID_WMI_CONTROL,
+ 		ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC1,
+ 		ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC2,
+-- 
+2.49.0
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
