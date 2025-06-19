@@ -1,63 +1,66 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DD6184F
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BAB12B71
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750291772; cv=none; b=jeYlLLLJ4A45eQ/zYMyCYycdPNssBFXyuM0WrlvGshrGBDb8mcSDJyT7xTipDDp2UrZ9MS5+qxYNzd5vivdvemkVmlSS350pcloaJVEndPZc3zFcBDiaIH5uYQbY92P1K2DpCEcNA7K6b7y4uVJQRL3B6GP3oTWnyAe8O1km718=
+	t=1750291783; cv=none; b=Jn4aWenl6jNGTn0alBvvYY0x101CBDWTa+pjfEjdwAuGr8MNVXbCgOTTmsy4sGCze7Vb8LaeSy1alNkOmCeeE0PDWkYhRRKtbPpCuuLXbk7RY2ZgoTT/IO3Vf5NleLDjJECuQ2KcD0v9LUGZGyLBO5MjNyhncnoQF6sjkVLCVT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750291772; c=relaxed/simple;
-	bh=g+WWwyExlFxOt7pdCc47liCfVvTztfDdp5uZ+qjboMk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MJdEHXeTWzDZYuBmpjFQN2xX9vGQpBJDyJHbBWEpw/H4GZIcIN6c3KTLBNTidQVJuz/mgWx8DCccnuxBDpgbjqau/vLOJ2L/pJ1T0TJ9OnM2iLfG4ZCGhJyPidT6kBRKLnuTqzQuQNiK9IaxxpIpNz94IXUDIrz8mo/kVP1WGMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E9CXeI4o; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1750291783; c=relaxed/simple;
+	bh=+qIMTdK2NCPkOQxAHBlrFY0gHuAzhR9s7EuV7668bG8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=D4b6CsumzVeOPvNfvGYlJ8rzorarfOoEduq/6qukzQNjWlBa79s7KEKfnjoT6mkk4OQzBjhFW+sPcNyzViAAN+C8t3+Qy8hoIXIcIvui9sdTRzyEnue+l72htn/yGCKP5WV4Kl7I+7Mruzk6A9iQaivZi3cUahU0yklGfJ6H5I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sr93ppCz; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pmalani.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E9CXeI4o"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3132e7266d3so140582a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:09:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sr93ppCz"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2354ba59eb6so3812615ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750291770; x=1750896570; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HQLEtaqNyQ09Ph8eJlSlh7L289gxZdZA63yPXzOJTQ8=;
-        b=E9CXeI4osH72yfwpl9lAuO0hQwKvQu6HexkcJ5HSwtBlSR/euDLYcq6NbGQ/8nkCMF
-         k4x2YLiRCWiLjBocKLcXEYS6/Fk80Lo/7d4h/GC7fJFx6EN7U/wZOqBGcR00XAmkRn4l
-         JNDUuy+z525ZiAzXMvqBbNLyRlMcuhjVs2bRQ9qJ2WM39QrxhFyT5ECZbdZloHzqYrjP
-         Spr7jB9OSSStHOKT9AWEk338yQqq+de8uDGpQg2YDk+88DWl3N99OcGFAaUPJJPAUbfo
-         tk81snbOlvarEsKNmT/B8iUiGVaxJaSSdfb37nV7MMVYhu0Zm9Wj9A3qwrM3xzc80eXL
-         YXzQ==
+        d=google.com; s=20230601; t=1750291782; x=1750896582; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QpC0/56QK9gvVcyMRwwJWQGp6+fL7PqTqoQ1qu/UYZU=;
+        b=sr93ppCz+QPG8IiRwSFt7B+vlHV8uQTbrAQshffn1DlChdirbXpsfWfY4FNKHgAE0S
+         JuIsuzWQrDJfeMWIIOLjXcjn3I3PuZBKWDm5M5WmV1q7jREodffDZnchbiweRDKOMCHe
+         1atV+3CfQ1szJ0AgVhBZHF+e0tZESMNt+G4w5C3dy+caMWQ9rCAjlXVFBV9cVvg+yUeH
+         P5/PfiONXJqLHXIo8kdNpWJD8m3p2Mo9iPe9tA5axLlTLXO0Fa0HqqCPtjuALyJLDwvO
+         oCBeNqoBYEviykJc6hDakSLWx3chtv0uLcHWqYxZoKhrLAEkxNLY/zdP79FE/LYKnveg
+         3r4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750291770; x=1750896570;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HQLEtaqNyQ09Ph8eJlSlh7L289gxZdZA63yPXzOJTQ8=;
-        b=OYANn7yKHJVC+1FNbERDVLqA5VJz3Q7uTh3HBONtBnf1w//V72goltjPuvVB/iSU+s
-         uhvebzYTelP29R2L8dO2yO1KnHX1VT3gi50uoW5olWV4S4Ih4bgjXq8y3nCm5ubHhyqO
-         q7uAf6GhVwrXX2ZPc7WcPhfmw0e7oGYpqZB4MnNfCYROwNqoknUAWMuDEiyq8K08+dy9
-         u2CwGEqXdYHad3mGiYyQITGIbGqnsweAz0zYb05x+YrYji3n2zYZtMMFT7y6MXji8IKU
-         kqYA562vbHtDw37b4AH3urKEWemBdFJCd9mqcoCf3kemFAW5PSZnbK9SfMRqfTl2+R2R
-         VJXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzW1e6nOUnFMMMXosDnN+sfEn2YLR/mx4kpO40qjjdSzzbIG9nJ003GEfUbBPThQoWBUn0bdcH4+nJYm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGEw4wdoc3yzTgMs0OeY/twYvGq+4mdI0Fn35AY8MljJeWMTnS
-	ZX8CoqRK0FjvXkrSjyJB8Yo/G3Mk3r0jyIoD//WxvdVUC8ZQtRbkR8aZC9YXBMVryPuD3TcVu+a
-	Ix85UC04iAQ==
-X-Google-Smtp-Source: AGHT+IEVPV22uL9FvDPeSwJL7aXmPGyFNVyn9NC6hjHk6PanbMIdcjq/wM1aPXRWX50pzKvhDPe3NM4t3h1h
-X-Received: from pjbdy12.prod.google.com ([2002:a17:90b:6cc:b0:311:462d:cb60])
- (user=pmalani job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1ccc:b0:313:14b5:2538
- with SMTP id 98e67ed59e1d1-313f1dd9808mr28691317a91.35.1750291770387; Wed, 18
- Jun 2025 17:09:30 -0700 (PDT)
-Date: Thu, 19 Jun 2025 00:09:15 +0000
+        d=1e100.net; s=20230601; t=1750291782; x=1750896582;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QpC0/56QK9gvVcyMRwwJWQGp6+fL7PqTqoQ1qu/UYZU=;
+        b=aRe2WBcy3hHB88WAucW6S2pKXmNPQtI5LZ9YLkObPCrJeW9KC5oDfXCLehHAMlAzRo
+         fS4hlhAIJIDPj2oF4VTR/oOaJ73DPpG1qCNZu4NjAUVzfL7aPvQRae83rit7fRMJIEi+
+         2XI7wEIWN7Rg+DtIsnNZZYnK1Sx040xitVf5VFjMYhAIEfd7Z1oR0zzWFHlsygcddjSu
+         OFbOG728g4Yun2hZ7KjmuHhZgbNZWBb3eWoVe7M447Wr9JtPuhovp2cfjRLKaNh23/5d
+         /QCZVuSdc88UaK7OJ3/dY2dgRXCGY1UYeLfyg3jiCUcdtu7d0fgJ/HpoQE6Cv+Jrq5II
+         h+1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWSghf6f+1aGNzuFsUcQeiwzqmPEOHW8Tqo9XUbip/nhkD4lti/aDvScID9HTy8LdX8MTP1/NO1pwgWRL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLa/t2HO7SoK8RRz7IPRPB5Xxt8WfyzbPZRVe/9itNawFn6h+k
+	fzshfFCcowlJI/Qp7aafOqJticLBnxQftiHn3y/HB6FhK53znFD1R+Xb/PQFL6BVNik+BXGvHJj
+	tNkqVLddoOw==
+X-Google-Smtp-Source: AGHT+IHEEOaCcOMdAMBdQBtaBCFLjNH36AGNabBMUPOCub7dg5uABSx4DqEsASmj5lALImz6DptXxGXuNrcm
+X-Received: from pgbx123.prod.google.com ([2002:a63:6381:0:b0:b2f:4c1b:e1a0])
+ (user=pmalani job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1cf:b0:234:f4da:7eef
+ with SMTP id d9443c01a7336-2366b1773c0mr311198265ad.52.1750291781704; Wed, 18
+ Jun 2025 17:09:41 -0700 (PDT)
+Date: Thu, 19 Jun 2025 00:09:16 +0000
+In-Reply-To: <20250619000925.415528-1-pmalani@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250619000925.415528-1-pmalani@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250619000925.415528-1-pmalani@google.com>
-Subject: [PATCH v2 0/2] cpufreq: CPPC: idle cpu perf handling
+Message-ID: <20250619000925.415528-2-pmalani@google.com>
+Subject: [PATCH v2 1/2] sched: Expose idle_cpu() to modules
 From: Prashant Malani <pmalani@google.com>
 To: Ben Segall <bsegall@google.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
 	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
@@ -69,24 +72,32 @@ To: Ben Segall <bsegall@google.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Prashant Malani <pmalani@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This is a short series to address the unreliable feedback performance
-counter values that are returned by the CPPC driver when the CPU is
-idle.
+idle_cpu() can be helpful in some drivers which can utilize it to make
+performance optimizations based on CPU idle state; since these drivers
+can be compiled as modules, that prevents them from using idle_cpu().
 
-The first patch exposes idle_cpu() to be accessible to modules, and the
-second patch does the actual change of not reading the feedback counters
-when we know that the CPU is idle.
+So, expose the function to be available to modules.
 
-v1(single patch): https://lore.kernel.org/all/20250614003601.1600784-1-pmalani@google.com/
+Signed-off-by: Prashant Malani <pmalani@google.com>
+---
 
-Prashant Malani (2):
-  sched: Expose idle_cpu() to modules
-  cpufreq: CPPC: Dont read counters for idle CPUs
+Patch first introduced in v2.
 
- drivers/cpufreq/cppc_cpufreq.c | 5 +++++
- kernel/sched/syscalls.c        | 1 +
- 2 files changed, 6 insertions(+)
+ kernel/sched/syscalls.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 547c1f05b667..0fd5e2dafcf7 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -216,6 +216,7 @@ int idle_cpu(int cpu)
+ 
+ 	return 1;
+ }
++EXPORT_SYMBOL_GPL(idle_cpu);
+ 
+ /**
+  * available_idle_cpu - is a given CPU idle for enqueuing work.
 -- 
 2.50.0.rc2.701.gf1e915cc24-goog
 
