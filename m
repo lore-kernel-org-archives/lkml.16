@@ -1,126 +1,98 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AC0242D69;
-	Thu, 19 Jun 2025 05:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D332123D2B0
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750312009; cv=none; b=jblGZ+Yu33//X+7DE07U9OdwvduLPTQAitT7RGhkmp2K9HIXn4Vp5a1+iZRRUfEhoo7MmWLXHXl5diviADI1kDowbw0RsVOCm4R99i71MNN1JfKhkg8o6F8cnEgfTOQnLn9dw7AZvr/OvToEA38lE+qB88QMKJwOza5nldZhuSM=
+	t=1750312015; cv=none; b=Mj4mtvXDoWK52bZFSB2KZmZGhbAGYOXlqCiogWzVmZnnZUFgqActtxoerIBi0WjRu9eW3nWmzWQ8Rq5F/tu3aoso1HOO/uPsHiysCHUFL9zOU1PLLWR00Yd80KthWg+AAjDRua0mrPALVAmGyCouibMOfVsF2INm7ljjKcVHeZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750312009; c=relaxed/simple;
-	bh=4S9XGg4nCpCNQhlQ1zGgYNASrs4TqBa8i2Q9xURUCkA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UStmWQht1mwNyVp8L+6Paz3mivIrvd7tW/VpNlblGLXAC9ZTtZSNy2QV4kiUasedSI3Y2Ax91LCjkqErR/MNJtLAbHr+GHgwVI04GNZQToMXD2g/mV390LaL3d3Mk0IGAOL8OBImZi4eUniSWk94JcSvhF1VHP5C1UeHMXjfL1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.33.139] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAAHt9UrpFNods+JBw--.6421S2;
-	Thu, 19 Jun 2025 13:46:20 +0800 (CST)
-Message-ID: <4036e3c2-8324-4eeb-9aa8-df1fbe9c7943@iscas.ac.cn>
-Date: Thu, 19 Jun 2025 13:46:19 +0800
+	s=arc-20240116; t=1750312015; c=relaxed/simple;
+	bh=Bn70nPJu3HUp/M+KYcLviCtpjLHOrJf1pcJLvrjQ/Es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c5JKJHBabdYAKTpLJkzETXuZDs4leZxhABQA96jRPTaIkqbj4QmpwzTDITsp4+1DKdfzft7eCFmVqZgsSawYcRyNnghogSSERm1KBfbeORl0jLjLBr5LGZoPpD1csnJqFb+z49SdPV0sOxJTNf5XteTKP1Vw9QXdxZmZnJAoAUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dp3C77lr; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dp3C77lr"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7486ca9d396so238746b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750312013; x=1750916813; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L1Xvm2/dcHJBRt7NYvlZ+VTR+ErXbR50l14mI16oEhY=;
+        b=Dp3C77lrzqGDO6ludV5D8bL0F7AwlrR8crpDyn/Om1g4MUBSXb13znlJ0KhQRNxPO1
+         iHZvLYLhLoCFNdfPbHP7V913x1P470fwT5vyPQU48GeTAUoGkB+iTGucUdcJKqT5xawq
+         NW316AlnSbmqgDW763um18OX0EuUelEzae+qHfrY6RFeyfjbZkZ5BoAD4YSemNfuudb+
+         owq38O0EgaYHC1bsWj3w+hIwWAR/2vWdmg9LokuwCPgIn9X+SN1fpzBOvFdYlaT7ovIe
+         GDRYIAInDBCxR2jqbrBS84ZGk4DhPb6j81zoQFeL59YtCj135C4gO5D9UbBbpTvGdvvO
+         /hIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750312013; x=1750916813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1Xvm2/dcHJBRt7NYvlZ+VTR+ErXbR50l14mI16oEhY=;
+        b=bnGxpsf+D1y9OfJnK9YA6ASIu8V3aPcLUxfXroi9Kkto8Be7OhjaB8G8ltbyhwwYJY
+         EOgU3PngAaM7AePXgjNTrMOVeswliglPiEPqMyjjlq0aDSSmeuEha7JZdvHg+b4VZxRU
+         8g4Ko4gzXvAfNeeAUrsGCWMNTtPDLsXkDLa/nnhOR589yorczSqpsEfO3IHaM/Dj+3EF
+         NjwTKf7dlgjgosDaTIxeUN2TftbElkbBC9Q9FUgnXtaxlJsbpcMcYsaezg0rrJZYbbVO
+         OA5HAmuo6M62LBhbs8NDK8Rsv5m9SF5hfGMUz5jHnrd16fpnZjsmyVDA9EPPTWVx4opR
+         lu8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXjDK1iKUVZKZVXpOSuXd+Ur1zaMno+tgij29wdgVjUBhf/Mp+9j4pFygEFwkZEcSzUV58C7iy/swVx0DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzstCttHJ2AO7qJcBZxIWNNBr8rWy+kTiF2UV0yJk2fH0zXm35E
+	fZJAklasBF7HwUPno4bzZ6c6SiiFYMe+6NgCO55PH1NylrIh/4pkp4ub6v6h7NcH4EU=
+X-Gm-Gg: ASbGncs4t9j4kn3jC4E7xwefBPiPk9TIXdcVrjeyLknmz93p12NN0ZtcI464+UHShsu
+	ifj9bzG39x2YL5VfE8A6jBwhl/OO5CDPV4j67POik4whZk18rgWkOUmRIVbm3BHjPAo4pg6Itn+
+	n9wEmaWIawLMfESQy58+w4blbWpc4VYHkXDKLxC+eqJ2JEPpN8X2mu2QZBnQUx28GnusOiQpzQm
+	x1VKnIpGT+TY+Mw9XOEjOjODlZtN71Cz2JXWB8mP3yz2che2vn+lZH2EEYpAmBeB1s7S5ZHfJrG
+	3pojdQGqWrUS4qsFmFZXoK77q/aSwjNUv6+H8Zrq9soDOfWGhnCRNtzVL1DFXEk=
+X-Google-Smtp-Source: AGHT+IGx25UdEAzlmqfQKTPAu3rI0FpfbMxJfPd/PkIc3VTClQaEGNZW5YGAM1Nh7zWb+auXSU7+sw==
+X-Received: by 2002:a05:6a00:10d2:b0:748:fd94:e62a with SMTP id d2e1a72fcca58-748fd94edb7mr1182029b3a.1.1750312013191;
+        Wed, 18 Jun 2025 22:46:53 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748e86b5527sm2820713b3a.86.2025.06.18.22.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 22:46:52 -0700 (PDT)
+Date: Thu, 19 Jun 2025 11:16:50 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, robert.moore@intel.com, lenb@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+	linuxarm@huawei.com, jonathan.cameron@huawei.com,
+	zhanjie9@hisilicon.com, lihuisong@huawei.com,
+	cenxinghai@h-partners.com, yubowen8@huawei.com
+Subject: Re: [PATCH 0/3] cpufreq: CPPC: Some optimizations for cppc_cpufreq.c.
+Message-ID: <20250619054650.pl5ase2l5juu5pm2@vireshk-i7>
+References: <20250526113057.3086513-1-zhenglifeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] mfd: spacemit: add support for SpacemiT PMICs
-To: Alex Elder <elder@riscstar.com>, lee@kernel.org, lgirdwood@gmail.com,
- broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlan@gentoo.org
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, troymitchell988@gmail.com, guodong@riscstar.com,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250613210150.1468845-1-elder@riscstar.com>
- <20250613210150.1468845-3-elder@riscstar.com>
-Content-Language: en-US
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <20250613210150.1468845-3-elder@riscstar.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qwCowAAHt9UrpFNods+JBw--.6421S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF48Aw17uw17Ar1rAry5urg_yoW8Wry3pF
-	Z8Zr93uF1UZFWF9w4DWrsruFyrGan7uFWjqFy3JwsIqFyq934jkr4DtFW7ZrWDJrWkGr42
-	gw4F9r9rWF4UJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Sb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-	8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
-	MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrwCFx2IqxV
-	CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-	6r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-	6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-	1UYxBIdaVFxhVjvjDU0xZFpf9x07jkNVkUUUUU=
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526113057.3086513-1-zhenglifeng1@huawei.com>
 
-On 6/14/25 05:01, Alex Elder wrote:
-> <snip>
->
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 6fb3768e3d71c..c59ae6cc2dd8d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1182,6 +1182,17 @@ config MFD_QCOM_RPM
->  	  Say M here if you want to include support for the Qualcomm RPM as a
->  	  module. This will build a module called "qcom_rpm".
->  
-> +config MFD_SPACEMIT_PMIC
-> +	tristate "SpacemiT PMIC"
-> +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> +	depends on I2C && OF
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	default ARCH_SPACEMIT
-> +	help
-> +	  This option enables support for SpacemiT I2C based PMICs.  At
-> +	  this time only the P1 PMIC (used with the K1 SoC) is supported.
-> +
+On 26-05-25, 19:30, Lifeng Zheng wrote:
+> This patch series makes some minor optimizations for cppc_cpufreq.c to
+> makes codes cleaner.
+> 
+> Lifeng Zheng (3):
+>   cpufreq: CPPC: Remove cpu_data_list
+>   cpufreq: CPPC: Return void in populate_efficiency_class()
+>   cpufreq: CPPC: Remove forward declaration of
+>     cppc_cpufreq_register_em()
+> 
+>  drivers/cpufreq/cppc_cpufreq.c | 59 +++++++++-------------------------
+>  include/acpi/cppc_acpi.h       |  1 -
+>  2 files changed, 15 insertions(+), 45 deletions(-)
 
-Module name?
+Applied. Thanks.
 
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called spacemit-pmic.
-
->  config MFD_SPMI_PMIC
->  	tristate "Qualcomm SPMI PMICs"
->  	depends on ARCH_QCOM || COMPILE_TEST
->
-> <snip>
->
-> +static struct i2c_driver spacemit_pmic_i2c_driver = {
-> +	.driver = {
-> +		.name = "spacemit-pmic",
-> +		.of_match_table = spacemit_pmic_match,
-> +	},
-> +	.probe    = spacemit_pmic_probe,
-> +};
-> +
-> +static int __init spacemit_pmic_init(void)
-> +{
-> +	return i2c_add_driver(&spacemit_pmic_i2c_driver);
-> +}
-> +
-> +static void __exit spacemit_pmic_exit(void)
-> +{
-> +	i2c_del_driver(&spacemit_pmic_i2c_driver);
-> +}
-> +
-> +module_init(spacemit_pmic_init);
-> +module_exit(spacemit_pmic_exit);
-> +
-
-module_i2c_driver
-
-Regards,
-Vivian "dramforever" Wang
-
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("SpacemiT multi-function PMIC driver");
-
+-- 
+viresh
