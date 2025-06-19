@@ -1,122 +1,110 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D5F264618;
-	Thu, 19 Jun 2025 08:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75382580FB;
+	Thu, 19 Jun 2025 08:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323294; cv=none; b=IApnfEMXjX5mDZjE2SC437dLsbCzCun/1ouKxCcnl0+IwKTMhVNnpjPmy/UR6ZUSzP0uOEh1NKLdq+h78st/O1rMFAJ0ZV2GrEp4m25VhFbq0PF/nQ8bnmBtd/Oe9WP+wJWcLI9vdksfG6wUNbpQciyR7w8C0ePlVAAYs7FViDs=
+	t=1750323328; cv=none; b=rMiXixkd52jf0WjtiH0PGgedRh1G3m5ilIEJi4kZm0+YH4UkvKmznG69+CHP3He0HOG+svyfyclk6uYNIMZhAW+0VKjSfZBLg+6URNq7T4IDVqVzbUFIhEkIK4SBN2Taj/lHaGI8YaThWniiMVE2UBAQwDUzoAGNMfwDel1j6xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323294; c=relaxed/simple;
-	bh=Oe3sQXha1qmerX9eSzIumQsaFzOJeWnD/5lIQE3te/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X4Y5vYA+fAh7JRfqUnzahLj8Jw9vPDrDLni4sDuUtDqYSPCXRadEFOJ3uScopc1cjHmTM2RaQopMVgLRZaTvdsRXdabSxcEPRSIasnesdw7QHvdsaOi0nG1u0KLj3xNhCK7mkSWpniYYqMiUy+JEuGjwPmcmHdn02OKRK34yPiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=o/6iUb+Z; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750323328; c=relaxed/simple;
+	bh=eQADuGSiL41NAxGl9NK+UhkSlVn0yTQBhyaUTND5Uzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jxrIHLlHwSCL1MSXs+zZ+V6xp2wSUNgOo6rC8sEVFU2vvtfD8wGzidr61eEwNRwEIamLqZet9ug/8YsCqa47t/+oaKRdoAvPukrwJoQ8Kpskk80KnB/EY4VpjoASPGzVRuc9bYtFFGevVM54JyPOW3Gg3UJY1UoM28gEp1wmT1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2FgroRg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="o/6iUb+Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=eD7eXQjCVZXrASkEWcilBg8DLF0GyjTxOwYQy8veqf8=; b=o/6iUb+ZXais31yF8EysEgF4nP
-	6sr4Vg/Z4rY9ovh5IfCwzyhKZLARasyvwvWzjrhIYyyxi94HFmFUF14PJKRMupQZJHu1sLL8CP7/9
-	SECVU1JfQoHKkLSmOR3KKA0UQEUmmCIT67OvC71waWiCBcHaOdGuMGxtQZoPF1BAOKLeLdZw+Zsyu
-	k4jFb8axA9Owba/EOT3Sh7ZoDF4e1T8qJFLkArK4D9dl4XdvWvvvw/bYZuLkL7vKH8csHF98J6NmP
-	WGgyR6kjpFPZLcAFtdmlZLcItUXUz7oMJQHdT/v5gBQLkHy+wTzvafJZPhcpxyKw8tMESvkTq17my
-	Fnly6pzQ==;
-Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uSB2j-00079q-Db; Thu, 19 Jun 2025 10:54:45 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Orson Zhai <orsonzhai@gmail.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Chunyan Zhang <zhang.lyra@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject:
- Re: [PATCH v2 10/12] gpio: rockchip: use new GPIO line value setter callbacks
-Date: Thu, 19 Jun 2025 10:54:44 +0200
-Message-ID: <15862883.tv2OnDr8pf@phil>
-In-Reply-To: <20250619-gpiochip-set-rv-gpio-v2-10-74abf689fbd8@linaro.org>
-References:
- <20250619-gpiochip-set-rv-gpio-v2-0-74abf689fbd8@linaro.org>
- <20250619-gpiochip-set-rv-gpio-v2-10-74abf689fbd8@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2FgroRg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F51C4CEF3;
+	Thu, 19 Jun 2025 08:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750323327;
+	bh=eQADuGSiL41NAxGl9NK+UhkSlVn0yTQBhyaUTND5Uzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p2FgroRg8XpbJ/VSjtfLXHjJJRjKYpLj2XcaUHKG2xLQ7wfM+Z5n3rCjl6c8Zto5M
+	 RSqSwjDobL8Uw3UNbEgelKH8UpaKTaToYX2CC3EHc2vsE2pdmJDyKlBWw+TMDnneAR
+	 zMJQDoEg8twbtA3I11UyCenEImVZ9sO7oElSKq/lIdyVHdbSV7Rl1uy4I9OtVCIJ1L
+	 xY4b7NmVNhx3/G6psbDY7j5hAeSUhrVg2Gh8rwAs7zI7pjkVGSiXnOiYqIeGf09brb
+	 UZTFESwD6c+51mkUr6sZ7eCO2jWacLftMDJ3IO+VCTUTYL9SrpXOCd2q9ivlu3Pq39
+	 P3TSZ4nA1tZBA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60789b450ceso962775a12.2;
+        Thu, 19 Jun 2025 01:55:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/GY9u/H6VmWYLvDF+tqQ6wvs4cQ80fpYCXLxpaeI3/hKLjPWaslAawPzcZv8FhbhaTHXqy2CVGxgUmg==@vger.kernel.org, AJvYcCUC7SLy1By2jbdrPLjrpds1xYDCeo4uSWgeDuKoCGrFN88IBz0opkL7rgdyTjdu6qVaje0nxVN2pqqP@vger.kernel.org, AJvYcCUa7Efc35Q8WkGsD2U4bCGoecJW/ptZTk39ref5CTSfW++U6zvqcFPlHuJpjvbY/a8eD4oWh3rp/qY7y+OEJxeBctA/Dt2d@vger.kernel.org, AJvYcCVjDX2VwfRuG5SxxnGpf5KC7Th8S4ZkJMhGPKBQqTAOByeqmHLWZvVAEFKQt4ygXHiI8aQ9jG5oWXcrmmuH@vger.kernel.org, AJvYcCW+tx0F01bmFzPlRq1s//0vymuMtR05zWZopJxI/dVAq8QgCfpLxVIDL2fCwcAEz/s21z9kDMM7AodgJA==@vger.kernel.org, AJvYcCWqAx+nfZcjxDIAjro9EdY9VtDv9Vo9k8YxKWYkMQGhLnpFFTQM5aVyNYHvqOxsl0bAya0Smo4HJuA=@vger.kernel.org, AJvYcCX73FZOQpOzdf9Hp5i4AYdcM99rSDTfOkO87rkzetCbweNzxNf3eKMm79ycetHQF9cuKgIQfepr0NTAfQ==@vger.kernel.org, AJvYcCXUjuJgbxjol0jB6YrOeiJbQ/EtotBa3LL1C4QzpqdW1wi+ArpGdxkeNLrBTJtcSjV3blfY5lmHKm8B2CXdAu/j@vger.kernel.org, AJvYcCXwvFMpnHmADqS7bqjBEL0UKfL5f5WhEOrViDiJQ3UB6JKdkqVAiubUnHinNAnpqgbcGOJnQIuV5wnoimDC@vger.kernel.org, AJvYcCXx5NT+KRx0hNKE7eB4CPymUiA8EmK/2CrHXe+kQF+v5B+RVODIZVFTK73fUmYhLST2j6NM06Sg4s3i46U7DP/Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YxntaGQ75cR2XT/KtiUEmUR6viMHpLHP+8ZBQ7dY8DNbCcsqVrI
+	CYr2glOimARwgCo6YYRC0tbgQ26zh/a93zRRAX4O4WnRQgWhdNq0pGl7dr3JC8orL2Cqe4djh5e
+	IdJf2tXvt2ESnC34dgslpqJ2En4YygkA=
+X-Google-Smtp-Source: AGHT+IFe63NPmdC9P72cDlyX2WP9si/cWhn+2uqDCCs1dQMO/+ouBJs4HCM0Kl1RCgdHuztVjrD3QGSEtvvPoh/cEAU=
+X-Received: by 2002:a05:6402:50d2:b0:607:6057:9006 with SMTP id
+ 4fb4d7f45d1cf-608d08f7a70mr18716524a12.8.1750323325929; Thu, 19 Jun 2025
+ 01:55:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-9-kees@kernel.org>
+In-Reply-To: <20250523043935.2009972-9-kees@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Jun 2025 16:55:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4rFt3J6hD-eiNN5nihNR0cwMxPJQpq8LQWkx4km428og@mail.gmail.com>
+X-Gm-Features: AX0GCFtBM3K8OeK1JL3sld-cpEWi3kLQAET9w-cyksCMv2tJ5SCZdduevj4T0cU
+Message-ID: <CAAhV-H4rFt3J6hD-eiNN5nihNR0cwMxPJQpq8LQWkx4km428og@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] mips: Handle KCOV __init vs inline mismatches
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Donnerstag, 19. Juni 2025, 10:33:23 Mitteleurop=C3=A4ische Sommerzeit sc=
-hrieb Bartosz Golaszewski:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi, Kees,
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-
-
+On Fri, May 23, 2025 at 12:41=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> When KCOV is enabled all functions get instrumented, unless
+> the __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions, we have to
+> handle differences in how GCC's inline optimizations get resolved. For
+> mips this requires forcing a function to be inline with __always_inline.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  drivers/gpio/gpio-rockchip.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 64700a003f9a17947dd38baea23a066e8c057caf..ecd60ff9e1dd1a090bfad204c=
-8b86c4d7fb68ce7 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -177,8 +177,8 @@ static int rockchip_gpio_set_direction(struct gpio_ch=
-ip *chip,
->  	return 0;
->  }
-> =20
-> -static void rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
-> -			      int value)
-> +static int rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
-> +			     int value)
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: <linux-mips@vger.kernel.org>
+> ---
+>  arch/mips/include/asm/time.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/include/asm/time.h b/arch/mips/include/asm/time.h
+> index e855a3611d92..044cff0e0764 100644
+> --- a/arch/mips/include/asm/time.h
+> +++ b/arch/mips/include/asm/time.h
+> @@ -55,7 +55,7 @@ static inline int mips_clockevent_init(void)
+>   */
+>  extern int init_r4k_clocksource(void);
+>
+> -static inline int init_mips_clocksource(void)
+> +static __always_inline int init_mips_clocksource(void)
+Similar to x86 and arm, I prefer to mark it as __init rather than
+__always_inline.
+
+Huacai
+
 >  {
->  	struct rockchip_pin_bank *bank =3D gpiochip_get_data(gc);
->  	unsigned long flags;
-> @@ -186,6 +186,8 @@ static void rockchip_gpio_set(struct gpio_chip *gc, u=
-nsigned int offset,
->  	raw_spin_lock_irqsave(&bank->slock, flags);
->  	rockchip_gpio_writel_bit(bank, offset, value, bank->gpio_regs->port_dr);
->  	raw_spin_unlock_irqrestore(&bank->slock, flags);
-> +
-> +	return 0;
->  }
-> =20
->  static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> @@ -325,7 +327,7 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc,=
- unsigned int offset)
->  static const struct gpio_chip rockchip_gpiolib_chip =3D {
->  	.request =3D gpiochip_generic_request,
->  	.free =3D gpiochip_generic_free,
-> -	.set =3D rockchip_gpio_set,
-> +	.set_rv =3D rockchip_gpio_set,
->  	.get =3D rockchip_gpio_get,
->  	.get_direction	=3D rockchip_gpio_get_direction,
->  	.direction_input =3D rockchip_gpio_direction_input,
->=20
->=20
-
-
-
-
+>  #ifdef CONFIG_CSRC_R4K
+>         return init_r4k_clocksource();
+> --
+> 2.34.1
+>
+>
