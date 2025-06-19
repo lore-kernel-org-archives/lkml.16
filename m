@@ -1,195 +1,250 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE00224AF7
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E229E221D93;
+	Thu, 19 Jun 2025 12:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334820; cv=none; b=fsdQAAVU9SDKPV+PeJFkM2WQzwgD1qd3O+VB1VedVubfHcb3TQGonqtG7kBqba37VVLkOEprvmQLZwMbvSdkUjZtynKMQqIdA8n0ZnLFD2CA+IUw6UeCYabqDrkhU01tMw1rFs6r/E4HjZNwCp0ak8cKZQ42Dxh73ZWSxIrvuJ4=
+	t=1750334876; cv=none; b=Fsq90lgEENQruPEd37mDvCoYnLwLbryfueaHCh9Fy/lvGuqyTE2wC6p23h5N9kRJBvphwRMMSYEwTLlFekMxQMkdtjznyTYfOD3YdxIzSkZ3IT20bxxGzqEtDqr2CPUQmeLBDDFmFOP3+6vDGSglBFokxSj8tG+AxS5RonuwrLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334820; c=relaxed/simple;
-	bh=tX+A3EmaSS8rn3OgKbgRud59BlcHQJ+KbZ2DJIx1Omw=;
+	s=arc-20240116; t=1750334876; c=relaxed/simple;
+	bh=gHMcK5FXmhzyrik19qB7bBfBSgqYIFyvtGRWEL15uTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q/+dE0Zc8/NCy1Gkduypj4MIBvLTcxgmcJlP0F9DfA10/ODjQe47MNjDJ1ru0ATOwcRPh+zTbS+ULUR2oWRTo/0OAGHH3+rzDNYiiMgED063HtW7XGNfuLue17AdEhJQPPos1R0T9vlr2ccu4VFftF1jAuHG2caIWdo1B2lJWYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zqPcFbLf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jEwdsj8r; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zqPcFbLf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jEwdsj8r; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=lahY/Ethlh5JlSri+qpbJVdPTMJUERD6S1PobxITnWn2dL95KJ9loaXwf68nJr4XSBZoLDzVT58L655b/GMKdehi2WuvumAWWiZVLSnFyljA7X+4zD9dPRi35uLGnF0bhohHN+H0bXcFOgbnYaGB8JUBmVeY9qAtkEpnt1K1AZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qb4njTXl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zqPcFbLf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jEwdsj8r";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zqPcFbLf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jEwdsj8r"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AC66B2121C;
-	Thu, 19 Jun 2025 12:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750334815; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KDAuEsNXKXygaILSEXeEMNcT2WMigGIcctwMV7a0cE8=;
-	b=zqPcFbLfpUQLjy+Nw4cOX/B2LiApdKR7t9DEm9m3vLLybWpiWlFBWTl6QNGFMMJe81DLE6
-	1uGk7SLFk0EUnA6QiPQBz3Kv/z1D/ZNALQXlfFywd0PzUqn46btyJOJmbpixQ6uQ0pR4Mz
-	lMMpI0foMRv6N403hLovr2WkJq9iRKQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750334815;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KDAuEsNXKXygaILSEXeEMNcT2WMigGIcctwMV7a0cE8=;
-	b=jEwdsj8rqU+sAaEm1rAhYOm4nratZdmqMyGOXNSbv1Zh1lQm/lkFeChFWsq3xyo2+/dtFQ
-	eI1mhCTdCBSEvaDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750334815; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KDAuEsNXKXygaILSEXeEMNcT2WMigGIcctwMV7a0cE8=;
-	b=zqPcFbLfpUQLjy+Nw4cOX/B2LiApdKR7t9DEm9m3vLLybWpiWlFBWTl6QNGFMMJe81DLE6
-	1uGk7SLFk0EUnA6QiPQBz3Kv/z1D/ZNALQXlfFywd0PzUqn46btyJOJmbpixQ6uQ0pR4Mz
-	lMMpI0foMRv6N403hLovr2WkJq9iRKQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750334815;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KDAuEsNXKXygaILSEXeEMNcT2WMigGIcctwMV7a0cE8=;
-	b=jEwdsj8rqU+sAaEm1rAhYOm4nratZdmqMyGOXNSbv1Zh1lQm/lkFeChFWsq3xyo2+/dtFQ
-	eI1mhCTdCBSEvaDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB002136CC;
-	Thu, 19 Jun 2025 12:06:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QUQhJlv9U2iXdgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 19 Jun 2025 12:06:51 +0000
-Date: Thu, 19 Jun 2025 14:06:49 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <aFP9WQSn2AZbRIb4@localhost.localdomain>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qb4njTXl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21257C4CEEA;
+	Thu, 19 Jun 2025 12:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750334875;
+	bh=gHMcK5FXmhzyrik19qB7bBfBSgqYIFyvtGRWEL15uTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qb4njTXlBRdKnJZpfl2+ni+KlTxDgPty/Jj+RuE3M2mI1M7ryKK0SqGS0QN9yT4K/
+	 0bfC3CYC93oJZRh9aBDoH7nAf94xizMrMGhNbTaSROnqhfqqrj9EKxlQtmCAyoCUCW
+	 xI28sVgB+JcPyVFWvdV+l0uGXhpuQf/FHLDz6/zviybDDKwBRwbNHbk0xQk0K6M7B9
+	 nVf7dIo1hHj8mQldXy+cSqwdczeDQzGZG61tx13gNJDN+mFZosLyeCURqcYPmU9wYw
+	 8XKNvX4PM6/TXG1BdoU9zLFCcfGRh+OWs1kOrXtv6OU/LZ0YBEuihOCbfokpwF8J+8
+	 qQEf3s0El/isg==
+Date: Thu, 19 Jun 2025 14:07:52 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Francesco Dolcini <francesco@dolcini.it>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
+Message-ID: <20250619-ubiquitous-annoying-tamarin-bbfdad@houat>
+References: <20250612081834.GA248237@francesco-nb>
+ <CAN9Xe3RFEXZuWTZB5E1tJdjXc9o_hB1ArgA5SvqbDUBkwYea8w@mail.gmail.com>
+ <20250618105158.06e42668@booty>
+ <20250618-fantastic-brown-elephant-df0ae4@houat>
+ <CAN9Xe3RpkBx8k+=VqDFh1n+-35gHM_L3UQvCJH58bBPF6pPuuA@mail.gmail.com>
+ <CAN9Xe3R96sTf911-n4iX=PME1zfO4Z+XojQSyK4OF8qw7vL7hA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="2h5cadptvtmbwers"
 Content-Disposition: inline
-In-Reply-To: <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
-X-Spam-Flag: NO
-X-Spam-Score: -8.30
-X-Spamd-Result: default: False [-8.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_GT_50(0.00)[64];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,oracle.com:email]
-X-Spam-Level: 
-
-On Wed, Jun 18, 2025 at 08:42:53PM +0100, Lorenzo Stoakes wrote:
-> The core kernel code is currently very inconsistent in its use of
-> vm_flags_t vs. unsigned long. This prevents us from changing the type of
-> vm_flags_t in the future and is simply not correct, so correct this.
-> 
-> While this results in rather a lot of churn, it is a critical pre-requisite
-> for a future planned change to VMA flag type.
-> 
-> Additionally, update VMA userland tests to account for the changes.
-> 
-> To make review easier and to break things into smaller parts, driver and
-> architecture-specific changes is left for a subsequent commit.
-> 
-> The code has been adjusted to cascade the changes across all calling code
-> as far as is needed.
-> 
-> We will adjust architecture-specific and driver code in a subsequent patch.
-> 
-> Overall, this patch does not introduce any functional change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Acked-by: Oscar Salvador <osalvador@suse.de>
-
-Heh, for one second I thought this was about to convert vm_fault->flags to
-the actual enum fault_flag (which wouldn't be bad if you ask me, because
-"unsigned int flags" is not very descriptive).
-
-But this is quite good as well, brings in some consistency.
+In-Reply-To: <CAN9Xe3R96sTf911-n4iX=PME1zfO4Z+XojQSyK4OF8qw7vL7hA@mail.gmail.com>
 
 
--- 
-Oscar Salvador
-SUSE Labs
+--2h5cadptvtmbwers
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
+MIME-Version: 1.0
+
+On Wed, Jun 18, 2025 at 04:45:31PM -0400, Anusha Srivatsa wrote:
+> On Wed, Jun 18, 2025 at 11:48=E2=80=AFAM Anusha Srivatsa <asrivats@redhat=
+=2Ecom>
+> wrote:
+> > On Wed, Jun 18, 2025 at 4:23=E2=80=AFAM Maxime Ripard <mripard@kernel.o=
+rg> wrote:
+> >
+> >> On Wed, Jun 18, 2025 at 10:51:58AM +0200, Luca Ceresoli wrote:
+> >> > Hello Anusha, Francesco,
+> >> >
+> >> > On Tue, 17 Jun 2025 11:17:20 -0500
+> >> > Anusha Srivatsa <asrivats@redhat.com> wrote:
+> >> >
+> >> > > On Thu, Jun 12, 2025 at 3:24=E2=80=AFAM Francesco Dolcini <
+> >> francesco@dolcini.it>
+> >> > > wrote:
+> >> > >
+> >> > > > Hello all,
+> >> > > >
+> >> > > > Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new
+> >> allocation in
+> >> > > > place of devm_kzalloc()")
+> >> > > > from 6.16-rc1 introduced a regression with this warning during p=
+robe
+> >> > > > with panel dpi described in the DT.
+> >> > > >
+> >> > > > A revert solves the issue.
+> >> > > >
+> >> > > > The issue is that connector_type is set to DRM_MODE_CONNECTOR_DP=
+I in
+> >> > > > panel_dpi_probe() that after that change is called after
+> >> > > > devm_drm_panel_alloc().
+> >> > > >
+> >> > > > I am not sure if there are other implication for this change in =
+the
+> >> call
+> >> > > > ordering, apart the one that triggers this warning.
+> >> > > >
+> >> > > > [   12.089274] ------------[ cut here ]------------
+> >> > > > [   12.089303] WARNING: CPU: 0 PID: 96 at
+> >> > > > drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0=
+xb8
+> >> > > > [   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa
+> >> > > > gpu_sched panel_simple imx6_media(C) imx_media_common
+> >> > > > (C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6
+> >> autofs4
+> >> > > > [   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted:=
+ G
+> >> > > >  C          6.16.0-rc1+ #1 PREEMPT
+> >> > > > [   12.157446] Tainted: [C]=3DCRAP
+> >> > > > [   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Dev=
+ice
+> >> Tree)
+> >> > > > [   12.166953] Workqueue: events_unbound deferred_probe_work_func
+> >> > > > [   12.172805] Call trace:
+> >> > > > [   12.172815]  unwind_backtrace from show_stack+0x10/0x14
+> >> > > > [   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
+> >> > > > [   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
+> >> > > > [   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
+> >> > > > [   12.195567]  warn_slowpath_fmt from
+> >> devm_drm_of_get_bridge+0xac/0xb8
+> >> > > > [   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x=
+164
+> >> > > > [   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
+> >> > > > [   12.213220]  platform_probe from really_probe+0xd0/0x3a4
+> >> > > > [   12.218551]  really_probe from __driver_probe_device+0x8c/0x1=
+d4
+> >> > > > [   12.224486]  __driver_probe_device from
+> >> driver_probe_device+0x30/0xc0
+> >> > > > [   12.230942]  driver_probe_device from
+> >> __device_attach_driver+0x98/0x10c
+> >> > > > [   12.237572]  __device_attach_driver from
+> >> bus_for_each_drv+0x90/0xe4
+> >> > > > [   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+> >> > > > [   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
+> >> > > > [   12.255285]  bus_probe_device from
+> >> deferred_probe_work_func+0x8c/0xcc
+> >> > > > [   12.261739]  deferred_probe_work_func from
+> >> process_one_work+0x154/0x2dc
+> >> > > > [   12.268371]  process_one_work from worker_thread+0x250/0x3f0
+> >> > > > [   12.274043]  worker_thread from kthread+0x12c/0x24c
+> >> > > > [   12.278940]  kthread from ret_from_fork+0x14/0x28
+> >> > > > [   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
+> >> > > > [   12.288720] 9fa0:                                     00000000
+> >> 00000000
+> >> > > > 00000000 00000000
+> >> > > > [   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000
+> >> 00000000
+> >> > > > 00000000 00000000
+> >> > > > [   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013
+> >> 00000000
+> >> > > > [   12.312050] ---[ end trace 0000000000000000 ]---
+> >> > > >
+> >> > > > #regzbot ^introduced: de04bb0089a96cc00d13b12cbf66a088befe3057
+> >> > > >
+> >> > > > Any advise?
+> >> > > >
+> >> > > > Hey Francesco!
+> >> > >
+> >> > > This mail reached my spam and I hadn't realised till today. Thanks=
+ for
+> >> > > bringing this to attention.
+> >> > >
+> >> > > Thinking out loud here: If we called dpi_probe() before allocating=
+ the
+> >> > > panel using devm_drm_panel_alloc()
+> >> > > then we would have the connector type. But  dpi_probe() needs the
+> >> panel to
+> >> > > be allocated....
+> >> >
+> >> > Reading the panel-simple.c code, the handling of the panel_dsi
+> >> > descriptor feels a bit hacky, and the recent change to
+> >> > devm_drm_panel_alloc() breaks it easily. Perhaps it would be cleaner=
+ to
+> >> > assess the whole descriptor before ding any allocation/init.
+> >> >
+> >> > You're right tat panel_dpi_probe() needs the panel, but it's only at=
+ the
+> >> > very end, to assign the descriptor:
+> >> >
+> >> >   panel->desc =3D desc;
+> >> >
+> >> > I think a good fix would be to clean it up by having:
+> >> >
+> >> >  * panel_dpi_probe() not take a panel pointer but rather returning a
+> >> >    filled descriptor
+> >> >  * panel_simple_probe() call panel_dpi_probe() early [before
+> >> >    devm_drm_panel_alloc()] and get the filled descriptor
+> >> >  * call devm_drm_panel_alloc() with that descriptor in the panel-dsi
+> >> >    case, or with the good old descriptor otherwise
+> >> >
+> >> > As a good side effect, it would get rid of a case where
+> >> > devm_drm_panel_alloc() is called with a Unknown connector type.
+> >> >
+> >> > Anusha, does it look like a good plan?
+> >>
+> >> It is, and I'd even go one step further. Like you said, panel_dpi_probe
+> >> kind of exists to allocate and initialize the panel descriptor, and is
+> >> called on the descriptor being equal to the (uninitialized) panel_dpi
+> >> global variable.
+> >>
+> >> We should also get rid of that hack, so do something like creating a
+> >> function that returns the descriptor, and is indeed called first in
+> >> panel_simple_probe. It first calls of_device_get_match_data(), and if
+> >> there's no match, and if the device is compatible with panel-dpi, then
+> >> it calls panel_dpi_probe (we should probably change that name too). Th=
+at
+> >> way, we can get rid of the panel_dpi variable entirely.
+> >>
+> >>
+> > Thanks Luca and Maxime.
+> > To summarize:
+> > 1. add a function like of_device_get_simple_dsi_match_data() which calls
+> > of_device_get_match_data(). if the device is compatible with panel-dpi,
+> > call
+> > panel-dpi-probe()
+> > 3. Change panel_dpi_probe() to return the panel descriptor
+> > 4. call devm_drm_panel_alloc()
+> >
+> >
+> Looking deeper it looks like I have some gaps in my understanding.
+> panel_simple_platform_probe()
+> already checks of_device_get_match_data() to call panel_simple_probe(). At
+> this point the change suggested is
+> to have to call it again to check if it is compatible with panel-dpi? If I
+> understand correctly panel_dpi is a fallback
+> and the only place the decision to probe panel_dpi() is with the hack.
+
+I'm sure you can figure something out. And feel free to send me patches
+for a private review if you feel more comfortable that way.
+
+Maxime
+
+--2h5cadptvtmbwers
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFP9mAAKCRAnX84Zoj2+
+dmGUAX9lkPTmSof8rdAbsqbqutnR0VMhpMXTErckzdIjfn52jPzCi2lwkEdOTSO1
+ciYHGK8Bf3UtW+YQPLiStMW75b+Py0Ditlm6IFforxt788D1036NSLEgfof4TYKB
+e6xyo+RzbQ==
+=tCEP
+-----END PGP SIGNATURE-----
+
+--2h5cadptvtmbwers--
