@@ -1,63 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1728B7F1;
-	Thu, 19 Jun 2025 16:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA87422B590;
+	Thu, 19 Jun 2025 16:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350277; cv=none; b=ZHcZKACR0g/nGtBe2hb3BgUFy2HazQemS8cxXZW02Np9pn+yUmPU67abyGiCoc8YDwX15J8+KQ0+K42ocEqCbGwMVFdost2ui6fzg1ntb0Za3wIji9l18eRnLl+0kICZoV6tDeSoUDEGB1TuEKFpQCHJpvqZPTTkz/PGQW0zf14=
+	t=1750350372; cv=none; b=kh3Oac4BYkuLDc7rLCycTJTe1lyUE8KtWHytQW88gfwP+3iS46ie+gQ9nky1Bp40/NNHt/2mnTGDQD5dbjvYNEhH2dfMHddWiJLs7gOzzHhZCkbdv7NynVXfv2XiOIJoXFalzD+yl4xd7cwU44a0lHfdqF1X+xvhW1BNhyH4s6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350277; c=relaxed/simple;
-	bh=kKrI2jKMPEkcb6jlgSGSYZjHHZ4eWR3Gzo8paMkNgVg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=US0EcqiFDQg2v+irOIYcSRtO6HQdcFwQO73aS5MczO2Ad+USSEWQCuvp0cGcYWc6smWzdR6XTYwOMLY6OGauHv9iTSqBPisb8ZOEOnz/cSLQZYy0V873Q3/9KQO+Egm1aV1uCmjPWjLKFG5uPgwl2T0Kl0J9krA0Onl1jD+T0Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLhNKyoq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750350372; c=relaxed/simple;
+	bh=2JYAwQJ/PUM7koPPsRke3N147Ydx6y3F32T6RAk7wCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fxJpNClij/Jl9mmXH8oMy+YrApn5XyNJftgb3QVoZzeF0HiT80KCRvg3h2UYFpQqWAq37XVKvB4UAxiMswedh35/T3UIPTiqpoo0rRWuxx1Nx4TnPaVOKWVrw9Q8uxEjbKaKqH+iA8XO724n8yb1Qs/x/H/3/blfhQ7esAK3a2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuGVlmFY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLhNKyoq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F1AC4CEEA;
-	Thu, 19 Jun 2025 16:24:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuGVlmFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B395C4CEEA;
+	Thu, 19 Jun 2025 16:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750350277;
-	bh=kKrI2jKMPEkcb6jlgSGSYZjHHZ4eWR3Gzo8paMkNgVg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=iLhNKyoqvbApkQeej4mwz9aUHZ995g58NMnUlFiExdhMH07prou9vlpQY6XquSyS4
-	 wOyUaITo2S/QUkTyegNsf6J9Kt/ZWXwy+VbFmFGQu9zPTmpqagMfpr7M+gg3BnEJGB
-	 oR2ENMIGEAGb6V5l0lB+qSQdC7v/OG/fPcfenkoWKBS5rCH+9y4hf5g04rUct7dSCe
-	 7p92uyK0WEC0pkEVGl20k7LiH3HzeSymeW2CLKtWwGFff79oZAJghYXdoeXem4yKIA
-	 otie1Sdkda76MK4C9VrQzfMeAe3JYHSrLqKxiSzx+i97mgN3uXazPF62y3b5PDsijo
-	 3APY8IXLlRVYw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710E838111DD;
-	Thu, 19 Jun 2025 16:25:06 +0000 (UTC)
-Subject: Re: [GIT PULL] hwmon fixes for v6.16-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250619134658.3618113-1-linux@roeck-us.net>
-References: <20250619134658.3618113-1-linux@roeck-us.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250619134658.3618113-1-linux@roeck-us.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.16-rc3
-X-PR-Tracked-Commit-Id: c25892b7a1744355e16281cd24a9b59ec15ec974
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 24770983ccfec854d89da9d87ca5f2c9efc695fc
-Message-Id: <175035030517.920710.1330674896893377472.pr-tracker-bot@kernel.org>
-Date: Thu, 19 Jun 2025 16:25:05 +0000
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1750350372;
+	bh=2JYAwQJ/PUM7koPPsRke3N147Ydx6y3F32T6RAk7wCk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KuGVlmFYIsCWk+GsIywyvOue/tP7dNTlJRowkkyL6sXVmdoYiaSXDKnOJIvG4Bs3e
+	 JKWrqJwa7/hwSxLJVs/wdL0As8OnCk4zqiiH4ZHoQb2aeUarnUuQSfKE5KwXGLMA6M
+	 H3wM0nuzhOidccq+9BufPs6NPe257kOFTDuibXVEsYm2LMukGJ+SzuTn64Il8RbXki
+	 +qlvlwstbE/AhzhuWR4ndao6HNmd02foRqcBCgbsYlbaBYpGXYpeY5bqKd9X2bKQc5
+	 +UMVg76yhUrwKlIMsXKI6Q+9AoluV5Zm86XFgbKvOPyq8p3OCIr0Gqk+6zaiI+APU9
+	 nA2n5bc6Fp96w==
+Date: Thu, 19 Jun 2025 09:26:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ workflows@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH v2 3/4] scripts/misc-check: check missing #include
+ <linux/export.h> when W=1
+Message-ID: <20250619092611.07d2feb8@kernel.org>
+In-Reply-To: <CAK7LNARJdVRcUCKo2zEfJr_0Dc-1fzkjf01OsDpDQLH2+wZHCg@mail.gmail.com>
+References: <20250601133230.4085512-1-masahiroy@kernel.org>
+	<20250601133230.4085512-3-masahiroy@kernel.org>
+	<20250619090100.39e37c5a@kernel.org>
+	<CAK7LNARJdVRcUCKo2zEfJr_0Dc-1fzkjf01OsDpDQLH2+wZHCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Thu, 19 Jun 2025 06:46:55 -0700:
+On Fri, 20 Jun 2025 01:13:28 +0900 Masahiro Yamada wrote:
+> > IIUC you made the kernel spew nearly 5000 warnings on every W=1 build
+> > to "encourage" others to help fix a fairly innocuous problem.
+> > I appreciate the work that goes into separating the headers but it's
+> > hardly urgent enough to force others to scroll thru 5k warnings.
+> >
+> > Please LMK if I'm missing some context here, otherwise I think this is
+> > quite antisocial behavior, and the warnings should go back to W=2 until
+> > someone actually cares to fix most of them.
+> >
+> > Happy to hear from others.. CC: workflows  
+> 
+> Please see commit a6a7946bd691940cfe7289ae6dfb1f077516df72
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.16-rc3
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/24770983ccfec854d89da9d87ca5f2c9efc695fc
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thank you.
