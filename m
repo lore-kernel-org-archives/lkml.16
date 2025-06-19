@@ -1,74 +1,74 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2E21B192
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5390821D3F0
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295100; cv=none; b=f+FXP30inhJDHmAzka/ssY6qZ8+rWoDo9waSpTWShWdQSqMeBbYOZqwBrvlk1VbsOLuP0bdHHw9nozUofh858de6xic5kzoKt+q+cZzRI9JoO7efFOHrvFKe+n9dtxDh3CG9NOqKpe5ZOnWPZvQ48dH4+fpthHqAuZvH1+VBsJQ=
+	t=1750295103; cv=none; b=MLIMfPQbwgzw6cz/ZkoUuZXghWhds18ZeZmHwKeQwdbnZJYbwUFSaKmK2S7gxTTi6uPxJ3lKp4hoKnzb+aOiJ6vpX+7kIKKyHEvgyYM1MoTk4D9iPk9ncNU4o/PWNP/EF433tQbk0wET56QtfUECk/fkUvOc/98VAoc4hPPXvA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295100; c=relaxed/simple;
-	bh=kvY4llqgRsxBvMcZ/CXo6FHDMPIg9Hmu3RD2Lrj2HZo=;
+	s=arc-20240116; t=1750295103; c=relaxed/simple;
+	bh=ZCQ+sWv+kQaZZrdKs3rCAYePM6dCyF/eP1qin3deuM8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EhEdYjGd6WK26EIwmvDuet4Z29H+gEufjkIeo4Epysu7PRVidRmwgm6B2jqMeHyr7nt+dYxwPb0ATeu49G+Eucb7VHRP1Jj4DfQKiDrUNe67wE8A6bjJ+9FHT70C5xFkhei575Ikrw5zQ9O/8Avz5vBcrbdsjpHTFn23Mk6awTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZ9u20cN; arc=none smtp.client-ip=209.85.210.179
+	 MIME-Version; b=kn3xApLkqJqMgFRXOwr0MR0axi4nvJrjvWcUBdR7oHu23AiwDNmBri4jU4AC+erLqXTVwaxIkhgbxnAniINCRBs4gTLLM1KqO3Ge/NXxLe10ZOpxajMxdTuTE0mqB7+Rz5n4hlTCNvhK3kH7PhvVeLFIZBlZnDJi9ccRw/+4veM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPEBCXdu; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZ9u20cN"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so178464b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:04:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPEBCXdu"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234bfe37cccso4447165ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:05:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750295098; x=1750899898; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750295100; x=1750899900; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SfaLR+xtvYbSj0Yj5pLhRxT8PrYzixVb/sw/K5Eb4uM=;
-        b=XZ9u20cN6A0dv0EM2c/8SK+qXRJENpBDmzfqwutsnFM46RoQ2JLaP/TEOFexAvPJOW
-         fnFR5dBC6CrCKkRRAfEKwSHeqfm66g6/Q1QHkvDSRVLJncUap4XGAhgAh19U2MEqM+Fg
-         vGpFple86xE3GZV33O7TS4crtcFBteJsZSeVIgMYSChnuDRkHMngT33e05PFs+mURobQ
-         DK40WhW488g3WsgEAz+ekhnzwBeLOKNCZo7jgAmsLelTcR/T9e2jQFZvxqzcw1/yzA/A
-         8dyljQ9zGbqRLYhaWiVwx/aizs1GdwhVNB5W3c/gAaSAVJckrkXus4fkxd3ter8LSxvo
-         N6Zg==
+        bh=h4TaMBScWlO5o6sQQ8rBV8o4/7whbCNqAJF2fPQ5Lds=;
+        b=GPEBCXduR7XRIeiZK9/e2v+VPc+cBdTorNqQ2ZRE68PgF2dUrVmCCJajIDDfETIh9Y
+         AL6YzsUiG32TVK5g/WigRHMOmOIvE09HUHxvN/9HC80TQPiQHyfVo+BcgHgY7+FEAtXk
+         uJuknZMMteYCHphbjNeI89V03Z+StM+sHPYKk4SkH98+HrpawLRUAfoXBuQMlx1i7QC6
+         zahpJRZpRa4C/geKeqQMz1K8qpGeYdapNJrlMS6kTp5ivg7NUVOSE/6bimNshSLi8x5W
+         660fVjZDhCwJ6NlQfAlul5gLqNQJ16lcEXQVODoSPsJtMljBhxTFR/9DlgOFzD/hAI/d
+         bc8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750295098; x=1750899898;
+        d=1e100.net; s=20230601; t=1750295100; x=1750899900;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SfaLR+xtvYbSj0Yj5pLhRxT8PrYzixVb/sw/K5Eb4uM=;
-        b=vJ7iT+AFoM8XGaIVy6prlzZbeubw9jqrWtEcfTX9VPqwxfQxnSLLkDP0Cr6qGBW4M9
-         bRpJaa9ecCWXNSDLDbNCQSFGei/s/OEV4O192GFC687+9BBcVaEIlwarTGjLl5m2FsVC
-         43ZNyNxUpBEhQ96CF1XYcQMBes/Lz8CNThSy/ilA3BW8B4dwIw3S5se975dJm8cXGxJY
-         gKw+QIj3xQ4TSlq00v1le6ln8AO12S5XTsC/VN7njZFDxTJBfMPSEKs03h6lGNm94XuT
-         9A1jOWYD+z8/cX7GvuL207NdcncjirzV8XDNmjOUJcaCmCfl4OPTBFPelcWatAG6Gy2X
-         O1pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIzSSI5VXQ7yAUJTjE+3T83O8MRR41xF8fs1hOD/pX7Lbowd3ohi9FYHlYv0ksW/VhK3OPv1Xav/pnZYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhL4S3xBSQERvk2LtOEPITuOfOGzygnBzk8KL6WsejvpOYa8lM
-	HjrwfQ1ppBMxQyfVRtVJsq+DAgN7ext/gO7gPfjm9wNo9OHBREpuhabd
-X-Gm-Gg: ASbGnctFCrp2inUgwaKAaA/P6k9WwT7/xNhJEIeTS+hEJ2QPnZ/BuuMA2GPqOt4DI7h
-	nDqlGrZXOb8tv1nyWwMoVAZYPXbo0pMA8l63+9vCBsOGi9WyW870mpXBq+bV3eWn8kcao+TJI5i
-	Aj9H+wZIyGQWYTXGVICPFsEYu9AjFi/DREVhkTUHceuSFTUDO84862qttKQI/8Y12dxsu50OhjF
-	Td5ys2iBv+dq8kVY3fdTKxKW3G5g1eQxPVsibsUSKdOwNkndyVPNJ7YuoWSK0iFbqHCmtS75b4Q
-	/KqSXzBnC6Axuxu1oMxKE0G7oJIITvCkCbKOJ92nJMX+40rSx9Jbk1iyP39+9xMMTIPP8EPDctB
-	gOhbtduoO5wng0+ewCjm52AiM2mG1ClWdj7x+rQU2oV4=
-X-Google-Smtp-Source: AGHT+IEV6Y3cJLP4JaMcdJhSY/ETlnIE+14RVCjfX1yXRvBEOpmZSlGpLo0DZSp8M2QLOOjfCnAESw==
-X-Received: by 2002:a05:6a20:72a5:b0:215:d1dd:df4c with SMTP id adf61e73a8af0-220111ad18emr2803824637.6.1750295097772;
-        Wed, 18 Jun 2025 18:04:57 -0700 (PDT)
+        bh=h4TaMBScWlO5o6sQQ8rBV8o4/7whbCNqAJF2fPQ5Lds=;
+        b=fBWbg360HUyp0bxpyTB2q4bQgl+aRClQNV5lnmeVxQsiWRPIpEYcN2pBKGKRvLKLQ/
+         maRCk7/cD6GHd1jlUkqMuLDz0Z+Rsd0VXvbSX8eaKcIaSaLzJ+wXg77XRwiZNKohWZYT
+         xgqx7vDb1E7tUQlj0kbsmXZt+g4vm0xloIjX03pFH+lX0797YRvFjOaFk52xVBXUSsOv
+         G0+MnaVWxuFIadztiDvKeJVVIwLsZSQ5eoPDFI1Yvqrl8laLab9C754rxXFJuTeugAZi
+         pJhboo5OgqcG4seuLtIHFdAziXnchVe0DB0R7nEfrlyXdAWzMP/k46seLZVtUd0CxlXr
+         9g8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXIkw+yXM6gXOreDMmCJXrjmH4U1kUBI5G0vpFAhbCltaRybSjrRQqu97roAKw11EE3aej6otOAjkaISA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRxtdaGFbXBva7ZrMHapa015r8ycgjxl38GxexoD226YJVSwKy
+	GnLyOQWEUFfjxeBmcNAq3Vr7CPdMBIG7gIKSpdERKVGkFlYTT5AXUnJB48zgUA==
+X-Gm-Gg: ASbGnctuifMtisChuptgcsJkStA3s6QyHVfW7+sCPfs3zIo0M/+VgzhKA0B/3c4+J7V
+	CaGkfkQEQaLQ0tXKgUrpaSL7mZ3/hvZLZ/wqgdQRGNbAUN7fLTUlRrmm3EEGp5cQCxleY94r0I+
+	hCef2WKM5ZOTdNr+rMAaIyIIHRF3DlYxl+Oqa4fO08F+EKz2ZQ+OXUpjS++DCgN0CbEjtXKvVKz
+	Po9MhpHCwdwpBJND+LPhB3EhStoTLL6KRfqtSKV72xC97pqQJI6AMsQsUBMQ3RwxhvykyuLOKHU
+	lfWz30AiRRotbKRYek8fNAnRAFT36v9QWC1+uiruyJIm06x261IYG2mwTxIzdjfRi7PuDhI6ubL
+	qr3jM08NJfVe9Wh1j2FtdR3PmIHdsBdN/
+X-Google-Smtp-Source: AGHT+IHEfEf0xDbJiz2jaCicc177c2yJr3e0LtxHwGoglzOoG3x2iUoBfgOElxhGTXsOdLYdWMv4lA==
+X-Received: by 2002:a17:903:2ace:b0:234:9068:ed99 with SMTP id d9443c01a7336-2366b14d37amr314881505ad.24.1750295100386;
+        Wed, 18 Jun 2025 18:05:00 -0700 (PDT)
 Received: from ikb-h07-29-noble.in.iijlab.net ([202.214.97.5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d233asm11870453b3a.159.2025.06.18.18.04.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0cffe6sm107190415ad.245.2025.06.18.18.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 18:04:57 -0700 (PDT)
+        Wed, 18 Jun 2025 18:04:59 -0700 (PDT)
 Received: by ikb-h07-29-noble.in.iijlab.net (Postfix, from userid 1010)
-	id D9ED2ED653E; Thu, 19 Jun 2025 10:04:55 +0900 (JST)
+	id 6DB93ED6540; Thu, 19 Jun 2025 10:04:57 +0900 (JST)
 From: Hajime Tazaki <thehajime@gmail.com>
 To: linux-um@lists.infradead.org
 Cc: thehajime@gmail.com,
 	ricarkol@google.com,
 	Liam.Howlett@oracle.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 11/13] um: change machine name for uname output
-Date: Thu, 19 Jun 2025 10:04:15 +0900
-Message-ID: <b580c35c6a52f009d863a1fe29bd7b089283b994.1750294482.git.thehajime@gmail.com>
+Subject: [PATCH v9 12/13] um: nommu: add documentation of nommu UML
+Date: Thu, 19 Jun 2025 10:04:16 +0900
+Message-ID: <220f0cc76f3dca8e6958c107e77976f255e096e1.1750294482.git.thehajime@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1750294482.git.thehajime@gmail.com>
 References: <cover.1750294482.git.thehajime@gmail.com>
@@ -80,46 +80,213 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit tries to display MMU/!MMU mode from the output of uname(2)
-so that users can distinguish which mode of UML is running right now.
+This commit adds an initial documentation for !MMU mode of UML.
 
 Signed-off-by: Hajime Tazaki <thehajime@gmail.com>
 ---
- arch/um/Makefile        | 6 ++++++
- arch/um/os-Linux/util.c | 3 ++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ Documentation/virt/uml/nommu-uml.rst | 180 +++++++++++++++++++++++++++
+ MAINTAINERS                          |   1 +
+ 2 files changed, 181 insertions(+)
+ create mode 100644 Documentation/virt/uml/nommu-uml.rst
 
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index 5371c9a1b11e..9bc8fc149514 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -153,6 +153,12 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE) $(CC_FLAGS_
- CLEAN_FILES += linux x.i gmon.out
- MRPROPER_FILES += $(HOST_DIR)/include/generated
- 
-+ifeq ($(CONFIG_MMU),y)
-+UTS_MACHINE := "um"
-+else
-+UTS_MACHINE := "um\(nommu\)"
-+endif
+diff --git a/Documentation/virt/uml/nommu-uml.rst b/Documentation/virt/uml/nommu-uml.rst
+new file mode 100644
+index 000000000000..1a988253bef8
+--- /dev/null
++++ b/Documentation/virt/uml/nommu-uml.rst
+@@ -0,0 +1,180 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- archclean:
- 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
- 		-o -name '*.gcov' \) -type f -print | xargs rm -f
-diff --git a/arch/um/os-Linux/util.c b/arch/um/os-Linux/util.c
-index 4193e04d7e4a..20421e9f0f77 100644
---- a/arch/um/os-Linux/util.c
-+++ b/arch/um/os-Linux/util.c
-@@ -65,7 +65,8 @@ void setup_machinename(char *machine_out)
- 	}
- # endif
- #endif
--	strcpy(machine_out, host.machine);
-+	strcat(machine_out, "/");
-+	strcat(machine_out, host.machine);
- }
- 
- void setup_hostinfo(char *buf, int len)
++UML has been built with CONFIG_MMU since day 0.  The patchset
++introduces the nommu mode on UML in a different angle from what Linux
++Kernel Library tried.
++
++.. contents:: :local:
++
++What is it for ?
++================
++
++- Alleviate syscall hook overhead implemented with ptrace(2)
++- To exercises nommu code over UML (and over KUnit)
++- Less dependency to host facilities
++
++
++How it works ?
++==============
++
++To illustrate how this feature works, the below shows how syscalls are
++called under nommu/UML environment.
++
++- boot kernel, install seccomp filter if ``syscall`` instructions are
++  called from userspace memory based on the address of instruction
++  pointer
++- (userspace starts)
++- calls ``vfork``/``execve`` syscalls
++- ``SIGSYS`` signal raised, handler calls syscall entry point ``__kernel_vsyscall``
++- call handler function in ``sys_call_table[]`` and follow how UML syscall
++  works.
++- return to userspace
++
++
++What are the differences from MMU-full UML ?
++============================================
++
++The current nommu implementation adds 3 different functions which
++MMU-full UML doesn't have:
++
++- kernel address space can directly be accessible from userspace
++  - so, ``uaccess()`` always returns 1
++  - generic implementation of memcpy/strcpy/futex is also used
++- alternate syscall entrypoint without ptrace
++- alternate syscall hook
++  - hook syscall by seccomp filter
++
++With those modifications, it allows us to use unmodified userspace
++binaries with nommu UML.
++
++
++History
++=======
++
++This feature was originally introduced by Ricardo Koller at Open
++Source Summit NA 2020, then integrated with the syscall translation
++functionality with the clean up to the original code.
++
++Building and run
++================
++
++::
++
++   make ARCH=um x86_64_nommu_defconfig
++   make ARCH=um
++
++will build UML with ``CONFIG_MMU=n`` applied.
++
++Kunit tests can run with the following command::
++
++   ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_MMU=n
++
++To run a typical Linux distribution, we need nommu-aware userspace.
++We can use a stock version of Alpine Linux with nommu-built version of
++busybox and musl-libc.
++
++
++Preparing root filesystem
++=========================
++
++nommu UML requires to use a specific standard library which is aware
++of nommu kernel.  We have tested custom-build musl-libc and busybox,
++both of which have built-in support for nommu kernels.
++
++There are no available Linux distributions for nommu under x86_64
++architecture, so we need to prepare our own image for the root
++filesystem.  We use Alpine Linux as a base distribution and replace
++busybox and musl-libc on top of that.  The following are the step to
++prepare the filesystem for the quick start::
++
++     container_id=$(docker create ghcr.io/thehajime/alpine:3.20.3-um-nommu)
++     docker start $container_id
++     docker wait $container_id
++     docker export $container_id > alpine.tar
++     docker rm $container_id
++
++     mnt=$(mktemp -d)
++     dd if=/dev/zero of=alpine.ext4 bs=1 count=0 seek=1G
++     sudo chmod og+wr "alpine.ext4"
++     yes 2>/dev/null | mkfs.ext4 "alpine.ext4" || true
++     sudo mount "alpine.ext4" $mnt
++     sudo tar -xf alpine.tar -C $mnt
++     sudo umount $mnt
++
++This will create a file image, ``alpine.ext4``, which contains busybox
++and musl with nommu build on the Alpine Linux root filesystem.  The
++file can be specified to the argument ``ubd0=`` to the UML command line::
++
++  ./vmlinux ubd0=./alpine.ext4 rw mem=1024m loglevel=8 init=/sbin/init
++
++We plan to upstream apk packages for busybox and musl so that we can
++follow the proper procedure to set up the root filesystem.
++
++
++Quick start with docker
++=======================
++
++There is a docker image that you can quickly start with a simple step::
++
++  docker run -it -v /dev/shm:/dev/shm --rm ghcr.io/thehajime/alpine:3.20.3-um-nommu
++
++This will launch a UML instance with an pre-configured root filesystem.
++
++Benchmark
++=========
++
++The below shows an example of performance measurement conducted with
++lmbench and (self-crafted) getpid benchmark (with v6.15-rc0 uml/next
++tree).
++
++.. csv-table:: lmbench (usec)
++  :header: ,native,um,um-mmu(s),um-nommu(s)
++
++  select-10    ,0.5224,28.3882,27.2839,3.0046
++  select-100   ,1.5641,30.3775,28.8091,3.8546
++  select-1000  ,11.6922,38.2021,32.5367,12.2568
++  syscall      ,0.1635,27.8278,24.8049,2.6957
++  read         ,0.3063,29.0073,23.5953,2.8127
++  write        ,0.2531,29.6342,26.3339,2.7932
++  stat         ,1.8827,41.2546,34.6495,3.3199
++  open/close   ,3.2548,67.5806,62.4781,6.4189
++  fork+sh      ,1108.8000,5618.0000,3604.6667,456.0476
++  fork+execve  ,519.1579,2242.8000,1425.7500,138.1316
++
++.. csv-table:: do_getpid bench (nsec)
++  :header: ,native,um,um-mmu(s),um-nommu(s)
++
++  getpid , 162 , 27049 , 24444 , 2696
++
++(um-nommu(s) is with seccomp syscall hook, um-mmu(s) is SECCOMP mode,
++respectively)
++
++Limitations
++===========
++
++generic nommu limitations
++-------------------------
++Since this port is a kernel of nommu architecture so, the
++implementation inherits the characteristics of other nommu kernels
++(riscv, arm, etc), described below.
++
++- vfork(2) should be used instead of fork(2)
++- ELF loader only loads PIE (position independent executable) binaries
++- processes share the address space among others
++- mmap(2) offers a subset of functionalities (e.g., unsupported
++  MMAP_FIXED)
++
++Thus, we have limited options to userspace programs.  We have tested
++Alpine Linux with musl-libc, which has a support nommu kernel.
++
++supported architecture
++----------------------
++The current implementation of nommu UML only works on x86_64 SUBARCH.
++We have not tested with 32-bit environment.
++
++
++Further readings about NOMMU UML
++================================
++
++- NOMMU UML (original code by Ricardo Koller)
++ - https://static.sched.com/hosted_files/ossna2020/ec/kollerr_linux_um_nommu.pdf
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ac8ccc837bab..822efc04bbe1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25753,6 +25753,7 @@ USER-MODE LINUX (UML)
+ M:	Richard Weinberger <richard@nod.at>
+ M:	Anton Ivanov <anton.ivanov@cambridgegreys.com>
+ M:	Johannes Berg <johannes@sipsolutions.net>
++M:	Hajime Tazaki <thehajime@gmail.com>
+ L:	linux-um@lists.infradead.org
+ S:	Maintained
+ W:	http://user-mode-linux.sourceforge.net
 -- 
 2.43.0
 
