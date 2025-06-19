@@ -1,127 +1,144 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C1D221D86
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B940224B13;
+	Thu, 19 Jun 2025 02:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750301535; cv=none; b=nGX0hVGEx4pWgfQ6p//lpVBX745bWNPC7fDEo81mbC5wx279LpbNeQ7UpdSIi1wJQxcwrxGZlvrhPVDkE70+WScPuuKbYPudFoGs6ATDscnv4vpK/PuxkblzJyb40Anr1kfCUBJ3xNCOLaldKxzQ1cXYxNsVBGI2C1hUkqNwWo0=
+	t=1750301542; cv=none; b=AWmmbusGpMmYmLpJBTdS29UMZAzCKXNYTsfdJJq8my9bXw0WclJ+Khw4uweoEuUNQnlpFTT/9NdNQJoCk3dVAgM9yr64YmR7pmxPgMr9z0yTnD1Q8UyM1w5E92p06GeDSXcRg714zfFCnm2nRs5DEr0WHP1k8OuB6TgrZ9LMWW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750301535; c=relaxed/simple;
-	bh=iG9AIBOwwJWUK3xkez0l5cZOQg8I/Bo19li6N6S6vP8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=duagVSVTiuzQaBYWF3VOvRQI+8s2a3Q1lEgoLW217d/hRvXx8vIbSB60+rM1qFsxl9wT3WZLbmb0YUn4Ob6pE4Gy6weunXKdmnVC1ZjRC8s30g47fXqN1Wmx6mPIGcmcJzPd14XxhKGwASOP0By0JFx6FJm3fkoPP8ol3aV3OAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so3724085ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:52:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750301533; x=1750906333;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zd4CSvo3YxjL3zyEytOcdXXsWxdDcjY434S3Ja1zW8=;
-        b=ZP41+zCwrg5uAWuguThF06qKRXnEC0tIyphU0O9xCf7Ctqowokh4RBbnFTsNHVEyp0
-         oQY5mdvLedsFHDbWAHtEgmuSHr35LtJBvzbbHX3ijdjnpF4iK0/mTTy/VWo+a+YL+99Q
-         FBhBd+ZbMHIAyxHseLComnPTwS5GC0SPjJ5NEqxj8UbNQyIoG3AM7GuGI5tQ67hkhxIR
-         178+U/YCslWReihdGmq4yN867gqI7GXYTWXkKb9g5VmWnGeCEA/2cm9kjuh0tem9sZPP
-         AVjWnm1I1+6QX6UVn6SdHO27VisERskGqQYsScXZS8CYFity1y4vSq/fwKGAD69OAb8A
-         vZVg==
-X-Gm-Message-State: AOJu0YyAYMx/uqFX+2RPZdAyvnWh3o163IuYlx/mN4An/BOIs5dfECMF
-	3SBWecIfpyFV4VddLWjB9ICHFXCjq6ktVLeKwHNKexYNFfTIzcPAYESvL6dzYXLm6sR7PMfv5DE
-	ub576vX+7cWcoWdaYaZE34HPINsHgWhcfRlsObc4d3Lq4yUtcb7PJCusc7bM=
-X-Google-Smtp-Source: AGHT+IFXQ7c0az38BtkI6HDJC4/uNzTrMn2kYl3Qx5njei15Z/9h+VnNonNd3++HAqi/l3evSSHIeS5AIri9jyuWe+1aZXG4bGK/
+	s=arc-20240116; t=1750301542; c=relaxed/simple;
+	bh=G0h+9piz8srcxOhaU5NXSgTuFSOxfqLH7RY2q+y74RA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFzJ5MTWZNklGhaUgvfviljBF5OMLpWtsH6+d14slctvAU4nD+GeLjST5w8Lz6R0kgv+ru1d4A1bOMiU6D68+4LUwsyx8Xkji/SnZDKLt0qTyrVLdlhSZ+5GrcwST+wGXRctoPtO3dwwt9sfxYAAaCI0aKx+bwu6tiviSWWB0Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.180])
+	by gateway (Coremail) with SMTP id _____8DxQK9ae1NohY0ZAQ--.23696S3;
+	Thu, 19 Jun 2025 10:52:10 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.180])
+	by front1 (Coremail) with SMTP id qMiowMAxj8VPe1NoOXYgAQ--.34847S2;
+	Thu, 19 Jun 2025 10:51:59 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v11 0/4] dd Loongson Security Engine chip driver
+Date: Thu, 19 Jun 2025 10:51:34 +0800
+Message-ID: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:180d:b0:3dd:f948:8539 with SMTP id
- e9e14a558f8ab-3de07c3ef61mr232226795ab.2.1750301533138; Wed, 18 Jun 2025
- 19:52:13 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:52:13 -0700
-In-Reply-To: <000000000000dbcd0f061f911231@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68537b5d.050a0220.216029.0147.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [wireless?] WARNING in cfg80211_scan_done
-From: syzbot <syzbot+189dcafc06865d38178d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxj8VPe1NoOXYgAQ--.34847S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr43XFy5WrW7Zw17try3ZFc_yoW5Zr17pF
+	45C3yakr4UJFsrCr93J348CFyfZ3s3Jr9xKa9rXw15ur9xAa48XrW2kFyUAa17AFyrJry2
+	vFWkCF4UCF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+accelerator engines. Each engine have its own DMA buffer provided
+by the controller. The kernel cannot directly send commands to the
+engine and must first send them to the controller, which will
+forward them to the corresponding engine. Based on these engines,
+TPM2 have been implemented in the chip, then let's treat TPM2 itself
+as an engine.
 
-***
+v11: Put all updates to the MAINTAINERS in one patch
+     crypto: statically initialize rng_devices.lock, use this lock in
+             loongson_rng_probe().
 
-Subject: Re: [syzbot] [wireless?] WARNING in cfg80211_scan_done
-Author: lizhi.xu@windriver.com
+v10: mfd: Cleanned up coding style.
+     crypto: Unlimited tfm
+     tpm: Added error check
 
-#syz test
+v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
 
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index cd8385ecafd9..7fc1e98abb2c 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -498,6 +498,8 @@ static void __ieee80211_scan_completed(struct ieee80211_hw *hw, bool aborted)
- 
- 	if (scan_req != local->int_scan_req) {
- 		local->scan_info.aborted = aborted;
-+		printk("local: %p, sr: %p, wip: %p, %s\n",
-+		local, scan_req, scan_req->wiphy, __func__);
- 		cfg80211_scan_done(scan_req, &local->scan_info);
- 	}
- 
-@@ -1123,6 +1125,8 @@ void ieee80211_scan_work(struct wiphy *wiphy, struct wiphy_work *work)
- 		/* need to complete scan in cfg80211 */
- 		rcu_assign_pointer(local->scan_req, scan_req);
- 		aborted = true;
-+		printk("local: %p, sr: %p, wip: %p, %s\n",
-+			local, scan_req, scan_req->wiphy, __func__);
- 		goto out_complete;
- 	}
- 
-@@ -1135,6 +1139,8 @@ void ieee80211_scan_work(struct wiphy *wiphy, struct wiphy_work *work)
- 	do {
- 		if (!ieee80211_sdata_running(sdata)) {
- 			aborted = true;
-+			printk("2local: %p, sr: %p, wip: %p, %s\n",
-+				local, scan_req, scan_req->wiphy, __func__);
- 			goto out_complete;
- 		}
- 
-@@ -1147,6 +1153,8 @@ void ieee80211_scan_work(struct wiphy *wiphy, struct wiphy_work *work)
- 			/* if no more bands/channels left, complete scan */
- 			if (local->scan_channel_idx >= scan_req->n_channels) {
- 				aborted = false;
-+				printk("3local: %p, sr: %p, wip: %p, %s\n",
-+				local, scan_req, scan_req->wiphy, __func__);
- 				goto out_complete;
- 			}
- 			ieee80211_scan_state_decision(local, &next_delay);
-@@ -1165,6 +1173,8 @@ void ieee80211_scan_work(struct wiphy *wiphy, struct wiphy_work *work)
- 			break;
- 		case SCAN_ABORT:
- 			aborted = true;
-+			printk("4local: %p, sr: %p, wip: %p, %s\n",
-+			local, scan_req, scan_req->wiphy, __func__);
- 			goto out_complete;
- 		}
- 	} while (next_delay == 0);
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index e8a4fe44ec2d..7c1f80be24bb 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1178,6 +1178,11 @@ void cfg80211_scan_done(struct cfg80211_scan_request *request,
- 	struct cfg80211_scan_info old_info = request->info;
- 
- 	trace_cfg80211_scan_done(request, info);
-+	printk("r: %p, wiphy: %p, scan_req: %p, int_scan_req: %p, %s\n",
-+		request, request->wiphy,
-+		wiphy_to_rdev(request->wiphy)->scan_req,
-+		wiphy_to_rdev(request->wiphy)->int_scan_req,
-+		__func__);
- 	WARN_ON(request != wiphy_to_rdev(request->wiphy)->scan_req &&
- 		request != wiphy_to_rdev(request->wiphy)->int_scan_req);
- 
+v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+    are all encryption related drivers and SM2, SM3, and SM4 drivers
+    will be added to the crypto subsystem in the future, the base driver
+    need to be changed when adding these drivers. Therefore, it may be
+    more appropriate to place the base driver within the crypto
+    subsystem.
+
+    Removed complete callback in all driver. Removed the concepts of
+    "channel", "msg" and "request" as they may be confusing. Used the
+    concepts of "egnine" and "command" may be better.
+
+v7: Addressed Huacai's comments.
+
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: mfd: Registered "ls6000se-rng" device in mfd driver
+    tpm: Prefix all with tpm_loongson instead of tpm_lsse.
+         Replace all "ls6000se" with "loongson"
+
+v4: tpm: Removed MODULE_AUTHOR fields.
+         Prefix all with tpm_lsse instead of tpm.
+
+v3: Put the updates to the MAINTAINERS in a separate patch.
+    tpm: Added reminder about Loongson security engine to git log.
+
+v2: Removed misc driver. Added tpm driver.
+
+Qunqin Zhao (4):
+  mfd: Add support for Loongson Security Engine chip controller
+  crypto: loongson - add Loongson RNG driver support
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add entry for Loongson Security Engine drivers
+
+ MAINTAINERS                            |   9 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   5 +
+ drivers/crypto/loongson/Makefile       |   1 +
+ drivers/crypto/loongson/loongson-rng.c | 209 ++++++++++++++++++++
+ drivers/mfd/Kconfig                    |  11 ++
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++++
+ include/linux/mfd/loongson-se.h        |  53 ++++++
+ 13 files changed, 639 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/mfd/loongson-se.c
+ create mode 100644 include/linux/mfd/loongson-se.h
+
+
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+-- 
+2.45.2
+
