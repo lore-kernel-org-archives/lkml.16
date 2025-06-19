@@ -1,106 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF34722B598;
-	Thu, 19 Jun 2025 12:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA29023DEAD
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336738; cv=none; b=F9uF0rViXg/gRnb7BWD+z4p/kN2T2H1h7NXAYQIX5eWbyrn67xpQTv2P02RtYEItYMDFYJ3ZBix2VYA+DM+2IZdrVrsIkPChrY+yQidvJtjrFraWCZkMQd9v0A1nscTTlXDIc/tbsoR3l3GoQldllsfVTn22K2PYb3VcDiLrju0=
+	t=1750336740; cv=none; b=auOtyzeo1JRkQs8mo32cyWX5ovVLbyANivbDnphQJTTZzgTcL4X4/kSxN2W+zgpyvBbuDdMclie8aQHSKyUK9sK9ZODbml5H3Uu8QGI3gDXdnKCxhOrLQKCqzqEdLsdrzIqN5UtViOuT7p70HKAlGA5OQFmDYtMh6SYVGsAfgig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336738; c=relaxed/simple;
-	bh=0O8KUs11HYzYDV9dS+Fjh+t+vw87oB0LvVgWoJBSoKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4eRbSOaP2va/NwCP9RC1DzB3l6dqKCnzMMpeAqJtj8bzdwreCrHywvCdZH0uF4dhnZ/L6vOe58ZsIlxOzSFQ1eEbfTP0HtYeN9Lu+M1r8qlLUqepN0rYCkn9ElKVvlek9fTFyFAa0N5VD10PsxKgba2B1EDj5SbkGWOToWD5Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emSXN9QN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750336740; c=relaxed/simple;
+	bh=p61Y1aPHGtDaXB5Oc6uLAlyBZTf58hYj6UieJYQTPeQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uIWKk8E8TEWThgSWp7ktpdlkuObdldwUtqfVLE9BSuPtHNIuav1Dlv6mbcuLa29RubLcKy3z9xsHbHaMsF8hTsP17pbIitPVU13GiMgFhjvBZUGLAMcW/h+zqIJeyCx8D6y/nsbw1KsOA4dC3gB87DBOaZ0bIomTzD67fSZNrHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NgAMT/PC; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emSXN9QN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD5EC4CEEA;
-	Thu, 19 Jun 2025 12:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750336737;
-	bh=0O8KUs11HYzYDV9dS+Fjh+t+vw87oB0LvVgWoJBSoKI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=emSXN9QNT3nkgNQTuAleo3mJHp4mZ0ARLDH9YcB5KZfxJhext93gFSgvVOAJScqdJ
-	 G5fB2V2QcQ9rDIO5Sb3u0vVsPysUlfbhTkEWgCSMcF+/b/98dNvK7u7OIps8FVWID0
-	 07I+/dBO6Ij7UUHpr4m9jVILeLIJimvgAmvPtmVq3TfzUfx4e5DvsYLgg0WnAnnObJ
-	 AtwLwuwSY3qRoW/yFQeB4sXurSWkn2TlJGzItFPQPUgGPyje5ERerhuu21IujH8SPd
-	 t2WzcvqtBzmirpKBx95bxkuNxtB8kpIWHEEI8JROzkPoQ9iMKsnIWYEX6oYkFV/Jai
-	 wyVBqjyFb3gfA==
-Date: Thu, 19 Jun 2025 13:38:52 +0100
-From: Simon Horman <horms@kernel.org>
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Frank Wunderlich <linux@fw-web.de>, Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Daniel Golle <daniel@makrotopia.org>, arinc.unal@arinc9.com
-Subject: Re: [net-next v4 1/3] net: ethernet: mtk_eth_soc: support named IRQs
-Message-ID: <20250619123852.GM1699@horms.kernel.org>
-References: <20250616080738.117993-1-linux@fw-web.de>
- <20250616080738.117993-2-linux@fw-web.de>
- <9FD09C8D-A9DC-4270-AB4A-6EBE25959F12@public-files.de>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NgAMT/PC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=3RjQ8vjMHty4FIlfcvQC7sTXic9WNUusceBrZsCmd2A=;
+	t=1750336738; x=1751546338; b=NgAMT/PCq6BJikVl9jTDHPbtBHBNN5bO/FSl1BwqHcS5Yby
+	u6MvcFUyKpxxy8WlbiNX8bY7LdfqIKxxfQdXR2EsdbPWMRxa6SbHpDEI/EFx2BxmXjL6uV/PlZvmE
+	sE9/1NeIDl3WlBptseaQ+FBp4faYivLGX/aLo122M+Hkh7YUGStu1f5eKRFEDNndbMg9F2K56U4kr
+	VUnRlOYbC3llTWdltyn5YfA2mhhcp1SruXXnVTfjKBuX32mm5q6xY31UADRFVr0eG4bg/nJRIAXWi
+	RXCKtJ6ke8wpDt3ef+dc3qEcganYJKd7EbxbB4hqSpTW8fdxVJDVsZqoBj72jQjA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <benjamin@sipsolutions.net>)
+	id 1uSEXY-000000014Eu-2Jtm;
+	Thu, 19 Jun 2025 14:38:48 +0200
+Message-ID: <2231a777eef3cdb339fe98af4618f958ed658df6.camel@sipsolutions.net>
+Subject: Re: [PATCH v9 07/13] um: nommu: configure fs register on host
+ syscall invocation
+From: Benjamin Berg <benjamin@sipsolutions.net>
+To: Hajime Tazaki <thehajime@gmail.com>
+Cc: linux-um@lists.infradead.org, ricarkol@google.com,
+ Liam.Howlett@oracle.com, 	linux-kernel@vger.kernel.org
+Date: Thu, 19 Jun 2025 14:38:47 +0200
+In-Reply-To: <m28qln6huv.wl-thehajime@gmail.com> (sfid-20250619_142254_743735_97A005BF)
+References: <cover.1750294482.git.thehajime@gmail.com>
+		<2863dab9b3f9d6536b73623398a3f39e4ae70957.1750294482.git.thehajime@gmail.com>
+		<412c514334ac14a992cab3e7b86170b96d60be1c.camel@sipsolutions.net>
+	 <m28qln6huv.wl-thehajime@gmail.com> (sfid-20250619_142254_743735_97A005BF)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9FD09C8D-A9DC-4270-AB4A-6EBE25959F12@public-files.de>
+X-malware-bazaar: not-scanned
 
-On Thu, Jun 19, 2025 at 09:44:34AM +0200, Frank Wunderlich wrote:
-> Am 16. Juni 2025 10:07:34 MESZ schrieb Frank Wunderlich <linux@fw-web.de>:
-> >From: Frank Wunderlich <frank-w@public-files.de>
-> >
-> >Add named interrupts and keep index based fallback for exiting devicetrees.
-> >
-> >Currently only rx and tx IRQs are defined to be used with mt7988, but
-> >later extended with RSS/LRO support.
-> >
-> >Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> >Reviewed-by: Simon Horman <horms@kernel.org>
-> >---
-> >v2:
-> >- move irqs loading part into own helper function
-> >- reduce indentation
-> >- place mtk_get_irqs helper before the irq_handler (note for simon)
-> >---
-> > drivers/net/ethernet/mediatek/mtk_eth_soc.c | 39 +++++++++++++++------
-> > 1 file changed, 28 insertions(+), 11 deletions(-)
-> >
-> >diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> >index b76d35069887..81ae8a6fe838 100644
-> >--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> >+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> >@@ -3337,6 +3337,30 @@ static void mtk_tx_timeout(struct net_device *dev, unsigned int txqueue)
-> > 	schedule_work(&eth->pending_work);
-> > }
-> > 
-> >+static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
-> >+{
-> >+	int i;
-> >+
-> >+	eth->irq[1] = platform_get_irq_byname(pdev, "tx");
-> >+	eth->irq[2] = platform_get_irq_byname(pdev, "rx");
-> 
-> Hi Simon,
-> 
-> I got information that reserved frame-engine 
->  irqs are not unusable and have no fixed
->  meaning. So i would add fe0..fe3 in
->  dts+binding and change these names from
-> tx/rx to fe1 and fe2.
-> 
-> Can i keep your RB here?
+On Thu, 2025-06-19 at 21:22 +0900, Hajime Tazaki wrote:
+>=20
+> On Thu, 19 Jun 2025 19:40:49 +0900,
+> Benjamin Berg wrote:
+> >=20
+> > On Thu, 2025-06-19 at 10:04 +0900, Hajime Tazaki wrote:
+> > > As userspace on UML/!MMU also need to configure %fs register when
+> > > it is
+> > > running to correctly access thread structure, host syscalls
+> > > implemented
+> > > in os-Linux drivers may be puzzled when they are called.=C2=A0 Thus i=
+t
+> > > has to
+> > > configure %fs register via arch_prctl(SET_FS) on every host
+> > > syscalls.
+> >=20
+> > Really, I still think that we should "just" get rid of libc
+> > entirely
+> > inside UML. That would avoid so many weird/potential issues =E2=80=A6
+>=20
+> I'm not sure if I understand your point.
+>=20
+> Q1) what do you mean by 'get rid of libc entirely' here ?
+> =C2=A0=C2=A0=C2=A0 do you mean the following code block adds the dependen=
+cy ?
+> + int os_arch_prctl(int pid, int option, unsigned long *arg2)
+> + {
+> +=C2=A0	return syscall(SYS_arch_prctl, option, arg2);
+> + }
+>=20
+> I guess this can be replaced with inline assembly instead of using
+> libc's one.=C2=A0 but this is the code under os-Linux, which I thought
+> we're
+> allowed to use the host code ?
+>=20
+> Q2) "That would avoid so many weird/potential issues =E2=80=A6"
+> I'm new to this;=C2=A0 I'm wondering what kind of issues did you see ?
 
-Since the meaning is changing somewhat maybe best to drop the RB.
-I'll look out for the new version to review.
+Oh, I am just being annoyed by libc in general in UM. It isn't specific
+to this patchset.
+
+An example is that we need to keep malloc() working for libc. Which I
+would think is kind of weird. Or we had issues because libc turned on
+rseq and that was inherited into userspace, causing random crashes and
+such.
+
+> > Doesn't change the fact that FS/GS needs to be restored when doing
+> > thread switches and such. Though one might be able to do it
+> > entirely
+> > within arch_switch_to then.
+>=20
+> I believe this is already done in arch_switch_to.=C2=A0 This particular
+> patch does the control to the host context.
+
+OK, need to look at that again a bit. I haven't really wrapped my mind
+around how everything fits together, so I probably got some stuff
+wrong.
+
+Benjamin
