@@ -1,86 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A972192F4;
-	Thu, 19 Jun 2025 12:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3B8221F3F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335500; cv=none; b=CWWlPES4e1C3tpXBrU2LzIBWi2/pLHoG7D7KNsIV3Poi4BkmI6vQVvpvcIZmAw48yOqeZSYpINHcPIaIUTcV/HkanKxrSyoKWlR03ebMHS5HxnhKdZH/ICwuTEe1cTFNicIBx5DJMxmJPuSYGf9FlzSgy9lIpF8xhvES+o0AcBI=
+	t=1750335531; cv=none; b=mwHl8joQSrYoV8h/n4Vb+UKcavPd1f5ajxVa/StfspXEIDzgrXFEAOyHqEqXP2IcuQsfyeuW8rczFrFMtaHwpb6v6gvTFIfNlmQoFlKj81gzS91dFkTBiuJgYQSx9h1lDXgOMJ38zsrQYIiCBVt/0PZEboTVlRYj91RqVNm0NW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335500; c=relaxed/simple;
-	bh=OqBY4FADivK1qZ21PyP/nb4Gm0qIUsZiD5QdvAZX0yg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=kdDP8fxiRxhGms1v2+v3s7sY0dh7ueARQHzy/W+2w0ChlJtv9neAKwCR+MQqnJzDlsEkeQbKssSGR3KnzzkBWIHHpHFIBQZc2MZekGWbAoe3vICGLWQRhBxfvotvcO28qlxmWJcHylR2ARsUbUQmweOW98p6F/7tr2SczsEbV5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q49BxJB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750335531; c=relaxed/simple;
+	bh=CjKg6+dv4hvhun00CEKq5N6o+T3kt/+QgrCScn5vaeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9P8Zc2+R09kjM2jpHrDyPt5mD1eLRAvGX8FsBjSl/Zl4+84v9jyP0edEz7MxlE3vzmjRAXurcEUHZCgx7CwSYmmCU/pzopuVwPoHgFuQUFX9+PmFS0gTvVbCS5JEu494C9VgQopowjE3HDVMeavED7jTn77Cw+JJg1BAZpxEdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XPlaE7Ax; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=z+lXerqE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DNfLMbsb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GORhZOkG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q49BxJB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE6EC4CEEE;
-	Thu, 19 Jun 2025 12:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750335499;
-	bh=OqBY4FADivK1qZ21PyP/nb4Gm0qIUsZiD5QdvAZX0yg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=q49BxJB1ezK+8prGDR8YLQnodRL151Wjclaa+uHeq9rMzbOQKcjFrM8ar0nbjrmhL
-	 aw1VCyWxO7AcflqPbNFBqNerYKvzzu7XDdabF1o8/r+3Opq78y9Hr3K7W1jg2arH68
-	 /MEyoae50uiKqX+6JfPkQcX/qWVXPo+wIi/Xthz8E+nubI4N856x9vYW+5io6cPtxg
-	 F2lbj4f4zB04WKIglTY0hOHXyeOCwLhrNfOPUtYOxn4RxLnDWRxD76YtGj5Iqr0kCD
-	 ygA7SESrqKdvVZhsanEdAZ4W9rGwp21w3cofgQkx9Q5mXlScnRVG5WMsVgUlNVu0t8
-	 X3FWifiaW+NMA==
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XPlaE7Ax";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="z+lXerqE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DNfLMbsb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GORhZOkG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EDF1F1F397;
+	Thu, 19 Jun 2025 12:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750335527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDOfXTJCUy9RIYvfyC/VOHcfLVOwjMHrr1ef/hUG1vw=;
+	b=XPlaE7AxC/UQ2ZTri9LpBW6fe+vNYRhJiXWZcJaFnxf7X0snZhefI5E0hYSh9sZ4Hb/vQ5
+	/CeS5VVvqrjWig7iYcqcWPDNalTr9+rxQiNC/YSWApdvwZi8Vh48NclMxfL9kKVhiPc7Sg
+	+IcYmP1dFsgIB7UPeTyisymKhw3k2lQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750335527;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDOfXTJCUy9RIYvfyC/VOHcfLVOwjMHrr1ef/hUG1vw=;
+	b=z+lXerqEG17n6Mrx87iXYeEaQNgRcg13D8THxZuj/2gvuvW5KkVGR/+W8nGrKbEHeP+zBI
+	KUCKhK9A9f1qbYBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750335526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDOfXTJCUy9RIYvfyC/VOHcfLVOwjMHrr1ef/hUG1vw=;
+	b=DNfLMbsbjxVntx3ja38oq/iryWc2jvDi14gzOxDZCREDjzMCyTp+fxF9sod6QxCr6g/ath
+	ZOkym8ze3HY2eSmf4HuoLelv/Ku8HWF3A6pNTWsJ39nCYdtuuxB4LMimYLoXksWvdXExM0
+	xR9ft5sK4GaEHPw/oEyq1gZJx0W0G+s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750335526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDOfXTJCUy9RIYvfyC/VOHcfLVOwjMHrr1ef/hUG1vw=;
+	b=GORhZOkG7p30uftoHa+iJg98cr18tQpd7lZYHu0zHRqqPh8tSxwA0MCUU1H9jBkLy/etec
+	5P1jtL4gJn/azEAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDD9C136CC;
+	Thu, 19 Jun 2025 12:18:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QtXWKiIAVGg1egAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 19 Jun 2025 12:18:42 +0000
+Date: Thu, 19 Jun 2025 14:18:40 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Muchun Song <muchun.song@linux.dev>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm: update architecture and driver code to use
+ vm_flags_t
+Message-ID: <aFQAIK4hyFAU9Rk0@localhost.localdomain>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 19 Jun 2025 14:18:15 +0200
-Message-Id: <DAQI5DZ6HHJR.DOP0AQVQH3ZW@kernel.org>
-Cc: "Oliver Mangold" <oliver.mangold@pm.me>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Asahi Lina" <lina@asahilina.net>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
- <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
- <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org> <aFKICIo8L958iFbz@mango>
- <0KbPJp-9Rk5DVetcI8bAv8kiy90arS0GSl4qi8R83fIgPTv0MXRhz06vbuTjt5hXGguPZbL6JsQxDmuj4ejVrA==@protonmail.internalid> <DAPZ1KYN5FB6.3C7CI4Y0OKOE0@kernel.org> <877c18849m.fsf@kernel.org>
-In-Reply-To: <877c18849m.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_GT_50(0.00)[64];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Level: 
 
-On Thu Jun 19, 2025 at 11:33 AM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
->> On Wed Jun 18, 2025 at 11:34 AM CEST, Oliver Mangold wrote:
->>> On 250514 1132, Benno Lossin wrote:
->>>> On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
->>>> > +pub unsafe trait OwnableMut: Ownable {}
->>>>
->>>> I don't like the name, but at the same time I also have no good
->>>> suggestion :( I'll think some more about it.
->>>
->>> There was already a bit of discussion about it. I had my own implementa=
-tion of this
->>> where I used the names `UniqueRefCounted` and `UniqueRef`, but after di=
-scovering
->>> this version from Asahi Lina, I took it as it was, keeping the name.
->>>
->>> No one else came up with different suggestions so far, so maybe we shou=
-ld just leave it
->>> at `Owned`/`Ownable`?
->>
->> I'm just hung up on the `Mut` part... Haven't come up with a good
->> replacement yet.
->
-> What do you dislike about the xxxxMut pattern?
+On Wed, Jun 18, 2025 at 08:42:54PM +0100, Lorenzo Stoakes wrote:
+> In future we intend to change the vm_flags_t type, so it isn't correct for
+> architecture and driver code to assume it is unsigned long. Correct this
+> assumption across the board.
+> 
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Uh, I have re-read the docs & don't remember what originally I didn't
-like about the name, so let's keep it :)
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
----
-Cheers,
-Benno
+
+-- 
+Oscar Salvador
+SUSE Labs
