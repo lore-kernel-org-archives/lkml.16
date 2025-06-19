@@ -1,114 +1,101 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F71D248F5E;
-	Thu, 19 Jun 2025 07:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86714218596
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319478; cv=none; b=VwCHDt5g3UEj8GhaI9m9WG0OlDQ6G33bL2kPZjo/w2Ot4H6HKXmbl26TzotSleuG9rcu+YWj888soPEPIYC+L0GZX6pn/R3XlLjiUpVzj4HYakXDY9hRpc+lZ7wDhr12LZKG6gN+k6KXWUlw/inVnfFOcl0VmrlHbSWY3MC5t3o=
+	t=1750319523; cv=none; b=Oe4z1NA6s5nCfgfK5jX6ILMSx/HpG+rGi3Ne3i06QyMqL57EzUBrAXv0vMVy70pkXJBKQ7kChZgFFTjJ+uD2Ul+4EmawIgJfaDEOB45F8EWHe4zZPK5HiKFw5iJ8BaefALbDHu3aIkwBWo0HHrmes0n+kYLcuxSNH6Arkc1BNNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319478; c=relaxed/simple;
-	bh=bHviAsuIfo6IGBrp4AOVqEtcYY9AbeOAmKOPuRF1lX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NUP56yryHr+yFe8G9DCcojuumT8aJMTaYFW0mBgeJ0P6Fzp4mGhppBF4I3L6GaMjz/CV52RlUdrgzeZ3Bwi6VcJpIbVHXyKvjUfTWE+KkoN7wOVvX2OVZwEFLG88RQNIGWetv6EPXsDGjTNtpy9/akZZjAuU0+4Z2xxlEn5OqkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=KhZ5txEb; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1750319523; c=relaxed/simple;
+	bh=7mQQX0g/RXBoYey7jHVoGxTSFtEhgzlZ2xKLsOSPaOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ReVn0mT0HNpxRXtGm5Mev1TnO8CDNSZmG3TQwSWL8GxTH3HcM0b1VBMneTgzvMU4hkkQqg/+gNdrU9mn88YBmdjhmnxloN24xj6B+8OLdmqB97xn3YJ+P3/A3R56INnAvz3ysvnUuw3Z3yD7JvdEYSN1h783ajrZ5FHZxHtFnVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bnO8TB91; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="KhZ5txEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1750319434;
-	bh=KLFd8Hwc+BrcRkjztF5W0V4sgqqXjZ/dOj8l+EYvXyg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=KhZ5txEbfemuKc9MIOVayZDf2OJzjO5+7gVLmzLg70Y8ayT5xAjfwdLinsN8hA/It
-	 x3k08jauRitDjhpasq1Eiibw6EW+55NpTfjIngnMQqKXX0zVOvIwEJZ7xwypZHcJ6v
-	 mt/EeaYiPTVooNmeGXGcvQtfo7YRzVvrTYM1ErAE=
-X-QQ-mid: zesmtpip4t1750319413t17bb649b
-X-QQ-Originating-IP: 9KKOypkCNDr4Fi7xRB09P3ZgHq9XVHrO7PfHQnwmCcw=
-Received: from avenger-e500 ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Jun 2025 15:50:11 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13789221876025690801
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: ikepanhc@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Renato Caldas <renato@calgera.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH 6.1/6.6] platform/x86: ideapad-laptop: add missing Ideapad Pro 5 fn keys
-Date: Thu, 19 Jun 2025 15:47:04 +0800
-Message-ID: <F7FB9E816BFCD1DE+20250619074704.56965-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bnO8TB91"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553b6a349ccso457118e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750319519; x=1750924319; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7mQQX0g/RXBoYey7jHVoGxTSFtEhgzlZ2xKLsOSPaOg=;
+        b=bnO8TB91+bqkCFtzVBCIsOhc02OTDTmRRCSBYqU3GSPneYpVvvaff7+B8i9Ez/7W5B
+         FnJRV+isIylWBbWVTd5QPuVKbFOK4wIJDsOvwlFaazre+3Gie4lwgooaXNGTae3YfAN7
+         6WwrQznORydJrN7fGvAvwFi9ugGvRsyHYhMGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750319519; x=1750924319;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7mQQX0g/RXBoYey7jHVoGxTSFtEhgzlZ2xKLsOSPaOg=;
+        b=ZEoozp3GCs+LfZJ3tggGPuPj1z8YPnAUowOE9u8Llz4ubIyGaFzqkYCphRF37V1ulH
+         p6fk7B19Z6VrjSi3WJupvR4WQjuUAaepNN/S3T2jMdTQ0OLc4Oy5ddGgCpv6fOOcO1UK
+         pqzqjNgISJ1ph6Uw0qb9aj+xxlB/PGfevL9aIPPtdjGGN+BKhLx36FB0OImGZY8Hudqp
+         SOlwpTeBU8bx3zvb+HKfi+Q7W2aE3Fn1FMpkG0T8JpPeAEdyZy8xNqfMnUwKIJWUEgQq
+         ErGCAznL0KtP7TRpi2rVPnFsNyN3QSAIzAQqKmorPle20hhISVzryPo5IiuYSeBlyqXD
+         1lpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWizDxLmyjGj6266UYheT6tZEP361Exc5vmcXCuGQpIxxfT74tg3imG8VVdXlDCXKL9QaQsL7AxUGntjQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBjoJy4HPqk6rd9Tw6ryiVz8wsY0V8bTb73U9DL6msm6xEKoHm
+	E1puDCL3G0U7WZiSA4AC9J8pYgYqkG3D02ZL1B5we+Hoi1LjwRtXlR4CUP5XmarOcpyil9WcO7P
+	78G3komf+i2rteO5H8H6olNB2y+smC8Uuoiyf0FoC
+X-Gm-Gg: ASbGncttArVkQgfLwP5xC0g2WUaoSWnv99wiN6EH29JxkzxOkKMoCoQ02+cloDD2LG4
+	lMWnBZ42qsEm50omQLEEgQh5aM7e33Y+EWO3hlOIboQEhbQb0rEGixh9YL8rPZ1gSdubH6thTYg
+	7pWuiTDNoP1o/+J1b1rC23WEc+eloYna8oL0zqgGdTTBKd8j/h2obBymxG7lwoaciYdpH4whg=
+X-Google-Smtp-Source: AGHT+IGKSw6WMdR9IoIRey67gW5v3Kd28RATCpIk0gj4cgp0HNOfe/nKQSJBKksAip/SsLckx6UbC9sCyZs1uSNHQ90=
+X-Received: by 2002:a05:6512:6ca:b0:553:6488:fa56 with SMTP id
+ 2adb3069b0e04-553b6f42225mr6061529e87.43.1750319519609; Thu, 19 Jun 2025
+ 00:51:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NzouuX5M12cOBvMscSOvIUovI2Hyf0KLYYKwn87zSATWV6tI+yqUYgkQ
-	5hXFSrfGm3wrZ9hZGkdrjrsD6fo7Jwfbx3MBW9E//tKfJwdcyEs06fBuiHiIQ3btiAZpvV7
-	pp6r4ASfJuDI5AxZVEO11BTd34wLN1NpKLCWFauR+SC6ryrVDSIqScQeG3iXcksEbbL8riH
-	KLiOnm/U54lNlaDCFVwXkyUyTugXr6Sge9nTdj6/cstPN71k1lWzjnwTgOgo56lKHAHy4BF
-	k3i3JCfOZHuN16dp8XCuxquhqAfp+sNSpoL82O4h74sFWl8Jm8kIMVAohzgua8XZ27l/086
-	N25vrvTUy8Ax6WL0ssHdWsj4o6/rSadUyQPJkfQIlpSWnWNuf5Ycw+k2oaZj1woSxF47rVC
-	0iK/38Od5/cwHpSE8aE//iDCw98qVli2zfto3vBI/UsHVTdwINK+RAvBueMMDEofLBjtONy
-	pCDlo+h9S2nTATVjyAsk903cHG3LF/7mtQ4skTUZF2bhCSI5GmChdE81vDCo8cWjg+ERbAe
-	kO6eMMSDuJc0lWdaPh5U+bGelsxoF0CuuAHjCcSPYNTu5h7YWZmDWQ8eGc0YIYI0ixYxYvJ
-	Se3uhLOkde/FhicTqmZUrQV0ukeV0KFRvrGPpddid/Hxz91nkgiJ9KwLqWIx1JqFgyD6hVX
-	Qkk9PuE0BhI60oOG7r/msy+EQlUnRwgPQ3nqJZX0oKWfKaifZQ/pKfF93H4NdxGjwG70C79
-	TO9Hw6f7zEOPBYCrDWVA3jd+XcoWoaxoL3YZduEx2Bn0ZjgajqRkEwy3RCWfudXOorPA87b
-	FzLgH2MuWn5tABUSY3YnyhUUMQ+PvO9xR5qSXzSkCWuYK9XOA7byZ20oParnD/Wl8TPS1EK
-	WBH6Ks3QjTTUC/IZnMky5FwhCb1wK5pH7Dbiw1ixu91F++EINqG6uBLmedPOxxjHi0iXq6Z
-	t6zDxYCgJHUO2Eb/jh6A8n3zmcU6QObeCri6G/AqWljnXXdm4LIM2BxsHwwR6p82YO5IkG6
-	QFZmNyDP57qYI7sl19k5qX4t5mPoE=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+References: <20250318102259.189289-1-laura.nao@collabora.com>
+ <20250318102259.189289-3-laura.nao@collabora.com> <CAGXv+5E-G0BY5q_EsxOkEEJvqXaX5=Y9PWqNbwysLEFfU-UmAg@mail.gmail.com>
+In-Reply-To: <CAGXv+5E-G0BY5q_EsxOkEEJvqXaX5=Y9PWqNbwysLEFfU-UmAg@mail.gmail.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Thu, 19 Jun 2025 15:51:48 +0800
+X-Gm-Features: AX0GCFshC_lgMp9vezDeihTD0kDhQFAT31Y9bBRKASrIpMKtnPIy3f3lDgJ-TQs
+Message-ID: <CAGXv+5Ff8jFqURizywr7NedprytSoCz9HvaW__v_Q1LcuzMxrw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt8192-asurada-spherion: Mark
+ trackpads as fail-needs-probe
+To: angelogioacchino.delregno@collabora.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	nfraprado@collabora.com, kernel@collabora.com, 
+	Laura Nao <laura.nao@collabora.com>, matthias.bgg@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Renato Caldas <renato@calgera.com>
+Hi Angelo,
 
-[ Upstream commit 36e66be874a7ea9d28fb9757629899a8449b8748 ]
+On Wed, Mar 19, 2025 at 12:23=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> =
+wrote:
+>
+> On Tue, Mar 18, 2025 at 6:26=E2=80=AFPM Laura Nao <laura.nao@collabora.co=
+m> wrote:
+> >
+> > Different Spherion variants use different trackpads on the same I2C2
+> > bus. Instead of enabling all of them by default, mark them as
+> > "fail-needs-probe" and let the implementation determine which one is
+> > actually present.
+> >
+> > Additionally, move the trackpad pinctrl entry back to the individual
+> > trackpad nodes.
+> >
+> > Signed-off-by: Laura Nao <laura.nao@collabora.com>
+>
+> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 
-The scancodes for the Mic Mute and Airplane keys on the Ideapad Pro 5
-(14AHP9 at least, probably the other variants too) are different and
-were not being picked up by the driver. This adds them to the keymap.
+It looks like this patch has fallen through the cracks.
+Could you pick it up?
 
-Apart from what is already supported, the remaining fn keys are
-unfortunately producing windows-specific key-combos.
 
-Signed-off-by: Renato Caldas <renato@calgera.com>
-Link: https://lore.kernel.org/r/20241102183116.30142-1-renato@calgera.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/platform/x86/ideapad-laptop.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 88eefccb6ed2..50013af0537c 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1101,6 +1101,9 @@ static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY,	0x27 | IDEAPAD_WMI_KEY, { KEY_HELP } },
- 	/* Refresh Rate Toggle */
- 	{ KE_KEY,	0x0a | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
-+	/* Specific to some newer models */
-+	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
-+	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
- 
- 	{ KE_END },
- };
--- 
-2.50.0
-
+Thanks
+ChenYu
