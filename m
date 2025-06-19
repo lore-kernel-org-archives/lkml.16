@@ -1,76 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F2D220F4F;
-	Thu, 19 Jun 2025 10:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4F72206B5;
+	Thu, 19 Jun 2025 10:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750327395; cv=none; b=QEodHX213aZiLjL+2tBtHB9eqeDkn+3AHZY3yKu/PjYn91bNpGGxpQ7HS/cw2Lh5Mgfs+7guPifH5uD4I5Q/7HizTeYhJ8lu0Byl1eqYalka4AbGu8InrU+Px2W9cJfV/xaVrdkaLiyd6JRmMVNiTgK0OT7Ks2n8p5puJRDjON0=
+	t=1750327397; cv=none; b=UoQDf++J+2Gzp2z3uKOe7YMxw0E0o+JMUQA8c+fTJpm7Hcu+jSRZZUCChr6kcO5ID2vmFFMj90pghc8sztK1puhcMQko8UkHxeeEal/BQb/YZ2BvEAOykptF7f73Oh6Dq6lp/DsS/J6bN1vuU8cHNSrRRijkxm26f2SbZWcG5LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750327395; c=relaxed/simple;
-	bh=+NmzNqs4ioHLre1LisHUVsrMGUyewytWYBtMJl8Nzdk=;
+	s=arc-20240116; t=1750327397; c=relaxed/simple;
+	bh=XDq4E2qobHh4SPNHxWaWwJy/V6onT872pHFjDniHXsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VC7Pq0Klg9ow2wdOFnKBzyQ/7VcX2DoIHb10M56xkpeNcrth4CK288eCKW4kI6q78ibjDSlCH5eu0vp6+aGG7USfEbg2Ysat9Pm4UD2LC1yx1g6l2qXt5HRXwU1S016qzLk2v+08GxwGd9YsahIhCiFB0SxiQQ1wg1XJ+QEp80g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6oZyWiW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RB/3csdtcxjzM75e8p+iDIlWU0q1ARQ4RC/1/RDw9InLEzYUcXD7TUib4+WGrhveZ9uuUsqeDnlAnZe5muGRthh8oKgJkMA0e/dgYxvocJeLd914IvxhnBj44LST9K1PA7OU+FMkrllUDT+rvL9aLRnPOkrVn1458CswqwOzIEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZADrI14; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6oZyWiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0CE9C4CEEA;
-	Thu, 19 Jun 2025 10:03:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZADrI14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F04C4CEED;
+	Thu, 19 Jun 2025 10:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750327395;
-	bh=+NmzNqs4ioHLre1LisHUVsrMGUyewytWYBtMJl8Nzdk=;
+	s=k20201202; t=1750327396;
+	bh=XDq4E2qobHh4SPNHxWaWwJy/V6onT872pHFjDniHXsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u6oZyWiWcI3x2ARJ2V8VEh9o7zxxRBSP4MYbwjVqFs9axHGNnC0qD+nUO2IMyuOb4
-	 diXOATtBrJVhrsWfLdRh5Q1+v18E0G+VgEavr8uOiadAWCp/Dxj/rlHOF2d92JKlG6
-	 tzLxVb4jyx0sEQGE5qWR4GJDhRdJocdfnhC6Lj7VMbkQmt7ni3Q7wtWEf+XKCt9ykD
-	 MpyQha8f/0Yl5FoDumPUOOLLELlNcA2QC4NrhYvkA9hPfqUSXNNqgLKDBUMGkPB5f6
-	 QV48kl2WieXcct/+o58B5UuGos4/FHvFSIpGI58yYm+2NDdIcgfcfVu/sCCKY/lWa/
-	 SbF2olp8sJifA==
-Date: Thu, 19 Jun 2025 11:03:09 +0100
-From: Simon Horman <horms@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Daniel Golle <daniel@makrotopia.org>, arinc.unal@arinc9.com
-Subject: Re: [net-next v5 3/3] net: ethernet: mtk_eth_soc: skip first IRQ if
- not used
-Message-ID: <20250619100309.GC1699@horms.kernel.org>
-References: <20250618130717.75839-1-linux@fw-web.de>
- <20250618130717.75839-4-linux@fw-web.de>
+	b=jZADrI14/ncLqFyri1sFkMVyEFQXv/gkPNVr/oK7Z4gaT+2I/JiuwXgAZSulfTZce
+	 Om4xbWOQusgqMGKDexgjc3ECK//5hld+LlFx3xrbC4VtXWHV15nD273jXZJc8Wa71H
+	 uVUPyLaShGGXgxYx/1yJ8n1Y+RjNv4H+Tvzkgg1S/7vji1P8EWzUhI0S9YwFDK/iX2
+	 IgMyw0DwBAPelyWMN+TPksPX0PiUluWXmCdHt06RFUIv5Da9+Uann/eQhA8ae6iq9e
+	 5OkorTX1QBMAVO4cm+NrPXQXqATF8+VSaw6CpEyOUzb31K/turFLijhxuV1Tx5piV6
+	 msgqnkeNV7qqA==
+Date: Thu, 19 Jun 2025 12:03:12 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, 
+	Shuah Khan <shuah@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com, Amir Goldstein <amir73il@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4] selftests: filesystems: Add functional test for the
+ abort file in fusectl
+Message-ID: <20250619-einlud-gestrafft-8e6d725d491d@brauner>
+References: <20250612094033.2538122-2-chenlinxuan@uniontech.com>
+ <9940a310-5a39-4489-a1bf-0809e5914c08@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618130717.75839-4-linux@fw-web.de>
+In-Reply-To: <9940a310-5a39-4489-a1bf-0809e5914c08@linuxfoundation.org>
 
-On Wed, Jun 18, 2025 at 03:07:14PM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+On Wed, Jun 18, 2025 at 02:52:08PM -0600, Shuah Khan wrote:
+> On 6/12/25 03:40, Chen Linxuan wrote:
+> > This patch add a simple functional test for the "abort" file
+> > in fusectlfs (/sys/fs/fuse/connections/ID/about).
+> > 
+> > A simple fuse daemon is added for testing.
+> > 
+> > Related discussion can be found in the link below.
+> > 
+> > Link: https://lore.kernel.org/all/CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com/
+> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> > Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> > Co-developed-by: Miklos Szeredi <miklos@szeredi.hu>
+> > Reviewed-by: Miklos Szeredi <miklos@szeredi.hu>
+> > ---
+> > Changes in v4:
+> > - Apply patch suggested by Miklos Szeredi
+> >    - Setting up a userns environment for testing
+> >    - Fix a EBUSY on umount/rmdir
+> > - Link to v3: https://lore.kernel.org/all/20250610021007.2800329-2-chenlinxuan@uniontech.com/
+> > Changes in v3:
+> > - Apply changes suggested by Amir Goldstein
+> >    - Rename the test subdir to filesystems/fuse
+> >    - Verify errno when connection is aborted
+> > - Apply changes suggested by Shuah Khan
+> >    - Update commit message
+> > - Link to v2: https://lore.kernel.org/all/20250517012350.10317-2-chenlinxuan@uniontech.com/
+> > Changes in v2:
+> > - Apply changes suggested by Amir Goldstein
+> >     - Check errno
+> > - Link to v1: https://lore.kernel.org/all/20250515073449.346774-2-chenlinxuan@uniontech.com/
 > 
-> On SoCs without MTK_SHARED_INT capability (all except mt7621 and
-> mt7628) platform_get_irq() is called for the first IRQ (eth->irq[0])
-> but it is never used.
-> Skip the first IRQ and reduce the IRQ-count to 2.
+> + adding Christian to the thread
 > 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> v5:
-> - change commit title and description
-> v4:
-> - drop >2 condition as max is already 2 and drop the else continue
-> - update comment to explain which IRQs are taken in legacy way
+> Hi Christian,
+> 
+> Would you like me to take this patch through my tree?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+I'll just take it otherwise it'll end up causing pointless merge
+conflicts as I'm touching that code as well.
