@@ -1,168 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4B320551C;
-	Thu, 19 Jun 2025 09:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD8E21FF5F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326375; cv=none; b=qs6Q8yFEwDWUoWsgttBzFPrX06gDIz/iMvkJSUd7N7DR6g7WLaygRypeJYLxjn/U3bsWwhFTHcN1aoniIsfqpQy6oVrk0sF25oykmcczNVY6Pk300+u1+5OL2yMG4gcHTfwGQeO5l9YwApmzFs8db9CH77zTSSyM9d1vEScGHCQ=
+	t=1750326402; cv=none; b=q1a3g0TzmZK8tM/V7X8ReWKiNh1Pv8L8EJwq1EvOZoU621B43lvZgB/YLtiMpPQej3ZkgT7sC7/mUml0r0TJCDD0TIi04k5vgcQ6XsSmC8C0v5zepYRdM+N1f4BqAw4YW7x54DoJsZOEcp8kEXDeb1RWjhMgX0ktIitoQ/jV1zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326375; c=relaxed/simple;
-	bh=UuLnT9fGW+15a+efSTXHXPlypCxXcrd7PtLcffPU4io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuAjr522VIAcTKSLX50S0604v/MAh6k2ZAWcsR7d8r7LfLEjkpsGAE4vDIHsVyUBgv1rEGyqeHosmRes1FtQKQ4mNHRy9twAd6iUJkP4IxLGQpzMvhqF9nw4Ud0vEwinCg567Kd4l054qxlkzObh50u4473xPYskkp/2y3iUyeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=evWXrDm0; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750326402; c=relaxed/simple;
+	bh=apG/keP/KLT8pvUXGpwz4q0QvABCBcwZ3u8hqT6KHKE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=kCG6SXBKB88hPPIMz/6wSTFxRf4PxcnvfXN3YQT1dq6nXu0teBsgsDonNnAzcZaxMno+0JF0AdojVSrQhxQ/1ExdzpMSWl6dSJRU9fKpTCi4VWyzGGpSXXw16SgLGX9m7p7MEmd8IVgYz6XuTXMaX7iPQM2BleTlzJe3neY1guE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=qBF6F/JF; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="evWXrDm0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750326374; x=1781862374;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UuLnT9fGW+15a+efSTXHXPlypCxXcrd7PtLcffPU4io=;
-  b=evWXrDm0aP9uoQBysECEroC+u9SjKFk4vhG2IoMZGQjYtzYuZrnT+7mc
-   s6M0WDGieWFfvmPfZrHsi7WvMomVBRlamyct3YRbjSqOjxDJfpeYhcCmW
-   u2DX7UVu1CrdM9MD6l+SFLd6GZf+6vnWrS4qATMvcRg3OddXmQTWbPeWp
-   qfAvv2jlivQNrPTnZEOurIn3i8DAl+PmLpHBOHxvpbJvR1MNGLgyLOiW+
-   Z/sN3Xq3iBt0Jv4pBRa6r9Z9gseERPKgl5MB+mBFV0vbWNfehTzW6XU9f
-   6awZYMaEW/Zryb/oy+kOTiGiWOVYO1bL4PfIwmDACoHV+9WPuq0gq0RJa
-   Q==;
-X-CSE-ConnectionGUID: AVfndRx6RSqOyJQ5s5gn5g==
-X-CSE-MsgGUID: W4XugKNsSMWkm3D42R8GSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="64004279"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="64004279"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:46:04 -0700
-X-CSE-ConnectionGUID: VpU8txZkSyybrd7ZTLNPZg==
-X-CSE-MsgGUID: Hs2fzB2LQS6Ns2HLVkksCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="150370624"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 02:45:41 -0700
-Message-ID: <30965147-24af-4dc8-aec4-781ea401a3a9@intel.com>
-Date: Thu, 19 Jun 2025 17:45:38 +0800
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="qBF6F/JF"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com,
- akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com,
- anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com,
- binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, yilun.xu@intel.com, yuzenghui@huawei.com,
- zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
- <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
- <9b55acfa-688e-49da-9599-f35aee351e3d@intel.com>
- <aFPYLM8U7GhCKkRC@yzhao56-desk.sh.intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aFPYLM8U7GhCKkRC@yzhao56-desk.sh.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1750326388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=95jwxwqOy3CE/suGZD6MlYCwgFQV2q5DD7APLcXDGSw=;
+	b=qBF6F/JFB8Ga+29xGShrQ+nv00Iv5P6Zpb4T/dk3e6MAJbO+H6+doGGxnsJfJI/kx0fgba
+	LpxYBlt/zc0ZxyJif1oMwDiMJa2RcXRGHRpLaLxrafWhFf3V0Vh+7RqAJQCUQwfRo8X7si
+	X0xwcrsDc9qzk1RPCPGkhrof7KLlyWVLEkl51JD73B8iW4qmHKoFatW4WrpoRqGSvpAClR
+	B9zyua4faYw4VV6P6C+tYUeI76n0bezZbhO9o7X0M0ecQ0TD9VFRS8HWMRmp7J4KWv1l/c
+	b34pOS6eG0FPqmk+YATMaGS1RL7N9JrziEtqd09cNbkXTkZ/gEMg38ZC+GAEKA==
+Content-Type: multipart/signed;
+ boundary=a3a566baaebf2efb32d488967dad63a47cda141ad75c7e052b59f3fe5c0e;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Thu, 19 Jun 2025 11:46:15 +0200
+Message-Id: <DAQEX04P5320.CQDU7SL7AV4A@cknow.org>
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS'
+ panel description
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Olivier Benjamin" <olivier.benjamin@bootlin.com>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+References: <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
+In-Reply-To: <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 6/19/2025 5:28 PM, Yan Zhao wrote:
-> On Thu, Jun 19, 2025 at 05:18:44PM +0800, Xiaoyao Li wrote:
->> On 6/19/2025 4:59 PM, Xiaoyao Li wrote:
->>> On 6/19/2025 4:13 PM, Yan Zhao wrote:
->>>> On Wed, May 14, 2025 at 04:41:39PM -0700, Ackerley Tng wrote:
->>>>> Hello,
->>>>>
->>>>> This patchset builds upon discussion at LPC 2024 and many guest_memfd
->>>>> upstream calls to provide 1G page support for guest_memfd by taking
->>>>> pages from HugeTLB.
->>>>>
->>>>> This patchset is based on Linux v6.15-rc6, and requires the mmap support
->>>>> for guest_memfd patchset (Thanks Fuad!) [1].
->>>>>
->>>>> For ease of testing, this series is also available, stitched together,
->>>>> at
->>>>> https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-
->>>>> support-rfc-v2
->>>> Just to record a found issue -- not one that must be fixed.
->>>>
->>>> In TDX, the initial memory region is added as private memory during
->>>> TD's build
->>>> time, with its initial content copied from source pages in shared memory.
->>>> The copy operation requires simultaneous access to both shared
->>>> source memory
->>>> and private target memory.
->>>>
->>>> Therefore, userspace cannot store the initial content in shared
->>>> memory at the
->>>> mmap-ed VA of a guest_memfd that performs in-place conversion
->>>> between shared and
->>>> private memory. This is because the guest_memfd will first unmap a
->>>> PFN in shared
->>>> page tables and then check for any extra refcount held for the
->>>> shared PFN before
->>>> converting it to private.
->>>
->>> I have an idea.
->>>
->>> If I understand correctly, the KVM_GMEM_CONVERT_PRIVATE of in-place
->>> conversion unmap the PFN in shared page tables while keeping the content
->>> of the page unchanged, right?
-> However, whenever there's a GUP in TDX to get the source page, there will be an
-> extra page refcount.
+--a3a566baaebf2efb32d488967dad63a47cda141ad75c7e052b59f3fe5c0e
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-The GUP in TDX happens after the gmem converts the page to private.
+Hi,
 
-In the view of TDX, the physical page is converted to private already 
-and it contains the initial content. But the content is not usable for 
-TDX until TDX calls in-place PAGE.ADD
+Thanks for working on upstreaming PPP things :-)
 
->>> So KVM_GMEM_CONVERT_PRIVATE can be used to initialize the private memory
->>> actually for non-CoCo case actually, that userspace first mmap() it and
->>> ensure it's shared and writes the initial content to it, after it
->>> userspace convert it to private with KVM_GMEM_CONVERT_PRIVATE.
-> The conversion request here will be declined therefore.
-> 
-> 
->>> For CoCo case, like TDX, it can hook to KVM_GMEM_CONVERT_PRIVATE if it
->>> wants the private memory to be initialized with initial content, and
->>> just do in-place TDH.PAGE.ADD in the hook.
->>
->> And maybe a new flag for KVM_GMEM_CONVERT_PRIVATE for user space to
->> explicitly request that the page range is converted to private and the
->> content needs to be retained. So that TDX can identify which case needs to
->> call in-place TDH.PAGE.ADD.
->>
+On Thu Jun 19, 2025 at 7:21 AM CEST, Olivier Benjamin wrote:
+> Fix a few issues in the panel section of the PinePhone Pro DTS:
+>   - add the second part of the Himax HX8394 LCD panel controller
+>     compatible
+>   - as proposed by Diederik de Haas, reuse the mipi_out and ports
+>     definitions from rk3399-base.dtsi instead of redefining them
+>   - add a pinctrl for the LCD_RST signal for LCD1, derived from
+>     LCD1_RST, which is on GPIO4_D1, as documented on pages 11
+>     and 16 of the PinePhone Pro schematic
+>
+> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+> ---
+> Small fixes to the PinePhone Pro DTS to fit bindings and
+> suppress warnings at build.
+> ---
+> Changes in v2:
+> - Added the pinctrl definition for GPIO4_D1/LCD1_RST
+> - Incorporated Diederik de Haas' suggestion for defining mipi_out
+> - Squashed multiple patches into one
+> - Link to v1: https://lore.kernel.org/r/20250618-dtb_fixes-v1-0-e54797ad2=
+eba@bootlin.com
+> ---
+>  .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 33 +++++++++++-----=
+------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch=
+/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> index 04ba4c4565d0a205e2e46d7535c6a3190993621d..98aba146749998dd5a798aabe=
+d0fe844c474d1cf 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> @@ -463,29 +463,18 @@ &io_domains {
+>  };
+> =20
+>  &mipi_dsi {
+> -	status =3D "okay";
+>  	clock-master;
+> -
+> -	ports {
+> -		mipi_out: port@1 {
+> -			#address-cells =3D <0>;
+> -			#size-cells =3D <0>;
+> -			reg =3D <1>;
+> -
+> -			mipi_out_panel: endpoint {
+> -				remote-endpoint =3D <&mipi_in_panel>;
+> -			};
+> -		};
+> -	};
+> +	status =3D "okay";
+> =20
+>  	panel@0 {
+> -		compatible =3D "hannstar,hsd060bhw4";
+> +		compatible =3D "hannstar,hsd060bhw4", "himax,hx8394";
+>  		reg =3D <0>;
+>  		backlight =3D <&backlight>;
+> -		reset-gpios =3D <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
+> -		vcc-supply =3D <&vcc2v8_lcd>;
+>  		iovcc-supply =3D <&vcc1v8_lcd>;
+>  		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&lcd_reset_pin>;
+> +		reset-gpios =3D <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
+> +		vcc-supply =3D <&vcc2v8_lcd>;
+> =20
+>  		port {
+>  			mipi_in_panel: endpoint {
+> @@ -495,6 +484,12 @@ mipi_in_panel: endpoint {
+>  	};
+>  };
+> =20
+> +&mipi_out {
+> +	mipi_out_panel: endpoint {
+> +		remote-endpoint =3D <&mipi_in_panel>;
+> +	};
+> +};
+> +
+>  &pmu_io_domains {
+>  	pmu1830-supply =3D <&vcc_1v8>;
+>  	status =3D "okay";
+> @@ -507,6 +502,12 @@ pwrbtn_pin: pwrbtn-pin {
+>  		};
+>  	};
+> =20
+> +	lcd {
+> +		lcd_reset_pin: reset-pin {
 
+I don't know if there's a 'hard rule' for it, but I'd recommend to use
+``lcd1_rst_pin: lcd1-rst-pin {`` as that would match the naming from
+the schematics. I realize that some but not all (other) pinctrl nodes
+follow that 'rule', but it helps with traceability.
+
+> +			rockchip,pins =3D <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+>  	leds {
+>  		red_led_pin: red-led-pin {
+>  			rockchip,pins =3D <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+
+Otherwise,
+
+Reviewed-by: Diederik de Haas <didi.debian@cknow.org>
+
+Cheers,
+  Diederik
+
+--a3a566baaebf2efb32d488967dad63a47cda141ad75c7e052b59f3fe5c0e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaFPcbQAKCRDXblvOeH7b
+boy+AQDbwzeOk3i0OYHIv6wu+lPogKc5TzKOKmCgkGkNRFumNwEAjC++J6IJV1V3
+YclMmumArJ0L1UN/PjW9uBrL/NoamwQ=
+=RIuv
+-----END PGP SIGNATURE-----
+
+--a3a566baaebf2efb32d488967dad63a47cda141ad75c7e052b59f3fe5c0e--
