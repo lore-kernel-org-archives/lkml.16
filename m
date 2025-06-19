@@ -1,88 +1,129 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B0C1F4C9F;
-	Thu, 19 Jun 2025 14:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394D01AA782;
+	Thu, 19 Jun 2025 14:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344159; cv=none; b=F4gQExces4hbQ55VV2Ly8tHJUnh4LNQBoJNSW/DEafTtjfqCUbv/R8LsY4eEguvR4R107L0KLKsJ89b9Pi0orlxu3smRcT0zdORjxCjJD35Ex4xQf4rGhrY3/ZhCLjaKsv4L463oRQCqEO87A5pZUbAqXaXOY2qOggv8eTitIM0=
+	t=1750344189; cv=none; b=RZlaolZBBNssyNiwCjSsc8rZsgLDF7BHufOLhlQBZ+fz92HgnU/YwWNq4QEhrD0ur6/Qd64CbFZBNHYObLMIWvnZPDFBrMiBnCkwiPJNTSnSUNw24nlfnqGigAeLpCNHnBcTda59kDuCRRjjKxRje3IlY1jYaudCZ+4qoGi+5pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344159; c=relaxed/simple;
-	bh=gdTGjd6pcw2UEWFBhdQNIPDZSoY1C0kjX28xf7y7oe8=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tfKZ/exbRyRmJIvKUjcWY39+xsZ3LmoL2oRAaCaIAJ8zNkIrhxN26V38aDT3rYPBWZFjDRGmdDP2QTg3HucoOZhoG3D7EbACgSucE/WHUNxXNGst6qi/CVgASdd7bpoRCdOgfcUvl2JDVPTYO18cs4E2wf89UhNhUP6v/Nne1tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bNNYt6MQ2z1d1qs;
-	Thu, 19 Jun 2025 22:40:18 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id E3B2E14011A;
-	Thu, 19 Jun 2025 22:42:31 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 19 Jun 2025 22:42:30 +0800
-Subject: Re: [PATCH 0/2] ACPI: Improve SPCR handling and messaging on
- SPCR-less systems
-To: Li Chen <me@linux.beauty>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>, Liu Wei <liuwei09@cestc.cn>, Ryan Roberts
-	<ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>, Li Chen <chenl311@chinatelecom.cn>,
-	Sudeep Holla <sudeep.holla@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-References: <20250606072802.191580-1-me@linux.beauty>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <af292806-633e-287a-2c05-777ac7bab22b@huawei.com>
-Date: Thu, 19 Jun 2025 22:42:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1750344189; c=relaxed/simple;
+	bh=/ELZptTBhqBUeDBGAiBxuTC6IoEc0cQXwy2tejgFxig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sEUafKHcdYnm8mIpn5b25d1h/Ms0BapJ4HQUZR2DBBs0q1R5dXmfk1X/Yk69c17DhRU93wUiJuHkH6cPjPJXbc1zE3nC5BLlxDMMLBGuhFq2FtGie5tTw3WlaTWT9w2KQePOaCTjrdQT/TFhf9DI9B8AY97KbTl2rj+970PvcVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dwvJA3FN; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dwvJA3FN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BNuxxZdvnFJv9N7bIABQrfSlQ4FsyW6sCUROC/TVYZs=; b=dwvJA3FNkttNq+bMx2HmmenkhQ
+	j8FBAiEdFQLEcocmeS5dIupozZFVjf3dlJW+dgd05mbaTedMUNbKx7l5rtBeWfm0tyHVk60+Mpr4R
+	l43CfxpcnYDkLkdu6BM9Jwp3G+JM1hMH7UBw0ELGiIGf/ZidM8OjsCOlvCQmOIFVgLjEs6aVFlyML
+	gRH+c/fdlX8MtrUw5SeZx9VDIeFLFdkdb3iSEKjRWSZJfV3DvuPfby/vHKDtjoYfnJa7MFDlr47Uu
+	qMrolJeOwIYTkTV/F73lchzfdIUF2xPRhjMRXUDspUpklFwU2vSmJOgfhWf8KK27LncNnA4o1Czup
+	9P/ClWFQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSGTg-00000004SQQ-1Keq;
+	Thu, 19 Jun 2025 14:42:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8723130890E; Thu, 19 Jun 2025 16:42:54 +0200 (CEST)
+Date: Thu, 19 Jun 2025 16:42:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Koichi Okuno <fj2767dz@fujitsu.com>, Will Deacon <will@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] perf: Fujitsu: Add the Uncore PCI PMU driver
+Message-ID: <20250619144254.GK1613376@noisy.programming.kicks-ass.net>
+References: <20250617102819.3685543-1-fj2767dz@fujitsu.com>
+ <20250617102819.3685543-3-fj2767dz@fujitsu.com>
+ <20250617103618.GT1613376@noisy.programming.kicks-ass.net>
+ <aFQXU5rK_HJE9zq0@J2N7QTR9R3>
+ <20250619140442.GH1613376@noisy.programming.kicks-ass.net>
+ <aFQgVPRvbrfcUrkY@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250606072802.191580-1-me@linux.beauty>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFQgVPRvbrfcUrkY@J2N7QTR9R3>
 
-Hi Li Chen,
-
-On 2025/6/6 15:27, Li Chen wrote:
-> From: Li Chen <chenl311@chinatelecom.cn>
+On Thu, Jun 19, 2025 at 03:36:04PM +0100, Mark Rutland wrote:
+> On Thu, Jun 19, 2025 at 04:04:42PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jun 19, 2025 at 02:57:55PM +0100, Mark Rutland wrote:
+> > > On Tue, Jun 17, 2025 at 12:36:18PM +0200, Peter Zijlstra wrote:
+> > > > On Tue, Jun 17, 2025 at 07:27:50PM +0900, Koichi Okuno wrote:
+> > > > > +	pcipmu->pmu = (struct pmu) {
+> > > > > +		.parent		= dev,
+> > > > > +		.task_ctx_nr	= perf_invalid_context,
+> > > > > +
+> > > > > +		.pmu_enable	= fujitsu_pci__pmu_enable,
+> > > > > +		.pmu_disable	= fujitsu_pci__pmu_disable,
+> > > > > +		.event_init	= fujitsu_pci__event_init,
+> > > > > +		.add		= fujitsu_pci__event_add,
+> > > > > +		.del		= fujitsu_pci__event_del,
+> > > > > +		.start		= fujitsu_pci__event_start,
+> > > > > +		.stop		= fujitsu_pci__event_stop,
+> > > > > +		.read		= fujitsu_pci__event_read,
+> > > > > +
+> > > > > +		.attr_groups	= fujitsu_pci_pmu_attr_grps,
+> > > > > +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> > > > 
+> > > > Should these drivers not also have PERF_PMU_CAP_NO_INTERRUPT ? Per them
+> > > > being uncore they cannot generate samples.
+> > > 
+> > > These PMUs actually have an interrupt, so that might be a bit confusing.
+> > > That said, the counters seem to be 64-bit, so the interrupt doesn't seem
+> > > practically necessary today.
+> > 
+> > Yeah, I saw they had an interrupt. But them being uncore they must not
+> > sample, and NO_INTERRUPT means not being able to sample.
+> > 
+> > Naming urgh :-)
 > 
-> This small series improves the kernel behavior and output when the ACPI SPCR
-> table is not present or not supported.
+> Yeah :)
 > 
-> Currently, even on systems that completely lack an SPCR table, the kernel prints:
-> "Use ACPI SPCR as default console: Yes"
-
-Agreed, this is wrong, we need to fix it.
-
+> FWIW, that came to mind due to:
 > 
-> Or if with acpi=nospcr:
-> "Use ACPI SPCR as default console: No"
+>   https://lore.kernel.org/lkml/20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com/
 
-I think this is OK, it's just to let you know we are not
-using ACPI SPCR console when ACPI is enabled, including
-cases with no SPCR table.
+Oh hey, look at that.. Clearly that is still stuck in my unread pile :/
 
+> ... and if NO_INTERRUPT would be better-named as NO_SAMPLING, that might
+> be a good opportunity to clean that up.
+
+Yeah, that's more or less what it does, look at the few sites in
+perf/events/core.c that test it.
+
+> > Yeah, there's lots of cleanup to be done. Quite possibly also some
+> > unification between the various drivers.
+> > 
+> > Just need someone that knows what they're doing that has spare time,
+> > know anybody like that? :-)
 > 
-> This may mislead users into thinking an SPCR table exists
-> when in fact there is no such table at all. This series addresses this in two steps:
+> I think a few folk likle that live in the nearest hall of mirrors...
 > 
-> Patch 1 ensures that acpi_parse_spcr() returns -ENODEV if CONFIG_ACPI_SPCR_TABLE is disabled.
-> 
-> Patch 2 updates arm64 acpi_boot_table_init() to only print the SPCR console message
-> if acpi_parse_spcr() succeeds.
+> If you're happy with that in concept, I can see about getting someone to
+> look at that -- the general idea has come up a few times.
 
-I have some detail comments for patch 2.
-
-Thanks
-Hanjun
+Sure.
