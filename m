@@ -1,136 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42DD188CB1;
-	Thu, 19 Jun 2025 13:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B4F2472B1;
+	Thu, 19 Jun 2025 13:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338907; cv=none; b=kp28w68vaDr+pqQXmDhJz7toyOZEkMNnvJb4d963W7cfIy/u7430jbJ3TthtGteulM+t7XFSX7YOQmpiW8AjV5j+fo1OUFAPYpbOD84HZI4GDhSHEQJrLRmTpQ76TSvLxV8FOXWdlHpk6tjh2CZsWRRI9Tzex0nF+USFbpk11VU=
+	t=1750338920; cv=none; b=g0dTccTlk7qsvGSXsm/Bte9ENGilaSQcUQi2YtIMAj6Wzl2CUfKuEzjXZ0AQIbziW2MZkXgkef97l7WFMYHlK7j5dozuw2CfqwCFSH+HGZ1pwIS9Q2+dxBrFj9d8xYBOhntiRrR/NIlikf4l66/SsVV8R/n9HQB4HoJggkvZeoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338907; c=relaxed/simple;
-	bh=XmA/rDaxVSJIKxYDrc79WLUOEQA0G2rxhfSxcF0bi0w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=V6rhNcajfAv2HUPXWMCdTSUfKRHITB6xfz5cbUvBHkuAekpuWhlQx4732ogAWb79s1/nnykyvoy/1PKfeRL6Jb37TaU5UiK0fijgZV/b+OfGpv4U+IsR7a46AhZuCvM5lkHWoWA6VjVZDuGSKWCWisK0OzS/8P7dykwoB9AU+gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HN89VgSY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HN89VgSY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6ABCC4CEEA;
-	Thu, 19 Jun 2025 13:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750338907;
-	bh=XmA/rDaxVSJIKxYDrc79WLUOEQA0G2rxhfSxcF0bi0w=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=HN89VgSYMF+Q0+qxAHhMd+/MiXoZSysZyeTDqWfJKVQJET4+UsnMZqbsxtRQf/+HH
-	 46G3I5+J9OVvl61r/Bg5Ii+6EPOuhHS4dQku/J+1hgG2X6ajxmpQZENAPTMoJ9BLtd
-	 RWybwEPXjtkwQVoMrAi43WExx8OcRbHqxGvbjZalxzjzGERH+FiminnpsTrEjEdjAg
-	 D/pQIRBJAtaARHnL9Nc379AsQWnXNMdhc9/BevFVJtlRGq5Xr0FHqmTGjED6Fyi4nQ
-	 MxdBlX9dNLFNtUCI5tckB4dLFmX+m5doQ5u9bEryuKaiuci8CIigmNvksH6cPWg9B0
-	 FyI5enUD1ezzQ==
+	s=arc-20240116; t=1750338920; c=relaxed/simple;
+	bh=AeSgFFFQI7owhohnK+ar5oPVTwBeVMCIKMJlUx7kFNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYt8bNX5xiOG0165q3L1+4hfxEbcPdLBqy3lWCFh8TYQK0ouEkL6YRl9FOCo5C8VWhp7dQ0pOOLmIpla3NlfJT7AAWj+u/dYZjO96rC5iIR2mXIJgoq6HGnw/PluiEDo96TPzfChYPoGZ+eexbF94O3y85hXlMCpezEWN03l5gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 921EF2009D10;
+	Thu, 19 Jun 2025 15:15:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 7C5323A085D; Thu, 19 Jun 2025 15:15:15 +0200 (CEST)
+Date: Thu, 19 Jun 2025 15:15:15 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Krzysztof Wilczy??ski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Fix secondary bus wait return value when D3cold
+ delay = 0
+Message-ID: <aFQNYwAuEG1t2iB4@wunner.de>
+References: <20250610115532.7591-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 19 Jun 2025 15:15:00 +0200
-Message-Id: <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
-In-Reply-To: <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610115532.7591-1-ilpo.jarvinen@linux.intel.com>
 
-On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
-> +/// A wrapper for kernel parameters.
-> +///
-> +/// This type is instantiated by the [`module!`] macro when module param=
-eters are
-> +/// defined. You should never need to instantiate this type directly.
-> +///
-> +/// Note: This type is `pub` because it is used by module crates to acce=
-ss
-> +/// parameter values.
-> +#[repr(transparent)]
-> +pub struct ModuleParamAccess<T> {
-> +    data: core::cell::UnsafeCell<T>,
-> +}
-> +
-> +// SAFETY: We only create shared references to the contents of this cont=
-ainer,
-> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
-> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
-> +
-> +impl<T> ModuleParamAccess<T> {
-> +    #[doc(hidden)]
-> +    pub const fn new(value: T) -> Self {
-> +        Self {
-> +            data: core::cell::UnsafeCell::new(value),
-> +        }
-> +    }
-> +
-> +    /// Get a shared reference to the parameter value.
-> +    // Note: When sysfs access to parameters are enabled, we have to pas=
-s in a
-> +    // held lock guard here.
-> +    pub fn get(&self) -> &T {
-> +        // SAFETY: As we only support read only parameters with no sysfs
-> +        // exposure, the kernel will not touch the parameter data after =
-module
-> +        // initialization.
+On Tue, Jun 10, 2025 at 02:55:31PM +0300, Ilpo Järvinen wrote:
+> If D3cold delay is zero, pci_bridge_wait_for_secondary_bus()
+> immediately returns 0 which is inconsistent with the rest of the
+> function.
+> 
+> When D3cold delay is 0, infer the return value like in the other cases.
+> With link_active_reporting, use Data Link Layer Link Active (PCIe spec
+> r6.2 sec. 7.5.3.8) and otherwise call pci_dev_wait() with zero delay.
 
-This should be a type invariant. But I'm having difficulty defining one
-that's actually correct: after parsing the parameter, this is written
-to, but when is that actually? Would we eventually execute other Rust
-code during that time? (for example when we allow custom parameter
-parsing)
+I guess Mika implemented it this way on purpose:
 
-This function also must never be `const` because of the following:
+If d3cold_delay is zero, the devices on the secondary bus are
+immediately available and there's no need to wait.  Note that
+pci_bus_max_d3cold_delay() goes below the default min_delay of 100
+only if pdev->d3cold_delay is lower.
 
-    module! {
-        // ...
-        params: {
-            my_param: i64 {
-                default: 0,
-                description: "",
-            },
-        },
-    }
+And pci_pm_init() initializes d3cold_delay to PCI_PM_D3COLD_WAIT
+(which is also 100).  So d3cold_delay has a different value only
+if it's changed in a quirk or similar.
 
-    static BAD: &'static i64 =3D module_parameters::my_param.get();
+pci_acpi_optimize_delay() actually sets d3cold_delay to zero under
+certain conditions, so your patch *will* cause a change of behavior.
 
-AFAIK, this static will be executed before loading module parameters and
-thus it makes writing to the parameter UB.
+Bottom line is, I think there's nothing to fix here.
 
-So maybe we should just use some sort of synchronization tool here...
+Thanks,
 
----
-Cheers,
-Benno
-
-> +        unsafe { &*self.data.get() }
-> +    }
-> +
-> +    /// Get a mutable pointer to the parameter value.
-> +    pub const fn as_mut_ptr(&self) -> *mut T {
-> +        self.data.get()
-> +    }
-> +}
+Lukas
