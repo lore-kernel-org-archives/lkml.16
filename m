@@ -1,48 +1,33 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4947C221725;
-	Thu, 19 Jun 2025 10:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1587E2222C5;
+	Thu, 19 Jun 2025 10:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750328427; cv=none; b=oskUDEaImYQWiotWEU9nmSITPT7nCVj5eW4Z82qtM+hHX88BGTzGMvLoHdyZIQ0hfCq13tzl7PAk+jvFfL8vAO5xY/9dPXXVTq0KWdaP3rF/9S4ibDWnugbCIa1H5ch+2sVERwf5lqh/krTjSTRljQpaQYOiDJwjiOGLMVm6lQ4=
+	t=1750328675; cv=none; b=LMQ5gCdDOx8SFdi6xCa+8eA/gU3vS9k8wnm0vVN1IVr5MNUttGUjOiZ5cL0qUALc7SpqOYMd6zuGi8b7B2azlyeLw1wGv5xF/uQ+WBKn8yH1rcddL7SAobsrQaUiqn6dTJnPZjMO/rUHHwfB3jfIotDrbV9cr6S7Z1mH8dCe9PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750328427; c=relaxed/simple;
-	bh=0DgFTAL6mz9/5mlr4eRewZuvWWgktHbE0dCpfKYuO5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cSCpnGDemti175qkTtzJ6qCImj0cbiWSwb0fGk4u+XVsqv+UZgJux4kxmMGlQ1UzJbQQb6ll3MXF0rwWXvzAQrPtTWI4Sa4J+n5eVLqYXCbkzJJvPaHq3+jAZEPjb9zj4bnhhAm0NKy6NLqtXS366ioQdZoL4OhWGbcz0yIvcXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HfGQfc7m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750328675; c=relaxed/simple;
+	bh=KBSsy/BlJxV1qwZnyo+C8SN0dRhnb7EWEpJVD7QDyMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jFZk9eJqye+ZCQVrdLNyq43pmesGuzB6leS9CNuV3at1LM/QhXn0hAkOM7Wf4HmhO6km1EGOZobcYhWPfCgp5s1dHaX5FOliRX11kPCaEEOp6Jbk+BIcy8OQfkimvjo9of6uYRmNEmksx0pCnKKZBpNcUOC0HbKYTZQ3n7vFL+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=em0J8tBU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HfGQfc7m"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J5wNNY002625;
-	Thu, 19 Jun 2025 10:20:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FIwbK4fsuTi2Ekg9nbMkJqw3FQ1RBeyBosd/m9t3QZI=; b=HfGQfc7m3b++WjVf
-	hHM5n6UFF51uDG5oD7ScfITiITd3h2hVtuOqOfehHJINXh/o3GmzeqgpQ4lh9aXW
-	v4697Dixc0TD74BtYoYsPUwJWrsA1Xz7afkFjcAK1DR464VdHebX+SKhhsLXfLUz
-	16M6AW2J3y10zWp1ugfiehCXWyjj/w0loqZdwiYm0KpeVm0CxJO0hwlH+ijYils4
-	rI9Nwpnk2j8wpnBKKrTZ/Gmi7njrAv+MjyeTlYma8QRIxaxGejbWPP0t/VDCc17W
-	Wd1U0ypCmXb2Y+BnuQbR0FYtNI6Zz6biYl6/vsZLvkE1BRqyMkfWNNEcBDHnGDCI
-	wliEjQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hd7p88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 10:20:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55JAKImX007362
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 10:20:18 GMT
-Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Jun
- 2025 03:20:11 -0700
-Message-ID: <5ed72663-da54-46a4-8f44-1ceda4a7d0d9@quicinc.com>
-Date: Thu, 19 Jun 2025 15:50:07 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em0J8tBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3FDC4CEEA;
+	Thu, 19 Jun 2025 10:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750328674;
+	bh=KBSsy/BlJxV1qwZnyo+C8SN0dRhnb7EWEpJVD7QDyMQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=em0J8tBUtud5bznU+lt1PYj2RC2d/Up1tUvdqsRTm6StLJDJDhCQJvvQwsS80WeeP
+	 py777ZWC3yHLV6AkkwHNiT4eH6CXZEWV9eMtp8xrGrGafGx/L+tW5igurnx1GYKEZZ
+	 z2aplgxELANRFosFbcNj17NXmJ8KBKx/4evwkKiTCTgd9DmGNytWC1CdCQHu0Z6oJo
+	 DU3P4HM/YP9+WZIOPewzNdOxDYIlM8aOirJC1r7RRoBuT4nJbKJipBroLPuIDID7uW
+	 /lj/T6nXnoWw++tSTCVn41QVVfpwARgByQ4UOz45IB8QYVFJ/juVh/kYYP6z4Tz+eb
+	 tfuOEziKsv0mA==
+Message-ID: <a122981d-ac9a-4c7e-a8a3-d50a3e613f0b@kernel.org>
+Date: Thu, 19 Jun 2025 12:24:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,95 +35,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: clock: qcom,sm8450-videocc: Add minItems
- property
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy
-	<vladimir.zapolskiy@linaro.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>
-References: <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-0-02e83aeba280@quicinc.com>
- <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-1-02e83aeba280@quicinc.com>
- <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
+Subject: Re: [PATCH net-next v4] page_pool: import Jesper's page_pool
+ benchmark
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Ilias Apalodimas
+ <ilias.apalodimas@linaro.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+ <toke@toke.dk>, Ignat Korchagin <ignat@cloudflare.com>
+References: <20250615205914.835368-1-almasrymina@google.com>
+ <c126182c-8f26-41e2-a20d-ceefc2ced886@kernel.org>
+ <CAHS8izPyzJvchqFNrRjY95D=41nya8Tmvx1eS9n0ijtHcUUETA@mail.gmail.com>
+ <f445633e-b72c-4b5d-bb18-acda1c1d4de6@kernel.org>
+ <CAHS8izOhNRNXyAgfuKW1xKb8PTernfer6tJfxG5FZmq7pePjwA@mail.gmail.com>
 Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDA4NyBTYWx0ZWRfX/trn2uyXOjTc
- 4IeRI9Cdlx3pU/HuRaOht29drWcPFBCK3gbknQh8urk0Ew7+NgFscoWuUZgq23RxvoLmVyEF4rU
- Ijlfq49ZrttjTaRu5vCEMweP5D2tpT2mMxXrrG5Qy6Sqs75rkkwjy6gXWcBeePwb02CNtPGoVF3
- SsJXdxJR/tmWVs5mHrq9Xv2kFp0Vo3r8ZvcGFrBXkor4JMPxWSW75vv9jcKncxnkpJvuWmaAzax
- zkMW6pHohJey/V4ZUXRhi8XD6BlHnksoLfcT3hlfiFkoNeJGiL5x50e2GN/j4k63Ca03G5WJ1Bm
- 0q51pPjJIIXY+/XLUrVq0AvTrgHkBQqKCFzQARbkrjaaEYlJ3EZhO/iGqHJZ0k9d5C4ETKyWFMZ
- QpJ7zNTTklqw49wvQzdHy9ZNc7YxW8lhE2AZkdCogktAh8dtYbiJUusHNTy28rRj5qpjiVEv
-X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=6853e462 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=cLWHS4kKuHwVDwOVLkgA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: GAUMW2cVFg-9ItYRwUoI_TkgEoHvKSCw
-X-Proofpoint-GUID: GAUMW2cVFg-9ItYRwUoI_TkgEoHvKSCw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_03,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506190087
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <CAHS8izOhNRNXyAgfuKW1xKb8PTernfer6tJfxG5FZmq7pePjwA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 6/18/2025 11:56 AM, Krzysztof Kozlowski wrote:
-> On 17/06/2025 21:07, Jagadeesh Kona wrote:
->> Add minItems as 1 for power-domains and required-opps properties
->> to allow this binding to be compatible with both single and multiple
->> power domains.
+On 19/06/2025 06.19, Mina Almasry wrote:
+> On Wed, Jun 18, 2025 at 5:46 AM Jesper Dangaard Brouer <hawk@kernel.org> wrote:
+>>>> Something is off with benchmark numbers compared to the OOT version.
+>>>>
+>>>
+>>> I assume you're comparing my results (my kernel config + my hardware +
+>>> upstream benchmark) with your results (your kernel config + your
+>>> hardware + OOT version). The problem may be in OOT vs upstream but it
+>>> may be just different code/config/hardware.
+>>
+>> True I used OOT version.
+>>
+>> Just applied this patch, but I get compile error. Because Makefile tries
+>> to get kernel headers (net/page_pool/helpers.h) from local Linux
+>> installation instead of git tree.  This need to be adjusted for patch,
+>> such that it builds with src-local/git tree provided headers.
+>>
 > 
-> This is your hardware, so you know how it works thus I expect here
-> arguments why this is correct from the hardware point of view. Without
-> this, it is impossible to judge whether this is a correct change.
+> I believe the fix to that is to do:
 > 
-> If I overlook this now, it will be used in discussions by other qcom
-> engineers, so unfortunately you see, you need to prepare perfect commits
-> now...
->
+> make KDIR=$(pwd) -C ./tools/testing/selftests/net/bench
+> 
 
-These clk controllers mainly require MMCX power domain to be enabled to access
-the clock registers. But to configure the cam & video PLLs in probe, an additional
-MXC power domain also needs to be enabled.
+Yes, this worked for me.
 
-Since the initial DTS changes only added MMCX power domain, this change is required
-to be backward compatible with older DTS and avoid ABI breakage as discussed in below
-thread.
+> I.e. the build files assume you're building the test to run it on the
+> current machine, to cross compile it for a different machine under
+> test, we need to pass explicit KDIR. I've kinda copy-pasted what other
+> TEST_GEN_MODS_DIR= makefiles do. In theory we could do something else
+> but I am guessing the way current TEST_GEN_MODS_DIR does it is the way
+> to go. Does it work for you if you do that?
 
-https://lore.kernel.org/all/cc737a89-77e0-43bc-8766-2c8e9cce1863@quicinc.com/#t
+Yes.
 
-Thanks,
-Jagadeesh
- 
-> Best regards,
-> Krzysztof
+> [...]
+>>>
+>>> Yeah, I actually just checked and I have CONFIG_DEBUG_NET on in my
+>>> build, and a lot of other debug configs are turned on.
+>>>
+>>
+>> The CONFIG_DEBUG_NET should be low overhead, so I don't expect this to
+>> be the root-cause.  Other CONFIG options are more likely the issue.
+>>
+> 
+> Thank you very much for the tips. Perf report showed the locking was
+> taking forever on my kernel... I had locking debug configs enabled in
+> my build... sorry... with those disabled, I get much more sane
+> results:
+> 
+> [  185.557293] bench_page_pool: time_bench_page_pool01_fast_path():
+> Cannot use page_pool fast-path
+> [  185.607873] bench_page_pool: Type:no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.177 ns (step:0) - (measurement period
+> time:0.041772642 sec time_interval:41772642) - (invoke count:10000000 tsc_interval:112778487)
+> [  185.627090] bench_page_pool: time_bench_page_pool02_ptr_ring():
+> Cannot use page_pool fast-path
+> [  185.826991] bench_page_pool: Type:no-softirq-page_pool02 Per elem: 51 cycles(tsc) 19.117 ns (step:0) - (measurement period
+> time:0.191178107 sec time_interval:191178107) - (invoke count:10000000 tsc_interval:516173586)
+> [  185.846380] bench_page_pool: time_bench_page_pool03_slow(): Cannot
+> use page_pool fast-path
+> [  186.479432] bench_page_pool: Type:no-softirq-page_pool03 Per elem: 168 cycles(tsc) 62.469 ns (step:0) - (measurement period
+> time:0.624690697 sec time_interval:624690697) - (invoke count:10000000 tsc_interval:1686656879)
+
+
+My results with this patch:
+
+$ sudo ./test_bench_page_pool.sh
+rmmod: ERROR: Module bench_page_pool is not currently loaded
+[268960.638885] bench_page_pool: Loaded
+[268960.684603] bench_page_pool: Type:for_loop Per elem: 1 cycles(tsc) 
+0.420 ns (step:0) - (measurement period time:0.042037752 sec 
+time_interval:42037752) - (invoke count:100000000 tsc_interval:151336355)
+[268961.203806] bench_page_pool: Type:atomic_inc Per elem: 18 
+cycles(tsc) 5.010 ns (step:0) - (measurement period time:0.501077936 sec 
+time_interval:501077936) - (invoke count:100000000 tsc_interval:1803899823)
+[268961.332771] bench_page_pool: Type:lock Per elem: 39 cycles(tsc) 
+11.041 ns (step:0) - (measurement period time:0.110410468 sec 
+time_interval:110410468) - (invoke count:10000000 tsc_interval:397481145)
+[268961.350718] bench_page_pool: time_bench_page_pool01_fast_path(): 
+Cannot use page_pool fast-path
+[268961.425335] bench_page_pool: Type:no-softirq-page_pool01 Per elem: 
+23 cycles(tsc) 6.571 ns (step:0) - (measurement period time:0.065719390 
+sec time_interval:65719390) - (invoke count:10000000 tsc_interval:236591475)
+[268961.444666] bench_page_pool: time_bench_page_pool02_ptr_ring(): 
+Cannot use page_pool fast-path
+[268961.622103] bench_page_pool: Type:no-softirq-page_pool02 Per elem: 
+60 cycles(tsc) 16.862 ns (step:0) - (measurement period time:0.168626201 
+sec time_interval:168626201) - (invoke count:10000000 
+tsc_interval:607060218)
+[268961.641608] bench_page_pool: time_bench_page_pool03_slow(): Cannot 
+use page_pool fast-path
+[268962.387479] bench_page_pool: Type:no-softirq-page_pool03 Per elem: 
+265 cycles(tsc) 73.739 ns (step:0) - (measurement period 
+time:0.737399722 sec time_interval:737399722) - (invoke count:10000000 
+tsc_interval:2654665224)
+
+Fast path results:
+no-softirq-page_pool01 Per elem: 23 cycles(tsc) 6.571 ns
+
+ptr_ring results:
+no-softirq-page_pool02 Per elem: 60 cycles(tsc) 16.862 ns
+
+slow path results:
+no-softirq-page_pool03 Per elem: 265 cycles(tsc) 73.739 ns
+
+
+> Does this alleviate your concern? Or do you still see an issue here?
+> There is still a delta between our results, on different
+> hardware/configs but results are in a sane range now.
+
+Now the results a sane and in range :-)
+
+--Jesper
+
+
