@@ -1,187 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3772BCF5;
-	Thu, 19 Jun 2025 16:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69384223702
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350050; cv=none; b=V8lHowKiEZUpMsPqGrC6D+ivTNfxk9Z7NDa12Xk8mQl04yXUq+GNd8kZvTsLUxvjPUm6gXQH6bv1ldEBv42GdN0FPyqDnjpNDC4UsJ1PHYx6HzKHDFodo2Y9POmaAuiJns3PnYwLhBnDp4jAypiAvbs9Gnee7N6VQdwGIVbdFZM=
+	t=1750350061; cv=none; b=QI+t65ccEPwEU4HVwV0PwRkbtIY6y18xoeh5hYtYo28FVOnY1+SbECnM+EPAVRuiQ995HB2J8lXC2fMc2i9haZs4aXEajmjxuvE/rA/dmMeyi96TxkOAWxoPmr+f0+FIw7nl+iUe3VH2AifL4T9osVLkswj+eKQSRNwqqrOtwwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350050; c=relaxed/simple;
-	bh=0cK3MBCollfYDzJaHmtoeXygpX004TDISddH5chzKRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hb9a1L8LkzzWVkmQCMOsbxkYF3lx07MQlKaQXN0r/VXjFWO0tWHuXUlK+gKsQdpn40Zz3LCpI3zh7YiQUik8Vyhz4NhnIkso0d1vFFGN8f+T84NWchFKwFgRB4eYK1OF9zX0cJMkHZdzELAU3bXPLOy4orJddS2S7nvNhe2SW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UZjTVYXA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750350061; c=relaxed/simple;
+	bh=kPDfthMkxPFZanpnkw6rTYC0wNDIoDrAboTw+WSvhVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ijvfrvyzFnR9GH5Hp3Wls9CVQW9WBb10CEAxs+TSYPXkYvuu1ldQJz5YZA/IfXs9xQaQBmkttss3QhyHSB+wBmxf48yyOeBIdPhsDvS0nCh6kKYvQ2pYTA0gQY4W+ur/ZsQQfrIF6lzOy/45aQRSisN33D1RuYP0Kw8DuEjAP4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o1oiWiCk; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UZjTVYXA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422F8C4CEEA;
-	Thu, 19 Jun 2025 16:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750350049;
-	bh=0cK3MBCollfYDzJaHmtoeXygpX004TDISddH5chzKRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UZjTVYXAvBhH5UnXSAzKI3yDcTnJVUcSZuFkUztSoNjHYoD6/nwAJKzmxNQw6Mrnt
-	 r4ZAQq/+/b18dMcjs4WiVT4KGC56tfvD1Kmy6cfTJm4YV+qyUPeo9NHcsKPmUVBpjJ
-	 3oEdCYuaKTOiUuuPOnV7WcxlYIEwZC9NQF8rPbHw=
-Date: Thu, 19 Jun 2025 18:20:46 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, linus.walleij@linaro.org, brgl@bgdev.pl,
-	andi.shyti@kernel.org, mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
-	jdelvare@suse.com, alexandre.belloni@bootlin.com,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <2025061910-skies-outgoing-89cc@gregkh>
-References: <20250612140041.GF381401@google.com>
- <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
- <20250612152313.GP381401@google.com>
- <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
- <20250613131133.GR381401@google.com>
- <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com>
- <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
- <20250619152814.GK795775@google.com>
- <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o1oiWiCk"
+Message-ID: <cdeb54e8-0624-42de-bac2-25b151c37872@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750350057;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkIvAdIcknw7YGYgEy5AX0Ny3blQrj6I2SRgxFMhm0A=;
+	b=o1oiWiCkmefm2k4pQhom1x13NN1mCxQEtwKqsY3LCg6R4zNo35wUI0HWjTuwvq/8KnittX
+	DeTTv5QzBnpQWEuCfN2xouE7HmqFtOhD6r12vrIIG4x2pDVOLkYtApUapK6vkLJaKzNzr5
+	tcf1+D5gXnfFpQwHkNsoRBOyjU+nZYc=
+Date: Thu, 19 Jun 2025 12:20:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/9] dt-bindings: spi: zynqmp-qspi: Add example dual
+ upper/lower bus
+To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+References: <20250616220054.3968946-1-sean.anderson@linux.dev>
+ <20250616220054.3968946-3-sean.anderson@linux.dev>
+ <2588bb7f-2a3a-4001-ab1b-6d9bd57b545b@baylibre.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <2588bb7f-2a3a-4001-ab1b-6d9bd57b545b@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 20, 2025 at 12:03:01AM +0800, Ming Yu wrote:
-> Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午11:28寫道：
-> >
-> > On Thu, 19 Jun 2025, Ming Yu wrote:
-> >
-> > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
-> > > >
-> > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > >
-> > > > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
-> > > > > >
-> > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > >
-> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
-> > > > > > > >
-> > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
-> > > > > > > >
-> > > > > > > > > Dear Lee,
-> > > > > > > > >
-> > > > > > > > > Thank you for reviewing,
-> > > > > > > > >
-> > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
-> > > > > > > > > >
-> > > > > > > > > ...
-> > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > > > > > > > > > > +
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
-> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
-> > > > > > > > > >
-> > > > > > > > > > Why have we gone back to this silly numbering scheme?
-> > > > > > > > > >
-> > > > > > > > > > What happened to using IDA in the child driver?
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > In a previous version, I tried to maintain a static IDA in each
-> > > > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
-> > > > > > > > > devices are bound to the same driver — in that case, the IDs are not
-> > > > > > > > > fixed and become unusable for my purpose.
-> > > > > > > >
-> > > > > > > > Not sure I understand.
-> > > > > > > >
-> > > > > > >
-> > > > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
-> > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
-> > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
-> > > > > > > However, when a second NCT6694 device is connected to the system, it
-> > > > > > > will receive IDs 16~31.
-> > > > > > > Because of this behavior, I switched back to using platform_device->id.
-> > > > > >
-> > > > > > Each of the devices will probe once.
-> > > > > >
-> > > > > > The first one will be given 0, the second will be given 1, etc.
-> > > > > >
-> > > > > > Why would you give multiple IDs to a single device bound to a driver?
-> > > > > >
-> > > > >
-> > > > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
-> > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
-> > > > > is independently addressable, has its own register region, and can
-> > > > > operate in isolation. The IDs are used to distinguish between these
-> > > > > instances.
-> > > > > For example, the GPIO driver will be probed 16 times, allocating 16
-> > > > > separate gpio_chip instances to control 8 GPIO lines each.
-> > > > >
-> > > > > If another device binds to this driver, it is expected to expose
-> > > > > peripherals with the same structure and behavior.
-> > > >
-> > > > I still don't see why having a per-device IDA wouldn't render each
-> > > > probed device with its own ID.  Just as you have above.
-> > > >
-> > >
-> > > For example, when the MFD driver and the I2C sub-driver are loaded,
-> > > connecting the first NCT6694 USB device to the system results in 6
-> > > nct6694-i2c platform devices being created and bound to the
-> > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
-> > >
-> > > However, when a second NCT6694 USB device is connected, its
-> > > corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
-> > > instead of 0 through 5 as I originally expected.
-> > >
-> > > If I've misunderstood something, please feel free to correct me. Thank you!
-> >
-> > In the code above you register 6 I2C devices.  Each device will be
-> > assigned a platform ID 0 through 5. The .probe() function in the I2C
-> > driver will be executed 6 times.  In each of those calls to .probe(),
-> > instead of pre-allocating a contiguous assignment of IDs here, you
-> > should be able to use IDA in .probe() to allocate those same device IDs
-> > 0 through 5.
-> >
-> > What am I missing here?
-> >
+On 6/18/25 14:27, David Lechner wrote:
+> On 6/16/25 5:00 PM, Sean Anderson wrote:
+>> Add an example of the spi-buses property showcasing how to have devices
+>> on both the upper and lower buses.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>> Changes in v2:
+>> - New
+>> 
+>>  .../bindings/spi/spi-zynqmp-qspi.yaml         | 22 ++++++++++++++++++-
+>>  1 file changed, 21 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+>> index 02cf1314367b..c6a57fbb9dcf 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+>> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
 > 
-> You're absolutely right in the scenario where a single NCT6694 device
-> is present. However, I’m wondering how we should handle the case where
-> a second or even third NCT6694 device is bound to the same MFD driver.
-> In that situation, the sub-drivers using a static IDA will continue
-> allocating increasing IDs, rather than restarting from 0 for each
-> device. How should this be handled?
+> 
+> In addition to changing the example, we could also extend the
+> spi-buses property for this controller since we know this controller
+> has 2 buses.
+> 
+>   properties:
+>     ...
+> 
 
-What is wrong with increasing ids?  The id value means nothing, they
-just have to be unique.
+OK, but this property is for the slaves not the master. I'm not sure what the right incantation is.
 
-thanks,
+>     spi-buses:
+>       description: 0 is the "lower" bus, 1 is the "upper" bus
+>       maxItems: 2
+>       items:
+>         enum: [0, 1]
+> 
+> Not sure what to do about the default though since as discussed elsewhere,
+> this controller needs the default bus number to be the CS number for
+> backwards compatibility rather than `default: [0]` as is specified in the
+> previous patch.
+> 
+> I suppose we could leave default out of the generic binding and leave it
+> up to each individual controller to decide how to handle that.
+> 
+>> @@ -69,7 +69,7 @@ examples:
+>>        #address-cells = <2>;
+>>        #size-cells = <2>;
+>>  
+>> -      qspi: spi@ff0f0000 {
+>> +      qspi: spi-controller@ff0f0000 {
+> 
+> It seems more common to have spi@ rather than spi-controller@.
+> Is there a push to change this in general?
 
-greg k-h
+iirc I got a warning when running dt_binding_check. I can re-test this...
+
+--Sean
