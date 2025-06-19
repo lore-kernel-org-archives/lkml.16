@@ -1,139 +1,179 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B2324BCE8;
-	Thu, 19 Jun 2025 13:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750338786; cv=pass; b=PEPQceI/wA3NlaBUZiAkmeJuil7mZhxDwl73oauzXVMXMcYWueu1CZ+hKaoG6vrBeWyhyqRNkjzf6yzy+xRAKR/x7J9gbU3rs1PmrRdoG6+cUUC2WO9nxiZOt6jkOA+FyJpKw/3lRN3H+IdvZY0kgb28UVuvuy6lOYBalnw+/y4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750338786; c=relaxed/simple;
-	bh=inbNtckscSaB8Lf7lHHxxSWdK9YOOANo5V2SBf41Zus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gYEL9qtlP1pMDT3HHwnKRAZ7s8AbJ07+Pf5syWP4Hzs39niqUmrYy2X1POtRsPn/xF/hn5k1R8uwyNaIDK/gq8Z3J1OLMZlmdGJBCtkYaRzYvFV+rnMHrJFFgEWTqgpMCvyga8S+cR9pZP4zxc8OCjcQQewpi9fsqlCGWfHy/Do=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=fvhT7kfY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB1A24677E;
+	Thu, 19 Jun 2025 13:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750338807; cv=none; b=MBYJekHbtsLpa7mAshWF4wNU+G5sbhrRuMFX4O9bUl2QpqHjw7gbnglKTO5T6ZwPXSE/9BuKwYxyhmkEkG5vrcaghOP5CQU6Roa4Rv8sZCRSZz+ktrRrgvo6nX8B366hbSawop363AhF86wEZwp61pU6dnKmjQWfyzUs+4cOAa8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750338807; c=relaxed/simple;
+	bh=bIK/6budNgvG72oKFlTYS9/dSDNFKzZHwI2wghWAvlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qB/aGxPK6jLLUZ760UG5G1cZ50rSHOlRDWmF4Cis7v3cNvv0hvs8JRZayo4JG2b7w4VivX8nk8EoIpCInDwUKmP7zHORxwLhbye618fSjmTZyJ7GJpw6aGXz0F91xVm20vRVrl5d9FbZhoGSl7owMTpDyITZjRwGTF4PCvBIb6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nN91qdO8; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="fvhT7kfY"
-ARC-Seal: i=1; a=rsa-sha256; t=1750338753; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GCDR6f+3a/UFNb4nvohWVlM9unBzKNbXba334HXQcyOIdNmWqbFHy+tak0MujKG2RfuavhlqH/eZsFcCcdd3JhrMDXTlOhwo8uhJ3Yti6o7BpyFLq7w+GtJNnTFy5lfnx5FfnyiHTTEirIg6juEfm7lXOsmjgidFReEJ415aSGI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750338753; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=h6AEfWB4cuhEQXOH4s1I3+qlS3WPRdeZ+P5xR1Kiktg=; 
-	b=gia973oc62L8OlhwNwnuQO6g/0HtyhkPxHJ2SuKqekurkVhxGmrhzPGqeBqtFVXfHr+rJ+RlKyQVXkCrjXIAkuBQ+1d1rsajLab3neKuKEgfIkhyhCKvdRVeS1irdtuNsVr/AlShHISj4fDvFA70zwKNfjeKIphea9v2wm4+C5s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750338753;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=h6AEfWB4cuhEQXOH4s1I3+qlS3WPRdeZ+P5xR1Kiktg=;
-	b=fvhT7kfYfzwkr9e+9GNSQ+7E9H1Z8Xi0xLaH82qHBbmghhdRGeAYLQu9WXKkL2Rd
-	1x2XkVxrOeZXAygUPhUqoKSNRUZkfg/K9rYq3FB4G2YzuhmUPFrkbBm7Pe/78C7vMlJ
-	c4eMz/eanN4/NrW7LiXNlB6egf49GAkdQp51pQus=
-Received: by mx.zohomail.com with SMTPS id 1750338750914761.7018386927865;
-	Thu, 19 Jun 2025 06:12:30 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id DE18F1805A8; Thu, 19 Jun 2025 15:12:26 +0200 (CEST)
-Date: Thu, 19 Jun 2025 15:12:26 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Andy Yan <andyshrk@163.com>
-Cc: neil.armstrong@linaro.org, conor+dt@kernel.org, 
-	quic_jesszhan@quicinc.com, krzk+dt@kernel.org, robh@kernel.org, tzimmermann@suse.de, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Make reset-gpio as
- optional for Raydium RM67200
-Message-ID: <7lfahwhcxvedizxpijst7nzseryw27r26rizqmyldsidm3wnwu@72mc42luxowx>
-References: <20250616070536.670519-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nN91qdO8"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6faf66905baso10671476d6.2;
+        Thu, 19 Jun 2025 06:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750338804; x=1750943604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iCV+HjjoDipCo7IVnf8NCCKQ43tzrdnmvfExbXDzQgk=;
+        b=nN91qdO8wgQcdQK21wY8SzBORkGGqFPGWyBimJfiYVi5c3761RrCPEb9c9H0GTnqxm
+         6ilrI58yHaq3NFuZEzclYysEDI+cKxS+vt1g+WgpI019r4kSxjcuUAZSqPXlzvrEr3OU
+         6GTV7dPmKVKZzVHfS/ejQjcNTJWIg31/SQLjv0i3eU921LpNys+6PeIcvw/glygPWR9C
+         fEoxtIWQZdPYM379B2mZMGKlpOFT6Z1sVz1LGvpaRqSPpocmWKS4d//2tHXht4MpbRjw
+         UUWcgmrEbGYyyTMz7VgsKUUtEnLxK3sNZMB2OSfWP208HBrADrtJTOSi1UmoUCasXPtg
+         hgrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750338804; x=1750943604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iCV+HjjoDipCo7IVnf8NCCKQ43tzrdnmvfExbXDzQgk=;
+        b=vL1lHbxqvfsjiLZHtPDG9GXQqBdHzDIoA5YWRevA6q6puFBHGjNcmDMa3F18g/Ltvi
+         /9nRyHjVUTbHIZ60L4ynjtm3D2zQ7ux6QfGESx/gxtvyntNZVcPCl64rSDPEsVTKcHzr
+         0H0Qay9h3vv3xmWMVSNQGgKh7z6u0GLbQqNLUoqott/3socKIf9pDr3BGzrsHKsb4qyJ
+         WdDhah/23SUrg4k0bAon4rmBiMIQjM9764R5GwTxqWjtQ5vHcMEhw/Z1FBrVfnX6Ha0/
+         MJBYtgX0XsnlJarRgzEzab2ILoVykbTZ6+SCmDyq7vZZnal9Z4CmzkOaBv8yQ/frEfKF
+         O6jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxTfD51H0O+4Vg9AsT+9T0mOp272Wldks3O5ZzmAB9YGVccNiSAeVk3yKOl6fDCQ0wAgmFUkQ8gNQBQzXQ@vger.kernel.org, AJvYcCWVN1R8Jz+hD2sCQMspypdwvTNIN+AeiPRPsNeyaN1IfY676hSFY7NppvoIel4GF5mC6JxS7GYpWGD9iUNcqC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfSuvqvOlL16wKHGECaCo506OSMouPEPb/fMRMk07PYWjb1TMh
+	9RWc7bCNMUZfmjpUrV7TTG5dfcG7rMoh2NCmqs8WNowag7aDzmwDYcO9
+X-Gm-Gg: ASbGncvVb0YoNP0QUSYVzZH2IU9CdjGJcPrZ9i/s5h1twLM8Er8zYY0In17PUVsyLPJ
+	x1AWjI6TTmvlK3dcneQ1mHnNKfFyIUKQRT7CIXX/QDUwIyC+1HK6hsNcXo9ZxUboDgA7G7CzM7j
+	cuXrF/bLAnomXAAUBeigdrPxsttls3TzjCUrYUHErE9/roppqx7CMZfuuVwyN3eoqMpApp3W2y6
+	gc2f443crXp5SRLYitpDUcEBiK+h3vrVk7F9SW9ruSFBUnQQ/fgPZK/eeeMb8l6WZT9+lBjNb7K
+	q1t1hwpi02qo13FgGVtOZVXwEYgE8N43Du7Q3w1s9cP/fDts6FI1KUHbpMBAvjo+TNcmbOQ8GHl
+	hU0lXg+xjgtd9be8dhNG/BzeeaRwPt/2gq9qwH7c=
+X-Google-Smtp-Source: AGHT+IExdStnCHjzsdA4GSW4nV9HKIjMFEKb/HwZY7IYhUqxOY72cf3bohKK4BFtw7VUJPX2LfVQOw==
+X-Received: by 2002:a05:6214:1314:b0:6fa:fe02:8219 with SMTP id 6a1803df08f44-6fb47627bd2mr390874206d6.7.1750338803858;
+        Thu, 19 Jun 2025 06:13:23 -0700 (PDT)
+Received: from fyre-x-redhat96-client-2.fyre.ibm.com ([129.41.87.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd014fb7e4sm7260276d6.31.2025.06.19.06.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 06:13:23 -0700 (PDT)
+From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+To: peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Subject: [PATCH v2] tpm: Replace scnprintf() with sysfs_emit() and sysfs_emit_at() in sysfs show functions
+Date: Thu, 19 Jun 2025 06:13:12 -0700
+Message-ID: <20250619131312.407615-1-chelsyratnawat2001@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dad4urbqwcejgf62"
-Content-Disposition: inline
-In-Reply-To: <20250616070536.670519-1-andyshrk@163.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/250.326.2
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
+Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
+sysfs show functions. These helpers are preferred in sysfs callbacks
+because they automatically handle buffer sizing (PAGE_SIZE) and
+improve safety and readability.
 
---dad4urbqwcejgf62
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Make reset-gpio as
- optional for Raydium RM67200
-MIME-Version: 1.0
+Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+---
+Changes in v2: 
+- Corrected sysfs_emit_at() usage to pass buf as first argument
 
-Hi,
+ drivers/char/tpm/tpm_ppi.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-On Mon, Jun 16, 2025 at 03:05:16PM +0800, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
->=20
-> Although the datasheet of the panel module describes that it has a
-> reset pin, in the actual hardware design, we often use an RC circuit
-> to control the reset, and rarely use GPIO to control the reset. This
-> is the way it is done on our numerous development boards (such as RK3568,
-> RK3576 EVB).
-> So make the reset-gpio optional.
->=20
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> ---
+diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+index bc7b1b4501b3..2c0d1859284d 100644
+--- a/drivers/char/tpm/tpm_ppi.c
++++ b/drivers/char/tpm/tpm_ppi.c
+@@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+ {
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
++	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+ }
+ 
+ static ssize_t tpm_show_ppi_request(struct device *dev,
+@@ -87,11 +87,11 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+ 		else {
+ 			req = obj->package.elements[1].integer.value;
+ 			if (tpm_ppi_req_has_parameter(req))
+-				size = scnprintf(buf, PAGE_SIZE,
++				size = sysfs_emit(buf,
+ 				    "%llu %llu\n", req,
+ 				    obj->package.elements[2].integer.value);
+ 			else
+-				size = scnprintf(buf, PAGE_SIZE,
++				size = sysfs_emit(buf,
+ 						"%llu\n", req);
+ 		}
+ 	} else if (obj->package.count == 2 &&
+@@ -100,7 +100,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+ 		if (obj->package.elements[0].integer.value)
+ 			size = -EFAULT;
+ 		else
+-			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
++			size = sysfs_emit(buf, "%llu\n",
+ 				 obj->package.elements[1].integer.value);
+ 	}
+ 
+@@ -211,9 +211,9 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
+ 	}
+ 
+ 	if (ret < ARRAY_SIZE(info) - 1)
+-		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
++		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
+ 	else
+-		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
++		status = sysfs_emit(buf, "%d: %s\n", ret,
+ 				   info[ARRAY_SIZE(info)-1]);
+ 	return status;
+ }
+@@ -255,22 +255,22 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
+ 	res = ret_obj[2].integer.value;
+ 	if (req) {
+ 		if (res == 0)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
++			status = sysfs_emit(buf, "%llu %s\n", req,
+ 					   "0: Success");
+ 		else if (res == 0xFFFFFFF0)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
++			status = sysfs_emit(buf, "%llu %s\n", req,
+ 					   "0xFFFFFFF0: User Abort");
+ 		else if (res == 0xFFFFFFF1)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
++			status = sysfs_emit(buf, "%llu %s\n", req,
+ 					   "0xFFFFFFF1: BIOS Failure");
+ 		else if (res >= 1 && res <= 0x00000FFF)
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
++			status = sysfs_emit(buf, "%llu %llu: %s\n",
+ 					   req, res, "Corresponding TPM error");
+ 		else
+-			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
++			status = sysfs_emit(buf, "%llu %llu: %s\n",
+ 					   req, res, "Error");
+ 	} else {
+-		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
++		status = sysfs_emit(buf, "%llu: %s\n",
+ 				   req, "No Recent Request");
+ 	}
+ 
+@@ -314,7 +314,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+ 		}
+ 
+ 		if (ret > 0 && ret < ARRAY_SIZE(info))
+-			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
++			str += sysfs_emit_at(buf, str - buf, "%d %d: %s\n",
+ 					 i, ret, info[ret]);
+ 	}
+ 
+-- 
+2.47.1
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-Greetings,
-
--- Sebastian
-
->=20
->  .../devicetree/bindings/display/panel/raydium,rm67200.yaml       | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67=
-200.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm67200.=
-yaml
-> index 54c9c0ef45ecc..97b7fbe05c077 100644
-> --- a/Documentation/devicetree/bindings/display/panel/raydium,rm67200.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67200.yaml
-> @@ -42,7 +42,6 @@ required:
->    - compatible
->    - port
->    - reg
-> -  - reset-gpios
-> =20
->  additionalProperties: false
-> =20
-> --=20
-> 2.43.0
->=20
-
---dad4urbqwcejgf62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhUDLYACgkQ2O7X88g7
-+pqBMA/2L1SNzxn1effxUKy7Jd45Rn59lJ3rd7BTpUKaBQnUOKBhcRaKob4C96Qv
-mPo+/WCApVgL83R3BkgkVUH644fhEc0aNp94zEIawiVo40ppMj/aWLgF4KWvqewa
-C9rlrPb+DId2V798rwGQqcSLKroOJSlv0WB8CI5c0pakegP8OB1GIpW8p/2JVTk+
-2IcryCh8nJrWkFRYRoyRIWlVDHMjcwk6x0e4tVhXfHjI955L1X5T0LAhE+oXffam
-z2/RtALqB6G8QKqabFM+MEEW1Yr62VwexJiurQeyHPw24sFkdYuLNz2N9paMiTK7
-Fk2RkN5nN6nYjwQ15rSrV1f0RXxvO4MCk/Yy/qkxRTaRnZk/gv+9SZ/53gsFSn8a
-4RWdfJbpa75xcvuxuPnxl2CSRYjbqqIV1lBwdwjX9MltZdWzk+Hoji+ny4iN3qJe
-73nUfzKl2Nc/KpEh2O7dmChhOCvrbbGhl41vH9RWXFNoO02E9Ew+VmlAmo8jH6pJ
-vQtQh44RQ1B/w70L18YeDwIC5HJo3KBmKqnTxC85MrUIaNv46dIYc3xg6kqg7XfF
-ifJNBCbe/zQZK3rwxma0p8dr1SNkx2Uzgi1ar/UJVP8P7LBuhPk7+KsQTViOxCaR
-04Y3M1sfFgQJ29O8RhX7olpZvVFC1GophcxyJ3kqqx/VmynwEA==
-=8c/e
------END PGP SIGNATURE-----
-
---dad4urbqwcejgf62--
