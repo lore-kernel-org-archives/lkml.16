@@ -1,261 +1,265 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2057.outbound.protection.outlook.com [40.107.236.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C683323536B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345899; cv=none; b=r2LovjwkKyfkxNsn0O95eDis8/jzLkSepBOUpKG40GJrOuvbXO8/3BZqGOg3rSThkNHuM1HbqVkDJG8NK6q7sLH/d1c0tdmkklzKUpKTqvscs8WY3fsdhOK6L8k3PI+6m5Ev8MpZzmveb+WXT/1pfuXklMQbei0V2X709rTaS1w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345899; c=relaxed/simple;
-	bh=8htbHuxeV073R1YJdk2jC84NXcVju+3iR3pYFD8tCCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bk3AbXL5uZPz+MNYz5b3Qg5x0iKh9SDRQtB6Xwf/E2SRpfJIwVDqwLb8fnCmMVfiRB/vcWzlcJ3G5HhEG3hRwQqbQb3a+fYxrahmzzbRCvKBPlaTnAY+pbaLs3Bpns8xah1uKnBR6x/x6HMCNc1lSQmwhAHYZdUOJpn576UDQ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=MiCTyE13; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B5F3085DB;
+	Thu, 19 Jun 2025 15:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750345930; cv=fail; b=GmLF48y0BCEVpYTRetgwSRBdNIccVzG1khGxu7mUh80e7JNo+hct2fJbXpA3T9E7i6teRoZZkuEw7U/RVPeIabotv6+1883p5ulOUbf7mptFgcfE3bgL22DHhOdsukvFGHL1u6b0zz1F/+kYuwL8NG8I26nMiLtv3Wmo6F5PwP0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750345930; c=relaxed/simple;
+	bh=/Iz5wMjqcFSnovMfpd8tPQUAnlIOG2DOchdM4vRnUyg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HkWOKqEGUHf7Lz4YefAg0TYJqk/UHhd0GDJ8Zq7qSDNkvwVE2mOTq2JXvsgBKr44nCsC5w4q9vS2XL0r85IDHLdOw9yqX96dbeTTCSnSbeIzATmwpeJpRIBNuyO/G5a7eW+hGwBRaC37jnqPGRjtyEEGKfk1dX+Adlh07U/6Pdo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GUazw5RI; arc=fail smtp.client-ip=40.107.236.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="MiCTyE13"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8731c3473c3so26261339f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1750345895; x=1750950695; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oFGwKffzZxxx+liHIJgaBF+mW0zmVCScmb0c46n6Kak=;
-        b=MiCTyE13EOfR3kzO4VHLNjqyM5osBbL1q3Tq/R85YdRLy4KENKLyKFk7xrSyGbXiXl
-         0zbq08VijbL0QBb7SBxekfmmReDD+iPWmkCI+bqA4g1mQu/lNQDbnHNzUk3COfCamDSp
-         4sj0daQnI101Onjd+Twe7RFmtRAARq4N99r0k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750345895; x=1750950695;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oFGwKffzZxxx+liHIJgaBF+mW0zmVCScmb0c46n6Kak=;
-        b=W8gdt+69fEK++pgbbYjbMkbEKjnOYlBW8IpoOlzlpnyvR9unf8bpmEPKtakEEoP9lA
-         nLSrdbdWP6irRaI/IcuY1CCOBj59V6Y6kvvvikFs1x9qglsnkykHnrjKdiddd8tAlnhD
-         RlUJq76NihfPqXGj5UmlAoxzOlBis2wxn28j3aw7v6WmeSTv+soiWWdMSxMmN/BZdJ+b
-         ULRsA6k8hrux/hyusVurLnYvS7h5jyr4dSkI8V1UIK97MlwpswIiCx8bHA/V10kPUgFY
-         cJaitLC0o5QEwl0xowdplKniXdjkIMxD/Fq1fna/r6gExKsFLZb9FGGzLBbPL0MaETG2
-         DQ8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVSG6Uw/JUFRbvm53m+MWyUFDIxDHQrL+AzLPGvqwdVEPClN1yhCNZ8MlAq5BvckLVsJEjNbcpH/NTt2ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd8gFud/Ww3kE2PKJHj/EZ2rR62LXYWRRGoJAmUsIOYubTTMHY
-	Ti+X5cN/EpQkplIhLRRarrZHNtffqZsaQySWaWlzTVTKUBkU5JVbO6iUp480B15dGA==
-X-Gm-Gg: ASbGncu5jk8W2+2DaYiiT0ABiVuoDgZtr9fl55rFFd0hAKe1XyxgOoO66SNskPPNjwy
-	kGc3R+NF0OuAXbGTg557r9+9pStXBW1xq+4qSkLNYD5HifXd7wzObhFNzIAI7uHzUZf4ggPsBDt
-	27GIeoswrHtBN91IFsVDkGj5bxjnlwM9ga6bAqL308kWryPjPp8NTGosysxuDgnfccyagTN78HJ
-	b6YGyzCZOx1PPytynVT8+KIaFJjTeOD8Yx2KRu4szuKY2ffuSi68NeJZDUaLUhlJ7v1gTUkQY0A
-	p2P8Jz0Akor8CFOuTtDwcgdgVJZorYOyQSVmq87u1c4bgvEttZcNgIfJ5ue9ZMlkMyQGRGsNBOr
-	KdQLkWfJSP1r1PqmRp9o4jjWjBAoRtkA=
-X-Google-Smtp-Source: AGHT+IF6bvglZ3cpBSripQco+ttcnZ5jzG2rPUkRsO79qncZB/5WB1V0utxb8yyQkNyJncd7lYe5LA==
-X-Received: by 2002:a05:6602:6424:b0:862:fe54:df4e with SMTP id ca18e2360f4ac-875ded5d849mr2848267139f.7.1750345894752;
-        Thu, 19 Jun 2025 08:11:34 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-875d5829e9dsm302704139f.37.2025.06.19.08.11.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 08:11:33 -0700 (PDT)
-Message-ID: <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org>
-Date: Thu, 19 Jun 2025 10:11:32 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GUazw5RI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TUYacAlQzLOXOog07xk2rwuCi+wdBBcsxQ9fxLIDw/S3nRIzlI6VgPbQzHdWt/JKYgwk11IY5vcuRoJnKBB0dUxBhvBqz4wUf8ixmXhENu/VUFUo0m5k/I9VREFI3s+v7gz8X42Bsu+YGnOP/zF2r/5MBp6wQ7Smje/nSMYLRhO5crzHu6l8MOHO3dK+rRZrNFWl7zkryyDxTksYPMxio7SymlnHiSn44pcsHKaixujGwWSo2Rz4AlSkxrTkbSnf+i8blikr21AqDblg4p82UnK208TrjAqHS65tg39E1WR9WjwW+BfRyRlpP0PGnpDuDc/O3YprtP/kBKyiWkG0JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nKrArgmXFOTLYTTyNhTeXov6XSTWvjvT9b7RYgx8wRU=;
+ b=HMQuNfu43iwzuJmWNMq/t1o8WZSj7H/xPfJt/JyASw9BgeBHTDsfBJlXG1k6BbfU+pL4DA1N4VfumUgFNYuvKf7NZqac0rYoNsmcLNga8NqwDibpm8+cMarPDIJD+0+Y6PzH45mZSzmQD5nn3yhodEeY+htPFUUlx7W1I7vKwimUEP0gN0G82lncpeJ6ixyoZaAZHJ8Sr5dyqTr2Q2gaK+vN3zpRTsVVEtAyxd5afWusdvRidzNSylL6MsZGONewyxXXIE/hsUbPq+arBhLsKxlrCXfAGXtXNehjYKdcUPVtwHUJ11272Fhm09Q07yZrQxiVTSKkD7+lUaYd4aMP4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nKrArgmXFOTLYTTyNhTeXov6XSTWvjvT9b7RYgx8wRU=;
+ b=GUazw5RIjG3kK3lkh3pOL5+Ys3Tn5s8QNJnZyypGlVKcDT/iWyBzQvxDTePEQyWCrnjpMiSGXH2zcxei/7u8HEuH5PpINbJxpF1j8Oc7zNtMHyTr4T82rQB2I63ktblU8EYN9EFGy5CdIjj0yXYeVi90TNgo4O+x2v5qwQlm48w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by IA1PR12MB9063.namprd12.prod.outlook.com (2603:10b6:208:3a9::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
+ 2025 15:12:05 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
+ 15:12:04 +0000
+Message-ID: <beb4ba2d-49e9-4945-b3c9-5af6927026fd@amd.com>
+Date: Thu, 19 Jun 2025 10:11:51 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] media: platform: amd: Add isp4 fw and hw interface
+To: "Du, Bin" <bin.du@amd.com>, mchehab@kernel.org, hverkuil@xs4all.nl,
+ laurent.pinchart+renesas@ideasonboard.com, bryan.odonoghue@linaro.org,
+ sakari.ailus@linux.intel.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alex Deucher <alexander.deucher@amd.com>
+Cc: pratap.nirujogi@amd.com, benjamin.chan@amd.com, king.li@amd.com,
+ gjorgji.rosikopulos@amd.com, Phil.Jawich@amd.com, Dominic.Antony@amd.com,
+ Svetoslav.Stoilov@amd.com,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <20250618091959.68293-1-Bin.Du@amd.com>
+ <20250618091959.68293-5-Bin.Du@amd.com>
+ <42bac0f3-159b-4192-b23f-658d7edc0d37@amd.com>
+ <6735fb02-24a0-42c1-86ab-605a783c4f47@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <6735fb02-24a0-42c1-86ab-605a783c4f47@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SCZP215CA0023.LAMP215.PROD.OUTLOOK.COM
+ (2603:10d6:300:54::17) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
- K1
-To: Vivian Wang <wangruikang@iscas.ac.cn>, Yixun Lan <dlan@gentoo.org>,
- Guodong Xu <guodong@riscstar.com>, Ze Huang <huangze@whut.edu.cn>,
- spacemit@lists.linux.dev
-Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB9063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3d689b95-2f4b-4950-e27e-08ddaf43a65b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZXY3cldpclNvdDMrMWR0cytoQ1IwNDdEcDA5bGtwY0psVHVtODR5ZWhxbFZN?=
+ =?utf-8?B?MEtYcUZ0TXY0U21uU2FPcURLRUtnMkUrOUNCR1crNlBoNmwxOE9uMjB4c3ZN?=
+ =?utf-8?B?TXRwNll4OTU4WDIwT1FDbnBpTEcrL0lnYVVucHZSeFR0VHViRDVTQ3o1ZE1Y?=
+ =?utf-8?B?RlhHaktGenlJekZPYjZ4ZDBJVVhoWSsydkQzbmJSelVXckZ0dTI3K1lpRkNC?=
+ =?utf-8?B?alcxZ0pQWFBxMHE4dU5KME5LRnBBQ1kxZ1V0NHRWOE1nU1AyQTdkRU9ocFlv?=
+ =?utf-8?B?VkM0TSt5OUtCQkx5ZkpqSWJhOHkxbW5Rbk41dzI1WDNqci9YZ1NsbjIxYmlT?=
+ =?utf-8?B?cHZRTjYrTG9mRWJ4RW02a0ROSExmTGtIWVVFbGdvZHEydkQ1anNNNHEyR0ps?=
+ =?utf-8?B?TldNRVdYcXJ6RWxwWWVIZm5uQWtLa0IzaU0wempTbzNta0RPK2tvaEE4NkVa?=
+ =?utf-8?B?azNneEpVSlRqY1RXS09jU3ZpUk5HbXlpS3dtbitOOGpSUWFsMTRpWGJhNlRO?=
+ =?utf-8?B?VVBVTzlleHBRNFlrUVlrN1gwVS9mbjRvUDlyUGNqcWNLZEMvdnNTRjZubUxm?=
+ =?utf-8?B?U3JLV0NPT1pJV1c5Wmc4dE1Nak9BSUhkdUFlWC9VQjJtUXpRUmM0MTNQaWl6?=
+ =?utf-8?B?cGlXcGw3V1pvYlhHdmxtL3FUUXQvUEtVTVhVeDNDZ0g3cFlieEpqL2JPVWtT?=
+ =?utf-8?B?RWZ3UjVpTWJnbVYzZkRLRkJIVnZXQ0RpdWswTlFoWk9ROEtwaVU2aGo5TE9a?=
+ =?utf-8?B?dGdxc0orV2VnbktuM2Y0WGF0REMxV3laVHFNNWdBMVdOZ3FibWM1b2lCMVl1?=
+ =?utf-8?B?d1I4eDVWWmg5U056NWp2RUswUW9JVzNTZVphaTNkeVdQSUh0aGhxbWw3KzJx?=
+ =?utf-8?B?MFhrb1VvM3dTN0FxcnZybTd3QlBrNHVoaHR6OVRxVEZtY1ljMjA4bktmTG5r?=
+ =?utf-8?B?REhZSkRrcHBUVlVKTUtOcmFtOFdCakw4cGhNL2tnZnlWeStnL3ErTW5aQ0RU?=
+ =?utf-8?B?L05nSDY3UFBZemRjYWc1cFVobThBLzFtSTZ1QjVaMDRnSG44TzhYSVRJRVNR?=
+ =?utf-8?B?Y3pnc1Z4QzVwZ0NEU1Q3bS9KcGVISk9IYzlEVEJMdFJxSzhLOXo2NUtPVlZL?=
+ =?utf-8?B?eVVCdm8vVWxFVVZ3cXcvZ2tPSEx6K0JhdGZHNHRsUEpaRWdxaHRVMm0xMjY5?=
+ =?utf-8?B?anBQRGc2TUJpUUVOVEpnTEhKYkc5Z3VHVllnR0JwV2Y3ZUUrakkvSmc1QkpL?=
+ =?utf-8?B?UkJZMXlaV1kvVHdWdkdIcElWWWNMMUYvZFZQSTZWeHFFWll5R2R3V01Lb29T?=
+ =?utf-8?B?YnN1MGxnUUF2VXdFTy94Ukw4VG43VFJScUJBOWEzZzVMRGpHY2xUdzlEalk3?=
+ =?utf-8?B?N1dxNHZreGFXZnl0ZXFadUtuWUtnYUpWM3kvQjU2ZmUrZ2V4ckNSZDR1bk5X?=
+ =?utf-8?B?TEJFUzc2c0VnbFhsWnpiZjVMaXR5VkUxdlpIUVQzbTBpUVNsbERvQXdYRW9B?=
+ =?utf-8?B?bXJKM28rTmJxa0gzOTU0aC9BbkVCayt0NTFoV0c4UythSXNYUXJVSWR2Sk5x?=
+ =?utf-8?B?TGRaeDRjNmRaaHZRcjZDaFQ5MzRzNU1OK1dhd01UbW03amc1aEhBVWd2WWNu?=
+ =?utf-8?B?OWZycFR5NHgzWVBvcmsvT2hNVEIzUE1TbURYdkdKUVNHQUljakxtbURuelUr?=
+ =?utf-8?B?Y2NRMHpJZDdOaCtldmFXdFQxckphYi9SbndaQmd0WlVEQXJnR1hqQkVFQW1R?=
+ =?utf-8?B?NTRDNGdVblpDRFBUY0xNM28ySjl3QmdMZUFIN1krQ3BtUmFBTmZCTG9BUVRH?=
+ =?utf-8?B?WHBRcnFTWVFWZ2FtMm9VYnVSTFdCaTNYOEJySVlDL0NBanpickZ6ZG42WnMx?=
+ =?utf-8?B?Q3BiSldqS3R1Vm1wTEgrejlNakRpQm9ESzVncEhlR0FFWDZ4ZWFsK1Y3VU1t?=
+ =?utf-8?B?dVc0NkFkeWtCRXNYSVgvNVBseDA1bTZOYlhGYVVPRFMvMmZYVmp0MlVJSVJh?=
+ =?utf-8?B?TGwwK2w3Q0xRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?amZBZGE0TktkSGFBOXhhLzlTcXF5dW9uaU1OMU1uZXNaWmNiNStiQ3BMbTE5?=
+ =?utf-8?B?R0hOTzFxQU92akVadGV1eHFEbFVYMGljc21Va2kyRGl1VjZPTlhrSHAweGRv?=
+ =?utf-8?B?dkVydm5uUFMxeFhLQzVXTXZzaDBZVVJqWnV5bDl4UHhPSzZueHpka1F3ZU9y?=
+ =?utf-8?B?cWluMkprcWx2WjhWTDhydmZ5WjNCYlN5dFFhSmN2QlJFd1c4NmViUHBDb2NS?=
+ =?utf-8?B?TFBSVzA2cEs0ZDYrZk4rWlJ3MDR5SkI5Y081Ky9VekNiWnpIZ0trVG5sYm5X?=
+ =?utf-8?B?MEJBRkJxUVM3aUVBZytuUkszZVVORldUWWlFdTlQU0RJWkRrM1crVVBHT3lK?=
+ =?utf-8?B?Zy9rR2dwbFkwa1lMWERpeUhkaDY4ODlReXJaQXlXUnBLanREK3lvejlWSGFt?=
+ =?utf-8?B?aEJHRlhtQ3Jpb0t0QTJ2RkxXWVVYQ2psdWFEZm80N1Avc3ZGaDArS3VOalF3?=
+ =?utf-8?B?Z2x0bWtST1ZqY0pRUGsxWmp5eEwyZXppVTVtbmlOQ0N0aWV1ZzAvWTZWRXRK?=
+ =?utf-8?B?ODJPZFN1cGluL0JIN1hQbzlsUjZGemlKRWJiSGMwQXE1WnQwdVBTdVFBMjlp?=
+ =?utf-8?B?TEF6OGE4TGg2SUM1NDEybFkwU3NXN1orYmMrYUlOMHl4Q1dtNTVkcFEyZmFv?=
+ =?utf-8?B?OERlejVFRDJUcGpYVEd4aFhWM3FjV2l5Qk0zTVJOeUV0NGlITm95MGl3eW5S?=
+ =?utf-8?B?eDBjWVkwazVtL2x6YlRkbTJBQzl4SDRTcGZDWHkxSnQ4R08zZ0p4cmRFbEgr?=
+ =?utf-8?B?c3lBcXMwR0dNbTU1cG16QzRSMkhQWDcwaGowb0QySGxuam1kYXJDQTFkbEhG?=
+ =?utf-8?B?Qm12RlQxRzBhemVlZ1RqM2tJM3UxbjMrMGF2cUU0UENueE0ycThoTVN4SUpV?=
+ =?utf-8?B?L0RIdTJ5ZURpNjV5WGtHd3NXeDRHTUVyRjRHM2ZsZllpMXRZbUFpUk5PQWxi?=
+ =?utf-8?B?bGZ5UmpFaytuNFJEOE1XK1BvRml3SFBLZWk0RkxWQ01tWkpMRk5IOE9NYXhQ?=
+ =?utf-8?B?UFJqdWFSV2paanYrVm8vaFo1N090Zk5JcUZZRGoxTlRzRjVaZi9kVU9kTytX?=
+ =?utf-8?B?Y2thaUtWQUwyU1AxWXIyLzIwM0JqNWJXZHFiNnFFcFhUeXkxUW1uelFlMzkv?=
+ =?utf-8?B?MndOVUZQbEFHN3dIdGI3THFOTURFVXdiM3gzVjRzbVNJY1k2Z0lIWmlHQXFC?=
+ =?utf-8?B?YXBieDkrSSs1bkNRdlRJZHB3TkFtanJZYXNDaTZUeTBINm1LQ2h6YmZRRGhH?=
+ =?utf-8?B?YXdXYWRXSTZXVXpzU3VldXp1YjJUZFRRSnUxUjBLYjhQQ0xURWxMalQ5UU95?=
+ =?utf-8?B?TkN1STMwTGlPaEliZC9VelAxWWV3Vi9wVCtTcWxEd1ViRXdITG5sY1NxVGhw?=
+ =?utf-8?B?Zmcybm12QmVPOWdQcWZqNk9ZdDdRM241dWh6U2N5YTVhOS81eVNadEhIU2l4?=
+ =?utf-8?B?RzVGbTNsSlE2VmJuSzdlOTQ5eGdweDQrK1Z2YVJPblBMbnhUSFJGTEFYTFlZ?=
+ =?utf-8?B?R0Ewb0gyQTBJd3VOQkgzOHpnQjdQakFDWUE0VktJU2tOcGM4bE43VEFlYUMy?=
+ =?utf-8?B?elVIb1Y5bUdMS21HZlJoZkdNejFudFRuRWNMQjdaRXRMVUFMa2xIVlExdTRH?=
+ =?utf-8?B?TWE3QTRBSmFjYThGM3FGdkFjZlFyZWhzWTdQamdza2dna0RGM01jQTlxMVpD?=
+ =?utf-8?B?ZHJXeHVReGNIWEVEZXZOQ3JCSGpMckpvbzNkTHFVUGlVNzRwbnJLOWU3b2FL?=
+ =?utf-8?B?NTV6Vm1MS29xOEdWRzFjNWEvMmJhSStOT1g5SmczaTJESEVCODZWeGZ5NWZV?=
+ =?utf-8?B?c0VSYlZKU0d1YmNya1dveHNHeEFiUDRBblRGZFNySXEwV3NKTkFWVVRwUHQ1?=
+ =?utf-8?B?M20xZ1FVRXNzS2xITE5EK1gxRFd0MktUd3RKeUZJMzZPekw2Nm1KemMwU04v?=
+ =?utf-8?B?S09TUXA0N1lOY0dCb09jeld5OEFRRFpMaTBXSTBUbjRTOWxWdkVpcWJkLzU2?=
+ =?utf-8?B?SHN1eEdQVEtVaWFmNFlzODgrWk5SQjJwZUFMKzFjR1MweThscE1uOURHSFV0?=
+ =?utf-8?B?d1F6VFk0LzNSMmlWTENLOVM4KzRpL1k4bC9nOGpta0VKKzZubHpGRnRGWjJK?=
+ =?utf-8?Q?Wms2MYv/YHBj9F5w3mIWwECLZ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d689b95-2f4b-4950-e27e-08ddaf43a65b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:12:04.7413
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ckPvLBQ+sf6aZPJngTDXgXGa3kxP6okX8tamEDM2Q61sFP0mztT2A6hnKH/McIBWbjfo0/tTvq+pYc7g+2WklQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9063
 
-On 6/17/25 12:21 AM, Vivian Wang wrote:
-> The SpacemiT K1 has various static translations of DMA accesses. Add
-> these as simple-bus nodes. Devices actually using these translation will
-> be added in later patches.
+On 6/19/2025 4:58 AM, Du, Bin wrote:
+> Thanks Mario, will fix in the next version and pls see some of my comments
 > 
-> The bus names are assigned according to consensus with SpacemiT [1].
+> On 6/19/2025 12:17 AM, Mario Limonciello wrote:
+>> +Alex
+>> +amd-gfx
+>>
+>> On 6/18/2025 4:19 AM, Bin Du wrote:
+>>> ISP firmware controls ISP HW pipeline using dedicated embedded processor
+>>> called ccpu.
+>>> The communication between ISP FW and driver is using commands and
+>>> response messages sent through the ring buffer. Command buffers support
+>>> either global setting that is not specific to the steam and support 
+>>> stream
+>>> specific parameters. Response buffers contains ISP FW notification
+>>> information such as frame buffer done and command done. IRQ is used for
+>>> receiving response buffer from ISP firmware, which is handled in the 
+>>> main
+>>> isp4 media device. ISP ccpu is booted up through the firmware loading
+>>> helper function prior to stream start.
+>>> Memory used for command buffer and response buffer needs to be allocated
+>>> from amdgpu buffer manager because isp4 is a child device of amdgpu.
+>>>
+>>> Signed-off-by: Bin Du <Bin.Du@amd.com>
+>>> Signed-off-by: Svetoslav Stoilov <Svetoslav.Stoilov@amd.com>
+>>> ---
+>>>   drivers/media/platform/amd/isp4/Makefile      |   12 +
+>>>   .../platform/amd/isp4/isp4_fw_cmd_resp.h      |  318 +++++
+>>>   .../media/platform/amd/isp4/isp4_interface.c  | 1052 +++++++++++++++++
+>>>   .../media/platform/amd/isp4/isp4_interface.h  |  164 +++
+>>>   4 files changed, 1546 insertions(+)
+>>>   create mode 100644 drivers/media/platform/amd/isp4/isp4_fw_cmd_resp.h
+>>>   create mode 100644 drivers/media/platform/amd/isp4/isp4_interface.c
+>>>   create mode 100644 drivers/media/platform/amd/isp4/isp4_interface.h
+>>>
+>>> diff --git a/drivers/media/platform/amd/isp4/Makefile b/drivers/ 
+>>> media/ platform/amd/isp4/Makefile
+>>> index 0e36201fbb30..c0166f954516 100644
+>>> --- a/drivers/media/platform/amd/isp4/Makefile
+>>> +++ b/drivers/media/platform/amd/isp4/Makefile
+>>> @@ -5,10 +5,22 @@
+>>>   obj-$(CONFIG_AMD_ISP4) += amd_capture.o
+>>>   amd_capture-objs := isp4.o    \
+>>>               isp4_phy.o \
+>>> +            isp4_interface.o \
+>>>               isp4_hw.o    \
+>>>   ccflags-y += -I$(srctree)/drivers/media/platform/amd/isp4
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/include
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/amdgpu
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/pm/inc
+>>> +ccflags-y += -I$(srctree)/include/drm
+>>>   ccflags-y += -I$(srctree)/include
+>>> +ccflags-y += -I$(srctree)/include/uapi/drm
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/acp/include
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/include
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/modules/inc
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/dc
+>>> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/amdgpu_dm
+>>
+>> IMO this feels like a hack and also fragile to be sharing so much 
+>> across subsystems.
+>>
+>> Either there should be a kernel wide include/ header that can be used 
+>> by both or there should be a helper exported to get just the data that 
+>> is needed.
 > 
-> [1] https://lore.kernel.org/all/CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com/
-
-So what you include here very closely matches what Guodong
-said in the message above.  Yours differs from his proposal
-and that makes it hard to compare them.  I have a few comments
-on that below.
-
-> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
-> ---
-> This is my concrete proposal for representing DMA translations for
-> SpacemiT K1.
-
-It's worth acknowledging that this is derived from what Guodong
-proposed (it's not "your" proposal in that respect).  That said,
-yours is a more complete and "formal" RFP than what he wrote.
-
-> For context, memory on the SpacemiT K1 is split into two chunks:
+> Yes, will refine to remove unnecessary ones in the next version, 
+> actually isp driver needs to access function amdgpu_bo_create_kernel 
+> which is exported by amdgpu and delared in amdgpu_object.h, because 
+> amdgpu_object.h also includes other amd gpu header files, so have to add 
+> these include path to avoid compilation error.
+> It'll be greate if there is kernel wide include, any suggestion for this?
 > 
-> - 0x0000_0000 to 0x8000_0000: First 2 GiB of memory
-> - 0x1_0000_0000 above: Rest of memory
-> 
-> DMA-capable devices on the K1 all have access to the lower 2G of memory
-> through an identity mapping. However, for the upper region of memory,
-> each device falls under one of six different mappings. The mappings are
-> provided in this patch as simple-bus nodes that device nodes should be
-> added to.
-> 
-> This patch is an RFC because it is not meant to be applied, or at least,
-> not certainly meant to be applied. Instead, this is an attempt to come
-> to a consensus on how these bus nodes should look like.
 
-I think the above is what Krzysztof might not have seen.  Perhaps
-it could have been made more clear--maybe in the "main" description
-section (above the ---) or even the subject line.
+Ah yeah I do see exports as of 
+https://git.kernel.org/torvalds/c/ebbe34edc0a90
 
-> More specifically, I propose that the process proceeds as follows:
-> 
-> - Firstly, relevant parties agree on these bus nodes given here.
-> - After that, each time the first user of a bus appears, the series
->    should include a patch to add the bus required for that driver.
-> - If a driver being submitted uses the same bus as another one that has
->    been submitted but hasn't yet landed, it can depend on the bus patch
->    from that previous series.
+So based on what is in the tree right now what you did "makes sense", 
+but I don't think it's "correct".  From another driver like the ISP 
+driver I feel that the code should really just be something like:
 
-Getting agreement is good, but otherwise this is basically
-the process Guodong was suggesting, right?
+#include <linux/amdgpu/isp.h>
 
-> For conventions regarding coding style, I propose that:
-> 
-> - #address-cells and #size-cells are 2 for consistency
-> - These bus nodes are put at the end of /soc, inside /soc
-> - These bus nodes are sorted alphabetically, not in vendor's order
-> - Devices are added into *-bus nodes directly, not appended towards the
->    end with a label reference
+I see a few ways forward.
 
-I do like that you're trying to be more complete and explicit
-on what you think needs agreement on.
+1) A new set of helpers created for amdgpu that can take
+opaque" data arguments (maybe the mfd device?) and return back a pointer 
+to the new buffer.  Describe those new helpers in that isp.h header.
 
-> The K1 DMA translations are *not* interconnects, since they do not
-> provide any configuration capabilities.
-> 
-> These bus nodes names and properties are provided compliant with
-> "simple-bus" bindings, and should pass "make dtbs_check".
-> 
-> Remaining questions:
-> 
-> - Should storage-bus exist? Or should drivers under it simply specify
->    32-bit DMA?
+2) Manage the lifecycle of the buffers in sw_init/sw_fini of the ISP in 
+amdgpu.  Store pointers to them for access in the mfd device, and let 
+the ISP driver take references.  This only works if you don't need new 
+buffers after the driver is loaded.
 
-Explicitly saying storage devices have one-to-one mapping
-seems informative, to me.
+I personally prefer option 2 if it is feasible.
 
-> ---
->   arch/riscv/boot/dts/spacemit/k1.dtsi | 53 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 53 insertions(+)
-
-The short summary of what differs between your proposal
-and what Guodong said is:
-- You sort nodes alphabetically, Guodong did not
-- You dropped the unit address
-- You dropped the comments he had, which indicated which
-   devices "belonged" to each mapping
-- You added a compatible property to each ("simple-bus")
-- You added an explicit (empty) ranges property to each
-- You add #address-cells and #size-cells properties, both 2
-- Your dma-ranges properties are identical to Guodong's,
-   for all nodes
-
-My comments:
-- I agree with you that a unit address doesn't really make
-   sense, because there is no meaningful ordering
-- Sorting alphabetically also makes sense to me
-- I think the comments about devices associated with each
-   mapping were informative
-
-I think Yixun should manage getting consensus on this
-(i.e., he should sign off on the RFP somehow).
-
-					-Alex
-
-> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> index c0f8c5fca975d73b6ea6886da13fcf55289cb16c..efefed21b9fa1ab9c6ac3d24cd0cca8958b85184 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> @@ -562,5 +562,58 @@ sec_uart1: serial@f0612000 {
->   			reg-io-width = <4>;
->   			status = "reserved"; /* for TEE usage */
->   		};
-> +
-> +		camera-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> +				     <0x0 0x80000000 0x1 0x00000000 0x1 0x80000000>;
-> +		};
-> +
-> +		dma-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> +				     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
-> +		};
-> +
-> +		multimedia-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> +				     <0x0 0x80000000 0x1 0x00000000 0x3 0x80000000>;
-> +		};
-> +
-> +		network-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> +				     <0x0 0x80000000 0x1 0x00000000 0x0 0x80000000>;
-> +		};
-> +
-> +		pcie-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> +				     <0x0 0xb8000000 0x1 0x38000000 0x3 0x48000000>;
-> +		};
-> +
-> +		storage-bus {
-> +			compatible = "simple-bus";
-> +			ranges;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +		};
->   	};
->   };
-> 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
-> 
-> Best regards,
-
+Alex or others might have some other ideas too.
