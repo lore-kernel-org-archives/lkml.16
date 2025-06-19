@@ -1,61 +1,135 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339C823BCF1;
-	Thu, 19 Jun 2025 04:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F068F3085D4
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750306404; cv=none; b=fQ9BethgjQw6lboOGIMILu6dGnXclnBLZG+1mwWXD3k66NRN/QVD1u529YDiHBWVAknYYJ26CQIJeFfLvfuw/uHsyjMzV3ZbqYuPYrD6QzReXIgLu39UxnAXSwYbuF/WQHkHR9U5wdDP2yw8Y3Ic1ytveEmm995pq5uerZcccko=
+	t=1750306613; cv=none; b=BKWZeaEv8OtuJjgdALkboAvcqLnPKrmWJNG6VKnyDM434YXMpg6vRt6eGv2ZxcXdQHPxH0lapxKz9k6yOMBXxOdL5sIgKUlf5kC2h6Y+faKPryGWF1jU89OixicKwgLVzpNvu7jIJMUO3ckWanImkdJwiUrnf/bDQJEPPEkSrfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750306404; c=relaxed/simple;
-	bh=VnLJTt5TZn/1JqPrr3RK4iKqWM+0/IVu7HJoZcruKak=;
+	s=arc-20240116; t=1750306613; c=relaxed/simple;
+	bh=eBiZtIBM2AzoVqqwcF2dshVCH1BG/6Y83/VbqTV149c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F9NKe7j71hYRha1HzUK6rdv+57iVWz6dbwp/zpMC6vMcC1WuDWhk7+veJftGUowqpRyIaH48nO+TEf81UCNRpsF2T7O1gnvluhyK9cb8fepjd1GCnAdwL0RVsjM8FAp9YcUmjTM4Pe5+thjOJzx2TA34HHl6P2W9BE1U/reyDXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=EfB0CD/5; arc=none smtp.client-ip=220.197.32.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuwIuJG1DeXo7CMw/U/d1GpetGAR8HYeO42NKN3rgvP3TgMgKBeKZwNf7lXBNa4B79coWACNUT2a0QZ48Tq4fM7DoJqE2bFe1OnYqHRmkzb5cK1x1EmYnNWdMGoy69Bkih8yV9lrSj1aS5EkeoQYvbGcDFXwOK++tnOI6B4lbS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XWBhB/oC; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="EfB0CD/5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=7mH7c45eSfL+b4MqS/CU4uB/SYh3Jq2So6ySOqYFG+4=;
-	b=EfB0CD/5usDHBil636l93NHjNoxGqOGsvbJ1iKPna7nEh8WxcJO9xotH3n5i54
-	C0FWUjv3btrdYM2t1a0pyrKp1VjzHVIVnQv5JNsnPLyjo78ToApYoBSbrf047v2t
-	dX2q2JTYGXp+IjX4X1Amrdr8Wf27N59b2GblJ3rsipBPI=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDnl4A1jlNoj0T8AA--.46928S3;
-	Thu, 19 Jun 2025 12:12:39 +0800 (CST)
-Date: Thu, 19 Jun 2025 12:12:36 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux@ew.tq-group.com,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] arm64: dts: tqma8mnql: Add EASRC support
-Message-ID: <aFOONKOejLcYOyLQ@dragon>
-References: <20250520120820.890252-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XWBhB/oC"
+Date: Thu, 19 Jun 2025 00:16:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750306608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jLkDzHDT1DpdO9SvwjUVcY89+HsbQoXPc++y60o2jdw=;
+	b=XWBhB/oCx8Xq0M2997Dmmqy/lPiH9P1wDkClwlGxOwFsMgqwkQLi99Thsv4IpmyKlYbrTQ
+	fZJBNz2w17VkoUi1rJYs6jaX65Paze7olS8Q8U84di4faPvxawpvP5lPBkWToxVRnkR5rB
+	JSmOkjEMkzRGmpU9yMVWqHhGdxt5rlY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [External] Re: [PATCH] mm: rename the oldflags and parameter in
+ memalloc_flags_*()
+Message-ID: <ig5wtmtownn5sebhqeugleb7ns5nf6wgmrbbzgev7henhujhsm@chsmrubxszrq>
+References: <20250618070328.2192849-1-hezhongkun.hzk@bytedance.com>
+ <20250618164334.54616cb2d70a1ee3c1f28a81@linux-foundation.org>
+ <p6nr56qg7vx72qvaalrvntzstyrkt7z3fytfux5nd4wlvef462@znymqow5qjsr>
+ <CACSyD1P5ksZHHRZwCr48gDVv9Wt9hXfX9PcXqrd5MpDRJkdzHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250520120820.890252-1-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:Mc8vCgDnl4A1jlNoj0T8AA--.46928S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUwhF4DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNRefBWhTjjdxrwAA3k
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACSyD1P5ksZHHRZwCr48gDVv9Wt9hXfX9PcXqrd5MpDRJkdzHA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 20, 2025 at 02:08:18PM +0200, Alexander Stein wrote:
-> Enable EASRC support in tlv320aic32x4 sound card.
+On Thu, Jun 19, 2025 at 11:17:58AM +0800, Zhongkun He wrote:
+> On Thu, Jun 19, 2025 at 8:07 AM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
+> >
+> > On Wed, Jun 18, 2025 at 04:43:34PM -0700, Andrew Morton wrote:
+> > > On Wed, 18 Jun 2025 15:03:28 +0800 Zhongkun He <hezhongkun.hzk@bytedance.com> wrote:
+> > >
+> > > > The variable name oldflags can indeed be misleading, because
+> > > > it does not store the complete original value of flags.
+> > > > Instead, it records which flags from the given set are not
+> > > > currently set. So rename it.
+> > > >
+> > >
+> > > Your email client is mangling the patches in strange ways.  Please send
+> > > yourself a patch, figure out why it didn't apply?
+> > >
+> > > > --- a/include/linux/sched/mm.h
+> > > > +++ b/include/linux/sched/mm.h
+> > > > @@ -322,21 +322,21 @@ static inline void might_alloc(gfp_t gfp_mask)
+> > > >  }
+> > > >
+> > > >  /**
+> > > > - * memalloc_flags_save - Add a PF_* flag to current->flags, save old value
+> > > > + * memalloc_flags_save - Add a PF_* flag to current->flags, return saved flags mask
+> > > >   *
+> > > >   * This allows PF_* flags to be conveniently added, irrespective of current
+> > > >   * value, and then the old version restored with memalloc_flags_restore().
+> > > >   */
+> > > > -static inline unsigned memalloc_flags_save(unsigned flags)
+> > > > +static inline unsigned int memalloc_flags_save(unsigned int flags_mask)
+> > > >  {
+> > > > -   unsigned oldflags = ~current->flags & flags;
+> > > > -   current->flags |= flags;
+> > > > -   return oldflags;
+> > > > +   unsigned int saved_flags_mask = ~current->flags & flags_mask;
+> > > > +
+> > > > +   current->flags |= flags_mask;
+> > > > +   return saved_flags_mask;
+> > > >  }
+> > > >
+> > > > -static inline void memalloc_flags_restore(unsigned flags)
+> > > > +static inline void memalloc_flags_restore(unsigned int flags_mask)
+> > > >  {
+> > > > -   current->flags &= ~flags;
+> > > > +   current->flags &= ~flags_mask;
+> > > >  }
+> > >
+> > > I guess so.  Maybe.  A bit.  Kent, what do you think?
+> >
+> > Eesh, seems like pointless verbosity to me. Maybe don't change it if it
+> > doesn't need to be changed?
 > 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Hi Kent, thanks for your feedback.
+> How about this version,  only change the 'old' to 'saved'.
+> The function does not return the old current->flags value. Instead,
+> it returns the subset of flags that were not previously set in current->flags,
+> so they can later be cleared by memalloc_flags_restore(). The name savedflags
+> makes this behavior clearer and avoids confusion.
 
-Applied both, thanks!
+Why change it at all? The returned flags parameter is opaque state that
+should only be used by memalloc_flags_restore(), it's not something the
+caller should be looking at.
 
+> 
+>  /**
+> - * memalloc_flags_save - Add a PF_* flag to current->flags, save old value
+> + * memalloc_flags_save - Add a PF_* flag to current->flags, return saved flags
+>   *
+>   * This allows PF_* flags to be conveniently added, irrespective of current
+>   * value, and then the old version restored with memalloc_flags_restore().
+>   */
+>  static inline unsigned memalloc_flags_save(unsigned flags)
+>  {
+> -       unsigned oldflags = ~current->flags & flags;
+> +       unsigned savedflags = ~current->flags & flags;
+>         current->flags |= flags;
+> -       return oldflags;
+> +       return savedflags;
+>  }
+> 
+> Thanks,
+> Zhongkun
