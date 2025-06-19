@@ -1,116 +1,146 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA29023DEAD
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134AF22B598;
+	Thu, 19 Jun 2025 12:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336740; cv=none; b=auOtyzeo1JRkQs8mo32cyWX5ovVLbyANivbDnphQJTTZzgTcL4X4/kSxN2W+zgpyvBbuDdMclie8aQHSKyUK9sK9ZODbml5H3Uu8QGI3gDXdnKCxhOrLQKCqzqEdLsdrzIqN5UtViOuT7p70HKAlGA5OQFmDYtMh6SYVGsAfgig=
+	t=1750336899; cv=none; b=OAMXAVKP2lZYApprf7lgzNDnGsd9w0J09eCtY68MyUXYWiGj/IFFKJjrkmWhzidC1tTNZHbqw9kZ9osiTlywG7PPAQr5GWN6is7AR3s1PSDcoAHuwaPSsLQZNxncmmCLDCXQ1RS74wHGlxiHJoUdbHfco8Mo4NZg92cfh2AMSPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336740; c=relaxed/simple;
-	bh=p61Y1aPHGtDaXB5Oc6uLAlyBZTf58hYj6UieJYQTPeQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uIWKk8E8TEWThgSWp7ktpdlkuObdldwUtqfVLE9BSuPtHNIuav1Dlv6mbcuLa29RubLcKy3z9xsHbHaMsF8hTsP17pbIitPVU13GiMgFhjvBZUGLAMcW/h+zqIJeyCx8D6y/nsbw1KsOA4dC3gB87DBOaZ0bIomTzD67fSZNrHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NgAMT/PC; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1750336899; c=relaxed/simple;
+	bh=1hCQouYpGPLYCGUMm7RuelDeleW9YnV3vKdJx2C+Kp4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OSAMFpjPNB9muQUqHrnIbk+domN3tGat67OiSBd1bUjp/PYqhgqcIIW5YNCG6/kSZmjilpnHNpRpWr2FMa0QdwGNh+aywoo04n2UE6X/tra1NsZUOQoETTdks1jK0DORXLZpfrbUCroBk9zylWWWI4b1QQQZh+eqniq0cjbdJqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLHnHJyn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NgAMT/PC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=3RjQ8vjMHty4FIlfcvQC7sTXic9WNUusceBrZsCmd2A=;
-	t=1750336738; x=1751546338; b=NgAMT/PCq6BJikVl9jTDHPbtBHBNN5bO/FSl1BwqHcS5Yby
-	u6MvcFUyKpxxy8WlbiNX8bY7LdfqIKxxfQdXR2EsdbPWMRxa6SbHpDEI/EFx2BxmXjL6uV/PlZvmE
-	sE9/1NeIDl3WlBptseaQ+FBp4faYivLGX/aLo122M+Hkh7YUGStu1f5eKRFEDNndbMg9F2K56U4kr
-	VUnRlOYbC3llTWdltyn5YfA2mhhcp1SruXXnVTfjKBuX32mm5q6xY31UADRFVr0eG4bg/nJRIAXWi
-	RXCKtJ6ke8wpDt3ef+dc3qEcganYJKd7EbxbB4hqSpTW8fdxVJDVsZqoBj72jQjA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1uSEXY-000000014Eu-2Jtm;
-	Thu, 19 Jun 2025 14:38:48 +0200
-Message-ID: <2231a777eef3cdb339fe98af4618f958ed658df6.camel@sipsolutions.net>
-Subject: Re: [PATCH v9 07/13] um: nommu: configure fs register on host
- syscall invocation
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Hajime Tazaki <thehajime@gmail.com>
-Cc: linux-um@lists.infradead.org, ricarkol@google.com,
- Liam.Howlett@oracle.com, 	linux-kernel@vger.kernel.org
-Date: Thu, 19 Jun 2025 14:38:47 +0200
-In-Reply-To: <m28qln6huv.wl-thehajime@gmail.com> (sfid-20250619_142254_743735_97A005BF)
-References: <cover.1750294482.git.thehajime@gmail.com>
-		<2863dab9b3f9d6536b73623398a3f39e4ae70957.1750294482.git.thehajime@gmail.com>
-		<412c514334ac14a992cab3e7b86170b96d60be1c.camel@sipsolutions.net>
-	 <m28qln6huv.wl-thehajime@gmail.com> (sfid-20250619_142254_743735_97A005BF)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLHnHJyn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964CFC4CEEA;
+	Thu, 19 Jun 2025 12:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750336898;
+	bh=1hCQouYpGPLYCGUMm7RuelDeleW9YnV3vKdJx2C+Kp4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=nLHnHJynvcZXruHY3un4m4i2As2KlH6rY6KC8PYMnX1fEcgB+rPqmwnSySo3EvVhz
+	 ROlIppyV4loCa/UndXtBvKc8MScOktM7T5F8ZWP3eG5jf2ucATD6xydNPqVlGCi7Jv
+	 E/Bxg9lBk9CsYc3gvaENUZFTSgVHq3fyQf9okpht7Ee8BarbzSFTMNRJyuwCbj7Lg/
+	 8PWv/erct9iJdRBH/OxI606fGGQR4wbOv/iLAin5528cdfzcWqLyuKvgsdUmkN6IjV
+	 e1hOXEq68MNmJOL/sRFRaISAde2pxY5yM4grcBwxFs9eljlWa8d/Exxc3OL8aEaxt1
+	 VoB/UC7FHM9lg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 1/6] rust: str: add radix prefixed integer parsing
+ functions
+In-Reply-To: <DAQI4RPK2Y7T.3TQ1G3IMZCNK4@kernel.org> (Benno Lossin's message
+	of "Thu, 19 Jun 2025 14:17:26 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
+	<bbRxeBHCiFQl9UTC1hFQYdzkdAIV5HcRTuFf9ucPUEZZ-uJmaHAZXfd8Tk-k9vzROgFsCyNhGBBCn5J_HnbUSA==@protonmail.internalid>
+	<DAPY5HF9HGXC.FCEKAMLPFY1H@kernel.org> <871prg7zoh.fsf@kernel.org>
+	<a8_DtAcJxescV_Khg6IkI9hOSEk_ZKpOWfnn_KzuZg9E9COLyO6awlSWnJra20Kvqxcf3Ph7w9VlKUt9dKRrCQ==@protonmail.internalid>
+	<DAQI4RPK2Y7T.3TQ1G3IMZCNK4@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 19 Jun 2025 14:41:26 +0200
+Message-ID: <87jz577vk9.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain
 
-On Thu, 2025-06-19 at 21:22 +0900, Hajime Tazaki wrote:
->=20
-> On Thu, 19 Jun 2025 19:40:49 +0900,
-> Benjamin Berg wrote:
-> >=20
-> > On Thu, 2025-06-19 at 10:04 +0900, Hajime Tazaki wrote:
-> > > As userspace on UML/!MMU also need to configure %fs register when
-> > > it is
-> > > running to correctly access thread structure, host syscalls
-> > > implemented
-> > > in os-Linux drivers may be puzzled when they are called.=C2=A0 Thus i=
-t
-> > > has to
-> > > configure %fs register via arch_prctl(SET_FS) on every host
-> > > syscalls.
-> >=20
-> > Really, I still think that we should "just" get rid of libc
-> > entirely
-> > inside UML. That would avoid so many weird/potential issues =E2=80=A6
->=20
-> I'm not sure if I understand your point.
->=20
-> Q1) what do you mean by 'get rid of libc entirely' here ?
-> =C2=A0=C2=A0=C2=A0 do you mean the following code block adds the dependen=
-cy ?
-> + int os_arch_prctl(int pid, int option, unsigned long *arg2)
-> + {
-> +=C2=A0	return syscall(SYS_arch_prctl, option, arg2);
-> + }
->=20
-> I guess this can be replaced with inline assembly instead of using
-> libc's one.=C2=A0 but this is the code under os-Linux, which I thought
-> we're
-> allowed to use the host code ?
->=20
-> Q2) "That would avoid so many weird/potential issues =E2=80=A6"
-> I'm new to this;=C2=A0 I'm wondering what kind of issues did you see ?
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Oh, I am just being annoyed by libc in general in UM. It isn't specific
-to this patchset.
+> On Thu Jun 19, 2025 at 1:12 PM CEST, Andreas Hindborg wrote:
+>> I'm having a difficult time parsing. Are you suggesting that we guard
+>> against implementations of `TryInto<u64>` that misbehave?
+>
+> Let me try a different explanation:
+>
+> The safety requirement for implementing the `FromStrRadix`:
+>
+>     /// The member functions of this trait must be implemented according to
+>     /// their documentation.
+>
+> Together with the functions of the trait:
+>
+>     /// Parse `src` to [`Self`] using radix `radix`.
+>     fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crate::error::Error>;
+>
+>     /// Return the absolute value of [`Self::MIN`].
+>     fn abs_min() -> u64;
+>
+>     /// Perform bitwise 2's complement on `self`.
+>     ///
+>     /// Note: This function does not make sense for unsigned integers.
+>     fn complement(self) -> Self;
+>
+> Doesn't make sense. What does it mean to return the "absolute value of
+> [`Self::MIN`]"? We don't have "absolute value" defined for an arbitrary
+> type. Similarly for `complement` and `from_str_radix`, what does "Parse
+> `src` to [`Self`] using radex `radix`" mean? It's not well-defined.
+>
+> You use this safety requirement in the parsing branch for negative
+> numbers (the `unsafe` call at the bottom):
+>
+>     [b'-', rest @ ..] => {
+>         let (radix, digits) = strip_radix(rest.as_ref());
+>         // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
+>         // So if we want to parse negative numbers as positive and
+>         // later multiply by -1, we have to parse into a larger
+>         // integer. We choose `u64` as sufficiently large.
+>         //
+>         // NOTE: 128 bit integers are not available on all
+>         // platforms, hence the choice of 64 bits.
+>         let val =
+>             u64::from_str_radix(core::str::from_utf8(digits).map_err(|_| EINVAL)?, radix)
+>                 .map_err(|_| EINVAL)?;
+>
+>         if val > Self::abs_min() {
+>             return Err(EINVAL);
+>         }
+>
+>         if val == Self::abs_min() {
+>             return Ok(Self::MIN);
+>         }
+>
+>         // SAFETY: We checked that `val` will fit in `Self` above.
+>         let val: Self = unsafe { val.try_into().unwrap_unchecked() };
+>
+>         Ok(val.complement())
+>     }
+>
+> But you don't mention that the check is valid due to the safety
+> requirements of implementing `FromStrRadix`. But even if you did, that
+> wouldn't mean anything as I explained above.
+>
+> So let's instead move all of this negation & u64 conversion logic into
+> the `FromStrRadix` trait. Then it can be safe & the `ParseInt::from_str`
+> function doesn't use `unsafe` (there still will be `unsafe` in the
+> macro, but that is fine, as it's more local and knows the concrete
+> types).
+>
 
-An example is that we need to keep malloc() working for libc. Which I
-would think is kind of weird. Or we had issues because libc turned on
-rseq and that was inherited into userspace, causing random crashes and
-such.
+Alright. I guess my safety comments are slightly hand-wavy. Thanks for
+the suggestion, I'll apply that for next spin.
 
-> > Doesn't change the fact that FS/GS needs to be restored when doing
-> > thread switches and such. Though one might be able to do it
-> > entirely
-> > within arch_switch_to then.
->=20
-> I believe this is already done in arch_switch_to.=C2=A0 This particular
-> patch does the control to the host context.
+Best regards,
+Andreas Hindborg
 
-OK, need to look at that again a bit. I haven't really wrapped my mind
-around how everything fits together, so I probably got some stuff
-wrong.
 
-Benjamin
