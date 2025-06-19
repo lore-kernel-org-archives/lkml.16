@@ -1,269 +1,298 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A1F22F767
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F292192F4;
+	Thu, 19 Jun 2025 12:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335437; cv=none; b=aqwGnDc9HuOEnmyHa7Dmc4mJyp0351bQiRlN56h2/+d+m8plpjxkHOLMizAirS5+ppJW7iQ/ADRleCG0/D8+u6j8rwBaXjsgVKRnxkowiLM3MQY+7xkMPDSkZeO9Y8B8eNcAjHpfir/ei1lLHWgImkj24HeIjC+oPBPmZsSMXBU=
+	t=1750335453; cv=none; b=RvOLz2lQCXYCkSIVraKbHfrZF3xp/xxXbhN3eZLwvAfoK8SpG2Hw6Qvn+waavBjFkurKqWs08VaCwCRsBD1CbfTad6RpatMap8J9YCQ7XxqrPBhplI09Bo3ImDGTIHblZFpEqZp49SMFFqwD7nI16UPmRi2PcQ8vS6BKSOCECuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335437; c=relaxed/simple;
-	bh=z1DQk6oJwrSJnLk2A1hLLXFtdvMdkvHImQ7JXj50+zQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ngbHFbSDaV2j1DYS0x3jGveysq37yI9NIDO95vnHWv+/4xWFh0WW9onzPlyTAOWwj8DPIiVzbr8hgySaDQyLdXoAYKcA8QJ/xsfkeVTGEZARc5FQH/FrYNVgL0vgusjKg4z1pKJw8UBTijxZGEoAAgin3PEu2BhtxpZPbfyZi0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=obM4JTqU; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750335453; c=relaxed/simple;
+	bh=/EhQ8omFBROqKVC50GMU4FURNn1d6ko5wL+1nqnYQ/M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=BCh6dmHdkgqSzhoaxyRF9FncE+bGTEaXf/w8zFfx1WQtINyX1IW8OnIEKpoaVI93FZbPhD4/E9Y4I8wruoh4ei8jfMfI1ZtfyJSn0xWpQsYjg8fghIFz4zb3R86hSMGnn/H4t4m7oOG+HT+hnY6X1VoxRLutsqCEMlQ/ufp/93k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt23KkSV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obM4JTqU"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e812fc35985so644910276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750335434; x=1750940234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D89Sqq1aKT2bW7ku1RLQISnLqAu/xDyFbJYC9lO2rJs=;
-        b=obM4JTqUGROyw5xmCeQUlcx4VTLRjOzJvRcbHUJGinkBTaJWse6kHmQl2SaSLjK99K
-         kjp9Im5YgTrszjvOJtxWj7HHrm5a9bwoVOuCZlDY8OQjZxa9DycSNtKh4758BuawYxWL
-         QtdWggCMvhVnwKeQDhP7S+ezr9LScbXuVb7XDh7TumNkvPBIH9KG9QZdl5tIi4mwBWEm
-         xl+ZwXDdYuWjDCs18GGw6sEPoQbAhWG2Jo1NRKitkrrNB5d+iyMVn18h8MDl2Eagkbo7
-         kwCDSZDC+YZiHB7qrx3HfQIBgxewiwre0RI1u4B2O4Dtve2UJ03U8hwZauYHC4yQIztO
-         iwdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750335434; x=1750940234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D89Sqq1aKT2bW7ku1RLQISnLqAu/xDyFbJYC9lO2rJs=;
-        b=q70pELzMPqx9IrV5tRV9YJSJnsMvK6AUS9sIpHPrXRNKdWhNIDqO7tfvsPMtSl5jwt
-         YimCXmn/7apr9ngaPy9rA1qPvNAZ0RRvDTPvC0mYTC8GNPmD9ZhRYZ2SYjkulowSMEMZ
-         Em8hcn+LOooTZl8SlObWJx42BQer4YSVNbEl/KBv9SX3m5ZScg4PeO8dKoG/ICBH15pX
-         h9+2B7vJuM6/rTH5iNIlJJQPK80pSzfF95/bZjbnEEspgfcaHjaUzD+zBfA7ouxN608l
-         syrOQtC2z7uGelU8lUYpDkXo6h/L/sPKGhtzSh4QoIMAbJah0D7mF4LS/WCxTGCMgrRu
-         SGHg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4kb0riLnhT7Z02LL+oZHGkU4yAjq0QgtlCcn88BsK0+/EazDfJS2fN2Goo1kXuUc9XbQ0CY9+wpe5oIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytQpnM89hNAnOmMZ6aUQjxv1/xahMAiKdOBvtt0E/i9wFeQ6F3
-	1PJDIJk9UwAgLjQUbCsVDaeu1NAg3Y+qaGrJpoi+UQtPHTZjIqTQYRc0XKBCTkVzjk4A7EYoyzr
-	Se+YVF4KSZl8XRCF0MlsJfGfFb1vDMf1XX75diETagg==
-X-Gm-Gg: ASbGncveotFWHVJMyAbsV5xHLRyOv2fmVtQ39jPTPfXKgrtzyWaLrTu4sWJirIpuapy
-	kMDb/+dqnBjqeIZ2K/YhM9HnGvFNqZhFC6UZR4rmwiUhnJdBrSECjb+15j7+NjBZl2NB0n0h/QO
-	u2hqmcN0lXzBAeUAmew2avzFh+IlZzuSUF3qhzaMjuosYP
-X-Google-Smtp-Source: AGHT+IE4V5K8d8X5JOwKwiCPaHkkAEfI1J8krPds4RSlcpu6FkdIpRV3UcQbKTgBA8xdyC0Mx0IiF2Kw9aGBA8VLdVc=
-X-Received: by 2002:a05:6902:2803:b0:e81:81f8:9edb with SMTP id
- 3f1490d57ef6-e822ad90167mr27310929276.36.1750335433995; Thu, 19 Jun 2025
- 05:17:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt23KkSV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3BFC4CEEA;
+	Thu, 19 Jun 2025 12:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750335453;
+	bh=/EhQ8omFBROqKVC50GMU4FURNn1d6ko5wL+1nqnYQ/M=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Dt23KkSV/9nHUWBbZqwwyVHWh5vfzY2McoksD6/jvAFf8HOocPocB7/dfzUrQVgel
+	 ZemKsW50cEAZstXzAavFEDMstS6soxv1e8fkkJMRzul607c2EBu08d4txfOx0O0EB/
+	 AooFWNZ12H3I/vK52mAGdfwwKkqLydGSWDa6RWrda1XiKWc7B1DSc9pPVu8wbQMoJP
+	 Vwr6UH3X3C4EvD6rCrCOVazVGrwwNETMEy/98VgQ/ITDLHzmjAS354iqM0i3mOyD76
+	 EDRaofER9LmRZ/fxUHhT3MfrkTijxbPM5BeXoYiKEDBfQ2BADT0H1cXD7ZsARCIk13
+	 zU1axqgl5vR/g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250616135357.3929441-1-claudiu.beznea.uj@bp.renesas.com>
- <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
- <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
- <04a6c53c-8383-4496-b502-149bd261cfdb@tuxon.dev> <CAJZ5v0gZ3GZ79j2gbhVSjTN+RmYjEUJQjGMSoLsEkUYtjWTngQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gZ3GZ79j2gbhVSjTN+RmYjEUJQjGMSoLsEkUYtjWTngQ@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 19 Jun 2025 14:16:37 +0200
-X-Gm-Features: AX0GCFvleBhZN8Bt4F-qt9DE5tPBIhacUI6gPwf5mtr4W_0PgkdoYzojhC0-B9Q
-Message-ID: <CAPDyKFo5=_eiWBf8fpv6kG8qhM6K3DxnqhttgHHgSTP6CM8LuA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] PM: domains: Detach on device_unbind_cleanup()
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, dakr@kernel.org, 
-	len.brown@intel.com, pavel@kernel.org, jic23@kernel.org, 
-	daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com, 
-	geert@linux-m68k.org, linux-iio@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, linux-i2c <linux-i2c@vger.kernel.org>, 
-	"andi.shyti@kernel.org" <andi.shyti@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 19 Jun 2025 14:17:26 +0200
+Message-Id: <DAQI4RPK2Y7T.3TQ1G3IMZCNK4@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
+ Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
+ Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
+ "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
+ <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
+ Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 1/6] rust: str: add radix prefixed integer parsing
+ functions
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
+ <bbRxeBHCiFQl9UTC1hFQYdzkdAIV5HcRTuFf9ucPUEZZ-uJmaHAZXfd8Tk-k9vzROgFsCyNhGBBCn5J_HnbUSA==@protonmail.internalid> <DAPY5HF9HGXC.FCEKAMLPFY1H@kernel.org> <871prg7zoh.fsf@kernel.org>
+In-Reply-To: <871prg7zoh.fsf@kernel.org>
 
-On Tue, 17 Jun 2025 at 20:54, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Jun 17, 2025 at 4:41=E2=80=AFPM Claudiu Beznea <claudiu.beznea@tu=
-xon.dev> wrote:
-> >
-> > Hi, Rafael,
-> >
-> > On 16.06.2025 20:14, Rafael J. Wysocki wrote:
-> > > On Mon, Jun 16, 2025 at 3:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon=
-.dev> wrote:
-> > >>
-> > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>
-> > >> The dev_pm_domain_attach() function is typically used in bus code al=
-ongside
-> > >> dev_pm_domain_detach(), often following patterns like:
-> > >>
-> > >> static int bus_probe(struct device *_dev)
-> > >> {
-> > >>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > >>     struct bus_device *dev =3D to_bus_device(_dev);
-> > >>     int ret;
-> > >>
-> > >>     // ...
-> > >>
-> > >>     ret =3D dev_pm_domain_attach(_dev, true);
-> > >>     if (ret)
-> > >>         return ret;
-> > >>
-> > >>     if (drv->probe)
-> > >>         ret =3D drv->probe(dev);
-> > >>
-> > >>     // ...
-> > >> }
-> > >>
-> > >> static void bus_remove(struct device *_dev)
-> > >> {
-> > >>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > >>     struct bus_device *dev =3D to_bus_device(_dev);
-> > >>
-> > >>     if (drv->remove)
-> > >>         drv->remove(dev);
-> > >>     dev_pm_domain_detach(_dev);
-> > >> }
-> > >>
-> > >> When the driver's probe function uses devres-managed resources that =
-depend
-> > >> on the power domain state, those resources are released later during
-> > >> device_unbind_cleanup().
-> > >>
-> > >> Releasing devres-managed resources that depend on the power domain s=
-tate
-> > >> after detaching the device from its PM domain can cause failures.
-> > >>
-> > >> For example, if the driver uses devm_pm_runtime_enable() in its prob=
-e
-> > >> function, and the device's clocks are managed by the PM domain, then
-> > >> during removal the runtime PM is disabled in device_unbind_cleanup()=
- after
-> > >> the clocks have been removed from the PM domain. It may happen that =
-the
-> > >> devm_pm_runtime_enable() action causes the device to be runtime-resu=
-med.
-> > >> If the driver specific runtime PM APIs access registers directly, th=
-is
-> > >> will lead to accessing device registers without clocks being enabled=
-.
-> > >> Similar issues may occur with other devres actions that access devic=
-e
-> > >> registers.
-> > >>
-> > >> Add detach_power_off member to struct dev_pm_info, to be used later =
-in
-> > >> device_unbind_cleanup() as the power_off argument for
-> > >> dev_pm_domain_detach(). This is a preparatory step toward removing
-> > >> dev_pm_domain_detach() calls from bus remove functions. Since the cu=
-rrent
-> > >> PM domain detach functions (genpd_dev_pm_detach() and acpi_dev_pm_de=
-tach())
-> > >> already set dev->pm_domain =3D NULL, there should be no issues with =
-bus
-> > >> drivers that still call dev_pm_domain_detach() in their remove funct=
-ions.
-> > >>
-> > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >> ---
-> > >>
-> > >> Changes in v4:
-> > >> - save dev->power.detach_power_off in dev_pm_domain_attach() and use
-> > >>   it in device_unbind_cleanup() when detaching
-> > >> - adjusted patch description
-> > >>
-> > >> Changes in v3:
-> > >> - dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
-> > >>   and use a single function devm_pm_domain_detach()
-> > >>
-> > >> Changes in v2:
-> > >> - none; this patch is new
-> > >>
-> > >>  drivers/base/dd.c           | 2 ++
-> > >>  drivers/base/power/common.c | 3 +++
-> > >>  include/linux/pm.h          | 1 +
-> > >>  3 files changed, 6 insertions(+)
-> > >>
-> > >> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > >> index b526e0e0f52d..13ab98e033ea 100644
-> > >> --- a/drivers/base/dd.c
-> > >> +++ b/drivers/base/dd.c
-> > >> @@ -25,6 +25,7 @@
-> > >>  #include <linux/kthread.h>
-> > >>  #include <linux/wait.h>
-> > >>  #include <linux/async.h>
-> > >> +#include <linux/pm_domain.h>
-> > >>  #include <linux/pm_runtime.h>
-> > >>  #include <linux/pinctrl/devinfo.h>
-> > >>  #include <linux/slab.h>
-> > >> @@ -552,6 +553,7 @@ static void device_unbind_cleanup(struct device =
-*dev)
-> > >>         dev->dma_range_map =3D NULL;
-> > >>         device_set_driver(dev, NULL);
-> > >>         dev_set_drvdata(dev, NULL);
-> > >> +       dev_pm_domain_detach(dev, dev->power.detach_power_off);
-> > >>         if (dev->pm_domain && dev->pm_domain->dismiss)
-> > >>                 dev->pm_domain->dismiss(dev);
-> > >>         pm_runtime_reinit(dev);
-> > >> diff --git a/drivers/base/power/common.c b/drivers/base/power/common=
-.c
-> > >> index 781968a128ff..a8f302ed27a5 100644
-> > >> --- a/drivers/base/power/common.c
-> > >> +++ b/drivers/base/power/common.c
-> > >> @@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, boo=
-l power_on)
-> > >>         if (!ret)
-> > >>                 ret =3D genpd_dev_pm_attach(dev);
-> > >>
-> > >> +       if (dev->pm_domain)
-> > >> +               dev->power.detach_power_off =3D power_on;
-> > >
-> > > I'm assuming that you have checked all of the users of
-> > > dev_pm_domain_attach() and verified that the "power off" value is the
-> > > same as the "power on" one for all of them.
-> >
-> > In v2 it has been discussed to just mirror the power_on acquisition.
-> >
-> > Double checking now, all the current users of dev_pm_domain_attach() fo=
-llow
-> > this rule, except the i2c bus. i2c powers on the domain conditionally:
-> >
-> > https://elixir.bootlin.com/linux/v6.15.2/source/drivers/i2c/i2c-core-ba=
-se.c#L575
-> >
-> > and powers it off unconditionally:
-> > https://elixir.bootlin.com/linux/v6.15.2/source/drivers/i2c/i2c-core-ba=
-se.c#L638
-> >
-> > Should we take this into account ?
->
-> I think so.
->
-> It is still sufficient to use one device flag to represent the
-> information whether or not to remove power on detach, but I would
-> change the second argument of dev_pm_domain_attach() to a u8
-> representing a mask of bits:
->
-> PM_DOMAIN_POWER_ON    BIT(0)
-> PM_DOMAIN_POWER_OFF    BIT(1)
->
-> where PM_DOMAIN_POWER_ON will be set to indicate that the device
-> should be turned on right after attaching the PM domain and the value
-> of PM_DOMAIN_POWER_OFF will be stored in the new device flag.
->
-> The majority of users will set or clear both, but i2c will set
-> PM_DOMAIN_POWER_OFF and either set of clear PM_DOMAIN_POWER_ON
-> depending on the do_power_on value.
+On Thu Jun 19, 2025 at 1:12 PM CEST, Andreas Hindborg wrote:
+> I'm having a difficult time parsing. Are you suggesting that we guard
+> against implementations of `TryInto<u64>` that misbehave?
 
-I am not sure it's needed, unless it's especially targeted for the
-ACPI PM domain, which I find hard to believe.
+Let me try a different explanation:
 
-Also, I find it awkward why the i2c bus should be any different from
-many other types of buses. It's probably just because of legacy and
-that someone took a decision when we added it.
+The safety requirement for implementing the `FromStrRadix`:
 
-Wolfram, what's your thinking around this?
+    /// The member functions of this trait must be implemented according to
+    /// their documentation.
 
-Kind regards
-Uffe
+Together with the functions of the trait:
+
+    /// Parse `src` to [`Self`] using radix `radix`.
+    fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crate::error:=
+:Error>;
+   =20
+    /// Return the absolute value of [`Self::MIN`].
+    fn abs_min() -> u64;
+   =20
+    /// Perform bitwise 2's complement on `self`.
+    ///
+    /// Note: This function does not make sense for unsigned integers.
+    fn complement(self) -> Self;
+
+Doesn't make sense. What does it mean to return the "absolute value of
+[`Self::MIN`]"? We don't have "absolute value" defined for an arbitrary
+type. Similarly for `complement` and `from_str_radix`, what does "Parse
+`src` to [`Self`] using radex `radix`" mean? It's not well-defined.
+
+You use this safety requirement in the parsing branch for negative
+numbers (the `unsafe` call at the bottom):
+
+    [b'-', rest @ ..] =3D> {
+        let (radix, digits) =3D strip_radix(rest.as_ref());
+        // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
+        // So if we want to parse negative numbers as positive and
+        // later multiply by -1, we have to parse into a larger
+        // integer. We choose `u64` as sufficiently large.
+        //
+        // NOTE: 128 bit integers are not available on all
+        // platforms, hence the choice of 64 bits.
+        let val =3D
+            u64::from_str_radix(core::str::from_utf8(digits).map_err(|_| EI=
+NVAL)?, radix)
+                .map_err(|_| EINVAL)?;
+   =20
+        if val > Self::abs_min() {
+            return Err(EINVAL);
+        }
+   =20
+        if val =3D=3D Self::abs_min() {
+            return Ok(Self::MIN);
+        }
+   =20
+        // SAFETY: We checked that `val` will fit in `Self` above.
+        let val: Self =3D unsafe { val.try_into().unwrap_unchecked() };
+   =20
+        Ok(val.complement())
+    }
+
+But you don't mention that the check is valid due to the safety
+requirements of implementing `FromStrRadix`. But even if you did, that
+wouldn't mean anything as I explained above.
+
+So let's instead move all of this negation & u64 conversion logic into
+the `FromStrRadix` trait. Then it can be safe & the `ParseInt::from_str`
+function doesn't use `unsafe` (there still will be `unsafe` in the
+macro, but that is fine, as it's more local and knows the concrete
+types).
+
+---
+Cheers,
+Benno
+
+Here is what I have in mind:
+
+diff --git a/rust/kernel/str/parse_int.rs b/rust/kernel/str/parse_int.rs
+index 0754490aec4b..9d6e146c5ea7 100644
+--- a/rust/kernel/str/parse_int.rs
++++ b/rust/kernel/str/parse_int.rs
+@@ -13,32 +13,16 @@
+ // `ParseInt`, that is, prevents downstream users from implementing the
+ // trait.
+ mod private {
++    use crate::prelude::*;
+     use crate::str::BStr;
+=20
+     /// Trait that allows parsing a [`&BStr`] to an integer with a radix.
+-    ///
+-    /// # Safety
+-    ///
+-    /// The member functions of this trait must be implemented according t=
+o
+-    /// their documentation.
+-    ///
+-    /// [`&BStr`]: kernel::str::BStr
+-    // This is required because the `from_str_radix` function on the primi=
+tive
+-    // integer types is not part of any trait.
+-    pub unsafe trait FromStrRadix: Sized {
+-        /// The minimum value this integer type can assume.
+-        const MIN: Self;
+-
++    pub trait FromStrRadix: Sized {
+         /// Parse `src` to [`Self`] using radix `radix`.
+-        fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crate::e=
+rror::Error>;
+-
+-        /// Return the absolute value of [`Self::MIN`].
+-        fn abs_min() -> u64;
++        fn from_str_radix(src: &BStr, radix: u32) -> Result<Self>;
+=20
+-        /// Perform bitwise 2's complement on `self`.
+-        ///
+-        /// Note: This function does not make sense for unsigned integers.
+-        fn complement(self) -> Self;
++        /// Tries to convert `value` into [`Self`] and negates the resulti=
+ng value.
++        fn from_u64_negated(value: u64) -> Result<Self>;
+     }
+ }
+=20
+@@ -108,19 +92,7 @@ fn from_str(src: &BStr) -> Result<Self> {
+                 let val =3D
+                     u64::from_str_radix(core::str::from_utf8(digits).map_e=
+rr(|_| EINVAL)?, radix)
+                         .map_err(|_| EINVAL)?;
+-
+-                if val > Self::abs_min() {
+-                    return Err(EINVAL);
+-                }
+-
+-                if val =3D=3D Self::abs_min() {
+-                    return Ok(Self::MIN);
+-                }
+-
+-                // SAFETY: We checked that `val` will fit in `Self` above.
+-                let val: Self =3D unsafe { val.try_into().unwrap_unchecked=
+() };
+-
+-                Ok(val.complement())
++                Self::from_u64_negated(val)
+             }
+             _ =3D> {
+                 let (radix, digits) =3D strip_radix(src);
+@@ -131,41 +103,49 @@ fn from_str(src: &BStr) -> Result<Self> {
+ }
+=20
+ macro_rules! impl_parse_int {
+-    ($ty:ty) =3D> {
+-        // SAFETY: We implement the trait according to the documentation.
+-        unsafe impl private::FromStrRadix for $ty {
+-            const MIN: Self =3D <$ty>::MIN;
+-
+-            fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crat=
+e::error::Error> {
+-                <$ty>::from_str_radix(core::str::from_utf8(src).map_err(|_=
+| EINVAL)?, radix)
+-                    .map_err(|_| EINVAL)
+-            }
+-
+-            fn abs_min() -> u64 {
+-                #[allow(unused_comparisons)]
+-                if Self::MIN < 0 {
+-                    1u64 << (Self::BITS - 1)
+-                } else {
+-                    0
++    ($($ty:ty),*) =3D> {
++        $(
++            impl private::FromStrRadix for $ty {
++                fn from_str_radix(src: &BStr, radix: u32) -> Result<Self> =
+{
++                    <$ty>::from_str_radix(core::str::from_utf8(src).map_er=
+r(|_| EINVAL)?, radix)
++                        .map_err(|_| EINVAL)
+                 }
+-            }
+=20
+-            fn complement(self) -> Self {
+-                (!self).wrapping_add((1 as $ty))
++                fn from_u64_negated(value: u64) -> Result<Self> {
++                    const ABS_MIN: u64 =3D {
++                        #[allow(unused_comparisons)]
++                        if <$ty>::MIN < 0 {
++                            1u64 << (Self::BITS - 1)
++                        } else {
++                            0
++                        }
++                    };
++
++                    fn complement(self) -> Self {
++                        (!self).wrapping_add((1 as $ty))
++                    }
++                    if val > ABS_MIN {
++                        return Err(EINVAL);
++                    }
++
++                    if val =3D=3D ABS_MIN {
++                        return Ok(<$ty>::MIN);
++                    }
++
++                    // SAFETY: The above checks guarantee that `val` fits =
+into `Self`:
++                    // - if `Self` is unsigned, then `ABS_MIN =3D=3D 0` an=
+d thus we have returned above
++                    //   (either `EINVAL` or `MIN`).
++                    // - if `Self` is signed, then we have that `0 <=3D va=
+l < ABS_MIN`. And since
++                    //   `ABS_MIN - 1` fits into `Self` by construction, `=
+val` also does.
++                    let val: Self =3D unsafe { val.try_into().unwrap_unche=
+cked() };
++
++                    Ok((!val).wrapping_add(1))
++                }
+             }
+-        }
+=20
+-        impl ParseInt for $ty {}
++            impl ParseInt for $ty {}
++        )*
+     };
+ }
+=20
+-impl_parse_int!(i8);
+-impl_parse_int!(u8);
+-impl_parse_int!(i16);
+-impl_parse_int!(u16);
+-impl_parse_int!(i32);
+-impl_parse_int!(u32);
+-impl_parse_int!(i64);
+-impl_parse_int!(u64);
+-impl_parse_int!(isize);
+-impl_parse_int!(usize);
++impl_parse_int![i8, u8, i16, u16, i32, u32, i64, u64, isize, usize];
