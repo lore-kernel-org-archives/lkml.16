@@ -1,162 +1,121 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E2F1E2312;
-	Thu, 19 Jun 2025 10:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469411E2312;
+	Thu, 19 Jun 2025 10:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750329093; cv=none; b=ArS4yO3mE0IJcCjGQx0rhYDGAcMXq/4w4QWMXFHNGiWiWglK14agleV6wYleQl8ZJpI7s9OFmLKkjqfACZGT+d88vnHND+Ad4oLLfuX0xVFKfzRrXufydhRUjOPAObfQKzWdc/yaCvk+dzX3gwVDkO+qQ84+mwD4JohQS8BXZpM=
+	t=1750329107; cv=none; b=mFq+7c8ed+Pm/Jk1wq2zSUPKWjQxhEj/kppIvnaN0wnUbPcP02QtnKLYYc9MHC/9W8jAI66ioZkwuye8G1L6SyJIV4n5VwiROQeP+ZivufoDShjYTlQcHcSY1qT/sWSMh81FJ44+wX41N4EnmNKAZddeDjQIyJOFpF36qAPvX8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750329093; c=relaxed/simple;
-	bh=VYGJH0cgcNidgY2b5A18wUcmB0qOwAs6N639WSmFLY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8os/+mvR6XyLBW/s1Y1GdTL25AtF6mZKa1tOjzSySfl8y5ihv4eORdlnZMruEgaoEDB75X9vPY00JDssbmt43xwW02HYgDoe62Ja7mIo7KNsLZCQ2hf//uzRvlkZ9KWFj63AZ7XyloFJCyIr1o9kMbRhF73z2CPAq3hR37r5G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=TJGRQL3I; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KDw9h6T/; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1750329107; c=relaxed/simple;
+	bh=xkmi7WTsSXagv5IZJW/ccnVltWO4yEgOk5fV/cts4nw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h/wSUYSNaNfdK5Cz1ctH0XWelukwEpPKXz0+CG6unpEvY8Rjg44RHUSRIj+JTf0kPwGpOMOyVcTH5U1XP/kd4koh5wzQ0MMOumhuH86DCZ0u0K8EkrYPbRCz5x3UHIecyOavJhVz9tNnfUd3ydWNcC9p/CmQO3h5u0kbHoGSWCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=qhUUmaua; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="TJGRQL3I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KDw9h6T/"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id CE3201380642;
-	Thu, 19 Jun 2025 06:31:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Thu, 19 Jun 2025 06:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1750329089;
-	 x=1750415489; bh=0YyQ5OiIFkEPqrZ6SWC3ezO49kjGRtXe1tfiAaXtyqA=; b=
-	TJGRQL3IigmqzKvAfzT0wXmFihWJZGSANSJH8RlXldFok9lQsRqVw2nO29suTFy9
-	6F+wdYVjeKlY50FnK/54E6112q6g1izi0Ghmac1pbnPiOXDVqtXiTR47r6MHw97d
-	0Ijlh8hRvEZJ47l9HpOHYNs3Liv9+0qQThxSi9yvA0qXt+qsUt21Y6QGcwJ7Ee7S
-	EVhhh6vyN79PBfS/JhQ7RncOuO6CkRRpei3nsNHAtiwY6C0lqKVacLQD5gekmZnS
-	qSu0kSAicre29/8JKBsGAEPcgeJ+l1w/S3Te8OQp3aT1T9p7c7++KXud3kdxTrot
-	ovJ9MITuY1+ucOmoS3qUHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750329089; x=
-	1750415489; bh=0YyQ5OiIFkEPqrZ6SWC3ezO49kjGRtXe1tfiAaXtyqA=; b=K
-	Dw9h6T/hlSF8ahctV6Mcpd9PgqiLn7fFQLPB/RWJ7YTVX+t+tM332Ps7PBHhAPvP
-	0PuXvoYU2HNKudQxs0iWzr+cjVgmk9eTnIOIrpDsRqaE7XWxV09hBtdSwnlvdnOx
-	U4jgIl/dk+oTW5mvx0Ab7Y7H4b191er6uH20TTB2WY1X6eyA7zneIlE9Oxx2i53s
-	21Evizc/s0ki7Ggb9c65QWWcoajD3bpz7FyedxNhwPPP/jU9I9RoReob+56IBfj2
-	25xzLgBJotZYaPxqpLRa3UMSfxN8CboazgmZJ/mWDdTYeKYI5hvNX59w2mXwoC+c
-	geM/DOBmdCw6FnjPlIGMw==
-X-ME-Sender: <xms:AedTaLeW0leb5D-cJa8GpIjBR-MPvXQquummYaXnnBSAiFhOkymE2g>
-    <xme:AedTaBOyvILu3SCbcMn5zHPWkslCmBygJwOsH06F5CHzesEEIoO5SCO_fDY57_WJS
-    vWizvCi5Z4LZPtQUZM>
-X-ME-Received: <xmr:AedTaEg8Oc06rLCnoSVR-HWbUDYbqqEJWS2dobqs2t4eeKmVHM56AE7QJk3eHdNeL-8KjoQEuIHlJSRn-xKFAbs2qBOTexWy1Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhklhgrshcu
-    ufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvg
-    gthhdrshgvqeenucggtffrrghtthgvrhhnpeevteegtddvvdfhtdekgefhfeefheetheek
-    keegfeejudeiudeuleegtdehkeekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrght
-    vggthhdrshgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopeht
-    ohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurd
-    gtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjuhhlihgvnhdrmhgrsh
-    hsohhtsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepshgrkhgrrhhirdgrihhl
-    uhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhgruhhrvghnthdrph
-    hinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehgrhgv
-    ghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuh
-    hsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:AedTaM_GyhSJMaz8ECrJ04ALdo8cCGiQFwJAJ1FqFpVJIeyv1xl7Iw>
-    <xmx:AedTaHtkDA7kZWBG14zDkTLrDJnncbi1tKt9J0CkN2RrekKpswsqRw>
-    <xmx:AedTaLHm1-lAkmfYuzeHSzQrVC3VR0dHXd0K47mS1F-LXxMHUe3BdA>
-    <xmx:AedTaOPQ-SUCnLA7bKcOjUg5_9eH9IF5p9ekSpitHt94pqslzhUjQg>
-    <xmx:AedTaEdLHin6pIVyWVT-gbmxzf2BUMJ-lNNmZ3K-fqVeTJsLnPL78njD>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 06:31:28 -0400 (EDT)
-Date: Thu, 19 Jun 2025 12:31:26 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	"open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS" <linux-media@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
-	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v4 07/19] dt-bindings: media: i2c: max96712: add myself
- as maintainer
-Message-ID: <20250619103126.GA2847778@ragnatech.se>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
- <20250618095858.2145209-8-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="qhUUmaua"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=uHc7BspCc4VebX3+yVBmPaBO4Z3SMOpLQiryABMTzXg=; b=qhUUmauacre6f0NDbZEh0A209v
+	PUSFAm69IOwcfWsONe8VRlmUFter+1RNbipSRBRx8Pkz1eqM7uPExZ/Jv9yT3+3VspkNVZzlc9SDk
+	Abq3dkD7mVqK/P0ZUX4fivIyplQ/yR373A/gvQRZfAG28HjumuSX1eAd90imC2PqWw+ivvezsgZFq
+	92/1onaEVis29tvgAVcXw2KIhbQ/HZ/kEjC+jIRjRxfMC01VaSuPxNS2zc/M80yqs5HL2xbA7Y22O
+	GaeTm8Hek/Gm0+lj59FMeDzKmoSgOLyG/WU2Luea9XKiGkTRohtkk170iYUPznw/y6I/AVZwX13i2
+	XMMlbEQw==;
+Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uSCYS-0008Oq-0k; Thu, 19 Jun 2025 12:31:36 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Olivier Benjamin <olivier.benjamin@bootlin.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Diederik de Haas <didi.debian@cknow.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS' panel
+ description
+Date: Thu, 19 Jun 2025 12:31:35 +0200
+Message-ID: <5461462.0VBMTVartN@phil>
+In-Reply-To: <DAQEX04P5320.CQDU7SL7AV4A@cknow.org>
+References:
+ <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
+ <DAQEX04P5320.CQDU7SL7AV4A@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250618095858.2145209-8-demonsingur@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Cosmin,
+Am Donnerstag, 19. Juni 2025, 11:46:15 Mitteleurop=C3=A4ische Sommerzeit sc=
+hrieb Diederik de Haas:
+> Hi,
+>=20
+> Thanks for working on upstreaming PPP things :-)
+>=20
+> On Thu Jun 19, 2025 at 7:21 AM CEST, Olivier Benjamin wrote:
+> > Fix a few issues in the panel section of the PinePhone Pro DTS:
+> >   - add the second part of the Himax HX8394 LCD panel controller
+> >     compatible
+> >   - as proposed by Diederik de Haas, reuse the mipi_out and ports
+> >     definitions from rk3399-base.dtsi instead of redefining them
+> >   - add a pinctrl for the LCD_RST signal for LCD1, derived from
+> >     LCD1_RST, which is on GPIO4_D1, as documented on pages 11
+> >     and 16 of the PinePhone Pro schematic
+> >
+> > Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
 
-Thanks for your patch.
+> > +	lcd {
+> > +		lcd_reset_pin: reset-pin {
+>=20
+> I don't know if there's a 'hard rule' for it, but I'd recommend to use
+> ``lcd1_rst_pin: lcd1-rst-pin {`` as that would match the naming from
+> the schematics. I realize that some but not all (other) pinctrl nodes
+> follow that 'rule', but it helps with traceability.
 
-On 2025-06-18 12:58:43 +0300, Cosmin Tanislav wrote:
-> Analog Devices is taking responsability for the maintenance of the Maxim
-> GMSL2/3 devices.
-> Add myself to the maintainers list and to the device tree bindings.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+not a "hard" rule, but a strong preference.
+I.e. we want people to ideally be able to just hit search in the
+schematics PDFs for the name they saw in the devicetree.
 
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Sometimes that is not possible, because of naming conventions or
+overly strange schematic-names ... and sometimes things slip through
+as well.
 
-> ---
->  Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 1 +
->  MAINTAINERS                                                     | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> index 26f85151afbd..efdece2b33b9 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> @@ -9,6 +9,7 @@ title: Quad GMSL2 to CSI-2 Deserializer with GMSL1 Compatibility
->  
->  maintainers:
->    - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
->  
->  description: |
->    The MAX96712 deserializer converts GMSL2 or GMSL1 serial inputs into MIPI
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 01363fbcb9b3..77adb1f7ac9c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14728,6 +14728,7 @@ F:	drivers/media/i2c/max9286.c
->  
->  MAX96712 QUAD GMSL2 DESERIALIZER DRIVER
->  M:	Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> +M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-> -- 
-> 2.49.0
-> 
+But following the schematic names, is the general goal.
 
--- 
-Kind Regards,
-Niklas Söderlund
+
+If this stays the only suggestion though, I can fix that when
+applying. Or you can send a v3 - up to you :-)
+
+
+Heiko
+
+
+>=20
+> > +			rockchip,pins =3D <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +	};
+> > +
+> >  	leds {
+> >  		red_led_pin: red-led-pin {
+> >  			rockchip,pins =3D <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+>=20
+> Otherwise,
+>=20
+> Reviewed-by: Diederik de Haas <didi.debian@cknow.org>
+>=20
+> Cheers,
+>   Diederik
+>=20
+
+
+
+
