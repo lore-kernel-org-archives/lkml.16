@@ -1,163 +1,226 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE421E0B7
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1276A2459E1;
+	Thu, 19 Jun 2025 21:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750369881; cv=none; b=n9eO0ANGV46ysimU7JKr1i6j01jRNtPgvRbbXIWAu1JWGIc1JWDFHvDXBZyrWdusY0GPT7G/D9RSqo8bdSq0DaciaBTerFj4cjnNv/brLXNTBHImkyPIKlcRpu1TFs/eeKuWCrtjCGAL6fwoysqOZKV/S/oQ8mjzzmWGEpp0oUM=
+	t=1750370131; cv=none; b=mY7yud6q8vpWn7V5x9w224d9ak83cUaYikOSs2DmIpQkCIT8evSEdNFwNjFi8ju87dZBql6BjnqssscrFTLQySGs9UrKdSDLKUB94r9i+W3V8BApfJqnZanxJIlYnLDwnkOTtXwsPIsVkqb0y6syxaWaHnX5XY4NLBAgPPQ56i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750369881; c=relaxed/simple;
-	bh=6b4xdbHAEobeRhtMS7us5of5Xvlx0zvK/T5YXduUbFw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Uwsi/SbJhRCNpMIkuZ46BfyVuSpPVhkVPZt6i6qOlbtDayRoJySpNfsUrp2tVWmcirVN2M8N4g1wEKf4GWtemHTK0OedKMuGGtcRSHd7sf/1u0vNsr8PV8X69EUARhVpt8R3nGo8/JQdikXVEBQAABE6vgHwt0JWeJTgJEKsdLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=d1Wq9FaL; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750370131; c=relaxed/simple;
+	bh=MDMtof2zLPxb60iACJOTv0INsBgQz0UZ3E4EuWl02g0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=S8bC1N/YvBP6Uzm5drf4EX166WFKESTZHbfFo684J6fpNTTBYMvsbVLD63C5mvkdzxuNYhcv6H0/ASI34wq1UYrmvX0nbSU/rSBFuj0Ez/u9EFBDbFQs5RtZnFjPKmXyAscaH4mYZpPMo08qzeZcRbBodh9iSUpczjhw2IAY2zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+vadTH/; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="d1Wq9FaL"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235f9ea8d08so10583305ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:51:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+vadTH/"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2363497cc4dso9448615ad.1;
+        Thu, 19 Jun 2025 14:55:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750369879; x=1750974679; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=QNrd+Ka91X9vzoKAkMJyDjy2RBoEtHPH04v+UX5wZMw=;
-        b=d1Wq9FaLII+vaeA0Xit/A9GE3gSxdAS4R2xRlQOJWLte3rSN2shVYJDS/vVKWjQifE
-         dtWEQgMbNvJU6ZBWMMhwI84X4tNO2C1hM8EES4vWEErqoLg+sXoWOH0EJGLAmZVAMC/j
-         btge3VcybjeoCoGoTldrOdnkjheecMwg+cAl8=
+        d=gmail.com; s=20230601; t=1750370129; x=1750974929; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v8ZME/OBMXRBz9TLaHW+wIbdfwUZa2EvpoVU8jKqzyo=;
+        b=a+vadTH/R3946EMVUF8Cxt6eA6goDEesZkKHFFZBoz8QWjWzJnRaDVCs5MFz+1XcLO
+         juXXXnezJIdpuCkUD7QfT6C8bUSr7nBiMos8j/OpbZ22Y+R65iptAum0WqB92qNy39Y7
+         5iXONqy9xqg8+jtlt//1YNXkfprBLJv9S+SD7ZWdbL3ZiMyGd80iVZ1D1xF4gAmJZro/
+         eTZv+7OveT8WsqVsUUODKXq6TBW0/UK/HxgxTWwkPg7s/ezz6PkB7GqrlRSImUo/P5nM
+         VnenQGTFkzf8DLzsKTI84N9UDLnAz2WO8rcmdol5YcwGnS9mrQjVvrnTchWpQNzleXVV
+         PZqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750369879; x=1750974679;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QNrd+Ka91X9vzoKAkMJyDjy2RBoEtHPH04v+UX5wZMw=;
-        b=AXFQ9VqM8HfFZlHeEfloes2dWHUIBj1jC68d2N99Fu068LfHzFIUf7/axjLEG6oAMX
-         7UzBqiKBOMgEB7pliQ+4RocXqAMkYlgKczoMAYL8t61YLZ+uGARxgkwojmilYozF2Cef
-         L/P9jlPbVYl63p24cX1jpgVGSyIcl4PGgh/goRf4xofXudVMRsgEQkEKFumt3IM6gsoK
-         /lxNcC20E0beGa/7vRrdkY640pNYn5HEQvsI06Nb9eCNr3tViVoZbtTZZADnXbeWssDg
-         62W7oCnbONF3M+ud/ZG3NA5hojsx4pBVuQOpx8cPkhCoXuDx4Y2IMpggGmWUXLsYbArA
-         QDqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCh2+T4nLl07o6vfBghAC8BQ/cKi/+fgy/arnz86W46cbyDaAiS07Jji0TlPhzbhS04z5pw6XOuGmz/Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0nnWsaPa0UoLUvCenGJXzys1H5VrlC7kb/ypJKrzI+rt98C4S
-	O5m1i75UPOaotmjyulZ1kkZ09HM4+RC3/H8MnnfkvusTEwu/basVPJcY/TorXI0nZQ==
-X-Gm-Gg: ASbGncsa51sCnk+EWxAczKLHU15T8wH4ydDhfnqmU8HWztMHRh2EdkDa8mU0eE8/b6I
-	mV5T3Gm0V8j7WN89bslJHTyy1b9zNC6s6wC/acuwnKri6iCvfFX+G8z3nN5WUOglWaXiHPusNDJ
-	yfDZuprSjSV3D2f7a7nft1XKZhHOI/tBxcUWTe9WN8diNB8yS/EIN7S8WhL/4tIfJMR/VKVT90f
-	/ByWuirOchMYTCf26iJxfyjeAlVDLXLoBZ5RVDB53MmS+6bZAlvYwT3RNrGgnkx1zOl5nWM1LSS
-	gNW2XCwEOCW4o4OcnMNVJnTVbFHlp4DMLeF1BN0fZ73vHdzrjVYetzSGkK6xXMU0fU6F05RRJQV
-	YhkqLGYBImMuwet3plLHRFzBvLufhO2Kad/Uo
-X-Google-Smtp-Source: AGHT+IFyEOg5XEeQ+aTcGDmVsuLniEdzYWdJFqg7fVC3s9zi7nKYJdY+MpYwPbLSToYsK7tOebVQrA==
-X-Received: by 2002:a17:902:f790:b0:234:a44c:18d with SMTP id d9443c01a7336-237d97b4515mr5569825ad.22.1750369879517;
-        Thu, 19 Jun 2025 14:51:19 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d87391e5sm2605945ad.244.2025.06.19.14.51.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 14:51:18 -0700 (PDT)
-Message-ID: <7ab95eac-47c0-437b-aa45-5b2871c31a8d@broadcom.com>
-Date: Thu, 19 Jun 2025 14:51:16 -0700
+        d=1e100.net; s=20230601; t=1750370129; x=1750974929;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v8ZME/OBMXRBz9TLaHW+wIbdfwUZa2EvpoVU8jKqzyo=;
+        b=MZ2o6RLrRcklV8taQ/dRfq9GRWn8Ta2b5EAboWy5pWHhAxxwGB9uGCOhzYuFlFBBvy
+         njIyuoK001im7St0HSbGUBV68EQB8SD9GvKiLJYv73h5050/qmEz/nmgOd/Ix+XNV/+B
+         fUMqvgLK2+QLleI7FtV+mw67EDpX/fkL98BoT9KFH7X+mf1gxBRl8LHpXHBg4+V+Hz/g
+         gWV8WoKcH2NlMGTf5LPl9AURx/50m+dRNuyYFV0XoWZeP6TglwFuWY0cCuzkyM3QXaE2
+         TtMAJtwsk5y4zfSRLCrhk1AAF+p/nUhTrrX2370E9Ug8MM6k+qiKeWiEFxYAHcXuDO1o
+         WYnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX0DKNNbkfh1izWxAtLYBkYpDo0REmcHZ5k6ncnTJ/glVSGLsKtuLllTg+aFdmbauClGxzshnhZbac5ZF2NGZC@vger.kernel.org, AJvYcCXR1MHJbHKqdcLXMgWSZGMrdC/EdMLfP7f1XYH2Mbuw7WcFqLVwC6FDe4epsZIdZ1AxE2o=@vger.kernel.org, AJvYcCXu6tBSbkkonN2S+Oq8pCPr/gApS8PE+Eb0J/qa5BdjtRRRudg7NrE60jQut/1tnpJpaMOpt0d5VOyzCy76@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBgzkdW9gkU79h16zwRPa08SW2HB4IyuthYGvwz1Yq2n1+pTIy
+	Y+XhkYCfVzQ2v01FLB7VTthgQ+CzriGUuSE7mowAfGs2MSrNCi4ArkIb
+X-Gm-Gg: ASbGncvXjU7JUo9UondKkbyqJV1pdtYqj63wPKX7pDC5+m0fX0rWKyiqstB45LvD6hQ
+	3x4qaDTU+iC8m8AI7smVCOkikJ3wQSHMlaTJeBp4gpQvsS03DeOh/L2ZskRM4ZQyIpr1nwqHD9J
+	f6PHXcc++6CaVyH6sqhtkDTTSykBAgsMA81wVTGTs/73VfhTaGUE6LJVLgQv7vBcdSuIrrPvofN
+	opAU6VD5wKRgtYT0f5hH2Cnw+vJxPR63o1Fda9STttTKuIzIANbWRzwkmXLYNSI+Qy2gxwmIV1Z
+	bHz8jOq8xx56lA0vq0SuPzixdEnY+o0YIEe7tzEghstTgV08X6qyfjqt6w==
+X-Google-Smtp-Source: AGHT+IG2rcFkDZnfxA8AbezU0wE5k3NVrUZF2gDieAY2VbqDXC/B78wsCt7rKShawbOAmQaAWSzktw==
+X-Received: by 2002:a17:902:fc4b:b0:234:9497:69e3 with SMTP id d9443c01a7336-237d9991a83mr4737985ad.25.1750370129184;
+        Thu, 19 Jun 2025 14:55:29 -0700 (PDT)
+Received: from [192.168.0.56] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d869554asm2741295ad.191.2025.06.19.14.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 14:55:28 -0700 (PDT)
+Message-ID: <04a5d2572ca2af1ec4dbc9cab5c61b1d0d9af0a9.camel@gmail.com>
+Subject: Re: [PATCH v2 2/2] selftests/bpf: Add testcases for BPF_ADD and
+ BPF_SUB
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
+Cc: ast@kernel.org, m.shachnai@rutgers.edu, srinivas.narayana@rutgers.edu, 
+	santosh.nagarakatte@rutgers.edu, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau	 <martin.lau@linux.dev>, Song Liu
+ <song@kernel.org>, Yonghong Song	 <yonghong.song@linux.dev>, KP Singh
+ <kpsingh@kernel.org>, Stanislav Fomichev	 <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Mykola Lysenko	
+ <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Matan Shachnai	
+ <m.shachnai@gmail.com>, Luis Gerhorst <luis.gerhorst@fau.de>, Kumar
+ Kartikeya Dwivedi	 <memxor@gmail.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-kselftest@vger.kernel.org
+Date: Thu, 19 Jun 2025 14:55:26 -0700
+In-Reply-To: <CAM=Ch05aDpkCZ7xF1Fs9SVrU8DFG7kofzRw4g4bkaUSdUsp3jQ@mail.gmail.com>
+References: <20250617231733.181797-1-harishankar.vishwanathan@gmail.com>
+	 <20250617231733.181797-3-harishankar.vishwanathan@gmail.com>
+	 <5b3b620d04fc3bcf4286dc4bb8c6fd995df86a25.camel@gmail.com>
+	 <CAM=Ch05aDpkCZ7xF1Fs9SVrU8DFG7kofzRw4g4bkaUSdUsp3jQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] scripts/gdb: fix parsing of MNT_* constants
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>,
- Tony Ambardar <tony.ambardar@gmail.com>, linux-kernel@vger.kernel.org,
- linux-debuggers@vger.kernel.org
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
- <kbingham@kernel.org>, Christian Brauner <brauner@kernel.org>
-References: <20250601055027.3661480-1-tony.ambardar@gmail.com>
- <7984ea38-20cc-49ad-ad72-c6433ad64698@oracle.com>
- <6388ccbc-3189-46ad-a146-b6b732417a09@broadcom.com>
-Content-Language: en-US
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <6388ccbc-3189-46ad-a146-b6b732417a09@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 6/3/25 09:17, Florian Fainelli wrote:
-> On 6/2/25 21:42, Stephen Brennan wrote:
->> On 5/31/25 22:50, Tony Ambardar wrote:
->>> Recently, constants in linux/mount.h were changed from integer macros
->>> parsable by LX_VALUE() to enums which are not, thus breaking gdb python
->>> scripts:
->>>
->>>    Reading symbols from vmlinux...
->>>    Traceback (most recent call last):
->>>      File ".../linux/vmlinux-gdb.py", line 25, in <module>
->>>        import linux.constants
->>>      File ".../linux/scripts/gdb/linux/constants.py", line 19, in 
->>> <module>
->>>        LX_MNT_NOSUID = MNT_NOSUID
->>>    NameError: name 'MNT_NOSUID' is not defined
->>>
->>> Update to parse with LX_GDBPARSED(), which correctly handles enums.
->>>
->>> Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
->>> Signed-off-by: Tony Ambardar <tony.ambardar@gmail.com>
->>
->> Hi Tony,
->>
->> I was totally unaware that these constants were being consumed by
->> another debugger, and having fixed them for one, I broke them for 
->> another!
->>
->> Thanks for the fix. Having read through the preprocessor magic and this
->> change, they make sense to me. In the future, I'll be sure to make an
->> extra check for GDB users when updating enums.
->>
->> Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
-> 
-> Not targeted to anyone in particular but this is a recurring problem, 
-> the GDB scripts are typically not part of any CI and it is not natural 
-> to grep for constant names outside of the C/Rust code where they are 
-> being used...
-> 
-> I suppose that QEMU it should be much easier to ensure that GDB scripts 
-> are being exercised than with my current set-up using OpenOCD + real 
-> hardware...
+On Thu, 2025-06-19 at 17:13 -0400, Harishankar Vishwanathan wrote:
+> On Wed, Jun 18, 2025 at 5:22=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.c=
+om> wrote:
+> >=20
+> > On Tue, 2025-06-17 at 19:17 -0400, Harishankar Vishwanathan wrote:
+> > > The previous commit improves the precision in scalar(32)_min_max_add,
+> > > and scalar(32)_min_max_sub. The improvement in precision occurs in
+> > > cases when all outcomes overflow or underflow, respectively. This
+> > > commit adds selftests that exercise those cases.
+> > >=20
+> > > Co-developed-by: Matan Shachnai <m.shachnai@rutgers.edu>
+> > > Signed-off-by: Matan Shachnai <m.shachnai@rutgers.edu>
+> > > Signed-off-by: Harishankar Vishwanathan <harishankar.vishwanathan@gma=
+il.com>
+> > > ---
+> >=20
+> > Could you please also add test cases when one bound overflows while
+> > another does not? Or these are covered by some other tests?
+>=20
+> Yes this is possible and I can add such test cases. These are not covered=
+ by
+> other tests as far as I can see.
 
-And also:
+Great, thank you.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > > +SEC("socket")
+> > > +__description("64-bit addition overflow, all outcomes overflow")
+> > > +__success __log_level(2)
+> > > +__msg("7: (0f) r5 +=3D r3 {{.*}} R5_w=3Dscalar(smin=3D0x800003d67e96=
+0f7d,umin=3D0x551ee3d67e960f7d,umax=3D0xc0149fffffffffff,smin32=3D0xfe960f7=
+d,umin32=3D0x7e960f7d,var_off=3D(0x3d67e960f7d; 0xfffffc298169f082))")
+> >=20
+> > Would it be possible to pick some more "human readable" constants here?
+> > As-is it is hard to make sense what verifier actually computes.
+> >=20
+> > > +__retval(0)
+> > > +__naked void add64_ovf(void)
+> > > +{
+> > > +     asm volatile (
+> > > +     "call %[bpf_get_prandom_u32];"
+> > > +     "r3 =3D r0;"
+> > > +     "r4 =3D 0x950a43d67e960f7d ll;"
+> > > +     "r3 |=3D r4;"
+> > > +     "r5 =3D 0xc014a00000000000 ll;"
+> > > +     "r5 +=3D r3;"
+> > > +     "r0 =3D 0;"
+> > > +     "exit"
+> > > +     :
+> > > +     : __imm(bpf_get_prandom_u32)
+> > > +     : __clobber_all);
+> > > +}
+>=20
+> It is possible to pick more human readable constants, but the precision g=
+ains
+> might not be as apparent. For instance, with the above (current) test cas=
+e,
+> the old scalar_min_max_add() produced
+> [umin_value=3D0x3d67e960f7d, umax_value=3DU64_MAX],
+> while the updated scalar_min_max_add() produces a much more
+> precise [0x551ee3d67e960f7d, 0xc0149fffffffffff], a bound that has close =
+to
+> 2**63 fewer inhabitants.
+>=20
+> For the purposes of a test case, if human readability is more important
+> than the demonstration of a large precision gain, I can prefer one that i=
+s more
+> readable, similar to the one shown in the commit message of v1 of the
+> patch [1]:
+>=20
+> With the old scalar_min_max_add(), we get r3's bounds set to unbounded, i=
+.e.,
+> [0, U64_MAX] after instruction 6: (0f) r3 +=3D r3
+>=20
+> 0: R1=3Dctx() R10=3Dfp0
+> 0: (18) r3 =3D 0x8000000000000000       ; R3_w=3D0x8000000000000000
+> 2: (18) r4 =3D 0x0                      ; R4_w=3D0
+> 4: (87) r4 =3D -r4                      ; R4_w=3Dscalar()
+> 5: (4f) r3 |=3D r4                      ;
+> R3_w=3Dscalar(smax=3D-1,umin=3D0x8000000000000000,var_off=3D(0x8000000000=
+000000;
+> 0x7fffffffffffffff)) R4_w=3Dscalar()
+> 6: (0f) r3 +=3D r3                      ; R3_w=3Dscalar()
+> 7: (b7) r0 =3D 1                        ; R0_w=3D1
+> 8: (95) exit
+>=20
+> With the new scalar_min_max_add(), we get r3's bounds set to
+> [0, 0xfffffffffffffffe], a bound that is more precise by having only 1 le=
+ss
+> inhabitant.
+>=20
+> ...
+> 6: (0f) r3 +=3D r3                      ; R3_w=3Dscalar(umax=3D0xffffffff=
+fffffffe)
+> 7: (b7) r0 =3D 1                        ; R0_w=3D1
+> 8: (95) exit
+>=20
+> Please advise which test cases to prefer. I will follow up with a v3.
 
-Jan, Kieran, can you please pick this up? Thanks!
--- 
-Florian
+Hm, I see, that's an interesting angle.
+The problem is, if I do something silly changing the code and this
+test fails I'd have a hard time understanding the expected output.
+Therefore, I'd prefer something more obvious.
+
+Maybe let's go with this:
+
+  SEC("tc")
+  __success
+  __naked void test1(void)
+  {
+	asm volatile (
+	"r3 =3D 0xa000000000000000 ll;"
+	"r4 =3D 0x0;"
+	"r4 =3D -r4;"
+	"r3 |=3D r4;"
+	"r3 +=3D r3;"
+	"r0 =3D 1;"
+	"exit;"
+	:
+	: __imm(bpf_get_prandom_u32)
+	: __clobber_all);
+  }
+
+Here is verifier log comparison:
+
+  master: 5: (0f) r3 +=3D r3     ; R3_w=3Dscalar()
+  branch: 5: (0f) r3 +=3D r3     ; R3_w=3Dscalar(umin=3D0x4000000000000000,=
+umax=3D0xfffffffffffffffe)
+
+?
+
+> [1]: https://lore.kernel.org/bpf/20250610221356.2663491-1-harishankar.vis=
+hwanathan@gmail.com/
+>=20
+> [...]
+
