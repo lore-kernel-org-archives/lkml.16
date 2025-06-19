@@ -1,74 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D025C83F;
-	Thu, 19 Jun 2025 13:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D166F2AF07;
+	Thu, 19 Jun 2025 13:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340121; cv=none; b=ShfqVGfh7sCa+9Y7kHnmjjr8FXcUkxG4+r0Ul3EecN+bK3tCOaH61KFwfbLaJ6bvQcgKe+qH/Z5D0Xs8PLqNJHP52ilnlznSWV267OuiItGLjVmiG6ew/UBzuPiAew+LnDERB8U4wbD8LNc5ol/m0G2dVFRP6BwhnIZwEhTp8UE=
+	t=1750340203; cv=none; b=OU8bBejxEpOqqF7OX8jWvsVFWJBFBYSCMlSTPoHtNBTVc/3EjuUMS85y4/zTD09cPG/L8yh9ecAQ6sqzPJlBETY8ipuvKtnNgn1k0gn8nd3ShGmwqmwQJrDdxyf0gqnB7Qh7acS0xKQKHqt7saUJNFEz50jhYmVM6LSvMERo2xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340121; c=relaxed/simple;
-	bh=nGBE81iJlu8wL29VIgLNBJjptMMyVWKnbJ7tJuB3pfU=;
+	s=arc-20240116; t=1750340203; c=relaxed/simple;
+	bh=i1H5EU2QfSJgEPMhXbCA744BQEMY5sB9PjVmugZBvxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2OnWwJQr3Aa/ss3c9r8lC9pJEpQtr6pKkhks9peoFtjIlJcYSqD0bkIqQljcqYXcpBcEPdUeIiuCoHy22kYinKCv/WwZN4iGCWAHBolnR/FP+26BiWnUz7JLadbbReMAzrlQgZG+/OruHa8azSnWfJpBWRgTCGDe9AooNgCqFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNtFV97u; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGiN4h+De7ztHscxiS+a2pLO84Ii6NxyuwTZQwwZvlRRZNbNodw3DmoZtXUC/ugHaegIk+iQFxQjG/qMLsHc58d8oR+S4BAC3xX9Tbms5qKOeK7/jxmNIpi/0ETHqshEPwcJ4pfoXdVRyDIo+g+tWLt2yWRVCTH0Ef+r4fqt1CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn0RJble; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNtFV97u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32BF6C4CEEA;
-	Thu, 19 Jun 2025 13:35:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn0RJble"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402C2C4CEEA;
+	Thu, 19 Jun 2025 13:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750340120;
-	bh=nGBE81iJlu8wL29VIgLNBJjptMMyVWKnbJ7tJuB3pfU=;
+	s=k20201202; t=1750340203;
+	bh=i1H5EU2QfSJgEPMhXbCA744BQEMY5sB9PjVmugZBvxo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LNtFV97ufpF+IrmqkPnD8MMoRkrDrl5EMNIC4OxW0JWQbBjv10yWzKeiNcQcWn+tl
-	 Iwxc+qNptGUA6+Mzc7pWHqw3ctIjImmV2x/Fa0qTovAYWVvgK7I4a7m+waK6lq7ZK0
-	 cnXjurgZHWhfCoOQiaKLrWpm0dDSjxpr2UE+SlbfEoXbMqCYDc7vaAm6fVyMJxCfxE
-	 xU2ZIWV+pktlZNZ4tXjc4lXO4WfRFN4G6Sl3dJQ35jmMPjTUmP6dCu3iLEwvfNoLH5
-	 Vhs8k1A1r159FzyhY9b+Uu8hzFWGDUiv87y4QqFkYOHSdAYSgrTAZfpZAvQQzhZhRm
-	 F3JvmylKIqcmg==
-Date: Thu, 19 Jun 2025 14:35:15 +0100
-From: Lee Jones <lee@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] mfd: tps6594: Add TI TPS652G1 support
-Message-ID: <20250619133515.GB795775@google.com>
-References: <20250613114518.1772109-1-mwalle@kernel.org>
- <20250613114518.1772109-2-mwalle@kernel.org>
+	b=Kn0RJbleSIGEFtAZ62vfWjYvGwPEU4GnzYYzZvVPx9AHK26rImHo3WCEiEcsD3CLg
+	 IjGPdvDRctBJJJMb0cyhkLeqcCfWkBTmvKUqWVrHdC8dA0sovwscwVhZwwn29PI0jA
+	 jd9PeR3JMxgf9KSCLbmZjQDovVnlTwyFvbRsKkKVw7CuaRcIxsqemDbN0s4MxCdwt3
+	 yYCqSBGEU0kfs9kH97YQ8SLfhuJlUaTDNUpBTxfB6Z398wX1ZNzvLUsDZJ9i5A7ASz
+	 v+1iDKGAlK5D0VZgCaSZ4YgPog4AsRa7/jJH3/z1VsEjNMqA1ZLAeAC7/hl71MvEtz
+	 Dk+T/lQfpiL3g==
+Date: Thu, 19 Jun 2025 14:36:38 +0100
+From: Simon Horman <horms@kernel.org>
+To: longli@microsoft.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [Patch net-next v3] net: mana: Record doorbell physical address
+ in PF mode
+Message-ID: <20250619133638.GR1699@horms.kernel.org>
+References: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613114518.1772109-2-mwalle@kernel.org>
+In-Reply-To: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
 
-On Fri, 13 Jun 2025, Michael Walle wrote:
-
-> The TPS652G1 is a stripped down version of the TPS65224. From a software
-> point of view, it lacks any voltage monitoring, the watchdog, the ESM
-> and the ADC.
+On Tue, Jun 17, 2025 at 06:36:46PM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> MANA supports RDMA in PF mode. The driver should record the doorbell
+> physical address when in PF mode.
+> 
+> The doorbell physical address is used by the RDMA driver to map
+> doorbell pages of the device to user-mode applications through RDMA
+> verbs interface. In the past, they have been mapped to user-mode while
+> the device is in VF mode. With the support for PF mode implemented,
+> also expose those pages in PF mode.
+> 
+> Support for PF mode is implemented in
+> 290e5d3c49f6 ("net: mana: Add support for Multi Vports on Bare metal")
+> 
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
->  drivers/mfd/tps6594-core.c  | 88 ++++++++++++++++++++++++++++++++++---
->  drivers/mfd/tps6594-i2c.c   | 10 ++++-
->  drivers/mfd/tps6594-spi.c   | 10 ++++-
->  include/linux/mfd/tps6594.h |  1 +
->  4 files changed, 99 insertions(+), 10 deletions(-)
+> Changes
+> v2: add more details in commit message on how the doorbell physical address is used
+> v3: add the early commit detail where the support for PF mode is implemented
 
-Looks good.
+Thanks for the updates.
 
-Let me know when you get the misc Ack.
+I agree that this revision address Jakub's feedback on v2.
+Which in turn addressed his feedback on v1.
 
--- 
-Lee Jones [李琼斯]
+Reviewed-by: Simon Horman <horms@kernel.org>
+
