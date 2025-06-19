@@ -1,126 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD462980DB;
-	Thu, 19 Jun 2025 18:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7A7298258
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750356134; cv=none; b=eI1xYwC702OOka2wNXsTsLfioCM3MqN4/XgXBFYVc+vUuMVB1Kqn3OgEAEPUGQokct+D+seiknD1MPhrU50Ilf9m+3EYJgTrVekLJO1TBWq3QTYQKvAigNC7q1NXHP/E/5e+pWYDJkZ1yT8/2FlKmcRXMa+jmqfIp4ZmgxdbHFM=
+	t=1750356134; cv=none; b=JbS6Ulok3acdmcY3lG2nUGroVivoxlLJ3JtTTUj5Haje0jRK4wQiV4EvqD/Mfq7fDGpjhBiw+/Oc+mc2gYFTO02boii7XltmoeGYahciDLzOtKDR1z1/1E1XKxCHV6/MJMxL7B2nXMnMuz4sSj0C9SzZSHp5NqVT95PnqBX2Ewk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750356134; c=relaxed/simple;
-	bh=C1vMfDnqWac0SNTLgP5bLPIMcw+naLfxvXI5keuItAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rVKuXTMsa9d9oTyAFrRx/ScSdOeK4rxnf2HWz2tqH/A5cN+luH3oONYW30aDQ2mBNOusfIYjk6Y6OyctfN8vS9gyWPJRpBRTzwsczUsdYEFygt1Hx8m0ka7Je9qMGAc6BIBOD6woIvvlOVVx+DwxBAAEBGJ6Dofc6+F+Ho9dYZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qu1nktZW; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=NUzIuRJOiY+vaxEiC/B98ILU8KhziclSjuFiudHGbw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gTohZ3MMPp1bf5JOgiU+pF6MEE+HhBW102WJqC0PYqaI6YBp4nNdPOv/MQvgWgVdTFI3pgJNGtT1CxrRCwgKPj8WY3XZd55WXAeOjZd5q9YYOfGaPT76/7BNkVZIc6Vv0FOuRGjr/iL2C0uowGfsfOMi/01oMqWTqhNQQ8d9lRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N2Foun68; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qu1nktZW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750356133; x=1781892133;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=C1vMfDnqWac0SNTLgP5bLPIMcw+naLfxvXI5keuItAM=;
-  b=Qu1nktZWrav79sZ85kmegPLPbRQp5kqSwTOL1uCkf3z96MAQvWzJeQ5B
-   PofW7M+u3vZek/sMm10z4O1XVd8IcuM1iC0Q62/qotlE9kX1v7fathsaz
-   50WSd3XO6eiljRY8/DfValMy1o6fU4nC4I64nlK45STiPTFM2WADUnYiA
-   KwH65Np4/X4fB+27Bez7Tj7wHvXrHdc29gvk3LUAzpSXgHdKLqnVxq/df
-   P9luudz0bf1mJmg6Qb4hmZ8aWvp1y5aumusOpq82/8mqgMrkjQO0ZZpUN
-   awyFeYKH6dZwS5xOmNi5JXmig97BoJFkLY+H2ppPHwbj7Dm7lqwiBIP3m
-   A==;
-X-CSE-ConnectionGUID: RKvsB+atQP6LilHLmTc4DA==
-X-CSE-MsgGUID: m970kBa0SNC768i1wKTBvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="64048093"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="64048093"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:02:12 -0700
-X-CSE-ConnectionGUID: ed6JtqWhQgm3iT9RcZwDbg==
-X-CSE-MsgGUID: TkYXesncRkiizvMcGNQrtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="150919399"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.13])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:02:02 -0700
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: laurent.pinchart@ideasonboard.com,
-	sakari.ailus@linux.intel.com
-Cc: akinobu.mita@gmail.com,
-	stanislaw.gruszka@linux.intel.com,
-	hdegoede@redhat.com,
-	arnd@arndb.de,
-	alain.volmat@foss.st.com,
-	andrzej.hajda@intel.com,
-	benjamin.mugnier@foss.st.com,
-	dave.stevenson@raspberrypi.com,
-	hansg@kernel.org,
-	hverkuil@xs4all.nl,
-	jacopo.mondi@ideasonboard.com,
-	jonas@kwiboo.se,
-	kieran.bingham@ideasonboard.com,
-	khalasa@piap.pl,
-	prabhakar.csengg@gmail.com,
-	mani@kernel.org,
-	m.felsch@pengutronix.de,
-	martink@posteo.de,
-	mattwmajewski@gmail.com,
-	matthias.fend@emfend.at,
-	mchehab@kernel.org,
-	mehdi.djait@linux.intel.com,
-	michael.riesch@collabora.com,
-	naush@raspberrypi.com,
-	nicholas@rothemail.net,
-	nicolas.dufresne@collabora.com,
-	paul.elder@ideasonboard.com,
-	dan.scally@ideasonboard.com,
-	pavel@kernel.org,
-	petrcvekcz@gmail.com,
-	rashanmu@gmail.com,
-	ribalda@chromium.org,
-	rmfrfs@gmail.com,
-	zhengsq@rock-chips.com,
-	slongerbeam@gmail.com,
-	sylvain.petinot@foss.st.com,
-	s.nawrocki@samsung.com,
-	tomi.valkeinen@ideasonboard.com,
-	umang.jain@ideasonboard.com,
-	zhi.mao@mediatek.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH v1 12/55] media: i2c: imx219: Use the v4l2 helper for obtaining the clock
-Date: Thu, 19 Jun 2025 19:59:05 +0200
-Message-ID: <0efc2e23bd82294c0b6901188d672d58879c0804.1750352394.git.mehdi.djait@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750352394.git.mehdi.djait@linux.intel.com>
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N2Foun68"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750356130;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RHCQtoHGjMDrhRcO8E0Tsx4dl8R3fUsghttQ3tnfAJk=;
+	b=N2Foun68seqVegkffkrtLAQEhtdDTdfg5lZSGntRIn7ow+JUc3hUg7vwspxY1N3q6i0ODm
+	ufCinajIAEM7zefMJ4XXvJ/9aZX0Z1qON/i3c+I+Y2xgAVA84UMSeJG/tjz6opSFMHjpw0
+	VAEmrl2j3YCJ4QjFgNxlZf8fRdFiyww=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-388-o63fMCJ-PEij3pYZnfvtiw-1; Thu,
+ 19 Jun 2025 14:02:06 -0400
+X-MC-Unique: o63fMCJ-PEij3pYZnfvtiw-1
+X-Mimecast-MFC-AGG-ID: o63fMCJ-PEij3pYZnfvtiw_1750356124
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D136180135B;
+	Thu, 19 Jun 2025 18:02:04 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A8C461800288;
+	Thu, 19 Jun 2025 18:02:00 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	mikko.ylinen@linux.intel.com,
+	kirill.shutemov@intel.com,
+	jiewen.yao@intel.com,
+	binbin.wu@linux.intel.com
+Subject: [PATCH v2 0/3] TDX attestation support and GHCI fixup
+Date: Thu, 19 Jun 2025 14:01:56 -0400
+Message-ID: <20250619180159.187358-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-devm_clk_get() fails on ACPI-based platforms, where firmware does not
-provide a direct reference to the clock producer.
+This is a refresh of Binbin's patches with a change to the userspace
+API.  I am consolidating everything into a single KVM_EXIT_TDX and
+adding to the contract that userspace is free to ignore it *except*
+for having to reenter the guest with KVM_RUN.
 
-Replace devm_clk_get() with the new v4l2 helper
-devm_v4l2_sensor_clk_get() that works on both DT- and ACPI-based
-platforms to retrieve a reference to the clock producer from firmware.
+If in the future this does not work, it should be possible to introduce
+an opt-in interface.  Hopefully that will not be necessary.
 
-Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+Paolo
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index 3b4f68543342..bb7808515178 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -1188,7 +1188,7 @@ static int imx219_probe(struct i2c_client *client)
- 				     "failed to initialize CCI\n");
- 
- 	/* Get system clock (xclk) */
--	imx219->xclk = devm_clk_get(dev, NULL);
-+	imx219->xclk = devm_v4l2_sensor_clk_get(dev, NULL);
- 	if (IS_ERR(imx219->xclk))
- 		return dev_err_probe(dev, PTR_ERR(imx219->xclk),
- 				     "failed to get xclk\n");
+Binbin Wu (3):
+  KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+  KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+  KVM: TDX: Exit to userspace for GetTdVmCallInfo
+
+ Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
+ arch/x86/include/asm/shared/tdx.h |  1 +
+ arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
+ include/uapi/linux/kvm.h          | 22 +++++++++
+ 4 files changed, 154 insertions(+), 8 deletions(-)
+
+-- 
+2.43.5
+
