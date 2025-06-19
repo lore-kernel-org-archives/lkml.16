@@ -1,81 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4773085D4;
-	Thu, 19 Jun 2025 04:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CD43085D4;
+	Thu, 19 Jun 2025 04:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750307226; cv=none; b=uvp8ce/qg6QrE3rZapy45zA33DnT6bU2tvp3jT1fhGUhaZU78FpPd3buMLd8VVeivjMC+CN6vplKKs9aycbf3YbQ5tOMPWirLjaO0733MeRav4Kjq+GfmBdgChjlWP0zDVfVnoS9STVgYly+IAORb895dYES2IIQVRSpNwW7jZs=
+	t=1750307295; cv=none; b=SWgMduUf/3HWb21na35H152raVfDw/mmIepIwUtDm9+BHs8XqOj6+BIcH6bf9LBF4SybIrdJeT84WtBvpTWdFRFkcrbnYJrWcnHNOJLgB/cMlCwEUnWIZ0eYA8Ueptm3ucSdk/E8GGLCmuheJIePPYd3Qd4q01pYfyOoGAaJ9EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750307226; c=relaxed/simple;
-	bh=N2vpBSPNlKoUrqHDLG0SPqnnjPg3ghTIKjqLMrRarVA=;
+	s=arc-20240116; t=1750307295; c=relaxed/simple;
+	bh=wGPPr8evg8EGvCbT/ay4qY+qSgTYYixp+8b3bm2r8yM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GLRZumE+NDkCj56OrT8lOY10AdIRlmG4y16geqbb1VQV7x/bRb7rV3bcLpyghfufgazeukasxYnqODL/CvbzxvCDFsoE/jq7J5SxCLpihuES/CIG4W79mLGq5szbsmOq65TIMlOFX8QAzZH38MuZ1T75m6ZkVxORQdqrTT0cuUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ppw9lp+/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kllvPnFc1NiX8dlbWmyLk3dZsGyfM25IOBT6QvnuATT4AFyb2OIYzDZzmmBV2do38Uzr/tjcaUjWMTf/CMFh/i3n6uEgozBerDJTbhTWKLZT9HtNtO+xfanIxabEh6iCIen7+lrRZPqp4XJaBM3CR++10G3Z5IQP74J03oE0GkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=oIL3Q0De; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ppw9lp+/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EECC4CEEA;
-	Thu, 19 Jun 2025 04:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750307224;
-	bh=N2vpBSPNlKoUrqHDLG0SPqnnjPg3ghTIKjqLMrRarVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ppw9lp+/zop4/18SACWOSBY7yCRclPZjzyszPIefxrKuGL0/lUI/H4j3ba6hfdciv
-	 +V9F7ZKjp16dGorniuepLNSC+QcvWrVIUoLVYw6+u3N0JsttbQ/64+4TK/gQk+tuch
-	 v2RsbhlHY6JqCUYPZ5o8Fif7Zfk53ndqdQAKZIGQ=
-Date: Thu, 19 Jun 2025 06:27:01 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: akpm@linux-foundation.org, broonie@kernel.org, conor@kernel.org,
-	f.fainelli@gmail.com, hargar@microsoft.com, jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org, linux@roeck-us.net,
-	lkft-triage@lists.linaro.org, patches@kernelci.org,
-	patches@lists.linux.dev, pavel@denx.de, rwarsow@gmx.de,
-	shuah@kernel.org, srw@sladewatkins.net, stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
-Message-ID: <2025061928-equal-track-76af@gregkh>
-References: <20250617152419.512865572@linuxfoundation.org>
- <20250618125710.1920658-1-ojeda@kernel.org>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="oIL3Q0De"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=7Yv8PVd52JTRw4r6qh65xK+kFgGp7k/YH+t5aN2ivQM=;
+	b=oIL3Q0De6A3nMNlyVAjT96y81tN5M/D0G3WdBE0268+AIXgutdBEL4keyZiTUm
+	Yyo0jkkZjwwl9DbTsUGXq/vAXZzuGxY3gsH+DQZdkDluJnKylod0iDvZ18myVvWA
+	XXc6o43PuZS+Gg4g82XJ7Lw7WMYQTwv5IbLQhY+UoB16A=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgAHfw6ikVNoUc_2AA--.36272S3;
+	Thu, 19 Jun 2025 12:27:16 +0800 (CST)
+Date: Thu, 19 Jun 2025 12:27:14 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Frank Li <Frank.Li@nxp.com>, mirela.rabulea@nxp.com, mchehab@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, krzysztof.kozlowski@linaro.org,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, ming.qian@nxp.com
+Subject: Re: [PATCH RESEND 1/2] media: dt-bindings: nxp,imx8-jpeg: Add
+ compatible strings for IMX95 JPEG
+Message-ID: <aFORokzx/sImgDtA@dragon>
+References: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
+ <20250521173444.310641-1-Frank.Li@nxp.com>
+ <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250618125710.1920658-1-ojeda@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
+X-CM-TRANSID:M88vCgAHfw6ikVNoUc_2AA--.36272S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy5tr4rtF45AFy5uw13CFg_yoWfXrbE9w
+	18Zw1Iqay3ZrW3Wry5AFs5C34Fga47XryUXryFyw1kuws0yr98AFZrGrn3XFy5uFZ5WF9F
+	kwnrtw1DCa9FgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1Hq2tUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCwlxZWhTizsX7wAAsl
 
-On Wed, Jun 18, 2025 at 02:57:10PM +0200, Miguel Ojeda wrote:
-> On Tue, 17 Jun 2025 17:19:26 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.12.34 release.
-> > There are 512 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 19 Jun 2025 15:22:45 +0000.
-> > Anything received after that time might be too late.
+On Fri, May 23, 2025 at 07:22:04PM -0400, Nicolas Dufresne wrote:
+> Hi,
 > 
-> For arm64, with Clang 18, I got:
+> Le mercredi 21 mai 2025 à 13:34 -0400, Frank Li a écrit :
+> > Add compatible strings "nxp,imx95-jpgdec" and "nxp,imx95-jpgenc", which
+> > are backward compatible with "nxp,imx8qxp-jpgdec" and
+> > "nxp,imx8qxp-jpegenc". i.MX95 just need one power domain which combine
+> > wrap and all slots together. Reduce minItems of power-domains to 1 for
+> > i.MX95 and keep the same restriction for others.
+> > 
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > 
->      drivers/thermal/mediatek/lvts_thermal.c:262:13: error: unused function 'lvts_debugfs_exit' [-Werror,-Wunused-function]
->       262 | static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
->           |             ^~~~~~~~~~~~~~~~~
->     1 error generated.
+> Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 > 
-> I assume the reason is that `CONFIG_MTK_LVTS_THERMAL_DEBUGFS=n`.
-> 
-> In mainline I don't see it. I think we need commit 3159c96ac2cb
-> ("thermal/drivers/mediatek/lvts: Remove unused lvts_debugfs_exit").
-> 
-> It cherry-picks cleanly.
+> Krzysztof, will you take this one once the DTS part is ready ?
 
-Good catch, thanks, I'll queue it up.  The "Fixes:" line in that commit
-refers to a wrong sha1, odd that it made it through linux-next without
-any errors because of that :(
+dt-bindings is the prerequisite of DTS.  DTS patch looks good to me
+and I'm waiting for dt-bindings part to be applied first.
 
-thanks,
+Shawn
 
-greg k-h
