@@ -1,75 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta-101a.earthlink-vadesecure.net (mta-101a.earthlink-vadesecure.net [51.81.61.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A863F1E7C2D;
-	Thu, 19 Jun 2025 16:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A65511712;
+	Thu, 19 Jun 2025 16:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750351599; cv=none; b=CnzgiA+owskFN7sniakW0+DZkmCoXTNBySUhCMWaMCgGitnAYYjQ+1ScQG1UZ+UkXprCFazUTh8m9Eu7RZ/mn6IgRO1Y+siUAh+MS+EL4Ypce/Earz8kMHAcA4JesyYWpnkUpZmyyi1sqSzk8qo4lfvAPsEnxkL56h7m9MfmRf4=
+	t=1750351812; cv=none; b=JR4sPaLIyYAmrvOsaoGFaKhXVFL9b+x4ikKSYz1brTOKUoVqUlx/BYNA9RlkeVQjjTwtL1kBz1FbussaSDbI9ySzi0d5X3WHa5+y5POW5Aho94jAAWUV7o2AyZlfYYo3vEfAHd+81JSp91iPaALJ5+Ao8JzrC9S2QN5eFtu+NjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750351599; c=relaxed/simple;
-	bh=6AofT9ESYtvzpKrunVUzggzgj28w/qQmVkafxRW5TS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FJzsrPDv/rSn00fSt8OW3bDYza/OirTnf9gtMzMvL6BAQPlIg410N85q5QqRbuEIT5A7VzfWKZ1rV6eK7mPDf6nw05tlTfH0GHp3Gi0hQKHJ8vDZy5ncIGda1rJt/KSdM08IL2ZK66rZw9THSgSuCP69KOZHp//CI3XtfL/QDrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIDO0tcD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750351812; c=relaxed/simple;
+	bh=YTlcXr9OlGydD15/oYLK7Weyj63Pb2tsjIWoisxYE6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QghKN3MnSq8CnOx4Y+h4RSd7ZPMrjZ10oRioQxGFqta7pjyFcs3VDkEmYsq7wdMYXQqVPzJpXSpbpPbdje5Mw1TE+bJmdnpnqUbahA1R4TFG32ZyMFJCdrEo2XsikNu+m8Afc1diUm0O26ODDOymCWbQbpjxUtdtBAj6uMnpPpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onemain.com; spf=pass smtp.mailfrom=onemain.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=HQ2jzHRs; arc=none smtp.client-ip=51.81.61.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onemain.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onemain.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIDO0tcD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19DEC4CEEA;
-	Thu, 19 Jun 2025 16:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750351599;
-	bh=6AofT9ESYtvzpKrunVUzggzgj28w/qQmVkafxRW5TS0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UIDO0tcDxPmmcC8RlZqRNMtLv7u4CeIS7PaTzZD73oiYAflzD78CM142D4UMLlmTp
-	 KCrlFeBu5HkhGq68TEF6zp5sx/wmSkPsUBFFhraBS9YRLRO1n5ZdZet+VmQdYcIId0
-	 cKYmFW2WVDKWytREBsqLW/fdxLCENXRYQsX/vEaohlWWwdaItHKjoDkfwxmt9O6XSu
-	 9y6Ml9feKgYh5Iyc14B6nO0YktS3zu5dEPxxBDteUB9YP8dwazbWj/xy7CzGnDDSRI
-	 +RLFAFAsdhyq3vdck/ABRXW6XlPKRUUFcBQGCLXPe76+BLYWcECibEcP7e4hwEVQ+G
-	 +N5zAisWJh0dA==
-From: SeongJae Park <sj@kernel.org>
-To: Yunjeong Mun <yunjeong.mun@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: Re: [PATCH] samples/damon: add parameters for node0 memory usage
-Date: Thu, 19 Jun 2025 09:46:36 -0700
-Message-Id: <20250619164636.58743-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250619050313.1535-1-yunjeong.mun@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="HQ2jzHRs"
+Authentication-Results: earthlink-vadesecure.net;
+ auth=pass smtp.auth=svnelson@teleport.com smtp.mailfrom=sln@onemain.com;
+DKIM-Signature: v=1; a=rsa-sha256; bh=YTlcXr9OlGydD15/oYLK7Weyj63Pb2tsjIWois
+ xYE6Q=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
+ date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
+ references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:
+ list-subscribe:list-post:list-owner:list-archive; q=dns/txt;
+ s=dk12062016; t=1750351484; x=1750956284; b=HQ2jzHRspBIedcrbh3Xwu9ZlrqH
+ w6Yb6hZ8q3mPiS1aXwM0srxcnpM0jPV8LwhcrRZfXWTiKIdGLhlt336KfL+vayjGGQ18Utu
+ XJ9halFKOr/ZXQryj9GbuqlVI0vjLXt/LaTzzg3EANGLG4YdjHkJUHbmengleZExk8uvqgS
+ iaGQzed+edFpNbz4Fp/gxwSEfcVPzXnzyruDBqN6mMTKpDgxayRRV9xmLTaKO4mfK0B05n/
+ hyi1in4iClNIXdffstHf7fbR3jFt8ofZXQmrZ18CnqpzDLb54UaDJZJDxrNLUv062UPfqUF
+ johVc98jsc4FdREd02yN9L+NN0mE2wQ==
+Received: from [192.168.0.23] ([50.47.159.51])
+ by vsel1nmtao01p.internal.vadesecure.com with ngmta
+ id 5a8dfc70-184a7f663f8b4416; Thu, 19 Jun 2025 16:44:44 +0000
+Message-ID: <8b18c015-3dbf-4c4d-a404-3831459c6326@onemain.com>
+Date: Thu, 19 Jun 2025 09:44:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] mailmap: Update shannon.nelson emails
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250619010603.1173141-1-sln@onemain.com>
+ <20250619082915.08a79e6b@kernel.org>
+Content-Language: en-US
+From: Shannon Nelson <sln@onemain.com>
+In-Reply-To: <20250619082915.08a79e6b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 19 Jun 2025 14:03:12 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+On 6/19/25 8:29 AM, Jakub Kicinski wrote:
+> On Wed, 18 Jun 2025 18:06:03 -0700 Shannon Nelson wrote:
+>> Retiring, so redirect things to a non-corporate account.
+> I just so happened to be applying your MAITNAINERS update and this
+> patch one after another, so I'm just gonna squash them. Hope you don't
+> mind.
 
-> This patch changes the hard-coded quota goal metric values into sysfs
-> knobs: `node0_mem_used_bp` and `node0_mem_free_bp`. These knobs
-> represent the used and free memory ratio of node0 in basis points
-> (bp, where 1 bp = 0.01%). As mentioned in [1], this patch is developed
-> under the assumption that node0 is always the fast-tier in a two-tiers
-> memory setup.
-> 
-> [1] https://lore.kernel.org/linux-mm/20250420194030.75838-8-sj@kernel.org/
+That works for me - thanks!
+sln
 
-Thank you for this patch.  Please note that this is just a sample code, and
-hence there will be no strict user space compatibility support.
-
-> 
-> Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-
-Reviewed-by: SeongJae Park <sj@kernel.org>
-
-
-Thanks,
-SJ
-
-[...]
