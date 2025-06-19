@@ -1,82 +1,72 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CD43085D4;
-	Thu, 19 Jun 2025 04:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C923085D4
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750307295; cv=none; b=SWgMduUf/3HWb21na35H152raVfDw/mmIepIwUtDm9+BHs8XqOj6+BIcH6bf9LBF4SybIrdJeT84WtBvpTWdFRFkcrbnYJrWcnHNOJLgB/cMlCwEUnWIZ0eYA8Ueptm3ucSdk/E8GGLCmuheJIePPYd3Qd4q01pYfyOoGAaJ9EU=
+	t=1750307345; cv=none; b=tFycTugWHxcqfbAgF5lcx4/xOibIv6lOPiW3RIcuTdxm6uwaqvyefPKRa1Zc06RIqL5Fe0DEmxDZvm3NFDTHdQ/tDyHQ7n4LVsF0d5J3ZhLtGFKpK/IBth+XRJNsKPbaUz869f3zigh1uV8DUB2RP/y4BcX+C6GNt6Wd1R6QKqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750307295; c=relaxed/simple;
-	bh=wGPPr8evg8EGvCbT/ay4qY+qSgTYYixp+8b3bm2r8yM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kllvPnFc1NiX8dlbWmyLk3dZsGyfM25IOBT6QvnuATT4AFyb2OIYzDZzmmBV2do38Uzr/tjcaUjWMTf/CMFh/i3n6uEgozBerDJTbhTWKLZT9HtNtO+xfanIxabEh6iCIen7+lrRZPqp4XJaBM3CR++10G3Z5IQP74J03oE0GkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=oIL3Q0De; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="oIL3Q0De"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=7Yv8PVd52JTRw4r6qh65xK+kFgGp7k/YH+t5aN2ivQM=;
-	b=oIL3Q0De6A3nMNlyVAjT96y81tN5M/D0G3WdBE0268+AIXgutdBEL4keyZiTUm
-	Yyo0jkkZjwwl9DbTsUGXq/vAXZzuGxY3gsH+DQZdkDluJnKylod0iDvZ18myVvWA
-	XXc6o43PuZS+Gg4g82XJ7Lw7WMYQTwv5IbLQhY+UoB16A=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgAHfw6ikVNoUc_2AA--.36272S3;
-	Thu, 19 Jun 2025 12:27:16 +0800 (CST)
-Date: Thu, 19 Jun 2025 12:27:14 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Frank Li <Frank.Li@nxp.com>, mirela.rabulea@nxp.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, krzysztof.kozlowski@linaro.org,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, ming.qian@nxp.com
-Subject: Re: [PATCH RESEND 1/2] media: dt-bindings: nxp,imx8-jpeg: Add
- compatible strings for IMX95 JPEG
-Message-ID: <aFORokzx/sImgDtA@dragon>
-References: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
- <20250521173444.310641-1-Frank.Li@nxp.com>
- <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
+	s=arc-20240116; t=1750307345; c=relaxed/simple;
+	bh=4lM1Pq8+OIPnLmUR0BvubcerHmS5fqj8yAXuchrWxrY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=s4blMzB08zquoGrYHUJUQaJKyH0AHB+cV4Ah/LaPz9C0uZPBmOZQoBAZ47ghlvQhX/wFUYTQCmbmS7X/j6jT6Sj4nDpV+aWWkXvCtrMebL/czEk6yYRgFgu4sPUvBMZksXSct5rmaHzDs8XEok71YTNeIsxPHqQQDnJHnv2gQUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8754cf2d6e2so32043339f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:29:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750307343; x=1750912143;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0RTBHQGJ4o6rnPsqSnb4biPDUygoMp38eBwORzFpO5c=;
+        b=NZ7xekRUrJqXLHyYOeiciLwCS8BG3II4CYO0aE1DidLL3lW2pBW/edlZejwKVSX980
+         HWxxKmpWXtZclD0XEHGb5ABuBJbs+V61lg1sai4FKm4aDyyZJj+1/f6CgWOMAhml10zl
+         ZB28ZzKaCWJgRXm+Dlin5lxMD0nixpYg8/2CKRcAkuurea+44hfy5Ys9UjztJ1vCLzOo
+         aujcXWqKh72ompkrnYGhdbJExGAtVfZ53ZZgrf/xpsgcUYdLnuF4K/R2c9M6PN1zj0S9
+         af5CDgsSabBYSKKCZBGFzT0LkEWL3ZfxSHSJJJqpbTPwt5lvtqpbMRrSOOaFVYh1GD13
+         Hx5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXFoyDP0Knd7yMgEl911/v8+oqcC8QYSOmo6QSo9DU8BqE4kWlyMYQq0zgOqz+YvtkZaEFmoNw4m+W7JPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMXSRIZ+EviLP7uJEV/jdRwhRb62bEcT3U+rnZcSghHaUEBM4S
+	uI98tEyBUPc2bWaMEAUBACi0TUu75SMZYxbesjZmxepGnji99cU658xzZQJg7QPZRRlFGxof5LC
+	2FY/rQi7Uiq8NZ6nAQ2yIhA1wFXhae7+bYZeYBxi+2CSrh0LYoXVxcgqM/N4=
+X-Google-Smtp-Source: AGHT+IH47ft2xBqsJgNwYhR12OCsOlAJNYrhkFplkeG8vasj3H+hW021FoknFfn/xqeoMarDrVNpaeHDJAZFMByJK1zAcJtHLgQ8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
-X-CM-TRANSID:M88vCgAHfw6ikVNoUc_2AA--.36272S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy5tr4rtF45AFy5uw13CFg_yoWfXrbE9w
-	18Zw1Iqay3ZrW3Wry5AFs5C34Fga47XryUXryFyw1kuws0yr98AFZrGrn3XFy5uFZ5WF9F
-	kwnrtw1DCa9FgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1Hq2tUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCwlxZWhTizsX7wAAsl
+X-Received: by 2002:a05:6602:3fc3:b0:875:acf6:21a with SMTP id
+ ca18e2360f4ac-875dedc39afmr2217590039f.11.1750307342971; Wed, 18 Jun 2025
+ 21:29:02 -0700 (PDT)
+Date: Wed, 18 Jun 2025 21:29:02 -0700
+In-Reply-To: <5a513fca-b8cd-40b9-9b28-9793cf80e293@linux.alibaba.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6853920e.050a0220.216029.0165.GAE@google.com>
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
+To: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 23, 2025 at 07:22:04PM -0400, Nicolas Dufresne wrote:
-> Hi,
-> 
-> Le mercredi 21 mai 2025 à 13:34 -0400, Frank Li a écrit :
-> > Add compatible strings "nxp,imx95-jpgdec" and "nxp,imx95-jpgenc", which
-> > are backward compatible with "nxp,imx8qxp-jpgdec" and
-> > "nxp,imx8qxp-jpegenc". i.MX95 just need one power domain which combine
-> > wrap and all slots together. Reduce minItems of power-domains to 1 for
-> > i.MX95 and keep the same restriction for others.
-> > 
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> 
-> Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> 
-> Krzysztof, will you take this one once the DTS part is ready ?
+Hello,
 
-dt-bindings is the prerequisite of DTS.  DTS patch looks good to me
-and I'm waiting for dt-bindings part to be applied first.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Shawn
+Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Tested-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         0097d266 erofs: refuse crafted out-of-file-range encod..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+console output: https://syzkaller.appspot.com/x/log.txt?x=1732b5d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
