@@ -1,93 +1,112 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAE07346F;
-	Thu, 19 Jun 2025 01:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62101188596
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295254; cv=none; b=B/htfcYICxnOat8TYVnFXqP3s2sEf1CkyunAFWt723cLaDCoZKfXSvwllW+wk7KgnCJFp5NAJiqm5TfRFT0eRkiVCsRy0SHwoc7j1jQrR0SmVVOpEAGoJ7AE9w+wa4lwfrx04mHEP9i4t5Dm2tld6UZ9zl+igLW7c4+AZYL9WuA=
+	t=1750295283; cv=none; b=QynZcnIaEZbBncf0a/lsHbd4/kzzHxMYDwx0TM6Qt/4eu1mT+skuHaBT4nc7FvC0YSsFroSzrq3I2ce9fMCcjzLfbvoUGizvjdyTHCOYESvivxK0sV0Rdjk/BdYznuI3if0p2T1ulwP0jnuKRWZcd2b1UDyjwSGlex4I1b7+UIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295254; c=relaxed/simple;
-	bh=DTTzp2Vl+gfUSOjGl00L5KJ+Pi3ykju5H8rpHVudf/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1uKD3apc0RJzdvWpAyOLM+E3jdDhenJSNNJrlp7onehctG/tk1GgQvXpn5CMNHnEUBDMxlQ7yYl6MIRHH9sEhOhPqlYJzFT+M+B/YNkrQL8Q4g0AX+2dxkVUfEl+Z1WO220CAuIqWjOsWi4vB9Biy66GE+ki9oTMwC0AH/CZzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ThcwohwO; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750295283; c=relaxed/simple;
+	bh=XVB9thgNi1didXz5aWGiHjLjyRTPcEHJKWRSyNTp4fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aHY4sojeyU4yx/hPerwiGALfpHtSjrJY67da+Vzc7rMOGl/GjNT0mpzXSrftBNTNjKWiTONZPuZ6YHG+3SYTaWkHzahuuYImMmNoXnt0e0qv5EekmroGgcI2EWfQXOdUwVloqRZiwr92MvLX+yMCoCPOZDQ+t/oV6Z1P9e+mKXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=tLCLqUjU; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ThcwohwO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750295242; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=AHKGW4H7LN/JdA90Hf//Jy9UM44rzmLKYv/T1BIQf3A=;
-	b=ThcwohwOlVxxBFreTs/w1zTgC4MHQ6HRZhidngBWyY40rRhV54E7HKpfTj0DXj/k6TcquCCVhH6FARIw95S8GH9PVSUkr3KViEHKMOdLwzCr5eaEr973mZk+fouPBM2Y1JLqndjqDeBW5H2iZOcxbD9tA5WDhy8Ko5nhJJHb/Pc=
-Received: from 30.74.144.119(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeFD6QU_1750295241 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 19 Jun 2025 09:07:21 +0800
-Message-ID: <fd838615-d550-4e3a-9b4c-616a977fa410@linux.alibaba.com>
-Date: Thu, 19 Jun 2025 09:07:21 +0800
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="tLCLqUjU"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6F9B62C0BC6;
+	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1750295278;
+	bh=7UmSMxZInk7rBl0e8y0lvWe7dE2+hkbf4Sw2iH0CEmM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tLCLqUjUtkvjGJBnnBji7/Rz6W8XqEczkKobhBEp4ZcB35PeIvia+4PqwXmGQAODL
+	 tHDgdkbST8j2H3ZvPt3PvXiy2/tS2s3BFLBJtBvoZ6rn7KurSVXXtkdnWORMJH1J9d
+	 zUkgCxac5nizBvGvB2lVYw61RlFc8WrFHTVxs8iQ1fvD4vqnLHODcChzGE5McZSgH2
+	 prwJplZylR8LlbmR3ZYRT4dcAc8hWMboHgDNaFfG9rcUW4zUs72r+LVr5qUhCKSeO3
+	 h1WiagGJrdPtGsU2S3/ZcfOSwJyUKMNtS7zZWMQtgQMmMeb+pfNpoo/hCCcSXozmSF
+	 cLfYF/nV71+eQ==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B685362ee0004>; Thu, 19 Jun 2025 13:07:58 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 0B30913EEA1;
+	Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 0BD95280993; Thu, 19 Jun 2025 13:07:58 +1200 (NZST)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: tsbogend@alpha.franken.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	sander@svanheule.net,
+	markus.stockhausen@gmx.de
+Cc: linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 4/4] mips: dts: realtek: Add gpio block
+Date: Thu, 19 Jun 2025 13:07:54 +1200
+Message-ID: <20250619010754.3760612-5-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
+References: <20250619010754.3760612-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/12] gpio: pmic-eic-sprd: drop unneeded .set() callback
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>,
- Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250617-gpiochip-set-rv-gpio-v1-0-903703881fa2@linaro.org>
- <20250617-gpiochip-set-rv-gpio-v1-5-903703881fa2@linaro.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250617-gpiochip-set-rv-gpio-v1-5-903703881fa2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=F7/0dbhN c=1 sm=1 tr=0 ts=685362ee a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=6IFa9wvqVegA:10 a=jdP34snFAAAA:8 a=GAZJBr5AWi_iGCRPYoMA:9 a=3ZKOabzyN94A:10 a=LeixItDrjNxFEfIwcpfa:22 a=jlphF6vWLdwq7oh3TaWq:22
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
+The RTL9300 has a block of GPIOs included in the SoC. Add these to the
+devicetree.
 
+This is taken from openwrt[1] the differences are removing the
+unnecessary second cell from the interrupt and removing the -controller
+from the node name to conform to the dtschema.
 
-On 2025/6/17 20:24, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> The lines on this chip are input-only. GPIO core can handle the missing
-> .set() callback so there's no need to implement a dummy here. Drop it.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[1] - https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob;f=3Dtarge=
+t/linux/realtek/dts/rtl930x.dtsi
 
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/mips/boot/dts/realtek/rtl930x.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> ---
->   drivers/gpio/gpio-pmic-eic-sprd.c | 7 -------
->   1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-> index d9b228bea42eec53ba9d0d0945125f530a22946c..cb015fb5c9467484022723910354219e2c98d3c7 100644
-> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
-> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-> @@ -109,12 +109,6 @@ static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
->   	return 0;
->   }
->   
-> -static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
-> -			      int value)
-> -{
-> -	/* EICs are always input, nothing need to do here. */
-> -}
-> -
->   static int sprd_pmic_eic_set_debounce(struct gpio_chip *chip,
->   				      unsigned int offset,
->   				      unsigned int debounce)
-> @@ -351,7 +345,6 @@ static int sprd_pmic_eic_probe(struct platform_device *pdev)
->   	pmic_eic->chip.request = sprd_pmic_eic_request;
->   	pmic_eic->chip.free = sprd_pmic_eic_free;
->   	pmic_eic->chip.set_config = sprd_pmic_eic_set_config;
-> -	pmic_eic->chip.set = sprd_pmic_eic_set;
->   	pmic_eic->chip.get = sprd_pmic_eic_get;
->   	pmic_eic->chip.can_sleep = true;
->   
-> 
+diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
+/realtek/rtl930x.dtsi
+index 77a854034aba..24e262e2dc2a 100644
+--- a/arch/mips/boot/dts/realtek/rtl930x.dtsi
++++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
+@@ -156,6 +156,19 @@ watchdog0: watchdog@3260 {
+ 			interrupts =3D <5>, <6>;
+ 		};
+=20
++		gpio0: gpio@3300 {
++			compatible =3D "realtek,rtl9300-gpio", "realtek,otto-gpio";
++			reg =3D <0x3300 0x1c>, <0x3338 0x8>;
++			gpio-controller;
++			#gpio-cells =3D <2>;
++			ngpios =3D <24>;
++
++			interrupt-controller;
++			#interrupt-cells =3D <2>;
++			interrupt-parent =3D <&intc>;
++			interrupts =3D <13>;
++		};
++
+ 		snand: spi@1a400 {
+ 			compatible =3D "realtek,rtl9301-snand";
+ 			reg =3D <0x1a400 0x44>;
+--=20
+2.49.0
+
