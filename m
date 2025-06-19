@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F8719E97C;
-	Thu, 19 Jun 2025 01:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4742913B58B;
+	Thu, 19 Jun 2025 01:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750297220; cv=none; b=ocB+UGEjJnApH1KC0iWxh/iPWIpGf0P0+YFmy68Gm6fhMH7dE2OMwRR2aSL12Q0Zx0ZZrs8aopLsQ169wb9cZDhFpiFkXbbVqQaqtr5yGzU/GOcKb9yfP+wyYvLViuynrwOQLrcSPv35RsKulAccM7KtOxOiCF/+Zq0KtHaScUM=
+	t=1750297230; cv=none; b=aIN7yLI1jQLEkrkFYWWuV+y7/jZGC+t0BsxensJ3HhNJBxdsU/fc00v0P2vULTbZdMyAFEINhnspRD+HEHBZwKR2sCDN2n39XioVorEin9IptfklxTxEAjCkOerTlMaRZtwOhTPKHBBYVNUXiavUHWGTyy2qM84KWHaVRyDB/L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750297220; c=relaxed/simple;
-	bh=z4W/5q3MfpuebwypaylYFOBs/0zUazBsHDSkzMhrQY0=;
+	s=arc-20240116; t=1750297230; c=relaxed/simple;
+	bh=SvpJaLgxZ01hhEyPBK7m+g0OO/xO6+1O9tYOQcbbOzA=;
 	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=l145RJ90EujYlqNvY0avMw7rdJpYrfRIGRO5ntOf/zGmwuoqIQk7H1+0LpgzXqV+XaTpVePCpEMKtj/il5dv0eQQclsCCPwFTbRMp5fzRMaA9Vdoi/z8IYg5sM2gEbRER/ToCPk3KfVGBE7Q/JkK1jy9WPvJeccCN1Eg9q5cmZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmauIfGn; arc=none smtp.client-ip=10.30.226.201
+	 To:Date:Message-ID; b=rinM9h6c2u6d3HMEVLVGNDUvjC9wKDfXP3C92bV+SHFA5RRxgSqjg+ySv8h22+UfOiinhmIXJSn+xcmBzqzHbgbHcYhACYgDIh5rxjQfT8YRAvDeq9QhtPs/ZW0JyYbifwrEU7UeA1SL40G50zRzliltBEtYQkmYiU9Yehawsxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpXJqfyf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmauIfGn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6909FC4CEE7;
-	Thu, 19 Jun 2025 01:40:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpXJqfyf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A610AC4CEE7;
+	Thu, 19 Jun 2025 01:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750297219;
-	bh=z4W/5q3MfpuebwypaylYFOBs/0zUazBsHDSkzMhrQY0=;
+	s=k20201202; t=1750297229;
+	bh=SvpJaLgxZ01hhEyPBK7m+g0OO/xO6+1O9tYOQcbbOzA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=cmauIfGn+V0fXJZoBk3VLdYUHm594MQU2k2ZH4CEDN+8YhgT1tlWpF0vp0HAhdrgn
-	 3oXfRwxAjJP+L4X5x/yLgGWzs9qwV6E0GA+sCW6ZBPpCZuK7t82N+9fD2ssv1qFcE0
-	 XFp4L2XCdlOJgkKnYSotfWgAk/g1to2EGEKtDHkgP/7uLyv5VN2skwEWIaHTSuANQl
-	 H/YuFXBVdkQdaUMu1BbOR5UCRg2nJmv74C/xKjXKSjP3Maz7fCRy4phoyyignNUzgQ
-	 g6Q8IO26J2L3bL0Lh46jqRr5dCk+8XL5BHhh6xsZXQBESDIeOXX0wGOZUi9VIKgl9h
-	 +/XhnrNxneoOg==
+	b=IpXJqfyfPrj+58MPxmgcnMA3cRgcvyJEh8E4R5kq80Z+oDRAVyInhWgDU9FykbD5J
+	 ry50fE6U0iAJWoK+RdyXZ9WLoBxaqcYOZ+2ckm6g77fkQTK7XjjLnyvkMlSWJAP1+c
+	 zTBeV8mEajEq5L6kf6lYKvO9sGARGN0X+YqpCUnGURNrMnOwXH0NfGL6O/V26iWtrp
+	 WzjGw3/ARoHUROUr3WpLOwjSblgqoK1PwJDvcNPuOkflBePl35+w+GBc99iMLvhwKC
+	 YtZAaMoZZnvm+vBggQWxqiVsrHew4KT58S31/uOcP0QFeYuFZQJAcECBPn8s8fG+7U
+	 Z3OKQG1j4klEg==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,19 +34,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250521210806.61286-1-robh@kernel.org>
-References: <20250521210806.61286-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Convert marvell,armada-xp-cpu-clock to DT schema
+In-Reply-To: <20250521210813.61484-1-robh@kernel.org>
+References: <20250521210813.61484-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: Convert marvell-armada-370-gating-clock to DT schema
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring (Arm) <robh@kernel.org>
-Date: Wed, 18 Jun 2025 18:40:18 -0700
-Message-ID: <175029721859.4372.14703260841968150696@lazor>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Richard Cochran <richardcochran@gmail.com>, Rob Herring (Arm) <robh@kernel.org>
+Date: Wed, 18 Jun 2025 18:40:28 -0700
+Message-ID: <175029722892.4372.16473400898661004974@lazor>
 User-Agent: alot/0.11
 
-Quoting Rob Herring (Arm) (2025-05-21 14:08:05)
-> Convert the Marvell Armada XP CPU clock binding to DT schema format.
-> It's a straight forward conversion.
+Quoting Rob Herring (Arm) (2025-05-21 14:08:11)
+> Convert the Marvell gating clock binding to DT schema format. It's a
+> straight forward conversion.
 >=20
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
