@@ -1,140 +1,174 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C516D242927
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1687D242D66
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334554; cv=none; b=a2tuEb1X7b3aDLn6W9mqeL/E5cay5qdty6FyAgy2+bLkkNSc2ZXwxs93yfUv84xN1HplPI4ARo9gcTa2xtpaBoJdHhpUSQCxSyo7/ocduMAkJ4Cvvhu9yigood6ra0KPsrbmyZjXETHYyk8ktHysJ2T4kkIiYbHuxtnT1lAM0uE=
+	t=1750334561; cv=none; b=ki5poBX40+WcAMlWC/AUVnA/tKUWPz9Vj5vfUHI/V546YX+gHaiqC1O4VXxJPASR+k47VB3vqUrDwsygdNPbEsokKC8J0lLEYpHNIw9x8VmJmzudgTg6q+aJyLDKyS2NMhFsfmhj/eTIk7fuj2am5eWkKVkeqbmrrTVYcpsB/8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334554; c=relaxed/simple;
-	bh=BYKuCV9M64mQhbaDKHTfDnmetVYcpDwkMASwExKUrd8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z4wDx6r9GAc4PBbtUtQzSee32fTdKQij6Vbo/7tf01dbBWmo276Hel9AWAOkHYXLZw2T+/J40k/jJRYXjFUf/nP2lECswjk/0tLOmlwJxoqfOOMFDvyXnesRBW27ExdLXtjtVY/y6B5RSkrPZH/uo90YYks0odVYt7CYsNs104Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddbfe1fc8fso15898025ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:02:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750334552; x=1750939352;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7y5j2JBAlW/36clXSZNKqoUukF2n112h8sNTaQ5TG7E=;
-        b=jf8+gAItaGkpWUnA/5KjzoRFwCip5Cn7v42xDO31r53vwnmTvPdN/Z/wflGTqfjLZ1
-         vc0LFGBP+I1NgGeqEnmmq0MYtCM00Y75Ld7bIFUdnk9v6/EhurRU6oEEegqnvpRNEpp5
-         lLyzA2bW1RHYma9u7CqW7dKhJ+mPlqrM/AVtEfR73mDWoCWVKEZD/lHTpqsEWSatZlxZ
-         10IYSThd1DUM0Y0ZPb/av9EwS7h6uclR7cfelLwRVvNdgJE5LL1/K262ZwJNgXdEGbAt
-         ZactPTqvFTL1MBZgP5Fb4Hs9LRAoGRQWYSXZrVzxd0lTu/DPo36j77uzTVNocjsDSUUf
-         4t8A==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Vyada7XcGtqxO1CJlepphpL4U6bRwGpvDQkzRZBbPeGogUeq1dLYgWiA33a7pZ60NvYZnzxEpfVZ6Oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT4k8OHV+VFJg2JpD1yfjCos1kGPumNnTEjHZQPAAAujeZkQwS
-	HmnyBvIsCXKZ9lsiSL98enLFPsRCyBWgH2k66sh7d8y346QwNvMF05ONn1USmDkxeciaXDREfEH
-	tTSRnzdCZ/5sLl/p2PKvcnnbGHYej4zDSbJp6YaMn9TiYbhl4+TistIip1I0=
-X-Google-Smtp-Source: AGHT+IGSqDCI6Q2927k9VKmm8G21vKiI1k9bL2sKeMEI0T3+Q+VZYcl5TxH7DPSpl8qNfvFEuXpZsGwC4UMFhj3ojY4Nq9Kfc0ZY
+	s=arc-20240116; t=1750334561; c=relaxed/simple;
+	bh=ISGKYWQHqZwrdnSH3aBAdSNROfpykmXrb7TRsxguEAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dMNWKxOW7VmFbSqLNpY4Nl9iBgr+oxAC1nfDjQb/FVNnXzlEPdT9YkDuwT33qFknWTeVbq2oDgel1Ax4DhkMTqP7ysagD7BKkqxIcmFuaPc1mRqNQToKbxSvHz8j9o/wcgLXlHkdMJKDUbKsQCuQZMUUfn/6axw72sceT2gYz4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aC71axHT; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aC71axHT"
+Message-ID: <b598f584-e9fd-4160-9ce7-d328fee9f5d2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750334553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UIf+80VMeEYtxKKh9WCpb+Oha15eREMQWcHaePGgOTU=;
+	b=aC71axHTIl1v63n3S1xr7QzaUpVhMRzdpRt+lClG6hABMEUEcvAVaW90rv6325ce/3Cn2k
+	ST4F1YBDEfEtFU2Ta6g6uWW0j+9XOWKAUohCvYQvAf2QqkR3c26loaO05p2LG31tCq7Hn0
+	Gc3eSADZetCuJtAdSXCZS1D57b+tFyg=
+Date: Thu, 19 Jun 2025 20:02:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2482:b0:3dc:79e5:e6a8 with SMTP id
- e9e14a558f8ab-3de07ccd64amr273170815ab.15.1750334551928; Thu, 19 Jun 2025
- 05:02:31 -0700 (PDT)
-Date: Thu, 19 Jun 2025 05:02:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6853fc57.a00a0220.137b3.0009.GAE@google.com>
-Subject: [syzbot] [cgroups?] [mm?] WARNING in folio_lruvec_lock
-From: syzbot <syzbot+a74a028d848147bc5931@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 3/5] sched/fair: Switch to task based throttle model
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
+ <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>,
+ linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <20250618081940.621-1-ziqianlu@bytedance.com>
+ <20250618081940.621-4-ziqianlu@bytedance.com>
+ <ddca03a3-14d2-4d71-8070-8f9b8de9b7eb@linux.dev>
+ <20250618111913.GA646@bytedance>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250618111913.GA646@bytedance>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On 2025/6/18 19:19, Aaron Lu wrote:
+> Hi Chengming,
+> 
+> Thanks for your review.
+> 
+> On Wed, Jun 18, 2025 at 05:55:08PM +0800, Chengming Zhou wrote:
+>> On 2025/6/18 16:19, Aaron Lu wrote:
+>>> From: Valentin Schneider <vschneid@redhat.com>
+>>>
+>>> In current throttle model, when a cfs_rq is throttled, its entity will
+>>> be dequeued from cpu's rq, making tasks attached to it not able to run,
+>>> thus achiveing the throttle target.
+>>>
+>>> This has a drawback though: assume a task is a reader of percpu_rwsem
+>>> and is waiting. When it gets woken, it can not run till its task group's
+>>> next period comes, which can be a relatively long time. Waiting writer
+>>> will have to wait longer due to this and it also makes further reader
+>>> build up and eventually trigger task hung.
+>>>
+>>> To improve this situation, change the throttle model to task based, i.e.
+>>> when a cfs_rq is throttled, record its throttled status but do not remove
+>>> it from cpu's rq. Instead, for tasks that belong to this cfs_rq, when
+>>> they get picked, add a task work to them so that when they return
+>>> to user, they can be dequeued there. In this way, tasks throttled will
+>>> not hold any kernel resources. And on unthrottle, enqueue back those
+>>> tasks so they can continue to run.
+>>>
+>>> Throttled cfs_rq's leaf_cfs_rq_list is handled differently now: since a
+>>> task can be enqueued to a throttled cfs_rq and gets to run, to not break
+>>> the assert_list_leaf_cfs_rq() in enqueue_task_fair(), always add it to
+>>> leaf cfs_rq list when it has its first entity enqueued and delete it
+>>> from leaf cfs_rq list when it has no tasks enqueued.
+>>>
+>>> Suggested-by: Chengming Zhou <chengming.zhou@linux.dev> # tag on pick
+>>> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+>>> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+>>> ---
+>>>    kernel/sched/fair.c | 325 +++++++++++++++++++++-----------------------
+>>>    1 file changed, 153 insertions(+), 172 deletions(-)
+>>>
+>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>> index 8226120b8771a..59b372ffae18c 100644
+>>> --- a/kernel/sched/fair.c
+>>> +++ b/kernel/sched/fair.c
+>>> @@ -5291,18 +5291,17 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>>>    	if (cfs_rq->nr_queued == 1) {
+>>>    		check_enqueue_throttle(cfs_rq);
+>>> -		if (!throttled_hierarchy(cfs_rq)) {
+>>> -			list_add_leaf_cfs_rq(cfs_rq);
+>>> -		} else {
+>>> +		list_add_leaf_cfs_rq(cfs_rq);
+>>>    #ifdef CONFIG_CFS_BANDWIDTH
+>>> +		if (throttled_hierarchy(cfs_rq)) {
+>>>    			struct rq *rq = rq_of(cfs_rq);
+>>>    			if (cfs_rq_throttled(cfs_rq) && !cfs_rq->throttled_clock)
+>>>    				cfs_rq->throttled_clock = rq_clock(rq);
+>>>    			if (!cfs_rq->throttled_clock_self)
+>>>    				cfs_rq->throttled_clock_self = rq_clock(rq);
+>>> -#endif
+>>>    		}
+>>> +#endif
+>>>    	}
+>>>    }
+>>> @@ -5341,8 +5340,6 @@ static void set_delayed(struct sched_entity *se)
+>>>    		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>>>    		cfs_rq->h_nr_runnable--;
+>>> -		if (cfs_rq_throttled(cfs_rq))
+>>> -			break;
+>>>    	}
+>>>    }
+>>> @@ -5363,8 +5360,6 @@ static void clear_delayed(struct sched_entity *se)
+>>>    		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>>>    		cfs_rq->h_nr_runnable++;
+>>> -		if (cfs_rq_throttled(cfs_rq))
+>>> -			break;
+>>>    	}
+>>>    }
+>>> @@ -5450,8 +5445,11 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>>>    	if (flags & DEQUEUE_DELAYED)
+>>>    		finish_delayed_dequeue_entity(se);
+>>> -	if (cfs_rq->nr_queued == 0)
+>>> +	if (cfs_rq->nr_queued == 0) {
+>>>    		update_idle_cfs_rq_clock_pelt(cfs_rq);
+>>> +		if (throttled_hierarchy(cfs_rq))
+>>> +			list_del_leaf_cfs_rq(cfs_rq);
+>>
+>> The cfs_rq should be removed from leaf list only after
+>> it has been fully decayed, not here.
+> 
+> For a throttled cfs_rq, the intent is to preserve its load while it's
+> throttled. Its pelt clock is stopped in tg_throttle_down(), there will
+> be no decay for it if left on leaf list.
 
-syzbot found the following issue on:
+Ah, right.
 
-HEAD commit:    bc6e0ba6c9ba Add linux-next specific files for 20250613
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1126090c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2f7a2e4d17ed458f
-dashboard link: https://syzkaller.appspot.com/bug?extid=a74a028d848147bc5931
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> 
+> I've also described why I chose this behaviour in cover letter:
+> "
+> For pelt clock, I chose to keep the current behavior to freeze it on
+> cfs_rq's throttle time. The assumption is that tasks running in kernel
+> mode should not last too long, freezing the cfs_rq's pelt clock can keep
+> its load and its corresponding sched_entity's weight. Hopefully, this can
+> result in a stable situation for the remaining running tasks to quickly
+> finish their jobs in kernel mode.
+> "
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Ok, I get it, keeping the current behavior seems reasonable to me.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/2430bb0465cc/disk-bc6e0ba6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/436a39deef0a/vmlinux-bc6e0ba6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e314ca5b1eb3/bzImage-bc6e0ba6.xz
+Another way maybe detaching throttled task's load when dequeue, and
+resetting its se->avg.last_update_time to 0, so its load will be attached
+when enqueue. So we don't need to stop its cfs_rq's pelt clock.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a74a028d848147bc5931@syzkaller.appspotmail.com
+But the current approach looks simpler.
 
- handle_mm_fault+0x740/0x8e0 mm/memory.c:6397
- faultin_page mm/gup.c:1186 [inline]
- __get_user_pages+0x1aef/0x30b0 mm/gup.c:1488
- populate_vma_page_range+0x29f/0x3a0 mm/gup.c:1922
- __mm_populate+0x24c/0x380 mm/gup.c:2025
- mm_populate include/linux/mm.h:3354 [inline]
- vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
- ksys_mmap_pgoff+0x587/0x760 mm/mmap.c:607
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page_owner free stack trace missing
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 38 at ./include/linux/memcontrol.h:732 folio_lruvec include/linux/memcontrol.h:732 [inline]
-WARNING: CPU: 0 PID: 38 at ./include/linux/memcontrol.h:732 folio_lruvec_lock+0x150/0x1a0 mm/memcontrol.c:1211
-Modules linked in:
-CPU: 0 UID: 0 PID: 38 Comm: ksmd Not tainted 6.16.0-rc1-next-20250613-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:folio_lruvec include/linux/memcontrol.h:732 [inline]
-RIP: 0010:folio_lruvec_lock+0x150/0x1a0 mm/memcontrol.c:1211
-Code: 7c 25 00 00 74 08 4c 89 ff e8 7c 66 f8 ff 4d 89 2f eb c4 48 89 df 48 c7 c6 60 4f 98 8b e8 58 9b dc ff c6 05 01 85 5f 0d 01 90 <0f> 0b 90 e9 d5 fe ff ff 44 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c 4d
-RSP: 0018:ffffc90000ae7660 EFLAGS: 00010046
-RAX: b21d845e3554e000 RBX: ffffea0002108000 RCX: b21d845e3554e000
-RDX: 0000000000000002 RSI: ffffffff8db792e4 RDI: ffff88801de83c00
-RBP: ffffea0002108000 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfaa14 R12: ffffea0002108000
-R13: ffffea0002108008 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888125c41000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f475c15ef98 CR3: 000000005f95a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __split_unmapped_folio+0x42e/0x2cb0 mm/huge_memory.c:3487
- __folio_split+0xf78/0x1300 mm/huge_memory.c:3891
- cmp_and_merge_page mm/ksm.c:2358 [inline]
- ksm_do_scan+0x499b/0x6530 mm/ksm.c:2665
- ksm_scan_thread+0x10b/0x4b0 mm/ksm.c:2687
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks!
