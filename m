@@ -1,182 +1,91 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA046264602;
-	Thu, 19 Jun 2025 13:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E7426E701;
+	Thu, 19 Jun 2025 13:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339775; cv=none; b=MDCo1JVDBWzTL12S5GAGhGvlh0k+mF+5GboAJiT31qpJrtqw+DzF1VERUF350Mhdo8W1AQWarzon9C5QkxexIEGT8GBBdPGczLlDngMVZfb82XOot+sc8KobZD8DBFfEsA1G7SgZfa7TvFREK3zsu6OlC5rFMhKZV9/IbyyAi8M=
+	t=1750339787; cv=none; b=QhaT8tox+GPzZ8JynUqY9jLVBHIqEfkZ2yZjapTr5HV1T2RHx5swkiR1lfpu6UZPwG4ttDJwHwB8UWVnreLHL3ITyOu0/0LGeQmU7htDJ32XK4ArctD6i6YerLt6CnF9F2oBpSHynvg7mIjwFOCm4h7bQNLJwo3PdkrYNjsem8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339775; c=relaxed/simple;
-	bh=k1rycoin016Y5oOCyiCPALghuj+7+2zI7ETOOd/al+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UN6CzcVFZbhwsjJNhorFFGFTQoiCAMalJ07IQ6uPNCj7NsT9jAx/tk0YUGFuVzEkwO6gPLXh9lXx+upfDhPLbBSLTTeZwTL2XtahnKxZsxA+8qdFSMGuZot88X5zjhpcAsG0eAsDq1dgPDuKNP64xLYozMdGtV0HpmhcbByidhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJKZWhlq; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750339787; c=relaxed/simple;
+	bh=FaMfLH+zASWj6RQ2hfI5lxo04Guv62Z/Oj3reFGID6c=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bcqxkTLA/liQRXQIhGiOyiwIdUu+AzZtt9vSgSVi1/BcSJTkc/l2TjMBjLMRFgtrmEnptmgBjVqNsUbHhYulDTX/9RRkxEJ5sdeCzyXWVgJQS2F+QtvmvjJnOPCgVRtxiWQ9fz0OfZGj9yTT7CVmjehGLazrV4giY6dIei17POw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tgp6q+17; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJKZWhlq"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d21f21baf7so97237085a.0;
-        Thu, 19 Jun 2025 06:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750339773; x=1750944573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OE6+E3mACThLS+PEtrJkYrlgdi95WFIgFRjgenTQrJQ=;
-        b=FJKZWhlqfgmbrPkfxAp4k1X1yBPhp0mkfee7jQY6FfBT+ZgUw2/25LKlIKwVG+5Rij
-         /7idYX3D39MtwPhToYdn6zQWnwA++boo/sUtACd5D41zvC4calfcgmW3zfemcLxPbBuL
-         gRe23Ph5+ZsFMDWdmRLktAmKdChIC8HofxkmkBqHjJ1Wj94TwD+XKybxkOHPrhPZHsp4
-         /5gpR4eoGfB+0BQ74NENngrmGT8N/46yO+utmnFdAT8r6NkTS/ADXupPS2aeNF+Psz1O
-         qqmZmgxd6h3YGrXzZeweHyqntjzgjoMTt6KhPhXHNVrZdccUWUOfGL6PG3yPh7bCzLLF
-         Op6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750339773; x=1750944573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OE6+E3mACThLS+PEtrJkYrlgdi95WFIgFRjgenTQrJQ=;
-        b=XiDyrKOU+lKVGygPetwi2i1zaZKsd16m+ki4+C1N+y5B9wwC+9i4JFuhyMPR5AD15Z
-         NSs/Zt3GyxIul6sHIl8SiGAOK6p26nDUccV4ql5yplObLyAOHT6liOLuaoWU07TqazSJ
-         OhOrWg4XJpVA545+TWtQw+4y8Yma0aLPtXbWHr+CvsQF5cFeBHvgXV+YSlswlnifswTb
-         uK94Hpqy1PbFMyHMoPAZKZUccDsSooMtMwMgsuwhRIcDMglIuk/aUukXkHXQBhFW5Hg7
-         2trBHL8UEhNKfhsNT0LJr8xuGFiIoqqTFPGD3+sfSLK8yH9EroePuB1fpJhM8sbJ7U/3
-         FkOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1/1+oqBLLa7AjkQXGFaFkLPE1KaUjJWAHNunuQsRXQNXFpU+x7NyJK7bhQOnJZw8Uboom5zBWhdkw@vger.kernel.org, AJvYcCVQDFgJoRI6HdnPaznOlWUyUKcbsEOrwsKcKwP830BxbeAIvblTeRyJfduhFxYRPXdyCCprsf9psQocxTu9CX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuDLfcYgNZj9edLzdO9M+9Vygu0C2akV+aIcwBCZY7KmRvGZ8n
-	JDngzdc4ghEqgnysKlSOwbUS5+JTGXEuehu8LYjLbkPEg1hpGL8Nadfg
-X-Gm-Gg: ASbGncvboxXFPzGAruDvb82LVjL4yWSGKDFvqmLsefCb1WY9kfVomyFrAnQzzE7NFX7
-	wX8HUEuaWGH1QBWe6YQE/+WzIGwA0DscVWu8k+9GVUu0yD5DRVx/pMsc7mxwH1b2LPlRR7eXhCe
-	+e6ZhwwDuQwF7x+YNfqNGHx1L0lz1AGa56Hcha9C2VYjpTl2clxmphVSey9GHTKUxP851VIvvzS
-	amKjaJK8pSaMWZQwg6qRUtM2M0XhP7hZAyx3dpw7r3RBLbj1t1/9KkZ4dyOc2JshKpgMxrbeL8K
-	2kevAfK7u8DcecxJONWXslZ0rhFMfArK1y5xwVl8drPxdKRKFuuza6NBvXGSuJvmFqYYTqSVKjm
-	xWoKfw++dhL2JPbRxakoe8QgJg7Kk94y4tfvm/bIsr8RN3pSoaKCm
-X-Google-Smtp-Source: AGHT+IG0jYJUV5aviMjD5HPm1vyOkmeugKyt/Y/JLGwulOYBKRujCGnV7nb/0X/gOg3ydiOk3qM+4w==
-X-Received: by 2002:a05:620a:25d4:b0:7c5:49b7:237c with SMTP id af79cd13be357-7d3c6cdc704mr3070557685a.27.1750339772721;
-        Thu, 19 Jun 2025 06:29:32 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eaca67sm878292685a.59.2025.06.19.06.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 06:29:32 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8C48E1200043;
-	Thu, 19 Jun 2025 09:29:31 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 19 Jun 2025 09:29:31 -0400
-X-ME-Sender: <xms:uxBUaEqPUZEiRlASJATU1Thqs6yZzEn6bBgVZVqb8R7RM8Va89_nbg>
-    <xme:uxBUaKqapLLmIlE2DtBf1RV3k19__mwd5LakfACLIaHc3sho5E-3eDQhjKqIibwoH
-    w3tj7xk4SpQydfqtA>
-X-ME-Received: <xmr:uxBUaJPuIusecdbUoejcPLwLV3Z46HjV2tfDgmJdBl2-kKEV7NqS3HnjkA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehieegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpefhtedvgfdtueekvdekieetieetjeeihedvteehuddujedvkedtkeefgedvvdehtden
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
-    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
-    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedv
-    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgrug
-    gvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlihhnuhig
-    rdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    rghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesgh
-    grrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhm
-    rghilhdrtghomh
-X-ME-Proxy: <xmx:uxBUaL4Sny6CKfAJbw3TXbpu_xWIczu0NcHpy51Pk3tLtVfw0N4gmQ>
-    <xmx:uxBUaD5z_QuETSR3iz-WSduY2Km4GIBr8L7BeOXkyhPGTWrBK2zC1g>
-    <xmx:uxBUaLhhglI3TRF6mDD2QS_Xt9n7uSTxJ4QWl6cqXGw2z_jZfPsSkg>
-    <xmx:uxBUaN58jF1LvA8Y1S-5vlU9PAus-2S7YH2ForbAzjZ4hx5GdawtuQ>
-    <xmx:uxBUaGJrWbYNrwuBbR4-Wo_Um4vBAqtx5rtzP1ZeXRjmQ4Sw0O5kA95q>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 09:29:31 -0400 (EDT)
-Date: Thu, 19 Jun 2025 06:29:29 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
- types
-Message-ID: <aFQQuf44uovVNFCV@Mac.home>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-4-boqun.feng@gmail.com>
- <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tgp6q+17"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED8FC4CEEA;
+	Thu, 19 Jun 2025 13:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750339786;
+	bh=FaMfLH+zASWj6RQ2hfI5lxo04Guv62Z/Oj3reFGID6c=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Tgp6q+17JO7gmCqulFeQTWGjy53/mM83Op7i2WiL38PoMcFsaxlK91mZmWEpFKhpH
+	 Rqc6AvNyRD4l7uhZOmFG8BVaO+lo5HnKxOHDAwGYBK1aLJ7QZTSOqfCFJ2LEQvrWf4
+	 fD0G1iSEi1e1deqHQpcdqhFQAiFOZN3xkB722n4qkz5pGP9gb56hnxYqQDGzSDsH58
+	 SjlOonL0RJ2x0WI08hNbGBUJZZy+NDf0zMtw00+YhH3cMSxquhhjh45tZk3eTXAcVw
+	 ko/G2M6KaznyZ4IgJ8hY/BryS7eO/UJLtwlnO49XPRPllxvKt9lMpwVs5b8DHwqmAa
+	 nvMte+Ea2CE5g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAC943806649;
+	Thu, 19 Jun 2025 13:30:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/4] Support bandwidth clamping in mana using
+ net
+ shapers
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175033981475.865029.2634804125287393920.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 13:30:14 +0000
+References: <1750144656-2021-1-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <1750144656-2021-1-git-send-email-ernis@linux.microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+ shirazsaleem@microsoft.com, leon@kernel.org,
+ shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
+ gerhard@engleder-embedded.com, rosenp@gmail.com, sdf@fomichev.me,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
 
-On Thu, Jun 19, 2025 at 12:31:55PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 18, 2025 at 09:49:27AM -0700, Boqun Feng wrote:
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 17 Jun 2025 00:17:32 -0700 you wrote:
+> This patchset introduces hardware-backed bandwidth rate limiting
+> for MANA NICs via the net_shaper_ops interface, enabling efficient and
+> fine-grained traffic shaping directly on the device.
 > 
-> > +//! Memory orderings.
-> > +//!
-> > +//! The semantics of these orderings follows the [`LKMM`] definitions and rules.
-> > +//!
-> > +//! - [`Acquire`] and [`Release`] are similar to their counterpart in Rust memory model.
+> Previously, MANA lacked a mechanism for user-configurable bandwidth
+> control. With this addition, users can now configure shaping parameters,
+> allowing better traffic management and performance isolation.
 > 
-> So I've no clue what the Rust memory model states, and I'm assuming
-> it is very similar to the C11 model. I have also forgotten what LKMM
-> states :/
-> 
-> Do they all agree on what RELEASE+ACQUIRE makes?
-> 
+> [...]
 
-I think the question is irrelevant here, because we are implementing
-LKMM atomics in Rust using primitives from C, so no C11/Rust memory
-model in the picture for kernel Rust.
+Here is the summary with links:
+  - [net-next,v3,1/4] net: mana: Fix potential deadlocks in mana napi ops
+    https://git.kernel.org/netdev/net-next/c/d5c8f0e4e0cb
+  - [net-next,v3,2/4] net: mana: Add support for net_shaper_ops
+    https://git.kernel.org/netdev/net-next/c/75cabb46935b
+  - [net-next,v3,3/4] net: mana: Add speed support in mana_get_link_ksettings
+    https://git.kernel.org/netdev/net-next/c/a6d5edf11e0c
+  - [net-next,v3,4/4] net: mana: Handle unsupported HWC commands
+    https://git.kernel.org/netdev/net-next/c/ca8ac489ca33
 
-But I think they do. I assume you mostly ask whether RELEASE(a) +
-ACQUIRE(b) (i.e. release and acquire on different variables) makes a TSO
-barrier [1]? We don't make it a TSO barrier in LKMM either (only
-unlock(a)+lock(b) is a TSO barrier) and neither does C11/Rust memory
-model.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[1]: https://lore.kernel.org/lkml/20211202005053.3131071-1-paulmck@kernel.org/
 
-> > +//! - [`Full`] means "fully-ordered", that is:
-> > +//!   - It provides ordering between all the preceding memory accesses and the annotated operation.
-> > +//!   - It provides ordering between the annotated operation and all the following memory accesses.
-> > +//!   - It provides ordering between all the preceding memory accesses and all the fllowing memory
-> > +//!     accesses.
-> > +//!   - All the orderings are the same strong as a full memory barrier (i.e. `smp_mb()`).
-> 
-> s/strong/strength/ ?
-> 
-
-Fixed locally.
-
-Regards,
-Boqun
-
-> > +//! - [`Relaxed`] is similar to the counterpart in Rust memory model, except that dependency
-> > +//!   orderings are also honored in [`LKMM`]. Dependency orderings are described in "DEPENDENCY
-> > +//!   RELATIONS" in [`LKMM`]'s [`explanation`].
-> > +//!
-> > +//! [`LKMM`]: srctree/tools/memory-model/
-> > +//! [`explanation`]: srctree/tools/memory-model/Documentation/explanation.txt
