@@ -1,81 +1,65 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420C28BABC
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6214423535A
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350526; cv=none; b=iR2cSU+qh4WYnwJQNsF8E65OvMJoBoD8a+f3451MXRDqrv6DHrDV4qsKC2Zj4U1fwRkpIq7oSnbzj0tM8ffwtOjIo3QKwi72AL+DO4lIyk1VEd7FeDhQ5wfj/Na6vijG9TqvGc7NFoj7HznCd1kCpBqL6qeQVtduM65ZCqMEi5k=
+	t=1750350562; cv=none; b=W9R4+EIzmJpa04MuTXZO8BRgOS34uZTY3w+OlQM/IlGVSZPjkwyHen9HhvEAJrv+n/IeBsdraSQxewKdVw48HfLsG1ajFJEO0dceOM9Qbl2RGU1HUrjopfOaELDtrVVPl5vW/LJ//f6thzHrYnk91oLBBPUC+/N1l02i1juVKb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350526; c=relaxed/simple;
-	bh=zidJjhp4CtIdjYt9Zfq+jJWUL7rpncLQlS5a5aZqwzc=;
+	s=arc-20240116; t=1750350562; c=relaxed/simple;
+	bh=EMyL1Uo0zzWNprcGuHaXIt2QwhvXtZojt+40ir9jHkc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=etN1SXPcx59lGbexgS1R329hrCx5QvaOjdmM7TA+F6rsQC9evWzV1hlQ81PBe8d1jwEO9ER4hZFMKrhKRJIdaQq+DkXrId1nwUEDHiGEeFO8EHgf6vr8UkNa7+qg7JmOXszdeA8KNjqdDeHrCDau3Awpj288GIpbtaNvc3QU4ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BeGa7k9b; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Tub6wDde; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BeGa7k9b; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Tub6wDde; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=jZDcl8Jbms7g0q2hRW2mmn+8ngrkTihdHK8ojoofQTJSB2Kwj1CAsMPQfJK5oTmnhkEW9YH997NLH+FDri1dUiI5XT9zMdC4saCsGop402v1kvStBXKxmkUaUbxALv2yuk8appKli5VmvnOgg9B/qEiPwWCxYjRaMTwfJhCYN/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RAvdPmVZ; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BeGa7k9b";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Tub6wDde";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BeGa7k9b";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Tub6wDde"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 30CB51F390;
-	Thu, 19 Jun 2025 16:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750350521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=L0XB80uY96nZSSx/hm/ejautkqzNKhDWxLnZPhTiV14=;
-	b=BeGa7k9bpKf9lHVInMG4ggxuTGbyy2Na2s3wSdo43x9lsanIwhCtf4qa/Wacks6GnEZByK
-	hamQIlvU5AYyj/ikzqT0qLBKXEMsW/Hf3YfYad6UDNgCIt4xevCWQY85+x36JxpNYh7L/6
-	tTaFvucek97bHLbrbXPucnvaZ77lHKc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750350521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=L0XB80uY96nZSSx/hm/ejautkqzNKhDWxLnZPhTiV14=;
-	b=Tub6wDdeT7HClESsmBZg0rMuHkyWXvR6/u5d4sU9cui2QsyjBJ0P61M/u9Ycm2GAWxWtCn
-	QsRjPj+x3CzIsUAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=BeGa7k9b;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Tub6wDde
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750350521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=L0XB80uY96nZSSx/hm/ejautkqzNKhDWxLnZPhTiV14=;
-	b=BeGa7k9bpKf9lHVInMG4ggxuTGbyy2Na2s3wSdo43x9lsanIwhCtf4qa/Wacks6GnEZByK
-	hamQIlvU5AYyj/ikzqT0qLBKXEMsW/Hf3YfYad6UDNgCIt4xevCWQY85+x36JxpNYh7L/6
-	tTaFvucek97bHLbrbXPucnvaZ77lHKc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750350521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=L0XB80uY96nZSSx/hm/ejautkqzNKhDWxLnZPhTiV14=;
-	b=Tub6wDdeT7HClESsmBZg0rMuHkyWXvR6/u5d4sU9cui2QsyjBJ0P61M/u9Ycm2GAWxWtCn
-	QsRjPj+x3CzIsUAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8D4E136CC;
-	Thu, 19 Jun 2025 16:28:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TJacKLg6VGhBRQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 19 Jun 2025 16:28:40 +0000
-Message-ID: <b62b287a-8c13-474b-96ab-a33cc06f1c54@suse.cz>
-Date: Thu, 19 Jun 2025 18:28:40 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RAvdPmVZ"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-40791b696a2so248143b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750350559; x=1750955359; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Id+f7kVLppAX20HAP2AURqNW1tLLgPJWhJTti78Nq48=;
+        b=RAvdPmVZiiyVV4XKLJ/iNfBCoCl62eXfu4FRUgmdYnhCOWt2SZTcRC1I3WR3MS1/Nq
+         jCuzzAKhWNHn5vpD1jA3NxkVySJT2XQQ1xmaOdljUbkiV0jiOLfrcMusqmxqrkZC+iJy
+         FyGi2IMa6cQLNbiF4zpsPH9ZIjpRZ+MSYxaKKm5uoAzaw5Y0B+U3O9PrFV8CLHqbxrh2
+         vkRIhltCm/N9tAiADQh1A4dpMxJKeYJOOJ0oifd0o+mkrbEhOPxrwk+FN/Kj12NGSUI0
+         Z8CdYGf1TgBNftKk1//XtTnEeudbOLwecnK3RJfc25/NK7ofRaifBv6j81/QOCNno0QT
+         36wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750350559; x=1750955359;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Id+f7kVLppAX20HAP2AURqNW1tLLgPJWhJTti78Nq48=;
+        b=AXsWggyCe18CwpHkisT3HEjpA2ZvrtyAxnYIQANg9513wIRX2MRvoupyzYwAh7oKk6
+         OEidU3gujycLSJJ8FVgJnVl7D9t6F+JBdy1jgEXzZdPrVrbYs3887XlwSvfyt/zS/0Z4
+         NWVNNOZpRGCyyqOSH5elEC0uQi9l7ljvEkw+DbHnyQgO1r1B4RUrYth1xliHadbX8acc
+         Hn/ps0iD/qr1eq8YCT0uLvds47VyDr8RAKQLU1MidJwPCkr2FUy82mVnxz2gAvsYbgiw
+         ad1z/JwOT2Gu69df2NWlG/zWNHenWY08QprDt1WgnxVAJQQ87UnhdSh5IcT9Opd3ZOd6
+         1/+A==
+X-Forwarded-Encrypted: i=1; AJvYcCW5hOSlHso7fxebOo71UwgwEL3PbWcO/8Mkf+RLKh/jqO/IzTx7fd0rTFlbFG9pY2STs4vWmGOMEhslW2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7M1K3StizR5viT0AvocNd3LRzJata8DfyoUa3pkKI4nUk4mr1
+	BYIWjmqleYw7exE/veYf41O3QsIiqIVc22vLavJvRmmJq5K0phfvGrVitYHKin4Lu+Y=
+X-Gm-Gg: ASbGncsVAIINUxHdxtd31X4TV5Ku5nHbb7MyFSMQsLmLmdTSLpYcmCaqWZUy79Lj4WR
+	Yn+zdQe3JG/8QKE0v4KVlpi9dtzJdqGh5EV0WpxZkPeZo/EEhLvW8s1580zzwKrJL/mJXOQASN6
+	IRHmJrcRTmVdguXqnmDBpxKg+5rL5P7uCvjCsG/fgZyHPag9fJKat1Wt0O9zYekway1Prw3tIFL
+	QaK7B+5gogHJya7ZSOn9qsD7aNDvWCBvyqHTZlGo3Xy5sAMB+/kC0SYBHy/qc5iS4lW/V5iFff6
+	YSVA8UKzCJ4XW5D5Oguis++9QDWaxy3qZ536xK2zfkQVUfl6UJvgl3RTH35kXa85hVWysbJ14iN
+	lrEZtutL4DAPEDFrmT5AUglcU+hVAhVuViem39Tg=
+X-Google-Smtp-Source: AGHT+IE3wykgtpudCLPxyYXHgot19QH7CguFGEPEsZeTABHQ1Nd9aytQtOo9OtA4EGXFPZmqiX54mQ==
+X-Received: by 2002:a05:6808:189c:b0:40a:56e7:1e59 with SMTP id 5614622812f47-40a7c17ecdemr15537482b6e.5.1750350559492;
+        Thu, 19 Jun 2025 09:29:19 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:5504:5211:6fc4:c093? ([2600:8803:e7e4:1d00:5504:5211:6fc4:c093])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a74172cb3sm2790979b6e.25.2025.06.19.09.29.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 09:29:19 -0700 (PDT)
+Message-ID: <b27c6aab-e363-45df-8521-e85c2b3f4421@baylibre.com>
+Date: Thu, 19 Jun 2025 11:29:17 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,197 +67,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v8 4/7] mm/mempolicy: Export memory policy symbols
+Subject: Re: [PATCH v2 2/9] dt-bindings: spi: zynqmp-qspi: Add example dual
+ upper/lower bus
+To: Sean Anderson <sean.anderson@linux.dev>, Mark Brown <broonie@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+References: <20250616220054.3968946-1-sean.anderson@linux.dev>
+ <20250616220054.3968946-3-sean.anderson@linux.dev>
+ <2588bb7f-2a3a-4001-ab1b-6d9bd57b545b@baylibre.com>
+ <cdeb54e8-0624-42de-bac2-25b151c37872@linux.dev>
 Content-Language: en-US
-To: Shivank Garg <shivankg@amd.com>, Gregory Price <gourry@gourry.net>
-Cc: seanjc@google.com, david@redhat.com, willy@infradead.org,
- akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
- brauner@kernel.org, viro@zeniv.linux.org.uk, ackerleytng@google.com,
- paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz,
- bfoster@redhat.com, tabba@google.com, vannapurve@google.com,
- chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
- yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
- michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com,
- peterx@redhat.com, jack@suse.cz, rppt@kernel.org, hch@infradead.org,
- cgzones@googlemail.com, ira.weiny@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- kent.overstreet@linux.dev, ying.huang@linux.alibaba.com, apopple@nvidia.com,
- chao.p.peng@intel.com, amit@infradead.org, ddutile@redhat.com,
- dan.j.williams@intel.com, ashish.kalra@amd.com, gshan@redhat.com,
- jgowans@amazon.com, pankaj.gupta@amd.com, papaluri@amd.com,
- yuzhao@google.com, suzuki.poulose@arm.com, quic_eberman@quicinc.com,
- aneeshkumar.kizhakeveetil@arm.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-coco@lists.linux.dev
-References: <20250618112935.7629-1-shivankg@amd.com>
- <20250618112935.7629-5-shivankg@amd.com>
- <aFLXRtCDfoNzQym6@gourry-fedora-PF4VCD3F>
- <4267108c-ac26-4528-97cc-0d160568baee@amd.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <4267108c-ac26-4528-97cc-0d160568baee@amd.com>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <cdeb54e8-0624-42de-bac2-25b151c37872@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 30CB51F390
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[google.com,redhat.com,infradead.org,linux-foundation.org,kernel.org,zeniv.linux.org.uk,paul-moore.com,namei.org,hallyn.com,suse.cz,intel.com,amd.com,nvidia.com,amazon.com,googlemail.com,amazon.co.uk,gmail.com,sk.com,linux.dev,linux.alibaba.com,arm.com,quicinc.com,vger.kernel.org,kvack.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_GT_50(0.00)[65];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.01
-X-Spam-Level: 
 
-On 6/19/25 13:13, Shivank Garg wrote:
-> 
-> 
-> On 6/18/2025 8:42 PM, Gregory Price wrote:
->> On Wed, Jun 18, 2025 at 11:29:32AM +0000, Shivank Garg wrote:
->>> KVM guest_memfd wants to implement support for NUMA policies just like
->>> shmem already does using the shared policy infrastructure. As
->>> guest_memfd currently resides in KVM module code, we have to export the
->>> relevant symbols.
+On 6/19/25 11:20 AM, Sean Anderson wrote:
+> On 6/18/25 14:27, David Lechner wrote:
+>> On 6/16/25 5:00 PM, Sean Anderson wrote:
+>>> Add an example of the spi-buses property showcasing how to have devices
+>>> on both the upper and lower buses.
 >>>
->>> In the future, guest_memfd might be moved to core-mm, at which point the
->>> symbols no longer would have to be exported. When/if that happens is
->>> still unclear.
->>>
->>> Acked-by: David Hildenbrand <david@redhat.com>
->>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
->>> Signed-off-by: Shivank Garg <shivankg@amd.com>
+>>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 >>> ---
->>>  mm/mempolicy.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
 >>>
->>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>> index 3b1dfd08338b..d98243cdf090 100644
->>> --- a/mm/mempolicy.c
->>> +++ b/mm/mempolicy.c
->>> @@ -354,6 +354,7 @@ struct mempolicy *get_task_policy(struct task_struct *p)
->>>  
->>>  	return &default_policy;
->>>  }
->>> +EXPORT_SYMBOL_GPL(get_task_policy);
->>>  
->>>  static const struct mempolicy_operations {
->>>  	int (*create)(struct mempolicy *pol, const nodemask_t *nodes);
->>> @@ -487,6 +488,7 @@ void __mpol_put(struct mempolicy *pol)
->>>  		return;
->>>  	kmem_cache_free(policy_cache, pol);
->>>  }
->>> +EXPORT_SYMBOL_GPL(__mpol_put);
->>>  
->> 
->> I'm concerned that get_task_policy doesn't actually increment the policy
-
-Hm it might be a bit misnomer. But fixing that would be out of scope here.
-
->> refcount - and mpol_cond_put only decrements the refcount for shared
->> policies (vma policies) - while __mpol_put decrements it unconditionally.
->> 
->> If you look at how get_task_policy is used internally to mempolicy,
->> you'll find that it either completes the operation in the context of the
->> task lock (allocation time) or it calls mpol_get afterwards.
+>>> Changes in v2:
+>>> - New
+>>>
+>>>  .../bindings/spi/spi-zynqmp-qspi.yaml         | 22 ++++++++++++++++++-
+>>>  1 file changed, 21 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+>>> index 02cf1314367b..c6a57fbb9dcf 100644
+>>> --- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+>>> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+>>
+>>
+>> In addition to changing the example, we could also extend the
+>> spi-buses property for this controller since we know this controller
+>> has 2 buses.
+>>
+>>   properties:
+>>     ...
+>>
 > 
-> I agree. But the semantics of my usage isn't new. shmem use this in same way.
+> OK, but this property is for the slaves not the master. I'm not sure what the right incantation is.
 
-Yeah it's only used in the context of the allocation or the get_mempolicy()
-syscall and the pointer is not retained somewhere indefinitely. In case of
-task's mempolicy, the protection comes from only accessing current task's
-policy, and also only the current task can replace it with the
-sys_mempolicy() syscall.
 
-> I think the alloc_frozen_pages_noprof(), alloc_pages_bulk_mempolicy_noprof()
-> calls get_task_policy without task_lock or calling mpol_get.
+I think using patternProperties, like in Documentation/devicetree/
+bindings/spi/spi-controller.yaml
 
-Yes.
+patternProperties:
+  "^.*@[01]$":
+    spi-buses:
+      ...
 
->> 
->> Exporting this as-is creates a triping hazard, if only because get/put
->> naming implies reference counting.
-
-I don't think we in general consider the act of export a larger hazard for
-misuse than misuse by internal code. For e.g. __mpol_put() we have to export
-it due to combination of inlined and non-inlined code, but nobody would
-really call it directly, but use mpol_put() and mpol_cond_put(). We'd need
-to be able to "un-declare" it after the usage in the two inline wrappers to
-prevent direct (mis)use by both modules and non-modules.
-
-> Since KVM is the only user, we could consider newly added EXPORT_SYMBOL_GPL_FOR_MODULES(..., "kvm")
-> to avoid wider exposure.
-
-Yes that would be preferred now for all the guest_memfd related series in
-flight adding exports anywhere.
-
-> Does this solve your concern?
-> Or should we rename these functions.
-> What should be the preferred approach?
 > 
-> Thanks,
-> Shivank
-
+>>     spi-buses:
+>>       description: 0 is the "lower" bus, 1 is the "upper" bus
+>>       maxItems: 2
+>>       items:
+>>         enum: [0, 1]
+>>
