@@ -1,136 +1,102 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652AD244699;
-	Thu, 19 Jun 2025 19:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B383522A;
+	Thu, 19 Jun 2025 19:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750361378; cv=none; b=VVWqTrcYgwO8MNcNzZIybpbCqnhLiwx6cAGVcnWI8zE2ayjgFCcA5Nv3wnmdB6vuRwCNKykRAUtvcaeLptB1cNifMXGl4+4szR/PPZQimCR2x2pYsx9gj8SGQEU0Rqg+bVAQ9ERtyP2lZ32fG/TOScTVqw5ClBz+Qo+vnj/mtzE=
+	t=1750361507; cv=none; b=BiOlOc0Riba+IsQpEGlg6svI7qC02biJLvNg5t3jOoNydyvF+agi1Yn/+rLjDBEDj22HA1N24yLhttopTXsiblnamkdzf9nFN2/zf9OZrRZhiR9OupjRp7uyu0SHjxsZgp/H6oB4Ks08CFINvJwwmS+tdCP5mk2X/QEhVcgpSOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750361378; c=relaxed/simple;
-	bh=V2qQyRszvZoY3v298FOrv1bwHvikJ5OUj4mvjFGRdAY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=QMNp13+m7dqtdgYr9AJYH7qtTh3hyJXGqS//eQHYm+gWdlujtSW4A2tnQYqfRRCuXg5IC2PGBrkCwCBM7tQkEzVskfP4B8AsT1U0cRXfMABaPYiQ55QnG+mChlxnm4d24dBN/KrVPmZwkrIFMih/9kJOlrLDLxOGSVVxJfpo8r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=okERvjuA; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750361507; c=relaxed/simple;
+	bh=sAV37d0cFXJZyNIU7TPKo9STDXldlu95Ciz5b1DMJso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P54LGdCInUp40YD275I1f3rsW6+UdQQrD3jmEff8Pwa1hM7g1/qQQHpC4lueKab5hPIyfm+kjq9XKzQPRAJbekkzgB7W3ebgpvk17I/1mF/wsJ2tJC3c48bl7MA6w2hovSo38StEsP5IjPeTeuH90zzAM5aVXkq0d2qKyivmaMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vtx2zPbm; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="okERvjuA"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 697D78286F37;
-	Thu, 19 Jun 2025 14:29:35 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id kDfBiWNVoCZQ; Thu, 19 Jun 2025 14:29:34 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 146358288ADA;
-	Thu, 19 Jun 2025 14:29:34 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 146358288ADA
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vtx2zPbm"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b31c9132688so132604a12.1;
+        Thu, 19 Jun 2025 12:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750361374; bh=fv7jthCvgTDyikGnfNvnPJOjHiDNeeJUYLlc2LyLdGU=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=okERvjuAVQE1NnPz1/LUszGYbnc5gBPXxzMF/eE18zXf4SW1rBeNA4wyL1j0oKjDa
-	 W6bZSSgPBwrq3qJ9bIJynpJMhpB4Z1Q5RKuGisW1Dl37Bb/cTDuruGZO1O1Gh7oTxz
-	 L+3VGPCQNIt2BAp4ZlaDBcLhNjM891lKExnTfaqo=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id R2rVL0rBaTqR; Thu, 19 Jun 2025 14:29:33 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id A74768286F37;
-	Thu, 19 Jun 2025 14:29:33 -0500 (CDT)
-Date: Thu, 19 Jun 2025 14:29:33 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>, 
-	Lukas Wunner <lukas@wunner.de>
-Message-ID: <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <20250618201722.GA1220739@bhelgaas>
-References: <20250618201722.GA1220739@bhelgaas>
-Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
- broken
+        d=gmail.com; s=20230601; t=1750361505; x=1750966305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mtEHKWJLefufP89E8LWjawJdakPNym2pyBrvAO8Qp3I=;
+        b=Vtx2zPbmdnfRk8fTpTBkd/uf+Uq3UaxTWdvV2yRg0pq1TQ7oT/nIH94EgGFePVujQi
+         xnd+7DwC3n/bfOLKqaaQZtmmaE2GN3daX/LkB/Gm9W0RJo9ze0AWGNq6bgHrzwkXHypx
+         Wy1euK9BziFtA7IMV7HymhEDjei5DqAUHO9V87i/A6T0a1RuJQcotZQViMAF/ErcHxfa
+         2aR323ENi6YjTFW4Zx2jP8VxNOFpiTag00nhIkKdv8skZwMoH/VNNrlAeYo9Nhr3WMaV
+         NWbk51nsP9Kk1jDQiQYSGJf/7DfWu054SPmfwHVL8ceqNFrj8prf1Nf6eJhRnsJYeUy6
+         pOTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750361505; x=1750966305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mtEHKWJLefufP89E8LWjawJdakPNym2pyBrvAO8Qp3I=;
+        b=GS9yHLUynbIq/OVf2yXwsBEPa8J9OipVZmJVdYJa2eU9wP552Ia/6XM0JKIW6n+xEe
+         f3UZZFA2LpBzyUIeW3dlxhTMXZ5yjxQoUINNw7y6iW//LLf7GK7/Dll6CY2kq7Lc8D/V
+         XY25oBL54JyfJqr5hSkiGZd1XREur+xakHyF4fuw9fDS6scjBI7iYjzTVpke3dr5zOm2
+         /jJ1fEydP6x5Zf+IUFgCvnZ9RlqKt4Dz61mtL6fQgwjJKyfiq2dJX/nU2A5mbGetpMWx
+         HAbWXeKo6WfXVvRH5YD3h0ARwzpC/ctK3nHw//zgub22lIxKIk0BA/vGpU4P/zTlAsAN
+         iZhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkBMWmRZhTGxYNYbY8RCxe5yPibbebtV2HKXbRBO96Zx8pEfCd0X3zGBAfOnkovz55sFsgBz19/FjuyNQ1Lwk=@vger.kernel.org, AJvYcCXBAvzC35HTVoD2rY97uo7PXILqd5LDz7G5Hvq70xJtDjbiTytH3+29G+1c3JsRB/MHhN1X30kj7CHXsFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxUIEubPwoEVyZBAvC8hMQuf7P6LOsQM45cw68Qf3JJq25mIez
+	8ZaOHeIFkFrsqGDDY1/G+eE899aRv2elemAbhgbLhUOUKhj2RVW5/Swey48mD+QIvG91OHGzQxx
+	BNS9xrzNv3AdI4Jliq7Jq+fwme5Iwa2Q=
+X-Gm-Gg: ASbGncuGMy4+/4bkib+B4E3rfk/CGqvD05oYV8F35JZUQ6bwZtIctZWzgNMdzutQo6m
+	mJS1cs6+4akY+/QtWW6dzvhI3qbkNLQfU3XXDQhAxwycHJKG4ue1EXQ6dak9PJU0VrzSEcilXMd
+	Qwj36UNqi4c9LXVuA0X839oZmi81Crtl5rhhUaXyaprto=
+X-Google-Smtp-Source: AGHT+IHEq4DFo+/yVvsQe9ARdAM9/iGz0q2OVWhVoh1F6aZJ3o8LIx/dcNW1+DvX57Dl2Z2Jegdu69eVZoB45yljgM4=
+X-Received: by 2002:a17:90b:3a43:b0:311:fde5:c4ae with SMTP id
+ 98e67ed59e1d1-3159d8e2be9mr207043a91.6.1750361505301; Thu, 19 Jun 2025
+ 12:31:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Work around switches with broken
-Thread-Index: QJ8OUVEQgO1djYf5DjG5ikGLe2LBIQ==
+References: <20250615072042.133290-1-christiansantoslima21@gmail.com>
+ <CANiq72mnxRquFmjoJemb=3LSq+ZdUfs9J+HXTwM6AavprsVNUg@mail.gmail.com>
+ <CABm2a9fVSGm+WWjdkAmJHUH9eH=Qx5efORKxyJtt0HnQrs0QHQ@mail.gmail.com>
+ <CANiq72=s6Ugqrf5Ot6fJOMyCug2XyvKpjFCzya_Mr5iBkpitLA@mail.gmail.com>
+ <CABm2a9e+XJsess6XY5ukz8vav30ADcmBrufmek+Bd-TNJpR2aQ@mail.gmail.com>
+ <CANiq72kY=sSnhzYPRo3Zuj-7RjULMpRfCBYfoDDCpCHttX-3-A@mail.gmail.com> <DAPWP2IC7HZ1.F1GYTSUGD8WN@kernel.org>
+In-Reply-To: <DAPWP2IC7HZ1.F1GYTSUGD8WN@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 19 Jun 2025 21:31:33 +0200
+X-Gm-Features: Ac12FXyddGraOnaHyCE5OHVAk2L4ld60yghKyl3hA61dKQn8bMId7m3JSW3tsDI
+Message-ID: <CANiq72mZYSd2bFRY30HbHQAsptbr9YYa6Veak6_eehMXxNKyLA@mail.gmail.com>
+Subject: Re: [PATCH v7] rust: transmute: Add methods for FromBytes trait
+To: Benno Lossin <lossin@kernel.org>
+Cc: Christian <christiansantoslima21@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ~lkcamp/patches@lists.sr.ht, 
+	richard120310@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 18, 2025 at 9:29=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> Yes, the prelude won't have precedence over locally defined items. So if
+> someone does
+>
+>     mod core {}
+>
+>     your_macro_that_uses_core!(); // <-- will error with `core::mem` not =
+existing
 
+Yeah, ideally the custom prelude thing (or Clippy or similar) could
+warn about having any collisions with things in the custom prelude to
+begin with.
 
------ Original Message -----
-> From: "Bjorn Helgaas" <helgaas@kernel.org>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>, "Lukas Wunner" <lukas@wunner.de>
-> Sent: Wednesday, June 18, 2025 3:17:22 PM
-> Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with broken
-
-> On Wed, Jun 18, 2025 at 02:50:04PM -0500, Timothy Pearson wrote:
->> ----- Original Message -----
->> > From: "Bjorn Helgaas" <helgaas@kernel.org>
->> > To: "Timothy Pearson" <tpearson@raptorengineering.com>
->> > Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel"
->> > <linux-kernel@vger.kernel.org>, "linux-pci"
->> > <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>,
->> > "Michael Ellerman" <mpe@ellerman.id.au>,
->> > "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao"
->> > <naveen@kernel.org>, "Bjorn Helgaas"
->> > <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>,
->> > "Lukas Wunner" <lukas@wunner.de>
->> > Sent: Wednesday, June 18, 2025 2:44:00 PM
->> > Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
->> > broken
->> 
->> > [+cc Lukas, pciehp expert]
->> > 
->> > On Wed, Jun 18, 2025 at 11:56:54AM -0500, Timothy Pearson wrote:
->> >>  presence detection
->> > 
->> > (subject/commit wrapping seems to be on all of these patches)
->> > 
->> >> The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
->> >> was observed to incorrectly assert the Presence Detect Set bit in its
->> >> capabilities when tested on a Raptor Computing Systems Blackbird system,
->> >> resulting in the hot insert path never attempting a rescan of the bus
->> >> and any downstream devices not being re-detected.
->> > 
->> > Seems like this switch supports standard PCIe hotplug?  Quite a bit of
->> > this driver looks similar to things in pciehp.  Is there some reason
->> > we can't use pciehp directly?  Maybe pciehp could work if there were
->> > hooks for the PPC-specific bits?
->> 
->> While that is a good long term goal that Raptor is willing to work
->> toward, it is non-trivial and will require buy-in from other
->> stakeholders (e.g. IBM).  If practical, I'd like to get this series
->> merged first, to fix the broken hotplug on our hardware that is
->> deployed worldwide, then in parallel see what can be done to merge
->> PowerNV support into pciehp.  Would that work?
-> 
-> Yeah, it wouldn't make sense to switch horses at this stage.
-> 
-> I guess I was triggered by this patch, which seems to be a workaround
-> for a defect in a device that is probably also used on non-PPC
-> systems, and pciehp would need a similar workaround.  But I guess you
-> go on to say that pciehp already does something similar, so it guess
-> it's already covered.
-
-No problem, I completely understand.  To be perfectly frank the existing code quality in this driver (and the associated EEH driver) is not the best, and it's been a frustrating experience trying to hack it into semi-stable operation.  I would vastly prefer to rewrite / integrate into the pciehp driver, and we have plans to do so, but that will take an unacceptable amount of time vs. trying to fix up the existing driver as a stopgap.
-
-As you mentioned, pciehp already has this fix, so we just have to deal with the duplicated code until we (Raptor) figures out how to merge PowerNV support into pciehp.
+Cheers,
+Miguel
