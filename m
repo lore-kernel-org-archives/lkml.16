@@ -1,133 +1,127 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EB823496F
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4F02737EB
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341944; cv=none; b=LH+UnieNbthq6eC3wuzWtdXxaBaYv8uU45yuFNhHnC0zEXhSidTzk5tbZpO3POoHKaaQQkIvK0LvrCTcfDdFGazy7VvspfFi2IlewjXUeCLyfDwjW3EuZ41Y5KJQo0fXkRw9n3w0NZ+NSJNcFAWEzHnB9EjjRRzvbuxRYkHGZrY=
+	t=1750341973; cv=none; b=WWvT2fikZ3MzuMEyR3ZgH+9X6WHvKghpcRUzZ6xck5G+8Q3u8f1PeJiVoYjXvqXm95t8lNhKTR51c1VlDeSKFQKP1jOf+m4+nEM2sgBKQoETW618d1/gupXlN0fJNc1NZbnLyA4IB5jVEqjtNdTxiXAnwIeNcQyLXWf1W+pxsBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341944; c=relaxed/simple;
-	bh=RKg0ba0YiDbucRJJP0q5rGzXl3UtGTSrIi2K7UJJiDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sP0IeK/TFJ+C0PjjCHMSrR9t9ypMimwPBbawnn29B3h1vr4dXjUBlR6N7I9W2JVskZ1th0dgzmfuHSssNR9r+v9tz4Mkvgonj2EwBtetW7lLS4Hi34KjsCLNeZtaMAGZZM+wGpD8z1PYZiwkb3+oiqufS0FZE1JcV5YrwpvGM6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EurY3DvU; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750341973; c=relaxed/simple;
+	bh=TrQEbkPOhkr+wXxKi4QhmQRGh+BqEkZVvBvjASyKlYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwg6jEnpQhNIZZH81ysKkBkSjB2GtZzzIwPCNU1mEsweID17Te2Uw3uhtE7xz+0KhSZhnA27j0F/UylWJIoWuWMVwIi838Se71UyvAX4QK4agINbnFG+m8ApAoX9kBlAKNbeCKUN+wqdvd+eZ5AGBjtM9hhkOoIYjKDp/0ijJxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LzSBQ1pv; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EurY3DvU"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e82278e3889so644367276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:05:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LzSBQ1pv"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so459571f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:06:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750341941; x=1750946741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RKg0ba0YiDbucRJJP0q5rGzXl3UtGTSrIi2K7UJJiDI=;
-        b=EurY3DvUsdfBOAQsumNXRbw24qBG5plNeQhFnD4AvMl5e3w2Zrir0VEIzPLdhIBuw0
-         +3nKnJ9UtgY/iUtUYGS1G7LaXIzZHyZFiy4R3+2pMpv0MvHbUdtMBbAvVyEZMdpGKMq8
-         kZ6vjFw4N5cIy9JgUkUV1gv4aqfNzhrjTi02KeCekAFptw2LZq5W5Xb1sYC0eTkivPI+
-         fpm6zJ9je/cBsNcFwzLHyJ2pnMi0It0evjWm6ChDL4jfSqGGiJ9KKpSO6XcGq2MDi1Oy
-         LWqBJIpyt/BImGtqGFPufOqklqSXE9uccOMlJk7Tmw2tZNGElsca6Lu9HRbFreXrGUVX
-         DcLw==
+        d=suse.com; s=google; t=1750341969; x=1750946769; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TrQEbkPOhkr+wXxKi4QhmQRGh+BqEkZVvBvjASyKlYw=;
+        b=LzSBQ1pvPgzNdC/ZTrW29Q8bKLmiCf5MiOHKd+5V0Lp+MVZHSdyYZh9I37uTNd0q1v
+         PH6Qd1J2dhu/QQVF+xqduoqOqUgmDOw4XYaWAWNPKuPBlXoH0EL7jmhLn8AcQcxaPNU5
+         DGbmXOKQHlD2uFp3wquvtvaN2ml6joJCrUBxszl8pkujNvZ8MurKFbFvPBuEnnMcbQIt
+         y5M41RAIMMIK7SjO0V4IBRwzCY4z5AY0qRaQmofoEnnEvYCdVW2a9DxJDzUkEUF9vc4g
+         2epwphggVRDWkyTKfUpAmKYAfIpllRUy1lnRcH7omAR5kr0VdbP7vNStOtEfNV4gdfU4
+         K9cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750341941; x=1750946741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RKg0ba0YiDbucRJJP0q5rGzXl3UtGTSrIi2K7UJJiDI=;
-        b=k+mp2iL4XC7D+0Ep8Tf2uB1t4IuXrMdmR9QfBEYBeUmlBXUvTYHBK5osaz9RQMajWT
-         dj8N5i10u5AXED4ZR1HEWyXroZX2/0Tc6C+QF7oIVr7NF4gD4/NV/PT95bUx8lLMDlfc
-         mHVd2LeHyqFP3XV28jJ2e3gPCTWVIcI7+W/v/4SziRq5PaQRE4zv4IZlunI5DSvHDtbx
-         9X9OE96pPkPbs6eBU7yMn3p0MersLhLGp5ZhTgSvynmNQ0nB6LJJPewaYQJDhl3Q6NDw
-         HPRbJSt+T+m9HX1X+eoAXsdxhjkOUnyCZ9i7BpTr7ZWtx/8xKDhwA2RZY5uMqh/cjJZ+
-         WHlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHlphXLzMMFuAIvdCL4fVxYcUGxEoeN1VjIal3E0DUacDPk4EbmPYst9w5lXo6+t1/6HWmlzmBzx1mFaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze/ZuQi31PGJvPf9cg0pUrLedx1Y3YdqRzTvR1vGI4OIyKoHWN
-	2hYfKH2pa12gd7a0P/qCbCrCaK+nzPhqIXeIg+X7TmAl935byxJxEywMjrWTX7o5nogGyJiYfm7
-	J7k/hCbSUGxz3bsE4aI9VGE8+MuRdwDdBRMujWTMAPg==
-X-Gm-Gg: ASbGncvZwnC+U3RtQY/z0Pb8iKJZKDngx7vZ7dwbUc8OQyiaC/mhNWxcGzZa0sJ/4BR
-	xLU/osbyeQV2CvM0ndoj+5t1JRdjdNcJLXuNSEr4EeH64jmLEXPIK9NfNzBacSrnrN0yKLhd2yy
-	jv6/ptJjAXD/qT1PKelcDhDApYve/UbTcHQQ1NZJp442KU
-X-Google-Smtp-Source: AGHT+IH0AH5eQCmkoaKuxJOOgz4lFGdC1+XDKcfPC3cVk26SzauKoptzIDMdTxuXWb+pjp6Y/soe1VeW59yNxFQhyjU=
-X-Received: by 2002:a05:6902:1a49:b0:e7d:a4a7:439b with SMTP id
- 3f1490d57ef6-e822ad08e62mr28105508276.48.1750341940771; Thu, 19 Jun 2025
- 07:05:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750341969; x=1750946769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TrQEbkPOhkr+wXxKi4QhmQRGh+BqEkZVvBvjASyKlYw=;
+        b=o1BGr9Ai9voYEdkKV9PsVlWEu/ll4469wblo1D+i7Q2DWxM0TUO7s693xJuZtoreBC
+         sfYimepDPC5qBH88ZzBUVtjDuWUlAf77oDRyJ1Z5tvDvCbE5BbDkaySsR2MtXQo1nE5A
+         x+06fHYCw41N78WYpS9fsuCsqnLCqL+8dSCXyB4mSWi5E3yAPDNx0vtCRcemR5p6Aj+Q
+         OZUXSK01An5N48nsuFI1b6uidORk9yt5l7OwPPKMmnppXS4+U6Bfa+fwCgFUZlZQhen+
+         jbDWYH2lPafUh5vBDgyAVEBySgrzA1QPZw4L4Je/4UOG8JmzJtBKs8wJeDGYTt880fbf
+         dvRw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/+/DP21qETi4rQLs6ez9uarAdIpdX8WQW59i5GmGT7BkN/qhO7cw78m837oM1RsvuNOIx1xbTLTGTlKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn30W/zHTwF0pmwn32Ug4T1wPJKIrCGs1CswGGJ73HrsnkxvsA
+	JIf1F+tIAVb14/tdPCDx5W/8pR++rIg4M78wdaozks9YJoW4BXzEqqvg/JJSBdEJPWE=
+X-Gm-Gg: ASbGnctomOR+9Y37sE3Gw/qfhhWmpaUj6tieyHYfVJtg1JguH31aL3H2+9XPpJz+iyM
+	RANg26sAVr/NDPr6wNE9kULaNTmVwf1CR+WULbccH/uec4B67peLbqQ2sxklKX5o+gqmsM6ymh3
+	DrD/xetibiiVPcIxKEAjJPiIWj0WApa1JAlQ9wUndVMSqS4wXPRdoffh8+9u5+ayYNdYZ9T2C1Z
+	qPa53syMxgeO+S4EFOrHs3GmzlHzDtV1C6SJZxbyv0mLEyznPC8DTdQcAFez05Ej2rBe95HHAxZ
+	BbxtH4kYsDS8wdXI5sL7ZixoV2R8k/HNEHUARSR5R0sRIPauuy2Rhr+U/wwHuwh5
+X-Google-Smtp-Source: AGHT+IFYZ5Og/LPrj6v29fVm2BOf1qki8zUztiChQu5TWH5+YhTscmSrBeIdsgN0gGcw2f5/E2TFiA==
+X-Received: by 2002:a05:6000:4a03:b0:3a4:fc0a:33ca with SMTP id ffacd0b85a97d-3a572397d6amr15059912f8f.4.1750341968150;
+        Thu, 19 Jun 2025 07:06:08 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e9844a9sm30681385e9.12.2025.06.19.07.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 07:06:07 -0700 (PDT)
+Date: Thu, 19 Jun 2025 16:06:05 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, peterz@infradead.org, 
+	akpm@linux-foundation.org, mingo@redhat.com, tj@kernel.org, hannes@cmpxchg.org, 
+	corbet@lwn.net, mgorman@suse.de, mhocko@kernel.org, muchun.song@linux.dev, 
+	roman.gushchin@linux.dev, tim.c.chen@intel.com, aubrey.li@intel.com, libo.chen@oracle.com, 
+	kprateek.nayak@amd.com, vineethr@linux.ibm.com, venkat88@linux.ibm.com, ayushjai@amd.com, 
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, yu.chen.surf@foxmail.com
+Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
+Message-ID: <zcabngubuvvlo7ddqhv734nmponyowtrtuerhcee25yk3cqxsd@gkyioppho5zt>
+References: <cover.1748002400.git.yu.c.chen@intel.com>
+ <7ef90a88602ed536be46eba7152ed0d33bad5790.1748002400.git.yu.c.chen@intel.com>
+ <cx4s4pnw5ymr4bxxmvrkhc457krq46eh6zamlr4ikp7tn3jsno@xzchjlnnawe5>
+ <uuhyie7udxyvbdpccwi7dl5cy26ygkkuxjixpl247u5nqwpcqm@5whxlt5ddswo>
+ <a8314889-f036-49ff-9cda-01367ddccf51@intel.com>
+ <fpa42ohp54ewxxymaclnmiafdlfs7lbddnqhtv7haksdd5jq6z@mb6jxk3pl2m2>
+ <djkzirwswrvhuuloyitnhxcm3sh7ebk6i22tvq2zzm4cb6pl45@t64jvtpl3ys6>
+ <c6bfa201-ed88-47df-9402-ead65d7be475@intel.com>
+ <h4chrmiscs66vwl4icda2emof4pbhqabpkklpql2azc5iujilm@o2ttlcanwztc>
+ <6e52340a-cabf-48db-b9f1-8300c1c13997@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618102228eucas1p1906803f73cc004e68f281b2bdf871da3@eucas1p1.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
- <20250618-apr_14_for_sending-v5-3-27ed33ea5c6f@samsung.com>
- <CAPDyKFq_4W7bPr1NiuEGzMDoY6tQuHbw5uOXrkJagbEbtmqMWg@mail.gmail.com> <CAMRc=Mf+o524rewPrtZGJhE11Gwp6v8A2V6zjGr3e1PmQq7aJw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf+o524rewPrtZGJhE11Gwp6v8A2V6zjGr3e1PmQq7aJw@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 19 Jun 2025 16:05:03 +0200
-X-Gm-Features: AX0GCFv2RIICzft_XZewOUAZZhSSWv8Je60KaQi8kC_SyLtOZnxRamWoHqyfp3U
-Message-ID: <CAPDyKFpsq6qaRaP4YDMkB=JrW+o3obKoirfHrdmost-kV4ct0Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/8] pmdomain: thead: Instantiate GPU power sequencer
- via auxiliary bus
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dqfju5slh7y3cmln"
+Content-Disposition: inline
+In-Reply-To: <6e52340a-cabf-48db-b9f1-8300c1c13997@intel.com>
 
-On Thu, 19 Jun 2025 at 14:31, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Thu, Jun 19, 2025 at 12:25=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.=
-org> wrote:
-> >
-> > On Wed, 18 Jun 2025 at 12:22, Michal Wilczynski
-> > <m.wilczynski@samsung.com> wrote:
-> > >
-> > > In order to support the complex power sequencing required by the TH15=
-20
-> > > GPU, the AON power domain driver must be responsible for initiating t=
-he
-> > > corresponding sequencer driver. This functionality is specific to
-> > > platforms where the GPU power sequencing hardware is controlled by th=
-e
-> > > AON block.
-> > >
-> > > Extend the AON power domain driver to check for the presence of the
-> > > "gpu-clkgen" reset in its own device tree node.
-> > >
-> > > If the property is found, create and register a new auxiliary device.
-> > > This device acts as a proxy that allows the dedicated `pwrseq-thead-g=
-pu`
-> > > auxiliary driver to bind and take control of the sequencing logic.
-> > >
-> > > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> >
-> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >
-> > It looks like there is another re-spin needed, but thinking of the
-> > merge-strategy I could potentially take patch1->patch3 via my pmdomain
-> > tree, as it seems reasonable to keep those changes together. Unless
-> > Bartosz sees any problem with that, of course.
-> >
->
-> I have another change planned for the pwrseq API for this cycle.
-> Nothing major but it still will require patch 1/8 to be in my tree so
-> if you don't mind, I'll take it hrough the pwrseq tree and provide you
-> an immutable tag to pull before you apply the rest?
 
-Right, that works perfectly fine too. I will wait for you to give me
-the branch then, before applying anything.
+--dqfju5slh7y3cmln
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
+MIME-Version: 1.0
 
-Kind regards
-Uffe
+On Thu, Jun 19, 2025 at 09:03:55PM +0800, "Chen, Yu C" <yu.c.chen@intel.com> wrote:
+> OK. Since this change has already been addressed in upstream kernel,
+
+Oh, I missed that. (Otherwise I wouldn't have bothered responding
+anymore in this case.)
+
+> I can update the numa_task_migrated/numa_task_swapped fields in
+> Documentation/admin-guide/cgroup-v2.rst to mention that, these
+> activities are not memory related but put here because they are
+> closer to numa balance's page statistics.
+> Or do you want me to submit a patch to move the items from
+> memory.stat to cpu.stat?
+
+I leave it up to you. (It's become sunk cost for me.)
+
+Michal
+
+--dqfju5slh7y3cmln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFQZSwAKCRB+PQLnlNv4
+CM3dAQCuYFm+JCgZpwkdQr6jIGP6Ax9dcl0VPZZyVPb3AipPYAEA7ouwjVSo7HYj
+QQfbWU/k3DuXFPBdpkExqgZHN55LaQ8=
+=gz+O
+-----END PGP SIGNATURE-----
+
+--dqfju5slh7y3cmln--
