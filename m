@@ -1,133 +1,306 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EA111712;
-	Thu, 19 Jun 2025 15:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348005; cv=none; b=EFTWx/fBdXGEIvZuo2/tpaXNHVxkPKOKTgVR1cQM4Qxc7yuqz3WbmopoHwsorbnk2wdTvjXIVUzt0HtDNDsRmHbqlWLPQi3U2p58ZziYe0HnR1tcIhLQonSROsNbpCcdf1iQlsJWhj6cWgaFDWXXhBXkDr5EF/h1cs2eqvmu0VU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348005; c=relaxed/simple;
-	bh=m84LE3Q2FEdUp4zpYoyPbYP7U4oeu6763y4q5FuSRJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EFAgHTYKB7llaj5hkZsE3BX6hz9PIUBZyNa9L2amVFlXDamjrb1fT7KizqUu/9ciwGjOM16oOkk5NEgWT4BCS7YEzZAQlNmTjB47j4x6IBJB6fBszuSrPwUnek6lxMNjPSnZ9cHKbi59LMTuPob7d+wi5rABzZudjIu5ITuY1gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LBbctc7g; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891DE11712;
+	Thu, 19 Jun 2025 15:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750348169; cv=fail; b=U6EZnmy4rOTfx0vp9BuYBt+W8R0l5DqZtn9lHM0dxbH/O7U3kUfbqOsNPC8KKamkQeMSbNuimmdTBMos34ikbAPmO8Ato4hHQ2x3BAjsVYgntWxFu6zMqbM3ua7Gol/4KZ8imCGN09fxF9L5Aq7QajuBcw66y/ddyGiTf6vKoM0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750348169; c=relaxed/simple;
+	bh=2Cg6VxTuYmYsuGYOd3ZiggQmZWW3B9Y/rhV6v/Xl6Ow=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kcNXJWb13mVKnSDA2350QZo05mvU7nAGVpJVCtYgFIweMzwMAOxyGHkuBwXKQe8e+EANd+XB9J4TjfsJDuDajiQJPHcbTD+s1r7iGTx5wvajz7po4WQm4ynEyDCz9AVnQj3yFZASa7Lr3+8dtnCmbMIG9a0jo1hJGJ0Hhug5AbU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fwUOlOg9; arc=fail smtp.client-ip=40.107.244.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBbctc7g"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6fae04a3795so9970796d6.3;
-        Thu, 19 Jun 2025 08:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750348003; x=1750952803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P6B4ve1u7kNtELsGO1WFpcXtViWSwIjcEYc11kcv2iw=;
-        b=LBbctc7gmydHvwT16Fr9GsYD/SR1BHJG3PLUrLnpLXH191eu/wGypb5CC0ZAxEmOiW
-         tWQUrAj6/HBvIOPr74NrKZQJElJsPJbDfHkiCdcy55HbIJlMyuTvnRLI/pT4a0fVwOiF
-         td99S3UxqqGJzJpe3pRFGBfcFChI7Pq+X7EwS+mFFZsluGJN8sPm48RzTHlHe/Q89Xa+
-         2O59T2AuSgomgdMaTz/t2NmAYsg8JZ7bj30E3DwdQ/wVykblHIBWPNyNvT/mLZyo37Yn
-         9M2rK+0helOMIcvzf4vvU4XQnYKyvOGeaJ4pVDqZq+rHd09BAHJQtmmXpDEYVd6kM5HC
-         Bg1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750348003; x=1750952803;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P6B4ve1u7kNtELsGO1WFpcXtViWSwIjcEYc11kcv2iw=;
-        b=hTKoQ6x8YnE5ozPF7QV10QRPOQ3ATOUaOPZqxYaDn7nmJZWQRLYHYrCx9Sgrp8cTs5
-         wvtDV0A0wFvTac/ZiD6yT1BOz3fgnNWQJ1mbjPq43YQL/9uYaRFL7VvL8mvOUDQ8O5bj
-         nuHnnaZwC81R/dYe0PV1WPhjtMgiCqtDXMGRX36FH9yCJaCC1QY8e5GSENZ6Pjm7mNtl
-         pSR5zPsdvzB/Apcl4H3m2S3qV506Zo5JMWpyGx3k3hr3yXTOnbF3Z8JauMTywumwaahz
-         qQQXRu5O1onpHUhcw42Lkxm7utNYAIgUYrxToBUpQXxD0JCOKE43D26q+1qE4t1tx0va
-         eCcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeIsw2+/Bsf2ROXvvuPn0COgCMrUoZo1Odhh0yLo6at5dJjXX9iDrXU4YwdD/pHoUkTrl5ccQYZk/Q2O8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt3y4eWeq79qgxW7n3mwa+7QT6FJo/V7UgETryTAEZfy4EAPZX
-	xLNsHot4Xnum1gkF1mU3gc54rNKPhE7r5ekJJ6eVKK9K6gQkduWts+PQ
-X-Gm-Gg: ASbGncvw0HVbwka0b1LruqFfrgO4P2/KA4H3C0SnfmkEoh9qz4Tvaw6AWw1VvR663as
-	wdl0RjZklb/bxt/+Lkp5csNu0Yy3j3zsvu7jbLa05RP55UhtMjpyGQHpZ17Z+CoWye3GpkjmoQk
-	BpJqF/gXvEDxp7shcwVW/POdX0Yk5s1h+HWRughVfsis03xmOUzGSHbqiAdGFbvS9pBi8XFECjM
-	7Kniu7LzsogaUqb9MdW90tNXWlP1bxyl/lnWuVTEHLySC5Sb1UK45oTVh8UxdDyjfMVNrTuMeu4
-	B8JffcUhYE/LbrdeviL5Qe66eBBd2LBJZ+fTHGmhYLFqUNQAoZ27cUC3mYBKC/HwFYd8DoYB33g
-	sF0TiF6VJOpz5fMaLbZt5Dqlp7j3q
-X-Google-Smtp-Source: AGHT+IH0pX4OgNTAH4KDF2nGmjng+ZqjtaVRQSnBtxBay7Pw8CVZsonkinMiI2K3A+7/TgeZuWV31A==
-X-Received: by 2002:ad4:5605:0:b0:6fb:4c6d:d4d8 with SMTP id 6a1803df08f44-6fb4c6dd5f2mr233401066d6.3.1750348002639;
-        Thu, 19 Jun 2025 08:46:42 -0700 (PDT)
-Received: from fyre-x-redhat96-client-2.fyre.ibm.com ([129.41.87.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd09538369sm1058276d6.60.2025.06.19.08.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 08:46:42 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH] hid: replace scnprintf() with sysfs_emit()
-Date: Thu, 19 Jun 2025 08:46:27 -0700
-Message-ID: <20250619154627.415368-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fwUOlOg9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SWHwQu6Z/h3rHIeuVz+YZTtlg0F9HnBPIimvnwD+rojMP2Bb+dV57ppAEDhhH5MH77vOGz30fGn7vUaKGZ67bet95MZsZ1BRr0VAoYcO53XNHB6X8kk1O7FnpRY7LVtK+uPz07aKcDmNBFUh02Kga7XQ0bHAofAdvIZMQ7+LxIxLSzIjp5jqrxhkp+jmHgvyJBkzcjjKsDy5YuLyIv8BBsXLudruNEs6uRhtJfCaUShbtUPradnzGgJ4OmVftcxSROAHrBK77TL+er73HVMj4h7ov6Xx64Kzi1uHBSMxNtd0gv7hdlNlWaq1SeQi6uFwzT0RfVZ1S8c3F2YEoSw79Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KhZSuJCEL5V8NZ2BiWXWtFeapylUs9beB+M2zBBb4yc=;
+ b=jyxf/seTodJ3Fn9pdGT6+Ol65/duoJi+baS6ojizsy64WjQx8rYHZoeWSATs1lNiQuw6l3BqYLhE1z3esobao+yZPhklDaoQBTeBZrTtjJ4Oj1mbZDqD571zqGUx05AZxlO+ay0vmI03iuj+rHsQ6XxSd27oJDeMbWrWNI3dHjzu/pQaACRkb9Tzkh9GSUHwejeYuA5txzdTJxOWhsHbuIc0rRBMLlZbzJ6VV7KLotgSLQZ4TPwxcrl+VCBBbLb8DHTwrI7lApTpY3ZPSC4nVW+L8g6V1RwWYt4pmLLHsiHE+om8Ok7jve52iLeBAA2FJ4r1tH94JQ6IWK+2xsdcFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KhZSuJCEL5V8NZ2BiWXWtFeapylUs9beB+M2zBBb4yc=;
+ b=fwUOlOg98EkRRksbkroZMuPH8eCAzsinUrtRedPxDC+wpYw4EuuB44Gwp1CMtPim8Zisd5Lb97wUBdNv6JvzxDtEYWVFJTqGl/MOEaq8igkxuyf9qzlnQXmuTqWn0AK6Cc8DDVAZG8eNq1mdh8baqvjtKcoGgp8Bpr5UKzxWlBY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
+ by PH7PR12MB7356.namprd12.prod.outlook.com (2603:10b6:510:20f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Thu, 19 Jun
+ 2025 15:49:25 +0000
+Received: from PH0PR12MB7982.namprd12.prod.outlook.com
+ ([fe80::bfd5:ffcf:f153:636a]) by PH0PR12MB7982.namprd12.prod.outlook.com
+ ([fe80::bfd5:ffcf:f153:636a%5]) with mapi id 15.20.8835.023; Thu, 19 Jun 2025
+ 15:49:24 +0000
+Message-ID: <5b77d33a-5668-42bc-802d-d2c5d95c1e7e@amd.com>
+Date: Thu, 19 Jun 2025 08:49:17 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to ethtool
+ NFC using Default Queue
+To: Song Yoong Siang <yoong.siang.song@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Shinas Rasheed <srasheed@marvell.com>, Kevin Tian <kevin.tian@intel.com>,
+ Brett Creeley <brett.creeley@amd.com>,
+ Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>,
+ Joshua Hay <joshua.a.hay@intel.com>, Sasha Neftin <sasha.neftin@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Jacob Keller
+ <jacob.e.keller@intel.com>, Kurt Kanzenbach <kurt@linutronix.de>,
+ Wojciech Drewek <wojciech.drewek@intel.com>,
+ Marcin Szycik <marcin.szycik@linux.intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250619153738.2788568-1-yoong.siang.song@intel.com>
+Content-Language: en-US
+From: Brett Creeley <bcreeley@amd.com>
+In-Reply-To: <20250619153738.2788568-1-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BLAPR03CA0095.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::10) To PH0PR12MB7982.namprd12.prod.outlook.com
+ (2603:10b6:510:28d::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|PH7PR12MB7356:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00fd3dd6-9073-439a-ef34-08ddaf48dd7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?alU1MmNKTmNHUlUyWVRwa0V0blpwMFc2WHRwZlMrU2VueTFJTGU0NDR3R2JX?=
+ =?utf-8?B?azRiTUl1c1ZubCtqY3NvZUNCUTBRRFVOVmNKa04rb2tMMDNKQ0RBQi91QThu?=
+ =?utf-8?B?bHgyNWROb0pLN3VCeWRYRm1WLzFBbzFybEFoRmR6YWlrZE5mRVN6STRkTXZl?=
+ =?utf-8?B?cHVmVXZwcmpQcEZQQ0k2WklQL0d5YTFJZzlCUkJOY1FKdmk5MlZqaVZvVnln?=
+ =?utf-8?B?djJNOUprYm14MlIvMTdJUzVDNHNwc25hWHZnS3pqV1ZyWUYwUlNHditIQjl4?=
+ =?utf-8?B?NGljeGEwdGJMRllSRkU3YWI0RFdIYzZsempoNFQyUFNpS0RRc0JEMWlic3h1?=
+ =?utf-8?B?SzI1bWF4YzRmeWhXRDRVaGJzaFR2Y3JQT2RaVHVtZnZaeGZmbkpFSWxxbStU?=
+ =?utf-8?B?elBZQ29EcjRrYkR6emorUTZKT0tWS0JyaVlJdXJIQnZYSmY1bVJxNkhRZ0F0?=
+ =?utf-8?B?NDI4R1doZ3FlNkE1U0hGQmVudGtjaFBCdlVrYWdpeTA3MThOMmZqdlZTMnhH?=
+ =?utf-8?B?cWhBMFd0V21YUWRSaTV2cFQwT3l4ZjNHMW5zcFF4d08veHA4RFJLbUNyZmxh?=
+ =?utf-8?B?Sm9NWFZqZEhMbzdia04xbUlzR0ZuMEFmU05aM2NlUGU4cU1XVzh5VXZvWkdP?=
+ =?utf-8?B?ZkltditNZ0FvemM5MkZobGVCS1Z6UlMzWEhzUWxpK2I1NUFWQVZDR0F0Qlg0?=
+ =?utf-8?B?anBHNmpuK0RXOUJMcWFFN0xUL2krcG5pa2lBaHhHZTVpSEJuVzl1Q0RKNHJM?=
+ =?utf-8?B?S1lYcTFKY2tLdi9CUndkS25DQ2o4cURIRTc0eDFzZEd3KzNoVDE0SWlsN0lJ?=
+ =?utf-8?B?eTh6SC85M1ErV3RDZ09NekNkTjJWNGUxQ0twd1cyUHVOWTQ1ZmQyKzRWUTZj?=
+ =?utf-8?B?SlI3c0c5OTNwS1o4d2FqMENMZ1BJUEhCYjRhL1p2c25KOXduYi9yeS9HRkkx?=
+ =?utf-8?B?KzRTemtOVUpEcy9hOHczVm5oRHJZOWR0VjZRY2F0amVjQWFmODJPeFU0K0NB?=
+ =?utf-8?B?OXFNdHdSejZPaWtiNWtMY0FpVElrV0VRVUJMS2NiU25zeDdJQS95VE1SYi9r?=
+ =?utf-8?B?SGlsQUY2YTN0QzBJeE1JOEp3U3Q3MHVDWFNzVWIxeDZVQVVOcE01S1pCWXRh?=
+ =?utf-8?B?WUFEU1JhVXZWaFZ2ZTgvdWtCQXBFWXUvd1BPbHdpc1VuSEJkVTRzN1l6a092?=
+ =?utf-8?B?RStBZUo3d1B4cTJITVVXbkh2RDNpa3lrNjhZVUE4WUJvZzB0eWxEWWU1bzli?=
+ =?utf-8?B?aUhQYWw4ZDVWem1maDJHamN4OGpZVCs5UnRGbmxYRmxlVlBZcklldU54STFE?=
+ =?utf-8?B?cmo4WEdmUjFKK0cyejJtaVN0VzFaRUV6UTVlc2JLOU9pcUdlOHhLY2Q1cGo5?=
+ =?utf-8?B?MHlvdmpvSjdnRm40cVYybHlUT2hSRzN5KzRGQzV4TThndXhWcU9GR01MYjJm?=
+ =?utf-8?B?MUM1SEJtMDlLaHRjK1pKakR4L0J4dk81Yzg4aSt1RWNOUlhrb3lQdWE1ZTA2?=
+ =?utf-8?B?ajEyb3A1NkI1YVRHdHhmd2FBUVRCSDZMaFVoN2VwcmphRWxyWHhlWElKVzVo?=
+ =?utf-8?B?UnFsNjZpbTNjNUlQeVl3WUUyL1RiOElvc3BiZjdxckFrWi9BMzdLb0Ztdklo?=
+ =?utf-8?B?T3VLK2dVY0FTdDNzRWlpU2tKWVNCUDJVY3dlREs2bkNzSFBoQ1N4MGJqNTZI?=
+ =?utf-8?B?REhLdGVTNUZmVXBkNUlROXVTUUFIaHRMMVkvRnhWR1ZqVGtrK29SdGJsaFpp?=
+ =?utf-8?B?MkU2QlpTdG5RNUpKb0R1Q0IyVHgwSm5FUG96b3FMTlgzQ2ZZdmg5Q0ZrMUhK?=
+ =?utf-8?B?RFJPZS9BNFh4eHl3M3RTUnZVS0JOQy9VSk1EYjNDVENLU1VCN2ZRdytycGps?=
+ =?utf-8?B?UlYvNnVTQU8ycUdLR0tjUU9hZGZydTlBUDMxaWtzcW1RNnNKaS9KRm1nY0c3?=
+ =?utf-8?B?MG5BZlp3dXFzQXZvc0dMYUlPZW0wU09CVnBBUy9RV2FPS2w2SmVOZS9FSTV0?=
+ =?utf-8?B?MkxWRmVDaElRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTRFT0FzVjNFL3BqVitrK1ptVlRJYk9zcG9WcUhxTlBFT2pLeU1xQ1A3aVk2?=
+ =?utf-8?B?c1hoMlRvVGRHdTFaTTFUemhrWUtNUkt4SEQ2dGl3aXlUYmoxeVJ1L2plNWt4?=
+ =?utf-8?B?d3djc2s3YTlEazNNWDNVNkp6UjJQNmxaeDFjVENDNXRZQm9vOEsyL2MvUWFL?=
+ =?utf-8?B?Vno4RmtOY0tET3VwRWhIMEJkeDBTUWpETUphTC9iOEtNTlhBRWhNbTFTcTl5?=
+ =?utf-8?B?KzZlbStWb01nS1JabmJXMGE0NDRLTE9KRGZXeVJRQWczckJUaDYrRlVXSytH?=
+ =?utf-8?B?cTlmaHUxcFM0cFQ3M05SekkweWFES1RaTjg3Vlp0a3dLRlovWk5hZWhnOUNp?=
+ =?utf-8?B?K2FJN2hRbDE5WjVNZTRqYUtvOGZyNlhrR1BxcWREZENMdTZ2Y1E1anpqOS9F?=
+ =?utf-8?B?UEx3RTBnVktWbkpIVTJlM3IzVTJRU0dDT2tlUzRzS250VmhCSWtqaDJ2U3Zj?=
+ =?utf-8?B?RUZndkREbG9GUTBzb281Rk4wOFBmZGtYWXVQdnJBa2VBY1F3aHBmTHhiTGFL?=
+ =?utf-8?B?ekRlZW1sdGQzNlR0c1ZnRC9DQjQ5U1d4ZGtsd1VZa1FhYjFZaWV3ZjlVOHI4?=
+ =?utf-8?B?dE41d0ptdTZIT3cvOWVxYnBqRmxITXlKa0JFUndpRmxqUnFBWE1WL3RXMUZC?=
+ =?utf-8?B?M3B0bjAxRGl0cysxVzVjdExITTdJdk5iTm5RZjRKUVNKb0VEeElCVVNtdVlm?=
+ =?utf-8?B?cC8vV2FHWjBIRzZySzEreU9RaVhQT3JZUHJjQ3FaZEVLc0huODBscDMwSGFa?=
+ =?utf-8?B?U3k0YkNPSmIvYmNtdE5lODNOaGgvZ1Y4bnpuc2lkWWNWazRKZ2RPTStxWFpy?=
+ =?utf-8?B?ZXNuanVXODUwU21lMzlXSnVVSWZPd3Y4R0ZVajE5TEVGRCt1bWp6cjVFZ2lB?=
+ =?utf-8?B?dzBBNThqazJNRWl5M2J6ckFKV0xEZEovSElmWlMzTGU1bFl0MW96SGhYQ3lv?=
+ =?utf-8?B?MTk5L2lXMFRUaVdTRGNrb3pFVC9NMnRJcjVUejBOUnRvUmZGcXd2eTA4V1JH?=
+ =?utf-8?B?d3lSV2ZzWW1BeVJHc1p0c2gzdkNGNWoveC9FOWtCeVlUODRjRlpiOWFWZEYw?=
+ =?utf-8?B?bS9NMGJVTlYrUm5Mc29vV1hKOGYyRldaOUlSVU9DR3h5SjFVcWhYbTVuRFlE?=
+ =?utf-8?B?UzRvbFU2dzkyTFk0WnBhNVNpL3ZVNG04YjhEVXFGYWRVTmkySE5yWWlOcHE2?=
+ =?utf-8?B?M0tCaVRkVUZML2JNMWtZSTFQS0JlOG9UZmF0Skc5Qk5ZdmhEa0ZjWkxIRGE2?=
+ =?utf-8?B?QURWVmt2ZzJGQ2c2Snk4ZVZkVWRTT0FMeDFZQWRoMXdoWHBXeE81OWZ4N0M3?=
+ =?utf-8?B?WUlxMlk1dDFWQ0I1dTlHK0x2WHpkMk9Fd0lIOFp0TVljVFdkVzhrVUdITFZS?=
+ =?utf-8?B?WEtnOWRCUUhlRjUybEZ0Mis0K3p3eGo5a3N2QUVCNjdWY1g0cEtOOUM3cVN3?=
+ =?utf-8?B?RjZ0NFNzekt0b2h2K3N1dXJXdjk4dmhiNFlPTGZQcG8yY0o0M0VYUUpwcFZS?=
+ =?utf-8?B?eDR1UVo4RWVXbXBnYTFJSzcrN1hqUXdlU3dwOW9oR2o5NmFiTURXNXdRSU9E?=
+ =?utf-8?B?eHR4dWU1dS8weERraUJjZ0RuMU9SbDZ5WXdkT2htMGdVQ1FsRVdZNDJGZEtV?=
+ =?utf-8?B?VXJCYlFocjk2U2N6TWlzbzZYWnBKMVFCT1UzTXhVdWFwbUdBejQvM2daNlgr?=
+ =?utf-8?B?LzFkY1NsSFNteHlPV3V0d1JtQzRvTFdXcjAwY2VmYU41eUkwbzlGWHllNmZz?=
+ =?utf-8?B?VkJXTXltTU4vSnFQS0paRDVLNkxSOVluMW01Ymx5Zkw1L1lIeFBOT2R5ZDli?=
+ =?utf-8?B?ZDFjVGd2Q1E5dHdVSUdwc29OQjJNSkdwL0JMYVNLUHBkcjRHMUg4UTZDOVpn?=
+ =?utf-8?B?QnIvZGthUS9aZllZVTg4R3hYZjJJTUx3THkyejZnSDFGQ0MrSElwbzd0ejlD?=
+ =?utf-8?B?Wk9IMW1nNk55aWoyaklXbk56MG9BUFBtQlVPaHRmamw3eTNNRHFZazdIOG5v?=
+ =?utf-8?B?UmZISGdkdDZqVkozNWEvSTY2Sk5hdnVCaVNaMUZUNVVCNGtwNFEzempBTVJk?=
+ =?utf-8?B?dndiVGdZcFdEME9zeENibUJEZ3BselpXYXpOYklCM0VXM3dWZWtZcXRKNE5L?=
+ =?utf-8?Q?vR1E+5KHF0DTGRmxJRN1ZqEWI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00fd3dd6-9073-439a-ef34-08ddaf48dd7a
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:49:24.6690
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZahCakuqFJaZLNpvBEgDsejLRhe90O8ey7luah8tQFAdO94K9ZZBTLjGntCv4aoXY5jJ7m/Pkyiy45imYG4r2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7356
 
-Documentation/filesystems/sysfs.rst mentions that show() should only
-use sysfs_emit() or sysfs_emit_at() when formating the value to be
-returned to user space. So replace scnprintf() with sysfs_emit().
+On 6/19/2025 8:37 AM, Song Yoong Siang wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> Introduce support for a lowest priority wildcard (catch-all) rule in
+> ethtool's Network Flow Classification (NFC) for the igc driver. The
+> wildcard rule directs all unmatched network traffic, including traffic not
+> captured by Receive Side Scaling (RSS), to a specified queue. This
+> functionality utilizes the Default Queue feature available in I225/I226
+> hardware.
+> 
+> The implementation has been validated on Intel ADL-S systems with two
+> back-to-back connected I226 network interfaces.
+> 
+> Testing Procedure:
+> 1. On the Device Under Test (DUT), verify the initial statistic:
+>     $ ethtool -S enp1s0 | grep rx_q.*packets
+>          rx_queue_0_packets: 0
+>          rx_queue_1_packets: 0
+>          rx_queue_2_packets: 0
+>          rx_queue_3_packets: 0
+> 
+> 2. From the Link Partner, send 10 ARP packets:
+>     $ arping -c 10 -I enp170s0 169.254.1.2
+> 
+> 3. On the DUT, verify the packet reception on Queue 0:
+>     $ ethtool -S enp1s0 | grep rx_q.*packets
+>          rx_queue_0_packets: 10
+>          rx_queue_1_packets: 0
+>          rx_queue_2_packets: 0
+>          rx_queue_3_packets: 0
+> 
+> 4. On the DUT, add a wildcard rule to route all packets to Queue 3:
+>     $ sudo ethtool -N enp1s0 flow-type ether queue 3
+> 
+> 5. From the Link Partner, send another 10 ARP packets:
+>     $ arping -c 10 -I enp170s0 169.254.1.2
+> 
+> 6. Now, packets are routed to Queue 3 by the wildcard (Default Queue) rule:
+>     $ ethtool -S enp1s0 | grep rx_q.*packets
+>          rx_queue_0_packets: 10
+>          rx_queue_1_packets: 0
+>          rx_queue_2_packets: 0
+>          rx_queue_3_packets: 10
+> 
+> 7. On the DUT, add a EtherType rule to route ARP packet to Queue 1:
+>     $ sudo ethtool -N enp1s0 flow-type ether proto 0x0806 queue 1
+> 
+> 8. From the Link Partner, send another 10 ARP packets:
+>     $ arping -c 10 -I enp170s0 169.254.1.2
+> 
+> 9. Now, packets are routed to Queue 1 by the EtherType rule because it is
+>     higher priority than the wildcard (Default Queue) rule:
+>     $ ethtool -S enp1s0 | grep rx_q.*packets
+>          rx_queue_0_packets: 10
+>          rx_queue_1_packets: 10
+>          rx_queue_2_packets: 0
+>          rx_queue_3_packets: 10
+> 
+> 10. On the DUT, delete all the NFC rules:
+>      $ sudo ethtool -N enp1s0 delete 63
+>      $ sudo ethtool -N enp1s0 delete 64
+> 
+> 11. From the Link Partner, send another 10 ARP packets:
+>      $ arping -c 10 -I enp170s0 169.254.1.2
+> 
+> 12. Now, packets are routed to Queue 0 because the value of Default Queue
+>      is reset back to 0:
+>      $ ethtool -S enp1s0 | grep rx_q.*packets
+>           rx_queue_0_packets: 20
+>           rx_queue_1_packets: 10
+>           rx_queue_2_packets: 0
+>           rx_queue_3_packets: 10
+> 
+> Co-developed-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
+> Signed-off-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> ---
+> V2:
+>    - use Ethtool wildcard rule instead of extra uAPI (Jakub Kicinski & Jacob Keller)
+>    - combine MRQC register definitions into a single location (Kurt Kanzenbach)
+>    - use FIELD_PREP (Kurt Kanzenbach)
+>    - use RCT rule (Wojciech Drewek)
+>    - no need brackets for single line code (Wojciech Drewek)
+>    - use imperative mood in commit message (Marcin Szycik)
+>    - ensure igc_ prefix in function name (Marcin Szycik)
+> 
+> V1: https://patchwork.ozlabs.org/project/intel-wired-lan/cover/20240730012212.775814-1-yoong.siang.song@intel.com/
+> ---
+>   drivers/net/ethernet/intel/igc/igc.h         | 15 ++++++-------
+>   drivers/net/ethernet/intel/igc/igc_defines.h |  4 ++++
+>   drivers/net/ethernet/intel/igc/igc_ethtool.c | 18 ++++++++++++++++
+>   drivers/net/ethernet/intel/igc/igc_main.c    | 22 ++++++++++++++++++++
+>   4 files changed, 52 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
+> index 1525ae25fd3e..c580ecc954be 100644
+> --- a/drivers/net/ethernet/intel/igc/igc.h
+> +++ b/drivers/net/ethernet/intel/igc/igc.h
+> @@ -406,10 +406,6 @@ extern char igc_driver_name[];
+>   #define IGC_FLAG_RSS_FIELD_IPV4_UDP    BIT(6)
+>   #define IGC_FLAG_RSS_FIELD_IPV6_UDP    BIT(7)
+> 
+> -#define IGC_MRQC_ENABLE_RSS_MQ         0x00000002
+> -#define IGC_MRQC_RSS_FIELD_IPV4_UDP    0x00400000
+> -#define IGC_MRQC_RSS_FIELD_IPV6_UDP    0x00800000
+> -
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
----
- drivers/hid/hid-core.c  | 2 +-
- drivers/hid/hid-lg4ff.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Small nit, but moving these fields seems like a separate patch since 
+moving them isn't part of the wildcard rule changes.
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index b348d0464314..4a00bd4a4224 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -2797,7 +2797,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- {
- 	struct hid_device *hdev = container_of(dev, struct hid_device, dev);
- 
--	return scnprintf(buf, PAGE_SIZE, "hid:b%04Xg%04Xv%08Xp%08X\n",
-+	return sysfs_emit(buf, "hid:b%04Xg%04Xv%08Xp%08X\n",
- 			 hdev->bus, hdev->group, hdev->vendor, hdev->product);
- }
- static DEVICE_ATTR_RO(modalias);
-diff --git a/drivers/hid/hid-lg4ff.c b/drivers/hid/hid-lg4ff.c
-index 445623dd1bd6..32b711723f2a 100644
---- a/drivers/hid/hid-lg4ff.c
-+++ b/drivers/hid/hid-lg4ff.c
-@@ -956,7 +956,7 @@ static ssize_t lg4ff_combine_show(struct device *dev, struct device_attribute *a
- 		return 0;
- 	}
- 
--	count = scnprintf(buf, PAGE_SIZE, "%u\n", entry->wdata.combine);
-+	count = sysfs_emit(buf, "%u\n", entry->wdata.combine);
- 	return count;
- }
- 
-@@ -1009,7 +1009,7 @@ static ssize_t lg4ff_range_show(struct device *dev, struct device_attribute *att
- 		return 0;
- 	}
- 
--	count = scnprintf(buf, PAGE_SIZE, "%u\n", entry->wdata.range);
-+	count = sysfs_emit(buf, "%u\n", entry->wdata.range);
- 	return count;
- }
- 
-@@ -1073,7 +1073,7 @@ static ssize_t lg4ff_real_id_show(struct device *dev, struct device_attribute *a
- 		return 0;
- 	}
- 
--	count = scnprintf(buf, PAGE_SIZE, "%s: %s\n", entry->wdata.real_tag, entry->wdata.real_name);
-+	count = sysfs_emit(buf, "%s: %s\n", entry->wdata.real_tag, entry->wdata.real_name);
- 	return count;
- }
- 
--- 
-2.47.1
+Thanks,
+
+Brett
+
+>   /* RX-desc Write-Back format RSS Type's */
+>   enum igc_rss_type_num {
+>          IGC_RSS_TYPE_NO_HASH            = 0,
+> @@ -635,6 +631,7 @@ enum igc_filter_match_flags {
+>          IGC_FILTER_FLAG_DST_MAC_ADDR =  BIT(3),
+>          IGC_FILTER_FLAG_USER_DATA =     BIT(4),
+>          IGC_FILTER_FLAG_VLAN_ETYPE =    BIT(5),
+> +       IGC_FILTER_FLAG_DEFAULT_QUEUE = BIT(6),
+>   };
+> 
+
+<snip>
 
