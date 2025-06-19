@@ -1,165 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB891917CD;
-	Thu, 19 Jun 2025 18:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F61E28E581;
+	Thu, 19 Jun 2025 18:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750356783; cv=none; b=hRDZTsBl+nvqW1+wSUwBKYsAk40zDqzmeiGgPO6PaFMO7+cWqThQXn0qOgBwDQl1avi/+bvfuQZJrVya9iwA09A0wYXJPTLTLlfYWy1CvriZ41cjRFAx7CbOG/D0tMYmRS6BqM9n3ilbouIfCTfeIDvPtMyanlMdDOxfuU5eif4=
+	t=1750356809; cv=none; b=HNfxQhcZzJtsH7njVcy6UfM/W3ljwbFblXLXVV/I/kzWXrXeBVc++1RV5W4W9evR8HKZynEAHiMM/2Q3QjVukPQv7/ojKXzou3O7mtgKWwGC3QNh6KV5/HNO3FiCRhVWBB5QMphvRAruZew2S5B2KY7qQQCfP6I6E4+xqDOaaoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750356783; c=relaxed/simple;
-	bh=6c+2N0AUxiqNfsZha6j0d5qz7pyY+SbEaXAGcihmsbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uBkpaSKW945djvk4CZzLmy6xowAw0KE2Czkk2BT32Fb9DwdKH3R0DbuRNuoc7JjenLJ8J7oQuymMUXi4dgyQjrQr1843TJegd87TYH92UTROtKcWs1/LGIE+tpAca60HeRDPLjhkCsgHwDvb7oyRFk7za+DRB0zDmx+bWrjdPSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=czQUw35R; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750356809; c=relaxed/simple;
+	bh=n1ni9DlPXMDUYhaHLZEWHB/Fi2keFgi3FF8tgcT9jlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f0D0WirmgWub/r+SkUAIbDc5ak5f9ZaXuAxWzwmV2+YpIP3V3vpOn9Q7TAIDS9MzdxbLQcyOb6aGwf3PhrE0EMio3MtdwOYtMnQoGzpvE4qjoXYhCfeJxogP8VGGZKK7pDRhnAHqtXf1xUOizrsVTcgMMFcwX/9/m2ZAGpI4AmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkBY2g0+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="czQUw35R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750356782; x=1781892782;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6c+2N0AUxiqNfsZha6j0d5qz7pyY+SbEaXAGcihmsbw=;
-  b=czQUw35RckoPEFbh+9Z/y6qNHjvwRR4c+XSgIu4KtzrSiXqVL3DjYbl9
-   axTVXXfKWRO//oAo66C0M+6ED1nP4oq4637um2x2GQ80kUDWzqwkLplCv
-   cIEC/RDXKC20M8yXfN+ByHxLzYB/MZXRSQVN2smLV6hnpX/5MXU7tUx1o
-   1C7Zo1+jrDzuK5ax4qAgQLpEvyfQPoIU+mNfcQA9MyHU/sbrlq1zemh2C
-   oqUN/rYddfLki3ftXv74mdtEevIDVIZisxch0FvwSFch7Axm7B4w0Rrqn
-   0Cyxk5VdtAkcxxGzkR3t6xXr0TidcRxvj4oHkLy293gpfYQPCPYe0gHmK
-   g==;
-X-CSE-ConnectionGUID: 9Lyu564qQoWOJXCPEgPSjA==
-X-CSE-MsgGUID: jMcLAvUfTeO65XVHbLy7Ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70054571"
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="70054571"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:13:01 -0700
-X-CSE-ConnectionGUID: 0v6h7fMQQJObZCL07krtCA==
-X-CSE-MsgGUID: e7qUCbilQ+WIIAzwOoMH7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
-   d="scan'208";a="150143748"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.13])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 11:12:52 -0700
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: laurent.pinchart@ideasonboard.com,
-	sakari.ailus@linux.intel.com
-Cc: akinobu.mita@gmail.com,
-	stanislaw.gruszka@linux.intel.com,
-	hdegoede@redhat.com,
-	arnd@arndb.de,
-	alain.volmat@foss.st.com,
-	andrzej.hajda@intel.com,
-	benjamin.mugnier@foss.st.com,
-	dave.stevenson@raspberrypi.com,
-	hansg@kernel.org,
-	hverkuil@xs4all.nl,
-	jacopo.mondi@ideasonboard.com,
-	jonas@kwiboo.se,
-	kieran.bingham@ideasonboard.com,
-	khalasa@piap.pl,
-	prabhakar.csengg@gmail.com,
-	mani@kernel.org,
-	m.felsch@pengutronix.de,
-	martink@posteo.de,
-	mattwmajewski@gmail.com,
-	matthias.fend@emfend.at,
-	mchehab@kernel.org,
-	mehdi.djait@linux.intel.com,
-	michael.riesch@collabora.com,
-	naush@raspberrypi.com,
-	nicholas@rothemail.net,
-	nicolas.dufresne@collabora.com,
-	paul.elder@ideasonboard.com,
-	dan.scally@ideasonboard.com,
-	pavel@kernel.org,
-	petrcvekcz@gmail.com,
-	rashanmu@gmail.com,
-	ribalda@chromium.org,
-	rmfrfs@gmail.com,
-	zhengsq@rock-chips.com,
-	slongerbeam@gmail.com,
-	sylvain.petinot@foss.st.com,
-	s.nawrocki@samsung.com,
-	tomi.valkeinen@ideasonboard.com,
-	umang.jain@ideasonboard.com,
-	zhi.mao@mediatek.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH v1 55/55] media: i2c: ov2680: Use the v4l2 helper for obtaining the clock
-Date: Thu, 19 Jun 2025 20:11:24 +0200
-Message-ID: <6284706df845a3c88826f1c3bd17f60d3e71ecd9.1750352394.git.mehdi.djait@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750352394.git.mehdi.djait@linux.intel.com>
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkBY2g0+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ACB7C4CEED;
+	Thu, 19 Jun 2025 18:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750356808;
+	bh=n1ni9DlPXMDUYhaHLZEWHB/Fi2keFgi3FF8tgcT9jlI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CkBY2g0+Ipg499Nhamecybxdcm7wkmdbVRfMUJye2sCkTidDLu3YqmCfBYlvKO5IU
+	 09iOh+RloQcMVdVCfx5/dUlYXwKymSYtRbmcwLFMhohlD6KuzYf19a1GcYZgbEdugf
+	 ElO+y/Nn47L9/W/UoYzH446GN24Wj3aLcBWx/nEFxB+nvrqGgCsovmgt2qqXTFVyxw
+	 V7HMD/WFZLUoauW53K2+qqLPaqUf4fFGPOV7uyFRw5Y4aRKMy58NqTzXFnv1wP5P0y
+	 9Rq8SIaRyuOzbDorBzcRAIGZFouH2c1okwRaGFcKmjs4TUmEBWOdYYXzlpyRHGg/5V
+	 RyrtE/EGDTG+Q==
+Date: Thu, 19 Jun 2025 19:13:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Dhruva Gole <d-gole@ti.com>, s-ramamoorthy@ti.com, lgirdwood@gmail.com,
+	aaro.koskinen@iki.fi, khilman@baylibre.com, rogerq@kernel.org,
+	tony@atomide.com, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com,
+	Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH] Revert "regulator: tps65219: Add TI TPS65214 Regulator
+ Support"
+Message-ID: <d526be6f-efe9-4f05-b8e1-9a80e4d92a36@sirena.org.uk>
+References: <20250619153526.297398-1-d-gole@ti.com>
+ <20250619193038.4e1f42c8@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aouGrvgz9MnWNdTD"
+Content-Disposition: inline
+In-Reply-To: <20250619193038.4e1f42c8@akair>
+X-Cookie: Reapply as necessary.
 
-Use the new v4l2 helper devm_v4l2_sensor_clk_get() that works on both
-DT- and ACPI-based platforms to retrieve a reference to the clock
-producer from firmware.
 
-Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+--aouGrvgz9MnWNdTD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
-index 7237fb27ecd0..c974169c92f8 100644
---- a/drivers/media/i2c/ov2680.c
-+++ b/drivers/media/i2c/ov2680.c
-@@ -1079,7 +1079,6 @@ static int ov2680_parse_dt(struct ov2680_dev *sensor)
- 	struct device *dev = sensor->dev;
- 	struct fwnode_handle *ep_fwnode;
- 	struct gpio_desc *gpio;
--	unsigned int rate = 0;
- 	int i, ret;
- 
- 	/*
-@@ -1114,13 +1113,6 @@ static int ov2680_parse_dt(struct ov2680_dev *sensor)
- 
- 	sensor->pwdn_gpio = gpio;
- 
--	sensor->xvclk = devm_clk_get_optional(dev, "xvclk");
--	if (IS_ERR(sensor->xvclk)) {
--		ret = dev_err_probe(dev, PTR_ERR(sensor->xvclk),
--				    "xvclk clock missing or invalid\n");
--		goto out_free_bus_cfg;
--	}
--
- 	/*
- 	 * We could have either a 24MHz or 19.2MHz clock rate from either DT or
- 	 * ACPI... but we also need to support the weird IPU3 case which will
-@@ -1130,22 +1122,15 @@ static int ov2680_parse_dt(struct ov2680_dev *sensor)
- 	 * uses devicetree then the configured rate should already be set, so
- 	 * we can just read it.
- 	 */
--	ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency",
--				       &rate);
--	if (ret && !sensor->xvclk) {
--		dev_err_probe(dev, ret, "invalid clock config\n");
-+
-+	sensor->xvclk = devm_v4l2_sensor_clk_get(dev, "xvclk");
-+	if (IS_ERR(sensor->xvclk)) {
-+		ret = dev_err_probe(dev, PTR_ERR(sensor->xvclk),
-+				    "xvclk clock missing or invalid\n");
- 		goto out_free_bus_cfg;
- 	}
- 
--	if (!ret && sensor->xvclk) {
--		ret = clk_set_rate(sensor->xvclk, rate);
--		if (ret) {
--			dev_err_probe(dev, ret, "failed to set clock rate\n");
--			goto out_free_bus_cfg;
--		}
--	}
--
--	sensor->xvclk_freq = rate ?: clk_get_rate(sensor->xvclk);
-+	sensor->xvclk_freq = clk_get_rate(sensor->xvclk);
- 
- 	for (i = 0; i < ARRAY_SIZE(ov2680_xvclk_freqs); i++) {
- 		if (sensor->xvclk_freq == ov2680_xvclk_freqs[i])
+On Thu, Jun 19, 2025 at 07:30:38PM +0200, Andreas Kemnade wrote:
+> Am Thu, 19 Jun 2025 21:05:26 +0530
+> schrieb Dhruva Gole <d-gole@ti.com>:
+>=20
+> > This reverts commit f1471bc435afa31c8c0c58551922830dc8f4b06b.
+
+> >  	TPS65219_REGULATOR("LDO2", "ldo2", TPS65219_LDO_2,
+> >  			   REGULATOR_VOLTAGE, ldos_1_2_ops, 64,
+> >  			   TPS65219_REG_LDO2_VOUT,
+> > @@ -366,23 +326,13 @@ struct tps65219_chip_data {
+> >  };
+
+> I think it should be relatively easy to only revert that part without
+> needing to revert it fully.
+
+Yes, I'd like to see some analysis as to why a revert is a good fix
+here, it doesn't seem like there's been any effort at understanding what
+went wrong and the change doesn't seem that complex.
+
+--aouGrvgz9MnWNdTD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhUU0IACgkQJNaLcl1U
+h9AVSwf+MbaSUYJhNtVCq9jz54zj03mpTsNA+BZoLqDn/DSe2N04Gh9Iwx64lU1/
+W0YE13KZPPwLHw1NX/CCnj6JntjROReuhEFNuVUj1XRA0/EoZwIIqanmVrlyEzSd
+x5WQJwJabyXmel3ujCvCu+ByWFkEck8z3BCfp5xmaP37caKd/umkoPyXT3YZhEV8
+hZuFmD/31K5Hf18a9YPXm1OQ1fIvtUwJbkmd5yA0KhENvmL1CyzTH3PIBCTxf18h
+YrkmCwsKO8263pVEp9ZzPYuxD2nS0hU523NNE1mAW6n1URxAMdxkoKqMG2h27YI5
++scBKBkFSchi/GVtMQswznI0fYSzQw==
+=LnG7
+-----END PGP SIGNATURE-----
+
+--aouGrvgz9MnWNdTD--
