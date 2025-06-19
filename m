@@ -1,170 +1,322 @@
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020143.outbound.protection.outlook.com [52.101.195.143])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA23B30E82B;
-	Thu, 19 Jun 2025 19:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.143
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750361727; cv=fail; b=vAekqKwTCM0fK1f+4XlttQqfRgutjYY13oqAn8tPLzO56Qs7UxfI1fppBnLsuuXmHX1hMWY5h5AUzJUweq1YPQuWoUt8A03/qaUFIpgigDvmoopSqhKJr1hYfplLzr9Jw4OZe66ejwXyO74yCxSamqd8vZHuDOvjW/Ui2Yx2Wjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750361727; c=relaxed/simple;
-	bh=2m6ietf5f4oWqSn64lv0cGi+qUrVSWLeGM8FsWcbQBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o5pOMVwSjWPzy70HZzDEVHL94ALUzxVx0ZFY0yBN5mF622bjzIGZlfWT6uZMh/fN0tiLiZ6GtGBCnk6xyaC6FXRcR0lq48u2GRvKRGkwLzrX6MCVchUJuyQ0voqJ0mjO2Z/MIBa2MxdPyEtIa4bcmdpNuo3U7HjHvtRV3BhXC0A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JFeEsHIBydWnpK3xIfVw+KK3zqnin2JVkmEz1Y8iHs3124Ndm6P+sDFMxS/gyoy4M4pwDgokzAqrnsX269itecwUuJqb7O/kjgsHdABvnBvtZAXse0RuQ9p1P+HCoOJ8/XYJWXKePjMYgHiL3Bx+8XjXj+UzhvENRjpPTYGQKz23Ki1+prs2UyDaY2yTylILsQoZGVilMD853OLVSRQ6JWaNKBlvn5WGne1UPq0AOOeL8nhMPau/4EqmkGlWtDuwmJO60d4M2nJLSzvXKQTW1Q3upxApnIjOTw+pghn3r73EV31uXX230jYaaS00nt0MX9QHC1v5rV5WgOwYN57xnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nPnX1dXv867Qr5QLLPxtwBptQl+HUPX+vcoCtiTsZy4=;
- b=G7c5CQbi77U0OKpMy5TbDJNQYxvJY3VpVR3w0vvsBpzzMPDX/sMAM4h2OPSaMpM583Fc+tTa8l7L2SnY5w739L+k69EagHv++isqIpKjuBZC5PRe4ZzgyDuInikgL4tLgYUsKL/N2DoJc5kxUPpJzbchInHzgRwNlrjrZ/iEXdI17RKBvsMhBYnFVKqoY7Bt9naGmTKtDzldVvIlBepX1Zm7pVJ/4NOfWHK21V7/oAqGlDhmmJhtU4Mnxvx+pjGDQAVHz2LqD0wVu0QSWHnW3qtTuTrNPp/quQQUG2wj5G1lX0m/oHpx7fXL5/meroA/mmJJrpn8Iwfktayje76atQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LO9P123MB7732.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:3e9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Thu, 19 Jun
- 2025 19:35:22 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::5352:7866:8b0f:21f6]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::5352:7866:8b0f:21f6%6]) with mapi id 15.20.8857.022; Thu, 19 Jun 2025
- 19:35:21 +0000
-Date: Thu, 19 Jun 2025 15:35:14 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: "Sean A." <sean@ashe.io>, 
-	"James.Bottomley@hansenpartnership.com" <James.Bottomley@hansenpartnership.com>, "kashyap.desai@broadcom.com" <kashyap.desai@broadcom.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, 
-	"martin.petersen@oracle.com" <martin.petersen@oracle.com>, 
-	"mpi3mr-linuxdrv.pdl@broadcom.com" <mpi3mr-linuxdrv.pdl@broadcom.com>, "sreekanth.reddy@broadcom.com" <sreekanth.reddy@broadcom.com>, 
-	"sumit.saxena@broadcom.com" <sumit.saxena@broadcom.com>
-Subject: Re: [RFC PATCH v2 1/1] scsi: mpi3mr: Introduce smp_affinity_enable
- module parameter
-Message-ID: <ntxbqgnwvjdxggl5hno7eqae6ccpzwoyule3gwo4pnb53h4jiy@qfvkb3ocdeef>
-References: <1xjYfSjJndOlG0Uro2jPuAmIrfqi5AVbfpFeWh7RfLfzqqH9u8ePoqgaP32ElXrGyOB47UvesV_Y2ypmM3cZtWit2EPnV3aj6i9w_DMo1eI=@ashe.io>
- <077ffc15-f949-41d4-a13b-4949990ba830@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <077ffc15-f949-41d4-a13b-4949990ba830@oracle.com>
-X-ClientProxiedBy: MN2PR04CA0019.namprd04.prod.outlook.com
- (2603:10b6:208:d4::32) To LO3P123MB3531.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:be::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296C030E83E;
+	Thu, 19 Jun 2025 19:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750362135; cv=none; b=r1nxstxv98090ZFBJYVIBkQjHm02SH2opHxtwg0O59PKosE89wo0wQtXGU/XwdSrpfYnfqXLpAx5HDB0XSpv4PW3XvKxJitCSOlEEUMWPE7na1d3lHscIMviZkJ1l/Azau+SbIqVAXUlTH2urA0JUYE6I8N9FhpboLZxGEkZYM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750362135; c=relaxed/simple;
+	bh=TzeHJzZ7h0/TmOcB7LFuWJJpKpZGwp266lYNGJjFFoc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IpTe7iQhSwzi+ONnMCbb8XXAUvLFX0x0ojyVXbJ7vdEkXJOwWYHsgqf/NieZjqLpL4ZS22PZ2IKvjA7XATBKWcR9u9y+x/FXoYr1zBTBkDbyuRjLsYXvhRkxOMHqz6g6Wemt9z4JXklzAm9CEedaEVA/emn6ZE08olgGdWZVih8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=O9iueXfR; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="O9iueXfR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=mXmvKHVyVneLNACt7FikTBcRVPKpi1VtdHVp1Bud38o=; b=O9iueXfRxbTTpObfvpHY5997gU
+	L35A1Q1ccvwrqb6emiFzg25TEFCYSP+QIIw9q3PQpHknDfKLQJPtRSkJ/o3SZRxrkQCafEVgdIkl+
+	5/JvnBprIHh/ktRDaqcSTONu+AKeaWxcRuGzedrDy4cOshIJG9M8PPkR3D7A/VWKNQTvqW7pBs7ju
+	MtPnxLxOvREZ7Yv+Fa5z5Ur5Xyd31p9WiD4KU3T7U5qR+tTRQ0JB+6vzrpF1wjTFBRAZfy1GrLEOo
+	Z72lXlLTq54NmfIp0Y8zrY4NpRBDldZ7NfZnw5MK23AWv4VfnoDH9Lx0QJdNtsgYffp7hjsVnpg5g
+	w17m70Rg==;
+Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uSL97-0006Um-Kt; Thu, 19 Jun 2025 21:42:01 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kever Yang <kever.yang@rock-chips.com>,
+ Frank Wang <frank.wang@rock-chips.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Alexey Charkov <alchark@gmail.com>, kernel@collabora.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject:
+ Re: [PATCH v5 1/2] phy: rockchip: inno-usb2: add soft vbusvalid control
+Date: Thu, 19 Jun 2025 21:42:00 +0200
+Message-ID: <7131451.G0QQBjFxQf@phil>
+In-Reply-To: <20250619-rk3576-sige5-usb-v5-1-9069a7e750e1@collabora.com>
+References:
+ <20250619-rk3576-sige5-usb-v5-0-9069a7e750e1@collabora.com>
+ <20250619-rk3576-sige5-usb-v5-1-9069a7e750e1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO9P123MB7732:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3c55a92-4336-4f5b-73d8-08ddaf686bec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TUEvTzdvL0ZEL1N0cGJsQ3o2WnVJU2lxSkJzYi9hVzJKRFBjQzhsV0RhaGVm?=
- =?utf-8?B?NjI0SnJ3ZkJiL0Qxa3R1MHZPOW5rN1VTUlQ2VTNINzdVUEJVUWR3a0RVenht?=
- =?utf-8?B?Ykc3aTNvYnljVjRDbEFOZTVSZThiU3M1dWdsVlo2TzJ3TVNDNjJqWGZobVVE?=
- =?utf-8?B?Sk5NUlVGMWc1bTkwQkovcU8yd1Avcjc2cjNFeHpVb1dLb1hhb0JzUldHTW1q?=
- =?utf-8?B?U09RSmxQTm1ibTUxa01kK01qQk1sU0VUaytydUNaVHBJWVg4b3RkUDlJSmM2?=
- =?utf-8?B?THhYMnVpVFc1UldBQTBmVFEwYndjTi9HWmxGbkpNK3pNdlVPZnBhQ2V3LzlQ?=
- =?utf-8?B?ZUErREc3d2syQ0J6aEJZT0VUS1UxNkJGUDlJOXhhK1Y1V3FGR1hBb1FIbUxm?=
- =?utf-8?B?cjErREM3UnpxN3I3SFhWOU15TTR1eGcyaFZKMnhpcGlpUnZZakpZalpCU3Ra?=
- =?utf-8?B?T3ZxSE1PTmg1cVBEU3g2NW1QQ0k3Z2tVTVJOTFQyRWpzQThvSit5WU8reGZ2?=
- =?utf-8?B?S0N5ejhQWFVXVVZFVld3RmRONEdoMWpFSEJqcVVLUENOUVZaeUZ1NmxBeHF6?=
- =?utf-8?B?TWR2RU40WGJxMlc2YVU5NjZZMmE1T2pua2tlaWNzb2lRRm43eVZxRFdHbHNP?=
- =?utf-8?B?dW8xd2sxNGIxeCtlTTFBVU9zVDdkb280bW4zZis2UHRvU05jYlQ3WjRvNk5D?=
- =?utf-8?B?dWhnSWdzZU4zaEZ2ZHBiYklMZ3g5aGJwYkk2MG9IaXRFUlFaOWVZMWg4N2Va?=
- =?utf-8?B?cE9UbDhaUnd6SytSSW02Z1NhUk1UeEEvSEIrREdtK3Fkdm0zL0pVcHlnN2I3?=
- =?utf-8?B?NEhFbnZlbUlpU2tpTU9scWlqMk0rVXRxVEJ2c2JqanFnQ21SWFV3TTFGTWFj?=
- =?utf-8?B?REltcE9iNXlKbENOR29Fc204cGE1bW41U0ZiZmRrclFjenFvcm8vU2dieEdu?=
- =?utf-8?B?S2RjaklxQlZwUk56R3krZVdTSk5SNUdoZFY0cG9BMzYxNnI1RWc3d0F5WDU5?=
- =?utf-8?B?L1RHaUlUNlFJbEFZd2pMT0p0cWlqRVFlYktRMWR6eGsxcXF3Z3N3c2kvTlg4?=
- =?utf-8?B?VnVTOTdPeElJNEVGYWNBbVR6UVp3dXZHSUwzekVIYkhMZVg0N3NYRTFqb2Rn?=
- =?utf-8?B?Z1BCS0NRcGRwbjZMYkd4MWt4L0NNNVZ3V09pSDhvaWgyalRESk85aHFqOThS?=
- =?utf-8?B?MmJNRDBaeko2Q09oRG03UEw0VUJWSE55TlBIUUZ4YUNjYWdYKzdGemZia0xq?=
- =?utf-8?B?SDdEdnFXV1VQY2doRkNlM2F4M3Z6Vk40UitQQ2M4a3dTWGR2Tnltd2IrblhL?=
- =?utf-8?B?QUZ4bk9NN1NGUy9qVm0zcEoyMkhqeERueGhxS2tsT1cvYzZvOW5SV2tXdFhI?=
- =?utf-8?B?RlR5K2JxZVpmZzFJUDQ1ZCtZeWhKdzFQZ2E3QVNkdUwwMi9aT1NybFppSmNY?=
- =?utf-8?B?d2xkc2E3VUdoNno2L3E4RmljUXpEOFhENnJKcUpoWllMWXg3YmFZeldsb2tq?=
- =?utf-8?B?RWVLYXF0WXBHN3Jvc3owTUVobU9UampWUXBZaG9wQW9Zb1ZwaGRxYlBvc3FL?=
- =?utf-8?B?aUdoNHdobXh2SVc5RzB5UjFEWU1WdWx6WUZrKzJDaGY2SU5EZXFRWlZBZVht?=
- =?utf-8?B?aDAxWkdRVCt0Z0dNWk5oTnFSM3kzdEZpMWZObWxhYm1Wc0pGNzE3Um1VYTJN?=
- =?utf-8?B?eVJyZkpTa0hoaGN0WmFFTEp6WVNtN2pvbFlPd3djNW9SbEcveGE4OGR4TERI?=
- =?utf-8?B?UUVXZWNTeENhMkZlREtRTTl2OW5SQWxMb1R6a2ovcmF0U0lzZS9hd2ZFcVNS?=
- =?utf-8?B?UWplOTI5UmFlVCtwTHZSQUpjczc3VmpKbUlrMHZ1QmxUa0h5THlOVG9XMHBS?=
- =?utf-8?B?ZUI5QUFqZSt1QmYreGkzSnR6WWRYUmd3bFAzQ1RzUDQ4RW80UnFuTDE4OGRk?=
- =?utf-8?Q?uAt5zXo1QEI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZFJqaGNRZGxTRDM1TytqTitpMUJnZ0ZZZVZWb0VZVVZWOWtCYkhjTkdld3gr?=
- =?utf-8?B?d3l4Z3Buc25NRHlTQjBsTXNjejVHTXFBalZQL0VlNDJGVkFWeVVWbEdteDBq?=
- =?utf-8?B?eVdLU1NEWGFhaTFydzBlN212Z2NVRkhCT0prSmZaOGFRc2I2SzRrWjViSFRU?=
- =?utf-8?B?VkkwL2puUjdHUnBxTnNSS1BSaFJzTnVxK0RQWU50Z2t3d1A3V3dCWUgwUkN4?=
- =?utf-8?B?UVo2WmNiVmpuUmozTk53dlBiNEZNM1BLTUxJUnhuU0FIQTRWVUFyVlBJcjlT?=
- =?utf-8?B?YkhnelF3U1VWcVFBV3hHQSt6blgzVGoyWjA1YUdMM0ZyaDJvNzZGQlFtQnRN?=
- =?utf-8?B?emdDNDdqb04xdDZtalFtakRxZkNlaXBOT3N0VVJBNzZuSHE1Nlh2R0ZSekYz?=
- =?utf-8?B?RmxCNldPZS95amlkRTNJWkNtY3FaejVUeExwNU5CZ1BueTR0ZUZFSGNBbEtB?=
- =?utf-8?B?ek5GSjZ2TGt4dTdKcjNOV3Z0bGhDV0pXc09NeXBPS2RMNllXZnpPOVVyKzcz?=
- =?utf-8?B?Y3poUnNJdWpUQy9oQXZ2WXVsbnJjUUxnand5WGVlUE01ZUJCM0gzWjJ2bGlO?=
- =?utf-8?B?SGR5VWVYb01UVWdXR1R6TXcrY0FEVm9aQ25PazI1b2RIT01PZCt0SVNZOXQ0?=
- =?utf-8?B?eGhNeUFzN0JZQXZTN2NscndjWUp5UjdNVVZ3eUxGSTBBY0w4Q1lucjlWZEtR?=
- =?utf-8?B?amxlRWZucjhuc1V2V3VvUHJuNG0vTEdvQnNGdW9UQW5VUDlTZmhhUENxaDY1?=
- =?utf-8?B?ZzBCM0hCRDE1S0kxRUxRdnBnWEowcmRLdmF5Mys0WkVtRFgrazZjTHQ1dFA0?=
- =?utf-8?B?Vkd1aVVRS2pwMEhUT0lpT3J5c2hDM1dXMGVHTmNzb1JjNzJYamhWTHpJU3R6?=
- =?utf-8?B?bXJYbXhzT25LSE9LOEdTTnhPeWd2WGFRdThhR2hEaWloamY5VC81cFB3NUJn?=
- =?utf-8?B?V1pSWCtJU1RLaWhCT2k0Y0hEME1tSVZnUnozeVhXN1RkOVZMWjRLcmdqb21y?=
- =?utf-8?B?ZzBLOGRzajlyaUczTG9JRlNZRmNBZ2ZnanBVWjJ5OEFXTFJWUVdRd29iY0NO?=
- =?utf-8?B?N2ZpMmNySXhQMlNsMDM3ZTBiRHJ5MTZtcjNjcjZ0aWFrTUgwdW45dDRZVitE?=
- =?utf-8?B?ekVaTUZIUy9VQlpsZXV5U0tQVUZDdWExR0R6dUxpbnJoN2k5WnFJeHlhQTU5?=
- =?utf-8?B?OUpKWWY2aVg1UnhFbmVYVDZKRGNnVkM4dkV5YkxUc3RvT3gweUYwYWxzV2h6?=
- =?utf-8?B?RkNrNHVpbm0va014T2ZVb2l0U2pyaHNCY00wSGIrejBvckovSFRCZmdTWFJY?=
- =?utf-8?B?UkJIRktGRkxxbXNMdnRFL2VLYVBPU1NPYWxkaTB5WTdJbXBvWEZ6ZGRHcFM4?=
- =?utf-8?B?RWVaVGxxU3JYaHJyM1VIU3pUTGhRdmQvU3l4T1FCVzg3bnF4bndzU0tDSzh2?=
- =?utf-8?B?UE5PbFFOdzNlV05LcjF0c1hsVnZTa3ZVZ1JSMlFnWXQ2Q09BZmYvS2FvRGNM?=
- =?utf-8?B?c3VPMFQwcnRVcjd0ZFNZenhBRDhNMWVta0d0NDNzdVlLSStTcE4vMEpVNnp5?=
- =?utf-8?B?eHNNUUFYa2tia1JHN3NySC9COUo5YTRmOWxyTGFFeU5Tbll4eklONktVLys3?=
- =?utf-8?B?UlluMzY1TS9tT0g3NzQwbWwraDMvMDg2SXcyMW9KbmlFVEdxdGJTTU50SUZT?=
- =?utf-8?B?OUIzSWRrK24wamR3QjA5OVhlTmt2WmQrWGJ0SEF4ai91ek44UUticUtYL1VM?=
- =?utf-8?B?TWtBbVE2V0ZFRjlqN0Q0YWo4REk2QUwxQWszMnQyV0plaUxNenVod21FMzZm?=
- =?utf-8?B?d3BWWjJPOW1nYkRXNDNyRzBMT0pZeUJhc0IvRzY2bWxWNW4rU3BRUUM3cDAr?=
- =?utf-8?B?L0V1OGFqcHYxUW9FaW5waTB5YVVnVVRVaFJEYnYwQ3p3N1V6MnF3d21abFFJ?=
- =?utf-8?B?ZSs2YXJQSTcvaFB5cDZ5L1NCNWdvbjdZeFNsc1JFcGppZVlWTThldFFkTXVS?=
- =?utf-8?B?elNjaHRZSEZmd28wdEdiZlRDb3R0UmFoZFpMU2dzeEYyTEVTQXNYRW96UXlD?=
- =?utf-8?B?TEJPTHFGUzIrTHIvQXZWVm5YQXJpaHp4Wk5wdms5L1ZBbzlBc2xNOTZJSUJS?=
- =?utf-8?Q?fc/iXEjdxIrIEkF4ZPoVPuhy1?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3c55a92-4336-4f5b-73d8-08ddaf686bec
-X-MS-Exchange-CrossTenant-AuthSource: LO3P123MB3531.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 19:35:21.7039
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DXknsP9ysJk3sA0BaT1bdyvuID+V2K35GGflFK9ktDe3O41RemlXQdI5BGPNZWhjS56lOA9Ct9x+CLzmJS6wFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO9P123MB7732
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Jun 18, 2025 at 07:49:16AM +0100, John Garry wrote:
-> BTW, if you use taskset to set the affinity of a process and ensure that
-> /sys/block/xxx/queue/rq_affinity is set so that we complete on same CPU as
-> submitted, then I thought that this would ensure that interrupts are not
-> bothering other CPUs.
+Hi Nicolas,
 
-Hi John,
+Am Donnerstag, 19. Juni 2025, 20:36:36 Mitteleurop=C3=A4ische Sommerzeit sc=
+hrieb Nicolas Frattaroli:
+> With USB type C connectors, the vbus detect pin of the OTG controller
+> attached to it is pulled high by a USB Type C controller chip such as
+> the fusb302. This means USB enumeration on Type-C ports never works, as
+> the vbus is always seen as high.
+>=20
+> Rockchip added some GRF register flags to deal with this situation. The
+> RK3576 TRM calls these "soft_vbusvalid_bvalid" (con0 bit index 15) and
+> "soft_vbusvalid_bvalid_sel" (con0 bit index 14).
 
-I'm trying to understand this better. If I'm not mistaken, modifying
-/sys/block/[device]/queue/rq_affinity impacts where requests are processed.
-Could you clarify how this would prevent an IRQ from being delivered to an
-isolated CPU?
+I would expect a paragraph more about what those bits (and their
+functionality) actually do here :-)=20
 
--- 
-Aaron Tomlin
+
+> Downstream introduces a new vendor property which tells the USB 2 PHY
+> that it's connected to a type C port, but we can do better. Since in
+> such an arrangement, we'll have an OF graph connection from the USB
+> controller to the USB connector anyway, we can walk said OF graph and
+> check the connector's compatible to determine this without adding any
+> further vendor properties.
+>=20
+> Do keep in mind that the usbdp PHY driver seemingly fiddles with these
+> register fields as well, but what it does doesn't appear to be enough
+> for us to get working USB enumeration, presumably because the whole
+> vbus_attach logic needs to be adjusted as well either way.
+
+
+In the rk3588 TRM I find USB2PHY_GRF_CON4
+bit3 - sft_vbus_sel (VBUS software control select)
+bit2 - sft_vbus (When sft_vbus_sel is 1'b1, vbusvalid and bvalid is
+                 controlled by sft_vbus)
+
+Is that the same stuff as you're adding for rk3576 ?
+
+My last dance with rk3588-type-c is already some months back, but I do
+remember running into "some" issue - but don't remember which one ;-)
+
+
+Heiko
+
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 108 ++++++++++++++++++++=
++++++-
+>  1 file changed, 104 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/=
+rockchip/phy-rockchip-inno-usb2.c
+> index b0f23690ec3002202c0f33a6988f5509622fa10e..71810c07e4150ea81f65a8a93=
+2541b144e95a137 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+> +#include <linux/of_graph.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> @@ -114,6 +115,8 @@ struct rockchip_chg_det_reg {
+>  /**
+>   * struct rockchip_usb2phy_port_cfg - usb-phy port configuration.
+>   * @phy_sus: phy suspend register.
+> + * @svbus_en: soft vbus bvalid enable register.
+> + * @svbus_sel: soft vbus bvalid selection register.
+>   * @bvalid_det_en: vbus valid rise detection enable register.
+>   * @bvalid_det_st: vbus valid rise detection status register.
+>   * @bvalid_det_clr: vbus valid rise detection clear register.
+> @@ -140,6 +143,8 @@ struct rockchip_chg_det_reg {
+>   */
+>  struct rockchip_usb2phy_port_cfg {
+>  	struct usb2phy_reg	phy_sus;
+> +	struct usb2phy_reg	svbus_en;
+> +	struct usb2phy_reg	svbus_sel;
+>  	struct usb2phy_reg	bvalid_det_en;
+>  	struct usb2phy_reg	bvalid_det_st;
+>  	struct usb2phy_reg	bvalid_det_clr;
+> @@ -203,6 +208,7 @@ struct rockchip_usb2phy_cfg {
+>   * @event_nb: hold event notification callback.
+>   * @state: define OTG enumeration states before device reset.
+>   * @mode: the dr_mode of the controller.
+> + * @typec_vbus_det: whether to apply Type C logic to OTG vbus detection.
+>   */
+>  struct rockchip_usb2phy_port {
+>  	struct phy	*phy;
+> @@ -222,6 +228,7 @@ struct rockchip_usb2phy_port {
+>  	struct notifier_block	event_nb;
+>  	enum usb_otg_state	state;
+>  	enum usb_dr_mode	mode;
+> +	bool typec_vbus_det;
+>  };
+> =20
+>  /**
+> @@ -495,6 +502,13 @@ static int rockchip_usb2phy_init(struct phy *phy)
+>  	mutex_lock(&rport->mutex);
+> =20
+>  	if (rport->port_id =3D=3D USB2PHY_PORT_OTG) {
+> +		if (rport->typec_vbus_det) {
+> +			if (rport->port_cfg->svbus_en.enable &&
+> +					rport->port_cfg->svbus_sel.enable) {
+> +				property_enable(rphy->grf, &rport->port_cfg->svbus_en, true);
+> +				property_enable(rphy->grf, &rport->port_cfg->svbus_sel, true);
+> +			}
+> +		}
+>  		if (rport->mode !=3D USB_DR_MODE_HOST &&
+>  		    rport->mode !=3D USB_DR_MODE_UNKNOWN) {
+>  			/* clear bvalid status and enable bvalid detect irq */
+> @@ -535,8 +549,7 @@ static int rockchip_usb2phy_init(struct phy *phy)
+>  			if (ret)
+>  				goto out;
+> =20
+> -			schedule_delayed_work(&rport->otg_sm_work,
+> -					      OTG_SCHEDULE_DELAY * 3);
+> +			schedule_delayed_work(&rport->otg_sm_work, 0);
+>  		} else {
+>  			/* If OTG works in host only mode, do nothing. */
+>  			dev_dbg(&rport->phy->dev, "mode %d\n", rport->mode);
+> @@ -666,8 +679,12 @@ static void rockchip_usb2phy_otg_sm_work(struct work=
+_struct *work)
+>  	unsigned long delay;
+>  	bool vbus_attach, sch_work, notify_charger;
+> =20
+> -	vbus_attach =3D property_enabled(rphy->grf,
+> -				       &rport->port_cfg->utmi_bvalid);
+> +	if (rport->port_cfg->svbus_en.enable && rport->typec_vbus_det) {
+> +		vbus_attach =3D true;
+> +	} else {
+> +		vbus_attach =3D property_enabled(rphy->grf,
+> +					       &rport->port_cfg->utmi_bvalid);
+> +	}
+> =20
+>  	sch_work =3D false;
+>  	notify_charger =3D false;
+> @@ -1276,6 +1293,83 @@ static int rockchip_otg_event(struct notifier_bloc=
+k *nb,
+>  	return NOTIFY_DONE;
+>  }
+> =20
+> +static const char *const rockchip_usb2phy_typec_cons[] =3D {
+> +	"usb-c-connector",
+> +	NULL,
+> +};
+> +
+> +static struct device_node *rockchip_usb2phy_to_controller(struct rockchi=
+p_usb2phy *rphy)
+> +{
+> +	struct device_node *np;
+> +	struct device_node *parent;
+> +
+> +	for_each_node_with_property(np, "phys") {
+> +		struct of_phandle_iterator it;
+> +		int ret;
+> +
+> +		of_for_each_phandle(&it, ret, np, "phys", NULL, 0) {
+> +			parent =3D of_get_parent(it.node);
+> +			if (it.node !=3D rphy->dev->of_node && rphy->dev->of_node !=3D parent=
+) {
+> +				if (parent)
+> +					of_node_put(parent);
+> +				continue;
+> +			}
+> +
+> +			/*
+> +			 * Either the PHY phandle we're iterating or its parent
+> +			 * matched, we don't care about which out of the two in
+> +			 * particular as we just need to know it's the right
+> +			 * USB controller for this PHY.
+> +			 */
+> +			of_node_put(it.node);
+> +			of_node_put(parent);
+> +			return np;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static bool rockchip_usb2phy_otg_is_type_c(struct rockchip_usb2phy *rphy)
+> +{
+> +	struct device_node *controller =3D rockchip_usb2phy_to_controller(rphy);
+> +	struct device_node *ports;
+> +	struct device_node *ep =3D NULL;
+> +	struct device_node *parent;
+> +
+> +	if (!controller)
+> +		return false;
+> +
+> +	ports =3D of_get_child_by_name(controller, "ports");
+> +	if (ports) {
+> +		of_node_put(controller);
+> +		controller =3D ports;
+> +	}
+> +
+> +	for_each_of_graph_port(controller, port) {
+> +		ep =3D of_get_child_by_name(port, "endpoint");
+> +		if (!ep)
+> +			continue;
+> +
+> +		parent =3D of_graph_get_remote_port_parent(ep);
+> +		of_node_put(ep);
+> +		if (!parent)
+> +			continue;
+> +
+> +		if (of_device_compatible_match(parent, rockchip_usb2phy_typec_cons)) {
+> +			of_node_put(parent);
+> +			of_node_put(controller);
+> +			return true;
+> +		}
+> +
+> +		of_node_put(parent);
+> +	}
+> +
+> +	of_node_put(controller);
+> +
+> +	return false;
+> +}
+> +
+>  static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
+>  					  struct rockchip_usb2phy_port *rport,
+>  					  struct device_node *child_np)
+> @@ -1297,6 +1391,8 @@ static int rockchip_usb2phy_otg_port_init(struct ro=
+ckchip_usb2phy *rphy,
+> =20
+>  	mutex_init(&rport->mutex);
+> =20
+> +	rport->typec_vbus_det =3D rockchip_usb2phy_otg_is_type_c(rphy);
+> +
+>  	rport->mode =3D of_usb_get_dr_mode_by_phy(child_np, -1);
+>  	if (rport->mode =3D=3D USB_DR_MODE_HOST ||
+>  	    rport->mode =3D=3D USB_DR_MODE_UNKNOWN) {
+> @@ -2050,6 +2146,8 @@ static const struct rockchip_usb2phy_cfg rk3576_phy=
+_cfgs[] =3D {
+>  		.port_cfgs	=3D {
+>  			[USB2PHY_PORT_OTG] =3D {
+>  				.phy_sus	=3D { 0x0000, 8, 0, 0, 0x1d1 },
+> +				.svbus_en	=3D { 0x0000, 15, 15, 0, 1 },
+> +				.svbus_sel	=3D { 0x0000, 14, 14, 0, 1 },
+>  				.bvalid_det_en	=3D { 0x00c0, 1, 1, 0, 1 },
+>  				.bvalid_det_st	=3D { 0x00c4, 1, 1, 0, 1 },
+>  				.bvalid_det_clr =3D { 0x00c8, 1, 1, 0, 1 },
+> @@ -2087,6 +2185,8 @@ static const struct rockchip_usb2phy_cfg rk3576_phy=
+_cfgs[] =3D {
+>  		.port_cfgs	=3D {
+>  			[USB2PHY_PORT_OTG] =3D {
+>  				.phy_sus	=3D { 0x2000, 8, 0, 0, 0x1d1 },
+> +				.svbus_en	=3D { 0x2000, 15, 15, 0, 1 },
+> +				.svbus_sel	=3D { 0x2000, 14, 14, 0, 1 },
+>  				.bvalid_det_en	=3D { 0x20c0, 1, 1, 0, 1 },
+>  				.bvalid_det_st	=3D { 0x20c4, 1, 1, 0, 1 },
+>  				.bvalid_det_clr =3D { 0x20c8, 1, 1, 0, 1 },
+>=20
+>=20
+
+
+
+
