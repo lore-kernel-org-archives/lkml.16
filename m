@@ -1,177 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C14624729C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594EC14F98
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750315352; cv=none; b=ruldy3qrqRLQl6zzJBcmyOam5ZLrtot0jSlZOX86lv5ogpkGfTVB7b1UyDYS9PIs0MYYFDqfjjK1AS16IcXGzKQW2++6e/1Xff6AsG5zaLMxuZOWH0el81rBGjasT7QPPNB3G8omwJqiIpczccr/M1ZJjpuoABKjSJE8KlUdTVw=
+	t=1750315539; cv=none; b=NVAgLFwp30bPZwJCWWmyF5WM58GDZccsIo02J9Zt89+qYa+K8V7P8SMuf3SacoFbTPXjQK9jFd0m3LfRCexiJk8gX3LBh/JdziF0znlQC/yjBtRVA7mRBo+RNm2j53pzL9qYYuvhz3DccCW+CCR2JpNWS9WORemYKXhtLXCVLe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750315352; c=relaxed/simple;
-	bh=e7Ocn6zrexmd6c1PsvepJzsoju7cEdVlt06t113BlmU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TzpxXHbUN124guD2H3BMVuzqDo+pgiF093kX1nfJf1G7lh0SjGJu9V/iH2fkgzACzo7cTCWrUjXCodVQE901OF32uxqsBuX7n6bC1SJi1J8HuLOTAiiVwgVDTbBtEQCsPVWdp+7Vmy9nieYwu2WIsEEmbdA4jyer0gYdPQdX7VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Now6d41D; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750315539; c=relaxed/simple;
+	bh=+eaXs18pbIdN16VjbFQKb/82Ep6y4XInUcmQiPzMqeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MPXjBj8yFgUdkf9QjWFeEIpAUUhajI04TLzH47dmc9Plro3Zq//K5fiq9fbKX9b7B4LpIDgxEJcbYAmhQ9HsScCkJPBtJ3n3hmk8eT2GuVL/u/nxtWDPmcoqYb0Pzx2LEnAaZl+rRm9Wpv9VQBC0XSIclCgsdX/uFpEXyy2NVHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hkoKGdU1; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Now6d41D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750315350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HrAK3Pb88d2mMW8Ubsq+AvQbXCBrspP+wLLZy4buj1s=;
-	b=Now6d41Dw0fOUMi3FlXKIRQOriiA7ODuErG5I0d1UWKTUzFGhur6o1aIl1wHpsqMnfyPUK
-	goEfWwOviFG7QQ/JWLN7QmTd81nsJuXneGD/uLYfOcgXtTP1d1j5+KrwYvD6DPECaDjoQf
-	hByoMqXfLGh2crYUPE3YNpEaU1yYjog=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-FvdUdjYcOkitgMLskd0Gzw-1; Thu, 19 Jun 2025 02:42:28 -0400
-X-MC-Unique: FvdUdjYcOkitgMLskd0Gzw-1
-X-Mimecast-MFC-AGG-ID: FvdUdjYcOkitgMLskd0Gzw_1750315347
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso173326f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkoKGdU1"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-748e81d37a7so278223b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750315537; x=1750920337; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ErliHYPaGrgVEE/NGmtD/hd2ZJlTMAp3Vp1b/8FHHgk=;
+        b=hkoKGdU13OY4Iw/aWO1ZtDgxoon4Us8wm1qV3TZ9LplmxbdVY33OJKwNJJM2wm1Pzz
+         MYTMegM8u4PUVJGfznIDDD59S4u5iMOpl+uTZmlDi1YXAyqXLuVBIbRfCNTAGosishlK
+         3MJlqu7Jeh3Mlu6rscioaO31Zf3OUTVQHKayN6l8cSisHRg7ry8ubOFK2dJ2bFg+e51i
+         GElKWybjkIc/RQnXHgGDoU9v0Ao7Thr1Jm7zuAMseQX8lQtFOx/zbBg5K+JNVbLIByvh
+         iOXMANgTgbQ9JXS/hkHHifWyvPLw6xltX37mK5Jv9e7htqHX/Th2wj3CF9MFN6lcIpcU
+         lfNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750315347; x=1750920147;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1750315537; x=1750920337;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HrAK3Pb88d2mMW8Ubsq+AvQbXCBrspP+wLLZy4buj1s=;
-        b=T65Ai4vHOg67R1lnNK90iq1g3NLzo/1JWjhbRPIQTC7qEHEfGcG0luf+5cafm8GP95
-         PFKRmgd3ib/rHJUnZ71aPz74ExB4pYFjMRvrZQZDEFp0IX+4hZeGQ8XaggZOtwuxTKGX
-         0UjVjpDazsVxndQzjQSQCq1Gupy4eUFYFVPkwndGpzvQk4eQsB4iuN2Pou+0wUA+lYb/
-         ZL4aeeTMMTeIaKgruTeSxhrnsj89zP0+1h8M3LXo9nNZgu5C51qbQtegTDyKdsa9w6Li
-         Oe8Ek+eDbrsneBgGIROnG65GQMf5/Nbah+0VNSfiVRvMyRAvBzlzoblYbDMQ5A3Do7pl
-         sL5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVvt/maXxI4+HVJvSAynx4pDr+y7F4eyVI/2uevQ7w6zzWOQal2+ja9S8q0LuJ+jBnFOoxpI7cH4D1davg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf/x2zekpYuGeAlaoaR+EjN97nzRLRjNFbLxCipTHb0XgzXE/5
-	CNbKV8sUP2bVKF2nphMDydrgFJfOvOOphcK2cirV07V6GD2zMKydS0AnzHazFSJFRx+Ql2xu48p
-	jjVOAJTXCURwmVXG40C1vkcdNSYvSP+N3SbgXXpHEPC28dR/o3+2CfMUiITto2/2L7w==
-X-Gm-Gg: ASbGncsKi/o1Ow81UVPFvDdnWexBAEzBjdMbwjt6CodOhYR6opU77t+FqttXJFl68m6
-	UmRelIFD4MuX7TMhZW1C9FQsXpw0uEBMgsueKfuVSsZEnrZGPcHQYB2QdIyh/UvmbDVtjKSpv02
-	vYzTpEANhZAV7tuc/teReUhnzPgVQoqfY5SmrYr8fvMA+AZOM6K0y7qvh9nGLJ0+8QhDQeqjwqI
-	GwF4ORHyaqbwHyyU+dga85WIzMLJ9PIwhuowKju+AW21uuMyoXimXi7Od+2355MPGA0+c3DqWEF
-	w5S10RMPBamOjazIu3Jeis/KkXUe
-X-Received: by 2002:a5d:584d:0:b0:3a3:64fb:304d with SMTP id ffacd0b85a97d-3a5723990f6mr15208323f8f.12.1750315346742;
-        Wed, 18 Jun 2025 23:42:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFpLtHsZYwk8UooadQvsmdpZxfBCgj7PE/RcSNtM8uxppV7BUokDO7d5f9znti0cXjt6rGs2Q==
-X-Received: by 2002:a5d:584d:0:b0:3a3:64fb:304d with SMTP id ffacd0b85a97d-3a5723990f6mr15208307f8f.12.1750315346354;
-        Wed, 18 Jun 2025 23:42:26 -0700 (PDT)
-Received: from [192.168.190.158] ([37.167.112.85])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7e980sm18260812f8f.41.2025.06.18.23.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 23:42:25 -0700 (PDT)
-Message-ID: <d8055c38-a802-4f9d-bc36-56f6c55099d7@redhat.com>
-Date: Thu, 19 Jun 2025 08:42:23 +0200
+        bh=ErliHYPaGrgVEE/NGmtD/hd2ZJlTMAp3Vp1b/8FHHgk=;
+        b=I9qprPmYvBqZIq0iaXzhILW8zrVKhqfc4fxb+bHVzTplb3R3yjiRRaXFdrWSxy+xvk
+         S40mQFLnyBKbqaMmVt3VLSsDtRmchgy7YGZmYj5/PAg7z4zhqTDdCU/zZk6dWwA9aov/
+         +5sOb+TfwZ1LCIqzEakKPEMaST50mmdFErMGlVbKpAvEI0Pv5KuNVv0s7FbNWtLjEjpH
+         qpH+WyWS3J8h48O+jHFK2tL7gJhhIFMdG5FlgOzSej9udDD/+mRVlxphZFl+tQUIU+UW
+         8Xkge5B8l6I6tQCfBIRwlw7B5Jsx2zIIdryZH2K8N/Ih+gvT//JPGTnGMBdACbajDu+4
+         9ayw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBE68DVaQPMj2JSrmFwRFWJrI3g1Bn6HhIO8o8OamdbI/ON6u66UIdWqLzkfyDgpQjfDMDaIAWSLbWhI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhMcBkFyA74XpkLJx7MKomVY0b2Wro9z24yN+k5r/s+Ri6TIUC
+	sdnOC4j4V/BUPdf0j9rFJcRcZJ6U6ABQqEJRN6eXkGSfjmxfbv+sN7ZNgqyy2/+ZEBo=
+X-Gm-Gg: ASbGncvjKfa3lyZXBrh2PlvW8EJkHaeQ2et/R2K2OKtc94bsEVJ1YWW9xHjG87Tw/u1
+	LDQruLE7ln3FazxXyXcA2MkEasAW4GHjrPccpwecGQZZvaS0+Y9Lf/AEbBItcRPrwkGX+cEOpG9
+	2H5xLSirg21XHz7Sze/JMvM9Xj6ymt4fE7++jGnL5HfDKfHInYrwQMuxPBBwG0QRkNNGr+9iVwe
+	lcNrx95BnHv3IrwYU0C24lpzwzRWXIsxhxgGESF8MSf0tltJIK5soRXQQbHh0LAjCBeZxPLjs+/
+	pCtBaRxXh1k4FDakSBiaGsnh2vtrVAtZ0VYuz8dzebGM8QguQL42MDN7AUwVPBu3KmgZJYEiGg=
+	=
+X-Google-Smtp-Source: AGHT+IHIpRyDDmSazg/HxBTkiTvghcwJZ4JLLCka55/2JHWzaYB3i4/iq5jFfG6qzHy4OHiMpdt6Pw==
+X-Received: by 2002:a05:6a21:6e4a:b0:215:dfd0:fd24 with SMTP id adf61e73a8af0-21fbd634a22mr33361216637.31.1750315537600;
+        Wed, 18 Jun 2025 23:45:37 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe163a498sm10335555a12.15.2025.06.18.23.45.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 23:45:37 -0700 (PDT)
+Date: Thu, 19 Jun 2025 12:15:34 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mturquette@baylibre.com" <mturquette@baylibre.com>,
+	"sboyd@kernel.org" <sboyd@kernel.org>,
+	"ojeda@kernel.org" <ojeda@kernel.org>,
+	"alex.gaynor@gmail.com" <alex.gaynor@gmail.com>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+	"gary@garyguo.net" <gary@garyguo.net>,
+	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>,
+	"lossin@kernel.org" <lossin@kernel.org>,
+	"a.hindborg@kernel.org" <a.hindborg@kernel.org>,
+	"aliceryhl@google.com" <aliceryhl@google.com>,
+	"tmgross@umich.edu" <tmgross@umich.edu>,
+	"dakr@kernel.org" <dakr@kernel.org>
+Subject: Re: [PATCH] Various improvements on clock abstractions
+Message-ID: <20250619064534.nipg4rs2gwepxqw2@vireshk-i7>
+References: <20250616200103.24245-1-work@onurozkan.dev>
+ <CANiq72n0v7jinSyO85vorYRFB=y5NH5roW4xLRjwZz+DFJ5QSQ@mail.gmail.com>
+ <42151750134012@mail.yandex.com>
+ <CANiq72n3+qzDCCf0ct-5gtQHKXDbT2rr1fgxVQP4qBW69JmmhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH drm-next] drm/bochs: Add support for drm_panic
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Cc: kraxel@redhat.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250613132023.106946-1-ryasuoka@redhat.com>
- <30f0ea0c-d8fb-461e-86ab-6e7677beac3c@redhat.com>
- <CAHpthZqfzOXfxzv7OTaLK0x_qro1sHKOHqPeFxwNA4_5FYQrRw@mail.gmail.com>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <CAHpthZqfzOXfxzv7OTaLK0x_qro1sHKOHqPeFxwNA4_5FYQrRw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72n3+qzDCCf0ct-5gtQHKXDbT2rr1fgxVQP4qBW69JmmhA@mail.gmail.com>
 
-On 19/06/2025 08:37, Ryosuke Yasuoka wrote:
-> On Thu, Jun 19, 2025 at 3:12 PM Jocelyn Falempe <jfalempe@redhat.com> wrote:
->>
->> On 13/06/2025 15:20, Ryosuke Yasuoka wrote:
->>> Add drm_panic moudle for bochs drm so that panic screen can be displayed
->>> on panic.
->>
->> Thanks for the patch, it's simple and looks good to me.
->>
->> Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
->>
->> If no objections, I will push it next Monday.
->>
->> Best regards,
->>
->> --
->>
->> Jocelyn
+On 17-06-25, 08:55, Miguel Ojeda wrote:
+> On Tue, Jun 17, 2025 at 6:28 AM Onur Özkan <work@onurozkan.dev> wrote:
+> >
+> > Yes, it should be "Onur Özkan", sorry. Should I update that part and re-send the patch?
 > 
-> Thank you Jocelyn for reviewing my patch.
-> Now I found a typo in the commit message; moudle -> module.
+> I would suggest to wait for other feedback, and then you can send a v2
+> if needed.
+> 
+> > where my patch converts this into a single straight line which I think makes it more idiomatic.
+> 
+> Up to the maintainers :) So far we have both styles around.
 
-No need to send a v2 for that, I will fix it before pushing the patch.
+I am okay with all the changes, the commit log can be improved as you mentioned
+earlier.
 
-Thanks,
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-
-Jocelyn
-
-> 
-> Let me fix it in v2.
-> 
-> Ryosuke
-> 
->>>
->>> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->>> ---
->>>    drivers/gpu/drm/tiny/bochs.c | 19 +++++++++++++++++++
->>>    1 file changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
->>> index 8706763af8fb..ed42ad5c4927 100644
->>> --- a/drivers/gpu/drm/tiny/bochs.c
->>> +++ b/drivers/gpu/drm/tiny/bochs.c
->>> @@ -19,6 +19,7 @@
->>>    #include <drm/drm_gem_shmem_helper.h>
->>>    #include <drm/drm_managed.h>
->>>    #include <drm/drm_module.h>
->>> +#include <drm/drm_panic.h>
->>>    #include <drm/drm_plane_helper.h>
->>>    #include <drm/drm_probe_helper.h>
->>>
->>> @@ -469,10 +470,28 @@ static void bochs_primary_plane_helper_atomic_update(struct drm_plane *plane,
->>>        bochs_hw_setformat(bochs, fb->format);
->>>    }
->>>
->>> +static int bochs_primary_plane_helper_get_scanout_buffer(struct drm_plane *plane,
->>> +                                                       struct drm_scanout_buffer *sb)
->>> +{
->>> +     struct bochs_device *bochs = to_bochs_device(plane->dev);
->>> +     struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(bochs->fb_map);
->>> +
->>> +     if (plane->state && plane->state->fb) {
->>> +             sb->format = plane->state->fb->format;
->>> +             sb->width = plane->state->fb->width;
->>> +             sb->height = plane->state->fb->height;
->>> +             sb->pitch[0] = plane->state->fb->pitches[0];
->>> +             sb->map[0] = map;
->>> +             return 0;
->>> +     }
->>> +     return -ENODEV;
->>> +}
->>> +
->>>    static const struct drm_plane_helper_funcs bochs_primary_plane_helper_funcs = {
->>>        DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
->>>        .atomic_check = bochs_primary_plane_helper_atomic_check,
->>>        .atomic_update = bochs_primary_plane_helper_atomic_update,
->>> +     .get_scanout_buffer = bochs_primary_plane_helper_get_scanout_buffer,
->>>    };
->>>
->>>    static const struct drm_plane_funcs bochs_primary_plane_funcs = {
->>>
->>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
->>
-> 
-
+viresh
