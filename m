@@ -1,99 +1,141 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C71AB6DE;
-	Thu, 19 Jun 2025 14:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A136235073
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750341637; cv=none; b=g1zpjEgIvW7QLhkSbCcbL1Pf+C6UkRaSHODQnMQV3hgxOnAzu2SR1T1IhQFScEGUqChvnj+aYf270LzAKRW4QphNqhMq20LtqTzvQTT+IJcjUsdZZX1oiDteBbFC2xoSo8d1nxcl7ejAhM6Y01cIUyPVEcmo2JSu5flkVhMHcqg=
+	t=1750341739; cv=none; b=ch99neFGwkwf33yQQ62D5zzKhbOD0RUmutuZv82/IXuWpipAuHK2GcZiEvsSuzD1EkFF2T+zGJ5udOwBIEbWusQD/iiiMOCS2GZGk4y/0nbsGOToeYrPtQK7WSAhNF++VX0jKgGZzGyuDdgKSzP9CztorMxOQXMIj/hnfVtfZEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750341637; c=relaxed/simple;
-	bh=2PU/TFSfF5yoquv02MsPO5iH70uAsHaoDtqzH+QBcPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MHx0vH3zdqoLBQ7MPyRJlIN8c6QtqKYOYfnbjI3OeZfY0A7nxgwTqggpA3ZLfrhEzqzLhC+DiTsGZKuNhID/b28r/dettdyKxZwAyZFqG/GTNSGfkQP45xIj6V6QwAJEbIYRI2z3x7aPCKXWUUYtM40eDTkPSwmftRzvW4P4+f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id A7CE6120186;
-	Thu, 19 Jun 2025 14:00:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id A4B7E45;
-	Thu, 19 Jun 2025 14:00:29 +0000 (UTC)
-Date: Thu, 19 Jun 2025 10:00:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250619100028.7ec6e40b@batman.local.home>
-In-Reply-To: <20250618084022.db09168befebc193c5b13a6f@kernel.org>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
-	<20250610105337.68df01f4@gandalf.local.home>
-	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
-	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
-	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<20250617102951.4e8d936f@gandalf.local.home>
-	<20250618084022.db09168befebc193c5b13a6f@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750341739; c=relaxed/simple;
+	bh=Wezz9bOmQBcQ1TUJ8Bn0jTeSjZaBZvH184Tg1O/8m8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RpMXfwHcpjqhfByMlNPLkk8bx+eWtTZbQQUmN6NFCwFlb9VgASUSc4Hm2xip0nKvw5D5ZL3uvmC2F15oYXTav+AQP7w5VmBbyMiq6mcLx4w9UjD3C+t+HSpdkn+e2OJ9vPxgQW2ReukKFYg7A8rx0UJCRNoW0+l7KqFR7XbP8AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=L4cFP12u; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="L4cFP12u"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553b16a0e38so894427e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750341734; x=1750946534; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aVriD3LvP+pMWvbTjI5kbfItE2BHS3ery/f+bu7NdfQ=;
+        b=L4cFP12uTMk8JwfeO0v3GW+A+YPyvB6q4ldEMMIqkzWrA6mrG2mbkpvgLvnH/MvX3z
+         QbTGB+L8OQy+SX9+ByTM++0fJXTsogKi1hFQboJiCvDZZoVhx6EPmt0QHmt1eFN+M8db
+         1QE+Vtf1bxpzj9WSfjMffuIUT/lIgDzIru17F/wZOEpfKRr8gU/tglCq7DHdBgjfsHoE
+         sKbizAWFathofHFBdLCHMOv+JNRoxbN5+VhFCucJf3Yo4zVHWG18PtPcIFDnH2jDhB6d
+         R6e4QSoaZKy0pskD8DABQ5fxG0vrZZJn+EhlwDWF2dzO1cR23zaNGs5xsZHgbdFJr/te
+         DjEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750341734; x=1750946534;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aVriD3LvP+pMWvbTjI5kbfItE2BHS3ery/f+bu7NdfQ=;
+        b=cMx0y3EtcNLbeuR8KyCls0/ogIUYupBKNBfnkexLB/qsB62eYwdRxIMtnwH/bei5I3
+         5t+dHjUID1svu3mL96JyyNAmCiVCtWNU1f6Mz7n/PuPjvFi9SwvNPpFp5/tboopBloa8
+         noSvOG5T6J6aJRcjeK5Kx9xNdZo83kXZrYtPyhD2TDwJv1wTnsfJRI85vkLOsUD0EtkP
+         EeLPNZywSGUgvWGt839OBg8rVnKGfguJXeKzfnhCIiuEpUNDGWH5abOz1fps1nzoovZT
+         HT/TnL3Ra80BiN7Sk/Iqfk3+czv7gtbtU41VZBm1QKFnVtZuNVrByO+Vggo21WDt6AKV
+         LUBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnTPpjTK+MqDFqCuWVd/vwW4UcfYfq48bo5pQXfvXR07fp0lxFZFZur41zmEVW27J0Sx9pQWwaoVgGdvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd5473OmojptzZQ8I0OX6fMVSfNHUuBY5MbXO9kujRcvRwVA8k
+	ZMNOUFD+7/tc2jG/Gyv788eIV7T/9Wy1jdgR/5qz5IejkZDBCimwvDIbm6Dd+CminiE=
+X-Gm-Gg: ASbGncudPXjs63FKnetZ/KwP9Bbt/g/mUUzLY3ZjnXRiSgb8jGpBRNX4j+3ymA6ll6o
+	i8WGmsivT7HNr/ECabGdE7ImRt8dUThr01jna2T3eBojlwIp3fkL9BgdU7vKsgnhKMFsvA3ZIBC
+	TRiwZTDxjSKx49Dvw3EEap9q1LmhDcRAb03aozdf9BRMxeoJg9XTbPa4ia/C88B8QuTO9pmnPbz
+	koNwSoYpUtqbs42zRVZ912EKhjqJAUCjMYJMAJthyBrVCdFTo6oSqNhtbn3zAqXDDzid/ifIO9W
+	q4FZYdddDZqnqyew1ApuUF7mehNV7lee0Gwtb8BQGqB3U00tQEjxXxQlOZYcCL5GVI/l8L/INwU
+	=
+X-Google-Smtp-Source: AGHT+IE8zVuCTN888UI9y/00n231FNOHGEnuXXDDP1EcNgSBpNMrZXqn05vmM5Fu8xUtJ3hiDai1XA==
+X-Received: by 2002:a05:6512:33ca:b0:553:543d:d963 with SMTP id 2adb3069b0e04-553b6f1ead0mr6203514e87.36.1750341732009;
+        Thu, 19 Jun 2025 07:02:12 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159b909a81sm253188a91.5.2025.06.19.07.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 07:02:11 -0700 (PDT)
+Date: Thu, 19 Jun 2025 16:01:56 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <aFQYVPmStsIIFcMW@pathway.suse.cz>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: csrodhr8n6hxyn5kcpoefu8cfbnk9m9r
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: A4B7E45
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19FWmgWa6nPD37HBGL7vMwvnR2O60Je3yc=
-X-HE-Tag: 1750341629-533940
-X-HE-Meta: U2FsdGVkX1+GCj1/Wzj5MRBXDM66vhzEL5bIY5ccwbSxURTRCBxEZqThbWGOwOUk3U8NBDUFUzUYLFzpwSmfAJozfmsDRUUCt0m1EfaI4U9t9/1dQfMXZs2GKJMtiQP5KwYBOJgu6KWsPjbSbR7BCyfkH0uPgWPCBIOyXPxGRH08kSz6MMMTLiAKInDpUveaO5khN8VDqrLrJc669LZ6dChccgl8wbeWgGOjpaLSLYP8fAJLeM6zr+ydaPhVaYZcyf5+WW9ux2a8sT5zB8e0MAkoq69MZvdzF6VLDxV9Idqd6iiDnZ3svrIYA2jBhG5nXgckaaVDxu58k+ATAY3a1NP0JxyeXjME
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618041235.1716143-2-anshuman.khandual@arm.com>
 
-On Wed, 18 Jun 2025 08:40:22 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed 2025-06-18 09:42:34, Anshuman Khandual wrote:
+> Add a new format for printing page table entries.
+
+How many users do you explect, please?
+
+This patch adds only one caller. It does not justify the added complexity.
+
+> @@ -2542,6 +2545,23 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		default:
+>  			return error_string(buf, end, "(einval)", spec);
+>  		}
+> +	case 'p':
+
+Please, do not opencode this in the already very long switch().
+Move it to a helper function.
 
 
-> > I would add more of what you found above in the change log. And the issue
-> > that was triggered I don't think was because of a buffer overflow. It was
-> > because an entry was added to the text_poke_array out of order causing the
-> > bsearch to fail.  
-> 
-> There are two patterns of bugs I saw, one is "Oops: int3" and another is
-> "#PF in smp_text_poke_batch_finish (or smp_text_poke_int3_handler)".
-> The latter comes from buffer overflow.
-> 
-> -----
-> [  164.164215] BUG: unable to handle page fault for address: ffffffff32c00000
-> [  164.166999] #PF: supervisor read access in kernel mode
-> [  164.169096] #PF: error_code(0x0000) - not-present page
-> [  164.171143] PGD 8364b067 P4D 8364b067 PUD 0 
-> [  164.172954] Oops: Oops: 0000 [#1] SMP PTI
-> [  164.174581] CPU: 4 UID: 0 PID: 2702 Comm: sh Tainted: G        W           6.15.0-next-20250606-00002-g75b4e49588c2 #239 PREEMPT(voluntary) 
-> [  164.179193] Tainted: [W]=WARN
-> [  164.180926] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  164.184696] RIP: 0010:smp_text_poke_batch_finish+0xb9/0x400
-> [  164.186873] Code: e4 4c 8d 6d c2 85 c9 74 39 48 63 03 b9 01 00 00 00 4c 89 ea 41 83 c4 01 48 c7 c7 d0 f7 f7 b2 48 83 c3 10 48 8d b0 00 00 c0 b2 <0f> b6 80 00 00 c0 b2 88 43 ff e8 68 e3 ff ff 44 3b 25 d1 29 5f 02
-> -----
-> 
-> This is because smp_text_poke_single() overwrites the
-> text_poke_array.vec[TEXT_POKE_ARRAY_MAX], which is nr_entries (and
-> the variables next to text_poke_array.)
+> +		if (fmt[1] == 't' && fmt[2] == 'e') {
+> +			pte_t *pte = (pte_t *)ptr;
 
-Interesting. It must be that the stress test was able to get in and add
-a bunch of individual entries while a batch was being performed.
+If the value (pointer) gets dereferenced then please add a basic
+check:
 
-Still, both are a bug and solved by the same solution ;-)
+	if (check_pointer(&buf, end, ptr, spec))
+		return buf;
 
-(Two for the price of one!)
+> +			spec.field_width = 10;
+> +			spec.precision = 8;
 
--- Steve
+Is she precision = 8 really needed?
+I guess that .field_width + ZEROPAD would do the trick.
+
+And them maybe special_hex_number() might be used instead of number()
+and safe a lot of code.
+
+> +			spec.base = 16;
+> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
+> +			if (sizeof(pte_t) == sizeof(u64)) {
+> +				u64 val = pte_val(*pte);
+> +
+> +				return number(buf, end, val, spec);
+> +			}
+> +			WARN_ONCE(1, "Non standard pte_t\n");
+
+This is nasty. It should be a compile-time check. And the code should
+get fixed on all architectures. If it is not easy then
+it might be a signal that the generic %ppte flag is not a good idea.
+
+> +			return error_string(buf, end, "(einval)", spec);
+> +		}
+> +		fallthrough;
+>  	default:
+>  		return default_pointer(buf, end, ptr, spec);
+>  	}
+
+Best Regards,
+Petr
