@@ -1,98 +1,74 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945C121883F;
-	Thu, 19 Jun 2025 14:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3321521883F;
+	Thu, 19 Jun 2025 14:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750342412; cv=none; b=rMghthV0YI/X4xVJoKNyIV4Su6Dw3wI+yjPZv16dx+jcQDbbYnHn1b7AvtC5kv2RrIVTD9aJVcH9kGfAUFyEWE3rZmaRJbEcmB13DR9qBWDXTR6t9ezuDfDccKtV5rO4VbkmxysyeUQ9V4HJbGjuwkz3Nn7SVt224in/4ClkSg0=
+	t=1750342451; cv=none; b=Lr/9uRoZtI8pr8i5E9j/axJ6lBGhH1dJLUto2C+FOmSTukR2xx6IJbknbRwWO/zwIVr59yIEGU0OFvZx4EF9EoqBIH43baKVXtatNn9pwP+1AkgxX+eGiL5SnJ7DwGpgk/5rUBLi0eAsoXpbTQ980C4uZejRorbrbmP97JBib4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750342412; c=relaxed/simple;
-	bh=U6yVuvluXAhR/fr0dFbQGKpCGEQa4jO8zcrBl72oYAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c20sYx/YJ1MB4KiXE2dO4b/GS5NZ2Rf4FveAYIMCRRSu/0ltJrBpBMiabXxwkRPYm82eQb4o5WkZsSFmRgV2VmHwlpq2/mmrho4A8D6/yhdQAmU6/yv6/2H7Sj2bKywlqUXswrxCvq0seL6Z01N3YmS8zZcLU6rKPw9r4L97o0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.0.110] (unknown [114.241.87.235])
-	by APP-03 (Coremail) with SMTP id rQCowACH2VHxGlRoB2WXBw--.1804S2;
-	Thu, 19 Jun 2025 22:13:07 +0800 (CST)
-Message-ID: <b73c0d8e-9869-469e-a46a-ddec9328885e@iscas.ac.cn>
-Date: Thu, 19 Jun 2025 22:13:05 +0800
+	s=arc-20240116; t=1750342451; c=relaxed/simple;
+	bh=ujJLdTiBqwmLx05oQHBt6I+p9J9oSCYXFfHSqzgHxuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dxOxfpaJkkAlwgqFMTe+L8qjAC4CzAmQ/ZBIGLAOHt5epXs1DYEFj36E7/hVdhEctwqR+NaGpCEpkJbGbRJq23hu3OQQk9UNY8K2zAw/XDrRi89nlDW04lEo5hnULAHzRYXmWYkhIloiN1gpTQEc+igVEmOzfPZq2fZTAgM3pKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P8EKjNn+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P8EKjNn+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=qQB2XCfNv1mPlDxDY2eQ0xVBVFH6UjPq5fcEOS9JpOs=; b=P8EKjNn+xQFlqctyEskyDgDURL
+	dQjN9bwpxdpKweO2HtIpwug2mWfpwd/bH9x4gqaUAGt6bvw4eBcl7eV2GQGdlCI25aVI7lnOUqpxO
+	h6MUJfkGL5se55vY0j0O+rAAhQLTEDKfjV/v/GlPYjX/ealsWjAk/f36aw8LktHsGWtXIVvURVmB1
+	lDg8nKvpiEKijpXXKkUPiCUELmzMIPMH8EcUVBConlrC3iRc1iZx384tJdFGJb4GBMYQyzRQlgZ/k
+	/BvCXM2ez7PlBfmAh5slYdnEUtICdhxkvUvioIA2PhXb/dQ7O0BnvNI0LXPGKWTm0TkvJah9w8sf+
+	6K/jtfng==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSG1i-00000004SET-1Moq;
+	Thu, 19 Jun 2025 14:14:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 50C2530890E; Thu, 19 Jun 2025 16:14:01 +0200 (CEST)
+Date: Thu, 19 Jun 2025 16:14:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com,
+	longman@redhat.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, thatslyude@gmail.com
+Subject: Re: [PATCH V3] implement `ww_mutex` abstraction for the Rust tree
+Message-ID: <20250619141401.GI1613376@noisy.programming.kicks-ass.net>
+References: <20250619140656.498-1-work@onurozkan.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] regulator: spacemit: support SpacemiT P1 regulators
-To: Alex Elder <elder@riscstar.com>, lee@kernel.org, lgirdwood@gmail.com,
- broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlan@gentoo.org
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, troymitchell988@gmail.com, guodong@riscstar.com,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250613210150.1468845-1-elder@riscstar.com>
- <20250613210150.1468845-4-elder@riscstar.com>
- <acac9522-fb19-4659-8e1a-544bf75f3864@iscas.ac.cn>
- <6504c609-f8b5-42e3-88ad-5cbee30a52ed@riscstar.com>
-Content-Language: en-US
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <6504c609-f8b5-42e3-88ad-5cbee30a52ed@riscstar.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACH2VHxGlRoB2WXBw--.1804S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Xw1xtryfJrWkGF4rtF1UZFb_yoW8Jr1fpF
-	4av3sIkwn5JFW8Zr4Durn7X3WFgF48Xa47Jr15Xr43Z34DWa129Fs2ka1Yvay8Xr95GF12
-	9w4qqryvkFyDZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvqb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
-	1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x07jgPEfUUUUU=
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+In-Reply-To: <20250619140656.498-1-work@onurozkan.dev>
 
-On 6/19/25 21:23, Alex Elder wrote:
-> On 6/19/25 1:15 AM, Vivian Wang wrote:
->> Also, consider naming this consistently: "spacemit-p1", or
->> "spacemit-p1-regulator"?
->
-> Let me see if I understand your comment, by explaining the
-> naming I used.
->
-> The PMIC driver could support a different PMIC.Â  Its OF
-> match table specifies a compatible string with matching
-> data, and the data describes attributes of the P1 PMIC.
-> So that driver uses MOD_NAME "spacemit-pmic".
->
-> This driver describes specifically the regulators found
-> in the P1 PMIC, so it uses "spacemit-p1-regulator" as
-> its MOD_NAME.
->
-> You might still be right; but does this change what you
-> are suggesting?
+On Thu, Jun 19, 2025 at 05:06:56PM +0300, Onur Özkan wrote:
+> +bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
+> +{
+> +	return ww_mutex_is_locked(lock);
+> +}
 
-Oh sorry it was simpler than that. It's just I've noted that this 
-regulator module file is called "spacemit-p1":
+Do we really need this? In general I dislike all the _is_locked()
+functions and would ideally like to remove them.
 
-> +obj-$(CONFIG_REGULATOR_SPACEMIT_P1) += spacemit-p1.o
+Pretty much the only useful pattern for any of the _is_locked()
+functions is:
 
-... but the MOD_NAME is "spacemit-p1-regulator", and I was wondering if 
-it made sense to rename the module to also "spacemit-p1-regulator". In 
-addition to consistency, modules are free to have all sorts of names in 
-Linux, but the names have to be unique, so if this is only the regulator 
-driver part, the name should reflect that.
+  WARN_ON_ONCE(!foo_is_locked(&foo));
 
-Vivian "dramforever" Wang
+Any other use is dodgy as heck.
 
 
