@@ -1,86 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DF3221FDF;
-	Thu, 19 Jun 2025 12:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D31121A94F;
+	Thu, 19 Jun 2025 12:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750334713; cv=none; b=VHm8htiHPMNlQp31180EJRogRIUcJrWIB8nRtgFO0CrjN+TWyp5KGHm5sYjZszrXHc5YJ/gESi+LlrZHKwXVBLlPF2sjsytcanZYBNYsqNwdSDNsq8oHuqRgNeIFLriAILmjKg5EriuYimUuLkZgVXklG5BcdDKD735ewdz0AHk=
+	t=1750334785; cv=none; b=C8fXkcmo43JxDgdmAZewLmPf+hUCP3UYn3Rxoxqf3Bj2B1JrKuEOGlaRe2qaoZETFP4gclXaY10R5+WNiNAlEmaER0gL2Wj3ZN8qUPDAaeopR6O+zhyHQKT7t2yqZez88AaeDeyxXYhiRHBoUaBEIU6uN72sIEN9c8zo7+f3CEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750334713; c=relaxed/simple;
-	bh=MunQ7b3vU7ftVz8YaGhqxMkxEggblwQtVf1vjF4zllU=;
+	s=arc-20240116; t=1750334785; c=relaxed/simple;
+	bh=qCHpBeYXKcvLBhGYRvbWtM3m7ZUS3RMm3uxtfmdZNfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZKd6QRfGhMLjotIRVlRydxIx5+A0ZRVpSH2sApxST5QTmyj1wrsmCrjo9mfWmB5nTWjW8HZdCQxD2Xws9now7xeRbosDT8ZXzDpiTFa3pUqjcSzI7Jr5lLH3EnO8J0jQvYrflB4xMpbDMebFOmhA6C1GRUReXU3oeXsNCUMrjlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1Q3A8RC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XeguKt8u1NAXbuFtZA8XwnjKIOdJIO/i3nGu7Y+FkhyTJj0gGEPcXYDe+wULtvYkIHhDOiKpKDpyZMUsaACcywPOpkh7tewZWZgExNxVdEgBRdpALCminBNbLwCwzu1XiJp5t7D/IVqQgspwXf4RmaKH5l2cAs9UBaVS18FvLaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXJSLurJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1Q3A8RC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9235EC4CEEA;
-	Thu, 19 Jun 2025 12:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXJSLurJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F2C2C4CEEA;
+	Thu, 19 Jun 2025 12:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750334712;
-	bh=MunQ7b3vU7ftVz8YaGhqxMkxEggblwQtVf1vjF4zllU=;
+	s=k20201202; t=1750334784;
+	bh=qCHpBeYXKcvLBhGYRvbWtM3m7ZUS3RMm3uxtfmdZNfQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m1Q3A8RCpduNXFnV1EPgCHLC9lFs/gD7zgVnx+w5hK9aQCHLcxE/5v5kKlafYvKOR
-	 fv11q1LKEieqxfDcNuftuxAJyk26/kCIlycJcf0bKS8u2uycArEG2sSyc6rtuwYoe3
-	 pi4j2i2NqKO/EsSQs1IkvdpDAIHT7B+gtxnX+hOCoJ4P0iX82AY4Gwq5IsvNCU48/H
-	 V1T287pkyxSnVzPkzrONol9U9ParA/pnUU+HRSpRVdsv8wfbYj7RR4Guf7fAnmdFOp
-	 eZTEzn6COjyNsbq8c7qE6VbyhnYRbr1DispP+jA8oO2nM7/7lGuuC58AfTMN8DvxCM
-	 +WMTvjs3CWfYw==
-Date: Thu, 19 Jun 2025 17:31:04 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 17/62] KVM: SVM: Add enable_ipiv param, never set
- IsRunning if disabled
-Message-ID: <fpb6l3xwyksd7s5izmrhr4hfrkmfeavbgfatokgl5sdeh75mtx@f6gcad774zeh>
-References: <20250611224604.313496-2-seanjc@google.com>
- <20250611224604.313496-19-seanjc@google.com>
- <2eqjnjnszlmhlnvw6kcve4exjnpy7skguypwtmxutb2gecs3an@gcou53thsqww>
+	b=ZXJSLurJV0FMeFP5DScAD7u8DQTWMZDvGTMxtvmIQM8PosQIckjMSty1/wRiztHLi
+	 DOza4j0ZvxolOQhPW/6605ikqSH/FTzFQJG3EZ9BrXG9XPD2fL3Fyvqa0SV5CDiJEV
+	 cY9jXFNJ3R6AUASaHlIMQg1BUAwZ6PpQ+sI/RSQCg51U7OkIUKPvHA0PuvYANQmA4h
+	 jY7xbgfa1XaYMs0CaMYiGzmGvUyrtOG169+NATQEvDlY5KqyWUkbfeBFHL8V9hkqIF
+	 X8IBtDm/O8wzWENYBGoZN4xMFi8eliVnYY/NrAxZVwSUCwteHhYJGfqg2NNBWbvkmQ
+	 frNk8QOyxh/Gw==
+Date: Thu, 19 Jun 2025 14:06:17 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Shivank Garg <shivankg@amd.com>, 
+	david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com, 
+	viro@zeniv.linux.org.uk, seanjc@google.com, willy@infradead.org, pbonzini@redhat.com, 
+	tabba@google.com, afranji@google.com, ackerleytng@google.com, jack@suse.cz, 
+	hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+Message-ID: <20250619-ablichten-korpulent-0efe2ddd0ee6@brauner>
+References: <20250619073136.506022-2-shivankg@amd.com>
+ <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+ <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
+ <aFPuAi8tPcmsbTF4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2eqjnjnszlmhlnvw6kcve4exjnpy7skguypwtmxutb2gecs3an@gcou53thsqww>
+In-Reply-To: <aFPuAi8tPcmsbTF4@kernel.org>
 
-On Thu, Jun 19, 2025 at 05:01:30PM +0530, Naveen N Rao wrote:
-> On Wed, Jun 11, 2025 at 03:45:20PM -0700, Sean Christopherson wrote:
-> > @@ -1030,7 +1047,7 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
-> >  	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
-> >  	 * recursively.
-> >  	 */
-> > -	entry = READ_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id]);
-> > +	entry = svm->avic_physical_id_entry;
-> >  
-> >  	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
-> >  	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
-> > @@ -1049,7 +1066,10 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
-> >  	avic_update_iommu_vcpu_affinity(vcpu, -1, 0);
-> >  
-> >  	entry &= ~AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK;
-> > -	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
-> > +	svm->avic_physical_id_entry = entry;
-> > +
-> > +	if (enable_ipiv)
-> > +		WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
+On Thu, Jun 19, 2025 at 02:01:22PM +0300, Mike Rapoport wrote:
+> On Thu, Jun 19, 2025 at 12:38:25PM +0200, Christian Brauner wrote:
+> > On Thu, Jun 19, 2025 at 11:13:49AM +0200, Vlastimil Babka wrote:
+> > > On 6/19/25 09:31, Shivank Garg wrote:
+> > > > Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
+> > > > anonymous inodes with proper security context. This replaces the current
+> > > > pattern of calling alloc_anon_inode() followed by
+> > > > inode_init_security_anon() for creating security context manually.
+> > > > 
+> > > > This change also fixes a security regression in secretmem where the
+> > > > S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
+> > > > LSM/SELinux checks to be bypassed for secretmem file descriptors.
+> > > > 
+> > > > As guest_memfd currently resides in the KVM module, we need to export this
+> > > 
+> > > Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
+> > > explicit for KVM?
+> > 
+> > Oh? Enlighten me about that, if you have a second, please. 
 > 
-> If enable_ipiv is false, then isRunning bit will never be set and we 
-> would have bailed out earlier. So, the check for enable_ipiv can be 
-> dropped here (or converted into an assert).
+> From Documentation/core-api/symbol-namespaces.rst:
+> 
+> The macro takes a comma separated list of module names, allowing only those
+> modules to access this symbol. Simple tail-globs are supported.
+> 
+> For example::
+> 
+>   EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
+> 
+> will limit usage of this symbol to modules whoes name matches the given
+> patterns.
 
-Ignore this, I got this wrong, sorry. The earlier check is against the 
-local copy of the physical ID table entry, which will indeed have 
-isRunning set so this is all good.
-
-- Naveen
-
+Is that still mostly advisory and can still be easily circumenvented?
