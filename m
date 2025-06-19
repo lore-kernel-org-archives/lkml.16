@@ -1,120 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1121F3085D7;
-	Thu, 19 Jun 2025 08:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926F33085D7
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321224; cv=none; b=T30xI9gQeGkutR5+hH9+VJK2ylW7fp/ah7Pq196aOTRBHzdGxTSfCyUndHsixxMLwCHce0fXsieZPlYFcq5hvaO9suEdex1u9t6kFYr1aEQJWkFzCyV3HcPfUjcyMbbpWMMxImN2mw2Mdw85m0xXy4MHT4Z+Xd7gA35q6PNm7vk=
+	t=1750321232; cv=none; b=U2O68dCGtvl5/uXp1R5jbE0P+i/XILYbomXeeiVDTgBlQATJ1uszr5Vkwmp0f8FhBXXD3ZIvUzE//LBv70iCKCzvZu/bkE6DE8HuH9K0YZE6p1PQrSKfY2F/hcM6Za+Jk1i8hAVNIuO0wuWRfi3a9R0NGlCYj1pxUqnEUIWp+6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321224; c=relaxed/simple;
-	bh=rs1SQZAjM42eP1OdPF5cxc7T68ok0Dt9YGM0X0I/GSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ShzOdD6pzM9OPAFFhi+Xj1B/DwhBJpu0LsJ3cWPHdISGW3u1tqfwIy1aOm6+P4hKVrEc/+06ARQguG/j2SGtwnEJdw2ZASd80XX3PZeOxNtddF0KgOmDCEKPdJUy4Bhxhbr3L0UIxMA5a8fiwOMr/baPPnpMMBPk7pLSXRnv73Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iM39Y27l; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iM39Y27l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF376C4CEEA;
-	Thu, 19 Jun 2025 08:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750321223;
-	bh=rs1SQZAjM42eP1OdPF5cxc7T68ok0Dt9YGM0X0I/GSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iM39Y27luLaflYHgryXb8/VAbHnzQmHzyVsZrnjWmLzWdooBDAeiGqi+GgHNjJxvm
-	 00nQywoISyVUd/nEX3+lO3HlQJ7YLrDDdi4PN/K0odYO1fi1ny/pSvD8J7sLfxes8M
-	 h8QYlQjosPQ6KZ2wGEJImAcu7eks3bxDYzqGtWQA=
-Date: Thu, 19 Jun 2025 10:20:20 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Mark Brown <broonie@kernel.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
-Message-ID: <2025061907-finance-dodgy-b0ae@gregkh>
-References: <20250617152451.485330293@linuxfoundation.org>
- <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
- <2025061858-reproduce-revolving-cae0@gregkh>
- <1081af30-1273-4a9a-a864-f59f1cb54fd1@t-8ch.de>
- <2025061949-epilepsy-punk-fb4e@gregkh>
- <a757c5d9-06f4-4ed0-9de9-08edbd16134a@t-8ch.de>
+	s=arc-20240116; t=1750321232; c=relaxed/simple;
+	bh=261sDo1GyqSpoit5EDehZ8hKlPpykt7N3iW2YK8Nh/w=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GdddSk+SLl6MEI1FpiH8Sk0irTNnYCYh5Oc+TSEwFwINzM4f1jE/vPcBOKGvqdHUwAidqAOVUvkrBypkb1tZd/ttn0Qrs7U+ahPC3pnwXtFLg097AYggFCMj7kKB2F0lKsBKK7AhWJLiy5rbfy7qACLJGA7l6AsKqbw23G+eP9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3de0dc57859so5297955ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:20:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750321230; x=1750926030;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y5VND3YHAKVVef6wrkt7GOTMwT6AsDTRdwEZamFb2fU=;
+        b=XvCB5mQCHjxquJlcXSEDe3fxQkRdM1qj6bOlW5bdwEm/RjBlYghNBH7vBYdOfTmV2V
+         4MDeXqNL6Xwg9uUSXi/8p+rDsV3IPSZr9CKjEeEBrdDIQNPw67HXHE77WLF64OXZmGvr
+         JGwtgAjP6LwtMFnE4hz/gq1tgfzKZ+SLgf3+pcQ4faXZBZYnM9HYIwA5phaM/CyZK5jh
+         T9Ey6+34DNCGZvKjsvbdCNhWtLTNjjJMc2S2GprSmh7WYLMKXag3VVBPMuAOFTpyehw3
+         r4iox/zgHSOpIOiWXWA2Vg+l4/0EFu+MCUD9D24hZrNk0dP9i0aVsj+Fjs5UrBrY3O03
+         ESKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMOF9jPtExPHTcm3Hakz9SdWYKFzUfSBW62OJ+YZIzzT2Gx5tInwQIVFkd7LH7WBow4SjbMVGRGV6v11k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdiDfcVmM39jmTOOdWzHeaGn13PGW1qIr/37rH4dF3F3z49Ndr
+	Bk2gpSqoNqBFEBOMyaVIzVMCRfddqBBtsQTWD+OWxt0mzUbXkg1GhNa7c1oOEE0fnOz/gNfbtse
+	PNk7rulfTui6QRSOTY++85ouXtL3MK4WAL3t9J52R6/M8wTrQc4L2FxTT5AU=
+X-Google-Smtp-Source: AGHT+IE9SYHZ0M03/4CZ4HxHMP2XlHQlC8tOVtlczY5YsdpXnMgZg8qqQz9KderSIsmW89xMPbcaTYwENsnTsmyMuwq5Q5x865aH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a757c5d9-06f4-4ed0-9de9-08edbd16134a@t-8ch.de>
+X-Received: by 2002:a05:6e02:12c7:b0:3dd:b655:2d6a with SMTP id
+ e9e14a558f8ab-3de07cff8camr235705765ab.7.1750321229797; Thu, 19 Jun 2025
+ 01:20:29 -0700 (PDT)
+Date: Thu, 19 Jun 2025 01:20:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6853c84d.050a0220.216029.01ca.GAE@google.com>
+Subject: [syzbot] [fs?] KMSAN: uninit-value in fsnotify_connector_destroy_workfn
+From: syzbot <syzbot+aaeb1646d01d0358cb2a@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 19, 2025 at 07:50:43AM +0200, Thomas Weißschuh wrote:
-> On 2025-06-19 06:19:52+0200, Greg Kroah-Hartman wrote:
-> > On Wed, Jun 18, 2025 at 04:15:09PM +0200, Thomas Weißschuh wrote:
-> > > On 2025-06-18 15:19:11+0200, Greg Kroah-Hartman wrote:
-> > > > On Wed, Jun 18, 2025 at 12:58:00PM +0100, Mark Brown wrote:
-> > > > > On Tue, Jun 17, 2025 at 05:15:08PM +0200, Greg Kroah-Hartman wrote:
-> > > > > > This is the start of the stable review cycle for the 6.15.3 release.
-> > > > > > There are 780 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > let me know.
-> > > > > 
-> > > > > This breaks the build of the arm64 selftests due to a change in nolibc,
-> > > > > it appears that "tools/nolibc: properly align dirent buffer" is missing
-> > > > > some dependency:
-> > > > > 
-> > > > > aarch64-linux-gnu-gcc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
-> > > > > 	-include ../../../../include/nolibc/nolibc.h -I../..\
-> > > > > 	-static -ffreestanding -Wall za-fork.c /build/stage/build-work/kselftest/arm64/fp/za-fork-asm.o -o /build/stage/build-work/kselftest/arm64/fp/za-fork
-> > > > > In file included from ./../../../../include/nolibc/nolibc.h:107,
-> > > > >                  from <command-line>:
-> > > > > ./../../../../include/nolibc/dirent.h: In function ‘readdir_r’:
-> > > > > ./../../../../include/nolibc/dirent.h:62:64: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘__nolibc_aligned_as’
-> > > > >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
-> > > > >       |                                                                ^~~~~~~~~~~~~~~~~~~
-> > > > > ./../../../../include/nolibc/dirent.h:62:64: error: implicit declaration of function ‘__nolibc_aligned_as’ [-Wimplicit-function-declaration]
-> > > > > ./../../../../include/nolibc/dirent.h:62:84: error: expected expression before ‘struct’
-> > > > >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
-> > > > >       |                                                                                    ^~~~~~
-> > > > > ./../../../../include/nolibc/dirent.h:63:47: error: ‘buf’ undeclared (first use in this function)
-> > > > >    63 |         struct linux_dirent64 *ldir = (void *)buf;
-> > > > >       |                                               ^~~
-> > > > > ./../../../../include/nolibc/dirent.h:63:47: note: each undeclared identifier is reported only once for each function it appears in
-> > > > 
-> > > > Thanks for the report, I'll go drop all nolibc patches from the queues
-> > > > for now.
-> > > 
-> > > Thanks.
-> > > 
-> > > Shouldn't the bots apply prerequisite patches from the series automatically?
-> > 
-> > Hopefully yes, obviously it doesn't always work :)
-> 
-> Is there something we can do to help the tools?
+Hello,
 
-That's up to Sasha, he has the tools that do this.
+syzbot found the following issue on:
 
-> > > This patch comes from [0] and the prerequisite is in there.
-> > > 
-> > > Also all nolibc patches which should go to stable are tagged as such.
-> > > Can you configure the bots not to pick up any nolibc patches automatically?
-> > 
-> > Yes we can!  I will add the needed regex to the file:
-> > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/ignore_list
-> > should it be:
-> > 	tools/include/nolibc/*
-> > 	tools/testing/selftests/nolibc/*
-> > ?
-> 
-> Looks good, thanks.
+HEAD commit:    8c6bc74c7f89 Merge tag 'v6.16-rc1-smb3-client-fixes' of gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c9bd70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61539536677af51c
+dashboard link: https://syzkaller.appspot.com/bug?extid=aaeb1646d01d0358cb2a
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-Great, I'll go make that change now.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-thanks,
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fa187645a1d3/disk-8c6bc74c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9c5f24a0cd2d/vmlinux-8c6bc74c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c2cd7c92032f/bzImage-8c6bc74c.xz
 
-greg k-h
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+aaeb1646d01d0358cb2a@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in fsnotify_connector_destroy_workfn+0x108/0x160 fs/notify/mark.c:323
+ fsnotify_connector_destroy_workfn+0x108/0x160 fs/notify/mark.c:323
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb91/0x1d80 kernel/workqueue.c:3321
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4154 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_noprof+0x81b/0xec0 mm/slub.c:4204
+ fsnotify_attach_connector_to_object fs/notify/mark.c:663 [inline]
+ fsnotify_add_mark_list fs/notify/mark.c:746 [inline]
+ fsnotify_add_mark_locked+0x862/0x1a90 fs/notify/mark.c:821
+ fsnotify_add_inode_mark_locked include/linux/fsnotify_backend.h:888 [inline]
+ inotify_new_watch fs/notify/inotify/inotify_user.c:620 [inline]
+ inotify_update_watch fs/notify/inotify/inotify_user.c:647 [inline]
+ __do_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:781 [inline]
+ __se_sys_inotify_add_watch+0x129c/0x1760 fs/notify/inotify/inotify_user.c:729
+ __x64_sys_inotify_add_watch+0x97/0xe0 fs/notify/inotify/inotify_user.c:729
+ x64_sys_call+0x330f/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:255
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 4808 Comm: kworker/u8:25 Tainted: G      D W           6.16.0-rc1-syzkaller-00236-g8c6bc74c7f89 #0 PREEMPT(undef) 
+Tainted: [D]=DIE, [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: events_unbound fsnotify_connector_destroy_workfn
+
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
