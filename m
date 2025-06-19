@@ -1,158 +1,111 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D33F21C161;
-	Thu, 19 Jun 2025 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C9C220F57
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326539; cv=none; b=akyi6YgP/KYHKEXWFnKx7ke2/E1uV/BVJJx+hq16XGIr57mHalVnYiFsPUpu0ptTzctbCEUprBhiep+ScjzeDlDC7TSoOJuret2XF4yGHwx6C51BrQNf56MNifKqiQ+A43Oq8CMF3oCzqon0ZI3f9hciY+XCuwq+H/0s+plet/U=
+	t=1750326560; cv=none; b=CRo5N0zDTADSIZOMcGBH67v3HLMsR8nN7RvuSSoRUUefFoMYd9Klu8MZnh0Z79346skwGq8UU+VlKLfwfZ8TEkkqmQ+HsE1gAM+HMwAFLgJKJRyqbsXqO2vJwPqKln6KMQJSQSemmsyAWI5Ngezhf2YllvmzLE/pcYirCynGStI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326539; c=relaxed/simple;
-	bh=pQaQfvfkymPyxbo/McQRSxkUjty96tFS2NmlDh7MURs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DcRK7kMwZOmchl8qvJHZ0gNaNPWT/LYYzJnxYP40Ru8DWLRdCRYi/E/iSZPVqha+NMV9tzl01qaR67mhtIMsCzqS0kF7uiQvxo4XID4oJbST/qHmXDxjUlnN17N2IkOF56zeH1pIra5OpabkYa4fSosz1GQ2o2pPbYlSBlUE57M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxnOL93FNoCr4ZAQ--.23424S3;
-	Thu, 19 Jun 2025 17:48:45 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBxLsf33FNoCe8gAQ--.38807S3;
-	Thu, 19 Jun 2025 17:48:41 +0800 (CST)
-Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
- <20250611015145.3042884-1-maobibo@loongson.cn>
- <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <189ff8c8-2a34-770c-9a0f-8d99b46884dc@loongson.cn>
-Date: Thu, 19 Jun 2025 17:47:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750326560; c=relaxed/simple;
+	bh=oGgNbIXl6T2if3214aOKJS8wjoi+YfhpFcEFUg4nfOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WnJ1ZjblPoI4uMmZgX7D33+5RjpxwnqZPnPPGWBe/tSE2L3SfWwWJnb1jz7TXwuY7D1GcIo9fN1dEt8k4PewovOkMPHUF1LAimmOZjMp87DqLGaC1dwLkYPcLh93h58vvhTKlL5hvj+ptmsrU/x8/6k5n0tIekMuk48wmtrMELU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Px1HRRr7; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Px1HRRr7"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72bd5f25ea6so187965a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750326558; x=1750931358; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QJl6uGqaCbQBaMQQvNPvxbNOxoHo/eT5TsgwXHD3osA=;
+        b=Px1HRRr7V+E1w1EyOWb5RapwyhMHzmqdDJIoawJt6gXpyGlwDH2PMW/sJjTuF6+Mz6
+         rwzNcbgxhVr2LP9HRFuiEzCyHSHpriG9xkBJX4tKpL8dI8N8+5wgYptJC+EwnmIuZZLk
+         qS57Bxxo6P/est1jKh4jJo2zNPU+g2q595w/owrYD8HZlJRJIJX04JoSWKSNE1G3ZZxf
+         WatzMKjhVYkpZ3zrcMMSenPK+9H/1EiZtuS0ls9GumP1qiNF3frZxvvAtXM8BHvrBXr3
+         sTbzJpgN1anQ3OetKCbVQ02ZD7nKvJpjc8uci5ewS3TYDTKeCgFOiGCm3DsDdGsWDcO8
+         g4qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750326558; x=1750931358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QJl6uGqaCbQBaMQQvNPvxbNOxoHo/eT5TsgwXHD3osA=;
+        b=J7eB+xfIDLrlt274GLT9dWgDZsEX47xm9WRUgBs5zpaILkHaMKiZ/4t6KLknajKzVo
+         e4gZa32LPjpq9SOcjuEaApXZCdxJa+XS7DWfJ6Ib6Uskps7OYffdxQAL7T1Ly8Ts4kky
+         av/49xeQnKHi9wtcebk4Tv0Pc9d1Y8os/aD/14hvf169pXBdkQBOc3oigTrgzFvc/qAP
+         50vySc27jQ9Qv8Vc9YWaaTCYXFg1NhFDQbFNSR0fObqQRp2kdKDqAIFQj8ksVNNAZ7I1
+         6Z8KBtnORo+IcQ8KBc/4h5Xkzeztwig2hZOYLC8065wfhjUpma7KIsUpGhaxrAVSoJyK
+         C1iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHpoh+Oo0LV177KpBvlvsMsEo4cPgFoUtkR4MTIlOEboBR7KdIoMksCPtamkbnrP6tglgCZ1BXNu2P38s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEAmNZ2ujqLV9Od7ACSJXZZcKKC65GcRmeLrc0UEGH16Qamv3z
+	Z8QBBfT6Bk3yrr0bmIZsXpbP8y8QX9gZvKq3aHk0UUd/nAYdnlgldAyBZ+Q3h71GTbO/J0e/GJ0
+	s7dj5GSs+GM4LD7V+Y3e0GTbredyui98AAQqXY4cn
+X-Gm-Gg: ASbGncs0hjCIQYDClFtN9vXZRHPauhFhoS5OnREZUy9f/LMS2GOQbzHEoBAsH5VkUgM
+	FqNrgPqsebDASQAbfVD7UGo5LoyHy+2ePJEKpOcb+bdt4xpRDmnZfWziXozbZYyaHfmIbRA7l91
+	6J9HwY6O2L/3IMcQxcQAsDRf8cxAQX+GHQWRFSL9L5skn8SFyC4lJriQnJIRBWykXm69djBqrw0
+	A==
+X-Google-Smtp-Source: AGHT+IHPHYRmKnHOsCVbSKhmMIjCUnO2bXpi2Qwr76anVtQSsYyUsTFZp5bLxrDV1U4X7C+0Wvz26zEAZlgrLMDZAdM=
+X-Received: by 2002:a05:6870:568c:b0:2d5:c61f:c2db with SMTP id
+ 586e51a60fabf-2eaf0ba304dmr13059233fac.34.1750326557882; Thu, 19 Jun 2025
+ 02:49:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxLsf33FNoCe8gAQ--.38807S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXr43Wry7uw43Kr1DXFy3Jrc_yoW5Ww48pr
-	WUAFs8ua1rZry7X3sxtwn0g3WjqwsYgF1UZry7tFWS9F4rZF17JryrC3yYvFyjka4ftF40
-	qF4Yqrn3uF45t3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
-	U
+References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
+ <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
+In-Reply-To: <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
+From: Burak Emir <bqe@google.com>
+Date: Thu, 19 Jun 2025 11:49:06 +0200
+X-Gm-Features: Ac12FXzSuruTt-Nyax2FrVAzCnnuEi5Z5jbM694g7SGeod-KmRRuCItsoAZiTfY
+Message-ID: <CACQBu=UHdyxiqngiqE-5KPVyn4VFmCDapKiy2W27ic46uNO6sw@mail.gmail.com>
+Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 16, 2025 at 12:49=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+>
+> On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wrote=
+:
+> > +impl core::ops::DerefMut for Bitmap {
+> > +    fn deref_mut(&mut self) -> &mut CBitmap {
+> > +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            // SAFETY: Bitmap is represented inline.
+> > +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
+> > +        } else {
+> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
+g`.
+> > +            unsafe { self.repr.ptr.as_mut() }
+>
+> Nit: You want NonNull::as_mut_ptr() here.
 
+Can you explain? That seems to be an unstable method that exists so
+one can get pointer to slice buffer.
 
-On 2025/6/19 下午4:47, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Wed, Jun 11, 2025 at 9:51 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> IOCSR instruction supports 1/2/4/8 bytes access, the address should
->> be naturally aligned with its access size. Here address alignment
->> check is added in eiointc kernel emulation.
->>
->> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
->> function kvm_emu_iocsr(), remove the default case in switch case
->> statements.
-> Robust code doesn't depend its callers do things right, so I suggest
-> keeping the default case, which means we just add the alignment check
-> here.
-ok, will keep the default case.
-> 
-> And I think this patch should also Cc stable and add a Fixes tag.
-ok, will add Cc stabe and Fixes tag.
+The repr.ptr case is NonNull<usize>, not a slice - though "morally",
+it is actually an owned C array.
+Are you suggesting we could/should represent it as a Rust one?
+However, we'd like it to use the C API to free etc.
 
-Regards
-Bibo Mao
-> 
-> 
-> Huacai
-> 
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
->>   1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->> index 8b0d9376eb54..4e9d12300cc4 100644
->> --- a/arch/loongarch/kvm/intc/eiointc.c
->> +++ b/arch/loongarch/kvm/intc/eiointc.c
->> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>                  return -EINVAL;
->>          }
->>
->> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
->> +       if (addr & (len - 1)) {
->> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->> +               return -EINVAL;
->> +       }
->> +
->>          vcpu->stat.eiointc_read_exits++;
->>          spin_lock_irqsave(&eiointc->lock, flags);
->>          switch (len) {
->> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>          case 4:
->>                  ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
->>                  break;
->> -       case 8:
->> +       default:
->>                  ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
->>                  break;
->> -       default:
->> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->> -                                               __func__, addr, len);
->>          }
->>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>
->> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>                  return -EINVAL;
->>          }
->>
->> +       if (addr & (len - 1)) {
->> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->> +               return -EINVAL;
->> +       }
->> +
->>          vcpu->stat.eiointc_write_exits++;
->>          spin_lock_irqsave(&eiointc->lock, flags);
->>          switch (len) {
->> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>          case 4:
->>                  ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
->>                  break;
->> -       case 8:
->> +       default:
->>                  ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
->>                  break;
->> -       default:
->> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->> -                                               __func__, addr, len);
->>          }
->>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>
->> --
->> 2.39.3
->>
-
+Thanks,
+Burak
