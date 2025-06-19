@@ -1,133 +1,146 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FE230E852
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD4F30E85D;
+	Thu, 19 Jun 2025 21:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750369425; cv=none; b=oSSLNyT+LdLpFcv+ssYD29aJ7NmV+20ePeMf6eerCFIxvs0yAp4zBknBcxYb3WXhsQguRNSM424ECwxVlp5IkkFmPtiFA22IP5BEzKYUJ20Gz3K754sUvhOdBrzT24mRdbl8EB3VoZlCn1IvDBxDRTzn4oy5m2ZWh6gAEfR6IrE=
+	t=1750369648; cv=none; b=TrSGkmuNNYqlmBZFbiH43DhmjEBeMVvt4DJW7ypxqLVD9t+rEiiECmrSjXwGxDRfM+tm0LKok9Lo1gqXvFF818LEfunvKePcYhJBDHUTMGHiEfhabTY6bSZE7BgTbQzdGyA0hXrN8Hi7keWBQ5OriANiQ6e7utaltl10WYcLJ1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750369425; c=relaxed/simple;
-	bh=a8LYviNq9YTYBcBCE7EKNDp6/+znT0swyLSfViL3a+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qqoRZWV+P/dDRXfP4GSnyR1L6bXmjDJ4Hs9iFVitwm9rKjrbXz0jDddQFdpiJvGOi8fu0NGXmrLQugFo6MqSMp+c4blfno7BqR9ul/+eh8RK+QaBv/CVQcBJm2IjffITPf/Mom0vn0fq0zhyJj+vfEZnMjNZj9mSRDWQXDiWO9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Z5to+WTx; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750369648; c=relaxed/simple;
+	bh=m4oDBPzsVwFn306XKjJaQFlsPXy8FWKdTSj8uorHUCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hea1zL12okgFFOcOev2pG1N6q0w7P0qZ5rtYFABV/KOJEN8droVAv/NwaiEs2pkvaprygqTMnEYTld629klTxzkRzBAqIOiKdMdQ541H568e2ymWBvDlVzyHueaMcxmUliQQDVANmmzKdRO7VVZlX6h+54PCsFbLVinHgqzjgb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KQ/2cDXK; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Z5to+WTx"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72c09f8369cso353130a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750369422; x=1750974222; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TtdWcZD9H9MU+GvH5qLxp8IIrliybyOXwnsM3fxu7b8=;
-        b=Z5to+WTx7TU+LsGOSauXJtjocY7EQwJangRlopFX02fqKnFuQIFrBEdW01cMxHDchu
-         /oHmhoHvLdpVZAfSyoNh+uDK7PWjsM5id6rRYo/IPRUr6X7bw1IK5sbLpWTM3eA4ZFWs
-         qOMHCfzj3r1Ws1UkyUz3b3vD0tniep+uaYyDk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750369422; x=1750974222;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TtdWcZD9H9MU+GvH5qLxp8IIrliybyOXwnsM3fxu7b8=;
-        b=Z4+Vt//xIHsIFdIyA2p3Izww9qWSJoGSqYkcG66qgsPufdO9KIntdjFNJlD7SP1InF
-         WGbJX2QGtVL3FgCl06/LZd7JmADFMYeCzRxRagWiBrxSY/4zvAZ8VTkGkoVvQ92qm25Y
-         vOxxRci66PD8PE9vm7YuEjmu/XqzUjwlRUwobBGxzjfW/xHKzSA5hg9qvv9Lf+JyTdDS
-         vUOkYKL88Fy4DmzQjjn4J3qzUymPvlLM932VfSkBVtnAou8FV1/5MuJFJOldKKLk4CKi
-         DpPg7q7ds/bXzwWXYq4r2k/lOujzG917d6wvxK3wMCI3UFHY8k2w7uSxpT5qrDWP7wim
-         Ds6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXgroo7lmG+BlFN6s7Qk4LSg38pJlZ6wFNC5xR8Qxdk5ez6GYZQf0Lz5IamvsS01AQrVEjgfTVpPXLgCtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeaEaNwsM+Vhy2ISCXpPFNBrRuagypaur7pj3ycyrEZkRGXZZU
-	pyJpewewv4yuEHHXI2nKicBHWfvy0h6D140kw3MKZX9gFRht6R6bgfdVwP2bCSmtM4o=
-X-Gm-Gg: ASbGncsUoodcUKoZtOjHh4VxCW7Lev6tOcTraOddTREnu1IiwzTPHVdy/6OvPzLAlVQ
-	2UNwI9wiS+Ug6fUu5eVhBi0oFrgETUxhdr1CtCY3pupqWsk++DuQFkMEITPXs256F5yET0W8/22
-	mvSTxfpcLi+TftcDtKy2IJL8WJ+uXOzWYZW89ypHeheoTqPyZzUdoA1/0lYhe7aGWCF40a0lAVg
-	eKOb/7+rgMLy1hhdWhUXw3ERc6ALSw75KiI4vgbjJj6gTth0yrL3h+N0h6Y9BUt7+2cdEmNxoKg
-	wIU8Lk6ClR6OnWyN+6ZgI7v9si1gYpJ1gr3j6k3+g2mfZxKl3qhZllj4JUXyrVqH8RVtffnUSQ=
-	=
-X-Google-Smtp-Source: AGHT+IG3zun6seWH0e2DDXaQTs69ENPXpIXcFxWPe0R6l6nMcNZ0CpLymICDCoYf5D5y3PDwuid1/w==
-X-Received: by 2002:a05:6830:3e95:b0:72b:7cc8:422 with SMTP id 46e09a7af769-73a91d4be8fmr149617a34.20.1750369422633;
-        Thu, 19 Jun 2025 14:43:42 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90ca8712sm77065a34.45.2025.06.19.14.43.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 14:43:42 -0700 (PDT)
-Message-ID: <4d625aaf-5c8c-4097-897e-a6ebb469c183@linuxfoundation.org>
-Date: Thu, 19 Jun 2025 15:43:40 -0600
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KQ/2cDXK"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C9873725;
+	Thu, 19 Jun 2025 23:47:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750369629;
+	bh=m4oDBPzsVwFn306XKjJaQFlsPXy8FWKdTSj8uorHUCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KQ/2cDXKWujuFsgJFOvr4ZmThNJOzuYAcScgYISt4y6sX8M5M2eYTw3+2JaSqGWBE
+	 rLfBOMJ+Oi6IHHr8TUBS4qvqTFI0Rm8txd25WN1/m3Y8Gfj/Pvb5HWqPEJflp5Nitu
+	 n6iGLW7sLhkRpxjUK2E9euaW7i3JCPQzNZblIaHo=
+Date: Fri, 20 Jun 2025 00:47:05 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: sakari.ailus@linux.intel.com, akinobu.mita@gmail.com,
+	stanislaw.gruszka@linux.intel.com, hdegoede@redhat.com,
+	arnd@arndb.de, alain.volmat@foss.st.com, andrzej.hajda@intel.com,
+	benjamin.mugnier@foss.st.com, dave.stevenson@raspberrypi.com,
+	hansg@kernel.org, hverkuil@xs4all.nl, jacopo.mondi@ideasonboard.com,
+	jonas@kwiboo.se, kieran.bingham@ideasonboard.com, khalasa@piap.pl,
+	prabhakar.csengg@gmail.com, mani@kernel.org,
+	m.felsch@pengutronix.de, martink@posteo.de, mattwmajewski@gmail.com,
+	matthias.fend@emfend.at, mchehab@kernel.org,
+	michael.riesch@collabora.com, naush@raspberrypi.com,
+	nicholas@rothemail.net, nicolas.dufresne@collabora.com,
+	paul.elder@ideasonboard.com, dan.scally@ideasonboard.com,
+	pavel@kernel.org, petrcvekcz@gmail.com, rashanmu@gmail.com,
+	ribalda@chromium.org, rmfrfs@gmail.com, zhengsq@rock-chips.com,
+	slongerbeam@gmail.com, sylvain.petinot@foss.st.com,
+	s.nawrocki@samsung.com, tomi.valkeinen@ideasonboard.com,
+	umang.jain@ideasonboard.com, zhi.mao@mediatek.com,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v1 02/55] Documentation: media: camera-sensor: Mention
+ v4l2_devm_sensor_clk_get() for obtaining the clock
+Message-ID: <20250619214705.GR22102@pendragon.ideasonboard.com>
+References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
+ <1261f41358da597fb9900b7880618ebcc392160d.1750352394.git.mehdi.djait@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] selftests: Suppress unused variable warning
-To: John Hubbard <jhubbard@nvidia.com>,
- Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi <mszeredi@redhat.com>,
- Jan Kara <jack@suse.cz>, zhanjun@uniontech.com, niecheng1@uniontech.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250610020758.2798787-2-chenlinxuan@uniontech.com>
- <6972404e-0237-47b9-8e3e-15551bea3440@linuxfoundation.org>
- <CAC1kPDPg0AN9Ft3SNM6JDcZf=XD1oinqeAMzuRpZF3nzemZ=Kg@mail.gmail.com>
- <265ebc1f-b0c0-4c57-92b2-41714469c7f5@linuxfoundation.org>
- <91817e12-54c4-4241-b895-2e452a00e0c4@nvidia.com>
- <f73fa51e-87e5-4805-bbbc-a7af9b50a1d8@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <f73fa51e-87e5-4805-bbbc-a7af9b50a1d8@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1261f41358da597fb9900b7880618ebcc392160d.1750352394.git.mehdi.djait@linux.intel.com>
 
-On 6/19/25 15:40, Shuah Khan wrote:
-> On 6/19/25 13:00, John Hubbard wrote:
->> On 6/19/25 10:00 AM, Shuah Khan wrote:
->>> On 6/19/25 01:46, Chen Linxuan wrote:
->>>> On Thu, Jun 19, 2025 at 5:23 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>>>> On 6/9/25 20:07, Chen Linxuan wrote:
->> ...
->>>>>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount- notify_test.c b/tools/testing/selftests/filesystems/mount-notify/ mount-notify_test.c
->>>>>> index 63ce708d93ed0..34afe27b7978f 100644
->>>>>> --- a/tools/testing/selftests/filesystems/mount-notify/mount- notify_test.c
->>>>>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount- notify_test.c
->>>>>> @@ -465,7 +465,9 @@ TEST_F(fanotify, rmdir)
->>>>>>        ASSERT_GE(ret, 0);
->>>>>>
->>>>>>        if (ret == 0) {
->>>>>> -             chdir("/");
->>>>>> +             // Suppress -Wunused-result
->>>>>> +             // Ref: https://gcc.gnu.org/bugzilla/show_bug.cgi? id=66425#c34
->>>>>> +             (void) !chdir("/");
->>
->> This is quite ugly. :)
->>
->>>>>>> Why not fix the problem the right way by checking the return value.
->>>>> Suppressing the error isn't useful.
->>>>
->>>> The code is already handling cleanup in error cases,
->>>> and I don't think checking the result of chdir would be useful here.
->>>
->>
->> Why not just fail with the appropriate test result, if chdir() fails
->> here, instead of making a bit of a mess with odd void casts to a
->> negated return value, and a reference to a compiler bug report?
->>
->> Really, Shuah is putting you on the right path here.
+Hi Mehdi,
+
+Thank you for the patch.
+
+On Thu, Jun 19, 2025 at 07:58:55PM +0200, Mehdi Djait wrote:
+> Add the new v4l2 helper devm_v4l2_sensor_clk_get() to Documentation. the
+> helper works on both DT- and ACPI-based platforms to retrieve a
+> reference to the clock producer from firmware.
 > 
-> Ha. I didn't ask to suppress the error with the cast. I asked
-> to check the return and fail.
+> Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
 > 
->>
+> diff --git a/Documentation/driver-api/media/camera-sensor.rst b/Documentation/driver-api/media/camera-sensor.rst
+> index c290833165e6..c82c018a5f40 100644
+> --- a/Documentation/driver-api/media/camera-sensor.rst
+> +++ b/Documentation/driver-api/media/camera-sensor.rst
+> @@ -32,7 +32,8 @@ user.
+>  ACPI
+>  ~~~~
+>  
+> -Read the ``clock-frequency`` _DSD property to denote the frequency. The driver
+> +Use ``devm_v4l2_sensor_clk_get()`` to get the clock. The function will read the
+> +``clock-frequency`` _DSD property to denote the frequency. The driver
+>  can rely on this frequency being used.
 
-Sorry John. I didn't read it correctly the first time.
-I probably go get more coffee. :)
-
-thanks,
--- Shuah
+This isn't specific to ACPI anymore. I think the documentation should be
+refactored further. Here's a proposal.
 
 
+Handling clocks
+---------------
+
+Camera sensors have an internal clock tree including a PLL and a number of
+divisors. The clock tree is generally configured by the driver based on a few
+input parameters that are specific to the hardware: the external clock frequency
+and the link frequency. The two parameters generally are specified by system
+firmware. **No other frequencies should be used in any circumstances.**
+
+The reason why the clock frequencies are so important is that the system is
+usually designed to use specific external clock and link frequencies to ensure
+electro-magnetic compatibility. Using other frequencies may cause harmful
+effects elsewhere. Therefore only the pre-determined frequencies are
+configurable by the user.
+
+The external clock frequency shall be retrieved by obtaining the external clock
+using the ``devm_v4l2_sensor_clk_get()`` helper function, and then getting its
+frequency with ``clk_get_rate()``. Usage of the helper function guarantees
+correct behaviour regardless of whether the sensor is integrated in a DT-based
+or ACPI-based system.
+
+ACPI
+~~~~
+
+ACPI-based systems typically don't register the sensor external clock with the
+kernel, but specify the external clock frequency in the ``clock-frequency``
+_DSD property. The ``devm_v4l2_sensor_clk_get()`` helper creates and returns a
+fixed clock set at that rate.
+
+Devicetree
+~~~~~~~~~~
+
+Devicetree-based systems declare the sensor external clock in the device tree
+and reference it from the sensor node. The preferred way to select the external
+clock frequency is to use the ``assigned-clocks``, ``assigned-clock-parents``
+and ``assigned-clock-rates`` properties in the sensor node to set the clock
+rate. See the `clock device tree bindings
+<https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml>`_
+for more information. The ``devm_v4l2_sensor_clk_get()`` helper retrieves and
+returns that clock.
+
+This approach has the drawback that there's no guarantee that the frequency
+hasn't been modified directly or indirectly by another driver, or supported by
+the board's clock tree to begin with. Changes to the Common Clock Framework API
+are required to ensure reliability.
+
+
+>  
+>  Devicetree
+
+-- 
+Regards,
+
+Laurent Pinchart
