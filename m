@@ -1,104 +1,233 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E8D221270;
-	Thu, 19 Jun 2025 15:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E9C1C8611
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346284; cv=none; b=nUEVCmXFsi3slhzqVy05g/QiWCdf2k/Nv78SEqdFKXzByEX3leUFm23tCsa/Ye9h5qDFP2rHuB23aTju+54wefflA2WppUCx8ZECEv9hVNLA9B0CPz3lpSblgP04AT5M6fAYXR58Ks5NztX/ZZwY7VatsgvEQ6U+dCOrlsvXb+g=
+	t=1750346299; cv=none; b=hU3DTI/jR2YHA8nXpfZEnUHO8oGjBGDVwUCFYoOrNgFUyXVrkxQtGsXF/XVr4KC2Dhdy+83GVBR3Gpe6yiqQGXve3wR3OciXj9EuKw7EP+hJ3MJy6ZM+4pM2+k1KLsDzowspmQhSc1hoG5/c3TRRfBtldl4po5LOS5ySZEPDRso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346284; c=relaxed/simple;
-	bh=qAmKIMry2tJjYOV/mRm6EhXtZ3wqm8lfOnhBtky/cus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FIc3rYOOJwmdeuhirfrTUwoFjbBx8FC6rRPypVQ23UD9M4C+qmFd18CHao3DNj7MwCtX13n6qBVaUIY/JYCwnAw6ZxkhS+9ap0ITmyy9oFjby1eB3aVSo+ue9JH+l4ggUw+FNtA10cHTXMvN3D1Xa0J3/pzyldpro0C3MDs27Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9a284c225so273325137.2;
-        Thu, 19 Jun 2025 08:18:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750346281; x=1750951081;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ntk+so1xA40iJ1eMvOf2PChc0jZI6RSYBcRU/+9kzH0=;
-        b=rMomg7rUHqajlfw/wPzqy8/BjXhIfMnVOiuW9oM1JIV90vY+O/eehpwWbTHKEvTSof
-         q1iv1ctMYELn+XwLoq7Ocykl1YCNQ8zS/f9QgpW76vO7yAn2x1r/huSugsubVXGrZFdx
-         G+BqqJe0SOK8MYAMGkiBDb5afDMAXAHgHWRmOm5Mjx2pKWsJqpVvyIKl+v0EAHCtGC22
-         hNqSzrGPVcWHbCYP8bjhP5j7mdqTctMyiJX8MaU9rthwQz8y9KPyq5clfvZeKwF0ohDg
-         nMrdHmZ2uN7n3CVpsOzD/wCWYpsDqmF9JMKY/7WAOVFPqw3H6/POhQukHqtpI57jyobm
-         P+lw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+x5F3Z4GTo0bE4RBhUZR5LR5zzcXCSoVYn7H4c123CbKsT5RxwXeTZbNmqe4DUVIdgcWoDaPCRUlS@vger.kernel.org, AJvYcCU85Xk+6z+NklAmPQsLnSsAWR1KgpPlf4J/U7zQn5c8Qv1Bl+Li20/xdHrS9E0baUH1tzowBZiJblmekM1t@vger.kernel.org, AJvYcCW1ROHspX+oHLRDdSqEAb22if+A2f2+fLPnJE1yZIjnTKOS5wbiQXKR6LxKRqRXVQqqoniAnmI4gBem@vger.kernel.org, AJvYcCXR0nx660DsCuiub3UIFx8aAYZHknD58Iu03FN7BAoZGoPVIsgLycvJDSkVdZnRV7podZgY79ZN+N3hJKRlAFQxxA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7K7CfkzTIAjmKhOLBfx3HcUgZOBPhhzqVuxEfjA+4vU2/51At
-	5JvXa7B9Yn6So+v+XuXAoqtTqGA5IQ++OGqPpEs352I2rCq3IkPiJQWqgLWbHivX
-X-Gm-Gg: ASbGnctOX9TR/IpjVWEfWhYhpPh8gNo7VgeqdkKXFl0PHZBcUT6GP75Y7nIAam3T1nM
-	Gt7cuB9LPUcQ/E+8AQoI3uvieM4xC0uIbskkUMCF9HREZi9+/NLB65qSgcF8UYz1TTf+YlkzFPM
-	4x3qOm4DgDB4H4NGz7OMZYSE0NkGmkRg58A0iBHHVst7vT6TetqgzHnT4Ib/6aLiElheF/3wRba
-	mFnrrajZyeQDoqybQsAG5WrpCw9wfXDQeQYb2PPV3eU/b+jW0EoilEd6grj1aa9MU3VFQaFD3+o
-	tLZGY8fxhjbS3v1Glajbnb0X/xIpiFtTM77Y81D3NXUPyL9hAJEy3ug8bV1bRyLgq8nilOApb9h
-	/3fbeuchXIhFG0pBQRxkXxvzv
-X-Google-Smtp-Source: AGHT+IGp+rIiFVTF0qFZtbXCpbPWn8i+wOZiAFu1907kUjqNkTIVcYFBH2366sAa2GdOb3V761kF+w==
-X-Received: by 2002:a05:6102:3e07:b0:4e2:bacd:9f02 with SMTP id ada2fe7eead31-4e7f62126d6mr15054576137.16.1750346280738;
-        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f389dd153sm1199677241.22.2025.06.19.08.18.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e9a284c225so273312137.2;
-        Thu, 19 Jun 2025 08:18:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsUSgA6NhlCA9ZFkJsu0SpxVqPpfgQsUbCsdtSyqT2xBcyXoNveshlaicdf/wmWGaevsXiXReoK5t/eERylzrDets=@vger.kernel.org, AJvYcCVab2GRJCYUEtnVQbP7Rgqy51UvtciUgcFTdXdHJQ95PUrNa/U/rOZRWdgvpXBdOYQ192m5sdIpg23y@vger.kernel.org, AJvYcCXSjrYXpfDwdJARENkoICF5K5Dh6HronP3rawwUQPeD5CbInQkjIMXH0/HRrZuTtxtMd2sicAKPJJ35mR27@vger.kernel.org, AJvYcCXgP+0mhzs2f5St3pMkaIX2aUTDlVGP3G30qr8EMYUZEMnIG+j6EGnB0MnZU7G/VZ9POthdYV4MCstv@vger.kernel.org
-X-Received: by 2002:a05:6102:6a8c:b0:4e4:5ed0:19b2 with SMTP id
- ada2fe7eead31-4e7f61646ecmr18359222137.9.1750346279912; Thu, 19 Jun 2025
- 08:17:59 -0700 (PDT)
+	s=arc-20240116; t=1750346299; c=relaxed/simple;
+	bh=OsQHC9nezz+lgdGUY/dZhjpZdYioQHWqNXx0tXhUcvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k0lm7AprDfxCHA7Hah7KesTOwyEUYl2rk2iut/erzhUjLIkzWAi9G79EfeJ7heKb/qzZI5WeZgEEn4E9MVHC1/x17GWKL9DY6V91TKyIBIRAETlVf+NEVWeYaEwG7IJww72q1Ap7Qs8rIqGLOGi6bBiL2qoRzlVCEj0Ar7YZ3Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WKtmm8hk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKtmm8hk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750346296;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5FtkTLDW6wXNpCIAd3hpZHY0oaOsNTLBcH8jmGh2AvQ=;
+	b=WKtmm8hkJck0LYji/G71bIFi/r1+iMZvYdS+SlQ0oQEEIXdMtx0Bsjj6QsHqv5mm74C1oS
+	il9wuYH1oK4+YNnmcjqvo4GpKR4ajOVY/MfN1OwjXgHaPBWRY1Qkq8gz6IXD9vgwd5RPYY
+	nvXZWup6ngHxmlfdboKReOmbN1bMgKw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-EonD_HmAMRmYlkygPbW06Q-1; Thu,
+ 19 Jun 2025 11:18:12 -0400
+X-MC-Unique: EonD_HmAMRmYlkygPbW06Q-1
+X-Mimecast-MFC-AGG-ID: EonD_HmAMRmYlkygPbW06Q_1750346290
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05B5919560A2;
+	Thu, 19 Jun 2025 15:18:09 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.69])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9164E30001A1;
+	Thu, 19 Jun 2025 15:18:00 +0000 (UTC)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: x86@kernel.org
+Cc: linux-efi@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Peter Jones <pjones@redhat.com>,
+	Daniel Berrange <berrange@redhat.com>,
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Luca Boccassi <bluca@debian.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] x86/efi: Implement support for embedding SBAT data for x86
+Date: Thu, 19 Jun 2025 17:17:59 +0200
+Message-ID: <20250619151759.355893-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617155757.149597-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617155757.149597-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250617155757.149597-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 19 Jun 2025 17:17:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVW8oPiqUqFt573-Db3963Yawm6+sT8DAHTq-64Naegog@mail.gmail.com>
-X-Gm-Features: Ac12FXzvo_4PUAY2MpopAYSr5MVWx-2BQeRauunUyjVmJtVyUj79Za_ayKIMT50
-Message-ID: <CAMuHMdVW8oPiqUqFt573-Db3963Yawm6+sT8DAHTq-64Naegog@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] clk: renesas: r9a09g077-cpg: Add PCLKL core clock
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, 17 Jun 2025 at 17:58, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add the Peripheral Module Clock L (PCLKL) for the RZ/T2H (R9A09G077) SoC.
-> PCLKL is sourced from PLL1 and runs at 62.5MHz. It is used by various
-> low-speed peripherals such as IIC and WDT.
->
-> Also update LAST_DT_CORE_CLK to reflect the addition of PCLKL, ensuring
-> correct enumeration of core clocks exposed to the DT.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2:
-> - New patch to add PCLKL core clock.
+Similar to zboot architectures, implement support for embedding SBAT data
+for x86. Put '.sbat' section in between '.data' and '.text' as the former
+also covers '.bss' and '.pgtable' and thus must be the last one in the
+file.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+Changes since v3:
+- Update optional PE header so .sbat is accounted in
+'SizeOfInitializedData' and not in 'SizeOfCode'.
+---
+ arch/x86/boot/Makefile                 |  2 +-
+ arch/x86/boot/compressed/Makefile      |  5 ++++
+ arch/x86/boot/compressed/sbat.S        |  7 ++++++
+ arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++
+ arch/x86/boot/header.S                 | 35 ++++++++++++++++++--------
+ drivers/firmware/efi/Kconfig           |  2 +-
+ 6 files changed, 46 insertions(+), 13 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/sbat.S
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 640fcac3af74..3f9fb3698d66 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+ 
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index f4f7b22d8113..3a38fdcdb9bd 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
++vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
++
++ifdef CONFIG_EFI_SBAT
++$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
++endif
+ 
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
+new file mode 100644
+index 000000000000..838f70a997dd
+--- /dev/null
++++ b/arch/x86/boot/compressed/sbat.S
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Embed SBAT data in the kernel.
++ */
++	.pushsection ".sbat", "a", @progbits
++	.incbin CONFIG_EFI_SBAT_FILE
++	.popsection
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 3b2bc61c9408..587ce3e7c504 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -43,6 +43,14 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
++#ifdef CONFIG_EFI_SBAT
++	.sbat : ALIGN(0x1000) {
++		_sbat = . ;
++		*(.sbat)
++		_esbat = ALIGN(0x1000);
++		. = _esbat;
++	}
++#endif
+ 	.data :	ALIGN(0x1000) {
+ 		_data = . ;
+ 		*(.data)
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index e1f4fd5bc8ee..f57c45d8584a 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -78,9 +78,9 @@ optional_header:
+ 	.byte	0x02				# MajorLinkerVersion
+ 	.byte	0x14				# MinorLinkerVersion
+ 
+-	.long	ZO__data			# SizeOfCode
++	.long	textsize			# SizeOfCode
+ 
+-	.long	ZO__end - ZO__data		# SizeOfInitializedData
++	.long	ZO__end - textsize		# SizeOfInitializedData
+ 	.long	0				# SizeOfUninitializedData
+ 
+ 	.long	setup_size + ZO_efi_pe_entry	# AddressOfEntryPoint
+@@ -179,15 +179,11 @@ pecompat_fstart:
+ #else
+ 	.set	pecompat_fstart, setup_size
+ #endif
+-	.ascii	".text"
+-	.byte	0
+-	.byte	0
+-	.byte	0
+-	.long	ZO__data
+-	.long	setup_size
+-	.long	ZO__data			# Size of initialized data
+-						# on disk
+-	.long	setup_size
++	.ascii	".text\0\0\0"
++	.long	textsize            		# VirtualSize
++	.long	setup_size			# VirtualAddress
++	.long	textsize			# SizeOfRawData
++	.long	setup_size			# PointerToRawData
+ 	.long	0				# PointerToRelocations
+ 	.long	0				# PointerToLineNumbers
+ 	.word	0				# NumberOfRelocations
+@@ -196,6 +192,23 @@ pecompat_fstart:
+ 		IMAGE_SCN_MEM_READ		| \
+ 		IMAGE_SCN_MEM_EXECUTE		# Characteristics
+ 
++#ifdef CONFIG_EFI_SBAT
++	.ascii	".sbat\0\0\0"
++	.long	ZO__esbat - ZO__sbat            # VirtualSize
++	.long	setup_size + ZO__sbat           # VirtualAddress
++	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
++	.long	setup_size + ZO__sbat           # PointerToRawData
++
++	.long	0, 0, 0
++	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
++		IMAGE_SCN_MEM_READ		| \
++		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
++
++	.set	textsize, ZO__sbat
++#else
++	.set	textsize, ZO__data
++#endif
++
+ 	.ascii	".data\0\0\0"
+ 	.long	ZO__end - ZO__data		# VirtualSize
+ 	.long	setup_size + ZO__data		# VirtualAddress
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index db8c5c03d3a2..16baa038d412 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -286,7 +286,7 @@ config EFI_SBAT
+ 
+ config EFI_SBAT_FILE
+ 	string "Embedded SBAT section file path"
+-	depends on EFI_ZBOOT
++	depends on EFI_ZBOOT || (EFI_STUB && X86)
+ 	help
+ 	  SBAT section provides a way to improve SecureBoot revocations of UEFI
+ 	  binaries by introducing a generation-based mechanism. With SBAT, older
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
