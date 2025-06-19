@@ -1,121 +1,99 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469411E2312;
-	Thu, 19 Jun 2025 10:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23C41E2312;
+	Thu, 19 Jun 2025 10:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750329107; cv=none; b=mFq+7c8ed+Pm/Jk1wq2zSUPKWjQxhEj/kppIvnaN0wnUbPcP02QtnKLYYc9MHC/9W8jAI66ioZkwuye8G1L6SyJIV4n5VwiROQeP+ZivufoDShjYTlQcHcSY1qT/sWSMh81FJ44+wX41N4EnmNKAZddeDjQIyJOFpF36qAPvX8E=
+	t=1750329124; cv=none; b=Imgqqx+QgWa1vC48szRnz3tEr5b4quQwCu3B5rjd6EkqG4B6cKb48Cmpz7P7kbWQCE7Ki9RGYfmZ9oulAxtTYF0UfWaOYZyp56vrOV2d/TXydJqNG/WIwcOauQl8fsg+dSVjrECQwgJayJi34yeVt1i5zxLFjQQaL9ApkKPEWr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750329107; c=relaxed/simple;
-	bh=xkmi7WTsSXagv5IZJW/ccnVltWO4yEgOk5fV/cts4nw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h/wSUYSNaNfdK5Cz1ctH0XWelukwEpPKXz0+CG6unpEvY8Rjg44RHUSRIj+JTf0kPwGpOMOyVcTH5U1XP/kd4koh5wzQ0MMOumhuH86DCZ0u0K8EkrYPbRCz5x3UHIecyOavJhVz9tNnfUd3ydWNcC9p/CmQO3h5u0kbHoGSWCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=qhUUmaua; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750329124; c=relaxed/simple;
+	bh=Khe/sdUUkDDqg1DjiaL2gTiOly2J6fsQL2KHmvONI2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ut3t2DdIde3Gbl6oAa11Yygck/5kuYzuA9VUXfOvckhZPkRLh0U3wDoPJIX+ID7Bhrfz4wF1EXePC8Me14Yg2LlVkgbsHOfR0XgjQ88QngC6CqKd3LnAScfRRyxORCXVRH7dBdjiFQY4GosMzOlofXrBhO/WviniksBGfb8mOAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T++0IscD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="qhUUmaua"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=uHc7BspCc4VebX3+yVBmPaBO4Z3SMOpLQiryABMTzXg=; b=qhUUmauacre6f0NDbZEh0A209v
-	PUSFAm69IOwcfWsONe8VRlmUFter+1RNbipSRBRx8Pkz1eqM7uPExZ/Jv9yT3+3VspkNVZzlc9SDk
-	Abq3dkD7mVqK/P0ZUX4fivIyplQ/yR373A/gvQRZfAG28HjumuSX1eAd90imC2PqWw+ivvezsgZFq
-	92/1onaEVis29tvgAVcXw2KIhbQ/HZ/kEjC+jIRjRxfMC01VaSuPxNS2zc/M80yqs5HL2xbA7Y22O
-	GaeTm8Hek/Gm0+lj59FMeDzKmoSgOLyG/WU2Luea9XKiGkTRohtkk170iYUPznw/y6I/AVZwX13i2
-	XMMlbEQw==;
-Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uSCYS-0008Oq-0k; Thu, 19 Jun 2025 12:31:36 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Olivier Benjamin <olivier.benjamin@bootlin.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Diederik de Haas <didi.debian@cknow.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v2] arm64: dts: rockchip: Fix the PinePhone Pro DTS' panel
- description
-Date: Thu, 19 Jun 2025 12:31:35 +0200
-Message-ID: <5461462.0VBMTVartN@phil>
-In-Reply-To: <DAQEX04P5320.CQDU7SL7AV4A@cknow.org>
-References:
- <20250619-dtb_fixes-v2-1-abd711d11b67@bootlin.com>
- <DAQEX04P5320.CQDU7SL7AV4A@cknow.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T++0IscD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=w1pniWAitZ7xsbl8EX2cBNfwJUGO6gUBYk8UsyzHaho=; b=T++0IscDTMH7RV/B13VlfwthTO
+	ocClwLWiSq5vhdXUmVM8gBi1SzG4bbvemjpW501sZlrU2uz4YOxforUAKJ+5ObYEFa3SxnbOiCd0k
+	TEK9F2H9iDYc6rxTdlrx9CSfCAl6P0SB4LxNQPp2rH1+vAsl9snvEv+NV3vVLtWRai3k0aVxDEANJ
+	YUWwo1d3cMR5Sk6nyaThKPq2nwpwpzx/hZf8edvc2wN/LB3re0uolTEKg9IdrEw7qMR4WvHa96lGZ
+	a0Cy8pN0ix0sd+rF5z81jdqTdyXw8QwZhmMCuBkQkOShQj2q57sCV4lyc3O078BZMBx7UKr8BnzEW
+	vtaQRULw==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSCYm-00000008GyW-2KJ1;
+	Thu, 19 Jun 2025 10:31:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9FB5A30890E; Thu, 19 Jun 2025 12:31:55 +0200 (CEST)
+Date: Thu, 19 Jun 2025 12:31:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
+ types
+Message-ID: <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-4-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618164934.19817-4-boqun.feng@gmail.com>
 
-Am Donnerstag, 19. Juni 2025, 11:46:15 Mitteleurop=C3=A4ische Sommerzeit sc=
-hrieb Diederik de Haas:
-> Hi,
->=20
-> Thanks for working on upstreaming PPP things :-)
->=20
-> On Thu Jun 19, 2025 at 7:21 AM CEST, Olivier Benjamin wrote:
-> > Fix a few issues in the panel section of the PinePhone Pro DTS:
-> >   - add the second part of the Himax HX8394 LCD panel controller
-> >     compatible
-> >   - as proposed by Diederik de Haas, reuse the mipi_out and ports
-> >     definitions from rk3399-base.dtsi instead of redefining them
-> >   - add a pinctrl for the LCD_RST signal for LCD1, derived from
-> >     LCD1_RST, which is on GPIO4_D1, as documented on pages 11
-> >     and 16 of the PinePhone Pro schematic
-> >
-> > Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+On Wed, Jun 18, 2025 at 09:49:27AM -0700, Boqun Feng wrote:
 
-> > +	lcd {
-> > +		lcd_reset_pin: reset-pin {
->=20
-> I don't know if there's a 'hard rule' for it, but I'd recommend to use
-> ``lcd1_rst_pin: lcd1-rst-pin {`` as that would match the naming from
-> the schematics. I realize that some but not all (other) pinctrl nodes
-> follow that 'rule', but it helps with traceability.
+> +//! Memory orderings.
+> +//!
+> +//! The semantics of these orderings follows the [`LKMM`] definitions and rules.
+> +//!
+> +//! - [`Acquire`] and [`Release`] are similar to their counterpart in Rust memory model.
 
-not a "hard" rule, but a strong preference.
-I.e. we want people to ideally be able to just hit search in the
-schematics PDFs for the name they saw in the devicetree.
+So I've no clue what the Rust memory model states, and I'm assuming
+it is very similar to the C11 model. I have also forgotten what LKMM
+states :/
 
-Sometimes that is not possible, because of naming conventions or
-overly strange schematic-names ... and sometimes things slip through
-as well.
+Do they all agree on what RELEASE+ACQUIRE makes?
 
-But following the schematic names, is the general goal.
+> +//! - [`Full`] means "fully-ordered", that is:
+> +//!   - It provides ordering between all the preceding memory accesses and the annotated operation.
+> +//!   - It provides ordering between the annotated operation and all the following memory accesses.
+> +//!   - It provides ordering between all the preceding memory accesses and all the fllowing memory
+> +//!     accesses.
+> +//!   - All the orderings are the same strong as a full memory barrier (i.e. `smp_mb()`).
 
+s/strong/strength/ ?
 
-If this stays the only suggestion though, I can fix that when
-applying. Or you can send a v3 - up to you :-)
-
-
-Heiko
-
-
->=20
-> > +			rockchip,pins =3D <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +		};
-> > +	};
-> > +
-> >  	leds {
-> >  		red_led_pin: red-led-pin {
-> >  			rockchip,pins =3D <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
->=20
-> Otherwise,
->=20
-> Reviewed-by: Diederik de Haas <didi.debian@cknow.org>
->=20
-> Cheers,
->   Diederik
->=20
-
-
-
-
+> +//! - [`Relaxed`] is similar to the counterpart in Rust memory model, except that dependency
+> +//!   orderings are also honored in [`LKMM`]. Dependency orderings are described in "DEPENDENCY
+> +//!   RELATIONS" in [`LKMM`]'s [`explanation`].
+> +//!
+> +//! [`LKMM`]: srctree/tools/memory-model/
+> +//! [`explanation`]: srctree/tools/memory-model/Documentation/explanation.txt
