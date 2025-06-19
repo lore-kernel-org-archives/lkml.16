@@ -1,239 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E57C11712;
-	Thu, 19 Jun 2025 15:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348238; cv=none; b=iWZtD/OdWeumqlWR0mft6fF6IdHutxaap7ZrIjUZlXzXfJ+9tmNDkMPakXo7C4CMCkEtsC8Hp+J/UNKKtUvJZKI9KHK4IokmMFtoIJ26QvyG26O3cxeonsZNVGCrct69jr2JhsePnaskP8d44Q3ljjTq2zIYGq4dzGVvmRtSkoQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348238; c=relaxed/simple;
-	bh=OKsVibEkSv+hfR4J2CvdJJEcDJm0d1G4pRgyEnSM5co=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jl7Lg0aSc3Hn76/ad1gysn6TqUz78OB+LvHeJRH2jdv4ZaIBPt4e7FC99MT+CKHF0IZtvdxiAOE9lf2sCfDURdByTBAnPkss0cYRkqSKAcT7qJcrJe+jAt+kOJ/P9FtZpUvWBR2aWQCzLiUosRs93rirtEsln/qw7UDxHlHZZi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Bw9meWho; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB46511712;
+	Thu, 19 Jun 2025 15:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750348322; cv=pass; b=Hyu9lqjgijUEf3sktqT6meY+yuhrX9NmtQ1F1/3eYNj7o2GTWTWKd6RFtKYw6s09pwBNpt5p0dsj1R75q0lG5DGroLcefxJEuCrulhoYcOwNzkfr7SNJqIBPM8ILCZJtDBQwhEYMp7PgO57EUfXSCJUt6Miy3pW8T2bX4ZOT1l0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750348322; c=relaxed/simple;
+	bh=3e+MnoCUQpIjahFcmnDHaFng1/HMNPCLp9IxTyA3Fuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i20ojxpwFiZ/NHlb5SMwrqh01yDyhttZGpYmbJEDPjQSwtyTQnFAOU7iOwBeKgay425IRBXUxHZmLmoo+nqtUJavBha6Ff8KEGdKaZkN5Rul4S5F4U1TP1Wnuoe7kT9Ztw0Q+YHSEIONp6ra6crBrTDUXVi3/KebPRPpRCjQWIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=g8SBqgUo; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bw9meWho"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OKsVibEkSv+hfR4J2CvdJJEcDJm0d1G4pRgyEnSM5co=; b=Bw9meWhos1tgAIc+K/544bWYY7
-	TSrs4qSCCLwK/G59yXQbgmv2lmkCuMkvZxk0hrTtkOpznc9r9pAlYHynY14uNOPuXmJB9OwLNvUcI
-	elmJR9YNWGf2mKdlNASMm/a1xOeU4qwTD53xc4HCErLoupHHCLNV6sLfS/JKHukPTXn8u0Ne2c922
-	zlvIs92esqPKGhjpXeteV0mf8YVWXMzWxaR7TBu4Qc6iFEwFrNIuSf9SW1Pvh6LVrFCB9HWPqvWkI
-	NBuMIBtV0y3/yxRkY0iNJMEu8uJCBtlNxR6m78RVbQ/tXU7Yly1mqDneI+6opUUl0VPDw/pix9OXz
-	zQZno7uA==;
-Received: from [2001:8b0:10b:5:748f:d833:d81c:4c8f] (helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSHX4-00000009LhR-2ep8;
-	Thu, 19 Jun 2025 15:50:30 +0000
-Message-ID: <b1db820e965996b4d236caf15736162f161223e6.camel@infradead.org>
-Subject: Re: [RFC PATCH 00/34] Running Qualcomm's Gunyah Guests via KVM in
- EL1
-From: David Woodhouse <dwmw2@infradead.org>
-To: Marc Zyngier <maz@kernel.org>, Karim Manaouil
- <karim.manaouil@linaro.org>,  Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- kvmarm@lists.linux.dev, Alexander Graf <graf@amazon.com>, Alex Elder
- <elder@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Fuad Tabba
- <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>, Jonathan Corbet
- <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, Prakruthi
- Deepak Heragu <quic_pheragu@quicinc.com>, Quentin Perret
- <qperret@google.com>, Rob Herring <robh@kernel.org>,  Srinivas Kandagatla
- <srini@kernel.org>, Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>, Will
- Deacon <will@kernel.org>, Haripranesh S <haripran@qti.qualcomm.com>, Carl
- van Schaik <cvanscha@qti.qualcomm.com>, Murali Nalajala
- <mnalajal@quicinc.com>,  Sreenivasulu Chalamcharla
- <sreeniva@qti.qualcomm.com>, Trilok Soni <tsoni@quicinc.com>, Stefan
- Schmidt <stefan.schmidt@linaro.org>
-Date: Thu, 19 Jun 2025 16:50:29 +0100
-In-Reply-To: <86ikmtjy51.wl-maz@kernel.org>
-References: <20250424141341.841734-1-karim.manaouil@linaro.org>
-	 <aApaGnFPhsWBZoQ2@linux.dev> <86ikmtjy51.wl-maz@kernel.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-8oYh6WC82njjqP/La6PW"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="g8SBqgUo"
+ARC-Seal: i=1; a=rsa-sha256; t=1750348305; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IcM1T3srtgYwUeY4mYmXJciHOaGmt3kjIYtN+Ups+ny/VYTLhM5k5QvFqWV9Mit6BJsiGMY87T7RReKdf7KCUElLe4apTB8a/YZDDAKrrxsXz/ytIrGRBl+O9SixREXUpdYKq24YKgTgmfooxlvOcodvcBR4K0xmDsOqe67v5cE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750348305; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZCoeH3n1KmlC4QaPJtFmhLx7PqSf1liYHdZw1gO42lw=; 
+	b=Phh5MA2v/ChxBwfja9NInH0Ma+zC8oYOhT06T/K+S99cUFWmrlndBom/CyzneWfCnJIA5P8zVPxxmqE1yRDOYoCv7sPGwSUVBugtp/onnLqp1TBLkGCakmSzmTKpXy52FutnQi9wcfU1qYUiUF2jdc7OuiKteJCSrOig6do5L0g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750348305;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ZCoeH3n1KmlC4QaPJtFmhLx7PqSf1liYHdZw1gO42lw=;
+	b=g8SBqgUor4pKiCJVPY8a80SyRdlpSyONnw5+acbP7KyUP6D0N2czMSQnvUmMKa66
+	cARh0eqYABAESAjZOW/DM0O2m2KlqiCYp8wOnGvu1GLsxqSBzOC3E7IBzfto4+gvHMs
+	wnPkrBJj4iuc1y9BYQgtOkV14HpnssKejnzbwm7A=
+Received: by mx.zohomail.com with SMTPS id 1750348302329727.2550679522411;
+	Thu, 19 Jun 2025 08:51:42 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id C6C6C1805A8; Thu, 19 Jun 2025 17:51:37 +0200 (CEST)
+Date: Thu, 19 Jun 2025 17:51:37 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Quentin Schulz <foss+kernel@0leil.net>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
+	Daniel Semkowicz <dse@thaumatec.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: add header for RK8XX PMIC
+ constants
+Message-ID: <t3wbjpbw7phqvip4yvxm5kux6hor5pehzamrw6hjv3hq2b3j3n@zuf2vuhgpdpp>
+References: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
+ <20250618-rk8xx-rst-fun-v3-3-081f02d3d348@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pu5pnebwd6cicvnp"
+Content-Disposition: inline
+In-Reply-To: <20250618-rk8xx-rst-fun-v3-3-081f02d3d348@cherry.de>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.2/250.326.2
+X-ZohoMailClient: External
 
 
---=-8oYh6WC82njjqP/La6PW
-Content-Type: text/plain; charset="UTF-8"
+--pu5pnebwd6cicvnp
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: add header for RK8XX PMIC
+ constants
+MIME-Version: 1.0
 
-On Thu, 2025-04-24 at 17:57 +0100, Marc Zyngier wrote:
-> On Thu, 24 Apr 2025 16:34:50 +0100,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
-> >=20
-> > On Thu, Apr 24, 2025 at 03:13:07PM +0100, Karim Manaouil wrote:
-> > > This series introduces the capability of running Gunyah guests via KV=
-M on
-> > > Qualcomm SoCs shipped with Gunyah hypervisor [1] (e.g. RB3 Gen2).
-> > >=20
-> > > The goal of this work is to port the existing Gunyah hypervisor suppo=
-rt from a
-> > > standalone driver interface [2] to KVM, with the aim of leveraging as=
- much of the
-> > > existing KVM infrastructure as possible to reduce duplication of effo=
-rt around
-> > > memory management (e.g. guest_memfd), irqfd, and other core component=
-s.
-> > >=20
-> > > In short, Gunyah is a Type-1 hypervisor, meaning that it runs indepen=
-dently of any
-> > > high-level OS kernel such as Linux and runs in a higher CPU privilege=
- level than VMs.
-> > > Gunyah is shipped as firmware and guests typically talk with Gunyah v=
-ia hypercalls.
-> > > KVM is designed to run as Type-2 hypervisor. This port allows KVM to =
-run in EL1 and
-> > > serve as the interface for VM lifecycle management,while offloading v=
-irtualization
-> > > to Gunyah.
-> >=20
-> > If you're keen on running your own hypervisor then I'm sorry, you get t=
-o
-> > deal with it soup to nuts. Other hypervisors (e.g. mshv) have their own
-> > kernel drivers for managing the host / UAPI parts of driving VMs.
-> >=20
-> > The KVM arch interface is *internal* to KVM, not something to be
-> > (ab)used for cramming in a non-KVM hypervisor. KVM and other hypervisor=
-s
-> > can still share other bits of truly common infrastructure, like
-> > guest_memfd.
-> >=20
-> > I understand the value in what you're trying to do, but if you want it
-> > to smell like KVM you may as well just let the user run it at EL2.
+Hi,
+
+On Wed, Jun 18, 2025 at 12:32:42PM +0200, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 >=20
-> +1. KVM is not a generic interface for random third party hypervisors.
+> To make it easier to read the device tree, let's add constants for the
+> rockchip,reset-mode property values that are currently only applicable
+> to RK806 PMIC.
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk8xx.h | 18 ++++++++++++++++++
 
-I don't think that should be true in the general case. At least, it
-depends on whether you mean the literal implementation in
-arch/arm64/kvm/ vs. the userspace API and set of ioctls on /dev/kvm.
+I think this header should be in include/dt-bindings/, otherwise the
+series LGTM.
 
-The kernel exists to provide a coherent userspace API for all kinds of
-hardware. That's what it's *for*. It provides users with a consistent
-interface to all kinds of network cards, serial ports, etc. =E2=80=94 and t=
-hat
-includes firmware/platform features too.=20
+Greetings,
 
-There's no reason that shouldn't be the same for virtualisation. If the
-kernel cannot provide an API which supports *all* kinds of
-virtualization, then it seems like we've done something wrong.
+-- Sebastian
 
-On x86 we have /dev/kvm backed by different vendor-specific support for
-Intel vs. AMD. And in recent years we've retrofitted confidential
-compute to it too, with SEV-SNP, TDX, etc.
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk8xx.h b/arch/arm64/boot/dts/r=
+ockchip/rk8xx.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a6fbef71c06493c35b0f36974=
+76167aaafa24f30
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk8xx.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-or-later OR MIT) */
+> +/*
+> + * Device Tree defines for Rockchip RK8xx PMICs
+> + *
+> + * Copyright 2025 Cherry Embedded Solutions GmbH
+> + *
+> + * Author: Quentin Schulz <quentin.schulz@cherry.de>
+> + */
+> +
+> +#ifndef _DT_MFD_ROCKCHIP_RK8XX_H
+> +#define _DT_MFD_ROCKCHIP_RK8XX_H
+> +
+> +/* For use with rockchip,reset-mode property */
+> +#define RK806_RESTART		0
+> +#define RK806_RESET		1
+> +#define RK806_RESET_NOTIFY	2
+> +
+> +#endif
+>=20
+> --=20
+> 2.49.0
+>=20
 
-We haven't resorted to saying "no, sorry, KVM doesn't support that".
+--pu5pnebwd6cicvnp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We shouldn't say that for Arm either.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhUMgUACgkQ2O7X88g7
++praYQ/+OsDoV143cUMLkmfVtsK7nqdpHgi5QYeMWvwzlvie418qaE4536HiU5h6
+HLJmwHAIOErsHPJFhQInCR4mCqhY9kg7BkW99taAjYfUO8kcIsyFeT9YfM2TZBPU
+nI4+15OFD0C4qNeafh6jalgjbhVq1rPB2B8tO3HnU+vYRaJCf5nZm9lwP6zWJKIT
+Dwc0en5+nxQySijc3A+TpSjCcAF+iEsaSwQvsase3UqHQOyfNgu3BvmPRPA7iqh+
+5Z+FkZvutgSwatiDcIECaTP6xe8AC8noY+KLIr5Eoa/dy8ppeGQaCMaDoLMgJ5AF
+u4G79LWzrCmF43LKo2rP+xIVrjxk2/kg+Udqctpy+mQHtNJQ614034lXd2fIMcxZ
+WZEyrKDeGL53qUqZpzSKV7a8RdIGyOFrX7a7QUyENOu5/yy01U1XruBNA5BDE7cx
+eoKDXMtzwpil/3JjkAgLcNV/dqusLpyf5aP3TzjORncngzI0Nwjxvbt5bimf7UVu
+5TDwpt9ZAVlu4KI7W/1DHfgjphAy0+oM44Eb//yIpZI2tcHUw13mVX7nJE1++4pM
+59rh+fs95SbmOAQa9ct3SG1fnzuxgNhhAL1g2SLbXW5OJDDanGFSVt+z54LjnQO4
+82YihEmMJd4Y1oY8aLuTayArlQkftbTi9qZEa3jzipAb0bLU+M0=
+=rZbZ
+-----END PGP SIGNATURE-----
 
---=-8oYh6WC82njjqP/La6PW
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDYxOTE1NTAy
-OVowLwYJKoZIhvcNAQkEMSIEII/fZn4RSpkWjs+K1CouaBN+lFLTetGT/HGblcvfb9w1MGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAZF3UeKEp1fX1
-qb4qMwFxPp240pSrWPJnjtAd+C45wLNgy0rvxM4a/SoZW03xflK6K8Fl2sIaPepLERERF9k/SLN+
-sGKrsSCE0JHDTjq9lRalv1UHVEgnrQe9JaVa/2Jcu33rllcOv0y0v+h8xuhyEY4JoqwCwsfh2RS/
-USZn9vxQnGeHPMJrQf/+avyLlRhzalNkQKst0yavMILRv7dtNS3yZifd0zWKDbka2nLfGRASnDks
-dYRXre7Ya2jJ2HT330wE+IzCUaFxW9jVr9Cs0+ODC5NreKR7ZIfmx+/9nak7UDPY2mcArLtOEjE4
-xr0q0POAiRD76lBIZxaUir34RsV+JesrNyvTOA5Ev0X2uGiSSgcJdESLKwdePjEWbUJL+ypcCHGY
-hr7pzpHQ11iGqk8P3pX2y/kMGk1Q2RTScOpGUB0kZsR3KpH5Dlfwi8e9oikKP4dDYgq86D5lXQlr
-yNT/iOP4fEtLYBDYePqZkgXLuECgWM6R1/91np3XXQKMa0YBiRMsbm4YUcpBQFExMtSyWVLXF7dS
-pdWKfJqV3UFbFsXf7UKtLLcxmnxSaDA69q4aJG+2zoYgTz07rJT2+KKi1DWTIeezUQIVoeegb+Ln
-gxTTxHkByue0WwZXarUb40fMbnMLt3JKR42IXHV74n6fslQNv5kwC9rDvP/Kj/gAAAAAAAA=
-
-
---=-8oYh6WC82njjqP/La6PW--
+--pu5pnebwd6cicvnp--
