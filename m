@@ -1,82 +1,178 @@
-Received: from mta-102a.earthlink-vadesecure.net (mta-102b.earthlink-vadesecure.net [51.81.61.67])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAA61CD3F;
-	Thu, 19 Jun 2025 01:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF841CD3F
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750296118; cv=none; b=FMfaYI8l46/Obq57uR8GEf8KXRmGLcP8nSZlE7XGrFAQZtrFMPDqedeKXC6x8L881EJICRBGBOZrtKkzjJ7E20q0TMDiEGJTSS5udjwOERtCYMjXDWxnAEXX72Y76lVdIvxyrJdjOXr3F6DSYmcbiJmsC4fxcDdmARIjdVvu0OM=
+	t=1750296182; cv=none; b=gn2lp286Mlw20mI7lGG4nwD+VtruDM3fAsy9BCSxe6UntXQ/QHtLPgN9nX62cZNURRaPKx7r8RNo8TzQzx22tnkdSLMd8H0vQjx1uP/b8PTBNQoo1sJ4c7RVNcLFlCmsJ/YpLinKO+zm2Ud+JcqNVe5K5WctgNMps9eJEp9rQUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750296118; c=relaxed/simple;
-	bh=MUo5HN2+4eHRF4vfZmOzGNcpIH8Cpomm1JQPO2fKijo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DHAGewiVjn1TzPX2iw1sJKjfB+x+vnpIaot822oWRWcRBfBv+btqEk/SyTwv1tOoMrdUh8lN0UkMoKeEh9cQa9V1EDcOF3vQXFJWfgmYlEsx+WelNvKq7pseIrczV9p62FMJcvtmKRmCIH4jntiW6JU8/0HcfBjOHEmohLs7qnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onemain.com; spf=pass smtp.mailfrom=onemain.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=gfCJwvUc; arc=none smtp.client-ip=51.81.61.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=onemain.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onemain.com
+	s=arc-20240116; t=1750296182; c=relaxed/simple;
+	bh=1mgzvpG6sKakGwAjQUMT8gPBm4sFDWDBckjO/agSuXk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=spFMiHQ4W/rjxnDci0Y5WwTzw7VOB91PRIiJ/cS4Jlwjb7+K5qo1gss+SaHro/T2J5kaug0yAWRpwTUrj37ol9dMbOxxk0nM/u1jnBB0kF81jU4qmrzybwKKL/mLdE3wnhKT16fzWelX3BG3Gd9E8GNv4GoC97AUxGgE6HLLku8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MlSrfA+S; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="gfCJwvUc"
-Authentication-Results: earthlink-vadesecure.net;
- auth=pass smtp.auth=svnelson@teleport.com smtp.mailfrom=sln@onemain.com;
-DKIM-Signature: v=1; a=rsa-sha256; bh=7zg+LvQChxQon/g4lI6tNsUEpvSR500gVyAdwM
- 5WaKU=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:
- list-subscribe:list-post:list-owner:list-archive; q=dns/txt;
- s=dk12062016; t=1750295183; x=1750899983; b=gfCJwvUcqLLM38NLBeyPWE/2Q+g
- QMPpcUYDwDFAD0vfwst+6+hVhEeBFTXTQD9q0HhvA0ceE/gYk9ZP5QItV1ZmscWFN+Qo1od
- dVL0N7ufgUqbwGt4qZEwl4tBERL1qjTfgDeD33cP+h6bpBeh3jzUq5tcDalCKnqdUipbgrf
- VdX79RjWTteXqmnJD3h9uzMkPJsCl48cJH3JGuIzlieNv7k7lvaQ+ezdg1Z0jAR8//2EvWR
- rrAH7m5i4ERhqqkWyc1RJJQpsVIHtanvnCF2cvrKwBiAfwhwRS1/lnYxAp6pXbeFdRYlZco
- /1iegGoYPflHH048LtVIm2Z0x69W3TQ==
-Received: from poptart.. ([50.47.159.51])
- by vsel1nmtao02p.internal.vadesecure.com with ngmta
- id 91a5f48a-184a4c317d2edef3; Thu, 19 Jun 2025 01:06:23 +0000
-From: Shannon Nelson <sln@onemain.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shannon Nelson <sln@onemain.com>
-Subject: [PATCH net] mailmap: Update shannon.nelson emails
-Date: Wed, 18 Jun 2025 18:06:03 -0700
-Message-Id: <20250619010603.1173141-1-sln@onemain.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MlSrfA+S"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313fb0ec33bso185332a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750296180; x=1750900980; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IB1pXwG+o7bC4LkvgA8w7LAYlqk0B9GUuwyv4RmtU4=;
+        b=MlSrfA+SMZ0LIBGoAZtoy0l0wkTNUm1mpvyWT5Jw+yqnYOqX5SUDIz164UhfBMWSVP
+         rjE0sK/w4PqkRVOKt2ScmCDJH9FxIQVJoLfKwl5Rc26ewR40ddo8Yah+iWk8fhra9qgc
+         oMa+FrrOG3x9WAS3FQTmRGFKbKLHVCs9KyoWLHW7IKU8jFZNx9rb7fSouDHVZcQaG8eV
+         w4BsloAoRi3BF7fWeGuZ93d5uMBEvxs9cRmBzXb/HK8TZwDL7sA6bao/Zvor4FlH92XZ
+         hjNvLXboVcF2gLighZJc1Rrq6cB+hEt4qs5GeWTt9vU/TlIqOqZ4/9Z64kdKIkpAHk5J
+         qArQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750296180; x=1750900980;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IB1pXwG+o7bC4LkvgA8w7LAYlqk0B9GUuwyv4RmtU4=;
+        b=HYRwEPpg2xpNWyuDRsO/65mMwxSLxsEDwXnV7KtqzohBCzO3htdjaMS+Mg3U9WqJ6l
+         MyV44564iuKvq+IAch1fzEhwPkmIiFNFTOIeeqfSqKtT5o7gm2ElpRO2fKmF5BMgUv/r
+         RTRBZ6/7e8bqp74hsHBLULUVZl21x2NwXFnOhtV+nrRBXL8d4NxMtbT6sdbLOE/tnLS/
+         qjwLxDn7IVrzZwhH5UEmP5/wwG49p+9UWjNbVjp6G9jazmKRnNh1tSB6iJG4SxtlSdOF
+         yCaI5yyoJZJJmqE7PF7vB8gdlLCxO8mUVuGURjgF4EYxaI5KnzuIC3bc/Gy9l8hfqttU
+         Wp3A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/DZ2SEIIjaULIEIszXpWimxAvxBKEPyuPkLw6jK2GarZ7lgN/tTP+Xde06nNLTJUU81cZl1CWGG5v7AI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqO/LasRu5Yi2Ymn2Q+5V4eyEuqJ5LVoVD311PHYrelZXPQjEe
+	fm6wITn5sLmULDDD7NgFSrP/HIU/+XSYXVo9/7KukrOId0vH/kxPU50CL4BMb8Ar0FE8ZnQFLUg
+	yirOZAA==
+X-Google-Smtp-Source: AGHT+IGdcvQAVVSk4fM09uW8oDEjJdJY7dpl9V3Y4AvXuJ+N0Avyh7SwiUaAWue2o5CoAmxFjj275F4p3uY=
+X-Received: from pjbsz14.prod.google.com ([2002:a17:90b:2d4e:b0:313:1c10:3595])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:254e:b0:311:e8cc:4256
+ with SMTP id 98e67ed59e1d1-313f1d644b8mr24662451a91.22.1750296180025; Wed, 18
+ Jun 2025 18:23:00 -0700 (PDT)
+Date: Wed, 18 Jun 2025 18:22:58 -0700
+In-Reply-To: <aFNIPXoEb5iCjt_L@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250618042424.330664-1-jthoughton@google.com>
+ <20250618042424.330664-4-jthoughton@google.com> <aFMaxi5LDr4HHbMR@linux.dev>
+ <aFMl6DOcKfH6ampb@google.com> <aFNIPXoEb5iCjt_L@linux.dev>
+Message-ID: <aFNmci0s1_P845XZ@google.com>
+Subject: Re: [PATCH v3 03/15] KVM: arm64: x86: Require "struct kvm_page_fault"
+ for memory fault exits
+From: Sean Christopherson <seanjc@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: James Houghton <jthoughton@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-Retiring, so redirect things to a non-corporate account.
+On Wed, Jun 18, 2025, Oliver Upton wrote:
+> On Wed, Jun 18, 2025 at 01:47:36PM -0700, Sean Christopherson wrote:
+> > On Wed, Jun 18, 2025, Oliver Upton wrote:
+> > > What I would like to see on arm64 is that for every "KVM_EXIT_MEMORY_FAULT"
+> > > we provide as much syndrome information as possible. That could imply
+> > > some combination of a sanitised view of ESR_EL2 and, where it is
+> > > unambiguous, common fault flags that have shared definitions with x86.
+> > 
+> > Me confused, this is what the above does?  "struct kvm_page_fault" is arch
+> > specific, e.g. x86 has a whole pile of stuff in there beyond gfn, exec, write,
+> > is_private, and slot.
+> 
+> Right, but now I need to remember that some of the hardware syndrome
+> (exec, write) is handled in the arch-neutral code and the rest belongs
+> to the arch.
 
-Signed-off-by: Shannon Nelson <sln@onemain.com>
----
- .mailmap | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Yeah, can't argue there.
 
-diff --git a/.mailmap b/.mailmap
-index b77cd34cf852..7a3ffabb3434 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -691,9 +691,10 @@ Serge Hallyn <sergeh@kernel.org> <serge.hallyn@canonical.com>
- Serge Hallyn <sergeh@kernel.org> <serue@us.ibm.com>
- Seth Forshee <sforshee@kernel.org> <seth.forshee@canonical.com>
- Shakeel Butt <shakeel.butt@linux.dev> <shakeelb@google.com>
--Shannon Nelson <shannon.nelson@amd.com> <snelson@pensando.io>
--Shannon Nelson <shannon.nelson@amd.com> <shannon.nelson@intel.com>
--Shannon Nelson <shannon.nelson@amd.com> <shannon.nelson@oracle.com>
-+Shannon Nelson <sln@onemain.com> <shannon.nelson@amd.com>
-+Shannon Nelson <sln@onemain.com> <snelson@pensando.io>
-+Shannon Nelson <sln@onemain.com> <shannon.nelson@intel.com>
-+Shannon Nelson <sln@onemain.com> <shannon.nelson@oracle.com>
- Sharath Chandra Vurukala <quic_sharathv@quicinc.com> <sharathv@codeaurora.org>
- Shiraz Hashim <shiraz.linux.kernel@gmail.com> <shiraz.hashim@st.com>
- Shuah Khan <shuah@kernel.org> <shuahkhan@gmail.com>
--- 
-2.34.1
+> > The approach is non-standard, but I think my justification/reasoning for having
+> > the structure be arch-defined still holds:
+> > 
+> >  : Rather than define a common kvm_page_fault and kvm_arch_page_fault child,
+> >  : simply assert that the handful of required fields are provided by the
+> >  : arch-defined structure.  Unlike vCPU and VMs, the number of common fields
+> >  : is expected to be small, and letting arch code fully define the structure
+> >  : allows for maximum flexibility with respect to const, layout, etc.
+> > 
+> > If we could use anonymous struct field, i.e. could embed a kvm_arch_page_fault
+> > without having to bounce through an "arch" field, I would vote for the approach.
+> > Sadly, AFAIK, we can't yet use those in the kernel.
+> 
+> The general impression is that this is an unnecessary amount of complexity
+> for doing something trivial (computing flags).
 
+It looks pretty though!
+
+> > Nothing prevents arm64 (or any arch) from wrapping kvm_prepare_memory_fault_exit()
+> > and/or taking action after it's invoked.  That's not an accident; the "prepare
+> > exit" helpers (x86 has a few more) were specifically designed to not be used as
+> > the "return" to userspace.  E.g. this one returns "void" instead of -EFAULT
+> > specifically so that the callers isn't "required" to ignore the return if the
+> > caller wants to populate (or change, but hopefully that's never the case) fields
+> > after calling kvm_prepare_memory_fault_exit), and so that arch can return an
+> > entirely different error code, e.g. -EHWPOISON when appropriate.
+> 
+> IMO, this does not achieve the desired layering / ownership of memory
+> fault triage. This would be better organized as the arch code computing
+> all of the flags relating to the hardware syndrome (even boring ones
+> like RWX) 
+
+Just to make sure I'm not misinterpreting things, by "computing all of the flags",
+you mean computing KVM_MEMORY_EXIT_FLAG_xxx flags that are derived from hardware
+state, correct?
+
+> and arch-neutral code potentially lending a hand with the software bits.
+>
+> With this I either need to genericize the horrors of the Arm
+> architecture in the common thing or keep track of what parts of the
+> hardware flags are owned by arch v. non-arch. SW v. HW fault context is
+> a cleaner split, IMO.
+
+The problem I'm struggling with is where to draw the line.  If we leave hardware
+state to arch code, then we're not left with much.  Hmm, but it really is just
+the gfn/gpa that's needed in common code to avoid true ugliness.  The size is
+technically arch specific, but the reported size is effectively a placeholder,
+i.e. it's always PAGE_SIZE, and probably always will be PAGE_SIZE, but we wanted
+to give ourselves an out if necessary.
+
+Would you be ok having common code fill gpa and size?  If so, then we can do this:
+
+--
+void kvm_arch_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+					struct kvm_page_fault *fault);
+
+static inline void kvm_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+						 struct kvm_page_fault *fault)
+{
+	KVM_ASSERT_TYPE_IS(gfn_t, fault->gfn);
+
+	vcpu->run->exit_reason = KVM_EXIT_MEMORY_FAULT;
+	vcpu->run->memory_fault.gpa = fault->gfn << PAGE_SHIFT;
+	vcpu->run->memory_fault.size = PAGE_SIZE;
+
+	vcpu->run->memory_fault.flags = 0;
+	kvm_arch_prepare_memory_fault_exit(vcpu, fault);
+}
+--
+
+where arm64's arch hook is empty, and x86's is:
+
+--
+static inline void kvm_arch_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+						      struct kvm_page_fault *fault)
+{
+	if (fault->is_private)
+		vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_PRIVATE;
+}
+--
+
+It's not perfect, but it should be much easier to describe the contract, and
+common code can still pass around a kvm_page_fault structure instead of a horde
+of booleans.
