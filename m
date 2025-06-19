@@ -1,175 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E023085DB;
-	Thu, 19 Jun 2025 15:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E533085DB;
+	Thu, 19 Jun 2025 15:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346901; cv=none; b=lAVDOS7/lcSUPqoZbHHgIueyFRYRSpTZycSgTi2ZbjExpjYo0FQVgDhuEEpHKj35pwQ+MpYA9V1uY3Nrx7Zj/ROJms1vikHVP/WDF11Gny5sBWxZ8gTne+ru9AIOLGKUAMkUr/N9mEN6jo8a2h4jUyQvmigy0u9DF//ETqqo0us=
+	t=1750346943; cv=none; b=cN8fZz9uWBQ75euD0yZgDfVglX17ZuaWgjV3faKiZR6iP/KfKzs3fOXOvhOa6SfCiPjUnXkWa8IixP20GUcme/KQ1qmr0T4QRohrDDJAj6+7fGwo18CPaas0L1C2K2mBhwncdn7ygoWBoqQPLjKJSVFAY0fnvX3B/cl3ueXG+a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346901; c=relaxed/simple;
-	bh=nkBVuy8yaSRVyY7240jNJJUyi5FunCZ+peQkhFA/csM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpPcsarb3ZkS2yenQdTwbl1sEcdDb4b+XBqz1xBN/b9HH1ecVWsUXObt/nAMPCJI27vFQq8QlLA4tsiX5rGMimzK+60E57ghnXSnn8cqpBT9DCEQJ5r2Q+ZFeI9DjUNUERc50po21EpIf3IWOTvtVZGqZsTNniRIfAcM80L0Bw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtEyfa2K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750346943; c=relaxed/simple;
+	bh=uLayjOda+JdH9N+Ha4k+1m0ww499qXcNEPzCrwKzI28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AqWcx0iPhLUdzBvKZjOYYyik3m9m3hx/fX+8Kg1FFLo/VWD0Z8d5gNrEnDVuD4EELGwsh1gIQuPbpX+6jDo0O9TTp7hPIVnucEz8q9tvK9VzadP1gYx3UiZWxYSKS4WSvfBmBEXId58j/fM6VGUOsMvmOZhDDU6vQ451czKEOy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRVD7+UN; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtEyfa2K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFBC4CEEA;
-	Thu, 19 Jun 2025 15:28:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750346901;
-	bh=nkBVuy8yaSRVyY7240jNJJUyi5FunCZ+peQkhFA/csM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UtEyfa2K8XZUovYXxPzSvi1B6sGFrKKf5w0404gJgSUfaiqDcwouKi3F5OY2vJRwH
-	 tEgizBKEFsPK6NAhMu9Y/vxnEiUcvIgudryHoLidQKCNtyMfMFsbJ2KRPgMJellZkA
-	 DvsqCB6tYVkm6bWc8YNG5fVkPRo/+2b0M2llnbJmkeyb8A8BZalVR1qZTL0MUwtMjE
-	 fUbvdqYyJCLosgCmBnjTwqMXDbtNCghKERGQ0pxjoJRXMrAY/Q926eA1djUl3KWfyo
-	 xa2Jztnw1w/aJ8IC1u3MaO2fGMLXMAcNndfCWf8NMyngNoWUdvkQjvLl/VzhJRKUUr
-	 tkiEIDhWMvGcg==
-Date: Thu, 19 Jun 2025 16:28:14 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250619152814.GK795775@google.com>
-References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
- <20250604041418.1188792-2-tmyu0@nuvoton.com>
- <20250612140041.GF381401@google.com>
- <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
- <20250612152313.GP381401@google.com>
- <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
- <20250613131133.GR381401@google.com>
- <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com>
- <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRVD7+UN"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4531898b208so429855e9.3;
+        Thu, 19 Jun 2025 08:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750346940; x=1750951740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/slM1VLvNtE9LZ3cjdrqxy5oIQVtpGyicT5X+Hl0SkA=;
+        b=DRVD7+UNUpwMap16LUg9XW07mosd0YyPjGdSrT0ug3YtjHPJyYq/3R61p/qX4f657S
+         gj5koOZCI/ej0IGpF6Ovp6oNALrrZ70NkPcplq37jHAj8SFsfRRYp/pL6ckoDLwD9TYZ
+         cvEuDMVcWUxJRDwbSMHY7j9Ut8U4ebhmcFZowM/NP0gcIVYykESfvgYNU4PpBXZMhZvZ
+         dTM4LlQRHUPa7ZHYSjVyM+HWnIzOZW9x3eMyFxaDfZCFOl5BFIYZzGVKDzkxRGmKZqsi
+         cHE8CyYDZOQto75OTHK72AThbnj5Jo8qKrDVhs+vuqI6M2e5mWE4Uhr36TRct+D6aUPs
+         iILQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750346940; x=1750951740;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/slM1VLvNtE9LZ3cjdrqxy5oIQVtpGyicT5X+Hl0SkA=;
+        b=FFnYOW/ft5hffr6P2UKO58NlQK5fVAyff+kc5SLKYIAkmRvJ91fVuay6dDdcUOf8Md
+         rsbKX5mmO0v2BujxT7EzV4JnhPQpfxKVXJRMIEjeHLVxu97CHwDNN4I2sEJzch0Yb7hW
+         3dv5qaEKluyjWn5qrgay59ezXFx5QbVf8RnHyVKDJoAlO6lQ+kUo030MSdLRgXmriRlN
+         mMBOfLofMwUSwzY6tPcv+MZ78XLSDn6OosEb839HjeoCztqjL90Ig8jMcKcqfhkpv1C4
+         9RRtB6WJFp6ncoxOjyrDalSOJIhfwT8ja9tPtRO47Dnl/mAj2xLWJWiS2qYttqWTaPrl
+         jTxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBGZpyumlqE4Ggi/mrJAZOvsZAnvUgv4ReZ388NMsU7YKPywx1m51pYAeJzAFcbLrv/QrcNs2ZStQcoYWR@vger.kernel.org, AJvYcCVE54WeD27R/AQaCboLKqWxJQw/ffV40cYtjib8A6LpAQl/nnZtjInAgnJRtG3Ft4cYwDXPDYGsSbk5ZTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySLw2V6kpgFff1+gb03QcmM/eiVxIZ320BBlMTEMoONdJcBCDP
+	9xf8LkKeQNIK9uag+JmAEuSbXQET4OCqZ0N6m/jZQy9GxJuK+M5az96/
+X-Gm-Gg: ASbGnct8bLU4l4XjBkSY+Ne31jLySiKB8jIHaqbc/1sDQo+llmIBLgaZbnSVpvT9xQo
+	YPaTmABtgBpxQJ3eMM+IwFwld4IFaxTZZ9gioNAP0T+9f0Ykb+wnN54hvqxiWIzssSGwF2+xh2y
+	EWfRjFLsbDqBXUO/0bKEhun1zGMGTvO8yvnAE5mzWoqfbG+TZcvodyfzBBfQRtAysao96Mt9wN0
+	lxI7cPZIddq0JkcjVncN0IGzO5ttowaLZFBCiRGSL10YBRbPuOt+VqqKXlwXRk5JBq0uZgc8Nnr
+	fuEpN08C13rCm0qDKzGtHZsd8DTz09qXJTqjIF3/rn4efxuNdXznFQF6R/0yXk+KnPimNgAbPM2
+	cKmTP9FoX6FSLjs59s7abyyqCZvMVS/p3hRkA6/lZlMdzzMZOipw6gy85HXGDOBkdFFUA1yHf1g
+	9MHsitc+zoKQ==
+X-Google-Smtp-Source: AGHT+IG15dfCwnBTt8OxmT/F7NrdFhJDq2Qr5JR3JFgsAm9i8HN8pMww9BrOgXeQHVTDDa2ETMnlCA==
+X-Received: by 2002:a05:600c:45c8:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-4535f9c1880mr12381255e9.3.1750346939483;
+        Thu, 19 Jun 2025 08:28:59 -0700 (PDT)
+Received: from thomas-precision3591.home (2a01cb00014ec300e6d7f532784aebda.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:e6d7:f532:784a:ebda])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4535e98b48asm32633925e9.16.2025.06.19.08.28.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 08:28:59 -0700 (PDT)
+From: fourier.thomas@gmail.com
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: inside-secure: Fix `dma_unmap_sg()` nents value
+Date: Thu, 19 Jun 2025 17:28:36 +0200
+Message-ID: <20250619152838.349584-1-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
 
-On Thu, 19 Jun 2025, Ming Yu wrote:
+From: Thomas Fourier <fourier.thomas@gmail.com>
 
-> Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
-> >
-> > On Fri, 13 Jun 2025, Ming Yu wrote:
-> >
-> > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
-> > > >
-> > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > >
-> > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
-> > > > > >
-> > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
-> > > > > >
-> > > > > > > Dear Lee,
-> > > > > > >
-> > > > > > > Thank you for reviewing,
-> > > > > > >
-> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
-> > > > > > > >
-> > > > > > > ...
-> > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > > > > > > > > +
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
-> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
-> > > > > > > >
-> > > > > > > > Why have we gone back to this silly numbering scheme?
-> > > > > > > >
-> > > > > > > > What happened to using IDA in the child driver?
-> > > > > > > >
-> > > > > > >
-> > > > > > > In a previous version, I tried to maintain a static IDA in each
-> > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
-> > > > > > > devices are bound to the same driver — in that case, the IDs are not
-> > > > > > > fixed and become unusable for my purpose.
-> > > > > >
-> > > > > > Not sure I understand.
-> > > > > >
-> > > > >
-> > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
-> > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
-> > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
-> > > > > However, when a second NCT6694 device is connected to the system, it
-> > > > > will receive IDs 16~31.
-> > > > > Because of this behavior, I switched back to using platform_device->id.
-> > > >
-> > > > Each of the devices will probe once.
-> > > >
-> > > > The first one will be given 0, the second will be given 1, etc.
-> > > >
-> > > > Why would you give multiple IDs to a single device bound to a driver?
-> > > >
-> > >
-> > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
-> > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
-> > > is independently addressable, has its own register region, and can
-> > > operate in isolation. The IDs are used to distinguish between these
-> > > instances.
-> > > For example, the GPIO driver will be probed 16 times, allocating 16
-> > > separate gpio_chip instances to control 8 GPIO lines each.
-> > >
-> > > If another device binds to this driver, it is expected to expose
-> > > peripherals with the same structure and behavior.
-> >
-> > I still don't see why having a per-device IDA wouldn't render each
-> > probed device with its own ID.  Just as you have above.
-> >
-> 
-> For example, when the MFD driver and the I2C sub-driver are loaded,
-> connecting the first NCT6694 USB device to the system results in 6
-> nct6694-i2c platform devices being created and bound to the
-> i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
-> 
-> However, when a second NCT6694 USB device is connected, its
-> corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
-> instead of 0 through 5 as I originally expected.
-> 
-> If I've misunderstood something, please feel free to correct me. Thank you!
+The `dma_unmap_sg()` functions should be called with the same nents as the
+`dma_map_sg()`, not the value the map function returned.
 
-In the code above you register 6 I2C devices.  Each device will be
-assigned a platform ID 0 through 5. The .probe() function in the I2C
-driver will be executed 6 times.  In each of those calls to .probe(),
-instead of pre-allocating a contiguous assignment of IDs here, you
-should be able to use IDA in .probe() to allocate those same device IDs
-0 through 5.
+Fixes: c957f8b3e2e5 ("crypto: inside-secure - avoid unmapping DMA memory that was not mapped")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/crypto/inside-secure/safexcel_hash.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-What am I missing here?
-
+diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
+index d2b632193beb..1ef1ccfaaa95 100644
+--- a/drivers/crypto/inside-secure/safexcel_hash.c
++++ b/drivers/crypto/inside-secure/safexcel_hash.c
+@@ -249,7 +249,10 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv,
+ 	safexcel_complete(priv, ring);
+ 
+ 	if (sreq->nents) {
+-		dma_unmap_sg(priv->dev, areq->src, sreq->nents, DMA_TO_DEVICE);
++		dma_unmap_sg(priv->dev,
++			     areq->src,
++			     sg_nents_for_len(areq->src, areq->nbytes),
++			     DMA_TO_DEVICE);
+ 		sreq->nents = 0;
+ 	}
+ 
+@@ -497,7 +500,10 @@ static int safexcel_ahash_send_req(struct crypto_async_request *async, int ring,
+ 			 DMA_FROM_DEVICE);
+ unmap_sg:
+ 	if (req->nents) {
+-		dma_unmap_sg(priv->dev, areq->src, req->nents, DMA_TO_DEVICE);
++		dma_unmap_sg(priv->dev,
++			     areq->src,
++			     sg_nents_for_len(areq->src, areq->nbytes),
++			     DMA_TO_DEVICE);
+ 		req->nents = 0;
+ 	}
+ cdesc_rollback:
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
