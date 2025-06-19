@@ -1,157 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E2825D549;
-	Thu, 19 Jun 2025 08:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C63200127;
+	Thu, 19 Jun 2025 08:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323361; cv=none; b=jpvVQa36m73X6ttdAygDSK9MyuABNQWLlGSw1A8SPGqq1S9i7iA72rC5CtNSX/QfnUhGYBm54BHKX+l/txjkch8d8ydKvBpVCV5hR5uudRJJ5UwLabG/xvQ6W+Dj9CIPORQdAiRrPwox3BdVZ9HowhOSImqcrpGlVMgwoAgR1s0=
+	t=1750323428; cv=none; b=ehOvxqHLr4S9q2KcJuSpYwsarzD0jYoYbtyOLmzgbpFF+p8lyjYQMPW8TLWGfuk8cSYlYB+3nCHsSRVXXIItSXcdTfJ6ZaP5BBYt3jt24jKvkxIi4vViPdVmLkFsgqH3+bGyBCK3CujGAWK4A/RVLeF5r+BtiVp8iWlVlJsiVU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323361; c=relaxed/simple;
-	bh=GY39qewCO8ZjeGeZxUohtkWS54SrNUfyybjbm7an5Kw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eqnBAczf8osqgsPn2gKeN69wArhh2/+PZ1oQQxjivitUnqx9BszsRQu8FD+z2DvRQn6WbuOT+1HmZgCWRQMUBbJ+s/reZkEAVEGKqi95s8wk94H3876qqo8tUayQQ4kNlvLP3j+lc0COe3Lm7IE2AeM41t2NiSn2rNgs9GHUUTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiG8+DpI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiG8+DpI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A744C4CEEA;
-	Thu, 19 Jun 2025 08:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750323361;
-	bh=GY39qewCO8ZjeGeZxUohtkWS54SrNUfyybjbm7an5Kw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BiG8+DpI8qK/7ehh9mHlWcIBDcd2aW6L5zsdQwFfDHxAQzkw3wpYWGPQ6B8QAPH9D
-	 y3g3vBeuapW2jbg7F3C0+1XUsLnDTo/NVZBstotfSykAdmedcEkBtU7uK0/NAe+wSt
-	 Kc+Lun055qORQz7b1mmMomPpcYDq76KH/YewkrSM0s4AR/fntnE2c+ZQiv3ylk6uFy
-	 YMe89/7ZUy5WBvyLmptPtHixT5axCELqsF3d08SoPQsMs39mRobfTX8/5lFJkTd5Ag
-	 2mulMGlFaIN9bMOa0eo2qBME6/JU5n//r22rEhdAHA56YcfKfLRjdPIb6YPhoPnwm1
-	 xxs6mMfeLDs3A==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso846001a12.1;
-        Thu, 19 Jun 2025 01:56:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHCkYMNw1BRTfnipAKau+57hCg6VfNnm33RULilbHOelSimGu7C9uEGZUW2F0Eig/ZlLAQWRqoKCI=@vger.kernel.org, AJvYcCUYHQlwDv8Nw267gHoMyU7XzCZhrLMQzn2w/rbH8ds2fDjD5Pg0r8zhJVp+qANqGJKqtfuT0yrDhLyOW+Fz@vger.kernel.org, AJvYcCUhtcaV4+1E5jIngF99oZe9W29MGgHZoXmUhueWcLZ1ZJF75rni+ODJrcJ3KGZcSXJpmbmc9aQQFYLHtF6CEaRH@vger.kernel.org, AJvYcCV87h/6ovZXIboDRd1TZGf7nsv2rvalW35DkYiOnJX1ExUtp89Ks28GnBoVf5JRM/5ZG7Gs9VuNiqva@vger.kernel.org, AJvYcCVpqGrCnN/Ti5ysP1DaXikAUo0fh4ZDjMhj92i1QKnT/fbTrHo/3jIwg9dVyUuzGH9LHMRqcf9WY9udF09gjLsn@vger.kernel.org, AJvYcCVveexRyt7YB4FS4dPVQBYx+13Q7Y/NXwxofIhpfCWkK9zPdDCkSPyI+VSaa8wDeRlhAYiWpq4TvRnaKw==@vger.kernel.org, AJvYcCWIJtizXqVvcHCLgTkPfLGLYrNsCghzr8Bw9/P/WuMYoYLLdu1XbSUkFx1h7cirlFB4eZ5Q81j9NVpOHdfc3L1J+AeFsDCi@vger.kernel.org, AJvYcCXVK4NWJfsCLMaDacHwC5WyphIGb+/LH3IW+23ZmVzPhFaTneUrchaHKSPRG2OCSKuVQ7065Wfoodf71XJd@vger.kernel.org, AJvYcCXkwwwKsfiJaidb2cWHNVl4pV/FAyLTI+QymCdkzLzDJi2sG7WpbJUpFVPRVtOzU2ay6wr4KJGPq0+IXg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvWPy9Wk0XYWzxt5k5naeASDm6On/ZbhdW+OkvGHt/iSB7Az9o
-	0xu+ZuaByB6Y65eZ4CiyNH15EcM3SmWkIjJyDxjlUwbN7lzcL7dqtoV078TkRBD0nuqPhUe815o
-	ksPFrkWRk4H5O7hUGvFw0iBi/nw7yfNA=
-X-Google-Smtp-Source: AGHT+IHshgFBjrE/bznWO4e6lyy0nq5bnj0JFcjbPNAIZZpdv6svyHpe5+Z0ZAFZ4cpQ+FvgAbwAckAC6VQE1xAS01s=
-X-Received: by 2002:a05:6402:26cc:b0:607:16b1:7489 with SMTP id
- 4fb4d7f45d1cf-608d094801bmr19223662a12.20.1750323359751; Thu, 19 Jun 2025
- 01:55:59 -0700 (PDT)
+	s=arc-20240116; t=1750323428; c=relaxed/simple;
+	bh=gfcuIFYhCl06aO8xfJLg9ceocBYaD3OMpX+RmyKMhbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S05D0BzL1s1FifKtCBs6qgCkcUcEPJ8EMDZlzoO1+Fwv6cmO2yu1rdJDbhbiObJSTCW5c1Uj0yIbX/ztC+Qlo99N6+Nw5xAKXeRNrvAn1HI2RGVERCoq1w8MWMsS+8dlIZTBzyMrqdNeZFdzddYh8zsLwmEsO6pwTw2vZ1R9lDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 67F33806F6;
+	Thu, 19 Jun 2025 08:57:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 21AFF20035;
+	Thu, 19 Jun 2025 08:56:55 +0000 (UTC)
+Date: Thu, 19 Jun 2025 04:56:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250619045659.390cc014@batman.local.home>
+In-Reply-To: <20250619075008.GU1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+	<20250618150915.3e811f4b@gandalf.local.home>
+	<20250619075008.GU1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-10-kees@kernel.org>
-In-Reply-To: <20250523043935.2009972-10-kees@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 16:55:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4WxAwXTYVFOnphgHN80-_6jt77YZ_rw-sOBoBjjiN-yQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvInY5DbmRkbwxLo6Cb2clGLakUsQ51xQCaa7Coc4b_DkkyTMX5tkJkYVA
-Message-ID: <CAAhV-H4WxAwXTYVFOnphgHN80-_6jt77YZ_rw-sOBoBjjiN-yQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/14] loongarch: Handle KCOV __init vs inline mismatches
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tianyang Zhang <zhangtianyang@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 21AFF20035
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: 93qcbrc46ffetio7ugxpb7t8s9ocaspu
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/GSAyh9tSEN32gmKXjkVBA2dq3LBhuMTE=
+X-HE-Tag: 1750323415-985225
+X-HE-Meta: U2FsdGVkX19A2hskoL8tdAMlOvZDhLq1M9SkWRs+0wMFWomrgmfltfYaVBcVlfQwH13aERtTBd3Fbj+tqCDV2m9xFzg9kq5USczg8q6SOMZakeTeqtDqgQkZh+5kY6TvsQQYSN9mJv7cvQUOxEfw8R1pB/DqKR2LX4FFY3N3fVWEF+tGP05OHIRCM4/U17AHDlMii6JAc+x4pxiWbAkSGMuUh7J0N+6n6/k4Gt4Iu6t1Vi0vuVd13va6FtFw1Tg9IFkw7k6EDX1jpFGSXZMxUaKsbv7pST+ZXpXzWgIXlPsjRW/90g6oeobsguhCs6oiGWUADYYbReh3Kh3TiOdC6Zyv2YfyWcu1or2bh6b7a2Ft+DZP4rDg0yCUPzW7udCU
 
-Hi, Kees,
+On Thu, 19 Jun 2025 09:50:08 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Fri, May 23, 2025 at 12:39=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> When KCOV is enabled all functions get instrumented, unless
-> the __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved. For
-> loongarch this exposed several places where __init annotations were
-> missing but ended up being "accidentally correct". Fix these cases and
-> force one function to be inline with __always_inline.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Cc: <loongarch@lists.linux.dev>
-> ---
->  arch/loongarch/include/asm/smp.h | 2 +-
->  arch/loongarch/kernel/time.c     | 2 +-
->  arch/loongarch/mm/ioremap.c      | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
-m/smp.h
-> index ad0bd234a0f1..88e19d8a11f4 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -39,7 +39,7 @@ int loongson_cpu_disable(void);
->  void loongson_cpu_die(unsigned int cpu);
->  #endif
->
-> -static inline void plat_smp_setup(void)
-> +static __always_inline void plat_smp_setup(void)
-Similar to x86 and arm, I prefer to mark it as __init rather than
-__always_inline.
+> On Wed, Jun 18, 2025 at 03:09:15PM -0400, Steven Rostedt wrote:
+> > On Wed, 18 Jun 2025 20:46:20 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> >   
+> > > > +struct unwind_work;
+> > > > +
+> > > > +typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 timestamp);
+> > > > +
+> > > > +struct unwind_work {
+> > > > +	struct list_head		list;    
+> > > 
+> > > Does this really need to be a list? Single linked list like
+> > > callback_head not good enough?  
+> > 
+> > Doesn't a list head make it easier to remove without having to iterate the
+> > list?  
+> 
+> Yeah, but why would you ever want to remove it? You asked for an unwind,
+> you get an unwind, no?
 
-Huacai
+No, it's not unique per tracing infrastructure, but tracing instance.
+That is, per perf program, or per tracing instance. It needs to be
+removed.
 
->  {
->         loongson_smp_setup();
->  }
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index bc75a3a69fc8..367906b10f81 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -102,7 +102,7 @@ static int constant_timer_next_event(unsigned long de=
-lta, struct clock_event_dev
->         return 0;
->  }
->
-> -static unsigned long __init get_loops_per_jiffy(void)
-> +static unsigned long get_loops_per_jiffy(void)
->  {
->         unsigned long lpj =3D (unsigned long)const_clock_freq;
->
-> diff --git a/arch/loongarch/mm/ioremap.c b/arch/loongarch/mm/ioremap.c
-> index 70ca73019811..df949a3d0f34 100644
-> --- a/arch/loongarch/mm/ioremap.c
-> +++ b/arch/loongarch/mm/ioremap.c
-> @@ -16,12 +16,12 @@ void __init early_iounmap(void __iomem *addr, unsigne=
-d long size)
->
->  }
->
-> -void *early_memremap_ro(resource_size_t phys_addr, unsigned long size)
-> +void * __init early_memremap_ro(resource_size_t phys_addr, unsigned long=
- size)
->  {
->         return early_memremap(phys_addr, size);
->  }
->
-> -void *early_memremap_prot(resource_size_t phys_addr, unsigned long size,
-> +void * __init early_memremap_prot(resource_size_t phys_addr, unsigned lo=
-ng size,
->                     unsigned long prot_val)
->  {
->         return early_memremap(phys_addr, size);
-> --
-> 2.34.1
->
+> 
+> > > >  static __always_inline void unwind_exit_to_user_mode(void)
+> > > >  {
+> > > >  	if (unlikely(current->unwind_info.cache))
+> > > >  		current->unwind_info.cache->nr_entries = 0;
+> > > > +	current->unwind_info.timestamp = 0;    
+> > > 
+> > > Surely clearing that timestamp is only relevant when there is a cache
+> > > around? Better to not add this unconditional write to the exit path.  
+> > 
+> > That's actually not quite true. If the allocation fails, we still want to
+> > clear the timestamp. But later patches add more data to check and it does
+> > exit out if there's been no requests:  
+> 
+> Well, you could put in an error value on alloc fail or somesuch. Then
+> its non-zero.
+
+OK.
+
+> 
+> > But for better reviewing, I could add a comment in this patch that states
+> > that this will eventually exit out early when it does more work.  
+> 
+> You're making this really hard to review, why not do it right from the
+> get-go?
+
+Because the value that is to be checked isn't here yet.
+
+> 
+> > > > +/* Guards adding to and reading the list of callbacks */
+> > > > +static DEFINE_MUTEX(callback_mutex);
+> > > > +static LIST_HEAD(callbacks);    
+> > > 
+> > > Global state.. smells like failure.  
+> > 
+> > Yes, the unwind infrastructure is global, as it is the way tasks know what
+> > tracer's callbacks to call.  
+> 
+> Well, that's apparently how you've set it up. I don't immediately see
+> this has to be like this.
+> 
+> And there's no comments no nothing.
+> 
+> I don't see why you can't have something like:
+> 
+> struct unwind_work {
+> 	struct callback_head task_work;
+> 	void *data;
+> 	void (*func)(struct unwind_work *work, void *data);
+> };
+> 
+> void unwind_task_work_func(struct callback_head *task_work)
+> {
+> 	struct unwind_work *uw = container_of(task_work, struct unwind_work, task_work);
+> 
+> 	// do actual unwind
+> 
+> 	uw->func(uw, uw->data);
+> }
+> 
+> or something along those lines. No global state involved.
+
+We have a many to many relationship here where a task_work doesn't work.
+
+That is, you can have a tracer that expects callbacks from several
+tasks at the same time, as well as some of those tasks expect to send a
+callback to different tracers.
+
+Later patches add a bitmask to every task that gets set to know which
+trace to use.
+
+Since the number of tracers that can be called back is fixed to the
+number of bits in long (for the bitmask), I can get rid of the link
+list and make it into an array. That would make this easier.
+
+
+> 
+> 
+> > > > +	guard(mutex)(&callback_mutex);
+> > > > +	list_for_each_entry(work, &callbacks, list) {
+> > > > +		work->func(work, &trace, timestamp);
+> > > > +	}    
+> > > 
+> > > So now you're globally serializing all return-to-user instances. How is
+> > > that not a problem?  
+> > 
+> > It was the original way we did things. The next patch changes this to SRCU.
+> > But it requires a bit more care. For breaking up the series, I preferred
+> > not to add that logic and make it a separate patch.
+> > 
+> > For better reviewing, I'll add a comment here that says:
+> > 
+> > 	/* TODO switch this global lock to SRCU */  
+> 
+> Oh ffs :-(
+> 
+> So splitting up patches is for ease of review, but now you're making
+> splits that make review harder, how does that make sense?
+
+Actually, a comment isn't the right place, I should have mentioned this
+in the change log.
+
+-- Steve
