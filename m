@@ -1,260 +1,184 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554522BF01B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF65A28E576
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345050; cv=none; b=qSSes7dOlgI0YfMP716IsmBGq0GbnHQN0h5lVXN9+mUCo0SRBk6PCk89O5NrlohSlMQ/IyJTbcGlsnHkw6eckgHKkSw7xLjwUe6toZv2HV/wCkly4jef0sD0KH3lpKREdwD5NmaUQSpSmLDjYTUBf6Fb0+rNCaCabvoT/7ttaUw=
+	t=1750345058; cv=none; b=K6hQF48D145NUq/HZr9JV8ogE842OxfPIRGOccwRdj9SeuI/tDo9V3LPPV6xY4JmcksfFabOMY37NBvrkfoJNKtOuCAswcFu9bYnMeWCqRtgD3kRSnRaHSqn0mqAaJtXZ58/GM4rcy8HqrgFmeQzOVcXLa1wi3FKten/hQpuRx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345050; c=relaxed/simple;
-	bh=0Ve5OciXTs/DgxXHyeH/Hw760EvX6jjzvIh5HDoxUeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NMwXPJhsY/Egv/peX36YU+E6XkYLgZk4lw0UzxsruU8fh/FOlk3QwOHNi0x0n6aBQO1mo118gbJXrs+BU+zpg+UgkQUsNxGk2YORKJlnatPQV1I5VyTTZl1zVW7SQgc9O/rPG07Tei3v1UR0o3s13MfZoOQbTdp9ySobDO/tMkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=I0BDEIWc; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750345058; c=relaxed/simple;
+	bh=7J/CgqkbcXG80noHuDHoNIvH2vrVKo6vpYMK3no1se4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTOjOa3WEkJdxMmmFR9mtv39hPAVEV7r7Bh7QLJ33tC5gvgvIXxaux+xhGHh9k84/6Fs31znIkLNqpLoPAz7OiwTcRWWaleZvAfwUCd9db6hLizuDlJ1TscW8YU6bovTNjp/XvAlTd6J9nNm7pFFcibWP00kyK+GtVd6MY+nRgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dhBy4NpF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0awkBNA9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ufuwwc8+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L22I6nuJ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I0BDEIWc"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEMYSB025798;
-	Thu, 19 Jun 2025 14:57:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=p1NR5
-	Uo9qxE/c+XYrd4u93UyzfRLfeM7J5KTXpPZ2rI=; b=I0BDEIWcJBFX3XY6cjlyN
-	Fx13e7Q3fJ15C4s9QH0c6xyP/vlqk792aO2gRsxg0oofeiO0jX2AczwedydR7jKt
-	mbB+m1b/JCFMsPkfEbnCBKKGdpGYk+98d/5a0UB+l/3Xy26wlUgD/x4ekPmpAV0b
-	HM/dKmlIu9bDXok0v24WRPEBUKC6YqI7TYlLBm12uMum1KL0VYhMHAsMbCB43sWN
-	MtWx+K04O/KboRz1ZxNr0mAFzuH3TpH70t8I9W+nS8rgp7A9zJdxRBXEMfb2k7s5
-	/Ee9tHKzgs3rnsBsJM4ty/2uC2aRT3sq2JGJ1tz/2fRboqbkP5tU6ORtXj+wrYbk
-	Q==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yv5a0r3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:21 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDJbWI022755;
-	Thu, 19 Jun 2025 14:57:20 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj8e6x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 14:57:20 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55JEv0Jf008257;
-	Thu, 19 Jun 2025 14:57:20 GMT
-Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-154-180-74.vpn.oracle.com [10.154.180.74])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhj8dta-17;
-	Thu, 19 Jun 2025 14:57:19 +0000
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
-To: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org,
-        peterz@infradead.org
-Cc: alexandre.chartre@oracle.com
-Subject: [RFC PATCH v2 16/17] objtool: Add the --disas=<function-pattern> action
-Date: Thu, 19 Jun 2025 16:56:58 +0200
-Message-ID: <20250619145659.1377970-17-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
-References: <20250619145659.1377970-1-alexandre.chartre@oracle.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dhBy4NpF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0awkBNA9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ufuwwc8+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L22I6nuJ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D74DC1F38D;
+	Thu, 19 Jun 2025 14:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750345055; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zsAbVB1A+G2OxEiG/UThBd8zRPy1cJO27DKKL7Bfk7A=;
+	b=dhBy4NpFXrENKVoDlm5F9zRKTbXOI2iIGo4p+hDxV/38avsEdaVYDX8YjFv0qk5Hbrtfxc
+	94pDJBFQrww2V0sKG0QBLRRe5pEublPW5jzD+NTsS2XqGxVvRytcAJnmIGwXO/3hkMZXrj
+	tCnsxfS0gHQ0txiyEXDyB4jO40Q4jUg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750345055;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zsAbVB1A+G2OxEiG/UThBd8zRPy1cJO27DKKL7Bfk7A=;
+	b=0awkBNA9Qn/ucAaAy7vZZB4p5FBcUp5ykhONmJZ/jH8F/HCiMIQCC/1oeSUWMc4DIOWHii
+	wSJcaD82ykgRfJDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750345054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zsAbVB1A+G2OxEiG/UThBd8zRPy1cJO27DKKL7Bfk7A=;
+	b=Ufuwwc8+qIyNq2wvtQEjo3Uw6cQ7D9VrXkbUZSb2dSwd5PRlXdhBvsJKmz9OL6TcBiSqEh
+	6sFv/1dSSA47dXa/hhqqjK9zu9emOBqvETzxl1q8HiPaLir5FAP65zQcTKl5OAWZjdur1N
+	af5r+KGsIKgxuLJfy9Yr8/H0Oeo3nCo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750345054;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zsAbVB1A+G2OxEiG/UThBd8zRPy1cJO27DKKL7Bfk7A=;
+	b=L22I6nuJQ1fKMgi3GLQkOCtJcqlkZTyCG3JsuAxpYEvvovrx7IYsWCzCg3Iu7UjIn6mc2E
+	6ETIE9QoWEaPVSCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C914813721;
+	Thu, 19 Jun 2025 14:57:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id j7IVMV4lVGi9KgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 19 Jun 2025 14:57:34 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6B2C4A29F8; Thu, 19 Jun 2025 16:57:34 +0200 (CEST)
+Date: Thu, 19 Jun 2025 16:57:34 +0200
+From: Jan Kara <jack@suse.cz>
+To: avinashlalotra <abinashlalotra@gmail.com>
+Cc: jack@suse.cz, amir73il@gmail.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, avinashlalotra <abinashsinghlalotra@gmail.com>, 
+	syzbot+aaeb1646d01d0358cb2a@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2] fsnotify: initialize destroy_next to avoid KMSAN
+ uninit-value warning
+Message-ID: <hzxqc3tbxc7bd6s3qv3hyocxvhuh4zszkvkqkvrmefhc5qrlez@5yroq663nxpj>
+References: <20250619105117.106907-1-abinashsinghlalotra@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
- adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506190124
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEyNCBTYWx0ZWRfXxd5PW7QJH39m PC1O2ZM0WGtPdzJXob7AgJiBXrm8rbJ9xTZcUaKUUSGzRs4x4Oal4DkidOpPVzvWRWBVGd8NsEP ivubBbrEHio6iYJxPp+dGcXOFTm2v8vRaRZIcH+5MMSISHV6BMtM9hA7nedz5632mv8RnQVCIex
- 6OB9JuoOtK2TRsKkrMJvWMwbTf8bEYhTvIff5Qc9HFDuLDkEQt5m9RCLON7OIrWY9hwzS0QaUko 7L/7qI2i86dH8qpyKhCFWxJGRt/k3dp/6vnyM33xl4zSO6l/LF9FjusLviVEZdmvZGzzKl6rijp QgrnuVRKbrKybWpMr87352HwFWQ0IbdYhOLm2HIfGjQXrOH+byRq0iDdVGAQYiI9HsXM6nf0UHX
- jJsHE0uI3haCKrfLIlQFSRURBESoKr08uA+qnRh7NCnK4tdZx+XeFl1Pd3mUTd9FZQ5HwZBk
-X-Proofpoint-GUID: JmF_Xw6DKI12uWtPLMo1cJod_Pc5eQ_B
-X-Proofpoint-ORIG-GUID: JmF_Xw6DKI12uWtPLMo1cJod_Pc5eQ_B
-X-Authority-Analysis: v=2.4 cv=W9c4VQWk c=1 sm=1 tr=0 ts=68542551 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=Yos37rPc9-vhJleOp_oA:9 cc=ntf awl=host:13207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619105117.106907-1-abinashsinghlalotra@gmail.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[aaeb1646d01d0358cb2a];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org,syzkaller.appspotmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-Add the --disas=<function-pattern> actions to disassemble the specified
-functions. The function pattern can be a single function name (e.g.
---disas foo to disassemble the function with the name "foo"), or a shell
-wildcard pattern (e.g. --disas foo* to disassemble all functions with a
-name starting with "foo").
+On Thu 19-06-25 16:21:17, avinashlalotra wrote:
+> KMSAN reported an uninitialized value use in
+> fsnotify_connector_destroy_workfn(), specifically when accessing
+> `conn->destroy_next`:
+> 
+>     BUG: KMSAN: uninit-value in fsnotify_connector_destroy_workfn+0x108/0x160
+>     Uninit was created at:
+>      slab_alloc_node mm/slub.c:4197 [inline]
+>      kmem_cache_alloc_noprof+0x81b/0xec0 mm/slub.c:4204
+>      fsnotify_attach_connector_to_object fs/notify/mark.c:663
+> 
+> The struct fsnotify_mark_connector was allocated using
+> kmem_cache_alloc(), but the `destroy_next` field was never initialized,
+> leading to a use of uninitialized memory when the work function later
+> traversed the destroy list.
+> 
+> Fix this by explicitly initializing `destroy_next` to NULL immediately
+> after allocation.
+> 
+> Reported-by: syzbot+aaeb1646d01d0358cb2a@syzkaller.appspotmail.com
+> Signed-off-by: abinashlalotra <abinashsinghlalotra@gmail.com>
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
----
- tools/objtool/builtin-check.c           |  4 ++-
- tools/objtool/check.c                   | 35 ++++++++++++++-----------
- tools/objtool/disas.c                   | 28 ++++++++++++++++++++
- tools/objtool/include/objtool/builtin.h |  1 +
- tools/objtool/include/objtool/disas.h   |  2 ++
- 5 files changed, 53 insertions(+), 17 deletions(-)
+This doesn't make sense. If you checked definition of
+fsnotify_mark_connector you'd see that destroy_next is in union with void
+*obj:
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index c53d738e4fb0..49b37da28b90 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -73,6 +73,7 @@ static int parse_hacks(const struct option *opt, const char *str, int unset)
- 
- static const struct option check_options[] = {
- 	OPT_GROUP("Actions:"),
-+	OPT_STRING_OPTARG('d',   "disas", &opts.disas, "function-pattern", "disassemble functions", "*"),
- 	OPT_CALLBACK_OPTARG('h', "hacks", NULL, NULL, "jump_label,noinstr,skylake", "patch toolchain bugs/limitations", parse_hacks),
- 	OPT_BOOLEAN('i', "ibt", &opts.ibt, "validate and annotate IBT"),
- 	OPT_BOOLEAN('m', "mcount", &opts.mcount, "annotate mcount/fentry calls for ftrace"),
-@@ -159,7 +160,8 @@ static bool opts_valid(void)
- 		return false;
- 	}
- 
--	if (opts.hack_jump_label	||
-+	if (opts.disas			||
-+	    opts.hack_jump_label	||
- 	    opts.hack_noinstr		||
- 	    opts.ibt			||
- 	    opts.mcount			||
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fecdf6f42358..c7a70d47f104 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2563,7 +2563,7 @@ static int decode_sections(struct objtool_file *file)
- 	 * Must be before add_jump_destinations(), which depends on 'func'
- 	 * being set for alternatives, to enable proper sibling call detection.
- 	 */
--	if (opts.stackval || opts.orc || opts.uaccess || opts.noinstr) {
-+	if (opts.stackval || opts.orc || opts.uaccess || opts.noinstr || opts.disas) {
- 		ret = add_special_section_alts(file);
- 		if (ret)
- 			return ret;
-@@ -4766,14 +4766,15 @@ int check(struct objtool_file *file)
- 	int ret = 0, warnings = 0;
- 
- 	/*
--	 * If the verbose or backtrace option is used then we need a
--	 * disassembly context to disassemble instruction or function
--	 * on warning or backtrace.
-+	 * Create a disassembly context if we might disassemble any
-+	 * instruction or function.
- 	 */
--	if (opts.verbose || opts.backtrace || opts.trace) {
-+	if (opts.verbose || opts.backtrace || opts.trace || opts.disas) {
- 		disas_ctx = disas_context_create(file);
--		if (!disas_ctx)
-+		if (!disas_ctx) {
-+			opts.disas = false;
- 			opts.trace = false;
-+		}
- 		objtool_disas_ctx = disas_ctx;
- 	}
- 
-@@ -4892,19 +4893,21 @@ int check(struct objtool_file *file)
- 	}
- 
- out:
--	if (!ret && !warnings)
--		return 0;
--
--	if (opts.werror && warnings)
--		ret = 1;
--
--	if (opts.verbose) {
-+	if (ret || warnings) {
- 		if (opts.werror && warnings)
--			WARN("%d warning(s) upgraded to errors", warnings);
--		print_args();
--		disas_warned_funcs(disas_ctx);
-+			ret = 1;
-+
-+		if (opts.verbose) {
-+			if (opts.werror && warnings)
-+				WARN("%d warning(s) upgraded to errors", warnings);
-+			print_args();
-+			disas_warned_funcs(disas_ctx);
-+		}
- 	}
- 
-+	if (opts.disas)
-+		disas_funcs(disas_ctx);
-+
- 	if (disas_ctx) {
- 		disas_context_destroy(disas_ctx);
- 		objtool_disas_ctx = NULL;
-diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
-index 376c7bedef47..97d506afdf45 100644
---- a/tools/objtool/disas.c
-+++ b/tools/objtool/disas.c
-@@ -3,6 +3,8 @@
-  * Copyright (C) 2015-2017 Josh Poimboeuf <jpoimboe@redhat.com>
-  */
- 
-+#include <fnmatch.h>
-+
- #include <objtool/arch.h>
- #include <objtool/check.h>
- #include <objtool/disas.h>
-@@ -399,3 +401,29 @@ void disas_warned_funcs(struct disas_context *dctx)
- 			disas_func(dctx, sym);
- 	}
- }
-+
-+void disas_funcs(struct disas_context *dctx)
-+{
-+	bool disas_all = !strcmp(opts.disas, "*");
-+	struct section *sec;
-+	struct symbol *sym;
-+
-+	for_each_sec(dctx->file, sec) {
-+
-+		if (!(sec->sh.sh_flags & SHF_EXECINSTR))
-+			continue;
-+
-+		sec_for_each_sym(sec, sym) {
-+			/*
-+			 * If the function had a warning and the verbose
-+			 * option is used then the function was already
-+			 * disassemble.
-+			 */
-+			if (opts.verbose && sym->warned)
-+				continue;
-+
-+			if (disas_all || fnmatch(opts.disas, sym->name, 0) == 0)
-+				disas_func(dctx, sym);
-+		}
-+	}
-+}
-diff --git a/tools/objtool/include/objtool/builtin.h b/tools/objtool/include/objtool/builtin.h
-index b3c84b6fdc5f..e41f3802d397 100644
---- a/tools/objtool/include/objtool/builtin.h
-+++ b/tools/objtool/include/objtool/builtin.h
-@@ -26,6 +26,7 @@ struct opts {
- 	bool uaccess;
- 	int prefix;
- 	bool cfi;
-+	const char *disas;
- 
- 	/* options: */
- 	bool backtrace;
-diff --git a/tools/objtool/include/objtool/disas.h b/tools/objtool/include/objtool/disas.h
-index 5db75d06f219..5d2149ffac33 100644
---- a/tools/objtool/include/objtool/disas.h
-+++ b/tools/objtool/include/objtool/disas.h
-@@ -14,6 +14,7 @@ struct disassemble_info;
- struct disas_context *disas_context_create(struct objtool_file *file);
- void disas_context_destroy(struct disas_context *dctx);
- void disas_warned_funcs(struct disas_context *dctx);
-+void disas_funcs(struct disas_context *dctx);
- int disas_info_init(struct disassemble_info *dinfo,
- 		    int arch, int mach32, int mach64,
- 		    const char *options);
-@@ -37,6 +38,7 @@ static inline struct disas_context *disas_context_create(struct objtool_file *fi
- 
- static inline void disas_context_destroy(struct disas_context *dctx) {}
- static inline void disas_warned_funcs(struct disas_context *dctx) {}
-+static inline void disas_funcs(struct disas_context *dctx) {}
- 
- static inline int disas_info_init(struct disassemble_info *dinfo,
- 				  int arch, int mach32, int mach64,
+        union {
+                /* Object pointer [lock] */
+                void *obj;
+                /* Used listing heads to free after srcu period expires */
+                struct fsnotify_mark_connector *destroy_next;
+        };
+
+and we do initialize 'obj' pointer in
+fsnotify_attach_connector_to_object(). So this report was caused either by
+some other memory corruption or KMSAN getting utterly confused...
+
+								Honza
+
+> 
+> ---
+> v2: Corrected the syzbot Reported-by email address.
+> ---
+>  fs/notify/mark.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/notify/mark.c b/fs/notify/mark.c
+> index 798340db69d7..28013046f732 100644
+> --- a/fs/notify/mark.c
+> +++ b/fs/notify/mark.c
+> @@ -665,6 +665,7 @@ static int fsnotify_attach_connector_to_object(fsnotify_connp_t *connp,
+>  		return -ENOMEM;
+>  	spin_lock_init(&conn->lock);
+>  	INIT_HLIST_HEAD(&conn->list);
+> +	conn->destroy_next = NULL;
+>  	conn->flags = 0;
+>  	conn->prio = 0;
+>  	conn->type = obj_type;
+> -- 
+> 2.43.0
+> 
 -- 
-2.43.5
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
