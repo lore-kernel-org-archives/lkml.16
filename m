@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C132AF1C;
-	Thu, 19 Jun 2025 17:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1338B28CF64;
+	Thu, 19 Jun 2025 17:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750354855; cv=none; b=DppDLQ3dVpnQ80WcsozpBTv+sqDJ8etXq+10vb8VfrEVED/7EwZuDkM8CDkNQs3tBQpNsBsLdY/YnGF5AJIcPQfCNIhsigxoRUa8oaZZ1RR0u1/neSVsKN2a7x9FzjJM3ni8mEUv/dPpsorKnVIwvGXbLHtzuN2J8coQq7UUmlI=
+	t=1750354874; cv=none; b=U/Dvx/2itx7Pz718Oymu4F7i5pmhFQuf76pWGzSLdbtwYQ+WL9LvJS6MVWzXZmy7Hy/CZERtccWiY6sFjajkvx/tAvZWFDWqKIXBUkMS14+RXzuomDhTagNBNOPGbFn2wLYHha84mkWbRBg40bJf15eN8c5tL+Sz5Jc2E6SHdYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750354855; c=relaxed/simple;
-	bh=pHocD+1IZ4THWLxnidWpQiRFVoIeI3zVCRVeyfn8Jbc=;
+	s=arc-20240116; t=1750354874; c=relaxed/simple;
+	bh=ikAdaCnZcwylMIvKHt+5EeFYJ7Cb4l8ylSoZt9x7e0U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EBsn7F8sfQSEcFmTA+xpVx/Fxl429QyxlPXNfrC6TasH138x5Urdy0l2YNANzDroGJf5cO7HVuQwP1HmtziuzY11C4mDEbaUIutxKV77wvoHBYF8cpbGRNRtvhWbFdwtycrcLA+4ZvdmkG8J57xEuMhXmJ3BHuUp3P7PUM2CSF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0harbrK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=E0yJpmdVDffQhdTkxTcInbRwo1Fpex1xTAqRRXP+0iAcmgtnJsTQKM9fiCPCjvZ5MbyLJ8WKSxMhIkgD/EyoJqbsa1+G7yRCvfZ/jtORDwFT4WvIo1FdLEBByF30SNVRLZbuwfdJIbU/Z1KfxtcnzGShz8c3LZVXfIROzgQOxG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrH2f8aL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0harbrK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EBBC4CEEA;
-	Thu, 19 Jun 2025 17:40:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrH2f8aL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452DFC4CEEA;
+	Thu, 19 Jun 2025 17:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750354855;
-	bh=pHocD+1IZ4THWLxnidWpQiRFVoIeI3zVCRVeyfn8Jbc=;
+	s=k20201202; t=1750354873;
+	bh=ikAdaCnZcwylMIvKHt+5EeFYJ7Cb4l8ylSoZt9x7e0U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M0harbrKog3eGUx6IKEp7wL3ZF/nLcDopJFbaLvL4JibYu3JXYpeXWCsSvnHs44Ct
-	 uW+mM94wMjULPK1z3go3w0r1kjgjUXPox1ObrGCOrEZvdQh6ccsMOYMfC65OZhoERF
-	 cy9D4Ozc2gMHuF2BDbIC4BFnwvQnA3rZDtl723QF/VMS388zSxYXYpA7gWTWNwmD8X
-	 MFM2DA0r4PVH9PBeJoIgYte4AhzOpFLEMwy7dB4v5fBHbvJ0rFatGeeSFDbq6sQHoP
-	 vG+pceMTr7SmWdTuhNjnIlyGroguc+JLsqPmKcviLrsQdPHVk31PSv0XIKW7t6W2+1
-	 5WCRgJWiqdUAQ==
-Message-ID: <c82bf3c6-ff40-4167-a78a-4ea21e41e8e9@kernel.org>
-Date: Thu, 19 Jun 2025 19:40:51 +0200
+	b=OrH2f8aLAMSC1Uu2R36bG2jBW0dyAmNN1CdJBAUZvXIr7tVFlzR78spQEUkwCaBqQ
+	 LLDTBO5sBAvrBkEZqedP80kHe9K6Ftvd+F7d8mSG+kbEDENjZoTD/LOs4RBMoxFmPw
+	 x1agOwhB2gmqA7xvJ6V6+gH5dFYb1tXnrDG0zLyFAAMpYz04t0OvuWGmKWXK6B3Wan
+	 gF3DU/BI7kN9FgPq86C3JmjuzPVRBdNsLIxHUq15bTYX8oIyFZgZs6N1MAuY/FFubB
+	 BsgBF1rQX5ATmI4cxPAaZ2oKDTLVccAkPK6x18Vgz5AUcqSyf5SU5NXBXyGd1iw1KW
+	 tJKM0rlQod6PQ==
+Message-ID: <f9a48d99-49c6-4efa-bd97-e9dba9fc55f6@kernel.org>
+Date: Thu, 19 Jun 2025 19:41:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Add driver support for ESWIN eic7700 SoC reset
- controller
+Subject: Re: [PATCH v3 2/2] reset: eswin: Add eic7700 reset driver
 To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
  huangyifeng@eswincomputing.com
 References: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+ <20250619080101.1360-1-dongxuyang@eswincomputing.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,33 +88,34 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+In-Reply-To: <20250619080101.1360-1-dongxuyang@eswincomputing.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/06/2025 09:58, dongxuyang@eswincomputing.com wrote:
-> From: Xuyang Dong <dongxuyang@eswincomputing.com>
-> 
-> There are some register offsets in reset dt-bindings. It could be used.
-> Therefore, we want to keep these bindings. I don't known if it meets
-> the requirements.
-> 
-> PIPE_RST_CTRL, TBU_RST_CTRL and TEST_RST_CTRL are not used in this
-> driver. Therefore, these are left out.
-> 
-> Updates:
-> 
->   dt-bindings: reset: eswin: Documentation for eic7700 SoC
->   v2 -> v3:
->     1. Drop syscon and simple-mfd from yaml and code, because these are
->        not necessary.
->     2. Update description to introduce reset controller.
->     3. Add reset control indices for dt-bindings.
->     4. Keep the register offsets in dt-bindings.
+On 19/06/2025 10:01, dongxuyang@eswincomputing.com wrote:
+> +
+> +static const struct reset_control_ops eswin_reset_ops = {
+> +	.reset = eswin_reset_reset,
+> +	.assert = eswin_reset_assert,
+> +	.deassert = eswin_reset_deassert,
+> +};
+> +
+> +static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
+> +{
+> +	struct of_phandle_args *reset_spec = data;
 
-No, drop. Register offsets are not bindings. That was last comment, so
-don't keep them. Remove them.
+Still wrong cast.
 
+What is the type? You got exactly that question. How did you resolve it?
 
+> +	struct eswin_reset_control *slot_control = p;
+> +
+> +	if (reset_spec->args[0] == slot_control->dev_id &&
+> +	    reset_spec->args[1] == slot_control->reset_bit)
+> +		return id;
+> +
+> +	return 0;
+> +}
+> +
 Best regards,
 Krzysztof
