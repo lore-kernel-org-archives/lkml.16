@@ -1,140 +1,102 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A1126136D;
-	Thu, 19 Jun 2025 08:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5364A1D;
+	Thu, 19 Jun 2025 08:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321810; cv=none; b=IAjQ0zk1pmgO43vLblRWuBH/caLjjW7A+XBVCCZWIPbR6ASZbJfT+lSgoCg4ifR04xMhbYEaZQKyLC/MT9iUHrxag92BC+dss4c8CBHlBN0SVOn8zkEeHZrLQqAkFYufciPQq8TM37OGaLYt+gZN4lSFLYifSISu+aZuJxOGGek=
+	t=1750321859; cv=none; b=GtoGiFZMYwP5VGLhgs8mmUZOkxX5KHxokaOFrLBu/dW7gCmQRrFaIBMvqVQK89mnH+RKd8kvx8AoPuzut6VxfloShj80iU6ADDGSESgNGPl7EVVBqM1NiENmDgpWCYof5389nS1XiC5TKP9mP+8ZCovCmZ8+N+mOGSpZ9FHdV2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321810; c=relaxed/simple;
-	bh=e6K52pkiA4lbq0TxwiOJxzpreb0jdw8kCEm3dDzE+so=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DcQVR+d2LKDgRoMCbvUoSOwylS0Uon30O7l29gah7aukTFu1wbzuELrCoXrIOihJm8vpQE+csHnR/WoGVoCITcS9OccNWPh9rgi7m89u86tRIHMG6iwxmQqmIPjlqNJUmeSlNsSYtmfxc0/3N/9x1a2m/5Z0GCSoa5TYObx0lDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hW3pKRbl; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1750321859; c=relaxed/simple;
+	bh=5U1WxsatwH9pCFmpAeShXCBLm1r5I+NDtPeCRXqZVpw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mRayQ9KEewVOOZ82F1EEmdPqVrKrTVox54VuE/+8g8Ofw553w4rKe8gSlA0Mbmi7rME/DBTYYIwns9uMiAYWjucd9jH3CKSQ6h9RE/wdCrzhAkTy0AR9kmjBamDACtGwkLfRTv1VZOqXgWJRP/LNlGzZBBDsiB6H6wXLkS1ZpX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0LWzaze; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hW3pKRbl"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad89333d603so91463966b.2;
-        Thu, 19 Jun 2025 01:30:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0LWzaze"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf214200so4385615e9.1;
+        Thu, 19 Jun 2025 01:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750321807; x=1750926607; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKn1ptPL56ANrUjI3SM/qbSzwOU3Ovzfc0dxrbHyY+o=;
-        b=hW3pKRbl6rLwYBk99tBn4ruUkxbk1UAyt8ovhcF8BmjUfra/sLzChT6P8yyC8ebSwg
-         yoAiB8pmoD+yrWGLtZYwYrfMQTz3DR6rrQzC7mtWcUTNb9xDlp6etk437fwzrYiaATL4
-         iw3sY9fik5y+LxOrR04HMh68Fo8wCmlfUiuWUIk6XPnIYC0oJO6SYSiuZRq1dwIbXm4F
-         wZp38noENZBOqhS5wzwko58Auon4aDksZFXAT/X++SxTYNMtxefs9Tit9im675BZL6Hr
-         S7gvrY52SO1lawfnyhTvgK2O8XTUx/gOxBE1ckwC1gwBoRA0DBu959K+APyyCc81B22Y
-         8+0A==
+        d=gmail.com; s=20230601; t=1750321856; x=1750926656; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1T6FrQp2okPwOD58MAho0evF8YiqmPgaoUsaoWni2dg=;
+        b=K0LWzazeK2rCTbFZMcSxY6kuWtGLS9/fyl1pZ3MWCKvOlyhl6bYc+0i0MOTOLIO3hy
+         pyTiaFSexrbmGc0WgkSpS0wJ7qVImr7bt+iz7Ib4MWM8i+VUDqw7fWci4xgPCAWMq5ZF
+         ZqmGfFo2cEFgv9RYgTu7ouwE8/HpfKBZifsKoIrIgkfpQVIwcn38sfzbA039WctulEIj
+         mUdbZgcPuAqxwDN3DGtyXHRaoJtqK5YGiigNgN7XwCJvAIPyhOU44RrJ+oa+lTPGwX0g
+         yVg32fo5JlSuiajSG76wu0NukcwWXNmkiZYf/hKpVqHaIw2hPQyNN/5tgyKwk/byk+Y8
+         re8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321807; x=1750926607;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rKn1ptPL56ANrUjI3SM/qbSzwOU3Ovzfc0dxrbHyY+o=;
-        b=YBARnVKXjf1npJqV831g10hMecrYfIqVYyhCPq9VdwfwkCTpV1px2hQw97XcCNxXCt
-         EW/yx3ESNnnjoi+ttRLM+AxA8yQ0xMsP8puPh3phkur3fr9qzVGwO0zmqJxQeRBWiTNs
-         1LMOxd6hbTY5t3xZErmVXraGLjmKlbcNC3wuGsLtzw2e8I/UF2zaeh9TJB5nKjmxBCCr
-         2CxGTEb289cv0yQvsmMd68UOBtmKVn9Y+6d/OoDvp5BnbhUzRWk7zg8gH1HHlg6kT7wA
-         BAaXxn9g57+tzlPRwyh484luoH8AvZggPO5CBsdraiRw+ozb6N2tqVDDYg1Eq9MJM9yQ
-         SvaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGRADRJXPWx3XCRAFsRUNSTm7ZYVhAQY9HUocMaJ/2JrMvRcpzsSjaRvVbDo8P8SYRO9tGGsCQaWb7AZtX@vger.kernel.org, AJvYcCUdRY2av6XQ7MjDMJLaNeQPBmrunU7Y9AzKUiRt8hebb3KskQj/G4SK2xfC7KUFTzksU2OWxagpsLeY@vger.kernel.org, AJvYcCWbCSKQbqOm9EhDcNLK9r4LJ1pRAVfYm0NGPA6JiPHMunqCHE/jzgqDxR1bmtUcaNMynyItEcPsC8cn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3W7iIf3EiUHZqDJKUwVlocteGWKy/G8V/Yb+kVDSQu73+h5si
-	2m/iindEp00FlM+bZUlqagSkIVUvqNIkuhsLzauckbXyJYdWsf8ZI57nfDgxEdhG0JZiGe8paCk
-	7IMnZN2Mzoo/KvBfOiSKoRy8jPJz+nho=
-X-Gm-Gg: ASbGncs2jjEWDkDirOhT+PpDcAU2fKLnG/NSROKIqQSnOeQseVTNyqC7kw7YMpaATH5
-	GECYzmv9pBg3wxT2N2ffPyqcmcKUKDiC5jTf8XBtIY3UaO2LpMukCdolBfRVYyuKAoxHB0AQW0r
-	7uXp8+cZQI6tgXB+d8Z8nI/WMUYLOKkmOw1Pus0acXsIQ04g==
-X-Google-Smtp-Source: AGHT+IF0i2vkEF+jFHeW2WDp5kmVNds+1mm8/x/CqyVXx2I+yZPnhJtAh3oOECcje7sEAEEwsOb1vr6CTNHgfN4ifPE=
-X-Received: by 2002:a17:907:1b0d:b0:ade:5fb:53bd with SMTP id
- a640c23a62f3a-adfad3c5445mr2083453666b.20.1750321806964; Thu, 19 Jun 2025
- 01:30:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750321856; x=1750926656;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1T6FrQp2okPwOD58MAho0evF8YiqmPgaoUsaoWni2dg=;
+        b=KHm8g/5WRcHjMcj6ChtqUuKZH8MwZ02JmkGh08rbDLjhnGhnWbtYenrF4T3PpnPKyl
+         W1+cwlUxmZYTWfO701W+OxsitFXD92aAW6/ZJYroHOCT2o0NDR6IkSxh8jFcG7Iq6Diq
+         y8FOUjVFVHgGigc9NAGBV0tSRSPahfWDHLO9C54Atij+dsbhEo+iLpkcVOmZL/EmLdRb
+         1XFmH8clGQ89cu9edboKGPWmzbfnVyO8te5+H4tDXDrX9qPaSiZdUoBMNiC9lqXnyML2
+         n6uAtYzfy+zBlr+caQlFVvTwIkbTWwhb0DJujTQ6OknfjcF9L1XwcUO3PArhzK5dTE8e
+         wE5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPKFeb/bosS0zHvDhZW3GpSgB9I/CZaq2vRAw98pn8+vzTF5R3gP6K6+ftG1yiJJgOl/dg6ed2jbg/EOVb@vger.kernel.org, AJvYcCUqx6SOE+cWG2td39lb8HC3Q88q0NozY7djxenzrshZaEbA5Z7x4Bjjig38g/HCBwrviWnPFL41ZBY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdokKCCpEG1k+vnH+j+1Rcu+uPMQB8PN8NfNaGmnysf3bNsK67
+	qQ1zpJl03yPFhyqsIPZrCEwROqzxVQx+L8eLMNIM0Izq8RXP+aS894LJSSG6yp5fEWAlhw==
+X-Gm-Gg: ASbGncvdxRNwecJEbit5T3fWzaQdYv5XPME1bIRm8bKL8jT5i3Ix1Jw2wan2uQ4ck+b
+	HwlbZL44R20mExwrJBqF+ot6leE/yNZ5wVpYnJRGoiZpPgA8qh9Fe/fRdU+iXJ8QcgzYN+VdCDY
+	n5ahhyIM3QbNuGppa9pP7a0gvCdVYDH1UkwimLFZCap8evmkutpdL2ctV54eD4tmZf7shChtALp
+	ngWDNnG4M+Zg0qGui6IOFf/Jse5pQQIPRb+a/4UIK9KYcUSETpEzQS+0vkAFvpe/H+0olgO3wNy
+	Znb5y6Gcw8/lhRYGrcbTg/4pUwbLOTNZhtoECxeoWax+Kht67S9wyjXws5Bs
+X-Google-Smtp-Source: AGHT+IEQpQd/8hmEsQ9eRTPMz052eU5rjSLNmdJtdjr2u9+ZU4TSJSnOXYilvQhtflXrG48W5EC87g==
+X-Received: by 2002:a05:600c:1c02:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-4533cab540cmr174416875e9.20.1750321856202;
+        Thu, 19 Jun 2025 01:30:56 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453599c9854sm27663455e9.1.2025.06.19.01.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 01:30:55 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] clk: moxart: Make read-only array div_idx static const
+Date: Thu, 19 Jun 2025 09:30:35 +0100
+Message-ID: <20250619083035.1835133-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613130207.8560-1-victor.duicu@microchip.com>
- <20250613130207.8560-3-victor.duicu@microchip.com> <CAHp75VdRisP+trez2Ysgrhan_zXMWsmawB3XeW+_ePsbNC4RzQ@mail.gmail.com>
- <f980b3c1a4fbd60f70dda9670648479a38313439.camel@microchip.com>
-In-Reply-To: <f980b3c1a4fbd60f70dda9670648479a38313439.camel@microchip.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 19 Jun 2025 11:29:30 +0300
-X-Gm-Features: AX0GCFtK0ncIVhpppFTb1voQFgUUDtzpBF-GqtLcEGCIbcMStBY2pLpHDJm_GWg
-Message-ID: <CAHp75Vc2nueOycoy8+dYyQekAAMPO82wOYSVT0RZOC4yRaE5jA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] iio: temperature: add support for MCP998X
-To: Victor.Duicu@microchip.com
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, robh@kernel.org, jic23@kernel.org, 
-	andy@kernel.org, krzk+dt@kernel.org, linux-kernel@vger.kernel.org, 
-	Marius.Cristea@microchip.com, conor+dt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 10:22=E2=80=AFAM <Victor.Duicu@microchip.com> wrote=
-:
-> On Sat, 2025-06-14 at 00:50 +0300, Andy Shevchenko wrote:
-> > On Fri, Jun 13, 2025 at 4:02=E2=80=AFPM <victor.duicu@microchip.com> wr=
-ote:
+Don't populate the read-only array div_idx on the stack at run time,
+instead make it static const.
 
-...
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/clk/clk-moxart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > +MICROCHIP MCP9982 TEMPERATURE DRIVER
-> > > +M:     Victor Duicu <victor.duicu@microchip.com>
-> > > +L:     linux-iio@vger.kernel.org
-> > > +S:     Supported
-> > > +F:
-> > > Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982
-> > > .yaml
-> > > +F:     drivers/iio/temperature/mcp9982.c
-> >
-> > So, with the first patch only the dangling file will be present
-> > without record in MAINTAINERS. Please, make sure that your DT schema
-> > file is in MAINTAINERS.
->
-> Are you referring here to the file sysfs-bus-iio-temperature-mcp9982?
-> This file was in v2 where there were a few custom attributes. In v3
-> I removed them, so the driver currently doesn't have custom attributes.
-> Should I had added it to the files in MAINTAINERS?
+diff --git a/drivers/clk/clk-moxart.c b/drivers/clk/clk-moxart.c
+index 3786a0153ad1..4d34d1d18dbd 100644
+--- a/drivers/clk/clk-moxart.c
++++ b/drivers/clk/clk-moxart.c
+@@ -58,7 +58,7 @@ static void __init moxart_of_apb_clk_init(struct device_node *node)
+ 	struct clk_hw *hw;
+ 	struct clk *pll_clk;
+ 	unsigned int div, val;
+-	unsigned int div_idx[] = { 2, 3, 4, 6, 8};
++	static const unsigned int div_idx[] = { 2, 3, 4, 6, 8};
+ 	const char *name = node->name;
+ 	const char *parent_name;
+ 
+-- 
+2.49.0
 
-You should have added the file to the MAINTAINERS in the same patch it
-appears. Not in some arbitrary change afterwards.
-
-> Isn't the yaml file sufficient to describe the devicetree? Should I
-> also add a dts file?
-
-No, this is not the point.
-
-...
-
-> > > +#define MCP9982_CHAN(index, si, __address)
-> > > ({                                          \
-> > > +       struct iio_chan_spec __chan =3D
-> > > {                                                 \
-> >
-> > Why not compound literal?
-> >
-> In v2 I used compound literal, but Jonathan suggested to add
-> the struct in the macro. After describing the reasoning, we
-> agreed to code it like this.
-
-Neither of the versions has a compound literal.
-
-> > > };
-> > >              \
-> > > +
-> > > __chan;
-> > >              \
-> > > +})
-
-
-https://gcc.gnu.org/onlinedocs/gcc/Compound-Literals.html
-
---=20
-With Best Regards,
-Andy Shevchenko
