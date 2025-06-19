@@ -1,70 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFD12110;
-	Thu, 19 Jun 2025 00:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413C620E6
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750293816; cv=none; b=jdk3vA/uRUvdChxUw2PfqT7jvtJLhC9kb0qetIAUQa+fCjQCWZS9L+K9Y5sAgb8rDPRaFQBXGjzW1q41RYjEqivlhCG1t2g0zsUqHB6NS9+HMhuo9P5qqpsco4gvJuY1MoSWLahR6NO8uHCo0pNtw2L4YnyIaQ5YfRQsPVgMu5Q=
+	t=1750294306; cv=none; b=LIbhR4eizceRssZW6OyEt+mXxLR17mCXB0lTKoi+4nYSoONI9Ne6RcWxu3dEm5BCfV7zueVRMqLu20FeKbIj6GrkvtH+wctDu566QwdjGJWJRmHMBMkPeU+fba+qcwePwsTBpKCC/5cCiXEy8H6lqVLSCcKQc/JXdjXIw1Mhowk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750293816; c=relaxed/simple;
-	bh=M+aQ4uVYvU10F4gbFw08dWri1Ncv/UDrlH7UcglAFRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulpzwUNLDZFyICYw43lKZVzyvm+Dq1YZpZvfUm30HPo+EGy6bXejmcXqk2pjxlsjAWH7u4hVtbxpdq5ToRi3r5O0qJ2mj8uE7smVcyTx+anCzu3SD2vfnjr2d456+T62N0lGgpLSN5L4xIp359ImPT0KnNeGHvmcuu/F+wdL7qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hop02Pwa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750294306; c=relaxed/simple;
+	bh=YYAAVnUJun7wXm/Q78Rqwh+hn4IyK7gg84jzU92RQyY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GdDqiMcBzdZH8x8Mxt8iYF6TceFE+fsHLoGwQna0xnkBnJdcCtUa5vIL03ZbwGAWOHH2Moa9eh6Lh9veb5vNCgORmHYFDUA6cATdoM47taEqI3FUPQA+9ZVve+qlX/RBIoegX6ypHcUfkZK4vgOk7hQDpoC8vfwsY/MR+/++pQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L96wqF2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hop02Pwa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81D8C4CEE7;
-	Thu, 19 Jun 2025 00:43:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L96wqF2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6402C4CEE7;
+	Thu, 19 Jun 2025 00:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750293815;
-	bh=M+aQ4uVYvU10F4gbFw08dWri1Ncv/UDrlH7UcglAFRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hop02PwabyWEchz1nQDouR7SRVN7lVTzEnaIcQhj8pBQoJG1p1rLDatkwb3hZQG9F
-	 6hYClGtHQ3zk4JjC2p8/hxDCnXIx0tztgyPOi0jMPtINnFgMJiUTRRO3/KxRFKp7Tz
-	 LOFDtjEI1w9NBlrITTLcNGk2yNxEjAxa+gwM767/3vr6EA5PP7wwyVrlqlkVwUQfnr
-	 feFVUdh1FzYzZAdqzdsdTI7HXrcvPar54a7R5YCg3ed7HSlOZUT+FwY8+jr0Xfhbbq
-	 ZMNge6NEMfUE6E+93DwusJITeN5NN8RBKRTRiPWKqaSd9sdzqq8mQh/NLDTxWCxYKm
-	 at+9J/T6UZrBg==
-Date: Wed, 18 Jun 2025 14:43:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com,
-	gregkh@linuxfoundation.org, daan.j.demeyer@gmail.com
-Subject: Re: [PATCH bpf-next 0/4] Introduce bpf_kernfs_read_xattr
-Message-ID: <aFNdNv4Bvw6MwlaH@slm.duckdns.org>
-References: <20250618233739.189106-1-song@kernel.org>
+	s=k20201202; t=1750294305;
+	bh=YYAAVnUJun7wXm/Q78Rqwh+hn4IyK7gg84jzU92RQyY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=L96wqF2lFvcUIBXKVoDsOS8ndpKEF69IO+FsKMPcEF0g6bAadbyMx0EIOH+J7rKWf
+	 +U78Xb2cv3R3Yr/NvBm6IltlYfyeerDIypvq4vEr12zU9CxWtDtmAupxDNdH4+VWZc
+	 zjf+Xmrj1D4tBOH2I3lCgbrRg+RU+JlGBw8+X4oKmyYRT3s9ANBDMIBldt0zdvVgie
+	 lk/WKDWkzcOXTwAwKhO5khDywEYtd/d+ozeY3XkWLm44epMww17P44tTmIzxrYf4pe
+	 Rc9z3AGv083wPWIe4HbuQCwRofB8E7UBrvJ+w25VqFpfF7Abv6MihDsLe4BMAOmV57
+	 M7xnHQUVp1umw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33ED33806649;
+	Thu, 19 Jun 2025 00:52:15 +0000 (UTC)
+Subject: Re: [GIT PULL] Driver core fixes for 6.16-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <aFMn9I0c7Pt9YDKu@pollux>
+References: <aFMn9I0c7Pt9YDKu@pollux>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aFMn9I0c7Pt9YDKu@pollux>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.16-rc3
+X-PR-Tracked-Commit-Id: eab9dcb76b9fca47402c9e93afca243e745a0f02
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 229f135e0680da3dd0bcce515c07be87858f1d12
+Message-Id: <175029433380.307467.7305287180057229820.pr-tracker-bot@kernel.org>
+Date: Thu, 19 Jun 2025 00:52:13 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618233739.189106-1-song@kernel.org>
 
-Hello,
+The pull request you sent on Wed, 18 Jun 2025 22:56:20 +0200:
 
-On Wed, Jun 18, 2025 at 04:37:35PM -0700, Song Liu wrote:
-> Introduce a new kfunc bpf_kernfs_read_xattr, which can read xattr from
-> kernfs nodes (cgroupfs, for example). The primary users are LSMs, for
-> example, from systemd. sched_ext could also use xattrs on cgroupfs nodes.
-> However, this is not allowed yet, because bpf_kernfs_read_xattr is only
-> allowed from LSM hooks. The plan is to address sched_ext later (or in a
-> later revision of this set).
+> git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.16-rc3
 
-I don't think kernfs is the name we should be exposing to BPF users. This is
-an implementation detail which may change in the future. I'd rather make it
-a generic interface or a cgroup specific one. The name "kernfs" doesn't
-really mean much outside kernel code that's using them.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/229f135e0680da3dd0bcce515c07be87858f1d12
 
-Thanks.
+Thank you!
 
 -- 
-tejun
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
