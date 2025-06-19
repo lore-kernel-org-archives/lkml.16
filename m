@@ -1,103 +1,111 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57B225DAF9
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F0F265630;
+	Thu, 19 Jun 2025 08:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322726; cv=none; b=Vp3xaE1kW8DzJeD2oAU4kh1FmXjlPusCgwKI637qFEtRTtVoST1r2QCj/nP5h7moS2prhdonaVQeGyOq8WuqSfW0xJnqsOecIfNqrvNc1DJUxw6jYqs2KbgHoPES/yp/J7oZyirL0nJuRf2m8e3xif6ZNUQSmEQH0Zw3kFIXUDo=
+	t=1750322731; cv=none; b=r6FtnICMKZ3ij0ppYTVnnBymf+uT72Oca5BrAxNDuB6H4a0HoTlmFTFL33GmftBY/lsFZ0eK/LnM4PlzGuwQo+0Fm3vgdnassEYKZBuhN8DSKTccB1R/OR/YoULvk8nR65Y4lPH+BHridKyHDI/CrDq5WY2mYyWsl+Wimm7S8nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322726; c=relaxed/simple;
-	bh=pj6ooHPpY02Xgn4aouAqvWLkf/SUqxgBJpi5NWn2MK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l675Z7uBFj9/wv4qSceMA2dE1nYZ2RcnaW53laoRRzjg9RjOU1ULAJmv5xpGH9LH4yEL2PCkhu7Lpnx9jlYdanrmj3d/vCok3Zq/pyfTCvAcgq/zOrfNSwMcfxI3mUV1fLH8hfh6yc5epMrZcE7Nh5PFLMURoSdbBIYycy9s0D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KcIfA1pc; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750322731; c=relaxed/simple;
+	bh=XLG2cZcQLhx33DVj14NNeTv+QvUPGw8VQgW7jRag7q4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WFC6CEHXnw5I0q/K/zBTSHDCiGbZWoo/aeWtwQjEQLz71esIIMDDdxYCVixpW4RC8seXJSOW+L2JjsNY4zhgDd4qQzC4/rMUE3yFruGB8OAstfA1OHuFWFMysNPRayyIRjBcGTfjVm5XTUjNo0rQgGnA5s67Zgyyku8gSvkLL6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net; spf=pass smtp.mailfrom=qmon.net; dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b=KhOTjIus; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qmon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcIfA1pc"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so936458a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:45:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750322723; x=1750927523; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q39zMSY2QXSvAessIFBztZZAf+LCItDf8l0+pCWd8Wg=;
-        b=KcIfA1pcEFKKaZuqUyb1b1V8nRsEDe/YNDoJZKQAedKhmDubVTn+MMIoP/E03dEg19
-         Zu+gOvUm8sTRQHPRt3O7xDaFdq876CTr0ASH7tBxa5wz8qtx7BFUnUKdkik8eP0RHNH/
-         1VyngeOfEC+lYHrV8EAp3Rffaj6rjI9k8HNMXJpl2Cn9Gd1w/c5eU7tHnCk3/6lmy2sz
-         FveQUsyknYeDDPWUiLtP3Ypg6dJ3JSchFO7uvFcwJFFUM8y8YCldf837OCWHJ+QJHyJG
-         QDTjyaA38WRQwKPc5CLMl00Cvn3iFxxK1ZmjU9WwuS23cj09UTNZ+X3WN55qufd0R7Ia
-         ++mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750322723; x=1750927523;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q39zMSY2QXSvAessIFBztZZAf+LCItDf8l0+pCWd8Wg=;
-        b=u1hyHrNqkO5SohEjCbXvYZR3DlQgFLebO9fRkp38Tj7cg/Oft633149SvyRgHfkuuI
-         3Q9eh6p24isr04CtisxDN123dwv9TIq4XbECW3znW8Cb8LvjUQdMG3FEGZR4EYHTM/qR
-         fIxySNwMiWFZBkIZOKZcxyNbFbPnmqZjxxRfS8l+Yp6NGDhu8t9GihP7p9D7v9Uv7QKi
-         Mhik7OPnHq5PhWCZDiSni3hpTfGm1CizbSOM4mVTPOK6tlttTC+xhdNZTg1LR7P/9IA4
-         xxizo3sW9QI0phc9Ziflpw8jDXyMnyCYNRLYm4L+CGm6zltet5ztOR4FdSgAkDE8BZha
-         NFkw==
-X-Gm-Message-State: AOJu0Yzl3OBEo35Etw/V9C0LswvmyICM4DFZeNBZ2fn/hQfh8yn9rnw3
-	K5d2APH5HE14lK1tmDvc20RxAPNLOb/Kx1doT+VcRDujyVRkv/NwZUAf
-X-Gm-Gg: ASbGncuhdiQ4Grnufk2dA+Nr7lu2ioOaiUUWghLDmjLFUqmcGvj6QEuEuuNpIZlqiPx
-	kzVw0a4wtKrzQn5PzeGFaUbpoiq8Zk0GB9SmK2C9NtVTE0On0xQqkpfvIozwkgbValWRqch1sdK
-	gRWZHPpeVqXZKRZ7xrKmtpjHMsJLZos5Amjb19843+yFtyi1vQwOweBEhhEcqUlRdjPdsrjdqoN
-	EMb0z4uOMHk+4UX03UJquMAe1J24ePBxdb93j/3c5bmAGzetNVknFxeamu/Pkm13huCepoOUiZo
-	ei8IT0xPoT/blf6kcAiIlLqT7pK4S/FhMGBXMXUyte0JmLloN95K4bq4svHLgoswue/kht1Qw0j
-	2CHPwgQ==
-X-Google-Smtp-Source: AGHT+IEtgbXlUI0CffNxw+nr/zbns5q7H2q+wq2PNORA4Hn5YeiYyblJ9ZadfIi/qu91qFv+IJUZhQ==
-X-Received: by 2002:a05:6402:3592:b0:607:19b6:8cec with SMTP id 4fb4d7f45d1cf-608d099f344mr18743835a12.33.1750322723202;
-        Thu, 19 Jun 2025 01:45:23 -0700 (PDT)
-Received: from chimera.vu.local ([145.108.90.28])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e6f0sm11276831a12.42.2025.06.19.01.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 01:45:23 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: hansg@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 2/4 V2] Staging: media: atomisp: i2c: removed redundand debug message
-Date: Thu, 19 Jun 2025 10:44:20 +0200
-Message-Id: <20250619084420.146151-2-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
-References: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
+	dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b="KhOTjIus"
+Received: from smtp.soverin.net (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4bNDhH6KQpz1HSZ;
+	Thu, 19 Jun 2025 08:45:19 +0000 (UTC)
+Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4bNDhH2XXSzQ4;
+	Thu, 19 Jun 2025 08:45:19 +0000 (UTC)
+Authentication-Results: smtp.soverin.net;
+	dkim=pass (2048-bit key; unprotected) header.d=qmon.net header.i=@qmon.net header.a=rsa-sha256 header.s=soverin1 header.b=KhOTjIus;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qmon.net; s=soverin1;
+	t=1750322719;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ErW2j+mManyJQM93IRatKSVT+nS/i3cLFDxhg+A0SH4=;
+	b=KhOTjIus5IhKLEu3NQgD51ii5zQKI2gZ8O/ya1kD4Nt36TT2aqkVZ75BZKwRvFqHg4kwc0
+	jBXNadfybHvHhOuyb4Zl0FAiVBZxPfVpc+zWkcXOhVEuKtTMqeht0ithVDAL0IhiEJLmFW
+	KjvFARXu4XckZfUyvlN4e6B51vIkUm7YwgJtSnxAmfQGX0YmslfqC/m1QQa3GPc9bQ2mbu
+	gQHPPM42yJvKaxkoFozd/cjtAgbfQpAy7sX3TAdteoB0XAKFE4975H85KXR/PHLe8EQ2eq
+	ZNo6YceLirVVsJYKOf5LbNe/jntEjvQoPD3FDGNghgCzvCx6pjhnKARZmvB/+Q==
+X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=6853ce1f a=IkcTkHD0fZMA:10 a=Byx-y9mGAAAA:8 a=VwQbUJbxAAAA:8 a=alrKA13-IdtXP1y8yCkA:9 a=QEXdDO2ut3YA:10
+Message-ID: <e938ef54-3ea0-4325-9860-477561af6042@qmon.net>
+Date: Thu, 19 Jun 2025 09:45:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATH v2] bpftool: Fix memory leak in dump_xx_nlmsg on realloc
+ failure
+To: chenyuan <chenyuan_fl@163.com>, ast@kernel.org, andrii@kernel.org
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ chenyuan <chenyuan@kylinos.cn>
+References: <20250619031037.39068-1-chenyuan_fl@163.com>
+ <20250619065713.65824-1-chenyuan_fl@163.com>
+From: Quentin Monnet <qmo@qmon.net>
+Content-Language: en-GB
+In-Reply-To: <20250619065713.65824-1-chenyuan_fl@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-Checkpatch fix: deleted `dev_dbg()` printing the name of the function.
-                ftrace can be used instead.
+2025-06-19 14:57 UTC+0800 ~ chenyuan <chenyuan_fl@163.com>
+> From: chenyuan <chenyuan@kylinos.cn>
+> 
+> In function dump_xx_nlmsg(), when realloc() fails to allocate memory,
+> the original pointer to the buffer is overwritten with NULL. This causes
+> a memory leak because the previously allocated buffer becomes unreachable
+> without being freed.
+> 
+> Fix: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
----
- drivers/staging/media/atomisp/i2c/atomisp-gc2235.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/i2c/atomisp-gc2235.c b/drivers/staging/media/atomisp/i2c/atomisp-gc2235.c
-index 857d7175942c..6fc39ab95e46 100644
---- a/drivers/staging/media/atomisp/i2c/atomisp-gc2235.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-gc2235.c
-@@ -779,8 +779,6 @@ static void gc2235_remove(struct i2c_client *client)
- 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
- 	struct gc2235_device *dev = to_gc2235_sensor(sd);
- 
--	dev_dbg(&client->dev, "gc2235_remove...\n");
--
- 	dev->platform_data->csi_cfg(sd, 0);
- 
- 	v4l2_device_unregister_subdev(sd);
--- 
-2.34.1
+Fixes: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
 
+(Not "Fix:")
+
+
+> Signed-off-by: chenyuan <chenyuan@kylinos.cn>
+> ---
+>  tools/bpf/bpftool/net.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
+> index 64f958f437b0..1abedfe6f33f 100644
+> --- a/tools/bpf/bpftool/net.c
+> +++ b/tools/bpf/bpftool/net.c
+> @@ -366,17 +366,18 @@ static int dump_link_nlmsg(void *cookie, void *msg, struct nlattr **tb)
+>  {
+>  	struct bpf_netdev_t *netinfo = cookie;
+>  	struct ifinfomsg *ifinfo = msg;
+> +	struct ip_devname_ifindex *tmp;
+>  
+>  	if (netinfo->filter_idx > 0 && netinfo->filter_idx != ifinfo->ifi_index)
+>  		return 0;
+>  
+>  	if (netinfo->used_len == netinfo->array_len) {
+> -		netinfo->devices = realloc(netinfo->devices,
+> -			(netinfo->array_len + 16) *
+> +		tmp = realloc(netinfo->devices, (netinfo->array_len + 16) *
+>  			sizeof(struct ip_devname_ifindex));
+
+
+Nit: Can you please break the line after the comma rather than after the '*' sign,
+like in dump_class_qdisc_nlmsg()?
+
+Otherwise looks good, thanks for this! You can add my tag for v3:
+
+Reviewed-by: Quentin Monnet <qmo@kernel.org>
