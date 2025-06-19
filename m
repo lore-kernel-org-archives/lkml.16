@@ -1,122 +1,98 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483A528DF0F
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9751F30E831
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750357392; cv=none; b=cImvj1zdVQFn8gmxR1/KMjJldQHU4AFRRoTwOUI3NVBhWuVXo0c1QYWd5I7K/RR7iDip0B6GMrubZ5KK+WrwpkNI/Fa6ksQVfP/Td0nVL0ikcU/OzylXth6esWqNB3u7nnjdu1htReht1NVdJhx12+XExVrATkdf4vAht3RZqno=
+	t=1750357592; cv=none; b=fH0gRluxiht0K5K21BuC1H28u47ntKgPbWhNrM5LFOklY6l1nZZyVrUko8w2So5mf26BDdqFYkV9RW11b41dDfI6YKlJkItE5wbdULhm2yYJeNtYT+8V00vYB/osO0LODVO7VYkt29UVdr/grljrKo9Pm8K2LKYRiOHPzaLl8UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750357392; c=relaxed/simple;
-	bh=6EM7W6Px13BkrnxhIGCscRQju3/pLtXfaLISOGXj2DA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEXTrAielfuKFkF7b5cPPZFqRD1ZuHMvAclPpk8MaSK0V4KezpaSFWuekG3iRW6e7irbPqotT88OA8e5ziy6J1xrN2WGyxyvm7YA3K7PR2cKQeILn8b1KX2DXxP8oB/Ddk1GOuMdgDuZyO342TXEsv56kFhGUDotcX9QgXmF0aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fjPAo/pS; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750357592; c=relaxed/simple;
+	bh=xAXdXSNpkRXdJk0Iuqg+ysFWFY24YTHzxOXr0w4V06c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=WfZEcDA868VRfNR5nLwsLno4zVHLSDB1deNaIMktH0KcVt9CRN4HbETYaIOf3c0wBTAy5XXb5XoVf4CE/lwT8NYbj+gPTnmX1OPzOj0sfc8dCkMpMKKVigPueua35A0kSCfMKv5P8zt2DpVfenXielqPfW1JXEK0C0wSQgkgfDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkoGRBaU; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fjPAo/pS"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b31aecc78a3so185981a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:23:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkoGRBaU"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234d366e5f2so13821145ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:26:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750357389; x=1750962189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6wn2R/tcCHSpRThGeyczBO7p55CHFgEwb59xkAN4huA=;
-        b=fjPAo/pSOSRGjK4d985pyzt4e4r7fMh40FvjG3FlS8VINRnX9cqfMUEHh0KcZxBNaA
-         EIQFzIIH53FXkCU/JfrJtCbRr6jhFAQdGXWrbsEoVP7dvIskTwroqlTXQCt3zNAx2fuP
-         WUTItT0dzkosv+NhySf5kgLp5Lc9w75Gts3VM=
+        d=gmail.com; s=20230601; t=1750357590; x=1750962390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6LU6WZ1sS2P+1pyOyitPk8GofNcu8iSEglDbZ8V7xgU=;
+        b=EkoGRBaUGgPfkzIfrCWnLlcnxDjJdKzMNnsJYnoM5f5zYvPGiHif158ol228G3qGoy
+         /6O1yOL7Xwr6s1Eh1cvcEjfOSITr4nXI0wUK2JQvmli0OMSZo8oYFgHggrx5ekv0hUDo
+         Fo8sx8lUTn/lVjbU8vGj+hl1tA4uoptCe4EK7R9vjx1f+PefggTi7JFnlOhBY0xGgNCm
+         dbLVQFrwwJZtBepXiD4LckGnN+t8DbbTyHpQtCDKP8zlvVJHbJoFKDIaiaYUCwC7kE6f
+         3OzurZ/gbwFdgonC0i9smN/SeXC/Gk8Bcxjjpz/3Tpm/ci/XomZPMWP7ZBwqzjwHMjom
+         Y/gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750357389; x=1750962189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6wn2R/tcCHSpRThGeyczBO7p55CHFgEwb59xkAN4huA=;
-        b=q0Nd5MQQQIKeODp8CW0kUS4dqIcpAE4vPtVR91WCLu2TWGCt8yax2Jpb6f6YR/v7g2
-         2zqPSxOZj7GtpSoJ0YTMNa+giVEMQPnT5bwym6Qu8UjNW4hxbosu6+cVHM00CVONKCRJ
-         zBAr/zpnpDPpM3NiDkVJXYWhTeFc9U9nE11tdBU8sMRV4Bs/r7gtC+//5g3kJ//sItfs
-         ZJT1P7QnjUCnsIIXWAz+Q0cwAyEMZJ1ldk9TQ5R+qmH8yY9FjIo63xl10aSDCJpR6wUz
-         +8Q34jZF8KZI8DyCqiXmPFd0MnnsmuXcLtbg2ANrQ+XEZNl5WqkA/ZhI5rQSCuUhgd83
-         f98A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUaHi488Teq2Ms/hjFok1nOEDT3dE8Lhe2Xy0PkOX57QbIjVHLf9iKjvwp7nrsq2NQ4L9tm9v97bXy9Dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVJwYK3nP9zCZUE0QNGWU6Im822BV+E0n3mNudtKZeIz5kPagr
-	w/J2FWi8A+rvuq3KHY5Yegwb70UwBU1nJK14pqfD0oLQR+FtB/GNPBbA3uSRB1/+TGqHhM0xgdM
-	mc80RnxwCKuzdE1Pyp8YgQta929tTN6K3qJmPYib4
-X-Gm-Gg: ASbGncvy680MjMgiLfPClTusfakXCJ6PfsoAAcZBV7XAP1Vvl+FEupClSBTp+Hxe5JQ
-	OjshDyvYW8uD7/crRNUvNOiao2tn9CXV0Ns7xtufMnc1pn6+0OFXc0Kmk2Ve0YVC6+VTpV2ZdNi
-	u0Oldwt4SuNDCD4i3Ko/IK3HhnrfeUnWuobsRG4SCY2foQrUy6n4Xw0Q==
-X-Google-Smtp-Source: AGHT+IFSj1i5cMc91WlmDpNumVdtdb8Ld/9OiYqe+qTePMX50c4RyMW+w6PNGPiUCp7f20XynJdqwZhRDrpoEUBp4ag=
-X-Received: by 2002:a17:90b:57ee:b0:312:ec:411a with SMTP id
- 98e67ed59e1d1-3159d8c6488mr131664a91.3.1750357389545; Thu, 19 Jun 2025
- 11:23:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750357590; x=1750962390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6LU6WZ1sS2P+1pyOyitPk8GofNcu8iSEglDbZ8V7xgU=;
+        b=sa7MeVglJSefhuBR0Q/wf3FcovkKoOUWusOGNhIjjwu3/fumb1Io9aXAQ+zIpEKV2b
+         A3w+x9esQvd5UyBAmLSjiUggfRh0mOPjzcH2jE6g6DtdbDcFYNU86TiT6rBQPiVzvXOE
+         MIRELzsxydeWjRkeTYhUbjEmr8va6jBqYObNu+b8U0Ynbx68vJiP//VylJpQkzohekj4
+         +PhfbHnV0UKZhx8BRSVAYLpzi4q83A0Bt4X68fjiwwcWlA6ytFUGACZE12VOqPmGqCCw
+         zQOvaEANzMYsim0GIZq1ppB7+72YLsYgmJgUmen9iEHuTx4u3+eTSpsmIvlAl4V1sGJy
+         M6iw==
+X-Gm-Message-State: AOJu0YyUM69jG1HMutgjz6ErRG1ZuexZ7/D4ALTB8oh4GSxDsgh3CZsY
+	nMNVzeIzYd0Ej8eWmVSgZiQrkSCg2xxQkV1h+CkaRKSLXBClC4yjoIqUFagLXQ==
+X-Gm-Gg: ASbGnctM+f5jsvBkb+xedSxX3lnkITfiqPYhdAZof0WxXACAzEVyaaT5CqE/nx9u0a4
+	Ss1wMz6KnpQAqlVXVLmIsxM371+/4tVW/JIlm9fLKTXFf1IB+O5VB2Ih4FU0aWzpYDcoj2+oLzn
+	ckNEnYd7eS2r8tB52L3S7zDN/We9RCBE3wQ+I/CtSLP3vHicCfn7udR5nOMLf0Pucz3zj9EuWTl
+	oY19QQJ58d9DADYqOy6B1hmkD+WS2M65Xal1JBeGKdGAQ596K0/Q37tAyYt7aiSuuxR/M7JX0/H
+	j7J7k9NtEyI6xsWSUKdIboq/ezDmuDMmn0z/BTz2leLUb0aTTTf7WUuabHYg5A==
+X-Google-Smtp-Source: AGHT+IGTZK204b2vIQNWi1IBdTbPOnR3ud4wldbVOTVIgJeqLxy7/UmQ6nbHt+HrUV38ARAFYkk5Iw==
+X-Received: by 2002:a17:903:32c9:b0:235:a9b:21e7 with SMTP id d9443c01a7336-2366b3df793mr321850155ad.48.1750357589729;
+        Thu, 19 Jun 2025 11:26:29 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83fb15bsm619075ad.81.2025.06.19.11.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 11:26:29 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v4 0/3] bitmap: introduce find_random_bit() and use in clocksource
+Date: Thu, 19 Jun 2025 14:26:22 -0400
+Message-ID: <20250619182626.393541-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606165756.1531164-1-dregan@broadcom.com> <8734c9z2ye.fsf@bootlin.com>
- <CAA_RMS7EB2v_h44Ysdoe0=WjC+T4G_5_4O-9DbCBE5OyRNArkg@mail.gmail.com> <87h60dmn86.fsf@bootlin.com>
-In-Reply-To: <87h60dmn86.fsf@bootlin.com>
-From: David Regan <dregan@broadcom.com>
-Date: Thu, 19 Jun 2025 11:23:03 -0700
-X-Gm-Features: Ac12FXwY4L3iGAb6y8Z7xuuGcl1xTOk1NYTk9evRoC8IYcMVu9a22ogFJ9qGxfY
-Message-ID: <CAA_RMS5a4kB0=P+XSS_-zL+KmP2YqSSQghb=c6UvvxQg16FiQw@mail.gmail.com>
-Subject: Re: [PATCH v2] mtd: nand: brcmnand: fix mtd corrected bits stat
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: David Regan <dregan@broadcom.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, 
-	bcm-kernel-feedback-list@broadcom.com, 
-	William Zhang <william.zhang@broadcom.com>, Anand Gore <anand.gore@broadcom.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Kamal Dasu <kamal.dasu@broadcom.com>, 
-	Dan Beygelman <dan.beygelman@broadcom.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	rafal@milecki.pl, computersforpeace@gmail.com, frieder.schrempf@kontron.de, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, 
-	Boris Brezillon <bbrezillon@kernel.org>, kdasu.kdev@gmail.com, 
-	JaimeLiao <jaimeliao.tw@gmail.com>, Adam Borowski <kilobyte@angband.pl>, 
-	Jonas Gorski <jonas.gorski@gmail.com>, dgcbueu@gmail.com, dregan@mail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi   Miqu=C3=A8l,
+nodemasks implement node_random(), which may also be useful for other
+subsystems. Generalize the function, and propagate to cpumask API.
 
-On Wed, Jun 18, 2025 at 2:07=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
->
-> Hello David
+v1: https://lore.kernel.org/all/20250604212125.25656-1-yury.norov@gmail.com/
+v2: https://lore.kernel.org/all/20250608194536.28130-1-yury.norov@gmail.com/
+v3: https://lore.kernel.org/all/20250617200854.60753-1-yury.norov@gmail.com/
+v4: return NUMA_NO_NODES instead of MAX_NUMNODES in node_random() (Andrew)
 
-...
+Yury Norov [NVIDIA] (3):
+  bitmap: generalize node_random()
+  cpumask: introduce cpumask_random()
+  clocksource: Improve randomness in clocksource_verify_choose_cpus()
 
-> So far the reporting looks good (and the nandflipbits output looks
-> correct as well).
->
-> > [  676.408441] mtd_nandbiterrs: Inserted biterror @ 2/5
-> > [  676.413411] mtd_nandbiterrs: rewrite page
-> > [  676.418122] mtd_nandbiterrs: read_page
-> > [  676.422267] mtd_nandbiterrs: verify_page
-> > [  676.426194] mtd_nandbiterrs: Error: page offset 0, expected 25, got =
-00
-> > [  676.432727] mtd_nandbiterrs: Error: page offset 1, expected a5, got =
-00
-> > [  676.439260] mtd_nandbiterrs: Error: page offset 2, expected 65, got =
-05
-> > [  676.445868] mtd_nandbiterrs: ECC failure, read data is incorrect
-> > despite read success
->
-> Here however there is something wrong. We do expect a read failure,
-> instead of returning wrong data. There is still a problem, I do not know
-> if this problem was there before though, but this must be fixed.
->
+ include/linux/cpumask.h   | 12 ++++++++++++
+ include/linux/find.h      |  2 ++
+ include/linux/nodemask.h  | 18 +++---------------
+ kernel/time/clocksource.c |  5 +----
+ lib/find_bit.c            | 24 ++++++++++++++++++++++++
+ 5 files changed, 42 insertions(+), 19 deletions(-)
 
-Thank you for highlighting this issue, I will investigate.
+-- 
+2.43.0
 
->
-> Hello Florian, if you have time, I'd welcome you opinion on this patch :)
->
-> Cheers,
-> Miqu=C3=A8l
-
-Thanks!
-
--Dave
