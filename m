@@ -1,145 +1,122 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E67200127;
-	Thu, 19 Jun 2025 08:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D5F264618;
+	Thu, 19 Jun 2025 08:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323267; cv=none; b=EfWRjClmbHrU9txzh3/3PXaZX53yR/oQLNQ5dv+yCbnB0HzjSbAwrjVbNdS41mCdqttxPHefwjVnCl/qVsKkf33tZQf28wOo24ubv8oivgpS+G06FWKDr7pi7M3sVHz/p7VLcPf0qqjM1UQ2lfkSYOEbb2Y/Z2ovOcU0chHlJsY=
+	t=1750323294; cv=none; b=IApnfEMXjX5mDZjE2SC437dLsbCzCun/1ouKxCcnl0+IwKTMhVNnpjPmy/UR6ZUSzP0uOEh1NKLdq+h78st/O1rMFAJ0ZV2GrEp4m25VhFbq0PF/nQ8bnmBtd/Oe9WP+wJWcLI9vdksfG6wUNbpQciyR7w8C0ePlVAAYs7FViDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323267; c=relaxed/simple;
-	bh=5TsKhf5TFRjYNYJ1lfoUHSCn3Ye0Fxta6qs1C8pi8eE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GE06LdpmlC5Fe+kAe7zPhwJJAOugVZl9/2zd18k8uBnySjF3a79ZTGj/Hj5ZCEpfeFU6M7/aM3//as+j5gmxbeVqiPShRo6UkKhHAk8n7EfOfJJq1PaSP/7z61nlKQRlIi4cGOfShy68aTq61f9p3cbfbueV+YOIystaK5rOVxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fRnctNSj; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750323294; c=relaxed/simple;
+	bh=Oe3sQXha1qmerX9eSzIumQsaFzOJeWnD/5lIQE3te/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X4Y5vYA+fAh7JRfqUnzahLj8Jw9vPDrDLni4sDuUtDqYSPCXRadEFOJ3uScopc1cjHmTM2RaQopMVgLRZaTvdsRXdabSxcEPRSIasnesdw7QHvdsaOi0nG1u0KLj3xNhCK7mkSWpniYYqMiUy+JEuGjwPmcmHdn02OKRK34yPiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=o/6iUb+Z; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRnctNSj"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so6152735e9.1;
-        Thu, 19 Jun 2025 01:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750323264; x=1750928064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2BgTuvT3u6AIqLm/PQRYt/22SDLcCwFXFs+qer6/yKE=;
-        b=fRnctNSj2kH9uNpxIF2m3a/TTdBMdEdmlCrNMw98v4JDDNva6cfn3UzYvmy7gezxUf
-         BwMir0NTHcwklEfjI+hXtaVBT6x/YyhynVnXxP3G+df5UfeDuykRY2M3aq4meJboaqe2
-         3Xg5apE9ioduKNAKWx85l0V8pYvzNWbzBpDJIefVCw0fpzisNSq2/wgm6bMKahMQIfwS
-         66Z5rlgA2eyIoMVPsG9GgXqLt2Bwdw0yRxwxHJBwnhXoySXxp4liFMc34MqkWZ4rseq6
-         qoMRLhZXPnMovWxAqrbrYujf+Ee3rPdqha8Lf3164p6NZWJBW1SGwQTCutAFAmNMC92M
-         KIEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750323264; x=1750928064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2BgTuvT3u6AIqLm/PQRYt/22SDLcCwFXFs+qer6/yKE=;
-        b=oZwlywC9G2+EZS7vM3rZpB4+Bmq8kllNyJEo+fm3wF7gYi6yNERr3hHrW7Oykd3fxj
-         kkvzbeVNC6wpbUB6RJED/GbGrN2DsooLyhWNZusQSow3xP3mDR/X2kIjZWmn5ynEaFuB
-         UQrrsYYmtc+gY8qMToKbX+4AmDMjR+6ocgRG3ijgKLukNEx+cjRQICS4KRxn1D0GUABY
-         Ytvz4p94OMIdAVcS6uhpDtCjKVMhoF8P4HaLJaM7KvGmkerYNigfDCecvObOMrjBpLIp
-         o1tgIYvIOBNxwOlZtyoxRnKNRo3wNmEaQt8xO6EavnmUi3Kt9alqykOyPr4EVPYCIphp
-         lR5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXkJFllQAW72oZqgfBoOT8rl8QFJ8aoB4FlxQp1yCpqVoKFqn7HAembIO7MWHjL646G74bveqtuXt8t@vger.kernel.org, AJvYcCXqFfekZO/a/u0k14nGsjBb+jfmTAfgCmis/NReawNg6NxPbzNYwpeP/EuTxDhVjJDX0ToLJQdCzC70m1Z2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4js1hFF9XyjFEI5/G3kPUU1r1/XMpp/h8IlfMwqGwno1lRxAH
-	JSs94i74i3331qTRZd8DHlQALtpwCQ8W5PRp2q+PP8FLJSwJ6mDGyrgdM8fKS8SIvGx5ldrPrJz
-	2f/pQpPoIysjaZfs3CPQSokdknU/mtJs=
-X-Gm-Gg: ASbGncvSjuHdfapcazY08RbkKa64OY1MZokACROOvSWMv4S2MM4oao6tNKAtTqfImaa
-	r+i3Lvhs3eJfrBu4QQeTtmkOyvQZiHR3xf9tCS9q1U5jjAnebGljKbz1WMYNYdO+SPrt5AbJSdS
-	tX6FoEkRCH7lDJJ1tOGU3/7UiFFbpDBDOL0T5t3OTgp0I7
-X-Google-Smtp-Source: AGHT+IEPcrAct2MvP6lMu67WHWgZkRHjbRH9x4L5SPSXZCedtmDIaEdykoVs3GdsAansa3lx+5kGChF4gR2TEuObCOU=
-X-Received: by 2002:a05:6000:144f:b0:3a4:f72a:b18a with SMTP id
- ffacd0b85a97d-3a5723a197amr16822801f8f.26.1750323263687; Thu, 19 Jun 2025
- 01:54:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="o/6iUb+Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=eD7eXQjCVZXrASkEWcilBg8DLF0GyjTxOwYQy8veqf8=; b=o/6iUb+ZXais31yF8EysEgF4nP
+	6sr4Vg/Z4rY9ovh5IfCwzyhKZLARasyvwvWzjrhIYyyxi94HFmFUF14PJKRMupQZJHu1sLL8CP7/9
+	SECVU1JfQoHKkLSmOR3KKA0UQEUmmCIT67OvC71waWiCBcHaOdGuMGxtQZoPF1BAOKLeLdZw+Zsyu
+	k4jFb8axA9Owba/EOT3Sh7ZoDF4e1T8qJFLkArK4D9dl4XdvWvvvw/bYZuLkL7vKH8csHF98J6NmP
+	WGgyR6kjpFPZLcAFtdmlZLcItUXUz7oMJQHdT/v5gBQLkHy+wTzvafJZPhcpxyKw8tMESvkTq17my
+	Fnly6pzQ==;
+Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uSB2j-00079q-Db; Thu, 19 Jun 2025 10:54:45 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chunyan Zhang <zhang.lyra@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject:
+ Re: [PATCH v2 10/12] gpio: rockchip: use new GPIO line value setter callbacks
+Date: Thu, 19 Jun 2025 10:54:44 +0200
+Message-ID: <15862883.tv2OnDr8pf@phil>
+In-Reply-To: <20250619-gpiochip-set-rv-gpio-v2-10-74abf689fbd8@linaro.org>
+References:
+ <20250619-gpiochip-set-rv-gpio-v2-0-74abf689fbd8@linaro.org>
+ <20250619-gpiochip-set-rv-gpio-v2-10-74abf689fbd8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526114353.12081-1-clamor95@gmail.com>
-In-Reply-To: <20250526114353.12081-1-clamor95@gmail.com>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Thu, 19 Jun 2025 11:54:12 +0300
-X-Gm-Features: Ac12FXzaBC7401W2R75FUry1Dj9NV-cb1lVlcCWDqwkSkHUUU5xEZJLQ_IxV-to
-Message-ID: <CAPVz0n3QJHBVbTvfW8A-4nTDmagEiav4iwiekFd-z2nQTvUegg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] drm: bridge: add ssd2825 RGB/DSI bridge support
-To: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-=D0=BF=D0=BD, 26 =D1=82=D1=80=D0=B0=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 14:4=
-4 Svyatoslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> Solomon SSD2825 is a RGB to MIPI DSI bridge used in LG Optimus 4D P880
-> and LG Optimus Vu P895
->
+Am Donnerstag, 19. Juni 2025, 10:33:23 Mitteleurop=C3=A4ische Sommerzeit sc=
+hrieb Bartosz Golaszewski:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+
+
 > ---
-> Changes on switching from v5 to v6:
-> - set correct module name in Kconfig help
-> - return error if spi sync failed for reading
->
-> Changes on switching from v4 to v5:
-> - rebased on top of drm-misc-next with adjustments to fit
->
-> Changes on switching from v3 to v4:
-> - no changes, resend
->
-> Changes on switching from v2 to v3:
-> - added mutex guard
-> - configuration register flags parametrized using panel flags
-> - removed unneded debug messages
-> - removed unimplemented modes checks
-> - added check for maximum pixel row length
-> - use types header
-> - remove ssd2825_to_ns
-> - shift bridge setup into atomic pre-enable
-> - cleaned default values of hzd and hpd
->
-> Changes on switching from v1 to v2:
-> - added description for clock
-> - removed clock-names
-> - added boundries for hs-zero-delay-ns and hs-prep-delay-ns
-> - added mutex lock for host transfers
-> - converted to atomic ops
-> - get drm_display_mode mode with atomic helpers
-> - parameterized INTERFACE_CTRL_REG_6 configuration
-> - added video mode validation and fixup
-> - removed clock name
-> - switched to devm_regulator_bulk_get_const
-> - added default timings
-> ---
->
-> Svyatoslav Ryhel (2):
->   dt-bindings: display: bridge: Document Solomon SSD2825
->   drm: bridge: Add support for Solomon SSD2825 RGB/DSI bridge
->
->  .../display/bridge/solomon,ssd2825.yaml       | 141 +++
->  drivers/gpu/drm/bridge/Kconfig                |  13 +
->  drivers/gpu/drm/bridge/Makefile               |   1 +
->  drivers/gpu/drm/bridge/ssd2825.c              | 814 ++++++++++++++++++
->  4 files changed, 969 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/solo=
-mon,ssd2825.yaml
->  create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
->
-> --
-> 2.48.1
->
+>  drivers/gpio/gpio-rockchip.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+> index 64700a003f9a17947dd38baea23a066e8c057caf..ecd60ff9e1dd1a090bfad204c=
+8b86c4d7fb68ce7 100644
+> --- a/drivers/gpio/gpio-rockchip.c
+> +++ b/drivers/gpio/gpio-rockchip.c
+> @@ -177,8 +177,8 @@ static int rockchip_gpio_set_direction(struct gpio_ch=
+ip *chip,
+>  	return 0;
+>  }
+> =20
+> -static void rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
+> -			      int value)
+> +static int rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
+> +			     int value)
+>  {
+>  	struct rockchip_pin_bank *bank =3D gpiochip_get_data(gc);
+>  	unsigned long flags;
+> @@ -186,6 +186,8 @@ static void rockchip_gpio_set(struct gpio_chip *gc, u=
+nsigned int offset,
+>  	raw_spin_lock_irqsave(&bank->slock, flags);
+>  	rockchip_gpio_writel_bit(bank, offset, value, bank->gpio_regs->port_dr);
+>  	raw_spin_unlock_irqrestore(&bank->slock, flags);
+> +
+> +	return 0;
+>  }
+> =20
+>  static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> @@ -325,7 +327,7 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc,=
+ unsigned int offset)
+>  static const struct gpio_chip rockchip_gpiolib_chip =3D {
+>  	.request =3D gpiochip_generic_request,
+>  	.free =3D gpiochip_generic_free,
+> -	.set =3D rockchip_gpio_set,
+> +	.set_rv =3D rockchip_gpio_set,
+>  	.get =3D rockchip_gpio_get,
+>  	.get_direction	=3D rockchip_gpio_get_direction,
+>  	.direction_input =3D rockchip_gpio_direction_input,
+>=20
+>=20
 
-These patches had no activity/feedback from DRM maintainers for a
-while, so, in case they got lost in the depths of email box, this is a
-friendly reminder that they are still relevant and I would like them
-to move on.
 
-Best regards,
-Svyatoslav R.
+
+
