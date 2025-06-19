@@ -1,143 +1,210 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4142222D9
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750299640; cv=none; b=ui9ozwiWnMvGUpegLjDJ7nAihfPCpj10cxl3yGBFB30OzT8sve5snDFgalC5YYcukuWi9ABC24IkN/4RGk5V+RK0OWbQWaWghYEbrAIincAkBN93Z/l59sI+tPXNI0IuYdD3HC5o0WURE1abh6B/ndlJA8+XQTR7w/ny8pJLceU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750299640; c=relaxed/simple;
-	bh=fbHwj/6Mc7LjY4LJrhtl5037k7Ipk80XNh/vyQkqCi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OuqicHqpuOQ29NGpu7gD5RvhqLSKF2dFZHQ8w3ue1v2VNIr+FqSGJXi4Xc5q905EJCwV/0+7NxjJkVOwTu94NirURzsb/BFfgAWrsbIxrdlRZ2MqB6jCMRKwh63E8+ojfzxYA6PeWzSTRzuRoxyZSwNF2THDtbFgCmpSNUjZwwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=g2CwFCi6; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BF81A5BB2
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750299667; cv=fail; b=ga08R8qAPcQ1+umHUYUOxE5heiLfKkukVgT4WAJNHo6TDAHzKrENrEBZ1cD8RtbSytUyW0MDVQVW0IhQ8vmIuxODALm8Je1aq11ptRLTEDuFeXN6JXlzSwciWV5qtRIRMdTA0shS/6hRDhiCLsXnKRVePpt2B9Qb7tq9K133ucI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750299667; c=relaxed/simple;
+	bh=6/uMahd+cxODXsITWtHF16gqVimJUR+819u+YrXQ0N0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JLASikjvOqUfblR51wBZDJUZJQ2i0+96+J6r0ZhR4NmtVuLnbAXNSJxSg7A6xlwZiL7SUpb0xfS0vO2GQMyrhxZZbK6+P/r9/NESMCanaY37CgLYD+Bvh5WnCj4J0klhq92Rw6mc2w4encgjsKHbQzYd+wWouHaIQSxunN2C/5Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QlFyARJN; arc=fail smtp.client-ip=40.107.244.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="g2CwFCi6"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-748f54dfa5fso182996b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1750299638; x=1750904438; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aB+z+oapAeIvD/LMQC0pA+9Dvh98i3pYzrLPX5UVNgs=;
-        b=g2CwFCi6sq6bYsGW56STu/fdSElwcbEqRmqpOgT+x6/oQ4HJlBBqJw7823cKPGAnn8
-         quYuYv5opcB/hsTq0mT3zTvnupthMsWM8LLCPQSj8tsJNlq7BGSNLKV9o4i21u7ibsT8
-         3kV3etSW9CXZ6jZWxt1ddGgA4VUBxNvkgbzNPGz4DEtAHxdfSOJDtdinDRFMFDpXmIzu
-         XxXHvKt9wyxQS1Spg4UWayJjuwrlKOfKsvU+HngTZEatK8ABBlvF1NHfsGjA80tCOSuC
-         jAVwNfeUS21qD2p1bH2eR8qwbtpiUSv6MTszxks7l6vYTtJHC19vJY0ZykxoBLAk04Qn
-         iNsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750299638; x=1750904438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aB+z+oapAeIvD/LMQC0pA+9Dvh98i3pYzrLPX5UVNgs=;
-        b=OYrVYWBcz+8VcoEhW3vvpajiMPTyxRUDaQPH7G8GSqGmY/ia8DokPlvMNqBvh89ShQ
-         UieUDj6VlTzr3HVaTakaNJqRjEvZyyAtm6AMqlFk0r0MZj7JMcFWaip7wpBNa3DExVvN
-         cCzxBkQSa/9VZL2QaZImCbfegNRdR0uBQeVCx4LM4wwo63LQJipovCPtmcBCUlwZGkPB
-         p1liT+T33td85JRxlbaZnzPuHno/UrQ2YkhxjBReJmKDQjWFJ7eCALI3a8/7/jcPW2RX
-         ybwS40NivNYJkXqFh0U5W6v13rHC0xEGnec6/y6cyvKZaV5rQ7jl9Swzoi1UoNbrqTte
-         lYng==
-X-Forwarded-Encrypted: i=1; AJvYcCVkZCiI098Lr2JG+/uB4zvXJsbbbdbW6Hgc1xyEE/xNo8nuGmUVljnUlq5QYE0xIa6T+xfJtIepo+UnpMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcmwkH2yRDx8o3+6TZ0U2R0sT7VDyDLJb8RJRdToMLRmYKk64E
-	NYh+vJ/WFSaeQFoPEVfdSAK4KkSBiTWWwJmig/+n9WV8HBfqxwDRIR3qsrGT/BlCs+8=
-X-Gm-Gg: ASbGncvJ7eZ8dCj09erPkNWItuOuPC+6TLrAH/pcPSZSvKQ7puxhUgyHMwRFyBxdRdL
-	vaGuzqcGoOxwl9T0RAXOph9n9rSJ0Be0XfjRYauFd6RuWmKNEMP5XDiHYm3k0zPoy6vrElCi9IF
-	8r/ZxpdrNzBo87FXfDW2GTRSHCVhCMXy0R0hXdaEtSFLI219P6kNL6OeQ6/0XQqbbOdfqwjxzdr
-	1YyQtMuTUdiBlCZzeR7Tm/rX4s1bThtPWQmkC7QskC+tIIBUbE+ul/CBygsgYeOl7oITf2aMvAX
-	Fir0od00lKAN7sAQ8wgu5H2HTcX2BLo//WT7X+/M6orho6AqTGlhyWQ+8L05P8a0SJubLBg=
-X-Google-Smtp-Source: AGHT+IGjSSZuolaUpbJOSDgxdNJ2rz6g6jIUWqfE+ln3NvBoOq+EqOxlPwszxtc7pzssoDHlu8HO3g==
-X-Received: by 2002:a05:6a21:62c9:b0:1f5:7366:2a01 with SMTP id adf61e73a8af0-21fbd6925a5mr30398731637.37.1750299638092;
-        Wed, 18 Jun 2025 19:20:38 -0700 (PDT)
-Received: from x1 (97-120-250-80.ptld.qwest.net. [97.120.250.80])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31c84be11fsm2584945a12.78.2025.06.18.19.20.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 19:20:37 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:20:35 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v5 6/8] riscv: dts: thead: th1520: Add GPU clkgen reset
- to AON node
-Message-ID: <aFNz8/m7q4T2qSHd@x1>
-References: <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
- <CGME20250618102231eucas1p1ec99058179825cb1250a1f189313b3eb@eucas1p1.samsung.com>
- <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QlFyARJN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uMLbWcoHwIwqlB5FcOM9W5ZMF9cyU4KLuMO9jgl/CFFnQuny/tipcLLQEgjt4+KvmXdEprHojBdKjP2bn20RxQwnGyc6YkeKBFa/4KgcJPHaW5wLglMtLl8bhXj/esfMLf1UDMvKrIN+8SCyrMHyaOmFHtB9Ohg5pN0XzO//XotzRsnfrpH+bn/9Inz0gYnhKNRDcsOZupfEpwWb0VZUl1yCYtYfzQIoBqXfb/gJJg5ZVCYson3tdB22AWrI6NSzzXFHZolLfaVF5Zhwyt5f+t2jWTle5xf6wYfmNYRvHZDTqIagNlL8eJAKNpMEE7irrWO4i/1lXbKNt9WTPJltTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6/uMahd+cxODXsITWtHF16gqVimJUR+819u+YrXQ0N0=;
+ b=EQ+abp0h+W1xJjDPFnf1TRSHifOY4IS0xpSI5lyy/etSqAL4OR6UgRSTe6G9ayHFGyWfe45B70liMXpHDJXNqa8syNaVRzsyTlNuFTBzSoj0QAw37FQwYFMNq+JbwMG1MULQr1T9ewxqBMG+yFD9aJo4cAj8/xusBec+jv/wQd/7UH6lYsCBM+cOn/BBuT0AwEyprtuEvSSr8ampiKPHrtRoTP0/B3JeqmE8vw2if3i9U2edzlGAyq9wznbMZdrCfTNveWSNaYFpuobrnH/x64bGnpg2XxzrapeZ88CTbI+CXSHwfc6lo7obOGbQAVQ9csymxO7fsPhFqOP9MziyYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6/uMahd+cxODXsITWtHF16gqVimJUR+819u+YrXQ0N0=;
+ b=QlFyARJNExtUQ2MTz4dk+FXtcyC3vd+buZmKduYZrpDhRdjySENMZmFJPxCLDnWG08rsVYXlzchd/agtX6fADrr+lt9frrdWnhP5cn9blJ/BnNbYLf9i9mtMGWUB3dDD1kw37aVg0av51F3hwRZr9ep2pGYEbu37NALuqvxWDAkVsWGDfKlTBfcP5mII2YwQtEtdi4RagTKRGkxoCt5gB0wkIKY02/pEtnP0QjFOiLYhgq44E/LIO2hepzmwVkRPmKT9xfQM1d6ws6FF6q8HNYSS7plFCt0CFgBCog6xcM3x6IvQRpySs0GyYgE0P5ofgcxuQ4zEDhI2By8YyxhmKg==
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
+ by SN7PR12MB6984.namprd12.prod.outlook.com (2603:10b6:806:260::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
+ 2025 02:21:02 +0000
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::ae1b:d89a:dfb6:37c2%3]) with mapi id 15.20.8813.024; Thu, 19 Jun 2025
+ 02:21:02 +0000
+From: Ankit Agrawal <ankita@nvidia.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, "maz@kernel.org" <maz@kernel.org>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "joey.gouly@arm.com"
+	<joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "will@kernel.org"
+	<will@kernel.org>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "david@redhat.com" <david@redhat.com>,
+	"ddutile@redhat.com" <ddutile@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>, Aniket Agashe <aniketa@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, Krishnakant Jaju
+	<kjaju@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Vikram
+ Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>, Alistair Popple
+	<apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, Dan Williams
+	<danw@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com"
+	<coltonlewis@google.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "maobibo@loongson.cn"
+	<maobibo@loongson.cn>
+Subject: Re: [PATCH v7 2/5] KVM: arm64: Block cacheable PFNMAP mapping
+Thread-Topic: [PATCH v7 2/5] KVM: arm64: Block cacheable PFNMAP mapping
+Thread-Index: AQHb4B4Q2ttwO17ce0uE4d9KsSbF0rQJEAyAgACwFVU=
+Date: Thu, 19 Jun 2025 02:21:02 +0000
+Message-ID:
+ <SA1PR12MB7199F2B88CEB501F498FF903B07DA@SA1PR12MB7199.namprd12.prod.outlook.com>
+References: <20250618065541.50049-1-ankita@nvidia.com>
+ <20250618065541.50049-3-ankita@nvidia.com> <aFLfT_c4Fcxt8euY@arm.com>
+In-Reply-To: <aFLfT_c4Fcxt8euY@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|SN7PR12MB6984:EE_
+x-ms-office365-filtering-correlation-id: ca87550f-569f-4045-a2c3-08ddaed7efd9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?smJFqMT9+P8fsHeL7s7+lNyMcybmOFfqHGBsVKNd09RyoUB98IGi1YHMDj?=
+ =?iso-8859-1?Q?8XHMkbSIcqTXxAE7FXB7288HWIFtPvBO6Hznr4DWUMWxG+PWnSGEBX2wwL?=
+ =?iso-8859-1?Q?z2CZ8IX/LCq22mWMAK8G7EExz2lhGSZwj+O8eRb6vQ+66og4SjwKrfPa2B?=
+ =?iso-8859-1?Q?5CFkVMfE3OKHvlFRkVr/2zYYenMb3b83ufhRtGylbCsXojLbPJdbD2TkyX?=
+ =?iso-8859-1?Q?4XHzRM/TsM8gMTFdOdiVmcv8LDQBSCaA3RUh3+Td7wyus5JBb3p4vOqMmn?=
+ =?iso-8859-1?Q?g04k1XtPYF2efudkNHmETFfq8NVrKRwqHFxLkzqvVMzGgY5CKWMu8NlRYA?=
+ =?iso-8859-1?Q?OrFVzwmn+Jd2cyk2eKJA35pKaFBmDZ4WgDRIj5HwYk9mBuST2tVLefixQW?=
+ =?iso-8859-1?Q?L9lVKmLVqzSIoxOL5zvHMOlDfq8XRH4xaUgDyFehbMosu6rEPe0HhNyx4i?=
+ =?iso-8859-1?Q?E/bFHLsttN61h+qrF/y3hR1yF65MSlZWyUocmCe7GNfnY6YOfW/PkzX0Ur?=
+ =?iso-8859-1?Q?k9LajPzpmYOT+rTNUCs3bFkS7RcHYaTWYavK6WejZdbdaWEEqh5JmcCf+K?=
+ =?iso-8859-1?Q?q/vbnXRcr8BcLRWNrMy5gi3GTVI4ryBiNpD51L/U7b0tml06Z1wgtBsy3S?=
+ =?iso-8859-1?Q?eHwtOF8CMUVC5UlFS7fUOW9wZIQ2rUHFH7zIlid1IQ8zGJkpM16PK6kI5q?=
+ =?iso-8859-1?Q?qkPWBljYvpeBB8HAKC5nv5vGjwTgJu8xFS4hJoM9kHFFW4G70RaJjCzm0K?=
+ =?iso-8859-1?Q?nqr4fkqhtjVJdKe4RfKVMLckcW1k/MXSb94zO6ukRSEgu+hDsz634/UB+U?=
+ =?iso-8859-1?Q?X09zVTQ119cjZ2IKS+C1N85cid/0V/ZXtF/OJ0VIktxhbdtq45vD9y6PR7?=
+ =?iso-8859-1?Q?2xzC8V8e2gICAQ/FbySXg2TbL07pYKPNHoXWV9GZu5mbyJEQbWevLA5kSx?=
+ =?iso-8859-1?Q?qXaGlaCtL7zJjilKtzs6+YRFQosMOWvHzm8h1j5C8Vs4o45vjnOKhN/nki?=
+ =?iso-8859-1?Q?ugospA4zwTAyzDtQI0TQaLALK8502hIsJFEf09Oo5VTuwKnbAUCCoM8y6t?=
+ =?iso-8859-1?Q?Ip6Wu3i4eelKFKS4S9xgIS0ZrBBhVxAqol9FVUNNPfH6ygnJCEo4aRrw1D?=
+ =?iso-8859-1?Q?XhNoM+nlOX8I9kM0TT0BhlhMzs74mEZ9K1t4g3xNdZCD1PEI5F9yzhXfju?=
+ =?iso-8859-1?Q?U3HibiTv+3xpA1ycTNOn2bff33KH9eVMFcv7AyWQbtdrb5OMYMcFWvrtyS?=
+ =?iso-8859-1?Q?eNIFCgDkIuZAwtl8KSOszxGw8bPjRVbVEnq6FWfL3ah6IDRw0CVEkUBnbw?=
+ =?iso-8859-1?Q?QxJ+jNNX3VtLztXmibcaeZ1fvOtWPhGLmhiCjU6g8EkeLbZY2TCtKhkcGn?=
+ =?iso-8859-1?Q?gdBIwzPOKk+DYfO4oNPCC588yGM+OgPF/o6/c82M01xuLByqsUALIAUucU?=
+ =?iso-8859-1?Q?G8urM4/Vd0j1oSXyy8xih5jJ6aZ2Rzst76XlxyGSnM1C/ysHx8c5HaXycZ?=
+ =?iso-8859-1?Q?t9b8E/SVTVIVkdTkSoyc2E5fvDWf9DE4YiU4J9ByEQ6g=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?OpHxWsOuPbmrV4Q0T6q72uJ8kuVdRbzpbN7BTcUVMsyIExQJXPZEKa8guY?=
+ =?iso-8859-1?Q?PBFdV0mX5Zp1HM3m1oW8009VEioqH4e9eatHd/Uxgkj9I5t65Eul5UYRv/?=
+ =?iso-8859-1?Q?umSRkMmF9ppI9pHMK6M4/Mxf+ouETSscBkjWFL2IQfOnNIR/3gcgj+POxJ?=
+ =?iso-8859-1?Q?n4lFLzGso/3ddqsyvttz8KqlHJmuRKz9DJ5XX1ytdTAcESU8Xz/crMgDC4?=
+ =?iso-8859-1?Q?AFzPc4YVvnYj/OQ/hnEEAmvEFdaC1QwUY/LYUTAXotlFwmxHmqUlEmb0L1?=
+ =?iso-8859-1?Q?CIlu1lvdfm9J8cMBBgHO9Y0EY/YngE9W0rkW771nJHffw8E2x+u4yyCQ8P?=
+ =?iso-8859-1?Q?r+fE/ol8+Yk3sVCp0Iicez3Yb4aOH+cuoglEXx7HCbTrOLin2mj2I9PlKd?=
+ =?iso-8859-1?Q?wdSqgsOHZlukjKM4bv3c4FrKTa5p6Fu7G5QuqYPZY3DTIL+9OrYJFa10Lj?=
+ =?iso-8859-1?Q?F9ZP1vHJjOWYrVqOLI1gMNy9Pr6Xh8l4T7h72J1Bn+xPuoPtvJuZFQcQ82?=
+ =?iso-8859-1?Q?T26/S/oYGv/oSk1yNNZhNNdFjyI140cxpiN3qKxV3TPu+RKWwVjMKF6y7r?=
+ =?iso-8859-1?Q?gegcL+XFXFc3KSw43FPkg9AQ0NN6jq0ChG/KQZlxJOYK7aIoKlZGlU7iPy?=
+ =?iso-8859-1?Q?XuSM3gOvKlIRdC3d9ItwaAOYd9DyQMeMICF4l2uGcuuhBMhurvVNC+ZH5Y?=
+ =?iso-8859-1?Q?XTzKQRb8l+Vvg2bJwKkNUsKB33+FdB+96N2VnafBJTzQbjSzlO2quaccG1?=
+ =?iso-8859-1?Q?U5g0URleQaD4VgXvZcd1xV4bhOCtodbmg0+avOQfF9bcVkG7Wzn14W4f+G?=
+ =?iso-8859-1?Q?NpI3hrKlUvI9qa2AWWLp824jC3o2CZ4A2b4WtwHl+28vovsn8tZ4ga1c2p?=
+ =?iso-8859-1?Q?MXOR4rdsCmQTasNs4RmeVmoveU5iaWPEM71B8bTP7q4lNf8vp4NXn8iAt5?=
+ =?iso-8859-1?Q?SodHZbq1Fv4U+APA79cZ6UE1tA0vc5Cd0Jb0JzN50vYfbgZrNPNWK7wHdj?=
+ =?iso-8859-1?Q?JDeelat0LHRgdZLsqUwSt/uLX4SuI75Jr1JbtBX02SnobWmlOy9OFZH93P?=
+ =?iso-8859-1?Q?cvuCCh1Visv7+tLY1PAarwG2L1NrL4qFv+wqSHf36z0i2y5JZmCpdTtqF7?=
+ =?iso-8859-1?Q?j686IBz5EFCb4o4VBdKhdLa8gzeK9l3DVJXwZFdH7bFS35AG2HKo1meL/8?=
+ =?iso-8859-1?Q?cEZui5inIK2+Yu9N0zGbDnHUt/DdqSj2GmyoYGvD2pgGdgs6FILooQT73K?=
+ =?iso-8859-1?Q?dIM2oJhzDc5bBBHY5qA03q2s6swVJixnXCEw/IjV9AK1OIe6WtH2ziOVRA?=
+ =?iso-8859-1?Q?m1hKAUhu2hRxuW0I+qYm+aRp/0kJMOfWo9/k7x0Raj5HxudomyuV3xR1bq?=
+ =?iso-8859-1?Q?l/2pzD9ViQSP2SVGDRINOCaCGQKNYdtdWzNGzQSkhr+FmPVQxA3Yq1zQXd?=
+ =?iso-8859-1?Q?vLHpEUn7jRvEWjaMQk4hX+jtJLjqc2fojwyG0N+CF36ixsLyjUOv00ArfF?=
+ =?iso-8859-1?Q?EQ7/Dg0CAsxFgerse46zygyCQCP+0qBKhY+gvV5+AVGSFWtf5w+DxsBSeW?=
+ =?iso-8859-1?Q?uAlx4XczQbN/8QlV7LOkHTVvy+G6agFglpo3xPOli3/p2RrqImWJ/2N78e?=
+ =?iso-8859-1?Q?0+nnisRRB9hTI=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca87550f-569f-4045-a2c3-08ddaed7efd9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 02:21:02.1556
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K/VLetb25spB9ESEtelGWTeHCDSdsWtPLX2PoxriWd7IA3+91LIsGO+v9ztY+Ev7/f8SYKLmxuotui4cKwE8lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6984
 
-On Wed, Jun 18, 2025 at 12:22:12PM +0200, Michal Wilczynski wrote:
-> Add the "gpu-clkgen" reset property to the AON device tree node. This
-> allows the AON power domain driver to detect the capability to power
-> sequence the GPU and spawn the necessary pwrseq-thead-gpu auxiliary
-> driver for managing the GPU's complex power sequence.
-> 
-> This commit also adds the prerequisite
-> dt-bindings/reset/thead,th1520-reset.h include to make the
-> TH1520_RESET_ID_GPU_CLKGEN available. This include was previously
-> dropped during a conflict resolution [1].
-> 
-> Link: https://lore.kernel.org/all/aAvfn2mq0Ksi8DF2@x1/ [1]
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> index 1db0054c4e093400e9dbebcee5fcfa5b5cae6e32..f3f5db0201ab8c0306d4d63072a1573431e51893 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
->  #include <dt-bindings/power/thead,th1520-power.h>
-> +#include <dt-bindings/reset/thead,th1520-reset.h>
->  
->  / {
->  	compatible = "thead,th1520";
-> @@ -234,6 +235,8 @@ aon: aon {
->  		compatible = "thead,th1520-aon";
->  		mboxes = <&mbox_910t 1>;
->  		mbox-names = "aon";
-> +		resets = <&rst TH1520_RESET_ID_GPU_CLKGEN>;
-> +		reset-names = "gpu-clkgen";
->  		#power-domain-cells = <1>;
->  	};
->  
-> 
-> -- 
-> 2.34.1
-> 
-
-Reviewed-by: Drew Fustini <drew@pdp7.com>
+Thanks Catalin for reviewing the patch.=0A=
+=0A=
+>>=A0 static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ip=
+a,=0A=
+>>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+struct kvm_s2_trans *nested,=0A=
+>>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+struct kvm_memory_slot *memslot, unsigned long hva,=0A=
+>> @@ -1477,7 +1493,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, p=
+hys_addr_t fault_ipa,=0A=
+>>=A0 {=0A=
+>>=A0=A0=A0=A0=A0=A0 int ret =3D 0;=0A=
+>>=A0=A0=A0=A0=A0=A0 bool write_fault, writable, force_pte =3D false;=0A=
+>> -=A0=A0=A0=A0 bool exec_fault, mte_allowed;=0A=
+>> +=A0=A0=A0=A0 bool exec_fault, mte_allowed, is_vma_cacheable =3D false;=
+=0A=
+>=0A=
+> Nit: do we need to initialise is_vma_cacheable here? It did not seem=0A=
+> used until the kvm_vma_is_cacheable() call. Anyway, it's harmless.=0A=
+=0A=
+Shouldn't be necessary. I'll remove it.=0A=
+=0A=
+>>=A0=A0=A0=A0=A0=A0 if (disable_cmo) {=0A=
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (is_vma_cacheable) {=0A=
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D -E=
+INVAL;=0A=
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto out_u=
+nlock;=0A=
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
+>=0A=
+> so, is there anything else changing 'disable_cmo' up to this point? If=0A=
+> not, I'd drop the second is_vma_cacheable check.=0A=
+>=0A=
+> --=0A=
+> Catalin=0A=
+=0A=
+Ack, we don't need the second check.=
