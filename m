@@ -1,138 +1,152 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481CF634
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 03:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3393CF9CB
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 03:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750303895; cv=none; b=V6QTokadLKGOLeWszp9jhUY8oajPq3trhOeMVNPeVLvEJ3zIVkJKlaPNu9bYg37wyKrjkbK+mXFBom4i+Mbo4FpvC43Hhnvn6K8gsUaSJ9GIui8ZkNatj4w4KSWSid15sVCxDAHUR/BwDgBicrVDRxgiKgWQD2XjeT1bdne04vk=
+	t=1750303989; cv=none; b=p6FLZPUMxn4EhlySr6zfXlEqlPyPH+YnCoseYSt18JpAybwfwLS2w7XBD+tz4zwY7e1NNevHfPH62H27rvZa3b2mdjGWkNlfsZ26LnN2+osSOwrb3qzrxnkb4NtNEFLcifqJCbVtzPrskHm48d+5bvW2xCssjnZHQQYm78+We3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750303895; c=relaxed/simple;
-	bh=wnYVcJND+0YSCps8gYqBnTTQaKrROg9oLByp7UEfSs0=;
+	s=arc-20240116; t=1750303989; c=relaxed/simple;
+	bh=o1cKqqrl3WcFN3B0siBCxSoKZjsWO26WSrvEnr5m2so=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uokFz6qb6d7yGRHSKMEmL/WEayvOuF/8RXjlfMghxti92egIl/Ur0ZzzBjOWMBoIbX2edmd0T4cF59+7KYzz3YIQbt/Q+KDIGpzd2E+9XxZGn8mMKGZUYWERIX2q2Q8HWacp7iArAuDm57h55sNn7h9+qq3D2XHhaV3bZx3GefQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=loxufJEN; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=phUFQJF8LRAkJ672VefGoQZrK0eQHTArIOCYxTfbXKPDN2354B22wGOQOCCUXFVT3Qtfw6XVWOwwdazi/5OC98KgyB4jZfYImSa3BZ4lX683aJPIyTZj6MWko1KQonJ0x8TbxUt7GpfZTyB1W2H4zvCvpms1y2iXMxJ20o7kWAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=0YIfDtff; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loxufJEN"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-607cf70b00aso525755a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:31:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="0YIfDtff"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e82596e88c4so348741276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750303891; x=1750908691; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IHCHN6bJnFw7jY2chWCLyrVEGLjzHZwAQev0cq6K6+8=;
-        b=loxufJENy5SbINpXfFmESoNuRc2gjXS+kfeaJjqnlHDUINmZcQRAqugE8QoCRxuuYT
-         NK3fFN2T1ptvrtmWjA0HwgcIJA6EDUzm51Sp1rlekbhJcibDHhBbIhW5dcJaSQ4dbMhl
-         irF2qDemHy8CE1Nx4zdDujuOc9K5l6xgxC5Jmt01ls+2DGx5+k6pmT69uppz6eVdcvh1
-         LUbbC2Gr1rxSPahEtAhaFJv/KaIEkruwPZyfcJW8SyjT2te80IXD9LN3i/qSH8/vkhI4
-         FA5kc1ztw5+yiuzJrD24IIVV+vDtAKWoSE6fZQzHiXyZbdOu/Q+j3nmso8aV54Y/Nvr1
-         YzJg==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750303985; x=1750908785; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60xy8wKrKO+1t7u1ffpNKlJu/zpqbkDRJr1SZgFpJWI=;
+        b=0YIfDtff8P2WYey3hbMLXaL5ajaAxfyzquZLWavw9WfTE37Ck4NKGPhCu+ZK629Or1
+         QlkbRu3Jrh47Cr4Ehnzth115VlZUYKjMtUYELIi6AR6Z01ncbr0TXFIvpja+6clCGPU2
+         tL7UVbaMyoUfk+s20QzCRCt45lwl3/W+bxPJMeXaoFpHW10i4ShF7hJer37zkjbNkFLb
+         dcjtIFwLgdvaCBzvC/qkga76fnAyQK161aSL3trnO/ey8vfxsi/CurHEKqoHZsoLvHvM
+         0XHC0svOWnzbK4XM/eGCd/Jo7SCfpgw7KlgbEOxi9PWiYRNUO5ha94WV/7ORax9JvS3A
+         t+TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750303891; x=1750908691;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IHCHN6bJnFw7jY2chWCLyrVEGLjzHZwAQev0cq6K6+8=;
-        b=PjWHl1pvonDZGwgBxSBlC/To1HOso9uDfMc0TUh3Ns7Zs5z+AxWgvBFAwNG0ajpcul
-         1WtFNU4z4zetA4ahx/MNu4I4zsIa0XUhw3KZrrtLnC6q5p9VdQxhZ49JdVqphP4DxHQ+
-         nl6TI/v5IJyHRwwV0zmu07WdruGjXXPgy/fCqNAvw/4tW8+/5pvykPjPhNZjj/Ok55KT
-         psySWdIWsNTBva7aoEjNzwKg7MTg5xPh8LI0RUF3uxYrh4/5RipzKnx6owoZPCMY1psK
-         UJYzfELMuSCpEgdHpFZRxaP9SEmvABbkZ8KiThh/r6iD0Mv4w+cfbqAWp4G0K5eCaISY
-         MjgQ==
-X-Gm-Message-State: AOJu0YxKsHFUqFbg7dv9PELetNl5cqlIGXOhRPoSAwS3WkCcjjjnspbU
-	GIESQCFfa84vprK3qaVqlNBuFLt4jEReBtedwS00ytiZKDNGO76WKXZuqWaM7veBkTeMUC4QhGI
-	Y+rc0tFsSM6T3l6OtrnX7KeyliNaN6PQ=
-X-Gm-Gg: ASbGncvnxaUIvuWak3PgSifj0efktQ8lwYXPNgPiGW4CxoB7Z/G3yo2s6lqbb9a0RfB
-	4JC3Md8NlPXN0Yaheb/JXwX45izWNgkWfeJ3/Wls9q780Dnx1dwjQeFyGZS9evt9N1K+BBC2DIe
-	hO/CMCK0bANIPJ8ehiUz9yGdBUfY1GFu7BvZn7Rnv1Yw==
-X-Google-Smtp-Source: AGHT+IGq/RFNkxWvH/Iw6aIBLsbVQoViyWrzEFxUBA3wVPHUIyrIMnrFenzZ03J9nZo0lUZcU2nGvcGqAoGQrJt/XEU=
-X-Received: by 2002:a17:906:4fca:b0:ad8:a41a:3cdc with SMTP id
- a640c23a62f3a-adfad3734admr1981716466b.2.1750303891263; Wed, 18 Jun 2025
- 20:31:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750303985; x=1750908785;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60xy8wKrKO+1t7u1ffpNKlJu/zpqbkDRJr1SZgFpJWI=;
+        b=C93BuhCxabljAsE2JAJdzNgD/RQi6FdWdbfwjcgcIz+mZjczPlAkKIR2a7SyzCWYqM
+         Sff3y9QgZTe0XezHljwTfeawvEreZ1tt2X9g4GlPTjoKaoDoi0dGSmIiKin2EFyodcjg
+         419rFwPVq1rUDsOwdLXf6XHpJsFNi1soDMwvwMGCNXHg+r0Cwe6qEESUyboWR10pq9qC
+         2qndv5hO5GIJtQRbLk9MDgdrG2a/v8xvqnpanD2aIpG4gWUmmC6yD3Pwz5U/vaEE0nld
+         FZDvhs/Og7XWALGJSj9vn0KW/4YAQDOeTEv4DsYYdaPcAlK1M9Q4vwy2wFgIVzP3fIip
+         FbrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdrrqmVDJyz40usVhvss129bhe1Sz3gTaKVH0rCPxwMSjHDlSbqMDUYb5yvq7US+5mccIrdCLHzztGLQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdOwM8d+u9HitWbqLPM4qTSf2TvTYZRGz2ZpwNFqS/pk5TH/VU
+	wse1qwFxfgYLL/SpmM/geXH9EJxnvCb6K/baoa/izEbaauJO4oS61ro72mgm3HnMuzh4aH8Yrw4
+	C9A7sZSkIqs3FQVYTKFUB23F9p8QZgGWbu8AxL3QRhw==
+X-Gm-Gg: ASbGncuGZZWKe/XNA6MTyubwDAdDCTa1D/B7tvCCYipHNJSAPRB6yv1qXdpzP4aXxDT
+	UR00mRIcpxFMuHOB3btIG3VzbQHw6cVP/on7JYjItjdlivZEix8v6yVrL/3Ujqj2mCOlEjJFfYG
+	bLbXWEa6Zx6ou/1B4uEGIuH9iDi2MtpJPY8V+n5FPyZw==
+X-Google-Smtp-Source: AGHT+IGcgeMo27lTgaDy9bbMAdcQR1xe3fMVRu8/9DI/Df3XMM3eOfwyhPsLvfFCCnJDn+wQXZA6c6yxRggua+A+pZ4=
+X-Received: by 2002:a05:690c:3501:b0:70a:36b2:8f94 with SMTP id
+ 00721157ae682-7117544b8a1mr301360657b3.18.1750303985204; Wed, 18 Jun 2025
+ 20:33:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPM=9ty750Ex93+9d6DJ1hFJE8XuhXOf7Q7dgXryvhGYLwHbdg@mail.gmail.com>
- <CAHk-=wgd=MdzRHO=bV=g0G0mMV+7ek-q2WnQ8P5sxwJdau-t=g@mail.gmail.com>
-In-Reply-To: <CAHk-=wgd=MdzRHO=bV=g0G0mMV+7ek-q2WnQ8P5sxwJdau-t=g@mail.gmail.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Thu, 19 Jun 2025 13:31:19 +1000
-X-Gm-Features: Ac12FXzvd5uZdb0LN8dEQjXUFHn5iwQeqYRDelo8B64Oeek5ZcnA7epM1xSFucU
-Message-ID: <CAPM=9tyG7+6ZQuBQY=nwiPxywWgVtOHus7cH-KjKMgn+0ADv8Q@mail.gmail.com>
-Subject: Re: double free in alternatives/retpoline
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, nik.borisov@suse.com, 
-	Mike Rapoport <rppt@kernel.org>
+References: <221b0b7c-1879-4944-b9c4-cfb9fad9ae91@ghiti.fr> <mhng-131B0C4B-6AD9-4B65-BC91-927FD725E63F@palmerdabbelt-mac>
+In-Reply-To: <mhng-131B0C4B-6AD9-4B65-BC91-927FD725E63F@palmerdabbelt-mac>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 19 Jun 2025 11:32:54 +0800
+X-Gm-Features: AX0GCFtELZSRZqubW6lHS8cOASUCtzDo1F3xvWoK2w2WWudZIiFtQ6t7sUz4_vI
+Message-ID: <CAH1PCMYR2L8TeuveA-XTorQE70wmJVA1Vbt3Qhz0864Vr206PQ@mail.gmail.com>
+Subject: Re: [PATCH] riscv: defconfig: run savedefconfig to reorder it
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, dlan@gentoo.org, Conor Dooley <conor@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	spacemit@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 at 12:33, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Fri, Jun 13, 2025 at 2:57=E2=80=AFAM Palmer Dabbelt <palmer@dabbelt.com>=
+ wrote:
 >
-> [ Adding Mike Rapoport ]
+> On Thu, 12 Jun 2025 06:12:09 PDT (-0700), Alexandre Ghiti wrote:
+> > On 6/12/25 11:32, Yixun Lan wrote:
+> >> Hi Alexandre,
+> >>
+> >> On 10:37 Thu 12 Jun     , Alexandre Ghiti wrote:
+> >>> Hi Yixun,
+> >>>
+> >>> On 6/11/25 16:56, Yixun Lan wrote:
+> >>>> Changes to defconfig should be always updated via 'make
+> >>>> savedefconfig', run this command to make it aligned again.
+> >>>>
+> >>>> This will ease the effort of reviewing changes of defconfig
+> >>>> in the future.
+> >>>>
+> >>>> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> >>>> ---
+> >>>> Update PDMA config bring in unnecessary changes[1], let's fix
+> >>>> it by run savedefconfig first.
+> >>>
+> >>> It would be easier if this patch was part of the PDMA series since th=
+e
+> >>> last patch will depend on it: @Guodong can you integrate this patch t=
+o
+> >>> your next revision of your patchset?
+> >>>
+> >> I'd rather make this patch independent, as nothing strongly ralated wi=
+th PDMA,
+> >> and it probably would take several rounds for PDMA patch to be settled=
+ down..
 >
-> On Wed, 18 Jun 2025 at 19:08, Dave Airlie <airlied@gmail.com> wrote:
+> Ya, I agree.
+>
+> >> Besides, there is no problem for PDMA patch to depend on this patch if
+> >> needed (easy to use b4 to handle this..)
+>
+> Yep, something like "b4 shazam -lts --merge --merge-base 958097bdf88"
+> should do it on the merge side -- and maybe you don't even need the
+> merge base, if all the b4 send side stuff picks it up right.
+>
+> >> The idea here is to get this patch merged as early as possible, as it'=
+s
+> >> quite straightforward, and other people may have similar problem inste=
+ad
+> >> of PDMA here
 > >
-> > I've just tried to boot Linux master with KASAN enabled on a laptop here, and it showing a slab UAF for apply_retpolines.
 > >
-> > I haven't had a chance to bisect yet, and unfortunately I only have a photo of the oops.
+> > Ok makes sense, so let's Guodong deal with that then.
 >
-> Hmm.
+> (for some reason this isn't showing up in patchwork)
 >
-> I think it's due to commit a82b26451de1 ("x86/its: explicitly manage
-> permissions for ITS pages").
->
-> Maybe I'm mis-reading it entirely, but I think that "its_fini_core()"
-> thing is entirely bogus. It does that
->
->         kfree(its_pages.pages);
->
-> but as far as I can tell, that thing is happily used later by module
-> initialization.
->
-> Freeing the pages that have been used and marked ROX sounds like it
-> should be fine, but I think it should also do
->
->         its_pages.pages = NULL;
->         its_pages->num = 0;
->
-> so that any subsequent user that comes along due to modules or
-> whatever and does __its_alloc() will DTRT wrt the realloc().
->
-> But I might be completely barking up the wrong tree and mis-reading
-> things entirely. PeterZ? Mike?
+> I'm going to merge it as a single patch into for-next.  It'll loop
 
-I wonder if the module code also needs the same treatment,
+Sounds good. Thank you.
+I will rebase, (or have it as a prerequisite in v2 of my PDMA
+patchset).
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 6455f7f751b3..4653881a4ab3 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -182,6 +182,7 @@ static void its_fini_core(void)
-     if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
-         its_pages_protect(&its_pages);
-     kfree(its_pages.pages);
-+    its_pages.pages = NULL;
- }
+Guodong
 
- #ifdef CONFIG_MODULES
-(1/2) Stage this hunk [y,n,q,a,d,j,J,g,/,e,p,?]? y
-@@ -220,6 +221,8 @@ void its_free_mod(struct module *mod)
-         execmem_free(page);
-     }
-     kfree(mod->arch.its_pages.pages);
-+    mod->arch.its_pages.pages = NULL;
-+    mod->arch.its_pages.num = 0;
- }
- #endif /* CONFIG_MODULES */
-
-boots for me, but I've no idea what is required or sufficient.
-
-Dave.
+> through the tester, but things look in good shape so it shouldn't take
+> too long.  This way there's a stable hash people can base stuff off,
+> rather than waiting for some other patch set.
 >
->              Linus
+> >
+> > Thanks,
+> >
+> > Alex
+> >
+> >
+> >>
+> >>> Thanks,
+> >>>
+> >>> Alex
+> >>>
