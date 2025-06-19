@@ -1,174 +1,241 @@
-Received: from mail.burntcomma.com (unknown [62.3.69.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC262367B1;
-	Thu, 19 Jun 2025 17:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45E62397B0
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750352778; cv=none; b=qlgrX0KyP9ZbKVNBRErt+kidMlOoYCFygR/WcMmQx2CH9v/Eat4BUCw5lZhS0m6dTipDsnRhacXInlVK+9++5b9JJM6/t8QOvu4Mib0RZt3J8zD9FBNjXaX8k7ArXe3Eh6MRoR7kfi095ABq1o+7zw2PR5lsVPkLDnT9wRXNlCk=
+	t=1750352872; cv=none; b=XBP8AtHerFGjKYarO9EZ6f2GkphkkACggR0xYnBR5W9h4NZU0WAIcPJ5lzR9dsDgpazU/0v/jJpKapw/SE3S7361sS8FXX7u2bBCaXBdVZtL48DMaPBsyrMvpGPdfTp7aRFWDA+AyeG3iBGwnCpeemxPr+rpGrwqm57l9xE+ulQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750352778; c=relaxed/simple;
-	bh=ByMVe8IbdMaFOUossUjxMjeIcyVLSrx4rAhlwxACzAs=;
-	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ffpo4WHNDIODNK6Zbcmc5CWsQJ7r4TSAEkjxeitkHVz2B3OlxRVLc/M9zfoF2J4hX7GiVLrNXy3o7xNXnGAONYh5ds6wAeIz14YFs0juniCdruZEx5cGNoMfwTgD//T5bAI8Bt07BpZcBEXtZW8AGh2pV8y2PT9BVAEUG1FoGBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=aLglzQ+y; arc=none smtp.client-ip=62.3.69.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
+	s=arc-20240116; t=1750352872; c=relaxed/simple;
+	bh=B5xc4Im05++LMRdzad+5xNIee+4aqUsqqP5r2J93OA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ebOlWxF4abI4ZeWbXfRSfBwINt3wvZ20fBCHuWHFP6e90xWEhflb3WWF/YPMDBApF0AXIipP5T1ybtmud4x35uPH73G6ZM4cTgcWll5B9NrE2PNmv0LDGKUOtTRl/periIwX6L1ABsg3DQwwi0VGZ+xDDHaC8NzbjjtSMvKeuzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+UViXE9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="aLglzQ+y"
-Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
-	by mail.burntcomma.com (Postfix) with ESMTPS id 8654C2896B7;
-	Thu, 19 Jun 2025 18:06:12 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
-	s=mail; t=1750352772;
-	bh=XEHNEzk9V6MYTH1qzKl38JyGH0PE4klJDHTC7EE6U8g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=aLglzQ+yruUfBzpJGuilvw+ClmbljmsHUSaRpAhdO88LpgOwGN63s4a4tER0vloFr
-	 Lzgj3sbEft4G7UuDnwjR2Az6KoVtt56PTPho2Jvf1FMHVjVSMAdhDpntM7ycIe4bkX
-	 vrhr1AmCaElZXu6uf1+p/5OLWhwkTFfosB+H6xng=
-Message-ID: <b8945d37-3eb9-4ad6-b3eb-2725dbb008ad@harmstone.com>
-Date: Thu, 19 Jun 2025 18:06:12 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+UViXE9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750352868;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qjyIhtiRnhSBaob8GERBPEKyHALfv30BI7kLfLtsO80=;
+	b=D+UViXE9ZhqsaJYnHHui6y9FCQTVjZ50w8QrYkYurKUqGmkk8DYppYsTIZRMGab5DsxZeR
+	VnQOhkSj0LGyA61wQIpRMfZl6pt79rsCHeA7NdH1W77qRUz0BOVhSOSglBLU/4Oan6vCke
+	OHc+IT9QspXy4yHozIAisO68z7+o2Mo=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-564-I9cOgobRONife78paY4g0w-1; Thu, 19 Jun 2025 13:07:47 -0400
+X-MC-Unique: I9cOgobRONife78paY4g0w-1
+X-Mimecast-MFC-AGG-ID: I9cOgobRONife78paY4g0w_1750352867
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a58813b591so16080251cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:07:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750352867; x=1750957667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qjyIhtiRnhSBaob8GERBPEKyHALfv30BI7kLfLtsO80=;
+        b=JA81bsptyjutCjG5yUOhOPjqXijls/LIy4G67pLYFkOqbYDAHxIFjGTE/SlmrM+/M2
+         NZNRlr0DrZKS8nPq+5qV9mI6tbyFBdspnBpkI/u1mb3cneljNMyXecLMsbTDzxW6oRcM
+         mDckWXlPRjHSMWWbUKUTehriCVi9eGaI5hGUiLCLQilLnPmpO3akqU3gTe/2CENKKyMk
+         f6E7KsVglcL0A2wl+vD5KZb5sJEi+rUgnmsogxKhRyIhVdx+r2CI2UdVlvYOfYhdFYao
+         0mCUPSo3QlUxTjJ/QXF+0F0Rrt1flc1U1Zlwyt63z5kbgXddubnC5enflJrRmRRjp4Fq
+         dc5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUfstIguZnjAGZ6t/V4d+ba+ma60DKuWUoDaQ+6ixj4AH8CXb6Hb8oejREIcJuRJS882HzgAYdZjub7Zu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4N6UVcii541BlG1VW9tMPi1cOteqg2RParuJzSZs5gX0W5nuf
+	yW/f29j23Ef2WEpcLRI0oPmcsWMnN0ECjEC3jyCzGjNywG8AtZc2m1E0jdYfjFLoGZID8Edz64A
+	1ZFOIFKoiyiNZZiGU77O5x+9O9nmpTn5Hcv8guMjdg4qQu7VVw9EAEa+ktvvrRYk7+0AF4E3yoj
+	KXLdNVkgA+ceFtkeNLr3/b0lPW6MJ/4xb9NzPtVTGc
+X-Gm-Gg: ASbGncu5CObBXLFidaPNMxthXMcrTOrmB9JGjuewWuFYtgiHhi2oThKQOSFfWOtGvEq
+	IgvAkSyg9zFKjDAOk+jTgwAqEfl1YutCJEm0O+/WpejEjzjSlu8pPArDd5QvtgkEZBhUlJDU1q8
+	aGEDQ=
+X-Received: by 2002:a05:622a:19a6:b0:4a7:8af:3372 with SMTP id d75a77b69052e-4a76e188722mr49519021cf.1.1750352866767;
+        Thu, 19 Jun 2025 10:07:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSmzCND1WCN9txyruppfLoZ6hfmgwfWopqcmajFZQtgBnUJsRuaTRf7kq/mh+lvzQ9HZm6xdYEe9rxcT0QBgw=
+X-Received: by 2002:a05:622a:19a6:b0:4a7:8af:3372 with SMTP id
+ d75a77b69052e-4a76e188722mr49518651cf.1.1750352866365; Thu, 19 Jun 2025
+ 10:07:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v2] btrfs: replace deprecated strcpy with strscpy
-To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
- ailiop@suse.com
-References: <20250619140623.3139-1-listout@listout.xyz>
- <20250619153904.25889-1-listout@listout.xyz>
-Content-Language: en-US
-From: Mark Harmstone <mark@harmstone.com>
-Autocrypt: addr=mark@harmstone.com; keydata=
- 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
-In-Reply-To: <20250619153904.25889-1-listout@listout.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250612104349.5047-1-gpaoloni@redhat.com> <20250612104349.5047-2-gpaoloni@redhat.com>
+ <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
+In-Reply-To: <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+Date: Thu, 19 Jun 2025 19:07:33 +0200
+X-Gm-Features: AX0GCFvxdyIr50kq-ajUHcRRD0JDOX9DLGaUyoN1IXHTnqLROGXdeqmRnZ5jTng
+Message-ID: <CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	acarmina@redhat.com, chuck.wolber@boeing.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/06/2025 4.39 pm, Brahmajit Das wrote:
-> strcpy is deprecated due to lack of bounds checking. This patch replaces
-> strcpy with strscpy, the recommended alternative for null terminated
-> strings, to follow best practices.
-> 
-> There are instances where strscpy cannot be used such as where both the
-> source and destination are character pointers. In that instance we can
-> use sysfs_emit or a memcpy.
-> 
-> Update in v2: using sysfs_emit instead of scnprintf
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> 
-> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-> ---
->   fs/btrfs/ioctl.c   | 2 +-
->   fs/btrfs/send.c    | 2 +-
->   fs/btrfs/volumes.c | 2 +-
->   fs/btrfs/xattr.c   | 4 ++--
->   4 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-> index 913acef3f0a9..203f309f00b1 100644
-> --- a/fs/btrfs/ioctl.c
-> +++ b/fs/btrfs/ioctl.c
-> @@ -4200,7 +4200,7 @@ static int btrfs_ioctl_set_fslabel(struct file *file, void __user *arg)
->   	}
->   
->   	spin_lock(&fs_info->super_lock);
-> -	strcpy(super_block->label, label);
-> +	strscpy(super_block->label, label);
->   	spin_unlock(&fs_info->super_lock);
->   	ret = btrfs_commit_transaction(trans);
+Hi Masami
 
-Surely this doesn't compile... strscpy takes three parameters.
+On Fri, Jun 13, 2025 at 4:45=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Thu, 12 Jun 2025 12:43:48 +0200
+> Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+>
+> > Currently there are different issues associated with ftrace_enable_fops
+> > - event_enable_write: *ppos is increased while not used at all in the
+> >   write operation itself (following a write, this could lead a read to
+> >   fail or report a corrupted event status);
+>
+> Here, we expected the "enable" file is a pseudo text file. So if
+> there is a write, the ppos should be incremented.
+>
+> > - event_enable_read: cnt < strlen(buf) is allowed and this can lead to
+> >   reading an incomplete event status (i.e. not all status characters
+> >   are retrieved) and/or reading the status in a non-atomic way (i.e.
+> >   the status could change between two consecutive reads);
+>
+> As I said, the "enable" file is a kind of text file. So reader must read
+> it until EOF. If you need to get the consistent result, user should
+> use the enough size of buffer.
 
-> diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
-> index 2891ec4056c6..66ee9e1b1e96 100644
-> --- a/fs/btrfs/send.c
-> +++ b/fs/btrfs/send.c
-> @@ -758,7 +758,7 @@ static int send_header(struct send_ctx *sctx)
->   {
->   	struct btrfs_stream_header hdr;
->   
-> -	strcpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
-> +	strscpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
->   	hdr.version = cpu_to_le32(sctx->proto);
->   	return write_buf(sctx->send_filp, &hdr, sizeof(hdr),
->   					&sctx->send_off);
-> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> index 89835071cfea..ec5304f19ac2 100644
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
->   	u32 size_bp = size_buf;
->   
->   	if (!flags) {
-> -		strcpy(bp, "NONE");
-> +		memcpy(bp, "NONE", 4);
->   		return;
->   	}
+What I am concerned about are scenarios like the one below:
+---
+# strace -Tfe trace=3Dopenat,open,read,write scat 1
+/sys/kernel/tracing/events/kprobes/ev1/enable
+open("/sys/kernel/tracing/events/kprobes/ev1/enable",
+O_RDONLY|O_LARGEFILE) =3D 3 <0.000237>
+Open /sys/kernel/tracing/events/kprobes/ev1/enable ->fd=3D3
+read fd=3D3, 1
+read(3, "0", 1)                         =3D 1 <0.000099>
+1 bytes Read
+30,
+read(3, "\n", 1)                        =3D 1 <0.000095>
+1 bytes Read
+0a,
+read(3, "", 1)                          =3D 0 <0.000102>
+close fd=3D3
++++ exited with 0 +++
+---
+So in this case there are 2 consecutive reads byte by byte that
+could lead to inconsistent results if in the meantime the event
+status has changed.
+With the proposed patchset the same test would result in a failure
+as per log below:
+---
+# strace -Tfe trace=3Dopenat,open,read,write scat 1
+/sys/kernel/tracing/events/kprobes/ev1/enable
+open("/sys/kernel/tracing/events/kprobes/ev1/enable",
+O_RDONLY|O_LARGEFILE) =3D 3 <0.000227>
+Open /sys/kernel/tracing/events/kprobes/ev1/enable ->fd=3D3
+read fd=3D3, 1
+read(3, 0x7ffd960234e0, 1)              =3D -1 EINVAL (Invalid argument)
+<0.000228>
+close fd=3D3
++++ exited with 0 +++
+---
+On the other side the proposed patchset would be still compatible with
+=E2=80=9Ccat=E2=80=9D or =E2=80=9Cscat 2=E2=80=9D commands that continue to=
+ work as they do today.
 
-Same issue here as with the other patch.
+>
+> > - .llseek is set to default_llseek: this is wrong since for this
+> >   type of files it does not make sense to reposition the ppos offset.
+> >   Hence this should be set instead to noop_llseek.
+>
+> As I said, it is a kind of text file, default_llseek is better.
+>
+> But, if we change (re-design) what is this "enable" file is,
+> we can accept these changes. So this is not a "Fix" but re-design
+> of the "enable" file as an interface (as a char device), not a text
+> file (or a block device).
+>
+> I want to keep this as is, same as other tracefs files.
 
->   
-> diff --git a/fs/btrfs/xattr.c b/fs/btrfs/xattr.c
-> index 3e0edbcf73e1..9f652932895c 100644
-> --- a/fs/btrfs/xattr.c
-> +++ b/fs/btrfs/xattr.c
-> @@ -12,6 +12,7 @@
->   #include <linux/posix_acl_xattr.h>
->   #include <linux/iversion.h>
->   #include <linux/sched/mm.h>
-> +#include <linux/string.h>
->   #include "ctree.h"
->   #include "fs.h"
->   #include "messages.h"
-> @@ -516,8 +517,7 @@ static int btrfs_initxattrs(struct inode *inode,
->   			ret = -ENOMEM;
->   			break;
->   		}
-> -		strcpy(name, XATTR_SECURITY_PREFIX);
-> -		strcpy(name + XATTR_SECURITY_PREFIX_LEN, xattr->name);
-> +		sysfs_emit(name, "%s%s", XATTR_SECURITY_PREFIX, xattr->name);
->   
->   		if (strcmp(name, XATTR_NAME_CAPS) == 0)
->   			clear_bit(BTRFS_INODE_NO_CAP_XATTR, &BTRFS_I(inode)->runtime_flags);
+IMO it is a redesign that is enforcing the user to avoid erroneous
+usages of enable files (because the reads are either reporting the
+whole and correct status of the event or failing to read; also the user
+cannot llseek into a position that would lead to not reading or reading
+a corrupted status).
+
+On the other hand the proposed re-design is fully compatible with
+the current user space commands reading and writing to the enable
+files.
+
+If the concern is having inconsistent implementations between tracefs
+files, I am happy to extend this patchset to all traces files, however,
+before doing so, I would like to have your approval.
+Otherwise I will just document the current functions and associated
+assumptions of use that the user must comply with in order to avoid
+the erroneous behaviour.
+
+Thanks a lot for your inputs and clarifications.
+Gab
+>
+> Thank you,
+>
+> >
+> > This patch fixes all the issues listed above.
+> >
+> > Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+> > Tested-by: Alessandro Carminati <acarmina@redhat.com>
+> > ---
+> >  kernel/trace/trace_events.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 120531268abf..5e84ef01d0c8 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -1798,6 +1798,13 @@ event_enable_read(struct file *filp, char __user=
+ *ubuf, size_t cnt,
+> >
+> >       strcat(buf, "\n");
+> >
+> > +     /*
+> > +      * A requested cnt less than strlen(buf) could lead to a wrong
+> > +      * event status being reported.
+> > +      */
+> > +     if (cnt < strlen(buf))
+> > +             return -EINVAL;
+> > +
+> >       return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf))=
+;
+> >  }
+> >
+> > @@ -1833,8 +1840,6 @@ event_enable_write(struct file *filp, const char =
+__user *ubuf, size_t cnt,
+> >               return -EINVAL;
+> >       }
+> >
+> > -     *ppos +=3D cnt;
+> > -
+> >       return cnt;
+> >  }
+> >
+> > @@ -2557,7 +2562,7 @@ static const struct file_operations ftrace_enable=
+_fops =3D {
+> >       .read =3D event_enable_read,
+> >       .write =3D event_enable_write,
+> >       .release =3D tracing_release_file_tr,
+> > -     .llseek =3D default_llseek,
+> > +     .llseek =3D noop_llseek,
+> >  };
+> >
+> >  static const struct file_operations ftrace_event_format_fops =3D {
+> > --
+> > 2.48.1
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
 
