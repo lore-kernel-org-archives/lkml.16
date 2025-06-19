@@ -1,89 +1,114 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C0D21D3C5;
-	Thu, 19 Jun 2025 07:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F71D248F5E;
+	Thu, 19 Jun 2025 07:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319473; cv=none; b=SoVyz6SQsKGKLVjJJkDzi+VDfE4YM+Ec2ObUDr0PWSJ031IUVV0ro6DQbzlmVyd/0BOeiIz++9r+Z508hfUO9iwZU5NsdAYWtmyP/93bpJK5VeJ3ofE1HlhzSdv4ctI7kd0AxBRA2de9wbM2W9giuqMB9XISx64nolBavlZfJiA=
+	t=1750319478; cv=none; b=VwCHDt5g3UEj8GhaI9m9WG0OlDQ6G33bL2kPZjo/w2Ot4H6HKXmbl26TzotSleuG9rcu+YWj888soPEPIYC+L0GZX6pn/R3XlLjiUpVzj4HYakXDY9hRpc+lZ7wDhr12LZKG6gN+k6KXWUlw/inVnfFOcl0VmrlHbSWY3MC5t3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319473; c=relaxed/simple;
-	bh=irOtMSTe18Nj09WUURiqFn7bJc2qntAyYH0FgwppccE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=foS4jk1cFkQMECCfDha3Q17usvFHcl60av0y8bBcOMouTsKDTJVNvmLp6JW8cwmiWopgRuzOH0JVx8YLCclxupVXnjk8RgxDLQZPCbF7s7uLUngEVprOc9pcgUUJb6h5gvB1KU9XYO7OBZc36ceNklsyRMVrHCPhcg/QwCkJjgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hHL1ioCg; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750319478; c=relaxed/simple;
+	bh=bHviAsuIfo6IGBrp4AOVqEtcYY9AbeOAmKOPuRF1lX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NUP56yryHr+yFe8G9DCcojuumT8aJMTaYFW0mBgeJ0P6Fzp4mGhppBF4I3L6GaMjz/CV52RlUdrgzeZ3Bwi6VcJpIbVHXyKvjUfTWE+KkoN7wOVvX2OVZwEFLG88RQNIGWetv6EPXsDGjTNtpy9/akZZjAuU0+4Z2xxlEn5OqkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=KhZ5txEb; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hHL1ioCg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=h6iVXO5KbYXdSc5S3Hf3L8++PkcBN/CgVnLY1g8EcyI=; b=hHL1ioCgzjArqd4YP/LoPeLWB0
-	yTxZ5UB/w3Jlv19XgSk0QS3Z7n0UVw0RsfAzzvTSBSpxGXupcNaKq/Eb7hd9T03xFmCQOSpzzhxTY
-	gph+gB/bxs1pgeW9Yz21aW0m18KHRzJC/iZTvG+ht9a9GRJID3zWpCx44RAP4Pz6YlmvJ/+G7UGsD
-	ErSH+pEE2SvJ+2BZFcc6F4XSef1uZ/CkmexP3l3Z83deYVNf4cNiGmn3EwC7rZoXMshBsJEBHsko+
-	Je4wG5QwBLey/EVpqBJO41rgDcC1kUx5Tf385J+YJcKmURlQSFBhPwDPrGuyoFiRVA/pwEJ7i7djE
-	3gLQ8jFQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSA36-00000004NLc-2jLK;
-	Thu, 19 Jun 2025 07:51:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5B7993088F2; Thu, 19 Jun 2025 09:51:03 +0200 (CEST)
-Date: Thu, 19 Jun 2025 09:51:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
- support
-Message-ID: <20250619075103.GV1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.261095906@goodmis.org>
- <20250618134758.GK1613376@noisy.programming.kicks-ass.net>
- <20250618111840.24a940f6@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="KhZ5txEb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1750319434;
+	bh=KLFd8Hwc+BrcRkjztF5W0V4sgqqXjZ/dOj8l+EYvXyg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=KhZ5txEbfemuKc9MIOVayZDf2OJzjO5+7gVLmzLg70Y8ayT5xAjfwdLinsN8hA/It
+	 x3k08jauRitDjhpasq1Eiibw6EW+55NpTfjIngnMQqKXX0zVOvIwEJZ7xwypZHcJ6v
+	 mt/EeaYiPTVooNmeGXGcvQtfo7YRzVvrTYM1ErAE=
+X-QQ-mid: zesmtpip4t1750319413t17bb649b
+X-QQ-Originating-IP: 9KKOypkCNDr4Fi7xRB09P3ZgHq9XVHrO7PfHQnwmCcw=
+Received: from avenger-e500 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 19 Jun 2025 15:50:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13789221876025690801
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: ikepanhc@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Renato Caldas <renato@calgera.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH 6.1/6.6] platform/x86: ideapad-laptop: add missing Ideapad Pro 5 fn keys
+Date: Thu, 19 Jun 2025 15:47:04 +0800
+Message-ID: <F7FB9E816BFCD1DE+20250619074704.56965-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618111840.24a940f6@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NzouuX5M12cOBvMscSOvIUovI2Hyf0KLYYKwn87zSATWV6tI+yqUYgkQ
+	5hXFSrfGm3wrZ9hZGkdrjrsD6fo7Jwfbx3MBW9E//tKfJwdcyEs06fBuiHiIQ3btiAZpvV7
+	pp6r4ASfJuDI5AxZVEO11BTd34wLN1NpKLCWFauR+SC6ryrVDSIqScQeG3iXcksEbbL8riH
+	KLiOnm/U54lNlaDCFVwXkyUyTugXr6Sge9nTdj6/cstPN71k1lWzjnwTgOgo56lKHAHy4BF
+	k3i3JCfOZHuN16dp8XCuxquhqAfp+sNSpoL82O4h74sFWl8Jm8kIMVAohzgua8XZ27l/086
+	N25vrvTUy8Ax6WL0ssHdWsj4o6/rSadUyQPJkfQIlpSWnWNuf5Ycw+k2oaZj1woSxF47rVC
+	0iK/38Od5/cwHpSE8aE//iDCw98qVli2zfto3vBI/UsHVTdwINK+RAvBueMMDEofLBjtONy
+	pCDlo+h9S2nTATVjyAsk903cHG3LF/7mtQ4skTUZF2bhCSI5GmChdE81vDCo8cWjg+ERbAe
+	kO6eMMSDuJc0lWdaPh5U+bGelsxoF0CuuAHjCcSPYNTu5h7YWZmDWQ8eGc0YIYI0ixYxYvJ
+	Se3uhLOkde/FhicTqmZUrQV0ukeV0KFRvrGPpddid/Hxz91nkgiJ9KwLqWIx1JqFgyD6hVX
+	Qkk9PuE0BhI60oOG7r/msy+EQlUnRwgPQ3nqJZX0oKWfKaifZQ/pKfF93H4NdxGjwG70C79
+	TO9Hw6f7zEOPBYCrDWVA3jd+XcoWoaxoL3YZduEx2Bn0ZjgajqRkEwy3RCWfudXOorPA87b
+	FzLgH2MuWn5tABUSY3YnyhUUMQ+PvO9xR5qSXzSkCWuYK9XOA7byZ20oParnD/Wl8TPS1EK
+	WBH6Ks3QjTTUC/IZnMky5FwhCb1wK5pH7Dbiw1ixu91F++EINqG6uBLmedPOxxjHi0iXq6Z
+	t6zDxYCgJHUO2Eb/jh6A8n3zmcU6QObeCri6G/AqWljnXXdm4LIM2BxsHwwR6p82YO5IkG6
+	QFZmNyDP57qYI7sl19k5qX4t5mPoE=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Jun 18, 2025 at 11:18:40AM -0400, Steven Rostedt wrote:
-> On Wed, 18 Jun 2025 15:47:58 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
-> > 
-> > > +#ifndef arch_unwind_user_init
-> > > +static inline void arch_unwind_user_init(struct unwind_user_state *state, struct pt_regs *reg) {}
-> > > +#endif
-> > > +
-> > > +#ifndef arch_unwind_user_next
-> > > +static inline void arch_unwind_user_next(struct unwind_user_state *state) {}
-> > > +#endif  
-> > 
-> > The purpose of these arch hooks is so far mysterious. No comments, no
-> > changelog, no nothing.
-> 
-> I'll add comments.
+From: Renato Caldas <renato@calgera.com>
 
-How about you introduce the hooks when they're actually needed instead?
+[ Upstream commit 36e66be874a7ea9d28fb9757629899a8449b8748 ]
+
+The scancodes for the Mic Mute and Airplane keys on the Ideapad Pro 5
+(14AHP9 at least, probably the other variants too) are different and
+were not being picked up by the driver. This adds them to the keymap.
+
+Apart from what is already supported, the remaining fn keys are
+unfortunately producing windows-specific key-combos.
+
+Signed-off-by: Renato Caldas <renato@calgera.com>
+Link: https://lore.kernel.org/r/20241102183116.30142-1-renato@calgera.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 88eefccb6ed2..50013af0537c 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1101,6 +1101,9 @@ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY,	0x27 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+ 	/* Refresh Rate Toggle */
+ 	{ KE_KEY,	0x0a | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
++	/* Specific to some newer models */
++	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
++	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+ 
+ 	{ KE_END },
+ };
+-- 
+2.50.0
+
