@@ -1,158 +1,111 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4F419D07B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A994319D07B;
+	Thu, 19 Jun 2025 02:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750299845; cv=none; b=pgb9UEUzVtynG/T4eBhRZuCmEfroFglRkYc772rcLU6EUzbqwR532wU4q/0RBr+cwLjLIFEVCayxm0nPc3TdE72fKBnKnbo6X7gUKATpbu6ewtVfK8D2qymwk1ZJPut/67V0xeZMyhTNLmTgVylKn6mQZ/DlXNRTS6TB1Msdzt0=
+	t=1750299998; cv=none; b=Rr0aplDSgXHXYo+SSWSfXfWubZJXg45KfBmduqRQ0d3K9VnGvhegiyqyMIAqM0KUmQg0K4Y+Y7BXqPFHMcVht/HyYP3Ar/eI9OB2jjCtc3tBvM0rh2a2qABXFUMI9uiVxVv/LHbJd3EHxCv9fQEsuZU8u/+zlOmdU7iAEuiuHNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750299845; c=relaxed/simple;
-	bh=IkWAaY/Ws4S8HREs6ZmpZHuV1FTlxpFqg3Bmx+YH1EY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rAxnpZJwKgGQW2TaXy/rFcQCImZa3gnj48qU/s6BNwJb1V/N6aWT8N0nYf25wVDN7UTIaSVKt4WdED4eNPji4bFHqm4Oe7lip0SOIF3o18sg97g9PIC8JjGPdMcEkyibZ6Eq16SfFtkwJOtiaIae6q98F/GfRs4qZnU/TZUzd0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=Aicidizy; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
+	s=arc-20240116; t=1750299998; c=relaxed/simple;
+	bh=bNa1LMr25XDkhPXvkNdxjEhOU+//U4wZlbl6WY4h7kw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WWXa+m5DdnHEDqWzmNAkzvmbULvNWwtoMJ8zOu9EbsJb7qbuVnTYtelIOiODvQd3qurCeTLjAnYLZEx+Da2dzhFkFpB8s2ax/5ImR3Q43iK9Yvw9vcWxhGkJf0LF2n1wnrowA5KgP1eokNU77pyEz7cODhqVfz2yknQIbX975KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sPwtQQ1+; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="Aicidizy"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d38cfa9773so33956385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:24:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=libre.computer; s=google; t=1750299842; x=1750904642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xIc69jZZtauTnE08yUtmztNBMw9hE7gd1ymlUgClN+8=;
-        b=AicidizyYmtk9zKgvgW+cb4IBkhaPXtngtcMbxWxN63PagCu14yqA+OleOsw1O+xBT
-         eifOIEDiItIWJFfnTxPq8zMHDvQo6JJvBxQmxPd3khL9HzWlum0rXztKaJqT/LwzY6TZ
-         tPo8PZ5Dp2uOo1w0Ib2ZgWqvzRvcCVSj5YAmbC69F9AtRl6pNxZcxSO4Y/W9mYRdCKV7
-         akAqUMY1ArH9uRHPR/HISwMK6T+YXUpF/Qq83/Zkwf8Kpoqbqog8kPs2Fl9atf2aYOVY
-         xXIq91woEeJO9Qhql9sDiVFR6VaQ6YvztQyccvWfzizZfDM5O4t7W2Oey5cTwDP0w6L0
-         bWXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750299842; x=1750904642;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xIc69jZZtauTnE08yUtmztNBMw9hE7gd1ymlUgClN+8=;
-        b=ajIEzO9MS25oj86PwMFTd+1x8hhLbQtAPEd3Ya5e7X9WVX+2r7bRc6Fj1F++r/rpUm
-         +HzSZ54nM4V+9FCJVTRIX2mOLpiA3C4K3QwCrMAzE2ynidSitrlRUZzUtfG8RYUqwE2F
-         h3TkEzSbbK8YXEMdTY2SMtuyLP31jhIFGP5YrxJHuqTSIcoepukeghWeIisVZj6iu3EC
-         fqRBLXE9U12LDkGJW/LStmdizMVih1id55vg/3gBWTfW6e3aWITb9p02x7Ykvat9IK9W
-         ptgN7A28tL+GhtRsFkGME4iko4STZxN1Yno3p1h09DgS7NUKfKu4CgUMFSAZKJtllY27
-         Whrg==
-X-Forwarded-Encrypted: i=1; AJvYcCViEtVPZ9db5DoXZjLE1ZQCKuht5g7rG8jmtX2SCI0dTkUT/bBC58TSabSYHHWwPLfAzDBtPKUSYesfpQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfAP1wrPNFIIn7Ey4hKFLEUvVT5nBl5856Njw0wkANmvfSVqkB
-	91x5EplPeehhHEMJ9FIhb9LgBkC0BVtpJKxJ2KpsLUorB+d78cQMNICOwxYpTtCTcw==
-X-Gm-Gg: ASbGncsI35WduCT1uZba0I72BZSrOqbEBn97eyL435ELpuHNkq8khhzS7n797Wd5I7b
-	aH77hykwPJKewKEqJXZeei3avqry4Bq5jWPrZQkC3q2vrkPx4MaDMktmdcJGYlX/+7RIgOaoXad
-	INNziwq5aIsGzC8VKW1R2WnPjQJWt33F/ygIN5fsFxxtumrGiuccZtf2PsKOfX/1ydj7OcYK7TW
-	l6InIZkxULRSfya3H/6VTcufruYEhcJC18N0AbU+ItlgssyhPkfyx+eMdqKpFcNw1KiR0x8eRLk
-	r81YTEX+geHgWsZeaIb/x3BohDi+kiR4+ro1NIpE7aNPPWY/YZQSrR/Huns=
-X-Google-Smtp-Source: AGHT+IE1rdDNmDG+3USJoAPdiCN3kxUYolutEerz4uopIsgF3VHmc6V3hXOEqTVlOlkynA8dHGaIbg==
-X-Received: by 2002:a05:620a:24ca:b0:7d3:c501:63da with SMTP id af79cd13be357-7d3c6d081d2mr3217739885a.48.1750299841762;
-        Wed, 18 Jun 2025 19:24:01 -0700 (PDT)
-Received: from localhost ([2607:fb90:6159:6306:2d25:3966:6b37:2813])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eb80c7sm834149085a.61.2025.06.18.19.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 19:24:01 -0700 (PDT)
-From: Da Xue <da@libre.computer>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Da Xue <da@libre.computer>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: meson-g12a: add g12b pwm groups
-Date: Wed, 18 Jun 2025 22:23:37 -0400
-Message-Id: <20250619022337.43900-1-da@libre.computer>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sPwtQQ1+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750299986; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=fdIXidgTQoJZ+pqA8Hrjl4qfJ3FwmVN/K/H7yiiXnsg=;
+	b=sPwtQQ1+g1TgTDoSNyFEiYjDSRhDt6iX0f15o4QIKUH38GSLEkMZR6AWIwtk1cPaYH0QUesixX5PofJH49/U1W1uAGA5ULJ45nwibTfe6pxJKycJUWAzk1azEo817hj6X35afMrsfLiA2JME8ozqg3kfbjDVsjf1j84dVQPvUiE=
+Received: from 30.221.131.111(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WeFTxhP_1750299985 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 19 Jun 2025 10:26:26 +0800
+Message-ID: <0a8d5fdb-28b9-41f5-a601-cf36641bddbf@linux.alibaba.com>
+Date: Thu, 19 Jun 2025 10:26:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH] selftests/pidfd: align stack to fix SP alignment
+ exception
+To: Shuah Khan <skhan@linuxfoundation.org>, brauner@kernel.org,
+ shuah@kernel.org, will@kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: baolin.wang@linux.alibaba.com, tianruidong@linux.alibaba.com,
+ catalin.marinas@arm.com, mark.rutland@arm.com
+References: <20250616050648.58716-1-xueshuai@linux.alibaba.com>
+ <ee095fdd-b3c1-4c41-9b06-a8e3695c1863@linuxfoundation.org>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <ee095fdd-b3c1-4c41-9b06-a8e3695c1863@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-g12b and sm1 have additional pwm pinmuxes for b, c, and d
 
-Signed-off-by: Da Xue <da@libre.computer>
----
- drivers/pinctrl/meson/pinctrl-meson-g12a.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index e2788bfc5874..8b9130c6e170 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -270,15 +270,21 @@ static const unsigned int pwm_a_pins[]			= { GPIOX_6 };
- /* pwm_b */
- static const unsigned int pwm_b_x7_pins[]		= { GPIOX_7 };
- static const unsigned int pwm_b_x19_pins[]		= { GPIOX_19 };
-+static const unsigned int pwm_b_z0_pins[]		= { GPIOZ_0 };
-+static const unsigned int pwm_b_z13_pins[]		= { GPIOZ_13 };
-+static const unsigned int pwm_b_h_pins[]		= { GPIOH_7 };
- 
- /* pwm_c */
- static const unsigned int pwm_c_c_pins[]		= { GPIOC_4 };
- static const unsigned int pwm_c_x5_pins[]		= { GPIOX_5 };
- static const unsigned int pwm_c_x8_pins[]		= { GPIOX_8 };
-+static const unsigned int pwm_c_z_pins[]		= { GPIOZ_1 };
- 
- /* pwm_d */
- static const unsigned int pwm_d_x3_pins[]		= { GPIOX_3 };
- static const unsigned int pwm_d_x6_pins[]		= { GPIOX_6 };
-+static const unsigned int pwm_d_z_pins[]		= { GPIOZ_2 };
-+static const unsigned int pwm_d_a_pins[]		= { GPIOA_4 };
- 
- /* pwm_e */
- static const unsigned int pwm_e_pins[]			= { GPIOX_16 };
-@@ -649,12 +655,22 @@ static const struct meson_pmx_group meson_g12a_periphs_groups[] = {
- 	GROUP(pwm_a,			1),
- 	GROUP(pwm_b_x7,			4),
- 	GROUP(pwm_b_x19,		1),
-+	GROUP(pwm_b_z0,			5),
-+	GROUP(pwm_b_z13,		5),
-+	GROUP(pwm_b_h,			5),
- 	GROUP(pwm_c_x5,			4),
- 	GROUP(pwm_c_x8,			5),
-+	GROUP(pwm_c_c,			5),
-+	GROUP(pwm_c_z,			5),
-+	GROUP(pwm_d_z,			4),
-+	GROUP(pwm_d_a,			3),
- 	GROUP(pwm_d_x3,			4),
- 	GROUP(pwm_d_x6,			4),
- 	GROUP(pwm_e,			1),
-+	GROUP(pwm_f_a,			3),
-+	GROUP(pwm_f_h,			4),
- 	GROUP(pwm_f_x,			1),
-+	GROUP(pwm_f_z,			5),
- 	GROUP(tsin_a_valid,		3),
- 	GROUP(tsin_a_sop,		3),
- 	GROUP(tsin_a_din0,		3),
-@@ -1058,15 +1074,15 @@ static const char * const pwm_a_groups[] = {
- };
- 
- static const char * const pwm_b_groups[] = {
--	"pwm_b_x7", "pwm_b_x19",
-+	"pwm_b_h", "pwm_b_x7", "pwm_b_x19", "pwm_b_z0", "pwm_b_z13"
- };
- 
- static const char * const pwm_c_groups[] = {
--	"pwm_c_c", "pwm_c_x5", "pwm_c_x8",
-+	"pwm_c_c", "pwm_c_x5", "pwm_c_x8", "pwm_c_z",
- };
- 
- static const char * const pwm_d_groups[] = {
--	"pwm_d_x3", "pwm_d_x6",
-+	"pwm_d_a", "pwm_d_x3", "pwm_d_x6", "pwm_d_z",
- };
- 
- static const char * const pwm_e_groups[] = {
--- 
-2.39.5
+在 2025/6/19 05:36, Shuah Khan 写道:
+> On 6/15/25 23:06, Shuai Xue wrote:
+>> The pidfd_test fails on the ARM64 platform with the following error:
+>>
+>>      Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
+>>
+>> When exception-trace is enabled, the kernel logs the details:
+>>
+>>      #echo 1 > /proc/sys/debug/exception-trace
+>>      #dmesg | tail -n 20
+>>      [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
+>>      [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
+>>      [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
+>>      [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
+>>      [48628.713055] pc : 0000000000402100
+>>      [48628.713056] lr : 0000ffff98288f9c
+>>      [48628.713056] sp : 0000ffffde49daa8
+>>      [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
+>>      [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+>>      [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
+>>      [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
+>>      [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
+>>      [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+>>      [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
+>>      [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
+>>      [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
+>>      [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
+>>
+>> According to ARM ARM D1.3.10.2 SP alignment checking:
+>>
+>>> When the SP is used as the base address of a calculation, regardless of
+>>> any offset applied by the instruction, if bits [3:0] of the SP are not
+>>> 0b0000, there is a misaligned SP.
+>>
+>> To fix it, align the stack with 16 bytes.
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> ---
+> 
+> Assuming this is going through Christian's tree.
+> 
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+> Let me know if you would like me to pick it up.
+> 
+> thanks,
+> -- Shuah
+
+Hi, Shuah
+
+Thanks for your review.
+
+I send this fix in Mar, but it missed last linux version.
+I think I need your help to pick it up.
+
+Thanks.
+Shuai
+
+
 
