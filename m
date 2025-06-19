@@ -1,102 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CA4246BBB;
-	Thu, 19 Jun 2025 19:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB7228152D
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750360762; cv=none; b=U/qT9li04/oOrryDXTfcaSCZaLow0VDzlM5FWOqSlzi9ocYHBg09cR4lsIgKL161aO2wVY7t6Tf9FTbjlZc6P+h4R5N1RYSthpeC4jYvIiA2nZvIVj+9F0GWPpFn+Yij7JDyo0KMpvft3JKgNNQkDvXWmRAMr11a5s2rmXcFLvo=
+	t=1750360766; cv=none; b=HzsWAdqfRuPRfzVTiRlpdRAuV/NbEQFhk/z7qlnF6NwXib50F79KpgpfB1+BfHo3RRvODu5sKLXo8LBnfhaBmxzXkBwzJmLSoRxc5X/I7UG4XRbutyxXIjpZT/S5hp0aQkFuhiJxoIRe1r6nPulRAUClKL4fHOM2KhZYhTpPxEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750360762; c=relaxed/simple;
-	bh=LDMXTkVlQDnupG+UBA2IQttq9RHsgsS5cAxbc+ksyEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jq36VpartB0eTcKqveMqitTB9YAukzqcftr8vV3t0x4F8+DWABWLZLf8wRnQzLQG31O0y5mtN4NFpjYkISyko6yzra32Vt4caa0BbAw4+t8N/9Jpnb2oTkCTPPwgunUywf4FpstGzp68Ec9e+VUzJ+VtBeAtW7p7dx5pDDFdd+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MET21Rqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750360766; c=relaxed/simple;
+	bh=wdL1e0FxJPNm7JAn83OhitF3yXWvKr44k4EiR1gWX58=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XvcS+ibsRq7/dl74R2O+2on3rNGn2QhW6XatxPbcrj67A9xUNRLPYOINFVBYUT23EGMlWdwPbIf0CgK48whGJYJ7SGxFJoqqBctOMV2/X60rOG9yyLozfZtCPZTJ/5dMhDTIl65+4o8rwadCESW4QgK0uLdTkAXvpY7K9IG7Ecs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dJMqmXqH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MET21Rqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C78C4CEEA;
-	Thu, 19 Jun 2025 19:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750360761;
-	bh=LDMXTkVlQDnupG+UBA2IQttq9RHsgsS5cAxbc+ksyEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MET21RqyYxksarZ9F9PT2gpDE69XYycjW9Ai26NHx2xjofzlYsdIJWBnPSUsTIte4
-	 KZ3qAg55yExnPpei/HOwZr9eWGR3RMsqHe5AZW+ea9bUyWsR+6Fmi8WVK0S4xyo5u4
-	 plOfsrR8zwhfbWtehabdm98sa2xjzxvc86txr5T1uB4tK3BTw8D/8RPsef806/+NvX
-	 WEOvkzpul7y/KcV3kqsYz9qvmEIUdNHCqfHWeFmFjpfU9DNPiJGuRKEm6SUdvDQrRF
-	 7yzXNJUDN+hPRxQOueAaVy47CEI6gnIdiUa2u949Plx0G64msh3cJhRWVEzdCFC0re
-	 qWiaJNBXPpIwQ==
-Date: Thu, 19 Jun 2025 12:19:20 -0700
-From: Saeed Mahameed <saeed@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, saeedm@nvidia.com, gal@nvidia.com,
-	leonro@nvidia.com, tariqt@nvidia.com,
-	Leon Romanovsky <leon@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/5] net/mlx5e: Add support for PCIe congestion
- events
-Message-ID: <aFRiuIPidlx7Qsy9@x130>
-References: <20250619113721.60201-1-mbloch@nvidia.com>
- <20250619075543.1d31f937@kernel.org>
- <d9bcc48d-17a2-4d12-bacd-6bef296b45c6@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJMqmXqH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750360763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8gPs4sj4/K13gI/HYpqYV+uIWwgLBY8Dn0ugveCFR1k=;
+	b=dJMqmXqHjZvBQWLLj3e3F7E8lHG8xdTIoglPzny2BXNKfYck4dl6/PtNQNZimF80qHh0NB
+	7yB1AcUcaQKJZH+Ql9FRRUKM8Z3mbVFrRXZk8A6/ChO3SIclMZA98/Z4O2P6SelsyQr3W0
+	zth9nlPov4W+U8oz4l1Ss2fD9NBVw+Q=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-348-M_JtvyASMu-WKdAYu-ywLA-1; Thu,
+ 19 Jun 2025 15:19:20 -0400
+X-MC-Unique: M_JtvyASMu-WKdAYu-ywLA-1
+X-Mimecast-MFC-AGG-ID: M_JtvyASMu-WKdAYu-ywLA_1750360754
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B94411809CAF;
+	Thu, 19 Jun 2025 19:19:14 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.132])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D741B19560A3;
+	Thu, 19 Jun 2025 19:19:05 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Thu, 19 Jun 2025 14:16:03 -0500
+Subject: [PATCH v2 11/16] drm/panel/sti: Keep up with refcounting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d9bcc48d-17a2-4d12-bacd-6bef296b45c6@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250619-b4-of_drm_find_panel_part1-v2-11-0df94aecc43d@redhat.com>
+References: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
+In-Reply-To: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>, 
+ Seung-Woo Kim <sw0312.kim@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Alain Volmat <alain.volmat@foss.st.com>, 
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, Stefan Agner <stefan@agner.ch>, 
+ Alison Wang <alison.wang@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Mikko Perttunen <mperttunen@nvidia.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750360565; l=807;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=wdL1e0FxJPNm7JAn83OhitF3yXWvKr44k4EiR1gWX58=;
+ b=EwhsT3JAYQcZTNfClR+7o4NypNPor8tvQQ/8B4FzoPHVR7sZ69og4CleXCpE8AMMwaqFipcqo
+ c2oa6NAe60iCIXtylSBSTU2sIKO+U0ANF2f9eYJb40K+dB3S6wfagyz
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 19 Jun 19:00, Mark Bloch wrote:
->
->
->On 19/06/2025 17:55, Jakub Kicinski wrote:
->> On Thu, 19 Jun 2025 14:37:16 +0300 Mark Bloch wrote:
->>> PCIe congestion events are events generated by the firmware when the
->>> device side has sustained PCIe inbound or outbound traffic above
->>> certain thresholds. The high and low threshold are hysteresis thresholds
->>> to prevent flapping: once the high threshold has been reached, a low
->>> threshold event will be triggered only after the bandwidth usage went
->>> below the low threshold.
->>
->> What are we supposed to do with a series half of which is tagged for
->> one tree and half for another? If you want for some of the patches to
->> go via the shared tree - you have to post them separately.
->> Ideally you'd post them to the list in a combined "pull request +
->> patches" format (see for example how Marc posts CAN patches, or Pablo
->> posts netfilter). Once we pull that you can sent the net-next stuff
->> separately as patches.
->
->Miscommunication about the proper process, thanks for the explanation.
->PR + patches seems cleaner and provides more context,
->so I’ll go with that.
->
->>
->> I feel like I just had the same exact conversation with Tariq recently.
->> Really not great when same process explainer has to be given to
->> multiple people from the same company :( I'd like to remind y'all that
->> reading the mailing list is not optional:
->
->I do follow the mailing list and double checked what should be done in
->this scenario. In the end it's my responsibility so it's my fault.
->
+Put the reference of the panel returned by
+of_drm_find_panel() in the disable() function
+after which panel won't be used.
 
-I think what Mark did here is fine, Yes I understand this is not
-applicable to net-next yet, but the point is review and we can do the
-following, when review is done:
+Patch added in v2.
 
-I can Apply the mlx5-next portion to mlx5-next and Mark on V2 can send the
-net-next stuff + A PR request to the mlx5-next branch, this is how we used
-to do it all the time, but this time review happens all at once for both
-trees.
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/sti/sti_dvo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jakub is this acceptable ? 
+diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
+index 7484d3c3f4ed5fac7eab408e30cbe2f6b87f27e5..11684279320a0e4b15fe761bdf6782cc24e8be96 100644
+--- a/drivers/gpu/drm/sti/sti_dvo.c
++++ b/drivers/gpu/drm/sti/sti_dvo.c
+@@ -225,6 +225,8 @@ static void sti_dvo_disable(struct drm_bridge *bridge)
+ 
+ 	drm_panel_disable(dvo->panel);
+ 
++	drm_panel_put(dvo->panel);
++
+ 	/* Disable/unprepare dvo clock */
+ 	clk_disable_unprepare(dvo->clk_pix);
+ 	clk_disable_unprepare(dvo->clk);
+
+-- 
+2.48.1
 
