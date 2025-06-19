@@ -1,144 +1,178 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F2630E84E;
-	Thu, 19 Jun 2025 18:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2A330E829;
+	Thu, 19 Jun 2025 18:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750358995; cv=none; b=kI5Bc7XXozV73YE3TxvNRtipvnhSCx0BC77797YVTL7DzAfkJrLMasYolPVkW4DqIofpNufucwqPDXo6hF5PPTfYVwbyeK8D81IKXeqNYqsSPelMvmWpOds0um2+MmEQ4JARTrvN1H1g5dzjqGvVe61/3XnQjxkNsj49uGnJLj0=
+	t=1750359069; cv=none; b=nVDpJO3wgZMXBWR7qqQ3efv6vItdkVSI8tZHs6oZLphnqSWVBjMSZfuUZ3C9EFqMdvNwEttfPIYrt0hFcVgdVwLRHxbFgUmheWCi7V+AiLC2zfTVbgQbUKto09lULqw29B5QsH+IWFcwoLa2YUpBwQ5R7HgPPrXUPfhbgwfdUg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750358995; c=relaxed/simple;
-	bh=IgLZ+wW2iKf4zedwAhePtcnxjJWns1fhdBd/jedKVVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qR4gtlIjgen6SZhOfIhKIc5Rz0nIrVlciToGKoi/0oZQhZdRO7igGBh6PfDMxqMlR1Qo41xP1Ly3cWnOmydCw81mw7ENIAyjJNkCEcqncBls6ugb0kmWuFSrxVi9C9fm5ythnd+o3w7d8PXKYa0WU1bKBFulmUPDFXb4/dP/+hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b1ljQc3t; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750359069; c=relaxed/simple;
+	bh=V6FgTW5bpQroTIYKEuUph17GQ4t3LAmXbkQjPBSHntQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q4R0F8kJo1ruyBVFzzOHUlG3BLhhzGIcroZ1v4LpNbKK38C3CN80m2WAmgGcIU21yxsEvaMhZkAkAJnBdYgQW98peMkRuKVVtO3bm85Bnmni+wVn44wna67jP3OdUjJnCfzTqLLMBwqiNdx3E02sXdpW0glPusRSLXPoOFPRXYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgGZFW+/; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b1ljQc3t"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JB4SVH002785;
-	Thu, 19 Jun 2025 18:49:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=aCu9v7
-	Bko2S3a/lR0+u625Si9DterNuLFxnjektrgNQ=; b=b1ljQc3tdB1/UhXc9zztog
-	7g7p3qukkXoDjQALWH1zEGu7j6H6gQFtuUYP1da6mlyi6vYj3CXboHtirCnY6laS
-	HGr+7cgZsMKcyYB6/3JztYYlyNEaZVsUndIBiqhaEY9krVKOb6gyoVT28cTOqcPh
-	Ojd+AIzbbvggCiL6V2Oozh6RVHh2OIBlEtTL3Jwv3QCGMPTLH2D3UbixLDkIbz3t
-	2dxoh7GfeUbBu0kKEiWbkhJzK0a6I3UF4HU93Ec7L0hwWyObn1JLsXgfR+9F1NGC
-	+yZsBqvzDeJkdqKtDx8AFRouaNLLoO97YQMy76otN8dEgUPSfceSbC8fXbP+HUhw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47beet4v0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 18:49:36 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55JFYcg2021612;
-	Thu, 19 Jun 2025 18:49:35 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47cahwb9ux-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 18:49:35 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55JInZnF10683088
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 18:49:35 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 159565805A;
-	Thu, 19 Jun 2025 18:49:35 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3EEE758056;
-	Thu, 19 Jun 2025 18:49:34 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 19 Jun 2025 18:49:34 +0000 (GMT)
-Message-ID: <53e81761-47e1-400e-933d-0a53018c9cab@linux.ibm.com>
-Date: Thu, 19 Jun 2025 14:49:33 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgGZFW+/"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso867689a91.0;
+        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750359067; x=1750963867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
+        b=hgGZFW+/55lw/EvxhymxJZoFdEP3/zsfgHhvIUAGiDRKuIAClK30a0MoFXnvjrAz4O
+         asOrb7ARDPhFgt0rEADY/RsJrWb9CER2eFF9xFTaOPgbBxaieWhofSy0Z1T0nA3u71nk
+         LEcV6gfU2TAg2yKLuqL1INWQNI5VrJvsVI/LPhYC0NUeA4csdtnIbikXlvHOZHPLW3Cn
+         rIh1wCSZbtrgblgvUtuuEjSsykHXsDwUxj8vItNwYPLnjKIrk4k+vzSz+W6k4jcRRhq8
+         gyjtYFu+J8rt6LzFPDPek8qELrJbaq6EcmI8hSocTPcSENQoyGkFYJF2oo2xDtXLFvdC
+         rkIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750359067; x=1750963867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
+        b=SqbqQUmtSP+WC9JJA8lJXE7j9U0WtTMdvMwMiPN4E2aBM39Il3y5nPRtzw9h5RoBuP
+         EkcGRmCL2OBHJ/zb70U5xpXow0kLLnvNTgdYCTDKYX87d7wJedlkWgD/L9DEnqCwkhW1
+         df92ShkqyEtJrPVD2/jciIfLT3FqEKUYyu4OSn8U0/Sve1Z7BZCTdSNq8+VNy4c8TdV0
+         qRDSr56nsgZ7pcsf7qeyR4sh+Igq3QcdvyLozNE53kIgdLtOaPJxGnGr/F5UlV9ARslV
+         3N8P1U3LfsQ0BueLKmqtuGCauOITaljtRGhsW3SzZ6prVWeJad45R4W+coMlwuldDUs2
+         Q3Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNqtfW7q9coctMC6kKdd1NUa1d4ouB0BgTcF0qKY1GS44IAuaBnyA8gBbGw/IPvcBiHU1EyYaLU71W@vger.kernel.org, AJvYcCXC11SmN5R4wFL3lWl+rPVEppCA8cmO4Ga/rSe7RLGZz47UlBNww+Zh8kzEJEnDjN9JCOgMReutwUqnhoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYvNAEs8Q5/QuyPWvrgTNdbhcxvsAWSd/szYG4WgJbf9nVC38w
+	bM6otIouF1qBvZLjSJYXSpPf8lxgrMYEBMMqrtj50Q98RLEN9gtlIEMNSvwc40Wo0iQ=
+X-Gm-Gg: ASbGncuEgaMljAZP0MNFBPyRzv9GiPj8elTtQN+xc13zBJ5QH0BvJsj69O1LjS7Vb6O
+	vUOKP6wyxMSXSfSyswtgsQj+m2RzC1ZpVq6rTIDhjpBO54m+H8oDEgzkvHdYIfMGrparwnFN/01
+	hr0TjcgZtAf8QwRhUIpXYriGDPp0WxH8/J3cCgnn1NK1Q9pP72SVsADcrsNODgXpUYnx1Sk0/UR
+	ydEqbMl8mgh2l8hF7YctvRp5R8nFjnicFv0clTrOjLQDwfDgFy/W3XKtPNjV59oxDzqTs6qR715
+	LA9cY95se32arr66Hr+tHQCUFgNbEeOCMRuJ7eTb5wsse8nkc4yXVZ3inyGa+Aq8f/q7fjLbBWH
+	Oqw==
+X-Google-Smtp-Source: AGHT+IHY07cWD3/UkHvQ+C8XH2o0tDncDzeMoJCIlVijlJqxL2AQusdDBC+VP0O6B4Op+4zXXreWaQ==
+X-Received: by 2002:a17:90b:5625:b0:313:bdbf:36c0 with SMTP id 98e67ed59e1d1-3159d5779femr676440a91.0.1750359067287;
+        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
+Received: from akshayaj-lenovo.. ([2401:4900:8839:85c6:508e:51d2:91e1:30dd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71d49sm44927a91.5.2025.06.19.11.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 11:51:06 -0700 (PDT)
+From: Akshay Jindal <akshayaj.lkd@gmail.com>
+To: bhelgaas@google.com,
+	helgaas@kernel.org,
+	mani@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	kwilczynski@kernel.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	Jonathan.Cameron@huawei.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	lukas@wunner.de
+Cc: Akshay Jindal <akshayaj.lkd@gmail.com>,
+	shuah@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI/AER: Add error message when AER_MAX_MULTI_ERR_DEVICES limit is hit during AER handling
+Date: Fri, 20 Jun 2025 00:20:30 +0530
+Message-ID: <20250619185041.73240-1-akshayaj.lkd@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Module signing and post-quantum crypto public key algorithms
-To: Simo Sorce <simo@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Ignat Korchagin <ignat@cloudflare.com>,
-        David Howells <dhowells@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephan Mueller <smueller@chronox.de>, torvalds@linux-foundation.org,
-        Paul Moore <paul@paul-moore.com>, Lukas Wunner <lukas@wunner.de>,
-        Clemens Lang <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <501216.1749826470@warthog.procyon.org.uk>
- <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
- <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
- <3081793dc1d846dccef07984520fc544f709ca84.camel@HansenPartnership.com>
- <7ad6d5f61d6cd602241966476252599800c6a304.camel@redhat.com>
- <69775877d04b8ee9f072adfd2c595187997e59fb.camel@HansenPartnership.com>
- <3d650cc9ff07462e5c55cc3d9c0da72a3f2c5df2.camel@redhat.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <3d650cc9ff07462e5c55cc3d9c0da72a3f2c5df2.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bPmLlaqINDo009ZWaJ3t33eb6lBrAuBY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDE1NCBTYWx0ZWRfXx5xWkXk8OiF/ nZ3EsvctxQPUTp/nMKLrwiOkBpq2knbo+0lC4URZ0AdllEzLiXW13t0CBvXAyj7nPpc+lXBGllK lB44iiVDcXZW5k6bb+j+IAhbA9CDej85O+tOTntJuu+mnkltVrTt6nRUuKzFa73u/OPV8D0aDuS
- GTvOsoUSb0t+NqeYX4M1PawmTnsHJglPFrFCBvItGrQcBtIBm39ENtaLTiDHc4chJ1D3qzYcZkg Rmm5ncfkKt2R41hB2wYx+5gm0ySNYlMzZ1Y0yauIAKsU8LFZo67hKrAx18T1/B7R+6ungCVr9S9 GCzmT9Wx9XOmDzDQLZCPRJaN1VrjS6yl2fqhPSMz66Ye0iygJTPK6Bhbgfe2YG25IU8dKOxbtzP
- h53x/s9JC8JdpV6ESPwi8k5tucsyPc6N8yOMFJVqM9Q9b4JgHgt3AiasadSK/Bq1xQQk1Ev8
-X-Authority-Analysis: v=2.4 cv=PrSTbxM3 c=1 sm=1 tr=0 ts=68545bc0 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=NEAV23lmAAAA:8 a=6FsnnaTg7kJAo-EUfpsA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: bPmLlaqINDo009ZWaJ3t33eb6lBrAuBY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_06,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxlogscore=999
- bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
- phishscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506190154
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+When a PCIe error is detected, the root port receives the error message
+and the threaded IRQ handler, aer_isr, traverses the hierarchy downward
+from the root port. It populates the e_info->dev[] array with the PCIe
+devices that have recorded error status, so that appropriate error
+handling and recovery can be performed.
 
+The e_info->dev[] array is limited in size by AER_MAX_MULTI_ERR_DEVICES,
+which is currently defined as 5. If more than five devices report errors
+in the same event, the array silently truncates the list, and those
+extra devices are not included in the recovery flow.
 
-On 6/16/25 1:27 PM, Simo Sorce wrote:
-> 
-> Of course we can decide to hedge *all bets* and move to a composed
-> signature (both a classic and a PQ one), in which case I would suggest
-> looking into signatures that use ML-DSA-87 + Ed448 or ML-DSA-87 + P-521
-> ,ideally disjoint, with a kernel policy that can decide which (or both)
-> needs to be valid/checked so that the policy can be changed quickly via
-> configuration if any of the signature is broken.
-> 
+Emit an error message when this limit is reached, fulfilling a TODO
+comment in drivers/pci/pcie/aer.c.
+/* TODO: Should print error message here? */
 
-FYI: based on this implementation of ML-DSA-44/65/87
+Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
+---
 
-https://github.com/IBM/mlca/tree/main/qsc/crystals
+Changes since v1:
+- Reworded commit message in imperative mood (per Shuah’s feedback)
+- Mentioned and quoted related TODO in the message
+- Updated recipient list
 
-(entry point is mlca_verify)
+Testing:
+========
+Verified log in dmesg on QEMU.
 
-I created a prototype of a kernel driver for mldsa-44/65/87 that can 
-verify self-signed mldsa certs created with this openssl command:
+1. Following command created the required environment. As mentioned below a
+pcie-root-port and a virtio-net-pci device are used on a Q35 machine model.
+./qemu-system-x86_64 \
+	-M q35,accel=kvm \
+	-m 2G -cpu host -nographic \
+	-serial mon:stdio \
+	-kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
+	-initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.cpio.gz \
+	-append "console=ttyS0 root=/ pci=pcie_scan_all" \
+	-device pcie-root-port,id=rp0,chassis=1,slot=1 \
+	-device virtio-net-pci,bus=rp0
 
-openssl \
-	req \
-	-x509 \
-	-newkey mldsa44 \
-	-keyout localhost-mldsa44.key \
-	-subj /CN=localhost \
-	-addext subjectAltName=DNS:localhost \
-	-days 30 \
-	-nodes \
-	-out localhost-mldsa44.crt
+~ # mylspci -t
+-[0000:00]-+-00.0
+           +-01.0
+           +-02.0
+           +-03.0-[01]----00.0
+           +-1f.0
+           +-1f.2
+           \-1f.3
+00:03.0--> pcie-root-port
 
-(it seems to use the shake256 hash by default)
+2. Kernel bzImage compiled with following changes:
+	2.1 CONFIG_PCIEAER=y in config
+	2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
+	Since there is no pcie-testdev in QEMU, it is impossible to create
+	a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
+	error scenario by changing the limit to 0.
+	2.3 Log added at the required place in aer.c.
 
-https://github.com/stefanberger/linux-ima-namespaces/commits/mldsa.06092025/
+3. Both correctable and uncorrectable errors were injected on
+pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
+HMP Command used are as follows:
+	3.1 pcie_aer_inject_error -c rp0 0x1
+	3.2 pcie_aer_inject_error -c rp0 0x40
+	3.3 pcie_aer_inject_error rp0 0x10
 
-There's lots of cleanup needed, but with a test suite in user space, 
-this should not be too difficult.
+Resulting dmesg:
+================
+[    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
+[   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+[  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+[  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+
+ drivers/pci/pcie/aer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 70ac66188367..3995a1db5699 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+ 		/* List this device */
+ 		if (add_error_device(e_info, dev)) {
+ 			/* We cannot handle more... Stop iteration */
+-			/* TODO: Should print error message here? */
++			pci_err(dev, "Exceeded max allowed (%d) addition of PCIe "
++				"devices for AER handling\n", AER_MAX_MULTI_ERR_DEVICES);
+ 			return 1;
+ 		}
+ 
+-- 
+2.43.0
 
