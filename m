@@ -1,109 +1,99 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADDA264F9C;
-	Thu, 19 Jun 2025 08:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B339E266B56
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322698; cv=none; b=SjLofCiwPoJSU0yyRvCcnsDBUtg2K9j1WkqvwjCpZmHBIxYGqbuBD34nnG+PwT/kmrrQFi7S6BJQTyfJm1gj0wvRyC2Fc0qyCcbR+H/MHiBqeemMZ8l40kvyloLh7i5oO7WXmE551d9yczKxO5E0KNq7/TgA/gD0iDAxxmOH4v0=
+	t=1750322713; cv=none; b=ecolmnyujlOf3AfDjcxempdPvgoQICiR/tyuBLel+6MsLLIJJBU2/RXa2Jsn5JuywBPOa83fr28IquJbYAFHyrg6dCCqmQg1gOlJbebdU+xpsCvdrpuvP87TjQP9HtqleQpefrzdAjPt/As7U5u5JO7RdcpYjzNr7yoesmIgkgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322698; c=relaxed/simple;
-	bh=4B1Mg/rUb8sAaCaNSvZH3vx8ti1Nm07+Tmko+JkJ1Yc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2Pukh2vCbLvJQywWg8rs++0eDGIJuLz2QJUF0sj0H+YgU3RsRu1xLTOX5MCHyKIJixJGxFUB4gJVx3Mx2YbWnMEqLeW0vTRM0CVilcgj+I9UQ06V5VZBwhWAyPLNxuUsFT3J5OR0K2Fz0YLzcG89eKwCJlDDacqTq/Lky8OkGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id B6A1B5AF53;
-	Thu, 19 Jun 2025 08:44:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id CD0F620029;
-	Thu, 19 Jun 2025 08:44:44 +0000 (UTC)
-Date: Thu, 19 Jun 2025 04:44:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250619044450.64d6c019@batman.local.home>
-In-Reply-To: <20250619075417.GW1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.433111891@goodmis.org>
-	<20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
-	<20250618112939.76f4bb87@gandalf.local.home>
-	<20250619075417.GW1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750322713; c=relaxed/simple;
+	bh=8wRQGv3zkd7w5VQBvNieRLV0qggGrNgPo8gaoi8QA+c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmaXcMSKTRtWXfTT+gR7HtRQZ8CrccllEf12HXF1Bq8PENSvenjWeK2XOJteWJZIbWsw4/LQUxnR2eOtiJz00RQdbELuRTz4RTnzsdHicL9Pxg8MPwuHeleDbGEerVsVFBCRMgKB8MJkrY77XnApXTKTPkOZCG3rD7cYfIWHiLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaXd/06N; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaXd/06N"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so875359a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750322710; x=1750927510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5X8gLMjNHyFOL2GGdyUmdBVB8Aoo+W1ibQ2rMarhgs=;
+        b=iaXd/06NaLUrjckFrfb82PsJzLj1YUISHPg9HG2EdA2XUUFOGDjzyo6U0rGZ/Uy70k
+         jPoAVy/w9kCKU/Ngl4klDpvIEJ6kVH9K43EdRj3mrhoVK3oGYrCgxPoebiV4Fk68yW6L
+         4JtAlcg+OHSzfP5Twmu6Sp5gU5mSfxG8+6GdyhTZbLmVoDzaVPl/LHJIWb/iLP5y/+BG
+         EF05TjfAv8AhHyaNCagjsyBa6FS1AV9um2HO/GLNacskOBPEyFBz+HKkf+bhzU6h96nX
+         4pdlmGJOEdqjKLt4U/Fu2vilU0SDJuC9jiwG1DyREJ4+Nn0rI7THfK1C/PyuLg8eJVAZ
+         La/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750322710; x=1750927510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X5X8gLMjNHyFOL2GGdyUmdBVB8Aoo+W1ibQ2rMarhgs=;
+        b=eyfugNNj02dF6XLT+p/EX2Ho78vFgjLJQou4vvzdYe9HQS6dul7EgEg+SHoJosQQVS
+         jfjaRrBq8iG7E4mKDk2JEa7ZXjA6s5vemaSVD4K5wT0cXodq61WY/V9N8DsHth2KrMKW
+         bVcYxf+bxjt/tX9TEL00F3eyOwFi/sOpmZPMtp5gaMkccGKuYBOezzocP7GEakhnUuzB
+         qH/yHPcN+unR2f6aPq3b4AKxUz7H9TdECLa2lSrhrGfB84PQi7SxFI4CZ11xy5NpJz1M
+         8JO7oCMTF3I7B/nsswX7WLfeLKvZZed3QWfVurmM0op7Mu+rIg/N6eRpiip9Lw6srN/E
+         wDSQ==
+X-Gm-Message-State: AOJu0Yxk0hzx3kcIFP7J5Og/XOTgwGhb2RgPbigyRKUi7KHw8bxnVkap
+	pMHp26tybANhzWp6mcmi+uqHKY+er7tVA5W0ZxtF3OMMq2B2EC4YfimR07yV1QWiD2k408ct
+X-Gm-Gg: ASbGnct0DK2FGsM+t/PY6yivhVrdCnJjSdQwLxn46XAh0IQbEvyYpSi2yquEImHAjXH
+	5WyxPkq8Gmfbkh2UETvt6DRxRNFC1JMqVKFmwh89SUuPbJQiee6MCykoZyPuq9tK8rGxu+Q9jn3
+	hkw5KR0QND7QPwuIQFFj3tJFAXsnGJ0mBLa0hw1n+Qb4VkSB96r/rCNMKr76ib2nR/xtAmFBJq8
+	ng5ZX983uF/+eXPWB+i72p8DbhcDoSUeCJmHChtyLwjUdyxhauLkhsAWg4a3pfjsaVviUrh6Gbv
+	59HmaZlU8AZXcFI6L/9T47tEaXKITJQhAWH75EtoqIG7MdOkp+pbpGOx9x9QViDTqrYi1KwxUh9
+	UDS/mCQ==
+X-Google-Smtp-Source: AGHT+IGMjyetyOU7YuxTeXG4YgVrNbIrwYWbe4hNfU6dsQ/FW/NlzDErrsExPei/I+rW4MGBXCh/Ew==
+X-Received: by 2002:a05:6402:34d3:b0:606:b778:78af with SMTP id 4fb4d7f45d1cf-608d09cf8a8mr19573568a12.27.1750322709940;
+        Thu, 19 Jun 2025 01:45:09 -0700 (PDT)
+Received: from chimera.vu.local ([145.108.90.28])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e6f0sm11276831a12.42.2025.06.19.01.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 01:45:09 -0700 (PDT)
+From: Thomas Andreatta <thomasandreatta2000@gmail.com>
+X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+To: hansg@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Subject: [PATCH 1/4 V2] Staging: media: atomisp: i2c: removed redundand debug message
+Date: Thu, 19 Jun 2025 10:44:18 +0200
+Message-Id: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CD0F620029
-X-Stat-Signature: nief18z4berszsd815n6hk4gpk9zouig
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+DCEjjs4l6M7N9GDYMFFUSWGqjmqCt2Cw=
-X-HE-Tag: 1750322684-366548
-X-HE-Meta: U2FsdGVkX19+H9lornc1JHqYbN9VPIzvbHGm9jmbvRYxx9zMgdUBFqYvC3XGtuNzvnhf3JUyerAOD3RZeCXHyxSVu1C+PPtyLPKro3pVcyQaMaCIc/RroFXcEhAvbH/UmykRpz2hF7dOfyzm9sHIi0uVQ/HvTHOHIpb1wRq49QXB3zIeqSEl/1KMBy/HPAeZxzlJFEPeuJQjoeQnUrto3T5i45t61XAXrmcQd359VlLNIem61rUTboA1PDwS4Q9mN9C3c1UaQcKCuA8iQWZxb1oYq9hPM6oS8SrJlE/KPdtOQnzC6t/Uy7326Xo9eIeMhV/iAiPLZbj6GU1SwICCM85cCLO/U/pUb/UQKpI0AbL8vXLLFZmE2M30B0/U19bO
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Jun 2025 09:54:17 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Checkpatch fix: deleted `dev_dbg()` printing the name of the function.
+                ftrace can be used instead.
 
-> On Wed, Jun 18, 2025 at 11:29:39AM -0400, Steven Rostedt wrote:
-> 
-> > Note, a request from the gcc folks is to add a system call that gives the
-> > user space application a backtrace from its current location. This can be
-> > handy for debugging as it would be similar to how we use dump_stack().  
-> 
-> That makes very little sense to me; apps can typically unwind themselves
-> just fine, no? In fact, they can use DWARFs and all that.
+Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+---
+ drivers/staging/media/atomisp/i2c/atomisp-gc0310.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Not really. It can in gdb, but doing it from a running app means that
-the app needs a full parser, and access to the elf file it's running.
+diff --git a/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c b/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c
+index d35394f1ddbb..830a38086cb8 100644
+--- a/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c
++++ b/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c
+@@ -584,8 +584,6 @@ static void gc0310_remove(struct i2c_client *client)
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct gc0310_device *dev = to_gc0310_sensor(sd);
+ 
+-	dev_dbg(&client->dev, "gc0310_remove...\n");
+-
+ 	v4l2_async_unregister_subdev(sd);
+ 	media_entity_cleanup(&dev->sd.entity);
+ 	v4l2_ctrl_handler_free(&dev->ctrls.handler);
+-- 
+2.34.1
 
-> 
-> Also, how about we don't make thing complicated and not confuse comments
-> with things like this? Focus on the deferred stuff (that's what these
-> patches are about) -- and then return-to-user is the one and only place
-> that makes sense.
-
-The change log had:
-
-   Add a function that must be called inside a faultable context that will
-   retrieve a user space stack trace. The function unwind_deferred_trace()
-   can be called by a tracer when a task is about to enter user space, or has
-   just come back from user space and has interrupts enabled.
-
-It doesn't mention the backtrace thing. It only makes a statement that
-it needs to be done in a faultable context. I renamed the function to:
-
-   unwind_user_faultable()
-
-And updated the change log to:
-
-    unwind_user/deferred: Add unwind_user_faultable()
-    
-    Add a new API to retrieve a user space callstack called
-    unwind_user_faultable(). The difference between this user space stack
-    tracer from the current user space stack tracer is that this must be
-    called from faultable context as it may use routines to access user space
-    data that needs to be faulted in.
-    
-    It can be safely called from entering or exiting a system call as the code
-
-The explanation is that it must be called in faultable context. It
-doesn't add any more policy that that (like it having to be deferred).
-
--- Steve
