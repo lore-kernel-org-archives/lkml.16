@@ -1,95 +1,104 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F5A192B7D
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7218F192B7D;
+	Thu, 19 Jun 2025 07:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750316822; cv=none; b=TDWGn/tqKyxni42V3lSHImKyLn9TPJ7pkeP502k8KaCJfPhWVEVLOpm7x+Mb544JRd31oPGewulGY5eanDzpV+PEmJt7v+5nMXfRr/oLD8z+37qOiSV2yFk930Ytj6UhzRyZLDC+N4tvO/1PR+i/rhU5kWodRENqEQLC+ef1Eik=
+	t=1750316833; cv=none; b=fBTZQ0lGqQtVaxwdTQeOOt4iNyj7jYUiawsej9ICk1JdqVUkVYrq6MCEHq5AbQwYDQraj5bFQV31ExQriKvd7qCVfTEL0wpBXxO4NIw2daMkZqZeTLT5HrXfRUATTALWQMSLLFJ2h+CjADk+wneMT11dPNBZVHVJC9Ts1EbRAqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750316822; c=relaxed/simple;
-	bh=gIrndrxqEQYIbQKwOcS4Mln3+RBHF7hskkcp5VOAKaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IxtVhMWiUpnBwU3DjsU/2MIBmTRq/mVbx9fny66Xmsv5hCYmF5M/CdHDFUqyUwSJd/rFE2t5cEu49kqvaEbJ90M7eWdg43MIaMS7aKDs/t5NzQryx7p4T/4wQWp1lWNOVoNbWFP1p3VVxdSQNw8bbP96RKUsDJ4vDRWlViwhGow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jITB6Yxw; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750316833; c=relaxed/simple;
+	bh=C4QpgZkZ9IIpsWFHkaQ514mxLlArKqKI3Y9pvUN/FWI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nymXZyBKRiGn+si3HRwNO0w32JnMJ6toYNH8dUbuuCSmhEJJY30EBPkf69GSICpjr6xo8dZ5GrSeyqTc6/EMo3pipYatXQFE83EmVWx8Jljhf5asCX4bJ63d1xUNvfrU5wJwApTfjwR7D/qlEF6UuCh8NR3Rls8ikWq1tZqt1Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Ed9A7ROB; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jITB6Yxw"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3137c20213cso390816a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750316821; x=1750921621; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IymuwWFz5efXWH2kgyyNSxlRPSBhBIlq8B6srm/Era0=;
-        b=jITB6YxwNdiziytTZMmOunSrMJYwnfFJlf59FgIG1M1zfjzHw1YCXXr1cL3RxvSt9g
-         pPfWHXi/GNu71l2fiKMDAD72d9CJ3Y9UoIV/RsDOorBaVU3gOBolh+p8n5rfDQRzibJ7
-         TwTnQKtw0DDJmlBWvmz0kjxdyTtr26oBtIGcjGMdiAxz8IY+WfbJ7QJTYsG1DRpmxAvm
-         06Rh09Bq0BurbrmGwM0b0/oKXjAsZuiyEg9rXqfaE+LlAFBq9JT6ZH8aHeIlg+yxjH4X
-         uFpnAKJ9eCSPTjVWwOg/a8LLN7UT89MEkyFa3m6rQgjEWpV2uqHy1QcfXVeWOXZ+3zx2
-         Og4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750316821; x=1750921621;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IymuwWFz5efXWH2kgyyNSxlRPSBhBIlq8B6srm/Era0=;
-        b=d0oR+zlEAQDa61Jc+MODcRBOoHE2byq62nhg28uynk9Yl6/yGURQYBKzoaf9wqIYLJ
-         Vpr5OMed7dhGXdvKD+Imky7gpO+MqvsesJrdGMko0vbG7m3Ajsywh5g8P+wGz6jhmAFK
-         AS+f6c0InXAhGXOr0gvXH6QKi6kVM1EU6ba1Pal9EbX7jn/lUHByqoU8NF15n9VvIokr
-         ubxAUG32zaNXgnXUrODiOVOnhHr5X2TdAz1sWg3jWrvcR1fVI+6vuudMDYQG6y9w7R4d
-         PMmuZLuqnHqDJSe0Pka+WXYb9nrBywlfAA359gxL67octohdAvC1MlO1OeejBFQUhMUQ
-         hrLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtaRygPGrINo4RsGtFk6T9664V7KPYnxIXhE/VgPNTQx1Q78ZaRv9Y6/l4lainIzOD0CpjDu+JplTdaJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypQHHoALapGTloH2VwWYeJoqncosULQI/HzX4Ej6GEVLxY0Nss
-	vgpwOdCU3aZcXZbWx00QH0lvsQLi6OarPVFulZ5BD6Wf5cyIbhfW867vjm97bkPXjLM=
-X-Gm-Gg: ASbGnctqMhIbviM+k1C+p03TXIkoF3wXikWf/9FyKv1qOpN3cQNancfZubl179TsaFp
-	rOaYU+AK6sNtkgxO1DhnKSVCU13z+aSwJO6Sg4UJ3jMqiArdbxRFfbIyqcqOs+Fi7jhabfVF7j5
-	YeEku4o1iruemuF6cYIK8b6VEe0Pf5xW2ORKX3rGPcnlkAK3gBo0GgDx6+3MoqRj+tmAj5ZG1Ji
-	Bx7tYRRmLXVMu9eFmZAFRf4TeuWv7pSD/f/2ReHuzIGAiIMaN+2zvarnvI+H0HtLGS/qYQh6ULB
-	MSn3jOo+06t1Qn8ArqS1jA2Lt6idZShwL8vZtPn0XAuC7QxYokkAEYYAoXm7kP8=
-X-Google-Smtp-Source: AGHT+IGyYaOKIL36CbVXP5wK2R0Ni0YKSM2IJpGDucT9Et2S+y0DrU3AlyTGX8LLr5798o70TnJH/A==
-X-Received: by 2002:a17:90b:380c:b0:311:baa0:89ce with SMTP id 98e67ed59e1d1-313f1c06bf5mr36604358a91.12.1750316820675;
-        Thu, 19 Jun 2025 00:07:00 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a23e627sm1365892a91.18.2025.06.19.00.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 00:07:00 -0700 (PDT)
-Date: Thu, 19 Jun 2025 12:36:57 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Markus Mayer <mmayer@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: brcmstb-avs: Fully open-code compatible for
- grepping
-Message-ID: <20250619070657.dshqwhulzadxpyz3@vireshk-i7>
-References: <20250613071643.46754-2-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ed9A7ROB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750316828; x=1781852828;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=C4QpgZkZ9IIpsWFHkaQ514mxLlArKqKI3Y9pvUN/FWI=;
+  b=Ed9A7ROBjeCgS07GzzUQaq2K7fPIPmoxp8MXf8kGIDCW+usPh+YVZ39a
+   D5TbarSMwIbl9aNWkswtPzaGAl1JbFsM/AVBwYxQMk38N+tUMdoyDaXDg
+   IUWM2yiXYlUo9G/niFYfCQpM6E34LN+HpCiHTafOb/gG2d4hpLuMh+Tt/
+   FHiZWNBn6QZoJdf32hXXy38PPTqhK66VXzPVg4y3FkSC/frR5LJmIIorB
+   Fpx3KGmkMtZTCOFHqOgBF0cRbxFpQh86TnAdpcGF/lyfg3hfvhlAdISqm
+   Fz+QGDEgDqJ8P5QJoWJ5kCtqMA5CzR2bsVfFOOod5/5qiibH9fnXstKPY
+   A==;
+X-CSE-ConnectionGUID: PlQ5gDZlQHSrfxlUJA1/0Q==
+X-CSE-MsgGUID: Gh79I1KERw++gOMSoTiWPQ==
+X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
+   d="scan'208";a="48018357"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Jun 2025 00:07:02 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 19 Jun 2025 00:06:46 -0700
+Received: from archlinux.mchp-main.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Thu, 19 Jun 2025 00:06:44 -0700
+From: Mihai Sain <mihai.sain@microchip.com>
+To: <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Mihai Sain <mihai.sain@microchip.com>
+Subject: [PATCH v3 1/2] ARM: dts: microchip: sama7d65: Add cache configuration for cpu node
+Date: Thu, 19 Jun 2025 10:06:35 +0300
+Message-ID: <20250619070636.8844-2-mihai.sain@microchip.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250619070636.8844-1-mihai.sain@microchip.com>
+References: <20250619070636.8844-1-mihai.sain@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613071643.46754-2-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 13-06-25, 09:16, Krzysztof Kozlowski wrote:
-> It is very useful to find driver implementing compatibles with `git grep
-> compatible`, so driver should not use defines for that string, even if
-> this means string will be effectively duplicated.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Describe the cache memories according with datasheet chapter 15.2:
 
-Applied. Thanks.
+- L1 cache configuration with 32KB for both data and instruction cache.
+- L2 cache configuration with 256KB unified cache.
 
+Before this patch the kernel reported the warning:
+
+[    0.161955] cacheinfo: Unable to detect cache hierarchy for CPU 0
+
+Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
+---
+ arch/arm/boot/dts/microchip/sama7d65.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+index d08d773b1cc5..f123faaa2ef7 100644
+--- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+@@ -32,6 +32,16 @@ cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			clocks = <&pmc PMC_TYPE_CORE PMC_CPUPLL>;
+ 			clock-names = "cpu";
++			d-cache-size = <0x8000>;	// L1, 32 KB
++			i-cache-size = <0x8000>;	// L1, 32 KB
++			next-level-cache = <&L2>;
++
++			L2: l2-cache {
++				compatible = "cache";
++				cache-level = <2>;
++				cache-size = <0x40000>; // L2, 256 KB
++				cache-unified;
++			};
+ 		};
+ 	};
+ 
 -- 
-viresh
+2.50.0
+
