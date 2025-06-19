@@ -1,128 +1,163 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96902701DF
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADE225D1E1;
+	Thu, 19 Jun 2025 13:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340312; cv=none; b=QtGfCGrxs7CvO+IHnBz5qU51c3nA5qvKhs3o0vYGVfC+xttSAvdQYAjHlzuq5aHEXtEXFN+SQU07fQgw/h147Nub2hJgLkJFpgA2Y918yB7KzMtCRr+kODZGeypr7rux6KLA1+taze3eNo/M5dK+gWDAdgsiE98fqYvQdOYNbQ0=
+	t=1750340330; cv=none; b=kbV7draLs6ugYM53sdR+SLv5VfdI8dRpfKgX0msauJlDlE3nKOYmiyFUNwuLeZA8Fh8qQEqcvklLX6+213BuAdyDBBbDDPYpDiGTPh7jXaS8xG8cwjs9OmDBBXqkJG3Lfyyc0RcGsC19IRFRpQhfs1MRj3WqXqpFlc5vJdF1Q+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340312; c=relaxed/simple;
-	bh=MfB3Ra+rbkQPduQ1b/ldf7ZEAPf14E/2tIl7mOAuo3Y=;
+	s=arc-20240116; t=1750340330; c=relaxed/simple;
+	bh=aVuQkpvPHlv3q67ADtXNkBERNF2PCkcHUVD/xqSdU3U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzdnQ9H7p1RLdy3kO1G8kFhB99S0zJkTZPydeRCr4aao74DLgmTtZoucFglk+f38VlKNFBsMOR8WwlMz558ali3drAozyNYCRtAteFaYDGuGVsmfAQCfn0Vsdq9whfFkSyKKn7S1Nz6yzFki9vKDkMt71orL1yMFRru0Uz82mIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gVZfKllo; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0cAYgMY2Ud8UVQ/Cd3mHxZ2/ndFSbMNywzPV6XN5GWI1ahCHWj5K3Sr6H3uIxsj360Itj4Nck6T5Ip8UY7XhVdMapgWRM91HWCz3IwbCEnF9hh6IZ/aFjHNLM+RPR3N6GcPo5fbxP5GxsHxKHlgQAl0Qs4B5Ajc5jZ7bcwWsWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ubt40zT2; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gVZfKllo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XDt0BB7NT2lvVBZjPs41Ot7bzpKGdDcl50tiZrGAOPo=; b=gVZfKlloJH+QL4k+SoR+wUilla
-	1KXo7VaQJEy/TD8E4Mavq1qxYSE8LZ9914N7ynj1urGbULlEutx4P9RyugwLpD59IhnNt1pAOcPrI
-	7ow9axuRgIqHNOhZgYErRW8LHMyM+PC/Wlqq4lF2srFhXRsNpnf91rW9I0zLZNOEPLkvQ+CoD4hx8
-	kmYNQHlSRQIPokx3s81HtxB1+z+A8aJQHZNSMvi7W7BwR2akJhgD86MZwr0awZdmolj94qb3u1EqN
-	rvDXLZFkwpZvGOTWwESlSZJ93zue69eCS708qOsrzSN61KFKpAy8sX2cJ81/z/h4HSp6jhv2MRbTu
-	tbg/dP2A==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSFTE-00000008sSD-2utJ;
-	Thu, 19 Jun 2025 13:38:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 599833088F2; Thu, 19 Jun 2025 15:38:23 +0200 (CEST)
-Date: Thu, 19 Jun 2025 15:38:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-	ak@linux.intel.com, zide.chen@intel.com
-Subject: Re: [RFC PATCH 00/12] Support vector and more extended registers in
- perf
-Message-ID: <20250619133823.GG1613376@noisy.programming.kicks-ass.net>
-References: <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
- <60c18595-c6a8-4c39-98fe-0822755fbdb7@linux.intel.com>
- <20250617142952.GX1613376@noisy.programming.kicks-ass.net>
- <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
- <1121293d-777e-4c21-b1ad-d34516d2cd3a@linux.intel.com>
- <a116761e-30bc-49bf-a1f8-9cc0ec1faae2@linux.intel.com>
- <4d4d1ca5-aab6-45be-9485-43c39b30fd62@linux.intel.com>
- <5aabcb15-0def-4f73-b4dd-03c958192d67@linux.intel.com>
- <1bc9de32-2599-483f-8c6a-6da59f8d9549@linux.intel.com>
- <d97fc799-ab9b-4c6a-a77e-8b542ac82efa@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ubt40zT2"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d0a2220fb0so106827285a.3;
+        Thu, 19 Jun 2025 06:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750340328; x=1750945128; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=UG1Xhvr8GQwqe2eQ2d3JyzHa9E9GMJ+mpdKgNjvYfWE=;
+        b=Ubt40zT2I0pYCbwUrZn9aLrhEvEocToPCZPrXMqzl5BHcJJ0WPZhDjLvzg27AwV8Vr
+         yKE+H4nEf9pyMIMzCEruzUBLv5HLhETAKj4djOfiRZMDSe4d9MMoWRvSRcYvg+OIy1V6
+         02Fh5sCfnQi88+Qh1aVdU0r42GYgjpHs3tKEfj+qSwSBImabsexiTUBArIOEVGPPCS59
+         N0LkfWqPYycbpm1gzzB9EZt7GZEKm29F2cSeiSgM2Qi2I8sm3aGkF7BSy1CSoPxcf4sL
+         SZHM4oyPm3X8i11rE0ItSE0S9RYwzknEQhxMzgaTRcYxt4NiWGyUBWPEmSaAsfJcKa+o
+         u6AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750340328; x=1750945128;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UG1Xhvr8GQwqe2eQ2d3JyzHa9E9GMJ+mpdKgNjvYfWE=;
+        b=kQLCpNvE8s6hxB7Vz81KNlVYqaKMsSLbzYxwG0WjzhtxO2ql+fKM7p6jwlQDGKlM89
+         08ofJ43xP0I277JcVmsx31LIJGoVbev+3ZEH0zSODfFN8lBqYYLTlKNzTKX9W7jvVjEB
+         KNcfR5IPi97aWmr+J/qufG1MEEbJqmrXwOE4KJZphDw4E9BDTuIubjNG9Y+5CiAWV7rR
+         L0QrKT/lTCNEBKfVHyxXGYnGDk3BkFRZDigKhBcGqQzcxZi0IJ1ORagRMuEo90YoOKFK
+         hkFxpaOu7CBDDm3fDB+rAIkK1of5M1JA2V11hXJ5xPTBkaLqSo49iKieq/+Q5n9V2xG+
+         M7NA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJopmEiUMQEYAHN9MXPbqL0qK9BT/WqT5fa9LNCD877bZ2lap6aak4FaBBQxiB05D4tjBwNHzSaY3dmNc=@vger.kernel.org, AJvYcCXgfBXsz89FSw3wbtuWx8L3oxZVtt+UTiSdwdMV517irDggd84niNDwFUopF9icVGR3VHfw/pum+3+Sa2a9b/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRWy6juArY/r0u2ldBNGQYkVDrq/t0hmhyZdQ7s15oiuUJoAbO
+	WRRcrVgFilOoonoVvoB/H6ogIHvCQ83khGi2gXzf9tJZvMzi+s7Kigvi
+X-Gm-Gg: ASbGncvLpLKhb7F5KTXsSp0ljiwT06pY5ygCAdKM73ajF/wQmF7MDedlPP13rn6Lz0t
+	HbaEsQlgJ/1rXaA0fdCqfR2Iet/O6OLX3jZYMLtxYJevlNtUlXw3f+6iDXyZt13BzPj/dGpnz+n
+	lJBi9KMMRA1Kzt1lFFyWQo4qP5N6e7c7Z8TE/KMR1c3HTfpmYbSUDmiCQMZhc2kw/0N89S0KfaN
+	/VMMmtjH+/IGLVA+uKCzcJB8j1bAqe9pq4ait/Cd2GygQ8hBn2B+pzSH8LtZtTirpKJlmkWNUPT
+	nJSjFiTbIxaQ+gw0sRC3Mym4wYvFzhwDK1l7vQbdyQPLlz2DyQXp8xik8+D2Htyx4FR1vdGKXkT
+	MrrxxYuomJTjVLt+AjUne62mLhPZwIpWhNUtrstcWGVSiZH3F7br24t4sLCR2cQ0=
+X-Google-Smtp-Source: AGHT+IGfOfmStbKMG63JE5udINbz4HyktUKW48TTrbYfWKZ1nKNhFANIaDxMqzdUQGN0R/G8IE6h9A==
+X-Received: by 2002:a05:620a:4091:b0:7cd:565b:dbd6 with SMTP id af79cd13be357-7d3c6c30a63mr3339977185a.25.1750340328157;
+        Thu, 19 Jun 2025 06:38:48 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e1cf5esm881740085a.49.2025.06.19.06.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 06:38:47 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3DD43120006B;
+	Thu, 19 Jun 2025 09:38:47 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 19 Jun 2025 09:38:47 -0400
+X-ME-Sender: <xms:5xJUaMFdE-fTJux6Z0uFhk3ugO9zwjQZqYivllpAsBC6dHNcLwSPig>
+    <xme:5xJUaFVtXN1jMMsnw_3aDZiSjHOFzzhRGOgYbqjhv0EbMjehS3yuIyccElegm3wAs
+    M4xUhcMS_7JzXg1rA>
+X-ME-Received: <xmr:5xJUaGJDUcLqDbKr6XDM8Ni_ECh7iBuXl6ZoQTeoUOO_rkU_QKCfSb_N-g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehieeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefhgfegleef
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehfuh
+    hjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgig
+    rdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdp
+    rhgtphhtthhopegrnhhnrgdqmhgrrhhirgeslhhinhhuthhrohhnihigrdguvgdprhgtph
+    htthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthho
+    pegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhrvgguvghrihgtsehkvg
+    hrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:5xJUaOEoXx6_R4Ori140nGH-glB1NbS1pZUATj5RbLOROwCN9BLNLQ>
+    <xmx:5xJUaCVS7nbEUfRpaxRAo2lwbG3PQMPHe3WiP0GJhTOMEuBsRkqfsA>
+    <xmx:5xJUaBPUSBKJgzauJkn3zWI53vsWyW996o7ZbvJkA1Z0X3p67Uk9KA>
+    <xmx:5xJUaJ3vrKXPJgHHbERpJvteVdwTz9bdWnH-U__zflNEeGaPUV6A0Q>
+    <xmx:5xJUaLXgVf0Lw5XejSvFTJo95POa9Z-upx9iyVoWop9cahS3_7n1OcjS>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 19 Jun 2025 09:38:46 -0400 (EDT)
+Date: Thu, 19 Jun 2025 06:38:45 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, alex.gaynor@gmail.com,
+	ojeda@kernel.org, aliceryhl@google.com, anna-maria@linutronix.de,
+	bjorn3_gh@protonmail.com, dakr@kernel.org, frederic@kernel.org,
+	gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
+	lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
+	sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
+Message-ID: <aFQS5egeo4xfFbNF@Mac.home>
+References: <lliFJqf-6WmrKCArjCpOguz4jsHNtiF9GU0X4Ip5bE8NseTdlyKNH_7Bp_CyxNBD5ZR-Jbz0teNRS4UgV_7Z3g==@protonmail.internalid>
+ <20250619.092816.1768105017126251956.fujita.tomonori@gmail.com>
+ <87cyb084df.fsf@kernel.org>
+ <HtpBC6KWSM5Y-x_Vzv2SvzKId8EC0R3fX9HB88gZQnIvy43YqYFDqAkXPUc1IQos2CoYljFnsJJDcGm-vep0TQ==@protonmail.internalid>
+ <20250619.203319.1745503493999032815.fujita.tomonori@gmail.com>
+ <8734bv7utz.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d97fc799-ab9b-4c6a-a77e-8b542ac82efa@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8734bv7utz.fsf@kernel.org>
 
-On Thu, Jun 19, 2025 at 07:11:23AM -0400, Liang, Kan wrote:
-
-> @@ -543,6 +544,24 @@ struct perf_event_attr {
->  	__u64	sig_data;
+On Thu, Jun 19, 2025 at 02:57:12PM +0200, Andreas Hindborg wrote:
+[...]
+> >>
+> >>
+> >>   pub trait ClockSource {
+> >>       /// The kernel clock ID associated with this clock source.
+> >>       ///
+> >>       /// This constant corresponds to the C side `clockid_t` value.
+> >>       const ID: bindings::clockid_t;
+> >>
+> >> The constant used to identify the clock source when calling into C APIs.
+> >
+> > Ah, I see. Sorry to ask another question, but can we require
+> > correlation between ID and the value fetched by `ktime_get`?
 > 
->  	__u64	config3; /* extension of config2 */
-> +
-> +
-> +	/*
-> +	 * Defines set of SIMD registers to dump on samples.
-> +	 * The sample_simd_req_enabled !=0 implies the
-> +	 * set of SIMD registers is used to config all SIMD registers.
-> +	 * If !sample_simd_req_enabled, sample_regs_XXX may be used to
-> +	 * config some SIMD registers on X86.
-> +	 */
-> +	union {
-> +		__u16 sample_simd_reg_enabled;
-> +		__u16 sample_simd_pred_reg_qwords;
-> +	};
-> +	__u16 sample_simd_pred_reg_intr;
-> +	__u16 sample_simd_pred_reg_user;
-
-This limits things to max 16 predicate registers. ARM will fully fill
-that with present hardware.
-
-> +	__u16 sample_simd_reg_qwords;
-> +	__u64 sample_simd_reg_intr;
-> +	__u64 sample_simd_reg_user;
-
-I would perhaps make this vec_reg.
-
->  };
+> Yes, I think we should. As in, `ClockSource::ktime_get` must return the
+> time associated with the clock specified by `ClockSource::ID`.
 > 
->  /*
-> @@ -1016,7 +1035,15 @@ enum perf_event_type {
->  	 *      } && PERF_SAMPLE_BRANCH_STACK
->  	 *
->  	 *	{ u64			abi; # enum perf_sample_regs_abi
-> -	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
-> +	 *	  u64			regs[weight(mask)];
-> +	 *	  struct {
-> +	 *	  	u16 nr_vectors;
-> +	 *	  	u16 vector_qwords;
-> +	 *	  	u16 nr_pred;
-> +	 *	  	u16 pred_qwords;
-> +	 *	  	u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
-> +	 *	  } && sample_simd_reg_enabled
+> >The value
+> > fetched by ktime_get is opaque, isn't it?
+> 
+> It is, but the implementation must still fetch the correct counter, right?
+> Not sure if it could lead to UB if it did not though 🤷
+> 
 
-Instead of using sample_simd_reg_enabled here I would perhaps extend
-perf_sample_regs_abi. The current abi word is woefully underused.
+The reason that we need ktime_get() to return value in [0, KTIME_MAX) is
+because Instant's type invariants (and Instant's type invariants is for
+subtraction not overflowing), so I would say this is not a safety
+requirement for impl ClockSource.
 
-Also, realistically, what you want to look at here is:
+Regards,
+Boqun
 
-  sample_simd_{pred,vec}_reg_user;
-
-If those are empty, there will be no registers.
-
-> +	 *	} && PERF_SAMPLE_REGS_USER
->  	 *
->  	 *	{ u64			size;
->  	 *	  char			data[size];
+> 
+> Best regards,
+> Andreas Hindborg
+> 
+> 
+> 
