@@ -1,686 +1,340 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A227E23E35B
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750337627; cv=none; b=CYesdcHI3Sj1KD7jxf9rgJBbmCALJ9LOc5LvzMWzOmu8fHsGqVrZMyTok63yD+dWT2FIliwO1eQMtgqDX9vF7SWqzrD2F74JDdbbjOoCxiGxLE2spezlp0q9BFiTpr0cosQdyrx2lgXrSwwHtoV1DDf5v/cWm4rDuxgQIIHi4dw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750337627; c=relaxed/simple;
-	bh=F9eG1Wv3XbeOxcIDAPJjsH3FbmPyLWpeIFlAN4B+hUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZLgZJbHa2vcTX++pBazFBwMI69XQyG4IPznfE1oqDwq1QJl8TDkrHa5ETD+Tlfq3f6OVYJZGDex6y3SPKQ6gy545OR3KhuSzVNC6eNFlIHX/A79JHMCUZHi3ULG7oB5yKGWt5wqR+su/qNBuNi3IJkjvClcHY4DcFK42T2fWij4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xIAWawfN; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89522405EC
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750337636; cv=fail; b=gYfILSHCnIXQL8NxX1TenG6OJXKYEhX+l2tJMNEZ/5I7FAw45XlIQcO/xxJoNiaSPK1TRBczN42/UPBODO7bg3OX9Hk6nZ1FbbWQsvLVSiZQHBwWdKFvwHP3zuj5xnzzLaggNJXtaP2ArkGu1joisuMPO5fgWc6sp+0RRBFDAIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750337636; c=relaxed/simple;
+	bh=cdPsqPU8bC6FGV5U4363WNJavqLVUy6ypT4tr1+MpZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FZjxXM29kDhh/kM65+CvhJ4HEX1DWTc9ZEqo7K5eY9q+L6+4IiNduHxhb464Q6J1RSvs75kwFjjlo0c29jYgJJwuHc8DbNOuOMBTMt5ow2ySboPoWwvKDJSEjnuzrhr3T+5a26vgOEVd626fdnFWiOzQtXWsJnu3IAEnKcCqefY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HXRrs/5t; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qzNqEiHX; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xIAWawfN"
-Message-ID: <4bf20b00-19bd-48f3-9d0c-3c8bde56ec47@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750337612;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bv2/1n6hcGYTDyBwgK7xAdg9bo1P08b8mwam7rhKZJA=;
-	b=xIAWawfNIhUOZfCak6FOkhg442UvAWVvu3cdtvu6LRmYt2A8B1ZAMToqrUQCFGVR2zt7zA
-	NKyHSbgSlTygnpL27RuvaZeZR6jF9ee56ULCgeZcmnWnGOQtptfiH7aRqJVPyxws+MU5vn
-	0fYVmDGFVK73TGk5q2U6y8dsl+NIKDA=
-Date: Thu, 19 Jun 2025 13:53:23 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HXRrs/5t";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qzNqEiHX"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J0fbST027889;
+	Thu, 19 Jun 2025 12:53:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=lC8dRjx+QheN5ZOtJF
+	qcI+6/kFlVRF4amU58J4Ku3BA=; b=HXRrs/5t1RkXBKXFCQIdI5IbjSS0C+ayqG
+	7eYMEEzQ0NS/D15t1QA30cMQW0T288CIubUIxJK1zuA16TL0SaHEKqQl21d9jef9
+	V2vv27iEOzBBvew8LNBIIsplibFP7lud2tV48yjlGOvThH2LcesYcsfQ1FYlZfJ4
+	h275yNlV7fMdzQe1C0xw1kz8toVULB5tbc5NIb0oifVi+WNv/aiQtO/vYlDt/n5H
+	4Wz1p4QqBXPTwqvQKUjypETdQOWp2ryPb5MsUhTB2DGJYzMQA6GsLBliD66RWzZJ
+	fhwaYyXoxdE00ASwxDqK8jnM0cUZ0Oa/1hKTNSs9OA2xtijYdQCw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4790yd9tsk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Jun 2025 12:53:38 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JB1FXc022769;
+	Thu, 19 Jun 2025 12:53:36 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhj4v5r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Jun 2025 12:53:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LX3ihnC5cNi7HqB7GYaqaBpgKO/UOzPrdKUidd7xCJa0sFNjYc/n6K3Zxx3zR/WrB1vupaTreo2T32lu1ByVKmptN7HMengAqENGHgAf55IMnVHOC6HP966HpOtciBiCJo7SE9lUo9+B/Wj7pWvD/b3jUHA30+m8SeH/xLIwN1uZOnHuH9Q9fhEE4Pc9sxaY6Ibd1cFhGLO8sMX086kcgWYPJh252xVlMhR3qp1XYTJ0vEMy6+GaFOQO4imCCAXkgEVFtm7oeCQ+FLoZ/WnqIddHYk2LrCm4qehSOX2bGXfYYoI8lmcNq3IuLVjOym8Ol+gC5R5RghWS5BMJfA3LkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lC8dRjx+QheN5ZOtJFqcI+6/kFlVRF4amU58J4Ku3BA=;
+ b=wftrQoN+mEQ4kVgerQ3JCmSIImymy/Uya7UDcWBS4LoDTsKsy0+lXmX9qeLdtgnwDRyJH25ERAugpBuPVyECXluOhUlWXpAgdLrTooPTOF9aSKpGryVOUBd+YO59HVdh//XwkBI0OXF+JanVGGxtDydOuciy6Uz9lr4+iFR1UHhnM2c2ohXVYSjN0mqZpVeKcvgL0Y1iK1JqxHXGTRv4CI941hhWpncMIgNvRArntw5A/bxUg+3n1VKpaIOgf476lB+T+hFcKdutMWV9LdUYCOWUpDFODOB06It3H0oLx1Ejj0doXS1qUEj3LWfqoUKMo0c+a6v+dy9vrIyNDhnZSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lC8dRjx+QheN5ZOtJFqcI+6/kFlVRF4amU58J4Ku3BA=;
+ b=qzNqEiHXsqXDBGp2D0BMnPszCMNdYFEqKODwSkfZJBbe3dJUdu46T+XDeOpvdGJuUp8tQ0wym28bGcWhSrHTX5j42xV+iietACa3eLpHq5tuZ9kp+uYJYaqzgOz6g2r8kDYRMHi0qaJk5XSFe84pMXVV3/W/G8NLbQ/HapTZUJg=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by LV3PR10MB8036.namprd10.prod.outlook.com (2603:10b6:408:28c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Thu, 19 Jun
+ 2025 12:53:34 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
+ 12:53:34 +0000
+Date: Thu, 19 Jun 2025 13:53:32 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
+        baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
+        npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] khugepaged: Optimize
+ __collapse_huge_page_copy_succeeded() for large folios by PTE batching
+Message-ID: <40a79c33-2490-4d82-bb93-6a65d0d16e0d@lucifer.local>
+References: <20250618102607.10551-1-dev.jain@arm.com>
+ <f4de7754-e60a-4a87-9319-24b78a0c6895@lucifer.local>
+ <e3a0a179-9246-4055-992e-3b9046e89748@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3a0a179-9246-4055-992e-3b9046e89748@arm.com>
+X-ClientProxiedBy: LO4P123CA0688.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:37b::17) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next, 04/10] bng_en: Add initial interaction with firmware
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- andrew+netdev@lunn.ch, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
- vsrama-krishna.nemani@broadcom.com,
- Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
- Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
- <20250618144743.843815-5-vikas.gupta@broadcom.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250618144743.843815-5-vikas.gupta@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV3PR10MB8036:EE_
+X-MS-Office365-Filtering-Correlation-Id: f62ef2d0-0ed3-47ea-9139-08ddaf304d2e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZZUz8sTjBVfdwrzfJndNzsHrKjbB138ZlalKFpdjAZAAF2RRjLU4EH1TNBb/?=
+ =?us-ascii?Q?wXlFgPON41Bl7diukVVt4THjWpespKgzV0r4Oz4KSbhIzHNjX3/3EsuGA92H?=
+ =?us-ascii?Q?kBdkteV3zWtBu15o+bfZ2fGJba8gYmgmZfE9GoL83snxWIDV5fWsNQ3gB+HU?=
+ =?us-ascii?Q?XrZTinZ9AmfL8a8fd18AzKPisaeeTmPs63eNqtdP4/7dmHMDCMM84nOUY28d?=
+ =?us-ascii?Q?EVwF2JqVkefsVwuwHNvk7HRyL417FvcSOvg9OVPczHt/63kv4mYJIbX4lcMz?=
+ =?us-ascii?Q?/2djglW4cga7OKd024rgl1Luwar8r7lS2mkIdSKf/2wqLds9hVJmKKqhIZ8A?=
+ =?us-ascii?Q?6qS6ETOLmFURlQq6o8QEn/cPTJnQeMXLJEuY4OgOtexErFXXh2aImB5s/KhE?=
+ =?us-ascii?Q?/PUhf+bkjEu3fKcnshUimSYMLJFuaA+MiYEiO4ngK8XnzMcnI4m4mhS/vQL0?=
+ =?us-ascii?Q?+mD1fi99JyfBvLfNyCKGZmq+zvjrcuzG+vc5NQWUuo3i1iHzsrCG9+5ZFVFt?=
+ =?us-ascii?Q?rC5j7e7yhhYiUQp4lUFb2yyXLxHV4SuBLfevym2TTftvT8soqC4J7H75GdNe?=
+ =?us-ascii?Q?oOwIpuOoeCDdv0saF/zgFjRuTlD0K2qV3mccvCuErUZMjKzAURdveMY4/x3a?=
+ =?us-ascii?Q?rFToiyuwGMPrymUjW9ZF3YfWx4P4E1cy+IINpo9/ZUxds3ebrL/MqmOLnK7o?=
+ =?us-ascii?Q?UuTVl0jMS2sQVWIPaZWulOIPWDpjHMpOSmQKNE3o41Toq+CSTHjRNF/W6Hec?=
+ =?us-ascii?Q?PgCbYyNOjYHS39yOEuKJs5ZYthmBhuxe9l7JH4qgTuMqke41wSENKH9j5rxz?=
+ =?us-ascii?Q?swRdU107PAApKIlXK7sgZ5KUNAk9t5l255kw/wgU0GHRJklxi9PHAqB/MqwP?=
+ =?us-ascii?Q?8MUka+MqxyyPAk27m1qsSmn3YqEMWEVwxrhl9SQ8fVe29JmOmxI+JLw2V0yc?=
+ =?us-ascii?Q?AvsxystGTZiuBc2yGdc2wYsOlWpoiwTyrCHiy273ZP1U+juRMuKaq7Cx/VgK?=
+ =?us-ascii?Q?jhbpfZW61lbZ4FODbp48UCMbxySWNuzSV4JKPtfUD3lJWa5eHmqnWhTwUUQ0?=
+ =?us-ascii?Q?aSnn3qo9zw7BBkhCR2gbggJEr8S4yoR34/o9OKHzEm7iXgvCdWeqIJnm2RXi?=
+ =?us-ascii?Q?Esv9HeDjXRV3JxjYFaAerN9jXsKXS1r1yZVV/aC9+23Xzq64LCPaYn1aNRQd?=
+ =?us-ascii?Q?WaVIzZYZciv7xxvNAoRo8rnh58kno6neAdjVH3xabYqLj6+uOWClYx1RqVAu?=
+ =?us-ascii?Q?i7OkPN/Cuy8nb4gDZZrP6hLmVGmgQIWj5TCxQZgdNNI7vIQ4vlgzqhotnrbl?=
+ =?us-ascii?Q?m6ohJIUbo1HrcOauahj4iFMbelEC7+2vUOzzaNlJjckAWRZUO5LDO6YtWsAf?=
+ =?us-ascii?Q?oSA3tbnaF36U737XEH3nCcx4UL/qEZ8pPGinX6Zn7kHS/TtuIxyUXqYLBZsn?=
+ =?us-ascii?Q?MJ/J7g7VRlE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mUFOJ7V1Tnw8swiLSZ+xO+iLggCGhkNf5Xmt5fwvEGFGPJo4JcqOEZr7QQM6?=
+ =?us-ascii?Q?M6H3+3svxf8RjVuO/zo4j4P+c0/r2OGwgyf2EWhXOQSvwsAzE0c7tVu2EIqe?=
+ =?us-ascii?Q?1o8DlcFOWsi1QUA81LvR7GP37ZTOfuibsOCWcAp89ygB9WJiuLmxQsaZXydU?=
+ =?us-ascii?Q?DeCEyp0ZdrYxdNupxX32ES8nvQX+kPwZWSdC8HIGSXI0isF18YHz9zXc5T6t?=
+ =?us-ascii?Q?e0UlXGDKQv4qnu9GdrgVGL5P/z+2XrFoZA7jug010biArS6fwSr0RcdfV/lj?=
+ =?us-ascii?Q?eoHxCH7RIgqmmheX/j8py50xxMimfckGcI0YLxK0BtLgj+HiVxLz3VJRHd+4?=
+ =?us-ascii?Q?jPRMTWjJVQkrzoNPC/AAvF6NnghQuiIc+j6uSXbl5KFxdGSAovgVch7Aoltn?=
+ =?us-ascii?Q?88M7gFx5cjFTGMt00gI3d+Qd1hw87z4q4M79Y+FwsiTJdrHVZf1WhxWwQMDZ?=
+ =?us-ascii?Q?OB7g5w6ARTHznHXCrY/HdwDi65G3t5crsRn5Aso12K9+QTPIFu9eEDbIMO6r?=
+ =?us-ascii?Q?XLiJ2rUyOU7cKnj9rzpik/nE/I84ID4jBxNgRfQlufs0yBhjvXjrPQVHpSfz?=
+ =?us-ascii?Q?ddUKYjaqucRF0rlisqEKqzDuBp/8LNkhSf7d50HJRJUhj0id3171fCi8Pp55?=
+ =?us-ascii?Q?iavF2OY0o4SNgi5DwkFubexQIjRcQST+dOtMy2lAib2SVnAHMSmYMAsb8N/H?=
+ =?us-ascii?Q?Pdc7q4njjU7f+pwoA5nRCtmPcNo7kC/Uv6SNT3s6O7RGU2ITkPYx2D82uvzx?=
+ =?us-ascii?Q?zgrboQgjIzhblJMOqu+r/ZgEkclXe7/oXP6oYLudkWOGex4X0QpOmexeK6py?=
+ =?us-ascii?Q?HpsvJPIGdq49yDQyRhIZrmIWEgkJYi3Bo6/BS3Ck7lh6iMuC6aLVBU2Agz5X?=
+ =?us-ascii?Q?DodqMuVRN4QjSdQzvCdgvriMuEdDGqgypCAlE2kxcP01ber4fvKnoP9wxJde?=
+ =?us-ascii?Q?vPgmh3MgRWkvwu/Q9mnU1jjZEpi9zFku/5b8JovRABJWLch3uTQa6+L9vaD7?=
+ =?us-ascii?Q?M9m7ntoEF+ptSO92n6I/8nXmqXc0yh/TmH/KFQk4fw0A4+tDqqBeSibg9ZO+?=
+ =?us-ascii?Q?W6c7pdAdpDmC4z0JMIqb6wIYUcw0gro+StM79boQWV8ZJFDoXoWgX5R0Nqtl?=
+ =?us-ascii?Q?X/uwIWh5uu0mKlOdGMM8uGuq2/U2AGBD4yAE+4+91QzNsZhi3sH748miBKQ8?=
+ =?us-ascii?Q?uRIrgoquStzwrBdG8DyNW7Omitro1ZlGzbhbbUqtOfivO+HKgBLsGdX54HBo?=
+ =?us-ascii?Q?NL+0IZ9/RMTMGVImNxJ8Qq5gN/cV9IUpmwrAWfldst/RgPeIBs4VW6plbRLg?=
+ =?us-ascii?Q?qE0Es4173GlktjCs5aFJQI8w3QCuaw2/g4faJ5B1I9QGC7eXiFIZgFRkbIJl?=
+ =?us-ascii?Q?N0K3/55AFrIB2LWarb/rsyZlsRT+K5OsIBWlHS1MMK9DzoiJw9Le+nLvBc0u?=
+ =?us-ascii?Q?teAViwAv1xQfqmTFDr6v8+5cfIwKHGpxZ+QHK75S0Grsx20bPOuqK8teJ/Ra?=
+ =?us-ascii?Q?T2E0CvJJrPuB1qzsUTPWbQMANO/8zdrasCYuaEOkXqZoABvSI4UBOgBfaeZw?=
+ =?us-ascii?Q?OsThJEm0V969xztI9bEhAVRoqbLij5e1GYnIQ2i/Vf1TCskXRnwPxf4wkiX3?=
+ =?us-ascii?Q?jA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/rEZ6CHJdcnKlPts8rVcjMknF6nUh1p4NCwds7IhL7Vff/50XLmHcvhBk+ZeBTHGgq9a0BI+vBHqwcfpKXClwYpr3wafZsJUEUCjfvjct8fQBOTNFoF3I8DK/K9TxQxXbKIYF6IvKrSQuFAKzrFwJ/0p8RdHrte6Hub99YIfbbFEdNDikV/QpOanbm7qzQvn8ywTvMkRHTw9aJ9JCcABhUqR5VLimhP0kThzddJmVXfYUdKKsOq5KGaRM/HGfv3DxAevigyK+s4eyQS5Has0i7/USukedeaJ7IDicDacQ0AvYtL0pdFM+R+kYP47SE/XwrDrsbHdhnalAZaQtwFUQAd9XAYmtF8aovDsSfYoAzPtSJkvixcdNGYGjSZ1rFTDe1nz6bJVC5tfKHX6VYwD8tKuBAn0E5mjoBDLJ4L7JMipzRZdaelumT8y3fScLAIvN4nOExJDXZpOzozkcrixDH+GgkWPAtSuLQ2qGPMoqK9pK0ECb1qeZRINFbm8VC4S6kWJtxnR4AUX21LDp8RAatd+yxZFDfSGt+L7SNu1dXbbqe6glvLwCOrrUnyjgSPrKTFrdKaA+jSZTdTSNJO0upIyjcguqNWPL+WHtX/8gtc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f62ef2d0-0ed3-47ea-9139-08ddaf304d2e
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 12:53:34.5416
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1b1jBwEr3qML30NsvlsJHmxt7WfISG5rU287g/HiXLr4gDGEzUoE/oT5b2eVJRjmKzUgTh8NQY01hzwFPwcr3T/x0ho3mgsoaN9w8oeNLuM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8036
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_04,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506190107
+X-Proofpoint-GUID: WPKy6wEGDSZNWMAg925K83X5gu2FICtQ
+X-Proofpoint-ORIG-GUID: WPKy6wEGDSZNWMAg925K83X5gu2FICtQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEwNyBTYWx0ZWRfXxgzCip1oiCEZ 84cINDSEaBX1p+v40SKrlixVGrp+2g38FtT45k+oIPI8zsa53RQhge0Hv1l5OGdPfkgngpLgwt0 J8JuaCM/HmOqUZV875RtJLIpbqTe8kwWcWBTidVQvu2VPzbFDnqYfFU0UxMG3tjah553cz/HaUu
+ N4Z2V/RzZ2QAVqqEbASm53KuX/v1WoaZKdvrExLA5Yx40M1ZeS/hvsV5M0FJJKf4QSCwhA94NU2 PzOlOBS5w1KcNUn55TFYYYndm59xGFZU1bKUSGBK9GAehU+OcTVE9WeocevtHY6bMaP18m+GCWn sdaDbV2c3Z82L+OQzuhhVaehyoQp+2FaBy0nGakaMSKUXjILGm1DfSAJ4tgLAg2ZcncNfgYRRFk
+ J532n/ycYHsVVuDDDBgShhIBqYYMOZwfrRJgcToUHOJd0uqXDLgnLaCTEIE/0ycrS4JE7Flr
+X-Authority-Analysis: v=2.4 cv=XZGJzJ55 c=1 sm=1 tr=0 ts=68540852 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=7CQSdrXTAAAA:8 a=okTdQrre1o-CogPxC6YA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22 cc=ntf awl=host:13207
 
-On 18/06/2025 15:47, Vikas Gupta wrote:
-> Query firmware with the help of basic firmware commands and
-> cache the capabilities. With the help of basic commands
-> start the initialization process of the driver with the
-> firmware.
-> Since basic information is available from the firmware,
-> add that information to the devlink info get command.
-> 
-> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-> ---
->   drivers/net/ethernet/broadcom/bnge/Makefile   |   3 +-
->   drivers/net/ethernet/broadcom/bnge/bnge.h     |  54 +++++
->   .../net/ethernet/broadcom/bnge/bnge_core.c    |  67 ++++++
->   .../net/ethernet/broadcom/bnge/bnge_devlink.c | 120 ++++++++++
->   .../ethernet/broadcom/bnge/bnge_hwrm_lib.c    | 213 ++++++++++++++++++
->   .../ethernet/broadcom/bnge/bnge_hwrm_lib.h    |  16 ++
->   6 files changed, 472 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
->   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
-> 
-> diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
-> index b296d7de56ce..b8dbbc2d5972 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/Makefile
-> +++ b/drivers/net/ethernet/broadcom/bnge/Makefile
-> @@ -4,4 +4,5 @@ obj-$(CONFIG_BNGE) += bng_en.o
->   
->   bng_en-y := bnge_core.o \
->   	    bnge_devlink.o \
-> -	    bnge_hwrm.o
-> +	    bnge_hwrm.o \
-> +	    bnge_hwrm_lib.o
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> index 8f2a562d9ae2..60af0517c45e 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
-> @@ -7,6 +7,13 @@
->   #define DRV_NAME	"bng_en"
->   #define DRV_SUMMARY	"Broadcom 800G Ethernet Linux Driver"
->   
-> +#include <linux/etherdevice.h>
-> +#include "../bnxt/bnxt_hsi.h"
-> +
-> +#define DRV_VER_MAJ	1
-> +#define DRV_VER_MIN	15
-> +#define DRV_VER_UPD	1
-> +
->   extern char bnge_driver_name[];
->   
->   enum board_idx {
-> @@ -15,6 +22,36 @@ enum board_idx {
->   
->   #define INVALID_HW_RING_ID      ((u16)-1)
->   
-> +enum {
-> +	BNGE_FW_CAP_SHORT_CMD				= BIT_ULL(0),
-> +	BNGE_FW_CAP_LLDP_AGENT				= BIT_ULL(1),
-> +	BNGE_FW_CAP_DCBX_AGENT				= BIT_ULL(2),
-> +	BNGE_FW_CAP_IF_CHANGE				= BIT_ULL(3),
-> +	BNGE_FW_CAP_KONG_MB_CHNL			= BIT_ULL(4),
-> +	BNGE_FW_CAP_ERROR_RECOVERY			= BIT_ULL(5),
-> +	BNGE_FW_CAP_PKG_VER				= BIT_ULL(6),
-> +	BNGE_FW_CAP_CFA_ADV_FLOW			= BIT_ULL(7),
-> +	BNGE_FW_CAP_CFA_RFS_RING_TBL_IDX_V2		= BIT_ULL(8),
-> +	BNGE_FW_CAP_PCIE_STATS_SUPPORTED		= BIT_ULL(9),
-> +	BNGE_FW_CAP_EXT_STATS_SUPPORTED			= BIT_ULL(10),
-> +	BNGE_FW_CAP_ERR_RECOVER_RELOAD			= BIT_ULL(11),
-> +	BNGE_FW_CAP_HOT_RESET				= BIT_ULL(12),
-> +	BNGE_FW_CAP_RX_ALL_PKT_TS			= BIT_ULL(13),
-> +	BNGE_FW_CAP_VLAN_RX_STRIP			= BIT_ULL(14),
-> +	BNGE_FW_CAP_VLAN_TX_INSERT			= BIT_ULL(15),
-> +	BNGE_FW_CAP_EXT_HW_STATS_SUPPORTED		= BIT_ULL(16),
-> +	BNGE_FW_CAP_LIVEPATCH				= BIT_ULL(17),
-> +	BNGE_FW_CAP_HOT_RESET_IF			= BIT_ULL(18),
-> +	BNGE_FW_CAP_RING_MONITOR			= BIT_ULL(19),
-> +	BNGE_FW_CAP_DBG_QCAPS				= BIT_ULL(20),
-> +	BNGE_FW_CAP_THRESHOLD_TEMP_SUPPORTED		= BIT_ULL(21),
-> +	BNGE_FW_CAP_DFLT_VLAN_TPID_PCP			= BIT_ULL(22),
-> +	BNGE_FW_CAP_VNIC_TUNNEL_TPA			= BIT_ULL(23),
-> +	BNGE_FW_CAP_CFA_NTUPLE_RX_EXT_IP_PROTO		= BIT_ULL(24),
-> +	BNGE_FW_CAP_CFA_RFS_RING_TBL_IDX_V3		= BIT_ULL(25),
-> +	BNGE_FW_CAP_VNIC_RE_FLUSH			= BIT_ULL(26),
-> +};
-> +
->   struct bnge_dev {
->   	struct device	*dev;
->   	struct pci_dev	*pdev;
-> @@ -25,6 +62,9 @@ struct bnge_dev {
->   
->   	void __iomem	*bar0;
->   
-> +	u16		chip_num;
-> +	u8		chip_rev;
-> +
->   	/* HWRM members */
->   	u16			hwrm_cmd_seq;
->   	u16			hwrm_cmd_kong_seq;
-> @@ -35,6 +75,20 @@ struct bnge_dev {
->   	unsigned int		hwrm_cmd_timeout;
->   	unsigned int		hwrm_cmd_max_timeout;
->   	struct mutex		hwrm_cmd_lock;	/* serialize hwrm messages */
-> +
-> +	struct hwrm_ver_get_output	ver_resp;
-> +#define FW_VER_STR_LEN		32
-> +	char			fw_ver_str[FW_VER_STR_LEN];
-> +	char			hwrm_ver_supp[FW_VER_STR_LEN];
-> +	char			nvm_cfg_ver[FW_VER_STR_LEN];
-> +	u64			fw_ver_code;
-> +#define BNGE_FW_VER_CODE(maj, min, bld, rsv)			\
-> +	((u64)(maj) << 48 | (u64)(min) << 32 | (u64)(bld) << 16 | (rsv))
-> +
-> +	unsigned long           state;
-> +#define BNGE_STATE_DRV_REGISTERED      0
-> +
-> +	u64			fw_cap;
->   };
->   
->   #endif /* _BNGE_H_ */
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_core.c b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-> index 1a46c7663012..5e23eb14f60e 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-> @@ -8,6 +8,8 @@
->   
->   #include "bnge.h"
->   #include "bnge_devlink.h"
-> +#include "bnge_hwrm.h"
-> +#include "bnge_hwrm_lib.h"
->   
->   MODULE_LICENSE("GPL");
->   MODULE_DESCRIPTION(DRV_SUMMARY);
-> @@ -37,6 +39,51 @@ static void bnge_print_device_info(struct pci_dev *pdev, enum board_idx idx)
->   	pcie_print_link_status(pdev);
->   }
->   
-> +static void bnge_nvm_cfg_ver_get(struct bnge_dev *bd)
-> +{
-> +	struct hwrm_nvm_get_dev_info_output nvm_info;
-> +
-> +	if (!bnge_hwrm_nvm_dev_info(bd, &nvm_info))
-> +		snprintf(bd->nvm_cfg_ver, FW_VER_STR_LEN, "%d.%d.%d",
-> +			 nvm_info.nvm_cfg_ver_maj, nvm_info.nvm_cfg_ver_min,
-> +			 nvm_info.nvm_cfg_ver_upd);
-> +}
-> +
-> +static void bnge_fw_unregister_dev(struct bnge_dev *bd)
-> +{
-> +	bnge_hwrm_func_drv_unrgtr(bd);
-> +}
-> +
-> +static int bnge_fw_register_dev(struct bnge_dev *bd)
-> +{
-> +	int rc;
-> +
-> +	bd->fw_cap = 0;
-> +	rc = bnge_hwrm_ver_get(bd);
-> +	if (rc) {
-> +		dev_err(bd->dev, "Get Version command failed rc: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	bnge_nvm_cfg_ver_get(bd);
-> +
-> +	rc = bnge_hwrm_func_reset(bd);
-> +	if (rc) {
-> +		dev_err(bd->dev, "Failed to reset function rc: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	bnge_hwrm_fw_set_time(bd);
-> +
-> +	rc =  bnge_hwrm_func_drv_rgtr(bd);
-> +	if (rc) {
-> +		dev_err(bd->dev, "Failed to rgtr with firmware rc: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static void bnge_pci_disable(struct pci_dev *pdev)
->   {
->   	pci_release_regions(pdev);
-> @@ -136,10 +183,26 @@ static int bnge_probe_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->   		goto err_devl_unreg;
->   	}
->   
-> +	rc = bnge_init_hwrm_resources(bd);
-> +	if (rc)
-> +		goto err_bar_unmap;
-> +
-> +	rc = bnge_fw_register_dev(bd);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "Failed to register with firmware rc = %d\n", rc);
-> +		goto err_hwrm_cleanup;
-> +	}
-> +
->   	pci_save_state(pdev);
->   
->   	return 0;
->   
-> +err_hwrm_cleanup:
-> +	bnge_cleanup_hwrm_resources(bd);
-> +
-> +err_bar_unmap:
-> +	bnge_unmap_bars(pdev);
-> +
->   err_devl_unreg:
->   	bnge_devlink_unregister(bd);
->   	bnge_devlink_free(bd);
-> @@ -153,6 +216,10 @@ static void bnge_remove_one(struct pci_dev *pdev)
->   {
->   	struct bnge_dev *bd = pci_get_drvdata(pdev);
->   
-> +	bnge_fw_unregister_dev(bd);
-> +
-> +	bnge_cleanup_hwrm_resources(bd);
-> +
->   	bnge_unmap_bars(pdev);
->   
->   	bnge_devlink_unregister(bd);
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_devlink.c b/drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
-> index d406338da130..f987d35beea2 100644
-> --- a/drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
-> @@ -8,6 +8,7 @@
->   
->   #include "bnge.h"
->   #include "bnge_devlink.h"
-> +#include "bnge_hwrm_lib.h"
->   
->   static int bnge_dl_info_put(struct bnge_dev *bd, struct devlink_info_req *req,
->   			    enum bnge_dl_version_type type, const char *key,
-> @@ -16,6 +17,10 @@ static int bnge_dl_info_put(struct bnge_dev *bd, struct devlink_info_req *req,
->   	if (!strlen(buf))
->   		return 0;
->   
-> +	if (!strcmp(key, DEVLINK_INFO_VERSION_GENERIC_FW_NCSI) ||
-> +	    !strcmp(key, DEVLINK_INFO_VERSION_GENERIC_FW_ROCE))
-> +		return 0;
-> +
->   	switch (type) {
->   	case BNGE_VERSION_FIXED:
->   		return devlink_info_version_fixed_put(req, key, buf);
-> @@ -63,11 +68,20 @@ static void bnge_vpd_read_info(struct bnge_dev *bd)
->   	kfree(vpd_data);
->   }
->   
-> +#define HWRM_FW_VER_STR_LEN	16
-> +
->   static int bnge_devlink_info_get(struct devlink *devlink,
->   				 struct devlink_info_req *req,
->   				 struct netlink_ext_ack *extack)
->   {
-> +	struct hwrm_nvm_get_dev_info_output nvm_dev_info;
->   	struct bnge_dev *bd = devlink_priv(devlink);
-> +	struct hwrm_ver_get_output *ver_resp;
-> +	char mgmt_ver[FW_VER_STR_LEN];
-> +	char roce_ver[FW_VER_STR_LEN];
-> +	char ncsi_ver[FW_VER_STR_LEN];
-> +	char buf[32];
-> +
->   	int rc;
->   
->   	if (bd->dsn) {
-> @@ -95,6 +109,112 @@ static int bnge_devlink_info_get(struct devlink *devlink,
->   			      DEVLINK_INFO_VERSION_GENERIC_BOARD_ID,
->   			      bd->board_partno);
->   
-> +	/* More information from HWRM ver get command */
-> +	sprintf(buf, "%X", bd->chip_num);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_FIXED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_ASIC_ID, buf);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ver_resp = &bd->ver_resp;
-> +	sprintf(buf, "%c%d", 'A' + ver_resp->chip_rev, ver_resp->chip_metal);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_FIXED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_ASIC_REV, buf);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_PSID,
-> +			      bd->nvm_cfg_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	buf[0] = 0;
-> +	strncat(buf, ver_resp->active_pkg_name, HWRM_FW_VER_STR_LEN);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW, buf);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (ver_resp->flags & VER_GET_RESP_FLAGS_EXT_VER_AVAIL) {
-> +		snprintf(mgmt_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->hwrm_fw_major, ver_resp->hwrm_fw_minor,
-> +			 ver_resp->hwrm_fw_build, ver_resp->hwrm_fw_patch);
-> +
-> +		snprintf(ncsi_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->mgmt_fw_major, ver_resp->mgmt_fw_minor,
-> +			 ver_resp->mgmt_fw_build, ver_resp->mgmt_fw_patch);
-> +
-> +		snprintf(roce_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->roce_fw_major, ver_resp->roce_fw_minor,
-> +			 ver_resp->roce_fw_build, ver_resp->roce_fw_patch);
-> +	} else {
-> +		snprintf(mgmt_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->hwrm_fw_maj_8b, ver_resp->hwrm_fw_min_8b,
-> +			 ver_resp->hwrm_fw_bld_8b, ver_resp->hwrm_fw_rsvd_8b);
-> +
-> +		snprintf(ncsi_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->mgmt_fw_maj_8b, ver_resp->mgmt_fw_min_8b,
-> +			 ver_resp->mgmt_fw_bld_8b, ver_resp->mgmt_fw_rsvd_8b);
-> +
-> +		snprintf(roce_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +			 ver_resp->roce_fw_maj_8b, ver_resp->roce_fw_min_8b,
-> +			 ver_resp->roce_fw_bld_8b, ver_resp->roce_fw_rsvd_8b);
-> +	}
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_MGMT, mgmt_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_MGMT_API,
-> +			      bd->hwrm_ver_supp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_NCSI, ncsi_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_RUNNING,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_ROCE, roce_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = bnge_hwrm_nvm_dev_info(bd, &nvm_dev_info);
-> +	if (!(nvm_dev_info.flags & NVM_GET_DEV_INFO_RESP_FLAGS_FW_VER_VALID))
-> +		return 0;
-> +
-> +	buf[0] = 0;
-> +	strncat(buf, nvm_dev_info.pkg_name, HWRM_FW_VER_STR_LEN);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_STORED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW, buf);
-> +	if (rc)
-> +		return rc;
-> +
-> +	snprintf(mgmt_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +		 nvm_dev_info.hwrm_fw_major, nvm_dev_info.hwrm_fw_minor,
-> +		 nvm_dev_info.hwrm_fw_build, nvm_dev_info.hwrm_fw_patch);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_STORED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_MGMT, mgmt_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	snprintf(ncsi_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +		 nvm_dev_info.mgmt_fw_major, nvm_dev_info.mgmt_fw_minor,
-> +		 nvm_dev_info.mgmt_fw_build, nvm_dev_info.mgmt_fw_patch);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_STORED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_NCSI, ncsi_ver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	snprintf(roce_ver, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +		 nvm_dev_info.roce_fw_major, nvm_dev_info.roce_fw_minor,
-> +		 nvm_dev_info.roce_fw_build, nvm_dev_info.roce_fw_patch);
-> +	rc = bnge_dl_info_put(bd, req, BNGE_VERSION_STORED,
-> +			      DEVLINK_INFO_VERSION_GENERIC_FW_ROCE, roce_ver);
-> +
->   	return rc;
->   }
->   
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
-> new file mode 100644
-> index 000000000000..567376a407df
-> --- /dev/null
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
-> @@ -0,0 +1,213 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2025 Broadcom.
-> +
-> +#include <linux/errno.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/pci.h>
-> +
-> +#include "bnge.h"
-> +#include "../bnxt/bnxt_hsi.h"
-> +#include "bnge_hwrm.h"
-> +#include "bnge_hwrm_lib.h"
-> +
-> +int bnge_hwrm_ver_get(struct bnge_dev *bd)
-> +{
-> +	u32 dev_caps_cfg, hwrm_ver, hwrm_spec_code;
-> +	u16 fw_maj, fw_min, fw_bld, fw_rsv;
-> +	struct hwrm_ver_get_output *resp;
-> +	struct hwrm_ver_get_input *req;
-> +	int rc;
-> +
-> +	rc = hwrm_req_init(bd, req, HWRM_VER_GET);
-> +	if (rc)
-> +		return rc;
-> +
-> +	hwrm_req_flags(bd, req, BNGE_HWRM_FULL_WAIT);
-> +	bd->hwrm_max_req_len = HWRM_MAX_REQ_LEN;
-> +	req->hwrm_intf_maj = HWRM_VERSION_MAJOR;
-> +	req->hwrm_intf_min = HWRM_VERSION_MINOR;
-> +	req->hwrm_intf_upd = HWRM_VERSION_UPDATE;
-> +
-> +	resp = hwrm_req_hold(bd, req);
-> +	rc = hwrm_req_send(bd, req);
-> +	if (rc)
-> +		goto hwrm_ver_get_exit;
-> +
-> +	memcpy(&bd->ver_resp, resp, sizeof(struct hwrm_ver_get_output));
-> +
-> +	hwrm_spec_code = resp->hwrm_intf_maj_8b << 16 |
-> +			 resp->hwrm_intf_min_8b << 8 |
-> +			 resp->hwrm_intf_upd_8b;
-> +	hwrm_ver = HWRM_VERSION_MAJOR << 16 | HWRM_VERSION_MINOR << 8 |
-> +			HWRM_VERSION_UPDATE;
-> +
-> +	if (hwrm_spec_code > hwrm_ver)
-> +		snprintf(bd->hwrm_ver_supp, FW_VER_STR_LEN, "%d.%d.%d",
-> +			 HWRM_VERSION_MAJOR, HWRM_VERSION_MINOR,
-> +			 HWRM_VERSION_UPDATE);
-> +	else
-> +		snprintf(bd->hwrm_ver_supp, FW_VER_STR_LEN, "%d.%d.%d",
-> +			 resp->hwrm_intf_maj_8b, resp->hwrm_intf_min_8b,
-> +			 resp->hwrm_intf_upd_8b);
-> +
-> +	fw_maj = le16_to_cpu(resp->hwrm_fw_major);
-> +	fw_min = le16_to_cpu(resp->hwrm_fw_minor);
-> +	fw_bld = le16_to_cpu(resp->hwrm_fw_build);
-> +	fw_rsv = le16_to_cpu(resp->hwrm_fw_patch);
-> +
-> +	bd->fw_ver_code = BNGE_FW_VER_CODE(fw_maj, fw_min, fw_bld, fw_rsv);
-> +	snprintf(bd->fw_ver_str, FW_VER_STR_LEN, "%d.%d.%d.%d",
-> +		 fw_maj, fw_min, fw_bld, fw_rsv);
-> +
-> +	if (strlen(resp->active_pkg_name)) {
-> +		int fw_ver_len = strlen(bd->fw_ver_str);
-> +
-> +		snprintf(bd->fw_ver_str + fw_ver_len,
-> +			 FW_VER_STR_LEN - fw_ver_len - 1, "/pkg %s",
-> +			 resp->active_pkg_name);
-> +		bd->fw_cap |= BNGE_FW_CAP_PKG_VER;
-> +	}
-> +
-> +	bd->hwrm_cmd_timeout = le16_to_cpu(resp->def_req_timeout);
-> +	if (!bd->hwrm_cmd_timeout)
-> +		bd->hwrm_cmd_timeout = DFLT_HWRM_CMD_TIMEOUT;
-> +	bd->hwrm_cmd_max_timeout = le16_to_cpu(resp->max_req_timeout) * 1000;
-> +	if (!bd->hwrm_cmd_max_timeout)
-> +		bd->hwrm_cmd_max_timeout = HWRM_CMD_MAX_TIMEOUT;
-> +	else if (bd->hwrm_cmd_max_timeout > HWRM_CMD_MAX_TIMEOUT)
-> +			dev_warn(bd->dev, "Default HWRM commands max timeout increased to %d seconds\n",
-> +				 bd->hwrm_cmd_max_timeout / 1000);
-> +
-> +	bd->hwrm_max_req_len = le16_to_cpu(resp->max_req_win_len);
-> +	bd->hwrm_max_ext_req_len = le16_to_cpu(resp->max_ext_req_len);
-> +
-> +	if (bd->hwrm_max_ext_req_len < HWRM_MAX_REQ_LEN)
-> +		bd->hwrm_max_ext_req_len = HWRM_MAX_REQ_LEN;
-> +
-> +	bd->chip_num = le16_to_cpu(resp->chip_num);
-> +	bd->chip_rev = resp->chip_rev;
-> +
-> +	dev_caps_cfg = le32_to_cpu(resp->dev_caps_cfg);
-> +	if ((dev_caps_cfg & VER_GET_RESP_DEV_CAPS_CFG_SHORT_CMD_SUPPORTED) &&
-> +	    (dev_caps_cfg & VER_GET_RESP_DEV_CAPS_CFG_SHORT_CMD_REQUIRED))
-> +		bd->fw_cap |= BNGE_FW_CAP_SHORT_CMD;
-> +
-> +	if (dev_caps_cfg & VER_GET_RESP_DEV_CAPS_CFG_KONG_MB_CHNL_SUPPORTED)
-> +		bd->fw_cap |= BNGE_FW_CAP_KONG_MB_CHNL;
-> +
-> +	if (dev_caps_cfg &
-> +	    VER_GET_RESP_DEV_CAPS_CFG_CFA_ADV_FLOW_MGNT_SUPPORTED)
-> +		bd->fw_cap |= BNGE_FW_CAP_CFA_ADV_FLOW;
-> +
-> +hwrm_ver_get_exit:
-> +	hwrm_req_drop(bd, req);
-> +	return rc;
-> +}
-> +
-> +int
-> +bnge_hwrm_nvm_dev_info(struct bnge_dev *bd,
-> +		       struct hwrm_nvm_get_dev_info_output *nvm_info)
-> +{
-> +	struct hwrm_nvm_get_dev_info_output *resp;
-> +	struct hwrm_nvm_get_dev_info_input *req;
-> +	int rc;
-> +
-> +	rc = hwrm_req_init(bd, req, HWRM_NVM_GET_DEV_INFO);
-> +	if (rc)
-> +		return rc;
-> +
-> +	resp = hwrm_req_hold(bd, req);
-> +	rc = hwrm_req_send(bd, req);
-> +	if (!rc)
-> +		memcpy(nvm_info, resp, sizeof(*resp));
-> +	hwrm_req_drop(bd, req);
-> +	return rc;
-> +}
-> +
-> +int bnge_hwrm_func_reset(struct bnge_dev *bd)
-> +{
-> +	struct hwrm_func_reset_input *req;
-> +	int rc;
-> +
-> +	rc = hwrm_req_init(bd, req, HWRM_FUNC_RESET);
-> +	if (rc)
-> +		return rc;
-> +
-> +	req->enables = 0;
-> +	hwrm_req_timeout(bd, req, HWRM_RESET_TIMEOUT);
-> +	return hwrm_req_send(bd, req);
-> +}
-> +
-> +int bnge_hwrm_fw_set_time(struct bnge_dev *bd)
-> +{
-> +	struct hwrm_fw_set_time_input *req;
-> +	struct tm tm;
-> +	time64_t now = ktime_get_real_seconds();
-> +	int rc;
+On Thu, Jun 19, 2025 at 08:52:51AM +0530, Dev Jain wrote:
+>
+> On 18/06/25 10:56 pm, Lorenzo Stoakes wrote:
+> > On Wed, Jun 18, 2025 at 03:56:07PM +0530, Dev Jain wrote:
+> > > Use PTE batching to optimize __collapse_huge_page_copy_succeeded().
+> > >
+> > > On arm64, suppose khugepaged is scanning a pte-mapped 2MB THP for collapse.
+> > > Then, calling ptep_clear() for every pte will cause a TLB flush for every
+> > > contpte block. Instead, clear_full_ptes() does a
+> > > contpte_try_unfold_partial() which will flush the TLB only for the (if any)
+> > > starting and ending contpte block, if they partially overlap with the range
+> > > khugepaged is looking at.
+> > >
+> > > For all arches, there should be a benefit due to batching atomic operations
+> > > on mapcounts due to folio_remove_rmap_ptes().
+> > >
+> > > No issues were observed with mm-selftests.
+> > >
+> > > Signed-off-by: Dev Jain <dev.jain@arm.com>
+> > > ---
+> > >   mm/khugepaged.c | 31 +++++++++++++++++++++++--------
+> > >   1 file changed, 23 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > > index d45d08b521f6..649ccb2670f8 100644
+> > > --- a/mm/khugepaged.c
+> > > +++ b/mm/khugepaged.c
+> > > @@ -700,12 +700,14 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
+> > >   						spinlock_t *ptl,
+> > >   						struct list_head *compound_pagelist)
+> > >   {
+> > > +	unsigned long end = address + HPAGE_PMD_SIZE;
+> > I assume we always enter here with aligned address...
+>
+> Yes.
 
-Reverse xmass tree, please. Not quite sure you need this 'now'
-variable at all. You can use ktime_get_real_seconds() directly
-in time64_to_tm() - there are examples of such code in the kernel.
+OK cool would be weird otherwise :)
 
-> +
-> +	time64_to_tm(now, 0, &tm);
-> +	rc = hwrm_req_init(bd, req, HWRM_FW_SET_TIME);
-> +	if (rc)
-> +		return rc;
-> +
-> +	req->year = cpu_to_le16(1900 + tm.tm_year);
-> +	req->month = 1 + tm.tm_mon;
-> +	req->day = tm.tm_mday;
-> +	req->hour = tm.tm_hour;
-> +	req->minute = tm.tm_min;
-> +	req->second = tm.tm_sec;
-> +	return hwrm_req_send(bd, req);
-> +}
+>
+> >
+> > >   	struct folio *src, *tmp;
+> > > -	pte_t *_pte;
+> > > +	pte_t *_pte = pte;
+> > >   	pte_t pteval;
+> > > +	int nr_ptes;
+> > >
+> > > -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
+> > > -	     _pte++, address += PAGE_SIZE) {
+> > > +	do {
+> > > +		nr_ptes = 1;
+> > >   		pteval = ptep_get(_pte);
+> > >   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+> > >   			add_mm_counter(vma->vm_mm, MM_ANONPAGES, 1);
+> > > @@ -719,23 +721,36 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
+> > >   				ksm_might_unmap_zero_page(vma->vm_mm, pteval);
+> > >   			}
+> > >   		} else {
+> > Existing code but hate this level of indentation.
+> >
+> > The code before was (barely) sort of ok-ish, but now it's realyl out of hand.
+> >
+> > On the other hand, I look at __collapse_huge_page_isolate() and want to cry so I
+> > guess this maybe is something that needs addressing outside of this patch.
+>
+> Trust me I have already cried a lot before while doing the khugepaged mTHP stuff :)
 
-This whole function looks like copy-paste from bnxt, did you consider
-merging these parts?
+Seems we all cry together about this code ;)
 
+>
+> >
+> >
+> > > +			const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> > > +			int max_nr_ptes;
+> > > +			bool is_large;
+> > > +
+> > >   			struct page *src_page = pte_page(pteval);
+> > >
+> > >   			src = page_folio(src_page);
+> > > -			if (!folio_test_large(src))
+> > > +			is_large = folio_test_large(src);
+> > > +			if (!is_large)
+> > >   				release_pte_folio(src);
+> > Hm, in this case right, release_pte_folio() does a folio_unlock().
+> >
+> > Where does a large folio get unlocked?
+> >
+> > I mean this must have been existing code because I don't see where this
+> > happens previously either.
+> >
+> > > +
+> > > +			max_nr_ptes = (end - address) >> PAGE_SHIFT;
+> > > +			if (is_large && max_nr_ptes != 1)
+> > Is it really that harmful if max_nr_ptes == 1? Doesn't folio_pte_batch()
+> > figure it out?
+>
+> Yup it will figure that out, was just following the pattern of zap_present_ptes
+> and copy_present_ptes. Will drop this.
 
-> +
-> +int bnge_hwrm_func_drv_rgtr(struct bnge_dev *bd)
-> +{
-> +	struct hwrm_func_drv_rgtr_output *resp;
-> +	struct hwrm_func_drv_rgtr_input *req;
-> +	u32 flags;
-> +	int rc;
-> +
-> +	rc = hwrm_req_init(bd, req, HWRM_FUNC_DRV_RGTR);
-> +	if (rc)
-> +		return rc;
-> +
-> +	req->enables = cpu_to_le32(FUNC_DRV_RGTR_REQ_ENABLES_OS_TYPE |
-> +				   FUNC_DRV_RGTR_REQ_ENABLES_VER |
-> +				   FUNC_DRV_RGTR_REQ_ENABLES_ASYNC_EVENT_FWD);
-> +
-> +	req->os_type = cpu_to_le16(FUNC_DRV_RGTR_REQ_OS_TYPE_LINUX);
-> +	flags = FUNC_DRV_RGTR_REQ_FLAGS_16BIT_VER_MODE;
-> +
-> +	req->flags = cpu_to_le32(flags);
-> +	req->ver_maj_8b = DRV_VER_MAJ;
-> +	req->ver_min_8b = DRV_VER_MIN;
-> +	req->ver_upd_8b = DRV_VER_UPD;
-> +	req->ver_maj = cpu_to_le16(DRV_VER_MAJ);
-> +	req->ver_min = cpu_to_le16(DRV_VER_MIN);
-> +	req->ver_upd = cpu_to_le16(DRV_VER_UPD);
-> +
-> +	resp = hwrm_req_hold(bd, req);
-> +	rc = hwrm_req_send(bd, req);
-> +	if (!rc) {
-> +		set_bit(BNGE_STATE_DRV_REGISTERED, &bd->state);
-> +		if (resp->flags &
-> +		    cpu_to_le32(FUNC_DRV_RGTR_RESP_FLAGS_IF_CHANGE_SUPPORTED))
-> +			bd->fw_cap |= BNGE_FW_CAP_IF_CHANGE;
-> +	}
-> +	hwrm_req_drop(bd, req);
-> +	return rc;
-> +}
-> +
-> +int bnge_hwrm_func_drv_unrgtr(struct bnge_dev *bd)
-> +{
-> +	struct hwrm_func_drv_unrgtr_input *req;
-> +	int rc;
-> +
-> +	if (!test_and_clear_bit(BNGE_STATE_DRV_REGISTERED, &bd->state))
-> +		return 0;
-> +
-> +	rc = hwrm_req_init(bd, req, HWRM_FUNC_DRV_UNRGTR);
-> +	if (rc)
-> +		return rc;
-> +	return hwrm_req_send(bd, req);
-> +}
-> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
-> new file mode 100644
-> index 000000000000..9308d4fe64d2
-> --- /dev/null
-> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2025 Broadcom */
-> +
-> +#ifndef _BNGE_HWRM_LIB_H_
-> +#define _BNGE_HWRM_LIB_H_
-> +
-> +int bnge_hwrm_ver_get(struct bnge_dev *bd);
-> +int bnge_hwrm_func_reset(struct bnge_dev *bd);
-> +int bnge_hwrm_fw_set_time(struct bnge_dev *bd);
-> +int bnge_hwrm_func_drv_rgtr(struct bnge_dev *bd);
-> +int bnge_hwrm_func_drv_unrgtr(struct bnge_dev *bd);
-> +int bnge_hwrm_vnic_qcaps(struct bnge_dev *bd);
-> +int bnge_hwrm_nvm_dev_info(struct bnge_dev *bd,
-> +			   struct hwrm_nvm_get_dev_info_output *nvm_dev_info);
-> +
-> +#endif /* _BNGE_HWRM_LIB_H_ */
+Thanks
 
+>
+> >
+> > > +				nr_ptes = folio_pte_batch(src, address, _pte,
+> > > +							  pteval, max_nr_ptes,
+> > > +							  flags, NULL, NULL, NULL);
+> > > +
+> > It'd be nice(r) if this was:
+> >
+> > if (folio_test_large(src))
+> > 	nr_ptes = folio_pte_batch(src, address, _pte,
+> > 		pteval, max_nr_ptes,
+> > 		flags, NULL, NULL, NULL);
+> > else
+> > 	release_pte_folio(src);
+> >
+> > But even that is horrid because of the asymmetry.
+> >
+> > >   			/*
+> > >   			 * ptl mostly unnecessary, but preempt has to
+> > >   			 * be disabled to update the per-cpu stats
+> > >   			 * inside folio_remove_rmap_pte().
+> > >   			 */
+> > >   			spin_lock(ptl);
+> > > -			ptep_clear(vma->vm_mm, address, _pte);
+> > > -			folio_remove_rmap_pte(src, src_page, vma);
+> > > +			clear_full_ptes(vma->vm_mm, address, _pte, nr_ptes, false);
+> > Be nice to use 'Liam's convention' of sticking `/* full = */ false)` on the
+> > end here so we know what the false refers to.
+>
+> Sounds good, although in the other mail David mentioned a way to elide this
+> so I will prefer that.
+
+OK
+
+>
+> >
+> > > +			folio_remove_rmap_ptes(src, src_page, nr_ptes, vma);
+> > Kinda neat that folio_remove_map_pte() is jus ta define onto this with
+> > nr_ptes == 1 :)
+> >
+> > >   			spin_unlock(ptl);
+> > > -			free_folio_and_swap_cache(src);
+> > > +			free_swap_cache(src);
+> > > +			folio_put_refs(src, nr_ptes);
+> > >   		}
+> > > -	}
+> > > +	} while (_pte += nr_ptes, address += nr_ptes * PAGE_SIZE, address != end);
+> > >
+> > >   	list_for_each_entry_safe(src, tmp, compound_pagelist, lru) {
+> > >   		list_del(&src->lru);
+> > > --
+> > > 2.30.2
+> > >
+> > I can't see much wrong with this though, just 'yuck' at existing code
+> > really :)
