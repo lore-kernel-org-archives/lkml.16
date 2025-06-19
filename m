@@ -1,74 +1,94 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCD71CBEB9
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D2124167E;
+	Thu, 19 Jun 2025 05:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750310764; cv=none; b=a79PxYeWFkycDLvLNo0PqUs/OY0s+zDdm/icbwYOvfUPGHICWx/EfsStXKm98B+lli705CQPvcYEPv5ZGMYHH1I63aLEA3byHXP2XceMQLlwXdAIDaKz1DPIIs3NbhG7g6o2t0kbubG4LG1Sm/C5eHIcd0rrL9D2/eJZ1RpCHBI=
+	t=1750310767; cv=none; b=fdtuY4YHK6mDRoRt/8l3VDfELqg8ZTf6MMSEtIQtYa6toSimst970mBpPwsMkwDDmNmesxTqgoc2EH0vlT4dG7UAGSlIHI6QZZMQsqwiF0qowjJtN+1P0ddlYIaBP+s1Op+uzkQsn12Gzd1AW703EZz+Mqlh+w1cOD5xOpRIcIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750310764; c=relaxed/simple;
-	bh=5Sdqyctg2uKhVTPW+2OeXcl6bZn8/pDFM49RmSq9VbA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IfDYsia0q7/Z1a/keUzqPQzAC8StpOVa6mUQT+v4OKYu7cLIoBIvdRbBrn3AQRozwloQDuF6GXuC7HUnnU21EtN1NrwsSqWy9JY3cHlCOrcdljmsTGDo2iFXnZYWTnRDktU9WoVXOJ+6KiJatcm1HqDDgfPJoSaaRcxY06NdFjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddd90ca184so3346835ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:26:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750310762; x=1750915562;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5AUYbYuCSXELB32r+LjODOWL/mKYb74pK4CYUXZ6rQ=;
-        b=rE7kSIdunTQBNoqTjNOLXbYckrH91GlWzCr+lG2qEkFRUw1u6dPEnlgKwLOgWzfa2e
-         5owCbDlefuMkj0Cn0l+as9PBXcFODepTNDn5xy7sd5x6wceey4x3/fJZluULtcf+Olye
-         EFPGwfRv4M84RPVOMm6uVl+aphtjgNI1hylM3zHxDGEFeZW3CQtwIWJ8VV/7T75jEPzA
-         j0KZqHyNGfKroCGNP2T7bb1zbpVmVL66sO2MtSALknw8ipf1V6Gci//exoTKP4ZaO0M7
-         56TAQchni2YwKVaAnnyVR4ifVuRN/hRIWdDRdhyvwY5amglbRzglRcrilwfB5YoF0GfL
-         Spog==
-X-Forwarded-Encrypted: i=1; AJvYcCVTeDARDai31kKCYBSU0dZ8WhnS8jR9UmZtCL3qPM++w1U36AlOtue72bIqCVIJA25xnZiymWwmR/6sNCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJQHSC1pyq2Gsbj7Vu0I/rozkjsGEiLrESTUd5y5b1SStdjjGB
-	i0Vi2QsiKmLDIyo4e/ixYDzJ4KR22Fy+pgNGLJFPIgFtKqEiRG8fS36ak9B8UgyFaXH1y2hkE/U
-	AYQYYnxlVeg+1f5Zbyqx1MRnyVq/bDDd7L2QEQwRqJzo+8FQfAKt7v93nNtc=
-X-Google-Smtp-Source: AGHT+IFTr/CelEExJAxRfB5tskot6+ZUhO5hVmdtdRw2tFRqT9Tb64tcwaM+F9w1Se6ogn7dmIo9Gb6hZtYQVoh6T/T7B0OUEVkO
+	s=arc-20240116; t=1750310767; c=relaxed/simple;
+	bh=enZMCHV6rYdmjk4yDDDjouDtx9GFZEOZXuVdGmaGa3g=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=dJ4w7KruhTKLGZ9GIfgH42+93CvVgxY2Zg9DBR3mQhLGseBefYNhz/UpodwjvxFl4AfX255Ir94gGTMEhac9zOghI2fH5G7U61PoF9mQAev6sLxcryfResz8dLwPYQFuDeHRjVuGO56/nroAGqCuGRWeU/K42Te1+OKUWOgAPao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TO4mwk4U; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TO4mwk4U"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id EBFEF211937B; Wed, 18 Jun 2025 22:26:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EBFEF211937B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750310762;
+	bh=19k6UZE0i+w0d0VDsgObHi/4QLbX04CSELitWB6Ome4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TO4mwk4U5/LDamnjfp/HiGd0wgFmKJUhi4L+QZcXV+K3FsmW9MWAQQbCYZyF0OOKR
+	 Nb+3jFwWoONYLA7DzDAs6ZMBO0vBpPSbigGp1anqxcj1VmqpGKzjmFmJsMJVjgD97B
+	 dkrO9SqiMhqTXM77gVFwUq5ojt9ltTgBtDutdiBM=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH] hv/hv_kvp_daemon: Prevent similar logs in kvp_key_add_or_modify()
+Date: Wed, 18 Jun 2025 22:26:01 -0700
+Message-Id: <1750310761-13302-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18ce:b0:3dc:8b29:30bc with SMTP id
- e9e14a558f8ab-3de07cf9efcmr260142635ab.21.1750310762078; Wed, 18 Jun 2025
- 22:26:02 -0700 (PDT)
-Date: Wed, 18 Jun 2025 22:26:02 -0700
-In-Reply-To: <20250618194732.835401-1-kuni1840@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68539f6a.050a0220.216029.017c.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING: proc registration bug in atm_dev_register
-From: syzbot <syzbot+8bd335d2ad3b93e80715@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, kuni1840@gmail.com, kuniyu@google.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+When hv_kvp_daemon is started in debug mode, in function
+kvp_key_add_or_modify() too many similar logs are logged for
+key/value being too long.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Restructured the logs to prevent this extra logging
 
-Reported-by: syzbot+8bd335d2ad3b93e80715@syzkaller.appspotmail.com
-Tested-by: syzbot+8bd335d2ad3b93e80715@syzkaller.appspotmail.com
+Suggested-by: Olaf Hering <olaf@aepfle.de>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ tools/hv/hv_kvp_daemon.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-Tested on:
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 1f64c680be13..91a708282358 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -352,21 +352,17 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 	int num_blocks;
+ 	int i;
+ 
+-	if (debug)
+-		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
+-		       __func__, pool, key, value);
+-
+ 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+ 		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
+-		syslog(LOG_ERR, "%s: Too long key or value: key=%s, val=%s",
+-		       __func__, key, value);
+-
+-		if (debug)
+-			syslog(LOG_DEBUG, "%s: Too long key or value: pool=%d, key=%s, val=%s",
+-			       __func__, pool, key, value);
++		syslog(LOG_ERR, "%s: Too long key or value: pool=%d key=%s, val=%s",
++		       __func__, pool, key, value);
+ 		return 1;
+ 	}
+ 
++	if (debug)
++		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
++
+ 	/*
+ 	 * First update the in-memory state.
+ 	 */
 
-commit:         fb4d33ab Merge tag '6.16-rc2-ksmbd-server-fixes' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1223e370580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4130f4d8a06c3e71
-dashboard link: https://syzkaller.appspot.com/bug?extid=8bd335d2ad3b93e80715
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=148d3e82580000
+base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
+-- 
+2.34.1
 
-Note: testing is done by a robot and is best-effort only.
