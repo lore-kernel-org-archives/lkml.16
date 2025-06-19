@@ -1,65 +1,71 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663FB259CB5
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD8425BEF0
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339411; cv=none; b=rLNIINnvDy9LHJfbR0MbKzaPG38Pw4msh1iGz5lN3q40E5Kw2Y3yZS/UKrISzkd13Nw8xTUI5hKB2MR+ukWZBdkGue0XbP4mgfURU8TYtC+9hrhVrNDzmAmwzxf5tnrBfA7dNnMZo3LCPpQ/P6L2t0/3pFXswDEmBq0CDbFaS1M=
+	t=1750339421; cv=none; b=sVKxKZMEQ7JfZaOI0f510qpKnc01Tb6PKFC8GC/rOsiLysvw54ENkDYaPdkqkpNNweQkPWeV3SHZbZ9etABoZC+NrFhPH9akLfVFvESfl5UrWbjlhDoQMM/aUCQx9qATVmk/YijoCgLbfVkGA2SLVarNZNmBTtYmZzCR1zCU7A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339411; c=relaxed/simple;
-	bh=s56PJFNbAR0+4oVC0BXCzijj2cnK6zrUkEsGzFgWjP8=;
+	s=arc-20240116; t=1750339421; c=relaxed/simple;
+	bh=yvTf0gRwf8lcvYmPdwBfIAWvG4ZTR+XJziAnsjuaLbY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hpGuIyxGRYgrP5JyeeZSZYymWTChUtPkj9i5Jd0EzzXUoyTDs2ETHeZUaGjYP+PwsejhGixqDdUXBqhQHy5LzugHqFSA3uKWnLHsS1OsN4aPKw4NI42K1DEGjJYj9LUy7tDFK51JGORWL0xS6r6JlWd+vGzfdahKbxzciWC7HLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=FF86Bo6q; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	 In-Reply-To:Content-Type; b=Wz3kM1auEgBK3i9CmihimL+Z1p6KC+qfQi3wEQIzYVTax/1VN3Pc3qJpuwD7/YffkjO06kSKZHQVno8c4WHSIlgj1Y8qBpadqs/LRh1fiPEuRw4Uw2+qnnVd08QZvBBvnqnv2pYXaRgsRmUW4pSE5sDQe2jWsO0Kxl2z/+gGL0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jBsgkAYi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="FF86Bo6q"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-40791b696a2so192485b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:23:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750339408; x=1750944208; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/70FnD9tQ+fRiZyRY5r5SMsQadgm6QXv7BQ/o/RrZC4=;
-        b=FF86Bo6qxRQ8Pl6dSeK5qzm53GQ6TBS9Se8r4YJzHuiO+JY9IoGYIGdPuQRJ8C6geE
-         /AkDfJAh3EPzRMpJ5Gmf0SjFcVZLUKnIobFoG6UziErg1OWolNRoS6dlVQXp8EU0x3cZ
-         ot/cthRbs8bEpqlqAPG86krgX8PwstOZMezw8KELEUk2EXX4xVaT3PqJv6u8w03LR6ja
-         iMkD+QwIiQxnxZdVjrDDlHu1Hv3s2oHKIgR3Y+WHKmw/B7I4mbob9dLWfGmO7Xaaczxk
-         98tJK7Eu0a735LnvvZYFtlkatiTinWQoTghCWVBjTWMPQssj9dMj0MG0Bx8XaBFUXtxt
-         62jg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jBsgkAYi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750339418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oRlc/455JdnZehorRTgWTdsui2EMVuSES1pT6cJjXLE=;
+	b=jBsgkAYifvsCqB3C7zKWiji+ij1MID3eBbTcGlpJTCzs21s4w2f3Zr8WINY2Qc8R7F9667
+	hbFd26dfo1yWyU/fiygbLyjFVjPuMTnyIH2GhsNeiA3BW5XyUZjRXdV5wSweaJq5KqHFzm
+	D8BTf0QT+JLcjqJylFqJdqWfV4OmyRQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-DgTZPrSEMJaWyEUQEOh-ig-1; Thu, 19 Jun 2025 09:23:37 -0400
+X-MC-Unique: DgTZPrSEMJaWyEUQEOh-ig-1
+X-Mimecast-MFC-AGG-ID: DgTZPrSEMJaWyEUQEOh-ig_1750339416
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso4811985e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:23:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750339408; x=1750944208;
+        d=1e100.net; s=20230601; t=1750339416; x=1750944216;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/70FnD9tQ+fRiZyRY5r5SMsQadgm6QXv7BQ/o/RrZC4=;
-        b=LrKE9tN8lPjApxOhvfGXG2A1Hja/KbXIaEd9B8dFm3+pVF+E/5+3yIzOh/gf8ITV6D
-         fhjqY0gqdHCnt05YAZ3sOw5TjuiuKXxIhTFrBkRNp0bQq2rWIRQuedXwq/+HzAraK2fY
-         5lb8598yTsTWpK6ucduakiRhm1tHf9Ig/0VLaqn4Eddd7FCLl2IQnNMHLjdNtU1e8Gsd
-         Jx98dx07HdyzQRMK4CLw8Gtyryyh1CaORWOrg5x42Dg8Lbhfayv7js4zeljroWbuE0m4
-         i4SKcwGcJ3/oUkmBjVCll2Ci+5xgiOiOBv90/UN6eK4v8MSRVDexUzkHbuBjttFwuCw4
-         P2fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS1eUjB2NJMvDbeeMUakNGxqvI3g/Aew/yroHzO7Sa2lQyvDWbJ55/JnDeI3hQYDvR7GpV+zO93oNGa9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWjy9UIv1Ae53oxczElXKSRvhiwbNKnIr8X46wqEWN1bCXcxSK
-	KeSI2/2jQvf/NNXG/uYGvnhTRRKpA/+Fh34EExaTeN9rT39EuXG+WGaxbFuoGHgpSyM=
-X-Gm-Gg: ASbGncvSGCUaA0oLoB8SI4x0rH3i/OxxRkOV23yz0ozH2+yokr7dI9axIyyDDJLFQnd
-	Xf3tCvA/zzTD8uZuXMKl0bYSZTvzP16Xs90szQREijQgcIXb3DM25DmBz/soatZFOCFSjutSmyJ
-	nL7Ky6IMEYb4aCAdPwDOOT8yKgx4yHGtgqJMdto642XbtGS+bvBC2tHVdAhAT1XBg2m52UyptaE
-	7CiBUAeh1WzYUTLK4mw0yQvxHxBOSfRECcVIQ2JlMlVBBwr0FqX/B1JtbUFhb0x17oimhLZjURP
-	AnTZLn9hqt0d4IgPa3KsBqneXdoV3C1Z5Yj0O2u1YXXfGwrpEuqEGecEgYu8k//GdyEKvq19V27
-	BemBDasMz2uru67KpLQdBQyt5ew==
-X-Google-Smtp-Source: AGHT+IGVYUqAL7UYn2pwdI0pVBJFm39ZocyoGLl1F6P4Vm48on+LUD6YmdbeE2h0MWfBSEJb6OB1Ew==
-X-Received: by 2002:a05:6808:152a:b0:3f9:8b5b:294c with SMTP id 5614622812f47-40a7c23cff7mr13295372b6e.31.1750339408304;
-        Thu, 19 Jun 2025 06:23:28 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a741b8837sm2759463b6e.46.2025.06.19.06.23.26
+        bh=oRlc/455JdnZehorRTgWTdsui2EMVuSES1pT6cJjXLE=;
+        b=dSTPrLN2mFpZ8sGpcGT0qjVXWiOT3w5veYlOS4EIUHNNhtv2NPob9pcu2Wfzc0OyRa
+         nBgz/0dFvICXxHhAF+2D7dDAl5eCcvxLQJGO7hLZlFAz4zHo+VNLhe63ot+VZbXL+rjX
+         bXC1AmHmIG4WVyuapvGJjEe7TBDIKb069t0dSuvMNvYsyTDMEEeLCvaip7LQZtmCEb/y
+         7hruQ0UJ9LITSh45NM/gb9sHNPNWtMM9Ufzjj6JO/87IQvfhgAjNj8Rk+kCH8KmOGjyl
+         uHvAem301Lws79xfHsCqE2UMfTkoaw/ahqQotvDrSnAsb8gRwoJK4r77Em5dgN0XjEJd
+         FrJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYVNBShmdUIyTmghPfQ6wa7SfUjkeBSfDiOPF8cvVF7dvRRlvXZ4VxmXN5hoXru5HnZF+wiAsWIfCEHEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvHIRW535UOer8Tm8vXHzuS/iOLiywV5mw5x/t9syTHnwRmNj4
+	Yw1R1h2Z1tJ1qEPQCm5LLSMzs9STZpYERzKWIIIi+C8API7jypa0gpJh73mT6TkSna3SPaxLXu2
+	A5KOlayOTSS834DJwdm3GYsv0cFsHbHS+wk0zgWXWIqyodNmgsC4QDctr01Zb3SxMRQ==
+X-Gm-Gg: ASbGncuy7iPcpN9I3ikuLZWTg5OFtPonlxCy6HrPZKVK7m0esJ7I4rFLDhWDJBk8Np2
+	jsX3Z4NwxJB1DkeAFiHwlHd4lmFtSNiJOP89VsOhiyt7mGampwZ4kXdhcqckDLU3YN/m1usYSHK
+	Qamw3GQ7KMPP7PZpPcceEy6lVGPml+bYj7YNGFolIeAKdOHdJZ3t/2s9BRlW8AFZrInKkrT1JNT
+	1CybDKfioZjcL+y4kqSTwBfS4SmSyy1iGxjDdKPYbvaODxsvn81KxWwlPXEPDRMcNuInkzuJomB
+	05P0bTbip5B6S9Ljp2CIB3FCKv/rQA==
+X-Received: by 2002:a05:600c:4f43:b0:448:e8c0:c778 with SMTP id 5b1f17b1804b1-453514a1e54mr102985315e9.22.1750339416163;
+        Thu, 19 Jun 2025 06:23:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzq+77XzI783Jt8YUI6h/miSxke49tHCSnFqIWVHg/I3AY/81H+u1Iauzwvv3Q5jdGX1Wv2g==
+X-Received: by 2002:a05:600c:4f43:b0:448:e8c0:c778 with SMTP id 5b1f17b1804b1-453514a1e54mr102984925e9.22.1750339415703;
+        Thu, 19 Jun 2025 06:23:35 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:271a:7310::f39? ([2a0d:3344:271a:7310::f39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45362219d3dsm8413635e9.26.2025.06.19.06.23.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 06:23:27 -0700 (PDT)
-Message-ID: <3d8b4025-4e82-4245-8923-b55954894137@riscstar.com>
-Date: Thu, 19 Jun 2025 08:23:26 -0500
+        Thu, 19 Jun 2025 06:23:33 -0700 (PDT)
+Message-ID: <45b79d7d-dc26-491b-b5e6-c5f5ab210850@redhat.com>
+Date: Thu, 19 Jun 2025 15:23:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,94 +73,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] mfd: spacemit: add support for SpacemiT PMICs
-To: Vivian Wang <wangruikang@iscas.ac.cn>, lee@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, dlan@gentoo.org
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, troymitchell988@gmail.com, guodong@riscstar.com,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250613210150.1468845-1-elder@riscstar.com>
- <20250613210150.1468845-3-elder@riscstar.com>
- <4036e3c2-8324-4eeb-9aa8-df1fbe9c7943@iscas.ac.cn>
+Subject: Re: [PATCH net-next v11 13/14] dpll: zl3073x: Add support to get/set
+ frequency on input pins
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250616201404.1412341-1-ivecera@redhat.com>
+ <20250616201404.1412341-14-ivecera@redhat.com>
+ <72bab3b2-bdd6-43f6-9243-55009f9c1071@redhat.com>
+ <ba027737-39df-4541-8fea-1c4cf489b43b@linux.dev>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <4036e3c2-8324-4eeb-9aa8-df1fbe9c7943@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <ba027737-39df-4541-8fea-1c4cf489b43b@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/19/25 12:46 AM, Vivian Wang wrote:
-> On 6/14/25 05:01, Alex Elder wrote:
->> <snip>
+On 6/19/25 2:15 PM, Vadim Fedorenko wrote:
+> On 19/06/2025 12:15, Paolo Abeni wrote:
+>> On 6/16/25 10:14 PM, Ivan Vecera wrote:
+>>> +/**
+>>> + * zl3073x_dpll_input_ref_frequency_get - get input reference frequency
+>>> + * @zldpll: pointer to zl3073x_dpll
+>>> + * @ref_id: reference id
+>>> + * @frequency: pointer to variable to store frequency
+>>> + *
+>>> + * Reads frequency of given input reference.
+>>> + *
+>>> + * Return: 0 on success, <0 on error
+>>> + */
+>>> +static int
+>>> +zl3073x_dpll_input_ref_frequency_get(struct zl3073x_dpll *zldpll, u8 ref_id,
+>>> +				     u32 *frequency)
+>>> +{
+>>> +	struct zl3073x_dev *zldev = zldpll->dev;
+>>> +	u16 base, mult, num, denom;
+>>> +	int rc;
+>>> +
+>>> +	guard(mutex)(&zldev->multiop_lock);
+>>> +
+>>> +	/* Read reference configuration */
+>>> +	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
+>>> +			   ZL_REG_REF_MB_MASK, BIT(ref_id));
+>>> +	if (rc)
+>>> +		return rc;
+>>> +
+>>> +	/* Read registers to compute resulting frequency */
+>>> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_BASE, &base);
+>>> +	if (rc)
+>>> +		return rc;
+>>> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_MULT, &mult);
+>>> +	if (rc)
+>>> +		return rc;
+>>> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_M, &num);
+>>> +	if (rc)
+>>> +		return rc;
+>>> +	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_N, &denom);
+>>> +	if (rc)
+>>> +		return rc;
+>>> +
+>>> +	/* Sanity check that HW has not returned zero denominator */
+>>> +	if (!denom) {
+>>> +		dev_err(zldev->dev,
+>>> +			"Zero divisor for ref %u frequency got from device\n",
+>>> +			ref_id);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	/* Compute the frequency */
+>>> +	*frequency = base * mult * num / denom;
 >>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 6fb3768e3d71c..c59ae6cc2dd8d 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1182,6 +1182,17 @@ config MFD_QCOM_RPM
->>   	  Say M here if you want to include support for the Qualcomm RPM as a
->>   	  module. This will build a module called "qcom_rpm".
->>   
->> +config MFD_SPACEMIT_PMIC
->> +	tristate "SpacemiT PMIC"
->> +	depends on ARCH_SPACEMIT || COMPILE_TEST
->> +	depends on I2C && OF
->> +	select MFD_CORE
->> +	select REGMAP_I2C
->> +	default ARCH_SPACEMIT
->> +	help
->> +	  This option enables support for SpacemiT I2C based PMICs.  At
->> +	  this time only the P1 PMIC (used with the K1 SoC) is supported.
->> +
-> 
-> Module name?
-> 
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called spacemit-pmic.
-
-I will add a comment like this to the help text.
-
-> 
->>   config MFD_SPMI_PMIC
->>   	tristate "Qualcomm SPMI PMICs"
->>   	depends on ARCH_QCOM || COMPILE_TEST
+>> As base, mult, num and denom are u16, the above looks like integer
+>> overflow prone.
 >>
->> <snip>
->>
->> +static struct i2c_driver spacemit_pmic_i2c_driver = {
->> +	.driver = {
->> +		.name = "spacemit-pmic",
->> +		.of_match_table = spacemit_pmic_match,
->> +	},
->> +	.probe    = spacemit_pmic_probe,
->> +};
->> +
->> +static int __init spacemit_pmic_init(void)
->> +{
->> +	return i2c_add_driver(&spacemit_pmic_i2c_driver);
->> +}
->> +
->> +static void __exit spacemit_pmic_exit(void)
->> +{
->> +	i2c_del_driver(&spacemit_pmic_i2c_driver);
->> +}
->> +
->> +module_init(spacemit_pmic_init);
->> +module_exit(spacemit_pmic_exit);
->> +
+>> I think you should explicitly cast to u64, and possibly use a u64 frequency.
 > 
-> module_i2c_driver
+> I might be a good idea to use mul_u64_u32_div together with mul_u32_u32?
+> These macroses will take care of overflow on 32bit platforms as well.
 
-You're right.  Thanks for the review.  I also added
-MODULE_ALIAS() for this driver, and defined MOD_NAME.
+I guess such macros will work, but u64 is available on 32bits platform
+as well - and possibly simpler/more readable.
 
-					-Alex
-> 
-> Regards,
-> Vivian "dramforever" Wang
-> 
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("SpacemiT multi-function PMIC driver");
-> 
+/P
 
