@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1958230E849;
-	Thu, 19 Jun 2025 20:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A910130E849;
+	Thu, 19 Jun 2025 20:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750363254; cv=none; b=BhelHq90iuRsSwnEB9d/jRy/0134sB/JEJuZegAzUPiDKOGHLK+sF2xgLZGSOUqFy4dc2o5pj6GK9cFfJ7dYDyCrzY9Mmiwy5/vEEHR+Kq/npdD2gzXPde579Evzcd9LeRGuwlcJm+ML8xJqui+nPLOIpVk6BajOf+lM8mu3P5I=
+	t=1750363365; cv=none; b=n5gLhBRryOmWZyDHNZ/YXwNQSEiMpuTrcCsy69+M4j9r6D9wD8n5s5upVxp5JvHF9Flf3s0YAux1BuOHrKCSlD7CyHds6Baff4f5UN4dCtv1WlHEx5B0aOO2x/jbk8TSONZSKIQWGdWVQELWpruU9xUYRSFTJo3cKEyBKZCUqMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750363254; c=relaxed/simple;
-	bh=W2J0i+WG/PKJ/ZkG9vyA2DkvGy1gkKZsqlYj/4o9WVc=;
+	s=arc-20240116; t=1750363365; c=relaxed/simple;
+	bh=4QdX6S4x0XEshK7BTOqLCSvid8HDlM1C6Xd+Rr9jdqM=;
 	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=VvpeXsbRAHLwPIU+02O7FGG/69Lom0WDJoX4GkdMHPmAK08ahkKzwe79LLZHUGC/wMqrKGcGxPgdt/gJ1dB92qRr3DP3ElDzUp0LSmAPf5GsAqmuO5nwWXzvWvO8V0Dn+7JJFBvUWIuWlIF9L7uFKoQ4qvS4iXbBnPvQ2SgiAxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJ02kzcb; arc=none smtp.client-ip=10.30.226.201
+	 To:Date:Message-ID; b=p+7w7+GNRwk8SyeeJn0qqQXYUIxJBnZolmkVUDX6otzXS7viNvSbSMt4vZabyFNDMRvlBIKh/zihiDvBvYmA66B8bkdNMIksyn7SaShYnMolVY2/6ETSDi2hP6uF7BsmVDaUzOEM5z6UsoMW/nr6wOTlnwj1IVwnztHYM7Avprc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OejIBUyV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJ02kzcb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3DBC4CEEA;
-	Thu, 19 Jun 2025 20:00:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OejIBUyV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0A9C4CEEA;
+	Thu, 19 Jun 2025 20:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750363253;
-	bh=W2J0i+WG/PKJ/ZkG9vyA2DkvGy1gkKZsqlYj/4o9WVc=;
+	s=k20201202; t=1750363365;
+	bh=4QdX6S4x0XEshK7BTOqLCSvid8HDlM1C6Xd+Rr9jdqM=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=UJ02kzcbZJZeiNEHd5b99bUhLyNEtRcBgfSKjSh+UOnyIc7kkQLDZFtwAZMz1ywhz
-	 7/SXXYjPRqVYlVdLVBpLLnv/0AdaP5zLVChg+Tw4+8CuqLhghPw+PajRVJop8jHJ9g
-	 7aoYF4o1rAUSU1tRakIJq4BHPyQC8FaUyLbmoWCiZBNWED3ibxKpPtxLs2xYsmhpcb
-	 Vr6I1QEx469iI9xEYTi15uvFqFwAkO0grFJvGWl5RJE9ZA69jqpzL1JDIOzpxWohyg
-	 2CMKHT1xuftnB62ZsAJGxOJ0TjfrmYKLdeRI+zzmBb9xPjdtnPFonlS4Dca3fHGxVo
-	 xLXoKV1K/Wewg==
+	b=OejIBUyVWLe5elZSTKm3AFVUlNs+ZdsZEfEx6/BjflIn6/5JovxPbnWR0BSl65Hmo
+	 2YX1g4yRPoAESzq/Rio8Yv2osygAjEzy/87XdsqH1VXfL7liKk0cYcliWGNCq6AjKO
+	 BA04bwhwkTkKZDiZ78EsxK2kAZ7omDnl6Sze/szUF5HyyH3A0XmgDIqRblr5ZGi+iC
+	 68bN1YWNLgkj9vsC+Hi1EOZCTnpcEKeaygmFfDNOnSil+x/LEYeHZ6DkygBB6y0Gdk
+	 LsNgDjH+Gzzecsv/nrxLIsXukXEo/KHz4zxHF1cC4On67IhYF9JAOylY8gpiyqrnx6
+	 M1Elj8zH/fkgQ==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,24 +34,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250610012406.3703769-3-jacky_chou@aspeedtech.com>
-References: <20250610012406.3703769-1-jacky_chou@aspeedtech.com> <20250610012406.3703769-3-jacky_chou@aspeedtech.com>
-Subject: Re: [net-next v2 2/4] dt-bindings: clock: ast2600: Add reset definitions for MAC1 and MAC2
+In-Reply-To: <20250602141937.942091-1-Frank.Li@nxp.com>
+References: <20250602141937.942091-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH 1/1] dt-bindings: clock: convert lpc1850-ccu.txt to yaml format
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, mturquette@baylibre.com, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com, Conor Dooley <conor.dooley@microchip.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date: Thu, 19 Jun 2025 13:00:52 -0700
-Message-ID: <175036325275.4372.17530886047439204374@lazor>
+Cc: imx@lists.linux.dev
+To: Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 19 Jun 2025 13:02:44 -0700
+Message-ID: <175036336439.4372.5290139630877956933@lazor>
 User-Agent: alot/0.11
 
-Quoting Jacky Chou (2025-06-09 18:24:04)
-> Add ASPEED_RESET_MAC1 and ASPEED_RESET_MAC2 reset definitions to
-> the ast2600-clock binding header. These are required for proper
-> reset control of the MAC1 and MAC2 ethernet controllers on the
-> AST2600 SoC.
+Quoting Frank Li (2025-06-02 07:19:36)
+> Convert lpc1850-ccu.txt to yaml format.
 >=20
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Additional changes:
+> - remove label in examples.
+> - remove clock consumer in examples.
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Applied to clk-next
