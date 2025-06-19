@@ -1,105 +1,237 @@
-Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012034.outbound.protection.outlook.com [52.101.66.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D9B1DDC3F;
-	Thu, 19 Jun 2025 06:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750314285; cv=none; b=dbC4qjhf1+hD2yEsXbxUA1ydwRWCSiwjDQwfAg7pFHllBns1Cmo4qSUA5HTTyyl/uAMvg9uSjy7fHI1HinIsZsoUvrX4aAaOcYpI6INhDNVCLF7FgEJDdm3T4aYHVALwUHdBhEL/89FfRr+OCUAfLRsw2ycSePHhKlixrvXoYj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750314285; c=relaxed/simple;
-	bh=BTaOj/LFHTMXn10NykK+I7b2lnQO1XQBlwEzd6mhsbE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bdotNHj85Kg7ZNeg6XNYJjr4YIMmF6lusSeruqDkqowpPdngBcR6tFBEnm85ERMrEdz8jElmNaAT4oYQDc2a8lcGCEU9hLg9V71iF4nI/nf2mdOv2NHhyXIJpvbgpxmHhWCp+6toDLdLDo+VgHu40FjZpfHJtP6RuGLKyn3kToU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=g+AyxAAE; arc=none smtp.client-ip=178.154.239.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99240246764;
+	Thu, 19 Jun 2025 06:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750314287; cv=fail; b=cA600A5Nq0aHWY/Y7h0bhb/nwizIZjiNVbQVIunJ7exUVrV6hkSPQAKsHk8wvksu+PadG9JE5c1HEv0Kd6vHeIOo269j6NLVq5lmoymptyHOsZeoXXHTHsmWeP/vSIxiJcXF1IJQdr/bMIq+y6E4YesJst8N77Ryfv5owWrLvYM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750314287; c=relaxed/simple;
+	bh=YQ7mxQFH9ZA3h8JuipR2Zkru2imKpT2YdKIX3ZVhfZ8=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uFSmo6T1XaJNr0vAul7ZY6am6rY3wRUmYG4Jg4DEXHsN5skaXcT+6ELTLbRx1kIHpUlM3meL0FU+pJV5pkjNXazeqt2kgnCG/5cTH+sO7E2TYtMsLeF9WKYC1ZUzCf5ILFEF5X431NY77QFOPisfmS+xhnPKzTahzgv5LxWcx9E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bMbm1nyD; arc=fail smtp.client-ip=52.101.66.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="g+AyxAAE"
-Received: from mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:fa8:0:640:af01:0])
-	by forward502b.mail.yandex.net (Yandex) with ESMTPS id F14FD61928;
-	Thu, 19 Jun 2025 09:24:37 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZOHeSc7LkuQ0-FOPo2JK0;
-	Thu, 19 Jun 2025 09:24:37 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1750314277; bh=VRVnFeiyhbRv73uj9rSI67sI0wNTtfrHx8orLwgEf74=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=g+AyxAAEaCirn5q+0Uun1b5tVU1z1O3Mf/DtIobilq1NbupX9MUh0oukS/nU9aUYB
-	 vKTyvZ8+PxbDNJi1SsIREtdbomBiR8QEOgpJ6qodfVjHeWD1Sco7f/gAsWFv2jOT8l
-	 hdTUY04VBpOjl1pnPF1B6Z+ulc0hAVmApnP+NSDI=
-Authentication-Results: mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <c5180008b4611f61866b216eb20f8db2e7ef429e.camel@yandex.ru>
-Subject: Re: [PATCH] Revert "platform/x86: alienware-wmi-wmax: Add G-Mode
- support to Alienware m16 R1"
-From: Konstantin Kharlamov <Hi-Angel@yandex.ru>
-To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf
- <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-	linux-kernel@vger.kernel.org, Cihan Ozakca <cozakca@outlook.com>, 
-	stable@vger.kernel.org
-Date: Thu, 19 Jun 2025 09:24:34 +0300
-In-Reply-To: <20250611-m16-rev-v1-1-72d13bad03c9@gmail.com>
-References: <20250611-m16-rev-v1-1-72d13bad03c9@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bMbm1nyD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qhK8+OvMUTwnX69FJXzdT8Qem/O0NOmJUi/khHHzw+myjNYGNQeO11AMNgUH7YsxltZFi1knUHypPM72pqImYwCyMVeXjlXGPu9h8cMxbJNUhQ3P9AaEL76CLG81HE1b4nU4VZkqz4vrvJ/HSs/e7NoeD+ZWdCJdEUcqD0w9Kr3PKb3MtVH/k9U92KVYNJJSlwIYBgLGdvfZlr38aOPAcLPEzanCPqXw0wquRXWBJEoFWB6h9+aSiDDSv7wrFRNitkqySnWawFUpDq/v51lAqsscYhgeAgsi5zPhQ9wC15aW0RU/dTsvJhcMJy/SbTGsjyrUGe6H/6eijIAzJPvpRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L+iRGzhIrF1EQzJAkfm0JWKtj/wKIEnBRtAuJR1k90Q=;
+ b=bnE2LUlBfSg4rKtJOAO1OGNEYVz1RnsNnlqCVvroR9PMECtzG/Yvt59Thxtco2difyX2BAph9bpI1oZ+El8wHFfKhJuDEhwSOydvo6pvnHee6P5YQxLs8lLE6iCTNQR9bHWzuDBOHd/qqb5Ej2Pe1PN+nefRY0Nd/ACaAwSMWY+XVprGxUdv3Bh41zQDVPOKUXeNHLBnW+CmqtSJjcAkimgTEinybpdB1LTGNZwOW8Wg8vonK4BoWWw4f+0lt8Pi3fAXvrB7M+NVpcscfuvtuMUwiM6VmbIEcymvasyoS1kOChe7Qqym14n2gNPUjHHvZ9ygSqdVZrPc9Mtm5M/R1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L+iRGzhIrF1EQzJAkfm0JWKtj/wKIEnBRtAuJR1k90Q=;
+ b=bMbm1nyD13MVG/d3n49h0/Dtx+GaJRxsFjFGcNQ0IHuoGbj9a4E0fm2wk8vBFRVR9qR4/YQumm/DjCrOaUlxjI7BAsPutZo19OdwDhbBZLIUutg7JLlUPjvAzqZ5Ljna908tF2Jzsz14yt07Oa15mCB4nNI94Fn5DuYj22kzjZbXw/pvH3pPNMgeUFEP2pfHc0GxU2O0FMzfe0Ksho1oeSdUYhWR1iKbKIJGO0BmRUy6KfgGefdP/sGpFxdwLGCj40KOSjhX0uRKp7r6Ksdb2jtGGFUmF7uz2P9IHBvl1OtUUuiCnC3/7JtRAT9rqLj25Bm4M/X8eB6cVs9LxHOeZQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
+ by DU6PR04MB11183.eurprd04.prod.outlook.com (2603:10a6:10:5c4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Thu, 19 Jun
+ 2025 06:24:41 +0000
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::24fa:6f9:8247:c5dc]) by DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::24fa:6f9:8247:c5dc%5]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
+ 06:24:41 +0000
+From: Chancel Liu <chancel.liu@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shawnguo@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ASoC: imx-card: Add WM8524 support
+Date: Thu, 19 Jun 2025 15:24:13 +0900
+Message-ID: <20250619062413.3946142-1-chancel.liu@nxp.com>
+X-Mailer: git-send-email 2.47.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0103.apcprd02.prod.outlook.com
+ (2603:1096:4:92::19) To DB9PR04MB9498.eurprd04.prod.outlook.com
+ (2603:10a6:10:360::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|DU6PR04MB11183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2251c826-f1f1-4106-1f0e-08ddaef9f92e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|7416014|366016|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hO/KSU/Mtvk5v7/wkJ9gXC40AIduCDXYi4UU24jZieZ7S6/KJF8j+ZfdYHDm?=
+ =?us-ascii?Q?tsrP0aw9ndON546Iz7P9HKvXC43bfv6Hvm93O72TQmGpivsr9UX/r9E77p2F?=
+ =?us-ascii?Q?6/62Iv7VNUBRK9m3k1wCAoR+trgCS9AKIzvCt0dscfcUnqXoeyaO20ODv5/S?=
+ =?us-ascii?Q?GDhdkda5CY/vHxCiHbtBxoDLOJq5M7NdV5yapcO2bZYRFppdDGYCm4sbmvgu?=
+ =?us-ascii?Q?OnY949XGyQE67X/lScUKtw3H8gc8YGDwrNHmy8M+MlDwNnzHVjB2RVEnwlNz?=
+ =?us-ascii?Q?Fd+CCG4XloNR52X1bfWjkpsNpvvg6VR5ZVX2km9m48g6bcTBNihGB2ODj62o?=
+ =?us-ascii?Q?jp1Lk425Ras9z6/jZ6grzybul42a4DUGZGik+Y3SlYXibFWUoleKHtkZNhy5?=
+ =?us-ascii?Q?Jt1YzUf2Ke/1oWGAkLD+T1WtS+73nwUfjNrfoNlkqDfOZfMP91J2Lmhvm64S?=
+ =?us-ascii?Q?maN0qzZPlV3pR+JrFkIm13cSZXrx/wfajt3Ml/2sFgUzSymk+jQzCahr/0XG?=
+ =?us-ascii?Q?yQ9oQvWbZs2mIgrA8MBeagU1H7rNq1USDKmaR37Z+jg8S8XHRmW1gUCABJML?=
+ =?us-ascii?Q?Ei1hXb+wpKGGgaBPiXSgH4K0CAszorjcp2pcwVTSPT50o7/4GcPtN5zyA61A?=
+ =?us-ascii?Q?aqqRJ7Y4m0zl0QKE0i7PgW3U/cINXXj+jsvSNzgeW6UfCe7DIqwe1XGADsA+?=
+ =?us-ascii?Q?d3TyvTSYUXte/10pXH7YQlE862zl2Oz4SidM29jpKGDC3MbaKoqxXUbFlzTu?=
+ =?us-ascii?Q?K1og8b/+55/Tb17RG/H04AwplxzjcKaQ7bDQG9lgmvR/4vk0LwAwE1JY0SSM?=
+ =?us-ascii?Q?1czgCRCIXJPSS3FVTt2K/uhYiti69m0zXNeBIv1bayFLWfTP0RJyrsE86q1U?=
+ =?us-ascii?Q?qhpfS2yK3jT1X7crdvAes0DOjPmEtjRyjBTnLhCxF6hFsQuQRbfjVlhI/0F/?=
+ =?us-ascii?Q?M8TR0HHkwZhkJbpOVzTO1pllvr6qhz7vg8uGe5YHEhAB/f+02Nh+CKW9KyK0?=
+ =?us-ascii?Q?sMvZtU5NOqzV0NgPR8zgPKBOQ/wjBjqQ49kDREaSq5WihJW7o6jPIoy2ydQd?=
+ =?us-ascii?Q?+jmL3sjlJJ+a1TNQZkRVwqLguhkEpk1bgUeZ3ihOtHibyf2ZdaRE636ZmQ/E?=
+ =?us-ascii?Q?TyuNhurvKzNB4Q8XJrYiomromx/rhUO/TuNVIRqf8mUxF3mpFWF56A0JwzfL?=
+ =?us-ascii?Q?XXKF6+S0RJ6On0ibyUSyJ8srk5Rdl4iFoc7vEXb31FKkIwuuV5UNnTr5w8nI?=
+ =?us-ascii?Q?aENcMZUyPII7SYrxoKT1T10GMc6ivE51lOfvo6lPrjB8YWiH4DAdx56iAr24?=
+ =?us-ascii?Q?mFo6quCyARrVvO67zb/vjQubG8m1B9rwjaum+/vzxO9KbZcp8dXs4Z52s75U?=
+ =?us-ascii?Q?/duLliVZ4GqYiR99UtczEWU9ieXCYXzkqwSxT9CZXodIP3c6N9LVpmqDU17O?=
+ =?us-ascii?Q?eE9DRgANqcqjJWPgC0G1pXAkXK14APUSrGQD1Pb2AEGSmeMF6Ps1JH/ojhGj?=
+ =?us-ascii?Q?l09uLjQpoKSt2n8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lpnWSiBk8pUH8wNbNRHtpQ20eO+e9HXeGizZJdHtN7LLg5yt3sCi4VMnlmug?=
+ =?us-ascii?Q?F+mXCyfuuDMKV6diKHioLvtO1z77P7iubVBqdw84+KhqNrgwf99neaWe0y0B?=
+ =?us-ascii?Q?yqoO34ytjScquT5p+nqx2dw2iQGl5DEkwGx+gAm0W40Wa+X7iBt1EmabkU+Z?=
+ =?us-ascii?Q?LhXOgGmobMCUGf/s8FK6HQgm/+CeqdSObLvBisTxgQwwyylvWqfZq7oqF1bN?=
+ =?us-ascii?Q?gIzAzdOyTCQ+lD+EwGn7uSWeoMn3viyh+rHPA39IUazKmGJAGpecn9hr6M87?=
+ =?us-ascii?Q?hVzPblW8acSxl1XohUEIPeWBLIdERNwnoIpUqlXPSUliFkS4pBzpkl3Zlyck?=
+ =?us-ascii?Q?KB99RShYYERubD3F3pOJyrrI+ydH5tTCNq28cnWyS71HUV8A6UyR2Kr0kAsx?=
+ =?us-ascii?Q?6C/gABEmfPL94SgKXNcrPMRXnb+uDOQ/17WvW+Z0fWqvuOTHmAVKm5WDeHjd?=
+ =?us-ascii?Q?OXVd3rdtfim1rKhxfJbPNjmcQUadV/CI7VQn7BP5zaAXsaNHnU13S40Kuto+?=
+ =?us-ascii?Q?SnqQDcC4b+N07tZnTCOwHmChWQnyMNuvSRLTSLaJFVCOuiT921PFuxTOdDjR?=
+ =?us-ascii?Q?EDML9nRJCrD81ijOIgwfok+9Vc7pFo/rAqDTskalVL+amixpeSEU1c2EGHKF?=
+ =?us-ascii?Q?gTDWaOEAUJr0QRFvi0/H4yTTaOhtDW2e8GN25B1/uQ/FJTOCKO/miVPsvtrf?=
+ =?us-ascii?Q?d/b0KwEZZBQgfy2DQzXImMhtrirlUMyyPCkM4pq1+h6Z6WNriEDou+BhTf15?=
+ =?us-ascii?Q?0gL23UZBEtZOIig0qRrFzmo0JqA6iwGXskPX9WbpqDztyl5TNhF9mehvcuEm?=
+ =?us-ascii?Q?b59QN9XEQ3adHt2+JN/N/PP/b+l29TEMOdGRbfsGs7s4wmbpMctxj77IM5EP?=
+ =?us-ascii?Q?/OhfojI+XMSBUC3RUPS8OZSKZ7RxWSjhtcz2CToorlIj8yuhCQAVV4RcdSSn?=
+ =?us-ascii?Q?Yvm1WE9Adde/38Z8cG0oJOYkYImw8lcndJVcnUTb1T9CrSIP462t/2RoAJUJ?=
+ =?us-ascii?Q?DhC/g3eoJX1MtxkIpClq5+hKtJEKrXXhKrpmWPoGALQDvL4DhY5MwKzfZRFV?=
+ =?us-ascii?Q?LTZOJjCAG3ufJytRrsuPoH2UGZ1OQsQbMesW9/cAzD/MNYKO+GLbrveCn609?=
+ =?us-ascii?Q?5wfcP5E5/2cXv2WxcgPkOivExUgz+sx4QM33G1IBQWaxGPbwbaEQV+96tvYY?=
+ =?us-ascii?Q?dtxGV4TVb5HdrdSGmOUKCmWuhNPJqHGHwre78jEzpVm3OxsRr/SKAyqzfwRh?=
+ =?us-ascii?Q?oV2KPiR42g7Nk0QSDB7OvF04nqx3Fek2tY07TM5RZnJ1bNYBuJupWaYkywtm?=
+ =?us-ascii?Q?38THhkYviiykTxEmrwyZ7X/U9j1Qzh7PeMIbPNU9BuvNXwscDskXORYct1HU?=
+ =?us-ascii?Q?o9JxybeH7JCmesIQCzkUTaw3OTUd2zCVgrbHJ4aj0/yqivNs3zA6w0R+WyhR?=
+ =?us-ascii?Q?nVBOOMAtKNzeSh0WwYPVQakaQywKGt15SPZ2BSEIdO58QexYWG/bnLebrZY0?=
+ =?us-ascii?Q?nSq/k3ZI1sEGkKeLw+B38tvSqvTuLVfIFjL0Rx+nYN8qgCOP/HRyh+8N/VPg?=
+ =?us-ascii?Q?okA0s+1DTmmGMU852N3BdlAdhbjpX1p3LQuO0Bp0?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2251c826-f1f1-4106-1f0e-08ddaef9f92e
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 06:24:41.0929
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tzEjpGDi1G+k+TJ8QrTypUYMSOuk0jGvoNnWTbRHUCAs2smQcmSkjqDjFVw11uwfg0yIEkTkCRa76SjB1XowHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU6PR04MB11183
 
-On Wed, 2025-06-11 at 18:30 -0300, Kurt Borja wrote:
-> This reverts commit 5ff79cabb23a2f14d2ed29e9596aec908905a0e6.
->=20
-> Although the Alienware m16 R1 AMD model supports G-Mode, it actually
-> has
-> a lower power ceiling than plain "performance" profile, which results
-> in
-> lower performance.
->=20
-> Reported-by: Cihan Ozakca <cozakca@outlook.com>
-> Cc: stable@vger.kernel.org=C2=A0# 6.15.x
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> Hi all,
->=20
-> Contrary to (my) intuition, imitating Windows behavior actually
-> results
-> in LOWER performance.
->=20
-> I was having second thoughts about this revert because users will
-> notice
-> that "performance" not longer turns on the G-Mode key found in this
-> laptop. Some users may think this is actually a regression, but IMO
-> lower performance is worse.
-> ---
-> =C2=A0drivers/platform/x86/dell/alienware-wmi-wmax.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> index
-> c42f9228b0b255fe962b735ac96486824e83945f..20ec122a9fe0571a1ecd2ccf630
-> 615564ab30481 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -119,7 +119,7 @@ static const struct dmi_system_id
-> awcc_dmi_table[] __initconst =3D {
-> =C2=A0			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> =C2=A0			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m16
-> R1 AMD"),
-> =C2=A0		},
-> -		.driver_data =3D &g_series_quirks,
-> +		.driver_data =3D &generic_quirks,
-> =C2=A0	},
-> =C2=A0	{
-> =C2=A0		.ident =3D "Alienware m16 R2",
+WM8524 is a stereo DAC. Add support for this codec in imx-card ASoC
+machine driver.
 
-I think, at least a code comment explaining the situation is warranted
-(or maybe even a print on keypress or both), because otherwise sometime
-in the future other people may try to add the functional back, and then
-yet other people may again revert it, regressing things back and forth.
+Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
+---
+ sound/soc/fsl/imx-card.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/sound/soc/fsl/imx-card.c b/sound/soc/fsl/imx-card.c
+index ea5dbb54b584..c2c22a058c46 100644
+--- a/sound/soc/fsl/imx-card.c
++++ b/sound/soc/fsl/imx-card.c
+@@ -26,6 +26,7 @@ enum codec_type {
+ 	CODEC_AK4497,
+ 	CODEC_AK5552,
+ 	CODEC_CS42888,
++	CODEC_WM8524,
+ };
+ 
+ /*
+@@ -196,6 +197,13 @@ static struct imx_akcodec_tdm_fs_mul cs42888_tdm_fs_mul[] = {
+ 	{ .min = 256,	.max = 256,	.mul = 256 },
+ };
+ 
++static struct imx_akcodec_fs_mul wm8524_fs_mul[] = {
++	{ .rmin = 8000,   .rmax = 32000,  .wmin = 256,  .wmax = 1152, },
++	{ .rmin = 44100,  .rmax = 48000,  .wmin = 256,  .wmax = 768, },
++	{ .rmin = 88200,  .rmax = 96000,  .wmin = 128,  .wmax = 384, },
++	{ .rmin = 176400, .rmax = 192000, .wmin = 128,  .wmax = 192, },
++};
++
+ static const u32 akcodec_rates[] = {
+ 	8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200,
+ 	96000, 176400, 192000, 352800, 384000, 705600, 768000,
+@@ -229,6 +237,10 @@ static const u32 cs42888_tdm_channels[] = {
+ 	1, 2, 3, 4, 5, 6, 7, 8,
+ };
+ 
++static const u32 wm8524_channels[] = {
++	2,
++};
++
+ static bool format_is_dsd(struct snd_pcm_hw_params *params)
+ {
+ 	snd_pcm_format_t format = params_format(params);
+@@ -261,6 +273,7 @@ static bool codec_is_akcodec(unsigned int type)
+ 	case CODEC_AK5558:
+ 	case CODEC_AK5552:
+ 	case CODEC_CS42888:
++	case CODEC_WM8524:
+ 		return true;
+ 	default:
+ 		break;
+@@ -632,6 +645,8 @@ static int imx_card_parse_of(struct imx_card_data *data)
+ 				plat_data->type = CODEC_AK5552;
+ 			else if (!strcmp(link->codecs->dai_name, "cs42888"))
+ 				plat_data->type = CODEC_CS42888;
++			else if (!strcmp(link->codecs->dai_name, "wm8524-hifi"))
++				plat_data->type = CODEC_WM8524;
+ 
+ 		} else {
+ 			link->codecs	 = &snd_soc_dummy_dlc;
+@@ -805,6 +820,10 @@ static int imx_card_probe(struct platform_device *pdev)
+ 		data->dapm_routes[1].sink = "CPU-Capture";
+ 		data->dapm_routes[1].source = "Capture";
+ 		break;
++	case CODEC_WM8524:
++		data->dapm_routes[0].sink = "Playback";
++		data->dapm_routes[0].source = "CPU-Playback";
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -854,6 +873,11 @@ static int imx_card_probe(struct platform_device *pdev)
+ 			plat_data->support_tdm_channels = cs42888_tdm_channels;
+ 			plat_data->num_tdm_channels = ARRAY_SIZE(cs42888_tdm_channels);
+ 			break;
++		case CODEC_WM8524:
++			plat_data->fs_mul = wm8524_fs_mul;
++			plat_data->num_fs_mul = ARRAY_SIZE(wm8524_fs_mul);
++			plat_data->support_channels = wm8524_channels;
++			plat_data->num_channels = ARRAY_SIZE(wm8524_channels);
+ 		default:
+ 			break;
+ 		}
+-- 
+2.47.1
+
