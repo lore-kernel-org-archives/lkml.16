@@ -1,177 +1,156 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942A511712
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8853011712;
+	Thu, 19 Jun 2025 16:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750350801; cv=none; b=CGrI8cHB/UAqQCvSAkP/RjGT+uzPGu/UCUBZze9Tx81pz//SFqXmGM7Vtdf0dEDCGrkEw32DsNxxn0vCv6OE9v+brwl19XHNusCRAACyj458wgn0Xz4r/E/IiatYBfYrI3OOpKMT4GzWrJxLolP3ZqqmvHTJP851aAQxbOhh/mc=
+	t=1750350808; cv=none; b=kTFUMNcy6yH2Pt14Ucoz4HiuFerMhxfS7lNV3II3hRXNjd/ZIxmk685ZMt1ZCm4VEOeilkQ6gP3DT5JS1lP8syFkrntG0gRYbZ2zvPeWICdGfEaKmP7JBLxFENiXENaGqRTQYclofZ766aZjrEvwr3SRmYeMAbkL2a/tb22ZyLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750350801; c=relaxed/simple;
-	bh=tL0j3d+WoQaI145+Ggpfa9fyEz+w6ykpo8zcye/PJQQ=;
+	s=arc-20240116; t=1750350808; c=relaxed/simple;
+	bh=nYezosKLlyFw27WtBkdAD0Q9bFlBtUPiFt6I0COF6bo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMQaMZCAzTRSASUwmmciGXGVg5e6L9RGTL0d0kZtLNfgyLH2uctUZB8w/kqeSoNecFMd8HWsLYaDW+fPH13EGEA9FvBoDAJ9tIVO8/KQvI5f4aMD8eNA79awc60jZgYQbVlMi7SbaZJghH08QdnobmxxR7KEtltTRhZycCARSWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f3Egjlbj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TtVBeF+8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f3Egjlbj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TtVBeF+8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDHQz+ZlxaqDFvq/w85u67os9m6lCvRIhlAJFndeI5uLKPi8Y3BsIDPh+FpI0gdW8E0MrBba2vFgKwW9S5ZjQHX0H1iJ83ijR18UtARx151bLfWPCnogzTTPqCe2hPmT8g4Z7Snpvg2kCPtlgWqPNfDy6KUmmYAPmKnS2Lw41GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pP+rENOn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f3Egjlbj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TtVBeF+8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f3Egjlbj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TtVBeF+8"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C91A421233;
-	Thu, 19 Jun 2025 16:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750350797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=trTySnNF4YbcEMneXVP3iop9ApEh2WZaTogTTe6r7h4=;
-	b=f3Egjlbj7bBAFy+QTNU9T/eSRZ9ZFg/K0s5vo5tGgVjaUZpg3wiqCcQsN+a8UljBUI1y9/
-	dX7gsMFU2Cnuz+tWC3neWr/nhm6ewqGN1MzQDSLKmPaMIpBtee9fwq4yDmT8tdjEoiRPqE
-	tNAGwj33jw1DR5xwu2azIoe4T7LFG/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750350797;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=trTySnNF4YbcEMneXVP3iop9ApEh2WZaTogTTe6r7h4=;
-	b=TtVBeF+834tC9j7NCb3YRvU6yAjtimykIwl3Cl9KS14zlQFtm+sSFDh6DKPX3A5nOOvCBg
-	/KRegQ/eTgcV50Dw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750350797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=trTySnNF4YbcEMneXVP3iop9ApEh2WZaTogTTe6r7h4=;
-	b=f3Egjlbj7bBAFy+QTNU9T/eSRZ9ZFg/K0s5vo5tGgVjaUZpg3wiqCcQsN+a8UljBUI1y9/
-	dX7gsMFU2Cnuz+tWC3neWr/nhm6ewqGN1MzQDSLKmPaMIpBtee9fwq4yDmT8tdjEoiRPqE
-	tNAGwj33jw1DR5xwu2azIoe4T7LFG/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750350797;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=trTySnNF4YbcEMneXVP3iop9ApEh2WZaTogTTe6r7h4=;
-	b=TtVBeF+834tC9j7NCb3YRvU6yAjtimykIwl3Cl9KS14zlQFtm+sSFDh6DKPX3A5nOOvCBg
-	/KRegQ/eTgcV50Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BADAF136CC;
-	Thu, 19 Jun 2025 16:33:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GHOaLc07VGicRgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 19 Jun 2025 16:33:17 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 746F0A29FA; Thu, 19 Jun 2025 18:33:13 +0200 (CEST)
-Date: Thu, 19 Jun 2025 18:33:13 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH v2 3/6] ext4: restart handle if credits are insufficient
- during allocating blocks
-Message-ID: <7nw5sxwibqmp6zuuanb6eklkxnm5n536fpgzqus6pxts37q2ix@vlpsd2muuj6w>
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-4-yi.zhang@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pP+rENOn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56947C4CEEA;
+	Thu, 19 Jun 2025 16:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750350808;
+	bh=nYezosKLlyFw27WtBkdAD0Q9bFlBtUPiFt6I0COF6bo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pP+rENOnmbiN3d+bdf0RABkZuzR9IQML68Gh8VezO/ZFbStNl4iKFH3Gvpy7bzQhI
+	 v62doGzfx62uXU+TmuNA+7NfEPsy/INr9aYO0VY2+LznRAxbpdxPOjyw59xi5Jnw1K
+	 NSakOzpzeYYQJiq0AzIViB+uNUos0ER2Ez6nyJ08=
+Date: Thu, 19 Jun 2025 18:33:24 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Saravana Kannan <saravanak@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] driver core: Prevent deferred probe loops
+Message-ID: <2025061944-rentable-unfixed-427d@gregkh>
+References: <2025061147-squishier-oversleep-80cd@gregkh>
+ <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
+ <CAGETcx9E5DB4UtdjjAO2=XfTNXdXocj7uk0JkVZ8hf9YadwNcA@mail.gmail.com>
+ <70958a2e-abc8-4894-b99a-f2981db9981f@linux.dev>
+ <2025061700-unmapped-labrador-a8c9@gregkh>
+ <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
+ <2025061740-banter-acclaim-2006@gregkh>
+ <24a0f3fa-2121-4de3-89fd-482b217ab98d@linux.dev>
+ <2025061929-produce-petticoat-8e0f@gregkh>
+ <6d14a0fb-2bf3-4ca5-9356-b94517ddfb14@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611111625.1668035-4-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d14a0fb-2bf3-4ca5-9356-b94517ddfb14@linux.dev>
 
-On Wed 11-06-25 19:16:22, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
+On Thu, Jun 19, 2025 at 12:19:23PM -0400, Sean Anderson wrote:
+> On 6/19/25 04:21, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 17, 2025 at 01:14:31PM -0400, Sean Anderson wrote:
+> >> On 6/17/25 11:49, Greg Kroah-Hartman wrote:
+> >> > On Tue, Jun 17, 2025 at 11:35:04AM -0400, Sean Anderson wrote:
+> >> >> On 6/17/25 04:50, Greg Kroah-Hartman wrote:
+> >> >> > On Thu, Jun 12, 2025 at 04:40:48PM -0400, Sean Anderson wrote:
+> >> >> >> On 6/12/25 13:56, Saravana Kannan wrote:
+> >> >> >> > On Thu, Jun 12, 2025 at 8:53 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+> >> >> >> >>
+> >> >> >> >> On 6/11/25 08:23, Greg Kroah-Hartman wrote:
+> >> >> >> >> > On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
+> >> >> >> >> >> On 6/10/25 19:32, Saravana Kannan wrote:
+> >> >> >> >> >> > On Tue, Jun 10, 2025 at 11:35 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+> >> >> >> >> >> >>
+> >> >> >> >> >> >> A deferred probe loop can occur when a device returns EPROBE_DEFER after
+> >> >> >> >> >> >> registering a bus with children:
+> >> >> >> >> >> >
+> >> >> >> >> >> > This is a broken driver. A parent device shouldn't register child
+> >> >> >> >> >> > devices unless it is fully read itself. It's not logical to say the
+> >> >> >> >> >> > child devices are available, if the parent itself isn't fully ready.
+> >> >> >> >> >> > So, adding child devices/the bus should be the last thing done in the
+> >> >> >> >> >> > parent's probe function.
+> >> >> >> >> >> >
+> >> >> >> >> >> > I know there are odd exceptions where the parent depends on the child,
+> >> >> >> >> >> > so they might add the child a bit earlier in the probe
+> >> >> >> >> >>
+> >> >> >> >> >> This is exactly the case here. So the bus probing cannot happen any
+> >> >> >> >> >> later than it already does.
+> >> >> >> >> >
+> >> >> >> >> > Please fix the driver not to do this.
+> >> >> >> >>
+> >> >> >> >> How? The driver needs the PCS to work. And the PCS can live on the MDIO
+> >> >> >> >> bus.
+> >> >> >> > 
+> >> >> >> > Obviously I don't know the full details, but you could implement it as
+> >> >> >> > MFD. So the bus part would not get removed even if the PCS fails to
+> >> >> >> > probe. Then the PCS can probe when whatever it needs ends up probing.
+> >> >> >> 
+> >> >> >> I was thinking about making the MDIO bus a separate device. But I think
+> >> >> >> it will be tricky to get suspend/resume working correctly. And this
+> >> >> >> makes conversions more difficult because you cannot just add some
+> >> >> >> pcs_get/pcs_put calls, you have to split out the MDIO bus too (which is
+> >> >> >> invariably created as a child of the MAC).
+> >> >> >> 
+> >> >> >> And what happens if a developer doesn't realize they have to split off
+> >> >> >> the MDIO bus before converting? Everything works fine, except if there
+> >> >> >> is some problem loading the PCS driver, which they may not test. Is this
+> >> >> >> prohibition against failing after creating a bus documented anywhere? I
+> >> >> >> don't recall seeing it...
+> >> >> > 
+> >> >> > What do you mean "failing after creating a bus"?  If a bus is failed to
+> >> >> > be created, you fail like normal, no difference here.
+> >> >> 
+> >> >> Creating the bus is successful, but there's an EPROBE_DEFER failure after
+> >> >> that. Which induces the probe loop as described in my initial email.
+> >> > 
+> >> > Then don't allow a defer to happen :)
+> >> 
+> >> Well, I could require all PCS drivers to be built-in I guess. But I suspect
+> >> users will want them to be modules to reduce kernel size.
+> > 
+> > True, then just auto-load them as needed like all other busses do.
+> > 
+> >> > Or better yet, just succeed and spin up a new thread for the new bus to
+> >> > attach it's devices to.  That's what many other busses do today.
+> >> 
+> >> Sorry, I'm not sure I follow. How can you attach a device to a thread? Do
+> >> you have an example for this?
+> > 
+> > Busses discover their devices in a thread, which then calls probe for
+> > them when needed.  A device isn't being attached to a thread, sorry for
+> > the confusion.
 > 
-> After large folios are supported on ext4, writing back a sufficiently
-> large and discontinuous folio may consume a significant number of
-> journal credits, placing considerable strain on the journal. For
-> example, in a 20GB filesystem with 1K block size and 1MB journal size,
-> writing back a 2MB folio could require thousands of credits in the
-> worst-case scenario (when each block is discontinuous and distributed
-> across different block groups), potentially exceeding the journal size.
-> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
-> when delalloc is not enabled.
-> 
-> Fix this by ensuring that there are sufficient journal credits before
-> allocating an extent in mpage_map_one_extent() and _ext4_get_block(). If
-> there are not enough credits, return -EAGAIN, exit the current mapping
-> loop, restart a new handle and a new transaction, and allocating blocks
-> on this folio again in the next iteration.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> OK, just to clarify, the subsystem I linked above is not a bus, it's an
+> internal API. Think GPIO or PWM. The devices typically live on an MDIO
+> bus (although a platform bus wouldn't be out of the question). So it's
+> "not our job" to load the module; that should be done by the bus. From
+> our perspective, if we look up a device and it's not there we don't
+> really know if it's ever going to show up.
 
-...
+That's fine, it will show up when it shows up, don't wait around for it :)
 
->  static int _ext4_get_block(struct inode *inode, sector_t iblock,
->  			   struct buffer_head *bh, int flags)
->  {
->  	struct ext4_map_blocks map;
-> +	handle_t *handle = ext4_journal_current_handle();
->  	int ret = 0;
->  
->  	if (ext4_has_inline_data(inode))
->  		return -ERANGE;
->  
-> +	/* Make sure transaction has enough credits for this extent */
-> +	if (flags & EXT4_GET_BLOCKS_CREATE) {
-> +		ret = ext4_journal_ensure_extent_credits(handle, inode);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	map.m_lblk = iblock;
->  	map.m_len = bh->b_size >> inode->i_blkbits;
->  
-> -	ret = ext4_map_blocks(ext4_journal_current_handle(), inode, &map,
-> -			      flags);
-> +	ret = ext4_map_blocks(handle, inode, &map, flags);
+> Regarding the auxiliary bus, I tried it out and it works. The conversion
+> is around +50 lines, which is not ideal. Ideally I would like to push
+> complexity into subsystem code rather than making drivers deal with it,
+> but I don't really see a good way to do this in the subsystem. There are
+> just a lot of assumptions along the line of "when you register the
+> device you must know what capabilities it supports." For example, fixed
+> links (MAC to MAC) are validated when the phylink is created and the
+> whole process fails if there's an incompatibility. Which can occur if
+> the late-binding component is the thing that adds support for the fixed
+> link.
 
-Good spotting with ext4_page_mkwrite() and ext4_write_begin() also needing
-this treatment! But rather then hiding the transaction extension in
-_ext4_get_block() I'd do this in ext4_block_write_begin() where it is much
-more obvious (and also it is much more obvious who needs to be prepared for
-handling EAGAIN error). Otherwise the patch looks good!
+50+ lines is not much, let's see the patch!
 
-								Honza
+thanks,
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+greg k-h
