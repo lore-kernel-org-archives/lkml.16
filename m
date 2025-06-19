@@ -1,233 +1,149 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F25269B01
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5386A12B71
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 13:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340665; cv=none; b=mi29iI52Gp+Cz6BJcJJsUE9vC9abLUiW8iqv5FkpHBHQo1GsUlc1O2uGfzclPwy6VMf5tk2fbCDQ4s78ykDEeFx2nMxekVG0tT++43rPgqDe3szXS9TYyJdJ6i2tZTgEiGP5ZrIg9opHxj4RYnqzmCzKEiILyEg7B9kT2iQsZiw=
+	t=1750340724; cv=none; b=m/fB5Z4wYMqfNxxxqyOBnXCQxRDKRG3ZkHFZapMFU8pWzQG5skNEqxyNW9Pfh5TQaHvOLLKAAU148uXFDhVcjCT6taBaB1ZueuxtJGpWCWvrCSUr84M6pQx3IvteMkXnfPOZlkYGjBBqmRJRxUi9EtgFSii0SmGfc3eryUrfuYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340665; c=relaxed/simple;
-	bh=HVqeC48N1cUFcSWdsmh+VpvQPJrtZxJ2xVfXF08G4qE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BENL3AJzFkxuKdJZZDAKuIPxAGRS3xVXUTvcI8wFaYUZgkd9DZ/dBwcD2vUK8ffQyVrvHiN4oD651JoMU/uQVI3ZY8i7t9J7to7tQi5HRWmpn+id5QicX1cJQGHFXi7FTyWRMagCYZZ8XkcuJOIdFHSuydAUkg8bxhXj5HyuRRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=meJEbItU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kT0eqKZ8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=meJEbItU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kT0eqKZ8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750340724; c=relaxed/simple;
+	bh=BCS8XSCc7BdmjjroO8wva12VT8ErmM88Yu4Sgr1hYt0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HZP+zvXq9Y19vFRLwPpeuN1EVaZPrngUtQhCTx4KRCFnNJiyNTep8elWCfKGVG+KocImuyXIVaYF9NFPE6j30HmGMzDtAsjhU1JYJV2dnmeDxVa0cDiUW85wS5t+DvI+hG//CzJVdu6wLb+f5x246m0g3J0xmSC3m0Jf69lEBbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fSSdJKaX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="meJEbItU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kT0eqKZ8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="meJEbItU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kT0eqKZ8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ABB8C21197;
-	Thu, 19 Jun 2025 13:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750340661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSSdJKaX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750340720;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vE+0s1lYm1T1NM1GtVBjtDn0WvdG3ES0gUD74JCiFFQ=;
-	b=meJEbItU75wc0jIVoshCNbce/5TiPJSZx88sm/HSj/ahxi458TByT1/bX9Ev+aU5VrmIW2
-	h/dhYvauCK0+znOIdH/toqj8oblsz4YIthLxeoPQSrDl6GYaJmiVtXtMC64mz1BQwtoGjn
-	K5MPk2Mmx6ch40Ps0gLrpjTlN1Ga6l0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750340661;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vE+0s1lYm1T1NM1GtVBjtDn0WvdG3ES0gUD74JCiFFQ=;
-	b=kT0eqKZ8zp5/OzMh807JMbpUuyfp3cocR+zLwIPAIjwpnpubNcq0kXG7LnXKEGkGEIPU/i
-	fINr4FWBxCOnSQDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=meJEbItU;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kT0eqKZ8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750340661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vE+0s1lYm1T1NM1GtVBjtDn0WvdG3ES0gUD74JCiFFQ=;
-	b=meJEbItU75wc0jIVoshCNbce/5TiPJSZx88sm/HSj/ahxi458TByT1/bX9Ev+aU5VrmIW2
-	h/dhYvauCK0+znOIdH/toqj8oblsz4YIthLxeoPQSrDl6GYaJmiVtXtMC64mz1BQwtoGjn
-	K5MPk2Mmx6ch40Ps0gLrpjTlN1Ga6l0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750340661;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vE+0s1lYm1T1NM1GtVBjtDn0WvdG3ES0gUD74JCiFFQ=;
-	b=kT0eqKZ8zp5/OzMh807JMbpUuyfp3cocR+zLwIPAIjwpnpubNcq0kXG7LnXKEGkGEIPU/i
-	fINr4FWBxCOnSQDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8EC37136CC;
-	Thu, 19 Jun 2025 13:44:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ozIYIjUUVGgmFQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 19 Jun 2025 13:44:21 +0000
-Message-ID: <7a1d94ca-65a1-4b60-83a7-055c69d5c882@suse.cz>
-Date: Thu, 19 Jun 2025 15:44:21 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=BwTrJw1aIKWLWhPL7hkRrv+k7V3BORW1xhuRqepCnuE=;
+	b=fSSdJKaXSelG6mdkjdxYJvyV19kSvEA8j+wU+LPIxFtHrN3DJFAeyTGNICtcCMaf38cqj2
+	0FdxMplY0Ih8hSxMpn8gvrpeJU11+X81dTtowSBpCIQinHc5d5kivEWzyi3QGe1ebCOnd/
+	HT9pn3lPjuyNzn6g9eosAudPyu2/CVo=
+Received: from mail-ua1-f69.google.com (mail-ua1-f69.google.com
+ [209.85.222.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-400-eAJ4OD7BPwaWMsJlK0p7Zg-1; Thu, 19 Jun 2025 09:45:16 -0400
+X-MC-Unique: eAJ4OD7BPwaWMsJlK0p7Zg-1
+X-Mimecast-MFC-AGG-ID: eAJ4OD7BPwaWMsJlK0p7Zg_1750340716
+Received: by mail-ua1-f69.google.com with SMTP id a1e0cc1a2514c-87ed30e2375so602243241.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 06:45:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750340716; x=1750945516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BwTrJw1aIKWLWhPL7hkRrv+k7V3BORW1xhuRqepCnuE=;
+        b=Vn9NRQ39VDrpzj8UAtjO0tW7rT0a+YgBEf9D2C0J4u5V4kJKvsfx/NOTbr1lVhEM7w
+         P9A1R1y2/FAWZqaFHO2OlDQVxnO78Pi2MODbJnHU6FsDSrcH1AAXzYHuxXYwOi9rOnxV
+         ObW3DooIQW6TgPOrmQ6Yf/UFNNo473v6bdMiD9ypGCx6UxHZPRgSs+vk/4/MI6sCGHT2
+         sGIgxw7VjydgTouCPCpmjl1xifE+xxuFyvKM9+rjX6ioINDM5ExQjlhgeXhA48fcWL7O
+         LeYuNSlUcsZfhdAIW8LNzUW1HcqYrR3bZlMQz6LIwFG2nh3Ikbg+ijGk8UFGMeXxMBl0
+         9nKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcGq2x6cZGP0V9SHHEQ6Nx7Y0u5qCA6fpejz/UvErgybBCqLxwwm4ZYUrzEef5i2lQQjCS8sStyZHQTcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2GbELIasrX1G5kiGDN/mOTB0LOMe2jYIn35b3irkSOPm4JQFe
+	cjtkJn/zWZcxam7LxAkwzuUGptWy20lss5ekTzdpRGTmIZGwAViVl7N1yAfgLlC+To3Qb5IhdY4
+	8uzN5Yfz0bIc9CRVh3h9vbyosai+nLa0e1yaQs8WNuwiJMXTiIfojyrKdBuBmLFzlA0lkCdeHzj
+	rH1opYnGapGscesUMDMzD+Ych58cwLKa6C3TLsnjGK
+X-Gm-Gg: ASbGncv2fzkpQywyUI/vdxAzBgJhtbjjzb2lAtpwyX4qZwb2m9jnPIJI5v7IDkvE6jV
+	8WW8OBJ20UEtNmXLNpWlkrhD4i4Qh9q7mGEnYTRxcCvOPL4uUGxCwdgATjCm1x+UhN+Q28YG7nb
+	JU9GYb
+X-Received: by 2002:a05:6102:6e8e:b0:4e9:a2bd:b455 with SMTP id ada2fe7eead31-4e9a2bdbeb0mr2666478137.14.1750340715919;
+        Thu, 19 Jun 2025 06:45:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhBhDEmG8kgdedUyWcBo/afrnkPcHMX3xV98VYGKv01zNwJBXjRnQ23jwDWA/8nMPj2ssed3gKKtx9K+N4puU=
+X-Received: by 2002:a05:6102:6e8e:b0:4e9:a2bd:b455 with SMTP id
+ ada2fe7eead31-4e9a2bdbeb0mr2666460137.14.1750340715581; Thu, 19 Jun 2025
+ 06:45:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vma: use vmg->target to specify target VMA for new VMA
- merge
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Kees Cook <kees@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250613184807.108089-1-lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250613184807.108089-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: ABB8C21197
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+References: <20250619132655.3318883-1-yukuai1@huaweicloud.com>
+In-Reply-To: <20250619132655.3318883-1-yukuai1@huaweicloud.com>
+From: Ming Lei <ming.lei@redhat.com>
+Date: Thu, 19 Jun 2025 21:45:04 +0800
+X-Gm-Features: Ac12FXyEcJkNVX0Embyg5cUBG6nnv5IfKErG0aKFhUHG982cYS7HYlRWJdwW6sE
+Message-ID: <CAFj5m9JBoY1ZPQ5oYh2RwMN9o_HEOofCge1LLPF1_Oh8AdP=Aw@mail.gmail.com>
+Subject: Re: [PATCH v2] lib/group_cpus: fix NULL pointer dereference from group_cpus_evenly()
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: tglx@linutronix.de, akpm@linux-foundation.org, john.g.garry@oracle.com, 
+	axboe@kernel.dk, linux-kernel@vger.kernel.org, yukuai3@huawei.com, 
+	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/13/25 20:48, Lorenzo Stoakes wrote:
-> In commit 3a75ccba047b ("mm: simplify vma merge structure and expand
-> comments") we introduced the vmg->target field to make the merging of
-> existing VMAs simpler - clarifying precisely which VMA would eventually
-> become the merged VMA once the merge operation was complete.
-> 
-> New VMA merging did not get quite the same treatment, retaining the rather
-> confusing convention of storing the target VMA in vmg->middle.
-> 
-> This patch corrects this state of affairs, utilising vmg->target for this
-> purpose for both vma_merge_new_range() and also for vma_expand().
-> 
-> We retain the WARN_ON for vmg->middle being specified in
-> vma_merge_new_range() as doing so would make no sense, but add an
-> additional debug assert for setting vmg->target.
-> 
-> This patch additionally updates VMA userland testing to account for this
-> change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Nit below:
-
-> @@ -1086,27 +1087,29 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
->   * @vmg: Describes a VMA expansion operation.
->   *
->   * Expand @vma to vmg->start and vmg->end.  Can expand off the start and end.
-> - * Will expand over vmg->next if it's different from vmg->middle and vmg->end ==
-> - * vmg->next->vm_end.  Checking if the vmg->middle can expand and merge with
-> + * Will expand over vmg->next if it's different from vmg->target and vmg->end ==
-> + * vmg->next->vm_end.  Checking if the vmg->target can expand and merge with
->   * vmg->next needs to be handled by the caller.
->   *
->   * Returns: 0 on success.
->   *
->   * ASSUMPTIONS:
-> - * - The caller must hold a WRITE lock on vmg->middle->mm->mmap_lock.
-> - * - The caller must have set @vmg->middle and @vmg->next.
-> + * - The caller must hold a WRITE lock on vmg->target->mm->mmap_lock.
-
-The assert uses vmg->mm so maybe the comment should do the same? (IIRC mm
-was added only later to vmg?)
-
-> + * - The caller must have set @vmg->target and @vmg->next.
->   */
->  int vma_expand(struct vma_merge_struct *vmg)
->  {
->  	struct vm_area_struct *anon_dup = NULL;
->  	bool remove_next = false;
-> -	struct vm_area_struct *middle = vmg->middle;
-> +	struct vm_area_struct *target = vmg->target;
->  	struct vm_area_struct *next = vmg->next;
-> 
-> +	VM_WARN_ON_VMG(!target, vmg);
+On Thu, Jun 19, 2025 at 9:33=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> While testing null_blk with configfs, echo 0 > poll_queues will trigger
+> following panic:
+>
+> BUG: kernel NULL pointer dereference, address: 0000000000000010
+> Oops: Oops: 0000 [#1] SMP NOPTI
+> CPU: 27 UID: 0 PID: 920 Comm: bash Not tainted 6.15.0-02023-gadbdb95c8696=
+-dirty #1238 PREEMPT(undef)
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.1-2.fc37=
+ 04/01/2014
+> RIP: 0010:__bitmap_or+0x48/0x70
+> Call Trace:
+>  <TASK>
+>  __group_cpus_evenly+0x822/0x8c0
+>  group_cpus_evenly+0x2d9/0x490
+>  blk_mq_map_queues+0x1e/0x110
+>  null_map_queues+0xc9/0x170 [null_blk]
+>  blk_mq_update_queue_map+0xdb/0x160
+>  blk_mq_update_nr_hw_queues+0x22b/0x560
+>  nullb_update_nr_hw_queues+0x71/0xf0 [null_blk]
+>  nullb_device_poll_queues_store+0xa4/0x130 [null_blk]
+>  configfs_write_iter+0x109/0x1d0
+>  vfs_write+0x26e/0x6f0
+>  ksys_write+0x79/0x180
+>  __x64_sys_write+0x1d/0x30
+>  x64_sys_call+0x45c4/0x45f0
+>  do_syscall_64+0xa5/0x240
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>
+> Root cause is that numgrps is set to 0, and ZERO_SIZE_PTR is returned
+> from kcalloc(), then __group_cpus_evenly() will deference the
+> ZERO_SIZE_PTR.
+>
+> Fix the problem by checking numgrps first in group_cpus_evenly(), and
+> return NULL directly if numgrps is zero.
+>
+> Fixes: 6a6dcae8f486 ("blk-mq: Build default queue map via group_cpus_even=
+ly()")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+> Changes in v2:
+>  - check numgrps directly.
+>
+>  lib/group_cpus.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> index ee272c4cefcc..d68407e3601e 100644
+> --- a/lib/group_cpus.c
+> +++ b/lib/group_cpus.c
+> @@ -352,6 +352,9 @@ struct cpumask *group_cpus_evenly(unsigned int numgrp=
+s)
+>         int ret =3D -ENOMEM;
+>         struct cpumask *masks =3D NULL;
+>
+> +       if (numgrps =3D=3D 0)
+> +               return NULL;
 > +
->  	mmap_assert_write_locked(vmg->mm);
-> 
-> -	vma_start_write(middle);
-> -	if (next && (middle != next) && (vmg->end == next->vm_end)) {
-> +	vma_start_write(target);
-> +	if (next && (target != next) && (vmg->end == next->vm_end)) {
->  		int ret;
-> 
->  		remove_next = true;
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thanks,
+
