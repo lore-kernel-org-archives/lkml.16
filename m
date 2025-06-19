@@ -1,75 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13A323E33D;
-	Thu, 19 Jun 2025 12:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866C023D2BC
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750337026; cv=none; b=ULZgAN5BrjJRVVdJY5s3yeB2Euwap+i7eTmgeQV1JyxNktag64/XIw9faSRXRnakBpIHPgGE4MPwcDkprN7etxXYPkvIlX5w2QUCy7GwgE36zEMI4PEkxUBD0vprkdfPKJW8HfP1p8cLMJjr6tPHuqZIL/trY0Cheuw5z4cBtJ8=
+	t=1750337033; cv=none; b=RkCNSwx5asisc3CKCT/t5rDn2bILjPfZEjPNadY4d/v9/cmQgm4OeWkv3IKxyYKhVdjJPqgoXZQKG9MFNt9Kuf6vnp2a1zZ/KyUs3ObFkIYaDC00BPXjfDvs45CmwHpfPOpu93VsA/acJKi+tR6e+17GzDte3pPxVeXJJLLn6T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750337026; c=relaxed/simple;
-	bh=3Q+26Gs812PgxPgZQayKZD7t0zCaR+Hv4tK2DXS1a68=;
+	s=arc-20240116; t=1750337033; c=relaxed/simple;
+	bh=6VrA574brT6VW/4UkR55B+2t41g9GvZgzDG0MC8lqW0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MYiDfRMZsVbqI6ek3ofRTlJbkxo0x+/RbNZZ430aygtFOwREO5QhHJjm/2Rmz9ieCvoSNvCbfIoVDyxyAVVk3Y87jiaDXk0WL2Os3Xweiza0iKUL6yMePP6/P/fvZLqMGcmmXStcJOM7AzhlSJojEpquZaYrGuz4O5HNC7xt6TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTMaFr/R; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=f94dwnxY0WXElMCMiCDnhuoxIOSP/oBWKZIhXYSFy7ObpOhgMk7kcZi8CPiNmNqIIS1c+DZtI54RgZ4MP0qT1QnnO57DZTeoo//4uroVc08IQ84vTv0OO8eqH8+guW7onlFCe0gOyniLKAVugYdBQAOfGzyDFdqic6H4q3K+Zvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I/Q1/tW9; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTMaFr/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E556C4CEEA;
-	Thu, 19 Jun 2025 12:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750337025;
-	bh=3Q+26Gs812PgxPgZQayKZD7t0zCaR+Hv4tK2DXS1a68=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FTMaFr/RkKfNt3SsQugX9H8NpQbmRPK6hfgkqg7QHHDskTKeblhFbfcc70sa19EtC
-	 eMaWuFJhNXGQhi4QQlt5yvae6oba9s7Tlv9rpxbm8y/ebp/X75PoFGSAIuL2N4PSsy
-	 /dMIsXaMn/Y6EWaIYuHkjU/MVPkeDDvR2jo5iN57CW4DuNmPg07Bhyt3UkUG+OGlPI
-	 uxtZQY+cNtgIzTFt7JLJi5zF92ss58KtV3XJLiEphuMvTIAe2tPQKPOcZAuynOCJVQ
-	 yaYqnxRy9FEpoMbBov5XK+2lQ0/1Zf+UiKFQNOZBWLMJ/qsY3u/rTWLBi/3mvxp3Ct
-	 SqWlgChbCcr0w==
-Message-ID: <3c3725cb-9c00-46b4-8947-4263ddc293ae@kernel.org>
-Date: Thu, 19 Jun 2025 14:43:38 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I/Q1/tW9"
+Message-ID: <6735a940-bce8-43f5-a6d7-7a48ace197c8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750337019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=88IeTx3F+Ru63iJfLhr9wYINj1DkxKZKk7DiEWTICcw=;
+	b=I/Q1/tW9NmVAli9fK97FXdwi9um9a5ePp3DzfxcTOgIiIaRm3KVi4eKOcHQmlEsE2SSas6
+	xWEE0ZVi+UrtKvHxP3GfsUSP89LWKtK3bVXi2ILF4wdjxvvXYUFUB2hsiapeswu7k39Kxb
+	MxtirJ1a9+m24g+W2b8WVPMYKOltQk8=
+Date: Thu, 19 Jun 2025 13:43:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 23/23] gpu: nova-core: load and run FWSEC-FRTS
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Benno Lossin <lossin@kernel.org>, John Hubbard <jhubbard@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
- Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- Lyude Paul <lyude@redhat.com>
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-23-14ba7eaf166b@nvidia.com>
- <aFMgLDfNKWPsSoD1@cassiopeiae> <aFMgiYzDXwHXVn8X@cassiopeiae>
- <DAQIIXV4SHGV.11VXZCUNADMX9@nvidia.com>
-From: Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [net-next, 03/10] bng_en: Add firmware communication mechanism
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+ vsrama-krishna.nemani@broadcom.com,
+ Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+ Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+ <20250618144743.843815-4-vikas.gupta@broadcom.com>
 Content-Language: en-US
-In-Reply-To: <DAQIIXV4SHGV.11VXZCUNADMX9@nvidia.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250618144743.843815-4-vikas.gupta@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+
+On 18/06/2025 15:47, Vikas Gupta wrote:
+> Add support to communicate with the firmware.
+> Future patches will use these functions to send the
+> messages to the firmware.
+> Functions support allocating request/response buffers
+> to send a particular command. Each command has certain
+> timeout value to which the driver waits for response from
+> the firmware. In error case, commands may be either timed
+> out waiting on response from the firmware or may return
+> a specific error code.
+> 
+> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
+> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+> ---
+>   drivers/net/ethernet/broadcom/bnge/Makefile   |   3 +-
+>   drivers/net/ethernet/broadcom/bnge/bnge.h     |  13 +
+>   .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 503 ++++++++++++++++++
+>   .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 107 ++++
+>   4 files changed, 625 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
+>   create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+> 
+> diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
+> index e021a14d2fa0..b296d7de56ce 100644
+> --- a/drivers/net/ethernet/broadcom/bnge/Makefile
+> +++ b/drivers/net/ethernet/broadcom/bnge/Makefile
+> @@ -3,4 +3,5 @@
+>   obj-$(CONFIG_BNGE) += bng_en.o
+>   
+>   bng_en-y := bnge_core.o \
+> -	    bnge_devlink.o
+> +	    bnge_devlink.o \
+> +	    bnge_hwrm.o
+> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
+> index 19d85aabab4e..8f2a562d9ae2 100644
+> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
+> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
+> @@ -13,6 +13,8 @@ enum board_idx {
+>   	BCM57708,
+>   };
+>   
+> +#define INVALID_HW_RING_ID      ((u16)-1)
+> +
+>   struct bnge_dev {
+>   	struct device	*dev;
+>   	struct pci_dev	*pdev;
+> @@ -22,6 +24,17 @@ struct bnge_dev {
+>   	char		board_serialno[BNGE_VPD_FLD_LEN];
+>   
+>   	void __iomem	*bar0;
+> +
+> +	/* HWRM members */
+> +	u16			hwrm_cmd_seq;
+> +	u16			hwrm_cmd_kong_seq;
+> +	struct dma_pool		*hwrm_dma_pool;
+> +	struct hlist_head	hwrm_pending_list;
+> +	u16			hwrm_max_req_len;
+> +	u16			hwrm_max_ext_req_len;
+> +	unsigned int		hwrm_cmd_timeout;
+> +	unsigned int		hwrm_cmd_max_timeout;
+> +	struct mutex		hwrm_cmd_lock;	/* serialize hwrm messages */
+>   };
+
+It's all looks pretty similar to what is used in bnxt driver. Why do you
+duplicate the code rather then reusing (and improving) the existing one?
+
+I didn't look carefully, but in case it's impossible to merge hwrm code
+from bnxt, you have to make function names prepended with bnge prefix...
 
 
 
-On 6/19/25 2:35 PM, Alexandre Courbot wrote:
-> All of this code is going to be moved out of `Gpu::new()` eventually
-> (i.e. the follow-up patchset), but we are still figuring out where it
-> will eventually land. We will need some other entity to manage the GSP
-> boot (GspBooter?), and I am still learning which parts are common to all
-> GPU families and which ones should be a HAL. So for now I'd rather keep
-> it here, modulo the part that can be moved into `FwsecFirmware`.
-
-Seems reasonable, let's move it to a separate function in the meantime and add a
-very brief TODO please.
