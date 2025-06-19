@@ -1,258 +1,97 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5753A227B83
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84CD1AA782;
+	Thu, 19 Jun 2025 14:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344200; cv=none; b=ctaSV61g/8WeR37RWaJlwzIYNVe4OK/FG0vVaKNI9L44i2hhXkDyFeYm24gT0VWGb0VsO6yeo9GAio+ju4FJMK3VErv+l9kCM0Zd+fePAtVhF9PX/D/l//AcU9iapONOB5iaGvS5h4eJV6bmjJhcorGVUkS7bIj9MAwig1cBtG8=
+	t=1750344243; cv=none; b=EMR3TrEA2Ycayzv1G1Jq/MBqjQzLpiE8qg/nGh/9ZQtU3ahraSkj9e2dbdUVNVXcH+aveC9BjVPn2XGVVASy4c+gte7yULLDMkuORmBKHUq7x2HZhOyteEC2FO5WOJF3Yg/B4pIJmq2HXJhAwVQ4o/WjuTG+klfhpXs33+r1VDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344200; c=relaxed/simple;
-	bh=BDrXN8cEKhWfXlTshh+iy/iDJNY5nWZhoBV77lo3Y/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMm0XV4RwptvUJjiPtznl0Ljf2VDn5FZlJ79iezjBBEQIuSS0O4ivZO3zCAuq8DHViomnRDXw3rAboZIziKjnpxKXWmIrR6558iJBW56o43VKSmG7oPMb7/d3N70VfPxTT3H/faRGTpwGLV3ry6hE6r1O1GU4ZCVIf8DaxaI96Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=taUDo0WC; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750344243; c=relaxed/simple;
+	bh=EU+XZK6yKZ4HAAQfL3WDI5g1SxC9aDlSQj1P0yXxHEg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SzGAJLkqneSAVFzjmMXkt4tevLzKNn9Q7AjsZkLxQ0nKx+wZJl/YsE/qYLVMcuM03MkinOCix4BMiaema5vcs8PIVslnpUmiCOKqAFK6Y3JzHnN1wUFxtweQCzOjwi+prVUM7Tha4PbxpqADhe26K2QdPjaOGnCXHAgDGIkl6bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC/8uKxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="taUDo0WC"
-Date: Thu, 19 Jun 2025 22:43:01 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750344196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9KW3ogTMNpUoc7AGxHr/wt079K5mnLuDr9bP8sPDr+Q=;
-	b=taUDo0WCH+TRlje236wmJXC0Smz+GART3fNhfyLkDplSN+xn3qokccye0V4OZb/ro1T7PW
-	Vz7h/PVoC1EY+nNKOsmJk2/xYaejOkKoqbZKInuVOmzOh1n36GfGbWYkPDYbVkKP0G9vYF
-	HYubp3NDCeyz0tiqlEjnFb7dpwnlmZg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dawei Li <dawei.li@linux.dev>
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com, dawei.li@linux.dev
-Subject: Re: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-Message-ID: <20250619144301.GA9575@wendao-VirtualBox>
-References: <20250609151531.22621-1-dawei.li@linux.dev>
- <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC/8uKxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11EA3C4CEEA;
+	Thu, 19 Jun 2025 14:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750344243;
+	bh=EU+XZK6yKZ4HAAQfL3WDI5g1SxC9aDlSQj1P0yXxHEg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=DC/8uKxn9E77vM4Ll9/l99dtI4pdCWQ0kvWoAT3Cc4h01/cVr0tSqAnsebmA/O5y2
+	 XUXEITCJ9os4cna5QK6hfN3wkDgJmaBvHt/9oOy7nY5dNvf6R7Q+ZMLucann5D3JXn
+	 oUlK2ZZIZfW49rGlWAPKstrSlU9bdINI/V0/H2eu9qc5YBDZZjmHvqKiSLxoXG7EMh
+	 WwFliXme6Fp6fmOEazDCgax0AeIfrlLWsQ+zHg4esdQAaZLDQmIXiayTkCOnOrEtjx
+	 PxqtU7U4E6ICvMHFsOJa7LgXoX/MEf5LFBfXf84VqZrkYHDX11du6eX88Mvxl9L3W0
+	 McDXtKYhoG6tQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 19 Jun 2025 16:43:58 +0200
+Message-Id: <DAQL8YH3LDKW.341ZTFFLTTUA2@kernel.org>
+Cc: <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
+ <boqun.feng@gmail.com>, <longman@redhat.com>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dakr@kernel.org>, <thatslyude@gmail.com>
+Subject: Re: [PATCH V3] implement `ww_mutex` abstraction for the Rust tree
+From: "Benno Lossin" <lossin@kernel.org>
+To: =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250619140656.498-1-work@onurozkan.dev>
+In-Reply-To: <20250619140656.498-1-work@onurozkan.dev>
 
-Hi Arnaud, 
-Thanks for review.
+On Thu Jun 19, 2025 at 4:06 PM CEST, Onur =C3=96zkan wrote:
+> From: onur-ozkan <work@onurozkan.dev>
+>
+> Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enable
+> deadlock-free acquisition of multiple related locks.
+>
+> The implementation abstracts `ww_mutex.h` header and wraps the existing
+> C `ww_mutex` with three main types:
+>     - `WwClass` for grouping related mutexes
+>     - `WwAcquireCtx` for tracking lock acquisition context
+>     - `WwMutex<T>` for the actual lock
+>
+> Some of the kernel's `ww_mutex` functions are implemented as `static inli=
+ne`,
+> so they are inaccessible from Rust as bindgen can't generate code on them=
+.
+> The `rust/helpers/ww_mutex.c` file provides C function wrappers around th=
+ese inline
+> implementations, so bindgen can see them and generate the corresponding R=
+ust code.
 
-On Wed, Jun 18, 2025 at 03:07:36PM +0200, Arnaud POULIQUEN wrote:
-> Hello Dawei,
-> 
-> 
-> Please find a few comments below. It is not clear to me which parts of your
-> implementation are mandatory and which are optional "nice-to-have" optimizations.
+I don't know the design of `struct ww_mutex`, but from the code below I
+gathered that it has some special error return values that signify that
+one should release other locks.
 
-It's more like an improvement.
+Did anyone think about making a more Rusty API that would allow one to
+try to lock multiple mutexes at the same time (in a specified order) and
+if it fails, it would do the resetting automatically?
 
-> 
-> Based on (potentially erroneous) hypothesis, you will find a suggestion for an
-> alternative to the anonymous inode approach, which does not seem to be a common
-> interface.
+---
+Cheers,
+Benno
 
-AFAIC, annoymous inode is a common interface and used extensivly in kernel development.
-Some examples below.
-
-> 
-> 
-> On 6/9/25 17:15, Dawei Li wrote:
-> > Hi,
-> > 
-> > This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
-> > for rpmsg subsystem.
-> > 
-> > Current uAPI implementation for rpmsg ctrl & char device manipulation is
-> > abstracted in procedures below:
-> > - fd = open("/dev/rpmsg_ctrlX")
-> > - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-> >   generated.
-> > - fd_ep = open("/dev/rpmsgY", O_RDWR) 
-> > - operations on fd_ep(write, read, poll ioctl)
-> > - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-> > - close(fd_ep)
-> > - close(fd)
-> > 
-> > This /dev/rpmsgY abstraction is less favorable for:
-> > - Performance issue: It's time consuming for some operations are
-> > invovled:
-> >   - Device node creation.
-> >     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-> >     overhead is based on coordination between DEVTMPFS and userspace
-> >     tools such as udev and mdev.
-> > 
-> >   - Extra kernel-space switch cost.
-> > 
-> >   - Other major costs brought by heavy-weight logic like device_add().
-> 
-> Is this a blocker of just optimization?
-
-Yep, performance is one of motivations of this change.
-
-> 
-> > 
-> > - /dev/rpmsgY node can be opened only once. It doesn't make much sense
-> >     that a dynamically created device node can be opened only once.
-> 
-> 
-> I assume this is blocker with the fact that you need to open the /dev/rpmsg<x>
-> to create the endpoint.
-
-Yes. You have to open /dev/rpmsgX which is generated by legacy ioctl to
-instantiate a new endpoint.
-
-> 
-> 
-> > 
-> > - For some container application such as docker, a client can't access
-> >   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-> >   is generated dynamically and whose existence is unknown for clients in
-> >   advance, this uAPI based on device node doesn't fit well.
-> 
-> does this could be solve in userspace parsing /sys/class/rpmsg/ directory to
-> retreive the device?
-
-Hardly, because client still can't access /dev/rpmsgX which is generated
-by host _after_ client is launched.
-
-> 
-> You could face same kind of random instantiation for serial peripherals ( UART;
-> USb, I2C,...) based on a device tree enumeration. I suppose that user space
-> use to solve this.
-> 
-> > 
-> > An anonymous inode based approach is introduced to address the issues above.
-> > Rather than generating device node and opening it, rpmsg code just creates
-> > an anonymous inode representing eptdev and return the fd to userspace.
-> 
-> A drawback is that you need to share fb passed between processes.
-
-Fd is the abstraction of an unique endpoint device, it holds true for
-both legacy and new approach.
-
-So I guess what you mean is that /dev/rpmsgX is global to all so other process
-can access it?
-
-But /dev/rpmsgX is designed to be opened only once, it's implemented as
-singleton pattern.
-
-static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-{
-...
-        if (eptdev->ept) {
-                mutex_unlock(&eptdev->ept_lock);
-                return -EBUSY;
-        }
-...
-        eptdev->ept = ept;
-...
-}
-
-[...]
- 
-> > 	printf("loop[%d]\n", loop);
-> > 
-> > 	gettimeofday(&start, NULL);
-> > 
-> > 	while (loop--) {
-> 
-> Do you need to create /close Endpoint sevral times in your real use case with
-> high timing
-> constraint?
-
-No, it's just a silly benchmark demo, large sample reduces noise statistically.
-
-> 
-> > 		fd_info.fd = -1;
-> > 		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
-> > 		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
-> > 		if (ret < 0 || fd_info.fd < 0) {
-> > 			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
-> > 		}
-> > 
-> 
-> 
-> > 		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-> > 		if (ret < 0) {
-> > 			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
-> > 		}
-> > 
-> > 		close(fd_info.fd);
-> 
-> It seems strange to me to use ioctl() for opening and close() for closing, from
-> a symmetry point of view.
-
-Sorry to hear that. But no, it's a pretty normal skill in kernel codebase
-, I had to copy some examples from reply to other reviewer[1].
-
-anon_inode_get_{fd,file} are used extensively in kernel for returning a new
-fd to userspace which is associated with an unique data structure in kernel
-space, in different ways:
-
-- via ioctl(), some examples are:
-
- - KVM ioctl(s)
-   - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
-   - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
-   - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
-   - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm
-
- - DMA buf/fence/sync ioctls
-   - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
-   - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
-   - Couples of driver implement DMA buf by using anon file _implicitly_:
-     - UDMABUF_CREATE -> udmabuf_ioctl_create
-     - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
-
- - gpiolib ioctls:
-   - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
-   - GPIO_V2_GET_LINE_IOCTL
-
- -  IOMMUFD ioctls:
-
- -  VFIO Ioctls:
-
- - ....
-
-
-- via other specific syscalls:
- - epoll_create1
- - bpf
- - perf_event_open
- - inotify_init
- - ...
-
-[1] https://lore.kernel.org/all/20250530125008.GA5355@wendao-VirtualBox/
-
-> 
-> Regarding your implementation, I wonder if we could keep the /dev/rpmsg<x>
-> device with specific open() and close() file operations associated with your new
-> ioctl.
-> 
-> - The ioctl would create the endpoint.
-> - The open() and close() operations would simply manage the file descriptor and
-> increment/decrement a counter to prevent premature endpoint destruction.
-> 
-> 
-> Regards,
-> Arnaud
-> 
-
-[...]
-
-Thanks,
-
-	Dawei
+> Link: https://rust-for-linux.zulipchat.com/#narrow/channel/291566-Library=
+/topic/Writing.20up.20wrappers.20for.20ww_mutex.3F/with/524269974
+> Suggested-by: thatslyude@gmail.com
+> Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
+> ---
+>  rust/helpers/helpers.c            |   1 +
+>  rust/helpers/ww_mutex.c           |  39 +++
+>  rust/kernel/error.rs              |   1 +
+>  rust/kernel/sync/lock.rs          |   1 +
+>  rust/kernel/sync/lock/ww_mutex.rs | 556 ++++++++++++++++++++++++++++++
+>  5 files changed, 598 insertions(+)
+>  create mode 100644 rust/helpers/ww_mutex.c
+>  create mode 100644 rust/kernel/sync/lock/ww_mutex.rs
