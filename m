@@ -1,65 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D30121B9C3;
-	Thu, 19 Jun 2025 10:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4947C221725;
+	Thu, 19 Jun 2025 10:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750328404; cv=none; b=ikf4jMth9TdaQ80T4r7qztM1aXZm5KVpeqmFl5ogfi88kWL+RHEQRI0+KN9Gld6/KNN5bDJfB1R17+XIuH6fF5urqTFpAZa90j74oaeTVmfy2oJNjtaNqMtzpgtT1KHV8CGgJ/Gmo8xWL3cOAPJp1b4LRYa7ckT4H0/EMmTJy4E=
+	t=1750328427; cv=none; b=oskUDEaImYQWiotWEU9nmSITPT7nCVj5eW4Z82qtM+hHX88BGTzGMvLoHdyZIQ0hfCq13tzl7PAk+jvFfL8vAO5xY/9dPXXVTq0KWdaP3rF/9S4ibDWnugbCIa1H5ch+2sVERwf5lqh/krTjSTRljQpaQYOiDJwjiOGLMVm6lQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750328404; c=relaxed/simple;
-	bh=/xxxdOXxClv+4BlH6eXnvPuhgcqk/6z8rlUMU8yyyJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rv6zqVbGWUhIItQ10xRuQZLf1MxlS2lV3ChZSSv5yYnufCSAIV6tgmn5Ym9YKGKI4zRuxOf/HQnP+4UeKWgDA56RnCk41vByPWLGOSHzikt49xT4GQ47xXPmyzNDG9jja1Kr0oP+/0gM2mXLgGVwNX5kLwy+0/2M/rnfz3R1XRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HucUzwXD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750328427; c=relaxed/simple;
+	bh=0DgFTAL6mz9/5mlr4eRewZuvWWgktHbE0dCpfKYuO5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cSCpnGDemti175qkTtzJ6qCImj0cbiWSwb0fGk4u+XVsqv+UZgJux4kxmMGlQ1UzJbQQb6ll3MXF0rwWXvzAQrPtTWI4Sa4J+n5eVLqYXCbkzJJvPaHq3+jAZEPjb9zj4bnhhAm0NKy6NLqtXS366ioQdZoL4OhWGbcz0yIvcXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HfGQfc7m; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HucUzwXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A7EC4CEED;
-	Thu, 19 Jun 2025 10:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750328404;
-	bh=/xxxdOXxClv+4BlH6eXnvPuhgcqk/6z8rlUMU8yyyJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HucUzwXDrAJOTLh0mIepk0Fovd/rehk1tTA/bZpmFBxAL5M2v9eewhUDCQy5rtBZG
-	 jjRdVo6fKh70vGIWDSsvJcuJKGWzZj6B2lzS6twwxr6ZbLpKRvpLddVGQOB1M6LCuu
-	 HYSp3fxN+TIwbc6Vzknhm3GphuOlxx9e1rOxXuJXIb5gpQWSguP34RDTz6THjUrwCF
-	 KzM86t8VanCyjG5H7WyOwIxTr7I8/6HD0NB+km9pysrWFP9pzymJ9wUwEJz7p/4WJN
-	 r7+4akkwqp+gsMPP52boiQQLRrERbO/caxHWhG3aJO7wzn/SsaXxDsrTESEQmgl4OM
-	 is2trKMcE3N7w==
-Date: Thu, 19 Jun 2025 11:20:00 +0100
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	jv@jvosburgh.ne, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, gustavold@gmail.com
-Subject: Re: [PATCH 3/3] netpoll: Extract IPv6 address retrieval function
-Message-ID: <20250619102000.GG1699@horms.kernel.org>
-References: <20250618-netpoll_ip_ref-v1-0-c2ac00fe558f@debian.org>
- <20250618-netpoll_ip_ref-v1-3-c2ac00fe558f@debian.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HfGQfc7m"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J5wNNY002625;
+	Thu, 19 Jun 2025 10:20:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FIwbK4fsuTi2Ekg9nbMkJqw3FQ1RBeyBosd/m9t3QZI=; b=HfGQfc7m3b++WjVf
+	hHM5n6UFF51uDG5oD7ScfITiITd3h2hVtuOqOfehHJINXh/o3GmzeqgpQ4lh9aXW
+	v4697Dixc0TD74BtYoYsPUwJWrsA1Xz7afkFjcAK1DR464VdHebX+SKhhsLXfLUz
+	16M6AW2J3y10zWp1ugfiehCXWyjj/w0loqZdwiYm0KpeVm0CxJO0hwlH+ijYils4
+	rI9Nwpnk2j8wpnBKKrTZ/Gmi7njrAv+MjyeTlYma8QRIxaxGejbWPP0t/VDCc17W
+	Wd1U0ypCmXb2Y+BnuQbR0FYtNI6Zz6biYl6/vsZLvkE1BRqyMkfWNNEcBDHnGDCI
+	wliEjQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hd7p88-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Jun 2025 10:20:18 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55JAKImX007362
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Jun 2025 10:20:18 GMT
+Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Jun
+ 2025 03:20:11 -0700
+Message-ID: <5ed72663-da54-46a4-8f44-1ceda4a7d0d9@quicinc.com>
+Date: Thu, 19 Jun 2025 15:50:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-netpoll_ip_ref-v1-3-c2ac00fe558f@debian.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: clock: qcom,sm8450-videocc: Add minItems
+ property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Satya Priya
+ Kakitapalli" <quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>
+References: <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-0-02e83aeba280@quicinc.com>
+ <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-1-02e83aeba280@quicinc.com>
+ <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDA4NyBTYWx0ZWRfX/trn2uyXOjTc
+ 4IeRI9Cdlx3pU/HuRaOht29drWcPFBCK3gbknQh8urk0Ew7+NgFscoWuUZgq23RxvoLmVyEF4rU
+ Ijlfq49ZrttjTaRu5vCEMweP5D2tpT2mMxXrrG5Qy6Sqs75rkkwjy6gXWcBeePwb02CNtPGoVF3
+ SsJXdxJR/tmWVs5mHrq9Xv2kFp0Vo3r8ZvcGFrBXkor4JMPxWSW75vv9jcKncxnkpJvuWmaAzax
+ zkMW6pHohJey/V4ZUXRhi8XD6BlHnksoLfcT3hlfiFkoNeJGiL5x50e2GN/j4k63Ca03G5WJ1Bm
+ 0q51pPjJIIXY+/XLUrVq0AvTrgHkBQqKCFzQARbkrjaaEYlJ3EZhO/iGqHJZ0k9d5C4ETKyWFMZ
+ QpJ7zNTTklqw49wvQzdHy9ZNc7YxW8lhE2AZkdCogktAh8dtYbiJUusHNTy28rRj5qpjiVEv
+X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=6853e462 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=cLWHS4kKuHwVDwOVLkgA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: GAUMW2cVFg-9ItYRwUoI_TkgEoHvKSCw
+X-Proofpoint-GUID: GAUMW2cVFg-9ItYRwUoI_TkgEoHvKSCw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_03,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506190087
 
-On Wed, Jun 18, 2025 at 02:32:47AM -0700, Breno Leitao wrote:
-> Extract the IPv6 address retrieval logic from netpoll_setup() into
-> a dedicated helper function netpoll_take_ipv6() to improve code
-> organization and readability.
+
+
+On 6/18/2025 11:56 AM, Krzysztof Kozlowski wrote:
+> On 17/06/2025 21:07, Jagadeesh Kona wrote:
+>> Add minItems as 1 for power-domains and required-opps properties
+>> to allow this binding to be compatible with both single and multiple
+>> power domains.
 > 
-> The function handles obtaining the local IPv6 address from the
-> network device, including proper address type matching between
-> local and remote addresses (link-local vs global), and includes
-> appropriate error handling when IPv6 is not supported or no
-> suitable address is available.
+> This is your hardware, so you know how it works thus I expect here
+> arguments why this is correct from the hardware point of view. Without
+> this, it is impossible to judge whether this is a correct change.
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> If I overlook this now, it will be used in discussions by other qcom
+> engineers, so unfortunately you see, you need to prepare perfect commits
+> now...
+>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+These clk controllers mainly require MMCX power domain to be enabled to access
+the clock registers. But to configure the cam & video PLLs in probe, an additional
+MXC power domain also needs to be enabled.
 
+Since the initial DTS changes only added MMCX power domain, this change is required
+to be backward compatible with older DTS and avoid ABI breakage as discussed in below
+thread.
+
+https://lore.kernel.org/all/cc737a89-77e0-43bc-8766-2c8e9cce1863@quicinc.com/#t
+
+Thanks,
+Jagadeesh
+ 
+> Best regards,
+> Krzysztof
