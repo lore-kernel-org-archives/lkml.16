@@ -1,214 +1,265 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D2723716B;
-	Thu, 19 Jun 2025 15:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750347762; cv=none; b=UZQYhwTeP2f4vTpb6GNDlhDO9U1zMcMFN+GVCq9Pk18UhEfKoLHZcJ4ekQw8ch3hqeL9NMdzQc3CVXt5hSKxy6O+oytU2thrjO6A8G/L8On35jlL6qCiY1yLRbTNreX/N11LgxuwUMiAR4s8ey5q/0Y2UrIiqaHaFVW9jS8/Tm0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750347762; c=relaxed/simple;
-	bh=K75b45Z+kn0Z6yKcs1BxrZIA2ZZow4VG61YQ+eMDe90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aq3wjfo9kRy6eXRpbyU3kCOxg/UFelcaHkCOGh9jtmU5M4NnBNqQQmv0quPHCc6FzlLD6ikP3JWhQ+dxSp1/brIxBH0zbWnsr45V3I2npJnwcEzQ7nBZ/0sedDwLQuKwR4CDYIkwho1Lp3GC7R53OtLbUoyZvCPitWi3GajGTcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.0.111] (unknown [114.241.87.235])
-	by APP-05 (Coremail) with SMTP id zQCowAAnZxTZL1RoE7qwBw--.30021S2;
-	Thu, 19 Jun 2025 23:42:17 +0800 (CST)
-Message-ID: <9e5e54a9-ef90-4a87-b082-d6eb9c7468c5@iscas.ac.cn>
-Date: Thu, 19 Jun 2025 23:42:17 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D1C11712;
+	Thu, 19 Jun 2025 15:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750347994; cv=fail; b=UtsJx7V7gG2K2FmLedxKf/TPc4soBoc55ofLcnHr9LyM3raOn9oacbGssIQDEYjrukFFAHuuNYw3byo+Gmt+/wwzxJaloTs4/3wPL40xpQIkNGFvKu6MQC3m7q5jwjpYg0hv5jj1X8++12jU00lNyvA2lTusDHptTqLez3dJLwE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750347994; c=relaxed/simple;
+	bh=S7pI0ii+bb7PmFQrKdKpcQOEQuv7e5dzQSNhlf2Khbo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ujx2fddDhit9WCSlGqNtQCDQNrJKxnDMvhfOcitF+PoKQZP9q/w6CsHt7sOihBDt+P7rqv9ilO5c7fDVeCGnEgG0zQN8yr/zJyHRsB/KsJEfJQ2YAAOpagAWCDQ0asp0iXytXyZFSGBCl+R2O+Uuu040AiKBMSPlpFeZPkXynOY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s5BwCtuh; arc=fail smtp.client-ip=40.107.243.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s5BwCtuh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k7xoyqzV7W27Fiq/EbuWn89tOTQY9c54Hquqq9m4+H0qLxruKb+UyW29R1jCGp0C/gZF+mO8TvaYIjWXz51bDi3xqHZjgozWy5vWG9S9MUQOghtapxe1/9IBXKpzllOY6kaLTHMLh2+AweDHwhGBBHCdzYt2DK6lZPACEUHVSxe2OYOg7XpfiVpLxy+heFEP+ySByWxI0nkqBbDsVgGIeHwa7rlsFWPeKm4bEzno2WQR15aQjM592Jo5dqk4dhOle/o7ZRVdya99PL0tZHFcTv0qWVbdOiE7AEhLOYnc+1setnWkVujRB9+aPw6G/OaGYvyVjTua1OH3Nci4yMrH4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
+ b=b7McOTRNYAmvXJSiJG7xJoIOmbLZqNLlGoz6kMLYg3Yaf95sUbMxd5sGqYhGDJ8hLRkep342eA3D3lALk9eEt2Ya2f+YTJ4s91XxzfI3NkrXbal7J0d6YNA+JBixiYHnyPjbWHJhMh4fF6TeLjC1ZZvsW0gMLSXsr1p6giYZRGLDHoxa9JJ3DDaO4s2przHr6MX2NjbQt3ETm2FuxoIvKWyaH464PVVGNtfz/N+A+aRANXYjvksaZRxEmPLOP/2LUh4ndPRcP8fO8IOj9jthhmtK7ocsR5P18tBgIxIpBJjqnn90V29cTikLapKn6vh4fpsM3JWCOjJXVib3HfZD0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
+ b=s5BwCtuhTVB/t9op5OQ8kvR7NK8f3AFeXboaytHyqWgydqrz9Ky5is4HrDxlKN6sSSjqYJFVerT4ywdtf59Ju7WbsnRhwCUxvU7V6N8jGhcNtwbM5pIfGfX+QzTD/WX3GEzX5tzKxqlNV7mlvqHA+UhvDCQLR2cJAdIxzhItBDM=
+Received: from CH2PR05CA0056.namprd05.prod.outlook.com (2603:10b6:610:38::33)
+ by DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Thu, 19 Jun 2025 15:46:28 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:38:cafe::3) by CH2PR05CA0056.outlook.office365.com
+ (2603:10b6:610:38::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.8 via Frontend Transport; Thu,
+ 19 Jun 2025 15:46:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025 15:46:28 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 19 Jun
+ 2025 10:46:26 -0500
+From: Raju Rangoju <Raju.Rangoju@amd.com>
+To: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <lukas@wunner.de>, Raju Rangoju <Raju.Rangoju@amd.com>, Sanath S
+	<Sanath.S@amd.com>
+Subject: [PATCH] PCI: pciehp: fix circular lock dependency b/w pci_rescan_remove_lock and reset_lock
+Date: Thu, 19 Jun 2025 21:16:10 +0530
+Message-ID: <20250619154610.902892-1-Raju.Rangoju@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
- K1
-To: Alex Elder <elder@ieee.org>, Vivian Wang <wangruikang@iscas.ac.cn>,
- Yixun Lan <dlan@gentoo.org>, Guodong Xu <guodong@riscstar.com>,
- Ze Huang <huangze@whut.edu.cn>, spacemit@lists.linux.dev
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
- <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org>
-Content-Language: en-US
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAnZxTZL1RoE7qwBw--.30021S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3JF43JF4UuryDXrWxZrWfuFg_yoWxJF48pF
-	s3GFsxKrWDtr1Ik39F934xXa4rtws5AFWUJFn8Wry5Ars8WFyIqryfKw1jvFyDursayw42
-	vr43Kr95WF1qyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
-	04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|DS0PR12MB6390:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YNncCpwYIAtNK2G4iXg1U2ns3YS+V4Fwrb7xnhyZTnFRw8Wehnneq+G94ci0?=
+ =?us-ascii?Q?8f/CU4Fr03ioVWKTvxPj28249cQ4o8ZAiPwR5X+xsFcdont5EMMqGuDinewK?=
+ =?us-ascii?Q?STitj26PnRtgORw0eHXe3AbmTPWTVOzbVrKI4/YhNixVKTr2aDy4W6wvIXFS?=
+ =?us-ascii?Q?ezKOg0mADG1Cj5dGNMeHS61NUsVOY49n8C1IsFYhPH9Af8M4IpBO0o0kh39d?=
+ =?us-ascii?Q?6RcBOCExZI4Ado3mYYM5rS90zO6/i09sbH9saGPEfYFJGvneZuxyRE3HxzwP?=
+ =?us-ascii?Q?b0+76MXbWqstRhDxF9SAnoaGZrStJRqhMu09KHuIEE9S+0cuL9XECC+aLiPs?=
+ =?us-ascii?Q?amZIUFhXpLScMSsU2qmJip4TBmOJw0VOgcWlVmMcOXvB3H1J7gSLcIdv45M6?=
+ =?us-ascii?Q?rPJW1TFKhudMWwKq4YD1y6cHma2kvrni2IRp8+JRT9hDdVh5xUZUyrSX9SQK?=
+ =?us-ascii?Q?QthG3Kmj2hw9Oc1zs8CiQPQglQ815yuF6PWKAP8qCAQpO7Q+i5GfDMRmhJn9?=
+ =?us-ascii?Q?9jWyqBXDXzrnmesKxuPqTYV6CM5XJTemauENuPOJwdWOWQ/tPv3Ge6LG/DNO?=
+ =?us-ascii?Q?Avi/nOV5VnIPIv573q1rGmGa6xA4V4jqi3tD7asSUaaEJ77N4o1cRnvBqY/X?=
+ =?us-ascii?Q?+4iSdefXtNAQp+IjjYZ/My/I1dF09zvejt9ul7vKe+aOgA2KT6It0Py1993c?=
+ =?us-ascii?Q?vkmIEJsgZVN+u3WFLgGwSNtI6k3h83EwfRZ+ftNt+VGJRAMql8Fdmtb00Qga?=
+ =?us-ascii?Q?/qoO2m+3Oq/y8m+ym8vMnAR3kLvl6f4IqMbK19W+jk2jxKlpSgc+39Bn5wZX?=
+ =?us-ascii?Q?wmLjtfweoPZJaiQtWbvM/CP0Z+diYWY2f6sY+yPKdvHbBDN7yjTrV8izvBMS?=
+ =?us-ascii?Q?7KQ1Na6VhsNG395pgXjRQJ5v3HMCwelaZpB+4aUtwYsgnyZkZeHZ0v3UbGTg?=
+ =?us-ascii?Q?sBagJNAxwxlKIZsrP7zMJSms9j8YOl320cbwlvY8JCOOKdYbNyZNQqkTt5vs?=
+ =?us-ascii?Q?azD+TCjIuxDund/PEr9/nsUGqjZjrplolZZtWhzmhT9VoFtyFRwaFDia0UbM?=
+ =?us-ascii?Q?0sLAoGByzDsRi/Mk3N19R1dkHdrqW1pQ1JUIWCrxxw6Zcn0bUCnGgeEkjYj/?=
+ =?us-ascii?Q?jrJYxJaopv6glmAzts75tV3hq/p132E55ANr8BIhQ4Q/9y1A3SwGn5yMbbfN?=
+ =?us-ascii?Q?FPEn8i9HoWm/5fcUfYlinYd2PjiVx6+gZIJH0wDHULtc5y3KUMK9HcWakr3s?=
+ =?us-ascii?Q?PaZvED43SKeOJN+v9R89fTVIiADzOfsNFEsonVq+BJAbWns0GbVMVsb5Ug1h?=
+ =?us-ascii?Q?SgyK5ZwdjgCi1eUNzhYm8agPKfdOadx+c/InzXTF5BSQWh686Zkt+HOR/2NX?=
+ =?us-ascii?Q?0xjBuSsd9VJ25aa0nydVJiav79FZphxFZDo2XO2Eluq0TtlWEm8/qCh7LXMk?=
+ =?us-ascii?Q?HG7MZ6zZYmLMcI2DSZ79bHE+TRakX8NwU6/DEJlYsx3BtbbxvZsS4P0eMDQn?=
+ =?us-ascii?Q?1iM9pmDa9GuHKeI2URF7ambuGjfwEWPWlHwG?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:46:28.7658
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6390
 
-Hi Alex,
+Resolves a circular locking dependency issue between
+pci_rescan_remove_lock() and ctrl->reset_lock() in the PCI hotplug
+subsystem, specifically in the pciehp_unconfigure_device() function.
 
-Thank you for your comments on this.
+Commit f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock
+ and device_lock") introduced a change in the locking order within
+pciehp_unconfigure_device() to avoid an AB-BA deadlock between
+ctrl->reset_lock and device_lock. However, this change inadvertently
+introduced a new circular locking dependency between
+pci_rescan_remove_lock and ctrl->reset_lock, as detected by lockdep.
 
-On 6/19/25 23:11, Alex Elder wrote:
-> On 6/17/25 12:21 AM, Vivian Wang wrote:
->> The SpacemiT K1 has various static translations of DMA accesses. Add
->> these as simple-bus nodes. Devices actually using these translation will
->> be added in later patches.
->>
->> The bus names are assigned according to consensus with SpacemiT [1].
->>
->> [1] 
->> https://lore.kernel.org/all/CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com/
->
-> So what you include here very closely matches what Guodong
-> said in the message above.  Yours differs from his proposal
-> and that makes it hard to compare them.  I have a few comments
-> on that below.
->
->> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
->> ---
->> This is my concrete proposal for representing DMA translations for
->> SpacemiT K1.
->
-> It's worth acknowledging that this is derived from what Guodong
-> proposed (it's not "your" proposal in that respect).  That said,
-> yours is a more complete and "formal" RFP than what he wrote.
->
-I had thought that since the addresses were already there in vendor's DT 
-[2], and the names were provided by SpacemiT, anything other than the 
-names was "well-known information". In retrospect, I should have made 
-the chain of information of this clearer and make it explicit that this 
-was based on Guodong's note.
+The problematic sequence is as follows:
+  1. pciehp_unconfigure_device() acquires ctrl->reset_lock (read lock).
+  2. It then acquires pci_rescan_remove_lock.
+  3. Within the device removal loop, it attempts to reacquire
+     ctrl->reset_lock after releasing it for driver unbinding,
+     while still holding pci_rescan_remove_lock.
 
-So, just to be clear, the information in my proposal is based on 
-Guodong's reply [1] (link the quoted text), which I had assumed, but not 
-explicitly confirmed, was based on already addresses in SpacemiT's DT 
-and names provided by SpacemiT.
+This creates a potential for deadlock if another thread acquires the
+locks in the opposite order, as illustrated by lockdep's report.
 
-[2]: https://github.com/spacemit-com/linux-k1x/blob/k1/arch/riscv/boot/dts/spacemit/k1-x.dtsi
+To resolve this, change the locking order in pciehp_unconfigure_device()
+so that ctrl->reset_lock is released before acquiring
+pci_rescan_remove_lock and before driver unbinding. This avoids
+holding both locks at the same time and breaks the circular
+dependency. After the critical section, ctrl->reset_lock is reacquired
+as needed.
 
->> For context, memory on the SpacemiT K1 is split into two chunks:
->>
->> - 0x0000_0000 to 0x8000_0000: First 2 GiB of memory
->> - 0x1_0000_0000 above: Rest of memory
->>
->> DMA-capable devices on the K1 all have access to the lower 2G of memory
->> through an identity mapping. However, for the upper region of memory,
->> each device falls under one of six different mappings. The mappings are
->> provided in this patch as simple-bus nodes that device nodes should be
->> added to.
->>
->> This patch is an RFC because it is not meant to be applied, or at least,
->> not certainly meant to be applied. Instead, this is an attempt to come
->> to a consensus on how these bus nodes should look like.
->
-> I think the above is what Krzysztof might not have seen.  Perhaps
-> it could have been made more clear--maybe in the "main" description
-> section (above the ---) or even the subject line.
->
-Yeah, that's my mistake in organizing the paragraphs.
+This ensures that the locking order is consistent and prevents the
+circular dependency, addressing the lockdep warning and potential
+deadlock.
 
->> More specifically, I propose that the process proceeds as follows:
->>
->> - Firstly, relevant parties agree on these bus nodes given here.
->> - After that, each time the first user of a bus appears, the series
->>    should include a patch to add the bus required for that driver.
->> - If a driver being submitted uses the same bus as another one that has
->>    been submitted but hasn't yet landed, it can depend on the bus patch
->>    from that previous series.
->
-> Getting agreement is good, but otherwise this is basically
-> the process Guodong was suggesting, right?
+[  120.615285] ======================================================
+[  120.615289] WARNING: possible circular locking dependency detected
+[  120.615293] 6.14.5-300.fc42.x86_64+debug #1 Not tainted
+[  120.615297] ------------------------------------------------------
+[  120.615300] irq/36-pciehp/136 is trying to acquire lock:
+[  120.615303] ffff88810d247340 (&ctrl->reset_lock){.+.+}-{4:4}, at: pciehp_unconfigure_device+0x1d0/0x390
+[  120.615323]
+               but task is already holding lock:
+[  120.615326] ffffffff9c13ce90 (pci_rescan_remove_lock){+.+.}-{4:4}, at: pciehp_unconfigure_device+0xe5/0x390
+[  120.615337]
+               which lock already depends on the new lock.
 
-Hmm, actually re-reading the discussion now, I realized that I may have 
-come to this late and missed out on some previous discussions, which 
-were alluded to in Yixun's messages. (This is again thread around link 
-[1] in quoted text.) This led me to believe that some of these were not 
-really agreed upon.
+[  120.615340]
+               the existing dependency chain (in reverse order) is:
+[  120.615343]
+               -> #1 (pci_rescan_remove_lock){+.+.}-{4:4}:
+[  120.615351]        lock_acquire.part.0+0x133/0x390
+[  120.615359]        __mutex_lock+0x1b3/0x1490
+[  120.615366]        pciehp_unconfigure_device+0xe5/0x390
+[  120.615370]        pciehp_disable_slot+0xfa/0x2f0
+[  120.615376]        pciehp_handle_presence_or_link_change+0xc8/0x310
+[  120.615381]        pciehp_ist+0x2d5/0x3e0
+[  120.615386]        irq_thread_fn+0x88/0x160
+[  120.615393]        irq_thread+0x21e/0x490
+[  120.615399]        kthread+0x39d/0x760
+[  120.615406]        ret_from_fork+0x31/0x70
+[  120.615412]        ret_from_fork_asm+0x1a/0x30
+[  120.615418]
+               -> #0 (&ctrl->reset_lock){.+.+}-{4:4}:
+[  120.615426]        check_prev_add+0x1ab/0x23b0
+[  120.615431]        __lock_acquire+0x2311/0x2e10
+[  120.615436]        lock_acquire.part.0+0x133/0x390
+[  120.615441]        down_read_nested+0xa4/0x490
+[  120.615445]        pciehp_unconfigure_device+0x1d0/0x390
+[  120.615448]        pciehp_disable_slot+0xfa/0x2f0
+[  120.615453]        pciehp_handle_presence_or_link_change+0xc8/0x310
+[  120.615458]        pciehp_ist+0x2d5/0x3e0
+[  120.615462]        irq_thread_fn+0x88/0x160
+[  120.615465]        irq_thread+0x21e/0x490
+[  120.615469]        kthread+0x39d/0x760
+[  120.615474]        ret_from_fork+0x31/0x70
+[  120.615478]        ret_from_fork_asm+0x1a/0x30
+[  120.615483]
+               other info that might help us debug this:
 
-I also realized I think one of the things I may have not yet made clear 
-is that I would like the bus node to be a *separate* patch. I think this 
-makes sense, because it's dealing with two different subsystems.
+[  120.615485]  Possible unsafe locking scenario:
 
->
->> For conventions regarding coding style, I propose that:
->>
->> - #address-cells and #size-cells are 2 for consistency
->> - These bus nodes are put at the end of /soc, inside /soc
->> - These bus nodes are sorted alphabetically, not in vendor's order
->> - Devices are added into *-bus nodes directly, not appended towards the
->>    end with a label reference
->
-> I do like that you're trying to be more complete and explicit
-> on what you think needs agreement on.
->
-Being thorough was the main goal of this RFC. If there was previous 
-agreement on how dma-ranges should be done, I'm sorry for missing them, 
-but from my observations on the mailing list on how these ended up into 
-patches I really haven't seen much consistency. Maybe there was 
-misunderstanding, which I'm hoping to clear up.
+[  120.615488]        CPU0                    CPU1
+[  120.615490]        ----                    ----
+[  120.615492]   lock(pci_rescan_remove_lock);
+[  120.615497]                                lock(&ctrl->reset_lock);
+[  120.615502]                                lock(pci_rescan_remove_lock);
+[  120.615506]   rlock(&ctrl->reset_lock);
+[  120.615511]
+                *** DEADLOCK ***
 
-(Although see my paragraph above, maybe I haven't been thorough enough.)
+Fixes: f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock")
+Co-developed-by: Sanath S <Sanath.S@amd.com>
+Signed-off-by: Sanath S <Sanath.S@amd.com>
+Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+---
+ drivers/pci/hotplug/pciehp_pci.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
->> The K1 DMA translations are *not* interconnects, since they do not
->> provide any configuration capabilities.
->>
->> These bus nodes names and properties are provided compliant with
->> "simple-bus" bindings, and should pass "make dtbs_check".
->>
->> Remaining questions:
->>
->> - Should storage-bus exist? Or should drivers under it simply specify
->>    32-bit DMA?
->
-> Explicitly saying storage devices have one-to-one mapping
-> seems informative, to me.
->
->> ---
->>   arch/riscv/boot/dts/spacemit/k1.dtsi | 53 
->> ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->
-> The short summary of what differs between your proposal
-> and what Guodong said is:
-> - You sort nodes alphabetically, Guodong did not
-> - You dropped the unit address
-> - You dropped the comments he had, which indicated which
->   devices "belonged" to each mapping
-> - You added a compatible property to each ("simple-bus")
-> - You added an explicit (empty) ranges property to each
-> - You add #address-cells and #size-cells properties, both 2
-> - Your dma-ranges properties are identical to Guodong's,
->   for all nodes
->
-That was a good summary. Thanks!
-
-My main goal of organizing the bus this way is making it actually pass 
-"make dtbs_check". I'm not sure if Krzysztof still objects to my reading 
-of simple-bus.yaml though.
-
-By the way, I don't think I will be making an RFC v2 of this. I think we 
-should get everything sorted under this one thread.
-
-Thanks again for taking a look.
-
-Vivian "dramforever" Wang
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index 65e50bee1a8c..08ba59d96f4a 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -104,6 +104,11 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 	if (!presence)
+ 		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
+ 
++	/*
++	 * Release reset_lock before driver unbinding
++	 * to avoid AB-BA deadlock with device_lock.
++	 */
++	up_read(&ctrl->reset_lock);
+ 	pci_lock_rescan_remove();
+ 
+ 	/*
+@@ -116,11 +121,6 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 					 bus_list) {
+ 		pci_dev_get(dev);
+ 
+-		/*
+-		 * Release reset_lock during driver unbinding
+-		 * to avoid AB-BA deadlock with device_lock.
+-		 */
+-		up_read(&ctrl->reset_lock);
+ 		pci_stop_and_remove_bus_device(dev);
+ 		down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 
+@@ -134,8 +134,14 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 			command |= PCI_COMMAND_INTX_DISABLE;
+ 			pci_write_config_word(dev, PCI_COMMAND, command);
+ 		}
++		/*
++		 * Release reset_lock before driver unbinding
++		 * to avoid AB-BA deadlock with device_lock.
++		 */
++		up_read(&ctrl->reset_lock);
+ 		pci_dev_put(dev);
+ 	}
+ 
++	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 	pci_unlock_rescan_remove();
+ }
+-- 
+2.34.1
 
