@@ -1,163 +1,98 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5225726560A
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA2C2673AA;
+	Thu, 19 Jun 2025 08:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322739; cv=none; b=n/8498x+tMGpjV/xQfnhz9XieOa0QdIC8ng/wos1VEdrqeMSOC6EZrj70os2HiiIJNEqwYsa+AC+Su4qiGHxdOpiOfhXlPdkJUlVYqbBzIuxN7x6QAAw+HSDv1ajMF9td3GyOuR9VmhoiCi4E/BnazIZ8kFnbn8FKlIYwabufQY=
+	t=1750322743; cv=none; b=jHlGIiqAEqNZq3UXLSlA7cVlQOhokoC6hU0LYH90bsQs3+7cH+DirvorL5+Vmx+OUZHDSly6NpAs/hJiqkux58RoQvGWy9wphGT5MqK5ScARHL7jvKQby9gTk8VdFTO0QIxz62lcFuSZHPNF3JhKQuqwZ7isyyVQywg39FFIlpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322739; c=relaxed/simple;
-	bh=dc8b4SqFbL7GbH4/AI1p/bawh7QOopzOKjzeIjY3oEk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rO4mA4mJETAcv1OcnwxrJC18BJ/kq9CHr6M1haO2cXjZvH1/Ke+UAJo6xX8gD4RoW/CzG+4jiN0eEZROtKmPda+WA9pHzZ8Ms8dnzetPrZKEpFt4snJa8C26rsep/tx2TRAR+jnOpre2XSE/dj6o7OQlADrSq2CJSq2TjSptgj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3hZoIun; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750322743; c=relaxed/simple;
+	bh=ETZAfHfnmnB7/VJHWpx7jZwUc3d27vyxp4OFrpnTGNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I7kwOKshBNOZCZdnNqiwwFvOnN40XOQ+7VqOShxICflWGSEaBNYsXu+NTeSCBdDUjF9OCRbQbcO/4Y8lpQdPWcJQWk0ftA+0p5Z4GTX6LMRi52oCz5K0k33oIT5nayCmILjsusxjNztw6RrACliZSTaP9f4SzgPOHn/DjIYyggs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H15O8R4H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3hZoIun"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so814212a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750322734; x=1750927534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0wtSbUxRYclW9mGhcArPsdL1jf7GZkXd48YFnMEvgU=;
-        b=C3hZoIunlRLh3X3IxLat12SSiT+S6UTZ75IDpSjAxKbFp5uF32qu1X9YsIRvqj4Ase
-         t+vfrQTJDEguqAlsI0XFvT0ik+0+OtpcM1T23Zd+j79Up8AwGNCwj5Bo+CbqMW8a5m4b
-         hzvKjxCIgcXgRt3ZcBmjxCPg98X/xwTJEtuZOScmyhGCcGzfKVa4KLkAJng90/SVHOy3
-         C9T3TWoT+5HWH+t0wPLLu3ZXabKJ3xybbn+eOXLtsMMgdygz6udr4L84oUNHRL6+Bx1F
-         6/jYrToOC7yr/vwU56BP/al9sM16WTCaMLkPsEiEndesrtbC1zVvLtTDqMHdz2i6BiqW
-         J0IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750322734; x=1750927534;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h0wtSbUxRYclW9mGhcArPsdL1jf7GZkXd48YFnMEvgU=;
-        b=E7IOwU9SJsRa1JyEsCYxuAWpUaAOKnwvogpAwnmWEBXgSdfaHuMotBREj1jirDIRaz
-         ZXK0qe5RU+kz7dtxcgsoX3+1KIGRLTtGLS5IG5Wpg/lQ3dEDza6FxHUcs3aQrzziQ1Kb
-         0bM0CI6/1V0GhE+ZF4B+a1WG/ZFEvPsSuz8QEBmbwSgRQN6Gj6l1jrextyNjhN0tpBho
-         xChgWWVFsoBPxyG4ScbULtm0Zq8iZ+CwEU7Nt4pLb+CiFPqDiCdhpQosY31M3+nzXdd9
-         zitRthe/7Pt6hevTY4T2pmjRcAR0UyqUOQr/4dQdicjRcJOaDbvPPy4GtptHpHd+F7lm
-         AtvA==
-X-Gm-Message-State: AOJu0Yx/bVkDS1hHT7BWab30OPUmKk4mWNg3Vu/XN067gnplFLxxzaIu
-	iczrXis3JNxa6Ok/OYVxXNcFubtBTPsi1nURfqfldiPap260LvoW3dJP
-X-Gm-Gg: ASbGnctW892DQUHadBpEXoWh0lwl988dvoVwTBLyvFwvNz9ALLppH4EyWKM3xpm6xdL
-	P5Zbq5355LaZJkrlqTFDCYCZWQOuul1SOPNrtLmTltTWWisZFMAMgV2Mu/icqgd+cR7JgScL+B5
-	gQiTpkCiRUOyLd1HxojnOHAgc/025s39jywfc9CAl50T0DdJAtEPakSl4uM35eNiYyG9DJSke8M
-	vaJljzjNZ87cOHhH4UAam+IONT2mZnt8U+RwDuNDIkaoeF9rJdduWL22tjUwuOhtGDK0uXjHYUC
-	w411+9ric0l5Ca1uPQ9L5lAQM83AnuGKHD5uKLzishgSi3OYQhmyfVTZ5FtVquQ6/goEz0dOike
-	adendH4pInlOlq8Ps
-X-Google-Smtp-Source: AGHT+IGwj1vYRM34MvLwuBy+TO7NC2p5Qze5GzXzAOBX4XqB3oeg9resaDD7r2lfy412opi9HxS22w==
-X-Received: by 2002:a05:6402:214d:b0:609:b263:41c9 with SMTP id 4fb4d7f45d1cf-609b26351cbmr5554526a12.32.1750322734545;
-        Thu, 19 Jun 2025 01:45:34 -0700 (PDT)
-Received: from chimera.vu.local ([145.108.90.28])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e6f0sm11276831a12.42.2025.06.19.01.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 01:45:34 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: hansg@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 3/4 V2] Staging: media: atomisp: i2c: struct definition style
-Date: Thu, 19 Jun 2025 10:44:22 +0200
-Message-Id: <20250619084420.146151-3-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
-References: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H15O8R4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04606C4CEEA;
+	Thu, 19 Jun 2025 08:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750322742;
+	bh=ETZAfHfnmnB7/VJHWpx7jZwUc3d27vyxp4OFrpnTGNY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H15O8R4HsWsWvzkoB8mcKBdWkY/qdSTohtFHiCM8PljYIRIeAXDgaSSYKs2m+ZB+j
+	 StXkAxdlDws7yJpjXOEml/YZndgtt89Pu2ZfcwbtQZ058umd3G6i+IQki8Grn0YeWt
+	 PgtgBj6zPk4oJDhso3ufO+svvOxiV5OnHdqBl/tlA7oQ7ie8L0TkELhcrX6TfnmCHC
+	 hv0CHgRNceqnZ0JWM1+lDtmLwHol2EikLoEDnPTKC6Fl5qAzzHfcAue7CZxcWCaz4m
+	 APzdkSeOCrYs0AnojcTCvwMvwVtDhh/LgqnEkySxPbrfv7Kcm41rYLc2ndvtyEg99b
+	 8Sl4n1na2QGow==
+From: Christian Brauner <brauner@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	seanjc@google.com,
+	vbabka@suse.cz,
+	willy@infradead.org,
+	pbonzini@redhat.com,
+	tabba@google.com,
+	afranji@google.com,
+	ackerleytng@google.com,
+	jack@suse.cz,
+	hch@infradead.org,
+	cgzones@googlemail.com,
+	ira.weiny@intel.com,
+	roypat@amazon.co.uk,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	david@redhat.com,
+	akpm@linux-foundation.org,
+	paul@paul-moore.com,
+	rppt@kernel.org,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
+Date: Thu, 19 Jun 2025 10:45:16 +0200
+Message-ID: <20250619-zerstochen-lamellen-b158317258e6@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250619073136.506022-2-shivankg@amd.com>
+References: <20250619073136.506022-2-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1342; i=brauner@kernel.org; h=from:subject:message-id; bh=ETZAfHfnmnB7/VJHWpx7jZwUc3d27vyxp4OFrpnTGNY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQEn1MTW6W6ZIpV9/31tXHvQuf5/ug5y8eQ7brj/sRl+ wOMqy586yhlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiIuznDX7Ha3VZdL663Wb3r Fpt8OCWwZqeC3KXIif9P/911OrA/spqRYathwLNXS0VvKOeLfWVemD7j7O5bu40kX2yy2Zn/7QX LCz4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-Reorder const qualifier in array declaration
+On Thu, 19 Jun 2025 07:31:37 +0000, Shivank Garg wrote:
+> Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
+> anonymous inodes with proper security context. This replaces the current
+> pattern of calling alloc_anon_inode() followed by
+> inode_init_security_anon() for creating security context manually.
+> 
+> This change also fixes a security regression in secretmem where the
+> S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
+> LSM/SELinux checks to be bypassed for secretmem file descriptors.
+> 
+> [...]
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
----
- drivers/staging/media/atomisp/i2c/gc2235.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-diff --git a/drivers/staging/media/atomisp/i2c/gc2235.h b/drivers/staging/media/atomisp/i2c/gc2235.h
-index 6c743a17f198..7dd9a676fb98 100644
---- a/drivers/staging/media/atomisp/i2c/gc2235.h
-+++ b/drivers/staging/media/atomisp/i2c/gc2235.h
-@@ -179,21 +179,21 @@ struct gc2235_write_ctrl {
- 	struct gc2235_write_buffer buffer;
- };
- 
--static struct gc2235_reg const gc2235_stream_on[] = {
-+static const struct gc2235_reg gc2235_stream_on[] = {
- 	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
- 	{ GC2235_8BIT, 0x10, 0x91}, /* start mipi */
- 	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
- 	{ GC2235_TOK_TERM, 0, 0 }
- };
- 
--static struct gc2235_reg const gc2235_stream_off[] = {
-+static const struct gc2235_reg gc2235_stream_off[] = {
- 	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
- 	{ GC2235_8BIT, 0x10, 0x01}, /* stop mipi */
- 	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
- 	{ GC2235_TOK_TERM, 0, 0 }
- };
- 
--static struct gc2235_reg const gc2235_init_settings[] = {
-+static const struct gc2235_reg gc2235_init_settings[] = {
- 	/* System */
- 	{ GC2235_8BIT, 0xfe, 0x80 },
- 	{ GC2235_8BIT, 0xfe, 0x80 },
-@@ -268,7 +268,7 @@ static struct gc2235_reg const gc2235_init_settings[] = {
-  * Register settings for various resolution
-  */
- #if ENABLE_NON_PREVIEW
--static struct gc2235_reg const gc2235_1296_736_30fps[] = {
-+static const struct gc2235_reg gc2235_1296_736_30fps[] = {
- 	{ GC2235_8BIT, 0x8b, 0xa0 },
- 	{ GC2235_8BIT, 0x8c, 0x02 },
- 
-@@ -321,7 +321,7 @@ static struct gc2235_reg const gc2235_1296_736_30fps[] = {
- 	{ GC2235_TOK_TERM, 0, 0 }
- };
- 
--static struct gc2235_reg const gc2235_960_640_30fps[] = {
-+static const struct gc2235_reg gc2235_960_640_30fps[] = {
- 	{ GC2235_8BIT, 0x8b, 0xa0 },
- 	{ GC2235_8BIT, 0x8c, 0x02 },
- 
-@@ -373,7 +373,7 @@ static struct gc2235_reg const gc2235_960_640_30fps[] = {
- };
- #endif
- 
--static struct gc2235_reg const gc2235_1600_900_30fps[] = {
-+static const struct gc2235_reg gc2235_1600_900_30fps[] = {
- 	{ GC2235_8BIT, 0x8b, 0xa0 },
- 	{ GC2235_8BIT, 0x8c, 0x02 },
- 
-@@ -418,7 +418,7 @@ static struct gc2235_reg const gc2235_1600_900_30fps[] = {
- 	{ GC2235_TOK_TERM, 0, 0 }
- };
- 
--static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
-+static const struct gc2235_reg gc2235_1616_1082_30fps[] = {
- 	{ GC2235_8BIT, 0x8b, 0xa0 },
- 	{ GC2235_8BIT, 0x8c, 0x02 },
- 
-@@ -463,7 +463,7 @@ static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
- 	{ GC2235_TOK_TERM, 0, 0 }
- };
- 
--static struct gc2235_reg const gc2235_1616_1216_30fps[] = {
-+static const struct gc2235_reg gc2235_1616_1216_30fps[] = {
- 	{ GC2235_8BIT, 0x8b, 0xa0 },
- 	{ GC2235_8BIT, 0x8c, 0x02 },
- 
--- 
-2.34.1
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] fs: export anon_inode_make_secure_inode() and fix secretmem LSM bypass
+      https://git.kernel.org/vfs/vfs/c/c696307648ea
