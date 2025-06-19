@@ -1,74 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EAC259CAB;
-	Thu, 19 Jun 2025 08:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD77926460D
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322348; cv=none; b=XQfSTTTQJzmYbSLyU8lE5phXoaJe2kfL0hUaZwATI2U1xfW4Mkmyq4OAAgCzi7pHl5HvGkxqCSj3kljl8dUiJidgUukQLYI/uFH+mD8yuyx+eIa0p9v7JHfyokiqDfB+w98SbdB53YXc5VO2uIuZsheOT7d2QpsAW+IJiVOixe8=
+	t=1750322363; cv=none; b=bOQcMZNQQ6BiaCivOp1/rNmGt4oLqJGRtSi7DJ4dgsndoFPmVDOsmZXVENVyocySKgzxZrwnVlH++Vq9JdcvoD0t8gFKjYYd8G1bypPeVwpmAlqin38fGaoXjronNidRcaMvToMaaIuxlX9gLKpTM/0kfyJKYx/FD4nen0FYXVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322348; c=relaxed/simple;
-	bh=3Huv7ZPDqkEecfnLz3oTSOVlSGhouvQtnTutmfxhBuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qW2XzTT9LY+H9YMxkzXre3OdSU21GGutPafNVr5Cv0EYbV6MiY8OIJjtECp7Fnf/o23O2Ui5bTNT1CXv74tsWh96YKhC5XXGQy3EamSGjUFQVrbAREMgg65wk1GpB6R2wiTbL1CJQ3djXSmFmm3Uug+rZowPXiTmTF44Jvory5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id A7FE080688;
-	Thu, 19 Jun 2025 08:39:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id E66A720028;
-	Thu, 19 Jun 2025 08:38:59 +0000 (UTC)
-Date: Thu, 19 Jun 2025 04:39:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
- support
-Message-ID: <20250619043905.151d7f63@batman.local.home>
-In-Reply-To: <20250619075103.GV1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.261095906@goodmis.org>
-	<20250618134758.GK1613376@noisy.programming.kicks-ass.net>
-	<20250618111840.24a940f6@gandalf.local.home>
-	<20250619075103.GV1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750322363; c=relaxed/simple;
+	bh=Af1OBCdjmgbt/lD9KT32L5IXYHmC0HvCKLNQiW6fK9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R8f7FuZP+oPsiGNLyEZK++Bb6HEAW/uoKJVle6P7doSkOJShNe/u7xmMRSCmoEQyDJz30h6+p7ddcXnvdMXNfqF2hmZzNsm8b73OaL6ex9BmqckRaBx8QVaZt0v7P9nGwo/hlbk/eZFJUj/4EkRD+JkpEmc8Ao38BW1g8FRKT0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Csh8OR/p; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Csh8OR/p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4413CC4CEEA
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750322363;
+	bh=Af1OBCdjmgbt/lD9KT32L5IXYHmC0HvCKLNQiW6fK9w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Csh8OR/pk9BFeNnwmvLfFJG2JwmWeRuYOUoDSa+zSj9lRB1ZY/XlsL5cqON4UBYfT
+	 ioVVAYqhvrTTZakzEiywyCQXZEcqZiTfWyccel4wCkjQfX3nM8Y1r//TP2rQrDIh63
+	 QUSKrx/IeUGfqXERYQNcTYfEZIU3c0+dCr4+OJE2xeIZk5+Y6iOwlP4LCKbcGzppg6
+	 YoBeAFYEidFfiV5gZwsYBXEexzL+0qcll7sNXfjMQ4sYlALzp8sr8t1hHYodFaiAkw
+	 eEAI4C12T8jRtDiKMcZltn2jtsqJKFJPASK52m27RswXlJ/2qWJwm/dCtoZKo/mpyn
+	 clP11XuDD/OmA==
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e82314f9a51so471478276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:39:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUeY7Ksr0mH2U7cJEWJQ4iDHQ6LBsL5PKYldsYnOl35sFpwnQtCJ5oVx4zPH2bON1EZ+KOwz/kakFhO2nk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxam8nG3/jJAmPjIileWr57ErdMPEE4RpwvGaZ73UKtwDhudBOs
+	RANPBALKA9ZzhYh3GmJQqq3iyOF8iu5Ez8BHlhIfwVnCzYxeFDvG5RxgQuphbnBCfSFydSaIq9o
+	DXqWkUwMSVQtFmwWWZAtBuCe3rKw1qD7BdtrVWb1M0g==
+X-Google-Smtp-Source: AGHT+IHFhbTPC3IHdAEhse776L10W8aRjQW3q5wXxAWG0QvKzfsbI08GKkjb4oJHnymnKzxYSdGNC0f44vXXp8PZN6Y=
+X-Received: by 2002:a05:6902:707:b0:e81:838b:c58c with SMTP id
+ 3f1490d57ef6-e822ac0a614mr27592560276.20.1750322362356; Thu, 19 Jun 2025
+ 01:39:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fb9zfdjrcr1djziti1opsxbup7bunpp6
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: E66A720028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+m7jQXYGP7iliC8RTJexUJZkESXpNRGiw=
-X-HE-Tag: 1750322339-171143
-X-HE-Meta: U2FsdGVkX1+WUuekhZmNCRTsM6ZfRq8DEQqOHEcVlEKwwjPLNFYw8ANaBzM3AdW9iJoHWvIbuXUSeerxBPiTPkSCu9cdZtSq8BD0VbDJOJhWoaRwMN0Z0gRMRM5YyARVhzWthTunsGQf+f2/x73QWWLztxQW+3CcDXN8tD79SGAmxQEqAgLiv6fIaqA7TRIWOLvHStT00dANm/chZlbLZkBIuZxJvTj1XuB0km4rtYQpKOT8ulWPoxFvbC2Y7ZTFnTaVzQbyJlj/hWjWJPPBh0tyNyL9B08TWUPwOnMw54pLLYapjDqy0SGax97sJt7WB/0GG5fOzuiie2Na7k7lguco2qj4ALrAUrCT3x59BcIezHQxyWftQ6KEcd51n2cUWFYLPPxWXC0zCHhwlwCmy1vbQ3VOP9lYdq6x0GR8pig=
+References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net> <20250606-6-10-rocket-v7-1-dc16cfe6fe4e@tomeuvizoso.net>
+In-Reply-To: <20250606-6-10-rocket-v7-1-dc16cfe6fe4e@tomeuvizoso.net>
+From: Robert Foss <rfoss@kernel.org>
+Date: Thu, 19 Jun 2025 10:39:11 +0200
+X-Gmail-Original-Message-ID: <CAN6tsi5Q_az2zYGLhNxvxmpZdHXusE-Uxwe9N0nWobdGQSVjQQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtRCeI0XKT_8-8WC0wDHRHS1a_MhotfcVvZBvXr_sxNNlpYqYYLoNopHpg
+Message-ID: <CAN6tsi5Q_az2zYGLhNxvxmpZdHXusE-Uxwe9N0nWobdGQSVjQQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/10] accel/rocket: Add registers header
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>, 
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Jun 2025 09:51:03 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jun 6, 2025 at 8:29=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
+ wrote:
+>
+> A XML file was generated with the data from the TRM, and then this
+> header was generated from it.
+>
+> The canonical location for the XML file is the Mesa3D repository.
+>
+> v3:
+> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
+>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 
-> > > 
-> > > The purpose of these arch hooks is so far mysterious. No comments, no
-> > > changelog, no nothing.  
-> > 
-> > I'll add comments.  
-> 
-> How about you introduce the hooks when they're actually needed instead?
-
-OK. Then I'll move the hooks to the later patch.
-
--- Steve
+Reviewed-by: Robert Foss <rfoss@kernel.org>
