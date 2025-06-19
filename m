@@ -1,153 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB46511712;
-	Thu, 19 Jun 2025 15:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750348322; cv=pass; b=Hyu9lqjgijUEf3sktqT6meY+yuhrX9NmtQ1F1/3eYNj7o2GTWTWKd6RFtKYw6s09pwBNpt5p0dsj1R75q0lG5DGroLcefxJEuCrulhoYcOwNzkfr7SNJqIBPM8ILCZJtDBQwhEYMp7PgO57EUfXSCJUt6Miy3pW8T2bX4ZOT1l0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750348322; c=relaxed/simple;
-	bh=3e+MnoCUQpIjahFcmnDHaFng1/HMNPCLp9IxTyA3Fuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i20ojxpwFiZ/NHlb5SMwrqh01yDyhttZGpYmbJEDPjQSwtyTQnFAOU7iOwBeKgay425IRBXUxHZmLmoo+nqtUJavBha6Ff8KEGdKaZkN5Rul4S5F4U1TP1Wnuoe7kT9Ztw0Q+YHSEIONp6ra6crBrTDUXVi3/KebPRPpRCjQWIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=g8SBqgUo; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC2B11712
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 15:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750348432; cv=none; b=gpXevqyhWVoH/IJzxUnWImqD+NLuYHd7swnFxjQmqbgbSTvtbpwdu9iXwfLFQbDX/aLA3N9Me/qx/qnEoJqUXPPxttXft/GyN63zd4FacJJ8rwJBRuDJKhB6aUx2D8tiqQ5gpNrFQ+TIRcNmm+BWzr2wJvpCyhRVUlBO83VDw/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750348432; c=relaxed/simple;
+	bh=ugdpOCezePD7o0TgXKAYQXIsUVZTkJ8svLFNheXBQBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMlRwwhGp82iFYgs8Fda2lK062YtLW9Na+KefLSEjO3zl5PSikf+xN/b2WKutagkt3Jd9djXkYefQ6LHYvzATWvAoVg3wtyG3bZOIqxy9MPF0oIjmurTtcgydK881DFaFmGl5lkRYENUmHpp7BMc0bQCfE9IX6SFIIjYUOmg/PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fDeVCTjq; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="g8SBqgUo"
-ARC-Seal: i=1; a=rsa-sha256; t=1750348305; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IcM1T3srtgYwUeY4mYmXJciHOaGmt3kjIYtN+Ups+ny/VYTLhM5k5QvFqWV9Mit6BJsiGMY87T7RReKdf7KCUElLe4apTB8a/YZDDAKrrxsXz/ytIrGRBl+O9SixREXUpdYKq24YKgTgmfooxlvOcodvcBR4K0xmDsOqe67v5cE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750348305; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZCoeH3n1KmlC4QaPJtFmhLx7PqSf1liYHdZw1gO42lw=; 
-	b=Phh5MA2v/ChxBwfja9NInH0Ma+zC8oYOhT06T/K+S99cUFWmrlndBom/CyzneWfCnJIA5P8zVPxxmqE1yRDOYoCv7sPGwSUVBugtp/onnLqp1TBLkGCakmSzmTKpXy52FutnQi9wcfU1qYUiUF2jdc7OuiKteJCSrOig6do5L0g=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750348305;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ZCoeH3n1KmlC4QaPJtFmhLx7PqSf1liYHdZw1gO42lw=;
-	b=g8SBqgUor4pKiCJVPY8a80SyRdlpSyONnw5+acbP7KyUP6D0N2czMSQnvUmMKa66
-	cARh0eqYABAESAjZOW/DM0O2m2KlqiCYp8wOnGvu1GLsxqSBzOC3E7IBzfto4+gvHMs
-	wnPkrBJj4iuc1y9BYQgtOkV14HpnssKejnzbwm7A=
-Received: by mx.zohomail.com with SMTPS id 1750348302329727.2550679522411;
-	Thu, 19 Jun 2025 08:51:42 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id C6C6C1805A8; Thu, 19 Jun 2025 17:51:37 +0200 (CEST)
-Date: Thu, 19 Jun 2025 17:51:37 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
-	Daniel Semkowicz <dse@thaumatec.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: add header for RK8XX PMIC
- constants
-Message-ID: <t3wbjpbw7phqvip4yvxm5kux6hor5pehzamrw6hjv3hq2b3j3n@zuf2vuhgpdpp>
-References: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
- <20250618-rk8xx-rst-fun-v3-3-081f02d3d348@cherry.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fDeVCTjq"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450dd065828so7110845e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750348429; x=1750953229; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q+k3NNEekvlr6fkv1a/A9HNwq1j5zrWYmNv2ri3gncM=;
+        b=fDeVCTjqwcgTlE39UCjEsgCsJHimcWBD1iXgRhJkzCpH4wioVH0Z5yRsuMwvw8LFeB
+         iFPGhydTIJDhlvdFjFa+Gqk5i9k/TkinIMQ9qRE//qSHO58Uy1PKTJzjE2kLYIQlfUwJ
+         c8kSu5X9ItId8t45kwDWzrImILXqmbtP3PD5fhtI9cpDyHQ2DObv2j59HdcP+gu6OWuK
+         Ou1cT+li2GvwcD1hvHzHC2cuh404z+hB3ZpqnNtuRzwsFMpcvikqg6jPTYV1P2/4qG9K
+         99oUdXXGZzNQ9SsHzl9dk9Iu3jflOhHJ4dbo+Hv1ZlXBQW4eeh3CeKzjO8MqgT684m0B
+         G1SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750348429; x=1750953229;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q+k3NNEekvlr6fkv1a/A9HNwq1j5zrWYmNv2ri3gncM=;
+        b=i1VXboa/Zb8W15HyIx5Exl/fvlYu6Xn1sAuS7wSOFAB7XkrfxN20sCMaIZyKlZHtQp
+         rhfvDrha2QEfJzOBynbJY99j6ZNX4imEWzjqaicQQJIn6lZtvEfdOkpacd1Tqfn4fBbc
+         8raWL+zq261Q4yyiCs4hGLelF7rrznOXqfgK1J4rUQSOV0x78y4Fy1NgbTwGdinKSamb
+         oDcdGxT4IUi4Vq3e69OwI8L6vHseLMB5lf/uXS6m6/TUCOu/nGSE9K4ZiNhn4sastIL2
+         aJAOQmVrzCiiVWqiNkmCWmp3hPasKlHlpGM4L8zExLmfcq3MDAxkWua3bobGKg+VEpG2
+         4dfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgWkktudJB+r2jTzRWw4rifZgikDgOmFrd9UgviLqscQpvGrPDcJASjwWRmams8TAYO0cMIDkGtJ28R8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5XVnKbIt6VHVjud4KxbRTKI5/No0WuUSwwi1om/PIuAYdJAWc
+	hSL+p1kwSi11SxfuQFvNtu+02hinmz7szR5gYnET3f5hFkShDaXYcu3ojPoW7xubiBg=
+X-Gm-Gg: ASbGnctFEeWMlSVAzs0+UMtC0woSeTXArdna0n26T+pccPAC83Bu7ty8qbZvWn0f9JV
+	c2uj/wdO2dRMcUxGpKqInZw8+Z8bcaixC4GsI0kEaxVW6PDw7wwyv0fHH0vz1mx+mIQfth/5gcY
+	0nm4aP9agDTNptVI4Hso0mTQrDX6Go8AnczIn4yv5B7cbc8PdEepKxuzhv2pXuAj7ZLPryW7eiL
+	D7Y1Ow7jUPA/M/J+vHfxkAHRw+O8L6PALq6JK0NQWO/EI2MuQVk2g1FXmIXFj6eBJEtwOlbAaZR
+	mgGIbrLvuTjNNQQ0u0NKeOJDiTvu29s6HiwZAJI8fQxQsCjleOc519KYX2ubPPs/0zQ=
+X-Google-Smtp-Source: AGHT+IFhgF5Hhrh/DcTEDSYXb3z6slUVm4fs2xKiMsWX1+2BhI88RWRGf74eQ6JDO4EbBchzGYmsrw==
+X-Received: by 2002:a05:6000:2313:b0:3a5:39be:c926 with SMTP id ffacd0b85a97d-3a572e82465mr17345796f8f.32.1750348428838;
+        Thu, 19 Jun 2025 08:53:48 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b28876sm19786654f8f.73.2025.06.19.08.53.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 08:53:48 -0700 (PDT)
+Message-ID: <7f9f123c-d7f9-478b-b207-f448a95d992a@linaro.org>
+Date: Thu, 19 Jun 2025 16:53:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pu5pnebwd6cicvnp"
-Content-Disposition: inline
-In-Reply-To: <20250618-rk8xx-rst-fun-v3-3-081f02d3d348@cherry.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/250.326.2
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: Replace scnprintf() with sysfs_emit() in sysfs
+ show functions
+To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, suzuki.poulose@arm.com,
+ alexander.shishkin@linux.intel.com, mike.leach@linaro.org
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250619150730.413287-1-chelsyratnawat2001@gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250619150730.413287-1-chelsyratnawat2001@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---pu5pnebwd6cicvnp
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: add header for RK8XX PMIC
- constants
-MIME-Version: 1.0
 
-Hi,
-
-On Wed, Jun 18, 2025 at 12:32:42PM +0200, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
->=20
-> To make it easier to read the device tree, let's add constants for the
-> rockchip,reset-mode property values that are currently only applicable
-> to RK806 PMIC.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+On 19/06/2025 4:07 pm, Chelsy Ratnawat wrote:
+> Replace calls to scnprintf() with sysfs_emit() in sysfs show functions.
+> These helpers are preferred in sysfs callbacks because they automatically
+> handle buffer sizing (PAGE_SIZE) and improve safety and readability.
+> 
+> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
 > ---
->  arch/arm64/boot/dts/rockchip/rk8xx.h | 18 ++++++++++++++++++
+>   .../hwtracing/coresight/coresight-etm-perf.c  |   4 +-
+>   .../coresight/coresight-etm3x-sysfs.c         |   2 +-
+>   .../coresight/coresight-etm4x-sysfs.c         | 108 +++++++++---------
+>   drivers/hwtracing/coresight/coresight-stm.c   |   8 +-
 
-I think this header should be in include/dt-bindings/, otherwise the
-series LGTM.
+There's two missing from coresight-sysfs.c. Might as well change those 
+too while were here.
 
-Greetings,
+With those changed:
 
--- Sebastian
+Reviewed-by: James Clark <james.clark@linaro.org>
 
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk8xx.h b/arch/arm64/boot/dts/r=
-ockchip/rk8xx.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..a6fbef71c06493c35b0f36974=
-76167aaafa24f30
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk8xx.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-or-later OR MIT) */
-> +/*
-> + * Device Tree defines for Rockchip RK8xx PMICs
-> + *
-> + * Copyright 2025 Cherry Embedded Solutions GmbH
-> + *
-> + * Author: Quentin Schulz <quentin.schulz@cherry.de>
-> + */
-> +
-> +#ifndef _DT_MFD_ROCKCHIP_RK8XX_H
-> +#define _DT_MFD_ROCKCHIP_RK8XX_H
-> +
-> +/* For use with rockchip,reset-mode property */
-> +#define RK806_RESTART		0
-> +#define RK806_RESET		1
-> +#define RK806_RESET_NOTIFY	2
-> +
-> +#endif
->=20
-> --=20
-> 2.49.0
->=20
-
---pu5pnebwd6cicvnp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhUMgUACgkQ2O7X88g7
-+praYQ/+OsDoV143cUMLkmfVtsK7nqdpHgi5QYeMWvwzlvie418qaE4536HiU5h6
-HLJmwHAIOErsHPJFhQInCR4mCqhY9kg7BkW99taAjYfUO8kcIsyFeT9YfM2TZBPU
-nI4+15OFD0C4qNeafh6jalgjbhVq1rPB2B8tO3HnU+vYRaJCf5nZm9lwP6zWJKIT
-Dwc0en5+nxQySijc3A+TpSjCcAF+iEsaSwQvsase3UqHQOyfNgu3BvmPRPA7iqh+
-5Z+FkZvutgSwatiDcIECaTP6xe8AC8noY+KLIr5Eoa/dy8ppeGQaCMaDoLMgJ5AF
-u4G79LWzrCmF43LKo2rP+xIVrjxk2/kg+Udqctpy+mQHtNJQ614034lXd2fIMcxZ
-WZEyrKDeGL53qUqZpzSKV7a8RdIGyOFrX7a7QUyENOu5/yy01U1XruBNA5BDE7cx
-eoKDXMtzwpil/3JjkAgLcNV/dqusLpyf5aP3TzjORncngzI0Nwjxvbt5bimf7UVu
-5TDwpt9ZAVlu4KI7W/1DHfgjphAy0+oM44Eb//yIpZI2tcHUw13mVX7nJE1++4pM
-59rh+fs95SbmOAQa9ct3SG1fnzuxgNhhAL1g2SLbXW5OJDDanGFSVt+z54LjnQO4
-82YihEmMJd4Y1oY8aLuTayArlQkftbTi9qZEa3jzipAb0bLU+M0=
-=rZbZ
------END PGP SIGNATURE-----
-
---pu5pnebwd6cicvnp--
