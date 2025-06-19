@@ -1,111 +1,176 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A994319D07B;
-	Thu, 19 Jun 2025 02:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5919D07B;
+	Thu, 19 Jun 2025 02:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750299998; cv=none; b=Rr0aplDSgXHXYo+SSWSfXfWubZJXg45KfBmduqRQ0d3K9VnGvhegiyqyMIAqM0KUmQg0K4Y+Y7BXqPFHMcVht/HyYP3Ar/eI9OB2jjCtc3tBvM0rh2a2qABXFUMI9uiVxVv/LHbJd3EHxCv9fQEsuZU8u/+zlOmdU7iAEuiuHNM=
+	t=1750300041; cv=none; b=L5Yn+PKX/7xH6V13gWamsKT19Eq2FAv/C/r0bJaBVUHCbIg7qW0HwVYo7XTdwCGl2dwcAtdsJ9ki1LyUXjbTIKBhhb8xBUNafsjuevJUTluBYrm4skDUaUMTLeG6FYM4aRl63/fr1i5mida+YIgfPWiYqDvFbHiLmMtY/lVZiZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750299998; c=relaxed/simple;
-	bh=bNa1LMr25XDkhPXvkNdxjEhOU+//U4wZlbl6WY4h7kw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WWXa+m5DdnHEDqWzmNAkzvmbULvNWwtoMJ8zOu9EbsJb7qbuVnTYtelIOiODvQd3qurCeTLjAnYLZEx+Da2dzhFkFpB8s2ax/5ImR3Q43iK9Yvw9vcWxhGkJf0LF2n1wnrowA5KgP1eokNU77pyEz7cODhqVfz2yknQIbX975KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sPwtQQ1+; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750300041; c=relaxed/simple;
+	bh=1x7x4NWqMUt2c8JTKHmXWQofJ+8/NIysaVeljVLRocQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZ22fsmSgbmyvoe5EjDBlwKtlBTMNNku+QOMSnYlywRSGK6+X1K2TNnWNUnrhi2jbdghRfr1ZPwlHLJiW+agLwwhi8mvxyWkwM4p6Y4inYCEVDgwP917GWCG2IljmFj6mqrcQlbBW4Z4KMrCHNRv0CKMBSURrGz9435/ogQYs8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYXTEdHJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sPwtQQ1+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750299986; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=fdIXidgTQoJZ+pqA8Hrjl4qfJ3FwmVN/K/H7yiiXnsg=;
-	b=sPwtQQ1+g1TgTDoSNyFEiYjDSRhDt6iX0f15o4QIKUH38GSLEkMZR6AWIwtk1cPaYH0QUesixX5PofJH49/U1W1uAGA5ULJ45nwibTfe6pxJKycJUWAzk1azEo817hj6X35afMrsfLiA2JME8ozqg3kfbjDVsjf1j84dVQPvUiE=
-Received: from 30.221.131.111(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WeFTxhP_1750299985 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 19 Jun 2025 10:26:26 +0800
-Message-ID: <0a8d5fdb-28b9-41f5-a601-cf36641bddbf@linux.alibaba.com>
-Date: Thu, 19 Jun 2025 10:26:24 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYXTEdHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3CDC4CEE7;
+	Thu, 19 Jun 2025 02:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750300040;
+	bh=1x7x4NWqMUt2c8JTKHmXWQofJ+8/NIysaVeljVLRocQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FYXTEdHJ7KSSK/VxDAfnvEujP1pjhGWb3+Fum4qYew0QVzvy++7E67hZhAwWqVSOP
+	 H6LiX5jLnYmfLOgTITdkW+0UVU4VQklZqvViL+aK0oVGhiwhUbn4jJ5WrEJwgiMhAt
+	 x5aJ8BIB12pRgf1SKbgcxCw+7AxQQZvHu6txa0mVEdXphKrpfhC2WB7kcPpUEJ4593
+	 D9Lnl6tYR9MWVNG61DTqiMAHGaMwhU3QxrxFkqLZ5gquilnOkjIldYU/PdaueXHGUR
+	 3+MRckG1ghCMCCDxP+x85Qy15LOHpdvuMqxJXXzha9mPsmvYfkm1MsYH3M3ZuAlZiq
+	 CKPSxezvbmb5A==
+Date: Thu, 19 Jun 2025 10:27:12 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: cdnsp: Fix issue with CV Bad Descriptor test
+Message-ID: <20250619022712.GA36288@nchen-desktop>
+References: <20250618053148.777461-1-pawell@cadence.com>
+ <PH7PR07MB9538574F646FD0664C05B055DD72A@PH7PR07MB9538.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] selftests/pidfd: align stack to fix SP alignment
- exception
-To: Shuah Khan <skhan@linuxfoundation.org>, brauner@kernel.org,
- shuah@kernel.org, will@kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: baolin.wang@linux.alibaba.com, tianruidong@linux.alibaba.com,
- catalin.marinas@arm.com, mark.rutland@arm.com
-References: <20250616050648.58716-1-xueshuai@linux.alibaba.com>
- <ee095fdd-b3c1-4c41-9b06-a8e3695c1863@linuxfoundation.org>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ee095fdd-b3c1-4c41-9b06-a8e3695c1863@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR07MB9538574F646FD0664C05B055DD72A@PH7PR07MB9538.namprd07.prod.outlook.com>
 
-
-
-在 2025/6/19 05:36, Shuah Khan 写道:
-> On 6/15/25 23:06, Shuai Xue wrote:
->> The pidfd_test fails on the ARM64 platform with the following error:
->>
->>      Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
->>
->> When exception-trace is enabled, the kernel logs the details:
->>
->>      #echo 1 > /proc/sys/debug/exception-trace
->>      #dmesg | tail -n 20
->>      [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
->>      [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
->>      [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
->>      [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
->>      [48628.713055] pc : 0000000000402100
->>      [48628.713056] lr : 0000ffff98288f9c
->>      [48628.713056] sp : 0000ffffde49daa8
->>      [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
->>      [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
->>      [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
->>      [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
->>      [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
->>      [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
->>      [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
->>      [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
->>      [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
->>      [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
->>
->> According to ARM ARM D1.3.10.2 SP alignment checking:
->>
->>> When the SP is used as the base address of a calculation, regardless of
->>> any offset applied by the instruction, if bits [3:0] of the SP are not
->>> 0b0000, there is a misaligned SP.
->>
->> To fix it, align the stack with 16 bytes.
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
+On 25-06-18 05:39:27, Pawel Laszczak wrote:
+> The SSP2 controller has extra endpoint state preserve bit (ESP) which
+> setting causes that endpoint state will be preserved during
+> Halt Endpoint command. It is used only for EP0.
+> Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
+> failed.
+> Setting this bit doesn't have any impact for SSP controller.
 > 
-> Assuming this is going through Christian's tree.
+> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+> Changelog:
+> v2:
+> - removed some typos
+> - added pep variable initialization
+> - updated TRB_ESP description
 > 
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+>  drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
+>  drivers/usb/cdns3/cdnsp-ep0.c    | 19 ++++++++++++++++---
+>  drivers/usb/cdns3/cdnsp-gadget.h |  6 ++++++
+>  drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
+>  4 files changed, 27 insertions(+), 6 deletions(-)
 > 
-> Let me know if you would like me to pick it up.
+> diff --git a/drivers/usb/cdns3/cdnsp-debug.h b/drivers/usb/cdns3/cdnsp-debug.h
+> index cd138acdcce1..86860686d836 100644
+> --- a/drivers/usb/cdns3/cdnsp-debug.h
+> +++ b/drivers/usb/cdns3/cdnsp-debug.h
+> @@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char *str, size_t size, u32 field0,
+>  	case TRB_RESET_EP:
+>  	case TRB_HALT_ENDPOINT:
+>  		ret = scnprintf(str, size,
+> -				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c",
+> +				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c %c",
+>  				cdnsp_trb_type_string(type),
+>  				ep_num, ep_id % 2 ? "out" : "in",
+>  				TRB_TO_EP_INDEX(field3), field1, field0,
+>  				TRB_TO_SLOT_ID(field3),
+> -				field3 & TRB_CYCLE ? 'C' : 'c');
+> +				field3 & TRB_CYCLE ? 'C' : 'c',
+> +				field3 & TRB_ESP ? 'P' : 'p');
+>  		break;
+>  	case TRB_STOP_RING:
+>  		ret = scnprintf(str, size,
+> diff --git a/drivers/usb/cdns3/cdnsp-ep0.c b/drivers/usb/cdns3/cdnsp-ep0.c
+> index f317d3c84781..9280a7b97e20 100644
+> --- a/drivers/usb/cdns3/cdnsp-ep0.c
+> +++ b/drivers/usb/cdns3/cdnsp-ep0.c
+> @@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct cdnsp_device *pdev,
+>  void cdnsp_setup_analyze(struct cdnsp_device *pdev)
+>  {
+>  	struct usb_ctrlrequest *ctrl = &pdev->setup;
+> +	struct cdnsp_ep *pep;
+>  	int ret = -EINVAL;
+>  	u16 len;
+>  
+> @@ -427,10 +428,22 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
+>  		goto out;
+>  	}
+>  
+> +	pep = &pdev->eps[0];
+> +
+>  	/* Restore the ep0 to Stopped/Running state. */
+> -	if (pdev->eps[0].ep_state & EP_HALTED) {
+> -		trace_cdnsp_ep0_halted("Restore to normal state");
+> -		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
+> +	if (pep->ep_state & EP_HALTED) {
+> +		/*
+> +		 * Halt Endpoint Command for SSP2 for ep0 preserve current
+> +		 * endpoint state and driver has to synchronize the
+> +		 * software endpoint state with endpoint output context
+> +		 * state.
+> +		 */
+> +		if (GET_EP_CTX_STATE(pep->out_ctx) == EP_STATE_HALTED) {
+> +			cdnsp_halt_endpoint(pdev, pep, 0);
+> +		} else {
+> +			pep->ep_state &= ~EP_HALTED;
+> +			pep->ep_state |= EP_STOPPED;
+> +		}
+
+Why else {} is needed?
+
+Peter
+
+
+>  	}
+>  
+>  	/*
+> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
+> index 2afa3e558f85..b1665f9e9ee5 100644
+> --- a/drivers/usb/cdns3/cdnsp-gadget.h
+> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
+> @@ -987,6 +987,12 @@ enum cdnsp_setup_dev {
+>  #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31, 16))
+>  #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
+>  
+> +/*
+> + * Halt Endpoint Command TRB field.
+> + * The ESP bit only exists in the SSP2 controller.
+> + */
+> +#define TRB_ESP				BIT(9)
+> +
+>  /* Link TRB specific fields. */
+>  #define TRB_TC				BIT(1)
+>  
+> diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.c
+> index fd06cb85c4ea..d397d28efc6e 100644
+> --- a/drivers/usb/cdns3/cdnsp-ring.c
+> +++ b/drivers/usb/cdns3/cdnsp-ring.c
+> @@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct cdnsp_device *pdev, unsigned int ep_index)
+>  {
+>  	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT) |
+>  			    SLOT_ID_FOR_TRB(pdev->slot_id) |
+> -			    EP_ID_FOR_TRB(ep_index));
+> +			    EP_ID_FOR_TRB(ep_index) |
+> +			    (!ep_index ? TRB_ESP : 0));
+>  }
+>  
+>  void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int intf_num)
+> -- 
+> 2.43.0
 > 
-> thanks,
-> -- Shuah
 
-Hi, Shuah
+-- 
 
-Thanks for your review.
-
-I send this fix in Mar, but it missed last linux version.
-I think I need your help to pick it up.
-
-Thanks.
-Shuai
-
-
-
+Best regards,
+Peter
