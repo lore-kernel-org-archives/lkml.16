@@ -1,67 +1,145 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6393D24467A;
-	Thu, 19 Jun 2025 07:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAEC1624FE;
+	Thu, 19 Jun 2025 07:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319032; cv=none; b=t8R2f3zEjoIYz6HkqaSoYs/3P+EmdxxiGL2dJdfRc8CshXQWwi8hUZe1NCWHrVzAUp/+Dka3Vd5eK2+jicXMxREAXLdvkQMzcehGBWgHixx2ytq+qczwckvWL2MbqHB1jG6kxGV2MrA1t4GJyQQQ//XI+IXM22Tohhqz2am23ic=
+	t=1750319034; cv=none; b=b68GJWf5Kv4Px8X0/tEdc4tEafJDxKXEjlk8TwD9xAJgDoEAqAvrDD4DklhqTUU/aemMGPqfqXigJm07/0ahUcny2ZgGCjVolB7JpEQmMA86+QEeRWxI5XAwfW7703My7CcoPqbf8zmCuYBVxJQvCb90KfQUsVa3rJWD47riXGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319032; c=relaxed/simple;
-	bh=rbT33KMGZn5PjflB+2U7aFNbMysCNyytlu8rmV/EDOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXWS1cQ6O9M1MecJplUrQW+dthldB7ym/yvidby/59nXj+0iM1Bhi08Tz32xkgr1SVIzVjl74+6ACJf+SBOIOmhfOfF2WcBsWoasPExbFcybbAqt8G6aRSJRw/LvJD2Wrv7r7n0tE4KWZYU6wP+yTESD9D2rg1h2MZtC2qbRvtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=Il1fwPTx; arc=none smtp.client-ip=220.197.32.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="Il1fwPTx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=gx9ZYZEfMPvpNfsm7y2FmscG8VU7g8hiMvYXHAUSJ20=;
-	b=Il1fwPTxBxtqZ3FQjQNk7TdfLMfBJFI1gsaPam5Fw7dTvDxqCeWquWZvrpcYoO
-	CkHpyKXr0o/3nsk3h3ksRjfHnbVKrmhxe22UaPuEEptqQ0Mgel6XsDPF9VBNqA3w
-	qRhykdiJzzw/H99mxJw5OIFmnp8yj6BL+z2wAzHjCdvHw=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgDXHzwnv1NoPNT5AA--.63344S3;
-	Thu, 19 Jun 2025 15:41:29 +0800 (CST)
-Date: Thu, 19 Jun 2025 15:41:27 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Stefan Agner <stefan@agner.ch>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Xiubo Li <Li.Xiubo@freescale.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: vfxxx: Correctly use two tuples for timer
- address
-Message-ID: <aFO/J1+Q8mWiffKi@dragon>
-References: <20250523071921.43216-2-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1750319034; c=relaxed/simple;
+	bh=L7M1r3hXW846r86reJZJKNbDYYbqOkSgw23MVbxAEB0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dtl1VwgDK6ZJh6joEb2sz3XGWV6PeJuSf9QhqhlB78r39a2umr0OQHXHi8DLnPYn/E/Fn91Epmpo/EKfholDjRgeurkhsyEamyyzY5XDNkw0z0GTty0sXep4wilkpVV/KZ3tPdMsB/PV5CObOP0fFyn72DvC39y2SEjhgFpljH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bNCD10yfnz10XVT;
+	Thu, 19 Jun 2025 15:39:13 +0800 (CST)
+Received: from kwepemo500015.china.huawei.com (unknown [7.202.194.227])
+	by mail.maildlp.com (Postfix) with ESMTPS id B239114011F;
+	Thu, 19 Jun 2025 15:43:47 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemo500015.china.huawei.com
+ (7.202.194.227) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Jun
+ 2025 15:43:47 +0800
+From: z30015464 <zhongxuan2@huawei.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<stephen@networkplumber.org>, <dsahern@gmail.com>
+CC: <gaoxingwang1@huawei.com>, <yanan@huawei.com>
+Subject: [Issue] iproute2: coredump problem with command ip link xstats
+Date: Thu, 19 Jun 2025 15:43:38 +0800
+Message-ID: <20250619074338.1774229-1-zhongxuan2@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523071921.43216-2-krzysztof.kozlowski@linaro.org>
-X-CM-TRANSID:M88vCgDXHzwnv1NoPNT5AA--.63344S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUzOzVUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIQnoTmhTvylr5gAA3u
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemo500015.china.huawei.com (7.202.194.227)
 
-On Fri, May 23, 2025 at 09:19:22AM +0200, Krzysztof Kozlowski wrote:
-> Address and size-cells are 1 and the ftm timer node takes two address
-> spaces in "reg" property, so this should be in two <> tuples.  Change
-> has no functional impact, but original code is confusing/less readable.
-> 
-> Fixes: 07513e1330a9 ("ARM: dts: vf610: Add Freescale FlexTimer Module timer node.")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Applied, thanks!
-
+Hello everyone,=0D
+=0D
+I having an issues while using iprute2 6.15.0. When I created a bond and in=
+tended to use 'ip link xstats' command to query extended information, a sta=
+ck overflow occurred, followed by a coredump. I couldn't identify the root =
+cause through the code and need some help.=0D
+=0D
+Example:=0D
+ifconfig eth1 up=0D
+modprobe bonding mode=3D4 max_bonds=3D1 lacp_rate=3D1 miimon=3D100=0D
+ip addr add 7.7.0.100/24 dev bond0=0D
+ip link xstats type bond dev bond0=0D
+=0D
+Here is the result:=0D
+[root@localhost /]# ip link xstats type bond=0D
+bond0=0D
+                    LACPDU Rx 0=0D
+                    LACPDU Tx 0=0D
+                    LACPDU Unknown type Rx 0=0D
+                    LACPDU Illegal Rx 0=0D
+                    Marker Rx 0=0D
+                    Marker Tx 0=0D
+                    Marker response Rx 0=0D
+                    Marker response Tx 0=0D
+                    Marker unknown type Rx 0=0D
+*** stack smashing detected ***: terminated=0D
+Aborted (core dumped)=0D
+=0D
+Here is the result with valgrind:=0D
+[root@localhost /]# valgrind ip link xstats type bond dev bond0=0D
+=3D=3D242893=3D=3D Memcheck, a memory error detector=0D
+=3D=3D242893=3D=3D Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward=
+ et al.=0D
+=3D=3D242893=3D=3D Using Valgrind-3.22.0 and LibVEX; rerun with -h for copy=
+right info=0D
+=3D=3D242893=3D=3D Command: ip link xstats type bond dev bond0=0D
+=3D=3D242893=3D=3D=0D
+bond0=0D
+                    LACPDU Rx 0=0D
+                    LACPDU Tx 0=0D
+                    LACPDU Unknown type Rx 0=0D
+                    LACPDU Illegal Rx 0=0D
+                    Marker Rx 0=0D
+                    Marker Tx 0=0D
+                    Marker response Rx 0=0D
+                    Marker response Tx 0=0D
+                    Marker unknown type Rx 0=0D
+*** stack smashing detected ***: terminated=0D
+=3D=3D242893=3D=3D=0D
+=3D=3D242893=3D=3D Process terminating with default action of signal 6 (SIG=
+ABRT)=0D
+=3D=3D242893=3D=3D    at 0x498AB5C: __pthread_kill_implementation (pthread_=
+kill.c:44)=0D
+=3D=3D242893=3D=3D    by 0x493CF45: raise (raise.c:26)=0D
+=3D=3D242893=3D=3D    by 0x492733B: abort (abort.c:79)=0D
+=3D=3D242893=3D=3D    by 0x49281A8: __libc_message.cold (libc_fatal.c:152)=
+=0D
+=3D=3D242893=3D=3D    by 0x4A1621A: __fortify_fail (fortify_fail.c:24)=0D
+=3D=3D242893=3D=3D    by 0x4A17435: __stack_chk_fail (stack_chk_fail.c:24)=
+=0D
+=3D=3D242893=3D=3D    by 0x157A81: bond_print_stats_attr (iplink_bond.c:877=
+)=0D
+=3D=3D242893=3D=3D    by 0x157B02: bond_print_xstats (iplink_bond.c:895)=0D
+=3D=3D242893=3D=3D    by 0x1846A9: rtnl_dump_filter_l (libnetlink.c:926)=0D
+=3D=3D242893=3D=3D    by 0x185A01: rtnl_dump_filter_nc (libnetlink.c:969)=0D
+=3D=3D242893=3D=3D    by 0x16B0BF: iplink_ifla_xstats (iplink_xstats.c:71)=
+=0D
+=3D=3D242893=3D=3D    by 0x118C3C: do_cmd (ip.c:131)=0D
+=3D=3D242893=3D=3D=0D
+=3D=3D242893=3D=3D HEAP SUMMARY:=0D
+=3D=3D242893=3D=3D     in use at exit: 33,878 bytes in 4 blocks=0D
+=3D=3D242893=3D=3D   total heap usage: 8 allocs, 4 frees, 66,755 bytes allo=
+cated=0D
+=3D=3D242893=3D=3D=0D
+=3D=3D242893=3D=3D LEAK SUMMARY:=0D
+=3D=3D242893=3D=3D    definitely lost: 0 bytes in 0 blocks=0D
+=3D=3D242893=3D=3D    indirectly lost: 0 bytes in 0 blocks=0D
+=3D=3D242893=3D=3D      possibly lost: 0 bytes in 0 blocks=0D
+=3D=3D242893=3D=3D    still reachable: 33,878 bytes in 4 blocks=0D
+=3D=3D242893=3D=3D         suppressed: 0 bytes in 0 blocks=0D
+=3D=3D242893=3D=3D Rerun with --leak-check=3Dfull to see details of leaked =
+memory=0D
+=3D=3D242893=3D=3D=0D
+=3D=3D242893=3D=3D For lists of detected and suppressed errors, rerun with:=
+ -s=0D
+=3D=3D242893=3D=3D ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 f=
+rom 0)=0D
+Aborted (core dumped)=0D
+=0D
+Through gdb debugging, __stack_chk_fail was triggered after the end of func=
+tion bond_print_stats_attr function.=0D
+I first found this issue in version 6.6.0. After replacing package 6.15.0, =
+the issue still persists. =0D
+I also tried version 5.15.0 but there was no abnormality.=0D
+Maybe some modifications triggered this issue, but I cannot found the cause=
+. I hope to get some helps.=0D
+=0D
+Thank you very much.=0D
+=0D
+=0D
+=0D
