@@ -1,96 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED8422F38E;
-	Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D190623B627;
+	Thu, 19 Jun 2025 12:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336113; cv=none; b=n+3mQkFxLzHSB4VD/KoUwxseA7Y/pgY4u9ZDRWGvUZHMFr0SWkjC8LhFsBLVCQZIEmZnLECi2YlP4vz4H0ghbzG669JR4bbTOysC0bYHguM/8+W6jvl7BtkAM4edf5F7Ixr5EUa4pKBB/IhrCOUkYyqUHsHgYrFBN2DYPygEuTw=
+	t=1750336130; cv=none; b=cLtleqlLGaau3aKhAIqA96vrSAnHAcPPJ9AC5BRW6z2l+1noLb7aK18t0CDKlhtCVFqjiFlRKcYnAGSp3c4u8VCamsh8pXsIHL+ul2SsNxRmo73D+GQEYU6K9RaJ3qTs3+lRMx0lvgTBUeJADXY5kPnZL60x775VUU7srTVVlLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336113; c=relaxed/simple;
-	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
+	s=arc-20240116; t=1750336130; c=relaxed/simple;
+	bh=4bW674pfC7bs8dldvM0Hic3wFQnfBcgS3yLOQJJbm+0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pZh57cuZJQAfbaVecOsc5URP4UzGg1UdUN/xqPawg8I2nizCe7BhngvE0QAkhIEkaJ4Bbi32LwJyMNFBtOEdjLyOcCaC4K4QlqvX9dDi5OJ92FmoxEwPNnED9Sv8pX+ouKxocU4bmP9lewY5zCCpndSV6SUm9V+RDp4IIneQk4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i50bJxBb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i50bJxBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58566C4CEEA;
-	Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750336113;
-	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i50bJxBb3ciOFReU2hRo0Jm+1GasYM6SiUzjADPN//ef5khvo+Ge8snIjXAVbO4pB
-	 7lPo7e8MeatoIo6IktyGT2hSB/4Wg2zFmdUqopGWOB3t4Q6DCE9O4lSedOSKjVQr8d
-	 Y9UNVIQEldUq9OD26jRfhgW1wqVokR5FGzLB/GPZ6tTRIOMJuC0PuygmQoNBjR5gRV
-	 UgHkLAArUmpIiofiq1pRTuwEXUpwzTipUXn8P6R7r9Bv4KapZN1b3MUFSmGuPR9NDw
-	 zLRQ7qaA3z+j/XQHQgASuh5dNiH1WYczJYp5Ln5aBiWfYqbpEk0vhFGzxiotHVtuRF
-	 FYM39ksGCawkw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so1037647a12.2;
-        Thu, 19 Jun 2025 05:28:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDQzRXqIpYUMDCfM1ORDQcxVR/+aIu38frNN5QYalHtXulpx/8BjzMgTmG/eHUf2Zg9e/X80mhC2R0a/4=@vger.kernel.org, AJvYcCWeQ/DFCEGIviThTTOtaACHZkQgjsM8t96s4eEvglfIRy5kj3Q0uPbvbhEaZpsrttGCHBUrKpMefdl+SLUZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YygPYPiCGjvN/DjFvB9y4rcerkvnBQcGuxdHE7mkTmMJUsb0Zpm
-	6oIa0GFY9aiFPbqzTGlmwtnIWVKc8zLxqe7xlLpZIn+9lCxElzJP7tC8l4l+l4Fr3d7F0/qG4+s
-	flyLHD/WaWByMiaNOLgSF5IH1Xoortoc=
-X-Google-Smtp-Source: AGHT+IF85I8sP9z6G7vD5ObsF0vTNB/bVlYvJOso17+d+NgDAyNvURfjJO/e9qF6e8tKh/UFnQNS+dLD883osXpQs5Y=
-X-Received: by 2002:a05:6402:5186:b0:602:1216:fdde with SMTP id
- 4fb4d7f45d1cf-608d08b6bc1mr18737168a12.14.1750336111892; Thu, 19 Jun 2025
- 05:28:31 -0700 (PDT)
+	 To:Cc:Content-Type; b=E4HKnCDCW33POfuufZcR27QEBvht2pLldWSCahzTUynN0UFPRyQvGJpwWDzbTCgOt3Kl7HScVLybgV9pE49Tlmi6QaaIQyiL+Y/P8v5EWgM65fMM/UgRzIrwI86jyGem1TYEQJl3JP8hVnAZfDMgWRtsWRtfTpWNqsbHk4Dta0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5315ebfda19so256250e0c.1;
+        Thu, 19 Jun 2025 05:28:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750336127; x=1750940927;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z9KqxynSkhQNk5Ajxj7HbKnlzRSGeB7hI86xplRL1UM=;
+        b=xSb2tUj/Lw5Abza4W0pxxUhUL4spauPDCPlyEG3obz/lHuFxi2kIh3dn1dlCfZ+mPp
+         6A8tH5Qr6xa6jOBPoe2Mn5qQIV+Ltc4bOCeyoNRBfS25wJtJq2Row7HFXizE4yTWnqrJ
+         YdvBMNGHe/0ospPYVpNFLJWz7ILvVkHWVt2YiE0CpPJIoTfYVFS/WCghgbUR2snXZbiE
+         2hfwc0pOY6hqfYsHNuaIVPgnO5vK1cAuw1LOaiyEaxX8I/LEoj2Er6ln5jhM5OS117ci
+         EkFFs5K3A4JHgNEmi5+2QP1cxx/J4uQ2Keb02y5ThpOfQn5S5P/NlDd/RJbF3Rj4/7wm
+         Td/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWb8EhTnlvzJYY8KpPn5zy3cE+pg7v5VpQLGp1uqL7SLTa4BN3r0/S+b67j5fh63z73OYfc8+qI4bEkBjUbJG566LI=@vger.kernel.org, AJvYcCXEMSE/q93t9h/vzJsoAx9oGe6lwdqgis0nTxSI/KhcrHNeR20JEiq9rLgy0XpB9vDFfr4+ViIBfGhK@vger.kernel.org, AJvYcCXdYCHYda80CDinBCiWRbHBpiYjln5MVCMCbP23/g9xvjp65/uHAmu/tIxJdMCFfOWhP6wEHqpmzjqTqekg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmWIG6iTKgun62fNH2jCR5uWVI923u0ARsNrkVRFxDaPjNuzOq
+	jxwvCKdXu86XEg8cBtMo89WVlfFMtyw0pFfcsGH6wMDHhS+5vMu4ipehonB2Nf8M
+X-Gm-Gg: ASbGncvX0pZCGqoKIT0stD1qMZ/I93gBwCX12EM8vNO0NcjCQz3ikyWbwCeHoc77Gw/
+	5p+l+tz4tIJWWw3kvHdzOXd9QnPAb+cbjMKcwE8cNldbtlMIdOTgSG0kxXeK6+QXomsPz4SUk4I
+	J7OUiChh8IHmiRHTWbh56iuWove03GKN3S1oWrK0HyBcs+ldiNZGjoNLQvaeC6iFwfPriIGOR3l
+	j69a456bF9MFitQr+BNDxgMChpF88nZnkQJfZObqoW84TLlSHsxQJLihAamBccKEc2ko9eI/Zvl
+	XhzmrpmNdfrVmEcGkaN+F/eGfVbiKFiWJuckRsklPACeKylvhG+5zaVsdpumhPAQjhleOFO8yLE
+	OXQeUwXN+bE0vunIakWucaoo98H71QTnPbzMYEiE=
+X-Google-Smtp-Source: AGHT+IGx8k3nfavDsoWNmKZRXluJCsYYc+fdwa0aziH8qtN0kmE/8rylSR+/WN9xX9gEfqPKDqglzw==
+X-Received: by 2002:a05:6122:91e:b0:531:2d3a:32aa with SMTP id 71dfb90a1353d-531493eb7d5mr13489184e0c.0.1750336127238;
+        Thu, 19 Jun 2025 05:28:47 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313dd849fdsm2398314e0c.3.2025.06.19.05.28.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 05:28:47 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-531a1fad7faso184456e0c.2;
+        Thu, 19 Jun 2025 05:28:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWVFAoF8S6brFDP3YB3ZrP7ZvmJexWdGrWhvqDtg8yVlTBFETwYqdXY9YXqCVzGKlfpNwE+3ZUxAnVki9rE@vger.kernel.org, AJvYcCXha2fwUF332A0og6oKyLZaSBO/X0egJmHWoTQ2JWAQh+Xzrlue78y0InYhbkXvXIJ538eDzr0JqqagasszEjaTk+c=@vger.kernel.org, AJvYcCXzvaZX4BtkD9ac3VlfJY43S1aFYYlf8OowAV3HV/6EO8ujA/92p1PzOz1R/bFpM6ZY2rchJ04QJd5N@vger.kernel.org
+X-Received: by 2002:a05:6122:3208:b0:531:394a:23f3 with SMTP id
+ 71dfb90a1353d-53149d80aadmr14846344e0c.10.1750336126701; Thu, 19 Jun 2025
+ 05:28:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608141509.157300-1-chenhuacai@loongson.cn> <20250616185737.GA23807@google.com>
-In-Reply-To: <20250616185737.GA23807@google.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 20:28:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
-X-Gm-Features: AX0GCFurjQs-cBGWxoCsgFhwNLZ8-8cvY9M4iIDvSP0-Mv6LkTl-cMO38sqU-Dg
-Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org, loongarch@lists.linux.dev, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+References: <20250613135614.154100-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250613135614.154100-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250613135614.154100-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 19 Jun 2025 14:28:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWGjH9vBy7A9OzCMSsAvQ0PCr30BE8rwOoeOcwWokfjGA@mail.gmail.com>
+X-Gm-Features: Ac12FXz6gOogY53aCzPg30ihF40YYPIdOFf3WNQ66idS_HlyDDWQlgy2eefQecY
+Message-ID: <CAMuHMdWGjH9vBy7A9OzCMSsAvQ0PCr30BE8rwOoeOcwWokfjGA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: renesas: r9a09g077: Add missing
+ hypervisor virtual timer IRQ
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Eric,
-
-On Tue, Jun 17, 2025 at 2:57=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> =
-wrote:
+On Fri, 13 Jun 2025 at 17:15, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> On Sun, Jun 08, 2025 at 10:15:09PM +0800, Huacai Chen wrote:
-> > diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/=
-crc32-loongarch.c
-> > index b37cd8537b45..db22c2ec55e2 100644
-> > --- a/arch/loongarch/lib/crc32-loongarch.c
-> > +++ b/arch/loongarch/lib/crc32-loongarch.c
-> > @@ -11,6 +11,7 @@
-> >
-> >  #include <asm/cpu-features.h>
-> >  #include <linux/crc32.h>
-> > +#include <linux/export.h>
-> >  #include <linux/module.h>
-> >  #include <linux/unaligned.h>
+> Add the missing fifth interrupt to the device node that represents the
+> ARM architected timer.  While at it, add an interrupt-names property for
+> clarity.
 >
-> You can drop the change to crc32-loongarch.c, as it would conflict with
-> https://lore.kernel.org/r/20250601224441.778374-8-ebiggers@kernel.org/ an=
-d
-> https://lore.kernel.org/r/20250612183852.114878-1-ebiggers@kernel.org/ wh=
-ich are
-> in crc-next for 6.17 and already handle this issue.
-Thank you for your suggestion. But I plan to merge this patch for
-6.16, while your commits are for 6.17, I can only keep it as is.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-However, the conflicts can be easily solved when Linus merges your
-code, or there is an alternative solution (if you want): update your
-patches when this one gets upstream.
+JFTR
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Huacai
+Gr{oetje,eeting}s,
 
->
-> - Eric
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
