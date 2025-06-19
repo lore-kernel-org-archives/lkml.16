@@ -1,154 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6CD264F9B;
-	Thu, 19 Jun 2025 08:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FFA3085A5;
+	Thu, 19 Jun 2025 08:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322854; cv=none; b=cjXe1hifjFx1WTbmuID//swWJA0awhZA3dtFzRonXXkMHTF6SskaI6xdy65t0huPiK2NlbZ8GwH3qIIbLxfZnAUgC4wuSC3OxUw+Cfq9Z4YG0FVY9uJqBpDSiSQkobhaHlhtKJD4wXk3W3KjJYLXeKxUQh7u1X1fEwDM53RJzQ0=
+	t=1750322900; cv=none; b=jNslDwLqwiPaljFBP6phpqWkuuqWJ9rbYQSjIfIIMqUvQH2f/FSgjPCqnlWYqsSWNEVS9Qag3fgRY+S6ojkoULF3EXIEsA8XfOTQWgorimzjDtIaHw+iHKidh4fI517eWoZgxFLbIFP7T1OuIECrULn4pXP1ZAwfUrXBumdxPo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322854; c=relaxed/simple;
-	bh=Muv3gqtcZ7hc62zIDmE1fQQ1ZoJ86CDm9SrW6sUcTZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PWxI3cGAc2OjReZcP8NDRjkki4OlpoTrEGMqm58Gsig+wHsUXKhVbZejrVY55ZVTKK6iNJjZ6hKV2ITNU0XOM1x/IfXZURBL+1cWs8RO9ITX308C1VCW4BQTkOl45MN0Lhh0arSdtTtEBmPOuffAlDnLURHGHY6FvriMo0Tc35I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7z/UCTl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750322900; c=relaxed/simple;
+	bh=48BhRGPoPQC3ZkFsaCUupKaDvr/iXvVX4G/QDp4DAKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBetjvoe9BQyJxypKmC7JUWpYUxRBtuYVZimDpIQoy/kBh75JVyMrU5c/f8h9s6ayZgDC7aFS4tqCioFIp8GYCb5mhQYoyQJJQ+h7nvTzGXwRfOblAi+zsbUvMK9E08yrFl9KV7ZKAYE6eEwLw17b7s/6qYmzSaOSSM118wrouw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwI1tCtz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7z/UCTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5549FC4CEED;
-	Thu, 19 Jun 2025 08:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwI1tCtz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A52C4CEEA;
+	Thu, 19 Jun 2025 08:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750322854;
-	bh=Muv3gqtcZ7hc62zIDmE1fQQ1ZoJ86CDm9SrW6sUcTZk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r7z/UCTlF2kKrOJLPjcS28VaGPmNdHI0quGlaZX7AXDlkpOGTGgORxqixWevRwgb3
-	 rp+jMSv8m4lYokNEpVLJ59nNNT2hV0ej3enTRwsCKk3kSq+O+280ZzMW2j5f50RVkq
-	 c5N+vc83YkVj4ZM5fVVNX02cFBx9CVTvMQZqlQR54YgqjWaPAndccFF+U14uE8Odmh
-	 63Zw/cUYxJYt6ypRX7rGFFXkG9Phqm/A0QeEcPW2SHecEt6DAR842CgtOBCqq7m32M
-	 6ydKH0cBjyJhA2xb++Ial4uAkE6+G4vy17dqOCFN96V+IGWWjvDOoEVnsdiWTBkkvN
-	 ClVHVCKRinLGQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so759419a12.2;
-        Thu, 19 Jun 2025 01:47:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2JJI5Yejf89+m7Gti21SFZkgZ9ce50QTORNEe5UkmldtYyguBWBAWYsBf9pzC46cq+xd0pPY6B8YVjJIg@vger.kernel.org, AJvYcCXsjgtaKfwIIx5ykHL0u/MRGwD6OG7JimpfV9K0BpHKj3BpuqYwIK7TluBSl45Y+6el6Ho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyqVnVvyt7MGDF51pKoKKJvbDfmwWJADnL1eVlrYCZXBXa63FD
-	eT8pNcjbRtZQbHw9RUrhMyD57nOJsY7NNMEgICTLFbWnklmNqYuysZXyLQSAtd9v83tCMCMvI3R
-	w3nQ3gZpk95AVH//E1ShAXR+3PUS7lPU=
-X-Google-Smtp-Source: AGHT+IGZWCNKwnyvE35SdXS5WBk9xN3oMka8jPWIYSnikYAanhsjcXod8utMB9LTgnkHZ/IPrs0CsRlIyZwXFTkTd2w=
-X-Received: by 2002:a05:6402:2749:b0:5f7:f55a:e5e1 with SMTP id
- 4fb4d7f45d1cf-608d0976322mr16486686a12.24.1750322852910; Thu, 19 Jun 2025
- 01:47:32 -0700 (PDT)
+	s=k20201202; t=1750322900;
+	bh=48BhRGPoPQC3ZkFsaCUupKaDvr/iXvVX4G/QDp4DAKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UwI1tCtzVaxcRAQ+91xU5Yw1D1P5yrJOQ1NmyJ1w4RJuBfuwYpXo5TpyixVWFqgmh
+	 HMMOmlsLB++U7x1wCuApC2Z3C+zFZSAokbSkG2ha1zX3CBeP76mnO3hcCoowshVdTF
+	 xv0qWAjQ7GTRisIXK5A/3Acc+CDMz9W49nN1oEfdDxcnekeK3MfICNEI+1xTEckG8g
+	 lj1FmqG3xMwbKZ6Df6kQV5Fg1VEaR4d8MIEgBANFbghsnjmYz8DZnu09tg1G/tKlnY
+	 T+YVwJD5SmL/rWD7pqSq+29q326punG6FW8MynVsf+Zn3jc9dylXtCA1Ofm+RnRmkX
+	 Qmz25pxKQquJA==
+Date: Thu, 19 Jun 2025 10:48:13 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
+	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
+	amir73il@gmail.com, gregkh@linuxfoundation.org, daan.j.demeyer@gmail.com
+Subject: Re: [PATCH bpf-next 0/4] Introduce bpf_kernfs_read_xattr
+Message-ID: <20250619-zwirn-thunfisch-de6e4891a453@brauner>
+References: <20250618233739.189106-1-song@kernel.org>
+ <aFNdNv4Bvw6MwlaH@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611015145.3042884-1-maobibo@loongson.cn>
-In-Reply-To: <20250611015145.3042884-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 16:47:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-X-Gm-Features: AX0GCFs7PzCirFOY8JuegGHGWftfJ3eh_4ShbpIciCF89h9EWVdRzTfi6iSQ5OM
-Message-ID: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
-Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFNdNv4Bvw6MwlaH@slm.duckdns.org>
 
-Hi, Bibo,
+On Wed, Jun 18, 2025 at 02:43:34PM -1000, Tejun Heo wrote:
+> Hello,
+> 
+> On Wed, Jun 18, 2025 at 04:37:35PM -0700, Song Liu wrote:
+> > Introduce a new kfunc bpf_kernfs_read_xattr, which can read xattr from
+> > kernfs nodes (cgroupfs, for example). The primary users are LSMs, for
+> > example, from systemd. sched_ext could also use xattrs on cgroupfs nodes.
+> > However, this is not allowed yet, because bpf_kernfs_read_xattr is only
+> > allowed from LSM hooks. The plan is to address sched_ext later (or in a
+> > later revision of this set).
+> 
+> I don't think kernfs is the name we should be exposing to BPF users. This is
+> an implementation detail which may change in the future. I'd rather make it
+> a generic interface or a cgroup specific one. The name "kernfs" doesn't
 
-On Wed, Jun 11, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> IOCSR instruction supports 1/2/4/8 bytes access, the address should
-> be naturally aligned with its access size. Here address alignment
-> check is added in eiointc kernel emulation.
->
-> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
-> function kvm_emu_iocsr(), remove the default case in switch case
-> statements.
-Robust code doesn't depend its callers do things right, so I suggest
-keeping the default case, which means we just add the alignment check
-here.
-
-And I think this patch should also Cc stable and add a Fixes tag.
-
-
-Huacai
-
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
-eiointc.c
-> index 8b0d9376eb54..4e9d12300cc4 100644
-> --- a/arch/loongarch/kvm/intc/eiointc.c
-> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->                 return -EINVAL;
->         }
->
-> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
-> +       if (addr & (len - 1)) {
-> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
-unc__, addr, len);
-> +               return -EINVAL;
-> +       }
-> +
->         vcpu->stat.eiointc_read_exits++;
->         spin_lock_irqsave(&eiointc->lock, flags);
->         switch (len) {
-> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->         case 4:
->                 ret =3D loongarch_eiointc_readl(vcpu, eiointc, addr, val)=
-;
->                 break;
-> -       case 8:
-> +       default:
->                 ret =3D loongarch_eiointc_readq(vcpu, eiointc, addr, val)=
-;
->                 break;
-> -       default:
-> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, s=
-ize %d\n",
-> -                                               __func__, addr, len);
->         }
->         spin_unlock_irqrestore(&eiointc->lock, flags);
->
-> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->                 return -EINVAL;
->         }
->
-> +       if (addr & (len - 1)) {
-> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
-unc__, addr, len);
-> +               return -EINVAL;
-> +       }
-> +
->         vcpu->stat.eiointc_write_exits++;
->         spin_lock_irqsave(&eiointc->lock, flags);
->         switch (len) {
-> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->         case 4:
->                 ret =3D loongarch_eiointc_writel(vcpu, eiointc, addr, val=
-);
->                 break;
-> -       case 8:
-> +       default:
->                 ret =3D loongarch_eiointc_writeq(vcpu, eiointc, addr, val=
-);
->                 break;
-> -       default:
-> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, s=
-ize %d\n",
-> -                                               __func__, addr, len);
->         }
->         spin_unlock_irqrestore(&eiointc->lock, flags);
->
-> --
-> 2.39.3
->
+cgroup specific, please. That's what I suggested to Daan. 
