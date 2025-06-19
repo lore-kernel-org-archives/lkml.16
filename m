@@ -1,237 +1,197 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2078.outbound.protection.outlook.com [40.107.92.78])
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B725258CC8;
-	Thu, 19 Jun 2025 07:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750317250; cv=fail; b=SbHQZrbA1ZNReHRzwPRH3H1J+YfhFMPiocKwQbGnKeux5HFC6cyRyH63pOtr07brgWR69mChQ1ur3VhTlCAyCrL92ggfcJijD/zUURTUyfK651nyKpLnmFlBD0vioiSnsda8fPYahfwxahwFO6+1cY/Zbf3mMxwMbLsRnadYosQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750317250; c=relaxed/simple;
-	bh=ct+hVDSqfhkdJryzUBw9aADOav3PXTIefxI252cC/Cc=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=KZtfQHOtkkz/pKugVqbqrI1Y5sSsDN08Neb39fxEmr4dw7Lv2pQlFs0Z0z+yQTGPRpAoqHoIC2vfKwwfcGvmPKgWlG0kidx/AELpBRAjTJDWW+b8iCHFMwN0EIoBSJv90sg6QesOfQn6vagJH8ffat8scD8yyv+0hVNpXU63AP4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VwZaUpZq; arc=fail smtp.client-ip=40.107.92.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FAF248F6D;
+	Thu, 19 Jun 2025 07:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750317275; cv=none; b=cW362/4xM3cg+TU1UESXHbo8tJnc+GSelw5JmM+auAVTEn7HOO87NBWr9O+Fzmv88cHYvC8HV+SeFYYIwvVDWVCEjGeWSx7stKgl13FxtzUPjCftUanBJ2wyTwmfoWZFok8GbpsRdEkVdXRVy+RiCwnb55PvTSmArf+yQTyRGRE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750317275; c=relaxed/simple;
+	bh=jH71zs3LfWkKnteZsD2czE+b35841PmPNpLX/e68fuE=;
+	h=Message-Id:Cc:To:From:Date:Subject; b=S0ZVt9jR0gfQkhJyoIfrY7lKNIuHgJrx2AOm49n9yR+kJgS4/DL5QtYKG30bBZ+XeOAF5T8jUOgYs6g1yrr218JHRUk2QgwB0ZWIa71XIf54tAEAh2SetfMnoH22TV/38PdPvSWRhhhV0DJIzDca4P2J/5thGJizWpLJj3h27eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=QxCNY5sL; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VwZaUpZq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M9wuwqLi6rtiXVOKEHsOXv7bTF2IZp9o6rMw5N9SjOx9j2Dd+zCHtXaSuVK52bmF94+4kpwb5Lp+PbvQ5IKT9pxfhCQ4BOHZdVrzXT9dRfdrS4NyNvMhbUXrzHaED/36mzsE6xwK98imcDggnziSpVxe/NGy/qbqU5RQxnUycuzL3KY1WH09vHU8oYJj+RzMe+gCdKdoLPa44ok3kDFgGB4LcHeUtrwgO1NIxWq9cTVRLSzDZiAWMMhh/3lIJsL+PcZ/7/cBZWVXxhRin+4D5dhWvCMyPU23bhH3/u4H/6rr9aphywVy4FMYgYEVTyJAWQFsjX9JN5XCb7I0kVZXDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZqPWN1i2wY1zeIkqUr6BelZrFeDu9RJw6OjMYUjCIVg=;
- b=iKH1qIeOuYbqvtIQcyY/A4gqpN0AyX1PwY9e5loMFSF9gF9IeyznRynStzHAY4cjtpz6a2UHOQ06psQeNZgZe4CQXJmPwPVQ5z9ArLrSLNkn4om7FaUq1UYL0Gia8uJn8AHtTuPlgptoY1L5nH//PKZIg3l5QDI8C0tf3U75L+q8qzJhrRDjYVwC1DK1T8e9Hi6oRoSpH0Zn7+k5MdGMUXXLcTchyIhfy3iIk2yZ3KUpYm9cpRLs8zLH3KeKkOA4AVXxDKBgZ2kYkJydOOzG+4CxdqC42G0Zwm01YKX1jt/g578NTsKdQXuSDyqaRvWKR/q59ZO3/fwuy10VGp2r9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZqPWN1i2wY1zeIkqUr6BelZrFeDu9RJw6OjMYUjCIVg=;
- b=VwZaUpZqadNrIg4b8fkB4Epzn1gQuso4bRxAfi09/c/DgM6rUDvcTzQWCTa1RSOLhz23bKntCn6Y8XYl2NTEZlPpoBoRDhZ9/t/GSFGGz4eAoLK+ESKuWUiO9jmCnN0zp/TkJEuzawwjKI7ezuHeKnHYkzlRtkPOOCVSssgNwZBA4hEsT3GhDH1Ly5W1g8p8xuXRV+ZtkXuCsjWR0TFBK0BIsF19jdHN2vYNQabeacEdtBqdSz6Tv8mjQTRJMAITvZAyzOmi2tAy8QFS1EgaKNZh6gGkhQHAfC+WHg8+qDxpVZStnFXdUQqQAl3zmrP5onclVow+FotCdtd7CwclWw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by DM4PR12MB8474.namprd12.prod.outlook.com (2603:10b6:8:181::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
- 2025 07:14:05 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
- 07:14:05 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 19 Jun 2025 16:14:02 +0900
-Message-Id: <DAQBOGIUHI90.2NO9AVT4IRDTY@nvidia.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Benno
- Lossin" <lossin@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Ben
- Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, "Lyude
- Paul" <lyude@redhat.com>, "Shirish Baskaran" <sbaskaran@nvidia.com>
-Subject: Re: [PATCH v5 00/23] nova-core: run FWSEC-FRTS to perform first
- stage of GSP initialization
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <aFMeJZuXsBRhUxJC@cassiopeiae>
-In-Reply-To: <aFMeJZuXsBRhUxJC@cassiopeiae>
-X-ClientProxiedBy: TYCP286CA0226.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c7::20) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="QxCNY5sL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References;
+	bh=eNmGhx6R0M+QxE1a3W/1Hlcq5xEj9nhVFRfzWvErvmQ=; b=QxCNY5sLajg3zF6IR5NcXZxP4L
+	aIiEzqPLqA0XCcl8t0RDZkM0nwafrHNkVT7CKf2Q7gZIwIFxGq+eMlx7jSXNk4OlBLxsiQ5woEyaZ
+	qxu1R6L8kthAzg1i/2xDEp5r8jYpeIDEi79KHiUrAxQws/ELtKTYtVo6kfedT7XLpMTT6Mzc1WiBo
+	Nx+fUvLwFZbTH8ng6//9Kgnm85NjXjeqOCwQlfhKLaaInVJrizkeNO8+3H9P7jx1LmD15hawpZHSy
+	i0KxpYwImnLTRE7pNWviaI76Hdwrq58AzXdxoLvOvs4p8rgVpUf66LYTTnNb2oNkKKPcuh1JhSIUk
+	4SxjLI0g==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1uS97m-000BbN-0a;
+	Thu, 19 Jun 2025 08:51:50 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1uS97k-00026S-3C;
+	Thu, 19 Jun 2025 08:51:49 +0200
+Message-Id: <DAQB7EU7UXR3.Z07Q6JQ1V67Y@folker-schwesinger.de>
+Cc: "Vinod Koul" <vkoul@kernel.org>, "Michal Simek" <michal.simek@amd.com>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Manivannan Sadhasivam"
+ <manivannan.sadhasivam@linaro.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, "Marek Vasut" <marex@denx.de>, "Radhey
+ Shyam Pandey" <radhey.shyam.pandey@amd.com>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+Date: Thu, 19 Jun 2025 08:32:58 +0200
+Subject: [PATCH v2] dmaengine: xilinx_dma: Support descriptor setup from
+ dma_vecs
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27673/Wed Jun 18 11:48:55 2025)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM4PR12MB8474:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9231aa64-5e32-4660-8603-08ddaf00e00c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZWNkdFV1cVMvbmFhMTB0QmQ4d0N5YllUWDZVS1ExME1VaklXQ0FpNWJENDY2?=
- =?utf-8?B?VXdTLzhQL1MvTnRxKzZhVURZM011S2tScGpFSmhqbHNqSHdqM1I4ZXN2SWpj?=
- =?utf-8?B?L1kyRTBaSWhuYk5welhwZG0zb0wrb3d3VDdhR2Z3MkNjdmZ6ZGdzQ0ZMN3h2?=
- =?utf-8?B?NXNPdzZ2QXFLeCswMHp1WlZTOGZXaXRjVTk2UGd1NC9QalpRaEF5ZWVrblkv?=
- =?utf-8?B?eDBaN1hXcjZMMGgxTkJnZ01iS0ZwUXhKKzB4SGpSSGJQU3ZadksyUytWQm5T?=
- =?utf-8?B?MlVTRUM5ZHpmQkkrcmZlS241RXNIMEZadGVzcFMrWEM0MmZDY1hwUys2SzVl?=
- =?utf-8?B?eGduWXpod3VXL0tmMEd2U3JaT2FjbVVTZzZVcmNkY3YvNGxHdDRhREJTVmdi?=
- =?utf-8?B?SWtXaFpEaW1rT1ZtYkNrZzJ2UnZMd250OFhhV2dhV0R5d1l0dUxXcmhqOHVB?=
- =?utf-8?B?Vm5LT0l1RkUzUVpvMk1wN0tEdlk1amNvZEZjOFU3c1ZKL1BiNkFSVWpFYUJx?=
- =?utf-8?B?WUlnUVQyZzBjYlVjZGZkWC9xNGlGL1ZlaWNJa2RXbTBZNXJzVmhJWEY1aGF6?=
- =?utf-8?B?WUNlS1hCOTFpNGVIODRhaVZtYWREUXhCTEtxbTNrLytQK0FONS9rSHc0UER2?=
- =?utf-8?B?R0dmREM2WDVxK0hDRWpDMlZYUnloNkpsTEQyb01TdlI5WWJTNDFlTTBqZ0My?=
- =?utf-8?B?d0h6Zll6dzdNdFUzY05oWlY2M3JzcEFaRmY5NktuSTZrcVFLK1lCS2lxQ21N?=
- =?utf-8?B?SlFNbFVBQTcrUGQxaGp2ZndLYVY3OEVnZG9jc2xxdlpRZDRZV25scms4REcv?=
- =?utf-8?B?MC9sKzFJUGV0SHFGZ0c3czlXa2xYRkFzRWVVNVR4cXBnMGh5a1Q4bXlJc2tG?=
- =?utf-8?B?YVB4bEtZd0licjhRQ084ay9waENiRW1hRkI3UlFSMml6bnpOclFtZlRiVDM1?=
- =?utf-8?B?Zlc4YWZIQmZobXBYVTNmTU4xR3hUa0J4K1lLMWRna0VxQzdIeVVaeVBLRko4?=
- =?utf-8?B?eXQva2loeEFVMm1HK0RBSFFER2s1TURXVkI3QjBVM2dHdU9rOUtuSDdLWjBC?=
- =?utf-8?B?SGQ2eEtKT29BU1lkYit3WU5ldkZoVlBZNXZOR2Uyeks4bEpOeGdLUlRaWCtH?=
- =?utf-8?B?YTRON1I0aVpFbFF1UVZBeG9hRmtaQVVSN2dSWGRLUTVDUyt0OEhVdzN3NlAx?=
- =?utf-8?B?N2lwNDNXYnNUT1BLWWxDdGdFbVFmK2FmT2pWVFgyelYzUWFRaDFHWGdmQklT?=
- =?utf-8?B?bUpHLy9aVHcyNk9aYVAzcUJEelRFTzZuTVFNaTk2UDNDZHNDbzVQOHJPRHZ0?=
- =?utf-8?B?U3JXTVZURTliaTJNK25obW5tbGUwVDNFZ0RSWVZsbDhlQitRZHBXeTYzVDNL?=
- =?utf-8?B?M2lUQjlTdFBkVzJYT1Eyb2FQc3RUMHNaamZQMUF3ZHZUYURrMThodUFmb2l2?=
- =?utf-8?B?RXg1aW43RW1LRVZFdnJUWWFqdTFtaGFwWndMS0p4ZWdYSG5OWVU4dWhmcmZm?=
- =?utf-8?B?MzRHcGV6b2xwYVNnZzdBazdoR3RPWitIYm9sU01lUTF4aTVMa1VZaFN2RG1i?=
- =?utf-8?B?NExyeDNQV3ozMmFIQlBpN21XL0FtcW9PdS9KSFVmSHNCai83RDRud21rYjRj?=
- =?utf-8?B?azh4T3BGSFFSSmtFYmFiNkJqM0tnVUdmWWpJbm5rYkJLNUV4M0VJc0VhU3dE?=
- =?utf-8?B?TEo3TzdlZkFETTliT2RKRVZ6Y2JaYzNXaFlMZUorK05EYyt1bmF6bGxXREhv?=
- =?utf-8?B?UVN1RG90UlA1SVZ1ZmphNWpHVFFLL1dXN050Zi91Q0xmcjN1SlB1ZmRaam0z?=
- =?utf-8?B?YUdHYTFRdTVMUXFoem5DRDJaWEZxLzFQUjZhZ0kzU0RmZUJTblpkR3Z2MnY2?=
- =?utf-8?B?UWdXL3F0TDNUUE5semJ1Wjl6MlhuNHFzN04xN0FZUUdZdnd6bzhIZkV3Vndr?=
- =?utf-8?Q?7WysgY3Mcxs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Sit2OTdsbWdwbHZVaTlrRmgrVjNLcGZ3aGlRS2lEdW1VVldnSjVvdUV6WHU4?=
- =?utf-8?B?TmM3cFdwb1MxRXBzdExCai85cWZjRlk2V1VuZmhFYWtvS1RHTXkwY0QvL2pp?=
- =?utf-8?B?V05HMFJHRlB1aDZlVmN5UkJwSm5sU2FrY0h6Y25PQ2tGakJ5akpDeDJlOUFO?=
- =?utf-8?B?VUNaZklmSG9ydnFzWHRjNWdiSjFYZVhlYXREbC9pUDAvNS81UTdJR3FBaXd6?=
- =?utf-8?B?azE2S1hETWZvVnZRNXB4Y0FIOEVHWXhBUGQvYzV6WDNycHlDUnliUk9LRnNR?=
- =?utf-8?B?KzU0aHFWQzROalJFUk5XTEJFODhaRFFVYUpUZ2xNa2J3amFOSUg5QllieTNJ?=
- =?utf-8?B?MFpseElCUHRkR2lEVnpxZFkzMENkTGNVMUVDQVFSSDhWNHYwS0tuR1E3Vml5?=
- =?utf-8?B?QVl4YmFiTitDU0pmMTlQZmkvVTd2ZXJickRaVTU4RktEMjV6RlB5VHFJZTBt?=
- =?utf-8?B?VlR2eXM1ZWJoM21laXYxVGhlN21qRnV1UkROWXQzWThSMXZITXRuZmxyUk95?=
- =?utf-8?B?aXpUT0NjRW1OaE9ES1gxNEZCMXF6MGhEZTZ5Z1pTV3VKdkVtQk51ekI3OXFI?=
- =?utf-8?B?UnZaQWxEKzFtQVJqRjQzR1gvdkcwNXdFdGdRZFhQbktMemNNWnFZRXcrYXZV?=
- =?utf-8?B?OFR4MGxkZkhsTGFGMWMzNjA1SHZiMENYRGdFMWdiNWs3dm92YWEzaThLYjdZ?=
- =?utf-8?B?SmZ1d0pEREtxOHhtTWtZUVk2clh0TEx0V1dYYzlrYktrdldXZVR4U01scndP?=
- =?utf-8?B?eTVsUG5BM1lPSnlyZFZKNmM5b21BUkdOWC9zSDVrMjlKd1piRC83NEsyVC94?=
- =?utf-8?B?T2RCVHdvMUVpQVo1elJxeks5enZEM1BIV3ozMmdiWlJBSFRUVGZOSk4rN3g2?=
- =?utf-8?B?S1RoejMxZzh2ems1ZHExdFU4QlhoRnc1UEo3aEQwK1ZPMWpvUzEwaWNPYTB4?=
- =?utf-8?B?VnA1dVFPYTl5Z0hBd2NHTGVrMnAzNXEyc1VOYlFOWWNvSXVva0o3WHdocnl4?=
- =?utf-8?B?M08vTWF2aHJybG9DY1lIbFc1Qjhtb0kzWmJkR3dyQTJYR1dkM0JpOStnN2JY?=
- =?utf-8?B?bWRHSW5kTExOb1AzajYwNWg2Y3g0d0l6TUNSeWtHbDVDSHIydnJld2o3RnpR?=
- =?utf-8?B?eFh1YWJVekZKakh2NTFKTEcvamNVWEVHakFkYkV5ajFYcEZURTRrMmt4Zksw?=
- =?utf-8?B?OGQvL3Q2RjBRVGQ5b1hMcXhYSENFSzh2Q0trTm5Ha1JzdHF3cy9Gb1pCWUxW?=
- =?utf-8?B?TkNYMFdJZXYzdmNYVXJ1bklWRVMzMzZBdHRDZjd6d0lBRXBrRUZPTXdHM3pj?=
- =?utf-8?B?bElXb1lrUW9DWllObmtIdVp1Y0lURVJzWVBpNWh3dGhXQktLY0VPazEwYThS?=
- =?utf-8?B?OG1CTXZrdjhvcGkvb2gvZHZ3ajdpcHB5VTk1c0YyRnhIakJYYzhZUU85OWhT?=
- =?utf-8?B?clRCVlB4R0FxdHQ1QURyUWVXK2szVjZnRWVua0J4Y0dUOEFQL0IxRFlmRjU0?=
- =?utf-8?B?SmY3amwxRjJweHpQWFFkR2lESnBYTWJ6Tkk3YjZDeCtNakJIMHFSSERQMkxh?=
- =?utf-8?B?V2I2VjBVWlZvWFpNVlNSREo4NnFsaGRJdm4yVzcrTGhUWWNBV3FlcEd6bVZO?=
- =?utf-8?B?OXBqT2VhVnhVeHlSd2N1b1pLY1I3VytXdUJTbDRBd2x5Z3JqZkg2QU0zR3VB?=
- =?utf-8?B?b0M5Zkt2REpiZFgyUThxei95RnVTdTRobm9sUExwMU1FOGJVQjNsYXdadnQv?=
- =?utf-8?B?Vi9FOXgyNDZhL2ZOZ3ZuK2FYaTIxb1lmL21pc2F2NDFoendrdjlpcUR1UGxV?=
- =?utf-8?B?NG9jQ2tjUFRITFFseTZ6dTVkK2hlbTdtemZldVVwWm9HaVl5M2VjVG94Vm1M?=
- =?utf-8?B?RzB6bTNobGd0cEdVL05MVHYvcjN0am04N0ZuMGhQbnZiMEdDTTh1OSt0UThC?=
- =?utf-8?B?V1Y2SWl6Y0labUFXMjk1M3RkU2tkUnBiVGpNb2grRm02cWJaY1pqZG80ODly?=
- =?utf-8?B?cGh1Wm1TSldZRStJMy80M3ZDTDdqMk5aTmg0bXdMWUJNb0p4d3dZeVhoaDhW?=
- =?utf-8?B?SDRydmZhdjFTcEpMc1c0aUpHR2pCOEF1L3R5L21hVUw0ampEeUlvdWVJVElT?=
- =?utf-8?B?c09lV1ppSXpUYzk3K0NyS0k1S1ZSdTJybnRBeTlLZlRGYm4xQVR5TTkyS1pI?=
- =?utf-8?Q?WDsHBTD2F3Qm2eBspotjYP/UU4q+vvtw8bZ4+9IS24/L?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9231aa64-5e32-4660-8603-08ddaf00e00c
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 07:14:05.2374
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ek8cvtRJROjdxYXDWzkiM8Ltn/DZ82SbKIqKU0opMuB1Xfh2wJoZ7s4ZAohmbXKdPouvWxA9RETfwEuS33Zu3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8474
 
-On Thu Jun 19, 2025 at 5:14 AM JST, Danilo Krummrich wrote:
-> On Thu, Jun 12, 2025 at 11:01:28PM +0900, Alexandre Courbot wrote:
->> Hi everyone,
->>=20
->> The feedback on v4 has been (hopefully) addressed. I guess the main
->> remaining unknown is the direction of the `num` module ; for this
->> iteration, following the received feedback I have eschewed the extension
->> trait and implemented the alignment functions as methods of the new
->> `PowerOfTwo` type. This has the benefit of making it impossible to call
->> them with undesirable (i.e. non-power of two) values. The `fls` function
->> is now provided as a series of const functions for each supported type,
->> generated by a macro.
->>=20
->> It feels like the `num` module could be its own series though, so if
->> there is still discussion about it, I can also extract it and implement
->> the functionality we need in nova-core as local helper functions until
->> it gets merged at its own pace.
->>=20
->> As previously, this series only successfully probes Ampere GPUs, but
->> support for other generations is on the way.
->>=20
->> Upon successful probe, the driver will display the range of the WPR2
->> region constructed by FWSEC-FRTS with debug priority:
->>=20
->>   [   95.436000] NovaCore 0000:01:00.0: WPR2: 0xffc00000-0xffce0000
->>   [   95.436002] NovaCore 0000:01:00.0: GPU instance built
->>=20
->> This series is based on v6.16-rc1 with no other dependencies.
->
-> If compiled with rustc 1.78 there are missing imports of size_of() and
-> align_of() which break the build.
->
-> There are also a few warnings still:
->
-> warning: unreachable `pub` field
->   --> drivers/gpu/nova-core/fb.rs:79:5
->    |
-> 79 |     pub fb: Range<u64>,
->    |     ---^^^^^^^^^^^^^^^
->    |     |
->    |     help: consider restricting its visibility: `pub(crate)`
->    |
->    =3D note: requested on the command line with `-W unreachable-pub`
->
-> warning: unreachable `pub` field
->   --> drivers/gpu/nova-core/fb.rs:80:5
->    |
-> 80 |     pub vga_workspace: Range<u64>,
->    |     ---^^^^^^^^^^^^^^^^^^^^^^^^^^
->    |     |
->    |     help: consider restricting its visibility: `pub(crate)`
->
-> warning: unreachable `pub` field
->   --> drivers/gpu/nova-core/fb.rs:81:5
->    |
-> 81 |     pub frts: Range<u64>,
->    |     ---^^^^^^^^^^^^^^^^^
->    |     |
->    |     help: consider restricting its visibility: `pub(crate)`
->
-> warning: 3 warnings emitted
+The DMAEngine provides an interface for obtaining DMA transaction
+descriptors from an array of scatter gather buffers represented by
+struct dma_vec. This interface is used in the DMABUF API of the IIO
+framework [1].
+To enable DMABUF support through the IIO framework for the Xilinx DMA,
+implement callback .device_prep_peripheral_dma_vec() of struct
+dma_device in the driver.
 
-Sorry about this. These are confirmed fixed in v6.
+[1]: https://elixir.bootlin.com/linux/v6.16-rc1/source/drivers/iio/buffer/industrialio-buffer-dmaengine.c#L104
 
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+
+---
+Changes in v2:
+- Improve commit message to include reasoning behind the change.
+- Rebase onto v6.16-rc1.
+- Link to v1: https://lore.kernel.org/dmaengine/D8TV2MP99NTE.1842MMA04VB9N@folker-schwesinger.de/
+---
+ drivers/dma/xilinx/xilinx_dma.c | 94 +++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index a34d8f0ceed8..fabff602065f 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2172,6 +2172,99 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
+ 	return NULL;
+ }
+ 
++/**
++ * xilinx_dma_prep_peripheral_dma_vec - prepare descriptors for a DMA_SLAVE
++ *	transaction from DMA vectors
++ * @dchan: DMA channel
++ * @vecs: Array of DMA vectors that should be transferred
++ * @nb: number of entries in @vecs
++ * @direction: DMA direction
++ * @flags: transfer ack flags
++ *
++ * Return: Async transaction descriptor on success and NULL on failure
++ */
++static struct dma_async_tx_descriptor *xilinx_dma_prep_peripheral_dma_vec(
++	struct dma_chan *dchan, const struct dma_vec *vecs, size_t nb,
++	enum dma_transfer_direction direction, unsigned long flags)
++{
++	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
++	struct xilinx_dma_tx_descriptor *desc;
++	struct xilinx_axidma_tx_segment *segment, *head, *prev = NULL;
++	size_t copy;
++	size_t sg_used;
++	unsigned int i;
++
++	if (!is_slave_direction(direction) || direction != chan->direction)
++		return NULL;
++
++	desc = xilinx_dma_alloc_tx_descriptor(chan);
++	if (!desc)
++		return NULL;
++
++	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
++	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
++
++	/* Build transactions using information from DMA vectors */
++	for (i = 0; i < nb; i++) {
++		sg_used = 0;
++
++		/* Loop until the entire dma_vec entry is used */
++		while (sg_used < vecs[i].len) {
++			struct xilinx_axidma_desc_hw *hw;
++
++			/* Get a free segment */
++			segment = xilinx_axidma_alloc_tx_segment(chan);
++			if (!segment)
++				goto error;
++
++			/*
++			 * Calculate the maximum number of bytes to transfer,
++			 * making sure it is less than the hw limit
++			 */
++			copy = xilinx_dma_calc_copysize(chan, vecs[i].len,
++					sg_used);
++			hw = &segment->hw;
++
++			/* Fill in the descriptor */
++			xilinx_axidma_buf(chan, hw, vecs[i].addr, sg_used, 0);
++			hw->control = copy;
++
++			if (prev)
++				prev->hw.next_desc = segment->phys;
++
++			prev = segment;
++			sg_used += copy;
++
++			/*
++			 * Insert the segment into the descriptor segments
++			 * list.
++			 */
++			list_add_tail(&segment->node, &desc->segments);
++		}
++	}
++
++	head = list_first_entry(&desc->segments, struct xilinx_axidma_tx_segment, node);
++	desc->async_tx.phys = head->phys;
++
++	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
++	if (chan->direction == DMA_MEM_TO_DEV) {
++		segment->hw.control |= XILINX_DMA_BD_SOP;
++		segment = list_last_entry(&desc->segments,
++					  struct xilinx_axidma_tx_segment,
++					  node);
++		segment->hw.control |= XILINX_DMA_BD_EOP;
++	}
++
++	if (chan->xdev->has_axistream_connected)
++		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
++
++	return &desc->async_tx;
++
++error:
++	xilinx_dma_free_tx_descriptor(chan, desc);
++	return NULL;
++}
++
+ /**
+  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
+  * @dchan: DMA channel
+@@ -3180,6 +3273,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	xdev->common.device_config = xilinx_dma_device_config;
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+ 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
++		xdev->common.device_prep_peripheral_dma_vec = xilinx_dma_prep_peripheral_dma_vec;
+ 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
+ 		xdev->common.device_prep_dma_cyclic =
+ 					  xilinx_dma_prep_dma_cyclic;
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.49.0
