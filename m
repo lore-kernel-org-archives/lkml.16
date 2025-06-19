@@ -1,88 +1,90 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4898F21E0AD;
-	Thu, 19 Jun 2025 10:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCEF1799F;
+	Thu, 19 Jun 2025 11:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750330781; cv=none; b=IfYZgmbjv0IWsGh5Cu67khwoqfksOop4lDeZGF8KcW1wjeNeQB0qVkBmwFnpmgx8upX1DvG8UjfLkmLvBaTf/QIJS9DfgwZDy1UFXZYN+VcnTybVtc5qGe6C0fmPP+qvOP4BmvXGVBSEyexE0J7Ku9LwxrYqKL1ObR778MaYiUU=
+	t=1750330893; cv=none; b=U9+oAkAcGhnX1Pdcn6j7ZIcUWHcf8TtigB7DXuthRlE8MU8jH8Mk78GnZ1Rc8gIYNxvuibypyfKQhqyrugLVsVBVUhRCrF+WZPTSXnnz7uqDGtnoOl61lJy1X5rEhtYyFypOWq/6VabAXNtBqR4WIGxTr3FwpAmj8TBb1TW56ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750330781; c=relaxed/simple;
-	bh=EGX3g6Sn6I4tatWsCSQ4Xmuh2IYdlCzBshgIniWX5g8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EBTKhJTAGvbWHJhxQ/FsNS3gErm6rMhTxUeTAe7SLnv65BCWSXQb7GfWYXiDSvtt7UXxIm5UnlY1i/YnFOy/wT/NBvamBUiZN6VIf3snjAiIjOFY1kmx238VMafjpAOiAZJg5+p+ZHKZOPk0VgmGm8VH+rF4mTD6/K0YV8+ITu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JcKj6Jyf; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750330893; c=relaxed/simple;
+	bh=rDmigmN49xXs0ZOjH9v39Y8p1cz3EI4TKppC8A5ZQxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfVfjAtPwKVpLo8yY0wWxmV5+1V1r628HuWTfs7fX+GErM1h4ukFul/fwqBWylP9GHaoPQl4Vu+pGMIjPouUL71Ps46yRU/kRfg+/r00xCiwDk6PC3v7XPDa2ms5WGRg4Sqc64cr/cPnIlqgLqk0pC1beTEUyB6YUBJADOtcp3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoMQ81Cl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JcKj6Jyf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750330772;
-	bh=bqHT6jLVoZ7STOU8FGhysfpRiQnCLdGWJVgr7wH6pTI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=JcKj6Jyff4nfP/YxZNJ2RpT6/F/srCowY2ZjdY0rXwgJoObkOVfXuToRuimhzFxje
-	 kVsFEqQ1vHr53G+6065X9IUcXeV1gTF+usg+27w4E6u0ghRdlbtDBIjESk02mMp0T5
-	 juFRnvfYRPuWPrZU3F0f96QQSDvn96qg+nrXTMTz1CEEqe5XzBLfWs/89Wi+oVuZht
-	 rzsmgJ7Q0bE3JWtP2Q1os3i46JHD68yMyE++votuqKQsVD4fwyzuyKswFOcJAwX0Dc
-	 U8eDf+qJnG4cET2Lp4MrnRoqRt2JVLtrjWo4CDLFXfBJ6RjWHIrR928m2EkVbjrNUq
-	 PIYmvyMqaE+HA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bNHg85r8yz4wyY;
-	Thu, 19 Jun 2025 20:59:32 +1000 (AEST)
-Date: Thu, 19 Jun 2025 20:59:31 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20250619205931.41cf9332@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoMQ81Cl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D62DC4CEEA;
+	Thu, 19 Jun 2025 11:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750330892;
+	bh=rDmigmN49xXs0ZOjH9v39Y8p1cz3EI4TKppC8A5ZQxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IoMQ81ClaVBTp7kQcn7uQPJivmnRlWWPqFzJYmXoRwpDIhLKNe8ZseCSKH58D42nQ
+	 xGAW7qCI/lAPesK05F0n70kScG9o+ZftkU2K5GKYU9biS8X6AHYhdsD2S8oSOQArmq
+	 9C3jnqq6fE9oFZMI4Seld/WQmbGrVvdfxwi1CcakXNUM9voUIEYbFBaSrvMJc/e3GG
+	 0QZCZBdWDJtcsxjdRy4GfXRCbf0P+5Zwx5CSBICvZJmA+auwqb2M+T1ddqi9F2VM2V
+	 w00NhI4ZGtEuzEp7WiCZE9TOVGDOF6v/XjicL7K4AGqyIHvztMLXrwpPJG7PEk06lE
+	 yRChYbkEztqCQ==
+Date: Thu, 19 Jun 2025 14:01:22 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Shivank Garg <shivankg@amd.com>,
+	david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com,
+	viro@zeniv.linux.org.uk, seanjc@google.com, willy@infradead.org,
+	pbonzini@redhat.com, tabba@google.com, afranji@google.com,
+	ackerleytng@google.com, jack@suse.cz, hch@infradead.org,
+	cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] fs: export anon_inode_make_secure_inode() and fix
+ secretmem LSM bypass
+Message-ID: <aFPuAi8tPcmsbTF4@kernel.org>
+References: <20250619073136.506022-2-shivankg@amd.com>
+ <da5316a7-eee3-4c96-83dd-78ae9f3e0117@suse.cz>
+ <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Y=9vF1foaCvbzwNSF28c/ww";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-fixpunkt-querfeldein-53eb22d0135f@brauner>
 
---Sig_/Y=9vF1foaCvbzwNSF28c/ww
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 19, 2025 at 12:38:25PM +0200, Christian Brauner wrote:
+> On Thu, Jun 19, 2025 at 11:13:49AM +0200, Vlastimil Babka wrote:
+> > On 6/19/25 09:31, Shivank Garg wrote:
+> > > Export anon_inode_make_secure_inode() to allow KVM guest_memfd to create
+> > > anonymous inodes with proper security context. This replaces the current
+> > > pattern of calling alloc_anon_inode() followed by
+> > > inode_init_security_anon() for creating security context manually.
+> > > 
+> > > This change also fixes a security regression in secretmem where the
+> > > S_PRIVATE flag was not cleared after alloc_anon_inode(), causing
+> > > LSM/SELinux checks to be bypassed for secretmem file descriptors.
+> > > 
+> > > As guest_memfd currently resides in the KVM module, we need to export this
+> > 
+> > Could we use the new EXPORT_SYMBOL_GPL_FOR_MODULES() thingy to make this
+> > explicit for KVM?
+> 
+> Oh? Enlighten me about that, if you have a second, please. 
 
-Hi all,
+From Documentation/core-api/symbol-namespaces.rst:
 
-After merging the amdgpu tree, today's linux-next build (htmldocs)
-produced this warning:
+The macro takes a comma separated list of module names, allowing only those
+modules to access this symbol. Simple tail-globs are supported.
 
-drivers/gpu/drm/amd/include/amd_shared.h:444: warning: Function parameter o=
-r struct member 'complete' not described in 'amd_ip_funcs'
+For example::
 
-Introduced by commit
+  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
 
-  64c3e4a868f1 ("drm/amd: Add support for a complete pmops action")
+will limit usage of this symbol to modules whoes name matches the given
+patterns.
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/Y=9vF1foaCvbzwNSF28c/ww
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhT7ZMACgkQAVBC80lX
-0GxeLwgAm6xjVWUc9cabSallDHFZw2dwMRj+Nl4ybWmRFa1f28UYGUCFOT9Nm/QN
-Aicmx6v8rPxyYjnUyeZaY5yAzG2pnRUv4/J72ZSZymzzXjIqolsGUbERcB8V014X
-9VsWra5QdK4lH8eDAL8fP4hQCcJjWxcwNlNPsUW+3wxz5jf8Cwl/K+xGUlgBbPBw
-vXHbwALFlqbEhx3kD0aqFSOp+FSZYspWbPUiUMWX9LdT0dHNY2M2XMXifYC2KZjt
-WQFZAED4XQ7ZDyoPNu2GohU3et3cqRNA3Qh41ARPwxnboPZJvqcQmeqEG/N1/ZVv
-vg5+NRp0cykFu6p2vcBWVmIg7s8j7A==
-=49Gq
------END PGP SIGNATURE-----
-
---Sig_/Y=9vF1foaCvbzwNSF28c/ww--
+-- 
+Sincerely yours,
+Mike.
