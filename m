@@ -1,203 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76C325229E
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1B525229E
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750318951; cv=none; b=sDbLtbeHw5X/DI1ok+0YQRRiD/Xi6Ii+KKFb6qITrdYu5t+81pFo/s2aaWONxzBxVnDgMBadyNvkfORnQUUZk00/8qRgrN8dvtVtXxJKbNiLxMqMUdKagh24mWvTSs/EoFYVlq0hysG+wMKhNv/bvVlIXWI5476rDJNJo7s+CcE=
+	t=1750318961; cv=none; b=V0Q6knVATtzVSKSxhddRQoZBphvoYh+i5En3Afh86mNOBt4an6eU5QvqdlepQ17WTSEeN97qo7P6d4wNnQxVq+NML0K9foqfUfueIrMxS3xRgRQqHcwDcH6DjJXeTZLWA4AOBH/Gbwx44N+kzKyXPviJ3FucejcRDFz9nMT78VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750318951; c=relaxed/simple;
-	bh=PqIHb0wsp28mIKgJtbOJN3X5NGN/ZbKKNoelt8TmsvI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=WH6Fvu45QJfQylsuC0kwj+KXbEalm4hG4Q/SAMjOEF6miOIWqGQL4vGGtXpyEudyJL8q6wLQu7cL6BezCkWmCM8N5lMa+olPiyqGUF1y8LswAFsTninfZwxzCIrxRzv0cZciJGlU07c/gBSXSIi9FBXFAL19Gfz2c9/L7GwgGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6YA/CLH; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750318961; c=relaxed/simple;
+	bh=s2OolJwIz9awxR2iz/43VMdB6EucvrqWeFm1XgBiIFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZB+ki8+bOmtfYT4v359nwJA1H1OOgQHqIdGS5jAa5daiD0YVtUZUdMkKXvBV1fPvQbfN9L+txwYvF27KckD2u/Q/ifoQz7h+EZxs8j1KTqAbVisF+JHdzB/n7dTLH1tHqKJ1elZc7KkGOQbau1fiTfig697ZCh1mCCjW9G/3Ujs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C0tykLMp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6YA/CLH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750318949; x=1781854949;
-  h=date:from:to:cc:subject:message-id;
-  bh=PqIHb0wsp28mIKgJtbOJN3X5NGN/ZbKKNoelt8TmsvI=;
-  b=d6YA/CLHZ0swIYpWqFpQVrPwcT8P+VQjdKtWvvePzbS0Itk8jNkx0FjW
-   /xmJ5cHzYdp6NkfgRCR3oF3JgNSKKuXo9NOq52R181oNhsjlsBDae+Ev4
-   OJfhIMQhIa0RghP/z7wpU3X+stt80r0QD4jeqNo+RtwTNgfN2XFeVHpsM
-   /ITWuFBRoWvyTkpKr2FmB1PY+JRMOeb3g7FLJAU5zePHM2n632RJKStiJ
-   NbmX5J3fXxaN2SOE5wlSzRutU81xlbNKSrcbjz7L9UNokhfJW4VQ3YCkJ
-   pWiUBnwk3CUag4ADKfSHb2llFZQYy/vvcL/CO1MrIXPzbXJok8DcGo8SF
-   A==;
-X-CSE-ConnectionGUID: s46kDSZZRAuBmRJg1PVRkA==
-X-CSE-MsgGUID: mUb1xwScS/O2oMHSPwEbaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52655969"
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="52655969"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 00:42:29 -0700
-X-CSE-ConnectionGUID: QmQsaxpkQduICSE1pzdO+Q==
-X-CSE-MsgGUID: XWzh73aNRqCGnlBGRODv5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="155130732"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 19 Jun 2025 00:42:28 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uS9uj-000KWm-2Q;
-	Thu, 19 Jun 2025 07:42:25 +0000
-Date: Thu, 19 Jun 2025 15:41:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- e462fd42ad34b6b0c787d30e97e9dfa25ef0719e
-Message-ID: <202506191529.BpzBS5rX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C0tykLMp"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55J2FUBa008353
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:42:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	8bK9StFic/Lakke1sCoMHiU5FEA33sLFtfn5W9fGOiA=; b=C0tykLMpxgecwn3B
+	rM1LOimHab64qUEI9q17fhye2dcs2/A3fRVQtcKasDTXdMtM1y4V8W5xWKvgppMx
+	d5qfSHq0Iq6P7+sHTAOqbNqnXEJ3iX8GDHaEme2KYcKwj0isr1yxKmzOSyDZ/AGg
+	4p9BNtD0q7o0aKauSQP+VGM1zSe1df1QWWUBo6ZCErrj8JzyCdFbnrDrxYpsHYSY
+	tN2iHVIgcq1/PHdwHguErK9d7bREa/cpu2arR3fDb2Atw8nzJQLAMz7rmTOY6p7v
+	ohMt8tCmYwINKZKrdOlq2N9Bm4N8dySQsJFwA/Majvhotg5MV4BBum464kkzqbN9
+	pd/RWQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47c9krrv1h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:42:38 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2356ce66d7cso7678605ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 00:42:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750318957; x=1750923757;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8bK9StFic/Lakke1sCoMHiU5FEA33sLFtfn5W9fGOiA=;
+        b=v94dgVp7OSzPrsGZFn0dlN7ITrm6NOQH09ESxguiGHBmlxRmxjFlSNY32o1fGaUXjo
+         IdpsXgCPaJxGAfpgp8cclPV+MctZNywR14nINgKyQQ7iK2aod7hkPTbn/Yjzi/FQJHA9
+         tZCj6rFPVP5op+co2TolffSnorJw3I84R6m6W2a+arEBoM9I+galRBwvzSq0V7wsXvTg
+         RPRIJ1SA5TaSkZhAyLmvFQ/kXTlgv13z1fGyHQpmRVTLHVBhSwhzcV9tKsLATtW2IQEm
+         QsFDq7bkb7+UbGtitGaeIEFJXqIqQu/8O9tRH1byOWi+kIvE4i+RpVYNB4Z8tmDmz4Cn
+         bXjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGLsLFcwWDqXrbY159sdK4sTAmiETQnVkGXo5CNpW+GplrT6Q1jK0P19G4Ka3Rly3nePIVkJpmBgx1fm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoayNqtPDO2UOgpmeWlcBdm7LmQmyG9Mc3Umi36O3wZgzfeFBB
+	B1TtKRWwVYZghrR+sdmXZDIjslGIWzs1rCXRPO7eQA2POvErInIHfY4ZvRmWfpwg/fDn7umgcW0
+	6jN3QUYJDvdnQfuJA9zsQ/muEuGaiI9wJ7cpAzjmVeQV4qfZ207O2sHwOhlBx9LWsecY=
+X-Gm-Gg: ASbGncsKQLNpHsgomqRP1Bgn7QjecGBxghUKlGfJSetY+bNTRI6jjdajdtDeZ8r5QWu
+	MMBVetxzVmwDMXQJ8LijWV9a5U6e2gMdgwI5zeR+8TI1iPrwvT67Te+y/Xz5Xuug8qM4WaZDmYC
+	X4w9gGbvLYPpe1CVjkfhO8ZX43ENOHWM6UlDfUEmB6iRxY5EC1dzLkiiVXssz+TJaa/SRdK9lLD
+	RhImuIsjlj0Svu7k5amYKXcFfwoE9qTSZ0+C2LC38qkd4qoH1Mr/71GNVBmp2F/Dfvnsydgx32R
+	BkbZSHDeHDW8aOGPJOgX0r2hO5CTUj0p1FwqDd2dIuEINy73uKf8msqnhCY83dH1W2xGIw==
+X-Received: by 2002:a17:903:124a:b0:235:f3e6:467f with SMTP id d9443c01a7336-2366b3138e6mr328987515ad.2.1750318957472;
+        Thu, 19 Jun 2025 00:42:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1K+tjlLOlBKZW+h28YggU3a33tgf21Wr5iYIUaMwfntpyd+JHMLZw4bqejg0TjXcSB6QJHA==
+X-Received: by 2002:a17:903:124a:b0:235:f3e6:467f with SMTP id d9443c01a7336-2366b3138e6mr328987155ad.2.1750318957019;
+        Thu, 19 Jun 2025 00:42:37 -0700 (PDT)
+Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a2f4c23sm1431417a91.29.2025.06.19.00.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 00:42:36 -0700 (PDT)
+Date: Thu, 19 Jun 2025 00:42:34 -0700
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        jeff.hugo@oss.qualcomm.com, mhi@lists.linux.dev,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        can.guo@oss.qualcomm.com, Mayank Rana <mayank.rana@oss.qualcomm.com>
+Subject: Re: [PATCH v2] mhi: host: Add standard elf image download
+ functionality
+Message-ID: <aFO/ahs3LwUvKpAB@hu-qianyu-lv.qualcomm.com>
+References: <20250603-standard_elf_image_load_support-v2-1-cce97644e99e@oss.qualcomm.com>
+ <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
+ <9ab8e8f8-e176-44ab-b8e5-0c27e5eff30b@quicinc.com>
+ <q3uxu5cki7c3nkv65kozibiz7ofjcm3clelog3oaqcya32kph4@ntvsqbshmeuw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <q3uxu5cki7c3nkv65kozibiz7ofjcm3clelog3oaqcya32kph4@ntvsqbshmeuw>
+X-Proofpoint-GUID: RtBCA1otGSE8bZjkBRjzI7tds5PfeM7U
+X-Authority-Analysis: v=2.4 cv=UPTdHDfy c=1 sm=1 tr=0 ts=6853bf6e cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=z0rqCJazpnJsISlW-HgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDA2NCBTYWx0ZWRfXyb7cPaGAPedm
+ Wu+J9pVY+f5Blkpk3DjphcdoDFuc89VzQWThA5rBDcDfwtNA8WDREHCeLDuasZt+GB9m0pi2wtG
+ NvjG9j2u0x4n9g5y8SYEJshVEDSFXAxEXp1q27gKEfYLEjfMnKshYXQH6SsR1H6CvFE5NrEfjur
+ qaoyLPgmYNIj3rZTmxIrRro+kI85wXQC3tGQzdUXtmctEPfs80cyS5RNyo4ZvIFjcTNXOpU0gmN
+ k+dXu6qD3RYxTsYdilbP/WTDio/ONhk97eJvCRRV0Acz0tBQ7pq/764hXZLYI4VkrW6Vmf62Hlu
+ fJgMVNPUrEVDPgg4sxK2UsZJtLcSArC1PYAAaVKq+IY1T3Jt3rK3HDCpKLFRIMlbaM9W2q+COyc
+ MSpNQ9DAQ+tLuZnD4UwZvK/MObgiJkDn+inW65I3ZYXcy8OtzRKNdzukWhrsS3IDyPxsbpU2
+X-Proofpoint-ORIG-GUID: RtBCA1otGSE8bZjkBRjzI7tds5PfeM7U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_03,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506190064
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: e462fd42ad34b6b0c787d30e97e9dfa25ef0719e  Merge branch into tip/master: 'x86/kconfig'
+On Tue, Jun 17, 2025 at 02:53:02PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jun 06, 2025 at 09:58:06AM +0800, Baochen Qiang wrote:
+> > 
+> > 
+> > On 6/6/2025 1:04 AM, Manivannan Sadhasivam wrote:
+> > > On Tue, Jun 03, 2025 at 02:05:44AM -0700, Qiang Yu wrote:
+> > >> From: Mayank Rana <mayank.rana@oss.qualcomm.com>
+> > >>
+> > >> Currently, the FBC image is a non-standard ELF file that contains a single
+> > >> ELF header, followed by segments for SBL, RDDM, and AMSS. Some devices are
+> > >> unable to process this non-standard ELF format and therefore require
+> > >> special handling during image loading.
+> > >>
+> > > 
+> > > What are those "some devices"? Why are they not able to process this format
+> > > which is used across the rest of the Qcom devices?
+> > > 
+> > >> Add standard_elf_image flag to determine whether the device can process
+> > >> the non-standard ELF format. If this flag is set, a standard ELF image
+> > >> must be loaded, meaning the first 512 KB of the FBC image should be
+> > >> skipped when loading the AMSS image over the BHIe interface.
+> > > 
+> > > Please explain what is present in the first 512KiB and why skipping that is
+> > > required.
+> > > 
+> > >> Note that
+> > >> this flag does not affect the SBL image download process.
+> > >>
+> > >> Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
+> > >> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > >> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > >> ---
+> > >> Changes in v2:
+> > >> - V1 patch is paused because of no user. WLAN team plan to add support for
+> > >>   new WLAN chip that requires this patch, so send v2.
+> > >> - Change author and SOB with new mail address.
+> > >> - Reword commit message.
+> > >> - Place standard_elf_image flag after wake_set in struct mhi_controller
+> > >> - Link to v1: https://lore.kernel.org/mhi/1689907189-21844-1-git-send-email-quic_qianyu@quicinc.com/
+> > >> ---
+> > >>  drivers/bus/mhi/host/boot.c | 7 +++++++
+> > >>  include/linux/mhi.h         | 4 ++++
+> > >>  2 files changed, 11 insertions(+)
+> > >>
+> > >> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+> > >> index efa3b6dddf4d2f937535243bd8e8ed32109150a4..f1686a8e0681d49f778838820b44f4c845ddbd1f 100644
+> > >> --- a/drivers/bus/mhi/host/boot.c
+> > >> +++ b/drivers/bus/mhi/host/boot.c
+> > >> @@ -584,6 +584,13 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+> > >>  	 * device transitioning into MHI READY state
+> > >>  	 */
+> > >>  	if (fw_load_type == MHI_FW_LOAD_FBC) {
+> > >> +		dev_dbg(dev, "standard_elf_image:%s\n",
+> > >> +			(mhi_cntrl->standard_elf_image ? "True" : "False"));
+> > > 
+> > > This print is just a noise even for debug.
+> > > 
+> > >> +		if (mhi_cntrl->standard_elf_image) {
+> > >> +			fw_data += mhi_cntrl->sbl_size;
+> > >> +			fw_sz -= mhi_cntrl->sbl_size;
+> > > 
+> > > Is it possible to detect the image type during runtime instead of using a flag?
+> > > Also, the flag is currently unused. So it should come along an user.
+> > 
+> > The flag would be used when a new WLAN device getting upstream. So either we merge this
+> > patch alone, or we get it grouped within the WLAN patches. Kindly share your thoughts?
+> > 
+> 
+> For the reason I mentioned in my previous reply, I don't think we should rely on
+> the flag unless the WLAN device is shipped with *only* the new FW. If that is
+> the case, then please send this patch when the ath driver support shows up. I
+> do not want to merge a patch with an unused interface.
+>
 
-elapsed time: 1448m
+I discussed with Wlan FW team. For a specific model of wlan chip, only one
+format image will be released.
 
-configs tested: 126
-configs skipped: 6
+- Qiang Yu
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                        nsim_700_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250618    gcc-11.5.0
-arc                   randconfig-002-20250618    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                       aspeed_g4_defconfig    clang-21
-arm                   randconfig-001-20250618    gcc-15.1.0
-arm                   randconfig-002-20250618    gcc-10.5.0
-arm                   randconfig-003-20250618    clang-21
-arm                   randconfig-004-20250618    gcc-11.5.0
-arm                        spear3xx_defconfig    clang-17
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250618    clang-21
-arm64                 randconfig-002-20250618    clang-21
-arm64                 randconfig-003-20250618    gcc-14.3.0
-arm64                 randconfig-004-20250618    clang-16
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250618    gcc-13.3.0
-csky                  randconfig-002-20250618    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250618    clang-19
-hexagon               randconfig-002-20250618    clang-16
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250618    clang-20
-i386        buildonly-randconfig-002-20250618    gcc-12
-i386        buildonly-randconfig-003-20250618    clang-20
-i386        buildonly-randconfig-004-20250618    clang-20
-i386        buildonly-randconfig-005-20250618    clang-20
-i386        buildonly-randconfig-006-20250618    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250618    gcc-15.1.0
-loongarch             randconfig-002-20250618    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                        mvme147_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm63xx_defconfig    clang-21
-mips                           ip28_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250618    gcc-11.5.0
-nios2                 randconfig-002-20250618    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250618    gcc-10.5.0
-parisc                randconfig-002-20250618    gcc-8.5.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                   currituck_defconfig    clang-21
-powerpc                 linkstation_defconfig    clang-20
-powerpc                 mpc8313_rdb_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250618    gcc-8.5.0
-powerpc               randconfig-002-20250618    clang-19
-powerpc               randconfig-003-20250618    clang-21
-powerpc                    sam440ep_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250618    gcc-8.5.0
-powerpc64             randconfig-002-20250618    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250618    clang-20
-riscv                 randconfig-002-20250618    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250618    gcc-8.5.0
-s390                  randconfig-002-20250618    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                     magicpanelr2_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250618    gcc-15.1.0
-sh                    randconfig-002-20250618    gcc-15.1.0
-sh                           se7206_defconfig    gcc-15.1.0
-sh                           se7750_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250618    gcc-8.5.0
-sparc                 randconfig-002-20250618    gcc-13.3.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250618    gcc-13.3.0
-sparc64               randconfig-002-20250618    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250618    clang-21
-um                    randconfig-002-20250618    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250618    clang-20
-x86_64      buildonly-randconfig-002-20250618    clang-20
-x86_64      buildonly-randconfig-003-20250618    gcc-12
-x86_64      buildonly-randconfig-004-20250618    clang-20
-x86_64      buildonly-randconfig-005-20250618    clang-20
-x86_64      buildonly-randconfig-006-20250618    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250618    gcc-13.3.0
-xtensa                randconfig-002-20250618    gcc-11.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> - Mani
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
