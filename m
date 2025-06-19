@@ -1,142 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DCF30E820;
-	Thu, 19 Jun 2025 20:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D027221F28
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750363429; cv=none; b=oKISWJdcbslrV46gq2YnWF22bp5UxVopeCmOR/uXAPUwRoWC0vBFNWFAkwhXuLeoe3CDi1eoc8oVX8H/XPivs2qQsFDpOazhhSjligVn0xm77CvtmiTnxNBCt/eS2u6O7xUkf8FHQqliRk94GwI8o+M+LTVAgEfYh3U4W1Z0I6w=
+	t=1750363559; cv=none; b=i0UxERFFt838DIE6+AhLmyDb/2cvKGU+3MBKaTCcC+6VzsU69ue9olP62TsOweKNVDK1IWIiGN2Um3AxtSYR5xrkzCF0Hur7a1mClP6BIMfB48MOufh2nGWBt/RP3J7V0p1ZmqGCyoXgUUGCGZv2dxkR6rJ0mio7fpp1EvkdL4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750363429; c=relaxed/simple;
-	bh=fk3fmHlAtMJ5XqQyz6sbrUWHSI6GW95mIPRC7IjMxio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0BrWPPGI5d3+uzcdNEiktA4hTugcbFgeTdss4G7A5vH5ox8HVZhh4SEwdcpLmoot/zZ3FWPS9XBe2pqat1flZTloRQNkeN/VsOFTf9pkF17AzhWL3WwSaDyeIx9kTYPsTEEMq/HbnMtYE1Cven0kLlQGG9YpyrCC6HyAdOTpsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgBxXsXx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750363559; c=relaxed/simple;
+	bh=dwsBTxlM2QohXlP1ErlyMOXw37DysFBS3JLvamLR6Do=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kA2ENh9Q0iDYdGqQSPBcdpEfSwxRXj0pQPTNqTMyKWlG7tAgBs0by532J4867uSppdgbJ6lMp3C2h+zuFf1l5QLDpd5XRuvdK077wl7+GksarcDiQu2O0knvwnW3S9tSZZFu1d8FcYx/GvOoVwIAkaTQSUQW61qI6nCQDMLcJLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U3ZaH+Oz; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgBxXsXx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D609FC4CEEA;
-	Thu, 19 Jun 2025 20:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750363429;
-	bh=fk3fmHlAtMJ5XqQyz6sbrUWHSI6GW95mIPRC7IjMxio=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kgBxXsXx+0RC+DQAfbbjIERuH0TEbASijWoawjtW8h6hyMuqO8RoUDDRxiOrCtEr4
-	 oup9YfEPiFKeHWAGQzmoTqwEIWvpLfjh/N1pOMYL7hQJzaE4a1nQCLtxJEvgd3HyOR
-	 fspVyMw+zIjDykPH0JV20aIavDqxLoSMi9evfeea7834ykIoX9N6Qgt2WoNcyy0Gnj
-	 vhdN+1o+iiEfjLkyoHDVapy8uUUQd6Dg+KSBCTQcSpNw6CujVsS8ZNYdbwCakMYw9G
-	 zLgD64tD/8RExiGfGRRsdQN/TyOL8da3lKLn/CnkDzbtP2oD++57p7KEotHFQSnOiX
-	 ofWbryazOWPYw==
-Message-ID: <7c5b6512-1374-41c9-be9a-ac05b573e2cd@kernel.org>
-Date: Thu, 19 Jun 2025 22:03:44 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U3ZaH+Oz"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750363555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F92lwo5VOd1tq612WPpWLZKza4VCHqS8IRTHLKoOjew=;
+	b=U3ZaH+OzZC4XyFuiMwkaaxWeHokAzLwigVj+qnaoY7KwKzsbhxDlPd9M8QE9zWVgL4B7W6
+	VDb90LbN9ao6Bcooq/qxZv7OXqed103e2WAOvU/aODvZ6Ud6hWDD2BRTRlwyxS5LnWfxtl
+	ZCcQxoxHJdj0HISri8DPdBgTf3rrDv8=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Simek <michal.simek@amd.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Ira Weiny <ira.weiny@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH net 1/4] auxiliary: Allow empty id
+Date: Thu, 19 Jun 2025 16:05:34 -0400
+Message-Id: <20250619200537.260017-2-sean.anderson@linux.dev>
+In-Reply-To: <20250619200537.260017-1-sean.anderson@linux.dev>
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
-To: Lee Jones <lee@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>, Werner Sembach <wse@tuxedocomputers.com>,
- ilpo.jarvinen@linux.intel.com, chumuzero@gmail.com, corbet@lwn.net,
- cs@tuxedo.de, ggo@tuxedocomputers.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-leds@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-3-W_Armin@gmx.de>
- <41de4cd4-2a27-4b14-a1c0-e336a3cec317@tuxedocomputers.com>
- <d645ba09-1820-4473-96bb-8550ed0b0a26@gmx.de>
- <20250619094757.GB587864@google.com>
- <ebd9489d-2783-468a-ad07-e7d1c04fb165@kernel.org>
- <20250619151714.GJ795775@google.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250619151714.GJ795775@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Lee,
+Support creating auxiliary devices with the id included as part of the
+name. This allows for non-decimal ids, which may be more appropriate for
+auxiliary devices created as children of memory-mapped devices. For
+example, a name like "xilinx_emac.mac.802c0000" could be achieved by
+setting .name to "mac.802c0000" and .id to AUXILIARY_DEVID_NONE.
 
-On 19-Jun-25 5:17 PM, Lee Jones wrote:
-> On Thu, 19 Jun 2025, Hans de Goede wrote:
-> 
->> Hi Lee,
->>
->> On 19-Jun-25 11:47 AM, Lee Jones wrote:
->>> On Tue, 17 Jun 2025, Armin Wolf wrote:
->>>
->>>> Am 16.06.25 um 14:46 schrieb Werner Sembach:
->>>>
->>>>> Hi, small additon
->>>>>
->>>>> Am 15.06.25 um 19:59 schrieb Armin Wolf:
->>>>>> +        functionality.
->>>>>> +
->>>>>> +What: /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/rainbow_animation
->>>>>> +Date:        Juni 2025
->>>>>> +KernelVersion:    6.17
->>>>>> +Contact:    Armin Wolf <W_Armin@gmx.de>
->>>>>> +Description:
->>>>>> +        Forces the integrated lightbar to display a rainbow
->>>>>> animation when the machine
->>>>>> +        is not suspended. Writing "enable"/"disable" into this file
->>>>>> enables/disables
->>>>>> +        this functionality.
->>>>>> +
->>>>>> +        Reading this file returns the current status of the rainbow
->>>>>> animation functionality.
->>>>>> +
->>>>>> +What: /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/breathing_in_suspend
->>>>>> +Date:        Juni 2025
->>>>>> +KernelVersion:    6.17
->>>>>> +Contact:    Armin Wolf <W_Armin@gmx.de>
->>>>>> +Description:
->>>>>> +        Causes the integrated lightbar to display a breathing
->>>>>> animation when the machine
->>>>>> +        has been suspended and is running on AC power. Writing
->>>>>> "enable"/"disable" into
->>>>>> +        this file enables/disables this functionality.
->>>>>> +
->>>>>> +        Reading this file returns the current status of the
->>>>>> breathing animation
->>>>>> +        functionality.
->>>>>
->>>>> maybe this would be better under the /sys/class/leds/*/ tree if possible
->>>>
->>>> I CCed the LED mailing list so that they can give us advice on which location is the preferred one for new drivers.
->>>
->>> No need to involve the LED subsystem for a hardware function controlled
->>> by a single register value just because the interface involves an LED.
->>
->> Lee, the question here is where put the sysfs attribute to put the lightbar
->> in breathing mode e.g. which of these 2 should be used?  :
->>
->> 1. /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/breathing_in_suspend
->> 2. /sys/class/leds/uniwill-lightbar/breathing_in_suspend
->>
->> I think this is a fair question and since 2. involves the LED class userspace
->> API I also think that asking for the LED maintainers input is reasonable.
->>
->> FWIW I'm not sure myself. 2. is the more logical place / path. But 2. adds
->> a custom sysfs attr the LED class device. Whereas 1. adds a custom sysfs attr
->> in a place where these are more or less expected.
-> 
-> Right.  It was a reasonable question.  Did I imply otherwise?
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-Sorry, my bad, I interpreted your "No need to involve the LED
-subsystem for a hardware function ..." remark as meaning that
-you did not understand why you were Cc-ed.
+ drivers/base/auxiliary.c      | 6 +++++-
+ include/linux/auxiliary_bus.h | 4 +++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-I now realize that you meant that you believe the control for
-this does not need to be under /sys/class/leds/
-
-> If it wasn't clear, my vote (this is not a dictatorship) is for 1.
-
-Ok, 1. works for me and that is what the patch is already doing,
-so lets keep it as as.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+index dba7c8e13a53..64a0d5e2eb83 100644
+--- a/drivers/base/auxiliary.c
++++ b/drivers/base/auxiliary.c
+@@ -331,7 +331,11 @@ int __auxiliary_device_add(struct auxiliary_device *auxdev, const char *modname)
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = dev_set_name(dev, "%s.%s.%d", modname, auxdev->name, auxdev->id);
++	if (auxdev->id == AUXILIARY_DEVID_NONE)
++		ret = dev_set_name(dev, "%s.%s", modname, auxdev->name);
++	else
++		ret = dev_set_name(dev, "%s.%s.%d", modname, auxdev->name,
++				   auxdev->id);
+ 	if (ret) {
+ 		dev_err(dev, "auxiliary device dev_set_name failed: %d\n", ret);
+ 		return ret;
+diff --git a/include/linux/auxiliary_bus.h b/include/linux/auxiliary_bus.h
+index 4086afd0cc6b..76904cf2c3dd 100644
+--- a/include/linux/auxiliary_bus.h
++++ b/include/linux/auxiliary_bus.h
+@@ -51,6 +51,8 @@
+  * unregisters the auxiliary device.
+  */
+ 
++#define AUXILIARY_DEVID_NONE	(-1)
++
+ /**
+  * struct auxiliary_device - auxiliary device object.
+  * @dev: Device,
+@@ -269,7 +271,7 @@ struct auxiliary_device *__devm_auxiliary_device_create(struct device *dev,
+ 
+ #define devm_auxiliary_device_create(dev, devname, platform_data)     \
+ 	__devm_auxiliary_device_create(dev, KBUILD_MODNAME, devname,  \
+-				       platform_data, 0)
++				       platform_data, AUXILIARY_DEVID_NONE)
+ 
+ /**
+  * module_auxiliary_driver() - Helper macro for registering an auxiliary driver
+-- 
+2.35.1.1320.gc452695387.dirty
 
