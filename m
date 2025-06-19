@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928E92AF1C;
-	Thu, 19 Jun 2025 17:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C132AF1C;
+	Thu, 19 Jun 2025 17:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750354758; cv=none; b=DYePTf9r/+mkBDN3Emtacn2qeQfVf6F4YuAdVbsiM5+5UhJSx2mHWEyozRrLqD9rFFsOTybL+9v3klcuTx4vryn++/OZzzWwhLejoXJak55qH+dZCi/xKE8Ici3zv9XDpHdNWNosEhB2ERll10S3L8DGnOZd+XglCoUOlOSHDK0=
+	t=1750354855; cv=none; b=DppDLQ3dVpnQ80WcsozpBTv+sqDJ8etXq+10vb8VfrEVED/7EwZuDkM8CDkNQs3tBQpNsBsLdY/YnGF5AJIcPQfCNIhsigxoRUa8oaZZ1RR0u1/neSVsKN2a7x9FzjJM3ni8mEUv/dPpsorKnVIwvGXbLHtzuN2J8coQq7UUmlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750354758; c=relaxed/simple;
-	bh=pRBStzprMVQpdd4OIP73O35IQskVrjlp0foBBFOYXLM=;
+	s=arc-20240116; t=1750354855; c=relaxed/simple;
+	bh=pHocD+1IZ4THWLxnidWpQiRFVoIeI3zVCRVeyfn8Jbc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sPhyixErgAjnaLDv5vSB78U+KnQ5D/0Is4tQThKk0lKdEixXlACHbcx6Dk57wqa+o1e4uqemrRJRT9BpRC+8SaPYLRR2KZFLFK7G/lEYldOpoISej0YHPkz3eIaDgXAOzyDL19xyxsNJFTbFiTD3lYfg+o94mdwjJbMkhXYjzgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8ScjhxR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EBsn7F8sfQSEcFmTA+xpVx/Fxl429QyxlPXNfrC6TasH138x5Urdy0l2YNANzDroGJf5cO7HVuQwP1HmtziuzY11C4mDEbaUIutxKV77wvoHBYF8cpbGRNRtvhWbFdwtycrcLA+4ZvdmkG8J57xEuMhXmJ3BHuUp3P7PUM2CSF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0harbrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8ScjhxR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2DEC4CEF0;
-	Thu, 19 Jun 2025 17:39:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0harbrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EBBC4CEEA;
+	Thu, 19 Jun 2025 17:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750354758;
-	bh=pRBStzprMVQpdd4OIP73O35IQskVrjlp0foBBFOYXLM=;
+	s=k20201202; t=1750354855;
+	bh=pHocD+1IZ4THWLxnidWpQiRFVoIeI3zVCRVeyfn8Jbc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q8ScjhxR+n6D1FFXxPcmAsOicx5kvxOnV/MBY1d5+9OzyDoR9ByqLqF8OQsepE1vZ
-	 pQA9jF0scj8TlOPcaY+B7xXddCNBSr5ARGkpENx96GxUAkLu74C4oa7RAhGZ9v230Z
-	 orB2u90kOoFN8z8IGbpEsuNVMvGiUOc6eCmCNQAftzLmh12MHe6hVDJ/9kh6iHrfkl
-	 2dFR0gO+jExeLcciK2ZfvoIsS35RyX1vEhDv2tSWxXv4YrO8iLDlA5EbVS5DCkm63h
-	 6qk4C9x+spijKTjg8XToKwj9MPIEF+R+z6+NqCo/3RGuxejNa51/zhpOXQ7NII2Es4
-	 Ti4aMrVmU7WWQ==
-Message-ID: <81bd7bd3-46c8-45c0-8266-44316597a406@kernel.org>
-Date: Thu, 19 Jun 2025 19:39:14 +0200
+	b=M0harbrKog3eGUx6IKEp7wL3ZF/nLcDopJFbaLvL4JibYu3JXYpeXWCsSvnHs44Ct
+	 uW+mM94wMjULPK1z3go3w0r1kjgjUXPox1ObrGCOrEZvdQh6ccsMOYMfC65OZhoERF
+	 cy9D4Ozc2gMHuF2BDbIC4BFnwvQnA3rZDtl723QF/VMS388zSxYXYpA7gWTWNwmD8X
+	 MFM2DA0r4PVH9PBeJoIgYte4AhzOpFLEMwy7dB4v5fBHbvJ0rFatGeeSFDbq6sQHoP
+	 vG+pceMTr7SmWdTuhNjnIlyGroguc+JLsqPmKcviLrsQdPHVk31PSv0XIKW7t6W2+1
+	 5WCRgJWiqdUAQ==
+Message-ID: <c82bf3c6-ff40-4167-a78a-4ea21e41e8e9@kernel.org>
+Date: Thu, 19 Jun 2025 19:40:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: reset: eswin: Documentation for
- eic7700 SoC
+Subject: Re: [PATCH v3 0/2] Add driver support for ESWIN eic7700 SoC reset
+ controller
 To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
  huangyifeng@eswincomputing.com
 References: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
- <20250619080012.1300-1-dongxuyang@eswincomputing.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,108 +88,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250619080012.1300-1-dongxuyang@eswincomputing.com>
+In-Reply-To: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/06/2025 10:00, dongxuyang@eswincomputing.com wrote:
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#reset-cells':
-> +    const: 2
+On 19/06/2025 09:58, dongxuyang@eswincomputing.com wrote:
+> From: Xuyang Dong <dongxuyang@eswincomputing.com>
+> 
+> There are some register offsets in reset dt-bindings. It could be used.
+> Therefore, we want to keep these bindings. I don't known if it meets
+> the requirements.
+> 
+> PIPE_RST_CTRL, TBU_RST_CTRL and TEST_RST_CTRL are not used in this
+> driver. Therefore, these are left out.
+> 
+> Updates:
+> 
+>   dt-bindings: reset: eswin: Documentation for eic7700 SoC
+>   v2 -> v3:
+>     1. Drop syscon and simple-mfd from yaml and code, because these are
+>        not necessary.
+>     2. Update description to introduce reset controller.
+>     3. Add reset control indices for dt-bindings.
+>     4. Keep the register offsets in dt-bindings.
 
-What is the meaning of the cells?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#reset-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/reset/eswin,eic7700-reset.h>
-> +
-> +    reset-controller@51828000 {
-> +        compatible = "eswin,eic7700-reset";
-> +        reg = <0x51828000 0x80000>;
-> +        #reset-cells = <2>;
-> +    };
-> diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
-> new file mode 100644
-> index 000000000000..8c3aa3c87ea4
-> --- /dev/null
-
-> +++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
-> @@ -0,0 +1,460 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-
-2025
-
-> + *
-> + * Device Tree binding constants for EIC7700 reset controller.
-> + *
-> + * Authors:
-> + *	Yifeng Huang <huangyifeng@eswincomputing.com>
-> + *	Xuyang Dong <dongxuyang@eswincomputing.com>
-> + */
-> +
-> +#ifndef __DT_ESWIN_EIC7700_RESET_H__
-> +#define __DT_ESWIN_EIC7700_RESET_H__
-> +
-> +#define SNOC_RST_CTRL 0
-> +#define GPU_RST_CTRL 1
-> +#define DSP_RST_CTRL 2
-> +#define D2D_RST_CTRL 3
-> +#define DDR_RST_CTRL 4
-> +#define TCU_RST_CTRL 5
-> +#define NPU_RST_CTRL 6
-> +#define HSPDMA_RST_CTRL 7
-> +#define PCIE_RST_CTRL 8
-> +#define I2C_RST_CTRL 9
-> +#define FAN_RST_CTRL 10
-> +#define PVT_RST_CTRL 11
-> +#define MBOX_RST_CTRL 12
-> +#define UART_RST_CTRL 13
-
-
-...
-
-> +
-> +/*TIMER1*/
-> +#define SW_TIMER1_RSTN_0 0
-> +#define SW_TIMER1_RSTN_1 1
-> +#define SW_TIMER1_RSTN_2 2
-> +#define SW_TIMER1_RSTN_3 3
-> +#define SW_TIMER1_RSTN_4 4
-> +#define SW_TIMER1_RSTN_5 5
-> +#define SW_TIMER1_RSTN_6 6
-> +#define SW_TIMER1_RSTN_7 7
-> +#define SW_TIMER1_PRSTN 8
-> +
-> +/*TIMER2*/
-> +#define SW_TIMER2_RSTN_0 0
-> +#define SW_TIMER2_RSTN_1 1
-> +#define SW_TIMER2_RSTN_2 2
-> +#define SW_TIMER2_RSTN_3 3
-> +#define SW_TIMER2_RSTN_4 4
-> +#define SW_TIMER2_RSTN_5 5
-> +#define SW_TIMER2_RSTN_6 6
-> +#define SW_TIMER2_RSTN_7 7
-> +#define SW_TIMER2_PRSTN 8
-
-That's unreadable - missing indent before the value. Ids equal to block
-number are not useful anyway.
-
-The problem is: you still do not use this as an ABI. No driver usage at
-all and (comment which I repeat very often) no point to add it to the
-bindings. Look at other bindings how this is supposed to look like.
+No, drop. Register offsets are not bindings. That was last comment, so
+don't keep them. Remove them.
 
 
 Best regards,
