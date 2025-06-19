@@ -1,143 +1,220 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FED21D6187
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 14:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714AB1D6187;
+	Thu, 19 Jun 2025 14:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750342725; cv=none; b=LaZoFM5fUEoxuHfPgtTxTcFQKgE6632SBrBMX0JfL+aSeo+OBS5nDnsjm20GdbZsud7LMHnxFNfLtWfXnTn6+OQ20hzB5avEsG9Hk35URTDfaqdxClm63z0t1LcEcafTqXPQHdsOGbRVjrMeQlwlisCvGXSCY+PHE1apAzxx3Mo=
+	t=1750342746; cv=none; b=EnKivHzxWGue/Y4p98x1YFemTMVP/3k+/g4cJrCrB6hMIG6awuptKRIt02AVK8H+jbWQPErZvDsm8Y3mVsFtCEmj/VXYyEePS41vSJUD3QLOopeHKIHXtgfuIgUD9fx5kJDTA6kXeOmf+s7YkL3OD7xO8R4I5OS3h4qy60wi3Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750342725; c=relaxed/simple;
-	bh=H6wzggDRhxLgF/k7QgwWzPPiwJmYOU2J3mhjqhSXHk0=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=URw3QRCVudVOSkpL+wrXpgkBfvAwgXQpqfwNNrLQU8vfJsVQWD363Ed0X8SmVxfLiCHki7IrwaHmaped1IuYbbNUIPwQj4qEoJRoVnnsnxkxj9Bs/NiyWID3zMZvfpjqrVWeyCGL0ALIbPDx0vEgyDgb3zp4F84/0CnLchvx5PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OOpYVzch; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1750342746; c=relaxed/simple;
+	bh=ss7iazria96I7YtSfmcL9zT0uqya5/2ZeIZbuBrsEOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZHbj6KWwEIawrPt+kAgSFpJsbYEUaAFUOWq8PtUUEjnf7uq+ZEiSZKFBBL2vseLBIR+/xdVOJOt7V3l2RTTfKpOWKf1GxHqMamJnAWEPaRaiL9wGNPv5B0fHBdO8sr2ak+0H48oDPfbTZqEZO738ReZLVCxw9DdPlLRSVoudFNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=sfIKtBtm; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OOpYVzch"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750342704; bh=jEPNTd2WPyoDSyTpEMpP/zxHOT0uryc9RD50UhZr78A=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=OOpYVzchjatZ/O42Rtt15I/wzUYV2xm35DqhbM0nL/Q5aNbB676VqIQjGTvfkNK0Y
-	 VADggGJM9pOxtTTvkB7dIVg81kp4S7AnZQSbh9T9MeOjrzDhEqgqLc5N1NK3JSCTNM
-	 4a5eaprowaJvaOgIa+44jAySdfewgguF3QQZ/dsA=
-Received: from smtpclient.apple ([2408:8207:18a2:f420:88c5:a3d0:e224:94b2])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 30E27000; Thu, 19 Jun 2025 22:12:14 +0800
-X-QQ-mid: xmsmtpt1750342334t1qpkrhkq
-Message-ID: <tencent_6FC67FBE2D41106D17474BDCC318C1909D07@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur9tZ/1rpJ6YURlDIRkqdSvQg6OqWDrVF/QvBWs51cGg0ant9754D
-	 mfznjollGXuxngwjuCxHkY19DV3Tl/S1vWXh5KI+Sw7OT2F5M/T55boe0d8qQrGXKNaGxP9HFlav
-	 QpC72Wx2QuZWjerGpykqJOKoV/gQISXf0Vle1EwpBziKrZE07RQQhNgYkZTDd94W90jm2ErV2kyH
-	 XHG82e1hFnkY1mnXWJOSzf6RO3kfTysuv8gHrIUPklnHR0AyACRmS/22vvL4BgJevC5Uuv999bLJ
-	 0C4wNNQfhd6AOl76BReXNvzhZa0lEbvHDNXeSGl4Y839oWBYSA6qLaqhA217SrrH/bR8ajsv0Cfo
-	 3ltr9lo2cg87GP5PQr4b7lCtTtbNjQqd5gS6sIgC+xophVxNDdAY3P6KsK4ulvxQsd4akjm8/XBU
-	 oQfCcDaMu64dN5D3QzcegZerXmJGkU7iDlFR1LWhQOkEBUZufR3WdXKLl6/rLTF8Rm6XS/4B/cqv
-	 On3Vf975oRFlxuII/vWlr/2JVKvWfBf1DQ/HLqN7YPqrBrN1m58qUEKgWOGvWawK5AkckJUvpxJ0
-	 w1m/Shq4PaKqIvH1qLK4aU8S4ZKwqxgNoqoQ6jA07E9TzJBIbawDl5ePHvftMx/8zWBvfF3frKhl
-	 TTsn85QVwSuntUBK0zOwsPC0znbE+tCjioEo82t4hQl9V2rLkv0bdw2UzsxzVB9oAFhXTeogXGNJ
-	 rfbmyCsiuYUhVNEJySMAlf8e9bDCEDuHUepP+PD6Vt6lc+/zbqu1fV6dm5oWVq11/ckuWhSfcPVY
-	 ryXZlOcngbtrzKDHAqDF+yTit9fPIcfI2BGZFXMQTHt79VvDX3I/25Rn3iX0rROGlmQXcfBI4+b2
-	 f3OAbrjaSw/wPzlT32AhFdJHCW1+mcGL3nf86vcTE7q6ffdhTktEP/LBBQmKlbt/N6kzBmurUb9l
-	 X4Xq1/u2K709dIixd3+QIAiQ+WF/6XNlnr/maF1V8Ks7KxxfJCfPv664MKRUbPp5e/Q+D858b5Cc
-	 /0CkhtnR76AD4Zs8YrV2TYat+WiqA=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="sfIKtBtm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1750342219; bh=poAPVZRH/Ym2dVkMmx5T8JhCt5BXCY00Cmi30L1b95I=;
+	h=From:To:Cc:Subject:Date:From:To:CC:Subject;
+	b=sfIKtBtm3gk316hz4Ct+J7uUXhnT7tx+GMfmhgTzt68s49srMKTeQYHhX1XBLx7EZ
+	 m9u10hAlLXJ46DW96J3xsfXhh2A/UIHY3p29kg1PkO5PuwlYS/otwRale5KIxS26Oy
+	 g3GDcUDmNkiJ0vbHELl1q7NsLBL3ZeJOfwu8R6kRYt+hG/Epd02em9ym9aPdmtX2v+
+	 v/sA9IQq8/bQ3gSVOLi39EfBoWEhuzlU9WN13QqVGbEWOUdUlaxVrdzUnikjcY0EnN
+	 SEnWmJRR/VuMLFI+2hCmd9bO04aym0H+C3Dq/4my40kUJS58s7Ne3j+ZYTJhzFrVck
+	 4WgmuBss5zGHw==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bNMvH3KlFz8sr5;
+	Thu, 19 Jun 2025 16:10:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3610:e200:f74c:d89c:f3eb:14e2
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3610:e200:f74c:d89c:f3eb:14e2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX19ceJz6kt+8pw8G45x/Oq8NCBPARrdAk2Q=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bNMvD2k43z8slX;
+	Thu, 19 Jun 2025 16:10:16 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	hbathini@linux.ibm.com,
+	christophe.leroy@csgroup.eu,
+	naveen@kernel.org
+Cc: Luis Gerhorst <luis.gerhorst@fau.de>
+Subject: [PATCH bpf-next] selftests/bpf: Support ppc64el in vmtest
+Date: Thu, 19 Jun 2025 16:08:53 +0200
+Message-ID: <20250619140854.2135283-1-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [RFC patch v3 00/20] Cache aware scheduling
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <9dbdfec2-0a2d-4110-b8ef-b9d16900ff87@intel.com>
-Date: Thu, 19 Jun 2025 22:12:03 +0800
-Cc: Tim Chen <tim.c.chen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>,
- Tim Chen <tim.c.chen@intel.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Libo Chen <libo.chen@oracle.com>,
- Abel Wu <wuyun.abel@bytedance.com>,
- Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
- Hillf Danton <hdanton@sina.com>,
- Len Brown <len.brown@intel.com>,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-X-OQ-MSGID: <879A5558-B722-4FC4-880E-C0DA303912D4@cyyself.name>
-References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
- <tencent_6E51A3175F8AE0A7F684A319EE63CC56C806@qq.com>
- <9dbdfec2-0a2d-4110-b8ef-b9d16900ff87@intel.com>
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+With a rootfs built using libbpf's BPF CI [1], we can run specific tests
+as follows:
 
+$ ../libbpf-ci/rootfs/mkrootfs_debian.sh --arch ppc64el --distro noble
+$ PLATFORM=ppc64el CROSS_COMPILE=powerpc64le-linux-gnu- \
+    tools/testing/selftests/bpf/vmtest.sh \
+    -l libbpf-vmtest-rootfs-*-noble-ppc64el.tar.zst \
+    -- ./test_progs -t verifier_array_access
 
-> On 19 Jun 2025, at 21:21, Chen, Yu C <yu.c.chen@intel.com> wrote:
-> 
-> On 6/19/2025 2:39 PM, Yangyu Chen wrote:
->> Nice work!
->> I've tested your patch based on commit fb4d33ab452e and found it
->> incredibly helpful for Verilator with large RTL simulations like
->> XiangShan [1] on AMD EPYC Geona.
->> I've created a simple benchmark [2] using a static build of an
->> 8-thread Verilator of XiangShan. Simply clone the repository and
->> run `make run`.
->> In a static allocated 8-CCX KVM (with a total of 128 vCPUs) on EPYC
->> 9T24, before the patch, we have a simulation time of 49.348ms. This
->> was because each thread was distributed across every CCX, resulting
->> in extremely high core-to-core latency. However, after applying the
->> patch, the entire 8-thread Verilator is allocated to a single CCX.
->> Consequently, the simulation time was reduced to 24.196ms, which
->> is a remarkable 2.03x faster than before. We don't need numactl
->> anymore!
->> [1] https://github.com/OpenXiangShan/XiangShan
->> [2] https://github.com/cyyself/chacha20-xiangshan
->> Tested-by: Yangyu Chen <cyy@cyyself.name>
-> 
-> Thanks Yangyu for your test. May I know if these 8-threads have any
-> data sharing with each other, or each thread has their dedicated
-> data? Or, there is 1 main thread, the other 7 threads do the
-> chacha20 rotate and put the result to the main thread?
+Does not include a DENYLIST or support for KVM for now.
 
-Ah, I had forgotten to mention the benchmark. The workload is not
-about chacha20 itself. This benchmark utilizes a RTL-level simulator
-[1] that runs an Open Source OoO CPU core called XiangShan [2]. The
-chacha20 algorithm is executed on the guest CPU within this simulator.
+[1] https://github.com/libbpf/ci
 
-The verilator partitions a large RTL design into multiple blocks
-of functions and distributes them to each thread. These signals
-require synchronization every guest cycle, and synchronization is
-also necessary when a dependency exists. Given that we have
-approximately 5K guest cycles per second, there is a significant
-amount of data that needs to be transferred between each thread.
-If there are signal dependencies, this could lead to latency-bound
-performance.
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+---
+ tools/testing/selftests/bpf/config.ppc64el | 93 ++++++++++++++++++++++
+ tools/testing/selftests/bpf/vmtest.sh      |  9 +++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/config.ppc64el
 
-[1] https://github.com/verilator/verilator
-[2] https://github.com/OpenXiangShan/XiangShan
+diff --git a/tools/testing/selftests/bpf/config.ppc64el b/tools/testing/selftests/bpf/config.ppc64el
+new file mode 100644
+index 000000000000..9acf389dc4ce
+--- /dev/null
++++ b/tools/testing/selftests/bpf/config.ppc64el
+@@ -0,0 +1,93 @@
++CONFIG_ALTIVEC=y
++CONFIG_AUDIT=y
++CONFIG_BLK_CGROUP=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BONDING=y
++CONFIG_BPF_JIT_ALWAYS_ON=y
++CONFIG_BPF_PRELOAD_UMD=y
++CONFIG_BPF_PRELOAD=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CGROUP_HUGETLB=y
++CONFIG_CGROUP_NET_CLASSID=y
++CONFIG_CGROUP_PERF=y
++CONFIG_CGROUP_PIDS=y
++CONFIG_CGROUP_SCHED=y
++CONFIG_CGROUPS=y
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE="console=hvc0 wg.success=hvc1 panic_on_warn=1"
++CONFIG_CPU_LITTLE_ENDIAN=y
++CONFIG_CPUSETS=y
++CONFIG_DEBUG_ATOMIC_SLEEP=y
++CONFIG_DEBUG_FS=y
++CONFIG_DETECT_HUNG_TASK=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_DEVTMPFS=y
++CONFIG_EXPERT=y
++CONFIG_EXT4_FS_POSIX_ACL=y
++CONFIG_EXT4_FS_SECURITY=y
++CONFIG_EXT4_FS=y
++CONFIG_FRAME_POINTER=y
++CONFIG_FRAME_WARN=1280
++CONFIG_HARDLOCKUP_DETECTOR=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_HUGETLBFS=y
++CONFIG_HVC_CONSOLE=y
++CONFIG_INET=y
++CONFIG_IP_ADVANCED_ROUTER=y
++CONFIG_IP_MULTICAST=y
++CONFIG_IP_MULTIPLE_TABLES=y
++CONFIG_IPV6_SEG6_LWTUNNEL=y
++CONFIG_JUMP_LABEL=y
++CONFIG_KALLSYMS_ALL=y
++CONFIG_KPROBES=y
++CONFIG_MEMCG=y
++CONFIG_NAMESPACES=y
++CONFIG_NET_ACT_BPF=y
++CONFIG_NETDEVICES=y
++CONFIG_NETFILTER_XT_MATCH_BPF=y
++CONFIG_NET_L3_MASTER_DEV=y
++CONFIG_NET_VRF=y
++CONFIG_NET=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_NONPORTABLE=y
++CONFIG_NR_CPUS=256
++CONFIG_PACKET=y
++CONFIG_PANIC_ON_OOPS=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_PCI_HOST_GENERIC=y
++CONFIG_PCI=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_PPC64=y
++CONFIG_PPC_OF_BOOT_TRAMPOLINE=y
++CONFIG_PPC_PSERIES=y
++CONFIG_PPC_RADIX_MMU=y
++CONFIG_PRINTK_TIME=y
++CONFIG_PROC_KCORE=y
++CONFIG_PROFILING=y
++CONFIG_RCU_CPU_STALL_TIMEOUT=60
++CONFIG_RT_GROUP_SCHED=y
++CONFIG_SECTION_MISMATCH_WARN_ONLY=y
++CONFIG_SECURITY_NETWORK=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_SMP=y
++CONFIG_SOC_VIRT=y
++CONFIG_SYSVIPC=y
++CONFIG_TCP_CONG_ADVANCED=y
++CONFIG_THREAD_SHIFT=14
++CONFIG_TLS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_TMPFS=y
++CONFIG_TUN=y
++CONFIG_UNIX=y
++CONFIG_UPROBES=y
++CONFIG_USER_NS=y
++CONFIG_VETH=y
++CONFIG_VLAN_8021Q=y
++CONFIG_VSOCKETS_LOOPBACK=y
++CONFIG_VSX=y
++CONFIG_XFRM_USER=y
+diff --git a/tools/testing/selftests/bpf/vmtest.sh b/tools/testing/selftests/bpf/vmtest.sh
+index 79505d294c44..2f869daf8a06 100755
+--- a/tools/testing/selftests/bpf/vmtest.sh
++++ b/tools/testing/selftests/bpf/vmtest.sh
+@@ -43,6 +43,15 @@ riscv64)
+ 	BZIMAGE="arch/riscv/boot/Image"
+ 	ARCH="riscv"
+ 	;;
++ppc64el)
++	QEMU_BINARY=qemu-system-ppc64
++	QEMU_CONSOLE="hvc0"
++	# KVM could not be tested for powerpc, therefore not enabled for now.
++	HOST_FLAGS=(-machine pseries -cpu POWER9)
++	CROSS_FLAGS=(-machine pseries -cpu POWER9)
++	BZIMAGE="vmlinux"
++	ARCH="powerpc"
++	;;
+ *)
+ 	echo "Unsupported architecture"
+ 	exit 1
 
-Thanks,
-Yangyu Chen
-
-> Anyway I tested it on a Xeon EMR with turbo-disabled and saw ~20%
-> reduction in the total time.
-
-Nice result!
-
-> 
-> Thanks,
-> Chenyu
-
+base-commit: cd7312a78f36e981939abe1cd1f21d355e083dfe
+-- 
+2.49.0
 
