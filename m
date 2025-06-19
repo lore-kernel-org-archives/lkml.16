@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE89430E83B;
-	Thu, 19 Jun 2025 22:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD44828DB53;
+	Thu, 19 Jun 2025 22:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750373390; cv=none; b=IsI0T7ZEJPHIh+G1tezmg0tZmn/aR21MZRvMCXPIqrqFhIODghXwJ5Zq7SgkCdZmS22y/k0lbER8qeziHeI8CLLIJBRGbL2owFwnoRALKh7D4zywTcrdZum7rwitv1EXEzfQqliUyAmK9uemwSzj6D1fLVJhsi01YJU1yw1cSBY=
+	t=1750373393; cv=none; b=UBaxYbSSQ1MCC46r91Qew/BqU4ORUP/4c98At5GKQ8XtgekdGhzO3/ENeliPPlJrKtlggEEcHSZKHJ0Dl/NZPi/V78GW9R520oEbg1BshsEtQ3tEf+eWp7EpgyQpf+fyNYCuqpKi1pdXFBt7KKc/CWWHewhh9PnIw2BzMUZRXhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750373390; c=relaxed/simple;
-	bh=3LSGSLfVYsNvUNKP2SYZvQq460SV3V4VjelImV4scU8=;
+	s=arc-20240116; t=1750373393; c=relaxed/simple;
+	bh=kqhaov+O4vdMOPoApugRrrxkIyXQeyou5roEoq+LvPQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GOcTCQeyUoEYoajBsTZLW9XI/Gy8KozN+0WK7P4gUDfT+2ALoorjIR5QyBDPAZaTAE/m33U9tkRhAQjduPpne408nmM4BepQGF5JTQjOL3OJPmIL90MYbop/cxBU1VRTbt18JPP8451KcBpLfBGTEK5m3Pla1RxBeRJmNr8ikXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3e1COyJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SLlqypvPUTPRgTGZnQS8LHNtVAUDRZMySQEFM52ihnTgPZ4WTi+8pEc5+J5++QWSs2Re3qLcD3IPYkcdMMB9wxb8IgHBra/DCwk+WedVN7nhcl/HAsQpvJFrmWHcNExwaH9MRdivls/P68x+uxHjmrA8KOwoGXl84PscdoBRkSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOPkelJ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3e1COyJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B0AC4CEEA;
-	Thu, 19 Jun 2025 22:49:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOPkelJ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A14C4CEEA;
+	Thu, 19 Jun 2025 22:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750373390;
-	bh=3LSGSLfVYsNvUNKP2SYZvQq460SV3V4VjelImV4scU8=;
+	s=k20201202; t=1750373393;
+	bh=kqhaov+O4vdMOPoApugRrrxkIyXQeyou5roEoq+LvPQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=X3e1COyJf2ekc3KYU6rK2SEGb3AwODX70cpjWa32BR4xmPqF08VtJGBo8Ieo9HiGe
-	 D+1o2NVNJGK+wsS+AlkFIksjy6Omi1+gcC6S5lyEGjRsA2vOkUqncu5o3hIE1ZkQ54
-	 vaRJ11z3VOHLMFDQYtpO0DPaFA/at3m7KakP/HODQF4dEBgzJ62/TeCgb6XVLTmMZe
-	 Re7i+vQNqltvAb5K7GtfKtwwo0MyTmQ9qYecD72YxmsVWzztQ0zPJbNBrLZbjtTNxQ
-	 DtWYa2tEEcFbS5MIwxzffFDXnj4DCwSN9ZA2Xn80vp1O57n3c3nMzVuZxx6jcRptk/
-	 SqcaG1eaEtHQA==
+	b=AOPkelJ3nqBIZRmKbU5CgeeHhtOfHe4YP+hg7BXxGNJiIbzTM9vXn3jhVCgaVY8+3
+	 BJ6NEP/RPhrVffvzFBHSC152m5gboW423VNA3xlnGEw2gkZuP63DVBV7HySSQW5M4Z
+	 zT5V3pdRr3GHJM9bUbYT6MIiVraBVCooQgiFWEP3Dx/R6kpJkRcJ45r2MbpE1fzwnf
+	 g82kZVFHlItK7cHKKxQ4Q29m137QxFXLRt8T2Qz+i/TEymUTpn+ytEwS8TC7awIgnG
+	 5heEMViRKQNeGNvbgkZ/90uO0OdnXqBn5zObJqh0ZEbB69sjttMvW6BUoLfAXf1lQe
+	 WT0Y/4SBzKyaw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1FF38111DD;
-	Thu, 19 Jun 2025 22:50:19 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E6E38111DD;
+	Thu, 19 Jun 2025 22:50:22 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,50 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v8 0/6] convert lan78xx driver to the PHYLINK
+Subject: Re: [PATCH v6] net: usb: Convert tasklet API to new bottom half
+ workqueue
+ mechanism
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175037341850.1010622.7477310203588526997.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Jun 2025 22:50:18 +0000
-References: <20250618122602.3156678-1-o.rempel@pengutronix.de>
-In-Reply-To: <20250618122602.3156678-1-o.rempel@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, woojung.huh@microchip.com, andrew+netdev@lunn.ch,
- rmk+kernel@armlinux.org.uk, Thangaraj.S@microchip.com,
- Rengarajan.S@microchip.com, kernel@pengutronix.de,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com, phil@raspberrypi.org,
- maxime.chevallier@bootlin.com, horms@kernel.org
+ <175037342124.1010622.12736703136854141830.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Jun 2025 22:50:21 +0000
+References: <20250618173923.950510-1-jun.miao@intel.com>
+In-Reply-To: <20250618173923.950510-1-jun.miao@intel.com>
+To: Jun Miao <jun.miao@intel.com>
+Cc: sbhatta@marvell.com, kuba@kernel.org, oneukum@suse.com,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, qiang.zhang@linux.dev
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed, 18 Jun 2025 14:25:56 +0200 you wrote:
-> This series converts the lan78xx driver to use the PHYLINK framework,
-> which enhances PHY and MAC management. The changes also streamline the
-> driver by removing unused elements and improving link status reporting.
+On Wed, 18 Jun 2025 13:39:23 -0400 you wrote:
+> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
+> replaces all occurrences of tasklet usage with the appropriate workqueue
+> APIs throughout the usbnet driver. This transition ensures compatibility
+> with the latest design and enhances performance.
 > 
-> This is the final part of the previously split conversion series:
-> https://lore.kernel.org/all/20250428130542.3879769-1-o.rempel@pengutronix.de/
+> Signed-off-by: Jun Miao <jun.miao@intel.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,v8,1/6] net: usb: lan78xx: Convert to PHYLINK for improved PHY and MAC management
-    https://git.kernel.org/netdev/net-next/c/e110bc825897
-  - [net-next,v8,2/6] net: usb: lan78xx: Rename EVENT_LINK_RESET to EVENT_PHY_INT_ACK
-    https://git.kernel.org/netdev/net-next/c/2c7fad8a9c66
-  - [net-next,v8,3/6] net: usb: lan78xx: Use ethtool_op_get_link to reflect current link status
-    https://git.kernel.org/netdev/net-next/c/69909c56504b
-  - [net-next,v8,4/6] net: usb: lan78xx: port link settings to phylink API
-    https://git.kernel.org/netdev/net-next/c/297080cf87a9
-  - [net-next,v8,5/6] net: usb: lan78xx: Integrate EEE support with phylink LPI API
-    https://git.kernel.org/netdev/net-next/c/673d455bbb1d
-  - [net-next,v8,6/6] net: usb: lan78xx: remove unused struct members
-    https://git.kernel.org/netdev/net-next/c/6a37750910da
+  - [v6] net: usb: Convert tasklet API to new bottom half workqueue mechanism
+    https://git.kernel.org/netdev/net-next/c/2c04d279e857
 
 You are awesome, thank you!
 -- 
