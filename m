@@ -1,99 +1,164 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23C41E2312;
-	Thu, 19 Jun 2025 10:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752AF221DA5;
+	Thu, 19 Jun 2025 10:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750329124; cv=none; b=Imgqqx+QgWa1vC48szRnz3tEr5b4quQwCu3B5rjd6EkqG4B6cKb48Cmpz7P7kbWQCE7Ki9RGYfmZ9oulAxtTYF0UfWaOYZyp56vrOV2d/TXydJqNG/WIwcOauQl8fsg+dSVjrECQwgJayJi34yeVt1i5zxLFjQQaL9ApkKPEWr0=
+	t=1750329161; cv=none; b=PpvcC4Gc10sb7fI6ReoN6WNynH1o7zS95nVd7xvtfBCi6onObfta5DjRwwVoQY1brgceOeXamfny98lRyB/zxj3N5M4y+rFGEoNLUprKHsbptUK8y5RRAH/oYjosXrRpQZRM3w+QrNQh/nM9lrGMZyRP4DlMTBUBxXe/cEhAUW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750329124; c=relaxed/simple;
-	bh=Khe/sdUUkDDqg1DjiaL2gTiOly2J6fsQL2KHmvONI2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ut3t2DdIde3Gbl6oAa11Yygck/5kuYzuA9VUXfOvckhZPkRLh0U3wDoPJIX+ID7Bhrfz4wF1EXePC8Me14Yg2LlVkgbsHOfR0XgjQ88QngC6CqKd3LnAScfRRyxORCXVRH7dBdjiFQY4GosMzOlofXrBhO/WviniksBGfb8mOAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T++0IscD; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750329161; c=relaxed/simple;
+	bh=R85HTAitpNtPtiN/A06M7DxLOGRv35n/I0Z6WFxnOII=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=DSwq4V5Gw/eia/lvHEkn4nsDThEMBRsE2hE/R94JcHn9HZ/4nWESVMHbv4Jez93JNbLZwm1rNXZJ7sOMkyaZYnjjtHgBOFxwF2HmbjPyqrxfhF4zCfQ/VbOsPvBFaag8ImTKLvgpPrddNLH7g0HNnOISHwAGg1O9tHcQ/Bfb40w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=Nw2ZDB1M; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T++0IscD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=w1pniWAitZ7xsbl8EX2cBNfwJUGO6gUBYk8UsyzHaho=; b=T++0IscDTMH7RV/B13VlfwthTO
-	ocClwLWiSq5vhdXUmVM8gBi1SzG4bbvemjpW501sZlrU2uz4YOxforUAKJ+5ObYEFa3SxnbOiCd0k
-	TEK9F2H9iDYc6rxTdlrx9CSfCAl6P0SB4LxNQPp2rH1+vAsl9snvEv+NV3vVLtWRai3k0aVxDEANJ
-	YUWwo1d3cMR5Sk6nyaThKPq2nwpwpzx/hZf8edvc2wN/LB3re0uolTEKg9IdrEw7qMR4WvHa96lGZ
-	a0Cy8pN0ix0sd+rF5z81jdqTdyXw8QwZhmMCuBkQkOShQj2q57sCV4lyc3O078BZMBx7UKr8BnzEW
-	vtaQRULw==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSCYm-00000008GyW-2KJ1;
-	Thu, 19 Jun 2025 10:31:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9FB5A30890E; Thu, 19 Jun 2025 12:31:55 +0200 (CEST)
-Date: Thu, 19 Jun 2025 12:31:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
- types
-Message-ID: <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-4-boqun.feng@gmail.com>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="Nw2ZDB1M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1750329125; x=1750933925; i=frank-w@public-files.de;
+	bh=OcYH8hblyOqphSxkfLeFjpUcClvEpIu8NxtFsTsW5Nw=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Nw2ZDB1MJgjSypAStXwuh1Gbt5FKe1o2iDNYFgB1Mb38X1cBM9/DUysb1uHHLEpL
+	 tUjH9krcooMov1LXLi6BTJfbuC4HVG2c2/gqkh95BFC5OQCJaU8SKZbzpxI0ngiqq
+	 Mu+mOgQYjGcQFggN3UnUq78OEOjA2g9sWXrCpjmfXO+Qq/ArF2qjUo39VS5vIZgFG
+	 wrynAUod06o9TDLTYIo9xGId/GX3KQoh8XTrRq7bPlqjZWwq7egt5ti6xhuLI6jUH
+	 QauFfSnJ9zjX8zG8+mxrpOmWVwifPWr2AlQkHaXu8uZ30kqeFgi/vdxO2u7qD2IG2
+	 UcenJ0Tpj7apFQo2Ug==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [100.64.250.227] ([100.64.250.227]) by
+ trinity-msg-rest-gmx-gmx-live-b647dc579-9795v (via HTTP); Thu, 19 Jun 2025
+ 10:32:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618164934.19817-4-boqun.feng@gmail.com>
+Message-ID: <trinity-98eee496-129f-43c7-8d3f-4a77f4a183b9-1750329125336@trinity-msg-rest-gmx-gmx-live-b647dc579-9795v>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: horms@kernel.org, linux@fw-web.de
+Cc: nbd@nbd.name, sean.wang@mediatek.com, lorenzo@kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, daniel@makrotopia.org,
+ arinc.unal@arinc9.com
+Subject: Aw: Re: [net-next v5 3/3] net: ethernet: mtk_eth_soc: skip first
+ IRQ if not used
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 19 Jun 2025 10:32:05 +0000
+In-Reply-To: <20250619100309.GC1699@horms.kernel.org>
+References: <20250618130717.75839-1-linux@fw-web.de>
+ <20250618130717.75839-4-linux@fw-web.de>
+ <20250619100309.GC1699@horms.kernel.org>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:ifZaB0TqILOfFP6+5o3LfKPHICLlxtenulQfOOEgY2f7tACewlBl3QLnsAj1aMLZYtvH6
+ npjRu0EOI51tAGdS9VkCwnbATYO+ViMaRfHy0GeW3oHCqjXq2X0EYFFF/2jxfEuwKq46BGz05UKu
+ GKZDt+Qva4mWA9Dk14indJ8u5jWlEWhPkSjyrsIgWl7eQk7ngpQ8ACY327QoBnIHw7RSyZ6q1kCR
+ ht9Hn9Zk2u0Bz3Sw2jVbc1iW2A8/3K/1W7+B8j8hhW14tZRd+hMWNokDLsjCeve8ThOTO5SWJkWF
+ 8fTQ48zmuNnOSPwKxv+9VXdWh6QWqBU5SaRA6u746ln8ZDQ2fvBpb7C1yJiCU9XX8Q=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hCRhkC8HBc4=;DGXBDvuDhiJCdGE8BCakk/+Hi/v
+ X7tX31k409HzWulaNQGbCeQzE0+3TZAhfp3QdKPgaIpqQJzJ1v92gd1BwpV0wMXcuDPybdVcO
+ rlzzTlGkPeG0xYvPpP+yuOJJnSaeMEiUOoyz6rxQqa+woB0FgZccyKuSG71AqporbzUiAx3r0
+ yMe3U7+otWFnm50ICcKqWBJFhyheL1lH6RjExDPfPrQbeEaIo7ON+JHdkq3HeGhnGtTH2bM5n
+ 6HWYJwQqFHj1OiKT0xVuLg6XmNk256R5GTN4Ns39RPeD7gNowN9IeXj1epAP0ItKOYN56u/VE
+ s2uD+CGeOxI/Y166FxNL3hXBq71lmM/SDBhmgfOmNaivzxcMQNwtKGRWmjqTEqB7cslzks+3E
+ DfuGb3xokg8iguP56UzJIk0QewGZytdYvo+oRyDgZ5lmaEIaH9jdPfILBh5JXlJ0PclqRcpov
+ hvga9GMeaUMPBHFXk/J7CFAoYkHU8u/jTrrL0rQznOBZxgcGNxZN0m8tzxkwtJcjDA33S6dqd
+ SIDDT8vUKgsaPxDsz+GdE8YGh28jwhEhN6fZaaxJ3mAuBp38gznBv8wgoO1Vvry9+DJkP7QiQ
+ wpVitM6fdx6JZM9Er67cXvtl4f2Vek8+MgCeD+q9cZ9a7BuxwhQnQ6YOVjlqZ+Snm4bYUdvXC
+ zZny4qC+wNQ8mULrAKXjvmmPv/nArNPF96l1BADDB9fVQbhGh0wBhiWkxfTXV/kQn67l9nCNC
+ ldM9jAK1nBtNrtdSd6zkr7i7gq8B60t8fuIT4OMSxmTkonwGJqRZ34F+sbsJ28AY+0G9yb9U4
+ SpfgDyfXAHxBzABkPEJqPhMs83meenDqShaT1YThDqV24DFWm0tku5af7ylnMJH7yYhljtrE0
+ 1L/EsrXmPr2mnQcmQIw6piwy5/TH50hpfMBPmBZvmePFW2JXh6BepjUptM3r7q7+3CXEpQcuD
+ u2cuUEFkcax2dFiZVwCToe5mz5X2Y8X7NIsvmQEIOwaYLZWHnCqfowu7JGYZD5y//NHQYuOIn
+ K7PBdk0hHt/i/PlfstTPApufSVwP3L26eBsXPRXfIyJh2DwTQ2rOvoiLq3KN4y/xpsGEQG6Pj
+ 4FexkV1AmlndIfp6cLbBRp5jGcxC09xFPNGj+t/e6hUN8C0oDUrn8q61rMA7qR5W59mTOSEA3
+ 9+NStiIArrQaU2Hch0LvBPVk0iJBOZgu8xcuICydYIyy2xIBYs+P6gtzN0t9gd3ssEv30wak/
+ nRJDZ+mVs3frS8M7hQsIkH5uFiZQ3bWn3jpw0CyE/WeKZF8/2sj44cJCfF6kyeEKfTlaLA2R4
+ 5jYw8uzKCiNgdz0VgjNoSPu1psbdqBH/Hcc9+1d0fESTjbl99Ctdwuss18adq11VUcVa2zElD
+ rnpi22twF7S04lrfi18LeQYPVTfw3wqWhKwTl7/N6x2potGDD4bDwDWVRO7SEp4h7KhE3L4Nd
+ VI8DLNULF6b1QC4WRv4QnBVtLGhXvpayxT46/pTTM9WfXZdtEqrVWn6JY21cKh4UoVwxuEXAT
+ G1ZpX7UWBxgJdL4WC76W+9+kHU0cb3K2yaqoYz/UnutvQphUWpPHLQFd4FydIka/lNOOwbEGg
+ LlcViVZwRLLpjlm92ABEKexBa5q0n0vRxFUOzmEKGpJeBi656gQL+NjNoB3iWc5qPAxnkD4S1
+ gYNHlys4X7+nmHlfssI/+2hREWD0fX9gz/E5jzbXx/iSsYqhP4WmRcE0emXmj4BkgAA4TG6fm
+ Bm+YM4v3G6hqq/clGR9nY681ayXp7ZmLnn/2eDNaNb8UhDMuSjoZvrLYU0k9R4AMhvwR3JhLB
+ Rq5OgR4q8mSWBxsnZdB2xrV6QtnUrspldqC8v5phXaRxZn292R16O/2NYiu3w5OircZWedAwJ
+ s6f1WXd7gUBhEKXIrHFs7Qbpxz3yanotFZTaK+Ul1a0AFE4AKdItgwlMbd7ktXt1EraoAPxRp
+ hMADf3M9uEZ9TWrhPmyzhhfOW89DIKmYFde9YlcLTKSuu4sd7W41oLCfCZwvM0aDbGH32HT33
+ 6fCecHoONmsVoVnIyXJTsGIcJnj3ie7eEE3nYbedgViHWGb1a5Qb54PzX1MRbuNJ6k1cRZ3G7
+ 4DcxXT3cce+Nm2AVx8uSnS4kMtRIstGCCYS7O7/3xUg+VAM6MMksKQ8AVpA0rJ7Wu43sGCry1
+ +gs+t9OVJz9E/6KYX76KLdPiQGBiGahGQVJMSkzuV+eU8/Y61Z3AzjnGuTPqCG5oCmpt9IwJS
+ L0611O4aF9fCCIJZRqu6kdzBPwiQsJAY16mxkK/mQbfnauL19qsgUY3dWoApwcdY6T/+sG2ig
+ tOeEucSVnnF0LVpgmXEpPtCqPGTz0L/yi3Ou48c5LDNsofs4+ZeiqQYMHB5B9h135sqf42LpA
+ vLfWlitlv9qIE/Ey5N9wdQtUSq+bjVjezf2UYBx0K6YJ9Yv3HBG1B3wEMwMqoBfK13c7eeptW
+ EVBCznbt/aX9G+QyayGxQnFoPqBbbXtQfZ3zK1FkC9RVBGhzqH6XbGxYuxJQrF8pdZYtr6yea
+ poZCwhzPLyoerTuq1G9Rc8blEc/iUT4fR4GKCn/NKklrIFH41JlYZhLZvO4mBOTuG0Yd65OCN
+ MvVeMtxc5KxDgY/DgpljpxJpORK8Ky5hJTx7zZZNgrS8CYQvnZqpjCS8sbnoJxKsXZyg5NQlI
+ s3yLODAuz7XByCfxtoLDUK6ffIFQ/3TNt5ryRjfGQ/fQWXXWxzlNNrXPmx6kyBaY6y+E/pIEO
+ yT5nNOkWbybV8SduLtR4rzZduDRCZ/TejBVD0F9PZv7ItVh4gDeUD/ingEELylSergtQdBmrp
+ 4dluTRSliHL9L9zhXmVtDd/Dt5O/Vw9Gdyte45i/GrJjCTZZ8Y1YQ4v9ISCGag4KQPaQ6S
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 09:49:27AM -0700, Boqun Feng wrote:
+Hi Simon
 
-> +//! Memory orderings.
-> +//!
-> +//! The semantics of these orderings follows the [`LKMM`] definitions and rules.
-> +//!
-> +//! - [`Acquire`] and [`Release`] are similar to their counterpart in Rust memory model.
+> Gesendet: Donnerstag, 19. Juni 2025 um 12:03
+> Von: "Simon Horman" <horms@kernel.org>
+> Betreff: Re: [net-next v5 3/3] net: ethernet: mtk_eth_soc: skip first IR=
+Q if not used
+>
+> On Wed, Jun 18, 2025 at 03:07:14PM +0200, Frank Wunderlich wrote:
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> >=20
+> > On SoCs without MTK_SHARED_INT capability (all except mt7621 and
+> > mt7628) platform_get_irq() is called for the first IRQ (eth->irq[0])
+> > but it is never used.
+> > Skip the first IRQ and reduce the IRQ-count to 2.
+> >=20
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > ---
+> > v5:
+> > - change commit title and description
+> > v4:
+> > - drop >2 condition as max is already 2 and drop the else continue
+> > - update comment to explain which IRQs are taken in legacy way
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-So I've no clue what the Rust memory model states, and I'm assuming
-it is very similar to the C11 model. I have also forgotten what LKMM
-states :/
+thank you very much
 
-Do they all agree on what RELEASE+ACQUIRE makes?
+i guess RB is still valid with changes requested by Daniel?
 
-> +//! - [`Full`] means "fully-ordered", that is:
-> +//!   - It provides ordering between all the preceding memory accesses and the annotated operation.
-> +//!   - It provides ordering between the annotated operation and all the following memory accesses.
-> +//!   - It provides ordering between all the preceding memory accesses and all the fllowing memory
-> +//!     accesses.
-> +//!   - All the orderings are the same strong as a full memory barrier (i.e. `smp_mb()`).
+    net: ethernet: mtk_eth_soc: skip first IRQ if not used
+   =20
+    On SoCs with dedicated RX and TX interrupts (all except MT7621 and
+    MT7628) platform_get_irq() is called for the first IRQ (eth->irq[0])
+    but it is never used.
+    Skip the first IRQ and reduce the IRQ-count to 2.
 
-s/strong/strength/ ?
+code (changed condition "if (i =3D=3D MTK_FE_IRQ_SHARED)")
+        for (i =3D 0; i < MTK_FE_IRQ_NUM; i++) {
+-               if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+-                       eth->irq[i] =3D eth->irq[MTK_FE_IRQ_SHARED];
+-               else
+-                       eth->irq[i] =3D platform_get_irq(pdev, i);
++               if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
++                       if (i =3D=3D MTK_FE_IRQ_SHARED)
++                               eth->irq[MTK_FE_IRQ_SHARED] =3D platform_g=
+et_irq(pdev, i);
++                       else
++                               eth->irq[i] =3D eth->irq[MTK_FE_IRQ_SHARED=
+];
++               } else {
++                       eth->irq[i] =3D platform_get_irq(pdev, i + 1);
++               }
 
-> +//! - [`Relaxed`] is similar to the counterpart in Rust memory model, except that dependency
-> +//!   orderings are also honored in [`LKMM`]. Dependency orderings are described in "DEPENDENCY
-> +//!   RELATIONS" in [`LKMM`]'s [`explanation`].
-> +//!
-> +//! [`LKMM`]: srctree/tools/memory-model/
-> +//! [`explanation`]: srctree/tools/memory-model/Documentation/explanation.txt
+regards Frank
