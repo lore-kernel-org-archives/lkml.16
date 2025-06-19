@@ -1,114 +1,98 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D6822FDE8
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6644E227E82;
+	Thu, 19 Jun 2025 11:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332049; cv=none; b=W+n3hj9j3czQt9vEEh2HrAPlsoI1x6BERKRS8+mjsoAFaWIviTbgGrSkhd3QSidT+8tYoErA8DxcLEtQpi+XgNTjgVup2hL7sa4XIqnw0oACakfCqZJ4P00I35Vf8sXUlV+V2zQJc/ozXJ2qiPLG1wiTLfQfsCNeYZ6XISE7XQE=
+	t=1750332061; cv=none; b=PrRTZ1eL4pbG+t//pimsCgY+eJUqL1h4oQOrkRyBKeXrLbrn8zUp2bSx95U1/rSeESGdKynSZyo9DCsnbxSXaFaOO7O5cE26n1QpIYfeirkviM7sM5D8KV/109oeCLRVEqygAFj7WFad8u4FMishPmR3htAp6vpqU813X4ePxoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332049; c=relaxed/simple;
-	bh=XpZIkc7P5Gd1VuFF2PalUhlkQmpyy96hiOjrxM3sEQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uKKV0L0XdHNZfjKf+Ll95fMMOzzVefJp+gLinoD8kJCMvxhNtEeVMVbpI/zu8GBeEKgqe6Fg5bn/h0iFFZr366E7sMYtOAvCHtvz7algPIQofLJyoJSItIfT1+/RKCpES8bZKI8c/zcaJDWlw41eloViFeF2YuC9K3zSNP3GIWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zdsQXYpX; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750332061; c=relaxed/simple;
+	bh=SuwzBYssjdm1y4bvlWEBpwSu5VUkT/HUMoOitgt2ua4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QFjAV/H3zQo07jlz7zef53ipokqh09inWrzcTSRU8vV9Bs+A2Q11z/BLLjOq3eB2HwyIGAXH6qAAoCtHKDvhDHwbDHsa3ziyWgi2hd8Zs8X56oPLSFeSQvjB7kTe6rKoT8Y96LJkdevWEoW7geyMal61rcZiGDp+EySfGlSPAM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VbXuMU/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zdsQXYpX"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e731a56e111so686060276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750332047; x=1750936847; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uY/q1REvshZb8ZqHUx9YD6JUoQdmd+nZPMlg3OsvzY=;
-        b=zdsQXYpXVisf1CJIU4EnSp4YmM8puBrrdznHJONd5UdRrcIhikIUBQfpIfFPLckDGq
-         8tGtrDZ/8Xd2Elfxk8xQM+Rc8+udr9SRlYbieUwXF6mii0wfhfbMZKk3jmA6YdB96ZPM
-         RtWX3tloMg2s2aQwPdKuQ53yHR0Gvb1FOH36ng3WV37ZLNE4i8xvmmiOAKrRVFPFnTVI
-         iuxRzpNuUrwxNqkh7jWXPaxekT48TmHMv3r60KdMH6q18kSrqjOKIu82QHTnGKW60MJA
-         qc+84D9ONaS6tDAxCo3r1HZ4si1C/HNgSLsg8JCFtUtXb816WVt49jJ5ds3hFI0wfs5X
-         bvvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750332047; x=1750936847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3uY/q1REvshZb8ZqHUx9YD6JUoQdmd+nZPMlg3OsvzY=;
-        b=Y+uTbxDwrJ8imY3AiXr7SLQEJpTktL7jDe9vJNNDfDetkrmUIelTQAIWnDQ0Z3p+Ca
-         2uaR1PSTeS/tsPNh70pDeo/tNJwLKsXfYyyt3H77DcleVF5lIumFjo1BoWjfIBMCoN9G
-         L/Y4vwWbFGv+PNkiPzPNh2DQK37WfjuEOhVKHiEk5RujgIGM9GJZCbvi03jWHcrc9BMN
-         dZzcQVVdqvhYEE0731D7kQ8z/pSuVi1bdQnUzRE+YzsuTdZYxMO+5E31g2qWq/Mea9my
-         bU6usRP9SLXoz+xmpPTi7jVM5p/gE2A2qVFQSGJzxh1nc1M7Cs/Y88FC34cnJLgB0mNY
-         Dznw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuH+63cnmqLemryRClH9PDBUVsNys6Z62neMt34NeVDCgXHWjCA/c1WbXjXGt/Hidpz8kqUGGBUk2jwWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx206b5PY8IkmDRVobaYx1XilCD+HUmBt8np8yGNtZKVwioKCMW
-	J9lNO3+FyfgHdmiSQ2K9+9Dbc1zUmZP2qAmvblcyUcO75okZamIYd3Zk5fdsiebH9n+cOHHCI6E
-	914JI8tYQieipu34jG2aWJI0aVxTOq74Qan51hVMsTdHvyrYYb4KT
-X-Gm-Gg: ASbGnctDnHaRb+WvsbgPEwzZWF+Nkn/OxpSjg0ryDSn7d/vVg1Y8cRfawaBkfCyR6WW
-	tas70HLkTJcjbQrAQ6Se6XsvqCdkHJvfDizsZaxzOei2tl2ON+qHvcNFJojsBBvqAW0dEGM6jsj
-	8vmUCap+Yy2WmXe5toO3lkSAPffdbiuqHTAndfidSQ58FA
-X-Google-Smtp-Source: AGHT+IHrlSuM7JSJr8c9kgmdvNp08MZcOS3NLfvvFtN8yWrHuOaNzCEtscvrXyTnnzpxByEh5NvJmKrao7BhkBqsCeY=
-X-Received: by 2002:a05:6902:cc6:b0:e81:b080:31df with SMTP id
- 3f1490d57ef6-e822acf0121mr26619202276.36.1750332046758; Thu, 19 Jun 2025
- 04:20:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VbXuMU/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC3EC4CEEA;
+	Thu, 19 Jun 2025 11:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750332061;
+	bh=SuwzBYssjdm1y4bvlWEBpwSu5VUkT/HUMoOitgt2ua4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VbXuMU/FppWwpWPlRiRUCRV2nNgtXmaDTeciOjbY69+WpDZZ2Eg/YpsUT+wNc5Hs1
+	 F6VUQeModegGdQqJ5Er4nqfd+1KrZILMbmfeX1JaxQZa9zAasBsiuZVEAL3+yAOz8T
+	 3S18xiIy4RedoF5nrfjdjEuxUTuM2fNBo04oHm+o=
+Date: Thu, 19 Jun 2025 13:20:58 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Marwan Seliem <marwanmhks@gmail.com>
+Cc: jirislaby@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: sysrq: Introduce compile-time crash-only mode
+Message-ID: <2025061938-making-igloo-3326@gregkh>
+References: <20250607151957.222347-1-marwanmhks@gmail.com>
+ <20250611063349.25187-1-marwanmhks@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618115954.10260-1-lidong@vivo.com>
-In-Reply-To: <20250618115954.10260-1-lidong@vivo.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 19 Jun 2025 13:20:11 +0200
-X-Gm-Features: AX0GCFsNapXRX5ie9F9QwLX0kkV34NiQ3-bC4aojojmuuwqKhvpcjI7kJ4y7s9Q
-Message-ID: <CAPDyKFqJuWC+XtC-WByRAeXPT=i4W4L5GzVKvs4+th4Fo4BNKA@mail.gmail.com>
-Subject: Re: [PATCH v1] mmc: Convert ternary operator to str_plural() helper
-To: Li Dong <lidong@vivo.com>
-Cc: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, 
-	"open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." <linux-mmc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250611063349.25187-1-marwanmhks@gmail.com>
 
-On Wed, 18 Jun 2025 at 14:00, Li Dong <lidong@vivo.com> wrote:
->
-> Replace direct ternary condition check with existing helper function
-> str_plural() to improve code readability and maintain consistency.
->
-> Signed-off-by: Li Dong <lidong@vivo.com>
+On Wed, Jun 11, 2025 at 09:33:49AM +0300, Marwan Seliem wrote:
+> Hi Jiri,
+> 
+> Thank you for your review and feedback. Let me address your comments and provide more context about the use case for this change.
+> 
+> > I must admit I don't much understand the purpose of this. It can be
+> > spelled as: you can crash the system only by sysrq-c from now on. Don't
+> > use sysrq-r or others. Who did ask for this?
+> 
+> This change was created with embedded systems that have external subsystems in mind (like modems/co-processors) where we need:
+>     - The ability to trigger a full system crash (via sysrq-c) to collect subsystem crash dumps
+>     - While explicitly disabling all other sysrq functionality for security reasons
 
-Applied for next, thanks!
+"security" involves crashing the system, so I fail to understand why one
+is more "secure" than the other.
 
-Kind regards
-Uffe
+Sorry, someone needs to go back and talk to the people who think that
+this is going to result in a more secure system as that's just not the
+case at all.
 
+> In these environments:
+>     - Crash dumps are essential for debugging
+> 	- Other sysrq commands pose unnecessary security risks
 
-> ---
->  drivers/mmc/host/cb710-mmc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/cb710-mmc.c b/drivers/mmc/host/cb710-mmc.c
-> index d741c1f9cf87..52f9cf7dbc7f 100644
-> --- a/drivers/mmc/host/cb710-mmc.c
-> +++ b/drivers/mmc/host/cb710-mmc.c
-> @@ -8,6 +8,7 @@
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/delay.h>
-> +#include <linux/string_choices.h>
->  #include "cb710-mmc.h"
->
->  #define CB710_MMC_REQ_TIMEOUT_MS       2000
-> @@ -215,7 +216,7 @@ static void cb710_mmc_set_transfer_size(struct cb710_slot *slot,
->                 ((count - 1) << 16)|(blocksize - 1));
->
->         dev_vdbg(cb710_slot_dev(slot), "set up for %zu block%s of %zu bytes\n",
-> -               count, count == 1 ? "" : "s", blocksize);
-> +               count, str_plural(count), blocksize);
->  }
->
->  static void cb710_mmc_fifo_hack(struct cb710_slot *slot)
-> --
-> 2.39.0
->
+Again, I don't buy it, sorry.
+
+> > Is it for real?
+> 
+> >From a pure security viewpoint, expert advice is to remove this Magic Sysrq functionality, 
+> either with kernel.sysrq=0 in sysctl config file, or with a full kernel rebuild 
+> with n value for CONFIG_MAGIC_SYSRQ parameter.
+> This patch provides a middle ground that:
+>     1) Resolves the Core Security Conflict
+> 		The CRASH_ONLY mode provides the minimal debug capability while eliminating:
+>             - Register dumps (disables 'p' command)
+>             - Filesystem operations (disables 'u'/sync commands)
+>             - All other privileged operations
+>     2) Security Architecture Benefits
+> 	
+> 		Traditional: All-or-nothing  
+> 		│─────────────┬─────────────│  
+> 			Full disable			Full enable  
+> 
+> 		Our Approach: Principle of Least Privilege  
+> 		│─────┬───────┬─────────────│  
+> 			Off	Crash-only		Full enable  
+
+I don't understand your graphs here, what are you trying to say?
+Somehow still allowing someone to crash the system still is "secure"?
+
+confused,
+
+greg k-h
