@@ -1,70 +1,70 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8606C28DB5C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1434C28DF4B
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750364854; cv=fail; b=d6nzuxvzqRuy6vkM0d4ZvT9JyV8z/qy/AaFGAhAUvsMdsdj1B6DUFh1ZB+aMfyGlJiU9OYf0JRWbHiIKIqjzlEbMj2yS6JenoqNE5htbEB7J5NqeF14ta1Wokz54mEmhdFeSQjNxGPFAmzf21p2zsYvDXaQrChGuFZNfYW19OZU=
+	t=1750364859; cv=fail; b=DQbPBBMyOQf92yIsoWaPdsqMbUjWGtpaB2IcXXvmuwCihYQwom4FeXPqdRf3On5aUNp0ZzZaEcEBjhUUQZexxIKjUTpNrNhN/HVlmrtb+axhrhVJZTZlC+NIv6CiPWaAdfvgJiMpyrfcf70x27rfWV/OQTzwZFgGLPHjlDpmoac=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750364854; c=relaxed/simple;
-	bh=xM6Vye2sZKDPZaEZoatHBF/HyI1DqQorVjO8+dZXIj4=;
+	s=arc-20240116; t=1750364859; c=relaxed/simple;
+	bh=72WujZOYWUFqq+jVzcyFH+OR5/eFQJ6EbvXj/VJLEuA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mJEO3rrxBsj/8UZPTPKJaOcLOkFweJZWll2q0kJmlqZE7Bt6t4hHdaLtpXT/Q2VS21VGkFSH/Ln3v8BWAjOZ3r7LSoFvOm3jFsSmAM7EdLcdKQPcLjpTVXNY6bHhRAW96oNp3lwR4g7XJN0DeffjJJqsVdNd1+dZQ/nfNYLLafQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mkLophPz; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=q446hBWv; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=dZqsTMBj1o6iCbIRfvbdyL4YkvOiWG46am4ru8oUzyOu+i16xKwm3OuU0JDxf/VXERn+Jz6sIhei2E5XajIR8bggXPNfgfi5JvW3I8Syjcv04PRlM3Ux9LTCMNNrn34jOA9Fj6jcybJPeC4WlxqCTSHipbfS3WhI5p9WGKz/+4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IB9UOhI7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JDQpTHNx; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mkLophPz";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="q446hBWv"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JIfdeI002021;
-	Thu, 19 Jun 2025 20:27:09 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IB9UOhI7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JDQpTHNx"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JIfbBP016371;
+	Thu, 19 Jun 2025 20:27:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=flA5bHnaQEo0QyxD2X0SNRJvrJofnevNw0E5qvrZZpI=; b=
-	mkLophPzpmmozi2MCIBR0K5WX/DSSwH17NPAsSNiUoN+hA0ud8qSc2SXOw6NPrPc
-	UMYFwS7fwIOmoN06vgTNBcw1Sgr2HPP+p6T986sRKDTFihiCPV8kXPkcvxTw7SEk
-	RSwrOiywfJxxVxjG2xdK5LYIt4HdbkipISsZVu8UasSwjU59jQr7f1BH0eRVZqUi
-	Uf1kr5Z8zZ+5R5jeABLJ9PfJzaJ9Gr1yLjb+fuNotu4fbz2p11cUgMs/YiXLHRCm
-	FMqH8LvblOobUHsE+Q0vFA7MOWBwshBA8W7Fldf3FD0YW1oITqREijafJFEOFk8g
-	VTiUoXneyqkfDQEExPVbHg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4tk8b-1
+	corp-2025-04-25; bh=lzDBoiehB+ORskSmZw4KbHEoEdjU54CX0+GY/qTNvTc=; b=
+	IB9UOhI7/ly2XjUR+keTPdNDf/gyP5S3Ll4bVA0+XhVp/f0sHkg8J26wDwCKwL47
+	E6f7LABxHkgUNUTdhpfULCZMcntnkO1iXTyqh0j8fXEvBnyEpXLTNTe73qpFcQNe
+	VCOd7NXdWHAamMOhoqBzFyHPyiJz654SfA1lWqEKsAHhhoQsCLE4P44gnlWvke2S
+	NYAoQEf9PeAhGr4ejoZsG2ypLwjyVtMhMelxEgoUt+6UcWKubolbShWYBpFB53MA
+	50LkZuo2uMAk2Kd+5U2czMbJ1CvvF8yhKjYpav97boVLR0x/823s7WF7c3pPAqVB
+	0CQvVjesQnbClBbYuz8DXg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47b23xx224-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 20:27:09 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JITFuJ018373;
-	Thu, 19 Jun 2025 20:27:08 GMT
-Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azon11011057.outbound.protection.outlook.com [52.101.57.57])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yhc7p2v-1
+	Thu, 19 Jun 2025 20:27:13 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55JIF279038493;
+	Thu, 19 Jun 2025 20:27:12 GMT
+Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azon11011005.outbound.protection.outlook.com [52.101.57.5])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhc7m9k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Jun 2025 20:27:08 +0000
+	Thu, 19 Jun 2025 20:27:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bwks3jJS5yRNvvlbx4JsGn7HQHBRz49KcMZ5Yzx0djHp2B9dHfODytRZXF2GzdbCB4+bKNmX6iG+OA2q9TJd6bG7y2WLiwXdsE8HAkikd1qXBBz71rqXC7Y+3/hAeXtfdhHp1vCBtf7sgyU3MV93p2XeHJv9jTgEzOYpAzY33WEthnmO7mvuU+s1mUOdAC0sRm6Jez3pYUIgiFTQOGm9elS4pNLlyh/IxVqp26Eltexi6BRj2KBFWbj1BBbkR4ctfhgZ3nm+KbMvdZ3Mp7tRPye9jD6aAPTmvPlKz9thKM14pSiGbo92kh0QleetC9XPwssyHfn5T8JxYiPpHYEN9Q==
+ b=XoWJVHJXZUFUsN6ltA6y9mE8nJjZjFFrK8bDVBeR3JfTonJ+EmPmBmVYbMbh3JvwGs6aGTf1Awxv833blOQGw8r2Rl4nqsWcmD3dxRzp5MTS7RUSBg858RT1WiZxx96dH3DMnINNK4CICHIQRwiWzcavDr1MtCCHLaqsokL1Yvw1IqIHNUIC14lge9qwOoc7W8SWdohs3AhaYoePUJzlASkckqXnYcrlUXB9bW6whgtYMfKG9yFExQjJLo+qmjsZjj8/3TzpEQph6wgQJuPD7fRTndMrjKYmmEpcvm6/kYuwFDQ+ITfb4lxf8dqTlSYYjbUFJiZlYYAomTF7cIJ86Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=flA5bHnaQEo0QyxD2X0SNRJvrJofnevNw0E5qvrZZpI=;
- b=AHNi0rOcWkGUw+fQwktPQO7C8fsvotloPxhZn4z6qBeGaGRExqKlMQEcHXw1vfNZJYSfN1A93pLfd+2uFnnqzEEUBWGC/+svNVEjiYtrgDmc2Zn7KdGcn0SyEQq9GIXAEEKXNEsglSHTER0oXP3JH/8atQ5Rbk0UDTV1gShOjmWVDYSe5dmHOciDve4RDRqKVJz2iw4L7S63DX9v6QNudPu2DaBSuQazyYezFg0G+O0ehTMMySWeXcvJSw3iu89vDWv4lsFOQjyB7HHmaJNc6gLJGi9UX7hrRPVcG+Tmd8dHLS3UdjC992pCf3UJmZJjTlysu/f3MvIUz4ScM0MrSg==
+ bh=lzDBoiehB+ORskSmZw4KbHEoEdjU54CX0+GY/qTNvTc=;
+ b=PQwur27wn8SLkvESBhHg1DfOiXIhLE7D2treIkQ0CZDtyDWqe6nhHAG7Kfgh5AlUzht+yKHpIZ8ANOgHiMjiRXMrbTUoc06VFx2AlvIbpBcflbGRCJZM9dAgAaOdUkbioMx901kPlAorMeLtXqe6FDn75O/ofwJQpQN3Jg4bW/AFgo75+enG+c+bSqSZYgC7LzFkh2GEdfBy9DzBU2Jd3nKZsBiTWP9YfmOopB41V2erpFSTcMizBEQ39rCHTEWSAyYpAym1u0ZjWQIAxRxKaJ34v9M5NBedwA1MqRrDhc2YXHsEbfB/+CXMdmLEb0KIw02GL9r5k8AVyipDnXTJAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=flA5bHnaQEo0QyxD2X0SNRJvrJofnevNw0E5qvrZZpI=;
- b=q446hBWv2ACX1HPepYB0BxPyFYp0qUzb2He+57oVPmFiHorKQEnowumrzxcU0Ix/3LF8aMyJGaARKzZvmGBU0f+B82zZMLHfCVMSw8GhGVGOkqfr25eE9lgvcCcDnOuFYgLRC0MwlipzPidwYsSx6FUIYUu/4N1kTzw40cMt1nc=
+ bh=lzDBoiehB+ORskSmZw4KbHEoEdjU54CX0+GY/qTNvTc=;
+ b=JDQpTHNxHgPTAgCFIf/RxHEzYz7DmCmMsBWMhSskc/31Sz4He0496DbloRwQfjmwA37BcMf3e9ikF9Dih/IhbkjK85PrCHFrcnZ9Lz7Lx/vPgbp94D5VupZQnmoXXK9yHrzbaDFTGLCPvv/hCDs7N/Z0g0Ncw6iOqQP830At0K0=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CO6PR10MB5791.namprd10.prod.outlook.com (2603:10b6:303:14c::22) with
+ by IA3PR10MB8042.namprd10.prod.outlook.com (2603:10b6:208:50c::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Thu, 19 Jun
- 2025 20:27:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Thu, 19 Jun
+ 2025 20:27:10 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
- 20:27:05 +0000
+ 20:27:10 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
@@ -76,16 +76,16 @@ Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Lance Yang <ioworker0@gmail.com>, SeongJae Park <sj@kernel.org>,
         Suren Baghdasaryan <surenb@google.com>
-Subject: [PATCH 3/5] mm/madvise: thread VMA range state through madvise_behavior
-Date: Thu, 19 Jun 2025 21:26:28 +0100
-Message-ID: <a520417243ce7f8122de05a0420f964a922e392a.1750363557.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH 5/5] mm/madvise: eliminate very confusing manipulation of prev VMA
+Date: Thu, 19 Jun 2025 21:26:30 +0100
+Message-ID: <441f6b68c62bff6aff68bd1befe90ffc1576b56f.1750363557.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750363557.git.lorenzo.stoakes@oracle.com>
 References: <cover.1750363557.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO2P265CA0296.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a5::20) To DM4PR10MB8218.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO2P123CA0098.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:139::13) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -94,356 +94,401 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CO6PR10MB5791:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9529d3a0-eaa4-4e15-717f-08ddaf6fa814
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA3PR10MB8042:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4874f37d-8dc3-4cfe-9ef6-08ddaf6faafb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FKd6j4OGYzivhKGwd9yUVOLyfwmx/c34b8hSklaEdc9z0pl00fwl0FGMCCUs?=
- =?us-ascii?Q?CVxV4B5zje5eQ+DsAKNaa3VcCXIoiQskbFig73Hwjo+ObDFctzcWJ/LZCGjI?=
- =?us-ascii?Q?0x2JfByROYD3CXWfGj7H2NLB/YbP0qRpk92fL8aY5pViICbe6tOwk77mcd++?=
- =?us-ascii?Q?TYaqCEXdDTUrVfjx6tcCWjYjvaOtKiLn23w7JLoiCDrxDCZP8PzJX56U6Bcw?=
- =?us-ascii?Q?umhPS3t6gd9Zz5CYKtzdtp/1P6Ewz+/az3fRYxZa+rrzG+nls8uCEK+GFd0o?=
- =?us-ascii?Q?SCjeS5r+wpuiD7HX2pfbTAh52K/ZOYtRCbNaIclLbkBFbSWfjEVSGf/yE8t7?=
- =?us-ascii?Q?45Ly6C3rmsgqIOgeJFYCx3C2/01OaG6YQRWfp/4KJ3xHvEtKZRIetjfbyCyb?=
- =?us-ascii?Q?ESpkO8aC8h88KT/gg93gfuyVYgDt3Ze1pIl2KtejmKS4ohzWZsNZzN2FP+PP?=
- =?us-ascii?Q?kJfrtgcR6Mhu1h3Ek1P06+b4uDSor6OZEHlt7OIjjIjgn/M7PSZ8FpGTbU0Z?=
- =?us-ascii?Q?2N0XWP+n9D2Pxt1CU6UHvCO5gCvUmzW2O5Xl7vSLke3uTuGT/ppTW8F8JtPd?=
- =?us-ascii?Q?LKSKpROAuZFA3BQoyaSg7tG5c9eItfYl8jBAStctKAVdmat8hqoemTsJm/ht?=
- =?us-ascii?Q?q90CzoR22mmAzPVh91Ug2ukXkWZN+zbAeTWEbcPFwIMzwGvSpcizQq9xOBF7?=
- =?us-ascii?Q?i5OzDs2Mvq6I2XLPodR07qA/wrLjT6lyIvVdHt7IAgBarwQznmqwuLf1mbGr?=
- =?us-ascii?Q?JAOtYUKuKMQPq6cWuWntDWKpQyjI4gcKDRNXHf/tfXzWbwhCziMZglCqXVTz?=
- =?us-ascii?Q?Bdd8fxhI9kfHhl6XFN1a0Sw+JUt2jwyQi1NKR+i6VrMWh+0FTeppEgxsRGzt?=
- =?us-ascii?Q?MAocMrjJTU3epNfS87FQO5jT9rFmBHc0AjeMXIVTyR7sPC4KxwhXKrqIYBL6?=
- =?us-ascii?Q?SHxW5KXLEO2Vft+wgrTy1dU0DcgXn2fGMxCUDV/h3FedAJFrSHMggGgHty3p?=
- =?us-ascii?Q?5zn5ckyjv55Nw+EKLHdOu52n3QFYTGwdbk2hxRPirsHQBT/74KV1OTJbj8Zp?=
- =?us-ascii?Q?4+Sf/6qEu1XxMpe3v/czTu7UK0NigzZNzgBKLzB2tE8EYkLzM8/ZSATqcrUu?=
- =?us-ascii?Q?ADP5XEu7/SKh1M5fu59cr4UBtzcdx6BWprHcgBf9300OTqzT1H4oQNeXw8jd?=
- =?us-ascii?Q?fc8dc1OKRe5apTbUU4HJ1LvZI4aklNU9mBq43DnTw+BGdeOs4b8/sYHy5f1y?=
- =?us-ascii?Q?EiFBoADkDBOGj/zludUBew0d4Oev9rAC7sqa3dilNp1Ko0QJto1dIbYL0fEr?=
- =?us-ascii?Q?BBLOhG3kreCwSZuEx1ZUtTYhCsWfUa5Ocjaj1lh+4BB1pGdOWvLE4GuLJD0f?=
- =?us-ascii?Q?xu2g/I5QipNLEAiItFYqtLIGkOoZjpYYMOh0Ng5vkBVOF+gGqCaZ+KCGxL/s?=
- =?us-ascii?Q?QgJ79PBB/0E=3D?=
+	=?us-ascii?Q?/7n+Bb9j1wlpShDq9WxKmNg3Jig0vymqrI0/u6TdcbdJeCxMPHfC0PGg3GbF?=
+ =?us-ascii?Q?OsCXUUAi33UgYPiJDnHetfkuai/yZBtAYif+ky8B9xYQL3Bp2bGRMkJZVz8C?=
+ =?us-ascii?Q?BSTN85MABiehgVtfjYyD8QwjePeHVdkf2XUfmnCbkF6xNu3GBjKzmEJnjc5d?=
+ =?us-ascii?Q?/qHO6DAuSJfqj6GuJW3JXDl8zr4IeCptsEwhIUd+eM52Sk0oFp0hc45n06d2?=
+ =?us-ascii?Q?yzHKZadH5MDO6O8lqnE3GX4JSvftbo3yzerP/kqkB/p+QengSkwteKPWjDff?=
+ =?us-ascii?Q?13D10zeJwyl97xLlm0b0jBc1iupt/6W+bhZvFFU7lk3hk99QJPzx15DbHlB+?=
+ =?us-ascii?Q?V5weTy9JfQ5IWoUDUNdcFbbNCu5es6hML4ZTZt7YDGQScwDJYiG8idxRqEel?=
+ =?us-ascii?Q?XGbu72oYwxByN6zvPgXbI8lwvCPop7f7mP/AINlk9CoijZaJVH2oyImqhIDt?=
+ =?us-ascii?Q?2P6cev+Dod74tXejXqn6Sz2YdCWtvCLSZhHFiBdDdoFDJadvDGVuD9gtgbRJ?=
+ =?us-ascii?Q?DT+x1uSLVGRxQsCa0LQtmNcpbW6QgkwOegXMgQ4uQ3m9nL3AXBHy46WeRI2k?=
+ =?us-ascii?Q?yewspta1zjRT75bbJtC/ornkcn5t0N3e8Pm+ZH4p+nt5j/xK7AIDgLOKLTqd?=
+ =?us-ascii?Q?JVXOxcVJjqRv7vcl3tkOSatPF7iADKzDX4zazxStIhr7tDb8uMcob8blYSMo?=
+ =?us-ascii?Q?cVKRmBti6s2Ip8IOvZG9clOs4bq1vqCvYlDR3tYSQixPDgLDqx53rOaMA03O?=
+ =?us-ascii?Q?qDuj1cznlo6ZqAHHJ+db1NtTrLJg4XYVYLPaI0XEOKJxwak9soCaiz89Nmlf?=
+ =?us-ascii?Q?QmN22kH+X3blbPXmQK+HcLZvsc4qwCB6rG9a+geDXjvFvO6GRcns9MAB/JAB?=
+ =?us-ascii?Q?qPzM2/VHCx/3XPHc1R3Zrx2gsIhWzLudDwNIVybXQ7OJHINIp/wOBf28LXB/?=
+ =?us-ascii?Q?tZLqyAWhb1Qd5M+w5aVTZaUpij42vN9nnqnwDpLjPSvHj+2cRs/5dgJkJwzO?=
+ =?us-ascii?Q?WvGQ3LXdDZ/1rDgD8c+alKNw4rclbqq7s4NaztCBxQQiIGFKPqXeEh4YYmT1?=
+ =?us-ascii?Q?IlKHCXoCVvARKe69iyFgXLAH337u5Qocdnd5cegJHLQAZ5eRKt720B9R/TdG?=
+ =?us-ascii?Q?LYqQbzrr9TaFhnS4kUgcc6EdH/i44WrVjyZkuCTF3OVtvfEvNfDKCnwFFAGH?=
+ =?us-ascii?Q?rRGfvwBo+RqUhSQsxXlmKUrRY/GY5dHH0HFHrtk18qmK+h2du17xFjNT0QSI?=
+ =?us-ascii?Q?c8MOtUxnfG70lh5yZV938SVbDy/fT7iHHI9rMYSxneFsNGVoOHsX1LNJyVF9?=
+ =?us-ascii?Q?vANWUKlToDh5ION34svsEENkGBBjf/ccaVhfpSGCjxlrlut9RvDvpEvov8hg?=
+ =?us-ascii?Q?wG+TdbKjfCmPIIJMJLnhACHRmmNxCQ9EhkJad7khslhVSgBk2uDMH74acDzc?=
+ =?us-ascii?Q?Ofb8QWR1CxU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C41q2LcBZ50i6PFlelUPZ14HwaJ7CT5MVC7kMR5MbomPP9VjYQPKSxwyEzvR?=
- =?us-ascii?Q?i5HkcVstInApcTyIOLeY2IEEUGJkoEj//yhRLrtDV7q7Cxqh4EocNzXxec+b?=
- =?us-ascii?Q?ox8l70a+tplhy9wb4d0lZNWXFX2o6SRJY95A9XHK+RpLExDMMMbd30mB6Vfk?=
- =?us-ascii?Q?ES4jACdkSwPOoW/fDCmC7FFae+3P6bHk643+Nm9vxlE8p2xA2vbD9aGSOvCn?=
- =?us-ascii?Q?PyY8JEOq+D+PjbVid5DPJtcLfhEEgTckbXCX1eIQ06Qm6Z7NjCUb9iJkU0BG?=
- =?us-ascii?Q?CSOpCD7CXgey4J85+e/rI+A6m+Okn9Oq3cBfHIMM7udEi3awL87rHAiOY0P+?=
- =?us-ascii?Q?fv8HVa0ndpnrMgL8ChGlixu0SH6hinNDCHuNcT3d8qKQQpRg0CiU4eP0A9ql?=
- =?us-ascii?Q?zZ6bhqRQ8wm2+pGeeYTdKFwZZQFEcL1+hps6HTk12MSDYjZ9ERWGrZSp1+ey?=
- =?us-ascii?Q?RndzfFnxQ9J49m9WgVOXRU2CX/Uw/jybezNLXMt0lSLeCwSchXpTLdC9Yx8Z?=
- =?us-ascii?Q?CukSvCdHHcR21n8QNhvjwj7catWmY9iHuOMxkvXb5dxfwdOtekgvnY+7gUN+?=
- =?us-ascii?Q?p3XWJgnydXSJEB1Dj5kcO2n9vlxaREn9+Ftj4ptuWA1zE1hJs1mPtSvE3TgS?=
- =?us-ascii?Q?c2KLKS/9wcBHa8zvLv7or8CREfoOzLk82aFYjKFKeXGf+SpqPQwE9PYPsiXu?=
- =?us-ascii?Q?GXhyjK1ErViS7f8bDOHuy7RSRq4d2m9MjgWOWcXmpg8fvcF2qWzkSqDvsb+4?=
- =?us-ascii?Q?lmZGIr5f6kXoSLMLTMvO6BbjRkRbey8V/5Z7hPvyGKrCUa99gN/mA00Uzepo?=
- =?us-ascii?Q?6kEfoaEnfQkVnysJ/VwLqj9cZef4gpZlug896VknQEMWyOyIiXg+lOlTszYU?=
- =?us-ascii?Q?s5eqo8NgmIeKELqaEgO8T2DXwmX24g7Dumx1PIdT+HpvWbbOH6ccZn5xJ7Mq?=
- =?us-ascii?Q?DB+Hu5SfZSu5k0p8gukGEjGhMM7jA/byrqKhH7BTRCv0LK6kUZZbx1kmaI78?=
- =?us-ascii?Q?rarOy2czgZJwr7EsMtTyIUPKCw4TVbunmgzbH89QbrFNwxFbsI4tdLrLbWxG?=
- =?us-ascii?Q?fIxt+h5wUMxLip+xn5ete/UByf1CjfEupM4gkoD5I9aSaHMaLOu0BZLIn2pw?=
- =?us-ascii?Q?C800vVxOVU/NIbLWTp8zNqJ1JFVSIZuHMaHkhCJuiH/NmRSHpOG6zh+XZHIV?=
- =?us-ascii?Q?amH+Cesf8CaNs9HNDBQIW1vR4tQMSxSXrcqouGKkUmKyUoGmXLvVhGG/R6db?=
- =?us-ascii?Q?Oe7ji7ckU6Rh+nlWDB8H2SEKTMNuY72U6bN3z1bCmRr7SsG5KuAdMjmLs+5g?=
- =?us-ascii?Q?QCoySclXD2HlCdd3VGrNMAiVD+uiyKme+/ZThHbLr9qFddVPFHGNa/NAz7eb?=
- =?us-ascii?Q?YTgHX2ZBilS9O2WQRx12nJGXjh+s81SJr8Af9JbipnOMDcSboOdGOqvEBwix?=
- =?us-ascii?Q?ySYWCK1kpXpmbD7/vi3fuVXcesLqoWUkIPCvzLQK4rpP2mqETXzt/hBCh6aN?=
- =?us-ascii?Q?Xka5Q/0OVIpZNob6pNZdO4K667GEMvGN0vv/yaxVw2Nnk9yYun6VPEgu+FST?=
- =?us-ascii?Q?oRHpz1ByEldE9CXl/McRR009XqykRu/5jOxEJ0nFg8ZufU1b+Fj5jFJo/Ejd?=
- =?us-ascii?Q?Pg=3D=3D?=
+	=?us-ascii?Q?C3/LrFA7DiPt8gxZ1idivb8mu/AhTss38dJGtNN61v6Q0qU7spCs6eeu9BI+?=
+ =?us-ascii?Q?ZvyLR1Hb99bL3EVuJ/0A/ty9m6kjY2S+ZsMi5qcIzr3Hxp5mSxPKMnpDA209?=
+ =?us-ascii?Q?jnZ3fcJvhW1tViYCOnaYc7s4Fdbc2WA//vYmJLwFpiYwfifY6Fc3xzq9E5km?=
+ =?us-ascii?Q?AqGBpeJs4O9v6p2UYQNb/9KRsXt9Y5XPGy/K6Menz84w8j4di0WCO5BtYAuP?=
+ =?us-ascii?Q?R+aKAVwylkSeLvu8bKXbOmAQ7XUrMTEFkWf2BcVQEtBUgv9X7pel2l1D+E4G?=
+ =?us-ascii?Q?pF5WHUmxgUuzlJZVlW3lV7G7k4/mpCQCk9SwQ9TXawKBsEmaE8H/8THJeDx1?=
+ =?us-ascii?Q?hOjOSbS42OeaiZAXKw+ugRf6sRRvbatEsiGVSw3UioumAHdz+IV59HwMo6yA?=
+ =?us-ascii?Q?MtVIflggEgYFL+0y2Sl05+C/fnLsZ/g3MCw8Ht3GnoPIY9BoQ864G1ujgm0O?=
+ =?us-ascii?Q?h5mVlISM/N8Ptsp4jSKZr9gdrZxKzRqco4HfjHfvPADcx04x2sr0n+kVGPw0?=
+ =?us-ascii?Q?ynwTdVMm7v2pHMQ7YQyoIBdz7a2M3kRkqB0dbk6uH/TklHzSI2leT/hRZ8q4?=
+ =?us-ascii?Q?WQmCVqhRq9eA2Sh3qUmzffF/7VD7EQF10Xb9lWDNr+j/M0LxYIqciy2klYAq?=
+ =?us-ascii?Q?5QirSvqOk2cJfPUmC31J47GgXrycDasLHmr3C9kOUNZqt6D1obFbc6B8LwHs?=
+ =?us-ascii?Q?ddVCXMWpLG3pBvM5tL5TSS78bI9sg4tQ4xK3rEizzVO/ap+B9/E2gEekx4zV?=
+ =?us-ascii?Q?ph80GDGiOYuV+13ueFt7suYzZDq2OsfWcQpQVuxvhnEwvUEyH2uQsbWaxP4h?=
+ =?us-ascii?Q?dl7SbSuf8lQyq0WJXykbdnMGeoEZrHn6go+097Zyyn164milC1sX9bvBWkTi?=
+ =?us-ascii?Q?AkBhdWIuo/CU0df4tuX3IFFudLl4wV/DKGJMxuLt+/Z4xgfUs74F2pWdIFhk?=
+ =?us-ascii?Q?43fQ6vv/lLYVOfwEkVpjbOyfbhnYogTz1Lt2qPEeRTwFCbb9ufQvZ0VasmuI?=
+ =?us-ascii?Q?THobqURzpDUcJshMNviEjSDC8Lv5xPTyq8HrfSoNfU3QKtxLqcMfTQNlNPne?=
+ =?us-ascii?Q?ISIXIT6Co8eMheVMqsrfXNv1+j6oXVRPQE7ZyR5MgK0HjH3OkX/r+WYI4GOM?=
+ =?us-ascii?Q?ls88yK5Y2ZXlvsghWmUtwHlh8zreNSwuZrZyWcTfn/QqeVPCPc6xaEh84R7k?=
+ =?us-ascii?Q?9Ifco5Pi1bDrzrFvrd/xHH74jGF/MWEUZd1jKYlPdvKfo2/piKY2SryNZ7Vk?=
+ =?us-ascii?Q?DuUHM85CQqrJMrr5glwJ9nQntJ90l8STQGIfUmyNv2wqG3+J6UBIBlOGbimW?=
+ =?us-ascii?Q?/HMbiUO/V9ccpRTJ0v7KIRY6n9vL0mXGCYHK9xW9IIi3qWIuZzVKXBkJrwUM?=
+ =?us-ascii?Q?XOpFux8yFczo+vLGtYlajDocnyd6ByQXHfJQ9k4P/rbygQuVHyN7w5Fu/ABs?=
+ =?us-ascii?Q?9ohifV/WjZYEKwazd0QJQAosdGKPPiTloyQemNoGdgSE6tgaoHYMEIF3dV4J?=
+ =?us-ascii?Q?qxYeTuXHMNQYIdcR2xNNXbli4KMlc2l0aNhIb5xq+BE5iqBok5BwzIiALtKF?=
+ =?us-ascii?Q?zLH+yL9PZ0a65faMtFxjWRxWCNQBSjhxaPhrk2YdZ3RA/cq50P0pXnDmlyWY?=
+ =?us-ascii?Q?8g=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	BNJOTeRKErybIv+ktXxHFiicSTMfebhONroyDRXX5tfBXazjdgxfh4gluaGFREwg5PScYFrz/j2CX9HQhkqkxbOEIqfnp0xvZ9odPTGHg8QwuQO158/YReJHmai8D2dvOmFVVtKiSGk54ZAqkVSEB4q6X9n1go1F/xELaPbdn5jrRWG0y42ZksRsnwupD7ZKmC6WwA2IaQ4agd9W24GVQSh0MvGevPcZEW2r/jR/KX55D7UD5bWDYmZm6roS/mHzUPl09P2VwMYSYkLBMups/O5z75KwXLttU/W+f0wfqI4c/wNjfkdqbjXFxRIeTAf1LewdINkIEVtm9k9vMY67GO8Iqx1MFiifLS/eTvrlt1ZfnJFHRftzZImpr0z/C7NX718oN+fwomFNHFMxKV5UAk65s5KfbI22nCWIzOCz5MabvD6aQjKSDdnDL/+fwmTiI9NisjNI8cOlwIS7cVwnoWqjqSqfn5xKPHz2hGFoMA7t/2wqoqJ9yS9+6X7YldMwcAR5QTP6bZmE3e151lFyVCMKtyNykX4hHztX6cPf6eSp4m8SybZtfuAMy8amOgzlBere7mZ5GpsCTOuO9UBMSnZpmOmNm0DrF9vn0FBYs2Q=
+	F4YStL3R3MgSAh1i8G28aPkIddp+xfr/SiDIqtNKTSASwkjG+BRr1/+oM2DOY5UKWcTBHFDx7Y8r2xiR6UVtsnRhlWgi4u87DUQgfhgGldTEH6cNpG44vg9m7zck5xHczGDxk9sCWPDUP4ZqrzNS7LvoMJ/1O/4MsgWY4uxMXG9kdHz/FSU6rbaIVP3vDPo62kDMNCpJg2Q2MYeAiPi1PBDzR5vR5r6i9EG6KGIn8NAREye0b8AM+T/mTUT11fkgQcw3YhsZuvkspWjjqxqQ9KZd2AxaVYCAX2sy77V0dby/6qLKBTK2bHqvJxuQr+rpqgMFkPn3Jv+TJoLYWhUmMryyqOrS6sXsg51LBC2DxMA7Rkaf9Kn0SCYHLHJXn4ip5VxI3ZrC1eWlbopATNB6xZ6dyhoHu0rQG1Mrzr1EwrY/w31lP+gRPy6Rat9mxJCoel0DOcz8FNkVOhpDajADSkgJ35WW0okzXpwCEAI9jIi4CARELngaojzh+ARzDqcvk7RRT1JFQ8hGi7a8k6kKy0UvkaUD6/HJJ7osC8L8VDX9ls1pD3yNIUNljRwe2NQT3DL6oSPyQ7kOm1Mgfh/FuXs0hHxr2zvv/4fH1YF1i4M=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9529d3a0-eaa4-4e15-717f-08ddaf6fa814
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4874f37d-8dc3-4cfe-9ef6-08ddaf6faafb
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 20:27:05.4297
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 20:27:10.3129
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dUZ72Br3f/+8+2OFsFXbTWv+UfXynoCLMmnQMemjz+cw2ruhTs1rHdnI5VekMFIWiPuEnqpiUTuAsMJ/bSu6RBasx0z/zMIyLdiA7uD2EJ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5791
+X-MS-Exchange-CrossTenant-UserPrincipalName: CM38HaGZ8Hb2XSrnNNxoEFGVLvTg3iLY1WJFW1WT7Gh6gpVvt7bhkjboq37m11KvbZBr8oCYGl7WuRn0L1AOdzCMQdrTBkQQ1HhXIgFyNTA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8042
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-19_07,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506190167
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDE2OCBTYWx0ZWRfX54Iw5N+L3vKu 1YMWDpJ69k8CyHeATqXq4yKxmwh47Ueq/HxqDwBwYytEamV6zCTBw7x9cBg8V3BMd7zKos+hSMT yvSmFJRkhHAWPGbdygMsIdiLO2YPd/enrfTrp6o4jXRBYsRXeQzbL1zOsD/YHQ9zGIDUl0glKX0
- Y2t9ApCshuFeU6jbs7ZWlOxnFjl1NduKC8tnghrdYXDhkdQbS6heySlhs6XDQ5gr6ErKfejh0Li BVu4RR1ovFWLUT/gxBwnex6TwkiP4XJjCa73bgJ9eWh1o+4KwqZtQnIwxmozbu16PyQDctQxOth sima5kZDSiOwyyGzvxy8/F5Etsq5ZFn65htODX/cwqnfxWh2BtuV4394qVXZKQ8jYdTnK6CbxP0
- ljikzzq7ld6bsT3YFB9zZV8QISo7heVt2VplS4Di78l0DOmXCcddVk8yHuQu3ZgHsqgTDN00
-X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=6854729d b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=06d9jRpDxHQBZIvN52cA:9
-X-Proofpoint-GUID: WocHfbnH8aSqTUGDMZrQWqNUZ4vmN-bV
-X-Proofpoint-ORIG-GUID: WocHfbnH8aSqTUGDMZrQWqNUZ4vmN-bV
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=995 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506190167
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDE2OCBTYWx0ZWRfX+aPHY1ehtNbh 5h5XV9GYNh2et1eCCXAsCPZO+okBBZYGl4h45JgGZIl5NL5Pysh5+qTGLzvjomlV565QdCc0LY8 +Os0+sURH2MU05jFkKnt87tTSuKHVFL3yZwKUUmhpYqFqKMIIalxyXZm49y2iBsSYSOVZfYTfeN
+ Ry0nHkv6bC83iOpy7rEG3GLhIof7Ikl3df61SNfjtf30xOLKCSefiN5Ywft2Cf6d2JriMIyHVY0 xW1v2O9nOm60tas/JXXvGPZvqB71pGYX2oPGdA3qtbrJAUFxjvZ854YR6LC1p7XFH5w2Qmiizw4 QYty7K2tIMBar+uLkq6ONxY/sZnfu4/2NQeGtgcH+tFW+YqiN9w9i+gyNhyJDR4AiAyRQ3R0sJZ
+ 2a1eTYLMV4JhNt/RCHWOOPQnmvjaOQIEJANZaO/embgDf8w4S4qDXEsZxvYZy+RHtY1Mliwd
+X-Authority-Analysis: v=2.4 cv=DM2P4zNb c=1 sm=1 tr=0 ts=685472a2 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=3PYvvxC6y3Yc54peycEA:9 cc=ntf awl=host:13206
+X-Proofpoint-GUID: FgyQX7JZUNR8sq81PWCboMfkueDCAyU6
+X-Proofpoint-ORIG-GUID: FgyQX7JZUNR8sq81PWCboMfkueDCAyU6
 
-Rather than updating start and a confusing local parameter 'tmp' in
-madvise_walk_vmas(), instead store the current range being operated upon in
-the struct madvise_behavior helper object in a range pair and use this
-consistently in all operations.
+The madvise code has for the longest time had very confusing code around
+the 'prev' VMA pointer passed around various functions which, in all cases
+except madvise_update_vma(), is unused and instead simply updated as soon
+as the function is invoked.
 
-This makes it clearer what is going on and opens the door to further
-cleanup now we store state regarding what is currently being operated upon
-here.
+To compound the confusion, the prev pointer is also used to indicate to the
+caller that the mmap lock has been dropped and that we can therefore not
+safely access the end of the current VMA (which might have been updated by
+madvise_update_vma()).
+
+Clear up this confusion by not setting prev = vma anywhere except in
+madvise_walk_vmas(), update all references to prev which will always be
+equal to vma after madvise_vma_behavior() is invoked, and adding a flag to
+indicate that the lock has been dropped to make this explicit.
+
+Additionally, drop a redundant BUG_ON() from madvise_collapse(), which is
+simply reiterating the BUG_ON(mmap_locked) above it (note that BUG_ON() is
+not appropriate here, but we leave existing code as-is).
+
+We finally adjust the madvise_walk_vmas() logic to be a little clearer -
+delaying the assignment of the end of the range to the start of the new
+range until the last moment and handling the lock being dropped scenario
+immediately.
+
+Additionally add some explanatory comments.
 
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- mm/madvise.c | 101 ++++++++++++++++++++++++++++-----------------------
- 1 file changed, 55 insertions(+), 46 deletions(-)
+ include/linux/huge_mm.h |  9 +++---
+ mm/khugepaged.c         |  9 ++----
+ mm/madvise.c            | 63 +++++++++++++++++++++--------------------
+ 3 files changed, 39 insertions(+), 42 deletions(-)
 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 8f1b15213f61..4d5bb67dc4ec 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -433,9 +433,8 @@ change_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 
+ int hugepage_madvise(struct vm_area_struct *vma, vm_flags_t *vm_flags,
+ 		     int advice);
+-int madvise_collapse(struct vm_area_struct *vma,
+-		     struct vm_area_struct **prev,
+-		     unsigned long start, unsigned long end);
++int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
++		     unsigned long end, bool *lock_dropped);
+ void vma_adjust_trans_huge(struct vm_area_struct *vma, unsigned long start,
+ 			   unsigned long end, struct vm_area_struct *next);
+ spinlock_t *__pmd_trans_huge_lock(pmd_t *pmd, struct vm_area_struct *vma);
+@@ -596,8 +595,8 @@ static inline int hugepage_madvise(struct vm_area_struct *vma,
+ }
+ 
+ static inline int madvise_collapse(struct vm_area_struct *vma,
+-				   struct vm_area_struct **prev,
+-				   unsigned long start, unsigned long end)
++				   unsigned long start,
++				   unsigned long end, bool *lock_dropped)
+ {
+ 	return -EINVAL;
+ }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 3495a20cef5e..1aa7ca67c756 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -2727,8 +2727,8 @@ static int madvise_collapse_errno(enum scan_result r)
+ 	}
+ }
+ 
+-int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+-		     unsigned long start, unsigned long end)
++int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
++		     unsigned long end, bool *lock_dropped)
+ {
+ 	struct collapse_control *cc;
+ 	struct mm_struct *mm = vma->vm_mm;
+@@ -2739,8 +2739,6 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 	BUG_ON(vma->vm_start > start);
+ 	BUG_ON(vma->vm_end < end);
+ 
+-	*prev = vma;
+-
+ 	if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
+ 		return -EINVAL;
+ 
+@@ -2788,7 +2786,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 							 &mmap_locked, cc);
+ 		}
+ 		if (!mmap_locked)
+-			*prev = NULL;  /* Tell caller we dropped mmap_lock */
++			*lock_dropped = true;
+ 
+ handle_result:
+ 		switch (result) {
+@@ -2798,7 +2796,6 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 			break;
+ 		case SCAN_PTE_MAPPED_HUGEPAGE:
+ 			BUG_ON(mmap_locked);
+-			BUG_ON(*prev);
+ 			mmap_read_lock(mm);
+ 			result = collapse_pte_mapped_thp(mm, addr, true);
+ 			mmap_read_unlock(mm);
 diff --git a/mm/madvise.c b/mm/madvise.c
-index 47485653c2a1..6faa38b92111 100644
+index 86fe04aa7c88..53c3a46d7bf6 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -58,17 +58,26 @@ enum madvise_lock_mode {
- 	MADVISE_VMA_READ_LOCK,
- };
- 
-+struct madvise_behavior_range {
-+	unsigned long start, end;
-+};
-+
- struct madvise_behavior {
- 	struct mm_struct *mm;
- 	int behavior;
- 	struct mmu_gather *tlb;
- 	enum madvise_lock_mode lock_mode;
- 	struct anon_vma_name *anon_name;
-+
-+	/*
-+	 * The range over which the behaviour is currently being applied. If
-+	 * traversing multiple VMAs, this is updated for each.
-+	 */
-+	struct madvise_behavior_range range;
+@@ -76,6 +76,7 @@ struct madvise_behavior {
+ 	struct madvise_behavior_range range;
+ 	/* The VMA and VMA preceding it (if applicable) currently targeted. */
+ 	struct vm_area_struct *prev, *vma;
++	bool lock_dropped;
  };
  
  #ifdef CONFIG_ANON_VMA_NAME
--static int madvise_walk_vmas(unsigned long start, unsigned long end,
--		struct madvise_behavior *madv_behavior);
-+static int madvise_walk_vmas(struct madvise_behavior *madv_behavior);
- 
- struct anon_vma_name *anon_vma_name_alloc(const char *name)
- {
-@@ -149,8 +158,9 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
- 
- 	madv_behavior.behavior =
- 		anon_name ? __MADV_SET_ANON_VMA_NAME : __MADV_CLEAR_ANON_VMA_NAME;
--
--	return madvise_walk_vmas(start, end, &madv_behavior);
-+	madv_behavior.range.start = start;
-+	madv_behavior.range.end = end;
-+	return madvise_walk_vmas(&madv_behavior);
- }
- 
- static bool is_anon_vma_name(int behavior)
-@@ -1012,12 +1022,13 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
- 		return -EINVAL;
- }
- 
--static long madvise_populate(unsigned long start, unsigned long end,
--		struct madvise_behavior *madv_behavior)
-+static long madvise_populate(struct madvise_behavior *madv_behavior)
- {
- 	struct mm_struct *mm = madv_behavior->mm;
- 	const bool write = madv_behavior->behavior == MADV_POPULATE_WRITE;
- 	int locked = 1;
-+	unsigned long start = madv_behavior->range.start;
-+	unsigned long end = madv_behavior->range.end;
- 	long pages;
- 
- 	while (start < end) {
-@@ -1308,12 +1319,13 @@ static long madvise_guard_remove(struct vm_area_struct *vma,
-  */
- static int madvise_vma_behavior(struct vm_area_struct *vma,
- 				struct vm_area_struct **prev,
--				unsigned long start, unsigned long end,
- 				struct madvise_behavior *madv_behavior)
- {
- 	int behavior = madv_behavior->behavior;
+@@ -205,10 +206,8 @@ static int madvise_update_vma(vm_flags_t new_flags,
  	struct anon_vma_name *anon_name = madv_behavior->anon_name;
- 	vm_flags_t new_flags = vma->vm_flags;
-+	unsigned long start = madv_behavior->range.start;
-+	unsigned long end = madv_behavior->range.end;
- 	int error;
+ 	VMA_ITERATOR(vmi, madv_behavior->mm, range->start);
  
- 	if (unlikely(!can_modify_vma_madv(vma, behavior)))
-@@ -1425,10 +1437,11 @@ static int madvise_vma_behavior(struct vm_area_struct *vma,
- /*
-  * Error injection support for memory error handling.
-  */
--static int madvise_inject_error(unsigned long start, unsigned long end,
--		struct madvise_behavior *madv_behavior)
-+static int madvise_inject_error(struct madvise_behavior *madv_behavior)
- {
- 	unsigned long size;
-+	unsigned long start = madv_behavior->range.start;
-+	unsigned long end = madv_behavior->range.end;
+-	if (new_flags == vma->vm_flags && anon_vma_name_eq(anon_vma_name(vma), anon_name)) {
+-		madv_behavior->prev = vma;
++	if (new_flags == vma->vm_flags && anon_vma_name_eq(anon_vma_name(vma), anon_name))
+ 		return 0;
+-	}
  
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
-@@ -1482,8 +1495,7 @@ static bool is_memory_failure(struct madvise_behavior *madv_behavior)
+ 	vma = vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+ 			range->start, range->end, new_flags, anon_name);
+@@ -216,7 +215,6 @@ static int madvise_update_vma(vm_flags_t new_flags,
+ 		return PTR_ERR(vma);
  
- #else
+ 	madv_behavior->vma = vma;
+-	madv_behavior->prev = vma;
  
--static int madvise_inject_error(unsigned long start, unsigned long end,
--		struct madvise_behavior *madv_behavior)
-+static int madvise_inject_error(struct madvise_behavior *madv_behavior)
- {
- 	return 0;
- }
-@@ -1565,20 +1577,20 @@ static bool process_madvise_remote_valid(int behavior)
-  * If a VMA read lock could not be acquired, we return NULL and expect caller to
-  * fallback to mmap lock behaviour.
-  */
--static struct vm_area_struct *try_vma_read_lock(struct mm_struct *mm,
--		struct madvise_behavior *madv_behavior,
--		unsigned long start, unsigned long end)
-+static
-+struct vm_area_struct *try_vma_read_lock(struct madvise_behavior *madv_behavior)
- {
-+	struct mm_struct *mm = madv_behavior->mm;
- 	struct vm_area_struct *vma;
+ 	/* vm_flags is protected by the mmap_lock held in write mode. */
+ 	vma_start_write(vma);
+@@ -330,7 +328,6 @@ static long madvise_willneed(struct madvise_behavior *madv_behavior)
+ 	unsigned long end = madv_behavior->range.end;
+ 	loff_t offset;
  
--	vma = lock_vma_under_rcu(mm, start);
-+	vma = lock_vma_under_rcu(mm, madv_behavior->range.start);
- 	if (!vma)
- 		goto take_mmap_read_lock;
- 	/*
- 	 * Must span only a single VMA; uffd and remote processes are
- 	 * unsupported.
+-	madv_behavior->prev = vma;
+ #ifdef CONFIG_SWAP
+ 	if (!file) {
+ 		walk_page_range_vma(vma, start, end, &swapin_walk_ops, vma);
+@@ -359,7 +356,7 @@ static long madvise_willneed(struct madvise_behavior *madv_behavior)
+ 	 * vma's reference to the file) can go away as soon as we drop
+ 	 * mmap_lock.
  	 */
--	if (end > vma->vm_end || current->mm != mm ||
-+	if (madv_behavior->range.end > vma->vm_end || current->mm != mm ||
- 	    userfaultfd_armed(vma)) {
+-	madv_behavior->prev = NULL;	/* tell sys_madvise we drop mmap_lock */
++	madv_behavior->lock_dropped = true;
+ 	get_file(file);
+ 	offset = (loff_t)(start - vma->vm_start)
+ 			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
+@@ -650,7 +647,6 @@ static long madvise_cold(struct madvise_behavior *madv_behavior)
+ 	struct vm_area_struct *vma = madv_behavior->vma;
+ 	struct mmu_gather tlb;
+ 
+-	madv_behavior->prev = vma;
+ 	if (!can_madv_lru_vma(vma))
+ 		return -EINVAL;
+ 
+@@ -682,7 +678,6 @@ static long madvise_pageout(struct madvise_behavior *madv_behavior)
+ 	struct mmu_gather tlb;
+ 	struct vm_area_struct *vma = madv_behavior->vma;
+ 
+-	madv_behavior->prev = vma;
+ 	if (!can_madv_lru_vma(vma))
+ 		return -EINVAL;
+ 
+@@ -971,7 +966,6 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
+ 	struct madvise_behavior_range *range = &madv_behavior->range;
+ 	int behavior = madv_behavior->behavior;
+ 
+-	madv_behavior->prev = madv_behavior->vma;
+ 	if (!madvise_dontneed_free_valid_vma(madv_behavior))
+ 		return -EINVAL;
+ 
+@@ -981,8 +975,7 @@ static long madvise_dontneed_free(struct madvise_behavior *madv_behavior)
+ 	if (!userfaultfd_remove(madv_behavior->vma, range->start, range->end)) {
+ 		struct vm_area_struct *vma;
+ 
+-		madv_behavior->prev = NULL; /* mmap_lock has been dropped, prev is stale */
+-
++		madv_behavior->lock_dropped = true;
+ 		mmap_read_lock(mm);
+ 		madv_behavior->vma = vma = vma_lookup(mm, range->start);
+ 		if (!vma)
+@@ -1081,7 +1074,7 @@ static long madvise_remove(struct madvise_behavior *madv_behavior)
+ 	unsigned long start = madv_behavior->range.start;
+ 	unsigned long end = madv_behavior->range.end;
+ 
+-	madv_behavior->prev = NULL; /* tell sys_madvise we drop mmap_lock */
++	madv_behavior->lock_dropped = true;
+ 
+ 	if (vma->vm_flags & VM_LOCKED)
+ 		return -EINVAL;
+@@ -1200,7 +1193,6 @@ static long madvise_guard_install(struct madvise_behavior *madv_behavior)
+ 	long err;
+ 	int i;
+ 
+-	madv_behavior->prev = vma;
+ 	if (!is_valid_guard_vma(vma, /* allow_locked = */false))
+ 		return -EINVAL;
+ 
+@@ -1310,7 +1302,6 @@ static long madvise_guard_remove(struct madvise_behavior *madv_behavior)
+ 	struct vm_area_struct *vma = madv_behavior->vma;
+ 	struct madvise_behavior_range *range = &madv_behavior->range;
+ 
+-	madv_behavior->prev = vma;
+ 	/*
+ 	 * We're ok with removing guards in mlock()'d ranges, as this is a
+ 	 * non-destructive action.
+@@ -1352,8 +1343,8 @@ static int madvise_vma_behavior(struct madvise_behavior *madv_behavior)
+ 	case MADV_DONTNEED_LOCKED:
+ 		return madvise_dontneed_free(madv_behavior);
+ 	case MADV_COLLAPSE:
+-		return madvise_collapse(vma, &madv_behavior->prev,
+-					range->start, range->end);
++		return madvise_collapse(vma, range->start, range->end,
++			&madv_behavior->lock_dropped);
+ 	case MADV_GUARD_INSTALL:
+ 		return madvise_guard_install(madv_behavior);
+ 	case MADV_GUARD_REMOVE:
+@@ -1601,7 +1592,6 @@ static bool try_vma_read_lock(struct madvise_behavior *madv_behavior)
  		vma_end_read(vma);
  		goto take_mmap_read_lock;
-@@ -1600,13 +1612,13 @@ static struct vm_area_struct *try_vma_read_lock(struct mm_struct *mm,
-  * Must be called with the mmap_lock held for reading or writing.
-  */
- static
--int madvise_walk_vmas(unsigned long start, unsigned long end,
--		      struct madvise_behavior *madv_behavior)
-+int madvise_walk_vmas(struct madvise_behavior *madv_behavior)
- {
- 	struct mm_struct *mm = madv_behavior->mm;
-+	struct madvise_behavior_range *range = &madv_behavior->range;
-+	unsigned long end = range->end;
- 	struct vm_area_struct *vma;
- 	struct vm_area_struct *prev;
--	unsigned long tmp;
+ 	}
+-	madv_behavior->prev = vma; /* Not currently required. */
+ 	madv_behavior->vma = vma;
+ 	return true;
+ 
+@@ -1627,7 +1617,7 @@ int madvise_walk_vmas(struct madvise_behavior *madv_behavior)
+ 	unsigned long end = range->end;
  	int unmapped_error = 0;
  	int error;
+-	struct vm_area_struct *vma;
++	struct vm_area_struct *prev, *vma;
  
-@@ -1615,11 +1627,10 @@ int madvise_walk_vmas(unsigned long start, unsigned long end,
- 	 * tentatively, avoiding walking VMAs.
- 	 */
- 	if (madv_behavior->lock_mode == MADVISE_VMA_READ_LOCK) {
--		vma = try_vma_read_lock(mm, madv_behavior, start, end);
-+		vma = try_vma_read_lock(madv_behavior);
- 		if (vma) {
- 			prev = vma;
--			error = madvise_vma_behavior(vma, &prev, start, end,
--						     madv_behavior);
-+			error = madvise_vma_behavior(vma, &prev, madv_behavior);
- 			vma_end_read(vma);
- 			return error;
- 		}
-@@ -1630,8 +1641,8 @@ int madvise_walk_vmas(unsigned long start, unsigned long end,
+ 	/*
+ 	 * If VMA read lock is supported, apply madvise to a single VMA
+@@ -1645,19 +1635,23 @@ int madvise_walk_vmas(struct madvise_behavior *madv_behavior)
  	 * ranges, just ignore them, but return -ENOMEM at the end.
  	 * - different from the way of handling in mlock etc.
  	 */
--	vma = find_vma_prev(mm, start, &prev);
--	if (vma && start > vma->vm_start)
+-	vma = find_vma_prev(mm, range->start, &madv_behavior->prev);
 +	vma = find_vma_prev(mm, range->start, &prev);
-+	if (vma && range->start > vma->vm_start)
- 		prev = vma;
+ 	if (vma && range->start > vma->vm_start)
+-		madv_behavior->prev = vma;
++		prev = vma;
  
  	for (;;) {
-@@ -1640,32 +1651,29 @@ int madvise_walk_vmas(unsigned long start, unsigned long end,
+-		struct vm_area_struct *prev;
+-
+ 		/* Still start < end. */
+ 		if (!vma)
  			return -ENOMEM;
  
  		/* Here start < (end|vma->vm_end). */
--		if (start < vma->vm_start) {
-+		if (range->start < vma->vm_start) {
+ 		if (range->start < vma->vm_start) {
++			/*
++			 * This indicates a gap between VMAs in the input
++			 * range. This does not cause the operation to abort,
++			 * rather we simply return -ENOMEM to indicate that this
++			 * has happened, but carry on.
++			 */
  			unmapped_error = -ENOMEM;
--			start = vma->vm_start;
--			if (start >= end)
-+			range->start = vma->vm_start;
-+			if (range->start >= end)
- 				break;
- 		}
+ 			range->start = vma->vm_start;
+ 			if (range->start >= end)
+@@ -1668,21 +1662,28 @@ int madvise_walk_vmas(struct madvise_behavior *madv_behavior)
+ 		range->end = min(vma->vm_end, end);
  
--		/* Here vma->vm_start <= start < (end|vma->vm_end) */
--		tmp = vma->vm_end;
--		if (end < tmp)
--			tmp = end;
-+		/* Here vma->vm_start <= range->start < (end|vma->vm_end) */
-+		range->end = min(vma->vm_end, end);
- 
--		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
--		error = madvise_vma_behavior(vma, &prev, start, tmp,
--					     madv_behavior);
-+		/* Here vma->vm_start <= range->start < range->end <= (end|vma->vm_end). */
-+		error = madvise_vma_behavior(vma, &prev, madv_behavior);
+ 		/* Here vma->vm_start <= range->start < range->end <= (end|vma->vm_end). */
++		madv_behavior->prev = prev;
+ 		madv_behavior->vma = vma;
+ 		error = madvise_vma_behavior(madv_behavior);
  		if (error)
  			return error;
--		start = tmp;
--		if (prev && start < prev->vm_end)
--			start = prev->vm_end;
--		if (start >= end)
-+		range->start = range->end;
-+		if (prev && range->start < prev->vm_end)
-+			range->start = prev->vm_end;
-+		if (range->start >= range->end)
+-		prev = madv_behavior->prev;
++		if (madv_behavior->lock_dropped) {
++			/* We dropped the mmap lock, we can't ref the VMA. */
++			prev = NULL;
++			vma = NULL;
++			madv_behavior->lock_dropped = false;
++		} else {
++			prev = vma;
++			vma = madv_behavior->vma;
++		}
+ 
+-		range->start = range->end;
+-		if (prev && range->start < prev->vm_end)
+-			range->start = prev->vm_end;
+-		if (range->start >= end)
++		if (vma && range->end < vma->vm_end)
++			range->end = vma->vm_end;
++		if (range->end >= end)
  			break;
- 		if (prev)
- 			vma = find_vma(mm, prev->vm_end);
- 		else	/* madvise_remove dropped mmap_lock */
--			vma = find_vma(mm, start);
-+			vma = find_vma(mm, range->start);
+-		if (prev)
+-			vma = find_vma(mm, prev->vm_end);
+-		else	/* madvise_remove dropped mmap_lock */
+-			vma = find_vma(mm, range->start);
++
++		vma = find_vma(mm, vma ? vma->vm_end : range->end);
++		range->start = range->end;
  	}
  
  	return unmapped_error;
-@@ -1846,22 +1854,23 @@ static int madvise_do_behavior(unsigned long start, size_t len_in,
- 		struct madvise_behavior *madv_behavior)
- {
- 	struct blk_plug plug;
--	unsigned long end;
- 	int error;
-+	struct madvise_behavior_range *range = &madv_behavior->range;
- 
- 	if (is_memory_failure(madv_behavior)) {
--		end = start + len_in;
--		return madvise_inject_error(start, end, madv_behavior);
-+		range->start = start;
-+		range->end = start + len_in;
-+		return madvise_inject_error(madv_behavior);
- 	}
- 
--	start = get_untagged_addr(madv_behavior->mm, start);
--	end = start + PAGE_ALIGN(len_in);
-+	range->start = get_untagged_addr(madv_behavior->mm, start);
-+	range->end = range->start + PAGE_ALIGN(len_in);
- 
- 	blk_start_plug(&plug);
- 	if (is_madvise_populate(madv_behavior))
--		error = madvise_populate(start, end, madv_behavior);
-+		error = madvise_populate(madv_behavior);
- 	else
--		error = madvise_walk_vmas(start, end, madv_behavior);
-+		error = madvise_walk_vmas(madv_behavior);
- 	blk_finish_plug(&plug);
- 	return error;
- }
 -- 
 2.49.0
 
