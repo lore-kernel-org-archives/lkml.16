@@ -1,139 +1,184 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6B811EB5FD;
-	Thu, 19 Jun 2025 14:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDFA1C8611;
+	Thu, 19 Jun 2025 14:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344637; cv=none; b=MzwZ+wJZWqgI/df51Tttt1aCGhVdpSOHe25elcJAtA90/qMnMmtEF2olwjIzJSk/lKTMo9licwaX1Uc7VupQaYd/ohrTd0GHpC1BrYENKqJ7tu68ez0ivuU/pHqsffmC/7Lnt3a10dJ1PNhIxmCB5U9hFKLrNfqhF5+F1XH8m28=
+	t=1750344660; cv=none; b=hx/L/KaUGM5Avds5LGTJzXjliUAK4JtuzTcLGD1Pig7///tHSfYZNoAmMuBA9Ce9NRNWe8gxXrBjEw6ar0mAa8fl6MzPG0F+A1aWRaIg9XTB6dXdE8dekyA5W6RwCHWBwlacoMvKqe4qrj322Iymc7UfIpp/kwGVrSmr9kds/kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344637; c=relaxed/simple;
-	bh=VbhmAEBQ8O4YJvRcxwQ4zTltQ26TLxM7HAoCcW6W/zU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YZhGqr3gJe0T4u9rFjd6ioA8CZqSJhJQfEKnp2y9hDxMFEC3Xj6Bctlp4Qzj4PguOoHQe8wv5GuWwWbTIyzuwoSZEvniI9vwusLFGSpsDYVVGptKafp+7p55EbFYLRQGmpsrFadGxXZizEiifEVTZUxbw5jsLA3PinEknO/aIDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bNNSQ43q2z9tMS;
-	Thu, 19 Jun 2025 16:35:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id jvK5WwOsEdLr; Thu, 19 Jun 2025 16:35:34 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bNNSL6hPpz9tMd;
-	Thu, 19 Jun 2025 16:35:30 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DC3A98B790;
-	Thu, 19 Jun 2025 16:35:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 6cuBk6pQxYZw; Thu, 19 Jun 2025 16:35:30 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 380198B78C;
-	Thu, 19 Jun 2025 16:35:30 +0200 (CEST)
-Message-ID: <f138b40e-095a-48f0-80b9-86685c640cd6@csgroup.eu>
-Date: Thu, 19 Jun 2025 16:35:29 +0200
+	s=arc-20240116; t=1750344660; c=relaxed/simple;
+	bh=VwvqMdaa9NZw6/FN4BrrnCTsukLuvToppo7JfxBzAXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+LTzNmSDT6MWRBeLQ1pxEJw8crajvTEBoLfdXmG6yrHrFgtIOaPxw57PNWG9hDq2VZk1axOuQxDnpwO11jlwwRxRW+HfCQQaU43eSnTuQxL8WrJ/DG6Tyk3j+jkUBVeMBcZpeDJm5ZSSDbcHBrt4u7ARkrauwacbfFlOlLS2yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SB9xZ8Lv; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SB9xZ8Lv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lyjCyObuqLYarHT2NF3ZABGgRv6FP79VVqjAGnV/Lrk=; b=SB9xZ8LvbT07yHDi2QBJXj6mrz
+	EEscIKEuvH+S6/2TK/aNwbqSYZmPFAc+xVwggcqHaIaT3tv0scVpqXZWj5vI9w1baNObE8X6ar38r
+	d2r+VReGkKIgvSqxMcf5nm7Zw7KW26gfcE8xrb0aN3RTgBnYcOXHosqPhF4NSYuRK4Yok6OZwJN46
+	EMNOwJ9oRV4w8/kPj547zrMqs5epd9XLAUw+V8ZqwUipI1kiQlvHOrB70WR/0VakgynHXvriXVhB+
+	gXsGQQBIIl/hHyhZHNhRyd6cZeVzaP3lZ2sY22UmG/8NMpJsbzZxTnrK1rs6HJ6D28kcpFtV5ewAA
+	/iNhMmhA==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSGbF-000000097uB-1ys9;
+	Thu, 19 Jun 2025 14:50:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A9DA230890E; Thu, 19 Jun 2025 16:50:44 +0200 (CEST)
+Date: Thu, 19 Jun 2025 16:50:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kernel@collabora.com,
+	Jonathan Corbet <corbet@lwn.net>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/headers: Document PERF_PMU_CAP capability flags
+Message-ID: <20250619145044.GL1613376@noisy.programming.kicks-ass.net>
+References: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next] powerpc/bpf: Fix warning for unused
- ori31_emitted
-To: Luis Gerhorst <luis.gerhorst@fau.de>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>,
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-References: <20250619142647.2157017-1-luis.gerhorst@fau.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250619142647.2157017-1-luis.gerhorst@fau.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
 
 
+Mark just linked this thread from another thread:
 
-Le 19/06/2025 à 16:26, Luis Gerhorst a écrit :
-> Without this, the compiler (clang21) might emit a warning under W=1
-> because the variable ori31_emitted is set but never used if
-> CONFIG_PPC_BOOK3S_64=n.
-> 
-> Without this patch:
-> 
-> $ make -j $(nproc) W=1 ARCH=powerpc SHELL=/bin/bash arch/powerpc/net
->    [...]
->    CC      arch/powerpc/net/bpf_jit_comp.o
->    CC      arch/powerpc/net/bpf_jit_comp64.o
-> ../arch/powerpc/net/bpf_jit_comp64.c: In function 'bpf_jit_build_body':
-> ../arch/powerpc/net/bpf_jit_comp64.c:417:28: warning: variable 'ori31_emitted' set but not used [-Wunused-but-set-variable]
->    417 |         bool sync_emitted, ori31_emitted;
->        |                            ^~~~~~~~~~~~~
->    AR      arch/powerpc/net/built-in.a
-> 
-> With this patch:
-> 
->    [...]
->    CC      arch/powerpc/net/bpf_jit_comp.o
->    CC      arch/powerpc/net/bpf_jit_comp64.o
->    AR      arch/powerpc/net/built-in.a
-> 
-> Fixes: dff883d9e93a ("bpf, arm64, powerpc: Change nospec to include v1 barrier")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506180402.uUXwVoSH-lkp@intel.com/
-> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+  https://lkml.kernel.org/r/20250619144254.GK1613376@noisy.programming.kicks-ass.net
 
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
+On Wed, Jun 18, 2025 at 09:08:34PM +0200, Nicolas Frattaroli wrote:
+
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index ec9d96025683958e909bb2463439dc69634f4ceb..7d749fd5225be12543df6e475277563bf16c05b1 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -294,16 +294,90 @@ struct perf_event_pmu_context;
+>  /**
+>   * pmu::capabilities flags
+>   */
+> +
+> +/**
+> + * define PERF_PMU_CAP_NO_INTERRUPT - \
+> + *    PMU is incapable of generating hardware interrupts
+> + */
+>  #define PERF_PMU_CAP_NO_INTERRUPT	0x0001
+
+This is not quite right; CAP_NO_INTERRUPT means it is not able to
+generate samples.
+
+While not being able to generate interrupts and not being able to
+generate sample is more or less the same for CPU PMU drivers, this is
+not true for uncore drivers. Even if an uncore driver has interrupt
+capacility to help with counter overflow, it cannot generate samples.
+
+> +/**
+> + * define PERF_PMU_CAP_NO_NMI - \
+> + *    PMU is guaranteed to not generate non-maskable interrupts
+> + */
+>  #define PERF_PMU_CAP_NO_NMI		0x0002
+> +/**
+> + * define PERF_PMU_CAP_AUX_NO_SG - \
+> + *    PMU does not support using scatter-gather as the output
+> + *
+> + * The PERF_PMU_CAP_AUX_NO_SG flag indicates that the PMU does not support
+> + * scatter-gather for its output buffer, and needs a larger contiguous buffer
+> + * to output to.
+> + */
+>  #define PERF_PMU_CAP_AUX_NO_SG		0x0004
+> +/**
+> + * define PERF_PMU_CAP_EXTENDED_REGS - \
+> + *    PMU is capable of sampling extended registers
+> + *
+> + * Some architectures have a concept of extended registers, e.g. XMM0 on x86
+> + * or VG on arm64. If the PMU is capable of sampling these registers, then the
+> + * flag PERF_PMU_CAP_EXTENDED_REGS should be set.
+> + */
+>  #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
+> +/**
+> + * define PERF_PMU_CAP_EXCLUSIVE - \
+> + *    PMU can only have one scheduled event at a time
+> + *
+> + * Certain PMU hardware cannot track several events at the same time. Such
+> + * hardware must set PERF_PMU_CAP_EXCLUSIVE in order to avoid conflicts.
+> + */
+>  #define PERF_PMU_CAP_EXCLUSIVE		0x0010
+> +/**
+> + * define PERF_PMU_CAP_ITRACE - PMU traces instructions
+> + *
+> + * Some PMU hardware does instruction tracing, in that it traces execution of
+> + * each instruction. Setting this capability flag makes the perf core generate
+> + * a %PERF_RECORD_ITRACE_START event, recording the profiled task's PID and TID,
+> + * to allow tools to properly decode such traces.
+> + */
+>  #define PERF_PMU_CAP_ITRACE		0x0020
+> +/**
+> + * define PERF_PMU_CAP_NO_EXCLUDE - \
+> + *    PMU is incapable of excluding events based on context
+> + *
+> + * Some PMU hardware will count events regardless of context, including e.g.
+> + * idle, kernel and guest. Drivers for such hardware should set the
+> + * PERF_PMU_CAP_NO_EXCLUDE flag to explicitly advertise that they're unable to
+> + * help themselves, so that the perf core can reject requests to exclude events
+> + * based on context.
+> + */
+>  #define PERF_PMU_CAP_NO_EXCLUDE		0x0040
+
+More to the point might be saying that it will reject any event that
+has: perf_event_attr::exclude_{user,kernel,hv,idle,host,guest} set.
+
+> +/**
+> + * define PERF_PMU_CAP_AUX_OUTPUT - PMU non-AUX events generate AUX data
+> + *
+> + * Drivers for PMU hardware that supports non-AUX events which generate data for
+> + * AUX events should set PERF_PMU_CAP_AUX_OUTPUT. This flag tells the perf core
+> + * to schedule non-AUX events together with AUX events, so that this data isn't
+> + * lost.
+> + */
+>  #define PERF_PMU_CAP_AUX_OUTPUT		0x0080
+> +/**
+> + * define PERF_PMU_CAP_EXTENDED_HW_TYPE - \
+> + *    PMU supports PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
+> + */
+>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+> +/**
+> + * define PERF_PMU_CAP_AUX_PAUSE - \
+> + *    PMU can pause and resume AUX area traces based on events
+> + */
+>  #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+> +/**
+> + * define PERF_PMU_CAP_AUX_PREFER_LARGE - PMU prefers contiguous output buffers
+> + *
+> + * The PERF_PMU_CAP_AUX_PREFER_LARGE capability flag is a less strict variant of
+> + * %PERF_PMU_CAP_AUX_NO_SG. PMU drivers for hardware that doesn't strictly
+> + * require contiguous output buffers, but find the benefits outweigh the
+> + * downside of increased memory fragmentation, may set this capability flag.
+> + */
+>  #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+>  
+>  /**
+> 
 > ---
->   arch/powerpc/net/bpf_jit_comp64.c | 11 +++++------
->   1 file changed, 5 insertions(+), 6 deletions(-)
+> base-commit: 31d56636e10e92ced06ead14b7541867f955e41d
+> change-id: 20250618-perf-pmu-cap-docs-a13e4ae939ac
 > 
-> diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
-> index 3665ff8bb4bc..a25a6ffe7d7c 100644
-> --- a/arch/powerpc/net/bpf_jit_comp64.c
-> +++ b/arch/powerpc/net/bpf_jit_comp64.c
-> @@ -820,13 +820,12 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
->   		case BPF_ST | BPF_NOSPEC:
->   			sync_emitted = false;
->   			ori31_emitted = false;
-> -#ifdef CONFIG_PPC_E500
-> -			if (!bpf_jit_bypass_spec_v1()) {
-> +			if (IS_ENABLED(CONFIG_PPC_E500) &&
-> +			    !bpf_jit_bypass_spec_v1()) {
->   				EMIT(PPC_RAW_ISYNC());
->   				EMIT(PPC_RAW_SYNC());
->   				sync_emitted = true;
->   			}
-> -#endif
->   			if (!bpf_jit_bypass_spec_v4()) {
->   				switch (stf_barrier) {
->   				case STF_BARRIER_EIEIO:
-> @@ -849,10 +848,10 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
->   					break;
->   				}
->   			}
-> -#ifdef CONFIG_PPC_BOOK3S_64
-> -			if (!bpf_jit_bypass_spec_v1() && !ori31_emitted)
-> +			if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) &&
-> +			    !bpf_jit_bypass_spec_v1() &&
-> +			    !ori31_emitted)
->   				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
-> -#endif
->   			break;
->   
->   		/*
+> Best regards,
+> -- 
+> Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > 
-> base-commit: cd7312a78f36e981939abe1cd1f21d355e083dfe
-
