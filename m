@@ -1,296 +1,154 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8A6BE46;
-	Thu, 19 Jun 2025 16:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5101721C184
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 16:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750349801; cv=none; b=XsmaahJS2wX39UJmVTltxehDZeT8R7oioOYf7CthmUKw/XhB2KaUj2DRv/pYLll0nyMxwjoRdevEq7q2Qwd4NAMAhgisNI6xRsiq7xozYpJXMc5dlCKmLRtx9NOsz70jh5m3YhRTItxtBtiVwIG73T1spqO8PUUGnNL1jJNr0AM=
+	t=1750349974; cv=none; b=UC7FQm0st8SoUxCRqIyeLhpkN+r1us7i3F/9tlIbb2D5+FHJX35gYLGbi1xdUgxoNdAkqa0GTLJNPLA8uWtbeYU82YG7Y0YfwwEhZWvKyEzy80xW6cYQ/JTWtHHfxpRvkEaf74D6VuULKSyQgeFZJ2mr1vldJmdTluYoeShUxmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750349801; c=relaxed/simple;
-	bh=PI3Cv1+ex7Jp9Z1i/+dHhhIbIB17+y/qlGuKqywH+Bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HlvfR25qr17oa7/PNnBZuDzS2GjhwHVO8rw+fuCN3fbDcWr79BYJH4xiUKDpy+nyL1nNcYSR7NNpwMHicItLGGbIUZSbmkqfrQHdWjnMrH9kIpvjgJ73aq+ipJp5mLnvMOyLIeOCHL0Y1yedWndQERY4XPz16pKluzDP50ZGACw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=A/bgmVvV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750349974; c=relaxed/simple;
+	bh=H0ev4YTGdT5Inv2bovVKvHYprggpynPPmC71UiQ3zPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pt+FfqeEg51BSIuqfej11L+W2w/Hya16Qyv8AwMB0v8L8ZAwpE6VQZVgTxjJD9r069O+AOgysEhhJu+BAuKNrG2zo1kkGF3GB+OJilWoqfagYO13XqwzVjokvZIcDlT+v7pQzFDG8QMY2G3k/2frjZfiV0WmPhm1wWPwZ1mRU7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mqw+9OXl; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="A/bgmVvV"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JAVae5007427;
-	Thu, 19 Jun 2025 16:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3PgOo4rsuxBaju2MQPw6hq+9hL7tBfpBnbE2Du+OpIU=; b=A/bgmVvVwCN8snoj
-	kIumvwhI8P6HEjoC7axx6Y0LVkPcsA9dSZxlu1Vb9BQ4lx1z/PNRuCxYDMGKVsgL
-	hEej+GjRCJu49HkmcmkkgBqBduXh0HpuZyDG2pJ01MR/YZvNybOgSPoO8l+eBT3V
-	rG3zp/lXf6YHyQOBxcfSK1tNJHWp4d6Wy0hjpw4jwtDbkUZuJ1eowQSIXJYnnXLB
-	MQGQmhkRzrb35bHztvLuI/EnFQiTmMkToPw97Hf5Pq8HgNDvLl+Ujq9D54LWCRPt
-	KxBFO9kxW9ICnixGmW+WH0+FDmyTtIyMyY1JflHePr09H7jzhjkfNlCKcZfxuKjm
-	hJQ32g==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47c9krtdvu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 16:16:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55JGGTF6028623
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Jun 2025 16:16:29 GMT
-Received: from [10.216.3.38] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Jun
- 2025 09:16:24 -0700
-Message-ID: <1b55d9d4-f3ff-4cd9-8906-5f370da55732@quicinc.com>
-Date: Thu, 19 Jun 2025 21:46:21 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mqw+9OXl"
+Message-ID: <6d14a0fb-2bf3-4ca5-9356-b94517ddfb14@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750349967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jjmy14KdtUGXxjll71XuQpqDflBtLFFz5WxBq5DW78k=;
+	b=mqw+9OXl9vv+1OwkbxkqJ3uRvGBNrLQx9HgCHPwUVy26XgABo/e/PnPJPK2BHY11F+g8Oe
+	+L2g4li6SAUWha7MV3Fe39h+CqLUEIvgefpYR71Z1HZvqhONfeq8BHaN0WhmmWc5pWrY5+
+	u0VFqqsI+l9e/0d+lpEXyVVYxW6jcT8=
+Date: Thu, 19 Jun 2025 12:19:23 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
- support
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Vinod Koul <vkoul@kernel.org>,
-        Mukesh Kumar Savaliya
-	<quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <quic_vtanuku@quicinc.com>
-References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
- <20250506111844.1726-3-quic_jseerapu@quicinc.com>
- <qizkfszruwcny7f3g3i7cjst342s6ma62k5sgc6pg6yfoti7b3@fo2ssj7jvff2>
- <3aa92123-e43e-4bf5-917a-2db6f1516671@quicinc.com>
- <a98f0f1a-d814-4c6a-9235-918091399e4b@oss.qualcomm.com>
- <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
- <w6epbao7dwwx65crst6md4uxi3iivkcj55mhr2ko3z5olezhdl@ffam3xif6tmh>
- <5ed77f6d-14d7-4b62-9505-ab988fa43bf2@quicinc.com>
- <644oygj43z2um42tmmldp3feemgzrdoirzfw7pu27k4zi76bwg@wfxbtgqqgh4p>
- <dc7358a1-ddc5-402e-9024-283f8e46e3b6@quicinc.com>
- <CAO9ioeVuAO6mYpBSpiTW0jhFRPtkubZ5eEskd1yLBHVdR8_YMA@mail.gmail.com>
+Subject: Re: [PATCH] driver core: Prevent deferred probe loops
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>,
+ Grant Likely <grant.likely@linaro.org>
+References: <CAGETcx-koKBvSXTHChYYF-qSU-r1cBUbLghJZcqtJOGQZjn3BA@mail.gmail.com>
+ <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev>
+ <2025061147-squishier-oversleep-80cd@gregkh>
+ <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
+ <CAGETcx9E5DB4UtdjjAO2=XfTNXdXocj7uk0JkVZ8hf9YadwNcA@mail.gmail.com>
+ <70958a2e-abc8-4894-b99a-f2981db9981f@linux.dev>
+ <2025061700-unmapped-labrador-a8c9@gregkh>
+ <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
+ <2025061740-banter-acclaim-2006@gregkh>
+ <24a0f3fa-2121-4de3-89fd-482b217ab98d@linux.dev>
+ <2025061929-produce-petticoat-8e0f@gregkh>
 Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <CAO9ioeVuAO6mYpBSpiTW0jhFRPtkubZ5eEskd1yLBHVdR8_YMA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <2025061929-produce-petticoat-8e0f@gregkh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1-FqmgCR8ss_BsQmdSOR3kjb8OpyeQkn
-X-Authority-Analysis: v=2.4 cv=UPTdHDfy c=1 sm=1 tr=0 ts=685437dd cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=S-KxFuBiFQdFA_wKS_YA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE5MDEzNCBTYWx0ZWRfXxD+aIb1JKwil
- +P+kuSMhlyTz3DEgTPio5ExQEqf+mIEn3ShWY0UzDScZRfpfbrnEyeXz/UG1OLPA9qadP3T/fTR
- YeYG6gqpdGO7tzdvurjTy2S7CQgxru6gvdqbxMiwJNm5ZBtiZIcZxkDkXG5E1GQBt6j7saT5obg
- +4y1iymL9f8J27/jgyHXkAeJsa6SmmGq0sXZcjzNS+cy4VoFrcPT4sYKQlbOTPdxGDMv1hktdnG
- ODx8Im66qb6xhztPQRDKgXGq66ID9YIQ4O8ZQEo3/CvhlY0TY7jfNbi+J0M4oLKnhOJS6YSbRaN
- PMMxXl/A9kF01l0r7bh1KnaPRvbuGkk9hDYuf0XrTrbjoCqyTsye6FPRV6goZAczbc9z+/58mPl
- y7O9EAVLZlmuI6NODgqAi3q81ubMGRDrK7d4C79dio8T5wgVg34HuY01lMYdWGRGzuM6OaUS
-X-Proofpoint-ORIG-GUID: 1-FqmgCR8ss_BsQmdSOR3kjb8OpyeQkn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_06,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506190134
+X-Migadu-Flow: FLOW_OUT
 
+On 6/19/25 04:21, Greg Kroah-Hartman wrote:
+> On Tue, Jun 17, 2025 at 01:14:31PM -0400, Sean Anderson wrote:
+>> On 6/17/25 11:49, Greg Kroah-Hartman wrote:
+>> > On Tue, Jun 17, 2025 at 11:35:04AM -0400, Sean Anderson wrote:
+>> >> On 6/17/25 04:50, Greg Kroah-Hartman wrote:
+>> >> > On Thu, Jun 12, 2025 at 04:40:48PM -0400, Sean Anderson wrote:
+>> >> >> On 6/12/25 13:56, Saravana Kannan wrote:
+>> >> >> > On Thu, Jun 12, 2025 at 8:53 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+>> >> >> >>
+>> >> >> >> On 6/11/25 08:23, Greg Kroah-Hartman wrote:
+>> >> >> >> > On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
+>> >> >> >> >> On 6/10/25 19:32, Saravana Kannan wrote:
+>> >> >> >> >> > On Tue, Jun 10, 2025 at 11:35 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+>> >> >> >> >> >>
+>> >> >> >> >> >> A deferred probe loop can occur when a device returns EPROBE_DEFER after
+>> >> >> >> >> >> registering a bus with children:
+>> >> >> >> >> >
+>> >> >> >> >> > This is a broken driver. A parent device shouldn't register child
+>> >> >> >> >> > devices unless it is fully read itself. It's not logical to say the
+>> >> >> >> >> > child devices are available, if the parent itself isn't fully ready.
+>> >> >> >> >> > So, adding child devices/the bus should be the last thing done in the
+>> >> >> >> >> > parent's probe function.
+>> >> >> >> >> >
+>> >> >> >> >> > I know there are odd exceptions where the parent depends on the child,
+>> >> >> >> >> > so they might add the child a bit earlier in the probe
+>> >> >> >> >>
+>> >> >> >> >> This is exactly the case here. So the bus probing cannot happen any
+>> >> >> >> >> later than it already does.
+>> >> >> >> >
+>> >> >> >> > Please fix the driver not to do this.
+>> >> >> >>
+>> >> >> >> How? The driver needs the PCS to work. And the PCS can live on the MDIO
+>> >> >> >> bus.
+>> >> >> > 
+>> >> >> > Obviously I don't know the full details, but you could implement it as
+>> >> >> > MFD. So the bus part would not get removed even if the PCS fails to
+>> >> >> > probe. Then the PCS can probe when whatever it needs ends up probing.
+>> >> >> 
+>> >> >> I was thinking about making the MDIO bus a separate device. But I think
+>> >> >> it will be tricky to get suspend/resume working correctly. And this
+>> >> >> makes conversions more difficult because you cannot just add some
+>> >> >> pcs_get/pcs_put calls, you have to split out the MDIO bus too (which is
+>> >> >> invariably created as a child of the MAC).
+>> >> >> 
+>> >> >> And what happens if a developer doesn't realize they have to split off
+>> >> >> the MDIO bus before converting? Everything works fine, except if there
+>> >> >> is some problem loading the PCS driver, which they may not test. Is this
+>> >> >> prohibition against failing after creating a bus documented anywhere? I
+>> >> >> don't recall seeing it...
+>> >> > 
+>> >> > What do you mean "failing after creating a bus"?  If a bus is failed to
+>> >> > be created, you fail like normal, no difference here.
+>> >> 
+>> >> Creating the bus is successful, but there's an EPROBE_DEFER failure after
+>> >> that. Which induces the probe loop as described in my initial email.
+>> > 
+>> > Then don't allow a defer to happen :)
+>> 
+>> Well, I could require all PCS drivers to be built-in I guess. But I suspect
+>> users will want them to be modules to reduce kernel size.
+> 
+> True, then just auto-load them as needed like all other busses do.
+> 
+>> > Or better yet, just succeed and spin up a new thread for the new bus to
+>> > attach it's devices to.  That's what many other busses do today.
+>> 
+>> Sorry, I'm not sure I follow. How can you attach a device to a thread? Do
+>> you have an example for this?
+> 
+> Busses discover their devices in a thread, which then calls probe for
+> them when needed.  A device isn't being attached to a thread, sorry for
+> the confusion.
 
+OK, just to clarify, the subsystem I linked above is not a bus, it's an
+internal API. Think GPIO or PWM. The devices typically live on an MDIO
+bus (although a platform bus wouldn't be out of the question). So it's
+"not our job" to load the module; that should be done by the bus. From
+our perspective, if we look up a device and it's not there we don't
+really know if it's ever going to show up.
 
-On 6/18/2025 1:02 AM, Dmitry Baryshkov wrote:
-> On Tue, 17 Jun 2025 at 17:11, Jyothi Kumar Seerapu
-> <quic_jseerapu@quicinc.com> wrote:
->>
->>
->>
->> On 5/30/2025 10:12 PM, Dmitry Baryshkov wrote:
->>> On Fri, May 30, 2025 at 07:36:05PM +0530, Jyothi Kumar Seerapu wrote:
->>>>
->>>>
->>>> On 5/21/2025 6:15 PM, Dmitry Baryshkov wrote:
->>>>> On Wed, May 21, 2025 at 03:58:48PM +0530, Jyothi Kumar Seerapu wrote:
->>>>>>
->>>>>>
->>>>>> On 5/9/2025 9:31 PM, Dmitry Baryshkov wrote:
->>>>>>> On 09/05/2025 09:18, Jyothi Kumar Seerapu wrote:
->>>>>>>> Hi Dimitry, Thanks for providing the review comments.
->>>>>>>>
->>>>>>>> On 5/6/2025 5:16 PM, Dmitry Baryshkov wrote:
->>>>>>>>> On Tue, May 06, 2025 at 04:48:44PM +0530, Jyothi Kumar Seerapu wrote:
->>>>>>>>>> The I2C driver gets an interrupt upon transfer completion.
->>>>>>>>>> When handling multiple messages in a single transfer, this
->>>>>>>>>> results in N interrupts for N messages, leading to significant
->>>>>>>>>> software interrupt latency.
->>>>>>>>>>
->>>>>>>>>> To mitigate this latency, utilize Block Event Interrupt (BEI)
->>>>>>>>>> mechanism. Enabling BEI instructs the hardware to prevent interrupt
->>>>>>>>>> generation and BEI is disabled when an interrupt is necessary.
->>>>>>>>>>
->>>>>>>>>> Large I2C transfer can be divided into chunks of 8 messages internally.
->>>>>>>>>> Interrupts are not expected for the first 7 message completions, only
->>>>>>>>>> the last message triggers an interrupt, indicating the completion of
->>>>>>>>>> 8 messages. This BEI mechanism enhances overall transfer efficiency.
->>>>>>>>>
->>>>>>>>> Why do you need this complexity? Is it possible to set the
->>>>>>>>> DMA_PREP_INTERRUPT flag on the last message in the transfer?
->>>>>>>>
->>>>>>>> If i undertsand correctly, the suggestion is to get the single
->>>>>>>> intetrrupt for last i2c message only.
->>>>>>>>
->>>>>>>> But With this approach, we can't handle large number of i2c messages
->>>>>>>> in the transfer.
->>>>>>>>
->>>>>>>> In GPI driver, number of max TREs support is harcoded to 64 (#define
->>>>>>>> CHAN_TRES   64) and for I2C message, we need Config TRE, GO TRE and
->>>>>>>> DMA TREs. So, the avilable TREs are not sufficient to handle all the
->>>>>>>> N messages.
->>>>>>>
->>>>>>> It sounds like a DMA driver issue. In other words, the DMA driver can
->>>>>>> know that it must issue an interrupt before exausting 64 TREs in order
->>>>>>> to
->>>>>>>
->>>>>>>>
->>>>>>>> Here, the plan is to queue i2c messages (QCOM_I2C_GPI_MAX_NUM_MSGS
->>>>>>>> or 'num' incase for less messsages), process and unmap/free upon the
->>>>>>>> interrupt based on QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
->>>>>>>
->>>>>>> Why? This is some random value which has no connection with CHAN_TREs.
->>>>>>> Also, what if one of the platforms get a 'liter' GPI which supports less
->>>>>>> TREs in a single run? Or a super-premium platform which can use 256
->>>>>>> TREs? Please don't workaround issues from one driver in another one.
->>>>>>
->>>>>> We are trying to utilize the existing CHAN_TRES mentioned in the GPI driver.
->>>>>> With the following approach, the GPI hardware can process N number of I2C
->>>>>> messages, thereby improving throughput and transfer efficiency.
->>>>>>
->>>>>> The main design consideration for using the block event interrupt is as
->>>>>> follows:
->>>>>>
->>>>>> Allow the hardware to process the TREs (I2C messages), while the software
->>>>>> concurrently prepares the next set of TREs to be submitted to the hardware.
->>>>>> Once the TREs are processed, they can be freed, enabling the software to
->>>>>> queue new TREs. This approach enhances overall optimization.
->>>>>>
->>>>>> Please let me know if you have any questions, concerns, or suggestions.
->>>>>
->>>>> The question was why do you limit that to QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
->>>>> What is the reason for that limit, etc. If you think about it, The GENI
->>>>> / I2C doesn't impose any limit on the number of messages processed in
->>>>> one go (if I understand it correctly). Instead the limit comes from the
->>>>> GPI DMA driver. As such, please don't add extra 'handling' to the I2C
->>>>> driver. Make GPI DMA driver responsible for saying 'no more for now',
->>>>> then I2C driver can setup add an interrupt flag and proceed with
->>>>> submitting next messages, etc.
->>>>>
->>>>
->>>> For I2C messages, we need to prepare TREs for Config, Go and DMAs. However,
->>>> if a large number of I2C messages are submitted then may may run out of
->>>> memory for serving the TREs. The GPI channel supports a maximum of 64 TREs,
->>>> which is insufficient to serve 32 or even 16 I2C messages concurrently,
->>>> given the multiple TREs required per message.
->>>>
->>>> To address this limitation, a strategy has been implemented to manage how
->>>> many messages can be queued and how memory is recycled. The constant
->>>> QCOM_I2C_GPI_MAX_NUM_MSGS is set to 16, defining the upper limit of
->>>> messages that can be queued at once. Additionally,
->>>> QCOM_I2C_GPI_NUM_MSGS_PER_IRQ is set to 8, meaning that
->>>> half of the queued messages are expected to be freed or deallocated per
->>>> interrupt.
->>>> This approach ensures that the driver can efficiently manage TRE resources
->>>> and continue queuing new I2C messages without exhausting memory.
->>>>> I really don't see a reason for additional complicated handling in the
->>>>> geni driver that you've implemented. Maybe I misunderstand something. In
->>>>> such a case it usually means that you have to explain the design in the
->>>>> commit message / in-code comments.
->>>>>
->>>>
->>>>
->>>> The I2C Geni driver is designed to prepare and submit descriptors to the GPI
->>>> driver one message at a time.
->>>> As a result, the GPI driver does not have visibility into the current
->>>> message index or the total number of I2C messages in a transfer. This lack
->>>> of context makes it challenging to determine when to set the block event
->>>> interrupt, which is typically used to signal the completion of a batch of
->>>> messages.
->>>>
->>>> So, the responsibility for deciding when to set the BEI should lie with the
->>>> I2C driver.
->>>>
->>>> If this approach is acceptable, I will proceed with updating the relevant
->>>> details in the commit message.
->>>>
->>>> Please let me know if you have any concerns or suggestions.
->>>
->> Hi Dmitry, Sorry for the delayed response, and thank you for the
->> suggestions.
->>
->>> - Make gpi_prep_slave_sg() return NULL if flags don't have
->>>     DMA_PREP_INTERRUPT flag and there are no 3 empty TREs for the
->>>     interrupt-enabled transfer.
->> "there are no 3 empty TREs for the interrupt-enabled transfer."
->> Could you please help me understand this a bit better?
-> 
-> In the GPI driver you know how many TREs are available. In
-> gpi_prep_slave_sg() you can check that and return an error if there
-> are not enough TREs available.
-> 
->>>
->>> - If I2C driver gets NULL from dmaengine_prep_slave_single(), retry
->>>     again, adding DMA_PREP_INTERRUPT. Make sure that the last one always
->>>     gets DMA_PREP_INTERRUPT.
->> Does this mean we need to proceed to the next I2C message and ensure
->> that the DMA_PREP_INTERRUPT flag is set for the last I2C message in each
->> chunk? And then, should we submit the chunk of messages to the GSI
->> hardware for processing?
-> 
-> No. You don't have to peek at the next I2C message. This all concerns
-> the current I2C message. The only point where you have to worry is to
-> explicitly set the flag for the last message.
-> 
->>
->>>
->>> - In geni_i2c_gpi_xfer() split the loop to submit messages until you
->>>     can, then call wait_for_completion_timeout() and then
->>>     geni_i2c_gpi_unmap() for submitted messages, then continue with a new
->>>     portion of messages.
->> Since the GPI channel supports a maximum of 64 TREs, should we consider
->> submitting a smaller number of predefined messages — perhaps fewer than
->> 32, such as 16?
-> 
-> Why? Just submit messages until they fit, then flush the DMA async channel.
-> 
->> This is because handling 32 messages would require one TRE for config
->> and 64 TREs for the Go and DMA preparation steps, which exceeds the
->> channel's TRE capacity of 64.
->>
->> We designed the approach to submit a portion of the messages — for
->> example, 16 at a time. Once 8 messages are processed and freed, the
->> hardware can continue processing the TREs, while the software
->> simultaneously prepares the next set of TREs. This parallelism helps in
->> efficiently utilizing the hardware and enhances overall system
->> optimization.
-> 
-> 
-> And this overcomplicates the driver and introduces artificial
-> limitations which need explanation. Please fix it in a simple way
-> first. Then you can e.g. implement the watermark at the half of the
-> GPI channel depth and request DMA_PREP_INTERRUPT to be set in the
-> middle of the full sequence, allowing it to be used asynchronously in
-> the background.
-> 
+Regarding the auxiliary bus, I tried it out and it works. The conversion
+is around +50 lines, which is not ideal. Ideally I would like to push
+complexity into subsystem code rather than making drivers deal with it,
+but I don't really see a good way to do this in the subsystem. There are
+just a lot of assumptions along the line of "when you register the
+device you must know what capabilities it supports." For example, fixed
+links (MAC to MAC) are validated when the phylink is created and the
+whole process fails if there's an incompatibility. Which can occur if
+the late-binding component is the thing that adds support for the fixed
+link.
 
-Okay, will review it. Thanks.
-
+--Sean
