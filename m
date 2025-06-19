@@ -1,66 +1,82 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505EB1E3DE8;
-	Thu, 19 Jun 2025 09:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28741E3DE8;
+	Thu, 19 Jun 2025 09:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326109; cv=none; b=c/mvPZGagOShSPfFtTg0bFnmVpD0kIkjyToPDH6s8ETBnWU72dbl0xiwJ94m6Eq5sQ55v1QWgOLR81qZ3ucw+3Bw9HQhIIo9akCIcsYsi13oyxKqDBeX3P7Qu19km9ywHAiCJ/5pRGVhEosND02i+efVZeqcBxPL7w8GJr/XlNM=
+	t=1750326169; cv=none; b=gsUZdWvh9oib28ZrREEJD4ZSoS6PkvUgAioQtHYAowvr/hCQVj4HvzP4+Ix/GorLf5hh5g8rNbezqBJpF7nypt/ynNXvaMdmelSgCANSl+aTfwx74VDxkCfQsRS2XAvEmtfOv5rNMPvywjqd4DCO+wi9Le7DMdN5t0gMDs0e2kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326109; c=relaxed/simple;
-	bh=6Kg55sbhzhwjhiprVxSq+GcLe6yjHcHSz6iixOl0tsA=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBkRgRaI4uwy+PM4dFnVcU7CQWJBF2PhytS86jAwPapjZLe75IzSFpLyMO9RRYflDLj/Zyq/noduppLjYGdrorsp3y77F+vpy4vM6MqseI0bKv9DkKteTYAHDDIM8a4dShDkDFCRa1yZ6gQni2JaTO0WvkN0zTfuwEBtRGYmlB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=NWqEuZUc; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="NWqEuZUc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=gIAyPD/RJ48Qpggk4OjyLNZuYhZUKPzUf+M33PEmv3Y=; b=NWqEuZUctRTBdW0875A5/ZLwWO
-	tIFtMTDqUIJakeZGR5tuqagrPEsQ27ioGOafpkFpP1jLq9w5kVSUX66CWc6df+s/JvDv70RR5brIv
-	juF6Um1WyR7za1yDgokARlW3iC1zMHqtnCFuL2dq+y1kZ3KNL2u6ixVOFFKFYnENlgSi/atVeg0Dr
-	qRN9Os/G4QW1OPPZHEe/2hY7MJmrB8tseXB2QyyfiKt1vQykyKysO7buCs/kf8flkDHbtCTMMHHq0
-	TUMRYFB7/EQui3+vpCNd/xGsAngKQAlw7FOi0z+Y/SsYoA+OfnzzBYF0jqxkuGq1THSipQ+cltoEe
-	CvZ20Qww==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uSBWg-000HKk-2l;
-	Thu, 19 Jun 2025 17:41:31 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 19 Jun 2025 17:41:30 +0800
-Date: Thu, 19 Jun 2025 17:41:30 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
-	linux-raid@vger.kernel.org
-Subject: Re: [v2 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
-Message-ID: <aFPbSvxCaxhFHc5s@gondor.apana.org.au>
-References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
+	s=arc-20240116; t=1750326169; c=relaxed/simple;
+	bh=O1jGF4Wb/pUkbNhephusfL38vZ4JQA1lxSzsxn3VAAY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=qxwm6cuM10xfsa/SHv02Y/rV0waStEXbSvUt2CdFBf3lhRenV4D/gHlYi820kwbJhikKozY8+id9s7pmSxUlsobYJkWLA6IVFZcJKIuX7hKjCbx3G5l+hiPWfxf9DbQF8y8CSwfzbEFqfET10Pe24jpFPEmT7dK92aF5cP0V5xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 657C310179E;
+	Thu, 19 Jun 2025 09:42:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 2AABC20011;
+	Thu, 19 Jun 2025 09:42:32 +0000 (UTC)
+Date: Thu, 19 Jun 2025 05:42:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v10_07/14=5D_unwind=5Fuser/deferre?=
+ =?US-ASCII?Q?d=3A_Make_unwind_deferral_requests_NMI-safe?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250619093226.GH1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org> <20250611010428.938845449@goodmis.org> <20250619085717.GB1613376@noisy.programming.kicks-ass.net> <FCBAD96C-AD1B-4144-91D2-2A48EDA9B6CC@goodmis.org> <20250619093226.GH1613200@noisy.programming.kicks-ass.net>
+Message-ID: <80DBA3D8-5B52-43DB-8234-EAC51D0FC0E1@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 2AABC20011
+X-Stat-Signature: ebhysdh4njnmbf8en7ntwmgruebqwmcq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18r+Rb1/p1OHbLk2qYYFtxDJr7jwhy5qnQ=
+X-HE-Tag: 1750326152-351886
+X-HE-Meta: U2FsdGVkX18MPqMRRCSliM51ziRnLbUMZnaU3ozI0ina4JEAZ2mw9ijPZ4E8GXsAn6cT1ldjS/hTHG6T2pVNQx5YhCW4kjup0rzzC+o1BBq/ZYtKLE0QnRV3q4vrUHs+hV/vz+A2cJamMDKjVYf5zlH9L0pVeNq+bUjyDXJGjr5P/JQUctb6/w7KpWR6yvSuGjx3EFblP71hFLS2B05Vkz7CkQb5XW38J4WmjJ9Ncf+HEJV+OiAkHJiNXCmTo58xPtlRaL8jQZuIeDmti0oZdqr41xNTPbeXDOLvg4Il25ldF6oxrr4tlgEJbKxg8JGkKfLj8QPuUhA8jmLe75wIogTnRJ4kvcm8XHmsT9cKmI1x6VvRzo2x7cp5/1fxf2xDGY3vgjWD/4C80xoXeVXJ8NVwz3dO29/5KqGyjXThKEY=
 
-On Mon, Mar 17, 2025 at 05:02:28PM +0800, Herbert Xu wrote:
-> Use the system-wide zero page instead of a custom zero page.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Why hasn't this patch been applied yet?
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On June 19, 2025 5:32:26 AM EDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
+rote:
+>On Thu, Jun 19, 2025 at 05:07:10AM -0400, Steven Rostedt wrote:
+>
+>> Does #DB make in_nmi() true? If that's the case then we do need to hand=
+le that=2E
+>
+>Yes: #DF, #MC, #BP (int3), #DB and NMI all have in_nmi() true=2E
+>
+>Ignoring #DF because that's mostly game over, you can get them all
+>nested for up to 4 (you're well aware of the normal NMI recursion
+>crap)=2E
+
+We probably can implement this with stacked counters=2E
+
+>Then there is the SEV #VC stuff, which is also NMI like=2E So if you're a
+>CoCo-nut, you can perhaps get it up to 5=2E
+
+The rest of the tracing infrastructure goes 4 deep and hasn't had issues, =
+so 4 is probably sufficient=2E
+
+-- Steve=20
+
