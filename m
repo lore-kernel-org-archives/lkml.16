@@ -1,111 +1,92 @@
-Received: from mail.burntcomma.com (unknown [62.3.69.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D877A23CB;
-	Thu, 19 Jun 2025 17:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9423CB;
+	Thu, 19 Jun 2025 17:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750352606; cv=none; b=ZaZYYKBNEPwP/umyYq55eE7/KwjhyZtOCn9sKXrSzQ/KmuCUmdg6v3OhBJZQPH/zdTDYwkFPOLheJAejx2KhykeEc8O6K5FPWdqLPICROc2NIc1veifFMeZ3lnju0zdMLZNdx6DyFd3s1fdv7OF4V8EfMiPWpz7EAwDhAtm9RmA=
+	t=1750352655; cv=none; b=VifzNk7d5Ixi+W/lQXqek4j4YDLTb4BmB2vmHmw7ru2oenW1eN/0fgooMkGwQ5kuOw90QUxspa1UHvCB3Tgx2DjX0e9rrmDwTpI254/d1oHxcZGewhV/aLNQKQtsq+qpha/pKTf/vSETwlODb3E2VTf91zT+/TdE1jHrvh4bpKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750352606; c=relaxed/simple;
-	bh=7xdCPxzJB1e5/qHFc8iHQXbuzlLFAz6G4Dm9ux1O3/c=;
-	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hgox5OlJPlYe1G9LQP3TlsW6Y2UhbRQBqlAIt9dohQj6YjFWzb51aF4lznDPsig+XQ3AAQkk/aZchzRNohF0z366vrPzRK1T5mKJXfjmV/CoBAnkNMyE4nyVv1JY4L0gZ0u6Jv510aKp+Ymi4e+snfleI01cNSomAb5jPBZm3kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=YLVRc4tJ; arc=none smtp.client-ip=62.3.69.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
+	s=arc-20240116; t=1750352655; c=relaxed/simple;
+	bh=rkue6qCTiyMbLrRxDHpkHGwB6s3jUn/L79o500WV5/g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jdt7vvFx2vgbfs7lpxJQQ9wD0yjRoH1myMQ3HHJDc+/jnbrXVL088K/+x5C6yQ6dpACZ8Cp2r2y7TbmS4doAU5TrVALRpHpohK8uH9swsE3byzVo06UtJjFm3Fmec7mKQCxYabBo/uy6KZE5FIC5UCe46+umBVbh2D9xrlK3GFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Q9mwf/mA; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="YLVRc4tJ"
-Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
-	by mail.burntcomma.com (Postfix) with ESMTPS id CF0482896A8;
-	Thu, 19 Jun 2025 18:03:11 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
-	s=mail; t=1750352591;
-	bh=vWnhfExwlsZUvukzyJutPT1fPw8hF7WbCkSYIyCGvjM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=YLVRc4tJOC8Ks1PBiT9IW4hydKawbAlMfEeOdEgrifAbUhTDl9kPJEVwsqjTGbjDH
-	 d5htbL3+wx7uuQI2Gev3JBJ0kieRqRXbO7taU+k+e4zYhP3RN9kLqrzbVP70lV5+N8
-	 v5iN5ocfKm7uFXC6XlcnXi00MugsJEQ/wBEvh7bc=
-Message-ID: <c278bbd3-c024-41ea-8640-d7bf7e8cff47@harmstone.com>
-Date: Thu, 19 Jun 2025 18:03:11 +0100
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Q9mwf/mA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750352654; x=1781888654;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rkue6qCTiyMbLrRxDHpkHGwB6s3jUn/L79o500WV5/g=;
+  b=Q9mwf/mA43eLiJlmm18GguPl9owTTyyQTWa8MYIQogeExEbtZsI/nQdx
+   pUYNHWN3yQmuLGwRnFyR/7VmWqLsZWdyPaqHvAivyxLXgbMDdQzr75emp
+   M97ADUD5ESzP8UoOH1LUOH4q7+mEvKRgXW1qAnOXVuyPLNvC+HGIWynYI
+   OzSXcZp6l2IhW+cbjJUfN1xZDhQ3I+8lkP1p/KHV/JVmnAkc4uZZWYTkp
+   M8+A3+70EPl8SKr46meKdQ3dKfAH7PhRLAS9ffpV9T/HT2TW/8bEj1chD
+   S46cHzjGyjDYdtl03T4APrduGJ9VCENsE5/brXWnoCc1E4iZj7yXoQno7
+   w==;
+X-CSE-ConnectionGUID: gIxPXZ7kQ0e0IzwdxhfIcw==
+X-CSE-MsgGUID: /TXATMiURlqyR2BrkjcObg==
+X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
+   d="scan'208";a="48040283"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Jun 2025 10:04:12 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 19 Jun 2025 10:04:02 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Thu, 19 Jun 2025 10:04:02 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<claudiu.beznea@tuxon.dev>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH 3/3] net: cadence: macb: Enable RMII for SAMA7 gem
+Date: Thu, 19 Jun 2025 10:04:15 -0700
+Message-ID: <0d56e0bd0cb32d1d9ff2c5674f66986251db5e40.1750346271.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1750346271.git.Ryan.Wanner@microchip.com>
+References: <cover.1750346271.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH] btrfs: replace deprecated strcpy with strscpy
-To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org
-References: <20250619140623.3139-1-listout@listout.xyz>
-Content-Language: en-US
-From: Mark Harmstone <mark@harmstone.com>
-Autocrypt: addr=mark@harmstone.com; keydata=
- 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
-In-Reply-To: <20250619140623.3139-1-listout@listout.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 19/06/2025 3.06 pm, Brahmajit Das wrote:
-> strcpy is deprecated due to lack of bounds checking. This patch replaces
-> strcpy with strscpy, the recommended alternative for null terminated
-> strings, to follow best practices.
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-I think calling strcpy "deprecated" is a bit tendentious. IMHO the way to proceed
-is to use KASAN, which catches the misuse of strcpy as well as other bugs.
+This macro enables the RMII mode bit in the USRIO register when RMII
+mode is requested.
 
-> ...snip...
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
->   	u32 size_bp = size_buf;
->   
->   	if (!flags) {
-> -		strcpy(bp, "NONE");
-> +		memcpy(bp, "NONE", 4);
->   		return;
->   	}
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 146e532543a1..f4f922915ade 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -5101,6 +5101,7 @@ static const struct macb_config mpfs_config = {
+ 
+ static const struct macb_config sama7g5_gem_config = {
+ 	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_CLK_HW_CHG |
++		MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII |
+ 		MACB_CAPS_MIIONRGMII | MACB_CAPS_GEM_HAS_PTP,
+ 	.dma_burst_length = 16,
+ 	.clk_init = macb_clk_init,
+-- 
+2.43.0
 
-These aren't equivalent. strcpy copies the source plus its trailing null - the
-equivalent would be memcpy(bp, "NONE", 4). So 4 here should really be 5 - but
-you shouldn't be hardcoding magic numbers anyway.
-
-On top of that memcpy is just as "unsafe" as strcpy, so there's no benefit to
-this particular change. gcc -O2 compiles it the same way anyway:
-https://godbolt.org/z/8fEaKTTzo
-
-Mark
