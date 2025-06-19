@@ -1,88 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582382405EC
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35C166F1A;
+	Thu, 19 Jun 2025 09:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750324821; cv=none; b=qtYbBnN1qqz9zwacCYOEVyAP85vRgT5vjZoyAVFjJ2xtfYNfYTPliIW+RIAkLiASs5sJ0ifVWoay48tZFl5l/KfUB1m63ioh+mFpJ7EBp7sAK0g/EC207Zr3uVWhpH9sMAjR0KJGJVr79WvNNecdVhBRwDiF/5OqswZ2MR3VJxM=
+	t=1750325061; cv=none; b=PKZC4USKGsZWz9bw9CPNYoMiw7ukEW0hAqOB1WrpHkbYcw2Wl+epsNfFZc3Aul6vKzZ0Hmu1VLfCbSAFEdMRGtlrnjYJfRzv1gl15wLPQYnfzmxE3Yj7Cvf+nN14+YGK/cE4YJURCV26dn0LFAdBm+A975QgJtO4sWaBOA1gjrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750324821; c=relaxed/simple;
-	bh=xfFrk+hniYU5BoCwpn9Udt1EIwc5zRCB71cWPF4u8K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6eyk/EO2tQUEjT4nVYyeJJeSw4mRCwA9hljog929ZnafLyjOr97hupfvVFJx6HNLrbjj5CQsknTvFuE1Czn+i1O+2ArA7IMVWRyNg3daxE4OCJIDf8ViHNGAxLELn1RppwUUROajULQ2hXD19Cd3wV9t6r8QN2eYMPVp81DOtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A806113E;
-	Thu, 19 Jun 2025 02:19:59 -0700 (PDT)
-Received: from [10.57.84.221] (unknown [10.57.84.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B13A3F58B;
-	Thu, 19 Jun 2025 02:20:16 -0700 (PDT)
-Message-ID: <8c6f1c91-176c-4382-b631-79948e8de16f@arm.com>
-Date: Thu, 19 Jun 2025 10:20:14 +0100
+	s=arc-20240116; t=1750325061; c=relaxed/simple;
+	bh=JbzrzqA0/p8I8EtwwZirDCjv+hDsXgCgRktfC4CCX8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvE7UWpao8VGsbuwBIn9PAqf8ObWCTHhzhmm/ra5aY4q/OmS97Y+0Hewpscy570IeT8MOQmc+AiHXdKk0QanR7jyo52UWuvynZ5xrDCehUKer9KvY/8gk/ZW6PA0hbAyyEtNe9b0hApXKNmfxxtPZJzGGZ22cN4FgqnSudraqqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jJPrO+oy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jJPrO+oy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2JeEE3ggrTpBGQUKEsYkqTFhXO/k+e9yZjnLbjYAA0g=; b=jJPrO+oyphGhQXrIlBketeJfcc
+	cIiw+MrKL9bpn3Ptn4rnBqLPveCu+ARDsdTDlQFCeUQND3hWkq+k80DqEvYJuhRAyTwwHJpQKfmNe
+	7Lhn1PjytOd6PIMHJ0VVsX4bCtKisbs4rL1f8UlsSfJokaga5DqKe/TW3thLjVH9maXZlKZFBTc6S
+	cGz2zm+/Gsrz7ZuP9j+/TQiETjLPmvCKLLqu38y0UoqdJEvsZaChVow7aVSoTvTZD05l7yYs1DRF4
+	xhIGnUYBdDy0Klhf6FT2Z5SArEl2t89TmMj1xHBWzB46LKxVyWzg4Xh6h9IAcebukubV4eAaZ6rdz
+	LINNUghg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSBV9-000000080wO-1Zt3;
+	Thu, 19 Jun 2025 09:24:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 74F823088F2; Thu, 19 Jun 2025 11:24:06 +0200 (CEST)
+Date: Thu, 19 Jun 2025 11:24:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250619092406.GG1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.938845449@goodmis.org>
+ <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
+ <20250619043733.2a74d431@batman.local.home>
+ <20250619084427.GA1613376@noisy.programming.kicks-ass.net>
+ <20250619084813.GG1613633@noisy.programming.kicks-ass.net>
+ <66B9E72C-4FDF-46DF-9231-BED06A6000D9@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/4] arm64: Add BBM Level 2 cpu feature
-Content-Language: en-GB
-To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
-Cc: yang@os.amperecomputing.com, catalin.marinas@arm.com, will@kernel.org,
- jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
- maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- james.morse@arm.com, broonie@kernel.org, ardb@kernel.org, baohua@kernel.org,
- suzuki.poulose@arm.com, david@redhat.com, jgg@ziepe.ca, nicolinc@nvidia.com,
- jsnitsel@redhat.com, mshavit@google.com, kevin.tian@intel.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev
-References: <20250617095104.6772-1-miko.lenczewski@arm.com>
- <20250617095104.6772-3-miko.lenczewski@arm.com>
- <e40989e9-9521-4915-9bae-eb7be1d4e056@arm.com>
- <20250619085701.GA10805@e133081.arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250619085701.GA10805@e133081.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66B9E72C-4FDF-46DF-9231-BED06A6000D9@goodmis.org>
 
-On 19/06/2025 09:57, Mikołaj Lenczewski wrote:
-> On Wed, Jun 18, 2025 at 03:07:41PM +0100, Ryan Roberts wrote:
->> On 17/06/2025 10:51, Mikołaj Lenczewski wrote:
->>>  #ifdef CONFIG_ARM64_PAN
->>>  static void cpu_enable_pan(const struct arm64_cpu_capabilities *__unused)
->>>  {
->>> @@ -2980,6 +3015,11 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->>>  		.matches = has_cpuid_feature,
->>>  		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, EVT, IMP)
->>>  	},
->>> +	{
->>> +		.capability = ARM64_HAS_BBML2_NOABORT,
->>> +		.type = ARM64_CPUCAP_EARLY_LOCAL_CPU_FEATURE,
->>> +		.matches = has_bbml2_noabort,
->>
->> Is there a reason you have removed the .desc from this? Without it, the kernel
->> won't print a "detected" line when it enables the feature. Previously you had:
->>
->> 		.desc = "BBM Level 2 without conflict abort",
->>
->>> +	},
->>>  	{
->>>  		.desc = "52-bit Virtual Addressing for KVM (LPA2)",
->>>  		.capability = ARM64_HAS_LPA2, 
->>
+On Thu, Jun 19, 2025 at 05:10:20AM -0400, Steven Rostedt wrote:
 > 
-> Damn it! I completely forgot to birng that back. Yet another remenant of
-> the NO_BBML2_NOABORT version we had discussed in v6, because a
-> description field would have been confusing due to the double negation:
 > 
-> https://lore.kernel.org/all/83d1f7af-3dc7-45f9-94f3-8a0917c051d2@arm.com/
+> On June 19, 2025 4:48:13 AM EDT, Peter Zijlstra <peterz@infradead.org> wrote:
+> >On Thu, Jun 19, 2025 at 10:44:27AM +0200, Peter Zijlstra wrote:
+> >
+> >> Luckily, x86 dropped support for !CMPXCHG8B right along with !TSC. So on
+> >> x86 we good with timestamps, even on 32bit.
+> >
+> >Well, not entirely true, local_clock() is not guaranteed monotonic. So
+> >you might be in for quite a bit of hurt if you rely on that.
+> >
 > 
-> Thank you very much for spotting this Ryan! Ill return the description,
-> and respin on Monday (unless it is possible to do this as a RESEND or
-> similar, but I doubt it since this is technically a functional change) :/
-> 
+> As long as it is monotonic per task. If it is not, then pretty much all tracers that use it are broken.
 
-I think probably just send out a new version.
+It is monotonic per CPU. It says so in the comment.
 
+The inter-CPU drift is bounded to a tick or something.
+
+The trade-off is that it can be the same value for the majority if the
+that tick.
+
+The way that thing is set up, is that we use GTOD (HPET if your TSC is
+buggered) snapshots at ticks, set up a window to the next tick, and fill
+out with TSC deltas and a (local) monotonicity filter.
+
+So if TSC is really wild, it can hit that window boundary real quick,
+get stuck there until the next tick.
+
+Some of the early had TSC affected by DVFS, so you change CPU speed, TSC
+speed changes along with it. We sorta try and compensate for that.
+
+Anyway, welcome to the wonderful world of trying to tell time on x86 :-(
+
+
+Today, most x86_64 chips made in the last few years will have relatively
+sane TSC, but still we get the rare random case it gets marked unstable
+(they're becoming few and far between though).
+
+x86 is one of the worst architectures in this regard -- but IIRC there
+were a few others out there. Also, virt, lets not talk about virt.
