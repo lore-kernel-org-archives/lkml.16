@@ -1,126 +1,124 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2DB21B9F2
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A993085D7;
+	Thu, 19 Jun 2025 08:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321449; cv=none; b=JdGbg4McquYyiqnKHPJ2FiYITvxLYLujPdHFH9HApYpNgqGmOv9hZg/b7z30BxGFuPYe9oaE3BpK3QH9Myg/qvHipE2xCiINrCKtJTxamBA4+tRXRb+xYXAhHIraavluBoyTqwE1jgzrnLF22Wz2g92KlD4ABy6or9NjlmZo5WE=
+	t=1750321578; cv=none; b=gpH3szABGgQJ+DUgH1GTq/rkxJ3o6RTWMj0cMTfRCD1Dtn/nmDflniTKMAtK96H2nX4ltH4ARNSNrwy/E6QxBOkdGwxmWJwRexvx7FeJ5MCZrSUWP2934vObm4T7es1kOLL9MGoVh9hPwZLc93/v3mnxp7ryWXgylu3jXmc86y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321449; c=relaxed/simple;
-	bh=fjuJFMaIgczpX1qC8kqBKhEOVuSRrClkmArcMFGn2Kk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=CF6FbnIsBhTgvRahhAOm078bXPyFOBH75VAZNHbsZch4LJzvs+81viMlwtfejsQFBuYNVgTIhLyeFT2TdbKYnVUmQdFn4I3wKHR5SRmUoOdIM08pfbUcAbp1soKS52yPJpK6+XoJxR1QCxxaMd4pmcIPfuvxtpawKtdME6tqAyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttOXseDz; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750321578; c=relaxed/simple;
+	bh=joblJuM3YJrC3NH4fp8pNVtiViql4YenRSFoWywNdnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TmoEo0t3D3/iFMfF5nBffK27mYxNMm4IVIj2cJnyUmkvuXHlxRl/YTlVHioMgBUvHtJSFfo4FfxlYW+Kluha5vF3Eg9TabydEdYYc8nqoSXmW9i5R+XS0lXGw3kqehHoy9VqMz8nZcme1d3zkiDGXn4QZp2Ms8EZ99zsM6YzBXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSN8V4Hv; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttOXseDz"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a365a6804eso317233f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:24:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSN8V4Hv"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so443597f8f.2;
+        Thu, 19 Jun 2025 01:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750321446; x=1750926246; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q22zQ9ihJ48zZasqPlIeu40rg877vsTtc5J9Nn4uWg0=;
-        b=ttOXseDzvDx+0HSFdHpjUDGIisAWbsLyzZVw4uQrhg/UualYbcCcoYebzOXDTGu064
-         vFaqY5iDYt3DZGojtIcJsyWGrNBauWnuIXaOGewcwpfr1JfybuWRHkgFlR5QnqVBVUSh
-         9V6V9T0wk3nvJ0z35Yes8Wi1EIhKkgE6DjYbI6xZXEX45zb/TvcGDimYEXwJl/dG9PQc
-         /7lYPZoti7ymBEeZZO6N6U84gLZkhNh1zFR3neQPhURiu2OJ4jaCGw2W7d4NU4btcOOM
-         qOQvsTZEh4XQn+HgyqinidPaYv3n062nhihZfRohBVoe04SaVOzvD2TGvrsv2EkjuNyh
-         +87g==
+        d=gmail.com; s=20230601; t=1750321574; x=1750926374; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B0QAsYOvosi5fcQ7ZHm7kVrA3Pm0vHCmDptHz6MIxTc=;
+        b=mSN8V4HvSTq97dQSzbffC4r+QT+nJLi6UZmRrlEI1esD0WaiKfXw9x3lecyRIFmbJx
+         mBCH72AORZjzsUgiEjqVgYb9tmxQEene9FTHZR0r5OZ3TwJYQwhz2mL+fZKAsDuSzHCw
+         u6U5DZ6Y1jdv9/wqsH28f7hn1CyWea4RfdxL6JHtVqaecvZPJMC75eCHpTV7vWpN/qaU
+         STgga3UUt5dzDtTweCTEFuDFtSOrxPQeIs2n9ayrfsZCh/VynS5UpoXOc6sADy/DQSJz
+         uzIF/R5hSfE4KuClj4b42Ie8uenFuNfYB6HiL+BtCwIBTJMgID+1qd/q0sIwGFcIrgls
+         QpNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321446; x=1750926246;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q22zQ9ihJ48zZasqPlIeu40rg877vsTtc5J9Nn4uWg0=;
-        b=cswELYSBiOsbGt5eZ9NSpeDIzVpYHuJRWc/jqg8Bpgfz6HvRVy9naF3QV1r+BwqB9q
-         9hN34vrolVplAq45HBJDedablp0NU2uISzL9b8Rmy8Ns8qn6xBFO+K4WTqoKou2pF8f1
-         2jZsDKj3kj9czS7Pic5l5r1umJZ4iuFM9UzHK8j3OIKfv2C/V1iDmcQxCkgtwp5FxnMP
-         KkQ5YRnM6bye42wUcJ9dvom1ssFFXUKiMHwzoDlilsmlHZcGysmxKMAYTCqReXJ7rAk0
-         0HFRvvqUChsQ02sNHXS/VGijv7U0jggIzbYXnp/rNTPPZWkQPOuOMlgBZo9I1TPqr2tB
-         Kjsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWreAylCXNKomSmidwW8gDJkRiXCk1kEuywk9uhr1Z9yTTON/xGxkgwyk8f2SxWFN4Gyobkcgy9dW/iAuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8OC5FUSl7LBD8XUhN21GV9aFRyooi2UJj48pbb3VKGYySA27V
-	gF1rY8eyWi4LPehybRTQm0swvAyIbN9BYAB3snuTJyUD2keyMUj+MqeK8vfjCuKIPVM=
-X-Gm-Gg: ASbGncvVg3Nur4acjbMau99bW2qEFmUJXfonhJiG6Fpy+d4x2S3vvnVdiFxnlcxBtt0
-	rUDnqsRoi8u3oRSKxxblJ4HNW4bDEbZ8TOBAw09BKKdidfIUlxM5EjimbJ/vS/oPeMt0n39HPDE
-	mFT+indPByc58mENJHwX/jC6TBfoPNStvCrYTrK3Ixnyg5m2uGizZF9EL/lpSvq8nNIoYxhwRt3
-	YzrV2epNCtkXO1StutuoqD8nAR7G5quiCB7P7TVBnZhEJ2z5xMHAvWGOYMfHTTcaymQ0rPdRohB
-	gHT+HYJCqj8glOdQ96uxe+m7OrvQGPecHbvVffaO1u4vtEYK0XJpbm7GjkvZfVLF2qs=
-X-Google-Smtp-Source: AGHT+IG3prb0JZdG8yBrJXbPEyJddXNVxU6+WbkUTfokRjiQKzSLM7C0hI5dwVQ+QosuYnaTi5pF6w==
-X-Received: by 2002:a05:6000:26c4:b0:3a3:652d:1638 with SMTP id ffacd0b85a97d-3a572e585a1mr16943912f8f.48.1750321446278;
-        Thu, 19 Jun 2025 01:24:06 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b3c0d3sm18939648f8f.79.2025.06.19.01.24.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 01:24:05 -0700 (PDT)
-Message-ID: <393e7584-7ca1-407e-bd42-4079e5d8d4e2@linaro.org>
-Date: Thu, 19 Jun 2025 09:24:04 +0100
+        d=1e100.net; s=20230601; t=1750321574; x=1750926374;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B0QAsYOvosi5fcQ7ZHm7kVrA3Pm0vHCmDptHz6MIxTc=;
+        b=vPs6RhtYeXeQ0x02icvj0cd6S63CGfDV6ObHBMuWdnjg493hY11qbysrulmFuVa45A
+         TyENgTwPgkwiSKzcZBKSg9nm46TfAsWcJeBrKWFnbXh9BYCNUtwnGLTNyQedjOIbae30
+         YIkQ/PK7tZFsa8hFv6luEt3kwPUd9iRaKqDzrLHd6DlKAe+VacEn0H2r6vh3loLH0xu5
+         42Jen7p2wIiguEfqIGZGPxu7ObjxVDzisbOk0lkLADDLpIJqz56oixuoyCcHocRLWfeh
+         onEj6PXmhtBVFrpvbOK4OIf5TMTYooifB6Xj2YoeA+TDMFY2wjSJavGRNqNWgpEsnTQU
+         lk6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU98uNcdoUWDYv1fPj5Bcqwuit9PeOvtdNl6UQCpLxHcEAEWKhL427Ef1ImhnFXYX8PoQDHfU3qDf9dojqxuNU=@vger.kernel.org, AJvYcCWs06JISII6fnOIMvezt7q4JwbKlB/FtXVUgbdTwu7dBSbF2mwMQrJQO8N3d5rcN80CcdZPsYKC1BGP04k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxycdCQ/jeFYS5faU0aOqbKK+T6SrxQ/PifjuPX8P7qeuSfG/nh
+	Sj+YbtRa+Y42SMnDAiwxf8YMGuzq8lEuZYCuHjsJFVZx7WaLPl7oWokE
+X-Gm-Gg: ASbGnct9ZyRwO66Ae4CsTn1dC+Rq9taM8/VZnc/8N7JrUGpM7NJ3JnL0uj3WbvvEbYa
+	McnWI/QpdTtYGIBX6HYGLAjvqNyT5kRxVq+2cTDSTftoDleQWL64iSpTE97dD336ETwqIaOojl0
+	ZwllRfdw2izYgpcwz8CY4GRov04GxrlqHgTfB+p9O4Sc6OFO2us8F3kJF4eS4kz+FvA3Q2iiDrw
+	3rdIw+xM1Yx+XGU/+E2Q3QgU6/JY/JulWRJv6vcIvxYxcFbmnO7Owzi8a2q14Pn9VoW0dHpq6BH
+	ozjXIaI7+O3P8CCAjtpSxqxl/beOiXi/NQAMjrljxux5KBk0F3NCJu9SknqX
+X-Google-Smtp-Source: AGHT+IGWTFmrBJA8zRQdgBQJ3AummUbiD7FB3vTuifAlQScjEa7PD5GnrcF+/Dd8m8wX0HdejVRe9A==
+X-Received: by 2002:a05:6000:4027:b0:3a4:fb33:85ce with SMTP id ffacd0b85a97d-3a572e8cd99mr17166579f8f.46.1750321574491;
+        Thu, 19 Jun 2025 01:26:14 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453607d8971sm8605895e9.23.2025.06.19.01.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 01:26:14 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] wifi: brcmfmac: Make read-only array cfg_offset static const
+Date: Thu, 19 Jun 2025 09:25:54 +0100
+Message-ID: <20250619082554.1834654-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test: Add basic callgraph test to record testing
-To: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>
-References: <20250619002443.100301-1-irogers@google.com>
-Content-Language: en-US
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Chun-Tse Shao
- <ctshao@google.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250619002443.100301-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+Don't populate the read-only array cfg_offset on the stack at run time,
+instead make it static const.
 
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ .../broadcom/brcm80211/brcmfmac/pcie.c        | 24 ++++++++++---------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-On 19/06/2025 1:24 am, Ian Rogers wrote:
-> Give some basic perf record callgraph coverage.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/tests/shell/record.sh | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 2022a4f739be..603fa6b79b5d 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
->   . "${shelldir}"/lib/perf_has_symbol.sh
->   
->   testsym="test_loop"
-> +testsym2="brstack"
->   
->   skip_test_missing_symbol ${testsym}
-> +skip_test_missing_symbol ${testsym2}
->   
->   err=0
->   perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> @@ -359,6 +361,23 @@ test_precise_max() {
->     fi
->   }
->   
-> +test_callgraph() {
-> +  echo "Callgraph test"
-> +  if ! perf record -o "${perfdata}" -g perf test -w brstack
-
-Looking at 2dac1f089 ("perf test: Fix 'perf script' tests on s390"), it 
-looks like this won't work there. Although I'm not sure why the fix 
-wasn't to change the default -g mode to dwarf on s390 if fp doesn't work 
-at all. That wouldn't fix -e cpu-clock being required though.
-
-Thanks
-James
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+index 8f97562811d7..9747928a3650 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+@@ -654,17 +654,19 @@ brcmf_pcie_select_core(struct brcmf_pciedev_info *devinfo, u16 coreid)
+ static void brcmf_pcie_reset_device(struct brcmf_pciedev_info *devinfo)
+ {
+ 	struct brcmf_core *core;
+-	u16 cfg_offset[] = { BRCMF_PCIE_CFGREG_STATUS_CMD,
+-			     BRCMF_PCIE_CFGREG_PM_CSR,
+-			     BRCMF_PCIE_CFGREG_MSI_CAP,
+-			     BRCMF_PCIE_CFGREG_MSI_ADDR_L,
+-			     BRCMF_PCIE_CFGREG_MSI_ADDR_H,
+-			     BRCMF_PCIE_CFGREG_MSI_DATA,
+-			     BRCMF_PCIE_CFGREG_LINK_STATUS_CTRL2,
+-			     BRCMF_PCIE_CFGREG_RBAR_CTRL,
+-			     BRCMF_PCIE_CFGREG_PML1_SUB_CTRL1,
+-			     BRCMF_PCIE_CFGREG_REG_BAR2_CONFIG,
+-			     BRCMF_PCIE_CFGREG_REG_BAR3_CONFIG };
++	static const u16 cfg_offset[] = {
++		BRCMF_PCIE_CFGREG_STATUS_CMD,
++		BRCMF_PCIE_CFGREG_PM_CSR,
++		BRCMF_PCIE_CFGREG_MSI_CAP,
++		BRCMF_PCIE_CFGREG_MSI_ADDR_L,
++		BRCMF_PCIE_CFGREG_MSI_ADDR_H,
++		BRCMF_PCIE_CFGREG_MSI_DATA,
++		BRCMF_PCIE_CFGREG_LINK_STATUS_CTRL2,
++		BRCMF_PCIE_CFGREG_RBAR_CTRL,
++		BRCMF_PCIE_CFGREG_PML1_SUB_CTRL1,
++		BRCMF_PCIE_CFGREG_REG_BAR2_CONFIG,
++		BRCMF_PCIE_CFGREG_REG_BAR3_CONFIG
++	};
+ 	u32 i;
+ 	u32 val;
+ 	u32 lsc;
+-- 
+2.49.0
 
