@@ -1,58 +1,58 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43DA22154E
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9FDD517
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750301094; cv=none; b=KJhXi6/AuK2O54BJIl6eybjd4lOHUtmbE8wsr7yU80ztoe/J8XvLIMXAXqKGOJ4JYWTSwq7FPDBLVvlxB1QsCLQvFRT/VRWPCKWBv9DVM5KEW4tAEltGOcOgkg7mTqIhM3lvlu+oMA4azRGeBquLnPyu8LRtzyaRvRkE56AMJv8=
+	t=1750301143; cv=none; b=Vi9gt9NzxoWqxx+Qg+ijRpm8rSbRWWHrPLnwwU4569sDEh8yY4qW7temH9TI6eoR7o1h0y3W9f5yeaOWzwPFTYXU1Baafcam2mp1YGb+2Dhz/Xo8f1GG2MrIC34t1p8AVB3/1JnTNT1n6+IX89B6ESwn9pNEWPL6uG4yj9mULzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750301094; c=relaxed/simple;
-	bh=qoyTG+y8tPin1lSTQeGsP+HTVOL7kT5xddmxzpFuYF0=;
+	s=arc-20240116; t=1750301143; c=relaxed/simple;
+	bh=yN5IRTf2bp0DFPhQIni3wnaPsQ3d+S++8/d0mRCJUJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cONuwD6phM3mnXxYJcrdHl/PrXwEXp3EqQwxJOwBg6Q8jDaWeEH4ZLdbDeBCdD7o8TgVgfRp1Fver0OpT8VsmTb45FXCGgya0/PJawsyVi40Evh9h+aI069bdDMMxMKQDY+Wk+D6BHujsLraTr5KIcXmQ/w/qwVLencasbI+HGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lUP+jB2d; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=AAHtDrT/BAxLxuethEf6FZ+Vw/kEQFm+fEQ6oKV2XR7TWVFb7nL5wBqwf9xnbQRTwgpnEPg4GnsklAZvaXZ0c8pFyQ4PIvOgzyskefEMZM0GmTYZN9FlozQNtQkL/xBl/5HZT8YqNGy7nNMexQHD5rmI/o+HNBfu8NPFm9LTyjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Su0j/k3L; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lUP+jB2d"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747c2cc3419so176341b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:44:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Su0j/k3L"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234c5b57557so3707795ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:45:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750301092; x=1750905892; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1750301141; x=1750905941; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NGiV4ZITlSkGta2ar3rISknYHCyA9ON09GdNG8pubLA=;
-        b=lUP+jB2dib70oqGt16Y6GBeBfnzx1zSmE8b286umuV+VGipfXEGsJve7AZHadYBTLH
-         kPqMZ6qXkDnO5ObjGixdg6pgSbSUoUIQjYMeFMYQlFXONkESGNBzF4x3ZTGzfAQuxXDb
-         6YGuw7F5C/VJuA55bICrXOMuQCNf5zlqfej/s=
+        bh=qVwsh/DCfF7Xz7iwx0RMWfoA+1QEfSvNmteXgwq8Uto=;
+        b=Su0j/k3LLmd1VlxZSHNKn5kSjdNSMFD8W1+TZtg+83M9lKwHCnkh1uVSLjdOlGEp4g
+         i2VD4Ii0o3P3JPMXvIGuTc3T5nrRyd9JvRFiXYtDxbhJeTcHdcbTJiCXW/vjlIgnuM2t
+         +MwFI3iKpLApzgx6qcqdaWFCR1/eAPPKqBVUA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750301092; x=1750905892;
+        d=1e100.net; s=20230601; t=1750301141; x=1750905941;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NGiV4ZITlSkGta2ar3rISknYHCyA9ON09GdNG8pubLA=;
-        b=EcjSayKp+InPNPqOy94/eaa2P7+usXBc6dN2pweqfezv38a06MqEoDtCwtc0Nn7wOV
-         KiWHzlOnN8BEsRY2CvIeo1YBKoG9KIVvpEpL44n0QX5psc3VU75gAVb6DmZkgx6qp14I
-         kYOusX7CXacH2l03Egg6VHcUkdotmjWWi93ROlaboHwU0TQEqg0/Fa26s7IZclnNNZ+O
-         taUQm+LnVMoez9dIKkG2IfGfwvBqpF/gA2gkEisIVCtHMQ/MBPoaaP4X06thHadI/fbP
-         9p+TzhWk5vDkW4dpDYL3s00b4iL3BChHVIj/Geu7qdwpg1WW7PgceQ0sRea0QDADv60D
-         PvyA==
-X-Gm-Message-State: AOJu0YwQk85o5y2CUBapSTgnhXhKAj8CCAETB/fFn410kv9PZCCNa/Do
-	3iZL1EFj7cjVxz0+YqWxCoDoOWZ4DEChhu3Oek1dLiFbgWEHZbWfsk4JPQm0gIPgYg==
-X-Gm-Gg: ASbGncvIFBv8LBBlDLmkmTOd71xHklEgeY/uqeQ62c5Uh+RRPLVW7AwWe7KpplFfHv5
-	LTfM9r3zAz55l0lEXjaFkSbfodH0wu3eaZ0tBvgAT3UkuiGMuyz5DodpDe2mEvO8MHDOY7jt2Kg
-	vuymNHyURmr5KAAlY1oProj+deAj4V6gY6MbKJYn25Kr3zdF/juLrM6Qt4ifOjDJOps/sCp/Gf3
-	tukM4b6nAavKCRc5KQyzWiB8Y/UEoUidyU18biewGk75E6w0Pi+uv+toxhjMYIMur70lVQpxrH4
-	BCB4jUt7zPUrKS65zIeTNwZZXjv1ZFyviPUf1zbMPZ74PLn1ztVoozOnoyKzzcYwEA==
-X-Google-Smtp-Source: AGHT+IG6keXC3NsOp2Ins+/oPh724/MxHSdE1WbIS33oc9s9zagcbgJChxdFiOB1royOBlBoftNKog==
-X-Received: by 2002:a05:6a00:1d15:b0:748:e4f6:ff31 with SMTP id d2e1a72fcca58-748e4f7091emr9593788b3a.8.1750301091998;
-        Wed, 18 Jun 2025 19:44:51 -0700 (PDT)
+        bh=qVwsh/DCfF7Xz7iwx0RMWfoA+1QEfSvNmteXgwq8Uto=;
+        b=Pc07X7otdSlz3aYlLkeRoiGHkvTlfdxN1h2q0NqFU6gGR0D6Oc4Piu/kEj/CailX6U
+         qTZmwoHaY4ynE2JzpzeBBKBgjCWdWKLSaN34ISFxYxJo1vV1A8/qt3WbuNIU9oSeR/RF
+         4fh3lYWBBeFLOa7+fJzpCaK1IEvbyYH51G2J47uqbHEXefslpxWkStX3nyFpugn8Z3lu
+         r0JnUQRWjNUU9+J4tVgW0rG+47ADl92V/+FgOP5gcnmSPw6Yu/ZeArNPmkuARnl0NGIK
+         hsVx08Ajz3KtSNr9wC6LkLIlRXlWjgJGj1v4nng7QXxwemnK840YSD3fBlNNxp7p0rYM
+         9LHA==
+X-Gm-Message-State: AOJu0Yw7H6EbM3SIwzBrdVx5KXP9cJoY/TVmnTQz8Uw6jbZy/B+jHh8Q
+	ulwleiS5IWhP6JbF5U4/bICQ2z9C39jhLJsmeRI0VYx06Ifv74TuaWvZJPd8Hdl6IQ==
+X-Gm-Gg: ASbGnctbcBBrcwQySCbQ5TKRNeuln2NzvdFFE1CtSDbd2yqkvThCTvwf928h2wWNKKb
+	ATFKrNJHH0l1C6sPmpNPYxnhANWfKcahSnFXMb84V6TqT8ZJFkpVI53sqTwgEHd2O3OJHm1OHdp
+	BVXYf60Bc+l9Pz3/iJ/ate73yCnmWoDeqgDVe6/BF3FeffhH3gE3jUjW//2YpYsaB2xDQW1BOLO
+	w7ReJXtLsxtOvkRj3t+cJvCVq3/ouzLc2YN7eSezlW3Prl6DzPM1+nj2ZgoMY6b47NzC2SPo+fH
+	shtalLYJEBowqQs9i1YV/PK55r52IrOYfJIknn/v9UR7RpxMvssMwsrrf1qa4iRtag==
+X-Google-Smtp-Source: AGHT+IEIhSKyAh/a5UXDnIfIZx40q+8DWj3yxUrqA8zj6603W5pJSAuRQjAc6FIffxONFpmzBXMSlQ==
+X-Received: by 2002:a17:902:e747:b0:234:d292:be8f with SMTP id d9443c01a7336-2366b32e55bmr310856115ad.1.1750301141373;
+        Wed, 18 Jun 2025 19:45:41 -0700 (PDT)
 Received: from google.com ([2401:fa00:8f:203:7cb6:ce70:9b77:ed3b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748ff646231sm44607b3a.146.2025.06.18.19.44.42
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a226ddcsm876010a91.1.2025.06.18.19.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 19:44:51 -0700 (PDT)
-Date: Thu, 19 Jun 2025 11:44:40 +0900
+        Wed, 18 Jun 2025 19:45:41 -0700 (PDT)
+Date: Thu, 19 Jun 2025 11:45:29 +0900
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: David Hildenbrand <david@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -80,11 +80,10 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>, 
 	Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
 	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 03/29] mm/zsmalloc: drop PageIsolated() related
- VM_BUG_ONs
-Message-ID: <ved33aqy5rlayhagg3x6xcry3cyadw6eponaj6dfwkt7xmbep6@dpcvwrfgrjxx>
+Subject: Re: [PATCH RFC 06/29] mm/zsmalloc: make PageZsmalloc() sticky
+Message-ID: <5qkfuuar3csonfv3a6nj5ikl3ghebqassnnfw24xj7rjwx77fg@cglr2plhwvfs>
 References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-4-david@redhat.com>
+ <20250618174014.1168640-7-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,12 +92,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618174014.1168640-4-david@redhat.com>
+In-Reply-To: <20250618174014.1168640-7-david@redhat.com>
 
 On (25/06/18 19:39), David Hildenbrand wrote:
-> Let's drop these checks; these are conditions the core migration code
-> must make sure will hold either way, no need to double check.
+> Let the buddy handle clearing the type.
 > 
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 
+FWIW,
 Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
