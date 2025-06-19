@@ -1,124 +1,123 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60513085D4
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FDE21FF57
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750300521; cv=none; b=OP2iEiIgNeBLlQs+y+ESnvt+L39sMElRydb1nSBFUEDxDwCwmja0aJf2dhgirFqEvEThu3UyJJACtU4GjoA7QS8rUC663dYZB7Ni6JAXLW5lHPTaQ1a5NotmGCZacYQcgEvCduA/oZ1igFgx7l9oDGpBsEyjDaqdlNj8TOiYKZ4=
+	t=1750300686; cv=none; b=NkC5kKKWUznpioW1MCZexAw/MRdOxDgZXIP5uQv+1fVdVwYa/jWgt1Ouj1C0fq5do0t92lmAG7JkT5mGr8GYdg5EnBucZ7PJZcYrN9luD5LLeCYMLmv6qiJMsve3xQZEPJq5NJr35a/tmFE/DHa/zOl5ySA2mEANIaeWeKomF3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750300521; c=relaxed/simple;
-	bh=oI1NEh28305D0ayJRrlO+zIubPUuGt/MLPVps+N4jbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMqcHZCD1qvQ44x9SZ1eUQOsNM+V1aWJYtKnyXkKe5XxpKvuC6L/2F6nO3zIngtrKrlAs+Rgwp7DsL97fc+hxvbXbAr11iTo/vkhMgHSYEDtNLiW4g13ZT/NZXhJMVfic7RwqcE3agqHRYkA7ifQ4cJbD8MNkZeSu5kLT3L/Bv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LwpvECJv; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750300686; c=relaxed/simple;
+	bh=R6t76eWH2HzIq2TB7HLKHxRY/f1IWLs6nx6TUFl7QAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rjWTVlie37/ppbBVt3kJH/NWD7G+f0OYJpppedTYZhBGCx++2YDLCXlqz73Nbxja2BI2cJlItApzWpTx1GBRk8pdhRbcBqTrjrmblp0vjYDvF6JDQMzAD3Plf6+MkH/qiCrmYVYKeVAmhK783fhnEyuHJSQxwi5AmbAf7HEjLzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=rDt6uPh7; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LwpvECJv"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2ea2fee5471so181599fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:35:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="rDt6uPh7"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-711756ae8c9so3115737b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750300519; x=1750905319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ve9tIiVhsY8HsyGqSgZ9WHqrheC4NxF+RmsfnVlvf/Y=;
-        b=LwpvECJv3H5DKOxZQFq/IvWd0rlSL2ZHSGP6lqcuHAe2ZDjuU7ftPEruVyi267LIrQ
-         w6hVypbrX/3qiaq91mQCqQkfB3G7X+Y76jUEbbpWhFfxszZS7B7KlU3AkcvsCG+gxxic
-         LzhudxuRpWVcGReZoRfQoqQalujz6Omn6yqWwN0IbsQPJyHOUt3wReqji2+zh3+mypi2
-         8JguDE3XqwuMvzX5gBWs31O9IrxbxM8TWGwQZhGjbfZMikfQps6k8S1kUbU7rNGLZhle
-         Sv5YiMRm+RMdmAZq8KluozfxNDpGCVI/lpjS95Wc2Q+4pOjBruYkAAyxV4IKjeu5/P9D
-         DlJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750300519; x=1750905319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750300684; x=1750905484; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ve9tIiVhsY8HsyGqSgZ9WHqrheC4NxF+RmsfnVlvf/Y=;
-        b=weIynQZCJcxsjZr5/U4C78biOTK+EmrexExtdwyv2MyuopdmjLcP0ilEYSLuHgWHbC
-         ECwpkWmVaqztzda2Ppf8XGRw2wTwMlflfFQEJXcWZvaDYk/djiJvpcYYJ4jFMCj82AbS
-         8I2/kkPB94xLxJ0c1OsQBetHWkGxtOhrzIslSFxhP66bb46mLbxv3YfrTh5miJ/WX40U
-         UhCobVecVXobhIJK5J/25hhUD+v+pkZORhzLatncJMwhVjU7CXcIlsrzGESw0bTJDR45
-         GFcgLkepYNz29Oqu0+yVDckIjTu9AIl57y8Z1L412tf24WXwV8jbvQOBJi3c5ZpsyPHh
-         YxQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgmjX8N20GOa0eLNGzzpf2M06qM41rrWyTsyDIaOn4SzIJYMkXIumFDMckhREM9kqror8e1y64q9ik9E0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4q7Sd8WrTUhAX8mhSkHLHThqsOg5kE71+qL+DL8RuDsZ/On+8
-	xYouxnPWaOznSzzYFxCNB3cLl5EpC7Llou1VcKdnriaBs3vg1f0b3+LS2sJ8hqHLSbA=
-X-Gm-Gg: ASbGnctnC9dZ/eJg8xX+UghW/ggmqOU6vp0RctqlrU4AmQLqEkZR27LURuB1l01Gi+J
-	rxwV6hS3KZqD53u6an5sX8ATi9Mjhevn/iC+AQvfv6VK2K1+d/WOpOjy+f6iaLtTHBEQAOO4h5Y
-	Hmi12eC0kxbnGYcTUyCHxiRz4aHsyIBCfp0ItqyaxnJ01vdgQnYBtt4tJfx/9oR0wamJhK3sW+h
-	D0myEloZXGYIBWV/yipZ7QqrvwGSkeIIU+5z9CcInzlrD0KkooGm4gT85N1Fl/o0udl2Osxi+I3
-	CmEDUr27UM3EfHIf7MITjbsT4YA2rTQbOZb0rxvICbl42/GG8hOu49XHvCbN58olBZWArA==
-X-Google-Smtp-Source: AGHT+IEgO2jGNnbhfnKxYS9lSpLhkJ0gH4kFRnvQIBypkNPPYfFa7bQbcVijzfEL6AgPzJEpLeYU/g==
-X-Received: by 2002:a05:6870:2e07:b0:2d4:dc79:b92 with SMTP id 586e51a60fabf-2eb9e89f262mr1258514fac.6.1750300519005;
-        Wed, 18 Jun 2025 19:35:19 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:f083:6e52:f970:dc01])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eba6224f78sm129400fac.39.2025.06.18.19.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 19:35:17 -0700 (PDT)
-Date: Thu, 19 Jun 2025 05:35:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Marc Herbert <marc.herbert@linux.intel.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Benjamin.Cheatham@amd.com,
-	Jonathan.Cameron@huawei.com, dakr@kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-	rafael@kernel.org, sudeep.holla@arm.com,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <b6e8a921-686c-46a6-b6b5-5e88e9b9c114@suswa.mountain>
-References: <2025061313-theater-surrender-944c@gregkh>
- <20250614105037.1441029-1-ojeda@kernel.org>
- <2025061446-wriggle-modulator-f7f3@gregkh>
- <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
- <2025061546-exile-baggage-c231@gregkh>
- <bcd3848d-54dd-453e-b0b5-91cb72160645@linux.intel.com>
- <6853586e9d366_1f9e10087@dwillia2-xfh.jf.intel.com.notmuch>
+        bh=mJvyWk8eVLm4Tc980PDphhjuFD7XIh64AkzzgoplEgI=;
+        b=rDt6uPh7hjhj1QiLe2docWIq9u9ltGOoLTZgCDpB2/t2jTunoLTIlspQ4Z9YofaJ6f
+         ZRySfv5+AUPDIMafIiILhsCGQDFNZC6++EeSCTkvwKvBdr83H1GfO41tHUXCYYXUFDXB
+         yxmlA2gbwDOtlrx19Z2vNDfdznH+epTTT7oQwVL5Ezujx5BcC2CzaI/GVOxWtCVkL0eF
+         E14A/QWQJQxfqQrXnvbGszEfBibMd7e3X6TpXET8MWct7oCplo3rf48IJEpfeL2W3MXX
+         SCJvZcm29xLShaG/kMSlin3xOdzKaD+XMVJEcqRpsoo1mTwM/vGSz5OxQKQGYUk+vwrR
+         DXrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750300684; x=1750905484;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mJvyWk8eVLm4Tc980PDphhjuFD7XIh64AkzzgoplEgI=;
+        b=oR4TIliYaPjOCBRfpIhY7I6UTzDZCgweZgMbNZze4vX3B+kcFmOFp/7u/8ct9cGEF+
+         jXo59Nz4qN6ZbGhB0DH7tZaethXuSv9+JqgFTHkm9L96yYVLr9BCt5ISz5XOSEkT4nyt
+         aR56en/QOg3KwLpYaGeapze+B/c0bCeve1mFlvG8hLO8AqRKjNMbU2arGTkvdqYameKa
+         Go6lXgfOP1cK17j3WzQJ9hNH7KN5big+785OejAhC71nzV1IvBKqRytC3eySQNVWMMvq
+         +nV5Bn04UrHnTKadBLnUsYT0DFkd2xf4noqVrWzkNc7Mc7Nytep7sKtvE9V7NWddn+RZ
+         MjWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1R5mw4QM+mNGT4+HsBL1Odirf8cnJMOULFKi+V1SmLzcUmVpoyO2/A6AsS3Idg+0VeOBoTMwL8cGacF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxruKQ0C1de9HfgrNB4hUsYrGjtDt1kQqto0H6YBXce6UjmPyIs
+	OgHLvURhr2yw+YmKQ2NsFjBBDKAssUaxFkyEMt3FkOa0l2qRKUwNRzSOkC4dqZbYYZLizrt20eK
+	4eVMuM0w75W41mFQUK2gxeL+dxJ2VbxpJycgwQbdFzw==
+X-Gm-Gg: ASbGncuFFS8u4N4Xh5XdO97IKQuSyAC5Q/q56mSzy3w1L9sow9zfzE2BX0bc6h811E1
+	fBXQMLIfit+Rh3vcxsF4tZgEVsnFnaAe10EC6qAc6eN+XJgPFO/j5MoUyhZ5G6gZ/YwbcJDw9RT
+	DEQYHyDmejnBV2vdVqzynY2i52qf0ah4SlzcNMWUIaXgisUXhw/RF3
+X-Google-Smtp-Source: AGHT+IFLz3Vl5G1STkCpTHnFizE3p8mAf9pvpCYG1N2QfqDuoM9RrsfGR/H2ltgphKQYCTDpc5ZM+HFUSOw07SlczgM=
+X-Received: by 2002:a05:690c:8e0d:b0:70e:7503:1181 with SMTP id
+ 00721157ae682-7117543370amr238070227b3.18.1750300683598; Wed, 18 Jun 2025
+ 19:38:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6853586e9d366_1f9e10087@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-5-guodong@riscstar.com>
+ <aFEFBss3RT7NbQkV@vaman>
+In-Reply-To: <aFEFBss3RT7NbQkV@vaman>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 19 Jun 2025 10:37:52 +0800
+X-Gm-Features: AX0GCFusS0Wf6JwTzVWm3sY_lYpO92NDTczE7xfKgCKObXd32EKaOhpP7K8QAJc
+Message-ID: <CAH1PCMYL57eEVyx7qy3offcsuKsN23qO73H+YTnffZe4kBxzMA@mail.gmail.com>
+Subject: Re: [PATCH 4/8] dma: mmp_pdma: Add SpacemiT PDMA support with 64-bit addressing
+To: Vinod Koul <vkoul@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, dlan@gentoo.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	joel@jms.id.au, duje.mihanovic@skole.hr, elder@riscstar.com, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 05:23:10PM -0700, Dan Williams wrote:
-> Marc Herbert wrote:
-> [..]
-> > In other words, by turning this off unconditionally at the global level,
-> > the kernel could actually lose (surprise!) some performance.
-> 
-> I expect the answer is that any compiler that does fail to convert this
-> to defined behavior is not suitable for compiling the kernel.
-> 
-> The issue is not "oh hey, this fixup in this case is tiny", it is
-> "changing this precedent implicates a large flag day audit". I am
-> certain this is one of many optimizations that the kernel is willing to
-> sacrifice.
-> 
-> Otherwise, the massive effort to remove undefined behavior from the
-> kernel and allow for complier optimzations around that removal is called
-> the "Rust for Linux" project.
+On Tue, Jun 17, 2025 at 2:02=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wrote=
+:
+>
+> On 11-06-25, 20:57, Guodong Xu wrote:
+> > Extend the MMP PDMA driver to support SpacemiT PDMA controllers with
+> > 64-bit physical addressing capabilities, as used in the K1 SoC. This
+> > change introduces a flexible architecture that maintains compatibility
+> > with existing 32-bit Marvell platforms while adding 64-bit support.
+> >
+> > Key changes:
+> > - Add struct mmp_pdma_config to abstract platform-specific behaviors
+> > - Implement 64-bit address support through:
+> >   * New high address registers (DDADRH, DSADRH, DTADRH)
+> >   * DCSR_LPAEEN bit for Long Physical Address Extension mode
+> >   * Helper functions for 32/64-bit address handling
+> > - Add "spacemit,pdma-1.0" compatible string with associated config
+> > - Extend descriptor structure to support 64-bit addresses
+> > - Refactor address handling code to be platform-agnostic
+> > - Add proper DMA mask configuration for both 32-bit and 64-bit modes
+> >
+> > The implementation uses a configuration-based approach to keeps all
+> > platform-specific code isolated in config structures. It maintains clea=
+n
+> > separation between 32-bit and 64-bit code paths, provides consistent
+> > API for both addressing modes and preserves backward compatibility.
+>
+> I would ask for this to be split, first to to driver changes for adding
+> new ops and then adding new soc support. This way the two changes are
+> independent
 
-We turned it off because of the tun.c bug.  CVE-2009-1897.  It was a fun
-story:
+Hi, Vinod
 
-https://lwn.net/Articles/342330/
-https://lwn.net/Articles/342420/
+Thank you for the feedback. I agree with that.
+I'll send v2 with this split approach.
 
-I would say that if having the compiler automatically delete nonsensical
-NULL checks leads to a performance improvement in your code then you're
-doing something wrong.  Potentially there could be nonsense NULL checks
-embedded inside macros, I guess.
+-
+Guodong
 
-But, again, this is a totally different thing from what the patch does.
-The faux_device_destroy() code is not doing a dereference, it's doing
-pointer math.
-
-regards,
-dan carpenter
+>
+> --
+> ~Vinod
