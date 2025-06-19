@@ -1,145 +1,98 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7828F25C810;
-	Thu, 19 Jun 2025 06:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D1A246772;
+	Thu, 19 Jun 2025 06:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750316087; cv=none; b=BNGpEflwoEUIiuTANp+WubcZSeqzQcm/z6K6PlBQSK8O1lCc2d/Pj10O4VvbVEwO1xow6GC1icnFPgmbCQ+nDUekeDg08nn6R0CUdkWJZgzaBUVUbyhPj1waaFI8oLLMTgr7YfFfeZaY5k+iVoQzWGmiw26dfCKcZ4qQjyX/lB0=
+	t=1750316174; cv=none; b=lRXWRlZ7jqCMsWQa+q2zteVj9bdGnwo//5uX2nfREit2YMcN3EMz/qXShe1p/xUkQl9VXZAtxZpJg87ZvnFlshI68etnXtPP9yI/kGJE8AIE5RGgjKCv889u4AptvWiPil/5Ox+KXMbuu4rpYxVQ/OUtPFGl04qtQH3o2vOdIhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750316087; c=relaxed/simple;
-	bh=DKIWEFD7IuiHQJbuY8wGd57bhJyvqmxIfitMGqJ6ZdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PCY80gSriuQlbJXBn3sr0DdHRky15NnK8jN8mPQs/KD/YRreJD7dy3YycFd9wGKZQYk8aRcQ92vLtgI06IU8PJkR+k/ojUF5B2UAbaK436pvE8fTPd8109thHHNG/IsYZmQPz706sPUgPvb0ctDEGJfWhVTzhTQ/E4pBRv3fgvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ohcmyJYq; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1750316174; c=relaxed/simple;
+	bh=vVSn7XKabejjo3pbl5c6nCyc1k4D4oaDiXJU5ZtAyT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Rs886OZ/4bhMqYudOl8vNbuwREyXYc5eSp5PXcQQ35oPQPfSUO7wZ4orZ77bxLlJwlVcV6clvYHogPGw+Eq+sIFaT4skrNfJptkAr7ZodxYBVLkNEkuez5T6jVBvebxmnEeGPul9Q6wZ7M8ZRkElDSoeq9VpxaN3xaUcDdZd2Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sQ2lEZGG; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ohcmyJYq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1750315985;
-	bh=wCgFcf8S1qz6TsKVSV0g1x9/rKEOEW9D85QGwXQvK74=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ohcmyJYq6nNEquCCKhkprx2Ku2LULev9JfWxpj4W+tS7VN109dWRqKQ6g0vSI0Ah+
-	 vPRQvm282gTOpC9S9dh9fn1IsviucXJZ8DeSNZmX3mfdoZ7492kM0+/d7oijh/RmM8
-	 YVVjbe/1JY07+FCvSHIVITEeZULA0rjzh+/ymYn0=
-X-QQ-mid: zesmtpip4t1750315979t3e7fd250
-X-QQ-Originating-IP: HY7OJzCHKvNXxA3FIXoKz/JEr+i4hyX3SN3hoQqaFSs=
-Received: from avenger-e500 ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Jun 2025 14:52:58 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11116470041164547082
-EX-QQ-RecipientCnt: 10
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com,
-	javier.carrasco.cruz@gmail.com,
-	u.kleine-koenig@baylibre.com,
-	wens@csie.org,
-	wangyuli@uniontech.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5.4~6.12] Input: sparcspkr - avoid unannotated fall-through
-Date: Thu, 19 Jun 2025 14:52:41 +0800
-Message-ID: <5C0E9B30D2B39A0D+20250619065241.37834-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sQ2lEZGG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750316168;
+	bh=Sxl7KycVrcsiHgLurxxG5MbEA/FN7L99ksyML0+5SDI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sQ2lEZGGrId+4G/4r9cjn+IamIL43YhEKHSHLbkKx0p443VLNBIKo/NPNzUPLVb8C
+	 Zi+yXgbMCAmdu4Ue5sXODy4GQ/BIzz5G2T5u9PUnS+1LUQdFvvhnLNu4lu6ibvI9qm
+	 rq2tYRGCJKA3exA1A7odKvNc/6eez5XnhVocR4DG7+DD8xIiZdQybleD2UaFQxwe4y
+	 LPfJuH0OU0qvDgwMGlWqC8GaUCL57MpB6tzCQzfZc8deyAyhTbMqOAlWSd99/c3lhz
+	 ivdhb9yn2UxYp838urFOJCPpOvQkdaYGtDHPIqOaAMO1rAy1G0m6uvyTHA5CRdtYp/
+	 1NnRFXGdHTYFw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bNBGJ15ntz4wcy;
+	Thu, 19 Jun 2025 16:56:08 +1000 (AEST)
+Date: Thu, 19 Jun 2025 16:56:07 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Jiri Slaby (SUSE)"
+ <jirislaby@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the tty tree
+Message-ID: <20250619165607.33403e19@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MRY6qckr/MVJEExJqnp1BH/QKQK1atcuSH4z4HyTlpzMJrsp7E/BS5My
-	osjEk+ik/E+EJiXyG39h8jI5q5PZuq3ybxBqLnTr31gADAFdhAeZGgcQkOteg4FzGrqkjV6
-	8tYOk8/3qjzBuIhZbh36YNPyqhjIn21ka4egylx4GOwJk1NredqdchNB78u0yicRw78dFyA
-	LAotO4U/Wq0xiMOhFEHpHMMD9SHpQkACwI4KaAm3z8Db22eOUbT21mIBvhX0sHXUQs+ywKz
-	GRtL6g0t4Or1lVv9acEkGIF8G5RoCe1yFtepCw4VRBPfGcKqk0kgd/5c/cmraTn+ryA2Q+q
-	laXOobUEnobvpRkYBI2l/m6+iNNn0Bwm9pF395DBIhjdw4FiiqgykESVzeqbP4pmZd53HrA
-	1T9kMvaM0MTYIRRW7XuM9xy6tn6PYbNhUJRRNtzeHkKsWHsEy3+ONacDymlCe4N8eTCCUHR
-	KQk+GCvx+cWXwwo1EaqLoMOCrA0XVg9CB4ANRF3PwvRfuwlsxTniA+5i9ZiwKmGNi4ZUj9y
-	7KDXmA69gmIMmPg1tpEUtRBLFpxrRVhMB+nn4aBDawztNHpMLxIly8Wa/1CsCLrtyEIdfHD
-	JtitWzwVsodGDGGb4oYPNXo7rjXg/xPIrkyTwBnBi2KH3nnE4VK1GuSRfcislbaAMjkHxzc
-	uUvWMlQoJtAo9xp+QBZ5wPrVK0755fp6zDnCAHNokRQrDI24kPjdIYinHmPgB/Ndtpjxc/I
-	7ZrAbmwj40ttBME+VOXvY1O8i2dlMty2d5ezwViyfdaQwdK0PnSxigVWBpwQbkZgMva6AFS
-	fbfzQdE/o6vBrC79t7hW2rRxbOBqgvsoGnpd5UcAv04A0JJSygEXgge/JQFY5TzX+XnRnf9
-	neZC9xMpLWKn8m/H/eIuObVgBrtdLSwIqWtVjT2WnSCwLoKijCbO9qb5nXf1UCYCUmAPfwW
-	yb9hzWOfVt4qpWLN+4RY+IYoW1/yTu8qKK/cWPQZQKf6kMdxgcD0cipU7LdwfUuuh4VX7KV
-	5V7/2Syw==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Content-Type: multipart/signed; boundary="Sig_/CfKrPqJxKFCbv7EWJ=H48aB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-[ Upstream commit 8b1d858cbd4e1800e9336404ba7892b5a721230d ]
+--Sig_/CfKrPqJxKFCbv7EWJ=H48aB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fix follow warnings with clang-21i (and reformat for clarity):
-  drivers/input/misc/sparcspkr.c:78:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-     78 |                 case SND_TONE: break;
-        |                 ^
-  drivers/input/misc/sparcspkr.c:78:3: note: insert 'break;' to avoid fall-through
-     78 |                 case SND_TONE: break;
-        |                 ^
-        |                 break;
-  drivers/input/misc/sparcspkr.c:113:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    113 |                 case SND_TONE: break;
-        |                 ^
-  drivers/input/misc/sparcspkr.c:113:3: note: insert 'break;' to avoid fall-through
-    113 |                 case SND_TONE: break;
-        |                 ^
-        |                 break;
-  2 warnings generated.
+Hi all,
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Link: https://lore.kernel.org/r/6730E40353C76908+20250415052439.155051-1-wangyuli@uniontech.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/misc/sparcspkr.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+After merging the tty tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-diff --git a/drivers/input/misc/sparcspkr.c b/drivers/input/misc/sparcspkr.c
-index 20020cbc0752..a94699f2bbc6 100644
---- a/drivers/input/misc/sparcspkr.c
-+++ b/drivers/input/misc/sparcspkr.c
-@@ -75,9 +75,14 @@ static int bbc_spkr_event(struct input_dev *dev, unsigned int type, unsigned int
- 		return -1;
- 
- 	switch (code) {
--		case SND_BELL: if (value) value = 1000;
--		case SND_TONE: break;
--		default: return -1;
-+	case SND_BELL:
-+		if (value)
-+			value = 1000;
-+		break;
-+	case SND_TONE:
-+		break;
-+	default:
-+		return -1;
- 	}
- 
- 	if (value > 20 && value < 32767)
-@@ -113,9 +118,14 @@ static int grover_spkr_event(struct input_dev *dev, unsigned int type, unsigned
- 		return -1;
- 
- 	switch (code) {
--		case SND_BELL: if (value) value = 1000;
--		case SND_TONE: break;
--		default: return -1;
-+	case SND_BELL:
-+		if (value)
-+			value = 1000;
-+		break;
-+	case SND_TONE:
-+		break;
-+	default:
-+		return -1;
- 	}
- 
- 	if (value > 20 && value < 32767)
--- 
-2.50.0
+ERROR: modpost: "rsa_autoconfig" [drivers/tty/serial/8250/8250_base.ko] und=
+efined!
+ERROR: modpost: "rsa_reset" [drivers/tty/serial/8250/8250_base.ko] undefine=
+d!
+ERROR: modpost: "rsa_disable" [drivers/tty/serial/8250/8250_base.ko] undefi=
+ned!
+ERROR: modpost: "rsa_enable" [drivers/tty/serial/8250/8250_base.ko] undefin=
+ed!
 
+Caused by commit
+
+  5a128fb475fb ("serial: 8250: move RSA functions to 8250_rsa.c")
+
+(or its neighbours)
+
+I have used the tty tree from next-20250618 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CfKrPqJxKFCbv7EWJ=H48aB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhTtIcACgkQAVBC80lX
+0Gx+qAf/Uk9aCs28YRDnbo/z87i5ngHOO8Y2LwZLJs19IXj1wAKanxGD6yQUHrTS
+1VwCFB4bWVQEf0VQJqhFQe452hpIyKTZ0kv2udKjCGoVq8MHK8ym4JWJpwL8O47H
+RgULxXL66NCo2DDB7m70NK/0BNBwu+6l/BMoweYNmaOcEphO73tKLfogsx/v2lGw
+5+TcETgP8sytcAG/iuccmP37zTNrQX4GZNuxpXujNHBC3L1CPd/WCFmKJS0A8avu
+7gc6iObbf6FZQkuCxhgSeEfCNn95T+y0NYbQVFH0nxsTXXvth3oACQd4ELydKwFG
+u4ZZtl5oUAF2aegaEcINaSYFg8X4QQ==
+=umYj
+-----END PGP SIGNATURE-----
+
+--Sig_/CfKrPqJxKFCbv7EWJ=H48aB--
