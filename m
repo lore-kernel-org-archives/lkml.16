@@ -1,63 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF2430E82B;
-	Thu, 19 Jun 2025 19:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BAE30E82B;
+	Thu, 19 Jun 2025 19:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750362877; cv=none; b=eMn0YNqDlBUmqZV37T3X72RUvKCXex+h9uXMMPbKRJdK+AeK4Q2XFR5xt1jY5hnD97FOw0cbM6fZeKWnfIRgy1UobAx9/vWrL9svFbUL4ykHrESl+yUJ/0/P2D/sJJZQZQHHVzpyVWsAsseeDGpqq+upyt70BbJa/fTl12fb2n8=
+	t=1750363013; cv=none; b=EJQg+ADa+/FF6QA8/gpgytNzr2AErMZL2qJBVvDiTqvXQL6yyGxhB3OB9BGFNCtdgqeMEZGu/Fd88QEavD6pIZeHddgcPwd5r8l//DpTjVKwmN1W5iiZh6gkTFGM4GAToBlPXfa0sqaseIw0noVcirLy1Yc03OAPNw1lN1wUc2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750362877; c=relaxed/simple;
-	bh=rWufee79LmCp4cY9NcorLs0fohV01FS8UrEAxvFpX8o=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=bY+4ze3IAILsE260Q0iGtDBZnWpGz4AFtYXmPQ7qsFOUDMEKC25V9ZIrtG0TBxwtg2ZCXLE7biTCSzSTQ2VV7BCTnKbAXRRnc4vVbZGy7gZj60LZjldCeMWx5RCu+2bXhxqomZjXUa6YT6WZL05l7Jv+CNttSk3svTM/Cc6n48A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqCYK5Rz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750363013; c=relaxed/simple;
+	bh=kc9yZUhhl+wZhmO8Wk+15fLRMuYCkRGwR4DU0HxHKsE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Unyaz5NxTcaceptlrBLyNr3LjsaHWPB25DqDrWKnkYsbI5gfAfiFTruKQc2YwnnoSRh3miBe89SxZxRwutR0VozUSUaN9f/p2KzXzmX82icWWd18eah1rWEtnwr+W1rlyvHQq5pTJJULQHfN9js/3Eod0+BjFflB0kIKJVUptmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=QXXkUgyT; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqCYK5Rz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270BEC4CEEA;
-	Thu, 19 Jun 2025 19:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750362877;
-	bh=rWufee79LmCp4cY9NcorLs0fohV01FS8UrEAxvFpX8o=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=SqCYK5Rz8YvF0vcvtzOdxJftdiR4Ku5Kg/+UB/wt9lfIapBdM7EgslJXlwWARdpim
-	 WvT2mH7T8ciXJGF3uluweqCm3Dalpgbm7YpT9JASuSX9V+RHXPljTPtkuPZj2QnyzP
-	 9Y75A50hutA0AjWGlMXh7V9tWiuA2uvHAAPcFTvLINIACd2KYBWnDQm2hbr67FNhXs
-	 w+0K/+KIOJhuz1To6GWST7NjPRJPFULHggPbUYeR94Hfpfe8qbJXfAT4MTBK53smqp
-	 zMbTO5YDNVWIpEug9qO7Prg6iRNc1DleXUDZafIa3NPKyB8uVR9sd8qZSKhyZhIU2z
-	 6YC/4iy+AHr2A==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="QXXkUgyT"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2AAD141AD8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1750363009; bh=pPgeY/Gg+qoV5kCFkGXINZQiuyl+REXzEHHp6WF7TWc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QXXkUgyTjGJu60So5GSYDnuzq5dsTwR30iwZ3/dMW58f/FpgOnQ5aonZpIe3KPYh9
+	 D5Pr/ftL57YI4cfcZq8bciunHkPSSklVM7D4bzjaOq26xcLHjDhgaHrF8xVq1NU3b9
+	 aAJ40urkx3382Vmik7EJ2cABNC4Jxv3m+fiKgxOeAVsLf9wGEcaxz0HjBTgT9cHeBW
+	 Icj+uQl3/7+24axbxNSlf3S9G5hjolAxv5vcFODhEEMgxZkqdV+gRLUWkPfO6GPNqy
+	 VQtTG//Ih1pW+5pWGsFQtr+NO/N2MIAAYWf8ezJ6mr3Wt8BpQ22+1hUf61e60t/dss
+	 iI9f9VPQ2t27w==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2AAD141AD8;
+	Thu, 19 Jun 2025 19:56:49 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>, Linux ext4 <linux-ext4@vger.kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, "Darrick J. Wong" <djwong@kernel.org>, "Ritesh
+ Harjani (IBM)" <ritesh.list@gmail.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>
+Subject: Re: [PATCH 0/4] Slurp (squash) ext4 subdocs
+In-Reply-To: <20250618111544.22602-1-bagasdotme@gmail.com>
+References: <20250618111544.22602-1-bagasdotme@gmail.com>
+Date: Thu, 19 Jun 2025 13:56:48 -0600
+Message-ID: <87bjqjh5dr.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250619171025.3359384-3-wens@kernel.org>
-References: <20250619171025.3359384-1-wens@kernel.org> <20250619171025.3359384-3-wens@kernel.org>
-Subject: Re: [PATCH 2/2] clk: sunxi-ng: sun55i-a523-r-ccu: Add missing PPU0 reset
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Andre Przywara <andre.przywara@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Chen-Yu Tsai <wens@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Samuel Holland <samuel@sholland.org>
-Date: Thu, 19 Jun 2025 12:54:36 -0700
-Message-ID: <175036287647.4372.1701190769589982450@lazor>
-User-Agent: alot/0.11
+Content-Type: text/plain
 
-Quoting Chen-Yu Tsai (2025-06-19 10:10:25)
-> From: Chen-Yu Tsai <wens@csie.org>
->=20
-> There is a PPU0 reset control bit in the same register as the PPU1
-> reset control. This missing reset control is for the PCK-600 unit
-> in the SoC. Manual tests show that the reset control indeed exists,
-> and if not configured, the system will hang when the PCK-600 registers
-> are accessed.
->=20
-> Add a reset entry for it at the end of the existing ones.
->=20
-> Fixes: 8cea339cfb81 ("clk: sunxi-ng: add support for the A523/T527 PRCM C=
-CU")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+> When a doc is included by other doc via include:: directive, Sphinx will
+> pick the included doc and parse it independently from the including doc
+> regardless if it is listed in the docs toctree. This, however, can
+> exposes duplicate label warning that refers the label to itself (bug?)
+> when the label is placed before any section heading, since Sphinx
+> encounters the label twice, both when parsing the included and the
+> including docs.
+>
+> This could be solved by removing the problematic label. However, when it
+> is heavily referenced by other doc (e.g. via :ref: directive), this can
+> be a churn. Furthermore, the include:: usage pattern in kernel docs is
+> to use it to included a common doc part that is shared by many docs
+> (e.g. isonum.txt). ext4 docs, though, is the opposite: splitting docs
+> into multiple reST files (subdocs) and including them in three master
+> docs (overview.rst, globals.rst, and dynamic.rst)
+>
+> Let's slurp (squash) the subdocs instead. This will make the master docs
+> larger of course (although not as big as KVM API docs), but one can use
+> cross-reference labels without hitting aforementioned warning bug. Also,
+> docs directory structure is tidier with only 4 files (master docs and
+> about.rst). As a bonus, also reduce toctree depth as to not spill the
+> whole hierarchy.
+
+"slurp" is not exactly a technical term that will make sense to readers
+of the changelogs.
+
+But, more importantly... Might it be that the current file structure
+reflects the way the authors wanted to manage the docs?  It seems to me
+that just organizing the existing files into a proper toctree would be
+rather less churny and yield useful results, no?
+
+jon
