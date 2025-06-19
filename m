@@ -1,266 +1,139 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A49223702
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A91B132103
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 11:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332578; cv=none; b=JsstLKVO0wH5N/P0oCSVu9KZU3GQGHyppYQ8f/TrA5PuNQVsgUEEB6zptCMUjfzpXmkWeRm4qrMjxvQl4t8vzXrgA/0YxPWcg2P9EMsP/4wc1LraWnLNq6664NfGQQPFrjFeS70C6+UQoyj51ki2YOKecx5RxwD+qSOYrLEmRo0=
+	t=1750332686; cv=none; b=tGudFVpPslxlmIpO7kIQD9TcvrPBkiamXKa12qDRXH5mfpWGGw8RNrz7OelvLkVTRvmByKW/hIPLENDn0A2wHgqEC1UBBD4peRyYPJYpLMZv1dr3gqj3GuNEAvAKpVg6VnTzDDL1kL90ErMLRRFS08wzGTRi6Te3Ka9UtKlhLMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332578; c=relaxed/simple;
-	bh=e0skP2wgHcDLar+1R1EpRVRuKiR3o3lQHV+r5AP3Deg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JKuq6JqlDwpc5+/WqhyigGYktcZ/W8qTmZOBnmb9Tr9tXi6tej2VVMzy6tE/dp2Z2VScKyCLapigwi1yTh8gaDkcgG4gNAa33eTxk/WPMLgobn7Hc59Wqzgf+9RJpWviBdTLme/rF83xZStkY8C1cJN4vMHHbNXlbx4AnI/fIn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso7357265ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:29:35 -0700 (PDT)
+	s=arc-20240116; t=1750332686; c=relaxed/simple;
+	bh=5ehJkgAbyggEQYCYMmY956XgyfrGZO0hGxlzMuYgDhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cubzo6HMFVbK8gQc+T4WDsyy3z0LVFpwmvoOBkv1vFsKzDyXN7BxjZ+6cRS3kspqdIEHbvV6XdbFzGrhCKO+S8yPYmpJT+U2e+2JCIO3DW8ERoowrr6Pek0SKLyxWs8KHfZLohxacHZ69dwLiesAjQRbASp5XZJkZgbhy/O2aM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=ekoSSl9u; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ekoSSl9u"
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso389819f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 04:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1750332683; x=1750937483; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=5ehJkgAbyggEQYCYMmY956XgyfrGZO0hGxlzMuYgDhw=;
+        b=ekoSSl9uiBgAKJXAdjMY63+MwYLxbFbt3fzAj8C/1OzIhe8d23QiL4oQRdvC94Lpng
+         3LVS8N6Wq7mQWzy2Nv46DPHvlKSY5mglyA9s25q9QAEnxQr4UwdLH3FHj/UaMcr2lZZm
+         hQUeQlO0jhK6SthanAWoEYqxdwdQnGFl727RU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750332574; x=1750937374;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0bpKo0a444ovW4sWpz4EXcZcoHocoxfjWX98q//TTg=;
-        b=s+CXPUEHm9g3OwDqHH/TSrfmXg9nR7hlPliXWf1JGIdkIDr2x5N9sUEgHRePB601lH
-         8HjrPbSpXuNlkMNBRKjJ51czOsGraGY0l4b2mtOE3FFKZ5pUmi7KgEIvvFqci90u+zfU
-         raO0nhUfKhmcifT1U63wPaTS3sIxAS/LqOepN6RaMBuat/gjEeh0E15T3lqMaMAjGd1/
-         pwjEwDGfmk6ZxpNR3nOGJEvn+kE0z+GryQIdyZo8BXxmJqKg3VVxtswbM3rtdnilGoQc
-         o6Nh76IpfSHydk7jUXG38E7OdBbHwQJoUNwWyaL8Il4WC7sItUDKTM9B2jDPSypoqtGm
-         dARQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8hfK9MNVqgtxxDHo9VERvPECMM617U5RTDer8+Up5E5z6wQ6FVAYkKR06BPi6tjW94H2XAQRbucZoiXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw87sRU95bJhcBwdsn+takmLurlvs3QyOtzGQ4BUEpeKpGt9IC/
-	4vf2MOuaR4qEqYQ/1VNy0SpNsuom2ystS3Z4AEsNrfGaShZZ4vv/s6ut0IpXgAj5VHKOZotOLHP
-	9XNI9y9bTZLYdmZplyDmD+8SK790o8rW5551X8o1amLeC/AdHjCovsskl9no=
-X-Google-Smtp-Source: AGHT+IH68r2tyy8nUBLxmmlVx0TaFawKz0a5suFWdAOObJenx/Ssp9C4XyqCfaJeLR8RhuYVQGNrvDW+X1+s4plJVIDdH+/YfHQc
+        d=1e100.net; s=20230601; t=1750332683; x=1750937483;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ehJkgAbyggEQYCYMmY956XgyfrGZO0hGxlzMuYgDhw=;
+        b=dmXYE+uAF8R4DP6VMII3po1XeSGb89h7ugxwCaWEu3s97pbkP1BXj91bhA8FX/oJWq
+         OW8RWGwixcErnhTraM+e2eJnxH4Opcj3EHB4xY+gH6YByQMX3tLFyX56zMS6//p/dlMW
+         AAxICTPPCXAz219wf/BLl1CtQx8PdS63sy35HBhOIypq5X170JTR8Ooc3DvZCO5q3ptG
+         MUTrSx3KrqyIO5hRMNUMxtB0aWlAdP693lMNHKBiIzOhu4U6ezTx8i9/XB/2G8fXI8wi
+         U0sexAkolqvBes8FitV2ABuRoKrCZeAnqHASWjwepyEWv9QT5Dsfrh2dP6oG98JmNQhN
+         sX7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXgT5U8NdKF/00B7Nv4iPthU7EOzz9g9nqq1KiUryh57ix4siljm7VMsrAZiqx1/qhJJml9aUsdrGnWaq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT37pgxceHsp4aEQy1e1Isr14gphvwYulv3qZXe9k6zZ7aQ1We
+	DDIMG+c4OJ9PlosEgfBEIb6Fxu6xgoeHFD5ogxV+fYFqHTrgP1JK5mvzxm8V935P6u4=
+X-Gm-Gg: ASbGncuxq1Izif84ESrNJjRc4xVU2YD8fadD1bVPMqF9KE7GAgHPw3Fp5qkxi1oZfHZ
+	NAzunBIrvXHC5FAe2yPETAWu5Fg11BEIUQHaLHFih/1IayKr6khPTI6Kbz5qOQQ1mQcDaKOr04d
+	RzK0h8KsWMt2Crmq21IEOKZ6UzOZ7j4ei2DHK+17QDbRI8wIY4J/0lOB3ikVosTm4H/aMmYqgzh
+	p/Uk41fEFdopIoxkGGxQdEg61cM/PWOVve59IAPA5YkBXyX7vQKLE9+FJuzctCfCEI9l306KdmJ
+	SdOkkZIuQrpP6IEiOpEXeER0fwtdtoqFoW6D2I5xd7aaEdNbP/bsQI6d+wa/nkLTPE4C1JXZYNM
+	8khGEvI1HTvR6cKpmDtLqJjswWyLXmy112LHXHQ==
+X-Google-Smtp-Source: AGHT+IGxkwun+ifyV59KufsXNv7Ckg+d7lxDOQOaYgTNfK2qaTapjjfUwlMwJunAE7mrRblG2Psqvg==
+X-Received: by 2002:a05:6000:144d:b0:3a1:fe77:9e1d with SMTP id ffacd0b85a97d-3a5723a3aebmr18322608f8f.16.1750332683232;
+        Thu, 19 Jun 2025 04:31:23 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b74313sm19471221f8f.96.2025.06.19.04.31.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jun 2025 04:31:22 -0700 (PDT)
+Message-ID: <2c24aca9-5e67-4c0f-b890-92a0ad8e1975@citrix.com>
+Date: Thu, 19 Jun 2025 12:31:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2583:b0:3dd:d18c:126f with SMTP id
- e9e14a558f8ab-3de07d50c73mr217896225ab.10.1750332574669; Thu, 19 Jun 2025
- 04:29:34 -0700 (PDT)
-Date: Thu, 19 Jun 2025 04:29:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6853f49e.a00a0220.137b3.0006.GAE@google.com>
-Subject: [syzbot] [nbd?] possible deadlock in nbd_open
-From: syzbot <syzbot+ea702c2366971b7fc6e4@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nbd@other.debian.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Xen PV dom0 "tried to execute NX-protected page" when running
+ nested in KVM - 6.15 regression
+To: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, linux-kernel@vger.kernel.org
+References: <aFPzXVl1pn1LtwoJ@mail-itl>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <aFPzXVl1pn1LtwoJ@mail-itl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 19/06/2025 12:24 pm, Marek Marczykowski-Górecki wrote:
+> Hi,
+>
+> With Linux 6.15.2 I got a crash like below. It worked fine with Linux
+> 6.14.11. Furthermore, the failure seems to be hardware-dependent. It
+> happens when running on Intel Core i9-13900H, but does not happen when
+> running on Intel Xeon E5-2620v4 (in both cases QEMU uses -cpu host).
 
-syzbot found the following issue on:
+Yes, it's a known regression in Linux's ITS / CVE-2024-28956 patches.
 
-HEAD commit:    306e57988197 Merge patch "riscv: defconfig: run savedefcon..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git for-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10721e82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=618b9468db3872f5
-dashboard link: https://syzkaller.appspot.com/bug?extid=ea702c2366971b7fc6e4
-compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: riscv64
+https://lore.kernel.org/lkml/20250603111446.2609381-1-rppt@kernel.org/
 
-Unfortunately, I don't have any reproducer for this issue yet.
+It's hardware-dependent because so is Indirect Target Selection.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-306e5798.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5fee9bbe87f3/vmlinux-306e5798.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e959580bb405/Image-306e5798.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ea702c2366971b7fc6e4@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc1-syzkaller-g306e57988197 #0 Not tainted
-------------------------------------------------------
-syz.4.1189/8748 is trying to acquire lock:
-ffffaf801a39a230 (&nbd->config_lock){+.+.}-{4:4}, at: nbd_open+0x3c0/0x6fe drivers/block/nbd.c:1703
-
-but task is already holding lock:
-ffffffff88e269e8 (nbd_index_mutex){+.+.}-{4:4}, at: nbd_open+0x98/0x6fe drivers/block/nbd.c:1690
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (nbd_index_mutex){+.+.}-{4:4}:
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
-       mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
-       nbd_open+0x98/0x6fe drivers/block/nbd.c:1690
-       blkdev_get_whole+0x8a/0x266 block/bdev.c:730
-       bdev_open+0x292/0xce6 block/bdev.c:957
-       blkdev_open+0x264/0x39a block/fops.c:676
-       do_dentry_open+0x97e/0x171e fs/open.c:964
-       vfs_open+0xbe/0x380 fs/open.c:1094
-       do_open fs/namei.c:3887 [inline]
-       path_openat+0x1bd8/0x2a82 fs/namei.c:4046
-       do_filp_open+0x19c/0x380 fs/namei.c:4073
-       do_sys_openat2+0x11a/0x1c2 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __riscv_sys_openat+0x178/0x1fe fs/open.c:1463
-       syscall_handler+0x94/0x118 arch/riscv/include/asm/syscall.h:112
-       do_trap_ecall_u+0x396/0x530 arch/riscv/kernel/traps.c:341
-       handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-
--> #2 (&disk->open_mutex){+.+.}-{4:4}:
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
-       mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
-       __del_gendisk+0x132/0xac6 block/genhd.c:706
-       del_gendisk+0xf6/0x19a block/genhd.c:819
-       nbd_dev_remove+0x3c/0xf2 drivers/block/nbd.c:268
-       nbd_dev_remove_work+0x1c/0x26 drivers/block/nbd.c:284
-       process_one_work+0x96a/0x1f32 kernel/workqueue.c:3238
-       process_scheduled_works kernel/workqueue.c:3321 [inline]
-       worker_thread+0x5ce/0xde8 kernel/workqueue.c:3402
-       kthread+0x39c/0x7d4 kernel/kthread.c:464
-       ret_from_fork_kernel+0x2a/0xbb2 arch/riscv/kernel/process.c:214
-       ret_from_fork_kernel_asm+0x16/0x18 arch/riscv/kernel/entry.S:327
-
--> #1 (&set->update_nr_hwq_lock){++++}-{4:4}:
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-       down_write+0x9c/0x19a kernel/locking/rwsem.c:1577
-       blk_mq_update_nr_hw_queues+0x3e/0xb86 block/blk-mq.c:5041
-       nbd_start_device+0x140/0xb2c drivers/block/nbd.c:1476
-       nbd_genl_connect+0xae0/0x1b24 drivers/block/nbd.c:2201
-       genl_family_rcv_msg_doit+0x206/0x2e6 net/netlink/genetlink.c:1115
-       genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-       genl_rcv_msg+0x514/0x78e net/netlink/genetlink.c:1210
-       netlink_rcv_skb+0x206/0x3be net/netlink/af_netlink.c:2534
-       genl_rcv+0x36/0x4c net/netlink/genetlink.c:1219
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x4f0/0x82c net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x85e/0xdd6 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0xcc/0x160 net/socket.c:727
-       ____sys_sendmsg+0x63e/0x79c net/socket.c:2566
-       ___sys_sendmsg+0x144/0x1e6 net/socket.c:2620
-       __sys_sendmsg+0x188/0x246 net/socket.c:2652
-       __do_sys_sendmsg net/socket.c:2657 [inline]
-       __se_sys_sendmsg net/socket.c:2655 [inline]
-       __riscv_sys_sendmsg+0x70/0xa2 net/socket.c:2655
-       syscall_handler+0x94/0x118 arch/riscv/include/asm/syscall.h:112
-       do_trap_ecall_u+0x396/0x530 arch/riscv/kernel/traps.c:341
-       handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-
--> #0 (&nbd->config_lock){+.+.}-{4:4}:
-       check_noncircular+0x132/0x146 kernel/locking/lockdep.c:2178
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain kernel/locking/lockdep.c:3911 [inline]
-       __lock_acquire+0x12b2/0x24ea kernel/locking/lockdep.c:5240
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
-       mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
-       nbd_open+0x3c0/0x6fe drivers/block/nbd.c:1703
-       blkdev_get_whole+0x8a/0x266 block/bdev.c:730
-       bdev_open+0x292/0xce6 block/bdev.c:957
-       blkdev_open+0x264/0x39a block/fops.c:676
-       do_dentry_open+0x97e/0x171e fs/open.c:964
-       vfs_open+0xbe/0x380 fs/open.c:1094
-       do_open fs/namei.c:3887 [inline]
-       path_openat+0x1bd8/0x2a82 fs/namei.c:4046
-       do_filp_open+0x19c/0x380 fs/namei.c:4073
-       do_sys_openat2+0x11a/0x1c2 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __riscv_sys_openat+0x178/0x1fe fs/open.c:1463
-       syscall_handler+0x94/0x118 arch/riscv/include/asm/syscall.h:112
-       do_trap_ecall_u+0x396/0x530 arch/riscv/kernel/traps.c:341
-       handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-
-other info that might help us debug this:
-
-Chain exists of:
-  &nbd->config_lock --> &disk->open_mutex --> nbd_index_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(nbd_index_mutex);
-                               lock(&disk->open_mutex);
-                               lock(nbd_index_mutex);
-  lock(&nbd->config_lock);
-
- *** DEADLOCK ***
-
-2 locks held by syz.4.1189/8748:
- #0: ffffaf801a3a2358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_open+0x3d0/0xce6 block/bdev.c:945
- #1: ffffffff88e269e8 (nbd_index_mutex){+.+.}-{4:4}, at: nbd_open+0x98/0x6fe drivers/block/nbd.c:1690
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 8748 Comm: syz.4.1189 Not tainted 6.16.0-rc1-syzkaller-g306e57988197 #0 PREEMPT 
-Hardware name: riscv-virtio,qemu (DT)
-Call Trace:
-[<ffffffff80078bbe>] dump_backtrace+0x2e/0x3c arch/riscv/kernel/stacktrace.c:132
-[<ffffffff8000327a>] show_stack+0x30/0x3c arch/riscv/kernel/stacktrace.c:138
-[<ffffffff8006103e>] __dump_stack lib/dump_stack.c:94 [inline]
-[<ffffffff8006103e>] dump_stack_lvl+0x12e/0x1a6 lib/dump_stack.c:120
-[<ffffffff800610d2>] dump_stack+0x1c/0x24 lib/dump_stack.c:129
-[<ffffffff802ce116>] print_circular_bug+0x254/0x29a kernel/locking/lockdep.c:2046
-[<ffffffff802ce28e>] check_noncircular+0x132/0x146 kernel/locking/lockdep.c:2178
-[<ffffffff802d1468>] check_prev_add kernel/locking/lockdep.c:3168 [inline]
-[<ffffffff802d1468>] check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-[<ffffffff802d1468>] validate_chain kernel/locking/lockdep.c:3911 [inline]
-[<ffffffff802d1468>] __lock_acquire+0x12b2/0x24ea kernel/locking/lockdep.c:5240
-[<ffffffff802d32de>] lock_acquire kernel/locking/lockdep.c:5871 [inline]
-[<ffffffff802d32de>] lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-[<ffffffff8630e424>] __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-[<ffffffff8630e424>] __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
-[<ffffffff8630f564>] mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
-[<ffffffff82c3fb3a>] nbd_open+0x3c0/0x6fe drivers/block/nbd.c:1703
-[<ffffffff81531ca6>] blkdev_get_whole+0x8a/0x266 block/bdev.c:730
-[<ffffffff81532f2e>] bdev_open+0x292/0xce6 block/bdev.c:957
-[<ffffffff81539df6>] blkdev_open+0x264/0x39a block/fops.c:676
-[<ffffffff80be5b4e>] do_dentry_open+0x97e/0x171e fs/open.c:964
-[<ffffffff80bea7aa>] vfs_open+0xbe/0x380 fs/open.c:1094
-[<ffffffff80c3d1ba>] do_open fs/namei.c:3887 [inline]
-[<ffffffff80c3d1ba>] path_openat+0x1bd8/0x2a82 fs/namei.c:4046
-[<ffffffff80c3e200>] do_filp_open+0x19c/0x380 fs/namei.c:4073
-[<ffffffff80beb5f4>] do_sys_openat2+0x11a/0x1c2 fs/open.c:1437
-[<ffffffff80bebff6>] do_sys_open fs/open.c:1452 [inline]
-[<ffffffff80bebff6>] __do_sys_openat fs/open.c:1468 [inline]
-[<ffffffff80bebff6>] __se_sys_openat fs/open.c:1463 [inline]
-[<ffffffff80bebff6>] __riscv_sys_openat+0x178/0x1fe fs/open.c:1463
-[<ffffffff800769ae>] syscall_handler+0x94/0x118 arch/riscv/include/asm/syscall.h:112
-[<ffffffff862fcc32>] do_trap_ecall_u+0x396/0x530 arch/riscv/kernel/traps.c:341
-[<ffffffff863250ca>] handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+~Andrew
