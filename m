@@ -1,37 +1,38 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A071525B67D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFC430E833;
 	Thu, 19 Jun 2025 22:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750371293; cv=none; b=I8vC3wk9dCJ0NcTlHfHFnr6pGavBXOT+ySsU1uJIRrydx5XOiCY+Gh2qx++fMaGhrXpcyqz9bHauHgr0D64KmWJbqwOfHAwzSiEJc35qbv+GFUbTy9eMRjE7dwy67NW4UmBbm792oqcIrUFlOvGQ/6xFEiKqVWr1U7YQ2gbjrzY=
+	t=1750371293; cv=none; b=DxKZC8JHMW3fmc6+410OIlCu4NbCq3b5wAA+F0Oo9wQ8RGeOaAKzXXTLykbzLZgQAKHIMTi12AD7nLdnzqZZrQEs6IgIvb0Jmwns0++TY5LFAnLSA3N3U4eNbeiaRjA7n5elF1HOCVOZw8X09YAwOLI04isbsKuUwPLVgA6S+Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750371293; c=relaxed/simple;
-	bh=4pEeREFybpd/OnCjYi3h6TofHXkoRxCnxIpsfW2tmng=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NXuMqpL8gUvbv1Up5sDjyUu0HHirTql4elEULYFEbzfMbSh2jnNPLHXQKSXHnxJ1323yAtag2CndD5RjtzgDzectNY6mii/FEZx04rwl8aBcyGfpHRlpnkDT2sqfJlUSSUm38n1PI9XsdgHNyDSvNZAoDc9xoc/cwdGQZTBsXDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jVE8sEFi; arc=none smtp.client-ip=212.227.15.18
+	bh=O936/vauKXiVp1nm3ylMAplHgjtRIVP8HwbPflvl1XY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BetngJTdH0w9oRe9bnShj+kx2lFeaAvUXfFNRXm0+5zHFe/pY+6KHbLNpCUcoZLmyVn9W0mmAdO+IUh7+YY+mt55mYdl034GQFARcXORATbmGUpHioZaJwIMSszSkRoXnS8ipXgKL/6h97yI1jyOVjbIvoE8emaNLWLDqNVxCF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MDPRvwRm; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jVE8sEFi"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MDPRvwRm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750371285; x=1750976085; i=w_armin@gmx.de;
-	bh=4ErRuAzCnDZGL5TW/v1gasHoSkgO2RZnnNnbdc0/nfQ=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	s=s31663417; t=1750371288; x=1750976088; i=w_armin@gmx.de;
+	bh=GNgfsCQIN1H+UxBaxTBvW/rMGREqliyFFcsFenyIrps=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=jVE8sEFiBCimJjCOt1zpa6u1H2iwPiWrjuikeTvqTQ9g3dDCjYkjXEmOIqHwdfz8
-	 wP14BAHZ6Ms9ctB+gOw+VaOu906j9kID0o9OBSXX6JYBz/D1yCHcDvR2kmhbDktV7
-	 mKF398O7NjaOgv59vahhmAJcSlzHHwvWPVeQNytntC39WWlSN3+nSoX3Oa+ztm2a1
-	 6TJm2r/CYNzMFNKfJ/GFaDNTHDQ1BHGIWfb16iDbmr9t2V8e22+uuVsb5CPN4O5Ob
-	 ac1Yt2UfBYk8APvYWkxV7jxJ0Cb6mPxtwbSdwFAIUf0KL4lK9pkTsCt/Cfw9VpJUW
-	 6bw4qUcG4QWGgb6qIQ==
+	b=MDPRvwRmuvDyfNIbCbMX8yKI1DaMIAj+95E8X2xNltk6uML9bIbBzVU+/zaL5Pu5
+	 TAMrKbfQdwemO2466VzxVVhCS4VYvkPsCwzttANaZqWzyGiD9iTdYNP0QlrVZ9ug2
+	 3M9KrpzCDUoi5BImJcV8lmhsj9aTqNCRL7rc6lQASlM+CFSgiSiCbX8Byks84t9l+
+	 KAgXeKLTz9lt528BbxCXH1etrF0yEmCnrUiFerDVUui4n15Oykwz0iRaRiO+4Pmrr
+	 34hby3/xBWkI7x9gIX6iijjehbyz4gJtxX+2sRzhpinlDO4ypZyjdmZNnJZqA3xwV
+	 N/47NvPa0tkLu5M9JQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mo6v3-1v8u1W1TgZ-00mclk; Fri, 20 Jun 2025 00:14:45 +0200
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MgvrL-1uyQQH0qaL-00fldx; Fri, 20 Jun 2025 00:14:48 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: dimich.dmb@gmail.com,
 	hdegoede@redhat.com,
@@ -40,10 +41,12 @@ To: dimich.dmb@gmail.com,
 Cc: corbet@lwn.net,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86: wmi: Fix WMI event enablement
-Date: Fri, 20 Jun 2025 00:14:39 +0200
-Message-Id: <20250619221440.6737-1-W_Armin@gmx.de>
+Subject: [PATCH 2/2] platform/x86: wmi: Update documentation of WCxx/WExx ACPI methods
+Date: Fri, 20 Jun 2025 00:14:40 +0200
+Message-Id: <20250619221440.6737-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250619221440.6737-1-W_Armin@gmx.de>
+References: <20250619221440.6737-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,116 +54,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fFxLv2+Ugj2b37UX4mUm00qGoYvYuDCP7E09ILb1L2qmWjis55b
- g/taT1tAHgqOiShGmNbCr/XtEZ291mBuOqb+760g3KKbe2TMop1hCSKlh15DE7Tzj6AipJK
- IYbMPaaDCqtNqgnIqutsB3XcBQK5hSoPd7Zcj2SWbhs8VuQ7B6HiUL4slsXRZ4aaOPEQjar
- RqRwRUo7rw/4GdMWbf0vA==
+X-Provags-ID: V03:K1:SLHGpVlT1rU6QWQGfCDEC9IlWYZ6EfL67Uy+hqxe85k4ebL+QVt
+ L/AWM/dMlUJU6tcz0uQ+I3I4F76n3t652nvpMvUnL+SozQOprf3+0pSF47r+8073NgwKg/s
+ xLOU+DTe8ES/9PiiDZMw0ODHxykui+Xdhs5n+Dd2rBGvIYLTKuuf7OkYOiVjL8Mk1vti5zJ
+ vwTQFv/b8xe2KOQ1cBDCg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CiiW+VObMx0=;QIP9ZH1IJX2dTzlPPKK5hjQJJgf
- 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
- lR9fKfmt9/RFbcYF
+UI-OutboundReport: notjunk:1;M01:P0:Qb7UoZPRIoc=;jLr3+BoN0SxGf3Opz8rRYkTPaa4
+ CKsRE0qHUDtqWseArjHrNyFUEfF2V+9Aj6n5FwA7tbLRQq1YtHJcj6sG3lHUeSqa5QaQNgbFE
+ I0mtu1JqGeX3yjwIQXs9CvDLhcHy0ny0/RTG/TegdBHHeB0IICUbZR+LoJ1dA++8j1E7fsFEr
+ PJVxEu6U2hFtDPiUfp4/NoTlBKKQg0d1mrJkbJApKIL2vP/jxiKY5tLcs3XEWS7RAlyn9o2fm
+ C0pN77Rx35W4h8Kn4LZfK6AXoe+zXMeBYFNABQN9X1Ljfa2nC0CcROgwimkwmyrKuPSCf+rkV
+ Z8+mOhYRMdCD+JjujdTw5O2/MQg06fgUVlLMnN6S5FHja6xWIQ5jDBqr48vv++Yrlcpyo5XTs
+ tM/M52mGzflmgzVY8bClITZX2aMCBaQV78n5woy+HE6dtpRxZhJDRcxRZmtI/4R6NEpR3jjDu
+ EKXo8+1+pINnSkyyu5PTsEKkiSXszxJQ24dxM0VKCO1rOZT82L7gMq8l+DXaKAGBbQHxXiwxO
+ SHv8oKF8a+b9HVhEWsmTmLTIFqwieDOGVH1HXl2JFz5ofnApd/rk7+rMkkFKLIJAhVa62AL72
+ YyeDs41Pf2ZnmXWJddW4xvkZbe7aDwaIo1Be1CkYzzt5WRRBHjgLUE4I0po5He7IfExtpn7vs
+ 4HHbLJUI2GxSAfh9xJI7C+xWUqEeD4QUD4ezKD+k6cDiDoFxsCgDnDu8aZjmDNSNUCyFdSYLR
+ CdyxNHbwcbKUIHG/il0xqzZBJAGhP1d98n+nCFkdUlI8NrjBFVW/mYh9k6g8EKB46TGR693Q7
+ 8TXK9Vc2vzx8rlxZwDRU7xBSPJYGVoJPdoOTUsxDDZPNY7j7HzTbzqxj1noNQmZhZCEeKBLGI
+ VLxiIPI9XKzb1RRNfKeG26dxt74dYtd3dapy5oV5VHqWMGBHL3gmKm5qz/2bSGBvm41rsJc6Z
+ gaQoRSu3AlswwOqHt/vpFiywN8VpXkhKI7yXhS3/PwWLdOLG/9RlFekVA/BY1Ty1i6DkRDeJv
+ D2+1ZuhOrX5wz+C7cxwA4MXJBE0nqK4AugDpQubTqnOOIVnVyVf8zeLDKXF5JR6Z3o9QwMotx
+ AvpQQ4xh2lAP7Z5eNmqhkTayRX3YhiYaZsWDPaIC8Cge2NZ59tLNH53AS+zm4QI0HdLpPfXVG
+ WMbiVJCWffVUts7WRjwP1sV1EF9GQyOWu3mOPhA91Xvi34U+wcT0ZSYMGuMYmcDfu5sHSQTLU
+ 3PThaSgiVMKX65QGTUOEAqXUi6FSWf4DCxoTjBIBt2ggtxBD/U0YrDOnJtm7MWPqjn0ZxUFkh
+ ErWjZKGMcli4n4F1MAScRog8kidoGbNLSwJcAURYlOApgICn8A1Nb/QJhrye2Nb0rOq9DCrv/
+ E13Zx9mMPBubk9GECIufgd910yEnOzRNdR0RmNhG6f5O4TvxKBjHQRc9lEB4DJ2Xv/9L9Vp2+
+ VNNRM0Ox1hICHjPY3MqbIeHV2XO+b97zLLSczzjVPKzlJ5vAdR2pRgNDCbNha+buNcmGvyfi4
+ l0u0PAszAOOq4AzzMQ7F6DJ6H3kclqaKZCfd7AWbjSbQIpnT26RuSo6hcAUgtg6pSu0OSqgIC
+ WaXFyOYZye7pmKICdN+RvafOhe01tHLdD6mii868YeDPCmo0rPrRLKdCjqEH0A+ChbizD4hWW
+ 7otxjFHsEdGHMXnwyKo/cTbsi9gFodf4+mm8/WWPLqzbEO5hpAV0ZvzOOtynN4FPBpznVNEQh
+ 6qVnFkeq62y3Xv7noP4THJF9WqkW9F9CPf7Q6k7jxjORx2rBcicp8u52CsK2ZvK80h2niBQcF
+ JzzAIiIDpTLiRIGMsQlzBFcOorkd6W6tjlqfNN5Mn6k1cdWH0O1l6Kx0rgfXNZteKC0Vm7CNc
+ RFTS+s+dHZwvbvjWmeocCt0Jf0tR1+dpw/W2Up8bJN8d3cFX98XK971wP5s2A3eYQd5PhfTpf
+ bxCHbqEM+aVXRqZhRiRCJUAtUSRMdlnHQ4++JQiAHdTIsij3x6WQksovNRIZ/koaTXmikNf1X
+ MCh99LLTLxRC/+oAX9jYx65dVXnwSupYPk8NI7sqsmLCofqTA33gdaS+v5Q4gQ47hchIt2iWT
+ 1U50p6eG64jLp4j5Ke5Uu2ooCCHpLcSmrYiiOPVXfOgvZjv2EWphKNU6AXN84sV2wALhQ6PnU
+ JAnAlxh78edwwZIHfCE8L/LeQ2nzr7X8nDTeBeWIILWQWzgXxaNlMcmFSq47ONOGDkXd/0bj6
+ HiU+0Uxh/Pn7vmj7yQcSVBz52x2XEhMowB9l5nIPAqLZZXnHSNOYz/mtjlNslWfJr67NNrWAw
+ thzoYbWXIZcSYG+BgXpNaassSoTkWNXnhyatZBD/8b8u1v1XEmsGukePRBeyq0nR/2+9ZTiJI
+ ixCEPh3psAoFkMl7Bn4dvfYDZDkEvNaxjKygu9BJhei292o4BhhaPnZN8+UOZCkPm01jSSIh8
+ 3rRSt2cuTiey7jFH7eaSYdQ+X+d5oKeoHlEkZYnbiD6dXPnyqWZCGvd11P+IGuzu6xgs1GURI
+ VqjdfgvxEwJ18c5+oqhn0dalNhmAHQ7O1VwlczKwZXrhzXI7nzxrb/WA3HaYxkuKSVxE2cNJr
+ /C7AAHYNMmgDNX63lXQLHcI2Btn/5DVBem4i9x0rhxyTID92kZIwoq8uGwD1SP5xSQZqaNn3+
+ DTXNqKHBi16MgXcTZYSgi+3eELrwRgYkqY5rTuDcxrAu9fEV2LuIEsrs0XS37JOC7ZyKsWPPD
+ vIDEscqgVWjDh0CZWL3wuNZ2C7AAuvrp++RZTHFrVL8SoLuvqll9yGxJYpcC462xQNRct1hUJ
+ qeSWwOKNKHEwD+/CtD242vw98NkRdXschMzQpu1hQQORwl/kOsaGurekrBcmLmd/DcJ075TEr
+ c/eC8+dTvEiwwgF84pmGD9yQkUn51p7IFd8PlmGfFvrT2mAuGwVawSAfjeqVH0UnRAm4SKi2d
+ Hp5sdYY8qZaeotlVS4/hJQBkbgp7ulPOmW/DEgPkP/qDQpe4E5SZ7ExfDZCvVxKl0ZsVNafjQ
+ +Z30WFpx4kUjxCnpxiAvZzk0DPdke+YOdx3P6hKDidg2evYDscNmDKXg6Z+4FthXVdHLOfz8h
+ u7Qvn1rMQtAPqGJVnuc3xNQpc023qWxGz9rwQTC7NbnizhDGHtUJ8CEM2ahsOl/Dp3toTw13n
+ owx3zRYvs12tsdo8rudVMoC/FgKrAPOqYiHJop+Eh9ySzxhDhze7lx1aHH5vGXqrv5KHCrbil
+ RG3b9gcD6oIr2+bI/WMGBYEMyunMUm9YU+uhRg==
 
-It turns out that the Windows WMI-ACPI driver always enables/disables
-WMI events regardless of whether they are marked as expensive or not.
-This finding is further reinforced when reading the documentation of
-the WMI_FUNCTION_CONTROL_CALLBACK callback used by Windows drivers
-for enabling/disabling WMI devices:
+Inform potential firmware developers that WExx ACPI methods are
+always called by the WMI driver core even if the associated WMI event
+is not marked as being expensive.
 
-	The DpWmiFunctionControl routine enables or disables
-	notification of events, and enables or disables data
-	collection for data blocks that the driver registered
-	as expensive to collect.
-
-Follow this behavior to fix the WMI event used for reporting hotkey
-events on the Dell Latitude 5400 and likely many more devices.
-
-Reported-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
-Tested-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-Fixes: 656f0961d126 ("platform/x86: wmi: Rework WCxx/WExx ACPI method hand=
-ling")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ Documentation/wmi/acpi-interface.rst | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 21b7e54bd7ab..4e86a422f05f 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -180,16 +180,22 @@ static int wmi_device_enable(struct wmi_device *wdev=
-, bool enable)
- 	acpi_handle handle;
- 	acpi_status status;
+diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi=
+-interface.rst
+index f1b28835d23c..1ef003b033bf 100644
+=2D-- a/Documentation/wmi/acpi-interface.rst
++++ b/Documentation/wmi/acpi-interface.rst
+@@ -36,7 +36,7 @@ Offset  Size (in bytes) Content
 =20
--	if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
--		return 0;
--
- 	if (wblock->dev.dev.type =3D=3D &wmi_type_method)
- 		return 0;
+ The WMI object flags control whether the method or notification ID is use=
+d:
 =20
--	if (wblock->dev.dev.type =3D=3D &wmi_type_event)
-+	if (wblock->dev.dev.type =3D=3D &wmi_type_event) {
-+		/*
-+		 * Windows always enables/disables WMI events, even when they are
-+		 * not marked as being expensive. We follow this behavior for
-+		 * compatibility reasons.
-+		 */
- 		snprintf(method, sizeof(method), "WE%02X", wblock->gblock.notify_id);
--	else
-+	} else {
-+		if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-+			return 0;
+=2D- 0x1: Data block usage is expensive and must be explicitly enabled/dis=
+abled.
++- 0x1: Data block is expensive to collect.
+ - 0x2: Data block contains WMI methods.
+ - 0x4: Data block contains ASCIZ string.
+ - 0x8: Data block describes a WMI event, use notification ID instead
+@@ -83,14 +83,18 @@ event as hexadecimal value. Their first parameter is a=
+n integer with a value
+ of 0 if the WMI event should be disabled, other values will enable
+ the WMI event.
+=20
++Those ACPI methods are always called even for WMI events not registered a=
+s
++being expensive to collect to match the behavior of the Windows driver.
 +
- 		get_acpi_method_name(wblock, 'C', method);
-+	}
+ WCxx ACPI methods
+ -----------------
+-Similar to the ``WExx`` ACPI methods, except that it controls data collec=
+tion
+-instead of events and thus the last two characters of the ACPI method nam=
+e are
+-the method ID of the data block to enable/disable.
++Similar to the ``WExx`` ACPI methods, except that instead of WMI events i=
+t controls
++data collection of data blocks registered as being expensive to collect. =
+Thus the
++last two characters of the ACPI method name are the method ID of the data=
+ block
++to enable/disable.
 =20
- 	/*
- 	 * Not all WMI devices marked as expensive actually implement the
+ Those ACPI methods are also called before setting data blocks to match th=
+e
+-behaviour of the Windows driver.
++behavior of the Windows driver.
+=20
+ _WED ACPI method
+ ----------------
 =2D-=20
 2.39.5
 
