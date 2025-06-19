@@ -1,158 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C2623183B;
-	Thu, 19 Jun 2025 21:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EEC1FBE8B;
+	Thu, 19 Jun 2025 21:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750368125; cv=none; b=oVJUAULnBOWuBLRoyNwf5wihv5EbZyt40q3JcXQmEXOv2ijZhcn3ZeZ8R47qTvr/cZqBHg6RmPVnbDPIOsfu57+St6DDH0qyBKwiBxfBLIBiFK3LymiUVMwElIjGVTR7T/UwX4ROdSyZZDYgUOFv9bp66hFZWTVJ5em7ecYRoW8=
+	t=1750368353; cv=none; b=Jq5Ngz9VhErFGpF+naJ9aWuYaWx1EwSisWpzPu5AOEkA5keminAG1lbfsuY6gzQjZ4BmHamFACkwJ0POpcTrucVOH9gPhzUat5yF1bJEXnaBZors2esKcs089MgaMrBH28xwn3CtSH8c3TRLz9fbguDXKRejb/lRHSNQvAvGaYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750368125; c=relaxed/simple;
-	bh=pRuGfH2o8r29IBa31hoMcUPybgxpzd9xd7p/eTD4ucE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ajfDyKAHuaRzUKQc6AcoaiEvCieKEPULNL/tcPGH7NzyzPKxJrwn8QN7F4jnocAEd7pOQ3wLf55bIst3bw/IMhWzWMVHC21UOOUQlCv9R47ItpneOzWBwYZSSu/uv0s0WNqmYNBSSG88s7X1SyjliLhVdmOZ6qodL5bMFGV9XMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QB7oRRku; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750368353; c=relaxed/simple;
+	bh=A8Dz1kV8B/vKnxifg5brF8+6N+EQZvca4FFY51ivExQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A5YgcmzJs70OVLl7K7mUxLzArzVL1JuUgG83NkVSHGmvi4hN7phHisG2meQi56XG8SSzEnZ723rtjXXgsjv9rAW59GkSWwXY1xysek63TsOMnhv6SscOi2d7CJlmvLmgJu6xB4qFTwoh3evfN7YzMYuMPCFH5uoNV53e8VDKV5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLn4/fEN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QB7oRRku"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6067EC4CEEA;
-	Thu, 19 Jun 2025 21:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750368125;
-	bh=pRuGfH2o8r29IBa31hoMcUPybgxpzd9xd7p/eTD4ucE=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=QB7oRRkujF64rco7v1qJSFRQ2UuX/i+bueaLWm8EloYX302qLwPpi60nZiCv2LpFh
-	 b0DqWyUc3mEuw3RZ5fP0k0ZLuNKfRmR2LYyaXB8EPeBv+WVMwOFjx1XhLtP1o4bFPP
-	 3FOfOmk1krrwGqGFisNi5MS7IcHV2SKrsZi3KhXugevEAnx3eXu/tKqswkB3gXv+FW
-	 xWBRJVLKsq2YlDhKlDNPXktdimQm4ainjzAAQCooQvyiX9YpCm6mqHgUetK5UD+D2H
-	 EVFoVU5Jq3bwimQqxyCSK3QW0bFN3hi1SSClf6B+5loLFs5KHPbYZNDgC/Ulh/SSkm
-	 9VArDebKn7jQg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5626BC7115A;
-	Thu, 19 Jun 2025 21:22:05 +0000 (UTC)
-From: Dominique Martinet via B4 Relay <devnull+asmadeus.codewreck.org@kernel.org>
-Date: Fri, 20 Jun 2025 06:22:03 +0900
-Subject: [PATCH v2] net/9p: Fix buffer overflow in USB transport layer
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLn4/fEN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750368352; x=1781904352;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=A8Dz1kV8B/vKnxifg5brF8+6N+EQZvca4FFY51ivExQ=;
+  b=eLn4/fEN6Oldy4OWJD9FOHGAfQMZZdezJpb52BRUMWcU0SaR7loiYqvi
+   rOI8jthd6JKy23PO6k3FajjPbBgmbRIsjLv55xhSRt3ht83uA+TcuZPmp
+   2IwB85auNoaBY3w68nXUR1VcJlcQ5ArSVZSPO3yC49g9eHHIB21VcMmRx
+   8bt0kMBlbHe9g8CqgT1Dv68gEOjxBokC1Tis96Bodt+A4xPGfEKh/M3zp
+   FoAd0nWovFz7nbNbPE56BKsPkQNRcd3PiwFpjZgNmxcGXqKkZ0WVsGD6Y
+   fdpyEcLjvWuc8NAQgxV4SM+cSOvl7Ev/2zSvzt5GaacvIO5+nNDtq3brL
+   w==;
+X-CSE-ConnectionGUID: k4OcYtPoTnOMVpdu6nK1dQ==
+X-CSE-MsgGUID: V4DpGrmtR0qF/LW3yLU6tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52706633"
+X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
+   d="scan'208";a="52706633"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 14:25:52 -0700
+X-CSE-ConnectionGUID: Kq4gUjf9S5GnDsjAJUnoCA==
+X-CSE-MsgGUID: Ya1tim+nS/iTRF9s2RnD6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
+   d="scan'208";a="155298484"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 19 Jun 2025 14:25:47 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSMlU-000L7a-2Y;
+	Thu, 19 Jun 2025 21:25:44 +0000
+Date: Fri, 20 Jun 2025 05:25:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: Re: [net-next, 08/10] bng_en: Add irq allocation support
+Message-ID: <202506200530.jiD9Txum-lkp@intel.com>
+References: <20250618144743.843815-9-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-9p-usb_overflow-v2-1-026c6109c7a1@codewreck.org>
-X-B4-Tracking: v=1; b=H4sIAHp/VGgC/y2NWw6CMBQFt0LutyV90Cb45T4MMQVu4RqgpFXUk
- O7dSvyck5yZHSIGwgjnYoeAG0XySwZ5KqAb7TIgoz4zSC41N5KzemXP2N78hsFN/sWkbl2nsW7
- RKcivNaCj92G8NplHig8fPkdgE7/17xJGKKlVXRpVqYoJ1tuF4p1y9DLMlqay8zM0KaUvVTFZO
- 6UAAAA=
-X-Change-ID: 20250620-9p-usb_overflow-25bfc5e9bef3
-To: Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: stable@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>, 
- security@kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2874;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=sd75KIQYdSHcNYSxHvOsd/ZrBkByS+On5VAz8Wg9id0=;
- b=owEBbQKS/ZANAwAKAatOm+xqmOZwAcsmYgBoVH98nfmseHzKhOwth426LG3xCNHGuKrMrPYIS
- 6knofnzWnuJAjMEAAEKAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCaFR/fAAKCRCrTpvsapjm
- cKyeD/oCJfejbpmPwkb/cnIW8YPsRFbmsDmvntEQHaill6n6KcyQB3v3oKHUGopejHFtiUl8TYQ
- NToXHtB3AKIWS7xpi4nHpHT+0QBUKW8TADf4peHz6SC9Mtnz3tUGLcrDMEFEjOBz9z+dQMfzEXT
- cLulWcIkJfGJQzNr0WON4ekRHI/EH0KSETffLJ5uedpG15CJPSypltjzs2RYIBtHyYiR6rcfSx6
- /snUGfZrEbSz/XfTLB3LOdxrFPEk6Ue/lJ7i2A4ANJGxL9SNKoF7iOnzPBjqhvgENnn/XgWi1Td
- +eq24+g3eeygU8qsaYnmtRHZYGa9Tm6ea8a1yG7wBS234sgRNMOfKTjH5nbLmvTDM9uQrbYdb+W
- vMeOdDJfeTh9ebLmRxdHGBkdZvliQKm/l0uU6G/wJ8DRmprt+sun73E7h90Zd53/u39mH3kj/3i
- i1l2jIGgVbBCjbxa9Nhdo0cfQcv1EdYRviS7m5azPRYRwKrRxaVXEc0sx9ef3X/iYNpZiewb6J9
- hxTVpZIe+YgQ1CTyAUlMWpv79xb/B8Ondu6yAX83B1+bfoZlJCRoThx2jtyR10yNjvRg11gY4Bj
- EDmfB3Zd6juPxcftwIgFSKK8fE1WgtERblihLOmKiO7xz+qjINPl/nurkKs7eF+xY7Zju1y4GX0
- Vq4Nxjjs6kH9Neg==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
-X-Endpoint-Received: by B4 Relay for asmadeus@codewreck.org/default with
- auth_id=435
-X-Original-From: Dominique Martinet <asmadeus@codewreck.org>
-Reply-To: asmadeus@codewreck.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618144743.843815-9-vikas.gupta@broadcom.com>
 
-From: Dominique Martinet <asmadeus@codewreck.org>
+Hi Vikas,
 
-A buffer overflow vulnerability exists in the USB 9pfs transport layer
-where inconsistent size validation between packet header parsing and
-actual data copying allows a malicious USB host to overflow heap buffers.
+kernel test robot noticed the following build warnings:
 
-The issue occurs because:
-- usb9pfs_rx_header() validates only the declared size in packet header
-- usb9pfs_rx_complete() uses req->actual (actual received bytes) for
-memcpy
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250619]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This allows an attacker to craft packets with small declared size
-(bypassing validation) but large actual payload (triggering overflow
-in memcpy).
+url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250618144743.843815-9-vikas.gupta%40broadcom.com
+patch subject: [net-next, 08/10] bng_en: Add irq allocation support
+config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250620/202506200530.jiD9Txum-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 8.5.0
 
-Add validation in usb9pfs_rx_complete() to ensure req->actual does not
-exceed the buffer capacity before copying data.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506200530.jiD9Txum-lkp@intel.com/
 
-Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-Closes: https://lkml.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
-Fixes: a3be076dc174 ("net/9p/usbg: Add new usb gadget function transport")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
-Not actually tested, I'll try to find time to figure out how to run with
-qemu for real this time...
+smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:347 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
 
-Changes in v2:
-- run through p9_client_cb() on error
-- Link to v1: https://lore.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
----
- net/9p/trans_usbg.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+vim +/irqs_demand +347 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
 
-diff --git a/net/9p/trans_usbg.c b/net/9p/trans_usbg.c
-index 6b694f117aef296a66419fed5252305e7a1d0936..43078e0d4ca3f4063660f659d28452c81bef10b4 100644
---- a/net/9p/trans_usbg.c
-+++ b/net/9p/trans_usbg.c
-@@ -231,6 +231,8 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
- 	struct f_usb9pfs *usb9pfs = ep->driver_data;
- 	struct usb_composite_dev *cdev = usb9pfs->function.config->cdev;
- 	struct p9_req_t *p9_rx_req;
-+	unsigned int req_size = req->actual;
-+	int status = REQ_STATUS_RCVD;
- 
- 	if (req->status) {
- 		dev_err(&cdev->gadget->dev, "%s usb9pfs complete --> %d, %d/%d\n",
-@@ -242,11 +244,19 @@ static void usb9pfs_rx_complete(struct usb_ep *ep, struct usb_request *req)
- 	if (!p9_rx_req)
- 		return;
- 
--	memcpy(p9_rx_req->rc.sdata, req->buf, req->actual);
-+	if (req_size > p9_rx_req->rc.capacity) {
-+		dev_err(&cdev->gadget->dev,
-+			"%s received data size %u exceeds buffer capacity %zu\n",
-+			ep->name, req_size, p9_rx_req->rc.capacity);
-+		req_size = 0;
-+		status = REQ_STATUS_ERROR;
-+	}
- 
--	p9_rx_req->rc.size = req->actual;
-+	memcpy(p9_rx_req->rc.sdata, req->buf, req_size);
- 
--	p9_client_cb(usb9pfs->client, p9_rx_req, REQ_STATUS_RCVD);
-+	p9_rx_req->rc.size = req_sizel;
-+
-+	p9_client_cb(usb9pfs->client, p9_rx_req, status);
- 	p9_req_put(usb9pfs->client, p9_rx_req);
- 
- 	complete(&usb9pfs->received);
+   329	
+   330	int bnge_alloc_irqs(struct bnge_dev *bd)
+   331	{
+   332		u16 aux_msix, tx_cp, num_entries;
+   333		u16 irqs_demand, max, min = 1;
+   334		int i, rc = 0;
+   335	
+   336		irqs_demand = bnge_nqs_demand(bd);
+   337		max = bnge_get_max_func_irqs(bd);
+   338		if (irqs_demand > max)
+   339			irqs_demand = max;
+   340	
+   341		if (!(bd->flags & BNGE_EN_SHARED_CHNL))
+   342			min = 2;
+   343	
+   344		irqs_demand = pci_alloc_irq_vectors(bd->pdev, min, irqs_demand,
+   345						    PCI_IRQ_MSIX);
+   346		aux_msix = bnge_aux_get_msix(bd);
+ > 347		if (irqs_demand < 0 || irqs_demand < aux_msix) {
+   348			rc = -ENODEV;
+   349			goto err_free_irqs;
+   350		}
+   351	
+   352		num_entries = irqs_demand;
+   353		if (pci_msix_can_alloc_dyn(bd->pdev))
+   354			num_entries = max;
+   355		bd->irq_tbl = kcalloc(num_entries, sizeof(*bd->irq_tbl), GFP_KERNEL);
+   356		if (!bd->irq_tbl) {
+   357			rc = -ENOMEM;
+   358			goto err_free_irqs;
+   359		}
+   360	
+   361		for (i = 0; i < irqs_demand; i++)
+   362			bd->irq_tbl[i].vector = pci_irq_vector(bd->pdev, i);
+   363	
+   364		bd->irqs_acquired = irqs_demand;
+   365		/* Reduce rings based upon num of vectors allocated.
+   366		 * We dont need to consider NQs as they have been calculated
+   367		 * and must be more than irqs_demand.
+   368		 */
+   369		rc = bnge_adjust_rings(bd, &bd->rx_nr_rings,
+   370				       &bd->tx_nr_rings,
+   371				       irqs_demand - aux_msix, min == 1);
+   372		if (rc)
+   373			goto err_free_irqs;
+   374	
+   375		tx_cp = bnge_num_tx_to_cp(bd, bd->tx_nr_rings);
+   376		bd->nq_nr_rings = (min == 1) ?
+   377			max_t(u16, tx_cp, bd->rx_nr_rings) :
+   378			tx_cp + bd->rx_nr_rings;
+   379	
+   380		/* Readjust tx_nr_rings_per_tc */
+   381		if (!bd->num_tc)
+   382			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   383	
+   384		return 0;
+   385	
+   386	err_free_irqs:
+   387		dev_err(bd->dev, "Failed to allocate IRQs err = %d\n", rc);
+   388		bnge_free_irqs(bd);
+   389		return rc;
+   390	}
+   391	
 
----
-base-commit: 74b4cc9b8780bfe8a3992c9ac0033bf22ac01f19
-change-id: 20250620-9p-usb_overflow-25bfc5e9bef3
-
-Best regards,
 -- 
-Dominique Martinet <asmadeus@codewreck.org>
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
