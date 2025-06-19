@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6103B248F7F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810032512FA;
 	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750315821; cv=none; b=kfuoO1oJ+H/a55aMEcEnVk2B7xpZCJtve3NDFs6xS9eZhRTfFFdvAEViDKCvs2sy1w3Yv1LBlZZJizq6h+XxvhyuUbS2Qr0+DCuL6UKd79fPxrK7xqjVPgkcw56zqLmBU3lPZqzycd0HbrMV1TuDFONZ6wue8qZ7iyDXJaeqmu8=
+	t=1750315821; cv=none; b=IJy+5abq/G2ONGD0WEBQyeTmYGCoqf//gc7AMbjRTBRtk0SVSbcLHebVRiB/yVxfvGcUXi1+CvoUuHrr5XZOYBQ26nSGYyxGdBJZlVzb16Z9zydDHpBgRQeNOvaUyXNnKOBs0Bn8vF5EVHZHt84oZpXHIPqdJbRKG5OF81m11cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750315821; c=relaxed/simple;
-	bh=2WQh1GG+XNK0Cdx26utHd/0dTt1jIj+urA1wFYdPe3Y=;
+	bh=Eu6NvKMYNdmD8XfJnfUGiXHKuW5qDdQasrskHf5QPZ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YZUB1FesV7y/lXyReaPGr0Be/TF0kIYW+yCReeYjF1iwpzfIatcSSx3eehXzohQifX9qFCrOwQELzt8OG9niioKTCNTFn1Odq4+0Bf4tNKF4ePk44BkiXeCeemK8T++08OZQWHVqd2CqmByzD+zsKinEiklyamo+1cYYBOonJ4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMEjse6c; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V/WgSli1eBK3ILLfdWSsZOy1RuMdFR3qHgcdcPU5F4poYA5SPb04CRzlgj86u7sifm9uBC3Fnk7E6eRTBqobU/xlc+O6hLWpkIjA5emy/yDiub2vKidWYiH4aqLnOlmNwzuJTJGt3NEY4iYXwEQOSUaY+qFS1h1ICaqKv32l3L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dq3gzpca; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMEjse6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC450C4CEF9;
-	Thu, 19 Jun 2025 06:50:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dq3gzpca"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F3AC116D0;
+	Thu, 19 Jun 2025 06:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750315820;
-	bh=2WQh1GG+XNK0Cdx26utHd/0dTt1jIj+urA1wFYdPe3Y=;
+	s=k20201202; t=1750315821;
+	bh=Eu6NvKMYNdmD8XfJnfUGiXHKuW5qDdQasrskHf5QPZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jMEjse6cg4r2ntotJIAcyHpxXXyFo0O8Qp1tJuELRLjPwAmJPGNWkSVoNc6PM30FR
-	 cSLbje2+1PXsWR0o4Q2CploANXWcOO2iSBC+qanSnqGbr00LOsTtFo9SvCTXeQuCL0
-	 l+gvjQHL14iwJKemVRzwNRcWnnom8qomn7JbFPy/7Xo/LMHYPwaYIFYt6ovSMYzHDs
-	 FSVimInct4LY6iIHjMUfGtyVAsFFKPpUhuLqE7phIyHfVItRxUcqG/GHXou3S2e5+f
-	 dYdf3RYRyHSrqjqAlHSzL7U9iXwc4NL+nmUeYV2BsnL63EwQcePCvaGPJmfFj9hBmb
-	 KBCgOWTCXBqdQ==
+	b=dq3gzpca5BoYs3ihHNdTlUhvI/81TS2OWbjM6BidamCOFgLlMjIaaxJqmNDjd2tfd
+	 XCB8SD5BaViIQDIDL6RgOhlRTKw04oRPq+nvnpIUz3guULiIUVVtZoz5qGHDtSfH/2
+	 UqXD5qRfe1x/ilmzJOjSXAXL8YSk768MlwUrz918oxM6fMKnDSC/CunO9SyxO2dMIC
+	 gEv9gNM1LYYX1qf9PEDvr/zuF/f8CpnZkhjzDJK9xgXjsEFLXMY2MTVFMmbF5ObRyR
+	 IhQnNW4m2wiHtVsA53eGkJHIfucD0a70CpyZ15rGDEvmqpvsHbjm9AC4Pl1p1UKcgV
+	 niC7U7PgG8zTw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uS96J-00000003dGy-01bn;
+	id 1uS96J-00000003dHU-113E;
 	Thu, 19 Jun 2025 08:50:19 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -46,6 +46,7 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Paolo Abeni" <pabeni@redhat.com>,
 	"Ruben Wauters" <rubenru09@aol.com>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
@@ -53,9 +54,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v7 07/17] docs: sphinx: add a parser for yaml files for Netlink specs
-Date: Thu, 19 Jun 2025 08:49:00 +0200
-Message-ID: <79fd88d84e63351d1156a343d697d9bbca8159c5.1750315578.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 15/17] docs: sphinx: add a file with the requirements for lowest version
+Date: Thu, 19 Jun 2025 08:49:08 +0200
+Message-ID: <e5666ba0c2867a0e78ff91727e827d706ce08668.1750315578.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750315578.git.mchehab+huawei@kernel.org>
 References: <cover.1750315578.git.mchehab+huawei@kernel.org>
@@ -68,116 +69,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Add a simple sphinx.Parser to handle yaml files and add the
-the code to handle Netlink specs. All other yaml files are
-ignored.
+Those days, it is hard to install a virtual env that would
+build docs with Sphinx 3.4.3, as even python 3.13 is not
+compatible anymore with it.
 
-The code was written in a way that parsing yaml for different
-subsystems and even for different parts of Netlink are easy.
-
-All it takes to have a different parser is to add an
-import line similar to:
-
-	from netlink_yml_parser import YnlDocGenerator
-
-adding the corresponding parser somewhere at the extension:
-
-	netlink_parser = YnlDocGenerator()
-
-And then add a logic inside parse() to handle different
-doc outputs, depending on the file location, similar to:
-
-        if "/netlink/specs/" in fname:
-            msg = self.netlink_parser.parse_yaml_file(fname)
+	/usr/bin/python3.9 -m venv sphinx_3.4.3
+	. sphinx_3.4.3/bin/activate
+	pip install -r Documentation/sphinx/min_requirements.txt
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/sphinx/parser_yaml.py | 76 +++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100755 Documentation/sphinx/parser_yaml.py
+ Documentation/doc-guide/sphinx.rst        | 15 +++++++++++++++
+ Documentation/sphinx/min_requirements.txt |  8 ++++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/sphinx/min_requirements.txt
 
-diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-new file mode 100755
-index 000000000000..635945e1c5ba
+diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
+index 5a91df105141..13943eb532ac 100644
+--- a/Documentation/doc-guide/sphinx.rst
++++ b/Documentation/doc-guide/sphinx.rst
+@@ -131,6 +131,21 @@ It supports two optional parameters:
+ ``--no-virtualenv``
+ 	Use OS packaging for Sphinx instead of Python virtual environment.
+ 
++Installing Sphinx Minimal Version
++---------------------------------
++
++When changing Sphinx build system, it is important to ensure that
++the minimal version will still be supported. Nowadays, it is
++becoming harder to do that on modern distributions, as it is not
++possible to install with Python 3.13 and above.
++
++The recommended way is to use the lowest supported Python version
++as defined at Documentation/process/changes.rst, creating
++a venv with it with, and install minimal requirements with::
++
++	/usr/bin/python3.9 -m venv sphinx_min
++	. sphinx_min/bin/activate
++	pip install -r Documentation/sphinx/min_requirements.txt
+ 
+ Sphinx Build
+ ============
+diff --git a/Documentation/sphinx/min_requirements.txt b/Documentation/sphinx/min_requirements.txt
+new file mode 100644
+index 000000000000..89ea36d5798f
 --- /dev/null
-+++ b/Documentation/sphinx/parser_yaml.py
-@@ -0,0 +1,76 @@
-+"""
-+Sphinx extension for processing YAML files
-+"""
-+
-+import os
-+import re
-+import sys
-+
-+from pprint import pformat
-+
-+from docutils.parsers.rst import Parser as RSTParser
-+from docutils.statemachine import ViewList
-+
-+from sphinx.util import logging
-+from sphinx.parsers import Parser
-+
-+srctree = os.path.abspath(os.environ["srctree"])
-+sys.path.insert(0, os.path.join(srctree, "tools/net/ynl/pyynl"))
-+
-+from netlink_yml_parser import YnlDocGenerator        # pylint: disable=C0413
-+
-+logger = logging.getLogger(__name__)
-+
-+class YamlParser(Parser):
-+    """Custom parser for YAML files."""
-+
-+    # Need at least two elements on this set
-+    supported = ('yaml', 'yml')
-+
-+    netlink_parser = YnlDocGenerator()
-+
-+    def do_parse(self, inputstring, document, msg):
-+        """Parse YAML and generate a document tree."""
-+
-+        self.setup_parse(inputstring, document)
-+
-+        result = ViewList()
-+
-+        try:
-+            # Parse message with RSTParser
-+            for i, line in enumerate(msg.split('\n')):
-+                result.append(line, document.current_source, i)
-+
-+            rst_parser = RSTParser()
-+            rst_parser.parse('\n'.join(result), document)
-+
-+        except Exception as e:
-+            document.reporter.error("YAML parsing error: %s" % pformat(e))
-+
-+        self.finish_parse()
-+
-+    # Overrides docutils.parsers.Parser. See sphinx.parsers.RSTParser
-+    def parse(self, inputstring, document):
-+        """Check if a YAML is meant to be parsed."""
-+
-+        fname = document.current_source
-+
-+        # Handle netlink yaml specs
-+        if "/netlink/specs/" in fname:
-+            msg = self.netlink_parser.parse_yaml_file(fname)
-+            self.do_parse(inputstring, document, msg)
-+
-+        # All other yaml files are ignored
-+
-+def setup(app):
-+    """Setup function for the Sphinx extension."""
-+
-+    # Add YAML parser
-+    app.add_source_parser(YamlParser)
-+    app.add_source_suffix('.yaml', 'yaml')
-+
-+    return {
-+        'version': '1.0',
-+        'parallel_read_safe': True,
-+        'parallel_write_safe': True,
-+    }
++++ b/Documentation/sphinx/min_requirements.txt
+@@ -0,0 +1,8 @@
++Sphinx==3.4.3
++jinja2<3.1
++docutils<0.18
++sphinxcontrib-applehelp==1.0.4
++sphinxcontrib-devhelp==1.0.2
++sphinxcontrib-htmlhelp==2.0.1
++sphinxcontrib-qthelp==1.0.3
++sphinxcontrib-serializinghtml==1.1.5
 -- 
 2.49.0
 
