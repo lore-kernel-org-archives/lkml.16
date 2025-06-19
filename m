@@ -1,111 +1,163 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F0F265630;
-	Thu, 19 Jun 2025 08:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5225726560A
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 08:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322731; cv=none; b=r6FtnICMKZ3ij0ppYTVnnBymf+uT72Oca5BrAxNDuB6H4a0HoTlmFTFL33GmftBY/lsFZ0eK/LnM4PlzGuwQo+0Fm3vgdnassEYKZBuhN8DSKTccB1R/OR/YoULvk8nR65Y4lPH+BHridKyHDI/CrDq5WY2mYyWsl+Wimm7S8nw=
+	t=1750322739; cv=none; b=n/8498x+tMGpjV/xQfnhz9XieOa0QdIC8ng/wos1VEdrqeMSOC6EZrj70os2HiiIJNEqwYsa+AC+Su4qiGHxdOpiOfhXlPdkJUlVYqbBzIuxN7x6QAAw+HSDv1ajMF9td3GyOuR9VmhoiCi4E/BnazIZ8kFnbn8FKlIYwabufQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322731; c=relaxed/simple;
-	bh=XLG2cZcQLhx33DVj14NNeTv+QvUPGw8VQgW7jRag7q4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WFC6CEHXnw5I0q/K/zBTSHDCiGbZWoo/aeWtwQjEQLz71esIIMDDdxYCVixpW4RC8seXJSOW+L2JjsNY4zhgDd4qQzC4/rMUE3yFruGB8OAstfA1OHuFWFMysNPRayyIRjBcGTfjVm5XTUjNo0rQgGnA5s67Zgyyku8gSvkLL6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net; spf=pass smtp.mailfrom=qmon.net; dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b=KhOTjIus; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qmon.net
+	s=arc-20240116; t=1750322739; c=relaxed/simple;
+	bh=dc8b4SqFbL7GbH4/AI1p/bawh7QOopzOKjzeIjY3oEk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rO4mA4mJETAcv1OcnwxrJC18BJ/kq9CHr6M1haO2cXjZvH1/Ke+UAJo6xX8gD4RoW/CzG+4jiN0eEZROtKmPda+WA9pHzZ8Ms8dnzetPrZKEpFt4snJa8C26rsep/tx2TRAR+jnOpre2XSE/dj6o7OQlADrSq2CJSq2TjSptgj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3hZoIun; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b="KhOTjIus"
-Received: from smtp.soverin.net (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4bNDhH6KQpz1HSZ;
-	Thu, 19 Jun 2025 08:45:19 +0000 (UTC)
-Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4bNDhH2XXSzQ4;
-	Thu, 19 Jun 2025 08:45:19 +0000 (UTC)
-Authentication-Results: smtp.soverin.net;
-	dkim=pass (2048-bit key; unprotected) header.d=qmon.net header.i=@qmon.net header.a=rsa-sha256 header.s=soverin1 header.b=KhOTjIus;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qmon.net; s=soverin1;
-	t=1750322719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ErW2j+mManyJQM93IRatKSVT+nS/i3cLFDxhg+A0SH4=;
-	b=KhOTjIus5IhKLEu3NQgD51ii5zQKI2gZ8O/ya1kD4Nt36TT2aqkVZ75BZKwRvFqHg4kwc0
-	jBXNadfybHvHhOuyb4Zl0FAiVBZxPfVpc+zWkcXOhVEuKtTMqeht0ithVDAL0IhiEJLmFW
-	KjvFARXu4XckZfUyvlN4e6B51vIkUm7YwgJtSnxAmfQGX0YmslfqC/m1QQa3GPc9bQ2mbu
-	gQHPPM42yJvKaxkoFozd/cjtAgbfQpAy7sX3TAdteoB0XAKFE4975H85KXR/PHLe8EQ2eq
-	ZNo6YceLirVVsJYKOf5LbNe/jntEjvQoPD3FDGNghgCzvCx6pjhnKARZmvB/+Q==
-X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=6853ce1f a=IkcTkHD0fZMA:10 a=Byx-y9mGAAAA:8 a=VwQbUJbxAAAA:8 a=alrKA13-IdtXP1y8yCkA:9 a=QEXdDO2ut3YA:10
-Message-ID: <e938ef54-3ea0-4325-9860-477561af6042@qmon.net>
-Date: Thu, 19 Jun 2025 09:45:19 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3hZoIun"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so814212a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 01:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750322734; x=1750927534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h0wtSbUxRYclW9mGhcArPsdL1jf7GZkXd48YFnMEvgU=;
+        b=C3hZoIunlRLh3X3IxLat12SSiT+S6UTZ75IDpSjAxKbFp5uF32qu1X9YsIRvqj4Ase
+         t+vfrQTJDEguqAlsI0XFvT0ik+0+OtpcM1T23Zd+j79Up8AwGNCwj5Bo+CbqMW8a5m4b
+         hzvKjxCIgcXgRt3ZcBmjxCPg98X/xwTJEtuZOScmyhGCcGzfKVa4KLkAJng90/SVHOy3
+         C9T3TWoT+5HWH+t0wPLLu3ZXabKJ3xybbn+eOXLtsMMgdygz6udr4L84oUNHRL6+Bx1F
+         6/jYrToOC7yr/vwU56BP/al9sM16WTCaMLkPsEiEndesrtbC1zVvLtTDqMHdz2i6BiqW
+         J0IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750322734; x=1750927534;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h0wtSbUxRYclW9mGhcArPsdL1jf7GZkXd48YFnMEvgU=;
+        b=E7IOwU9SJsRa1JyEsCYxuAWpUaAOKnwvogpAwnmWEBXgSdfaHuMotBREj1jirDIRaz
+         ZXK0qe5RU+kz7dtxcgsoX3+1KIGRLTtGLS5IG5Wpg/lQ3dEDza6FxHUcs3aQrzziQ1Kb
+         0bM0CI6/1V0GhE+ZF4B+a1WG/ZFEvPsSuz8QEBmbwSgRQN6Gj6l1jrextyNjhN0tpBho
+         xChgWWVFsoBPxyG4ScbULtm0Zq8iZ+CwEU7Nt4pLb+CiFPqDiCdhpQosY31M3+nzXdd9
+         zitRthe/7Pt6hevTY4T2pmjRcAR0UyqUOQr/4dQdicjRcJOaDbvPPy4GtptHpHd+F7lm
+         AtvA==
+X-Gm-Message-State: AOJu0Yx/bVkDS1hHT7BWab30OPUmKk4mWNg3Vu/XN067gnplFLxxzaIu
+	iczrXis3JNxa6Ok/OYVxXNcFubtBTPsi1nURfqfldiPap260LvoW3dJP
+X-Gm-Gg: ASbGnctW892DQUHadBpEXoWh0lwl988dvoVwTBLyvFwvNz9ALLppH4EyWKM3xpm6xdL
+	P5Zbq5355LaZJkrlqTFDCYCZWQOuul1SOPNrtLmTltTWWisZFMAMgV2Mu/icqgd+cR7JgScL+B5
+	gQiTpkCiRUOyLd1HxojnOHAgc/025s39jywfc9CAl50T0DdJAtEPakSl4uM35eNiYyG9DJSke8M
+	vaJljzjNZ87cOHhH4UAam+IONT2mZnt8U+RwDuNDIkaoeF9rJdduWL22tjUwuOhtGDK0uXjHYUC
+	w411+9ric0l5Ca1uPQ9L5lAQM83AnuGKHD5uKLzishgSi3OYQhmyfVTZ5FtVquQ6/goEz0dOike
+	adendH4pInlOlq8Ps
+X-Google-Smtp-Source: AGHT+IGwj1vYRM34MvLwuBy+TO7NC2p5Qze5GzXzAOBX4XqB3oeg9resaDD7r2lfy412opi9HxS22w==
+X-Received: by 2002:a05:6402:214d:b0:609:b263:41c9 with SMTP id 4fb4d7f45d1cf-609b26351cbmr5554526a12.32.1750322734545;
+        Thu, 19 Jun 2025 01:45:34 -0700 (PDT)
+Received: from chimera.vu.local ([145.108.90.28])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e6f0sm11276831a12.42.2025.06.19.01.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 01:45:34 -0700 (PDT)
+From: Thomas Andreatta <thomasandreatta2000@gmail.com>
+X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+To: hansg@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Subject: [PATCH 3/4 V2] Staging: media: atomisp: i2c: struct definition style
+Date: Thu, 19 Jun 2025 10:44:22 +0200
+Message-Id: <20250619084420.146151-3-thomas.andreatta2000@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
+References: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATH v2] bpftool: Fix memory leak in dump_xx_nlmsg on realloc
- failure
-To: chenyuan <chenyuan_fl@163.com>, ast@kernel.org, andrii@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- chenyuan <chenyuan@kylinos.cn>
-References: <20250619031037.39068-1-chenyuan_fl@163.com>
- <20250619065713.65824-1-chenyuan_fl@163.com>
-From: Quentin Monnet <qmo@qmon.net>
-Content-Language: en-GB
-In-Reply-To: <20250619065713.65824-1-chenyuan_fl@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+Content-Transfer-Encoding: 8bit
 
-2025-06-19 14:57 UTC+0800 ~ chenyuan <chenyuan_fl@163.com>
-> From: chenyuan <chenyuan@kylinos.cn>
-> 
-> In function dump_xx_nlmsg(), when realloc() fails to allocate memory,
-> the original pointer to the buffer is overwritten with NULL. This causes
-> a memory leak because the previously allocated buffer becomes unreachable
-> without being freed.
-> 
-> Fix: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
+Reorder const qualifier in array declaration
 
+Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+---
+ drivers/staging/media/atomisp/i2c/gc2235.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Fixes: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
+diff --git a/drivers/staging/media/atomisp/i2c/gc2235.h b/drivers/staging/media/atomisp/i2c/gc2235.h
+index 6c743a17f198..7dd9a676fb98 100644
+--- a/drivers/staging/media/atomisp/i2c/gc2235.h
++++ b/drivers/staging/media/atomisp/i2c/gc2235.h
+@@ -179,21 +179,21 @@ struct gc2235_write_ctrl {
+ 	struct gc2235_write_buffer buffer;
+ };
+ 
+-static struct gc2235_reg const gc2235_stream_on[] = {
++static const struct gc2235_reg gc2235_stream_on[] = {
+ 	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
+ 	{ GC2235_8BIT, 0x10, 0x91}, /* start mipi */
+ 	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
+ 	{ GC2235_TOK_TERM, 0, 0 }
+ };
+ 
+-static struct gc2235_reg const gc2235_stream_off[] = {
++static const struct gc2235_reg gc2235_stream_off[] = {
+ 	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
+ 	{ GC2235_8BIT, 0x10, 0x01}, /* stop mipi */
+ 	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
+ 	{ GC2235_TOK_TERM, 0, 0 }
+ };
+ 
+-static struct gc2235_reg const gc2235_init_settings[] = {
++static const struct gc2235_reg gc2235_init_settings[] = {
+ 	/* System */
+ 	{ GC2235_8BIT, 0xfe, 0x80 },
+ 	{ GC2235_8BIT, 0xfe, 0x80 },
+@@ -268,7 +268,7 @@ static struct gc2235_reg const gc2235_init_settings[] = {
+  * Register settings for various resolution
+  */
+ #if ENABLE_NON_PREVIEW
+-static struct gc2235_reg const gc2235_1296_736_30fps[] = {
++static const struct gc2235_reg gc2235_1296_736_30fps[] = {
+ 	{ GC2235_8BIT, 0x8b, 0xa0 },
+ 	{ GC2235_8BIT, 0x8c, 0x02 },
+ 
+@@ -321,7 +321,7 @@ static struct gc2235_reg const gc2235_1296_736_30fps[] = {
+ 	{ GC2235_TOK_TERM, 0, 0 }
+ };
+ 
+-static struct gc2235_reg const gc2235_960_640_30fps[] = {
++static const struct gc2235_reg gc2235_960_640_30fps[] = {
+ 	{ GC2235_8BIT, 0x8b, 0xa0 },
+ 	{ GC2235_8BIT, 0x8c, 0x02 },
+ 
+@@ -373,7 +373,7 @@ static struct gc2235_reg const gc2235_960_640_30fps[] = {
+ };
+ #endif
+ 
+-static struct gc2235_reg const gc2235_1600_900_30fps[] = {
++static const struct gc2235_reg gc2235_1600_900_30fps[] = {
+ 	{ GC2235_8BIT, 0x8b, 0xa0 },
+ 	{ GC2235_8BIT, 0x8c, 0x02 },
+ 
+@@ -418,7 +418,7 @@ static struct gc2235_reg const gc2235_1600_900_30fps[] = {
+ 	{ GC2235_TOK_TERM, 0, 0 }
+ };
+ 
+-static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
++static const struct gc2235_reg gc2235_1616_1082_30fps[] = {
+ 	{ GC2235_8BIT, 0x8b, 0xa0 },
+ 	{ GC2235_8BIT, 0x8c, 0x02 },
+ 
+@@ -463,7 +463,7 @@ static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
+ 	{ GC2235_TOK_TERM, 0, 0 }
+ };
+ 
+-static struct gc2235_reg const gc2235_1616_1216_30fps[] = {
++static const struct gc2235_reg gc2235_1616_1216_30fps[] = {
+ 	{ GC2235_8BIT, 0x8b, 0xa0 },
+ 	{ GC2235_8BIT, 0x8c, 0x02 },
+ 
+-- 
+2.34.1
 
-(Not "Fix:")
-
-
-> Signed-off-by: chenyuan <chenyuan@kylinos.cn>
-> ---
->  tools/bpf/bpftool/net.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
-> index 64f958f437b0..1abedfe6f33f 100644
-> --- a/tools/bpf/bpftool/net.c
-> +++ b/tools/bpf/bpftool/net.c
-> @@ -366,17 +366,18 @@ static int dump_link_nlmsg(void *cookie, void *msg, struct nlattr **tb)
->  {
->  	struct bpf_netdev_t *netinfo = cookie;
->  	struct ifinfomsg *ifinfo = msg;
-> +	struct ip_devname_ifindex *tmp;
->  
->  	if (netinfo->filter_idx > 0 && netinfo->filter_idx != ifinfo->ifi_index)
->  		return 0;
->  
->  	if (netinfo->used_len == netinfo->array_len) {
-> -		netinfo->devices = realloc(netinfo->devices,
-> -			(netinfo->array_len + 16) *
-> +		tmp = realloc(netinfo->devices, (netinfo->array_len + 16) *
->  			sizeof(struct ip_devname_ifindex));
-
-
-Nit: Can you please break the line after the comma rather than after the '*' sign,
-like in dump_class_qdisc_nlmsg()?
-
-Otherwise looks good, thanks for this! You can add my tag for v3:
-
-Reviewed-by: Quentin Monnet <qmo@kernel.org>
