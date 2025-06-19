@@ -1,129 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8207D35963;
-	Thu, 19 Jun 2025 12:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B1435963
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750337139; cv=none; b=iY+HeKBublaZDjoFlEO9zSOFbGypTlWWzERHB1Aam+w3xmAH+0KVU5bW94jM4LM4m42yF8CRogRVS4sJA9/m1/4clkwqoknGgWR0t1oDbMFaOImfI0pDF1+UT8aLv7O2NJsSIWctgrHg1jBITHwjk7Mq2Q1nudSolwRb8B7I6ug=
+	t=1750337219; cv=none; b=PafdQB/xWkyYYUbvrp1RwEcO06OYu2RaVpNcRcrE8gmHETBDbaJCG+MbYF5x2NokwXFkqL3mjoLQtZ3QxUcpnJzAwfYTvtJIu7HV1PC4Shaq1qrnooXMI81T5qtA4apZlVHABXskEkj5uzeTIfuIouI66ZPW1xnETjVdztbpMps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750337139; c=relaxed/simple;
-	bh=KNqb7eHKDRfrbzB+nYR6iggc29bY0RRO9LiF69GOYI8=;
+	s=arc-20240116; t=1750337219; c=relaxed/simple;
+	bh=8l1q+TBAI9HhwE2BKGaRYlrGQW21nfpsy+w1kz5Ns8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nzss1yyje8DIW/+rODWIQazytSnHPmtvgmM8bt6zUmoOcZvBhn3OtQ+/XV8D/vsrHST8EBLFbbpypeB6+IEr9xlfzLMCQDeYCI9nvphDSx1iFvR7Kz8NAar3sFpYcM2JskQwe/L5U/4hNUrFp5t5lNG+aBizihhUNkUUXfJy3i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwYq1A2f; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uehVVPi3IKofYOma9NCN6cOBZ5UE8Rrxtnmjx8KweJtZqPlH1C76+cZyJ9Y0hSHaSIeRuFSlQZCWZelvxKV4hqfDRFu1hS71nIr80IchxqHu/8DUq/ORdP51EfufNLgymgvOfWf74MZi0mRnPvViGekYwgczsaerxnNqlBJN9mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z3lXv73K; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5FlSBCrg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z3lXv73K; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5FlSBCrg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwYq1A2f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7822AC4CEEA;
-	Thu, 19 Jun 2025 12:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750337138;
-	bh=KNqb7eHKDRfrbzB+nYR6iggc29bY0RRO9LiF69GOYI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iwYq1A2fmSqsQaRBsaydPOG21gcTZCtQd7cYOYCEGO+WYBLtTuJT/9uNfzsZ+9Vps
-	 uRYjx7+K7cWyyYCYOX7eUU4RfG2XNfDlCo6xWjQ7PYuRl/PzOJXe6nvvBDtX/uim+B
-	 S++kc8EQVH9INpuVvcdjMfHmT4svUZZczCZtatRH2PfF9UihMu6fU14qbAlXLb1Mpv
-	 +dGKfzMHYSWmGMR49wGjHkrOzbB14t3DjHD8EsCMEcJlsBD4d23TFosFIDV/Tlv4pf
-	 VUf6hio6bIfjEW3X23Gwmg3ePGgwhy3m5ko6QI5XDep/RFn6Qpjf0pzXz0kY1PaAl4
-	 8Snes676Vd6wg==
-Date: Thu, 19 Jun 2025 18:15:20 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Niklas Cassel <cassel@kernel.org>, lpieralisi@kernel.org, kw@linux.com, 
-	bhelgaas@google.com, heiko@sntech.de, manivannan.sadhasivam@linaro.org, 
-	yue.wang@amlogic.com, pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org, 
-	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
-	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 1/2] PCI: Configure root port MPS during host probing
-Message-ID: <rjgmkdk33h64plssiw2euna3wo4ejw4t3gisqkt3ibco62vjin@w2yu6wnzwled>
-References: <20250510155607.390687-1-18255117159@163.com>
- <20250510155607.390687-2-18255117159@163.com>
- <co2q55j4mk2ux7af4sj6snnfomditwizg5jevg6oilo3luby5z@6beqtbn3l432>
- <aEwRAZgLJUECbGz6@ryzen>
- <1e3ba7e1-dad3-4728-85d2-276945119ab0@163.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z3lXv73K";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5FlSBCrg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z3lXv73K";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5FlSBCrg"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 2E9CA211C6;
+	Thu, 19 Jun 2025 12:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750337216; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5+fM4MttKE3A03nChZO9COV7itbt2Km8YxBW6g7esUo=;
+	b=Z3lXv73KiWY95pdfmh0Pfoybb2uI7JQ/GOM/KUE+4HCpm8wNwpLgJVMr1jyxA1mQ0kYTdq
+	qo5CPob2oAwOuLqoPwuED71JRJlAKPh3UsqRt2Z2LXvQsvTlhOw5o4axHBOq6Iet9J7Zqz
+	llCXE56uDd/TA5E44rbeitRFwFNHgKg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750337216;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5+fM4MttKE3A03nChZO9COV7itbt2Km8YxBW6g7esUo=;
+	b=5FlSBCrgaDGDUb9oa6w9IwyKfAfRQrd/oRtVGPljTKwpZAGsn5pONnUfbtqkNDE6Q1xbJR
+	wBFaHrGrQ5zF6cBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750337216; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5+fM4MttKE3A03nChZO9COV7itbt2Km8YxBW6g7esUo=;
+	b=Z3lXv73KiWY95pdfmh0Pfoybb2uI7JQ/GOM/KUE+4HCpm8wNwpLgJVMr1jyxA1mQ0kYTdq
+	qo5CPob2oAwOuLqoPwuED71JRJlAKPh3UsqRt2Z2LXvQsvTlhOw5o4axHBOq6Iet9J7Zqz
+	llCXE56uDd/TA5E44rbeitRFwFNHgKg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750337216;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5+fM4MttKE3A03nChZO9COV7itbt2Km8YxBW6g7esUo=;
+	b=5FlSBCrgaDGDUb9oa6w9IwyKfAfRQrd/oRtVGPljTKwpZAGsn5pONnUfbtqkNDE6Q1xbJR
+	wBFaHrGrQ5zF6cBQ==
+Date: Thu, 19 Jun 2025 14:46:56 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <aFQGwKGwGb69M9VS@dwarf.suse.cz>
+References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+ <aEqpgDIBndZ5LXSo@dwarf.suse.cz>
+ <20250612164735.76a1ea9a156cd254331ffdc4@linux-foundation.org>
+ <925cdfc4-7878-4572-9a4d-9b99d149a652@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1e3ba7e1-dad3-4728-85d2-276945119ab0@163.com>
+In-Reply-To: <925cdfc4-7878-4572-9a4d-9b99d149a652@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Fri, Jun 13, 2025 at 11:31:01PM +0800, Hans Zhang wrote:
+On Fri, Jun 13, 2025 at 11:19:11AM +0200, David Hildenbrand wrote:
+> > It's sad to add a 10s delay for something which some systems will never
+> > do.  I wonder if there's some simple hack we can add.  Like having a
+> > global flag which gets set the first time someone pins a CMA page
 > 
+> We would likely have to do that for any GUP on such a page (FOLL_GET |
+> FOLL_PIN), both from gup-fast and gup-slow.
 > 
-> On 2025/6/13 19:52, Niklas Cassel wrote:
-> > On Fri, Jun 13, 2025 at 12:08:31PM +0530, Manivannan Sadhasivam wrote:
-> > > On Sat, May 10, 2025 at 11:56:06PM +0800, Hans Zhang wrote:
-> > > > Current PCIe initialization logic may leave root ports operating with
-> > > > non-optimal Maximum Payload Size (MPS) settings. While downstream device
-> > > > configuration is handled during bus enumeration, root port MPS values
-> > > > inherited from firmware or hardware defaults might not utilize the full
-> > > > capabilities supported by the controller hardware. This can result is
-> > > > uboptimal data transfer efficiency across the PCIe hierarchy.
-> > > > 
-> > > > During host controller probing phase, when PCIe bus tuning is enabled,
-> > > > the implementation now configures root port MPS settings to their
-> > > > hardware-supported maximum values. By iterating through bridge devices
-> > > > under the root bus and identifying PCIe root ports, each port's MPS is
-> > > > set to 128 << pcie_mpss to match the device's maximum supported payload
-> > > > size.
-> > > 
-> > > I don't think the above statement is accurate. This patch is not iterating
-> > > through the bridges and you cannot identify root ports using that. What this
-> > > patch does is, it checks whether the device is root port or not and if it is,
-> > > then it sets the MPS to MPSS (hw maximum) if PCIE_BUS_TUNE_OFF is not set.
-> > 
-> > Correct.
-> > Later, when the bus is walked, if any downstream device does not support
-> > the MPS value currently configured in the root port, pci_configure_mps()
-> > will reduce the MPS in the root port to the max supported by the downstream
-> > device.
-> > 
-> > So even we start off by setting MPS in the root port to the max supported
-> > by the root port, it might get reduced later on.
-> > 
-> > 
-> 
-> Dear Mani and Niklas,
-> 
-> Is it okay to modify the commit message as follows? The last paragraph
-> remains unchanged.
-> 
-> 
-> 
-> Current PCIe initialization logic may leave root ports operating with
-> non-optimal Maximum Payload Size (MPS) settings. While downstream device
-> configuration is handled during bus enumeration, root port MPS values
-> inherited from firmware or hardware defaults might not utilize the full
-> capabilities supported by the controller hardware. This can result in
-> suboptimal data transfer efficiency across the PCIe hierarchy.
-> 
-> During host controller probing phase, when PCIe bus tuning is enabled,
-> the implementation now configures root port MPS settings to their
-> hardware-supported maximum values. Specifically, when configuring the MPS
-> for a PCIe device, if the device is a root port and the bus tuning is not
-> disabled (PCIE_BUS_TUNE_OFF), the MPS is set to 128 << dev->pcie_mpss to
-> match the device's maximum supported payload size. The Max Read Request
+> Should work, but IMHO can be optimized later, on top of this series.
 
-s/device/Root Port
+The 10 s was David's suggestion during the discussion of v2 of
+this patchset. We already had a discussion about both the length
+of the delay and whether to make it configurable [1] 
 
-> Size (MRRS) is subsequently adjusted through existing companion logic to
-> maintain compatibility with PCIe specifications.
-> 
-> Note that this initial setting of the root port MPS to the maximum might
-> be reduced later during the enumeration of downstream devices if any of
-> those devices do not support the maximum MPS of the root port.
-> 
+We agreed it was best to start with a longer fixed delay to be on the
+safe side.
 
-Rest LGTM!
+If the CMA reservation becomes popular and anybody complains
+about the delay, then we can trivially make this configurable or
+think of other improvements.
 
-- Mani
+[1] https://lore.kernel.org/lkml/a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com/
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
