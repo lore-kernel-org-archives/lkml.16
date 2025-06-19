@@ -1,109 +1,102 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4498E23B60C
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 12:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE03121FF33;
+	Thu, 19 Jun 2025 12:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335580; cv=none; b=nmqZuAYf3XwRLQmvosH0XNWNkCPTt+CTqIbZzcVj1RsJ0ezL164EC5sDHXs+En/J7ikO0Uh3w8oEn5ayz2du/NYMR4IizPJDzxjCiOcNigtHrTVs0AInyLb8yPZ7rpi66tOgSmsULbr5fcweuitKzowfBIKjbj1AM7EK+qhbNJo=
+	t=1750335600; cv=none; b=Tu4dg0lXznfYz2iYR6VbfFZRCrK9HbnT5iyzhbtbJozJWqwteKqy/1fdyYSh5hRQcQJ1TgZwdnk/B4b0YXwPZT9TZyrJS3KNmvay4WZQiPH6mw7PAwZZ7w2BJZP6KCnMiWsUxxAy9w0WbriZYrNR0zWEq65hh9iqtt2fO/djR2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335580; c=relaxed/simple;
-	bh=7ac51FHNRIWsyGPsA2cT/OoFSdh1Legd6vLnNQpKO8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i6PCTJGNaFCEvpEwn5r7rSLpsl8abz6Ff+l16GfwteALneNZicLQlHOb5BF5dmV6khxtNfOwT1pAdtRICjTKs0lz/+oxBHLY3Os3tljnYbznwm8YuoIGqX+EKJP+WBQD/d6OtOnrG8QGFWuHkz/oKSyYvi512NBU0b/eCWFcxTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gG0ytBXt; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750335600; c=relaxed/simple;
+	bh=XquW5ZV6oc/hCki+AgbKZYygFXjNvaYEnNIQqvtyoYk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=I1nRXQCHzvUur4OUdVX/5cYhdhf/giMYJHyJsSusAvrQyhcXA3FdieUDA0ShCpahra4sUrhM47Q5/NHChBly01knbpVjkv7t1xabhq2Y1ppm3PXak+1dLPHsKQNbuZtY0Q8URa/HiNdu4kgHwfTfnk2bukyu0JRu4Up7RIEmX2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=leQTnC7G; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gG0ytBXt"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a57c8e247cso709663f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 05:19:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leQTnC7G"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a54700a463so424749f8f.1;
+        Thu, 19 Jun 2025 05:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750335576; x=1750940376; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ac51FHNRIWsyGPsA2cT/OoFSdh1Legd6vLnNQpKO8c=;
-        b=gG0ytBXtmGHLSLatGLouXVMjpdD9PTgyi3phXhmdCWrKH5D2h6HBTzQ7Fpe8ZlMRW+
-         QetZ89S/+/mLR2FAtmNPXyYhA4MN9U9UW4cZaigAb/zP08sCpY/xHMCBe/9GF0ClAe4E
-         dIc7lEuUtyGijgnNNYp1zberagJRM2xotXY+hwCfLDhKw0X8fw9SRz3KxhgBRY3njF95
-         C7KL8pfuqDTb5duEzbql3XqBka1dmTX2TNuRuBd0+X0B0w3FCWvmOWqgskEnEWuvb/cz
-         3ry+wOaXh3Z7UCIpM0UMEgIlCQiG4Rh+ScgVJvTh6DfSatOB2yMCHQi/re9Fz/ypfNQp
-         jYKg==
+        d=gmail.com; s=20230601; t=1750335597; x=1750940397; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uQfUHBUgL4FYDXO1aQtp+eVF7jpagDZr1s2Tf1cBE7o=;
+        b=leQTnC7Gk6AuvxIxHedMbuGZB4dlQjMmsJ5+KvFFZ0nluhEJxxCtQck26vI+XY3lt4
+         rHUdZj/EG66Z/xyJnnAoFn+D3WyKKKhlN33Rqy7N+5eHQNdFpBg7WnMe1MHw/XQIIQRr
+         REeJLnUzfwnQtXfMaR2WNAoK0mgiMqo6zHKtTFrzPrZRpxKfZn8tpmRE7Rl7s0Hsr8iR
+         v731wJ/qLTHZ6wexqh+ry2Gnf6msdm6dAvnn8Ag128T6V9v1mwk4SIlZNHiBAtwynGWc
+         E7wGX+y4LbvrhdnlqyHRtM63+3jPyDsN7kvRfiprHdI/PmdyvAS5hW/Po5j0pVYibOuV
+         fruA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750335576; x=1750940376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ac51FHNRIWsyGPsA2cT/OoFSdh1Legd6vLnNQpKO8c=;
-        b=o8ivPcM7FhqXF0GiN4SDYkGj2LXrAQlobSPCYvKEbmphyPF2CNAkhws6KcA61+QUbM
-         K6+97FE4AQVqD5qYHNe9szb9TSPEvkcUqnrAGKEv4L7IAVG4hz9q+9vNEHKfea18g5ij
-         UtuFb5vYbQqwcSZb3uY0KmeEgX12okB7of2pXzW8ra6s5Z8eyyJeAiTu3N9XhKhiHu6i
-         sx1CeK2bt2hAgNyup5O3jo9sfB8BLlBHhEl0Z9VRe9lUAfQ7shwXWkVaRyvrfz6NLRT0
-         EKfezSEWcRLh/naJjnE1MsgnSYbdNHhIGXCW6fRZ4zOBlXTwot8Q4YrFxc838UKaztDD
-         3Rvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmjLnsydc+9WsyXpi4xJXUh3dPYqWljmx8cnFSJ4ae+9CABtp4SPiR805JKAn/tz2R7RqViWulmEJxQO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC1nw0ZpgoH6/EYA4chOpe2rvAVbCJj7GaURnKb76/bwLUI06O
-	kCSh/G6uK71uNSIN04mMaoB0oRf4avflF44vYTvqeSBivfBJwTbqB9oryqLe8YxGCFWRprkecD6
-	WFmG8GwESIP7dkmQby/1vz4QHBHNE1Bc1ajz+fyRN
-X-Gm-Gg: ASbGncvcF1ZOVrCvYUwFC+O3bSPY4pBnSySCEmyRIW4TEDPGD6PnuLajRXLZVs59Kvd
-	Jij/5598Jp1qfXWj7yxg4Yeq0VBUEgSpv0au6UWlnOKNA/fEWB3BmgdE8Lv5NZfEKHrj3uMms6w
-	mV8xGnG0+1j6nuYT322xun7oV8iw+sPM4kCITb9344iXFyTOIKrTe6lUclvQeZnQ9hKXohRKtOI
-	BI2DuwQx4qp
-X-Google-Smtp-Source: AGHT+IEdN1dcFOkm876VSH5eqAcy40nZdytTN0BHyo53UKISb9ybhB6h26VIwqtDwmUT6/7XOiLspK8lUcD/OvMDcxw=
-X-Received: by 2002:a05:6000:430c:b0:3a5:3517:de3e with SMTP id
- ffacd0b85a97d-3a572e6bc97mr18896998f8f.35.1750335576228; Thu, 19 Jun 2025
- 05:19:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750335597; x=1750940397;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uQfUHBUgL4FYDXO1aQtp+eVF7jpagDZr1s2Tf1cBE7o=;
+        b=o2p8Ni9OeLdLr0WlfrTSnwBbzsbyMeErR/PRfRiPwtQIN1sBwy9+Z9IBIHBUi0+/Mf
+         1//CCE2cmy9y6ErTLuWo3XbQQomO9vtMhMfXf08ZoYVrViBn5DbChEvoQDQKqhJReL4S
+         Xcr4iuqGEYTHtCXu9PRoXKThEfHVAYFkV2K6nL0kKdGJvmPZiTIEFsY21RgudTtpitNT
+         0fTkZT1rotLkWClKPQx8Pr49w/0MhmKzqk7K3rkbXKQ6Np2234rXbiawKb1CsrkQQkhh
+         csfm7gR4gwz01MU0CVe/qPKwum5+T7WsqLV/UEIdlVYZSSTAn2wmJbJ3N64wnVIyDu8F
+         IKNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnbxRAuaUy+4gDNAajN65r+2G/425f8kA9obsmNWR0Ovv47SiY9YCNkQF22wMdKwjKicSCUF+hltQZgcY=@vger.kernel.org, AJvYcCX7i/mtecdhSiB5XaNsHNwJcgJ1G8hsgky+LpdTKGqYegZKNvadEnnIXQbaPKwDDe81hB9dvyRu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWRUDiEvKk1ZifL/rD1Q6graGWuefJti7/otxx8upEDVtgFK/J
+	RD3siwZnlECUh246qn9mHuSWIptcbMlDJXPQO400HXhvaiDzpLU9uke7
+X-Gm-Gg: ASbGncur7cGM912Lg/hi7CKjLGAG7c7rbHPLa23AIuW5betu0zt8feCtWpj25RdHTur
+	9opWcwzFGTaunv4PtEVnlB/18CTNAcWrk3bu53HIxxZH1IzWvcC5Prr3magP43wgOGWjR2+xAJ7
+	NKPa8JwlOwxXD0OO0POBjFnAG0HHxF8EvGTMIhZZL1oy/RodT8BGvrCHFUqF+68yv1xQUQt91NH
+	+7VXGyi0s5f6wWe3QzzWnl4KZx7sSfykKqFmOzSJkgei/OgCJOwSOuCoJZe8oL0WhDFWIc82uem
+	OlQqKqDJOaQfdgOfHpVVCukjJ6xq76izMe1EAGENIIZiZv+WKcr8MtUtlpNHpZcYGAiiEi1J
+X-Google-Smtp-Source: AGHT+IFMDYQMfyO8NuzqQxoOHc8RZSPZIdd81fqB1a+VABhpS0urt+/BDcKR/TSjd1tmz0JMUrX5ag==
+X-Received: by 2002:a05:6000:22c1:b0:3a4:f7dd:6fad with SMTP id ffacd0b85a97d-3a6c96bde70mr3293996f8f.14.1750335597039;
+        Thu, 19 Jun 2025 05:19:57 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:ad83:585e:86eb:3f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b5c372sm18955330f8f.89.2025.06.19.05.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 05:19:56 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
+ <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
+ Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
+  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
+ <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
+ <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
+  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>,  Randy
+ Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Don't generate netlink .rst files inside
+ $(srctree)
+In-Reply-To: <cover.1750315578.git.mchehab+huawei@kernel.org>
+Date: Thu, 19 Jun 2025 09:29:19 +0100
+Message-ID: <m2y0tof82o.fsf@gmail.com>
+References: <cover.1750315578.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618164934.19817-1-boqun.feng@gmail.com> <20250618164934.19817-4-boqun.feng@gmail.com>
- <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250619103155.GD1613376@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 19 Jun 2025 14:19:23 +0200
-X-Gm-Features: Ac12FXz2t9QSaVzsNj9MSWHyeQZH7QvXWY1Yd25RYMgxbqiHuVm7qkIrRqBSAbY
-Message-ID: <CAH5fLgjhdxdFztu_pXLjngu4cD7g7jw16bcQYz=XNmGxKfThsA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation types
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, lkmm@lists.linux.dev, 
-	linux-arch@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Lyude Paul <lyude@redhat.com>, 
-	Ingo Molnar <mingo@kernel.org>, Mitchell Levy <levymitchell0@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Jun 19, 2025 at 12:31=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 >
-> On Wed, Jun 18, 2025 at 09:49:27AM -0700, Boqun Feng wrote:
->
-> > +//! Memory orderings.
-> > +//!
-> > +//! The semantics of these orderings follows the [`LKMM`] definitions =
-and rules.
-> > +//!
-> > +//! - [`Acquire`] and [`Release`] are similar to their counterpart in =
-Rust memory model.
->
-> So I've no clue what the Rust memory model states, and I'm assuming
-> it is very similar to the C11 model. I have also forgotten what LKMM
-> states :/
->
-> Do they all agree on what RELEASE+ACQUIRE makes?
+> v7:
 
-Rust just uses the C11 model outright, so yes it's the same. There's
-no separate Rust memory model as far as atomics are concerned.
+ETOOFAST
 
-Alice
+https://docs.kernel.org/process/maintainer-netdev.html#resending-after-review
+
+I didn't complete reviewing v6 yet :(
+
+> - Added a patch to cleanup conf.py and address coding style issues;
+> - Added a docutils version check logic to detect known issues when
+>   building the docs with too old or too new docutils version.  The
+>   actuall min/max vesion depends on Sphinx version.
+
+It seems to me that patches 15-17 belong in a different series.
