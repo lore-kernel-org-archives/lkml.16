@@ -1,50 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824A7221704;
-	Thu, 19 Jun 2025 11:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA9122A4EA;
+	Thu, 19 Jun 2025 11:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333805; cv=none; b=IA/eBxlT3Bh10/IlZcH7n2gYe/SmzHhuXGqjsafqtnKxrPpZ4szfwjYWYvOxCAsNPrh9UD9G2MAyaWMuDvlTJZEOh9k2JmOd0nWzqXRv9AOMvJBKO0pXAeE5g7NIzy5821ZTWmzn4sTWy6pt+Jn/SCWRhAVLyzi7cxZJpIVqeiA=
+	t=1750333902; cv=none; b=GwANFVhPG/UsPT/Ul3N/6gDf1vmnnhR6Wyh6SDMi9oyMIg/z8+gpScm4hOIk/i1Ktz5iRkktPXD5ZUFcBiZtOnDT1tUacwBq5RS0Q7qnk7CvN6/9OsD58e1nG3FyWypXzbW0kV2vOZaki3sYK1rjJhmx8SMg1xjYy3lQl19BDmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333805; c=relaxed/simple;
-	bh=xcXMxMStMR8/rb3GKA1jioXnMSxQsU2Ozqjqe/yF1w4=;
+	s=arc-20240116; t=1750333902; c=relaxed/simple;
+	bh=/xeFPIk1YZqG9Yb44PzZdK2gx7mLQTryn360QlKdwEM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cYyh2maadk7gA6pk2/oD9AbS4sVsxNvk8N+7bsHs/ltZJgHeBULH4JsHNFk3m5ZhxTgSWUlK8a6sUPSsngEVLqLH3/yn/XU8ZoQiLXvU36B6zdn3qq1ppAFH/Tc80kjo+KpTNTDlsUypmlCc3zTeYguQ+0pTOeNhn4vyOxTCyiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJBUADiP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dFzSqWmYuc1u17P003W8MYaVcXsSSnPEZ+V2gtOj+aWDxAzD2jH09GQpRiEYGWcw2ZzaubALVwghJjz3lnXgFXaCcZjcjWTkESp3x38Q/8MTlUQl9ziA/gb6Sba6y/3aGPouZwl4Hwp5niFi+RUSt2WagEV8ndbhO559rSNAImQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efaYPYPI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJBUADiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B52C4CEEA;
-	Thu, 19 Jun 2025 11:50:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efaYPYPI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F67C4CEEA;
+	Thu, 19 Jun 2025 11:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750333805;
-	bh=xcXMxMStMR8/rb3GKA1jioXnMSxQsU2Ozqjqe/yF1w4=;
+	s=k20201202; t=1750333902;
+	bh=/xeFPIk1YZqG9Yb44PzZdK2gx7mLQTryn360QlKdwEM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJBUADiP0/X9+azGm/g0vceCBNhs6nGkYRctOjZ0QujbBcVw07QEuw90FiyNinK/F
-	 NfZ37rkV0sUP/G0oblx/GVCfEyXj/nhORcmp5qDKSX0KH3ot5K7K59vws1ab9u98Lq
-	 EJoWZgGz25N5q51nkLZxnbG4upiC8/EdjQ/1y/YDTUhEIrC8aEDgvYIxCJ8RpieFcI
-	 rVHrJS0yuA3ss51VZzsJ4cSoJHpoOVA5SxIfiC93NY9Py8Y8VzT/lpbSGO9BzGefL0
-	 Vz9D/grzsbiLENfOJmkZpKpjPCCVMTxRsZEVtE/ahvL6O4duPDOE61p95G5saaxSRZ
-	 FiFGUqm7XKKiQ==
-Date: Thu, 19 Jun 2025 12:49:58 +0100
+	b=efaYPYPIcR+0rCCpCgXXuc3Zb9offsicCHyLPnb0mDZ+eG64uV0oDRdG2BrlOds4n
+	 6inQL7T/z5Pjn81c6lmCAinRdkYzXl6VlZ1buRzpvIiFuxvkCP5zNctF1UKxUvU7Ma
+	 1ZY4flU7cC5wxaSnQqoSeIgnHgVgOthRbj93ltX81U4cLp6IOts/VM9/1SqdFCy9LN
+	 vs27qbYGt3e+QcUmwpqkctPXI/lIWyI/9WNJXrXo4Z3K+hou2byZtux9G7zGEVTdWl
+	 rPJoQ+4jQHNB9bhkViFrOeAely9ewjEF3Xsv4S+4dBaspB4IcdiFh+YG4EygyA9Hh1
+	 wDFAOW+GqLrDQ==
+Date: Thu, 19 Jun 2025 12:51:37 +0100
 From: Lee Jones <lee@kernel.org>
-To: Sven Peter <sven@kernel.org>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
- Controller
-Message-ID: <20250619114958.GJ587864@google.com>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com,
+	rogerq@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: twl6030-irq: Remove unused twl6030_mmc_card_detect*
+Message-ID: <20250619115137.GK587864@google.com>
+References: <20250607202232.265344-1-linux@treblig.org>
+ <20250613143757.GL897353@google.com>
+ <aExDbkQBhK3ZubVo@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,39 +46,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+In-Reply-To: <aExDbkQBhK3ZubVo@gallifrey>
 
-On Tue, 10 Jun 2025, Sven Peter wrote:
+On Fri, 13 Jun 2025, Dr. David Alan Gilbert wrote:
 
-> The System Management Controller (SMC) on Apple Silicon machines is a
-> piece of hardware that exposes various functionalities such as
-> temperature sensors, voltage/power meters, shutdown/reboot handling,
-> GPIOs and more.
+> * Lee Jones (lee@kernel.org) wrote:
+> > On Sat, 07 Jun 2025, linux@treblig.org wrote:
+> > 
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > 
+> > > twl6030_mmc_card_detect() and twl6030_mmc_card_detect_config() have
+> > > been unused since 2013's
+> > > commit b2ff4790612b ("ARM: OMAP2+: Remove legacy
+> > > omap4_twl6030_hsmmc_init")
+> > 
+> > This formatting is driving the little OCD being that lives on my
+> > shoulder crazy!
 > 
-> Communication happens via a shared mailbox using the RTKit protocol
-> which is also used for other co-processors. The SMC protocol then allows
-> reading and writing many different keys which implement the various
-> features. The MFD core device handles this protocol and exposes it
-> to the sub-devices.
-> 
-> Some of the sub-devices are potentially also useful on pre-M1 Apple
-> machines and support for SMCs on these machines can be added at a later
-> time.
-> 
-> Co-developed-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> Signed-off-by: Sven Peter <sven@kernel.org>
-> ---
->  MAINTAINERS                |   2 +
->  drivers/mfd/Kconfig        |  18 ++
->  drivers/mfd/Makefile       |   1 +
->  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
->  5 files changed, 798 insertions(+)
+> Thanks, which bit?  I tend to put the commit .... on it's own
+> line, but then checkpatch really doesn't like long lines so I wrap
+> any word that starts after col 75.
 
-This is ready.  Let me know when you have all of the other driver/* Acks.
+No need to put the commit on a new line.
+
+> > I'll fix-up and apply the patch.  Bear with.
+> 
+> Thanks!
+
+NP
 
 -- 
 Lee Jones [李琼斯]
