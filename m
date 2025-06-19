@@ -1,79 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C0A2980A2;
-	Thu, 19 Jun 2025 23:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CF81624DE;
+	Thu, 19 Jun 2025 23:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750375202; cv=none; b=Az8e9ECr9aNridRpaN1NN4NQYxXz9TSfT12iSrpkr0NmQ7RA03cGlv22vw8vqaGP4zfkiFZ3XpVQDm0hEyAf5q3eFIppgG4++1NYbY7gZVw6FTzcWQQqTSENqLIkSI9nQ50XKgfsOXnyKup5kH0xDolI57qW11fNDFnTc5uLNBk=
+	t=1750375369; cv=none; b=ZOYJD4HRRd4MILHMUk8d6A+fEDoCwtVY1MQZG6KQPYDcyS5xHsKVEcxKA5Qic66J0ef6idpwewZxO+xNKw+IEeK8anPVwLSGGPseCtBQrxHOvEmSCcWshJKv3v7jv3H1SkMzaeHON6dkVTcN6YJUpQhxRtf6BCYvDmCS7inJlmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750375202; c=relaxed/simple;
-	bh=j6/M6lV5AgkmjUTUcqy+FGFH7p1rumsUY4miWwtlLPs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=r/uQMfubWQhQfCmHpm3UhtAIiL5gLnxqZb36j+pPlv9FMykSv2YbXBK1wN99Kgs32wztmRaGIe2ZT2iIH9H6ocPt0KwDmA8MmtZr2QHAy76ddwmd3SL49cxP5pkY4GjLLCePfwI5X1t5QFiBGYYOkPa1Ziy0YSODUIcdpO/8ZtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T26uVoHH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750375369; c=relaxed/simple;
+	bh=Vfhc+F1NBou2Cp7Orz20Okwcw/W+PxblCM7CBaW11eE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUAh52GwhKO/A91CE8/NI1IHik/lGqbnYzJx3oFr2glR9l4h6HoaJezaOzF+zH5Ad8qYEDyeTyJJF5+JUqsxnD9Mu4TO1pdtAFdEF9asrHRXDkTZPxEJhRY5MmL2VN/x8NfGtWi3KP5yXa5fLb6fCwTbEt3vuKJJB+lkVxjIWHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=nDz8fjGx; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T26uVoHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35F6C4CEF8;
-	Thu, 19 Jun 2025 23:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750375202;
-	bh=j6/M6lV5AgkmjUTUcqy+FGFH7p1rumsUY4miWwtlLPs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=T26uVoHHXD8fwNi39piwckyrUqyver196+QfUiG5WkoU6Grf7ri8ozUlACNwJ/0lT
-	 rfctU19R1CfkaP+hP2HmfwFMP2xyT6wqU2tlOvZnHTHcpFrGGxRyReCnVa+aeqOokZ
-	 ltEWPtHuiBOOeV19TjLle09GgB3whTkq+ziDZP4YKmSH5RXgEHMjJdGOYR0+Ooo1XK
-	 wiFC0eX+CXHpTwkANWgUdrSmxeoeZ6FXxVxb3ysUiLyyWFsNqW0in6w7WfwLElH6KL
-	 cTKckAefKJ6tvCGB59C+SKok1T/wi9alPzkK9D226L20qz2aBECf0aDr7Sdq5hD7gs
-	 L85KdEhQAwIPQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C7E38111DD;
-	Thu, 19 Jun 2025 23:20:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="nDz8fjGx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=W+Y2lsXPJdi1RUH/PSEB/FJQRlCoG8VD2Nqg0GB52nc=; b=nDz8fjGxN2pP7BV25fGFwk6IrT
+	ABdXg3zraCQs5jIG/UqGltCl9nP70gM7q8Cf8T+Kv+zQnujizKWmGKrFVJ3OQiruAARi6R2qXoXKx
+	qEH28ypgsmFsOp4+KMS8+1D6QCwxgIfsINmhcLu5XZupxv+hy+Ao/ipE7wY60o4I1IQma8VzYwcvJ
+	Y+e26aicEpu4ObHlSt0D5XMJq+AGJSmhMbhJP6ifuo1I1PZA4fyuLuykPjJZeKS2eSBERAmaqRRVc
+	thTSH5+0QfvPJqXepnFMISklrlohJ19s5PSob7hZtYmhbPn3YB0HVuYsCnzkAB/mVMPoH0KqhoRay
+	OPtOi5SQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uSOL8-000R2r-10;
+	Fri, 20 Jun 2025 07:22:27 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Jun 2025 07:22:26 +0800
+Date: Fri, 20 Jun 2025 07:22:26 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: David Howells <dhowells@redhat.com>,
+	Stephan Mueller <smueller@chronox.de>, Simo Sorce <simo@redhat.com>,
+	torvalds@linux-foundation.org, Paul Moore <paul@paul-moore.com>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Clemens Lang <cllang@redhat.com>,
+	David Bohannon <dbohanno@redhat.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: Module signing and post-quantum crypto public key algorithms
+Message-ID: <aFSbsteSI9xTRA1Q@gondor.apana.org.au>
+References: <501216.1749826470@warthog.procyon.org.uk>
+ <aFQDLCvTs8IaAQI_@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net/smc: remove unused input parameters in
- smc_buf_get_slot
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175037522974.1016629.11778548886817850645.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Jun 2025 23:20:29 +0000
-References: <20250618103342.1423913-1-wangliang74@huawei.com>
-In-Reply-To: <20250618103342.1423913-1-wangliang74@huawei.com>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, alibuda@linux.alibaba.com,
- tonylu@linux.alibaba.com, guwen@linux.alibaba.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- yuehaibing@huawei.com, zhangchangzhong@huawei.com,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFQDLCvTs8IaAQI_@wunner.de>
 
-Hello:
+On Thu, Jun 19, 2025 at 02:31:40PM +0200, Lukas Wunner wrote:
+>
+> I assume Herbert will insist that any new algorithm is hardened
+> against side channel attacks.  Thankfully, Stephan seems to have
+> put some effort into that:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+No I think we should instead only support public keys.  There is
+no valid use-case for private keys in the kernel.
 
-On Wed, 18 Jun 2025 18:33:42 +0800 you wrote:
-> The input parameter "compressed_bufsize" of smc_buf_get_slot is unused,
-> remove it.
-> 
-> Signed-off-by: Wang Liang <wangliang74@huawei.com>
-> ---
->  net/smc/smc_core.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-
-Here is the summary with links:
-  - [net-next] net/smc: remove unused input parameters in smc_buf_get_slot
-    https://git.kernel.org/netdev/net-next/c/c3ee72ded0d2
-
-You are awesome, thank you!
+Cheers,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
