@@ -1,161 +1,103 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06432E545
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 03:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308B01CBEB9;
+	Thu, 19 Jun 2025 03:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750303119; cv=none; b=DZVEjGPoLMl9LIRUnN3sSlndA8/ToCg9UGW44haZhPSwt921qP0406w9u+DMtw+l/RApUa2jpYKOiUkDDrp4TehQ9HT80ibS9Lc9EUNRLkwBsmsQyxELrfCD07IU98sC+xagkjOnnkuShJePaKua4fy8qSxPNcc2vqGv08UDGTs=
+	t=1750303207; cv=none; b=N8w1r5acdnJ3cl6qqA7KediS1+umHgGgBEz1L8hlDWYtjxbGDfCYTdlkeWgetUhqsW4O8gr8PYYaGviDZaqpVcuI1EOXRha6XkA8tl+uJrG1gNJ+aTk35Pb/Bcac8UkpZCMH28Oo1otpYd0hliisoSOLs7xtQtnhzNwXka41R08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750303119; c=relaxed/simple;
-	bh=kZ7cHOnajterqVY/s4WF2QOzI3LuVWmPmyznXAf9t4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UH/sYQUeXcYOx03lRdjVZLORG5g1IZd+kFhaG6p4QqeNmlBZwKsMFkJp4tq87BZwRidJFYFUmHq2WEqVXKkQEex+hLFX5sBSpvYJG2Ef+LUHXYEE38zx/mMdByZMzDqsjfWzCT/u5djSi5Qa+aJMchA3g97QO9ayTIM/6vD1uLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KBDfRifw; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KBDfRifw"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-553d771435fso277290e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750303115; x=1750907915; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h6NkPCHYEoZsUFSw6jIHPSK470nj4uo13JKCT/+imIM=;
-        b=KBDfRifwW8mic1Q4GPRyZOYS/KRUfR/kKnQJhACuaHFCAldDiEw3QiIxFRToZEXpHA
-         1ebEw4+OP+F+QQxGCbZMjBPJy1pw4vp5iCEuKGnY4TwiybCwTi0QYT7fkFH7Zx/5Nqdr
-         n9dT00zbRqm5FLkhvElNX4WK3QAZwKMrJnqRD2QVEqS1BGH2lZvx2fAaMQDj1nX7pHhx
-         GG6R3G9wyc6t81N4wzABqEZ+ML3xooHyk1yDKW2m9/6n/cWaIj48PhkCDzdajMl9wHnN
-         dxJZKoL/JplB8geJ5S1dHK0Xaiisd1h9NqRTWbtGhOBWtbz0/kIQTIE45YLSh0MR1wq0
-         lAjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750303115; x=1750907915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h6NkPCHYEoZsUFSw6jIHPSK470nj4uo13JKCT/+imIM=;
-        b=PB7d2GQ9Z2csqzvKbltOG+fobZVbpdLfQCbnJ3DBWsAI52nU1jUguFbVnOhrTc3rTK
-         2T3SBIxpYa0RzzfvGgg2MH3zNf7FBtlMfq6adbtMxN2MJdMPJOYzO+6h9p3VvjMBbuc3
-         E0nER8CiPTT0UXRSK+8uOsFrAHKXxBUOLsFpWRgbfIBhn+xYHPBIHUkE76gu/kXfgtMe
-         eB+n8jHV6dnsODijxOEHGtOs99CwDKwOxqgnhNAlTq301JS9btGMABOzSJoh7baZq9S1
-         2ic397Oq1GtF80KT308+9STtMRwyWT3wChnc8T7RkpErQgtgqbY1LNIaITryPf7uzZGn
-         JFVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZDk0H5/eAP84UoLCxrVPDMXEVZ+49rAH4RgBAodIg+p8qA387j5DxdbsHgUkkGn6oZp0FDrBXGrpOKPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzJY1FmhvaKyYW+jWem/KMn69hucd5gZxP3IZ/Thr6Bgsg4lzM
-	2VoLzvmMDzrpAIfKv0XB/C4MFpOu77n5FJvYzo6zB78JFvKFDPjnlul5Ko7qXBDUyLOpimNAxGB
-	vpAnE7MyZN75lMXuHKA6hqGDdf1IdCPdZxjy86SN2XA==
-X-Gm-Gg: ASbGncsZL4jRm1O6FtzRBjyUQ/JHYkIDnpvlQ2seAJBz/XXVVfIa6WBH/o59ex0NrwH
-	SMZbsxszQqBtgsLOULLJ9Ab2m8YtuzY8aYqzAOBwcYunddzI/Ips3jDBQMxANrn68rN+MtND+ei
-	CKvNaH95eF6bzDWOoalFFNbunOugBoYMxPTG4nOkTvq7zSLbx99vm+ZlNFcg==
-X-Google-Smtp-Source: AGHT+IHKjrphxhIm9vilp/aQmrbgmu6S+E/zwZTB7dNpu62I00LyyEn65mgpkmnCNH5/lpGLxjtGUxJxYD0Awk5yviI=
-X-Received: by 2002:a05:6512:10d1:b0:550:e608:410b with SMTP id
- 2adb3069b0e04-553b6f1a12cmr5542468e87.33.1750303114901; Wed, 18 Jun 2025
- 20:18:34 -0700 (PDT)
+	s=arc-20240116; t=1750303207; c=relaxed/simple;
+	bh=JJl4egwEehwUZ9lH0qcCNVO5URPGIQgATOlSnKgy/dM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iBOno5iyNLBOtG+W+dzDRUTyOonNa+dV4rCj8RqWlo4DNraxEVeUotgLcEm23jiY86pfS82IrsFupqkcng8Oxn9INqt4sWnUQ6DG5gntAbtOWfTX0NfYtr61OJXDsEZMxWtkFR4z9OZWmSq+8kACMUa7pwU0qZuSgOdjAoxc48Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4580d29e4cbc11f0b29709d653e92f7d-20250619
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:784bea5c-baf2-46ce-a734-c7636d820195,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:770a56878cedc0abef4c5af809c10e2d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4580d29e4cbc11f0b29709d653e92f7d-20250619
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <tanze@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1002011062; Thu, 19 Jun 2025 11:19:55 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 0B32D16001A01;
+	Thu, 19 Jun 2025 11:19:55 +0800 (CST)
+X-ns-mid: postfix-685381D9-2974341226
+Received: from localhost.localdomain (unknown [10.42.12.96])
+	by node4.com.cn (NSMail) with ESMTPA id 8787616001CC7;
+	Thu, 19 Jun 2025 03:19:51 +0000 (UTC)
+From: tanze <tanze@kylinos.cn>
+To: peterz@infradead.org,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	tanze <tanze@kylinos.cn>
+Subject: [PATCH] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
+Date: Thu, 19 Jun 2025 11:19:47 +0800
+Message-Id: <20250619031947.1111196-1-tanze@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618070328.2192849-1-hezhongkun.hzk@bytedance.com>
- <20250618164334.54616cb2d70a1ee3c1f28a81@linux-foundation.org> <p6nr56qg7vx72qvaalrvntzstyrkt7z3fytfux5nd4wlvef462@znymqow5qjsr>
-In-Reply-To: <p6nr56qg7vx72qvaalrvntzstyrkt7z3fytfux5nd4wlvef462@znymqow5qjsr>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Thu, 19 Jun 2025 11:17:58 +0800
-X-Gm-Features: Ac12FXz628ssSehvnNEODzLupA-PZ9JlsOYBcKOKn58kQjOASv9O20Rq0e79bOg
-Message-ID: <CACSyD1P5ksZHHRZwCr48gDVv9Wt9hXfX9PcXqrd5MpDRJkdzHA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm: rename the oldflags and parameter in memalloc_flags_*()
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 8:07=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Wed, Jun 18, 2025 at 04:43:34PM -0700, Andrew Morton wrote:
-> > On Wed, 18 Jun 2025 15:03:28 +0800 Zhongkun He <hezhongkun.hzk@bytedanc=
-e.com> wrote:
-> >
-> > > The variable name oldflags can indeed be misleading, because
-> > > it does not store the complete original value of flags.
-> > > Instead, it records which flags from the given set are not
-> > > currently set. So rename it.
-> > >
-> >
-> > Your email client is mangling the patches in strange ways.  Please send
-> > yourself a patch, figure out why it didn't apply?
-> >
-> > > --- a/include/linux/sched/mm.h
-> > > +++ b/include/linux/sched/mm.h
-> > > @@ -322,21 +322,21 @@ static inline void might_alloc(gfp_t gfp_mask)
-> > >  }
-> > >
-> > >  /**
-> > > - * memalloc_flags_save - Add a PF_* flag to current->flags, save old=
- value
-> > > + * memalloc_flags_save - Add a PF_* flag to current->flags, return s=
-aved flags mask
-> > >   *
-> > >   * This allows PF_* flags to be conveniently added, irrespective of =
-current
-> > >   * value, and then the old version restored with memalloc_flags_rest=
-ore().
-> > >   */
-> > > -static inline unsigned memalloc_flags_save(unsigned flags)
-> > > +static inline unsigned int memalloc_flags_save(unsigned int flags_ma=
-sk)
-> > >  {
-> > > -   unsigned oldflags =3D ~current->flags & flags;
-> > > -   current->flags |=3D flags;
-> > > -   return oldflags;
-> > > +   unsigned int saved_flags_mask =3D ~current->flags & flags_mask;
-> > > +
-> > > +   current->flags |=3D flags_mask;
-> > > +   return saved_flags_mask;
-> > >  }
-> > >
-> > > -static inline void memalloc_flags_restore(unsigned flags)
-> > > +static inline void memalloc_flags_restore(unsigned int flags_mask)
-> > >  {
-> > > -   current->flags &=3D ~flags;
-> > > +   current->flags &=3D ~flags_mask;
-> > >  }
-> >
-> > I guess so.  Maybe.  A bit.  Kent, what do you think?
->
-> Eesh, seems like pointless verbosity to me. Maybe don't change it if it
-> doesn't need to be changed?
+Perf's instructions event tests on Zhaoxin CPUs may exhibit:
 
-Hi Kent, thanks for your feedback.
-How about this version,  only change the 'old' to 'saved'.
-The function does not return the old current->flags value. Instead,
-it returns the subset of flags that were not previously set in current->fla=
-gs,
-so they can later be cleared by memalloc_flags_restore(). The name savedfla=
-gs
-makes this behavior clearer and avoids confusion.
+  $perf stat -e instructions,cycles ls -l
 
- /**
-- * memalloc_flags_save - Add a PF_* flag to current->flags, save old value
-+ * memalloc_flags_save - Add a PF_* flag to current->flags, return saved f=
-lags
-  *
-  * This allows PF_* flags to be conveniently added, irrespective of curren=
-t
-  * value, and then the old version restored with memalloc_flags_restore().
-  */
- static inline unsigned memalloc_flags_save(unsigned flags)
+  ......
+  Performance counter stats for 'ls -l':
+
+                 0      instructions                     #    0.00  insn =
+per cycle
+         9,488,278      cycles
+
+       0.004365407 seconds time elapsed
+
+       0.003303000 seconds user
+       0.001099000 seconds sys
+
+The absence of the fixedctr member leads to an incorrect hwc->event_base
+value on Zhaoxin CPUs, causing a discrepancy in the instruction count
+reported by perf stat. This commit resolves the instruction count issue
+by properly initializing the fixedctr member.
+
+Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
+
+Signed-off-by: tanze <tanze@kylinos.cn>
+---
+ arch/x86/events/zhaoxin/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/cor=
+e.c
+index 4bdfcf091200..3fc3f9abece9 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst =3D=
  {
--       unsigned oldflags =3D ~current->flags & flags;
-+       unsigned savedflags =3D ~current->flags & flags;
-        current->flags |=3D flags;
--       return oldflags;
-+       return savedflags;
- }
+ 	.schedule_events	=3D x86_schedule_events,
+ 	.eventsel		=3D MSR_ARCH_PERFMON_EVENTSEL0,
+ 	.perfctr		=3D MSR_ARCH_PERFMON_PERFCTR0,
++	.fixedctr		=3D MSR_ARCH_PERFMON_FIXED_CTR0,
+ 	.event_map		=3D zhaoxin_pmu_event_map,
+ 	.max_events		=3D ARRAY_SIZE(zx_pmon_event_map),
+ 	.apic			=3D 1,
+--=20
+2.25.1
 
-Thanks,
-Zhongkun
