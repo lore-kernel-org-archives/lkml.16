@@ -1,66 +1,119 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9080E21C9E3
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 07:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC9821C9E3;
+	Thu, 19 Jun 2025 07:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750319927; cv=none; b=QyGgNVJhvSlHB2gtx5zWHo+T/oFSK6AvZKWihl8v+9RT81jd53QdM2i+LGau9z3WMpe36MUV75ssdYhRaOAJ0qWYb9GDsxOSDG5UsPpAJwK6XxWRr6B+eU3xM6CgwYipSF5t/x6YzPc5KvThpI2IqP88BYe9GiU1tWabP/tdDM8=
+	t=1750319939; cv=none; b=hjTSKz/caLPBtHCdJ4m+PUNcBPBQH/jMj51zZ0Af/KmQhN1E82ikw+PuLW/AgiJJbJlGDl1J7ehE9Yc+wa1DKzUl9reegqRPhbM6p9eLN6tpnsOY0eia3Z3tPgztL8dIcdYZItK5zH4a+sVLOoQ9pdG8ykNhTpJ5fa8TzRblnbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750319927; c=relaxed/simple;
-	bh=crqk+zhdQ8Qr/k404DZSB2tQzBrmeeHuh9f0v8uhmTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xa5Sx+JhhxIG43t5y54q1laxCIzr2ZB6dFy42SEwtRnewgoeNXAKqSTruuza8QnTKejK6HS/SjmYauHZbbabmCG5uqKlgTj0fQzRZt+8DDRdgeMAUNVDWxHJ2CkHt0LCqD/A6Wfolqmw6AJMpHxVcq3AfpOB34cnxT+pIxs491w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=Of2bD993; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="Of2bD993"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=D8MldPwbwsdIkwE8tzK40xr/dxkO1GNTeWs2e/Byr+M=;
-	b=Of2bD993b5NP6aOpy9wWGxOojcUgkQJnZVIcN9+oqdrChJ2XG4QVhla/HNkDCd
-	C3bKt714JU+Eb9xNPq5SYdM3H/bRZ1LFkkJ3daNjQpeBDCvNIu/+ECK30uNhKhTo
-	sjyBQX5rEsERgHseWn7ruNlyuj+O457Ei1oixj8dnZXeg=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDnfU8Bw1NoXtX_AA--.28682S3;
-	Thu, 19 Jun 2025 15:57:55 +0800 (CST)
-Date: Thu, 19 Jun 2025 15:57:53 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev
-Subject: Re: [PATCH] arm64: defconfig: add S32G RTC module support
-Message-ID: <aFPDAYCwA7I7yipt@dragon>
-References: <20250526165041.2486330-1-ciprianmarian.costea@oss.nxp.com>
+	s=arc-20240116; t=1750319939; c=relaxed/simple;
+	bh=udWOnZrRgI2y+PCIemO3YH5qb5fdd89TfRNdT3smMAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MeaiWW8jnEiWNoPMWZeqKgy9DIRZ17+RUlMHqq40LRs3lAKlaq9l/GrYJeo3E6SnaYnIYl3q19VLmatwQ0ytfoTGCAUk59YERC3J7piWqpdmituXHhb1NXLDNo6UJieAOmpOjoqlkESx7h86pe3xe+25c1J5gVLHZXAU2dH4BOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgAHp5Umw1NoNs+hAA--.11977S2;
+	Thu, 19 Jun 2025 15:58:32 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v3 0/2] Add driver support for ESWIN eic7700 SoC reset controller
+Date: Thu, 19 Jun 2025 15:58:11 +0800
+Message-Id: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526165041.2486330-1-ciprianmarian.costea@oss.nxp.com>
-X-CM-TRANSID:Mc8vCgDnfU8Bw1NoXtX_AA--.28682S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUO7KIDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBAZxZWhTjfbDTwAAsa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgAHp5Umw1NoNs+hAA--.11977S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4DGryftF1kWrW8uw43Awb_yoW8tF47pF
+	s8GFy7KrsYyrWxXayfJ3WFyFyfXan3tF4UCrW0qw47Aa9xJFy8tr15tF1UAFyDCrs7Xry3
+	WF13C34S9Fyqy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Mon, May 26, 2025 at 07:50:41PM +0300, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> 
-> The RTC hardware module present on S32G based SoCs tracks clock time
-> during system suspend and it is used as a wakeup source on S32G2/S32G3
-> architecture.
-> 
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Applied, thanks!
+There are some register offsets in reset dt-bindings. It could be used.
+Therefore, we want to keep these bindings. I don't known if it meets
+the requirements.
+
+PIPE_RST_CTRL, TBU_RST_CTRL and TEST_RST_CTRL are not used in this
+driver. Therefore, these are left out.
+
+Updates:
+
+  dt-bindings: reset: eswin: Documentation for eic7700 SoC
+  v2 -> v3:
+    1. Drop syscon and simple-mfd from yaml and code, because these are
+       not necessary.
+    2. Update description to introduce reset controller.
+    3. Add reset control indices for dt-bindings.
+    4. Keep the register offsets in dt-bindings.
+
+  v1 -> v2:
+    1. Clear warnings/errors for using "make dt_binding_check".
+    2. Update example, change parent node from sys-crg to reset-controller
+       for reset yaml.
+    3. Drop the child node and add '#reset-cells' to the parent node.
+    4. Drop the description, because sys-crg block is changed to reset-
+       controller.
+    5. Change hex numbers to decimal numbers going from 0, and drop the
+       not needed hardware numbers.
+
+  reset: eswin: Add eic7700 reset driver
+  v2 -> v3:
+    1. Change syscon_node_to_regmap() to MMIO regmap functions, because
+       droped syscon.
+    2. Add BIT() in function eswin_reset_set() to shift the reset
+       control indices.
+    3. Remove forced type conversions from function eswin_reset_of_
+       xlate_lookup_id().
+
+  v1 -> v2:
+    1. Modify the code according to the suggestions.
+    2. Use eswin_reset_assert() and eswin_reset_deassert in function
+       eswin_reset_reset().
+    3. Place RESET_EIC7700 in Kconfig and Makefile in order.
+    4. Use dev_err_probe() in probe function.
+
+Xuyang Dong (2):
+  dt-bindings: reset: eswin: Documentation for eic7700 SoC
+  reset: eswin: Add eic7700 reset driver
+
+ .../bindings/reset/eswin,eic7700-reset.yaml   |  42 ++
+ drivers/reset/Kconfig                         |  10 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-eic7700.c                 | 243 +++++++++
+ .../dt-bindings/reset/eswin,eic7700-reset.h   | 460 ++++++++++++++++++
+ 5 files changed, 756 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+ create mode 100644 drivers/reset/reset-eic7700.c
+ create mode 100644 include/dt-bindings/reset/eswin,eic7700-reset.h
+
+--
+2.17.1
 
