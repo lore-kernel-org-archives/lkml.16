@@ -1,102 +1,360 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7376A23AE60;
-	Thu, 19 Jun 2025 08:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from zg8tmty1ljiyny4xntuumtyw.icoremail.net (zg8tmty1ljiyny4xntuumtyw.icoremail.net [165.227.155.160])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7C625DAE8;
+	Thu, 19 Jun 2025 08:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.227.155.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750320081; cv=none; b=H4GtI45JotpxejgSim+ovXJtD5/SMAPS5HWNiOI4s2aUqiUct+5LUjxn0jqhjbf9dOfIpiaf60sCNicKX0hs02mfzoqCSuoEOdcpSg4OI8vgL+xen5BvqLxtin4OUaI7SQlx4IKFIDRhN0NnuU01NwwoQRGcHG40Jm1yLAhqWKw=
+	t=1750320085; cv=none; b=irSjBRvF8/k2XS2VJtTpgDBDvHw/Nmfmby6hhcsEZH/1Og1FVO23A5zfmdg3sgoRf6RGDhe+ky6kIa26Azr0I6jVh1B27bsmLEduFa3isizhB3P3LVW7+wkVdxPN7KlvW65tSLcMlvsBzsFhfpfBcIC5EGTf2M+Ag+pjxBBHiUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750320081; c=relaxed/simple;
-	bh=K4Uqs7AMZHE9Ot8S/BK4MEl+Qm8sSFeK1zNGuiqrgoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZV9PjtRCTwiTxFGqvzGn+Rk4XfeouxKb2Gr41+mobKa7bm7Y2c2EeoIo2oflHJk5ePtz64huJPouOVZcvAXeLK04hwoJL7AAD22MiObqVINPJrXoMUHutzpf5wdCrZrm4Gbq1ickgbvijFkC0EkiEJR+GlfVvOrqlzIigrvICA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A5/zBiCr; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A5/zBiCr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Xsbe0ope0hkQuYxUEAzIg1Go8B7EYdI/tGK+nDa4ZWM=; b=A5/zBiCrJaivG0mCc6mnTIuiF4
-	lHSJk9V9KEW19Jnla8pqEDTVOMZFK6D4GpDUwW62tporUnwDaZSR+xf4KySLr3bc8Y80/qMFVUsoX
-	OGhk/3o13hWitflAPwiVSgWZ5YFCvj5u0rul9pzcgVthVoxmwLwPAvZSQKPWebOuDatOObKUUgevK
-	A8bxXIsmLhPl77R36ftsFWIt9UoeECp4okly8lxRSdY/WURGRsN/Qv6u1ykzstdjNc3p97q9L+YNh
-	h3V9fM//FV73t8O8dXP8+n2cUDh26NuZmAfb/tPO4ieXxGXjEpGmEZ78ne5xbCsBRqoCIrYPJzIT7
-	uy+5sHHQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSACr-00000007imF-1jBP;
-	Thu, 19 Jun 2025 08:01:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE7F53088F2; Thu, 19 Jun 2025 10:01:08 +0200 (CEST)
-Date: Thu, 19 Jun 2025 10:01:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250619080108.GY1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.770214773@goodmis.org>
- <20250618142000.GS1613376@noisy.programming.kicks-ass.net>
- <20250618113706.2eb46544@gandalf.local.home>
+	s=arc-20240116; t=1750320085; c=relaxed/simple;
+	bh=mkDWQIXYU/4z8xx0YSNSPkiqALUhlAz25BHxoRNhRs8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y9OHSyRAUSlI/bT4wkVFMUHQdv74V0EAjiOIZMXaErM4aqLE5+pML2b02mCs1+nx8aOYbYt84ZzatmQ25/OM3zUAxarEYjjhWxOjnkj9fAIyMx7Lfph8ySct2PrO6BT7beDw2XJ5Epz2Onr1Z2NiLNbFAVi+Uyj2P1wv1VPtj7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=165.227.155.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgBXexG_w1NozM+hAA--.32881S2;
+	Thu, 19 Jun 2025 16:01:05 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v3 2/2] reset: eswin: Add eic7700 reset driver
+Date: Thu, 19 Jun 2025 16:01:01 +0800
+Message-Id: <20250619080101.1360-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
+References: <20250619075811.1230-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618113706.2eb46544@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgBXexG_w1NozM+hAA--.32881S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFW7Kry5GrW7Gry3CFy8Xwb_yoWfCw1DpF
+	4rGFW3Jr4UJr4fWw4xJr1kuF4ag3Z3KFyUGrZrKw4Iyw13ta4UJF48tFy8tFyDCryDXFy5
+	tF1agayruFnxtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHCJQUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Wed, Jun 18, 2025 at 11:37:06AM -0400, Steven Rostedt wrote:
-> On Wed, 18 Jun 2025 16:20:00 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > The timestamp is passed to the caller on request, and when the stacktrace is
-> > > generated upon returning to user space, it call the requester's callback
-> > > with the timestamp as well as the stacktrace.  
-> > 
-> > This whole story hinges on there being a high resolution time-stamp
-> > available... Good thing we killed x86 !TSC support when we did. You sure
-> > there's no other architectures you're interested in that lack a high res
-> > time source?
-> > 
-> > What about two CPUs managing to request an unwind at exactly the same
-> > time?
-> 
-> It's mapped to a task. As long as each timestamp is unique for a task it
-> should be fine. As the trace can record the current->pid along with the
-> timestamp to map to the unique user space stack trace.
-> 
-> As for resolution, as long as there can't be two system calls back to back
-> within the same time stamp. Otherwise, yeah, we have an issue.
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Well, up until very recent, jiffies was the fallback clock on x86. You
-can get PID reuse in a jiffy if you push things hard.
+Add support for reset controller in eic7700 series chips.
+Provide functionality for asserting and deasserting resets
+on the chip.
 
-Most archs seem to have some higher res clock these days, but I would
-not be surprised if among the museum pieces we still support there's
-some crap lying in wait.
+Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+---
+ drivers/reset/Kconfig         |  10 ++
+ drivers/reset/Makefile        |   1 +
+ drivers/reset/reset-eic7700.c | 243 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 254 insertions(+)
+ create mode 100644 drivers/reset/reset-eic7700.c
 
-If you want to rely on consecutive system calls never seeing the same
-timestamp, let alone PID reuse in the same timestamp -- for some generic
-infrastructure -- you need to go audit all the arch code.
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d85be5899da6..82f829f4c9f0 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -66,6 +66,16 @@ config RESET_BRCMSTB_RESCAL
+ 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
+ 	  BCM7216.
+
++config RESET_EIC7700
++	bool "Reset controller driver for ESWIN SoCs"
++	depends on ARCH_ESWIN || COMPILE_TEST
++	default ARCH_ESWIN
++	help
++	  This enables the reset controller driver for ESWIN SoCs. This driver is
++	  specific to ESWIN SoCs and should only be enabled if using such hardware.
++	  The driver supports eic7700 series chips and provides functionality for
++	  asserting and deasserting resets on the chip.
++
+ config RESET_EYEQ
+ 	bool "Mobileye EyeQ reset controller"
+ 	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 91e6348e3351..ceafbad0555c 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
+ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
++obj-$(CONFIG_RESET_EIC7700) += reset-eic7700.o
+ obj-$(CONFIG_RESET_EYEQ) += reset-eyeq.o
+ obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
+ obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+diff --git a/drivers/reset/reset-eic7700.c b/drivers/reset/reset-eic7700.c
+new file mode 100644
+index 000000000000..61513746c06c
+--- /dev/null
++++ b/drivers/reset/reset-eic7700.c
+@@ -0,0 +1,243 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * ESWIN Reset Driver
++ *
++ * Authors:
++ *	Yifeng Huang <huangyifeng@eswincomputing.com>
++ *	Xuyang Dong <dongxuyang@eswincomputing.com>
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#define SYSCRG_CLEAR_BOOT_INFO_OFFSET 0x30C
++#define CLEAR_BOOT_FLAG_BIT BIT(0)
++#define SYSCRG_RESET_OFFSET 0x400
++
++/**
++ * struct eswin_reset_data - reset controller information structure
++ * @rcdev: reset controller entity
++ * @dev: reset controller device pointer
++ * @idr: idr structure for mapping ids to reset control structures
++ * @regmap: reset controller device register map
++ */
++struct eswin_reset_data {
++	struct reset_controller_dev rcdev;
++	struct device *dev;
++	struct idr idr;
++	struct regmap *regmap;
++};
++
++/**
++ * struct eswin_reset_control - reset control structure
++ * @dev_id: SoC-specific device identifier
++ * @reset_bit: reset mask to use for toggling reset
++ */
++struct eswin_reset_control {
++	u32 dev_id;
++	u32 reset_bit;
++};
++
++static const struct regmap_config eswin_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.max_register = 0x8000000,
++};
++
++#define to_eswin_reset_data(p) container_of((p), struct eswin_reset_data, rcdev)
++
++/**
++ * eswin_reset_set() - program a device's reset
++ * @rcdev: reset controller entity
++ * @id: ID of the reset to toggle
++ * @assert: boolean flag to indicate assert or deassert
++ *
++ * This is a common internal function used to assert or deassert a device's
++ * reset by clear and set the reset bit. The device's reset is asserted if the
++ * @assert argument is true, or deasserted if @assert argument is false.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_set(struct reset_controller_dev *rcdev, unsigned long id,
++			   bool assert)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	control = idr_find(&data->idr, id);
++
++	if (!control)
++		return -EINVAL;
++
++	if (assert)
++		ret = regmap_clear_bits(data->regmap, SYSCRG_RESET_OFFSET +
++						       control->dev_id * sizeof(u32),
++							   BIT(control->reset_bit));
++	else
++		ret = regmap_set_bits(data->regmap, SYSCRG_RESET_OFFSET +
++						     control->dev_id * sizeof(u32),
++						     BIT(control->reset_bit));
++
++	return ret;
++}
++
++static int eswin_reset_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, true);
++}
++
++static int eswin_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, false);
++}
++
++static int eswin_reset_reset(struct reset_controller_dev *rcdev,
++			     unsigned long id)
++{
++	int ret;
++
++	ret = eswin_reset_assert(rcdev, id);
++	if (ret != 0)
++		return ret;
++
++	usleep_range(10, 15);
++	ret = eswin_reset_deassert(rcdev, id);
++	if (ret != 0)
++		return ret;
++
++	return 0;
++}
++
++static const struct reset_control_ops eswin_reset_ops = {
++	.reset = eswin_reset_reset,
++	.assert = eswin_reset_assert,
++	.deassert = eswin_reset_deassert,
++};
++
++static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
++{
++	struct of_phandle_args *reset_spec = data;
++	struct eswin_reset_control *slot_control = p;
++
++	if (reset_spec->args[0] == slot_control->dev_id &&
++	    reset_spec->args[1] == slot_control->reset_bit)
++		return id;
++
++	return 0;
++}
++
++/**
++ * eswin_reset_of_xlate() - translate a set of OF arguments to a reset ID
++ * @rcdev: reset controller entity
++ * @reset_spec: OF reset argument specifier
++ *
++ * This function performs the translation of the reset argument specifier
++ * values defined in a reset consumer device node. The function allocates a
++ * reset control structure for that device reset, and will be used by the
++ * driver for performing any reset functions on that reset. An idr structure
++ * is allocated and used to map to the reset control structure. This idr
++ * is used by the driver to do reset lookups.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_of_xlate(struct reset_controller_dev *rcdev,
++				const struct of_phandle_args *reset_spec)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	ret = idr_for_each(&data->idr, eswin_reset_of_xlate_lookup_id,
++			   (void *)reset_spec);
++	if (ret)
++		return ret;
++
++	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
++	if (!control)
++		return -ENOMEM;
++
++	control->dev_id = reset_spec->args[0];
++	control->reset_bit = reset_spec->args[1];
++
++	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
++}
++
++static const struct of_device_id eswin_reset_dt_ids[] = {
++	{
++		.compatible = "eswin,eic7700-reset",
++	},
++	{ /* sentinel */ }
++};
++
++static int eswin_reset_probe(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data;
++	struct device *dev = &pdev->dev;
++	void __iomem *base;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	data->regmap = devm_regmap_init_mmio(dev, base, &eswin_regmap_config);
++	if (IS_ERR(data->regmap))
++		return dev_err_probe(dev, PTR_ERR(data->regmap), "failed to get regmap!\n");
++
++	platform_set_drvdata(pdev, data);
++
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.ops = &eswin_reset_ops;
++	data->rcdev.of_node = pdev->dev.of_node;
++	data->rcdev.of_reset_n_cells = 2;
++	data->rcdev.of_xlate = eswin_reset_of_xlate;
++	data->rcdev.dev = &pdev->dev;
++	data->dev = &pdev->dev;
++	idr_init(&data->idr);
++
++	/* clear boot flag so u84 and scpu could be reseted by software */
++	regmap_set_bits(data->regmap, SYSCRG_CLEAR_BOOT_INFO_OFFSET,
++			CLEAR_BOOT_FLAG_BIT);
++	msleep(50);
++
++	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
++}
++
++static void eswin_reset_remove(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data = platform_get_drvdata(pdev);
++
++	idr_destroy(&data->idr);
++}
++
++static struct platform_driver eswin_reset_driver = {
++	.probe	= eswin_reset_probe,
++	.remove = eswin_reset_remove,
++	.driver = {
++		.name		= "eswin-reset",
++		.of_match_table	= eswin_reset_dt_ids,
++	},
++};
++
++static int __init eswin_reset_init(void)
++{
++	return platform_driver_register(&eswin_reset_driver);
++}
++arch_initcall(eswin_reset_init);
+--
+2.17.1
+
