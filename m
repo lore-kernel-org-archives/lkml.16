@@ -1,111 +1,170 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C9C220F57
-	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26705221579
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 09:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326560; cv=none; b=CRo5N0zDTADSIZOMcGBH67v3HLMsR8nN7RvuSSoRUUefFoMYd9Klu8MZnh0Z79346skwGq8UU+VlKLfwfZ8TEkkqmQ+HsE1gAM+HMwAFLgJKJRyqbsXqO2vJwPqKln6KMQJSQSemmsyAWI5Ngezhf2YllvmzLE/pcYirCynGStI=
+	t=1750326565; cv=none; b=I7VV53tBNyUseaEJ1zmWgX4y7mFJpWxdhdyloqqzc1630ythBVNZEaMSMPvEa0lFICOwRHPieS2yyYH0iRU3siJmdBBKJVLj0F91e29rbCgjQ7zaRmHV0SmPNpHZ36RLctutXCOyWHkW0MkRk/lXiGZcM+qjz+6XzPTDkKJ1R84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326560; c=relaxed/simple;
-	bh=oGgNbIXl6T2if3214aOKJS8wjoi+YfhpFcEFUg4nfOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WnJ1ZjblPoI4uMmZgX7D33+5RjpxwnqZPnPPGWBe/tSE2L3SfWwWJnb1jz7TXwuY7D1GcIo9fN1dEt8k4PewovOkMPHUF1LAimmOZjMp87DqLGaC1dwLkYPcLh93h58vvhTKlL5hvj+ptmsrU/x8/6k5n0tIekMuk48wmtrMELU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Px1HRRr7; arc=none smtp.client-ip=209.85.210.50
+	s=arc-20240116; t=1750326565; c=relaxed/simple;
+	bh=3LkyeQl0t9LM+cj52xpO+Ax9lI0k6dCYkCdTOXS+hWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7C2OBZA+k9Lar2EslzUEgHbi402qmXXwyAVs7WYC5MbF23VrsrQZCqT/vWfHpDWrFGHDCwgjN6xK76PHT/qLNSMyqKT1IzW0L49Hsw9BuBsf8mP5ek48R/+utuHysElID6Sk629YFNxixV92dSWFH+n7pQZt+FspZxzzwpH0uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PQuxVCDT; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Px1HRRr7"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72bd5f25ea6so187965a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:49:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQuxVCDT"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235ca5eba8cso134945ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 02:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750326558; x=1750931358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QJl6uGqaCbQBaMQQvNPvxbNOxoHo/eT5TsgwXHD3osA=;
-        b=Px1HRRr7V+E1w1EyOWb5RapwyhMHzmqdDJIoawJt6gXpyGlwDH2PMW/sJjTuF6+Mz6
-         rwzNcbgxhVr2LP9HRFuiEzCyHSHpriG9xkBJX4tKpL8dI8N8+5wgYptJC+EwnmIuZZLk
-         qS57Bxxo6P/est1jKh4jJo2zNPU+g2q595w/owrYD8HZlJRJIJX04JoSWKSNE1G3ZZxf
-         WatzMKjhVYkpZ3zrcMMSenPK+9H/1EiZtuS0ls9GumP1qiNF3frZxvvAtXM8BHvrBXr3
-         sTbzJpgN1anQ3OetKCbVQ02ZD7nKvJpjc8uci5ewS3TYDTKeCgFOiGCm3DsDdGsWDcO8
-         g4qw==
+        d=google.com; s=20230601; t=1750326562; x=1750931362; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=17oxjeeFsHFeG65L770MNpFPAUdse/NuAwqFBcFBF84=;
+        b=PQuxVCDTgWhORmrR+ZAqjQ151mrOTPmBYrhmS4vovM/Nv9PEbDz5t34HHCFxijI9mm
+         AoMwwDmkKo7sRjAXRm+uY3T2oYCPYKgFcSinlh8ag8XezsLHtXaU4ROr172WILE2I2nh
+         ojyGe5tOmRmNybjbv4b4fgAPKZmUyHZ+fdvxRxA3nV/IFiiChxuqEtta02niY+Yb5SFD
+         gRXS7ufjGxEeqozweC/UNHMlOneORaNGmao7JGAXogXkL98bHE5d6d4UN1590tWvtyKy
+         aK6+/3lGwzf5Rg3tqr3pSxypnkcKFixHGe6YdvqF0jl1c/IS71kwp+TGLb/j3tZoqcNV
+         YQgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750326558; x=1750931358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QJl6uGqaCbQBaMQQvNPvxbNOxoHo/eT5TsgwXHD3osA=;
-        b=J7eB+xfIDLrlt274GLT9dWgDZsEX47xm9WRUgBs5zpaILkHaMKiZ/4t6KLknajKzVo
-         e4gZa32LPjpq9SOcjuEaApXZCdxJa+XS7DWfJ6Ib6Uskps7OYffdxQAL7T1Ly8Ts4kky
-         av/49xeQnKHi9wtcebk4Tv0Pc9d1Y8os/aD/14hvf169pXBdkQBOc3oigTrgzFvc/qAP
-         50vySc27jQ9Qv8Vc9YWaaTCYXFg1NhFDQbFNSR0fObqQRp2kdKDqAIFQj8ksVNNAZ7I1
-         6Z8KBtnORo+IcQ8KBc/4h5Xkzeztwig2hZOYLC8065wfhjUpma7KIsUpGhaxrAVSoJyK
-         C1iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHpoh+Oo0LV177KpBvlvsMsEo4cPgFoUtkR4MTIlOEboBR7KdIoMksCPtamkbnrP6tglgCZ1BXNu2P38s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEAmNZ2ujqLV9Od7ACSJXZZcKKC65GcRmeLrc0UEGH16Qamv3z
-	Z8QBBfT6Bk3yrr0bmIZsXpbP8y8QX9gZvKq3aHk0UUd/nAYdnlgldAyBZ+Q3h71GTbO/J0e/GJ0
-	s7dj5GSs+GM4LD7V+Y3e0GTbredyui98AAQqXY4cn
-X-Gm-Gg: ASbGncs0hjCIQYDClFtN9vXZRHPauhFhoS5OnREZUy9f/LMS2GOQbzHEoBAsH5VkUgM
-	FqNrgPqsebDASQAbfVD7UGo5LoyHy+2ePJEKpOcb+bdt4xpRDmnZfWziXozbZYyaHfmIbRA7l91
-	6J9HwY6O2L/3IMcQxcQAsDRf8cxAQX+GHQWRFSL9L5skn8SFyC4lJriQnJIRBWykXm69djBqrw0
-	A==
-X-Google-Smtp-Source: AGHT+IHPHYRmKnHOsCVbSKhmMIjCUnO2bXpi2Qwr76anVtQSsYyUsTFZp5bLxrDV1U4X7C+0Wvz26zEAZlgrLMDZAdM=
-X-Received: by 2002:a05:6870:568c:b0:2d5:c61f:c2db with SMTP id
- 586e51a60fabf-2eaf0ba304dmr13059233fac.34.1750326557882; Thu, 19 Jun 2025
- 02:49:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750326562; x=1750931362;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17oxjeeFsHFeG65L770MNpFPAUdse/NuAwqFBcFBF84=;
+        b=vsfGPSlPXi2vUNXiDHPU4mmCYKZNyY9JuBcoiDpNVYJOpW1F3gIJcfOC097p30mzqr
+         hCacASaTFpYMYeShxQYk/VE8N9r4I5wLV2lw44dZ6P1BoMxAPlJpqIiKwCIXY4ujvgSx
+         KWL1J9YjzXhJkr/LE19RW7hSGr+vF82vs8MIkDQGWl3SjztlGGitmLGcr6jG4sfSJsXF
+         YrEtr0XgOzhb+PqB2PsshK5614fjK3bNEXZfsReLAA9fKqjUJf2xdjMcaofvqY8kprCz
+         nTXSuUzfaeLaT7X2A2rm9P15i1KhVDP1kFdVObCfdrL7lAgYGDF7WqYohTn015mXwelc
+         dSog==
+X-Forwarded-Encrypted: i=1; AJvYcCWQnAAanG9U522O9R7JkHeEdepNOuX5Fz59ZClL45B2jGElPO7WrihOY2bF66YfoKs9//UZhmaF6AHNaXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKZr8bxn8UNN+AkvAwX0q3bEIbFwf+M12sn5uJmMiEasPQYYBi
+	F3XjMmtJuVZhHjEqX6VNTQfu4wxmh0JOyG9qJWmS/jGbW16i/i0H6a0GioBNlivlOA==
+X-Gm-Gg: ASbGnctU4N3T3bpiNVwb454Pv/9fe7+3lrwvHXRFlYYhvYyf7IuVY1fX6+kPgXTrB5E
+	t9RPX1oBvZlTBFi5trfwJpZuN5WAcJkYWxG0xXRvXnnB+Mz7X24qLZbolsKgsDmliaTuYjDn8kY
+	SZJWhj8ktbFiwijW641NKXj+12Z60ZHUONF5AvgRPCnOepM1nI/vg7L7d1URXHcR/mUkMMBFYR7
+	pfKUBHhwhJ+rdCBW6q0g3kVwpkgeOLlK9Ot8tSFZCqTSsoucpIMWVX/eKraUhZcEqPsYr6GcxcS
+	7Z0/fTXFefJku0tTks/D55sBN76AScl+8TZMpwyg6/2UoF/yrudc65DquSlZ/7kFs9vPFSrN8uH
+	CC724RmThINXUR8yyketI
+X-Google-Smtp-Source: AGHT+IEuCYASVN8j1eZMJIcAvoBEAqstpKSSgGIYZ2iYQuSQhTyrI+a8+/330LWZVAAW9AYW4syqlA==
+X-Received: by 2002:a17:902:fc46:b0:234:bcd0:3d6f with SMTP id d9443c01a7336-237cdfe9619mr1746815ad.1.1750326562236;
+        Thu, 19 Jun 2025 02:49:22 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb04a6sm116435595ad.178.2025.06.19.02.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 02:49:21 -0700 (PDT)
+Date: Thu, 19 Jun 2025 09:49:10 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, kevin.tian@intel.com, corbet@lwn.net,
+	will@kernel.org, bagasdotme@gmail.com, robin.murphy@arm.com,
+	joro@8bytes.org, thierry.reding@gmail.com, vdumpa@nvidia.com,
+	jonathanh@nvidia.com, shuah@kernel.org, jsnitsel@redhat.com,
+	nathan@kernel.org, peterz@infradead.org, yi.l.liu@intel.com,
+	mshavit@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v6 07/25] iommufd/access: Add internal APIs for HW queue
+ to use
+Message-ID: <aFPdFnKvus57cGOU@google.com>
+References: <cover.1749884998.git.nicolinc@nvidia.com>
+ <64145b184a0fa7c9b60532c9b475a51625edb77c.1749884998.git.nicolinc@nvidia.com>
+ <20250616133719.GC1174925@nvidia.com>
+ <aFDSNYOTToFSbFA2@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
- <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
-In-Reply-To: <CAH5fLgiMCZuaCSYRDLCpZjaa=EZ=Zaw4y54zDED-7ox9K9++2g@mail.gmail.com>
-From: Burak Emir <bqe@google.com>
-Date: Thu, 19 Jun 2025 11:49:06 +0200
-X-Gm-Features: Ac12FXzSuruTt-Nyax2FrVAzCnnuEi5Z5jbM694g7SGeod-KmRRuCItsoAZiTfY
-Message-ID: <CACQBu=UHdyxiqngiqE-5KPVyn4VFmCDapKiy2W27ic46uNO6sw@mail.gmail.com>
-Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFDSNYOTToFSbFA2@nvidia.com>
 
-On Mon, Jun 16, 2025 at 12:49=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wrote=
-:
-> > +impl core::ops::DerefMut for Bitmap {
-> > +    fn deref_mut(&mut self) -> &mut CBitmap {
-> > +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
-> > +            // SAFETY: Bitmap is represented inline.
-> > +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
-> > +        } else {
-> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
-g`.
-> > +            unsafe { self.repr.ptr.as_mut() }
->
-> Nit: You want NonNull::as_mut_ptr() here.
+On Mon, Jun 16, 2025 at 07:25:57PM -0700, Nicolin Chen wrote:
+> On Mon, Jun 16, 2025 at 10:37:19AM -0300, Jason Gunthorpe wrote:
+> > On Sat, Jun 14, 2025 at 12:14:32AM -0700, Nicolin Chen wrote:
+> > > Now, access->ops can be NULL, to support an internal use case for the new
+> > > HW queue object. Since an access object in this case will be allocated by
+> > > an inernal iommufd object, the refcount on the ictx should be skipped, so
+> > > as not to deadlock the release of the ictx as it would otherwise wait for
+> > > the release of the access first during the release of the internal object
+> > > that could wait for the release of ictx:
+> > >     ictx --releases--> hw_queue --releases--> access
+> > >       ^                                         |
+> > >       |_________________releases________________v
+> > > 
+> > > Add a set of lightweight internal APIs to unlink access and ictx:
+> > >     ictx --releases--> hw_queue --releases--> access
+> > > 
+> > > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > > ---
+> > >  drivers/iommu/iommufd/iommufd_private.h |  8 ++++
+> > >  drivers/iommu/iommufd/device.c          | 59 +++++++++++++++++++++----
+> > >  2 files changed, 58 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> > > index 4a375a8c9216..468717d5e5bc 100644
+> > > --- a/drivers/iommu/iommufd/iommufd_private.h
+> > > +++ b/drivers/iommu/iommufd/iommufd_private.h
+> > > @@ -484,6 +484,14 @@ void iopt_remove_access(struct io_pagetable *iopt,
+> > >  			struct iommufd_access *access, u32 iopt_access_list_id);
+> > >  void iommufd_access_destroy_object(struct iommufd_object *obj);
+> > >  
+> > > +/* iommufd_access for internal use */
+> > > +struct iommufd_access *iommufd_access_create_internal(struct iommufd_ctx *ictx);
+> > > +#define iommufd_access_destroy_internal(ictx, access) \
+> > > +	iommufd_object_destroy_user(ictx, &(access)->obj)
+> > 
+> > Use a static inline please
+> > 
+> > > +int iommufd_access_attach_internal(struct iommufd_access *access,
+> > > +				   struct iommufd_ioas *ioas);
+> > > +#define iommufd_access_detach_internal(access) iommufd_access_detach(access)
+> > 
+> > 
+> > >  struct iommufd_eventq {
+> > >  	struct iommufd_object obj;
+> > >  	struct iommufd_ctx *ictx;
+> > > diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+> > > index 9293722b9cff..ad33f1e41a24 100644
+> > > --- a/drivers/iommu/iommufd/device.c
+> > > +++ b/drivers/iommu/iommufd/device.c
+> > > @@ -1084,7 +1084,39 @@ void iommufd_access_destroy_object(struct iommufd_object *obj)
+> > >  	if (access->ioas)
+> > >  		WARN_ON(iommufd_access_change_ioas(access, NULL));
+> > >  	mutex_unlock(&access->ioas_lock);
+> > > -	iommufd_ctx_put(access->ictx);
+> > > +	if (access->ops)
+> > > +		iommufd_ctx_put(access->ictx);
+> > 
+> > I was hoping we could null the ictx to signal internal? That didn't
+> > work out?
+> 
+> access->ictx should be NULL for internal. It should have been:
+> +	if (access->ictx)
+> +		iommufd_ctx_put(access->ictx);
+> 
 
-Can you explain? That seems to be an unstable method that exists so
-one can get pointer to slice buffer.
+Ohh sorry, just saw this. +1, I too believe this is better than relying
+on access->ops being NULL.
 
-The repr.ptr case is NonNull<usize>, not a slice - though "morally",
-it is actually an owned C array.
-Are you suggesting we could/should represent it as a Rust one?
-However, we'd like it to use the C API to free etc.
+> > I would at least add a comment here this is filtering internal that
+> > doesn't have ictx. Maybe a little inline 'iommufd_access_is_internal'
+> > is appropriate. We'll be sad down the road if we need ops for
+> > internal.
+> 
+> Yea, an inline will be cleaner. Will add that.
+> 
+
+Ack.
 
 Thanks,
-Burak
+Praan
