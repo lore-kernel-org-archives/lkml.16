@@ -1,315 +1,218 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4004C28C5BA
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750428617; cv=none; b=BNx4R50nRjjsJUFjkh2ndT4Gp7MXNkQkuw+fRo2TJRIlEYQOY+2XoQGy7cUrjqF5l8G7ft6ZtjMIgNmooaTo3Tr/HsWz5+7DBQHO2QJTJt6kz6keC+0nBBKY9pSP8tBZqH6JapSl7TMlUuNtvvg4yIjqrpgk+WOPxu7vfx0CTYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750428617; c=relaxed/simple;
-	bh=TjGiW7i9K3ODr2HIBkdPJY5MK/H2xVSqGYS4lHnPSws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H9Yf5WFa43CKUwtixdizB/Z0OGpYPKZNiZD06V45hNdaDJXynOahLG9D6WE94rXxvKJgInHwdPWxZYUcLL+eO0c8Iq/LrhdaluuwRbojpqjlMI+05F9tSiHNJTymlXu2YWzu/4r7oqJs6yZkdPzO9H0olrdj0ZugClmAwnzwk+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=3UdFHXIV; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA028DF13;
+	Fri, 20 Jun 2025 14:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750428625; cv=fail; b=OolQG57kJYtLuJ3OuwAjY8HjAKnGIiLHTrSZkEytInPVWc3KxxWQv/I7f0KTzCyLBRKpBUzaa/rY3I+1u1FFwV5GoNydxD06WGCHZi5gBw0BH1EevSinZjlviGXNXV2A/HZKKsJweNq1twBwhrP9QxYfu/TBxkXC5Vs4SieqPhQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750428625; c=relaxed/simple;
+	bh=oh/v2w4/zhPWXP4EzB7gL1be/QqJRqTBvUAfFOaWAUc=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LNuo49SWkZG/viqt6g4gpaVn5H+tkxoYjF+WPCSZtCXdy/6Mn1xr3TU4PH3Bbg6Tw5uWoxZB/q3Pgpnky9f1K/Nx50S01DUsD9x2ap1KY0RXAbCGsWbwEFplrrAvb2zbB0cBbOKt48SDxdkENoylTwNc/ZFAUbL/Lg+YFca6A5o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDYWmsOp; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="3UdFHXIV"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-711d4689084so20637757b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750428613; x=1751033413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r+pLxQe4eVRAY0bh5C+6wdQnLVkUY9s5flt9lCy/28I=;
-        b=3UdFHXIVLpDk8PG41k8WyMpOoDdxWWzipQm9Wpjb2LgaoKVllqPzS5UNvuPCsgZtlW
-         f5lx3j7ezN3PRAfzXIMTjqK16G59N9BbhR4DGlM+de756yeg5b3nCBXszyeEcAFx+IRq
-         UL50dXATwiza4s7PBocviT1aEJwsu7Ob2OVfVtdSxyPUHRmOfELFCsxP4I4k8SxJe5LJ
-         dq3ZDhpBn7CkkkFHTHCbeecUXhtUG2nJJHxB9bv5rQnYl2+k/rAuClaeqSAcprDt//Ys
-         1UCRdp6uJtY4R5YrgwgBwIZWj9pr91qz2z3M5JZF9f9JjNob+Ow11HRNJL9fT49l9vz+
-         KzqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750428613; x=1751033413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r+pLxQe4eVRAY0bh5C+6wdQnLVkUY9s5flt9lCy/28I=;
-        b=JbyrUBZ0nlgibDoDZn/NmbnxG+7j+lG7hE+gnzqVhZqk0Bm3Ap1uN027weGghT3RDe
-         weOTA8KoMJDKgACVXSwt0agnePNnQloQYryykh0QDYohPowEjXtg1N1qBrV+WJAbAYNs
-         CCYMpNj7Qr+A1IJiShPjL/nxfi8H8vGhzy9yZtGit15p7OoGXlJNzjnj1a1C1YeGVjP7
-         a7a96oBDMPAQIA4A/HafCDKKE+hijIgFta3saICXhZLv7KtrOfzrVQF06B2iYdiVjJdG
-         mjEoo0plffMCQIeLULJztVTMm2Zwc7zYOi4/0Vvpt2NJgj0KVlLA47vbmuhay5JdUTDl
-         Iqsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXN2OwamC5EXsIpJKnCMJh0TfxjK2jSTUHqTGRoESlV0iVYEu6aJH4waTq04oB0MyCQ+ZFlOJ/4IPSPikk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIgH5DnuJKyy1pbA4AEp8a/BnrHmuI3abXDPtO7UCOiIwf4YXG
-	A5cNtpyP4AT6HwwNjS2TY5O1xHIXdClZUl+CeRqPqJ4tNsI//rUrj2/cYVabCXZdd74CijfaREP
-	p7sYIqSEDyM2tdSnEs2hoPhcfVlHDpZ2eh0fCLXxyXw==
-X-Gm-Gg: ASbGncvhkUTo1cB4of67jnltfq6qxRQPT6Ep+70ZzXrK4QLXYIVXQwoPZDCIOvBtdei
-	KTDNuhihWb92y7iT/3OrHnES2cVFHWDF5o3PjoNMQPl/SPdQ75o/2H58XYX+YWY8mbbgCvg+7Yq
-	vX4+HpsUQMYxGeIflqLYIqi0wECeeR0k7V9yX3+lOMjFc=
-X-Google-Smtp-Source: AGHT+IErXi1FXvWIfcINPIC2kRfbQWrm886Vqr6UoQFGwv43uK/gV2FH6lDzRfIyRbnRc7wq5KlIwUNxU6fp12JvFqM=
-X-Received: by 2002:a05:690c:6b85:b0:710:f74b:61ab with SMTP id
- 00721157ae682-712c63ed50amr38667807b3.9.1750428612962; Fri, 20 Jun 2025
- 07:10:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDYWmsOp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750428624; x=1781964624;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=oh/v2w4/zhPWXP4EzB7gL1be/QqJRqTBvUAfFOaWAUc=;
+  b=QDYWmsOp/ipDqnoNWJjnEewQ6li0C8XcHVgXV4q163gpgzCWPxYcl+yk
+   poZ8sH0z9wHFd2H44ifDtDRkmHInF/0pxlVxh1BDYmTk9UMjjHjctJig8
+   EZo/0sn4ZMZtisxwgrRUqqs3PJZFZA36Ha4QzJ/g/o+bkwIF9TFdEk1fX
+   kzfkiPNICZ7q+XCfQnOOhbDvHUmNoj/4haiQ2rnicUNNVkHK5ecY1RNzN
+   B9Vu8UCmCO4gpJ31gBW0Sa+52fw5QUetOl/JC74zDdA4+xPKSY6xpMTqr
+   injIVTronO0Vdhh/NiteJ8UEHqQzKdRKV0K2kuJCdq/Gel7mHOlaQr6W5
+   g==;
+X-CSE-ConnectionGUID: sra0lAeESuyEzD0JlquQag==
+X-CSE-MsgGUID: 5Xszxm5wRTiFHqhvK1FixQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52773893"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="52773893"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:10:17 -0700
+X-CSE-ConnectionGUID: go/KyU21QwulZwiiLyZ8Hw==
+X-CSE-MsgGUID: BwVXHC7YTdGL8/fIX9XIHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="151452444"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:10:16 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 07:10:16 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 07:10:16 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.59) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 07:10:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m2sxG3zXt13OXlwPmEd3FLLD5jaoTvbudO/AZ83MmNnsCJzLOzupsb+HpWnA8Xsjl6YtffLRnUhHojRr1EevHLUvDwflbDmET4aFl5wxCa4CkZ/xeU/Jv69/vRLEzbz16X5uSqPpkkhULUBDrLUF4UWV0QiI5YFQh08fgSSS8fomTd5TuaHxNJDCGm7RKJISKhJQkkEBWWM/ftvqKFIHV+EXxqW3Ow9YCoDqL1DJtV9yUH1GI/UjyZPKw4u8ANCMHX7CjfCgAt/tz74PjpTlsg0FzV8yVeh9xePz3AQrZnb1AMTD/tnYSXyL3NmRXnR1GOKGsB/v4TRJa+TrPxbkiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BQIJrx5atcLjiUSbN4PrZGRUzzJ+kaBORMOiVEZvAhQ=;
+ b=AMQ96OiliAes08y1RdhfKICZ9DiEiWXRbMZbRTRfdxanerjj+uBi1oDTpuZ4Hn1M5GY/ogQ/CFGSGU5hAU665GazHM0D1ig44VO1qC8lDmIoQsYtbifSXzBO3nNsefD9fAZYvhCMDGLmLf7nyFE7MWxaTZHCvYFVGh025lblo1ToTvPl5RN6U6YIkdd5Het+J4ERxphchgAoyczOvr8eVKJEK5ffPb2qOm7QzsJg/s1IW0epMsiZKdcTVzLRzYAFPx8+fOvQt+vZ0LVepfoC/HV5pZoiklXHmtRs6Np94PHkxhzEGA+qHvbf7AJqfoouwA4cXAfrUY37aWEG/I+l1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by DS0PR11MB8072.namprd11.prod.outlook.com (2603:10b6:8:12f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Fri, 20 Jun
+ 2025 14:09:40 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%3]) with mapi id 15.20.8857.021; Fri, 20 Jun 2025
+ 14:09:40 +0000
+Message-ID: <c898e879-26e6-4701-9baa-f9d2444e3137@intel.com>
+Date: Fri, 20 Jun 2025 16:09:34 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: qed: reduce stack usage for TLV processing
+To: Arnd Bergmann <arnd@kernel.org>
+CC: Manish Chopra <manishc@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Nathan
+ Chancellor" <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Nick
+ Desaulniers" <nick.desaulniers+lkml@gmail.com>, Bill Wendling
+	<morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>
+References: <20250620130958.2581128-1-arnd@kernel.org>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250620130958.2581128-1-arnd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0317.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4ba::27) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
- <5cc644f8-7394-48f2-b62b-1e7cd5ce27d3@ieee.org> <9e5e54a9-ef90-4a87-b082-d6eb9c7468c5@iscas.ac.cn>
- <20250620105619-GYA165049@gentoo>
-In-Reply-To: <20250620105619-GYA165049@gentoo>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Fri, 20 Jun 2025 22:10:01 +0800
-X-Gm-Features: AX0GCFv9n0bzPRKSi_EV7zEUnvgGx0rfSCuPNUTx-ocg18nmlNPk27cj-wTyKM8
-Message-ID: <CAH1PCMZibCc-P7JQf4WyhkKuT607bWppKfKQ-7eo7-PyNGDAOg@mail.gmail.com>
-Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for K1
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Vivian Wang <wangruikang@iscas.ac.cn>, Alex Elder <elder@ieee.org>, 
-	Ze Huang <huangze@whut.edu.cn>, spacemit@lists.linux.dev, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|DS0PR11MB8072:EE_
+X-MS-Office365-Filtering-Correlation-Id: 21ecda2f-8275-4efc-3e74-08ddb004188f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Wnh4QkVCMVNlWHJYWm5LYjY3d1NhdzJzNWhFb2o1K3YwVmlidlJKeDlQVFhP?=
+ =?utf-8?B?aThpdU5TVWY4K25WbzY4b2ExTDkveXpzMnhZVFc5NGNyTXc5dHNTSkE1U1dn?=
+ =?utf-8?B?cGtEUlZYM0s0SDhDVTZkWjE3N0Y1M3NrM1ZjSWt3Q0lteEFDZXVmdGxBMFhJ?=
+ =?utf-8?B?Vng2eFY1a3FjUHc3dlJDWkRwQm9NaTQ2SGlncE5VaGJRQUJwOURsY2tSUDUv?=
+ =?utf-8?B?SVRhSFhIb1RBeHhOZDRrcFF5M1JTZTdBQUhBTEx1MUY3a0lCQlczdytqRzBI?=
+ =?utf-8?B?RHUzNGZTeDJKbGQxOFJMYzFIdmNhVVFoT3pkN1RHNzE0c3BZRTNUSUcyQ1VH?=
+ =?utf-8?B?Y1BFVDRVdUJ5T3pnVmkrb2NVZ0RNSTY0R2ZiVTl6bS9uZTliODA4L2NhMzZL?=
+ =?utf-8?B?dGlMaCtKbWxXeFVvVkU2R2NFaHl2Y3h2VzhaeldhTlY0SVptZ0pQc0tKL0kv?=
+ =?utf-8?B?MVVTWjNnY055eWhiN2FqODNmSzJJb08vN2JRd1FaR1pnU1VJTjlRSlpuRHBu?=
+ =?utf-8?B?a09vdHprMTNSOEIxcVYvS2VGbW1Ga1lKMWx5R3RIbzR5VkU2VStyTzJodEtZ?=
+ =?utf-8?B?a2ozc0k5c0RqbHFGajE5d3o5d28wWEFuZ0Z4alRHUGxycU9nYTJoSnlCZzNs?=
+ =?utf-8?B?elhmV0Y0aDRDN0YrY3dTRHYxdWx0bnl2U3pqWGlBMUdJa3V6U1ZocmRYUEpa?=
+ =?utf-8?B?Yk9GeEVLc1lLT1crb3czNmZBb1grNGwxZThOWkMxMElOSFZSWkpBd053bEpi?=
+ =?utf-8?B?bnIvanZjUXJTZGFFUDdRQ2VoaHFCYTJnMG1zQlpnZjZ2RXJ6S3NmUnozcWlD?=
+ =?utf-8?B?eGFhcnc0eVpySkd5d0VqOGNsazEyQitORUdwdHhsSHJSdjcwNHBlVDkxcXVD?=
+ =?utf-8?B?cGR3RUZZVVJhU0U4c0RMeXNEaWd3azJkV0tnQjlia0ZXM2VhNGM1TFdGZ0J4?=
+ =?utf-8?B?c21xMjllMEtSWndaSGh1aTIzZnBNRS92VVRtTU13ZFFEVUpnRjhGOERleWxB?=
+ =?utf-8?B?eUt2K3F1K2dRUEF4SGdBdHNlajJERzBoZjg3UGhOOTloOEtDWWZZTlJrU0E5?=
+ =?utf-8?B?aVFkRWRYZjA3bi9QSCsvYmlwa1dUQ1h5ZCtQNU1DYkFwdmZxQlNQOEFoeEl0?=
+ =?utf-8?B?dUIzMkpYKzZJaDBwVHZTdU53L0dPL2ZQRUs5OEFNUXFqZlZBM2FVTTlzSG9y?=
+ =?utf-8?B?QzVBeE1paHJTQnVGbm5ETi9YUUtxSWVmcW85Mi9DSEtQVVV5QVJOTW9VUm9r?=
+ =?utf-8?B?ZVVhcGloY0o1SkhjSG1aZmxvQVhnait6dEhsN2puV2srVEczUUd1b0I2dXll?=
+ =?utf-8?B?RzgzczkxWDFDWVllblh1bldTcS9TUkJIZldsd0s5NVFuUkx5Wk9CdmxRajh1?=
+ =?utf-8?B?Q05zNnRuWWVVd0FVWWFXd1VUeWgzZnVMZVVtSlhIaGVEWktnL2lRTGZhanlK?=
+ =?utf-8?B?ZFdMYmN1QWIrV0JpL2ZiTmN2eW53VVV5YkNsU3drVkpiQk5GaHU2eEdObUhX?=
+ =?utf-8?B?NDI4Sm4zRkhhc3ZlYkZabUJSZmhLcDRkOU5wbGtqMUNtQWd2TUtyaDFlZ3hw?=
+ =?utf-8?B?UmRnZWd5VkZocUtXUDJkU3IvTUhxTHlYdU5POUZ3dzFYVXpkdGRnc2FxbTRE?=
+ =?utf-8?B?OFVnRU8rM0JvL3BMRzhHbDB3SkRLVWZTSXdabVc0OFZTQmxFMElzT044VlFr?=
+ =?utf-8?B?OGs5d2tUU1dNTUxtUGVvTGZTZlQzb2g5ekxteURmWVZOU0VoVmhhR25tZkw5?=
+ =?utf-8?B?eURSVmhvNnVITlJFbmlFK2Znek1FUExLUWNjbXB0bVcybjA0L1hENHVHTmxQ?=
+ =?utf-8?B?eGZ0WEZVY2N2YlZFK2hGQkdNeVB6dW11emFVN29wUDZBcDM4Mmw3b2lEYWN6?=
+ =?utf-8?B?b09XWFQ2ZUIyUnNQVUhEbytpTGdPVTB4Y3lDMkpUL3NJcFRhS1dQUzQvSTFF?=
+ =?utf-8?Q?dsp0NKYT224=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ajBLZlRHYjVsZVlHRGNWUTFYU1RZaHZrQkZTSWQxZmRnYnJSZDR5QWJKcFhM?=
+ =?utf-8?B?VDFobFFKUTNpU245OHUyU0xrdjV1NURlZCsxRE5VWnlubXVwbEQvaDcwUEcv?=
+ =?utf-8?B?SW5DcmdGZ1ViQ0tlUHJJWWVRZ3pZTVRSME82c2pCQ0s3S0xZdmVYazZMZysr?=
+ =?utf-8?B?M3VPNHVWK1k2ZGNhK29iUEhTVTFKRDF2SGl1V1RvZHAzaUVUTXEwS054dzJD?=
+ =?utf-8?B?cnlSWHd6aUVJYWZMZzBBOHNOMEVQaVlwdmY1Yk9uVnhtRU55Qk8zWXBwMjBl?=
+ =?utf-8?B?a0ppT2pZaXF0NXI2SlN0WTdMM3QrTU92UTNoRUlrK0l4bitTMW4rQmhOOWF4?=
+ =?utf-8?B?eXBhTHRrSndhd2ZVUUVObU1iRHo3S0hESUEycFdmSk9XSHZoVW50SW9LVjFZ?=
+ =?utf-8?B?ZUFwUCtQMzh0eXFZSzhSL3djcjlLb1VWVjhCQnVSejhwTjVpYWV2RHlTUXZ0?=
+ =?utf-8?B?TEFidlAxLy82SWY3VUsvZWZWQkxkcHpjMS9oNllPTGg0RjFMeWhhZWM3R2lX?=
+ =?utf-8?B?ZWlLOXkzYmZ4VExDaE41cEw0RnVhemJzMXBvWmw5b2U2N3lsNVNuSUlJK1Nu?=
+ =?utf-8?B?WU4xUWRER3Z0SWZPanNmakNaWGJjRmxyTEV2eDBRMUQzN1NrN0ZJZXpPRVpS?=
+ =?utf-8?B?bk1iU0NVUmRnMjdML1ZKNmV1d2w2cW83VXdYWlpKT3FNT2ozRGJBazQ2V3ox?=
+ =?utf-8?B?V2QxU0QxRUU1cXZINFIvR0tadVNuNHBwbm91bXA3Ykp4VHdqYzR6cUJpbEVp?=
+ =?utf-8?B?dTZBblk0ZXlXcFlxOTlySUZhUU15WG5ra2N0V2lkUCtQOWtWNXhHRmw5TXlw?=
+ =?utf-8?B?MzRBRlppS0FQZHFJU1R2bkZZdHMwNGhXUmZCM3c3WStyUlJGcDg1RGVacmhL?=
+ =?utf-8?B?bU1CczAwc0RmeVdrSU5xZmtMMk5DWGtwOEJPS0ZBSU5qZzRFQnFLYTFGTmpq?=
+ =?utf-8?B?bU5tZHdMOVZ1bGtFbFY5ditVUHEraXJqck03bkhJblNlRFZtMjg5TkxOWmNr?=
+ =?utf-8?B?L1d6MGxwaExmbkJVMkhyTlVFWlVqV2ErenMxM1dBZU8ybHQ2bkc1N3hTdk5T?=
+ =?utf-8?B?Zllkd0RUNVRkVDZHbGFMVnZiV1NURUJYN21ZVlU3dk1SUUtlb0VKSmdjMEpq?=
+ =?utf-8?B?OW5kTUxSUzZocUhjb25zOUJpOERscy9RV3VkWHYzODlqZ3ZrcVpTNUw4N3Fa?=
+ =?utf-8?B?alNiWkt1MHljeE1IcVY0Vm5Tb0x3R3NDUW1NQjNDb1BDbFAwQ2xjSm9IdHpU?=
+ =?utf-8?B?MTdzNzJLQy8zZExnOGNCR1JTNWJPTXZJTzZ5b0NhZmZha2hzUGhaVVJURlEv?=
+ =?utf-8?B?dC9ubUVjTHZlZzhMQlg0WVg3clpPa1VNTFM5cHNFVTZ6TEFvZUtaeWxiZ05B?=
+ =?utf-8?B?bXNZaDBFSGJXVkxaNzBoM1BOTTFKS0pBWE5Bd1lDRzJPd2N3MjlTa0thU0Z3?=
+ =?utf-8?B?dFVvcXZXaFNxa2NMTmFhMHF0TFFMajdheW9xaG56K1M2ajJPNVBrSGF2eEM2?=
+ =?utf-8?B?RXJQcDZHd3IvQTJjQUMyK0E0UjdZU3FZVDhQdGNNYzVrUllVR0c3YVZTU0hz?=
+ =?utf-8?B?Ym40WXUyc01JajlaVWlkMVRLdHJGREpoT2lHbTRqV3BnS0pzT1ZJcC8zN1k4?=
+ =?utf-8?B?aXYxZElWK0ZoMVJOVUdwVUR3ZktKaEVnd25OQzRBT2h0WmYwU2IyVnlYdXRm?=
+ =?utf-8?B?YTh0eERHeHhIaDNMSGdVbk1GMmt6SVBhb0RsbDRwYldiQ1FCWmhyb0FDWFBj?=
+ =?utf-8?B?TWgyUVpieFRubENYVjkzRGlONndwMGwyZWRQcndZeDY0ZnVzSTMvcTNYQms5?=
+ =?utf-8?B?bndyQUduZ05RcEthNFF3UU5NanViWGx3TnVBZmJreHh6MjU3emZ0LzB5MTZS?=
+ =?utf-8?B?NFpSZnR0T01tOWJ0K0RiaDh6WXowT0JBak16YmI0TkIweExCaUhJcHVtZVlO?=
+ =?utf-8?B?NVIwTVRLSHNKcjh6WTl5UThheGdtcDI3c1pvSGtJUnBKdFVYTllzcHFrTHAw?=
+ =?utf-8?B?S0luaFplK0RWK2JKMWMwR2FEVEUwMXhqdlRDS1F1TnVyTUZyS29MNmFCQVRK?=
+ =?utf-8?B?MGRjZks0WXEzYjJUM21JR3UrcmJ5b0ZOUnZZU3k5dkFmd1BOY1A1cnNwK04r?=
+ =?utf-8?B?VlM2anhnMXplVFljUCtCZVRzbEdLa213MDM0MDBla01lM0ZTS0kwV0FDOHRY?=
+ =?utf-8?B?RlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21ecda2f-8275-4efc-3e74-08ddb004188f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 14:09:40.2279
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9llvzMm9rEr0Btbx89j3LIqaqeE+w/VyHmGWtJV5L1fxzpMZ2zc3oniNyqXTIIZlNlMl/nPNEqv+chIM/8l51HC/z1T4yHggydpZ17aLmjw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8072
+X-OriginatorOrg: intel.com
 
-On Fri, Jun 20, 2025 at 6:56=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->
-> Hi Vivian, Alex,
->
-> On 23:42 Thu 19 Jun     , Vivian Wang wrote:
-> > Hi Alex,
-> >
-> > Thank you for your comments on this.
-> >
-> > On 6/19/25 23:11, Alex Elder wrote:
-> > > On 6/17/25 12:21 AM, Vivian Wang wrote:
-> > >> The SpacemiT K1 has various static translations of DMA accesses. Add
-> > >> these as simple-bus nodes. Devices actually using these translation =
-will
-> > >> be added in later patches.
-> > >>
-> > >> The bus names are assigned according to consensus with SpacemiT [1].
-> > >>
-> > >> [1]
-> > >> https://lore.kernel.org/all/CAH1PCMaC+imcMZCFYtRdmH6ge=3DdPgnANn_GqV=
-fsGRS=3D+YhyJCw@mail.gmail.com/
-> > >
-> > > So what you include here very closely matches what Guodong
-> > > said in the message above.  Yours differs from his proposal
-> > > and that makes it hard to compare them.  I have a few comments
-> > > on that below.
-> > >
-> > >> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
-> > >> ---
-> > >> This is my concrete proposal for representing DMA translations for
-> > >> SpacemiT K1.
-> > >
-> > > It's worth acknowledging that this is derived from what Guodong
-> > > proposed (it's not "your" proposal in that respect).  That said,
-> > > yours is a more complete and "formal" RFP than what he wrote.
-> > >
-> > I had thought that since the addresses were already there in vendor's D=
-T
-> > [2], and the names were provided by SpacemiT, anything other than the
-> > names was "well-known information". In retrospect, I should have made
-> > the chain of information of this clearer and make it explicit that this
-> > was based on Guodong's note.
-> >
-> > So, just to be clear, the information in my proposal is based on
-> > Guodong's reply [1] (link the quoted text), which I had assumed, but no=
-t
-> > explicitly confirmed, was based on already addresses in SpacemiT's DT
-> > and names provided by SpacemiT.
-> >
-> > [2]: https://github.com/spacemit-com/linux-k1x/blob/k1/arch/riscv/boot/=
-dts/spacemit/k1-x.dtsi
-> >
-> > >> For context, memory on the SpacemiT K1 is split into two chunks:
-> > >>
-> > >> - 0x0000_0000 to 0x8000_0000: First 2 GiB of memory
-> > >> - 0x1_0000_0000 above: Rest of memory
-> > >>
-> > >> DMA-capable devices on the K1 all have access to the lower 2G of mem=
-ory
-> > >> through an identity mapping. However, for the upper region of memory=
-,
-> > >> each device falls under one of six different mappings. The mappings =
-are
-> > >> provided in this patch as simple-bus nodes that device nodes should =
-be
-> > >> added to.
-> > >>
-> > >> This patch is an RFC because it is not meant to be applied, or at le=
-ast,
-> > >> not certainly meant to be applied. Instead, this is an attempt to co=
-me
-> > >> to a consensus on how these bus nodes should look like.
-> > >
-> > > I think the above is what Krzysztof might not have seen.  Perhaps
-> > > it could have been made more clear--maybe in the "main" description
-> > > section (above the ---) or even the subject line.
-> > >
-> > Yeah, that's my mistake in organizing the paragraphs.
-> >
-> > >> More specifically, I propose that the process proceeds as follows:
-> > >>
-> > >> - Firstly, relevant parties agree on these bus nodes given here.
-> > >> - After that, each time the first user of a bus appears, the series
-> > >>    should include a patch to add the bus required for that driver.
-> > >> - If a driver being submitted uses the same bus as another one that =
-has
-> > >>    been submitted but hasn't yet landed, it can depend on the bus pa=
-tch
-> > >>    from that previous series.
-> > >
-> > > Getting agreement is good, but otherwise this is basically
-> > > the process Guodong was suggesting, right?
-> >
-> > Hmm, actually re-reading the discussion now, I realized that I may have
-> > come to this late and missed out on some previous discussions, which
-> > were alluded to in Yixun's messages. (This is again thread around link
-> > [1] in quoted text.) This led me to believe that some of these were not
-> > really agreed upon.
-> >
-> > I also realized I think one of the things I may have not yet made clear
-> > is that I would like the bus node to be a *separate* patch. I think thi=
-s
-> > makes sense, because it's dealing with two different subsystems.
-> >
-> > >
-> > >> For conventions regarding coding style, I propose that:
-> > >>
-> > >> - #address-cells and #size-cells are 2 for consistency
-> > >> - These bus nodes are put at the end of /soc, inside /soc
-> > >> - These bus nodes are sorted alphabetically, not in vendor's order
-> > >> - Devices are added into *-bus nodes directly, not appended towards =
-the
-> > >>    end with a label reference
-> > >
-> > > I do like that you're trying to be more complete and explicit
-> > > on what you think needs agreement on.
-> > >
-> > Being thorough was the main goal of this RFC. If there was previous
-> > agreement on how dma-ranges should be done, I'm sorry for missing them,
-> > but from my observations on the mailing list on how these ended up into
-> > patches I really haven't seen much consistency. Maybe there was
-> > misunderstanding, which I'm hoping to clear up.
-> >
-> > (Although see my paragraph above, maybe I haven't been thorough enough.=
-)
-> >
-> > >> The K1 DMA translations are *not* interconnects, since they do not
-> > >> provide any configuration capabilities.
-> > >>
-> > >> These bus nodes names and properties are provided compliant with
-> > >> "simple-bus" bindings, and should pass "make dtbs_check".
-> > >>
-> > >> Remaining questions:
-> > >>
-> > >> - Should storage-bus exist? Or should drivers under it simply specif=
-y
-> > >>    32-bit DMA?
-> > >
-> > > Explicitly saying storage devices have one-to-one mapping
-> > > seems informative, to me.
-> sounds good to be explicit
->
-> > >
-> > >> ---
-> > >>   arch/riscv/boot/dts/spacemit/k1.dtsi | 53
-> > >> ++++++++++++++++++++++++++++++++++++
-> > >>   1 file changed, 53 insertions(+)
-> > >
-> > > The short summary of what differs between your proposal
-> > > and what Guodong said is:
-> > > - You sort nodes alphabetically, Guodong did not
-> > > - You dropped the unit address
-> I'd agree with not adding unit number to the simple-bus
->
-> > > - You dropped the comments he had, which indicated which
-> > >   devices "belonged" to each mapping
-> I went ahead and checked those comments, and found them all about
-> devices under specific bus, I'm not strongly against adding the
-> comments but feel it's kind of unnecessary, or even in worst cases,
-> it may bring extra confusions.. on the other hand, you can always
-> check  device nodes under the bus to find what's there.
->
-> exmaple for dram4_range(vendor code)/dma_bus, the comments is
->  /* DMA controller, and users */
-> what's is 'users'? still have to check the dts, and find them -
-> uart, spi, i2c, qspi, hdmi, sounds..
->
-> If people really want to add comments and help others to understand
-> this patch, then I'd suggest to add explanation in commit message(better?=
-)
-> to fully describe all the busses, or why choose this name? -
->  storage/multimedia/pcie/camera/dma/network_bus
-> pretty much in much high level perspective..
->
-> > > - You added a compatible property to each ("simple-bus")
-> > > - You added an explicit (empty) ranges property to each
-> > > - You add #address-cells and #size-cells properties, both 2
-> > > - Your dma-ranges properties are identical to Guodong's,
-> > >   for all nodes
-> I think those all above already exist in Guodong's version which
-> align his idea
->
-> > >
-> > That was a good summary. Thanks!
-> >
-> > My main goal of organizing the bus this way is making it actually pass
-> > "make dtbs_check". I'm not sure if Krzysztof still objects to my readin=
-g
-> > of simple-bus.yaml though.
-> It would be great if DT maintainer can clarify, or give an ACK
->
-> >
-> > By the way, I don't think I will be making an RFC v2 of this. I think w=
-e
-> > should get everything sorted under this one thread.
-> >
-> Instead, from a SoC tree maintainer's perspective (whom taking care of
-> merging all the dts files), I'd rather perfer an independent or
-> separated patch for this given every party reached consesus, so we could
-> get this patch merged first and early, instead of getting them distribute=
-d all
-> over in different series, IMO, separated patches brings more dedependenci=
-es
-> if more than two series require one bus and result in more merge conflict=
-s..
-> Besides, introducing new busses result in re-arrangement of previous node=
-s,
-> those like uart, i2c (even they have no DMA feature implemented currently=
-)..
->
+From: Arnd Bergmann <arnd@kernel.org>
+Date: Fri, 20 Jun 2025 15:09:53 +0200
 
-Hi Yixun,
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> clang gets a bit confused by the code in the qed_mfw_process_tlv_req and
+> ends up spilling registers to the stack hundreds of times. When sanitizers
+> are enabled, this can end up blowing the stack warning limit:
+> 
+> drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c:1244:5: error: stack frame size (1824) exceeds limit (1280) in 'qed_mfw_process_tlv_req' [-Werror,-Wframe-larger-than]
+> 
+> Apparently the problem is the complexity of qed_mfw_update_tlvs()
+> after inlining, and marking the four main branches of that function
+> as noinline_for_stack makes this problem completely go away, the stack
+> usage goes down to 100 bytes.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-So, here is my proposed plan: I will submit two patches. The first
-patch will introduce the dma-bus node and move the relevant (uart0, uart2
-..uart9) device nodes under it. The second patch will then add the pdma0
-node itself. Please let me know if you have a different approach in mind.
+Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-Maybe you want to see an independent patchset with just the first patch? Th=
-is
-way it can be merged early without waiting for the pdma0 series.
-Let me know. Thanks.
-
-On a side note, you mentioned I2C. I searched for upstream I2C DTS nodes
-for the K1 but couldn't find any. I checked the for-next/dt-for-next
-branches in the spacemit-com/linux.git repository. Did I miss something?
-
-BR,
-Guodong
-
-
-> >
->
-> --
-> Yixun Lan (dlan)
+Thanks,
+Olek
