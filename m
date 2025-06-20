@@ -1,144 +1,288 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BB58F5B;
-	Fri, 20 Jun 2025 15:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE029B211
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432856; cv=none; b=HLl2gkPJCIf3Aff5NEqLdA+jkwg9qkdTp4Grlr+S5g3owbibVg1Jx/KT8whRV3IgBmXoOYv8dfJhlFGjClyfZ32A9F8afSHm+XkK6vJ6q2O6R6boicj7o0MAZb6Y/P2eCTYfq2wrUtjMMuushT4S94nYL2Uu4Sb3B5tos0eS/ec=
+	t=1750432874; cv=none; b=lCKvATOXpRhJ4pVOK3JlwkKFPA6AfoFeZRafHpdErBuyFMujYBo8dnJxiXl6zH31cPYO+XB3YrKs5W4CnH0VfK7DcMPgN8psKSTO2vPbz7GLSCsp4HaT1vN4gCKJgW+uLrBzYmuHB9yToOFdOYOWV6JEB7VRu8v03RtybIZWg/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432856; c=relaxed/simple;
-	bh=8+3R0drlRKnn/JI35OglwAOSwdC9nd8AtxSqpjzELK4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sRO/08XOT4Ac5ZrgraaZ1EL2VaMinfYdytQLJd5+FVDOq5Neg/bcva9ZBi+v3lnh93cQP+XCCz+HOMdX4i9+IZk9CwG9sWYfIWb3AhiRjekXaSkx/V2jOwNrQUHWtgU5aa65tJnes6HKLDdJNtbhyRkICpjGOZhDpfKvnvhijVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIEEU1Op; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750432874; c=relaxed/simple;
+	bh=iomTu1xs83r/cYqzkuUR2FRi5imAYOOPdLaTWbfrsn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T49uN6XnvRaACUu/OeXFpV+TyYwm8GVMeYuX7kvdkXzSdpknicKNypeNJk/TTmj9974JoG4U/Mb2rQC2zaZQpliHKZ4a5nzoANIALYTXmpCilj3rF743o8qRQqgU4YLtdC1nUpFzkym8QgClen/L68+CahlZQ1s8r37gkuD8cdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FF248BNa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QNlz2wbm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FF248BNa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QNlz2wbm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIEEU1Op"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453066fad06so13046655e9.2;
-        Fri, 20 Jun 2025 08:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750432853; x=1751037653; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M/KIHO86ldP5ZYoE2kwfFWlV69Tw5RaRQj/rKy8DDRg=;
-        b=NIEEU1OpZ6bGXPEtZBJLe7vQYxJLQ/8YHga8PDGa70rCR21LdPdt/saNOifOY35g2y
-         A+mNnv2ZNjWDYqYSA6TsTDEb25dG6opTvdRRCFsndRtDIEsfoPaiI6G7lbq2fSAjP+7P
-         DPl6lOMctefpXzGoW/8zBf/k7AC2LmQ+5hNO/arqnTM2MbQz65K1NXWDdF3LUUpB9P7a
-         PYs+z4498JHILdGfnH6z/wwzDCwhiyLZLZ1Pm6UMwC6Oe/LE41YgwLUJVkG7IWy6zYb8
-         Xb5HBUm7WjxJOSSr8g8wKiy/pxMeZIUVlxHlIKwlfuKu49ihpoMsZKpjfrjCOHD8XLSZ
-         99Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750432853; x=1751037653;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=M/KIHO86ldP5ZYoE2kwfFWlV69Tw5RaRQj/rKy8DDRg=;
-        b=l4CB78TFljm0hmdrfQGiH6dMKD14/tom9jhqZtF1m/whDczcZSC8EBEYJ7ZCJ/U4Gt
-         xHKpSB+y9xx3eCo90imCMNt6TFhJLHlcCEUuov2rYIzxori9dCMkxU2fbSxxPbXG8llz
-         bD/lY9f15GiXVDXWl6920EsOEHpMqcLSq/VmGhAaEWuaKJukL0+A5nXuV1BDPgi52GdT
-         Au+OUniGzI/Eza6RM2D87AOQjqJjxdByixA8SweaXfp6fEqhOuj5j9lwOnEJ09x1qC0L
-         XOpK05tYkllbqA7zqLH/U7FX8M/XEDMlFIk4lyK07BAuov2abg7oS4mbmiaSU6m16aFq
-         HZcA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6c/v3LmRQ64RHS5aoq+sZen4Kn35T3PYjdcLIy2ksUp7yz2Fsk4CAC92Eac+0IVfdmnwh7iPK3cQV@vger.kernel.org, AJvYcCVDqeXgwImvlrxz6L9aXPG46iOhOerZA2+kPWmjaGyTKiyvaW8ayJxYqI/PjjlbdggqmRy9QAVHestmYdPg@vger.kernel.org, AJvYcCWFIrxNcTrErk8cwO5vNHlDFkpuFtLCYUe4S31/PwoQ9eFMLLEp6BXyXRg/FJosSFKnE2niPQLv/KZppQ==@vger.kernel.org, AJvYcCX34AKeNPHwFwqznjZp0sjrILWuYKXvTbZEv/U+1n6JBgdJUqVzxzvh9T3l/ZLn/2c8nkYbdwvRDOi43GZ1nqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXLdJRtorhJ8hcJHIMfhcSfU81yfkLxPkYW4SAaK6JduR01VBh
-	j2ZlWsb9f0pmIgSZ1cp3EHPs3OXcfABZzZmAkG7/fEnopQXJYpeMfcqk
-X-Gm-Gg: ASbGncsH4gLSMM43DJEwLrp7Hl/bUkEUPENpWlLC1P/9YwoAzG8yasKleBUhsShd+bN
-	Vlh68JoHIIGxhaWxZ+opa+sKVg37z8a5+1B9Hj94rGNiK5GPHhXeUzAKiZhy1/aUeg8+cPGqYs8
-	d3KJQHdKkVd2iIsEfrSRZ53cyPuPv+KKx2Kgu2GBzH10NhoA8wOVyMikj4cgj+6kOWxv4asL0vm
-	WeW9tNaiBpzwyRua2xbKDFPH1QFktfJJ7u4khzJRvABtK9uHEbjZ/ILCeDCyvVVO1L75dwZnCLg
-	b+EqTUMXmSoWVaSBmee4jAQlsjQdPtuYXwo5PmkLAomE6QQPe5w6+qtK9k34Ha5V096/Oie2DG6
-	MOYjseJVaVfdfqkOD+5iHt1MvnDXfu2q63S8R7Q2wdjrheoTG3w==
-X-Google-Smtp-Source: AGHT+IFWKYgJk3mh4dufOnojkp3+ym/Cq+duMM+/JKKRWEtc/dnqzc4ndzC9W90pmrbOVECY/4YLeA==
-X-Received: by 2002:a05:600c:46cb:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-4536877fc08mr16646495e9.30.1750432853078;
-        Fri, 20 Jun 2025 08:20:53 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d1508sm28563515e9.12.2025.06.20.08.20.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:20:52 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Alex Hung <alex.hung@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Igor Korotin <igor.korotin.linux@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	Len Brown <lenb@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Subject: [PATCH v8 2/9] samples: rust: platform: don't call as_ref() repeatedly
-Date: Fri, 20 Jun 2025 16:18:49 +0100
-Message-ID: <20250620151849.281238-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FF248BNa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QNlz2wbm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FF248BNa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QNlz2wbm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8417621228;
+	Fri, 20 Jun 2025 15:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750432870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNdbnPCpie2X1ncI1WlTRB4blHLCzrzEd53jwoytgqg=;
+	b=FF248BNadQhU/Dk+1b5SWRQZr4ATLNFsu4xvp7PRleqj7BX/LtcTJOHFj53SObQsU8AgY5
+	tZ1gakhncqPFy1+O/W7+S451RO1emY9tTEb0dUDmVAviRpo4+phA2JikMEqV6iqBmeg9gl
+	jD8w4mQM/AOjHIbgUpAnCbzpwbIo5TM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750432870;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNdbnPCpie2X1ncI1WlTRB4blHLCzrzEd53jwoytgqg=;
+	b=QNlz2wbmwaLgFNdI8lTg8WkC8Wld1j1fWlE+HC/e6ftQRHo4aNflEKEK19CWrpn84WKS2k
+	se0piMA+h/oHwdCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=FF248BNa;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QNlz2wbm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750432870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNdbnPCpie2X1ncI1WlTRB4blHLCzrzEd53jwoytgqg=;
+	b=FF248BNadQhU/Dk+1b5SWRQZr4ATLNFsu4xvp7PRleqj7BX/LtcTJOHFj53SObQsU8AgY5
+	tZ1gakhncqPFy1+O/W7+S451RO1emY9tTEb0dUDmVAviRpo4+phA2JikMEqV6iqBmeg9gl
+	jD8w4mQM/AOjHIbgUpAnCbzpwbIo5TM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750432870;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNdbnPCpie2X1ncI1WlTRB4blHLCzrzEd53jwoytgqg=;
+	b=QNlz2wbmwaLgFNdI8lTg8WkC8Wld1j1fWlE+HC/e6ftQRHo4aNflEKEK19CWrpn84WKS2k
+	se0piMA+h/oHwdCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6857513736;
+	Fri, 20 Jun 2025 15:21:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5NxxGWZ8VWgTXQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 20 Jun 2025 15:21:10 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C18D6A08DD; Fri, 20 Jun 2025 17:21:05 +0200 (CEST)
+Date: Fri, 20 Jun 2025 17:21:05 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, 
+	yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 2/6] ext4: fix stale data if it bail out of the
+ extents mapping loop
+Message-ID: <ygdwliycwt52ngkl2o4lia3hzyug3zzvc2hdacbdi3lvbzne7l@l7ub66fvqym6>
+References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
+ <20250611111625.1668035-3-yi.zhang@huaweicloud.com>
+ <m5drn6xauyaksmui7b3vpua24ttgmjnwsi3sgavpelxlcwivsw@6bpmobqvpw7f>
+ <14966764-5bbc-48a9-9d56-841255cfe3c6@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14966764-5bbc-48a9-9d56-841255cfe3c6@huaweicloud.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 8417621228
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MISSING_XM_UA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-From: Danilo Krummrich <dakr@kernel.org>
+On Fri 20-06-25 12:57:18, Zhang Yi wrote:
+> On 2025/6/20 0:21, Jan Kara wrote:
+> > On Wed 11-06-25 19:16:21, Zhang Yi wrote:
+> >> From: Zhang Yi <yi.zhang@huawei.com>
+> >>
+> >> During the process of writing back folios, if
+> >> mpage_map_and_submit_extent() exits the extent mapping loop due to an
+> >> ENOSPC or ENOMEM error, it may result in stale data or filesystem
+> >> inconsistency in environments where the block size is smaller than the
+> >> folio size.
+> >>
+> >> When mapping a discontinuous folio in mpage_map_and_submit_extent(),
+> >> some buffers may have already be mapped. If we exit the mapping loop
+> >> prematurely, the folio data within the mapped range will not be written
+> >> back, and the file's disk size will not be updated. Once the transaction
+> >> that includes this range of extents is committed, this can lead to stale
+> >> data or filesystem inconsistency.
+> >>
+> >> Fix this by submitting the current processing partial mapped folio and
+> >> update the disk size to the end of the mapped range.
+> >>
+> >> Suggested-by: Jan Kara <jack@suse.cz>
+> >> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> >> ---
+> >>  fs/ext4/inode.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++--
+> >>  1 file changed, 48 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> >> index 3a086fee7989..d0db6e3bf158 100644
+> >> --- a/fs/ext4/inode.c
+> >> +++ b/fs/ext4/inode.c
+> >> @@ -2362,6 +2362,42 @@ static int mpage_map_one_extent(handle_t *handle, struct mpage_da_data *mpd)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +/*
+> >> + * This is used to submit mapped buffers in a single folio that is not fully
+> >> + * mapped for various reasons, such as insufficient space or journal credits.
+> >> + */
+> >> +static int mpage_submit_buffers(struct mpage_da_data *mpd, loff_t pos)
+> >> +{
+> >> +	struct inode *inode = mpd->inode;
+> >> +	struct folio *folio;
+> >> +	int ret;
+> >> +
+> >> +	folio = filemap_get_folio(inode->i_mapping, mpd->first_page);
+> >> +	if (IS_ERR(folio))
+> >> +		return PTR_ERR(folio);
+> >> +
+> >> +	ret = mpage_submit_folio(mpd, folio);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +	/*
+> >> +	 * Update first_page to prevent this folio from being released in
+> >> +	 * mpage_release_unused_pages(), it should not equal to the folio
+> >> +	 * index.
+> >> +	 *
+> >> +	 * The first_page will be reset to the aligned folio index when this
+> >> +	 * folio is written again in the next round. Additionally, do not
+> >> +	 * update wbc->nr_to_write here, as it will be updated once the
+> >> +	 * entire folio has finished processing.
+> >> +	 */
+> >> +	mpd->first_page = round_up(pos, PAGE_SIZE) >> PAGE_SHIFT;
+> > 
+> > Well, but there can be many folios between mpd->first_page and pos. And
+> > this way you avoid cleaning them up (unlocking them and dropping elevated
+> > refcount) before we restart next loop. How is this going to work?
+> > 
+> 
+> Hmm, I don't think there can be many folios between mpd->first_page and
+> pos. All of the fully mapped folios should be unlocked by
+> mpage_folio_done(), and there is no elevated since it always call
+> folio_batch_release() once we finish processing the folios.
 
-In SampleDriver::probe() don't call pdev.as_ref() repeatedly, instead
-introduce a dedicated &Device.
+Indeed. I forgot that mpage_map_one_extent() with shorten mpd->map->m_len
+to the number of currently mapped blocks.
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- samples/rust/rust_driver_platform.rs | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> mpage_release_unused_pages() is used to clean up unsubmitted folios.
+> 
+> For example, suppose we have a 4kB block size filesystem and we found 4
+> order-2 folios need to be mapped in the mpage_prepare_extent_to_map().
+> 
+>        first_page             next_page
+>        |                      |
+>       [HHHH][HHHH][HHHH][HHHH]              H: hole  L: locked
+>        LLLL  LLLL  LLLL  LLLL
+> 
+> In the first round in the mpage_map_and_submit_extent(), we mapped the
+> first two folios along with the first two pages of the third folio, the
+> mpage_map_and_submit_buffers() should then submit and unlock the first
+> two folios, while also updating mpd->first_page to the beginning of the
+> third folio.
+> 
+>                   first_page  next_page
+>                   |          |
+>       [WWWW][WWWW][WWHH][HHHH]              H: hole    L: locked
+>        UUUU  UUUU  LLLL  LLLL               W: mapped  U: unlocked
+> 
+> In the second round in the mpage_map_and_submit_extent(), we failed to
+> map the blocks and call mpage_submit_buffers() to submit and unlock
+> this partially mapped folio. Additionally, we increased mpd->first_page.
+> 
+>                      first_page next_page
+>                      |        /
+>       [WWWW][WWWW][WWHH][HHHH]              H: hole    L: locked
+>        UUUU  UUUU  UUUU  LLLL               W: mapped  U: unlocked
 
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index c0abf78d0683..000bb915af60 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -32,13 +32,15 @@ fn probe(
-         pdev: &platform::Device<Core>,
-         info: Option<&Self::IdInfo>,
-     ) -> Result<Pin<KBox<Self>>> {
--        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
-+        let dev = pdev.as_ref();
-+
-+        dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
- 
-         if let Some(info) = info {
--            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
-+            dev_info!(dev, "Probed with info: '{}'.\n", info.0);
-         }
- 
--        Self::properties_parse(pdev.as_ref())?;
-+        Self::properties_parse(dev)?;
- 
-         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
- 
+Good. But what if we have a filesystem with 1k blocksize and order 0
+folios? I mean situation like:
+
+        first_page             next_page
+        |                      |
+       [HHHH][HHHH][HHHH][HHHH]              H: hole  L: locked
+        L     L     L     L
+
+Now we map first two folios.
+
+                   first_page  next_page
+                   |           |
+       [MMMM][MMMM][HHHH][HHHH]              H: hole  L: locked
+                    L     L
+
+Now mpage_map_one_extent() maps half of the folio and fails to extend the
+transaction further:
+
+                   first_page  next_page
+                   |           |
+       [MMMM][MMMM][MMHH][HHHH]              H: hole  L: locked
+                    L     L
+
+and mpage_submit_folio() now shifts mpd->first page like:
+
+                          first_page
+                          |    next_page
+                          |    |
+       [MMMM][MMMM][MMHH][HHHH]              H: hole  L: locked
+                    L     L
+
+and it never gets reset back?
+
+I suspect you thought that the failure to extend transaction in the middle
+of order 0 folio should not happen because you reserve credits for full
+page worth of writeback? But those credits could be exhaused by the time we
+get to mapping third folio because mpage_map_one_extent() only ensures
+there are credits for mapping one extent.
+
+And I think reserving credits for just one extent is fine even from the
+beginning (as I wrote in my comment to patch 4). We just need to handle
+this partial case - which should be possible by just leaving
+mpd->first_page untouched and leave unlocking to
+mpage_release_unused_pages(). But I can be missing some effects, the
+writeback code is really complex...
+
+BTW long-term the code may be easier to follow if we replace
+mpd->first_page and mpd->next_page with logical block based or byte based
+indexing. Now when we have large order folios, page is not that important
+concept for writeback anymore.
+
+								Honza
 -- 
-2.43.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
