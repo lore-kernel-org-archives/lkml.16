@@ -1,116 +1,106 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE92220ADEE;
-	Fri, 20 Jun 2025 04:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41AC18024
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750392507; cv=none; b=d54bcjIa8tKRr3/0AsNofg3qI236xOY+Xa6Wpe96dWmsr1n38sfLZ+FDYbGmUdu5BsM7ltS3C4eDDLZI3842/4tCbA6rcKUmVwNAuHbU7UN0XXsxArqDyBi6Wjb3XjNRNYaPYA7GG3R9sPMM9Hzaqdy2yHr+nd3yMB1QIXQPiYI=
+	t=1750392606; cv=none; b=eucMREdHq6d1Ok6YTRDbm3zKfAKcoV/Rh93ME0JNn8XNUnk3oxL0sOL0HcCRv/+jwtgL9hYz2B+kqYjoN7gdmXT9tgIGvqTUdwEgqOcxTbPtcmMtlLzWEupgRZ3qjzQHAKDFRA+S4rHKHfVUN91LzTiKxlx/MvdBEOR3tGBnMK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750392507; c=relaxed/simple;
-	bh=CulyjY4NjRIeD655pJ5HRYpXZ+ZdovvS8mZgv+1xvTg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IdVMT2VCD+j65HLyJy0yi0oCdAYI2RyZo3tBqyhQeh7hUgY5R36qGnefiDn6Hvma8WYdimEt3LZvz7ISXd6IUyZ9wMauX2JYqGHg3+u2PlYll6tv5zx5HpMPe2TyIai92veu3O3sPrWWlYt0kmYF9KbiQcxwVCBHLpOT+JFl/Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lxB0cfA3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750392606; c=relaxed/simple;
+	bh=ZFwFxwz18sLqOB/ZYXms8m7xw2eOeIJ1+Ts6fVGCxZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mlHS8ln1BHuoGjTJgS3SO8QzgzoRl3NH4IW370pWquyrQ8AwySYZezqwqe0aF/O+LD4XLqJzgyXBauX4HK18I7x1xQgS2xhX/EuZM4XR+UEza+f9/PiKnWdWGT2HiaUJKyTSPusC7G2mHXf3+vxJv7cEyfaQtkQUuRAyG0eq67c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPgGB7n7; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lxB0cfA3"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JEDRhC028912;
-	Fri, 20 Jun 2025 04:08:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zBnlfquW8ztjsrCBTO4CFPwJoK+KHTJQ37+y7SWYtwg=; b=lxB0cfA320KFnrcT
-	Vz/SaWAaXlFLOstwLxI5kqJWO+lg6UGzTjdrxgalXddWIRSn+AkmnMwwTgd571b/
-	cX/dp450H4U0n4LrOTQnYSqdW2bmJKZpbyhdz+8awa0GjPZGjULAs/6BHIzaacyO
-	S+jrEvNn4eoCDZDbXFYqwa2I99mwGYqh/kyQrqW9WLMtlYDFGCbid4pNBUUJbERa
-	dGXsauz6dTDnbfmmXmBT6KuJKyA3oZEBU+tUdQkQnSwx3esMBgqyvD47MKAtFscP
-	kjbU9UjfGVMy4gRfcnb8NXLuC8A1878qBTlS3mjt6PvQrY7k+npqiyCvg2RLpmcv
-	UPvTTQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9hwwg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 04:08:21 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55K48KiQ000915
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 04:08:20 GMT
-Received: from cse-cd01-lnx.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 19 Jun 2025 21:08:15 -0700
-From: Wenmeng Liu <quic_wenmliu@quicinc.com>
-To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <akapatra@quicinc.com>,
-        <hariramp@quicinc.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_svankada@quicinc.com>, <quic_depengs@quicinc.com>,
-        <quic_vikramsa@quicinc.com>, <quic_wenmliu@quicinc.com>
-Subject: [RFC PATCH 3/3] arm64: dts: qcom: qcs6490-rb3gen2: Add csiphy current support
-Date: Fri, 20 Jun 2025 12:07:36 +0800
-Message-ID: <20250620040736.3032667-4-quic_wenmliu@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250620040736.3032667-1-quic_wenmliu@quicinc.com>
-References: <20250620040736.3032667-1-quic_wenmliu@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPgGB7n7"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2357c61cda7so192115ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750392604; x=1750997404; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D0J3pz+vXx4zWhDRnHNe5jTGnCrwT8SdrIPkh78HUGw=;
+        b=gPgGB7n7UB++Bs7cddmcHy6D2OnexGBJvlJfFJEgZMnZziAm+0HNHvfL8fk9E+Jluf
+         Sf3mPpeNyja0ILzstRqNOf8bmxERASYmLIbxWspBNAFJDpC68jcSy8JBGtx6OJ8y/BZb
+         WZFAwMV8cGBG9xD8oswpAbfkwfM0tZ3qpqknt73D/TD2ppof+D5e1pWDJJkb3t/IgjNB
+         +gyFGYCQB+8A3mDu/St1xSQ0GhfmnIc2QgGh6nFN+ZFPtUd4GZOzn7FaX/8g4IlvEdg9
+         92a6BNuCQvi7pfuQgfcJSFyR6yorqrovuX3AxSO2JXIARaF+SK0NdwJEcOoCD0Twzjt5
+         iSlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750392604; x=1750997404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D0J3pz+vXx4zWhDRnHNe5jTGnCrwT8SdrIPkh78HUGw=;
+        b=l28JZscyyLob4/z27001pdqqwyTQBSluQvjNO4s1qbUJv+BgEryd4dLP8pf6FZYFSm
+         l+1Jo79x+R5L57Pc/P7urtyQ2lGc3Wz2Vx7Yb+wTzqEL9R7Wu/JPrWFm9etfzD9xo/Ms
+         Yo42BYPiUcWSgbsDv7M6ei+I52hssoYqdzDlTYeXvuQaqLS65mC4hDB3ycHf1Zr8+bCf
+         73Zj7ySEX0/XahI3Y1sK8VHAdD9KBPX+iOwEuxwj6VNKxe425iRcPqZWBQiO7Bf+Od+S
+         Sn/Ze8KtXELevNFzZ/IrNVPqVuLsvYMoqnLQM2exVtx57LbKeYdlnFuIH+B83CiPsTkt
+         2BPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjo2RJJeV3ItOZ7g+eNMstvzWgv8knSbp+wzDOCbrTGccHRQPCForQ/dPKel7UGNiy91uq7l7Wl8yZXEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4METD5/g15SxHmkqBAkg1d8VMfu73hYWAutax6E9Gbgy8iaei
+	dn3j20bA8U01uEVb46U2EVBBvg2bfR2QiTsm6prFx9JoG8I/MnXPzXk/4FHNpJ+4RXusv9KcEMY
+	DRmM2jdH2gW2+846OlomNkSJzA6+s8FHYdXVNhvk=
+X-Gm-Gg: ASbGnctSqsuYEc/Arag4Ox6mpDz8F2dNXVumYMklUrscAlbcfqiatknvlgQlCn5V/Xp
+	CLc2IWcyS1KCd6ktzprAELkTLq7jMpoW8fDz1vg1OkMdf1ovRE5/lpe+at5CzJT5pRzzpCAgRA9
+	CUYNnULZFpOZLS2lg0s+1mkZVlbxeXhqkzFlgQ6WCfjtMswFjoTic=
+X-Google-Smtp-Source: AGHT+IEeiO4iWa8EguWAwpdoCgX9FfeOPkwKUTRcK304CQpV58E4RzV9wvrINPgshPqwuZAunqgkJK18ieFfghOTBsY=
+X-Received: by 2002:a17:902:da48:b0:234:c37:85a with SMTP id
+ d9443c01a7336-237ccb4b061mr4410355ad.24.1750392603867; Thu, 19 Jun 2025
+ 21:10:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: F-Kil7l_4sVM6dbBgELwl4lX8MQRQUox
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDAyOSBTYWx0ZWRfX7GXsx9or//wn
- ZyaWhbUreiWagcaBY6K2Gk57uyCiMUnCqmYOdumeh3Mx9MVjZVUv0Pd5jSCg6dPbFkk33o6B9vR
- 6jffu/iVPxtcAZ8wci8Sv/5QUjgmhmYYShN4vqImKRaO7YdO2KTgYhX66rIkkWEOFRD3swkRxMO
- gCAgTfj2NFMAx+n/f17osAtwuyI4mOiZpMwrsXqzoWpEybiGf4PTamE7FER7EkfM1bsyTzc+93S
- +PY33zwfLzqnXeR52obLXETn6tt13po2/pKXjvzMpXsyhlIaNN+ngwodEGLuilURR0mdrQ/+P/E
- lC/tgiEPstgloNOzTO2Gi/IxVPT1hFNP9Sqy6ngDFJTy+dBKSo+F872Ckrf9CPK5GlbyLrAB5xB
- vVZvbJY068W/5OjRXbxs9UStdlvbYih8zsbIoX/LmqZ6JAQL/nPC5gP2HybDVikSAdTTzj32
-X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=6854deb5 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=zPEXOy06XE7ydg0V1ewA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: F-Kil7l_4sVM6dbBgELwl4lX8MQRQUox
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_01,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=838
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200029
+References: <20250618132622.3730219-1-richardycc@google.com> <n6sls56srw265fmyuebz6ciqyxqshxyqb53th23kr5d64rwmub@ibdehcnedro6>
+In-Reply-To: <n6sls56srw265fmyuebz6ciqyxqshxyqb53th23kr5d64rwmub@ibdehcnedro6>
+From: Richard Chang <richardycc@google.com>
+Date: Fri, 20 Jun 2025 12:09:51 +0800
+X-Gm-Features: AX0GCFtrk97VEBBkmDra-Yk9RA-ymri9HdcNDawwzFbyzXPhM5wZf-3ANJ1sG1Q
+Message-ID: <CALC_0q8-98y0v_jV6QOFTKRAGhJ4nCXZ=q9wutLZPCE0KnKymw@mail.gmail.com>
+Subject: Re: [PATCH] zram: support asynchronous writeback
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>, bgeffon@google.com, 
+	liumartin@google.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add csiphy current value to support csiphy current load setting.
+Hi Sergey,
+The main idea is to replace submit_bio_wait() to submit_bio(), remove
+the one-by-one IO, and rely on the underlying backing device to handle
+the asynchronous IO requests.
+From my testing results on Android, the idle writeback speed increased 27%.
 
-Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso | 1 +
- 1 file changed, 1 insertion(+)
+idle writeback for 185072 4k-pages (~723 MiB)
+$ echo all > /sys/block/zram0/idle
+$ time echo idle > /sys/block/zram0/writeback
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-index b9e4a5214f70..60e7d46db394 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-@@ -16,6 +16,7 @@
- &camss {
- 	vdda-phy-supply = <&vreg_l10c_0p88>;
- 	vdda-pll-supply = <&vreg_l6b_1p2>;
-+	regulator-load-current = <54000 96400>;
- 
- 	status = "okay";
- 
--- 
-2.34.1
+Async writeback:
+0m02.49s real     0m00.00s user     0m01.19s system
+0m02.32s real     0m00.00s user     0m00.89s system
+0m02.35s real     0m00.00s user     0m00.93s system
+0m02.29s real     0m00.00s user     0m00.88s system
 
+Sync writeback:
+0m03.09s real     0m00.00s user     0m01.07s system
+0m03.18s real     0m00.00s user     0m01.12s system
+0m03.47s real     0m00.00s user     0m01.16s system
+0m03.36s real     0m00.00s user     0m01.27s system
+
+On Thu, Jun 19, 2025 at 10:28=E2=80=AFAM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (25/06/18 13:26), Richard Chang wrote:
+> > This commit introduces asynchronous writeback to zram, improving the
+> > idle writeback speed.
+>
+> Can I please ask for significantly more details here?
+> Justification, rationale, testing data/results, etc.
