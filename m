@@ -1,148 +1,92 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC4713774D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D181C13774D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435968; cv=none; b=M+f9Y2fEsXDCZ6XDBSAsCz/m/ss1Q6MJu74ZlrZrUTVDkFwqn4kqzE9o8bJgNTAvU0dlgwjn+URhTTc8EtyTMMWq3dGIUaQDdqi2CZ9wWf2FCdQY+e0CbhrSxdeGmFdc7ydBCm2Eyd014KDT9Pcs0H9BOdEisdwhqPH1QyeLZXs=
+	t=1750435981; cv=none; b=kkyPmZFDZTqZ15qfV505K/XLEYyLYikngJDE8PQ70wnhG91MX9Y+D+ccFnbTawZaDnMC9ilQGige1OhxfKOtjLHGGJGqpProjDzyr7mXPm/mmd/lHLIY6zEaC1aLiNAIptnD46uUCKQKcyg2iM0oy1dA60Kh9+5NL0DXbsN0+lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435968; c=relaxed/simple;
-	bh=dSrlAF32I5lH3btMaCGJWgljcuhVLfSPBYtyqJZd7k0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DrDDd5KA5+mHvXDdysbLCj0lbr7bGHb9w1Csz3ifZW/KJVw5IwFMt4nYqjrNWQAPaO16X4TYE9iRj9Hlt5WXlUekTJ5lraZtsT3SjKXk1GmA1CuCLbCf7BKuldYgXxgiG20i9rPiYD0XQt/vGx/AQEm6eTXDu2PzgR38zyBNmnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=lOMwqZrp; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+	s=arc-20240116; t=1750435981; c=relaxed/simple;
+	bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QmTlmgNjXMwsQ46G9mibVqkdZAocwD/4VeMGm6hihLkVCp1lFxeTOb0Da76onBSebG6jmMSY/Ta/6uOrxlH41+yX71qnPoMQoUrc4HV2GdT4GasBKYC+kjHQjP1PW9o5QM5cZLCRxOtsXoN9gBl8rIS9fzAOCz1uzwiaQzuNscI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=JzvajXlG; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="lOMwqZrp"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60634f82d1aso508604eaf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:12:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="JzvajXlG"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6facf4d8e9eso23493666d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks.com; s=google; t=1750435966; x=1751040766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uk1h/OSRQW76dr7YBIYqdBe7lZw8tZ9KpxMBcLXXza8=;
-        b=lOMwqZrpYw47239a5gbVxV4UugHMwf1jWYglWSLvgqTiklguqYBsn2wxqCMfTtSrjN
-         AmcFBn/laW7MYphhKRHo0oAarn9o1QR+vwuxkQO9E8GortvmGYm85lc9AZY3xWb4vLrh
-         FEbuY++jPa8u4pfNomINHaafbpPzG0Ypu4z1p6t4yq2J4C7CewxQ8U40mBTEde22Egob
-         i7WCwGJPEeU6C0v/EcMlaD5nnCTa6nJwK/ud+AuHMjDnbWk0ZRVDT+FVJVTHRVML094N
-         grLzQe0e4EOaOTs3tN4hVuk8wzJGEmG/DIjp+sajNiOqBCCIQa67JEs2IjQiBWxJ4Jxi
-         Fihg==
+        d=maine.edu; s=google; t=1750435977; x=1751040777; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+        b=JzvajXlG6VXYfNdyCmL/A0w+XVzLLhwy33OUayX7VMcY7gMZ2TLf2lhcRsPzsN3SXp
+         79zqvEVycxJre50sQSA/HkaZfeodwP4KRsCkQTFSKBF2N7cAEiaxzDnsHhuteOqyv71M
+         Lzh04P5Ozuou7IXIYGpjJsykugFUrBscit4iI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750435966; x=1751040766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uk1h/OSRQW76dr7YBIYqdBe7lZw8tZ9KpxMBcLXXza8=;
-        b=wX9KviyzZljxZWkZ4YH8YYL+w82aovLRGqqqeIGYPEykw2zlD4yjU5loXZ6uTyrous
-         uX52Y6+TbKIB2RqDwaus/kn0rZ9pm4COvyH4XKWbC72aIpWugPS4xNIu/7ZDjCSM0gRn
-         eb1aDLh9I/eT0UYNGucvyJSKoQTIt9IGiSTdMGL9TapXl0FhI9+9Oye7UJQ/2SBGPQzu
-         p7WwXzHnFm6oKgkhFqOqFBQDJhDyISKRgLPg5rNMr3y2Ga3YwadlgciMIu9tBMl/XMaf
-         J1pqLLy3eb7A7md5mGcvDVvPfUN3O8gF2dJtPBgoU5TxI+Ff6b8qCSy2QIYDzwLV0vF/
-         Cusg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEU+YsdaDcbyqwTqLyT3V4SCuUasVi9OBJr8sYPnLav1mqiVwSiKj464tNNCq2cG8dock0BVVEv7ztR+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPlHr/avRBH8p0YNapTZYZ3egznhp3iJlhh/Ktbm8K/giBs9qC
-	JTV4wOGWqcjC6uj/gQhec0ILOYd/BWi9dncu/wD/Vr6sM76UMLGLym1uvk81G//7VdduVcdaDwO
-	0j7ymuQnF3eYaATCaZehVJLi/Coj18V2iA+B1ZlwhDw==
-X-Gm-Gg: ASbGnctNaqAgNm0UILm4g1ZY4tG9VbjNUWfW29BwhAW5ZL+WzdjCZg+fqubpa5GHwlI
-	aZ8HSXH1rRYBlXWhgeebyLoIn3SPe9fO/BFiP3a2BEg6sNJPtWegI087gm20XxmSt/Hc2HtMsJZ
-	YfBRgeg73omFe2aD49lw1veP/DBX+/MX8yndvx/qnfBYE=
-X-Google-Smtp-Source: AGHT+IEWHRk01AMNXUO3Iti/LVUHyPY06MPi2HY582F4LaypQ5ZkZqqgLLKeo/FHsS0LAg4XUMcQcmQIpTlGgPfCCxs=
-X-Received: by 2002:a05:6820:1e87:b0:610:fc12:cbb4 with SMTP id
- 006d021491bc7-6115b8a077cmr2461053eaf.1.1750435966109; Fri, 20 Jun 2025
- 09:12:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750435977; x=1751040777;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+        b=kjKaLNMbIwqvQyYhIbTiDWPNe1hRAPTSSHr+hNPfcCDv2HEiouBgT9r2duVlvnFzlY
+         uWIaduScI3eeuCT4sed7WKaX7TVnxA1BcNZodAp/RZuCWXojOX8iQVNmmvnu54QQ0/tt
+         gOnjv+FncN6KkQmuSXg/cIl3xqL9e6z3FefmGDzrJVfIrOrg/prZavVA05KWIg2vsEhH
+         6eUGenb0c69v/uNtzdFy0/j1gN5swI83m+ERbVC48UUcjHdr3IPBsCW9DW4irA12LjIm
+         Oewce/RueMRiZcmYqmzmIpyLCx7I+xlA58A8f5JQcdbyWc+MRPSvuOmjQVmFUdIw3Rij
+         jt4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXeOy/H81j9YSiduDgjVPKB0SxraM84a0WkBOa3CJBBTnvresX23gYSeT0nG0q+Idm5ahLwRcy96owHgPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPiR7P9hmch1eepi5jRX46HFO4G3pvMUp6papoWdLramqy/sX6
+	eb1ldzGGg8Z2vuXG88GE8FBbfmkgC6pA3jG2yyK1UULytotWXQDox+Qw5Gq/KuwRRg==
+X-Gm-Gg: ASbGncuMYk5FIsv/JOWUehY8DXQX+TkD9tmLC9iBthhml5JROMToCJr4Edr2Eu18S/t
+	YKO+UgVsIAXcE1irWjLGaf+lX/nzHswED2cjzM6GtpF9aM5ApVXEKJpmYVhEv6UY7DMkTGg5cfr
+	l3Y3DnQSl1qH1i0dh9a7t1EebD3XvE/GH6MWOTc8ZHFKDLxY2EYztgpLS22vtY67mJzgVC9H8sJ
+	elnHSW+ZSyYmYlwC1vdNTGMPXQky4050+swm8v6I8c2W7p0s0HNLD4b2FvNmSGtPuQrS2onauGf
+	aGsyxmzWjja9uSydn5vfbLHESGNkIiyW+w+KszAN/KLry2e01mQkxIrfJOpdIhARJaA9yTh66sI
+	RypMIrQ==
+X-Google-Smtp-Source: AGHT+IGoovvsl19mY0vCtYhvu9E/Pp3ZVzXJ4Ykxp/GDEUA/7TwOQGC7TYT+H9Qq8AVH2lCTzNqJTQ==
+X-Received: by 2002:a05:6214:2627:b0:6fa:c0ca:c75c with SMTP id 6a1803df08f44-6fd0a5fff0fmr62574406d6.42.1750435976837;
+        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd093decfbsm13710906d6.11.2025.06.20.09.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Fri, 20 Jun 2025 12:12:55 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+In-Reply-To: <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
+Message-ID: <5a53490f-d4ec-85f7-4175-e148e02c3e67@maine.edu>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com> <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
+ <52656281-ab73-baf7-0a80-ebcbe79dfca2@maine.edu> <9aee2b65-e43a-4fcd-a929-a98269621315@linux.intel.com> <d12d4300-9926-5e58-6515-a53cb5c7bee0@maine.edu> <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616085742.2684742-1-hongxing.zhu@nxp.com> <20250616085742.2684742-2-hongxing.zhu@nxp.com>
-In-Reply-To: <20250616085742.2684742-2-hongxing.zhu@nxp.com>
-From: Tim Harvey <tharvey@gateworks.com>
-Date: Fri, 20 Jun 2025 09:12:35 -0700
-X-Gm-Features: AX0GCFupqyePYKY1h7Imt92So6Th1StimJuRSWH0VvVxy1uS8kPjLbLXM76L3Es
-Message-ID: <CAJ+vNU15XpyLuxO4EowyqO9P+ZUqNApoH2Wu261iu-5b2GrkGw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: imx6: Remove apps_reset toggle in _core_reset functions
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jun 16, 2025 at 1:59=E2=80=AFAM Richard Zhu <hongxing.zhu@nxp.com> =
-wrote:
->
-> apps_reset is LTSSM_EN on i.MX7, i.MX8MQ, i.MX8MM and i.MX8MP platforms.
-> Since the assertion/de-assertion of apps_reset(LTSSM_EN bit) had been
-> wrappered in imx_pcie_ltssm_enable() and imx_pcie_ltssm_disable();
->
-> Remove apps_reset toggle in imx_pcie_assert_core_reset() and
-> imx_pcie_deassert_core_reset() functions. Use imx_pcie_ltssm_enable()
-> and imx_pcie_ltssm_disable() to configure apps_reset directly.
->
-> Fix fail to enumerate reliably PI7C9X2G608GP (hotplug) at i.MX8MM, which
-> reported By Tim.
->
-> Reported-by: Tim Harvey <tharvey@gateworks.com>
-> Closes: https://lore.kernel.org/all/CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZcM=
-HDy+poj9=3DjSy+w@mail.gmail.com/
-> Fixes: ef61c7d8d032 ("PCI: imx6: Deassert apps_reset in imx_pcie_deassert=
-_core_reset()")
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controll=
-er/dwc/pci-imx6.c
-> index 9754cc6e09b9..f5f2ac638f4b 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -860,7 +860,6 @@ static int imx95_pcie_core_reset(struct imx_pcie *imx=
-_pcie, bool assert)
->  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  {
->         reset_control_assert(imx_pcie->pciephy_reset);
-> -       reset_control_assert(imx_pcie->apps_reset);
->
->         if (imx_pcie->drvdata->core_reset)
->                 imx_pcie->drvdata->core_reset(imx_pcie, true);
-> @@ -872,7 +871,6 @@ static void imx_pcie_assert_core_reset(struct imx_pci=
-e *imx_pcie)
->  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
->  {
->         reset_control_deassert(imx_pcie->pciephy_reset);
-> -       reset_control_deassert(imx_pcie->apps_reset);
->
->         if (imx_pcie->drvdata->core_reset)
->                 imx_pcie->drvdata->core_reset(imx_pcie, false);
-> @@ -1247,6 +1245,9 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp=
-)
->                 }
->         }
->
-> +       /* Make sure that PCIe LTSSM is cleared */
-> +       imx_pcie_ltssm_disable(dev);
-> +
->         ret =3D imx_pcie_deassert_core_reset(imx_pcie);
->         if (ret < 0) {
->                 dev_err(dev, "pcie deassert core reset failed: %d\n", ret=
-);
-> --
-> 2.37.1
->
+On Fri, 20 Jun 2025, Liang, Kan wrote:
 
-Tested-by: Tim Harvey <tharvey@gateworks.com> # imx8mp-venice-gw74xx
-(i.MX8MP + hotplug capable switch)
+> Thanks very much for the reproducer! The issue has been root-caused.
+> I've sent a patch to fix it. Please give it a try.
+> https://lore.kernel.org/lkml/20250620110406.3782402-1-kan.liang@linux.intel.com/
 
-Best Regards,
+I've applied the patch and can no longer generat the issue with my tests.
 
-Tim
+Thanks!
+
+Vince
+
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
