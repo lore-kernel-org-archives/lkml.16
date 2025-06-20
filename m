@@ -1,203 +1,103 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA1622A1E9;
-	Fri, 20 Jun 2025 08:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326A922A1E9;
+	Fri, 20 Jun 2025 08:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406943; cv=none; b=HPGfc55r6Tjt5+uT/iXVV1ox71r1+u/5+1ItQPP7V1LNcx34yqp1MZKH/i+1qpquDsxrdGrTAHkXc5eAjJesSb6FUkLa4NK6wkEYvm6tpvox3U9kfKv3kLGJxpLp86zSG4o81rpYjvQBvpVy1If7dW7H1tSyvK7aspXEYIqopBY=
+	t=1750406954; cv=none; b=FDSKMW/sTlJ2+QiVDa8S345mWWmmWNhcLZGupMQsCDMpEurYIlBVkMnF7SzejtPKQSb2VdMIXZ05U5dOd1gjTl9BCDOrIjQsoorLk/pREzWtQUahAD+4/Y92mjW2Vrnp0PynQANsKeZF1MJ2UfnTNwQAjO9xF6AtLKLzfsD9NX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406943; c=relaxed/simple;
-	bh=pxqPziK15Wg3g2t9bTkyy7xbwTJ8XZFDrgsd4s2deVw=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=nU8K/tnjtTEdkvVZu6sec0raZ/7a7aWUE3IFdh1j456j/tLHHl8RZEkGwBSToHCe6QpVQ0oT0BKN7ojG9rIJJcicyF4KdcJ0afefNDg2/C2M4TqRrXLKLXpclVaodmz+JeTCwUpIwPsNxcKDtM+9bOsZ7eFKy7PNPR+1XOwW/KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bNqqg07y6z4xfxK;
-	Fri, 20 Jun 2025 16:08:47 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl2.zte.com.cn with SMTP id 55K88WkU022600;
-	Fri, 20 Jun 2025 16:08:32 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Fri, 20 Jun 2025 16:08:34 +0800 (CST)
-Date: Fri, 20 Jun 2025 16:08:34 +0800 (CST)
-X-Zmail-TransId: 2afa68551702562-5cd67
-X-Mailer: Zmail v1.0
-Message-ID: <20250620160834242DDgecL4HF8b1OBLiZnnrl@zte.com.cn>
+	s=arc-20240116; t=1750406954; c=relaxed/simple;
+	bh=HYKgPE/DTO/7zsFIBAmEO/1XOE3FM0lL5rL2FL+sL6A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=PjPbjU64/9iM/ljpQXAR66tLVWmQuVtQxqWIFfYMiLsjcH7W48Lbg06tc9jtCeIMZ6fLgop94zFL+P4tZnENaP2ysEQXr3zYjGPgxL5gbpXEdkxC6ikB5gQZ8zHN1HyhLC4gb+erfj0lItGu/PLok43xFJZohHgy51nqkUCudnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6tq1Rld; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6tq1Rld"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C1CC4CEE3;
+	Fri, 20 Jun 2025 08:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750406953;
+	bh=HYKgPE/DTO/7zsFIBAmEO/1XOE3FM0lL5rL2FL+sL6A=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=O6tq1RldxFCSz69QTSzSi01QVUpNTc9ubgFmOL2ftfR1Dbdc6F0m2VK39Y62TBs5f
+	 /M6mnbPXOH/MV6SlBrJsD1PRR6WP2+ErtIklPS+jIiltN84axYSeTvC/v28jk8Km0J
+	 rJfABbbAr6giDJxqUHCIXd0aYdm4KLd8idAnZVLrwnHwwv4fb3iTV2lx4TaNmUCBgE
+	 jNDjyaMA5CLp/6jcX7hEvDnHlsRkzOBHjucXUizxf/M2ZMLbos+bvDoBeRfKw+t0q9
+	 jmTISXAgprzEuE9RtzGF2Yz9fS/EgF4VwBCg+x8Mdq6XJtTiHi2O7t7jCi0/SAhBWw
+	 0fK9NeCQxp9ZA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <geert+renesas@glider.be>
-Cc: <changhuang.liang@starfivetech.com>, <geert+renesas@glider.be>,
-        <magnus.damm@gmail.com>, <heiko@sntech.de>, <alim.akhtar@samsung.com>,
-        <walker.chen@starfivetech.com>, <sebastian.reichel@collabora.com>,
-        <detlev.casanova@collabora.com>, <finley.xiao@rock-chips.com>,
-        <shawn.lin@rock-chips.com>, <pgwipeout@gmail.com>,
-        <shao.mingyin@zte.com.cn>, <linux-pm@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYzXSBwbWRvbWFpbjogVXNlIHN0cl9lbmFibGVfZGlzYWJsZSgpIGFuZCBzdHJfb25fb2ZmKCkgaGVscGVycw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55K88WkU022600
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6855170F.000/4bNqqg07y6z4xfxK
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 10:09:09 +0200
+Message-Id: <DAR7H7EY3ITC.1VEEK0VQCUGAJ@kernel.org>
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Asahi Lina"
+ <lina@asahilina.net>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
+ <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
+ <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org> <aFE8PFNmpFeWNgTN@mango>
+ <DAPZ3WLBCBVL.3KA57Y90UKNRT@kernel.org> <aFUHWtE2dm3_-Rbs@mango>
+In-Reply-To: <aFUHWtE2dm3_-Rbs@mango>
 
-From: Shao Mingyin <shao.mingyin@zte.com.cn>
+On Fri Jun 20, 2025 at 9:01 AM CEST, Oliver Mangold wrote:
+> On 250618 2322, Benno Lossin wrote:
+>> On Tue Jun 17, 2025 at 11:58 AM CEST, Oliver Mangold wrote:
+>> > On 250514 1132, Benno Lossin wrote:
+>> >> On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
+>> >> > +///
+>> >> > +/// # Safety
+>> >> > +///
+>> >> > +/// Implementers must ensure that:
+>> >> > +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while t=
+hat owned reference exists (i.e.
+>> >> > +///   until the [`release()`](Ownable::release) trait method is ca=
+lled).
+>> >>
+>> >> I don't immediately understand what this means. How about "Any value =
+of
+>> >> type `Self` needs to be stored as [`Owned<Self>`]."?
+>> >
+>> > Let me think. The safety requirements here talk about safety of
+>> > implementing the trait.  But if you have a `Self` which is not wrapped=
+, you
+>> > still cannot create an `Owned<Self>` in safe code. It's different from=
+ an
+>> > `AlwaysRefCounted`, where an `ARef<Self>` can be created from a `&Self=
+`.
+>>=20
+>> That might be true, but AFAIK this trait is designed to be used for
+>> stuff that has a `create_foo` and `destroy_foo` function in C returning
+>> and taking a raw pointer to `foo` respectively. So creating it on the
+>> stack doesn't make sense.
+>
+> I didn't mean creating one on the stack, but keeping it in a raw pointer =
+or
+> `NonNull<T>`, not bothering to wrap in in an `Owned<T>`. But doesn't
+> matter. In any case in v11 (which predates your answer), I moved this
+> requirement to `Owned::from_raw()`, as, you asked below, which should be
+> okay as that function is the only way to create an `Owned<T>`. But I can
+> add the "needs to be stored as `Owned<Self>`" requirement, if you think i=
+t
+> is important.
 
-Use str_enable_disable() and str_on_off() helper instead of open
-coding the same.
+I'm not so sure, it depends on what we want `Owned<T>` to be. When I
+take a look at v11, I might be able to figure it out.
 
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-Reviewed-by: Changhuang Liang <changhuang.liang@starfivetech.com>
 ---
-v3:
-preserve the original patch format to avoid whitespace-damaged
- drivers/pmdomain/renesas/rcar-gen4-sysc.c    | 3 ++-
- drivers/pmdomain/renesas/rcar-sysc.c         | 3 ++-
- drivers/pmdomain/rockchip/pm-domains.c       | 3 ++-
- drivers/pmdomain/samsung/exynos-pm-domains.c | 6 +++---
- drivers/pmdomain/starfive/jh71xx-pmu.c       | 7 ++++---
- 5 files changed, 13 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-index e001b5c25bed..c8aa7538e95f 100644
---- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-+#include <linux/string_choices.h>
-
- #include "rcar-gen4-sysc.h"
-
-@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
-  out:
- 	spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
- 	return ret;
- }
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
-index 047495f54e8a..dae01ca0ef6a 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-sysc.c
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/soc/renesas/rcar-sysc.h>
-+#include <linux/string_choices.h>
-
- #include "rcar-sysc.h"
-
-@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
-
- 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
- 	return ret;
- }
-diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
-index 4cce407bb1eb..0681c763f843 100644
---- a/drivers/pmdomain/rockchip/pm-domains.c
-+++ b/drivers/pmdomain/rockchip/pm-domains.c
-@@ -21,6 +21,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/string_choices.h>
- #include <soc/rockchip/pm_domains.h>
- #include <soc/rockchip/rockchip_sip.h>
- #include <dt-bindings/power/px30-power.h>
-@@ -595,7 +596,7 @@ static int rockchip_do_pmu_set_power_domain(struct rockchip_pm_domain *pd,
- 					is_on == on, 0, 10000);
- 	if (ret) {
- 		dev_err(pmu->dev, "failed to set domain '%s' %s, val=%d\n",
--			genpd->name, on ? "on" : "off", is_on);
-+			genpd->name, str_on_off(on), is_on);
- 		return ret;
- 	}
-
-diff --git a/drivers/pmdomain/samsung/exynos-pm-domains.c b/drivers/pmdomain/samsung/exynos-pm-domains.c
-index 9b502e8751d1..1a892c611dad 100644
---- a/drivers/pmdomain/samsung/exynos-pm-domains.c
-+++ b/drivers/pmdomain/samsung/exynos-pm-domains.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
- #include <linux/pm_domain.h>
- #include <linux/delay.h>
- #include <linux/of.h>
-@@ -38,7 +39,6 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
- 	struct exynos_pm_domain *pd;
- 	void __iomem *base;
- 	u32 timeout, pwr;
--	char *op;
-
- 	pd = container_of(domain, struct exynos_pm_domain, pd);
- 	base = pd->base;
-@@ -51,8 +51,8 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
-
- 	while ((readl_relaxed(base + 0x4) & pd->local_pwr_cfg) != pwr) {
- 		if (!timeout) {
--			op = (power_on) ? "enable" : "disable";
--			pr_err("Power domain %s %s failed\n", domain->name, op);
-+			pr_err("Power domain %s %s failed\n", domain->name,
-+			       str_enable_disable(power_on));
- 			return -ETIMEDOUT;
- 		}
- 		timeout--;
-diff --git a/drivers/pmdomain/starfive/jh71xx-pmu.c b/drivers/pmdomain/starfive/jh71xx-pmu.c
-index 74720c09a6e3..dc3e109e273a 100644
---- a/drivers/pmdomain/starfive/jh71xx-pmu.c
-+++ b/drivers/pmdomain/starfive/jh71xx-pmu.c
-@@ -12,6 +12,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/string_choices.h>
- #include <dt-bindings/power/starfive,jh7110-pmu.h>
-
- /* register offset */
-@@ -155,7 +156,7 @@ static int jh7110_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
-
- 	if (ret) {
- 		dev_err(pmu->dev, "%s: failed to power %s\n",
--			pmd->genpd.name, on ? "on" : "off");
-+			pmd->genpd.name, str_on_off(on));
- 		return -ETIMEDOUT;
- 	}
-
-@@ -197,8 +198,8 @@ static int jh71xx_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
- 	}
-
- 	if (is_on == on) {
--		dev_dbg(pmu->dev, "pm domain [%s] is already %sable status.\n",
--			pmd->genpd.name, on ? "en" : "dis");
-+		dev_dbg(pmu->dev, "pm domain [%s] is already %s status.\n",
-+			pmd->genpd.name, str_enable_disable(on));
- 		return 0;
- 	}
-
--- 
-2.25.1
+Cheers,
+Benno
