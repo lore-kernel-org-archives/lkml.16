@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7465E38DD8;
-	Fri, 20 Jun 2025 06:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2E530E844;
+	Fri, 20 Jun 2025 06:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750399702; cv=none; b=aDmoZIoAI/Q9xyEMTkdq1wvZFLbpQU+rZ86AwjLVHBndFPnT1jGffnZ5jOaTn0CSu3QaiWe2qmBzebHnIyYkFDkIAzJYNE5/PIR+CsiHVHOVx+fEWGdBz/XeGwLbtHAwh0z/7FQELo08yN2EK839CLme+5ap/dWy6cyHDE+53xI=
+	t=1750399751; cv=none; b=IeqQYD79W2o6hRPzSLp3Ympz669ERXga9b7accOnCYJdA7TReN9ihhjrIm7Do8UxBrfVqc0M0xBfr1ux9dlm0CbS1mYPuFA0rYc43sQOtcM1JSpVDqhjDz3t0dAjjy6Cvn1Tbn450PTGh4ym7ErbA7N5SyLMlm7qmr8amrPyN2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750399702; c=relaxed/simple;
-	bh=ipMsj6JUO2go39tDkkj3PYDbD+Imwr51Wow06uo4mjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kwq79srlBsG2JMJKA+l4x/TnY7x3dRlb2noLfQYhJw3IafHC9BcPl7WKiwjF8OH/dwls/eBmiGRmOneop13erZiM76ACz32fC94n0LPCGhXIvFLMb0mQf/dQnmy1/LQB+wurjjKvNIvA32i51n9rA7yXu4hBPf2q6Cw5DoczI+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ah21+X0s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750399751; c=relaxed/simple;
+	bh=QGULT/+qFJlx0fY3ofxFZOztAw3sxBbpACU7X2GRR8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ELbW2LlqVwEHLC8b+l+TH4OYOpq+zj7MAXDMl1KcIlCtMf0HuENWpBs+iIpzQb1Mi60V7b1G9lsyngbvqBnRAyn2XQfbtJcBnFKl9kyZePJaFpLSZ1EBbMOr02SoyReUPNq4k0jrCoUDuPhcQx1W2X8Vrtc1FlqqDjiSMwBWBFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2LC7BmJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ah21+X0s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17EDC4CEE3;
-	Fri, 20 Jun 2025 06:08:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2LC7BmJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788C3C4CEE3;
+	Fri, 20 Jun 2025 06:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750399701;
-	bh=ipMsj6JUO2go39tDkkj3PYDbD+Imwr51Wow06uo4mjc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ah21+X0sZEgeZqUcorZMmhfCt9WS4osoQ0UzDyh68yY4lseVE9ZNhqALgox9S2+QP
-	 9jBMfclH+GLLE4b8Eh4sSFzW21/CJ2UGTPX4DpfRIGCJWHGnEVC9YH6KomRExRGDCL
-	 yabWH0wLZ2MMNntXoNw2NeU8DazZW53qwlLAUyEyFst60GGDKlbw1ghYgp/uKfN9XN
-	 fQowPWmVvNR84Y8taoKhX/UVmV/rL05mf1644Cku09IXD5dwyu5IgQaQcIr1FNc3Ur
-	 cdDjhNUNjStS6YNvxkGLqqYt/QumbJuklLPjEhIhUcb5NqL2olplJgA/EsTqwHHpCV
-	 r7fwBJ1MYw0xg==
-Message-ID: <9012cc61-b499-4213-9753-54cf4d24c822@kernel.org>
-Date: Fri, 20 Jun 2025 08:08:16 +0200
+	s=k20201202; t=1750399751;
+	bh=QGULT/+qFJlx0fY3ofxFZOztAw3sxBbpACU7X2GRR8Y=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=l2LC7BmJ8egcst9yf9qH5qOjV2EDNPK+fBc7yEiNO+XYLxmIx37BU/zKM6TYnf9l8
+	 wtIEzeavI+NvPFPaVI+xJAykrmfPkYnEDjyco4VaFRMuMPR6WvCu/CcCHdRAZ1RbIc
+	 4Q1uPKzDBt0kvHdjKK+0LBEWYv1wN3oSpuDVnYNFGJCoxtOcpm/EAOo+0xCJzxsn8x
+	 T3rz0Yi2QLBjOKBIYx/5Nqthe4xPIvUN0CesYlo+NnhiMuHiIKomSe0hT31cUqBDkR
+	 o/4TMYcT+1ef6FEoisPogUz2O1X6PL98ABfM4f6yzyBnV4p6iixauhm1kumbs5arJP
+	 uqAGTnzWS4YmA==
+Message-ID: <7b712056-b038-436f-a3d0-eb6fe74c86e2@kernel.org>
+Date: Fri, 20 Jun 2025 08:09:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,24 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
- <6ef92d1a-39cc-409f-8ebe-d28ad2006988@kernel.org>
- <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: clock: add TI CDCE6214 binding
 From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ kernel@pengutronix.de, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+References: <20250618-clk-cdce6214-v5-0-9938b8ed0b94@pengutronix.de>
+ <20250618-clk-cdce6214-v5-1-9938b8ed0b94@pengutronix.de>
+ <20250619-nonchalant-benign-ape-1fb180@kuoka>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -97,37 +91,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
+In-Reply-To: <20250619-nonchalant-benign-ape-1fb180@kuoka>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/06/2025 00:41, Harshit Shah wrote:
->>> +
->>> +             spi_clk: spi_clk {
->>> +                     compatible = "fixed-clock";
->>> +                     #clock-cells = <0>;
->>> +                     clock-frequency = <25000000>;
->>> +             };
->>> +
->>> +             apb_pclk: apb_pclk {
->> No underscores in node names, but all these look incorrect - don't you
->> have clock controller?
-> Noted, we will remove the "_" from the nodes. We do have clock 
-> controller however that is being accessed by other CPU before Linux will 
-> come-up.
-
-What does it mean? Is the clock controller not available at all for
-Linux or any other OS?
-
+On 19/06/2025 09:37, Krzysztof Kozlowski wrote:
+> On Wed, Jun 18, 2025 at 11:21:12AM GMT, Sascha Hauer wrote:
+>> Add device tree binding for the CDCE6214, an Ultra-Low Power Clock
+>> Generator With One PLL, Four Differential Outputs, Two Inputs, and
+>> Internal EEPROM.
+>>
+>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+>> ---
+>>  .../devicetree/bindings/clock/ti,cdce6214.yaml     | 60 ++++++++++++++++++++++
+>>  include/dt-bindings/clock/ti,cdce6214.h            | 25 +++++++++
+>>  2 files changed, 85 insertions(+)
 > 
-> So, the purpose of this clock nodes is to calculate the frequencies for 
-> other peripherals. (We will update the nodes with clock-<freq>)
-
-You do not calculate any frequencies here... You created nodes for fixed
-clocks but I question here whether these are fixed clocks.
-
-Where are these clocks located exactly?
-
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Un-reviewed, incomplete binding.
 
 Best regards,
 Krzysztof
