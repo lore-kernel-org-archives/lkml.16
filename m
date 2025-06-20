@@ -1,110 +1,128 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F42252287;
-	Fri, 20 Jun 2025 08:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A7426E6F0
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408789; cv=none; b=PNELNmiH/gKH5zD+XE7gtk7I26t5nmC2jglGt5ZO31la0J/FOawDFeceyIg1OB348ypFoNIDeZbWdVNqkm2THgm42mi9r1WSZZKiX+SG8RzUS+BqXMeXWzXh9lWaGsPcR6RrjVBBAydViRPkFpwqzM2J7vvMYpfvRWgipF/RZTI=
+	t=1750408817; cv=none; b=HgmmhvF2qwPlwfEGLehA2PKtMvPe10M4eoMayu3hTt1GYSvZiZfzQsA8yjUyaUZYbcgWmCWgu4t2Pza6T2q6QPU6ykaCJvbpUb9DJYm6fFG+8Ce4hetGlYCUJopuXCCXciUIZDZi2vG4Kfdro9Sh1ZFZf5YQS3bEmdLa3DqVju0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408789; c=relaxed/simple;
-	bh=t3m4zgkquuasfnbkxfN0dX0nzEs/hohOPoU5Oje+sZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5sr6sSBJPkdImoFISqk3OW/iKbKvsBop8BOSFdtH/8lmv+lmg8GCGz4quZuZPT4Tjoh/i7Pad6/DNQqWqXZcx9/bw7O59N7T973iUjaz9tlXYIpIEcYNx9puskkUZozvU/3A2tkrv44667Vy3SfOuntSP6ft2ztzcqI0Ax3+/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so274801066b.2;
-        Fri, 20 Jun 2025 01:39:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408786; x=1751013586;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1750408817; c=relaxed/simple;
+	bh=a3mQToStIF6B1IdwttoHX1nYEJ1tyZcwTnGtOMKW35Q=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=CXo/oJ5xOu8faS+/DR8na8mycCcXLcrQkjUiB+FkDvcPQQ/+MI6BqP4x2Sysg0Zj1k/p87yyj/v2blP2/UfuAGxEo5C4FmcX81ogHNi1cI572m0keP4FoF6YW65RQeX0jmv7qcnStr551pVkUVKaWslA1uQ9/ybsJsXbNTw6wBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=OzsPiecT; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="OzsPiecT"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so2502257a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750408813; x=1751013613; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F/6KSINIX8nITlevtHLgkn3+hb19b17sG99+6WMB0gY=;
-        b=Bfp8TtCFkUGnlVeURedgGyNte6JR3RS6RpCBQ2yScb1yq+1GU0qoM43W/nsPzsAY0p
-         G9nu96ZxHVzdzHul8VLFb5szAB08vLkTUEk3BJfvAH2p7btE6v4TIGZOd9LcY+2qMVDD
-         KwW4KU9uolWS2Bvk0uDyzoab7Q9dt/L2eSuK0Cgjz8nDGZXb5xzDAlmlozpx5N1Mun3J
-         gIFL/4AWCtOmdMWrmx2A8rTyNaPz9UrrBg/5RzATbifCOt+8NnytshsXCzf8Zcl/x0ju
-         4HKVTFHAXJILtZ16CVNu2vuP8whwDp7WoygMbGgwMjND6u2Ns5LULyTQgZXm4WEJrVQi
-         MiPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmo/VlU2wJsgby2bEOKjybFklM+fcOZAhJOTYcNTGieQ8B00F41PFhNDb+0zcpdgljH5qTYV3l@vger.kernel.org, AJvYcCVm684NMaQanHhT3Ab2mHitI4TCeUuKKaQ7C7opVQBZQAZHXkLJYlBg+xdktSucf/9x3S9ML0n5u6VJ3w1svsxe@vger.kernel.org, AJvYcCXzmeL29O70wIkFvNydsOExRJWR2IJJNCpeR5PFfTagiYoH2uHPy7bWssKU9y2GvYGK8FmBxIsjR2xvdtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFRmCpOqyyVrWXTSBxeh5WYHVX3lMXXX7+VzXl3JVxa9KZfHmk
-	H8VWyueuqcAZGuKzC/VciFvWp7EKzUWb4a5Xjj/wWYWL7wpqmXRBmKlj
-X-Gm-Gg: ASbGnctVq6sHwMmA/ThX/qPsDRo6Fc697NAbhjOieRQJ4X0hEZEnADbwO2grvD/VNsS
-	Ir6XsIP4ASqAE2cEoO84bQDSd8vNHQ/39RdO5psU0y8uXWHZXAiKjlvDZsWiizXP98KquVWx72x
-	9+hDeyqLbBOAR5wLRwEV9tOa68tjt4GPIGScpGJF0c1EP8vU2RVq6Nm0FpOlZZTdptPcrUyjRTE
-	Qq/g8aj15wF2XShIl2rdAiqJJA8RQf0NdNXpom0Z3YUgX8u3xshsEd9zp7whJbh37/2hxjTlHoQ
-	WGJQt4uJ9ohaaKU9HR9/M0bPGifz7dnZJSQVNrRRhdfL0j4Ubt+d
-X-Google-Smtp-Source: AGHT+IFJC+uPUCQdo0jPF8qiWvYcBREhi2HoqhqKfSvYBtJf/pYW+MJ6BHIIjikhDG8oYFShX4n9kQ==
-X-Received: by 2002:a17:907:d06:b0:adb:3509:b459 with SMTP id a640c23a62f3a-ae0579c7346mr199707366b.19.1750408785980;
-        Fri, 20 Jun 2025 01:39:45 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:1::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209a62sm126137066b.177.2025.06.20.01.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 01:39:45 -0700 (PDT)
-Date: Fri, 20 Jun 2025 01:39:43 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	ast@kernel.org
-Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
- functionality test
-Message-ID: <aFUeT8HSPYiDyALB@gmail.com>
-References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
- <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
- <aEwd9oLRnxna97JK@gmail.com>
- <20250613174233.0dd5e7c1@kernel.org>
+        bh=Xb6LSPnM0jp92EEKrNM76UM1fccTcugFDTVrUIjKDq8=;
+        b=OzsPiecTJAWEDjY3lZVKGcTxZo1IjiJb6A2krnBK+QO63UFoy2xb0TJC7c+x27xhqC
+         K8WPcXa8R5ILdCCXOBByLgtcytWRNtmsOZ9/JG/zthzGETQq/2fYFtvwclG094H+UI+0
+         nIz53UkqIJZt+ICtDSDObVG9OvQ9ORUvlDGym3Rx80kk+BY9BrFKR3rrtR/BriuTB9/k
+         M/9Nc9ti9da3+kBYbgfP9Wv4qci+5XbGRDaxp6aALp25RvhqKygC2Ard7nq2Fz63Xxum
+         zc4keaPBkwSVzswBkmkNS+1zSyoieN9aWB+bkf3FQ4vcVozl3HdC9lkHMHw+qMQ/jObH
+         8r3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750408813; x=1751013613;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xb6LSPnM0jp92EEKrNM76UM1fccTcugFDTVrUIjKDq8=;
+        b=NlAFZECcYlrPCPmvPzGmh5GYZiYTdRHwTwev2fuHt06JUdnT2hB+wQtJrv9wpRYC/4
+         GB/8ugDMXmag7BLR0bIhZqk1oEYE2raNXIdinOKIPvMQ9pA8lh3kJLUOcnjJs19lLjIZ
+         IP3YNfTPhLJPSBRtaPEaZPl3VqfhXZNu1K5EIt3mpt9NiYXVleEjsqrMi7LIqazov8ef
+         ln126NffLwtXGjLddt9XaZBdMINZMwBWfIOBBo9RoZNRWqqY9BWEE8uUh9ADljSewJ+1
+         vrVZ8iOGao5yNVMTllgyETTyZ+k9fV4AieGKHiLm6iJ89AC+ZJ1q1ejSsCAGF/4J3SrC
+         yRFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSiaMOs5IXi2AENhqiJ3YT+BM3RqSqHBvvb0SefvnwNwbUxc9lphhc03r47iocD0YEd5sTZWzAGRSvZrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM24VbxuNSXQruRWWAIJfTGJm0sEhUq9EH8DcVhcyKlI4wUEAC
+	OJA6DWc3LHk3c7mIc6M0zK4TQJsjQq4W7uXJbUuEj9/502V4YLlK3+kC7lVbiHLdPkw=
+X-Gm-Gg: ASbGncuiO+t0lmifInm6e9RRXpirfhXUwZiM5KhREQKmss0y03K5lVM0DHsHAU11nM0
+	YsTovX5QebCTi4BzVAeOsY4FR6p8VfUX0aVvxSrAWBJoVnGpZqSt3XtbyTT8mo1QEWo038LnNW1
+	M1EjqNU2ehFmUD6A1Y3o7i6OLmVIFl4PJECxGvOCGY5brGZ9C1nsBFqTNeAXL+6uiCqBOesrUCK
+	KD9528qlMqF5CjXAxUzJekJ3cMPGGsAZDGiRbKzJclIHMA7UA5v0/0JyXgLvn9NPwb6zO2YbyTu
+	e0Lm9+XiNGdWlPV+3uFi+Fi/N43wTc4R92kmitG9e/xdAVLGFEcrDlX+rxHOm34l7+TdSfHsQDz
+	BJQ80QxflXodrdKTCD5nCp5I9g9aqyvU=
+X-Google-Smtp-Source: AGHT+IHSanY7BYLP4aWQy8kFVBDTWraG5UXAI4rv0kvSKzHjiyN5FBJKlVrNJSNccFlJIgG0wJH/Gg==
+X-Received: by 2002:a05:6402:35d3:b0:606:bd9d:a772 with SMTP id 4fb4d7f45d1cf-60a1d18ee41mr1852590a12.24.1750408813427;
+        Fri, 20 Jun 2025 01:40:13 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a1854362csm1084336a12.20.2025.06.20.01.40.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 01:40:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613174233.0dd5e7c1@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 10:40:12 +0200
+Message-Id: <DAR84ZHFZOJI.3CRLDTISWFUEQ@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 10/11] MAINTAINERS: add myself as smbx charger driver
+ maintainer
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
+ <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
+ Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-10-ac5dec51b6e1@linaro.org>
+In-Reply-To: <20250619-smb2-smb5-support-v1-10-ac5dec51b6e1@linaro.org>
 
-On Fri, Jun 13, 2025 at 05:42:33PM -0700, Jakub Kicinski wrote:
-> On Fri, 13 Jun 2025 05:47:50 -0700 Breno Leitao wrote:
-> > > Or is there another way that the packets could be observed, e.g.,
-> > > counters.  
-> > 
-> > Unfortunately netpoll doesn't expose any data, thus, it is hard to get
-> > it. 
-> > 
-> > I have plans to create a configfs for netpoll, so, we can check for
-> > these numbers (as also configure some pre-defined values today, such as
-> > USEC_PER_POLL, MAX_SKBS, ip6h->version = 6; ip6h->priority = 0, etc.
-> > 
-> > In fact, I've an private PoC for this, but, I am modernizing the code
-> > first, and creating some selftests to help me with those changes later
-> > (given we have very little test on netpoll, and I aim to improve this,
-> > given how critical it is for some datacenter designs).
-> 
-> FWIW you can steal bpftrace integration from this series:
-> https://lore.kernel.org/all/20250421222827.283737-22-kuba@kernel.org/
+Hi Casey,
 
-Yes, that would be great. I think we can iterate until we hit the poll
-path, otherwise we skip the test at timeout. Something as:
+On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
+> Missed when this originally went upstream, add myself to the MAINTAINERS
+> file for this driver.
+>
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c2b570ed5f2f28341a3bcb7b699cbb250ffa2a88..a32e53d89c29cacf6e456258c=
+4c7c0206cf8abf2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20565,8 +20565,15 @@ L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/mtd/qcom,nandc.yaml
+>  F:	drivers/mtd/nand/raw/qcom_nandc.c
+> =20
+> +QUALCOMM SMB2 CHARGER DRIVER
 
-	while (true):
-		send msg
-		if netpoll_poll_dev() was invoked:
-			ksft_exit
-		
-		if timeout:
-			raise KsftSkipEx
-	
-As soon as your code lands, I will adapt the test to do so. Meanwhile,
-I will send the v1 for the netpoll, and later we can iterate.
+SMB2/SMB5 or SMBX probably?
 
-Thanks for working on this bfptrace helper. This will be useful on other
-usecases as well.
+Regards
+Luca
 
---breno
+> +M:	Casey Connolly <casey.connolly@linaro.org>
+> +L:	linux-arm-msm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.y=
+aml
+> +F:	drivers/power/supply/qcom_smbx_charger.c
+> +
+>  QUALCOMM QSEECOM DRIVER
+>  M:	Maximilian Luz <luzmaximilian@gmail.com>
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+
