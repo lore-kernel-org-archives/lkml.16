@@ -1,165 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8F91DD543;
-	Fri, 20 Jun 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9762419A297;
+	Fri, 20 Jun 2025 16:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436369; cv=none; b=Jf+jslGdONFv5RgwoTAiJG5YV0kwC+YRwjf/GDWftQTT/7XF1V8pnETPg3YW3dKr86MzX+pJvYuAulFLNGIptAfY2KJA0nAvO//qQBKGj1sfu/d4Jp4aYI5YNHY6u9kxjoAXNJFqhZZZep7tOZ1+VhlmZ02q55+5lkli7B+xd3E=
+	t=1750436455; cv=none; b=FajMJmLlgcG0m1GQEY+BYEPcoWpmCPvYoGbSSy6FSFOsoNPmkZf9OfsVUNJLqSWR4YqC6Z+R36/3MyJBJghWVwcIYLBmDlY3xWF52PICCc3IjwtOVL1DDiry+QvoFjDvXxSh3d820Zp7sGd9MjA6N3/e/QValEUYJfoi/2TaM3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436369; c=relaxed/simple;
-	bh=vv/we4/ivW8qVlc9KYQ3SUnskmMUwhAqc+b3MJmmAI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ccv5vlTB01Pn+Q+pNisSj0bkHqq2V13nnq5kmnD+T37Dis8RWT5MIhlDJFPZoPBZMiny17EAWX1Y5kHmJGOflD4sFkFG6w5LN/RXL4J0/wU76/FBSyi2eql0WFlfZ1CwUsK4pUWDPWBiGmEUWW/LP0ZCJ2vNMN9XTacb/mWf5zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fVSZ0plV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PhmuZmuQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750436455; c=relaxed/simple;
+	bh=cp0kw4T/GySkKxRMjIRuSd2w97N7TjVI1fQ0H5rFv50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/7eIwluQsi3ZJ/9EKETfjGw4HbtBnSx3eVwhjPkTQFXdcFp/g7yOk0Cnf19cNfe6lGctzQYlxMcHcAhoCz8CPFbsEO5yjuEXmESRahs4xBcFTPxL12FKmNIMigQ5coyky57T1ooOQXr0PKQY+tcIMbXzMo8/P8y/EroiLxSBmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ec0LxLk5; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fVSZ0plV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhmuZmuQ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=fVSZ0plVYhp6KwBYpmltfkSxuNsNAC/7XfZShU69Cx0/8hFmuPw0eSH+Nv9WnM/23Ocjem
-	zIzX6xLJ3SmpgUl8dHsH60vTgmOX/s1XIxN2K00/JWg12h41baUgo9scAOfzGov7X6tw++
-	UThw1WbFXpflUv/HaDUSOQUxlDrxlUNYfWbbJhkMqa2e7AzYsRxv9spTmH44ZGYAVLLESf
-	hED98byL/mOH+Y7OH5oywasR7kOg2FHnFgpdaKJEPJN05IeErqtTiyTEHvws4+6BtPeizF
-	nB+qGcccE9bDamx0L+mVy+WppwgPi52/1R4wcXKnjszqujq37+vlqBNOsns79w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=PhmuZmuQfJdPqbEkPXi+gvYMeuWTjpSprGjAU1gvLagNyhdjlNiTFYgUXvA2f35kGWg5v3
-	nz1mSbILfIRi+rDA==
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>, Michael Kelley
- <mhklinux@outlook.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
- <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
- <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
-In-Reply-To: <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157639630F8AD2D8FD8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-Date: Fri, 20 Jun 2025 18:19:24 +0200
-Message-ID: <878qlmqtbn.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ec0LxLk5"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso1655396b3a.2;
+        Fri, 20 Jun 2025 09:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750436453; x=1751041253; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sRqS8yCp71M8J/v9FNUlPgqOmmjQL4d9Ouv9ykz1KGU=;
+        b=ec0LxLk5hDmNCy36xVGvRkwMCsOjYGDrlovD7UD4yxos5G9QjCR8dStu3qrxdoSkmX
+         keUIJVy6PIixIhP1QCM4Vy1EWUl7O+Dh+f0GnsXl8+INvY7luz+D/IiX8r+rfCu4zaEM
+         OoZLejhuYQBKdrvv4vYqgc5XQATO1aDHJ2/eg0MOhg0hxSv0/ha7KRFCAMYmvFvwd+cY
+         E0KqGpiDXCuKQWzqAfzg/HokZcoS68brKUJKGSbmuK7Auio1FuWJLWbR2d+hkBBbdQpc
+         J6D/RK0RVhYiBmUzmYaHcNZNIaAuHiDaqiTz/HXarao8esJSJYaa3/6fHb0Eqn+dLxsF
+         Uwlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750436453; x=1751041253;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sRqS8yCp71M8J/v9FNUlPgqOmmjQL4d9Ouv9ykz1KGU=;
+        b=jIDVCBwCaMf6lTs6U//6BSXE+ZADKgCrB/qjVDQtkiaODvppmkjHDQcUJkCnGKxZRo
+         fK6rvY4lSwB/MHUVIHPZ2mzHuKabSgxy0k4zF4uczBl40BaLUhIT//VPKJ8ZdoZgYnNi
+         oCWntK4z7tj3xX2VEn2Ye6hFHfxexV4fvJ3PdtwP8a126uDWHXYPPBmWDzZpnT0LMhpg
+         pOfHYHTnxqt6y2tPBugFmKRpEG8OsK/+0xPpR8AmAP8Z791mmWx/3MEQyzbxTSiikKTA
+         ttDBP2mrK9OMbqVErZRVwYkQjvjZYIqUKqkdKbNZJoFlQQfV+ddAX5DcsSE1bI0VbK8E
+         hu7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUvBnRfsd5FGhUM7jVTcxjtJT4vZvs2t+/s1CzbvTIxKaGmh9ViG+X/9XwKJ9mAHyi3f2xx5gHh/w+ITois@vger.kernel.org, AJvYcCXkw0yXikrZUyVUzQ2biMpf2FDkfaI3ZFlfgagyXKgjZPcUxiZV0f+t1IDnANrmLNoQ1EJaY1EEHyby@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZy+RavRCk0Vis9aHSz4gr+b6WzNRISi3RGvhR+MOwls6WHkB6
+	OjhAiNjpXa4NzMFOpHCjXa+RXe8zU3xSdG/+PuQFzhlIfOlaoZhw1un1
+X-Gm-Gg: ASbGnctixs5pCRaICabtkmSU7humQrKgz3DHeoq55qjFOpIBJRbGSyle+WaqpWJvKn0
+	+rtrwAk9Gyw1eQ84XoWmbeNdoUkFvRM+JBxQzOghhWKm+FXkPiP2lBNybFNS5aEV6WZgA/HuHVV
+	ak1ogdc25N2Iqef1gvqvj3Q3P2p78TTZFzbMmD+qVEa8RKU2P6+KC66SCe+c+5xLv5fAl5MjDGB
+	6CmzLa0rfMFDWxh0M8+CnqkBIPpe3seaFGxSdKnIHsbtldCPoCQUyVTX1qEkkHFDSi+pbI6/Tzh
+	FCh5s0AFfTtTo3N110qX5TkPUfkzsN4ItezEHiTzNcFXNYZN/iq/pX3OxeXbjbjPOmKCEXkA
+X-Google-Smtp-Source: AGHT+IEWxjdwWEc3fO2QlYsxczv0i4+WeKU2EtbTY6IkJyPa6vf0ImD2eIaO/NXQMX7yrumuW68/Cg==
+X-Received: by 2002:a05:6a21:4612:b0:1f5:6b36:f57a with SMTP id adf61e73a8af0-22026ff9abcmr5656587637.39.1750436452658;
+        Fri, 20 Jun 2025 09:20:52 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6c203bsm2386636b3a.171.2025.06.20.09.20.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:20:51 -0700 (PDT)
+Date: Fri, 20 Jun 2025 12:20:47 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: cp0613@linux.alibaba.com
+Cc: linux@rasmusvillemoes.dk, arnd@arndb.de, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
+ extension
+Message-ID: <aFWKX4rpuNCDBP67@yury>
+References: <20250620111610.52750-1-cp0613@linux.alibaba.com>
+ <20250620111610.52750-3-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620111610.52750-3-cp0613@linux.alibaba.com>
 
-On Wed, Jun 18 2025 at 14:08, Nuno Das Neves wrote:
-> On 6/11/2025 4:07 PM, Michael Kelley wrote:
->> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
->>> +/**
->>> + * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
->>> + * @data:      Describes the IRQ
->>> + * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
->>> + *
->>> + * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
->>> + */
->>> +int hv_map_msi_interrupt(struct irq_data *data,
->>> +			 struct hv_interrupt_entry *out_entry)
->>>  {
->>> -	union hv_device_id device_id = hv_build_pci_dev_id(dev);
->>> +	struct msi_desc *msidesc;
->>> +	struct pci_dev *dev;
->>> +	union hv_device_id device_id;
->>> +	struct hv_interrupt_entry dummy;
->>> +	struct irq_cfg *cfg = irqd_cfg(data);
->>> +	const cpumask_t *affinity;
->>> +	int cpu;
->>> +	u64 res;
+On Fri, Jun 20, 2025 at 07:16:10PM +0800, cp0613@linux.alibaba.com wrote:
+> From: Chen Pei <cp0613@linux.alibaba.com>
+> 
+> The RISC-V Zbb extension[1] defines bitwise rotation instructions,
+> which can be used to implement rotate related functions.
+> 
+> [1] https://github.com/riscv/riscv-bitmanip/
+> 
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+> ---
+>  arch/riscv/include/asm/bitops.h | 172 ++++++++++++++++++++++++++++++++
+>  1 file changed, 172 insertions(+)
+> 
+> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
+> index d59310f74c2b..be247ef9e686 100644
+> --- a/arch/riscv/include/asm/bitops.h
+> +++ b/arch/riscv/include/asm/bitops.h
+> @@ -20,17 +20,20 @@
+>  #include <asm-generic/bitops/__fls.h>
+>  #include <asm-generic/bitops/ffs.h>
+>  #include <asm-generic/bitops/fls.h>
+> +#include <asm-generic/bitops/rotate.h>
+>  
+>  #else
+>  #define __HAVE_ARCH___FFS
+>  #define __HAVE_ARCH___FLS
+>  #define __HAVE_ARCH_FFS
+>  #define __HAVE_ARCH_FLS
+> +#define __HAVE_ARCH_ROTATE
+>  
+>  #include <asm-generic/bitops/__ffs.h>
+>  #include <asm-generic/bitops/__fls.h>
+>  #include <asm-generic/bitops/ffs.h>
+>  #include <asm-generic/bitops/fls.h>
+> +#include <asm-generic/bitops/rotate.h>
+>  
+>  #include <asm/alternative-macros.h>
+>  #include <asm/hwcap.h>
+> @@ -175,6 +178,175 @@ static __always_inline int variable_fls(unsigned int x)
+>  	 variable_fls(x_);					\
+>  })
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+...
 
->>>
->>> -	return hv_map_interrupt(device_id, false, cpu, vector, entry);
->>> +	msidesc = irq_data_get_msi_desc(data);
->>> +	dev = msi_desc_to_pci_dev(msidesc);
->>> +	device_id = hv_build_pci_dev_id(dev);
->>> +	affinity = irq_data_get_effective_affinity_mask(data);
->>> +	cpu = cpumask_first_and(affinity, cpu_online_mask);
->> 
->> Is the cpus_read_lock held at this point? I'm not sure what the
->> overall calling sequence looks like. If it is not held, the CPU that
->> is selected could go offline before hv_map_interrupt() is called.
->> This computation of the target CPU is the same as in the code
->> before this patch, but that existing code looks like it has the
->> same problem.
->> 
->
-> Thanks for pointing it out - It *looks* like the read lock is not held
-> everywhere this could be called, so it could indeed be a problem.
->
-> I've been thinking about different ways around this but I lack the
-> knowledge to have an informed opinion about it:
->
-> - We could take the cpu read lock in this function, would that work?
+> +static inline u8 variable_ror8(u8 word, unsigned int shift)
+> +{
+> +	u32 word32 = ((u32)word << 24) | ((u32)word << 16) | ((u32)word << 8) | word;
 
-Obviously not.
+Can you add a comment about what is happening here? Are you sure it's
+optimized out in case of the 'legacy' alternative?
 
-> - I'm not actually sure why the code is getting the first cpu off the effective
->   affinity mask in the first place. It is possible to get the apic id (and hence
->   the cpu) already associated with the irq, as per e.g. x86_vector_msi_compose_msg()
->   Maybe we could get the cpu that way, assuming that doesn't have a
->   similar issue.
+> +
+> +	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> +				      RISCV_ISA_EXT_ZBB, 1)
+> +			  : : : : legacy);
+> +
+> +	asm volatile(
+> +		".option push\n"
+> +		".option arch,+zbb\n"
+> +		"rorw %0, %1, %2\n"
+> +		".option pop\n"
+> +		: "=r" (word32) : "r" (word32), "r" (shift) :);
+> +
+> +	return (u8)word32;
+> +
+> +legacy:
+> +	return generic_ror8(word, shift);
+> +}
+> +
+> +#define rol64(word, shift) variable_rol64(word, shift)
+> +#define ror64(word, shift) variable_ror64(word, shift)
+> +#define rol32(word, shift) variable_rol32(word, shift)
+> +#define ror32(word, shift) variable_ror32(word, shift)
+> +#define rol16(word, shift) variable_rol16(word, shift)
+> +#define ror16(word, shift) variable_ror16(word, shift)
+> +#define rol8(word, shift)  variable_rol8(word, shift)
+> +#define ror8(word, shift)  variable_ror8(word, shift)
 
-There is no reason to fiddle in the underlying low level data. The
-effective affinity mask is there for a reason.
+Here you wire ror/rol() to the variable_ror/rol() unconditionally, and
+that breaks compile-time rotation if the parameter is known at compile
+time.
 
-> - We could just let this race happen, maybe the outcome isn't too catastrophic?
-
-Let's terminate guesswork mode and look at the facts.
-
-The point is that hv_map_msi_interrupt() is called from:
-
-    1) hv_irq_compose_msi_msg()
-
-    2) hv_arch_irq_unmask() (in patch 4/4)
-
-Both functions are interrupt chip callbacks and invoked with the
-interrupt descriptor lock held.
-
-At the point where they are called, the effective affinity mask is valid
-and immutable. Nothing can modify it as any modification requires the
-interrupt descriptor lock to be held. This applies to the CPU hotplug
-machinery too. So this AND cpu_online_mask is a complete pointless
-voodoo exercise.
-
-Just use:
-
-     cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
-
-and be done with it.
-
-Please fix that first with a seperate patch before moving this code
-around.
+I believe, generic implementation will allow compiler to handle this
+case better. Can you do a similar thing to what fls() does in the same
+file?
 
 Thanks,
+Yury
 
-        tglx
+> +
+>  #endif /* !(defined(CONFIG_RISCV_ISA_ZBB) && defined(CONFIG_TOOLCHAIN_HAS_ZBB)) || defined(NO_ALTERNATIVE) */
+>  
+>  #include <asm-generic/bitops/ffz.h>
+> -- 
+> 2.49.0
