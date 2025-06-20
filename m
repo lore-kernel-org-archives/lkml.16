@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFBF23236F;
-	Fri, 20 Jun 2025 08:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38623371E;
+	Fri, 20 Jun 2025 08:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407114; cv=none; b=VhXBCxlh8uEozNTks2Q8Nn2Bl2ojI6/dVeYJoer8fpTVI6Ubt0Bw+wCiBUOA+i8+1353eCEVWOqZTBnsQGx1MyIayEBjbECHpvqt+jmZZ+wJoQdSoLXY4Oa/JMpDXlGAGGdYHPsFWzrSx/t7/Jw3K+JKlBDrEs8JRf2Lu7CYWIY=
+	t=1750407114; cv=none; b=l50skHv5fw5bw+V+I2t91IJkFwQ3Bkn7vjJk78BrVM/GbR32uyX2/gX/x7pFvuJB8gfBvJiDmwzfHf1jOt7dGSoI4/GfQanFxnJxg9FbVb/hAr5Pqs1nEPlakLiu9s7xv9RH6w0hz9pp8II0/uFQrQzg79YwmqAhi8hnk2bcDCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750407114; c=relaxed/simple;
-	bh=JvTI+DF/1Dszyn4T0n7ZKhi6vNtj6FoC1Ae/TMd5FHM=;
+	bh=wx0BDvaHpPo9dP1wTRMAhz/5i+/h4gNQceHfFlSoK7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ieOjYaC7VCvdhtGrVGnS6qppY/+KKfWogpx/4oEYWieM+Gx1hbZeP3Rr2iNSImMnX3+jwg2VMe0ubnf1GX2B983+J4/xDnxmd+fIr5EFCk+a47bKduKzN1LY37XqQe5oP9r6eiEU6zAk1xARz6Ku/NRfflygEHrw342NeT8UPEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9RBbEPy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hDJOght8J0JD3RSFe0mbFJbG+y+mX46DB5WMf50bUafO5PWYrrtayQBPm2nq+3iUT1Ip9JMM+Smk11Z/sd1g9FkSgNS+F3ii+Hz01BNb4eQwHvkFLHJwqCwoI1urodxLewwibbibLDP9pEqVB7m0U1H9hkvMV011Ff/dTsswZnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7y94HaH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9RBbEPy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1A0C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7y94HaH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C792DC4AF09;
 	Fri, 20 Jun 2025 08:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750407113;
-	bh=JvTI+DF/1Dszyn4T0n7ZKhi6vNtj6FoC1Ae/TMd5FHM=;
+	s=k20201202; t=1750407114;
+	bh=wx0BDvaHpPo9dP1wTRMAhz/5i+/h4gNQceHfFlSoK7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R9RBbEPybIDPIl5sxqWXk0nqMmbTRyx+Fh7+IEbpD2P0UFiQvaByzvjRhvhjo5aiX
-	 AvQgoX+g64q+H2ETUi05ul1jL6nxGUlNNg4s0Meqxx+CWwoQ/i0KKJE8aHLUwirvjy
-	 ifi4gpzk+lACr7ttf5qMWV1KjmfVYsA9MVPdlbDhqCaNKD0pQO2ZRM2TSbWOWn4FG2
-	 S8ZqZ4H8Zi+yDyAZGoxILDsX1NLOTQVeV4Kx9TN2YkOSKqSv6A41XjBQqXCGqZl3QM
-	 eULTtvbfoqtG9xReD0CfhtiFj3kceu/Zz+VHhx3WFqY+N9M9n0tPrCvKrM5xiHM82a
-	 WwPbTYf2sCEqg==
+	b=o7y94HaHSE67lSEPEmuqgyCglT7T6bKhAla/OLEqFQkcisrE6dNuZxo4z1UDOCJcR
+	 /ipKl4JCApwsr6TWAyyRZBZsqY9W6+n+sDKu/g3SdzaX7VTiAjQO2hVEtzubjO4gPZ
+	 RluTjkE1W88llGp3iWDpQPKz7g8Qe8e2AL+0KsDFSZtKORzjK4Y2WFRYUdaf6WP7Vc
+	 1Z0dKMgPCzxyuFz/tb5PHT7qExcHnUVNcc+4PohotqMZopVckKLNwLx1rHI7AASMc8
+	 ba3VnPheZ+/ShiCyKbvcksBsMvBjG8ShYYW/8utfyChyZzpV4XXs7rLl46w76pMZFd
+	 Ws92II0KtnzaQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uSWql-00000004TWn-3Lm5;
+	id 1uSWql-00000004TWv-3ZJx;
 	Fri, 20 Jun 2025 10:11:51 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,11 +36,10 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Donald Hunter <donald.hunter@gmail.com>
-Subject: [PATCH 1/6] docs: conf.py: properly handle include and exclude patterns
-Date: Fri, 20 Jun 2025 10:11:41 +0200
-Message-ID: <737b08e891765dc10bd944d4d42f8b1e37b80275.1750406900.git.mchehab+huawei@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/6] scripts: scripts/test_doc_build.py: add script to test doc build
+Date: Fri, 20 Jun 2025 10:11:43 +0200
+Message-ID: <1858fa581a86a1c684cf1c6044be98d482022251.1750406900.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750406900.git.mchehab+huawei@kernel.org>
 References: <cover.1750406900.git.mchehab+huawei@kernel.org>
@@ -53,125 +52,264 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-When one does:
-	make SPHINXDIRS="foo" htmldocs
+Testing Sphinx backward-compatibility is hard, as per version
+minimal Python dependency requirements can be a nightmare.
 
-All patterns would be relative to Documentation/foo, which
-causes the include/exclude patterns like:
-
-	include_patterns = [
-		...
-		f'foo/*.{ext}',
-	]
-
-to break. This is not what it is expected. Address it by
-adding a logic to dynamically adjust the pattern when
-SPHINXDIRS is used.
-
-That allows adding parsers for other file types.
-
-It should be noticed that include_patterns was added on
-Sphinx 5.1:
-	https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-include_patterns
-
-So, a backward-compatible code is needed when we start
-using it for real.
+Add a script to help automate such checks.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
 ---
- Documentation/conf.py | 67 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 4 deletions(-)
+ scripts/test_doc_build.py | 241 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
+ create mode 100755 scripts/test_doc_build.py
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 12de52a2b17e..4ba4ee45e599 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -17,6 +17,66 @@ import os
- import sphinx
- import shutil
- 
-+# Get Sphinx version
-+major, minor, patch = sphinx.version_info[:3]
+diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
+new file mode 100755
+index 000000000000..482716fbe91d
+--- /dev/null
++++ b/scripts/test_doc_build.py
+@@ -0,0 +1,241 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++# Copyright(c) 2025: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
++#
++# pylint: disable=C0103,R1715
 +
-+# Include_patterns were added on Sphinx 5.1
-+if (major < 5) or (major == 5 and minor < 1):
-+    has_include_patterns = False
-+else:
-+    has_include_patterns = True
-+    # Include patterns that don't contain directory names, in glob format
-+    include_patterns = ['**.rst']
++"""
++Install minimal supported requirements for different Sphinx versions
++and optionally test the build.
++"""
 +
-+# Location of Documentation/ directory
-+doctree = os.path.abspath('.')
++import argparse
++import os.path
++import sys
++import time
 +
-+# Exclude of patterns that don't contain directory names, in glob format.
-+exclude_patterns = []
++from subprocess import run
 +
-+# List of patterns that contain directory names in glob format.
-+dyn_include_patterns = []
-+dyn_exclude_patterns = ['output']
++# Minimal python version supported by the building system
++python_bin = "python3.9"
 +
-+# Properly handle include/exclude patterns
-+# ----------------------------------------
++# Starting from 8.0.2, Python 3.9 becomes too old
++python_changes = {(8, 0, 2): "python3"}
 +
-+def update_patterns(app):
++# Sphinx versions to be installed and their incremental requirements
++sphinx_requirements = {
++    (3, 4, 3): {
++        "alabaster": "0.7.13",
++        "babel": "2.17.0",
++        "certifi": "2025.6.15",
++        "charset-normalizer": "3.4.2",
++        "docutils": "0.15",
++        "idna": "3.10",
++        "imagesize": "1.4.1",
++        "Jinja2": "3.0.3",
++        "MarkupSafe": "2.0",
++        "packaging": "25.0",
++        "Pygments": "2.19.1",
++        "PyYAML": "5.1",
++        "requests": "2.32.4",
++        "snowballstemmer": "3.0.1",
++        "sphinxcontrib-applehelp": "1.0.4",
++        "sphinxcontrib-devhelp": "1.0.2",
++        "sphinxcontrib-htmlhelp": "2.0.1",
++        "sphinxcontrib-jsmath": "1.0.1",
++        "sphinxcontrib-qthelp": "1.0.3",
++        "sphinxcontrib-serializinghtml": "1.1.5",
++        "urllib3": "2.4.0",
++    },
++    (3, 5, 4): {},
++    (4, 0, 3): {
++        "docutils": "0.17.1",
++        "PyYAML": "5.1",
++    },
++    (4, 1, 2): {},
++    (4, 3, 2): {},
++    (4, 4, 0): {},
++    (4, 5, 0): {},
++    (5, 0, 2): {},
++    (5, 1, 1): {},
++    (5, 2, 3): {
++        "Jinja2": "3.1.2",
++        "MarkupSafe": "2.0",
++        "PyYAML": "5.3.1",
++    },
++    (5, 3, 0): {
++        "docutils": "0.18.1",
++        "PyYAML": "5.3.1",
++    },
++    (6, 0, 1): {},
++    (6, 1, 3): {},
++    (6, 2, 1): {
++        "PyYAML": "5.4.1",
++    },
++    (7, 0, 1): {},
++    (7, 1, 2): {},
++    (7, 2, 3): {
++        "PyYAML": "6.0.1",
++        "sphinxcontrib-serializinghtml": "1.1.9",
++    },
++    (7, 3, 7): {
++        "alabaster": "0.7.14",
++        "PyYAML": "6.0.1",
++    },
++    (7, 4, 7): {
++        "docutils": "0.20",
++        "PyYAML": "6.0.1",
++    },
++    (8, 0, 2): {},
++    (8, 1, 3): {
++        "PyYAML": "6.0.1",
++        "sphinxcontrib-applehelp": "1.0.7",
++        "sphinxcontrib-devhelp": "1.0.6",
++        "sphinxcontrib-htmlhelp": "2.0.6",
++        "sphinxcontrib-qthelp": "1.0.6",
++    },
++    (8, 2, 3): {
++        "PyYAML": "6.0.1",
++        "sphinxcontrib-serializinghtml": "1.1.9",
++    },
++}
 +
-+    """
-+    On Sphinx, all directories are relative to what it is passed as
-+    SOURCEDIR parameter for sphinx-build. Due to that, all patterns
-+    that have directory names on it need to be dynamically set, after
-+    converting them to a relative patch.
 +
-+    As Sphinx doesn't include any patterns outside SOURCEDIR, we should
-+    exclude relative patterns that start with "../".
-+    """
++def parse_version(ver_str):
++    """Convert a version string into a tuple."""
 +
-+    sourcedir = app.srcdir  # full path to the source directory
-+    builddir = os.environ.get("BUILDDIR")
++    return tuple(map(int, ver_str.split(".")))
 +
-+    # setup include_patterns dynamically
-+    if has_include_patterns:
-+        for p in dyn_include_patterns:
-+            full = os.path.join(doctree, p)
 +
-+            rel_path = os.path.relpath(full, start = app.srcdir)
-+            if rel_path.startswith("../"):
-+                continue
++parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
 +
-+            app.config.include_patterns.append(rel_path)
++parser.add_argument('-v', '--version', help='Sphinx single version',
++                    type=parse_version)
++parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
++                    type=parse_version)
++parser.add_argument('--max-version', "--max", help='Sphinx maximum version',
++                    type=parse_version)
++parser.add_argument('-a', '--make_args',
++                    help='extra arguments for make htmldocs, like SPHINXDIRS=netlink/specs',
++                    nargs="*")
++parser.add_argument('-w', '--write', help='write a requirements.txt file',
++                    action='store_true')
++parser.add_argument('-m', '--make',
++                    help='Make documentation',
++                    action='store_true')
++parser.add_argument('-i', '--wait-input',
++                    help='Wait for an enter before going to the next version',
++                    action='store_true')
 +
-+    # setup exclude_patterns dynamically
-+    for p in dyn_exclude_patterns:
-+        full = os.path.join(doctree, p)
++args = parser.parse_args()
 +
-+        rel_path = os.path.relpath(full, start = app.srcdir)
-+        if rel_path.startswith("../"):
++if not args.make_args:
++    args.make_args = []
++
++if args.version:
++    if args.min_version or args.max_version:
++        sys.exit("Use either --version or --min-version/--max-version")
++    else:
++        args.min_version = args.version
++        args.max_version = args.version
++
++sphinx_versions = sorted(list(sphinx_requirements.keys()))
++
++if not args.min_version:
++    args.min_version = sphinx_versions[0]
++
++if not args.max_version:
++    args.max_version = sphinx_versions[-1]
++
++first_run = True
++cur_requirements = {}
++built_time = {}
++
++for cur_ver, new_reqs in sphinx_requirements.items():
++    cur_requirements.update(new_reqs)
++
++    if cur_ver in python_changes:
++        python_bin = python_changes[cur_ver]
++
++    ver = ".".join(map(str, cur_ver))
++
++    if args.min_version:
++        if cur_ver < args.min_version:
 +            continue
 +
-+        app.config.exclude_patterns.append(rel_path)
++    if args.max_version:
++        if cur_ver > args.max_version:
++            break
 +
- # helper
- # ------
- 
-@@ -219,10 +279,6 @@ language = 'en'
- # Else, today_fmt is used as the format for a strftime call.
- #today_fmt = '%B %d, %Y'
- 
--# List of patterns, relative to source directory, that match files and
--# directories to ignore when looking for source files.
--exclude_patterns = ['output']
--
- # The reST default role (used for this markup: `text`) to use for all
- # documents.
- #default_role = None
-@@ -516,3 +572,6 @@ kerneldoc_srctree = '..'
- # the last statement in the conf.py file
- # ------------------------------------------------------------------------------
- loadConfig(globals())
++    if not first_run and args.wait_input and args.make:
++        ret = input("Press Enter to continue or 'a' to abort: ").strip().lower()
++        if ret == "a":
++            print("Aborted.")
++            sys.exit()
++    else:
++        first_run = False
 +
-+def setup(app):
-+	app.connect('builder-inited', update_patterns)
++    venv_dir = f"Sphinx_{ver}"
++    req_file = f"requirements_{ver}.txt"
++
++    print(f"\nSphinx {ver} with {python_bin}")
++
++    # Create venv
++    run([python_bin, "-m", "venv", venv_dir], check=True)
++    pip = os.path.join(venv_dir, "bin/pip")
++
++    # Create install list
++    reqs = []
++    for pkg, verstr in cur_requirements.items():
++        reqs.append(f"{pkg}=={verstr}")
++
++    reqs.append(f"Sphinx=={ver}")
++
++    run([pip, "install"] + reqs, check=True)
++
++    # Freeze environment
++    result = run([pip, "freeze"], capture_output=True, text=True, check=True)
++
++    # Pip install succeeded. Write requirements file
++    if args.write:
++        with open(req_file, "w", encoding="utf-8") as fp:
++            fp.write(result.stdout)
++
++    if args.make:
++        start_time = time.time()
++
++        # Prepare a venv environment
++        env = os.environ.copy()
++        bin_dir = os.path.join(venv_dir, "bin")
++        env["PATH"] = bin_dir + ":" + env["PATH"]
++        env["VIRTUAL_ENV"] = venv_dir
++        if "PYTHONHOME" in env:
++            del env["PYTHONHOME"]
++
++        # Test doc build
++        run(["make", "cleandocs"], env=env, check=True)
++        make = ["make"] + args.make_args + ["htmldocs"]
++
++        print(f". {bin_dir}/activate")
++        print(" ".join(make))
++        print("deactivate")
++        run(make, env=env, check=True)
++
++        end_time = time.time()
++        elapsed_time = end_time - start_time
++        hours, minutes = divmod(elapsed_time, 3600)
++        minutes, seconds = divmod(minutes, 60)
++
++        hours = int(hours)
++        minutes = int(minutes)
++        seconds = int(seconds)
++
++        built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
++
++        print(f"Finished doc build for Sphinx {ver}. Elapsed time: {built_time[ver]}")
++
++if args.make:
++    print()
++    print("Summary:")
++    for ver, elapsed_time in sorted(built_time.items()):
++        print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
 -- 
 2.49.0
 
