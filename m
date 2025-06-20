@@ -1,149 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D6E21A425;
-	Fri, 20 Jun 2025 11:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C289E05
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419700; cv=none; b=Akmb+p4kHXFlKtxwFScJ8L5tsn8g5DxfVPW7bQgxunCDOSqOo6KzEDAQS1CFXd3DEr3RruzDfJK/E31A9EOCiUz6ycWmLfcVzqcSWGQUXTynhuy383nUhhkCAHxGHeqEaXrPaz4a/Zx7d6CJu64+J1zYvUG/GjetF6+Y5JCnwXU=
+	t=1750419711; cv=none; b=TOaZ0IoEv4raniFxMjXUdZWV+CDWIXvl2n/yF3bv5ML4F6JI4xPoJsOfWWTZR/MDO64iKxQgeuL4OiKuXDoREwz468J+5kp6dhTL9hfEuCQFC4MM2VIjLbS5sNUNKAQeq54gIzFPEryUyVm6SdmANLCcDoWtHdkeUDsRZSKUfw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419700; c=relaxed/simple;
-	bh=7jO5EkOKHQFOUcZ4HOZ+7p+fQUAUaAut8T+zMp0e1vU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D2VNSedg3h+7NGUskJxo1RYLXt/OEHLXzk6gf62HJczNCFPdnsFIrxkU1bsOz84WPKpW9A2/x6k0wFQqTRBgugk5I2Zk2jVmxkkWHmf24gmnhJ0qhRK6Sp3gB2WGXakgp9lt/veB0iWO3QqBqju7YrEuzw8YC4WTxBs7uj0ensw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUvJ6t6h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750419711; c=relaxed/simple;
+	bh=NJeI8YppKOxLx0T0KsWLoadLL/ubvvWy8yozXSRreC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhvqHVC/PKo2CDgxGCgZf+gS2liW1ujEJN84pfpwgVMdOPTIRxdmJn8zwq+X32TKhsj3w/Q+Yx9BF6Q0z4G1wu/4KtBaQETeBVqOHR5VKnOd31QbKvHPLcPQWUwBFLCvPfbYz3QZoYBHVm5pu8iu8K7Oj3DTwOxJAVqO4ne/TGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLEauDJR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUvJ6t6h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F19C4CEE3;
-	Fri, 20 Jun 2025 11:41:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLEauDJR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0233EC4CEE3;
+	Fri, 20 Jun 2025 11:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750419699;
-	bh=7jO5EkOKHQFOUcZ4HOZ+7p+fQUAUaAut8T+zMp0e1vU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hUvJ6t6hBmEDsdNmDlxXz6D29wVyyMBGSEsPXHI0QTZcWpo0GOr9W7vZvcosPisGL
-	 deyjD9e/jWWOqtyVxpqzmeGqhUjjad7ESqLkym4JPnOCVViARjwPAdxc6VxFEWNAGN
-	 nty4qjMU3O68FrGTn/aiJzzxHiIUHQ8Fdfe1w4g0G4DXYdEXz7T8EQmiBrD5kawaRX
-	 m2bRgsGvVxe6lofSr/1wixBYArAi3IIV6g3uHAc+4xo/SoaXeSXYelAd6rA7lJlGon
-	 k36QRTUyU/voN4r4kgQX7glDvSYksNN+4JTEBekNitZsoPnK3XOXS4i2E+Mh2i5wc1
-	 S/NKHQ9Vto4Nw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Shiju Jose <shiju.jose@huawei.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] EDAC: mem_repair: reduce stack usage in edac_mem_repair_get_desc()
-Date: Fri, 20 Jun 2025 13:41:28 +0200
-Message-Id: <20250620114135.4017183-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1750419711;
+	bh=NJeI8YppKOxLx0T0KsWLoadLL/ubvvWy8yozXSRreC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RLEauDJR6/Gfwu+2GELnsQ59RddEchkKxm1P0c2X+quuWtrfShq4LkfIuAvC+wbvb
+	 i/nm1eaRttO/55Bly+rtsywkqF7DLy0RflVAcgR+CuDiscv5Af3pE+9Bwmk2X+8GDf
+	 y3uZvjwdjg3EkQxREQ9i42N2e98WWKTbx1A0cgxqBGSkjyiSNnmdhuXgh4NLhVvd3c
+	 VBoUHOpzBTN086z1NDz6grEqzcQUesleYAmCPfyxV0odsx9vDtDtyA6A7u6SBHUVy0
+	 2hz7d4YqtJ4QENnF1Xk9Z9VTA050zo4KtOCTDW9RaIxoSkjJzHOJRyVn2onTgfmA6s
+	 knIrvzY0/yAbw==
+Date: Fri, 20 Jun 2025 13:41:48 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/bridge: add warning for bridges not using
+ devm_drm_bridge_alloc()
+Message-ID: <20250620-adaptable-loutish-oryx-fee75c@houat>
+References: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-0-bad7eba5d117@bootlin.com>
+ <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-3-bad7eba5d117@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="biluwndv5kawvnzs"
+Content-Disposition: inline
+In-Reply-To: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-3-bad7eba5d117@bootlin.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Constructing an array on the stack adds complexity and can exceed the
-warning limit for per-function stack usage:
+--biluwndv5kawvnzs
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/3] drm/bridge: add warning for bridges not using
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-drivers/edac/mem_repair.c:361:5: error: stack frame size (1296) exceeds limit (1280) in 'edac_mem_repair_get_desc' [-Werror,-Wframe-larger-than]
+Hi Luca,
 
-Change this to have the actual attribute array allocated statically
-and then just add the instance number on the per-instance copy.
+On Fri, Jun 20, 2025 at 11:32:08AM +0200, Luca Ceresoli wrote:
+> To the best of my knowledge, all drivers in the mainline kernel adding a
+> DRM bridge are now converted to using devm_drm_bridge_alloc() for
+> allocation and initialization. Among others this ensures initialization of
+> the bridge refcount, allowing dynamic allocation lifetime.
+>=20
+> devm_drm_bridge_alloc() is now mandatory for all new bridges. Code using
+> the old pattern ([devm_]kzalloc + filling the struct fields +
+> drm_bridge_add) is not allowed anymore.
+>=20
+> Any drivers that might have been missed during the conversion, patches in
+> flight towards mainline and out-of-tre drivers still using the old pattern
+> will already be caught by a warning looking like:
+>=20
+>   ------------[ cut here ]------------
+>   refcount_t: addition on 0; use-after-free.
+>   WARNING: CPU: 2 PID: 83 at lib/refcount.c:25 refcount_warn_saturate+0x1=
+20/0x148
+>   [...]
+>   Call trace:
+>    refcount_warn_saturate+0x120/0x148 (P)
+>    drm_bridge_get.part.0+0x70/0x98 [drm]
+>    drm_bridge_add+0x34/0x108 [drm]
+>    sn65dsi83_probe+0x200/0x480 [ti_sn65dsi83]
+>    [...]
+>=20
+> This warning comes from the refcount code and happens because
+> drm_bridge_add() is increasing the refcount, which is uninitialized and
+> thus initially zero.
+>=20
+> Having a warning and the corresponding stack trace is surely useful, but
+> the warning text does not clarify the root problem nor how to fix it.
+>=20
+> Add a DRM_WARN() just before increasing the refcount, so the log will be
+> much more readable:
+>=20
+>   [drm] DRM bridge corrupted or not allocated by devm_drm_bridge_alloc()
+>   ------------[ cut here ]------------
+>   refcount_t: addition on 0; use-after-free.
+>   [...etc...]
+>=20
+> A DRM_WARN is used because drm_warn and drm_WARN require a struct
+> drm_device pointer which is not yet available when adding a bridge.
+>=20
+> Do not print the dev_name() in the warning because struct drm_bridge has =
+no
+> pointer to the struct device. The affected driver should be easy to catch
+> based on the following stack trace however.
+>=20
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>=20
+> ---
+>=20
+> This patch was added in v8
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index f001bbe95559aabf0aac9f25f89250ad4e1ad9c8..7d511c28608f1d8ea8fbb81d0=
+0efa9e227b02a13 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -295,6 +295,9 @@ EXPORT_SYMBOL(__devm_drm_bridge_alloc);
+>   */
+>  void drm_bridge_add(struct drm_bridge *bridge)
+>  {
+> +	if (kref_read(&bridge->refcount) =3D=3D 0)
+> +		DRM_WARN("DRM bridge corrupted or not allocated by devm_drm_bridge_all=
+oc()\n");
+> +
 
-Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/edac/mem_repair.c | 56 +++++++++++++++------------------------
- 1 file changed, 22 insertions(+), 34 deletions(-)
+I'm fine with it on principle, but I wonder if using bridge->container
+is set wouldn't be a more obvious way to check it?
 
-diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
-index d1a8caa85369..2e4e790e0ffe 100755
---- a/drivers/edac/mem_repair.c
-+++ b/drivers/edac/mem_repair.c
-@@ -286,17 +286,26 @@ static umode_t mem_repair_attr_visible(struct kobject *kobj, struct attribute *a
- 	return 0;
- }
- 
--#define MR_ATTR_RO(_name, _instance)       \
--	((struct edac_mem_repair_dev_attr) { .dev_attr = __ATTR_RO(_name), \
--					     .instance = _instance })
--
--#define MR_ATTR_WO(_name, _instance)       \
--	((struct edac_mem_repair_dev_attr) { .dev_attr = __ATTR_WO(_name), \
--					     .instance = _instance })
--
--#define MR_ATTR_RW(_name, _instance)       \
--	((struct edac_mem_repair_dev_attr) { .dev_attr = __ATTR_RW(_name), \
--					     .instance = _instance })
-+static const struct device_attribute mem_repair_dev_attr[] = {
-+	[MR_TYPE]	  = __ATTR_RO(repair_type),
-+	[MR_PERSIST_MODE] = __ATTR_RW(persist_mode),
-+	[MR_SAFE_IN_USE]  = __ATTR_RO(repair_safe_when_in_use),
-+	[MR_HPA]	  = __ATTR_RW(hpa),
-+	[MR_MIN_HPA]	  = __ATTR_RO(min_hpa),
-+	[MR_MAX_HPA]	  = __ATTR_RO(max_hpa),
-+	[MR_DPA]	  = __ATTR_RW(dpa),
-+	[MR_MIN_DPA]	  = __ATTR_RO(min_dpa),
-+	[MR_MAX_DPA]	  = __ATTR_RO(max_dpa),
-+	[MR_NIBBLE_MASK]  = __ATTR_RW(nibble_mask),
-+	[MR_BANK_GROUP]   = __ATTR_RW(bank_group),
-+	[MR_BANK]	  = __ATTR_RW(bank),
-+	[MR_RANK]	  = __ATTR_RW(rank),
-+	[MR_ROW]	  = __ATTR_RW(row),
-+	[MR_COLUMN]	  = __ATTR_RW(column),
-+	[MR_CHANNEL]	  = __ATTR_RW(channel),
-+	[MR_SUB_CHANNEL]  = __ATTR_RW(sub_channel),
-+	[MEM_DO_REPAIR]	  = __ATTR_WO(repair)
-+};
- 
- static int mem_repair_create_desc(struct device *dev,
- 				  const struct attribute_group **attr_groups,
-@@ -305,34 +314,13 @@ static int mem_repair_create_desc(struct device *dev,
- 	struct edac_mem_repair_context *ctx;
- 	struct attribute_group *group;
- 	int i;
--	struct edac_mem_repair_dev_attr dev_attr[] = {
--		[MR_TYPE]	  = MR_ATTR_RO(repair_type, instance),
--		[MR_PERSIST_MODE] = MR_ATTR_RW(persist_mode, instance),
--		[MR_SAFE_IN_USE]  = MR_ATTR_RO(repair_safe_when_in_use, instance),
--		[MR_HPA]	  = MR_ATTR_RW(hpa, instance),
--		[MR_MIN_HPA]	  = MR_ATTR_RO(min_hpa, instance),
--		[MR_MAX_HPA]	  = MR_ATTR_RO(max_hpa, instance),
--		[MR_DPA]	  = MR_ATTR_RW(dpa, instance),
--		[MR_MIN_DPA]	  = MR_ATTR_RO(min_dpa, instance),
--		[MR_MAX_DPA]	  = MR_ATTR_RO(max_dpa, instance),
--		[MR_NIBBLE_MASK]  = MR_ATTR_RW(nibble_mask, instance),
--		[MR_BANK_GROUP]   = MR_ATTR_RW(bank_group, instance),
--		[MR_BANK]	  = MR_ATTR_RW(bank, instance),
--		[MR_RANK]	  = MR_ATTR_RW(rank, instance),
--		[MR_ROW]	  = MR_ATTR_RW(row, instance),
--		[MR_COLUMN]	  = MR_ATTR_RW(column, instance),
--		[MR_CHANNEL]	  = MR_ATTR_RW(channel, instance),
--		[MR_SUB_CHANNEL]  = MR_ATTR_RW(sub_channel, instance),
--		[MEM_DO_REPAIR]	  = MR_ATTR_WO(repair, instance)
--	};
--
- 	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < MR_MAX_ATTRS; i++) {
--		memcpy(&ctx->mem_repair_dev_attr[i],
--		       &dev_attr[i], sizeof(dev_attr[i]));
-+		ctx->mem_repair_dev_attr[i].dev_attr = mem_repair_dev_attr[i];
-+		ctx->mem_repair_dev_attr[i].instance = instance;
- 		ctx->mem_repair_attrs[i] =
- 			&ctx->mem_repair_dev_attr[i].dev_attr.attr;
- 	}
--- 
-2.39.5
+Maxime
 
+--biluwndv5kawvnzs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFVI9wAKCRAnX84Zoj2+
+dru/AYDf1o82ABSqpVDUzoRUAi2lnvEW2Ru8cHWndoy8kfCGn3V0PIo/dHgnQGzG
+Km9lf6gBfiMcTbF2bR6qv6gaCVUy87maQ0869Q1HyfDa31GCT7YV4OaKHt6Ztel1
+NSnRrqzLJw==
+=gzYf
+-----END PGP SIGNATURE-----
+
+--biluwndv5kawvnzs--
