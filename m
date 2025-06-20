@@ -1,166 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0790220696;
-	Fri, 20 Jun 2025 12:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569291C5D7B
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422531; cv=none; b=oddl1Wy0X2yZEAPNFt4LQbayEA0pgodjHJsaaCwohrSB0S3ACTrlmZZpo7hmeOSOiNyvndB8xM0qXOplHovMLANqykJW0YvZXgO7pNA0Dhk4+bPTC3DJiN7N+8badjyg1WnVKziR3L3x7ZNsjQVOFcPrTfv5kMnnFZp7Et9aFmM=
+	t=1750422630; cv=none; b=Nvb6BuTHK5anFdGW93y1mCf5JtZclkfepocQ4eFZfpcr65H5sf8xVun1VrUF3LHFkF6pJxfynw6EfFEjZuKM+a00iuLse7zNGM8DSTrhuIXNVu/FrqWn/vqRrscTNGQX715XsJ55cug2lcZliZwOHCbflHZIKQQ8ct1DfqY6gCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422531; c=relaxed/simple;
-	bh=7nPhNMyXqRY92E+lzth6jsH7dnJ4KYzBBljDG+AN4gw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=iGdkrx5DVJy5wDRx+40pHVF6w1HTV8+/4oDciQaCfB6KfUPdUJyRyoiOxmJhFRjMOL2sS3NWrJ3vCQFFXkOkbF9+g3xMoCaLqoYoTmXFwCJgvxo/IzBIv0RcjWgKd4E6sXireUiau9zgZmqaBrxBEAxMJzezY4To/o872a6PWHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJeZeYdD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750422630; c=relaxed/simple;
+	bh=OAT2kA2Gp/GliDE9Ae1C1zJswYpBGaBlXGVT1uCDnDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KqDQYlaEPhJDr2kGpasEc1cQD/VA+lA8Ao2DqQwCazbwYvV3Uh2srxltULN7FOYULo5IUDuQj2nt0WgiaOS2JrcGeXkG+yw3+SfVzSvZnWXrMSAtJaa8lL2edFLvIY5rJ93iTJaCIp0qbE5H0Ui0J87smV1pEQ4RZA3g+rWeAGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xiJ6+53c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WmcWJ6GX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xiJ6+53c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WmcWJ6GX; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJeZeYdD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906ECC4CEF3;
-	Fri, 20 Jun 2025 12:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750422531;
-	bh=7nPhNMyXqRY92E+lzth6jsH7dnJ4KYzBBljDG+AN4gw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=tJeZeYdDuh/fSbZt/FDky6SBNqceJ/TGmMe4ucAVxvtfSeMueGEbD+tZwHfDfNYyK
-	 /iORBPFTbs1RWlVp0ZUrvrs4hOo3yICq8i/AYVPq6AI2jJkZA98IYVYCxi9J3xLvZJ
-	 FonAz0myhZ/31NIyNWcyi8MCg1C7EWc9hQyEynw000ZF0aQXMYQKSl+hv27BBwdBpi
-	 Fkbe9uZX+qoZtbOAWrXVHpOUelDnBtpBMvXQnzj805vNukEKb8mVHmWaz9s4EOJi6Q
-	 sQnLcohjfrY9606K1bdBTOqm4GJYbtVWSsufHzT2dwJw/zlQ4sEm3P04x8+Kuym8da
-	 vxmJ3TWy5d0lQ==
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xiJ6+53c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WmcWJ6GX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xiJ6+53c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WmcWJ6GX"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B11B82121C;
+	Fri, 20 Jun 2025 12:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750422627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
+	b=xiJ6+53cZKxx7bm1WEu8PpgXXC7xVc2/vSQNkqCL1yDRrKKHC+/1hX5BfwFwc4tpSH17WF
+	Jmk0HC2oE/93XFNdndWA4nDYNOG19NPvO3PeDg8Cz7yWg14pkX3IseaWOlg//PLlE2qLFU
+	7KlssLRFvDtPe9yd+GKxJ/6IUnKjmxI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750422627;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
+	b=WmcWJ6GX8EpCWR3+hcotrFfKuETSAucz3sSQI+e3gc9jbYVxWMR1R2IyICQ14jiHTXQkhR
+	B3dCg5aLuMUwPdAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750422627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
+	b=xiJ6+53cZKxx7bm1WEu8PpgXXC7xVc2/vSQNkqCL1yDRrKKHC+/1hX5BfwFwc4tpSH17WF
+	Jmk0HC2oE/93XFNdndWA4nDYNOG19NPvO3PeDg8Cz7yWg14pkX3IseaWOlg//PLlE2qLFU
+	7KlssLRFvDtPe9yd+GKxJ/6IUnKjmxI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750422627;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
+	b=WmcWJ6GX8EpCWR3+hcotrFfKuETSAucz3sSQI+e3gc9jbYVxWMR1R2IyICQ14jiHTXQkhR
+	B3dCg5aLuMUwPdAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 395E8136BA;
+	Fri, 20 Jun 2025 12:30:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IOhUC2NUVWjNKAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 20 Jun 2025 12:30:27 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Peter Xu <peterx@redhat.com>,
+	Gavin Guo <gavinguo@igalia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2 0/5] Misc rework on hugetlb faulting path
+Date: Fri, 20 Jun 2025 14:30:09 +0200
+Message-ID: <20250620123014.29748-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 14:28:44 +0200
-Message-Id: <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
- Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
- Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
- "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
- <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
- Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
- <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
-In-Reply-To: <87ikkq648o.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
 
-On Fri Jun 20, 2025 at 1:29 PM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
->> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
->>> +/// A wrapper for kernel parameters.
->>> +///
->>> +/// This type is instantiated by the [`module!`] macro when module par=
-ameters are
->>> +/// defined. You should never need to instantiate this type directly.
->>> +///
->>> +/// Note: This type is `pub` because it is used by module crates to ac=
-cess
->>> +/// parameter values.
->>> +#[repr(transparent)]
->>> +pub struct ModuleParamAccess<T> {
->>> +    data: core::cell::UnsafeCell<T>,
->>> +}
->>> +
->>> +// SAFETY: We only create shared references to the contents of this co=
-ntainer,
->>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
->>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
->>> +
->>> +impl<T> ModuleParamAccess<T> {
->>> +    #[doc(hidden)]
->>> +    pub const fn new(value: T) -> Self {
->>> +        Self {
->>> +            data: core::cell::UnsafeCell::new(value),
->>> +        }
->>> +    }
->>> +
->>> +    /// Get a shared reference to the parameter value.
->>> +    // Note: When sysfs access to parameters are enabled, we have to p=
-ass in a
->>> +    // held lock guard here.
->>> +    pub fn get(&self) -> &T {
->>> +        // SAFETY: As we only support read only parameters with no sys=
-fs
->>> +        // exposure, the kernel will not touch the parameter data afte=
-r module
->>> +        // initialization.
->>
->> This should be a type invariant. But I'm having difficulty defining one
->> that's actually correct: after parsing the parameter, this is written
->> to, but when is that actually?
->
-> For built-in modules it is during kernel initialization. For loadable
-> modules, it during module load. No code from the module will execute
-> before parameters are set.
+ v1 -> v2:
+   - Addressed feedback from David
+   - Settle ideas wrt. locking in faulting path after
+     discussion with David
+   - Add Acks-by
 
-Gotcha and there never ever will be custom code that is executed
-before/during parameter setting (so code aside from code in `kernel`)?
+ RFC -> v1:
+   - Stop looking up folio in the pagecache for detecting a COW
+     on a private mapping.
+   - Document the locks
 
->> Would we eventually execute other Rust
->> code during that time? (for example when we allow custom parameter
->> parsing)
->
-> I don't think we will need to synchronize because of custom parameter
-> parsing. Parameters are initialized sequentially. It is not a problem if
-> the custom parameter parsing code name other parameters, because they
-> are all initialized to valid values (as they are statics).
+This patchset aims to give some love to the hugetlb faulting path, doing so
+by removing obsolete comments that are no longer true, sorting out the folio
+lock, and changing the mechanism we use to determine whether we are COWing a
+private mapping already.
 
-If you have `&'static i64`, then the value at that reference is never
-allowed to change.
+The most important patch of the series is #1, as it fixes a deadlock that
+was described in [1], where two processes were holding the same lock
+for the folio in the pagecache, and then deadlocked in the mutex.
+Looking up and locking the folio in the pagecache was done to check whether
+that folio was the same folio we had mapped in our pagetables, meaning that if it
+was different we knew that we already mapped that folio privately, so any
+further CoW would be made on a private mapping, which lead us to the  question:
+ __Was the reservation for that address consumed?__
+That is all we care about, because if it was indeed consumed and we are the
+owner and we cannot allocate more folios, we need to unmap the folio from the
+processes pagetables and make it exclusive for us.
 
->> This function also must never be `const` because of the following:
->>
->>     module! {
->>         // ...
->>         params: {
->>             my_param: i64 {
->>                 default: 0,
->>                 description: "",
->>             },
->>         },
->>     }
->>
->>     static BAD: &'static i64 =3D module_parameters::my_param.get();
->>
->> AFAIK, this static will be executed before loading module parameters and
->> thus it makes writing to the parameter UB.
->
-> As I understand, the static will be initialized by a constant expression
-> evaluated at compile time. I am not sure what happens when this is
-> evaluated in const context:
->
->     pub fn get(&self) -> &T {
->         // SAFETY: As we only support read only parameters with no sysfs
->         // exposure, the kernel will not touch the parameter data after m=
-odule
->         // initialization.
->         unsafe { &*self.data.get() }
->     }
->
-> Why would that not be OK? I would assume the compiler builds a dependency=
- graph
-> when initializing statics?
+We figured we do not need to look up the folio at all, and it is just enough to
+check whether the folio we have mapped is anonymous, which means we mapped it
+privately, so the reservation was indeed consumed.
 
-Yes it builds a dependency graph, but that is irrelevant? The problem is
-that I can create a `'static` reference to the inner value *before* the
-parameter is written-to (as the static is initialized before the
-parameters).
+Patch#2 sorts out folio locking in the faulting path, reducing the scope of it
+,only taking it when we are dealing with an anonymous folio and document it.
+More details in the patch.
 
----
-Cheers,
-Benno
+Patch#3-5 are cleanups.
+
+[1] https://lore.kernel.org/lkml/20250513093448.592150-1-gavinguo@igalia.com/
+
+Oscar Salvador (5):
+  mm,hugetlb: Change mechanism to detect a COW on private mapping
+  mm,hugetlb: Sort out folio locking in the faulting path
+  mm,hugetlb: Rename anon_rmap to new_anon_folio and make it boolean
+  mm,hugetlb: Drop obsolete comment about non-present pte and second
+    faults
+  mm,hugetlb: Drop unlikelys from hugetlb_fault
+
+ mm/hugetlb.c | 130 ++++++++++++++++++++++-----------------------------
+ 1 file changed, 55 insertions(+), 75 deletions(-)
+
+-- 
+2.50.0
+
