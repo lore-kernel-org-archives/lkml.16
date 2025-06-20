@@ -1,201 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601AE2EB5CD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC802EB5B1;
+	Fri, 20 Jun 2025 15:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433032; cv=none; b=aOVLnqHsrhRPGYxIcxM9jy/upgwEqUMKsAV8FLE8rukoWPR4cMU8z1KSQrI5KW7tk+mmo/4D43SCGNzULed8WYynX9Yx5yfl3cjtjUiTV0IxoaYLVpYww8sO4azn2Uu+3PFQv8h+A19n3wPSTcOl1gM0DjDgNrevpMvMbabXuy8=
+	t=1750433033; cv=none; b=nhTfTdbESa1dzTwtcmAErVFDVGvFQcLlk8viyS4tWNnMAnMZURrSMX7dPKzbxIgsBJmvAPEdMhYLyR1UTpvlIZrrM9vnF2NgEyicL6pR9b7j1IqOIa7VEfZ2tTuEm6wJO1URCM4OQDwGjzHcaL2qZiQ/AFqhoXvhxcddP5oqSEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433032; c=relaxed/simple;
-	bh=PxV8uVE16ABO59cZv2sbLkYT2OSz4gIZFG6bkET4xxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=onxl1IbP+y0qG5cY7kxaLU5A6Y5zJu8Tj/E1J+kezZSkYb51T1E/c8EciAZ/qE/fcMtmWwJmbLsQFcbblB9Hh0Zf9pjTYaduX/hk6HCnP0rnrlQpCUOl9zDTNE0Ygg/vcW6o/4plA5reJXe8EL6oTtxuwxtzUA2hXLet0Tvbjjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+UPX7Y8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750433033; c=relaxed/simple;
+	bh=iwq/+Q/e7kBxQ3rjoWEiPb6qPn9I4cQn1Lure4idRos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B0nYlu51SNKjHxUp1YCncO8YAtdSyQNZYiklgZu0l2N4dBlM8Y9iShLdECodNNFX3pcQdg+quOe632BaSaM//bR2bm3bDOIT633Pt7HWE8lw3Jdx9vFIt7MZLNqHq71fD9aU9yVREKXjDvatHmlQdZYdz+PxRZHD6yEarPm5Ua4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2EjNPdF; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+UPX7Y8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34559C4CEEF;
-	Fri, 20 Jun 2025 15:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433032;
-	bh=PxV8uVE16ABO59cZv2sbLkYT2OSz4gIZFG6bkET4xxs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c+UPX7Y8y7agrFwSLTB/Z5E5riFd8+b39XMcNueDLWxdFy5mXGXsgJMQfA2lN+fxR
-	 DrPputdojw5lMReE+9WSHGMSixf6OWWCdq5HNuIBTfVYVAfvAACZx3liCPVqoanGh5
-	 PXSOu9yl7+GNBhznIa57FiDsUTOlwVeSfbZrcbUWEwY1hKS1wwyXTX4hGoioTKdgsY
-	 ZFU6f46jprATJFLLHFaFpDtHYvpTPwvyDrpLW5wB/OPMMLyP1M8/k/DGkxIz4svTjJ
-	 JaJyL+ZAdqs0F3tCPqifaHLtiloiiuUio7EAzPA4NXVdALwGUPvfzngxSbkmDNeacU
-	 owM0DzpIwVQqw==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 14/27] sched/isolation: Convert housekeeping cpumasks to rcu pointers
-Date: Fri, 20 Jun 2025 17:22:55 +0200
-Message-ID: <20250620152308.27492-15-frederic@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
-References: <20250620152308.27492-1-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2EjNPdF"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-313b6625cf1so1419561a91.0;
+        Fri, 20 Jun 2025 08:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750433031; x=1751037831; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJwPe4Na7egNR42KB/ME0LulyT8UQ11yNNRgw9O2r5I=;
+        b=S2EjNPdF1L2C1VhkdzG3ek56EFqgOGO/TUz6EEmUb1Ly+dllMcJp+nJDDEyQQOzi8T
+         SSVnOJ2n7hztm4SsA9hDri3n5dDV/YpsnSyex7yIrs2QSbO9WBtIzfVfOPVYUH7qiXNR
+         Qf9m56p2szME7hVIdfwj/qvCmUASNV9CEixgS/louUAiJ6D0Dm12hj8q8BmXj37cOndq
+         ZzHPMtvIgPhp/wAptP5jDIBsqd2n0CLY33P5OBvspewVQQJ6/VTtWwKUALkmE0wdivxm
+         yew8dAbq5iuep5LqtVGo6JBJ25f+uJL91Ir/ixOSlQhOV7mliLFJcYTzneSnzFU739Ks
+         zcmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750433031; x=1751037831;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HJwPe4Na7egNR42KB/ME0LulyT8UQ11yNNRgw9O2r5I=;
+        b=wwYHwlbAGswDQkVYd1X86gMWlCG2FQrK/VjmcRVvA8qi0EhNbw23FhWzpTgHHZEKED
+         ZLsCQwKyX/+KwhA4J7iYiUspwWq1TW9jTJlnE+VqEoFwpR3605byhp93H4AWxcLBEh5N
+         JU59KOAHXDygHTSrrkz6PUI/dre/QdLYj11FeIwo2RQ1dvaIhsumfUQsegH0b7UtoKqX
+         /QUFGnr8jIC8AyT2qtVPbnvvfeyF2c8YHuUp3piIovM8e0LTZc82HGxb0TpranCwIQpv
+         AFMWpnC7DX1BndDTfZ8PUF6jpghdtDP0fCTiR02zkPzoj/DqSrJ9hY/96Q/wkzTcx3aN
+         lKYA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4tFYVKoHT/aukBT9nRLFjMhjKt4DQizXNkHRXM9gwqIg4+ZqaM/uGruhtqe9VhvRFyYyAtFNSZcx5wBo=@vger.kernel.org, AJvYcCVPXFRYB+bDCgIfhNbzUMBqZ4vTWKckCEVcye61bJWWqayEN3wExqHIhP4QJmLlgOPnnqxONzqNtMX0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4qIS4WSDAh0Lu5E37Q4BkRrjBd6KTQ7CaPLY3s8hdv4YWtsLn
+	HqVlxM7Atx7pOCDOFXrvnYF/2WdXqix/yTCqrY5tYuOROrW6/Tle3IEHGs/tGbJN
+X-Gm-Gg: ASbGncsRtPFWPMDWGy78M9tzbmQn15wjEmuW9Ps2Td3oQiDWr1Rphq6UmkQL3I0jEFh
+	gyXNDv5QJtYJp3iITC76PoYS1ucXYnVhmquh8nN4YHco03k0ivrPQXa8JEM+FjfTnTqJ9XhwY7t
+	TujSe2rv4b6BS+bdfMPsCr2t0UAkHU6nysd0oL90muEd6GcsY3M4Cf2mc8RTUusy+3Ap98Am7Rt
+	GmnDUQnSbQ5eIaSr3z1PVJLk57Ek/oc5dEIB4wixPmC+2Zz3cQNX6TTGloGSwAHAlH+QpcQIkvT
+	ZVhAg+OIjesicVBrmba/xsmb36raSjMDlJgo4q8DjBHTjz8U/A==
+X-Google-Smtp-Source: AGHT+IHFRRH/nR58cuUa9CJCW89Y1XthgS4quVstWRXVLKvN5X1n1m1ZpPRMW8SNJyW5hNR+qXcUTg==
+X-Received: by 2002:a17:90b:54c6:b0:312:dbcd:b94f with SMTP id 98e67ed59e1d1-3159f503790mr4589404a91.11.1750433030516;
+        Fri, 20 Jun 2025 08:23:50 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:cd3b::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e07d027sm1904055a91.43.2025.06.20.08.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:23:49 -0700 (PDT)
+Date: Fri, 20 Jun 2025 12:23:42 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 4/4] phy: rockchip-pcie: Adjust read mask and write
+Message-ID: <aFV8_k4vne-m3Rzh@geday>
+References: <cover.1749833986.git.geraldogabriel@gmail.com>
+ <7068a941037eca8ef37cc65e8e08a136c7aac924.1749833987.git.geraldogabriel@gmail.com>
+ <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
 
-HK_TYPE_DOMAIN's cpumask will soon be made modifyable by cpuset.
-Sleepable users of housekeeping can synchronize against cpumask
-modifications using the housekeeping rwsem. Other callsites need an
-alternative.
+On Fri, Jun 20, 2025 at 03:19:06PM +0100, Robin Murphy wrote:
+> On 2025-06-13 6:04 pm, Geraldo Nascimento wrote:
+> > Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
+> > defines asynchronous strobe TEST_WRITE which should be enabled then
+> > disabled and seems to have been copy-pasted as of current. Adjust it.
+> 
+> FWIW that's a bit hard to make sense of, given that it bears no relation 
+> whatsoever to the naming used in the code :/
+> 
+> (Not least because the mapping of register fields to phy signals here is 
+> really a property of GRF_SOC_CON8 rather than the phy itself)
 
-Turn the housekeeping cpumasks into RCU pointers. Once a housekeeping
-cpumask will be modified, the update side will wait for an RCU grace
-period and propagate the change to interested subsystem when deemed
-necessary.
+Hi Robin,
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/sched/isolation.c | 52 ++++++++++++++++++++++++++--------------
- kernel/sched/sched.h     |  1 +
- 2 files changed, 35 insertions(+), 18 deletions(-)
+will adjust for a better commit message, thank you.
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 9ecf53c5328b..75505668dcb9 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -15,7 +15,7 @@ enum hk_flags {
- 	HK_FLAG_KERNEL_NOISE	= BIT(HK_TYPE_KERNEL_NOISE),
- };
- 
--static cpumask_var_t housekeeping_cpumasks[HK_TYPE_MAX];
-+static struct cpumask __rcu *housekeeping_cpumasks[HK_TYPE_MAX];
- unsigned long housekeeping_flags;
- EXPORT_SYMBOL_GPL(housekeeping_flags);
- 
-@@ -37,16 +37,25 @@ void housekeeping_unlock(void)
- 	percpu_up_read(&housekeeping_pcpu_lock);
- }
- 
-+const struct cpumask *housekeeping_cpumask(enum hk_type type)
-+{
-+	if (housekeeping_flags & BIT(type)) {
-+		return rcu_dereference_check(housekeeping_cpumasks[type], 1);
-+	}
-+	return cpu_possible_mask;
-+}
-+EXPORT_SYMBOL_GPL(housekeeping_cpumask);
-+
- int housekeeping_any_cpu(enum hk_type type)
- {
- 	int cpu;
- 
- 	if (housekeeping_flags & BIT(type)) {
--		cpu = sched_numa_find_closest(housekeeping_cpumasks[type], smp_processor_id());
-+		cpu = sched_numa_find_closest(housekeeping_cpumask(type), smp_processor_id());
- 		if (cpu < nr_cpu_ids)
- 			return cpu;
- 
--		cpu = cpumask_any_and_distribute(housekeeping_cpumasks[type], cpu_online_mask);
-+		cpu = cpumask_any_and_distribute(housekeeping_cpumask(type), cpu_online_mask);
- 		if (likely(cpu < nr_cpu_ids))
- 			return cpu;
- 		/*
-@@ -62,25 +71,17 @@ int housekeeping_any_cpu(enum hk_type type)
- }
- EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
- 
--const struct cpumask *housekeeping_cpumask(enum hk_type type)
--{
--	if (housekeeping_flags & BIT(type))
--		return housekeeping_cpumasks[type];
--	return cpu_possible_mask;
--}
--EXPORT_SYMBOL_GPL(housekeeping_cpumask);
--
- void housekeeping_affine(struct task_struct *t, enum hk_type type)
- {
- 	if (housekeeping_flags & BIT(type))
--		set_cpus_allowed_ptr(t, housekeeping_cpumasks[type]);
-+		set_cpus_allowed_ptr(t, housekeeping_cpumask(type));
- }
- EXPORT_SYMBOL_GPL(housekeeping_affine);
- 
- bool housekeeping_test_cpu(int cpu, enum hk_type type)
- {
- 	if (housekeeping_flags & BIT(type))
--		return cpumask_test_cpu(cpu, housekeeping_cpumasks[type]);
-+		return cpumask_test_cpu(cpu, housekeeping_cpumask(type));
- 	return true;
- }
- EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
-@@ -95,9 +96,23 @@ void __init housekeeping_init(void)
- 	if (housekeeping_flags & HK_FLAG_KERNEL_NOISE)
- 		sched_tick_offload_init();
- 
-+	/*
-+	 * Realloc with a proper allocator so that any cpumask update
-+	 * can indifferently free the old version with kfree().
-+	 */
- 	for_each_set_bit(type, &housekeeping_flags, HK_TYPE_MAX) {
-+		struct cpumask *omask, *nmask = kmalloc(cpumask_size(), GFP_KERNEL);
-+
-+		if (WARN_ON_ONCE(!nmask))
-+			return;
-+
-+		omask = rcu_dereference(housekeeping_cpumasks[type]);
-+
- 		/* We need at least one CPU to handle housekeeping work */
--		WARN_ON_ONCE(cpumask_empty(housekeeping_cpumasks[type]));
-+		WARN_ON_ONCE(cpumask_empty(omask));
-+		cpumask_copy(nmask, omask);
-+		RCU_INIT_POINTER(housekeeping_cpumasks[type], nmask);
-+		memblock_free(omask, cpumask_size());
- 	}
- }
- 
-@@ -105,9 +120,10 @@ static void __init housekeeping_setup_type(enum hk_type type,
- 					   cpumask_var_t housekeeping_staging)
- {
- 
--	alloc_bootmem_cpumask_var(&housekeeping_cpumasks[type]);
--	cpumask_copy(housekeeping_cpumasks[type],
--		     housekeeping_staging);
-+	struct cpumask *mask = memblock_alloc_or_panic(cpumask_size(), SMP_CACHE_BYTES);
-+
-+	cpumask_copy(mask, housekeeping_staging);
-+	RCU_INIT_POINTER(housekeeping_cpumasks[type], mask);
- }
- 
- static int __init housekeeping_setup(char *str, unsigned long flags)
-@@ -160,7 +176,7 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
- 
- 		for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
- 			if (!cpumask_equal(housekeeping_staging,
--					   housekeeping_cpumasks[type])) {
-+					   housekeeping_cpumask(type))) {
- 				pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
- 				goto free_housekeeping_staging;
- 			}
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 0cdb560ef2f3..407e7f5ad929 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -42,6 +42,7 @@
- #include <linux/ktime_api.h>
- #include <linux/lockdep_api.h>
- #include <linux/lockdep.h>
-+#include <linux/memblock.h>
- #include <linux/minmax.h>
- #include <linux/mm.h>
- #include <linux/module.h>
--- 
-2.48.1
+> 
+> > While at it, adjust read mask which should be the same as write mask.
+> 
+> Which write mask? Certainly not PHY_CFG_WR_MASK... However as this 
+> definition is unused since 64cdc0360811 ("phy: rockchip-pcie: remove 
+> unused phy_rd_cfg function"), I don't see much point in touching it 
+> other than to remove it entirely. If it is the case that only the 
+> address field is significant for whatever a "read" operation actually 
+> means, well then that's just another job for ADDR_MASK (which I guess is 
+> what the open-coded business with PHY_CFG_PLL_LOCK is actually doing...)
 
+Oh, I already had agreed on Bjorn's suggestion to drop PHY_CFG_RD_MASK
+for good from code, but I appreciate your input too.
+
+Thanks,
+Geraldo Nascimento
+
+> 
+> Thanks,
+> Robin.
+> 
+> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> > ---
+> >   drivers/phy/rockchip/phy-rockchip-pcie.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> > index 48bcc7d2b33b..35d2523ee776 100644
+> > --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
+> > +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> > @@ -30,9 +30,9 @@
+> >   #define PHY_CFG_ADDR_SHIFT    1
+> >   #define PHY_CFG_DATA_MASK     0xf
+> >   #define PHY_CFG_ADDR_MASK     0x3f
+> > -#define PHY_CFG_RD_MASK       0x3ff
+> > +#define PHY_CFG_RD_MASK       0x3f
+> >   #define PHY_CFG_WR_ENABLE     1
+> > -#define PHY_CFG_WR_DISABLE    1
+> > +#define PHY_CFG_WR_DISABLE    0
+> >   #define PHY_CFG_WR_SHIFT      0
+> >   #define PHY_CFG_WR_MASK       1
+> >   #define PHY_CFG_PLL_LOCK      0x10
+> 
