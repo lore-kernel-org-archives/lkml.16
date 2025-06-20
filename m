@@ -1,196 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B62178F39;
-	Fri, 20 Jun 2025 05:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750397086; cv=none; b=GvgKtMQAqa4uDM46E+huQGrnlW30etHhZzSfa9y+EUeUPmBKKmwCSlk3Pl4wXELSp8R6C81PRPWAV8G6bZRxqKPuA9QcdAHGJSnuTPjISIq7O4UPA0R6Fg5kCAA0pw92e4JLdnV2GGnRIYLjGRB8V3t9A0SSSgN0N1b7V9n211M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750397086; c=relaxed/simple;
-	bh=a+uVNoGq9fRm+96SWC94r9MWgC1I8tZ9OPaJZzfREv8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hB32OTDz258g6IoRT7FEDD6nWIdfb7dfE0+/RF5sCK7MD0iEWNfPHVReZVy7/bDjrv3vrWtm1GZQipWoY46HYLvKa7DFfF2cuzcifV1LdJpo5BPmtXAB5Dtx8g0BHXR4nlBlAblFGA1dN+eJ4WrdFRdhGu+L8wW/J55bxJwNycY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A973176A;
-	Thu, 19 Jun 2025 22:24:23 -0700 (PDT)
-Received: from a076716.blr.arm.com (a076716.blr.arm.com [10.164.21.47])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E98523F673;
-	Thu, 19 Jun 2025 22:24:37 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: dev.jain@arm.com,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH V2] mm/ptdump: Take the memory hotplug lock inside ptdump_walk_pgd()
-Date: Fri, 20 Jun 2025 10:54:27 +0530
-Message-Id: <20250620052427.2092093-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023105.outbound.protection.outlook.com [40.107.44.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B161AD3E0;
+	Fri, 20 Jun 2025 05:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750397088; cv=fail; b=Ei/BUJ6aex9Ewu/9yEsSWxAJl/AXoD/p3/9ZSDT6hQnY7mHrVe3RM0e72cPLkUhYlSl/c2PET64QwSD1hhSynD71PnT3lk7CSH5YYqeWiHeI/84sijjTx2KJLC/XQC5jEuM29Fz8KryjUDExefUazdQA2bvv9IXJlm3h296DzG8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750397088; c=relaxed/simple;
+	bh=xno+TyT2NxIdXrRHhTmwJPGQVXGTV+FavXmfgywjO9I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PbCOo6amPLdmZaDs3bQwZLfktT4IfMues3hy5ZXC2SyaFfuCcR/Frfd4FrMR6ILpnGHzzA1JfHODV9DiBtniJfIbaChT6DTeKQdiSuX5Pd4CHIiLeaPRifKRNLM2xaAUVgwP30BHcdzDERYiMdqXBmFmjUnry150e1VBCZqyJp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=FNkl1oY1; arc=fail smtp.client-ip=40.107.44.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="FNkl1oY1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pCjp7GgjXLjcJkVY/4kBaVRN5CIv7wB2v99zhyOfo039vMPt3wuMkHCTmkrUht2/AMxE+xaLclgLsm6yQYEFfcbE2Kz28AaEKrE9ksq0zZ5Wz9D50jbAGuMdvTOGhGMV60YpEaSqS1/3/LldQAHqwNo7uFs5qr4xF8/5YfyhrRJdZrSX95Sn13C2XBy2hXDxLhb/1Hlt/Ru3kjULPTYeszC5bIGgA8rPfWjBld4h8bTZ5yGy1DUpZwOU/FR/pyJJ9UOKGf0vfByOvKip2CbkoInnzoB35SbvUvimPd5EAKaC2k3C29IeeBwmDxqwD5nZA3TEbqDtkwsNDBKCUl+rkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xno+TyT2NxIdXrRHhTmwJPGQVXGTV+FavXmfgywjO9I=;
+ b=C89KmZtd7DTAUYn0xiL+R/uchCeGlOpmVSP5NK59BlRcVG6wWZX78v+xr8ciKn2cc2vnpv5hAdEOotYTRSP+8qla+eR5qI7bq4q8jBbGZJtI1xNd6jBxuK2LyEjkhZW8UVVKG0nPjRRqMagDk5SwcYGaBeW9W4O8V95BInoxBnTkbgrxjJKOA1PuX88rPaL9uYcglTWNYxQB2Ityus6cAz7IkuB3E2JFZ8rw5ajHdQFxoVD5tQDONVJXkj6t623wlAL48uKbOkh2N2TpMhdns1sqWi+FL2Ku0vtsjxFL9U46EsXG+pGnC3TwzhnuAflk/565rnvduzhqhT1XWSbqsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xno+TyT2NxIdXrRHhTmwJPGQVXGTV+FavXmfgywjO9I=;
+ b=FNkl1oY1wIgGWjpc1KJRVPE+U4eqGDqCG/sfdgwuFyU0UunPL/pzY+GYI4w1GZ1RVZEhxfViYvQJ3t60puqWdU63NGSE+DGiBPFqWjUQYO8ON7M9JaT21vsSg7dw/g3NCT3L29YVFb7SJjSZPvw1qpQoJfCmr5fJecxHvFnxpbeu214GX1RLDywsG8SM7h2rJhP9YwCkF/tbdLGbykHOf5IcAKq5t7/C+FLytHyYlPRjnhCDTRDL62tFgEzJPJvEF54aVql7s/gdJ8eVD9liHvAxRHq+NE33zu8HkLep91RF2bW2EnQDFGKQe/gX+eoLEz2yG2kU+jqsnA6ptj+HvQ==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by KL1PR06MB5881.apcprd06.prod.outlook.com (2603:1096:820:da::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Fri, 20 Jun
+ 2025 05:24:39 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%5]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
+ 05:24:39 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
+	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>, "anhphan@google.com"
+	<anhphan@google.com>, "wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>, BMC-SW
+	<BMC-SW@aspeedtech.com>
+Subject:
+ =?big5?B?pl7C0DogW1BBVENIIDUvN10gQVJNOiBkdHM6IGFzcGVlZC1nNjogQWRkIFBDSWUg?=
+ =?big5?Q?RC_node?=
+Thread-Topic: [PATCH 5/7] ARM: dts: aspeed-g6: Add PCIe RC node
+Thread-Index: AQHb3BN5+/k5uKYPMUe/SI/Gdc6Yn7QBPt8AgApPrpA=
+Date: Fri, 20 Jun 2025 05:24:39 +0000
+Message-ID:
+ <SEYPR06MB51343F38D4F9C130A4CE3FED9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20250613033001.3153637-6-jacky_chou@aspeedtech.com>
+ <20250613155458.GA962010@bhelgaas>
+In-Reply-To: <20250613155458.GA962010@bhelgaas>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|KL1PR06MB5881:EE_
+x-ms-office365-filtering-correlation-id: 04ac24ee-8c2d-4fe8-f06c-08ddafbac10e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?big5?B?QU03dG9kNktBRHROYjV4OCt0dGtiRWNFOVAzckdwd2VoRzJETkF3V0hKaFVaQmc0?=
+ =?big5?B?N2t0V0k5eDloVk9xU28wOXRSQUlLSG5aWU9PTHBaS2ZxYmVsbXd2ME9GWjNQeGEz?=
+ =?big5?B?YlpteUtUNVNrTFB4NFozRnlwQ05aS0lFb0lYRFdZa1RQajVkcEFMYUl6aUF5M1dO?=
+ =?big5?B?L21LejkzMi8rWCtoWlVHTTBXWXFQVDFtaEd0NzB0dkVxaFc4TE5ZWTh6RE5DWWZN?=
+ =?big5?B?UjBuUktTUVVaRlppYkNPZC9JSEdvU3Mwekl4ODBXcjR0YzdaZnZSUnVHVk02RE92?=
+ =?big5?B?RlAvMU1IREN3TzBFOWV5WFZEaDc5eUJSS1RidFgzbGNMLy9oZW0zUUJrS2ZQT2ZK?=
+ =?big5?B?MTVuZVBNY2dES0dYNVMwM3p0eHRsZ0VqZGI0STlPTkQxSnNWRVdlUWFHeHl1c2Iz?=
+ =?big5?B?Q0xndlE2ajFmOUhqSVc5bVBCTE1iaG90cUY0SFBBSHMva090QkZ4MUNjbExZLzhm?=
+ =?big5?B?MjhlMDQyRUtxN0hTemRpUHI0eEZaZXZsSGRDVzdCTDVhWXhVZVIvL0Fqd21OQnBW?=
+ =?big5?B?NXZFMU44WWRWMUdMWTVmUlBPR2dLanFTdUVoRWlSQy9KblBsSXdCaU5FSXV0QXo5?=
+ =?big5?B?THU2dmlkMTdSRnBFZTFUei9ETTQ2OHd4UHFKbWNVb1JhS0VCZDkvSGdrS3F5Nmw1?=
+ =?big5?B?R0ZCWWtLdlFLbzF0RVg3M1hJQStFdzk4dmE3dDdWV09ETTJQN1h2cTA0Mk1NWTdV?=
+ =?big5?B?R0Q5WE5NbUlvUmRmbUc2UUZPQlU4bUlHeUFNQ1hkNU9rNHJkY0tTbFJYZ2FUOG1Q?=
+ =?big5?B?VlI4b1ZoMlh2MCthTzR4MDhlS0pQR3EzcUozZXQxSGwrcWZSYXY1K0luWDZrblE5?=
+ =?big5?B?eDNyRnBNQUN3OUpjT0d2MHd3QXFjMjhKU3BaMjRLL3Q3ZUllZ2VOVUYwRldjSVBZ?=
+ =?big5?B?cnZaR3JoeHZNWGxqTURBNGpQTDQyYjJwM3JBTmtQRkgzYTQ5WW5LUlJWakFqMUxV?=
+ =?big5?B?MUdvZ2lXNVVhL2ZUbjlIeEVMSlNPZmlZanNMVFRXRVJlSER6QUdtdjZZeklxZ05X?=
+ =?big5?B?Ry9xOXU5bzVCV3ZkbkkrOFUvYmp0MkllVXZudzY4cFBzTHV6Q2JBUnNtK3I1TEZk?=
+ =?big5?B?ZSs1bXpVOG14ejFYMFJwMnhMRWpjcmVoOUdyeUtFalcyMmlsZFVtUEdjclNieDlo?=
+ =?big5?B?NURXSWtoZlJHZ1pKdVFBUXU5aXNDeC9WY0FSYVZwQWw2bW9ZYWlIa0xrS3VMWkJ4?=
+ =?big5?B?NGhoQjBUaGExQmxWUFRHTGZQREVTSWN3S0hSTUFEZGpYalYzR2ZQdVdZSTQ2T1cx?=
+ =?big5?B?dVFDeU92M1RWN3RlYm55ZVJWVXFIczZxWWJLbEZJUXg3TldLRitETmhRUW54ZWN0?=
+ =?big5?B?b2dwODh3N3FpUThzMklueUdUV0JoRHZFVTAwc3RpSVdPNFVJcW5zUnFkUDdtYlVT?=
+ =?big5?B?UHF4YTJUVHhNRGxYUTN1bnlHbUJZaGpFZWFkS2Z5Sm4xcDM0RnpVRWw3SkhaM0xj?=
+ =?big5?B?bWNUdDNzczhoeFFFTExDOWFGNlllQ0s5WnpkUy93SVBFcU1haHNJV0krOTZHTkZa?=
+ =?big5?B?eU1kazhLK1N0QUxjRnh1U0hEY0RHRmJFYkRsTjVIS3lNczMzc0dPU1RmUWZJVEY4?=
+ =?big5?B?cTIrdkNJaWxHSWx4TktlTmsyajZRdnVBeWZyM0xoK0RpT016VnZOMG5NVEI0R3NI?=
+ =?big5?B?bjFPbEVHNjd6RUtQWGpJejhiNUVnWkZtSHNHQjVYNzZTRUIrSVdCWWZ1RFp2SHM5?=
+ =?big5?B?Z2svTk9mYmRhcjNGdG1KcjdoM3BCOUh0N09nSGlzMTc0ZVYzMi9DT05VYm1vYkp4?=
+ =?big5?B?MFZOeGU3K1B1aWZTTEUwUmk1Y1l5OHR0U21PK2k5UnN6bmJHWk1yUitGMk1pOHpV?=
+ =?big5?B?czZiSXIzMnpCem0yY0d5bTF0SERQK1I1ZldBVXJtYmFBSmRLNkw3dS8wK1VOM2U4?=
+ =?big5?Q?pcbvd7baHNddM4Dg6E4exYkV9QE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?big5?B?blA4WTQvSktHZ0FacmZSSE1NQ3poZTNxMllVY0UxQUM2SWUraWhlRVY1dFk3VExP?=
+ =?big5?B?MUR2L09vUGhLREF2eE1rR09zcTlVelEzQmVabEMxZ211NEZ0MndFR1VqbVpYa3c5?=
+ =?big5?B?MncvNWlYSThmbm5WQXFSMXNmOUw2Rm9seitra2pZdzltTE1MQVRTa0lNaWJVNGF6?=
+ =?big5?B?V1Ficm14VDA0bU5KRFJtLy9rWGg3VHIyWHp6dVkzYks2aWN2VE9OcUlOUENkd3Fz?=
+ =?big5?B?Rkh2L3B2Y1lyN2pjdUY2MVJCRUczYm0vMmFVUFloYmZsdWI4SjZ0ZDNTZzltUUVa?=
+ =?big5?B?d2tBSGkxazROVk5FOU53dmtPT3hqdTkyazIxV080SUUwcWQ2RERFTzRUYlR5ZzJU?=
+ =?big5?B?QnBvUkRBRFlOZG9iMEMxWWNncTZaTi9PeVljU3ljVmZLMDJ2eTZTdWNUbFVQNXkz?=
+ =?big5?B?UktMODhqNkRRRXZTOENxbnRwenNNOVlGME1INFZSNWdrOGpTVEFzS1FiZldubW9p?=
+ =?big5?B?cmJXMlJHdy9qZytkd052U3BhUjR5YW9OZVpReml6cS9LdzYzOFhLdlNVT1RyQ3Vn?=
+ =?big5?B?Q1hSbG83c2J3b25ETDFxL1BLZ1ZCYVRISVYzSUg0WlpveFFDNUtXK2R6ZTFhLzZC?=
+ =?big5?B?OVM5cXFXN0x4dTU2YXZZUVl3RUJsVXhvZTc4clBWQjdMcnZIMkdyVFl0U3k3STdQ?=
+ =?big5?B?MXV1N0haQ2NacHR4N0hFdEoxRmpDdHVxYzJCdW9iWk1wRnl6SUQ3SW9iR1J0MkYr?=
+ =?big5?B?dkVmVG56TjZ3cFA4ckRlMk4xeE1IdW93S01wMjdlcHZ2Q3V0Z1dxMU1QalloYXUv?=
+ =?big5?B?dVNoTVdZRWYwb0NYTFFRamVHZU82WmwrL2JvejlMTFJtQm0zU1I1QWMwL3VlNVM5?=
+ =?big5?B?bUEzcDlPMXFES3BuclZKSUpjUm1ORElybHZaNHdSRmU1UEFzclZaNU4wTGRucWx4?=
+ =?big5?B?dm5xV0NJRGkrS3V2Vmd6NER6U2ZIVUJnb29uRW5KTUkybDljdGZtQno5aTF0NU5y?=
+ =?big5?B?Z3FIbERLa2k3WEVteHAvZzg1cHZVc0NIRFRQbzhJdXBDV3NObU9QSUJ6eTlJT2o1?=
+ =?big5?B?YVRQQnRaZG81aG1nR2tudVJPMlZTd0tLR2s4UG5hU1B6VmxORGFqOUlWaFZXWFhp?=
+ =?big5?B?TjVEOTBOUFM4aGR6Wkh6WVFZWDIvaFpmTEh6ZDU1eFJ1aUJkNDJ4MmVLM0dEOHpj?=
+ =?big5?B?MEJsVUVrbU1NVFdNLzBmNno1a21VZWxwT0hOVURnaG41YWMyM1cyNUNPbDNGY0hj?=
+ =?big5?B?Zm42S2xGemJERCt2WVpOSzJ0RFR2RFVIci80UXBoelJSbEhZMUw3WGlwUEZnNGVZ?=
+ =?big5?B?V29EbHJqdXRmZ0Q2ZEtaRVpxbktsQmFKOWZvbjVnd1VkVmpPQVl0bEFqZGpwUE5F?=
+ =?big5?B?K0NzeW85K1JZWkFLeEQvZExoSkw1WmJoMklwcFNwVStndHBkVGtvT3hpSThGSStv?=
+ =?big5?B?azl0blJLSjJLT2RkVDkrbXFUcE0wUTRPOFFGV3lBR3pzSEFoZnlnZDlCQ01BL29h?=
+ =?big5?B?dTdsNDFuV2dVN0F6TUFFMFhmb0thTlBUbUx6RjFRcnl1UWMxcFkzN0JVTG5TR3kz?=
+ =?big5?B?QjkyQ1gxdkIzVlJnN2kxZFdJMjZaNzlveUpPSTd4UXdiQWl6Mkt6Mit1SDNSVXhK?=
+ =?big5?B?M2MzM2thT0lNc1Q1U0hreUlYNDRzMW5tQ0c0TGRETENOcmZXWlZ3YXRvYjR6SXQ0?=
+ =?big5?B?bVd6UmVzVDR4QnZEWEpWVUFJUVZsU21ZSWZHZXEzckZGV1pGQUZZU1k4VHNQc05I?=
+ =?big5?B?L2dVRU9mNVkyVUM2bitlMnBEa1BqS0xUaE45aWFwb0Erd1ZMaWxCS05jQkNtcXBK?=
+ =?big5?B?ZDRFYkhmSmZsV3ZrUW5BalRXRWtqMnJUY1hKWjJZdldzNTZkMmk1Z3RNWVlPR28x?=
+ =?big5?B?QWltRXlNZkQrOFZlL1R0V0dSZWxIVkhvd05EZy96OVdkc2N4T0NwSEdWZWpPNnlB?=
+ =?big5?B?UXVaWXNsWWJUeEZ3andJSmp2Wk0vbmtmNTRWcWl3MmhtaG95YUlPTFdzUzFYWU9C?=
+ =?big5?B?RklrMVdzdDlIUzZxZHhjd3pkTU5SdnlqdXQza2Jta2M5UmRPVzVGMHhMMURsV1JQ?=
+ =?big5?Q?sTrj+93bWcNXDkWc?=
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04ac24ee-8c2d-4fe8-f06c-08ddafbac10e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 05:24:39.3851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lYfgCwCcyhZBJNHJywRyZhaN5wNyThoJOWWed1WTR1aW/QEthDawHKb+9VCSKFBxaF5hxGll12QzHTLyFXB1o7i6OW8nMLbG7odL/xt7ZTA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB5881
 
-Memory hot remove unmaps and tears down various kernel page table regions
-as required. The ptdump code can race with concurrent modifications of the
-kernel page tables. When leaf entries are modified concurrently, the dump
-code may log stale or inconsistent information for a VA range, but this is
-otherwise not harmful.
-
-But when intermediate levels of kernel page table are freed, the dump code
-will continue to use memory that has been freed and potentially reallocated
-for another purpose. In such cases, the ptdump code may dereference bogus
-addresses, leading to a number of potential problems.
-
-To avoid the above mentioned race condition, platforms such as arm64, riscv
-and s390 take memory hotplug lock, while dumping kernel page table via the
-sysfs interface /sys/kernel/debug/kernel_page_tables.
-
-Similar race condition exists while checking for pages that might have been
-marked W+X via /sys/kernel/debug/kernel_page_tables/check_wx_pages which in
-turn calls ptdump_check_wx(). Instead of solving this race condition again,
-let's just move the memory hotplug lock inside generic ptdump_check_wx()
-which will benefit both the scenarios.
-
-Drop get_online_mems() and put_online_mems() combination from all existing
-platform ptdump code paths.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-CC: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-mm@kvack.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This patch applies on v6.16-rc2 and has been tested on arm64. Besides it
-builds on riscv, s390, x86 and powerpc as well. But should the following
-fixes tag from V1 also needs to be around as well ?
-
-Fixes: bbd6ec605c0f ("arm64/mm: Enable memory hot remove")
-
-Changes in V2:
-
-- Moved [get|put]_online_mems() inside generic ptdump_walk_pgd()
-
-Changes in V1:
-
-https://lore.kernel.org/all/20250609041214.285664-1-anshuman.khandual@arm.com/
-
- arch/arm64/mm/ptdump_debugfs.c | 3 ---
- arch/riscv/mm/ptdump.c         | 3 ---
- arch/s390/mm/dump_pagetables.c | 2 --
- mm/ptdump.c                    | 2 ++
- 4 files changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-index 68bf1a125502d..1e308328c0796 100644
---- a/arch/arm64/mm/ptdump_debugfs.c
-+++ b/arch/arm64/mm/ptdump_debugfs.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/debugfs.h>
--#include <linux/memory_hotplug.h>
- #include <linux/seq_file.h>
- 
- #include <asm/ptdump.h>
-@@ -9,9 +8,7 @@ static int ptdump_show(struct seq_file *m, void *v)
- {
- 	struct ptdump_info *info = m->private;
- 
--	get_online_mems();
- 	ptdump_walk(m, info);
--	put_online_mems();
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(ptdump);
-diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-index 32922550a50a3..3b51690cc8760 100644
---- a/arch/riscv/mm/ptdump.c
-+++ b/arch/riscv/mm/ptdump.c
-@@ -6,7 +6,6 @@
- #include <linux/efi.h>
- #include <linux/init.h>
- #include <linux/debugfs.h>
--#include <linux/memory_hotplug.h>
- #include <linux/seq_file.h>
- #include <linux/ptdump.h>
- 
-@@ -413,9 +412,7 @@ bool ptdump_check_wx(void)
- 
- static int ptdump_show(struct seq_file *m, void *v)
- {
--	get_online_mems();
- 	ptdump_walk(m, m->private);
--	put_online_mems();
- 
- 	return 0;
- }
-diff --git a/arch/s390/mm/dump_pagetables.c b/arch/s390/mm/dump_pagetables.c
-index ac604b1766609..9af2aae0a5152 100644
---- a/arch/s390/mm/dump_pagetables.c
-+++ b/arch/s390/mm/dump_pagetables.c
-@@ -247,11 +247,9 @@ static int ptdump_show(struct seq_file *m, void *v)
- 		.marker = markers,
- 	};
- 
--	get_online_mems();
- 	mutex_lock(&cpa_mutex);
- 	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
- 	mutex_unlock(&cpa_mutex);
--	put_online_mems();
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(ptdump);
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 9374f29cdc6f8..0a6965e2e7fa6 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -175,6 +175,7 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd)
- {
- 	const struct ptdump_range *range = st->range;
- 
-+	get_online_mems();
- 	mmap_write_lock(mm);
- 	while (range->start != range->end) {
- 		walk_page_range_novma(mm, range->start, range->end,
-@@ -182,6 +183,7 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd)
- 		range++;
- 	}
- 	mmap_write_unlock(mm);
-+	put_online_mems();
- 
- 	/* Flush out the last page */
- 	st->note_page_flush(st);
--- 
-2.30.2
-
+PiA+ICsJCQkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0gyWD4sDQo+ID4gKwkJCQkJ
+IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9QQ0lFX1JDX08+Ow0KPiA+ICsJCQkJcmVzZXQtbmFtZXMg
+PSAiaDJ4IiwgInBlcnN0IjsNCj4gDQo+IFBFUlNUIyBpcyBjbGVhcmx5IGEgcGVyLVJvb3QgUG9y
+dCBpdGVtIHNpbmNlIGl0J3MgYSBzaWduYWwgb24gdGhlIFBDSWUgY29ubmVjdG9yLg0KPiBDYW4g
+eW91IHNlcGFyYXRlIHRoaXMgYW5kIGFueSBvdGhlciBwZXItUm9vdCBQb3J0IHRoaW5ncyBpbnRv
+IGEgUm9vdCBQb3J0DQo+IHN0YW56YSB0byBsZWF2ZSBvcGVuIHRoZSBwb3NzaWJpbGl0eSBvZiBm
+dXR1cmUgaGFyZHdhcmUgdGhhdCBzdXBwb3J0cyBtdWx0aXBsZQ0KPiBSb290IFBvcnRzIGluIHRo
+ZSBSQz8NCg0KVGhlIFBDSWUgUkMgdGhhdCBkZXNpZ25lZCBieSB1cyBpcyBvbmx5IG9uZSByb290
+IHBvcnQuDQoNClRoYW5rcywNCkphY2t5DQo=
