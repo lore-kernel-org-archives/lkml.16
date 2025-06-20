@@ -1,42 +1,42 @@
 Received: from pf-012.whm.fr-par.scw.cloud (pf-012.whm.fr-par.scw.cloud [51.159.173.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA88A295DB8;
-	Fri, 20 Jun 2025 14:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D32E5BAF0;
+	Fri, 20 Jun 2025 14:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.173.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430792; cv=none; b=ciHPFV8fONuB0Yx6lbHRcp+vJL3UAHFf6Oh9sZVgicAMYx6V646NFKCJjYUd0wuyL7kZGDRy/xYAGYiJjPtPm72FpxVC7Q+jc0Y+gEbLMrF3xvg5aFVzjuEK4P0Q2X50DH2Vd1qFBpOVMHw9FMgP6RRH38c1/0jWavM0GwEbH+E=
+	t=1750430801; cv=none; b=H6PEoMtdKsSckjetJkatzH9LtljWHy7hzQ+GQnlR3h9cXu/ynWSx8Aaox4MeP/zIUFoIo7fecKEHlJI1ye1UrwDuj3ISufRqgi+Jz1IJrHW1aVkTpWPXWNJ/5rWdtgRSgG7sJv12yZ6woBJW0CZVly+yLMQL9wHmwOsCpYR+hU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430792; c=relaxed/simple;
-	bh=nKJpLyVb3Mf+ZB2BJ5zQqKhJeaFKSpYxxkFva1A7Y0U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EslalPNLirgvYc3h0B9XyTu5J/9Md9gpdOKLbh0qwnnXQxBurd4MV+CDYzMqSEhEgueyCqNY0/gxOmeHGIXZncJe77M8u1tyN327aY2wQKJP771x7uh2vF7gUsSOAFCMF2OaGF4SP60SQquTGHa+OjlpSbTih67h6Y/aQNtfcnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=q7QM1RgV; arc=none smtp.client-ip=51.159.173.17
+	s=arc-20240116; t=1750430801; c=relaxed/simple;
+	bh=ABf6EwWTGkcZcPTeOeyFfUPP2cHPPDEntIOdF3urxX8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UVX7qhCsqRh1X8jnVugnybgK3Oezzndhs46tWhBsD9tvjfw03Wbm1AFnU+xJdJfROFmZT5xWh5iUrvh8/MIYxzPGHt/6ihX4oOwTNnSLgS9M9rQcFja5cM0z6krNMO0e2REaEhHmccDAkAUFZ2ySJYyA1ZR4i/cgtyOuknNmWYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=R2JA26jZ; arc=none smtp.client-ip=51.159.173.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="q7QM1RgV"
+	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="R2JA26jZ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=oss.cyber.gouv.fr; s=default; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=y4GtbjwsgXd9i+tuWT0wCJrZu63vjEneWpfP0tEUUag=; b=q7QM1RgVzshpD+9pwDkduM7xk0
-	JQ63YK8yctjaazdpQsnz2BoHCC+sKC6m65lXI7hha3ab3YsncUFMfwdVV/uZcleBfcBaVgeaeVOWZ
-	I9VAmGZq7thgN6PjqwWTh2S405ZASD9S3BGhb9gqdPH91b9ldj/w2wjuZVsKB95gafeh5f0kNKNwQ
-	0KaHm+puCji1UWUgLjJIEek/qhKmTbhlgJgnzIeJ931rcD9eaRaXAmmY6bC9ri0/MG+krzbPFyQor
-	dmBSyLtWfuh1DQkyS52bCLyhO4Qs0olw+ATjv713SaaRAD/ALLxjEUdiQ0nEIILU9pdHGjnmOcyMp
-	B+gIsCbA==;
+	d=oss.cyber.gouv.fr; s=default; h=Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Orp3DJwdoLCPJivzW1fDqgU7aiPGhytEa2iFmC1YDdM=; b=R2JA26jZ0BrujI9rFnb9eL99L2
+	PFXTbh86tFuEbsw28Cdki8KTSRniTlCNDe+0+lwJ9vxKZNxhLUN6A9Q7znNIpDSY5Y3t4ijZLf7Vo
+	RYJPXBosaR1GxykTh8WxbvO/6jGN+E9hr6aOiv4pScI+kV0H6Qth9CQ6ZqVoGElCQLL/wK61LjruT
+	5uYKy8WIBRyiAaGhvcKkkZtoTL+CL58lXkEWhCMnwCDDOhUcXv2a00zipHEVC7Bib6HME4y8FF17v
+	zPBgAXBBC1OM3Qiu5YCNT1Ll5JpHpaJIVVm8ZVce11tzQbNfmRSCmq9rnMCUWIAIK/STJstaPtVoa
+	pvuW75rA==;
 Received: from laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr ([90.63.246.187]:43571 helo=[10.224.8.110])
 	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <nicolas.bouchinet@oss.cyber.gouv.fr>)
-	id 1uScib-00000007rNQ-3xdT;
-	Fri, 20 Jun 2025 16:27:46 +0200
+	id 1uSciZ-00000007rNQ-0bb5;
+	Fri, 20 Jun 2025 16:27:44 +0200
 From: nicolas.bouchinet@oss.cyber.gouv.fr
-Date: Fri, 20 Jun 2025 16:27:18 +0200
-Subject: [RFC PATCH 3/4] usb: core: Plug the usb authentication capability
+Subject: [RFC PATCH 0/4] Support for usb authentication
+Date: Fri, 20 Jun 2025 16:27:15 +0200
+Message-Id: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,9 +45,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
-References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
-In-Reply-To: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
+X-B4-Tracking: v=1; b=H4sIAMNvVWgC/x2MSQqAMBDAviJztlA76MGviEiXqc6lShcRpH+3e
+ AwkeSFRZEowdy9EujnxGRoMfQf20GEnwa4xKKlGOSkpSjKbLvmgkNnq3HSBiMbpySN6ghZekTw
+ //3RZa/0AN0n0YWQAAAA=
+X-Change-ID: 20250620-usb_authentication-333bda6f33fe
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Alan Stern <stern@rowland.harvard.edu>, 
  Kannappan R <r.kannappan@intel.com>, 
@@ -72,174 +73,200 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+We have been working on the implementation of the USB authentication
+protocol in the kernel.
 
-Plugs the usb authentication implementation in the usb stack and more
-particularly in the usb_parse_configuration function after the BOS has
-been parsed and the usb authentication capacity has been controlled.
+You can find our work here https://github.com/ANSSI-FR/usb_authentication.
 
-The authentication bulk is implemented by the usb_authenticate_device
-function.
+It is still work in progress but we would like to start discussions
+about the implementation design and its possible integration to the
+Linux kernel.
 
-The authorization decision enforcement is done via the authorized field of
-the usb_device and the associated authorization and deauthorization functions.
-The usb_device also contains an authenticated field that could be used to track
-the result of the authentication process and allow for more complex security
-policy: the user could manually authorize a device that failed the
-authentication or manually deauthorize a device that was previously
-authenticated.
+Best regards,
 
-The usb_authenticate_device returns 0 or an error code. If 0 is
-returned, the authorized and authenticated fields of the usb_device are
-updated with the result of the authentication.
+Nicolas and Luc
 
-Co-developed-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
+USB peripherals are an important attack vector in personal computers and
+pose a risk to the cyber security of companies and organizations.
+
+The USB foundation has published a standard to allow the authentication
+of USB peripherals ([1] and [2]). It defines a mechanism for the host to
+request credentials and issue an authentication challenge to USB-2 or
+USB-3 peripherals, either upon connection or later during the use of the
+peripheral.
+
+We currently envision the following use cases for USB authentication:
+
+- company networks where computers and peripherals can be privately
+  controlled and administered;
+- USB cleaning or decontamination stations;
+- individuals who want to prevent unauthorized device plug-in into their
+  machine.
+
+The implementation of this feature will obviously necessitate efforts
+from both the kernel community and peripherals vendors. We believe that
+providing an implementation of the host side of the protocol in the
+Linux kernel will encourage constructors to include this feature in
+their devices. On the other hand, we are working on implementing
+reference code for embedded devices, notably for Zephyr OS.
+
+The USB authentication protocol is based on a simple signature
+challenge. Devices hold between 1 and 8 pairs of private signing key and
+x509 certificate. Hosts must possess a store of root Certificate
+Authority certificates provided by device vendors.
+
+The protocol exchange is driven by the host and can be decomposed into
+three, mostly independent, phases:
+
+- The Host can request a digest of each certificate owned by the
+  peripheral.
+- If the Host does not recognize the peripheral from one of its digests,
+  it can read one or more certificates from the device until a valid one
+  is found.
+- The Host can issue an authentication challenge to the peripheral.
+
+On the host side, this requires the following functions:
+
+- handling the protocol exchange with the peripheral;
+- X509 certificates validation and administration (root CA loading,
+  certificate revocation…);
+- cryptographic functions for the challenge (random number generation
+  and ECDSA with the NIST P256 -secp256r1- curve);
+- security policy management;
+- authorization decision enforcement.
+
+We chose to implement the authentication protocol exchange directly in
+the kernel USB stack during the device enumeration. This is done by
+first requesting the device BOS to detect its capacity at handling
+authentication, then if supported starting the authentication sequence
+with a digest request.
+
+The implementation of the other functions is open to several design
+alternatives, mainly based on their distribution between kernel and user
+space. In this first implementation, we chose to implement most (all) of
+the cryptographic functions, certificate management and security policy
+management in user space in order to limit impact on the kernel side.
+This allows for more personalization later on. The communication between
+the kernel USB stack authentication function and user space is done via
+a generic netlink socket.
+
+The authorization decision enforcement can be done via the authorized
+field of the usb_device and the associated authorization and
+deauthorization functions. The usb_device also contains an authenticated
+field that could be used to track the result of the authentication
+process and allow for more complex security policy: the user could
+manually authorize a device that failed the authentication, or manually
+deauthorize a device that was previously authenticated.
+
+The USB authentication protocol come with some inherent limitations, [3]
+does a good job at describing most of them. During the implementation,
+we also found that the value encoding of the Validity field in the x509
+certificate differs from the RFC5280 [4]. This has prevented us from
+using the x509 parser included in the Linux kernel or OpenSSL, we chose
+to use the mbedtls library instead [5]. This obviously does not prevent
+others to replace it with their preferred implementation. It will also
+open discussions on the protocol enhancement.
+
+The architectural choice to place most of the cryptographic and security
+management functions in user space comes with its own limitations.
+
+First it introduces a dependency on the user space program availability.
+It will probably be necessary to introduce a fail-safe mechanism if the
+authentication can not be completed. Also, during early boot stages the
+user space service will be needed in one form or another in the
+initramfs.
+
+The second limitation is that the device initialization process is
+paused multiple times. Each time, the hub lock is released in order not
+to block the rest of the stack; and then reacquired when a response has
+been received from user space. The resuming of the operation on the
+device must be done with great care.
+
+Last, we do not yet interface properly with the rest of the usb stack
+and thus do not enforce a strict control of the two authenticated and
+authorized fields. Other sections of the kernel or userspace are able to
+overwrite those fields using the sysfs exposed files for example.
+
+The current kernel implementation of the USB authentication protocol is
+experimental and has the following limitations:
+
+- It does not yet handle all possible protocol errors.
+- It has been tested with a QEMU mock device, but tests with real
+  hardware are still in progress. As such, the over-the-wire protocol
+  has not yet been fully validated.
+- The kernel/user space communication has not yet been completely
+  validated, including the interruption of the worker thread and its
+  resuming.
+- Device authorization and deauthorization has not been completely
+  implemented.
+- It lacks an overall documentation and test suite.
+
+Our current kernel patch is obviously a work-in-progress and not yet
+ready for merging. We feel it is best to start a discussion on the
+architectural choices and gather early comments that could be used to
+improve the design.
+
+Concerning the user space functions, they are currently implemented in a
+small independent executable as a proof-of-concept. In the future,
+integrating it in existing larger projects, like USBGuard [6], would
+allow presenting a homogeneous USB administration interface to the user.
+
+We would like to get comments on the proposed architectural choices
+regarding the repartition of functions between kernel and user space and
+on the implementation in the USB stack, mostly concerning the releasing
+and reacquiring the hub lock multiple times during the authentication
+process.
+
+You can find in the following repository [7] the necessary code for
+creating a test environment:
+
+- the Linux kernel patches;
+- a python utility to generate a small PKI for device enrollment;
+- a C minimalist service to implement the USB policy engine;
+- patches for QEMU to implement a mock USB device with the
+  authentication capability;
+- a testbed to compile and test the project.
+
+- [1] “Universal Serial Bus Security Foundation Specification”, Revision
+  1.0 with ECN and Errata through January 7, 2019
+- [2] “Universal Serial Bus Type-C Authentication Specification”,
+  Revision 1.0 with ECN and Errata through January 7, 2019
+- [3] J. Tian, N. Scaife, D. Kumar, M. Bailey, A. Bates and K. Butler,
+  "SoK: "Plug & Pray" Today – Understanding USB Insecurity in Versions 1
+  Through C," 2018 IEEE Symposium on Security and Privacy (SP), San
+  Francisco, CA, USA, 2018, pp. 1032-1047, doi: 10.1109/SP.2018.00037
+- [4] RFC 5280, Internet X.509 Public Key Infrastructure Certificate and
+  Certificate Revocation List (CRL) Profile, May 2008
+- [5] https://www.trustedfirmware.org/projects/mbed-tls/
+- [6] https://usbguard.github.io/
+- [7] https://github.com/ANSSI-FR/usb_authentication
+
 Signed-off-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
 Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 ---
- drivers/usb/core/config.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/usb/core/hub.c    |  6 ++++++
- drivers/usb/core/usb.c    |  5 +++++
- include/linux/usb.h       |  2 ++
- 4 files changed, 63 insertions(+), 1 deletion(-)
+Nicolas Bouchinet (4):
+      usb: core: Introduce netlink usb authentication policy engine
+      usb: core: Introduce usb authentication feature
+      usb: core: Plug the usb authentication capability
+      usb: core: Add Kconfig option to compile usb authorization
 
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 13bd4ec4ea5f7a6fef615b6f50b1acb3bbe44ba4..45ee8e93e263c41f1bf4271be4e69ccfcac3f650 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -14,6 +14,7 @@
- #include <asm/byteorder.h>
- #include "usb.h"
- 
-+#include "authent.h"
- 
- #define USB_MAXALTSETTING		128	/* Hard limit */
- 
-@@ -824,7 +825,50 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
- 		kref_init(&intfc->ref);
- 	}
- 
--	/* FIXME: parse the BOS descriptor */
-+	/* If device USB version is above 2.0, get BOS descriptor */
-+	/*
-+	 * Requirement for bcdUSB >= 2.10 is defined in USB 3.2 §9.2.6.6
-+	 * "Devices with a value of at least 0210H in the bcdUSB field of their
-+	 * device descriptor shall support GetDescriptor (BOS Descriptor) requests."
-+	 *
-+	 * To discuss, BOS request could be also sent for bcdUSB >= 0x0201
-+	 */
-+	// Set a default value for authenticated at true in order not to block devices
-+	// that do not support the authentication
-+	dev->authenticated = 1;
-+
-+	if (le16_to_cpu(dev->descriptor.bcdUSB) >= 0x0201) {
-+		pr_notice("bcdUSB >= 0x0201\n");
-+		retval = usb_get_bos_descriptor(dev);
-+		if (!retval) {
-+			pr_notice("found BOS\n");
-+#ifdef CONFIG_USB_AUTHENTICATION
-+			if (dev->bos->authent_cap) {
-+				/* If authentication cap is present, start device authent */
-+				pr_notice("found Authent BOS\n");
-+				retval = usb_authenticate_device(dev);
-+				if (retval != 0) {
-+					pr_err("failed to authenticate the device: %d\n",
-+					       retval);
-+				} else if (!dev->authenticated) {
-+					pr_notice("device has been rejected\n");
-+					// return early from the configuration process
-+					return 0;
-+				} else {
-+					pr_notice("device has been authorized\n");
-+				}
-+			} else {
-+				// USB authentication unsupported
-+				// Apply security policy on failed devices
-+				pr_notice("no authentication capability\n");
-+			}
-+#endif
-+		} else {
-+			// Older USB version, authentication not supported
-+			// Apply security policy on failed devices
-+			pr_notice("device does not have a BOS descriptor\n");
-+		}
-+	}
- 
- 	/* Skip over any Class Specific or Vendor Specific descriptors;
- 	 * find the first interface descriptor */
-@@ -1051,6 +1095,7 @@ int usb_get_bos_descriptor(struct usb_device *dev)
- 	length = bos->bLength;
- 	total_len = le16_to_cpu(bos->wTotalLength);
- 	num = bos->bNumDeviceCaps;
-+
- 	kfree(bos);
- 	if (total_len < length)
- 		return -EINVAL;
-@@ -1122,6 +1167,10 @@ int usb_get_bos_descriptor(struct usb_device *dev)
- 			dev->bos->ptm_cap =
- 				(struct usb_ptm_cap_descriptor *)buffer;
- 			break;
-+		case USB_AUTHENT_CAP_TYPE:
-+			dev->bos->authent_cap =
-+				(struct usb_authent_cap_descriptor *)buffer;
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 0e1dd6ef60a719f59a22d86caeb20f86991b5b29..753e55155ea34a7739b5f530dad429534e60842d 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2640,6 +2640,12 @@ int usb_new_device(struct usb_device *udev)
- 	udev->dev.devt = MKDEV(USB_DEVICE_MAJOR,
- 			(((udev->bus->busnum-1) * 128) + (udev->devnum-1)));
- 
-+	// TODO: Check the device state, we want to avoid semi-initialized device to userspace.
-+	if (!udev->authenticated) {
-+		// If the device is not authenticated, abort the procedure
-+		goto fail;
-+	}
-+
- 	/* Tell the world! */
- 	announce_device(udev);
- 
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 0b4685aad2d50337f3cacb2198c95a68ae8eff86..76847c01d3493e2527992a3bb927422519d9a974 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -46,6 +46,7 @@
- #include <linux/dma-mapping.h>
- 
- #include "hub.h"
-+#include "authent_netlink.h"
- 
- const char *usbcore_name = "usbcore";
- 
-@@ -1080,6 +1081,10 @@ static int __init usb_init(void)
- 	usb_debugfs_init();
- 
- 	usb_acpi_register();
-+
-+	// TODO : check error case
-+	usb_auth_init_netlink();
-+
- 	retval = bus_register(&usb_bus_type);
- 	if (retval)
- 		goto bus_register_failed;
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index b46738701f8dc46085f251379873b6a8a008d99d..e9037c8120b43556f8610f9acb3ad4129e847b98 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -431,6 +431,8 @@ struct usb_host_bos {
- 	struct usb_ssp_cap_descriptor	*ssp_cap;
- 	struct usb_ss_container_id_descriptor	*ss_id;
- 	struct usb_ptm_cap_descriptor	*ptm_cap;
-+	/* Authentication capability */
-+	struct usb_authent_cap_descriptor *authent_cap;
- };
- 
- int __usb_get_extra_descriptor(char *buffer, unsigned size,
+ drivers/usb/core/Kconfig                  |    8 +
+ drivers/usb/core/Makefile                 |    4 +
+ drivers/usb/core/authent.c                |  631 +++++++++++++++++
+ drivers/usb/core/authent.h                |  166 +++++
+ drivers/usb/core/authent_netlink.c        | 1080 +++++++++++++++++++++++++++++
+ drivers/usb/core/authent_netlink.h        |  157 +++++
+ drivers/usb/core/config.c                 |   51 +-
+ drivers/usb/core/hub.c                    |    6 +
+ drivers/usb/core/usb.c                    |    5 +
+ include/linux/usb.h                       |    2 +
+ include/uapi/linux/usb/usb_auth_netlink.h |   67 ++
+ 11 files changed, 2176 insertions(+), 1 deletion(-)
+---
+base-commit: fc85704c3dae5ac1cb3c94045727241cd72871ff
+change-id: 20250620-usb_authentication-333bda6f33fe
 
+Best regards,
 -- 
-2.50.0
+Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
