@@ -1,143 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B940380;
-	Fri, 20 Jun 2025 05:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9120421A45A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750398347; cv=none; b=On9E7mvsUVAuCLoQGMWtlAfurRiKkRS0f/8tyEApH4UkM8TzFjjFBj6b0wPly+0ziJAZTRoZtKVh9leWS5OzZvdac7BxpfooUNqoJ8L0u3FYUVWFyFNCCHs0PTYDpiLR2LPVIp7kngVvXrS7U8up/ReUCKaSnw3iKRQPnCfSDhc=
+	t=1750398504; cv=none; b=eEmj+6n6JaHEnpft04b3Sk3uFYpiHh2v/BV46SFSt5DTXo6xz+PuN3iN2WkGMSvGiaxzobYwB+PGCUI0ClSn1Fy9HCocREem6GBRpqvk/AejrD2JllBFv5NTZKYv7U8jbPeLw2jT1PyUNrSssXAq7m3OANoj0m9sNxPI76moDIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750398347; c=relaxed/simple;
-	bh=zKYwjILYaQAPYlBM1770fKrIAlknXwMfFEvVljOlCHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u4H+hRkcwvTeFuVRFdp12WPueWKEAc3MOqBLbS1b3G/ZWKuzic35c53U0rgur7KpiHL8kgnOnG3o4XUo9hayJlcprJDhSxGe4lZxhjwM+hNnK+KVq2T4wc3Iq+Hti/EEj395Iw65gAz4vFaA7lEZM0S1N0t3+0R+hNXC7Y/KZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q31SyGJ1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750398504; c=relaxed/simple;
+	bh=S75fM3nM9TnsR7L4uT55yoIs2jbn/4LAz5Rs4K4sh/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZvJFIC21hQMvsjbIyvFRjrKFSlISK87+j8v6OsusGBNrUQVUoSdR6fGrNU4U5h5xL5f/GlswF7KA2PZCKLtO0ghA0bzgpGu0uUXjeNJKxWXoIfToK2KyzoPSLKPJ6Yk52f3aEqfPzznqhSjvy45lW2fj5ls2AadI683iq/bNh3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e5c9e2va; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q31SyGJ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2C7C4CEE3;
-	Fri, 20 Jun 2025 05:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750398347;
-	bh=zKYwjILYaQAPYlBM1770fKrIAlknXwMfFEvVljOlCHM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q31SyGJ19ASUx8SjtzAN0IrpTm4g9RqGt2KFKaGVT4Awpw5RpefAxZ29vVcePlF1F
-	 Nu1BLPFgeqSdUOpJydoCdVqQelCgsvEHzoXbEsBI97rqtqCTZhKX2+ancGnf8jzqg3
-	 2u1of7zacglwKKn+bQj0e0uxHeo/yfNkJ2zSjtQid0S8lR4PJYHr5M78OoJTjIpsmh
-	 wh2wUuGMIqWwsxFQh+depRY/byzZQ38xwVspE21vpBWV38GSdQ/T8mhRgrHBm3cj+V
-	 x9hy/rpVuTrg4LKKkNycEtW4Qs/RIfiAvYt6kaIeZ3jX1k73Vg1ZMWKM+BX34LqbiY
-	 AarjHav00I47A==
-Message-ID: <ca0f85f9-3908-4c7d-add3-905e9e6f634c@kernel.org>
-Date: Fri, 20 Jun 2025 07:45:42 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e5c9e2va"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so10964955ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750398502; x=1751003302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
+        b=e5c9e2vaRW27In8sJjFRZX4JAI6HG/qpTqecPVPmhdDDh6dBKKkKkB7SKyp1/JL1HJ
+         foJX4G9ulj7wOEVhqCnV/M/s7xAYtPf+ycwZ3ZLR5z+Tres4nzpQAR3NWoHE1wjDqgJA
+         R2Ggroh+enLgInAeji9CmeyzxLA2XQbF8S/vw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750398502; x=1751003302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
+        b=a5Nn/IzfbHaEpmHqiesMMZn78SLkDkR3S9B//o9GkfwqrYLj+UKHCE7zuebkYX5r9B
+         ycZlmwF+hVTicGXotuoMBkqv0DF6IhHwDmzKdG2u7J+fx4lo2SeQ1OdSgve55XImyaDC
+         x64ahYGbyf4P9zGu9KdyASP53FahK68WfX34fOuPLGPYJ+LpsKkzo37DRDc70YEoIJUK
+         AUxjMmMSTilP9BPChAA1sVoInJlPbDRZ23WY+YU9B+CrDs/1oCZe3wUeo+8fZeroDs2U
+         AmZJi0yjoLkzTK5u0UT+uYL9JAhBAJ/2ViaXYbR0592N0SN8PpXAsRYhEccq2pONp+3Q
+         vOLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeD093Stljwz/qeB2g9ivszZ4mchXMmV624bCZPmF9JLZVNblD0PsK75w7dQ8Y2SZ7Tx+3fJAvC0guV1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEOMCuNQaDnv0G+zhxDAUNn4iEhjImy5/CuPW9OandDXtJYpvM
+	kY31321bjim+tS+j1P0crE7bSB8EcbSAqWsykzUoyytSNTM/nHbCC2PjMa51hPTB9rH+D3HByv0
+	xcDQ=
+X-Gm-Gg: ASbGncvfKtFx0iEseAlQUB2zmF1XTe0x5ZY5GnVqjGW2FU96y0HpJM9CEsx5A5wxq4Y
+	rtiIKDtniNojaZzb0dspQ1kuoZAprevehwalj38pH3dVtdq4QMgjpJIwqbFQNKnEFp3jaVqo5d4
+	M+EQiVUSbo2V5TTEDgUbo70UXObihcGzKaJLT0WfrHZFzLPiguJpAZLBQFIRK3gCIBz7StGA48G
+	20KIuvaFbhxWViYgu1E008/hc4oiP5a2JQgDPpK9ejtQvQQG0hl1+PTNlSFpkZewRuCTNGfJqP/
+	IFXiJ2Z8j2NdqyC2OjlMy3kVryF9iIaJb027EaKcCnV02y9QzM5O5q3Kr2c1x3Z1prsd1IHlgXS
+	tvScAUqEtdD5KtFnht0s=
+X-Google-Smtp-Source: AGHT+IFJk0gn2Y3dKhWc3pdhP6/fnoHggpA9+Dt/AssUIqPkRx2PlFX9KNpf7G7AZbo7eFSKogQnog==
+X-Received: by 2002:a17:903:1988:b0:234:f182:a734 with SMTP id d9443c01a7336-237d9954d7dmr24314205ad.31.1750398501768;
+        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
+Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:8f2b:74f7:bc26:564e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83937bcsm9215265ad.43.2025.06.19.22.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
+From: Naoya Tezuka <naoyatezuka@chromium.org>
+To: Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Naoya Tezuka <naoyatezuka@chromium.org>
+Subject: [PATCH] pstore/ram: Validate ECC parameters against Reed-Solomon constraint
+Date: Fri, 20 Jun 2025 14:47:57 +0900
+Message-ID: <20250620054757.1006729-1-naoyatezuka@chromium.org>
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] dt-bindings: iio driver: Add BMP390 pressure
- sensor device tree binding
-To: liquancin.mereenamathai@in.bosch.com, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, jic23@kernel.org, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, vassilisamir@gmail.com,
- marcelo.schmitt1@gmail.com, javier.carrasco.cruz@gmail.com,
- Xu.Zhang@cn.bosch.com, Maoting.Bian@cn.bosch.com
-References: <20250620045456.1151-1-liquancin.mereenamathai@in.bosch.com>
- <20250620045456.1151-3-liquancin.mereenamathai@in.bosch.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250620045456.1151-3-liquancin.mereenamathai@in.bosch.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/06/2025 06:54, liquancin.mereenamathai@in.bosch.com wrote:
-> From: Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
-> 
+The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
+BUG_ON(), where `n` is `block_size + ecc_size` and `m` is `symsize` for
+the pstore RAM backend. A driver providing invalid parameters can trigger
+this, leading to a kernel panic. For more details on the theory behind:
+https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
+This issue was discovered during develop chromeos_pstore driver:
+https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
 
+Add a check to validate this constraint before initializing Reed-Solomon
+codec. On failure, return -EINVAL to prevent the panic.
 
-> Signed-off-by: Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
+Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+---
+ fs/pstore/ram_core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index f1848cdd6d34..c7a2ff9c5a6c 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -212,6 +212,14 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
+ 		return -EINVAL;
+ 	}
+ 
++	if (prz->ecc_info.block_size + prz->ecc_info.ecc_size >
++	    (1 << prz->ecc_info.symsize) - 1) {
++		pr_err("%s: invalid ecc parameters (block_size = %d, ecc_size = %d, symsize = %d\n",
++		       __func__, prz->ecc_info.block_size,
++		       prz->ecc_info.ecc_size, prz->ecc_info.symsize);
++		return -EINVAL;
++	}
++
+ 	prz->buffer_size -= ecc_total;
+ 	prz->par_buffer = buffer->data + prz->buffer_size;
+ 	prz->par_header = prz->par_buffer +
+-- 
+2.50.0.rc2.701.gf1e915cc24-goog
 
-A nit, subject: drop second/last, redundant "device tree bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
-And drop driver. Bindings are not for drivers.
-
-There are several issues in the binding at first glance, but I won't
-review it due to lack of testing. Look at other bindings and don't
-repeat common mistakes. Just take other RECENT binding as starting point.
-
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
-
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
-
-
-Best regards,
-Krzysztof
