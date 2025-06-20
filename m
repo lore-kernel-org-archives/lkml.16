@@ -1,150 +1,103 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BEC28934A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4521283FEE;
+	Fri, 20 Jun 2025 11:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417348; cv=none; b=NGzL34vSObrQANB/DyDXv5qLUnr4IrmRSjPy2VQ5opAI4rxjISe3rQA/Px7gkxPQWBTkZYeTcHY3Qlde3moKg0hoNXYz5pEcxQ26UXi0Wn+21xvx6ZTQD/Dhw8vXuziq+sKCLwTfVD3GQCp1eeU8RUuAybsZkaR72HeItYG7IA0=
+	t=1750417385; cv=none; b=anVLUP/yThPWaJJq+1/hffJt/x1w9XIKfLShfQjlyljfzV0qdSowFpKdvWFpbvXcPFun4XxZ0hIryu1Miwfli1B7cLI6X4sqUYBYmyt2VvVT5vPEXWeaeJ73fm87T4QsYsn3DTcbU/m3xKgtys7joB04JljK15B92Kd9WM1aYgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417348; c=relaxed/simple;
-	bh=iKD3mOzrfDWywd4Zfuvy+Y9C7Kn49H/mvCcbac8muPY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mKjTdKQuzWog2qnFFOT8L9rXwc4xh0DCNFDRSbI8MKicasWrbAFcQXnAlgVhbFQ70kVPH58iR/GC29mX3q+h/3ZbxJ1Qcn1qxvuo11yj42JfL2VXFXyEhI9v+3ep+mlSyinzPnjA8HCoxSdcIKx+lEJma1BHJLViiDZnXjhdiiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-87595d00ca0so128514939f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:02:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750417346; x=1751022146;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SjmGfFdQ3OW7xmT/wki6+bin2IsFnsHG1ciZdNAwxz4=;
-        b=ZKFpnSVpQR2020Tx711Rww7sgeES1cpzDTy3U7tZp96y017YsVz3kLHg4oxgKbLSuc
-         bAtBs/UwlZr6qX2guvbVVFBX1P2PaVbF0eCiEnKl4J2bMCztMzcBXn8ZHmD/o6KMWHla
-         /UZyxmEr6me6BfYg6EmR7FGJRkYm7fhQ0f7uT4UU3Z44M73/W5RDMef86c/QWVvisyhn
-         Cezugz+YXVaK0jOgY5ofDPm6CoYsHluzDh7NgnFs6twy0F//Jf65wcI9KMo+Sy2qGI6A
-         p5bs09GIo06L998zpeCEMOeyChUxFrO60vFymxJ6wrwDTSjEjMC0vfF+ACSgyZfuVOOa
-         FDeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXidpuzLhAC2rksKTwr7/iH61KTrJvruLZ0LF4ORRjgzYSubFXS5sdQ6KVw/e/PmR8cOvJs/45GFnrwDG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQxBmUz/TgaKsrJ8IvgDeRsRl25t+YNwwCBKzeYu8uUndhO/cm
-	v6mSLgSTuutwdLGpcKPmzMH+6g3TnwDCu4yEFoASpJ5DNttgW2UzEJ2djmuosMX4HU+6EFjHepK
-	HGD4YAnXfaPWgAR8Tkznu43gHHNd4vmX6xM64Vtbd/N+VqEY0rn+ckV7a7Hg=
-X-Google-Smtp-Source: AGHT+IF9BaVS6lJ2URCIGUDTxUO/JdHanbROVlj+8/hRjlRnpgM/ucvo/8p6DFj7zif39oqhi0C3+/Y7bGmGvuKR/KMn+UcNACPb
+	s=arc-20240116; t=1750417385; c=relaxed/simple;
+	bh=VyKy7ZblJIux9A8nr4UKOBkLEzekMiA4P1J54fnWw9I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e6zIATmspK97F5GwzCAInHx1yodyjZKAHdY3c5ZaUaeTLXukRDT7hPBB4uI6YgZIqy86M0X9ykEEC1RKr9DkIDxXnqpxNnDeMn7XGNU6fXnL0SzqPwxivmwnlolcDxm+Hwi70mLGnEGGZrArDmiOjMxBbJHe7VLwRQXKu3lgbMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1UYH/jTm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y4ReoX7H; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1UYH/jTm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y4ReoX7H"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750417379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oGBO/Bsd9Ek7GSchB/P0tD6LqkXEF7CldRyZjA/Vzn4=;
+	b=1UYH/jTmoqNtisk0sd6H+kx4BMUL36RaQo3TE7OpOaUw0b5Na7GpkCvL2ZRMCBOKTvmGy9
+	YZukfkqX1aUw05oJkVzmgo27Rq6CTXb7upgl81qsHiJ3Xd2kNGTPsJGTU3aJP+SnICrE0e
+	A/LK6ZQaulEAv9qIhaF7MI7ZGvmvIItWtRwaTfbewMmGqzWF7phhDOZA75R2qFq2L1xbJ0
+	Y99zE2Zv5/3w8PAqaTC1rEtk0Ej2tg4I3y+yL6krKXqxCCGWJnpUusoacDIkyQJ4nQ85T5
+	vD3bD72YqPd/bV1Rb5rRDC/qnq8Etk18fUGY/H/JpWRtsEdoLRREClNoDBWGag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750417379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oGBO/Bsd9Ek7GSchB/P0tD6LqkXEF7CldRyZjA/Vzn4=;
+	b=y4ReoX7HpOtcCFEmySKh4pv1Io1/H2aWd803okTb2PyIjrrl4hheYhuxdiRInoT8Q803gQ
+	a8LinyR3edIM5UBA==
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Shuah Khan <shuah@kernel.org>,
+	Luca Boccassi <luca.boccassi@gmail.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH] selftests/coredump: Fix "socket_detect_userspace_client" test failure
+Date: Fri, 20 Jun 2025 13:02:52 +0200
+Message-Id: <20250620110252.1640391-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2703:b0:3dc:7f3b:aca9 with SMTP id
- e9e14a558f8ab-3de38ca2cedmr22167895ab.14.1750417346068; Fri, 20 Jun 2025
- 04:02:26 -0700 (PDT)
-Date: Fri, 20 Jun 2025 04:02:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68553fc2.a00a0220.137b3.0048.GAE@google.com>
-Subject: [syzbot] [kernel?] BUG: unable to handle kernel paging request in netdev_unregister_kobject
-From: syzbot <syzbot+59e97f6296ecdc571f71@syzkaller.appspotmail.com>
-To: dakr@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+The coredump.socket_detect_userspace_client test occasionally fails:
+    #  RUN           coredump.socket_detect_userspace_client ...
+    # stackdump_test.c:500:socket_detect_userspace_client:Expected 0 (0) !=
+=3D WIFEXITED(status) (0)
+    # socket_detect_userspace_client: Test terminated by assertion
+    #          FAIL  coredump.socket_detect_userspace_client
+    not ok 3 coredump.socket_detect_userspace_client
 
-syzbot found the following issue on:
+because there is no guarantee that client's write() happens before server's
+close(). The client gets terminated SIGPIPE, and thus the test fails.
 
-HEAD commit:    39dfc971e42d arm64/ptrace: Fix stack-out-of-bounds read in..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=15af690c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=941e423b930a32dc
-dashboard link: https://syzkaller.appspot.com/bug?extid=59e97f6296ecdc571f71
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+Add a read() to server to make sure server's close() doesn't happen before
+client's write().
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ee1a7942f1b9/disk-39dfc971.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5b94ed3d0f7e/vmlinux-39dfc971.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9ce219d3314e/Image-39dfc971.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+59e97f6296ecdc571f71@syzkaller.appspotmail.com
-
-Unable to handle kernel paging request at virtual address dfff80000000000b
-KASAN: null-ptr-deref in range [0x0000000000000058-0x000000000000005f]
-Mem abort info:
-  ESR = 0x0000000096000005
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x05: level 1 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[dfff80000000000b] address between user and kernel address ranges
-Internal error: Oops: 0000000096000005 [#1]  SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 7660 Comm: kbnepd bnep0 Not tainted 6.16.0-rc1-syzkaller-g39dfc971e42d #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : klist_put lib/klist.c:212 [inline]
-pc : klist_del+0x4c/0x110 lib/klist.c:230
-lr : klist_del+0x28/0x110 lib/klist.c:229
-sp : ffff80009e977720
-x29: ffff80009e977720 x28: dfff800000000000 x27: ffff0000cda2c028
-x26: 1ffff00013d2eef4 x25: ffff80009e9777a0 x24: 1fffe00019b458e5
-x23: 1fffe0001ed3f28c x22: ffff0000cda2c728 x21: dfff800000000000
-x20: 0000000000000000 x19: ffff0000f69f9460 x18: 00000000ffffffff
-x17: ffff8000892f3474 x16: ffff800080520d04 x15: 0000000000000001
-x14: 1fffe0001eb56768 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001eb56769 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : 000000000000000b x7 : ffff800080c3eef0 x6 : ffff800080c3b260
-x5 : ffff0000cded8998 x4 : ffff800089214348 x3 : ffff800080f87888
-x2 : 0000000000000001 x1 : 0000000000000004 x0 : 0000000000000058
-Call trace:
- klist_put lib/klist.c:212 [inline] (P)
- klist_del+0x4c/0x110 lib/klist.c:230 (P)
- device_del+0x234/0x808 drivers/base/core.c:3858
- netdev_unregister_kobject+0x2bc/0x3bc net/core/net-sysfs.c:2308
- unregister_netdevice_many_notify+0x1934/0x1fac net/core/dev.c:12112
- unregister_netdevice_many net/core/dev.c:12140 [inline]
- unregister_netdevice_queue net/core/dev.c:11984 [inline]
- unregister_netdevice include/linux/netdevice.h:3379 [inline]
- unregister_netdev+0x15c/0x1f8 net/core/dev.c:12158
- bnep_session+0x208c/0x223c net/bluetooth/bnep/core.c:525
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-Code: f9400268 927ff914 91016280 d343fc08 (38756908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	f9400268 	ldr	x8, [x19]
-   4:	927ff914 	and	x20, x8, #0xfffffffffffffffe
-   8:	91016280 	add	x0, x20, #0x58
-   c:	d343fc08 	lsr	x8, x0, #3
-* 10:	38756908 	ldrb	w8, [x8, x21] <-- trapping instruction
-
-
+Fixes: 7b6724fe9a6b ("selftests/coredump: add tests for AF_UNIX coredumps")
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/testing/selftests/coredump/stackdump_test.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/testing/selftests/coredump/stackdump_test.c b/tools/test=
+ing/selftests/coredump/stackdump_test.c
+index 9984413be9f06..68f8e479ac368 100644
+--- a/tools/testing/selftests/coredump/stackdump_test.c
++++ b/tools/testing/selftests/coredump/stackdump_test.c
+@@ -461,10 +461,15 @@ TEST_F(coredump, socket_detect_userspace_client)
+ 			_exit(EXIT_FAILURE);
+ 		}
+=20
++		ret =3D read(fd_coredump, &c, 1);
++
+ 		close(fd_coredump);
+ 		close(fd_server);
+ 		close(fd_peer_pidfd);
+ 		close(fd_core_file);
++
++		if (ret < 1)
++			_exit(EXIT_FAILURE);
+ 		_exit(EXIT_SUCCESS);
+ 	}
+ 	self->pid_coredump_server =3D pid_coredump_server;
+--=20
+2.39.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
