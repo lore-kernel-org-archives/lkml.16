@@ -1,140 +1,166 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EC0220696
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0790220696;
+	Fri, 20 Jun 2025 12:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422474; cv=none; b=sGG8xumUnRetSaS90nRvgzpnZY8LBZoktRcrYyUA2d+/6ALZq+mUmSpkdl5PImAMORw2v/IHSpqwHBph5JjDW0pE8fPmde/yvrqwJSAVEuPWu2aFzlQGARfwTN0MAgZ74QaQqQHMlASE2VJyutmcVIwchiRtLeeOSKIbDuDRDWM=
+	t=1750422531; cv=none; b=oddl1Wy0X2yZEAPNFt4LQbayEA0pgodjHJsaaCwohrSB0S3ACTrlmZZpo7hmeOSOiNyvndB8xM0qXOplHovMLANqykJW0YvZXgO7pNA0Dhk4+bPTC3DJiN7N+8badjyg1WnVKziR3L3x7ZNsjQVOFcPrTfv5kMnnFZp7Et9aFmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422474; c=relaxed/simple;
-	bh=+X4HipRIq+J2ON+qLoXQtPdB6JpfFCAxFh5A9SABbH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Om7eIwSw22+70jeQj1Jkgr+QhXZJBJMMkyGgU9MJN3W3u3OwbeaqPWbhGVSiuGmRX0RptUA/NSjUyWutJk3S4rD9t2/RGu8Kt3v2utAlzd2vzS56OcSHM6KVH9USJL0zGj2XCh1Tlt64EeEYMlqKPMsWiqI4aNCRwEwyyuxcCfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDhQBldA; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750422531; c=relaxed/simple;
+	bh=7nPhNMyXqRY92E+lzth6jsH7dnJ4KYzBBljDG+AN4gw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=iGdkrx5DVJy5wDRx+40pHVF6w1HTV8+/4oDciQaCfB6KfUPdUJyRyoiOxmJhFRjMOL2sS3NWrJ3vCQFFXkOkbF9+g3xMoCaLqoYoTmXFwCJgvxo/IzBIv0RcjWgKd4E6sXireUiau9zgZmqaBrxBEAxMJzezY4To/o872a6PWHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJeZeYdD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDhQBldA"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2353a2bc210so14970715ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750422473; x=1751027273; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QEocjAYqKEkY+hSTJFMKsjk9/XRXyymLEZn31502qxk=;
-        b=KDhQBldAEXxSVA5VuENMis5tRdoj9rTOiNPX0ppsR7hPCZdUK6DxDg5/pRajrYve5D
-         G+Vausd1qodSvv7JFBUEY4+ie+pT8XtE2tQfKJ2mPh7HaBh4fUKHgQzstnBQD2zG4H81
-         kK+mP6uYD56mCPR/ad/dWR8syXVchi1VYyp6sdvB9OoIpWACkza1ZXt/uLObq7B34u82
-         vyABFXE7tlG1lz8Zi4qDYU7qlIPECcqt3vBpqMHZRUMOLZn0sH3c5lKjS7fKtZ03yevV
-         Fy5JxbZeRuOWiuODK9tCLCmCLBygA3wMfuRW8sK+dDAH01+xEq7vqsgRrQqYY2w6QMFo
-         MmXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750422473; x=1751027273;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QEocjAYqKEkY+hSTJFMKsjk9/XRXyymLEZn31502qxk=;
-        b=C+z/6CU556woiTCwcIcE5JCEr+so6TEjtwMYsxdJq7ggKqcc6GYGdDCTG+5Gk1YHCw
-         998c9enJFfhY9ItZcYSC/89IxMobbvAjdRdPCTkti48jWFQteaqiUDjVqPTHj1seTLrD
-         QuZFBQ652EaGooYDbJ0Ffu9GBdoeCq6YEZyG+9OFtS3AFhXW6eG7XUZmup/EXMYYR10n
-         9Wk0pL7zgMUKEF4hWG3AkDxB9KK+PjPbQNGf8eou8pvlBgMYyjDAJiCiI+/wcWhROccD
-         qqhK0UDJ94TU4BqqrkmF9ZmXCFAz7I1bg+IbHCw5ywPgxTgtLEbWkCv6hsyRIWogN4kw
-         9PZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqyhhtHiOz+SYP99e17RRMQo7RVDamcEBT/TozagRPG1yIciaP/OIDSyY57GH9rOqcHbAYnZ128CkS3Lg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjDjuMVnyCBYP4BeRy8bQNxgHFLTgxvCstUysog7ypci/XOJyS
-	Confc7gYCWaFm0N0aajGxnWhpuKh+xthkrHxMjNYVEr4AM0lgXvvze12z9QOSjBM
-X-Gm-Gg: ASbGncvffjBGdy4bvEDgQKA3Wi1xiIsmm8ixm+5s9SJrxqh9UaOjBZvswGmwzi7MnGd
-	rMFgFvptk3z2l751sxQH6tB65no2cMz46DC0RhyOHBmN1USw5vtq+uCXQoyASgLrZGrdrna18mG
-	SwBLCPSrSzWDLsEEJ3yW8z7p7gY/cGtL2bK37yhOgv/7mwp40z5OTf7BTw8fMweUfRldPWpnayV
-	HSssHYjGVw+ZF4V1Gyn+x+Lj93cScZTuw6E2xXSsgKcfeIm8VwF58bbkzI112PqSB4rRRkiegOZ
-	IEbBmW/JvYo/1jZD2uB/lq7uXYddgwryQmpdZberEIxHy0EMQ/REKgsM81rpvR/+18IVtvzyxbF
-	hLeXEXNjn
-X-Google-Smtp-Source: AGHT+IEnXi6DBx0CYmyTvYOiLCXe6zhbTcGB7f/MIED+yLrawXV25RkssTAqsM1VJ+h9BEOJeGr6lA==
-X-Received: by 2002:a17:902:e842:b0:235:7c6:ebd2 with SMTP id d9443c01a7336-237d991f9f4mr44340985ad.31.1750422472749;
-        Fri, 20 Jun 2025 05:27:52 -0700 (PDT)
-Received: from shark.hitronhub.home ([2407:4d00:ac00:1c13:9629:b33c:2fa:30fa])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83d101esm17622575ad.64.2025.06.20.05.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:27:52 -0700 (PDT)
-From: Shou-Chi Chen <tuxsogi@gmail.com>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org
-Cc: dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	linux-kernel@vger.kernel.org,
-	Shou-Chi Chen <tuxsogi@gmail.com>
-Subject: [PATCH] sched/deadline: Fix typo "a entity" to "an entity" in comment
-Date: Fri, 20 Jun 2025 20:26:30 +0800
-Message-Id: <20250620122630.1113563-1-tuxsogi@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJeZeYdD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906ECC4CEF3;
+	Fri, 20 Jun 2025 12:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750422531;
+	bh=7nPhNMyXqRY92E+lzth6jsH7dnJ4KYzBBljDG+AN4gw=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=tJeZeYdDuh/fSbZt/FDky6SBNqceJ/TGmMe4ucAVxvtfSeMueGEbD+tZwHfDfNYyK
+	 /iORBPFTbs1RWlVp0ZUrvrs4hOo3yICq8i/AYVPq6AI2jJkZA98IYVYCxi9J3xLvZJ
+	 FonAz0myhZ/31NIyNWcyi8MCg1C7EWc9hQyEynw000ZF0aQXMYQKSl+hv27BBwdBpi
+	 Fkbe9uZX+qoZtbOAWrXVHpOUelDnBtpBMvXQnzj805vNukEKb8mVHmWaz9s4EOJi6Q
+	 sQnLcohjfrY9606K1bdBTOqm4GJYbtVWSsufHzT2dwJw/zlQ4sEm3P04x8+Kuym8da
+	 vxmJ3TWy5d0lQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 14:28:44 +0200
+Message-Id: <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
+ Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
+ Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
+ "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
+ <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
+ Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+ <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
+In-Reply-To: <87ikkq648o.fsf@kernel.org>
 
-Corrected a grammatical mistake in the comment of deadline.c,
-changing "a entity" to "an entity" to conform with proper English usage.
+On Fri Jun 20, 2025 at 1:29 PM CEST, Andreas Hindborg wrote:
+> "Benno Lossin" <lossin@kernel.org> writes:
+>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+>>> +/// A wrapper for kernel parameters.
+>>> +///
+>>> +/// This type is instantiated by the [`module!`] macro when module par=
+ameters are
+>>> +/// defined. You should never need to instantiate this type directly.
+>>> +///
+>>> +/// Note: This type is `pub` because it is used by module crates to ac=
+cess
+>>> +/// parameter values.
+>>> +#[repr(transparent)]
+>>> +pub struct ModuleParamAccess<T> {
+>>> +    data: core::cell::UnsafeCell<T>,
+>>> +}
+>>> +
+>>> +// SAFETY: We only create shared references to the contents of this co=
+ntainer,
+>>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
+>>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
+>>> +
+>>> +impl<T> ModuleParamAccess<T> {
+>>> +    #[doc(hidden)]
+>>> +    pub const fn new(value: T) -> Self {
+>>> +        Self {
+>>> +            data: core::cell::UnsafeCell::new(value),
+>>> +        }
+>>> +    }
+>>> +
+>>> +    /// Get a shared reference to the parameter value.
+>>> +    // Note: When sysfs access to parameters are enabled, we have to p=
+ass in a
+>>> +    // held lock guard here.
+>>> +    pub fn get(&self) -> &T {
+>>> +        // SAFETY: As we only support read only parameters with no sys=
+fs
+>>> +        // exposure, the kernel will not touch the parameter data afte=
+r module
+>>> +        // initialization.
+>>
+>> This should be a type invariant. But I'm having difficulty defining one
+>> that's actually correct: after parsing the parameter, this is written
+>> to, but when is that actually?
+>
+> For built-in modules it is during kernel initialization. For loadable
+> modules, it during module load. No code from the module will execute
+> before parameters are set.
 
-Signed-off-by: Shou-Chi Chen <tuxsogi@gmail.com>
+Gotcha and there never ever will be custom code that is executed
+before/during parameter setting (so code aside from code in `kernel`)?
+
+>> Would we eventually execute other Rust
+>> code during that time? (for example when we allow custom parameter
+>> parsing)
+>
+> I don't think we will need to synchronize because of custom parameter
+> parsing. Parameters are initialized sequentially. It is not a problem if
+> the custom parameter parsing code name other parameters, because they
+> are all initialized to valid values (as they are statics).
+
+If you have `&'static i64`, then the value at that reference is never
+allowed to change.
+
+>> This function also must never be `const` because of the following:
+>>
+>>     module! {
+>>         // ...
+>>         params: {
+>>             my_param: i64 {
+>>                 default: 0,
+>>                 description: "",
+>>             },
+>>         },
+>>     }
+>>
+>>     static BAD: &'static i64 =3D module_parameters::my_param.get();
+>>
+>> AFAIK, this static will be executed before loading module parameters and
+>> thus it makes writing to the parameter UB.
+>
+> As I understand, the static will be initialized by a constant expression
+> evaluated at compile time. I am not sure what happens when this is
+> evaluated in const context:
+>
+>     pub fn get(&self) -> &T {
+>         // SAFETY: As we only support read only parameters with no sysfs
+>         // exposure, the kernel will not touch the parameter data after m=
+odule
+>         // initialization.
+>         unsafe { &*self.data.get() }
+>     }
+>
+> Why would that not be OK? I would assume the compiler builds a dependency=
+ graph
+> when initializing statics?
+
+Yes it builds a dependency graph, but that is irrelevant? The problem is
+that I can create a `'static` reference to the inner value *before* the
+parameter is written-to (as the static is initialized before the
+parameters).
+
 ---
- kernel/sched/deadline.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ad45a8fea..e1c0a2443 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -848,20 +848,20 @@ static bool dl_entity_overflow(struct sched_dl_entity *dl_se, u64 t);
- 
- /*
-  * Pure Earliest Deadline First (EDF) scheduling does not deal with the
-- * possibility of a entity lasting more than what it declared, and thus
-+ * possibility of an entity lasting more than what it declared, and thus
-  * exhausting its runtime.
-  *
-  * Here we are interested in making runtime overrun possible, but we do
-- * not want a entity which is misbehaving to affect the scheduling of all
-+ * not want an entity which is misbehaving to affect the scheduling of all
-  * other entities.
-  * Therefore, a budgeting strategy called Constant Bandwidth Server (CBS)
-  * is used, in order to confine each entity within its own bandwidth.
-  *
-  * This function deals exactly with that, and ensures that when the runtime
-- * of a entity is replenished, its deadline is also postponed. That ensures
-+ * of an entity is replenished, its deadline is also postponed. That ensures
-  * the overrunning entity can't interfere with other entity in the system and
-  * can't make them miss their deadlines. Reasons why this kind of overruns
-- * could happen are, typically, a entity voluntarily trying to overcome its
-+ * could happen are, typically, an entity voluntarily trying to overcome its
-  * runtime, or it just underestimated it during sched_setattr().
-  */
- static void replenish_dl_entity(struct sched_dl_entity *dl_se)
-@@ -3104,7 +3104,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
- 
- 	if (task_current_donor(rq, p)) {
- 		/*
--		 * If we now have a earlier deadline task than p,
-+		 * If we now have an earlier deadline task than p,
- 		 * then reschedule, provided p is still on this
- 		 * runqueue.
- 		 */
-@@ -3123,7 +3123,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
- 	}
- #else
- 	/*
--	 * We don't know if p has a earlier or later deadline, so let's blindly
-+	 * We don't know if p has an earlier or later deadline, so let's blindly
- 	 * set a (maybe not needed) rescheduling point.
- 	 */
- 	resched_curr(rq);
--- 
-2.34.1
-
+Cheers,
+Benno
