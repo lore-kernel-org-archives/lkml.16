@@ -1,129 +1,105 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC39D238C16
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED4923AB87;
+	Fri, 20 Jun 2025 21:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750456279; cv=none; b=hMZQv/203g3ypphnRQtTSp4JmRsfVnHMOYWIW+Mbq6/1IlSjh9SXMKkiPt6RawZ8kuYYc0qGs/2WFZKJGohJNqOJDKRJWhLgojvHR++2pYglwdAXr96xzV93+h3lQuRzmz42yncz/lPgNawo+WX3jxSxIR037XTNxKjhacC8apw=
+	t=1750456301; cv=none; b=XNf1nNX24zhZTxXeq7Kgx6DBV+qg+AyO/bIbOlytxhw7C17yJYScDK1VRod8dhk9suiDzlno1Tvqz79958cSYCi4A+bhQZ/WEHRI6hSW5rE+Yhw5nZrILfmK4fnDhjjSfl5ncsuU+a8MLcNiXyxoAJnOgat9yqIO60OO9aETkzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750456279; c=relaxed/simple;
-	bh=bfITkeYShQSWbkf0r8/RmW2u9c17/1b7cuwuM7i5gDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pLcKO+/xsMoVeYLiNYQQ+LZCKS6mz+fpTcYzTDcDaQojdesMXKvQJQiixoe31DvO8dhBdY6NSxUZzpRj/8pXAK89E3kzSrG9o8Lc3dXSFs85X43tiPWSRID5zJFMKY2Z7237iX9/UE9AB33UC8Mo9hOh0R/s63m4XxcaC6upTGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TxKhxVPY; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750456301; c=relaxed/simple;
+	bh=yyT37FVYMxc3pvsuybNv+R5u392ufUHT5onLtkknmoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nStL+GRVMm1HUfAYbTqc2lBjjXsPq7dWOtRK7OX95Bj38qcHOkqRdtxWNJUiVlNqgaNxGr1Nel28A2psPzMbuCsehe2dR1ewfRR/4kpsDRfDql6UtpgTNOzTppP0HMBEyUMaLW8jtncqS9PSsoZ5Qj+TL+wfflQfkutanenUkk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BUF2JKH4; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxKhxVPY"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-4080548891fso624385b6e.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:51:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUF2JKH4"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-7111f616c6bso3000747b3.1;
+        Fri, 20 Jun 2025 14:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750456277; x=1751061077; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qciZZcm9ZhGrH66JTdpjaM1ur/fzC7K8oAKg3h0lmsU=;
-        b=TxKhxVPYG2lPfAIdx9xs2zsDK8uffCoBgDvFnVp8PEngdvZ5YABKGMDX+CdnWBF53i
-         vrms6pFociO0hcL0frT7nSkMOA7dRzOc2Nu04J/u4Ym8mg4mJ42iKUbc+k4A8sTkcLOK
-         PaVLmJB4oDennFVNLGUtxB7iN7Uu0EvP05hpShNhOzSICkblLlInmdZKkPkaEqLDZu6S
-         jVx2xpchcATeKYOOXkZgIAh5VJ7WDZ7RFLRrOrJcYpFRFL3JriqPLnrs2/OnkEqRg6f+
-         pxwHbMrflgI+1dgxhg7hNZMDLETenI+wSxQP7l+mZbT2U+vzZidzfw3S6qQNWOoSoTcW
-         o9XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750456277; x=1751061077;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750456297; x=1751061097; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qciZZcm9ZhGrH66JTdpjaM1ur/fzC7K8oAKg3h0lmsU=;
-        b=qnbCmOhuHiOK1bpZRMkKg+WwIVlIBeaygb3vjhCdr2Gtgkb8HID04YEXW5oLTxZWkl
-         SOLfIthwE7noVNl4FlhVzyzqakXN7uWAT49TEJ31vf8CS/2V5dQatR7ljcS8FCkgy3zh
-         8xPEXFyjV02PmHqsolRIdOXdsEMgqohWT3TkXZWhJl+n1aGD+fRwqHuRazOVVmeuRrzi
-         X/BdeQDDTK3hoTD6+gMed+LUS/4JhyOlFyMNXLXJtu8khme1Zd9p8RRFvEunmNKOgdtI
-         2kq1ndnRMdF2BvvJaIidr6m81+WeVb2PudWkiIoT/TM2YK8Ef9M6J+eggKX1fY78VNYr
-         ReYA==
-X-Gm-Message-State: AOJu0YzKnzxs5la8c+LFUpNL/eWnoxf/AwKa/0zvKar1o0Cl8aNifZ1o
-	k3qhcSvTv0sqO5wr6FOHhEXvGX0FODY3HIdBSF2zrARx3uDULbc4fxMwEKpq9E+Yk/A=
-X-Gm-Gg: ASbGnct4Y2J+agcBoLVmAgz50J3YqisMFXtkUFzyKiDe6zN6L4PSTv68D8n/iaWvc3i
-	mEuo1oyeiOxlcr91oUywRXFmodaKWwkW840ogjeUadp55jTNaKo6I34QNFZLdgzYyAfIESy9P2G
-	AP38RE32lCpEAo8nRvl07QnPm/wKKrr+7KahonMRbZvfLof2VGtVMxR0VmBYUl0jMRw/Gnmn+Wg
-	TYzWK58/PSrw5m2M6w6l69Z0CxECoDJLZrLVI6Pzzvyea2Dkc59CejoDhipXoZOJ6/mSLM2iGBc
-	lcYmUjGH61XIdp205MlNwHJ9RkOy7wElisg/S2sJ7onjTNnoJu5DPPTIeK8rrVh+iEQtSQ==
-X-Google-Smtp-Source: AGHT+IEUKt2T8NPo19dPeOycUEZfJIdPu2BwWVzJ6tGEwvl4xQ4AjLwthY3jfBkPvwEIgCaF/ro8vQ==
-X-Received: by 2002:a05:6870:af42:b0:2d5:2955:aa66 with SMTP id 586e51a60fabf-2eeda4e114emr3105643fac.1.1750456276972;
-        Fri, 20 Jun 2025 14:51:16 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:35a7:a70f:9610:a99b])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6115b7c909esm342923eaf.27.2025.06.20.14.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:51:15 -0700 (PDT)
-Date: Sat, 21 Jun 2025 00:51:12 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, etienne.carriere@st.com,
-	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
-	d-gole@ti.com, souvik.chakravarty@arm.com
-Subject: Re: [RFC PATCH 5/7] firmware: arm_scmi: Add System Telemetry
- chardev/ioctls API
-Message-ID: <6fa26a61-1f61-4ab0-8b7d-caeae7eb801e@suswa.mountain>
-References: <20250620192813.2463367-1-cristian.marussi@arm.com>
- <20250620192813.2463367-6-cristian.marussi@arm.com>
+        bh=iJHMifKVc+SOcf+N/mU5T07qJGJW3LDfk0F+0ysQoRc=;
+        b=BUF2JKH4t9mONas2Pj8tkiKCpnMSx4LthiSZSePpNC8tM7b0ppvlT/bXfy8FnC3VZe
+         Q33kehDcsC94lL87qWVsJh1VIqMHsVYBQHVHwT+LQpgzSAS2lkL7BK2zTw/Six/370ir
+         GDBstLrDrIVrN9I6+uHDXzzvtOYfhaIXbhM9MAk0O3WGzsKNt8xrwue9347wX6pSiYpb
+         Ppk5uZ8XokAaTJ6jZkYX3f3GkSKa+40SSiaVY90XgjLDOaXJzMm5oN7Tr8Cse4DLNM0A
+         EnRRsrf4WO3/17ZWB/BwPu6z9bhlHhU+wXC0/ryvV4Jdiq4jvjusauhfrAhwFcyTtZs8
+         xY+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750456297; x=1751061097;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iJHMifKVc+SOcf+N/mU5T07qJGJW3LDfk0F+0ysQoRc=;
+        b=h6PyADqtTfQlb2KaBW2GNTVWFulgThOsIs6S2aeJSEPldQ5un4FmjRBDXk7bYIWtXS
+         BNOXj8Q3gqEpIopWNBpjZKthzeAuJrKisWzEEAWBRU0TuEDdvfZlSUuYxN3SKldQNSpl
+         IlTZy9XXivR3HLJgBAz6AD82VAOKhqh0xtUDxDu3yDxkSQejm4AVRWRvVPslQ1Tb9i+c
+         xwqk2qTXB+wb/TJnqcTxu0Ssc2IUbbZ1I+5pdMpvsGG0lJlshjqlq8chwkaszRR/2oAT
+         5VMKkRt2pY/jHWL8+2UJ5X0Fj8y1nxNAUD+aQJ+CvV0xJvQjaB0sCKwjBHOd5ACZ7yKi
+         XlWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtxiBM7FyOqQTuEZQrb26nVtnroIQCvOMvhHDaE4l8vds2fmrpQBGtvRb0ZmjkJdtlcV3AWfcf@vger.kernel.org, AJvYcCWzfRU2EpaFummUvVzZzfn0Q9CWVHhNJPOY15ApudGAPBB0EsSiBBueEqjvzR/zLMrCVGm6JGlIIN1InoRY@vger.kernel.org, AJvYcCXGAoca2+EMyR/3RRzBMv2mucktYP0kzuK4v1teCGSk7OpbyosQYNzEvPP0mRI7o8f6qdrV9CDXUYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6yuvAo06Gj05GTKuvR8qioWbHTh42EIHwUVryWAXs5nJf/ex/
+	vSCeKz8Anal6ApxLXEBh2M4v28rJjO3PGZKa0OCE5VtbFmmjqOD/9uQ719cdhKvIIjkS0zceZ2h
+	4mb9/JHI35EOfjJ1XxwUTYQeqUpnB0Dg=
+X-Gm-Gg: ASbGncuHlS0LqMULwfgh54BdOn4ijoUJm9WeDF62fTjEaaJNmfsMk90pd7laYnT+Lg3
+	RA8QvCw342vy17VAlhK9tN3DPdHiCDbIW3tW1mDcoVQpVQ6cNNLBrhpzfZ+XBe0E25OrrtkFffe
+	kOZAXWDmR3tX0ucz11EXV2sXtjjRNJxMeQDjNZ/RsJicWxwWgU7JKvLc0=
+X-Google-Smtp-Source: AGHT+IH2DKA2rSw+dytJIi10/6die2HLD1sv1v3othTe3lp3JFsz1ecHk5GScFEEWVmflAUox1MnHnrI8upf47AUTfg=
+X-Received: by 2002:a05:690c:f0e:b0:711:7256:54cb with SMTP id
+ 00721157ae682-712c6530555mr34978747b3.7.1750456296685; Fri, 20 Jun 2025
+ 14:51:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620192813.2463367-6-cristian.marussi@arm.com>
+References: <20250614225324.82810-1-abdelrahmanfekry375@gmail.com>
+ <20250614225324.82810-3-abdelrahmanfekry375@gmail.com> <20250617181219.GB2545@horms.kernel.org>
+In-Reply-To: <20250617181219.GB2545@horms.kernel.org>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Sat, 21 Jun 2025 00:51:25 +0300
+X-Gm-Features: AX0GCFtUsm3G5TCCAwjsTHaKQv_Kk_OYKf6HQyFZSN2f7zg3KjZrBsbQqMzWN-0
+Message-ID: <CAGn2d8M=Q9DdknYwSUtdb-TMks4CEmMmbNEnSesJA66ahLT7wQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] docs: net: clarify sysctl value constraints
+To: Simon Horman <horms@kernel.org>
+Cc: corbet@lwn.net, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, skhan@linuxfoundation.com, jacob.e.keller@intel.com, 
+	alok.a.tiwari@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 08:28:11PM +0100, Cristian Marussi wrote:
-> +static long scmi_tlm_des_read_ioctl(struct scmi_tlm_instance *ti,
-> +				    unsigned long arg, bool single)
-> +{
-> +	void * __user uptr = (void * __user)arg;
-> +	struct scmi_tlm_setup *tsp = ti->tsp;
-> +	struct scmi_tlm_bulk_read bulk, *bulk_ptr;
-> +	int ret;
-> +
-> +	if (copy_from_user(&bulk, uptr, sizeof(bulk)))
-> +		return -EFAULT;
-> +
-> +	bulk_ptr = kzalloc(sizeof(*bulk_ptr) +
-> +			     bulk.num_samples * sizeof(bulk_ptr->samples[0]),
+On Tue, Jun 17, 2025 at 9:12=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
+te:
+> In his review of v1 [*] Jacob said:
+>
+>   "Hm. In many cases any non-zero value might be interpreted as "enabled"=
+ I
+>    suppose that is simply "undefined behavior"?
+>
+> Looking over the parsing and use of ip_forward_use_pmtu (I did not check
+> the other parameters whose documentation this patch updates) I would take
+> Jacob's remark a few steps further.
+>
+> It seems to me that values of 0-255 are accepted and while 0 means
+> disabled, all the other values mean enabled. That is because that
+> what the code does. And being part of the UAPI it can't be changed.
+>
+> So I don't think it is correct to describe only values 0/1 having defined
+> behaviour. Because the code defines behaviour for all the values in the
+> range 0-255.
+>
+> [*] https://lore.kernel.org/netdev/8b53b5be-82eb-458c-8269-d296bffcef33@i=
+ntel.com/
+>
+> ...
 
-This should be struct_size(bulk_ptr, samples, bulk.num_samples) to
-avoid an integer overflow on 32bit systems.
-
-regards,
-dan carpenter
-
-> +			     GFP_KERNEL);
-> +	if (!bulk_ptr)
-> +		return -ENOMEM;
-> +
-> +	bulk_ptr->grp_id = bulk.grp_id;
-> +	bulk_ptr->num_samples = bulk.num_samples;
-> +	if (!single)
-> +		ret = tsp->ops->des_bulk_read(tsp->ph, bulk_ptr->grp_id,
-> +					      &bulk_ptr->num_samples,
-> +			  (struct scmi_telemetry_de_sample *)bulk_ptr->samples);
-> +	else
-> +		ret = tsp->ops->des_sample_get(tsp->ph, bulk_ptr->grp_id,
-> +					       &bulk_ptr->num_samples,
-> +			  (struct scmi_telemetry_de_sample *)bulk_ptr->samples);
-> +	if (ret)
-> +		goto out;
-> +
-> +	if (copy_to_user(uptr, bulk_ptr, sizeof(*bulk_ptr) +
-> +			 bulk_ptr->num_samples * sizeof(bulk_ptr->samples[0])))
-> +		ret = -EFAULT;
-> +
-> +out:
-> +	kfree(bulk_ptr);
-> +
-> +	return ret;
-> +}
-
+well , Thanks for the clarification , i will only keep patch 1/2 in
+the next post
