@@ -1,155 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610971DC075;
-	Fri, 20 Jun 2025 17:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C33F1DC075;
+	Fri, 20 Jun 2025 17:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750442030; cv=none; b=SmPH2tRAXSzht6RfLW+jEwTe4pKxSgiD2v7Mi2EuXbA4iPct9p9xWX6Q6kg+MkMx4RdUZJY3tc/WxNwfL0T28WVmgvDRuxHuYY3Mh2arTBWlDm1UdZxW312FIcqsd6XQRv9BB0rVsBI2mJYJnFLJKF4m1ZSFo3aqDYmJt8Nl8gw=
+	t=1750442072; cv=none; b=Tpc/PMqTkVXOZ2RgLjtsh+9J2V0MOyDNgIEVYnJ9bP+sGGIH8R6NWwf2Vo8E4biaecGQiXEWLJeADjWC8oenywZiGqt2kHepwrEysUGdGJrvYsWsiSsJWiCdA+idARMGYx8Y1rhJt7MHsU27s88vZtKU1M+0qBhrmwjQKohNHf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750442030; c=relaxed/simple;
-	bh=3r1V8Z/Gp2YPWtaOdAZ8uyXjTfYNapOfK8bg7Thxlvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a34oyMIEH1mLYUaEPuUceojnpKRzghrkVdIGGLfOn+cuO26Funfru1JLF5jZLXrblvbDtDzUVn6o1Rysh74aCREeeBkaQZOSZLNYNtL7OWOGaNwkOxyxV5ioAAh96aFxqUHS5mDhpkwPj9pw19xk+oepTEXHsRn2sfd4m/eO6QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ob4hsDJj; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750442072; c=relaxed/simple;
+	bh=3AOITwQtdLNcGHqTsIj4mSgyifucL4YYBlRM/I0eweA=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Fyj3ECRRYEaO49YxBIlPA8+R7Zqc4zQ0EDGqtSZVZBghJ0O7uwIwAPGGK1r6gGP0ZKstF7H0fWwRwSDDf1CWvlAi+E2HUKJxz/uQrfIA2vcmKxnsnwt/P2xWQc4TPekUKsetYPzJ70Qz8QPyUnFA9ep0bD6DLvdV0gDOwO1KYGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k7FyjgrF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Naw2kSI3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ob4hsDJj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750442029; x=1781978029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3r1V8Z/Gp2YPWtaOdAZ8uyXjTfYNapOfK8bg7Thxlvg=;
-  b=Ob4hsDJjUZ8nkIPf24jtU7O2ACBOA3Mia5VXzNbOqElXwbUuukOMRgK0
-   6Sh31tGxZ7XYw5HbAdfq5wOJ7Kh5HR29CQrxjhH2MbOvza1iXuw7JdJ0W
-   YJGYeWGsUj+965FiyYi/1WVKR6G6B9968gxKbyoqWDan3adw4/IMej+z0
-   LP2uZe1o6AORwYZ9VmdA3tNEeuVP2xGiMtGMhiZcPW5SAnKbVo0MAgP4o
-   FiYoElUSE6BnhTEapaX9YU/wDiHr3T5YElzeAG6fhlsBgXpIzPn5vKVId
-   EjY9R2V1a8qcdZZgQvDy6Pi/r2jI0vWf4OwXdTahKFNiC1ek4H6x0gF73
-   A==;
-X-CSE-ConnectionGUID: TSh0ciRdQpWqqzBXX7Si5Q==
-X-CSE-MsgGUID: JTNBTPPZQAilPrl6eahKKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="75246061"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="75246061"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:53:48 -0700
-X-CSE-ConnectionGUID: EmxsnnN8QjKmRLdf6pTwig==
-X-CSE-MsgGUID: c3uRYrctSaq6g3uPxc3LyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="151111509"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 20 Jun 2025 10:53:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 97CC8109; Fri, 20 Jun 2025 20:53:36 +0300 (EEST)
-Date: Fri, 20 Jun 2025 20:53:36 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv6 13/16] x86/traps: Handle LASS thrown #SS
-Message-ID: <p6nykttpomxtjw4py65ozxpuirviubhmhqu5paa75mnzk75kck@jb43wyhf5sn3>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-14-kirill.shutemov@linux.intel.com>
- <08758240-fd38-4d90-9efa-354274e8bb8e@zytor.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k7FyjgrF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Naw2kSI3"
+Date: Fri, 20 Jun 2025 17:54:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750442069;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=BVBjjX1hbRfc8ehGh7/c987HLQFk/Q8im+szf4eY5+E=;
+	b=k7FyjgrFw5oh3/rBRqZs4czqkMq09AVrq4WUfsI7vxok/gw7Ru6DiMvr4Y1ECbHNvNr5Qo
+	loTJLs5QuJphncdDplEgOw6o377idIsWLOmWfmhO93Z/TTi+7jYh9NwEM/Do4/Yfbsoshi
+	S5ywER/Hq6xIXrnIUGO3ZREU4ym3wJKyFOZzRHFFYuvA8HaWgBfpEmP5DuEk7ZdoMJVBAp
+	YqIPqzjf3/VZbd0DTXDOfs+d/f3CH8SeTKWx/xs2Y+c2xHI7I5NHnaAQx34vKJQW3TzRt+
+	p06CeIpn7EgYZOE4ziZxr1qp+faFSzHh9/oFF5XITvmwSwTh2H6DOplEfguzHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750442069;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=BVBjjX1hbRfc8ehGh7/c987HLQFk/Q8im+szf4eY5+E=;
+	b=Naw2kSI3hYK2YxRjKFNM/OXXYlMlYq0Nnr1qD4rvdaxeVLlsn66LMkbge2IHiVZNYDzotb
+	o/Ll/9Xazw0AoHDA==
+From: "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/efi: Move runtime service initialization to arch/x86
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Sohil Mehta <sohil.mehta@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08758240-fd38-4d90-9efa-354274e8bb8e@zytor.com>
+Message-ID: <175044206817.406.15116962193585235583.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 08:20:12AM -0700, Xin Li wrote:
-> On 6/20/2025 6:53 AM, Kirill A. Shutemov wrote:
-> > From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > 
-> > LASS throws a #GP for any violations except for stack register accesses,
-> > in which case it throws a #SS instead. Handle this similarly to how other
-> > LASS violations are handled.
-> > 
-> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >   arch/x86/kernel/traps.c | 34 ++++++++++++++++++++++++++++------
-> >   1 file changed, 28 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > index 0f558d3369a3..bd8f7e72b238 100644
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -866,6 +860,34 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
-> >   	cond_local_irq_disable(regs);
-> >   }
-> > +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
-> > +{
-> > +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
-> > +		enum kernel_gp_hint hint = GP_NO_HINT;
-> > +		unsigned long gp_addr;
-> > +
-> > +		if (user_mode(regs)) {
-> > +			gp_user_force_sig_segv(regs, X86_TRAP_GP, error_code, GPFSTR);
-> > +			return;
-> > +		}
-> 
-> Please add the following FRED code:
-> 
-> 		if (cpu_feature_enabled(X86_FEATURE_FRED) &&
-> 		    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
-> 			return;
-> 
-> Because the following FRED fixup
-> 
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5105e7687ad3dffde77f6e4393b5530e83d672dc
-> 
-> is otherwise skipped, it is interpreted as a LASS #SS before reaching
-> the FRED fixup (which is indeed a userspace fault but triggered from
-> a specific kernel IP as described in the commit changelog).
-> 
-> The x86 selftest sigreturn_64 fails w/o the above fix.
+The following commit has been merged into the x86/boot branch of tip:
 
-Okay, will do.
+Commit-ID:     ce2c403c26c1ed0e28fc541ab30fe13ff50236be
+Gitweb:        https://git.kernel.org/tip/ce2c403c26c1ed0e28fc541ab30fe13ff50236be
+Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate:    Fri, 20 Jun 2025 16:53:12 +03:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Fri, 20 Jun 2025 10:48:50 -07:00
 
-> > +
-> > +		hint = get_kernel_gp_address(regs, &gp_addr);
-> > +		if (hint != GP_NO_HINT) {
-> > +			printk(GPFSTR ", %s 0x%lx", kernel_gp_hint_help[hint],
-> 
-> GPFSTR?
-> 
-> #define GPFSTR "general protection fault"
-> 
-> It is misleading here, you need something like SSFSTR which tells
-> exactly which exception caused it.
+x86/efi: Move runtime service initialization to arch/x86
 
-Yep, thanks for catching that!
+The EFI call in start_kernel() is guarded by #ifdef CONFIG_X86. Move
+the thing to the arch_cpu_finalize_init() path on x86 and get rid of
+the #ifdef in start_kernel().
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+No functional change intended.
+
+Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/all/20250620135325.3300848-5-kirill.shutemov%40linux.intel.com
+---
+ arch/x86/kernel/cpu/common.c | 7 +++++++
+ init/main.c                  | 5 -----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8feb8fd..4f430be 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -26,6 +26,7 @@
+ #include <linux/pgtable.h>
+ #include <linux/stackprotector.h>
+ #include <linux/utsname.h>
++#include <linux/efi.h>
+ 
+ #include <asm/alternative.h>
+ #include <asm/cmdline.h>
+@@ -2530,6 +2531,12 @@ void __init arch_cpu_finalize_init(void)
+ 	fpu__init_cpu();
+ 
+ 	/*
++	 * This needs to follow the FPU initializtion, since EFI depends on it.
++	 */
++	if (efi_enabled(EFI_RUNTIME_SERVICES))
++		efi_enter_virtual_mode();
++
++	/*
+ 	 * Ensure that access to the per CPU representation has the initial
+ 	 * boot CPU configuration.
+ 	 */
+diff --git a/init/main.c b/init/main.c
+index 225a582..f9f401b 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -53,7 +53,6 @@
+ #include <linux/cpuset.h>
+ #include <linux/memcontrol.h>
+ #include <linux/cgroup.h>
+-#include <linux/efi.h>
+ #include <linux/tick.h>
+ #include <linux/sched/isolation.h>
+ #include <linux/interrupt.h>
+@@ -1068,10 +1067,6 @@ void start_kernel(void)
+ 
+ 	pid_idr_init();
+ 	anon_vma_init();
+-#ifdef CONFIG_X86
+-	if (efi_enabled(EFI_RUNTIME_SERVICES))
+-		efi_enter_virtual_mode();
+-#endif
+ 	thread_stack_cache_init();
+ 	cred_init();
+ 	fork_init();
