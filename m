@@ -1,195 +1,339 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD6627726;
-	Fri, 20 Jun 2025 20:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450762; cv=fail; b=jryu7TZslbW6M6tVoAteQ4ij87dlhoZ3Vh5XE2Gsq0oWueiDVkgbhZ36wKceHpLEovrtxr1VAczMWGcNga+5WoaY9Cz2bOwpGgXWRChPgf4XfObSDPVAed0lqafX81LWQVLp9uFJ1IZY34u9Rj7FRr8N0J3GSu2mXbyTxbaO0xg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450762; c=relaxed/simple;
-	bh=GdAwH2kaanjhGqWjTgn84FpdVXBQMCVW249NFL26Xag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ICGGzxs70m2opXeN17ylHA05iRe6MfdYMPIP8KjkIZMJttWPZKaO+EsXv8sEC+m9u5/CwvZASdXTSSlHrNAEoWAI3rsDLeGa9U2OwAuXvIGLY/Ha//VyMWk6ZJ3euydCKbSzdFuH5wC2QxhRc7MUJQTrwe4Pv74Rv761Np4ybc0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WIYDH6Jd; arc=fail smtp.client-ip=40.107.237.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6DD235073
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750450875; cv=none; b=awVbQJw3dy/EfYEq8pfCPc+Kv+QvFz3NEmybckIdqJcw8b2XmDdC1kKbQ2cX4rVFbx1OmLq0/Rqp41EGtf9kob8Ut9oBUjKzK8DC2S11NoV3j7sgrMKNuL1mYNMrKnTWwh+s1OgjU7bd+GGnf2B7n2WP033sJcM/P1P0e2xzp84=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750450875; c=relaxed/simple;
+	bh=CeheS3/N3d0YsxD2iHCBzG3hpN9N+WOXn37z1HfdSVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Omdu9NdFsv7guXQflE8iVn9l8r5NmXgeXLIVBWh6Kgh5Qj7YJ1OPD7+BJMu2Nx934DQbnaevk4GbKtDWYNLoVJb0jLGDQ+bB8xy1FkQLQIYHBFhR+YmnCdWbkqk03Dld5dd3qjLTpdtqpo22ab8U4tbS0Uc2TRkOHmTC+CVDSYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QFYgtk8I; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WIYDH6Jd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=daAF0q+IL/tFcLcLd77Z7osGlmmZVb4Jcbre9eenR7gTF4dNAYQskOX7O7of6R86O3C0w8qahXMs2Oml54/Ntc6zI+Og6v5X69VxjXpG+Bii7v5KVg5/SDvLlK4U34X55ZKa/c9cyra0ISdgbV3uFVBiOgGZ4wSVhRTX0ZTxQrxAsKLdbIw5oszz1brF2+YAL607QJ0aek+IjvpD3szSoSme49fvZ4ZQM9NAAbCMHMY826iPmv5sN+ygkJTM41hn0mxXV8vCxMNRPlNDMOdXxXB9bwon6cRUkuG9nvPkYP4ElJzqLy05yVueDmtyB/rKkjZhdcHVDTMqDAVbEPJlZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tJ3YGWIbAZJFKnC4D2/WZbyGHNelgob45ZcpOUcFHxM=;
- b=nUN+JoaEjAPEe4hxXv7X/gn+BuSibQV42O3UOe4z6c9t0AyDUS3AbaSkpC9Qy2pDvc3Yy8tIpBQ9ZvJUNdoz1SfOvxRcozvvUHOAGd8lXztMAi6E5m38vnl5t3Kbwg9DP4jSjO7AVuRi2mPR1k8oBgkLzAvkGg/cgZIlAu+6Hx4YtM9quPVJ8wKrl6Pld/USEVj+zgwBXG8HAON2MYiRItCADPAUDDwYxUGXAS7LTKTUqQ18VCdcO4+1f4QZz65GQUS0KLdU6F/9CGHqaMNL2rkRpj9mphEYxriZvKN2EqDwIERnYpC/0tSdvznrBNXliBLS1xK1GS2nUorlhh8j0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJ3YGWIbAZJFKnC4D2/WZbyGHNelgob45ZcpOUcFHxM=;
- b=WIYDH6Jd8+oMNF7ee1Zz6BM2WZK7u3LW9AuXtmZxgmLpyNuD+naOjKv0Mmb0hff6rYK00F43MM1b62lI3vZAaQCTJfj6lczGWhS8VGyAJxki9Qwj1cG0auOSJscddOxYJaBetad+IWtIkzigAYQ0pJT++cRMbToG6sFmOelCxNA8ze9f0WnYtmidqxHqE2SKgphMOtFegwV/zTI8tUjSp7yFZFpnNjzuVB4Oxcdd1J6MWcRDE5zNZ1dvP9OrlDGcOc9l/vHAZKzqhL18hK/SR2BEJedl1e+ivptGee80nK8Dy3B+5pHDjk+9Lb0b7Pqgz8Lxq7Ay+F769+l3HbenXA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- CY8PR12MB8266.namprd12.prod.outlook.com (2603:10b6:930:79::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.29; Fri, 20 Jun 2025 20:19:16 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.037; Fri, 20 Jun 2025
- 20:19:16 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 15/29] mm/migration: remove PageMovable()
-Date: Fri, 20 Jun 2025 16:19:12 -0400
-X-Mailer: MailMate (2.0r6263)
-Message-ID: <A2697861-23B4-4A1E-994F-39E448E8FC7B@nvidia.com>
-In-Reply-To: <20250618174014.1168640-16-david@redhat.com>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-16-david@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0340.namprd13.prod.outlook.com
- (2603:10b6:208:2c6::15) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QFYgtk8I"
+Date: Fri, 20 Jun 2025 13:20:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750450859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9pdtWMoCinyj89bjdjI6OzYDNaMakww7IsU4AzJ521M=;
+	b=QFYgtk8IHCNJ2IufikHWLfCT60VrcIOlQ3tXXqV41huMzW1qweQtKUcUyknhvkGp0CAG5F
+	N+u0FqUVlUCV3ude8SmDGj5HhMLMZJY/17UUbpfszawkWB0SyFFGCEon1d0yBH1QwrIpcl
+	nAmgF2/zXqNYxx7Z+qwVaf4b8siQcaU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sascha Bischoff <Sascha.Bischoff@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
+	"maz@kernel.org" <maz@kernel.org>, Joey Gouly <Joey.Gouly@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	Timothy Hayes <Timothy.Hayes@arm.com>
+Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
+Message-ID: <aFXClKQRG3KNAD2y@linux.dev>
+References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
+ <20250620160741.3513940-5-sascha.bischoff@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CY8PR12MB8266:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6858bb7-c460-4626-67d1-08ddb037baf2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lHBIt60cYgxGIuxkq4iIEYQ+cyq6xvysV0Ap0L1xMgarOHqNjED0pEmugEbI?=
- =?us-ascii?Q?BBdV7eCweLjEemRzqc1UooUEh0BsNHGTtiGew0QgwodsaLUlhTCJOHH1pb62?=
- =?us-ascii?Q?1zEgwa9jbNQ0dX/j5jxIJCeRQnjEtM86hGfKeFvYUQ9D17URLMDDv4imo5IX?=
- =?us-ascii?Q?89pAVnIWE/t2RPPL997gOM9BRxsCli/f7zOKbYx+EBNWY097mYfWctV9QKs8?=
- =?us-ascii?Q?Xl2G1RlrearQ0+KStNV3caL2EVtXEgFlbQxHvTDq+Hx9/zl72tIowza9FQd3?=
- =?us-ascii?Q?gmsd/3Ps7SrB2cUEy5wFZMZOoB1nfg4d5ZXo+EGjPkk23Tvzpcp5K2QPsz7H?=
- =?us-ascii?Q?WBlJ9z8FRuZPMF57woaFM2boAxxg6RJhM3Wa32lmfjpZdsKtTZyVJWgh6foI?=
- =?us-ascii?Q?o7I1jfs2p8aqVHc5EDujv1G+wx+QTxkPa8X6LuUn9mFz7lHAjrPHeP+WoFkX?=
- =?us-ascii?Q?fKdsenJGxpydw6kweL/yeRFC99fhXkF2y/oe7xpfJMzKY/tdXf4ikxJQDyqx?=
- =?us-ascii?Q?5Qwoq75wP7KM3Aj8Fdt6FTwd8C/Oq3TUqPL3JbZ5TL4SIwwrnGADzM6BRjfl?=
- =?us-ascii?Q?m/qiEQiy0R9c6JRrv781TUaODn9MSkq3eXi4qtFLLzeLoRp0dYPdj/3TKjSC?=
- =?us-ascii?Q?cY+/SmWLksI85f+CbizEYJ/awxuAyo63HQ+o0/nlXT2U3plSc1fpZsIQOD1U?=
- =?us-ascii?Q?KRrBzVvL1bU9CKCImPishNae+41rBYEPINNrAl1YNiPG1YOLhLncon5MLgCB?=
- =?us-ascii?Q?Eeixv07kG91R8NDhe/0yDZnW0M64SK/cTYy8vDPDiTZuyo7IXTQ36S9/knqm?=
- =?us-ascii?Q?EhBE1w3ufvwYVptQwxjFpCejelJ8m+0BreLydv8ADjCSZ3vb2p6yb2NEniJg?=
- =?us-ascii?Q?CcV1WUa4TW4ZTM+7vp78lgkckMiywxRS5byIfF99mX825/r4JUtturfYbXNB?=
- =?us-ascii?Q?Sb24PAgVCrth000Qc9Q5f29PozON5BOvPU5fCjPq0yxdL1+1KOtFc2IXtRlK?=
- =?us-ascii?Q?AbKc9u4rEEYhRhmdCR0mPwo1pGsdZ9iAdppL9N265JEXJYcYyroorMPoeYkq?=
- =?us-ascii?Q?UzUMV8IFa//nEGuwl7cgp4cR1SqwhL3b/3n2EK7FsC1msoV3Unwy6cUv/uri?=
- =?us-ascii?Q?ArLreXrJsg+9MdOlRes/kiBwVajymBOffvVj7qdEMD3GGhq1a6PWcSDlFpiD?=
- =?us-ascii?Q?0rs4uW1DpZd95KDciBTky72kJTClgr4TkTS3IL6X2uWYAjUMW0xtHrJHCDzM?=
- =?us-ascii?Q?aofVgHbkIHCi2+T7sW7qmgGLO0X1YGolR0/dSb7mSek5BiM4gRIBffT9dTeK?=
- =?us-ascii?Q?qHAk474ItLlMv48xu7BXE+vAgrPu2e0obyuyqfa6RiX+5I5ifk2/F4YjVIeD?=
- =?us-ascii?Q?yi7Xr8XvaUquUArn/s/PPcf/AXGpnZIkZJMS01+6XqmgLKuWMkpHb+9b5sqE?=
- =?us-ascii?Q?k/vefAeGgI4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?raKRV6kfU1HSHdutj5Jml1dUaukuVtrgO+XltkXEFXevf0dhlhfxRaQ/ftXa?=
- =?us-ascii?Q?NOrSwrInJ/Af067ORkONIzLGa/CcHcAuiUtvDnLqOCrY7hgPyVxNMgYAC1eR?=
- =?us-ascii?Q?Usu9ijTkYti+iAVMX2Sb6yZYASQtLXyQ/i1Uy8L8EPqV9ccTH7QDYWNhtz25?=
- =?us-ascii?Q?V6lxi9uSrbpY/LTrKzQqKo1Cf5wATKu+SkY7YzPCpZG1Dd3B7aJs85VmN4y1?=
- =?us-ascii?Q?2spbC3JqzfgNQfhm0dkg73bengg5H4sHtARzJzrptn3QuDyePKMg4oYn0UP3?=
- =?us-ascii?Q?/FuR6NEglTzWzCaZE/72O0LxsHqpqsJY5b0P4n+0KefFFPGLPDnwqEoT0iaT?=
- =?us-ascii?Q?KilLyUUrxHDehTCc81DXako67yXTpCKClq/PxFxTIsA4C3RTYURDaXSzo8GD?=
- =?us-ascii?Q?pvBbIXQZU/aK9PGIsS+ynse/UU4Jejk77r5zMG2cnLMKYfYfG+EUaHJ6MJMw?=
- =?us-ascii?Q?FIyh7kZ/vs4h+xtKVgbp6bIY94G0kIoFgRo1Esw0rP+e29uLqgoHkxvbOVXr?=
- =?us-ascii?Q?MK14wh/OhTGQlVr9nGLe9BYvMahVk0kNUgFVpDb3xxQ6vkeDFDFTF7ci517r?=
- =?us-ascii?Q?Gq9WmXxC+NsW/AE+CtBKkTLS/wQnTnji5vF4pDj/qw2VnI9AG26UL+1vCFzz?=
- =?us-ascii?Q?YsfIoDBSabjssdYpvMfkWoGY6wSgTWLKkfpJqA9w+7g2tjiEizkKSEgGu3zR?=
- =?us-ascii?Q?MZb804vUks/e4dtXU94aPSnBmZU4Vl3UiY9U7pgNoTrgnURiTsIr1vg8N+0i?=
- =?us-ascii?Q?bOwXNR7l2C2+Nc1UIDdGuuubDkQHfijoiIJf2aewJj7UJ/Q0srEwIW5DZlu1?=
- =?us-ascii?Q?DxTExyqqVEiHdL/h5pthKgcQ0hjxv4+MmFjN7zyqQMq3ohmcUrhXvEI0FlZL?=
- =?us-ascii?Q?/+x+L+KaPsS7ss2dFyq8ryvDRoZLCjMlvk1HniNMMFDCZ3dQCA3hmXJIIeAb?=
- =?us-ascii?Q?8x/yy540WEkOgoftztxTo9GfBTsivHRMP2hh9lBEJdQJx+Na5V+y4s9698pI?=
- =?us-ascii?Q?mJtFeyvl2B3MZZpsxjZcgj4v5/IibQ10Nvl7dglzDlWvBwKFB+yL1EtV4hsr?=
- =?us-ascii?Q?tr+J1yO1lskguCTEVHR0gjqfutQF2mNRxFmiuDzWNi5ZLB69zQWnDLKSgjZ2?=
- =?us-ascii?Q?98rln9x/ilHmRjXkNODfDUhUFWa8WsZhejTboJFfE5SD9te2n3Wto845dQZc?=
- =?us-ascii?Q?RyV4BEoBcId7Z1tp5WxZOmFobqO0dpGRSyxCyUcQhYZ7hsM0LO5Ypb/efgjd?=
- =?us-ascii?Q?QuilVvRHmoUWCXyD/uueEoZVP0XcLNpS2bh0iZqspvyyqweNDj/zJcRN6aIL?=
- =?us-ascii?Q?gPRmjpmru+fSfh8lYSp54v8s4Q3lS9mt5TCgQ4ISc6+wUfc2+jk+Mk0IFBtQ?=
- =?us-ascii?Q?rkrPrPeuT0eDMUQk3dzD7Mm1LNo1MiXOXR2BUWQZvnRDDS7rs55bwtFrpTzF?=
- =?us-ascii?Q?Tlz6c3kJP132HprHVwEF5RLMGzNuo14jMYWeA0kjAYY6PqohhUX1lLr2Gg3h?=
- =?us-ascii?Q?pkpjwzUJJabEbhS5GJs/xMRV1DBN2/vx6G5NJdtdcw0CvVJvCzLTXw//CwF4?=
- =?us-ascii?Q?YVc0EhYbWdQjU7xF82gXABY6k2aCZFq6VrGZC7OK?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6858bb7-c460-4626-67d1-08ddb037baf2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 20:19:16.5144
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ql6twvobWYKUKppUcgOVkQLKhL/nDsjH22kTfLBJv0/XThhVHwWqGfYS6rMmGnct
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8266
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620160741.3513940-5-sascha.bischoff@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+Hi Sascha,
 
-> As __ClearPageMovable() is gone that would have only made
-> PageMovable()==false but still __PageMovable()==true, now
-> PageMovable() == __PageMovable().
->
-> So we can replace PageMovable() checks by __PageMovable(). In fact,
-> __PageMovable() cannot change until a page is freed, so we can turn
-> some PageMovable() into sanity checks for __PageMovable().
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Thank you for posting this. Very excited to see the GICv5 enablement get
+started.
+
+On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
+> Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
+> GICv5 host to run GICv3-based VMs. This change enables the
+> VHE/nVHE/hVHE/protected modes, but does not support nested
+> virtualization.
+
+Can't we just load the shadow state into the compat VGICv3? I'm worried
+this has sharp edges on the UAPI side as well as users wanting to
+migrate VMs to new hardware.
+
+The guest hypervisor should only see GICv3-only or GICv5-only, we can
+pretend FEAT_GCIE_LEGACY never existed :)
+
+> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
 > ---
->  include/linux/migrate.h |  2 --
->  mm/compaction.c         | 15 ---------------
->  mm/migrate.c            | 18 ++++++++++--------
->  3 files changed, 10 insertions(+), 25 deletions(-)
->
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+>  arch/arm64/include/asm/kvm_asm.h   |  2 ++
+>  arch/arm64/include/asm/kvm_hyp.h   |  2 ++
+>  arch/arm64/kvm/Makefile            |  3 +-
+>  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 12 +++++++
+>  arch/arm64/kvm/hyp/vgic-v3-sr.c    | 51 +++++++++++++++++++++++++-----
+>  arch/arm64/kvm/sys_regs.c          | 10 +++++-
+>  arch/arm64/kvm/vgic/vgic-init.c    |  6 ++--
+>  arch/arm64/kvm/vgic/vgic-v3.c      |  6 ++++
+>  arch/arm64/kvm/vgic/vgic-v5.c      | 14 ++++++++
+>  arch/arm64/kvm/vgic/vgic.h         |  2 ++
+>  include/kvm/arm_vgic.h             |  9 +++++-
+>  11 files changed, 104 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/arm64/kvm/vgic/vgic-v5.c
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index bec227f9500a..ad1ef0460fd6 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -81,6 +81,8 @@ enum __kvm_host_smccc_func {
+>  	__KVM_HOST_SMCCC_FUNC___kvm_timer_set_cntvoff,
+>  	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_vmcr_aprs,
+>  	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
+> +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_enable,
+> +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_disable,
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
+> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> index e6be1f5d0967..9c8adc5186ec 100644
+> --- a/arch/arm64/include/asm/kvm_hyp.h
+> +++ b/arch/arm64/include/asm/kvm_hyp.h
+> @@ -85,6 +85,8 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if);
+>  void __vgic_v3_save_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+>  void __vgic_v3_restore_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+>  int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
+> +void __vgic_v3_compat_mode_enable(void);
+> +void __vgic_v3_compat_mode_disable(void);
+>  
+>  #ifdef __KVM_NVHE_HYPERVISOR__
+>  void __timer_enable_traps(struct kvm_vcpu *vcpu);
+> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> index 7c329e01c557..3ebc0570345c 100644
+> --- a/arch/arm64/kvm/Makefile
+> +++ b/arch/arm64/kvm/Makefile
+> @@ -23,7 +23,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+>  	 vgic/vgic-v3.o vgic/vgic-v4.o \
+>  	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
+>  	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
+> -	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o
+> +	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
+> +	 vgic/vgic-v5.o
+>  
+>  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+>  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index e9198e56e784..61af55df60a9 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -475,6 +475,16 @@ static void handle___vgic_v3_restore_vmcr_aprs(struct kvm_cpu_context *host_ctxt
+>  	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
+>  }
+>  
+> +static void handle___vgic_v3_compat_mode_enable(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	__vgic_v3_compat_mode_enable();
+> +}
+> +
+> +static void handle___vgic_v3_compat_mode_disable(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	__vgic_v3_compat_mode_disable();
+> +}
+> +
+>  static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
+>  {
+>  	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
+> @@ -603,6 +613,8 @@ static const hcall_t host_hcall[] = {
+>  	HANDLE_FUNC(__kvm_timer_set_cntvoff),
+>  	HANDLE_FUNC(__vgic_v3_save_vmcr_aprs),
+>  	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
+> +	HANDLE_FUNC(__vgic_v3_compat_mode_enable),
+> +	HANDLE_FUNC(__vgic_v3_compat_mode_disable),
+>  	HANDLE_FUNC(__pkvm_init_vm),
+>  	HANDLE_FUNC(__pkvm_init_vcpu),
+>  	HANDLE_FUNC(__pkvm_teardown_vm),
+> diff --git a/arch/arm64/kvm/hyp/vgic-v3-sr.c b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> index f162b0df5cae..b03b5f012226 100644
+> --- a/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> +++ b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> @@ -257,6 +257,18 @@ void __vgic_v3_restore_state(struct vgic_v3_cpu_if *cpu_if)
+>  	}
+>  }
+>  
+> +void __vgic_v3_compat_mode_enable(void)
+> +{
+> +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, 0, ICH_VCTLR_EL2_V3);
+> +	isb();
+> +}
+> +
+> +void __vgic_v3_compat_mode_disable(void)
+> +{
+> +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
+> +	isb();
+> +}
+> +
 
---
-Best Regards,
-Yan, Zi
+It isn't clear to me what these ISBs are synchonizing against. AFAICT,
+the whole compat thing is always visible and we can restore the rest of
+the VGICv3 context before guaranteeing the enable bit has been observed.
+
+Can we consolidate this into a single hyp call along with
+__vgic_v3_*_vmcr_aprs()?
+
+Last bit as an FYI, kvm_call_hyp() has an implied context synchronization upon
+return, either because of ERET in nVHE or an explicit ISB on VHE.
+
+>  void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
+>  {
+>  	/*
+> @@ -296,12 +308,19 @@ void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
+>  	}
+>  
+>  	/*
+> -	 * Prevent the guest from touching the ICC_SRE_EL1 system
+> -	 * register. Note that this may not have any effect, as
+> -	 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
+> +	 * GICv5 BET0 FEAT_GCIE_LEGACY doesn't include ICC_SRE_EL2. This is due
+> +	 * to be relaxed in a future spec release, likely BET1, at which point
+> +	 * this in condition can be dropped again.
+>  	 */
+> -	write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
+> -		     ICC_SRE_EL2);
+> +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
+> +		/*
+> +		 * Prevent the guest from touching the ICC_SRE_EL1 system
+> +		 * register. Note that this may not have any effect, as
+> +		 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
+> +		 */
+> +		write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
+> +			     ICC_SRE_EL2);
+> +	}
+>  
+>  	/*
+>  	 * If we need to trap system registers, we must write
+> @@ -322,8 +341,14 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if)
+>  		cpu_if->vgic_vmcr = read_gicreg(ICH_VMCR_EL2);
+>  	}
+>  
+> -	val = read_gicreg(ICC_SRE_EL2);
+> -	write_gicreg(val | ICC_SRE_EL2_ENABLE, ICC_SRE_EL2);
+> +	/*
+> +	 * Can be dropped in the future when GICv5 BET1 is released. See
+> +	 * comment above.
+> +	 */
+> +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
+
+Can we use the GCIE cpucap instead, possibly via a shared helper with
+the driver?
+
+> -	if (kvm_vgic_global_state.type == VGIC_V3) {
+> +	if (kvm_vgic_global_state.type == VGIC_V3 || kvm_vgic_in_v3_compat_mode()) {
+
+Can we do a helper for this too?
+
+>  		val &= ~ID_AA64PFR0_EL1_GIC_MASK;
+>  		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
+>  	}
+> @@ -1953,6 +1953,14 @@ static int set_id_aa64pfr0_el1(struct kvm_vcpu *vcpu,
+>  	    (vcpu_has_nv(vcpu) && !FIELD_GET(ID_AA64PFR0_EL1_EL2, user_val)))
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * If we are running on a GICv5 host and support FEAT_GCIE_LEGACY, then
+> +	 * we support GICv3. Fail attempts to do anything but set that to IMP.
+> +	 */
+> +	if (kvm_vgic_in_v3_compat_mode() &&
+> +	    FIELD_GET(ID_AA64PFR0_EL1_GIC_MASK, user_val) != ID_AA64PFR0_EL1_GIC_IMP)
+> +		return -EINVAL;
+> +
+
+
+
+>  	return set_id_reg(vcpu, rd, user_val);
+>  }
+>  
+> diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
+> index eb1205654ac8..5f6506e297c1 100644
+> --- a/arch/arm64/kvm/vgic/vgic-init.c
+> +++ b/arch/arm64/kvm/vgic/vgic-init.c
+> @@ -674,10 +674,12 @@ void kvm_vgic_init_cpu_hardware(void)
+>  	 * We want to make sure the list registers start out clear so that we
+>  	 * only have the program the used registers.
+>  	 */
+> -	if (kvm_vgic_global_state.type == VGIC_V2)
+> +	if (kvm_vgic_global_state.type == VGIC_V2) {
+>  		vgic_v2_init_lrs();
+> -	else
+> +	} else if (kvm_vgic_global_state.type == VGIC_V3 ||
+> +		   kvm_vgic_in_v3_compat_mode()) {
+>  		kvm_call_hyp(__vgic_v3_init_lrs);
+> +	}
+>  }
+>  
+>  /**
+> diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
+> index b9ad7c42c5b0..b5df4d36821d 100644
+> --- a/arch/arm64/kvm/vgic/vgic-v3.c
+> +++ b/arch/arm64/kvm/vgic/vgic-v3.c
+> @@ -734,6 +734,9 @@ void vgic_v3_load(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
+>  
+> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
+> +		kvm_call_hyp(__vgic_v3_compat_mode_enable);
+> +
+>  	/* If the vgic is nested, perform the full state loading */
+>  	if (vgic_state_is_nested(vcpu)) {
+>  		vgic_v3_load_nested(vcpu);
+> @@ -764,4 +767,7 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
+>  
+>  	if (has_vhe())
+>  		__vgic_v3_deactivate_traps(cpu_if);
+> +
+> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
+> +		kvm_call_hyp(__vgic_v3_compat_mode_disable);
+>  }
+> diff --git a/arch/arm64/kvm/vgic/vgic-v5.c b/arch/arm64/kvm/vgic/vgic-v5.c
+> new file mode 100644
+> index 000000000000..57199449ca0f
+> --- /dev/null
+> +++ b/arch/arm64/kvm/vgic/vgic-v5.c
+> @@ -0,0 +1,14 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <kvm/arm_vgic.h>
+> +
+> +#include "vgic.h"
+> +
+> +inline bool kvm_vgic_in_v3_compat_mode(void)a
+
+nit: we're generally trusting of the compiler to 'do the right thing'
+and avoid explicit inline specifiers unless necessary.
+
+> +{
+> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif) &&
+> +	    kvm_vgic_global_state.has_gcie_v3_compat)
+> +		return true;
+> +
+> +	return false;
+> +}
+
+This should be a per-VM thing once KVM support for GICv5 lands. Can you
+get ahead of that and take a KVM pointer that goes unused. Maybe rename
+it:
+
+bool vgic_is_v3_compat(struct kvm *kvm)
+
+Or something similar.
+
+Thanks,
+Oliver
