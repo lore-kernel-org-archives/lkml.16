@@ -1,315 +1,352 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECB4242D97
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C226523F412
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750460540; cv=none; b=czh57slRp0nBuYRV19+6U4PY32dfQacSXUP3ORQ6x1Q0qvZxrBcOiANmISiUlkELATO5D5M7G37PqD89t1562o2E8+8YSqXhlFby4RTn3IeXJt6GNAN/P2BvXj8OF/+BZJ/IzaGWuiZyEswc6VD6TE9kPQVv1KptwzNOWmjv1v0=
+	t=1750460593; cv=none; b=bCRhkrsY5MoKv80ylbH0+Na7HFlV8IrEH68OLWL44jx2Pbg4G+vWNrPjudSC37bwOB/Q1XD6KjC1x57Qzl0wsa42MTHywwzJT+hScrOfnRMQK9l2b8z2RvU4KWg8JEyoECDp+wzjqX55q37oaIewfMkFNOdZmyYwBvo5ni02rd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750460540; c=relaxed/simple;
-	bh=Tbh8ry1lWJGYK/W7V9BgYWpNKiajyQhbqRdEU96TOGA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FdfKFbOr50psRfD/RSnZfOefoUi7rByZp1dU0XQBgAxyCagBOjDIkwDOWsEuYAUcCiCiYEyzKKZ0D5JV8DDs4Wc5rfH8V0jpgiW1vrFjx6eOtiCc5WUNKy+H46h6hCrzn4kwESW5q+A4Nok4DOgQ9shb8+01NqkdEq2ppnxNw5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVQJGRSb; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750460593; c=relaxed/simple;
+	bh=EBrJcSUnn0tjaoqzsso4+ZBe6J/hEnxNrY1vkz+KcA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B17griNPIvtysXUUVG6YuWDs8PlyPFVe13CEn+6vyfOfiMwWwS0rdW1yAsnevWtARJhQbycLdyTJikIOJ6EK9E4ak0e8Vex/sinWoVi0Z9HAAW3wSksSLJ3Uew43+SdZ+hfQZkXl6SydO1P3hyNZ0mjmhQQxdrtOYXvp8R0wnew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cBDZqcN5; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVQJGRSb"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7dc89108bfso1911187276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750460538; x=1751065338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ArUQ8QVqS/QJ/vgHPbGXTRv239wlRJkgHtl0VZTwag=;
-        b=nVQJGRSb/cSS3JsyXC+6Lllc2/ugQvBa7SMwJml7i3NdP6qP5sDpWi620vr6wOWv/E
-         j5j2iOlh1f41TdIzVvZxrItl6mpIAiEsXRn4kYPmHb0nhavZkbK/od2g5u91LL8OteMw
-         niiymnq94d+zDv3kF2pMgxNtMwPRClCO0UJBMHRNgO27zXbLQXzlvzZVLOnH7Kn6UoL7
-         y1rInpkNPE7iZOuigMfrQpQ2c5VHF6bLurOsINP6MzvV9ROiDS4jQLXkeAeV9BJh3js0
-         6+PdE1FSRU5rdfM0A/w8FHFOdgXwroCvOKInb+Y/n+nii5PRfnyRQLE71OZ8l5f66RAW
-         VQRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750460538; x=1751065338;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ArUQ8QVqS/QJ/vgHPbGXTRv239wlRJkgHtl0VZTwag=;
-        b=DEr2LTDkI2APXoqZT136EYw3h6cs85FPP0HiWrNVE39xYRWepWzFzh94UAA2h4aZK0
-         /BJ4TWxDRbGazobwaec5rcYSdDRPxbmLpYAhmzuf/Mr2aRmuqSRLR92SgCVLz+apmj7q
-         5v2kHQwrXhvoJ1a+4Sntbj6kblcIWx6s6ndqXloD4Rl5VPZzW7fMO0T5AnOCeLWNP7cV
-         +3JYnhLUJLzIWfHWncbMCRwnStyEMl40WFD/Dx81o4355ZDEZBTGRBUAyhCqHvgSTXTU
-         Xwnbx8L5dzbOFyTWIo/+OhUr8l9Q/9JkO7Cc5CRj2A5gr27rzClo3CifvJW4hDEEXjkj
-         /wSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTvvQLZ5fTUn0+D85pHHhFeETlNs4DRORtxY8UR6dBDpgsRK7YSS+48ImWQcGODomUYzsoqc1ptzfAnDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhRoqZCAPuAw2rQd1s8EKckrpfFcujb8wquBdkQJDV6pGoFtSM
-	XIYextDlirH5XLwtNXBLTyyO3GRQY4TaLDBUDbYhZgS1fuUgm3CATij8TeWOFboj
-X-Gm-Gg: ASbGncvtTUY9RUTlKEB4M0NzpjXjC6eLzm8iHyR3vKXNSm7Qvh/NNAkKTu2IMCRpWLX
-	pXHxdMcUqzCx1T281Z5zzuDfvws7H0/QI4mypfssxnYEbHkvX2Wi5rRJKbX5ZhHePYM7JJ0dtyG
-	pymbx1xrPc5vC78YkREiF4cdjS6Xlpu/c6Qlwh7Mg6Cck14aByutqkVl0bmOh/eGLzVq8W+rzEk
-	zm8egdXt9K9wXw14PAcIlrWR8PbatOX17LxY3XC5cVAxHDqt3xOR54caqAoBCw6rrX6xAw95Mot
-	oBxulxiAsLNOyWCPVcD4d+9q07TbbRhYoCWf5yddDZoq1C+lMmccVh4t8ZFo46vT36wigztp2Ru
-	DXA==
-X-Google-Smtp-Source: AGHT+IEIvzmiWthMEcAxXwgVG3Wo9vvhbiOI15NAoRwemKNFyO05E7JCSh/OsyIWpCFFN7A9sOhphg==
-X-Received: by 2002:a05:6902:6986:b0:e84:32a7:89ad with SMTP id 3f1490d57ef6-e8432a78a96mr3235478276.48.1750460537797;
-        Fri, 20 Jun 2025 16:02:17 -0700 (PDT)
-Received: from Slackware.localdomain ([191.96.150.102])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 16:02:16 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: dan.carpenter@linaro.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9]  Trivial changes,usage text show scriptname without path,and few of them use nproc binary to show cpu core
-Date: Sat, 21 Jun 2025 04:08:58 +0530
-Message-ID: <772a80d0cc54bbc1c138730972193faa76238bd1.1750459100.git.unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <cover.1750459100.git.unixbhaskar@gmail.com>
-References: <cover.1750459100.git.unixbhaskar@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cBDZqcN5"
+Date: Fri, 20 Jun 2025 16:02:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750460578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5tAZQ0spVVEZZIHmVQBC+dOaNCyVxTOIQXkIyXzUO5k=;
+	b=cBDZqcN5mHkTBb2IiWeX4Taf2j8l+UDr1mn+oTK+j21w/qkbzBLq/ddDQiIC1Y2SpIDFIK
+	h/4mxwtGV8jZX4pZyLpJHcY3/dARAsFd3pgXrbwYwsBxhc6g4m1d0okpnBlbRPqdRhW8LT
+	Co/XYkCK6dhGd4zgDHcMmcKGGsR7xo0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sascha Bischoff <Sascha.Bischoff@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
+	"maz@kernel.org" <maz@kernel.org>, Joey Gouly <Joey.Gouly@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	Timothy Hayes <Timothy.Hayes@arm.com>
+Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
+Message-ID: <aFXomXKBk1V9iYSa@linux.dev>
+References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
+ <20250620160741.3513940-5-sascha.bischoff@arm.com>
+ <aFXClKQRG3KNAD2y@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFXClKQRG3KNAD2y@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-Trivial fixes for the script name to show up in help/usage test without full
-pathname and some of them have CPU core variable via nproc.
+On Fri, Jun 20, 2025 at 01:20:36PM -0700, Oliver Upton wrote:
+> Hi Sascha,
+> 
+> Thank you for posting this. Very excited to see the GICv5 enablement get
+> started.
+> 
+> On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
+> > Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
+> > GICv5 host to run GICv3-based VMs. This change enables the
+> > VHE/nVHE/hVHE/protected modes, but does not support nested
+> > virtualization.
+> 
+> Can't we just load the shadow state into the compat VGICv3? I'm worried
+> this has sharp edges on the UAPI side as well as users wanting to
+> migrate VMs to new hardware.
+> 
+> The guest hypervisor should only see GICv3-only or GICv5-only, we can
+> pretend FEAT_GCIE_LEGACY never existed :)
+> 
+> > Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > ---
+> >  arch/arm64/include/asm/kvm_asm.h   |  2 ++
+> >  arch/arm64/include/asm/kvm_hyp.h   |  2 ++
+> >  arch/arm64/kvm/Makefile            |  3 +-
+> >  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 12 +++++++
+> >  arch/arm64/kvm/hyp/vgic-v3-sr.c    | 51 +++++++++++++++++++++++++-----
+> >  arch/arm64/kvm/sys_regs.c          | 10 +++++-
+> >  arch/arm64/kvm/vgic/vgic-init.c    |  6 ++--
+> >  arch/arm64/kvm/vgic/vgic-v3.c      |  6 ++++
+> >  arch/arm64/kvm/vgic/vgic-v5.c      | 14 ++++++++
+> >  arch/arm64/kvm/vgic/vgic.h         |  2 ++
+> >  include/kvm/arm_vgic.h             |  9 +++++-
+> >  11 files changed, 104 insertions(+), 13 deletions(-)
+> >  create mode 100644 arch/arm64/kvm/vgic/vgic-v5.c
+> > 
+> > diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> > index bec227f9500a..ad1ef0460fd6 100644
+> > --- a/arch/arm64/include/asm/kvm_asm.h
+> > +++ b/arch/arm64/include/asm/kvm_asm.h
+> > @@ -81,6 +81,8 @@ enum __kvm_host_smccc_func {
+> >  	__KVM_HOST_SMCCC_FUNC___kvm_timer_set_cntvoff,
+> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_vmcr_aprs,
+> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
+> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_enable,
+> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_disable,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
+> >  	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
+> > diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> > index e6be1f5d0967..9c8adc5186ec 100644
+> > --- a/arch/arm64/include/asm/kvm_hyp.h
+> > +++ b/arch/arm64/include/asm/kvm_hyp.h
+> > @@ -85,6 +85,8 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if);
+> >  void __vgic_v3_save_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+> >  void __vgic_v3_restore_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
+> >  int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
+> > +void __vgic_v3_compat_mode_enable(void);
+> > +void __vgic_v3_compat_mode_disable(void);
+> >  
+> >  #ifdef __KVM_NVHE_HYPERVISOR__
+> >  void __timer_enable_traps(struct kvm_vcpu *vcpu);
+> > diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> > index 7c329e01c557..3ebc0570345c 100644
+> > --- a/arch/arm64/kvm/Makefile
+> > +++ b/arch/arm64/kvm/Makefile
+> > @@ -23,7 +23,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+> >  	 vgic/vgic-v3.o vgic/vgic-v4.o \
+> >  	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
+> >  	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
+> > -	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o
+> > +	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
+> > +	 vgic/vgic-v5.o
+> >  
+> >  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+> >  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
+> > diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > index e9198e56e784..61af55df60a9 100644
+> > --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> > @@ -475,6 +475,16 @@ static void handle___vgic_v3_restore_vmcr_aprs(struct kvm_cpu_context *host_ctxt
+> >  	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
+> >  }
+> >  
+> > +static void handle___vgic_v3_compat_mode_enable(struct kvm_cpu_context *host_ctxt)
+> > +{
+> > +	__vgic_v3_compat_mode_enable();
+> > +}
+> > +
+> > +static void handle___vgic_v3_compat_mode_disable(struct kvm_cpu_context *host_ctxt)
+> > +{
+> > +	__vgic_v3_compat_mode_disable();
+> > +}
+> > +
+> >  static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
+> >  {
+> >  	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
+> > @@ -603,6 +613,8 @@ static const hcall_t host_hcall[] = {
+> >  	HANDLE_FUNC(__kvm_timer_set_cntvoff),
+> >  	HANDLE_FUNC(__vgic_v3_save_vmcr_aprs),
+> >  	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
+> > +	HANDLE_FUNC(__vgic_v3_compat_mode_enable),
+> > +	HANDLE_FUNC(__vgic_v3_compat_mode_disable),
+> >  	HANDLE_FUNC(__pkvm_init_vm),
+> >  	HANDLE_FUNC(__pkvm_init_vcpu),
+> >  	HANDLE_FUNC(__pkvm_teardown_vm),
+> > diff --git a/arch/arm64/kvm/hyp/vgic-v3-sr.c b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > index f162b0df5cae..b03b5f012226 100644
+> > --- a/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > +++ b/arch/arm64/kvm/hyp/vgic-v3-sr.c
+> > @@ -257,6 +257,18 @@ void __vgic_v3_restore_state(struct vgic_v3_cpu_if *cpu_if)
+> >  	}
+> >  }
+> >  
+> > +void __vgic_v3_compat_mode_enable(void)
+> > +{
+> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, 0, ICH_VCTLR_EL2_V3);
+> > +	isb();
+> > +}
+> > +
+> > +void __vgic_v3_compat_mode_disable(void)
+> > +{
+> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
+> > +	isb();
+> > +}
+> > +
+> 
+> It isn't clear to me what these ISBs are synchonizing against. AFAICT,
+> the whole compat thing is always visible and we can restore the rest of
+> the VGICv3 context before guaranteeing the enable bit has been observed.
+> 
+> Can we consolidate this into a single hyp call along with
+> __vgic_v3_*_vmcr_aprs()?
+> 
+> Last bit as an FYI, kvm_call_hyp() has an implied context synchronization upon
+> return, either because of ERET in nVHE or an explicit ISB on VHE.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- smatch_scripts/gen_no_return_funcs.sh  | 2 +-
- smatch_scripts/gen_puts_list.sh        | 2 +-
- smatch_scripts/gen_rosenberg_funcs.sh  | 2 +-
- smatch_scripts/gen_sizeof_param.sh     | 2 +-
- smatch_scripts/gen_unwind_functions.sh | 2 +-
- smatch_scripts/kpatch.sh               | 2 +-
- smatch_scripts/show_errs.sh            | 2 +-
- smatch_scripts/show_ifs.sh             | 2 +-
- smatch_scripts/show_unreachable.sh     | 2 +-
- smatch_scripts/summarize_errs.sh       | 2 +-
- smatch_scripts/test_generic.sh         | 4 ++--
- smatch_scripts/test_kernel.sh          | 4 ++--
- smatch_scripts/whitespace_only.sh      | 4 ++--
- smatch_scripts/wine_checker.sh         | 4 ++--
- 14 files changed, 18 insertions(+), 18 deletions(-)
+Ah, reading the spec was a useful exercise. ICH_VMCR_EL2 is a modal
+register... I hear implementation folks *love* those :)
 
-diff --git a/smatch_scripts/gen_no_return_funcs.sh b/smatch_scripts/gen_no_return_funcs.sh
-index 713456c04aac..c5e16cc1008a 100755
---- a/smatch_scripts/gen_no_return_funcs.sh
-+++ b/smatch_scripts/gen_no_return_funcs.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
+Please do the aforementioned consolidation, at which point the purpose
+of the ISB should be apparent.
 
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
-     exit 1
- fi
+> >  void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
+> >  {
+> >  	/*
+> > @@ -296,12 +308,19 @@ void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
+> >  	}
+> >  
+> >  	/*
+> > -	 * Prevent the guest from touching the ICC_SRE_EL1 system
+> > -	 * register. Note that this may not have any effect, as
+> > -	 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
+> > +	 * GICv5 BET0 FEAT_GCIE_LEGACY doesn't include ICC_SRE_EL2. This is due
+> > +	 * to be relaxed in a future spec release, likely BET1, at which point
+> > +	 * this in condition can be dropped again.
+> >  	 */
+> > -	write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
+> > -		     ICC_SRE_EL2);
+> > +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
+> > +		/*
+> > +		 * Prevent the guest from touching the ICC_SRE_EL1 system
+> > +		 * register. Note that this may not have any effect, as
+> > +		 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
+> > +		 */
+> > +		write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
+> > +			     ICC_SRE_EL2);
+> > +	}
+> >  
+> >  	/*
+> >  	 * If we need to trap system registers, we must write
+> > @@ -322,8 +341,14 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if)
+> >  		cpu_if->vgic_vmcr = read_gicreg(ICH_VMCR_EL2);
+> >  	}
+> >  
+> > -	val = read_gicreg(ICC_SRE_EL2);
+> > -	write_gicreg(val | ICC_SRE_EL2_ENABLE, ICC_SRE_EL2);
+> > +	/*
+> > +	 * Can be dropped in the future when GICv5 BET1 is released. See
+> > +	 * comment above.
+> > +	 */
+> > +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
+> 
+> Can we use the GCIE cpucap instead, possibly via a shared helper with
+> the driver?
+> 
+> > -	if (kvm_vgic_global_state.type == VGIC_V3) {
+> > +	if (kvm_vgic_global_state.type == VGIC_V3 || kvm_vgic_in_v3_compat_mode()) {
+> 
+> Can we do a helper for this too?
+> 
+> >  		val &= ~ID_AA64PFR0_EL1_GIC_MASK;
+> >  		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
+> >  	}
+> > @@ -1953,6 +1953,14 @@ static int set_id_aa64pfr0_el1(struct kvm_vcpu *vcpu,
+> >  	    (vcpu_has_nv(vcpu) && !FIELD_GET(ID_AA64PFR0_EL1_EL2, user_val)))
+> >  		return -EINVAL;
+> >  
+> > +	/*
+> > +	 * If we are running on a GICv5 host and support FEAT_GCIE_LEGACY, then
+> > +	 * we support GICv3. Fail attempts to do anything but set that to IMP.
+> > +	 */
+> > +	if (kvm_vgic_in_v3_compat_mode() &&
+> > +	    FIELD_GET(ID_AA64PFR0_EL1_GIC_MASK, user_val) != ID_AA64PFR0_EL1_GIC_IMP)
+> > +		return -EINVAL;
+> > +
+> 
+> 
+> 
+> >  	return set_id_reg(vcpu, rd, user_val);
+> >  }
+> >  
+> > diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
+> > index eb1205654ac8..5f6506e297c1 100644
+> > --- a/arch/arm64/kvm/vgic/vgic-init.c
+> > +++ b/arch/arm64/kvm/vgic/vgic-init.c
+> > @@ -674,10 +674,12 @@ void kvm_vgic_init_cpu_hardware(void)
+> >  	 * We want to make sure the list registers start out clear so that we
+> >  	 * only have the program the used registers.
+> >  	 */
+> > -	if (kvm_vgic_global_state.type == VGIC_V2)
+> > +	if (kvm_vgic_global_state.type == VGIC_V2) {
+> >  		vgic_v2_init_lrs();
+> > -	else
+> > +	} else if (kvm_vgic_global_state.type == VGIC_V3 ||
+> > +		   kvm_vgic_in_v3_compat_mode()) {
+> >  		kvm_call_hyp(__vgic_v3_init_lrs);
+> > +	}
+> >  }
+> >  
+> >  /**
+> > diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
+> > index b9ad7c42c5b0..b5df4d36821d 100644
+> > --- a/arch/arm64/kvm/vgic/vgic-v3.c
+> > +++ b/arch/arm64/kvm/vgic/vgic-v3.c
+> > @@ -734,6 +734,9 @@ void vgic_v3_load(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
+> >  
+> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
+> > +		kvm_call_hyp(__vgic_v3_compat_mode_enable);
+> > +
+> >  	/* If the vgic is nested, perform the full state loading */
+> >  	if (vgic_state_is_nested(vcpu)) {
+> >  		vgic_v3_load_nested(vcpu);
+> > @@ -764,4 +767,7 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
+> >  
+> >  	if (has_vhe())
+> >  		__vgic_v3_deactivate_traps(cpu_if);
+> > +
+> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
+> > +		kvm_call_hyp(__vgic_v3_compat_mode_disable);
 
-diff --git a/smatch_scripts/gen_puts_list.sh b/smatch_scripts/gen_puts_list.sh
-index 5a877aeb8423..32eda6d52e42 100755
---- a/smatch_scripts/gen_puts_list.sh
-+++ b/smatch_scripts/gen_puts_list.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
+Do we need to eagerly disable compat mode or can we just configure the
+VGIC correctly for the intended vCPU at load()?
 
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
-     exit 1
- fi
-
-diff --git a/smatch_scripts/gen_rosenberg_funcs.sh b/smatch_scripts/gen_rosenberg_funcs.sh
-index 0152ba9c1192..cfc0c9a8a40d 100755
---- a/smatch_scripts/gen_rosenberg_funcs.sh
-+++ b/smatch_scripts/gen_rosenberg_funcs.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
-
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
-     exit 1
- fi
-
-diff --git a/smatch_scripts/gen_sizeof_param.sh b/smatch_scripts/gen_sizeof_param.sh
-index 8f4e5f7493c0..653f39dae61e 100755
---- a/smatch_scripts/gen_sizeof_param.sh
-+++ b/smatch_scripts/gen_sizeof_param.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
-
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
-     exit 1
- fi
-
-diff --git a/smatch_scripts/gen_unwind_functions.sh b/smatch_scripts/gen_unwind_functions.sh
-index ae8504902018..dc7d66fa0bf1 100755
---- a/smatch_scripts/gen_unwind_functions.sh
-+++ b/smatch_scripts/gen_unwind_functions.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
-
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
-     exit 1
- fi
-
-diff --git a/smatch_scripts/kpatch.sh b/smatch_scripts/kpatch.sh
-index 66cef9581ca0..7ee229a0bfbf 100755
---- a/smatch_scripts/kpatch.sh
-+++ b/smatch_scripts/kpatch.sh
-@@ -4,7 +4,7 @@ TMP_DIR=/tmp
-
- help()
- {
--    echo "Usage: $0 [--no-compile|--amend] <filename>"
-+	echo "Usage: $(basename $0) [--no-compile|--amend] <filename>"
-     echo "You must be at the base of the kernel tree to run this."
-     exit 1
- }
-diff --git a/smatch_scripts/show_errs.sh b/smatch_scripts/show_errs.sh
-index bc6930ffa245..2f3983abab45 100755
---- a/smatch_scripts/show_errs.sh
-+++ b/smatch_scripts/show_errs.sh
-@@ -15,7 +15,7 @@ done
- file=$1
- [ "$file" = "" ] && [ -e err-list ] && file=err-list
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 [-C <lines>] [-b] [-k] <file with smatch messages>"
-+	echo "Usage:  $(basename $0) [-C <lines>] [-b] [-k] <file with smatch messages>"
-     echo "  -C <lines>:  Print <lines> of context"
-     exit 1
- fi
-diff --git a/smatch_scripts/show_ifs.sh b/smatch_scripts/show_ifs.sh
-index 4f93ca5fa285..8b84606250b5 100755
---- a/smatch_scripts/show_ifs.sh
-+++ b/smatch_scripts/show_ifs.sh
-@@ -9,7 +9,7 @@ fi
-
- file=$1
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 [-C <lines of context>] <file with smatch messages>"
-+	echo "Usage:  $(basename $0) [-C <lines of context>] <file with smatch messages>"
-     exit 1
- fi
-
-diff --git a/smatch_scripts/show_unreachable.sh b/smatch_scripts/show_unreachable.sh
-index 7402615dc670..e866760c6726 100755
---- a/smatch_scripts/show_unreachable.sh
-+++ b/smatch_scripts/show_unreachable.sh
-@@ -24,7 +24,7 @@ done
-
- file=$1
- if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 [-C <lines>] [-b] [-k] <file with smatch messages>"
-+	echo "Usage:  $(basename $0) [-C <lines>] [-b] [-k] <file with smatch messages>"
-     echo "  -C <lines>:  Print <lines> of context"
-     echo "  -b        :  Ignore unreachable break statements"
-     echo "  -k        :  Ignore some kernel defines"
-diff --git a/smatch_scripts/summarize_errs.sh b/smatch_scripts/summarize_errs.sh
-index b958a015ddf2..a444fa267495 100755
---- a/smatch_scripts/summarize_errs.sh
-+++ b/smatch_scripts/summarize_errs.sh
-@@ -2,7 +2,7 @@
-
- print_help()
- {
--    echo "usage: $0 <warning file>"
-+	echo "usage: $(basename $0) <warning file>"
-     exit 1;
- }
-
-diff --git a/smatch_scripts/test_generic.sh b/smatch_scripts/test_generic.sh
-index 9fbd1caf4b29..5ad08f4fa135 100755
---- a/smatch_scripts/test_generic.sh
-+++ b/smatch_scripts/test_generic.sh
-@@ -1,12 +1,12 @@
- #!/bin/bash
-
--NR_CPU=$(cat /proc/cpuinfo | grep ^processor | wc -l)
-+NR_CPU=$(nproc)
- TARGET=""
- WLOG="smatch_warns.txt"
- LOG="smatch_compile.warns"
- function usage {
-     echo
--    echo "Usage:  $0 [smatch options]"
-+    echo "Usage: $(basename $0) [smatch options]"
-     echo "Compiles the kernel with -j${NR_CPU}"
-     echo " available options:"
-     echo "	--endian          : enable endianness check"
-diff --git a/smatch_scripts/test_kernel.sh b/smatch_scripts/test_kernel.sh
-index 9d25ce9c1ed3..9a0eb482a2f6 100755
---- a/smatch_scripts/test_kernel.sh
-+++ b/smatch_scripts/test_kernel.sh
-@@ -2,13 +2,13 @@
-
- set -e
-
--NR_CPU=$(cat /proc/cpuinfo | grep ^processor | wc -l)
-+NR_CPU=$(nproc)
- TARGET="bzImage modules"
- WLOG="smatch_warns.txt"
- LOG="smatch_compile.warns"
- function usage {
-     echo
--    echo "Usage:  $0 [smatch options]"
-+    echo "Usage: $(basename $0) [smatch options]"
-     echo "Compiles the kernel with -j${NR_CPU}"
-     echo " available options:"
-     echo "	--endian          : enable endianness check"
-diff --git a/smatch_scripts/whitespace_only.sh b/smatch_scripts/whitespace_only.sh
-index 975e6571e1e7..e72afb67a519 100755
---- a/smatch_scripts/whitespace_only.sh
-+++ b/smatch_scripts/whitespace_only.sh
-@@ -2,7 +2,7 @@
-
- usage()
- {
--    echo "usage:  $0 <patch file>"
-+	echo "usage:  $(basename $0) <patch file>"
-     exit 1
- }
-
-@@ -84,7 +84,7 @@ for file in $files ; do
- 	echo '!!                            !!'
- 	echo '!!#$%@$%@^@#$^@#%@$%@$%@#%$@#%!!'
-
--	diff -u $before $after
-+	diff -u $before $after
-     fi
-     rm -f $before $after $tmpfile
- done
-diff --git a/smatch_scripts/wine_checker.sh b/smatch_scripts/wine_checker.sh
-index 79b4faa51a07..5825cf9e8a13 100755
---- a/smatch_scripts/wine_checker.sh
-+++ b/smatch_scripts/wine_checker.sh
-@@ -1,7 +1,7 @@
- #!/bin/bash
-
- function usage {
--    echo "Usage:  $0 [--sparse][--valgrind][--debug] path/to/file.c"
-+	echo "Usage:  $(basename $0) [--sparse][--valgrind][--debug] path/to/file.c"
-     exit 1
- }
-
-@@ -14,7 +14,7 @@ else
-     echo "Smatch binary not found."
-     exit 1
- fi
--
-+
- POST=""
- WINE_ARGS="-p=wine --full-path -D__i386__"
-
---
-2.46.3
-
+> >  }
+> > diff --git a/arch/arm64/kvm/vgic/vgic-v5.c b/arch/arm64/kvm/vgic/vgic-v5.c
+> > new file mode 100644
+> > index 000000000000..57199449ca0f
+> > --- /dev/null
+> > +++ b/arch/arm64/kvm/vgic/vgic-v5.c
+> > @@ -0,0 +1,14 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +#include <kvm/arm_vgic.h>
+> > +
+> > +#include "vgic.h"
+> > +
+> > +inline bool kvm_vgic_in_v3_compat_mode(void)a
+> 
+> nit: we're generally trusting of the compiler to 'do the right thing'
+> and avoid explicit inline specifiers unless necessary.
+> 
+> > +{
+> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif) &&
+> > +	    kvm_vgic_global_state.has_gcie_v3_compat)
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> 
+> This should be a per-VM thing once KVM support for GICv5 lands. Can you
+> get ahead of that and take a KVM pointer that goes unused. Maybe rename
+> it:
+> 
+> bool vgic_is_v3_compat(struct kvm *kvm)
+> 
+> Or something similar.
+> 
+> Thanks,
+> Oliver
+> 
