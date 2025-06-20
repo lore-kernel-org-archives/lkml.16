@@ -1,119 +1,161 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22FFB15A8;
-	Fri, 20 Jun 2025 01:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3369135950
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750382543; cv=none; b=HMyPXRslIbx4EMcicEpF59HVh9XZZipNBQAoPGw0FvsmYwbybpprYyrLHi6Ko6Reyh54/1nVVBHzYGnd9wcqltUejFqXIViFwpUQIycv6Ii5LgYZEZpjECaciXrn5RdTRJbjoSLCn7jQ9vvaD9lkdDB4G1xRtSdBlD0zh4duZsE=
+	t=1750382700; cv=none; b=VBssdR/MbGNQVyR2bKw+4HL4rWOTJF2/ZTlKo2twYRR1xzw0oSA0EnR0V5XSMewwRUoSphQ8g0Z3T158qoIo6p5zbbigUuEa9qRZMKJS5vrpWs15Lbr6cJuR/WXMqSLXBTwAHyWk24f+/NmK/kHsvAOJxsDY9wGpLKTGjssBvis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750382543; c=relaxed/simple;
-	bh=ye518mZO0ATTHA/VKZIRuQMgvXIzdamAefhJTThYFY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=po95gUSak1YT7s+O7ALc3YOJFIREDKz+auTYr2EDz25YhsD2OLl4Qk3dvFBdIr00wsqSyLAr0VxO9l9aOym6B2OSxnrAYY0ljLvI+97s4aNnIUQenttV5c8CpHnidPZg9pSE4UZM1JF7MvD8E6UQNCO14B/ifZKdbax7GUgok0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=T/gj0YRk; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750382700; c=relaxed/simple;
+	bh=ZE6H1UsaemZuuFtMzSuGkSE5yaVJfmesBRedgaKkURA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YxObmX4K9k6WOSi2FPQiIaAdjnZYOMJrCigGVK2/4U+DtUGk78h+gClKtjDCXWQxestEQJnFj7H/+3jYzUEqop1tQUXrIfaU7TGRUy+ZjGXK68ABxPY4NP1ljdWC7pC1nPN0giMzBP/P8FJT6aS6mtdnnhTY65VFAzlp2JajGUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=Wl5qVVaj; arc=none smtp.client-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="T/gj0YRk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=gN
-	gSoBAGHb087xh7RdKgFmbAjPkYpRZ93PeMkFlrG0g=; b=T/gj0YRk22RsRzVtpL
-	YsJqnEIYeTMwxXRjbWuL4C+NRnv0lyhELprwTs3fWy65I3zHlFOEHEtfQzd+KdOI
-	QzQdLWbHfdOalK9K/0/4Zdz4CsIXOIk2Gc8q8n46OSkGWXuajkY6dWlIE7CBnQ9i
-	tn2HTfkDVK8HYsm7azocHYG80=
-Received: from 163.com (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3nvKut1Row0BIAg--.43572S2;
-	Fri, 20 Jun 2025 09:21:51 +0800 (CST)
-From: Yuan Chen <chenyuan_fl@163.com>
-To: ast@kernel.org,
-	qmo@qmon.net,
-	alexei.starovoitov@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenyuan_fl@163.com,
-	Yuan Chen <chenyuan@kylinos.cn>
-Subject: [PATCH v3] bpftool: Fix memory leak in dump_xx_nlmsg on realloc failure
-Date: Fri, 20 Jun 2025 09:21:33 +0800
-Message-Id: <20250620012133.14819-1-chenyuan_fl@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAADnVQLy0_FsjRLt2n9R0Rs90VvLQYbkSiji6usaoB_bf4+tYg@mail.gmail.com>
-References: <CAADnVQLy0_FsjRLt2n9R0Rs90VvLQYbkSiji6usaoB_bf4+tYg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="Wl5qVVaj"
+Received: from pps.filterd (m0167075.ppops.net [127.0.0.1])
+	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JDAUu7024212
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:24:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : message-id :
+ mime-version : subject : to; s=pps01;
+ bh=GOxKSLo88/sXZwWQN7+1MNoBNEcUs8IGR6idhRWKuT4=;
+ b=Wl5qVVajGyapEOBP/ZgYDieFsd7UvqoNRUOm0bpseTC3OM+CKNoaDul3A0QuQO6vJnmz
+ TzFZhsnsZCsvk8O/AdfQVO2mrgVkto4l22ZM7YopRLvF8vY3mlOvrjGXJMXwkm5igrxk
+ Esbu6SYWjtqkxxDTsgM144AsGcPz5+VqlsbzPwOxFb/Ba0uQYBCQTeyqVQG4jM4t0OZ5
+ FauKl5ZaCCjFTFEQUbZw+ZtUDrachxlOwvnLrZKnJzAliHeXyNuJKO/QzSTPxMPjehCk
+ DV8SrrOIZ0N4mWvX1Um87vUSGzl5VUph0pVgwAGKdJ0tEcUxjNKPtRuhBOi4kxI0fNxr 9w== 
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 479p7pqscr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:24:50 -0400
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a589edc51aso32440611cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:24:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750382690; x=1750987490;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GOxKSLo88/sXZwWQN7+1MNoBNEcUs8IGR6idhRWKuT4=;
+        b=xAdZ2CYJk5nNJiZbbMSHwtynX1l6Hx0r1xKt63QDBoJERO58r0oh9ueQObW7F0LzJf
+         1EOACBSLycLbBwmCuun6WfGcBeiw6Gk/qscu5y9pE4yWGBd0uABXf6vEVyhEccIA9Pwl
+         KztF81gFZRIXT7IgCDbKcoHLxtdaoosBy2t+HBN4mgJ4oJLwNDDbpQiDysMRyw2edlrV
+         Yi2oj1j9LLDsYMXKDEggJD7VKyfWTBZrtwYVrQoMJUyCrmBHXVNo6+DnIxRimUi4hSct
+         U/cZJqk0lw2Jzkk0898Em1kYu8G8IsrPB+SEUzxGr42E9Q8PkuUp+0HPqZzW/MRoPw0u
+         2CLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5omyiCyxzVrrjVhLzbJAoeCGSy4rHdnLjWJmLUWA2ad20NENHQ/N7sQRgBYxkndeEfOu9/rGvCny6F9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrxQuD7To5BGBhVa6PgcNhnS/vTpCCBm9hWouoIC17+HrdNNcE
+	eST58yLcqrgtPQ2bt4gqimJgztHLjqyloGpshrRHorMRpsiM4TtZwBcP4BE5eqo6Nue9znhW/Ln
+	YU8Lzy3ELHz38Iz7Iy4LLSxPfx7LQj2cOS5gw8OLcdLzxC5V25ncjr6hbvDplOw==
+X-Gm-Gg: ASbGnctUBjgrAMnJbvhpBpYbmfrA5sleTB1WAanGMxL4XzH2Ibs5BefLNUAwyo5FtxC
+	sB/KyPw1A3VTsi31C27LSDJOzAWa28KWJeh+zy/bKZKfnDzLlCmKzCUfk2rFcMLdqOY7Yl+kBb4
+	aVKMZffV0bnonUi0McDkvumkunGZsuMxuQQZJ9NZtRoiQ4DH5hiMaVN6GVmKp3S104Dh851Tn3K
+	QWLqLQrFuWF5yt5Zh20okDR0Lg5uh62fhEC205xypcIFv5xcj1ccPdrMhc/ngL+cV2t48TYeJNP
+	5Sfg42tbgQwMjZHwEoZIKlo+rbJ2LJ8aA7Fx98Nfvo2A4OEL3NE+dndWGcq0JbxOBhC/
+X-Received: by 2002:a05:622a:180b:b0:4a6:f416:48c8 with SMTP id d75a77b69052e-4a77a21e7a6mr19249481cf.23.1750382689872;
+        Thu, 19 Jun 2025 18:24:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEC9jHCGCp55sYm55ro7Kc20y+6lcgDMG8zlg8paNloPrfi/X7/VdzRZ4ySVIX6xJuzroxtdQ==
+X-Received: by 2002:a05:622a:180b:b0:4a6:f416:48c8 with SMTP id d75a77b69052e-4a77a21e7a6mr19249191cf.23.1750382689454;
+        Thu, 19 Jun 2025 18:24:49 -0700 (PDT)
+Received: from [127.0.1.1] (dyn-160-39-33-242.dyn.columbia.edu. [160.39.33.242])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e79c12sm3794321cf.53.2025.06.19.18.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 18:24:49 -0700 (PDT)
+From: Tal Zussman <tz2294@columbia.edu>
+Subject: [PATCH v3 0/4] mm: userfaultfd: assorted fixes and cleanups
+Date: Thu, 19 Jun 2025 21:24:22 -0400
+Message-Id: <20250619-uffd-fixes-v3-0-a7274d3bd5e4@columbia.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3nvKut1Row0BIAg--.43572S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFW5Xry7WF18XFWrJr1UKFg_yoW8tFy3pa
-	y7Ga40yr15WF1ru34kAa1rZFW3Cw1xKrs5Gr43G3y8Cw15Wrn3uF18KFyFvFs0gFyrWFy2
-	yr1FkF9rXF1UAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEb18DUUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiJxdyvWhUsxR6vgAAsg
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEa4VGgC/12MzQ7CIBAGX6XhLAbY/lhPvofxQGGxm2gxYImm6
+ btL66V6nN1vZmIRA2Fkx2JiARNF8kMG2BXM9Hq4IiebmSmhKlGB5KNzljt6YeSyVACykxXWwLL
+ wCLg+8v58ydxTfPrwXttJLtdvphawzSTJBW9NDQfTgBNlczL+Nt470nu0I1tKSW3t5sdW2QZor
+ XbYauXwz57n+QNJ5y/i5QAAAA==
+X-Change-ID: 20250531-uffd-fixes-142331b15e63
+To: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Tal Zussman <tz2294@columbia.edu>
+X-Mailer: b4 0.14.3-dev-d7477
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750382688; l=2062;
+ i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
+ bh=ZE6H1UsaemZuuFtMzSuGkSE5yaVJfmesBRedgaKkURA=;
+ b=h51Sumoe8WMQI0ow4ldHFipUTQo0+KGud2JGMHV3Z4Jp/FnieXctvfS3G6UIcUk8KBHKmttXs
+ /uxZhxMsgciDp/5JmA2w18lXCk8p26Nd2DbvPPJsyobMopV4CLUTM+O
+X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
+ pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDAwOCBTYWx0ZWRfX5jvkBAXMrZ7u jcfVzE2bUgvmzNHh3RjdxOuqpsfDmwY9oYHDsMF4YBFVpGUDFTxQHm63fYMIELNQLII3NQvasHa aQF6R5C587AyLXJ12JjYQ4TA3uWyAztCAg19UEdxjSpi2pd/pytLQYt3KVIDIdvg0JUhcM0chkS
+ 7mWkj5IjNMla5T7yHraqOK0A/F5CRE3vL4SqLUdvYsYTWM9w3/8yzjj7wPCeW6IT6tylQ93rgb0 /JifnJpyqIgleNx6JIPYsMUkPG9pJfrZAW0XheaBZ3HOVgJMA6ZGgC4ziEiSZAoJhzxqcOJPLVo ZWpe1NjfdMqaN5U5jWChHvjOMES1yvF+GYBDTxDqTCfFYGDEiF7tDp+M8Yi7DTZXjBZExMH8z7t A96gtdzu
+X-Proofpoint-GUID: wDEqfMNvVlQqUNJNPs5eVMvVAf6cS1WN
+X-Proofpoint-ORIG-GUID: wDEqfMNvVlQqUNJNPs5eVMvVAf6cS1WN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-19_08,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=10
+ priorityscore=1501 malwarescore=0 suspectscore=0 lowpriorityscore=10
+ clxscore=1015 mlxlogscore=602 mlxscore=0 adultscore=0 spamscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2505160000 definitions=main-2506200008
 
-From: Yuan Chen <chenyuan@kylinos.cn>
+Two fixes and two cleanups for userfaultfd.
 
-In function dump_xx_nlmsg(), when realloc() fails to allocate memory,
-the original pointer to the buffer is overwritten with NULL. This causes
-a memory leak because the previously allocated buffer becomes unreachable
-without being freed.
+Note that the third patch yields a small change in the ABI, but we seem
+to have concluded that that's acceptable in this case.
 
-Fixes: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
-Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
 ---
- tools/bpf/bpftool/net.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Changes in v3:
+- Propagate tags. (David, Jason)
+- Move the uffd unregistration fixes patch before the
+  VM_WARN_ON_ONCE() conversion patch, as per David.
+- Update comments and commit message of 2/4, as per David.
+- Update the commit message in 3/4 with more details about various
+  conversions, as per David.
+- Convert two additional WARN_ON()s in 3/4, as per David.
+- Link to v2: https://lore.kernel.org/r/20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu
 
-diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
-index 64f958f437b0..cfc6f944f7c3 100644
---- a/tools/bpf/bpftool/net.c
-+++ b/tools/bpf/bpftool/net.c
-@@ -366,17 +366,18 @@ static int dump_link_nlmsg(void *cookie, void *msg, struct nlattr **tb)
- {
- 	struct bpf_netdev_t *netinfo = cookie;
- 	struct ifinfomsg *ifinfo = msg;
-+	struct ip_devname_ifindex *tmp;
- 
- 	if (netinfo->filter_idx > 0 && netinfo->filter_idx != ifinfo->ifi_index)
- 		return 0;
- 
- 	if (netinfo->used_len == netinfo->array_len) {
--		netinfo->devices = realloc(netinfo->devices,
--			(netinfo->array_len + 16) *
--			sizeof(struct ip_devname_ifindex));
--		if (!netinfo->devices)
-+		tmp = realloc(netinfo->devices,
-+			(netinfo->array_len + 16) * sizeof(struct ip_devname_ifindex));
-+		if (!tmp)
- 			return -ENOMEM;
- 
-+		netinfo->devices = tmp;
- 		netinfo->array_len += 16;
- 	}
- 	netinfo->devices[netinfo->used_len].ifindex = ifinfo->ifi_index;
-@@ -395,6 +396,7 @@ static int dump_class_qdisc_nlmsg(void *cookie, void *msg, struct nlattr **tb)
- {
- 	struct bpf_tcinfo_t *tcinfo = cookie;
- 	struct tcmsg *info = msg;
-+	struct tc_kind_handle *tmp;
- 
- 	if (tcinfo->is_qdisc) {
- 		/* skip clsact qdisc */
-@@ -406,11 +408,12 @@ static int dump_class_qdisc_nlmsg(void *cookie, void *msg, struct nlattr **tb)
- 	}
- 
- 	if (tcinfo->used_len == tcinfo->array_len) {
--		tcinfo->handle_array = realloc(tcinfo->handle_array,
-+		tmp = realloc(tcinfo->handle_array,
- 			(tcinfo->array_len + 16) * sizeof(struct tc_kind_handle));
--		if (!tcinfo->handle_array)
-+		if (!tmp)
- 			return -ENOMEM;
- 
-+		tcinfo->handle_array = tmp;
- 		tcinfo->array_len += 16;
- 	}
- 	tcinfo->handle_array[tcinfo->used_len].handle = info->tcm_handle;
+Changes in v2:
+- Remove Pavel Emelyanov <xemul@parallels.com> from To: due to bouncing
+  email.
+- Propagate tags. (David, Peter)
+- Add a patch converting userfaultfd BUG_ON()s to VM_WARN_ON_ONCE().
+- Move the "different uffd" check in Patch 3 (prev. Patch 2) before the
+  vma_can_userfault() check due to the wp_async bug, as per James.
+- Change the added BUG_ON() in Patch 3 to a VM_WARN_ON_ONCE, as per
+  James and David.
+- Reorder the assertions in Patch 3 to simplify them and avoid the
+  wp_async bug, as per James.
+- Update the Patch 3 commit message to include more details, as per
+  Peter.
+- Link to v1: https://lore.kernel.org/r/20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu
+
+---
+Tal Zussman (4):
+      userfaultfd: correctly prevent registering VM_DROPPABLE regions
+      userfaultfd: prevent unregistering VMAs through a different userfaultfd
+      userfaultfd: remove (VM_)BUG_ON()s
+      userfaultfd: remove UFFD_CLOEXEC, UFFD_NONBLOCK, and UFFD_FLAGS_SET
+
+ fs/userfaultfd.c              | 78 ++++++++++++++++++++++---------------------
+ include/linux/userfaultfd_k.h |  6 +---
+ mm/userfaultfd.c              | 68 ++++++++++++++++++-------------------
+ 3 files changed, 74 insertions(+), 78 deletions(-)
+---
+base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+change-id: 20250531-uffd-fixes-142331b15e63
+
+Best regards,
 -- 
-2.25.1
+Tal Zussman <tz2294@columbia.edu>
 
