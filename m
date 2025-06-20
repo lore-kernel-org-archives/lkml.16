@@ -1,78 +1,85 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6512DFF17
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA7B30E830
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750442591; cv=none; b=f0Uoi2Vg37E0ypVCdSvn6GX3H3VmyAe+JuX842Or5TAdQJxqyBLMAfUfLOO7+BlKmVa31vf3PXXYnukxOoquUN0R0ksinCFYhaGlWIckqwTTXYD58bHYVHcd8tzD+J8SaW7e3qnF5p/HwUroR5Sy5vCsJi6vIz8H0iXXKeNyy9o=
+	t=1750442769; cv=none; b=URfBi1gczTzS6CZXgIWLcCdgX5Qmn9DQg6ZRo3v3axLoy6TiFXcCrbrLtwPSv5z8uYHLAfb+5fbPITSV+elsuDtFlD30IFyYJaGshxTvt2hcBg+HDAcyVLg/EIJ9Y57U1PQZlISvxzOqyF6l1CaFIOkM4ff9Xdfto8UJGZIMtHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750442591; c=relaxed/simple;
-	bh=jFX7Zn97NNqcIpZJHQJ1GlN7HXgR2NyfxKF/YU5EaSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TGgOe6bhU3JFDeoUTg+MJb/rfZTOIswBEVoNss/5vSzLZnJsJpaxCvQEpgZ/sXwaDQhYcFKDveLlCm/tqMe8qUmjHDOf0F614fvGM1cq3EsCIbJYzi9S6q0tq6JxredYczvdx8L/benTsBZGaEbvSvi73nufUHIv+DHmpzhdMDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=OftwhLSt; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
+	s=arc-20240116; t=1750442769; c=relaxed/simple;
+	bh=+wzHUMazOKnec+G9KyklcNWUhGvrOLpI/W4XEr61oKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qUBO4dqCLC+Jnq14AbPcfj18gpmcm5rS+Y0Z24we41aaqqRwvPi8GCOWQ0sL/tLcXnVX5Sn5AiO4McWaKgnMAMYlur2hunPVqgoH/zu5rEz7R9CQ0sEArCbLq2kluZnNnCpY/X9LESr5G/bUUh0bRP+RmOAygZ+LmIitPo71Pss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YdwanO01; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="OftwhLSt"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-748e378ba4fso2878786b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:03:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YdwanO01"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e740a09eb00so1831555276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1750442589; x=1751047389; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750442767; x=1751047567; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LASqD0oWUo5WFt/+IQjzZizw1Tgw6LTsbm7AdZ6Fm7Q=;
-        b=OftwhLStxMF0iVL+ILcb4NxJj9Q7SNR/4Pt5EYD2GKlbeSkx51BDywP0b1/SY7lPpH
-         BSIvg/MrEI8wI0Ly9vd36dYIbFC9vXKfFfUEuqUyr27Tnoft+19gWIiF1PHs3lXjr5T6
-         1S3knnjH77N2/uNEsGsK1psEvdkEBgD7uwIlH3zgHoJWH/2HmsnwdgE7yREGELsi/mYT
-         F+SaFBg8ZNchJI9E0kxrlGvquUfg8+EsAL+jfzdPSXejIbzs5boG2RXL77jwMJUITkeW
-         4bVOTohjwUVSbW4EVrwTsrjQrXuFN4DDD2agedTQOkH3sa0gPGctnFgCyg4rEBg2VBQ4
-         8AZQ==
+        bh=ThTQstncnZmUa26ZltlYLWyz+7Cb8KdI0EV0/HFtDbE=;
+        b=YdwanO01A3KQf+DejmiFC9HOhWSq0NB+patSYEN9tXTTGAgzNjit/gR/ILmY6aLQWG
+         f610/EN+kgHrLjph0rTrspqAEebUTpode3KGV7CE2dJyPUBo3dDANHyEkniUyC+yNPD0
+         /OLP78GpsufeKcbE348bN2rVQZs46TR6LNKaF1DXTZA8VYRr6cZ4aSOrdi3wBNiPIDhq
+         8O8tmQavF21M9KMOY069zP5Ljkoiu65Nnn46WGEhSTwI0TlSKyzHexK8TaBU2kikwp/y
+         +oLdg8ZQTGJGFMLWqyvdkp6DfMGGrBN+IbIGRLfXIgAbl6e7YdzQNZiHnrNubr5RP09W
+         gKyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750442589; x=1751047389;
+        d=1e100.net; s=20230601; t=1750442767; x=1751047567;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LASqD0oWUo5WFt/+IQjzZizw1Tgw6LTsbm7AdZ6Fm7Q=;
-        b=OlcYSt4vlF+8pPy1N0Ol50tg0at7Y1Jrik0DoyDAx4jLsIrWif0j8MhUEU9B0rbB+2
-         epLA/tZmNRkGcSodnn9zk9Wxe/n9uCS+iJdOZ/uS+yhvJIBHs+keaGjF412evVWGYmva
-         RwRBXahuWm1N5dX578KeeaUsz8+lLDNLaZ9RjQJO11ZUeifeHHAf/eRkBq6Fy3ENyoGj
-         GcBiNzWrdiM2JkZcIM6b/yLJCQlANXUqqE3pD13QBv416sSbGsoK/mZfbHOQ3gXjW5N2
-         32waFVjILA6FxQbYCAmfG2cxQO9E5Wd782gTYRw5oahwKOGLwXNYi1x1sEd53JIyU7ri
-         luxw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+fledSF8l+5b0nAYIhlGbGfjX+y7T/e8bLewPUoDdYzAXgXcN3YUUk72UymY6MmX4UUDmW6K2qKYKhPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ0DGcmgGufQ3x1OeHYNTngBuZXAxsv6deNcV3xZ7hHxQQHbZq
-	4DuUWgI4TUvLbvXVG5uxX5Ltjh4AgyMqVkhCQnjKE4pAkAvdkx7Tv0sTj8JNTW8t/zY=
-X-Gm-Gg: ASbGncufemBguZHDpZWZ0EBLLaKkXlE9oWvgAf2I1GPTiy/cdWAhZanqh/MKrkDu4Mh
-	69dytS+R5+v3i3ymUQoQX0QLMG1Wv/+uJ9/2psvsKZWk2e0e8yjflrgFO/eeoqL3Y6FToL/5MUH
-	QqfVWAjGi3PU8bgU2QMEEhLQVukhsfe0TpAGTPIhTMrMz/P0t+vK61pVc2zTI/Hg8r9W9pOOE3u
-	1NScdrLIK9ybClYCKldRM4thwCoEeysrHOVNLQV+2eF/HQ0uQ9SNL+D2tMZqPfLwucRwJw1cAgN
-	fvGtsjgWULrC9lbDNjbRQ5oZ4UiNi7sAOWoIbvkBuICC0g8VFz7RWGVhiwjxlUUAVkI/VebNU9i
-	rmE30hS/8r1xzK+VQkg==
-X-Google-Smtp-Source: AGHT+IFlM8cNRiBkGT187wOeWcfkfeb30/gPkHi7Ft0d5GjTVFgLhRQpzSohSUSYFxFeTwX7y0TLjg==
-X-Received: by 2002:a05:6a20:72a5:b0:203:bb65:995a with SMTP id adf61e73a8af0-22026f007fcmr6414483637.30.1750442589385;
-        Fri, 20 Jun 2025 11:03:09 -0700 (PDT)
-Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1256f03sm2131724a12.51.2025.06.20.11.03.07
+        bh=ThTQstncnZmUa26ZltlYLWyz+7Cb8KdI0EV0/HFtDbE=;
+        b=SpSg+Bs+Q7bjc1TrJIIXawdxTRRblZre5EYti4CczlFGoGeL2Z1UerbZNFqyYBiW86
+         Rb2sB4Q94/jQkYMOwONbhC82YELrNbqZ7OOncLGfrbX/XmwcLUcgDzN0NrlOu5+y60fk
+         1fh682mnSFmjJPdQ0P1CXZHmmkmVrSelAve7rW5GIBz5/O2N7Ih39UTsn8oGxjZFOIvl
+         3N2mQMWA48S/0l0mFCNpU2EelT2b24Kc3raS4eIU4QcvuWiMOF5BpuoFiuba/1GeKK2d
+         6z22sDxOcU4jh60gx18IkBbZ60/nJT30/isO3wLdMY6jxWMz2yutQqNSpTdGtMr1SU7v
+         Mvhg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8l4N9dkS8xBoLcIt9racouFOzu0xBRcPKxflGoytQ+0oOX5XI+2Wud23utPgEHIUi468jtKWc3njOycg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP31zOMchNvrmNSCOltKEEw4JSF6dDm4T2Rwt32Ux1a9CR9Nmh
+	WVitW903l15BGsrjfZqtD3LHGob0PhStP9Xw5tGRfECLudGc4deWfAWl
+X-Gm-Gg: ASbGncvBLvWIwM3nbU8xxId443yx5YVhU9tNigoOyAssMNzQQlf8XuT6XJs080raSx2
+	rX4X5d/Ysupih/gxHroI1xgWc5+gdMO9Eg7r28x1E0OW6Ygrzv96S0bmD6uw+/rDII0IybIr2tQ
+	dXAInvk7Jg+bZk4AJkjU3ik25RkMBPKc+kb0dEd+HeBSEiHxO/up8fekOC83jitxJ1m5vT0DBcI
+	YAL6jcyqmm0rxBvdzqpbDoQa1IcmWRb0EGegQuReiRu149WGIV9uU2Lcb0PrBlGQKCyGn3/2JrU
+	NGY+/ql6QkjFrohVdCZp5NOHrmn12fbNpou0jcoU1JS06AGL4WDqRbB+pHDbpN475RK0/6iH4qK
+	pndHA8A==
+X-Google-Smtp-Source: AGHT+IGpzNTvUQe9mxEVIptHo4i/QXbhpfSOs71TRKNPlVJ7HkRTdPi5RFoc3K0VnlMA3ZySDgFsug==
+X-Received: by 2002:a05:6902:1541:b0:e82:24b3:7ec3 with SMTP id 3f1490d57ef6-e842bcdf7fbmr4728707276.23.1750442766512;
+        Fri, 20 Jun 2025 11:06:06 -0700 (PDT)
+Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:227e:8527:3def:3ad])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842aaed6e4sm769304276.20.2025.06.20.11.06.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 11:03:08 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jonathan Corbet <corbet@lwn.net>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Brigham Campbell <me@brighamcampbell.com>
-Subject: [PATCH] Fix typo in drm docs
-Date: Fri, 20 Jun 2025 12:02:58 -0600
-Message-ID: <20250620180258.132160-1-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.49.0
+        Fri, 20 Jun 2025 11:06:06 -0700 (PDT)
+From: Bijan Tabatabai <bijan311@gmail.com>
+To: damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: sj@kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in migrate_{hot,cold} actions
+Date: Fri, 20 Jun 2025 13:04:56 -0500
+Message-ID: <20250620180458.5041-1-bijan311@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,26 +88,198 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix typo in Documentation/gpu/introduction.rst
+From: Bijan Tabatabai <bijantabatab@micron.com>
 
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
----
- Documentation/gpu/introduction.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+A recent patch set automatically sets the interleave weight for each node
+according to the node's maximum bandwidth [1]. In another thread, the patch
+set's author, Joshua Hahn, wondered if/how thes weights show be changed if
+the bandwidth utilization of the system changes [2]
 
-diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/introduction.rst
-index 3cd0c8860b94..39b4c943fa00 100644
---- a/Documentation/gpu/introduction.rst
-+++ b/Documentation/gpu/introduction.rst
-@@ -32,7 +32,7 @@ member, only the structure.
- 
- Except in special situations (to separate locked from unlocked variants)
- locking requirements for functions aren't documented in the kerneldoc.
--Instead locking should be check at runtime using e.g.
-+Instead locking should be checked at runtime using e.g.
- ``WARN_ON(!mutex_is_locked(...));``. Since it's much easier to ignore
- documentation than runtime noise this provides more value. And on top of
- that runtime checks do need to be updated when the locking rules change,
+This patch set adds the mechanism for dynamically changing how application
+data is interleaved across nodes while leaving the policy of what the
+interleave weights should be to userspace. It does this by modifying the
+migrate_{hot,cold} DAMOS actions to allow passing in a list of migration
+targets to their target_nid parameter. When this is done, the
+migrate_{hot,cold} actions will migrate pages between the specified nodes
+using the global interleave weights found at
+/sys/kernel/mm/mempolicy/weighted_interleave/node<N>. This functionality
+can be used to dynamically adjust how pages are interleaved by changing the
+global weights. When only a single migration target is passed to
+target_nid, the migrate_{hot,cold} actions will act the same as before.
+
+There have been prior discussions about how changing the interleave weights
+in response to the system's bandwidth utilization can be beneficial [2].
+However, currently the interleave weights only are applied when data is
+allocated. Migrating already allocated pages according to the dynamically
+changing weights will better help balance the bandwidth utilization across
+nodes.
+
+As a toy example, imagine some application that uses 75% of the local
+bandwidth. Assuming sufficient capacity, when running alone, we want to
+keep that application's data in local memory. However, if a second
+instance of that application begins, using the same amount of bandwidth,
+it would be best to interleave the data of both processes to alleviate the
+bandwidth pressure from the local node. Likewise, when one of the processes
+ends, the data should be moves back to local memory.
+
+We imagine there would be a userspace application that would monitor system
+performance characteristics, such as bandwidth utilization or memory access
+latency, and uses that information to tune the interleave weights. Others
+seem to have come to a similar conclusion in previous discussions [3].
+We are currently working on a userspace program that does this, but it is
+not quite ready to be published yet.
+
+We believe DAMON is the correct venue for the interleaving mechanism for a
+few reasons. First, we noticed that we don't ahve to migrate all of the
+application's pages to improve performance. we just need to migrate the
+frequently accessed pages. DAMON's existing hotness traching is very useful
+for this. Second, DAMON's quota system can be used to ensure we are not
+using too much bandwidth for migrations. Finally, as Ying pointed out [4],
+a complete solution must also handle when a memory node is at capacity. The
+existing migrate_cold action can be used in conjunction with the
+functionality added in this patch set to provide that complete solution.
+
+Functionality Test
+==================
+Below is an example of this new functionality in use to confirm that these
+patches behave as intended.
+In this example, the user initially sets the interleave weights to
+interleave the pages at a 1:1 ratio and start an application, alloc_data,
+using those weights that allocates 1GB of data then sleeps. Afterwards, the
+weights are changes to interleave pages at a 2:1 ratio. Using numastat, we
+show that DAMON has migrated the application's data to match the new
+interleave weights.
+  $ # Show that the migrate_hot action is used with multiple targets
+  $ cd /sys/kernel/mm/damon/admin/kdamonds/0
+  $ sudo cat ./contexts/0/schemes/0/action
+  migrate_hot
+  $ sudo cat ./contexts/0/schemes/0/target_nid
+  0-1
+  $ # Initially interleave at a 1:1 ratio
+  $ echo 1 | sudo tee /sys/kernel/mm/mempolicy/weighted_interleave/node0
+  $ echo 1 | sudo tee /sys/kernel/mm/mempolicy/weighted_interleave/node1
+  $ # Start alloc_data with the initial interleave ratio
+  $ numactl -w 0,1 ~/alloc_data 1G &
+  $ # Verify the initial allocation
+  $ numastat -c -p alloc_data
+
+  Per-node process memory usage (in MBs) for PID 12224 (alloc_data)
+           Node 0 Node 1 Total
+           ------ ------ -----
+  Huge          0      0     0
+  Heap          0      0     0
+  Stack         0      0     0
+  Private     514    514  1027
+  -------  ------ ------ -----
+  Total       514    514  1027
+  $ # Start interleaving at a 2:1 ratio
+  $ echo 2 | sudo tee /sys/kernel/mm/mempolicy/weighted_interleave/node0
+  $ # Verify that DAMON has migrated data to match the new ratio
+  $ numastat -c -p alloc_data
+
+  Per-node process memory usage (in MBs) for PID 12224 (alloc_data)
+           Node 0 Node 1 Total
+           ------ ------ -----
+  Huge          0      0     0
+  Heap          0      0     0
+  Stack         0      0     0
+  Private     684    343  1027
+  -------  ------ ------ -----
+  Total       684    343  1027
+
+Performance Test
+================
+Below is a simple example showing that interleaving application data using
+these patches can improve application performance.
+To do this, we run a bandwidth intensive embedding reduction application
+[5]. This workload is useful for this test because it reports the time it
+takes each iteration to run and reuses its buffers between allocation,
+allowing us to clearly see the benefits of the migration.
+
+We evaluate this a 128 core/256 thread AMD CPU, with 72 GB/s of local DDR
+bandwidth and 26 GB/s of CXL memory.
+
+Before we start the workload, the system bandwidth utilization is low, so
+we start with interleave weights biased as much as possible to the local
+node. When the workload begins, it saturates the local bandwidth, making
+the page placement suboptimal. To alleviate this, we modify the interleave
+weights, triggering DAMON to migrate the workload's data.
+
+  $ cd /sys/kernel/mm/damon/admin/kdamonds/0/
+  $ sudo cat ./contexts/0/schemes/0/action
+  migrate_hot
+  $ sudo cat ./contexts/0/schemes/0/target_nid
+  0-1
+  $ echo 255 | sudo tee /sys/kernel/mm/mempolicy/weighted_interleave/node0
+  $ echo 1 | sudo tee /sys/kernel/mm/mempolicy/weighted_interleave/node1
+  $ <path>/eval_baseline -d amazon_All -c 255 -r 100
+  <clip startup output>
+  Eval Phase 3: Running Baseline...
+
+  REPEAT # 0 Baseline Total time : 9043.24 ms
+  REPEAT # 1 Baseline Total time : 7307.71 ms
+  REPEAT # 2 Baseline Total time : 7301.4 ms
+  REPEAT # 3 Baseline Total time : 7312.44 ms
+  REPEAT # 4 Baseline Total time : 7282.43 ms
+  # Interleave weights changed to 3:1
+  REPEAT # 5 Baseline Total time : 6754.78 ms
+  REPEAT # 6 Baseline Total time : 5322.38 ms
+  REPEAT # 7 Baseline Total time : 5359.89 ms
+  REPEAT # 8 Baseline Total time : 5346.14 ms
+  REPEAT # 9 Baseline Total time : 5321.98 ms
+
+Updating the interleave weights, and having DAMON migrate the workload
+data according to the weights resulted in an approximately 25% speedup.
+
+Questions for Reviewers
+=======================
+1. Are you happy with the changes to the DAMON sysfs interface?
+2. Setting an interleave weight to 0 is currently not allowed. This makes
+   sense when the weights are only used for allocation. Does it make sense
+   to allow 0 weights now?
+
+Patches Sequence
+================
+This first patch exposes get_il_weight() in ./mm/internal.h to let DAMON
+access the interleave weights.
+The second patch implements the interleaving mechanism in the
+migrate_{hot/cold} actions.
+
+Revision History
+================
+Changes from v1
+(https://lore.kernel.org/linux-mm/20250612181330.31236-1-bijan311@gmail.com/)
+- Reuse migrate_{hot,cold} actions instead of creating a new action
+- Remove vaddr implementation
+- Remove most of the use of mempolicy, instead duplicate the interleave
+  logic and access interleave weights directly
+- Write more about the use case in the cover letter
+- Write about why DAMON was used for this in the cover letter
+- Add correctness test to the cover letter
+- Add performance test
+
+[1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
+[2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
+[3] https://lore.kernel.org/linux-mm/20250314151137.892379-1-joshua.hahnjy@gmail.com/
+[4] https://lore.kernel.org/linux-mm/87frjfx6u4.fsf@DESKTOP-5N7EMDA/
+[5] https://github.com/SNU-ARC/MERCI
+
+Bijan Tabatabai (2):
+  mm/mempolicy: Expose get_il_weight() to MM
+  mm/damon/paddr: Allow multiple migrate targets
+
+ include/linux/damon.h    |   8 +--
+ mm/damon/core.c          |   9 ++--
+ mm/damon/lru_sort.c      |   2 +-
+ mm/damon/paddr.c         | 108 +++++++++++++++++++++++++++++++++++++--
+ mm/damon/reclaim.c       |   2 +-
+ mm/damon/sysfs-schemes.c |  14 +++--
+ mm/internal.h            |   6 +++
+ mm/mempolicy.c           |   2 +-
+ samples/damon/mtier.c    |   6 ++-
+ samples/damon/prcl.c     |   2 +-
+ 10 files changed, 138 insertions(+), 21 deletions(-)
+
 -- 
-2.49.0
+2.43.5
 
