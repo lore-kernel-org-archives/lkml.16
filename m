@@ -1,91 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D235D17A2FC;
-	Fri, 20 Jun 2025 20:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5C41862BB;
+	Fri, 20 Jun 2025 20:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750451378; cv=none; b=qWOkC6y2esQTpi2LozMWML+QG9JeaM41TyMTc8FQsdQz2u0TEA3rHLxzY8KR2H2Hq5UmSGOco9fN4UGtFOCXlPLglMMNJXvMAcR6sEOGqcIHUm5AIwhgirDCT3qAlgYdYIHU5t9IIfYwe8vO0g7qVtXaRpLfIHDZ2R5clkoQa38=
+	t=1750451480; cv=none; b=L9D1y7TFcFv5NBoLtAF7vmP/yfEdDia8il8dtJlTRZF98RTe8m9AmrpX+Rk8l0RgmOUgdmfiFWk1hG5AOrhnIScabdOnuss+TF5fFH9ES03CK3oh2ZUF+zPCra954CFkn9Q6wbokmnDhZrjwyuJnvOT3/Qpga3LReZXWriDYQSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750451378; c=relaxed/simple;
-	bh=oKz1LT33m9jsQ4CxJ5fRgauawkfw2GApHL5/a2fWSdg=;
+	s=arc-20240116; t=1750451480; c=relaxed/simple;
+	bh=z2CBDTFaNkEb8wXZSali4WmCkEEPu1SJGj4x57/JJe8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gr2GkuMLw0Th/oHtGhR9MAhJCRwmGmTDJ4zemP1XT7nJ2TvEfpvUxROamt00f7eVOHiSITzv9SrNKT0IL0987YuGi5sXqkqwZ0747XTPNtryxxLEKQCKIEG6ykgQ6r0XjNLBpavN29l7wmqZpn0Xyd0SMAgjdh3lwvKA3YLBtjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWI247ws; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2OuehXFM93gp+0heiyhS+CZ5xStz187xxAxzvEdtNJCGvmH7RlxjcmxF7AVOpDA0LLqm0UiPUc6HY/GiM1ssCxaRlNv+e8UsEc+L4m/jVKd8gwUa2jnCVa3TWVmIrryRls0XaR95ikXzIg3XDzmRUsFXwWasGCqqsHv2AWtSSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=apPZ2Q5j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWI247ws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495D5C4CEE3;
-	Fri, 20 Jun 2025 20:29:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="apPZ2Q5j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA011C4CEE3;
+	Fri, 20 Jun 2025 20:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750451378;
-	bh=oKz1LT33m9jsQ4CxJ5fRgauawkfw2GApHL5/a2fWSdg=;
+	s=k20201202; t=1750451480;
+	bh=z2CBDTFaNkEb8wXZSali4WmCkEEPu1SJGj4x57/JJe8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mWI247ws50YQTWeXFSlEj353U4dlyqMrvkrWq6MGMEqs6okCBAc7KSYiDxCqMQp43
-	 9zR0YR+Ljt+gqCQU+9L7swfXpk92w1H0RtK6oqC17ZHYrBJBwcQ1mARfTRyj4NYSzr
-	 8uTKEwAjMhuAulRTMRxvcORY6I5B6WHkus/pwHocFAYGsmO2p7NYNYNaVL2ev0Mrp7
-	 Sd9Pv4XBt/hByspwZE/uFzwiUY8KnLCqzkP2DCk7cEpmIunVvmun7yyPUUggkDiobU
-	 ynWRS+qeuoF/VNovdDhxg1RnPYUwAxhazbep00KODOrGj+QJIHZYJ6GnMQFg6rAbZR
-	 9iIL0U9DCbffg==
-Date: Fri, 20 Jun 2025 13:29:36 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: sha256 - mark sha256_choose_blocks as
- __always_inline
-Message-ID: <20250620202936.GA5460@quark>
-References: <20250620191952.1867578-1-arnd@kernel.org>
+	b=apPZ2Q5jFjH0lxby9i/X7QSLCPOpDSRFlLE7rAWY+2nPbuZgn4J7bAN2IHEgDhIWP
+	 8Tl2wxoQds47Gq/UI88QSigXruXNSQdAeqhFzOQ+xfoZUdFhi73vsmnVuwv5ujY4n6
+	 8nn8GSR1Zw8s94g5fOunAuOaU/zqtQiIBeqxr4XmQh8FSHRyXBy6aPG/sR3zisTjSe
+	 NraUvpUq22U6tTpTOM7rqd2W5GBDbx+FEzsUcTdd6hmWdPkfIDZvDcTiVYFr5LfyYw
+	 I8AF5ErTsq9OULYYa/y0gfob9zAL7nt4AbZ/VwDxwGFZOAZ8sO49DI7rLBCiaSZiLV
+	 g3hs4RdkE/5pQ==
+Date: Fri, 20 Jun 2025 13:31:18 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf parse-events: Set default GH modifier properly
+Message-ID: <aFXFFktxXbV87lh2@google.com>
+References: <20250606225431.2109754-1-namhyung@kernel.org>
+ <CAP-5=fVoQXwFFdqY7ne0ZLJk+aTzm9knHqgVbvhJtb44doqe-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250620191952.1867578-1-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVoQXwFFdqY7ne0ZLJk+aTzm9knHqgVbvhJtb44doqe-g@mail.gmail.com>
 
-On Fri, Jun 20, 2025 at 09:19:40PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Jun 06, 2025 at 04:50:13PM -0700, Ian Rogers wrote:
+> On Fri, Jun 6, 2025 at 3:54 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Commit 7b100989b4f6bce7 ("perf evlist: Remove __evlist__add_default")
+> > changed to use "cycles:P" as a default event.  But the problem is it
+> > cannot set other default modifiers correctly.
+> >
+> > perf kvm needs to set attr.exclude_host by default but it didn't work
+> > because of the logic in the parse_events__modifier_list().  Also the
+> > exclude_GH_default was applied only if ":u" modifier was specified -
+> > which is strange.  Move it out after handling the ":GH" and check
+> > perf_host and perf_guest properly.
+> >
+> > Before:
+> >   $ ./perf kvm record -vv true |& grep exclude
+> >   (nothing)
+> >
+> > But specifying an event (without a modifier) works:
+> >
+> >   $ ./perf kvm record -vv -e cycles true |& grep exclude
+> >     exclude_host                     1
+> >
+> > After:
+> > It now works for the both cases:
+> >
+> >   $ ./perf kvm record -vv true |& grep exclude
+> >     exclude_host                     1
+> >
+> >   $ ./perf kvm record -vv -e cycles true |& grep exclude
+> >     exclude_host                     1
+> >
+> > Fixes: 35c8d21371e9b342 ("perf tools: Don't set attr.exclude_guest by default")
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> When the compiler chooses to not inline sha256_choose_blocks() in
-> the purgatory code, it fails to link against the missing CPU
-> specific version:
+> Code is more understandable than before and reads as correct.
 > 
-> x86_64-linux-ld: arch/x86/purgatory/purgatory.ro: in function `sha256_choose_blocks.part.0':
-> sha256.c:(.text+0x6a6): undefined reference to `irq_fpu_usable'
-> sha256.c:(.text+0x6c7): undefined reference to `sha256_blocks_arch'
-> sha256.c:(.text+0x6cc): undefined reference to `sha256_blocks_simd'
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks for your review!
+
 > 
-> Mark this function as __always_inline to prevent this, same as sha256_finup().
-> 
-> Fixes: ff8f037d394f ("crypto: sha256 - Use the partial block API for generic")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> This is likely compiler specific, I found it in randconfig testing using
-> gcc-9.5 on x86.
-> ---
->  include/crypto/internal/sha2.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Perhaps consider adding test coverage in tools/perf/tests/parse-events.c ?
 
-Thanks, applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-fixes
+Yep, will add it later.
 
-I have some additional cleanups to SHA-256 planned, which will supersede the odd
-sha256_choose_blocks() thing which shouldn't have been pushed out in the first
-place.  For 6.16 I'll take this straightforward fix though.
-
-I don't think the Fixes commit you gave is quite correct.  I revised it to:
-
-    Fixes: 5b90a779bc54 ("crypto: lib/sha256 - Add helpers for block-based shash")
-
-I also adjusted the commit title to be consistent with what I'm planning to use
-for lib/crypto changes:
-
-    lib/crypto: sha256: Mark sha256_choose_blocks as __always_inline
-
-Thanks!
-
-- Eric
+Thanks,
+Namhyung
+ 
+> > ---
+> >  tools/perf/util/parse-events.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index 7f34e602fc080881..d1965a7b97ed6b97 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1830,13 +1830,11 @@ static int parse_events__modifier_list(struct parse_events_state *parse_state,
+> >                 int eH = group ? evsel->core.attr.exclude_host : 0;
+> >                 int eG = group ? evsel->core.attr.exclude_guest : 0;
+> >                 int exclude = eu | ek | eh;
+> > -               int exclude_GH = group ? evsel->exclude_GH : 0;
+> > +               int exclude_GH = eG | eH;
+> >
+> >                 if (mod.user) {
+> >                         if (!exclude)
+> >                                 exclude = eu = ek = eh = 1;
+> > -                       if (!exclude_GH && !perf_guest && exclude_GH_default)
+> > -                               eG = 1;
+> >                         eu = 0;
+> >                 }
+> >                 if (mod.kernel) {
+> > @@ -1859,6 +1857,13 @@ static int parse_events__modifier_list(struct parse_events_state *parse_state,
+> >                                 exclude_GH = eG = eH = 1;
+> >                         eH = 0;
+> >                 }
+> > +               if (!exclude_GH && exclude_GH_default) {
+> > +                       if (perf_host)
+> > +                               eG = 1;
+> > +                       else if (perf_guest)
+> > +                               eH = 1;
+> > +               }
+> > +
+> >                 evsel->core.attr.exclude_user   = eu;
+> >                 evsel->core.attr.exclude_kernel = ek;
+> >                 evsel->core.attr.exclude_hv     = eh;
+> > --
+> > 2.50.0.rc0.604.gd4ff7b7c86-goog
+> >
