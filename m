@@ -1,33 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1651280CD9;
-	Fri, 20 Jun 2025 09:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910CA2820D9;
+	Fri, 20 Jun 2025 09:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411432; cv=none; b=rKL6+kGSwf7yb0hAslQ0rBvT6KiCwyY4+rhios+A9d3mnDxUEU+D7PIm4FqZReGw/+E093HmLLCr5sabJI82PfEmf8peLUQOCODrqGZNsv+mnQQztKactuGEHMvvSC5jW9MqarNTHRaj+FwVvjms3BMHfGd91xBQ15I/hTB5BYE=
+	t=1750411650; cv=none; b=ck4n4mmozkCnUCxaHI2xja8riKCpLuXyMMsWG1IS8N2TjRNPRVe8q0vgNwhFBr0njAuaf75upmiWR+/LLx3uQeE/Y3+Ldq7sXa0KjgcjHzWW2Y1JJot9Ba3gkasM71z/ohJR8UOlrufg7jRRAIEuIDV0fb7J0w1at5PK6XVL/Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411432; c=relaxed/simple;
-	bh=gFqKMGB+599gWiIDRuPwLjV0AGFzK9hvlcYgaGWzgvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T+POmuoUb3NC01yPoeOspeCyZcO5j6I7fG34hoiGW3bwSURuggHwvaCqiJsjiadL+4FmrSneVP8TPO4XfRL5xl6L+hOoyz3AzfoirRjJwtvI53eECDcCOHQgqjGvCH9RkXGTK1cqQPMBaS3i6MwIXr5APNNOyETLBcchUZveR3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRNalUTQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750411650; c=relaxed/simple;
+	bh=Le9otLwvEbWLIK3K/u+Bxc7kyJZnW7RVmeB0XyLkllg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=ejR1j5jx+OBEKutK/b8V1G7Z98xdrmRYQYWvXdwhElubzLSnVosku4Q5DMHKk5eqdMWLcRHy8Pv6siT88u3H9zOYyitMpSEMe9UmHPv6UgwQ9t0fPo1cQHPbGq6QCbKaO2jJ5VI8lrNeipld1NbNpVQZlOAhHkq5NDslLADnIgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tqljnBD8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRNalUTQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13606C4CEED;
-	Fri, 20 Jun 2025 09:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750411432;
-	bh=gFqKMGB+599gWiIDRuPwLjV0AGFzK9hvlcYgaGWzgvY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uRNalUTQ5gxcjvSaBaopQhZFUT6v9dCfyTuq9SEEvAtoGA7gQDel3vreSKWnZIXIs
-	 a3BqJe3+kgEPbRgUCEXcMC6AgKxnZ8jnx+B0YWA0aTb0JsjJ6K6+6HRYdf2+cpRvjs
-	 5TWmbfeXAglJ2sVFzVGxaMsmKMAbJaudbip8N7bG40c0agXcZlHtzxsYgvPjxT8dis
-	 uyR42v2Fzw8HLgY112XHfv7G1ekIHDnHjvauUvqtD3r24kBfBq14HaBGnYfSw1ukig
-	 835Kk5pYJ3DQFi+9bGebYH50tSgdxn4v7A7VQozKxvSgLqM7CxeazzRliEXnhsgmk/
-	 L7S0Ghv5/5uDw==
-Message-ID: <47a7209a-5f8b-40d0-9bba-19339fd4fc5b@kernel.org>
-Date: Fri, 20 Jun 2025 11:23:43 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tqljnBD8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K2inRn003480;
+	Fri, 20 Jun 2025 09:27:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=xs4Gwt
+	Zhq/RZpg0ApqIdO1ibqn3rjOuW0IdI803an9Y=; b=tqljnBD8glea6ilpaQASVt
+	NdT0sMx+zhAPC4XkpLeorg3e0H6/qWgQUdQIEevgiWBvpxTNc9yjbqQWQLN4Qnhu
+	N4OOy7vMWejfkNkKbABJPhlWUkicxwV8uBeyP7aiTFOPqiCkFDF7YDShE5qBlPTP
+	yBKKhdnULf1qeE8lK5N2Z8sjKizOGGbHzC/nuK+/lMNBWM/T6IiX617nJqVHMawn
+	F+Im2ugjr5Bnag1v1IIO+MGFMlPXUOxHfTR8NCFA/xgROm94Nq5DwF6XqAZaSWYD
+	SvTvgraBzazf5r5hIe5NUKZwWFuYLGbSZfzmEkaDVb1b4hacgd9cMMAEP0uqeYRg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47cy4jspuw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 09:27:00 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55K9JHFJ003146;
+	Fri, 20 Jun 2025 09:27:00 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47cy4jspus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 09:27:00 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55K95We1021600;
+	Fri, 20 Jun 2025 09:26:59 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47cahwe8e9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 09:26:59 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55K9QvAJ55640484
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 09:26:57 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 62C7520043;
+	Fri, 20 Jun 2025 09:26:57 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7183920040;
+	Fri, 20 Jun 2025 09:26:55 +0000 (GMT)
+Received: from [9.109.241.85] (unknown [9.109.241.85])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 20 Jun 2025 09:26:55 +0000 (GMT)
+Message-ID: <19689b53-ac23-4b48-97c7-b26f360a7b75@linux.ibm.com>
+Date: Fri, 20 Jun 2025 14:56:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,241 +69,179 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: freescale: Add Mettler-Toledo
- Snowflake V2 support
-To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Marek Vasut <marex@denx.de>, Frieder Schrempf <frieder.schrempf@kontron.de>,
- Markus Niebel <Markus.Niebel@tq-group.com>, Frank Li <Frank.Li@nxp.com>,
- =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
- Michael Walle <mwalle@kernel.org>, Heiko Schocher <hs@denx.de>,
- Francesco Dolcini <francesco.dolcini@toradex.com>,
- Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
- <tharvey@gateworks.com>, Primoz Fiser <primoz.fiser@norik.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Manivannan Sadhasivam <mani@kernel.org>,
- Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Tobias Graemer <Tobias.Graemer@mt.com>
-References: <20250620084512.31147-1-Wojciech.Dubowik@mt.com>
- <20250620084512.31147-4-Wojciech.Dubowik@mt.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
+ indicator
+To: linuxppc-dev@lists.ozlabs.org,
+        Timothy Pearson <tpearson@raptorengineering.com>,
+        Shawn Anastasio <sanastasio@raptorengineering.com>
+References: <20250618190146.GA1213349@bhelgaas>
+ <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250620084512.31147-4-Wojciech.Dubowik@mt.com>
+From: Krishna Kumar <krishnak@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "\"linux-pci\"," <linux-pci@vger.kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        "\"Bjorn Helgaas\","
+ <bhelgaas@google.com>,
+        Shawn Anastasio <sanastasio@raptorengineering.com>
+In-Reply-To: <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: H5gm5CuRg5G1vL8RnfCBsF8H5nEiiA25
+X-Authority-Analysis: v=2.4 cv=a7ww9VSF c=1 sm=1 tr=0 ts=68552964 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=_AprYWD3AAAA:8 a=voM4FWlXAAAA:8 a=VnNF1IyMAAAA:8 a=1UX6Do5GAAAA:8
+ a=1XWaLZrsAAAA:8 a=l-zMBAn9ipa4B3h1PFYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fKH2wJO7VO9AkD4yHysb:22 a=IC2XNlieTeVoXbcui8wp:22 a=Et2XPkok5AAZYJIKzHr1:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA2OCBTYWx0ZWRfXztuPp7Hmqghr 98gbmuDSvnfmXzBjLf9FY5ZDg1UEfltV+FYLasqzwXEfi6it0ilw1iXa7wJRm4ed1MK0UznOnPd 20FR3xZsgaCsA+7nFA6iSbzRPfNy+Ohf2HND1ChjMGP6H1KDRHHGPnDbIvMT2JOORD3V2kL7S6b
+ URA+ebAFIEWt9hoLTBWL+F2XRKUVlx/+Hs25DW5+P0Avi+ZeZ3qId2XtGEPke4brhcSwhWWWBer joR/R0/Ieo1QRusCM2hiXSJ+9Hjw0z63rjiNf+9IxgeUKshhqGSP7tyZM2E5FdyJDldBeH7Z7LU sEiFVuiYkxNB+An9MproBX8WlLgCgioaSHUQmlekwULfktUZ6GgQ+P6qznStxFRyEKkdtjvPbaQ
+ vRHB0Kb/HC4BPLLWTNWvNYZg1A6m4YrUSuxWHsf5lZP5PcXSoanI0/qO50F2311LwSadJ3lK
+X-Proofpoint-ORIG-GUID: 3PPcyUxRJT5_vYdplbgsuscFw7Wby9Ox
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_03,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 phishscore=0 clxscore=1011 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200068
 
-On 20/06/2025 10:41, Wojciech Dubowik wrote:
-> +
-> +	ili2511: ili2511@41 {
+Shawn, Timothy:
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +		compatible = "ilitek,ili251x";
-> +		reg = <0x41>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_touch>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-> +		reset-gpios = <&gpio3 16 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	lvds: lvds@2c {
-> +		compatible = "ti,sn65dsi83";
-> +		reg = <0x2c>;
-> +		vcc-supply = <&reg_sn65dsi83_1v8>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sn65dsi83>;
-> +		status = "okay";
-
-Was it disabled anywhere?
-
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				bridge_in: endpoint {
-> +					remote-endpoint = <&mipi_dsi_out>;
-> +					data-lanes = <1 2>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				bridge_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +					data-lanes = <4 3 2 1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	usbc-cc-controller@61 {
-> +		compatible = "ti,tusb320";
-> +		reg = <0x61>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_usbc_controller>;
-> +		interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +};
-> +
-> +&mipi_dsi {
-> +	status = "okay";
-> +	vddio-supply = <&reg_sn65dsi83_1v8>;
-> +	assigned-clocks = <&clk IMX8MM_CLK_DSI_CORE>,
-> +			  <&clk IMX8MM_VIDEO_PLL1_OUT>,
-> +			  <&clk IMX8MM_CLK_DSI_PHY_REF>;
-> +	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_266M>,
-> +			  <&clk IMX8MM_VIDEO_PLL1_BYPASS>,
-> +			  <&clk IMX8MM_CLK_24M>;
-> +	assigned-clock-rates = <266000000>, <594000000>, <12000000>;
-> +	samsung,pll-clock-frequency = <12000000>;
-> +	samsung,burst-clock-frequency = <891000000>;
-> +	samsung,esc-clock-frequency = <54000000>;
-> +};
-> +
-> +&mipi_dsi_out {
-> +	remote-endpoint = <&bridge_in>;
-> +};
-> +
-> +&lcdif {
-> +	status = "okay";
-> +};
-> +
-> +&gpu_2d {
-> +	status = "okay";
-> +};
-> +
-> +&gpu_3d {
-> +	status = "okay";
-> +};
-> +
-> +&ecspi1 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpio1 {
-> +	bootph-pre-ram;
-> +};
-> +
-> +&gpio2 {
-> +	bootph-pre-ram;
-> +};
-> +
-> +&gpio3 {
-> +	bootph-pre-ram;
-> +};
-> +
-> +&gpio4 {
-> +	bootph-pre-ram;
-> +};
-> +
-> +&gpio5 {
-> +	bootph-pre-ram;
-> +	status_led_controller_oe: status-led-controller-hog {
-> +		gpio-hog;
-> +		gpios = <4 GPIO_ACTIVE_HIGH>;
-> +		output-low;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_hog_status_led_controller>;
-> +	};
-> +};
-> +
-> +&pca9450 {
-> +	bootph-pre-ram;
-> +};
-> +
-> +&{/soc@0/bus@30800000/i2c@30a20000/pmic@25/regulators} {
-
-There is no label to override it? Probably should be added.
+Thanks for posting the series of patch. Few things I wanted to do better understand Raptor problem -
 
 
-> +	bootph-pre-ram;
-> +};
-> +
+1. Last time my two patches solved all the hotunplug operation and Kernel crash issue except nvme case. It did not work with
+
+    NVME since dpc support was not there. I was not able to do that due to being  occupied in some other work.
+
+2. I want to understand the delta from last yr problem to this problem. Is the PHB freeze or hotunplug failure happens
+
+    only for particular Microsemi switch or it happens with all the switches. When did this problem started coming ? Till last yr 
+
+    it was not there. Is it specific to particular Hardware ? Can I get your setup to test this problem and your patch ?
+
+3. To me, hot unplug opertaion  --> AER triggering --> DPC support, this flow should mask the error to reach root port/cpu and it 
+
+    should solve the PHB freeze/ hot unplug failure operation. If there are AER/EEH related synchronization issue we need to solve them. 
+
+    Can you pls list the issue, I will pass it to EEH/AER team. But yeah, to me if AER implementation is correct and we add DPC support,
+
+    all the error will be contained by switch itself. The PHB/root port/cpu will not be impacted by this and there should not be any freeze.
+
+4. Ofcourse we can pick some of the fixes from pciehp driver if its missing in pnv_php.c. Also at the same time you have done
+
+    some cleanup in hot unplug path and fixed the attenuation button related code. If these works fine, we can pick it. But I want to test it.
+
+     Pls provide me setup.
+
+5. If point 3 and 4 does not solve the problem, then only we should move to pciehp.c. But AFAIK, PPC/Powernv is DT based while pciehp.c
+
+     may be only supporting acpi (I have to check it on this).  We need to provide PHB related information via DTB and maintain the related 
+
+     topology information via dtb and then it can be doable. Also , we need to do thorough planning/testing if we think to choose pciehp.c. 
+
+     But yeah, lets not jump here and lets try to fix the current issues via point 3 & 4. Point 5 will be our last option.
+
+
+Best Regards,
+
+Krishna
 
 
 
 
-> +&usbotg2 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	disable-over-current;
-> +	dr_mode = "host";
-> +	status = "okay";
-> +
-> +	usb1@1 {
-
-usb@
-
-Why usb1?
-
-> +		reg = <1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		usbnet: ethernet@1 {
-> +			compatible = "usb424,9500";
-> +			reg = <1>;
-> +			mac-address = [ 00 00 00 00 00 00 ];
-> +		};
-> +	};
-> +};
-
-
-
-Best regards,
-Krzysztof
+On 6/19/25 6:07 AM, Timothy Pearson wrote:
+>
+> ----- Original Message -----
+>> From: "Bjorn Helgaas" <helgaas@kernel.org>
+>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+>> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
+>> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
+>> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
+>> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
+>> Sent: Wednesday, June 18, 2025 2:01:46 PM
+>> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
+>> On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
+>>>  state
+>> Weird wrapping of last word of subject to here.
+> I'll need to see what's up with my git format-patch setup. Apologies for that across the multiple series.
+>
+>>> The PCIe specification allows three attention indicator states,
+>>> on, off, and blink.  Enable all three states instead of basic
+>>> on / off control.
+>>>
+>>> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+>>> ---
+>>>  drivers/pci/hotplug/pnv_php.c | 15 ++++++++++++++-
+>>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+>>> index 0ceb4a2c3c79..c3005324be3d 100644
+>>> --- a/drivers/pci/hotplug/pnv_php.c
+>>> +++ b/drivers/pci/hotplug/pnv_php.c
+>>> @@ -440,10 +440,23 @@ static int pnv_php_get_adapter_state(struct hotplug_slot
+>>> *slot, u8 *state)
+>>>  	return ret;
+>>>  }
+>>>  
+>>> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
+>>> *state)
+>>> +{
+>>> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
+>>> +	struct pci_dev *bridge = php_slot->pdev;
+>>> +	u16 status;
+>>> +
+>>> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
+>>> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
+>> Should be able to do this with FIELD_GET().
+> I used the same overall structure as the pciehp_hpc driver here.  Do you want me to also fix up that driver with FIELD_GET()?
+>
+>> Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
+>> log doesn't mention it, and as far as I can tell, this would be the
+>> only driver to do that.  Most expose only the attention status (0=off,
+>> 1=on, 2=identify/blink).
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +
+>>>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
+>>>  {
+>>>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
+>>>  
+>>> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
+>> This is a change worth noting.  Previously we didn't read the AIC
+>> state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
+>> keep track of whatever had been previously set via
+>> pnv_php_set_attention_state().
+>>
+>> Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
+>> that php_slot->attention_state is still needed at all.
+> It probably isn't.  It's unclear why IBM took this path at all, given pciehp's attention handlers predate pnv-php's by many years.
+>
+>> Previously, the user could write any value at all to the sysfs
+>> "attention" file and then read that same value back.  After this
+>> patch, the user can still write anything, but reads will only return
+>> values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
+>>
+>>>  	*state = php_slot->attention_state;
+>>>  	return 0;
+>>>  }
+>>> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
+>>> *slot, u8 state)
+>>>  	mask = PCI_EXP_SLTCTL_AIC;
+>>>  
+>>>  	if (state)
+>>> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
+>>> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
+>> This changes the behavior in some cases:
+>>
+>>  write 0: previously turned indicator off, now writes reserved value
+>>  write 2: previously turned indicator on, now sets to blink
+>>  write 3: previously turned indicator on, now turns it off
+> If we're looking at normalizing with pciehp with an eye toward eventually deprecating / removing pnv-php, I can't think of a better time to change this behavior.  I suspect we're the only major user of this code path at the moment, with most software expecting to see pciehp-style handling.  Thoughts?
+>
