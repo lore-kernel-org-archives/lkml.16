@@ -1,93 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E358A268683;
-	Fri, 20 Jun 2025 11:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDF225E479;
+	Fri, 20 Jun 2025 11:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418384; cv=none; b=sg8Ovj11HnRbbA8OW49ndyET+beselJLRKffJnMzGLgG/rWYzUYnMVQh9oQfmAnfJg8EVWLIIDusG2zGqTrvVQFE7b6ndaT+ougRVLABC3Zi+hTYxgoGURONOvu7rC54gy1+0YLueRi40KvUwYNMbdD1HkYaBAZxvUVEL0y758o=
+	t=1750418404; cv=none; b=opuEULPbo2zFsLjpnzGc9eAA6q9kx9vag3KiFLNJuTm2nlZUJJ9MVyJfsyWIhLR/vSVHbwBz23Slgy64l1AqJYOuiE8ycVaTY6n3Lfuc6HwhbXqTM4SQDUZpWjzenLOJ+ElsN3fZgWogodPlf1PB9xYVDv0vjR40jReamm5kr2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418384; c=relaxed/simple;
-	bh=v4CSPeGlTth/fyAsN1KxvH9LcX2LADhaZVDWoO+/GwU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bkpWL/Iz3u8xg8uznCF4ZLFvztTvkT7VL7d/kA/cF1K6qP2b0LymwseKYLMJvv/kTcO8YvRg7x9BehxiP6Lww/p1zZlmsRFrJZtE9FoCFbh9V5dMAescz+reTOmZw9NYgQJiEGwfaQ2s5/m0sSOtaIOb7bV1fQ9NF7P2/cZSnEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZNHFMLM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750418404; c=relaxed/simple;
+	bh=iRX4jiyASWwZNjvp8+lt29LIi2pbzwldzyTRMZCejDE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HLedQcjoHGbtr18XS5JIl/0QidDG10nT0oNQMYOnwvG1iVaM+ZWGk5knjOI9ACuG7O2aov8kc60/E26zBB3Lb//PVP0PUZRbKtTmHDFen6UeLPkFj9UQCLJ6/TNafXV5HFTbTungtQKztenleN2NVrLdtOJYrujsUcMy9kyrL70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IfenBHCO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4JlBMyjr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZNHFMLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3B6C4CEEE;
-	Fri, 20 Jun 2025 11:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418383;
-	bh=v4CSPeGlTth/fyAsN1KxvH9LcX2LADhaZVDWoO+/GwU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XZNHFMLMOwJs1tRC9UEfBSfA5v9xqXp3vhC2nC7TtET0tRZikVz7OeRertU+daUAw
-	 LA3TF/NWE9VMthu1Hwj6dNdd/4jDOoDN9ChBMwWhOB7a0/f28nQhvV+WktLGe0OBak
-	 2ZA0/JyGoMqX8Ky7ivixNDebHthm32Fjht9dJQpUyaTVjZ0jpF2ghqIaxPpcwC8AJQ
-	 lZWVGxErxouSemnabSzvHNF0EpcUzktj/EuRyuwPPNjeI+Tn1nxBFDCaFsTY+yCWPA
-	 RhQxY2Kw4a8kXLXevWjHy8YI0hUOkXuVkjuDzUd2pW8iCW9O9WitKpUeGFytoPJEek
-	 zUUE4oc2J6EOQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Pohsun Su <pohsuns@nvidia.com>,
-	Robert Lin <robelin@nvidia.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH] clocksource: tegra186: avoid 64-bit division
-Date: Fri, 20 Jun 2025 13:19:35 +0200
-Message-Id: <20250620111939.3395525-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IfenBHCO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4JlBMyjr"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750418399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=48S3J+SGLw7x3DaSxzDEz0cUwEhO4zPv8TOnoSh8LdE=;
+	b=IfenBHCOIaCjT501fu6+KiLFXwM7OTo5yBXexAKsRyuH+8nqOf1btk2wUotA9OThWu49YD
+	BRzCcNNt2R+fFu4bof5x7QqQq9RnYcxdmV2301wEt9Hg8OFgZaChaZDTM8YjaHJxiGGmrs
+	jymhz6s/IehvrLxkqHtNA1jIcnSMzxq7BxJPl70fmcMnUZc7VtqOL4PIhyV3Tl9hyYN8S1
+	SL4PSkPam4CZVTFywgs15ZWiymAaGlaqT7GHWyK9OxbY4DBc7pCqCDYEOU4qam1ykCFUfU
+	FSIHI6mzf/cUmhp5HSwXYMM+jX/PANX6tcrZ3hPpaKjXrCili6QK23p3yxUtdQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750418399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=48S3J+SGLw7x3DaSxzDEz0cUwEhO4zPv8TOnoSh8LdE=;
+	b=4JlBMyjrOxLX0IQ45O/wXMG1TQ8DQKAFY+QHbrfmZ5sqz8cQOJoY1rXQ5A1A32z2ouMtTz
+	SMTHVLf012mcqQDA==
+To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
+ andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
+ cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
+ heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+ jirislaby@kernel.org, jkeeping@inmusicbrands.com,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
+ paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
+ sunilvl@ventanamicro.com, tim.kryger@linaro.org
+Cc: stable@vger.kernel.org
+Subject: Re: [PATCH v9 1/4] serial: 8250: fix panic due to PSLVERR
+In-Reply-To: <20250610092135.28738-2-cuiyunhui@bytedance.com>
+References: <20250610092135.28738-1-cuiyunhui@bytedance.com>
+ <20250610092135.28738-2-cuiyunhui@bytedance.com>
+Date: Fri, 20 Jun 2025 13:25:58 +0206
+Message-ID: <84bjqik6ch.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 2025-06-10, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
+>
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the serial_port_in(port, UART_RX).
+> This satisfies the PSLVERR trigger condition.
+>
+> When another CPU (e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+> (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> dw8250_force_idle().
+>
+> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> to fix this issue.
+>
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
+>
+> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Cc: stable@vger.kernel.org
 
-The newly added function causes a build failure on 32-bit targets with
-older compiler version such as gcc-10:
-
-arm-linux-gnueabi-ld: drivers/clocksource/timer-tegra186.o: in function `tegra186_wdt_get_timeleft':
-timer-tegra186.c:(.text+0x3c2): undefined reference to `__aeabi_uldivmod'
-
-The calculation can trivially be changed to avoid the division entirely,
-as USEC_PER_SEC is a multiple of 5. Change both such calculation for
-consistency, even though gcc apparently managed to optimize the other one
-properly already.
-
-Fixes: 28c842c8b0f5 ("clocksource/drivers/timer-tegra186: Add WDIOC_GETTIMELEFT support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/clocksource/timer-tegra186.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-index e5394f98a02e..bd3d443e41cd 100644
---- a/drivers/clocksource/timer-tegra186.c
-+++ b/drivers/clocksource/timer-tegra186.c
-@@ -159,7 +159,7 @@ static void tegra186_wdt_enable(struct tegra186_wdt *wdt)
- 	tmr_writel(wdt->tmr, TMRCSSR_SRC_USEC, TMRCSSR);
- 
- 	/* configure timer (system reset happens on the fifth expiration) */
--	value = TMRCR_PTV(wdt->base.timeout * USEC_PER_SEC / 5) |
-+	value = TMRCR_PTV(wdt->base.timeout * (USEC_PER_SEC / 5)) |
- 		TMRCR_PERIODIC | TMRCR_ENABLE;
- 	tmr_writel(wdt->tmr, value, TMRCR);
- 
-@@ -267,7 +267,7 @@ static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
- 	 * counter value to the time of the counter expirations that
- 	 * remain.
- 	 */
--	timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
-+	timeleft += (u64)wdt->base.timeout * (USEC_PER_SEC / 5) * (4 - expiration);
- 
- 	/*
- 	 * Convert the current counter value to seconds,
--- 
-2.39.5
-
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
