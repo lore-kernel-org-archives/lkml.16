@@ -1,164 +1,189 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011055.outbound.protection.outlook.com [40.107.130.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF058801
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750389368; cv=none; b=Kvrbxob/fHY/U/sJng10k9pO5HOPmJqU//TTTbiO6F28RGNHB2ArBHqvAZRdW2COD+iqPA1bCXsx632uyyb+v2gk7rxrp0QcK9gptim3RbDAts/OzXx07vFONbZ3yR99pLV6UXiKuRaQ+kKjcDXge+QyiOF0aiZyKGOKCkD0x6M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07AE1C862C;
+	Fri, 20 Jun 2025 03:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750389368; cv=fail; b=HA0Bk21nREgzSeDMT4gK5EJvZLqwTG7BP785s5lNOdzT07fPesZCpX7LosdYjO3tm2iq+MITEupryPCIMh+KPN2nJqjStXQ/b81Q03XiX5LsVnbJX/Lv1w37S/ceqku3MD1VqF8yFoxM0C1eqvZQIc8kkB9RejEe438QocTR7dE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750389368; c=relaxed/simple;
-	bh=O2GvBgg/BxYhZTydzvibsdx6k/2knZD4ueSDzAgPU9A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ag6AuA/QsZxxDHw0tUuciDXUzqM1q2AxCAk5Y12PMQBDXAV4EV1SoFrg6tSuimJkkrPzjCr1lsEwda0AEmXW+dSex8kBjHL3EoK/fXHdNKyIJpG1dzt7eXmxHc7gGx/Itn2nR6oYj/IYFRqIf9AV4GbIoH0703aEo/f6XqS2wOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=Cs6G+hpC; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=KRB4Yd3X; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
+	bh=h2AxTEi/8m7FQDA8yAWRUKyM6jiL34/v5lsaBue+6aE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ooh0hIvJnXjBmYvryGNx0r+q3CcMD6/330SKfNDT2diIdJmCPJqZcrX360rS5BH5FQUxljHwXtbpAOvCS9cV4/CSUitimbMuibtICv2BRh60M6YnJvZCspMNJPP/pddFIagC6Ow9O7YiFtYfHgazAgAiAc10TxjxWDHrAIMLyPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OV3OA0Ch; arc=fail smtp.client-ip=40.107.130.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="Cs6G+hpC";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="KRB4Yd3X"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 9A38E26F75D5;
-	Fri, 20 Jun 2025 12:16:01 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1750389361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIT+A3Ph7WWNHmUmXCYqK/z9hZmbl30OP3CAfbAILAo=;
-	b=Cs6G+hpCngjQibUcMvGhq4nhxa8WyNCTrpv/fXFJMFmBT1SbLKD692Tp/N4nDe3B7FH+t2
-	VgMlrRpa0F+xMFbDpOkBUFIz8Ubg6x8ydxY484GYCxAews3PCVRBgOC3Ieaxpo4tJRbdwl
-	tsLe8VtGkIH/qzm3tClYmqDGFoH05a6bwtZR9DHtvoDpU7XrBB5fYBuzOHUPtJmmtLHRmV
-	4Ytl1aUH9Uk6xNIi9aNv8Dld9qMc+85Mm4BQBIOFHHC8b6GAgkx6ZtalexsK3DI1tqvod/
-	cpeQq07RjgwKzQDXauxQiRUtPgtQH4nq2KdITqldSTmvVLPoWBfHGpGm+6CuRA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1750389361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIT+A3Ph7WWNHmUmXCYqK/z9hZmbl30OP3CAfbAILAo=;
-	b=KRB4Yd3XBAYdBQ+0uAr+BEFTGapXvRN6F3esGVC+eKOqMUBZ+cUrUUDLTaSBOxJFxeAU0p
-	HclfnHrOch+bVTBg==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 55K3G0ro013301
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 12:16:01 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 55K3G0jf040331
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 12:16:00 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 55K3FxZK040330;
-	Fri, 20 Jun 2025 12:15:59 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Li Chen <me@linux.beauty>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] fs: fat: Prevent fsfuzzer from dominating the console
-In-Reply-To: <20250620020231.9292-1-me@linux.beauty>
-References: <20250620020231.9292-1-me@linux.beauty>
-Date: Fri, 20 Jun 2025 12:15:59 +0900
-Message-ID: <87a563w1ao.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OV3OA0Ch"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TVnqoFfQrNthhzMXDp+kii3Q2qzv5t6KFGLQQ3i3Q5/N3fmGEBZkeKHAI4E3Re23dUAcXIX6pSkB7+ioef+TTyXXr/HB0uYlyrt/+lPTIaGPgsHIT8SiA8J7+dlZ9IixzwWh+C3g9BLptJX92cOt+9Ev0tomOLhUe8+JJkyxAepd5TwkRwaUNp3BnezSagFMpzjiEuAkQQ/xRK5fNkPF01pGdYq1abwcEb69PgKraqU9YrPgmLxV5IfFo5+84L7sZMWy7Fz8tPkXkHAjBt5EDt2XQCmmkwwBeWORC6VLtc0UcUQ6/cHWk8AyVbVaNtD+lZCH6ywKRWX6p6tKnMuJjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7/1ITjMwUAAcUzbY5RSpObofmW185rHSqiBJeL2Ra+0=;
+ b=obA/EfeJJ6nzvUxdxFawykVwFhc+rXbc4wFT6evcZbu86ej+FBYAvboiSFGq2rdjHJ84jsH5bmhZkxcRql3xHJ67rQ4tUJ+FPTBIDL0miomw1JIY/TazMRIDythqxY3XSOLNtkVeLRidP11zpoyRX0HTQx7z/JXN3nVmcjtZGBmiO/pdqAc9lryId91bVz5QBXLkHwqrbHEjCuMZ6d/3NpcmzLIdXmS3KP4U5UY+428wMlErY6B8XfkgsuaGHdFMLfSrZVmmrWRe1JuYwljNfncy8TRlNsPO5fRtIwBt9DETWG4mu7yuCwQKNtz7WR7giWcL3ZZipSLakXneGtSEfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7/1ITjMwUAAcUzbY5RSpObofmW185rHSqiBJeL2Ra+0=;
+ b=OV3OA0ChdEOm3IQn6b+MB0n3ZOsNnrmatCnUvT+cZkZllG//D1sPVNXLf2NW07AfLIB5PqsHlQBvng1Z6Yaf3GcpdIH54UVHJqWDNiz/Pjd1LUuXuwlLvKuP89GCP7ygpPDwd8h0CEXrdWVHjXKpzQfgB5iroyPUBM13LtAEA9fBvoanEy2Ys/AXXKXIO6009iYATWUYOIPEELSrDk6ofnR+2YkZJnNNRBOe6W5Rz9U3PrTSR5Z4GKF0oONT2VFN1TqX+qh80k4YC3d+QpVBsDIG1mAHvbcTAh2eBAe529eQUHKqjnR7red4AlJQj+UF1J+FdUITVqnJZaKUTGNO0w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by AM8PR04MB7875.eurprd04.prod.outlook.com (2603:10a6:20b:236::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.35; Fri, 20 Jun
+ 2025 03:16:04 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
+ 03:16:04 +0000
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: frank.li@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	bhelgaas@google.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock mode support
+Date: Fri, 20 Jun 2025 11:13:49 +0800
+Message-Id: <20250620031350.674442-2-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20250620031350.674442-1-hongxing.zhu@nxp.com>
+References: <20250620031350.674442-1-hongxing.zhu@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0175.apcprd04.prod.outlook.com
+ (2603:1096:4:14::13) To AS8PR04MB8676.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|AM8PR04MB7875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2db5fa68-bbeb-4e09-3c34-08ddafa8ca5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|7416014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TGJ3cT91g2tmTECVnz5ql0roKVIfPNhCSwMQ8gayUmqe0Ig0Iv37Fh4rRwLw?=
+ =?us-ascii?Q?Frx/74lC9MjB9FE806jd9Q1ggkYYMLmGjQmz83kK8T3Z9mg+G8kkmEBs8jCW?=
+ =?us-ascii?Q?01yki6LIHEXmyNXXxBMt5gjMzvTZ2A1FmUhUxU5he/UNX3Vgx6VpACqlEDTj?=
+ =?us-ascii?Q?2wWRGlM7PaFPUPhLHeRBf9NdvoLJHl0Oil0sHRnqMs3naXueQL6CVGbXeFdk?=
+ =?us-ascii?Q?XDySA7hXYdF3ywOlHLoPIu2dWu3r4UKyZ3sM7snGfei0W5KLs7xRVc56MTI5?=
+ =?us-ascii?Q?XPn55E/IwQOnnsxHnPZJYB5RKOBCknY8hpcrRd+9Hqg/DHUN46HJ0zOGtYvF?=
+ =?us-ascii?Q?beD+pWyQ+8oPrH/82tICYeVPY5pOViKr7k15i0SrlYYV/eeKp5qwPaMyX1H7?=
+ =?us-ascii?Q?z8UwoBzrvK1CutT0AniyEplQOOKw04slvHFtHLd1HAA7Pb66GU+PtZIJExvm?=
+ =?us-ascii?Q?eMBTKVhYGxBls7fdq6IqXR2+XU97b7J01sKd0WotJe1Y8PAI31juxvRtEqSJ?=
+ =?us-ascii?Q?EF1ybTqRQ4CzKagDLP7xMlIWTXXNMJM5FhZJ4kmMgc/JhoV193atSGSIcNhe?=
+ =?us-ascii?Q?AQ4YYeVCTqO1kEtrEQGALFjgd2gQD8bjdvWAvms3y1DbE+QJtKrA5VTgDeCR?=
+ =?us-ascii?Q?ammZ7DRFKLQjeEL/x4SoTLFqCAt3+HAH1Yfc3O0n28L3KO0n6tbV+Y2EmZZl?=
+ =?us-ascii?Q?YBMAAw6jPuXk4jXsVbkdpfmGyDJMZSgq7Xeqr23gSo2eRqj4dXHAj8SKaGJV?=
+ =?us-ascii?Q?xGsHqhEYW3vQhn5NHK5OpDRwTcKsfkDX6FNo4jPKQXCM7VoVWnpcPmQswvDn?=
+ =?us-ascii?Q?T7oyZjmTqvoodbWTSdHTCqUinRD1i8nuT1vHoPBkByAiWBibEcVLLO8JIIdh?=
+ =?us-ascii?Q?K4iWryEZJI72JhJiuMMO7Yby5JIIwXrJf1EqgVl8+ojACD7tMkqS6dt9kOZ3?=
+ =?us-ascii?Q?nfV/CV68CJS/tq1sIgFUJvJuCcw74nRUdIbyI8xgRJH5GvwHH10+HPRhZeZn?=
+ =?us-ascii?Q?bdQn7/OwNcX4+7sJbryegEsVhkRyob1+HchuQt3PRmUqU4yb6e/k70Kokgnf?=
+ =?us-ascii?Q?M2/MJKoV4rt4hNjCIspASCrsfZ8T3Kfse42eN7alZaK0G2RV1VdpE88CwDY4?=
+ =?us-ascii?Q?wOmRNAyM/4AcDZH1rFdZydBXCvaxAsawpFWAgrr3eFdsM2ehM20ImY5S0Bw+?=
+ =?us-ascii?Q?0xnMLQUw/uEttZFFJfwM/nT2hNRQW/SemKULQX6cFcN8NWuj5q0gKitAFadZ?=
+ =?us-ascii?Q?EBNHXNzcq5o9MzUYBJ9wZqaB1/g6LpM/uerUTiSQVr02XaZVvWGSojEN+18B?=
+ =?us-ascii?Q?RJ/dS/bNmNgjPQBSGYvdCl9X0/1FJBwIdw5vyRrPJt6ccE5h8+d9j7rwE8uE?=
+ =?us-ascii?Q?wjfrRfokVU6mOSDj0LuWSFr6oHRMBUz3DBg+uZfBrB8I7yxioLW+DRfWvQP3?=
+ =?us-ascii?Q?HIHk9a77xdwlhY0DZfA41plgz/ibaNgHgFETFL2cIq/3p2tn2tykcamPYUXd?=
+ =?us-ascii?Q?X39g66g1L3hGy+g=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(7416014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?QYehh2sx5Ek9ihWAUScM2ajljqWeS1mWY3BdYQ3+rCCgYJFRiKjrN5Z3lCr9?=
+ =?us-ascii?Q?Aamho2kagCyeSqVK+7CalIg3MiPFDs+GHs5qiYEG9981Yy95BzDTQKBXtpj7?=
+ =?us-ascii?Q?4D2On9Ns2tTc2sVm2pmN6k8iDYha9W7RHlsJS0RoUyooWVuUyPoaDpCZ4+ii?=
+ =?us-ascii?Q?L7xNgGuB29JrJpvsPe48Xdyse9jjE/2+BHIDrhismJiPAD+rMJJZzwgVMu5l?=
+ =?us-ascii?Q?rrA58cqD+q7iu/EyFO4I5eecJWOHwvXTqmUxN0VQ+pY6t3y6igXL8l+BxgXR?=
+ =?us-ascii?Q?7JsGMADl6UNKhHjmhKMwYY1VsdjJ2RI3a6FppSTRYrZJqK+1Td0NBvTiou5P?=
+ =?us-ascii?Q?cEdNTYCP3MPVBmIu3h6KUi68n8yVjZbng1oSXZrdNziISXKVSDFNWP+aXosX?=
+ =?us-ascii?Q?02wD3BT1DL86Eh0JNQUWnXKQr5ojSfZjeBrOqkwUC2upei9TiCHkk532WJae?=
+ =?us-ascii?Q?bd3UB6Tm87SuItVAgMXOLfyhJc5Z5e3DrMAku3Rcui/bSkIq0Lj0DpwSl8sj?=
+ =?us-ascii?Q?uwtXVw+LmkTMuKsu2qtlY1Vw13kkZUSPAdnyjk2NaW6oW+OPWdqp1EKR6yfe?=
+ =?us-ascii?Q?jnAIX+kTwxXqdf/sBX2YgIZirl3NyhgbEUQr5e1o01dENnSPiczXdUnMVUpm?=
+ =?us-ascii?Q?ooDsUiFHg/4qQ4oF0jJyCBvYa4Cs+5GqlPe0fgC8tF3ZfEZCA6mXf7tZ2jrn?=
+ =?us-ascii?Q?BQiqJ66TfvOWYa0ydFyhv0A4am54QRlo4AIhof9IvVgAd2xRYhzkOAlO1eeK?=
+ =?us-ascii?Q?hHkW8TPPAGguwWERyMGnN4B6SiqLzL2L8QCWa7SIh5uGbrDJguqOWBScY5v7?=
+ =?us-ascii?Q?mQB2YMcTThKP86Lnd23u/JDSt/I5H0X4bICCq2Of+r0YBj72cAIFLgqeAEEb?=
+ =?us-ascii?Q?iWn46qtvt0PHh/vyZ9qb49GnPVCIRlELZOg+lI3jr5/0MaSRFLzshzIk8z8w?=
+ =?us-ascii?Q?V/hfBUMe4JUxdQVuN2omf4QB1n7O8X78AVHMEQNA7HX8bkv7lznbciitQb6x?=
+ =?us-ascii?Q?L4S2FGo44T855nAIp27xNiElfNGBxR8J5H5wjJNs7D/kv729TfWyAgYmoRUM?=
+ =?us-ascii?Q?FigNZC7PJpkJDRfk91pTVB0WyKmbienF6qYHXuNI0hkNXfT1bfOYjMX27vw+?=
+ =?us-ascii?Q?xDaWKh/JDUm0odFn8i2XGXyGWUV20sqlF1TZTYJT/3Q5aCX9MUbDt1Je68so?=
+ =?us-ascii?Q?Uq5VV3U2iMum5CDTJL1OGdOblWMyha80/3OG59syPxj4nxbMiZSCayuS2qSD?=
+ =?us-ascii?Q?Jv/hbwtcufX6ZeTn3MprFA/anLyGjxDo0Ds1miB6zg8iUnxP9HKuXdca6y2H?=
+ =?us-ascii?Q?DEUAPCaA9qNe679XQzKiaFtcrb0hNnQXVSC17ohnjYJlQ7kmJYOXRPIKfQkH?=
+ =?us-ascii?Q?qrAUei9f3HPuglMdNUfzCLMcPhI+3Pf8kSldLOlL3hhRaY2Saor+sM/l6svz?=
+ =?us-ascii?Q?UHzZV+bJFR27ZgNVu9NwPsZWCJw0rxo6bAlxqSJluMVaGIajn6C/Afcj+lLM?=
+ =?us-ascii?Q?EmD4eHCDWBd7lQspavIMJJmZXgYYG4HaiZKYU6A+co1dflf0mRRHNY2zYnXC?=
+ =?us-ascii?Q?rjSDrw9QyQrnpP+NHEz1DfGbJQcslOVGjQIhefaY?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2db5fa68-bbeb-4e09-3c34-08ddafa8ca5e
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 03:16:04.1775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZTSwbrUdVhzu69PNd2SOg+oN5OqWPhFB7+/MkhYLopgMlKSJ8umE4iAAXK8xqGT6QD+1qTLoMnVWZ8Da2uMx9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7875
 
-Li Chen <me@linux.beauty> writes:
+On i.MX, the PCIe reference clock might come from either internal
+system PLL or external clock source.
+Add the external reference clock source for reference clock.
 
-> From: Li Chen <chenl311@chinatelecom.cn>
->
-> fsfuzzer may make many invalid access for FAT-fs and generate many kmsg
-> like "FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)".
->
-> For platforms & os that enables hardware serial device whose speed are
-> slow, this may cause softlockup easily.
->
-> So let's ratelimit the error log.
->
-> The log as below:
-> [11916.242560] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.254485] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.266388] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.278287] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.290180] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.302068] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.313962] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.325848] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.337732] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.349619] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.361505] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.373391] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.385272] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.397144] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.409025] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.420909] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.432791] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.444674] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.456558] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.468446] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-> [11916.480352] watchdog: BUG: soft lockup - CPU#58 stuck for 26s! [cat:2446035]
-> [11916.480357] Modules linked in: ...
-> [11916.480503] CPU: 58 PID: 2446035 Comm: cat Kdump: loaded Tainted: ...
-> [11916.480508] Hardware name: vclusters VSFT5000 B/VSFT5000 B, BIOS ...
-> [11916.480510] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [11916.480513] pc : console_emit_next_record+0x1b4/0x288
-> [11916.480524] lr : console_emit_next_record+0x1ac/0x288
-> [11916.480525] sp : ffff80009bcdae90
-> [11916.480527] x29: ffff80009bcdaec0 x28: ffff800082513810 x27: 0000000000000001
-> [11916.480530] x26: 0000000000000001 x25: ffff800081f66000 x24: 0000000000000000
-> [11916.480533] x23: 0000000000000000 x22: ffff80009bcdaf8f x21: 0000000000000001
-> [11916.480535] x20: 0000000000000000 x19: ffff800082513810 x18: ffffffffffffffff
-> [11916.480538] x17: 0000000000000002 x16: 0000000000000001 x15: ffff80009bcdab30
-> [11916.480541] x14: 0000000000000000 x13: 205d353330363434 x12: 32545b5d36343438
-> [11916.480543] x11: 652820544146206f x10: 7420737365636361 x9 : ffff800080159a6c
-> [11916.480546] x8 : 69202c726f727265 x7 : 545b5d3634343836 x6 : 342e36313931315b
-> [11916.480549] x5 : ffff800082513a01 x4 : ffff80009bcdad31 x3 : 0000000000000000
-> [11916.480551] x2 : 00000000ffffffff x1 : 0000000001b9b000 x0 : ffff8000836cef00
-> [11916.480554] Call trace:
-> [11916.480557]  console_emit_next_record+0x1b4/0x288
-> [11916.480560]  console_flush_all+0xcc/0x190
-> [11916.480563]  console_unlock+0x78/0x138
-> [11916.480565]  vprintk_emit+0x1c4/0x210
-> [11916.480568]  vprintk_default+0x40/0x58
-> [11916.480570]  vprintk+0x84/0xc8
-> [11916.480572]  _printk+0x68/0xa0
-> [11916.480578]  _fat_msg+0x6c/0xa0 [fat]
-> [11916.480593]  __fat_fs_error+0xf8/0x118 [fat]
-> [11916.480601]  fat_ent_read+0x164/0x238 [fat]
-> [11916.480609]  fat_get_cluster+0x180/0x2c8 [fat]
-> [11916.480617]  fat_get_mapped_cluster+0xb8/0x170 [fat]
->
-> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+---
+ Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Looks good.
-
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-
-Thanks.
-
-> ---
-> Changelog:
-> v2: use fat_fs_error_ratelimit instead as suggested by OGAWA Hirofumi
->
->  fs/fat/fatent.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
-> index 1db348f8f887a..a7061c2ad8e4d 100644
-> --- a/fs/fat/fatent.c
-> +++ b/fs/fat/fatent.c
-> @@ -356,7 +356,7 @@ int fat_ent_read(struct inode *inode, struct fat_entry *fatent, int entry)
->  
->  	if (!fat_valid_entry(sbi, entry)) {
->  		fatent_brelse(fatent);
-> -		fat_fs_error(sb, "invalid access to FAT (entry 0x%08x)", entry);
-> +		fat_fs_error_ratelimit(sb, "invalid access to FAT (entry 0x%08x)", entry);
->  		return -EIO;
->  	}
-
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+index ca5f2970f217..c472a5daae6e 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+@@ -219,7 +219,12 @@ allOf:
+             - const: pcie_bus
+             - const: pcie_phy
+             - const: pcie_aux
+-            - const: ref
++            - description: PCIe reference clock.
++              oneOf:
++                - description: The controller might be configured clocking
++                    coming in from either an internal system PLL or an
++                    external clock source.
++                  enum: [ref, gio]
+ 
+ unevaluatedProperties: false
+ 
 -- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+2.37.1
+
