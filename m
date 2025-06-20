@@ -1,98 +1,213 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7961B292910
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA21C225777;
+	Fri, 20 Jun 2025 13:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427671; cv=none; b=WnVgqUieAx6JGzPmF09G0BPPoKk14mUK72neuMC4pFt6YluF9yj0HXbt7HTPplDo3ghXLpPkMLgikuQ7RWHGixYaCjmubL1mEmM9xn5l8Nzl98F4Fyw17VgAlhw62i94PNnESy4Qoof9BokWocdCW8fCvc+wIkMr/u5Uo0N+djg=
+	t=1750427687; cv=none; b=eq1KwVnWnxPMPh9x1cDvdhssB545LSk4I65BHPtPakw1fDZlguXCyKsq4jTk2p0dNlJ7tlbsCmQ65YmvN6cEx4xgCHnGScoTDcpPddidWfWKELJriAVl9XAI9KODHljbqYokhanhZxoDOVlsdi+pT56JQDr50DxXwdICjvdTDMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750427671; c=relaxed/simple;
-	bh=GjWW+UAOEI1Y8xJ4s0fuw1gUr0BfGUhdvPuHSNg1Pg0=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=istJBcpK+eMmc1g3/l+JltrLm8+Mxn8ICmZS8cV30j0mpnzkQyJMtkmdBtknjXshZPVJhxwbOE+RV2Bk/ERAbRl/BWII1VglegdVVAxbkyyfNfBEIW0YLWvL0A3vSyah9sD7uPXNkNCkfl9PzA/V7oIrgjXpiwAKh0Jy8QAmOcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sJ1ND8Md; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IGhPCBbz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sJ1ND8Md";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IGhPCBbz"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750427668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t+/d3Ltn6EAjzIfsp2dWcTTas6TSWctHfNuxn8agZc0=;
-	b=sJ1ND8MdOAL+iaDpYM+71KYRhwYMzE6ktsDTDk6ggLvH24V5zIoNLZzGGyUFTYsBnXgjX9
-	eISBDVzGghCJHZEEArImiLDr0X1k6GQBmwXEql2SZL+iPCndtm9RmDtUEd28m14TmNKA2i
-	ZdZUwteOPtgknsfoyqHQnoHj4ERM/N1qDs/O1CoDy9UN97qznpg+BDKRLAMg6IZ/1ghpAB
-	FT9Dy/w+Z6DyfaOvK0tAIAYlP4TQR5bJSB0cT5b6ioORjVGabpPwTstgbVJfX33h68KcbN
-	sFKD3t/hwrfveji4Zk16x324Y10yqwoEE+8yMdSggMgN0nZvhWt7wIRZeDjMHQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750427668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t+/d3Ltn6EAjzIfsp2dWcTTas6TSWctHfNuxn8agZc0=;
-	b=IGhPCBbzcuPD78o2UNkelSdm0MCWXp6j5mxsJmvLTu27aOpr2w5P/E5FoG0LfUhLMpUR+K
-	21NXXdk28aydhkCQ==
-To: Li Chen <me@linux.beauty>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86
- <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND] x86/smpboot: avoid SMT domain attach/destroy if
- SMT is not enabled
-In-Reply-To: <1965cae22a0.12ab5a70c833868.7155412488566097801@linux.beauty>
-References: <1965cae22a0.12ab5a70c833868.7155412488566097801@linux.beauty>
-Date: Fri, 20 Jun 2025 15:54:27 +0200
-Message-ID: <87msa2r018.ffs@tglx>
+	s=arc-20240116; t=1750427687; c=relaxed/simple;
+	bh=hlCzuFtOfFjS1WXB8RKyMr6ZXhuppBwt3/3Us2XH22o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aG1phRgn33joLExUmxiJff/76a2LeYtLTKvjL94QDRUwP32OEgGcBXjU3/89YGUa5CI9UeCS616czd6nao+01VjUw+xChivVkpIl+iNixretUJC9+smbxLLbmgY3Pxm+tz9+mVGAUjoGGWbLg8zr87ASuiuMruneIIzVGQVBwTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9170416F2;
+	Fri, 20 Jun 2025 06:54:25 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 691343F58B;
+	Fri, 20 Jun 2025 06:54:43 -0700 (PDT)
+Date: Fri, 20 Jun 2025 14:54:40 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
+ Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] arm64: dts: allwinner: a523: Move mmc nodes to
+ correct position
+Message-ID: <20250620145440.047e933b@donnerap.manchester.arm.com>
+In-Reply-To: <20250619173007.3367034-3-wens@kernel.org>
+References: <20250619173007.3367034-1-wens@kernel.org>
+	<20250619173007.3367034-3-wens@kernel.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22 2025 at 16:47, Li Chen wrote:
-> Currently, the SMT domain is added into sched_domain_topology
-> by default if CONFIG_SCHED_SMT is enabled.
->
-> If cpu_attach_domain finds that the CPU SMT domain=E2=80=99s cpumask_weig=
-ht
-> is just 1, it will destroy_sched_domain it.
+On Fri, 20 Jun 2025 01:30:04 +0800
+Chen-Yu Tsai <wens@kernel.org> wrote:
 
-If cpu_attach_domain() ..., it will destroy it.
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> When the mmc nodes were added to the dtsi file, they were inserted in
+> the incorrect position.
+> 
+> Move them to the correct place.
 
-> On a large machine, such as one with 512 cores, this results in
-> 512 redundant domain attach/destroy operations.
->
-> We can avoid these unnecessary operations by simply checking
+Yes, they were indeed wrongly ordered! Now "grep @ ... | sort -c" is happy.
 
-s/We can avoid/Avoid/
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-> cpu_smt_num_threads and not inserting SMT domain into x86_topology if SMT
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-the SMT domain=20
+Cheers,
+Andre
 
-> is not enabled.
->
-> #ifdef CONFIG_SCHED_SMT
-> -    x86_topology[i++] =3D (struct sched_domain_topology_level){
-> -        cpu_smt_mask, cpu_smt_flags, SD_INIT_NAME(SMT)
-> -    };
-> +    if (cpu_smt_num_threads > 1) {
-> +        x86_topology[i++] =3D (struct sched_domain_topology_level){
-> +            cpu_smt_mask, cpu_smt_flags, SD_INIT_NAME(SMT)
-> +        };
-> +    }
+> ---
+>  .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 126 +++++++++---------
+>  1 file changed, 63 insertions(+), 63 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> index 8b7cbc2e78f5..458d7ecedacd 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> @@ -181,69 +181,6 @@ ccu: clock-controller@2001000 {
+>  			#reset-cells = <1>;
+>  		};
+>  
+> -		mmc0: mmc@4020000 {
+> -			compatible = "allwinner,sun55i-a523-mmc",
+> -				     "allwinner,sun20i-d1-mmc";
+> -			reg = <0x04020000 0x1000>;
+> -			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+> -			clock-names = "ahb", "mmc";
+> -			resets = <&ccu RST_BUS_MMC0>;
+> -			reset-names = "ahb";
+> -			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&mmc0_pins>;
+> -			status = "disabled";
+> -
+> -			max-frequency = <150000000>;
+> -			cap-sd-highspeed;
+> -			cap-mmc-highspeed;
+> -			cap-sdio-irq;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -		};
+> -
+> -		mmc1: mmc@4021000 {
+> -			compatible = "allwinner,sun55i-a523-mmc",
+> -				     "allwinner,sun20i-d1-mmc";
+> -			reg = <0x04021000 0x1000>;
+> -			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+> -			clock-names = "ahb", "mmc";
+> -			resets = <&ccu RST_BUS_MMC1>;
+> -			reset-names = "ahb";
+> -			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&mmc1_pins>;
+> -			status = "disabled";
+> -
+> -			max-frequency = <150000000>;
+> -			cap-sd-highspeed;
+> -			cap-mmc-highspeed;
+> -			cap-sdio-irq;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -		};
+> -
+> -		mmc2: mmc@4022000 {
+> -			compatible = "allwinner,sun55i-a523-mmc",
+> -				     "allwinner,sun20i-d1-mmc";
+> -			reg = <0x04022000 0x1000>;
+> -			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+> -			clock-names = "ahb", "mmc";
+> -			resets = <&ccu RST_BUS_MMC2>;
+> -			reset-names = "ahb";
+> -			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&mmc2_pins>;
+> -			status = "disabled";
+> -
+> -			max-frequency = <150000000>;
+> -			cap-sd-highspeed;
+> -			cap-mmc-highspeed;
+> -			cap-sdio-irq;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -		};
+> -
+>  		wdt: watchdog@2050000 {
+>  			compatible = "allwinner,sun55i-a523-wdt";
+>  			reg = <0x2050000 0x20>;
+> @@ -449,6 +386,69 @@ its: msi-controller@3440000 {
+>  			};
+>  		};
+>  
+> +		mmc0: mmc@4020000 {
+> +			compatible = "allwinner,sun55i-a523-mmc",
+> +				     "allwinner,sun20i-d1-mmc";
+> +			reg = <0x04020000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC0>;
+> +			reset-names = "ahb";
+> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&mmc0_pins>;
+> +			status = "disabled";
+> +
+> +			max-frequency = <150000000>;
+> +			cap-sd-highspeed;
+> +			cap-mmc-highspeed;
+> +			cap-sdio-irq;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		mmc1: mmc@4021000 {
+> +			compatible = "allwinner,sun55i-a523-mmc",
+> +				     "allwinner,sun20i-d1-mmc";
+> +			reg = <0x04021000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC1>;
+> +			reset-names = "ahb";
+> +			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&mmc1_pins>;
+> +			status = "disabled";
+> +
+> +			max-frequency = <150000000>;
+> +			cap-sd-highspeed;
+> +			cap-mmc-highspeed;
+> +			cap-sdio-irq;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		mmc2: mmc@4022000 {
+> +			compatible = "allwinner,sun55i-a523-mmc",
+> +				     "allwinner,sun20i-d1-mmc";
+> +			reg = <0x04022000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC2>;
+> +			reset-names = "ahb";
+> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&mmc2_pins>;
+> +			status = "disabled";
+> +
+> +			max-frequency = <150000000>;
+> +			cap-sd-highspeed;
+> +			cap-mmc-highspeed;
+> +			cap-sdio-irq;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		usb_otg: usb@4100000 {
+>  			compatible = "allwinner,sun55i-a523-musb",
+>  				     "allwinner,sun8i-a33-musb";
 
-Looks about right, though I really detest this coding style. I'm not
-blaming you, as you just followed the already existing bad taste...
-
-Thanks,
-
-        tglx
