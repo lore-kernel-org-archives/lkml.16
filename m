@@ -1,98 +1,99 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988B521C18E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B143921C18E;
+	Fri, 20 Jun 2025 12:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421074; cv=none; b=A2gN51aRJgGvkZPvlk1aaOmtlgZPdB8lCoanQn/A3wvdgowCFw9vAYp0ZzOV7nEteh95j22M7KxbTtmggiOemRSrP2lYZIdGi/3biSZCpJRQ2AGcB80i+DSIh8q/++UUZyRhROaIadTrAc77+QvNS5dcgeF83ezxkfwrITBKM/g=
+	t=1750421092; cv=none; b=HY3krCgwKawvYNQqH/8hRpmUBMmdbmyu5ci0IvCVyWDABTzHB5Fx0OS+VBcHdZVjrjerRhb+F0kGJg0YHOTpX9Pl8oFkaGHpGwUinKpEvUaxo1UjBNAa6LaLLHCrx6bJdMkvzMUROLOcjepvorGDylirs6ZAok+zy42o3vxPjWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421074; c=relaxed/simple;
-	bh=D4CLahTcm02K4MIrgNUooEK1xt6s6SBPZH2zMP2SJFU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Fn238s38TivKED8Zp/MC9PRV2NsJKnOYVH0hwvaX3OSvDX5snqScqMS9Al5anxOoKYq34TV+iOlqQ5u0hl5joq5/fSDIEz/IPjZt5AaKv61/prROSdyx3W/xDrPIuXqSUboUWO3kBpipYtPw8PICjnxBWB2eniDpG0Rv3NEN3T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AFP35sF1; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AFP35sF1"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4ee391e6fso290632f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750421071; x=1751025871; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+XeTD7cN51Pn2KJSTE1mvF0ehQNPT1Jdjz2pWXS0RPo=;
-        b=AFP35sF1RK2x7kFTHo1q0Dvw4GvfVfyJkbsHwj5mndAJMshYV0g5q4C6m0sbQtvgI5
-         OToN8Vubm/Tqa2+USeVj39CC+ECIclY6y+oagdLGt3b1JM7GJ8cpUW1NcXFYADCrYKfU
-         2Rg+I5nOgEg4JYtqWg6vJaPX/WJKTXkt+bQMvUukceYEmcPChnisO9uC8d9Nuv8UAP0c
-         TAOUNitHYNRXCZQ2bbMWkTwINNlXJyySCeBDo2mI4yspsivg9Gv3QAaO0SwBjPigrLvE
-         jYRbJemVu4zJDGxxq/hUpeCFswp68EoZzOV9kyOoTdGlc7mrMqKVfKkmTeoGklN2WeVm
-         bNww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750421071; x=1751025871;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+XeTD7cN51Pn2KJSTE1mvF0ehQNPT1Jdjz2pWXS0RPo=;
-        b=Hd74JM6QGzSzt+90/6AL1s/5eYk56Z1Jl3SrwNxg7npyYvUAEnYdCCMcMX9RuixGS9
-         C3E+H3ksdmzhoOHS0EeU2ffanRR8617sjOeM35XrthVRTEi28BaiAZutjrhzB7QERA93
-         fKYiggHQD6NN33Ar8GN8dp9WoWbrxLaLSk3wG0LZ1bNH30ihxGEcQNc1+QSsfZFdN3Tw
-         UwxCoxfQVqxIy483dfsncIAbUQTHxlxIYrqOlWwXki2cuP1l1xLLJLaXihd8hkSgmE0b
-         j+/QPWQvnEBsslNdpL4bYrg9GeMluA9nwFifLhFeAFjETiVJhaUShuiJuD9eCmDSfO6J
-         PFkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWa9tziNHkng3LbBOuxXnpty7ZF3sbW1lXvDkjkFjBC1nh7yL5ZhYDlziPYEDExR7BTiDMI9imSOt4EAFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYhqCTGJVhoO7xMPwVVOmKw5yk1Js9SQWrdTAsOhHS/HFkB56w
-	Ouz5c4giomMYCm3SCHLS5y/lI4UXNTX3E9HE9RgddsGr5Rx856pIANeHkvf3YFHV1P0=
-X-Gm-Gg: ASbGncv2q7OA8Yy2mSDtmCyy7Q0IX+t3PMKNtbdqfn0qpsvOxt6kQRB7YlmP/UfhV2g
-	CM+RhKGoqN7Nu3Zeo5IdfcDENrcCY5DEAdN8WqWZxC3QVAZQBOGHs7uP9LoETcMkl4Ib/fzra+/
-	q692/7BGQD2YIeB0suEZKiUag/U3eDxUVRxdjxH0tY1t0FnZ6x5hYvWb9dgfeavqTQVckIg9GXw
-	dCjbIywQMyGVf8Br8q0OTonUnd5IYvTsjtNSCUOIGG2qHLgUBVYpMiEjNCUR68dL0ml5fDw2qgD
-	XABj1lYYEj6Z9opxWz5Fh3ZFojnCyqO6XRYrTR0wSUhM/QXBvOS11i4DofT5+JiiXM/V
-X-Google-Smtp-Source: AGHT+IE5Nwx55CYVDH94kaBUPm5U9VYUEHy18TPg0VqIF2/T7Ln2PcZvxS2VOj8pKTt4zB2/NGi+iQ==
-X-Received: by 2002:a05:600c:c087:b0:441:c1ae:3340 with SMTP id 5b1f17b1804b1-453657bf6camr6628245e9.1.1750421069056;
-        Fri, 20 Jun 2025 05:04:29 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:81c5:fb37:d08e:99a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a5fsm57299655e9.34.2025.06.20.05.04.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:04:28 -0700 (PDT)
+	s=arc-20240116; t=1750421092; c=relaxed/simple;
+	bh=tCIXfMiKQccXCO9quG8rjG7WtEugWSAaDnbrbxXHMoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ASd51WVNxFtFKr3X9gptizu7i9eVm7ul1rl3hHtt5rblaqi6luztyd2A0moJchTJcIfj8hCGUxJFAXo9qR57Q9gx8Tp7UKRZqQQuARdDu5RnAHShk2GbpHxwwzSCj/8nXboCX7aVg+0InUjz1fEFjGrgBabjZstbCQ+2YtEGRe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E59D106F;
+	Fri, 20 Jun 2025 05:04:30 -0700 (PDT)
+Received: from [192.168.1.102] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD2173F58B;
+	Fri, 20 Jun 2025 05:04:47 -0700 (PDT)
+Message-ID: <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
+Date: Fri, 20 Jun 2025 13:04:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 14:04:28 +0200
-Message-Id: <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
-Subject: Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
-Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Xu Lu" <luxu.kernel@bytedance.com>, <anup@brainfault.org>,
- <atish.patra@linux.dev>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
- <aou@eecs.berkeley.edu>, <alex@ghiti.fr>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
-In-Reply-To: <20250620091720.85633-1-luxu.kernel@bytedance.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
+To: Geraldo Nascimento <geraldogabriel@gmail.com>,
+ linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rick wertenbroek <rick.wertenbroek@gmail.com>,
+ linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1749833986.git.geraldogabriel@gmail.com>
+ <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
-> Delegate illegal instruction fault to VS mode in default to avoid such
-> exceptions being trapped to HS and redirected back to VS.
->
-> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
+> Current code enables only Lane 0 because pwr_cnt will be incremented
+> on first call to the function. Use for-loop to enable all 4 lanes
+> through GRF.
+
+If this was really necessary, then surely it would also need the 
+equivalent changes in rockchip_pcie_phy_power_off() too?
+
+However, I'm not sure it *is* necessary - the NVMe on my RK3399 board 
+happily claims to be using an x4 link, so I stuck a print of inst->index 
+in this function, and sure enough I do see it being called for each 
+instance already:
+
+[    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
+[    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
+[    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
+[    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
+
+Thanks,
+Robin.
+
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 > ---
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/k=
-vm_host.h
-> @@ -48,6 +48,7 @@
-> +					 BIT(EXC_INST_ILLEGAL)    | \
+>   drivers/phy/rockchip/phy-rockchip-pcie.c | 12 +++++++-----
+>   1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> index bd44af36c67a..48bcc7d2b33b 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> @@ -176,11 +176,13 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+>   				   PHY_CFG_ADDR_MASK,
+>   				   PHY_CFG_ADDR_SHIFT));
+>   
+> -	regmap_write(rk_phy->reg_base,
+> -		     rk_phy->phy_data->pcie_laneoff,
+> -		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+> -				   PHY_LANE_IDLE_MASK,
+> -				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+> +	for (int i=0; i < PHY_MAX_LANE_NUM; i++) {
+> +		regmap_write(rk_phy->reg_base,
+> +			     rk_phy->phy_data->pcie_laneoff,
+> +			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+> +					   PHY_LANE_IDLE_MASK,
+> +					   PHY_LANE_IDLE_A_SHIFT + i));
+> +	}
+>   
+>   	/*
+>   	 * No documented timeout value for phy operation below,
 
-You should also remove the dead code in kvm_riscv_vcpu_exit.
-
-And why not delegate the others as well?
-(EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
- EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
-
-Thanks.
