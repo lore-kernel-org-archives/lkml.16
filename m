@@ -1,164 +1,155 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0462B2E613E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE92C28A415
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436761; cv=none; b=dwCNBii9Zs2QpgJSkVE4D8H9fp4nuF36BcGgPouCJ7IQqUXVpZ9C1pJMsLGI9XN9ZHdSE+LeEn+NViQPEr/56gNF6WI8LWcrw08qXE5DrR5LmCI4aYe7GNi5bjTJgKa4q4/oG6BqHSsk24myGWPv3AfdSQMkNxwo52377F/86xA=
+	t=1750436781; cv=none; b=TbGv0pJLUnyBuBnIc0hzGR+AoGnGVv1Zg1GntKNonh8wqnTA9Shh97JIZnQTXzKgmB5eQTyhcfO0ZotW+vNUl/+gJN5i1TOBMuHg3N7gSrxu+GiqP6w/aEPMcbW7leF+fr3FP4aaIaZmvYZL6n40x7AaF+jTiaT4Kmbr9YT+hAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436761; c=relaxed/simple;
-	bh=2lpfuT+UJ73xh83VqKPWIoYBmbgIzKWaPVoLMY4rhrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jq+oRrb4Cj5DmzXPdgW1+6ZuYCBY9/f7LGz450jelItet3EKd1bbzG/0QRl1zrpd8SUlk6JJKJdglJkfUK+pF+I1/vVx9SmwU6UGSZbscHtU+jT6K3PxPNNQUo3NTxTPVZ+jcBSxVa6uJlOWOhRmmCOcY2RvOgbqpzzZJu+oGr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DU/J5Ppt; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750436781; c=relaxed/simple;
+	bh=GmbeS99lMZb32yLusCYzKg0Hsx2vlzLyFSD34r6Dsx8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cTT8cXlN8YZsL6YYOMyMulbLy4fbtY/f0PXlRuHoFwy8cUwfic5+QtbhM8wz6D8MxUowagZasZ4r8aP+iCCx0F/NHBMcT94Z0TuQ2BIb8Y91e/+zkNxHYEXuZNyobuFZaBYTLP5+16ST0VH3T3If2rJ2M70paP+i9E/2DBik0q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yBuoA83M; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DU/J5Ppt"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so23188465e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:25:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yBuoA83M"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31bc3128fcso2659201a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750436758; x=1751041558; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Alqg+WicKPYUIWXmnQXqsBN2VhHsKxxFP4ePyG0B/vk=;
-        b=DU/J5PptjWdlJAqQaZD2jvC/tSBZrpcFT7r8u4oFD9vEx6UA+nZ9mVBAFRrZ20h+Bp
-         O8PHKcThXHvlOqA4L8DydUqHeTTfd8qdVhFpZ9dR1a7pAJvyeD9SNfRD10xS5bRpuOLI
-         WlKEE0x00EnGNzLZznjnumWgB30vM1eCm4ekg=
+        d=google.com; s=20230601; t=1750436778; x=1751041578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ohXTG1F8q+sZIWE5T3UCXkFHYvD6TwygvwiXK1MWjtQ=;
+        b=yBuoA83MeQzMBdGtlT29OOOJSRBBU+vQlJ1LOjJwsQE7bZPVhFLoWRg75cnmO1o9F0
+         h/q1Ub10SqA2F9g/tLsNadZCurFfuBmNVh182H/pNowR0vpfx7XcYIijniIa0SdBTdFM
+         BRVJhoY6wksm+5lRh43YxbFBE2Ftk6gsOrsZWsk/p9QZnMLPpFdOgUmXYd5d+oLvGTux
+         FFSJJBYiczLuoBCZhKYuOAEOyFG2ZHr3nYcI4x8FbPCr/9kscMIyxGLtT1XYCFFgbGvR
+         cwDyrNBTdDpd792he+lq8fjc0cgO9Eoq92sZm/6yNc2RNi6Fg1mfKR5N05y1BPJrhOqN
+         9erA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750436758; x=1751041558;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Alqg+WicKPYUIWXmnQXqsBN2VhHsKxxFP4ePyG0B/vk=;
-        b=g9wm20cCVqm8g7+Lb3nX/guHttW0YA82/FrbokQiTInNbw8x3l/oOg1YNGTgtXP2YO
-         YFWBA91EbsXUHA04Jg/+KNKRSuGhwgziJq87ZCjhybtzff+vixC8bR5MUIfwQpmRCWt0
-         NkSMuUclsoiEoF1AR5YFc/zrVZe7reqmS76oZItaI75Af5RAavO0nBPXQfAwzPEKMzFe
-         k3zxXXCeaY/S6PmgL32qfkcyLNpwE8Sh1IRgX04bx2/lZhud9XNMXBYYL5TbMdm4rT6i
-         XQ0NgWccvXS0XV7mosj6ylnAk6scNNkYoDTqIzvkzCvY/xMUvkrRxt+CWu/uzfCETKfn
-         sjFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4+dwnZcvBgKkA0RzIl8QyVtLaKjTbioW41kUGe8wfz2ahSPoNor+zJ1ThNCMA/WvIiLM61+AFERascnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxpgvUqJaPrbWYtBgZ5f/fxNjjnMeBEqAERZjNxmlU6eRYkeHA
-	oNjiQuS46u7zGX4ZEk2Jcm2hghfDTvizwSIPCMNqLdWO36R9gPjZ10JO8R5imAdJ9A==
-X-Gm-Gg: ASbGncuY4yAO7NvUsNKIo2cFhQRvSaZwcWPJ7m/sdPAY9ayNkIyF1/xTHyXvOqJtvSp
-	Ah/1sjbKopHScIn+Af5HptJv2DMGGRXyvgthBGMCmgcSc2mVFNihljo2H+RtxQ94DXK6oD0rkaa
-	G5Z0V4GcvERYbh6JDEQ6sej7I/nEeRmCDJqhgtlJo31d9OD1T3TSP2hKUtL4rHBefvpvsj+VF5P
-	jhlPxFL0T4JJP9n4FPTniRYhh6jM6MBX/b4GhL62UtFSB9npKu0RWWdlYC/owrCqBiGUWn4fp36
-	POrRZLeDBlOe/yCzJQITeCfLba00f+nsNRThX8XWMhJ1gIR5cAr6GvTD59QG1LLjLfAvdo9eGG2
-	079Iys5xBB8jXKB1l4KzIsIugoikS8OuoOhAc
-X-Google-Smtp-Source: AGHT+IGRwKx0AynK+ibMBUFo43qWTcsiEdtRRQuC50E0G+K6arFeZxJbV27lEJE+xU2l8nMbP/C7jw==
-X-Received: by 2002:a05:600c:4f8a:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-453659f5049mr31054025e9.33.1750436758174;
-        Fri, 20 Jun 2025 09:25:58 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac8bb6sm64450535e9.25.2025.06.20.09.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 09:25:57 -0700 (PDT)
-Message-ID: <e683862b-3eb2-4783-aa4e-c457b7113b7d@broadcom.com>
-Date: Fri, 20 Jun 2025 09:25:46 -0700
+        d=1e100.net; s=20230601; t=1750436778; x=1751041578;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ohXTG1F8q+sZIWE5T3UCXkFHYvD6TwygvwiXK1MWjtQ=;
+        b=RAV97SO8xNmCvN7YJ7m6+e8swCLMFXtIaiSN/njYidc/lI7gZykc3U8PoIehWPFzUu
+         ZSrqcYLkuITT8xDblT77/P/limnMYxAswr2Ng31liKGJdttOVgum7c2a+So7WWNVhgYI
+         XoFyHf4V6zRyeQreUkD7NQLjtBNl6cHRIWxoFIyv5xW53TDrJQ20iOp9Ym7WssEIQmED
+         BUUoxPz/tRSUaGMD0VQxGx6IZ5yqt67tKTMkMeRwhQGs3zVw/MwzsgtPNzd093Ts6vmF
+         r0IP6MrGYuFjfs3MW5WAMzgY3sL04UIl/Kv+HJ3RBt4tjkFd8YscFP1tCSi6XS65aC4A
+         m+Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUHzd0Q1Z7y2qKx8ON7lukrqh26EdnHnTsBJIrPoVYgEoq/RqxmEUpNYfmxzL1Sbs4xUygGTXtnz6/6sc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQzzPxVIcX0wdQqF44glIW8N0l41MxiADrSaeQWJ2PBdBCX7DY
+	pELySpj4bcAoGmB7/cUl/5YOkK0oJepqeMA9CjOI+h9voA+xmXWse5IdjDIyho0Rkc4QgsEcCKq
+	An3C0BQ==
+X-Google-Smtp-Source: AGHT+IHSI33VZnJrVN5GSWOeOURBcD463SXHD2uLeqoTFyAZmRsAQZBnIblvyZ5jUZEP7pAHfN+WFTdx7sg=
+X-Received: from pjbpb15.prod.google.com ([2002:a17:90b:3c0f:b0:2ef:d283:5089])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:574d:b0:312:e51c:af67
+ with SMTP id 98e67ed59e1d1-3159d6267eamr5679524a91.1.1750436778221; Fri, 20
+ Jun 2025 09:26:18 -0700 (PDT)
+Date: Fri, 20 Jun 2025 09:26:16 -0700
+In-Reply-To: <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next RFC] net: Throw ASSERT_RTNL into phy_detach
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Kory Maincent <kory.maincent@bootlin.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- thomas.petazzoni@bootlin.com, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <mani@kernel.org>, Mark Einon <mark.einon@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Iyappan Subramanian <iyappan@os.amperecomputing.com>,
- Keyur Chudgar <keyur@os.amperecomputing.com>,
- Quan Nguyen <quan@os.amperecomputing.com>,
- =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
- Michael Chan <michael.chan@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Doug Berger <opendmb@gmail.com>,
- Pavan Chebbi <pavan.chebbi@broadcom.com>,
- Sunil Goutham <sgoutham@marvell.com>,
- Hans Ulli Kroll <ulli.kroll@googlemail.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ioana Ciornei <ioana.ciornei@nxp.com>, Jijie Shao <shaojijie@huawei.com>,
- Jian Shen <shenjian15@huawei.com>, Salil Mehta <salil.mehta@huawei.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>,
- Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou
- <mengyuanlou@net-swift.com>, Imre Kaloz <kaloz@openwrt.org>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Steve Glendinning <steve.glendinning@shawell.net>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
- Vladimir Oltean <olteanv@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>
-References: <20250620143341.2158655-1-kory.maincent@bootlin.com>
- <aFV2h4w3MLtjyfPb@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <aFV2h4w3MLtjyfPb@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250611095158.19398-1-adrian.hunter@intel.com>
+ <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+ <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
+ <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
+ <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
+ <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
+Message-ID: <aFWLqOd7Kln67h1N@google.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+From: Sean Christopherson <seanjc@google.com>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/25 07:56, Russell King (Oracle) wrote:
-> On Fri, Jun 20, 2025 at 04:33:27PM +0200, Kory Maincent wrote:
->> phy_detach needs the rtnl lock to be held. It should have been added before
->> to avoid this massive change among lots of net drivers but there was no
->> clear evidence of such needs at that time. This imply a lock change in
->> this API. Add phy_detach_rtnl, phy_diconnect_rtnl, phylink_connect_phy_rtnl
->> and phylink_fwnode_phy_connect_rtnl helpers to take the lock before calling
->> their respective function.
-> 
-> Please don't increase the number of API functions for phylink for the
-> long term. I'd prefer all callers of the phylink phy_connect functions
-> be updated to hold the RTNL, just like phylink_disconnect() requires.
-> 
+On Fri, Jun 20, 2025, Vishal Annapurve wrote:
+> On Fri, Jun 20, 2025 at 7:24=E2=80=AFAM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > > > The problem is that setting kvm->vm_dead will prevent (3) from succ=
+eeding.  If
+> > > > kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not =
+/dev/kvm the
+> > > > device, but rather devices bound to the VM) ioctls.
+> > >
+> > > (3) is "Close the older guest memfd handles -> results in older VM in=
+stance cleanup."
+> > >
+> > > close() is not an IOCTL, so I do not understand.
+> >
+> > Sorry, I misread that as "Close the older guest memfd handles by deleti=
+ng the
+> > memslots".
+> >
+> > > > I intended that behavior, e.g. to guard against userspace blowing u=
+p KVM because
+> > > > the hkid was released, I just didn't consider the memslots angle.
+> > >
+> > > The patch was tested with QEMU which AFAICT does not touch  memslots =
+when
+> > > shutting down.  Is there a reason to?
+> >
+> > In this case, the VMM process is not shutting down.  To emulate a reboo=
+t, the
+> > VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.=
+  Because
+> > guest_memfd takes a reference to "struct kvm", through memslot bindings=
+, memslots
+>=20
+> guest_memfd takes a reference on the "struct kvm" only on
+> creation/linking, currently memslot binding doesn't add additional
+> references.
 
-Yes, I completely agree, this should also make for a smaller patch set 
-to review.
--- 
-Florian
+Oh yeah, duh.
+
+> Adrian's suggestion makes sense
+
++1.  It should also be faster overall (hopefully notably faster?).
+
+> and it should be functional but I am running into some issues which likel=
+y
+> need to be resolved on the userspace side. I will keep this thread update=
+d.
+>=20
+> Currently testing this reboot flow:
+> 1) Issue KVM_TDX_TERMINATE_VM on the old VM.
+> 2) Close the VM fd.
+> 3) Create a new VM fd.
+> 4) Link the old guest_memfd handles to the new VM fd.
+> 5) Close the old guest_memfd handles.
+> 6) Register memslots on the new VM using the linked guest_memfd handles.
+>=20
+> That being said, I still see the value in what Sean suggested.
+> " Remove vm_dead and instead reject ioctls based on vm_bugged, and simply=
+ rely
+>     on KVM_REQ_VM_DEAD to prevent running the guest."
+>=20
+> This will help with:
+> 1) Keeping the cleanup sequence as close as possible to the normal VM
+> cleanup sequence.
+> 2) Actual VM destruction happens at step 5 from the above mentioned
+> flow, if there is any cleanup that happens asynchronously, userspace
+> can enforce synchronous cleanup by executing graceful VM shutdown
+> stages before step 2 above.
+>=20
+> And IIUC the goal here is to achieve exactly what Sean suggested above
+> i.e. prevent running the guest after KVM_TDX_TERMINATE_VM is issued.
+
+Ya, I still like the idea.  But given that it's not needed for KVM_TDX_TERM=
+INATE_VM,
+it can and should be posted/landed separately.
