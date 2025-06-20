@@ -1,114 +1,143 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D45B292936;
-	Fri, 20 Jun 2025 15:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26E12DFF22
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435163; cv=none; b=RGvCvpyq+1NZ10q423ekhytwpnvj1mvMC5fo4yjFdwHBMkUfYZswSWS2sdrFOMSEm0LQBUQMDTpQ+vkbeuNgn+1hZhpEGgL+1DOXO8VTVl+k8UjGoghR7DbQe9RqBli8+H9fPV+n3BN/zkuwdun3hmmecK7uhXnAd+KPOL/yEyU=
+	t=1750435205; cv=none; b=jsM66lEFxuiyXPM3BH9yD99mOZG/odcRy4c6lC6H9395tCl+0pmr0hScHKSsF3isi/CxwunwN+92UNux6j9arfefUE/leD0VCBDgSp3Fyp6TCEfM5M/WlZD2TIo+Z2c8EOrowkAAG+lq4qMdnOKlDiXW8LtY2Lfp0A85PjbaPG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435163; c=relaxed/simple;
-	bh=YWywS6coQ5SLZX7nQ9wv5WL8S0zIjuBiMyIx4hdFcZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MBCvkfAgnSFl9EJimrgHAH0yZV+CEKpQRNpYpcUuPmKuM3WKDA+Mz1Xam3AeQ/3HyQpHkiYZwnWOStOqkqdOO+oSJLfuDHcJxz8jc7yAc3FKYWTgoZc2H4Qr/ptTA3uHG71PVxmLICqpoRJDgTUguYiCcvQHKLjvzspyZVVISJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=J4fitMSV; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750435205; c=relaxed/simple;
+	bh=ZKdoyWG4uNvQboILO4stlRgtMREmdDVse60DV4CbPCs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tgC0NAas0KCA3e8memf2m2o4yqxJvwDVU+56tEoCxJyKXM73YZbTzTPGvQW3vpwEDHxjG8FWY7LdB+IACUIYJ6GGoSVMhOVdD46Lav8LN58+GiYNwvopfGwCLvYOXkbDllLEKJkX1YovUOpUKKmIHiDoN0G9kmADzE3d+lKGvEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TrdRDju6; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="J4fitMSV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=0zrM8W2TbSsSIHvT1Fq4IVGHy7WN7Km4fk5n2KCsDZg=;
-	b=J4fitMSVfCyFl9sFMsejJfExQJjX5ak/mbOya/qJbysx2L2x6nfErZb0HeEn2t
-	4u1d8czktvXwNmZTtXizOgBTIs59ATRW7ZbUk2LowXejD5t/XYtNA2K9GobExCeh
-	pOIIK2ouvF0xt8SkVj2G249iaVqK5g0eiYGF+rwejVsLQ=
-Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgCnzAA9hVVoKwqyAA--.25131S2;
-	Fri, 20 Jun 2025 23:58:54 +0800 (CST)
-Message-ID: <4bfc8c05-c6e6-4246-960c-ee5802840523@163.com>
-Date: Fri, 20 Jun 2025 23:58:53 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TrdRDju6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 619FD41CFD;
+	Fri, 20 Jun 2025 15:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750435201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uCrCrimT2GeByS96cS2HIu4iMov1HLkBona2ijb0XWw=;
+	b=TrdRDju6W4qLi2wv9kb+q8qV4GC+F8lb5Bzco8TZoQqCVdY5h8XGs1oRyj9v02IsfyMTzG
+	pP2TH2eY8J9XeJtJpCjnvbsZsy9BVoE13mbvWPWmNGKzWJlnpL7NsLpPR+kPrLb+bd4xOL
+	RKeg9Dimz2d25e+rHWCJKEyd8WvljFxtsSB9WkeIEZJr/nCGuGzFWISU4ggSPe4z5Yni9/
+	lQYXOBmhAGCtYtWsH+ycKNHWuXOtTchZ8fPJRtOMKAUF7UBWbXSt4zlhQRPI27AyuB5lzR
+	K+b6K/cYOWfyAbEDstY8nQpRBURXjAkfkQRXbOrPkCtEX1RbXiE+3akWcfKIbQ==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH v9 0/3] drm/bridge: get/put the bridge reference in
+ drm_bridge.c, warn on old alloc pattern
+Date: Fri, 20 Jun 2025 17:59:52 +0200
+Message-Id: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-0-ca53372c9a84@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: rockchip: Remove redundant PCIe message routing
- definitions
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
- shawn.lin@rock-chips.com, heiko@sntech.de, robh@kernel.org,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250620154202.GA1292011@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250620154202.GA1292011@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:QCgvCgCnzAA9hVVoKwqyAA--.25131S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWw1DWF4xAF4xCF1kCrWfXwb_yoW5Jw4rpr
-	WUXayFyF48Jr43ua4aqan3XF47XanrtF4jgr1I9w4fKF1fWryrWa4Yvr45Grn8XrW8Xrn2
-	k390ka4DKFZ8J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UntxhUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxVyo2hVgqRJRAAAsJ
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHiFVWgC/5WNyw6CMBBFf4XM2jFtFVFX/odh0ccIkwAlbW00h
+ H+3snLr8pyb3LNApMAU4VotEChzZD8VuOwqsL2eOkJ2hUEJVYuTEujCiCawK4seBm+xozQ/06+
+ 3KLRRVh/P0h4aKFdzoAe/tsy9LdxzTD68t2qWX/tnIEsUaLRryOjaSdncjPdp4Glv/Qjtuq4fT
+ +YJZ9oAAAA=
+X-Change-ID: 20250620-drm-bridge-alloc-getput-drm-bridge-c-0ab2ca481c37
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Anusha Srivatsa <asrivats@redhat.com>, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekkedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejjefhgfffleevhefhfeduhedtfedttedtkefgkeeuieehtdeifeduveejffevgeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmp
+ dhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
+This small series adds drm_bridge_get/put() calls where applicable in the
+bridge core code, and adds a warning when the old allocation patter is
+used.
 
+This is part of the work towards removal of bridges from a still existing
+DRM pipeline without use-after-free.
 
-On 2025/6/20 23:42, Bjorn Helgaas wrote:
-> On Sat, Jun 07, 2025 at 11:49:13PM +0800, Hans Zhang wrote:
->> The Rockchip driver contained duplicated message routing and INTx code
->> definitions (e.g., ROCKCHIP_PCIE_MSG_ROUTING_TO_RC,
->> ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA). These are already provided by the
->> PCI core in drivers/pci/pci.h as PCIE_MSG_TYPE_R_RC and
->> PCIE_MSG_CODE_ASSERT_INTA, respectively.
->>
->> Remove the driver-specific definitions and use the common PCIe macros
->> instead. This aligns the driver with the PCIe specification and reduces
->> maintenance overhead.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/controller/pcie-rockchip.h | 14 --------------
->>   1 file changed, 14 deletions(-)
->>
->> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
->> index 5864a20323f2..12bc8da59d73 100644
->> --- a/drivers/pci/controller/pcie-rockchip.h
->> +++ b/drivers/pci/controller/pcie-rockchip.h
->> @@ -215,20 +215,6 @@
->>   #define RC_REGION_0_TYPE_MASK			GENMASK(3, 0)
->>   #define MAX_AXI_WRAPPER_REGION_NUM		33
->>   
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_TO_RC		0x0
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ADDR		0x1
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ID		0x2
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_BROADCAST		0x3
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX		0x4
->> -#define ROCKCHIP_PCIE_MSG_ROUTING_PME_ACK		0x5
->> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA		0x20
->> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTB		0x21
->> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTC		0x22
->> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTD		0x23
->> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA		0x24
->> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTB		0x25
->> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTC		0x26
->> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTD		0x27
-> 
-> Thanks for doing this!  In fact, these definitions are not only
-> redundant, they're not even used at all.
-> 
->>   #define ROCKCHIP_PCIE_MSG_ROUTING_MASK			GENMASK(7, 5)
->>   #define ROCKCHIP_PCIE_MSG_ROUTING(route) \
->>   	(((route) << 5) & ROCKCHIP_PCIE_MSG_ROUTING_MASK)
-> 
-> And neither are these ROUTING and CODE definitions.
+The steps in the grand plan [1] are:
 
-Dear Bjorn,
+ 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
+ 2. handle gracefully atomic updates during bridge removal
+ 3. avoid DSI host drivers to have dangling pointers to DSI devices
+ 4. finish the hotplug bridge work, removing the "always-disconnected"
+    connector, moving code to the core and potentially removing the
+    hotplug-bridge itself (this needs to be clarified as points 1-3 are
+    developed)
 
-Yes, this driver has too many unused definitions. I can delete the other 
-unused definitions next. For this series, I just delete the similar 
-macro definitions in drivers/pci/pci.h.
+This series is part of step 1 of the grand plan.
+
+Current tasks in step 1 of the grand plan:
+
+ A. ✔ add new alloc API and refcounting (in v6.16-rc1)
+ B. ✔ convert all bridge drivers to new API (now in drm-misc-next)
+ C. ✔ kunit tests (now in drm-misc-next)
+ D. ➜ after (B), add get/put to drm_bridge_add/remove() + attach/detech()
+      and warn on old allocation pattern (this series)
+ E. after (B), convert accessors; this is a large work and can be done
+    in chunks
+ F. debugfs improvements
+
+Specifically, this series does two things related to the recently
+introduced devm_drm_bridge_alloc() [0]:
+
+ A) add drm_bridge_get/put() in the two places within drm_bridge.c where a
+    bridge reference is taken/relased
+ B) add a warning on bridges using the old allocation pattern instead of
+    devm_drm_bridge_alloc()
+
+These are loosely related topics, but I'm sending them in a single series
+to avoid trivial patch conflicts, as they touch the same lines. This will
+holefully help getting the patches applied more efficiently and quickly. I
+hope this is fine being 3 small patches.
+
+Part A) is made of patches 1 and 2. Those have been previously sent in
+"[PATCH v7 00/11] drm/bridge: add devm_drm_bridge_alloc() with bridge
+refcount" [2] (as patches 3 and 4), and already Reviewed-by Maxime at that
+time. However they could not be applied until the conversion of all bridge
+drivers to devm_drm_bridge_alloc(), which got completed a few days
+ago. Hence the reason this is v8.
+
+[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
+[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
+[2] https://lore.kernel.org/all/20250314-drm-bridge-refcount-v7-0-152571f8c694@bootlin.com/
+
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+Changes in v9:
+- patch 3: change warning trigger from "refcount != 1" to "container not NULL"
+- Link to v8 (counted as v1 by mistake): https://lore.kernel.org/r/20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-0-bad7eba5d117@bootlin.com
+
+---
+Luca Ceresoli (3):
+      drm/bridge: get/put the bridge reference in drm_bridge_add/remove()
+      drm/bridge: get/put the bridge reference in drm_bridge_attach/detach()
+      drm/bridge: add warning for bridges not using devm_drm_bridge_alloc()
+
+ drivers/gpu/drm/drm_bridge.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+---
+base-commit: a59a271769149f0b8258507276f3d2a24370cbdb
+change-id: 20250620-drm-bridge-alloc-getput-drm-bridge-c-0ab2ca481c37
 
 Best regards,
-Hans
+-- 
+Luca Ceresoli <luca.ceresoli@bootlin.com>
 
