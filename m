@@ -1,81 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2349218AAB
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070432D3A6E;
+	Fri, 20 Jun 2025 17:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440816; cv=none; b=TYiWZZNZfH9iA9vmY1q8wMOZ/JzmayU37OuaskglbifLoKQxA6+e89kfkZYyo8120ReCUCNKPfnmqHyUM+Kaq22706doj0+AAKt1p9m7a7l5mAmOoVWqRmfW2ezVKwRC66tAJHIjVrUKoJ4ue8JEgp5awPAOSXUluHoQ5SdutJc=
+	t=1750440830; cv=none; b=eZHZePKkz9OLdZkEZZR2qELQAKjoqb7NB55TomJT3845O05u1umtsxo9hZgfT5lvLEGg2yjNAfpbEect19YCmut2hoBA69BRF3GklekfGFWRhoue57TuVKnU6ERdtqE0qmaqN0utZgSzpfI2zPM9MpAUBeupfKBmyi1Wps2QkyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440816; c=relaxed/simple;
-	bh=ty8CZ8PfOQuKhNDdbfpzSP4TCs0Z8KwtEq/Nni1TAls=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MvdD3d5847UMx20uVWLOkN+/2QLy6vHA1joiNibhIarwRvrfTQpxCKLG8lZlLA+4/VN3AGmsoalp0wxOpLPD6Jld9Lq1zmE0xI+1+DwRyHQJdlUUZSH8ajowFwzN5bsgXkHd5EGh8KtwgQu8MuQbDhYUt84yCtfywKzHYxIRwkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4OTqmdR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750440830; c=relaxed/simple;
+	bh=C0KIP4y2EaLB9MdRBxwuIaS4kc8jFZZqZaGNo2xtJ/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QG4zEPzURAP/h+vFtyjDN3LBqWKRaQ8V5QndQiWFvNYqlP/s65I873oT+dwlSLuoFit9GoKq8kTpj3bWOj6sKejYyXMKas5SRjApdCbYhV2fqrfslzaoRZbx+whV71IRTzp15BnDE6PykzPmhzPbW/AXsx1WxuuwNi5B3V1Szgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHtXkU6y; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4OTqmdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D5DC4CEE3;
-	Fri, 20 Jun 2025 17:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750440815;
-	bh=ty8CZ8PfOQuKhNDdbfpzSP4TCs0Z8KwtEq/Nni1TAls=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a4OTqmdRHh5E+XNrgmwzxQrtuSzLwRXfgIzn4HsfG80tofbr7sFMYARVuBHSIy1Ej
-	 TInLIwudMQgAmC4xmggDADO3bjsI3ShIavmPB9BLIGYdG0THxuZ5iMsUUOPwBjYEmc
-	 1m6ma5DctPAkrMIAPAcO0cPV2Ll3OngwfpZ3D5UwrEnWA3CCjpkWhvOBkS5y8GRtL/
-	 XPgTscG8ZynlH+nCMiMKzv2vfPwA+n0y+LNokNX12frf1F5hDiI8ujOiNGwUn7dR8u
-	 Q7xF3L550lg2WML65M0ylFAt9n4froQyWjumTYtXoBKtHwyhITTCYCm6glTArzfUyo
-	 e/KrLYXG3iSQQ==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v2 3/5] mm/madvise: thread VMA range state through madvise_behavior
-Date: Fri, 20 Jun 2025 10:33:32 -0700
-Message-Id: <20250620173332.96194-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <518480ceb48553d3c280bc2b0b5e77bbad840147.1750433500.git.lorenzo.stoakes@oracle.com>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHtXkU6y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750440829; x=1781976829;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C0KIP4y2EaLB9MdRBxwuIaS4kc8jFZZqZaGNo2xtJ/k=;
+  b=IHtXkU6yXnvCpzaChjzLh2kAmz9kL82Fn85J2lMzo1SOcIkQVuMsF026
+   ZHz86Fo9zG9y7ozBxtOblEQj4I93jkpSEFByErbsT55ul4h5razzyUMSl
+   nvwOQtqbnMrHIEF62FirtFo4kza1mSKMbwQmJVmvnA7DLWwgcFtRG8JPL
+   3XnRXdrSuRw95nUv56PAE+YeOOjTpFB2i1COGvysMwsIK0j+lOsA06Eh/
+   glSPl2qKOJrDKB4xS5joDeGnsTm7cGmZpcAIZOcG/GOmwhrrE7eyvI2xB
+   lIcwjyWEmTcUw2CGx/dgSsAjO5/V9b8KXhfnuhl8BGm9TQ8V687LXaszm
+   A==;
+X-CSE-ConnectionGUID: VsHAKXjeSGa9yYIQreGd2Q==
+X-CSE-MsgGUID: 2Go1r15nQTma9Nuq+5ssDQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51943391"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="51943391"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:33:48 -0700
+X-CSE-ConnectionGUID: 5ylaNGQKRJKduxA7PJ9a/g==
+X-CSE-MsgGUID: VgHyEtvcR26bzU3URzErIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="155272453"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 20 Jun 2025 10:33:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 3A5B1109; Fri, 20 Jun 2025 20:33:36 +0300 (EEST)
+Date: Fri, 20 Jun 2025 20:33:36 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Message-ID: <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
 
-On Fri, 20 Jun 2025 16:33:03 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> Rather than updating start and a confusing local parameter 'tmp' in
-> madvise_walk_vmas(), instead store the current range being operated upon in
-> the struct madvise_behavior helper object in a range pair and use this
-> consistently in all operations.
+On Fri, Jun 20, 2025 at 06:35:04PM +0200, Borislav Petkov wrote:
+> On Fri, Jun 20, 2025 at 04:53:09PM +0300, Kirill A. Shutemov wrote:
+> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > index ee176236c2be..4473a6f7800b 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -313,6 +313,7 @@
+> >  #define X86_FEATURE_SM4			(12*32+ 2) /* SM4 instructions */
+> >  #define X86_FEATURE_AVX_VNNI		(12*32+ 4) /* "avx_vnni" AVX VNNI instructions */
+> >  #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* "avx512_bf16" AVX512 BFLOAT16 instructions */
+> > +#define X86_FEATURE_LASS		(12*32+ 6) /* "lass" Linear Address Space Separation */
 > 
-> This makes it clearer what is going on and opens the door to further
-> cleanup now we store state regarding what is currently being operated upon
-> here.
-> 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> This needs to be in /proc/cpuinfo because...?
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
+What is current policy around it ?
 
+I think it is useful to advertise security features in cpuinfo. LASS fits
+next to SMAP/SMEP/UMIP.
 
-Thanks,
-SJ
-
-[...]
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
