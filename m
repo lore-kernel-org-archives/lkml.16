@@ -1,144 +1,192 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B87E28A702;
-	Fri, 20 Jun 2025 13:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABDDA95C
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750425615; cv=none; b=S9g3NEbTndWPQCrqRmxSTNj3GQ4gouX5aWBrf4cVDjTGDlBEC7AOPTXGFnSvE55htNG4r2dzeNIuyu7ZHFTa/ayvm4Asv9A7NVNZ/BRznCsWerp614iGUFU3sbECzvk19NQaYk964TX9n9ee8RjDKckFd5NdLARq89tVXoJQzOg=
+	t=1750425663; cv=none; b=Rcm5s0xmMcwWZpWCXjQW/6o3wYbZ6rMpBnx2kS9q/rCeqveGDa8oBpyPTiLpDiQD/e79XuUepuV+Q54sFqYWKgTJBQ7w7r1ESm8mJc/rk7d3QXQ7NcgBKYRCxCft6NbN36RCwLZL5h4eXMv8ff64lT6axfJOKCnxBC76z+mzexo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750425615; c=relaxed/simple;
-	bh=3vPdSbxRbyaoVOn3PcDa5iy1hPOieg/lPxOkMCMwclY=;
+	s=arc-20240116; t=1750425663; c=relaxed/simple;
+	bh=m++IWIdhWcOcndZZ1RdUUYfFhpUVf+EYrm4S0Wxh/7g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqF8uXqleGTNAKE8iqDEEA9NlLssFrXi17y0kNsXkqjXcY2Jf/3n7zE1tjbFzK/uOCAWO9wqwhxbqJl69nny/iwR5DJQ2r5Fgfx6ZNSiJKMB+b+bS9h5jhq52hFH0f0npgW6C4sYgUzKpVnI1r7QoVZqT0JB9gWAFc1SJQHVLIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xbpk1Gcv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dSETFzgg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=PdGXzidm05O6Sl63NTLuu4nHwT/COYAV5FlK68THRvbrkBUAeecK/7BNL8jUM2vPGMSwS0gVVwEiQ3aA1wfnpalaEokjTdZMqORneZ3JuEDRQiKWD1Z2mzkncz8jznppCnpd7WYAkDaRpSWbC5efPjIPb/1tKiBqKRfBJUSCPyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QgzbRBoG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xbpk1Gcv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dSETFzgg"
-Date: Fri, 20 Jun 2025 15:20:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750425611;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgzbRBoG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750425660;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8wtKTkQ0DJEvdIq2uKb64fr5/HkxwWYfnbB81VGsqgQ=;
-	b=xbpk1GcvM2CXI7N+DS6uqb548rLThLHg/zqPom8QVEOT5a/F66PvrvtRfsQsj06JgllVrN
-	cxVqhsouaY7hRE/8702pTpFKqf19ByPCB/Se+NqvTUziRwYMndFAJYn1AJ/e2+QYjInlnl
-	QlFn4C+i4aON3q32OHt2+FiEAUnXlnJTeLFhSf8aWted+OZzjUIM4YP5M4m5lEhadIJlj5
-	68yuQbDlQI8clAyATZE9bkeYahAlnNHeyTIRLlGVQO59ReNhRdfeAEbQ8uW1r6G6KwpUoW
-	HWIgt14WEuN/AZVgEQogB0xD0a+OKnv83IceXbXM/7PDWrpQ/SW8js51gSeNiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750425611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8wtKTkQ0DJEvdIq2uKb64fr5/HkxwWYfnbB81VGsqgQ=;
-	b=dSETFzgg52sTw+31LwsX+wqORY9FaScJ2yCaW+8TvpLO5n2KBPBHCHdH46BRV6EWHtb8tR
-	kBZZlj4ovuzufjBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Gow <davidgow@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
-Subject: Re: [PATCH v3 08/16] kunit: tool: Add test for nested test result
- reporting
-Message-ID: <20250620151847-953c56f6-5a20-4e46-82ce-8b58fd409250@linutronix.de>
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-8-55e3d148cbc6@linutronix.de>
- <CABVgOSmTXj_t0_nJyjhc=mvpPkGGW5D4qGd0WajmVgVyMgd_Hg@mail.gmail.com>
+	bh=wrbqyOjgClJljme6Y8IBM3ztge6H5cPgaXJrix0YAsM=;
+	b=QgzbRBoG40v5dauQBefN2qeiEt/619XaJRWdLw7UqPLaGxTWD8IT6ZHp3QfpD2dor9ROp4
+	z43Tji7D/bW55I30dmjzQz0OqWi/uq9b5lPDJ6yfAn6FlQtOIX32izu5PS6pflaw3+uB41
+	Nm1wh54VtIurNMlNFORgGXv7rVCc42k=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-LtCWpKLvPSqza8PINUEujQ-1; Fri, 20 Jun 2025 09:20:59 -0400
+X-MC-Unique: LtCWpKLvPSqza8PINUEujQ-1
+X-Mimecast-MFC-AGG-ID: LtCWpKLvPSqza8PINUEujQ_1750425658
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so1135881f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:20:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750425658; x=1751030458;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wrbqyOjgClJljme6Y8IBM3ztge6H5cPgaXJrix0YAsM=;
+        b=umunpCD56z+PBvB1J6uVw68h6irwIXtyrR13wXaX7oHtJw4dIoqN3lPVZk1ITuodMd
+         umhgDDCOh+DLtqNzYucNrVbJU3hzw0CKvtL3C3qJTKDN4NV25a48rgSZxEu7tXvj4Pij
+         e5rV9/XD9X9L6t29Vu0r106iRHBiVqP6HOY2jHwlmSn3y1OuPzlKpNpU3QSi1AbXhvsL
+         y+XGwWzZmOsJGgRp82OMB9YqxvX0Icth/0ta/udIMyJ8wNPymUjYTNV+57qqU0O1Tkdv
+         ZXmWA9RSwTn6eRJY9emBx50w2gDbNotVcCLWOSFVeAKtq/0jtq5Qwen2x7+a9uaL4H1y
+         6Dnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVj/IzNrkOFeSoGXdJLBnDW1Gm5GKMOSTv6hwevnfHugMyjWyHBC9JMVZTF57rn1ifMOjVPg3Cl6Mv8Ok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjGjIXBryGdeloYzz3osd4Td5F1YdR8VUAII6VmLfFfBIT8j43
+	ZTJJy07Zy6Yh5oJZfe7Zi/dadVWPmOoGz7LDtLOqWjgpfvel99tcn7FxGAMu1OHSjq283tHI2Xh
+	nLW+oSK4Hu9oqg//UykdF1xRYVe1Iy0b8w+jeJa8Zr9+LUkVasaMuXRRKmU2LbRJSNA==
+X-Gm-Gg: ASbGnctI+BeGblrRQbomEBzcs/Tif1I4TjrvmLL/K62MBg4cUjVeUDwuEiuM3AprBjV
+	2+B7VWY7M2EP3ovd+vwrYg0fLdmH/56kjcBB3clhAFaG2EuNrRzaW2Laq5Tg7NFGFQ64N6nMfUO
+	4vsMXV/cJVwz1Lmm2fKsMXmBJHVIFJEgtAzcH8wbe9mY7GtUbt3qL1zF9MGOJNb+qHqfEZ0GgJk
+	rVmZQ6TqDquH10/s24OuaGKC7aWgHtj4gB7vb8IOp3qF/hCt/yj11Z7WX2wSDibAezxx7+BAlJe
+	VCSGt6glDM7B/+J8jm+NY617sDY=
+X-Received: by 2002:adf:9dd1:0:b0:3a4:f655:8c4d with SMTP id ffacd0b85a97d-3a6d131787bmr2056457f8f.27.1750425658395;
+        Fri, 20 Jun 2025 06:20:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9QRtkvxSOLn59Do52l3ix3GhLfK1cWTxETb+z/cJOkSsbedauMcmLKrjvI5kUALGNlARMfA==
+X-Received: by 2002:adf:9dd1:0:b0:3a4:f655:8c4d with SMTP id ffacd0b85a97d-3a6d131787bmr2056441f8f.27.1750425657878;
+        Fri, 20 Jun 2025 06:20:57 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.146.57])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0ec947fsm2106321f8f.0.2025.06.20.06.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 06:20:57 -0700 (PDT)
+Date: Fri, 20 Jun 2025 15:20:52 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
+Message-ID: <cg25zc7ktl6glh5r7mfxjvbjqguq2s2rj6vk24ful7zg6ydwuz@tjtvbrmemtpw>
+References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+ <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
+ <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
+ <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABVgOSmTXj_t0_nJyjhc=mvpPkGGW5D4qGd0WajmVgVyMgd_Hg@mail.gmail.com>
+In-Reply-To: <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
 
-On Fri, Jun 20, 2025 at 05:37:39PM +0800, David Gow wrote:
-> On Wed, 11 Jun 2025 at 15:38, Thomas Weiﬂschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > Currently there is no test validating the result reporting from nested
-> > tests. Add one, it will also be used to validate upcoming changes to the
-> > nested test parsing.
-> >
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> 
-> This looks good, modulo a couple of minor suggestions below.
-> 
-> Regardless,
-> Reviewed-by: David Gow <davidgow@google.com>
-> 
-> Cheers,
-> -- David
-> 
-> >  tools/testing/kunit/kunit_tool_test.py                           | 9 +++++++++
-> >  .../kunit/test_data/test_is_test_passed-failure-nested.log       | 7 +++++++
-> >  2 files changed, 16 insertions(+)
-> >
-> > diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-> > index bbba921e0eacb18663abfcabb2bccf330d8666f5..691cde9b030f7729128490c1bdb42ccee1967ad6 100755
-> > --- a/tools/testing/kunit/kunit_tool_test.py
-> > +++ b/tools/testing/kunit/kunit_tool_test.py
-> > @@ -165,6 +165,15 @@ class KUnitParserTest(unittest.TestCase):
-> >                 self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
-> >                 self.assertEqual(result.counts.errors, 0)
-> >
-> > +       def test_parse_failed_nested_tests_log(self):
-> > +               nested_log = test_data_path('test_is_test_passed-failure-nested.log')
-> > +               with open(nested_log) as file:
-> > +                       result = kunit_parser.parse_run_tests(file.readlines(), stdout)
-> > +               self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
-> > +               self.assertEqual(result.counts.failed, 2)
-> > +               self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[0].status)
-> 
-> Is it worth also testing the value of the nested test's result here? i.e.,
-> self.assertEqual(kunit_parser.TestStatus.FAILURE,
-> result.subtests[0].subtests[0].status)
+On Fri, Jun 20, 2025 at 02:58:49PM +0200, Michal Luczaj wrote:
+>On 6/20/25 10:32, Stefano Garzarella wrote:
+>> On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
+>>> Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
+>>> Make sure pointers remain valid.
+>>>
+>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+>>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
+>>> Call Trace:
+>>> __x64_sys_ioctl+0x12d/0x190
+>>> do_syscall_64+0x92/0x1c0
+>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>>
+>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>>> ---
+>>> net/vmw_vsock/af_vsock.c | 4 ++++
+>>> 1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>>> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
+>>> --- a/net/vmw_vsock/af_vsock.c
+>>> +++ b/net/vmw_vsock/af_vsock.c
+>>> @@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>>>
+>>> 	switch (cmd) {
+>>> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
+>>> +		mutex_lock(&vsock_register_mutex);
+>>> +
+>>> 		/* To be compatible with the VMCI behavior, we prioritize the
+>>> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+>>> 		 */
+>>> @@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>>> 		else if (transport_h2g)
+>>> 			cid = transport_h2g->get_local_cid();
+>>>
+>>> +		mutex_unlock(&vsock_register_mutex);
+>>
+>>
+>> What about if we introduce a new `vsock_get_local_cid`:
+>>
+>> u32 vsock_get_local_cid() {
+>> 	u32 cid = VMADDR_CID_ANY;
+>>
+>> 	mutex_lock(&vsock_register_mutex);
+>> 	/* To be compatible with the VMCI behavior, we prioritize the
+>> 	 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+>> 	 */
+>> 	if (transport_g2h)
+>> 		cid = transport_g2h->get_local_cid();
+>> 	else if (transport_h2g)
+>> 		cid = transport_h2g->get_local_cid();
+>> 	mutex_lock(&vsock_register_mutex);
+>>
+>> 	return cid;
+>> }
+>>
+>>
+>> And we use it here, and in the place fixed by next patch?
+>>
+>> I think we can fix all in a single patch, the problem here is to call
+>> transport_*->get_local_cid() without the lock IIUC.
+>
+>Do you mean:
+>
+> bool vsock_find_cid(unsigned int cid)
+> {
+>-       if (transport_g2h && cid == transport_g2h->get_local_cid())
+>+       if (transport_g2h && cid == vsock_get_local_cid())
+>                return true;
+>
+>?
 
-This should be result.subtests[1].subtests[0].status.
-But Ack and done.
+Nope, I meant:
 
-> > +               self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].status)
-> > +
-> >         def test_no_header(self):
-> >                 empty_log = test_data_path('test_is_test_passed-no_tests_run_no_header.log')
-> >                 with open(empty_log) as file:
-> > diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..835816e0a07715a514f5f5afab1b6250037feaf4
-> > --- /dev/null
-> > +++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
-> > @@ -0,0 +1,7 @@
-> > +KTAP version 1
-> > +1..2
-> > +not ok 1 subtest 1
-> > +    KTAP version 1
-> > +    1..1
-> > +        not ok 1 test 1
-> > +not ok 2 subtest 2
-> 
-> Having these named 'subtest 1' and 'test 1' is a bit confusing to me
-> (as it implies the outer tests are subtests of the inner ones, which
-> isn't right).
-> 
-> Could we either swap 'subtest' and 'test' here, or -- if we want to
-> preserve the match between 'subtest' here and the subtest in the
-> python code -- label the inner one something like 'subsubtest'?
+  bool vsock_find_cid(unsigned int cid)
+  {
+-       if (transport_g2h && cid == transport_g2h->get_local_cid())
+-               return true;
+-
+-       if (transport_h2g && cid == VMADDR_CID_HOST)
++       if (cid == vsock_get_local_cid())
+                 return true;
 
-Ack.
+         if (transport_local && cid == VMADDR_CID_LOCAL)
+
+But now I'm thinking if we should also include `transport_local` in the 
+new `vsock_get_local_cid()`.
+
+I think that will fix an issue when calling 
+IOCTL_VM_SOCKETS_GET_LOCAL_CID and only vsock-loopback kernel module is 
+loaded, so maybe we can do 2 patches:
+
+1. fix IOCTL_VM_SOCKETS_GET_LOCAL_CID to check also `transport_local`
+    Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
+
+2. move that code in vsock_get_local_cid() with proper locking and use 
+it also in vsock_find_cid()
+
+WDYT?
+
+Thanks,
+Stefano
+
