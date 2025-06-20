@@ -1,162 +1,137 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F33218024;
-	Fri, 20 Jun 2025 04:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA4C1DED5C;
+	Fri, 20 Jun 2025 04:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750392742; cv=none; b=f2uBWUoqMdqWhNCDNH299yOKTHJCT0I3ppjDVqTJ5h7ZqFXtaai0Nu7Y9as9FvCuqQxuyYnFr8pio3exvV9QMXZJ/5+P3ifsh10A4TI/cWFUOYG0aeg3WQQIsQydsH39RDvrCb3HQRj/GDbTG1rINCff8Kt0eU+ZWEvU5cn8U4E=
+	t=1750392758; cv=none; b=QvEpWUXVPKELoHJP8SQPdvq8z4HpCorB7WwxDhoyH6apGvP2Ys67YAHvuaaeWz5Lnu/P0ei699x4x53Qcc/rIYi3djl5zLx1pORPptC2uQg26n8jFW2marooO+7MDRwyIsedJ/Skp31GysvlVnkCxGiPZeMMD6S2D08XTlebKgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750392742; c=relaxed/simple;
-	bh=/yYEvc9YKJuB+6SO8RQVApaqJgCZjt1JYTqSqohRidQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f8FGmBHZwoRPVcSCIgfTTObtc3PSDMk1tLkF+xrr7J8pgHstR/++PEKbsRsZYv78xlukcaEbqFsXY5mFOjtvoo5/dlvHadDFvYs50p6EH63pB/XK5wkaDoW0P7pk6JC22cEPSa4eQnmiwdzeIAR1z/RkFzKPr9o127hmfrEL4lE=
+	s=arc-20240116; t=1750392758; c=relaxed/simple;
+	bh=BpEBqg0Tn6vBpZdUHkN0C1T/n1AoxJGZgoBMWrqDqIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m9JV1U09pZSNz5IelJ6TLy7oFNeF/uwSV2Jj5C+8GirpWJeN4tFkI4IjTWxGxQ93ZcE37JErJdQXElKKLON9yhtX4ROqODRDktq4IEMlOxhtOtXFHu89MQ2csdUQ787raIhHRK0ndvvpPJWBzqG4fnkObFS6Ag+fgajWLEE8EGQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-1d-6854df9d3c68
-Date: Fri, 20 Jun 2025 13:12:08 +0900
+X-AuditID: a67dfc5b-669ff7000002311f-75-6854dfb227fc
 From: Byungchul Park <byungchul@sk.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, willy@infradead.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH net-next 1/9] netmem: introduce struct netmem_desc
- mirroring struct page
-Message-ID: <20250620041208.GA11405@system.software.com>
-References: <20250609043225.77229-1-byungchul@sk.com>
- <20250609043225.77229-2-byungchul@sk.com>
- <20250609123255.18f14000@kernel.org>
- <20250610013001.GA65598@system.software.com>
- <20250611185542.118230c1@kernel.org>
- <20250613011305.GA18998@system.software.com>
- <CAHS8izMsKaP66A1peCHEMxaqf0SV-O6uRQ9Q6MDNpnMbJ+XLUA@mail.gmail.com>
+To: willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com,
+	kuba@kernel.org,
+	almasrymina@google.com,
+	ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com,
+	hawk@kernel.org,
+	akpm@linux-foundation.org,
+	davem@davemloft.net,
+	john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch,
+	asml.silence@gmail.com,
+	toke@redhat.com,
+	tariqt@nvidia.com,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	horms@kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	vishal.moola@gmail.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	jackmanb@google.com
+Subject: [PATCH net-next v6 4/9] page_pool: rename __page_pool_alloc_pages_slow() to __page_pool_alloc_netmems_slow()
+Date: Fri, 20 Jun 2025 13:12:19 +0900
+Message-Id: <20250620041224.46646-5-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250620041224.46646-1-byungchul@sk.com>
+References: <20250620041224.46646-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izMsKaP66A1peCHEMxaqf0SV-O6uRQ9Q6MDNpnMbJ+XLUA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa2yLYRTH87y3vuvW5FXDsxGigliCbRk5RGTxQV6XCOELEtT2Rkt3SWs3
-	IcY6l7JhJqwr6YxdukUpum6qY8YuNqZ2qW3WZbZFxAydsUuMdhH79sv5n3N+58NhSelNOphV
-	xh4W1LFylYwRU+KBgJtLr7t3KEIrny8Cg7mUgZJfyVDYbaPBYLIiGBrpEIGnuoaB/LxhEgyv
-	tRT8MI+S0PeiRwTugn4K7KfLSOi5UMtAhnaMhJO2IgKarJk0ZI/eJqEstVsEbysMDHSVTtDQ
-	X5VBQZ2+mAJ3ZiS8MM6E4ZefEVSbywgYPn+dgctOIwMftG4Ezmc9FOSeyERgdrhoGPtlYCLn
-	8w+K3xF8uf69iDdaEvj7RSG8zuUkeYvpLMNbvmeJ+M5WO8PXXhuj+HKbh+Az0r4w/Le+doof
-	dLQwvPlBC8U3GKtFvMcydyu3S7wmWlApEwX18rX7xIrBiQE6/vyc5Po7a1PRwAwdYlnMReBH
-	nuM65OfD0TNXSS9T3ELcWNxLeJnhFmOXa8RXD+SW4FuOS7QOiVmS+0rj8u4R5A2mc3uwqeOn
-	b0DCAR4w2X1NUq6ZwFmXO0STwTRcl9NLeZn8u3X8hpP0HkFys3Hhb3ayPA+nPcz1yfy4bThP
-	20p7eQa3AD+x1hDenZizs/jNxSto8uog/LTIRV1E0/RTFPopCv1/hX6KwogoE5IqYxNj5EpV
-	xDJFSqwyeVlUXIwF/f2cgmPju23oe9P2KsSxSBYgsQ1tV0hpeaImJaYKYZaUBUrya7copJJo
-	ecoRQR23V52gEjRVaDZLyWZJwoeToqXcAflh4ZAgxAvqfynB+gWnovznOfeafxjtESuJivSk
-	KP8n+rvGBQEP6wW6rz1RGxC+vj9Ymr45lGtqUTuzqq+kZx892BTpEAdtmG9oK4ymE8ZHT6lW
-	6bLjz3WuGKLdobs+dTrOpD2+uvXQGwvVteHj+LqJyooG6U6XFQVa7fvbxvzTdJWrwzZu8pwe
-	0byKKmmUURqFPCyEVGvkfwDhqzvKNQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+d3X7mar61K7ZFCtFwmZQcIRxaLnDwsxDMyCdNXNDR+TOxXt
-	AZbaQ3LlI7K51WLlY2WLVTpLJKb5qCzRCtNSMYuK1tOsqT2cEfnfh+/3nM/557Ck4gg9m9Wk
-	pAliiipJycgoWWRozjJT/1Z10M9fvmC0XWHg8o9MqBhw0GC01iAYdvdK4GtTCwOWCyMkGB/l
-	UvDNNkrCq+ZBCfSXv6ag/mgtCYMnWxkoyB0j4bCjkoBGUxsNHTV6GkpGL5FQmz0gga5bRgb6
-	rvym4bWzgII2QxUF/frV0Gz2g5H77xE02WoJGDlhYqC408zAy9x+BJ2NgxSUHdIjsDV00zD2
-	w8isVuIbVc8IXGd4IcFmezq+XhmA87s7SWy3Hmew/UuRBD9/Ws/g1tIxCtc5vhK4IOcDgz+/
-	6qHwx4YnDLa8+URg240nFH5gbpJEeW+Xhe0RkjQZgrg8PF6m/vjbRaeemJN572p4NnL55iMp
-	y3Mr+dFjZ0gPU9wivr1qiPAwwy3hu7vdk7kPt5S/2FBI5yMZS3KfaL5uwI08xUxuJ2/t/T65
-	IOeAd1nrJ4cU3GOCLyrulfwtvPm2s0OUh8kJ6/i5zgkrO8H+fMUv9m88l8+5WTZ5TMpt4S/k
-	PqU97Mst4O/UtBCn0HTDFJNhisnw32SYYjIjyop8NCkZySpNUnCgLlGdlaLJDNytTbajie8o
-	Pzhe6EDDXRudiGORcprcMRytVtCqDF1WshPxLKn0kVtaI9UK+R5V1j5B1MaJ6UmCzon8WUo5
-	Sx4RI8QruARVmpAoCKmC+K8lWOnsbEQOBSyK9fIPW6W9G6JXhESutUSN6/e/lfyUds0r8pLF
-	H1il1YbfXGDwjV33vfehGOquM2ryNkffCR7aIO4tOf1ubV79jF1Cn7ojdr4u5tCavMUuhbjN
-	YqoujXCtKLu2e+F5R2D0pqDivdXtfd6nMNmz/vbnxq4dFS1E3EiMX0Jfo5LSqVUrAkhRp/oD
-	2SBXbxkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUhUcRSH+c9dHZy63ga9aQtNhiRoGi6nrPChh9tDEdSDlVSDXprBLcYl
+	FSrTAUnSIhNs1BoV17FGxm1cklJzDVLLmHIZGVNaXHBNncpmlKi3j3N+3++8HBpjcwlXWhkd
+	J6ii5ZEyUoyLZxwLvWrM5xU+E1LI11eRoFtNhLJxIwH5lfUIltaGKVjs6CKhuHAFg/y3ahyW
+	9esYTHZaKNAZToO5dAqHlvQGDCz3u0nIVFsxeLE2S0GqsVwE/fVZBDxaL8GgIWWcgndN+SSM
+	VW0QMNWWiUOPpgIHc1YwdGqdYaVvGkGHvkEEK/cKSMge1JIwoTYjGGy34JB3JwuBvtVEgHXV
+	1pH3eowKdufbp+cwvrbio4hv1IxSvNYQz9eUe/IZpkGMN1TeJXnDwkOKH/nQQvLduVacbzQu
+	ivjMtFmSn5/8hPNzrUMkr68dwvk32g7qrNNF8bFwIVKZIKgOnbgqVpSOSq8viBMNFV9RCipw
+	yEAONMf4cZMlWvSXey2TuJ1JxoMzmdYwO0sZX27R0mWbi2mMeUZyHVXDlH2xg4nnlp/qCTvj
+	zAEu7XHqpixh/LnBohJ8q3Qvp6t+uVnkwARw86nNpJ1ZW2a1SE1s5Z24nsefbXnadsCD0z9h
+	7WPMpqbV5WH2uxxTS3MD+lZqq3Mn96rchD9AjOY/XfNP1/ynaxFWiVhldEKUXBnp561IilYm
+	eofFRBmQ7V9Kb/68ZEQL/efaEEMjmaPEuHROwRLyhNikqDbE0ZhMKinuPqNgJeHypGRBFXNF
+	FR8pxLYhNxqXuUgOr9wIZ5lr8jghQhCuC6q/WxHt4JqCdDmWLz/2KRqbUqSX91sriI2DTE0o
+	jIUEbrhbPCMczaMX3u8+Wp1dInGt673VWbDBotKQHGcdgYp+W4WnbnXvRtJ/uSwXh30rC5B5
+	dSVrb/sXHnHekxhj+H7gitK1OQuCZmB72Ul2Kk7Wpw4UD/iMa4lTPmOhQebj29jnuzpleKxC
+	7uuJqWLlfwBO5gJLKwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTcRjF+e+9bjl4W1IvCVkDKQK7QMZDSRh0+SfM7AJBH6pRL201Z21e
+	phSZG4SS2g2sOctLW3mJ2TKdZlFzLS0oWyRL08nKlaFmaaIuqk2J+nY453fO8+VhCVmIXMyq
+	tRmCTqvUyGkJKUnZaIx3+Peq1vivxoPFXk9D3ZQBbg04KbDUNiGYmO5lYNz9jIbqykkCLK9M
+	JPywzxAw6AkwUOdQgN8WJKHtXDMBgZIOGopMIQIeTo8ykO+8LYL28k4KupqKKbgyYyWgOW+A
+	gTetFhr6639TEHQVkdBpriHBX5wEnoqFMPliGIHb3iyCyfPlNFz2VtDwweRH4G0PkFB2thiB
+	/ZGPgtBUeKPsaT+TFIfbh78SuLHmnQi3mPsYXOHIxPdur8SFPi+BHbUFNHZ8v8Tg991tNO64
+	GiJxi3NchIuMozT+NthD4q+P3tK4+vOYCNsb35Kpsv2SxCOCRp0l6FZvOiRR2fqiT3yXGBw1
+	QygPlYsLkZjluXX888AgGdE0t5z3+aaJiI7m1vLjgWdhX8IS3B2ad9f3MpFgAZfJ/7hhpyKa
+	5OJ447X82bKUS+C9VVZybjSWr2t4PDsk5tbz3/If0BEtCzNTVSZqjp/Pd177GObZ8IHlvP26
+	LGIT4arxfhlxAUnN/1Hmf5T5P6oCEbUoWq3NSlOqNQmr9MdVOVq1YdXh9DQHCr+E7fTPi040
+	8Wa7C3EskkdJnRN7VDJKmaXPSXMhniXk0dLqjhSVTHpEmZMr6NIP6jI1gt6FYlhSvkiavE84
+	JOOOKjOE44JwQtD9TUWseHEeSm30FPg/WZ6OWVdk4C29doVvj2XbgcT4HdWbN4hf9/CK0gHr
+	sn03+jiPGavl7iiF4Xx2ws2uuzFnSpYYRlJaD9t6tC9jT9XZSphjtcyuIasl6F+q+dIQrGza
+	qTLnssmfTjrSNTmlI4k1S4xn+7J3z9t6M900097d8KTl5C8qKCf1KuXalYROr/wDnSYNGg4D
+	AAA=
 X-CFilter-Loop: Reflected
 
-On Fri, Jun 13, 2025 at 07:19:07PM -0700, Mina Almasry wrote:
-> On Thu, Jun 12, 2025 at 6:13 PM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > On Wed, Jun 11, 2025 at 06:55:42PM -0700, Jakub Kicinski wrote:
-> > > On Tue, 10 Jun 2025 10:30:01 +0900 Byungchul Park wrote:
-> > > > > What's the intended relation between the types?
-> > > >
-> > > > One thing I'm trying to achieve is to remove pp fields from struct page,
-> > > > and make network code use struct netmem_desc { pp fields; } instead of
-> > > > sturc page for that purpose.
-> > > >
-> > > > The reason why I union'ed it with the existing pp fields in struct
-> > > > net_iov *temporarily* for now is, to fade out the existing pp fields
-> > > > from struct net_iov so as to make the final form like:
-> > >
-> > > I see, I may have mixed up the complaints there. I thought the effort
-> > > was also about removing the need for the ref count. And Rx is
-> > > relatively light on use of ref counting.
-> > >
-> > > > > netmem_ref exists to clearly indicate that memory may not be readable.
-> > > > > Majority of memory we expect to allocate from page pool must be
-> > > > > kernel-readable. What's the plan for reading the "single pointer"
-> > > > > memory within the kernel?
-> > > > >
-> > > > > I think you're approaching this problem from the easiest and least
-> > > >
-> > > > No, I've never looked for the easiest way.  My bad if there are a better
-> > > > way to achieve it.  What would you recommend?
-> > >
-> > > Sorry, I don't mean that the approach you took is the easiest way out.
-> > > I meant that between Rx and Tx handling Rx is the easier part because
-> > > we already have the suitable abstraction. It's true that we use more
-> > > fields in page struct on Rx, but I thought Tx is also more urgent
-> > > as there are open reports for networking taking references on slab
-> > > pages.
-> > >
-> > > In any case, please make sure you maintain clear separation between
-> > > readable and unreadable memory in the code you produce.
-> >
-> > Do you mean the current patches do not?  If yes, please point out one
-> > as example, which would be helpful to extract action items.
-> >
-> 
-> I think one thing we could do to improve separation between readable
-> (pages/netmem_desc) and unreadable (net_iov) is to remove the struct
-> netmem_desc field inside the net_iov, and instead just duplicate the
-> pp/pp_ref_count/etc fields. The current code gives off the impression
-> that net_iov may be a container of netmem_desc which is not really
-> accurate.
-> 
-> But I don't think that's a major blocker. I think maybe the real issue
-> is that there are no reviews from any mm maintainers? So I'm not 100%
-> sure this is in line with their memdesc plans. I think probably
-> patches 2->8 are generic netmem-ifications that are good to merge
-> anyway, but I would say patch 1 and 9 need a reviewed by from someone
-> on the mm side. Just my 2 cents.
-> 
-> Btw, this series has been marked as changes requested on patchwork, so
-> it is in need of a respin one way or another:
+Now that __page_pool_alloc_pages_slow() is for allocating netmem, not
+struct page, rename it to __page_pool_alloc_netmems_slow() to reflect
+what it does.
 
-Some can be improved but the others not.  For example:
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+---
+ net/core/page_pool.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-   +static noinline netmem_ref __page_pool_alloc_netmems_slow(struct page_pool *pool,
-   +							  gfp_t gfp)
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 95ffa48c7c67..05e2e22a8f7c 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -544,8 +544,8 @@ static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
+ }
+ 
+ /* slow path */
+-static noinline netmem_ref __page_pool_alloc_pages_slow(struct page_pool *pool,
+-							gfp_t gfp)
++static noinline netmem_ref __page_pool_alloc_netmems_slow(struct page_pool *pool,
++							  gfp_t gfp)
+ {
+ 	const int bulk = PP_ALLOC_CACHE_REFILL;
+ 	unsigned int pp_order = pool->p.order;
+@@ -615,7 +615,7 @@ netmem_ref page_pool_alloc_netmems(struct page_pool *pool, gfp_t gfp)
+ 	if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_ops)
+ 		netmem = pool->mp_ops->alloc_netmems(pool, gfp);
+ 	else
+-		netmem = __page_pool_alloc_pages_slow(pool, gfp);
++		netmem = __page_pool_alloc_netmems_slow(pool, gfp);
+ 	return netmem;
+ }
+ EXPORT_SYMBOL(page_pool_alloc_netmems);
+-- 
+2.17.1
 
-It complains about the long line length but no idea how to avoid it :(
-I can do nothing but to ignore..
-
-	Byungchul
-
-> https://patchwork.kernel.org/project/netdevbpf/list/?series=&submitter=byungchul&state=*&q=&archive=&delegate=
-> 
-> https://docs.kernel.org/process/maintainer-netdev.html#patch-status
-> 
-> -- 
-> Thanks,
-> Mina
