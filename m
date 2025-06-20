@@ -1,263 +1,275 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023074.outbound.protection.outlook.com [52.101.127.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F5E280A5A;
-	Fri, 20 Jun 2025 09:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411281; cv=fail; b=YWV8EW7LjC1K0/g7bDMmre8eAwZA7j2yP4qCQ3g9+rCYU1mWAycWBBkhKNYCe4N2nc5MhczJMStDOuv+wsKojdhu/eLlMIDPaakewhptc8VblNN5UXkZd7BWaxa1lLbbeT2wJqGKGIyWsZhybweoPvXSV8XaiNGkLsvJ95z+NYM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411281; c=relaxed/simple;
-	bh=ZOX3eJK6wfjMMQpr/a75xDt5LIiM+GSrbAyIMFxEbRA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DV8UbUcRqyiB03VH384IVuPAuVXDttQeHU7iyobfwtrkL5EXjHfnlhAtDzQQVaiAq5rzHaGLI8BvSCRVsGwFZ8A4jaAiTr5VdAo81G8blWt5ldvdHvvR+ziJ3FgcWb1iEf/xRL9E7iGjz1EwuPA2QaXyE2lcos2rGrwu3RaTnrE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=Mu0fOWbj; arc=fail smtp.client-ip=52.101.127.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1651280CD9;
+	Fri, 20 Jun 2025 09:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750411432; cv=none; b=rKL6+kGSwf7yb0hAslQ0rBvT6KiCwyY4+rhios+A9d3mnDxUEU+D7PIm4FqZReGw/+E093HmLLCr5sabJI82PfEmf8peLUQOCODrqGZNsv+mnQQztKactuGEHMvvSC5jW9MqarNTHRaj+FwVvjms3BMHfGd91xBQ15I/hTB5BYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750411432; c=relaxed/simple;
+	bh=gFqKMGB+599gWiIDRuPwLjV0AGFzK9hvlcYgaGWzgvY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T+POmuoUb3NC01yPoeOspeCyZcO5j6I7fG34hoiGW3bwSURuggHwvaCqiJsjiadL+4FmrSneVP8TPO4XfRL5xl6L+hOoyz3AzfoirRjJwtvI53eECDcCOHQgqjGvCH9RkXGTK1cqQPMBaS3i6MwIXr5APNNOyETLBcchUZveR3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRNalUTQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="Mu0fOWbj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fZTGbQxuuVE6Cv8cvVPvI4wpz4LH+OUXm54T/BxMFkhj3OBtnfUfsMeK00x7lWh0rgrcXBVxLiUDRw4ZCYv7DLEdQIf864J0QgUUVQc+IG7JWtLmgaFAOwuUx36y5RIfWoJtMXOqCHnOE+8mzGzhNYyUpqRNXm/P+gMUI3f22rnD7ZjRBV1dsPe9dp/zOTmw9aXTzIzWx8qJr25v7hmnxnRHgFz95aWKJXEr602ssT806e3qrAb9nBCJ4qNIkwl2nWVBU2xljaValWA0mGehbAN1B1dqG9kjh9mSbwGzjJ4PJfw3kjecbfCMNQ5PAy9r34WElwtFFi8blOlAnKQB1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=krtgKmIZ4+cgGj8sKGuQ4fzO1lo4Jytvs46OGzR+OKA=;
- b=JS4/IXKP5BnR9rSQO2JQeThrHwTr+hEtIh4D6rgk0LDlJhNKeoIDj0KTvrH7lgIXh7W6Nk8Lh8nFuCllHBEBt2CwHBxis1/5Mogs2JOSKk+jo7pnw7qTJKBor8yTVQ+IC75DjI71SmsyIbRkhJTLil5ObYWLy6Rc/nuVxEZVxebHVdnjltqbwsMAzSDQ8UqyWxOFicXXpIU+pwUyoweA1/iGfxOduznksvsyHGuKMJG/Xs5Yahu0D3oY5lWiwjuUhHII7R7mA8UzOcZYy/zQ2yJmytBvC2/OmeL2SzH7we3B+/U6WI4dwtbLUgw7LfGMu5Ddt22zEcYy5KMyYAE8rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=krtgKmIZ4+cgGj8sKGuQ4fzO1lo4Jytvs46OGzR+OKA=;
- b=Mu0fOWbjbAlW6/O0ONE/XLksst4YuuUcK+5hws8LqKydpKiIKO718ADYxF+Qv5Kx9cK+TqJoSmm2gptrVVWqC/ZN4gc7aMAy85w+duqeMIq8HuxFIZ/M0y1jJUBS1mWqZxzvysS3ujZ+QtymHQb92YTrAPTOfZnI3JNhESPVZMEZWQfmFvzislSZhQH9Y5Opc0pmgFrg9fbtsk4WEAi3PFHWGi2WALTG8DsLAc9kVYB4KaLLwaSkiGzEpT1pwWszl9AeQTtgZVJAJWdf3OGL8eWcLclf3glr0yWgGrbvu+QZ7QKG0kMVeFYQmeCvPm47cDbz9ukB61idSSJRfw4uQw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from SEZPR03MB7146.apcprd03.prod.outlook.com (2603:1096:101:ee::14)
- by SE1PPFB8A17DC0E.apcprd03.prod.outlook.com (2603:1096:108:1::861) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
- 2025 09:21:14 +0000
-Received: from SEZPR03MB7146.apcprd03.prod.outlook.com
- ([fe80::f608:5d7a:df6:35f8]) by SEZPR03MB7146.apcprd03.prod.outlook.com
- ([fe80::f608:5d7a:df6:35f8%6]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
- 09:21:13 +0000
-Message-ID: <7ae5cc8c-410b-4be7-84b8-7a6273a45717@amlogic.com>
-Date: Fri, 20 Jun 2025 17:21:10 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] clk: meson: add MESON_PCLK_V2 for sys gate clock
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>, Chuan Liu
- <chuan.liu@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Dmitry Rokosov <ddrokosov@sberdevices.ru>, robh+dt <robh+dt@kernel.org>,
- Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>,
- linux-clk <linux-clk@vger.kernel.org>,
- linux-amlogic <linux-amlogic@lists.infradead.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20250509074825.1933254-1-jian.hu@amlogic.com>
- <20250509074825.1933254-6-jian.hu@amlogic.com>
- <1jzfffy738.fsf@starbuckisacylon.baylibre.com>
-From: Jian Hu <jian.hu@amlogic.com>
-In-Reply-To: <1jzfffy738.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2P153CA0049.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::18)
- To SEZPR03MB7146.apcprd03.prod.outlook.com (2603:1096:101:ee::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRNalUTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13606C4CEED;
+	Fri, 20 Jun 2025 09:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750411432;
+	bh=gFqKMGB+599gWiIDRuPwLjV0AGFzK9hvlcYgaGWzgvY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uRNalUTQ5gxcjvSaBaopQhZFUT6v9dCfyTuq9SEEvAtoGA7gQDel3vreSKWnZIXIs
+	 a3BqJe3+kgEPbRgUCEXcMC6AgKxnZ8jnx+B0YWA0aTb0JsjJ6K6+6HRYdf2+cpRvjs
+	 5TWmbfeXAglJ2sVFzVGxaMsmKMAbJaudbip8N7bG40c0agXcZlHtzxsYgvPjxT8dis
+	 uyR42v2Fzw8HLgY112XHfv7G1ekIHDnHjvauUvqtD3r24kBfBq14HaBGnYfSw1ukig
+	 835Kk5pYJ3DQFi+9bGebYH50tSgdxn4v7A7VQozKxvSgLqM7CxeazzRliEXnhsgmk/
+	 L7S0Ghv5/5uDw==
+Message-ID: <47a7209a-5f8b-40d0-9bba-19339fd4fc5b@kernel.org>
+Date: Fri, 20 Jun 2025 11:23:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR03MB7146:EE_|SE1PPFB8A17DC0E:EE_
-X-MS-Office365-Filtering-Correlation-Id: 542765eb-b083-4b4b-a5d0-08ddafdbcd6b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QVh2WmNlUWowVVF5akJDdHBJU3lNUDcrbGNvTmg0ckFvREw0QzdTamRDcVgx?=
- =?utf-8?B?MC93a3BPWFlOUlNXeVkwdGh4M2lSQlYza3l4VkFJRzg5MGhSNzBOR3N0ZTZG?=
- =?utf-8?B?RElrcHVnNmpEeSt6bW55SWp1WEtlcGFtSUw4UDc5QlBNeFRVbzJMOFJjWXpJ?=
- =?utf-8?B?aEJFMUt6Mkg3dGlHNU1JZG9jWEdCVXdwenlxQ2tPcnlhZmE3OWoyUFNIZ1ZQ?=
- =?utf-8?B?MjNrYW5rTkgrQ2tNZzRJK21QdGF0Zml4QW5vOHBvVit1UmZ1TU42UGJ6QkNU?=
- =?utf-8?B?Kyt3Rk95cytvVis0NTZFZDMzNUlMam9ubVd0dXVYcjh5SXltR1kydlFJUXlo?=
- =?utf-8?B?UDJVNDkrY0VDQnVLdHBKcUpkVmdUK2FlY2NzalRUNytrQmlqbVRwWUxCK3gy?=
- =?utf-8?B?eTVWZXNQdzRzNW9lRXUreUI3RDJHR1hadDZXanMweGlYcHZEaTRUNmRZM0RZ?=
- =?utf-8?B?SWJOc2FzWHNkMmppY09GZGQzS3l4bU43TVU2dEdJVXJwZWk2dWdjWWw3THJZ?=
- =?utf-8?B?akRVaGdlb2NmOFVuNjV1VGYrcmFIUnFscXByeHcxeXpxZzVtcDFCdWZWOVFZ?=
- =?utf-8?B?Q1NnS0huaGFBZnZkaURPZWNiN29PRUFPeUdzNldnVHkwRzFlL2lGLzhUcVJi?=
- =?utf-8?B?R2lwdkxJQXM1RzBKSzVLREdJaXZXVUNPaUJpd0dQTExjOXFvTjdDUGlPMFFY?=
- =?utf-8?B?Y3BZSlR2TVZ2cTRwaUJyRnN5K2RTc1l5NnBqYzh1ZXZLVHRiaGt0TjFVbWNV?=
- =?utf-8?B?S3MrL3pYbFJjbVJCblZGbXFrQzBJb1dRZXppSjk4WnU2U2dETm5ta3pjQnhM?=
- =?utf-8?B?c2p0SFk1dFJYZGNybldHVzNGU1dRemFkK2ZSa3QzVW1nNnlUTXp3TUtDdXpK?=
- =?utf-8?B?NEY4VWNOWThMbWoxaDhKalBDOWc2NWF6WHpBUzIzNHdSWWpTYlMxdmFKSmlu?=
- =?utf-8?B?VUNtQWtsektKbWNybGhMRUtNeTRCdTdHajVqMGVvYXpuT0FrWmVpVVAyMEp1?=
- =?utf-8?B?U2VqYU9LNU5mNjlYYnA3V0NZVlUySklIOWFrYk9BWG5QOWtpQ0FuMnZqekhV?=
- =?utf-8?B?WW1TcGZXN1hRYUdLcjVhY094TDdGY2lwTjA2aEt6a3FCbkt6S0RzRGtGdEp5?=
- =?utf-8?B?a0FBc3g1elR2Ky9CS0h6QWtmelVmbXdtdWZJU0lZUGZpZnQ1ci9mK3FLdFVZ?=
- =?utf-8?B?WitjamZEeEh2N2I2UlJZZ0NKU3A0N0w0Q3VFS0pEWXVnaEQ2S1RudGtGenFj?=
- =?utf-8?B?N25vbk1CcEtFRU14S2RRbFgvYkFnMFBScU9BTjdlNDJROTJvdEhDdnBCb1FV?=
- =?utf-8?B?U0JjN0I1TXQybUhUaldya0tyVFFPUjZVd1A1MlJQcWZwWFFNRng2OHJXbkVw?=
- =?utf-8?B?bWpRMTVMK2xpYmtGSE1NTHJFUHNZcHluNE90TW1iYmNCL01wdjFnMmFXSzkw?=
- =?utf-8?B?dFg5Vnd3Sk9WS2Y3anppWHVyRm1UWEVGR25TVkwwVHVVZzdpNGRNQ2E5VlJZ?=
- =?utf-8?B?Q3NRajA1djNIbDA4VTk1dXZvZkFOdFh4U3MrbG12a3g2MDNBaWgxUzRseTdo?=
- =?utf-8?B?NkRSWUJkaWpLMkUwd0RDNUlobXhpb25NWnBvOE9QOFRvdkNITWd2VnRjbGVT?=
- =?utf-8?B?c3ZKWTBKb1dFUThxdm9rR0lHQ2JTcWtEV2tvMXVUb3FHbXJldmJDcjZxZlho?=
- =?utf-8?B?bVR5S0o3NXY4NzlicFFpWGdmUGg2aWZpeFJXb1Y2MktVSkRSdmJMdVFJL3BJ?=
- =?utf-8?B?NDRjcXFHdTA5WVNaTTkwdjNOVmNGQ28vVEx5K3VyTm4zS0xVcmEyV2JEbGpO?=
- =?utf-8?Q?0An3XZISJB6PJ3hNEmwdZnXXaCqVL/f2ljXHs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR03MB7146.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QlU0RmdSVm8wYlZucnM2bGl4Vy9OZ0c5M3NLTDgwR1VRdFdqY2J5MnB3Q1J2?=
- =?utf-8?B?ZGRDWHg4RzBjVmtjOGFJdnNsbjdpb1hYd2hxWHNmeWQ3dTNZYTUzaHJ0V090?=
- =?utf-8?B?L1ZRVkZvWkNMcTJDQ1lBc2xibGxsVGVFd2dMejQrL0JSUjN1T1ZGbmYwaWQv?=
- =?utf-8?B?dWh2VDVqNkZmanhEcjJVM3dwV2JWMExHdjhWOUdObWdaN0F1ODErYy9tcnBD?=
- =?utf-8?B?U0Nmb3JYRWxQaDh4aGFmYXlKY0JVb0c2U0dqbnRnYS9IOUo4ZU5abnFIR2o0?=
- =?utf-8?B?RlVRL0pCRVdRYU52MUs4WFY4NTkyS3hQS1ZuVUhFZ2JIZFlkK1dhZmFNNkN1?=
- =?utf-8?B?d0VDTXhxQmtYdUtCb3ZBTWZBSUxnRTRVeWNxUk9uT0taNU1Ed05ocno4ZS81?=
- =?utf-8?B?ZWRnOEY2aDFyL0drekhPYUVwSXNpN2ZQNGFobGpOQjBBRGlVYzZqa2VDYlBI?=
- =?utf-8?B?NTVtM3JBVTlUbkZUZWFEVktURWIwZjYvZ3M3cXNUQWhSOEkyZ2gycjZHL3hl?=
- =?utf-8?B?UTU4b0ZkL3VQb3pNcXdGOXJNZGlqUHBSYXZBNCs1VUhQWGhkdnZiQWhBK2tZ?=
- =?utf-8?B?ZE52MlR2dldtcHJkVFNYUWlqZ0hFbllmL243L211WlV6T1NoaS9jY0lOQ1Bz?=
- =?utf-8?B?K3VST01LZzEvb3ArZXZLaTdBU29XalhHV09OdGRSWmpNUk1QYktnMUw3a1J4?=
- =?utf-8?B?NWJCcCtRN1hMMlppQWRTK1p4dlFTOFRqWExJa1pqOWtUWDg3VlBVMFdFMVVp?=
- =?utf-8?B?aUY4ZWpTU1JVYXdUNVc1c0dTdkxMdXhTb2xpbUM4djdOc0VPdmF3bEFiOVUr?=
- =?utf-8?B?cmF6dzZSYWMvOEVJay84cG1qbEsvMkx6M2plRWFjdmRYRUN4QW9WbWY0aGhH?=
- =?utf-8?B?TkNxWVI4OWsxYUVOSFhIaGpTNjRMcVNCQlZsanplNm4yUHJzYmU4Q2MvemJi?=
- =?utf-8?B?V3ZkZVRKdHMvby9CMXR3TGhXQTVHZXVtWUg4dVAzTUxPeUZ3TDlsNXRjL3ZP?=
- =?utf-8?B?WWp2VXpWZ2h1V01vTVZRZEtvTE05ZTFoTGhBbjVvbTV2S3A4WHVjVFNKaUxy?=
- =?utf-8?B?ZmhkSmh5ZG53QVBEUFpZK3dQT1FyQU5WSFdES1Y1VldvVXhKdENMWE5DcFlI?=
- =?utf-8?B?Um9Xby9LdnBTUVovZGpuZ0ZGaVlua1hQU3FjN0FRN0NBdlBEMmVsa0RCNlpC?=
- =?utf-8?B?MFI4ZlovTk8vUXVBa2s3SXRJbVlxY3N1cG0rbVlwUXFpYnNnblBrZFVsckVS?=
- =?utf-8?B?Mi9EQmUzcWl2NE9tbmdtRHZSTDgwcEZya29mTXdkUEJpRHZPamJ4SmU5VXI2?=
- =?utf-8?B?ajg4WlJ6Z2lVa0VVUVRzVFFLbGZEeWkyVVowdmFFZ1pPTXM1dkM2SHQzNHpG?=
- =?utf-8?B?VUdrOGFoWXI3RkdjZE9BTkFHblRwOHR2bzJuNWFSUXRocWk4VS90aXBOaWg5?=
- =?utf-8?B?OFBBRlBRYnVuYVhwTzlTK3dSYWhyajNycWJlVVdUVDRTTkhuczZzd01IWnNH?=
- =?utf-8?B?MmNreGN6a2dCY0w2Qy9PZlhQRHQ0cWdDRnpKVWVmaWVVNlY3V3JCTk1Oc1VI?=
- =?utf-8?B?eklKSUpFd1ZTam9sc1duRUFuMkhRa29ObVZHemxTQ2NtTWx4bERZUGYvMXNT?=
- =?utf-8?B?blRZMTY4bHl6TDNUaGlUNjNDMEFKbENXREpocUhhdWhZWDJPK0w3a3Ruelh3?=
- =?utf-8?B?WmNBM0NiSUx1TkFTamFaUTc5Qzd4VnlWU1Z0eHdXM056N2tVOHl1K1hQTFJJ?=
- =?utf-8?B?K2IvL2dIa01iemIrdmdnWFdxeWI2bUxrN0I0bE9tbnFWbE5HLytnM0RlVk45?=
- =?utf-8?B?RkIxQ3RoY0QzUnphSExrS1NRd2U2Y0RwK3JkbzhVN2h5L1RnYTJWYnFocnFi?=
- =?utf-8?B?bWliWGhUanI3T0pZeTg5OG0rVlBBL2g3dmswQk5oWmNOZnpEQTJDai9uN05W?=
- =?utf-8?B?TjFyT3hTb3hHZEdzblZ2RlBGYVpnMC80aXRMQ3VuU25PeTc1cE9HUGw1VnJU?=
- =?utf-8?B?dnRIcTloaklTZ3VnSXh6S2I4SkJjR3VzMG5sakdwY3RRZ3JkY0F2djRVVXdL?=
- =?utf-8?B?SnZuU3Q3eFV2dnE5TWs5K3FLUTI1OEF6SUhxY3R6UFgyU2R4RkpHSlp0NU1F?=
- =?utf-8?Q?cZx5HRI1Ac32brQ1+6vFG0IMu?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 542765eb-b083-4b4b-a5d0-08ddafdbcd6b
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR03MB7146.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 09:21:13.7501
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 67SbzYjDRFVx76TYuFeNyHMvnYg1Vd3T3OvuuxlqoDeIMAs2qVwV0J3qkiSCa4xzKrK0p3eKixx4G98BEYXN1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1PPFB8A17DC0E
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: freescale: Add Mettler-Toledo
+ Snowflake V2 support
+To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Marek Vasut <marex@denx.de>, Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Markus Niebel <Markus.Niebel@tq-group.com>, Frank Li <Frank.Li@nxp.com>,
+ =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+ Michael Walle <mwalle@kernel.org>, Heiko Schocher <hs@denx.de>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>,
+ Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
+ <tharvey@gateworks.com>, Primoz Fiser <primoz.fiser@norik.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Manivannan Sadhasivam <mani@kernel.org>,
+ Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Tobias Graemer <Tobias.Graemer@mt.com>
+References: <20250620084512.31147-1-Wojciech.Dubowik@mt.com>
+ <20250620084512.31147-4-Wojciech.Dubowik@mt.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620084512.31147-4-Wojciech.Dubowik@mt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Resend it because it refused to receive html messages.
+On 20/06/2025 10:41, Wojciech Dubowik wrote:
+> +
+> +	ili2511: ili2511@41 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
 
-On 2025/5/14 15:39, Jerome Brunet wrote:
-> [ EXTERNAL EMAIL ]
->
-> On Fri 09 May 2025 at 07:48, Jian Hu <jian.hu@amlogic.com> wrote:
->
->> A new MESON_PCLK_V2 macro is introduced for the sys gate clock. Its parent
->> is an SCMI clock. It belongs to another clock controller, and the parent
->> configuration is different from  that of MESON_PCLK. This avoids new macro
->> definition in the peripheral clock driver.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   drivers/clk/meson/clk-regmap.h | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/clk/meson/clk-regmap.h b/drivers/clk/meson/clk-regmap.h
->> index e365312da54e..61b8fc2d875f 100644
->> --- a/drivers/clk/meson/clk-regmap.h
->> +++ b/drivers/clk/meson/clk-regmap.h
-> This file is not meant for amlogic specific stuff. I know some found
-> their way in regardless but that's being fixed
+> +		compatible = "ilitek,ili251x";
+> +		reg = <0x41>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_touch>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+> +		reset-gpios = <&gpio3 16 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	lvds: lvds@2c {
+> +		compatible = "ti,sn65dsi83";
+> +		reg = <0x2c>;
+> +		vcc-supply = <&reg_sn65dsi83_1v8>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_sn65dsi83>;
+> +		status = "okay";
+
+Was it disabled anywhere?
+
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				bridge_in: endpoint {
+> +					remote-endpoint = <&mipi_dsi_out>;
+> +					data-lanes = <1 2>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				bridge_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +					data-lanes = <4 3 2 1>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	usbc-cc-controller@61 {
+> +		compatible = "ti,tusb320";
+> +		reg = <0x61>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usbc_controller>;
+> +		interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&mipi_dsi {
+> +	status = "okay";
+> +	vddio-supply = <&reg_sn65dsi83_1v8>;
+> +	assigned-clocks = <&clk IMX8MM_CLK_DSI_CORE>,
+> +			  <&clk IMX8MM_VIDEO_PLL1_OUT>,
+> +			  <&clk IMX8MM_CLK_DSI_PHY_REF>;
+> +	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_266M>,
+> +			  <&clk IMX8MM_VIDEO_PLL1_BYPASS>,
+> +			  <&clk IMX8MM_CLK_24M>;
+> +	assigned-clock-rates = <266000000>, <594000000>, <12000000>;
+> +	samsung,pll-clock-frequency = <12000000>;
+> +	samsung,burst-clock-frequency = <891000000>;
+> +	samsung,esc-clock-frequency = <54000000>;
+> +};
+> +
+> +&mipi_dsi_out {
+> +	remote-endpoint = <&bridge_in>;
+> +};
+> +
+> +&lcdif {
+> +	status = "okay";
+> +};
+> +
+> +&gpu_2d {
+> +	status = "okay";
+> +};
+> +
+> +&gpu_3d {
+> +	status = "okay";
+> +};
+> +
+> +&ecspi1 {
+> +	status = "disabled";
+> +};
+> +
+> +&gpio1 {
+> +	bootph-pre-ram;
+> +};
+> +
+> +&gpio2 {
+> +	bootph-pre-ram;
+> +};
+> +
+> +&gpio3 {
+> +	bootph-pre-ram;
+> +};
+> +
+> +&gpio4 {
+> +	bootph-pre-ram;
+> +};
+> +
+> +&gpio5 {
+> +	bootph-pre-ram;
+> +	status_led_controller_oe: status-led-controller-hog {
+> +		gpio-hog;
+> +		gpios = <4 GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hog_status_led_controller>;
+> +	};
+> +};
+> +
+> +&pca9450 {
+> +	bootph-pre-ram;
+> +};
+> +
+> +&{/soc@0/bus@30800000/i2c@30a20000/pmic@25/regulators} {
+
+There is no label to override it? Probably should be added.
 
 
-OK,  I found macro MESON_PCLK is used in G12A/MESON8B/GXBB/S4.
-
-New macro is needed for T7 .
-
->> @@ -134,4 +134,28 @@ struct clk_regmap _name = {                                              \
->>
->>   #define MESON_PCLK_RO(_name, _reg, _bit, _pname)     \
->>        __MESON_PCLK(_name, _reg, _bit, &clk_regmap_gate_ro_ops, _pname)
->> +
->> +#define __MESON_PCLK_V2(_name, _reg, _bit, _ops, _pname)             \
->> +struct clk_regmap _name = {                                          \
->> +     .data = &(struct clk_regmap_gate_data){                         \
->> +             .offset = (_reg),                                       \
->> +             .bit_idx = (_bit),                                      \
->> +     },                                                              \
->> +     .hw.init = &(struct clk_init_data) {                            \
->> +             .name = #_name,                                         \
->> +             .ops = _ops,                                            \
->> +             .parent_data = &(const struct clk_parent_data) {        \
->> +                     .fw_name = #_pname,                             \
->> +             },                                                      \
->> +             .num_parents = 1,                                       \
->> +             .flags = (CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED),     \
->> +     },                                                              \
->> +}
-> The proliferation of those macros has been going on for far too long,
-> add using CLK_IGNORE_UNUSED inside is certainly a mistake I won't
-> repeat.
->
-> This will be part of more general clean-up that currently depends on a
-> this [1] patch to go further. You'll have to be patient.
->
-> [1]: https://lore.kernel.org/r/20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com
+> +	bootph-pre-ram;
+> +};
+> +
 
 
-OK, CLK_IGNORE_UNUSED is added for all gate clocks.
-
-And  quote your comments in v2.  the T7_CLK_GATE is newly added in T7 
-Peripheral driver in v2.
-
-If I understand you correctly.  A common macro should be added for it 
-and remove T7_CLK_GATE.
 
 
-So I add a common macro in clk-regmap.h, and it can be used for 
-different SoCs.
+> +&usbotg2 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	disable-over-current;
+> +	dr_mode = "host";
+> +	status = "okay";
+> +
+> +	usb1@1 {
 
-MESON_PCLK and MESON_PCLK_V2 difference is a clocks's parent defination.
+usb@
 
-the sys gate clock parent is in another clock controller. So parent_data 
-member is needed for it.
+Why usb1?
 
-and parent_hw member is for previous SoCs which clock and parent clock 
-are in one clock controller.
+> +		reg = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usbnet: ethernet@1 {
+> +			compatible = "usb424,9500";
+> +			reg = <1>;
+> +			mac-address = [ 00 00 00 00 00 00 ];
+> +		};
+> +	};
+> +};
 
 
-How should we deal with it.
 
-1.Add the macro in T7 Perpheral driver.
-
-2.Or add a common macro for parent_data,   and where the macro should be 
-placed? maybe put it in meson-clkc-utils.h?
-
->> +
->> +#define MESON_PCLK_V2(_name, _reg, _bit, _pname)     \
->> +     __MESON_PCLK_V2(_name, _reg, _bit, &clk_regmap_gate_ops, _pname)
->> +
->> +#define MESON_PCLK_RO_V2(_name, _reg, _bit, _pname)  \
->> +     __MESON_PCLK_V2(_name, _reg, _bit, &clk_regmap_gate_ro_ops, _pname)
->> +
->>   #endif /* __CLK_REGMAP_H */
-> --
-> Jerome
+Best regards,
+Krzysztof
