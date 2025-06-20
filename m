@@ -1,125 +1,128 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F5A28F3;
-	Fri, 20 Jun 2025 08:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF33D235052;
+	Fri, 20 Jun 2025 08:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407362; cv=none; b=YqJt16D5Ng8u1TjzSdDuNSGO2TPviCrpkspTPoSbQ6YiuJ54iX99UtNvQwtvzIsXY95lPLSzh5Bk8XmP62WY/1UXU9kuNaJIZNcO5O7dzLHDvLup6VgOggG3RJ4w296Eg6bxYtV/xOBxjY96xiJs2rAlsdcqxdsrtefsdSKKhBk=
+	t=1750407367; cv=none; b=TBWtHQTqwQJcpPanUQ63vYzLpfWyVJ0mM5XwMfmg8BIbAXYxhFpe6zqIF47MnbLW/42OzTH4XJ6ed3227sG911ZHZFxCEJWLBrosgIcydHDLPFfHzgJB36ocjEbUaI2O39n70Pt9Mf62sRYIreGdC9SFzR0PZxRysm5b4QdW9Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407362; c=relaxed/simple;
-	bh=wgoyCtEiXxlezBvNBqyM0qd8zvtWEkhDLIA41gSe+KY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1enz3dmm5IxqIvY99aFIYTd8ADnOmSFYbWz6Dcm0SzNxImEGWDwznNDUTSnc2v+EVLxNG1A+7WF4s0EiMNZcIC9XHn7cry/d8YJtiZOWy40/6TJ9hbOH4JKTur4FsZMJOX8m8aqOHaH2Jw3pAPhNQG6jiz/frYRWXhSKuOODl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DDVg+WAJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750407367; c=relaxed/simple;
+	bh=ERsEyCdS6V266eXdQIdkuTWzZ+BkZEWMo6Bl74nG3OA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Me+D8KPm6+HDJVcOVF562/V0Spg5lUBUPho8QbjLxIdnZqC3IuKz3CbihjwBH/D8LzHPtXpYIwmn5hHUOasoKo+Co6NElHUqa78u6msWy/6kwkr7Fgo9I8zr35qoYjrl4bam8DRGI4OHvHtXvbnHbu+WAELK13BwrAdq8VaVk5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GD6uArs9; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DDVg+WAJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C2SozZJF+dRAW0Ug5ciknM6joODBVsslgQj4ViQKp00=; b=DDVg+WAJhj1HBfuYFYKza+kG2L
-	FZDDJqxrzufbuVfq0x4QTJmAmJ0FMVsnBwOlLjFj6hVVoMW7dJCtGaCs+6NssJ4r0Ob5Rgg3kdg7/
-	3ZM2qiGLMirbX96pM44FaW/99Tzp+eVWIigQ2BxxqFBY8og/GWpezZgHUL6VBmpcy81I+xGK1qTFN
-	rY97ZdWCggDOBwx40+aTaru34tQZzLHZaG3chkNviXSqshmmxzIw2tC/cDRYSs2T8KK3EmVXULnKo
-	x03Mq9I3JWZYHKTEYFyjJHMK1Yj3YzPBlgqlXsn2HERUb/8lk+ef5xse3pBEBAbVmJ8X/dyAbVflN
-	/X8Isljg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSWuV-0000000C3B1-2rb6;
-	Fri, 20 Jun 2025 08:15:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B3A69308989; Fri, 20 Jun 2025 10:15:42 +0200 (CEST)
-Date: Fri, 20 Jun 2025 10:15:42 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 08/14] unwind deferred: Use bitmask to determine
- which callbacks to call
-Message-ID: <20250620081542.GK1613200@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010429.105907436@goodmis.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GD6uArs9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3EDAF4341B;
+	Fri, 20 Jun 2025 08:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750407362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QUDJU35AM9kzHk4YIR5DF+IBht1+rCZRXjiyPtd5Ts0=;
+	b=GD6uArs9646hiod0S1X8K4P5IhI8vi4OLk0U+9Ny4tPI0Utvm0+k8Enl9zygdQjVTyJb+T
+	oL4CkbHjzVwGjKP8sR1sgrNXRfyb86MPmK3Lb0Cy459jQ5dP3i0tXB5ZSNxCJo3pqxAp9U
+	R88GepDtgFl/7i6utHMNvfBRzGLieoTWz+qr0AsvAHUofzB9G+XzgaHaiC8SMXl8FidKxL
+	JKosLQ3sbNIoCxflYnUVEQhy3XIWHLLGlMjzmDdOwfd8Y0SlCO3m0QoW1i7g5+K2UtXJZB
+	z7tmMHrGD5nwOuSLEmps4inhl+4lCi0aTviiyUFJgD/nbYIMo8Pd2p7KN2ktMw==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH v5 0/5] Add support for BeagleBone Green Eco board
+Date: Fri, 20 Jun 2025 10:15:51 +0200
+Message-Id: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611010429.105907436@goodmis.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALcYVWgC/23Nyw6CMBAF0F8hXVvTDn3hyv8wLugDaKLUFEI0h
+ H+3gIkQnd2dzLkzos5F7zp0ykYU3eA7H9oU+CFDpinb2mFvU0ZAgBMOOda6xlIUhCpLKyglSpe
+ P6Cr/XFou15Qb3/UhvpbSgc7bvR8oJthVrCwcly7NWYfQ33x7NOGO5oYBvkqQYlWQFAepCAgtW
+ aF+Vb5R9PMrnxVlxhopFGN/FNsquSqWlAJptBVEWC32apqmN/9g31w6AQAA
+X-Change-ID: 20250523-bbg-769018d1f2a7
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
+ Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Paul Barker <paul.barker@sancloud.com>, 
+ Marc Murphy <marc.murphy@sancloud.com>
+Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, 
+ Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.15-dev-dd21f
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdejkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhgfeiieefgedtvdehvdeujeffleetveehueeuveeiteduveekvdetvdeigeegvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdguvggsihgrnhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopehmrghrtgdrmhhurhhphhihsehsrghntghlohhuugdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepphhrrghnvggvthhhsehtihdrtghomhdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhlrdgto
+ hhmpdhrtghpthhtoheprhhoghgvrhhqsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhho
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, Jun 10, 2025 at 08:54:29PM -0400, Steven Rostedt wrote:
+SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
+(BBG). It has minor differences from the BBG, such as a different PMIC,
+a different Ethernet PHY, and a larger eMMC.
 
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Changes in v5:
+- Split the patch series. As the cleaning process faced some pushback,
+  I prefer to first get this support accepted and separately work on the
+  devicetree and binding cleaning process.
+- Link to v4: https://lore.kernel.org/r/20250617-bbg-v4-0-827cbd606db6@bootlin.com
 
->  void unwind_deferred_cancel(struct unwind_work *work)
->  {
-> +	struct task_struct *g, *t;
-> +
->  	if (!work)
->  		return;
->  
->  	guard(mutex)(&callback_mutex);
->  	list_del(&work->list);
-> +
-> +	clear_bit(work->bit, &unwind_mask);
+Changes in v4:
+- Drop model value change to avoid conflict with script based on this
+  value like:
+  https://salsa.debian.org/installer-team/flash-kernel/-/blob/master/db/all.db?ref_type=heads
+- Rename ti,am335x-shc to bosch,am335x-shc
+- Forgot to change to "Seeed" in BeagleBone Green Eco model description.
+- Link to v3: https://lore.kernel.org/r/20250613-bbg-v3-0-514cdc768448@bootlin.com
 
-atomic bitop
+Changes in v3:
+- Update multi_v7_defconfig with TPS65219 config.
+- Remove extraneous compatible strings.
+- Replace BeagleBone compatible board name vendor to use "beagle" instead
+  of "ti".
+- Link to v2: https://lore.kernel.org/r/20250609-bbg-v2-0-5278026b7498@bootlin.com
 
-> +
-> +	guard(rcu)();
-> +	/* Clear this bit from all threads */
-> +	for_each_process_thread(g, t) {
-> +		clear_bit(work->bit, &t->unwind_info.unwind_mask);
-> +	}
->  }
->  
->  int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
-> @@ -256,6 +278,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
->  	memset(work, 0, sizeof(*work));
->  
->  	guard(mutex)(&callback_mutex);
-> +
-> +	/* See if there's a bit in the mask available */
-> +	if (unwind_mask == ~0UL)
-> +		return -EBUSY;
-> +
-> +	work->bit = ffz(unwind_mask);
-> +	unwind_mask |= BIT(work->bit);
+Changes in v2:
+- Add patch 1 to 3 to fix binding and devicetree inconsistencies.
+- Rename tps node name to generic pmic node name in am335x-bone-common.
+- Link to v1: https://lore.kernel.org/r/20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com
 
-regular or
+---
+Kory Maincent (5):
+      arm: dts: omap: am335x-bone-common: Rename tps to generic pmic node
+      dt-bindings: omap: Add Seeed BeagleBone Green Eco
+      arm: dts: omap: Add support for BeagleBone Green Eco board
+      arm: omap2plus_defconfig: Enable TPS65219 regulator
+      arm: multi_v7_defconfig: Enable TPS65219 regulator
 
-> +
->  	list_add(&work->list, &callbacks);
->  	work->func = func;
->  	return 0;
-> @@ -267,6 +297,7 @@ void unwind_task_init(struct task_struct *task)
->  
->  	memset(info, 0, sizeof(*info));
->  	init_task_work(&info->work, unwind_deferred_task_work);
-> +	info->unwind_mask = 0;
->  }
+ Documentation/devicetree/bindings/arm/ti/omap.yaml |   1 +
+ arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+ arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi  |   2 +-
+ arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 169 +++++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig                |   3 +
+ arch/arm/configs/omap2plus_defconfig               |   3 +
+ 6 files changed, 178 insertions(+), 1 deletion(-)
+---
+base-commit: e22b9ddaf3afd031abc350c303c7c07a51c569d8
+change-id: 20250523-bbg-769018d1f2a7
 
-Which is somewhat inconsistent;
+Best regards,
+--  
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-  __clear_bit()/__set_bit()
-
-or:
-
-  unwind_mask &= ~BIT() / unwind_mask |= BIT()
