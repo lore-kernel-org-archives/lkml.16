@@ -1,98 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6712F2836A6
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084DA27814A;
+	Fri, 20 Jun 2025 11:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418407; cv=none; b=SP4C2lvd9qjZ3xLfHs867CjRwB/R40FvqCeIF3v8d67s5FD2RfrX3P8NPmB8m3UqqXnZlTFoEjyOb+w6KKhv0UaBuARuSKrZIveOr1SqzYBC/JWazb27h4ghqH3Yftdm8rEC95KMhBDdDzn9aVzms3m0ugvBd4I/+nYzaSStAVY=
+	t=1750418439; cv=none; b=Gh2GjerU6h5T/QTZOZTRJF6QwFWCPmAfNSjrGIF4DCHF8i1xS4xGq51F2htU+NRHPaVxY7qEjKEEF4RW4UoG7zCq74eZwVcJZ6Tb2z/AZLiiB7nXFNQTmHcgadlaj/uH4kj+Svm1u/JEFZRTV4zTx79e/vwTF6VrIg8KPuXVTos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418407; c=relaxed/simple;
-	bh=lrY3AgKwDr2QnUYeMAu9baBFC0TNe1uwbz5QnFOlaB0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NIHDBomp1kvN588GuJ9PDgFIvWg4IXqu2/71e7ncrMtPIJ4p4xGQwqsb1SEliZq1xbosaKK+sHz5FuY2092miUb+sdLbJob/rAbB2OTp+ip+yMhKp+B3Unn9qWDMhLzvlmtadYMu3fo6C33aIoGv1dszDNAfe+gVUmyzXbpUcCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fzzisRUr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750418439; c=relaxed/simple;
+	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QIjCnObyIy2SFXocShfAs+DuB3l4L3RllA3qoxl+2rOX2tGNNqjeGU5ej+kVLYzRmF/VYl3ibORHJVUpM2QKl+XzyG7sGKHlCJYrdcWWRV7Q0OIztVvTMTM33ucOLSAPovQ7695MaYabyGoSoxwFqLFVnGBqzNSc5bIoo65NYoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DHI9kYRr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aqXpD3Yx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fzzisRUr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C18E4C4CEED;
-	Fri, 20 Jun 2025 11:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418407;
-	bh=lrY3AgKwDr2QnUYeMAu9baBFC0TNe1uwbz5QnFOlaB0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fzzisRUrhgjv2O7fszTxjloAcgWtEadSboNSrZUxsnMMtS5TfbkONQ7BpGsCQlgeD
-	 XQ8Xaovvm1yBLdqF6cFvfx3g3aPsGs8PWoXmUviSnyHMa9auI58Bu5y9ZvCXoYp6aS
-	 ObkifRnkI4QTjwAMUCmH0KO7FK9yKqNZUhDG7kNx2ju/+i6BD51AWghA3gsc4nMPkd
-	 Vv9NIHmmRV9TciY1hcxwutHSGFTj0c/7uwNRSEPs7RRwMfZiDYsnv7i0CAZvnseKEl
-	 MBEU8ZVCPlBSZLQ26w0GKBeeZWAolm7w+Invto+8QoOwCanXVHzDb/T4S9JJUpWT7Q
-	 io6AaZSeIPnVw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	SeongJae Park <sj@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] binfmt_elf: reduce stackusage in kunit test
-Date: Fri, 20 Jun 2025 13:19:58 +0200
-Message-Id: <20250620112003.3395792-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DHI9kYRr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqXpD3Yx"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750418435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
+	b=DHI9kYRrUMkGcx/u4tFkP55K9Ei4oCOvSrrsFKnffiCAJ6UinzhzkpiH5Ih8l43TJ4M2YK
+	44uGrVPA8Rs6TAbDb7/o4ThqsZzyQjeXaDx2jYPib6a6zyKrvQtKGXvRyf9/7LNo5GJ6F0
+	R6XvMO/dp5ToO+gDkArQdyVOQ+eMZ6GcH90+1MEb3AW6YVpdC+bcZmcbt5hG3Gh3PhQ2Eh
+	xKjGIy+g0fL98ZP7gJ6cnjBGqspU2V/zrI8aoTFZ3uOAOBkfXd6dUfkWK5Rk8NbGlXmcYy
+	OIP/vT8Azaq7sRqQmlHDxJFZyXPRp0S0cJeS2uZcO12jU3ay76PyC64KXwQGhQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750418435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
+	b=aqXpD3YxtJzh4w3dtZQQcMWKsYpGa7iD0P8JeTHMlCyLjKafOJgb+H/EvWGu19vuMklg7j
+	vO6Ns/uq8ryvLUAQ==
+To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
+ andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
+ cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
+ heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+ jirislaby@kernel.org, jkeeping@inmusicbrands.com,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
+ paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
+ sunilvl@ventanamicro.com, tim.kryger@linaro.org
+Subject: Re: [PATCH v9 3/4] serial: 8250: avoid potential PSLVERR issue
+In-Reply-To: <20250610092135.28738-4-cuiyunhui@bytedance.com>
+References: <20250610092135.28738-1-cuiyunhui@bytedance.com>
+ <20250610092135.28738-4-cuiyunhui@bytedance.com>
+Date: Fri, 20 Jun 2025 13:26:34 +0206
+Message-ID: <848qlmk6bh.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 2025-06-10, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+> When the PSLVERR_RESP_EN parameter is set to 1, reading UART_RX while
+> the FIFO is enabled and UART_LSR_DR is not set will generate a PSLVERR
+> error.
+>
+> Failure to check the UART_LSR_DR before reading UART_RX, or the non-
+> atomic nature of clearing the FIFO and reading UART_RX, poses
+> potential risks that could lead to PSLVERR.
+>
+> PSLVERR is addressed through two methods. One is to introduce
+> serial8250_discard_data() to check whether UART_LSR_DR is set before
+> reading UART_RX, thus solving the PSLVERR issue when the FIFO is
+> enabled. The other is to place FIFO clearing and reading of UART_RX
+> under port->lock.
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 
-Constructing arrays on the stack in the test case triggers a warning
-in some configurations:
-
-fs/tests/binfmt_elf_kunit.c: In function 'total_mapping_size_test':
-fs/tests/binfmt_elf_kunit.c:52:1: error: the frame size of 1448 bytes is larger than 1408 bytes [-Werror=frame-larger-than=]
-
-Change the arrays to 'static const' to not use any stack space at all.
-This is possible since the contents are never modified.
-
-Fixes: 9e1a3ce0a952 ("binfmt_elf: Introduce KUnit test")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/tests/binfmt_elf_kunit.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/tests/binfmt_elf_kunit.c b/fs/tests/binfmt_elf_kunit.c
-index 11d734fec366..023042f6aeee 100644
---- a/fs/tests/binfmt_elf_kunit.c
-+++ b/fs/tests/binfmt_elf_kunit.c
-@@ -3,7 +3,7 @@
- 
- static void total_mapping_size_test(struct kunit *test)
- {
--	struct elf_phdr empty[] = {
-+	static const struct elf_phdr empty[] = {
- 		{ .p_type = PT_LOAD, .p_vaddr = 0, .p_memsz = 0, },
- 		{ .p_type = PT_INTERP, .p_vaddr = 10, .p_memsz = 999999, },
- 	};
-@@ -11,7 +11,7 @@ static void total_mapping_size_test(struct kunit *test)
- 	 * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t\t{ .p_type = PT_" \
- 	 *				$1 ", .p_vaddr = " $3 ", .p_memsz = " $6 ", },"}'
- 	 */
--	struct elf_phdr mount[] = {
-+	static const struct elf_phdr mount[] = {
- 		{ .p_type = PT_PHDR, .p_vaddr = 0x00000040, .p_memsz = 0x0002d8, },
- 		{ .p_type = PT_INTERP, .p_vaddr = 0x00000318, .p_memsz = 0x00001c, },
- 		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
-@@ -28,7 +28,7 @@ static void total_mapping_size_test(struct kunit *test)
- 	};
- 	size_t mount_size = 0xE070;
- 	/* https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdomain */
--	struct elf_phdr unordered[] = {
-+	static const struct elf_phdr unordered[] = {
- 		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
- 		{ .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
- 		{ .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
--- 
-2.39.5
-
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
