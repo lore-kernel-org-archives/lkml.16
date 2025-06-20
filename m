@@ -1,196 +1,304 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19012047.outbound.protection.outlook.com [52.103.7.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB371993BD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435479; cv=none; b=n8jGjKX5wKTf22MXvlwur3vuDXPuhPR/zkArBtRs+UCwr3R7ypPXmFFhnfUXYCV4t3RQxcB9YNXAAeDJawbM6C9hWQmDfnVaolmX6SFxeKidMG0rkkNg30SINFM/69K2L25nlD2JbGS7oLeAe/huaizOuvk3Y8xNPdQutA7fvX8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435479; c=relaxed/simple;
-	bh=KBcGLgy3ZycCDoT7xlJdzPZ1CdI0tHu42dibypRo3EE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q3Tc41WWQay0+au+yVZqGz6KaaQ5N67yQGUrjs9zBlb4YiCyBwuBo4Zom8QZGA/R284QGlpvthjYw4ZgPEAp59qNhnvbtR7tMPor6LPxS/NVouT9l+d7ALwknoDPxquIPkZ538nbGoL4feyP/fx3T5uKCesPMxu2TYxzMEqRGDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=q/4MxPsY; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1691993BD;
+	Fri, 20 Jun 2025 16:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750435517; cv=fail; b=Xk72IBfChlXDlHvNKTSzw4+JcJCk4PVeaiKUmukWCISfci0JTwJzYzQEalg+RhQRbKF92EBypkpcT2stLT9XnznQtDVerCAnU+RxCEm3qcmz8lMthsE6f7z2uNIx/wTNM4lqy3b04rYsNEeKP5a93cVW3qMgRUglaVXpYzSmwcE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750435517; c=relaxed/simple;
+	bh=LFWRF0c3o8FP5gUJZIlInfT+3Kkb8Y/hfoEkNutedAA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QC1CWPrmtmUfrvBWFx/1/Yq3onC4g3oxctxZbf6EzeChgVDf3tklqFbIHAEEJzD50Md/o6p8ktpGR3zMM52EMBQEqiP4eeWsVysrP7kpua4h0G2MJtb+Rv4qV7nRr1JQFaoAYtyvOkzil1VONykKlSYV9M+3OFffA2U9UppI8Wo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Ya8EeN3s; arc=fail smtp.client-ip=52.103.7.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="q/4MxPsY"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a5903bceffso22616851cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750435477; x=1751040277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KBcGLgy3ZycCDoT7xlJdzPZ1CdI0tHu42dibypRo3EE=;
-        b=q/4MxPsY/qDx4YUkyPzL64dH/K0Sw71gttFssB3sh1sASpJk+3HuY3do/Jpomr6oEa
-         sFLBGUzzl2jU52Q/vLKVSTXWSSoxoLpqn0ZbbTef7VsOkA/t2SDhbsHO1REWZqGUWdHJ
-         Ir6FjWW0n5rrs8PTfcY1iz+TmiCQXeG/4d+WSy/W6yMTaPUBv9X0NYam44DhsAOknwvq
-         gyxjhBnJVlB5KQfbhPcT5gAR78nVBHWnH2wtwf4ZVt28T2UYt8ZfjrzfZKh6fzdOm3/7
-         OPKOprwyVl8iFJ2sm1nm4KLLeQcSknMoqIH+MaEovXRobvnrBPFOhLO1j7LyrdQKTAbO
-         nvxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750435477; x=1751040277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KBcGLgy3ZycCDoT7xlJdzPZ1CdI0tHu42dibypRo3EE=;
-        b=KO52tIVwSPm19+9vq28/eGqLCbOLHQVIsm8N4Obv7eeUWipmTfJJlnIVJ6109qT/43
-         Bi1Yni4DRvkoVfiuRxtOiKWJhHMvFMLfQs4g9QtVKQ7Jr/ADhn9b5uPo8Ycjp2zHb1G7
-         1P/NWfuIDJNCYkZZl7rtm35Ut06MPEfAdXzoqy9F1sN526msQIVmjIfupZ27jkxTJuYG
-         cG9hWWVmQiBdMF3Nm3IOKpd0g4bK80Mql5WEO6kUG2pkOw9tTMJwg2+pBKqCJQ9cUNk1
-         txQO0WbqXRKz0/Qww7KPMsF9GQHaiMWT+Dkr2n3/xIpehAbOy7MWB9KXS5ORFimguErY
-         y4fg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpSSVFH5Z91fowwwIczUNLuy7oHztETI6tBjsKUGHJpUG6fF+dy8EGG2lq8D3tW1cFdHgoBrhedXksXls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx00+BQCdFB5BXA5qESl+k8uQxDZEHbDERrp36iN70EfKbQocdl
-	CMcU04dBbkuUiQhGUxAp/h/mB4V12TwAvX4K05xVZRUL6NtUXNT4wLy0DBRyzeKP/C5Y5AubKUN
-	E1afcixYvZWv7o8EW3Hqi877HU7WFWp7RKj+YJGr9TQ==
-X-Gm-Gg: ASbGncsA3BUIvFDV4eaRSM667QzjOz/+Rii/QUg7uahJO1lrHxm5uo5SbNO26ZVgfd+
-	R8lVBpP+xiuaKlT5xpCLngEHZ7zG4BnlbUqpMPYIqTO269auu8t9Gt8hhUj2dQj+MWVlJ5M4owb
-	q2liIM/cQybotdyC9jA2HbNY5Qt/7deSuC4qKKYeaB
-X-Google-Smtp-Source: AGHT+IFYMkrIV8rD7Pif2HmczDwpVC2FXm+jHHb0EasflVe0vI4Kty5fEm7Qn6/47uvi0pcg9jQaBOvaY3LbpyffyhQ=
-X-Received: by 2002:ac8:5e4b:0:b0:494:adff:7fe2 with SMTP id
- d75a77b69052e-4a77a24907bmr54563871cf.43.1750435476818; Fri, 20 Jun 2025
- 09:04:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Ya8EeN3s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dGOT/SC7gfnNcIsvBvPmFGTuQcH3zSA1z92YilBGtKtsrdIBXdskoqxzxMIPVNgbATOX8/mR0KUoXzqxMcG97h/rQH8OcynIMegsb+zTqkMK4qHhFr+BfeTaRoF9xLcMqpTSGGUWec00jaHqNpXDL3jIjy3gC4410GSH+0t6LU97Tm0rTKc5Eij4JY0K6W+2IRYPzLTQxbCe8ttr7T2p/DGWuflIi1ZO+rh71EVAMBj9h5nM8nV6iqJKsPe7txBFKLhHXul2XFHns/FgDPvv1EKmQeoUK7j0bPZZIB3W/lHXH6aLQF6KcMd+RASZIH4jnQlI0efrm2nc8084Fr3l1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e0goYAXhffL32HRo1en4LQ3q2/GqztsQgliwVERr3nk=;
+ b=FenPfyMOzHoWMWVp03vG1QRn9HwBDtGJdV4HMPAE71QWFyd1yXUrbbZQqqGVKjWxvng3YXT63q8A8LA0gkVq+m9XS6ur53kQf57+i9aQIjsubUoi758HmfTBPFGUp6CFRjverQPkt4WFFrXEV8RX8AoNUK28IMaeZEoRfiCR0ur66PQHE4zSsbPNirLguUP3qq2AG/c39acMxBAs/vqqijTUK9OS+rKm/+FbV65pSQcml8t3XlAX3s4paf/tpj+/t1a3GZlbiVlgDPO9zR3FTMUu9IO02S0o5ASoGb3SlbtSFdY77kJ2ICwse1pRxUgA4jOo2F46ygmB4q2zg+GdZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e0goYAXhffL32HRo1en4LQ3q2/GqztsQgliwVERr3nk=;
+ b=Ya8EeN3s4Adu82bCyBcUUKpn0ieMjKCL6yK5mv2rY18Y0uOHuoSyq/qHpqX12d+6oYy4ru+8V9gmhRy0hekR/8yuXyS8OZHLOv6wXiY3/Du11oFYnzb0CxyZfTBrxG4QPTiApoOvGWaSTXVVp7cypFHST01HaD7IGqdRh2yspwuKTpJXefDBueF7pHLM2UHFDfCr+D+Dd5aIlcmub5MGFE05ye16B18z9M+lY21O70xv9t3nA9YCn2ZBgTDtt0TsYf4CACLwuYkw+8HU+swOU0hnex/BiHTRvChOd7lrhCGi+D9VTmUprtO/fi/I8UiktVo6fkWwy2EoZ011dAch7Q==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB7333.namprd02.prod.outlook.com (2603:10b6:510:1c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Fri, 20 Jun
+ 2025 16:05:13 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
+ 16:05:13 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
+	<longli@microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring
+ buffer
+Thread-Topic: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring
+ buffer
+Thread-Index: AQHb4bHmzA7RWc6sw0e084SYV6icObQMMm2w
+Date: Fri, 20 Jun 2025 16:05:13 +0000
+Message-ID:
+ <SN6PR02MB41574C54FFDE0D3F3B7A5649D47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250620070618.3097-1-namjain@linux.microsoft.com>
+In-Reply-To: <20250620070618.3097-1-namjain@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7333:EE_
+x-ms-office365-filtering-correlation-id: 8e4e171e-5e79-4dc0-344e-08ddb0143d50
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799009|461199028|8060799009|8062599006|41001999006|19110799006|3412199025|440099028|102099032|51005399003|40105399003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?6A1bV7CEz1Q3p22VBvphnNrX4BHSLkRtrIZRaR8KjQ/r//arW+8P+2EVjKDM?=
+ =?us-ascii?Q?rGzcwaf1fx2GyQLmH54L+IppESuqZd51VaKs9LTC80G7pj7qdTcZxt4wE1XX?=
+ =?us-ascii?Q?P5szhySb9Go5QXI3H3TOsowJfFKAYzlvxUMOwOecGwTyDXliGWBMfcWeqcj0?=
+ =?us-ascii?Q?wQhOVywY85ScS3RDpt2+SUKDxDcpX/BF2rKgZgXu3fqTMf5byClxI6tn51aq?=
+ =?us-ascii?Q?8HOtVfx0fFHoPefxw2DfY7dkHJlNy250qE0QNykwGsbPofh/86iPTys0Sk1z?=
+ =?us-ascii?Q?lWnRvG3rrWfmhdv0girznqBbeW8gRW3xsvOE6dB4+g9rZUEQgAORyKwdt/NV?=
+ =?us-ascii?Q?nEKBe9gRXmzKjzoDLIur8pQqBzKBZnvnbLB/cSJhYgkv/IcrhxTbZNQn+plY?=
+ =?us-ascii?Q?WNW7laKuo7NuNGhlqGiUn+ZQVSDAJn5y2egfS0ceYnbmw/XMHKT0sE3ksB6y?=
+ =?us-ascii?Q?s4BuXpwLUmOSZNK5BeUF99zpq9uz0f30pB7zQoiBOwzElpIrSmtjM4RlvWiG?=
+ =?us-ascii?Q?GreVSJIEQ+LGA/pVymrmAkya31f3oFrxF7Ko6W+Q+mhUg0WwT3m13s5xzDm1?=
+ =?us-ascii?Q?xDlXGb2KfElGEwF+vr8DujXZ4LpIMtDbrc5QW8lrHNwOaZxC5oFjyp3ldgDf?=
+ =?us-ascii?Q?tY8qTc8jf3iooZLT8nzu9qtZS3ivdm/33YNK6FZ32fCtYGnyhgjA9s1X0fRb?=
+ =?us-ascii?Q?rQmZ8KpKJF8N9Z5OfTE4hxhyxTRal00FxAkO/gQ996RCgn1tyZrXtTN/0hGk?=
+ =?us-ascii?Q?LYL/RgVQlmgc6z+mr6qa67DqsZ3ozip3fVvndmndn9X0PM/gKFthVG7pg4zx?=
+ =?us-ascii?Q?2SfX43rP1fc7Mre+a9tKzSu1VbjagpvthVbX0BNJNalyn9ne/qu/751zCI/6?=
+ =?us-ascii?Q?EhslkjL7xU80lE24Exo4lotKqI+h9utzodCdJkUK9Wmq9Dq+ZdOiDpinQadz?=
+ =?us-ascii?Q?VEb6NwZbU2WkSFze6sAWM4qSkXSwtG27TQGa7WFVdMgo9gxXrTSccaZEVKfi?=
+ =?us-ascii?Q?741XZGR+5Y8QfUu2N5hkiqbZwTRoasSm3C7DkXsV6Tiy6CNZVVLCpdpEbjib?=
+ =?us-ascii?Q?Nbft6l/E6UpNhinVuKATeZavYQvC3Au3nvBB+xYy43x/lFBXVLgdLr5qpHDG?=
+ =?us-ascii?Q?Ak2YIodn7UvvO4L2EjvbRg7jWlOX2sjUv/rFu0rpv+sAawf4kuMrp37S1Lfz?=
+ =?us-ascii?Q?dyba2W+juq3OoUoc?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?tWU3/1oH3wImTmz/6NGwImckoXqnCnmDBZZJtQGeYmziOJOQI1IrEhL+ZxBL?=
+ =?us-ascii?Q?+n3QO6SCs3OY9OHwadyFNZNuhLgtAejP5/oEM/wh2R0v5cYf1Yv9WtvLunZ0?=
+ =?us-ascii?Q?qArmGvd03Oq5ycVX9Hc1rYTsfIZNzUaZDdxv3JQuH117xw7KpD4INKl/Z96A?=
+ =?us-ascii?Q?zmgIoChefoFpNGvT9LUx2Gq+OHmkIdGLYOv0k2ISc/Ox+2yZCT7aWW58trqK?=
+ =?us-ascii?Q?R5VPhdkSl5t2aumHFc1EQFz7nSseIqYW2TJ3/4rvd93IUOes+nYtrc+NTu6r?=
+ =?us-ascii?Q?c4PJCGiWafuDGo6d6uGkpqitXCAyOj4eNTHGb37FHoB6YHxZ7tqGSyIDkaTK?=
+ =?us-ascii?Q?mDHnRMrWdBwysYp2IYrK6a56MetkznW7x7++Ln4o6CZB5Esvi6wv77+CnaCO?=
+ =?us-ascii?Q?dMlxn2/0jntEdg1/98XT0MhRzRa6w8lVelSCZSGLLY+55phrsM5irbKAoZrF?=
+ =?us-ascii?Q?wnAyW9kHlvb88s/kft4nZ6AImfgzMxeXiV5r0n5b/bDAyxFIe7OfQWAlTAV+?=
+ =?us-ascii?Q?CzqwZT+cs1I2U14ykb6Jj+0K2P/tKkN09QraATPYsMKCvdSNlBatVEnUC4L5?=
+ =?us-ascii?Q?nvGJm32N9yop/zHCtG/gk2fNCppATPmhuP9nXawZ9FB+KLQtC7hTecGnLdgN?=
+ =?us-ascii?Q?YXxgru76DksdcDZtxeTiau/tRxI7wCMOUyHcadDw+NO4/REQiwd03UfNZhYT?=
+ =?us-ascii?Q?3vNbm9HqWolpr8ZhT/qZpZQuMHoOZg9XxOzdRsN/lhXZY3OKO2vJ+N7qUj+q?=
+ =?us-ascii?Q?E9+WY2NWf3N8MHIt888EbUrOFphVWxOh+qqebar8mK59eRsmwmk6Bi8aWeer?=
+ =?us-ascii?Q?F7UIFcXHDNwoK4XMBwJG6pFsFVo9u6lCLBBnZObwrp8V0b+AK9abQYj4zZSj?=
+ =?us-ascii?Q?4U4USxLf/HR3Yo79eL0vgDEbAFyC6odawL8XFbLWM29lKGM9K3SdTJ4q3jkC?=
+ =?us-ascii?Q?0m73SLj9ywW70nAeBjjW0PPTuFJq6KABQ/LS4gmnE8rNAqz4ilG77D6MwRWq?=
+ =?us-ascii?Q?WJHw71D6dcLeiokwefaWd9NzPiexLSmztqATF5SFOo1ODZ1kI+O+qWPwdsa6?=
+ =?us-ascii?Q?WDe3goG8VpbvFYrK60rE9ObJQFFszBJc+RTBP8/FAVxpDEc5nPNaxA/tWAbU?=
+ =?us-ascii?Q?mmCx48JGcedznJ//JF4W0FU+oqy9V0Ts2vVbBtT5suowzL0VSUcqMRz4xvum?=
+ =?us-ascii?Q?Xiex26/glxZsXlNh1cgqUsSZdjXpHLoNAPUdy0qI4r94PZO39p5ixY6Uvg4?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <mafs0sekfts2i.fsf@kernel.org> <CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
- <mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
- <CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
- <mafs05xgtw5wn.fsf@kernel.org> <CA+CK2bDWAPSmTdnD7vw4G00nPsM8R_Zefs_G+9zvSqTJqPb9Lg@mail.gmail.com>
- <aFLr7RDKraQk8Gvt@kernel.org> <CA+CK2bAnCRu+k=Q78eA4kcAebxA9NgOorhwRqu-WxC913YBsBw@mail.gmail.com>
- <CA+CK2bB3P1vX658ErkP4_-L6WZSOCcenEwUdX1qS=poDjs=i+A@mail.gmail.com>
- <aFP7wwCviqxujKDg@kernel.org> <CA+CK2bDqO4SkUpiFahfUx2MUiE8oae9HmuaghPAnCwaJZpoTwQ@mail.gmail.com>
- <mafs0ikkqv3ds.fsf@kernel.org>
-In-Reply-To: <mafs0ikkqv3ds.fsf@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 20 Jun 2025 12:03:59 -0400
-X-Gm-Features: AX0GCFsQhPGk-ls7Li1zkHXTCt1at0pTBUhnscC7tj8uZk3G-noKoK_lGxaGFUA
-Message-ID: <CA+CK2bCA_ggpvbY+MQPaAHsN7MOzV7D3=MYvfAP4cFwhThJpPw@mail.gmail.com>
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4e171e-5e79-4dc0-344e-08ddb0143d50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 16:05:13.0819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7333
 
-On Fri, Jun 20, 2025 at 11:28=E2=80=AFAM Pratyush Yadav <pratyush@kernel.or=
-g> wrote:
->
-> Hi Pasha,
->
-> On Thu, Jun 19 2025, Pasha Tatashin wrote:
->
-> [...]
-> >> And it has to be done before kexec load, at least until we resolve thi=
-s.
-> >
-> > The before kexec load constrained has been fixed. The only
-> > "finalization" constraint we have is it should be before
-> > reboot(LINUX_REBOOT_CMD_KEXEC) and only because memory allocations
-> > during kernel shutdown are undesirable. Once KHO moves away from a
-> > monolithic state machine this constraint disappears. Kernel components
-> > could preserve their resources at appropriate times, not necessarily
-> > tied to a shutdown-time. For live update scenarios, LUO already
-> > orchestrates this timing.
-> >
-> >> Currently this is triggered either by KHO debugfs or by LUO ioctls. If=
- we
-> >> completely drop KHO debugfs and notifiers, we still need something tha=
-t
-> >> would trigger the magic.
-> >
-> > An external "magic trigger" for KHO (like the current finalize
-> > notifier or debugfs command) is necessary for scenarios like live
-> > update, where userspace resources are being preserved in a coordinated
-> > fashion just before kexec.
-> >
-> > For kernel-internal resources that are unrelated to such a
-> > userspace-driven live update flow, the respective kernel components
-> > should directly use KHO's primitive preservation APIs
-> > (kho_preserve_folio, etc.) when they need to mark their resources for
-> > handover. No separate, state machine or external trigger should be
-> > required for these individual, self-contained preservation acts.
->
+From: Naman Jain <namjain@linux.microsoft.com> Sent: Friday, June 20, 2025 =
+12:06 AM
+>=20
+> Size of ring buffer, as defined in uio_hv_generic driver, is no longer
+> fixed to 16 KB. This creates a problem in fcopy, since this size was
+> hardcoded. With the change in place to make ring sysfs node actually
+> reflect the size of underlying ring buffer, it is safe to get the size
+> of ring sysfs file and use it for ring buffer size in fcopy daemon.
+> Fix the issue of disparity in ring buffer size, by making it dynamic
+> in fcopy uio daemon.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 0315fef2aff9 ("uio_hv_generic: Align ring size to system page")
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
+>  tools/hv/hv_fcopy_uio_daemon.c | 65 ++++++++++++++++++++++++++++++----
+>  1 file changed, 58 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemo=
+n.c
+> index 0198321d14a2..da2b27d6af0e 100644
+> --- a/tools/hv/hv_fcopy_uio_daemon.c
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -36,6 +36,7 @@
+>  #define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+>=20
+>  #define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b=
+64d17d4/uio"
+> +#define FCOPY_CHANNELS_PATH	"/sys/bus/vmbus/devices/eb765408-105f-49b6-b=
+4aa-c123b64d17d4/channels"
+>=20
+>  #define FCOPY_VER_COUNT		1
+>  static const int fcopy_versions[] =3D {
+> @@ -47,9 +48,51 @@ static const int fw_versions[] =3D {
+>  	UTIL_FW_VERSION
+>  };
+>=20
+> -#define HV_RING_SIZE		0x4000 /* 16KB ring buffer size */
+> +#define HV_RING_SIZE_DEFAULT	0x4000 /* 16KB ring buffer size default */
+>=20
+> -static unsigned char desc[HV_RING_SIZE];
+> +static uint32_t get_ring_buffer_size(void)
+> +{
+> +	char ring_path[PATH_MAX];
+> +	DIR *dir;
+> +	struct dirent *entry;
+> +	struct stat st;
+> +	uint32_t ring_size =3D 0;
+> +
+> +	/* Find the channel directory */
+> +	dir =3D opendir(FCOPY_CHANNELS_PATH);
+> +	if (!dir) {
+> +		syslog(LOG_ERR, "Failed to open channels directory, using default ring=
+ size");
 
-Hi Pratyush,
+This is where the previous long discussion about racing with user space
+comes into play. While highly unlikely, it's possible that the "opendir" co=
+uld fail
+because of racing with the kernel thread that creates the "channels" direct=
+ory.
+The right thing to do would be to sleep for some period of time, then try
+again. Sleeping for 1 second would be a very generous -- could also go with
+something like 100 milliseconds.
 
-> For kernel-internal components, I think this makes a lot of sense,
-> especially now that we don't need to get everything done by kexec load
-> time. I suppose the liveupdate_reboot() call at reboot time to prepare
-> final things can be useful, but subsystems can just as well register
-> reboot notifiers to get the same notification.
+> +		return HV_RING_SIZE_DEFAULT;
+> +	}
+> +
+> +	while ((entry =3D readdir(dir)) !=3D NULL) {
+> +		if (entry->d_type =3D=3D DT_DIR && strcmp(entry->d_name, ".") !=3D 0 &=
+&
+> +		    strcmp(entry->d_name, "..") !=3D 0) {
+> +			snprintf(ring_path, sizeof(ring_path), "%s/%s/ring",
+> +				 FCOPY_CHANNELS_PATH, entry->d_name);
+> +
+> +			if (stat(ring_path, &st) =3D=3D 0) {
+> +				/* stat returns size of Tx, Rx rings combined, so take half of it */
+> +				ring_size =3D (uint32_t)st.st_size / 2;
+> +				syslog(LOG_INFO, "Ring buffer size from %s: %u bytes",
+> +				       ring_path, ring_size);
+> +				break;
+> +			}
+> +		}
+> +	}
 
-Correct. If subsystems unrelated to the userspace live update flow,
-such as pstore, tracing, telemetry, debugging, or IMA, need to be
-notified about a reboot, they can simply register their own reboot
-notifier.
+The same race problem could happen with this loop. The "channels" directory
+might have been created, but the entry for the numbered channel might not.
+The loop could exit having found only "." and "..". Again, if no numbered
+channel is found, sleep for a short period of time and try again.
 
-> >> I'm not saying we should keep KHO debugfs and notifiers, I'm saying th=
-at if
-> >> we make LUO the only thing driving KHO, liveupdate is not an appropria=
-te
-> >> name.
-> >
-> > LUO drives KHO specifically for the purpose of live updates. If a
-> > different userspace use-case emerges that needs another distinct
-> > purpose (e.g., not to preserve a FD a or a device across kernel reboot
-> > (i.e. something for which LUO does not provide uAPI)), then that would
-> > probably need a separate from LUO uAPI instead of extending the LUO
-> > uAPI.
->
-> Outside of hypervisor live update, I have a very clear use case in mind:
-> userspace memory handover (on guest side). Say a guest running an
-> in-memory cache like memcached with many gigabytes of cache wants to
-> reboot. It can just shove the cache into a memfd, give it to LUO, and
-> restore it after reboot. Some services that suffer from long reboots are
-> looking into using this to reduce downtime. Since it pretty much
-> overlaps with the hypervisor work for now, I haven't been talking about
-> it as much.
->
-> Would you also call this use case "live update"? Does it also fit with
-> your vision of where LUO should go?
+> +
+> +	closedir(dir);
+> +
+> +	if (!ring_size) {
+> +		ring_size =3D HV_RING_SIZE_DEFAULT;
+> +		syslog(LOG_ERR, "Could not determine ring size, using default: %u byte=
+s",
+> +		       HV_RING_SIZE_DEFAULT);
+> +	}
+> +
+> +	return ring_size;
+> +}
+> +
+> +static unsigned char *desc;
+>=20
+>  static int target_fd;
+>  static char target_fname[PATH_MAX];
+> @@ -406,7 +449,8 @@ int main(int argc, char *argv[])
+>  	int daemonize =3D 1, long_index =3D 0, opt, ret =3D -EINVAL;
+>  	struct vmbus_br txbr, rxbr;
+>  	void *ring;
+> -	uint32_t len =3D HV_RING_SIZE;
+> +	uint32_t ring_size =3D get_ring_buffer_size();
 
-Yes, absolutely. The use case you described (preserving a memcached
-instance via memfd) is a perfect fit for LUO's vision.
+Getting the ring buffer size before even the command line options
+are parsed could produce unexpected results. For example, if someone
+just wanted to see the usage (the -h option), they might get
+an error about not being able to get the ring size. I'd suggest doing
+this later, after the /dev/uio<N> entry is successfully opened.
 
-While the primary use case driving this work is supporting the
-preservation of virtual machines on a hypervisor, the framework itself
-is not restricted to that scenario. We define "live update" as the
-process of updating the kernel from one version to another while
-preserving FD-based resources and keeping selected devices
-operational. The machine itself can be running storage, database,
-networking, containers, or anything else.
+> +	uint32_t len =3D ring_size;
+>  	char uio_name[NAME_MAX] =3D {0};
+>  	char uio_dev_path[PATH_MAX] =3D {0};
+>=20
+> @@ -416,6 +460,13 @@ int main(int argc, char *argv[])
+>  		{0,		0,		   0,  0   }
+>  	};
+>=20
+> +	desc =3D (unsigned char *)malloc(ring_size * sizeof(unsigned char));
+> +	if (!desc) {
+> +		syslog(LOG_ERR, "malloc failed for desc buffer");
+> +		ret =3D -ENOMEM;
+> +		goto exit;
+> +	}
+> +
+>  	while ((opt =3D getopt_long(argc, argv, "hn", long_options,
+>  				  &long_index)) !=3D -1) {
+>  		switch (opt) {
+> @@ -448,14 +499,14 @@ int main(int argc, char *argv[])
+>  		goto exit;
+>  	}
+>=20
+> -	ring =3D vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
+> +	ring =3D vmbus_uio_map(&fcopy_fd, ring_size);
+>  	if (!ring) {
+>  		ret =3D errno;
+>  		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(=
+ret));
+>  		goto close;
+>  	}
+> -	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
+> -	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
+> +	vmbus_br_setup(&txbr, ring, ring_size);
+> +	vmbus_br_setup(&rxbr, (char *)ring + ring_size, ring_size);
+>=20
+>  	rxbr.vbr->imask =3D 0;
+>=20
+> @@ -472,7 +523,7 @@ int main(int argc, char *argv[])
+>  			goto close;
+>  		}
+>=20
+> -		len =3D HV_RING_SIZE;
+> +		len =3D ring_size;
+>  		ret =3D rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
+>  		if (unlikely(ret <=3D 0)) {
+>  			/* This indicates a failure to communicate (or worse) */
+>=20
+> base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+> --
+> 2.34.1
 
-A good parallel is Kernel Live Patching: we don't distinguish what
-workload is running on a machine when applying a security patch; we
-simply patch the running kernel. In the same way, Live Update is
-designed to be workload-agnostic. Whether the system is running an
-in-memory database, containers, or VMs, its primary goal is to enable
-a full kernel update while preserving the userspace-requested state.
-
-Thanks,
-Pasha
