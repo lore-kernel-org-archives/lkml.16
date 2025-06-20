@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9362423504D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5716B23372E;
 	Fri, 20 Jun 2025 08:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407114; cv=none; b=g+pglMCsEbLtyn9r09mAAEUJB8qVQf+6vOEUQ8BmRZGUiURo2zKMbBgosuW0tAuh2IQcKQlndlK1S7m9XzD7YRYZIZO62Zapz+E+hhwn/lT3h88hDcDALXezp3Ilhl4oCIrNpsrMsD35LcYj+GdZfnzUbsFzSiJ1beXs1vSIQ5s=
+	t=1750407114; cv=none; b=YumXZn6rtG/5Ky9VO9a3WlckWs/HhOre3poaf4Hrh9nEEjlTvFvqi4ukPmG+7km6DvPxuVVXK/FWURtXMMwgEHpoTqpbrlmIDPOKhFp3dGqceyxDz9n0f1hOHYIV+u7yKJC11JIrEuNPqv133J7YxzhEWIxmvbYnAXRswUbtZ+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750407114; c=relaxed/simple;
-	bh=t6WKKzUZ3jaz/IWeMR8qJbIf2p6B9ADIoUTLRFgr0u0=;
+	bh=XT+7KR3Tg4iAhlUU3c6mKrOGy1MIPvbKyEPBCyZpAmw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pN3Ftav/CWwsEHSTtori3z2JWodmt5UOVXQD7iWZh/a7sxeMRXh4ZCwAiQS3FhWEzf5uo+sysdqPKVnoGLnJfZQReH2SetxNr93Z5ZsXLQ0vVSpijKoSg/KPre3pOuAJhCKMkg/onjXJDpYhDaE9HYqrv2QJ+3LpXkO/4kLV11Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bv8JAdSh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kdodHir61/LYfcls6eRavHt7TmTa5v18xiWTq5bjYF1uWtK7AW4ZDQ99JUL0S3ySxPybYUhjSgAT3RfJNC9wmQZybaWmTgRbXQnZf6hnKE3pXRJSW70g2SzVf0/2ni6JTHDwAsWA0Y0glzVXpDQ1oku4MjGC/gkuyfJvAeKviZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RT2Bq3n5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bv8JAdSh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC25EC4CEF8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RT2Bq3n5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F80C4CEF5;
 	Fri, 20 Jun 2025 08:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750407114;
-	bh=t6WKKzUZ3jaz/IWeMR8qJbIf2p6B9ADIoUTLRFgr0u0=;
+	bh=XT+7KR3Tg4iAhlUU3c6mKrOGy1MIPvbKyEPBCyZpAmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bv8JAdShpRMIbnveqo5nklz8ukjqn7HR+jMc8Fdu2t7EtPnd4f1BmWGViH3LXIrn/
-	 3NUjpP8NckKDlrPxt1cZ5BP/6KYneUBzkPnId4oOPtb4Id5dTzDdic655Cu4F2GlOa
-	 Dj75A01yeRzdFJg4+L9hCK5UWg87WPu0GN1v+1zhhAoXgkVZbFSvKubTuiE2MU00Fj
-	 7KCIP9HYyRtAreUqfL7KBwGL3P4UkwW2GNRNFBzWQHvQQjhYK/ZxIcIJBwxsiK7zX9
-	 gyIPikBgBMwfyfXHGggnrqrdNXZMcNZxp3uZmJTnIDsQodh9RF6FSmY3jh0pcVoK2u
-	 9HwGL7brI6csg==
+	b=RT2Bq3n5H2XOU69Jn3UhOPJSdWL88/4TC+yf8M9PnNCRpcTxIh4QQ4lYT6N/jk0rV
+	 epkKT0ISnQ0DDs7TLuVezdvvwNrAfWEdAH4Gpn+pzsbP0QQksy6YIqRJq8TRouZg7M
+	 s8+dXzwAKuA7x94h3DlcflUt6zFLrMlqp220t6FGnfiZIsyO9sPfEuSkPYCx9T6ru5
+	 R1O61P22PlPsXNBk+d5Vwk2KRwiS5jsuPCHF7K6aj1eZC56zSVDx+QMUOl3POBkfiV
+	 mVPd8aLkbwJzHweWKLURwhb4KKm0vIKjKm6TJoNaDQMP3Jxs7w8DgBSXPuEG71J9C/
+	 xVuKFH5INHXVg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uSWql-00000004TX3-3mwU;
+	id 1uSWql-00000004TWz-3gE9;
 	Fri, 20 Jun 2025 10:11:51 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -37,9 +37,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Akira Yokosawa" <akiyks@gmail.com>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] scripts: test_doc_build.py: better control its output
-Date: Fri, 20 Jun 2025 10:11:45 +0200
-Message-ID: <5bdec8c0811ffb66470146b45e70a4edafbc52ad.1750406900.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 4/6] scripts/test_doc_build.py: make capture assynchronous
+Date: Fri, 20 Jun 2025 10:11:44 +0200
+Message-ID: <55f4ce45bc0b48c5d1a2fcac2e92f6cdc3d727d6.1750406900.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750406900.git.mchehab+huawei@kernel.org>
 References: <cover.1750406900.git.mchehab+huawei@kernel.org>
@@ -52,209 +52,444 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that asyncio is supported, allow userspace to adjust
-verbosity level and direct the script output to a file.
+Prepare the tool to allow writing the output into log files.
+For such purpose, receive stdin/stdout messages asynchronously.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/test_doc_build.py | 78 +++++++++++++++++++++++++--------------
- 1 file changed, 51 insertions(+), 27 deletions(-)
+ scripts/test_doc_build.py | 393 +++++++++++++++++++++++++-------------
+ 1 file changed, 255 insertions(+), 138 deletions(-)
 
 diff --git a/scripts/test_doc_build.py b/scripts/test_doc_build.py
-index 94f2f2d8c3b7..5b9eb2c0bf01 100755
+index 482716fbe91d..94f2f2d8c3b7 100755
 --- a/scripts/test_doc_build.py
 +++ b/scripts/test_doc_build.py
 @@ -2,7 +2,7 @@
  # SPDX-License-Identifier: GPL-2.0
  # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
  #
--# pylint: disable=R0903,R0913,R0914,R0917
-+# pylint: disable=R0903,R0912,R0913,R0914,R0917,C0301
+-# pylint: disable=C0103,R1715
++# pylint: disable=R0903,R0913,R0914,R0917
  
  """
  Install minimal supported requirements for different Sphinx versions
-@@ -104,9 +104,22 @@ SPHINX_REQUIREMENTS = {
- class AsyncCommands:
-     """Excecute command synchronously"""
+@@ -10,20 +10,20 @@ and optionally test the build.
+ """
  
--    stdout = None
--    stderr = None
--    output = None
-+    def __init__(self, fp=None):
+ import argparse
++import asyncio
+ import os.path
+ import sys
+ import time
+-
+-from subprocess import run
++import subprocess
+ 
+ # Minimal python version supported by the building system
+-python_bin = "python3.9"
++MINIMAL_PYTHON_VERSION = "python3.9"
+ 
+ # Starting from 8.0.2, Python 3.9 becomes too old
+-python_changes = {(8, 0, 2): "python3"}
++PYTHON_VER_CHANGES = {(8, 0, 2): "python3"}
+ 
+ # Sphinx versions to be installed and their incremental requirements
+-sphinx_requirements = {
++SPHINX_REQUIREMENTS = {
+     (3, 4, 3): {
+         "alabaster": "0.7.13",
+         "babel": "2.17.0",
+@@ -101,141 +101,258 @@ sphinx_requirements = {
+ }
+ 
+ 
++class AsyncCommands:
++    """Excecute command synchronously"""
 +
-+        self.stdout = None
-+        self.stderr = None
-+        self.output = None
-+        self.fp = fp
++    stdout = None
++    stderr = None
++    output = None
 +
-+    def log(self, out, verbose, is_info=True):
-+        if verbose:
-+            if is_info:
-+                print(out.rstrip("\n"))
++    async def _read(self, stream, verbose, is_info):
++        """Ancillary routine to capture while displaying"""
++
++        while stream is not None:
++            line = await stream.readline()
++            if line:
++                out = line.decode("utf-8", errors="backslashreplace")
++                self.output += out
++                if is_info:
++                    if verbose:
++                        print(out.rstrip("\n"))
++
++                    self.stdout += out
++                else:
++                    if verbose:
++                        print(out.rstrip("\n"), file=sys.stderr)
++
++                    self.stderr += out
 +            else:
-+                print(out.rstrip("\n"), file=sys.stderr)
++                break
 +
-+        if self.fp:
-+            self.fp.write(out.rstrip("\n") + "\n")
- 
-     async def _read(self, stream, verbose, is_info):
-         """Ancillary routine to capture while displaying"""
-@@ -115,16 +128,10 @@ class AsyncCommands:
-             line = await stream.readline()
-             if line:
-                 out = line.decode("utf-8", errors="backslashreplace")
--                self.output += out
-+                self.log(out, verbose, is_info)
-                 if is_info:
--                    if verbose:
--                        print(out.rstrip("\n"))
--
-                     self.stdout += out
-                 else:
--                    if verbose:
--                        print(out.rstrip("\n"), file=sys.stderr)
--
-                     self.stderr += out
-             else:
-                 break
-@@ -140,10 +147,8 @@ class AsyncCommands:
- 
-         self.stdout = ""
-         self.stderr = ""
--        self.output = ""
- 
--        if verbose:
--            print("$ ", " ".join(cmd))
-+        self.log("$ " + " ".join(cmd), verbose)
- 
-         proc = await asyncio.create_subprocess_exec(cmd[0],
-                                                     *cmd[1:],
-@@ -167,7 +172,7 @@ class AsyncCommands:
- 
-         if capture_output:
-             if proc.returncode > 0:
--                print("Error {proc.returncode}", file=sys.stderr)
-+                self.log(f"Error {proc.returncode}", verbose=True, is_info=False)
-                 return ""
- 
-             return self.output
-@@ -192,10 +197,11 @@ class SphinxVenv:
-         self.built_time = {}
-         self.first_run = True
- 
--    async def _handle_version(self, args, cur_ver, cur_requirements, python_bin):
-+    async def _handle_version(self, args, fp,
-+                              cur_ver, cur_requirements, python_bin):
-         """Handle a single Sphinx version"""
- 
--        cmd = AsyncCommands()
-+        cmd = AsyncCommands(fp)
- 
-         ver = ".".join(map(str, cur_ver))
- 
-@@ -210,10 +216,11 @@ class SphinxVenv:
-         venv_dir = f"Sphinx_{ver}"
-         req_file = f"requirements_{ver}.txt"
- 
--        print(f"\nSphinx {ver} with {python_bin}")
-+        cmd.log(f"\nSphinx {ver} with {python_bin}", verbose=True)
- 
-         # Create venv
--        await cmd.run([python_bin, "-m", "venv", venv_dir], check=True)
-+        await cmd.run([python_bin, "-m", "venv", venv_dir],
-+                      verbose=args.verbose, check=True)
-         pip = os.path.join(venv_dir, "bin/pip")
- 
-         # Create install list
-@@ -223,7 +230,7 @@ class SphinxVenv:
- 
-         reqs.append(f"Sphinx=={ver}")
- 
--        await cmd.run([pip, "install"] + reqs, check=True, verbose=True)
-+        await cmd.run([pip, "install"] + reqs, check=True, verbose=args.verbose)
- 
-         # Freeze environment
-         result = await cmd.run([pip, "freeze"], verbose=False, check=True)
-@@ -248,10 +255,11 @@ class SphinxVenv:
-             await cmd.run(["make", "cleandocs"], env=env, check=True)
-             make = ["make"] + args.make_args + ["htmldocs"]
- 
--            print(f". {bin_dir}/activate")
--            print(" ".join(make))
--            print("deactivate")
--            await cmd.run(make, env=env, check=True)
-+            if args.verbose:
-+                print(f". {bin_dir}/activate")
-+            await cmd.run(make, env=env, check=True, verbose=True)
-+            if args.verbose:
-+                print("deactivate")
- 
-             end_time = time.time()
-             elapsed_time = end_time - start_time
-@@ -264,7 +272,7 @@ class SphinxVenv:
- 
-             self.built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
- 
--            print(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}")
-+            cmd.log(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}", verbose=True)
- 
-     async def run(self, args):
-         """
-@@ -272,6 +280,15 @@ class SphinxVenv:
-         on a loop.
-         """
- 
-+        if args.log:
-+            fp = open(args.log, "w", encoding="utf-8")
-+            if not args.verbose:
-+                args.verbose = False
++    async def run(self, cmd, capture_output=False, check=False,
++                  env=None, verbose=True):
++
++        """
++        Execute an arbitrary command, handling errors.
++
++        Please notice that this class is not thread safe
++        """
++
++        self.stdout = ""
++        self.stderr = ""
++        self.output = ""
++
++        if verbose:
++            print("$ ", " ".join(cmd))
++
++        proc = await asyncio.create_subprocess_exec(cmd[0],
++                                                    *cmd[1:],
++                                                    env=env,
++                                                    stdout=asyncio.subprocess.PIPE,
++                                                    stderr=asyncio.subprocess.PIPE)
++
++        # Handle input and output in realtime
++        await asyncio.gather(
++            self._read(proc.stdout, verbose, True),
++            self._read(proc.stderr, verbose, False),
++        )
++
++        await proc.wait()
++
++        if check and proc.returncode > 0:
++            raise subprocess.CalledProcessError(returncode=proc.returncode,
++                                                cmd=" ".join(cmd),
++                                                output=self.stdout,
++                                                stderr=self.stderr)
++
++        if capture_output:
++            if proc.returncode > 0:
++                print("Error {proc.returncode}", file=sys.stderr)
++                return ""
++
++            return self.output
++
++        ret = subprocess.CompletedProcess(args=cmd,
++                                          returncode=proc.returncode,
++                                          stdout=self.stdout,
++                                          stderr=self.stderr)
++
++        return ret
++
++
++class SphinxVenv:
++    """
++    Installs Sphinx on one virtual env per Sphinx version with a minimal
++    set of dependencies, adjusting them to each specific version.
++    """
++
++    def __init__(self):
++        """Initialize instance variables"""
++
++        self.built_time = {}
++        self.first_run = True
++
++    async def _handle_version(self, args, cur_ver, cur_requirements, python_bin):
++        """Handle a single Sphinx version"""
++
++        cmd = AsyncCommands()
++
++        ver = ".".join(map(str, cur_ver))
++
++        if not self.first_run and args.wait_input and args.make:
++            ret = input("Press Enter to continue or 'a' to abort: ").strip().lower()
++            if ret == "a":
++                print("Aborted.")
++                sys.exit()
 +        else:
-+            fp = None
-+            if not args.verbose:
-+                args.verbose = True
++            self.first_run = False
 +
-         cur_requirements = {}
-         python_bin = MINIMAL_PYTHON_VERSION
- 
-@@ -290,7 +307,7 @@ class SphinxVenv:
-                 if cur_ver > args.max_version:
-                     break
- 
--            await self._handle_version(args, cur_ver, cur_requirements,
-+            await self._handle_version(args, fp, cur_ver, cur_requirements,
-                                        python_bin)
- 
-         if args.make:
-@@ -299,6 +316,8 @@ class SphinxVenv:
-             for ver, elapsed_time in sorted(self.built_time.items()):
-                 print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
- 
-+        if fp:
-+            fp.close()
- 
++        venv_dir = f"Sphinx_{ver}"
++        req_file = f"requirements_{ver}.txt"
++
++        print(f"\nSphinx {ver} with {python_bin}")
++
++        # Create venv
++        await cmd.run([python_bin, "-m", "venv", venv_dir], check=True)
++        pip = os.path.join(venv_dir, "bin/pip")
++
++        # Create install list
++        reqs = []
++        for pkg, verstr in cur_requirements.items():
++            reqs.append(f"{pkg}=={verstr}")
++
++        reqs.append(f"Sphinx=={ver}")
++
++        await cmd.run([pip, "install"] + reqs, check=True, verbose=True)
++
++        # Freeze environment
++        result = await cmd.run([pip, "freeze"], verbose=False, check=True)
++
++        # Pip install succeeded. Write requirements file
++        if args.write:
++            with open(req_file, "w", encoding="utf-8") as fp:
++                fp.write(result.stdout)
++
++        if args.make:
++            start_time = time.time()
++
++            # Prepare a venv environment
++            env = os.environ.copy()
++            bin_dir = os.path.join(venv_dir, "bin")
++            env["PATH"] = bin_dir + ":" + env["PATH"]
++            env["VIRTUAL_ENV"] = venv_dir
++            if "PYTHONHOME" in env:
++                del env["PYTHONHOME"]
++
++            # Test doc build
++            await cmd.run(["make", "cleandocs"], env=env, check=True)
++            make = ["make"] + args.make_args + ["htmldocs"]
++
++            print(f". {bin_dir}/activate")
++            print(" ".join(make))
++            print("deactivate")
++            await cmd.run(make, env=env, check=True)
++
++            end_time = time.time()
++            elapsed_time = end_time - start_time
++            hours, minutes = divmod(elapsed_time, 3600)
++            minutes, seconds = divmod(minutes, 60)
++
++            hours = int(hours)
++            minutes = int(minutes)
++            seconds = int(seconds)
++
++            self.built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
++
++            print(f"Finished doc build for Sphinx {ver}. Elapsed time: {self.built_time[ver]}")
++
++    async def run(self, args):
++        """
++        Navigate though multiple Sphinx versions, handling each of them
++        on a loop.
++        """
++
++        cur_requirements = {}
++        python_bin = MINIMAL_PYTHON_VERSION
++
++        for cur_ver, new_reqs in SPHINX_REQUIREMENTS.items():
++            cur_requirements.update(new_reqs)
++
++            if cur_ver in PYTHON_VER_CHANGES:          # pylint: disable=R1715
++
++                python_bin = PYTHON_VER_CHANGES[cur_ver]
++
++            if args.min_version:
++                if cur_ver < args.min_version:
++                    continue
++
++            if args.max_version:
++                if cur_ver > args.max_version:
++                    break
++
++            await self._handle_version(args, cur_ver, cur_requirements,
++                                       python_bin)
++
++        if args.make:
++            print()
++            print("Summary:")
++            for ver, elapsed_time in sorted(self.built_time.items()):
++                print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
++
++
  def parse_version(ver_str):
      """Convert a version string into a tuple."""
-@@ -311,7 +330,7 @@ async def main():
  
-     parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
+     return tuple(map(int, ver_str.split(".")))
  
--    parser.add_argument('-v', '--version', help='Sphinx single version',
-+    parser.add_argument('-V', '--version', help='Sphinx single version',
-                         type=parse_version)
-     parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
-                         type=parse_version)
-@@ -328,6 +347,11 @@ async def main():
-     parser.add_argument('-i', '--wait-input',
-                         help='Wait for an enter before going to the next version',
-                         action='store_true')
-+    parser.add_argument('-v', '--verbose',
-+                        help='Verbose all commands',
+ 
+-parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
+-
+-parser.add_argument('-v', '--version', help='Sphinx single version',
+-                    type=parse_version)
+-parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
+-                    type=parse_version)
+-parser.add_argument('--max-version', "--max", help='Sphinx maximum version',
+-                    type=parse_version)
+-parser.add_argument('-a', '--make_args',
+-                    help='extra arguments for make htmldocs, like SPHINXDIRS=netlink/specs',
+-                    nargs="*")
+-parser.add_argument('-w', '--write', help='write a requirements.txt file',
+-                    action='store_true')
+-parser.add_argument('-m', '--make',
+-                    help='Make documentation',
+-                    action='store_true')
+-parser.add_argument('-i', '--wait-input',
+-                    help='Wait for an enter before going to the next version',
+-                    action='store_true')
+-
+-args = parser.parse_args()
+-
+-if not args.make_args:
+-    args.make_args = []
+-
+-if args.version:
+-    if args.min_version or args.max_version:
+-        sys.exit("Use either --version or --min-version/--max-version")
+-    else:
+-        args.min_version = args.version
+-        args.max_version = args.version
+-
+-sphinx_versions = sorted(list(sphinx_requirements.keys()))
+-
+-if not args.min_version:
+-    args.min_version = sphinx_versions[0]
+-
+-if not args.max_version:
+-    args.max_version = sphinx_versions[-1]
+-
+-first_run = True
+-cur_requirements = {}
+-built_time = {}
+-
+-for cur_ver, new_reqs in sphinx_requirements.items():
+-    cur_requirements.update(new_reqs)
+-
+-    if cur_ver in python_changes:
+-        python_bin = python_changes[cur_ver]
+-
+-    ver = ".".join(map(str, cur_ver))
+-
+-    if args.min_version:
+-        if cur_ver < args.min_version:
+-            continue
+-
+-    if args.max_version:
+-        if cur_ver > args.max_version:
+-            break
+-
+-    if not first_run and args.wait_input and args.make:
+-        ret = input("Press Enter to continue or 'a' to abort: ").strip().lower()
+-        if ret == "a":
+-            print("Aborted.")
+-            sys.exit()
+-    else:
+-        first_run = False
+-
+-    venv_dir = f"Sphinx_{ver}"
+-    req_file = f"requirements_{ver}.txt"
+-
+-    print(f"\nSphinx {ver} with {python_bin}")
+-
+-    # Create venv
+-    run([python_bin, "-m", "venv", venv_dir], check=True)
+-    pip = os.path.join(venv_dir, "bin/pip")
+-
+-    # Create install list
+-    reqs = []
+-    for pkg, verstr in cur_requirements.items():
+-        reqs.append(f"{pkg}=={verstr}")
+-
+-    reqs.append(f"Sphinx=={ver}")
+-
+-    run([pip, "install"] + reqs, check=True)
+-
+-    # Freeze environment
+-    result = run([pip, "freeze"], capture_output=True, text=True, check=True)
+-
+-    # Pip install succeeded. Write requirements file
+-    if args.write:
+-        with open(req_file, "w", encoding="utf-8") as fp:
+-            fp.write(result.stdout)
+-
+-    if args.make:
+-        start_time = time.time()
+-
+-        # Prepare a venv environment
+-        env = os.environ.copy()
+-        bin_dir = os.path.join(venv_dir, "bin")
+-        env["PATH"] = bin_dir + ":" + env["PATH"]
+-        env["VIRTUAL_ENV"] = venv_dir
+-        if "PYTHONHOME" in env:
+-            del env["PYTHONHOME"]
+-
+-        # Test doc build
+-        run(["make", "cleandocs"], env=env, check=True)
+-        make = ["make"] + args.make_args + ["htmldocs"]
+-
+-        print(f". {bin_dir}/activate")
+-        print(" ".join(make))
+-        print("deactivate")
+-        run(make, env=env, check=True)
+-
+-        end_time = time.time()
+-        elapsed_time = end_time - start_time
+-        hours, minutes = divmod(elapsed_time, 3600)
+-        minutes, seconds = divmod(minutes, 60)
+-
+-        hours = int(hours)
+-        minutes = int(minutes)
+-        seconds = int(seconds)
+-
+-        built_time[ver] = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+-
+-        print(f"Finished doc build for Sphinx {ver}. Elapsed time: {built_time[ver]}")
+-
+-if args.make:
+-    print()
+-    print("Summary:")
+-    for ver, elapsed_time in sorted(built_time.items()):
+-        print(f"\tSphinx {ver} elapsed time: {elapsed_time}")
++async def main():
++    """Main program"""
++
++    parser = argparse.ArgumentParser(description="Build docs for different sphinx_versions.")
++
++    parser.add_argument('-v', '--version', help='Sphinx single version',
++                        type=parse_version)
++    parser.add_argument('--min-version', "--min", help='Sphinx minimal version',
++                        type=parse_version)
++    parser.add_argument('--max-version', "--max", help='Sphinx maximum version',
++                        type=parse_version)
++    parser.add_argument('-a', '--make_args',
++                        help='extra arguments for make htmldocs, like SPHINXDIRS=netlink/specs',
++                        nargs="*")
++    parser.add_argument('-w', '--write', help='write a requirements.txt file',
 +                        action='store_true')
-+    parser.add_argument('-l', '--log',
-+                        help='Log command output on a file')
- 
-     args = parser.parse_args()
- 
++    parser.add_argument('-m', '--make',
++                        help='Make documentation',
++                        action='store_true')
++    parser.add_argument('-i', '--wait-input',
++                        help='Wait for an enter before going to the next version',
++                        action='store_true')
++
++    args = parser.parse_args()
++
++    if not args.make_args:
++        args.make_args = []
++
++    if args.version:
++        if args.min_version or args.max_version:
++            sys.exit("Use either --version or --min-version/--max-version")
++        else:
++            args.min_version = args.version
++            args.max_version = args.version
++
++    sphinx_versions = sorted(list(SPHINX_REQUIREMENTS.keys()))
++
++    if not args.min_version:
++        args.min_version = sphinx_versions[0]
++
++    if not args.max_version:
++        args.max_version = sphinx_versions[-1]
++
++    venv = SphinxVenv()
++    await venv.run(args)
++
++
++# Call main method
++if __name__ == "__main__":
++    asyncio.run(main())
 -- 
 2.49.0
 
