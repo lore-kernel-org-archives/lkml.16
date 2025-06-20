@@ -1,123 +1,106 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726F6253F16;
-	Fri, 20 Jun 2025 16:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0A2E7181
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437375; cv=none; b=gib8dkCwKtHFmrAgepAc9dN0T3S8MuqnPq6/snxAu/u/o+tuNSKqZPCE9Y/Ov8OsIURdBDqZ5c6iLR9wfjL0vKl68nAbGjUaDVnzPe9vDMQatt2kdhWYEYOiiqR/6Snq/2ybGTDN5CIcbWUeMyH5HDJw6/N6cjc0z9Kfs2PJLek=
+	t=1750437379; cv=none; b=jsmYMPzhtJXvxs2OhsJfrSNF9BvwqbMo/P5YJjD5Z0VR6k4aloY7i7gv1v4XboLf5jR+1RLOR/z13xhmpKuPPFj7HjiJMuYKEYltrxNDONL8XoHpZK+4TNs9RtpcIC7+XjHVDCQEuQYwp/IwYl3iI1yGEEohsXY7gzmdBRiMTyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437375; c=relaxed/simple;
-	bh=0JBK0kjtuXTJbfe/j75WPFJur2USdSDEx+6UkmtIXHU=;
+	s=arc-20240116; t=1750437379; c=relaxed/simple;
+	bh=GB2QSxOXPLCCKsHcC8diOJcoWq3MI5uEslI8P9rodFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sz6uFLiQyjPfAzCFa1J8RxBhDZhnQTPTXZDaWgMh0eesO1seSYfiTs0MlZmMk881/rL1SZ4LSGuFdFfLfbUF/+q41V/VYKV9raKTiJ/6YV26w51GGWPRt4ILHu2hRJXFnbCTHlLFgLRL2tL6of5s/xgOft8smw05XdpijjW0r0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HETrpudq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=EdZBO9/++KvB/L6Rk2OpVIueNlA4iYyrROSGmFkXbWC984+069mxR7wZ16Y1h9i7i52kbmpHi7zv/ht6KCtuCOaD9RIZ+vvVNaAzLgIXQjmcMNibzh4DIi4RKZb7y1FIaRaEuQcEvZlCztKuh+6QdWOxX4Siw0hHO+BP2WG3Mmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oiJ8q5Zx; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HETrpudq"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B4B5F40E01A0;
-	Fri, 20 Jun 2025 16:36:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DrXHxtYlXPrM; Fri, 20 Jun 2025 16:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750437362; bh=0gF6sK4Cybkep6s2rCZ6sHaCZMCg5iNoRw7AXjmPKJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HETrpudqyEyQ6xokIZsnaHY2t+ngqKBbk6kjssgaJEns3kaWR4iy3Hqwdrsz0K/Jo
-	 UtdNpfnlNK31eIIUkjiEe/4HPYYSXgmf2qHbHFP2gf9eQ9gtH2XIS9Axwmf9+iCpCk
-	 lUsry8NgLUkZE33UeOSLXg5VXYsqqom4rbKymGbEl5Gwvi65rTKeC+/Y3zBdKbcPMI
-	 Od/OyWAZFxxTNSdE5Z+HgWlimIxbnFc7AQ49gC+/CGjEDtf1qXeYiTFYrM5E6L1wcw
-	 cwTd/8g18ne7eDMKk2jWM2jcxppk2GvIYpikLoGHiqvpsUGnVChUKI9CJpGP1VEZZ/
-	 +eYzFoClsJ/QjNX6TPM3nv5Vsx0hroz/5T/QWOkOEUiAWVoX98F3hiQtsFnZfpNASd
-	 BRB1M0dgBqN+EtuIgkeyBBG6VRHBpegI9FpfjrzMOYDJ+zeqf2HcAZrsxoWqUxDRmC
-	 bFgykmkREk97/VvYpmRXQdHVotDhmWyiB8585U5UWJqk1RIrSRz3TMd4EfCOV7q/P5
-	 chbkmDQ1eJMp+S2IdxwjzLa0V8ng4Xus8Xe/QE4SczEGkCxFOyyByEixZjFO+YHl7m
-	 mB9Vxgt5iIQE4UDNvJifYpPJSYmOrPjsfpayQ1681Vr+rAk7u0Zd0qgkWLMRQAwtKK
-	 fglZQsb/zCyOslnoQDRuaXnM=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 41DB640E0184;
-	Fri, 20 Jun 2025 16:35:10 +0000 (UTC)
-Date: Fri, 20 Jun 2025 18:35:04 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org,
-	Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-Message-ID: <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oiJ8q5Zx"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6fac7147cb8so37242336d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750437376; x=1751042176; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uJYXWxLY4HLgWwCr48sF3PGs/sRochGTLyGIU3biNNU=;
+        b=oiJ8q5ZxlJxp+suKVtHETfd+oplSmO/PROqPOYkLX4hSxvBrrRDknEV1ZCM1co0Ek6
+         zvFaMXSQEjYPJtEBbgUaKkDwBFzhLV85ueDNUpbMRcl+J2UL1JFTitZU5v6n+3QjvpQs
+         dvvnHjDwuwoC9TYYyLeF47AGe9wqpHZgw8fC+ueuVmb7qcLelKFAnAYFXsrskrhik6zp
+         er7iHb8XgtBiGZgghOqi1nkMCLeaY5N37DknTF3N9HbBASpmwAhRF4B9WuJEDk1MXgCd
+         DG8RQonK26ylknlq+WTEnBUx9RaJyHz0bOHkQIcjccj3dxzqJB6EJsWT8RU0Vvtyevd8
+         SX6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750437376; x=1751042176;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uJYXWxLY4HLgWwCr48sF3PGs/sRochGTLyGIU3biNNU=;
+        b=DQzCn+y3eLCtOXSQl2MjW48zqf/gGwhlC4u534xP2dadWH5ZcJxLbzUGuCx1lSQ4jk
+         sWK8uOr3EPZVsLDlVSaIk/TC8EM7lJj7h3arbF/pBOZOVcyqpwJCOX7u+ltOnKgrTPfF
+         +wWSLH3ZhWIzGXuYw/6sGun87cGGldNqma+ILl+C6yenVXbq+kbg9shHHETfCrxSdjS/
+         OtLtmb/2eyHtXlb6d73XuMXiFt9Kc40GV0lHzyWP2YQdc/zf0e8z63SYCCN7CsSyb4G8
+         vjzUf9tDHMbH+fChEYTwXss8aVjt1fQlKjZHIjzGtUlNT76wa50cWx8sKRdGCj0wC7ae
+         YDrg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0gerNWvGW4bV5DFkPSpEZfHHaCKblCLhPhDshjUd6zRlYPJIfCbRzE/RIVMc8FoviaaYs/ule7OO90vQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiOhQz9Rv0EwHGzQyNT5o7bfeosaPeSIJPFQh/U6AGoBvegICC
+	zW4O9fAH6/J9MkJOeW5PK4OfIY5JLRpPmQMBQiLwdaQBYABY+p6Na153Rdac6/xrIKk=
+X-Gm-Gg: ASbGnctg+p/V4500VFn95EXhPmNgE1uLmDegkuDiMn418UX8/FNXT4GCn0mkSeex1MG
+	uD32yt95Bi4KbaEhYBtsQpKsiHh4q110Dmudzgv21sJ+mKNgZAb/RC4Z+vRlpg6FdNhHtQkVoe9
+	xqSFkuDP2l5y+2N+2EPKJaLBWthBpGpv4CmCquTliaafL1FCmoAD2Ak1/dDd6TwPw8Hsx5no+IG
+	c/xM0b4A28ZtHiRVWV7e8k09xjuxh5rcp/Bmjd0fHnoHIe9z2b4x2qZp+wk3dV53K40StBBbwOy
+	gQaVgM2VTH4oYl1CHANVfpq2OjwAcV7XLmDVXKCcsbuR+0SHIVDsgz7E5D14PtXYWkwvFmeCOdM
+	cGZ95C4HrK5FtztPwpvson1esSz1krahbrudDwg==
+X-Google-Smtp-Source: AGHT+IHyontIEkY5vAgGgYhS+U+r5SqIyyHQ9UkviOZGeU6jrV3bzO+5OOnHkugt3y3GJ2IEIkVU5A==
+X-Received: by 2002:ad4:5de4:0:b0:6fa:ccb6:602a with SMTP id 6a1803df08f44-6fd0a51b3d7mr63974736d6.20.1750437376130;
+        Fri, 20 Jun 2025 09:36:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd09596e6bsm13876946d6.100.2025.06.20.09.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:36:15 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uSeit-00000000EsP-10Pb;
+	Fri, 20 Jun 2025 13:36:15 -0300
+Date: Fri, 20 Jun 2025 13:36:15 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
+Message-ID: <20250620163615.GC39770@ziepe.ca>
+References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+ <20250619131232.69208-4-benjamin.gaignard@collabora.com>
+ <20250619134752.GB1643390@ziepe.ca>
+ <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
+ <20250619165928.GA10257@ziepe.ca>
+ <e034a111-93eb-42e8-a533-46553b4f5588@collabora.com>
+ <20250620120509.GA39770@ziepe.ca>
+ <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+In-Reply-To: <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
 
-On Fri, Jun 20, 2025 at 04:53:09PM +0300, Kirill A. Shutemov wrote:
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index ee176236c2be..4473a6f7800b 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -313,6 +313,7 @@
->  #define X86_FEATURE_SM4			(12*32+ 2) /* SM4 instructions */
->  #define X86_FEATURE_AVX_VNNI		(12*32+ 4) /* "avx_vnni" AVX VNNI instructions */
->  #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* "avx512_bf16" AVX512 BFLOAT16 instructions */
-> +#define X86_FEATURE_LASS		(12*32+ 6) /* "lass" Linear Address Space Separation */
+On Fri, Jun 20, 2025 at 03:52:46PM +0200, Benjamin Gaignard wrote:
+> > > vsi_iommu_suspend() and vsi_iommu_resume() will also have to take the lock
+> > > before calling vsi_iommu_disable() and vsi_iommu_enable().
+> > Yes, if they use iommu->domain that seems good
+> > 
+> > If the above locking is a problem then I'd use the group mutex instead
+> > during resume/suspend. The attach functions are already called with
+> > the group mutex held.
+> 
+> Does group mutex is also called when using vsi_iommu_map or vsi_iommu_unmap ?
 
-This needs to be in /proc/cpuinfo because...?
+No
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jason
