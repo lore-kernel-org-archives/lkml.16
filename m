@@ -1,150 +1,134 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB192045B5;
-	Fri, 20 Jun 2025 07:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9437E220686
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750402923; cv=none; b=Bdzp2MUSAlKPavkmJ3aBs45YhPLidr5Dr8/g4NR8zvsv2501HF5Vld0FjYFnSU5bHsha4nV2E9AOtAs+/X/6RUk9XzEMV46vQAONbvanSt8GP/yy1FEdKDCAaDABFeUP39a6lJsnWJ2i9L7q3EBjhKfyqTZUiNXqY+yN92uzyUw=
+	t=1750402925; cv=none; b=J5M/XaZ6ExnsvzvEUlKQqpTnHZprdmBm59XcLbnU0eULSA2E5yCgGHd093TaOAHvhzV4ZZllq8tcrj5Xu5cmTBnt174dV2QTmktgZ6yEMVQm1il50HuQYv2IfF3UOB1MDrfktXTxqaWSEOc6ZQseuts3vvcxhwNj29Q8b0gC0T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750402923; c=relaxed/simple;
-	bh=PPGIeVhRL2lTJDHqNuXa88LI8/7e7OhApOd+69gueiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=RQbz6LTBYl5o1Mhpv6izpHKdl9BO8aIhRndwsuzX69vsta1z4iCGOd7ZJYWnHU82czTNES994klhcW3Zsnc+fFDncHEIYO8oo9I/cbcLsGzNKq+VJIqj1theHvOeyegONT1DXmER8RBI6lPop9THuVePDNViZeo46Ipr2r1gRlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=l02k53+9 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750402925; c=relaxed/simple;
+	bh=GvtVq+ofHW/htAxcXQEoeyYdEDhq9U76CmZN6QzabDQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GdpDYy0lUpxdirH80jMZySnyWW1ZP3Vv3mBfkUaHWv3DvPZhYaZAeS97t/1urIMiLYCGrGY40IMiQrf1I98BqwekDtdkc+VqZYapDQPOwoyIDfjFl4QNWhkOI0qJW3tMD/hZEMhzamniLlgmhvM/7ddlgAXD5IeD0JSFISn4kHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=b7PVteZ6; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="l02k53+9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=5jU6bv8xXmRLsTj5uh1t8r9LWPcLjVEkYquNpqGe6Oo=; b=l
-	02k53+9rAu7tgnppr2kOTKzYz4LcDHXpbJCKvAcIh0iu0kYSdEt4ywzAWanN3JL8
-	WvrhRhuCTSCc4+c3dtzuXL6dZRzeaCexuSxF2/jN4y/6iLwRGKOYyb57nutGpsqP
-	SXc/DH6kOWK2uYK4HLa03CebN+rScrEvt3zBCjP4pI=
-Received: from slark_xiao$163.com ( [2408:8459:3c50:e0b:fe63:4f5:6342:5dbf]
- ) by ajax-webmail-wmsvr-40-141 (Coremail) ; Fri, 20 Jun 2025 15:01:25 +0800
- (CST)
-Date: Fri, 20 Jun 2025 15:01:25 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: manivannan.sadhasivam@linaro.org, johan+linaro@kernel.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v2] bus: mhi: host: pci_generic: Add Foxconn T99W696
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <4k7426oxhrnfoshkcqwwilq5lqldjovvtrwfownllwxwgudwjo@a3i47vma4lhr>
-References: <20250528092232.16111-1-slark_xiao@163.com>
- <4k7426oxhrnfoshkcqwwilq5lqldjovvtrwfownllwxwgudwjo@a3i47vma4lhr>
-X-NTES-SC: AL_Qu2eAvibvUAj4yOaYekfmUoQhek9W8qwvPsu1YFfOZlwjCrr1xgqRntMJGPT6vOOBj2FkReYcAVo2N95fLRaUKsZZGjZndk2xjgTxJQf+GiCCQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="b7PVteZ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1750402915; x=1750662115;
+	bh=ZomiTmy/Mokp/VP87JWffaAAvQX8m1ge4zOANZCRHuw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=b7PVteZ6EfoZKxCGyQ4qMFqEB8PMbV17KjTI+ihrSYiAzRS1anxOElIeouqfRVHr/
+	 lFqbVTg7DuBC1lYQX8ONyrWnDICWgGgne+M9vn8jYPtXRrDXfRiwxdosu1Xy9qaIzp
+	 Mrw9NMwOmQKvv5fV9fiphrWNHgZFHMhqZiGWnUSDBHN50I+rGTkXQuaz9CU4VHBnWo
+	 VcQoD7ACuBFXv+wTcVjdScPeyRkMmTVRxNgIq0CApgHPdqEWvQLXJr2UF/aP3BwMbn
+	 SUPnmmZk4LZyiLrGBl5RyNzF077uOxjb0aMofuhOmkBQFZP6K9AUYlc0Qxrx2B7duR
+	 dXXRXW+CRMvZg==
+Date: Fri, 20 Jun 2025 07:01:49 +0000
+To: Benno Lossin <lossin@kernel.org>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+Message-ID: <aFUHWtE2dm3_-Rbs@mango>
+In-Reply-To: <DAPZ3WLBCBVL.3KA57Y90UKNRT@kernel.org>
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <20250502-unique-ref-v10-1-25de64c0307f@pm.me> <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org> <aFE8PFNmpFeWNgTN@mango> <DAPZ3WLBCBVL.3KA57Y90UKNRT@kernel.org>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 6cdf635b60cf7b5d021babf819cb11d3aa65dbda
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <cb7bd34.6056.1978c2466d2.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jSgvCgD3n2lFB1VoyAohAA--.64024W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiRxVyZGhU+HIFAAACs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-CgpBdCAyMDI1LTA2LTE3IDE3OjM5OjExLCAiTWFuaXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaUBr
-ZXJuZWwub3JnPiB3cm90ZToKPk9uIFdlZCwgTWF5IDI4LCAyMDI1IGF0IDA1OjIyOjMyUE0gKzA4
-MDAsIFNsYXJrIFhpYW8gd3JvdGU6Cj4+IFQ5OVc2OTYgaXMgZGVzaWduZWQgYmFzZWQgb24gUXVh
-bGNvbW0gU0RYNjEgY2hpcCB3aGljaCBpcyBhIGNvc3QKPj4gZG93biBjaGlwIHJlZmVyIHRvIHBy
-ZXZpb3VzIFNEWDYyL1NEWDY1LiBUaG91Z2ggd2UgaGF2ZSBhIHN1cHBvcnQKPj4gb24gU0RYNjIv
-U0RYNjUsIHdlIGNyZWF0ZSBhIG5ldyBjaGFubmVsIGNvbmZpZyBmb3IgU0RYNjEgc2luY2UKPj4g
-d2UgYWRkIGEgTk1FQSBjaGFubmVsIHN1cHBvcnQgZnJvbSB0aGlzIHByb2R1Y3QuCj4+IEZvciBu
-ZXcgcHJvZHVjdHMgd2UgYXJlIGFsbG93ZWQgdG8gY3VzdG9taXplIHRoZSBzdWJWSUQgYW5kCj4+
-IHN1YlBJRCBvbmx5Lgo+PiAKPgo+Q291bGQgeW91IHBsZWFzZSBwdXNoIHRoZSBmaXJtd2FyZSB0
-byBsaW51eC1maXJtd2FyZT8gSSBkb24ndCBleHBlY3QgdGhlIHVzZXJzCj5vZiB0aGUgcHJvZHVj
-dHMgdG8gdXBzdHJlYW0gdGhlIGZpcm13YXJlLCBidXQgSSBkbyBleHBlY3QgdGhlIHZlbmRvcnMg
-dG8gZG8gc28uCj4KPkZZSTogUWNvbSB3YXMgYWJsZSB0byB1cHN0cmVhbSB0aGUgZmlybXdhcmUg
-Zm9yIG9uZSBvZiB0aGVpciBtb2RlbXM6Cj5odHRwczovL3dlYi5naXQua2VybmVsLm9yZy9wdWIv
-c2NtL2xpbnV4L2tlcm5lbC9naXQvZmlybXdhcmUvbGludXgtZmlybXdhcmUuZ2l0L2NvbW1pdC9x
-Y29tL3FkdTEwMC94Ymxfcy5tZWxmP2lkPTAxODQyZGE0NWRmMGE5Zjg2MjA5OGQxNTk3ZjZhZTU3
-NzRiM2U0OGEKPgo+U28gdGhlcmUgc2hvdWxkIGJlIG5vIGxpY2Vuc2luZyBpc3N1ZXMuIEdvaW5n
-IGZvcndhcmQsIEkgd2FudCBib3RoIFFjb20gYW5kCj52ZW5kb3JzIHRvIHVwc3RyZWFtIHRoZSBm
-aXJtd2FyZSBiZWZvcmUgdGhlIG1vZGVtIHN1cHBvcnQgZ2V0cyBpbi4KPgo+LSBNYW5pCj4KSXQg
-c2hvdWxkIGJlIG9rYXkuIEJ1dCB3ZSBhcmUgZmFjaW5nIHRoYXQgd2UgY2FuJ3QgY29tbWl0IGZp
-bGVzIHRvIGxpbnV4LWZpcm13YXJlCnNpbmNlIENoaW5hIHdhcyBiYW5uZWQgZnJvbSB0aGF0IGNv
-bW11bml0eS4KSSB3aWxsIHNoYXJlIHRoZSBlZGwgZmlsZSB0byB5b3UgaW4gYW5vdGhlciBtYWls
-LgoKVGhhbmtzCj4+IFNpZ25lZC1vZmYtYnk6IFNsYXJrIFhpYW8gPHNsYXJrX3hpYW9AMTYzLmNv
-bT4KPj4gLS0tCj4+IHYyOiBDb3JyZWN0IHRoZSBjaF9jZmcgYXMgc2R4NjEgY2hhbm5lbHMKPj4g
-LS0tCj4+ICBkcml2ZXJzL2J1cy9taGkvaG9zdC9wY2lfZ2VuZXJpYy5jIHwgNTIgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygr
-KQo+PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMg
-Yi9kcml2ZXJzL2J1cy9taGkvaG9zdC9wY2lfZ2VuZXJpYy5jCj4+IGluZGV4IGE0YTYyNDI5Yzc4
-NC4uYTkwYWIzMWM0NmE5IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2J1cy9taGkvaG9zdC9wY2lf
-Z2VuZXJpYy5jCj4+ICsrKyBiL2RyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMKPj4g
-QEAgLTQ5MCw2ICs0OTAsMjMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfY2hhbm5lbF9jb25m
-aWcgbWhpX2ZveGNvbm5fc2R4NTVfY2hhbm5lbHNbXSA9IHsKPj4gIAlNSElfQ0hBTk5FTF9DT05G
-SUdfSFdfREwoMTAxLCAiSVBfSFcwX01CSU0iLCAxMjgsIDMpLAo+PiAgfTsKPj4gIAo+PiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtaGlfY2hhbm5lbF9jb25maWcgbWhpX2ZveGNvbm5fc2R4NjFfY2hh
-bm5lbHNbXSA9IHsKPj4gKwlNSElfQ0hBTk5FTF9DT05GSUdfVUwoMCwgIkxPT1BCQUNLIiwgMzIs
-IDApLAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETCgxLCAiTE9PUEJBQ0siLCAzMiwgMCksCj4+
-ICsJTUhJX0NIQU5ORUxfQ09ORklHX1VMKDQsICJESUFHIiwgMzIsIDEpLAo+PiArCU1ISV9DSEFO
-TkVMX0NPTkZJR19ETCg1LCAiRElBRyIsIDMyLCAxKSwKPj4gKwlNSElfQ0hBTk5FTF9DT05GSUdf
-VUwoMTIsICJNQklNIiwgMzIsIDApLAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETCgxMywgIk1C
-SU0iLCAzMiwgMCksCj4+ICsJTUhJX0NIQU5ORUxfQ09ORklHX1VMKDMyLCAiRFVOIiwgMzIsIDAp
-LAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETCgzMywgIkRVTiIsIDMyLCAwKSwKPj4gKwlNSElf
-Q0hBTk5FTF9DT05GSUdfVUxfRlAoMzQsICJGSVJFSE9TRSIsIDMyLCAwKSwKPj4gKwlNSElfQ0hB
-Tk5FTF9DT05GSUdfRExfRlAoMzUsICJGSVJFSE9TRSIsIDMyLCAwKSwKPj4gKwlNSElfQ0hBTk5F
-TF9DT05GSUdfVUwoNTAsICJOTUVBIiwgMzIsIDApLAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19E
-TCg1MSwgIk5NRUEiLCAzMiwgMCksCj4+ICsJTUhJX0NIQU5ORUxfQ09ORklHX0hXX1VMKDEwMCwg
-IklQX0hXMF9NQklNIiwgMTI4LCAyKSwKPj4gKwlNSElfQ0hBTk5FTF9DT05GSUdfSFdfREwoMTAx
-LCAiSVBfSFcwX01CSU0iLCAxMjgsIDMpLAo+PiArfTsKPj4gKwo+PiAgc3RhdGljIHN0cnVjdCBt
-aGlfZXZlbnRfY29uZmlnIG1oaV9mb3hjb25uX3NkeDU1X2V2ZW50c1tdID0gewo+PiAgCU1ISV9F
-VkVOVF9DT05GSUdfQ1RSTCgwLCAxMjgpLAo+PiAgCU1ISV9FVkVOVF9DT05GSUdfREFUQSgxLCAx
-MjgpLAo+PiBAQCAtNTA2LDYgKzUyMywxNSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9jb250
-cm9sbGVyX2NvbmZpZyBtb2RlbV9mb3hjb25uX3NkeDU1X2NvbmZpZyA9IHsKPj4gIAkuZXZlbnRf
-Y2ZnID0gbWhpX2ZveGNvbm5fc2R4NTVfZXZlbnRzLAo+PiAgfTsKPj4gIAo+PiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBtaGlfY29udHJvbGxlcl9jb25maWcgbW9kZW1fZm94Y29ubl9zZHg2MV9jb25m
-aWcgPSB7Cj4+ICsJLm1heF9jaGFubmVscyA9IDEyOCwKPj4gKwkudGltZW91dF9tcyA9IDIwMDAw
-LAo+PiArCS5udW1fY2hhbm5lbHMgPSBBUlJBWV9TSVpFKG1oaV9mb3hjb25uX3NkeDYxX2NoYW5u
-ZWxzKSwKPj4gKwkuY2hfY2ZnID0gbWhpX2ZveGNvbm5fc2R4NjFfY2hhbm5lbHMsCj4+ICsJLm51
-bV9ldmVudHMgPSBBUlJBWV9TSVpFKG1oaV9mb3hjb25uX3NkeDU1X2V2ZW50cyksCj4+ICsJLmV2
-ZW50X2NmZyA9IG1oaV9mb3hjb25uX3NkeDU1X2V2ZW50cywKPj4gK307Cj4+ICsKPj4gIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgbWhpX2NvbnRyb2xsZXJfY29uZmlnIG1vZGVtX2ZveGNvbm5fc2R4NzJf
-Y29uZmlnID0gewo+PiAgCS5tYXhfY2hhbm5lbHMgPSAxMjgsCj4+ICAJLnRpbWVvdXRfbXMgPSAy
-MDAwMCwKPj4gQEAgLTYxNSw2ICs2NDEsMTcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNp
-X2Rldl9pbmZvIG1oaV9mb3hjb25uX2R3NTkzNGVfaW5mbyA9IHsKPj4gIAkuc2lkZWJhbmRfd2Fr
-ZSA9IGZhbHNlLAo+PiAgfTsKPj4gIAo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rl
-dl9pbmZvIG1oaV9mb3hjb25uX3Q5OXc2OTZfaW5mbyA9IHsKPj4gKwkubmFtZSA9ICJmb3hjb25u
-LXQ5OXc2OTYiLAo+PiArCS5lZGwgPSAicWNvbS9zZHg2MS9mb3hjb25uL3Byb2dfZmlyZWhvc2Vf
-bGl0ZS5lbGYiLAo+PiArCS5lZGxfdHJpZ2dlciA9IHRydWUsCj4+ICsJLmNvbmZpZyA9ICZtb2Rl
-bV9mb3hjb25uX3NkeDYxX2NvbmZpZywKPj4gKwkuYmFyX251bSA9IE1ISV9QQ0lfREVGQVVMVF9C
-QVJfTlVNLAo+PiArCS5kbWFfZGF0YV93aWR0aCA9IDMyLAo+PiArCS5tcnVfZGVmYXVsdCA9IDMy
-NzY4LAo+PiArCS5zaWRlYmFuZF93YWtlID0gZmFsc2UsCj4+ICt9Owo+PiArCj4+ICBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG1oaV9jaGFubmVsX2NvbmZpZyBtaGlfbXYzeF9jaGFubmVsc1tdID0gewo+
-PiAgCU1ISV9DSEFOTkVMX0NPTkZJR19VTCgwLCAiTE9PUEJBQ0siLCA2NCwgMCksCj4+ICAJTUhJ
-X0NIQU5ORUxfQ09ORklHX0RMKDEsICJMT09QQkFDSyIsIDY0LCAwKSwKPj4gQEAgLTg2Myw2ICs5
-MDAsMjEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lkIG1oaV9wY2lfaWRfdGFi
-bGVbXSA9IHsKPj4gIAkvKiBUZWxpdCBGRTk5MEEgKi8KPj4gIAl7IFBDSV9ERVZJQ0VfU1VCKFBD
-SV9WRU5ET1JfSURfUUNPTSwgMHgwMzA4LCAweDFjNWQsIDB4MjAxNSksCj4+ICAJCS5kcml2ZXJf
-ZGF0YSA9IChrZXJuZWxfdWxvbmdfdCkgJm1oaV90ZWxpdF9mZTk5MGFfaW5mbyB9LAo+PiArCS8q
-IEZveGNvbm4gVDk5VzY5Ni4wMSwgTGVub3ZvIEdlbmVyaWMgU0tVICovCj4+ICsJeyBQQ0lfREVW
-SUNFX1NVQihQQ0lfVkVORE9SX0lEX1FDT00sIDB4MDMwOCwgUENJX1ZFTkRPUl9JRF9GT1hDT05O
-LCAweGUxNDIpLAo+PiArCQkuZHJpdmVyX2RhdGEgPSAoa2VybmVsX3Vsb25nX3QpICZtaGlfZm94
-Y29ubl90OTl3Njk2X2luZm8gfSwKPj4gKwkvKiBGb3hjb25uIFQ5OVc2OTYuMDIsIExlbm92byBY
-MSBDYXJib24gU0tVICovCj4+ICsJeyBQQ0lfREVWSUNFX1NVQihQQ0lfVkVORE9SX0lEX1FDT00s
-IDB4MDMwOCwgUENJX1ZFTkRPUl9JRF9GT1hDT05OLCAweGUxNDMpLAo+PiArCQkuZHJpdmVyX2Rh
-dGEgPSAoa2VybmVsX3Vsb25nX3QpICZtaGlfZm94Y29ubl90OTl3Njk2X2luZm8gfSwKPj4gKwkv
-KiBGb3hjb25uIFQ5OVc2OTYuMDMsIExlbm92byBYMSAyaW4xIFNLVSAqLwo+PiArCXsgUENJX0RF
-VklDRV9TVUIoUENJX1ZFTkRPUl9JRF9RQ09NLCAweDAzMDgsIFBDSV9WRU5ET1JfSURfRk9YQ09O
-TiwgMHhlMTQ0KSwKPj4gKwkJLmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9uZ190KSAmbWhpX2Zv
-eGNvbm5fdDk5dzY5Nl9pbmZvIH0sCj4+ICsJLyogRm94Y29ubiBUOTlXNjk2LjA0LCBMZW5vdm8g
-UFJDIFNLVSAqLwo+PiArCXsgUENJX0RFVklDRV9TVUIoUENJX1ZFTkRPUl9JRF9RQ09NLCAweDAz
-MDgsIFBDSV9WRU5ET1JfSURfRk9YQ09OTiwgMHhlMTQ1KSwKPj4gKwkJLmRyaXZlcl9kYXRhID0g
-KGtlcm5lbF91bG9uZ190KSAmbWhpX2ZveGNvbm5fdDk5dzY5Nl9pbmZvIH0sCj4+ICsJLyogRm94
-Y29ubiBUOTlXNjk2LjAwLCBGb3hjb25uIFNLVSAqLwo+PiArCXsgUENJX0RFVklDRV9TVUIoUENJ
-X1ZFTkRPUl9JRF9RQ09NLCAweDAzMDgsIFBDSV9WRU5ET1JfSURfRk9YQ09OTiwgMHhlMTQ2KSwK
-Pj4gKwkJLmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9uZ190KSAmbWhpX2ZveGNvbm5fdDk5dzY5
-Nl9pbmZvIH0sCj4+ICAJeyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfUUNPTSwgMHgwMzA4KSwK
-Pj4gIAkJLmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9uZ190KSAmbWhpX3Fjb21fc2R4NjVfaW5m
-byB9LAo+PiAgCXsgUENJX0RFVklDRShQQ0lfVkVORE9SX0lEX1FDT00sIDB4MDMwOSksCj4+IC0t
-IAo+PiAyLjI1LjEKPj4gCj4KPi0tIAo+4K6u4K6j4K6/4K614K6j4K+N4K6j4K6p4K+NIOCumuCu
-pOCuvuCumuCuv+CuteCuruCvjQo=
+On 250618 2322, Benno Lossin wrote:
+> On Tue Jun 17, 2025 at 11:58 AM CEST, Oliver Mangold wrote:
+> > On 250514 1132, Benno Lossin wrote:
+> >> On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
+> >> > +///
+> >> > +/// # Safety
+> >> > +///
+> >> > +/// Implementers must ensure that:
+> >> > +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while th=
+at owned reference exists (i.e.
+> >> > +///   until the [`release()`](Ownable::release) trait method is cal=
+led).
+> >>
+> >> I don't immediately understand what this means. How about "Any value o=
+f
+> >> type `Self` needs to be stored as [`Owned<Self>`]."?
+> >
+> > Let me think. The safety requirements here talk about safety of
+> > implementing the trait.  But if you have a `Self` which is not wrapped,=
+ you
+> > still cannot create an `Owned<Self>` in safe code. It's different from =
+an
+> > `AlwaysRefCounted`, where an `ARef<Self>` can be created from a `&Self`=
+.
+>=20
+> That might be true, but AFAIK this trait is designed to be used for
+> stuff that has a `create_foo` and `destroy_foo` function in C returning
+> and taking a raw pointer to `foo` respectively. So creating it on the
+> stack doesn't make sense.
+
+I didn't mean creating one on the stack, but keeping it in a raw pointer or
+`NonNull<T>`, not bothering to wrap in in an `Owned<T>`. But doesn't
+matter. In any case in v11 (which predates your answer), I moved this
+requirement to `Owned::from_raw()`, as, you asked below, which should be
+okay as that function is the only way to create an `Owned<T>`. But I can
+add the "needs to be stored as `Owned<Self>`" requirement, if you think it
+is important.
+
+
+> If we do want to make this trait more general, then we can do so, but
+> this is my current understanding.
+>=20
+> >> And then ask in
+> >> `Owned::from_raw` for a pointer that is valid indefinitely (or at leas=
+t
+> >> until `release` is called).
+> >
+> > So, hmm, I think one could even move this safety requirement to `Owned:=
+:from_raw()`.
+> >
+> >> > +/// - That the C code follows the usual mutable reference requireme=
+nts. That is, the kernel will
+> >> > +///   never mutate the [`Ownable`] (excluding internal mutability t=
+hat follows the usual rules)
+> >> > +///   while Rust owns it.
+> >>
+> >> I feel like this requirement is better put on the `Owned::from_raw`
+> >> function.
+> >
+> > Together with the above, this would leave to safety requirements for `O=
+wnable.
+> > Make `Ownable` a safe trait, then? Instead of safety requirements just =
+add an invariant:
+> >
+> >     # Invariant
+> >
+> >     An `Owned<Self>` represents a unique reference to a `Self`, thus ho=
+lding
+> >     an `Owned<Self>` or `&mut Owned<Self>` allows one to assume that th=
+e object
+> >     is not accessed concurrently from elsewhere.
+> >
+> > Not sure what is best. Would that make sense?
+>=20
+> Making it safe makes sense, when we can move all requirements to
+> `Owned::from_raw`. I don't think the invariants section makes sense, how
+> would the trait have any influence in that when `Owned::from_raw`
+> already guarantees it?
+
+I think you are right on that. Let's not do that.
+
+Best,
+
+Oliver
+
