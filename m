@@ -1,159 +1,140 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172022836B4
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EC0220696
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422441; cv=none; b=oxE2pf2nwkRGZHv3tkbZp4FzvWGgMc7sk4a3QdYJgwM+timS0I/lvfLEeM0aNHyYp7khfp18JNFPULJCkRxbtGg41r7O1Pw5wBJg5HEQGkrIy4xbOtdz7qapNW687kTHlv+0B9lzv00y/WYZqr0BsjOX61/FPBLXSPP92t128Uw=
+	t=1750422474; cv=none; b=sGG8xumUnRetSaS90nRvgzpnZY8LBZoktRcrYyUA2d+/6ALZq+mUmSpkdl5PImAMORw2v/IHSpqwHBph5JjDW0pE8fPmde/yvrqwJSAVEuPWu2aFzlQGARfwTN0MAgZ74QaQqQHMlASE2VJyutmcVIwchiRtLeeOSKIbDuDRDWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422441; c=relaxed/simple;
-	bh=tX37v4gyoxennChCQjy16+67csIbio+cpP+xJt9Rkwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RL/1fpZymbgFyboyxCrWaMHDO/xENw2TN+yj5ziALfxaZb6MajJqNrC8DB6sGiMfKaPhQ1y0kcz7QXO5tlxwnPlqX0mOQfRrm1h3+0gobI5EG8Mz2aBDS64X3RUC46uVQ5Kc5PSyvwoq/DWjsr6+QkyqecDdk1rRGTYJysOSIGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750422474; c=relaxed/simple;
+	bh=+X4HipRIq+J2ON+qLoXQtPdB6JpfFCAxFh5A9SABbH0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Om7eIwSw22+70jeQj1Jkgr+QhXZJBJMMkyGgU9MJN3W3u3OwbeaqPWbhGVSiuGmRX0RptUA/NSjUyWutJk3S4rD9t2/RGu8Kt3v2utAlzd2vzS56OcSHM6KVH9USJL0zGj2XCh1Tlt64EeEYMlqKPMsWiqI4aNCRwEwyyuxcCfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDhQBldA; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 32E1B1F38D;
-	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
-	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
-	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
-	vyfJy1YIyjMN4CBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=XTKisOjD;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=x1VXfJZv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
-	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
-	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
-	vyfJy1YIyjMN4CBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 130BF136BA;
-	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PoZwBKVTVWjXJwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 12:27:17 +0000
-Date: Fri, 20 Jun 2025 14:27:15 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, kees@kernel.org, ailiop@suse.com,
-	Mark Harmstone <mark@harmstone.com>
-Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <20250620122715.GR4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250619153904.25889-1-listout@listout.xyz>
- <20250620014344.27589-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDhQBldA"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2353a2bc210so14970715ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750422473; x=1751027273; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QEocjAYqKEkY+hSTJFMKsjk9/XRXyymLEZn31502qxk=;
+        b=KDhQBldAEXxSVA5VuENMis5tRdoj9rTOiNPX0ppsR7hPCZdUK6DxDg5/pRajrYve5D
+         G+Vausd1qodSvv7JFBUEY4+ie+pT8XtE2tQfKJ2mPh7HaBh4fUKHgQzstnBQD2zG4H81
+         kK+mP6uYD56mCPR/ad/dWR8syXVchi1VYyp6sdvB9OoIpWACkza1ZXt/uLObq7B34u82
+         vyABFXE7tlG1lz8Zi4qDYU7qlIPECcqt3vBpqMHZRUMOLZn0sH3c5lKjS7fKtZ03yevV
+         Fy5JxbZeRuOWiuODK9tCLCmCLBygA3wMfuRW8sK+dDAH01+xEq7vqsgRrQqYY2w6QMFo
+         MmXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750422473; x=1751027273;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QEocjAYqKEkY+hSTJFMKsjk9/XRXyymLEZn31502qxk=;
+        b=C+z/6CU556woiTCwcIcE5JCEr+so6TEjtwMYsxdJq7ggKqcc6GYGdDCTG+5Gk1YHCw
+         998c9enJFfhY9ItZcYSC/89IxMobbvAjdRdPCTkti48jWFQteaqiUDjVqPTHj1seTLrD
+         QuZFBQ652EaGooYDbJ0Ffu9GBdoeCq6YEZyG+9OFtS3AFhXW6eG7XUZmup/EXMYYR10n
+         9Wk0pL7zgMUKEF4hWG3AkDxB9KK+PjPbQNGf8eou8pvlBgMYyjDAJiCiI+/wcWhROccD
+         qqhK0UDJ94TU4BqqrkmF9ZmXCFAz7I1bg+IbHCw5ywPgxTgtLEbWkCv6hsyRIWogN4kw
+         9PZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqyhhtHiOz+SYP99e17RRMQo7RVDamcEBT/TozagRPG1yIciaP/OIDSyY57GH9rOqcHbAYnZ128CkS3Lg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjDjuMVnyCBYP4BeRy8bQNxgHFLTgxvCstUysog7ypci/XOJyS
+	Confc7gYCWaFm0N0aajGxnWhpuKh+xthkrHxMjNYVEr4AM0lgXvvze12z9QOSjBM
+X-Gm-Gg: ASbGncvffjBGdy4bvEDgQKA3Wi1xiIsmm8ixm+5s9SJrxqh9UaOjBZvswGmwzi7MnGd
+	rMFgFvptk3z2l751sxQH6tB65no2cMz46DC0RhyOHBmN1USw5vtq+uCXQoyASgLrZGrdrna18mG
+	SwBLCPSrSzWDLsEEJ3yW8z7p7gY/cGtL2bK37yhOgv/7mwp40z5OTf7BTw8fMweUfRldPWpnayV
+	HSssHYjGVw+ZF4V1Gyn+x+Lj93cScZTuw6E2xXSsgKcfeIm8VwF58bbkzI112PqSB4rRRkiegOZ
+	IEbBmW/JvYo/1jZD2uB/lq7uXYddgwryQmpdZberEIxHy0EMQ/REKgsM81rpvR/+18IVtvzyxbF
+	hLeXEXNjn
+X-Google-Smtp-Source: AGHT+IEnXi6DBx0CYmyTvYOiLCXe6zhbTcGB7f/MIED+yLrawXV25RkssTAqsM1VJ+h9BEOJeGr6lA==
+X-Received: by 2002:a17:902:e842:b0:235:7c6:ebd2 with SMTP id d9443c01a7336-237d991f9f4mr44340985ad.31.1750422472749;
+        Fri, 20 Jun 2025 05:27:52 -0700 (PDT)
+Received: from shark.hitronhub.home ([2407:4d00:ac00:1c13:9629:b33c:2fa:30fa])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83d101esm17622575ad.64.2025.06.20.05.27.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 05:27:52 -0700 (PDT)
+From: Shou-Chi Chen <tuxsogi@gmail.com>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org
+Cc: dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Shou-Chi Chen <tuxsogi@gmail.com>
+Subject: [PATCH] sched/deadline: Fix typo "a entity" to "an entity" in comment
+Date: Fri, 20 Jun 2025 20:26:30 +0800
+Message-Id: <20250620122630.1113563-1-tuxsogi@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 32E1B1F38D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[twin.jikos.cz:mid,suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.21
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 07:13:44AM +0530, Brahmajit Das wrote:
-> strcpy is deprecated due to lack of bounds checking. This patch replaces
-> strcpy with strscpy, the recommended alternative for null terminated
-> strings, to follow best practices.
-> 
-> There are instances where strscpy cannot be used such as where both the
-> source and destination are character pointers. In that instance we can
-> use sysfs_emit or a memcpy.
-> 
-> Update in v2: using sysfs_emit instead of scnprintf
-> Update in v3: Removed string.h in xattr, since we are not using any
-> fucntions from string.h and fixed length in memcpy in volumes.c
+Corrected a grammatical mistake in the comment of deadline.c,
+changing "a entity" to "an entity" to conform with proper English usage.
 
-This should be placed under the "---" marker. If it's a new information
-relevant for the patch then it should be a normal part of the changelog.
+Signed-off-by: Shou-Chi Chen <tuxsogi@gmail.com>
+---
+ kernel/sched/deadline.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> No functional changes intended.
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ad45a8fea..e1c0a2443 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -848,20 +848,20 @@ static bool dl_entity_overflow(struct sched_dl_entity *dl_se, u64 t);
+ 
+ /*
+  * Pure Earliest Deadline First (EDF) scheduling does not deal with the
+- * possibility of a entity lasting more than what it declared, and thus
++ * possibility of an entity lasting more than what it declared, and thus
+  * exhausting its runtime.
+  *
+  * Here we are interested in making runtime overrun possible, but we do
+- * not want a entity which is misbehaving to affect the scheduling of all
++ * not want an entity which is misbehaving to affect the scheduling of all
+  * other entities.
+  * Therefore, a budgeting strategy called Constant Bandwidth Server (CBS)
+  * is used, in order to confine each entity within its own bandwidth.
+  *
+  * This function deals exactly with that, and ensures that when the runtime
+- * of a entity is replenished, its deadline is also postponed. That ensures
++ * of an entity is replenished, its deadline is also postponed. That ensures
+  * the overrunning entity can't interfere with other entity in the system and
+  * can't make them miss their deadlines. Reasons why this kind of overruns
+- * could happen are, typically, a entity voluntarily trying to overcome its
++ * could happen are, typically, an entity voluntarily trying to overcome its
+  * runtime, or it just underestimated it during sched_setattr().
+  */
+ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
+@@ -3104,7 +3104,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+ 
+ 	if (task_current_donor(rq, p)) {
+ 		/*
+-		 * If we now have a earlier deadline task than p,
++		 * If we now have an earlier deadline task than p,
+ 		 * then reschedule, provided p is still on this
+ 		 * runqueue.
+ 		 */
+@@ -3123,7 +3123,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+ 	}
+ #else
+ 	/*
+-	 * We don't know if p has a earlier or later deadline, so let's blindly
++	 * We don't know if p has an earlier or later deadline, so let's blindly
+ 	 * set a (maybe not needed) rescheduling point.
+ 	 */
+ 	resched_curr(rq);
+-- 
+2.34.1
 
-No need to write this.
-
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-
-No newline here.
-
-> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
-> Suggested-by: Mark Harmstone <mark@harmstone.com>
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-
-Otherwise it looks good, thanks.
