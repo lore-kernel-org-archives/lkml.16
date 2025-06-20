@@ -1,96 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C332253E0;
-	Fri, 20 Jun 2025 07:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A72253E0;
+	Fri, 20 Jun 2025 07:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403380; cv=none; b=ihNK/KMCwqVBEHULArn4r2tp3FGfgnk/4C/KDVhATiwsgAmB5x125cjk6kTVpMTC3JNKYJRanE935xOHf5jSqvaOq/GGBdjGfUwIPqcBJ/METK1LovKEG7YAPaPAwecvV4PL91FuEKApq52s89oJ/FLzqjNf/p2rsEVhPhfxdDs=
+	t=1750403386; cv=none; b=BGFbtRI9im5zykPzr2Jgg4KcKQiiqmxTVE7RO1vUrI7fZrS+g/8kOknNHAze+Hfq43A3/wVGYcb7WWAop842AZ7+XAIITBsw0gCBcmdPY8kGKWf3tAtPCvT7XU+f6x00OaEDj+djV6xh5Wpa61G0qo7hWaga2FVMvQo064Pt/uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403380; c=relaxed/simple;
-	bh=buczXM9TcKcZwQGwqB2wjSqv4KT179kVCnGDwoRveA0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZEU3s2MJc0RwGfZwTwihFyObKrpCUMDM8LOO/sxD+qaN2borWaTu7TeK+bBQdtf++eBaq6V9Pm4M0aq+xPXbsuxvwsAwvb3t7vJ9yZngOujn1XOoJR0IcUnmfyqdN++bSIoA+L2EuH5hNxKe/Ef2ut46Ah0svh8JqFvtnC0X/HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgLv2uEO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750403386; c=relaxed/simple;
+	bh=BCFllEoY5gzDCd+pq8P7iPKpzwybmkCLAP5pwNN5M98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=goWyvjWd6qPL6lEQLDzzwC1EGghhJ6rV1L1s63UX0FIh6XpWunBkhJEoBJTNHax9MlJm5jPbPbfGnih8qdZCkCX/uBzmKKb7vttGr8wZyp9ANMGdziD1schvNCYB6G/+HTIMap7gdj8Ed81ivYWYZwQtK2NE+H3mK4xz0t0JN5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxOUOpN4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgLv2uEO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94848C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxOUOpN4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47C5C4CEEE;
 	Fri, 20 Jun 2025 07:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750403380;
-	bh=buczXM9TcKcZwQGwqB2wjSqv4KT179kVCnGDwoRveA0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=CgLv2uEOoe8C/75KcvBjJGJ7XXQ202YfDHVIzAYoMe6+Lx3bY5XEt1t23QmHoTsIL
-	 1tb/RKeZ6ZIZowM57tYNSKXq9ZjVGhTnOoa/30vl+mnjl0gDd7aF7g1w9sFisT3CKp
-	 szAPsXwBIZNNmucY+/Y0VaqNm/U06z/bEe1lkOP93v7moXRNFCmA1lMJHeITQVZYqE
-	 wOWKcRsEg5p4bSEFU0SwJauZWNlKiMREL+wClLlp5AdmY5X38C+NWWNFBNnYy2Cryk
-	 VzYW5UCqs1zLsqLjQAjwjpeFyxcO9tcaylLwUUVp2U+5DmpI9M0CF05C58kCEcd9zY
-	 HZ7F6MdSwMaSQ==
-Date: Fri, 20 Jun 2025 09:09:37 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Li Chen <me@linux.beauty>
-cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] HID: rate-limit hid_warn to prevent log flooding
-In-Reply-To: <20250620021506.12624-1-me@linux.beauty>
-Message-ID: <446o7on5-8s99-01p9-rq78-4qo9pqo3qpr0@xreary.bet>
-References: <20250620021506.12624-1-me@linux.beauty>
+	s=k20201202; t=1750403385;
+	bh=BCFllEoY5gzDCd+pq8P7iPKpzwybmkCLAP5pwNN5M98=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GxOUOpN4VXDvY/WttyaqkcOUWF731SS3YM4qSbiD9OSw2hQNyB6X367NZBRULwysb
+	 6RHRzWiypNZze0YVgwqcIm/0lW0XlX78Zi8lQ+NTFWPxw9g06bS/eAbyw8TRYXptHm
+	 QnfCsitpVT32vjNLJkVqNTDnhVhc8xiuSVgV0cHnBSSNz8IBtZvULhBVZNJUNxiIWk
+	 IH6c6iPWUcQ/ZCK6p4oVAXo/9WhoYmyLy9sacl8a10+DOIRxcE3QstQZV2+dJpMR3q
+	 UAbhKLDaMPFyGzF6wY3SRpx5mlswfcnWgrpRLhr95raFKiSipcF8TslhR+TAeiEcCp
+	 f3FR/z1Ma2dUg==
+Message-ID: <66094c33-07bd-4621-b49c-b29a0270e002@kernel.org>
+Date: Fri, 20 Jun 2025 09:09:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] arm64: defconfig: Enable X1P42100 GPUCC driver
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-pm@vger.kernel.org, Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+References: <20250620-x1p-adreno-v3-0-56398c078c15@oss.qualcomm.com>
+ <20250620-x1p-adreno-v3-2-56398c078c15@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620-x1p-adreno-v3-2-56398c078c15@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025, Li Chen wrote:
+On 20/06/2025 08:54, Akhil P Oommen wrote:
+> In order to enable GPU support in X1P42100-CRD and other similar
+> laptops with Snapdragon X1P42100 SoC, enable X1P42100 GPUCC driver
+> as a module.
+> 
+> Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-> From: Li Chen <chenl311@chinatelecom.cn>
-> 
-> Syzkaller can create many uhid devices that trigger
-> repeated warnings like:
-> 
->   "hid-generic xxxx: unknown main item tag 0x0"
-> 
-> These messages can flood the system log, especially if a crash occurs
-> (e.g., with a slow UART console, leading to soft lockups). To mitigate
-> this, convert `hid_warn()` to use `dev_warn_ratelimited()`.
-> 
-> This helps reduce log noise and improves system stability under fuzzing
-> or faulty device scenarios.
-> 
-> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+Defconfigs cannot be tested really...
+
+> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
 > ---
-> Changelog:
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> v2: Introduce hid_warn_ratelimited to rate-limit the specified log.
-> 
->  drivers/hid/hid-core.c | 2 +-
->  include/linux/hid.h    | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index b348d0464314c..aaba7164a8c9a 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -661,7 +661,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
->  			item->tag <= HID_MAIN_ITEM_TAG_RESERVED_MAX)
->  			hid_warn(parser->device, "reserved main item tag 0x%x\n", item->tag);
->  		else
-> -			hid_warn(parser->device, "unknown main item tag 0x%x\n", item->tag);
-> +			hid_warn_ratelimited(parser->device, "unknown main item tag 0x%x\n", item->tag);
->  		ret = 0;
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 897fc686e6a91b79770639d3eb15beb3ee48ef77..ccd03ab5de495498281175a4550bc73d3e65f3f4 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1347,6 +1347,7 @@ CONFIG_CLK_X1E80100_CAMCC=m
+>  CONFIG_CLK_X1E80100_DISPCC=m
+>  CONFIG_CLK_X1E80100_GCC=y
+>  CONFIG_CLK_X1E80100_GPUCC=m
+> +CONFIG_CLK_X1P42100_GPUCC=m
 
-While I agree in principle that we shouldn't be flooding dmesg in case the 
-report descriptor is completely bogus, I think we should be more 
-consistent then.
+Not placed in proper spot. Don't add things in random order, but follow
+savedefconfig.
 
-I am pretty sure syzkaller produce report descriptors that will emit flood 
-of "reserved main item tag", but you don't seem to be addresing that case?
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Best regards,
+Krzysztof
