@@ -1,67 +1,67 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C7A2EA744
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4E62EAB67
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450939; cv=none; b=X9IAWJucVoCs6M6VbGDCqz4D34nAVTOMKZTCC8bgaFqlAhCx0q98LIXRFMuXx07QXbcv0+QjKz2J7J7rS8uFJYYtoRYw/X1LAy1bUrTeoGHs7ZX/YvDrUtSnLHfpf0Rcxy/VqysjbB6g/VbM+yYx1T3Q80NqLM7sOOAvQfGyji4=
+	t=1750450941; cv=none; b=tw21u7cccwimJV/ajP0WhnCywO/xokXHtmSMWF/GzSd9GV2ZBFUkeK3OZ/kiG6wFY+zdJuschct47nd3D4y2HIhd8k00W5n2zV78q0MQqBGzck06yoLpg38qx8hDaQwLiXmh5aoawJq8DRr/be1zBMzZDhCVgHWRHFOJcf5lkhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450939; c=relaxed/simple;
-	bh=A1P6kxgEJNmX9GHIO3H26K7yk2m8/f23Gd0ZQ/RNXe8=;
+	s=arc-20240116; t=1750450941; c=relaxed/simple;
+	bh=Vq5Ge4Wa3TVBt85DoyylAxrZltpaFYZYUPYZeK66VFs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LsxmFguQrpa3sLSR9JQXaEE+SJydyevf/QMJxxrxULyPWjEY4ekbuE7JROHiQH2L4nw/h23wYhpskY6yI+HTS9q0hy28sVOiWOOhlD/JZaLtro4VaekRei1ggf2x6nXXoet4AdBhSVVpbSZm9C3uFCRRcNVFYA+aYZtUHRS2U30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IJcGlLKN; arc=none smtp.client-ip=209.85.214.176
+	 In-Reply-To:To:Cc; b=fPOp7ePJxxXPex2Zi79Yc0vnrdeIiy014fv+/1G/kOOmh1wFSJef0oTZZLCV++fL+SgRAKNjfrWgq3ZUUcSTa4Ov45AsTNMyfyOi+OH7Gj53/NL1H/TKDo1tgPpZD/RkpS2d+p28X5Jv49RmO1BMzGTn1Spc/sjM4xpEPNil3ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ijwaG5/M; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IJcGlLKN"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234d366e5f2so30033465ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:22:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ijwaG5/M"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2363e973db1so16458345ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750450936; x=1751055736; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750450939; x=1751055739; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9+zRP05sT2nYVu63jmc+xv4tV8ecuFPHchJnn/1sRt8=;
-        b=IJcGlLKNpZDUo0nQZZSsi2+ser5BqKkICIQ4V+FqrPFOs4ZxdGqZIP0jIDSw2m7W27
-         ewio/yG/bddPnzcQRSKwj/7Wmaq16X7Lhw0ODBpI9Ur7HuYCbcuwPnz2xjF+mCqpOy6i
-         T7ttqtrijIrTi77j7b3rxIxJYO3MOyDPf0zwCt3mVipd2ID6pEFLNeDkT8bZ8SveCDPq
-         ZU/JtBxjzjNI03d3AH2V9IABwY4TkTc5M8slfpLgA1kqmCXNCEvHGRR1Pc2Why7BGzlR
-         nHGO15dM6uzCHsYJF6ribSD+xhZgfw2TftBg6ou34+VUnLqCwPHkKaQCOSgNppRsmpdw
-         VUwA==
+        bh=MkEX4rpjq7p6WD5IMKA2IyXzEVHdMDVkgNg15alekzg=;
+        b=ijwaG5/M95gHT2vNFPx6zUOGre9TSiW08dsz1Z4wCtROD4yTkhTp1ql5Eg6s393sUo
+         9v8LxhVaNHF2KycM6NH0pg4uAb40fDxqoGgMc3fXw1moHQciKSNmBxdLJjun/RcrQldW
+         yDhggCZg1byEbZyRHQS3QsT+UNmPyLEu3l4DjshksE7GZcAb9ptRH46KprpC6vqRMQst
+         FtMaUZ4VnuiAl6RdCY5doDgSh8hv01tRIKJbl/ectB3z0HjIugvYpJzurDybiCf7xgbh
+         Uil/VdYGgZckjiJbryWCcmYWi7W2h44NGB2ong2bXAuFlVvS8pNWjum2wAHaGkFaqouU
+         J+zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750450936; x=1751055736;
+        d=1e100.net; s=20230601; t=1750450939; x=1751055739;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9+zRP05sT2nYVu63jmc+xv4tV8ecuFPHchJnn/1sRt8=;
-        b=L4ZcLIiN0eH80SLPs4ZGQX8b1d9GCH8jVTKFqqmg2+mwMyRtwExPG/OWjo9pkpO8WH
-         GHKBxzbECM/ZcFs+N+s2sZmtpMVxyDKQ+DspgpEsny/8iPFqkmV+0K7aIfL3Tutks9tu
-         O8tvksW7zcxK/rSL4CBVJj5Sg6AkUcsMtAELukQaTCFXfTXCdYjuccjTaJ1UIbcdT71k
-         d5d5MhPp+f319rSQBAg7adpYIG3Zr4darxJQUkAvVZWE6Ng7IStf9XCEXcrvYJRYSUeK
-         GjAUA7GdPtQjWTY3tV5AVoEZygdzzXMXUAqD9ovTPBwkjT0jYGx01a4omUzsXETfKVQi
-         V8UA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6ZqQb2MWoP0+OspkNKznVSMttMD8IwQy6iIm6+U78fsqL7pFj/ddNSWZ7igyKXPp/lxRnPYDiD3xguLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx750VrEaci79MUMfuKcPmg4QEahkv/R0OIa7VZK+OP35uCZmVG
-	eXuP2GlDkRDyzLvIxnabWg/NC4WvGIVHpTRtKtwupCjHvAHo/FumSFiDB/kPFS7uMpp8KQEsxpR
-	+LymJ
-X-Gm-Gg: ASbGncvScF1PWTomnCYJ9LJDv/dXnr9o+/DmYZIGiKtBVaSJQVwqueuB3xHJ7/IYFC3
-	sTHmIrj2P1BIMj+mMeYFESZ45yLr9RLzXtpctiDwFtwkSSGPcp1P9+1/co9IhsOutRbsbU4eF0t
-	eFog06/I6NMxLindL8nPH78VIRWCU4qBTTiiV2flZ++xjU0qlV/8aEg5IpsRca9Ees+nViEClDA
-	mrVVy8ybd8G4+96pWii4CL+n0ZRco/mQVOnC9kzAk3MR8yHXXvxA/qnWKbI5DUu9dNFDz9+yswG
-	1+z9Jxw6q+oYu+uGwa7vZ3FO/x4+cMXMJnYOb6fQKUBWj3p8ZMaDUe6lP0RjRn566AAudKf5MVJ
-	s1PQBRFKF8Rjn16eFX9jxQdjg+2Q/aVxEQg==
-X-Google-Smtp-Source: AGHT+IGxF3Y7GuTw7cF2rLjoHJi9Q+J10U0wcLkyab0NxUAfAKaXxRxyLreJ/M4k337d4xGl2V1n6g==
-X-Received: by 2002:a17:903:40ca:b0:235:f4f7:a633 with SMTP id d9443c01a7336-237d9917e38mr65455185ad.28.1750450935857;
-        Fri, 20 Jun 2025 13:22:15 -0700 (PDT)
+        bh=MkEX4rpjq7p6WD5IMKA2IyXzEVHdMDVkgNg15alekzg=;
+        b=KAGEINhvafWcZUxzmH8e8a/nI87K21W/sVqXoJNRKCbGQ5r7MVuRVXYBWrVQskBuQ+
+         3ChVcglqcK4G6ovkkesSt4qXdtkXeeOEoZpIep4IUO1AEvvRYAodrh7UNoCKQMDa1El0
+         O65RAbIK1JxAC6bMcIAo5q9bwpRzinXTkdg2CjuynYxbpMyl0zOQIBKSohboIP5cM664
+         KjknclcDifNFJXxa8pICWZcdANC4CoJszC8pYJyeDmAz5LOdXvwYYWCWHjKoO1pg7SR2
+         mCjJlv+cbwE8GR5sl89z9zyo9r8gxkMFUbAhLYrwUAeXhCXTu8y1vhbCvKmQMqZC44ZF
+         HxOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHe9fmCWHvPtdAz/MmvSnz9F4H+ngXyIsGELmZOjxxlNDZzLJCVkYyjiqywsVn2uBdeWY5ZVxVfLqqsZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeXyHSs4ULyef7sD2to6LXJH1Ub3HFuqkXsX3mMtbNHejeL1Tu
+	0IfTmOambIGA9Z5BSeJK7GXVRAyT+BN6FiLIBW6ghD/E1DlDnSy3gje/C63/MCsDn8k=
+X-Gm-Gg: ASbGncuvMALmolYzGRWxVzP8YTADfIjj+OSdJ5qo8mj8AqCj1X7CODv+sU9ZNI3kbSx
+	lnGZq0HWVY8XrsTl/D96t1kDkVWI4IPFeyIrWO3Nos6Zf62toNlDCUs8d4t677Nrvq+DsrpK9Jn
+	+jk+emstvTUCK/P6fuWShRfuf2owN8QVi+eSE0i8+XcmKPdXGLxKFiPlu7CtsnCzBCwOd3uOUO3
+	ZzKX0qRV53MV30QDY5We+EdXj9eXGsqy40pAyLHdWD1HfG/sgGEebQc8nw+IqRH1SA6QFsT0bu6
+	3JlaX8kANDiPHWKMEqIyLI0wSjRmCHnKAtvaq4NVcG6MgWodGiZ2p2J9IfKevttDH+na1Ch/O+/
+	ituyD3XbH9yBcVhOU40TO30HsjD6Z0XLSyIgcL2r/AUf1
+X-Google-Smtp-Source: AGHT+IEGbDx2L0uhp1l68AXPB4oKTeswGNYaYazB8bKKifgSCD07xtvqs/Vw7e6uATFM9kf9PdX0sg==
+X-Received: by 2002:a17:902:e54e:b0:215:6c5f:d142 with SMTP id d9443c01a7336-237db0d5a62mr50236945ad.20.1750450939429;
+        Fri, 20 Jun 2025 13:22:19 -0700 (PDT)
 Received: from alexghiti.eu.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860fb58sm24239005ad.99.2025.06.20.13.22.12
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860fb58sm24239005ad.99.2025.06.20.13.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 13:22:15 -0700 (PDT)
+        Fri, 20 Jun 2025 13:22:18 -0700 (PDT)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Fri, 20 Jun 2025 20:21:57 +0000
-Subject: [PATCH v5 1/3] riscv: Fix typo EXRACT -> EXTRACT
+Date: Fri, 20 Jun 2025 20:21:58 +0000
+Subject: [PATCH v5 2/3] riscv: Strengthen duplicate and inconsistent
+ definition of RV_X()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,8 +69,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250620-dev-alex-insn_duplicate_v5_manual-v5-1-d865dc9ad180@rivosinc.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-dev-alex-insn_duplicate_v5_manual-v5-2-d865dc9ad180@rivosinc.com>
 References: <20250620-dev-alex-insn_duplicate_v5_manual-v5-0-d865dc9ad180@rivosinc.com>
 In-Reply-To: <20250620-dev-alex-insn_duplicate_v5_manual-v5-0-d865dc9ad180@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -80,55 +80,182 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
  Alexandre Ghiti <alexghiti@rivosinc.com>, 
- =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
  Andrew Jones <ajones@ventanamicro.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1555;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7020;
  i=alexghiti@rivosinc.com; h=from:subject:message-id;
- bh=A1P6kxgEJNmX9GHIO3H26K7yk2m8/f23Gd0ZQ/RNXe8=;
- b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJCD71PWD2XoWjx0cuV9YUOOycnx6/eWvbgZ/k7Y6ZNB
- YnVb641dJSyMIhxMMiKKbIomCd0tdifrZ/959J7mDmsTCBDGLg4BWAiYtsZ/nBOqzx68FDIy/8S
- 7cybFgRz7FzHYt7dzGNquHxz0tw38vMYGa66Znaku/smceTExJS7u2zin8rvVLfAPthwZhZPqLc
- mCwA=
+ bh=Vq5Ge4Wa3TVBt85DoyylAxrZltpaFYZYUPYZeK66VFs=;
+ b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJCD3246T+x3+vZmwqhZc9/i6mpTf184X6hSVFTvejU/
+ 6VqvAc9O0pZGMQ4GGTFFFkUzBO6WuzP1s/+c+k9zBxWJpAhDFycAjCRjwsZGWaqSO0X0PqsOFP0
+ hoZf/+VFzk/+3VcUWdfZGjD3rN9Z592MDG171FcY9Rh5vlnMo3Yw8nP1Cb61L5awdLK6rtp2r/y
+ mPAcA
 X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp;
  fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
 
-Simply fix a typo.
+RV_X() macro is defined in two different ways which is error prone.
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+So harmonize its first definition and add another macro RV_X_mask() for
+the second one.
+
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- arch/riscv/include/asm/insn.h | 2 +-
- arch/riscv/kernel/vector.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/insn.h          | 39 +++++++++++++++++-----------------
+ arch/riscv/kernel/machine_kexec_file.c |  2 +-
+ arch/riscv/kernel/traps_misaligned.c   |  2 +-
+ arch/riscv/kvm/vcpu_insn.c             |  2 +-
+ 4 files changed, 23 insertions(+), 22 deletions(-)
 
 diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-index 09fde95a5e8f75ac6ee741ded7c6beaa57677d13..2a589a58b2917d67efcb18792b05f5e640bda37f 100644
+index 2a589a58b2917d67efcb18792b05f5e640bda37f..ac3e606feca2584494ce4c41afd64c5f22a65c44 100644
 --- a/arch/riscv/include/asm/insn.h
 +++ b/arch/riscv/include/asm/insn.h
-@@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
- 	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
+@@ -288,43 +288,44 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
+ 
+ #define RV_IMM_SIGN(x) (-(((x) >> 31) & 1))
+ #define RVC_IMM_SIGN(x) (-(((x) >> 12) & 1))
+-#define RV_X(X, s, mask)  (((X) >> (s)) & (mask))
+-#define RVC_X(X, s, mask) RV_X(X, s, mask)
++#define RV_X_mask(X, s, mask)  (((X) >> (s)) & (mask))
++#define RV_X(X, s, n) RV_X_mask(X, s, ((1 << (n)) - 1))
++#define RVC_X(X, s, mask) RV_X_mask(X, s, mask)
+ 
+ #define RV_EXTRACT_RS1_REG(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RVG_RS1_OPOFF, RVG_RS1_MASK)); })
++	(RV_X_mask(x_, RVG_RS1_OPOFF, RVG_RS1_MASK)); })
+ 
+ #define RV_EXTRACT_RD_REG(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RVG_RD_OPOFF, RVG_RD_MASK)); })
++	(RV_X_mask(x_, RVG_RD_OPOFF, RVG_RD_MASK)); })
+ 
+ #define RV_EXTRACT_UTYPE_IMM(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RV_U_IMM_31_12_OPOFF, RV_U_IMM_31_12_MASK)); })
++	(RV_X_mask(x_, RV_U_IMM_31_12_OPOFF, RV_U_IMM_31_12_MASK)); })
+ 
+ #define RV_EXTRACT_JTYPE_IMM(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RV_J_IMM_10_1_OPOFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OFF) | \
+-	(RV_X(x_, RV_J_IMM_11_OPOFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OFF) | \
+-	(RV_X(x_, RV_J_IMM_19_12_OPOFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OFF) | \
++	(RV_X_mask(x_, RV_J_IMM_10_1_OPOFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OFF) | \
++	(RV_X_mask(x_, RV_J_IMM_11_OPOFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OFF) | \
++	(RV_X_mask(x_, RV_J_IMM_19_12_OPOFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OFF) | \
+ 	(RV_IMM_SIGN(x_) << RV_J_IMM_SIGN_OFF); })
+ 
+ #define RV_EXTRACT_ITYPE_IMM(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RV_I_IMM_11_0_OPOFF, RV_I_IMM_11_0_MASK)) | \
++	(RV_X_mask(x_, RV_I_IMM_11_0_OPOFF, RV_I_IMM_11_0_MASK)) | \
+ 	(RV_IMM_SIGN(x_) << RV_I_IMM_SIGN_OFF); })
+ 
+ #define RV_EXTRACT_BTYPE_IMM(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RV_B_IMM_4_1_OPOFF, RV_B_IMM_4_1_MASK) << RV_B_IMM_4_1_OFF) | \
+-	(RV_X(x_, RV_B_IMM_10_5_OPOFF, RV_B_IMM_10_5_MASK) << RV_B_IMM_10_5_OFF) | \
+-	(RV_X(x_, RV_B_IMM_11_OPOFF, RV_B_IMM_11_MASK) << RV_B_IMM_11_OFF) | \
++	(RV_X_mask(x_, RV_B_IMM_4_1_OPOFF, RV_B_IMM_4_1_MASK) << RV_B_IMM_4_1_OFF) | \
++	(RV_X_mask(x_, RV_B_IMM_10_5_OPOFF, RV_B_IMM_10_5_MASK) << RV_B_IMM_10_5_OFF) | \
++	(RV_X_mask(x_, RV_B_IMM_11_OPOFF, RV_B_IMM_11_MASK) << RV_B_IMM_11_OFF) | \
+ 	(RV_IMM_SIGN(x_) << RV_B_IMM_SIGN_OFF); })
+ 
+ #define RVC_EXTRACT_C2_RS1_REG(x) \
+ 	({typeof(x) x_ = (x); \
+-	(RV_X(x_, RVC_C2_RS1_OPOFF, RVC_C2_RS1_MASK)); })
++	(RV_X_mask(x_, RVC_C2_RS1_OPOFF, RVC_C2_RS1_MASK)); })
+ 
+ #define RVC_EXTRACT_JTYPE_IMM(x) \
+ 	({typeof(x) x_ = (x); \
+@@ -346,10 +347,10 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
+ 	(RVC_IMM_SIGN(x_) << RVC_B_IMM_SIGN_OFF); })
+ 
+ #define RVG_EXTRACT_SYSTEM_CSR(x) \
+-	({typeof(x) x_ = (x); RV_X(x_, RVG_SYSTEM_CSR_OFF, RVG_SYSTEM_CSR_MASK); })
++	({typeof(x) x_ = (x); RV_X_mask(x_, RVG_SYSTEM_CSR_OFF, RVG_SYSTEM_CSR_MASK); })
+ 
+ #define RVFDQ_EXTRACT_FL_FS_WIDTH(x) \
+-	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
++	({typeof(x) x_ = (x); RV_X_mask(x_, RVFDQ_FL_FS_WIDTH_OFF, \
  				   RVFDQ_FL_FS_WIDTH_MASK); })
  
--#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
-+#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
+ #define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
+@@ -375,10 +376,10 @@ static inline void riscv_insn_insert_jtype_imm(u32 *insn, s32 imm)
+ {
+ 	/* drop the old IMMs, all jal IMM bits sit at 31:12 */
+ 	*insn &= ~GENMASK(31, 12);
+-	*insn |= (RV_X(imm, RV_J_IMM_10_1_OFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OPOFF) |
+-		 (RV_X(imm, RV_J_IMM_11_OFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OPOFF) |
+-		 (RV_X(imm, RV_J_IMM_19_12_OFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OPOFF) |
+-		 (RV_X(imm, RV_J_IMM_SIGN_OFF, 1) << RV_J_IMM_SIGN_OPOFF);
++	*insn |= (RV_X_mask(imm, RV_J_IMM_10_1_OFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OPOFF) |
++		 (RV_X_mask(imm, RV_J_IMM_11_OFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OPOFF) |
++		 (RV_X_mask(imm, RV_J_IMM_19_12_OFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OPOFF) |
++		 (RV_X_mask(imm, RV_J_IMM_SIGN_OFF, 1) << RV_J_IMM_SIGN_OPOFF);
+ }
  
  /*
-  * Get the immediate from a J-type instruction.
-diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-index 184f780c932d443d81eecac7a6fb8070ee7a5824..901e67adf57608385e6815be1518e70216236eda 100644
---- a/arch/riscv/kernel/vector.c
-+++ b/arch/riscv/kernel/vector.c
-@@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
- 		return true;
- 	case RVV_OPCODE_VL:
- 	case RVV_OPCODE_VS:
--		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
-+		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
- 		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
- 		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
- 			return true;
+diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+index e36104af2e247fc0acb88eb5558d07ac49c713e4..5c2ed4c396e9d242054fdb30510a36bb3901a27b 100644
+--- a/arch/riscv/kernel/machine_kexec_file.c
++++ b/arch/riscv/kernel/machine_kexec_file.c
+@@ -15,6 +15,7 @@
+ #include <linux/memblock.h>
+ #include <linux/vmalloc.h>
+ #include <asm/setup.h>
++#include <asm/insn.h>
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&elf_kexec_ops,
+@@ -109,7 +110,6 @@ static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+ }
+ #endif
+ 
+-#define RV_X(x, s, n)  (((x) >> (s)) & ((1 << (n)) - 1))
+ #define RISCV_IMM_BITS 12
+ #define RISCV_IMM_REACH (1LL << RISCV_IMM_BITS)
+ #define RISCV_CONST_HIGH_PART(x) \
+diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+index dd8e4af6583f47d2cce8cab61bcd92e7d642a11f..1b69b91d7739c8b8ccb7b1605b6b4b88197b30a5 100644
+--- a/arch/riscv/kernel/traps_misaligned.c
++++ b/arch/riscv/kernel/traps_misaligned.c
+@@ -18,6 +18,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/sbi.h>
+ #include <asm/vector.h>
++#include <asm/insn.h>
+ 
+ #define INSN_MATCH_LB			0x3
+ #define INSN_MASK_LB			0x707f
+@@ -113,7 +114,6 @@
+ #define SH_RS2				20
+ #define SH_RS2C				2
+ 
+-#define RV_X(x, s, n)			(((x) >> (s)) & ((1 << (n)) - 1))
+ #define RVC_LW_IMM(x)			((RV_X(x, 6, 1) << 2) | \
+ 					 (RV_X(x, 10, 3) << 3) | \
+ 					 (RV_X(x, 5, 1) << 6))
+diff --git a/arch/riscv/kvm/vcpu_insn.c b/arch/riscv/kvm/vcpu_insn.c
+index 97dec18e69892a1f3dac5464f892a8bac25eefd5..62cb2ab4b63680d9d436c12bb2faae94e7988761 100644
+--- a/arch/riscv/kvm/vcpu_insn.c
++++ b/arch/riscv/kvm/vcpu_insn.c
+@@ -8,6 +8,7 @@
+ #include <linux/kvm_host.h>
+ 
+ #include <asm/cpufeature.h>
++#include <asm/insn.h>
+ 
+ #define INSN_OPCODE_MASK	0x007c
+ #define INSN_OPCODE_SHIFT	2
+@@ -91,7 +92,6 @@
+ #define SH_RS2C			2
+ #define MASK_RX			0x1f
+ 
+-#define RV_X(x, s, n)		(((x) >> (s)) & ((1 << (n)) - 1))
+ #define RVC_LW_IMM(x)		((RV_X(x, 6, 1) << 2) | \
+ 				 (RV_X(x, 10, 3) << 3) | \
+ 				 (RV_X(x, 5, 1) << 6))
 
 -- 
 2.34.1
