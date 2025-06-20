@@ -1,74 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.burntcomma.com (unknown [62.3.69.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F7C2080C8;
-	Fri, 20 Jun 2025 05:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D5C78F39;
+	Fri, 20 Jun 2025 05:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750396404; cv=none; b=jgOhRnvNXT97JEK/WJyUi7dhWKRn0MxgKpU6OY2bOhiRFTmUFlcaGuVMsFpCEH2KQE+7gVK463yvBEUY62E/Y3fa3/2Kxy4c24Zv28j49lMl60H9lqR50tqgP/+QyZy52+4KrZBepgtkS4KuojK3eRbfanhXedywAknGY0rDeac=
+	t=1750396544; cv=none; b=stZccV0avp7Mjt6hmNyV9H80UYUGQwM2QznWfiOZIYGrldrfFbUFgb5GnFCXEptQX6Pr+LVfQwnU5PyRpZo9WiMQnqoIMaMxGSnIUHpOKiwlLtW+lDSpKEFCuWfLF0PpX+Glv79mOzp8F4/5C/pieR53e4f5JGjeRoKIlXnqPwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750396404; c=relaxed/simple;
-	bh=oQJ+HgZ1HzTQr6gaOz+14ObNdfbXRI6qb0MFsR9E0yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Th9g16rPqN5DHW6XQRqQ9xoESb93rkxZ3/dLdwCkEwno+TvGxqTaod4aI5wYhSvRYhjNq9uAQ6wVVYLkXFEQt/yZR9+K4ZMMy0riNTQsHwpENgzhD2nvho+KvDlrGexUSAj92jMAbwUtr/TRWVduk+RBQo2M7/+B3uu1HZygnbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HklS9UjT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750396544; c=relaxed/simple;
+	bh=O904UY4g9qU/8ydu02BIa7irnjU7uK2vL+0lcoh6uSg=;
+	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mRSQDqmnKg9I1YyafP6I93x2z0YXE8ay09QKVThCxhUj7BbqJXkJertdbfwYW2h8VNw3zRD8vgmrRmq9H2VRMDvM+PkFmHCP8LOYKeGiNqUF+7IbeJA6GAcQfHmFIcFuscx3wCOV8FA82BPv5XGjoIEThhGrVteV6wspXHJoo8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=Jpsby3fo; arc=none smtp.client-ip=62.3.69.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HklS9UjT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711C1C4CEE3;
-	Fri, 20 Jun 2025 05:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750396404;
-	bh=oQJ+HgZ1HzTQr6gaOz+14ObNdfbXRI6qb0MFsR9E0yY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HklS9UjTgmwvOGKiAz7K5E9rk3tmtU4a4dp9E+A/bgh1w98Jx3VM6YKfr7dGQyrb/
-	 YgCodfOwUOqW5A5tvIFUKavikr3UYAU1wPc6XbHdKnQBXoCw8eek6rd/vTDjuI6qQW
-	 P2aMLXcIOyac+Bh3k88xVesQOg5xbLP4cj9Om7Wg=
-Date: Fri, 20 Jun 2025 07:13:21 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH net 1/4] auxiliary: Allow empty id
-Message-ID: <2025062004-essay-pecan-d5be@gregkh>
-References: <20250619200537.260017-1-sean.anderson@linux.dev>
- <20250619200537.260017-2-sean.anderson@linux.dev>
+	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="Jpsby3fo"
+Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
+	by mail.burntcomma.com (Postfix) with ESMTPS id 62D9F289FC5;
+	Fri, 20 Jun 2025 06:15:34 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
+	s=mail; t=1750396534;
+	bh=FnNTl0qbEVs06UYig+TW5k2wjnmUnCDbypirnUZwu6A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Jpsby3foFxNktoFfhbog4sVWzUFPZklJzlZmGw783gPqd4+5HYS6E4SWH5QBWe5sv
+	 ulq+0Wfkl8kkLlH0fG8ZwXv+5xAs/APftYYR3zCQ8QLFqyiIQz7r1/1qIalKX/6RPr
+	 j0Qbf34BOEe+5Vxkgr1lb5eMO0haE8qkMpmtLfD0=
+Message-ID: <37cea83e-06b2-44c6-abe2-4bccc1cfd5c4@harmstone.com>
+Date: Fri, 20 Jun 2025 06:15:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619200537.260017-2-sean.anderson@linux.dev>
+Mime-Version: 1.0
+Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
+To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
+ ailiop@suse.com
+References: <20250619153904.25889-1-listout@listout.xyz>
+ <20250620014344.27589-1-listout@listout.xyz>
+Content-Language: en-US
+From: Mark Harmstone <mark@harmstone.com>
+Autocrypt: addr=mark@harmstone.com; keydata=
+ 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
+In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 04:05:34PM -0400, Sean Anderson wrote:
-> Support creating auxiliary devices with the id included as part of the
-> name. This allows for non-decimal ids, which may be more appropriate for
-> auxiliary devices created as children of memory-mapped devices. For
-> example, a name like "xilinx_emac.mac.802c0000" could be achieved by
-> setting .name to "mac.802c0000" and .id to AUXILIARY_DEVID_NONE.
+On 20/06/2025 2.43 am, Brahmajit Das wrote:
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
+>   	u32 size_bp = size_buf;
+>   
+>   	if (!flags) {
+> -		strcpy(bp, "NONE");
+> +		memcpy(bp, "NONE", 5);
+>   		return;
+>   	}
 
-I don't see the justification for this, sorry.  An id is just an id, it
-doesn't matter what is is and nothing should be relying on it to be the
-same across reboots or anywhere else.  The only requirement is that it
-be unique at this point in time in the system.
+There's still the problem here that you're hardcoding a magic number,
+and that memcpy is no safer than strcpy.
 
-We're having this same discussion on a different thread for a different
-bus as well.  This isn't something new, it's been hashed out and
-resolved 20+ years ago...
-
-So no, this change isn't ok to make at this point in time, sorry.
-
-greg k-h
+If your aim is to get rid of strcpy entirely in the codebase, this is
+more than likely impossible.
