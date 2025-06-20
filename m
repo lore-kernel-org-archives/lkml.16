@@ -1,311 +1,95 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E7928B4EB
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC4028B4FA;
+	Fri, 20 Jun 2025 12:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424275; cv=none; b=M86g4D9WJBJ7AKUaVq4HTLFZDK2MAUNVEMq5i1qwhiRt1aeP7yhsQkPJ/MjHS+tePiZbYSP3eqwUHasMsVm3iif5/XkMH9SiQhV8AzzR0mn50ZDz6YEQCcaudurCssw+3jJDqWrGpjB/eASHr9W451ZOvWwI+u64g/TmzBhSGXA=
+	t=1750424279; cv=none; b=naOFwu7KEJSGX6322xGLewBa1p8DBBXbZjFyHEAnp+s4+bZ8q5ccwj2QCaq7NgEqILNz2qRzmE2yLKJfrmjyc8znKay3Bd8rsJ59h621XgNjAReRMS/P/9rkFZ1aSbmw4aQIljxyMIwZjzH7vogoNx0KJZHouPw+A/+GjNMttCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424275; c=relaxed/simple;
-	bh=QlEprds3Zybg0FowxuXO8i2smkbJaZCX8P4B+brlGhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BwdtZGWcMwjYETCF3rX19jc+PFOpVsvGBP4WI/xYA2EhLCtc7gZ2JN6vHZLaqVy384docvw+G5cNQHZzAz09LWcb1lkNvCHbSk653O9VRUcncGqsWcjwGrA+WJaItJhUUPN4c4bTMY4e6rIYz82HGiLG/gwyvpfvti0exyR+kIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TwyX0df8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NVysyb1a; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dfS7ZhsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ual1WZqK; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750424279; c=relaxed/simple;
+	bh=EGdmSkbyYDyeIUSuUVtgaqaMcFrbNqCr0h3vtKs9RI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uGDq7Aw3n69KafABWRXp8lo9wS8zB/A3wHE5FJulTsTVnf9OCtqDYksICQsojvVsioNTzMONYCEDZQzDRqHgApdLNRrjDDafFio812jn+nS41eLr3dn4y0B0cYuBwO78P/2U3hrHUImEMD2UQxQbjzTtYigHUhYCAoAXKLBMqzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=LZt2itCt; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TwyX0df8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NVysyb1a";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dfS7ZhsK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ual1WZqK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5D7081F82B;
-	Fri, 20 Jun 2025 12:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750424271;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
-	b=TwyX0df8ZNKIsDzgybk2NJmwnxXRy4xOENAGbTpnCNpOi4BCRzaikRx0HDRUJUUGFPwarR
-	jPOcOiI4lv7KGgnVHZzzMaPi6MfWdGL7IxLt6z/yv0hw16qebLBH60duC57hrnK9AEqgfp
-	tzva3OCIORcXs/mqcguG8JKl0T1xWDI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750424271;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
-	b=NVysyb1adbyrTijaaCwULk0nmGx4rmZzyXsU6r9TXypGAcQsH5B1GegOUq2llyrTuMKlzR
-	2yQBRLiNa8/XPvDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750424270;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
-	b=dfS7ZhsK/E4hPjHm7lu7QXGdeOsUgUnowtpfCVYq4ApL0SbLyM2+icolKjQlFftKo85YJY
-	5WiQBHjwi6tP7E/HBsr4ptqoQqgnHEphOfjXUMaolPGrVzcYexw8m3cNiCbGaPe3dhkZ3J
-	m64z7XNE8z28Lz+JXgznPRsB6O9nME8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750424270;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
-	b=Ual1WZqK/66pKfc/z1EbvB924eCz08tLtKzADMSEO6vh1UH2/hI5kKGrxwwp+FLzQ4tdCk
-	KVBLrju4TJAGG2Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 27D5A136BA;
-	Fri, 20 Jun 2025 12:57:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2Z2ACc5aVWisMAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 12:57:50 +0000
-Date: Fri, 20 Jun 2025 14:57:44 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: index buffer_tree using node size
-Message-ID: <20250620125744.GT4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250612084724.3149616-1-neelx@suse.com>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="LZt2itCt"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uSbJM-00HLGE-1M; Fri, 20 Jun 2025 14:57:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=2J6Y8XwOM/mssKlqoVlql2Rx7ivwP4hQKu407pGnyyM=; b=LZt2itCtZ/pHOnO/0BksE377e1
+	sE2vCeVqEOkTyXeW8eCaR/FbbeAIUScmVcpH+75PuSiovTecUMmwUlXT97ZMq+dfjsISOsaicUTOB
+	vIkjPwHysPErm1zTGbTKOTiq35PHxVS5fTXa2T6CnhEx6jKRynoNWYWVeX9AuHcNr5lev1Zr8Makt
+	W8QSRdMQfVVS6ptdrHpVMxyPgH+lyil7aqdul+O2aU6iMuzVNlQADbYvYnX1gj0zhEY1SFFeTvHIy
+	kVsYiu/Wf8opqDRb3EoB92QSc9/E843aC6IQJ4AY02PNdG2REs4fGWgmLiwkWGzPLiaxh0wfja6gh
+	0EBKahpQ==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uSbJL-0003DV-6z; Fri, 20 Jun 2025 14:57:39 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uSbJG-00AXhy-7c; Fri, 20 Jun 2025 14:57:34 +0200
+Message-ID: <f96fb2fc-53ca-4e47-ab94-81c2f7b7c61a@rbox.co>
+Date: Fri, 20 Jun 2025 14:57:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612084724.3149616-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:replyto]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 3/3] vsock: Fix transport_* TOCTOU
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+ <20250618-vsock-transports-toctou-v1-3-dd2d2ede9052@rbox.co>
+ <qvdeycblu6lsk7me77wsgoi3b5fyspz4gnrvl3m5lrqobveqwv@fhuhssggsxtk>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <qvdeycblu6lsk7me77wsgoi3b5fyspz4gnrvl3m5lrqobveqwv@fhuhssggsxtk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 10:47:23AM +0200, Daniel Vacek wrote:
-> So far we are deriving the buffer tree index using the sector size. But each
-> extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
+On 6/20/25 10:37, Stefano Garzarella wrote:
+>> -	if (!new_transport || !try_module_get(new_transport->module))
+>> -		return -ENODEV;
+>> +	if (!new_transport || !try_module_get(new_transport->module)) {
+>> +		ret = -ENODEV;
+>> +		goto unlock;
+>> +	}
+>> +
 > 
-> For example the typical and quite common configuration uses sector size of 4KiB
-> and node size of 16KiB. In this case it means the buffer tree is using up to
-> the maximum of 25% of it's slots. Or in other words at least 75% of the tree
-> slots are wasted as never used.
-> 
-> We can score significant memory savings on the required tree nodes by indexing
-> the tree using the node size instead. As a result far less slots are wasted
-> and the tree can now use up to all 100% of it's slots this way.
-> 
-> Note: This works even with unaligned tree blocks as we can still get unique
->       index by doing eb->start >> nodesize_shift.
+> I'd add a comment here to explain that we can release it since we
+> successfully increased the `new_transport` refcnt.
 
-Can we have at least some numbers? As we've talked about it and you
-showed me the number of radix nodes or other internal xarray structures
-before/after.
+Sure, will do.
 
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
-> Reviewed-by: Qu Wenruo <wqu@suse.com>
-> ---
-> v2 changes:
->  * Note that this is still correct even with unaligned tree blocks.
->  * Rename node_bits to nodesize_bits to stay consistent.
->  * Move the nodesize_bits member next to nodesize and make it u32.
+>> +	mutex_unlock(&vsock_register_mutex);
+>>
+>> 	if (sk->sk_type == SOCK_SEQPACKET) {
+>> 		if (!new_transport->seqpacket_allow ||
+>> @@ -528,6 +539,9 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>> 	vsk->transport = new_transport;
+>>
+>> 	return 0;
+>> +unlock:
 > 
-> ---
->  fs/btrfs/disk-io.c   |  1 +
->  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
->  fs/btrfs/fs.h        |  3 ++-
->  3 files changed, 18 insertions(+), 16 deletions(-)
-> 
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index 0d6ad7512f217..3d465258f15b7 100644
-> --- a/fs/btrfs/disk-io.c
-> +++ b/fs/btrfs/disk-io.c
-> @@ -3396,6 +3396,7 @@ int __cold open_ctree(struct super_block *sb, struct btrfs_fs_devices *fs_device
->  	fs_info->delalloc_batch = sectorsize * 512 * (1 + ilog2(nr_cpu_ids));
->  
->  	fs_info->nodesize = nodesize;
-> +	fs_info->nodesize_bits = ilog2(nodesize);
->  	fs_info->sectorsize = sectorsize;
->  	fs_info->sectorsize_bits = ilog2(sectorsize);
->  	fs_info->csums_per_leaf = BTRFS_MAX_ITEM_SIZE(fs_info) / fs_info->csum_size;
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index e9ba80a56172d..a55c7c7eb8990 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffer_for_io(struct extent_buffer *e
->  	 */
->  	spin_lock(&eb->refs_lock);
->  	if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
-> -		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-> +		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
->  		unsigned long flags;
->  
->  		set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
-> @@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer *eb)
->  static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
->  {
->  	struct btrfs_fs_info *fs_info = eb->fs_info;
-> -	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-> +	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
->  	unsigned long flags;
->  
->  	xas_lock_irqsave(&xas, flags);
-> @@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
->  static void buffer_tree_clear_mark(const struct extent_buffer *eb, xa_mark_t mark)
->  {
->  	struct btrfs_fs_info *fs_info = eb->fs_info;
-> -	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-> +	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
->  	unsigned long flags;
->  
->  	xas_lock_irqsave(&xas, flags);
-> @@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(struct btrfs_fs_info *fs_info,
->  	rcu_read_lock();
->  	while ((eb = find_get_eb(&xas, end, tag)) != NULL) {
->  		if (!eb_batch_add(batch, eb)) {
-> -			*start = ((eb->start + eb->len) >> fs_info->sectorsize_bits);
-> +			*start = (eb->start + eb->len) >> fs_info->nodesize_bits;
+> I'd call it `err:` so it's clear is the error path.
 
-In other places you drop the outer ( ) from the shifts, please keep it
-if it's there (or add if it's missing).
+Right, that makes sense.
 
->  			goto out;
->  		}
->  	}
-> @@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_nolock(
->  		struct btrfs_fs_info *fs_info, u64 start)
->  {
->  	struct extent_buffer *eb;
-> -	unsigned long index = (start >> fs_info->sectorsize_bits);
-> +	unsigned long index = start >> fs_info->nodesize_bits;
->  
->  	rcu_read_lock();
->  	eb = xa_load(&fs_info->buffer_tree, index);
-> @@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btrfs_fs_info *fs_info, u64 start,
->  				      u64 end)
->  {
->  	struct eb_batch batch;
-> -	unsigned long start_index = (start >> fs_info->sectorsize_bits);
-> -	unsigned long end_index = (end >> fs_info->sectorsize_bits);
-> +	unsigned long start_index = start >> fs_info->nodesize_bits;
-> +	unsigned long end_index = end >> fs_info->nodesize_bits;
->  
->  	eb_batch_init(&batch);
->  	while (start_index <= end_index) {
-> @@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space *mapping,
->  
->  	eb_batch_init(&batch);
->  	if (wbc->range_cyclic) {
-> -		index = ((mapping->writeback_index << PAGE_SHIFT) >> fs_info->sectorsize_bits);
-> +		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->nodesize_bits;
->  		end = -1;
->  
->  		/*
-> @@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space *mapping,
->  		 */
->  		scanned = (index == 0);
->  	} else {
-> -		index = (wbc->range_start >> fs_info->sectorsize_bits);
-> -		end = (wbc->range_end >> fs_info->sectorsize_bits);
-> +		index = wbc->range_start >> fs_info->nodesize_bits;
-> +		end = wbc->range_end >> fs_info->nodesize_bits;
->  
->  		scanned = 1;
->  	}
-> @@ -3038,7 +3038,7 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
->  	eb->fs_info = fs_info;
->  again:
->  	xa_lock_irq(&fs_info->buffer_tree);
-> -	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->sectorsize_bits,
-> +	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->nodesize_bits,
->  			      NULL, eb, GFP_NOFS);
->  	if (xa_is_err(exists)) {
->  		ret = xa_err(exists);
-> @@ -3355,7 +3355,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
->  again:
->  	xa_lock_irq(&fs_info->buffer_tree);
->  	existing_eb = __xa_cmpxchg(&fs_info->buffer_tree,
-> -				   start >> fs_info->sectorsize_bits, NULL, eb,
-> +				   start >> fs_info->nodesize_bits, NULL, eb,
->  				   GFP_NOFS);
->  	if (xa_is_err(existing_eb)) {
->  		ret = xa_err(existing_eb);
-> @@ -3458,7 +3458,7 @@ static int release_extent_buffer(struct extent_buffer *eb)
->  		 * in this case.
->  		 */
->  		xa_cmpxchg_irq(&fs_info->buffer_tree,
-> -			       eb->start >> fs_info->sectorsize_bits, eb, NULL,
-> +			       eb->start >> fs_info->nodesize_bits, eb, NULL,
->  			       GFP_ATOMIC);
->  
->  		btrfs_leak_debug_del_eb(eb);
-> @@ -4300,9 +4300,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
->  {
->  	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
->  	struct extent_buffer *eb;
-> -	unsigned long start = (folio_pos(folio) >> fs_info->sectorsize_bits);
-> +	unsigned long start = folio_pos(folio) >> fs_info->nodesize_bits;
->  	unsigned long index = start;
-> -	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
-> +	unsigned long end = index + (PAGE_SIZE >> fs_info->nodesize_bits) - 1;
->  	int ret;
->  
->  	xa_lock_irq(&fs_info->buffer_tree);
-> diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
-> index b239e4b8421cf..fd7cbbe3515d6 100644
-> --- a/fs/btrfs/fs.h
-> +++ b/fs/btrfs/fs.h
-> @@ -781,7 +781,7 @@ struct btrfs_fs_info {
->  
->  	struct btrfs_delayed_root *delayed_root;
->  
-> -	/* Entries are eb->start / sectorsize */
-> +	/* Entries are eb->start >> nodesize_bits */
->  	struct xarray buffer_tree;
->  
->  	/* Next backup root to be overwritten */
-> @@ -813,6 +813,7 @@ struct btrfs_fs_info {
->  
->  	/* Cached block sizes */
->  	u32 nodesize;
-> +	u32 nodesize_bits;
->  	u32 sectorsize;
->  	/* ilog2 of sectorsize, use to avoid 64bit division */
->  	u32 sectorsize_bits;
-> -- 
-> 2.47.2
-> 
+Thanks!
+Michal
+
