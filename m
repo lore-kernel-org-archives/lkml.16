@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA21C225777;
-	Fri, 20 Jun 2025 13:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285712989B0;
+	Fri, 20 Jun 2025 13:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427687; cv=none; b=eq1KwVnWnxPMPh9x1cDvdhssB545LSk4I65BHPtPakw1fDZlguXCyKsq4jTk2p0dNlJ7tlbsCmQ65YmvN6cEx4xgCHnGScoTDcpPddidWfWKELJriAVl9XAI9KODHljbqYokhanhZxoDOVlsdi+pT56JQDr50DxXwdICjvdTDMg=
+	t=1750427704; cv=none; b=WO5YOfpfuFGg1eE0bR3hWq4lgFtgyqNFIVbaPSHTGqJF804Icef4Bxd9sH93kiXSIEX8tofCWV64mx+KbOOJfTJPWqMZLwa/CUezeYokGEiyt6BtOVuC4+BqI/pppM4LFm3SA5swkD053Ov/56YsbfZQ/fGG08cr5Cp0Czubbxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750427687; c=relaxed/simple;
-	bh=hlCzuFtOfFjS1WXB8RKyMr6ZXhuppBwt3/3Us2XH22o=;
+	s=arc-20240116; t=1750427704; c=relaxed/simple;
+	bh=Le6qiyOhF8O82q8CmPbMXE6fHz1irEYt8vH8NVlcyC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aG1phRgn33joLExUmxiJff/76a2LeYtLTKvjL94QDRUwP32OEgGcBXjU3/89YGUa5CI9UeCS616czd6nao+01VjUw+xChivVkpIl+iNixretUJC9+smbxLLbmgY3Pxm+tz9+mVGAUjoGGWbLg8zr87ASuiuMruneIIzVGQVBwTE=
+	 MIME-Version:Content-Type; b=J8G7uA89LVYjS3V+XqyI5kpj3fEJ+tWa8j63CToORhDYDm84Ke16M9olPjkRmXYMC7LwniyKGpKMhApbDbP1MKuoqJqtAXijZUhTA3xyYNDZtCzgSFKxJHfAqwzrIY+X6adE15kJTwXD6tFEIK2+aBly6UpD4FahRvUICZJIQ9g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9170416F2;
-	Fri, 20 Jun 2025 06:54:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F341A16F2;
+	Fri, 20 Jun 2025 06:54:41 -0700 (PDT)
 Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 691343F58B;
-	Fri, 20 Jun 2025 06:54:43 -0700 (PDT)
-Date: Fri, 20 Jun 2025 14:54:40 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB47E3F58B;
+	Fri, 20 Jun 2025 06:54:59 -0700 (PDT)
+Date: Fri, 20 Jun 2025 14:54:57 +0100
 From: Andre Przywara <andre.przywara@arm.com>
 To: Chen-Yu Tsai <wens@kernel.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -26,12 +26,12 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>,
  devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] arm64: dts: allwinner: a523: Move mmc nodes to
- correct position
-Message-ID: <20250620145440.047e933b@donnerap.manchester.arm.com>
-In-Reply-To: <20250619173007.3367034-3-wens@kernel.org>
+Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a523: Move rgmii0 pins to
+ correct location
+Message-ID: <20250620145448.5e48d9b0@donnerap.manchester.arm.com>
+In-Reply-To: <20250619173007.3367034-4-wens@kernel.org>
 References: <20250619173007.3367034-1-wens@kernel.org>
-	<20250619173007.3367034-3-wens@kernel.org>
+	<20250619173007.3367034-4-wens@kernel.org>
 Organization: ARM
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
@@ -43,18 +43,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025 01:30:04 +0800
+On Fri, 20 Jun 2025 01:30:05 +0800
 Chen-Yu Tsai <wens@kernel.org> wrote:
 
 > From: Chen-Yu Tsai <wens@csie.org>
 > 
-> When the mmc nodes were added to the dtsi file, they were inserted in
-> the incorrect position.
+> Nodes are supposed to be sorted by address, or if no addresses
+> apply, by node name. The rgmii0 pins are out of order, possibly
+> due to multiple patches adding pin mux settings conflicting.
 > 
-> Move them to the correct place.
-
-Yes, they were indeed wrongly ordered! Now "grep @ ... | sort -c" is happy.
-
+> Move the rgmii0 pins to the correct location.
+> 
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
@@ -63,151 +62,45 @@ Cheers,
 Andre
 
 > ---
->  .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 126 +++++++++---------
->  1 file changed, 63 insertions(+), 63 deletions(-)
+>  .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 20 +++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
 > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> index 8b7cbc2e78f5..458d7ecedacd 100644
+> index 458d7ecedacd..30613a0b1124 100644
 > --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
 > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> @@ -181,69 +181,6 @@ ccu: clock-controller@2001000 {
->  			#reset-cells = <1>;
->  		};
+> @@ -126,16 +126,6 @@ pio: pinctrl@2000000 {
+>  			interrupt-controller;
+>  			#interrupt-cells = <3>;
 >  
-> -		mmc0: mmc@4020000 {
-> -			compatible = "allwinner,sun55i-a523-mmc",
-> -				     "allwinner,sun20i-d1-mmc";
-> -			reg = <0x04020000 0x1000>;
-> -			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
-> -			clock-names = "ahb", "mmc";
-> -			resets = <&ccu RST_BUS_MMC0>;
-> -			reset-names = "ahb";
-> -			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&mmc0_pins>;
-> -			status = "disabled";
+> -			rgmii0_pins: rgmii0-pins {
+> -				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
+> -				       "PH5", "PH6", "PH7", "PH9", "PH10",
+> -				       "PH14", "PH15", "PH16", "PH17", "PH18";
+> -				allwinner,pinmux = <5>;
+> -				function = "emac0";
+> -				drive-strength = <40>;
+> -				bias-disable;
+> -			};
 > -
-> -			max-frequency = <150000000>;
-> -			cap-sd-highspeed;
-> -			cap-mmc-highspeed;
-> -			cap-sdio-irq;
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
-> -		mmc1: mmc@4021000 {
-> -			compatible = "allwinner,sun55i-a523-mmc",
-> -				     "allwinner,sun20i-d1-mmc";
-> -			reg = <0x04021000 0x1000>;
-> -			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
-> -			clock-names = "ahb", "mmc";
-> -			resets = <&ccu RST_BUS_MMC1>;
-> -			reset-names = "ahb";
-> -			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&mmc1_pins>;
-> -			status = "disabled";
-> -
-> -			max-frequency = <150000000>;
-> -			cap-sd-highspeed;
-> -			cap-mmc-highspeed;
-> -			cap-sdio-irq;
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
-> -		mmc2: mmc@4022000 {
-> -			compatible = "allwinner,sun55i-a523-mmc",
-> -				     "allwinner,sun20i-d1-mmc";
-> -			reg = <0x04022000 0x1000>;
-> -			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
-> -			clock-names = "ahb", "mmc";
-> -			resets = <&ccu RST_BUS_MMC2>;
-> -			reset-names = "ahb";
-> -			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&mmc2_pins>;
-> -			status = "disabled";
-> -
-> -			max-frequency = <150000000>;
-> -			cap-sd-highspeed;
-> -			cap-mmc-highspeed;
-> -			cap-sdio-irq;
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
->  		wdt: watchdog@2050000 {
->  			compatible = "allwinner,sun55i-a523-wdt";
->  			reg = <0x2050000 0x20>;
-> @@ -449,6 +386,69 @@ its: msi-controller@3440000 {
+>  			mmc0_pins: mmc0-pins {
+>  				pins = "PF0" ,"PF1", "PF2", "PF3", "PF4", "PF5";
+>  				allwinner,pinmux = <2>;
+> @@ -163,6 +153,16 @@ mmc2_pins: mmc2-pins {
+>  				bias-pull-up;
 >  			};
->  		};
 >  
-> +		mmc0: mmc@4020000 {
-> +			compatible = "allwinner,sun55i-a523-mmc",
-> +				     "allwinner,sun20i-d1-mmc";
-> +			reg = <0x04020000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC0>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc0_pins>;
-> +			status = "disabled";
+> +			rgmii0_pins: rgmii0-pins {
+> +				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
+> +				       "PH5", "PH6", "PH7", "PH9", "PH10",
+> +				       "PH14", "PH15", "PH16", "PH17", "PH18";
+> +				allwinner,pinmux = <5>;
+> +				function = "emac0";
+> +				drive-strength = <40>;
+> +				bias-disable;
+> +			};
 > +
-> +			max-frequency = <150000000>;
-> +			cap-sd-highspeed;
-> +			cap-mmc-highspeed;
-> +			cap-sdio-irq;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc1: mmc@4021000 {
-> +			compatible = "allwinner,sun55i-a523-mmc",
-> +				     "allwinner,sun20i-d1-mmc";
-> +			reg = <0x04021000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC1>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc1_pins>;
-> +			status = "disabled";
-> +
-> +			max-frequency = <150000000>;
-> +			cap-sd-highspeed;
-> +			cap-mmc-highspeed;
-> +			cap-sdio-irq;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc2: mmc@4022000 {
-> +			compatible = "allwinner,sun55i-a523-mmc",
-> +				     "allwinner,sun20i-d1-mmc";
-> +			reg = <0x04022000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC2>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc2_pins>;
-> +			status = "disabled";
-> +
-> +			max-frequency = <150000000>;
-> +			cap-sd-highspeed;
-> +			cap-mmc-highspeed;
-> +			cap-sdio-irq;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		usb_otg: usb@4100000 {
->  			compatible = "allwinner,sun55i-a523-musb",
->  				     "allwinner,sun8i-a33-musb";
+>  			uart0_pb_pins: uart0-pb-pins {
+>  				pins = "PB9", "PB10";
+>  				allwinner,pinmux = <2>;
 
