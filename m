@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23C12E54CF
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60962BF3F3;
+	Fri, 20 Jun 2025 15:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433012; cv=none; b=gikun+fVh2oiFMo2RGRLSiDosVaCGvNVeJifswmVcdNF9nF+TJeTnZDfEOTwNXMfPgaGQ70Um0Y11q3O6UNZKjcuWKSOxznHlRSGVjfZ6+A9eEV7F+flvh+kH0f5xqrC8ErTh3M4AnEyuR5vBrofQTsEyXauc1HEiJTZDWYlVbo=
+	t=1750433018; cv=none; b=ON00xh/1qT1FnlKAwaxd3NpWQhZoDMnc0O/cTqUw2qNGgit64rQ8H6F5oUa3M+HyfFXmsEOOAxnbk+k9NMj6U6cwTrGW9BHYoexJ9uV5+suS+tu/ESGvKQyHkxlR4c9nhLWgRWvcbp8uaZDNvKAg+3i7M2t0v7ZPPCp/RmI75LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433012; c=relaxed/simple;
-	bh=5ZDs0SoJ8yatsvNiDpfTaIQZ7Et15dC+wW8JUAJyaC4=;
+	s=arc-20240116; t=1750433018; c=relaxed/simple;
+	bh=NgFkxLsB6pI1LPP33IKIqTl6H68LrR1CV3Ob+pEb3ew=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oIU+o20tlQMWcUfduFDbbKNvHPqMv7fsYPGepT5gpAEadIee805vofv7/W3fzlrgtDIizL4V/1voCboVvakOJTOl/qgSGbv5/X+lxcTzhInfXUtcAviX0p+DGXX4sgLp1QySVlColEBsoHYnHwaUsBBiQRWeint8ZUz9rp0Jq9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0GoWGit; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ilf3djERkwlPWI7ZtRwK1yFlGDHqHImahUnrkIVPCaioOOS5Wq6OBrFL5DUdM6z9qDU/bhKOJXPg072U1/RqR6lRJHqMHYzsgRSmHRG1kmtEotW0ni0lJOCZ9M81jMd3AxcOHk96nZQD2B1u7LSaowZNjwevnxha62RYgc1cipY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHWVq1SJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0GoWGit"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8A3C4CEF1;
-	Fri, 20 Jun 2025 15:23:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHWVq1SJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DACC4CEEF;
+	Fri, 20 Jun 2025 15:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433012;
-	bh=5ZDs0SoJ8yatsvNiDpfTaIQZ7Et15dC+wW8JUAJyaC4=;
+	s=k20201202; t=1750433015;
+	bh=NgFkxLsB6pI1LPP33IKIqTl6H68LrR1CV3Ob+pEb3ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N0GoWGitkAAPEFD4VB5WV0lsjJeMMqPW/RjtPbDmKWgyegn813ztRSTvejygMwPe+
-	 KngmwpDKwqSpbfjIrvCAc45lgKRgkrdqvaoBqgbO0GT6zY5oS9p/VZmpZe2CPVSHl5
-	 N7iv8Ke1n7/qP4Vg56o0C/5E6EVGmPIQwZJKE0ssVJyBeEHXvjd82QZUy8Jkm1zfid
-	 +pnMSNJ/3noGsHybSfuXSHN3WW3tIIBolDNQ9f5CY5PBKtLZbuYC0HpIi2hVHU81Z9
-	 wX0FI4cfDMgGL8Z1/8I0KBgvuL7n5VjBePTEpi4jRBhdiB8LnB53fCYteEM5ei8bH+
-	 5H28P9i3kAEJA==
+	b=SHWVq1SJJifIxnLZZcRlQAtcXftd0wXnBdJiGBYnOCYXLHK9VFRD4/KRSXH1SxKqY
+	 HlTFixp5qIj9M+ywxx5kV8TxwZMcjBVeOidzjOwAJzqiQZlN2e67Qi4C9+U0zZdTrY
+	 sCcPy7iccNIH40lgQ/Qc6m3csyCMzOcyCGRS17i/0HeGy1AFsl7Y2JlRq5zj+o2Xxy
+	 Ds4F1NoC19qtfvEf0/zat5SJ4nIcyqKTanqsDaC8camPLkvDq/jpfLPCIBuxRARtAY
+	 dqIb/uWBfL/A/SBFExyIengU3xEyNURXCwKcHYCNyMoDJy7UDSUj/Mk8NIcKIZCcqf
+	 E+2FWRBekiybQ==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>,
+	Michal Koutny <mkoutny@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Tejun Heo <tj@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Vlastimil Babka <vbabka@suse.cz>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 07/27] sched/isolation: Save boot defined domain flags
-Date: Fri, 20 Jun 2025 17:22:48 +0200
-Message-ID: <20250620152308.27492-8-frederic@kernel.org>
+	Waiman Long <longman@redhat.com>,
+	cgroups@vger.kernel.org
+Subject: [PATCH 08/27] cpuset: Convert boot_hk_cpus to use HK_TYPE_DOMAIN_BOOT
+Date: Fri, 20 Jun 2025 17:22:49 +0200
+Message-ID: <20250620152308.27492-9-frederic@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
 References: <20250620152308.27492-1-frederic@kernel.org>
@@ -51,63 +53,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-HK_TYPE_DOMAIN will soon integrate not only boot defined isolcpus= CPUs
-but also cpuset isolated partitions.
-
-Housekeeping still needs a way to record what was initially passed
-to isolcpus= in order to keep these CPUs isolated after a cpuset
-isolated partition is modified or destroyed while containing some of
-them.
-
-Create a new HK_TYPE_DOMAIN_BOOT to keep track of those.
+boot_hk_cpus is an ad-hoc copy of HK_TYPE_DOMAIN_BOOT. Remove it and use
+the official version.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- include/linux/sched/isolation.h | 1 +
- kernel/sched/isolation.c        | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ kernel/cgroup/cpuset.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index 8de4f625a5c1..731506d312d2 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -7,6 +7,7 @@
- #include <linux/tick.h>
- 
- enum hk_type {
-+	HK_TYPE_DOMAIN_BOOT,
- 	HK_TYPE_DOMAIN,
- 	HK_TYPE_MANAGED_IRQ,
- 	HK_TYPE_KERNEL_NOISE,
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 8c02eeccea3b..9ecf53c5328b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -9,6 +9,7 @@
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 3bc4301466f3..aae8a739d48d 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -80,12 +80,6 @@ static cpumask_var_t	subpartitions_cpus;
   */
+ static cpumask_var_t	isolated_cpus;
  
- enum hk_flags {
-+	HK_FLAG_DOMAIN_BOOT	= BIT(HK_TYPE_DOMAIN_BOOT),
- 	HK_FLAG_DOMAIN		= BIT(HK_TYPE_DOMAIN),
- 	HK_FLAG_MANAGED_IRQ	= BIT(HK_TYPE_MANAGED_IRQ),
- 	HK_FLAG_KERNEL_NOISE	= BIT(HK_TYPE_KERNEL_NOISE),
-@@ -214,7 +215,7 @@ static int __init housekeeping_isolcpus_setup(char *str)
+-/*
+- * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
+- */
+-static cpumask_var_t	boot_hk_cpus;
+-static bool		have_boot_isolcpus;
+-
+ /* List of remote partition root children */
+ static struct list_head remote_children;
  
- 		if (!strncmp(str, "domain,", 7)) {
- 			str += 7;
--			flags |= HK_FLAG_DOMAIN;
-+			flags |= HK_FLAG_DOMAIN | HK_FLAG_DOMAIN_BOOT;
- 			continue;
- 		}
+@@ -1601,15 +1595,16 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
+  * @new_cpus: cpu mask
+  * Return: true if there is conflict, false otherwise
+  *
+- * CPUs outside of boot_hk_cpus, if defined, can only be used in an
++ * CPUs outside of HK_TYPE_DOMAIN_BOOT, if defined, can only be used in an
+  * isolated partition.
+  */
+ static bool prstate_housekeeping_conflict(int prstate, struct cpumask *new_cpus)
+ {
+-	if (!have_boot_isolcpus)
++	if (!housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
+ 		return false;
  
-@@ -244,7 +245,7 @@ static int __init housekeeping_isolcpus_setup(char *str)
+-	if ((prstate != PRS_ISOLATED) && !cpumask_subset(new_cpus, boot_hk_cpus))
++	if ((prstate != PRS_ISOLATED) &&
++	    !cpumask_subset(new_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT)))
+ 		return true;
  
- 	/* Default behaviour for isolcpus without flags */
- 	if (!flags)
--		flags |= HK_FLAG_DOMAIN;
-+		flags |= HK_FLAG_DOMAIN | HK_FLAG_DOMAIN_BOOT;
+ 	return false;
+@@ -3766,12 +3761,9 @@ int __init cpuset_init(void)
  
- 	return housekeeping_setup(str, flags);
+ 	BUG_ON(!alloc_cpumask_var(&cpus_attach, GFP_KERNEL));
+ 
+-	have_boot_isolcpus = housekeeping_enabled(HK_TYPE_DOMAIN);
+-	if (have_boot_isolcpus) {
+-		BUG_ON(!alloc_cpumask_var(&boot_hk_cpus, GFP_KERNEL));
+-		cpumask_copy(boot_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
+-		cpumask_andnot(isolated_cpus, cpu_possible_mask, boot_hk_cpus);
+-	}
++	if (housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
++		cpumask_andnot(isolated_cpus, cpu_possible_mask,
++			       housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT));
+ 
+ 	return 0;
  }
 -- 
 2.48.1
