@@ -1,142 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.monkeyblade.net (shards.monkeyblade.net [23.128.96.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4B1FAC34;
-	Fri, 20 Jun 2025 17:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CF81E2606;
+	Fri, 20 Jun 2025 17:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.128.96.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441840; cv=none; b=m06KDhQrPS16FDOv4YftBCwt1LDiTa7/fDMsdayz0K9oaQD+c8oBbxZkZ9RZ8MiW5bEWPaWi3eKRW+nJR3CKFhDmec0xUCrcEbbauqoL5KO9zL8wCFmD3tJa9IdmWw3cIuCxKKarxgaF9m0prlyu1MYAVRYkkwIMRc3PFfNmBus=
+	t=1750441932; cv=none; b=tdGukG+47RegtISzCjiMEwSZUc2o0I8XAdRfayERCnqjADxVMiLWQ7MIXeOjvCme3OgCr9b44MG5yJYMiV+GYHe/XycqHZFFk2sjrzW1uIiLidHxf6/qPagYfvyFrIXaV8TjpR8O3evHFvZJlTYpQn+4L1foS/cC9vlPvywFPkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441840; c=relaxed/simple;
-	bh=GKe85BRj+aBlgJq8ZSqdTGlkuD86znOrDCE8X6u/nxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtTdN7C2etU+5S3D4FnRI13UFSA5s+waCqWMqX71DSNA8LZMpLOkiKHxXVoyLekXbtxlvu4OXIygM97RFWCttyb9WD8q0Xkayo/1jKPq6+dpWQN7nWeDAL3OJQdoYRp4QgASq8FKlTnoS/lWjaXPF3LCj7VbyfTlBN31/8nDCr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mJAxo6ok; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mJAxo6ok"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750441838; x=1781977838;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GKe85BRj+aBlgJq8ZSqdTGlkuD86znOrDCE8X6u/nxw=;
-  b=mJAxo6ok73j2R3Xgv5B5eSuOSsYLy8LhzoHaLmAjzSoEK09cFEPcjIDh
-   2cErTsaAz2QLGga9nJPoOe/oeon8U+E1Hyyg6YFO9Uzmc2kmwuxtIhElP
-   bIj5Vt9GXj0SHoDCSpff0V6KMxi3z35MR1ERNBxBi11yHokR6uHPA3pp4
-   BaTSe65lH/AGhQyA/C6ExYUbCo2rCb2iOUT6BR2UYl3UAZcpUeZWb2nl/
-   8A/ek30NC0o6cGLi9RNdwyOZp3BupidJPzc0jSYSelYj1Baqs6TRuC8Si
-   QW1B59xn7BsKcn9tLT3VpD225BuH7oOEKOMGOgyp5sKbMeoXvJwh6cn/M
-   Q==;
-X-CSE-ConnectionGUID: oZ68axr0TMWzWhWDGIjKpQ==
-X-CSE-MsgGUID: CGc0quVtSCuPUH/LZ/O/IA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63762790"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="63762790"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:50:37 -0700
-X-CSE-ConnectionGUID: XGr9QXHgQXqGBNEM48eESQ==
-X-CSE-MsgGUID: RFygdJJKTECI+x0NaxvJzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="151187360"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 20 Jun 2025 10:50:23 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 17AAC109; Fri, 20 Jun 2025 20:50:21 +0300 (EEST)
-Date: Fri, 20 Jun 2025 20:50:21 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv6 06/16] efi: Disable LASS around
- set_virtual_address_map() EFI call
-Message-ID: <cwbzde3qvcvwfz2bgatxfkb2v6wbdvlvoulzvtlqe5mhxr5577@ghpqtyaupkeq>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-7-kirill.shutemov@linux.intel.com>
- <5bb6275b-5046-4bda-8c92-434e59cac08f@intel.com>
+	s=arc-20240116; t=1750441932; c=relaxed/simple;
+	bh=Dy+p15HC9zP/n/4KM5eMWzVkPkNU3THZSPGOgrzcbL0=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gJ15V3E4rkeanFpc/q68putI6teA3G/j/jK0RYZ9ZA2I3yDw3jyIrjsZrm3voTxX+JTo/+r+3E+kn284yba2y0bCQxsgvvinRI6iOT1ZnePqa9eChATZ3f9ItsAS5NWp4nbGf4cpe734lIwSaxL8n5+uh0OyVeH90syLKPXU0R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davemloft.net; spf=none smtp.mailfrom=davemloft.net; arc=none smtp.client-ip=23.128.96.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davemloft.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davemloft.net
+Received: from localhost (brnt-05-b2-v4wan-161083-cust293.vm7.cable.virginm.net [86.11.207.38])
+	by mail.monkeyblade.net (Postfix) with ESMTPSA id EFA01841F1AE;
+	Fri, 20 Jun 2025 10:52:06 -0700 (PDT)
+Date: Fri, 20 Jun 2025 18:52:02 +0100 (BST)
+Message-Id: <20250620.185202.1877972778102559754.davem@davemloft.net>
+To: arnd@kernel.org
+Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, arnd@arndb.de, horms@kernel.org, linux@treblig.org,
+ aleksandr.loktionov@intel.com, dawid.osuchowski@linux.intel.com,
+ jedrzej.jagielski@intel.com, mateusz.polchlopek@intel.com,
+ piotr.kwapulinski@intel.com, slawomirx.mrozowicz@intel.com,
+ martyna.szapar-mudlaw@linux.intel.com, intel-wired-lan@lists.osuosl.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] ethernet: intel: fix building with large NR_CPUS
+From: David Miller <davem@davemloft.net>
+In-Reply-To: <20250620173158.794034-1-arnd@kernel.org>
+References: <20250620173158.794034-1-arnd@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5bb6275b-5046-4bda-8c92-434e59cac08f@intel.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail.monkeyblade.net [0.0.0.0]); Fri, 20 Jun 2025 10:52:10 -0700 (PDT)
 
-On Fri, Jun 20, 2025 at 08:55:29AM -0700, Dave Hansen wrote:
-> On 6/20/25 06:53, Kirill A. Shutemov wrote:
-> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> > index 463b784499a8..94c335229697 100644
-> > --- a/arch/x86/platform/efi/efi.c
-> > +++ b/arch/x86/platform/efi/efi.c
-> > @@ -825,11 +825,24 @@ static void __init __efi_enter_virtual_mode(void)
-> >  
-> >  	efi_sync_low_kernel_mappings();
-> >  
-> > +	/*
-> > +	 * set_virtual_address_map is the only service located at lower
-> > +	 * addresses, so we have to temporarily disable LASS around it.
-> > +	 * Note that clearing EFLAGS.AC is not enough for this, the whole
-> > +	 * LASS needs to be disabled.
-> > +	 */
-> > +	if (cpu_feature_enabled(X86_FEATURE_LASS))
-> > +		cr4_clear_bits(X86_CR4_LASS);
-> 
-> Could we do it like this instead?
-> 
-> 	unsigned long lass = cr4_read_shadow() & X86_FEATURE_LASS;
-> 	...
-> 	cr4_clear_bits(lass);
-> 
-> >  	status = efi_set_virtual_address_map(efi.memmap.desc_size * count,
-> >  					     efi.memmap.desc_size,
-> >  					     efi.memmap.desc_version,
-> >  					     (efi_memory_desc_t *)pa,
-> >  					     efi_systab_phys);
-> > +
-> > +	if (cpu_feature_enabled(X86_FEATURE_LASS))
-> > +		cr4_set_bits(X86_CR4_LASS);
-> 
-> and:
-> 
-> 	cr4_set_bits(lass);
-> 
-> >  	if (status != EFI_SUCCESS) {
-> >  		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
-> >  		       status);
-> 
-> That way, neither the presence of X86_FEATURE_LASS nor the ordering of
-> setting up X86_CR4_LASS matters.
-> 
-> Let's say the CPU supports X86_FEATURE_LASS and this code gets called
-> before the kernel is ready for LASS. It would break as written above.
-
-Okay, will rework this.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBrZXJuZWwub3JnPg0KRGF0ZTogRnJpLCAyMCBKdW4g
+MjAyNSAxOTozMToyNCArMDIwMA0KDQo+IEZyb206IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIu
+ZGU+DQo+IA0KPiBXaXRoIGxhcmdlIHZhbHVlcyBvZiBDT05GSUdfTlJfQ1BVUywgdGhyZWUgSW50
+ZWwgZXRoZXJuZXQgZHJpdmVycyBmYWlsIHRvDQo+IGNvbXBpbGUgbGlrZToNCj4gDQo+IEluIGZ1
+bmN0aW9uIKFpNDBlX2ZyZWVfcV92ZWN0b3KiLA0KPiAgICAgaW5saW5lZCBmcm9tIKFpNDBlX3Zz
+aV9hbGxvY19xX3ZlY3RvcnOiIGF0IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQw
+ZV9tYWluLmM6MTIxMTI6MzoNCj4gICA1NzEgfCAgICAgICAgIF9jb21waWxldGltZV9hc3NlcnQo
+Y29uZGl0aW9uLCBtc2csIF9fY29tcGlsZXRpbWVfYXNzZXJ0XywgX19DT1VOVEVSX18pDQo+IGlu
+Y2x1ZGUvbGludXgvcmN1cGRhdGUuaDoxMDg0OjE3OiBub3RlOiBpbiBleHBhbnNpb24gb2YgbWFj
+cm8goUJVSUxEX0JVR19PTqINCj4gIDEwODQgfCAgICAgICAgICAgICAgICAgQlVJTERfQlVHX09O
+KG9mZnNldG9mKHR5cGVvZigqKHB0cikpLCByaGYpID49IDQwOTYpOyAgICBcDQo+IGRyaXZlcnMv
+bmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9tYWluLmM6NTExMzo5OiBub3RlOiBpbiBleHBh
+bnNpb24gb2YgbWFjcm8goWtmcmVlX3JjdaINCj4gIDUxMTMgfCAgICAgICAgIGtmcmVlX3JjdShx
+X3ZlY3RvciwgcmN1KTsNCj4gICAgICAgfCAgICAgICAgIF5+fn5+fn5+fg0KPiANCj4gVGhlIHBy
+b2JsZW0gaXMgdGhhdCB0aGUgJ3JjdScgbWVtYmVyIGluICdxX3ZlY3RvcicgaXMgdG9vIGZhciBm
+cm9tIHRoZSBzdGFydA0KPiBvZiB0aGUgc3RydWN0dXJlLiBNb3ZlIHRoaXMgbWVtYmVyIGJlZm9y
+ZSB0aGUgQ1BVIG1hc2sgaW5zdGVhZCwgaW4gYWxsIHRocmVlDQo+IGRyaXZlcnMuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiAtLS0NCj4gdjI6
+IG1vdmUgcmN1IHRvIGp1c3QgYWZ0ZXIgdGhlIG5hcGlfc3RydWN0IFtBbGV4YW5kZXIgTG9iYWtp
+bl0NCg0KQWNrZWQtYnk6IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD4NCg==
