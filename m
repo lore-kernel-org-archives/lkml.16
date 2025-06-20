@@ -1,95 +1,88 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797BB22F750
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B941322F750;
+	Fri, 20 Jun 2025 07:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750405836; cv=none; b=aQFLowhUKebq4FyDS/cDfNS8d5ibka6Zx/NNSMOA/yukxpaOAmjat+vl5dfZ9mu5Yn2Sr/31Yflzef2bneeMNuAhlhrifHLatQ96v061SEJLi2wJFkCAiTrqQAmL63/HIS4Cz+9xFRYnkGB2SIU+wGlIxCa3S5MDmYsIUxOQw0k=
+	t=1750405981; cv=none; b=owbroF8XyDd6gucC0fC2Az2kC4GEE8ydd6Gk7iYV7DZVtKk4SdFPqo9NNFkx8yzUXEYUCrwzLy8Pd5JuuZrhHN+hqzuPbmXaTnUz9rVVAT9HQtaE1jSoBojYAzN2682LGLH5su+qc0LBIYEni0vSD5QShw4f0664SgzxLSZz5bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750405836; c=relaxed/simple;
-	bh=eGSej3YNaCeGStzfd3t2gmDRYaMCZAVt45nnXtkdcTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkDtMUY/IQB4wGv+9k45WfexuzHdHyqHBigC9w1oKE8Mda3m1K0O/AlaJ2zwfcRhteBjd3+Qu92kFO1hLHuzUOx3xHpeBvw/yCM3fYQ7ZIC2lc8tPmLSPVgBWQ9xDm03oW04g5LcZUqEOKd6xrK1xSE4dX+lxsi3Jk7VN18wbcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bNqJ74FjMz9sXD;
-	Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ZdnK-QQBFf1P; Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bNqJ73VYhz9s28;
-	Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 728D58B7AB;
-	Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id K4i5McYStysj; Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B2E98B78C;
-	Fri, 20 Jun 2025 09:44:55 +0200 (CEST)
-Message-ID: <16e789a6-87f4-4f7a-9f13-edf47f9f401f@csgroup.eu>
-Date: Fri, 20 Jun 2025 09:44:55 +0200
+	s=arc-20240116; t=1750405981; c=relaxed/simple;
+	bh=Wx7tLA436v23x17RKluO3lN8P/SGvVuUDUQzA1ZeXvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEFpH5TBZsFjIp6lgf5Xcx+Xrs4Agwqenv6bqmmlURAwVUkoLRYHQzw61X9dvhLRcQnq+3YGj8FQZzF5VCXOrVH9KWErLND6igfpH7k9GOw1ONxs9YUoYep+M2tDxCVbetLhIhnEkdY17BL1l7QpwnX/q2d2Ix4MsuTUv1n5PQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 35B212C06671;
+	Fri, 20 Jun 2025 09:52:55 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2FD183A0857; Fri, 20 Jun 2025 09:52:55 +0200 (CEST)
+Date: Fri, 20 Jun 2025 09:52:55 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
+ broken
+Message-ID: <aFUTV87SMdpHRbt8@wunner.de>
+References: <20250618201722.GA1220739@bhelgaas>
+ <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: floppy: Add missing checks after DMA map
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250619110739.323202-2-fourier.thomas@gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250619110739.323202-2-fourier.thomas@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com>
 
-Hi Thomas,
+On Thu, Jun 19, 2025 at 02:29:33PM -0500, Timothy Pearson wrote:
+> To be perfectly frank the existing code quality in this driver
+> (and the associated EEH driver) is not the best, and it's been
+> a frustrating experience trying to hack it into semi-stable
+> operation.
+> 
+> I would vastly prefer to rewrite / integrate into the pciehp driver,
+> and we have plans to do so, but that will take an unacceptable amount
+> of time vs. trying to fix up the existing driver as a stopgap.
+> 
+> As you mentioned, pciehp already has this fix, so we just have to
+> deal with the duplicated code until we (Raptor) figures out how to
+> merge PowerNV support into pciehp.
 
-Le 19/06/2025 à 13:07, Thomas Fourier a écrit :
-> [Vous ne recevez pas souvent de courriers de fourier.thomas@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> The DMA map functions can fail and should be tested for errors.
-> 
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->   arch/powerpc/include/asm/floppy.h | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/include/asm/floppy.h b/arch/powerpc/include/asm/floppy.h
-> index f8ce178b43b7..df8ce2ae636d 100644
-> --- a/arch/powerpc/include/asm/floppy.h
-> +++ b/arch/powerpc/include/asm/floppy.h
-> @@ -144,9 +144,14 @@ static int hard_dma_setup(char *addr, unsigned long size, int mode, int io)
->                  bus_addr = 0;
->          }
-> 
-> -       if (!bus_addr)  /* need to map it */
-> +       if (!bus_addr) {        /* need to map it */
->                  bus_addr = dma_map_single(&isa_bridge_pcidev->dev, addr, size,
->                                            dir);
-> +               if (dma_mapping_error(&isa_bridge_pcidev->dev, bus_addr)) {
-> +                       bus_addr = 0;
+I don't know how much PCIe hotplug on PowerNV differs from native,
+spec-compliant PCIe hotplug.  If the differences are vast (and I
+get the feeling they might be if I read terms like "PHB" and
+"EEH unfreeze", which sound completely foreign to me), it might
+be easier to refactor pnv_php.c and copy patterns or code from
+pciehp, than to integrate the functionality from pnv_php.c into
+pciehp.
 
-bus_addr is a local variable, there is no point in setting it to zero 
-here. Just return -ENOMEM.
+pciehp does carry some historic baggage of its own (such as poll mode),
+which you may not want to deal with on PowerNV.
 
-> +                       return -ENOMEM;
-> +               }
-> +       }
-> 
->          /* remember this one as prev */
->          prev_addr = addr;
-> --
-> 2.43.0
-> 
+One thing I don't quite understand is, it sounds like you've
+attached a PCIe switch to a Root Port and the hotplug ports
+are on the PCIe switch.  Aren't those hotplug ports just
+bog-standard ones that can be driven by pciehp?  My expectation
+would have been that a PowerNV-specific hotplug driver would
+only be necessary for hotplug-capable Root Ports.
 
+Thanks,
+
+Lukas
