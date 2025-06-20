@@ -1,356 +1,213 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890E228B51F;
-	Fri, 20 Jun 2025 12:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86522397BF
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422803; cv=none; b=LYzZ+vnL2KSfDsda+9vBXSBeezUMaqtz4BvSM/h7OVrev8q017FoCrr/0vT1YPCIPpbD6Z0RkYPG3Iwsle2XMSYjbB/HEKQOBVViHOQzrpI5Og/hzMi9J6CsYas3EfZWIt4wcq2SlnA/XZgKpHMbAdESBBSHxiSfKhC+x4lZBrw=
+	t=1750422842; cv=none; b=H5h0CrjNvpSCHODRkL5vAiakjFdqW1I+rXasJC3CTZ1iwKio36V39EdfVI8J+9K/1awK9r8S6DLSS6Sa8BRHOR6n6FhcwUQj2z6hJVhkhbgumQM4XA2lsbeui5i2Uc+ONkYwAQpuMMyGzrNS1NLazB2M6oIS+u5StIGmJgUz9VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422803; c=relaxed/simple;
-	bh=Tx2iuY7WTJRCRdb+By+4+ha12rfjdgsCr5BbtyuNaEE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NKJOWxvA+yckV6tfFZxx44FxFJNtdV7dnp2OioBKTsRTMuO6TvXZDcjtCPR6X2yViVgEW7OpAyjSJWt93/oA82dYaJgmp+UEAuXCpJJDJXegqTED2tSKlu/o9d/tfkyGE5xt5TdHr23cxZ0jzZs+omFoZa8JqOVcyEjaVHg/mrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FPND23I+; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750422842; c=relaxed/simple;
+	bh=1MDKPZbbI/KdzS2StH/cBW6xEO0ojQedO0pGKXh7T6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aBrVU2iJD7sU9khAQ31BxSXxRzlJj2C6N/oKC4E/05AJ6KPHnCui+qB5TgT73yXfkH5Z+eQATioScIQBh/l0pbAXICeth2FSkVCmd7qJNdtKPKL+myVvpBQMLOvMeRro5jZDSRR68XfHWP/kZNQRa6FTwYc90Y+xQ690yE9eG/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtZ78+yj; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FPND23I+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A828205B9;
-	Fri, 20 Jun 2025 12:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750422799;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aKo/BXWI1JK7r7b6qKlGabXnKQxUEGpnUcQ7be9VQt4=;
-	b=FPND23I+ipXsNjvUPgVayjt19E3l0E5S4mKTTnS9Wur3jcq3f9ynjVT0NA3NMwJfw3tsTa
-	vcii14E7UAssczzZ9k48cOAbH78vQ7ku15hrtyB1pDDXBd2nhSgNlqWvjyVbXlnenR97HR
-	2hCLfI1R6lg9ulLkrm5tA9liDjH03oz4Y3cWyWFiFC8UsX47ZFpgGVIi1l/WP8Zir4ZVjD
-	ryV5NWcvEkLeXLT9ZVmvV5jo/nd8foZwrk7RxWk+hmsorrbysf41kHezZvd12216a6hnMu
-	yxPzMxrarX38TJJkxh2WJSvIiUSXFGQJzsKxK/nhPDwDo9PC5i2u94XC4Pp2xA==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 20 Jun 2025 14:33:06 +0200
-Subject: [PATCH ethtool-next 1/2] update UAPI header copies
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtZ78+yj"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234c5b57557so17278455ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750422840; x=1751027640; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xD71SdW5peKOXqfnFLf71PUUXbnUP93dgxGEinYj8ME=;
+        b=FtZ78+yjtqrJFOsfiVrAfvNowQx7csi2Y2vKZeHivd/+xapuGCtfbCtGhPju3UzhDR
+         L54M1SauWX4Qt0yyYFS0rv0LsT3XUaHbC0o2lOZNFneIfsLrUO7TItVgM/t1O6DxL+3R
+         Y3nq/ngBbfT5Qzn7JI/SwWSDa7rwsjEC4HphVPJIfAxnHAKbVxTncdqrxGqNsP2EKzd0
+         K2N12IciLuqlLO52/C13o4uG/Bdr3be2VSvLvWBRX3zG10GrRvvH7q55Yxwtn6IyKA8s
+         vqiiPDA3GyEoqUu/ynR9ZMWBicoiNSbDWVRsaQxBm7PPGiSOahmjSu7ktlk6KYdpUbqz
+         h2TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750422840; x=1751027640;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xD71SdW5peKOXqfnFLf71PUUXbnUP93dgxGEinYj8ME=;
+        b=wYoIqq4/iAlJ5aDLAYUIjTNjl9paud33vmUtPhZz0DV2luzWDX1cMYQtVU4T2C7Yp/
+         GozzxplZmQsUZPnH3cJQ+P7bKFl7ttE+IueBQbIlBUn32XQFlsb41o889X1FvbaPbKod
+         KqT6BTSXOIXfYUX/wXMIMGNUL8QTHx8bxiZH+M3IlKP71Har3KFkNePHGyzqYKm7eeSZ
+         T/bxWuXaKGcTEidduyJe3mvwtk3HZJzWc0a7Lx6U37y7qIcgD9au+YaREWV9Px5xuoP9
+         zCFqqAxpHq48xzPqpRkifcsffV62APmuX4PUt0+MRiskOqjz1ojgIgZU5P9Ht9XRWuns
+         zaMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUh7E5H3mT3t4YWECnaEsjxJagSGkDbhig3AHmTQJFSj5/nD6XaEU5NrGT4vHE4EKe0ctsv+QzZ+KKG57Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/YIqCotDRD38M1pPDxuxSWKVmhCFzr4HBR2WbCIMr88sB+fZA
+	UlTGcBUcdkHK7t00HtKQ8td3SZluUhqrQ13lUBebSm//yEMh+2MtHkbC
+X-Gm-Gg: ASbGncuVkgjezNhezYrhIUYKCOLoAcp8Fi2CiRYuNGpfEN0cYuGG2/PZ7Erv0oP3aAx
+	29KD9lUxVa+/w0nF2fop5B/DDl+mHTHs9tmntATUMZVY+YvifsxUZ1vw7R6SObDzAd/p/Q6leP1
+	HetUBzsOfahOjnpyzAuPAJYLO58WIcyFzVxp9n06srrw+t2o0XHtSu3Es3d6lw/5RJsIULLS3of
+	lPxJsVy8FfWqKXzRaZh89BFYl/PI9Udj8Hk5TqBn3dXmhCpwJ+cBQTLjVTXfk0alroSEU2LU2rW
+	R/H4zV5EpzgWYVKSLGlYbjSkrgREIBaDCEpoUkdbYfv9REm0RGjLyriXfatZmQ==
+X-Google-Smtp-Source: AGHT+IHNKFm5yGIukI363S3mVHZokkhSd7/SyqBWeC5OnvO2eekuRR5ZQ+wr0su1YjcLk4a5Tvu/1Q==
+X-Received: by 2002:a17:902:f546:b0:234:8f5d:e3a4 with SMTP id d9443c01a7336-237d977939bmr43326905ad.2.1750422839714;
+        Fri, 20 Jun 2025 05:33:59 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c3:450a:5588:4056:772b:c07f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a854sm17056685ad.116.2025.06.20.05.33.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 05:33:57 -0700 (PDT)
+Date: Fri, 20 Jun 2025 09:33:50 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Inki Dae <inki.dae@samsung.com>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [PATCH] drm/bridge: samsung-dsim: Fix init order
+Message-ID: <20250620123350.btgncwhwuxjqok7c@hiago-nb>
+References: <20250619-samsung-dsim-fix-v1-1-6b5de68fb115@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-b4-feature_poe_pw_budget-v1-1-0bdb7d2b9c8f@bootlin.com>
-References: <20250620-b4-feature_poe_pw_budget-v1-0-0bdb7d2b9c8f@bootlin.com>
-In-Reply-To: <20250620-b4-feature_poe_pw_budget-v1-0-0bdb7d2b9c8f@bootlin.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Andrew Lunn <andrew@lunn.ch>, Michal Kubecek <mkubecek@suse.cz>
-Cc: Kyle Swenson <kyle.swenson@est.tech>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-8cb71
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehkhihlvgdrshifvghnshhonhesvghsthdrthgvtghhpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepn
- hgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmkhhusggvtggvkhesshhushgvrdgtii
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-samsung-dsim-fix-v1-1-6b5de68fb115@ideasonboard.com>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Thu, Jun 19, 2025 at 03:27:18PM +0300, Tomi Valkeinen wrote:
+> The commit c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain
+> pre-enable and post-disable") changed the order of enable/disable calls.
+> Previously the calls (on imx8mm) were:
+> 
+> mxsfb_crtc_atomic_enable()
+> samsung_dsim_atomic_pre_enable()
+> samsung_dsim_atomic_enable()
+> 
+> now the order is:
+> 
+> samsung_dsim_atomic_pre_enable()
+> mxsfb_crtc_atomic_enable()
+> samsung_dsim_atomic_enable()
+> 
+> On imx8mm (possibly on imx8mp, and other platforms too) this causes two
+> issues:
+> 
+> 1. The DSI PLL setup depends on a refclk, but the DSI driver does not
+> set the rate, just uses it with the rate it has. On imx8mm this refclk
+> seems to be related to the LCD controller's video clock. So, when the
+> mxsfb driver sets its video clock, DSI's refclk rate changes.
+> 
+> Earlier this mxsfb_crtc_atomic_enable() set the video clock, so the PLL
+> refclk rate was set (and didn't change) in the DSI enable calls. Now the
+> rate changes between DSI's pre_enable() and enable(), but the driver
+> configures the PLL in the pre_enable().
+> 
+> Thus you get a black screen on a modeset. Doing the modeset again works,
+> as the video clock rate stays the same.
+> 
+> 2. The image on the screen is shifted/wrapped horizontally. I have not
+> found the exact reason for this, but the documentation seems to hint
+> that the LCD controller's pixel stream should be enabled first, before
+> setting up the DSI. This would match the change, as now the pixel stream
+> starts only after DSI driver's pre_enable().
+> 
+> The main function related to this issue is samsung_dsim_init() which
+> will do the clock and link configuration. samsung_dsim_init() is
+> currently called from pre_enable(), but it is also called from
+> samsung_dsim_host_transfer() to set up the link if the peripheral driver
+> wants to send a DSI command.
+> 
+> This patch fixes both issues by moving the samsung_dsim_init() call from
+> pre_enable() to enable().
+> 
+> However, to deal with the case where the samsung_dsim_init() has already
+> been called from samsung_dsim_host_transfer() and the refclk rate has
+> changed, we need to make sure we re-initialize the DSI with the new rate
+> in enable(). This is achieved by clearing the DSIM_STATE_INITIALIZED
+> flag and uninitializing the clocks and irqs before calling
+> samsung_dsim_init().
+> 
+> Fixes: c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
+> Reported-by: Hiago De Franco <hiagofranco@gmail.com>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Update to kernel commit 757639ac608e.
+Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Verdin iMX8MP
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
- uapi/linux/ethtool.h                   | 134 +++++++++++++++++----------------
- uapi/linux/ethtool_netlink_generated.h |  59 +++++++++++++--
- uapi/linux/if_link.h                   |  16 ++++
- 3 files changed, 139 insertions(+), 70 deletions(-)
+Best regards,
+Hiago.
 
-diff --git a/uapi/linux/ethtool.h b/uapi/linux/ethtool.h
-index 506e086..253df22 100644
---- a/uapi/linux/ethtool.h
-+++ b/uapi/linux/ethtool.h
-@@ -2293,71 +2293,75 @@ static __inline__ int ethtool_validate_duplex(__u8 duplex)
- #define	RXH_XFRM_SYM_OR_XOR	(1 << 1)
- #define	RXH_XFRM_NO_CHANGE	0xff
- 
--/* L2-L4 network traffic flow types */
--#define	TCP_V4_FLOW	0x01	/* hash or spec (tcp_ip4_spec) */
--#define	UDP_V4_FLOW	0x02	/* hash or spec (udp_ip4_spec) */
--#define	SCTP_V4_FLOW	0x03	/* hash or spec (sctp_ip4_spec) */
--#define	AH_ESP_V4_FLOW	0x04	/* hash only */
--#define	TCP_V6_FLOW	0x05	/* hash or spec (tcp_ip6_spec; nfc only) */
--#define	UDP_V6_FLOW	0x06	/* hash or spec (udp_ip6_spec; nfc only) */
--#define	SCTP_V6_FLOW	0x07	/* hash or spec (sctp_ip6_spec; nfc only) */
--#define	AH_ESP_V6_FLOW	0x08	/* hash only */
--#define	AH_V4_FLOW	0x09	/* hash or spec (ah_ip4_spec) */
--#define	ESP_V4_FLOW	0x0a	/* hash or spec (esp_ip4_spec) */
--#define	AH_V6_FLOW	0x0b	/* hash or spec (ah_ip6_spec; nfc only) */
--#define	ESP_V6_FLOW	0x0c	/* hash or spec (esp_ip6_spec; nfc only) */
--#define	IPV4_USER_FLOW	0x0d	/* spec only (usr_ip4_spec) */
--#define	IP_USER_FLOW	IPV4_USER_FLOW
--#define	IPV6_USER_FLOW	0x0e	/* spec only (usr_ip6_spec; nfc only) */
--#define	IPV4_FLOW	0x10	/* hash only */
--#define	IPV6_FLOW	0x11	/* hash only */
--#define	ETHER_FLOW	0x12	/* spec only (ether_spec) */
--
--/* Used for GTP-U IPv4 and IPv6.
-- * The format of GTP packets only includes
-- * elements such as TEID and GTP version.
-- * It is primarily intended for data communication of the UE.
-- */
--#define GTPU_V4_FLOW 0x13	/* hash only */
--#define GTPU_V6_FLOW 0x14	/* hash only */
--
--/* Use for GTP-C IPv4 and v6.
-- * The format of these GTP packets does not include TEID.
-- * Primarily expected to be used for communication
-- * to create sessions for UE data communication,
-- * commonly referred to as CSR (Create Session Request).
-- */
--#define GTPC_V4_FLOW 0x15	/* hash only */
--#define GTPC_V6_FLOW 0x16	/* hash only */
--
--/* Use for GTP-C IPv4 and v6.
-- * Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
-- * After session creation, it becomes this packet.
-- * This is mainly used for requests to realize UE handover.
-- */
--#define GTPC_TEID_V4_FLOW 0x17	/* hash only */
--#define GTPC_TEID_V6_FLOW 0x18	/* hash only */
--
--/* Use for GTP-U and extended headers for the PSC (PDU Session Container).
-- * The format of these GTP packets includes TEID and QFI.
-- * In 5G communication using UPF (User Plane Function),
-- * data communication with this extended header is performed.
-- */
--#define GTPU_EH_V4_FLOW 0x19	/* hash only */
--#define GTPU_EH_V6_FLOW 0x1a	/* hash only */
--
--/* Use for GTP-U IPv4 and v6 PSC (PDU Session Container) extended headers.
-- * This differs from GTPU_EH_V(4|6)_FLOW in that it is distinguished by
-- * UL/DL included in the PSC.
-- * There are differences in the data included based on Downlink/Uplink,
-- * and can be used to distinguish packets.
-- * The functions described so far are useful when you want to
-- * handle communication from the mobile network in UPF, PGW, etc.
-- */
--#define GTPU_UL_V4_FLOW 0x1b	/* hash only */
--#define GTPU_UL_V6_FLOW 0x1c	/* hash only */
--#define GTPU_DL_V4_FLOW 0x1d	/* hash only */
--#define GTPU_DL_V6_FLOW 0x1e	/* hash only */
-+enum {
-+	/* L2-L4 network traffic flow types */
-+	TCP_V4_FLOW	= 0x01,	/* hash or spec (tcp_ip4_spec) */
-+	UDP_V4_FLOW	= 0x02,	/* hash or spec (udp_ip4_spec) */
-+	SCTP_V4_FLOW	= 0x03,	/* hash or spec (sctp_ip4_spec) */
-+	AH_ESP_V4_FLOW	= 0x04,	/* hash only */
-+	TCP_V6_FLOW	= 0x05,	/* hash or spec (tcp_ip6_spec; nfc only) */
-+	UDP_V6_FLOW	= 0x06,	/* hash or spec (udp_ip6_spec; nfc only) */
-+	SCTP_V6_FLOW	= 0x07,	/* hash or spec (sctp_ip6_spec; nfc only) */
-+	AH_ESP_V6_FLOW	= 0x08,	/* hash only */
-+	AH_V4_FLOW	= 0x09,	/* hash or spec (ah_ip4_spec) */
-+	ESP_V4_FLOW	= 0x0a,	/* hash or spec (esp_ip4_spec) */
-+	AH_V6_FLOW	= 0x0b,	/* hash or spec (ah_ip6_spec; nfc only) */
-+	ESP_V6_FLOW	= 0x0c,	/* hash or spec (esp_ip6_spec; nfc only) */
-+	IPV4_USER_FLOW	= 0x0d,	/* spec only (usr_ip4_spec) */
-+	IP_USER_FLOW	= IPV4_USER_FLOW,
-+	IPV6_USER_FLOW	= 0x0e, /* spec only (usr_ip6_spec; nfc only) */
-+	IPV4_FLOW	= 0x10, /* hash only */
-+	IPV6_FLOW	= 0x11, /* hash only */
-+	ETHER_FLOW	= 0x12, /* spec only (ether_spec) */
-+
-+	/* Used for GTP-U IPv4 and IPv6.
-+	 * The format of GTP packets only includes
-+	 * elements such as TEID and GTP version.
-+	 * It is primarily intended for data communication of the UE.
-+	 */
-+	GTPU_V4_FLOW	= 0x13,	/* hash only */
-+	GTPU_V6_FLOW	= 0x14,	/* hash only */
-+
-+	/* Use for GTP-C IPv4 and v6.
-+	 * The format of these GTP packets does not include TEID.
-+	 * Primarily expected to be used for communication
-+	 * to create sessions for UE data communication,
-+	 * commonly referred to as CSR (Create Session Request).
-+	 */
-+	GTPC_V4_FLOW	= 0x15,	/* hash only */
-+	GTPC_V6_FLOW	= 0x16,	/* hash only */
-+
-+	/* Use for GTP-C IPv4 and v6.
-+	 * Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
-+	 * After session creation, it becomes this packet.
-+	 * This is mainly used for requests to realize UE handover.
-+	 */
-+	GTPC_TEID_V4_FLOW	= 0x17,	/* hash only */
-+	GTPC_TEID_V6_FLOW	= 0x18,	/* hash only */
-+
-+	/* Use for GTP-U and extended headers for the PSC (PDU Session Container).
-+	 * The format of these GTP packets includes TEID and QFI.
-+	 * In 5G communication using UPF (User Plane Function),
-+	 * data communication with this extended header is performed.
-+	 */
-+	GTPU_EH_V4_FLOW	= 0x19,	/* hash only */
-+	GTPU_EH_V6_FLOW	= 0x1a,	/* hash only */
-+
-+	/* Use for GTP-U IPv4 and v6 PSC (PDU Session Container) extended headers.
-+	 * This differs from GTPU_EH_V(4|6)_FLOW in that it is distinguished by
-+	 * UL/DL included in the PSC.
-+	 * There are differences in the data included based on Downlink/Uplink,
-+	 * and can be used to distinguish packets.
-+	 * The functions described so far are useful when you want to
-+	 * handle communication from the mobile network in UPF, PGW, etc.
-+	 */
-+	GTPU_UL_V4_FLOW	= 0x1b,	/* hash only */
-+	GTPU_UL_V6_FLOW	= 0x1c,	/* hash only */
-+	GTPU_DL_V4_FLOW	= 0x1d,	/* hash only */
-+	GTPU_DL_V6_FLOW	= 0x1e,	/* hash only */
-+
-+	__FLOW_TYPE_COUNT,
-+};
- 
- /* Flag to enable additional fields in struct ethtool_rx_flow_spec */
- #define	FLOW_EXT	0x80000000
-diff --git a/uapi/linux/ethtool_netlink_generated.h b/uapi/linux/ethtool_netlink_generated.h
-index fa0522b..c06721f 100644
---- a/uapi/linux/ethtool_netlink_generated.h
-+++ b/uapi/linux/ethtool_netlink_generated.h
-@@ -31,17 +31,52 @@ enum ethtool_header_flags {
- 	ETHTOOL_FLAG_STATS = 4,
- };
- 
--enum {
--	ETHTOOL_PHY_UPSTREAM_TYPE_MAC,
--	ETHTOOL_PHY_UPSTREAM_TYPE_PHY,
--};
--
- enum ethtool_tcp_data_split {
- 	ETHTOOL_TCP_DATA_SPLIT_UNKNOWN,
- 	ETHTOOL_TCP_DATA_SPLIT_DISABLED,
- 	ETHTOOL_TCP_DATA_SPLIT_ENABLED,
- };
- 
-+/**
-+ * enum hwtstamp_source - Source of the hardware timestamp
-+ * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from a MAC or a device
-+ *   which has MAC and PHY integrated
-+ * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one PHY device of the
-+ *   network topology
-+ */
-+enum hwtstamp_source {
-+	HWTSTAMP_SOURCE_NETDEV = 1,
-+	HWTSTAMP_SOURCE_PHYLIB,
-+};
-+
-+/**
-+ * enum ethtool_pse_event - PSE event list for the PSE controller
-+ * @ETHTOOL_PSE_EVENT_OVER_CURRENT: PSE output current is too high
-+ * @ETHTOOL_PSE_EVENT_OVER_TEMP: PSE in over temperature state
-+ * @ETHTOOL_C33_PSE_EVENT_DETECTION: detection process occur on the PSE. IEEE
-+ *   802.3-2022 33.2.5 and 145.2.6 PSE detection of PDs. IEEE 802.3-202
-+ *   30.9.1.1.5 aPSEPowerDetectionStatus
-+ * @ETHTOOL_C33_PSE_EVENT_CLASSIFICATION: classification process occur on the
-+ *   PSE. IEEE 802.3-2022 33.2.6 and 145.2.8 classification of PDs mutual
-+ *   identification. IEEE 802.3-2022 30.9.1.1.8 aPSEPowerClassification.
-+ * @ETHTOOL_C33_PSE_EVENT_DISCONNECTION: PD has been disconnected on the PSE.
-+ *   IEEE 802.3-2022 33.3.8 and 145.3.9 PD Maintain Power Signature. IEEE
-+ *   802.3-2022 33.5.1.2.9 MPS Absent. IEEE 802.3-2022 30.9.1.1.20
-+ *   aPSEMPSAbsentCounter.
-+ * @ETHTOOL_PSE_EVENT_OVER_BUDGET: PSE turned off due to over budget situation
-+ * @ETHTOOL_PSE_EVENT_SW_PW_CONTROL_ERROR: PSE faced an error managing the
-+ *   power control from software
-+ */
-+enum ethtool_pse_event {
-+	ETHTOOL_PSE_EVENT_OVER_CURRENT = 1,
-+	ETHTOOL_PSE_EVENT_OVER_TEMP = 2,
-+	ETHTOOL_C33_PSE_EVENT_DETECTION = 4,
-+	ETHTOOL_C33_PSE_EVENT_CLASSIFICATION = 8,
-+	ETHTOOL_C33_PSE_EVENT_DISCONNECTION = 16,
-+	ETHTOOL_PSE_EVENT_OVER_BUDGET = 32,
-+	ETHTOOL_PSE_EVENT_SW_PW_CONTROL_ERROR = 64,
-+};
-+
- enum {
- 	ETHTOOL_A_HEADER_UNSPEC,
- 	ETHTOOL_A_HEADER_DEV_INDEX,
-@@ -406,6 +441,8 @@ enum {
- 	ETHTOOL_A_TSINFO_PHC_INDEX,
- 	ETHTOOL_A_TSINFO_STATS,
- 	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_SOURCE,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PHYINDEX,
- 
- 	__ETHTOOL_A_TSINFO_CNT,
- 	ETHTOOL_A_TSINFO_MAX = (__ETHTOOL_A_TSINFO_CNT - 1)
-@@ -633,6 +670,9 @@ enum {
- 	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
- 	ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT,
- 	ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES,
-+	ETHTOOL_A_PSE_PW_D_ID,
-+	ETHTOOL_A_PSE_PRIO_MAX,
-+	ETHTOOL_A_PSE_PRIO,
- 
- 	__ETHTOOL_A_PSE_CNT,
- 	ETHTOOL_A_PSE_MAX = (__ETHTOOL_A_PSE_CNT - 1)
-@@ -709,6 +749,14 @@ enum {
- 	ETHTOOL_A_TSCONFIG_MAX = (__ETHTOOL_A_TSCONFIG_CNT - 1)
- };
- 
-+enum {
-+	ETHTOOL_A_PSE_NTF_HEADER = 1,
-+	ETHTOOL_A_PSE_NTF_EVENTS,
-+
-+	__ETHTOOL_A_PSE_NTF_CNT,
-+	ETHTOOL_A_PSE_NTF_MAX = (__ETHTOOL_A_PSE_NTF_CNT - 1)
-+};
-+
- enum {
- 	ETHTOOL_MSG_USER_NONE = 0,
- 	ETHTOOL_MSG_STRSET_GET = 1,
-@@ -813,6 +861,7 @@ enum {
- 	ETHTOOL_MSG_PHY_NTF,
- 	ETHTOOL_MSG_TSCONFIG_GET_REPLY,
- 	ETHTOOL_MSG_TSCONFIG_SET_REPLY,
-+	ETHTOOL_MSG_PSE_NTF,
- 
- 	__ETHTOOL_MSG_KERNEL_CNT,
- 	ETHTOOL_MSG_KERNEL_MAX = (__ETHTOOL_MSG_KERNEL_CNT - 1)
-diff --git a/uapi/linux/if_link.h b/uapi/linux/if_link.h
-index ceff2f2..cdb5acc 100644
---- a/uapi/linux/if_link.h
-+++ b/uapi/linux/if_link.h
-@@ -1396,6 +1396,7 @@ enum {
- 	IFLA_VXLAN_LOCALBYPASS,
- 	IFLA_VXLAN_LABEL_POLICY, /* IPv6 flow label policy; ifla_vxlan_label_policy */
- 	IFLA_VXLAN_RESERVED_BITS,
-+	IFLA_VXLAN_MC_ROUTE,
- 	__IFLA_VXLAN_MAX
- };
- #define IFLA_VXLAN_MAX	(__IFLA_VXLAN_MAX - 1)
-@@ -1984,4 +1985,19 @@ enum {
- 
- #define IFLA_DSA_MAX	(__IFLA_DSA_MAX - 1)
- 
-+/* OVPN section */
-+
-+enum ovpn_mode {
-+	OVPN_MODE_P2P,
-+	OVPN_MODE_MP,
-+};
-+
-+enum {
-+	IFLA_OVPN_UNSPEC,
-+	IFLA_OVPN_MODE,
-+	__IFLA_OVPN_MAX,
-+};
-+
-+#define IFLA_OVPN_MAX	(__IFLA_OVPN_MAX - 1)
-+
- #endif /* _LINUX_IF_LINK_H */
-
--- 
-2.43.0
-
+> ---
+>  drivers/gpu/drm/bridge/samsung-dsim.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+> index f2f666b27d2d..cec383d8946d 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1473,22 +1473,31 @@ static void samsung_dsim_atomic_pre_enable(struct drm_bridge *bridge,
+>  	}
+>  
+>  	dsi->state |= DSIM_STATE_ENABLED;
+> -
+> -	/*
+> -	 * For Exynos-DSIM the downstream bridge, or panel are expecting
+> -	 * the host initialization during DSI transfer.
+> -	 */
+> -	if (!samsung_dsim_hw_is_exynos(dsi->plat_data->hw_type)) {
+> -		ret = samsung_dsim_init(dsi);
+> -		if (ret)
+> -			return;
+> -	}
+>  }
+>  
+>  static void samsung_dsim_atomic_enable(struct drm_bridge *bridge,
+>  				       struct drm_atomic_state *state)
+>  {
+>  	struct samsung_dsim *dsi = bridge_to_dsi(bridge);
+> +	int ret;
+> +
+> +	/*
+> +	 * The DSI bridge may have already been initialized in
+> +	 * samsung_dsim_host_transfer(). It is possible that the refclk rate has
+> +	 * changed after that due to the display controller configuration, and
+> +	 * thus we need to reinitialize the DSI bridge to ensure the correct
+> +	 * clock settings.
+> +	 */
+> +
+> +	if (dsi->state & DSIM_STATE_INITIALIZED) {
+> +		dsi->state &= ~DSIM_STATE_INITIALIZED;
+> +		samsung_dsim_disable_clock(dsi);
+> +		samsung_dsim_disable_irq(dsi);
+> +	}
+> +
+> +	ret = samsung_dsim_init(dsi);
+> +	if (ret)
+> +		return;
+>  
+>  	samsung_dsim_set_display_mode(dsi);
+>  	samsung_dsim_set_display_enable(dsi, true);
+> 
+> ---
+> base-commit: 7872997c048e989c7689c2995d230fdca7798000
+> change-id: 20250619-samsung-dsim-fix-58c8ec8193e9
+> 
+> Best regards,
+> -- 
+> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>
