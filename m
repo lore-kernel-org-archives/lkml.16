@@ -1,119 +1,125 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43E521D001
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F221C18E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750399011; cv=none; b=Exdy3e9CrvDfIYsy3zyo08M/6Tm0Os5kXKVEumNKYTJmDw9BL57Ik+szGgRRX3ncaqGq7YuhlTki46T1Mc166R9bZpJZe68e2yWZiPRtFV6d58rHBqcBFvEhW/OxmzYYnwNYyr/g+zU9/DHVKX2pq5M9ZbeXZUXVQGFt3g0/oe8=
+	t=1750399086; cv=none; b=HY6BN7WIxdGt3EypuMGoj1LQq22SDGZe9FhW6oiUr5KCQK0bbSV+N57lNt2ixITPHMxs3JYDaKvmlSqhbiyLryImW7QCwPlGRi7Yln+LwJicrWGq7VJftndNh4eS7emPxNrYMK8HZ+5xczKMhYqrBGnAZgMo9LMKsW4KxMH7Wjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750399011; c=relaxed/simple;
-	bh=QmxzrQ1XE5dR6+/jxjBGLJSVr0bsJPDR+Gf4o5oyzoA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YZAFlNk1gACV1GG3q2n511DmsDOnhZVUtd9uz0U5w2f5bfpym+pSO6u5NglOTM4BuLEWNJuG/QB7raiFWxpXu1nadsKRKoz2XtFvWlIQjyj+ReIdmtGQhWt2oDLS/vS3ITmhIQU7MFyGteNlIgx7mqst1gqwl8f5dCIY14/BJS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZYhEyOZS; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYhEyOZS"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2348ac8e0b4so239005ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750399009; x=1751003809; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wxpxNicPnor4y8vQEH+jSbLfvejhtfEVW8wIzxz3DXI=;
-        b=ZYhEyOZSkM1OUIRV4egrcN+wiFY1kKxeXSBoAnahtJoOZ07prhAQj9UmurMrycnBd+
-         EuS45OAO8HyD3YaobKxzQxo1fyVLYVqjoxaGc5zHuveyK9s8FMbZ5W8MZWsEOVxAoWtk
-         9B0KdTjebBjdTVCln3nGBpEIzjR7Ajh6WJh5SSfGU4HT9fsNwEnylLlKLmIi7uQG1Pg1
-         AKUbac8PGGKT0xLeFMCim5GuYMLV9wDgTPjWb7GIn3122/wOJalUvVH/07lck9nYlEWv
-         XAKA6K/VHpL3XMWd6HvDH3dp0Xs+hmFqbEtC/xdERunKqSSnna61paH6EzmMvWYZwM0v
-         zH7g==
+	s=arc-20240116; t=1750399086; c=relaxed/simple;
+	bh=BSCEYiaS+fGcvu5Z2sC8v5yb8W/TX3BAKBzI445SwOU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SJJgsFlV2pJuFnx0vYBwKuQOf5B5v6+j4wLOaPvTx37scuUZMp8TX1rJmcHjsqjQ0YlurKsJpVdXpgoU2khqEOnV82X74+cclqYa6LaXGpP/tHoXozjmjZH6zS1PX3fQcod7+ZzHKVymGw+R5mviBAhNjxKY5tfF6Gw6mam2x+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3de0f73f9e0so14281125ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:58:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750399009; x=1751003809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wxpxNicPnor4y8vQEH+jSbLfvejhtfEVW8wIzxz3DXI=;
-        b=MB0B2QvplncnwPBN6R7TqL7kTXfYGwWcR3YwPD729t9lIzfSPybCL26wXrIiEKD/R/
-         pMeyT/CQ2a5PLVNbvZ0Pn6V7+lnrKQaO/8av/c99TKoAyYbSr9tq/++A4sqtK3YcnNgg
-         36LyXbdMHHFLtSc74kY0F7POACIqB+7TzaYgXvqofT4qVmqdCnZhnasokfPxkEz9BIJB
-         HUlSY2E5XBqaZnypQPLwVZ0KYzQefn57KfnFU5VlIXi13TI46D9eYvo6QD0lwVzP6Mf8
-         SgJlk1T7uOsf0YY8pBK5Ms+fE0w5NWZz6fx90fHPZ/87m8hpDlgx3c/kvpVU66TJnCqu
-         mwJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOZEgcgzA2AwWEI73MOWS42rss18JbuNFb+m2JflnmJTpeM1CxjOSiKcNw+EFEgveIGz3CBT4XMZK8Dy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyciXeFfiZLny4pdci8hFiW9z4F5HxCjw6g6BPcqfzSJdjjzL6j
-	Ss0heV4EIZuoRhjiFimoBM0bKpJZgvJhyvvD9acR4C7ExjYIlAFGmO4oxQlRmVQ9IRakDpEIRl/
-	NGc8LWqo/0ZU3PNfwlhfDiRdkcHc4V/zTaouNYMw=
-X-Gm-Gg: ASbGncvWkh8MMrh8cwtrCp970Wn4ulOkb0dXHWBjUipvc0FirmSgsxXxexI/7wt+sbz
-	qMsJifUhdePoanW7W0XxkqOOOrGz1UGW0l87ugMSP6y7kEX00t27x1nMRuve263VdIbdWr9qfh7
-	+wbkkO5s5ogaggAsc+PdKhF/p8Pok+woznfDzcfydX
-X-Google-Smtp-Source: AGHT+IE0fbJcpE3a5EWlRlBwzmwzf74XJIWhUKbxVW9udfBkda1c7D5doedK1kwFwVY18nvlCbeXmzQvOHd9GK/23H8=
-X-Received: by 2002:a17:902:ce11:b0:236:9402:a610 with SMTP id
- d9443c01a7336-237cca9ac6dmr4107045ad.22.1750399008899; Thu, 19 Jun 2025
- 22:56:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750399083; x=1751003883;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ygRVccr4dNW9i/toJAUUbN0X0I/j6BzWjyVBKJ46yqM=;
+        b=fnuJDmpXxhmoKLRc7cxNsX5M87dooSpfCUPhaDXc9r/Mn+8kMtAtcLGw7KK0MwKGDs
+         mZtNjjyirx7hwGfI3p9XyNpm2Ke6cqY3dZA4upmWo3ly5hgbrdqQvz1rAjPr2T3G9rID
+         aOyPFIaiUvEXVAOW/ZNYb2I06sG1BXwrtRdAz2ktiWvnc6FJS9breeJWV2L8impPU6+D
+         FpL2dox+2cr2Y+9v/J6TykSOiXRjfX5zo2PB5SK2AGTzo34HnjqLIxqk5LjSiQQLMg+y
+         jgoRVhcbjg66IJiCWUB9dxSgqsGDE5sTEkiXfir9Mheff4po/QCZaQ3L3A4j79XU40gR
+         DZPw==
+X-Gm-Message-State: AOJu0YxC1rolII9ldOUQDNBPSJpUZa/1HvWNJDEX4MgIMofyXCtGWdRd
+	Eai1GpD441KBzfcDZpm7Qy3UaIZBBaSu1/Zfqq/xIz8CtDL3m0GjuXT5sGm9gcr0ZnLkL7qTYhN
+	SN3xobbsP1L7JQ+Jhfmkw4GX8WZgwN3Yd0cuMRsppxf8MPpZ02K322Q9H+v0=
+X-Google-Smtp-Source: AGHT+IHhKeSHOAUROYa49UkTXrFSN7G+JMwdsihraV3SV7GtqL32CcBkXHsUFAMpZfw1ldz5f8ihbytKSZCnD2LG5PMbfAk2+RFF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618132622.3730219-1-richardycc@google.com>
- <n6sls56srw265fmyuebz6ciqyxqshxyqb53th23kr5d64rwmub@ibdehcnedro6>
- <CALC_0q8-98y0v_jV6QOFTKRAGhJ4nCXZ=q9wutLZPCE0KnKymw@mail.gmail.com> <x54netqswex6fpv46nlmeea3ebnm32xnwask4zxw7nmcn7tqdz@4mu4hwsa7hsb>
-In-Reply-To: <x54netqswex6fpv46nlmeea3ebnm32xnwask4zxw7nmcn7tqdz@4mu4hwsa7hsb>
-From: Richard Chang <richardycc@google.com>
-Date: Fri, 20 Jun 2025 13:56:36 +0800
-X-Gm-Features: AX0GCFs5Hupz_gafVprFl7uNHbD4US3FsNSuhKS2U7_w7YEQD3JEd08YVfAk1SA
-Message-ID: <CALC_0q-aRtNS8c00nCD0key27UH9-_2kW=PoXQKrLQ5bg6MU_A@mail.gmail.com>
-Subject: Re: [PATCH] zram: support asynchronous writeback
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>, bgeffon@google.com, 
-	liumartin@google.com, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org
+X-Received: by 2002:a05:6e02:154c:b0:3dd:c946:a273 with SMTP id
+ e9e14a558f8ab-3de38c5878amr16262855ab.9.1750399083538; Thu, 19 Jun 2025
+ 22:58:03 -0700 (PDT)
+Date: Thu, 19 Jun 2025 22:58:03 -0700
+In-Reply-To: <20250620052310.1280771-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6854f86b.a00a0220.137b3.002e.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Sergey,
-I copied three linux-6.16-rc2.tar.gz tarball files as the data set.
+Hello,
 
-Test Flow:
-- mkfs on the zram device, mount it
-- cp tarball files
-- do idle writeback
-- check bd_stat writes 185072 pages
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
 
-On Fri, Jun 20, 2025 at 12:15=E2=80=AFPM Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
->
-> Hi,
->
-> On (25/06/20 12:09), Richard Chang wrote:
-> > Hi Sergey,
-> > The main idea is to replace submit_bio_wait() to submit_bio(), remove
-> > the one-by-one IO, and rely on the underlying backing device to handle
-> > the asynchronous IO requests.
-> > From my testing results on Android, the idle writeback speed increased =
-27%.
-> >
-> > idle writeback for 185072 4k-pages (~723 MiB)
-> > $ echo all > /sys/block/zram0/idle
-> > $ time echo idle > /sys/block/zram0/writeback
-> >
-> > Async writeback:
-> > 0m02.49s real     0m00.00s user     0m01.19s system
-> > 0m02.32s real     0m00.00s user     0m00.89s system
-> > 0m02.35s real     0m00.00s user     0m00.93s system
-> > 0m02.29s real     0m00.00s user     0m00.88s system
-> >
-> > Sync writeback:
-> > 0m03.09s real     0m00.00s user     0m01.07s system
-> > 0m03.18s real     0m00.00s user     0m01.12s system
-> > 0m03.47s real     0m00.00s user     0m01.16s system
-> > 0m03.36s real     0m00.00s user     0m01.27s system
->
-> Has this been tested on exactly same data sets? page-to-page comparable?
-> We decompress before writeback, so if the data had different compression
-> ratios, different number of incompressible objects, etc. then the results
-> are not directly comparable.
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:444 [inline]
+ vmci_host_unlocked_ioctl+0x1e1d/0x5360 drivers/misc/vmw_vmci/vmci_host.c:938
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ kmemdup_noprof+0xb0/0x100 mm/util.c:139
+ kmemdup_noprof include/linux/fortify-string.h:765 [inline]
+ dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
+ vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+ vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
+ vmci_host_unlocked_ioctl+0x4524/0x5360 drivers/misc/vmw_vmci/vmci_host.c:934
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable ev.i.i created at:
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+
+Bytes 28-31 of 40 are uninitialized
+Memory access of size 40 starts at ffff888013ca72c0
+Data copied to user address 000000000000a4bf
+
+CPU: 1 UID: 0 PID: 6602 Comm: syz.0.16 Not tainted 6.16.0-rc2-syzkaller-00162-g41687a5c6f8b-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+Tested on:
+
+commit:         41687a5c Merge tag 'spi-fix-v6.16-rc2' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=166d9d0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15659d0c580000
+
