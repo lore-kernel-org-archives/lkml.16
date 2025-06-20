@@ -1,176 +1,110 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D826C385
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F42252287;
+	Fri, 20 Jun 2025 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408755; cv=none; b=Zy+zJVX1j+SlNs27ZCRQ7bcS8anN54TsRBfvlJJwkRbkk4ylIFAP2u1D+Xt/yXVcu8UpdECS1rdAbNFlZfonQWBJNakXKgmB4AkWbKKpc0W+mKntgHvgtfwW0HsRm9czc+nYbWhYE+f93QwYdRqwNN1ViMgMHgioi13tTfnuLF0=
+	t=1750408789; cv=none; b=PNELNmiH/gKH5zD+XE7gtk7I26t5nmC2jglGt5ZO31la0J/FOawDFeceyIg1OB348ypFoNIDeZbWdVNqkm2THgm42mi9r1WSZZKiX+SG8RzUS+BqXMeXWzXh9lWaGsPcR6RrjVBBAydViRPkFpwqzM2J7vvMYpfvRWgipF/RZTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408755; c=relaxed/simple;
-	bh=nW0F0O/hWqw37ehBTiHOaKNVn3q7ZPdsEdlHH98mdbM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=V0UeQFGb2l9R63AtNDLczrhhzjw00pfoQRoa7qmjnsrlfpRaVt9CO9O+TOIqR4ArkG5pPJex5xYtIFGcmrv3ce4nlaCeT92a46H7kncxOpVxKdkHQOoHFXdEFhan/K27jDs2Iq2n2L3Tf3e0AGAsip4bnG/JmnDwtIhDi9T7wFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Q9xiXWaU; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Q9xiXWaU"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-acbb85ce788so293429266b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750408752; x=1751013552; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
-        b=Q9xiXWaUVze6+3GxmnW8BlyGUQCfzbUuMCDHKuvU9se1IwGuIfLyzdveR2kcLu5Udn
-         xBSlTM/JaO96BhWAbE4WYr2MzkknDj7NFwNZ2zqGVcLOp/JB36tJ1uLmtYDTErgwTidQ
-         tmkldF6E1bTWV2zSrIeiJu4laeHtsAUdhr5m6QIb1kvRJRQZ3JVSofIYgf9SHw/kI2xL
-         CMS4nO7AooBQ7lStCAXLR5+YaZU7pbcEqyFHcgmdWD7q02R3NrB5xVaYsSIsTDlxilP5
-         js3OU1+BWZL55bsKeeTa9P5GHHvs1qfsewrTSmYhY6/psnV8azoc1lj+Mkd2G/oUHxpo
-         Xsng==
+	s=arc-20240116; t=1750408789; c=relaxed/simple;
+	bh=t3m4zgkquuasfnbkxfN0dX0nzEs/hohOPoU5Oje+sZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M5sr6sSBJPkdImoFISqk3OW/iKbKvsBop8BOSFdtH/8lmv+lmg8GCGz4quZuZPT4Tjoh/i7Pad6/DNQqWqXZcx9/bw7O59N7T973iUjaz9tlXYIpIEcYNx9puskkUZozvU/3A2tkrv44667Vy3SfOuntSP6ft2ztzcqI0Ax3+/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so274801066b.2;
+        Fri, 20 Jun 2025 01:39:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408752; x=1751013552;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
-        b=jvNee009A2FmlfIsFZWjIax8XmPz4K17B9M5I45uEnDbaYEmFvtX01wF/5LttbL5p8
-         Q7H4lJ6TRyVZf13pFt9JE3WjCXpEhOKj9CECV1CNUpFSIwYazLeM6X5ox6j6lpw1An/h
-         +/frQHY0m3OoLnZ6rTx2IFlnBfNHWaS8BciMzOxM01rx8xHyJmSdenPmUTnIk4WySeSu
-         kV+GVUiVPwAzkuci93Cku6qd8t5RN8o/rMmch2ViuaFpqRvbtWgmnvFs1E0SoNGVkq6b
-         GAz+B8lXhhl+KIf2ERONWZixWrjFNI3yYlqztf5E3+uaZDJmvOFyoKLP/afYxIF54hgC
-         Espg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJLzEiH4wqL39Wgem6kI8w6bctroNnAQzewVi/jXaTuTqTWy0ieTgUD/7lQ2++gpT4T9cvyUpyOFvSvbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWUu/coneUmqtig0rSzTxzdMe+PQygvDlXWm8+iWSzea9dgccl
-	TAF4771wRsTx97sEl5nsCU3Z3EMP34wp6H2idUpvH0SjtJVf6uXkEmq4rQDPWuGyqCE=
-X-Gm-Gg: ASbGncvC6SDPYzIccDhd/zbpu8jgPspeEeULu72qWFiWdkO3v5PmVSp46rAcX9wdyDC
-	mNBKSuu02gUijFkjw8G9p65diOeY5LCthfv8LNL2/wfjv9NtOyHWGGHxH2tezUmewSLKNjsxont
-	Z0w1Zqu9FrBT6qIemqB1K5jr99z+5wFWiw94i1OTACxvh3nk5A1PoGiytB+BLX1IEdRHnReUwu0
-	7wWHZevrZ8PjE5pn6eyws3qqplukFUBqiHVvDCQlWbGmDF+a34xIzudtEQb/AuX4BaUkCNPSGbW
-	ik9PIhH1wR9xNM3I6C2qIXIP0vdfA/fFGWeGYxORGFO24B0dtk+LSCZO2St9+jRu9e6vhabUX9Q
-	odFbRj/TCVppJu+dRW8eJvy2pesZZFK4=
-X-Google-Smtp-Source: AGHT+IHnn+pgrcY80rrdIAItBJEQnsl8DLBgDjOptwBLYFl+zdmUZHUQXrI9nz0s+HIckaBRB9p+5A==
-X-Received: by 2002:a17:907:9816:b0:ad5:55db:e413 with SMTP id a640c23a62f3a-ae057a284e5mr172285466b.26.1750408751642;
-        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6e36sm123747666b.120.2025.06.20.01.39.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750408786; x=1751013586;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F/6KSINIX8nITlevtHLgkn3+hb19b17sG99+6WMB0gY=;
+        b=Bfp8TtCFkUGnlVeURedgGyNte6JR3RS6RpCBQ2yScb1yq+1GU0qoM43W/nsPzsAY0p
+         G9nu96ZxHVzdzHul8VLFb5szAB08vLkTUEk3BJfvAH2p7btE6v4TIGZOd9LcY+2qMVDD
+         KwW4KU9uolWS2Bvk0uDyzoab7Q9dt/L2eSuK0Cgjz8nDGZXb5xzDAlmlozpx5N1Mun3J
+         gIFL/4AWCtOmdMWrmx2A8rTyNaPz9UrrBg/5RzATbifCOt+8NnytshsXCzf8Zcl/x0ju
+         4HKVTFHAXJILtZ16CVNu2vuP8whwDp7WoygMbGgwMjND6u2Ns5LULyTQgZXm4WEJrVQi
+         MiPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmo/VlU2wJsgby2bEOKjybFklM+fcOZAhJOTYcNTGieQ8B00F41PFhNDb+0zcpdgljH5qTYV3l@vger.kernel.org, AJvYcCVm684NMaQanHhT3Ab2mHitI4TCeUuKKaQ7C7opVQBZQAZHXkLJYlBg+xdktSucf/9x3S9ML0n5u6VJ3w1svsxe@vger.kernel.org, AJvYcCXzmeL29O70wIkFvNydsOExRJWR2IJJNCpeR5PFfTagiYoH2uHPy7bWssKU9y2GvYGK8FmBxIsjR2xvdtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFRmCpOqyyVrWXTSBxeh5WYHVX3lMXXX7+VzXl3JVxa9KZfHmk
+	H8VWyueuqcAZGuKzC/VciFvWp7EKzUWb4a5Xjj/wWYWL7wpqmXRBmKlj
+X-Gm-Gg: ASbGnctVq6sHwMmA/ThX/qPsDRo6Fc697NAbhjOieRQJ4X0hEZEnADbwO2grvD/VNsS
+	Ir6XsIP4ASqAE2cEoO84bQDSd8vNHQ/39RdO5psU0y8uXWHZXAiKjlvDZsWiizXP98KquVWx72x
+	9+hDeyqLbBOAR5wLRwEV9tOa68tjt4GPIGScpGJF0c1EP8vU2RVq6Nm0FpOlZZTdptPcrUyjRTE
+	Qq/g8aj15wF2XShIl2rdAiqJJA8RQf0NdNXpom0Z3YUgX8u3xshsEd9zp7whJbh37/2hxjTlHoQ
+	WGJQt4uJ9ohaaKU9HR9/M0bPGifz7dnZJSQVNrRRhdfL0j4Ubt+d
+X-Google-Smtp-Source: AGHT+IFJC+uPUCQdo0jPF8qiWvYcBREhi2HoqhqKfSvYBtJf/pYW+MJ6BHIIjikhDG8oYFShX4n9kQ==
+X-Received: by 2002:a17:907:d06:b0:adb:3509:b459 with SMTP id a640c23a62f3a-ae0579c7346mr199707366b.19.1750408785980;
+        Fri, 20 Jun 2025 01:39:45 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:1::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209a62sm126137066b.177.2025.06.20.01.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 01:39:45 -0700 (PDT)
+Date: Fri, 20 Jun 2025 01:39:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	ast@kernel.org
+Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
+ functionality test
+Message-ID: <aFUeT8HSPYiDyALB@gmail.com>
+References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
+ <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
+ <aEwd9oLRnxna97JK@gmail.com>
+ <20250613174233.0dd5e7c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 10:39:10 +0200
-Message-Id: <DAR846ZKJENY.KINMYGVYAY97@fairphone.com>
-Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
- Reichel" <sebastian.reichel@collabora.com>,
- <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
- <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
- Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, "Bryan O'Donoghue"
- <bryan.odonoghue@linaro.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
-In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613174233.0dd5e7c1@kernel.org>
 
-Hi Casey!
+On Fri, Jun 13, 2025 at 05:42:33PM -0700, Jakub Kicinski wrote:
+> On Fri, 13 Jun 2025 05:47:50 -0700 Breno Leitao wrote:
+> > > Or is there another way that the packets could be observed, e.g.,
+> > > counters.  
+> > 
+> > Unfortunately netpoll doesn't expose any data, thus, it is hard to get
+> > it. 
+> > 
+> > I have plans to create a configfs for netpoll, so, we can check for
+> > these numbers (as also configure some pre-defined values today, such as
+> > USEC_PER_POLL, MAX_SKBS, ip6h->version = 6; ip6h->priority = 0, etc.
+> > 
+> > In fact, I've an private PoC for this, but, I am modernizing the code
+> > first, and creating some selftests to help me with those changes later
+> > (given we have very little test on netpoll, and I aim to improve this,
+> > given how critical it is for some datacenter designs).
+> 
+> FWIW you can steal bpftrace integration from this series:
+> https://lore.kernel.org/all/20250421222827.283737-22-kuba@kernel.org/
 
-Adding a note here, I also plan to look into what (if any) changes are
-necessary for this to work on PMI632 (which is the PMIC for
-sdm632/msm8953 Fairphone 3) since that's also SMB5.
+Yes, that would be great. I think we can iterate until we hit the poll
+path, otherwise we skip the test at timeout. Something as:
 
-On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
-> Introduce support for the SMB5 charger found on pm8150b and other more
-> modern Qualcomm SoCs.
->
-> SMB5 is largely similar to SMB2, with a few register differences. The
-> main difference is the new Type-C hardware block which some registers
-> are moved to.
->
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
->  drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++=
-------
->  1 file changed, 314 insertions(+), 53 deletions(-)
+	while (true):
+		send msg
+		if netpoll_poll_dev() was invoked:
+			ksft_exit
+		
+		if timeout:
+			raise KsftSkipEx
+	
+As soon as your code lands, I will adapt the test to do so. Meanwhile,
+I will send the v1 for the netpoll, and later we can iterate.
 
-<snip>
+Thanks for working on this bfptrace helper. This will be useful on other
+usecases as well.
 
-> +/* Bits 2:0 match PMI8998 TYPE_C_INTRPT_ENB_SOFTWARE_CTRL */
-> +#define SMB5_TYPE_C_MODE_CFG				0x544
-> +#define SMB5_EN_TRY_SNK_BIT				BIT(4)
-> +#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
-> +
-> +#define SMB5_TYPEC_TYPE_C_VCONN_CONTROL			0x546
-> +#define SMB5_VCONN_EN_ORIENTATION_BIT			BIT(2)
-> +#define SMB5_VCONN_EN_VALUE_BIT				BIT(1)
-> +#define SMB5_VCONN_EN_SRC_BIT				BIT(0)
-> +
-> +
-> +#define SMB5_TYPE_C_DEBUG_ACCESS_SINK			0x54a
-> +#define SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK		GENMASK(4, 0)
-> +
-> +#define SMB5_DEBUG_ACCESS_SRC_CFG			0x54C
-> +#define SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT	BIT(0)
-> +
-> +#define SMB5_TYPE_C_EXIT_STATE_CFG			0x550
-> +#define SMB5_BYPASS_VSAFE0V_DURING_ROLE_SWAP_BIT	BIT(3)
-> +#define SMB5_SEL_SRC_UPPER_REF_BIT			BIT(2)
-> +#define SMB5_EXIT_SNK_BASED_ON_CC_BIT			BIT(0)
-
-<snip>
-
->  /* Init sequence derived from vendor downstream driver */
-> -static const struct smb_init_register smb_init_seq[] =3D {
-> -	{ .addr =3D AICL_RERUN_TIME_CFG, .mask =3D AICL_RERUN_TIME_MASK, .val =
-=3D 0 },
-> +static const struct smb_init_register smb5_init_seq[] =3D {
-> +	{ .addr =3D USBIN_CMD_IL, .mask =3D USBIN_SUSPEND_BIT, .val =3D 0 },
-> +	/*
-> +	 * By default configure us as an upstream facing port
-> +	 * FIXME: This will be handled by the type-c driver
-> +	 */
-> +	{ .addr =3D SMB5_TYPE_C_MODE_CFG,
-> +	  .mask =3D SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
-> +	  .val =3D SMB5_EN_TRY_SNK_BIT },
-
-Since there's already a driver for the Type-C in pm8150b and pm7250b,
-can we remove this? Or is additional plumbing between the two drivers
-necessary to make this work? Maybe Bryan can also jump in here.
-
-Regards
-Luca
-
-> +	{ .addr =3D SMB5_TYPEC_TYPE_C_VCONN_CONTROL,
-> +	  .mask =3D SMB5_VCONN_EN_ORIENTATION_BIT | SMB5_VCONN_EN_SRC_BIT |
-> +		  SMB5_VCONN_EN_VALUE_BIT,
-> +	  .val =3D SMB2_VCONN_EN_SRC_BIT },
-> +	{ .addr =3D SMB5_DEBUG_ACCESS_SRC_CFG,
-> +	  .mask =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT,
-> +	  .val =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT },
-> +	{ .addr =3D SMB5_TYPE_C_EXIT_STATE_CFG,
-> +	  .mask =3D SMB5_SEL_SRC_UPPER_REF_BIT,
-> +	  .val =3D SMB5_SEL_SRC_UPPER_REF_BIT },
-> +	/*
-> +	 * Disable Type-C factory mode and stay in Attached.SRC state when VCON=
-N
-> +	 * over-current happens
-> +	 */
-> +	{ .addr =3D TYPE_C_CFG,
-> +	  .mask =3D APSD_START_ON_CC_BIT,
-> +	  .val =3D 0 },
-> +	{ .addr =3D SMB5_TYPE_C_DEBUG_ACCESS_SINK,
-> +	  .mask =3D SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK,
-> +	  .val =3D 0x17 },
+--breno
