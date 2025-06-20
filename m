@@ -1,167 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3528F2E6127;
-	Fri, 20 Jun 2025 18:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7015F2E6127;
+	Fri, 20 Jun 2025 18:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443888; cv=none; b=fw14VnkuUmvgna6ZasqzuLpkaUcWTL6Xf4eps9OlnpZHqTHfcv2S2G7vz5OplK5YqJfLb50ePzT8mRr/XFnC6g3PwK+Ed/v4kWkQzOu5wL34DRXlQBp208GIgvNQKS6lIznZvEOtdDb4iJwFMjGB4BJ6OuCtN8dPrdWZzYw03V4=
+	t=1750443921; cv=none; b=ssmk8snOBlD0gDJrtibdQEoqFQcsL8v8oHPFQx6Bybn9l5cadH1TEjPh2OBdmVIkkRCNNBirMW8nPEyz1Onffu/nPXlgb8c8/Pbt6rx6ILEC1skRlxhZSj26pNiOTktBXEIposliQfCrFk6uVhCSt/AjR6yWh5WfDWW7H7y4/pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443888; c=relaxed/simple;
-	bh=2Kq5DqGL43bqMDlvM9zin3PNX/FX8mcTTcyK/dln/Z4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HBTk3x1unPTBYULlVoG0qCiVZihkj0IzmSDW0jstSGXbYClA8mDrRN4OQIHfzhD2eF9NREHT9BbHNJMBhnelheP6VrK5isM62X6NhEhjVz0yszd/HIv05pB/Q0D2m5ILhemSF3p1Z8yF73vM/gJ0hwwI+KVB2Nei+TtaZaJL/GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uhzqra43; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750443921; c=relaxed/simple;
+	bh=jGhgKDFEe3Pg7Z8KZ0eA6tMXvUHpocTDBhojXUcAe4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aoIWrCnho1GRJJf01Ner6r3TLQyxkpKaIr80kDnfFe0vF0cKp1TR3pVyiyu3w2OvN61fLLFGC5ZIK/plcFLOZ3G4W/2suSsEoCnuMhY38Y1eWHP//wWDSRWP4w8Yonp7NVMvIwoDtOSDtlAPy3cs1wyLJzAKPuBESl8ennv6R+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRgb9ajL; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uhzqra43"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750443886; x=1781979886;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2Kq5DqGL43bqMDlvM9zin3PNX/FX8mcTTcyK/dln/Z4=;
-  b=Uhzqra434Tm3aaTBjxRUBQK1W452JLGWBDZJj7PG6ijj44csxxRM+ey9
-   OV/Lca7N0tpXWHd3mBAwc4PCKQOw9YGAf/CCuHxIMYSrY0+ZrqFbVo1qs
-   z3eY/wC8vBtmqB/KoRgruuB73dch1nTx5IrkLhCSXGdVid09UOqJ7706N
-   QHflrSAd7YjfM/jK9zJGn75eIS06vJGvSXMcXYFLAx7eowXBMBSyUdYX6
-   cTxMug370dK2Is4GNan9mkhXa7vf29kRHR5R24bs3bkkJTEXg1RUJm62A
-   VYVYluIyihHLYdSfQT9YpOEeQ8YZNt9zx8pxqZDrUYDjadUDMfPFh8tW2
-   g==;
-X-CSE-ConnectionGUID: jtMav2iTQbWTiYpqyNfoCQ==
-X-CSE-MsgGUID: qfmB5B4RTFeQ/q69p0bWiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70151560"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="70151560"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 11:24:45 -0700
-X-CSE-ConnectionGUID: HFLMsLaKShS+9TJwKRK4Tw==
-X-CSE-MsgGUID: J53SgqgPQn+eFy7lasinZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="150411591"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.136]) ([10.125.108.136])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 11:24:44 -0700
-Message-ID: <adaf2d81-75b5-4f02-99ea-03ea0f1a5a96@intel.com>
-Date: Fri, 20 Jun 2025 11:24:43 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRgb9ajL"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so21318845e9.0;
+        Fri, 20 Jun 2025 11:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750443918; x=1751048718; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gt/i0BLT2snEIhTbJGy1TYFOLnyF4y9hY/P46u8QJs0=;
+        b=YRgb9ajLqX1OrIriQ5nUrByhxx7RalmUnjZjcqzg+sDwhvivsDuukxlHRagAxYS8h7
+         /5+rQEvLrENoC2cxZFhJPLdVsR8xW5Hxw3jn/jTKACRjbI3MT48EQdk/du190e+JGrSf
+         wK6k/qA7oOPXduKaqCsYw795XpqLHM10VHR0rGxFB7rD4GR/mO2qbUX66vZh4HE7A1So
+         AZU0RSTuDSd4Gd5gKHaX8eILsI+HKfV7lFxZ86as0QCgQcJ3PqYd9AWg/vvCuFgD17pN
+         /IaNYhppap70syk+CPNCUC/AUSMZMD7927yHVF5fTb6gMyZ66IrAUiJUqNTIQ70pCuRl
+         r0aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750443918; x=1751048718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gt/i0BLT2snEIhTbJGy1TYFOLnyF4y9hY/P46u8QJs0=;
+        b=xLaBgeKHnrFePasYscJ8gmatw59tIQWqaXSR4wHWRmTUHIXTvnJFxDKv06yH1fA+aE
+         sox/A65W/GrPqzuaNwIEk0V0utYP/zYlTv6IYAr++OYRshPTHevPcHjpes1C+ap4rmLB
+         pMkRDGek+t4i1SOTaRTQ5+OBqWNp63jYLvmInxHPlMDTwZslTbsLUcC9NtPJ3e7W73Z9
+         dABm2Z0Pf2M4NKFeLiQNftw92DgnDJ+uf6sJXgioIQfrJdyN872v/DvRwDRmdteyMfIY
+         ZkMUjDLQilopLpAuink8ayLtG/Ps7ed1UrX8QXgdtE2RUox8R2FaHImfG9WNk4Hiuyl7
+         w1wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfwZ9eJba3CsnHJ+FYJfun7foDkhO6z9ckcOLgHSxstkU5rWvrq/u1g38cThEba8Wx3jmZz2hviKZ9tiTvnd6mjH18@vger.kernel.org, AJvYcCWO8QLAST5xv/KS5unlAgJ2VBmNr83femqBhTzipJVyE7NZDZC2OBKjAR+FK4cBWzycsqU=@vger.kernel.org, AJvYcCWiPwFBDdAWIf7mymPg4CcnuiDfei+BY0/uDtACXu1T9rnk4ZvMBtztx/fHcWcr2zvDo02TyZgOwJbCjJbg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVf+G2CkVL5OOQ0sHrxcHZwy0eE3qPp8iBzb4s1wKe1vlVYyT/
+	/WfqWuJmuEcP4m1AnCMOH8DSYTB6jQL1N4UMiD3RV6Eo0ICNQ8hWIOiiVQI9DsKxOmqwPnxrPAG
+	8s7KJUHY8P6gNF5Jj/RPfv78ASeWVSw8=
+X-Gm-Gg: ASbGncsUI+edynR2IhT+IQOoPCdLRuLUHHJbSQxfcyfBPGFh6IFRAzcUFGKCsUC40ZZ
+	kYuGdhq2SveaCZJQvdrCGaDzwZshXJrjOK2kZ2VKdj3wGnLLXlRqrAr3OUW2aAMLywiV99pXbh8
+	DOw0jBhtqvie8BGf4Ifd6K0MOxLj9EdmiiwyGCM/XlwWLZ04nhOuCPOBoZY+Z63K/t3+6VWbiS
+X-Google-Smtp-Source: AGHT+IFq8K9bNqZ9f4cupMWMXq68frawsn8RVGfiyeoCiXF/kw+TVdBhMioEWGJkNhfPeR0A5MHmD4r80ke4UoM4SzU=
+X-Received: by 2002:a05:6000:40df:b0:3a5:5130:1c71 with SMTP id
+ ffacd0b85a97d-3a6d26ec1c6mr3944019f8f.0.1750443917558; Fri, 20 Jun 2025
+ 11:25:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-To: Sohil Mehta <sohil.mehta@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Daniel Sneddon <daniel.sneddon@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
- Breno Leitao <leitao@debian.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
- Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
- Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
- Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
- Changbin Du <changbin.du@huawei.com>,
- Huang Shijie <shijie@os.amperecomputing.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org,
- Yian Chen <yian.chen@intel.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
- Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <248e272c-79ec-4c11-a3a8-dff1de2147c0@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <248e272c-79ec-4c11-a3a8-dff1de2147c0@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250619034257.70520-1-chen.dylane@linux.dev> <20250619034257.70520-2-chen.dylane@linux.dev>
+ <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com>
+ <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev> <CAADnVQJcdVCKPu8aPPj5hZExNTFYAYTd5xkF=Ljfm__+ugirGg@mail.gmail.com>
+ <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
+In-Reply-To: <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 20 Jun 2025 11:25:06 -0700
+X-Gm-Features: Ac12FXyJkFR8rjBuSo4gLhjDVZGf9JFATvweEAE_aYUr4XayfWPQ7zQy3NpA0jE
+Message-ID: <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/25 11:14, Sohil Mehta wrote:
-> @Dave Hansen, you had suggested separating out the SMAP/LASS AC toggle
-> functions. But, the difference in usage between both of them seems very
-> subtle. Could this be easily misused?
+On Thu, Jun 19, 2025 at 8:31=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> =E5=9C=A8 2025/6/20 10:59, Alexei Starovoitov =E5=86=99=E9=81=93:
+> > On Thu, Jun 19, 2025 at 7:46=E2=80=AFPM Tao Chen <chen.dylane@linux.dev=
+> wrote:
+> >>
+> >> =E5=9C=A8 2025/6/20 01:17, Alexei Starovoitov =E5=86=99=E9=81=93:
+> >>> On Wed, Jun 18, 2025 at 8:44=E2=80=AFPM Tao Chen <chen.dylane@linux.d=
+ev> wrote:
+> >>>>
+> >>>> Show kprobe_multi link info with fdinfo, the info as follows:
+> >>>>
+> >>>> link_type:      kprobe_multi
+> >>>> link_id:        1
+> >>>> prog_tag:       a15b7646cb7f3322
+> >>>> prog_id:        21
+> >>>> type:   kprobe_multi
+> >>>
+> >>> ..
+> >>>
+> >>>> +       seq_printf(seq,
+> >>>> +                  "type:\t%s\n"
+> >>>> +                  "kprobe_cnt:\t%u\n"
+> >>>> +                  "missed:\t%lu\n",
+> >>>> +                  kmulti_link->flags =3D=3D BPF_F_KPROBE_MULTI_RETU=
+RN ? "kretprobe_multi" :
+> >>>> +                                        "kprobe_multi",
+> >>>
+> >>> why print the same info twice ?
+> >>> seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+> >>> in bpf_link_show_fdinfo() already did it in a cleaner way.
+> >>>
+> >>
+> >> link_type only shows 'kprobe_multi', maybe we can show the format like=
+:
+> >
+> > Ohh. Especially so. It would be wrong and confusing to display:
+> > link_type:      kprobe_multi
+> > type: kretprobe_multi
+> >
+> > Let's fix 'link_type' to display it properly.
+>
+> What do you think show like this:
+>
+>      link_type:      kprobe_multi
+>      link_id:        1
+>      prog_tag:       33be53a4fd673e1d
+>      prog_id:        21
+>      retprobe:       false
 
-Logically there are two completely different things:
-
-	1. Touching userspace
-	2. Touching the lower half of the address space
-
-If it's only userspace in the lower half of the address space, then
-there's no controversy. But the problem obviously occurs when you want
-to touch kernel mappings in the lower half of the address space.
-
-I want to preserve the "stac/clas" meaning as just "touch userspace".
-
-The new functions should be for "touch the lower half of the address
-space" alone. Maybe it should be:
-
-	lass_disable_enforcement()
-	lass_enable_enforcement()
-
-The only downside of not having stac/clac in the names is that it's not
-obvious that they have an impact on SMAP because they're named to be
-LASS-only. But I'm not super worried about this. If we have a
-proliferation of call sites we have bigger problem on our hands.
+It leaks implementation details.
+For the kernel the link type is BPF_LINK_TYPE_KPROBE_MULTI for retprobe too=
+,
+but show_fdinfo is for humans.
+'link_type:' field can be more precise and differentiate
+what's effectively a subtype of the link.
