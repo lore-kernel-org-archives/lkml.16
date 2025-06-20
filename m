@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAC038DD8;
-	Fri, 20 Jun 2025 06:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7465E38DD8;
+	Fri, 20 Jun 2025 06:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750399594; cv=none; b=KFvkwtMXgSwxSj0wvkOCGH3vxspfTtrQIs0l748sU+khKDkZCdRirYvdOkrScCO5G/WGk3la5bUtVCbygXGzTNKtoTzLUHjW/GHHcUe/rP8cJBhxzBY1PvjoS5VgATAQ29gVy8Oi7BhdV238GyoJVfX0/eK90yxaW92y1flJKKo=
+	t=1750399702; cv=none; b=aDmoZIoAI/Q9xyEMTkdq1wvZFLbpQU+rZ86AwjLVHBndFPnT1jGffnZ5jOaTn0CSu3QaiWe2qmBzebHnIyYkFDkIAzJYNE5/PIR+CsiHVHOVx+fEWGdBz/XeGwLbtHAwh0z/7FQELo08yN2EK839CLme+5ap/dWy6cyHDE+53xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750399594; c=relaxed/simple;
-	bh=sEYic5OrVjD6hWkOfxuOeaGzuWpjyBgXCww2D7dncYw=;
+	s=arc-20240116; t=1750399702; c=relaxed/simple;
+	bh=ipMsj6JUO2go39tDkkj3PYDbD+Imwr51Wow06uo4mjc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NVeBnHr5KKOc+mIoAVXnE7fcwzHSURWbO7t4hi2BofRLMkRDN2GXmRWKf0hPYpFRs0dbhUj/r0B7fMDVKP9b6hXTqHbGIHlMNOfyh8zB4OteKtZbP2brAdE13wS6RMvcGBOFJKOpJXK5frfM9CbnpCZzoWM1ILKYCO0grvfgIYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4XFYsyR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kwq79srlBsG2JMJKA+l4x/TnY7x3dRlb2noLfQYhJw3IafHC9BcPl7WKiwjF8OH/dwls/eBmiGRmOneop13erZiM76ACz32fC94n0LPCGhXIvFLMb0mQf/dQnmy1/LQB+wurjjKvNIvA32i51n9rA7yXu4hBPf2q6Cw5DoczI+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ah21+X0s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4XFYsyR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41F9C4CEE3;
-	Fri, 20 Jun 2025 06:06:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ah21+X0s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17EDC4CEE3;
+	Fri, 20 Jun 2025 06:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750399594;
-	bh=sEYic5OrVjD6hWkOfxuOeaGzuWpjyBgXCww2D7dncYw=;
+	s=k20201202; t=1750399701;
+	bh=ipMsj6JUO2go39tDkkj3PYDbD+Imwr51Wow06uo4mjc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p4XFYsyRlkYkt54vjZI3BJzXZi70D782inBOAUs6UB1k6BYEDQHK8wsjsoFHz58qN
-	 F/uUcsNtSiTEN/kSvuiB7T0qALxDBeNiUhLXdXG+uryr2K7i/OUIkAjgfHQQ3xzNGD
-	 D18uMhxwWH8T+kx8Cui7koF25MEZ1z87ZBUPMNvUTkgi46TmLj+Qa+ewQKdpQy4hXY
-	 /7v66LkNScG2RAqFeqRG3XPkHCZGaaubnIId/tL7MFNm5UQSoN0/NbyEoa1B2mBgSY
-	 IFGRwGY6gPSpSP+mjvhxqC/B8ysj+GvT7Ey3YFAeGdc+O5/VuTzbcTkdm5YaJoWsAz
-	 yMExgYfcYxqDw==
-Message-ID: <7fcb5ca6-7881-44c2-a658-752fa7cd5f38@kernel.org>
-Date: Fri, 20 Jun 2025 08:06:29 +0200
+	b=Ah21+X0sZEgeZqUcorZMmhfCt9WS4osoQ0UzDyh68yY4lseVE9ZNhqALgox9S2+QP
+	 9jBMfclH+GLLE4b8Eh4sSFzW21/CJ2UGTPX4DpfRIGCJWHGnEVC9YH6KomRExRGDCL
+	 yabWH0wLZ2MMNntXoNw2NeU8DazZW53qwlLAUyEyFst60GGDKlbw1ghYgp/uKfN9XN
+	 fQowPWmVvNR84Y8taoKhX/UVmV/rL05mf1644Cku09IXD5dwyu5IgQaQcIr1FNc3Ur
+	 cdDjhNUNjStS6YNvxkGLqqYt/QumbJuklLPjEhIhUcb5NqL2olplJgA/EsTqwHHpCV
+	 r7fwBJ1MYw0xg==
+Message-ID: <9012cc61-b499-4213-9753-54cf4d24c822@kernel.org>
+Date: Fri, 20 Jun 2025 08:08:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,19 +35,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/4] dt-bindings: clock: cdce6214: add binding for pin
- configuration
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- kernel@pengutronix.de, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-References: <20250618-clk-cdce6214-v5-0-9938b8ed0b94@pengutronix.de>
- <20250618-clk-cdce6214-v5-3-9938b8ed0b94@pengutronix.de>
- <20250619-arboreal-jaguarundi-of-passion-a2eaa1@kuoka>
- <aFP0YIgXndjTVyAL@pengutronix.de>
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>
+References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+ <6ef92d1a-39cc-409f-8ebe-d28ad2006988@kernel.org>
+ <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -93,34 +97,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aFP0YIgXndjTVyAL@pengutronix.de>
+In-Reply-To: <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/06/2025 13:28, Sascha Hauer wrote:
-> On Thu, Jun 19, 2025 at 09:42:06AM +0200, Krzysztof Kozlowski wrote:
->> On Wed, Jun 18, 2025 at 11:21:14AM GMT, Sascha Hauer wrote:
->>> Add pin configuration binding for the TI CDCE6214. The CDCE6214 has
->>> an internal EEPROM to to fully configure the chip, but this EEPROM
->>> might be empty, so add support for configuring the chip through
->>> the device tree.
->>>
->>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->>> ---
->>>  .../devicetree/bindings/clock/ti,cdce6214.yaml     | 95 ++++++++++++++++++++++
->>>  1 file changed, 95 insertions(+)
->>
->>
->> This should be part of previous patch. Bindings should be complete, not
->> added in partial sets.
-> 
-> See cover letter why I did this. If everybody is fine with the pin
-> configuration binding then I can merge this back together, but I doubt
-> it and in that case I'd rather get the driver upstream without the pin
-> configuration at first.
+On 20/06/2025 00:41, Harshit Shah wrote:
+>>> +
+>>> +             spi_clk: spi_clk {
+>>> +                     compatible = "fixed-clock";
+>>> +                     #clock-cells = <0>;
+>>> +                     clock-frequency = <25000000>;
+>>> +             };
+>>> +
+>>> +             apb_pclk: apb_pclk {
+>> No underscores in node names, but all these look incorrect - don't you
+>> have clock controller?
+> Noted, we will remove the "_" from the nodes. We do have clock 
+> controller however that is being accessed by other CPU before Linux will 
+> come-up.
 
-We expect bindings to be complete, not added in chunks and drivers do
-not matter here that much. You can still discuss the drivers, afterwards.
+What does it mean? Is the clock controller not available at all for
+Linux or any other OS?
+
+> 
+> So, the purpose of this clock nodes is to calculate the frequencies for 
+> other peripherals. (We will update the nodes with clock-<freq>)
+
+You do not calculate any frequencies here... You created nodes for fixed
+clocks but I question here whether these are fixed clocks.
+
+Where are these clocks located exactly?
+
 
 Best regards,
 Krzysztof
