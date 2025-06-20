@@ -1,64 +1,64 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6359130E841
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5397F266B52;
+	Fri, 20 Jun 2025 11:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419139; cv=none; b=hHBNCj8Vb2c/yZaY98cNYEYzRvDgksZ0opK7XUMV1rigy1lQ07WlZuSQnk+UbQ7C4mETWQryZA2TuAx0WLGhAoPvFblbVaMfG8M9NWMQ6JaiwYkjdMVp+5t4xlu9uYRg4/nHbx9wLQFy+zewy6/jqFa3tqSwIkUJed3hkKV/yB8=
+	t=1750419176; cv=none; b=ib625Z2ekylunBDHA/yK6l8/b7K8pB+vmX9d1Er2C5yoC492p49cmWPWmeGxJEXapOVmsadWuUTfEfB00wbRnThg5/w9Bdz/zKnVhGXR9RGslaUCi1GbXEIN8cG39b+ZvJ3fIOzu8buacjxiBm5ditWDjP5qcYToBAOGmdoty9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419139; c=relaxed/simple;
-	bh=heERv5g/XsTsuXNwTTbKK4BB0Mtt5YAjNxLbnrwgDIw=;
-	h=Content-Type:Message-ID:Date:MIME-Version:To:From:Subject; b=NjTw++ryEs8pXJE2rleKYlFbuiHXkGemjrUkTCiZ8+TMNI8jI4tb3tHbwD61cv4vjRzVg+7oz2CyYo2UKFZxz9JWl4cZE6ne/IfxWbQ1CM+gn1R/CRNdONCP+rdJFbragbbB++jXa6jb3D6KEE01+W+tuEMjlRs3MQyCUJcZ7A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j1b7zeHG; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1750419176; c=relaxed/simple;
+	bh=aVUis3tmwjEVO7sLfUIv5dGMKiNhugLFOOb2Uv9ONlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gnQiZHO+namdmyNzbmY76TPYevW1cowEPmaM7AGCsVdKPv07JFU+XBN1SmRCXMpNYe+3SB5s8/gczhfDuwdnxj3D00ncuj/bESIfERMHmoxFegQmmZyYQlrrV5cSbhx6lFWpUVc+8/cCt2U3HhRZZr6F94HikxUdc9yxW6V0Wcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXb0b8MZ; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1b7zeHG"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23694cec0feso15625795ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:32:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXb0b8MZ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a54690d369so1552870f8f.3;
+        Fri, 20 Jun 2025 04:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750419137; x=1751023937; darn=vger.kernel.org;
-        h=subject:from:to:content-language:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=us3Sptj3W6iQQ2egH/6NimLpKK2aDaly4nfpdXlFxwE=;
-        b=j1b7zeHGl+iyMk1G7Ur0uM7/Dcl+haezVloCSO9GR4D0mRM7xUSoh9ZqGJTUCFb35S
-         yMB2/FJLBRUWTXsiHuPYGhKNL/uAOd/Q1WDu8uLnZVR+6KfJ+xe4e/yMNQ8hE86ItR+8
-         TxbSAomqWD4O6hTm7oPUhbEOF5AMh+kojTsITbUP75UoSU4GCnD9vTpVFfeJg7zBoXGI
-         m8grJAW8LLcYk87kDlstOmXPFPTmJx9GetpkAE6jHKyFRTZcXE6ytpeFURknLE9DJmeb
-         fMM6TUsSjs2tR53xO6+iDZci+s7HVH129hLXGpVllaVFCn4qQ84cqPAmKHm1uFozsfz9
-         L4sw==
+        d=gmail.com; s=20230601; t=1750419174; x=1751023974; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q6mEJj3phw5TW6gbm0SfLzIIYERO6R6gcqINxCdoWyU=;
+        b=NXb0b8MZ5uiVVOST+ylTE9Mov2arH5IHHlYJ4KIHMXvHEyELW0mcF5Leq+0J8S5+76
+         5r1uRZYj763RwOAfZ6B8KHQTJBtOZgLLNYZtMpRc9Chhjf9tOrU6BMx6MQ/VG173JYUp
+         60Mijk717h3EcEmYRCvyXJ/nk0JZUhkf3AUs6kWsaQuJM/rb0jqJrd1GMZaXocW4Imar
+         qdQVbKIAk9aUBuNm1J7RAreX4qxWesqWi5/4lxO26Ep6lBNOtcVWuGLqYTshah40ahe2
+         91dTnNts3N3W6dmWte1Rmp/xTKqn8cNldWGOnSq9c1DXTc/Dc9XWHn2qsAj5SipPFhyg
+         WQvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750419137; x=1751023937;
-        h=subject:from:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=us3Sptj3W6iQQ2egH/6NimLpKK2aDaly4nfpdXlFxwE=;
-        b=UevWhNsvzEnCJuNvu/rb7sJit4JCOX5RrmMdYz0h5bWOxKHYcPXvkCNNnY7mUBxB+1
-         NFoXMVQPDBs7jqx1DI+ZIFJzl5vBqZfGnZKObe23kqCXYRLMxkDnHMUS7CN9qmt5O6yJ
-         zFptYS+tf7fcwdiMuytGN6YlwsLmwAThe19lT1oKUYI6PPm4aP5DWuQBrF14B6l8d5IP
-         BoOPT+uGbx14smy4EOzthdu+t0as4Glfkq8RIQsdVJfonSVe1xJg9wKALJwsdbC2blAB
-         3Z7cbNTp+jLkjsNnF1SzX52Dhss5JFrjLXVIuaF8rL27Xp3IIM+Ke8vNrzdexVvpXCYB
-         UD1w==
-X-Gm-Message-State: AOJu0YyJwI8zLVV40ICa1BXKrk6clIMzKD4bDXILFyJbQVqfquFoWU67
-	SH9O+Lra3ky8sBVX/CpWf0BvXysbtHUEyZncuRyDP2BIysPeN7Jd30rnNQ78jhrhlMc=
-X-Gm-Gg: ASbGncu0QdBKRVlfmkQ93VMvVGN7BFmDsxSzsGcEoXLEB/E19DGiyQBqnxFrNTfEMFp
-	fNAUMa7emO5HQYO/OiaWsiEFwYv8QCBuh29pF/b7aUGzVKWKqsX2BWeTtO9QJYQk6ZNxXf47rtv
-	bvYlXPqVO+4FIUgc2NIWsgiCp6q77R6V3uxwdGwmdRB79/DJqfwFy6QoxKtJgi3ciE5TPyLtB8d
-	u3FJ9wDuxmFTYeOnAtKQhGhsAMxo1/iKGYHqc4o3Tfc0bPajDWFPVhuh34f98sQN8MSV/Q1eU+A
-	0nAmZix7IkfsH8CFZt0v54zHLuI/T49iS1i2E7S2uEYcTW4xKwGB6PBOD5D3gkX9JovjbKOQsZq
-	EvnKQg/M5UVG7KhymCzlFesc6vFlXOrBz4aNsA09D
-X-Google-Smtp-Source: AGHT+IE54ifv4wCagmDfminedIxUUVCbUSmwmzI+A2oY8eHq+k9CpmMZ96jV4cp2H4s8PDsrM/WXsA==
-X-Received: by 2002:a17:902:f64a:b0:235:6e1:3edf with SMTP id d9443c01a7336-237d9878c08mr37269195ad.34.1750419137216;
-        Fri, 20 Jun 2025 04:32:17 -0700 (PDT)
-Received: from ?IPV6:2400:2411:d5c0:8200:6567:d3bb:9110:b725? ([2400:2411:d5c0:8200:6567:d3bb:9110:b725])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86f8261sm15945685ad.221.2025.06.20.04.32.15
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1750419174; x=1751023974;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q6mEJj3phw5TW6gbm0SfLzIIYERO6R6gcqINxCdoWyU=;
+        b=u9EghzRN/1N4D1oPUGYJIVcY2TnHsCiHD1pmnL10qRMiZ4FrytY51Xxh7gzfHmDxEW
+         2qK/XAuDy+LW66/pHm3WFOMWT9ceChibNBCdvTQIawzK7kuTYZv3rN1Cj83kBYNazGI9
+         NqgAoGsEcKbVm2OnwER+sBl/gik7qfC7qAtNU9jpxP+Tw6RMJ+S3/fTR+GObMSAisql8
+         cL/XhrJ4ytW3h62YY5VodCOyMqW14T2LmHYwutEymm+GYltl5DTAUOd7yH3mVnBMO1It
+         zTCH/9smUGvzdaaaCeRV2aLmvmtdEuigAj7U+HcltIHvWu71XCvocJ81m98S8hZeNu58
+         vQjg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0FEK5WVp+l55szDCa5CSrpK9eNrWJZZWijuQ1nuHRjLPWZrkItmPYPQtrWGmSUdZiyYVsY3YK2EAhVIgkEdc=@vger.kernel.org, AJvYcCXAJ7PakyrMo1bM18/kfewrECgdcDBgli45Ya56wUz6KtJL+uQP/x38ROh+AkrIqNDuU9/gpX0uAqgc@vger.kernel.org, AJvYcCXLAlxDi7hrIf6gj30XzOsNcdJ0R+iFqKeuqazFV25RNu5c88tijLR6pzNQ4RgMFmkF42QmXkz7TcdCaIj1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWmJG1NihH9d8x2XE/MncpaaF97S5H18IqfqwNnwCI6jDkW39O
+	9C//jNA0pRWJmycrSULn7+n0h82Mqb/CyVelGzODNssZNPw9YBJ7gI/W
+X-Gm-Gg: ASbGncsi+A7ma/IXXPaiq3q4IHpZQI55tg/1AcYfxUpqt12S8WTKPMhAy+qxETkDdyn
+	j39rxXCRKK4YSsqJ95FXnHSXR1FYwXz80N+bnUBrUBfkQYN5FnS4A9AXw45camOI7m5D580CDuh
+	BeTLfLhS/eFV8n9YIQSX0ze+IhtVcD0PlCQefco8Amh61f9aim2kCv/RBf7kC/Pp9nRNdck/VFi
+	NsONX5xRXAw0UzAydWF7YHLkVsIulhsOM9wlg/fQc3XxumkEKxGPQX8HnWXMJGjdDe9vtHhAjzw
+	NF+CTr38CaHqsAOWf7ydv5EazOWHPnapk4lohNIL1mz2bhLYQhq5fSfPChaFJ4pYtog9
+X-Google-Smtp-Source: AGHT+IEOSthR0EbNak5G9TavGEk3affJNL6c5D3MkqGwwG0EgoahxIttjypkNXmARDLkwGDSSJ3aZg==
+X-Received: by 2002:a5d:64e4:0:b0:3a4:ebc4:45a9 with SMTP id ffacd0b85a97d-3a6d12a422fmr1841526f8f.19.1750419173444;
+        Fri, 20 Jun 2025 04:32:53 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d118b910sm1773851f8f.84.2025.06.20.04.32.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 04:32:16 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------P0OEujdFXvmaOhgbvcFVUG86"
-Message-ID: <0edee524-4abd-493f-bbb6-f1ca852a043a@gmail.com>
-Date: Fri, 20 Jun 2025 20:32:14 +0900
+        Fri, 20 Jun 2025 04:32:53 -0700 (PDT)
+Message-ID: <ddcdc5ac-9c6f-4aca-ad66-37e1e66ef740@gmail.com>
+Date: Fri, 20 Jun 2025 12:30:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,54 +66,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/9] samples: rust: platform: conditionally call
+ Self::properties_parse()
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: ojeda@kernel.org, Rob Herring <robh@kernel.org>, alex.gaynor@gmail.com,
+ rafael@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+ viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
+References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+ <20250618101325.3048187-1-igor.korotin.linux@gmail.com>
+ <20250618131958.GA1550757-robh@kernel.org> <aFLJJkeFfHR9GB-0@pollux>
+ <aFRP-vGMoZNmQZ2E@pollux>
 Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-From: Mishchneko Sergey <sergey994049@gmail.com>
-Subject: [PATCH] module: Add comment explaining purpose of module_decompress.c
-
-This is a multi-part message in MIME format.
---------------P0OEujdFXvmaOhgbvcFVUG86
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <aFRP-vGMoZNmQZ2E@pollux>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 6/19/25 18:59, Danilo Krummrich wrote:
+> On Wed, Jun 18, 2025 at 04:11:57PM +0200, Danilo Krummrich wrote:
+>> On Wed, Jun 18, 2025 at 08:19:58AM -0500, Rob Herring wrote:
+>>> On Wed, Jun 18, 2025 at 11:13:25AM +0100, Igor Korotin wrote:
+>>>> From: Danilo Krummrich <dakr@kernel.org>
+>>>>
+>>>> Only call Self::properties_parse() when the device is compatible with
+>>>> "test,rust-device".
+>>>>
+>>>> Once we add ACPI support, we don't want the ACPI device to fail probing
+>>>> in Self::properties_parse().
+>>>>
+>>>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>>>
+>>> This needs your S-o-b as well since you sent the patch.
+>>>
+>>>> ---
+>>>>  samples/rust/rust_driver_platform.rs | 7 ++++++-
+>>>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+>>>> index 000bb915af60..036dd0b899b0 100644
+>>>> --- a/samples/rust/rust_driver_platform.rs
+>>>> +++ b/samples/rust/rust_driver_platform.rs
+>>>> @@ -40,7 +40,12 @@ fn probe(
+>>>>              dev_info!(dev, "Probed with info: '{}'.\n", info.0);
+>>>>          }
+>>>>  
+>>>> -        Self::properties_parse(dev)?;
+>>>> +        if dev
+>>>> +            .fwnode()
+>>>> +            .is_some_and(|node| node.is_compatible(c_str!("test,rust-device")))
+>>>
+>>> I think you should be checking just is this ACPI or DT rather than 
+>>> compatible. It's kind of an anti-pattern to test compatible in probe. 
+>>> The reason is we've already matched to a compatible and have match data 
+>>> to use, so we don't need to do it again. It becomes quite messy when 
+>>> there are numerous possible compatibles.
+>>
+>> Yeah, that was my first approach; here's the patch from a few days ago [1].
+>>
+>> The reason why I decided against this, was that all the properties we check in
+>> Self::properties_parse() in a fallible way *only* apply to the device with this
+>> compatible string.
+>>
+>> But I don't mind if we replace it with [1] either.
+> 
+> As mentioned, I don't mind either, so let's change it up.
+> 
+> @Igor, can you please pick up the patch in [1] and at the same time drop the
+> patch introducing FwNode::is_compatible() and replace node.is_compatible() with
+> node.is_of_node() in this one?
 
-This patch adds a header comment to kernel/module/decompress.c to 
-clarify its purpose.
+Just to make sure that we're on the same page, I replace this:
 
-The file handles decompression of loadable kernel modules using multiple 
-formats (gzip, xz, zstd), and this comment helps new contributors 
-understand the role of this file more easily.
+    if dev.fwnode().is_some_and(|node|
+node.is_compatible(c_str!("test,rust-device")))
 
-Signed-off-by: Mishchenko Sergey <sergey994049@gmail.com>
+with:
 
---------------P0OEujdFXvmaOhgbvcFVUG86
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-module-Add-comment-explaining-purpose-of-module_deco.patch"
-Content-Disposition: attachment;
- filename*0="0001-module-Add-comment-explaining-purpose-of-module_deco.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
+    if dev.fwnode().is_some_and(|node| node.is_of_node())
 
-RnJvbSBmYmQ3MDcxMDBhYTI5YTg4Y2NiMjU1NTMyZjI2ZWMxYmFhMDFhNGYxIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBNaXNoY2hlbmtvIFNlcmdleSA8c2VyZ2V5OTk0MDQ5
-QGdtYWlsLmNvbT4KRGF0ZTogRnJpLCAyMCBKdW4gMjAyNSAyMDoxODowNSArMDkwMApTdWJq
-ZWN0OiBbUEFUQ0hdIG1vZHVsZTogQWRkIGNvbW1lbnQgZXhwbGFpbmluZyBwdXJwb3NlIG9m
-IG1vZHVsZV9kZWNvbXByZXNzLmMKClRoaXMgYWRkcyBhIGRlc2NyaXB0aXZlIGNvbW1lbnQg
-YXQgdGhlIHRvcCBvZiBtb2R1bGVfZGVjb21wcmVzcy5jLApjbGFyaWZ5aW5nIHRoYXQgaXQg
-aGFuZGxlcyBkZWNvbXByZXNzaW9uIG9mIGxvYWRhYmxlIGtlcm5lbCBtb2R1bGVzCnVzaW5n
-IGd6aXAsIHh6LCBvciB6c3RkLCBhbmQgaW50ZWdyYXRlcyB3aXRoIHRoZSBrZXJuZWwgbW9k
-dWxlIGxvYWRlci4KClNpZ25lZC1vZmYtYnk6IE1pc2hjaGVua28gU2VyZ2V5IDxzZXJnZXk5
-OTQwNDlAZ21haWwuY29tPgotLS0KIGtlcm5lbC9tb2R1bGUvZGVjb21wcmVzcy5jIHwgNCAr
-KysrCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEva2Vy
-bmVsL21vZHVsZS9kZWNvbXByZXNzLmMgYi9rZXJuZWwvbW9kdWxlL2RlY29tcHJlc3MuYwpp
-bmRleCA0NzRlNjhmMGYuLjM1ZTM3ZTdlMSAxMDA2NDQKLS0tIGEva2VybmVsL21vZHVsZS9k
-ZWNvbXByZXNzLmMKKysrIGIva2VybmVsL21vZHVsZS9kZWNvbXByZXNzLmMKQEAgLTEsNSAr
-MSw5IEBACiAvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vci1sYXRlcgog
-LyoKKyAqIFN1cHBvcnQgZm9yIGRlY29tcHJlc3NpbmcgbG9hZGFibGUga2VybmVsIG1vZHVs
-ZXMuCisgKiBIYW5kbGVzIG11bHRpcGxlIGNvbXByZXNzaW9uIGZvcm1hdHMgKGd6aXAsIHh6
-LCB6c3RkKSBhbmQgaW50ZWdyYXRlcworICogd2l0aCB0aGUga2VybmVsIG1vZHVsZSBsb2Fk
-aW5nIGluZnJhc3RydWN0dXJlLgorICoKICAqIENvcHlyaWdodCAyMDIxIEdvb2dsZSBMTEMu
-CiAgKi8KIAotLSAKMi41MC4wCgo=
+And reworded the comment as follows:
 
---------------P0OEujdFXvmaOhgbvcFVUG86--
+    samples: rust: platform: conditionally call Self::properties_parse()
+
+    Only call Self::properties_parse() when the device is OF node
+
+    Once we add ACPI support, we don't want the ACPI device to fail probing
+    in Self::properties_parse().
+
+
+Thanks
+Igor
