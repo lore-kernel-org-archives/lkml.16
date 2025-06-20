@@ -1,518 +1,224 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B781F2D4B4F;
-	Fri, 20 Jun 2025 20:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750449641; cv=none; b=Cnim8gyp4M9Vjii4DgKs0kWYkah6j7RMcBQvFy+tYGVRTvyA+dJeARnbXOk6kQNlQ1POcLVXedyb5c8q5KwT3vIANNUJjfZyzzA7CznDFJBqb5x6hN7NvboWb0KN4X0dnFGiLE0/LS9GV8HSjLAYyIPuxv5dk07aeiDjcAjSL1s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750449641; c=relaxed/simple;
-	bh=FnLu/zteBtcbgF39/de0UEj6CjpgRW4OwQJqSK/DCvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nc1r0c/lOEWRAGLVqt2Wt8UPbQMmBKyW4DcpKTTB7+ptFh4Sp1jESuu2iwwrpos/2qpYmRitiKI/iVaPl0x24rwCf598aX+xthsORGylJiSZcGYgEQDu6BmVAZTWcnQ31zIbf3RoI3nqP5Gnf8qctAOyduFm/qBUC4mx9Tcpxyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGPm4+2j; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425A930E84D;
+	Fri, 20 Jun 2025 20:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750449780; cv=fail; b=jrEw3mpfKshbLR2tmFyEBRgyKMWgcERqi9nEy/QxR/0hvb/vlzxT15G3zctVc96cMAGzbGWOdg0mZPn3D6UA3ihNzEtSqv/KBfZXOOdxjC0Xi5drofaCaE0CPCvT/5Q5pfmpePdfCR0775psqaRYFu+PA+XcwFsxEgx/jTJbepg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750449780; c=relaxed/simple;
+	bh=D7EEtRavgzL/aej4JWe0CQKZ9daQ8EttaxWbqkJLlJc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fVHdUKnYy75iOziC20stfJ2WsY3WIwkinn3OQBsyqkoKAqqczYr5bsGVMv138MuUo0iM+mA7MDtA2amzua7dWBIubht/MN5LKT+WyE4limWv5zLWRuNuGI8gEhFdzxeMojsPfJK9EYrxUUMcyl3fox4wVHVFANYq6OqNtat1238=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hisQtC7g; arc=fail smtp.client-ip=40.107.223.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGPm4+2j"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a44b9b2af8so11956541cf.3;
-        Fri, 20 Jun 2025 13:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750449638; x=1751054438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cLlBLN6XYSWvjZS1MTV4Ao6ngjgsPbI1kTt9I/+kVy0=;
-        b=kGPm4+2jtPjQcXkv6IxhYSGf+jGHv5IYuSksWyE6+zLw1AohSHtUYm8+uQti0FRY2i
-         +WVBsj6SefnfMFxCXKFCgFta5Z8L8l3SbksgPxBqqchesdnQx2oz+xnGZzCM9D5Pim02
-         tHxlX+WN1iK9ypRmryCvTulUmXepRhkJYHcg/YFtA3GhOCnhcQMCu5VnfURqokaP0Me3
-         z9CMbB6VKbYwRTrvtjBVysDu9By/uf3tiB+wCMo0C8iH91xxoxqo9/VAa+sUxIU3E9vf
-         zzzew9YLZtlGm6DM075ILRvzSGZ1dLCpfV+wUUDXJoohVSicMFuc1gTdIf7POYOya0a/
-         vW5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750449638; x=1751054438;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cLlBLN6XYSWvjZS1MTV4Ao6ngjgsPbI1kTt9I/+kVy0=;
-        b=DV8X7W5uTqustYZ7U4m3qQLjPWPgLlSqgk3cQvdY1myyHopRUnhZYDDPmyWRf3aPrh
-         07VhR4CxqDGh31hIonOji2Fz4m0eehP0w6UiLdIoxpJZvaKimnp1eb+TI6N1mGkoAb/c
-         OeulRCVR2wtB/M2+T0bSL8f/yn6OrtgTdyV67uqxCy6/2v3iKtJ4Aj9uh6BmRCw/qzOu
-         KcrFbD7Z40m+aXKM53ttymMi+o/TwZ6W8To0TcVQ7V5AxUasWVbxSzj8g/x2KG0Y8LWP
-         eq2dCEQX0yZvY4UAx6FmNurOxBacFfEryV0om2L7bF/c37zZJgYnhYMs7b5H14rX+q9u
-         ZQmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrGE4a6nGHIBKbI1oWR5LTjUt35G15R41jdODqLFO214hODbdlCWuuYVY8Y+8M/9biGioORm6RwLuT5Q==@vger.kernel.org, AJvYcCXN1KutvFUhVkoeE5QoF5iDZzhEs+hDPqIsdpmzT4bDbSd5iZBBquTVZXGtOfrXYbHuTVgy7REx2XZl5Sk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyreM8Y6LXZX6wCf+hsTJOdkrEWFLQLh9pU/ecoysaM58AQIeIs
-	Bo1mgT5bfySDitsuOBon3Gfb0oDq6HIhgZykALa/sVMqHNkpXq+oSJmZ
-X-Gm-Gg: ASbGncvtz8Bn4F3rhxbXM+3xwWPFMM4sZDIn3f+ggavw/G7SAhuNU4+A4E1JlIDcpx8
-	5WIUHMCsEAf6PaaK7kLN6owt710TA0ikIK1yIxhHVJxixv70IW2LxFDxLxyemswxktYpjY8K/xw
-	bSE1jV09FzHt9Fm+lbKYCJ73jV2w6Uv5vVR2HKshA/bujZ4BcGWfDpPzEYXFwz0wA11+kLyWZ5z
-	hCQkob8/8xFc049zBuFUg8eSj+A4i56lbfJwGtIjhYxsqB0fgB9osRqnFgKHkFRFJ1P1q8RG3Af
-	ZmJG4o+iLuG+9RcdIva0YjyVHUTq7MERsaLhdWz8a96+rG58BOaHmwXZ3vdqO+KkowziAziljRe
-	nsoQXmTLgKszvhQ==
-X-Google-Smtp-Source: AGHT+IHqDuYQTela0b4PTSe5zzZAZ45fG5k1UhCMdnnTCrUP6kNd3QLPjdXdUCD8LSsV/M/1RjkAkA==
-X-Received: by 2002:ac8:594d:0:b0:4a4:2f0b:d2dc with SMTP id d75a77b69052e-4a77a2083acmr74820241cf.20.1750449636505;
-        Fri, 20 Jun 2025 13:00:36 -0700 (PDT)
-Received: from localhost.localdomain.com (sw.attotech.com. [208.69.85.34])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779d67360sm12659891cf.24.2025.06.20.13.00.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 13:00:35 -0700 (PDT)
-From: Steve Siwinski <stevensiwinski@gmail.com>
-X-Google-Original-From: Steve Siwinski <ssiwinski@atto.com>
-To: alok.a.tiwari@oracle.com
-Cc: James.Bottomley@HansenPartnership.com,
-	bgrove@atto.com,
-	gustavoars@kernel.org,
-	kashyap.desai@broadcom.com,
-	kees@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	martin.petersen@oracle.com,
-	mpi3mr-linuxdrv.pdl@broadcom.com,
-	prayas.patel@broadcom.com,
-	ranjan.kumar@broadcom.com,
-	sathya.prakash@broadcom.com,
-	sreekanth.reddy@broadcom.com,
-	ssiwinski@atto.com,
-	stevensiwinski@gmail.com,
-	sumit.saxena@broadcom.com,
-	tdoedline@atto.com
-Subject: [PATCH v2 2/2] scsi: mpi3mr: Add initialization for ATTO 24Gb SAS HBAs
-Date: Fri, 20 Jun 2025 16:00:23 -0400
-Message-ID: <20250620200023.43408-1-ssiwinski@atto.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <0c9391ed-2015-41f7-850c-39c20730ca8c@oracle.com>
-References: <0c9391ed-2015-41f7-850c-39c20730ca8c@oracle.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hisQtC7g"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Kf052bl51wo842rKTIWKJboCWPqd9hHfsT8uNNJpLCKAeRJAnu5++Pq9SlvjFVy3M1cVcaX03dEmZSTGxe0mO6OPGo26llkY2Deezqg3PQ7Mt6aZeFIgNE1S3cGYPMX9AnW+WVz8YpfWxzdzr9WhUMlCnkmzBvJVDcUoCXjy6wYmib2D2r39BEF65rBM3gYYn0pNuFW7akSnlwHOkYoUdo0LAS0VEcork4MGpyJ+J+fcVn9uda8pfl2Q7U85sC+OF0lFs0ofB2Gj7KUpRdyx8+0uGRrDveNJAXHs4vAp7x3ByfioT1wrJDO56LT3BjuKTcRX8qZ9nOe23jeldOiQ4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j71XMOg9URpT2R99uYkEDmCK944SElCb6FadvfKLZuk=;
+ b=hqi1fHq6MgEXqudKzblmsrnP+eWIp2rGAwyCiFAx6F34ZX7qFXEa6NL4RZ5bAnkthdfeoIEuJKQXKPvNpBPCEjf9ZTMAaHj2KFlIjX5ewn51HuoURdPoG81PPHJB5fnY/RceyScdyd3ohlR79J1eAMr+2LyeMGFaipeabUTQ2VDyRY9bxIxd2CuGNuPOQcJ9JLzLNVySFP/SH8g8Yz2p3VYzFAhaqVp/LKr/MKef2rx0rsgx8Y1KrxdgOaeR+hnCs5lLN4zFaqL30KTsIbnOMrZjoiWVtsSbHP5M18X/A4LwoxO6QpAt1jLQ4KwdMcsQbPXh9QiacAxhg7gMvxGSWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j71XMOg9URpT2R99uYkEDmCK944SElCb6FadvfKLZuk=;
+ b=hisQtC7gSZ7JOUR+1o75wOtmszgmXmwTXtreRDh6aJWVdF+ZH56MaVdISGCqJkrv3An0UkD0fUG/rAN0LiDN+3VDhMtra7Iqp5y0LR9rICd7FesNuAAeluZ9earF0+V8ViXxMB1w2BdlLc+Y6WgTTwjb1KpdFiMV5v4OqzwCK9c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by CH3PR12MB8512.namprd12.prod.outlook.com (2603:10b6:610:158::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
+ 2025 20:02:56 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
+ 20:02:56 +0000
+Message-ID: <4e4edb94-e2fc-4e32-bc27-3b0bc5ccd74f@amd.com>
+Date: Fri, 20 Jun 2025 16:02:54 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
+Content-Language: en-GB
+To: Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ Benjamin Chan <benjamin.chan@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+ Armin Wolf <W_Armin@gmx.de>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Chan, Benjamin (Koon Pan)" <benjamin.chan@amd.com>, Bin Du
+ <bin.du@amd.com>, "Rosikopulos, Gjorgji" <gjorgji.rosikopulos@amd.com>,
+ "Li, King" <king.li@amd.com>, Phil.Jawich@amd.com
+References: <20250620115448.202425-1-arnd@kernel.org>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <20250620115448.202425-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR08CA0016.namprd08.prod.outlook.com
+ (2603:10b6:5:80::29) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|CH3PR12MB8512:EE_
+X-MS-Office365-Filtering-Correlation-Id: 374f809f-64f2-46ad-73ff-08ddb03572e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YVRWcGhicFU5MUw3azdScExUT3dXUkg4ZzR2Y3JHSUMrZy91SmYvQ25CUldO?=
+ =?utf-8?B?cWZNWVlVeUhqYkJVVHlhUk1vUkhaQXV2L0xGRm9pN2lVRXRWVVo5TUREQ256?=
+ =?utf-8?B?d3FvSXpLVEhuV201ZWlDZTZZYlIyQ0k5dzhRWUVCc0hhSlpLWlI2bHF4MHlN?=
+ =?utf-8?B?enh6bk9BdUs0bkEyOVBFZUZSR09Lbm5NbHJ0b2hLL2NXWnp4VFhaTjk3VUda?=
+ =?utf-8?B?OEhERURGT3RUTmZTNzdrNXRpWHlmVE9FMUVnbzVSSWxwTHhjRXRBRDF6YS9W?=
+ =?utf-8?B?ZGxvK3pQTGNKNXRLSTNNcGhvQzBDVnZtV0xCczY4VmZEWkJHRjVwR0pQT2lI?=
+ =?utf-8?B?bytHbTV4ZXRLbWRCcXRBSk1aQllvZ1ZMVkdwbWltVWRDWmFiM3JvYW5vdi9S?=
+ =?utf-8?B?eG45a1o1RE1DaWo2b1VIdSs5NldEaGIzWGxjSUdmY3Zjcm5uSCs0bVF0Qk1X?=
+ =?utf-8?B?NlNMQWtwM1poWFZGTk92czl2anRTdUxiZGRqc29HWXErVVRVM25EbVpGWmpr?=
+ =?utf-8?B?ZzZmc1VMZFkrbTNScmg5RU5hbVpQOFB0MzNZcThZQU5VRzFxN1hkbTdHMk5B?=
+ =?utf-8?B?dlVkL29uQWwwQXNxZk5PRFFXUUl0Uk8yTnF5cTkyQmZZcC80emQray96cDZj?=
+ =?utf-8?B?aHo1U05vMjllRFlrSUFPSEw1UkdwMWJNWU12Y29odlk0VDJGNW4rOUtseFhH?=
+ =?utf-8?B?dnNaTFcwVFBRajg2a21SZHE1Z1ZhOUwvOTFzeUVyN1paN3liQisxNktyUkgz?=
+ =?utf-8?B?T0xITnFyaHd0THYvUTdYY3gyVXBsN2Y4ZEEwMzEvL3VwZHZyUXhueXFqRlhS?=
+ =?utf-8?B?SkExOU1jY3hYRHNQSGFlazNlSW1aYWN6WkQ0Nk1FMWE5a3lMVjBEQWNpS2N0?=
+ =?utf-8?B?OWZJb3NYMHVoVWd4S3VVQkRrbzhiTlFyZk55VFFnV0R3NEpuSkZEekszQ1Yx?=
+ =?utf-8?B?NllKSStWZ3VDSGw1S2FscnV2SVVHNkR1OFl1ZjFnYmVwY29odHF5UHE0L2Fw?=
+ =?utf-8?B?WGpXU0J6QTZMUkhtSjVvaU5LWEtrQkNoTlFyQVdQQTIzOVUyaDk3cm9aOStV?=
+ =?utf-8?B?clFEOHlqaWoyMlhFcjk3aFp1TEV4MUswK0RYQXNnMGg3MHpDSkVlN2RYVG16?=
+ =?utf-8?B?dENxWVVqSkdyTS9WTGZ5V0dhS2d1YTA5QXREcVJkblV2eDZadTgxUVBoSG0y?=
+ =?utf-8?B?QkhiMTJKR2tMVFdWVk5XZ05NV0FOVlMvelNLS1U3dWpkK1hYaWRvZDhhK1g5?=
+ =?utf-8?B?RlJVRjc1QjhqSzQwLzRvSzUyOVVNckZkUkdsbGJZeG9EcldLQk1mUzh1ZG8r?=
+ =?utf-8?B?dWhlVkN1eFNucTAwclJJVU9LRi9hcTJXUnhLRHhHSXVWbkF4S0lVKzd4UlRx?=
+ =?utf-8?B?S1ppRmM5T2g1a2xDSzNsb2k3dm5XTjZJYThock16UzFPazkvb3VaKzZkWFdM?=
+ =?utf-8?B?a3Z4VXNwWW9YUmNZYXA2TVlvVXE5NXlTbDdERENaODJJV2tlc0JEbWRqaW5x?=
+ =?utf-8?B?Rk5GZHBpRlVzQytLelREcmd6cFMwd2cwREtweEtVRGdFc3hQZi9TaDJLdkpj?=
+ =?utf-8?B?aWl0My9YeXVMem4wOXFaY05EaHlsT1lwWUR3QVlNOWV3OTBpTWFTWmpEV21S?=
+ =?utf-8?B?bmV1T3IxcFRPMlcvU2cvVS9nVVpQUnh0aThGM0hoNWdheE43aWlZeWVzS1A0?=
+ =?utf-8?B?eWwvd1N6a0Y3UG5DdFowSjl5KzRUbVdnR2JyYS9CdFpMMWhDZS82WnFWM1VD?=
+ =?utf-8?B?Q3U3UHh4STRrcXZBaWlKcXNCaVhmVDNGOWtvYnFMc0h0M25aTWZib0pNa0RG?=
+ =?utf-8?B?cVo2WWtTMm5ZM0l4T2J0WHZvWkU3U3k3c2pjTXY0V01ScmhvdEVmc2RKTE1Z?=
+ =?utf-8?B?OHdPU21BN1FDaVVDNndkMWxTQWdPQlg2ZFNHdDh0dFV3c1lxRWZuaDhDSEZn?=
+ =?utf-8?Q?1THyqVwTiL3QK31yc9znK/MCIVV87i3e?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?clhiVGlPYWVWNDBrdEdUcEkxK2QrL2drTkNEcFpwNGI1Q3JFaW9UZUM2djk5?=
+ =?utf-8?B?L1BtRWx1TUhQUmFyc0s4M0tQbTEyZi9IYnhhZVdEMEZxWEFLQzZtTjBCdWQx?=
+ =?utf-8?B?Tml2Nkh4R1BxNmZoaEZJVEQ1bHp6VkJTUVpWVHpSQTlrRGthVWJEeEpRNHRH?=
+ =?utf-8?B?OHc3RG1TNEJmb1ltS1VReEpyMlh3K3Q3L0xyVTNFQ3JpbU5BUmxLbGhPVjYy?=
+ =?utf-8?B?bjB6cE1BZHk3R0tTcnpxMWE5Uys2aFJEdytlbUlHOG4xekxvQWhOWU1lQy9q?=
+ =?utf-8?B?Z2V4YUhrdFJwK05mc0ZCckFMSTJRQlgvbFRYM2JvUFNhRGUrM2F5a3Vidzcz?=
+ =?utf-8?B?Sjh3aGpaQndoMzBLSFkyd2lTZ0tJdGdSdjdrM2Nkb0NRbWFiVTBycnZYUHkv?=
+ =?utf-8?B?Tm55WitpUzIzeFVneGhvN0Q3akgyYWRyaE9EVTNOSFcwd2EwZ3JDN1Y3SmpB?=
+ =?utf-8?B?ckRkbnBEQlpBWGRoWnBVK2RvRy90ZjlIcGtVM09ZSThDZW1Rb1VZYVBKNWtv?=
+ =?utf-8?B?T21KWHl4bTFzZTNFbXZVSVdNV05URWJ4R1hOUGNhVFg1OWhnQ0tybXllTitC?=
+ =?utf-8?B?NWttK2xtN0IzNGlra0dVbVR6enZFNVQyTURBTVpJZnU0L2JYclZ6eFFnRTMw?=
+ =?utf-8?B?QTA3R1F5M0hPQXNscnhSSE9LQlM5eElGYlBYcTVKYWkvUy9kNGR6bzRRcHB2?=
+ =?utf-8?B?M2pXbjEyZWloakV1Q3cwamQ2dG1OWHpMVXJZeXNvVC9jVGYxRlFDSGY2cjJP?=
+ =?utf-8?B?UXlwVTZZMjVGWnp2MVZiSE5hdDRMSlJ0akREUHd2ZEpwSlVyWEFtSGk1Q0hs?=
+ =?utf-8?B?T0FBNWRRZzZ1TWNiVi9qR3J5Tzl2VXRGTVVoQThXcGdyZzJJQzUzaktBMTk2?=
+ =?utf-8?B?SnlqSjgySG50YzI4TEhLWFcvdGxBL09GUDduN3hJQzVEN21OTWwxaElOdWxK?=
+ =?utf-8?B?S3VoTlYyaFhUSWxjOXNvUXFNdGZtWGlyeXFCZ25ORm1pQzZEdks4QThZOGZC?=
+ =?utf-8?B?dU5kMTJISS8wNFRSOTB3ZjAybUp0bTcyY3NWZjB3cW84b2JyZVZRNVFiS1NT?=
+ =?utf-8?B?MWhUWDRleGNDZmtmUDJyUHI1bGM5RmNnbHBtaEhRb2tOTU00bTIra1dybzVC?=
+ =?utf-8?B?V0I4cUdpaVBja2RHdXFlWHBqWXE0MDhKMTRzR29wZzVReW0zU3Ayd2VDb0lK?=
+ =?utf-8?B?c0NFcC9mNTdsaU9SZFVaRmJsc2JXZDlmNFVZSjBZU01tYkVsZWdvU053SWpk?=
+ =?utf-8?B?Rjh0SXlCQlc4blptK0xhQjRhbXB0dHRQQW1mektxbTBCRW9LalNQMG1mV29E?=
+ =?utf-8?B?QTRSYW4xcFFORzdKT0VXVXdGSU1uWEFqOE16RUZ1QjNvcXBqUzBXU3BBbzVh?=
+ =?utf-8?B?M1B1U0VjUVJvMGVLb1FhNnpEYUZqR0VqbU53SkpyUkxPNE5VWVorSmVIeE9K?=
+ =?utf-8?B?dGpBZDRabGVxOVlXRlZxRzliZkU5ZU5xWFk5bXVLeFd2VkFoMEV3UkhaK1Jm?=
+ =?utf-8?B?VjhsRm9LWDltNmtxM3BzOTJtWHNnTVViZlFqYTkzbVdYZnROWmd0S0U4bENO?=
+ =?utf-8?B?ZC9lQUdZRENRKzBPSkVZMWtpcWtCVktxRy81a1ZZVzloUlRJZ2F3WHh5U1Ux?=
+ =?utf-8?B?dkdtbWEwcy9qRmsrUHJHVm43Wi9Bd09YbXY4c2luRDFZZTZOSmQ5SkJXVENI?=
+ =?utf-8?B?RW0rNjRGSGZ2SXRBaWNsYkl1dTlnNGhLT3VuZGsyUEdsbTdDN0RTSjVMSWhy?=
+ =?utf-8?B?TGpzdGhyOFJtcUxLaUdzL0lVM04xTlBjQkl5czY2Yk1mNENwN2hNUXhHQ1hn?=
+ =?utf-8?B?ZkY2QmJpVmJGWHBNaGxrMzRYQlo1YXI4REN4TUY0SWU1T3FlWmtBOFhhSUhG?=
+ =?utf-8?B?cEVhL3NGT1c4M3hHUHczdTBBYzVFcDFXaHFBZUhyZGtkNXhCdnp6OEF6djB3?=
+ =?utf-8?B?aURDMFNwTTVDL0lWU1hIRzdUTFlCTWtJa3BRZTFZSmNhNjhpVkk2RllQYU9r?=
+ =?utf-8?B?Vk5IVEtleHp2T0JkazhHSUZJYVJ6QnllNnFzbXN3SUxnUkQ3cFh0cFFkZWs1?=
+ =?utf-8?B?SEQxRjNlMnVucFhFRFlBNDN1b0FUVnlmYlRtWTErNlI5ZktkWUZwT09JdGpC?=
+ =?utf-8?Q?tNSxlXBZ57rR8h+VBsofF7PVp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 374f809f-64f2-46ad-73ff-08ddb03572e4
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 20:02:56.5714
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EqiBp6QJa/k+LfFlbi85sKrfLCRjUQ7Ws6Wubez5st0+MTm9SvZ/TUTALo0j6o8RyvQYW2aL5QNDzQD23Y3nYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8512
 
-This patch adds initialization routines for ATTO 24Gb SAS HBAs.
-It introduces the ATTO NVRAM structure and functions to validate
-NVRAM contents.
+Hi Arnd,
 
-The `mpi3mr_atto_init` function is added to handle ATTO-specific
-controller initialization. This involves reading the ATTO SAS address
-from Driver Page 2 and then assigning unique device names and WWIDs
-to Manufacturing Page 5.
+Thanks for the patch.
 
-v2:
-- Fixed typo and whitespace issues. (Reported by alok.a.tiwari@oracle.com)
-- Changed ATTO_SAS_ADDRESS members to __le16/__le32/__le64.
-  (Reported by Sparse)
-- Initialized 'r' return value in mpi3mr_atto_get_sas_addr.
-  (Reported by Sparse)
-- Applied le16_to_cpu to return value in mpi3mr_cfg_get_page_size.
-  (Reported by Sparse)
-- Corrected parameter names in comments. (Reported by Sparse)
+On 6/20/2025 7:54 AM, Arnd Bergmann wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Checking the module owner of the device only works when modules are
+> enabled, and the device is created from a module:
+> 
+> drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
+> 
+> Building the driver as a loadable module avoids the build failure,
+> though this should probably be fixed in a different way that still
+> works if the device was created from built-in code.
+> 
+> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/platform/x86/amd/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index 63e4bd985699..9e150500e37e 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -36,6 +36,7 @@ config AMD_WBRF
+>   config AMD_ISP_PLATFORM
+>          tristate "AMD ISP4 platform driver"
+>          depends on I2C && X86_64 && ACPI
+> +       depends on m
+This issue is reported earlier and the fix has been submitted to replace 
+adap->owner->name with adap->name to remove the dependency on 
+CONFIG_MODULES. But until the fix is accepted and is available on either 
+i2c or pdx86 tree, I think its good to have this fix to avoid the build 
+errors.
 
-Signed-off-by: Steve Siwinski <ssiwinski@atto.com>
----
- drivers/scsi/mpi3mr/mpi3mr.h    |  35 ++++
- drivers/scsi/mpi3mr/mpi3mr_fw.c | 310 ++++++++++++++++++++++++++++++++
- 2 files changed, 345 insertions(+)
+https://lore.kernel.org/all/20250609155601.1477055-4-pratap.nirujogi@amd.com/
 
-diff --git a/drivers/scsi/mpi3mr/mpi3mr.h b/drivers/scsi/mpi3mr/mpi3mr.h
-index 9bbc7cb98ca3..35332c0bcdad 100644
---- a/drivers/scsi/mpi3mr/mpi3mr.h
-+++ b/drivers/scsi/mpi3mr/mpi3mr.h
-@@ -1438,6 +1438,35 @@ struct delayed_evt_ack_node {
- 	u32 event_ctx;
- };
- 
-+/*
-+ * struct ATTO_SAS_NVRAM - ATTO NVRAM settings
-+ * @signature: ATTO NVRAM signature
-+ * @version: ATTO NVRAM version
-+ * @checksum: NVRAM checksum
-+ * @sasaddr: ATTO SAS address
-+ */
-+struct ATTO_SAS_NVRAM {
-+	u8		signature[4];
-+	u8		version;
-+#define ATTO_SASNVR_VERSION		0
-+
-+	u8		checksum;
-+#define ATTO_SASNVR_CKSUM_SEED	0x5A
-+	u8		pad[10];
-+	u8		sasaddr[8];
-+#define ATTO_SAS_ADDR_ALIGN		64
-+	u8		reserved[232];
-+};
-+
-+#define ATTO_SAS_ADDR_DEVNAME_BIAS		63
-+
-+union ATTO_SAS_ADDRESS {
-+	u8		b[8];
-+	__le16	w[4];
-+	__le32	d[2];
-+	__le64	q;
-+};
-+
- int mpi3mr_setup_resources(struct mpi3mr_ioc *mrioc);
- void mpi3mr_cleanup_resources(struct mpi3mr_ioc *mrioc);
- int mpi3mr_init_ioc(struct mpi3mr_ioc *mrioc);
-@@ -1533,10 +1562,16 @@ int mpi3mr_cfg_get_sas_io_unit_pg1(struct mpi3mr_ioc *mrioc,
- 	struct mpi3_sas_io_unit_page1 *sas_io_unit_pg1, u16 pg_sz);
- int mpi3mr_cfg_set_sas_io_unit_pg1(struct mpi3mr_ioc *mrioc,
- 	struct mpi3_sas_io_unit_page1 *sas_io_unit_pg1, u16 pg_sz);
-+int mpi3mr_cfg_get_man_pg5(struct mpi3mr_ioc *mrioc,
-+	struct mpi3_man_page5 *man_pg5, u16 pg_sz);
-+int mpi3mr_cfg_set_man_pg5(struct mpi3mr_ioc *mrioc,
-+	struct mpi3_man_page5 *man_pg5, u16 pg_sz);
- int mpi3mr_cfg_get_driver_pg1(struct mpi3mr_ioc *mrioc,
- 	struct mpi3_driver_page1 *driver_pg1, u16 pg_sz);
- int mpi3mr_cfg_get_driver_pg2(struct mpi3mr_ioc *mrioc,
- 	struct mpi3_driver_page2 *driver_pg2, u16 pg_sz, u8 page_type);
-+int mpi3mr_cfg_get_page_size(struct mpi3mr_ioc *mrioc,
-+	int page_type, int page_num);
- 
- u8 mpi3mr_is_expander_device(u16 device_info);
- int mpi3mr_expander_add(struct mpi3mr_ioc *mrioc, u16 handle);
-diff --git a/drivers/scsi/mpi3mr/mpi3mr_fw.c b/drivers/scsi/mpi3mr/mpi3mr_fw.c
-index 1d7901a8f0e4..29b9ae547710 100644
---- a/drivers/scsi/mpi3mr/mpi3mr_fw.c
-+++ b/drivers/scsi/mpi3mr/mpi3mr_fw.c
-@@ -4203,6 +4203,163 @@ static int mpi3mr_enable_events(struct mpi3mr_ioc *mrioc)
- 	return retval;
- }
- 
-+/**
-+ * mpi3mr_atto_validate_nvram - validate the ATTO nvram
-+ *
-+ * @mrioc: Adapter instance reference
-+ * @nvram: ptr to the ATTO nvram structure
-+ * Return: 0 for success, non-zero for failure.
-+ */
-+static int mpi3mr_atto_validate_nvram(struct mpi3mr_ioc *mrioc, struct ATTO_SAS_NVRAM *nvram)
-+{
-+	int r = -EINVAL;
-+	union ATTO_SAS_ADDRESS *sasaddr;
-+	u32 len;
-+	u8 *pb;
-+	u8 cksum;
-+
-+	/* validate nvram checksum */
-+	pb = (u8 *) nvram;
-+	cksum = ATTO_SASNVR_CKSUM_SEED;
-+	len = sizeof(struct ATTO_SAS_NVRAM);
-+
-+	while (len--)
-+		cksum = cksum + pb[len];
-+
-+	if (cksum) {
-+		ioc_err(mrioc, "Invalid ATTO NVRAM checksum\n");
-+		return r;
-+	}
-+
-+	sasaddr = (union ATTO_SAS_ADDRESS *) nvram->sasaddr;
-+
-+	if (nvram->signature[0] != 'E'
-+	|| nvram->signature[1] != 'S'
-+	|| nvram->signature[2] != 'A'
-+	|| nvram->signature[3] != 'S')
-+		ioc_err(mrioc, "Invalid ATTO NVRAM signature\n");
-+	else if (nvram->version > ATTO_SASNVR_VERSION)
-+		ioc_info(mrioc, "Invalid ATTO NVRAM version");
-+	else if ((nvram->sasaddr[7] & (ATTO_SAS_ADDR_ALIGN - 1))
-+			|| sasaddr->b[0] != 0x50
-+			|| sasaddr->b[1] != 0x01
-+			|| sasaddr->b[2] != 0x08
-+			|| (sasaddr->b[3] & 0xF0) != 0x60
-+			|| ((sasaddr->b[3] & 0x0F) | le32_to_cpu(sasaddr->d[1])) == 0) {
-+		ioc_err(mrioc, "Invalid ATTO SAS address\n");
-+	} else
-+		r = 0;
-+	return r;
-+}
-+
-+/**
-+ * mpi3mr_atto_get_sas_addr - get the ATTO SAS address from driver page 2
-+ *
-+ * @mrioc: Adapter instance reference
-+ * @sas_address: Pointer to store the sas address
-+ * Return: 0 for success, non-zero for failure.
-+ */
-+static int mpi3mr_atto_get_sas_addr(struct mpi3mr_ioc *mrioc, union ATTO_SAS_ADDRESS *sas_address)
-+{
-+	struct mpi3_driver_page2 *driver_pg2 = NULL;
-+	struct ATTO_SAS_NVRAM *nvram;
-+	u16 sz;
-+	int r = -ENOMEM;
-+	__be64 addr;
-+
-+	sz = mpi3mr_cfg_get_page_size(mrioc, MPI3_CONFIG_PAGETYPE_DRIVER, 2);
-+	driver_pg2 = kzalloc(sz, GFP_KERNEL);
-+	if (!driver_pg2)
-+		goto out;
-+
-+	r = mpi3mr_cfg_get_driver_pg2(mrioc, driver_pg2, sz, MPI3_CONFIG_ACTION_READ_PERSISTENT);
-+	if (r)
-+		goto out;
-+
-+	nvram = (struct ATTO_SAS_NVRAM *) &driver_pg2->trigger;
-+
-+	r = mpi3mr_atto_validate_nvram(mrioc, nvram);
-+	if (r)
-+		goto out;
-+
-+	addr = *((__be64 *) nvram->sasaddr);
-+	sas_address->q = cpu_to_le64(be64_to_cpu(addr));
-+
-+out:
-+	kfree(driver_pg2);
-+	return r;
-+}
-+
-+/**
-+ * mpi3mr_atto_init - Initialize the controller
-+ * @mrioc: Adapter instance reference
-+ *
-+ * This the ATTO controller initialization routine
-+ *
-+ * Return: 0 on success and non-zero on failure.
-+ */
-+static int mpi3mr_atto_init(struct mpi3mr_ioc *mrioc)
-+{
-+	int i, bias = 0;
-+	u16 sz;
-+	struct mpi3_sas_io_unit_page0 *sas_io_unit_pg0 = NULL;
-+	struct mpi3_man_page5 *man_pg5 = NULL;
-+	union ATTO_SAS_ADDRESS base_address;
-+	union ATTO_SAS_ADDRESS dev_address;
-+	union ATTO_SAS_ADDRESS sas_address;
-+
-+	sz = mpi3mr_cfg_get_page_size(mrioc, MPI3_CONFIG_PAGETYPE_SAS_IO_UNIT, 0);
-+	sas_io_unit_pg0 = kzalloc(sz, GFP_KERNEL);
-+	if (!sas_io_unit_pg0)
-+		goto out;
-+
-+	if (mpi3mr_cfg_get_sas_io_unit_pg0(mrioc, sas_io_unit_pg0, sz)) {
-+		ioc_err(mrioc, "failure at %s:%d/%s()!\n",
-+		    __FILE__, __LINE__, __func__);
-+		goto out;
-+	}
-+
-+	sz = mpi3mr_cfg_get_page_size(mrioc, MPI3_CONFIG_PAGETYPE_MANUFACTURING, 5);
-+	man_pg5 = kzalloc(sz, GFP_KERNEL);
-+	if (!man_pg5)
-+		goto out;
-+
-+	if (mpi3mr_cfg_get_man_pg5(mrioc, man_pg5, sz)) {
-+		ioc_err(mrioc, "failure at %s:%d/%s()!\n",
-+		    __FILE__, __LINE__, __func__);
-+		goto out;
-+	}
-+
-+	mpi3mr_atto_get_sas_addr(mrioc, &base_address);
-+
-+	dev_address.q = base_address.q;
-+	dev_address.b[0] += ATTO_SAS_ADDR_DEVNAME_BIAS;
-+
-+	for (i = 0; i < man_pg5->num_phys; i++) {
-+		if (sas_io_unit_pg0->phy_data[i].phy_flags &
-+			(MPI3_SASIOUNIT0_PHYFLAGS_HOST_PHY |
-+			MPI3_SASIOUNIT0_PHYFLAGS_VIRTUAL_PHY))
-+			continue;
-+
-+		sas_address.q = base_address.q;
-+		sas_address.b[0] += bias++;
-+
-+		man_pg5->phy[i].device_name = dev_address.q;
-+		man_pg5->phy[i].ioc_wwid = sas_address.q;
-+		man_pg5->phy[i].sata_wwid = sas_address.q;
-+	}
-+
-+	if (mpi3mr_cfg_set_man_pg5(mrioc, man_pg5, sz))
-+		ioc_info(mrioc, "ATTO set manufacturing page 5 failed\n");
-+
-+out:
-+	kfree(sas_io_unit_pg0);
-+	kfree(man_pg5);
-+
-+	return 0;
-+}
-+
-+
- /**
-  * mpi3mr_init_ioc - Initialize the controller
-  * @mrioc: Adapter instance reference
-@@ -4376,6 +4533,9 @@ int mpi3mr_init_ioc(struct mpi3mr_ioc *mrioc)
- 		goto out_failed;
- 	}
- 
-+	if (mrioc->pdev->subsystem_vendor == MPI3_MFGPAGE_VENDORID_ATTO)
-+		mpi3mr_atto_init(mrioc);
-+
- 	ioc_info(mrioc, "controller initialization completed successfully\n");
- 	return retval;
- out_failed:
-@@ -6293,6 +6453,118 @@ int mpi3mr_cfg_set_sas_io_unit_pg1(struct mpi3mr_ioc *mrioc,
- 	return -1;
- }
- 
-+/**
-+ * mpi3mr_cfg_get_man_pg5 - Read manufacturing page 5
-+ * @mrioc: Adapter instance reference
-+ * @man_pg5: Pointer to the manufacturing page 5 to read
-+ * @pg_sz: Size of the memory allocated to the page pointer
-+ *
-+ * This is handler for config page read of manufacturing
-+ * page 5.
-+ *
-+ * Return: 0 on success, non-zero on failure.
-+ */
-+int mpi3mr_cfg_get_man_pg5(struct mpi3mr_ioc *mrioc,
-+	struct mpi3_man_page5 *man_pg5, u16 pg_sz)
-+{
-+	struct mpi3_config_page_header cfg_hdr;
-+	struct mpi3_config_request cfg_req;
-+	u16 ioc_status = 0;
-+
-+	memset(man_pg5, 0, pg_sz);
-+	memset(&cfg_hdr, 0, sizeof(cfg_hdr));
-+	memset(&cfg_req, 0, sizeof(cfg_req));
-+
-+	cfg_req.function = MPI3_FUNCTION_CONFIG;
-+	cfg_req.action = MPI3_CONFIG_ACTION_PAGE_HEADER;
-+	cfg_req.page_type = MPI3_CONFIG_PAGETYPE_MANUFACTURING;
-+	cfg_req.page_number = 5;
-+	cfg_req.page_address = 0;
-+
-+	if (mpi3mr_process_cfg_req(mrioc, &cfg_req, NULL,
-+	    MPI3MR_INTADMCMD_TIMEOUT, &ioc_status, &cfg_hdr, sizeof(cfg_hdr))) {
-+		ioc_err(mrioc, "manufacturing page5 header read failed\n");
-+		goto out_failed;
-+	}
-+	if (ioc_status != MPI3_IOCSTATUS_SUCCESS) {
-+		ioc_err(mrioc, "manufacturing page5 header read failed with ioc_status(0x%04x)\n",
-+		    ioc_status);
-+		goto out_failed;
-+	}
-+
-+	cfg_req.action = MPI3_CONFIG_ACTION_READ_CURRENT;
-+
-+	if (mpi3mr_process_cfg_req(mrioc, &cfg_req, &cfg_hdr,
-+	    MPI3MR_INTADMCMD_TIMEOUT, &ioc_status, man_pg5, pg_sz)) {
-+		ioc_err(mrioc, "manufacturing page5 read failed\n");
-+		goto out_failed;
-+	}
-+	if (ioc_status != MPI3_IOCSTATUS_SUCCESS) {
-+		ioc_err(mrioc, "manufacturing page5 read failed with ioc_status(0x%04x)\n",
-+		    ioc_status);
-+		goto out_failed;
-+	}
-+	return 0;
-+out_failed:
-+	return -1;
-+}
-+
-+/**
-+ * mpi3mr_cfg_set_man_pg5 - Write manufacturing page 5
-+ * @mrioc: Adapter instance reference
-+ * @man_pg5: Pointer to the manufacturing page 5 to write
-+ * @pg_sz: Size of the memory allocated to the page pointer
-+ *
-+ * This is handler for config page write for manufacturing
-+ * page 5. This will modify only the current page.
-+ *
-+ * Return: 0 on success, non-zero on failure.
-+ */
-+int mpi3mr_cfg_set_man_pg5(struct mpi3mr_ioc *mrioc,
-+	struct mpi3_man_page5 *man_pg5, u16 pg_sz)
-+{
-+	struct mpi3_config_page_header cfg_hdr;
-+	struct mpi3_config_request cfg_req;
-+	u16 ioc_status = 0;
-+
-+	memset(&cfg_hdr, 0, sizeof(cfg_hdr));
-+	memset(&cfg_req, 0, sizeof(cfg_req));
-+
-+	cfg_req.function = MPI3_FUNCTION_CONFIG;
-+	cfg_req.action = MPI3_CONFIG_ACTION_PAGE_HEADER;
-+	cfg_req.page_type = MPI3_CONFIG_PAGETYPE_MANUFACTURING;
-+	cfg_req.page_number = 5;
-+	cfg_req.page_address = 0;
-+
-+	if (mpi3mr_process_cfg_req(mrioc, &cfg_req, NULL,
-+	    MPI3MR_INTADMCMD_TIMEOUT, &ioc_status, &cfg_hdr, sizeof(cfg_hdr))) {
-+		ioc_err(mrioc, "manufacturing page5 header read failed\n");
-+		goto out_failed;
-+	}
-+	if (ioc_status != MPI3_IOCSTATUS_SUCCESS) {
-+		ioc_err(mrioc, "manufacturing page5 header read failed with ioc_status(0x%04x)\n",
-+		    ioc_status);
-+		goto out_failed;
-+	}
-+
-+	cfg_req.action = MPI3_CONFIG_ACTION_WRITE_CURRENT;
-+
-+	if (mpi3mr_process_cfg_req(mrioc, &cfg_req, &cfg_hdr,
-+	    MPI3MR_INTADMCMD_TIMEOUT, &ioc_status, man_pg5, pg_sz)) {
-+		ioc_err(mrioc, "manufacturing page5 write failed\n");
-+		goto out_failed;
-+	}
-+	if (ioc_status != MPI3_IOCSTATUS_SUCCESS) {
-+		ioc_err(mrioc, "manufacturing page5 write failed with ioc_status(0x%04x)\n",
-+		    ioc_status);
-+		goto out_failed;
-+	}
-+
-+	return 0;
-+out_failed:
-+	return -1;
-+}
-+
- /**
-  * mpi3mr_cfg_get_driver_pg1 - Read current Driver page1
-  * @mrioc: Adapter instance reference
-@@ -6409,3 +6681,41 @@ int mpi3mr_cfg_get_driver_pg2(struct mpi3mr_ioc *mrioc,
- 	return -1;
- }
- 
-+/**
-+ * mpi3mr_cfg_get_page_size - Get the size of requested page
-+ * @mrioc: Adapter instance reference
-+ * @page_type: Page type (MPI3_CONFIG_PAGETYPE_XXX)
-+ * @page_num: Page number
-+ *
-+ * Return the specified config page size in bytes.
-+ *
-+ * Return: Page size in bytes, -1 on failure.
-+ */
-+int mpi3mr_cfg_get_page_size(struct mpi3mr_ioc *mrioc, int page_type, int page_num)
-+{
-+	struct mpi3_config_page_header cfg_hdr;
-+	struct mpi3_config_request cfg_req;
-+	u16 ioc_status = 0;
-+
-+	memset(&cfg_hdr, 0, sizeof(cfg_hdr));
-+	memset(&cfg_req, 0, sizeof(cfg_req));
-+
-+	cfg_req.function = MPI3_FUNCTION_CONFIG;
-+	cfg_req.action = MPI3_CONFIG_ACTION_PAGE_HEADER;
-+	cfg_req.page_type = page_type;
-+	cfg_req.page_number = page_num;
-+	cfg_req.page_address = 0;
-+
-+	if (mpi3mr_process_cfg_req(mrioc, &cfg_req, NULL,
-+	    MPI3MR_INTADMCMD_TIMEOUT, &ioc_status, &cfg_hdr, sizeof(cfg_hdr))) {
-+		ioc_err(mrioc, "header read failed\n");
-+		return -1;
-+	}
-+	if (ioc_status != MPI3_IOCSTATUS_SUCCESS) {
-+		ioc_err(mrioc, "header read failed with ioc_status(0x%04x)\n",
-+		    ioc_status);
-+		return -1;
-+	}
-+
-+	return le16_to_cpu(cfg_hdr.page_length) * 4;
-+}
--- 
-2.43.5
+Reviewed-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+
+Thanks,
+Pratap
+
+
+
+>          help
+>            Platform driver for AMD platforms containing image signal processor
+>            gen 4. Provides camera sensor module board information to allow
+> --
+> 2.39.5
+> 
 
