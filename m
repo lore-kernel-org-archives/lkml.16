@@ -1,149 +1,133 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1EB1E2607;
-	Fri, 20 Jun 2025 03:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4441E0E0B
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750391636; cv=none; b=rb+jqH1Iro7Yr5ZvtmpszYOlUkp6lZ0hm3JM2zujF1k9/RgsdSgLNeZtYuN+X4SyMRVcJBe+34aIonam500j8Wi2tcUfk/y4mzg9ZxCBnSc/2CiVH7zj+l8H4jF3WKYuLCvBT+uFaYoR8k0DFZ1OlxyGNgy/JUqj0yOGohe43Cs=
+	t=1750391751; cv=none; b=MYzYXV63S8fNO74g0TSfQJeGciDNta2gI4OaLTLtNPWMw6MahPLpEB+fOmI4sqgvY9PCAqKzQoHSwpsodhjNlZlm2pJcXKqbDoJhjXp0LUdwumaQc6QmquKzGPErjHz//YquEt8ZaI/yPbeoVHkrpaC4hhprHXEQ+DVYnXxPn4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750391636; c=relaxed/simple;
-	bh=ZbMmurYJaKY5lkw0VcwClw93/1JlV36rPOejef/6RLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
-	 In-Reply-To:Content-Type; b=GEioNvHMpuvPezEEbwAMgTpVhey11+SVFDSIOShKmWmTRMbt6HVaCFgs6sTWmZX1kj1yA0lJNjEc7r7JW2IbfdZoX5eKkSLYysx0k0hUxVjtuc7/5gyUBc+YpBvEfbI4O88smCBzXRn8pQyAuo7V95JDqJKPtQ6R4FFIutwsAWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bNk7k2SW8z2BdWC;
-	Fri, 20 Jun 2025 11:52:18 +0800 (CST)
-Received: from kwepemo100006.china.huawei.com (unknown [7.202.195.47])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6C2B1140294;
-	Fri, 20 Jun 2025 11:53:48 +0800 (CST)
-Received: from [10.67.121.58] (10.67.121.58) by kwepemo100006.china.huawei.com
- (7.202.195.47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 20 Jun
- 2025 11:53:47 +0800
-Message-ID: <ff65b997-eb14-798f-1d2f-c375bf763e71@hisilicon.com>
-Date: Fri, 20 Jun 2025 11:53:47 +0800
+	s=arc-20240116; t=1750391751; c=relaxed/simple;
+	bh=LY8ANmPaWU03IOjkEPYoZ2pfuLTEkXi7k0X/MjRp79o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUiT3Qi4zfSFOvnxiZqV8+ZQHqsEUquglzIQ3GlNp5h8dyZdw/SY0EVvRWyun0eGoDOjgyjnth3HtMkcJntZnP8epvSDbi2TSlb89Ogg+tuT2Ji1/iyH2Si/VnSCfd0DnvYFQizBVw3uHGRPVq4Yrlq6RBahldf9DdZukcY3Vdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ksehFE35; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ksehFE35"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-400fa6eafa9so950640b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750391749; x=1750996549; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9ygpRy1yhhvPXt3ON6IStdleo1cb/x/nqaI0QI7Xp8=;
+        b=ksehFE35g7scQ7JurvjhwSZTU8uma/OdZHPI3DBSf9M1a79QH+121ek3OaSMjk+j4q
+         tHBzAybwosov+2Tr8wrYEpQkU+Gtc8WG5k+H9dmjz9y2ww5iMGbAdtzdc6dnxMN+GePB
+         hAZltC5W4dE6XAz/6oSb1KQnN1jh7XhWQJlEis5buX5+tBIvSfE9LWuO1FFS23/GX0HV
+         KP7Fa2GZGJoDLSKcO9e+YTetg3USdCLacep35X/XRKRV7GMp1vki4MDYm0c/Xj2ypX7+
+         NEcsg0BBN/l/bS8qtl3PdP9zZywuffiXYWc4d5eN70T21dvIeHtnAy3cUHdQTKUagT/9
+         3j6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750391749; x=1750996549;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q9ygpRy1yhhvPXt3ON6IStdleo1cb/x/nqaI0QI7Xp8=;
+        b=utF0bN9zt0sWq1Xb/+NMV/b+xkhjzd+7AQKdhOCrENVBKuoGS2tMVEfXIvRNVa1t8r
+         w9GBdWiP+V0guokWZti7l6zpYJBwXykpKbFwMm5rk9EFzam+ub1fj4AepJrejhOf0lCC
+         8EOUW7SgbBQ95EdjfgB6wS+VBj5T++0tXuBG43zOlnHo7KPQ1F+TLwdpnamWeS2QlPb/
+         Kg8cXURMQJ01rHlsYMygHVktoIwWtYPLnsGui0fulsrR277FxHumfS1gptvHL6I69xJO
+         +qVoFjw1AupApcSLLJqZFJt438XHaZl8HKU8xNvfALWDkG2i++nWeS/x43YHAMwpNAuw
+         uE2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVY9K5rdDZyDH7g2Iz5CGuou2dz7HmArh5EM2forqwS/QSZe1XzY6FVnSFlstILKapJCQIvz3QWCI+iQ6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjGyIG9m/2TkrqXKr28WCV5nRYYe8Ig2in20qr94wCpoQX2rAN
+	m+PySsdq1G2OER0RomcFb4UMPhYueAxZceVc0kW32W1HGh7Fo5zfgaPhErdTy40JsLg=
+X-Gm-Gg: ASbGncsEmW7MdZNaqMw/1Dc1pmL1BKC31rrvviMQjX2Bu0VsvWLW8bFiCIhK0eyY7PN
+	zyWJvdBwsLZcSlEpAHjETzDfxD8D3B2n0l9+RMLp1qrjxqRSQ7QqNoR8aNfAy9pPnTUkH4dkr31
+	3xYYc745gyA8MA322/66ndXWOsJR9uJfLjUCI9GmuQAryFAgvJwBFHEimnwbldSBuOWycC4m4NB
+	TdpiKb+V3zcTN+Pa43y7b7qvfvjed694X5d2vR9xGmq0wkjBkYtmZsfiJvzqoM7TxjYd425iKsS
+	jD0LHeha8tTRSc645FbqEkifOWRJVUPTCxMNYj3/cvFbkDkKF10QlxvBYC+uYIb/xNx4lw==
+X-Google-Smtp-Source: AGHT+IFpMqMfL10VDeZnAPZWqzBUfFVLrNCqWwvVeY7CBAKdJ4F2IHl6lMhC8ceeQFXXdaQcmdLn7w==
+X-Received: by 2002:a05:6808:19a7:b0:406:6d79:49d2 with SMTP id 5614622812f47-40ac6fccb21mr1032511b6e.26.1750391748683;
+        Thu, 19 Jun 2025 20:55:48 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:67e2:ece8:b2f5:738f])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a908bc982sm193555a34.0.2025.06.19.20.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 20:55:47 -0700 (PDT)
+Date: Fri, 20 Jun 2025 06:55:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/2] firmware: arm_scmi: bus: Add pm ops
+Message-ID: <8a7e6e24-5ab2-434a-ba71-7b1b4f74e9f3@suswa.mountain>
+References: <20250620-scmi-pm-v1-0-c2f02cae5122@nxp.com>
+ <20250620-scmi-pm-v1-1-c2f02cae5122@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v2 2/2] cpufreq: CPPC: Dont read counters for idle CPUs
-To: Prashant Malani <pmalani@google.com>
-References: <20250619000925.415528-1-pmalani@google.com>
- <20250619000925.415528-3-pmalani@google.com>
-CC: Ben Segall <bsegall@google.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
-	<juri.lelli@redhat.com>, open list <linux-kernel@vger.kernel.org>, "open
- list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, Mel Gorman
-	<mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Valentin Schneider
-	<vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Viresh
- Kumar <viresh.kumar@linaro.org>, Ionela Voinescu <ionela.voinescu@arm.com>,
-	Beata Michalska <beata.michalska@arm.com>, z00813676
-	<zhenglifeng1@huawei.com>
-From: Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20250619000925.415528-3-pmalani@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemo100006.china.huawei.com (7.202.195.47)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620-scmi-pm-v1-1-c2f02cae5122@nxp.com>
 
-Hi Prashant,
-
-Thanks for spotting this.
-Cc'd a few more developers.
-
-Jie
-
-On 19/06/2025 08:09, Prashant Malani wrote:
-> AMU performance counters tend to be inaccurate when measured on idle CPUs.
-> On an idle CPU which is programmed to 3.4 GHz (verified through firmware),
-> here is a measurement and calculation of operating frequency:
+On Fri, Jun 20, 2025 at 11:37:13AM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> t0: ref=899127636, del=3012458473
-> t1: ref=899129626, del=3012466509
-> perf=40
-
-In this case, the target cpu is mostly idle but not fully idle during the
-sampling window since the counter grows a little bit.
-Perhaps some interrupts happen to run on the cpu shortly.
-
-Thus, the actual issue is the accuracy of frequency sampling becomes poor
-when the delta of counters are too small to obtain a reliable accuracy.
-
-Would it be more sensible to put a minimum threshold of the delta of
-counters when sampling the frequency?
-
-If the threshold is not met, we can go to the existing out_invalid_counters
-path.  Then we don't have to export idle_cpu() either, and BTW, that ABI
-doesn't seem to be synchronous at all, i.e. the cpu might be busy when we
-check and then become idle when sampling.
-
+> Take platform_pm_ops as reference. Add pm ops for scmi_bus_type,
+> then the scmi devices under scmi bus could have their own hooks for
+> suspend, resume function.
 > 
-> For reference, when we measure the same CPU with stress-ng running, we have
-> a more accurate result:
-> t0: ref=30751756418, del=104490567689
-> t1: ref=30751760628, del=104490582296
-> perf=34
-> 
-> (t0 and t1 are 2 microseconds apart)
-> 
-> In the above, the prescribed method[1] of calculating frequency from CPPC
-> counters was used.
-> 
-> The follow-on effect is that the inaccurate frequency is stashed in the
-> cpufreq policy struct when the CPU is brought online. Since CPUs are mostly
-> idle when they are brought online, this means cpufreq has an inaccurate
-> view of the programmed clock rate.
-> 
-> Consequently, if userspace tries to actually set the frequency to the
-> previously erroneous rate (4 GHz in the above example), cpufreq returns
-> early without calling in to the CPPC driver to send the relevant PCC
-> command; it thinks the CPU is already at that frequency.
-> 
-> Update the CPPC get_rate() code to skip sampling counters if we know a CPU
-> is idle, and go directly to the fallback response of returning the
-> “desired” frequency. The code intends to do that anyway if the counters
-> happen to return an “idle” reading.
-> 
-> [1] https://docs.kernel.org/admin-guide/acpi/cppc_sysfs.html#computing-average-delivered-performance
-> 
-> Signed-off-by: Prashant Malani <pmalani@google.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
+>  drivers/firmware/arm_scmi/bus.c | 45 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 > 
-> Changes in v2:
-> - Add sched.h header for usage when compiled as module.
-> 
->  drivers/cpufreq/cppc_cpufreq.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index b7c688a5659c..5ed04774e569 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -18,6 +18,7 @@
->  #include <linux/cpufreq.h>
->  #include <linux/irq_work.h>
->  #include <linux/kthread.h>
-> +#include <linux/sched.h>
->  #include <linux/time.h>
->  #include <linux/vmalloc.h>
->  #include <uapi/linux/sched/types.h>
-> @@ -753,6 +754,10 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpu)
+> diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
+> index 1adef03894751dae9bb752b8c7f86e5d01c5d4fd..2d1ef73cb6d39ac611afa5d0008c46515e297b93 100644
+> --- a/drivers/firmware/arm_scmi/bus.c
+> +++ b/drivers/firmware/arm_scmi/bus.c
+> @@ -323,6 +323,50 @@ static struct attribute *scmi_device_attributes_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(scmi_device_attributes);
 >  
->  	cpufreq_cpu_put(policy);
->  
-> +	/* Idle CPUs have unreliable counters, so skip to the end. */
-> +	if (idle_cpu(cpu))
-> +		goto out_invalid_counters;
+> +#ifdef CONFIG_SUSPEND
+> +static int scmi_pm_suspend(struct device *dev)
+> +{
+> +	const struct device_driver *drv = dev->driver;
+> +	int ret = 0;
 > +
->  	ret = cppc_get_perf_ctrs_sample(cpu, &fb_ctrs_t0, &fb_ctrs_t1);
->  	if (ret) {
->  		if (ret == -EFAULT)
+> +	if (!drv)
+> +		return 0;
+> +
+> +	if (drv->pm) {
+> +		if (drv->pm->suspend)
+> +			ret = drv->pm->suspend(dev);
+> +	}
+> +
+> +	return ret;
+> +}
+
+These could be done on one line:
+
+static int scmi_pm_suspend(struct device *dev)
+{
+	const struct device_driver *drv = dev->driver;
+
+	if (drv && drv->pm && drv->pm->suspend)
+		return drv->pm->suspend(dev);
+
+	return 0;
+}
+
+regards,
+dan carpenter
+
