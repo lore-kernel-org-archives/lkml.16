@@ -1,54 +1,53 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17D0289370;
-	Fri, 20 Jun 2025 11:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3449E289353;
+	Fri, 20 Jun 2025 11:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417796; cv=none; b=Ksef0RDxpm9W5ru+anGkiAC1PWAilI18Ngx+zeWbrr1RYuaLCl7PyIo7SAbvO7za/LRUgtYfJ8teeHVIN9V3VuApD4/8nhjSqwlWgPXd9EGVhUInXGfSQlMLgAUwrHE77iiJ+e/oUoG6daK3dHayi/HFdobvHY/3ptLvVjBhyE8=
+	t=1750417817; cv=none; b=b/kNymzKnbwy7rIhGbfU+j1mLjzxqW+4v7F7z54FFx6SHTf+eQFJycGTcZ1ZFQ2xlsb+fRfdy3FY9ODOJKJni63453/LkHjTVppp/6g8mp1+Zs6CX5iCERZyJ8jmbE7c7hBHbcTye6lml6Vel6/wWcu0KmsnPY8rJla9FiC6fFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417796; c=relaxed/simple;
-	bh=IBZkMlagCA+R/KhShpO9+UpMtZRbm3VwQ3iZSH+Pgqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ta1QWAewPeNr9GzaG2vrEq2H4GxH37dZh5zgU7iduKSu27luTYg6kYxzRAUKilZRHUQyUUSvCj1D9xhXqXP2EoK9q/jHx3aHWM49Hm3JjN9mxooKZJpdrx/FDW42onmAffVEZ/wvtHMfobYj9KeeKq4BfM5ytEr3ciZRYGcettI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oGePHy8n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gItVlmop; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750417817; c=relaxed/simple;
+	bh=uvtVP1aYMUTlFmGxU79MyL6lu/a9tI++Kn5yo964ngw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VZZIbJCt/BIBPiRXnxxGU3LrBTqMhW9UhoDmIa1/2960dzFOI7Jg3fBnu2QmQMIDruoMtBUzyjQXWzSZhiHJ06yWi3Xs+DJYToTkiQp15RLb9HiUU1Nem2/pW4anBEjYK5qa2sDw3VXJGY4ujKrUU6z80CytR1cRzONJdkVUjtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2wrkJE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oGePHy8n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gItVlmop"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750417791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PWqArSOAfTC1L3Ga/GRvc43T5ZdN4RWui3vJm5T69f0=;
-	b=oGePHy8ntSocBb8MmX7vxwMR9AqGRAPw0yxsBBrcSfEeaK1J4g5eQEg9+8zn5QV19p9F8C
-	rdJhUnL5TuKHtOxM40vvqSPPbyagDXffZmP0GSTQx67YmcZnIfjvc+e1KpBrJpFLw2wli+
-	RbCV1BHNjfw+sxnUEdRsHk6gXGklaJi618XzRu7HGUadmZoOz4ZhqskAeinurLKFH61F9B
-	mu/okgLunmYf7hJEclF8rUZzxq6Lwlc/72jc8YUsS7J8JxYPiOqLPn/jSjQ0jnGUpI5Pfo
-	qCUg51IxvxsWrB/p682AUP/BT0odvO3FucyXsKFZD/piun7nnbslBgJhxVtFFg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750417791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PWqArSOAfTC1L3Ga/GRvc43T5ZdN4RWui3vJm5T69f0=;
-	b=gItVlmoprKsgxq+suCSmg/zOUer9qJQuKwHSqxDJwzd5/0p34r50fGnn5RHBtznem2B6fK
-	pQY35dFXapMQoiCg==
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Nylon Chen <nylon.chen@sifive.com>,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2wrkJE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C3AC4CEEE;
+	Fri, 20 Jun 2025 11:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750417816;
+	bh=uvtVP1aYMUTlFmGxU79MyL6lu/a9tI++Kn5yo964ngw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=r2wrkJE1oBEwAImWqC6gxhqDrazO1wRs7uEh2lluKtKamtV693IR8cEbvcTjZ7Poe
+	 2Vn8xWR1r2oZKa+Q+WAn2+VZ+n+rg0fdHrn42gcJxEKuftfK0LVRRDJQGgzW7JFgFQ
+	 KoBqQPjS3nOOYaC3h85xyvP6hiRtfHqOvpQ7JN0oGdtv7SIGhoQdhJrB/mIDLi2m82
+	 ukfHIR4KB+v+OYP9EK1y1TQKsyOn2rqvl8jJaxeVIpBGhMuFqmObKnvc+xx3Utlbp5
+	 Tcym8jdkbEu6qYJHM65kl5QFEQWW7+sLYEw8K9tE9Jw7579bcqyEBEkt0EoEeS1ahB
+	 BZXzF/c/BH+qg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eli Cohen <elic@nvidia.com>,
+	Shay Drory <shayd@nvidia.com>,
+	Jacob Keller <jacob.e.keller@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Erez Shitrit <erezsh@nvidia.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Yevgeny Kliteynik <kliteyn@nvidia.com>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	stable@vger.kernel.org
-Subject: [PATCH] Revert "riscv: misaligned: fix sleeping function called during misaligned access handling"
-Date: Fri, 20 Jun 2025 13:09:39 +0200
-Message-Id: <20250620110939.1642735-1-namcao@linutronix.de>
+Subject: [PATCH] [RFC] net/mlx5: don't build with CONFIG_CPUMASK_OFFSTACK
+Date: Fri, 20 Jun 2025 13:10:04 +0200
+Message-Id: <20250620111010.3364606-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,55 +55,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This reverts commit 61a74ad25462 ("riscv: misaligned: fix sleeping function
-called during misaligned access handling"). The commit addresses a sleeping
-in atomic context problem, but it is not the correct fix as explained by
-Cl=C3=A9ment:
+From: Arnd Bergmann <arnd@arndb.de>
 
-"Using nofault would lead to failure to read from user memory that is paged
-out for instance. This is not really acceptable, we should handle user
-misaligned access even at an address that would generate a page fault."
+Local cpumask_t variables must be wrapped with alloc_cpumask_var() or
+similar helpers, to allow building with ridiculous values of CONFIG_NR_CPUS:
 
-This bug has been properly fixed by commit 453805f0a28f ("riscv:
-misaligned: enable IRQs while handling misaligned accesses").
+drivers/net/ethernet/mellanox/mlx5/core/eq.c: In function ‘comp_irq_request_sf’:
+drivers/net/ethernet/mellanox/mlx5/core/eq.c:897:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_ctrl_irq_request’:
+drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:494:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_irq_request_vector’:
+drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:561:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c: In function ‘irq_pool_request_irq’:
+drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c:74:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
 
-Revert this improper fix.
+The mlx5 driver used to do this correctly in the past, but was changed
+to use local 'irq_affinity_desc' structures in at least four places,
+which ends up having the mask on the stack again.
 
-Link: https://lore.kernel.org/linux-riscv/b779beed-e44e-4a5e-9551-4647682b0=
-d21@rivosinc.com/
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: stable@vger.kernel.org
+It is not easily possible to use alloc_cpumask_var() again without
+reverting that patch, so work around this by disallowing this drivers
+on kernels that rely on CONFIG_CPUMASK_OFFSTACK.
+
+Fixes: bbac70c74183 ("net/mlx5: Use newer affinity descriptor")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/riscv/kernel/traps_misaligned.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This is probably not a great idea since most enterprise distros do
+enable both CPUMASK_OFFSTACK and MLX5, and any ideas for how to sort
+this out better would be helpful.
 
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps=
-_misaligned.c
-index dd8e4af6583f4..93043924fe6c6 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -454,7 +454,7 @@ static int handle_scalar_misaligned_load(struct pt_regs=
- *regs)
-=20
- 	val.data_u64 =3D 0;
- 	if (user_mode(regs)) {
--		if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
-+		if (copy_from_user(&val, (u8 __user *)addr, len))
- 			return -1;
- 	} else {
- 		memcpy(&val, (u8 *)addr, len);
-@@ -555,7 +555,7 @@ static int handle_scalar_misaligned_store(struct pt_reg=
-s *regs)
- 		return -EOPNOTSUPP;
-=20
- 	if (user_mode(regs)) {
--		if (copy_to_user_nofault((u8 __user *)addr, &val, len))
-+		if (copy_to_user((u8 __user *)addr, &val, len))
- 			return -1;
- 	} else {
- 		memcpy((u8 *)addr, &val, len);
---=20
+I mainly tried setting CONFIG_NR_CPUS to an unrealistic value for my
+own compile testing, to see which files run into this problem. I have
+managed to come up with better fixes for the other three I found, but
+not this one.
+---
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+index 6ec7d6e0181d..7c2da240ffdb 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+@@ -8,6 +8,7 @@ config MLX5_CORE
+ 	depends on PCI
+ 	select AUXILIARY_BUS
+ 	select NET_DEVLINK
++	depends on !CPUMASK_OFFSTACK
+ 	depends on VXLAN || !VXLAN
+ 	depends on MLXFW || !MLXFW
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+-- 
 2.39.5
 
