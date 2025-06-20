@@ -1,229 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1684263F5B;
-	Fri, 20 Jun 2025 12:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C29F21C17D;
+	Fri, 20 Jun 2025 12:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423582; cv=none; b=b8lCid9UK2dOkEzet1yRzzaZ46OhDcJvZgrWj9cS9G14hlQSpfFYDm7pMmRVcLxpZXOjrS89zFDpeYxJsnyLj7CTYvtjfMI7DYsySgDEakcbZaPvTOdwlMMJXiF1DCt6VPvgU4yidBdwW5sucPpKcACiVk7gLR/Sp1qEM0eUZq0=
+	t=1750423662; cv=none; b=D3N7B9Tv6ZHErvyLx6+EKsiVEB6sSYBs+Gb8o7jwK2P3s8LYWaOru0JSodeb5sCyiEXtsYYjtTHOvf5tEWlLvfpsqQu93GL7lgfSBHSLZgsmSaj4E30b0KF4phnCbpMpNe5HyOo/CBQWP3OT3tqbwytFB2/gbIlZEDR5E1A6n5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423582; c=relaxed/simple;
-	bh=8D/3rXr7aLfxT+nfdjxwtCzpi7Ojp5qrveWYUl0YqpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PbAhbG08KJxYYTsivxcpR98NFECWIW2u/DI96vOVOS1r9jB8zM70whXqMkFmHj+12SCD2ysCfPZ1dwZq6Nk06FOs3cVmYHeQ4YuTYMK4LemxQnwjDX/IEOOE0q4RFzteBM3kSdenwS1T0CeTxNSq5qlkp6Z8ASI7+7E/PGvFGh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0QPULLE; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0QPULLE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750423581; x=1781959581;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8D/3rXr7aLfxT+nfdjxwtCzpi7Ojp5qrveWYUl0YqpU=;
-  b=d0QPULLE1G8de43pY/zxgo2ixGGNKWG8NPP8q+EcNDHyU39PoAezGsko
-   MPKCVsxR4lC12Vxo3Qu0K8UiRk3R5BTpr2f76t5ImTKVXwE4cOBSPaKiQ
-   yY0m6YXh/XeszWWkRyO+sX+eqpRBl8C/TmO/5MZBUzDxj2uRcZSoLq1VD
-   axx5kMgJIwUdzFXZ4PtQkEeBn11sHeI8aU8HwRUP3g0mRAK0mQDEZJbx0
-   kXHVM8mBJmhzHfTpCXcYIWgOwJY8pEJU14Zw7LEugXZ8HNN55IE9M3wSP
-   OihsG4MDtCYLT42kGsxrSLkf/MWhHBwU0Ek7U3jIQC33VSyLuQ/4V3uFD
-   A==;
-X-CSE-ConnectionGUID: 3x1qU5ZuSLOswWQg6bCoog==
-X-CSE-MsgGUID: we34CWAeTtSLUWzEmBgSxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63737729"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="63737729"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:46:19 -0700
-X-CSE-ConnectionGUID: sQr8BNk7QaetJSqb1QezEg==
-X-CSE-MsgGUID: dHFA4dGhRsa9rCmOwD5ELQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="150402846"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.215])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:46:15 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
- LMH, ED
-Date: Fri, 20 Jun 2025 14:46:11 +0200
-Message-ID: <4295321.aCxCBeP46V@fdefranc-mobl3>
-In-Reply-To: <34fcdfb0-e32c-4eb3-8afe-49c34dcab2c3@infradead.org>
-References:
- <20250618151710.1001847-1-fabio.m.de.francesco@linux.intel.com>
- <34fcdfb0-e32c-4eb3-8afe-49c34dcab2c3@infradead.org>
+	s=arc-20240116; t=1750423662; c=relaxed/simple;
+	bh=WxQdWAW0bSSHvBvtVzl7jN97x6tGEWp71VMdnr6DKR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lMi9FC/ohhfq0EUE3N54B1lzj6ti3oXR5haaWrhbNlAEhaaAly7nYWVCb0RV3qmZu7jY28Za/uaRXDH36iYAkO+H/Q7NBDa3IeCiKK2cndNizHlsyCGCJ6Y7m0Ybf0NUOWjkElkDE52Q2rxRgk9x8M/Jyyv5psCjSrlDj2mGyEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC8216F2;
+	Fri, 20 Jun 2025 05:47:20 -0700 (PDT)
+Received: from [10.57.27.59] (unknown [10.57.27.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895973F58B;
+	Fri, 20 Jun 2025 05:47:37 -0700 (PDT)
+Message-ID: <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
+Date: Fri, 20 Jun 2025 13:47:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rick wertenbroek <rick.wertenbroek@gmail.com>,
+ linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1749833986.git.geraldogabriel@gmail.com>
+ <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
+ <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com> <aFVTdYWxuq9YzVQR@geday>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <aFVTdYWxuq9YzVQR@geday>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Randy,
+On 2025-06-20 1:26 pm, Geraldo Nascimento wrote:
+> On Fri, Jun 20, 2025 at 01:04:46PM +0100, Robin Murphy wrote:
+>> On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
+>>> Current code enables only Lane 0 because pwr_cnt will be incremented
+>>> on first call to the function. Use for-loop to enable all 4 lanes
+>>> through GRF.
+>>
+>> If this was really necessary, then surely it would also need the
+>> equivalent changes in rockchip_pcie_phy_power_off() too?
+>>
+>> However, I'm not sure it *is* necessary - the NVMe on my RK3399 board
+>> happily claims to be using an x4 link, so I stuck a print of inst->index
+>> in this function, and sure enough I do see it being called for each
+>> instance already:
+>>
+>> [    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
+>> [    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
+>> [    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
+>> [    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
+>>
+> 
+> Hi Robin, and thanks for caring, it's excellent to rely on your
+> extensive expertise on ARM in general and RK3399 specifically!
+> 
+> However, on my board I'm positive it does not work without proposed
+> patch and I get stuck with x1 link without it.
+> 
+> There are currently very similar patches applied downstream to Armbian
+> and OpenWRT so at least I'm confident that is not only my board which is
+> quirky and other people experienced the same problem.
 
-On Wednesday, June 18, 2025 5:54:35=E2=80=AFPM Central European Summer Time=
- Randy Dunlap wrote:
-> Hi,
->=20
-> On 6/18/25 8:17 AM, Fabio M. De Francesco wrote:
-> > Add documentation on how to resolve conflicts between CXL Fixed Memory
-> > Windows, Platform Memory Holes, and Endpoint Decoders.
-> >=20
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
-> >  1 file changed, 85 insertions(+)
-> >=20
-> > diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentati=
-on/driver-api/cxl/conventions.rst
-> > index da347a81a237..acf2523ae799 100644
-> > --- a/Documentation/driver-api/cxl/conventions.rst
-> > +++ b/Documentation/driver-api/cxl/conventions.rst
-> > @@ -45,3 +45,88 @@ Detailed Description of the Change
-> >  ----------------------------------
-> > =20
-> >  <Propose spec language that corrects the conflict.>
-> > +
-> > +
-> > +Resolve conflict between CFMWS, Plaftform Memory Holes, and Endpoint D=
-ecoders
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> > +
-> > +Document
-> > +--------
-> > +
-> > +CXL Revision 3.2, Version 1.0
-> > +
-> > +License
-> > +-------
-> > +
-> > +SPDX-License Identifier: CC-BY-4.0
-> > +
-> > +Creator/Contributors
-> > +--------------------
-> > +
-> > +Fabio M. De Francesco, Intel
-> > +Dan J. Williams, Intel
-> > +Mahesh Natu, Intel
-> > +
-> > +Summary of the Change
-> > +---------------------
-> > +
-> > +According to the current CXL Specifications (Revision 3.2, Version 1.0)
-> > +the CXL Fixed Memory Window Structure (CFMWS) describes zero or more H=
-ost
-> > +Physical Address (HPA) windows that are associated with each CXL Host
-> > +Bridge. Each window represents a contiguous HPA range that may be
-> > +interleaved across one or more targets, some of which are CXL Host Bri=
-dges.
-> > +Associated with each window are a set of restrictions that govern its
->=20
->                                is
->=20
-Okay.
->
-> > +usage. It is the OSPM=E2=80=99s responsibility to utilize each window =
-for the
-> > +specified use.
-> > +
-> > +Table 9-22 states the Window Size field contains that the total number=
- of
->=20
->                                            contains the total number of
->
-Ok.
->=20
-> > +consecutive bytes of HPA this window represents and this value shall b=
-e a
-> > +multiple of Number of Interleave Ways * 256 MB.
-> > +
-> > +Platform Firmware (BIOS) might reserve part of physical addresses below
-> > +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for M=
-MIO
-> > +or a requirement for the greater than 8 way interleave CXL regions sta=
-rting
-> > +at address 0). In that case the Window Size value cannot be anymore
-> > +constrained to the NIW * 256 MB above-mentioned rule.
-> > +
-> > +On those systems, BIOS publishes CFMWS which communicate the active Sy=
-stem
-> > +Physical Address (SPA) ranges that map to a subset of the Host Physical
-> > +Address (HPA) ranges. The SPA range trims out the hole, and capacity i=
-n the
-> > +endpoint is lost with no SPA to map to CXL HPA in that hole.
-> > +
-> > +The description of the Window Size field in table 9-22 needs to take t=
-hat
-> > +special case into account.
-> > +
-> > +Note that the Endpoint Decoders HPA range sizes have to comply with the
-> > +alignment constraints and so a part of their memory capacity might not=
- be
-> > +accessible if their size exceeds the matching CFMWS range's.
-> > +
-> > +Benefits of the Change
-> > +----------------------
-> > +
-> > +Without this change, the OSPM wouldn't match Endpoint Decoders with CF=
-MWS
-> > +whose Window Size don't comply with the alignment rules and so all the=
-ir
-> > +capacity would be lost. This change allows the OSPM to match Endpoint
-> > +Decoders whose HPA range size exceeds the matching CFMWS and create
-> > +regions that at least utilize part of the decoders total memory capaci=
-ty.
-> > +
-> > +References
-> > +----------
-> > +
-> > +Compute Express Link Specification Revision 3.2, Version 1.0
-> > +<https://www.computeexpresslink.org/>
-> > +
-> > +Detailed Description of the Change
-> > +----------------------------------
-> > +
-> > +The current description of a CFMWS Window Size (table 9-22) is replaced
-> > +with:
-> > +
-> > +"The total number of consecutive bytes of HPA this window represents. =
-This
-> > +value shall be a multiple of NIW*256 MB. On platforms that reserve phy=
-sical
-> > +addresses below 4 GB for special use (e.g., the Low Memory Hole for PC=
-Ie
-> > +MMIO on x86), an instance of CFMWS whose Base HPA is 0 might have a wi=
-ndow
-> > +size that doesn't align with the NIW*256 MB constraint; note that the
-> > +matching Endpoint Decoders HPA range size must still align to the
-> > +above-mentioned rule and so the memory capacity that might exceeds the
->=20
->                                                               exceed
->
-Again.
->=20
-> > +CFMWS window size will not be accessible.".
-> >=20
-> > base-commit: a021802c18c4c30dff3db9bd355cacb68521f1aa
->=20
+Ah, I put that print at the top of the function - on second look now I
+see that there's an awkward mix of per-lane and global data, and pwr_cnt
+is actually the latter. Sure enough, moving the print past that check I
+only see it once.
+
+However, I still don't think blindly enabling all the lanes is the right
+thing to do either; I'd imagine something like the (untested) diff below
+would be more appropriate. That would then seem to balance with what
+power_off is doing.
+
 Thanks,
+Robin.
 
-=46abio
-
-
-
+----->8-----
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index bd44af36c67a..a34a983db16c 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -160,11 +160,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+  
+  	guard(mutex)(&rk_phy->pcie_mutex);
+  
+-	if (rk_phy->pwr_cnt++) {
+-		return 0;
+-	}
+-
+-	err = reset_control_deassert(rk_phy->phy_rst);
++	if (rk_phy->pwr_cnt++)
++		err = reset_control_deassert(rk_phy->phy_rst);
+  	if (err) {
+  		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
+  		rk_phy->pwr_cnt--;
+@@ -181,6 +178,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+  		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+  				   PHY_LANE_IDLE_MASK,
+  				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++	if (rk_phy->pwr_cnt)
++		return 0;
+  
+  	/*
+  	 * No documented timeout value for phy operation below,
 
