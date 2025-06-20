@@ -1,156 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C289E05
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F6221A425;
+	Fri, 20 Jun 2025 11:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419711; cv=none; b=TOaZ0IoEv4raniFxMjXUdZWV+CDWIXvl2n/yF3bv5ML4F6JI4xPoJsOfWWTZR/MDO64iKxQgeuL4OiKuXDoREwz468J+5kp6dhTL9hfEuCQFC4MM2VIjLbS5sNUNKAQeq54gIzFPEryUyVm6SdmANLCcDoWtHdkeUDsRZSKUfw4=
+	t=1750419818; cv=none; b=UWul1cVDrYaHnZ94Arrc8JAJkUjCdjNaEPVOAkZzcQaxWMwfdBlVAlDmixZHcQ/kP4sPa6DzXQ/T64aAKgunVHNU7FCUeps6A9SX8bE1omzSSq6M5HROi39OfaDrq2HffO0kLOrOc3i+CdUZs21OwmLiv0s9n5zGNAmdF2KSTSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419711; c=relaxed/simple;
-	bh=NJeI8YppKOxLx0T0KsWLoadLL/ubvvWy8yozXSRreC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhvqHVC/PKo2CDgxGCgZf+gS2liW1ujEJN84pfpwgVMdOPTIRxdmJn8zwq+X32TKhsj3w/Q+Yx9BF6Q0z4G1wu/4KtBaQETeBVqOHR5VKnOd31QbKvHPLcPQWUwBFLCvPfbYz3QZoYBHVm5pu8iu8K7Oj3DTwOxJAVqO4ne/TGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLEauDJR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750419818; c=relaxed/simple;
+	bh=huyYXBjxoUlbMgsEeTSO6RSLo2wZgKDFybH8JTb2g7U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=thOQ9ZWaxkKvJMJt5CBm3TJVrIkD0yL2J3yT8ayGcsRRxYsiKMk5B+GUcpkOKmPUIZ1h+HqLBly1aV4LmGkzBVJ+StonQ6WBuArCDzPc7ceZRWIAPgh7Cw87zICb/MwMm8waUMiSYlyD1Wa0RAQF8u0wRm50OhqPA+mwExfu5T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLk3W+n8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLEauDJR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0233EC4CEE3;
-	Fri, 20 Jun 2025 11:41:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLk3W+n8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86B0C4CEE3;
+	Fri, 20 Jun 2025 11:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750419711;
-	bh=NJeI8YppKOxLx0T0KsWLoadLL/ubvvWy8yozXSRreC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RLEauDJR6/Gfwu+2GELnsQ59RddEchkKxm1P0c2X+quuWtrfShq4LkfIuAvC+wbvb
-	 i/nm1eaRttO/55Bly+rtsywkqF7DLy0RflVAcgR+CuDiscv5Af3pE+9Bwmk2X+8GDf
-	 y3uZvjwdjg3EkQxREQ9i42N2e98WWKTbx1A0cgxqBGSkjyiSNnmdhuXgh4NLhVvd3c
-	 VBoUHOpzBTN086z1NDz6grEqzcQUesleYAmCPfyxV0odsx9vDtDtyA6A7u6SBHUVy0
-	 2hz7d4YqtJ4QENnF1Xk9Z9VTA050zo4KtOCTDW9RaIxoSkjJzHOJRyVn2onTgfmA6s
-	 knIrvzY0/yAbw==
-Date: Fri, 20 Jun 2025 13:41:48 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Anusha Srivatsa <asrivats@redhat.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/bridge: add warning for bridges not using
- devm_drm_bridge_alloc()
-Message-ID: <20250620-adaptable-loutish-oryx-fee75c@houat>
-References: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-0-bad7eba5d117@bootlin.com>
- <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-3-bad7eba5d117@bootlin.com>
+	s=k20201202; t=1750419817;
+	bh=huyYXBjxoUlbMgsEeTSO6RSLo2wZgKDFybH8JTb2g7U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PLk3W+n8O9Q8SeD4XraZY78wnohzP6GWTciiDsfCB31+VTS3aBn0YbGqHGo8KYTfK
+	 UbJEgpwICGi35S6ZJqq1tYIh3Le1lysdVB836foEcu6RwxDoW9RBw2AzPEDvnda1cU
+	 py1VyGN7NQ6VZrHMtXGKi7kmEUfX4btMyIHkY0UelMTdqf8hsd6HzpSWsjJh/1lxK7
+	 ivcQ3E5rYPm6QWiOqFGqe1XLDJdXLEPF3y1brzHwGtQrW+eVkv8/VpZw5o5yPzLS/o
+	 qnvZrvtHIcfTCL9XkopBQbMkAqHN10HLIvgeVMv/i/w29Dg3Ckmk4ap0iBr/nVfyyh
+	 wiHQtrmwJVIYQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Bernard Metzler <bmt@zurich.ibm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Showrya M N <showrya@chelsio.com>,
+	Eric Biggers <ebiggers@google.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] RDMA/siw: work around clang stack size warning
+Date: Fri, 20 Jun 2025 13:43:28 +0200
+Message-Id: <20250620114332.4072051-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="biluwndv5kawvnzs"
-Content-Disposition: inline
-In-Reply-To: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v1-3-bad7eba5d117@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---biluwndv5kawvnzs
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/3] drm/bridge: add warning for bridges not using
- devm_drm_bridge_alloc()
-MIME-Version: 1.0
+clang inlines a lot of functions into siw_qp_sq_process(), with the
+aggregate stack frame blowing the warning limit in some configurations:
 
-Hi Luca,
+drivers/infiniband/sw/siw/siw_qp_tx.c:1014:5: error: stack frame size (1544) exceeds limit (1280) in 'siw_qp_sq_process' [-Werror,-Wframe-larger-than]
 
-On Fri, Jun 20, 2025 at 11:32:08AM +0200, Luca Ceresoli wrote:
-> To the best of my knowledge, all drivers in the mainline kernel adding a
-> DRM bridge are now converted to using devm_drm_bridge_alloc() for
-> allocation and initialization. Among others this ensures initialization of
-> the bridge refcount, allowing dynamic allocation lifetime.
->=20
-> devm_drm_bridge_alloc() is now mandatory for all new bridges. Code using
-> the old pattern ([devm_]kzalloc + filling the struct fields +
-> drm_bridge_add) is not allowed anymore.
->=20
-> Any drivers that might have been missed during the conversion, patches in
-> flight towards mainline and out-of-tre drivers still using the old pattern
-> will already be caught by a warning looking like:
->=20
->   ------------[ cut here ]------------
->   refcount_t: addition on 0; use-after-free.
->   WARNING: CPU: 2 PID: 83 at lib/refcount.c:25 refcount_warn_saturate+0x1=
-20/0x148
->   [...]
->   Call trace:
->    refcount_warn_saturate+0x120/0x148 (P)
->    drm_bridge_get.part.0+0x70/0x98 [drm]
->    drm_bridge_add+0x34/0x108 [drm]
->    sn65dsi83_probe+0x200/0x480 [ti_sn65dsi83]
->    [...]
->=20
-> This warning comes from the refcount code and happens because
-> drm_bridge_add() is increasing the refcount, which is uninitialized and
-> thus initially zero.
->=20
-> Having a warning and the corresponding stack trace is surely useful, but
-> the warning text does not clarify the root problem nor how to fix it.
->=20
-> Add a DRM_WARN() just before increasing the refcount, so the log will be
-> much more readable:
->=20
->   [drm] DRM bridge corrupted or not allocated by devm_drm_bridge_alloc()
->   ------------[ cut here ]------------
->   refcount_t: addition on 0; use-after-free.
->   [...etc...]
->=20
-> A DRM_WARN is used because drm_warn and drm_WARN require a struct
-> drm_device pointer which is not yet available when adding a bridge.
->=20
-> Do not print the dev_name() in the warning because struct drm_bridge has =
-no
-> pointer to the struct device. The affected driver should be easy to catch
-> based on the following stack trace however.
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->=20
-> ---
->=20
-> This patch was added in v8
-> ---
->  drivers/gpu/drm/drm_bridge.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index f001bbe95559aabf0aac9f25f89250ad4e1ad9c8..7d511c28608f1d8ea8fbb81d0=
-0efa9e227b02a13 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -295,6 +295,9 @@ EXPORT_SYMBOL(__devm_drm_bridge_alloc);
->   */
->  void drm_bridge_add(struct drm_bridge *bridge)
->  {
-> +	if (kref_read(&bridge->refcount) =3D=3D 0)
-> +		DRM_WARN("DRM bridge corrupted or not allocated by devm_drm_bridge_all=
-oc()\n");
-> +
+The real problem here is the array of kvec structures in siw_tx_hdt that
+makes up the majority of the consumed stack space.
 
-I'm fine with it on principle, but I wonder if using bridge->container
-is set wouldn't be a more obvious way to check it?
+Ideally there would be a way to avoid allocating the array on the
+stack, but that would require a larger rework. Add a noinline_for_stack
+annotation to avoid the warning for now, and make clang behave the same
+way as gcc here. The combined stack usage is still similar, but is spread
+over multiple functions now.
 
-Maxime
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/infiniband/sw/siw/siw_qp_tx.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---biluwndv5kawvnzs
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
+index 6432bce7d083..3a08f57d2211 100644
+--- a/drivers/infiniband/sw/siw/siw_qp_tx.c
++++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
+@@ -277,6 +277,15 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
+ 	return PKT_FRAGMENTED;
+ }
+ 
++static noinline_for_stack int
++siw_sendmsg(struct socket *sock, unsigned int msg_flags,
++	    struct kvec *vec, size_t num, size_t len)
++{
++	struct msghdr msg = { .msg_flags = msg_flags };
++
++	return kernel_sendmsg(sock, &msg, vec, num, len);
++}
++
+ /*
+  * Send out one complete control type FPDU, or header of FPDU carrying
+  * data. Used for fixed sized packets like Read.Requests or zero length
+@@ -285,12 +294,11 @@ static int siw_qp_prepare_tx(struct siw_iwarp_tx *c_tx)
+ static int siw_tx_ctrl(struct siw_iwarp_tx *c_tx, struct socket *s,
+ 			      int flags)
+ {
+-	struct msghdr msg = { .msg_flags = flags };
+ 	struct kvec iov = { .iov_base =
+ 				    (char *)&c_tx->pkt.ctrl + c_tx->ctrl_sent,
+ 			    .iov_len = c_tx->ctrl_len - c_tx->ctrl_sent };
+ 
+-	int rv = kernel_sendmsg(s, &msg, &iov, 1, iov.iov_len);
++	int rv = siw_sendmsg(s, flags, &iov, 1, iov.iov_len);
+ 
+ 	if (rv >= 0) {
+ 		c_tx->ctrl_sent += rv;
+@@ -427,13 +435,13 @@ static void siw_unmap_pages(struct kvec *iov, unsigned long kmap_mask, int len)
+  * Write out iov referencing hdr, data and trailer of current FPDU.
+  * Update transmit state dependent on write return status
+  */
+-static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
++static noinline_for_stack int siw_tx_hdt(struct siw_iwarp_tx *c_tx,
++					 struct socket *s)
+ {
+ 	struct siw_wqe *wqe = &c_tx->wqe_active;
+ 	struct siw_sge *sge = &wqe->sqe.sge[c_tx->sge_idx];
+ 	struct kvec iov[MAX_ARRAY];
+ 	struct page *page_array[MAX_ARRAY];
+-	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_EOR };
+ 
+ 	int seg = 0, do_crc = c_tx->do_crc, is_kva = 0, rv;
+ 	unsigned int data_len = c_tx->bytes_unsent, hdr_len = 0, trl_len = 0,
+@@ -586,14 +594,16 @@ static int siw_tx_hdt(struct siw_iwarp_tx *c_tx, struct socket *s)
+ 		rv = siw_0copy_tx(s, page_array, &wqe->sqe.sge[c_tx->sge_idx],
+ 				  c_tx->sge_off, data_len);
+ 		if (rv == data_len) {
+-			rv = kernel_sendmsg(s, &msg, &iov[seg], 1, trl_len);
++
++			rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, &iov[seg],
++					 1, trl_len);
+ 			if (rv > 0)
+ 				rv += data_len;
+ 			else
+ 				rv = data_len;
+ 		}
+ 	} else {
+-		rv = kernel_sendmsg(s, &msg, iov, seg + 1,
++		rv = siw_sendmsg(s, MSG_DONTWAIT | MSG_EOR, iov, seg + 1,
+ 				    hdr_len + data_len + trl_len);
+ 		siw_unmap_pages(iov, kmap_mask, seg);
+ 	}
+-- 
+2.39.5
 
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFVI9wAKCRAnX84Zoj2+
-dru/AYDf1o82ABSqpVDUzoRUAi2lnvEW2Ru8cHWndoy8kfCGn3V0PIo/dHgnQGzG
-Km9lf6gBfiMcTbF2bR6qv6gaCVUy87maQ0869Q1HyfDa31GCT7YV4OaKHt6Ztel1
-NSnRrqzLJw==
-=gzYf
------END PGP SIGNATURE-----
-
---biluwndv5kawvnzs--
