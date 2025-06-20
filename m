@@ -1,397 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C786278F4A;
-	Fri, 20 Jun 2025 11:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A330D78F4A;
+	Fri, 20 Jun 2025 11:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418568; cv=none; b=t5tkmqP2Zfji1FRnOaki40aF25Ox6SUoJtMpfaAMY2G4eTjww9xB/k8iXyS+SbkSbKPUri7P7wkcVph/gjrwq8O0pPKINfLNc5DbTTsqwRPSgOiRfrN7wsYBWlXGVRWYZruAoI+cnzXiXsPxatlbVnjh5x1XOk6b3vlpfeLtrUQ=
+	t=1750418645; cv=none; b=Gt1v6rgTgrMc8BPGaKIdg7G4fUE+VL93EyTLj6/+/FfsLQQ6FXYmawnMtiknpjvNlsaEI0kdbeGTyDWsMxqZRhuvzGmfV4G8SCE5aGqHuvACwFs3wmQVLkF1ZjZcZIig4qfyj/4W34fb93G93ryKjjIEpkelycDZjlIHTM+Xawo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418568; c=relaxed/simple;
-	bh=QBFJzVVrfVoyGIEd3fk1LqSlNLHOElDjvujD8eKPQIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZB99bqX+6prafH1fsfZE67Oi+jsnOa6UAwCoSly6BGhT0G5AHX35JIuCBTWnoytLUt4ZRq/n4xsYRT1IEFXUykmm8OFz2J3lIJH49e4kNUe2IzsIHRZbrzuV+KgcVaub7+6LTGRUHGiBnlw/fg4VCw7Tin9yO044cTwtRrPQzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+2tHfKb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+2tHfKb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC88C4CEE3;
-	Fri, 20 Jun 2025 11:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418568;
-	bh=QBFJzVVrfVoyGIEd3fk1LqSlNLHOElDjvujD8eKPQIw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H+2tHfKbk0CjhBzyiqzIoioVXNchfu684gcdExNICGG0E8f9LWlKIwb/PD2xKkMhP
-	 NpeGKwOYqpIKscYKovXrO1h0TY7rTFS+5pcY79bZOxkXLXt2xec6cIpIj+zIUn98H9
-	 q39XaAPds05Lm2Ey2FcE/UQyYOBacES9fXQuAy5BzsqvNlhvRDN3VNEI1Trgi8Qm9d
-	 jxno7LYJxiWYFGDZftxZKwl3/bgCn8hV1Hy3Y9/n2qwIj9RkCUke2eiCzRgzmfb8al
-	 l188xmUF8JPUgmBcPRs5FWOAf1yWii7elT1K32xAp1kTYK4B1/lIcOwIZLDLNVQ5Hz
-	 eAJskdotPxunw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] caif: reduce stack size, again
-Date: Fri, 20 Jun 2025 13:22:39 +0200
-Message-Id: <20250620112244.3425554-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750418645; c=relaxed/simple;
+	bh=vPvzD8auiKqrrd5DjYZNOQJwyQxrMebWgV0Mo4yBAs8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F46H0tYYaOeijMOTcR18RBKEojx20aoeWGajDfeThKWu1Lww9UIkI8+eMCRbDpXN2HVXY+8suXCBnn2gPAI9eZXTbFwj1RoGJa4JDz5YieEe1jKEf5UeuWuOjQwQTtjMse0Vm0cDBfWTSthmWAtBe3tcLBR6LP4I+lQJpG9q6KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1307941C7B;
+	Fri, 20 Jun 2025 11:23:57 +0000 (UTC)
+Message-ID: <f90f6843-4ffd-48a3-9813-0d1c52f8e48e@ghiti.fr>
+Date: Fri, 20 Jun 2025 13:23:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "riscv: misaligned: fix sleeping function called
+ during misaligned access handling"
+To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Nylon Chen <nylon.chen@sifive.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250620110939.1642735-1-namcao@linutronix.de>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250620110939.1642735-1-namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeejieeuudejieekveeutdeguefhkeduledugeevhefffeejudeggedufffgleeugfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemkegsgeegmegrvdelsgemvghffhehmeeirgejfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemkegsgeegmegrvdelsgemvghffhehmeeirgejfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemkegsgeegmegrvdelsgemvghffhehmeeirgejfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepledprhgtphhtthhopehnrghmtggroheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehpr
+ ghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheptghlvghgvghrsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehnhihlohhnrdgthhgvnhesshhifhhivhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 6/20/25 13:09, Nam Cao wrote:
+> This reverts commit 61a74ad25462 ("riscv: misaligned: fix sleeping function
+> called during misaligned access handling"). The commit addresses a sleeping
+> in atomic context problem, but it is not the correct fix as explained by
+> Clément:
+>
+> "Using nofault would lead to failure to read from user memory that is paged
+> out for instance. This is not really acceptable, we should handle user
+> misaligned access even at an address that would generate a page fault."
+>
+> This bug has been properly fixed by commit 453805f0a28f ("riscv:
+> misaligned: enable IRQs while handling misaligned accesses").
+>
+> Revert this improper fix.
+>
+> Link: https://lore.kernel.org/linux-riscv/b779beed-e44e-4a5e-9551-4647682b0d21@rivosinc.com/
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: stable@vger.kernel.org
+> ---
+>   arch/riscv/kernel/traps_misaligned.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+> index dd8e4af6583f4..93043924fe6c6 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -454,7 +454,7 @@ static int handle_scalar_misaligned_load(struct pt_regs *regs)
+>   
+>   	val.data_u64 = 0;
+>   	if (user_mode(regs)) {
+> -		if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
+> +		if (copy_from_user(&val, (u8 __user *)addr, len))
+>   			return -1;
+>   	} else {
+>   		memcpy(&val, (u8 *)addr, len);
+> @@ -555,7 +555,7 @@ static int handle_scalar_misaligned_store(struct pt_regs *regs)
+>   		return -EOPNOTSUPP;
+>   
+>   	if (user_mode(regs)) {
+> -		if (copy_to_user_nofault((u8 __user *)addr, &val, len))
+> +		if (copy_to_user((u8 __user *)addr, &val, len))
+>   			return -1;
+>   	} else {
+>   		memcpy((u8 *)addr, &val, len);
 
-I tried to fix the stack usage in this function a couple of years ago,
-but there is still a problem with the latest gcc versions in some
-configurations:
 
-net/caif/cfctrl.c:553:1: error: the frame size of 1296 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+Of course this is a wrong fix:
 
-Reduce this once again, with a separate cfctrl_link_setup() function that
-holds the bulk of all the local variables. It also turns out that the
-param[] array that takes up a large portion of the stack is write-only
-and can be left out here.
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-Fixes: ce6289661b14 ("caif: reduce stack size with KASAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/caif/cfctrl.c | 294 +++++++++++++++++++++++-----------------------
- 1 file changed, 144 insertions(+), 150 deletions(-)
+Thanks for catching this,
 
-diff --git a/net/caif/cfctrl.c b/net/caif/cfctrl.c
-index 20139fa1be1f..06b604cf9d58 100644
---- a/net/caif/cfctrl.c
-+++ b/net/caif/cfctrl.c
-@@ -351,17 +351,154 @@ int cfctrl_cancel_req(struct cflayer *layr, struct cflayer *adap_layer)
- 	return found;
- }
- 
-+static int cfctrl_link_setup(struct cfctrl *cfctrl, struct cfpkt *pkt, u8 cmdrsp)
-+{
-+	u8 len;
-+	u8 linkid = 0;
-+	enum cfctrl_srv serv;
-+	enum cfctrl_srv servtype;
-+	u8 endpoint;
-+	u8 physlinkid;
-+	u8 prio;
-+	u8 tmp;
-+	u8 *cp;
-+	int i;
-+	struct cfctrl_link_param linkparam;
-+	struct cfctrl_request_info rsp, *req;
-+
-+	memset(&linkparam, 0, sizeof(linkparam));
-+
-+	tmp = cfpkt_extr_head_u8(pkt);
-+
-+	serv = tmp & CFCTRL_SRV_MASK;
-+	linkparam.linktype = serv;
-+
-+	servtype = tmp >> 4;
-+	linkparam.chtype = servtype;
-+
-+	tmp = cfpkt_extr_head_u8(pkt);
-+	physlinkid = tmp & 0x07;
-+	prio = tmp >> 3;
-+
-+	linkparam.priority = prio;
-+	linkparam.phyid = physlinkid;
-+	endpoint = cfpkt_extr_head_u8(pkt);
-+	linkparam.endpoint = endpoint & 0x03;
-+
-+	switch (serv) {
-+	case CFCTRL_SRV_VEI:
-+	case CFCTRL_SRV_DBG:
-+		if (CFCTRL_ERR_BIT & cmdrsp)
-+			break;
-+		/* Link ID */
-+		linkid = cfpkt_extr_head_u8(pkt);
-+		break;
-+	case CFCTRL_SRV_VIDEO:
-+		tmp = cfpkt_extr_head_u8(pkt);
-+		linkparam.u.video.connid = tmp;
-+		if (CFCTRL_ERR_BIT & cmdrsp)
-+			break;
-+		/* Link ID */
-+		linkid = cfpkt_extr_head_u8(pkt);
-+		break;
-+
-+	case CFCTRL_SRV_DATAGRAM:
-+		linkparam.u.datagram.connid = cfpkt_extr_head_u32(pkt);
-+		if (CFCTRL_ERR_BIT & cmdrsp)
-+			break;
-+		/* Link ID */
-+		linkid = cfpkt_extr_head_u8(pkt);
-+		break;
-+	case CFCTRL_SRV_RFM:
-+		/* Construct a frame, convert
-+		 * DatagramConnectionID
-+		 * to network format long and copy it out...
-+		 */
-+		linkparam.u.rfm.connid = cfpkt_extr_head_u32(pkt);
-+		cp = (u8 *) linkparam.u.rfm.volume;
-+		for (tmp = cfpkt_extr_head_u8(pkt);
-+		     cfpkt_more(pkt) && tmp != '\0';
-+		     tmp = cfpkt_extr_head_u8(pkt))
-+			*cp++ = tmp;
-+		*cp = '\0';
-+
-+		if (CFCTRL_ERR_BIT & cmdrsp)
-+			break;
-+		/* Link ID */
-+		linkid = cfpkt_extr_head_u8(pkt);
-+
-+		break;
-+	case CFCTRL_SRV_UTIL:
-+		/* Construct a frame, convert
-+		 * DatagramConnectionID
-+		 * to network format long and copy it out...
-+		 */
-+		/* Fifosize KB */
-+		linkparam.u.utility.fifosize_kb = cfpkt_extr_head_u16(pkt);
-+		/* Fifosize bufs */
-+		linkparam.u.utility.fifosize_bufs = cfpkt_extr_head_u16(pkt);
-+		/* name */
-+		cp = (u8 *) linkparam.u.utility.name;
-+		caif_assert(sizeof(linkparam.u.utility.name)
-+			     >= UTILITY_NAME_LENGTH);
-+		for (i = 0; i < UTILITY_NAME_LENGTH && cfpkt_more(pkt); i++) {
-+			tmp = cfpkt_extr_head_u8(pkt);
-+			*cp++ = tmp;
-+		}
-+		/* Length */
-+		len = cfpkt_extr_head_u8(pkt);
-+		linkparam.u.utility.paramlen = len;
-+		/* Param Data */
-+		cp = linkparam.u.utility.params;
-+		while (cfpkt_more(pkt) && len--) {
-+			tmp = cfpkt_extr_head_u8(pkt);
-+			*cp++ = tmp;
-+		}
-+		if (CFCTRL_ERR_BIT & cmdrsp)
-+			break;
-+		/* Link ID */
-+		linkid = cfpkt_extr_head_u8(pkt);
-+		/* Length */
-+		len = cfpkt_extr_head_u8(pkt);
-+		/* Param Data */
-+		cfpkt_extr_head(pkt, NULL, len);
-+		break;
-+	default:
-+		pr_warn("Request setup, invalid type (%d)\n", serv);
-+		return -1;
-+	}
-+
-+	rsp.cmd = CFCTRL_CMD_LINK_SETUP;
-+	rsp.param = linkparam;
-+	spin_lock_bh(&cfctrl->info_list_lock);
-+	req = cfctrl_remove_req(cfctrl, &rsp);
-+
-+	if (CFCTRL_ERR_BIT == (CFCTRL_ERR_BIT & cmdrsp) ||
-+		cfpkt_erroneous(pkt)) {
-+		pr_err("Invalid O/E bit or parse error "
-+				"on CAIF control channel\n");
-+		cfctrl->res.reject_rsp(cfctrl->serv.layer.up, 0,
-+				       req ? req->client_layer : NULL);
-+	} else {
-+		cfctrl->res.linksetup_rsp(cfctrl->serv.layer.up, linkid,
-+					  serv, physlinkid,
-+					  req ?  req->client_layer : NULL);
-+	}
-+
-+	kfree(req);
-+
-+	spin_unlock_bh(&cfctrl->info_list_lock);
-+
-+	return 0;
-+}
-+
- static int cfctrl_recv(struct cflayer *layer, struct cfpkt *pkt)
- {
- 	u8 cmdrsp;
- 	u8 cmd;
--	int ret = -1;
--	u8 len;
--	u8 param[255];
-+	int ret = 0;
- 	u8 linkid = 0;
- 	struct cfctrl *cfctrl = container_obj(layer);
--	struct cfctrl_request_info rsp, *req;
--
- 
- 	cmdrsp = cfpkt_extr_head_u8(pkt);
- 	cmd = cmdrsp & CFCTRL_CMD_MASK;
-@@ -374,150 +511,7 @@ static int cfctrl_recv(struct cflayer *layer, struct cfpkt *pkt)
- 
- 	switch (cmd) {
- 	case CFCTRL_CMD_LINK_SETUP:
--		{
--			enum cfctrl_srv serv;
--			enum cfctrl_srv servtype;
--			u8 endpoint;
--			u8 physlinkid;
--			u8 prio;
--			u8 tmp;
--			u8 *cp;
--			int i;
--			struct cfctrl_link_param linkparam;
--			memset(&linkparam, 0, sizeof(linkparam));
--
--			tmp = cfpkt_extr_head_u8(pkt);
--
--			serv = tmp & CFCTRL_SRV_MASK;
--			linkparam.linktype = serv;
--
--			servtype = tmp >> 4;
--			linkparam.chtype = servtype;
--
--			tmp = cfpkt_extr_head_u8(pkt);
--			physlinkid = tmp & 0x07;
--			prio = tmp >> 3;
--
--			linkparam.priority = prio;
--			linkparam.phyid = physlinkid;
--			endpoint = cfpkt_extr_head_u8(pkt);
--			linkparam.endpoint = endpoint & 0x03;
--
--			switch (serv) {
--			case CFCTRL_SRV_VEI:
--			case CFCTRL_SRV_DBG:
--				if (CFCTRL_ERR_BIT & cmdrsp)
--					break;
--				/* Link ID */
--				linkid = cfpkt_extr_head_u8(pkt);
--				break;
--			case CFCTRL_SRV_VIDEO:
--				tmp = cfpkt_extr_head_u8(pkt);
--				linkparam.u.video.connid = tmp;
--				if (CFCTRL_ERR_BIT & cmdrsp)
--					break;
--				/* Link ID */
--				linkid = cfpkt_extr_head_u8(pkt);
--				break;
--
--			case CFCTRL_SRV_DATAGRAM:
--				linkparam.u.datagram.connid =
--				    cfpkt_extr_head_u32(pkt);
--				if (CFCTRL_ERR_BIT & cmdrsp)
--					break;
--				/* Link ID */
--				linkid = cfpkt_extr_head_u8(pkt);
--				break;
--			case CFCTRL_SRV_RFM:
--				/* Construct a frame, convert
--				 * DatagramConnectionID
--				 * to network format long and copy it out...
--				 */
--				linkparam.u.rfm.connid =
--				    cfpkt_extr_head_u32(pkt);
--				cp = (u8 *) linkparam.u.rfm.volume;
--				for (tmp = cfpkt_extr_head_u8(pkt);
--				     cfpkt_more(pkt) && tmp != '\0';
--				     tmp = cfpkt_extr_head_u8(pkt))
--					*cp++ = tmp;
--				*cp = '\0';
--
--				if (CFCTRL_ERR_BIT & cmdrsp)
--					break;
--				/* Link ID */
--				linkid = cfpkt_extr_head_u8(pkt);
--
--				break;
--			case CFCTRL_SRV_UTIL:
--				/* Construct a frame, convert
--				 * DatagramConnectionID
--				 * to network format long and copy it out...
--				 */
--				/* Fifosize KB */
--				linkparam.u.utility.fifosize_kb =
--				    cfpkt_extr_head_u16(pkt);
--				/* Fifosize bufs */
--				linkparam.u.utility.fifosize_bufs =
--				    cfpkt_extr_head_u16(pkt);
--				/* name */
--				cp = (u8 *) linkparam.u.utility.name;
--				caif_assert(sizeof(linkparam.u.utility.name)
--					     >= UTILITY_NAME_LENGTH);
--				for (i = 0;
--				     i < UTILITY_NAME_LENGTH
--				     && cfpkt_more(pkt); i++) {
--					tmp = cfpkt_extr_head_u8(pkt);
--					*cp++ = tmp;
--				}
--				/* Length */
--				len = cfpkt_extr_head_u8(pkt);
--				linkparam.u.utility.paramlen = len;
--				/* Param Data */
--				cp = linkparam.u.utility.params;
--				while (cfpkt_more(pkt) && len--) {
--					tmp = cfpkt_extr_head_u8(pkt);
--					*cp++ = tmp;
--				}
--				if (CFCTRL_ERR_BIT & cmdrsp)
--					break;
--				/* Link ID */
--				linkid = cfpkt_extr_head_u8(pkt);
--				/* Length */
--				len = cfpkt_extr_head_u8(pkt);
--				/* Param Data */
--				cfpkt_extr_head(pkt, &param, len);
--				break;
--			default:
--				pr_warn("Request setup, invalid type (%d)\n",
--					serv);
--				goto error;
--			}
--
--			rsp.cmd = cmd;
--			rsp.param = linkparam;
--			spin_lock_bh(&cfctrl->info_list_lock);
--			req = cfctrl_remove_req(cfctrl, &rsp);
--
--			if (CFCTRL_ERR_BIT == (CFCTRL_ERR_BIT & cmdrsp) ||
--				cfpkt_erroneous(pkt)) {
--				pr_err("Invalid O/E bit or parse error "
--						"on CAIF control channel\n");
--				cfctrl->res.reject_rsp(cfctrl->serv.layer.up,
--						       0,
--						       req ? req->client_layer
--						       : NULL);
--			} else {
--				cfctrl->res.linksetup_rsp(cfctrl->serv.
--							  layer.up, linkid,
--							  serv, physlinkid,
--							  req ? req->
--							  client_layer : NULL);
--			}
--
--			kfree(req);
--
--			spin_unlock_bh(&cfctrl->info_list_lock);
--		}
-+		ret = cfctrl_link_setup(cfctrl, pkt, cmdrsp);
- 		break;
- 	case CFCTRL_CMD_LINK_DESTROY:
- 		linkid = cfpkt_extr_head_u8(pkt);
-@@ -544,9 +538,9 @@ static int cfctrl_recv(struct cflayer *layer, struct cfpkt *pkt)
- 		break;
- 	default:
- 		pr_err("Unrecognized Control Frame\n");
-+		ret = -1;
- 		goto error;
- 	}
--	ret = 0;
- error:
- 	cfpkt_destroy(pkt);
- 	return ret;
--- 
-2.39.5
+Alex
 
