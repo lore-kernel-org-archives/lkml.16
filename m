@@ -1,57 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3081130E85C;
-	Fri, 20 Jun 2025 07:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8311E30E85C;
+	Fri, 20 Jun 2025 07:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750404095; cv=none; b=l2vfuUxN5rv6j2bdNFDcgI2sJMdKAxZq7p7S7vareSvIQqGJtsgEo/phGOGN3/f4bjqF1LtAxNLHOOvM3/OC+FGqbbCUsLrp26/zII3goP6YQjdZSiK4Nz31tXgW3V7MA56islH0+DcFiHMTc0/2z39m+C1B7NdQN/zapePae7o=
+	t=1750404127; cv=none; b=F4YYVLMg63UK3FUQ+oWAtYHzI5VFZ8cdgwQD4xiRNbF0XDiZJ6LAvscDrtjLG2enp1UPlrmgeWzh9GWPxunNzy0OwwAfiT3wYbVfMYDX6ss0vPGM4X9Gqhr1e3o1wD1OCjIbCAgNKSdwrmpa2UA47qImeiPBujvcMM2L7Q6zyR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750404095; c=relaxed/simple;
-	bh=Itc9ddbP7s53ig+Z8sahKa7vHJExHczg9UB74ndkSPI=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=Yf7e6LqbWcHcTdGXmxpfucVuW2jPlo0E1tE6MJqOwbK92uI4U7P4twfOkQsNDzl4LH4VMipXGUWaTm0nWiWd/u58tD96c46EMyFuwTzJmRyByVCN8p9mJTGrzLxWwapomQLIBasE+K2HPTyQ+YX3ZQeNNI2sb1UMUdXlfquJgUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3ibzmw6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750404127; c=relaxed/simple;
+	bh=5RPAq0Ia69osMsa70Jk9HSRpAEfxlhKNmA/7/I1S0Pg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WWKINuZsAQSQIsork/H9m6ccqM4a0xm9GEQJckl2XhZF4hIwXUT1iy9NB8cylgOFGx9YYs0SBI+W4Rfv7x/kDZxdRA6lhghrZr2huLoMLyXhWboQ4piTFApOnBaVTG3XsCmQjWpGN6jon5GqgIlvkfrPQHrwhSYFWQx4r1TQe34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJ64G+TC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3ibzmw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FFE4C4CEE3;
-	Fri, 20 Jun 2025 07:21:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJ64G+TC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2B8C4CEE3;
+	Fri, 20 Jun 2025 07:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750404094;
-	bh=Itc9ddbP7s53ig+Z8sahKa7vHJExHczg9UB74ndkSPI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=l3ibzmw6cfD/1zap3DXnKrGsKBbjSdP8g0Via6HC1pavu2/ECH2MlF9m04hMRtL7A
-	 JAn1iwABQotzPbFEaAPh7yXXCzjXVvRJZPg7J5lj5hXBpcTT5pecqu6Ap8h1z+qlG4
-	 +7pHonS5IHIPoOvrl9RDESnG936EtL7S9Obz6oDEURnDYFxrizS7DVcro3tfU+tL/N
-	 oRi5BZW0FUfhbMhbPSk5Ij6detl2UaZ08imnUq2iC67HH40M0FTgva+2wbeeTH2ymZ
-	 xFbXWmttm2Cb0WPzCj5GVJLJeNEE4HTeCRDTAEGVsX3rhcYMBp1+ysj6u/SASmOl83
-	 WJNvYF7qYzU1g==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750404127;
+	bh=5RPAq0Ia69osMsa70Jk9HSRpAEfxlhKNmA/7/I1S0Pg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GJ64G+TCI+QHThsiEaKisdrrzaIC8mNN1kXyFDKDkncbuhxRq5Jm1pqRsZQ+gesuD
+	 9rqDmkugl+vIlP9OHgU5OX1HJ3ChyVcFItvHK0oxzmExEPoantG6iLimuoFzU/JxjW
+	 EaztZ0R2uER86C2sg8/0S8nJofVYVCqafVXfs2ICIoJx97J6dlV2Z/2cbyMBTn/hq6
+	 FqsYjieUkBLpW+OvINs2MEujQoiVo+ZMvwVQjLyC1W/1jdu+Y/DfcWS+gC/bywAmWY
+	 s9/gMB+LFpa1x/A8APjO/JQFjZIzlb3KYiQJoK0ns5mudxJ2bZZTwMU8D1LJ9Z/oBK
+	 aNIwO2rJkH2xA==
+Date: Fri, 20 Jun 2025 09:22:04 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Hardik Garg <hargar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	decui@microsoft.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ssengar@linux.microsoft.com, hargar@microsoft.com, apais@microsoft.com
+Subject: Re: [PATCH v4 2/2] vmbus: retrieve connection-id from DeviceTree
+Message-ID: <20250620-miniature-wisteria-moose-8d8cf8@kuoka>
+References: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
+ <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250404-kconfig-defaults-clk-v1-3-4d2df5603332@linaro.org>
-References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org> <20250404-kconfig-defaults-clk-v1-3-4d2df5603332@linaro.org>
-Subject: Re: [PATCH 3/5] clk: stm32: Do not enable by default during compile testing
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, Emilio =?utf-8?q?L=C3=B3pez?= <emilio@elopez.com.ar>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Samuel Holland <samuel@sholland.org>
-Date: Fri, 20 Jun 2025 00:21:33 -0700
-Message-ID: <175040409330.4372.17935739040360849030@lazor>
-User-Agent: alot/0.11
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
 
-Quoting Krzysztof Kozlowski (2025-04-04 04:56:59)
-> Enabling the compile test should not cause automatic enabling of all
-> drivers.  Restrict the default to ARCH also for individual driver, even
-> though its choice is not visible without selecting parent Kconfig
-> symbol, because otherwise selecting parent would select the child during
-> compile testing.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Thu, Jun 19, 2025 at 04:06:35PM GMT, Hardik Garg wrote:
+> The connection-id determines which hypervisor communication channel the
+> guest should use to talk to the VMBus host. This patch adds support to
+> read this value from the DeviceTree where it exists as a property under
+> the vmbus node with the compatible ID "microsoft,message-connection-id".
+> The property name follows the format <vendor>,<field> where
+> "vendor": "microsoft" and "field": "message-connection-id"
+> 
+> Reading from DeviceTree allows platforms to specify their preferred
+> communication channel, making it more flexible. If the property is
+> not found in the DeviceTree, use the default connection ID
+> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
+> based on protocol version).
+> 
+> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
 > ---
+> v3: https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com
+> v2: https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com
+> v1: https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com
+> ---
+>  drivers/hv/connection.c |  6 ++++--
+>  drivers/hv/vmbus_drv.c  | 13 +++++++++++++
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index be490c598785..15d2b652783d 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -99,11 +99,13 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+>  	if (version >= VERSION_WIN10_V5) {
+>  		msg->msg_sint = VMBUS_MESSAGE_SINT;
+>  		msg->msg_vtl = ms_hyperv.vtl;
+> -		vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID_4;
+>  	} else {
+>  		msg->interrupt_page = virt_to_phys(vmbus_connection.int_page);
+> -		vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID;
+>  	}
+> +	/* Set default connection ID if not provided via DeviceTree */
+> +	if (!vmbus_connection.msg_conn_id)
 
-Applied to clk-next
+Your binding said connection ID 0 is a valid one, so this is wrong. Or
+binding is wrong.
+
+Best regards,
+Krzysztof
+
