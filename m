@@ -1,81 +1,112 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135C2220687
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337A52DF3F2
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750445214; cv=none; b=ZKB9K1Vyt12UwFzc4OzfxkoJ2B7DfJzB3SuHL1xi7RWiVQUin86wcP3HWyCTV8cfJ2wR6evioG9uwFcgTNL/UcRLpjK4RZnYb37FcXLARQLMxERSILIcGgb/joWWC85FkG8wIsHFLMGsk6KgfjKz97F6TQUfOwxpG0Di+fLmOgc=
+	t=1750445226; cv=none; b=lKZjjPDxxw2/+spMl5YZC86N44RS93TxcCnQsqljGfKyR4hO5Ov3mFtzwvCCxm8l50/hTOKoMhhzaECk+vxSxCkE5BZtYJdvvd5TT+uRqD22Lqzi01C1mx9P/ACJufkXnQDYj6JPs/fjDFbhrreFGGFB3vUwONCSnnTG0MlikLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750445214; c=relaxed/simple;
-	bh=d/GlD2KP1uZD+1yoFhPJcFL2TMCqvOPZQ9p8ZBOmw+k=;
+	s=arc-20240116; t=1750445226; c=relaxed/simple;
+	bh=Cus87x9xWctWVEhliM11PHlEDTfUIJe8asLHPb9D8Qw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HWQ8moOI+HmyuoKB+d7ThEaxUzJ4bwKul5uFq+7p61xtxh71v/50tK+RGcxvMNQUuUzQ1JgaBHkf+Jqc5tAdyLMXadQLVRc2UeprWbvsBZ8a2ACY1ROFc3yl/+uvgqWSMm4pfqDaJxQ70xp4gBxZISMt0UFOPF4TmY9nzAd1dpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=y96jXFFa; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=AXB7ADHc1ddsHSY+C3qJpN7Q2D4z/z3OlzZdgRROVR8QC8/drrTuiDkzXR74B6MizCK+QopnnQF1EdVB0sFAxPHUXN+K2wnloQ9m/uo7ieHERg3reSeyaM+oHAAHLobabvSutUP+4IdSgf/sMnf3m7IDzc3/PTxRPR0fy0iNImQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wV33ZKmi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iltBBPrt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wV33ZKmi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iltBBPrt; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="y96jXFFa"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2eb5cbe41e1so1315487fac.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1750445212; x=1751050012; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s8NHYIJCrgO6+UfKO/xAGNidF0eDJbqLbRizmGJ3qXI=;
-        b=y96jXFFaiIEOrDspEKhUGxTaQDDZOwiIr/ChcftT+A/mPY1dMuH6RGjSalToyZP5Tc
-         Kp2ffpiQU7FwykNqviwoy66PVlZmoqflWZSUxjhS8tZs4/u81OeDX9Nj6cIB7r9MxwMK
-         +IXH1mR5rkl6mMB4u54nidHOhyyI2ZC2W7Gou5x4BS21rTG4MZ268FIykfN4mEa12N1c
-         j3lDmmX88HOYIB3lKPeiszx1I28WpUcveEkPuKUsfhn598WofyWplUkug7mBsJhK4O3H
-         OXp3pOeLsmiXhwafam+Zqguc/jUEuDxjmWjXBWb1clT2X0pSfqRU0bpk7BZgt52RSlXN
-         h+Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750445212; x=1751050012;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s8NHYIJCrgO6+UfKO/xAGNidF0eDJbqLbRizmGJ3qXI=;
-        b=EvH822pmlW0fEc7+Pfirk31r9BDuRMJgtKM8NDW94ShBXNjdFM4eotei4YnsghBa0g
-         rGVnoeFhEWOUAGY/xHbfFdlwKYaEEWIwKdK7qtjpL4SD582Kra3TBWECFyc2oemOyjD0
-         QWCCBpN9YW+YtaNaFKtPyRt+Dt/VFElgSdyrGQd88Hq8s5Zt0IytLf8fNB3DoXIlCZDg
-         yZ5MwPoqocL2Yac1PYIcUKIVl/DmNhxHsho25esG4DaByHR6Uj+20II4xV171JvLa+pP
-         ezUJZGKsmxuZN1xd4F6WB+Q6ZCXTDnOlklVkw8Cji1bXl4a+2gqveD6FhoMxkoKMTH0z
-         KU8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXjiXFBxfr1BTDi/FiZARVE0J1SfelBYnkBBxN2QWQYv1CWJl53erEaCZ10pZVNvsyMZuwgc824kVgy/Z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAhjvvcEEj631nkv6FHyGDbt4dG8Wutj+jcYrb2k1+1ptkfOf8
-	Xu5ZNf65DUVTUnNPxheMzy+SDCpuVjb/bYKwxieEj9cTWpC1pMCaiL5V9nJHviKa4fQ=
-X-Gm-Gg: ASbGncs77/32DGQW+9OEHBl+uCJYOh0d7sfpqYlLpeECQ9CdnFM/zR/9SUWulwId9ri
-	o4Qf2MVY+mkHrrAH1skOxcwpxSlEaJ78E5S4VwCvcc9woEpfao1fO0nzKWYCfVCvGhpBf+xIoyj
-	a1x8QltAnO0BW6Uf7ezo3iFOg2AbbQOjkrYEUl+I3kXyDvc3jQV5T18gu+83ihP5+Zr05jBb3f0
-	rK+1OC+CiK3ktaFm9gsN0mXPI4r1l4GtN7FaQEnBzKXrkN0sWjKU/htlaVucWmfaKEh0eFsg13h
-	XteDl8H2JPe86ALyBmatMbIYxa3ngaVSOfIKHy2wh+Y21bmRyT6ok2bSNrRLivjWwZAf4xfDmZQ
-	=
-X-Google-Smtp-Source: AGHT+IGvXifjETCnN4g1olyDwWNAcDk+oFv5m2B4XET98iABiZega1zQLzY80woia5ktb/6ap2w1Cg==
-X-Received: by 2002:a05:6870:d288:b0:2ea:73fb:7850 with SMTP id 586e51a60fabf-2eeee4cb6b9mr2820332fac.24.1750445211862;
-        Fri, 20 Jun 2025 11:46:51 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:680:2e07:b628:1be4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ee6655a2c7sm491389fac.17.2025.06.20.11.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 11:46:51 -0700 (PDT)
-Date: Fri, 20 Jun 2025 13:46:46 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
- driver
-Message-ID: <aFWslonzXrSfTASW@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <cover.1750301674.git.zhoubinbin@loongson.cn>
- <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wV33ZKmi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iltBBPrt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wV33ZKmi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iltBBPrt"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2522F2122A;
+	Fri, 20 Jun 2025 18:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750445222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TkWPg2eqT1+Wq/XA39xuKkI/6ymg24dNRTDXNGfR9M=;
+	b=wV33ZKmidBf6Y8tLbYUzp3ExOoEPuqaXGNO1YKfUzB3/w6kUbu02/maHt8FMnN4Da9PGMS
+	f/xj59Z9f2sNOOQGQZwZXjlX5vxf16MTmKx0ZrujArItuct/44+QL2YYZZXq6No3336eam
+	mNLTOl4uB7qph5v5nYSGBhagrx1l+yg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750445222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TkWPg2eqT1+Wq/XA39xuKkI/6ymg24dNRTDXNGfR9M=;
+	b=iltBBPrtxjj12CpwRx3h+WSbqrjS7pCaqKpa20FayEi0UZ3cdueWboT+A2rw9MX97i0kQZ
+	Kwks5DiRHuYcBuAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750445222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TkWPg2eqT1+Wq/XA39xuKkI/6ymg24dNRTDXNGfR9M=;
+	b=wV33ZKmidBf6Y8tLbYUzp3ExOoEPuqaXGNO1YKfUzB3/w6kUbu02/maHt8FMnN4Da9PGMS
+	f/xj59Z9f2sNOOQGQZwZXjlX5vxf16MTmKx0ZrujArItuct/44+QL2YYZZXq6No3336eam
+	mNLTOl4uB7qph5v5nYSGBhagrx1l+yg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750445222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TkWPg2eqT1+Wq/XA39xuKkI/6ymg24dNRTDXNGfR9M=;
+	b=iltBBPrtxjj12CpwRx3h+WSbqrjS7pCaqKpa20FayEi0UZ3cdueWboT+A2rw9MX97i0kQZ
+	Kwks5DiRHuYcBuAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8461B136BA;
+	Fri, 20 Jun 2025 18:46:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y/tWHaKsVWgWFwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 20 Jun 2025 18:46:58 +0000
+Date: Fri, 20 Jun 2025 19:46:56 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Hugh Dickins <hughd@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: change vm_get_page_prot() to accept vm_flags_t
+ argument
+Message-ID: <64r5sm2aqgphrs5t4vzzgz7qitn3efmxpxjzv4wsaeyuncrn56@tdu4z7uzxluq>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
+ <20250619-unwiederholbar-addition-6875c99fe08d@brauner>
+ <a21c59dd-5d2d-4cd2-a04d-63eec059f3c9@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,227 +115,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+In-Reply-To: <a21c59dd-5d2d-4cd2-a04d-63eec059f3c9@lucifer.local>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,armlinux.org.uk,arm.com,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_GT_50(0.00)[64];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Fri, Jun 20, 2025 at 10:06:27AM +0800, Binbin Zhou wrote:
-> The Loongson-2K Board Management Controller provides an PCIe interface
-> to the host to access the feature implemented in the BMC.
+On Thu, Jun 19, 2025 at 09:49:03AM +0100, Lorenzo Stoakes wrote:
+> On Thu, Jun 19, 2025 at 10:42:14AM +0200, Christian Brauner wrote:
+> > If you change vm_flags_t to u64 you probably want to compile with some
+> > of these integer truncation options when you're doing the conversion.
+> > Because otherwise you risk silently truncating the upper 32bits when
+> > assigning to a 32bit variable. We've had had a patch series that almost
+> > introduced a very subtle bug when it tried to add the first flag outside
+> > the 32bit range in the lookup code a while ago. That series never made
+> > it but it just popped back into my head when I read your series.
 > 
-> The BMC is assembled on a server similar to the server machine with
-> Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
+> Yeah am very wary of this, it's a real concern. I'm not sure how precisely we
+> might enable such options but only in this instance? Because presumably we are
+> intentionally narrowing in probably quite a few places.
 > 
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/mfd/Kconfig         |  11 +++
->  drivers/mfd/Makefile        |   2 +
->  drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+)
->  create mode 100644 drivers/mfd/ls2k-bmc-core.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 96992af22565..a1081c4211b0 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2389,6 +2389,18 @@ config MFD_INTEL_M10_BMC_PMCI
->  	  additional drivers must be enabled in order to use the functionality
->  	  of the device.
->  
-> +config MFD_LS2K_BMC_CORE
-> +	bool "Loongson-2K Board Management Controller Support"
-> +	select MFD_CORE
+> Pedro mentioned that there might be compiler options to help so I'm guessing
+> this is the same thing as to what you're thinking here?
 
-Also, from the recent bug report, this is missing a depends on PCI.
+I was thinking about -Wnarrowing but sadly it seems that this is only for C++
+code. Also MSVC is quite strict (even in C) when it comes to this stuff, so you
+could also add MSVC support to the kernel, small task :P
 
-> +	help
-> +	  Say yes here to add support for the Loongson-2K BMC which is a Board
-> +	  Management Controller connected to the PCIe bus. The device supports
-> +	  multiple sub-devices like display and IPMI. This driver provides common
-> +	  support for accessing the devices.
-> +
-> +	  The display is enabled by default in the driver, while the IPMI interface
-> +	  is enabled independently through the IPMI_LS2K option in the IPMI section.
-> +
->  config MFD_QNAP_MCU
->  	tristate "QNAP microcontroller unit core driver"
->  	depends on SERIAL_DEV_BUS
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 5e5cc279af60..6bad54edca34 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -282,6 +282,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
->  obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
->  obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
->  
-> +obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
-> +
->  obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
->  obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
->  
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> new file mode 100644
-> index 000000000000..9ee1edf286e7
-> --- /dev/null
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Loongson-2K Board Management Controller (BMC) Core Driver.
-> + *
-> + * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-> + *
-> + * Authors:
-> + *	Chong Qiao <qiaochong@loongson.cn>
-> + *	Binbin Zhou <zhoubinbin@loongson.cn>
-> + */
-> +
-> +#include <linux/aperture.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/platform_data/simplefb.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* LS2K BMC resources */
-> +#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
-> +#define LS2K_IPMI_RES_SIZE		0x1C
-> +#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
-> +#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
-> +
-> +static struct resource ls2k_display_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi0_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi1_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi2_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi3_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi4_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
-> +};
-> +
-> +static struct mfd_cell ls2k_bmc_cells[] = {
-> +	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> +};
-> +
-> +/*
-> + * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
-> + * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
-> + */
-> +static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
-> +{
-> +	char *mode;
-> +	int depth, ret;
-> +
-> +	/* The last 16M of PCI BAR0 is used to store the resolution string. */
-> +	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	/* The resolution field starts with the flag "video=". */
-> +	if (!strncmp(mode, "video=", 6))
-> +		mode = mode + 6;
-> +
-> +	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pd->stride = pd->width * depth / 8;
-> +	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
-> +
-> +	return 0;
-> +}
-> +
-> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> +{
-> +	struct simplefb_platform_data pd;
-> +	resource_size_t base;
-> +	int ret;
-> +
-> +	ret = pci_enable_device(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ls2k_bmc_parse_mode(dev, &pd);
-> +	if (ret)
-> +		goto disable_pci;
-> +
-> +	ls2k_bmc_cells[0].platform_data = &pd;
-> +	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
-> +	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
-> +
-> +	/* Remove conflicting efifb device */
-> +	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
-> +	if (ret) {
-> +		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
-> +		goto disable_pci;
-> +	}
-> +
-> +	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-> +				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
-> +				    &dev->resource[0], 0, NULL);
-> +
-> +disable_pci:
-> +	pci_disable_device(dev);
-> +	return ret;
-> +}
-> +
-> +static void ls2k_bmc_remove(struct pci_dev *dev)
-> +{
-> +	pci_disable_device(dev);
-> +}
-> +
-> +static struct pci_device_id ls2k_bmc_devices[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
-> +
-> +static struct pci_driver ls2k_bmc_driver = {
-> +	.name = "ls2k-bmc",
-> +	.id_table = ls2k_bmc_devices,
-> +	.probe = ls2k_bmc_probe,
-> +	.remove = ls2k_bmc_remove,
-> +};
-> +module_pci_driver(ls2k_bmc_driver);
-> +
-> +MODULE_DESCRIPTION("Loongson-2K BMC Core driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.47.1
+One could in theory add support for this stuff in GCC, but I would expect it
+to flag almost everything in the kernel (e.g long -> int implicit conversions).
 > 
+> I also considered a sparse flag, Pedro mentioned bitwise, but then I worry that
+> we'd have to __force in a million places to make that work and it'd be
+> non-obvious.
+
+Here's an example for __bitwise usage taken from block:
+
+typedef unsigned int __bitwise blk_insert_t;
+#define BLK_MQ_INSERT_AT_HEAD		((__force blk_insert_t)0x01)
+
+
+then in block/blk-mq.c:
+
+	if (flags & BLK_MQ_INSERT_AT_HEAD)
+		list_add(&rq->queuelist, &hctx->dispatch);
+
+
+So doing regular old flag checks with the bitwise & operator seems to work fine.
+Assignment itself should also just work. So as long as we're vm_flags_t-typesafe
+there should be no problem? I think.
+
+> 
+> Matthew's original concept for this was to simply wrap an array, but that'd
+> require a complete rework of every single place where we use VMA flags (perhaps
+> we could mitigate it a _bit_ with a vm_flags_val() helper that grabs a u64?)
+> 
+
+I think the real question is whether we expect to ever require > 64 flags for
+VMAs? If so, going with an array would be the best option here. Though in that
+case I would guess we probably want to hide the current vm_flags member in
+vm_area_struct first, providing some vm_flags_is_set() and whatnot.
+
+-- 
+Pedro
