@@ -1,134 +1,131 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8236130E83E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1938F30E824;
+	Fri, 20 Jun 2025 08:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406496; cv=none; b=MLOziAVI5wEJAcnrwxBg3CyQ0zB5oHTg/Ct7ntBP8zZNtRDUCl0Ge/i8OUHlI7H+KsgAlgAt492MhU3QbE4DFqQeJE0jj2vshQj9y+AtaEOV8DolI29r5FRkc8z+SLElrbMAMAajzU26HtLvMyzy6Ev9Ne1Zg9sotNfW1ASNK3E=
+	t=1750406561; cv=none; b=S6YABDI16DdAI6KD/5YdXErmO+0OZKXt333TLN8cZNioUvb7R/MX3uFZdN+XgVPGpUf2iZNkYcU0u/PsbbezaEGuKXmLl2scLpEqJHpoeABw75nvywPP+93GNv6PjE47FsJqWSmK3yNbSVEzq6smPAigR6V6PKreARYr6USeA8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406496; c=relaxed/simple;
-	bh=ei5TCEvtcygrE6+QwZHiX831z/Q2wq9Tgnp6CUfvyCw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KXHqbAP7sIJ1h0UCsQV9eNit2Nyj4yDhWcYujGGsOXLVC10Bh9sKYr3hMtzUthmh5ChuaCsv0albXRzKvVcowwuNm8NVWwvjDrxLTkq85wPY5JVzYEihXf4/OrZ58KI1hFbQX40Bnav5tPrxX0wSMgp6tEtpg2WYB0SiIIVF3T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aPq5hUkK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3k1xQNg+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uhrlvLk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cOcdjAo3; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aPq5hUkK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3k1xQNg+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uhrlvLk0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cOcdjAo3"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D0B721222;
-	Fri, 20 Jun 2025 08:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750406488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=50BWLZrso6w212HfOHjDgMwDQvF9dm0kjF/VQn3tiWY=;
-	b=aPq5hUkK6BBeubhXu10A5mD02jzP2/U3bpKa+edlAtNKE+Dy8TJxj0MwmPFMFatliea1PE
-	CHMpDoL6NdyWG6azGsamyHkTRfvUuakNQawYL+L5Xaz6W2AzPqoRMIn7oHOW5OssZTStEh
-	P/MQFoYEgFz+Jh7Gkw3N9gQUnRdafD4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750406488;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=50BWLZrso6w212HfOHjDgMwDQvF9dm0kjF/VQn3tiWY=;
-	b=3k1xQNg+0O/tnGRmSdmoslRFLZSgXPbbfRT50rFX76s7Pet7lEIgySSGvJzvQjTue4Ji6m
-	k7plRkMxRt8E4LBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750406484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=50BWLZrso6w212HfOHjDgMwDQvF9dm0kjF/VQn3tiWY=;
-	b=uhrlvLk0ko7RrvYXXsgdcnz+ziKlB0hWNs5PceRhYNI1DLq57+tTQ3iAJMZStHZgO6l8Wa
-	Hiwg5WBTtAxWkfO1881iiiKd+XDvlldB17jcl4M0wfd8WeX0k3YrDZcpz8zprCkZg0KwOv
-	6i6xEPmEsVirKXcbw8s48CvhR1j5u60=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750406484;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=50BWLZrso6w212HfOHjDgMwDQvF9dm0kjF/VQn3tiWY=;
-	b=cOcdjAo3qHQDzK8e91dNOg5oFIpYYEj8UJm7fGulmofM8/FMvHWs0A2YXsqfXCmC//01Z1
-	sh3QxccSyofgWUDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D380D13736;
-	Fri, 20 Jun 2025 08:01:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ExpIMlMVVWi5WAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 08:01:23 +0000
-Date: Fri, 20 Jun 2025 10:01:23 +0200
-Message-ID: <87v7oqx2ng.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
-Cc: tiwai@suse.com,
-	perex@perex.cz,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	simont@opensource.cirrus.com,
-	josh@joshuagrisham.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset Mic on Positivo P15X
-In-Reply-To: <20250619191215.17203-1-edson.drosdeck@gmail.com>
-References: <20250619191215.17203-1-edson.drosdeck@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1750406561; c=relaxed/simple;
+	bh=zR9P41fSivBylvTIgh8isbmn30vkfpgRB7a+NPqHr1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OE3JJf+67AEjrzJgm8ke4dc3k1FlAXIlXmy5M3MjRVQFxgmjlV2mWzn5wvqdxXuBPfo9z1GI4YpgzAYM1cmBhnydjydgWGnswR5g1aFq3SN8bZ/eD62CcqiR5JG9v2vg/3mGWYSyAtAuryQyD2uVSJR86ZI6XqJ3lEHhh0SBtJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37CE5176A;
+	Fri, 20 Jun 2025 01:02:18 -0700 (PDT)
+Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 713BE3F66E;
+	Fri, 20 Jun 2025 01:02:34 -0700 (PDT)
+Message-ID: <68cdf649-a273-4d83-b862-6b675a793f18@arm.com>
+Date: Fri, 20 Jun 2025 13:32:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Level: 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <aFQYVPmStsIIFcMW@pathway.suse.cz>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <aFQYVPmStsIIFcMW@pathway.suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 19 Jun 2025 21:12:15 +0200,
-Edson Juliano Drosdeck wrote:
+On 19/06/25 7:31 PM, Petr Mladek wrote:
+> On Wed 2025-06-18 09:42:34, Anshuman Khandual wrote:
+>> Add a new format for printing page table entries.
 > 
-> Positivo P15X is equipped with ALC269VC, and needs a fix to make
-> the headset mic to work.
-> Also must to limits the internal microphone boost.
+> How many users do you explect, please?
 > 
-> Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
+> This patch adds only one caller. It does not justify the added complexity.
 
-Thanks, applied now.
+Understood.
 
+The idea is to convert all page table entry prints through out the tree
+both in generic and platform code. Added just a single generic example
+here for this being a RFC proposal. Will go through similar instances
+and be back with more comprehensive change set.
 
-Takashi
+> 
+>> @@ -2542,6 +2545,23 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>>  		default:
+>>  			return error_string(buf, end, "(einval)", spec);
+>>  		}
+>> +	case 'p':
+> 
+> Please, do not opencode this in the already very long switch().
+> Move it to a helper function.
+Sure, will do.
+
+> 
+> 
+>> +		if (fmt[1] == 't' && fmt[2] == 'e') {
+>> +			pte_t *pte = (pte_t *)ptr;
+> 
+> If the value (pointer) gets dereferenced then please add a basic
+> check:
+
+Sure, will do.
+
+> 
+> 	if (check_pointer(&buf, end, ptr, spec))
+> 		return buf;
+> 
+>> +			spec.field_width = 10;
+>> +			spec.precision = 8;
+> 
+> Is she precision = 8 really needed?
+> I guess that .field_width + ZEROPAD would do the trick.
+> 
+> And them maybe special_hex_number() might be used instead of number()
+> and safe a lot of code.
+
+Agreed. Andy also might have suggested about special_hex_number() helper
+on the other thread. Will try and use the helper instead.
+
+> 
+>> +			spec.base = 16;
+>> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
+>> +			if (sizeof(pte_t) == sizeof(u64)) {
+>> +				u64 val = pte_val(*pte);
+>> +
+>> +				return number(buf, end, val, spec);
+>> +			}
+>> +			WARN_ONCE(1, "Non standard pte_t\n");
+> 
+> This is nasty. It should be a compile-time check. And the code should
+
+Something like BUILD_BUG_ON() against pte_t as either u64 or u32 aka all
+the sizes the print format is going to support and it should pass on all
+platforms ?
+
+> get fixed on all architectures. If it is not easy then> it might be a signal that the generic %ppte flag is not a good idea.
+
+Understood.
+
+> 
+>> +			return error_string(buf, end, "(einval)", spec);
+>> +		}
+>> +		fallthrough;
+>>  	default:
+>>  		return default_pointer(buf, end, ptr, spec);
+>>  	}
+> 
+> Best Regards,
+> Petr
+
+Thanks for your review.
