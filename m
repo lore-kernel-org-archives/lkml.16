@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DD02ED841;
-	Fri, 20 Jun 2025 15:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B802ED858
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433047; cv=none; b=ZMcyOgGA//8mRZ4bJ8FNRmihvHOMqJpnLhMaiU7KTNrgswbyprUi+tvEkdYmiBD+2pnSGSeEsO3ah+wZsi4k8/CHtqkSxFQQ4jMwdzqk1+4xSBVJHTWpW1EtxYm/k2KzwHDEk03SBg/mFcjIVZX5ha+fnZ+rwoyku08lqGoDs+4=
+	t=1750433050; cv=none; b=cQYI5DqnCX0jMPW1Ots1xp3AQQXx3Y6TvJBie+QTGVFnduYKHh6k2ZoXBz1b3Zd9i2+5GUI48iyoFSm+e3cjeaa9LlAIRw6WjERA+kz3cIg3P5w6luHYw3B4wSSy6K/u2zM2eEu5CrotHYjzSJhQb4ZCBKCr1cy2InG57mn8sGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433047; c=relaxed/simple;
-	bh=7DejguHPFkVxCftEAVKS/blsYBEuLHXPel4oIb+v3f8=;
+	s=arc-20240116; t=1750433050; c=relaxed/simple;
+	bh=Jw9wHfu0A4TsY4rYKLYQ+jzBCiVyP6zlxbiDxEx+J6c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ihIA8qfRb6b4y+xMfCRKk/UXTHOR+ID2DjXDlICxXBvwer/GFKvUFn5fJ4TeZXrzEzE1F5SGh07LDzttId7iZ07q4b8pH8p6zFmXCrkv/dMTZm5XnlRk12aoVLM2eHFWqf6MNVpfbyCbfnypwQcRaX0cJyYAyuekCcxAyw47h/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpWgXKar; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KJ717cLC9WlNCH0eoLoIbuax3hDQjThmTV/++iY/T9k1KyBUfsvuoSegbfpbVgFQJ++Po8NcepvSx+RLDHPTnRVvXCIhYcDld1AyiaHJLXlTRhbnsEDAlzrywoIsb+hegZjdy9hJyS+zGjV2LWt3D+2uepEY8tMQbUASdspJQ7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1iTSF8w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpWgXKar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430BBC4CEF2;
-	Fri, 20 Jun 2025 15:24:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1iTSF8w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E57CAC4CEFB;
+	Fri, 20 Jun 2025 15:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433047;
-	bh=7DejguHPFkVxCftEAVKS/blsYBEuLHXPel4oIb+v3f8=;
+	s=k20201202; t=1750433049;
+	bh=Jw9wHfu0A4TsY4rYKLYQ+jzBCiVyP6zlxbiDxEx+J6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kpWgXKarrRUtUnKUt5+ZVIZfbqScBpWkbAn+u9HqYb9Wr//Ar4DiV3rkVQ3OcHZBo
-	 no7GUOdf7pDHa3xI9qj5A7+lmJ45X2oHgU0VuXmj4UUjdJgfBWlBboj+4PUWNqCXFs
-	 mvrjp6H4OuxIJiMLABQCG9H1ZtVd78d0Y+wgZssVZ3iAczsS8DhfDeGAGPmI8Jkb2G
-	 XsNMubQU+Ku7m3VdqZiTZwbMq0nHvdoBvCevozdf2o7Br58pxHMMaembQMIx/KwIsW
-	 RonzrriigUG2cGDU6WrBRFfBr5q7z/ccCy4/0zmEkjMAmQtAvREDDrjAw8/HoW5qwl
-	 qAIyEPSolef4Q==
+	b=T1iTSF8wzOBLkmU2HCPT4Xt4zSx5uKxpbG1+QhuvvucvndUmg8qJ6hQiyljFBoWHi
+	 uW0xKVBdArhMA93UMBBp/iCFkcItGI2mfpeMBEN0Rpp6VU/PwHVWs516VLp7iC8wmJ
+	 MUU91zxBjdHPZuqw1QyV16aDoT8te5fup5TQIk4x/qAcvMBL89JwiwtzRiimyrWHic
+	 JoeNoa4s93KHLTfpVIK3J7DR6c49sSSDkvqtMk9LylxivYBJ40GdtWsAtPP6tMRXqo
+	 bfB1eq6Zbnfg51QGvXOVqRJNL2J59Nl9DtQgHW9jnZCMH+gQ+rMArfI7H9NeVtTuJy
+	 xb+ocq0ImKgsw==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Tejun Heo <tj@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Vlastimil Babka <vbabka@suse.cz>,
-	Waiman Long <longman@redhat.com>,
-	cgroups@vger.kernel.org
-Subject: [PATCH 19/27] cpuset: Remove cpuset_cpu_is_isolated()
-Date: Fri, 20 Jun 2025 17:23:00 +0200
-Message-ID: <20250620152308.27492-20-frederic@kernel.org>
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 20/27] sched/isolation: Remove HK_TYPE_TICK test from cpu_is_isolated()
+Date: Fri, 20 Jun 2025 17:23:01 +0200
+Message-ID: <20250620152308.27492-21-frederic@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
 References: <20250620152308.27492-1-frederic@kernel.org>
@@ -51,89 +49,37 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The set of cpuset isolated CPUs is now included in HK_TYPE_DOMAIN
-housekeeping cpumask. There is no usecase left interested in just
-checking what is isolated by cpuset and not by the isolcpus= kernel
-boot parameter.
+It doesn't make sense to use nohz_full without also isolating the
+related CPUs from the domain topology, either through the use of
+isolcpus= or cpuset isolated partitions.
+
+And now HK_TYPE_DOMAIN includes all kinds of domain isolated CPUs.
+
+This means that HK_TYPE_KERNEL_NOISE (of which HK_TYPE_TICK is only an
+alias) implies HK_TYPE_DOMAIN and therefore checking the latter is
+enough to deduce the former.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- include/linux/cpuset.h          |  6 ------
- include/linux/sched/isolation.h |  3 +--
- kernel/cgroup/cpuset.c          | 12 ------------
- 3 files changed, 1 insertion(+), 20 deletions(-)
+ include/linux/sched/isolation.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 051d36fec578..a10775a4f702 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -78,7 +78,6 @@ extern void cpuset_lock(void);
- extern void cpuset_unlock(void);
- extern void cpuset_cpus_allowed(struct task_struct *p, struct cpumask *mask);
- extern bool cpuset_cpus_allowed_fallback(struct task_struct *p);
--extern bool cpuset_cpu_is_isolated(int cpu);
- extern nodemask_t cpuset_mems_allowed(struct task_struct *p);
- #define cpuset_current_mems_allowed (current->mems_allowed)
- void cpuset_init_current_mems_allowed(void);
-@@ -208,11 +207,6 @@ static inline bool cpuset_cpus_allowed_fallback(struct task_struct *p)
- 	return false;
- }
- 
--static inline bool cpuset_cpu_is_isolated(int cpu)
--{
--	return false;
--}
--
- static inline nodemask_t cpuset_mems_allowed(struct task_struct *p)
- {
- 	return node_possible_map;
 diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index f1b309f18511..9f039dfb5739 100644
+index 9f039dfb5739..46677e8edf76 100644
 --- a/include/linux/sched/isolation.h
 +++ b/include/linux/sched/isolation.h
-@@ -89,8 +89,7 @@ static inline void housekeeping_init(void) { }
+@@ -88,8 +88,7 @@ static inline void housekeeping_init(void) { }
+ 
  static inline bool cpu_is_isolated(int cpu)
  {
- 	return !housekeeping_test_cpu(cpu, HK_TYPE_DOMAIN) ||
--	       !housekeeping_test_cpu(cpu, HK_TYPE_TICK) ||
--	       cpuset_cpu_is_isolated(cpu);
-+	       !housekeeping_test_cpu(cpu, HK_TYPE_TICK);
+-	return !housekeeping_test_cpu(cpu, HK_TYPE_DOMAIN) ||
+-	       !housekeeping_test_cpu(cpu, HK_TYPE_TICK);
++	return !housekeeping_test_cpu(cpu, HK_TYPE_DOMAIN);
  }
  
  DEFINE_LOCK_GUARD_0(housekeeping, housekeeping_lock(), housekeeping_unlock())
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 98b1ea0ad336..db80e72681ed 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -29,7 +29,6 @@
- #include <linux/mempolicy.h>
- #include <linux/mm.h>
- #include <linux/memory.h>
--#include <linux/export.h>
- #include <linux/rcupdate.h>
- #include <linux/sched.h>
- #include <linux/sched/deadline.h>
-@@ -1353,17 +1352,6 @@ static void update_housekeeping_cpumask(bool isolcpus_updated)
- 	WARN_ON_ONCE(ret < 0);
- }
- 
--/**
-- * cpuset_cpu_is_isolated - Check if the given CPU is isolated
-- * @cpu: the CPU number to be checked
-- * Return: true if CPU is used in an isolated partition, false otherwise
-- */
--bool cpuset_cpu_is_isolated(int cpu)
--{
--	return cpumask_test_cpu(cpu, isolated_cpus);
--}
--EXPORT_SYMBOL_GPL(cpuset_cpu_is_isolated);
--
- /*
-  * compute_effective_exclusive_cpumask - compute effective exclusive CPUs
-  * @cs: cpuset
 -- 
 2.48.1
 
