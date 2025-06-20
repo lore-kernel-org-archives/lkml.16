@@ -1,64 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7762629CB40;
-	Fri, 20 Jun 2025 13:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750425017; cv=none; b=i5WcnCeV2rPG8xjjbFIgM1vn4boNEBIleIPaUTesrMPEtFBqcvyy6MOIRv/0ww2NIoLsiLFA2Wo6l56Tq0f762cuY4jJzCht3ld4c/00bzjQkqe3tXvhJnfcPCEKIdFxtBWVF3CybDt308Fhx/e0+8HTtjrQfSPfdTT//OT9Zug=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750425017; c=relaxed/simple;
-	bh=I5vk2rGm9Gp8qpb3w92XvEWty7AtHtw6DnFufqS61L4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XYLaNrsmP3yMWCyhzgrFajQboTCR8nuctzRXM8zDQrGl8o0aL2mXHwppIdXPkC1FhwyzszX8xEiWmvvJrTFSyiWjpgPY2I/DrznwFm02NAel+S6hGMcvcvog7WHIVIMiiWJ0tz/n8IZVSfU2Mju4QvH7ljZBE1xBhsA/SwCp8AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TIVF1vtS; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BB9258A;
+	Fri, 20 Jun 2025 13:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750425236; cv=pass; b=b/vVp2gJGS/YvHQCU0O+u/8oUeMh/hZLB/qA4RhDIje5A5xyFvTvSOaadq2B6j/mz7zEEfKZj8BBSfaMcIfywupeNwk4i8dMlpf+3S8jMayHnNfq4ohPJgPxCbRwSS0cXRBLVmqV2qTzsYVhskX/gbfz7RiiJ1wK+TIPhLIe9h0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750425236; c=relaxed/simple;
+	bh=RPGrsUiY9GGnw/6tXbjccCX3DGhS40+0nbnucG8R+Kk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=BAifpIQ9yAVwc25zVqat278x9kxdrC8icGSmetWsSsr6AwIjjABE9YzyyLSgmNtgHZDI7p0s/YAfsJKCf/kJC1T1MsGtCGApmwVJiyJdYcazpSjvfrOKMRQUL/gK8zfMy5HSE1rdOMr6AIIrIMHJjeeqjigZjBsyGp7zLRp6uu0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=QGlDSicn; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TIVF1vtS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750425015; x=1781961015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I5vk2rGm9Gp8qpb3w92XvEWty7AtHtw6DnFufqS61L4=;
-  b=TIVF1vtS4Or9ezyCizY/T3Nn7Q6pmVV1Uiy+ynR16GLzFk6UQWA6LuSy
-   HsKnsZBkHqGSJk1Q7hdZBnEO0NgixM+bAWXtaVOOa0y/shlapVi/YUgkH
-   G//RZX916MhgaRvQlxDKpIEqq5vWpBb0pTuqcdUFrrVeBDXtz4VlNRfhq
-   Ds79y1apSdm0wMqD7q1HhcQNZ/2qbn3B2O7Eg+EX26LHeQWc12dc5RvFg
-   24lUxb0WFG3whNNFbGVGrmsWVQeeT9rS5tCwC8NWTchrqejAxSKvYl6sV
-   xtz5h+RafGVzazoKrG6dUMNMGf6o1SaVLPtD22fJLP57gRGsKpU+8Zz+M
-   w==;
-X-CSE-ConnectionGUID: Z+Tt6J96Q/O/+4lLhKTV7Q==
-X-CSE-MsgGUID: X05uKYOAR1GT1ww8rSmgMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52388893"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="52388893"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:10:14 -0700
-X-CSE-ConnectionGUID: sqL897AZQWejJ8rtDWZK4A==
-X-CSE-MsgGUID: Nl3L8TU5RMetN1FVbCUJMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="154928687"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by fmviesa003.fm.intel.com with ESMTP; 20 Jun 2025 06:10:12 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: dave.jiang@intel.com,
-	vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="QGlDSicn"
+ARC-Seal: i=1; a=rsa-sha256; t=1750425200; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ag6sm19tCZyRI1BO2CAVBqUY3xmXRXJa92+mdmoKr64FDpX00OTD2KOnRqm91jz7XjJ+rmjaL+312oJM0bPTvEpue8+nIPxQEMelWaVu40gxosO422ZaXGDei0X9ocNE3svu+X4vyLT0Y14mK/Bbiz/fmH44sXyP/I0EYqdp5Xs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750425200; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=Ydvxy1sRh0XdyUY78UINI/d5MUqA5T2bAotDmBZAf6w=; 
+	b=ljK02p0OoIZuydQAGJsoVnGKSlUXXg0QKS3ddUTcdkWCokCBMfCVFlA8AmvhSxtWRpqTy5u3kUM2kdyV5j7ShRCSJqyop3xwf4xrWHRXIbzD+JHPnGpdIOwDBgw8jLAdf89++/DAnV4sAPjPSSMljYph4ZwZlDPSTaJCL2c9LfE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750425200;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=Ydvxy1sRh0XdyUY78UINI/d5MUqA5T2bAotDmBZAf6w=;
+	b=QGlDSicnOv6qys1rQpkrOFbO9r5rCtI2Rg8ZI7nc19PanS3DdqWsz8p4fZOUwbeN
+	EuQ/YhXGI5NXYINn7s+oEqtYJfFEyOcA+OCJ531usFR9aiVgMIc11iX987MPm7uWZ7d
+	FOLJ/9kSeo7gw9QX3u4nV2Qo53E9Hlje4Ll985jg=
+Received: by mx.zohomail.com with SMTPS id 175042519577329.422760089999883;
+	Fri, 20 Jun 2025 06:13:15 -0700 (PDT)
+From: Li Chen <me@linux.beauty>
+To: Hanjun Guo <guohanjun@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Liu Wei <liuwei09@cestc.cn>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	fenghuay@nvidia.com,
-	philip.lantz@intel.com
-Cc: yi.sun@intel.com,
-	gordon.jin@intel.com,
-	anil.s.keshavamurthy@intel.com
-Subject: [PATCH v2 2/2] dmaengine: idxd: Add Max SGL Size Support for DSA3.0
-Date: Fri, 20 Jun 2025 21:09:53 +0800
-Message-ID: <20250620130953.1943703-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620130953.1943703-1-yi.sun@intel.com>
-References: <20250620130953.1943703-1-yi.sun@intel.com>
+	linux-acpi@vger.kernel.org
+Subject: [PATCH v2 0/2] ACPI: Improve SPCR handling and messaging on SPCR-less systems
+Date: Fri, 20 Jun 2025 21:13:06 +0800
+Message-ID: <20250620131309.126555-1-me@linux.beauty>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,127 +60,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce, require max
-SGL configured for workqueues prior to supporting these opcodes.
+From: Li Chen <chenl311@chinatelecom.cn>
 
-Configure the maximum scatter-gather list (SGL) size for workqueues during
-setup on the supported HW. Application can then properly handle the SGL
-size without explicitly setting it.
+From: Li Chen <chenl311@chinatelecom.cn>
 
-Signed-off-by: Yi Sun <yi.sun@intel.com>
-Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+This small series improves the kernel behavior and output when the ACPI SPCR
+table is not present or not supported.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5cf419fe6b46..1c10b030bea7 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -375,6 +375,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- 	memset(wq->name, 0, WQ_NAME_SIZE);
- 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+	idxd_wq_set_init_max_sgl_size(idxd, wq);
- 	if (wq->opcap_bmap)
- 		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
- }
-@@ -974,6 +975,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	/* bytes 12-15 */
- 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
- 	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
-+	if (idxd_sgl_supported(idxd))
-+		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
- 
- 	/* bytes 32-63 */
- 	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
-@@ -1152,6 +1155,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
- 
- 	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
- 
- 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
- 		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index cc0a3fe1c957..ea8c4daed38d 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -227,6 +227,7 @@ struct idxd_wq {
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 
- 	/* Lock to protect upasid_xa access. */
- 	struct mutex uc_lock;
-@@ -348,6 +349,7 @@ struct idxd_device {
- 
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 	int max_groups;
- 	int max_engines;
- 	int max_rdbufs;
-@@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
- 		wq->max_batch_size = max_batch_size;
- }
- 
-+static bool idxd_sgl_supported(struct idxd_device *idxd)
-+{
-+	return idxd->data->type == IDXD_TYPE_DSA &&
-+	       idxd->hw.version >= DEVICE_VERSION_3 &&
-+	       idxd->hw.dsacap0.sgl_formats;
-+}
-+
-+static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
-+						 struct idxd_wq *wq)
-+{
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+}
-+
- static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
- 						  u32 max_batch_shift)
- {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 216461aa0cd1..4daf5995acee 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -217,6 +217,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		init_completion(&wq->wq_resurrect);
- 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+		idxd_wq_set_init_max_sgl_size(idxd, wq);
- 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
- 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg) {
-@@ -587,6 +588,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 		idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
- 		idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
- 	}
-+	if (idxd_sgl_supported(idxd)) {
-+		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
-+	}
- 
- 	/* read iaa cap */
- 	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index b430bddbd1e4..c665687913c6 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -385,7 +385,8 @@ union wqcfg {
- 		/* bytes 12-15 */
- 		u32 max_xfer_shift:5;
- 		u32 max_batch_shift:4;
--		u32 rsvd4:23;
-+		u32 max_sgl_shift:4;
-+		u32 rsvd4:19;
- 
- 		/* bytes 16-19 */
- 		u16 occupancy_inth;
+Currently, even on systems that completely lack an SPCR table, the kernel prints:
+"Use ACPI SPCR as default console: Yes"
+
+This may mislead users into thinking an SPCR table exists
+when in fact there is no such table at all. This series addresses this in two steps:
+
+Patch 1 ensures that acpi_parse_spcr() returns -ENODEV if CONFIG_ACPI_SPCR_TABLE is disabled.
+
+Patch 2 updates arm64 acpi_boot_table_init() to only print the Yes
+if acpi_parse_spcr() succeeds.
+
+This results in cleaner and more accurate boot logs on ARM64.
+
+Tested on both SPCR-enabled and SPCR-less qemu-system arm64 virt platform. [1]
+
+Changelog:
+v2: refine the printk message logic as suggested by Hanjun Guo. [2]
+
+[1]: https://patchew.org/QEMU/20250528105404.457729-1-me@linux.beauty/
+[2]: https://www.spinics.net/lists/kernel/msg5730585.html
+
+Li Chen (2):
+  ACPI: Return -ENODEV from acpi_parse_spcr() when SPCR support is
+    disabled
+  ACPI: Suppress misleading SPCR console message when SPCR table is
+    absent
+
+ arch/arm64/kernel/acpi.c | 10 +++++++---
+ include/linux/acpi.h     |  2 +-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
