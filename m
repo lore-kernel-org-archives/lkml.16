@@ -1,108 +1,118 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A602EA737
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27272ECD1A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440397; cv=none; b=nTi495diXVtcGOY6qcozGJOxKJKsecS8TiCeRnQxfVfOr8JXIEQZB2+irc8FROd7vMS5XzR1gt4XcJXvwIBKNk9pVJAAYTsxXgQkbiy86B31jx0gjBE6nkX8igx2MBnTEKLnU58+HzbRiRZmLuW8DBlWExxfA0/bSVcb7RQKnK8=
+	t=1750440402; cv=none; b=UJ7UxpIpMK3cIXJJavHVzQKzXpEWjaf6Usuv+8xfiPZKBJ99EiESCM1WJKzAlP6R7pkYNA8ZfhDQVQre5Z5oAZsi8pcZ9XZkBxmIQ4Wip3b8/u6SRnC5+KT9MD0RWRziI9phXS7U04RUs5qYgrneoHPM/rqLEkYIeABj50x8WDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440397; c=relaxed/simple;
-	bh=sFXt5Hfa8fzRV2BAEylvdv3O1RHUEpTzrxJY01GuBhw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=An105zBBYvbIoTH6rPDgo29jAnZvfaZb9xc5AgCElsElkO0w0FbKn0nOFOFQZzRbJ4/oah2w/qsxX1tKiiLUaa28dEgIb2At2M8usGl7a3GW5FIzQEerbYnPE5HNtKo8UilnYHVASd8E124Ap/JX2p8/0mWg9Dwcg81ipteGCFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XwEph24N; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750440402; c=relaxed/simple;
+	bh=OMbvB3+Bgh7ZH/dGCkrpzdqRe/AVt/TYCz0eQJ4uPEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJR7OPPICt8kBLBImWTDEG5x2iUxR85YKZ1PD+umy0NF672p9Z8KK9a6EfD5hWkN20TLc6HDcb/wPchCQOeNdAxfNVi6GR9DSJ1xrZGfxN0RAaj4ASf6h7W0AQBsna/fSFkyz9Xz8ysSuob7Rx/BH7SD4vLuqj9jYDT3VKHe8cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItdQE9Nk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XwEph24N"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E711D1FD3C;
-	Fri, 20 Jun 2025 17:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750440388;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItdQE9Nk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750440399;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WXjnwSQXDdtuytqxtM3L0hY5puciJ4Vzaf5CQJt2GEg=;
-	b=XwEph24NxMunBm+1IjcSw4FMaGc6u5HQQsElJXg6SRdwrSinyvEcufBN/hRkCnK7Av4ct0
-	wweKtkH+quKN+qa0Wddar3/LdGGpUKNVjuPr1++qK+5yKCrsgr7Odjmb2ZN6mok8+vo0dY
-	K7iCuToEInTUAE69BwmhRNnNgqSU7BVyk/SLd4kVIl81cwvFSGMjL7YOLJBA8alXtqGv0H
-	QHpxWHV5ANYspBuBXD6Tf4IO/NXDpdgP7Bw+nkzbqX/OPn/uQysdbQ0Outkow5oanyh68Z
-	ABf0cy2xZPhSQhF+V9LdBzLYSBCf+iPW7O5nT22sW7yWOmn3EQug34/SNbMrFw==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Fri, 20 Jun 2025 19:26:15 +0200
-Subject: [PATCH v8 3/5] drm/mxsfb: put the bridge returned by
- drm_bridge_chain_get_first_bridge()
+	bh=oW1wB1FdrUHROAIYbkZS8OO3BReKXHOvb71P4QLKK10=;
+	b=ItdQE9NkjslrfxgttpYIRzaSJhl8Ol9obybyydhEfBXlPRptUSkd+GXNn34PLjy0ZbHJ6k
+	jts0LQFsRKq+OrGO0YEGF6jsEZ6m+ZdMyMjSl/pJitznzkaZk9B1hCfQSLxAB0EMhMP2Tr
+	WOAIrAzxAEz5VzblnWY5w/um8qQobU4=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-593-NHP4OT9vO-CI5YZBmpv-qg-1; Fri, 20 Jun 2025 13:26:38 -0400
+X-MC-Unique: NHP4OT9vO-CI5YZBmpv-qg-1
+X-Mimecast-MFC-AGG-ID: NHP4OT9vO-CI5YZBmpv-qg_1750440396
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d400a4d4f2so85421885a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:26:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750440395; x=1751045195;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oW1wB1FdrUHROAIYbkZS8OO3BReKXHOvb71P4QLKK10=;
+        b=MFeCcue9rla4LvNxWKJ0OnWqjsq75OEbKweNMfuTvQ7L/rY+W2UcgB9P5d7y+WyZ+y
+         tU3f3xUCK3/WM8OoRTeAmpSbs2dpujWssPNg7NPeOY2+/iETT5EFUpr5IGPdosw0d652
+         DcLpUy4uGtkRGZEvKTtkzliUadjJGqHByGe2ffrlnR73sjP+LwSqTGp740Exy7mvMYBl
+         UsYxo9vVh4luYLXfnHcO3kyuYfuzGLNL06oWXzhYBIui6IWiTx+kwESELmi7YH+JZsBe
+         x2a9dRZoBuBMPoEyHE0oV2Ulr3l8WQRaAwmJEy8Tuvg/0ywWa8kg+z9Q/e+AIUy6KfTX
+         S8Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVZYCWQWwmeNwZTnR1l0JhhCRUCHpBiz4ZdCTFnDeYBsOR2TtQ//emiv3iWRHDRt4qmUKMJw5DLB1L2up8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy+51jk8+qYjWDv7EKQzdhrvu1DymS77dPYJa+xRp6dVttLs0A
+	Q46drL2EHW8nZ8P5UBR7gQwWKCiYo9I0POof0JaJt3oRVyM34Y8ywBLPBemBe6Y472mSrV+CH2C
+	hqA4b5kcRdTb6FFBtDsI0iyB3Ez4w7U+ISFqETdfMU0p5XjrtwJbfOY9OsCs0RCh2YA==
+X-Gm-Gg: ASbGncto2kEWEGuTxiaKbh5L3My2/DsZZ6Q301p3NoS2N3EtLgh+fzo1x1DamvZnEjD
+	vUMIhRlMm52OMlF+JzSTkru1zyxYuHiYs8oM8FcsQI0+V3KKT2LsOJaEpqbS3e7I9vduTsk4L54
+	12br0zj1fkaLQTHIYtkjDHYOmT/VhI+PiAwg7UjA+itWoRo+mty1Y6xx9JguepcJONtBUP5VPsf
+	JFIEf3dqIgSZfd8sZINR+cr1cFfhd7S/ibAvodxAXn5ykkOvDbHy450RZ3XGx3SlOYPGqvia7Vp
+	pmwlG0uRN1L091+TXYQ=
+X-Received: by 2002:a05:620a:4508:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d3f9923e6bmr440263785a.34.1750440395703;
+        Fri, 20 Jun 2025 10:26:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwn0FOYZdQIgzW0lIgog7qT3m0aCTEHJnIBNGa4hMVm/8ZQQ5oeBJdA+DeqKv13eQnIHQcNA==
+X-Received: by 2002:a05:620a:4508:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d3f9923e6bmr440257685a.34.1750440394942;
+        Fri, 20 Jun 2025 10:26:34 -0700 (PDT)
+Received: from thinkpad2024 ([71.217.79.154])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f999c1b6sm114174185a.6.2025.06.20.10.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 10:26:34 -0700 (PDT)
+Date: Fri, 20 Jun 2025 13:26:32 -0400
+From: "John B. Wyatt IV" <jwyatt@redhat.com>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: "Shinji Nomoto (Fujitsu)" <fj5851bi@fujitsu.com>,
+	Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] cpupower: Allow control of boost feature on non-x86
+ based systems with boost support.
+Message-ID: <aFWZyPs4eBwGcKPu@thinkpad2024>
+References: <20250522061122.2149188-1-fj5851bi@fujitsu.com>
+ <aDhJdTWzDihchywc@thinkpad2024>
+ <OS9PR01MB14003E72236096AD987D2D4CED96DA@OS9PR01MB14003.jpnprd01.prod.outlook.com>
+ <0053926a-7b0a-4e49-9acf-fcb1d73134cc@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-3-0321845fcafb@bootlin.com>
-References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
-In-Reply-To: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhin
- hdrtghomhdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhtvghfrghnsegrghhnvghrrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0053926a-7b0a-4e49-9acf-fcb1d73134cc@linuxfoundation.org>
 
-The bridge returned by drm_bridge_chain_get_first_bridge() is
-refcounted. Put it when done. Use a scope-based free action to catch all
-the code paths.
+On Wed, Jun 18, 2025 at 03:54:56PM -0600, Shuah Khan wrote:
+> On 6/3/25 01:16, Shinji Nomoto (Fujitsu) wrote:
+> > John Wyatt wrote:
+> > > Did you test this on non-x86 systems? If so, would you please provide details on those architectures and systems?
+> > 
+> > Hello,
+> > 
+> > This patch has been tested on Arm-based systems.
+> > 
+> > * It was tested on our internal simulator based on QEMU which supports boost.
+> > * It was tested on the Nvidia grace system (which does not support boost).
+> > * The cppc_cpufreq driver is working on both of the above systems.
+> > 
+> > We have also confirmed that it continues to work as expected on AMD systems.
+> > 
+> 
+> John,
+> 
+> Let me know if you are good with this testing details.
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
-
-This patch was added in v7.
----
- drivers/gpu/drm/mxsfb/lcdif_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/mxsfb/lcdif_kms.c b/drivers/gpu/drm/mxsfb/lcdif_kms.c
-index dbd42cc1da87f82ef9cd4ccc70cdecbe56035174..21311cf5efee7d26c80316bffe80dd2bfed02238 100644
---- a/drivers/gpu/drm/mxsfb/lcdif_kms.c
-+++ b/drivers/gpu/drm/mxsfb/lcdif_kms.c
-@@ -433,7 +433,6 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
- 	struct drm_connector *connector;
- 	struct drm_encoder *encoder;
- 	struct drm_bridge_state *bridge_state;
--	struct drm_bridge *bridge;
- 	u32 bus_format, bus_flags;
- 	bool format_set = false, flags_set = false;
- 	int ret, i;
-@@ -448,6 +447,8 @@ static int lcdif_crtc_atomic_check(struct drm_crtc *crtc,
- 
- 	/* Try to find consistent bus format and flags across first bridges. */
- 	for_each_new_connector_in_state(state, connector, connector_state, i) {
-+		struct drm_bridge *bridge __free(drm_bridge_put) = NULL;
-+
- 		if (!connector_state->crtc)
- 			continue;
- 
+I have not tested it, but I the testing details are fine.
 
 -- 
-2.49.0
+Sincerely,
+John Wyatt
+Software Engineer, Core Kernel
+Red Hat
 
