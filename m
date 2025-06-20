@@ -1,86 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4981624DE;
-	Fri, 20 Jun 2025 11:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0273223DFA
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750420494; cv=none; b=Hc1cF4EEhaYx3No0lvYndQC6j/zOvVQsGF4grmudxEx+zMnpwuGJk7a17srI/He1XpLBKf7wXzsr8kMuTNYaFRqbneeJrLFb0U1M39agctF8F+U2gP3hyNGCWeADBVJV2x8wFFC7PEmdZUEAbZnQik4jp4bPy1McTt9VWVZTRhM=
+	t=1750420536; cv=none; b=i4vCHknInQsYZilCw5YlHEnxNLTK5rviSqUljrwYqNt1EN6E/1pzEhBNN0pm4+BGxFfFjT0zxbgmHBcHfQlr1RCfwhpwR00qnr/V1RX0r1jhYGZWdGbYn3p6o0EnlOR/wOEjjAEMEwX4HLeO5AmyNfpHALjoNbppqDRLZLS3MEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750420494; c=relaxed/simple;
-	bh=MytoXtQaPni0it6yYWfCVADYD7ugpdiw/k3h63C1vWY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=heKeJV/WKca7df+28+/WXx804QmqMlNGTJQT9pUGBzuIt+GlF5+ph8knyRp5HN61GQ/ba8YiHIKbPEwqntNRD/6t8bc5Dp9VioWRThdVrvRPAlOaicJjIeDy1OAT/qzKGqvTYBSF7EjE1tkcdVE53YPM1PQRsH/H/cUhEuwGXa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1EISdf3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750420536; c=relaxed/simple;
+	bh=leUZfC3phG/G71xqxE7hs61HDNGRm6jBy7y2+hiUxzA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=qkQsFb78NHRfVULmUcZv0rW3FWKRC3fbNwbF3EQyiIcbNwJ5UnjuYrSGysANYlp9yhOfULmvz4+2Xts83YySzVXFLJVBP/ZKhVqCof9w+jIShFNrkldkKDHIWMJtKNu/4wQ5RHMZ/l1tDpDc20/WPArZ36Eqx/tH6hWSCYfdxxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kPTvl70M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tKxIOt0V; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Cl9mrrk6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JFLqehut; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1EISdf3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392EFC4CEE3;
-	Fri, 20 Jun 2025 11:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750420493;
-	bh=MytoXtQaPni0it6yYWfCVADYD7ugpdiw/k3h63C1vWY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=e1EISdf30ogXbndk62n4Izr2YWrZM3Rm3uocJV3gtsMDXBTpGAw88BF6Sw/6AF5/o
-	 Ncpb6lK4hn1het2/akrqXlchdX06wuHnfM4q4qv46l5TCZpUhrtwozy5O/OPCsJpe3
-	 eNmEJ9bx1ThXmRTUdHqtO4WOV37m/W0ZqN/Qo0fSnd6z+795rhjmdieGPF/ls79+l9
-	 fkzaUIA3/045nSrf9GWwBXo72GZ3SjXP+AtAI+PfpEyMDT5fY/lTD6Lw+O6F112eee
-	 c3fkHcB14bDmXJwpPioEeBI8Vio0+k8WZkn383fySyf4ZdYh4KHIWlHoVBYSrV0VyB
-	 spRWi52RDY6Sw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>,
-	Benjamin Chan <benjamin.chan@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <lkp@intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Suma Hegde <suma.hegde@amd.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
-Date: Fri, 20 Jun 2025 13:54:45 +0200
-Message-Id: <20250620115448.202425-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kPTvl70M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tKxIOt0V";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Cl9mrrk6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JFLqehut"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 65FFD1F38D;
+	Fri, 20 Jun 2025 11:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750420526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=kPTvl70MGqaW6Yi3jiuH/4heyMKV67vgaYQZmE1YMoivhf7IXZ2HZTRjlHGXMrvGByHhEn
+	C998DFe6N+kgSGHpH+ymJlcHonnGXJOoZKDFHCvqKCxjfLhGgCX+6lNyhC5XZMyNPUxAVH
+	zS2u4aTAXDOYpsYJVg/SinrqUg2S5xE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750420526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=tKxIOt0Vg2hCqS741ET7fQhnvw9PZ/XCyskWVtDltNkj0OnRQosjQzh7mXzH6Adpo4Tok7
+	A1ahGkf5+WlASjDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750420525; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=Cl9mrrk68VbbkvsTLF4uxihOieWJfQ4eGVbT16tbdqQSKoNAp9m/rQrHpjQNv9FiEpuWfG
+	/5LVKv+GkTCXcdRFoiFKaLvUSR05BOHsPPWrJMdUovD1619yRkFinGCIiMl4CPLI7ywHkY
+	Df/H/ryaGZVsAnpU+2nP/wrqqwUzsYU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750420525;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=JFLqehutfZfY4J9hA3ujziMmXJO01FJcSrxAropdwdI7fY71xN11mVETenkZ8FnAFEOIoY
+	EpHjjAFC/7JmLBBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8EE813736;
+	Fri, 20 Jun 2025 11:55:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id eDI6JilMVWgUHwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 20 Jun 2025 11:55:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neilb@suse.de>
+To: chenxiaosong@chenxiaosong.com
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, huhai@kylinos.cn,
+ "ChenXiaoSong" <chenxiaosong@kylinos.cn>
+Subject: Re: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
+In-reply-to: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+References: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+Date: Fri, 20 Jun 2025 21:55:11 +1000
+Message-id: <175042051171.608730.8613669948428192921@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,imap1.dmz-prg2.suse.org:helo,chenxiaosong.com:email,chenxiaosong.com:url]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 18 Jun 2025, chenxiaosong@chenxiaosong.com wrote:
+> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+>=20
+> Before commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client=
+"),
+> we had a null-ptr-deref in nfsd4_probe_callback() (Link[1]):
+>=20
+>  nfsd: last server has exited, flushing export cache
+>  NFSD: starting 90-second grace period (net f0000030)
+>  Unable to handle kernel NULL pointer dereference at virtual address 000000=
+0000000000
 
-Checking the module owner of the device only works when modules are
-enabled, and the device is created from a module:
+The only possible cause that I can find for this crash is that the nfsd
+thread must have still been running when nfsd_shutdown_net() and then
+nfsd_shutdown_generic() were called resulting in the workqueue being
+destroyed.
 
-drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
+The threads will all have been signalled with SIGKILL, but there was no
+mechanism to wait for the threads to complete.
 
-Building the driver as a loadable module avoids the build failure,
-though this should probably be fixed in a different way that still
-works if the device was created from built-in code.
+This was changed in
 
-Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/x86/amd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Commit: 3409e4f1e8f2 ("NFSD: Make it possible to use svc_set_num_threads_sync=
+")
 
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index 63e4bd985699..9e150500e37e 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -36,6 +36,7 @@ config AMD_WBRF
- config AMD_ISP_PLATFORM
- 	tristate "AMD ISP4 platform driver"
- 	depends on I2C && X86_64 && ACPI
-+	depends on m
- 	help
- 	  Platform driver for AMD platforms containing image signal processor
- 	  gen 4. Provides camera sensor module board information to allow
--- 
-2.39.5
+Sync then threads were stopped synchronously so they were certainly all
+stopped before the workqueue was removed.
+
+NeilBrown
+
+
+>  ...
+>  Call trace:
+>   __queue_work+0xb4/0x558
+>   queue_work_on+0x88/0x90
+>   nfsd4_probe_callback+0x4c/0x58 [nfsd]
+>  NFSD: starting 90-second grace period (net f0000030)
+>   nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
+>   nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
+>   nfsd4_create_session+0x5b8/0x718 [nfsd]
+>   nfsd4_proc_compound+0x4c0/0x710 [nfsd]
+>   nfsd_dispatch+0x104/0x248 [nfsd]
+>   svc_process_common+0x348/0x808 [sunrpc]
+>   svc_process+0xb0/0xc8 [sunrpc]
+>   nfsd+0xf0/0x160 [nfsd]
+>   kthread+0x134/0x138
+>   ret_from_fork+0x10/0x18
+>  Code: aa1c03e0 97ffffba aa0003e2 b5000780 (f9400262)
+>  SMP: stopping secondary CPUs
+>  Starting crashdump kernel...
+>  Bye!
+>=20
+> One of the cases is:
+>=20
+>     task A (cpu 1)    |   task B (cpu 2)     |   task C (cpu 3)
+>  ---------------------|----------------------|-----------------------------=
+----
+>  nfsd_startup_generic | nfsd_startup_generic |
+>    nfsd_users =3D=3D 0    |  nfsd_users =3D=3D 0     |
+>    nfsd_users++       |  nfsd_users++        |
+>    nfsd_users =3D=3D 1    |                      |
+>    ...                |                      |
+>    callback_wq =3D=3D xxx |                      |
+>  ---------------------|----------------------|-----------------------------=
+----
+>                       |                      | nfsd_shutdown_generic
+>                       |                      |   nfsd_users =3D=3D 1
+>                       |                      |   --nfsd_users
+>                       |                      |   nfsd_users =3D=3D 0
+>                       |                      |   ...
+>                       |                      |   callback_wq =3D=3D xxx
+>                       |                      |   destroy_workqueue(callback=
+_wq)
+>  ---------------------|----------------------|-----------------------------=
+----
+>                       |  nfsd_users =3D=3D 1     |
+>                       |  ...                 |
+>                       |  callback_wq =3D=3D yyy  |
+>=20
+> After commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"=
+),
+> this issue no longer occurs, but we should still convert the nfsd_users
+> to atomic_t to prevent other similar issues.
+>=20
+> Link[1]: https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_c=
+allback.html
+> Co-developed-by: huhai <huhai@kylinos.cn>
+> Signed-off-by: huhai <huhai@kylinos.cn>
+> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+> ---
+>  fs/nfsd/nfssvc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 9b3d6cff0e1e..08b1f9ebdc2a 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -270,13 +270,13 @@ static int nfsd_init_socks(struct net *net, const str=
+uct cred *cred)
+>  	return 0;
+>  }
+> =20
+> -static int nfsd_users =3D 0;
+> +static atomic_t nfsd_users =3D ATOMIC_INIT(0);
+> =20
+>  static int nfsd_startup_generic(void)
+>  {
+>  	int ret;
+> =20
+> -	if (nfsd_users++)
+> +	if (atomic_fetch_inc(&nfsd_users))
+>  		return 0;
+> =20
+>  	ret =3D nfsd_file_cache_init();
+> @@ -291,13 +291,13 @@ static int nfsd_startup_generic(void)
+>  out_file_cache:
+>  	nfsd_file_cache_shutdown();
+>  dec_users:
+> -	nfsd_users--;
+> +	atomic_dec(&nfsd_users);
+>  	return ret;
+>  }
+> =20
+>  static void nfsd_shutdown_generic(void)
+>  {
+> -	if (--nfsd_users)
+> +	if (atomic_dec_return(&nfsd_users))
+>  		return;
+> =20
+>  	nfs4_state_shutdown();
+> --=20
+> 2.34.1
+>=20
+>=20
 
