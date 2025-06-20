@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0C92EACF8
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2729D2ECD27
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750444403; cv=none; b=SYQ8quwsa13Rn9BwaXwseeCbw9M2Qz68jZ7ItnTQO4TPeSLkxyDStmdA9dxlKRaVkV3gBUMn/b2rEVVEBntJ+cH1NebmfrtQ/i1YlmYQcweUNrqQ2iSOCgHzZOOfTr8wIrEeE7jkl+0nmlgFEiHLECXpRgAhaVrsaNKpUin0YCU=
+	t=1750444408; cv=none; b=heAu/pZjgoAELw9Hv8DxFWGauol8U8HhWVwsS/akyWAdu06bxwcHvLKd2Fo4rKHYZFnEdJQ/S7UMW5oWLcUfq4CngEqIog0jxAQ4BQv+wGxzmGSAa6uyrgRAdCevb1hwAGot25FyFqDkOOQJqIHePvZOOW++lMJhiqnVa3FrZSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750444403; c=relaxed/simple;
-	bh=ucRzHJWp7naudgx3oSodbDo3ziwW+nJdx1fM+yiieLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P1U8nHkFhUbR5wSh8kn7g0raC8Y/KdeEQ7YV8bTlmUQOdKEFC5P5XyBJJA/Xvq/iK7txNYhTh6VLU8YO9w0s0xt3vh+kAND+LpFGlSVns4JipcgwE79+kixSeY70u8LS/P5RHL0E7AJuvmx7YZJgncuyQurnyhA6mkOR/RrmU/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtUMFBGb; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1750444408; c=relaxed/simple;
+	bh=EJdvl1mpg9X4+2eKTHQcBsjXQgPe+r8ZKJ03qQj+0EU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xmeu1hqi9UNEvMmwfeuz101XxFtw5isp5liajsFaD3xU5FFQcSZdUQMaUkBkD2xTOezO7dZZJ3X541t0OFXZLQ3CeKMDA6rB7V84874XaUihMucM+lkoVpJTvbOF+TGdKrsLXluf/FL2jDXULZNRyUYYzsWHlELVigTexd/awSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yh9PDX/r; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtUMFBGb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yh9PDX/r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750444400;
+	s=mimecast20190719; t=1750444405;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ew6cYXJ5tlWvgkgeybcpF+VZLjwvJDFqrgIT2wI2peY=;
-	b=HtUMFBGbuHxeBHKTqBwSye22QcPj5hyIR2nt/dL+X5B8qDjVNYkyYAyas4MTua+8/P72nZ
-	0huseTbvOt1m9M7vH9eJ5zYYAX+gb67XB51TkqDhqPpFgTg8FfErAb260eibF32ozTenaA
-	jKfe4gHCXesRWtKZJIUIRVZ/ztRc5vU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wFCupry0pZgVg2F7QGJdDFaIsxUC3ZYbC/9zJmpzQvI=;
+	b=Yh9PDX/rkJpkPLfIDfzMOIryMjxhGREyU7KL6gOFGtMIrQ3awhUBZk7K2Gm/cGTUgEeQvn
+	ohVC7tvBR9l9TR4xTOcWn486vtbWQpMpjhWVdcsBtarJkD+NBseiXcswaor4vMwRncMLOn
+	6MZVzF8S9RRA9aSLOEEe39IlqFu3gVA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-25-7yf16FjtOpapJiIk6xmmOQ-1; Fri,
- 20 Jun 2025 14:33:15 -0400
-X-MC-Unique: 7yf16FjtOpapJiIk6xmmOQ-1
-X-Mimecast-MFC-AGG-ID: 7yf16FjtOpapJiIk6xmmOQ_1750444393
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-gLDMy9x4PVuguoNyz34Qbg-1; Fri,
+ 20 Jun 2025 14:33:19 -0400
+X-MC-Unique: gLDMy9x4PVuguoNyz34Qbg-1
+X-Mimecast-MFC-AGG-ID: gLDMy9x4PVuguoNyz34Qbg_1750444397
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E228195608C;
-	Fri, 20 Jun 2025 18:33:12 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C22219560AA;
+	Fri, 20 Jun 2025 18:33:17 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D5B7180045B;
-	Fri, 20 Jun 2025 18:33:09 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 19A59180045B;
+	Fri, 20 Jun 2025 18:33:14 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -57,9 +59,11 @@ Cc: rick.p.edgecombe@intel.com,
 	kirill.shutemov@intel.com,
 	jiewen.yao@intel.com,
 	binbin.wu@linux.intel.com
-Subject: [PATCH v3 0/3] TDX attestation support and GHCI fixup
-Date: Fri, 20 Jun 2025 14:33:05 -0400
-Message-ID: <20250620183308.197917-1-pbonzini@redhat.com>
+Subject: [PATCH 2/3] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+Date: Fri, 20 Jun 2025 14:33:07 -0400
+Message-ID: <20250620183308.197917-3-pbonzini@redhat.com>
+In-Reply-To: <20250620183308.197917-1-pbonzini@redhat.com>
+References: <20250620183308.197917-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,32 +74,197 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The userspace API is the same as in v2, consolidating everything into a
-single KVM_EXIT_TDX where userspace is free to ignore unknown TDVMCALLs.
+From: Binbin Wu <binbin.wu@linux.intel.com>
 
-Together with this I have written an extra small series that adds supported
-TDVMCALLs in the KVM_TDX_CAPABILITIES output, and also adds
-SetupEventNotifyInterrupt support.  I'd rather include it in 6.16 but
-also it's better to do that as soon as the spec is finalized rather than
-earlier.
+Handle TDVMCALL for GetQuote to generate a TD-Quote.
 
-Since there's nothing really interesting in there, I'll hold on it for
-a couple weeks hoping for more movement on the spec side.
+GetQuote is a doorbell-like interface used by TDX guests to request VMM
+to generate a TD-Quote signed by a service hosting TD-Quoting Enclave
+operating on the host.  A TDX guest passes a TD Report (TDREPORT_STRUCT) in
+a shared-memory area as parameter.  Host VMM can access it and queue the
+operation for a service hosting TD-Quoting enclave.  When completed, the
+Quote is returned via the same shared-memory area.
 
-Paolo
+KVM only checks the GPA from the TDX guest has the shared-bit set and drops
+the shared-bit before exiting to userspace to avoid bleeding the shared-bit
+into KVM's exit ABI.  KVM forwards the request to userspace VMM (e.g. QEMU)
+and userspace VMM queues the operation asynchronously.  KVM sets the return
+code according to the 'ret' field set by userspace to notify the TDX guest
+whether the request has been queued successfully or not.  When the request
+has been queued successfully, the TDX guest can poll the status field in
+the shared-memory area to check whether the Quote generation is completed
+or not.  When completed, the generated Quote is returned via the same
+buffer.
 
+Add KVM_EXIT_TDX as a new exit reason to userspace. Userspace is
+required to handle the KVM exit reason as the initial support for TDX,
+by reentering KVM to ensure that the TDVMCALL is complete.  While at it,
+add a note that KVM_EXIT_HYPERCALL also requires reentry with KVM_RUN.
 
-Binbin Wu (3):
-  KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
-  KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
-  KVM: TDX: Exit to userspace for GetTdVmCallInfo
+Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
+Tested-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
+Acked-by: Kai Huang <kai.huang@intel.com>
+[Adjust userspace API. - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virt/kvm/api.rst | 49 +++++++++++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/tdx.c         | 32 ++++++++++++++++++++++
+ include/uapi/linux/kvm.h       | 17 ++++++++++++
+ 3 files changed, 97 insertions(+), 1 deletion(-)
 
- Documentation/virt/kvm/api.rst    | 59 +++++++++++++++++++++-
- arch/x86/include/asm/shared/tdx.h |  1 +
- arch/x86/kvm/vmx/tdx.c            | 83 ++++++++++++++++++++++++++++---
- include/uapi/linux/kvm.h          | 22 ++++++++
- 4 files changed, 157 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 1bd2d42e6424..115ec3c2b641 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6645,7 +6645,8 @@ to the byte array.
+ .. note::
+ 
+       For KVM_EXIT_IO, KVM_EXIT_MMIO, KVM_EXIT_OSI, KVM_EXIT_PAPR, KVM_EXIT_XEN,
+-      KVM_EXIT_EPR, KVM_EXIT_X86_RDMSR and KVM_EXIT_X86_WRMSR the corresponding
++      KVM_EXIT_EPR, KVM_EXIT_HYPERCALL, KVM_EXIT_TDX,
++      KVM_EXIT_X86_RDMSR and KVM_EXIT_X86_WRMSR the corresponding
+       operations are complete (and guest state is consistent) only after userspace
+       has re-entered the kernel with KVM_RUN.  The kernel side will first finish
+       incomplete operations and then check for pending signals.
+@@ -7174,6 +7175,52 @@ The valid value for 'flags' is:
+   - KVM_NOTIFY_CONTEXT_INVALID -- the VM context is corrupted and not valid
+     in VMCS. It would run into unknown result if resume the target VM.
+ 
++::
++
++		/* KVM_EXIT_TDX */
++		struct {
++			__u64 flags;
++			__u64 nr;
++			union {
++				struct {
++					u64 ret;
++					u64 data[5];
++				} unknown;
++				struct {
++					u64 ret;
++					u64 gpa;
++					u64 size;
++				} get_quote;
++			};
++		} tdx;
++
++Process a TDVMCALL from the guest.  KVM forwards select TDVMCALL based
++on the Guest-Hypervisor Communication Interface (GHCI) specification;
++KVM bridges these requests to the userspace VMM with minimal changes,
++placing the inputs in the union and copying them back to the guest
++on re-entry.
++
++Flags are currently always zero, whereas ``nr`` contains the TDVMCALL
++number from register R11.  The remaining field of the union provide the
++inputs and outputs of the TDVMCALL.  Currently the following values of
++``nr`` are defined:
++
++* ``TDVMCALL_GET_QUOTE``: the guest has requested to generate a TD-Quote
++signed by a service hosting TD-Quoting Enclave operating on the host.
++Parameters and return value are in the ``get_quote`` field of the union.
++The ``gpa`` field and ``size`` specify the guest physical address
++(without the shared bit set) and the size of a shared-memory buffer, in
++which the TDX guest passes a TD Report.  The ``ret`` field represents
++the return value of the GetQuote request.  When the request has been
++queued successfully, the TDX guest can poll the status field in the
++shared-memory area to check whether the Quote generation is completed or
++not. When completed, the generated Quote is returned via the same buffer.
++
++KVM may add support for more values in the future that may cause a userspace
++exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
++it will enter with output fields already valid; in the common case, the
++``unknown.ret`` field of the union will be ``TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED``.
++Userspace need not do anything if it does not wish to support a TDVMCALL.
+ ::
+ 
+ 		/* Fix the size of the union. */
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 5d100c240ab3..b619a3478983 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1465,6 +1465,36 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
+ 	return 1;
+ }
+ 
++static int tdx_complete_simple(struct kvm_vcpu *vcpu)
++{
++	tdvmcall_set_return_code(vcpu, vcpu->run->tdx.unknown.ret);
++	return 1;
++}
++
++static int tdx_get_quote(struct kvm_vcpu *vcpu)
++{
++	struct vcpu_tdx *tdx = to_tdx(vcpu);
++	u64 gpa = tdx->vp_enter_args.r12;
++	u64 size = tdx->vp_enter_args.r13;
++
++	/* The gpa of buffer must have shared bit set. */
++	if (vt_is_tdx_private_gpa(vcpu->kvm, gpa)) {
++		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
++		return 1;
++	}
++
++	vcpu->run->exit_reason = KVM_EXIT_TDX;
++	vcpu->run->tdx.flags = 0;
++	vcpu->run->tdx.nr = TDVMCALL_GET_QUOTE;
++	vcpu->run->tdx.get_quote.ret = TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED;
++	vcpu->run->tdx.get_quote.gpa = gpa & ~gfn_to_gpa(kvm_gfn_direct_bits(tdx->vcpu.kvm));
++	vcpu->run->tdx.get_quote.size = size;
++
++	vcpu->arch.complete_userspace_io = tdx_complete_simple;
++
++	return 0;
++}
++
+ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+ {
+ 	switch (tdvmcall_leaf(vcpu)) {
+@@ -1474,6 +1504,8 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+ 		return tdx_report_fatal_error(vcpu);
+ 	case TDVMCALL_GET_TD_VM_CALL_INFO:
+ 		return tdx_get_td_vm_call_info(vcpu);
++	case TDVMCALL_GET_QUOTE:
++		return tdx_get_quote(vcpu);
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index d00b85cb168c..e23e7286ad1a 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -178,6 +178,7 @@ struct kvm_xen_exit {
+ #define KVM_EXIT_NOTIFY           37
+ #define KVM_EXIT_LOONGARCH_IOCSR  38
+ #define KVM_EXIT_MEMORY_FAULT     39
++#define KVM_EXIT_TDX              40
+ 
+ /* For KVM_EXIT_INTERNAL_ERROR */
+ /* Emulate instruction failed. */
+@@ -447,6 +448,22 @@ struct kvm_run {
+ 			__u64 gpa;
+ 			__u64 size;
+ 		} memory_fault;
++		/* KVM_EXIT_TDX */
++		struct {
++			__u64 flags;
++			__u64 nr;
++			union {
++				struct {
++					__u64 ret;
++					__u64 data[5];
++				} unknown;
++				struct {
++					__u64 ret;
++					__u64 gpa;
++					__u64 size;
++				} get_quote;
++			};
++		} tdx;
+ 		/* Fix the size of the union. */
+ 		char padding[256];
+ 	};
 -- 
 2.43.5
+
 
