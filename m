@@ -1,139 +1,102 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F0728AB11;
-	Fri, 20 Jun 2025 12:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CFB236442
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424341; cv=none; b=VAM24dqbOBf8CNVOVfq4mUdgFQlnbmD1TZSoISx62mMaILOQ0HQ/t832aVm8AsdqhZqdogS2C+sfelVLNuYLwUvqQrKsZfrPffVTzTV/aX08EGPVhDhud4a5JrOPdrHiHZve+Xzs6tQavjMwUdvWTyI44xBijtbRt7D2gWTGOtU=
+	t=1750424416; cv=none; b=K/r0CNZlIT03W7WJNxlpINLrom80loz0tXdeZtKJoXFTepj5geuewNtGszFkCiEZ48qJ8shsE32pVB9X5wnJ1PsTxL0knSI1hMcWhcPN8i3877J4zk68xwXU3IqJll4YRcvpeoigiiHkp2LZ23CYFgV2CkJxieCz72cXfOMlpQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424341; c=relaxed/simple;
-	bh=KIYnJyvfLLQZY8dOiAzbOJCNFpN9oV15l1W65TMa9q8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1u+afvOpxmxQRaWTn71qrOmq6GTXqpa/V8DNqEy+hH3Jhkwa5XRrGYXj4s5fo6G/RP+L1EVuXtbKPJj2j8IAapP4FExshwL34WDtyHi5HTr8hXS1fqTyrrz0okO2RzNEMNj5jAXVSsNQ2tm7KDs0UMRRXN85TimwV9n2BxgYXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=EHG1iWW4; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750424416; c=relaxed/simple;
+	bh=jZZ/xkZYhg27rMIBma/CNy6BmfDLsuguSvLbtNJe22A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j26CqLB7yyhjOnu42QY5vTntHeIBxKd82ca0xAOXHtZveF8KZhe6mYs9Tb9vHB8i/BfKHCc0472dCn4GDbRd1DkJS3xzGeOJ1/rXE3L/fkop9xJU3xZ5ruDNrlNOJD9OF2exURcpbapnwszwtuDOAPSIVU3mLlOVPQMSCxP3754=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RFez/MPD; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="EHG1iWW4"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uSbKW-00HLP1-Rv; Fri, 20 Jun 2025 14:58:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=UJ5ca2MMOgMZ7TfbXbB+tMHmzuecN31xCJX2LHjhkXY=; b=EHG1iWW4prYz57diPMlrZfKzRd
-	Wm5yHA6y+2DnHSwKSCDjdnVn6GB7+/3KynUgYybTQ2gelTklCJrUa0tB66sE6IEigz9VmSDaAdZyR
-	aE5x8pR/jgzdqWO2qT0F/lsG7UmHErTNafMRngOe+4mAjl7S0kwgL9zObOmIV3K/AXK3spnf8BqCQ
-	swLAQztNr/5nEzpVo6wwg1TGQLFpq9LRbgLH+Lotx7pY+e/ndzrUA5lMfwuaT2gzu6q/F91njuz5E
-	ypDo1p3svj4MQM5hb5XR4eelQ25AGj3XMaJ1Yl8pUExrGZzAKDJVfsEl6RnzjzpnzrTep47YtEaEw
-	5XKGpcoA==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uSbKW-0003JG-7c; Fri, 20 Jun 2025 14:58:52 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uSbKU-00Ammu-RA; Fri, 20 Jun 2025 14:58:50 +0200
-Message-ID: <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
-Date: Fri, 20 Jun 2025 14:58:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFez/MPD"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-31306794b30so206927a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750424414; x=1751029214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iHusbDYNQFht+VhqQI20ig4TKjH1YnzOWhBaeYQa1tQ=;
+        b=RFez/MPDkeDE8UOQycQH+X/IA0PuAqyg1iLEvcX2oK4tAXfUHsHt0ori+VvT2AKpy5
+         b583qAOmg7dM24CNODcm6bP9oQj7XNgCqrfhtuPFnm6S4eCfO08O8h0XtW5ILYzz05lr
+         MlG0KelUDqMxmmwwaM3sXBCWN78307rWjPyrn2iIKswjFrODNAc0o0FVMT8gS9JrLncD
+         uwG2ND1SfIxBGI22yQu8/cLt6CWQ86P+afKgXEL+JavDrG9bncknKLFqqmnT74e3wrQB
+         srTwzZPn0owPWN8EgZt8DPmsJfAz1QADHHH9MhvaWCkwG2PA+YL8xuBCjj+dBqtErznJ
+         w/uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750424414; x=1751029214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iHusbDYNQFht+VhqQI20ig4TKjH1YnzOWhBaeYQa1tQ=;
+        b=A8vWlzkwxO8nvX/6yV4epZoORyU9U8p5xlidPiSNeB9ZTgTbe8WFjgy4DveNlxlKwc
+         8No3uhURbzUgl1CiqLiu95mcFoNC9bCZtXnw+S2XFIyx/BPufwJ+/PVu3i+4RmkKlutX
+         f9ew8745jHK1PHpjm7HxYW+hK+lKchCM5P77QEX4mZ7D3nEpTMe3z3w1RgL8SZvJaNh+
+         IOGhuKSfw3CnfLCki/A7j1Vs8hNL73N5O6U0bl2mk7Onj1+2LsVHvB9aBYiiqxjP0bmS
+         sPnFm1wMpK24x9rw2NCOhpEasLPYjml6uqv9RKEg1yiE/ywEU5j2AvS34R9iKsmDHnwn
+         bnug==
+X-Forwarded-Encrypted: i=1; AJvYcCXkMc5XsvTeLROQG2bKB94YyEe2//JOWc5B4VABpyBn9pLpdqW7umqWxHUQUjhCzYTjTypSQqEbnSvTKx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXJD2QMvn82YnY46DxCm+CO5NRX+6LOra/yhH25C8vfqkY8jQP
+	BxqQ8Zc6/ss8ovFyZy4CYlaxGnl2tpmJXavmwY/M0MJq0vJxPXcQNTaJnlMVVjNqDWH3qbc6/US
+	pSrJ1e0zz3sSwHxTotG2QF87OQSIdtWU=
+X-Gm-Gg: ASbGncsa8B98taAueiy+xPSbodLRYMn367+HRV1kHeNfBeUWTmy5Jo1kZG+IF+D4/pt
+	827JXy7dbz6PSDpmzXROk//nxir5RrCUmtLADKeW/2CBhZtqIphcOnM+w1u0uQlE1ripiupPmpj
+	Wd5CiorL8ESGJ0rVsI71gqF02DTzgFl7LahNcPV/6TLc0=
+X-Google-Smtp-Source: AGHT+IGlT/p4avAw3OActY0SsgmlHfvmC7u//by9/Qs2X0j+n1a4zqlppZzYwFev8DlDQk3HtgZsp2wYIisHxJvsWIg=
+X-Received: by 2002:a17:90b:2709:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-3159d8dfa33mr1803795a91.5.1750424413975; Fri, 20 Jun 2025
+ 06:00:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
- <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
- <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250620111406.3365763-1-arnd@kernel.org>
+In-Reply-To: <20250620111406.3365763-1-arnd@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 20 Jun 2025 15:00:01 +0200
+X-Gm-Features: AX0GCFvt549YbePHDFUC5E6wMqoJqx4LlXU3Vlyz-GlYaVfKJhvMdL9vUzaIFzA
+Message-ID: <CANiq72mYSPA_S6hT4B2U8Sgt2QTJekuVEKqjJDgQxGVmMX64jA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: change __retain macro for gcc-11
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Tony Ambardar <tony.ambardar@gmail.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Arnd Bergmann <arnd@arndb.de>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/25 10:32, Stefano Garzarella wrote:
-> On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
->> Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
->> Make sure pointers remain valid.
->>
->> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
->> Call Trace:
->> __x64_sys_ioctl+0x12d/0x190
->> do_syscall_64+0x92/0x1c0
->> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>
->> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->> ---
->> net/vmw_vsock/af_vsock.c | 4 ++++
->> 1 file changed, 4 insertions(+)
->>
->> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
->> --- a/net/vmw_vsock/af_vsock.c
->> +++ b/net/vmw_vsock/af_vsock.c
->> @@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
->>
->> 	switch (cmd) {
->> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
->> +		mutex_lock(&vsock_register_mutex);
->> +
->> 		/* To be compatible with the VMCI behavior, we prioritize the
->> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
->> 		 */
->> @@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
->> 		else if (transport_h2g)
->> 			cid = transport_h2g->get_local_cid();
->>
->> +		mutex_unlock(&vsock_register_mutex);
-> 
-> 
-> What about if we introduce a new `vsock_get_local_cid`:
-> 
-> u32 vsock_get_local_cid() {
-> 	u32 cid = VMADDR_CID_ANY;
-> 
-> 	mutex_lock(&vsock_register_mutex);
-> 	/* To be compatible with the VMCI behavior, we prioritize the
-> 	 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
-> 	 */
-> 	if (transport_g2h)
-> 		cid = transport_g2h->get_local_cid();
-> 	else if (transport_h2g)
-> 		cid = transport_h2g->get_local_cid();
-> 	mutex_lock(&vsock_register_mutex);
-> 
-> 	return cid;
-> }
-> 
-> 
-> And we use it here, and in the place fixed by next patch?
-> 
-> I think we can fix all in a single patch, the problem here is to call 
-> transport_*->get_local_cid() without the lock IIUC.
+On Fri, Jun 20, 2025 at 1:14=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> Building kernels with CONFIG_LD_DEAD_CODE_DATA_ELIMINATION using gcc-11
+> causes compiler warnings:
+>
+> kernel/cgroup/rstat.c:65:1: error: 'retain' attribute ignored [-Werror=3D=
+attributes]
+>
+> It appears that this version reports __has_attribute(__retain__) as true
+> but doesn't actually support the feature.
 
-Do you mean:
+Hmm... I can't reproduce the error in Compiler Explorer:
 
- bool vsock_find_cid(unsigned int cid)
- {
--       if (transport_g2h && cid == transport_g2h->get_local_cid())
-+       if (transport_g2h && cid == vsock_get_local_cid())
-                return true;
+    https://godbolt.org/z/roMrfjxGM
 
-?
+And locally with a GCC 11.4 I can see the attribute keeping a function
+in the final binary when marked as `retain` against `retain` against
+`-ffunction-sections -Wl,--gc-sections`.
 
-So we need to check transport_g2h twice; in vsock_find_cid() and then again
-in vsock_get_local_cid(), right?
+Is something else going on?
 
+Cheers,
+Miguel
