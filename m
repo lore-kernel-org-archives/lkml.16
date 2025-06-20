@@ -1,99 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F8830E85C;
-	Fri, 20 Jun 2025 07:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF66225A2C;
+	Fri, 20 Jun 2025 07:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750404063; cv=none; b=tCxEoskF1505uTI4NoGopgIa2YiiBHAb+Fen74m5/crxXa+YJpFtnudhAIOwzLJ8VBz9mabR/88x+xHBJ6ptRpbPpqXGHssVQS3+IzowfbNSW52wqYEits+MXI+1hepACJs9qZl1NBuSFjuuw8UlS7JzE2fDoW4555PNdCVsOm8=
+	t=1750404084; cv=none; b=u1ufxeJlLK7sD+onjcEGkaLgnWQmstgHq9INfBfOglvSywY7agKMY30/UCAZXLmTckNtXI0ZOxgESXzFeXLuwnONzEuBbf/60vOyi10ClCjJUgR3O2REXqUN/BMW6sjQg3rLqxanEDLlpSgdlpeSjD0SSWRR2vo12nne+KZfIkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750404063; c=relaxed/simple;
-	bh=6CzJTTe8UAFryKwBLx1KIZhMQnCrxcLcO3PkHsiIgZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Plu+tSWyeVzXijd5aqCuiDOZDWQB/ZfGaZHYjfXqYzl0n/FBI8FwsM6DyUpqfolq3JeCv0XA3MT2H3uB6nHTQKIlXe6s3cSWs7SYUeir9qXfL0V1NvTG9WVkK5oaipTv0ApZSiWRa04xWd74fvPv5lUJxM2RML/BepcpovJLUBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuHKoPlV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750404084; c=relaxed/simple;
+	bh=FSM2izM9vl5e3Hqb+oIj0xlTknp96G+HXI6ROxmh4SA=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=rKV5qbTiFX3W/Mr1i697KMJ+DdZnfQMfU5HJR2ac+N6MPtUlzWkeZ1Ut2MUSuZL8P2dQhxb6ZPT+o5IXRm2U+qkMvlCMhPM2/s1jKMvU11JODI7ujSzvKr1HC3odFK/jlbEcqsxUNLapn7dk22UDTYeRQBHU1Gc9XvhLqpxNkrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoRRXQiL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuHKoPlV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F8D0C4CEE3;
-	Fri, 20 Jun 2025 07:21:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoRRXQiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 480B4C4CEE3;
+	Fri, 20 Jun 2025 07:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750404063;
-	bh=6CzJTTe8UAFryKwBLx1KIZhMQnCrxcLcO3PkHsiIgZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TuHKoPlVPfTOsB/WQtYJf5zlBtolTQkUCL6Vi4nZPFzAv37NK4dAVgTRiuCfkzRqV
-	 jjtylnUGD/2CJo8wk/7C9QvKljadw6O870GPa7Lrt5pKVHsJztSDTV9i+Fewi+kKpV
-	 X30rJLlfKQUB8dhsA75W7VbzieK73uZDwwNgEyrBvdEBwYTh/mHEgp6ZIlKv2RwWmm
-	 nyCHXn7M0TZoyq0yCD1BXnBjEtejLsDkcc0AO5rgyEPPhXDIXJOtnirC7SnBdPyJoK
-	 0yGvbGIpVruZGDZ2VkClfdsJNec3LRbEMLroF2nxq7hu82CpTcc2zw1J2WuCYOROR5
-	 ++bCX09pEZ6Zg==
-Date: Fri, 20 Jun 2025 09:21:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ssengar@linux.microsoft.com, hargar@microsoft.com, apais@microsoft.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus
- message-connection-id property
-Message-ID: <20250620-strange-rough-gharial-d2bc73@kuoka>
-References: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
- <1750374395-14615-2-git-send-email-hargar@linux.microsoft.com>
+	s=k20201202; t=1750404083;
+	bh=FSM2izM9vl5e3Hqb+oIj0xlTknp96G+HXI6ROxmh4SA=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=UoRRXQiLO+R0p4ZlmRLdszbRQ3CXGasmrKwf0KJAtOE1m1aqiOcZyZsaIRvWQ0pe2
+	 MGK4ZpAvNswj+g4TDkFL74RdrdwXEHDGiGJ5GutrNTSYny0w/xp1YBHBFqW0TQ4vV5
+	 2598p67FYgF/tkW5qSsuJVOJky9F/iaivYRZPf5Mj8TrNvU/f2SYzG0/Cll171zt1F
+	 /1mexlZS5/AwibSZ16WWqdJ1jIqKHZF8CGTeMrZLsjA9QtNdPbE3kDRYzCJ3L4JEuu
+	 G+vrC0+S2bM1j4RUdvuWezHWIcPv//+lNBM4SW1c1E1ojLb1BOk6V+0nH1tcvzPs0Q
+	 4TUEO7h88wtLw==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1750374395-14615-2-git-send-email-hargar@linux.microsoft.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250404-kconfig-defaults-clk-v1-2-4d2df5603332@linaro.org>
+References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org> <20250404-kconfig-defaults-clk-v1-2-4d2df5603332@linaro.org>
+Subject: Re: [PATCH 2/5] clk: nuvoton: Do not enable by default during compile testing
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, Emilio =?utf-8?q?L=C3=B3pez?= <emilio@elopez.com.ar>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Samuel Holland <samuel@sholland.org>
+Date: Fri, 20 Jun 2025 00:21:21 -0700
+Message-ID: <175040408188.4372.10647064030431437175@lazor>
+User-Agent: alot/0.11
 
-On Thu, Jun 19, 2025 at 04:06:34PM GMT, Hardik Garg wrote:
-> Document the microsoft,message-connection-id property for VMBus DeviceTree
-> node. This property allows specifying the connection ID used for
-
-What is a connection ID and why it cannot be inferred from existing
-system API?
-
-> communication between host and guest.
-> 
-> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
+Quoting Krzysztof Kozlowski (2025-04-04 04:56:58)
+> Enabling the compile test should not cause automatic enabling of all
+> drivers.  Restrict the default to ARCH also for individual driver, even
+> though its choice is not visible without selecting parent Kconfig
+> symbol, because otherwise selecting parent would select the child during
+> compile testing.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> v3: https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com
-> v2: https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com
-> v1: https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com
-> ---
->  Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> index 0bea4f5287ce..615b48bd6a8b 100644
-> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> @@ -17,6 +17,14 @@ properties:
->    compatible:
->      const: microsoft,vmbus
 
-There's a reason why you have here generic property - this is generic
-and/or discoverable and/or whatever software interface. Adding now more
-properties, just because you made it generic, is not the way.
-
->  
-> +  microsoft,message-connection-id:
-> +    description: |
-
-Drop |
-
-> +      VMBus message connection ID to be used for communication between host and
-> +      guest. If not specified, defaults to VMBUS_MESSAGE_CONNECTION_ID_4 (4) for
-> +      protocol version VERSION_WIN10_V5 and above, or VMBUS_MESSAGE_CONNECTION_ID
-> +      (1) for older versions.
-
-Missing constraints, defaults, if this stays, but frankly speaking it
-looks really not appropriate, considering lack of any explanation in the
-binding or in commit msg.
-
-
-Best regards,
-Krzysztof
-
+Applied to clk-next
