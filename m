@@ -1,56 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CEA30E85C;
-	Fri, 20 Jun 2025 07:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F8830E85C;
+	Fri, 20 Jun 2025 07:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750404053; cv=none; b=icGYXVKXqU7UxP+/17ns19/LM6E/E+hhzYQDfWF6VN37J1SEslk+Q8u+rn9rKcYO9pESIWARwz20HVqW385/seh87cEVY6pm/AriQ1ybW8MbHqV5cifKX7uBBoff6mfO7bscc34K9FTCUVahC3u8d6J7KIBwa7uSXeti41MNytY=
+	t=1750404063; cv=none; b=tCxEoskF1505uTI4NoGopgIa2YiiBHAb+Fen74m5/crxXa+YJpFtnudhAIOwzLJ8VBz9mabR/88x+xHBJ6ptRpbPpqXGHssVQS3+IzowfbNSW52wqYEits+MXI+1hepACJs9qZl1NBuSFjuuw8UlS7JzE2fDoW4555PNdCVsOm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750404053; c=relaxed/simple;
-	bh=zF5y0gF8Y7NkjYj9fVdZa2uGp6iaT6yW0LPr/ToduHI=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=rmfTRlWYstjVCpbMfCnDHDGCx8TV8ULURn7d97Zj/SNhT4kz9b2MU/mYxdYTVH6ISPsH2upTvZBOSDbIbljC33WmtdV03zbg6WFn5UnG39qIiaBiwiUfoW/tENrMiMux4948hQAugnWolzElg6Iftf8Dp4ah3j+xX/mHVrOnp2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMMc0M4f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750404063; c=relaxed/simple;
+	bh=6CzJTTe8UAFryKwBLx1KIZhMQnCrxcLcO3PkHsiIgZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Plu+tSWyeVzXijd5aqCuiDOZDWQB/ZfGaZHYjfXqYzl0n/FBI8FwsM6DyUpqfolq3JeCv0XA3MT2H3uB6nHTQKIlXe6s3cSWs7SYUeir9qXfL0V1NvTG9WVkK5oaipTv0ApZSiWRa04xWd74fvPv5lUJxM2RML/BepcpovJLUBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuHKoPlV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMMc0M4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC004C4CEE3;
-	Fri, 20 Jun 2025 07:20:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuHKoPlV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F8D0C4CEE3;
+	Fri, 20 Jun 2025 07:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750404052;
-	bh=zF5y0gF8Y7NkjYj9fVdZa2uGp6iaT6yW0LPr/ToduHI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=JMMc0M4fqKQJS0JOcr1N2FW5URnjzSFhUD+n8ntxQ3VvngFeOwVrr5VmRGsxnxBUe
-	 7pDHvW3W9LyQcNR4bnesTXu02QV7XikGO2Lm9qC6JvvVg3mVb+6NXUGhWNUw0iZjMM
-	 wRd2WWl0/7463L/DK0Stv5XMaaJ4kUFwEnLM/na8gDxO0odeGpRS8UcMa44dqjMwCP
-	 bWEGdGyJaHoPsWIT0OrsVoJa/JT/xz5juHz4RlttTR+sY+KOUVOUuFPnSlhAMb+58N
-	 wFLb4D2kmlRgAEkC4aDRS3dUF9/llorkBSGEh1VQ857b2e4YDwrLxpLoeXsSv2VLW8
-	 3m+DDWAqj0F8w==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750404063;
+	bh=6CzJTTe8UAFryKwBLx1KIZhMQnCrxcLcO3PkHsiIgZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TuHKoPlVPfTOsB/WQtYJf5zlBtolTQkUCL6Vi4nZPFzAv37NK4dAVgTRiuCfkzRqV
+	 jjtylnUGD/2CJo8wk/7C9QvKljadw6O870GPa7Lrt5pKVHsJztSDTV9i+Fewi+kKpV
+	 X30rJLlfKQUB8dhsA75W7VbzieK73uZDwwNgEyrBvdEBwYTh/mHEgp6ZIlKv2RwWmm
+	 nyCHXn7M0TZoyq0yCD1BXnBjEtejLsDkcc0AO5rgyEPPhXDIXJOtnirC7SnBdPyJoK
+	 0yGvbGIpVruZGDZ2VkClfdsJNec3LRbEMLroF2nxq7hu82CpTcc2zw1J2WuCYOROR5
+	 ++bCX09pEZ6Zg==
+Date: Fri, 20 Jun 2025 09:21:00 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Hardik Garg <hargar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	decui@microsoft.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ssengar@linux.microsoft.com, hargar@microsoft.com, apais@microsoft.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus
+ message-connection-id property
+Message-ID: <20250620-strange-rough-gharial-d2bc73@kuoka>
+References: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
+ <1750374395-14615-2-git-send-email-hargar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com>
-References: <20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com>
-Subject: Re: [PATCH 0/2] clk: add a clk_hw helpers to get the clock device or device_node
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
-To: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>
-Date: Fri, 20 Jun 2025 00:20:51 -0700
-Message-ID: <175040405169.4372.877329870252746551@lazor>
-User-Agent: alot/0.11
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1750374395-14615-2-git-send-email-hargar@linux.microsoft.com>
 
-Quoting Jerome Brunet (2025-04-17 06:44:21)
-> This patchset adds helpers to get the device or device_node associated wi=
-th
-> clk_hw. This can be used by clock drivers to access various device related
-> functionality. The 2nd changes adds kunit test coverage for the new helpe=
-rs
->=20
+On Thu, Jun 19, 2025 at 04:06:34PM GMT, Hardik Garg wrote:
+> Document the microsoft,message-connection-id property for VMBus DeviceTree
+> node. This property allows specifying the connection ID used for
 
-I've pushed this to clk-hw-device, splitting the test patch into two and
-reworking it. Let me know if you see anything off.
+What is a connection ID and why it cannot be inferred from existing
+system API?
+
+> communication between host and guest.
+> 
+> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
+> ---
+> v3: https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com
+> v2: https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com
+> v1: https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com
+> ---
+>  Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+> index 0bea4f5287ce..615b48bd6a8b 100644
+> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+> @@ -17,6 +17,14 @@ properties:
+>    compatible:
+>      const: microsoft,vmbus
+
+There's a reason why you have here generic property - this is generic
+and/or discoverable and/or whatever software interface. Adding now more
+properties, just because you made it generic, is not the way.
+
+>  
+> +  microsoft,message-connection-id:
+> +    description: |
+
+Drop |
+
+> +      VMBus message connection ID to be used for communication between host and
+> +      guest. If not specified, defaults to VMBUS_MESSAGE_CONNECTION_ID_4 (4) for
+> +      protocol version VERSION_WIN10_V5 and above, or VMBUS_MESSAGE_CONNECTION_ID
+> +      (1) for older versions.
+
+Missing constraints, defaults, if this stays, but frankly speaking it
+looks really not appropriate, considering lack of any explanation in the
+binding or in commit msg.
+
+
+Best regards,
+Krzysztof
+
