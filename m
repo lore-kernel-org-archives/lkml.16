@@ -1,65 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378A22EB5AD;
-	Fri, 20 Jun 2025 17:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8251EB5F8;
+	Fri, 20 Jun 2025 17:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441252; cv=none; b=gudWV0kX742hHw9l8F5Ffvw9PWVF3/RliwfpBhCKlpA93y5YOuDoc5bIMBz0Hf56+/r927L+XTLQ8B8S3Pvv9GoH3FUlDPyHaWuUmPUTd7Lkaz8VIF2ygwqg7NA1itQA6PTEdusVUzHGJTlFZUFCkZTBgFzBcZ2w4iNOiax++Wg=
+	t=1750441335; cv=none; b=YVfKsT9Y0ZHCdlD3udpZsw6agoMBG+vLA91PW336d7owpXK4U7O0Z9ryZtp3zecMZYEOlcHcD4VutNub4UoapexBAm9jG/V1Z7Wh72tHk0oK7f5JPqD5pCtFY4ILkXKmMsTI82cBO0NwpThlitHlatwMHzMlQF/YfBMTekN43TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441252; c=relaxed/simple;
-	bh=NRGSRyTah5ICBT0QVblczXDuitpxn/LFY+zhFSrKnus=;
+	s=arc-20240116; t=1750441335; c=relaxed/simple;
+	bh=+d8rWtAZJO4o7jYg3VVESTCyMRK/oKsbIChLqwzbf0k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozl3oXX7KqqB0/r2AsEi8BoC3op3eWtu8Q4QkOWO0Ws2a5EH+HSRBLfp6SQQWmSIloSqq6NCzagiBCw2vrHyxu/jlu65d1ih/X5yCnuUFYxXuaxlyjB4kWTTGlV/yDBkSLBEZcKshuean8e44SeoLCkg7gHO1uIlJ2BWCnJygqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KEYSZ7Ic; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i205fpFMgF3/EBZ2p4ZujxJ/rP880dgzp9Kg0lofYdWGWHPn7hmSYJhbXd3ynBmXboP+YgpKPetjJZq0Sa8k3cscRAkRlxBxzlWHUMgCPrn6+uIBTu6uRihKXptzRKfODdXBpvV6UQM1pvntUHeDuyPLJmR8RZxrXhGhiUx7uxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAyEZ8Je; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KEYSZ7Ic"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAyEZ8Je"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750441251; x=1781977251;
+  t=1750441334; x=1781977334;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NRGSRyTah5ICBT0QVblczXDuitpxn/LFY+zhFSrKnus=;
-  b=KEYSZ7IcR++AAyn3Kfl/qsrDYhoJITcyBzcUm6lgzHo4SzvIcVig3amv
-   alnKdLxh5GbptWo8uc+FyP9CTr0CAsdw1yqp7j+DbLiEZh5fnC9xSZ56q
-   lEZRrrewJYK/9NTR+rVSjyhUlGUJlyee2hQ/Q/oGZOOGHSDtmSzm5l7vY
-   bJsAo17RxxKLCbK9y3M/zsNDIZhb65EXJA06SZQ4Hx+3DUJ/rYrX7M6mc
-   MKzPZ3ixloXxH90Z3XBbS/BgjzXIx7ikgdURMH1vPSDpqng0lB28lRPeR
-   HGQdcsa3AqgFpOA7r+j5X3RO22ex9AYHBYwfo3I5NEZuIhwprYj9UXOVu
-   w==;
-X-CSE-ConnectionGUID: 1WZr/DZoQwGgzgv0a3unxg==
-X-CSE-MsgGUID: B8aOE63URzCZdtInQ3R0Gw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52586070"
+  bh=+d8rWtAZJO4o7jYg3VVESTCyMRK/oKsbIChLqwzbf0k=;
+  b=lAyEZ8JeIWaxE/7CIH0xhLVGxj87APxxhZHoTc82l5QlIHs+EZ5A9qKf
+   Jn5UezPw5xkScEy40xjJaAL0WITqXnplEdna+Y9B4IRFQYCpN0XAGGuzq
+   uqoqWzHMHPHwDGMhD25/5ElF4dtWWLwuyaJ7Wn2TzWc3TZzJPyTSn8NUW
+   gJsglbJpQ9mx+eElPgXBY++mXKsR6azW+VpF4CCn6Qw6FYl52JX+ZuqOT
+   MRl8/dN+Klbn0CPn54vepZYjTKBuN2a6mWJMVQcaNxAYE8gomyP8fPk5p
+   KZva+ZvwTDCpODAAoC30c0yvneXHIWaqZFf/2n3Kdl1GsnSOh/0LQQ+kS
+   g==;
+X-CSE-ConnectionGUID: hRsgTmLiR1y9jNeBY9lgsw==
+X-CSE-MsgGUID: cUbm9elmSqyZy5xjS2gYzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63396414"
 X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="52586070"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:40:50 -0700
-X-CSE-ConnectionGUID: RH6NSA+vRnOBwGunq1Sriw==
-X-CSE-MsgGUID: 967yrwNfSTCe7ac8Cpd9sg==
+   d="scan'208";a="63396414"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:42:13 -0700
+X-CSE-ConnectionGUID: Jz2GhDOiQICSKlR67fCgag==
+X-CSE-MsgGUID: K38Nbuk0TT+ExDsKqRqDHQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="150459518"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 20 Jun 2025 10:40:47 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSfjI-000M1Q-0R;
-	Fri, 20 Jun 2025 17:40:44 +0000
-Date: Sat, 21 Jun 2025 01:40:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>
-Cc: oe-kbuild-all@lists.linux.dev, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
-	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
- SCMI_SYSPOWER_IDLE in pm resume
-Message-ID: <202506210114.2Ix0TkA0-lkp@intel.com>
-References: <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
+   d="scan'208";a="151514115"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 20 Jun 2025 10:42:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 4B1EE109; Fri, 20 Jun 2025 20:42:00 +0300 (EEST)
+Date: Fri, 20 Jun 2025 20:42:00 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv6 04/16] x86/efi: Move runtime service initialization to
+ arch/x86
+Message-ID: <aqkhzspx6bh7u6gkxkgp7ih3onk27rot7ojwvwvsk6c7zv4ror@ilbd7wt56jxi>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-5-kirill.shutemov@linux.intel.com>
+ <ba766193-e344-4def-84fd-f366872a2ee0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,48 +86,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
+In-Reply-To: <ba766193-e344-4def-84fd-f366872a2ee0@intel.com>
 
-Hi Peng,
+On Fri, Jun 20, 2025 at 08:35:14AM -0700, Dave Hansen wrote:
+> On 6/20/25 06:53, Kirill A. Shutemov wrote:
+> > From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > 
+> > The EFI call in start_kernel() is guarded by #ifdef CONFIG_X86. Move
+> > the thing to the arch_cpu_finalize_init() path on x86 and get rid of
+> > the #ifdef in start_kernel().
+> 
+> What does this have to do with LASS?
 
-kernel test robot noticed the following build warnings:
+It is required to move CR pinning below it and allow to disable CR4.LASS
+temporarily during EFI initialization.
 
-[auto build test WARNING on 4325743c7e209ae7845293679a4de94b969f2bef]
+> Is there any reason not to just pull this in to tip now as a cleanup? It
+> looks good regardless of what it does to LASS.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Peng-Fan-OSS/firmware-arm_scmi-bus-Add-pm-ops/20250620-114042
-base:   4325743c7e209ae7845293679a4de94b969f2bef
-patch link:    https://lore.kernel.org/r/20250620-scmi-pm-v1-2-c2f02cae5122%40nxp.com
-patch subject: [PATCH 2/2] firmware: arm_scmi: power_control: Set SCMI_SYSPOWER_IDLE in pm resume
-config: arm-randconfig-002-20250621 (https://download.01.org/0day-ci/archive/20250621/202506210114.2Ix0TkA0-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210114.2Ix0TkA0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506210114.2Ix0TkA0-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/firmware/arm_scmi/scmi_power_control.c:363:12: warning: 'scmi_system_power_resume' defined but not used [-Wunused-function]
-     363 | static int scmi_system_power_resume(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/scmi_system_power_resume +363 drivers/firmware/arm_scmi/scmi_power_control.c
-
-   362	
- > 363	static int scmi_system_power_resume(struct device *dev)
-   364	{
-   365	
-   366		struct scmi_syspower_conf *sc = dev_get_drvdata(dev);
-   367	
-   368		sc->state = SCMI_SYSPOWER_IDLE;
-   369	
-   370		return 0;
-   371	}
-   372	
+I am totally fine with applying it right away.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Kiryl Shutsemau / Kirill A. Shutemov
