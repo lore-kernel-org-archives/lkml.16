@@ -1,156 +1,145 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E5523507E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219702367DF
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406803; cv=none; b=eGNiO9rHnM34Bnv7/JbZdiVzupfx6mIHrO2pg7VlF/kv2BnwULyiAC2sSytxF4S0cUOTA+TVFqf/wzQzi5dUzVvm4aOgm8GHIf9DAVEv1DznHJe879Dut5JZwT3eND+ogyvpdwkM9NbDdZLu2sCviRG3Q95Z1HOvF2N9csLSSak=
+	t=1750406806; cv=none; b=b5LU51242XBQVGoeZA5QjsOIiGPaYBgnjXLpv4wGWJOfC0HrrQXKmdvaVEqBjFrYgfwTMh1v5s7cOD8MJapeSumCe7eeUMXrGJzxCkeERobUCzv1nz50xwk2pPntWbx31dO+8eYZ5aItlxQ+ph93//1ZUkKqEL9IwWPnSLFhxk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406803; c=relaxed/simple;
-	bh=bPOWhIvLpETLw9/fZPa9WPnf/zgDPVp1QOoej1cOWdQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QIHCv503CiU/M44DdlrHo/7ONjnDCcSVJpa9AlKIIpVsTco2tClZKwCD563TbXSvXFEJRoGbDUUhXZMp7CV+eWMW2GRxbKlwVhKfjvNiEUKQamYf9fgCTkWiAR9H/hKlFpF3N/UpRj+a2lZbR2sXhNz4kYvy29PALdxYG79+kes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Uifo7LYg; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1750406806; c=relaxed/simple;
+	bh=4t9se+4GUix+8DnOgFg98/XTY58guVYeePGBKqOYJXQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rPMS8Cx4qwcQjhcQH9dWVxHT8OpCWYvOiKxmP+vuv1ogE4gWGsKmVjrsW/1aqBXs17n0UQ+tRsgj3YbGuL5dVFGzkN605CM+h3WjRV0xItUbS5pinTkTtdl6YZRVWIdFdtfhorGb3V3yXG21R7iQSJygS1v5kyOzR76afTPkgGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aNplW2s6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rDHQbiQz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aNplW2s6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rDHQbiQz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Uifo7LYg"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45362b7adc9so5608615e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1750406799; x=1751011599; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LaH9Kr0KBdWEdHexAhzixmWuUEOjZiRLNEaItTOC7wo=;
-        b=Uifo7LYg7U4uUXzlfVqZN2OqT57KqPIRsgyW5rdH55ljBjrBtWhd5SgJV5bFAMp/Ui
-         qoId43A+2Gb1eWhOzh0kjlkFqhYDK33sevCf0jfvmZ9P8IgwOgfThJHoyXPsQDc98j/4
-         89aj+m74ZG0LuL311pgCYc4OHhOytuFCKWAoY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750406799; x=1751011599;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LaH9Kr0KBdWEdHexAhzixmWuUEOjZiRLNEaItTOC7wo=;
-        b=tw/+ApNcD8aRaZABOTgJlRz0LK6I4d3v+apfJAZOmyRZXY8DiW3rUF6o9oZBHwhKwj
-         IAKu/CPDS9AADuwCrFgtC9fWdZiRNsG70NIwQowuzno5VNJptXSl9n4+d4JShq8UkIlR
-         ZGLbO/pKfRolloje+tVUxkC1A3XYSb36mtCebTXM5V3Yh7/ccaPO4+0krKYtJl+eoVha
-         ffFizc/T1W3zdQzDx2OizfXfEeMty8DZVz48SR8czpQZSRoZnCkeogiaAIaawuHPaAXF
-         0qzxLlKEC8fyHhDT0O9v6hq9YJYMo7Gt7QWxQ5dFzUj2TaHlpA7m19Tw3F2CxCFr1NHl
-         OUJQ==
-X-Gm-Message-State: AOJu0YyHQXVG3CHNugq0HtQBEjykuiUW2PwsR2feH3WdPJ/4xlPqSysq
-	nEbxMGrIdJGysLHXC1jd7OKuag91HX8p8PkJSnWleIMj3+5fBBBUqUSujQYM8myi/C6HxlrcsRc
-	yCbSg
-X-Gm-Gg: ASbGncvxp7ERNhasNWDLJuRx8f3aAYOuDq74QPK2iGmYoLU5B54rUmkV6k5PxhGWlc0
-	FVLMbAtxu4esNlIJP4/jimsjj4UC1MqyvJ6LeVhcE4xDczbOMTnEnwCoI379QMZREp7ekfPJHfg
-	lTCyTlQvxWmryTqIkCRSUVFQTlyfAmj2YzXueWfOZP+V6thPoEzqbYxchoZESPsI9m+P7UuElqC
-	7ddxQLZ1kS1uzFchEFwQDX4hbgWpL1kcM/nNnUIvLxvUMG1MnINeuTVlhJbTLWfouqTLi3KhFlq
-	d12p0qBprbAyi8QN4RoezDAzQYcQSF6KCrJmMoNb3kSnzg4mcYbD/xnqBI6x/z9av75VmfajB9I
-	dbdjiF2pBZ8i3RcsmRlb1GQloE2Yynwql8zr1cUFmIpMGJAtDnFiR
-X-Google-Smtp-Source: AGHT+IH7fwkHJC3cXXyAdVYkYDzLjEdQXHbS11KLEXj8zNWxo6QfxaTajDmFHgq5T93JnBlRG9Likg==
-X-Received: by 2002:a05:600c:c105:b0:453:60c8:f0e6 with SMTP id 5b1f17b1804b1-45365e42d77mr9268105e9.2.1750406799284;
-        Fri, 20 Jun 2025 01:06:39 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.43.224])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebd02basm50137905e9.39.2025.06.20.01.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 01:06:38 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: michael@amarulasolutions.com,
-	linux-amarula@amarulasolutions.com,
-	Frank Li <Frank.Li@nxp.com>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 5/5] ARM: mxs_defconfig: select new drivers used by imx28-amarula-rmm
-Date: Fri, 20 Jun 2025 10:06:21 +0200
-Message-ID: <20250620080626.3580397-6-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620080626.3580397-1-dario.binacchi@amarulasolutions.com>
-References: <20250620080626.3580397-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aNplW2s6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rDHQbiQz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aNplW2s6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rDHQbiQz"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E9681F390;
+	Fri, 20 Jun 2025 08:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750406803; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2vl7c5sv3NqD4IdivEfc/qb7/IiFjcb96vcadE1Y50=;
+	b=aNplW2s69+BV0ebHWqAThFwN+WOsrOuRUQcE0Tfd2jUVYjCVxw+0yX3ffR8COQnG4+5B9Z
+	WY78UjRjp6e51t55uoeV2x4PCETqM3ZXoaout/tWFJH1mvwqCrAL5xulIv45QRpjH32c/b
+	vyyCnpxCyOi8l9gLBY+q1v14/usCf8M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750406803;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2vl7c5sv3NqD4IdivEfc/qb7/IiFjcb96vcadE1Y50=;
+	b=rDHQbiQzMDpcv4s+xEaZjnjJYnhEpI+fN7CQNeOTlO3HcmYQobbmP+ccppt8tO2s2nBfNB
+	oyJc++kMmb8b6/AA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aNplW2s6;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rDHQbiQz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750406803; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2vl7c5sv3NqD4IdivEfc/qb7/IiFjcb96vcadE1Y50=;
+	b=aNplW2s69+BV0ebHWqAThFwN+WOsrOuRUQcE0Tfd2jUVYjCVxw+0yX3ffR8COQnG4+5B9Z
+	WY78UjRjp6e51t55uoeV2x4PCETqM3ZXoaout/tWFJH1mvwqCrAL5xulIv45QRpjH32c/b
+	vyyCnpxCyOi8l9gLBY+q1v14/usCf8M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750406803;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2vl7c5sv3NqD4IdivEfc/qb7/IiFjcb96vcadE1Y50=;
+	b=rDHQbiQzMDpcv4s+xEaZjnjJYnhEpI+fN7CQNeOTlO3HcmYQobbmP+ccppt8tO2s2nBfNB
+	oyJc++kMmb8b6/AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB38913736;
+	Fri, 20 Jun 2025 08:06:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2c41OJIWVWgsWgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 08:06:42 +0000
+Date: Fri, 20 Jun 2025 10:06:42 +0200
+Message-ID: <87qzzex2el.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: aloop: Replace deprecated strcpy() with strscpy()
+In-Reply-To: <20250618223844.1458-2-thorsten.blum@linux.dev>
+References: <20250618223844.1458-2-thorsten.blum@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 4E9681F390
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[perex.cz,suse.com,linutronix.de,kernel.org,renesas.com,gmail.com,suse.de,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid]
+X-Spam-Score: -2.01
+X-Spam-Level: 
 
-Select the options required by the imx28-amarula-rmm board.
+On Thu, 19 Jun 2025 00:38:43 +0200,
+Thorsten Blum wrote:
+> 
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Applied now.  Thanks.
 
----
 
-Changes in v6:
-- Drop [PATCH v5 1/6] "dt-bindings: mfd: convert mxs-lradc bindings
-  to json-schema" because applied by Lee Jones.
-
-Changes in v5:
-- In mxs-lradc.txt:
-  - Fix deacription formating
-- In imx28-amarula-rmm.dts:
-  - Drop #address-cells from gpmi node
-
-Changes in v4:
-- In mxs-lradc.txt:
-  - Fix typo Low-Resoulution -> Low-Resolution'
-  - Wrap lines at 80 char.
-  - Drop '|' from the description
-  - Describe what each interrupt is for.
-  - Move touchscreen-wires constraint for imx28 to the top level
-- In imx28-amarula-rmm.dts:
-  - Drop label property (deprecated) under the leds sub-nodes.
-  - Add microSD comment above the ssp0 node.
-- Add patch 5/6 "ARM: mxs_defconfig: Cleanup mxs_defconfig"
-- Add patch 6/6 "ARM: mxs_defconfig: select new drivers used by
-  imx28-amarula-rmm"
-
-Changes in v3:
-- In imx28-amarula-rmm.dts:
-  - Drop xceiver-supply property from can0 node.
-  - Rearrange the order of specific nodes and properties
-    alphabetically.
-
-Changes in v2:
-- In imx28-amarula-rmm.dts:
-  - Replace '-' with '@' for the pinctrl sub-nodes.
-  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
-  - Drop LCD reset hog pin.
-  - Add correct #address-cells and #size-cells to gpmi node.
-  - Replace edt-ft5x06@38 with touchscreen@38.
-- Drop from commit messages all references to LCD display.
-- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
-  json-schema".
-
- arch/arm/configs/mxs_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index 91723fdd3c04..3b08c63b6de4 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -64,8 +64,11 @@ CONFIG_INPUT_EVDEV=y
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
- CONFIG_INPUT_TOUCHSCREEN=y
-+CONFIG_TOUCHSCREEN_EDT_FT5X06=y
- CONFIG_TOUCHSCREEN_MXS_LRADC=y
- CONFIG_TOUCHSCREEN_TSC2007=m
-+CONFIG_INPUT_MISC=y
-+CONFIG_INPUT_PWM_BEEPER=y
- # CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_AMBA_PL011=y
--- 
-2.43.0
-
+Takashi
