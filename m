@@ -1,114 +1,227 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7BF30E82C
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ED535950;
+	Fri, 20 Jun 2025 01:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750382243; cv=none; b=oaNh6ifultwVTI32MOw+fmeEqbGpWjacXp3esRWaGdHL23ju7JlY7KPxklaaei3nA4863MHhzHjI5spAVrHZuciBNqoC6WKQMEsUPADG9XuXprqqo8qLJCEvLsxjOrwXy8smtZA26kELwlO/rWPEGHdTSa0fQdQWktZcH6yAmH4=
+	t=1750382466; cv=none; b=Ew2FDWaDxWBxdwyDL1dQfFJRWY3XcWF/FPdi3VUGfapMxobb1cGLgGcazW5orQ2IscE8AUr/nDsuDLgdx+PNUqfrPGyTlC6/osV5gYhJOf89tEjEXGrAGzmpJ5rwtrVZ4SFSyIzeFqRSRWCSqks97Ox3nDNdn5TRNCZhxtToTwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750382243; c=relaxed/simple;
-	bh=X23QSIwegBE8G7bURwdV+f5iHUK/4f41ONT6pBASI3Y=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=WOrqHsMx84Yk/9LWyLBB9klSSeoeEsyyQAVxG8AfolOigeEbyS8djJp5QQU9jnJLh3rSbymu2/uth/hkaBo5KEFYaCkvWDrNKFUMaEdaLJUja61FuzgE+ZXeDSYIP/VF4eYuCVLtLJGVVdsEP4RwxWXykWKEGb8tgPGCdj96p1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=RtKiqCHH; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+	s=arc-20240116; t=1750382466; c=relaxed/simple;
+	bh=7zVvybjqSFfS+Z9K61ba+IQ8a9OcQvv3itypzSUbN4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MvoEx6C7XLL64IXTxwdXQvJNWKv01DbppneT7xLT3xcDpqHoCM7q3eEu/axHmFBDxQpZpXAO/CwboMrXQL9r0txywONiymrjRlYIWvmcj6owxc3DQOsmeiWR3LxKhCnf6VZ1McovwUxnF7m+sQKAADdJBcSgRweP2fUhg7wmNXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qj0hDI5h; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="RtKiqCHH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1750382189;
-	bh=Hk4LQge5dZN0PKJMnUNEwLr8KrYB0N4+j6gEFlg+Ep0=;
-	h=From:To:Subject:Date:Message-Id;
-	b=RtKiqCHHuEglrNVUQZQjWZQDz7lv7WmFziwNVDV/KuUBAXqpkj61PVXwxuz+Mutyw
-	 z2ZEy98zeKxZEXuRXM3sBAiutTQjcBON5o0PDJijZJv2OeYPWqN9HcOhzd8/HsbU+P
-	 AEGGzv7UKkqLbin2mIL/aISwmlQD/XVRdH+UrUbA=
-X-QQ-mid: esmtpgz12t1750382187t7a3389cc
-X-QQ-Originating-IP: sQXtZrTrRWkPHpCLRXEKYqYrB1xzMxgT06FWXQbhkTQ=
-Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 20 Jun 2025 09:16:25 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7161152192131492949
-From: Chaoyi Chen <kernel@airkyi.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>
-Subject: [PATCH RESEND] drm/bridge-connector: Fix bridge in drm_connector_hdmi_audio_init()
-Date: Fri, 20 Jun 2025 09:16:16 +0800
-Message-Id: <20250620011616.118-1-kernel@airkyi.com>
-X-Mailer: git-send-email 2.17.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MxdW4jxL6NvXQoGjJXfegqa9j77uCv7romqb6bzpxIiwh+0rKaCybytc
-	ez9ZCzwsFdfVyIcPUddTNoLQUzdZY+IQU0+rhvzrqBwut3qLiTARk5+WuKuESb4j03KmGkC
-	NdAQ2Fix5NQrJxqUMRrVnRPbXHLD6ReAiIVRv3AkhdFMWmMY5p+HNZF10tNlusCN8MX8jrn
-	ve8CzKrSybEj/ju+Pl4f+NENXYoyfvyAJ0lrqqFZ+u3uQyEYZAQou/LsXifrgC/l2+LJHOx
-	7L7RbcIDcPJ8aJO38WnZJCkGzLHDNO45oWgpFOUanA/UjNKJIx88zY+XtSSFrqLDBzd4bDq
-	KLkCjLVJB5xx9O7hwTK9tN5kfa3WdumkDg74sPMbWyJ2xxhxprcUrQDER+lS7SG7a5rAmzD
-	gPxQSP3IpaUSLHeIyW+Ny1fm1wnyyrcf4z4c3zBcU58W7XdCC9wbDs6AX0hDRYI2Q3ysj8B
-	twBkTnC180Bxv1HJGB8Nx/5LsH6roBxsJmeah5ghtks7w/QR+4/LURMQMoW21iuLjMBL/82
-	zy6Aecfuw4KVHCAIjtkPF4fkhnXR2kP1odKGFPCU/v55xUgeEzdNs8Y4VUt7Yfp3MfK0QV0
-	/Up3G4bmu7H/4QyLVSncYtfzoN0Unkg/jletPmirWtUbdfJnuNWNbclzWXLYt59BBVhxlSz
-	Fm8JIkbrlYtJbfrwTjcIGl0xmxxnSKo3FSNsGEuilHHNOI3QYvY1rwivS2pRPUEdP2qOL6U
-	Fn7HGsZKBNXtNPevRln7rYXVhJ95w/ipyTXJHUnYNTqJXxLm5OY7vtGbnNJrHER2TkfbQ3C
-	8Psxgi8fmytvNz/m+PmI5jj8FaDDY4Gcj4LKJ0QjyxN/xsvr1V5M1v4BXfm4ifmw7eJ+0di
-	vCaXS4mXhEvTKEuX3uBxM3Xij5wTkh2jgdSRspS13at4S9LQX2W/2/jwtDhHtlJkVB8WNWt
-	oKD+WfibHMUw1VybJHVDAQsHx
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qj0hDI5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750382464; x=1781918464;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7zVvybjqSFfS+Z9K61ba+IQ8a9OcQvv3itypzSUbN4o=;
+  b=Qj0hDI5hEibpyPd5ZhZCY79aruZ0z0AR07daOrPJJDiY4svsCaf6Bqsu
+   hzEvK/5IRmLS7oB2HTn+zIGzAnRrRgMSlVQud84x2djKa4kE0oVPBlFjy
+   iO5ALlAFo97teTsgZnElSdmkDwNdXtkjA2SEuOC0WH4Z4EDayTFuiV+m3
+   T6eCVMGQddW9JXPiFrG6gDrqtH6Gft8mu8+6XMH8Hk72edPo0VpjOFrze
+   zOTcuWahxw3FrNoVtdP87TeyX8pzAfWaeIsJybrK5TNTKzevGV6Bcb4sD
+   /knwItYgnPMtGT5IDdTWr63bZx/O+vNXoULGpkdrnKpeDaDfmtLaqNdaU
+   g==;
+X-CSE-ConnectionGUID: YU7Zu6qWTUeqqTWL54/hzw==
+X-CSE-MsgGUID: RiKE7o3IS5anr+9mzn/IqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52605675"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="52605675"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 18:21:03 -0700
+X-CSE-ConnectionGUID: 8erNCieqRBK2kxgCMCZKLQ==
+X-CSE-MsgGUID: W84Lfdy6QAOxCXWnNdFBiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="150911071"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 18:20:58 -0700
+Message-ID: <cc443335-442d-4ed0-aa01-a6bf5c27b39c@intel.com>
+Date: Fri, 20 Jun 2025 09:20:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, seanjc@google.com
+Cc: rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
+ reinette.chatre@intel.com, tony.lindgren@intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com,
+ mikko.ylinen@linux.intel.com, kirill.shutemov@intel.com,
+ jiewen.yao@intel.com, binbin.wu@linux.intel.com
+References: <20250619180159.187358-1-pbonzini@redhat.com>
+ <20250619180159.187358-4-pbonzini@redhat.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250619180159.187358-4-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
+> From: Binbin Wu <binbin.wu@linux.intel.com>
+> 
+> Exit to userspace for TDG.VP.VMCALL<GetTdVmCallInfo> via KVM_EXIT_TDX,
+> to allow userspace to provide information about the support of
+> TDVMCALLs when r12 is 1 for the TDVMCALLs beyond the GHCI base API.
+> 
+> GHCI spec defines the GHCI base TDVMCALLs: <GetTdVmCallInfo>, <MapGPA>,
+> <ReportFatalError>, <Instruction.CPUID>, <#VE.RequestMMIO>,
+> <Instruction.HLT>, <Instruction.IO>, <Instruction.RDMSR> and
+> <Instruction.WRMSR>. They must be supported by VMM to support TDX guests.
+> 
+> For GetTdVmCallInfo
+> - When leaf (r12) to enumerate TDVMCALL functionality is set to 0,
+>    successful execution indicates all GHCI base TDVMCALLs listed above are
+>    supported.
+> 
+>    Update the KVM TDX document with the set of the GHCI base APIs.
+> 
+> - When leaf (r12) to enumerate TDVMCALL functionality is set to 1, it
+>    indicates the TDX guest is querying the supported TDVMCALLs beyond
+>    the GHCI base TDVMCALLs.
+>    Exit to userspace to let userspace set the TDVMCALL sub-function bit(s)
+>    accordingly to the leaf outputs.  KVM could set the TDVMCALL bit(s)
+>    supported by itself when the TDVMCALLs don't need support from userspace
+>    after returning from userspace and before entering guest. Currently, no
+>    such TDVMCALLs implemented, KVM just sets the values returned from
+>    userspace.
+> 
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
+> [Adjust userspace API. - Paolo]
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   Documentation/virt/kvm/api.rst | 15 +++++++++++++-
+>   arch/x86/kvm/vmx/tdx.c         | 38 ++++++++++++++++++++++++++++++----
+>   include/uapi/linux/kvm.h       |  5 +++++
+>   3 files changed, 53 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 3643d853a634..2b1656907356 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -7190,6 +7190,11 @@ The valid value for 'flags' is:
+>   					u64 gpa;
+>   					u64 size;
+>   				} get_quote;
+> +				struct {
+> +					u64 ret;
+> +					u64 leaf;
+> +					u64 r11, r12, r13, r14;
+> +				} get_tdvmcall_info;
+>   			};
+>   		} tdx;
+> 
+> @@ -7216,9 +7221,17 @@ queued successfully, the TDX guest can poll the status field in the
+>   shared-memory area to check whether the Quote generation is completed or
+>   not. When completed, the generated Quote is returned via the same buffer.
+>   
+> +* ``TDVMCALL_GET_TD_VM_CALL_INFO``: the guest has requested the support
+> +status of TDVMCALLs.  The output values for the given leaf should be
+> +placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
+> +field of the union.  This TDVMCALL must succeed, therefore KVM leaves
+> +``ret`` equal to ``TDVMCALL_STATUS_SUCCESS`` and ``r11`` to ``r14``
+> +equal to zero on entry.
+> +
+>   KVM may add support for more values in the future that may cause a userspace
+>   exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
+> -it will enter with output fields already valid; in the common case, the
+> +it will enter with output fields already valid as mentioned for
+> +``TDVMCALL_GET_TD_VM_CALL_INFO`` above; in the common case, the
+>   ``unknown.ret`` field of the union will be ``TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED``.
+>   Userspace need not do anything if it does not wish to support a TDVMCALL.
+>   ::
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 6878a76069f8..5804d1b1ea0e 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -1451,18 +1451,49 @@ static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
+>   	return 1;
+>   }
+>   
+> +static int tdx_complete_get_td_vm_call_info(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> +
+> +	tdvmcall_set_return_code(vcpu, vcpu->run->tdx.get_tdvmcall_info.ret);
+> +
+> +	/*
+> +	 * For now, there is no TDVMCALL beyond GHCI base API supported by KVM
+> +	 * directly without the support from userspace, just set the value
+> +	 * returned from userspace.
+> +	 */
+> +	tdx->vp_enter_args.r11 = vcpu->run->tdx.get_tdvmcall_info.r11;
+> +	tdx->vp_enter_args.r12 = vcpu->run->tdx.get_tdvmcall_info.r12;
+> +	tdx->vp_enter_args.r13 = vcpu->run->tdx.get_tdvmcall_info.r13;
+> +	tdx->vp_enter_args.r14 = vcpu->run->tdx.get_tdvmcall_info.r14;
+> +
+> +	return 1;
+> +}
+> +
+>   static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vcpu_tdx *tdx = to_tdx(vcpu);
+>   
+> -	if (tdx->vp_enter_args.r12)
+> -		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
+> -	else {
+> +	switch (tdx->vp_enter_args.r12) {
+> +	case 1:
+> +		vcpu->run->tdx.get_tdvmcall_info.leaf = tdx->vp_enter_args.r12;
+> +		vcpu->run->exit_reason = KVM_EXIT_TDX;
+> +		vcpu->run->tdx.flags = 0;
+> +		vcpu->run->tdx.nr = TDVMCALL_GET_TD_VM_CALL_INFO;
+> +		vcpu->run->tdx.get_tdvmcall_info.ret = TDVMCALL_STATUS_SUCCESS;
+> +		vcpu->run->tdx.get_tdvmcall_info.r11 = 0;
+> +		vcpu->run->tdx.get_tdvmcall_info.r12 = 0;
+> +		vcpu->run->tdx.get_tdvmcall_info.r13 = 0;
+> +		vcpu->run->tdx.get_tdvmcall_info.r14 = 0;
+> +		vcpu->arch.complete_userspace_io = tdx_complete_get_td_vm_call_info;
+> +		return 0;
+> +	default:
+>   		tdx->vp_enter_args.r11 = 0;
+> +		tdx->vp_enter_args.r12 = 0;
+>   		tdx->vp_enter_args.r13 = 0;
+>   		tdx->vp_enter_args.r14 = 0;
+> +		return 1;
 
-The bridge used in drm_connector_hdmi_audio_init() does not correctly
-point to the required audio bridge, which lead to incorrect audio
-configuration input.
+Though it looks OK to return all-0 for r12 == 0 and undefined case of 
+r12 > 1, I prefer returning TDVMCALL_STATUS_INVALID_OPERAND for 
+undefined case.
 
-Fixes: 231adeda9f67 ("drm/bridge-connector: hook DisplayPort audio support")
-Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
----
- drivers/gpu/drm/display/drm_bridge_connector.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+So please make above "case 0:", and make the "default:" return 
+TDVMCALL_STATUS_INVALID_OPERAND
 
-diff --git a/drivers/gpu/drm/display/drm_bridge_connector.c b/drivers/gpu/drm/display/drm_bridge_connector.c
-index 7d2e499ea5de..262e93e07a28 100644
---- a/drivers/gpu/drm/display/drm_bridge_connector.c
-+++ b/drivers/gpu/drm/display/drm_bridge_connector.c
-@@ -708,11 +708,14 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
- 	if (bridge_connector->bridge_hdmi_audio ||
- 	    bridge_connector->bridge_dp_audio) {
- 		struct device *dev;
-+		struct drm_bridge *bridge;
- 
- 		if (bridge_connector->bridge_hdmi_audio)
--			dev = bridge_connector->bridge_hdmi_audio->hdmi_audio_dev;
-+			bridge = bridge_connector->bridge_hdmi_audio;
- 		else
--			dev = bridge_connector->bridge_dp_audio->hdmi_audio_dev;
-+			bridge = bridge_connector->bridge_dp_audio;
-+
-+		dev = bridge->hdmi_audio_dev;
- 
- 		ret = drm_connector_hdmi_audio_init(connector, dev,
- 						    &drm_bridge_connector_hdmi_audio_funcs,
--- 
-2.49.0
-
+>   	}
+> -	return 1;
+>   }
+>   
+>   static int tdx_complete_simple(struct kvm_vcpu *vcpu)
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 6708bc88ae69..fb3b4cd8d662 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -461,6 +461,11 @@ struct kvm_run {
+>   					__u64 gpa;
+>   					__u64 size;
+>   				} get_quote;
+> +				struct {
+> +					__u64 ret;
+> +					__u64 leaf;
+> +					__u64 r11, r12, r13, r14;
+> +				} get_tdvmcall_info;
+>   			};
+>   		} tdx;
+>   		/* Fix the size of the union. */
 
