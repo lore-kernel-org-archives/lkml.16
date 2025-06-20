@@ -1,86 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFD221C17D;
-	Fri, 20 Jun 2025 12:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D4728368A;
+	Fri, 20 Jun 2025 12:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423673; cv=none; b=pWql/43phXz6ww727aqIcrHA+4VKmqpniwEr06irPo9ESWabF9hu8eXmoU1NuRpduF93/8vVc3RXoTCcSE9Z92HzdOdYIHR5ALrqmxywC4t1Ol1kK9kNb+oDyu1Htl3EhLjurUCBDekJx/C/Foh8S3+NyqHAeWSoNsRn6ZT5LDE=
+	t=1750423727; cv=none; b=YgeObSjTQ5CKokacYB0bdRMjzrPZF+VaX/qgLk29CDJJCxnYSmgGNSj1iQgyr2SjYLGYOHup5C6avNN7ZrOv9Mg8RptKq682EH1qs2dt5FR4p20wFZK0k/S9B3IS7ByquUKvy8MfdUMlbEq0NMZoNEm3iV47x1i4AHw1scB0Nr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423673; c=relaxed/simple;
-	bh=PohVpKV1EcWKh5h1vwR17he9CFGObdq89GBQaGriu4M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ewXq3UdSzFR+nUF44NhaIpmB5Yq4odV3+Np2cBitdDcUtsGBvCMK5mohrQheWynsI99rvIzHhHZciKnNKWggLTgeN5iyBPwLVFZrjbiMFY0WVfVjERLpLRcuknYhghiK1UggaJOOIhBktduPwBnZzTbmq6gsXFJYCqvLl6xlzxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYQCReGR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750423727; c=relaxed/simple;
+	bh=yVaxpPeFFP3rnQCIorHxvbBAoiiYM3mlDcF3kA5KISI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A81cWTxvH1YPDFdwyTa7ASDiXAq6BPWZq4bolQp/EDMEUmnLWdLYhy2+AWIb0AGgR+xlKQ3g+Jv+FS2/cGJW56nXu8vwtywlm11LvRUTHP6xEP6TfaLRkcoqZRUwU1lEajufF6Ow+8EWP2GUtIpnNyo8jxYmh0ChqDZlFOEp2Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XGU28bMd; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYQCReGR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5991C4CEE3;
-	Fri, 20 Jun 2025 12:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750423673;
-	bh=PohVpKV1EcWKh5h1vwR17he9CFGObdq89GBQaGriu4M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YYQCReGRiY4bge2iScXEUhsyAwUA9zO30x+YLAZPrOw5ZXaXBYK7YdgNyiK7I7YMQ
-	 3lm/LWDFqRwcJ5U5Nb6uZcwYxghT3T+K7UkaUq7zVKw3XmQc/ngnzoSaMtqdJsqhjE
-	 TZb2O2acTpYm80M6MEaGtebmYBqavX9lYPPdU7p+D5z+SL5dc8jQI4eKf/m5LFeJxI
-	 3+KfojPvF2NP/q3rVmjlJaYcuNk41lp6TCCl+qKNHRSqXL0lUGNLZ+XtnRbt9ffU56
-	 UVWnbFFldiVaUUkqP+/nVqRQSisNR0qtfcft5qdPBi60WHAXGHW9AUSbIHZhH1+uC5
-	 IGv6JYbx9zZZg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Stephen Boyd <swboyd@chromium.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm/dp: include linux/io.h
-Date: Fri, 20 Jun 2025 14:47:43 +0200
-Message-Id: <20250620124747.1928114-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XGU28bMd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750423726; x=1781959726;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yVaxpPeFFP3rnQCIorHxvbBAoiiYM3mlDcF3kA5KISI=;
+  b=XGU28bMdhwZA2zwJF+8tgZ7kDn2eei16QzafYMPBxpaERO/XNWa3KNOa
+   mOX2UiMxwTlDKi1qD0XRUIaSz1pew9E4YRGcX2sNWupCoOHdQwhPHAnxw
+   JWaZt9QJ69B8VN48QjcRjOuYAcvbncCSK4xfkMaonrtOsks9NGhXHsocC
+   R0SDfjkaouHzQdxibocvhxjmU+UMm1I50Cf7Gu201Hmiw4r6TUuoN0KGe
+   XX6/N5cMvTCgKyvfajmKMWjYor5xNuxlKfPtT8CNNLNoafvCEbOFswn1I
+   hFvlDzf6ja/HdFi1omOBZMY5RgNTiWaLF7tK8cE2RTmacTfJjZI8Av13T
+   w==;
+X-CSE-ConnectionGUID: e7rT/RTjTTuVo4xi/uNUfA==
+X-CSE-MsgGUID: OkciWRStTyWQ0V81T3LQTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="75216094"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="75216094"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:48:46 -0700
+X-CSE-ConnectionGUID: GqSOpAUeQdGVI6bfIkq+Dg==
+X-CSE-MsgGUID: IXp2ib+DRKaj7ZWXPIsPmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="155195275"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:48:42 -0700
+Message-ID: <b003b2c8-66fc-4600-9873-aa5201415b94@intel.com>
+Date: Fri, 20 Jun 2025 20:48:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Kernel Mailing List, Linux" <linux-kernel@vger.kernel.org>,
+ kvm <kvm@vger.kernel.org>, Sean Christopherson <seanjc@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, "Huang, Kai"
+ <kai.huang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ reinette.chatre@intel.com, "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>, Yan Zhao
+ <yan.y.zhao@intel.com>, mikko.ylinen@linux.intel.com,
+ "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+ "Yao, Jiewen" <jiewen.yao@intel.com>, Binbin Wu <binbin.wu@linux.intel.com>
+References: <20250619180159.187358-1-pbonzini@redhat.com>
+ <3133d5e9-18d3-499a-a24d-170be7fb8357@intel.com>
+ <CABgObfaN=tcx=_38HnnPfE0_a+jRdk_UPdZT6rVgCTSNLEuLUw@mail.gmail.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <CABgObfaN=tcx=_38HnnPfE0_a+jRdk_UPdZT6rVgCTSNLEuLUw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 6/20/2025 8:03 PM, Paolo Bonzini wrote:
+> Il ven 20 giu 2025, 03:30 Xiaoyao Li <xiaoyao.li@intel.com> ha scritto:
+>>
+>> On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
+>>> This is a refresh of Binbin's patches with a change to the userspace
+>>> API.  I am consolidating everything into a single KVM_EXIT_TDX and
+>>> adding to the contract that userspace is free to ignore it *except*
+>>> for having to reenter the guest with KVM_RUN.
+>>>
+>>> If in the future this does not work, it should be possible to introduce
+>>> an opt-in interface.  Hopefully that will not be necessary.
+>>
+>> For <GetTdVmCallInfo> exit, I think KVM still needs to report which
+>> TDVMCALL leaf will exit to userspace, to differentiate between different
+>> KVMs.
+> 
+> 
+> The interface I chose is that KVM always exits, but it initializes the
+> output values such that userspace can leave them untouched for unknown
+> TDVMCALLs or unknown leaves. So there is no need for this.
+> 
+> Querying kernel support of other services can be added later, but
+> unless the GHCI adds more input or output fields to TdVmCallInfo there
+> is no need to limit the userspace exit to leaf 1.
 
-The driver started using readl/writel, which are defined in linux/io.h,
-so this needs to be included here:
+I meant the case where KVM is going to support another optional TDVMCALL 
+leaf in the future, e.g., SetEventNotifyInterrupt. At that time, 
+userspace needs to differentiate between old KVM which only supports 
+<GetQuote> and new KVM which supports both <GetQuote> and 
+<SetEventNotifyInterrupt>.
 
-drivers/gpu/drm/msm/dp/dp_panel.c:33:9: error: call to undeclared function 'readl_relaxed'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   33 |         return readl_relaxed(panel->link_base + offset);
+- If it's old KVM, userspace should only set <GetQuote> bit in 
+GetTdVmCallInfo exit. If userspace sets <SetEventNotifyInterrupt> in 
+GetTdVmCallInfo exit and enumerate to TD guest, but it's wrong info 
+since the KVM doesn't support <SetEventNotifyInterrupt> and userspace 
+won't get any chance to handle the guest call of <SetEventNotifyInterrupt>
 
-Fixes: 9d47325ee063 ("drm/msm/dp: drop the msm_dp_catalog module")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/msm/dp/dp_panel.c | 1 +
- 1 file changed, 1 insertion(+)
+- But if it's new KVM, userspace can <SetEventNotifyInterrupt> bit in 
+GetTdVmCallInfo exit and enumerate to TD guest.
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
-index 489e39f6c0ac..ecd5d3665541 100644
---- a/drivers/gpu/drm/msm/dp/dp_panel.c
-+++ b/drivers/gpu/drm/msm/dp/dp_panel.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
-  */
-+#include <linux/io.h>
- 
- #include "dp_panel.h"
- #include "dp_reg.h"
--- 
-2.39.5
+Anyway, its the future problem, there should be various options to 
+handle it in the future. This series works for the current need.
+
+> 
+> Paolo
+> 
+>>
+>> But it's not a must for current <GetQuote> since it exits to userspace
+>> from day 0. So that we can leave the report interface until KVM needs to
+>> support user exit of another TDVMCALL leaf.
+>>
+>>> Paolo
+>>>
+>>> Binbin Wu (3):
+>>>     KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+>>>     KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+>>>     KVM: TDX: Exit to userspace for GetTdVmCallInfo
+>>>
+>>>    Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
+>>>    arch/x86/include/asm/shared/tdx.h |  1 +
+>>>    arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
+>>>    include/uapi/linux/kvm.h          | 22 +++++++++
+>>>    4 files changed, 154 insertions(+), 8 deletions(-)
+>>>
+>>
+> 
 
