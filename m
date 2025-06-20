@@ -1,115 +1,124 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDCB284B39;
-	Fri, 20 Jun 2025 13:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530241A28D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750426529; cv=none; b=uJ6H7mWH4GW4SK4ktk7yM8XnsaeChTaoW1pCuIyl1N5yVd3cZvptjOPaEW7zVzeY3XCz4O6oOqHQa37pumQA3Shr47BiweTZlHzJa5AwE15dOF7j2YZKXCyxXLwghXV6RAkq99AKerAAtmIQADmI3IVlVhcsqJlcKNlLUs+lqWo=
+	t=1750426628; cv=none; b=lVn4Oopxih7KJp1UPmG2ptQiBXHzJSprApfVJMDQUugfRI80tp5R31uklE8v3fOopQnUCbENafgubw/4I+GeVUKbsNL1uM7bTQtixJtD1j5kGSLpRKv1FItv/pceHjfbViZ6LL4WB7a1aaoG0efKm291r4YzXpEfK1cG1Cv+UGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750426529; c=relaxed/simple;
-	bh=tCnpOHv3HE8hDdGh8EQcA6cGVLk0vkjD3PAfi/luf1k=;
+	s=arc-20240116; t=1750426628; c=relaxed/simple;
+	bh=M0YT2iBaogn/DyTFdR1V9sCYLGYvYdijypQw0oPDd3E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BYDqmDC/4JDGzAfN0XGSM5q6td8ySuhikg/NqB/GwUXUqDkWf3scWoeNViAVoafcyO4bV+fdJ/M1OfTzbfTSY4iPC5fwlTBQdBG6m6eL5jzqf0eDOyLeoYk20H60MMBoyYyhvpU2T5WxjCxFMIVQcedaDsjoxrfGcRoB8MofKug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+790DtO; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=YdOHIc5znDrnfYwmwLXZrNxhPtS7qvPhXWqeC/1PjUSsEGF79x13pt5/TU8kwa6bEswjZrDjyuAKM0l4WwUhJs2986GTSjKqiSPoJipmIOFMAYO5+bAHpQiUxbOPz5o9XVDJmWkM14mrWdbrJkJQx308nzN3oQsrg9i2e17oc1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ci4zGjDF; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+790DtO"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2700de85d0so293041a12.2;
-        Fri, 20 Jun 2025 06:35:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ci4zGjDF"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5533303070cso1791787e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750426527; x=1751031327; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750426625; x=1751031425; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ciykJwNPy2VNieSQKGV5yGfXBWXTz3pnWQQit/GvIGg=;
-        b=l+790DtOGu+go5WFYPQFGE50/jMPemJ/d1mGMEL3FahOzxSACRKyzwj3iG+xQZeLIU
-         nTZPcD55DPCMRRF9RXscVjciLQIcQoU95uv2aHOIVa734vcvZ7M/fvN2qZa2Qj7Q9szc
-         96BqNjg9hZlikNPnd51xADygKJ3PavOSGh/youxbec8Zo0EOYWz27k7NkoqSN824eEBQ
-         ASFbHwWNtLInx0cuY5qWKI2xvIvIIWtGy4ubudCoy9mDAo11Fb0ga6nYYMl0btLyyZ5n
-         4kf20jxYevp7ZVbMRj71wNWQDTUa8ozLVnTCFqCKNvs0TqpiMx7VOfyGzsp+fd8LpPUV
-         n3dg==
+        bh=4aJt4fkup5IZNsrpvVhEKVipXbYCZJtOBbKMV7cDmJU=;
+        b=ci4zGjDFWHYuu0WmVl9fluwbbv4bE3t1sFzuIOyfRkehuAcoUZGUJxGMVSMMcKexJW
+         unnVOFcFe5J+nMU7ujtEflCPJtY1/W3PwYcLpfDYy6zATpZID/wdXvcp1GdQV2ZLedDK
+         7B45w58ZmPPlXVczKv5mG+UIx1sQO7luYxJH2AeymvpOuoohxY6knJoXJ2JIo2W05cxU
+         TsjtlMGYlwsiCv+p9lGnTIZLygFNNzaV3n0TBaywRiRlxnn3/PtAfQG+Viqcpy832DSM
+         jLt+X0nsyvlBz9S4lKp7KEk8HkIEbDsrEHoiv19C4+Q54SWDRfMshHMQ5KYQ/W9EULwj
+         kL+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750426527; x=1751031327;
+        d=1e100.net; s=20230601; t=1750426625; x=1751031425;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ciykJwNPy2VNieSQKGV5yGfXBWXTz3pnWQQit/GvIGg=;
-        b=CFn7a374FP9XaV+iVH/oRIKdrsexUBSBFOgDmxO6syXi2js0ugClu97FUK9g0r80VB
-         nQ9t+7M80Z/cA9OkGI9L4PRDcFQmZ35ez3OR6r8wtFSYV7oTK3Wi5+1oF8K9RwcXet5E
-         HFNPB/ugGjWr7fxdUicqy+4T97QELbkRyEWBZVCDwy8q0amtJO9aU9oN2nP+sAeGpDu3
-         QNeReQ0huHd8Pfm6nsWsg9XsPMpZu3XCVNuP/5GsylAe0cWtSfvm8HUIfCg3uIHON2xm
-         rrKvm2RxNGykX/mceYt7coYirhA8x8WuxEmkjP29jfuvrGFl77xRDPeY0mMen57/NKPK
-         oTJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBPsdjTrbx2QI2pt+P8Vl15UIKVizAXEWK4NHaHJcFNP43W0nEa2+orI+1MRq4hZqy+l4ccBeqzJtN6UA=@vger.kernel.org, AJvYcCVmA/ltDewMqVu+sU6EswR71SHVKEQnke0sH0qgI2eNStixll0s+O/fgzV8hlmSV0KmMJgbO3ufa3nt+XTQ9ZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz029y2fhUQCIiIqO51BG3Z3OUsk8E8lwPK/owaITfRj5iCifaf
-	5HeK4+hvmPcn863k5Baq0ZIHczHc/IPhSp0X7KsPUbGNuexWc/tL7S1hpzbwrvg8eVVyDrQE8RW
-	LluujSqrLhfHz2rdNYgDabAvg1pNKkXk=
-X-Gm-Gg: ASbGnctIalB7CK3YyveZMHTmQzJew+J2HKEycqAbHaoghM9Mll0KW61TPkGUUCXyGVf
-	mRRl/T82olB7YNEvpO55xcetqT1zZEsXHcfuTalk5zWF5WYay6+H4HL2sqfhyHo1VYuY+GBqEN1
-	ze7PhpytNq5RGIZhlsB6N6hM8WwCn24zGR+cR+Uzps6mE=
-X-Google-Smtp-Source: AGHT+IFPthesqIFSi/O171CaK3dBItc40f2bqdqoBwA2MAUv9vVgFRzwoXgjNy0n53Ha/Xt7WBxaFVSen5LG/UgilkQ=
-X-Received: by 2002:a17:90b:3a43:b0:311:fde5:c4ae with SMTP id
- 98e67ed59e1d1-3159d8e2be9mr1716522a91.6.1750426527235; Fri, 20 Jun 2025
- 06:35:27 -0700 (PDT)
+        bh=4aJt4fkup5IZNsrpvVhEKVipXbYCZJtOBbKMV7cDmJU=;
+        b=Y5SwT9lByg6lY7EJKqcbYPt+JbdaTF8sqk4LyK2Yq9OXhmLwsXwx99iFpVSRFcZxCC
+         nOsF3pi9uN1m1shFmukNYCkR7AIgkWWjfUm97fcCjbPEoNcSlmyXAkiqPs8vxqhBzSx5
+         xCAFxhhWRg2Z9d5cfNE5AInKtEFb9oVy++FPdRyjUSnKPzeLXpoXZ8ICB9FVQZkYbcrJ
+         jNkvTHdp9m8eRiN2DSMXwWMi3xb5JVCSu3c27Jy93NNQf0xC7ziWhzPCvTKcAz4Hz3iC
+         6WeFzpyEUKDrWrxsJg+Xjwzlgr5LHYHSYkk5F8zpGj4Fjln9Ia+E78IMzQNb8DSmZYWE
+         69MA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPbK/S7wRy0ac3V6+qLeijSXodLb/sFL7eyutYwyiW4bRcpcatY78IQIRgwT0wLlDtLKimJ8hezKXTuQ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKjUzUrev1cbmkmYFd4lp7objWdEqBUu6B4UdfvVuWmiZRUJ7A
+	0WHqlC6bDnNZlGkHD/UUjzaOQz8dVWAofZPBWxGBtIvmnjIjmLsK9EfH8D4UbfLqisK6ZUi8San
+	hTCnHc6g40+IAGuggIYzKbDeqJdh5GpwLH94AdMsFcw==
+X-Gm-Gg: ASbGncteWngRW7OrW+4ta2DbBW5nyWWhrkOHQEaZ8wDIMgoiIHepGMgoRKJ3Hf8PITk
+	AXpxGqEfyIO2NH6MiUbHEgb1AaxCNaMkd8REwanC6q7li7sGnwxzuP6IObrBmo8I6EMoSRwUDQ8
+	toLbDTehpOgKAcl7keqLkONZSTcqkbbKkq5ZEPMqVV2qpIrvRbvBUsECoOiN8J2Uo4k82mRCq2C
+	yo=
+X-Google-Smtp-Source: AGHT+IF5fLhfuC8hz4Rv1krK7DbtYye+VXaU6bceTUWd3ZX5FC4oEcmGEW+wthmMe7jT3GYqphVFIC0r8DxUKFP+CT8=
+X-Received: by 2002:ac2:4e06:0:b0:553:37e7:867c with SMTP id
+ 2adb3069b0e04-553e3d028b0mr1105854e87.50.1750426625405; Fri, 20 Jun 2025
+ 06:37:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-num-v1-0-7ec3d3fb06c9@nvidia.com> <20250620-num-v1-1-7ec3d3fb06c9@nvidia.com>
-In-Reply-To: <20250620-num-v1-1-7ec3d3fb06c9@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 20 Jun 2025 15:35:14 +0200
-X-Gm-Features: AX0GCFuVT1QLcBO2haDSwB53syExrcXNwY3AyOzQthEHRsH2T3KmjtBuf1buWgA
-Message-ID: <CANiq72=BSnom-nQgzLvv-cqwSknK1uJ=CXGP51r0WRj1Y553Ew@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rust: add `num` module with `PowerOfTwo` type
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org
+References: <20250620130814.2580678-1-arnd@kernel.org>
+In-Reply-To: <20250620130814.2580678-1-arnd@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 20 Jun 2025 15:36:53 +0200
+X-Gm-Features: AX0GCFveiLVvzbVVb4pbzshJs5knTsbLzp0XOfzNaJNTrqpVl3158pRzAoNLUfc
+Message-ID: <CAMRc=Mep0SNj6anWcmaNh4v8Z=J7eomujU69Gz_exuG2Wsd=8A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: zynq: add CONFIG_OF dependency
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Pratap Nirujogi <pratap.nirujogi@amd.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 3:15=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
+On Fri, Jun 20, 2025 at 3:08=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 >
-> Introduce the `num` module, featuring the `PowerOfTwo` unsigned wrapper
-> that guarantees (at build-time or runtime) that a value is a power of
-> two.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> Such a property is often useful to maintain. In the context of the
-> kernel, powers of two are often used to align addresses or sizes up and
-> down, or to create masks. These operations are provided by this type.
+> The zynq driver can be enabled for compile-testing on builds without
+> CONFIG_OF, leading to a link error:
+>
+> ld.lld-21: error: undefined symbol: pinconf_generic_dt_node_to_map
+>  referenced by pinconf-generic.h:231 (/home/arnd/arm-soc/include/linux/pi=
+nctrl/pinconf-generic.h:231)
+>           drivers/pinctrl/pinctrl-zynq.o:(pinconf_generic_dt_node_to_map_=
+all) in archive vmlinux.a
+>
+> Prevent this with the proper compile time dependency.
+>
+> Fixes: 1982621decaf ("pinctrl: Allow compile testing for K210, TB10X and =
+ZYNQ")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/pinctrl/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 753692e9ecf5..ddd11668457c 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -603,6 +603,7 @@ config PINCTRL_TH1520
+>  config PINCTRL_ZYNQ
+>         bool "Pinctrl driver for Xilinx Zynq"
+>         depends on ARCH_ZYNQ || COMPILE_TEST
+> +       depends on OF
+>         select PINMUX
+>         select GENERIC_PINCONF
+>         help
+> --
+> 2.39.5
+>
+>
 
-Before I forget: the other day in a call we discussed powers of two
-and I mentioned that there is `Alignment` in the standard library:
+I don't think this is the actual problem. I can build (and link)
+pinctrl-zynq with COMPILE_OF disabled alright. Can you paste the
+entire offending .config somewhere?
 
-    https://doc.rust-lang.org/std/ptr/struct.Alignment.html
-
-    "A type storing a `usize` which is a power of two"
-
-So it would be nice to ask upstream the following if they have plans
-to stabilize it, and whether they have considered a generic
-`PowerOfTwo<T>` type like this one, rather than one just for alignment
-purposes (possibly with an alias or newtype for `Alignment` if
-needed).
-
-Similarly, if they stabilize the `Alignment` one (only) and we end up
-only using our `PowerOfTwo<T>` for `usize` and those use cases, then
-we should consider using the upstream one (and adding any/all methods
-that we need).
-
-So I will ask them the next time we meet. I have added
-`ptr_alignment_type` to our list (in the "nice to have" section).
-
-(Apologies if this was already discussed!)
-
-Cheers,
-Miguel
+Bartosz
