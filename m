@@ -1,50 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F03C23D2B7;
-	Fri, 20 Jun 2025 21:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498B3137E;
+	Fri, 20 Jun 2025 21:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750454692; cv=none; b=ZuEXbxpuA9qgMV8Q9L0WFGgMk6r3yf/3w8XirzAYyQmacH0IQbGk74rgiR19vI7Ke2lZtFgDY7joppr2zyltZDeHfg1EFyxFh+CIl4PUIzFI8r3qo2ZwixZiOHz6pydPgYWLfu7INOvPpP/0Dwaun6QZebSd8d3OZtndDdJfQFk=
+	t=1750454776; cv=none; b=o8kPMqJvSAYvaneLZf2SBd2gwrWooniKrIgC9QV5PNZUmNOmcJgyqSo22bDnWTrpUtPG55xsy5O5UrfuPP8hisarTQHHbCrHf6OlBBUzR1CaJtr8IJq00vQ7XmAoOiLfsLyfPtVULNYvQmIRjMh0hPn93ubQOecX/ZdznEbTJCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750454692; c=relaxed/simple;
-	bh=Sqa7yFlza+E5vO9QUSHOv5OOHJZbEhVBY+11+7dXhpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JTBOPRSthjoMExd6s+Jxj3yWBo8DwtGXsuaO/jUEKbKWOJlkhqq9tiZUvDa+D+Lsx8H9NS9r1DkQHdSMA3mWRazhf3TmRvo0zm3iISssPTXSPbNK06ecOH5Vs8xjxxmRVi0XCDcNKhIJLgJEMvWN8WUIIPTmtL4hjhUhmbcnn8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OScFH4Fs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750454776; c=relaxed/simple;
+	bh=y1kWc66n/acw5CLFQnhOd4l2C3dq+axEoA6CjFiogTc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LjcDOzzpGFNSAzMT5pRuccQz9HRuQ3XuV/LUYuCUnepvlQVKo2O/wdQaQIsbBk+b2IwlawxK/TqxVjpOiIQqN1PBhS6xqBr3sndMoIqhxybxyRdCZ7NVyNuC+qr8D8u1VMBJ9OMo533zbhpIR83CKUYCJLU4bsXtIIFfPTlifBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJh/pcBE; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OScFH4Fs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A2EC4CEEE;
-	Fri, 20 Jun 2025 21:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750454691;
-	bh=Sqa7yFlza+E5vO9QUSHOv5OOHJZbEhVBY+11+7dXhpk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OScFH4Fs+0DABU5z8M4eOFqEDzIwgI1asIZGUYW+UHeQGNX8pcFPFKm9o3cjE9FCC
-	 m7jNBmlaJej3lMCNAo+WA6xtXYEsNojXrlT/wnjjoMlZlWmVBD1IJjHSO26SqOaHgf
-	 YjCZaoG3j+RFXVpDiPyPMxxLepPGKRA0Fhcov2k/W+U8/xkD9dSFR4ulezosprcEyH
-	 7yf9AwduGkQXt8pxJyhWEqJioGrydIQjad6ilo/9sLPae38gDUHaZiiRkjQb5ieyCI
-	 +MYJB5WwGRWuqCUX2N6MsSbxAdZiolcEkTqjifhTF48HN9tVlbdYa19xRSoo52WXjN
-	 Y4zDXpkWuSAdA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/3] perf build: The bfd features are opt-in, stop testing for them by default
-Date: Fri, 20 Jun 2025 18:24:35 -0300
-Message-ID: <20250620212435.93846-4-acme@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250620212435.93846-1-acme@kernel.org>
-References: <20250620212435.93846-1-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJh/pcBE"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-711d4689084so24974647b3.0;
+        Fri, 20 Jun 2025 14:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750454774; x=1751059574; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMnAMEjpYBbD1fXqa7lqbHKNPJmENbHUnreLVU24EBI=;
+        b=FJh/pcBEuc7P3tAvCfx4xBOU0vtRt4x5Rbab8FMqGvZqBiIs1dVZbD7KJ1Ja27uiz2
+         vLqzLTfTgquPZpul6uWIMwuqwNAeBUUDFPt4OhC7RxvTL6AloXnPfrxwXBmlZYefzAVr
+         LCjifvhrENz4tsdyfaYM60WIr3GDXO85Kibc4WtcGJFc41Fd7wCgocPQCTBCzlDpaA73
+         NZypYlCxeSYF3aYiYWYN9M1s7F7rws/Vvlfzsrfcf+KCuLGTrCHeo8diQiacL0u1q3ig
+         0HN4rPP3oE5quZASUIlH7C/VvrRCgXB4mEBxLQ3gwN8MyylJtwLKy7hbQ4iHoofwStYy
+         Ibqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750454774; x=1751059574;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oMnAMEjpYBbD1fXqa7lqbHKNPJmENbHUnreLVU24EBI=;
+        b=sTN1A18ieIviwKnAmg88oH/Gf2BWa1Yo2m9TWK2IKZEFrwjn/At3Ijg82pGqu8uiI6
+         C6W3I9RiEGPAIZSmjh2JCnxpJsNb14IARJTG3WLiNiGHl2E+wvrpdxfXl79qZHkwMaR+
+         evm1EW8tghVqCqMX56qrMH6ZkuB+FQkezGrkymB1WSxbZM5hdFlDII5H+b8FMHC73gJk
+         iEosiyIGa4RiLJ4lbE7dcTtzCcamFYBBKqrngSVv6eolHN8qbhNHJbVHvhpadV7aRGPq
+         7ll17Y7CwhbpyGtrHExnXLg8xIYODoGddC5OSvZ67qe2RLWDzkYfLsAxrRcHWmmkuisH
+         TmPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNz1jGlRuhdY7HN95CPdS+6Tn6m/i4/m+Je269H/vYH35jpEdDD7riWOu9vHzWlprYOoS1wo2dOYH6yKQ=@vger.kernel.org, AJvYcCVP57Tj5JLvJU9Oy5Oph7iku03VHkFp2kNC+ejQF1Bf3Bv1ROgyQoTbER6JIuN4g3xhEXVK/jYy/57REXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoduzKwRgJJMeYKSJ1yykkDwjVox26rYvjneNMlqvs+6+Nv/Vs
+	x6yCr1AVdeeigd2hAH0L4cLTQ2tFtkRRl8auCO7p1BdUqTilxBhYhBjb
+X-Gm-Gg: ASbGncswub7uYBqvB8p/D8H/+E6zOaiZqX1sVzUaZkfklAjNf7rENc9aorOc5I4WHQy
+	jt1WwUBg7y1EBudvkLH94s03zQTP4U7R5WyTaL/Qms9Sgz/V/7TSkqEGdNUEtl9lLapQYi+Z6U5
+	ttGlaeA7eeKwGAry68WUCYqRLhVe7KnLmmUyaBR2KzpvvKG4M7zcTMS25NlzsubTq8yKQd2cjZO
+	YBA7nnpdtQEh9buImOhq+1wS60QIdSfYVjijc+URe8U9nzNDahMFbtLh4NJUSH+fTT/IwId3NLH
+	qVKgk5RFT84uL6MSEkLADgMVafruz3aqSr3evJVXd00v/VCUlqNUbmElqmlO334weK7VekGUwQn
+	D
+X-Google-Smtp-Source: AGHT+IGhIGCKynlURH41S79mDAn/8USLtqeUYJHKGkiXxmzGTVg7ChX6bcF/AEXDADdXNf/Hh0XwkA==
+X-Received: by 2002:a05:690c:f:b0:70f:87c5:5270 with SMTP id 00721157ae682-712c65149femr70877567b3.19.1750454774131;
+        Fri, 20 Jun 2025 14:26:14 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4b96754sm5864757b3.67.2025.06.20.14.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 14:26:13 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-usb: dw2102: fix null-ptr-deref in su3000_i2c_transfer
+Date: Fri, 20 Jun 2025 17:26:11 -0400
+Message-Id: <20250620212611.3211946-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,102 +74,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. We add check on
+msg.len to prevent crash.
 
-These are leftovers noticed while updating a build container.
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
+fix null-ptr-deref in az6027_i2c_xfer()")
 
-We don't need those so that test-all.c can build and thus speed up the
-feature detection.
-
-Test for those features only if the user asks for BUILD_NONDISTRO=1 to
-build with libbfd.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
 ---
- tools/build/feature/test-all.c | 19 -------------------
- tools/perf/Makefile.config     |  5 +++++
- 2 files changed, 5 insertions(+), 19 deletions(-)
+ drivers/media/usb/dvb-usb/dw2102.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 03ddaac6f4c4dfa2..1010f233d9c1ad49 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -66,14 +66,6 @@
- # include "test-libslang.c"
- #undef main
- 
--#define main main_test_libbfd
--# include "test-libbfd.c"
--#undef main
--
--#define main main_test_libbfd_buildid
--# include "test-libbfd-buildid.c"
--#undef main
--
- #define main main_test_backtrace
- # include "test-backtrace.c"
- #undef main
-@@ -158,14 +150,6 @@
- # include "test-reallocarray.c"
- #undef main
- 
--#define main main_test_disassembler_four_args
--# include "test-disassembler-four-args.c"
--#undef main
--
--#define main main_test_disassembler_init_styled
--# include "test-disassembler-init-styled.c"
--#undef main
--
- #define main main_test_libzstd
- # include "test-libzstd.c"
- #undef main
-@@ -193,8 +177,6 @@ int main(int argc, char *argv[])
- 	main_test_libelf_gelf_getnote();
- 	main_test_libelf_getshdrstrndx();
- 	main_test_libslang();
--	main_test_libbfd();
--	main_test_libbfd_buildid();
- 	main_test_backtrace();
- 	main_test_libnuma();
- 	main_test_numa_num_possible_cpus();
-@@ -213,7 +195,6 @@ int main(int argc, char *argv[])
- 	main_test_setns();
- 	main_test_libaio();
- 	main_test_reallocarray();
--	main_test_disassembler_four_args();
- 	main_test_libzstd();
- 	main_test_libtraceevent();
- 	main_test_libtracefs();
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index fd03ba83a48ee08b..12193986effb954a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -918,6 +918,8 @@ ifneq ($(NO_JEVENTS),1)
- endif
- 
- ifdef BUILD_NONDISTRO
-+  $(call feature_check,libbfd)
-+
-   ifeq ($(feature-libbfd), 1)
-     EXTLIBS += -lbfd -lopcodes
-   else
-@@ -946,6 +948,9 @@ ifdef BUILD_NONDISTRO
- 
-   CFLAGS += -DHAVE_LIBBFD_SUPPORT
-   CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
-+
-+  $(call feature_check,libbfd-buildid)
-+
-   ifeq ($(feature-libbfd-buildid), 1)
-     CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
-   else
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
+index 8f694d8d52bc..54493bc490ae 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -746,6 +746,10 @@ static int su3000_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 	while (j < num) {
+ 		switch (msg[j].addr) {
+ 		case SU3000_STREAM_CTRL:
++			if (msg[j].len < 1) {
++				num = -EOPNOTSUPP;
++				break;
++			}
+ 			state->data[0] = msg[j].buf[0] + 0x36;
+ 			state->data[1] = 3;
+ 			state->data[2] = 0;
+@@ -754,6 +758,10 @@ static int su3000_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 				err("i2c transfer failed.");
+ 			break;
+ 		case DW2102_RC_QUERY:
++			if (msg[j].len < 2) {
++				num = -EOPNOTSUPP;
++				break;
++			}
+ 			state->data[0] = 0x10;
+ 			if (dvb_usb_generic_rw(d, state->data, 1,
+ 					       state->data, 2, 0) < 0)
 -- 
-2.49.0
+2.34.1
 
