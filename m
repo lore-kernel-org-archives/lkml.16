@@ -1,38 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D152AF07
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B072AF07;
+	Fri, 20 Jun 2025 10:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750416610; cv=none; b=unr086fGFJHYmyOViAjC2EQSIUJjxjcbAR390s7a53tMHQT8sjAL+5ogSzBz2KGCRX7/1QpeZN2D56z9mcm0124i/pt67HXrj2xWex07ezBS6VjMpiREYE0zAn+Q6zjh3N7ZH2d/1U0nXFeKO35/IAoS+gDkmXDcdzt1yX9fPzo=
+	t=1750416680; cv=none; b=ac3mwiZ1Pv9ogmpwjDHBf/X+aoZgJRWRh56wIWDqkhd/XzOIRqZ9IAgvT2ZT7zdi58TGP4gSdXZjTP+aKR5/o1SYZlETm8ygr7WAMvJreeTaT8I/NKIR9KD+hubYqNh/ktYNi6nrpe6KjtKL3b8lH1bLtttMeo6ymzKZiZ4Pz3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750416610; c=relaxed/simple;
-	bh=vCwR+vgZaANWT+DX6tuXMLx5vzPlxMcIfrhlOdZgpE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KPwlqeF3O9R8oWZGeW5/qKWlY183s7VnO2J886ycNTplMPbK2wXtxOtR6oxt/RG/QTgSv6IK5geEf833YLBMz30tkkW2w4J2GA3k2lM1VN5H3EmnPrjYPLqS485iFjGdJycRi6XpRzqHQRzagxNNQz0I2uvO9vlJG6K08BEUqPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHFzJ+E7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750416680; c=relaxed/simple;
+	bh=xJpDu3YPjXRnNpdNI//n/GTlpYebqH9RGK2+XQwqJKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3POHfocaOyGbsJLVRRbjU0QTVpwZsOokJcbEryNz7te3M7P4ffeM4eZM9wAL48efrasIhcv6notClTlULWVIm3/zirZaFcvCJqHR+YGUbj7p+oK/U/Wo7dCPatI+0SveUnDBnDFvRMoSLMyfd0vhQFiDdprZ8B6FIuL7bkm0yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSBzQbBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHFzJ+E7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF55C4CEE3;
-	Fri, 20 Jun 2025 10:50:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSBzQbBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105D3C4CEE3;
+	Fri, 20 Jun 2025 10:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750416610;
-	bh=vCwR+vgZaANWT+DX6tuXMLx5vzPlxMcIfrhlOdZgpE0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=eHFzJ+E7tzfit7vZPwamrR96dRzKK40YBJ5L8zwfpfmezE697ryxGA5+B0QnjFlC+
-	 XOg70mzx+mQ9k6/WPClZXDuJLkjGmU0ZwiM69v2qGy9ckITaKNl6WCklzU+gaBQFnV
-	 YIE7mrsVAR17y9GPsnhd4ksecWrRsNunrH8637RhuuZND/0rNGdQs4auoWNvwusbd8
-	 hRNjs734BqfCrUzLJ1/rrWgPUS5codBZE0gVXty4st2jRuTIN7NhyFvDw27kovakTT
-	 fzYZNa5hTdqSTaRJODM2/b6BvaPb9iJe4BTJTLUNQLhOLK7eOUDDEnrzGhXHwoodBy
-	 zMhJYWhccOGDg==
-Date: Fri, 20 Jun 2025 11:50:06 +0100
-From: Will Deacon <will@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc3
-Message-ID: <20250620105005.GA22615@willie-the-truck>
+	s=k20201202; t=1750416680;
+	bh=xJpDu3YPjXRnNpdNI//n/GTlpYebqH9RGK2+XQwqJKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uSBzQbBT5RcFquiP0m0RCt4BVGKVEtivSyIWS7FGOlhNBoKceRDp9CYfkinY164sk
+	 FHxPDvkoin9HzeFLb1cL1Nl4h0lE0R4kzqOWw67goC+9O8xYoFQYncRiteyvOG6TI6
+	 U5ayR2w32UIxDMN2hLcIHglljW0B0wFYCV+Ozyq40tsfm3CJpTCOpjT0twXTBmZTzJ
+	 Tkk/HwhQiysMgcTRvJeQdUHz54t0nlqivJ8esmQj+yzSCVa513TCtUuc9pyiu0Simz
+	 MyzfVt13D5njUILeeQEtoALdN9QQ8YYTXyN+b2sNROx2zD1Z/Lcb0UTE1Ze3zPQIsF
+	 kN6XEhTBYx+tw==
+Date: Fri, 20 Jun 2025 11:51:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: Brett Creeley <bcreeley@amd.com>
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net v3] ethernet: ionic: Fix DMA mapping tests
+Message-ID: <20250620105114.GH194429@horms.kernel.org>
+References: <20250619094538.283723-2-fourier.thomas@gmail.com>
+ <bb84f844-ac16-4a35-9abf-614bbf576551@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,59 +57,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bb84f844-ac16-4a35-9abf-614bbf576551@amd.com>
 
-Hi Linus,
+On Thu, Jun 19, 2025 at 03:28:06PM -0700, Brett Creeley wrote:
+> 
+> 
+> On 6/19/2025 2:45 AM, Thomas Fourier wrote:
+> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > 
+> > 
+> > Change error values of `ionic_tx_map_single()` and `ionic_tx_map_frag()`
+> > from 0 to `DMA_MAPPING_ERROR` to prevent collision with 0 as a valid
+> > address.
+> > 
+> > This also fixes the use of `dma_mapping_error()` to test against 0 in
+> > `ionic_xdp_post_frame()`
+> > 
+> > Fixes: 0f3154e6bcb3 ("ionic: Add Tx and Rx handling")
+> 
+> I'm not sure the Fixes commit above should be in the list. Functionally it's
+> correct, except there being multiple calls to dma_mapping_error() on the
+> same dma_addr.
+> 
+> Other than the minor nit above the commit looks good. Thanks again for
+> fixing this.
+> 
+> Reviewed-by: Brett Creeley <brett.creeley@amd.com>
 
-Please pull these four arm64 fixes for -rc3. There's nothing major (even
-the vmalloc one is just suppressing a potential warning) but all worth
-having, nonetheless.
+Hi Brett and Thomas,
 
-Cheers,
+Maybe I misunderstand things, if so I apologise.
 
-Will
+If this patch fixes a bug - e.g. the may observe a system crash -
+then it should be targeted at net and have a Fixes tag. Where the
+Fixes tag generally cites the first commit in which the user may
+experience the bug.
 
---->8
+If, on the other hand, this does not fix a bug then the patch
+should be targeted at net-next and should not have a Fixes tag.
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+In that case, commits may be cited using following form in
+the commit message (before the Signed-off-by and other tags).
+And, unlike tags, it may be line wrapped.
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+commit 0f3154e6bcb3 ("ionic: Add Tx and Rx handling")
 
-are available in the Git repository at:
+E.g.: This was introduce by commit 0f3154e6bcb3 ("ionic: Add Tx and Rx
+handling").
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+I hope this helps. If not, sorry for the noise.
 
-for you to fetch changes up to 39dfc971e42d886e7df01371cd1bef505076d84c:
-
-  arm64/ptrace: Fix stack-out-of-bounds read in regs_get_kernel_stack_nth() (2025-06-12 17:28:18 +0100)
-
-----------------------------------------------------------------
-arm64 fixes for -rc3
-
-- Suppress KASAN false positive in stack unwinding code.
-
-- Drop redundant reset of the GCS state on exec().
-
-- Don't try to descend into a !present PMD when creating a huge vmap()
-  entry at the PUD level.
-
-- Fix a small typo in the arm64 booting Documentation.
-
-----------------------------------------------------------------
-Dev Jain (1):
-      arm64: Restrict pagetable teardown to avoid false warning
-
-Lorenzo Pieralisi (1):
-      docs: arm64: Fix ICC_SRE_EL2 register typo in booting.rst
-
-Mark Brown (1):
-      arm64/gcs: Don't call gcs_free() during flush_gcs()
-
-Tengda Wu (1):
-      arm64/ptrace: Fix stack-out-of-bounds read in regs_get_kernel_stack_nth()
-
- Documentation/arch/arm64/booting.rst | 2 +-
- arch/arm64/kernel/process.c          | 4 +++-
- arch/arm64/kernel/ptrace.c           | 2 +-
- arch/arm64/mm/mmu.c                  | 3 ++-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+...
