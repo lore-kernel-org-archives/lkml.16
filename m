@@ -1,63 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC82E2D3A86;
-	Fri, 20 Jun 2025 15:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15F52E8E17
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434458; cv=none; b=l1BqvTenxKOWASxokhtRTXgRKxAucobyOSX60QRYyZAWmjUM+nY2dcWrPG8umuNNf+e8NFsl5GB1N0x4z0yTgIfG0Ehm/5U9WZGvjWbhUjCgn6/ycz8VTe8+aeC9nkpM5EMh8zAgCAA5zvyYkqFnqtJ0rYWiLNBE+Jyz7IWad1c=
+	t=1750434468; cv=none; b=utaGxDZFcB/BhMF2MorNineMO203IycVMMOyyfr71Iay2wBot5q1mIwZs5iTaJVS147FfmnUPeCJoSFI8B/gGwCbLvpkSBRG+JGIsoVucogrBJDjWnK6S9siC2w3jgl5M//YIIvLCDtra4+zhI8jpqr84XuvfwqrlwqnG2L7u9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434458; c=relaxed/simple;
-	bh=HB6q6Zx5mOBujUOsBMfV/rOeFmq/1ii8asxoKAUsy0o=;
+	s=arc-20240116; t=1750434468; c=relaxed/simple;
+	bh=eMGC5Ax1af3GV4qbwjp8a8GGUC5Nhvn9YI171BLAqds=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwoYzACGRIEWQyV80f9VgDPq59sZg8l24BgCmXx0Xkag79v7mYUKhBZOPAGlOXSfWyY6sVylFFJfUyFDoDMouU/MiamhEgfgcT/9vO0M0rMTfyz8GtF5MjJqLWzOUcjysWZTxL8DT5QqysBoKNrocdYbOTKS9PrlcVtY3t2l9gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCBmwHOg; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=spK1qhgBSFDdd3XuUJ76HrwAFofiPIBqxmydrHcLhgDfwz2+ZUDu1oYh2pKKZovoCvqA0WZ2oUNojTX/KMjkYjkTzo9TpTXe3Ql/7FD2ErHCM7fcuYrRtwka1/fPfRehLeSPiJrlVu7VlsrN7m4Je3DtE6IuCSj2IAswRwDNExM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OY4QPDGE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OA1nHk4N; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OY4QPDGE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OA1nHk4N; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCBmwHOg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750434457; x=1781970457;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HB6q6Zx5mOBujUOsBMfV/rOeFmq/1ii8asxoKAUsy0o=;
-  b=oCBmwHOg676bkj54+OOXvxCZTnweuoECZu0SvOo3n3uvuU+mRbs0jLqB
-   iXriuv8yt3hJj6fof81ZQgwyoVW8NyE6HiUi+QXqt8Yv2nGsGCO3vF1/+
-   2+R8uFAgC3rbfALKANyy5ZAfx3NR9ku1N5CT4NyKa1cEgZ5Jyi/ujNsxA
-   FA1+VdrcwvXT7HLIQ5HkJgs70XAHkY2gxc+YabCDrwmyGDGVxJkKRNoFe
-   bSHELfxJLsNIeG++GMl8DC3Qlhgm1+E9NlvZrYI3odc+/cb1zVHyPxuAY
-   VZh7PI8ctE10PBrGh+YXs2378LFZ5PTECGqXoYhxsygHJfCmwC4JjH0T1
-   g==;
-X-CSE-ConnectionGUID: VOoUROyTSeWg4M96ogdzxA==
-X-CSE-MsgGUID: g6ck/0D6Q1mTnvIM1GaRqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51929926"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="51929926"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 08:47:36 -0700
-X-CSE-ConnectionGUID: mizpIV4gQTyf+VLZoEzF+w==
-X-CSE-MsgGUID: kWYn61oQT7StHW/fudnPBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="155236555"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 20 Jun 2025 08:47:33 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSdxj-000LuE-1D;
-	Fri, 20 Jun 2025 15:47:31 +0000
-Date: Fri, 20 Jun 2025 23:47:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: cp0613@linux.alibaba.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, arnd@arndb.de, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr
-Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chen Pei <cp0613@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] bitops: generic rotate
-Message-ID: <202506202300.dZGgBtbQ-lkp@intel.com>
-References: <20250620111610.52750-2-cp0613@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OY4QPDGE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OA1nHk4N";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OY4QPDGE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OA1nHk4N"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4A4411F38D;
+	Fri, 20 Jun 2025 15:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750434465;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jb4rmzCBy2JbwhbSe1U00gQREDjOVt6Lc3XN3bwP9Eg=;
+	b=OY4QPDGEDmD1mjpSUfxgQF9dRz0+RmTiFM0YBezqiBiVP/h+fad6RL/NKIq5/uN3TlqoxF
+	2rDcKUc8QmoJ4VAqohWdbSZ+TMpHtQLtbx58L4x8FG+/MkRboprcKOOXAn02Fs9BJPLBdS
+	QaR1E9d7okOCGlnvwaxqrxNlgs8LuZM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750434465;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jb4rmzCBy2JbwhbSe1U00gQREDjOVt6Lc3XN3bwP9Eg=;
+	b=OA1nHk4NQy+b6Sd2iYbdFO+su7/TkYvinaDaqefaxibMSqckDDxhy/UcEGCRyS0CHanwY4
+	RGB67sCFNhA4//Dg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750434465;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jb4rmzCBy2JbwhbSe1U00gQREDjOVt6Lc3XN3bwP9Eg=;
+	b=OY4QPDGEDmD1mjpSUfxgQF9dRz0+RmTiFM0YBezqiBiVP/h+fad6RL/NKIq5/uN3TlqoxF
+	2rDcKUc8QmoJ4VAqohWdbSZ+TMpHtQLtbx58L4x8FG+/MkRboprcKOOXAn02Fs9BJPLBdS
+	QaR1E9d7okOCGlnvwaxqrxNlgs8LuZM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750434465;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jb4rmzCBy2JbwhbSe1U00gQREDjOVt6Lc3XN3bwP9Eg=;
+	b=OA1nHk4NQy+b6Sd2iYbdFO+su7/TkYvinaDaqefaxibMSqckDDxhy/UcEGCRyS0CHanwY4
+	RGB67sCFNhA4//Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 23C9713736;
+	Fri, 20 Jun 2025 15:47:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 67OFCKGCVWgoZQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 15:47:45 +0000
+Date: Fri, 20 Jun 2025 17:47:43 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Jens Axboe <axboe@kernel.dk>,
+	Mark Harmstone <maharmstone@fb.com>, linux-btrfs@vger.kernel.org,
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] io_uring/btrfs: remove struct io_uring_cmd_data
+Message-ID: <20250620154743.GY4037@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250619192748.3602122-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,136 +90,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620111610.52750-2-cp0613@linux.alibaba.com>
+In-Reply-To: <20250619192748.3602122-1-csander@purestorage.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,twin.jikos.cz:mid];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Hi,
+On Thu, Jun 19, 2025 at 01:27:44PM -0600, Caleb Sander Mateos wrote:
+> btrfs's ->uring_cmd() implementations are the only ones using io_uring_cmd_data
+> to store data that lasts for the lifetime of the uring_cmd. But all uring_cmds
+> have to pay the memory and CPU cost of initializing this field and freeing the
+> pointer if necessary when the uring_cmd ends. There is already a pdu field in
+> struct io_uring_cmd that ->uring_cmd() implementations can use for storage. The
+> only benefit of op_data seems to be that io_uring initializes it, so
+> ->uring_cmd() can read it to tell if there was a previous call to ->uring_cmd().
+> 
+> Introduce a flag IORING_URING_CMD_REISSUE that ->uring_cmd() implementations can
+> use to tell if this is the first call to ->uring_cmd() or a reissue of the
+> uring_cmd. Switch btrfs to use the pdu storage for its btrfs_uring_encoded_data.
+> If IORING_URING_CMD_REISSUE is unset, allocate a new btrfs_uring_encoded_data.
+> If it's set, use the existing one in op_data. Free the btrfs_uring_encoded_data
+> in the btrfs layer instead of relying on io_uring to free op_data. Finally,
+> remove io_uring_cmd_data since it's now unused.
+> 
+> Caleb Sander Mateos (4):
+>   btrfs/ioctl: don't skip accounting in early ENOTTY return
+>   io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
+>   btrfs/ioctl: store btrfs_uring_encoded_data in io_btrfs_cmd
+>   io_uring/cmd: remove struct io_uring_cmd_data
 
-kernel test robot noticed the following build errors:
+The first patch is a fix so it can be put to a -rc queue.
 
-[auto build test ERROR on arnd-asm-generic/master]
-[also build test ERROR on linus/master v6.16-rc2 next-20250620]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/cp0613-linux-alibaba-com/bitops-generic-rotate/20250620-192016
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git master
-patch link:    https://lore.kernel.org/r/20250620111610.52750-2-cp0613%40linux.alibaba.com
-patch subject: [PATCH 1/2] bitops: generic rotate
-reproduce: (https://download.01.org/0day-ci/archive/20250620/202506202300.dZGgBtbQ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506202300.dZGgBtbQ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   make[1]: *** [Makefile:1281: prepare0] Error 2
-   In file included from weak.c:10:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/x86/orc.c:5:
-   In file included from tools/objtool/include/objtool/check.h:11:
-   In file included from tools/objtool/include/objtool/arch.h:11:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from check.c:13:
-   In file included from tools/objtool/include/objtool/arch.h:11:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from orc_gen.c:12:
-   In file included from tools/objtool/include/objtool/check.h:11:
-   In file included from tools/objtool/include/objtool/arch.h:11:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitIn file included from orc_dump.c:8:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-   o   27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   ps/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/x86/special.c:4:
---
-   In file included from tools/objtool/include/objtool/check.h:11:
-   In file included from tools/objtool/include/objtool/arch.h:11:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-   :13   27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   :
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
-   make[4]: *** [tools/build/Makefile.build:86: tools/objtool/weak.o] Error 1
-   In file included from elf.c:22:
-   In file included from tools/objtool/include/objtool/elf.h:12:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from builtin-check.c:15:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from objtool.c:16:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
-   1 error generated.
-   make[5]: *** [tools/build/Makefile.build:86: tools/objtool/arch/x86/orc.o] Error 1
---
-   In file included from tools/objtool/include/objtool/check.h:11:
-   In file included from tools/objtool/include/objtool/arch.h:11:
-   In file included from tools/objtool/include/objtool/objtool.h:11:
-   In file included from tools/include/linux/hashtable.h:13:
-   In file included from tools/include/linux/bitops.h:52:
->> tools/include/asm-generic/bitops.h:27:10: fatal error: 'asm-generic/bitops/rotate.h' file not found
-      27 | #include <asm-generic/bitops/rotate.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
-   make[4]: *** [tools/build/Makefile.build:86: tools/objtool/check.o] Error 1
-   1 error generated.
-
-
-vim +27 tools/include/asm-generic/bitops.h
-
-    25	
-    26	#include <asm-generic/bitops/hweight.h>
-  > 27	#include <asm-generic/bitops/rotate.h>
-    28	#include <asm-generic/bitops/atomic.h>
-    29	#include <asm-generic/bitops/non-atomic.h>
-    30	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The rest change the io_uring logic, so it's not up to me, but regarding
+how to merge them either via btrfs or io_uring tree work for me.
