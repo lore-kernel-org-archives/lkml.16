@@ -1,59 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834E8225A2C;
-	Fri, 20 Jun 2025 07:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E38430E85C;
+	Fri, 20 Jun 2025 07:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403715; cv=none; b=e5UJ2Vf3GeCexL1i42/11iJBK6uCA8VymSfT2Sb810M7vq1iBI/wAmM9HqL843u9QbVBFn9SxUsDPQO2vYYuX4uxdPHzbuNxQXPzNo/jkP7B+loVbGy+uKMlaVLOSx0GxjoBMX74j7p8vukwVV61DPuThQpfzTPESlxjpr/PR+s=
+	t=1750403857; cv=none; b=YtAAqXJxBHk99f3z53jID8HusviBGMxK+00wIHIRVwDDcFl0oae6tH7RRfsNtkNwM8JZ1nysth8SYza7ZfYexl84MWvIwhdCOJs43a091ATds01x+synBTmD/erb/r5MpH/lR28v08C+k126/DP5sVFUdxKShvIKMSOY2bNsVy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403715; c=relaxed/simple;
-	bh=XiVJzwWcli4XMRC3pzo03tNkjfRMnkjglH4BRakPqaw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BoxAxd9O4RP4SSLNJACwmDF7MwZ4w4YFSJDFzq78tHRVa8xI9Vs2uQfg7Q0LR09XaW0Xqf42qzHbvPxyydSTjwN2XL9ULcbU+UrA24bqr7+i6lyCPLG9rESjtmrPGjuc0HtEILbCDRzeAAzcZsCBa3uGrvbHsZncHE3fo9JXzUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQJJAyx4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750403857; c=relaxed/simple;
+	bh=EkT8c7NhUhxATwkYAQb5mAtqvgYpiTu6GWN9+u+uTJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TygCOPWF6tjShWHReonRl3gyyMeN8ANqTXZbrK444hV5AipHgQvP82cYph6ve+Vg+KVuneuybqnMgbVMNg4WdauKuy6aRhB+6kpjJmPR3eHra8nbt81ODg88b71xwGqg4I2Xkao6F21Y/d+QXjFJJ8hbwRYU1LMl+HlieV6i7r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZ6dc0Vj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQJJAyx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC30C4CEE3;
-	Fri, 20 Jun 2025 07:15:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZ6dc0Vj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EEBC4CEE3;
+	Fri, 20 Jun 2025 07:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750403715;
-	bh=XiVJzwWcli4XMRC3pzo03tNkjfRMnkjglH4BRakPqaw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=iQJJAyx4Cn8yBL2OHOEFTP1iaftNRTsriH8p9qT9GDcDTDGPV0rKffZbvdDPNBJP7
-	 jTZBywRmQIKfWvuJbVrzjnAl0kX3iu8a/R/5VbTBlGgcqsRPyethh0RO9dbJ+deM4U
-	 Nkx/cAUe/30LRDsJSpXB7/hFj07TpS0DyhdOmloHOUy4k0wC0K6kQTVZC/SERT1S1b
-	 PjTMqXz2N7uCT6W121bDa5CMJp2Xw4k2YZcihTxKTJe3hd7w8hBKjaX+HTOx1TAYHP
-	 qnlKr2WOHDLCcM4caRknuepXzOUuW/qu242q7ogAuzPjSmfHSvq/twleyfyzgnU97a
-	 MAsdvxuoIUZhw==
-Date: Fri, 20 Jun 2025 09:15:12 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-cc: bentiss@kernel.org, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hid: replace scnprintf() with sysfs_emit()
-In-Reply-To: <20250619154627.415368-1-chelsyratnawat2001@gmail.com>
-Message-ID: <38r035or-9ron-46p9-32or-q9rnqs9o9684@xreary.bet>
-References: <20250619154627.415368-1-chelsyratnawat2001@gmail.com>
+	s=k20201202; t=1750403857;
+	bh=EkT8c7NhUhxATwkYAQb5mAtqvgYpiTu6GWN9+u+uTJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DZ6dc0VjDoWXwJTV7yxRF03i+CmBFCRDsk9f+lknU/j9Chbq/9nTCI6j/8Ab7O3Ij
+	 X3PP52VLgFlsl2Eyd0sRUiTxWtN6pEVmZWJehGwmUimc4klbdPOyCOQQ51DvrE/uPB
+	 NvWIJA7GLz8fVtHV6p5NFTqXFspM19OOGIhzZGNbzFAV3AKHYitwaHhfgoCPnbpF2+
+	 bjncjJ+eKZ7K8XSiE1V54YVOzPsdcMB28qURL3TVYdJijxPlWHAlaUEWTP3Je06ek1
+	 hMcXXGJIFOo1BEqxbUjsv20Witu+JNZW2UQk4DmzIDCz5BPyygBtyY7lRDYTw+ve6M
+	 UhDw5+IPVFufw==
+Date: Fri, 20 Jun 2025 09:17:34 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amitkumar.karwar@nxp.com, 
+	sherry.sun@nxp.com, manjeet.gupta@nxp.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: net: bluetooth: nxp: Add support for
+ 4M baudrate
+Message-ID: <20250620-colossal-competent-turaco-d4f8b5@kuoka>
+References: <20250619111629.30098-1-neeraj.sanjaykale@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250619111629.30098-1-neeraj.sanjaykale@nxp.com>
 
-On Thu, 19 Jun 2025, Chelsy Ratnawat wrote:
-
-> Documentation/filesystems/sysfs.rst mentions that show() should only
-> use sysfs_emit() or sysfs_emit_at() when formating the value to be
-> returned to user space. So replace scnprintf() with sysfs_emit().
+On Thu, Jun 19, 2025 at 04:46:28PM GMT, Neeraj Sanjay Kale wrote:
+> Add support for 4000000 as secondary baudrate.
 > 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> ---
+> v2: Use the available 'max-speed' device tree property. (Krzysztof)
+> v3: No Change
+> v4: Add ref for max-speed. (Krzysztof)
 
-Applied, thanks.
+No, why?
 
--- 
-Jiri Kosina
-SUSE Labs
+> ---
+>  .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> index 3ab60c70286f..bb9ab5dd3b4a 100644
+> --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> @@ -34,6 +34,13 @@ properties:
+>        This property depends on the module vendor's
+>        configuration.
+>  
+> +  max-speed:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+No, drop, I did not ask that.
+
+I asked to do like other bindings, just look at them. I gave you exact
+ref which is missing.
+
+NAK
+
+Best regards,
+Krzysztof
 
