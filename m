@@ -1,25 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E678123ABA3
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FB2266EE7
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750409089; cv=none; b=pqNChEWn/6kpxEGkMlMKKHcC5pvg1+pu47t3xqnTTq8t984pII1XfXbKzTr6bK/R2AYt8O9iiTq72L4uf8kwpHlQIb0YQFFqtxNIKf3bQD6VTBQko+6FkJiSclNGlB2U+qk4md9tVBM6V5+H+k1Tikkdjk31r1n9F3Snhp5KocI=
+	t=1750409141; cv=none; b=Q57ap9zzjBFjoh0Mj3TX56cDhsjfbBAx4OoVB1rgYyE0VpPDt7cj7v9/IWSKS4aa6Q4xE0Swliwfa+3d3X/iU2F9fIwNTNZPyFE3W8d2pPUm/ZFWF7P4XAk8LgWZ6SIgkKTkF2l6h3VSO6Oi//ckvetzIBWWAi8dFUEJ67GCv20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750409089; c=relaxed/simple;
-	bh=O1uqg9NwSbzeIw2lb8hAr7/+RNfd/v25wGjZEozZeNM=;
+	s=arc-20240116; t=1750409141; c=relaxed/simple;
+	bh=+PeBkVJpdBt0LQBKLfTN7ouk6W3CRJ/HX46KdLeSTJg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sgk3QrPZ5i5X6Ic9Z2MX8ls663Smf4JUepP4og01m7SeK3dAPY1X68cvaeEeBYOUkKhBs+qX0ssKYjZGkpEsEb6n6Xeu4kG28hEDGo7u4p8Mcmw9OQOeGIhVNVgpekdyxDJpvDYB75qrepbZmDWS797hdCQcNlS9MzGfqvlU4VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 883EF176A;
-	Fri, 20 Jun 2025 01:44:26 -0700 (PDT)
-Received: from [10.57.84.60] (unknown [10.57.84.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0EEC03F58B;
-	Fri, 20 Jun 2025 01:44:44 -0700 (PDT)
-Message-ID: <9c5bf40a-b0d8-414c-a0c9-f5da5d9b612d@arm.com>
-Date: Fri, 20 Jun 2025 09:44:42 +0100
+	 In-Reply-To:Content-Type; b=iOg/KW0v9bK1BQBrr51M7r3mKQ5y1ldsEOYdoLyWsLpDRvoDQ14hPPiCoJ1/dbJfth3+m5o+EE+NUToIXaBenBgQFgrhzU0MhcwIRoZZLuHFF117m2mpsZdYK06tb2IkNP9zi8qn3vd1OPYt7NQGK6WGjudli42u/PGWUdmtER0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=drL2aHv/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sZOuTFpL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=drL2aHv/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sZOuTFpL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="drL2aHv/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sZOuTFpL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="drL2aHv/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sZOuTFpL"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 72AD3218CE;
+	Fri, 20 Jun 2025 08:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750409136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eKeGa7VBLRAvBYON3djkPdQ3aaduYpuA7WDUVb/4p/k=;
+	b=drL2aHv/1l5jeYHhXkGtjiLQT47aWLx9nGjVsOA/gDetA95c+wk5YzW78KBQG/iDEIA4MT
+	+NkFEkQuRzw5u3Ji5E5agan6HfKbPxVIZyIEvYHaeqLl2dUWciobvthV5Rh2nxyE8eSB/j
+	5K/UBArOhRs4zqcImujbbk4ot4mX36g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750409136;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eKeGa7VBLRAvBYON3djkPdQ3aaduYpuA7WDUVb/4p/k=;
+	b=sZOuTFpLskOAy6cxr/8RT03ecZ/LiqD0QPne9u9+CQ6Q851CU1sXMjxfVmsDyGZMp6snA5
+	+dXeuB5FCFEfQUCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750409136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eKeGa7VBLRAvBYON3djkPdQ3aaduYpuA7WDUVb/4p/k=;
+	b=drL2aHv/1l5jeYHhXkGtjiLQT47aWLx9nGjVsOA/gDetA95c+wk5YzW78KBQG/iDEIA4MT
+	+NkFEkQuRzw5u3Ji5E5agan6HfKbPxVIZyIEvYHaeqLl2dUWciobvthV5Rh2nxyE8eSB/j
+	5K/UBArOhRs4zqcImujbbk4ot4mX36g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750409136;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eKeGa7VBLRAvBYON3djkPdQ3aaduYpuA7WDUVb/4p/k=;
+	b=sZOuTFpLskOAy6cxr/8RT03ecZ/LiqD0QPne9u9+CQ6Q851CU1sXMjxfVmsDyGZMp6snA5
+	+dXeuB5FCFEfQUCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCC64136BA;
+	Fri, 20 Jun 2025 08:45:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /zvKMK8fVWhPZgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 20 Jun 2025 08:45:35 +0000
+Message-ID: <704d2a80-79bb-4247-a2aa-25bd3eb9a7e5@suse.de>
+Date: Fri, 20 Jun 2025 10:45:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,155 +82,298 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] CoreSight: WARN_ON in coresight_disclaim_device_unlocked
- due to register reset on CPU power-cycle
-Content-Language: en-GB
-To: Keita Morisaki <keyz@google.com>, linux-kernel@vger.kernel.org,
- alexander.shishkin@linux.intel.com
-Cc: Yi-ming Tseng <yimingtseng@google.com>, Eric Chan
- <ericchancf@google.com>, Leo Yan <leo.yan@arm.com>,
- James Clark <james.clark@linaro.org>,
- "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
- Mike Leach <mike.leach@linaro.org>
-References: <CAGo=-X1K1qZ_p9X0yeKy8Wm4QMDs2+4VE08LUNKOCrA15KFLTA@mail.gmail.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CAGo=-X1K1qZ_p9X0yeKy8Wm4QMDs2+4VE08LUNKOCrA15KFLTA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] PCI/VGA: Move check for firmware default out of
+ VGA arbiter
+To: Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250620024943.3415685-1-superm1@kernel.org>
+ <20250620024943.3415685-7-superm1@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250620024943.3415685-7-superm1@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	URIBL_BLOCKED(0.00)[amd.com:email,bootlin.com:url,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,bootlin.com:url,imap1.dmz-prg2.suse.org:helo,amd.com:email]
+X-Spam-Level: 
 
-Cc: coresight lists, Leo, James, Mike L
+Hi
+
+Am 20.06.25 um 04:49 schrieb Mario Limonciello:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> The x86 specific check for whether a framebuffer belongs to a device
+> works for display devices as well as VGA devices.  Callers to
+> video_is_primary_device() can benefit from checking non-VGA display
+> devices.
+>
+> Move the x86 specific check into x86 specific code, and adjust VGA
+> arbiter to call that code as well. This allows fbcon to find the
+> right PCI device on systems that don't have VGA devices.
+>
+> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   arch/x86/video/video-common.c | 28 +++++++++++++++++++++++++++
+>   drivers/pci/vgaarb.c          | 36 ++---------------------------------
+>   2 files changed, 30 insertions(+), 34 deletions(-)
+>
+> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
+> index 81fc97a2a837a..718116e35e450 100644
+> --- a/arch/x86/video/video-common.c
+> +++ b/arch/x86/video/video-common.c
+> @@ -9,6 +9,7 @@
+>   
+>   #include <linux/module.h>
+>   #include <linux/pci.h>
+> +#include <linux/screen_info.h>
+>   #include <linux/vgaarb.h>
+>   
+>   #include <asm/video.h>
+> @@ -27,13 +28,40 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>   
+>   bool video_is_primary_device(struct device *dev)
+
+I'm not sure I understand this patch. video_is_primary_device() already 
+exists for 3 architectures, including x86. [1] Adding it here should 
+produce an error. (?)
+
+[1] https://elixir.bootlin.com/linux/v6.15.2/A/ident/video_is_primary_device
+
+The code on x86 is
+
+bool 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/bool>video_is_primary_device 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/video_is_primary_device>(structdevice 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/device>*dev) { 
+structpci_dev 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/pci_dev>*pdev; 
+if(!dev_is_pci 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/dev_is_pci>(dev)) 
+returnfalse <https://elixir.bootlin.com/linux/v6.15.2/C/ident/false>; 
+pdev=to_pci_dev 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/to_pci_dev>(dev); 
+return(pdev==vga_default_device 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/vga_default_device>()); }
+
+I was thinking about extending it to test for additional properties, 
+like this
+
+bool 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/bool>video_is_primary_device 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/video_is_primary_device>(structdevice 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/device>*dev) { 
+structpci_dev 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/pci_dev>*pdev; 
+if(!dev_is_pci 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/dev_is_pci>(dev)) 
+returnfalse <https://elixir.bootlin.com/linux/v6.15.2/C/ident/false>; 
+pdev=to_pci_dev 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/to_pci_dev>(dev); 
+if(pdev==vga_default_device 
+<https://elixir.bootlin.com/linux/v6.15.2/C/ident/vga_default_device>()) 
+return true for_each_pci_dev() { // test if display and could be 
+primary. } return false; // nothing found }
 
 
-Hello !
-
-Thanks for the report ! In the future, please use
-scripts/get_maintainer.pl for the clear list of people/list
-for reporting issues.
-
-Response inline, below.
-
-On 20/06/2025 08:21, Keita Morisaki wrote:
-> Hello folks,
-> 
-> I am writing to report a WARN_ON message I'm encountering in the 
-> CoreSight driver on a multi-core ARM system running a 6.12-based kernel. 
-> The warning appears consistently when disabling an Embedded Trace 
-> Extension (ETE) source after it has been active. The issue is not 
-> reproducible when CPUidle is disabled.
-> 
-> The problem occurs because the driver assumes the CoreSight claim 
-> register is persistent, but it could be reset by the CPUidle power 
-> management flow. The section B2.3.2 of Arm CoreSight Architecture 
-> Specification v3.0[1] indicates that the claim register must reset at 
-> “reset”. A CPU power-up from an idle state can trigger a Cold reset, 
-> which might explain this behavior.
-> 
-> My ftrace analysis confirms this. I traced the only two functions that 
-> modify the claim state: coresight_set_claim_tags (which sets the claim) 
-> and coresight_clear_claim_tags (which is the only part of the kernel 
-> that writes to CLAIMCLR). The trace shows the claim being set, followed 
-> by a CPUidle transition, but no subsequent call to 
-> coresight_clear_claim_tags.
-> 
-> Here are the steps to reproduce the issue:
-> 
-> modprobecoresight_etm4x
-> 
-> # Enable any relevant sink
-> 
-> echo1>/sys/bus/coresight/devices/ete0/enable_source
-> 
-> echo0>/sys/bus/coresight/devices/ete0/enable_source
-> 
-> 
-> Here is a relevant snippet from the ftrace log that illustrates the 
-> sequence:
-> 
-> #tracer:function_graph
-> 
-> #
-> 
-> #CPUDURATIONFUNCTIONCALLS
-> 
-> #|||||||
-> 
-> 0)|coresight_claim_device_unlocked[coresight](){
-> 
-> 0)3.750us|coresight_set_claim_tags[coresight]();//Claimissethere
-> 
-> 0)+20.260us|}
-> 
-> 0)|/*psci_domain_idle_enter:cpu_id=0state={Our PSCI parameter value}*/// 
-> CPUgoesidle
-> 
-> 0)|/*psci_domain_idle_exit:cpu_id=0state={Our PSCI parameter value}*/// 
-> CPUwakesup,causingColdreset
-> 
-> ...
-> 
-> 0)@309346.3us|coresight_disclaim_device_unlocked[coresight]();// 
-> TriggersWARN_ON
-> 
-> 
-> The following WARN_ON [2] is printed because the CLAIMCLR register has 
-> already been reset at the time coresight_disclaim_device_unlocked is 
-> called, contrary to the driver's expectation.
-> 
-
-We have the ETM driver performing the save/restore of ETM context during
-a CPUidle. This is only done when the ETM/ETE is described to be loosing
-context over PM operation. If this is not done (via DT), the driver
-doesn't do anything. This could be problematic. Could you try adding:
-
-"arm,coresight-loses-context-with-cpu"
+This would then be called from per-device sysfs code that export a 
+property similar to boot_vga (such as boot_display).
 
 
-property to the ETE nodes and see if it makes a difference ?
+The issue is currently just an x86 problem, but I can imagine something 
+similar happening on ARM. There we'd have to go through the DT tree to 
+figure out the primary device. That's a problem for a later patch set, 
+but we should keep this in mind.
 
-Kind regards
-Suzuki
+>   {
+> +	u64 base = screen_info.lfb_base;
+> +	u64 size = screen_info.lfb_size;
+>   	struct pci_dev *pdev;
+> +	struct resource *r;
+> +	u64 limit;
+>   
+>   	if (!dev_is_pci(dev))
+>   		return false;
+>   
+>   	pdev = to_pci_dev(dev);
+>   
+> +	if (!pci_is_display(pdev))
+> +		return false;
+> +
+> +	/* Select the device owning the boot framebuffer if there is one */
+> +	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+> +		base |= (u64)screen_info.ext_lfb_base << 32;
+> +
+> +	limit = base + size;
+> +
+> +	/* Does firmware framebuffer belong to us? */
+> +	pci_dev_for_each_resource(pdev, r) {
+> +		if (resource_type(r) != IORESOURCE_MEM)
+> +			continue;
+> +
+> +		if (!r->start || !r->end)
+> +			continue;
+> +
+> +		if (base < r->start || limit >= r->end)
+> +			continue;
+> +
+> +		return true;
+> +	}
+> +
 
-[0] 
-https://elixir.bootlin.com/linux/v6.12/source/Documentation/devicetree/bindings/arm/arm,coresight-etm.yaml#L79 
+You can drop all this code and call screen_info_pci_dev() instead. I 
+simply never got to update vgaarb to use it.
 
+[2] 
+https://elixir.bootlin.com/linux/v6.15.2/source/drivers/video/screen_info_pci.c#L109
 
+>   	return (pdev == vga_default_device());
+>   }
+>   EXPORT_SYMBOL(video_is_primary_device);
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dbae..15ab58c70b016 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -26,12 +26,12 @@
+>   #include <linux/poll.h>
+>   #include <linux/miscdevice.h>
+>   #include <linux/slab.h>
+> -#include <linux/screen_info.h>
+>   #include <linux/vt.h>
+>   #include <linux/console.h>
+>   #include <linux/acpi.h>
+>   #include <linux/uaccess.h>
+>   #include <linux/vgaarb.h>
+> +#include <asm/video.h>
+>   
+>   static void vga_arbiter_notify_clients(void);
+>   
+> @@ -554,38 +554,6 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
+>   }
+>   EXPORT_SYMBOL(vga_put);
+>   
+> -static bool vga_is_firmware_default(struct pci_dev *pdev)
+> -{
+> -#if defined(CONFIG_X86)
+> -	u64 base = screen_info.lfb_base;
+> -	u64 size = screen_info.lfb_size;
+> -	struct resource *r;
+> -	u64 limit;
+> -
+> -	/* Select the device owning the boot framebuffer if there is one */
+> -
+> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+> -		base |= (u64)screen_info.ext_lfb_base << 32;
+> -
+> -	limit = base + size;
+> -
+> -	/* Does firmware framebuffer belong to us? */
+> -	pci_dev_for_each_resource(pdev, r) {
+> -		if (resource_type(r) != IORESOURCE_MEM)
+> -			continue;
+> -
+> -		if (!r->start || !r->end)
+> -			continue;
+> -
+> -		if (base < r->start || limit >= r->end)
+> -			continue;
+> -
+> -		return true;
+> -	}
+> -#endif
+> -	return false;
+> -}
+> -
+>   static bool vga_arb_integrated_gpu(struct device *dev)
+>   {
+>   #if defined(CONFIG_ACPI)
+> @@ -623,7 +591,7 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>   	if (boot_vga && boot_vga->is_firmware_default)
+>   		return false;
+>   
+> -	if (vga_is_firmware_default(pdev)) {
+> +	if (video_is_primary_device(&pdev->dev)) {
 
-> [416.354181][C0]WARNING:CPU:0PID:0atdrivers/hwtracing/coresight/ 
-> coresight-core.c:187coresight_disclaim_device_unlocked+0x84/0x9c[coresight]
-> 
-> [416.535454][C0]Calltrace:
-> 
-> [416.538606][C0]coresight_disclaim_device_unlocked+0x84/0x9c[coresight]
-> 
-> [416.549359][C0]etm4_disable_hw+0x2d8/0x374[coresight_etm4x]
-> 
-> [416.623310][C0]do_idle+0x1d4/0x264
-> 
-> (Note on tracing: To get this detailed trace, I made two modifications 
-> to the kernel. First, since the trace_psci_domain_idle_enter/exit events 
-> are not available in kernel 6.12, I cherry-picked the upstream patch 
-> 7b7644831e72 [3] to add them. Second, to specifically trace the claim 
-> functions, I temporarily replaced their inline compiler hints with 
-> noinline.)
-> 
-> Given the evidence, it appears the driver's assumption that the claim 
-> register is persistent across CPU power states is incorrect and may need 
-> to be addressed.
-> 
-> Could you please provide your guidance on this?
-> 
-> Thank you for your time and assistance.
-> 
-> [1] https://developer.arm.com/documentation/ihi0029/latest/ <https:// 
-> developer.arm.com/documentation/ihi0029/latest/>_
-> _[2] https://elixir.bootlin.com/linux/v6.12/source/drivers/hwtracing/ 
-> coresight/coresight-core.c#L187 <https://elixir.bootlin.com/linux/v6.12/ 
-> source/drivers/hwtracing/coresight/coresight-core.c#L187>_
-> _[3] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/ 
-> linux.git/commit/?id=7b7644831e7276f52a233ec685d13c965fff09d9 <https:// 
-> web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/? 
-> id=7b7644831e7276f52a233ec685d13c965fff09d9>
-> 
-> Best regards,
-> Keita
+Maybe not change this because you don't want to end up with non-VGA 
+devices here.
+
+Best regards
+Thomas
+
+>   		vgadev->is_firmware_default = true;
+>   		return true;
+>   	}
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
