@@ -1,153 +1,178 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A852EA466
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07691CBEB9
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 19:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750445968; cv=none; b=eENcAYxZbAM28gihXKkauTD+UExcQVKxEzWb/xMrEODBJdmfh0NqgipuyReU0xcXxRzm1tQ8AkczLzoik5++0iWCa77sVsicH8XjMguBOiet1sydXURw9bA3f9O8Ra3FjDb2IDx269NFcFUfb4SUEhNJhEC4/L3kMqIxveVhfUw=
+	t=1750446233; cv=none; b=YyznmdvPfzLhg5nhDWwS6XtEGKle76ZQHhXDukd7smhxe582zKqpNGN3V2jKqCznNkgVQT03+gsuoyDspN08NtIMMn41qazog0KAaCjVMJPLyQEwTCAjbvu96Nbpypl9R0qwOpjJUucNtYaUMm60NUrbju7xgogLZICzpy/V1o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750445968; c=relaxed/simple;
-	bh=JeLnbyY2dQTg/A+SEJyHL4uN25xDCrtKzzPo1dmUSLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QW+tmRtzfQ02HubhhibzsoMQeQ35gWdezrkmdXEWJJGZ8Na/BpsUj48dR4lh4DguCFETJxEEj1pvUdVa+PFD7iLU3IuAsFVy5H8FqG3nGhxvttTZcyhJdP9cWBUK6wPqtWvDqVsdbFm8ic0dTgN+kcC62gFcDSTTolA1hls9g1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YEuNqKNY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fA3ymKZ2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YEuNqKNY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fA3ymKZ2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750446233; c=relaxed/simple;
+	bh=tm2Jtsr3mu6AhBzbEmc7bjfiTss5Qy0vup2pm/AFT8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=eJTHxHltjpqLkHYNu3eoN1fsN7dzfntpGWPsD6+OZr1ww3Ly98WYWq6VXRyj/sSSci76jys8wzSEQG+kZ5MMID9HIKjjbX3eQA5MARCEutR9SSEk/O6w9DF3xVLoo38Khc3fefgrt5swRFep6i2IQmoIp+v63djfkuAKm1VUWbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NA2XLuqB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YEuNqKNY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fA3ymKZ2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YEuNqKNY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fA3ymKZ2"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 903E721201;
-	Fri, 20 Jun 2025 18:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750445964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rcdBWSrdiOeiTEuukcj+PpyH0Ha29phKzpomaCvvSfE=;
-	b=YEuNqKNYxyl2y85Dnkrn+ugY06r0Wg8BQjJ/yq0G3IleH6i7Hk04SHGBXa05PtfnZlWg6n
-	GZxmEJR2MsbD/grScqqCtM91AnyAaPPlLAwyw/RZwuAFR4Qyxs4rONPkFj83ql5VapDSzZ
-	HaFkGzTaCMU4uni//LaOoCISMA9cM+8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750445964;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rcdBWSrdiOeiTEuukcj+PpyH0Ha29phKzpomaCvvSfE=;
-	b=fA3ymKZ25Y+Mzo2psbokdUhI5YkHV9EnNg9DWL+5XQeJLvswY+U+/BF7Eh65fGRbJ/YflJ
-	IgG+sChMCMib7WCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750445964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rcdBWSrdiOeiTEuukcj+PpyH0Ha29phKzpomaCvvSfE=;
-	b=YEuNqKNYxyl2y85Dnkrn+ugY06r0Wg8BQjJ/yq0G3IleH6i7Hk04SHGBXa05PtfnZlWg6n
-	GZxmEJR2MsbD/grScqqCtM91AnyAaPPlLAwyw/RZwuAFR4Qyxs4rONPkFj83ql5VapDSzZ
-	HaFkGzTaCMU4uni//LaOoCISMA9cM+8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750445964;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rcdBWSrdiOeiTEuukcj+PpyH0Ha29phKzpomaCvvSfE=;
-	b=fA3ymKZ25Y+Mzo2psbokdUhI5YkHV9EnNg9DWL+5XQeJLvswY+U+/BF7Eh65fGRbJ/YflJ
-	IgG+sChMCMib7WCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5D41F136BA;
-	Fri, 20 Jun 2025 18:59:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id S0ilE4uvVWjbGQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 20 Jun 2025 18:59:23 +0000
-Date: Fri, 20 Jun 2025 19:59:17 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Jakub Matena <matenajakub@gmail.com>, Wei Yang <richard.weiyang@gmail.com>, 
-	Barry Song <baohua@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] mm/mremap: introduce more mergeable mremap via
- MREMAP_RELOCATE_ANON
-Message-ID: <tc466z77itm7qps5exnelcp57dabnvn2gtd2tigutaivulmowh@4n74ymr5yxtg>
-References: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
- <7e51e1e2-7272-48d5-9457-40ab87ad7694@redhat.com>
- <b65dd020-5e02-4863-8994-def576e3d3dd@redhat.com>
- <76zi626uk53dtfzmezzt6cfz45ansam2gpcumddqxnipnw5jkh@qwfzoxgi255b>
- <68d8c7ad-aea0-4556-be63-9b67d70e4386@redhat.com>
- <58560256-58da-4fa6-a953-d2c4695ffba8@lucifer.local>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NA2XLuqB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750446230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dUGtP2n8cbKQ5lAX7UXKt00TyIe26nbilcTxEZNSxWI=;
+	b=NA2XLuqBYVO/WcxQzxzBCTBlYomljKWdC0RQzAONm3b+xcPK3ajXXEZ+qkQ9kaIEhYq8Z3
+	yeUaDv6wWAXFN/dFgkmZnvKC6ih6FQ5MSAcBRazOhQx+I8sr6ssEEpITWefX3kX1DtOBjP
+	9QMYLAqtOjZB2Xsu+u5g9+SyGWxGRnY=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-7h2VatphPjOeTRReU1f7IQ-1; Fri, 20 Jun 2025 15:03:49 -0400
+X-MC-Unique: 7h2VatphPjOeTRReU1f7IQ-1
+X-Mimecast-MFC-AGG-ID: 7h2VatphPjOeTRReU1f7IQ_1750446229
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-234b133b428so16716895ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:03:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750446228; x=1751051028;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dUGtP2n8cbKQ5lAX7UXKt00TyIe26nbilcTxEZNSxWI=;
+        b=Xu9ymyD3p6sF6hHE26x5G8jzoeKu9UpcwEbrntJXY8jVHHmH98Ve1ZDbv8/tdsmJif
+         f3snnQlFEN5j4V2nb92EJAuv8oknQJtvqzs5QLpM66cLWm5IwuvfCaLfus1x9qJX381p
+         Ewf42AAfmHVdazzvhuFpMZfbHaMWkUI4tjuFc0j0DE6gHSPP7Iz0imci4RagvRBaa9fR
+         BSBsnoY8RXCBTqlrrx/Wop0dBNo1Gr0++9t6fa0tDml8Nlzua7aYnGEKqkTZOrISXzpG
+         BeaKkiLR3KDwxAGXdcLDl3rmCYT3sfU21bzNcWe7f+owbw8zekm7xs11RAn7qdTsSGWg
+         s4sA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1EfcLQ96thw+YHXO7hWCwZhXfM6sJINJi5KyMTyer8zF+GJyhccH5TqYY4qzDGKvAXeNv2gdRK+WMPyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDD2+ddpbT1rHadiQ8ssyYKarkqyPIm1FhuZKgRjvqG+xsAvdn
+	De8lYJFd/iHaXYYh5wdAVndxPE2LbmifioDXDGW+ToBfdcyFUwDHNet77hr0fMQfOkgpb3+2P6b
+	K1a72DoUEEu01dV3ZeXlAODe/sugGh0Qq/di5whwxNli0tcnkab7YCzpZ6W3lJkzkmA==
+X-Gm-Gg: ASbGncuUnBPifzwbh2x8Il5VRiLl3H/Uqv3WOThLxvzTW8rxMwn4nzY7dAPV/JL1J1n
+	03KtgFcDH8pzgV6yzXzmMN60LmMxHY3UOMu4LWACbE38BmBzbBSMLy6T+l9AXkSbFB1jGj+9U5F
+	lKqtQbS/698UQbKfAgGH3NHlU01j+ZdBEkTR8QkYanUPLk0RxvdXnDkX6IPwMck/J1OZIAVJNqH
+	2uyTvEHYzAMfoBHSAxW44vtwJgC2k2EnwaIIgRUtFBDSx9+ZrQ7PFTs99xMbcxRWcbQR6n+7ESa
+	O9nJHgIccm8=
+X-Received: by 2002:a17:903:988:b0:234:cc7c:d2e2 with SMTP id d9443c01a7336-237d97c89d0mr55547585ad.1.1750446228439;
+        Fri, 20 Jun 2025 12:03:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIprR2hIy8ljR+9gmTCa6DaaTxi47lCYb0fcSWA4gJP+7N78JTWg2K1+N08CEwxd3l9Bfi8Q==
+X-Received: by 2002:a17:903:988:b0:234:cc7c:d2e2 with SMTP id d9443c01a7336-237d97c89d0mr55547145ad.1.1750446228011;
+        Fri, 20 Jun 2025 12:03:48 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8609968sm24235535ad.136.2025.06.20.12.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 12:03:47 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Nikita Kalyazin <kalyazin@amazon.com>,
+	peterx@redhat.com,
+	Hugh Dickins <hughd@google.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: [PATCH 0/4] mm/userfaultfd: modulize memory types
+Date: Fri, 20 Jun 2025 15:03:38 -0400
+Message-ID: <20250620190342.1780170-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58560256-58da-4fa6-a953-d2c4695ffba8@lucifer.local>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,suse.cz,google.com,oracle.com,infradead.org,surriel.com,nvidia.com,linux.alibaba.com,arm.com,gmail.com,kernel.org,kvack.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 11:57:11AM +0100, Lorenzo Stoakes wrote:
-> On Tue, Jun 17, 2025 at 10:45:53AM +0200, David Hildenbrand wrote:
-> > mremap() is already an expensive operation ... so I think we need a pretty
-> > convincing case to make this configurable by the user at all for each
-> > individual mremap() invocation.
-> 
-> My measurements suggest, unless you hit a very unfortunate case of -huge
-> faulted in range all mapped PTE- that the work involved is not all that
-> much more substantial in terms of order of magnitude than a normal mremap()
-> operation.
-> 
+[based on akpm/mm-new]
 
-Could you share your measurements and/or post them on the cover letter for the
-next version?
+This series is an alternative proposal of what Nikita proposed here on the
+initial three patches:
 
-If indeed it makes no practical difference, maybe we could try to enable it by
-default and see what happens...
+  https://lore.kernel.org/r/20250404154352.23078-1-kalyazin@amazon.com
 
-Or: separate but maybe awful idea, but if the problem is the number of VMAs
-maybe we could try harder based on the map count? i.e if 
-map_count > (max_map_count / 2), try to relocate anon.
+This is not yet relevant to any guest-memfd support, but paving way for it.
+Here, the major goal is to make kernel modules be able to opt-in with any
+form of userfaultfd supports, like guest-memfd.  This alternative option
+should hopefully be cleaner, and avoid leaking userfault details into
+vm_ops.fault().
+
+It also means this series does not depend on anything.  It's a pure
+refactoring of userfaultfd internals to provide a generic API, so that
+other types of files, especially RAM based, can support userfaultfd without
+touching mm/ at all.
+
+To achieve it, this series introduced a file operation called vm_uffd_ops.
+The ops needs to be provided when a file type supports any of userfaultfd.
+
+With that, I moved both hugetlbfs and shmem over.
+
+Hugetlbfs is still very special that it will only use partial of the
+vm_uffd_ops API, due to similar reason why hugetlb_vm_op_fault() has a
+BUG() and so far hard-coded into core mm.  But this should still be better,
+because at least hugetlbfs is still always involved in feature probing
+(e.g. where it used to not support ZEROPAGE and we have a hard-coded line
+to fail that, and some more).  Meanwhile after this series, shmem will be
+completely converted to the new vm_uffd_ops API; the final vm_uffd_ops for
+shmem looks like this:
+
+static const vm_uffd_ops shmem_uffd_ops = {
+	.uffd_features	= 	__VM_UFFD_FLAGS,
+	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
+				BIT(_UFFDIO_ZEROPAGE) |
+				BIT(_UFFDIO_WRITEPROTECT) |
+				BIT(_UFFDIO_CONTINUE) |
+				BIT(_UFFDIO_POISON),
+	.uffd_get_folio	=	shmem_uffd_get_folio,
+	.uffd_copy	=	shmem_mfill_atomic_pte,
+};
+
+As I mentioned in one of my reply to Nikita, I don't like the current
+interface of uffd_copy(), but this will be the minimum change version of
+such API to support complete extrenal-module-ready userfaultfd.  Here, very
+minimal change will be needed from shmem side to support that.
+
+Meanwhile, the vm_uffd_ops is also not the only place one will need to
+provide to support userfaultfd.  Normally vm_ops.fault() will also need to
+be updated, but that's a generic function and it'll play together with the
+new vm_uffd_ops to make everything fly.
+
+No functional change expected at all after the whole series applied.  There
+might be some slightly stricter check on uffd ops here and there in the
+last patch, but that really shouldn't stand out anywhere to anyone.
+
+For testing: besides the cross-compilation tests, I did also try with
+uffd-stress in a VM to measure any perf difference before/after the change;
+The static call becomes a pointer now.  I really cannot measure anything
+different, which is more or less expected.
+
+Comments welcomed, thanks.
+
+Peter Xu (4):
+  mm: Introduce vm_uffd_ops API
+  mm/shmem: Support vm_uffd_ops API
+  mm/hugetlb: Support vm_uffd_ops API
+  mm: Apply vm_uffd_ops API to core mm
+
+ include/linux/mm.h            |  71 +++++++++++++++++++++
+ include/linux/shmem_fs.h      |  14 -----
+ include/linux/userfaultfd_k.h |  58 ++++-------------
+ mm/hugetlb.c                  |  19 ++++++
+ mm/shmem.c                    |  28 ++++++++-
+ mm/userfaultfd.c              | 115 +++++++++++++++++++++++++---------
+ 6 files changed, 217 insertions(+), 88 deletions(-)
 
 -- 
-Pedro
+2.49.0
+
