@@ -1,72 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B617E;
-	Fri, 20 Jun 2025 00:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7E4EBE;
+	Fri, 20 Jun 2025 00:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750378422; cv=none; b=OTFl/xQtm92baX2PvPMq7mCj0zyp6TspKKXwru7cm1lb7agJ7C3GecPAl5W3MxM4fdmCpk+eK4abD7ts3ZI9evr+TSefzT9075oUb+RltKKk6UCvPCc5vfUrHs01WzqvuigsGeLCwrYkL8m5TY7Mr9BbKPAy1PMHZCpA2j8jjes=
+	t=1750378541; cv=none; b=qRwTFr6A1WgCtgd7dfGz16686AIlX/l1MY8bFT9ln10v25kqMecbdQXmqhgNq+z4k+TGvibhgTDGuxuVQhDB9W1NHTHgwUI4RqnZgXmDRtrsoHPJn0+03YiTYTitB39p2ShRS8jvqoJC8kUSk1qEUPXgQ0LXAPXkZZEcv60P5eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750378422; c=relaxed/simple;
-	bh=HASUCIL9ulPvLyn3zTulpno8DS94ekxO6WW6pn7Y6ms=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VES785xgAz3Ku/+/wihzH4xZ9DCDnYQePe8RkISQIiEYFQHEfSiWPwNqHWcDyKiN6bSxjTx9D3TarVy/8aUXLjGdjMYDAllYozSJ86T0fsO4QJXNeAxYruHd3n8l+vuO9DGMt/0vbdP1Qqorxu7mWJWDTaSJttRUUvamCnR73BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XuMA59iR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750378541; c=relaxed/simple;
+	bh=e6PUvRTJSmaqea6lu1amVWDSUsUOK8CDnQiceXZWUeE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bioPKjDnxOYroWnAoKdOdx21mAQTL5LuEQZJp1cb/IySejC73OuZcE9A7O+o1SNXsiEZZanI1SPIz3ziQA/dffHBAZKP+Btg7XFEr0ciGfxstcbQRf0KnlCM2mYJtu+x4RZJC6YA8gS0fd3hIeXwdrKAyl1RrNegjFGEjN42UIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OnwLyjdc; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XuMA59iR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63888C4CEF1;
-	Fri, 20 Jun 2025 00:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750378421;
-	bh=HASUCIL9ulPvLyn3zTulpno8DS94ekxO6WW6pn7Y6ms=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XuMA59iRXoC4OrMM44QnuZF3MM/WJnbYjB9BPDvZrFYPEQ2kNMfGGZz8JnDY/c2jR
-	 1812O2iaojg/6koDslMtFlbJTkD6pX5PHKzvjnu0Ldzv8FgnmaBwlvrtyPBeK5Nz8+
-	 4/xGmDQnJdjmDVnSj0NIkYBcgp/ONwgujOTQKUeheJhkYL1b7qGBQ5w/aNckMIwpoy
-	 kYCYvrKl06oYl/cQEvtnauN2Bt2d6rcACroXBXug0KA2slmpMOipopx+fM7Y42e4DV
-	 HxGADf3EBYFtDKsqKN5RZqHJ5AxLgqSC/9BUGkF5qZEDKwthDsxRb1++jgCKXvbh5U
-	 QUzHbwlfGzhCA==
-Date: Thu, 19 Jun 2025 17:13:39 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, Krzysztof
- Karas <krzysztof.karas@intel.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor <nathan@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH v15 0/9] ref_tracker: add ability to register a debugfs
- file for a ref_tracker_dir
-Message-ID: <20250619171339.1bf28dc7@kernel.org>
-In-Reply-To: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org>
-References: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OnwLyjdc"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55K0FCCg760724;
+	Thu, 19 Jun 2025 19:15:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750378512;
+	bh=QukmTRfi9xF8L8Kp5D+iDJT0jTYg0jLPd+qbgDL3Ep8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=OnwLyjdc4RV112HYIsbIb9KDddM31DIf6Goh8OzT7Bmw1JPLszkbAXqn927Xh9Lsa
+	 I6uOvO/OuluV2n3g8Vs3q6U+Y+kfLI6UrvUI/CF6SqEH8QN2h/MF4xDOmjqnMfFZY3
+	 eCeUoDnX3vNgiTf1KLN+UdFLddMafri+G9wJuTbM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55K0FCfc162323
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 19 Jun 2025 19:15:12 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
+ Jun 2025 19:15:11 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 19 Jun 2025 19:15:11 -0500
+Received: from [10.249.33.201] ([10.249.33.201])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55K0FBqh2252500;
+	Thu, 19 Jun 2025 19:15:11 -0500
+Message-ID: <1cee7d78-247b-4ae3-a2d5-f478dac1985b@ti.com>
+Date: Thu, 19 Jun 2025 19:15:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "regulator: tps65219: Add TI TPS65214 Regulator
+ Support"
+To: Robert Nelson <robertcnelson@gmail.com>
+CC: Dhruva Gole <d-gole@ti.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>
+References: <20250619153526.297398-1-d-gole@ti.com>
+ <c04c4bef-2773-41f7-b2e6-ea465cb9f164@ti.com>
+ <CAOCHtYhjSnypDcd5iojg_0KM9aBX6QH+0hMfauGccL6MvyLXzg@mail.gmail.com>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <CAOCHtYhjSnypDcd5iojg_0KM9aBX6QH+0hMfauGccL6MvyLXzg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, 18 Jun 2025 10:24:13 -0400 Jeff Layton wrote:
-> For those just joining in, this series adds a new top-level
-> "ref_tracker" debugfs directory, and has each ref_tracker_dir register a
-> file in there as part of its initialization. It also adds the ability to
-> register a symlink with a more human-usable name that points to the
-> file, and does some general cleanup of how the ref_tracker object names
-> are handled.
+Hi Robert,
 
-Thanks Jeff!
+On 6/19/2025 6:24 PM, Robert Nelson wrote:
+> On Thu, Jun 19, 2025 at 2:58 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>> Hi,
+>>
+>> On 6/19/25 10:35 AM, Dhruva Gole wrote:
+>>> This reverts commit f1471bc435afa31c8c0c58551922830dc8f4b06b.
+>> I will be sending a patch soon with a fix regarding the devm_kmalloc use in the probe() function.
+>> I'll keep looking into these bugs to see if there's anything else to fix.
 
-I'm going to apply this based on v6.16-rc2 and merge to net-next.
-If anyone would like to also pull into their trees the hash will 
-be 707bd05be75f. Happy to create a branch if necessary, too.
+I submitted a patch that addresses the incorrect kmalloc size occurring
+in the regulator probe().
+
+When ya'll have time, could you verify if this patch [0] addresses the
+boot failure you're encountering.
+
+Regardless, this is a logic error that should be updated. Thank you for
+your time & sorry for the headache this caused!
+
+[0]:
+https://lore.kernel.org/all/20250620000924.2636542-1-s-ramamoorthy@ti.com/
+
+>>
+>>> This was causing boot regressions [1] on many BeagleBoard platforms
+>>> like the AM62x based BeaglePlay and PocketBeagle-2.
+>>>
+>>> [1] https://gist.github.com/DhruvaG2000/75b7d5ced6c09d508ee0ad5ab1f19707
+> This bug is nasty... ugh! My BeaglePlay (am62) just triggered the same
+> classic bug on startup.  Seems like it's related to the phase of the
+> moon/etc.. Something in the PMIC doesn't like what we are doing with
+> the new devices bolted on top..
+>
+> Here is my boot log with only f1471bc435afa31c8c0c58551922830dc8f4b06b
+> reverted https://gist.github.com/RobertCNelson/745bc4f9e219be264722b2093ef03fa8
+>
+> So there's been 4 patches on "tps65219-regulator.c" :
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/regulator/tps65219-regulator.c?h=v6.16-rc2
+>
+> f1471bc435afa31c8c0c58551922830dc8f4b06b regulator: tps65219: Add TI
+> TPS65214 Regulator Support
+> 38c9f98db20a649a1f8454f507608b6aef0c9297 regulator: tps65219: Add
+> support for TPS65215 Regulator IRQs
+> 3f2e457efdad5af4164f155bd7ac902258a9b1ce regulator: tps65219: Add
+> support for TPS65215 regulator resources
+> 8c04144e156b49980a786e80c855e41f6c71685c regulator: tps65219: Update
+> struct names
+>
+> Back to retesting the 3 other commits tomorrow!
+>
+> Fun note... I'm testing 4 PocketBeagle2 's and 2 BeaglePlays,
+> depending on the day one board will trigger this bug 80% of the time,
+> someday it takes hours to trigger.
+>
+> Regards,
+>
