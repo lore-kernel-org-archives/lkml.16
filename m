@@ -1,47 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19302EAB81
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0C92EACF8
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750444401; cv=none; b=U0yc7YQCxVOrpCT838unBJ1WECVwniKtWrsSlj2f7i7lfrHD2HCvICGcndokrHekGCjbltN+BmvnfWWfUPM2xv5dOQGaf7fPHrH0tXRGO1rif5czANbIovz+ve+6LQIc2//cO3muEsucoCBV8MmiKT0DyQaqwd5Ia0qf9vgl03I=
+	t=1750444403; cv=none; b=SYQ8quwsa13Rn9BwaXwseeCbw9M2Qz68jZ7ItnTQO4TPeSLkxyDStmdA9dxlKRaVkV3gBUMn/b2rEVVEBntJ+cH1NebmfrtQ/i1YlmYQcweUNrqQ2iSOCgHzZOOfTr8wIrEeE7jkl+0nmlgFEiHLECXpRgAhaVrsaNKpUin0YCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750444401; c=relaxed/simple;
-	bh=sIMco8OZdRKD0PESP1248SY+C1rI3eIxgXz4pXFO21A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oo6FNZJF7ga1ZY42W2VgMo8BtuEMzqxwrH4TieIbiiWWihxyZBniwMVU/gvichs5OvkqriwST3HK+ZjZ0ErenQfEE4qQpAc/bO/tCU7LmZAVdfsH2bwu9sZ83Es5QVCk9CuOeOH7zEB1qNUR9xAF906/HA1sNhWCLjNBSkJxGN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d7J42BSk; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1750444403; c=relaxed/simple;
+	bh=ucRzHJWp7naudgx3oSodbDo3ziwW+nJdx1fM+yiieLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P1U8nHkFhUbR5wSh8kn7g0raC8Y/KdeEQ7YV8bTlmUQOdKEFC5P5XyBJJA/Xvq/iK7txNYhTh6VLU8YO9w0s0xt3vh+kAND+LpFGlSVns4JipcgwE79+kixSeY70u8LS/P5RHL0E7AJuvmx7YZJgncuyQurnyhA6mkOR/RrmU/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtUMFBGb; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7J42BSk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtUMFBGb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750444398;
+	s=mimecast20190719; t=1750444400;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qFCxvPemuwsmy2QbSvDCCNSay81IMpoZXa9WMQ9tskg=;
-	b=d7J42BSkVQh4iD8gZfvX/su7bhugEsnRKjYXMHjEs63f5cl9XifK+0xmo9L5cUtIe/0aUC
-	emucIW7srEMJCA+vdedN71Ms1w9B0XWy0V3RVnYOgSdhNxQ0E98CNCQ6Yem6+Ofms82PDn
-	Wipd8jA+4C2dixjXz2JcJAUNYhUmY8w=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ew6cYXJ5tlWvgkgeybcpF+VZLjwvJDFqrgIT2wI2peY=;
+	b=HtUMFBGbuHxeBHKTqBwSye22QcPj5hyIR2nt/dL+X5B8qDjVNYkyYAyas4MTua+8/P72nZ
+	0huseTbvOt1m9M7vH9eJ5zYYAX+gb67XB51TkqDhqPpFgTg8FfErAb260eibF32ozTenaA
+	jKfe4gHCXesRWtKZJIUIRVZ/ztRc5vU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-US2x4_1XNZmhusfqhFmbcw-1; Fri,
- 20 Jun 2025 14:33:17 -0400
-X-MC-Unique: US2x4_1XNZmhusfqhFmbcw-1
-X-Mimecast-MFC-AGG-ID: US2x4_1XNZmhusfqhFmbcw_1750444395
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-25-7yf16FjtOpapJiIk6xmmOQ-1; Fri,
+ 20 Jun 2025 14:33:15 -0400
+X-MC-Unique: 7yf16FjtOpapJiIk6xmmOQ-1
+X-Mimecast-MFC-AGG-ID: 7yf16FjtOpapJiIk6xmmOQ_1750444393
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D811C19560B2;
-	Fri, 20 Jun 2025 18:33:14 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A878C1800285;
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E228195608C;
 	Fri, 20 Jun 2025 18:33:12 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D5B7180045B;
+	Fri, 20 Jun 2025 18:33:09 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -59,11 +57,9 @@ Cc: rick.p.edgecombe@intel.com,
 	kirill.shutemov@intel.com,
 	jiewen.yao@intel.com,
 	binbin.wu@linux.intel.com
-Subject: [PATCH 1/3] KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
-Date: Fri, 20 Jun 2025 14:33:06 -0400
-Message-ID: <20250620183308.197917-2-pbonzini@redhat.com>
-In-Reply-To: <20250620183308.197917-1-pbonzini@redhat.com>
-References: <20250620183308.197917-1-pbonzini@redhat.com>
+Subject: [PATCH v3 0/3] TDX attestation support and GHCI fixup
+Date: Fri, 20 Jun 2025 14:33:05 -0400
+Message-ID: <20250620183308.197917-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,86 +70,32 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Binbin Wu <binbin.wu@linux.intel.com>
+The userspace API is the same as in v2, consolidating everything into a
+single KVM_EXIT_TDX where userspace is free to ignore unknown TDVMCALLs.
 
-Add the new TDVMCALL status code TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED and
-return it for unimplemented TDVMCALL subfunctions.
+Together with this I have written an extra small series that adds supported
+TDVMCALLs in the KVM_TDX_CAPABILITIES output, and also adds
+SetupEventNotifyInterrupt support.  I'd rather include it in 6.16 but
+also it's better to do that as soon as the spec is finalized rather than
+earlier.
 
-Returning TDVMCALL_STATUS_INVALID_OPERAND when a subfunction is not
-implemented is vague because TDX guests can't tell the error is due to
-the subfunction is not supported or an invalid input of the subfunction.
-New GHCI spec adds TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED to avoid the
-ambiguity. Use it instead of TDVMCALL_STATUS_INVALID_OPERAND.
+Since there's nothing really interesting in there, I'll hold on it for
+a couple weeks hoping for more movement on the spec side.
 
-Before the change, for common guest implementations, when a TDX guest
-receives TDVMCALL_STATUS_INVALID_OPERAND, it has two cases:
-1. Some operand is invalid. It could change the operand to another value
-   retry.
-2. The subfunction is not supported.
+Paolo
 
-For case 1, an invalid operand usually means the guest implementation bug.
-Since the TDX guest can't tell which case is, the best practice for
-handling TDVMCALL_STATUS_INVALID_OPERAND is stopping calling such leaf,
-treating the failure as fatal if the TDVMCALL is essential or ignoring
-it if the TDVMCALL is optional.
 
-With this change, TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED could be sent to
-old TDX guest that do not know about it, but it is expected that the
-guest will make the same action as TDVMCALL_STATUS_INVALID_OPERAND.
-Currently, no known TDX guest checks TDVMCALL_STATUS_INVALID_OPERAND
-specifically; for example Linux just checks for success.
+Binbin Wu (3):
+  KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+  KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+  KVM: TDX: Exit to userspace for GetTdVmCallInfo
 
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
-[Return it for untrapped KVM_HC_MAP_GPA_RANGE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
+ Documentation/virt/kvm/api.rst    | 59 +++++++++++++++++++++-
  arch/x86/include/asm/shared/tdx.h |  1 +
- arch/x86/kvm/vmx/tdx.c            | 10 ++++++----
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ arch/x86/kvm/vmx/tdx.c            | 83 ++++++++++++++++++++++++++++---
+ include/uapi/linux/kvm.h          | 22 ++++++++
+ 4 files changed, 157 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index 2f3820342598..d8525e6ef50a 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -80,6 +80,7 @@
- #define TDVMCALL_STATUS_RETRY		0x0000000000000001ULL
- #define TDVMCALL_STATUS_INVALID_OPERAND	0x8000000000000000ULL
- #define TDVMCALL_STATUS_ALIGN_ERROR	0x8000000000000002ULL
-+#define TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED	0x8000000000000003ULL
- 
- /*
-  * Bitmasks of exposed registers (with VMM).
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b952bc673271..5d100c240ab3 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1212,11 +1212,13 @@ static int tdx_map_gpa(struct kvm_vcpu *vcpu)
- 	/*
- 	 * Converting TDVMCALL_MAP_GPA to KVM_HC_MAP_GPA_RANGE requires
- 	 * userspace to enable KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE
--	 * bit set.  If not, the error code is not defined in GHCI for TDX, use
--	 * TDVMCALL_STATUS_INVALID_OPERAND for this case.
-+	 * bit set.  This is a base call so it should always be supported, but
-+	 * KVM has no way to ensure that userspace implements the GHCI correctly.
-+	 * So if KVM_HC_MAP_GPA_RANGE does not cause a VMEXIT, return an error
-+	 * to the guest.
- 	 */
- 	if (!user_exit_on_hypercall(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
--		ret = TDVMCALL_STATUS_INVALID_OPERAND;
-+		ret = TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED;
- 		goto error;
- 	}
- 
-@@ -1476,7 +1478,7 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
- 		break;
- 	}
- 
--	tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
-+	tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED);
- 	return 1;
- }
- 
 -- 
 2.43.5
-
 
