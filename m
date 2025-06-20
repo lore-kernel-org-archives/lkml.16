@@ -1,60 +1,63 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBE44C79
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5246D24397B
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750463469; cv=none; b=LwkXu66Ca8EQ1Otk59fJl1S0YBFtd4aBW9/NcIyvS8rcSPTC44xw+0k25/6+RKSMEPkOo4Tlwm+B16EY/n9cam8i98emPUNnSbUtqqJEpywtuNmT2VULK2W5IGHwBUHB3kKvMGLxgfl3IrxmK2sLrquRbo0tJVp/sct/cNr/bUs=
+	t=1750463472; cv=none; b=UgCl2FNQ6SZ22eZw8Murt6hSc1paqkGANVCtfNuaGfNvuxCx+MlLhFVeKANt/dmE2FQ/IuxhPGyXJJpCp7zLdZo4nSH88U/uCx//aAVwEZfysESuoiOgcYagA4uVdCQJQ6gV6kkeocRCmvj0Ht7lH7dfwUlbJWg5qBBbTZoxTN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750463469; c=relaxed/simple;
-	bh=UG0pHJ+uAqJPf6laJDHPPgB1ToxPm2YcWHQ7iAd5Oh0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=N+zRBTimuzlwHvOgqIlF9JssUZQYUTkVA7QdxGtbJZgNYmmyNBdxYJwQiqnWNNubYQJ95eeaA+kNL2wNtH9JriRClmf9H9ZhUR0UnIUFTuP/LvK/9sH7mIwiq2UTx1Xb8Sk0ImxsmVDDofB63QCZey4dPesr0TCZE86uMa0031A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTsP5BqW; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1750463472; c=relaxed/simple;
+	bh=AITQe8mrogs4HI2pTmaOHdcxZKDYfWIA+mzA0ZGiqxg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BtEOyQkQAMSFv+UwvDVMVnlNTfk4TmiJgzDu6E6neQUfRtU/lk2jEAZcm59BGSfK6vO2cpUM2FeAgGrQo9rg5VXULKaqI0MzWYR6+9wb7oo+kVvfx9gHGxemicM33bORyyGO8Z9d0HuT1zcozFsD4pCsra6iLbkYW0XUXIqDQSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gilVzFRP; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTsP5BqW"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742caef5896so1936846b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:51:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gilVzFRP"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1735760a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750463467; x=1751068267; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=waNy4ez4bEWiFAi20kf5V6Z5gKcc9dgtrDoRnH3Tvks=;
-        b=bTsP5BqW6yAqxoN9F5NDQrUcsY8Trxc4pkmd3DTwblnNqnjKCvIdru5+C6w8poow9n
-         //GJLBGiZrBgQeakzZHTyEB+pR03lf1TSuE+286I62tMQFlLOhSQ7MRsm2sVUZezuDv8
-         g6i/wD1kxYgoLxyk5xpyZ275ObPKb1pwoLVTExT7cj7uBCLhShjMSb9ZA+YQsJEixSKH
-         iymtnGQAT4wQY0CveT4DwnkWh3FRajqheGtxf9LISo4Pe9ROST9bCkNZnEBMT2OlMSrz
-         oB8Z9v9i5m5y+2FGkCkjQXnvIxqOVx50o0ArggSJAemq3b+dwhRtWnMBqrZX9CayDa1a
-         /QVw==
+        d=gmail.com; s=20230601; t=1750463470; x=1751068270; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bIspX+R59/KkNw1d2FACMt9ogJpMnxhLRlBebcNNzSk=;
+        b=gilVzFRPLD49l+cbPzK42I5jW3y+oBP7GDRl04xsNQL2zz+vUHStm99SKk8rn3aBFQ
+         asrZqfyIc4WA8pmf0H3ekyFnzrgaysfxWF3GuWr2xStZU+gOyZ8+cwNkI59GdS8MRfT1
+         Svva06U6JybS/akURWNtlDXA8l5VKnVetGATrQFuqZ6bcl7wCfJpNnsimfocu+pCGjfz
+         JqQNWRm/nXZRbxJFXn1JIzMF9bNgPj/5CjRgKHWI7Ljh+d5DZqGkWHgH/OVDiAahppqu
+         PMPn7aOJeL/ME+xerV4H2iZyv17H55PHyfXdNqDvLdL1GpZucpBOFIHjbI2KP/ErqGmB
+         ImhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750463467; x=1751068267;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=waNy4ez4bEWiFAi20kf5V6Z5gKcc9dgtrDoRnH3Tvks=;
-        b=bb7QtRuSjtVja3XToHZoSFHlfJV4RMNxFDnnO51QeIbePrEYRg3ZAcIyStw7gwmHwl
-         LBTpLjcAiOUqfE10mrDunXVIlaENtVfP502hHumqau6bW6EfmJHqGgT9N4tIRzrm929B
-         +4twp+eHMhNfaVO8oH8In9CxplpsivF75x0HiWsrQj3EW+1Vy0sO6aIXI3wXavmvuQ0b
-         BZZFXqIpBLBt3HX5PcRwvAu97prhfFypdhSxgfZxr8N1+SUKr1LgOttpchOZ2hc5TmfB
-         andT3fJyds4U0KVzJIoxfKqUTbVQTBN4+x7cdWwjQ9vf9j4N9ley1cWLO3hXan8nhcC5
-         6wvw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3B3v9XPgJy+yfHDjVLCLcZvq+BJXTKtlaaAr29Mda+EtkjgIwe5/mw0Rb/pFLCX9PzgoaDwDvM59Tvng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaQIiM4GR3vh7VLOPVAyeF7EdqgDTjAFk4kU2E7Pf/0GxKPHUj
-	vSXg/PKZwZl/kyYrhjislWBwz592PQak4efFrKcj00qMz79cyZ/3DOBf1qQOYpmL
-X-Gm-Gg: ASbGncsDqJG/CA9VLwclT9neWtGTv/j4KslWDOAun781S+KcjNNY3GqPzBMgCaw6g1N
-	Ge9RZUR3pTs6zTGqQctLHcYjYbU1O0l3ROm//Y4ytsxY78kXS2LA+aDQKT/AS4qAOfPwrXxN9gr
-	S/nUB6gka9D2+PxxeyVRmHP37UaqxiKd/sj2yuA83pkJwXQ64r7TXIZhcIAkbD4YI/f6fg2HVSp
-	E2CP4Ra1lH6QfXUksQXOqr/FWj2z8zSTCx/gmft0qEXbOOysANercwfitVT3X6989paB3QdGKiF
-	1eHEiwMxj5EieRzGyNkkkQOOLMDp3Kq6IlbhdEwlDFzwO1oBc+ICAO5KEWTGULtG2yapK6ev8iq
-	c83z1kKoxd9G5lOuGP41e
-X-Google-Smtp-Source: AGHT+IGXhlS4EuNUY1DCvllWMfs8pL3PnyMNQSQDD+Igpi3bZ08W8gV4hTscMjZcqVGIThQOQyrTXA==
-X-Received: by 2002:a05:6a21:44ca:b0:21f:751a:dd41 with SMTP id adf61e73a8af0-22026e2a41emr8617432637.40.1750463466892;
-        Fri, 20 Jun 2025 16:51:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750463470; x=1751068270;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bIspX+R59/KkNw1d2FACMt9ogJpMnxhLRlBebcNNzSk=;
+        b=e5Jvacox+LQOY7wkxO/W/2dxIuIG58jXoSdU6T3n02jAN6NzEHPwvSzSBqK1WB0ZCe
+         94+gVfBHHblcmHrXHrCh5UUN33/qwXyFP4YPwXXUpj/TcWZtg1oU/XjPB6Lm9Y5uwuIf
+         qmaK4U93mb82FMj3ooS2ECWmiUP84EWdbX9M0gRNurNYkzNU0tG8LZjOTwRoAJ0UxVFD
+         p9hCa6QrpuK6qyMIfjM5XCI2xbF3HZuVCqyZ+youtrsHXzHtkuWRggtKfibZl9whjFDW
+         gC0Hwshq90NbzRCDyY5+fgqSKq5fANqKrW58yqrzUwwYu010tFulIgHbOuInmAKnMRNA
+         Ligw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmfimmCkeXz75IR3wLh9G3fYZOm4aQQ1gFzalAVIPesg5cNgtRVDKdDGSWXaUFpSDL+zKFDXWVSVaGCd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRbkBiYN1Kbh2l1n+bWL8Y8A4eNj07nakCKpQL2octvBM7iu8w
+	z12GAfOTcjw87k6Y7z8RJn+U4SFXX1ia/UHPXQWga3oUKi4DAM2feeL7
+X-Gm-Gg: ASbGncsRzHgLAvf21uvPG2DfgLyAJwWuWy//37o1h2Z+NvQE9AESdAwqHPMs7LY5++I
+	jNL+HKB8/eh14/5dbYvzAFck0Ce+QhvepYIlYz95ypYe50kAv+DIPvOG9TbVOVgdBxUNevScwwt
+	1qbFiPWS1UQD9oS/9YmrcjzHApYCmKj/6Rx9tafRaLggokLZIANHxsi0wE+zdHTEvnHpITHZXZk
+	DABhs63HW19jjFvUrIvwseaOeKDuKriTyQ9k4iN/02gZc5PdryAcPrX/jVnz2RSBVp5AStT6V0c
+	3GaWaOid9R9zyodr1vLnoimlXM3TeoRnV4VPJy8bYNoUpn4V4U5RTA/jVdYemYier4V958zRqHy
+	LRyRjPYgTcvc4PCQDe+0u
+X-Google-Smtp-Source: AGHT+IE976pSbdd7FW0S5BytUdlkttRhJ9v8UMgbKLSGtDpmUrSef8Wbi/Q5nXAJVfP5KA7TureZtQ==
+X-Received: by 2002:a17:90b:5625:b0:313:bdbf:36c0 with SMTP id 98e67ed59e1d1-3159d5779femr8909762a91.0.1750463470490;
+        Fri, 20 Jun 2025 16:51:10 -0700 (PDT)
 Received: from localhost (212.18.125.34.bc.googleusercontent.com. [34.125.18.212])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b31f125837bsm2146049a12.56.2025.06.20.16.51.06
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-237d875a7b5sm26731135ad.256.2025.06.20.16.51.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 16:51:06 -0700 (PDT)
+        Fri, 20 Jun 2025 16:51:10 -0700 (PDT)
 From: Chia-I Wu <olvaffe@gmail.com>
 To: Boris Brezillon <boris.brezillon@collabora.com>,
 	Steven Price <steven.price@arm.com>,
@@ -66,10 +69,12 @@ To: Boris Brezillon <boris.brezillon@collabora.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] panthor: print task pid and comm on gpu errors
-Date: Fri, 20 Jun 2025 16:50:49 -0700
-Message-ID: <20250620235053.164614-1-olvaffe@gmail.com>
+Subject: [PATCH 1/4] panthor: set owner field for driver fops
+Date: Fri, 20 Jun 2025 16:50:50 -0700
+Message-ID: <20250620235053.164614-2-olvaffe@gmail.com>
 X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+In-Reply-To: <20250620235053.164614-1-olvaffe@gmail.com>
+References: <20250620235053.164614-1-olvaffe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,21 +83,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series saves task pid and comm in panthor_file, ensures panthor_group can
-access panthor_file, and prints task pid and comm on gpu errors.
+It allows us to get rid of manual try_module_get / module_put.
 
-Chia-I Wu (4):
-  panthor: set owner field for driver fops
-  panthor: save panthor_file in panthor_group
-  panthor: save task pid and comm in panthor_file
-  panthor: dump task pid and comm on gpu errors
+Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
+---
+ drivers/gpu/drm/panthor/panthor_drv.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
- drivers/gpu/drm/panthor/panthor_device.h | 22 ++++++++++++++
- drivers/gpu/drm/panthor/panthor_drv.c    | 38 ++++++++++++++++--------
- drivers/gpu/drm/panthor/panthor_mmu.c    |  1 +
- drivers/gpu/drm/panthor/panthor_sched.c  | 31 +++++++++++++++----
- 4 files changed, 75 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
+index 1116f2d2826ee..775a66c394544 100644
+--- a/drivers/gpu/drm/panthor/panthor_drv.c
++++ b/drivers/gpu/drm/panthor/panthor_drv.c
+@@ -1400,14 +1400,9 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
+ 	struct panthor_file *pfile;
+ 	int ret;
+ 
+-	if (!try_module_get(THIS_MODULE))
+-		return -EINVAL;
+-
+ 	pfile = kzalloc(sizeof(*pfile), GFP_KERNEL);
+-	if (!pfile) {
+-		ret = -ENOMEM;
+-		goto err_put_mod;
+-	}
++	if (!pfile)
++		return -ENOMEM;
+ 
+ 	pfile->ptdev = ptdev;
+ 	pfile->user_mmio.offset = DRM_PANTHOR_USER_MMIO_OFFSET;
+@@ -1439,9 +1434,6 @@ panthor_open(struct drm_device *ddev, struct drm_file *file)
+ 
+ err_free_file:
+ 	kfree(pfile);
+-
+-err_put_mod:
+-	module_put(THIS_MODULE);
+ 	return ret;
+ }
+ 
+@@ -1454,7 +1446,6 @@ panthor_postclose(struct drm_device *ddev, struct drm_file *file)
+ 	panthor_vm_pool_destroy(pfile);
+ 
+ 	kfree(pfile);
+-	module_put(THIS_MODULE);
+ }
+ 
+ static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
+@@ -1555,6 +1546,7 @@ static void panthor_show_fdinfo(struct drm_printer *p, struct drm_file *file)
+ }
+ 
+ static const struct file_operations panthor_drm_driver_fops = {
++	.owner = THIS_MODULE,
+ 	.open = drm_open,
+ 	.release = drm_release,
+ 	.unlocked_ioctl = drm_ioctl,
 -- 
 2.50.0.714.g196bf9f422-goog
 
