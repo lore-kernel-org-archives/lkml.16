@@ -1,80 +1,163 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084DA27814A;
-	Fri, 20 Jun 2025 11:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215A4289E21;
+	Fri, 20 Jun 2025 11:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418439; cv=none; b=Gh2GjerU6h5T/QTZOZTRJF6QwFWCPmAfNSjrGIF4DCHF8i1xS4xGq51F2htU+NRHPaVxY7qEjKEEF4RW4UoG7zCq74eZwVcJZ6Tb2z/AZLiiB7nXFNQTmHcgadlaj/uH4kj+Svm1u/JEFZRTV4zTx79e/vwTF6VrIg8KPuXVTos=
+	t=1750418440; cv=none; b=j/pxr0rZozMxJNgwVJwJnabHoXfxs4a7VYjh06pQMMrwxqhWm2sf/uqwXtKZNKdYY74DE22I61+BM7JxtPrkJ6S/l941RFloyN2AGHbqMwiRAMYuiibPE8Sp4v608FviVUWNbseWeLIxx/E/j+8dcySfhWEJSa+Ec8kSPzKUKGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418439; c=relaxed/simple;
-	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QIjCnObyIy2SFXocShfAs+DuB3l4L3RllA3qoxl+2rOX2tGNNqjeGU5ej+kVLYzRmF/VYl3ibORHJVUpM2QKl+XzyG7sGKHlCJYrdcWWRV7Q0OIztVvTMTM33ucOLSAPovQ7695MaYabyGoSoxwFqLFVnGBqzNSc5bIoo65NYoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DHI9kYRr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aqXpD3Yx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750418440; c=relaxed/simple;
+	bh=1J/ZluEQ/v2RVVm+XiPqXcxJV1l7adhp5J+iGqlRXiU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OtTsHWe7hNAZrcNbxAx5qOBj6R+fleJPrFzTLQTz6+R5D7SNMhB5JT553i+acAb6rkC/1cgPpv5PVvzsCIiaDa0x4KJwTRhzo9priN22gz6D/+zdcFAjudvnKpYQYN7hzY5anvHlrfHhJXOIQ1HYF4b1xYauwbhwqCMqcETN2jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuWSIseF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DHI9kYRr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqXpD3Yx"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750418435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
-	b=DHI9kYRrUMkGcx/u4tFkP55K9Ei4oCOvSrrsFKnffiCAJ6UinzhzkpiH5Ih8l43TJ4M2YK
-	44uGrVPA8Rs6TAbDb7/o4ThqsZzyQjeXaDx2jYPib6a6zyKrvQtKGXvRyf9/7LNo5GJ6F0
-	R6XvMO/dp5ToO+gDkArQdyVOQ+eMZ6GcH90+1MEb3AW6YVpdC+bcZmcbt5hG3Gh3PhQ2Eh
-	xKjGIy+g0fL98ZP7gJ6cnjBGqspU2V/zrI8aoTFZ3uOAOBkfXd6dUfkWK5Rk8NbGlXmcYy
-	OIP/vT8Azaq7sRqQmlHDxJFZyXPRp0S0cJeS2uZcO12jU3ay76PyC64KXwQGhQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750418435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QZQn5hlcEoc8aWSjPZrTR9kgtMnW7nGO1rmhXIili4A=;
-	b=aqXpD3YxtJzh4w3dtZQQcMWKsYpGa7iD0P8JeTHMlCyLjKafOJgb+H/EvWGu19vuMklg7j
-	vO6Ns/uq8ryvLUAQ==
-To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
- andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
- cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- jirislaby@kernel.org, jkeeping@inmusicbrands.com,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
- paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
- sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Subject: Re: [PATCH v9 3/4] serial: 8250: avoid potential PSLVERR issue
-In-Reply-To: <20250610092135.28738-4-cuiyunhui@bytedance.com>
-References: <20250610092135.28738-1-cuiyunhui@bytedance.com>
- <20250610092135.28738-4-cuiyunhui@bytedance.com>
-Date: Fri, 20 Jun 2025 13:26:34 +0206
-Message-ID: <848qlmk6bh.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuWSIseF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41653C4CEE3;
+	Fri, 20 Jun 2025 11:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750418438;
+	bh=1J/ZluEQ/v2RVVm+XiPqXcxJV1l7adhp5J+iGqlRXiU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WuWSIseFtAFYpLc8QGZ8r5av+itDrOluLVU7VyQMmIiK9YyqTv/h2Q3Unrs3J/Y8j
+	 zwc7LeXmwj2hkaCy12phCE3BM3PWhiZDWQRV72ISJTKPYuAniMkmRIqIakAk/FOCDL
+	 3pm6OOS8XnOjIA1EqOu21JyGALTRBybD8lJz4/1H7X9Gj5WmrwAw/rx3ZnryPs/b3M
+	 XiN5nG7wPjCjU07Hz/UqT2LPgeCMErwnSWa19/IiWzdqW4kAxjOCZGT9lLMQXqIE9p
+	 uqJu1TjnzOQnEZnnXt3+Gw/+nwcclTTzAsxapOmqQPkjIkyhT531i2wQp0ik7KTR32
+	 8uio97NeR5OAQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	David Gow <davidgow@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] lib/tests: split randstruct initializer tests
+Date: Fri, 20 Jun 2025 13:20:29 +0200
+Message-Id: <20250620112034.3395968-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-10, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> When the PSLVERR_RESP_EN parameter is set to 1, reading UART_RX while
-> the FIFO is enabled and UART_LSR_DR is not set will generate a PSLVERR
-> error.
->
-> Failure to check the UART_LSR_DR before reading UART_RX, or the non-
-> atomic nature of clearing the FIFO and reading UART_RX, poses
-> potential risks that could lead to PSLVERR.
->
-> PSLVERR is addressed through two methods. One is to introduce
-> serial8250_discard_data() to check whether UART_LSR_DR is set before
-> reading UART_RX, thus solving the PSLVERR issue when the FIFO is
-> enabled. The other is to place FIFO clearing and reading of UART_RX
-> under port->lock.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
+kunit code tents to cause problems with stack usage, especially when
+sanitizers are enabled.
+
+lib/tests/randstruct_kunit.c:306:1: error: the frame size of 1520 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+
+Splitting up the randstruct_initializers() function into two halves
+helps since each side now stays below 1KB of stack even with sanitizers
+enabled.
+
+Fixes: b370f7eacdcf ("lib/tests: Add randstruct KUnit test")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/tests/randstruct_kunit.c | 65 +++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 23 deletions(-)
+
+diff --git a/lib/tests/randstruct_kunit.c b/lib/tests/randstruct_kunit.c
+index f3a2d63c4cfb..74211e2f186f 100644
+--- a/lib/tests/randstruct_kunit.c
++++ b/lib/tests/randstruct_kunit.c
+@@ -249,16 +249,6 @@ static void randstruct_initializers(struct kunit *test)
+ 	struct randstruct_mixed_shuffled mixed_shuffled = {
+ 		init_members
+ 	};
+-	struct contains_randstruct_untouched contains_untouched = {
+-		.untouched = {
+-			init_members
+-		},
+-	};
+-	struct contains_randstruct_shuffled contains_shuffled = {
+-		.shuffled = {
+-			init_members
+-		},
+-	};
+ #define func_member(x, ignored)	\
+ 		.x = func_##x,
+ 	struct randstruct_funcs_untouched funcs_untouched = {
+@@ -274,6 +264,47 @@ static void randstruct_initializers(struct kunit *test)
+ 			init_members
+ 		});
+ 
++	test_check_mixed_init(test, "named", &mixed_untouched, &mixed_shuffled);
++	test_check_mixed_init(test, "unnamed", &mixed_untouched,
++		&(struct randstruct_mixed_shuffled){
++			init_members
++		});
++
++	test_check_funcs_init(test, "named", &funcs_untouched, &funcs_shuffled);
++	test_check_funcs_init(test, "unnamed", &funcs_untouched,
++		&(struct randstruct_funcs_shuffled){
++			DO_MANY_MEMBERS(func_member)
++		});
++
++#undef func_member
++#undef init_members
++}
++
++static void randstruct_contains_initializers(struct kunit *test)
++{
++#define init_members		\
++		.a = 1,		\
++		.b = 3,		\
++		.c = 5,		\
++		.d = 7,		\
++		.e = 11,	\
++		.f = 13,	\
++		.g = 17,	\
++		.h = 19,
++	struct contains_randstruct_untouched contains_untouched = {
++		.untouched = {
++			init_members
++		},
++	};
++	struct contains_randstruct_shuffled contains_shuffled = {
++		.shuffled = {
++			init_members
++		},
++	};
++	struct randstruct_shuffled shuffled = {
++		init_members
++	};
++
+ 	test_check_contained_init(test, "named", &contains_untouched, &contains_shuffled);
+ 	test_check_contained_init(test, "unnamed", &contains_untouched,
+ 		&(struct contains_randstruct_shuffled){
+@@ -289,19 +320,6 @@ static void randstruct_initializers(struct kunit *test)
+ 			.shuffled = shuffled,
+ 		});
+ 
+-	test_check_mixed_init(test, "named", &mixed_untouched, &mixed_shuffled);
+-	test_check_mixed_init(test, "unnamed", &mixed_untouched,
+-		&(struct randstruct_mixed_shuffled){
+-			init_members
+-		});
+-
+-	test_check_funcs_init(test, "named", &funcs_untouched, &funcs_shuffled);
+-	test_check_funcs_init(test, "unnamed", &funcs_untouched,
+-		&(struct randstruct_funcs_shuffled){
+-			DO_MANY_MEMBERS(func_member)
+-		});
+-
+-#undef func_member
+ #undef init_members
+ }
+ 
+@@ -319,6 +337,7 @@ static struct kunit_case randstruct_test_cases[] = {
+ 	KUNIT_CASE(randstruct_layout_fptr),
+ 	KUNIT_CASE(randstruct_layout_fptr_deep),
+ 	KUNIT_CASE(randstruct_initializers),
++	KUNIT_CASE(randstruct_contains_initializers),
+ 	{}
+ };
+ 
+-- 
+2.39.5
+
