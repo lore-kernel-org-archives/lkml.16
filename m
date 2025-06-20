@@ -1,203 +1,73 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9324023185A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F8D2356B4;
+	Fri, 20 Jun 2025 08:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407132; cv=none; b=GOgIkzmsdGtxSwtA/LI5K2lJBEzVX+1u3tg2KvdSwlR/j0FsUTOdbIKWUU2zpgWRxnXbmZObr2WLJKJ8UzxOMmEtalLf6ateVHmYAN4yKJYyIc/8FQLPLL8KXzynjZiQEbWbCGwhvuo/yWOB/Elrqo5aUZm2YbIv66m0Bma+Kqg=
+	t=1750407183; cv=none; b=iLFmklkuO5D/1/CDWr8zYf3OqqQBGupd+wWG1gfXwJTJmnCJaPTjmLq941SyCZvK0+uei60YlNqJeP7WX22dr7hWsqZ6BAgWtgrha4w5BGZ1MkC4K156kUzcicuE9PE/Om7soG7Z93nC5SSpoYGCyjJRxUyKbBehSPCAJr2aluE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407132; c=relaxed/simple;
-	bh=IySXIDBYq4vmS4M9SKbQdvVBQkhfmrzbRdY90uiaR30=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KmmIGjxUmCPzZ22ZFSII8hPJrwgswRi8vAAyQcx+64BVvSzUH9b7qm3VqfJzhQC+zCLNS+9jViDIEdS8CII2E9Kt/T5HUQCKaZ1MOopbkXZt7Z510ZP5ZJGsItr0LYnOj5vFi5t05vUaFy0vMzYKfGC0lLdDn+r9VGFqrdLDoss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OBWBCHAR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3h0+eN6V; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fUdcnFrp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ojMZvkR0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OBWBCHAR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3h0+eN6V";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fUdcnFrp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ojMZvkR0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C6217211A3;
-	Fri, 20 Jun 2025 08:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750407128; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i7kW58skzLpE69Ly01+iLIrtetXieZGB3GPtzPrrsLQ=;
-	b=OBWBCHAR9o85tR369wgyeXRrAFc65qZxA6/aRe5NVKwB4M9kR+bb+FuggKiQb0RIU0vphY
-	tBOzo8rK3Zq2Otmp9uVt83ctMUVHe7qVP6aFWLkqy83ygZGV/zIKF1JK3pa5MPVlyf73rG
-	AYmAS/pLpK9KL7N0C4tglNg1969UNGU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750407128;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i7kW58skzLpE69Ly01+iLIrtetXieZGB3GPtzPrrsLQ=;
-	b=3h0+eN6Vr4J1zm94U2714SSwhes1Ne9QsCFk2Q8ZlvfZzxhzUpjh3Tf8odTelmjVanFuLO
-	PhRaoJzRhhX4ANDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fUdcnFrp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ojMZvkR0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750407127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i7kW58skzLpE69Ly01+iLIrtetXieZGB3GPtzPrrsLQ=;
-	b=fUdcnFrpRttKc1DoD4Ijo2314YkjuN2bOCfB8yJh4FGfmbvK4eXQWpccrPHiWyKsS40cMr
-	wcY9dBZ+37WgJJURknz7x7OovFjUbtcEprgeJLmHxNs6Od67FLgfD82K73wMu2qc3YZ1x1
-	3wOFU+fsLKjbuW3xhhvMMAX4JwrfRlk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750407127;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i7kW58skzLpE69Ly01+iLIrtetXieZGB3GPtzPrrsLQ=;
-	b=ojMZvkR0JXsCOSBrQFCIISZmcGBVKlmps9Qlj2W9WhozsiIHjtrQiqvVDSCfIuriNXRa/9
-	OUbu/ECvCvYcwwCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 27CB313A9C;
-	Fri, 20 Jun 2025 08:12:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QeeUCNcXVWiZXAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 08:12:07 +0000
-Date: Fri, 20 Jun 2025 10:12:06 +0200
-Message-ID: <87msa2x25l.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,	Alex Deucher
- <alexander.deucher@amd.com>,	Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>,	David Airlie <airlied@gmail.com>,	Simona Vetter
- <simona@ffwll.ch>,	Lukas Wunner <lukas@wunner.de>,	Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,	David Woodhouse
- <dwmw2@infradead.org>,	Lu Baolu <baolu.lu@linux.intel.com>,	Joerg Roedel
- <joro@8bytes.org>,	Will Deacon <will@kernel.org>,	Robin Murphy
- <robin.murphy@arm.com>,	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),	iommu@lists.linux.dev (open
- list:INTEL IOMMU (VT-d)),	linux-pci@vger.kernel.org (open list:PCI
- SUBSYSTEM),	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),	Daniel Dadap
- <ddadap@nvidia.com>,	Mario Limonciello <mario.limonciello@amd.com>,	Simona
- Vetter <simona.vetter@ffwll.ch>,	Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 5/7] ALSA: hda: Use pci_is_display()
-In-Reply-To: <20250620024943.3415685-6-superm1@kernel.org>
-References: <20250620024943.3415685-1-superm1@kernel.org>
-	<20250620024943.3415685-6-superm1@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1750407183; c=relaxed/simple;
+	bh=z8UDxO/OcLukhXKZ6GZRQPrtUnvInsX/2UomE+yR66s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d1y2ootx5OHA7J2s2l4+y3X/iYDCtMb7ksq14bVrDKXp+HcG81/CEAD6aWLH0xxV1oPSLGjuJWQyjiw+8hsfrWqpBajSl9AcxRqMmGdR06x8S3ZFPAafXVI6bTk0RgTgWFrEqnwv2GJzeC+dUbwws5fm5oX+IDMY5NCB0l9yLp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BE77176A;
+	Fri, 20 Jun 2025 01:12:40 -0700 (PDT)
+Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1382A3F66E;
+	Fri, 20 Jun 2025 01:12:55 -0700 (PDT)
+Message-ID: <d5a86ef8-a58c-4abc-8312-08406c847edc@arm.com>
+Date: Fri, 20 Jun 2025 13:42:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[google.com,amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,suse.de,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	R_RATELIMIT(0.00)[to_ip_from(RL19doqawnwjg494dhy1bqfax3)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email,nvidia.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: C6217211A3
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.51
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <aFQP8LzVMctf6XH5@casper.infradead.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <aFQP8LzVMctf6XH5@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025 04:49:41 +0200,
-Mario Limonciello wrote:
+On 19/06/25 6:56 PM, Matthew Wilcox wrote:
+> On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
+>> +++ b/mm/memory.c
+>> @@ -522,9 +522,8 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
+>>  	mapping = vma->vm_file ? vma->vm_file->f_mapping : NULL;
+>>  	index = linear_page_index(vma, addr);
+>>  
+>> -	pr_alert("BUG: Bad page map in process %s  pte:%08llx pmd:%08llx\n",
+>> -		 current->comm,
+>> -		 (long long)pte_val(pte), (long long)pmd_val(*pmd));
+>> +	pr_alert("BUG: Bad page map in process %s  pte:%ppte pmd:%ppte\n",
+>> +		 current->comm, &pte, pmd);
 > 
-> From: Mario Limonciello <mario.limonciello@amd.com>
+> Unfortunately, the one example you've converted shows why this is a bad
+> idea.  You're passing a pmd_t pointer to a function which is assuming a
+> pte_t pointer.  And a pmd_t and a pte_t are sometimes different sizes!
+> (eg sometimes one is 64 bit and the other 32 bit).
+
+As discussed on a separate thread, this might be addressed via separate
+printf formats for each page table level e.g %ppte, %ppmd, and %ppud etc. 
+
 > 
-> The inline pci_is_display() helper does the same thing.  Use it.
+> So no, NACK.
 > 
-> Reviewed-by: Daniel Dadap <ddadap@nvidia.com>
-> Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
 
-thanks,
-
-Takashi
-
-> ---
->  sound/hda/hdac_i915.c     | 2 +-
->  sound/pci/hda/hda_intel.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/hda/hdac_i915.c b/sound/hda/hdac_i915.c
-> index e9425213320ea..44438c799f957 100644
-> --- a/sound/hda/hdac_i915.c
-> +++ b/sound/hda/hdac_i915.c
-> @@ -155,7 +155,7 @@ static int i915_gfx_present(struct pci_dev *hdac_pci)
->  
->  	for_each_pci_dev(display_dev) {
->  		if (display_dev->vendor != PCI_VENDOR_ID_INTEL ||
-> -		    (display_dev->class >> 16) != PCI_BASE_CLASS_DISPLAY)
-> +		    !pci_is_display(display_dev))
->  			continue;
->  
->  		if (pci_match_id(denylist, display_dev))
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index e5210ed48ddf1..a165c44b43940 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1465,7 +1465,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
->  				 * the dGPU is the one who is involved in
->  				 * vgaswitcheroo.
->  				 */
-> -				if (((p->class >> 16) == PCI_BASE_CLASS_DISPLAY) &&
-> +				if (pci_is_display(p) &&
->  				    (atpx_present() || apple_gmux_detect(NULL, NULL)))
->  					return p;
->  				pci_dev_put(p);
-> @@ -1477,7 +1477,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
->  			p = pci_get_domain_bus_and_slot(pci_domain_nr(pci->bus),
->  							pci->bus->number, 0);
->  			if (p) {
-> -				if ((p->class >> 16) == PCI_BASE_CLASS_DISPLAY)
-> +				if (pci_is_display(p))
->  					return p;
->  				pci_dev_put(p);
->  			}
-> -- 
-> 2.43.0
-> 
