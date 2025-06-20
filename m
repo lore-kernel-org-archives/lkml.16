@@ -1,140 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E15128B40A;
-	Fri, 20 Jun 2025 13:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A6B22615
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427028; cv=none; b=AsHTYPIlWOvGK/vUkm+arasoQHVGnKpQTFTO1rrjm1foEybNa99nDovPdxge+h77qYLIyrPJUzj1BBQQPraaBxajLdhhml4GjtdARpXUTLvXilKD8kO5W/4qvsUCveNb/eP/NNzD4gsfX0PhcKC8rl2GmoHM8e4KIsaBRDKNWM4=
+	t=1750427168; cv=none; b=NsDS4BTS3y0bblBkFjSJrpxQhWjXF8p3UzYAh+zsiyndMvy3E0g0FeEO2uqs0lJc63+pc+GuGMHaLgH6LbDaib4w0jvjo0EV98CkWGL3+D3ENZjyU5kg5aWL1pQ2YAtvSzQnTGPQzaLkmnZQVI5wr5qBWTtGfF6pzGJFAIm0TCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750427028; c=relaxed/simple;
-	bh=kE6T0xVo349h12vhdsOptOJ59XBo3V1Vl/qYHwIDF5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBh1ZJcprnri825iPoPDufSVmoS6ATFS5ctV+lMHH6NGRvnuOZS79GDIdr6md+T1FL4EkZnhWzqCdtiNIc/N6ReElBsFA7rUwuIimXcnPcyYQ3sqIBR5MDo0xNQiteeaCiLihubUmcv38gtyxOB4xngbQLFOnNoI9VNSOTZIxUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Uek3h/ox; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hj9fDcoQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750427168; c=relaxed/simple;
+	bh=IJPxx/8CSit5u8YWIiRwcIVEMyk6eioXTZfQ0C6DKrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PBUOPNb6LxCHVPTzr8f1dkkDjXdl4FYEntV6MrW+8oTJOElxkQOizLXd4/AilhR9s19p2tsyI01ZZHLac2Wi+qdEBysJxTbNXTYURzlUSKGES0VWL+cwzrvL9nqDBmYVRCIhn8VNSAhunEmLXcYi9pvekvU6LBOR9PeeU+8L0WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Yf9CBPs2; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uek3h/ox";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hj9fDcoQ"
-Date: Fri, 20 Jun 2025 15:43:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750427024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6e5LiVdLYV1MWzKzm2m1QtrQk2Nr/rVHB48W5asO8Cg=;
-	b=Uek3h/ox5BdHyjedKfonkpQexvpQ9o7KIUuDiu7fe3874JF9ZCdFhjafKo2geauJlK8u0N
-	5St4VbJtIg8TijyGaDbDPyFiiiPNuR6uTpnJHYZGQQdTJVrwuBzSOlxXHy83CoTYg5zrmi
-	UHVRZc9YwXxrYARSdqnBI1nyTX1KRtp0+s8naFhXeR0NQdiFnJy+YG02GPyU6IZWToqS30
-	HGdped6jS8ckUjTlEUMAmyV1Y1AZDt74DxeulpgQufmVZbFR1HIbdXMVcy1VHfruB7+W8z
-	ia6+enwyHC3umAf6Vv69ImHbaKaq4TCnZo0sSY8v4qt5x+esnqoXl2CGYOVlWA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750427024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6e5LiVdLYV1MWzKzm2m1QtrQk2Nr/rVHB48W5asO8Cg=;
-	b=hj9fDcoQDkyXcjztkkuYK+FdVDHyH2XXIcdl+2TM6PadC4dD9JUEMU+mDkWDXpM8kEkwz0
-	BIGtpZnNbb1N+6Cg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Gow <davidgow@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
-Subject: Re: [PATCH v3 13/16] kunit: Introduce UAPI testing framework
-Message-ID: <20250620152344-fadbb8ae-0a86-4938-b05d-00da66fc05c5@linutronix.de>
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-13-55e3d148cbc6@linutronix.de>
- <CABVgOSmdcOZ0+-k=SM4LibOVMKtcbF27p6N40kuDX_axTPZ=QQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Yf9CBPs2"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441ab63a415so20393355e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750427165; x=1751031965; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xnbbZF0mgVLEqOkcFAOg1RxmEXcv9IgRKhCyVN6STvE=;
+        b=Yf9CBPs2+ODUhv4qVlya7qnegjzL8Q+TPsYye3uiyevXUtGlXDvRsQnoDBizZ6smBE
+         bXQv5Hvq+JycUpCD5EfUwal/JHVQKJ4GkEl7Ex8P6Fi9IttyGedQn3nCsnAld6zD5uxQ
+         kQH1XjjoFS1tbSW6G5S2tTbQv+dBYrJ13MqZ9GfX0cKtq42KUJ7pv4KtRQWRSXWtzyRh
+         dGJHp2mkKZubgbRpqUfI7myBFNiTDzLB64PSp+bjSVdZkrwWWWiY8j5rkDUcCzo77nLg
+         Xai9KSSTD3RcIYN3SSolh7WEmMCyXSurBc/cvlfJb6gJtiypO/sEJvByhfDZXwaDwQpY
+         KDzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750427165; x=1751031965;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xnbbZF0mgVLEqOkcFAOg1RxmEXcv9IgRKhCyVN6STvE=;
+        b=Q2fCKofbiL0w6q3az47FpZSF1qp8jwnEBnYyB5hrTUGpCMF8VQj1KbeJiOkHeGWl15
+         uftCRfaFXqg1LXnDuUFwCOenP5xeSLsc3t/oDt1LQHUoya7SGz1fERuJ+d6x9ypxeRr0
+         5MMFVp4SDCVuTrYasaOsR4cejQGRmGH2C+eDDBjAlXAZIATCmaf6sZUzeGHMHU0ylSxB
+         PZ4vmFy9QRYHXJer9/5dttblcuX0LJ546bQGkc1SKi8T7QAxqTYAuFxJy7TN3ZAN7cPx
+         JR/SKA+D6gM2sisKwUMkwwl205L12HCwCpfk7cJ0tiUkz81TYKrA7JLN0Grsnnt0SnUx
+         3r9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVDvPV++RmCgX7vUJcjSS3NK16Mc2hjadCFDqhF6JIyjWBWUSdwYuDUAyp6RvwVjpcggnByHGCgM5YGSO8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn5M/aKfFR8pItQFafdhisKGIEhwwuUn7eaR5RzSq8+45qwSOj
+	nIj3gS+A0JrCYrH4s8pjJTqo6jmW1QmPz0aLbd/7RUBQzPPJBg8QllqxfKZwJqU2uOwFvSe9PhI
+	gbr3uAsM=
+X-Gm-Gg: ASbGnct/qKQ1S9erC+cdIRi3QjwdpLf2ae4iByIcJSYrDUf1bWRDtkuwFjiC9fluEOM
+	XbEGEbJG36mgu7KOa3OqM5B5kERK9BbtEO9T+sQi0oJhwPtlKZZ6KSoo6RZFVvWqR9skNplzFJG
+	vgMmTzzq5sv9BgM0ph7Zl/oCsRSvX/fSbMEVuJxDZuyeRbhUYHEm4KwJPxaivcbaqwTLJISoaZ/
+	dVWX6db9iYrCt/dRAbCR4aPwVJkSNVQgADDXe+BoYM5SEc5VJFB4U9FIfq3VOi3bdRs0Ng0Kfhj
+	AD3gdxqV7oVamhdvmGlU7fmpb3KMRoc6TGs1l4NyQ6aAGUWJcLz1ILY5+FLO3yquMiXxU9AORg=
+	=
+X-Google-Smtp-Source: AGHT+IHE23+lfQrmmrvOY4gXFo8XmhpszpPqyuXRd+QCzWbJDAGWy+pg7cxPcbBy7LIK3eHWbQ1xQQ==
+X-Received: by 2002:a05:600c:1e0d:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-45364791b6cmr33843335e9.0.1750427165627;
+        Fri, 20 Jun 2025 06:46:05 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:69fe:2655:53a6:f735])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364705748sm25637935e9.28.2025.06.20.06.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 06:46:05 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.16-rc3
+Date: Fri, 20 Jun 2025 15:46:02 +0200
+Message-ID: <20250620134602.111269-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABVgOSmdcOZ0+-k=SM4LibOVMKtcbF27p6N40kuDX_axTPZ=QQ@mail.gmail.com>
 
-On Fri, Jun 20, 2025 at 05:47:39PM +0800, David Gow wrote:
-> On Wed, 11 Jun 2025 at 15:38, Thomas Weiﬂschuh
-> <thomas.weissschuh@linutronix.de> wrote:
-> >
-> > Enable running UAPI tests as part of kunit.
-> > The selftests are embedded into the kernel image and their output is
-> > forwarded to kunit for unified reporting.
-> >
-> > The implementation reuses parts of usermode drivers and usermode
-> > helpers. However these frameworks are not used directly as they make it
-> > impossible to retrieve a thread's exit code.
-> >
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> >
-> > ---
-> 
-> It feels to me like there are three features hidden in here:
-> - KUnit helpers for manipulating vfs files
-> - A way of having KUnit tests run userspace helpers
-> - The full framework for writing/running whole tests in userspace.
-> 
-> It's really the first two which excite me personally most -- as they
-> give us a sort-of inverse to the kselftest "helper module" paradigm --
-> so we can test things which are impossible to test from within
-> kernelspace.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-For me it is only the third feature that I really care about right now.
-But I do expect users for the first two to pop up at some point and these are
-obviously valid usecases.
+Linus,
 
-> So maybe those APIs should be exposed separately (so a
-> test can be written mostly in kernel-space using the KUnit framework
-> APIs, and just call out to a helper where needed). But I'm happy for
-> them to stay private functions until we have a test which actually
-> needs them.
+Please pull the following set of GPIO driver fixes for the upcoming RC.
 
-Agreed, let's expose it when there are users.
+Thanks,
+Bartosz
 
-> > Currently this depends on CONFIG_KUNIT=y as it uses some non-exported
-> > symbols around process management.
-> 
-> That's fine for now, IMHO, but will make it difficult to use this on,
-> e.g., Red Hat setups, where CONFIG_KUNIT=m. Hopefully we can resolve
-> this by exporting some of the symbols?
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
-I'll try to use the new EXPORT_SYMBOL_GPL_FOR_MODULES() on these symbols and
-see what the maintainers say about it.
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
 
-> In general, I'm happy with the implementation here. The fs stuff
-> probably needs a closer look from someone who knows the vfs better
-> than me, though.
-> 
-> Nevertheless,
-> Reviewed-by: David Gow <davidgow@google.com>
+are available in the Git repository at:
 
-Thanks
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.16-rc3
 
-> 
-> Cheers,
-> -- David
-> 
-> > ---
-> >  Documentation/dev-tools/kunit/api/index.rst |   5 +
-> >  Documentation/dev-tools/kunit/api/uapi.rst  |  12 ++
-> >  include/kunit/uapi.h                        |  24 +++
-> >  lib/kunit/Kconfig                           |  10 +
-> >  lib/kunit/Makefile                          |   2 +
-> >  lib/kunit/uapi.c                            | 287 ++++++++++++++++++++++++++++
-> >  6 files changed, 340 insertions(+)
+for you to fetch changes up to 10af0273a35ab4513ca1546644b8c853044da134:
 
-<snip>
+  gpio: mlxbf3: only get IRQ for device instance 0 (2025-06-18 12:19:39 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.16-rc3
+
+- correct the ACPI GPIO access mode in gpio-loongson-64bit
+- only obtain the interrupt for a single instance of the chip controlled
+  by gpio-mlxbf3
+- fix an invalid value return from probe() in gpio-pca953x
+- add missing MODULE_DEVICE_TABLE() to gpio-spacemit
+- update the HiSilicon GPIO driver maintainer entry
+
+----------------------------------------------------------------
+Binbin Zhou (1):
+      gpio: loongson-64bit: Correct Loongson-7A2000 ACPI GPIO access mode
+
+David Thompson (1):
+      gpio: mlxbf3: only get IRQ for device instance 0
+
+Sascha Hauer (1):
+      gpio: pca953x: fix wrong error probe return value
+
+Vivian Wang (1):
+      gpio: spacemit: Add missing MODULE_DEVICE_TABLE
+
+Yang Shen (1):
+      MAINTAINERS: Update HiSilicon GPIO driver maintainer
+
+ MAINTAINERS                        |  2 +-
+ drivers/gpio/gpio-loongson-64bit.c |  2 +-
+ drivers/gpio/gpio-mlxbf3.c         | 52 +++++++++++++++++++++++++-------------
+ drivers/gpio/gpio-pca953x.c        |  2 +-
+ drivers/gpio/gpio-spacemit-k1.c    |  1 +
+ 5 files changed, 38 insertions(+), 21 deletions(-)
