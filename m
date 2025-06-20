@@ -1,125 +1,125 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B144A27AC44
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C73023AB98
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750409262; cv=none; b=Twl8Jjimo+C0wRKtbmPw9YgYwkbVCEKBJYGN3rjvCKEc9BFeYjIzotbY4mRYzq86HpQOurOvGsITMdOkjH0/meTx7rBeIoA1bwEoLdLwtjaL1pHSAheNdT0cu4YtktUII50z+Q48zkA0SfiG0i0smdBM0zFvmMYSZzKt8PxXTgw=
+	t=1750409344; cv=none; b=sxyuknp1a95HbNZzMIaDIOY+YvRbZLft0GUNIbVVlYsXeXcVrAa7nfRe9A7ktoqEoN+sOUOjEKuaH9X5VDguzkH3Ki9obWWZTKeStRPTQ1if4d1QupilEii66SR7WzuB/BvbdRDxaeQgpqmAA9ncqLeVezbACBqW2DWl3wtEqB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750409262; c=relaxed/simple;
-	bh=SGobpLuVUs7D23HfBqLMyecSiLQVVDb3avZcnsTrn9o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sAXutLXf1ktkb2ehrGpcnIgYxj49xc/vGMcXN2ykJdI/i3CT08yd8xCxDKl/0wJhMf6lTreQ64T4/X7VC5D9iFOyYozvNUNXEIJ/a21h4Fzy0ogctQPfnc1qWgFZnlgYP5T7fmr7M+wd9fEAOCQYNZ/Jm2bJdqp6bBDiQXoor10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IM2lB094; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IM2lB094"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5535652f42cso1787161e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750409259; x=1751014059; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NaWs4xvvPpeaCjJCWs098f2+kCHkcJzonLJVPQ9irHg=;
-        b=IM2lB094ehZfICYGbghXJQilTHtezSWOOQ3GtgSL2UwG7X+6tty7D+qjjA21pKkGqN
-         Bk//DSFM7T1q7JMxH6EzW/rQgK9ALczIxfPlVQvEEBB9MYtG2Er7BPuWq978qbCRH9U3
-         YxrXah9yxqB+OBFEYwXVtk3IoEFK5aJMXGzfFwmLLxQlemG2eqShJ6MdrTUwYHChm8mP
-         MduktXcEkWEEFQehEtfMm0yVEYLYkuXHTDL7xeSQ676+SpjT06yo0R/myVF6egkEEZRC
-         JuAsP0+RXrkgtaebLqv+ceOeZK5eFk6Rr828K5gCMn7gHdHIakkzMrFEJAMsSV9Xkbe2
-         6CPw==
+	s=arc-20240116; t=1750409344; c=relaxed/simple;
+	bh=4Cduu0PiAyTfHMt0xDlKWHudMH6r4p0zCoccUUb9VSg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RL5bjaWbSVhq5ZZrq9fD0XQUtHYtCwQtCX8R8DJmxfQWOp182SCFqI/lHMhowIOV67Fspm4b6+brUSAtKaKoQVHhFguoP6hI8E26729dQK07U0EyZjusD8eKs1VkhihSOaJ4RLQjDlj5GIoiSCGp9P4vS9wHjeXa3x2/Vd5VoFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so16297585ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:49:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750409259; x=1751014059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NaWs4xvvPpeaCjJCWs098f2+kCHkcJzonLJVPQ9irHg=;
-        b=dvTLJfFacVwc1nTl466xiF8NPKdwUSIb0/M/PQe2bOHVA6h2zdEYaQGZSKjmSx0z6W
-         EDnSQ91nXFRPack51xMqyAqoPIbJ2bfs6Mi+oWg6jtX1XxpbOSP+2mzmJ+ItMOhDZa8y
-         Zx0zK3nWkTmQ5WWPWVHyTANDdEJtcCoOpHzUJr7JrYYGPuzp4Rgjiq0R/sE2SCBrCLeM
-         zVkbWYmNxYelxLGXuPHt9CeHQYuhaPIj0eN/kcQ9xouEQwigwMBguhylD+6EQ0CSX9B9
-         Jm8svCZw3d3yVweXjHvj6DhKsyYa6q0iTAMGjNUTahGzHmMQie+GS08gJLYZK4DPcGUa
-         sdZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9q7LCmKrT+aUyxkHwyL2QXIBLVPaSJg8Mkg68GM+TmeF4oeXdUPXkOvhDqwsLWBqt2+vimQwLRZhMQeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZK8sVQTmOLeAKHuKKkwW4noHB4JxiKxUpephk6wb9mJ+PIBRR
-	xVRamsoRxORfS+8fgUsxsFZflSzlSd/zPLNeHLYOI2749yk3Nun2MRoo
-X-Gm-Gg: ASbGncsxa41LopaZ2HLpZzEOcWu0VFPxl+KevN6xBSzCMJrMJa+MDoCp0e6v6HJeVlN
-	y8xFE7lNbAAP9/Gbn4zoqbJnXZWc2orkNUgAcoUCcWTX7C01T4Ez63tsvMHi8G8BssdyVY1pHvw
-	dFso4CQh5zZJikRNuEz5N+wYmCjh8KXSiu7kovhHFEJc7X9wslKhMbnQwJKSZG6iufAcEoZ7fc6
-	SbZ0PkBNUwskAYBy8X0oXDyFAlRouYL3bzblhtG8M5/XIpfcV3ylyKePfnKm3CLZStJ7ayRcsns
-	T/ho8b7P/+EVPpVeGcExgdz49VqzkaGgzb1CLgezhI3fm1bFToAIApYzugBYYJlv/++U+ipXqzd
-	k+i3tQVuYhfnWNII9
-X-Google-Smtp-Source: AGHT+IFOvPmfqOBZOG5VL73wW51rn1KE6VYniA2GZLKFP8gJr25s/3ya10MiUT7/JdsCkGykUpR+/A==
-X-Received: by 2002:a05:6512:4014:b0:553:acf9:c430 with SMTP id 2adb3069b0e04-553e3ba865emr810575e87.17.1750409258480;
-        Fri, 20 Jun 2025 01:47:38 -0700 (PDT)
-Received: from pc636 (host-95-193-182-189.mobileonline.telia.com. [95.193.182.189])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41d73f9sm204956e87.252.2025.06.20.01.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 01:47:37 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Fri, 20 Jun 2025 10:47:34 +0200
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Uladzislau Rezki <urezki@gmail.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Adrian Huang <ahuang12@lenovo.com>,
-	Christop Hellwig <hch@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-mm@kvack.org,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: Re: Kernel crash due to alloc_tag_top_users() being called when
- !mem_profiling_support?
-Message-ID: <aFUgJgrc_eIHRy5-@pc636>
-References: <202506181351.bba867dd-lkp@intel.com>
- <aFQaY4Bxle8-GT6O@harry>
- <aFQnEj0UASzl2Lxa@hyeyoo>
+        d=1e100.net; s=20230601; t=1750409342; x=1751014142;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jdVW9F5ZncPgUoo0T9QdBpdyAP6BE2IsFqHGJoXzcUU=;
+        b=bTofCCSwlCMgRrv4UH+xEmUESJWvU/tALrGeFMXOclRiG1avWRdwuPfkTNuTxYQPNl
+         ZlaYMS0xnIj6hipi8NJtQdn0SeVQi6pXyyAsdSLfFGPdqaiAznWeHXifZuIx721yAz6h
+         2A6px8Ldi7c15lmK8+/aAKJZvskzY46hkt/ehNYdIDj5r/X5GzBa9PaVr70nQH0se2ZV
+         uoaIGPq9CAZpQgmzpZFf3xiqbBfY3q9cidmTSrvKVyyxer+bqClPLWUaoRnOP0kHfRd8
+         3ulhcbXpioF7joaE7Zvr9MiL92TtxqqMiWugq06P4jVg52rdBK4eA39u8Qg6RJKlAL+8
+         sb7A==
+X-Gm-Message-State: AOJu0Yx9bPtSHduLyoXvmeLOgYAXIQAUXeY7HxzhYOY/aLRXsX7RRilU
+	VSO8zECWUJ5Gqtkk2zOahaPQIkoCheL4Vy9Jzjw8Lx45TQWVFTHoXVzGefhKUdFtBnowYnxqMvy
+	vNd1qUd5lJyJaJ0X/s5IIdWhknyijSUqPsXbS8O9rgQm5EOjg/AloZ4zbtYw=
+X-Google-Smtp-Source: AGHT+IFd7ePwM9n9WVIbCODZaaf1w58MJuDctisSI2dGknDQfIgaSyEplP8OaTAQsKlo4x3FMK3twAKI2eLWzbKFM+jnVaXp1vN2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFQnEj0UASzl2Lxa@hyeyoo>
+X-Received: by 2002:a05:6e02:3b83:b0:3dd:c4ed:39c0 with SMTP id
+ e9e14a558f8ab-3de38c159a7mr23626995ab.1.1750409342359; Fri, 20 Jun 2025
+ 01:49:02 -0700 (PDT)
+Date: Fri, 20 Jun 2025 01:49:02 -0700
+In-Reply-To: <20250620065230.1552640-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6855207e.a00a0220.137b3.003b.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 20, 2025 at 12:04:50AM +0900, Harry Yoo wrote:
-> On Thu, Jun 19, 2025 at 11:10:43PM +0900, Harry Yoo wrote:
-> > On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
-> > > 
-> > > Hello,
-> > > 
-> > > for this change, we reported
-> > > "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
-> > > in
-> > > https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
-> > > 
-> > > at that time, we made some tests with x86_64 config which runs well.
-> > > 
-> > > now we noticed the commit is in mainline now.
-> > 
-> > (Re-sending due to not Ccing people and the list...)
-> > 
-> > Hi, I'm facing the same error on my testing environment.
-> 
-> I should have clarified that the reason the kernel failed to allocate
-> memory on my machine was due to running out of memory, not because of the
-> vmalloc test module.
-> 
-> But based on the fact that the test case (align_shift_alloc_test) is
-> expected to fail, the issue here is not memory allocation failure
-> itself, but rather that the kernel crashes when the allocation fails.
-> 
-It looks someone tries to test the CONFIG_TEST_VMALLOC=y as built-in
-approach test-cases. Yes, it will trigger a lot of warnings as some
-use cases are supposed to be failed. This will trigger a lot of kernel
-warnings which can be considered by test-robot or people as problem.
+Hello,
 
-In this case i can exclude those use cases or even not run at all unless
-boot-parameters properly sets if built-in.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
 
---
-Uladzislau Rezki
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:439 [inline]
+ vmci_host_unlocked_ioctl+0x1d05/0x5260 drivers/misc/vmw_vmci/vmci_host.c:933
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ kmemdup_noprof+0xb0/0x100 mm/util.c:139
+ kmemdup_noprof include/linux/fortify-string.h:765 [inline]
+ dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
+ vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+ vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
+ vmci_host_unlocked_ioctl+0x45c1/0x5260 drivers/misc/vmw_vmci/vmci_host.c:929
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable ev.i.i created at:
+ ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
+ ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
+ vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+
+Bytes 28-31 of 40 are uninitialized
+Memory access of size 40 starts at ffff8880231f26c0
+Data copied to user address 000000000000a4bf
+
+CPU: 0 UID: 0 PID: 6787 Comm: syz.0.16 Not tainted 6.16.0-rc2-syzkaller-00231-g75f5f23f8787-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+Tested on:
+
+commit:         75f5f23f Merge tag 'block-6.16-20250619' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a13d0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15f39d0c580000
+
