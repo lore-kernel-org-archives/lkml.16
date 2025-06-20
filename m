@@ -1,173 +1,58 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F0335958;
-	Fri, 20 Jun 2025 07:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54FB722D4D7;
+	Fri, 20 Jun 2025 07:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750405549; cv=none; b=D2EZVk5E95O9DrVtwyXxUjMctah12FPX2XKh1EmnFngdsLEqiJKEArPUstpRdcRlx4IhsB3KJ/z36DgIHZw+Qf2Nmo/I4LNK32UJeKV6/beGq5iviqG5b5WUBLVt+kUlHJjGUcZ97gf2Um82JisLSFsd8BnU4W3BmQuxwoQE7Os=
+	t=1750405688; cv=none; b=WwbZ+a2x5nZ8fYDDr3TJEMCnlsiEz3GYdAKHPjVsU4kdwn4x2OzyOrDlt6Y1xuLg6uVlAQX24sr2Cd2d/a5iEiZe4jiSYzwEdYhG6+lOHSft8qJlxfvRfZRs2EaFB++nFTfAlQdeJxn9wfPvxliXCZDf+PUHEsBWiTT2DXDiK2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750405549; c=relaxed/simple;
-	bh=RbnTkvnJP1Ebdtqwc/VhKT85ujDu26dnLeIL9eViZj8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=R/0IAm372DSIoED4UD6K61PHy7+yAk6lPDjDr/jqnoHYBor+gkULTGxMhysBwoIvp16a7mhx2FM4bi+yX4x8eI+fQtRAyjaULPuhwbTbSp2p8Hltwu3C9ENx7co4yEBloaHVfT4Dgbz7bz/mchK+x4AujcADhWH3NZ0ZooRgSYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fcR2AwBf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5KX7Hbri; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fcR2AwBf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5KX7Hbri"
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750405544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yiOx0UJc6/4EKhHUrNBpnoe5RzXYaQsljD5jorHuO9U=;
-	b=fcR2AwBfoJuarhXpV1pAN5qQaHOipR3HK/EyhllabDDjEDaA7FR8QoqR1zzakUuFtSFevU
-	12/cTQFHmNuLal8bg5Q1QrRgNb3NLshTlXzw2yQHo/7JKQgzZEE2Cx/r6k8mzbMPerRBxH
-	iwzGfJJai3NDQsDtH+aLY4J0YaH31ll8AsZlDi0fesj8oVnnSiApOX7qFz1np6JqRQZptl
-	kK/+tfdHPSbIjitbXKYv+fZJDEuGmXssd/y3KGacea55/GuFQqIxoqqTV55OACUCXMLX18
-	UtW7kBR6nOksyZkuQ0lwBDPkm86+f7f/dytdB0RLYliWkxUv7DPEyVFT5PFaVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750405544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yiOx0UJc6/4EKhHUrNBpnoe5RzXYaQsljD5jorHuO9U=;
-	b=5KX7HbriTjtu5BozbLOQv3iJmoMYE97BbpEOOj0WHHXHajNS8xQGCx+I/x2fRMUCv+rvcP
-	upkDcLbTGDSYlyAw==
-To: Song Yoong Siang <yoong.siang.song@intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran
- <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Vinicius Costa Gomes
- <vinicius.gomes@intel.com>, Jonathan Corbet <corbet@lwn.net>, Przemek
- Kitszel <przemyslaw.kitszel@intel.com>, Shinas Rasheed
- <srasheed@marvell.com>, Kevin Tian <kevin.tian@intel.com>, Brett Creeley
- <brett.creeley@amd.com>, Blanco Alcaine Hector
- <hector.blanco.alcaine@intel.com>, Joshua Hay <joshua.a.hay@intel.com>,
- Sasha Neftin <sasha.neftin@intel.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Jacob Keller <jacob.e.keller@intel.com>, Wojciech
- Drewek <wojciech.drewek@intel.com>, Marcin Szycik
- <marcin.szycik@linux.intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to
- ethtool NFC using Default Queue
-In-Reply-To: <20250619153738.2788568-1-yoong.siang.song@intel.com>
-References: <20250619153738.2788568-1-yoong.siang.song@intel.com>
-Date: Fri, 20 Jun 2025 09:45:42 +0200
-Message-ID: <8734bux3dl.fsf@jax.kurt.home>
+	s=arc-20240116; t=1750405688; c=relaxed/simple;
+	bh=K/9E0Rna/8vdvK/ihc4HMC8NaJSoKS4B1swdubMU4iI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PN0fTX/IgE8EmWyUz10MkCJsykmMUXwgcTjOdWGfZfX930dOLxbjE9pJJeuGoH0t3v/j80ZGR/bNxMyQmZ/A24dwZDq6o6er93m+X57puW+U37fSDXShM+uB023ztDEFpCABFCLnYPT6vrhCW5q93sDC1rvhe7vCRi2OHZexPEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55K7em13022553;
+	Fri, 20 Jun 2025 09:40:48 +0200
+Date: Fri, 20 Jun 2025 09:40:48 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/nolibc: make stackprotector probing more robust
+Message-ID: <20250620074048.GA22550@1wt.eu>
+References: <20250609-nolibc-stackprotector-robust-v1-1-a1cfc92a568a@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250609-nolibc-stackprotector-robust-v1-1-a1cfc92a568a@weissschuh.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
---=-=-=
-Content-Type: text/plain
+On Mon, Jun 09, 2025 at 09:39:16AM +0200, Thomas Weiﬂschuh wrote:
+> nolibc only supports symbol-based stackprotectors, based on the global
+> variable __stack_chk_guard. Support for this differs between
+> architectures and toolchains. Some use the symbol mode by default, some
+> require a flag to enable it and some don't support it at all.
+> 
+> Before the nolibc test Makefile required the availability of
+> "-mstack-protector-guard=global" to enable stackprotectors.
+> While this flag makes sure that the correct mode is available it doesn't
+> work where the correct mode is the only supported one and therefore the
+> flag is not implemented.
+> 
+> Switch to a more dynamic probing mechanism.
+> This correctly enables stack protectors for mips, loongarch and m68k.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+(...)
 
-On Thu Jun 19 2025, Song Yoong Siang wrote:
-> Introduce support for a lowest priority wildcard (catch-all) rule in
-> ethtool's Network Flow Classification (NFC) for the igc driver. The
-> wildcard rule directs all unmatched network traffic, including traffic not
-> captured by Receive Side Scaling (RSS), to a specified queue. This
-> functionality utilizes the Default Queue feature available in I225/I226
-> hardware.
->
-> The implementation has been validated on Intel ADL-S systems with two
-> back-to-back connected I226 network interfaces.
->
-> Testing Procedure:
-> 1. On the Device Under Test (DUT), verify the initial statistic:
->    $ ethtool -S enp1s0 | grep rx_q.*packets
->         rx_queue_0_packets: 0
->         rx_queue_1_packets: 0
->         rx_queue_2_packets: 0
->         rx_queue_3_packets: 0
->
-> 2. From the Link Partner, send 10 ARP packets:
->    $ arping -c 10 -I enp170s0 169.254.1.2
->
-> 3. On the DUT, verify the packet reception on Queue 0:
->    $ ethtool -S enp1s0 | grep rx_q.*packets
->         rx_queue_0_packets: 10
->         rx_queue_1_packets: 0
->         rx_queue_2_packets: 0
->         rx_queue_3_packets: 0
->
-> 4. On the DUT, add a wildcard rule to route all packets to Queue 3:
->    $ sudo ethtool -N enp1s0 flow-type ether queue 3
->
-> 5. From the Link Partner, send another 10 ARP packets:
->    $ arping -c 10 -I enp170s0 169.254.1.2
->
-> 6. Now, packets are routed to Queue 3 by the wildcard (Default Queue) rule:
->    $ ethtool -S enp1s0 | grep rx_q.*packets
->         rx_queue_0_packets: 10
->         rx_queue_1_packets: 0
->         rx_queue_2_packets: 0
->         rx_queue_3_packets: 10
->
-> 7. On the DUT, add a EtherType rule to route ARP packet to Queue 1:
->    $ sudo ethtool -N enp1s0 flow-type ether proto 0x0806 queue 1
->
-> 8. From the Link Partner, send another 10 ARP packets:
->    $ arping -c 10 -I enp170s0 169.254.1.2
->
-> 9. Now, packets are routed to Queue 1 by the EtherType rule because it is
->    higher priority than the wildcard (Default Queue) rule:
->    $ ethtool -S enp1s0 | grep rx_q.*packets
->         rx_queue_0_packets: 10
->         rx_queue_1_packets: 10
->         rx_queue_2_packets: 0
->         rx_queue_3_packets: 10
->
-> 10. On the DUT, delete all the NFC rules:
->     $ sudo ethtool -N enp1s0 delete 63
->     $ sudo ethtool -N enp1s0 delete 64
->
-> 11. From the Link Partner, send another 10 ARP packets:
->     $ arping -c 10 -I enp170s0 169.254.1.2
->
-> 12. Now, packets are routed to Queue 0 because the value of Default Queue
->     is reset back to 0:
->     $ ethtool -S enp1s0 | grep rx_q.*packets
->          rx_queue_0_packets: 20
->          rx_queue_1_packets: 10
->          rx_queue_2_packets: 0
->          rx_queue_3_packets: 10
->
-> Co-developed-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
-> Signed-off-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
-> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+Acked-by: Willy Tarreau <w@1wt.eu>
 
-Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmhVEaYTHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgmuJEACJBgobj3CkAve16FGrjD3Zh4+IiYSY
-J/o1/mJPvAyf5YhYEgQBOdqAn+w8jGBapT+RZ5ZlykRmPhjHcXIoxdi3Z7g6+u3K
-gG1ymQZVbFT3NcPv5+AZHzd5825wUJJkYrJoX4MpouK6hCmw5dDPK/Eu7yg6qmhj
-6bh43bt7LeZSL7KSDfGJXagYLhzVuFUI63/HSTICQz7mpd0/6qhEPW9qf4TEZZVV
-bZXXO2UYJvmc01VFiEk0nFyPKEMYMW1VUvPeAZn+Y6FpvkqGj5iyKgktbiqHwuYn
-BT3dEr3Io03pZn7ceuiOXF5eSGaTYvECeAx50vHvjIXwzITF9mqiNLQiEXA/hpHy
-D0RlenWbdauzgaB7gDVxt2Z+FhH9MhSmTWblFeVlFgKcZt+Oz+bQwEsIlzsnhi/z
-MaendoQO12/HMPRBx5LCzEwxxd+/jxUYullWCS9IYvwTErojLYCtTSsZ98XbqBd8
-AsXfOuDvKGNUt6/AL5H6shQWk2l8RUUPcP58W9CnO4eo+BQqQ2x5P0HxhsqTK8SS
-pU7de1jVOAsffe3D/Ee+t0/n2NFFWjIcQ2P45jLtDXsCeXVCo2hdHlL2VIkvGNiJ
-rKUWejs6zdwUg5Q3D+SX1yvi2TXaFZ30X95RYwiP8uzX+Hui5HwZcHtO5VAd2VCi
-hIODG5E/V6fKqA==
-=SVhz
------END PGP SIGNATURE-----
---=-=-=--
+Willy
