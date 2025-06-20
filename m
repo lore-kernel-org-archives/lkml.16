@@ -1,83 +1,69 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEC21D7E41
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823311B87F2;
+	Fri, 20 Jun 2025 03:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750390354; cv=none; b=FhWbEsTZO6fCFeSB7m1s87ZTyJ16ACrlXZ52yLwAV6saI1t8EiP0HQv+9rWt7D+3ri2uuh6JCJ0STfbRpgS8bPo0699yVjnBwE6bIwuIxLAW7RwfFqvFVoxtmj47oiDjHclmDxMac/INDoZtVO86BXXL0CRkZxGy5IMrMbqENVw=
+	t=1750390406; cv=none; b=t22C8bhTVoL6y6z82t8pVp2SCyPYnNdIjY0ba8KYoJ6yLkcIuCOLkFrwAAktDbhYuMcXGsp4fWnlcWg0bfpHn4cVJdf3naXpwI9lY5jORHLnXqF53s3o7m4mVet2IbYvaWJz1r7HSTj5ZK2DqZHfVWSS5DXdCVGOakjOuQ4sHhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750390354; c=relaxed/simple;
-	bh=9Hg5pobEE7M3tPGS8XdU/oGbneOqIPiRWFR/3Cld4kE=;
+	s=arc-20240116; t=1750390406; c=relaxed/simple;
+	bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRObwhVv+Yjcf4PVpWcWtXzqNsp0LU02nZe4IMVze9/gYXanNJR2VwIfmTU1BU3jYSItiripEqkHcVTQpiEcJd9z3fIsIcvu0IsxiwuEnrihuF9s/XPJJ79KOSki2Mh0cNysv+ZSIPojR0F1qWEMa4FmZA5s1q4mLd8yQIVmH3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AoGnXy/A; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vyk8emCz4Ftrtls2DAO0OJEErsX38bRbRCZqJPAcJ/00XEQMn0QHD32+yWsF8kR2BrOBftzRi7HUAO3eW4ZsqOo/qULttyhAaTERaq+YyXC7No+S11hLZf4tCLUSkT0ddVFB6B8/noshq3c2X4xAhim1AMvZR6nyNUJhLTRGKPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUBaWCiJ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AoGnXy/A"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2348ac8e0b4so228845ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750390352; x=1750995152; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qa/VDd/mSdDHpuvSCZ3/ODd1JXeFiiam1MgWlPeSiGs=;
-        b=AoGnXy/AZbTUnAiISuR6WY4TdSv0KCdP51xnuZwgl0WKBl6MsF3POltmch5BtyqMwO
-         FwlVPQJz+ibakQaIKbNccY5TrGBl3L+vePiIWy8XJb/Pfs9N8JSIwi+7q7LeBAbiKm2N
-         9edG8wsPF5uOalZI7FPS2HPwjGOuQE17a14pxzQA5tMWNmJjm5N+oTUGRW2cqzkh5yky
-         yioB7FAaIZWH8SunlNbK2Nmv2X1NEK/BRNffTu+vRnS3OvCjNG5r5no4ZVm6L7G01Kl4
-         SC7pKoxN/abeH/BFqZy8KsNjgNGRqpoKxTQR1K5soXhxQilNZttiYWcqvKekWfUx/nyq
-         hnEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750390352; x=1750995152;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qa/VDd/mSdDHpuvSCZ3/ODd1JXeFiiam1MgWlPeSiGs=;
-        b=RKux5GjL5rOE4DHGWrkdb7ep6ZkI8FHtvrQSAUqXV0GSFfEoxTlGxl6641pfWQ+Up0
-         6CST6l2tmb2mjyIEjXvTcPU8ZIKm654Iznz+dZMjWFmTicUUnc2M+9Pv7H25flrJjSB7
-         5U9pxxsuC2R3qEnfAP0ry92EJhhxM3vGZR58CMH7svnvAtXTq4viIcjXLba9OKR1qdR6
-         q7FVDsfoOhAJpU4wM9yn/5/Z4hgtbzQeNDMSNQpA95hq3Li6yqy/PSTDuR4PCFw6sjc7
-         5NJZ62Gf7UreICgrC3u6qWL+u3XXg0udB60VOnioO6IURngltaBXFHHqeBe4w8L50XHQ
-         2bGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSKKZeXuxfo0Rotnl0rvnxfhQZ6etWiFdQFprmuSsB39KWsU3fNwp9ueDrgNJP6fGHkgBzq06GpyshqNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV+li7mZViWTadmMwk5B414IHggzWy+rdT2c0/E5Els7fXRx7j
-	/a/XBZfWhsxSRwIt6aMF87+mvCvkCPTYbGDDzdhLZRb9E7iWB+v2xNfsM3xp7kahBw==
-X-Gm-Gg: ASbGnctooBB8gMX7I5SB/I+1wzzrN1LN1B6Vv9Kmp9kN7u6luUovXAgyxrD12vD3Aqd
-	SSKaUy8gFdmCPUH4d5ZBS3tvNX6zhAl6Zx9cLV+zVjKiotaqK/S8VIHHm7onwNhswGB2+QO+Flr
-	wxA8spd8HymVdY4nKPnqUhjVBqSdnmRVXAcf+WPjtHnlG/fr4L5MJFKwY78k0johrQwSC0nHezT
-	EpFK8//7WvX+6yMzeqwk81J1kLAZWj4LR3SlaUc8s7N1XO2HjDNNJ7YNUo6/x+ICyJ8oP8CKlq3
-	Mc67rF+l2ZZcxfsvy2Wm9WtQ+0dq6X4i7263ZR779ji1jfbqR3vy2PPFxR0ateuu+jF5lXQT2H/
-	HlsEcVeOekxqq9Zo+n7lllNaaDqqOZM8=
-X-Google-Smtp-Source: AGHT+IERsl+HTUr1rqxITuYHKylDMvSd/CxPtRuNjbrAMl+KyO4xPzytclG3wi1xtC95QCov1vt9OA==
-X-Received: by 2002:a17:903:1667:b0:215:f0c6:4dbf with SMTP id d9443c01a7336-237cc9fd3d7mr4672645ad.14.1750390351828;
-        Thu, 19 Jun 2025 20:32:31 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ce860sm6966175ad.65.2025.06.19.20.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 20:32:31 -0700 (PDT)
-Date: Fri, 20 Jun 2025 03:32:19 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
-	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
-	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
-	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
-	yi.l.liu@intel.com, mshavit@google.com, zhangzekun11@huawei.com,
-	iommu@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
-	vasant.hegde@amd.com, dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v6 20/25] iommu/arm-smmu-v3-iommufd: Add hw_info to
- impl_ops
-Message-ID: <aFTWQ4v6aZABpzeV@google.com>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <f36b5e42bac83d0cdf5773cad1c3a44c3eaed396.1749884998.git.nicolinc@nvidia.com>
- <aFP4zHIVT6epJeLb@google.com>
- <20250619185325.GB17127@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUBaWCiJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750390404; x=1781926404;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
+  b=gUBaWCiJGuywIjJtog9di/kCyviKcdjpS6ru+SaVCLKQ1dYqTjP+9lr9
+   WRrrc2I5XWCjyNTFJ+ERFVrBcHisSh9jS4yefgaz38P6o/R0AfVvpoUVy
+   BOsFrj6DeaW7gyQi9/0muR2eYluh9MP5ZlIXllTNVX+ubnBTMPDMF6B5Q
+   2474hvuy0l925Z24OciP3BWCV+gJGb1OkE2nCf5cKP2mSrGUq4/Mnriy+
+   jFPS563Y45BxpomSgEm4GE6t4yBK/7WzldqNp62sZh34t6tWgfSu5/vwg
+   +FMS+iNFruh19kZ00R9Wf40KthlRljOwVfNn+cpAFOYC0qYqAdgOHjs1t
+   g==;
+X-CSE-ConnectionGUID: asbSkjizR0qeQfwuNlsa7A==
+X-CSE-MsgGUID: 1SRYPx4FQJimbAGCwveB/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63692002"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="63692002"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 20:33:24 -0700
+X-CSE-ConnectionGUID: VUdPqhjeRb2L7mMeCgCrCw==
+X-CSE-MsgGUID: 7ZdBpbZbRx6UeBW6+OSrbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="151105038"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 19 Jun 2025 20:33:20 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSSVB-000LL8-2s;
+	Fri, 20 Jun 2025 03:33:17 +0000
+Date: Fri, 20 Jun 2025 11:32:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Casey Connolly <casey.connolly@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Casey Connolly <casey.connolly@linaro.org>
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+Message-ID: <202506201101.9HMIR1fb-lkp@intel.com>
+References: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,60 +72,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250619185325.GB17127@nvidia.com>
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-On Thu, Jun 19, 2025 at 03:53:25PM -0300, Jason Gunthorpe wrote:
-> On Thu, Jun 19, 2025 at 11:47:24AM +0000, Pranjal Shrivastava wrote:
-> > I'm not sure if I get this right.. if the user (while porting a VMM or
-> > something) mistakenly passes *type == IOMMU_HW_INFO_TYPE_INTEL_VTD here,
-> > they'll get impl-specific info?
-> 
-> It should call the impl hw_info which should fail?
-> 
-> +static void *tegra241_cmdqv_hw_info(struct arm_smmu_device *smmu, u32 *length,
-> +				    u32 *type)
-> +{
-> +	if (*type != IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> 
-> If impl ops is null/etc then it fails:
-> 
-> +             if (!impl_ops || !impl_ops->hw_info)
-> +                     return ERR_PTR(-EOPNOTSUPP);
-> 
-> Where does IOMMU_HW_INFO_TYPE_INTEL_VTD return something?
-> 
+Hi Casey,
 
-I mean, the check in the driver (for e.g. arm-smmu-v3) is:
+kernel test robot noticed the following build warnings:
 
- if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
-     *type != IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
+[auto build test WARNING on bc6e0ba6c9bafa6241b05524b9829808056ac4ad]
 
-     // call impl_ops
+url:    https://github.com/intel-lab-lkp/linux/commits/Casey-Connolly/dt-bindings-power-supply-qcom-pmi89980-charger-add-pm8150b-and-7250b/20250619-230137
+base:   bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+patch link:    https://lore.kernel.org/r/20250619-smb2-smb5-support-v1-9-ac5dec51b6e1%40linaro.org
+patch subject: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+config: x86_64-buildonly-randconfig-006-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/reproduce)
 
-My point is that in-case someone passed INTEL_VTD type, we would end up
-calling impl_ops->hw_info and then the impl_ops->hw_info shall check for
-the type to return -EOPNOTSUPP. Either we should clearly mention that
-each impl_op implementing hw_info *must* add another type and check for
-it OR we could have sub-types for implementations extending a main type
-somehow?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506201101.9HMIR1fb-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
-> > I agree in that case the impl-specific
-> > driver needs to check the type, but shouldn't we simply return from here
-> > itself if the type isn't arm-smmu-v3?
-> 
-> Then how do you return IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV?
-> 
+>> Warning: drivers/power/supply/qcom_smbx.c:250 struct member 'gen' not described in 'smb_chip'
 
-The current version is just fine with a doc string mentioning type
-checks within impl_ops->hw_info OR we could have sub-types for
-implementations extending some architectural IOMMU. 
-
-I'm just trying to avoid weird bug reports in the future because some
-impl didn't check for their type.
-
-> Jason
-
-Thanks
-Praan
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
