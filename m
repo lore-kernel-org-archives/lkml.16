@@ -1,152 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA4C2C374E;
-	Fri, 20 Jun 2025 15:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D2628C037;
+	Fri, 20 Jun 2025 15:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434862; cv=none; b=aNYAuIpmHMe/oHOy7FO1D2sZVmatSlt3QVL+s5O5dp4xMPoSSb8RXuezXunnwC2kOQUaOJhedRWM06Ez7Ki9YZ1tmr5/RKwWz6/3+2GVqbG7HKSzDVoyAUXC0AEYwEKUGn3XSGf8/MlVzcuDhCLBFxZIQNfUYQAhWk+kRpGxL9w=
+	t=1750434937; cv=none; b=RXCewXwuVyMTdL+dXIc2bgtD0nqIIxySElQnZRXUqm9nDShhK2ipwi4gg5AwpZLCGFbPoFEId5ecYVKL7Pnp+3duTYDqYXpU2Qs20L0CD4fvpgdZ3t8PyJWpF6uCIuyeSk3qxICdTAGgZdME58/kcIgyaSzTLGU1MAkdZKGq0NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434862; c=relaxed/simple;
-	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hXHn0Lzvez9AbATfqWOqW66Fbv826dt7/w8R17hTJX2UhXWG5G5RL6zzshINYaPALl0Ey3exl7sJBkMfo/rLqpAAFEvVsMZhyGVHSgjXLKlj5tcgWI3krWK8DAeNNSeCb29SKlTHZaN05UYT2uLhUnuKx6H9m3zkMfZKzgWpyHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPck3FAA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750434937; c=relaxed/simple;
+	bh=redXOYeCpKZBh+pLo/Ehn44+G435+Q4Pmuu1SB+tN54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OqtBuSctOpbzy5RNFr1cYthGHUwTgRWKERqFqoytDNxG1kda5qQJbjBCIV0GQnQPNAHuIU0k+/i4t7iQdHV5SphKthgarcY5AFo01XgU0aA+gy5ZnQM/jwSz8KCc34fn70w28yz/G7or9pEmKG74eUVeTVo+FUGBdsi/vHitYyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzbxPyiy; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPck3FAA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155F8C4CEE3;
-	Fri, 20 Jun 2025 15:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750434862;
-	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NPck3FAAqqQbowswZ4Bs9WQSeDFdlLzALda6dw2sOGvdu2GPaaXPwVC+Ue0I3mT2D
-	 xCodo5MJbVikwhdWdkZ9KQX17P32/qNs+DkOOWOcm7J8AHB24n3Z6oSANV67PtdbD1
-	 cKyM41Ve2cxXpIHJOWj0sLrNZZq3wqJRJnn8X99zANQiM+N0E8ickQhCSUhTTdwUe1
-	 fT/NQ237d0qLc/QQqXQKOJNTKwdEMqnQ8ymBcatzxVPZFH8eTFWD+ll03OPolwsIpy
-	 nselsg0dC2PWXafRdiiu+p+BgUjWN3daNGM9iaZx3bgWbSwVgyKckmzPHfn9jl9JcH
-	 d7R7tM/JcfOyA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.16
-Date: Fri, 20 Jun 2025 12:54:15 -0300
-Message-ID: <20250620155415.88215-1-acme@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzbxPyiy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750434935; x=1781970935;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=redXOYeCpKZBh+pLo/Ehn44+G435+Q4Pmuu1SB+tN54=;
+  b=mzbxPyiydAjFQtdOi2KdxDOx1ROKcI4aRO1deZxpTfR2ZdSXnA5PP5Cq
+   jbZ9F9b24WukPfdAGoA3eBA4aIAgm/8ejJ8dNNTzwgzRhTJ4kJ2Ub7pRu
+   lVOCoJ6ABmdMEOAdnzAVPVazxZcklFBk0qcrPiy+cM/2eLZ+pfXJYXv4n
+   aHa19ro4HZ627OoORiTtbX9ZPqSTLCnes+ViRzHgCF9GLFs+nBiksTgh9
+   Or/+UIrJcmo/7+bO3rgvk1UuSR1OBBOW4JT6MLGtwGJsPKjfBfrChHvKf
+   UQuG7mfZJerxWJF7sN21v7XCfYHXkY5mJkiCVDgvdkyZqrx+fFUW2dw9M
+   w==;
+X-CSE-ConnectionGUID: 5RvDvJIORvyjE8SrPjv3kw==
+X-CSE-MsgGUID: kTSlmxwVQnymvTEz27vpkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51815957"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="51815957"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 08:55:33 -0700
+X-CSE-ConnectionGUID: VwZYmYr9TmCFNCQaR48eTw==
+X-CSE-MsgGUID: 4Os9WouSRgap++Yc2gOF7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="151085092"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.136]) ([10.125.108.136])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 08:55:30 -0700
+Message-ID: <5bb6275b-5046-4bda-8c92-434e59cac08f@intel.com>
+Date: Fri, 20 Jun 2025 08:55:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 06/16] efi: Disable LASS around
+ set_virtual_address_map() EFI call
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Breno Leitao <leitao@debian.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+ Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>,
+ Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-7-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250620135325.3300848-7-kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 6/20/25 06:53, Kirill A. Shutemov wrote:
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index 463b784499a8..94c335229697 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -825,11 +825,24 @@ static void __init __efi_enter_virtual_mode(void)
+>  
+>  	efi_sync_low_kernel_mappings();
+>  
+> +	/*
+> +	 * set_virtual_address_map is the only service located at lower
+> +	 * addresses, so we have to temporarily disable LASS around it.
+> +	 * Note that clearing EFLAGS.AC is not enough for this, the whole
+> +	 * LASS needs to be disabled.
+> +	 */
+> +	if (cpu_feature_enabled(X86_FEATURE_LASS))
+> +		cr4_clear_bits(X86_CR4_LASS);
 
-	Please consider pulling,
+Could we do it like this instead?
 
-Best regards,
+	unsigned long lass = cr4_read_shadow() & X86_FEATURE_LASS;
+	...
+	cr4_clear_bits(lass);
 
-- Arnaldo
+>  	status = efi_set_virtual_address_map(efi.memmap.desc_size * count,
+>  					     efi.memmap.desc_size,
+>  					     efi.memmap.desc_version,
+>  					     (efi_memory_desc_t *)pa,
+>  					     efi_systab_phys);
+> +
+> +	if (cpu_feature_enabled(X86_FEATURE_LASS))
+> +		cr4_set_bits(X86_CR4_LASS);
 
-The following changes since commit 44a5ab7a7958fbf190ae384b8ef252f23b840c1b:
+and:
 
-  Merge tag 'powerpc-6.16-3' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2025-06-16 08:49:58 -0700)
+	cr4_set_bits(lass);
 
-are available in the Git repository at:
+>  	if (status != EFI_SUCCESS) {
+>  		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
+>  		       status);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.16-1-2025-06-20
+That way, neither the presence of X86_FEATURE_LASS nor the ordering of
+setting up X86_CR4_LASS matters.
 
-for you to fetch changes up to d222b6e6fb31e320eca506e665694d8ddf459157:
+Let's say the CPU supports X86_FEATURE_LASS and this code gets called
+before the kernel is ready for LASS. It would break as written above.
 
-  tools headers x86 cpufeatures: Sync with the kernel sources (2025-06-17 18:29:42 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.16, 1st batch:
-
-- Fix some file descriptor leaks that stand out with recent changes to
-  'perf list'.
-
-- Fix prctl include to fix building 'perf bench futex' hash with musl libc.
-
-- Restrict 'perf test' uniquifying entry to machines with 'uncore_imc' PMUs.
-
-- Document new output fields (op, cache, mem, dtlb, snoop) used with
-  'perf mem'.
-
-- Synchronize kernel header copies.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (16):
-      tools headers: Update the fs headers with the kernel sources
-      tools headers UAPI: Sync linux/prctl.h with the kernel sources to pick FUTEX knob
-      tools kvm headers arm64: Update KVM header from the kernel sources
-      tools headers UAPI: Sync KVM's vmx.h header with the kernel sources
-      tools headers x86 svm: Sync svm headers with the kernel sources
-      tools headers UAPI: Sync kvm header with the kernel sources
-      perf beauty: Update copy of linux/socket.h with the kernel sources
-      tools headers UAPI: Sync the drm/drm.h with the kernel sources
-      tools headers UAPI: Sync linux/kvm.h with the kernel sources
-      tools headers: Update the copy of x86's mem{cpy,set}_64.S used in 'perf bench'
-      tools headers: Syncronize linux/build_bug.h with the kernel sources
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-      tools arch amd ibs: Sync ibs.h with the kernel sources
-      tools headers: Synchronize linux/bits.h with the kernel sources
-      perf bench futex: Fix prctl include in musl libc
-      tools headers x86 cpufeatures: Sync with the kernel sources
-
-Chun-Tse Shao (1):
-      perf test: Restrict uniquifying test to machines with 'uncore_imc'
-
-Ian Rogers (2):
-      perf evsel: Missed close() when probing hybrid core PMUs
-      perf test: Directory file descriptor leak
-
-Namhyung Kim (1):
-      perf mem: Document new output fields (op, cache, mem, dtlb, snoop)
-
- include/uapi/linux/bits.h                          |  4 +-
- tools/arch/arm64/include/uapi/asm/kvm.h            |  9 +--
- tools/arch/x86/include/asm/amd/ibs.h               |  5 ++
- tools/arch/x86/include/asm/cpufeatures.h           | 14 +++--
- tools/arch/x86/include/asm/msr-index.h             | 16 +++--
- tools/arch/x86/include/uapi/asm/kvm.h              | 71 ++++++++++++++++++++++
- tools/arch/x86/include/uapi/asm/svm.h              |  2 +
- tools/arch/x86/include/uapi/asm/vmx.h              |  5 +-
- tools/arch/x86/lib/memcpy_64.S                     |  1 +
- tools/arch/x86/lib/memset_64.S                     |  1 +
- tools/include/linux/bits.h                         | 57 ++++++++++++++++-
- tools/include/linux/build_bug.h                    | 10 +--
- tools/include/linux/compiler.h                     |  8 +++
- tools/include/uapi/drm/drm.h                       |  4 ++
- tools/include/uapi/linux/fscrypt.h                 |  6 +-
- tools/include/uapi/linux/kvm.h                     |  4 ++
- tools/include/uapi/linux/stat.h                    |  8 ++-
- tools/perf/Documentation/perf-amd-ibs.txt          | 59 ++++++++++++------
- tools/perf/Documentation/perf-mem.txt              | 50 +++++++++++++++
- tools/perf/bench/futex-hash.c                      |  1 -
- tools/perf/bench/futex.c                           |  9 ++-
- tools/perf/check-headers.sh                        |  2 +-
- tools/perf/tests/shell/stat+event_uniquifying.sh   | 12 +++-
- tools/perf/tests/tests-scripts.c                   |  1 +
- tools/perf/trace/beauty/include/linux/socket.h     |  2 +-
- tools/perf/trace/beauty/include/uapi/linux/fs.h    |  1 +
- tools/perf/trace/beauty/include/uapi/linux/prctl.h |  7 +++
- tools/perf/trace/beauty/include/uapi/linux/stat.h  |  8 ++-
- tools/perf/util/include/linux/linkage.h            |  4 ++
- tools/perf/util/print-events.c                     |  1 +
- 30 files changed, 329 insertions(+), 53 deletions(-)
