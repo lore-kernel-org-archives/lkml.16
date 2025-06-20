@@ -1,123 +1,169 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E23030E85E;
-	Fri, 20 Jun 2025 15:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2F2980D3
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750431968; cv=none; b=nlSBwIPeGuLsnTBsac/ICQwNS7P6zQpH6jJh50lB6Zq72YWGTcMnoDZsptDO+1yfrpc/beqKPNiT/TXC2mOzKTavIdiEa6GBkXtuwgFXg2jnIT6Ryx+qqKgE52W6mET2RTs9Fi8oZHC2bE+FtZxUaTWnX78yX/MhNrngc79HyEE=
+	t=1750432012; cv=none; b=eGjSH5cYA15MnrAw3E6MwQNs8HEVw/qGh+NFZ6bdjbqpElEPfhtTdxIB+gj8PxMjdeHpLTGOdCrmX8F+0qfbcduUUOAWGfJnKajQY+CgulaBTdkKWdsku3naFc8kIOkUT96edZBQeyVvPx+x4CZMTIw43t/1q9d2DUcV2WRaMvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750431968; c=relaxed/simple;
-	bh=ksFoRy/K+QsZuP+UMssBVlk6SssmE35N4Xgff7AljiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mb+Ca80S1Ypon649xPRHoJGenJDHSFvhFLgYWyCX0PjVKXJZC75zE5myEDGb595oila+YVysjv1OqJTfFVt9gORFHeyFhkPZi/VHcgcSNPzeiHpKS9F7PoEfXkAion7zZ2jq42I3prADToo15YJcx2bWwa8FaUNRVKCXGEX5j5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpbWGLV6; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750432012; c=relaxed/simple;
+	bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W/dI3hNnKGUx3j6uOXP4moCg+fk7lbdTQX7Pwc4z0k8vFVYcTmOIq5ZPOo9e8GEKmkon2q0q9Yw/T12f7ZV0GTR3xmv6tpPaKeCF4ekOedwVr1XIR/Msn6uaJf2n7Loaey7sb/lJofzfjKnpGFNiRHrGv96vwCakrlqDLVRxdX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=zmv6Hlun; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpbWGLV6"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31f22d706aso729127a12.0;
-        Fri, 20 Jun 2025 08:06:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="zmv6Hlun"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fafdd322d3so21205316d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:06:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750431965; x=1751036765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
-        b=KpbWGLV6wxjXuKgGo83HpxXZsFIZddJtObNUKj2aGxsqGYjqpp0bxQbDm9MTn0/vYN
-         1EEYI8zvJMD2/WCO8qS0mKW39VMcJyYeXf0s1rrs7l8sS4aekAfYpk9mtW+WBy3ZiCWP
-         VajyY4HHotEacJsu8wi0ajL4SaijaySgIKRT3bEzX7LBhZA1Is6r3ySABIhxVUXppatj
-         0gOouHp7YFq7a9JAbeNedTX+FumAG66vSkf9kq8+A9pg0rOMqfHKcfQpbI0uZI1RPjmu
-         3h6raVSsF28gP+tpoHkaurce9xfO/16cSkYuLpKa/CdQjkgnCvk1Bqs3lxBaNIRocI7+
-         kGXw==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1750432009; x=1751036809; darn=vger.kernel.org;
+        h=mime-version:user-agent:autocrypt:references:in-reply-to:date:cc:to
+         :from:subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
+        b=zmv6Hlun5MD8eXUeWIFU/QwIGl0gg+q0NuMqEX5rk3xctKJ5wvM+AhlGgqWAhos15T
+         muqK4nHHco6V2ok+CGfJ7/KXrXdiqEPvRY2kaLvYGD+fCgTLOojH4h90WpNDhQiyhDbv
+         tUwm5+p4/j4UkSp8EYZF1WFWw+haRorRKKt0jHJ+OXarfEFbkuNzQcBotZLOAtaXzfZ9
+         AW4W5pKXsLMu/Z7BrxhbPSWMr7FSPnLIw0Kme5cdZZUS7RVpbc0C9ajc5JxPELaWEnHF
+         3+5akoEoVPNTmfXAR2bwVUcR8U/y2P0Vny5VVOjs+9P1EDnnll+VOxEArFJPREWGmOrG
+         CfjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750431965; x=1751036765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
-        b=nfjM9xx8W+/K1bAWWiklwyhtz7DZCMLdosYWgC03b4hj8Wn66zoELiVOZenHxzCk0R
-         mOQwqjTUn6ulOqm2nj/gAHAclcmPvWwgfZyKW4JE7b28iURTnND4Pfe1ZCu7vyc3tCYq
-         ayYQL1jFC3ZMwb8cPQIbt4gZxdyojMDdhp/iG0wJh/SV895AQXqJFZ0H1Gz+VoZQW0M+
-         Wxqsz6BrvoycJBUIEUssjR5zlrppqOr48/YWu2ErvYV7HXBc1nIO5d1vkb0mvOJAuzF8
-         I18IsZLTFXtSd1qQVV4jYuud1Cba2Z4K65Pa6y3JXXIDIjkMXLxFLvuH7n1thyxIUeh6
-         AagA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsu0wqrbEAg5MFabqDRy1shDDEmpymJEN2cL+MtWmHpi8UAimoeY0LDaQ5oimVJVhtFjXjF8MsXrdXST0h@vger.kernel.org, AJvYcCVKdDZwKKVOxz29BqzZtI3BuUgVw5y1E4HHmrtXQ1dFjK/3cxc3OgD4BAqloBgHv5oD/ZoKboqEBgy30Q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeNEjJKyAndgiXxd+/rZ1EO8QxTCzK45BYqBaSR68rQrQ1uif2
-	4qieE0jLTaFH1EjgwPvPnakhVGQTGpYQoHe6Rj9/1DWvbjh29BD3u93oTsSnm2oFb+4qk07cBzP
-	/BEzGp/HNjQKxK9PqurzGzg6yZsJtsSg=
-X-Gm-Gg: ASbGncsJbVjWmMrNAIydF2DjLUsBoIdXQqwTm7x7169Fp/jnAAlrIi692sG0x6DzjZ5
-	60kshfg7oLnZxFP6q/DiOk1nOYyE/IV5+tcG8iU5eIcoaOMltCVNWWCp22dLt/rth9dk+cBbT0+
-	qlvpv7pkprAsDwsVNDpZochAdHWt5wu3YRlU0pvu285gYMcMJTkqM=
-X-Google-Smtp-Source: AGHT+IFs1wDL+Fq34XOMDcxJYXK2p83tODMKFqB5EPpzMmEwzoywgbh28enfu/rjuNlD9SkE6FZWERHQsPwWGgXgmr4=
-X-Received: by 2002:a17:90b:538d:b0:313:283e:e87c with SMTP id
- 98e67ed59e1d1-3159d6347famr5079508a91.3.1750431964650; Fri, 20 Jun 2025
- 08:06:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750432009; x=1751036809;
+        h=mime-version:user-agent:autocrypt:references:in-reply-to:date:cc:to
+         :from:subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
+        b=kollfuiEdlPrx0dHhFx2vO/AcJ0v3QHHQImd66E1takAGx52ihtBZtCgfTgMs7IHl0
+         LY27n3hJLvhQV4IuMaqom/seLxObUxO/PLiPJaaBp7Q2S7jNqc5Izaz5Hxu8Rhue6Xq/
+         qwTSlu1VIUVhsLEFyLKV/1tiSuN+I0+iVcgQZKB7F/qcju0tdN4n5W7X1GIUzY/2buvt
+         8qBTFiCDfRhlvZqwki3/Wmao+PxcpZxWau/EtkdCqTgXeYxfdJepTtatUfmyILAShkrI
+         gdkU1A8a4ICPBFabFfdzKVPfcWi5SisbH5dRY/1p0tMUVH/5Dm6SyhsH3imDu+FnPzTe
+         LqKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqgTPjpNP7cf1oRiOURzfJeMGye+rzKLJA5sd/Jpg9X55WkdC7kpZG494nuaKUQF3lLLpoI28OZpoFl54=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0WGzODQ7/iko5cOER6BKVloNjnKrEEru8XaiSjrc2OqhjDDOF
+	M6c4q1+bxhaKEE8SpMQzZR0+VNRLAA/59lANmsRzsola3ORT6yI8mlddIEhStxVuR04=
+X-Gm-Gg: ASbGnctDlU3GeJ4ntI3VzrtE+QKt9pdQZj/4EtIXa1fdfiK6tmhvMzRYJUa5JPQSYWz
+	BbRBteV2IPgBf4hcaakmjdaTl2YfMGkQztgFKkKmAOejRwCMIc7L9fZ2AShZ22teGRMSUqgEVKQ
+	mojH+ezhMqcyNz6q7CgPXEhY+Y3LGZpNE2h/9lkuXZ0kXe9frIv+jV6IMjSRMiALSq7J7v/d8c8
+	zXkXITXVca7anjj0alDqerQYSX8ukdz0Ylo2Vao3Y++BFNNeN3NsNUwk13GpWCrgMRFAH3vK6jT
+	OFgdLqBsoG3UmJKTP3JGbkLDHF2xnh/VgLRPHl5pQakGwSVMigaiwCRGNFDYLCXeZoM=
+X-Google-Smtp-Source: AGHT+IFSbdWcJq6maD1xUyD31N97nxqkeERkrPfl+oPHZ7odb6VWFZL/FFDSL0pRREpka1+wvb6uPw==
+X-Received: by 2002:a05:6214:2463:b0:6f8:8fdf:f460 with SMTP id 6a1803df08f44-6fd0a461262mr40636306d6.9.1750432009010;
+        Fri, 20 Jun 2025 08:06:49 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:17:b699::c41? ([2606:6d00:17:b699::c41])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd095a3f94sm12971696d6.111.2025.06.20.08.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:06:47 -0700 (PDT)
+Message-ID: <82d38c0dc93255da3195a919dc650ef8fc07e7f2.camel@ndufresne.ca>
+Subject: Re: [PATCH RESEND 1/2] media: dt-bindings: nxp,imx8-jpeg: Add
+ compatible strings for IMX95 JPEG
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Shawn Guo
+	 <shawnguo2@yeah.net>
+Cc: Frank Li <Frank.Li@nxp.com>, mirela.rabulea@nxp.com, mchehab@kernel.org,
+ 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ shawnguo@kernel.org, 	s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, 	imx@lists.linux.dev, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, 	ming.qian@nxp.com
+Date: Fri, 20 Jun 2025 11:06:45 -0400
+In-Reply-To: <6898ce74-808d-4976-b04e-31737396a86c@linaro.org>
+References: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
+	 <20250521173444.310641-1-Frank.Li@nxp.com>
+	 <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
+	 <aFORokzx/sImgDtA@dragon>
+	 <d46d73f84e78daf152962ffb5cce7dd3ae0920d1.camel@ndufresne.ca>
+	 <6898ce74-808d-4976-b04e-31737396a86c@linaro.org>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual;
+ keydata=mDMEaCN2ixYJKwYBBAHaRw8BAQdAM0EHepTful3JOIzcPv6ekHOenE1u0vDG1gdHFrChD
+ /e0MU5pY29sYXMgRHVmcmVzbmUgPG5pY29sYXMuZHVmcmVzbmVAY29sbGFib3JhLmNvbT6ImQQTFg
+ oAQQIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBO8NUoEVxMPCGgRvEtlBlFEpYHL0BQJ
+ oLLLGBQkJZfd1AAoJENlBlFEpYHL0BEkA/3qkWYt99myYFSmTJUF8UB/7OroEm3vr1HRqXeQe9Qp2
+ AP0bsoAe6KjEPa/pJfuJ2khrOPPHxvyt/PBNbI5BYcIABLQnTmljb2xhcyBEdWZyZXNuZSA8bmljb
+ 2xhc0BuZHVmcmVzbmUuY2E+iJkEExYKAEECGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQ
+ TvDVKBFcTDwhoEbxLZQZRRKWBy9AUCaCyy+AUJCWX3dQAKCRDZQZRRKWBy9FJ5AQCNy8SX8DpHbLa
+ cy58vgDwyIpB89mok9eWGGejY9mqpRwEAhHzs+/n5xlVlM3bqy1yHnAzJqVwqBE1D0jG0a9V6VQI=
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-6BjHJSIIonN27c8RdqsP"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613110829.122371-1-ltykernel@gmail.com> <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Fri, 20 Jun 2025 23:05:28 +0800
-X-Gm-Features: Ac12FXzP9tlv4Hr8yWE5eMb2orG3vvSitxGnMHugM7FMpfdlgMpzp9R-ZhuwjoA
-Message-ID: <CAMvTesAscN2MyqJXpcbwcXWC-6-en6U_c03M+2=zcMF0bLv4iw@mail.gmail.com>
-Subject: Re: [RFC Patch v2 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
-	"Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, Tianyu Lan <tiala@microsoft.com>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+
+
+--=-6BjHJSIIonN27c8RdqsP
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 10:17=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
-om> wrote:
->
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, June 13, 2025 4:08 A=
-M
-> >
-> > Secure AVIC is a new hardware feature in the AMD64
-> > architecture to allow SEV-SNP guests to prevent the
-> > hypervisor from generating unexpected interrupts to
-> > a vCPU or otherwise violate architectural assumptions
-> > around APIC behavior.
-> >
-> > Each vCPU has a guest-allocated APIC backing page of
-> > size 4K, which maintains APIC state for that vCPU.
-> > APIC backing page's ALLOWED_IRR field indicates the
-> > interrupt vectors which the guest allows the hypervisor
-> > to send.
-> >
-> > This patchset is to enable the feature for Hyper-V
-> > platform. Patch "Expose x2apic_savic_update_vector()"
-> > is to expose new fucntion and device driver and arch
-> > code may update AVIC backing page ALLOWED_IRR field to
-> > allow Hyper-V inject associated vector.
->
-> The last sentence above seems to be leftover from v1 of the
-> patch set and is no longer accurate. Please update.
+Le vendredi 20 juin 2025 =C3=A0 07:54 +0200, Krzysztof Kozlowski a =C3=A9cr=
+it=C2=A0:
+> On 19/06/2025 19:16, Nicolas Dufresne wrote:
+> > Le jeudi 19 juin 2025 =C3=A0 12:27 +0800, Shawn Guo a =C3=A9crit=C2=A0:
+> > > On Fri, May 23, 2025 at 07:22:04PM -0400, Nicolas Dufresne wrote:
+> > > > Hi,
+> > > >=20
+> > > > Le mercredi 21 mai 2025 =C3=A0 13:34 -0400, Frank Li a =C3=A9crit=
+=C2=A0:
+> > > > > Add compatible strings "nxp,imx95-jpgdec" and "nxp,imx95-jpgenc",=
+ which
+> > > > > are backward compatible with "nxp,imx8qxp-jpgdec" and
+> > > > > "nxp,imx8qxp-jpegenc". i.MX95 just need one power domain which co=
+mbine
+> > > > > wrap and all slots together. Reduce minItems of power-domains to =
+1 for
+> > > > > i.MX95 and keep the same restriction for others.
+> > > > >=20
+> > > > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > >=20
+> > > > Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > > >=20
+> > > > Krzysztof, will you take this one once the DTS part is ready ?
+> > >=20
+> > > dt-bindings is the prerequisite of DTS.=C2=A0 DTS patch looks good to=
+ me
+> > > and I'm waiting for dt-bindings part to be applied first.
+> >=20
+> > I was waiting for sign of life on the DTS part, we usually get some ack=
+,
+> > which is good sign we can take the bindings.
+>=20
+> Such process never happens. DT bindings are the prerequisite here and
+> platform maintainers wait for bindings to be accepted before taking DTS
+> or even sometimes reviewing DTS. Why even bother to review DTS if it
+> follows entirely incorrect binding?
 
-Thank you very much, Michael!  Will update.
->
-> Additional observation:  These patches depend on
-> CC_ATTR_SNP_SECURE_AVIC, which is not set when operating
-> in VTOM mode (i.e., a paravisor is present). So evidently Linux
-> on Hyper-V must handle the Secure AVIC only when Linux is
-> running as the paravisor in VTL2 (CONFIG_HYPERV_VTL_MODE=3Dy),
-> or when running as an SEV-SNP guest with no paravisor. Is
-> that correct?
+You are the one requesting DTS with DT bindings for review purpose. You've
+done so regularly this year.
 
-This patchset enables Secure AVIC function for enlightened SEV-SNP guest
-which uses c-bit to encrypt/decrypt guest memory.
+As for review process, Ack are a workaround to a black whole in our review
+process. Patches without any reply can either be un-reviewed due to lack
+of time, or accepted. You do whatever you like, I'm just saying that clarit=
+y
+can help to coordinate.
 
---=20
-Thanks
-Tianyu Lan
+regards,
+Nicolas
+
+>=20
+> Best regards,
+> Krzysztof
+
+--=-6BjHJSIIonN27c8RdqsP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTvDVKBFcTDwhoEbxLZQZRRKWBy9AUCaFV5BQAKCRDZQZRRKWBy
+9KazAQCZpPC27cOiLrCeirOx9KtegKeVBpOKvNdcjZFKHZg+0AD+OJGvNGaHn+Di
+rFaOSJG8M735rmjWeSPrkNAWKU2s4Qc=
+=Chy2
+-----END PGP SIGNATURE-----
+
+--=-6BjHJSIIonN27c8RdqsP--
