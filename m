@@ -1,102 +1,129 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CE42EA752;
-	Fri, 20 Jun 2025 18:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DC62EA737;
+	Fri, 20 Jun 2025 18:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443090; cv=none; b=Gh148CpQ+BDl5heV6qpqtCSTTQI27IAZBlfz2eCelZEqr4nu16ZzpZT0yzzhyBhHk5VKHpQ55bFs05wkvPgXWTGXVTn/U1UOvE5r+FHvsg+wLhZmS6g3Ozj0mqyZ1vS+GVPV5WkGBsDk7SOZ0wYh+LZKDomRqHlzSJccDdUWEg0=
+	t=1750443090; cv=none; b=lMknaz5k6m4NDolhICQ/S4dANO9dFDSiSH2QHRTL973ThoRM/zjRHqnQz7sPsElzqY47IGQHAf7zaPZqcpv8N6j/2fpnv7yfjQi0O0gNjTVCdZOCCF0BxbnOQNO08MLycdX64/tVpOyqZbhaafziNjsXLaI5SaZ5T1a60ZpezDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750443090; c=relaxed/simple;
-	bh=1dDLFyjAEHX8cxwcTCC/k6iBaRFF/axpFXkeBLu67dM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NvcSxBMNFIbQaE2fo+4aWcGFvG4rJ9Bs4fmriMSUf7s6KTCXH5pbmoucFgr0xXMYuS+7MWe/4Kkh5VtU8UO5bI81kuXecE9ncgKJen95P1lnT/FZdXNNpQwGvn+IeC0ZsGgTJ0027vjl9T9IDRHql9/URNvm+rU+7u52P1USNRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhJem19N; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=lSokGwWrTbP2w0Z66opvrz8zVvFcpyUebe8RxlTyZE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PmYwJ0I8ni7M6iWaMfsAQY57r9xkQino0h6K/L0YWzYhKEJpgcb0SOSkfWLGOu4E8C7RZUNQlU3BoH1esu+pQyL95gv/W2XBunoiY3RRTyIo9Vg1DPp5JcBIdD8wbzP51ZsTEnu7FtHY17idTiskLyqkF20DF8uhgTJPJoT+Tcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=gljf9ICt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pjqcciv+; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhJem19N"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so2188888f8f.1;
-        Fri, 20 Jun 2025 11:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750443087; x=1751047887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2mEzXZ/YIhixe6E1kyZ5GIWXcl4av2h83GgvTF7RG6c=;
-        b=fhJem19Nxd5HtTVDbiWg7qT8ulK/k0VLXouM/SZffxvSjhf96aO7ROeG/XH/6vDLnX
-         SeICoFd4PtLYMZW0k4r2X0adfBPYFDvgeH1R8EQAMQ9rtdHStgFEz4ah/WIRjp5c5zGj
-         aSPECJB1/jnm+Lo72u63YDnHXm4XRMeSDQ8Th4FmoTmXsyJFzigsb7jYlV2/fVf34elI
-         EeLkmBYEBvNXDu0J/Mj4T8wcOxohINFWNw84rtCzC+KK4RH49k7TFBSu0LrCzFEDouaQ
-         cB9lupTCg3r9Iw++f3QjYqTpUF7SAV5V0Qfp3GRsfMDNzC8pmiJ71xrl+OThVaWXG4/5
-         JuKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750443087; x=1751047887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2mEzXZ/YIhixe6E1kyZ5GIWXcl4av2h83GgvTF7RG6c=;
-        b=IxP4lGphzozaKG0sMBP1+15yOWSty9OYCT6hG/kzblsV68t1xelzPZU+YExbJWmnpG
-         iCxA2I4s9BgDs+gG84qZ8bmiskNTompCzEDhWeJhMaQYZUif6jyQgOFoqh3e+NPxMEKT
-         GLWILgFrb8tj/qSE0n0lD/pCiYshCGW+5NunHLesAwduKa4Tz83Mp5go/rMWtGt1KIhk
-         f2Btis4hpHGw7e7xDvt8nx7+bMmFqzUKz42POJ7TTnCII3ZV4roLB7nTmif1W8oZ8d25
-         yTOeJF1EKUoHeRtmcY2+WjMUQL0hGL43zwtiQHSe+yeOHZ/IZHMoRWK+HlnBG0fskZMK
-         EaSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVelZf8AQI0YaRAsb20HT5wR9mG9In4yEzZMLQxXmdGwZFB7ZhDZATPCMU2j6Y++MJTlmag8/+gv8G9zP@vger.kernel.org, AJvYcCVOuKwyAwvluHj66MqTgZsjb4m//kuz3aBX6FnPWrYnlUR7zLsOBdWrnn+10D8QFeG573Xes9p5r5/hpSd1cU1IwkXGJvbR@vger.kernel.org, AJvYcCXEAi9NoLGr0bEFuIS0vlYHuCckHcT/6P46tdx0OtQk7Vu9WeVdA2G6AXOqGU8x7pVBlQu97rUlGyeY+dPK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw4bf1LH+J7pbPHRAlvT9yEq6EDJ9gwHkQv0YocLAE9arkccsU
-	Tvdfjfi2nxcPRHkPH9nlcK43jJaRhcWIjLY0V8OMqCzRK6DInSwF+qgOYce3tkYKtJG6ANdXDaK
-	5c5ab3KaO2TY73ldX9CMaA6odeMWBwmA=
-X-Gm-Gg: ASbGncuEdZu2bDMoPQzHH3PQJkpE+AoZmRnSGRA8cglG8RsD5js3FtQuRXgCjRFxWmx
-	TEOJilV5i9HIGbsGlwUn3MR2Z0JXgkiUig7s4CrqlzwiQ8I63UQFGlDYO8KQp1K/SYE7vAkczEz
-	e4azj8QX+hp2zTo0nb6Th3FrWZR0NnwDWC7+TfZ16HbF0lqCCwxVo2wwUmEmD9UQTJYQpsMO4O
-X-Google-Smtp-Source: AGHT+IGfJOYs+TU8Pm+1eKpur6OPfhxYVjv6rAi7gkrEUuJaY+iWia/CHhyGwOziyeDcYZ+upUUxt3w9mKnp3ZXK7uY=
-X-Received: by 2002:a05:6000:2011:b0:3a0:b565:a2cb with SMTP id
- ffacd0b85a97d-3a6d277a9bcmr3464061f8f.1.1750443086458; Fri, 20 Jun 2025
- 11:11:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="gljf9ICt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pjqcciv+"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 8CF3E1380452;
+	Fri, 20 Jun 2025 14:11:26 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 20 Jun 2025 14:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1750443086; x=
+	1750529486; bh=7Ykv1WdH4LN+2KFW44tucEmnHyrkAkxKCk4JhHN/PwA=; b=g
+	ljf9ICtn+X+z8zxwNDRDewHfl8ECDDVBVsq43S2FcVliq8K4Z50LTYM5DuJF/q9Q
+	Z5kvmjaHYd7QgWVQwev9X3blbxmtYIKSgb5sgLpQ4ccDgNHUvug+DTgpyDrrF3iP
+	fVLjdEtOOED0Q8zEGx46hveht3eZK2M4DzvfG9ykLVMSJP0yUrJSB5s7hqaqzIay
+	JquovmmNJwwJocdCE+p3ezpsm+5yXeMIi9VY1qOMtsXNTxqX+YneGfJ2AB3KtUYL
+	RVg1vTT+5FveGGvV3Y7Vxwjwoab6TnqO/9mUPcntxo0HnAjSP7C24bkaY4cQIw80
+	/3eM8IhFL4kEyGWzpn9IA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1750443086; x=1750529486; bh=7
+	Ykv1WdH4LN+2KFW44tucEmnHyrkAkxKCk4JhHN/PwA=; b=pjqcciv+lBW2Htzrp
+	PhK6WOlkPxS3Y+aCRwV3FE+A0anC5kWthJnQEexiAFCAnnHTrR8mcb8e7KkdaPLZ
+	oG0Ucun8Gs+xF6916w7OnGuVfXXVkHsNHFHzufCVKF6u5DtAsA0P7lOngAF9kYj+
+	/+KP6pXAtZ1INbYqgvO/qbo+3mPkFTl+daBTveyswVhdOKtmN8kHHg1GS3rte3eD
+	4htvSsWeXa1nqtPGw5tMDQrCG2r6FYs+uPr8K1X87Z8jRhYhCEBReT0+l8LlMao4
+	NwAr8TvwODvDEV9CFy2SVxPFyBLoKdfQwTTH3mJStagmatbEcDX3egFNO1o5pqds
+	Nh/aQ==
+X-ME-Sender: <xms:TaRVaEsWzAmJI77s8IdbqvkK1mf4a1mchrx7sUTOFCvGKVkzBD284A>
+    <xme:TaRVaBf8Bmdoknykbe-Pvp4aI9bOVGG5o3FO4SwzlcMDNkL3sWOGvaXEhRH_FdWsT
+    bOItwbrTH6UL6WzBko>
+X-ME-Received: <xmr:TaRVaPxXCnMQlFLIzZppO7It2ZuqggJrc6ASr-jyLiGMvX2F3XgOxmOYUkfXHW0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdeltdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhush
+    hpvggtthffohhmrghinhculdegledmnegoteeftdduqddtudculdduhedmnecujfgurhep
+    hffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrh
+    hsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggft
+    rfgrthhtvghrnhepjeeltedtgeeigeekffethfduheevtdfhveejheeukeejgfdvvdevve
+    egteehieeunecuffhomhgrihhnpehsohhurhgtvghfohhrghgvrdhnvghtnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqd
+    hlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepkedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphhtthhopehh
+    uggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvh
+    hinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghp
+    ihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtth
+    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepghgurghmjhgrnhesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:TaRVaHNKpy9uwYt1mSbzQ3erixZ7_DCFs0f0U5QzJHJyHVR1hroftA>
+    <xmx:TaRVaE_JZS8VdoR3drAANYThAk_Tme6AnZrt1hW6wsQhuadToUHMhg>
+    <xmx:TaRVaPVM7jjGF_m3UvZpsvrnO4esCddvi8bKvAVqxWpfgVLeiKPlnA>
+    <xmx:TaRVaNdzFDFMbWYvh26bsrpQPvMJ3NjvsYncgmFdtAg8-btiUA_pPw>
+    <xmx:TqRVaCM1BHo8XsBPrgUl0i_IgRTYo3wVf2YFlu6KrMe1a3X93Yg_V4_e>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 20 Jun 2025 14:11:24 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Damjan Georgievski <gdamjan@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+Date: Fri, 20 Jun 2025 14:11:10 -0400
+Message-ID: <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619220114.3956120-1-song@kernel.org> <20250619220114.3956120-5-song@kernel.org>
-In-Reply-To: <20250619220114.3956120-5-song@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 20 Jun 2025 11:11:15 -0700
-X-Gm-Features: Ac12FXyshEwARoZFYJF1zB3nJckCcTMlv6mMIXAMOjn59QA2CaNEhkcL1gCUHnA
-Message-ID: <CAADnVQKKQ8G91EudWVpw5TZ6zg3DTaKx9nVBUj1EdLu=7K+ByQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 4/5] selftests/bpf: Add tests for bpf_cgroup_read_xattr
-To: Song Liu <song@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	"Jose E. Marchesi" <jose.marchesi@oracle.com>
-Cc: bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 3:02=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> +       bpf_dynptr_from_mem(xattr_value, sizeof(xattr_value), 0, &value_p=
-tr);
+2025 Thinkpads F11 key launch the Intel Unison app on Windows,
+which does some sort of smart sharing between laptop and phone.
 
-https://github.com/kernel-patches/bpf/actions/runs/15767046528/job/44445539=
-248
+Map this key event to KEY_LINK_PHONE as the closest thing we have.
+This prevents an error message being displayed on key press.
 
-progs/cgroup_read_xattr.c:19:9: error: =E2=80=98bpf_dynptr_from_mem=E2=80=
-=99 is static
-but used in inline function =E2=80=98read_xattr=E2=80=99 which is not stati=
-c [-Werror]
-19 | bpf_dynptr_from_mem(value, sizeof(value), 0, &value_ptr);
-| ^~~~~~~~~~~~~~~~~~~
+Reported-by: Damjan Georgievski<gdamjan@gmail.com>
+Closes: https://sourceforge.net/p/ibm-acpi/mailman/message/59189556/
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index e1c7bd06fa12..2155ec682b08 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -3295,6 +3295,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
+ 	 */
+ 	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
+ 	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
++	{ KE_KEY, 0x1402, { KEY_LINK_PHONE } },
+ 	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
+ 	{ KE_END }
+ };
+-- 
+2.43.0
 
-Jose,
-
-Could you please help us understand this gcc-bpf error ?
-What does it mean?
