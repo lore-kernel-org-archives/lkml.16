@@ -1,129 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A18428A71B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988B521C18E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421048; cv=none; b=QH0FK8PQmlGwS1VvCpZsRrl3kd/lBaQO2n9YqO6IGGKkLX/MKQW7xmMMURelabKxSxyCovEGOuzeES+p1eQ/dYsEsssqM1oNLjpFfg/4C3L7cTQRhVfEH5kycZK1pu67VCZRKFeipGIFZBnFKVYErd2zyaSscPBZ0wp0Y+lNyWo=
+	t=1750421074; cv=none; b=A2gN51aRJgGvkZPvlk1aaOmtlgZPdB8lCoanQn/A3wvdgowCFw9vAYp0ZzOV7nEteh95j22M7KxbTtmggiOemRSrP2lYZIdGi/3biSZCpJRQ2AGcB80i+DSIh8q/++UUZyRhROaIadTrAc77+QvNS5dcgeF83ezxkfwrITBKM/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421048; c=relaxed/simple;
-	bh=l1Z6RZ+Jg/F0bsfyt7bxGpqft0eCD+Wo2GNzL0aL/xw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DT5EnT21XtrWG6+ONrc+fRxivDUetlgA6jvpwahNqiqqz08mcIlmUj+Y+fMccgwUNJJB5mUDsk8PVmQ7oxSWit/SI69l4U4k6+tibIpj2RphZjj/CCCo8/pXBPQgRCwxOhOpeCsMJUDLrG2SiU4zqQshDDnA32DM9FoRBF5QBlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hTaPe6/q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750421074; c=relaxed/simple;
+	bh=D4CLahTcm02K4MIrgNUooEK1xt6s6SBPZH2zMP2SJFU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=Fn238s38TivKED8Zp/MC9PRV2NsJKnOYVH0hwvaX3OSvDX5snqScqMS9Al5anxOoKYq34TV+iOlqQ5u0hl5joq5/fSDIEz/IPjZt5AaKv61/prROSdyx3W/xDrPIuXqSUboUWO3kBpipYtPw8PICjnxBWB2eniDpG0Rv3NEN3T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AFP35sF1; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hTaPe6/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750421044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JW3kxfXMYL5iahKOftdvklIyRga4xpLB5+77DL7Pz9M=;
-	b=hTaPe6/qfpZATNdEbXTfqSn94+igvssEc/Tszvlwno2SKMzZTr0T+qHer0FHxp9M9R4TjE
-	tL3psX/uLfO2dkQxyr6lt61p74RhiZrhmIkvdp04QnDHxT8C8EvflojXBl2ymezvHcZy2y
-	x231bOLvcIC9NGpRb9br5vcz/kl1Zzg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-6-yogXgJUhPYSLNRPvkIGO5w-1; Fri, 20 Jun 2025 08:04:03 -0400
-X-MC-Unique: yogXgJUhPYSLNRPvkIGO5w-1
-X-Mimecast-MFC-AGG-ID: yogXgJUhPYSLNRPvkIGO5w_1750421042
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d50eacafso10776715e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:04:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AFP35sF1"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4ee391e6fso290632f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750421071; x=1751025871; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+XeTD7cN51Pn2KJSTE1mvF0ehQNPT1Jdjz2pWXS0RPo=;
+        b=AFP35sF1RK2x7kFTHo1q0Dvw4GvfVfyJkbsHwj5mndAJMshYV0g5q4C6m0sbQtvgI5
+         OToN8Vubm/Tqa2+USeVj39CC+ECIclY6y+oagdLGt3b1JM7GJ8cpUW1NcXFYADCrYKfU
+         2Rg+I5nOgEg4JYtqWg6vJaPX/WJKTXkt+bQMvUukceYEmcPChnisO9uC8d9Nuv8UAP0c
+         TAOUNitHYNRXCZQ2bbMWkTwINNlXJyySCeBDo2mI4yspsivg9Gv3QAaO0SwBjPigrLvE
+         jYRbJemVu4zJDGxxq/hUpeCFswp68EoZzOV9kyOoTdGlc7mrMqKVfKkmTeoGklN2WeVm
+         bNww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750421042; x=1751025842;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JW3kxfXMYL5iahKOftdvklIyRga4xpLB5+77DL7Pz9M=;
-        b=v/tFoL33PNdYCokHtVrQOQexWEoMVc4JBNjFdqT9Xr2pUYxYdeLUK/Z/KUF+SGxZ9o
-         dUVTeF3pquCSYAFabbsx5OJ61QpZQyjKcUp4l8acRdvkqK7d+muQsqxVuEnpNziBYFxm
-         c0QRJv7Hc4ZcGVJCMOvL757sd1Px+AQJ/3ON0R1uNb63Iqw6ghKCSkX/l9Y/d/X+XPXi
-         VZ1fgToR66LwmndnH3GLZb4PlPCQMxeqV9Z/DiAAIEU1bmMKYz0fnUwHnjwvhVcNexn5
-         eNmyJprRMvKm7XWtPm5jF0+7NqYXHeu3A20Mt7DyqU/d+sY89liucL0Z15toYDabqPV1
-         eABg==
-X-Gm-Message-State: AOJu0YypWWEqLT5u9ttEJnhVuC9pRxUQ5P1EjUeQGoclcxwaJ5+tI2OO
-	HQO5H1gM6KmVTN0Ojvzk44luueFGDCdChxLppZH9rU7avWHEmniG3J0UcrcfCraoOmYIg4zeFaq
-	NQ1omB8e1BBMfo7vOSbLEhRQdB+nQ9xtcr5G/PEnlmf5Jbj6ZQbkhQIvewGadMQH7Ez02gE68CX
-	dFTwti1wy3RSRW4bePOXpT57oX7QiJ+U29EbJUdqC7
-X-Gm-Gg: ASbGncsznQ/8J7P1SbfknyEyy4iBvIHzA+nXv2FnUR4tHgtR4d7SCDFLg3fn2HdRcQX
-	GLlWyjA4jdt+kUCo0hbAbi16Z17gdZBBEZagygsp3L/adTUd4juxQrzL1YYpBwtzYnMnHjeVe7W
-	NoUVc=
-X-Received: by 2002:a5d:5f8e:0:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a6d12bb6b6mr2193975f8f.2.1750421041727;
-        Fri, 20 Jun 2025 05:04:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJzasLSc76E2amKmRvg22TG4v1hAFaZKZ2pNBS9y7yYicS3IGqkmtp9MKL+Y+V7M0fpDUlyS00yQ6bumKJzPI=
-X-Received: by 2002:a5d:5f8e:0:b0:3a5:243c:6042 with SMTP id
- ffacd0b85a97d-3a6d12bb6b6mr2193916f8f.2.1750421041262; Fri, 20 Jun 2025
- 05:04:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750421071; x=1751025871;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+XeTD7cN51Pn2KJSTE1mvF0ehQNPT1Jdjz2pWXS0RPo=;
+        b=Hd74JM6QGzSzt+90/6AL1s/5eYk56Z1Jl3SrwNxg7npyYvUAEnYdCCMcMX9RuixGS9
+         C3E+H3ksdmzhoOHS0EeU2ffanRR8617sjOeM35XrthVRTEi28BaiAZutjrhzB7QERA93
+         fKYiggHQD6NN33Ar8GN8dp9WoWbrxLaLSk3wG0LZ1bNH30ihxGEcQNc1+QSsfZFdN3Tw
+         UwxCoxfQVqxIy483dfsncIAbUQTHxlxIYrqOlWwXki2cuP1l1xLLJLaXihd8hkSgmE0b
+         j+/QPWQvnEBsslNdpL4bYrg9GeMluA9nwFifLhFeAFjETiVJhaUShuiJuD9eCmDSfO6J
+         PFkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa9tziNHkng3LbBOuxXnpty7ZF3sbW1lXvDkjkFjBC1nh7yL5ZhYDlziPYEDExR7BTiDMI9imSOt4EAFU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYhqCTGJVhoO7xMPwVVOmKw5yk1Js9SQWrdTAsOhHS/HFkB56w
+	Ouz5c4giomMYCm3SCHLS5y/lI4UXNTX3E9HE9RgddsGr5Rx856pIANeHkvf3YFHV1P0=
+X-Gm-Gg: ASbGncv2q7OA8Yy2mSDtmCyy7Q0IX+t3PMKNtbdqfn0qpsvOxt6kQRB7YlmP/UfhV2g
+	CM+RhKGoqN7Nu3Zeo5IdfcDENrcCY5DEAdN8WqWZxC3QVAZQBOGHs7uP9LoETcMkl4Ib/fzra+/
+	q692/7BGQD2YIeB0suEZKiUag/U3eDxUVRxdjxH0tY1t0FnZ6x5hYvWb9dgfeavqTQVckIg9GXw
+	dCjbIywQMyGVf8Br8q0OTonUnd5IYvTsjtNSCUOIGG2qHLgUBVYpMiEjNCUR68dL0ml5fDw2qgD
+	XABj1lYYEj6Z9opxWz5Fh3ZFojnCyqO6XRYrTR0wSUhM/QXBvOS11i4DofT5+JiiXM/V
+X-Google-Smtp-Source: AGHT+IE5Nwx55CYVDH94kaBUPm5U9VYUEHy18TPg0VqIF2/T7Ln2PcZvxS2VOj8pKTt4zB2/NGi+iQ==
+X-Received: by 2002:a05:600c:c087:b0:441:c1ae:3340 with SMTP id 5b1f17b1804b1-453657bf6camr6628245e9.1.1750421069056;
+        Fri, 20 Jun 2025 05:04:29 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:81c5:fb37:d08e:99a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a5fsm57299655e9.34.2025.06.20.05.04.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 05:04:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250619180159.187358-1-pbonzini@redhat.com> <20250619180159.187358-4-pbonzini@redhat.com>
- <cc443335-442d-4ed0-aa01-a6bf5c27b39c@intel.com>
-In-Reply-To: <cc443335-442d-4ed0-aa01-a6bf5c27b39c@intel.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 20 Jun 2025 14:03:49 +0200
-X-Gm-Features: Ac12FXzbneTz5YpRMuZL36zwNtkuaeE1Xz-EjUQKtd3ZczaGjNE0oZuCnQ-GZx8
-Message-ID: <CABgObfaeYdKeYQb+6j6j6u5ytasgb=t2z03cQvkG2c+owfOCgg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: "Kernel Mailing List, Linux" <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	"Huang, Kai" <kai.huang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, reinette.chatre@intel.com, 
-	"Lindgren, Tony" <tony.lindgren@intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	Yan Zhao <yan.y.zhao@intel.com>, mikko.ylinen@linux.intel.com, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 14:04:28 +0200
+Message-Id: <DARCHDIZG7IP.2VTEVNMVX8R1E@ventanamicro.com>
+Subject: Re: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
+Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
+ <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Xu Lu" <luxu.kernel@bytedance.com>, <anup@brainfault.org>,
+ <atish.patra@linux.dev>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+ <aou@eecs.berkeley.edu>, <alex@ghiti.fr>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250620091720.85633-1-luxu.kernel@bytedance.com>
+In-Reply-To: <20250620091720.85633-1-luxu.kernel@bytedance.com>
 
-Il ven 20 giu 2025, 03:21 Xiaoyao Li <xiaoyao.li@intel.com> ha scritto:
+2025-06-20T17:17:20+08:00, Xu Lu <luxu.kernel@bytedance.com>:
+> Delegate illegal instruction fault to VS mode in default to avoid such
+> exceptions being trapped to HS and redirected back to VS.
 >
-> >               tdx->vp_enter_args.r11 = 0;
-> > +             tdx->vp_enter_args.r12 = 0;
-> >               tdx->vp_enter_args.r13 = 0;
-> >               tdx->vp_enter_args.r14 = 0;
-> > +             return 1;
->
-> Though it looks OK to return all-0 for r12 == 0 and undefined case of
-> r12 > 1, I prefer returning TDVMCALL_STATUS_INVALID_OPERAND for
-> undefined case.
+> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> ---
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/k=
+vm_host.h
+> @@ -48,6 +48,7 @@
+> +					 BIT(EXC_INST_ILLEGAL)    | \
 
+You should also remove the dead code in kvm_riscv_vcpu_exit.
 
-From the GHCI I wasn't sure that TDVMCALL_STATUS_INVALID_OPERAND is a
-valid result at all.
+And why not delegate the others as well?
+(EXC_LOAD_MISALIGNED, EXC_STORE_MISALIGNED, EXC_LOAD_ACCESS,
+ EXC_STORE_ACCESS, and EXC_INST_ACCESS.)
 
-Paolo
-
->
-> So please make above "case 0:", and make the "default:" return
-> TDVMCALL_STATUS_INVALID_OPERAND
->
-> >       }
-> > -     return 1;
-> >   }
-> >
-> >   static int tdx_complete_simple(struct kvm_vcpu *vcpu)
-> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > index 6708bc88ae69..fb3b4cd8d662 100644
-> > --- a/include/uapi/linux/kvm.h
-> > +++ b/include/uapi/linux/kvm.h
-> > @@ -461,6 +461,11 @@ struct kvm_run {
-> >                                       __u64 gpa;
-> >                                       __u64 size;
-> >                               } get_quote;
-> > +                             struct {
-> > +                                     __u64 ret;
-> > +                                     __u64 leaf;
-> > +                                     __u64 r11, r12, r13, r14;
-> > +                             } get_tdvmcall_info;
-> >                       };
-> >               } tdx;
-> >               /* Fix the size of the union. */
->
-
+Thanks.
