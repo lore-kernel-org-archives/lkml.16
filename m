@@ -1,47 +1,44 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06AD13FEE
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750384965; cv=pass; b=Rs7rlmrn4jkK+/iDj4TgiVEHsi7OBztyt2vmB8WS3T6Fn/xKNIxNzU8c1UhKNfom+xVADs4nmNB5M5/iwxahPEGRoF+R9QWBD+HYyh0eWm0iGKGjxpqAEdWczyz6281VCfYipS7jO/y2O+wDegTEGgw7b4txxCpWIHm3fPQInyo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750384965; c=relaxed/simple;
-	bh=gBFgfJh2VkbOukLjoqLaqY96WZMEg2MXB9YJtIr/90o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=vDa/bWhoC8ICIdFSDsf+ihL36SwbaRcOpKjaX8cfOsZdS8hncJLG/2GRZFb92oAukTq/yAgPlg2w0/vp8OTHiuukC5QiUv33sYzuHtf/In/5LDU84Dsn+LyLdpuKGA0z9Curb7GNf8ARM6+exAQdEM4PS5DBs8S7SOXU/K3v+HU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=koTd/9Jc; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="koTd/9Jc"
-ARC-Seal: i=1; a=rsa-sha256; t=1750384956; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xr/U3m+kFlPfrNz1WCc71+54ZgupsJZslgkHvCjvNO5UAQDybi436Exd3NQDK1abULu5wY4j/kkG9cT52L21/iFttnBP+gkSh4RiK9SwCdIW+/zX+7GU7xRKxsQpRrHSm5Nr9Hcy1xr7+FuHjZK0yFfu8dtfq2/1tlliP47rMfE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750384956; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=a+EU7KKPvNkXJFFZX0OFldWwk3ORRhdp+azsYQ3XmRc=; 
-	b=PzRqaZuG4T2eZmEjMvL++rzjdhrSipaM69yh+bILwuZNzmp+/uDoKaxMnrOjsHdlfaJMskKJzKRZbxKkn+jafICM7TrP/yOPwXsKH+a+IBJS12b42I3d7WP5JELznqw2hBxQR/MiH4sqjAWg/+m1DGK6VfJm9HeGdSP7uRfDoOg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750384956;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=a+EU7KKPvNkXJFFZX0OFldWwk3ORRhdp+azsYQ3XmRc=;
-	b=koTd/9JcxeT4e+wh94w/WP/s++IDR2nFm1Fz0V0IUCb1Z0KeaeAPECA3z655X6iR
-	FcYHU4Dshfm/H8lrj1LzWwcjPaFoul3pWpo4hnBHFBsJ8VDky7ccTjecE/9euRJa55k
-	zzA+vaBPcZqwUI46/o0NV/6ZZyrr6HdDRVDTHbI0=
-Received: by mx.zohomail.com with SMTPS id 1750384955320426.8580082395033;
-	Thu, 19 Jun 2025 19:02:35 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2] fs: fat: Prevent fsfuzzer from dominating the console
-Date: Fri, 20 Jun 2025 10:02:31 +0800
-Message-ID: <20250620020231.9292-1-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D947F1B960
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750385214; cv=none; b=UjkuhQtu5nzA5bE/mxYdxfgfXM6Ygph5oesOtvFJLDCv71c8JceqlcVykrVwCmgHU0t3NtzRSPFIDUBwfwuzFgc53WWRr6ssERZMek0U09x7wbjeOO8AI5oqu1eGyPmEA4KCGPxy0Kh0MFFrLutCp1ohdU6v7gXNBevcdJkXsuw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750385214; c=relaxed/simple;
+	bh=0IMNRrBwsUtPjrMBrN75aN4WtfKl9O+CUh4fg1LY/kU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AneKePH6aN6W3vxcqVKmi2CHgqH4PE4oBIBWNNvPfw8DiUYgOm0ZehkRp6Tw8MgrI2erg61Wzy7VDoooRbnYFLtpLU+GTzwXzSgltXmUVNahzNWNZy4yk+yd8tPF6mqb+MaQBDxcMWbRNGkRwNryNDmp7QWDgqTtk6Ty/1tV5f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8AxDGs5wlRoWSMaAQ--.59480S3;
+	Fri, 20 Jun 2025 10:06:49 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowMCx7MQuwlRodNIhAQ--.36930S3;
+	Fri, 20 Jun 2025 10:06:46 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+Date: Fri, 20 Jun 2025 10:06:27 +0800
+Message-ID: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1750301674.git.zhoubinbin@loongson.cn>
+References: <cover.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,92 +46,241 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-CM-TRANSID:qMiowMCx7MQuwlRodNIhAQ--.36930S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw48JFyfXr47Jr1kGrWxGrX_yoW3GrWrp3
+	W8Aay5Crn5AF17Wa9xAr1UuFW3ua9av3y5JFW3Ww1a9an3Ca4DXw4ktFyYvF9rJFykKFy2
+	qF9xXr4xCan8JFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAKsUUUUUU=
 
-From: Li Chen <chenl311@chinatelecom.cn>
+The Loongson-2K Board Management Controller provides an PCIe interface
+to the host to access the feature implemented in the BMC.
 
-fsfuzzer may make many invalid access for FAT-fs and generate many kmsg
-like "FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)".
+The BMC is assembled on a server similar to the server machine with
+Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
 
-For platforms & os that enables hardware serial device whose speed are
-slow, this may cause softlockup easily.
-
-So let's ratelimit the error log.
-
-The log as below:
-[11916.242560] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.254485] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.266388] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.278287] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.290180] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.302068] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.313962] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.325848] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.337732] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.349619] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.361505] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.373391] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.385272] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.397144] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.409025] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.420909] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.432791] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.444674] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.456558] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.468446] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
-[11916.480352] watchdog: BUG: soft lockup - CPU#58 stuck for 26s! [cat:2446035]
-[11916.480357] Modules linked in: ...
-[11916.480503] CPU: 58 PID: 2446035 Comm: cat Kdump: loaded Tainted: ...
-[11916.480508] Hardware name: vclusters VSFT5000 B/VSFT5000 B, BIOS ...
-[11916.480510] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[11916.480513] pc : console_emit_next_record+0x1b4/0x288
-[11916.480524] lr : console_emit_next_record+0x1ac/0x288
-[11916.480525] sp : ffff80009bcdae90
-[11916.480527] x29: ffff80009bcdaec0 x28: ffff800082513810 x27: 0000000000000001
-[11916.480530] x26: 0000000000000001 x25: ffff800081f66000 x24: 0000000000000000
-[11916.480533] x23: 0000000000000000 x22: ffff80009bcdaf8f x21: 0000000000000001
-[11916.480535] x20: 0000000000000000 x19: ffff800082513810 x18: ffffffffffffffff
-[11916.480538] x17: 0000000000000002 x16: 0000000000000001 x15: ffff80009bcdab30
-[11916.480541] x14: 0000000000000000 x13: 205d353330363434 x12: 32545b5d36343438
-[11916.480543] x11: 652820544146206f x10: 7420737365636361 x9 : ffff800080159a6c
-[11916.480546] x8 : 69202c726f727265 x7 : 545b5d3634343836 x6 : 342e36313931315b
-[11916.480549] x5 : ffff800082513a01 x4 : ffff80009bcdad31 x3 : 0000000000000000
-[11916.480551] x2 : 00000000ffffffff x1 : 0000000001b9b000 x0 : ffff8000836cef00
-[11916.480554] Call trace:
-[11916.480557]  console_emit_next_record+0x1b4/0x288
-[11916.480560]  console_flush_all+0xcc/0x190
-[11916.480563]  console_unlock+0x78/0x138
-[11916.480565]  vprintk_emit+0x1c4/0x210
-[11916.480568]  vprintk_default+0x40/0x58
-[11916.480570]  vprintk+0x84/0xc8
-[11916.480572]  _printk+0x68/0xa0
-[11916.480578]  _fat_msg+0x6c/0xa0 [fat]
-[11916.480593]  __fat_fs_error+0xf8/0x118 [fat]
-[11916.480601]  fat_ent_read+0x164/0x238 [fat]
-[11916.480609]  fat_get_cluster+0x180/0x2c8 [fat]
-[11916.480617]  fat_get_mapped_cluster+0xb8/0x170 [fat]
-
-Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
-Changelog:
-v2: use fat_fs_error_ratelimit instead as suggested by OGAWA Hirofumi
+ drivers/mfd/Kconfig         |  11 +++
+ drivers/mfd/Makefile        |   2 +
+ drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 169 insertions(+)
+ create mode 100644 drivers/mfd/ls2k-bmc-core.c
 
- fs/fat/fatent.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
-index 1db348f8f887a..a7061c2ad8e4d 100644
---- a/fs/fat/fatent.c
-+++ b/fs/fat/fatent.c
-@@ -356,7 +356,7 @@ int fat_ent_read(struct inode *inode, struct fat_entry *fatent, int entry)
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 96992af22565..a1081c4211b0 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2389,6 +2389,18 @@ config MFD_INTEL_M10_BMC_PMCI
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
  
- 	if (!fat_valid_entry(sbi, entry)) {
- 		fatent_brelse(fatent);
--		fat_fs_error(sb, "invalid access to FAT (entry 0x%08x)", entry);
-+		fat_fs_error_ratelimit(sb, "invalid access to FAT (entry 0x%08x)", entry);
- 		return -EIO;
- 	}
++config MFD_LS2K_BMC_CORE
++	bool "Loongson-2K Board Management Controller Support"
++	select MFD_CORE
++	help
++	  Say yes here to add support for the Loongson-2K BMC which is a Board
++	  Management Controller connected to the PCIe bus. The device supports
++	  multiple sub-devices like display and IPMI. This driver provides common
++	  support for accessing the devices.
++
++	  The display is enabled by default in the driver, while the IPMI interface
++	  is enabled independently through the IPMI_LS2K option in the IPMI section.
++
+ config MFD_QNAP_MCU
+ 	tristate "QNAP microcontroller unit core driver"
+ 	depends on SERIAL_DEV_BUS
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 5e5cc279af60..6bad54edca34 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -282,6 +282,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
+ obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
+ obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
  
++obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
++
+ obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
+ obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
+ 
+diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+new file mode 100644
+index 000000000000..9ee1edf286e7
+--- /dev/null
++++ b/drivers/mfd/ls2k-bmc-core.c
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Loongson-2K Board Management Controller (BMC) Core Driver.
++ *
++ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
++ *
++ * Authors:
++ *	Chong Qiao <qiaochong@loongson.cn>
++ *	Binbin Zhou <zhoubinbin@loongson.cn>
++ */
++
++#include <linux/aperture.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci_ids.h>
++#include <linux/platform_data/simplefb.h>
++#include <linux/platform_device.h>
++
++/* LS2K BMC resources */
++#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
++#define LS2K_IPMI_RES_SIZE		0x1C
++#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
++#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
++
++static struct resource ls2k_display_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
++};
++
++static struct resource ls2k_ipmi0_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
++};
++
++static struct resource ls2k_ipmi1_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
++};
++
++static struct resource ls2k_ipmi2_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
++};
++
++static struct resource ls2k_ipmi3_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
++};
++
++static struct resource ls2k_ipmi4_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
++};
++
++static struct mfd_cell ls2k_bmc_cells[] = {
++	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
++};
++
++/*
++ * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
++ * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
++ */
++static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
++{
++	char *mode;
++	int depth, ret;
++
++	/* The last 16M of PCI BAR0 is used to store the resolution string. */
++	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
++	if (!mode)
++		return -ENOMEM;
++
++	/* The resolution field starts with the flag "video=". */
++	if (!strncmp(mode, "video=", 6))
++		mode = mode + 6;
++
++	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
++	if (ret)
++		return ret;
++
++	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
++	if (ret)
++		return ret;
++
++	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
++	if (ret)
++		return ret;
++
++	pd->stride = pd->width * depth / 8;
++	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
++
++	return 0;
++}
++
++static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
++{
++	struct simplefb_platform_data pd;
++	resource_size_t base;
++	int ret;
++
++	ret = pci_enable_device(dev);
++	if (ret)
++		return ret;
++
++	ret = ls2k_bmc_parse_mode(dev, &pd);
++	if (ret)
++		goto disable_pci;
++
++	ls2k_bmc_cells[0].platform_data = &pd;
++	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
++	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
++
++	/* Remove conflicting efifb device */
++	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
++	if (ret) {
++		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
++		goto disable_pci;
++	}
++
++	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
++				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
++				    &dev->resource[0], 0, NULL);
++
++disable_pci:
++	pci_disable_device(dev);
++	return ret;
++}
++
++static void ls2k_bmc_remove(struct pci_dev *dev)
++{
++	pci_disable_device(dev);
++}
++
++static struct pci_device_id ls2k_bmc_devices[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
++	{ }
++};
++MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
++
++static struct pci_driver ls2k_bmc_driver = {
++	.name = "ls2k-bmc",
++	.id_table = ls2k_bmc_devices,
++	.probe = ls2k_bmc_probe,
++	.remove = ls2k_bmc_remove,
++};
++module_pci_driver(ls2k_bmc_driver);
++
++MODULE_DESCRIPTION("Loongson-2K BMC Core driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
++MODULE_LICENSE("GPL");
 -- 
-2.49.0
+2.47.1
 
