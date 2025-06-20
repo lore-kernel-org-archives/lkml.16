@@ -1,128 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655421AD3E0;
-	Fri, 20 Jun 2025 04:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6DC1E376E;
+	Fri, 20 Jun 2025 04:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750393759; cv=none; b=a5Jf1BGzPxnQdwjHXoYNqcRzVNu/a9A+9U9U6DSD94KF8ErCEHkT/a2q2fmplJyB5tRD91ougqvpFLrwzeLTZeFExNDySKiN2M+4pL1vCggppZAKxDFNDwpDJR+mTGltWTrC1RoyZ7GFTkkT6YvU9br/nI8syuhV8BFEt1WnaDk=
+	t=1750393781; cv=none; b=cwTwJE2R9fNyIJ96t/DJadqPy0tHjri85EQkyrrUkz3JnWd2RcZC2YgRETdrp8F8+ncV20NnVx/JjdaGi/M2pAvYj23HDHfqGLbkfYldCmK8WdZvEuZJb/QanQWsMgoJzsmosWRyLpvbet1bbKxKz/SDx8RSsoXouk8/ZHJ7nv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750393759; c=relaxed/simple;
-	bh=It+X+LhsWdDOwjdBav4EX8XJ1EMBhJqb7BxwKfvsvlY=;
+	s=arc-20240116; t=1750393781; c=relaxed/simple;
+	bh=6xjHdq3+8GeIYmGoNXg8Sb7EjScZbbPi8vugBxeQkkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NXh9sp/ou7DD8mF+kZClT9dBSCTwACmu0e55/cH99OteSVwl+zz5l9XQweu4j6qYpB0R7VKXJBQnDIXeYltsET4nHNc1tgwbOuh3D4EfeIQcApZ7Mc2b8lV1hyPVSHpJpV+V60IG2HCfrV4gTI1oEeeIayLyOU7iJMw4Lv/KAjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Keo9qEQ5; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNxSRXEj6dRXRXsp7iOy2OjmWSY4fF143RlbGXituXZbOW4W+2RnmN4B6rEXjFQY4c8ON6d2paC8hYLlVVZEalj9idWxoAxCM8oY/BQO/fomaLju5X1PDqxB4tw2DRzWdDWkWQZppqbygv0m3Th6vDoqyonZmoAoqMhIQlkEGGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Z4ned6lB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Keo9qEQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750393758; x=1781929758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=It+X+LhsWdDOwjdBav4EX8XJ1EMBhJqb7BxwKfvsvlY=;
-  b=Keo9qEQ5Me4M6lnMHAooEkniX/BuacjOypwTVSfNkzPiFvCa1083Vqb0
-   3dRO/zfUC/QjMx2Jq5Avt9YqUxwyBCPQ0iO9diLkgp9UQsBPaBJ2NUCJK
-   PmUV5FnBaV/4yxgSu+Q5QLUBUohxn5bL8vkSDsb7fDvUfTS8xO5216cCV
-   G6yRpcojuR36yJF/JmTj/lU+20fZ4h1We0ASXtYhapz8SvqxeDMvbsQfV
-   +AKVFXGO+e712zu8kKOCf50wA7vxAa+QuvuxTcgLEzeRPG1kApnFM49po
-   5PV/5kSuWZTs20SEMKvoRmZ6pGoQmxjPgBS+RNiMY0+FbVYQTa4yd0SRT
-   g==;
-X-CSE-ConnectionGUID: VrPHoj8XTiywjV5ZPPc0QQ==
-X-CSE-MsgGUID: kjC7wdiLTnmWbK1EeA2rFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="40257705"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="40257705"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 21:29:17 -0700
-X-CSE-ConnectionGUID: rWOJemhGSAKbmpWp/SKpxg==
-X-CSE-MsgGUID: 6a20+jVmRau5+Pgdg0r32w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="154817573"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa003.fm.intel.com with ESMTP; 19 Jun 2025 21:29:11 -0700
-Date: Fri, 20 Jun 2025 12:21:49 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
-	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
-	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
-	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
-	aneesh.kumar@kernel.org, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 00/30] Host side (KVM/VFIO/IOMMUFD) support for TDISP
- using TSM
-Message-ID: <aFTh3YASDNtyAc+k@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250602133727.GD233377@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Z4ned6lB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B3DC4CEE3;
+	Fri, 20 Jun 2025 04:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750393780;
+	bh=6xjHdq3+8GeIYmGoNXg8Sb7EjScZbbPi8vugBxeQkkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z4ned6lBe4terW135Wq0aOvEvs9s/NsHzfMMc5s36uF8lLKPsqJOgbe3y5DyTuDuQ
+	 9Hf9DNprN4ZVK/BJ1jdG/OsVFDH6rId4HnFA1KxglkQ2m72drj/aJERIR72KyLNvBS
+	 ghlpVLKdjSoSQ73b1iubjNI1turGiOhzDXw2eQWk=
+Date: Fri, 20 Jun 2025 06:29:36 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Zongmin Zhou <min_halo@163.com>
+Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	zhouzongmin@kylinos.cn
+Subject: Re: [PATCH v2] usbip: convert to use faux_device
+Message-ID: <2025062010-hardiness-flashily-cb0f@gregkh>
+References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
+ <20250604065410.76069-1-min_halo@163.com>
+ <2025061926-paycheck-footnote-a2b8@gregkh>
+ <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250602133727.GD233377@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
 
-On Mon, Jun 02, 2025 at 10:37:27AM -0300, Jason Gunthorpe wrote:
-> On Thu, May 29, 2025 at 01:34:43PM +0800, Xu Yilun wrote:
+On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
 > 
-> > This series has 3 sections:
+> On 2025/6/19 19:01, Greg KH wrote:
+> > On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
+> > > From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+> > > 
+> > > The vhci driver does not need to create a platform device,
+> > > it only did so because it was simple to do that in order to
+> > > get a place in sysfs to hang some device-specific attributes.
+> > > Now the faux device interface is more appropriate,change it
+> > > over to use the faux bus instead.
+> > > 
+> > > Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
+> > > ---
+> > > Changes in v2:
+> > > - don't change faux create api,just call probe on vhci_hcd_init.
+> > > 
+> > >   drivers/usb/usbip/vhci.h             |  4 +-
+> > >   drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
+> > >   drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
+> > >   tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
+> > >   4 files changed, 72 insertions(+), 88 deletions(-)
+> > I get the following build errors from this patch:
+> > 
+> > drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
+> >   1462 | static int vhci_hcd_resume(struct faux_device *fdev)
+> >        |            ^~~~~~~~~~~~~~~
+> > drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
+> >   1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
+> >        |            ^~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
+> > 
+> > Are you sure you tested this?
+> I apologize for not enabling -Werror, which resulted in missing this error
+> warning.
+> I have tested usbip feature use the new patch,but not test system
+> suspend/resume.
+> The faux bus type don't add pm function,and vhci-hcd driver can't register
+> it.
+> Maybe have to add suspend/resume for it.like below:
+> static const struct bus_type faux_bus_type = {
+>     .name        = "faux",
+>     .match        = faux_match,
+>     .probe        = faux_probe,
+>     .remove        = faux_remove,
+>     .resume     = faux_resume,
+>     .suspend    = faux_suspend,
+> };
 > 
-> I really think this is too big to try to progress, even in RFC
-> form.
+> Is that right?
+> Your expertise would be greatly valued.
 
-Sorry, I missed this message...
+As this is not real hardware, why do you need the suspend/resume
+callbacks at all?  What is happening here that requires them?
 
-Yeah, I just try to give a overview of what components we need, what the
-expect flow would be like for the first time. Also vendors need as much
-components as possible to enable their own HW and verify this flow works.
+thanks,
 
-We could split into small topics then.
-
->  
-> > Patch 1 - 11 deal with the private MMIO mapping in KVM MMU via DMABUF.
-> > Leverage Jason & Vivek's latest VFIO dmabuf series [3], see Patch 2 - 4.
-> > The concern for get_pfn() kAPI [4] is not addressed so are marked as
-> > HACK, will investigate later.
-> 
-> I would probably split this out entirely into its own topic. It
-> doesn't seem directly related to TSM as KVM can use DMABUF for good
-> reasons independently .
-
-Yes, since I'm not work on improving this for now, I'll not include this
-part next time. Will start independent thread if there is update.
-
-> 
-> > Patch 12 - 22 is about TSM Bind/Unbind/Guest request management in VFIO
-> > & IOMMUFD. Picks some of Shameer's patch in [5], see Patch 12 & 14.
-> 
-> This is some reasonable topic on its own after Dan's series
-
-OK, I'll just focus on this for next version.
-
->  
-> > Patch 23 - 30 is a solution to meet the TDX specific sequence
-> > enforcement on various device Unbind cases, including converting device
-> > back to shared, hot unplug, TD destroy. Start with a tdx_tsm driver
-> > prototype and finally implement the Unbind enforcement inside the
-> > driver. To be honest it is still awkward to me, but I need help.
-> 
-> Then you have a series or two to implement TDX using the infrastructure.
-
-Yeah, this should happen after "IOMMUFD for trusted".
-
-Thanks,
-Yilun
-
-> 
-> Jason
+greg k-h
