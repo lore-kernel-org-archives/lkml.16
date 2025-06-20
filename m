@@ -1,141 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0998C28368C;
-	Fri, 20 Jun 2025 10:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA16928368C
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413607; cv=none; b=oTP8/O0HOiauvudjpFM2jsW0vmYm4tqjBFSs/+DPDrWzP3i492XJCs6yFWBChhzDnBbr95vibOEs0z2m7eOQE4jIOFc6DZ7a5jB5bn1p4ThKHSylyAqmPm5IDVPCGF11oZ7DrHwQuaXolagjV0YeACMAPrf0++AtUDqvTqo2ZbQ=
+	t=1750413617; cv=none; b=GIeoYpnEIGH4bf/ouV9avnvMP+4mV/NiWAClVbZ2cJl7GK2tf/2POHCB+QYjgjwt9185ZUzGYQIBRD51EGmjisvRTQg/6dLKP0ZXBW2FMfogxAsOGzTXoX2El/tcqLMLGePMwyBNJBon/kl34hEVuuEU+/Nb1X7iHfGSo08MsEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413607; c=relaxed/simple;
-	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YSkO8U45oCrFqayz1TmWhszDCVWYC+ojnd2/YGa3kTzDeVIGdUSsjOZmBaNnqydx1Eruch6v132VQfRSyeABUmu4mNM+7j/yB1mDw1sZhH+k1wfKS6blvfVxjuUyvOOkNLu4noqiLYQf4ZPUXaicFzRdyD3mla5kOpqCy+C2qyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+TqVJ89; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750413617; c=relaxed/simple;
+	bh=rKaljkqEUrjUUYISCTJvN0+VAGfaDFBRT5j3tv3rmRA=;
+	h=Message-Id:Content-Type:In-Reply-To:Subject:Date:References:To:Cc:
+	 From:Mime-Version; b=Q7Ffwc6dHBvOEO2Q80RRW5cjqafb1pi1sKT4et2Fh+VpTPa/1zMCM8gDglMYleP05PBo9zkcPITuoITWjVYVlNIi2FXLWOR1XsIjywY2k9jp+4QeyP8IxElwRiAV+oJ+lqpurQF2tnXnNBD6Sl+wXVopFq6Caan/mr0emKNSsag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=Yeyt9eQC; arc=none smtp.client-ip=118.26.132.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+TqVJ89"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A4EC4CEE3;
-	Fri, 20 Jun 2025 10:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750413606;
-	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W+TqVJ896c/dwB23Q2KDA8VvHqx5c64JMtk/c7PBTuo+CgFnCRzmEd9WvcX4A8ZXm
-	 5IOUf6CBnN1tkRp+QnUPBo9NJrbX0WghyUZLZzdiPnQ4U9eZ0KqLVY7Gwd30CF5Bf6
-	 46jqE7295eoeG+BecPycXAsXFcr+QNPTj97VEqMsrPqsfpm3Pvng2s5h2YSeac3DUB
-	 ioF0oFStcf+vyMkIAoY44tO5C/FjObUuuqCyJ96+SqE31DrF/tSKD18xOMkJRulGYj
-	 DzuS/Q2pZCIs5ne1SIod+H/w0R/lCPGvJy/rwDA8tEad6ugP9RuGzrLYeogsGo0bRI
-	 DcgFkDXOHLAPA==
-Message-ID: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
-Date: Fri, 20 Jun 2025 12:00:03 +0200
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="Yeyt9eQC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750413523;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=lva+y9NB39YGFOB+2A2HkG7HC06lS3LbJWgBT7uypq8=;
+ b=Yeyt9eQCUIPOIMBgdiTlkn39j5upI7p97RnORCsqR3eq1k4XsnU5SMeULErSGmHZ606uAS
+ 6wIjfQ3Vt1Yme4fclC/oHjfUQK/2wtd6WpyQuXvuptrGS3BYNfHDD7ut3HynILEmzTT/1T
+ rrnYyqUxwWx0gI2HqhG1qsRIe/533Cvd36qzwiymqHd3jwUMp58SkO6zqJ/SAKChpGQL4F
+ c7gXZp0jLjUn2bORe3+IV5R2t50OQwMyuDsg7mVslvHUJye7bdQhFmQ4WS2jaSL/F1v6HV
+ ED9JqaK8TCk+w/66wOS1hSfLGWGsJW17KqZLJ2BwleuG7fS30iMZqAz9YZcABw==
+Message-Id: <2acb706f-fb20-45ef-a8c8-762e193ca548@lanxincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+2685530d1+006e4f+vger.kernel.org+liujingqi@lanxincomputing.com>
+Subject: Re: [PATCH 5/5] KVM: riscv: selftests: Add bfloat16 extension to get-reg-list test
+Date: Fri, 20 Jun 2025 17:58:38 +0800
+References: <cover.1750164414.git.zhouquan@iscas.ac.cn> <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
+To: <zhouquan@iscas.ac.cn>, <anup@brainfault.org>, <ajones@ventanamicro.com>, 
+	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
+	<palmer@dabbelt.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
+	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>
+From: "Nutty Liu" <liujingqi@lanxincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-To: Xiang Shen <turyshen@gmail.com>, acelan.kao@canonical.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250620003849.54442-1-turyshen@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250620003849.54442-1-turyshen@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Received: from [127.0.0.1] ([180.165.3.105]) by smtp.feishu.cn with ESMTPS; Fri, 20 Jun 2025 17:58:40 +0800
+Content-Language: en-US
+X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
 
-Hi,
-
-On 20-Jun-25 2:38 AM, Xiang Shen wrote:
-> Fix checkpatch code style errors:
-> 
-> ERROR: do not use assignment in if condition
-> +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> 
-> ERROR: do not use assignment in if condition
-> +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> 
-> Signed-off-by: Xiang Shen <turyshen@gmail.com>
-
-Thank you for your patch, but this change really does not make
-the code more readable.
-
-The contrary the suggested changes are making the code harder
-to read, so NACK.
-
-Note checkpatch is just a tool, sometimes there are good reasons
-to deviate from the style checks done by checkpatch.
-
-Next time when submitting a patch to fix checkpatch issues please
-take a look at the resulting code after the patch and only submit
-the patch upstream if it actually is an improvement.
-
-Regards,
-
-Hans
-
-
-
+On 6/17/2025 9:10 PM, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
+>
+> The KVM RISC-V allows Zfbfmin/Zvfbfmin/Zvfbfwma extensions for Guest/VM
+> so add them to get-reg-list test.
+>
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
->  1 file changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> index 232cd12e3c9f..bcc97b06844e 100644
-> --- a/drivers/platform/x86/intel/vbtn.c
-> +++ b/drivers/platform/x86/intel/vbtn.c
-> @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  
->  	guard(mutex)(&priv->mutex);
->  
-> -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-> +	if (ke) {
->  		if (!priv->has_buttons) {
->  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
->  				 event);
->  			return;
->  		}
->  		input_dev = priv->buttons_dev;
-> -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> -		if (!priv->has_switches) {
-> -			/* See dual_accel_detect.h for more info */
-> -			if (priv->dual_accel)
-> -				return;
-> -
-> -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> -			ret = input_register_device(priv->switches_dev);
-> -			if (ret)
-> -				return;
-> -
-> -			priv->has_switches = true;
-> -		}
-> -		input_dev = priv->switches_dev;
->  	} else {
-> -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> -		return;
-> +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-> +		if (ke) {
-> +			if (!priv->has_switches) {
-> +				/* See dual_accel_detect.h for more info */
-> +				if (priv->dual_accel)
-> +					return;
-> +
-> +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> +				ret = input_register_device(priv->switches_dev);
-> +				if (ret)
-> +					return;
-> +
-> +				priv->has_switches = true;
-> +			}
-> +			input_dev = priv->switches_dev;
-> +		} else {
-> +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> +			return;
-> +		}
->  	}
->  
->  	if (priv->wakeup_mode) {
+>   tools/testing/selftests/kvm/riscv/get-reg-list.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> index ebdc34b58bad..e5a07e000b66 100644
+> --- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> +++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> @@ -80,6 +80,7 @@ bool filter_reg(__u64 reg)
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCMOP:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFBFMIN:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOM:
+> @@ -104,6 +105,8 @@ bool filter_reg(__u64 reg)
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZTSO:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBB:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBC:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFMIN:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFWMA:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFH:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFHMIN:
+>   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVKB:
+> @@ -535,6 +538,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+>   		KVM_ISA_EXT_ARR(ZCF),
+>   		KVM_ISA_EXT_ARR(ZCMOP),
+>   		KVM_ISA_EXT_ARR(ZFA),
+> +		KVM_ISA_EXT_ARR(ZFBFMIN),
+>   		KVM_ISA_EXT_ARR(ZFH),
+>   		KVM_ISA_EXT_ARR(ZFHMIN),
+>   		KVM_ISA_EXT_ARR(ZICBOM),
+> @@ -559,6 +563,8 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+>   		KVM_ISA_EXT_ARR(ZTSO),
+>   		KVM_ISA_EXT_ARR(ZVBB),
+>   		KVM_ISA_EXT_ARR(ZVBC),
+> +		KVM_ISA_EXT_ARR(ZVFBFMIN),
+> +		KVM_ISA_EXT_ARR(ZVFBFWMA),
+>   		KVM_ISA_EXT_ARR(ZVFH),
+>   		KVM_ISA_EXT_ARR(ZVFHMIN),
+>   		KVM_ISA_EXT_ARR(ZVKB),
+> @@ -1138,6 +1144,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zcmop, ZCMOP);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zfbfmin, ZFBFMIN);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
+>   KVM_ISA_EXT_SUBLIST_CONFIG(zicbom, ZICBOM);
+> @@ -1162,6 +1169,8 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zkt, ZKT);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(ztso, ZTSO);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zvbb, ZVBB);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zvbc, ZVBC);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfmin, ZVFBFMIN);
+> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfwma, ZVFBFWMA);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zvfh, ZVFH);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zvfhmin, ZVFHMIN);
+>   KVM_ISA_EXT_SIMPLE_CONFIG(zvkb, ZVKB);
+> @@ -1213,6 +1222,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
+>   	&config_zcf,
+>   	&config_zcmop,
+>   	&config_zfa,
+> +	&config_zfbfmin,
+>   	&config_zfh,
+>   	&config_zfhmin,
+>   	&config_zicbom,
+> @@ -1237,6 +1247,8 @@ struct vcpu_reg_list *vcpu_configs[] = {
+>   	&config_ztso,
+>   	&config_zvbb,
+>   	&config_zvbc,
+> +	&config_zvfbfmin,
+> +	&config_zvfbfwma,
+>   	&config_zvfh,
+>   	&config_zvfhmin,
+>   	&config_zvkb,
 
+Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+
+Thanks,
+Nutty
