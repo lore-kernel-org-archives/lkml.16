@@ -1,101 +1,137 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B59283FF0;
-	Fri, 20 Jun 2025 10:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7647E285051;
+	Fri, 20 Jun 2025 10:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413803; cv=none; b=Od2VYvjQX/W2cyVmn5CHGwXHl4kWFpLtE7YGHlnIN8gTjI+TFjCKPSEFwNjBdl5JhpBWJHW2MD5fru1+98KgpVWVGdJ3/1P/nBRuQI0V70c/8Uvm2km9oRw6Q0Y39eh2QFTcBWSTtz+EIofAS/sIQx9IxEhRfN2/QsoVGL8TTgI=
+	t=1750413809; cv=none; b=dKps+UN9CuaLGgTbNFZ3NUpp8eYIkfNx5fuLOiCfbLALnrxrN9xKP3qTn2gQtZGhLvMlY5GO1pS6a3Ha0LB4TrH1WrVLCKdzK7Yh7GRNvc8U34DR0rQrHr7u1YmMX8wcDfidAiwfeQ8kWA1YujLkRq2mw17d7DOENdN5qub6gHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413803; c=relaxed/simple;
-	bh=xPR/InKNKfudhPDMsRzEG2eMx0eJCVxmRV7MrFp61XQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cj8p8tBzIb1M4R4EcEWwif6GiKS0Ftg37D6bvUmAyYRb19MUKGF1J07iu0riwvG2NG0JbF438cuF/lV5iZPkkA5GcK+ZMpMJlt5I908zQn9AbZLhmjQ0IrWKx87xE6Lxjvvs79+pVia+iL7+N2D/kNdWwCCLv/dZ2yyFBKtdIik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=drsTSoje; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750413809; c=relaxed/simple;
+	bh=CQGVmG5DzyINqq9HjZaFAhV7/N9sszZHtO3uOlf8a+k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j/mPgSM5Ra7P/o2zo0BUBKfCELex01qjLB3sPsHTZC89iQy3kXNVSOTUvYt2pxBHQ5NFxiBDjW062CfiBa+RA60M7Bwc8tQBztKG2SzMYgTWb1vgNhEQ+kYtqOToMyoLpDgVIwgNTf8+Kcw9zMrJZX3f0s18XHAQr3xkIK55f6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y11UvJ8s; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="drsTSoje"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9F7DB43194;
-	Fri, 20 Jun 2025 10:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750413794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AuMofWOPrsRbIItSZ8PDXSA7GLYNIKCwv7N2XYcmiBI=;
-	b=drsTSoje48BRR/mJ2Zz9hh17Ob8Yp3T9MKDv5S4FVh90S1kvFlLwDps6RvF6YG4fVhzF78
-	jzLK4WpzTNA58Jwo4chy+m7sNuWkoSII7eDXwlX/zGHjVrRAgDTHYzm1TwEIWTHjpn+evS
-	Xxq97UIHKLw+VDDdy6j+qKfUkRhm8rzhvghsJ+oWwQ5AtlQ9wWGWk8C3/a4Zcb4M6CyWja
-	ZDcJxHAJGvi2YyNJN+Mv4g5dDKWwBXpooeaP2pzwPbmUnYn+LFrai18rw2NGL2lt7/eJO7
-	/9QbClO3T7Y1O7+SP2H3c2PvUE4I5SeQyvmRhcljgGuqTHjE3uh/bllMfMhz8g==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 20 Jun 2025 12:02:40 +0200
-Subject: [PATCH net-next 2/2] net: pse-pd: tps23881: Clarify
- setup_pi_matrix callback documentation
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y11UvJ8s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750413807; x=1781949807;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=CQGVmG5DzyINqq9HjZaFAhV7/N9sszZHtO3uOlf8a+k=;
+  b=Y11UvJ8sYIJLu5zHCjUU3tJz3beIUDDbc89F1DlCkCPp1/kBl9eXDkxV
+   T9AdqJy5X5bsBoIxC6lJaQ5q8ZfG4oWo+yKkMkdjEXjGm2TgM+OA9wSOx
+   I4aDvhdsrsus9eismWmjrW/qJinIH1K6cMp0avhjPnf6G2zzEe9pSsUxz
+   81STFZH0dapvrylRgtiQDD2iIcUKhrtEQTEb9/Ni1V9Vr15BlDDFb/I0z
+   WoI5bvJ573g7KIkNbuTS2cwQz6YwHey+RmBifU5Q+CVVlkEKy8r0zbxdi
+   YOYk+wGq52ynxLxAZRNUAHhTE+HGbDF6lfJvu6eKfE/9PkkLA9stRRytz
+   Q==;
+X-CSE-ConnectionGUID: Ypwolvp5QJe5vBVaz3FKeg==
+X-CSE-MsgGUID: zjCs9c/kRXiLe1fMp+w12g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52817095"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="52817095"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 03:03:27 -0700
+X-CSE-ConnectionGUID: MhaWDlu1QxqkL0qi3Zw4pw==
+X-CSE-MsgGUID: Ce0XWxVtSoSksHuUAySBQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="181744791"
+Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
+  by fmviesa001.fm.intel.com with ESMTP; 20 Jun 2025 03:03:21 -0700
+From: Song Yoong Siang <yoong.siang.song@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Shinas Rasheed <srasheed@marvell.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>,
+	Joshua Hay <joshua.a.hay@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Kurt Kanzenbach <kurt@linutronix.de>,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Brett Creeley <bcreeley@amd.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH iwl-next,v3 1/2] igc: Relocate RSS field definitions to igc_defines.h
+Date: Fri, 20 Jun 2025 18:02:50 +0800
+Message-Id: <20250620100251.2791202-2-yoong.siang.song@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250620100251.2791202-1-yoong.siang.song@intel.com>
+References: <20250620100251.2791202-1-yoong.siang.song@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-poe_doc_improve-v1-2-96357bb95d52@bootlin.com>
-References: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
-In-Reply-To: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Piotr Kubik <piotr.kubik@adtran.com>, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-dd21f
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnr
- dgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Improve the setup_pi_matrix callback documentation to clarify its purpose
-and usage. The enhanced description explains that PSE PI devicetree nodes
-are pre-parsed before this callback is invoked, and drivers should utilize
-pcdev->pi[x]->pairset[y].np to map PSE controller hardware ports to their
-corresponding Power Interfaces.
+Move the RSS field definitions related to IPv4 and IPv6 UDP from igc.h to
+igc_defines.h to consolidate the RSS field definitions in a single header
+file, improving code organization and maintainability.
 
-This clarification helps driver implementers understand the callback's
-role in establishing the hardware-to-PI relationship mapping.
+This refactoring does not alter the functionality of the driver but
+enhances the logical grouping of related constants
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
+Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
 ---
- include/linux/pse-pd/pse.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/igc/igc.h         | 4 ----
+ drivers/net/ethernet/intel/igc/igc_defines.h | 3 +++
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index e5f305cef82e..4e5696cfade7 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -159,7 +159,13 @@ struct ethtool_pse_control_status {
- /**
-  * struct pse_controller_ops - PSE controller driver callbacks
-  *
-- * @setup_pi_matrix: setup PI matrix of the PSE controller
-+ * @setup_pi_matrix: Setup PI matrix of the PSE controller.
-+ *		     The PSE PIs devicetree nodes have already been parsed by
-+ *		     of_load_pse_pis() and the pcdev->pi[x]->pairset[y].np
-+ *		     populated. This callback should establish the
-+ *		     relationship between the PSE controller hardware ports
-+ *		     and the PSE Power Interfaces, either through software
-+ *		     mapping or hardware configuration.
-  * @pi_get_admin_state: Get the operational state of the PSE PI. This ops
-  *			is mandatory.
-  * @pi_get_pw_status: Get the power detection status of the PSE PI. This
-
+diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
+index 1525ae25fd3e..0b35e593d5ee 100644
+--- a/drivers/net/ethernet/intel/igc/igc.h
++++ b/drivers/net/ethernet/intel/igc/igc.h
+@@ -406,10 +406,6 @@ extern char igc_driver_name[];
+ #define IGC_FLAG_RSS_FIELD_IPV4_UDP	BIT(6)
+ #define IGC_FLAG_RSS_FIELD_IPV6_UDP	BIT(7)
+ 
+-#define IGC_MRQC_ENABLE_RSS_MQ		0x00000002
+-#define IGC_MRQC_RSS_FIELD_IPV4_UDP	0x00400000
+-#define IGC_MRQC_RSS_FIELD_IPV6_UDP	0x00800000
+-
+ /* RX-desc Write-Back format RSS Type's */
+ enum igc_rss_type_num {
+ 	IGC_RSS_TYPE_NO_HASH		= 0,
+diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
+index 86b346687196..d80254f2a278 100644
+--- a/drivers/net/ethernet/intel/igc/igc_defines.h
++++ b/drivers/net/ethernet/intel/igc/igc_defines.h
+@@ -383,11 +383,14 @@
+ #define IGC_RXDEXT_STATERR_IPE		0x40000000
+ #define IGC_RXDEXT_STATERR_RXE		0x80000000
+ 
++#define IGC_MRQC_ENABLE_RSS_MQ		0x00000002
+ #define IGC_MRQC_RSS_FIELD_IPV4_TCP	0x00010000
+ #define IGC_MRQC_RSS_FIELD_IPV4		0x00020000
+ #define IGC_MRQC_RSS_FIELD_IPV6_TCP_EX	0x00040000
+ #define IGC_MRQC_RSS_FIELD_IPV6		0x00100000
+ #define IGC_MRQC_RSS_FIELD_IPV6_TCP	0x00200000
++#define IGC_MRQC_RSS_FIELD_IPV4_UDP	0x00400000
++#define IGC_MRQC_RSS_FIELD_IPV6_UDP	0x00800000
+ 
+ /* Header split receive */
+ #define IGC_RFCTL_IPV6_EX_DIS	0x00010000
 -- 
-2.43.0
+2.34.1
 
