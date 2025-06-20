@@ -1,304 +1,290 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010051.outbound.protection.outlook.com [52.101.84.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BBD3987D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385788; cv=none; b=m2NeoPQ30MEr76GPUcoUJXsi+OXA8QL3258mEKd50pf84s3axNrPUec7422jX6rzNn6/M1RP5g1+SmLcRsR54nRFaDnxklinoTMvUAFJGNORHm9RyUMyT/LKOYeYD0FnWa8AuUPEhEZB3yaZKAhF3upD5MMBuisLGUQA+wVhF+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385788; c=relaxed/simple;
-	bh=g5OW8tuvyxUA+t6pLcKEEoc1EraU6/LLk2G3G1r0G+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l3LuBuo5cwT1Tc9NQ3bl3MFUsWiCxtinrerXIgTc4VGbDuB+CO72mfQwMmMBsiMn+KYneWz25GQpzOL3jiF+Bn3YNYjDKnLA9DnhWStBhSxuv1KDpszUFaXdx/iZnb05KEbLYNycyVFI31irkNqta6evzKUmhEjJxxOtkJKR/ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=XplCFzea; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59029A0;
+	Fri, 20 Jun 2025 02:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750385804; cv=fail; b=MM2bZieJbNRRFrFy9YJdSnpYZpGMxV8eAF1hKeE4YP1fflF9AMnlncrCgNHWOUhtc8yZ9yiUMUCPmrokrR+7YxbYV3sqXmU/365WoUMpVc6TwHGChKkyshYCbKdlPoOxWQ+jXtoOI9aX8Gd33zDTWwQJJ355PwcLG+orzYinXDE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750385804; c=relaxed/simple;
+	bh=Q4q5MyTcJz327bYyD7859N889d7o/wMA96kUsv052GQ=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nXWdhpjxB1fcYdflgVMCCKaF2WiZLrjeOZQJqnV4jfRSdDZTb3JOQuDOVlh+LxTv6y0XRx7dNAw+JCmEBEHwD3BAmUWkiJnztl6leuzZ54+x5KiYOWKKrVES0vufM1B3ojpFzbsVZFKTZ1Zs55bZH3cQ4Zvm/Pt0E3jsB4+3Sdc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=aJNMLcuk; arc=fail smtp.client-ip=52.101.84.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XplCFzea"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-86a464849c2so45822739f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 19:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1750385784; x=1750990584; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x6VzlhRVh//x5/bp+2ihBVL31M01Rg7PAdE9X0/n0so=;
-        b=XplCFzeaT0UI3xYRmaARyqEdD97XMne1e3DHmUxq4ajv1NXr3mZN6+HpBn8+p4y2vC
-         ZIffVKiUiG6KqmOdRuglV8AMpVVmK4nQTkuQSjZlY1bJ3tlTIJtJsnRVEpwYPO8bF9ZX
-         giodreBA5Y6kd9L+peqjqAaxHRKKBPHIrTMEqj5/1zVehCA4H5ioBfnGCDoUjl1btvGI
-         JJSJ5VgF+p49cEhlNOYrOoebp+TLtvBmv8rMIAvDfPLEKH8iJ4gBUk+BkE/JCwXSq42/
-         t/oyEI5d6twFBpd+vHXXEusMArMv3k+DWtDse9duVqJ/nAclXbHwBvjmkeTMQd910xpN
-         opeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750385784; x=1750990584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6VzlhRVh//x5/bp+2ihBVL31M01Rg7PAdE9X0/n0so=;
-        b=h482CsuKG4+QkjGIQYB2towBvlSWctOTaVQ9YJLiunZ0+6wqwSNMCPysuDXrlnwIYk
-         6uY71bjOrfmw2NxIj1YWCol6Jo+M4Q1CG9Ds1YPsf4in68gyzqya+5jKN0ohb9EVeWIS
-         BK0jihXnlhYjc7v8itFCAw2x+u2q6Ee76+ork0RNWaFEU3jOdgZU9AKZRlU8qT5mAU8r
-         1H8mf8Cz8rBXwW1LE+WBqjNuHnzZK8TL9WeVs2EVDDZIzmcqW+ymIdyKVa3oebhl1Ubu
-         zbv45myh4kSxrNxhKfPWlz6lC8otLgEa8cbBNHl8orF+GWK62KXHodv7wjD045ZUTiBb
-         prrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZNDluuVoCkZ0AYwq2u5UpW2E1/x7ZzGEgEmAuRSt6Ch4e2WOsJ/aUGO7tDk6Ykg3A/yGOwFz2xm4GEDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7iVEIJ1XtnwH8dNVxWNmn6l/nf0oY0mKxNMjErCeNC0rcjNYJ
-	n5CQTyC2eO5jl3fWOixLgjcQeaYQ2BtZC6JCIIjNtTKfetaHk5x1++I+EQan4SO4cyYtWYvFj49
-	JqYyFi6WeZWzU2sNeYvu5rzXR3oLb3R8vmNN8nj7XXg==
-X-Gm-Gg: ASbGncv9MF0eCQUhxzuYCbC2PyIe3Z1WAW4IRIigjnchDxnWZ8yCHzX6EWQwDQwaech
-	FGun65OAAww/VlTxu6zCNrsabgGcjtqU8+LvR3HcagusbH8VBL6B/NaFbc6kvoGq2NN1GoFl8gD
-	fXGNmXIr4DLZPimrz3RM1mDUOTakDTwN+9sS28EKUB44MCDQ==
-X-Google-Smtp-Source: AGHT+IFMb9mI6JMrDwTDWGg+EBY6yLgAqHEKa1UTY7olo+luMJ+3DWC5EwQujeTUmlUkh6NOSS/MWljD6rFkZYVc5ek=
-X-Received: by 2002:a05:6602:8303:b0:867:15a5:d16 with SMTP id
- ca18e2360f4ac-8762e7372bemr28998539f.8.1750385784285; Thu, 19 Jun 2025
- 19:16:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="aJNMLcuk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pjK1gtZfs/KkwZqcuYf3yR5uQv6FTYm/HwSglDMVBqJ6qBV3n/4fNHhk/5H5qMO+GXjcWK6S9LvVne1VsU5C2y1Z4ZNwjqaRPjzI91HilXZO6P1xm9pP6TW3M8a/y7olFplx4Xwnyob80tuPaIbDBFJnAGfP8DkDprtgOOgy9OIrjjD8F0+DYTUPtIX1/KAtkgVdYUGmxrIucG4f0v1zGh0TN1CECXkfOPNtMWkzNML2DKLJJFc1eF5bCg1HHCxc+Ll4d/UWk/hp0P8GRsEem/Aeu+BzT2vr7GfI+jJdkyVrwQqDh/N211YJx9Ot5zS7UJ7TW0+m45ElIgUwZK8mxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZGegtEMkczxR/wLNBS+hzA1vadoUL4u4tFFYHgkkvUo=;
+ b=SL9/izTKNH+r9iy+FNv8bi56oIj/JX8YI2O+/3L5oMSWmveEz8OhgKGO/755UIUvj2WTMQK47T2mfMBCZ6lGW0c+FLcGHCqydl5Suz6kritbTKeVwiemZY7Az6jMp+ItUr8WW2uxCA7C15V+8tiqfyZcjBsAnl9RUH7G0RjJJYVBwybsn/myZTcMYH705t9rvfjFU9gmxsx0IXi/T/yVM1ELH7cjH42CC3H46+looucbpXMn+QF8GdPNUy4jY1Klhp03m/wYCR1RfzlFi9ruwbHM/l6h2ouSkf5kO8W/ZV03JvXG4j/VrZFXc8kAxj3Th8QvTVX0G1r1+h1H+E1olA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGegtEMkczxR/wLNBS+hzA1vadoUL4u4tFFYHgkkvUo=;
+ b=aJNMLcukpjZKNpw03tZGHoJyTkiSPHyuLo0XSNQ/KZKOPqaZV3auXtgCX3rjKfuwAsZy87kFUaVbfZq5hVD+rNFkcMEUtsfnHipEs9OFnPvx/0QUCyxKxgugnQxQo+r4tz53aainR+/+l1eW/Dk4yvXa8/6bDtTGFaC01JHZV0eQujpze3rmg6bliGOK4+EUCZgkey0vR8Y+soJo1q0XVGKtRFo5rVBLmmdN2P6wSH8dpjn3F0jV3fN5DFHpNxlIrT3LPNasEU5+roMSeYh5PQ/a6YVrPfF4U5O4Oilrs4MIpMvj4ahAQTvI58tqCXJApl1J7a/YbsZR8Uo6U5DXEA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB7055.eurprd04.prod.outlook.com (2603:10a6:800:123::21)
+ by GV4PR04MB11332.eurprd04.prod.outlook.com (2603:10a6:150:29a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 20 Jun
+ 2025 02:16:39 +0000
+Received: from VI1PR04MB7055.eurprd04.prod.outlook.com
+ ([fe80::d6ab:1538:d868:bf8]) by VI1PR04MB7055.eurprd04.prod.outlook.com
+ ([fe80::d6ab:1538:d868:bf8%4]) with mapi id 15.20.8857.021; Fri, 20 Jun 2025
+ 02:16:39 +0000
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	patches@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com
+Subject: [PATCH v3] ASoC: wm8524: enable constraints when sysclk is configured.
+Date: Fri, 20 Jun 2025 10:14:03 +0800
+Message-Id: <20250620021403.624303-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0018.APCP153.PROD.OUTLOOK.COM (2603:1096::28) To
+ VI1PR04MB7055.eurprd04.prod.outlook.com (2603:10a6:800:123::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-v5_user_cfi_series-v17-0-4565c2cf869f@rivosinc.com>
- <20250604-v5_user_cfi_series-v17-15-4565c2cf869f@rivosinc.com> <CANXhq0pRXX_OMW2g2ui-k7Z_ZT+5a8Sra8oE28nBh5B9K2L5bQ@mail.gmail.com>
-In-Reply-To: <CANXhq0pRXX_OMW2g2ui-k7Z_ZT+5a8Sra8oE28nBh5B9K2L5bQ@mail.gmail.com>
-From: Zong Li <zong.li@sifive.com>
-Date: Fri, 20 Jun 2025 10:16:12 +0800
-X-Gm-Features: AX0GCFudFSxSRELkYOW_7RRTcSiKTWMBH5CUlpZzl260C95QwRIsmCDm3_hQ72g
-Message-ID: <CANXhq0p3MVLMsr_r0RWMti476pT0EMx61PQArjo2fUauTdpXaQ@mail.gmail.com>
-Subject: Re: [PATCH v17 15/27] riscv/traps: Introduce software check exception
- and uprobe handling
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, alistair.francis@wdc.com, 
-	richard.henderson@linaro.org, jim.shu@sifive.com, andybnac@gmail.com, 
-	kito.cheng@sifive.com, charlie@rivosinc.com, atishp@rivosinc.com, 
-	evan@rivosinc.com, cleger@rivosinc.com, alexghiti@rivosinc.com, 
-	samitolvanen@google.com, broonie@kernel.org, rick.p.edgecombe@intel.com, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR04MB7055:EE_|GV4PR04MB11332:EE_
+X-MS-Office365-Filtering-Correlation-Id: f002be43-a356-422c-f276-08ddafa07d2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?B5J5wlMYvasguTCJQlkiCNp9z7Aluwa08jtDFzxkhbRxydO3yKD9A+oncBvr?=
+ =?us-ascii?Q?1vsl8CaYHN21+A03Yo9ZoaZI+0OwPjTLvFKTZ0fXRCO4p8F11gyrMnDggAvN?=
+ =?us-ascii?Q?m/ousi47w8OrGaSmhhofyJdkQXFJq54n5T7SD3uvXSVdlFhYEwuKVm89j7h/?=
+ =?us-ascii?Q?cKXFSSj1iSiywf/FEhTGO1zMzMu9t1mB3UCww8v24TinObmyrXQGyQmGfk39?=
+ =?us-ascii?Q?wFC943K2YOOXWM3m/pyng1FUC+sTWobBu9x/wsIPBJGxmmw3FRiWRfh8Opbm?=
+ =?us-ascii?Q?yIGNgEISKp2lsQNEtIdESduCtsdC0KuTRpycO3luCnl55VLS3IBjA1vsaDHq?=
+ =?us-ascii?Q?g/LOBhdKc2S4kuDrqr++BS+fZgNvS5mrRBhwj/RpYh9mTQyI0l2MUnIREUA2?=
+ =?us-ascii?Q?JqnuU6Mt2lcAK+It41PXSTH4Fn4lZ5nfEqNgGpOqDX5523FameZOXknjy6Am?=
+ =?us-ascii?Q?/nwUge+LN/zfPDGwe97wdqwj0FLXbpZM/8617DHpngK/YTQhCaaZc1q5/5to?=
+ =?us-ascii?Q?aY8+spqQ0w4ysyZyJoFXDdx9uaTF5RW5tA8Zu1UNvfDS7TKhNWhexKNwtCQU?=
+ =?us-ascii?Q?ismqR8GlmmdBdbZFik911Tc6DtvG4sDxrX0JtfSXyKBg1reVxyOAonV4u6ES?=
+ =?us-ascii?Q?RvH4e0yIgdpDxqBg4sb6ma17wjMV9dxPuKBJ2vlYelrM0bPO32CiccfdsdR7?=
+ =?us-ascii?Q?7syQ+904DW5aqktvIBd6nz0BEG1gBJV1PDauF0xmCBwxluwUY/QDZSs4jrPz?=
+ =?us-ascii?Q?omjlqrzSE3Lfcxcr04Zf/E8OyBnkvnQ6IO2Qfx09LhwVfQPJnMidwLWuJsxA?=
+ =?us-ascii?Q?cuuyeMPoG9cqToq3fFm08dY7rdOEJVl7FhaQ1wKh2mPsuyP/vSsp/H27BsK9?=
+ =?us-ascii?Q?Bwh45EfLh4Bu8B3Nt/VbSWiILhIQyUJ+2hScIyskX3dsCkSZGavcLtnMEBlu?=
+ =?us-ascii?Q?LsRu5amniuqYVyYPRKQhUrM+Kjy06rBiQkP4UvOltiEVtJ/PCpuRmtWh3GVc?=
+ =?us-ascii?Q?37cLGwrsZqM4YLSPUfstNB12m4nYP+5VR58mXe0COcIO9UUXtIDajYiavJMv?=
+ =?us-ascii?Q?2GP7kCVfZjcihK0ZRdYbKv2cRdLExk+/FyMus5rMzW2sx78rYuHq8qelw/ax?=
+ =?us-ascii?Q?0Le773FOJ7+zL1cVDJsE2+a/IawxUHWxLvlNI6kiRWb2SC6wEXoja09wQdOl?=
+ =?us-ascii?Q?kmdfKOYp7E/bv7S7yS0G89vuD5/fSwiCCkJ/LZpIYEgp64ojWhc35hec/vHV?=
+ =?us-ascii?Q?SNfD5w9fyLmOIoCwx07Odfuq21aw1rOnDxzLP52FSB0MyunFEX5lVqQDni9g?=
+ =?us-ascii?Q?dqdlNtgRIpz8wUihsr1zkts6oANzK8m62PPNJ43zgy0YsIAFW1zz/x/YsNx+?=
+ =?us-ascii?Q?1d0RmWAg0hy779ZHwtG99SB0OUKfPjy19htxrWXUHD59GkuKS7k0sV/ONnVr?=
+ =?us-ascii?Q?eUGw+2ZlNAT4zvedvfj9IncfXvUAlk2tBXPgPjH3RIscD4UL+vhidUg2nooo?=
+ =?us-ascii?Q?TRCGMdNQs/1x05w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7055.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T+zAY8kzBVBaxgoa6h4tBYEdWidGTQ+6ZnH2LUcDZcZyNYnY01O3RfCGdIsk?=
+ =?us-ascii?Q?JScGqxzIhM5V5PKpSfYIVriBCdXV9zIqwdw/kZqAvrl/iG0eR3QPzSkw0kxI?=
+ =?us-ascii?Q?AkqZ5JOVchlxh7B/Kg1M0qS2sRpyeAPeILUG9HkP4rLUM9tNijzGvNWrcVdg?=
+ =?us-ascii?Q?fzuisTfoYqeEuELiZmS5a81azgRhbqaEfQv+gRfMdbu8HRv6gydxSK5DK3o7?=
+ =?us-ascii?Q?v8mjJ1q+hnYITlyF3CNuF0bRk4GniI2raA6wWQMWctnq95cDY4cwklBzqDHE?=
+ =?us-ascii?Q?WkN6FSoSKmyxYtmFumLZpPaiZe+CuUuA5qQyg8lsq6RhWx/8XGfpL05h+swK?=
+ =?us-ascii?Q?P3W49T6pXZxoB00nw5omwmLiwCqRrF2x73CVvswhwD+BM8GinTTIYswTXQmc?=
+ =?us-ascii?Q?rpGs6FoS9pw1bgtFquk2FhBV/YvTbBbmC7QiKx5b88+jRmp5FllKQFXJxwTK?=
+ =?us-ascii?Q?ELMa1nb+UTojarbWDi8y44Nk97J8rlK+0eGsIw2+jXiECx+XE3VJUkTNe/op?=
+ =?us-ascii?Q?6GzS+vCZTlEtaUb3k0dyJcqT89kaVamdeXtKJDEzAGRZZez76x86SL63bijU?=
+ =?us-ascii?Q?fENPkxZMSOqHVrj8wlajZGL2PCxKy1sbKd07e6iRgfOeK1eo/muyuvEbg7B7?=
+ =?us-ascii?Q?vR0EdOej4N6CAKC4RMH8k7ykGuyCAZFvLgQrqo0xQDEA4T3si/1kLuKe9rye?=
+ =?us-ascii?Q?flaPCLlCB+7zbuVPeQKL1EJGdv0dEV1tr1NQo0xpebC+f/VTRfE1Am6i5YOf?=
+ =?us-ascii?Q?7SeI/H2hWjeA3894agP3Mfcux7j3gmwC0d6AtbFARU/47SNq7oXPRSdINb0w?=
+ =?us-ascii?Q?9GMugshiubSwZvMEzjy2inARyBF5oKS3UAQvT7J26/iNNlX7tK9vlp0k6Zry?=
+ =?us-ascii?Q?amvvPhTudlxDR/3gI6q29CsKzQVRaMiCAaNMzlUw7OyvL0rKwdCDUABtBm4i?=
+ =?us-ascii?Q?HrgTtPYTdXVbOL9mxnNo0OfQ19GQs3YI+7EcY+SDJI9isfiBhTRFJO8UohB6?=
+ =?us-ascii?Q?Ll+bnoJy1fdcxurwfjHkz95XZTbLhWZOPaD76COWfJqIe3dL1OMD1+3Tdc/z?=
+ =?us-ascii?Q?iYe7mluSR/wSzhLh+ZpWN47G82yhk/S41ho3fGm2H5zdzO1PeolTAaYA7xeG?=
+ =?us-ascii?Q?kr3NCR3xbSMzKMTkEoZx+HdV7gMEtwN0WWDJ0YBzCsGoT0PaBeJ/25J3R5gr?=
+ =?us-ascii?Q?uwkPntLh4JwevD8Fw3U3LDSLliXllKF6Q/sxRAgEk4SRH5GZhVPKRkn9GXLI?=
+ =?us-ascii?Q?Uc7q2s8AQbedbvmZ0ldXqpGWC9wV7pu2PSSZNOBfpa/i5hUoSSMfbFjp++oz?=
+ =?us-ascii?Q?pP6zYvFgsPI1YCsEkwOYexCL5UkVAbm1d80xldqguP+KBn1ceeDO27LRLnsP?=
+ =?us-ascii?Q?4wUhrXQU8hcYICbCIZE6SG9TFPydSHcuucOYfOBF4/qSbyQWJdwrQm3c9nNI?=
+ =?us-ascii?Q?G9pr3yYqxnF9Dl5PCx8UqETDxFsjapm+URbWfOexLe3TBGbC1z3T9VHp2vCw?=
+ =?us-ascii?Q?O1tS0RJDCWgRMHxMZlK2qOECOA2GmETUjZePTg3gZbiRsH3324sQqYSgHkor?=
+ =?us-ascii?Q?GfDfnw21SPnrDrlKFjuOmpZIWf6E/uAYRREZ1/JV?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f002be43-a356-422c-f276-08ddafa07d2d
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7055.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 02:16:39.1269
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Cs8OciZzh/MFVu32V6FiAQHCHFZiecXkiceCGJoGNDhequFxWq1eaLulpaAtCnDk7hOeipb0F95wroX+Xa45CA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV4PR04MB11332
 
-On Mon, Jun 16, 2025 at 3:31=E2=80=AFPM Zong Li <zong.li@sifive.com> wrote:
->
-> On Thu, Jun 5, 2025 at 1:17=E2=80=AFAM Deepak Gupta <debug@rivosinc.com> =
-wrote:
-> >
-> > zicfiss / zicfilp introduces a new exception to priv isa `software chec=
-k
-> > exception` with cause code =3D 18. This patch implements software check
-> > exception.
-> >
-> > Additionally it implements a cfi violation handler which checks for cod=
-e
-> > in xtval. If xtval=3D2, it means that sw check exception happened becau=
-se of
-> > an indirect branch not landing on 4 byte aligned PC or not landing on
-> > `lpad` instruction or label value embedded in `lpad` not matching label
-> > value setup in `x7`. If xtval=3D3, it means that sw check exception hap=
-pened
-> > because of mismatch between link register (x1 or x5) and top of shadow
-> > stack (on execution of `sspopchk`).
-> >
-> > In case of cfi violation, SIGSEGV is raised with code=3DSEGV_CPERR.
-> > SEGV_CPERR was introduced by x86 shadow stack patches.
-> >
-> > To keep uprobes working, handle the uprobe event first before reporting
-> > the CFI violation in software-check exception handler. Because when the
-> > landing pad is activated, if the uprobe point is set at the lpad
-> > instruction at the beginning of a function, the system triggers a softw=
-are
-> > -check exception instead of an ebreak exception due to the exception
-> > priority, then uprobe can't work successfully.
-> >
-> > Co-developed-by: Zong Li <zong.li@sifive.com>
-> > Reviewed-by: Zong Li <zong.li@sifive.com>
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/asm-prototypes.h |  1 +
-> >  arch/riscv/include/asm/entry-common.h   |  2 ++
-> >  arch/riscv/kernel/entry.S               |  3 ++
-> >  arch/riscv/kernel/traps.c               | 51 +++++++++++++++++++++++++=
-++++++++
-> >  4 files changed, 57 insertions(+)
-> >
-> > diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/inclu=
-de/asm/asm-prototypes.h
-> > index cd627ec289f1..5a27cefd7805 100644
-> > --- a/arch/riscv/include/asm/asm-prototypes.h
-> > +++ b/arch/riscv/include/asm/asm-prototypes.h
-> > @@ -51,6 +51,7 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_u);
-> >  DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
-> >  DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
-> >  DECLARE_DO_ERROR_INFO(do_trap_break);
-> > +DECLARE_DO_ERROR_INFO(do_trap_software_check);
-> >
-> >  asmlinkage void handle_bad_stack(struct pt_regs *regs);
-> >  asmlinkage void do_page_fault(struct pt_regs *regs);
-> > diff --git a/arch/riscv/include/asm/entry-common.h b/arch/riscv/include=
-/asm/entry-common.h
-> > index b28ccc6cdeea..34ed149af5d1 100644
-> > --- a/arch/riscv/include/asm/entry-common.h
-> > +++ b/arch/riscv/include/asm/entry-common.h
-> > @@ -40,4 +40,6 @@ static inline int handle_misaligned_store(struct pt_r=
-egs *regs)
-> >  }
-> >  #endif
-> >
-> > +bool handle_user_cfi_violation(struct pt_regs *regs);
-> > +
-> >  #endif /* _ASM_RISCV_ENTRY_COMMON_H */
-> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> > index 978115567bca..8d25837a9384 100644
-> > --- a/arch/riscv/kernel/entry.S
-> > +++ b/arch/riscv/kernel/entry.S
-> > @@ -474,6 +474,9 @@ SYM_DATA_START_LOCAL(excp_vect_table)
-> >         RISCV_PTR do_page_fault   /* load page fault */
-> >         RISCV_PTR do_trap_unknown
-> >         RISCV_PTR do_page_fault   /* store page fault */
-> > +       RISCV_PTR do_trap_unknown /* cause=3D16 */
-> > +       RISCV_PTR do_trap_unknown /* cause=3D17 */
-> > +       RISCV_PTR do_trap_software_check /* cause=3D18 is sw check exce=
-ption */
-> >  SYM_DATA_END_LABEL(excp_vect_table, SYM_L_LOCAL, excp_vect_table_end)
-> >
-> >  #ifndef CONFIG_MMU
-> > diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> > index 8ff8e8b36524..64388370e1ad 100644
-> > --- a/arch/riscv/kernel/traps.c
-> > +++ b/arch/riscv/kernel/traps.c
-> > @@ -354,6 +354,57 @@ void do_trap_ecall_u(struct pt_regs *regs)
-> >
-> >  }
-> >
-> > +#define CFI_TVAL_FCFI_CODE     2
-> > +#define CFI_TVAL_BCFI_CODE     3
-> > +/* handle cfi violations */
-> > +bool handle_user_cfi_violation(struct pt_regs *regs)
-> > +{
-> > +       unsigned long tval =3D csr_read(CSR_TVAL);
-> > +       bool is_fcfi =3D (tval =3D=3D CFI_TVAL_FCFI_CODE && cpu_support=
-s_indirect_br_lp_instr());
-> > +       bool is_bcfi =3D (tval =3D=3D CFI_TVAL_BCFI_CODE && cpu_support=
-s_shadow_stack());
-> > +
-> > +       /*
-> > +        * Handle uprobe event first. The probe point can be a valid ta=
-rget
-> > +        * of indirect jumps or calls, in this case, forward cfi violat=
-ion
-> > +        * will be triggered instead of breakpoint exception.
-> > +        */
-> > +       if (is_fcfi && probe_breakpoint_handler(regs))
-> > +               return true;
->
-> Hi  Deepak,
-> Sorry for missing something earlier. I think we would like to clear
-> sstatus.SPELP in the uprobe handling case. For example:
->
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index c2ea999c1167..e8492bb57e09 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -349,8 +349,10 @@ bool handle_user_cfi_violation(struct pt_regs *regs)
->         bool is_fcfi =3D (tval =3D=3D CFI_TVAL_FCFI_CODE &&
-> cpu_supports_indirect_br_lp_instr());
->         bool is_bcfi =3D (tval =3D=3D CFI_TVAL_BCFI_CODE &&
-> cpu_supports_shadow_stack());
->
-> -       if (is_fcfi && probe_breakpoint_handler(regs))
-> +       if (is_fcfi && probe_breakpoint_handler(regs)) {
-> +               regs->status =3D regs->status & ~SR_ELP;
->                 return true;
-> +       }
->
->         if (is_fcfi || is_bcfi) {
->                 do_trap_error(regs, SIGSEGV, SEGV_CPERR, regs->epc,
->
->
-> When a user mode CFI violation occurs, the ELP state should be 1, and
-> the system traps into supervisor mode. During this trap, sstatus.SPELP
-> is set to 1, and the ELP state is reset to 0. If we don=E2=80=99t clear
-> sstatus.SPELP, the ELP state will become 1 again after executing the
-> sret instruction. As a result, the system might trigger another
-> forward CFI violation upon executing the next instruction in the user
-> program, unless it happens to be a lpad instruction.
->
-> The previous patch was tested on QEMU, but QEMU does not set the
-> sstatus.SPELP bit to 1 when a forward CFI violation occurs. Therefore,
-> I suspect that QEMU might also require some fixes.
+In some cases, the sysclk won't be configured on init, and sysclk can be
+changed in hw_params() according to different sample rate, for example,
+for 44kHz sample rate, the sysclk is 11.2896MHz, for 48kHz sample rate,
+the sysclk is 12.288MHz.
 
-Hi Deepak,
-The issue with QEMU was that the sw-check exception bit in medeleg
-couldn't be set. This has been fixed in the latest QEMU mainline. I
-have re-tested the latest QEMU version, and it works.
+In order to support the above case, only enable constraints when sysclk
+is configured, and check the rate in hw_params.
 
->
-> Thanks
->
-> > +
-> > +       if (is_fcfi || is_bcfi) {
-> > +               do_trap_error(regs, SIGSEGV, SEGV_CPERR, regs->epc,
-> > +                             "Oops - control flow violation");
-> > +               return true;
-> > +       }
-> > +
-> > +       return false;
-> > +}
-> > +
-> > +/*
-> > + * software check exception is defined with risc-v cfi spec. Software =
-check
-> > + * exception is raised when:-
-> > + * a) An indirect branch doesn't land on 4 byte aligned PC or `lpad`
-> > + *    instruction or `label` value programmed in `lpad` instr doesn't
-> > + *    match with value setup in `x7`. reported code in `xtval` is 2.
-> > + * b) `sspopchk` instruction finds a mismatch between top of shadow st=
-ack (ssp)
-> > + *    and x1/x5. reported code in `xtval` is 3.
-> > + */
-> > +asmlinkage __visible __trap_section void do_trap_software_check(struct=
- pt_regs *regs)
-> > +{
-> > +       if (user_mode(regs)) {
-> > +               irqentry_enter_from_user_mode(regs);
-> > +
-> > +               /* not a cfi violation, then merge into flow of unknown=
- trap handler */
-> > +               if (!handle_user_cfi_violation(regs))
-> > +                       do_trap_unknown(regs);
-> > +
-> > +               irqentry_exit_to_user_mode(regs);
-> > +       } else {
-> > +               /* sw check exception coming from kernel is a bug in ke=
-rnel */
-> > +               die(regs, "Kernel BUG");
-> > +       }
-> > +}
-> > +
-> >  #ifdef CONFIG_MMU
-> >  asmlinkage __visible noinstr void do_page_fault(struct pt_regs *regs)
-> >  {
-> >
-> > --
-> > 2.43.0
-> >
+So overall there are three cases that need to be considered:
+- call set_sysclk() on init, then constraints will be initialized.
+- don't call set_sysclk() on init, but call it after startup(), then
+  constraints will be configured, the constraints can be cleared with
+  call set_sysclk() again in shutdown().
+- don't call set_sysclk() in the whole flow, then there are no any
+  constraints. The clocks depend on cpu dai.
+
+Enlarge the WM8524_NUM_RATES to 12, as the supported rate range is 8kHz
+to 192kHz.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+changes in v3
+- Add rate check in hw_params, and enlarge NUM_RATES to 12.
+
+changes in v2
+- Don't remove constraints, but only enable constraints when sysclk
+  is configured.
+
+ sound/soc/codecs/wm8524.c | 55 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 42 insertions(+), 13 deletions(-)
+
+diff --git a/sound/soc/codecs/wm8524.c b/sound/soc/codecs/wm8524.c
+index 403e513f3fa8..6b1a7450b0ac 100644
+--- a/sound/soc/codecs/wm8524.c
++++ b/sound/soc/codecs/wm8524.c
+@@ -21,7 +21,7 @@
+ #include <sound/soc.h>
+ #include <sound/initval.h>
+ 
+-#define WM8524_NUM_RATES 7
++#define WM8524_NUM_RATES 12
+ 
+ /* codec private data */
+ struct wm8524_priv {
+@@ -46,7 +46,7 @@ static const struct snd_soc_dapm_route wm8524_dapm_routes[] = {
+ static const struct {
+ 	int value;
+ 	int ratio;
+-} lrclk_ratios[WM8524_NUM_RATES] = {
++} lrclk_ratios[] = {
+ 	{ 1, 128 },
+ 	{ 2, 192 },
+ 	{ 3, 256 },
+@@ -63,17 +63,12 @@ static int wm8524_startup(struct snd_pcm_substream *substream,
+ 	struct wm8524_priv *wm8524 = snd_soc_component_get_drvdata(component);
+ 
+ 	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC - enforce this.
++	 * MCLK supplied to the CODEC.
+ 	 */
+-	if (!wm8524->sysclk) {
+-		dev_err(component->dev,
+-			"No MCLK configured, call set_sysclk() on init\n");
+-		return -EINVAL;
+-	}
+-
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &wm8524->rate_constraint);
++	if (wm8524->sysclk)
++		snd_pcm_hw_constraint_list(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_RATE,
++					   &wm8524->rate_constraint);
+ 
+ 	gpiod_set_value_cansleep(wm8524->mute, 1);
+ 
+@@ -97,9 +92,11 @@ static int wm8524_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+ 	unsigned int val;
+ 	int i, j = 0;
+ 
++	wm8524->rate_constraint.count = 0;
+ 	wm8524->sysclk = freq;
++	if (!wm8524->sysclk)
++		return 0;
+ 
+-	wm8524->rate_constraint.count = 0;
+ 	for (i = 0; i < ARRAY_SIZE(lrclk_ratios); i++) {
+ 		val = freq / lrclk_ratios[i].ratio;
+ 		/* Check that it's a standard rate since core can't
+@@ -108,9 +105,13 @@ static int wm8524_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+ 		 */
+ 		switch (val) {
+ 		case 8000:
++		case 11025:
++		case 16000:
++		case 22050:
+ 		case 32000:
+ 		case 44100:
+ 		case 48000:
++		case 64000:
+ 		case 88200:
+ 		case 96000:
+ 		case 176400:
+@@ -157,6 +158,33 @@ static int wm8524_mute_stream(struct snd_soc_dai *dai, int mute, int stream)
+ 	return 0;
+ }
+ 
++static int wm8524_hw_params(struct snd_pcm_substream *substream,
++			    struct snd_pcm_hw_params *params,
++			    struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct wm8524_priv *wm8524 = snd_soc_component_get_drvdata(component);
++	int i;
++
++	/* If sysclk is not configured, no need to check the rate */
++	if (!wm8524->sysclk)
++		return 0;
++
++	/* Find a supported LRCLK rate */
++	for (i = 0; i < wm8524->rate_constraint.count; i++) {
++		if (wm8524->rate_constraint.list[i] == params_rate(params))
++			break;
++	}
++
++	if (i == wm8524->rate_constraint.count) {
++		dev_err(component->dev, "LRCLK %d unsupported with MCLK %d\n",
++			params_rate(params), wm8524->sysclk);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ #define WM8524_RATES SNDRV_PCM_RATE_8000_192000
+ 
+ #define WM8524_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
+@@ -169,6 +197,7 @@ static const struct snd_soc_dai_ops wm8524_dai_ops = {
+ 	.set_sysclk	= wm8524_set_dai_sysclk,
+ 	.set_fmt	= wm8524_set_fmt,
+ 	.mute_stream	= wm8524_mute_stream,
++	.hw_params	= wm8524_hw_params,
+ };
+ 
+ static struct snd_soc_dai_driver wm8524_dai = {
+-- 
+2.34.1
+
