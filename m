@@ -1,187 +1,161 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88CE1E0E0B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FA136988;
+	Fri, 20 Jun 2025 16:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437839; cv=none; b=k5VAt6+qCbZWWT4kcfHwmrdJhQsSzGFaq82igH3Efs9fYM2kC2JypIpLpf1oD6Gmjq5Ip/QwZmbnFPPoRRwJOOyyNGYZ9i7gtwVbAXjEzAkGXjWprAGTDcVyMBFUPnJkbSbpiu6cpTO5wp8iuR0E8Mtw6RP9h/Y6SL4Vdi4Rve4=
+	t=1750437957; cv=none; b=XY6aVcoqWbMFRr2KEF+B9mgMzbUm+ZD27/aZgD9G+gAzKZS/p81onsU6i07dx2sLlksr0Cu6slMAQj2qCj/XlyK2TkOmG5LfpCJIphomKXzYnr6V3lcYqo9hs0o/tKI9qwR2oB2FgVI9W+T6UKcMJl1Ui0cifEu5cKNv83LgDmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437839; c=relaxed/simple;
-	bh=0EVbeZfTsrFJAs+fr1YOAKUVFiNAZHXZYc7YeBvgxJY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JlZ0mMsU39GXq2g42onqWxYGbjyAP6IPkblPbCm0MbvllB1u0IKAcBkZRlAhoeMkuEx6elm+Y7bK/+9+fnHhEzjzvzqEQnZaZZVze90sorHd4PNT9fchQ3ATKkVQka5aapeqYVKTSecbxjQAozCpUYvaawI1pUYDGRa1X2S5Pcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a32g3JZd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750437957; c=relaxed/simple;
+	bh=N68bI8SGJJ3SKPEabsdfy1Rw9X1WhzHFwhJV+Ya/LrU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=fWG3FDZFkmd0FZTAqH39o1Fdu7VfyOL7eAyljX0rlBx7YAPRUPCTfIWS2KFS8YA6NcczfVDN8ioufXbNozrMWTpHTPDH/HiJCo/8pE1VY0U2CFDK4TNde3t/9UsAzyBAWF0wdLRr9onvr0IEtR4ak5x290y/Pyktyr+XDtN9K4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=RVqmFiu4; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a32g3JZd"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KG2Ojd008997
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=xuEtKw7CVCzY7rX/A/xyoVgknCTtkl+u8Ne
-	wJyyFkL0=; b=a32g3JZdmtZ7HgruRhHyloY0BtIP7txAXMeGc328069AO5u68dp
-	4pO/s8182d+JHKc9QZoL+xqSsaXXypI4zrf+Ehch+N1PZUdDx9x7OEZYCyuwszol
-	qaNVpd3ogAsfZlQUoKqYWZsXCl8VeORlDxk+yp62LxRCge1cSP+quurQfimUEgOy
-	Wdm7oMvsFq9xuzCATJcD56m9KmxOfmeJ19eiRyl7ZbVFNHOjE0WrthwRCkLiNS1T
-	U9PEM9de/aju61emu0olGlCz7/qP5jXksor5XuQF9lprZJy9XxZjhD49kmoZVe/7
-	vCB0oV9xencAggRhS/+iNlaIyJ0m6cAmvpg==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47date03ks-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:56 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7491814d6f2so393187b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:43:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750437835; x=1751042635;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xuEtKw7CVCzY7rX/A/xyoVgknCTtkl+u8NewJyyFkL0=;
-        b=UDpOye0OahU063nNyRyGK4koDIjRlDqN+GxixRhiXXSN7VvUzKM+7k1uHhTcvcHT/Z
-         ORA3mccQwN8DBi4v68BG65uScSjZeod50Pe70TrsLX1KT7qIvF0qlmt6n4nkdToroewD
-         k22XdaFZf6e90VmxQvWXWbx/pLEpBbfehEpqaWPMfxVGsR/syyl3eZf+mzqJLlMtU4cw
-         OzgpaJbXoRiIaLPQdDOOsMZzOnLsyzKs+yXEVbXKg8wUm0Wp+1vcbwXkSeH6y1dOAuHr
-         tzWYLJjax0tdHfZjGiIhoqSTeupTH8zoiTJFVullpyxBGsmVuHi2K6AqCSezKcJX7L6i
-         C2Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVB6tEcLV/wS6Tq1PKrI9aoEtJBGCR1m85U5L+jyj1rRwN2IBesAvCCvZDwg6pqc08UBLGR+n9DlwNllQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk2DqLBKC6s3b0wX2r2YbVAP9MELF79YeKEkdlcOy3IKBTDxVu
-	zZbyNLtu4kRxZiRKyzykHzyVq0/s4LuRKc24cmf69kjgOSL/bWBaxpHn9JpmxrPj3QpcMzIxVvM
-	++iIzXxXiyF9A+2W9DxJN0Reaqr6x8RpF12bktD4l4L6cQb5A3vZrmIRZJv0R2lHVxKk=
-X-Gm-Gg: ASbGnctUbWmBpebkqd2MrT0FZrV2XhAuy0jKM/yjcNdMEEsxUngZjDgXOHmqbKaqq6R
-	e/rZ5B1gLVR2k8gGneIGm+PLCewNUAEi0DyYl5UYl35eX0VtTrqjreitKs0F+5MoCHtPX5LiYQt
-	/h5R2oCgfSHaU9hHG/hC22Ku+0RdwBnAPXEpf8ac23V1V5Te2MF6t9Y4wDIQP/+FCj2NV0ueRV+
-	IGFu91UhkyItQZcki2X8X7vsY7V+B4cKWn2IPw6wvuXbyjjQZWNM9jT+d6zAz9ABvm5w0eCpcXa
-	7EEKODDXbpJlcjDxGv5Mbcg6hWtw5VgwOsdiDYQSYOxuTOPwrw==
-X-Received: by 2002:a05:6a00:2789:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-7490d6089e3mr4881808b3a.13.1750437835188;
-        Fri, 20 Jun 2025 09:43:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+mlnNp+NYv/5F3VQSUkNQ13bw4oYCkNCD2zEFLoQeeMCUK09WXH/1bwz8n1x/AWHoK21U8A==
-X-Received: by 2002:a05:6a00:2789:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-7490d6089e3mr4881763b3a.13.1750437834662;
-        Fri, 20 Jun 2025 09:43:54 -0700 (PDT)
-Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6490c9sm2386919b3a.110.2025.06.20.09.43.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 09:43:54 -0700 (PDT)
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: [PATCH] pinmux: fix race causing mux_owner NULL with active mux_usecount
-Date: Fri, 20 Jun 2025 22:13:24 +0530
-Message-Id: <20250620164324.3616153-1-mukesh.ojha@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="RVqmFiu4"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 569668287484;
+	Fri, 20 Jun 2025 11:45:50 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id wRjCNNNSGv1c; Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 1CC8882883EB;
+	Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 1CC8882883EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750437948; bh=qJI9vRVPG2JtxMF1nFpr43wzk4hpyWTFMAH0t4tQyfM=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=RVqmFiu4MxhddEf8TwOlqyM0KJG2onnFK2cigc4HlrrrTnigMsR14cDLSL/hK0Eni
+	 MfdIYXLgpRCGLtrej9K0rpBfcns97K6O5zGp0t6StTDjXy1dHTjW8j7Pt9DRjm9S7V
+	 1ZtkaUFez4tjhpcTeHtNI0pIDfIY+MIiaMVryOOs=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id xyFpQtmjQd2c; Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id BAEC08287484;
+	Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
+Date: Fri, 20 Jun 2025 11:45:45 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <318974284.1316210.1750437945118.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <aFUTV87SMdpHRbt8@wunner.de>
+References: <20250618201722.GA1220739@bhelgaas> <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com> <aFUTV87SMdpHRbt8@wunner.de>
+Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
+ broken
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExOCBTYWx0ZWRfX5EgO21G4KZUE
- LwQeElJtLUdfMZm3CetE2rbFo41yb48Fw2k/qHCvQWCe/1nmSB+1ZBsScqFBnLOGr8PDKGJB0Xx
- 88KlAgJeGHkUlrm5zC/xZ/yfJv8DrEC6uendVeorbdcMRbkfD49riugxWoksMH5vtRz7I/1d09j
- M2ie1NeZn+6Bp4/C3ye+8+txp9SJIXscSA7woY2zIZBooPlC+6CEm7bVv6DwCH/lfHhOFOZnCRI
- OgajJuI1qQYudcu1fMAs41Mw8lyg5LO9Ng+RRvVsMDvJrC/6hsTCmHiOXM3k7ad+Tbs7xoRC+OJ
- RLlUgHMDHMuizN6hGqiNg6F3doBPTf+RLZModZg8nt5nhqp1LDk+HjAb4WfqMEPkfbdnjDN4n8n
- 6+656bJbQ7gptf1wsxSugSj+DIuk/HE5X1C1fxNsco4VLHCRFbyqSW4RZHYvjCdXOHhq7sLT
-X-Proofpoint-GUID: LdsHh6pL8Rdw4lqShHzYyu-oI3nSLeIs
-X-Authority-Analysis: v=2.4 cv=DO6P4zNb c=1 sm=1 tr=0 ts=68558fcc cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=PkRvFfspCsMwYezBOQkA:9
- a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: LdsHh6pL8Rdw4lqShHzYyu-oI3nSLeIs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_07,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0
- mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200118
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Topic: pci/hotplug/pnv_php: Work around switches with broken
+Thread-Index: zvrBWMc7bGiakDybKycWMKCNibeoAQ==
 
-Commit  ("pinmux: Use sequential access to access desc->pinmux data")
-tried to address the issue when two client of the same gpio calls
-pinctrl_select_state() for the same functionality, was resulting in
-NULL pointer issue while accessing desc->mux_owner. However, issue
-was not completely fixed due to the way it was handled and it can
-still result in the same NULL pointer.
 
-The issue occurs due to the following interleaving:
 
-     cpu0 (process A)                   cpu1 (process B)
+----- Original Message -----
+> From: "Lukas Wunner" <lukas@wunner.de>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "Bjorn Helgaas" <helgaas@kernel.org>, "linuxppc-dev" <linuxppc-dev@li=
+sts.ozlabs.org>, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, "linux-pci" <linux-pci@vger.kernel.org>, =
+"Madhavan Srinivasan" <maddy@linux.ibm.com>,
+> "Michael Ellerman" <mpe@ellerman.id.au>, "christophe leroy" <christophe.l=
+eroy@csgroup.eu>, "Naveen N Rao"
+> <naveen@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Shawn Anasta=
+sio" <sanastasio@raptorengineering.com>
+> Sent: Friday, June 20, 2025 2:52:55 AM
+> Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches wit=
+h broken
 
-      pin_request() {                   pin_free() {
+> On Thu, Jun 19, 2025 at 02:29:33PM -0500, Timothy Pearson wrote:
+>> To be perfectly frank the existing code quality in this driver
+>> (and the associated EEH driver) is not the best, and it's been
+>> a frustrating experience trying to hack it into semi-stable
+>> operation.
+>>=20
+>> I would vastly prefer to rewrite / integrate into the pciehp driver,
+>> and we have plans to do so, but that will take an unacceptable amount
+>> of time vs. trying to fix up the existing driver as a stopgap.
+>>=20
+>> As you mentioned, pciehp already has this fix, so we just have to
+>> deal with the duplicated code until we (Raptor) figures out how to
+>> merge PowerNV support into pciehp.
+>=20
+> I don't know how much PCIe hotplug on PowerNV differs from native,
+> spec-compliant PCIe hotplug.  If the differences are vast (and I
+> get the feeling they might be if I read terms like "PHB" and
+> "EEH unfreeze", which sound completely foreign to me), it might
+> be easier to refactor pnv_php.c and copy patterns or code from
+> pciehp, than to integrate the functionality from pnv_php.c into
+> pciehp.
 
-                                         mutex_lock()
-                                         desc->mux_usecount--; //becomes 0
-                                         ..
-                                         mutex_unlock()
+The differences at the root level (PHB) are quite significant -- the contro=
+ller is more advanced in many ways than standard PCIe root complexes [1] --=
+ and those differences need very special handling.  Once we are looking at =
+devices downstream of the root complex, standard PCIe hotplug and AER speci=
+fications apply, so we're in a strange spot of really wanting to use pciehp=
+ (to handle all nested downstream bridges), but pciehp still needs to under=
+stand how to deal with our unqiue root complex.
 
-  mutex_lock(desc->mux)
-  desc->mux_usecount++; // becomes 1
-  desc->mux_owner = owner;
-  mutex_unlock(desc->mux)
+One idea I had was to use the existing modularity of pciehp's source and ad=
+d a new pciehp_powernv.c file with all of our root complex handling methods=
+.  We could then #ifdef swap the assocated root complex calls to that exter=
+nal file when compiled in PowerNV mode.
 
-                                         mutex_lock(desc->mux)
-                                         desc->mux_owner = NULL;
-                                         mutex_unlock(desc->mux)
+> pciehp does carry some historic baggage of its own (such as poll mode),
+> which you may not want to deal with on PowerNV.
 
-This sequence leads to a state where the pin appears to be in use
-(`mux_usecount == 1`) but has no owner (`mux_owner == NULL`), which can
-cause NULL pointer on next pin_request on the same pin.
+At the root level we probably don't care about polling mode, but in terms o=
+f nested downtream bridges polling may still be desireable.  I don't have a=
+ strong opinion either way.
 
-Ensure that updates to mux_usecount and mux_owner are performed
-atomically under the same lock. Only clear mux_owner when mux_usecount
-reaches zero and no new owner has been assigned.
+> One thing I don't quite understand is, it sounds like you've
+> attached a PCIe switch to a Root Port and the hotplug ports
+> are on the PCIe switch.  Aren't those hotplug ports just
+> bog-standard ones that can be driven by pciehp?  My expectation
+> would have been that a PowerNV-specific hotplug driver would
+> only be necessary for hotplug-capable Root Ports.
 
-Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
----
- drivers/pinctrl/pinmux.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+That's the problem -- the pciehp driver assumes x86 root ports, and the pow=
+ernv driver ends up duplicating (badly) parts of the pciehp functionality f=
+or downstream bridges.  That's one reason I'd like to abstract the root por=
+t handling in pciehp and eventually move the PowerNV root port handling int=
+o that module.
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 0743190da59e..1cea04d57ca2 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -235,19 +235,9 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 			desc->mux_usecount--;
- 			if (desc->mux_usecount)
- 				return NULL;
--		}
--	}
- 
--	/*
--	 * If there is no kind of request function for the pin we just assume
--	 * we got it by default and proceed.
--	 */
--	if (gpio_range && ops->gpio_disable_free)
--		ops->gpio_disable_free(pctldev, gpio_range, pin);
--	else if (ops->free)
--		ops->free(pctldev, pin);
-+		}
- 
--	scoped_guard(mutex, &desc->mux_lock) {
- 		if (gpio_range) {
- 			owner = desc->gpio_owner;
- 			desc->gpio_owner = NULL;
-@@ -258,6 +248,15 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 		}
- 	}
- 
-+	/*
-+	 * If there is no kind of request function for the pin we just assume
-+	 * we got it by default and proceed.
-+	 */
-+	if (gpio_range && ops->gpio_disable_free)
-+		ops->gpio_disable_free(pctldev, gpio_range, pin);
-+	else if (ops->free)
-+		ops->free(pctldev, pin);
-+
- 	module_put(pctldev->owner);
- 
- 	return owner;
--- 
-2.34.1
+> Thanks,
+>=20
+> Lukas
 
+[1] Among other interesting differences, it is both capable of and has been=
+ tested to properly block and report all invalid accesses from a PCIe devic=
+e to system memory.  This breaks assumptions in many PCIe device drivers, b=
+ut is also a significant security advantage.  EEH freeze is effectively thi=
+s security mechanism kicking in -- on detecting an invalid access, the PHB =
+itself will block the access and put the PE into a frozen state where no PC=
+Ie traffic is permitted.  It simultaneously rases an error to the host (col=
+loquially referred to as EEH) and punts the decision making on whether to r=
+eset or resume the device to the kernel itself.  We've caught various cards=
+ doing fun things like reading host RAM or trying to write to 0x0 via this =
+mechanism, one of the most egregious was a Chinese telecom card that appare=
+ntly tries to reset the host with a write to low memory on detecting an int=
+errupt servicing delay (!).
