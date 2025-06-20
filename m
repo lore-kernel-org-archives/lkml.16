@@ -1,112 +1,138 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8418417E;
-	Fri, 20 Jun 2025 12:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750420967; cv=pass; b=dptS5XyVlTaYuUv5Cmp/TBtrcycaedgVU2ARbKYtuxR1dNGqXyGiWyQp+fig8sDHBnrlTdvh85AUvE6c5bjgzwTPItRy8dEbJJnL/D4f7cxWzegplgcfizWqwmlyEELuB2V59y5fG+QUjp2nXLGmaWxTE1F9ml/7mP42UPlBhU8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750420967; c=relaxed/simple;
-	bh=xDm0ilED4qPz4FF5p1rUzW0PoZs/y2K8SzBuBuvdZsI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=JF2RpAT6y58IJJ1w4WfamornRaqArUYvBdqrWeNJMJZs5dQb0ehTL+m3XHNi2TU1iEuEdma/J4ps8/rkCXE5w79Uby2a5cebPAitt4MaDsqgU47/FnLKFsxWYqmjdWJKCuaM4b/mmUzhVFw0ScvKOsTNZCx7okaLvmgc2GvAnGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=jfpltqY0; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="jfpltqY0"
-ARC-Seal: i=1; a=rsa-sha256; t=1750420959; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=N+QHe5pw9fa2FJ8hG2sJV2cR50ujkIWOmyIwBaDnYfD0VIjzWeFFp0uFF3xRqLmKJL5zQGAY6SaG+8vdtvz3A2KpcAyM39GWQnjXC8OZ8O6ibFsiJ4XnAaBN7tcK5l6phmdodDFO1IQGdRDoJWB8utN3OLIiy0gvH5RzawKsbsc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750420959; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=3ZzuSg//Ia/otYj7pJhVIPVxw+jAtaRKy02IhuwBd9A=; 
-	b=Qb+WRunsVQML4i6+pdWu2LFoCoRnrdFN9apd2RRqcgJ9LSPwS+035O8JG8jga032j0ZxGKhkGCSJy44nBDRdIamlcYZLqUfgcYMmfMNf+4aoCZvBFdEiS2CFF3lKu/ZuZwNaLfebGY30nhvCdSXYJqrhhtqkznvNFgOWmT9nj/E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750420959;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=3ZzuSg//Ia/otYj7pJhVIPVxw+jAtaRKy02IhuwBd9A=;
-	b=jfpltqY0Ok8CGXnhXC0aiD3G2LvKLi1dRNBGJIIIEEdDOerB52pBOgkyAbbcMwKp
-	9CjUsajMiVrkmefXoI3/CJLT7gL4fy1iixvY1sdUBsNee8XXF0wBnumbpgHKQ+k1/0t
-	Qxkxs+CnGLiJwLgjFVNaG9u/GRjDZaD+FtVaKDCk=
-Received: by mx.zohomail.com with SMTPS id 1750420956566126.73019613968916;
-	Fri, 20 Jun 2025 05:02:36 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] HID: rate-limit hid_warn to prevent log flooding
-Date: Fri, 20 Jun 2025 20:02:31 +0800
-Message-ID: <20250620120232.81649-1-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB82A17E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750421015; cv=none; b=MTtlAHZ8gx9VaDHg1yvChbmT4Cs+YHzNumyirSezOUUySN6THaH/ac/WxSrnw4SvKoTZXQT87lLnnwTcR0sIVzmSzHQMll3rjmvp4PF7HA8APUZOkDXXxVKSLjJLdsEe2etzxfXCWrjTzWwpcQOdTKGYk8olfH+My6kiwQVjnis=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750421015; c=relaxed/simple;
+	bh=44Yw/CSL31ZZtRiXC7+bIPYWmkXmBYVRisSnGaYNhcc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tF5ruRa0KsZYudWd9+xiZW9bhZ72M9EnbjIRNbdokc9QpNqp/q0j5ATu8pk3Y2NimxxQxdEuCf0WeJryVxY78SGlfKvPtlls4blqQp2SZQRVMxsZjmQumjHvHCpNnnwjDU6IaQOYrOF+jJYxa/MiiRAY4n8EUq8G8G6NqlgzMQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddbd339f3dso18304985ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:03:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750421013; x=1751025813;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AE0FozSg59g5qQgki6uRnf/ry+uRQl8bOroOeAAV7Ws=;
+        b=keMqGBt3d4e+WMNxLEX/0DEC7GqF2RXnxdHf0CLG0gOjj19nBLo03/Ly1uMQSHdg1D
+         g7bNAsPz4LK3czgN1TXHyxuEYUYlR3VlOpP6Wlky6yi+NJowH1e+RC9u2txd+IIYAlx1
+         Zopcp33VyjpmK7qqRu5PL8GoDXtUvdrkn/ggHhUR3q258aovx7FSLojb0GXb61IJwIbE
+         CeKHwGaGNYdhK/EbgnC3AV1CpznH6V+6LVnpxJRH/zE3ZTEY8r0cGDH6cyOXoV4TNjYX
+         2jtVsjfsQmr8Va95mTd0sI1t9Gh3rrMNKBY9WGpmqd2WWKmAvKvpFdTa7hwqNs1BSNvw
+         FcnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkR1L9BggwgJyBRdB2ll6Zdfhh3XWcGueIKffxCQ/04aGWf8n2k3BgN1xrGLhepEAXrQR6lehOzUo/+B0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx2sxAXJEEm/FiUqWgY/68xEBMvD8/x+AAgiJl2XeZg6bF6itf
+	w6ezhpDGMVOH746Upwd93pzOqW8iq8vRElL8QVFkvWop2UQnlNQT4gt2OVrVmlgyEsmSAD9384O
+	IykI9QC89uNCNnSyhPAuUZlbtr0mCmqa+X5NeB1uMYbUfqT1actnwskN+9C0=
+X-Google-Smtp-Source: AGHT+IEK+eTKwJOtAB4ekJWjorfgk8SwDprMoD6Cg3r1xqoPifVdru453MUxuA1ukiSfYOpSTGKI7ESeXMecv6R2aN+IsbzcthSi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Received: by 2002:a05:6e02:1fec:b0:3dc:87c7:a5a8 with SMTP id
+ e9e14a558f8ab-3de38c1bf73mr27536305ab.2.1750421013111; Fri, 20 Jun 2025
+ 05:03:33 -0700 (PDT)
+Date: Fri, 20 Jun 2025 05:03:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68554e15.a00a0220.137b3.0049.GAE@google.com>
+Subject: [syzbot] [kernel?] KMSAN: uninit-value in flush_tlb_mm_range
+From: syzbot <syzbot+7b7cbaa9efbaa5cf0771@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
+	x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Li Chen <chenl311@chinatelecom.cn>
+Hello,
 
-Syzkaller can create many uhid devices that trigger
-repeated warnings like:
+syzbot found the following issue on:
 
-  "hid-generic xxxx: unknown main item tag 0x0"
+HEAD commit:    e04c78d86a96 Linux 6.16-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=123415d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
+dashboard link: https://syzkaller.appspot.com/bug?extid=7b7cbaa9efbaa5cf0771
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-These messages can flood the system log, especially if a crash occurs
-(e.g., with a slow UART console, leading to soft lockups). To mitigate
-this, convert `hid_warn()` to use `dev_warn_ratelimited()`.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-This helps reduce log noise and improves system stability under fuzzing
-or faulty device scenarios.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c0f064a5f302/disk-e04c78d8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b71205c143e3/vmlinux-e04c78d8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2abdee22b79e/bzImage-e04c78d8.xz
 
-Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7b7cbaa9efbaa5cf0771@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in find_next_bit include/linux/find.h:68 [inline]
+BUG: KMSAN: uninit-value in cpumask_any_but include/linux/cpumask.h:460 [inline]
+BUG: KMSAN: uninit-value in flush_tlb_mm_range+0x786/0x1590 arch/x86/mm/tlb.c:1449
+ find_next_bit include/linux/find.h:68 [inline]
+ cpumask_any_but include/linux/cpumask.h:460 [inline]
+ flush_tlb_mm_range+0x786/0x1590 arch/x86/mm/tlb.c:1449
+ flush_tlb_page arch/x86/include/asm/tlbflush.h:324 [inline]
+ ptep_clear_flush+0x161/0x1d0 mm/pgtable-generic.c:101
+ wp_page_copy mm/memory.c:3635 [inline]
+ do_wp_page+0x411c/0x80b0 mm/memory.c:4030
+ handle_pte_fault mm/memory.c:6105 [inline]
+ __handle_mm_fault mm/memory.c:6232 [inline]
+ handle_mm_fault+0x4929/0xe5e0 mm/memory.c:6401
+ do_user_addr_fault+0xfe1/0x2560 arch/x86/mm/fault.c:1387
+ handle_page_fault arch/x86/mm/fault.c:1476 [inline]
+ exc_page_fault+0x68/0xb0 arch/x86/mm/fault.c:1532
+ asm_exc_page_fault+0x2b/0x30 arch/x86/include/asm/idtentry.h:623
+ __put_user_4+0xd/0x20 arch/x86/lib/putuser.S:92
+ ret_from_fork+0x37/0x310 arch/x86/kernel/process.c:144
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4154 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_noprof+0x81b/0xec0 mm/slub.c:4204
+ dup_mm kernel/fork.c:1467 [inline]
+ copy_mm+0x124/0x9d0 kernel/fork.c:1529
+ copy_process+0x27ed/0x5e70 kernel/fork.c:2169
+ kernel_clone+0x416/0x1070 kernel/fork.c:2599
+ __do_sys_clone kernel/fork.c:2742 [inline]
+ __se_sys_clone kernel/fork.c:2726 [inline]
+ __x64_sys_clone+0x253/0x360 kernel/fork.c:2726
+ x64_sys_call+0x37e7/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:57
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 UID: 0 PID: 16686 Comm: syz-executor Not tainted 6.16.0-rc2-syzkaller #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
 ---
-Changelog:
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v2: Introduce hid_warn_ratelimited to rate-limit the specified log.
-v3: also ratelimit "reserved main item tag ..."
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
- drivers/hid/hid-core.c | 4 ++--
- include/linux/hid.h    | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index b348d0464314c..7d6750f05324f 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -659,9 +659,9 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	default:
- 		if (item->tag >= HID_MAIN_ITEM_TAG_RESERVED_MIN &&
- 			item->tag <= HID_MAIN_ITEM_TAG_RESERVED_MAX)
--			hid_warn(parser->device, "reserved main item tag 0x%x\n", item->tag);
-+			hid_warn_ratelimited(parser->device, "reserved main item tag 0x%x\n", item->tag);
- 		else
--			hid_warn(parser->device, "unknown main item tag 0x%x\n", item->tag);
-+			hid_warn_ratelimited(parser->device, "unknown main item tag 0x%x\n", item->tag);
- 		ret = 0;
- 	}
- 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 568a9d8c749bc..7f260e0e20498 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -1239,6 +1239,8 @@ void hid_quirks_exit(__u16 bus);
- 	dev_notice(&(hid)->dev, fmt, ##__VA_ARGS__)
- #define hid_warn(hid, fmt, ...)				\
- 	dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_warn_ratelimited(hid, fmt, ...)				\
-+	dev_warn_ratelimited(&(hid)->dev, fmt, ##__VA_ARGS__)
- #define hid_info(hid, fmt, ...)				\
- 	dev_info(&(hid)->dev, fmt, ##__VA_ARGS__)
- #define hid_dbg(hid, fmt, ...)				\
--- 
-2.49.0
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
