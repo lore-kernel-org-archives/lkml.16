@@ -1,65 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07822222D2;
-	Fri, 20 Jun 2025 06:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F370022422B;
+	Fri, 20 Jun 2025 06:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750402115; cv=none; b=E46WxlMm81NoXL3sTc8hysNBFPqntbUhllry1GcaiZ0+EYr0SaHvaN0QS0q6LyP8afMbRqBihwrpuBQa1cRfD/9DGrSakeAWrNzP0TGAkukyyjgH8TXrY7RdYkmG7y/Eo0whe2UQDmmdgh3QnqBrSY3dHT4M8PChc+dUpWP0zK0=
+	t=1750402156; cv=none; b=Mzls8ICE4uU/qL5Xkkvy75ilz0RqxeLkcWRSvtK4f8cy3iljDOvB4lpGVSWOa+8tbh/m2+tm684H/Yjz7SLf9NXeGNn2N2YcbON0d83LrmHfMyHojUIfALWq1XOm+pHGPAaTmhGWKoK59K6fUUgUJXRIbxucp3Nquhy2a4wJ/A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750402115; c=relaxed/simple;
-	bh=s20YvBqSFHG/ffmbK7H93MHNtVb1omg0JAoJo9GA+gs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SGKOfZPb9OgLxb0WRbHFDMOR4q2urx7dvpccboh44RaFjwhRIgwrhpq8rdjFx69KVV9DnSvlnLZbqty4jE1WCxbpOQrGw68grIWobXWXsyIot4nAl+q4Ht3XG8I0O6b2mRky3y24+HZcsOpbw1NvfJt3Wbwmzv3fZaDxxaJvxk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/EN3rAP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750402156; c=relaxed/simple;
+	bh=yEAri5y4gAhsgInWcejPMRho4UCr0thyUJyK3rNGA4s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NLl7VUwA3erZdFsyWDtPCBxLnBFcoa8+0DmdryBfEsaTyahhrnwDHC0qZLdqSMDpOGyu22sqvWNg5H3IBH6Kz9uMFq1dwh06GU6uR8WVt8lsuw2tGPfavkoVlpy0ypvCokZnMjlH7aLBTrcd70rj9tlKjooAS/bTyVMW9d+mQaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sko3WQgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/EN3rAP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DB7C4CEE3;
-	Fri, 20 Jun 2025 06:48:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sko3WQgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A2C5C4CEEE;
+	Fri, 20 Jun 2025 06:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750402115;
-	bh=s20YvBqSFHG/ffmbK7H93MHNtVb1omg0JAoJo9GA+gs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=b/EN3rAPq21ruaYgE0o5BVdxWtC19uqvFNQ1hm4AtPRM2TPgEq9vgolOLd0hGkNxo
-	 grxXmUhoiKgDHAcGbff8sidEEy55rUvE8Fx7mh66jJQCACRvsUqsbgCSvmERZ03z8H
-	 ULoaSh7v+JljyjQbg2AsSj2YDCAjx+1k9/94/1xAi+GzUpGwk0+y9ETtORzIiZtmBR
-	 79LUtStRG3qA0MSeMeabkT1nkEPZAYuNiblluoPgRFrwCvvXI/VTjEz+ApHkb+A7Ao
-	 W1o8EjszEaRVgSqLjlZ9Bp7IZeWtr4F+Xh8zDOB2q5BwtS/TCHMyQsuL8K2A7J+iIP
-	 CJpUnnAVS7u2Q==
-Date: Fri, 20 Jun 2025 08:48:32 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Heiko Schocher <hs@denx.de>
-cc: linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
-    Rishi Gupta <gupt21@gmail.com>, linux-i2c@vger.kernel.org, 
-    linux-input@vger.kernel.org
-Subject: Re: [PATCH] HID: mcp2221: set gpio pin mode
-In-Reply-To: <20250608163315.24842-1-hs@denx.de>
-Message-ID: <p1p1759q-s35n-647s-n694-01o1r5q95131@xreary.bet>
-References: <20250608163315.24842-1-hs@denx.de>
+	s=k20201202; t=1750402155;
+	bh=yEAri5y4gAhsgInWcejPMRho4UCr0thyUJyK3rNGA4s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Sko3WQgvxFl5Sgbmy0cp/+hqHnZrLWxHssVcylZ3jRHzbqJ5zY6vs/jzHeT7bLD28
+	 5wMjXN1wPxtDMPTekDYJJ+cttekmV2oPTUGF2ZmwuCUDXMkTKFyVNVfNF6b379Ikrg
+	 /a99++g8xKZW4dJP63pHOOvpLjbdZeXYXgRhdt/qrtNe5VyRSae66Z0+ZjGm94D2mV
+	 4BYCsx7E77dgtYXgA/go83bwL8RGHz2QTwl55MvIV/XppsE+vUWGF9MOno90aVngt0
+	 6IxWUzuy1UMECXaVf0xWZzd3Ie0VgdK6ktfksHWHo8JX22zwh3Z+YboDnhCMALLYbK
+	 mEvsbkDnP/ffg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EF2C7115B;
+	Fri, 20 Jun 2025 06:49:15 +0000 (UTC)
+From: Sung-Chi Li via B4 Relay <devnull+lschyi.chromium.org@kernel.org>
+Date: Fri, 20 Jun 2025 14:49:12 +0800
+Subject: [PATCH v5 1/3] platform/chrome: update pwm fan control host
+ commands
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250620-cros_ec_fan-v5-1-5979ea1abb31@chromium.org>
+References: <20250620-cros_ec_fan-v5-0-5979ea1abb31@chromium.org>
+In-Reply-To: <20250620-cros_ec_fan-v5-0-5979ea1abb31@chromium.org>
+To: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Sung-Chi Li <lschyi@google.com>, Sung-Chi Li <lschyi@chromium.org>, 
+ Tzung-Bi Shih <tzungbi@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750402154; l=2295;
+ i=lschyi@chromium.org; s=20250429; h=from:subject:message-id;
+ bh=WehMqfAvS8Gru582KJA7c0gaiPHFPKW1pqv6LAW1Tjs=;
+ b=IU12Oue7UzL6gtR070ohJ/x1ovOGhZfkdqEzWpKCoeeZTWK35IDYkRbBd6r045zmQ1oA+7KLS
+ vr3xs5tDrADAFMEJBwYxjpAcIx9vUyahildZXPVXLn7/SE7iGccPron
+X-Developer-Key: i=lschyi@chromium.org; a=ed25519;
+ pk=9gCZPRJmYyHDt6VN9FV2UreFcUr73JFrwYvmsltW9Y8=
+X-Endpoint-Received: by B4 Relay for lschyi@chromium.org/20250429 with
+ auth_id=392
+X-Original-From: Sung-Chi Li <lschyi@chromium.org>
+Reply-To: lschyi@chromium.org
 
-On Sun, 8 Jun 2025, Heiko Schocher wrote:
+From: Sung-Chi Li <lschyi@chromium.org>
 
-> in case we have GPIOLIB enabled the gpio pins are used
-> from the current driver as gpio pins. But may the gpio
-> functions of this pins are not enabled in the flash
-> of the chip and so gpio access fails.
-> 
-> In case CONFIG_IIO is not enabled we can prevent this
-> issue of the driver simply by enabling the gpio mode
-> for all pins.
-> 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
+Update cros_ec_commands.h to include definitions for getting PWM fan
+duty, getting and setting the fan control mode.
 
-Now applied to hid.git#for-6.17/mcp2221. Thanks,
+Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
+Acked-by: Tzung-Bi Shih <tzungbi@kernel.org>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ include/linux/platform_data/cros_ec_commands.h | 29 +++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index c74edd735a0e3992a06affa62d63a0882bb75967..e41e04d01e93d33704af76a7eac95d53bdb1fd54 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -1825,6 +1825,16 @@ struct ec_response_pwm_get_duty {
+ 	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
+ } __ec_align2;
+ 
++#define EC_CMD_PWM_GET_FAN_DUTY 0x0027
++
++struct ec_params_pwm_get_fan_duty {
++	uint8_t fan_idx;
++} __ec_align1;
++
++struct ec_response_pwm_get_fan_duty {
++	uint32_t percent; /* Percentage of duty cycle, ranging from 0 ~ 100 */
++} __ec_align4;
++
+ /*****************************************************************************/
+ /*
+  * Lightbar commands. This looks worse than it is. Since we only use one HOST
+@@ -3137,14 +3147,31 @@ struct ec_params_thermal_set_threshold_v1 {
+ 
+ /****************************************************************************/
+ 
+-/* Toggle automatic fan control */
++/* Set or get fan control mode */
+ #define EC_CMD_THERMAL_AUTO_FAN_CTRL 0x0052
+ 
++enum ec_auto_fan_ctrl_cmd {
++	EC_AUTO_FAN_CONTROL_CMD_SET = 0,
++	EC_AUTO_FAN_CONTROL_CMD_GET,
++};
++
+ /* Version 1 of input params */
+ struct ec_params_auto_fan_ctrl_v1 {
+ 	uint8_t fan_idx;
+ } __ec_align1;
+ 
++/* Version 2 of input params */
++struct ec_params_auto_fan_ctrl_v2 {
++	uint8_t fan_idx;
++	uint8_t cmd; /* enum ec_auto_fan_ctrl_cmd */
++	uint8_t set_auto; /* only used with EC_AUTO_FAN_CONTROL_CMD_SET - bool
++			   */
++} __ec_align4;
++
++struct ec_response_auto_fan_control {
++	uint8_t is_auto; /* bool */
++} __ec_align1;
++
+ /* Get/Set TMP006 calibration data */
+ #define EC_CMD_TMP006_GET_CALIBRATION 0x0053
+ #define EC_CMD_TMP006_SET_CALIBRATION 0x0054
 
 -- 
-Jiri Kosina
-SUSE Labs
+2.50.0.rc2.701.gf1e915cc24-goog
+
 
