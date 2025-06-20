@@ -1,215 +1,227 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20A370825
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CA9233721;
+	Fri, 20 Jun 2025 21:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750456061; cv=none; b=O6niOVwpDzID2jKye3qROwkCF/oyqlT456V+IrM3uqxnoeRkGOKyLM48CL8v2oihSPMpXa9BnmzTRG5UBHkz4AhVZxjo1iEi7Z6h9p62T0J14duP4ElVEr3E0Mhdg3wEgeO9J2m0p8kvVWQ1H0/9YY0mYJM65rZhaxL0uyDQqhg=
+	t=1750456152; cv=none; b=h3nMjLOW+U0hkNaD6LwQJGOmSmCsZYigpNIJv8rFDw5+L7E6x1QHamCvt0fEgW7q7teFdBWDsyCEmEi9qip8ai+akup5z2loDB+DV4UJ2K2mNBKsZXUukFN+WcwA8DK8xP6PNYLPg+t3yGMokEUyIa6MbFi1sP1sqDE0mUgK85M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750456061; c=relaxed/simple;
-	bh=Wa+uWIqB4aZ8UY7tQj9IFQRBuVASDILXTcvnQ59YODo=;
+	s=arc-20240116; t=1750456152; c=relaxed/simple;
+	bh=qh/IyVfcuIlM9SBo9aGWenEhO9QLRSKZCKrPJUNw760=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qaobnzj5+j3kY5Oy+ZWx5DsIKHmyK7CbJM8xmD7ptkDoHEXXZpjxgfmJMkp789u7cgRpXH77I3RfAsn3MmdKxwvUTiXYO4QLbWqfBiT+ruK61A1yWk7H0z//34tH9jzwch5Kgc2KWVpFwnnUMJRxVQsLx/YbHPcJkvyqNBsa4nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRLYBIlJ; arc=none smtp.client-ip=209.85.208.48
+	 To:Cc:Content-Type; b=kwRtHqSbtyHaLemNPDSLMheq1DgZ+t3+t/v4QEoEPhGG43qRNRylYv/OYWXbppumjZi5pvP7gmiHsfuxMHVwgHJO6MpcZSrTPrrSZWx0aDd6FEzdAkkUerRdoeWoQWdzxdk8PuXS3+Fmpcq0xyDc9M9txjJufhvXrl/Up7lxGoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iBbmfqwF; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRLYBIlJ"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-607cf70b00aso4050967a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:47:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBbmfqwF"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-711751e2d9fso2314457b3.0;
+        Fri, 20 Jun 2025 14:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750456058; x=1751060858; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750456149; x=1751060949; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4/b8SGEJQFlDd4fd5rMq8B6RnUjovzraV/pGDKTi6mA=;
-        b=JRLYBIlJwa5+ydm9W1A61+yJIRUq2H7cU9eeT4WNkeY9asIERL802lrCGykF8s98yn
-         lTT/x9on56feAlAxHFtuCX5WDiRFreD5cNTL/jktYoSam1AYdNHvXIjwZdZ+OHTF62A/
-         H6Fw2UyxSSdQm0d/ifvYaPM3fFhEUAZBbFPa4VH0BSIplCrkpB3JAAc9Vtkf0m9XGcB3
-         vzw5MwCBKroiABctQyUGlvCVXR5cBjQyOl8RjpjqpjTsJWmakoMal4p8yKPIDSstWBnF
-         Q+mDiAvqRRlBNZaoCtG5BtmHM9kdveAPmo9wqHTKyQvQtu0jYLqf60GJXT/+meGPsPcx
-         7avQ==
+        bh=QELowKEXA7R77PUl1OqaRZQ4vmTwB/KNp4b6p3jgc+0=;
+        b=iBbmfqwFJst4Hvzv6ck8hylMWZXIzKe7qd5HKCMwLwF+PiwTw9aDIYYeBX5BXNnQCi
+         kBn2ZMU+f87x5FWCZsxnHHZ0MutPxcEfuFvbo+wFcSlErp5ANzQlZVKZNRxsqR/5WbJ1
+         Vaw6TtvJyr9AsvT97FLicaOmNod9lMSQrtfANfsqTTjzKjZvYdx3cA4NHx9OjTq6cE+Y
+         /QEYipR+SM2KQKPmlu1LDjXHfgAcfcY01dm70+BaOg7sQEOMtngvalrgBWhtY+WpFMxq
+         F4+Cwt6RXUCOJQySHBDRFArmsrSEdmSVX9RlrmYUze4SEtu0Y0fsRLdCIXlV8Xg0tpct
+         Eg5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750456058; x=1751060858;
+        d=1e100.net; s=20230601; t=1750456149; x=1751060949;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4/b8SGEJQFlDd4fd5rMq8B6RnUjovzraV/pGDKTi6mA=;
-        b=wupZPWx5au9G2ONPWdLpXwAVS1hhQMzKcJ4e4zAoeeQTnG2q0RZNm6qmUEHmKaj3mZ
-         W/yz4SJ1Ilsr43d4XS7TVi8W/YwQ+RJpJFGhVrT6SouMsQ2Ktci8s+o/B72Bq0w5nfOL
-         cV+KXaZvvmv4LOFXsUXzy5H5T8doYIjU4O1f12b04ChPfSITBwv9nha/CKE4AuLr9LdL
-         7dOs3bLg5e+mNxzN9aDRIqdVWH2Z2L4dJC7FVIQ+Pi3kijyKNpUQM1/O/Rl5DOdsZrTj
-         eaUta3I0Mpt8GeyUFvwtN5sgkRgqaBJwSXmk2co+NNMpeGjk4I3Dn5UQBeoFTOOmxCNW
-         SxCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVYcVZsrH6j37xwPnooDVmVf7evpLd6ektbeqZ8IssdOcTE9D4UH3id3j9ynQDs0Dt4s+N4FQK+WulQTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+yxRynvu4VVOhbz6P4u7hICC5QzbcvfVvVNS6Z8YAqoEyg1eV
-	EZ9Imm0HrNY3ZUlAeq4sh5+8eAEJngSONHIY+7w0Z7vISLawzowaLlz1/88H/LQTdFm9yiSi5eV
-	zp4n5PftJmDlKoJ0CfpwlLEOg9zp305M=
-X-Gm-Gg: ASbGncuzk7/zmFR1wmUvadO8zMLLWT8qf+XLjox0YFH3vcOXcF3ElJkJVnoY7Bv3M/3
-	uGuD3naqeELm/nHRCbXxDA9f8cX5MqEp2IKB32MtORY56D4qeSai7c4ZpIOt5rd3oDQFsSAC2I9
-	RLqmwsFO5RcjbhiUQKRGZbkbr+mXYHajWcQzm6fJb3PIOgC8mtPPzKiwWn2yjfM5qZPB0zlWnp5
-	efqnhona6aDkX/p
-X-Google-Smtp-Source: AGHT+IFBMnvlkmoY7H6omzg7UDAqSYXQfxSICjnkdbKgo7nV5h7TFBh+q5W8gVbHtCvl4GGytB5w6tjyIEcHnyR3jsA=
-X-Received: by 2002:a17:907:7289:b0:add:f191:d851 with SMTP id
- a640c23a62f3a-ae057b60511mr397434566b.32.1750456057834; Fri, 20 Jun 2025
- 14:47:37 -0700 (PDT)
+        bh=QELowKEXA7R77PUl1OqaRZQ4vmTwB/KNp4b6p3jgc+0=;
+        b=Y99OzmIqkwwMwL9NTVcdWEyczAkmbjkxCfYKthX2jpPZMyjpNLFMLktm/dDDAIWJf9
+         8YQjOo+b0Wa6gZkZneK7PqSCHF8Gini+SCJ+uMYQf0GsARBxq3E+ONH49eWA+lG/kMkZ
+         wRLJrheKrkSgBirRSwE1tqIzeA4/fxBrS5pHhdezHFFDv5LUfdpBMHkuSl4BrX/Vx/eu
+         HznA0+peoNRaCxavqiHq5riNRngEj3THezKSI04xOtxDojoxAJYtOOqitRXS6A6MAS8m
+         Kw6tJC8JvbF8lNo4JU1tKINjB0KdBhwPQrXpqCu3pKXk4mHt9I6rqvMl7IRBed8uM8nB
+         Ahsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVL89Db9Royj9siLKUZlQe9hFdcpxiOFb64cOqqA/U+E8jehXjdeoq0Kl5FRb0ogqiAMdZDXbKWqnLXgXbM@vger.kernel.org, AJvYcCWPobeh0vY+OuuTwcXktmMQFPVtXl6OFPSl/MfLziU2Ju6MTHOGgVUVqeM5kO7zXIBH4UIcrQda@vger.kernel.org, AJvYcCXkfczUTXzXpka0g/efdDwMxZ3G+vcL/eeY1Q8d491Q1aDXtEa/VgUyQU/NUu5lEXPRPn5iOJdIAss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmL/nTDFvEIcCU8Y7aBOlPKcOeK8aNL+6X8y79qu/yKnQj/LPV
+	t19SgdV2VEyCePCrS85WtMRdAkIu4ayAg6baEv080T8YA/PJZGHy6O17BoeI9xvfPAkQhaWPejB
+	gp5MFxaN0kGrKUJxvJ0OWl1mogqqnlho=
+X-Gm-Gg: ASbGncsH+DCES2c9BZZiHDROBdJB/4IilGH8uIdguOFDHZCWg9nsH+94+4n9bOSo+dh
+	/QX0BUHmYXN/jDn2EZrOGiymTaWQksFuUxXe4OKIgSgYz7qkr0b668FnX1KFpToOWAvaflWl7kh
+	Z8qN8rnSU+0RUnqw13SfYlXv9zKZRP94MaO0ZYXBZ1KbSJ
+X-Google-Smtp-Source: AGHT+IGFRd+SUbN4k0ULblstnmL1Dz7mO/FJidC5D8wq7DGHLKGZn9t7alLOtBhhKHFNRMftIWOmpxJrPWMpPbFv/5A=
+X-Received: by 2002:a05:690c:3503:b0:712:c55c:4e67 with SMTP id
+ 00721157ae682-712c65261ffmr31332997b3.4.1750456148909; Fri, 20 Jun 2025
+ 14:49:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620180458.5041-1-bijan311@gmail.com> <20250620202155.98021-1-sj@kernel.org>
-In-Reply-To: <20250620202155.98021-1-sj@kernel.org>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Fri, 20 Jun 2025 16:47:26 -0500
-X-Gm-Features: AX0GCFswQvDPvHTlBd2hX3fSa1Acsc4GALQizBGHTv_3IJ0fB0gZkfA3pdqdjFg
-Message-ID: <CAMvvPS4imbSprPPZ3dtPBK2i3DZPffYn3d4rASMoNwcTeHCWqg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in
- migrate_{hot,cold} actions
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
-	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, bijantabatab@micron.com, venkataravis@micron.com, 
-	emirakhur@micron.com, ajayjoshi@micron.com, vtavarespetr@micron.com
+References: <20250614225324.82810-1-abdelrahmanfekry375@gmail.com>
+ <20250614225324.82810-2-abdelrahmanfekry375@gmail.com> <20250617183124.GC2545@horms.kernel.org>
+In-Reply-To: <20250617183124.GC2545@horms.kernel.org>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Sat, 21 Jun 2025 00:48:57 +0300
+X-Gm-Features: AX0GCFvqmEkkV13jSqvRdKfTQr6HjsP-DYV9223ypVJqavMJc3V_jZXyECyhqS4
+Message-ID: <CAGn2d8MS2PQnosR7AVp=1dRUat_Gu0E9t-P-AQ=k0Ei0ofT_sQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] docs: net: sysctl documentation cleanup
+To: Simon Horman <horms@kernel.org>
+Cc: corbet@lwn.net, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, skhan@linuxfoundation.com, jacob.e.keller@intel.com, 
+	alok.a.tiwari@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi SeongJae,
+Thanks for the review
 
-On Fri, Jun 20, 2025 at 3:21=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
-:
+
+On Tue, Jun 17, 2025 at 9:31=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
+te:
 >
-> Hi Bijan,
+> On Sun, Jun 15, 2025 at 01:53:23AM +0300, Abdelrahman Fekry wrote:
+> > I noticed that some boolean parameters have missing default values
+> > (enabled/disabled) in the documentation so i checked the initialization
+> > functions to get their default values, also there was some inconsistenc=
+y
+> > in the representation. During the process , i stumbled upon a typo in
+> > cipso_rbm_struct_valid instead of cipso_rbm_struct_valid.
 >
-> On Fri, 20 Jun 2025 13:04:56 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
-rote:
+> Please consider using the imperative mood in patch discriptions.
+
+Noted , will be used in v3.
+
+> As per [*] please denote the target tree for Networking patches.
+> In this case net-next seems appropriate.
 >
-> [...]
-> > As a toy example, imagine some application that uses 75% of the local
-> > bandwidth. Assuming sufficient capacity, when running alone, we want to
-> > keep that application's data in local memory. However, if a second
-> > instance of that application begins, using the same amount of bandwidth=
-,
-> > it would be best to interleave the data of both processes to alleviate =
+>   [PATCH net-next v3 1/2] ...
+>
+> [*] https://docs.kernel.org/process/maintainer-netdev.html
+>
+> And please make sure the patches apply cleanly, without fuzz, on
+> top of the target tree: this series seems to apply cleanly neither
+> on net or net-next.
+
+Noted, will make sure to denote the target tree and to test it first.
+
+> The text below, up to (but not including your Signed-off-by line)
+> doesn't belong in the patch description. If you wish to include
+> notes or commentary of this nature then please do so below the
+> scissors ("---"). But I think the brief summary you already
+> have there is sufficient in this case - we can follow
+> the link to v1 for more information.
+>
+> >
+> > Thanks for the review.
+> >
+> > On Thu, 12 Jun 2025, Jacob Keller wrote:
+> > > Would it make sense to use "0 (disabled)" and "1 (enabled)" with
+> > > parenthesis for consistency with the default value?
+> >
+> > Used as suggested.
+> >
+> > On Fri, 13 Jun 2025, ALOK TIWARI wrote:
+> > > for consistency
+> > > remove extra space before colon
+> > > Default: 1 (enabled)
+> >
+> > Fixed.
+> >
+> > On Sat, 14 Jun 2025 10:46:29 -0700, Jakub Kicinski wrote:
+> > > You need to repost the entire series. Make sure you read:
+> > > https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
+> > > before you do.
+> >
+> > Reposted the entire series, Thanks for you patiency.
+> >
+> > Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+> > ---
+
+Noted, Thanks.
+
+> > diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/net=
+working/ip-sysctl.rst
+> > index 0f1251cce314..68778532faa5 100644
+> > --- a/Documentation/networking/ip-sysctl.rst
+> > +++ b/Documentation/networking/ip-sysctl.rst
+> > @@ -8,14 +8,16 @@ IP Sysctl
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> >
+> >  ip_forward - BOOLEAN
+> > -     - 0 - disabled (default)
+> > -     - not 0 - enabled
+> > +     - 0 (disabled)
+> > +     - not 0 (enabled)
+> >
+> >       Forward Packets between interfaces.
+> >
+> >       This variable is special, its change resets all configuration
+> >       parameters to their default state (RFC1122 for hosts, RFC1812
+> >       for routers)
+> > +
+> > +     Default: 0 (disabled)
+> >
+> >  ip_default_ttl - INTEGER
+> >       Default value of TTL field (Time To Live) for outgoing (but not
+> > @@ -75,7 +77,7 @@ fwmark_reflect - BOOLEAN
+> >       If unset, these packets have a fwmark of zero. If set, they have =
 the
-> > bandwidth pressure from the local node. Likewise, when one of the proce=
-sses
-> > ends, the data should be moves back to local memory.
+> >       fwmark of the packet they are replying to.
+>
+> Maybe it would be more consistent to describe this in terms
+> of enabled / disabled rather than set / unset.
+
+Will do this  here and in other parameters to ensure consistency.
+
+>
 > >
-> > We imagine there would be a userspace application that would monitor sy=
-stem
-> > performance characteristics, such as bandwidth utilization or memory ac=
-cess
-> > latency, and uses that information to tune the interleave weights. Othe=
-rs
-> > seem to have come to a similar conclusion in previous discussions [3].
-> > We are currently working on a userspace program that does this, but it =
-is
-> > not quite ready to be published yet.
->
-> So, at least in this toy example, we have user-space control.  Then, I th=
-ink we
-> could decouple DAMON and weighted interleaving, and ask the usr-space too=
-l to
-> be the connection between those.  That is, extend DAMOS_MIGRATE_{HOT,COLD=
-} to
-> let users specify migration target nodes and their weights.  And ask the
-> user-space tool to periodically read weighted interleaving parameters tha=
-t
-> could be auto-tuned, and update DAMOS_MIGRATE_{HOT,COLD} parameters
-> accordingly.  Actually the user-space tool on this example is making the
-> weights by itself, so this should be easy work to do?
->
-> Also, even for general use case, I think such user-space intervention is =
-not
-> too much request.  Please let me know if I'm wrong.
-
-You are correct. The userspace tool would be coming up with the
-weights, so it would not be hard for it to write those weights to two
-places. I coupled the weights used in DAMON and weighted interleaving
-for this revision and the previous because I could not think of a use
-case where you would want to use different weights for allocation time
-and migration, so it felt silly to have two different places with the
-same data. However, I don't feel too strongly about this, so I'm
-willing to defer to your judgement.
-
-Also, our userspace tool updates these weights somewhat frequently,
-several times per minute, when it detects a change in the bandwidth
-utilization of the system to calibrate the interleave ratio. I am
-concerned about how frequent changes to the scheme via the sysfs
-interface will affect the effectiveness of DAMON's page sampling. From
-what I understand, updates to the sysfs aren't saved until the user
-writes to some sysfs file to commit them, then the damon context is
-recreated from scratch. Would this throw away all the previous
-sampling work done and work splitting and merging regions? I am not
-super familiar with how the sysfs interface interacts with the rest of
-the system, so this concern might be entirely unfounded, but I would
-appreciate some clarification here.
-
-[...]
+> > -     Default: 0
+> > +     Default: 0 (disabled)
 > >
-> > Questions for Reviewers
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > 1. Are you happy with the changes to the DAMON sysfs interface?
+> >  fib_multipath_use_neigh - BOOLEAN
+> >       Use status of existing neighbor entry when determining nexthop fo=
+r
+> > @@ -368,7 +370,7 @@ tcp_autocorking - BOOLEAN
+> >       queue. Applications can still use TCP_CORK for optimal behavior
+> >       when they know how/when to uncork their sockets.
+> >
+> > -     Default : 1
+> > +     Default: 1 (enabled)
 >
-> I'm happy with it for RFC level implementation.  And in my opinion, you n=
-ow
-> proved this is a good idea.  For next steps toward mainline landing, I'd =
-like
-> to suggest below interface change.
->
-> Let's allow users specify DAMOS_MIGRATE_{HOT,COLD} target nodes and weigh=
-ts
-> using only DAMON interface.  And let the user-space tool do the synchroni=
-zation
-> with weighted interleaving or other required works.
->
-> This may require writing not small amount of code, especially for DAMON s=
-ysfs
-> interface.  I think it is doable, though.  If you don't mind, I'd like to
-> quickly make a prototype and share with you.
->
-> What do you think?
+> For consistency, would it make sense to document the possible values here=
+.
 
-That sounds good to me! Having a prototype from you for the sysfs
-interface would certainly be helpful, but if you're busy, I can take a
-pass at it as well.
+Noted, will document possible values here and in other parameters for
+consistency.
 
-> > 2. Setting an interleave weight to 0 is currently not allowed. This mak=
-es
-> >    sense when the weights are only used for allocation. Does it make se=
-nse
-> >    to allow 0 weights now?
 >
-> I have no opinion, and would like to let mempolicy folks make voices.  Bu=
-t if
-> we go on the decoupling approach as I suggested above, we can do this
-> discussion in a separate thread :)
+> >
+> >  tcp_available_congestion_control - STRING
+> >       Shows the available congestion control choices that are registere=
+d.
+> > @@ -407,6 +409,12 @@ tcp_congestion_control - STRING
+> >
+> >  tcp_dsack - BOOLEAN
+> >       Allows TCP to send "duplicate" SACKs.
+> > +
+> > +     Possible values:
+> > +             - 0 (disabled)
+> > +             - 1 (enabled)
 >
-> [...]
-> > Revision History
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > Changes from v1
-> > (https://lore.kernel.org/linux-mm/20250612181330.31236-1-bijan311@gmail=
-.com/)
-> > - Reuse migrate_{hot,cold} actions instead of creating a new action
-> > - Remove vaddr implementation
-> > - Remove most of the use of mempolicy, instead duplicate the interleave
-> >   logic and access interleave weights directly
-> > - Write more about the use case in the cover letter
-> > - Write about why DAMON was used for this in the cover letter
-> > - Add correctness test to the cover letter
-> > - Add performance test
+> In the case of ip_forward, the possible values are not explicitly named
+> as such and appear at the top of the documentation for the parameter.
 >
-> Again, thank you for revisioning.  Please bear in mind with me at next st=
-eps.
-> I believe this work is very promising.
+> Here they are explicitly named possible values and appear below the
+> description of the parameter, but before documentation of the Default.
+> Elsewhere, e.g. ip_forward_use_pmtu, they appear after the documentation =
+of
+> the Default. And sometimes, e.g. ip_default_ttl, the possible values are
+> documented at all.
+>
 
-Thank you for your help and feedback!
-Bijan
-
-[...]
+Noted, will make sure that all representation follow the same appearance,
+first the description then possible values then default.
