@@ -1,128 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030AD81ACA;
-	Fri, 20 Jun 2025 03:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59804137E;
+	Fri, 20 Jun 2025 03:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388482; cv=none; b=CWP7IDGKYuGTl95n/XaXCC9mF+4dkLHcTZDAZ6tzEXRRClc8SqPZKod1ZDuAzqwNDmz9K3JXtsm8IfbOQ0tO+WLxRy004pd7GiSj2VQiBWRkP7zPYb6dvWT73iO0lZugEsKihDV1j9Dn2W3tyGGEGxct8EIAEEEHjKfHempL58w=
+	t=1750388620; cv=none; b=BcJHRa59DkwqNi1lzAFut3dmPBguRkOowCYM6DnjMVC4PuiE5FsSpiD6ISqMaLYvsxkccl9E26bGtOuK0zkyF5SSZ2Yz1CZGrQ6sUWckZZHJFIZu8F8ysn+uisGRyKPdmYH5K8JmCf9ulvMTQv7NrixR60srtZ0PL+V3CvV/DBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388482; c=relaxed/simple;
-	bh=f7V5rYWc1EwjcgrxpnoH3ziozc2NpXhZC+YcuAXFxeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pJJqgGJVibP7XMKwp3nRZRE6FnDGLhiEWrTczavCDs1PVQKmNn4KYjRZ2+3mmWMfc3wAEosIsraTDyiLVJapJTb8Z1eaCz9lfzTlM3szpSdzlg0XNrkq3DHcvhYa5BzqV1OIc6abRi2HNYeKzHXamP9ndopP7rj50SW4sSoCPU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ecMWs2IE; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750388620; c=relaxed/simple;
+	bh=6yCZRZuZUR7WhBry7brArBVWxVYRgw6AmXA2RXTmqDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mZ6PAtd5KDK1cxh/RQo/duVmMpWvw4VruviEItyRTAHZmWf0fp9MgylGm5T7I776wUVzxy7G/SqA6Mdc8Fxa1X2zlpTc5VPG7NVKzOHdUFuyHioiGtdPaFaXV+EcJ50Mf3RAoxdMrmpmFplU+9uDl1IusnxD+FMRRdLKGFCRsA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ErB1qrnu; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ecMWs2IE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750388481; x=1781924481;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f7V5rYWc1EwjcgrxpnoH3ziozc2NpXhZC+YcuAXFxeE=;
-  b=ecMWs2IEvV9YE7XE7ZHHPOkzvHFd4oJPHx4eakVSUTkCgtcQFY0jSBVy
-   OXfOQphJVULkLXIJoWQxrL8uGVyBxnGFO2V47z19jmxRoCUhwz24XbXwC
-   j3gTg36Fd9zRhQW/j8CsLlBGPChwLUKLJS5u89TfJhGZGhI8QWmf3fPm9
-   ci7UJSrL10kel2QIMCF0VPmoekFUzPKUuXTzNNUtPL/vRnzsAemn3b8ll
-   zB0YsU9fEswWaYSIyRWxWTXCHpJ+R4lVCZMCInRj65lmlOlkDOFuftO6s
-   3asugS5qFMEiCdM302xvx6i9t7W86OrqYf1qJkcnGx6VG3vrdaznos0W8
-   w==;
-X-CSE-ConnectionGUID: gLPstCzDQjuo8/JZiDINmA==
-X-CSE-MsgGUID: 8tjdHGr7TSKgPSc0PK2h/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51871292"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="51871292"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 20:01:20 -0700
-X-CSE-ConnectionGUID: AscknAMsTSqjYgMPwfOSEw==
-X-CSE-MsgGUID: zF1ixVj+S4iOTJcojkyKRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="181664045"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 19 Jun 2025 20:01:17 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSS0B-000LJu-1o;
-	Fri, 20 Jun 2025 03:01:15 +0000
-Date: Fri, 20 Jun 2025 11:00:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>, clabbe.montjoie@gmail.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	linux-crypto@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, wens@csie.org, jernej.skrabec@gmail.com,
-	samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Subject: Re: [PATCH 10/10] crypto: sun8i-ce - implement request batching
-Message-ID: <202506201006.eQ2P1PuC-lkp@intel.com>
-References: <20250619122316.2587236-11-ovidiu.panait.oss@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ErB1qrnu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=EE6yPAb2qKpzwXxZMMPRxZYq/qXbroYZD+xcI7gpJLE=; b=ErB1qrnuc1Sm3Qm4rUdhaaIfU0
+	XiUaXD/sR1zZv9+9N+NHewsznKYcmTqc5toEw/2o6kYM9ItRf6yjvbLg2VAZEMg9SjZ2m0Rvhx3yy
+	OUZxwV9hJSuQqlyGZiXwUiPzpGMp3QoQm74QNl14EenNY4piOIAV7rZ+1c2afkcYFTGV5cW6bK12w
+	l6L+oS6pi/DFEYBMBhp4YtbBxhUT1WEhPiioBeYVJG9TSqFlMlTWnouDEd9wjPp9dqyRaOnkcE8oM
+	IxrmMPrzbg7zCvsFhBQYHZ9MtQcV4ci+TJc/JkNkCJ2pffzW3/W97t9VmwEufU9TMilg4tLmdz9YT
+	OeQmrPKQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSS2L-00000004dla-2mTL;
+	Fri, 20 Jun 2025 03:03:30 +0000
+Message-ID: <848423f2-65d8-4ae2-a873-2e8cd474ab86@infradead.org>
+Date: Thu, 19 Jun 2025 20:03:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619122316.2587236-11-ovidiu.panait.oss@gmail.com>
-
-Hi Ovidiu,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on herbert-cryptodev-2.6/master]
-[also build test WARNING on next-20250619]
-[cannot apply to sunxi/sunxi/for-next herbert-crypto-2.6/master linus/master v6.16-rc2]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ovidiu-Panait/crypto-sun8i-ce-remove-channel-timeout-field/20250619-202957
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20250619122316.2587236-11-ovidiu.panait.oss%40gmail.com
-patch subject: [PATCH 10/10] crypto: sun8i-ce - implement request batching
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250620/202506201006.eQ2P1PuC-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506201006.eQ2P1PuC-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506201006.eQ2P1PuC-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c: In function 'sun8i_ce_dump_task_descriptors':
->> drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c:178:52: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 7 [-Wformat-truncation=]
-     178 |                 snprintf(task, sizeof(task), "TASK %d:", i);
-         |                                                    ^~
-   drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c:178:46: note: directive argument in the range [-2147483641, 2147483646]
-     178 |                 snprintf(task, sizeof(task), "TASK %d:", i);
-         |                                              ^~~~~~~~~~
-   drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c:178:17: note: 'snprintf' output between 8 and 18 bytes into a destination of size 12
-     178 |                 snprintf(task, sizeof(task), "TASK %d:", i);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] lsm: introduce security_lsm_config_*_policy hooks
+To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+ linux-security-module@vger.kernel.org
+Cc: john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
+ serge@hallyn.com, mic@digikod.net, kees@kernel.org,
+ stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+ takedakn@nttdata.co.jp, penguin-kernel@I-love.SAKURA.ne.jp, song@kernel.org,
+ linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-kernel@vger.kernel.org
+References: <20250619181600.478038-1-maxime.belair@canonical.com>
+ <20250619181600.478038-3-maxime.belair@canonical.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250619181600.478038-3-maxime.belair@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-vim +178 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
 
-   171	
-   172	static void sun8i_ce_dump_task_descriptors(struct sun8i_ce_flow *chan)
-   173	{
-   174		for (int i = 0; i < chan->reqs_no; ++i) {
-   175			struct ce_task *cet = &chan->tl[i];
-   176			char task[CE_MAX_TASK_DESCR_DUMP_MSG_SIZE];
-   177	
- > 178			snprintf(task, sizeof(task), "TASK %d:", i);
-   179			print_hex_dump(KERN_INFO, task, DUMP_PREFIX_NONE, 16, 4,
-   180				       cet, sizeof(struct ce_task), false);
-   181		}
-   182	}
-   183	
+On 6/19/25 11:15 AM, Maxime Bélair wrote:
+> Define two new LSM hooks: security_lsm_config_self_policy and
+> security_lsm_config_system_policy and wire them into the corresponding
+> lsm_config_*_policy() syscalls so that LSMs can register a unified
+> interface for policy management. This initial, minimal implementation
+> only supports the LSM_POLICY_LOAD operation to limit changes.
+> 
+> Signed-off-by: Maxime Bélair <maxime.belair@canonical.com>
+> ---
+>  include/linux/lsm_hook_defs.h |  4 ++
+>  include/linux/security.h      | 16 ++++++++
+>  include/uapi/linux/lsm.h      |  8 ++++
+>  security/Kconfig              | 22 +++++++++++
+>  security/lsm_syscalls.c       | 17 ++++++++-
+>  security/security.c           | 69 +++++++++++++++++++++++++++++++++++
+>  6 files changed, 134 insertions(+), 2 deletions(-)
+> 
+
+> diff --git a/security/Kconfig b/security/Kconfig
+> index 4816fc74f81e..958be7b49a9e 100644
+> --- a/security/Kconfig
+> +++ b/security/Kconfig
+> @@ -220,6 +220,28 @@ config STATIC_USERMODEHELPER_PATH
+>  	  If you wish for all usermode helper programs to be disabled,
+>  	  specify an empty string here (i.e. "").
+>  
+> +config LSM_CONFIG_SELF_POLICY_MAX_BUFFER_SIZE
+> +	int "Maximum buffer size for lsm_manage_policy"
+
+Update function name.
+
+> +	range 16384 1073741824
+> +	depends on SECURITY
+> +	default 4194304
+> +	help
+> +	  The maximum size of the buffer argument of lsm_config_self_policy.
+> +
+> +	  The default value of 4194304 (4MiB) is reasonable and should be large
+> +	  enough to fit policies in for most cases.
+> +
+> +config LSM_CONFIG_SYSTEM_POLICY_MAX_BUFFER_SIZE
+> +	int "Maximum buffer size for lsm_manage_policy"
+
+same here.
+
+> +	range 16384 1073741824
+> +	depends on SECURITY
+> +	default 4194304
+> +	help
+> +	  The maximum size of the buffer argument of lsm_config_system_policy.
+> +
+> +	  The default value of 4194304 (4MiB) is reasonable and should be large
+> +	  enough to fit policies in for most cases
+> +
+>  source "security/selinux/Kconfig"
+>  source "security/smack/Kconfig"
+>  source "security/tomoyo/Kconfig"
+
+
+> diff --git a/security/security.c b/security/security.c
+> index fb57e8fddd91..8efea2b6e967 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -5883,6 +5883,75 @@ int security_bdev_setintegrity(struct block_device *bdev,
+>  }
+>  EXPORT_SYMBOL(security_bdev_setintegrity);
+>  
+> +/**
+> + * security_lsm_config_self_policy() - Manage caller's LSM policies
+> + * @lsm_id: id of the LSM to target
+> + * @op: Operation to perform (one of the LSM_POLICY_XXX values)
+> + * @buf: userspace pointer to policy data
+> + * @size: size of @buf
+> + * @flags: lsm policy management flags
+> + *
+> + * Manage the policies of a LSM for the current domain/user. This notably allows
+> + * to update them even when the lsmfs is unavailable is restricted. Currently,
+
+                                                        or
+?
+
+> + * only LSM_POLICY_LOAD is supported.
+> + *
+> + * Return: Returns 0 on success, error on failure.
+> + */
+> +int security_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
+> +				 size_t size, u32 flags)
+> +{
+> +	int rc = LSM_RET_DEFAULT(lsm_config_self_policy);
+> +	struct lsm_static_call *scall;
+> +
+> +	if (size > (CONFIG_LSM_CONFIG_SELF_POLICY_MAX_BUFFER_SIZE))
+> +		return -E2BIG;
+> +
+> +	lsm_for_each_hook(scall, lsm_config_self_policy) {
+> +		if ((scall->hl->lsmid->id) == lsm_id) {
+> +			rc = scall->hl->hook.lsm_config_self_policy(lsm_id, op, buf, size, flags);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL(security_lsm_config_self_policy);
+> +
+> +/**
+> + * security_lsm_config_system_policy() - Manage system LSM policies
+> + * @lsm_id: id of the lsm to target
+> + * @op: Operation to perform (one of the LSM_POLICY_XXX values)
+> + * @buf: userspace pointer to policy data
+> + * @size: size of @buf
+> + * @flags: lsm policy management flags
+> + *
+> + * Manage the policies of a LSM for the whole system. This notably allows
+> + * to update them even when the lsmfs is unavailable is restricted. Currently,
+
+                                                        or
+?
+
+> + * only LSM_POLICY_LOAD is supported.
+> + *
+> + * Return: Returns 0 on success, error on failure.
+> + */
+> +int security_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
+> +				   size_t size, u32 flags)
+> +{
+
+[snip]
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+~Randy
+
