@@ -1,190 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695D7246BC5
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D826C385
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408685; cv=none; b=H0IMtSr3wNXwTYRezzYGhnMzYoYaiCMuRJB0XJcche/1Z34cWy3szJeNUE9VfMHzi0GwpZYsVmMhLJsHG86zU0EHDW/j6PzKEV/sMRBxDhmIJngz5b31ABBX9/XE3YSTM0RiTTtlUUlPxXwbkL+nHXF5pS5mA2qePa1KyD3dl0E=
+	t=1750408755; cv=none; b=Zy+zJVX1j+SlNs27ZCRQ7bcS8anN54TsRBfvlJJwkRbkk4ylIFAP2u1D+Xt/yXVcu8UpdECS1rdAbNFlZfonQWBJNakXKgmB4AkWbKKpc0W+mKntgHvgtfwW0HsRm9czc+nYbWhYE+f93QwYdRqwNN1ViMgMHgioi13tTfnuLF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408685; c=relaxed/simple;
-	bh=/X0onNxIoHCituHUtODJAVeY5Sgv6GC2RODQR2Tb0Wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WrQp9DgeBMSUYcZFipPgknsL2v1d/P3YnQ1xzQI0jyWJfjIMscbX+X4OVwb0ADVIPYPuOvCz90TG9zomENeC/aNUYocr9DIx9l8Evqim+U5gef/jYFd4Rfv4QSPJ/QTreQ6aKOvIOxYDGni9oOaFIy8rvL6CK6uJLOs2krO0GIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEZ9bBLg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750408755; c=relaxed/simple;
+	bh=nW0F0O/hWqw37ehBTiHOaKNVn3q7ZPdsEdlHH98mdbM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=V0UeQFGb2l9R63AtNDLczrhhzjw00pfoQRoa7qmjnsrlfpRaVt9CO9O+TOIqR4ArkG5pPJex5xYtIFGcmrv3ce4nlaCeT92a46H7kncxOpVxKdkHQOoHFXdEFhan/K27jDs2Iq2n2L3Tf3e0AGAsip4bnG/JmnDwtIhDi9T7wFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Q9xiXWaU; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEZ9bBLg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750408682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Eog4yVEfqOklks2EjdMhzqPgmpWjhS9NGkes1JaQ9/0=;
-	b=hEZ9bBLghkkbijuQcSsjaVawoES3YlWLGoUxuI91KKvv+A9MH6AnZBQhAFcPUGEcZfGTk9
-	tCE9TtI/P3pAFvLVGStxpOXbtbtoSLFhIEqeTgpGlaDoXGsMbsKpcceIw77eIm4WJ5fkOC
-	c64mRxXyn6Ojwxtk7UxAzdrNEBkUlxc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-132-WxnBSvnONd2neI0_KuQ6-w-1; Fri, 20 Jun 2025 04:38:00 -0400
-X-MC-Unique: WxnBSvnONd2neI0_KuQ6-w-1
-X-Mimecast-MFC-AGG-ID: WxnBSvnONd2neI0_KuQ6-w_1750408679
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb5f71b363so30873396d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:38:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408679; x=1751013479;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Q9xiXWaU"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-acbb85ce788so293429266b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750408752; x=1751013552; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Eog4yVEfqOklks2EjdMhzqPgmpWjhS9NGkes1JaQ9/0=;
-        b=tHLnarY+fBmDBiNlPraVQYO6Q4gD5J5g6ErJBg8TqUO3hu5/itFPoRvc8+QN1Ijgav
-         FEZ4ERJA0b5eAeL+R5C6MLYu7aJbAISmHR4IF+9yB1m0lk3VzdER9DheG1rpaB3jnANT
-         9PDL55kQbOSwkACir8V8LAtFYrSekasZqa6//x7XzH75oQHg8chnxTQlNRccu5Cedc6l
-         1uHIivohYJqOhckjxVOt7OjmKJ1AalOzBTfVrFanIXJYzfnZC0Soy3Hla5gVnKWeXKVy
-         JFTE8jYK5yobd7KTMldYlS43pY0Xg/8YygWGMcqPTvhhzFeVFwZcnv3xlyvC+EjI1mcF
-         Unlg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1tjH1fj+OAZtSYkYb2dcrYGmYAYCRuhZCh9JaOPv8z44QIGR9dqe6wDE3LYOkO/VC5FZ4NfdA5buwsf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyotTnk5DZfnBuBJnS3svYANhtZnNc11pVsMo0L4i00v4isz1JK
-	/DbFtmWh0SSAXVJ8nVBGUnoCyVX+cjxhkrRxGTecwiBewSZV/WM1VNiDSsWd5FWPzKC99Ar/lJh
-	/rgk2O7vKT0IOX44gbTB/UQvhm6FwHNjcOK6Wb6fkUCCfMpEk0aS9uKiZTTtQjVj4aA==
-X-Gm-Gg: ASbGncve8oy1hFhMbOm7RcBm0TjigIzF2mTP9KwzwpvDlE4cdBRzjGypvacSymPC/Kv
-	ghKDFaZQZONuWPandftWNGl9B3AzENWNAixrIHDdM4Ike3aF6pz3p2//f1dVJ2oVFKWnW9dokbl
-	Y9eMDnVq7zgZivLTnWTHqBfjUJqlSSTcAl++yPvio8TR8DiwVi5qTfji3ibCx28/HynvvRS/MhD
-	gL3jPVVOi9xBXSKhTh1d68/+wSnEkrve/GYh4DjUkO632eiAfTMkmI/YVnFoiDFyxWx97bCPn2f
-	8VX9JGGB+ZRWGrShyqHCJJsKv41T
-X-Received: by 2002:a05:6214:21ef:b0:6e8:fbb7:675b with SMTP id 6a1803df08f44-6fd0a5bb050mr37553616d6.32.1750408679569;
-        Fri, 20 Jun 2025 01:37:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmA3h6ErxX85wD5sSfG+Vzbb3PR/XLuB7HFc0jjVgeWIZox/+0PegblvBekonQcxrwvk7ztQ==
-X-Received: by 2002:a05:6214:21ef:b0:6e8:fbb7:675b with SMTP id 6a1803df08f44-6fd0a5bb050mr37553336d6.32.1750408679168;
-        Fri, 20 Jun 2025 01:37:59 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.182.199])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0957f69bsm9353816d6.96.2025.06.20.01.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 01:37:58 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:37:49 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 3/3] vsock: Fix transport_* TOCTOU
-Message-ID: <qvdeycblu6lsk7me77wsgoi3b5fyspz4gnrvl3m5lrqobveqwv@fhuhssggsxtk>
-References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
- <20250618-vsock-transports-toctou-v1-3-dd2d2ede9052@rbox.co>
+        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
+        b=Q9xiXWaUVze6+3GxmnW8BlyGUQCfzbUuMCDHKuvU9se1IwGuIfLyzdveR2kcLu5Udn
+         xBSlTM/JaO96BhWAbE4WYr2MzkknDj7NFwNZ2zqGVcLOp/JB36tJ1uLmtYDTErgwTidQ
+         tmkldF6E1bTWV2zSrIeiJu4laeHtsAUdhr5m6QIb1kvRJRQZ3JVSofIYgf9SHw/kI2xL
+         CMS4nO7AooBQ7lStCAXLR5+YaZU7pbcEqyFHcgmdWD7q02R3NrB5xVaYsSIsTDlxilP5
+         js3OU1+BWZL55bsKeeTa9P5GHHvs1qfsewrTSmYhY6/psnV8azoc1lj+Mkd2G/oUHxpo
+         Xsng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750408752; x=1751013552;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
+        b=jvNee009A2FmlfIsFZWjIax8XmPz4K17B9M5I45uEnDbaYEmFvtX01wF/5LttbL5p8
+         Q7H4lJ6TRyVZf13pFt9JE3WjCXpEhOKj9CECV1CNUpFSIwYazLeM6X5ox6j6lpw1An/h
+         +/frQHY0m3OoLnZ6rTx2IFlnBfNHWaS8BciMzOxM01rx8xHyJmSdenPmUTnIk4WySeSu
+         kV+GVUiVPwAzkuci93Cku6qd8t5RN8o/rMmch2ViuaFpqRvbtWgmnvFs1E0SoNGVkq6b
+         GAz+B8lXhhl+KIf2ERONWZixWrjFNI3yYlqztf5E3+uaZDJmvOFyoKLP/afYxIF54hgC
+         Espg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJLzEiH4wqL39Wgem6kI8w6bctroNnAQzewVi/jXaTuTqTWy0ieTgUD/7lQ2++gpT4T9cvyUpyOFvSvbE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWUu/coneUmqtig0rSzTxzdMe+PQygvDlXWm8+iWSzea9dgccl
+	TAF4771wRsTx97sEl5nsCU3Z3EMP34wp6H2idUpvH0SjtJVf6uXkEmq4rQDPWuGyqCE=
+X-Gm-Gg: ASbGncvC6SDPYzIccDhd/zbpu8jgPspeEeULu72qWFiWdkO3v5PmVSp46rAcX9wdyDC
+	mNBKSuu02gUijFkjw8G9p65diOeY5LCthfv8LNL2/wfjv9NtOyHWGGHxH2tezUmewSLKNjsxont
+	Z0w1Zqu9FrBT6qIemqB1K5jr99z+5wFWiw94i1OTACxvh3nk5A1PoGiytB+BLX1IEdRHnReUwu0
+	7wWHZevrZ8PjE5pn6eyws3qqplukFUBqiHVvDCQlWbGmDF+a34xIzudtEQb/AuX4BaUkCNPSGbW
+	ik9PIhH1wR9xNM3I6C2qIXIP0vdfA/fFGWeGYxORGFO24B0dtk+LSCZO2St9+jRu9e6vhabUX9Q
+	odFbRj/TCVppJu+dRW8eJvy2pesZZFK4=
+X-Google-Smtp-Source: AGHT+IHnn+pgrcY80rrdIAItBJEQnsl8DLBgDjOptwBLYFl+zdmUZHUQXrI9nz0s+HIckaBRB9p+5A==
+X-Received: by 2002:a17:907:9816:b0:ad5:55db:e413 with SMTP id a640c23a62f3a-ae057a284e5mr172285466b.26.1750408751642;
+        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6e36sm123747666b.120.2025.06.20.01.39.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250618-vsock-transports-toctou-v1-3-dd2d2ede9052@rbox.co>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 10:39:10 +0200
+Message-Id: <DAR846ZKJENY.KINMYGVYAY97@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
+ <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
+ Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, "Bryan O'Donoghue"
+ <bryan.odonoghue@linaro.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-On Wed, Jun 18, 2025 at 02:34:02PM +0200, Michal Luczaj wrote:
->Transport assignment may race with module unload. Protect new_transport
->from becoming a stale pointer.
->
->This also takes care of an insecure call in vsock_use_local_transport();
->add a lockdep assert.
->
->BUG: unable to handle page fault for address: fffffbfff8056000
->Oops: Oops: 0000 [#1] SMP KASAN
->RIP: 0010:vsock_assign_transport+0x366/0x600
->Call Trace:
-> vsock_connect+0x59c/0xc40
-> __sys_connect+0xe8/0x100
-> __x64_sys_connect+0x6e/0xc0
-> do_syscall_64+0x92/0x1c0
-> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->
->Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> net/vmw_vsock/af_vsock.c | 24 +++++++++++++++++++-----
-> 1 file changed, 19 insertions(+), 5 deletions(-)
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 337540efc237c8bc482a6730948fc773c00854f1..133d7c8d2231e5c2e5e6a697de3b104fe05d8020 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -407,6 +407,8 @@ EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
->
-> static bool vsock_use_local_transport(unsigned int remote_cid)
-> {
->+	lockdep_assert_held(&vsock_register_mutex);
->+
-> 	if (!transport_local)
-> 		return false;
->
->@@ -464,6 +466,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
->
-> 	remote_flags = vsk->remote_addr.svm_flags;
->
->+	mutex_lock(&vsock_register_mutex);
->+
-> 	switch (sk->sk_type) {
-> 	case SOCK_DGRAM:
-> 		new_transport = transport_dgram;
->@@ -479,12 +483,15 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
-> 			new_transport = transport_h2g;
-> 		break;
-> 	default:
->-		return -ESOCKTNOSUPPORT;
->+		ret = -ESOCKTNOSUPPORT;
->+		goto unlock;
-> 	}
->
-> 	if (vsk->transport) {
->-		if (vsk->transport == new_transport)
->-			return 0;
->+		if (vsk->transport == new_transport) {
->+			ret = 0;
->+			goto unlock;
->+		}
->
-> 		/* transport->release() must be called with sock lock acquired.
-> 		 * This path can only be taken during vsock_connect(), where we
->@@ -508,8 +515,12 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
-> 	/* We increase the module refcnt to prevent the transport unloading
-> 	 * while there are open sockets assigned to it.
-> 	 */
->-	if (!new_transport || !try_module_get(new_transport->module))
->-		return -ENODEV;
->+	if (!new_transport || !try_module_get(new_transport->module)) {
->+		ret = -ENODEV;
->+		goto unlock;
->+	}
->+
+Hi Casey!
 
-I'd add a comment here to explain that we can release it since we
-successfully increased the `new_transport` refcnt.
+Adding a note here, I also plan to look into what (if any) changes are
+necessary for this to work on PMI632 (which is the PMIC for
+sdm632/msm8953 Fairphone 3) since that's also SMB5.
 
->+	mutex_unlock(&vsock_register_mutex);
+On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
+> Introduce support for the SMB5 charger found on pm8150b and other more
+> modern Qualcomm SoCs.
 >
-> 	if (sk->sk_type == SOCK_SEQPACKET) {
-> 		if (!new_transport->seqpacket_allow ||
->@@ -528,6 +539,9 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
-> 	vsk->transport = new_transport;
+> SMB5 is largely similar to SMB2, with a few register differences. The
+> main difference is the new Type-C hardware block which some registers
+> are moved to.
 >
-> 	return 0;
->+unlock:
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++=
+------
+>  1 file changed, 314 insertions(+), 53 deletions(-)
 
-I'd call it `err:` so it's clear is the error path.
+<snip>
 
-Thanks,
-Stefano
+> +/* Bits 2:0 match PMI8998 TYPE_C_INTRPT_ENB_SOFTWARE_CTRL */
+> +#define SMB5_TYPE_C_MODE_CFG				0x544
+> +#define SMB5_EN_TRY_SNK_BIT				BIT(4)
+> +#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
+> +
+> +#define SMB5_TYPEC_TYPE_C_VCONN_CONTROL			0x546
+> +#define SMB5_VCONN_EN_ORIENTATION_BIT			BIT(2)
+> +#define SMB5_VCONN_EN_VALUE_BIT				BIT(1)
+> +#define SMB5_VCONN_EN_SRC_BIT				BIT(0)
+> +
+> +
+> +#define SMB5_TYPE_C_DEBUG_ACCESS_SINK			0x54a
+> +#define SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK		GENMASK(4, 0)
+> +
+> +#define SMB5_DEBUG_ACCESS_SRC_CFG			0x54C
+> +#define SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT	BIT(0)
+> +
+> +#define SMB5_TYPE_C_EXIT_STATE_CFG			0x550
+> +#define SMB5_BYPASS_VSAFE0V_DURING_ROLE_SWAP_BIT	BIT(3)
+> +#define SMB5_SEL_SRC_UPPER_REF_BIT			BIT(2)
+> +#define SMB5_EXIT_SNK_BASED_ON_CC_BIT			BIT(0)
 
->+	mutex_unlock(&vsock_register_mutex);
->+	return ret;
-> }
-> EXPORT_SYMBOL_GPL(vsock_assign_transport);
->
->
->-- 
->2.49.0
->
+<snip>
 
+>  /* Init sequence derived from vendor downstream driver */
+> -static const struct smb_init_register smb_init_seq[] =3D {
+> -	{ .addr =3D AICL_RERUN_TIME_CFG, .mask =3D AICL_RERUN_TIME_MASK, .val =
+=3D 0 },
+> +static const struct smb_init_register smb5_init_seq[] =3D {
+> +	{ .addr =3D USBIN_CMD_IL, .mask =3D USBIN_SUSPEND_BIT, .val =3D 0 },
+> +	/*
+> +	 * By default configure us as an upstream facing port
+> +	 * FIXME: This will be handled by the type-c driver
+> +	 */
+> +	{ .addr =3D SMB5_TYPE_C_MODE_CFG,
+> +	  .mask =3D SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
+> +	  .val =3D SMB5_EN_TRY_SNK_BIT },
+
+Since there's already a driver for the Type-C in pm8150b and pm7250b,
+can we remove this? Or is additional plumbing between the two drivers
+necessary to make this work? Maybe Bryan can also jump in here.
+
+Regards
+Luca
+
+> +	{ .addr =3D SMB5_TYPEC_TYPE_C_VCONN_CONTROL,
+> +	  .mask =3D SMB5_VCONN_EN_ORIENTATION_BIT | SMB5_VCONN_EN_SRC_BIT |
+> +		  SMB5_VCONN_EN_VALUE_BIT,
+> +	  .val =3D SMB2_VCONN_EN_SRC_BIT },
+> +	{ .addr =3D SMB5_DEBUG_ACCESS_SRC_CFG,
+> +	  .mask =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT,
+> +	  .val =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT },
+> +	{ .addr =3D SMB5_TYPE_C_EXIT_STATE_CFG,
+> +	  .mask =3D SMB5_SEL_SRC_UPPER_REF_BIT,
+> +	  .val =3D SMB5_SEL_SRC_UPPER_REF_BIT },
+> +	/*
+> +	 * Disable Type-C factory mode and stay in Attached.SRC state when VCON=
+N
+> +	 * over-current happens
+> +	 */
+> +	{ .addr =3D TYPE_C_CFG,
+> +	  .mask =3D APSD_START_ON_CC_BIT,
+> +	  .val =3D 0 },
+> +	{ .addr =3D SMB5_TYPE_C_DEBUG_ACCESS_SINK,
+> +	  .mask =3D SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK,
+> +	  .val =3D 0x17 },
