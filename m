@@ -1,69 +1,37 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569291C5D7B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE6B1DA3D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422630; cv=none; b=Nvb6BuTHK5anFdGW93y1mCf5JtZclkfepocQ4eFZfpcr65H5sf8xVun1VrUF3LHFkF6pJxfynw6EfFEjZuKM+a00iuLse7zNGM8DSTrhuIXNVu/FrqWn/vqRrscTNGQX715XsJ55cug2lcZliZwOHCbflHZIKQQ8ct1DfqY6gCc=
+	t=1750422632; cv=none; b=gvp0TSJehrVMzT4GszZgiH7mNYQapUonI8yd/G5xnbHjCP50WYsi7EMYHgC5K6iS+Q6n93xm25zkqjzqJoNSt2CCN2T/d7lEZqpVFeDkKZswf5pIRR/eL2xa/A29akMzzQnM0rZ9jKbBKB3YnuduV7iWKr2Iu/SOQp2Ce1ZMGTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422630; c=relaxed/simple;
-	bh=OAT2kA2Gp/GliDE9Ae1C1zJswYpBGaBlXGVT1uCDnDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KqDQYlaEPhJDr2kGpasEc1cQD/VA+lA8Ao2DqQwCazbwYvV3Uh2srxltULN7FOYULo5IUDuQj2nt0WgiaOS2JrcGeXkG+yw3+SfVzSvZnWXrMSAtJaa8lL2edFLvIY5rJ93iTJaCIp0qbE5H0Ui0J87smV1pEQ4RZA3g+rWeAGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xiJ6+53c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WmcWJ6GX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xiJ6+53c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WmcWJ6GX; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1750422632; c=relaxed/simple;
+	bh=S8ywCHIrPv1TFxfhggKzpeG1YWigLuz2M8Wv8Ahtddo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TWRwXsYJgbdyz1bmEYcV+lJIHC8AwhAANJcqrlyckm1z8NJLeh0YfPcWTzqZQqAotuXn016PhwdGtviBE/MNVreLWKyaqt5vDPqmg7KZGq4RhWLjTd4wq2QI35lna+t+xkrlOIOB+35ICYG+zxe+BQbul8UkQyBDX1J2R2vsbnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xiJ6+53c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WmcWJ6GX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xiJ6+53c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WmcWJ6GX"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B11B82121C;
-	Fri, 20 Jun 2025 12:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750422627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
-	b=xiJ6+53cZKxx7bm1WEu8PpgXXC7xVc2/vSQNkqCL1yDRrKKHC+/1hX5BfwFwc4tpSH17WF
-	Jmk0HC2oE/93XFNdndWA4nDYNOG19NPvO3PeDg8Cz7yWg14pkX3IseaWOlg//PLlE2qLFU
-	7KlssLRFvDtPe9yd+GKxJ/6IUnKjmxI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750422627;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
-	b=WmcWJ6GX8EpCWR3+hcotrFfKuETSAucz3sSQI+e3gc9jbYVxWMR1R2IyICQ14jiHTXQkhR
-	B3dCg5aLuMUwPdAw==
-Authentication-Results: smtp-out1.suse.de;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 665F31F7CF;
+	Fri, 20 Jun 2025 12:30:29 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
 	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750422627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
-	b=xiJ6+53cZKxx7bm1WEu8PpgXXC7xVc2/vSQNkqCL1yDRrKKHC+/1hX5BfwFwc4tpSH17WF
-	Jmk0HC2oE/93XFNdndWA4nDYNOG19NPvO3PeDg8Cz7yWg14pkX3IseaWOlg//PLlE2qLFU
-	7KlssLRFvDtPe9yd+GKxJ/6IUnKjmxI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750422627;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MyPppERCuMEI9DFIqEdgueHGbR+05Ah5b5rn0YRrw4w=;
-	b=WmcWJ6GX8EpCWR3+hcotrFfKuETSAucz3sSQI+e3gc9jbYVxWMR1R2IyICQ14jiHTXQkhR
-	B3dCg5aLuMUwPdAw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 395E8136BA;
-	Fri, 20 Jun 2025 12:30:27 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DE45513A99;
+	Fri, 20 Jun 2025 12:30:28 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IOhUC2NUVWjNKAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 20 Jun 2025 12:30:27 +0000
+	id eH2VM2RUVWjNKAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 20 Jun 2025 12:30:28 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: David Hildenbrand <david@redhat.com>,
@@ -73,10 +41,12 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2 0/5] Misc rework on hugetlb faulting path
-Date: Fri, 20 Jun 2025 14:30:09 +0200
-Message-ID: <20250620123014.29748-1-osalvador@suse.de>
+Subject: [PATCH v2 3/5] mm,hugetlb: Rename anon_rmap to new_anon_folio and make it boolean
+Date: Fri, 20 Jun 2025 14:30:12 +0200
+Message-ID: <20250620123014.29748-4-osalvador@suse.de>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250620123014.29748-1-osalvador@suse.de>
+References: <20250620123014.29748-1-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,81 +54,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 665F31F7CF
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Score: -4.00
 
- v1 -> v2:
-   - Addressed feedback from David
-   - Settle ideas wrt. locking in faulting path after
-     discussion with David
-   - Add Acks-by
+anon_rmap is used to determine whether the new allocated folio is anonymous.
+Rename it to something more meaningul like new_anon_folio and make it boolean,
+as we use it like that.
+While we are at it, drop 'new_pagecache_folio' as 'new_anon_folio' is enough to
+check whether we need to restore the consumed reservation.
 
- RFC -> v1:
-   - Stop looking up folio in the pagecache for detecting a COW
-     on a private mapping.
-   - Document the locks
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+---
+ mm/hugetlb.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-This patchset aims to give some love to the hugetlb faulting path, doing so
-by removing obsolete comments that are no longer true, sorting out the folio
-lock, and changing the mechanism we use to determine whether we are COWing a
-private mapping already.
-
-The most important patch of the series is #1, as it fixes a deadlock that
-was described in [1], where two processes were holding the same lock
-for the folio in the pagecache, and then deadlocked in the mutex.
-Looking up and locking the folio in the pagecache was done to check whether
-that folio was the same folio we had mapped in our pagetables, meaning that if it
-was different we knew that we already mapped that folio privately, so any
-further CoW would be made on a private mapping, which lead us to the  question:
- __Was the reservation for that address consumed?__
-That is all we care about, because if it was indeed consumed and we are the
-owner and we cannot allocate more folios, we need to unmap the folio from the
-processes pagetables and make it exclusive for us.
-
-We figured we do not need to look up the folio at all, and it is just enough to
-check whether the folio we have mapped is anonymous, which means we mapped it
-privately, so the reservation was indeed consumed.
-
-Patch#2 sorts out folio locking in the faulting path, reducing the scope of it
-,only taking it when we are dealing with an anonymous folio and document it.
-More details in the patch.
-
-Patch#3-5 are cleanups.
-
-[1] https://lore.kernel.org/lkml/20250513093448.592150-1-gavinguo@igalia.com/
-
-Oscar Salvador (5):
-  mm,hugetlb: Change mechanism to detect a COW on private mapping
-  mm,hugetlb: Sort out folio locking in the faulting path
-  mm,hugetlb: Rename anon_rmap to new_anon_folio and make it boolean
-  mm,hugetlb: Drop obsolete comment about non-present pte and second
-    faults
-  mm,hugetlb: Drop unlikelys from hugetlb_fault
-
- mm/hugetlb.c | 130 ++++++++++++++++++++++-----------------------------
- 1 file changed, 55 insertions(+), 75 deletions(-)
-
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 1a5f713c1e4c..57bb8b2dce21 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -6427,17 +6427,16 @@ static bool hugetlb_pte_stable(struct hstate *h, struct mm_struct *mm, unsigned
+ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ 			struct vm_fault *vmf)
+ {
++	u32 hash = hugetlb_fault_mutex_hash(mapping, vmf->pgoff);
++	bool new_folio, new_anon_folio = false;
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct hstate *h = hstate_vma(vma);
+ 	vm_fault_t ret = VM_FAULT_SIGBUS;
+-	int anon_rmap = 0;
+-	unsigned long size;
++	bool folio_locked = true;
+ 	struct folio *folio;
++	unsigned long size;
+ 	pte_t new_pte;
+-	bool new_folio, new_pagecache_folio = false;
+-	u32 hash = hugetlb_fault_mutex_hash(mapping, vmf->pgoff);
+-	bool folio_locked = true;
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -6518,6 +6517,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ 		folio_zero_user(folio, vmf->real_address);
+ 		__folio_mark_uptodate(folio);
+ 		new_folio = true;
++		new_anon_folio = !(vma->vm_flags & VM_MAYSHARE);
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+ 			int err = hugetlb_add_to_page_cache(folio, mapping,
+@@ -6536,10 +6536,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ 				ret = VM_FAULT_SIGBUS;
+ 				goto out;
+ 			}
+-			new_pagecache_folio = true;
+ 		} else {
+ 			folio_lock(folio);
+-			anon_rmap = 1;
+ 		}
+ 	} else {
+ 		/*
+@@ -6588,7 +6586,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ 	if (!pte_same(huge_ptep_get(mm, vmf->address, vmf->pte), vmf->orig_pte))
+ 		goto backout;
+ 
+-	if (anon_rmap)
++	if (new_anon_folio)
+ 		hugetlb_add_new_anon_rmap(folio, vma, vmf->address);
+ 	else
+ 		hugetlb_add_file_rmap(folio);
+@@ -6604,7 +6602,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ 	hugetlb_count_add(pages_per_huge_page(h), mm);
+ 	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
+ 		/* No need to lock file folios. See comment in hugetlb_fault() */
+-		if (!anon_rmap) {
++		if (!new_anon_folio) {
+ 			folio_locked = false;
+ 			folio_unlock(folio);
+ 		}
+@@ -6640,7 +6638,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+ backout:
+ 	spin_unlock(vmf->ptl);
+ backout_unlocked:
+-	if (new_folio && !new_pagecache_folio)
++	/* We only need to restore reservations for private mappings */
++	if (new_folio && new_anon_folio)
+ 		restore_reserve_on_error(h, vma, vmf->address, folio);
+ 
+ 	if (folio_locked)
 -- 
 2.50.0
 
