@@ -1,112 +1,138 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5621FF51;
-	Fri, 20 Jun 2025 18:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4046BFCE;
+	Fri, 20 Jun 2025 18:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750444569; cv=none; b=CfHr14T3LS5Gj2C6YCdAJ7beyDtx/MTwLOuO3Oq91gktqHdjZFEgbwc/k++F+JbVbAt9S/M1pYYS54PjZA4NyiG9cQQbFJKfWCaeOh5xywxUBq8/9/L962C41VEyur/1VEUdI7QJM2kujA8UoxaMl/+T3lllKYBGgL/RY+KUB6U=
+	t=1750444606; cv=none; b=T/SyOJwgKAq2tmNQhKi57BA2d2B65yw4rjh9e/HhZnGGd+ETZ8DldTnsWQq3xmNVQ43a0lATCyjQCaN8irBLUqZG684KeoZx3kRNHDiGQj3aMkC+pRdMx59hJ7Qb5hjH8cIJZNrz3w3NMYyCc/T+os4tEENUF88v90AK4htL70A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750444569; c=relaxed/simple;
-	bh=VxYYZ+5XRHo4d4bvFkZwjgzgU+HxsHrnwxX5D8o2J7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXtXKwRI3u8T14ZBP+KjSupmeDr8kxXmxvmH4XufgcD6Yp7jgH30xhqKmYagKgp8XWoqBY/gbQydDfiFNr+W1lR+MwtEk7/E4dxBge6rRGlv0oh2lmA7bM+kNCx2mErhcMhy82s3U0LeixCfx3MbmhaCvSIJNTXb1LlyQ7iLW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOmYPssx; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1750444606; c=relaxed/simple;
+	bh=5aprew4hKX/coXkjFe17a/Yyf3ir4h7JJIR+NElQm6A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GV0XmbssbyBE7I/wm8mGFUhDyzTwalS5lC1y65YTMmzSHL5dPFbqjYwqzH3NHcRwx8G0Epu7pk/V/QjS4GdfrNtNL6r4o6gyU2jh31ygUy2VMDhVkzVNb5BHH9zy/vlUuncJc4qCjh7APfOK0ULgl2rfzGUvJeAq+pZvMLnmkDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=It6HDZAc; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOmYPssx"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-237311f5a54so22814345ad.2;
-        Fri, 20 Jun 2025 11:36:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="It6HDZAc"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so18145835ad.3;
+        Fri, 20 Jun 2025 11:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750444568; x=1751049368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iB8K7naU/3cWPMjhndPtrJKbfq4r5Bnu9UIH3k9QIY0=;
-        b=MOmYPssxlcwbS4ZYjkXEXfkTvUUBwwVaHlypz9Ui/k/JvHYVZ7NsJjYmoGhrXtFlYo
-         4gzNa/ShoOQvumSQuopHPerrqrOlrEEU7cmNBoGrTreSzc4GjzWcsN37QDjCHIDok/55
-         lkXF5jy/oSTGKvRr8duIZuAeryLHnUvTUwGP7VVPfijDINZIJMrN4lBq0Qb31jVL5XaU
-         uorMEHPc6fE6LDV/g7dmk7IyzbRRdcFkeAkMNqNLvy3nAg3kSJcexwH+veBI7dyB7Osy
-         uv62j2CncVkhNvdbNkbzFdsiQFPKxs0V5Jv+OZlFpiiGWMfPGr+D9/Wq3RdX04ELDWFF
-         cbuA==
+        d=gmail.com; s=20230601; t=1750444604; x=1751049404; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s4gciWTSONw0akSEEEhFqXpes8/mqcuvWff1e7xwDzs=;
+        b=It6HDZAc9AL787xkUle1V7wdcGePPaVkKUbY67oohIxW0P77VpbUDvM/T7xkpGLWbr
+         VI3OdY7tuXaSHDnzh8nSmaw9Wdj3ki94g1UJbbZBJP0qE3+WObmfimREtahAZBBmilGP
+         j5A/T/DMdrl0fB4jl7CIxwQaG05kJmGrex9nk4Rw04aEegTkphFvleV/j/fOKeI1NCNU
+         3CcusWPTT61rNdflN0GNattEsMvk7aOtSgWraG4bdA57H13ec1p3k3KKA6kTLAkdBzIO
+         XIYBzgEwWn0V2oEMMWzYiWgU/XL0mjTP35e3t9x/8aiJ+hDwMnvyPeR6FM/7c0vnM9TU
+         M9bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750444568; x=1751049368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iB8K7naU/3cWPMjhndPtrJKbfq4r5Bnu9UIH3k9QIY0=;
-        b=fMPbZIiJwW+Xit87nP+K4/JgF+lXzyCZw+9W4aL/aumHMl7QoWItgCXnhgbXE6bTi4
-         0RzqUAtRBK2KTmSlHjjWWDJkUbhLywBffbjjCnMPqM9RUDyMRZgy0G8/XtK3SnQ00GuA
-         kQ5xesHl0ePah09HhJ8yhkJN+YW9jDTvCRjt9xQVCZphXBJ2qYJbjGIXvxxTDDZ3uVcZ
-         7f4422sITeKV98HBA8ThBg+iSu1HWkRJ4O2EkkPQ6Yy8dk7W+fV9lI+pQhf5R+RdNJaw
-         ebw+e7/97K071PLuSfsefiffJd+7/Xm4dWYH2dSxtAtLyAZ/zcUgR0BJsvV/uPqOQp9i
-         T+6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVnYOa9T7mq16//QO2mM2xW8eKIxZdsfVUTehdpnuwisS4DJ3hvb0uzxbByMyiFhummd+C8hwEC+w3D@vger.kernel.org, AJvYcCWyw2QWPOzx8aGn6/D28rYO8TI1TEBalWY5xooS0dAewaFGmhKR1oVWcqFKyk/tnvtOY8JNCJ42jBCGgeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDAzJprsLW0SvkIE5oVqg4vyFY3d5hbB7IeEwAfJvVXZwbkkaq
-	xrRRPD94ksph1uTsibm2A/UeNGywwq/85Ekbk5ln3svRFOK/JIo5LpmI
-X-Gm-Gg: ASbGncv6UbiR7AVj1o5ZWtwdhpUxwO7doHEOXWLmvjBUQpaXQ2GdHEQPaDUtjUu2iOg
-	3C6T+DQ0heOsYlP9CDGorqwk1PlGBS6IugATl69HY8V2V7zUrs2OVClS2qbfnLD60nKEPttYmIy
-	Nm6u7sJREXG1A0LTqprUINwCPrBjv/obh18aqPO7A21mZiyShqfiTaJGVyMrJGKPIsvrtHlh/yo
-	OjNxPZCCrsST0NZMZPe/yKB6iaA+Nl4EMDXegnxePORtMKy8TRfSrj8GzO769TRS6TU4TpTD55L
-	kvN61WJrEVOVmZRw73DKjmXyTLazrn9zky6rvrjNFHhtjst1ww==
-X-Google-Smtp-Source: AGHT+IEpd/aQfcdw5uYZ1ZK+nV3R3Zab/R2Ed0lgYGKgBLEMJrWyEefDcKKfz+3OCjw8DJ0q07uFQA==
-X-Received: by 2002:a17:903:1b66:b0:234:c5c1:9b5f with SMTP id d9443c01a7336-237d99064ccmr64870585ad.16.1750444567570;
-        Fri, 20 Jun 2025 11:36:07 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:cf24::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d872a3d4sm23398895ad.239.2025.06.20.11.36.03
+        d=1e100.net; s=20230601; t=1750444604; x=1751049404;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s4gciWTSONw0akSEEEhFqXpes8/mqcuvWff1e7xwDzs=;
+        b=R7r1JXuD7kmGZZyayWRu4PahhIfQ/XOWbqzcntW8MrCSaMZXANPRw/nWIAxv24CyDO
+         dGepen2IpQxorjOCcYoZpGpolD2edZxX3wgEH4IlStLMW8KKmNU8QAOhprN1uw2kL8aP
+         KVj5FVI7cYwXt9/sBhdZrMwuuIsGxi4CmKKMe2BfDnAz7JX0X9oZtCurYgG+g9A1gGml
+         YZzjDiGsYL3g2LERiIv0MVwF8oOxwZvH03gcNRU2QDVyhIC73w6za/eVoLnQCql1K4zy
+         kTPLlvKBuFf2q+9lWvPxlRjCd1wxEj7kSORAsPdtcTFNN9U7iBs1ZgcWp7HuV4fDxDY2
+         ACwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVe6NAK5XCZpE1ABBVWMnnFK/8bNdvdVVy5I8GozRod469/iE2ab9mMsC85lOmKDYhGEmxqcXzQ27WhVOCv@vger.kernel.org, AJvYcCW/rt/a2dedOUFswiUBXCj98CIXohgGbmipAmDTrLxdKYfhi03dk/Y3ZFD1+yGYnUvhugU+17N0V4JbdckV@vger.kernel.org, AJvYcCWhHNjVHflB//UQvlyp5yv2Uok8ela/3HW/sgosoK6qkC4rCBSxONeeXTp4pmkwXhl7LRxtHC34TEoUaG9ikSWjbuWjQs62@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkbP7w9tiBQhJ7NY8eW99BJwcSdr3PJOP2rKV0ZEVXhSiJu67n
+	kyCCVixfwbpj3vrnIb127TOFE++bohgoS+xkb0Rrs2BtKQCkf+mmtPh6
+X-Gm-Gg: ASbGncsCM5PfWhjckAPiq0F9K1wOeebcuOr8WaLA08r88x8kR26ucOLFoSZ4dhE0xaU
+	GhkxHpBbyu3HAYUTRHvI7TwS7TTZBAYpAIJCc+N+n0SWeGTztAWJQPv8xXBEdddifMMCvi7TM+W
+	Sq3T1/c8AR4tPIcWmfivGdEytjwvwt+I0IsOc+hEUvO8ycrchbBSEGTYRqa081tCR/gzbrCPR5l
+	25TvSJ0EU6xLRJRtJesl3ZeO8NTuAv62bPKBePZPJaPMuNRyyIs13Yskx7I3vuRXbkiGIVxfysG
+	GZI4vFPxGqqyxdHB3wXsl3J+w6Ph/OiXk2ERPqYc/udzB7LU0v1qjojjYAG0eVYs99um
+X-Google-Smtp-Source: AGHT+IGHKJOmUPn26KDy0m1jr5bhCOMFbt9X8MQuRFyRFftp90pbLKnHi7J8ydZpQWGBmXaW0/MOfA==
+X-Received: by 2002:a17:903:2306:b0:234:d7b2:2ac4 with SMTP id d9443c01a7336-237d980da56mr67713185ad.17.1750444603773;
+        Fri, 20 Jun 2025 11:36:43 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c096:14a::247? ([2620:10d:c090:600::1:97ac])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a426sm23459215ad.117.2025.06.20.11.36.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 11:36:07 -0700 (PDT)
-Date: Fri, 20 Jun 2025 15:35:51 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 4/4] phy: rockchip-pcie: Adjust read mask and write
-Message-ID: <aFWqB8YRtYlC0vGG@geday>
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <7068a941037eca8ef37cc65e8e08a136c7aac924.1749833987.git.geraldogabriel@gmail.com>
- <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
+        Fri, 20 Jun 2025 11:36:43 -0700 (PDT)
+Message-ID: <de68f43f9e83230bbb055fdecba564ee662d6091.camel@gmail.com>
+Subject: Re: [PATCH v2 bpf-next 4/5] selftests/bpf: Add tests for
+ bpf_cgroup_read_xattr
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Song Liu	
+ <song@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>, "Jose E. Marchesi"
+	 <jose.marchesi@oracle.com>
+Cc: bpf <bpf@vger.kernel.org>, Linux-Fsdevel
+ <linux-fsdevel@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>, LSM
+ List <linux-security-module@vger.kernel.org>,  Kernel Team
+ <kernel-team@meta.com>, Andrii Nakryiko <andrii@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro	
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	 <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, Matt Bobrowski	
+ <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, Daan
+ De Meyer <daan.j.demeyer@gmail.com>
+Date: Fri, 20 Jun 2025 11:36:40 -0700
+In-Reply-To: <CAADnVQKKQ8G91EudWVpw5TZ6zg3DTaKx9nVBUj1EdLu=7K+ByQ@mail.gmail.com>
+References: <20250619220114.3956120-1-song@kernel.org>
+	 <20250619220114.3956120-5-song@kernel.org>
+	 <CAADnVQKKQ8G91EudWVpw5TZ6zg3DTaKx9nVBUj1EdLu=7K+ByQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
 
-On Fri, Jun 20, 2025 at 03:19:06PM +0100, Robin Murphy wrote:
-> Which write mask? Certainly not PHY_CFG_WR_MASK... However as this 
-> definition is unused since 64cdc0360811 ("phy: rockchip-pcie: remove 
-> unused phy_rd_cfg function"), I don't see much point in touching it 
-> other than to remove it entirely. If it is the case that only the 
-> address field is significant for whatever a "read" operation actually 
-> means, well then that's just another job for ADDR_MASK (which I guess is 
-> what the open-coded business with PHY_CFG_PLL_LOCK is actually doing...)
+On Fri, 2025-06-20 at 11:11 -0700, Alexei Starovoitov wrote:
+> On Thu, Jun 19, 2025 at 3:02=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+> > +       bpf_dynptr_from_mem(xattr_value, sizeof(xattr_value), 0, &value=
+_ptr);
+>=20
+> https://github.com/kernel-patches/bpf/actions/runs/15767046528/job/444455=
+39248
+>=20
+> progs/cgroup_read_xattr.c:19:9: error: =E2=80=98bpf_dynptr_from_mem=E2=80=
+=99 is static
+> but used in inline function =E2=80=98read_xattr=E2=80=99 which is not sta=
+tic [-Werror]
+> 19 | bpf_dynptr_from_mem(value, sizeof(value), 0, &value_ptr);
+> > ^~~~~~~~~~~~~~~~~~~
+>=20
+>=20
+> Jose,
+>=20
+> Could you please help us understand this gcc-bpf error ?
+> What does it mean?
 
-Just for the sake of posterity, Robin is right here, PHY_CFG_WR_MASK is
-just hardcoded to 1, and PHY_CFG_RD_MASK should have been the same
-as PHY_CFG_ADDR_MASK as Robin correctly pointed out.
+Not Jose, but was curious.
+Some googling lead to the following C99 wording [1]:
 
-Moot point since I already agreed with Bjorn and Robin to drop the read
-define, and Robin was kind enough to track the exact commit where the
-corresponding read function was removed. I re-injected that function
-from BSP into mainline for my own debugging though, that's why I caught
-the typo.
+  > An inline definition of a function with external linkage shall not
+  > contain a definition of a modifiable object with static storage
+  > duration, and shall not contain a reference to an identifier with
+  > internal linkage
 
-Thanks,
-Geraldo Nascimento
+[1] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
+    6.7.4 Function specifiers, paragraph 3
 
-> 
-> Thanks,
-> Robin.
+The helper is defined as `static`:
+
+  static long (* const bpf_dynptr_from_mem)(...) =3D (void *) 197;
+
+While `read_xattr` has external linkage:
+
+  __always_inline void read_xattr(struct cgroup *cgroup)
+  {
+	...
+	bpf_dynptr_from_mem(value, sizeof(value), 0, &value_ptr);
+	...
+  }
+
+I think that declaring `read_xattr` as `static` should help with gcc.
