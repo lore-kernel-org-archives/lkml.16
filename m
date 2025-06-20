@@ -1,115 +1,96 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA80E2DF3D1;
-	Fri, 20 Jun 2025 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A432D3A6A;
+	Fri, 20 Jun 2025 16:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435224; cv=none; b=hwEIupN16+ugIyc4kEgE8I3WYmlXU8qJaTZPmZqwzj7bbgO8sgIfK6N+8Y2B4NRxH6ZTjCT0r96MQ1Pagu546CqhR9H8K7wf63AFrJC8KF66YSX6jvXW5K8gXXCfk15mPSx8BVgSm7u4uX1iLsw7082CT4SFdBvutW5Q1HGP4ho=
+	t=1750435264; cv=none; b=OioWeu4aoN2tKDJQpRQTVvZOd7VpQvA+nxU7LuqdBC/yuk+BYBsUNUFancCqmKNSr+Duan7fGzbhW7oRD99v5GePNRAbY2pxoefIgzkIHave+0UkOKmp3keymmiey8TT/l8YO9lfqKZ7fkla+ht6YQC/zoMCzMzOuXMDDx0XPIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435224; c=relaxed/simple;
-	bh=0Tra1843jmm9hB/IPbor7LgwCzJ0hIXr5r965/fV3JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZyY+MMhel2/n1cOh5t3lfwwCajoSjXfrebo+CB51DWPsuorBIX1K9bWPi8nS1OPnoMZEeJDc1buXNnH+TBLyf97PeIV5BsJ085r4eSpgeRmJGZiEv6DPJfg49DQwz9R6Ai8ExWQfID5FhCapaVqEGxqRP85rUbjqESUiashk+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Ylu/cWtj; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1750435264; c=relaxed/simple;
+	bh=476EDcByVUDcMJq9G0/L+M1afs1hWsv5RMTIUVRlTMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEnaQM2h5vJ2AAMeOIuGob6vj22DyDdPQ3pSgvXAiYh6B2Ub4b41n6fW8UkyAzkeKU7oCH64MNn93HEZ6FjiYDMBz0UuN9UTnQiDl0PPGuSjivdXI8gPK+1trcPWGLawIT12hU5/zCEFQpu4TzI7Ud+cUZtUVWe09DhN7WySsRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QeNRSKWG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Ylu/cWtj"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bP2Hg5XCYzlgn8k;
-	Fri, 20 Jun 2025 16:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1750435213; x=1753027214; bh=VfNRI3BjuugSr0OXWJjcf+of
-	9TA6jIqcVZZJHTzRJeQ=; b=Ylu/cWtjYZcl2Qte27ZG2/YlLrjxCmJHBbxtnDv7
-	68FMT/8DOJalAQvZNFj8aXIo0LR7y2rs2EyoFpxrOXF2VFcEvsUZ8TLSpK05ZwyX
-	GLnu3xO5Z229ukv/CTIqkkTwsD473UgYvQTn4AS1Vv5zuiIvn/K1NwK6fpragQ+q
-	L9kd111mJp2aC6GrNhlQ+JYeULbeOF+VaqeLmiz/VLn89pVWcvgjJMqX39np8OSr
-	uhu8R6kWedXAlbNJAt7fZ9RjWiYY6hJ+5mwaDrHsg+A8Mqbhwget/q3h4yhIlAY8
-	/9Rjhq7KcLnE513thGEu8tgOpvfyoGXhjbk5IMfuDJ10xA==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id uVJuV67gQTBt; Fri, 20 Jun 2025 16:00:13 +0000 (UTC)
-Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bP2HP2NXXzlgqV9;
-	Fri, 20 Jun 2025 16:00:00 +0000 (UTC)
-Message-ID: <ef9bcc7e-a726-43e1-a51e-47093589b01c@acm.org>
-Date: Fri, 20 Jun 2025 08:59:58 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QeNRSKWG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F27C4CEE3;
+	Fri, 20 Jun 2025 16:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750435264;
+	bh=476EDcByVUDcMJq9G0/L+M1afs1hWsv5RMTIUVRlTMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QeNRSKWGt70s6g1hwBDaHF1e0D8Pd+LYbrtycRrUqtWP4xqpmf51Q62U0NHpRDVqA
+	 pqBOl2B8YSaxaEhX3Fq4vtZWrImkX0Rf2jTJ7jZooe75XlMgkCsXadzhhYWETF9JAV
+	 knXOlLmUBr0FCnGmWondl/AB0jOCbK554Ve2lLDA=
+Date: Fri, 20 Jun 2025 18:01:01 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH net 0/4] net: axienet: Fix deferred probe loop
+Message-ID: <2025062054-tameness-canal-2204@gregkh>
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
+ <2025062004-sandblast-overjoyed-6fe9@gregkh>
+ <56f52836-545a-45aa-8a6b-04aa589c2583@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/27] block: Protect against concurrent isolated cpuset
- change
-To: Frederic Weisbecker <frederic@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Marco Crivellari
- <marco.crivellari@suse.com>, Michal Hocko <mhocko@suse.com>,
- Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Vlastimil Babka <vbabka@suse.cz>,
- Waiman Long <longman@redhat.com>, linux-block@vger.kernel.org
-References: <20250620152308.27492-1-frederic@kernel.org>
- <20250620152308.27492-12-frederic@kernel.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250620152308.27492-12-frederic@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56f52836-545a-45aa-8a6b-04aa589c2583@linux.dev>
 
-On 6/20/25 8:22 AM, Frederic Weisbecker wrote:
-> The block subsystem prevents running the workqueue to isolated CPUs,
-> including those defined by cpuset isolated partitions. Since
-> HK_TYPE_DOMAIN will soon contain both and be subject to runtime
-> modifications, synchronize against housekeeping using the relevant lock.
+On Fri, Jun 20, 2025 at 11:41:52AM -0400, Sean Anderson wrote:
+> On 6/20/25 01:10, Greg Kroah-Hartman wrote:
+> > On Thu, Jun 19, 2025 at 04:05:33PM -0400, Sean Anderson wrote:
+> >> Upon further investigation, the EPROBE_DEFER loop outlined in [1] can
+> >> occur even without the PCS subsystem, as described in patch 4/4. The
+> >> second patch is a general fix, and could be applied even without the
+> >> auxdev conversion.
+> >> 
+> >> [1] https://lore.kernel.org/all/20250610183459.3395328-1-sean.anderson@linux.dev/
+> > 
+> > I have no idea what this summary means at all, which isn't a good start
+> > to a patch series :(
+> > 
+> > What problem are you trying to solve?
 > 
-> For full support of cpuset changes, the block subsystem may need to
-> propagate changes to isolated cpumask through the workqueue in the
-> future.
+> See patch 4/4.
+
+That's not what should be in patch 0/4 then, right?
+
+> > What overall solution did you come up with?
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->   block/blk-mq.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
+> See patch 4/4.
+
+Again, why write a 0/4 summary at all then?
+
+> > Who is supposed to be reviewing any of this?
 > 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 4806b867e37d..ece3369825fe 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -4237,12 +4237,16 @@ static void blk_mq_map_swqueue(struct request_queue *q)
->   
->   		/*
->   		 * Rule out isolated CPUs from hctx->cpumask to avoid
-> -		 * running block kworker on isolated CPUs
-> +		 * running block kworker on isolated CPUs.
-> +		 * FIXME: cpuset should propagate further changes to isolated CPUs
-> +		 * here.
->   		 */
-> +		housekeeping_lock();
->   		for_each_cpu(cpu, hctx->cpumask) {
->   			if (cpu_is_isolated(cpu))
->   				cpumask_clear_cpu(cpu, hctx->cpumask);
->   		}
-> +		housekeeping_unlock();
->   
->   		/*
->   		 * Initialize batch roundrobin counts
+> Netdev. Hence "PATCH net".
+> 
+> And see [1] above for background. I will quote it more-extensively next time.
 
-Isn't it expected that function names have the subsystem name as a
-prefix? The function name "housekeeping_lock" is not a good name because
-that name does not make it clear what subsystem that function affects.
-Additionally, "housekeeping" is very vague. Please choose a better name.
+Referring to random links doesn't always work as we deal with thousands
+of patches daily, and sometimes don't even have internet access (like
+when reviewing patches on long flights/train rides...)
 
-Thanks,
+Make things self-contained please.
 
-Bart.
+thanks,
+
+greg k-h
