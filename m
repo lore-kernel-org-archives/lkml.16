@@ -1,53 +1,49 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF070825;
-	Fri, 20 Jun 2025 21:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E7322E3FA
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750453642; cv=none; b=PiGokBIUXAr9waN/BLkE+HVN15jNceWAT/Z8R562P6KnpXy/NtflzlY6TY+cnvGky1biBQ+zaoyhd+TlytG9za0sMU+b905ynkk4mV1ArGSJhd/Hw4Fz+KBAHSOPv5hfL/OZDsltPr3eUiubH3AmcvYIi1cjGK/cyDvQmOghvEA=
+	t=1750454103; cv=none; b=U4CbTWVzL2DMjtguE6q6xfIvAmzmrTdqlZNSYGx26mlk/BQhzdgdAw0PG+AFQoHALBrtrTwhVhYr6n30Zb+IHPe5B2nhAk4Q95qryANxZERs8hZ0NYCWmVay68z4wP93EE/LEMobQafAhWoo8RPR8shGMo8FMNAC2EDor/lsV9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750453642; c=relaxed/simple;
-	bh=gOYFevN0LEy2D/8b7xY3NrYDJBWaFqN/Mep6tXyQcRE=;
+	s=arc-20240116; t=1750454103; c=relaxed/simple;
+	bh=5r/CkVofuZA7EJFf7MFmIyLXxR3anpO+G72ytEr+YUY=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YWReDl/A4lGVaogMvKLYhhLpg2xk1nV/5dtC1+jSusqIF8zZcrOTdmAR8p70xHB3SRpB2FscA0Ji+4s7+aOPlZHqy8sjblsAO8YhPZ1+xV000aB4IOJ9DqQQkagZijrKKiE6Ns8AFMmtRGQH4mf1Mvb4tb/LiXXVgbxo5bArrHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oSoCKK7z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JPhJarEJ; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=fbYjf4qhh2rPLHgDDLEIgRoSu4yqahnxaEpqs5F+mitp8Jf+gtLmiLjq1aSJhlczFXVgt078dtZCWfVSRVt/f0AGe1qaul/zT7A373DTnNn+TBZYvxVQz+jGmAzt6y4xd17EjfqQpft8QobD40FtzY4fBtgdeHf689Gq1nxIFJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L8CVxoAn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=inM3Q34V; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oSoCKK7z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPhJarEJ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L8CVxoAn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="inM3Q34V"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750453638;
+	s=2020; t=1750454100;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=egwWRVIQ5L1+Q/QWzj2riLFWuuq+G6oubEW3WKFA2KQ=;
-	b=oSoCKK7z3FOvgltzawlbz6fzYOZIuHhCeJmBk/AKvW6VFki2x06qYX/0CZzxI4K7wl7Ilr
-	/3UcPJc54lLuRRAqyhhKt+iYNqVCzUK59nRwDN/xNNm63D4mx7FgGKRCeTITMEKW0Z7Ezd
-	qHJz6DRZrGlmtsO+QDj7KF2fXm4FZvwpjK97HaLm2d8w0FIXkYwm541ZZ9TQkUG0hmhn+s
-	QmYY2zQZY3Ga+POwavDd/uEh6BtUIYYNZYngmarDhgAjwuorKqDInfK+Xwr7RNeUvZESTP
-	pVK6ExGc8wTlWrttIJUiYU+vZSjCrNrWIAwW8YICdu4qkRHpTfmdSLkp9v6NzA==
+	bh=xDbHQcOycUUREm1YCW6mXPxgfuhfSj9P9iRDf90OR1s=;
+	b=L8CVxoAno90oexVUd2OU5szNLiS2a+u+Sx5UMuj0NsYvh3XoPn8mP2sVMA9pndXBW4Cft7
+	4upTneP2NQZ4Y5GSjP+FaAu07tReSMCv8sBNnv8J0bWulMS4l16cC7S/zGB/KOFZ8SQgyy
+	hXEq1Ri1Zydp6adxzHuaMeU7ehixyMzj4okPqUHV/cQ1qWI/FgnSFX6BwDPvhBYnwQJ1Yp
+	K7kPAc9s+FttN1xPhx7Bp+KmwZ1OYzQ3eKCyn9p7lwwOO5U7XNITAOWxruAKFpv2tugP3f
+	LeWXvMBIGeBdkhQLSFGl5XkCYag1y4uEqN5RviHh+Tc0AJysLVihaq0o0WZreQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750453638;
+	s=2020e; t=1750454100;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=egwWRVIQ5L1+Q/QWzj2riLFWuuq+G6oubEW3WKFA2KQ=;
-	b=JPhJarEJhV3zJnci9PuoGV4FkGAbYIniNeiV39H+6W6znyiNAtYjcywSP7WtT75aegPmzb
-	9KFYYFazha4sszBQ==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Ingo Molnar <mingo@kernel.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] lockdep: Fix inconsistency in irq tracking on NMIs
-In-Reply-To: <20250620125112.33978-2-gmonaco@redhat.com>
-References: <20250620125112.33978-2-gmonaco@redhat.com>
-Date: Fri, 20 Jun 2025 23:07:17 +0200
-Message-ID: <87sejup1fe.ffs@tglx>
+	bh=xDbHQcOycUUREm1YCW6mXPxgfuhfSj9P9iRDf90OR1s=;
+	b=inM3Q34VcHSdlTXjgRYyyPltLbjBdBkkn9In1ZCSZ4NoIlzK45XRKIrj9/gQCHcgWBRSW0
+	y/750MfdbyNd+yBA==
+To: Khalid Ali <khaliidcaliy@gmail.com>, peterz@infradead.org, luto@kernel.org
+Cc: linux-kernel@vger.kernel.org, Khalid Ali <khaliidcaliy@gmail.com>
+Subject: Re: [PATCH v2] entry: Update outdated comment in entry_common.h
+In-Reply-To: <20250618081305.1060-1-khaliidcaliy@gmail.com>
+References: <20250618081305.1060-1-khaliidcaliy@gmail.com>
+Date: Fri, 20 Jun 2025 23:14:59 +0200
+Message-ID: <87pleyp12k.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,111 +52,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Fri, Jun 20 2025 at 14:51, Gabriele Monaco wrote:
+On Wed, Jun 18 2025 at 08:12, Khalid Ali wrote:
 
-The subject prefix is misleading. The problem is not in lockdep, the
-problem is in the generic entry NMI code, no?
+$Subject: entry: Update outdated kernel doc for syscall_trace_enter()
 
-> The irq_enable/irq_disable tracepoints fire only when there's an actual
+The shortlog should describe the change concisely. 'in entry_common.h'
+tells absolutely nothing.
 
-Now it gets truly confusing. Above you say lockdep, now it's trace
-points...
-
-> transition (enabled->disabled and vice versa), this needs special care
-> in NMIs, as they could potentially start with IRQs already disabled.
-
-s/IRQs/interrupts/ please. This is not twatter.
-
-> The current implementation takes care of this by tracking the lockdep
-> state before the NMI (on nmi_entry) and not tracing on nmi_exit in case
-> IRQs were already disabled, we don't trace on nmi_entry following the
-> tracing_irq_cpu variable, which can be racy:
-
-This sentence does not parse, especially the subordinate clause starting
-with 'we' does not make sense.
-
-> The error is visible with the sncid RV monitor and particularly likely
-> on machines with the following setup:
-> - x86 bare-metal with 40+ CPUs
-> - tuned throughput-performance (activating regular perf NMIs)
-> - workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
+> From: Khalid Ali <khaliidcaliy@gmail.com>
 >
-> The presence of the RV monitor is useful to see the error but it is not
-> necessary to trigger it.
+> The comment above syscall_enter_from_user_mode() refers to
+> syscall_enter_from_user_mode_prepare(), which is no longer used. This can
+> mislead readers trying to follow the entry path.
+>
+> Update the comment to reflect the current implementation by replacing
+> syscall_enter_from_user_mode_prepare() with enter_from_user_mode().
+>
+> Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+> ---
+>  include/linux/entry-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+> index dad1f257e3dd..49f5d99b254c 100644
+> --- a/include/linux/entry-common.h
+> +++ b/include/linux/entry-common.h
+> @@ -146,7 +146,7 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
+>   * @syscall:	The syscall number
+>   *
+>   * Invoked from architecture specific syscall entry code with interrupts
+> - * enabled after invoking syscall_enter_from_user_mode_prepare() and extra
+> + * enabled after invoking enter_from_user_mode() and extra
+>   * architecture specific work.
 
-Not sure whether this information is useful in the change log itself. It
-can go into the notes section after the '---' seperator.
+And how is that more correct? I explained it to you in great detail what
+the prerequisites are:
 
-> @@ -326,13 +326,15 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
->  	irq_state.lockdep = lockdep_hardirqs_enabled();
->  
->  	__nmi_enter();
-> -	lockdep_hardirqs_off(CALLER_ADDR0);
-> +	if (irq_state.lockdep)
-> +		lockdep_hardirqs_off(CALLER_ADDR0);
+ https://lore.kernel.org/all/87cyb6q1aj.ffs@tglx
 
-This avoids the lockdep call, which has nothing to do with your tracing
-problem. lockdep already handles that case. So making this conditional
-is a cosmetic noop, nothing else. It's actually questionable whether
-this conditional makes sense performance wise. It only makes sense when
-the amount of lockdep state == disabled instances is significant.
-Otherwise it introduces an extra conditional into the hot path.
-
->  	lockdep_hardirq_enter();
->  	ct_nmi_enter();
->  
->  	instrumentation_begin();
->  	kmsan_unpoison_entry_regs(regs);
-> -	trace_hardirqs_off_finish();
-> +	if (irq_state.lockdep)
-> +		trace_hardirqs_off_finish();
-
-Now this is the real thing you are interested in, because otherwise you
-end up with a trace_irqsoff() event without the corresponding
-trace_irqson() event, right?
-
-So in short what you are trying to explain in the change log is:
-
-irqentry_nmi_enter() tracks the lockdep interrupt state on entry to
-prevent a lockdep_hardirqs_on() invocation in the NMI exit path, when
-lockdep was interrupted by the NMI before it could mark interrupts
-enabled in the lockdep tracking. This works correctly, but a similar
-problem exists for the local_irq_* tracepoints.
-
-local_irq_enable() invokes trace_hardirqs_on(), which invokes
-lockdep_hardirqs_on() after establishing the tracer state.
-
-If the NMI hits before lockdep_hardirqs_on() has established the lockdep
-enabled state, then unconditional trace_hardirqs_off_finish() invocation
-in irqentry_nmi_enter() flips the tracer state to disabled.
-
-In irqentry_nmi_exit() the counterpart trace_hardirqs_on_prepare() is
-only invoked when the lockdep interrupt state on entry was 'enabled',
-which means the trace lacks the corresponding interrupt enable entry.
-
-Fix this by making the invocation of trace_hardirqs_off_finish() in
-irqentry_nmi_enter() conditional on the lockdep state.
-
-Right?
-
-But you missed something completely here. This problem exists also when
-lockdep is disabled and then it is way simpler to trigger. Why?
-
-If lockdep is off, then lockdep_hardirqs_enabled() always returns
-false. So any entry where the tracer state is 'enabled' will record a
-off, but the exit will not record the on.
-
-As you correctly described, the two states are asynchronous in the
-context of NMIs, so the obvious thing is to treat them as seperate
-entities so that the trace really contains the off/on events independent
-of lockdep enablement and lockdep's internal state. No?
-
-The only other sensible option is to remove the trace points from the
-NMI code all together because with the lockdep conditional they are
-inconsistent no matter what.
-
-Aside of that you missed to fix the corresponding problem in the arm64
-entry code, which still has it's own version of the generic entry code.
+No?
 
 Thanks,
 
