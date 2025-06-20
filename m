@@ -1,136 +1,132 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8391F03C7;
-	Fri, 20 Jun 2025 16:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F029C1F03C7
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750438480; cv=none; b=uYPL751if8v+Xs8/sqkdUHj3gT5qsG56z40U1w08SMCwoSYWgUC395PX5TNlJjxZUvjd3s9OIm55bORQo89bKpt/BUppePSm/UmCimKGfNSQNQvcRtiTr0AeKU3/nNuisZTNwjt/LNoZNYvVgOAdEa0maxfxh7cm9ZIEz9nbCbY=
+	t=1750438519; cv=none; b=VUEG7ahleds5VCqAdq3lTeAK2WFSdldqAN9hzOeMyEwe2ojAORZWN53z6pWL6DBbgkbEwrNiUlNhedQG4pSwXQlHOFYNVJsOBjWa+pHPUTmbDkaMFcM4lDJC25Hlv6qMhmTifhHjPuRkChD0+wbAUjZHdC6XZ5Cp8usPhrk/XOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750438480; c=relaxed/simple;
-	bh=s9nqYb57y/nutAilPgtn+5a6ISQWT7mmIgEn/sTWkNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BCtEy66hsXeciqaeqiBm6b7UyLvv4qmQNBB0erO9VplxOvzIcXGKjEoN9VlcFathIJZiBo5eMyM1lTuy1HfpyhDJnxHPwW7GAYALtcS5nOJYkN/6lJgsisSSrsXuGsbaCHcjZ1XaXg2IxnLBK3QyzXxbfEMc1W7SiE0vBNqk/L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQhDyjKE; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750438519; c=relaxed/simple;
+	bh=2PjTMHy5F3iPIngcSswDszD1rmfKQu+pVIhzm5QlxFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FLuEYXogVnX05+PrXLquw8jttjsKx5GLym+Q54lPUluH+6r85T2q1bCkoJ5WYJmEQkHGcz7t3o6EBtwdkqJcD8KRrOlyWAgBgz7ZDaI1+yzb4qyzlfX+LcsHoyUxDgha5tF2oScn2iGlYZFZ4WtU4gbmlqkWamAwQegPE9gzekk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mL52/1Jg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQhDyjKE"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2352400344aso21966185ad.2;
-        Fri, 20 Jun 2025 09:54:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750438478; x=1751043278; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5n8UMa9ZY2/Uq1XXfaQRztTpb/VKkz/BaxVAYOVSYU0=;
-        b=QQhDyjKEp7CvZ2F0gEpqzN+o3Uz2TwsAOl1/g80FiFeYhh5UZziV+I7Kzr0aInhPLW
-         oMGMbImOFD5FkuL5xIiMDgKa1zo44DvedMFE+F0vcNQDnp6JDCoyEh5FkLVncmU25OD7
-         6OxW5eW6hqt6XewP/TC1rnKe8Zkx2L4yGvgfAXbKJXEM9mOiI42EaYG2w2HeZWEbKRTg
-         hg+V9VXJSRQTY9PExZJ1WOQgxL8LQy+4PKvArzKoGlJy4DNvgNcxNGcCRsakYkvVPR2D
-         QqBNEwo5WvwDvscf8Ztq2S3Pu5FYz5REteEA5K3ZonGxgcvLjRkQ6QI27zWaWMkoVOEf
-         9Izg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mL52/1Jg"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KD2KGW018588
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:55:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Y2I2QseFJ0gr5gYIqnnWqNCwwaaSonPDD1prW4PD/A4=; b=mL52/1JgJoGggS/i
+	4nE0Id8O6uM8LFH1ZMyXi7NeB3vdT6P8lbIFSEnmBwu3rzG4TnYW0rxA1xFxS3+W
+	A/Tgk4sn8UFRyQIW5n1uqiNNwDDdajBTWa2ZlgRkISB42kKMQHJ5ABp1jctCXIGQ
+	YCyslYKe/DLbQDQqKginB7+66PmR7fFYeEEYjqFvt2uuK+TectPsye++pn+Qq89H
+	pREE28Mh/QbYDV6DvduAzzu2dEf1oMN8lpyGHtb1hAol/MKMhteC6rA0/WCCOLM/
+	PbJJ4dGYl6lVD6j2NN6fzToXbDNkYYk9QsolwWP2uYfkXWPXr9N+QEwMRSxULpk8
+	UAx32w==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47d0pchy22-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:55:17 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fadeceb4c9so4196486d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:55:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750438478; x=1751043278;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1750438505; x=1751043305;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5n8UMa9ZY2/Uq1XXfaQRztTpb/VKkz/BaxVAYOVSYU0=;
-        b=Reb9E5tA3Nc6z3CSJUEQbp55HPk3LWu0pdvtqHHDE5T1hyU0hjNI1uQHkHmI6KkiYe
-         aXM+xStclFl4F/DRW4xuOuZpZEsuQB0HC4LhCA6TuI8ZzVtwhtRUqisMmw1zMjzjO/4U
-         hwFyE95YFK86wB/CMAWHLX11691ihIOTopdy0gsMs2wb7vEfjlF5cmgu7JzNumt/GPYX
-         sLMD3ZESQzBqm60LKwUx3bKzpAaQJThX9t4kECpfn/FdbU88AN6ESjpKuXSAPTgbZKgM
-         iOktCuHu6XiQ8q0Yh60iQRQCt//XyTAHUJbaAdFkXtDzFmlwXSKqvM6uZIptS+U6cvvB
-         EGEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcW2e8Lrc4MWclzhtVeOIjmtnm6QRzS7mrqLlXLwiqiWBJdcWBQt+oCtSPkhZnB6fgeI6pW9Omkwg8P80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZUVdmC9sKk1nnVCZI7yTotgcW/UpAoiC54MNdtm5D0paLWl4W
-	yVA93B1VCIciPyotZaxQkE6YJx5zf0+fB/23lVjMmy2MBY+ivZA8pn/L
-X-Gm-Gg: ASbGncujBT9JBQH6GEeMrbPwVZJm9MTJ6e90AkCn0eCBym5tllneuUHGtjewXnJhSjq
-	rC6wfRnwZrxHhjwintzDd5Mr0cQ9UZ0/M+4K4iRrUG+COxmnZf+sQIRl+DUSCxXCcKBsXVB0Fb0
-	sAvJayzfhhpSWYqojrmAjmk54xd0H+fX9Qto/IX5HTeLL885XbRSvCvmThuu8Lw9yKAcCzfwcSp
-	PVCiU/1CrPep0zwt9Gm2TfVBDHSMK5Ux/PWrXqPK0vsf883gY7OAG518+JFqVQZ/OQRGt+B4979
-	VbTRkSfWsIurfafcA3m4JxJq/kbK1qGfMWQISVYIx+akB8aUgbRgchii7w==
-X-Google-Smtp-Source: AGHT+IHaN1oW5Hlwn8COrjTD8w04UIf4nZDmAvGd+2JS44q7BflFiyYUhW37lDPvB8pB5dOo1nA6Ig==
-X-Received: by 2002:a17:902:da8c:b0:225:abd2:5e4b with SMTP id d9443c01a7336-237d9841785mr59869815ad.16.1750438478311;
-        Fri, 20 Jun 2025 09:54:38 -0700 (PDT)
-Received: from zinc ([182.216.63.93])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d867f5cfsm21727635ad.181.2025.06.20.09.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 09:54:37 -0700 (PDT)
-Date: Sat, 21 Jun 2025 01:54:32 +0900
-From: Kisub Choe <kisub.choe.0x1@gmail.com>
-To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org
-Cc: linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kisub.choe.0x1@gmail.com
-Subject: [PATCH v2] staging: sm750fb: remove function pointer proc_setBLANK
-Message-ID: <aFWSSAcboBVi4ROh@zinc>
+        bh=Y2I2QseFJ0gr5gYIqnnWqNCwwaaSonPDD1prW4PD/A4=;
+        b=KU8edNsh8x/DP8RPmBnDKxQWkkNRbCuvM/l0LY6Hp+bDZebrinIratceGZLYIbodMg
+         nmx/EJIjyoIWQMg9RgKYhG7QvME4HYRF701WXnTIR5O+2t/sH8TWTIl2UJHOFJgEiuzw
+         85P7fVVX65Rt66+hWb1lDNyr8Q/qlatmD0OGFwC0oxHqonXKi+jWNs5PtY+DLvm1HuFw
+         YlKXW+8N2yaJb/RfRda5/KCMnb8WQtJKSUMhpGIgwIdaBXSK7Jlt8Z508qKuzF0WmqJw
+         9/xYXN+XlXNZKHl3GKTb38zs9mBmVoVXc9BgwYJ1RNKKrWXsBHFpcYNN8XdgmRLzhtQb
+         3MSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzsw9RkYjjF7Rfo8t1eBIJFZRgPvrUtOXHUs+aSxtaJRDZK0HzNUYs1f8RPxMfxu5Tilo0CoS83fz3A1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH+v65e25psh2pNMsz/n/epOmxMo+Kc0IU3DVzsJv/3kNvcsLW
+	dWz1CNACdCg40KnNx9/T4GeLZZanAyOQpW8kuA7i+xCzZcILsJCS12y2IHrRINivEQYmqeMJSBo
+	YWZNqqRli9SPzZZUhcIxuwMK4lUJUc12SBDdY/JjAAjx44h8beCbR1CRaHFVhoUlDG6M=
+X-Gm-Gg: ASbGncuiD5PStgWLzBvBG+2NGKH1j7q7EhGtMlKiGDz9pT+lKZlIPJfdKZoFY6Cx2XK
+	gdTt4bakiwsw/8zrRUfPaL6fljyNLqTINLTSa3E1F94olEIk2eCPXCJASOqWEaXUAD8sL2fK963
+	ybXqOpK9qJaSFUtrmdN/X5JPkMGD5hfJ+hGuLfferOU1oeEs2yFDnTxRuOAt/vTddkgc6aiZ1LM
+	9M+qLxMj68ycbSd0LZo6DPHTV7DM2lhBs1ki1fUNEq2Sdy8JTj4IsZcrH047ibilYyljPuBTMht
+	zsfJFTEupQgrQM9K66AvInd7zTLDxDSHY29CGYSHJmoSuZZX3SeUXxumbf+yhjTLPYsBnHKyy3S
+	l90U=
+X-Received: by 2002:a05:620a:1a84:b0:7c0:c42a:707d with SMTP id af79cd13be357-7d3f993a910mr185107085a.15.1750438505172;
+        Fri, 20 Jun 2025 09:55:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzroywSyK0lLak+kmGhL7I4nUbTDl//l0+nE20iSxOE4K84JZ9jklmLuZwJGAH+b1r8H4Iyw==
+X-Received: by 2002:a05:620a:1a84:b0:7c0:c42a:707d with SMTP id af79cd13be357-7d3f993a910mr185105185a.15.1750438504725;
+        Fri, 20 Jun 2025 09:55:04 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a1857c124sm1603889a12.36.2025.06.20.09.54.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 09:55:01 -0700 (PDT)
+Message-ID: <2864033f-5f1d-4026-9bed-6a79ca917701@oss.qualcomm.com>
+Date: Fri, 20 Jun 2025 18:54:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/11] power: supply: qcom_smbx: allow disabling charging
+To: Casey Connolly <casey.connolly@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-hardening@vger.kernel.org
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-5-ac5dec51b6e1@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250619-smb2-smb5-support-v1-5-ac5dec51b6e1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: TDoJaWw6fUM6TJebgeDK1VgYheI4eJum
+X-Authority-Analysis: v=2.4 cv=YKyfyQGx c=1 sm=1 tr=0 ts=68559275 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=XZI00cIVyT1STSWTZ2QA:9 a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: TDoJaWw6fUM6TJebgeDK1VgYheI4eJum
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExOSBTYWx0ZWRfX+R3dx5aqwJhd
+ /Q6g00aqGjKHpBFi8QKGkLmq0SK37o9I95t+z7zSnLMKB7FQ5+CHb53g+QWm7iM1K7yZVmXok00
+ 3RyPlL1AJYWIHrLNT+4m4cS+4KEmIIZvc0s+nj1B//K/C5SzcXn0Za+CsI9fBbJfBPS5Y3MrD21
+ PjQMRFgy50fRiTbBaC0tHxyIvzKDGhgSBFL8P4KkAz4q/AM8MOhHR4lhsH+tIkNqhmQx4bN7TIK
+ N9I8QMCMkVkOqu6fTsa4I642Tttrz43oWSgdmtsUps5CQsXKd5ZBiHLcq7PuPZk/Qb39fCvFKNb
+ AoVJ07OclTjcCpZYMWf3ZMoJZ+AyNeGV3R58FaGhdBJUt8tvGnxyq/7zaOCK82kegZeRMEYjb2h
+ bItHIivw8BzUoSWLOnRAWy31u7cnYTwiPANRl+jZjA5GRA8jOUipnmPDfST61rUrlOlXkkXt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_07,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 mlxlogscore=803 phishscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200119
 
-Call a function based on sm750_dev->revid
-instead of using this indirection
+On 6/19/25 4:55 PM, Casey Connolly wrote:
+> Hook up USBIN_CMD_IL so that writing "0" to the status register will
+> disable charging, this is useful to let users limit charging
+> automatically.
+> 
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
 
-Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
----
-Changes in v2:
-  - removed the function pointer in accordance with the feedback
----
- drivers/staging/sm750fb/sm750.c | 10 +++++++---
- drivers/staging/sm750fb/sm750.h |  2 --
- 2 files changed, 7 insertions(+), 5 deletions(-)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 1d929aca399c..b65a527314f1 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -571,13 +571,19 @@ static int lynxfb_ops_setcolreg(unsigned int regno,
- 
- static int lynxfb_ops_blank(int blank, struct fb_info *info)
- {
-+	struct sm750_dev *sm750_dev;
- 	struct lynxfb_par *par;
- 	struct lynxfb_output *output;
- 
- 	pr_debug("blank = %d.\n", blank);
- 	par = info->par;
- 	output = &par->output;
--	return output->proc_setBLANK(output, blank);
-+	sm750_dev = par->dev;
-+
-+	if (sm750_dev->revid == SM750LE_REVISION_ID)
-+		return hw_sm750le_set_blank(output, blank);
-+	else
-+		return hw_sm750_set_blank(output, blank);
- }
- 
- static int sm750fb_set_drv(struct lynxfb_par *par)
-@@ -605,8 +611,6 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
- 	crtc->ypanstep = 1;
- 	crtc->ywrapstep = 0;
- 
--	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
--				 hw_sm750le_set_blank : hw_sm750_set_blank;
- 	/* chip specific phase */
- 	sm750_dev->accel.de_wait = (sm750_dev->revid == SM750LE_REVISION_ID) ?
- 				    hw_sm750le_de_wait : hw_sm750_de_wait;
-diff --git a/drivers/staging/sm750fb/sm750.h b/drivers/staging/sm750fb/sm750.h
-index 9cf8b3d30aac..640bff625052 100644
---- a/drivers/staging/sm750fb/sm750.h
-+++ b/drivers/staging/sm750fb/sm750.h
-@@ -169,8 +169,6 @@ struct lynxfb_output {
- 	 * output->channel ==> &crtc->channel
- 	 */
- 	void *priv;
--
--	int (*proc_setBLANK)(struct lynxfb_output *output, int blank);
- };
- 
- struct lynxfb_par {
--- 
-2.34.1
-
+Konrad
