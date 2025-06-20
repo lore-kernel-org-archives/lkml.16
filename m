@@ -1,170 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3B17485;
-	Fri, 20 Jun 2025 00:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2C8A923
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750380079; cv=none; b=GHW6B68fH6K6EJsLxsetBP/8NaBiY4affiXUJeNVWeujPxbcSo2OF771lrlB8lcLx6X59KRXvYcoNkeb8i/wyLGd58yQ6D8RZqgd4thB1xOb5VPcXZ/NRw7LcT5Wertr6mLNXMN6EfJJ4LN6O2T8qTYYp3HzLSdsdaJyj5BERIw=
+	t=1750380129; cv=none; b=WM1Vk+2tWp4cbfGesTmmFJexkwbu7FxmjLrRutBupRXbyfklXwZk+0B35nHuorfkouy0/6kB1edXbmgAQtc1oFyjmphF/2o8xd0hERL4pn8FD8kKE53uyWMA/MPR+HG6fbDqQVvSLsdnEdqlMUBfcDJT7s8cFMn+3KV3u9xM8ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750380079; c=relaxed/simple;
-	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FvRdTeexeTTQ4/i65scJIav6HQKRJsG0gQ9q00D5tviJBcQPD7i8721lX6dVnp120f5YSUEQvo6ZzwuKIVHvbUd2pVDeHsxzF4uARBjC95o2iha6o9Fn3VbM4bDP8d6cAnNPmPVDxG0y+y8+oA9F99ANXDyOkb+KV0ffBw1pqxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/WMn6SV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/WMn6SV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FDFC4CEEA;
-	Fri, 20 Jun 2025 00:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750380079;
-	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=M/WMn6SVuP+u5/SFJBpyzTJFMcNyPoxrKhOIQtECO3z4mpG3ocURkDWFKGo9DppC2
-	 0WKDK1XDKV9drzyHE5TabrD5I/nBz1uZBOadgqY8MULiwcbYfiSOco8BPLP+KhUi+T
-	 rb9F4tw6F97kpk7NIjNf9pa4LuKbaZU8pCErk2+dd2MnXBIx1x8Vqj+dG+vpOmymDm
-	 hzR5GPMNdbFK+MMt4qWaKzgkvRiW7Sle+nw3Bat2t3vIZc1JUH08UDATQafIzYzVdl
-	 ihubzytYA7iWfT4os6R9Ytl3S/QEVJ0ZW1jjqgiB1F56KlsWN47d0sfxwN2Y1JCw1C
-	 E/Eq5ElaQJCbQ==
-Date: Fri, 20 Jun 2025 09:41:16 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools:bootconfig:scripts: Put back the comments where
- they should be
-Message-Id: <20250620094116.366eff08bc65f682cc1da74b@kernel.org>
-In-Reply-To: <20250521115018.32392-1-unixbhaskar@gmail.com>
-References: <20250521115018.32392-1-unixbhaskar@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750380129; c=relaxed/simple;
+	bh=VAQSvPyDO1ZmPDa8nxQSlhHP3K0jM5ycwZPsDCz+TOg=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=uYh5WzgwsDFtFkqi1wslXet/N545oNiaNEF/u/PVWtoEWkDwVr/CAZUzZ9z7Jic9EApsdUVp7A/uXbKwEG0b2RiATBtQRAbY/8KpkPy0gk5CLAcfdfRvfOAOl9YEy7q31KLKs89ET5ZHUNPd5h3Iha2t9aDr7omDconbMz5hsRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bNdw70kn4z5DXWg;
+	Fri, 20 Jun 2025 08:41:59 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 55K0f4Ic094365;
+	Fri, 20 Jun 2025 08:41:04 +0800 (+08)
+	(envelope-from jiang.peng9@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid31;
+	Fri, 20 Jun 2025 08:41:04 +0800 (CST)
+Date: Fri, 20 Jun 2025 08:41:04 +0800 (CST)
+X-Zmail-TransId: 2afc6854ae20ffffffffd83-7c389
+X-Mailer: Zmail v1.0
+Message-ID: <20250620084104786r5xoR16_AmYZMJLnno3_Q@zte.com.cn>
+In-Reply-To: <0f535bed-f4d4-4565-8f21-b10070f793e8@suse.com>
+References: 20250618100153468I5faNUAhCdtMA01OuuTKC@zte.com.cn,0f535bed-f4d4-4565-8f21-b10070f793e8@suse.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: <jiang.peng9@zte.com.cn>
+To: <jgross@suse.com>
+Cc: <sstabellini@kernel.org>, <oleksandr_tyshchenko@epam.com>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
+        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Ml0geGVuL3hlbmJ1czogZml4IFc9MSBidWlsZCB3YXJuaW5nIGluIHhlbmJ1c192YV9kZXZfZXJyb3IgZnVuY3Rpb24=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55K0f4Ic094365
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6854AE57.000/4bNdw70kn4z5DXWg
 
-On Wed, 21 May 2025 17:16:51 +0530
-Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+From: Peng Jiang <jiang.peng9@zte.com.cn>
 
-> Mundane adjustment to the comments, where they should belong.
-> 
-> Does it change the functionality? NO
-> 
-> Does it improve the readability? Probably and that is why.
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  tools/bootconfig/scripts/ftrace.sh | 35 ++++++++++++++++++++----------
->  1 file changed, 24 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
-> index 186eed923041..e2a075879db4 100644
-> --- a/tools/bootconfig/scripts/ftrace.sh
-> +++ b/tools/bootconfig/scripts/ftrace.sh
-> @@ -1,23 +1,28 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> 
-> -clear_trace() { # reset trace output
-> -    echo > trace
-> + # reset trace output
-> +clear_trace() {
-> +
-> +	 echo > trace
->  }
-> 
-> -disable_tracing() { # stop trace recording
-> +# stop trace recording
-> +disable_tracing() {
->      echo 0 > tracing_on
->  }
-> 
-> -enable_tracing() { # start trace recording
-> +# start trace recording
-> +enable_tracing() {
->      echo 1 > tracing_on
->  }
-> 
-> -reset_tracer() { # reset the current tracer
-> +# reset the current tracer
-> +reset_tracer() {
->      echo nop > current_tracer
->  }
-> 
-> +# remove action triggers first
->  reset_trigger_file() {
-> -    # remove action triggers first
->      grep -H ':on[^:]*(' $@ |
->      while read line; do
->          cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
-> @@ -32,21 +37,25 @@ reset_trigger_file() {
->      done
->  }
-> 
-> -reset_trigger() { # reset all current setting triggers
-> +# reset all current setting triggers
-> +reset_trigger() {
->      if [ -d events/synthetic ]; then
->          reset_trigger_file events/synthetic/*/trigger
->      fi
->      reset_trigger_file events/*/*/trigger
->  }
-> 
-> -reset_events_filter() { # reset all current setting filters
-> +# reset all current setting filters
-> +reset_events_filter() {
->      grep -v ^none events/*/*/filter |
->      while read line; do
->  	echo 0 > `echo $line | cut -f1 -d:`
->      done
->  }
-> 
-> -reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
-> +# reset all triggers in set_ftrace_filter
-> +
+This patch fixes a W=1 format-string warning reported by GCC 12.3.0
+by annotating xenbus_switch_fatal() and xenbus_va_dev_error()
+with the __printf attribute. The attribute enables compile-time
+validation of printf-style format strings in these functions.
 
-Why this has an empty line after comment?
+The original warning trace:
+drivers/xen/xenbus/xenbus_client.c:304:9: warning: function 'xenbus_va_dev_error' might be
+a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
 
-> +reset_ftrace_filter() {
->      if [ ! -f set_ftrace_filter ]; then
->        return 0
->      fi
-> @@ -78,17 +87,21 @@ disable_events() {
->      echo 0 > events/enable
->  }
-> 
-> -clear_synthetic_events() { # reset all current synthetic events
-> +# reset all current synthetic events
-> +
+Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
+---
+ drivers/xen/xenbus/xenbus_client.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Ditto.
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index 51b3124b0d56..e73ec225d4a6 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -202,6 +202,7 @@ int xenbus_watch_pathfmt(struct xenbus_device *dev,
+ }
+ EXPORT_SYMBOL_GPL(xenbus_watch_pathfmt);
 
-> + clear_synthetic_events() {
->      grep -v ^# synthetic_events |
->      while read line; do
->          echo "!$line" >> synthetic_events
->      done
->  }
-> 
-> -initialize_ftrace() { # Reset ftrace to initial-state
-> +# Reset ftrace to initial-state
->  # As the initial state, ftrace will be set to nop tracer,
->  # no events, no triggers, no filters, no function filters,
->  # no probes, and tracing on.
-> +
++__printf(4, 5)
+ static void xenbus_switch_fatal(struct xenbus_device *, int, int,
+                                const char *, ...);
 
-Here too.
+@@ -287,6 +288,7 @@ int xenbus_frontend_closed(struct xenbus_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(xenbus_frontend_closed);
 
-> +initialize_ftrace() {
->      disable_tracing
->      reset_tracer
->      reset_trigger
-> --
-> 2.49.0
-> 
-
-Thanks,
-
++__printf(3, 0)
+ static void xenbus_va_dev_error(struct xenbus_device *dev, int err,
+                                const char *fmt, va_list ap)
+ {
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
