@@ -1,84 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0412628B4E1;
-	Fri, 20 Jun 2025 13:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCEB1E47B7;
+	Fri, 20 Jun 2025 13:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427423; cv=none; b=aBR4AS3F6MxSSRWaNP7yuiA+Q8zsRG6D6vJSv8y+Uh2l3fm7p8QiDlkZZAbM2fqPH0EKYG0PMJ7F9wZjfE6oFVz5jkQIS9T8EfYQr/LwJEPvDEQnSzwlhdtyqrv/+YYZRDC1MH0xt9TGHz7gqjgMbrWsPZD276d7LYiSrzSgR14=
+	t=1750427423; cv=none; b=kiAN91J9iWSB5ioTUgNP0A3tml1oO1tHAsXrlL00teMiLt3q/rNsThPGkTqy0DjFtPi6adahlr2B1auxp26pjBoWNFsQqqk+lhAgMkdv4eNs5VlNOGqzzgie6Oav+QESCD6qeB/8gMGVAncfhKjU62WgFI+Vf9MUMnAEy3ORqww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750427423; c=relaxed/simple;
-	bh=Pmbu545g0y8Z5tDvcWsZaI+7dbDf3hK0chejmT6OVWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K9nBYqPGt03NybJfj+qv3R1ME/d2r2DL5+cxK7K5OMJYaYWY9LZplo4BCqQDqFcUroraDbMRP863GcjJLrEgeU7x0xj7Ub646tWPyrL+Ugkhhkwfchx2y+2vQqQ2SJTCl9VnRqPujawuKN9aHpb+EHmX+17W0nO29XpcUZSsqNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ao6lcT4c; arc=none smtp.client-ip=10.30.226.201
+	bh=EhB/9fVRF7Lh/rEakg8Cd3L6DZp2n4PHnzXdkTUl054=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=su3P/FBDA6IrheX3kENJOueLT6AF7njt1gWXj8d/K/IUc3/vqXQL1lKH5KWZ8PRllMAUtpv5cQgXlriIEVuof9C2qmQuYlWfKefc/8ajJ4zigwbQeecKcFNhOCLT+6tUR9YfO69yr+4rlf4FCVM8RB0fEETwCNlFx/ARdw1vryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bL6iBar9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uI2lqy+e; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ao6lcT4c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE4AC4CEF0;
-	Fri, 20 Jun 2025 13:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750427422;
-	bh=Pmbu545g0y8Z5tDvcWsZaI+7dbDf3hK0chejmT6OVWI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ao6lcT4cY8yem9U1zmLcBnST74EfjH6x2jYil7xPZcdcGLZIpdfWyElZ5VfllM4Aq
-	 JcL4+VL8xBs2pUeCG/fUeIWNv+eEloF8vFWhafJPH3sgxw7ubYLxA7JpJ22dpGD9Hw
-	 mA+ZYO6C8vX/ynkl9oWp7q0C3vNYTWZCWZZDhLwmaWyDuA6TCHbQx12Ujd2Fzaeesx
-	 xVrnbAJFV4EuQzMkBs/ob1qb0agAo6H3TsFH4DUSREuXPnUYdsLqbX4s1Ko9dVlCv2
-	 25J9rMicqBacqqkX5awmw76p011WEIDktCBKZXl3IlqWOqwmd828DDxQWyydZHHNds
-	 fxaFS25vOF7kg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so3727413a12.3;
-        Fri, 20 Jun 2025 06:50:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWFNBpznNKJ8RFUvIJvymXyjuHdNtSedV3e0PkSSfo6XzGXUSlmZ3ohbBZ3L7i6faxReRuNGk+zGVzi4651@vger.kernel.org, AJvYcCXnO88XnyrKnGleSxJp9pz1DzFNWsgFmmsMcBEuBCCsgifv503r4NMAWUYSXM7GbCkk5jWrDX8ysZKHB3XJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj/XA8xeLp2UF2uil5gBH/fh1t0og4JkK6JDMCr85heOOSzDnQ
-	xqVzX9FO5n8NXVQGWUhANw78BVQjoT6VBAvpACL9vRLOBnNsfY1D+g9lsVpHuyj4EUK0Tgf7rVd
-	TD5xdQP1LAv3P114mnEmmFu4flsX0YD0=
-X-Google-Smtp-Source: AGHT+IEocA9K4Yuv/cWHLZWe9Fn+X0HysoAkBHdG2IcKgUlrvB9TEGfs5kODpypGKIknfAlOtHG4Vn7t92uFLZn33IY=
-X-Received: by 2002:a17:907:1c8d:b0:ad8:8ac5:c75e with SMTP id
- a640c23a62f3a-ae057c709dcmr253785066b.60.1750427421414; Fri, 20 Jun 2025
- 06:50:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bL6iBar9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uI2lqy+e"
+Date: Fri, 20 Jun 2025 15:50:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750427420;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cjzSfiMgzjbJPtz34LRfOtXpbo+tLxgxkNks+JkVZ88=;
+	b=bL6iBar9j84mRqpnw2Bb/piFTqoCtYiys7YQUV+/ydPaRa9/fY/7fEmjlVkAPc/XakoGbw
+	sW2MRFs8TMcPHCu413LXsftJlEZtMdQdroNYGVFOEJSOrr3ZDc8ojpD2YCFN76LtYjZEjR
+	4EfS+iShJfP33H6stThryXblX1IdUp/Cdda5ynWW0cQ3lFkgF6HOcfRqnaNjwTiLyYLTNb
+	y12aoeOdhC6kF0OmuZonAZ5aAwgiE+bgI17vTKmGjUsZZAq1qgGmDJOCwDrAFCY2LJz84f
+	DLgeQD5IG/+cHQhnUm7zAJZyhzMUuG89/h/ufq5rIJkNgbuxqgadJZhe9U1Kzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750427420;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cjzSfiMgzjbJPtz34LRfOtXpbo+tLxgxkNks+JkVZ88=;
+	b=uI2lqy+e+cujbEB1wBGlRvE7HiY0YGnrv1yYnXFyP+bB8A2OhDYaslLPUpICycctN+U2CO
+	rpo8YxbPjbrhKrDw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: David Gow <davidgow@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v3 16/16] kunit: uapi: Validate usability of /proc
+Message-ID: <20250620154408-bc103402-56f0-4ac1-a06f-63b2ed30ed29@linutronix.de>
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+ <20250611-kunit-kselftests-v3-16-55e3d148cbc6@linutronix.de>
+ <CABVgOSkzpY8327ePSjuLcbz2jWZkavJvJfF7eehCsS0uzkB65g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619013331.664521-1-zhengxu.zhang@unisoc.com>
-In-Reply-To: <20250619013331.664521-1-zhengxu.zhang@unisoc.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Fri, 20 Jun 2025 22:50:10 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd_aBgCwmrS6FjaDRBxSGvOxB8t4XdxJ+Qf8x=quu4Yv=g@mail.gmail.com>
-X-Gm-Features: Ac12FXxJLnOAxDPONASWzj_Kp-et6cKeAeoQIyHxlHBCjAvTYuiKyiO5IAQzB24
-Message-ID: <CAKYAXd_aBgCwmrS6FjaDRBxSGvOxB8t4XdxJ+Qf8x=quu4Yv=g@mail.gmail.com>
-Subject: Re: [PATCH V2] exfat: fdatasync flag should be same like generic_write_sync()
-To: Zhengxu Zhang <zhengxu.zhang@unisoc.com>
-Cc: sj1557.seo@samsung.com, Yuezhang.Mo@sony.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com, zhiguo.niu@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABVgOSkzpY8327ePSjuLcbz2jWZkavJvJfF7eehCsS0uzkB65g@mail.gmail.com>
 
-On Thu, Jun 19, 2025 at 10:34=E2=80=AFAM Zhengxu Zhang <zhengxu.zhang@uniso=
-c.com> wrote:
->
-> Test: androbench by default setting, use 64GB sdcard.
->  the random write speed:
->         without this patch 3.5MB/s
->         with this patch 7MB/s
->
-> After patch "11a347fb6cef", the random write speed decreased significantl=
-y.
-> the .write_iter() interface had been modified, and check the differences =
-with
-> generic_file_write_iter(), when calling generic_write_sync() and
-> exfat_file_write_iter() to call vfs_fsync_range(), the fdatasync flag is =
-wrong,
-> and make not use the fdatasync mode, and make random write speed decrease=
-d.
->
-> So use generic_write_sync() instead of vfs_fsync_range().
->
-> Fixes: 11a347fb6cef ("exfat: change to get file size from DataLength")
->
-> Signed-off-by: Zhengxu Zhang <zhengxu.zhang@unisoc.com>
-Applied it to #dev.
-Thanks!
+On Fri, Jun 20, 2025 at 05:48:07PM +0800, David Gow wrote:
+> On Wed, 11 Jun 2025 at 15:38, Thomas Weiﬂschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > Show that the selftests are executed from a fairly "normal"
+> > userspace context.
+> >
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > ---
+> 
+> This is good. I'm not 100% sure the example test is the best place for
+> it, though.
+> 
+> Would it make more sense to either have this:
+> - in the main kunit test (since it's really _verifying_ the KUnit
+> environment, rather than documenting it)
+> - in a separate kunit-uapi test (if we want to keep some separation
+> between the UAPI and entirely in-kernel tests)
+> - in a separate procfs test (since it tests procfs functionality as
+> much as it's testing the KUnit environment)
+
+Originally this change was really meant as an example for users.
+But moving it into the main kunit test probably makes more sense.
+
+> Personally, my gut feeling is the main kunit-test is the best place
+> for this, even if it means spinning up a separate file is best here.
+
+Ack.
+
+> As for the actual implementation, though, that looks fine to me. A few
+> small comments below, but nothing particularly important.
+> 
+> Reviewed-by: David Gow <davidgow@google.com>
+> 
+> Cheers,
+> -- David
+> 
+> >  lib/kunit/kunit-example-uapi.c | 34 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 33 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/lib/kunit/kunit-example-uapi.c b/lib/kunit/kunit-example-uapi.c
+> > index 4ce657050dd4a576632a41ca0309c4cb5134ce14..5e7a0f3b68f182c42b03e667567e66f02d8c2b86 100644
+> > --- a/lib/kunit/kunit-example-uapi.c
+> > +++ b/lib/kunit/kunit-example-uapi.c
+> > @@ -8,13 +8,45 @@
+> >   * This is *userspace* code.
+> >   */
+> >
+> > +#include <fcntl.h>
+> > +#include <unistd.h>
+> > +#include <string.h>
+> > +
+> >  #include "../../tools/testing/selftests/kselftest.h"
+> >
+> > +static void test_procfs(void)
+> > +{
+> > +       char buf[256];
+> > +       ssize_t r;
+> > +       int fd;
+> > +
+> > +       fd = open("/proc/self/comm", O_RDONLY);
+> > +       if (fd == -1) {
+> > +               ksft_test_result_fail("procfs: open() failed: %s\n", strerror(errno));
+> > +               return;
+> > +       }
+> > +
+> > +       r = read(fd, buf, sizeof(buf));
+> > +       close(fd);
+> > +
+> > +       if (r == -1) {
+> > +               ksft_test_result_fail("procfs: read() failed: %s\n", strerror(errno));
+> > +               return;
+> > +       }
+> > +
+> 
+> Do we want to use TASK_COMM_LEN rather than hardcoding 16 below?
+
+> (And, if so, do we need something more complicated in case it's not 16?)
+
+TASK_COMM_LEN is not part of the UAPI headers.
+But I don't think it can ever change.
+
+> > +       if (r != 16 || strncmp("kunit-example-u\n", buf, 16) != 0) {
+> > +               ksft_test_result_fail("procfs: incorrect comm\n");
+> > +               return;
+> > +       }
+> > +
+> > +       ksft_test_result_pass("procfs\n");
+> > +}
+> > +
+> >  int main(void)
+> >  {
+> >         ksft_print_header();
+> >         ksft_set_plan(4);
+> > -       ksft_test_result_pass("userspace test 1\n");
+> > +       test_procfs();
+> >         ksft_test_result_pass("userspace test 2\n");
+> >         ksft_test_result_skip("userspace test 3: some reason\n");
+> >         ksft_test_result_pass("userspace test 4\n");
+> >
+> > --
+> > 2.49.0
+> >
+
+
