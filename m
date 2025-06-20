@@ -1,113 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A8D30E844;
-	Fri, 20 Jun 2025 06:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6772220766E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750401441; cv=none; b=Su3wyauBCOG2T/+AxI9OOevWrhTADalnfPPyYTToO2q38oxc2uDZZw2rjSz2T0MLGVWeabDRuRSx3eyvYZ1EschXXeK/F/lIdPeymU/OnLMveso5OsSyKpj0nCrtJ3MdUtpadQpijJ/Qamyc6o/EY8vIA/HE4oBK+qKXdooeLsk=
+	t=1750401464; cv=none; b=kIqW0tBuyUHywdyReYjshaV5FtSGZKUC4hMyNLVEMQPrOTuTqUPYmmCn5DQLWsonBAcuMDDk0spLfskHMBT43BhA0gaJkHh6Hl22AdD1L/Z2v+6pC9j1QsR+GDjj02RR5mLvVrj8cK5BW2WioJxy2UQDOsojm32ESdBJ+IIda8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750401441; c=relaxed/simple;
-	bh=xSgnkSGUCzH3zbebQlPjkTkIK7IMoI3JTLg/1WFjyFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e7YR2wsn5GJIlAhSp8P72xO+biwZO5YSx7Dk3OB5GleNGeIVDqF+FKcQcT5Bfqxm5+02kg80dmEEDntJx5WMXswo0uBgwYQE1iHm+ez7MUzx/I5BX0jTHWedb/Cp182bnWdMxwtUJNhKIg0pShfTFsT/j2ZwD7R5l3VUANNNS9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUBJquru; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750401464; c=relaxed/simple;
+	bh=3s63AwsVyS7wPpA+ZDGY88Fx96+m6en+mxv4pdNkhhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=opywMhFliUMH7mKCa0gfuK6Ewf71C4bS1POkesbLU2ntcUHmzDeWfA4JKyu6PoZEEnsb6s/AE4mVl7+2ubpZ7w+AT8WeljxYSIZx+p05meLZT0sF0yxvVvOLaXsusM1Yji0948ktClE8CgiLTICoxnEwsxWef84gycOgOuPdXGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ilAM+l3c; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUBJquru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB4FC4CEE3;
-	Fri, 20 Jun 2025 06:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750401441;
-	bh=xSgnkSGUCzH3zbebQlPjkTkIK7IMoI3JTLg/1WFjyFs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sUBJquruVjVFf55wZFon+b+niQTsgjtv6Er1sajoH3yC6wV/2QAMdkmCh6pYqs+q+
-	 Ptqr73JGSj3EaR03W+Qw5/UCkI0wT/hctPtqEDnZ2JG8tscPEyLLHzHLJ83LifjiUW
-	 fsGSARf6CEMylOQkjMdeCtBOx0ncYlwCstBkESnr/1iKXSOg4nyTRxLRsRFeyl8vrg
-	 0Ui+txJ+UFoxdgdg7QNwK+0MZfjbyB80E1ZOLfd3R881IpB9xoQOTcRGkq3fJR5Ijo
-	 gTTYBfQ97N4UHUBhGDCiPBslHWBT/13Hryma8DW379l3rmWwmCfghiqaqG0mnc9m+z
-	 Y18RZMfED2AnA==
-Message-ID: <93c91bda-9c2a-4a23-bc35-a46587077621@kernel.org>
-Date: Fri, 20 Jun 2025 08:37:14 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ilAM+l3c"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6097de2852aso1895055a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:37:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750401460; x=1751006260; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzSd9noJcXTnChwwbuS54IDVOnK86AoZYc5tXmM0Rd4=;
+        b=ilAM+l3cB4QHg+EW76aNakP+4pVtnHyOgIQhr5LyvrtR3pu+bZR1qo5CEoyOQc+o7V
+         yKBhat3iurgjhXx6rRFev6s3gC4dL+YHz7JuoHYcbEBMjd9DpEeh+rRSf1woCVez1N5h
+         NO1uxg1hOU/MOTbuSxgF++mAfiAph7L319j3tAGHg7Uhm++00kyAtaQX4VBlITyvxWGs
+         82r2b71G7fQgp732ezPdcNjchgce/SAjnmDJGBOAAZZHve+UvFc83UoVaXQHtX1AAP5h
+         IglNGE9c5s9wHwm4B9uO7VwvpXlZZIUAcav/kFgkURqwkyjyChG+qFEc2r1RkoB5SK75
+         h8Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750401460; x=1751006260;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TzSd9noJcXTnChwwbuS54IDVOnK86AoZYc5tXmM0Rd4=;
+        b=PMJp6SR7zowzlX+iTW9HQZrKXwY0SoFep7RQJQNgNvhqpDQEH0KeWhR7M9TUL+dx/E
+         eo85JviFYlkrwQV31gKKWq1wvSjaI8ujENJycAsdAv6hZuZQ4asivWh1Iov0HsHtpRhL
+         C6HuwYFY98rIFY/4hKQ32GwSDAjZ0jk4p0hbeZdrd/9ieGzQPmvy9EGsnNN33Qc+58Fp
+         f63J5TKVn82wWQWsStjLz7D50yTCIzXZVrT/LT46DrAkarVEQcCgNNqmoGiCaQWX0X6p
+         7gOZB+4b7DsRr24oBm3B/351ILKoL4KxXvzpiWEdJHJw7wjqNMv8qJ6E9PtwdvzSgLNv
+         OvlA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7yy2xRrKNCuh8x5WJx6R3a6KMsh4oPBpgvwLoxgd8jGfDueePzr8MKSrjps87AqPCwP5wBLyyk5FiSwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU/m1BFjQMKDhwwdrxs1KJ2+voE8g+RGavrQiA4U0lscZyssC+
+	HneXUqjYcdWWFq4cEp5Ghir5tfkLMeJVQ/LjWg53XjAjwgM3hmyTaoSphYkEzlfBQzdzIqCtwWt
+	fB9owO6ZSp4IxYv7yDkRk8REN+5otrw/ExZNnSotvmw==
+X-Gm-Gg: ASbGncsp1ntpveAANCtfMxlenoTnBFkl2FCHT4/mYxdkjhJIep14hauYWHQlMs7x2yI
+	fFWN2kQ8ZTbNPUNTLMwS94ebBNPDVjlROosgpTtqVrCRyP8A+c48vTobLwiT/EwxjlpePcM26qA
+	jCcIMIULGNV8DAo3RAQ5QLTeEqdh+esCdpSnWSz4w/vP2cvSl1Uuk+LdhDOJ34PFlgpiKf1lvS
+X-Google-Smtp-Source: AGHT+IH/b8pr5Xw6Z986KuG0mGsqQTe81JwOAkD7HanMNT4jwSH+4I+1DLXOQWNnKp9CJwN4Rrj6FNYf1/AlADruo/w=
+X-Received: by 2002:a17:907:c895:b0:ad2:1a63:3ba4 with SMTP id
+ a640c23a62f3a-ae057b89b76mr147380366b.37.1750401460563; Thu, 19 Jun 2025
+ 23:37:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2]
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-To: Leo Wang <leo.jt.wang@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com,
- Leo Wang <leo.jt.wang@fii-foxconn.com>,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com>
- <20250618-add-support-for-meta-clemente-bmc-v1-1-e5ca669ee47b@fii-foxconn.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250618-add-support-for-meta-clemente-bmc-v1-1-e5ca669ee47b@fii-foxconn.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250619031942.25474-1-shijie@os.amperecomputing.com>
+ <CAKfTPtBUJa4A2V3XR8EwYVPxiY=ENZr1=Jg5R3E75r5XnrnRPg@mail.gmail.com> <cf675887-49e0-45a9-9008-33c0c6f1edf1@amperemail.onmicrosoft.com>
+In-Reply-To: <cf675887-49e0-45a9-9008-33c0c6f1edf1@amperemail.onmicrosoft.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 20 Jun 2025 08:37:29 +0200
+X-Gm-Features: AX0GCFv5cKDtlqU5Kf8fNrmxSdLPM59nPPUtgAURXuK4Pr-K-DXpzJfwFZsYmuM
+Message-ID: <CAKfTPtCg7vLxQbTjeRodnbhj3sCo_zThcvS4cWBe-q2tgXi+cg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: set the se->vlag strictly following the paper
+To: Shijie Huang <shijie@amperemail.onmicrosoft.com>
+Cc: Huang Shijie <shijie@os.amperecomputing.com>, mingo@redhat.com, peterz@infradead.org, 
+	patches@amperecomputing.com, cl@linux.com, yang@os.amperecomputing.com, 
+	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 18/06/2025 11:40, Leo Wang wrote:
-> Document the new compatibles used on Meta Clemente.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-How v1 with such subject could have been acked?
+On Fri, 20 Jun 2025 at 05:01, Shijie Huang
+<shijie@amperemail.onmicrosoft.com> wrote:
+>
+>
+> On 2025/6/19 21:53, Vincent Guittot wrote:
+> > On Thu, 19 Jun 2025 at 05:20, Huang Shijie
+> > <shijie@os.amperecomputing.com> wrote:
+> >>  From the paper, the lag should follow the limit:
+> >>       -r_max < lag < max(r_max, q)
+> >>
+> >> But current code makes the lag follow the limit:
+> >>       -max(r_max, q) < lag < max(r_max, q)
+> >>
+> >> This patch introduces limit_hi/limit_lo/r_max, and
+> >> make the lag follow the paper strictly.
+> > We don't strictly follow the paper. Typically, paper assumes that a
+> > task will not run more than its slice r before deciding which task is
+> > the next to run. But this is not our case as we must wait for a sched
+> > event like the tick before picking next  task which can be longer than
+> > the slice r
+> >
+> > Side note, we don't have a fix definition of the quantum q which is
+> > something between 0 and a tick (and even more currently with run to
+> > parity) as we wait for the next the tick to pick another task
+> >
+> > This means that a task can run a full tick period even if its slice is
+> > shorter than the tick period
+>
+> Thanks for the explanations.
+>
+> But if we enable the HRTICK, the task will run to match its slice.
 
-Please provide lore links.
+Yes, but I'm curious to see the impact of irq time accounting on this
+as the time will not be fully accounted as the slice
 
-Best regards,
-Krzysztof
+>
+>
+> Thanks
+>
+> Huang Shijie
+>
