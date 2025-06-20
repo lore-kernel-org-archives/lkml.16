@@ -1,99 +1,71 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ED02A8C1
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606B0204680;
+	Fri, 20 Jun 2025 05:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750396242; cv=none; b=mnQi2sqMusPLdrNsnpDckemgH9RnyTiC5IceiZuECIMobxIk3GLeISYrTIdx8rG8IANvkb5UL9dQsiJtiuO0wM6z18YwWDWHxrnQuz31MsFMJsvY3DkVxr48wUuL4oQxz0x/ZDTb72hWGcVBJ4H6zR3WvxZ/SM/6ljBc+EqAa6M=
+	t=1750396244; cv=none; b=rlcTh/DBKVBdreV9ximoVU1s7WlQ66Mt0bJQiXQ5M4uvwyUa0bsSOKaG+oi2HHtNYuTP70aSPTCOxCMqcIj/x1yFWrYHw8U65qCyONAha4eM6+B5gPJpmgtB8Fo9uywED8XTFLbMKtIz/cNRNTHF7zfNlamcOV9Z70KT3+G1Nww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750396242; c=relaxed/simple;
-	bh=wTe9sZu+7w2/u0QZ1g9JhwPm1diF0KdniHSnNJVGwEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQxzzA5uhDJtK66z9FXrZwuZUdPqDGKbtj4D5RHE60aPA2zpfUPcb6Up+Oq+/Zu4YfkN3jz72C7W89qEjO1IIK/8JFNCiiKxPv4SfjxIpGVZ7de0nFXeCDM/Q0aVOKjPL/K54wRfgWL1Iy3zba9raD04h5wm4Ik6XZAuW5DpO1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JOCUVuHm; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750396244; c=relaxed/simple;
+	bh=3Owcc1dRQY1Z8F1XG3Fhvz1hyBv+3yD4Obr3vbxaSeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MVBtXaoNwONst7Y7Nu+vNVMo28TY8VRtjk4mkfGJhtyfEhGGfPaI4S5zMEs+Gnytk1ZOvk9JFhIBpRxoaJZeOa9Nqf4ioSkoQjdGhoYXefpx8ndZMMkarcn1szelab8FcUKBQxd9JjkLNDfkEo1SyqKBz+XKujpesaRfWMEMWj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AwXhW/3d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JOCUVuHm"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750396237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EbmDynAdqvSSqw5yXcEWVeaFPATe2PmYKwtuqurNZ0U=;
-	b=JOCUVuHmW5dkBwVq9b8di//Jc6GWwZV0X18Wa2ZjO8/HBxPwlx7KZf4CTlql/Ry0gphvjs
-	KiGBaPPom/+h1mMUEEwHtxdFAJD+X90F8fsRLIf8MauifA93mm5UsG85JlfV7EdS3O0bWy
-	gvwtpEnny7G2yYh/1xO2J93AGUWszKo=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next] bpf: Add load_time in bpf_prog fdinfo
-Date: Fri, 20 Jun 2025 13:10:17 +0800
-Message-ID: <20250620051017.111559-1-chen.dylane@linux.dev>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AwXhW/3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2586FC4CEED;
+	Fri, 20 Jun 2025 05:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750396242;
+	bh=3Owcc1dRQY1Z8F1XG3Fhvz1hyBv+3yD4Obr3vbxaSeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AwXhW/3dW4NobnXVrDnuTj9sJWvpONnO6e13RC1b8v30Q5BZHyA5X3ixaqY+vERJb
+	 nr0Zh0vWuZwid66smDuNUlz+GLmutwxaZze2SOUG5oh8nwy/AJTCVGfwt0fp72Yt9Q
+	 U9MjBGLTf5narKknvYW6atYjvPurd6V4NfTaM6CU=
+Date: Fri, 20 Jun 2025 07:10:39 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH net 0/4] net: axienet: Fix deferred probe loop
+Message-ID: <2025062004-sandblast-overjoyed-6fe9@gregkh>
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619200537.260017-1-sean.anderson@linux.dev>
 
-The field run_time_ns can tell us the run time of the bpf_prog,
-and load_time_s can tell us how long the bpf_prog loaded on the
-machine.
+On Thu, Jun 19, 2025 at 04:05:33PM -0400, Sean Anderson wrote:
+> Upon further investigation, the EPROBE_DEFER loop outlined in [1] can
+> occur even without the PCS subsystem, as described in patch 4/4. The
+> second patch is a general fix, and could be applied even without the
+> auxdev conversion.
+> 
+> [1] https://lore.kernel.org/all/20250610183459.3395328-1-sean.anderson@linux.dev/
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/bpf/syscall.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+I have no idea what this summary means at all, which isn't a good start
+to a patch series :(
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 51ba1a7aa43..407841ea296 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2438,6 +2438,7 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
- 	const struct bpf_prog *prog = filp->private_data;
- 	char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
- 	struct bpf_prog_kstats stats;
-+	u64 now = ktime_get_boottime_ns();
- 
- 	bpf_prog_get_stats(prog, &stats);
- 	bin2hex(prog_tag, prog->tag, sizeof(prog->tag));
-@@ -2450,7 +2451,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
- 		   "run_time_ns:\t%llu\n"
- 		   "run_cnt:\t%llu\n"
- 		   "recursion_misses:\t%llu\n"
--		   "verified_insns:\t%u\n",
-+		   "verified_insns:\t%u\n"
-+		   "load_time_s:\t%llu\n",
- 		   prog->type,
- 		   prog->jited,
- 		   prog_tag,
-@@ -2459,7 +2461,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
- 		   stats.nsecs,
- 		   stats.cnt,
- 		   stats.misses,
--		   prog->aux->verified_insns);
-+		   prog->aux->verified_insns,
-+		   (now - prog->aux->load_time) / NSEC_PER_SEC);
- }
- #endif
- 
--- 
-2.48.1
+What problem are you trying to solve?  What overall solution did you
+come up with?  Who is supposed to be reviewing any of this?
 
+totally confused,
+
+greg k-h
