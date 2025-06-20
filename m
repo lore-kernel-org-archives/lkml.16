@@ -1,58 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB2289E25
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE305289350
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423938; cv=none; b=TD+9cQa77U/x+j+ng9vCqyQQkoCmpUMzNwPy7fqZdmsitWk75twMK/DeABtsQI3OCu8uQxw9obuBJKoYyTd5T3GpzMSmun9DUbQA9qKmQTJoCu5KIe6wRmPbW/q3WVzULmz5SplB1pXxKZ3w/RayADQwV2jGFXQMTO3YoQyLGXI=
+	t=1750424240; cv=none; b=bOkjfy8TW3ElLcG7YfqoRrr2UyYs9shFsX4lj8mbkc1Tj2sFReHEMyqMA0YfaehWiERaAF75qUbd/eE+eiGmt9yjMQtIbp3vNhsWzNFzEjzhjdn+0EysJMMHfTmB3O59v0YbsHfxhbykgmGI+UL2xp4/z705m3QRIwTo3xC8Tyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423938; c=relaxed/simple;
-	bh=rN1ooU/vgwiM7qKfNGgfrMEc5Uuses/VTRaZdMJ+VWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q4tYxhBdnF9KyTH+JWILagCYNroGbD0ehsBmyeUnVkSLmncttsh5ghq8EiKuyraOQPsu6CdruGwDn8w+EIyJhFmZ4sEiOXpA13Id+PMwfMrhL1PnNRA9EgiSQm1/lN3NWVHN+V8A5wNvnz12KDkfEetrHjQWQeQyx3ulfHYVONM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f2L1orqi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750424240; c=relaxed/simple;
+	bh=lTPPKqsjRUZhBLRfXVcXfzKpDXjJLav32kNwPoV+o3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9zZAk43JcbxU5iuN+vFanTaHfspU0Zwr270y8AaGyZlYmBhkpSpwaidTxMgdWIXlWquh3YnbpaHG9jKPF+XgMgwPpZiEs8rW+gVnjiZQgkFlAueSsBB1JX7lSWNCkYOScsuhzDJVR1hXtmu/1rAHMwsKKqK0j9Leiq5HBGydjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fv6+lj1u; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2L1orqi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750423936;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WdDZ6z+nY5bkBJ/Zc38cvy69vch4xTVz4tRvVbwqk+c=;
-	b=f2L1orqiuGLA1jYg2mAimdvkO3gUwHej+FCSvLV6wkvd7SrrrliqQ0Fo3FlGLKNI6vmj0j
-	HujnH22vStqe/5uBoJTUmfX3JDs/ar/y7i0aQO3ksxc098yNRjU/p0p93CYU/Z0stO8VHd
-	zBl8dONjvdVNMJja/velhFJ4MjKexUI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-NAhqTwdcOVKVaxKZOR2Nyw-1; Fri,
- 20 Jun 2025 08:52:11 -0400
-X-MC-Unique: NAhqTwdcOVKVaxKZOR2Nyw-1
-X-Mimecast-MFC-AGG-ID: NAhqTwdcOVKVaxKZOR2Nyw_1750423929
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 753C51800296;
-	Fri, 20 Jun 2025 12:52:09 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.37])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67ABA19560A3;
-	Fri, 20 Jun 2025 12:52:05 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] lockdep: Fix inconsistency in irq tracking on NMIs
-Date: Fri, 20 Jun 2025 14:51:13 +0200
-Message-ID: <20250620125112.33978-2-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fv6+lj1u"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4533fbbd21bso656595e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750424236; x=1751029036; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VcQf6CBPY3ZD6ktFmPaCJ7ntO/vY14LwSb9xlORB7bI=;
+        b=Fv6+lj1uLKWUKIqbDE2ahUKu1GR7eOpSCtb4UZi9ZhZN41HgIHxXkVC9Z+nyefvg9C
+         3v8K70p3LSv9RgKCRltIiuCBMhSrh4jTyb04La5y5DaqEV4kHnck5S2vnXTllP5LR9HP
+         WRfFHa5To5gs7cylnTvTbzCnXnzz9Ofkdoonmv/7k3oCEzrD2gwofT+vV2fcpPfoELqR
+         vp4POE4jXpcxQE4rRQ4Tq6eWfDapm5iFIejO1gWrP2MZ1J8NNtRCCZ9GihkxawZFJfTh
+         fPax852U/Wj+O9Fh7WXEEU77avkgmGUnrL97XEptL46siES1A8YdRN3NNd6sPOLsYFYg
+         96sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750424236; x=1751029036;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VcQf6CBPY3ZD6ktFmPaCJ7ntO/vY14LwSb9xlORB7bI=;
+        b=Cm2e0FPANA+ElLkvyu2DrxwPLFhv3J+PMWpXZoVt6nRQ8yJJVtkFiwgdd2zKX6iwMF
+         57QrjfBbP/NoRTzVrLZadT+OJU+ZOLMUpvFl1oCfegsLjwkO0dR0rDu5aEvVK1afHsdk
+         BNuEbFNAKTRlvCb+0yBFT6oW72gGukcclmEoc2Ht94l5+d0TSbb9+yC6O+nfRkmxbaS1
+         k/USVnCXr/td5hsymHWc0gFzURIuV23iT+HfBMCWmgr56HN/NfU2irFHHkQAaY/zaqok
+         AZBXw+PjMiuJXfB6zy5nZl3o0HH0MDwM2UHsEgd0h4nhWpioJvpr1Z2efYRwpIg0P+os
+         uf4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUspa+hmcrQVoZZAC/67n/lfF4fHdf3r3TgRiuvI9spT/tDfF6p6Pvv4Ty2gS+1TC9S0XkzcOI+mLC38LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiCpgWNyVuLDc0pmdcNdQxLi3TBlZbcqxLc3mM719S9PHm53A5
+	TZW7WpuFPYYq/hpoB1nPDpcxewH7uZCLEkZ7C42/IVq5TzciHmxux0ESsLZC0TCsMb0=
+X-Gm-Gg: ASbGncuGLDUKmfjbcoJ1f5MhM2ePzjojjME3bydEthhYuJoBTQDr3v7G0/b5A4p5ti7
+	Rp1IWjTTNFNQszOjZ4ApBft183wh0o5krBZiHKKbv6R8KHx0LqWlVJ+DD3GF/pWro0Ob5D+qdcG
+	CTnNJMM8Y14edTTTYwOH57mwvgzINxY3vavOCyDzJJ4E29dmWWYcJ0IpHKLGmMZGDR1UwoXh5bS
+	3GISsIuZO5WqAVGReghCehmgWlt4HU5XtnbVpVEVcDMHjDdJaP8hiu7euOZkQZUbr9FuWiVKWz2
+	Bk4koD4MATMwTqu+CUmpGJvUSKAsbL88sBWau+448QMLuhmw7ebaEtJPi6pv2SLcjGJu4170doZ
+	9i42D+uDc9FFanfD8fu4exE7dILOsw/XXd9/QcEYeAWWOjenJu1oA
+X-Google-Smtp-Source: AGHT+IEHbW1gi7tKLAH0rP+T2bleVijcw5AagqiUirX0zCprzVmiF7q9fNFxn6Dgee94AnNr3udkCA==
+X-Received: by 2002:a05:600c:3143:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-453658bac2cmr11147335e9.3.1750424236123;
+        Fri, 20 Jun 2025 05:57:16 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4535eac8c16sm58113845e9.19.2025.06.20.05.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 05:57:15 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Paolo Abeni <pabeni@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	netdev@vger.kernel.org (open list:NETWORKING [TCP])
+Cc: David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH net v2 0/2] tcp_metrics: fix hanlding of route options
+Date: Fri, 20 Jun 2025 14:56:42 +0200
+Message-ID: <20250620125644.1045603-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,85 +78,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-The irq_enable/irq_disable tracepoints fire only when there's an actual
-transition (enabled->disabled and vice versa), this needs special care
-in NMIs, as they could potentially start with IRQs already disabled.
-The current implementation takes care of this by tracking the lockdep
-state before the NMI (on nmi_entry) and not tracing on nmi_exit in case
-IRQs were already disabled, we don't trace on nmi_entry following the
-tracing_irq_cpu variable, which can be racy:
+I ran into a couple of issues while trying to tweak TCP congestion
+avoidance to analyze a potential performance regression. It turns out
+that overriding the parameters with ip-route(8) does not work as
+expected and appears to be buggy.
 
- local_irq_enable()
-   void trace_hardirqs_on(void)
-   {
-   	if (tracing_irq_cpu) {
-   		trace(irq_enable);
-   		tracing_irq_cpu = 0;
-   	}
+Changes in v2:
+- more background information in the cwnd commit message
+- fix handling of initial TCP Slow Start if cwnd is clamped
 
-                /*
-                 * NMI here
-                 * tracing_irq_cpu == 0 (done tracing)
-                 * lockdep_hardirqs_enabled == 0 (IRQs still disabled)
-                 */
+Petr Tesarik (2):
+  tcp_metrics: set congestion window clamp from the dst entry
+  tcp_metrics: use ssthresh value from dst if there is no metrics
 
-                                   irqentry_nmi_enter()
-                                       irq_state.lockdep = 0
-                                       trace(irq_disable);
+ net/ipv4/tcp_metrics.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-                                   irqentry_nmi_exit()
-                                       // irq_state.lockdep == 0
-                                       // do not trace(irq_enable)
-   	lockdep_hardirqs_on();
-   }
-
-The error is visible with the sncid RV monitor and particularly likely
-on machines with the following setup:
-- x86 bare-metal with 40+ CPUs
-- tuned throughput-performance (activating regular perf NMIs)
-- workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
-
-The presence of the RV monitor is useful to see the error but it is not
-necessary to trigger it.
-
-Prevent this scenario by checking lockdep_hardirqs_enabled to trace also
-on nmi_entry.
-
-Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- kernel/entry/common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index a8dd1f27417cf..7369132c00ba4 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -326,13 +326,15 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
- 	irq_state.lockdep = lockdep_hardirqs_enabled();
- 
- 	__nmi_enter();
--	lockdep_hardirqs_off(CALLER_ADDR0);
-+	if (irq_state.lockdep)
-+		lockdep_hardirqs_off(CALLER_ADDR0);
- 	lockdep_hardirq_enter();
- 	ct_nmi_enter();
- 
- 	instrumentation_begin();
- 	kmsan_unpoison_entry_regs(regs);
--	trace_hardirqs_off_finish();
-+	if (irq_state.lockdep)
-+		trace_hardirqs_off_finish();
- 	ftrace_nmi_enter();
- 	instrumentation_end();
- 
-
-base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
 -- 
 2.49.0
 
