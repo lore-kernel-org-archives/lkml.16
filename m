@@ -1,179 +1,148 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3928130E85D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7D928C2B5
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429416; cv=none; b=RCZoOJ615AXEe1HO6ugqH7dswHH4hwPsgjMyzJboBgynq+H3kQwbOEDrkfkLYT6pieaUaqMs8Fr5XEsoN1vcFtch+jIt+N1izQj5j35tMpG4R6olnSh0e0KRBDCrN6pWaZkXOhj6rTBmmBhPYAvp+qsOZga8q7mBHVQUt8i2+Es=
+	t=1750429458; cv=none; b=tFeYc1C8yYgdB7Ba7FzR1j4/00b9iwr1rsdtPe3KeoL9aK8+4Syz+qfuCYLkkssv24oRHLTiItTUddYbdy0lZD+QzKD8kxcyWJq9FE2zjbNjhJUD0xIJHL/9f04EjeeUW3VlG+10lDh1+ww85RyBZt0bYyC3wctmGtG658wIMgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429416; c=relaxed/simple;
-	bh=l3XhOSHTNZroVMzNR2+6Q0mvyT4UKPGMoBHQBADHQ9k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XCKAzDYGois9VPJo7SiVrcc7ioPkmkaZ2l8YJrdh6NtEPTaw7MGqrolXTud41VcVjI8vYBEq+EKJz4LSMtBRWRRWU6BITYX5M/y8v9b8SQFflFZaWZSbCh9+YUv0vJQKP8RTwJaThZIELZg+9Z0wpjVqAYPi0y13oi8XqFpveAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=k8To1SOW; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750429458; c=relaxed/simple;
+	bh=8qIBDe8CC1qMzJmK1qpPswC5E3z8bq7oslqo1eXzTbA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=llcn5cFHK1Bgy1+Oz3kU0f13Cu7BbONkF9GBMWTLUNaRl52cX/M2Q5nYZYHKEy6z3z0IhLY/CxOI8YqDbt/r88QSY/CUvagUju+Mmlid4y9ZYcVgDD/Z5QHR/CgAzcdJXH3wIPlXHW7aMxXVoaASyFNLuxSjT8n1MX5UQZ1WIp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HRRI1Pm/; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="k8To1SOW"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uSceN-00HY5T-Gt; Fri, 20 Jun 2025 16:23:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=lP0loMAPyzVsIfOKqivfcGIEGx4G4b6mLzOjVforSRw=; b=k8To1SOWxESaEvwsZjVHOaDPB6
-	QWuH5oErGRcVMtY549ZwXrZwq7FuaK8DQOh081vxbvJjyY+dd71T2OJp99C2K3g5rpLL0oxI9kiVA
-	MJIntIV0ziPnpOMw18fLGHFBT6/cPJyV2AI5i+cCf/d6xegyAxE5uog6JPWjrdYtjX8rZXtQRVlNr
-	IZzOIlgWCcmOWKefUUkkKsD4i1fsLrp47MnAODa5U+jn+TUV/2tNfO5iv+sl4ls0v+rQpZCquZbFQ
-	ldYNlPrv6aagh29KSFjIN/2CcVFQn7CenFpU1m2QHHKkLptT+NWSLrUyR2zrZ2GZZtRbRw6Npbwxt
-	Lu2f1HQQ==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uSceM-0003PV-2L; Fri, 20 Jun 2025 16:23:26 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uSceD-00B7zB-D6; Fri, 20 Jun 2025 16:23:17 +0200
-Message-ID: <4f0e2cc5-f3a0-4458-9954-438911e7d104@rbox.co>
-Date: Fri, 20 Jun 2025 16:23:10 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HRRI1Pm/"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235dd77d11fso19561355ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750429456; x=1751034256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yN9SVkscvf0ymifcjfPVbbXbvx2xgxruV+ORd9NfpdA=;
+        b=HRRI1Pm/GpAVewk9yMlXcfloaJ2jXLmuV/HVHcNDMYJ4ppm9MK0wqPndq9caChPJIl
+         5HRXoKBwN0O6OR8OPTP7x44EZzHAR5r59c02hkS+TcCf3WjWttEsBRZMoD5QWSvmrLU7
+         L+m3XzV0EIlQrmHIkXElRMQrYHd04LYIjwh1gobe7/z7/jgG1WSk+Frj9kHX/Nn454QQ
+         V1BjGTDt7S6BqyKWQOJmSjY6WwsEPHgcNT35j6lMSG8jpA5N4DYp0+wmgImWyfdI2FlF
+         bvuIb9mceYMs4joboRkcJ17sP/Rf7JXVhykX83fh+K3ICP9keDZ0YlJUOpc4XoZixCYf
+         akzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750429456; x=1751034256;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yN9SVkscvf0ymifcjfPVbbXbvx2xgxruV+ORd9NfpdA=;
+        b=kRPGnvfpCsdk1zEnHnSmJ3+HriiRbbKiMs1ClSZZQlS2j5DD2xpdpSSsMaVknQ9xvg
+         MEkwc6YtzpqvCi5dKLpyicIJljbIf/JpuP5zQDLCyZNWpQbZpav6AVB57G2XNsBZdNqq
+         bK5IEBZg3dkeQJkeJUg/xHvILSsp+TssxGgA26Vcxq5gzxIMw4lTzNvKywJWsrGhu00y
+         B6iRpPO/hKwXN1q+ct1xFK8n8h/IgCtjvZ7Oxg5hyMCPX912svvVl+EqaPAqiV5I5/0W
+         SECq8GaJDIeB66xGUJicbUnbVEOAu/9J4eTtqE0/5zYk6i72HsvMRkxdvKWZVDbfKFHk
+         0KUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB3oyOqudV/7h8zXrCxWyfMYO3kICIHpaoD3i2sSuwYkTuOGfWK4j03yFXxoHM1HYr7Qmh/EapCwlGmXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYnG3Jk9hVPy0b/ekrLgIuQKnpXwXHPxtF9899Xo9tYgDmrsNN
+	RWbf0luAGYlI3JBMABbqR78cpcgwwQAmtb7ySVQeIxKmy13NEdGSpPblhBR1hg5fXUPBvEyxMAP
+	le9MxLA==
+X-Google-Smtp-Source: AGHT+IG+aInIJQRJW5MndgQr1v2uYYg3X1/828GUSXmS1eSJdsFhrtgCOHZvxiB2UNMND/jdB+uKu1yWnYs=
+X-Received: from plbkh5.prod.google.com ([2002:a17:903:645:b0:235:ed02:286a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec8c:b0:237:c8de:f289
+ with SMTP id d9443c01a7336-237d996bf44mr45859345ad.36.1750429455987; Fri, 20
+ Jun 2025 07:24:15 -0700 (PDT)
+Date: Fri, 20 Jun 2025 07:24:14 -0700
+In-Reply-To: <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
- <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
- <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
- <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
- <cg25zc7ktl6glh5r7mfxjvbjqguq2s2rj6vk24ful7zg6ydwuz@tjtvbrmemtpw>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <cg25zc7ktl6glh5r7mfxjvbjqguq2s2rj6vk24ful7zg6ydwuz@tjtvbrmemtpw>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250611095158.19398-1-adrian.hunter@intel.com>
+ <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+ <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
+ <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
+ <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com>
+Message-ID: <aFVvDh7tTTXhX13f@google.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+From: Sean Christopherson <seanjc@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/25 15:20, Stefano Garzarella wrote:
-> On Fri, Jun 20, 2025 at 02:58:49PM +0200, Michal Luczaj wrote:
->> On 6/20/25 10:32, Stefano Garzarella wrote:
->>> On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
->>>> Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
->>>> Make sure pointers remain valid.
->>>>
->>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->>>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
->>>> Call Trace:
->>>> __x64_sys_ioctl+0x12d/0x190
->>>> do_syscall_64+0x92/0x1c0
->>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>
->>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->>>> ---
->>>> net/vmw_vsock/af_vsock.c | 4 ++++
->>>> 1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->>>> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
->>>> --- a/net/vmw_vsock/af_vsock.c
->>>> +++ b/net/vmw_vsock/af_vsock.c
->>>> @@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
->>>>
->>>> 	switch (cmd) {
->>>> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
->>>> +		mutex_lock(&vsock_register_mutex);
->>>> +
->>>> 		/* To be compatible with the VMCI behavior, we prioritize the
->>>> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
->>>> 		 */
->>>> @@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
->>>> 		else if (transport_h2g)
->>>> 			cid = transport_h2g->get_local_cid();
->>>>
->>>> +		mutex_unlock(&vsock_register_mutex);
->>>
->>>
->>> What about if we introduce a new `vsock_get_local_cid`:
->>>
->>> u32 vsock_get_local_cid() {
->>> 	u32 cid = VMADDR_CID_ANY;
->>>
->>> 	mutex_lock(&vsock_register_mutex);
->>> 	/* To be compatible with the VMCI behavior, we prioritize the
->>> 	 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
->>> 	 */
->>> 	if (transport_g2h)
->>> 		cid = transport_g2h->get_local_cid();
->>> 	else if (transport_h2g)
->>> 		cid = transport_h2g->get_local_cid();
->>> 	mutex_lock(&vsock_register_mutex);
->>>
->>> 	return cid;
->>> }
->>>
->>>
->>> And we use it here, and in the place fixed by next patch?
->>>
->>> I think we can fix all in a single patch, the problem here is to call
->>> transport_*->get_local_cid() without the lock IIUC.
->>
->> Do you mean:
->>
->> bool vsock_find_cid(unsigned int cid)
->> {
->> -       if (transport_g2h && cid == transport_g2h->get_local_cid())
->> +       if (transport_g2h && cid == vsock_get_local_cid())
->>                return true;
->>
->> ?
-> 
-> Nope, I meant:
-> 
->   bool vsock_find_cid(unsigned int cid)
->   {
-> -       if (transport_g2h && cid == transport_g2h->get_local_cid())
-> -               return true;
-> -
-> -       if (transport_h2g && cid == VMADDR_CID_HOST)
-> +       if (cid == vsock_get_local_cid())
->                  return true;
-> 
->          if (transport_local && cid == VMADDR_CID_LOCAL)
+On Thu, Jun 19, 2025, Adrian Hunter wrote:
+> On 19/06/2025 03:33, Sean Christopherson wrote:
+> > On Wed, Jun 18, 2025, Adrian Hunter wrote:
+> >> On 18/06/2025 09:00, Vishal Annapurve wrote:
+> >>> On Tue, Jun 17, 2025 at 10:50=E2=80=AFPM Adrian Hunter <adrian.hunter=
+@intel.com> wrote:
+> >>>>> Ability to clean up memslots from userspace without closing
+> >>>>> VM/guest_memfd handles is useful to keep reusing the same guest_mem=
+fds
+> >>>>> for the next boot iteration of the VM in case of reboot.
+> >>>>
+> >>>> TD lifecycle does not include reboot.  In other words, reboot is
+> >>>> done by shutting down the TD and then starting again with a new TD.
+> >>>>
+> >>>> AFAIK it is not currently possible to shut down without closing
+> >>>> guest_memfds since the guest_memfd holds a reference (users_count)
+> >>>> to struct kvm, and destruction begins when users_count hits zero.
+> >>>>
+> >>>
+> >>> gmem link support[1] allows associating existing guest_memfds with ne=
+w
+> >>> VM instances.
+> >>>
+> >>> Breakdown of the userspace VMM flow:
+> >>> 1) Create a new VM instance before closing guest_memfd files.
+> >>> 2) Link existing guest_memfd files with the new VM instance. -> This
+> >>> creates new set of files backed by the same inode but associated with
+> >>> the new VM instance.
+> >>
+> >> So what about:
+> >>
+> >> 2.5) Call KVM_TDX_TERMINATE_VM IOCTL
+> >>
+> >> Memory reclaimed after KVM_TDX_TERMINATE_VM will be done efficiently,
+> >> so avoid causing it to be reclaimed earlier.
+> >=20
+> > The problem is that setting kvm->vm_dead will prevent (3) from succeedi=
+ng.  If
+> > kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not /dev=
+/kvm the
+> > device, but rather devices bound to the VM) ioctls.
+>=20
+> (3) is "Close the older guest memfd handles -> results in older VM instan=
+ce cleanup."
+>=20
+> close() is not an IOCTL, so I do not understand.
 
-But it does change the behaviour, doesn't it? With this patch, (with g2h
-loaded) if cid fails to match g2h->get_local_cid(), we don't fall back to
-h2g case any more, i.e. no more comparing cid with VMADDR_CID_HOST.
+Sorry, I misread that as "Close the older guest memfd handles by deleting t=
+he
+memslots".
 
-> But now I'm thinking if we should also include `transport_local` in the 
-> new `vsock_get_local_cid()`.
-> 
-> I think that will fix an issue when calling 
-> IOCTL_VM_SOCKETS_GET_LOCAL_CID and only vsock-loopback kernel module is 
-> loaded, so maybe we can do 2 patches:
-> 
-> 1. fix IOCTL_VM_SOCKETS_GET_LOCAL_CID to check also `transport_local`
->     Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
+> > I intended that behavior, e.g. to guard against userspace blowing up KV=
+M because
+> > the hkid was released, I just didn't consider the memslots angle.
+>=20
+> The patch was tested with QEMU which AFAICT does not touch  memslots when
+> shutting down.  Is there a reason to?
 
-What would be the transport priority with transport_local thrown in? E.g.
-if we have both local and g2h, ioctl should return VMADDR_CID_LOCAL or
-transport_g2h->get_local_cid()?
-
-> 2. move that code in vsock_get_local_cid() with proper locking and use 
-> it also in vsock_find_cid()
-> 
-> WDYT?
-
-Yeah, sure about 1, I'll add it to the series. I'm just still not certain
-how useful vsock_get_local_cid() would be for vsock_find_cid().
-
+In this case, the VMM process is not shutting down.  To emulate a reboot, t=
+he
+VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.  Be=
+cause
+guest_memfd takes a reference to "struct kvm", through memslot bindings, me=
+mslots
+need to be manually destroyed so that all references are put and the VM is =
+freed
+by the kernel.  E.g. otherwise multiple reboots would manifest as memory le=
+akds
+and eventually OOM the host.
