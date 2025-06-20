@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963F041C71;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8595336D;
 	Fri, 20 Jun 2025 04:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750394771; cv=none; b=obAjtTTy2miextLrN84MaA6eDn62/8ug8wQcVJwgyOdWeg8hIMNdjYbE2xeJOvglg8N/iRPhp6Zx724nlvuHXUp7RxiULgrUWTM1kycUJudfoTyphWa/oLbVdqewTUrkvHdmkkxZA2mQFYncNBkK7c4fXrzXlAHJv5ufEcpPUNs=
+	t=1750394771; cv=none; b=p5EPygC8xqGqUM0W5hVXDLkeJUXHFIz9YHQQ2PdCXV0NHKx56PFjgv2RZQCd45yplTK7w4Sg+D6NU9yTyPV+Z6ZsCicBiAbYJzkvUeUsfFC9VzgDC7JuWMdF/gZvkyxJA0xN+5QLDoKdLk0Tv850rQh9nBu+gdmdjeVPQ3l3uoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750394771; c=relaxed/simple;
-	bh=lBthyPAfKhHtbhMUBAuoaz/8Tw5PYAJ1Odx6iC5j3ns=;
+	bh=3fIQL4QWyco0hEODQOdUxUigyMr71zkRtJM9vlMRwG4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iymfT3Ja9UQvNb5oWIbYu6aJOupvCUSa12o7l+lnp0SYXEqqA/Ba+4FQLTL2iIzOXZKVHp39JyG35IL7Bqb43rK+xPnjQqYu95WrOAAuq9YOFcCbbrVIgTo2Y/x+V8qjoIhtlGhyfDUDp4SmanIAzkHuK69G1cXroqe72r3JhI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAYj52zR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MiRn4B0AMz+YmK4i1rFuoRARpoY5e3cEujETi5gJIZY8SXEsII/3Ef6Yy9P7r5FfWM/QrxCeVUQbkL6b7PPkPloMpb3apDteBkWd9bzyCWDCoUFWAOHFXi0MaTU8gijLmQjRahXaWb7bMwG/HmttXxjuLgMt7wAnrWUiQnot644=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k++kqFo2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAYj52zR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3205BC4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k++kqFo2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CBE8C4CEF8;
 	Fri, 20 Jun 2025 04:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750394771;
-	bh=lBthyPAfKhHtbhMUBAuoaz/8Tw5PYAJ1Odx6iC5j3ns=;
+	bh=3fIQL4QWyco0hEODQOdUxUigyMr71zkRtJM9vlMRwG4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lAYj52zRcCalqKxhgJO2wpDazmmLcVSvTAwXS/I/ZXeNY7xPmOYNr8jPJPA8MVBxI
-	 HVn3sek6n3r1VXBg0b6jZ1vxklQ1m7nYq3hCvdE5qCnkEdvzoICSKwVhoW4WnaVxIl
-	 wuQ9+LP39Rtf4DFAOsRtShfRrlkoKHWhObJYlvsIeEBAqhCQ66hhzhCguA0l59hfI+
-	 7AWcKZTNdG9Pnup6sKzSXvS4vvOWle1A6yOpY/mbvdRRg/DdxXKxdt9i9gMMgUB8Xp
-	 lklq/NHlphhZri7o4BmuyxGoOvsEVsG2rD2hvNm0F7wVbapZUgrhCCoes+ibjGND/E
-	 h9B4sP5mAOZfw==
+	b=k++kqFo28uw61Pt3lKlcogHTP0HQi7Qq3kjj8L3Bz30q8tf+Eh1QPJl6/xzOipLIY
+	 4wW+XRM1/WTewFhhpl40ZNXfAWH2pNZ3NFI9x9fuMGB7mMLq8Dk6WKVU9TsFfYgPph
+	 LzEWLcG8xj3MFjgJ8dq8wFrag47MvETAZH9b9Tsr1gqrNtIjFln89pqGo0xqc0xMQe
+	 MbXnB8JJWMs7lbCuxamfOcZc1aW3pmG1+8QxtmPnBcDl1plIrBH0NUQuD6LAbHBx5m
+	 byHslJtVMUY+DNfqTBKGc/YMsqBDzKALEqRQyUIsiyMJLXy8I29wyfxeLimE/LvyqK
+	 hHLyaO/ZWTQvA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A30FC7115D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46912C71155;
 	Fri, 20 Jun 2025 04:46:11 +0000 (UTC)
 From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Fri, 20 Jun 2025 12:46:04 +0800
-Subject: [PATCH v5 2/5] firmware: stratix10-svc: Implement ID pool
- management for asynchronous operations
+Date: Fri, 20 Jun 2025 12:46:06 +0800
+Subject: [PATCH v5 4/5] firmware: stratix10-svc: Add support for RSU
+ commands in asynchronous framework
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-sip_svc_upstream-v5-2-732d4ac08a32@altera.com>
+Message-Id: <20250620-sip_svc_upstream-v5-4-732d4ac08a32@altera.com>
 References: <20250620-sip_svc_upstream-v5-0-732d4ac08a32@altera.com>
 In-Reply-To: <20250620-sip_svc_upstream-v5-0-732d4ac08a32@altera.com>
 To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -50,11 +50,11 @@ To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750394768; l=6320;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750394768; l=8242;
  i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=n18tKLs7MLh8G8eEquC0bpSpqdEDws81zjcXK5xIQgg=;
- b=UBDiUNAMiEMsXDfvedE6nCVJOCm656l3r9jwuWLHp/akUpj1yL/bWWvK03DghQIaS3D0Y2aWH
- vLqbsAbUSDqCUXWfkhV77cL0MQ7CdBpCF6giFEMQSI/Izv7x8lg4BuN
+ bh=iTm7E1YwxYmOVcZUGNFFE9XKR//QCEaHqnvM31rn93A=;
+ b=jkdWCW5Aeb+vCd5ia2+ZV7wV9f4B+zo9J3RH+PNE/b8BK0hCw7nuK23OEXzn3MaBYdU7XnzmV
+ UqE8G6AeWl9DAwBVnrsU2gkUsW6ShdfvsRK0pdkUcyMPyjHt+MlPxiW
 X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
  pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
@@ -64,230 +64,220 @@ Reply-To: mahesh.rao@altera.com
 
 From: Mahesh Rao <mahesh.rao@altera.com>
 
-Implement ID pool management API's which will be
-used for Stratix10 Asynchronous communication with
-Secure Device Manager. These API's will be used
-in subsequent patches for ID management in
-asynchronous operations.
+Integrate Remote System Update(RSU) service commands
+into the asynchronous framework for communicating
+with SDM. This allows the RSU commands to be processed
+asynchronously, improving the responsiveness of the
+Stratix10 service channel.
+
+The asynchronous framework now supports the following
+RSU commands:
+
+* COMMAND_RSU_GET_SPT_TABLE
+* COMMAND_RSU_STATUS
+* COMMAND_RSU_NOTIFY
 
 Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
-Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
 ---
- drivers/firmware/stratix10-svc.c | 194 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 194 insertions(+)
+ drivers/firmware/stratix10-svc.c                   | 72 ++++++++++++++++++++++
+ include/linux/firmware/intel/stratix10-smc.h       | 52 ++++++++++++++++
+ .../linux/firmware/intel/stratix10-svc-client.h    |  4 ++
+ 3 files changed, 128 insertions(+)
 
 diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index 73c77b8e9f2b44a6729dd349ef0947ed47be681b..a8c57963da993a3d6207dbf802633bc82006ada7 100644
+index 4480ba8b2e115809103f3632906ac81e4fb8a63a..491a8149033f975d515444f025723658c51aa1fe 100644
 --- a/drivers/firmware/stratix10-svc.c
 +++ b/drivers/firmware/stratix10-svc.c
-@@ -170,6 +170,21 @@ struct stratix10_svc_chan {
- 	spinlock_t lock;
- };
+@@ -87,6 +87,12 @@
+ #define STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(transaction_id) \
+ 	(FIELD_PREP(STRATIX10_TRANS_ID_FIELD, transaction_id))
  
-+/**
-+ * struct stratix10_sip_id_pool - Structure representing a pool of IDs for
-+ *                                asynchronous operations.
-+ * @head:         The head index of the ID pool.
-+ * @size:         The total size of the ID pool.
-+ * @id_mask:      Pointer to an array representing the mask of allocated IDs.
-+ * @lock:         Mutex lock to protect access to the ID pool.
-+ */
-+struct stratix10_sip_id_pool {
-+	unsigned long head;
-+	unsigned long size;
-+	unsigned long *id_mask;
-+	struct mutex lock;
-+};
++/* 10-bit mask for extracting the SDM status code */
++#define STRATIX10_SDM_STATUS_MASK GENMASK(9, 0)
++/* Macro to get the SDM mailbox error status */
++#define STRATIX10_GET_SDM_STATUS_CODE(status) \
++	(FIELD_GET(STRATIX10_SDM_STATUS_MASK, status))
 +
- static LIST_HEAD(svc_ctrl);
- static LIST_HEAD(svc_data_mem);
- /* svc_mem_lock protects access to the svc_data_mem list for
-@@ -177,6 +192,185 @@ static LIST_HEAD(svc_data_mem);
-  */
- static DEFINE_MUTEX(svc_mem_lock);
+ typedef void (svc_invoke_fn)(unsigned long, unsigned long, unsigned long,
+ 			     unsigned long, unsigned long, unsigned long,
+ 			     unsigned long, unsigned long,
+@@ -1454,6 +1460,16 @@ int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg,
+ 		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
  
+ 	switch (p_msg->command) {
++	case COMMAND_RSU_GET_SPT_TABLE:
++		args.a0 = INTEL_SIP_SMC_ASYNC_RSU_GET_SPT;
++		break;
++	case COMMAND_RSU_STATUS:
++		args.a0 = INTEL_SIP_SMC_ASYNC_RSU_GET_ERROR_STATUS;
++		break;
++	case COMMAND_RSU_NOTIFY:
++		args.a0 = INTEL_SIP_SMC_ASYNC_RSU_NOTIFY;
++		args.a2 = p_msg->arg[0];
++		break;
+ 	default:
+ 		dev_err(ctrl->dev, "Invalid command ,%d\n", p_msg->command);
+ 		ret = -EINVAL;
+@@ -1508,6 +1524,56 @@ int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg,
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(stratix10_svc_async_send);
++
 +/**
-+ * stratix10_id_pool_create - Create a new ID pool for Stratix10
-+ * async operation
-+ * @size: The size of the ID pool to create
++ * stratix10_svc_async_prepare_response - Prepare the response data for
++ * an asynchronous transaction.
++ * @chan: Pointer to the service channel structure.
++ * @handle: Pointer to the asynchronous handler structure.
++ * @data: Pointer to the callback data structure.
 + *
-+ * This function allocates and initializes a new ID pool structure
-+ * for Stratix10 async operations. It allocates memory for the ID
-+ * pool structure and the associated bitmaps for ID management.
++ * This function prepares the response data for an asynchronous transaction. It
++ * extracts the response data from the SMC response structure and stores it in
++ * the callback data structure. The function also logs the completion of the
++ * asynchronous transaction.
 + *
-+ * Return: Pointer to the newly created ID pool structure, or NULL
-+ * on failure.
++ * Return: 0 on success, -ENOENT if the command is invalid
 + */
-+static struct stratix10_sip_id_pool *stratix10_id_pool_create(unsigned long size)
++static int stratix10_svc_async_prepare_response(struct stratix10_svc_chan *chan,
++						struct stratix10_svc_async_handler *handle,
++						struct stratix10_svc_cb_data *data)
 +{
-+	struct stratix10_sip_id_pool *id_pool = NULL;
++	struct stratix10_svc_client_msg *p_msg =
++		(struct stratix10_svc_client_msg *)handle->msg;
++	struct stratix10_svc_controller *ctrl = chan->ctrl;
 +
-+	if (size == 0)
-+		return NULL;
++	data->status = STRATIX10_GET_SDM_STATUS_CODE(handle->res.a1);
 +
-+	id_pool = kzalloc(sizeof(*id_pool), GFP_KERNEL);
-+	if (!id_pool)
-+		return NULL;
++	switch (p_msg->command) {
++	case COMMAND_RSU_NOTIFY:
++		break;
++	case COMMAND_RSU_GET_SPT_TABLE:
++		data->kaddr1 = (void *)&handle->res.a2;
++		data->kaddr2 = (void *)&handle->res.a3;
++		break;
++	case COMMAND_RSU_STATUS:
++		/* COMMAND_RSU_STATUS has more elements than the cb_data
++		 * can acomodate, so passing the response structure to the
++		 * response function to be handled before done command is
++		 * executed by the client.
++		 */
++		data->kaddr1 = (void *)&handle->res;
++		break;
 +
-+	id_pool->size = size;
-+
-+	id_pool->id_mask = bitmap_zalloc(size, GFP_KERNEL);
-+	if (!id_pool->id_mask) {
-+		kfree(id_pool);
-+		return NULL;
++	default:
++		dev_alert(ctrl->dev, "Invalid command\n ,%d", p_msg->command);
++		return -ENOENT;
 +	}
-+
-+	mutex_init(&id_pool->lock);
-+
-+	return id_pool;
-+}
-+
-+/**
-+ * stratix10_id_pool_destroy - Destroy an ID pool for Stratix10 async operation
-+ * @id_pool: Pointer to the ID pool structure
-+ *
-+ * This function destroys an ID pool for Stratix10 async operations. It first
-+ * checks if the ID pool is valid, then frees the associated bitmap and the
-+ * ID pool structure itself.
-+ *
-+ * Return: 0 on success, -EINVAL if the ID pool is invalid.
-+ */
-+static int stratix10_id_pool_destroy(struct stratix10_sip_id_pool *id_pool)
-+{
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	if (id_pool->id_mask)
-+		bitmap_free(id_pool->id_mask);
-+
-+	mutex_unlock(&id_pool->lock);
-+	mutex_destroy(&id_pool->lock);
-+
-+	kfree(id_pool);
-+
++	dev_dbg(ctrl->dev, "Async message completed transaction_id 0x%02x\n",
++		handle->transaction_id);
 +	return 0;
-+}
-+
-+/**
-+ * stratix10_reserve_id - Reserve an ID in the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ * @id: The ID to be reserved
-+ *
-+ * This function reserves an ID in the given ID pool. It first checks if
-+ * the ID pool is valid and if the ID is within the valid range.
-+ *
-+ * Return:
-+ * 0 on success,
-+ * -EINVAL if the ID pool is invalid, the ID is out of range, or the ID is
-+ * already reserved.
-+ */
-+static int stratix10_reserve_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
-+{
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	if (id >= id_pool->size)
-+		return -EINVAL;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	if (test_bit(id, id_pool->id_mask)) {
-+		mutex_unlock(&id_pool->lock);
-+		return -EINVAL;
-+	}
-+	set_bit(id, id_pool->id_mask);
-+
-+	mutex_unlock(&id_pool->lock);
-+	return 0;
-+}
-+
-+/**
-+ * stratix10_allocate_id - Allocate an ID from the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ *
-+ * This function allocates an ID from the given ID pool. It searches for
-+ * the next available ID in the pool, marks it as allocated,
-+ * and returns it.
-+ *
-+ * Return:
-+ * A non-negative integer representing the allocated ID on success
-+ * -EINVAL if the id_pool is NULL
-+ * -ENOMEM if no IDs are available in the pool
-+ */
-+static int stratix10_allocate_id(struct stratix10_sip_id_pool *id_pool)
-+{
-+	unsigned long tries = 0;
-+	int id;
-+
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	if (id_pool->head >= id_pool->size)
-+		return -ENOMEM;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	do {
-+		id_pool->head = find_next_zero_bit(id_pool->id_mask,
-+						   id_pool->size, id_pool->head);
-+		if (id_pool->head >= id_pool->size) {
-+			id_pool->head = 0;
-+			tries++;
-+		}
-+		/* cycle through the whole bitmap at least once*/
-+	} while (tries < 2 && test_bit(id_pool->head, id_pool->id_mask));
-+
-+	if (tries >= 2) {
-+		mutex_unlock(&id_pool->lock);
-+		return -ENOMEM;
-+	}
-+
-+	set_bit(id_pool->head, id_pool->id_mask);
-+	id = id_pool->head;
-+	id_pool->head = (id_pool->head + 1) % id_pool->size;
-+	mutex_unlock(&id_pool->lock);
-+	return id;
-+}
-+
-+/**
-+ * stratix10_deallocate_id - Deallocate an ID in the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ * @id: The ID to be deallocated
-+ *
-+ * This function deallocates an ID in the given ID pool. It first
-+ * checks if the ID pool is valid and if the ID is within the valid
-+ * range.
-+ *
-+ * Return:
-+ * 0 on success,
-+ * -EINVAL if the ID pool is invalid, the ID is out of range, or the
-+ * ID is not set.
-+ */
-+static int stratix10_deallocate_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
-+{
-+	int ret = -EINVAL;
-+
-+	if (!id_pool)
-+		return ret;
-+
-+	if (id >= id_pool->size)
-+		return ret;
-+
-+	mutex_lock(&id_pool->lock);
-+	if (test_bit(id, id_pool->id_mask)) {
-+		clear_bit(id, id_pool->id_mask);
-+		ret = 0;
-+	}
-+	mutex_unlock(&id_pool->lock);
-+
-+	return ret;
 +}
 +
  /**
-  * svc_pa_to_va() - translate physical address to virtual address
-  * @addr: to be translated physical address
+  * stratix10_svc_async_poll - Polls the status of an asynchronous
+  * transaction.
+@@ -1536,6 +1602,7 @@ int stratix10_svc_async_poll(struct stratix10_svc_chan *chan, void *tx_handle,
+ 	struct stratix10_svc_controller *ctrl;
+ 	struct stratix10_async_ctrl *actrl;
+ 	struct stratix10_async_chan *achan;
++	int ret;
+ 
+ 	if (!chan || !tx_handle || !data)
+ 		return -EINVAL;
+@@ -1565,6 +1632,11 @@ int stratix10_svc_async_poll(struct stratix10_svc_chan *chan, void *tx_handle,
+ 	memset(data, 0, sizeof(*data));
+ 
+ 	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
++		ret = stratix10_svc_async_prepare_response(chan, handle, data);
++		if (ret) {
++			dev_err(ctrl->dev, "Error in preparation of response,%d\n", ret);
++			WARN_ON_ONCE(1);
++		}
+ 		return 0;
+ 	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
+ 		dev_dbg(ctrl->dev, "async message is still in progress\n");
+diff --git a/include/linux/firmware/intel/stratix10-smc.h b/include/linux/firmware/intel/stratix10-smc.h
+index c98ed992d23bed5aa344868ca0c77a2d19d94c06..f87273af5e284b8912d87eb9d7179eb3d43e40e1 100644
+--- a/include/linux/firmware/intel/stratix10-smc.h
++++ b/include/linux/firmware/intel/stratix10-smc.h
+@@ -644,4 +644,56 @@ INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FPGA_CONFIG_COMPLETED_WRITE)
+ #define INTEL_SIP_SMC_ASYNC_FUNC_ID_POLL (0xC8)
+ #define INTEL_SIP_SMC_ASYNC_POLL \
+ 	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNC_ID_POLL)
++
++/**
++ * Request INTEL_SIP_SMC_ASYNC_RSU_GET_SPT
++ * Async call to get RSU SPT from SDM.
++ * Call register usage:
++ * a0 INTEL_SIP_SMC_ASYNC_RSU_GET_SPT
++ * a1 transaction job id
++ * a2-a17 not used
++ *
++ * Return status:
++ * a0 INTEL_SIP_SMC_STATUS_OK ,INTEL_SIP_SMC_STATUS_REJECTED
++ * or INTEL_SIP_SMC_STATUS_BUSY
++ * a1-a17 not used
++ */
++#define INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_GET_SPT (0xEA)
++#define INTEL_SIP_SMC_ASYNC_RSU_GET_SPT \
++	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_GET_SPT)
++
++/**
++ * Request INTEL_SIP_SMC_ASYNC_RSU_GET_ERROR_STATUS
++ * Async call to get RSU error status from SDM.
++ * Call register usage:
++ * a0 INTEL_SIP_SMC_ASYNC_RSU_GET_ERROR_STATUS
++ * a1 transaction job id
++ * a2-a17 not used
++ *
++ * Return status:
++ * a0 INTEL_SIP_SMC_STATUS_OK ,INTEL_SIP_SMC_STATUS_REJECTED
++ * or INTEL_SIP_SMC_STATUS_BUSY
++ * a1-a17 not used
++ */
++#define INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_GET_ERROR_STATUS (0xEB)
++#define INTEL_SIP_SMC_ASYNC_RSU_GET_ERROR_STATUS \
++	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_GET_ERROR_STATUS)
++
++/**
++ * Request INTEL_SIP_SMC_ASYNC_RSU_NOTIFY
++ * Async call to send NOTIFY value to SDM.
++ * Call register usage:
++ * a0 INTEL_SIP_SMC_ASYNC_RSU_NOTIFY
++ * a1 transaction job id
++ * a2 notify value
++ * a3-a17 not used
++ *
++ * Return status:
++ * a0 INTEL_SIP_SMC_STATUS_OK ,INTEL_SIP_SMC_STATUS_REJECTED
++ * or INTEL_SIP_SMC_STATUS_BUSY
++ * a1-a17 not used
++ */
++#define INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_NOTIFY (0xEC)
++#define INTEL_SIP_SMC_ASYNC_RSU_NOTIFY \
++	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNC_ID_RSU_NOTIFY)
+ #endif
+diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
+index bda837815bae35fbf4df6280dba5bc02d747426e..cf0eac5446147e9a92a1ddada23bc183977123c0 100644
+--- a/include/linux/firmware/intel/stratix10-svc-client.h
++++ b/include/linux/firmware/intel/stratix10-svc-client.h
+@@ -125,6 +125,9 @@ struct stratix10_svc_chan;
+  * @COMMAND_RSU_DCMF_STATUS: query firmware for the DCMF status
+  * return status is SVC_STATUS_OK or SVC_STATUS_ERROR
+  *
++ * @COMMAND_RSU_GET_SPT_TABLE: query firmware for SPT table
++ * return status is SVC_STATUS_OK or SVC_STATUS_ERROR
++ *
+  * @COMMAND_FCS_REQUEST_SERVICE: request validation of image from firmware,
+  * return status is SVC_STATUS_OK, SVC_STATUS_INVALID_PARAM
+  *
+@@ -159,6 +162,7 @@ enum stratix10_svc_command_code {
+ 	COMMAND_RSU_DCMF_VERSION,
+ 	COMMAND_RSU_DCMF_STATUS,
+ 	COMMAND_FIRMWARE_VERSION,
++	COMMAND_RSU_GET_SPT_TABLE,
+ 	/* for FCS */
+ 	COMMAND_FCS_REQUEST_SERVICE = 20,
+ 	COMMAND_FCS_SEND_CERTIFICATE,
 
 -- 
 2.35.3
