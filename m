@@ -1,86 +1,137 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2FC2BD5BF
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F819A297;
+	Fri, 20 Jun 2025 15:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434134; cv=none; b=hzwrNvGEHfwXHHnPAZEkrFrLKQTbDeMP1xJFt3p1MPPY3EY7KwglG2dTXDtkbyzN/247EjCy8vfXJT84ejbJbBPSyaByJ+qC5P2nfumprW9snCOZAPvFcOzaek0t4RuJuUJI/5BRGUPEkmKkIfB0yEIaY22lR9Bxm50etxLi/hk=
+	t=1750434210; cv=none; b=J4qGb6FqkvoFB76s1GvD7uf0/23BTrWqHDA0JXNF/YHs9P/7sg8nZjXjKfNzsjglEijz6DIkg+gLJPNo9RrmgluAN8jmdAFgKCNlHNQTJuZN+EXNi92zMOQHTOwyEfS7lIHSW7pD1kAow85Uy5uZd7D+z1p6cbopALoP26twXC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434134; c=relaxed/simple;
-	bh=cLUxPPjYkBw7STQusnQiKUISqYoRPP4aoEc3f3wxNRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UaLeD8V8lRVazhh4jDOnaIHnnN1cqP8cep2bITw32ubc1vIk3yRIlh+HAWmoLzOaP9qyJVEn4wZyhZIYPFG3/r99YKGFTdsk4iZWbzt/3iilA7ldiUTfzCt1ziCzGQCgRfGydomseI1XSlcmSXN0XCTCJNbnl8EeZQPwNuWXeW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I8GAJEjt; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750434210; c=relaxed/simple;
+	bh=X3GP0rFGQWYb7D9EofmWO4CkjJb3nRBnJ4sS25K5GGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IsvrXsMgjr8CBMvONC3q+f7/Ah/0b9esLnj5vrOufTKWlVO/Z0XPY+gKz4Lfuu3QmaDVivXfgjrzvARkai9eeoItDYcJEA/42IKuVEUA6EDwPOYDZmlUUNJzbwy+0uNiGslozDlnEz7J6KNc6osyUS5AMrV0s3nVYd8mojHHdNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJ9yPT19; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I8GAJEjt"
-Message-ID: <56f52836-545a-45aa-8a6b-04aa589c2583@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750434131;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5vxNedAjVSukjlPsPkPSM2hsqyg7r1pIanZ7gFNuJhA=;
-	b=I8GAJEjtP32F6Q/LrmgaBIS5PQsFSM5HwZwx0rWj3XnRmwTe/El0Ii75HYP9sLU6d/ZOJ1
-	cVI/VZ6Wu44tRXNFU6169t1XuPyIfdInIkwtFErnMxZeu+yhZmUbYey44qlIToRwds80dF
-	1U8WRtNlQekNfmts8HlBdehctnL7cJ0=
-Date: Fri, 20 Jun 2025 11:41:52 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJ9yPT19"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cf214200so19174985e9.1;
+        Fri, 20 Jun 2025 08:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750434207; x=1751039007; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
+        b=kJ9yPT19DCAwz1Ppqhgt5E5EPfhcTcUdsmqKqdNDGwUvwO0G70TeIRWsJMZlNOZgKn
+         x7ysjeBDWtEgon9dxyfjhA2WZdYV3W14KjHw/G1iE6tj0Ugf8FKkurB0tjoLAz7PQfHR
+         B8QJ0x2uS0XGmXhCXuYZed0bghvCYigKUvDQMdCVXrDBym4BBajVHTenScGdcOpsOH+d
+         ZFLIK3CxBXjo3wys4GqaKtr6AA6A24MTcKSGJtHJxF6tSCmqkApOeB4iLr95U2Wucz8/
+         Mqd6vZbJOP511sryiTNQ+dh0eWxZyIM9pEUJyzEgJf4XDKEa82xaSYHmCxHTAVFa37WT
+         c3+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750434207; x=1751039007;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
+        b=jzW6BsUab7sm+GTy1z1oZU+kDaEsPmK/Tk14dsDKgx33BUbGvQ/vWk/a7lPOC40eRq
+         V93GGmqU9cyjNAA/CY6NvKFFAMqTimOH0V+/dH8SC757hAzo1kdo3sBRDttNMjTHQQnh
+         HE6izru26hT+v2tkbPnTG0NQVAP2CqO8aIuWN1Mr1VlZ3ClvvRG94cyZOokQJJpqNr/v
+         qpvvBw50yVOBGxim8CDQCRCyxu6HctKfKIaQM7q3TRRDr1aXZ+QnwrtwciSkXNhL9eea
+         pHWa4CLDA6TvicxihU15IYeeGWFHglnsQ8PdSSL3Mgi/4cFWPNkiiLM+Y5t17SSDhcqj
+         wQGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+siVY5SgCFWcxqvWRvdxa57R9pA8x6CzYuxAPVEEJYYMBpFuCdnt/sXsAf3r1FlwUBb8B+GWlbW6HCQ==@vger.kernel.org, AJvYcCUOQSeNRqib2Qafr27DCONOsoHVq5PEdUCjTON+8H4JXPiI7TgnINZYlNE+6YVDBpPe77ZEXKGnqD9HbhMF@vger.kernel.org, AJvYcCUcE1FhQxPLYD7e8cyzZySxGyms15ycSi/x8DmpilstWZw8JCrzmd1qM/PaVUnSGXacdYw6jqoNLDXH@vger.kernel.org, AJvYcCX4mv0tS8iaCrBBR7cak8ecNwc/6IJqoZoMXZQrVG1Rvn3Ly5gW3iP/dx6HvYxb0cCgbcbzroG2u1P2SRYrwjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygE+fghR/FtOXGKPukRf2wYOW3Zg6z+1og7wGeO98ccodEU5Oj
+	lGjqUYVRl9KdvX6DFnC+YM2mSgNragH+fx+Gwzh715jNnRytSzFcbfQA
+X-Gm-Gg: ASbGncuPKjDaPf3kRQNglcfl+UUkIkIiaFH9qtQhs4AwlZgWvG/XkgSay+Iqm2SnQoH
+	hIP+ZY3ZOl+Dbut2sKPFjVHs0ojaK+rkHwS0af9jw2YE+HQfZMkz6ALJl6u5bmgw6GitL4C8+cR
+	4ZgeRJV+SbDNcM2nE4TwHwlbzmt+Mj5v3iowfaSorY4S2CE+vp9JJgIRxMKzmsOopaMLvfZu7eD
+	h+rPSVHo2/qx02qKltxq7KwLuJonzVYPooPBnZTkCjny4cYdS/MdOBhfGz3jlbgOQBaDK5eCq2D
+	p+Ezn2MFe7O5D3DvbV5zyvQLrlNPJWWBY5T8yP0uacyigMpsum4bf2l7i1YmaXxYasKH2a2Jz+9
+	Nh/WkFNbroWs9kpVzNFnUzrxOrRrBgROJOFPO
+X-Google-Smtp-Source: AGHT+IGOay+Dgmk/mALjZ37btoxDkdcv0+KYLeDqi25xqCLtwnCwdg8q4gUaX5ZM7cMj3xDEX0s+IA==
+X-Received: by 2002:a05:600c:3b8d:b0:44a:b7a3:b95f with SMTP id 5b1f17b1804b1-453659f82abmr28801445e9.25.1750434207082;
+        Fri, 20 Jun 2025 08:43:27 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb672sm29603795e9.6.2025.06.20.08.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:43:26 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Alex Hung <alex.hung@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Igor Korotin <igor.korotin.linux@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Len Brown <lenb@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>
+Subject: [PATCH v8 7/9] rust: platform: Set `OF_ID_TABLE` default to `None` in `Driver` trait
+Date: Fri, 20 Jun 2025 16:41:24 +0100
+Message-ID: <20250620154124.297158-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net 0/4] net: axienet: Fix deferred probe loop
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
- Saravana Kannan <saravanak@google.com>, Leon Romanovsky <leon@kernel.org>,
- Dave Ertman <david.m.ertman@intel.com>, linux-kernel@vger.kernel.org,
- Ira Weiny <ira.weiny@intel.com>, linux-arm-kernel@lists.infradead.org,
- Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250619200537.260017-1-sean.anderson@linux.dev>
- <2025062004-sandblast-overjoyed-6fe9@gregkh>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <2025062004-sandblast-overjoyed-6fe9@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 6/20/25 01:10, Greg Kroah-Hartman wrote:
-> On Thu, Jun 19, 2025 at 04:05:33PM -0400, Sean Anderson wrote:
->> Upon further investigation, the EPROBE_DEFER loop outlined in [1] can
->> occur even without the PCS subsystem, as described in patch 4/4. The
->> second patch is a general fix, and could be applied even without the
->> auxdev conversion.
->> 
->> [1] https://lore.kernel.org/all/20250610183459.3395328-1-sean.anderson@linux.dev/
-> 
-> I have no idea what this summary means at all, which isn't a good start
-> to a patch series :(
-> 
-> What problem are you trying to solve?
+Provide a default value of `None` for `Driver::OF_ID_TABLE` to simplify
+driver implementations.
 
-See patch 4/4.
+Drivers that do not require OpenFirmware matching no longer need to
+import the `of` module or define the constant explicitly.
 
-> What overall solution did you come up with?
+This reduces unnecessary boilerplate and avoids pulling in unused
+dependencies.
 
-See patch 4/4.
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ rust/kernel/platform.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Who is supposed to be reviewing any of this?
-
-Netdev. Hence "PATCH net".
-
-And see [1] above for background. I will quote it more-extensively next time.
-
---Sean
-
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5923d29a0511..2436f55b579b 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -162,7 +162,7 @@ pub trait Driver: Send {
+     type IdInfo: 'static;
+ 
+     /// The table of OF device ids supported by the driver.
+-    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>>;
++    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+ 
+     /// Platform driver probe.
+     ///
+-- 
+2.43.0
 
