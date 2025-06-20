@@ -1,70 +1,128 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B3B1AD3E0
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655421AD3E0;
+	Fri, 20 Jun 2025 04:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750393684; cv=none; b=u1rXaABtQps6xHmh780YNfG4saTcJO2NwPSkGNetxALea7+MTUhLyD3zHxfO6k89gbwMnPLWIXeYuQAN2eBXG9ehQxotOb8W4fSPhS5vZx935VgK5qGDcYi3ibOymntDRtGZrDZJ1RTx6xIwuQbpcmCJMmmk+GNQxKzLpPM4o1w=
+	t=1750393759; cv=none; b=a5Jf1BGzPxnQdwjHXoYNqcRzVNu/a9A+9U9U6DSD94KF8ErCEHkT/a2q2fmplJyB5tRD91ougqvpFLrwzeLTZeFExNDySKiN2M+4pL1vCggppZAKxDFNDwpDJR+mTGltWTrC1RoyZ7GFTkkT6YvU9br/nI8syuhV8BFEt1WnaDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750393684; c=relaxed/simple;
-	bh=rJ7vq7jFwBj03LSfOq7eImpNezJCroQyveX3uWk7zW0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aoMJ3bI/jAfFKNcXdn/JlY9yVLdy0ZXhRkbSptbhS9BRGeAAbgqqNLxXMN14Q/c+cxcS1YTvbGIX/y8ZzrSql4FRf2tsEZd2B9i1qkoDuaohx/s41o3iGAcZsPNYLQYxC4cYS7UgDx3/jNuEyPEHnMs17gyGs6NmNmCX61mYniw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so17850285ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:28:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750393681; x=1750998481;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XayVGBJ9wQI0RVgIxn88SbNXCutkcEQtnevqVzMO7wI=;
-        b=fis+FU0r8wFc6SfGSOcOOiVbet3+TVFkOI9nZSPUuphHzfPV8BQBcRpNWvI7Hj7ny7
-         01ywuBvZWgQTiAWakvi7hgf+Vqu4BHOSuUeJBDg+PlywJdQCT37JIHm9xX1emM5mUXo1
-         32TY2KQxHcQbcK/7KIwIix+TSu24Mbeq6FBT5j6Mlw6q+5tpVtVFJ3Cyx99W1/UToRWI
-         yhhps1/y6UMg0yu5heKM+w8ECX7SrcT4DaKokC5fE91DCJFf7cZ+V1Qt1sxFLl/gSeop
-         QukU+BHEsGVacDMeeABBURiQ7XOody1WHzQaYPbeh7BQRJoXYG1N8WJQGaKygn52BE8b
-         Eohg==
-X-Gm-Message-State: AOJu0YwmePRm/XBQeMPzMXbfVZUxWnuloEqVTAu6xLmdwUNeiryf/+f8
-	vX5sOZMt6O+2PEYXhdlsjH4KGiJHSM/ILXtRRJ/GXP4J12IZK2iDiIyB96L48WAOpfgF0Rp21Fr
-	lMsAfw9p4/iZq8b8rM89hYt7bS50fg0jaxBUsd4V55fATJKq17u+iY8U2wt0=
-X-Google-Smtp-Source: AGHT+IEO8cgXqU0V94Rc1XNTEyRpccqGnvU3kJjmbUeo/o2NQOaqtbmAtxvLwrnKAdsiGbE0oxvGyOVjf9pj1ZtoR1elWleismqe
+	s=arc-20240116; t=1750393759; c=relaxed/simple;
+	bh=It+X+LhsWdDOwjdBav4EX8XJ1EMBhJqb7BxwKfvsvlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NXh9sp/ou7DD8mF+kZClT9dBSCTwACmu0e55/cH99OteSVwl+zz5l9XQweu4j6qYpB0R7VKXJBQnDIXeYltsET4nHNc1tgwbOuh3D4EfeIQcApZ7Mc2b8lV1hyPVSHpJpV+V60IG2HCfrV4gTI1oEeeIayLyOU7iJMw4Lv/KAjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Keo9qEQ5; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Keo9qEQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750393758; x=1781929758;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=It+X+LhsWdDOwjdBav4EX8XJ1EMBhJqb7BxwKfvsvlY=;
+  b=Keo9qEQ5Me4M6lnMHAooEkniX/BuacjOypwTVSfNkzPiFvCa1083Vqb0
+   3dRO/zfUC/QjMx2Jq5Avt9YqUxwyBCPQ0iO9diLkgp9UQsBPaBJ2NUCJK
+   PmUV5FnBaV/4yxgSu+Q5QLUBUohxn5bL8vkSDsb7fDvUfTS8xO5216cCV
+   G6yRpcojuR36yJF/JmTj/lU+20fZ4h1We0ASXtYhapz8SvqxeDMvbsQfV
+   +AKVFXGO+e712zu8kKOCf50wA7vxAa+QuvuxTcgLEzeRPG1kApnFM49po
+   5PV/5kSuWZTs20SEMKvoRmZ6pGoQmxjPgBS+RNiMY0+FbVYQTa4yd0SRT
+   g==;
+X-CSE-ConnectionGUID: VrPHoj8XTiywjV5ZPPc0QQ==
+X-CSE-MsgGUID: kjC7wdiLTnmWbK1EeA2rFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="40257705"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="40257705"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 21:29:17 -0700
+X-CSE-ConnectionGUID: rWOJemhGSAKbmpWp/SKpxg==
+X-CSE-MsgGUID: 6a20+jVmRau5+Pgdg0r32w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="154817573"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa003.fm.intel.com with ESMTP; 19 Jun 2025 21:29:11 -0700
+Date: Fri, 20 Jun 2025 12:21:49 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	aneesh.kumar@kernel.org, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 00/30] Host side (KVM/VFIO/IOMMUFD) support for TDISP
+ using TSM
+Message-ID: <aFTh3YASDNtyAc+k@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250602133727.GD233377@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a4d:b0:3dd:d189:8a6c with SMTP id
- e9e14a558f8ab-3de38c1ba49mr14002125ab.4.1750393681635; Thu, 19 Jun 2025
- 21:28:01 -0700 (PDT)
-Date: Thu, 19 Jun 2025 21:28:01 -0700
-In-Reply-To: <20250620042056.1099990-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6854e351.a00a0220.137b3.002b.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602133727.GD233377@nvidia.com>
 
-Hello,
+On Mon, Jun 02, 2025 at 10:37:27AM -0300, Jason Gunthorpe wrote:
+> On Thu, May 29, 2025 at 01:34:43PM +0800, Xu Yilun wrote:
+> 
+> > This series has 3 sections:
+> 
+> I really think this is too big to try to progress, even in RFC
+> form.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Sorry, I missed this message...
 
-drivers/misc/vmw_vmci/vmci_host.c:396:25: error: incompatible integer to pointer conversion passing 'u64' (aka 'unsigned long long') to parameter of type 'const void *' [-Wint-conversion]
+Yeah, I just try to give a overview of what components we need, what the
+expect flow would be like for the first time. Also vendors need as much
+components as possible to enable their own HW and verify this flow works.
 
+We could split into small topics then.
 
-Tested on:
+>  
+> > Patch 1 - 11 deal with the private MMIO mapping in KVM MMU via DMABUF.
+> > Leverage Jason & Vivek's latest VFIO dmabuf series [3], see Patch 2 - 4.
+> > The concern for get_pfn() kAPI [4] is not addressed so are marked as
+> > HACK, will investigate later.
+> 
+> I would probably split this out entirely into its own topic. It
+> doesn't seem directly related to TSM as KVM can use DMABUF for good
+> reasons independently .
 
-commit:         41687a5c Merge tag 'spi-fix-v6.16-rc2' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61539536677af51c
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14219d0c580000
+Yes, since I'm not work on improving this for now, I'll not include this
+part next time. Will start independent thread if there is update.
 
+> 
+> > Patch 12 - 22 is about TSM Bind/Unbind/Guest request management in VFIO
+> > & IOMMUFD. Picks some of Shameer's patch in [5], see Patch 12 & 14.
+> 
+> This is some reasonable topic on its own after Dan's series
+
+OK, I'll just focus on this for next version.
+
+>  
+> > Patch 23 - 30 is a solution to meet the TDX specific sequence
+> > enforcement on various device Unbind cases, including converting device
+> > back to shared, hot unplug, TD destroy. Start with a tdx_tsm driver
+> > prototype and finally implement the Unbind enforcement inside the
+> > driver. To be honest it is still awkward to me, but I need help.
+> 
+> Then you have a series or two to implement TDX using the infrastructure.
+
+Yeah, this should happen after "IOMMUFD for trusted".
+
+Thanks,
+Yilun
+
+> 
+> Jason
