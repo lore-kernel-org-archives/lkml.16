@@ -1,110 +1,66 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058582253EB
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 19:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D80A221FBF;
+	Fri, 20 Jun 2025 19:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750449283; cv=none; b=igkCzqk7/rTnGb3ZyjBXm1Ge4iyfI1AkUJRR1DIkGiPUvI/xg2IwaAgHCmEPNcPboTA7+v0HS8JiaxJqUqfAiEbtK7JTnxDmu98QbC8BhiggfxIfpDFEG5GKre/JTq0+7FeSdh5Os7FAu/REY6CJzhZQ+ACpseT5PfzY9OkCRNw=
+	t=1750449300; cv=none; b=hZX08cmz7Y7h5LQIogNJ7SOc45P/D7NnsOsoTSbLW3REyRtSZZYbgb/pyAl0y/jAlWbRnnBsbqWBfr74h2qwnZi1DDOUdUoqLrCor3q7eukxOboRzeSsDijs8BXTTlGoda2S2Dep1NY81Jc75A+wUc0cGRFoDD52+MG0zJqtq+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750449283; c=relaxed/simple;
-	bh=gwW/ZJH1VLIkz6MGwVX4aHnvXoTlVx/vj9jo9qbl9zI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KXjPsdJKhCthCLTPYF6qttQeodERZSpUDqmcYSPalaCvy1c9XCn/OTDJpCxd3AI7nW9qrgO+vSQ84A/ZAD9re+zVALkdPfzQlixX1ez75UFD7sLIyLW8+MpnQ4k5hrMdq6TMvMcSrVBLR1+Pe/xSpW5Hb76Qov12OvF0uPo1CDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VgxayH6b; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750449300; c=relaxed/simple;
+	bh=pySmXwSoyXawUE5lOnRaqr9m9TZBHviSkIg2SRRuX38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDExrsImS6uZ2JZ22gGxI7BrcO2YvCgw8Xk8Ry4UyWlxjJ+Y8MWdBs/qOqJ1Q6TCki0g/dvmfhFcazry9JPvWgQU9bE6aBWzwHhZVXTETeP0GLLzY8o+v/kwfAdy9U8c0gFFKWylsj6eIiqy1KOBlUx3ZgVR+QLNhCqf4neBekU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxQhk8JN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VgxayH6b"
-Message-ID: <5ff84c99-46a2-4dde-a1f4-f49b09b0b15f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750449278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B9890C/fAgtvvt0ndaoyPFp5S+6tCMCjaOU36i0zlJk=;
-	b=VgxayH6bRXn9jSnHSGefKyUi69i6ZbZ1L2hKf+wfXjXRHL5Peg5g2TxObTti+rt28g2NUr
-	BRiLjX9Ne+JoQOQy0iykdbVrDVjTb9fVLsqrTxwC0pFXvDJS8S/cX1rnb53Bmfh4gxSqwI
-	S6a6ddIFT7t8OsyGaKDNe6uhnID9Jf8=
-Date: Sat, 21 Jun 2025 03:54:29 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxQhk8JN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8326C4CEE3;
+	Fri, 20 Jun 2025 19:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750449299;
+	bh=pySmXwSoyXawUE5lOnRaqr9m9TZBHviSkIg2SRRuX38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lxQhk8JNCzaL8/q8x4EhcJeBc60BO9OOzIA5hIMUvJ+pycDoC7fhFn/alRkio7MYS
+	 BnnlC+ivohmNlOgJUH9jUDGBnQEGl2gw+GaLKe20HW6Lh2bVnvDWaChOUHBn5dWBpN
+	 e2+MflIzwkCeGkO6mfVuJ25SEjx0UWOLYz41i8olocWpHmcz15Jv+xVVNeSeap05Az
+	 s4dYRxreq2shNI0VdzCnKdxq8rCcDAybviJeF/JY2nEaWGDvwrmzzPtpD+C60qU/nf
+	 nsSHnRPKJ4Hq7FT4ZJikXwoj9QXGWWxT99tMHhn95t7VG4a1aHxwMdyNUMOOAxBdbn
+	 J2SprTsJuhDAg==
+Date: Fri, 20 Jun 2025 20:54:55 +0100
+From: Simon Horman <horms@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel test robot <lkp@intel.com>, thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] net: pse-pd: Fix ethnl_pse_send_ntf() stub
+ parameter type
+Message-ID: <20250620195455.GA9190@horms.kernel.org>
+References: <20250620091641.2098028-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Add load_time in bpf_prog fdinfo
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250620051017.111559-1-chen.dylane@linux.dev>
- <CAADnVQLd9Z1nfp+WBdMLaZ7EP-+A9QEDdOhZaL0YTaygtKD2Hg@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAADnVQLd9Z1nfp+WBdMLaZ7EP-+A9QEDdOhZaL0YTaygtKD2Hg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620091641.2098028-1-kory.maincent@bootlin.com>
 
-在 2025/6/21 02:27, Alexei Starovoitov 写道:
-> On Thu, Jun 19, 2025 at 10:10 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->> The field run_time_ns can tell us the run time of the bpf_prog,
->> and load_time_s can tell us how long the bpf_prog loaded on the
->> machine.
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/bpf/syscall.c | 7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
->> index 51ba1a7aa43..407841ea296 100644
->> --- a/kernel/bpf/syscall.c
->> +++ b/kernel/bpf/syscall.c
->> @@ -2438,6 +2438,7 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
->>          const struct bpf_prog *prog = filp->private_data;
->>          char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
->>          struct bpf_prog_kstats stats;
->> +       u64 now = ktime_get_boottime_ns();
->>
->>          bpf_prog_get_stats(prog, &stats);
->>          bin2hex(prog_tag, prog->tag, sizeof(prog->tag));
->> @@ -2450,7 +2451,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
->>                     "run_time_ns:\t%llu\n"
->>                     "run_cnt:\t%llu\n"
->>                     "recursion_misses:\t%llu\n"
->> -                  "verified_insns:\t%u\n",
->> +                  "verified_insns:\t%u\n"
->> +                  "load_time_s:\t%llu\n",
->>                     prog->type,
->>                     prog->jited,
->>                     prog_tag,
->> @@ -2459,7 +2461,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
->>                     stats.nsecs,
->>                     stats.cnt,
->>                     stats.misses,
->> -                  prog->aux->verified_insns);
->> +                  prog->aux->verified_insns,
->> +                  (now - prog->aux->load_time) / NSEC_PER_SEC);
+On Fri, Jun 20, 2025 at 11:16:41AM +0200, Kory Maincent wrote:
+> The ethnl_pse_send_ntf() stub function has incorrect parameter type when
+> CONFIG_ETHTOOL_NETLINK is disabled. The function should take a net_device
+> pointer instead of phy_device pointer to match the actual implementation.
 > 
-> I don't like where it's going.
-> Soon fdinfo will be printing the xlated insns of the prog too,
-> since why not?
-> Let's stop here. We have syscall query api-s for that and
-> bpftool to print such things.
-> No more fdinfo "improvements".
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506200355.TqFiYUbN-lkp@intel.com/
+> Fixes: fc0e6db30941 ("net: pse-pd: Add support for reporting events")
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-Got it, Alexei, thanks for your patient explanation.
+I note that this is a fix for a patch present in net-next but not net,
+so the Fixes tag + target of net-next combination looks good to me.
 
--- 
-Best Regards
-Tao Chen
+Reviewed-by: Simon Horman <horms@kernel.org>
