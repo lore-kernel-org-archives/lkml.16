@@ -1,110 +1,91 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B0328FAA5;
-	Fri, 20 Jun 2025 14:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E6F28FD;
+	Fri, 20 Jun 2025 14:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430056; cv=none; b=QoITpKcLU8mBCTZzZdNrrRyp4PP66oBZNAmlWIVfJEGVYjQriiBqRJD93pRbSD2954NcJIFDy74h8qm3Gt1g0uiYPkNLZyvFhz1X2ii8psEJfcl9QhkiCZ4myX71S/vBAzBpccDKgLZy6NGI1n3KjpWXRmGEsQm2psEed09mqvI=
+	t=1750430086; cv=none; b=jnuNDsbvVg3S6Xrvxupw3uI+dqlO8TDlg71cDFFp7tSBChbDPMche7mIWOxGJHGSF/Rk9mD4JUEmHpJblo5cyWKhvXRSqIz6uQpq8P+dvcVT8zQJzd2a6VVyphdakuF21RhsBLKR6s1+FJhNH6ZGQcC0GeA//0W9AAAt3Tu9tFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430056; c=relaxed/simple;
-	bh=TI+5LDC/0Boaaa2mFEGhq1MpCEpdgNy9e8C/z0AQV70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JrKniPKmjbtw6tOV7f64j7icZnTBJVQSTfPDPBWpaQoeTQgrS5j7QDfGjgwQwiUAe9W0YWI788mDJLA+H49tHoigZ3hE7csRsoVDBr9O6qmqCZdgu0GFgJRxXNycVegA59YYCtpVw2kdqiF84Z1X00QY4Io8ZmZMxnNhT3yBzKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T7ddrfcd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750430086; c=relaxed/simple;
+	bh=eQB5eV4iQShXILJeHvcYp/UCB2dfeS5Ieo8zVzXk3Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=btMvsgB7XlB+e+vrTDIGnsCJBITk6QU3NlxHTUYw8KLsFUb9SESBzYzQN4Fdq2sh/nL97RMvR2GBaUGQ1DEAxeKCopTkNvyVJWKXQkNWXqmgKAnoTyzL6BrsUdC0dEaF7Nw0K5lvpl6+xC0xAW+JUsQOQCXw8wh0+WWOWf68314=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rkcicpSV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T7ddrfcd"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K9vZsD022855;
-	Fri, 20 Jun 2025 14:33:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=eK2JIh
-	VJsbNFpG27/SudEaniFaBWxW3Hn9PlQCUOL7E=; b=T7ddrfcdsq5aH+ySgjnTTu
-	jLUvwYQdgHBUif5j/pgKtpYwpS61TyC0Z1rU39LUshF4NiHdgTVIpjht5AQxv6Rr
-	L5UqLkJi18c4dBH53Pn89AfaSvuyQcDMO8eKEjmR4oJM+7XgwHpt14gphgZGrmGU
-	4NM1WGg6DhtemJPpRmOvPcLU6teeyQgtrraQBk/nRAxCzcoxBHQsqlxYZzcHarhk
-	1WX4zvS1VtV4mrUfYrhMfTJshln4ZbRbHKl51KUrEWxY8NGsaWEP4Jt1Sb3spxZY
-	JcoQbrDpYfdMso/kpTQWClKAVZKRk4oTcpGabVtMD8FCWFXQTTcn5U0AS3k3+GFA
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4794qptw6q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:24 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KCGZUm011331;
-	Fri, 20 Jun 2025 14:33:23 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdtutd5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:23 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KEXMTH32244270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Jun 2025 14:33:23 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F48C5803F;
-	Fri, 20 Jun 2025 14:33:22 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8120D5804E;
-	Fri, 20 Jun 2025 14:33:17 +0000 (GMT)
-Received: from [9.61.191.218] (unknown [9.61.191.218])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Jun 2025 14:33:17 +0000 (GMT)
-Message-ID: <17d13cad-e205-43b7-835c-dfcf5f356399@linux.ibm.com>
-Date: Fri, 20 Jun 2025 20:03:15 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rkcicpSV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=d9fw5HN0v/kKWel+rpUYgeRmoN6kOXJkrXAVRSMObCQ=; b=rkcicpSVsY9/iNejtlpkTvRkk+
+	f6/CplQO0sPdjeHV9G7GmsVOvMuUl5T0SQtUAUFodvOQ1VcR7uW1ytVPlw/JOs7vwkPZDKoommpRl
+	I6uP76BWOwj1oLpFBLxetE8kQg0FMOrTPjZAeO+3ldSzsEBvgFhap2vj7TcpAhdrsmfyNkMO1sjQ4
+	qXoHeMfABSqx2hnkXQtTACb4y/KCmK2qNTuAkO/ojr7+VYZEiMiNjYg9U0fWHtUOI4WyzJQG/D/v8
+	MhUxXfCo8hGF3VZY56PJDFJXz/IsnK1Lghci6nmJzjUTXkE1EkhKzxgdhSRXZSMFsOJPDoysgcQWp
+	BuPx1G8A==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uScot-0000000CosM-2xWJ;
+	Fri, 20 Jun 2025 14:34:19 +0000
+Date: Fri, 20 Jun 2025 15:34:19 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz,
+	akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
+	brauner@kernel.org, viro@zeniv.linux.org.uk, ackerleytng@google.com,
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+	pvorel@suse.cz, bfoster@redhat.com, tabba@google.com,
+	vannapurve@google.com, chao.gao@intel.com, bharata@amd.com,
+	nikunj@amd.com, michael.day@amd.com, yan.y.zhao@intel.com,
+	Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, aik@amd.com, jgg@nvidia.com,
+	kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz,
+	rppt@kernel.org, hch@infradead.org, cgzones@googlemail.com,
+	ira.weiny@intel.com, rientjes@google.com, roypat@amazon.co.uk,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net,
+	kent.overstreet@linux.dev, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, chao.p.peng@intel.com, amit@infradead.org,
+	ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com,
+	gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com,
+	papaluri@amd.com, yuzhao@google.com, suzuki.poulose@arm.com,
+	quic_eberman@quicinc.com, aneeshkumar.kizhakeveetil@arm.com,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [RFC PATCH v8 3/7] mm/filemap: Add mempolicy support to the
+ filemap layer
+Message-ID: <aFVxa-PRavav6pNd@casper.infradead.org>
+References: <20250618112935.7629-1-shivankg@amd.com>
+ <20250618112935.7629-4-shivankg@amd.com>
+ <aFQ0v0DfWgUvqK6L@casper.infradead.org>
+ <ce88982b-0a01-4673-a0f2-d490b66d0fa6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] dm-stripe: limit chunk_sectors to the stripe size
-To: John Garry <john.g.garry@oracle.com>, agk@redhat.com, snitzer@kernel.org,
-        mpatocka@redhat.com, song@kernel.org, yukuai3@huawei.com, hch@lst.de,
-        axboe@kernel.dk
-Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        ojaswin@linux.ibm.com, martin.petersen@oracle.com
-References: <20250618083737.4084373-1-john.g.garry@oracle.com>
- <20250618083737.4084373-5-john.g.garry@oracle.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250618083737.4084373-5-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IEZjTd_vMC3GYjwOEcpVzAbtsmcnzGs_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwMiBTYWx0ZWRfX4+uh3Fp9cckg CnTfI2aY6ifad+VbC8LgV4Ic71pUA3VexVWbOzWLm8VQVKcfncvdiCeUHUz7Vj9phatBKS94zuO PbyeI/fsd+0VkZcrOuG+139ORvE+K1FItRgegLcun2GW+ZJaY0VzIR0B2QKLQqS03XCroscQ4bX
- uAQY3IWfB05pndW9jlXH5bNMbaGl/LcGE2utSfA53giHSUWNpdUAXBYp7PBKmjLJFEDh1oj1jkX xYtwjFXQegQ7DthaRIV/TF/+gQTK0wMNcaoyQBTIY+UvI9o18VYhw1VCzjD3gCPqZ694qtpTFze Ti1ZLL9hsnc6syazlU+5vm4adVEdL7G0LPZeYcebBTj3rIu5FCOXpy4cxY7YYNlHMdRPIvkS49S
- 6nD87+ATdR8P3a4Un5lfjV/LTp6WPT0H9dCuAw3Omh1iv2vLkm+eDiYix4sLUFCqux8yZUIj
-X-Authority-Analysis: v=2.4 cv=NYfm13D4 c=1 sm=1 tr=0 ts=68557134 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8 a=wbLohENRK3cqXJ1mymsA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: IEZjTd_vMC3GYjwOEcpVzAbtsmcnzGs_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce88982b-0a01-4673-a0f2-d490b66d0fa6@amd.com>
 
-
-
-On 6/18/25 2:07 PM, John Garry wrote:
-> Same as done for raid0, set chunk_sectors limit to appropriately set the
-> atomic write size limit.
+On Fri, Jun 20, 2025 at 11:29:20AM +0530, Shivank Garg wrote:
+> filemap_grab_folio_mpol() is used in [Patch 6/7] in kvm_gmem_prepare_folio().
 > 
-> Setting chunk_sectors limit in this way overrides the stacked limit
-> already calculated based on the bottom device limits. This is ok, as
-> when any bios are sent to the bottom devices, the block layer will still
-> respect the bottom device chunk_sectors.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> filemap_alloc_folio_mpol() and __filemap_get_folio_mpol()) are internally used
+> to support the filemap_grab_folio_mpol().
 
-Looks good to me:
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+That's not better.  We don't add unused functions, and unless there's
+something coming that's going to use them, the entire structure of this
+is wrong.
+
+filemap_grab_folio() is a convenience function that avoids us having to
+specify the other two arguments to __filemap_get_folio().  Since there's
+no indication at this point that there are going to be more callers of
+it, filemap_grab_folio_mpol() should not even exist.
+
+I'll send a pair of patches which should be sufficient for your needs.
