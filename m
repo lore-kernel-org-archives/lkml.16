@@ -1,218 +1,341 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA028DF13;
-	Fri, 20 Jun 2025 14:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750428625; cv=fail; b=OolQG57kJYtLuJ3OuwAjY8HjAKnGIiLHTrSZkEytInPVWc3KxxWQv/I7f0KTzCyLBRKpBUzaa/rY3I+1u1FFwV5GoNydxD06WGCHZi5gBw0BH1EevSinZjlviGXNXV2A/HZKKsJweNq1twBwhrP9QxYfu/TBxkXC5Vs4SieqPhQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750428625; c=relaxed/simple;
-	bh=oh/v2w4/zhPWXP4EzB7gL1be/QqJRqTBvUAfFOaWAUc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LNuo49SWkZG/viqt6g4gpaVn5H+tkxoYjF+WPCSZtCXdy/6Mn1xr3TU4PH3Bbg6Tw5uWoxZB/q3Pgpnky9f1K/Nx50S01DUsD9x2ap1KY0RXAbCGsWbwEFplrrAvb2zbB0cBbOKt48SDxdkENoylTwNc/ZFAUbL/Lg+YFca6A5o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDYWmsOp; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC7628DB53
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750428646; cv=none; b=SGEUUTUYmr9UAkYHwngF6F+eYFYeErvvhst4zv/Aq5btDke9vUykfkgYmjkrOmc9z1ZEDQ1pE9xYD8O+Qv82x2mClDZIVO358wt/V04oRAo3XPGBM+EVmZpzm+MV6SaaSgZI82ppnJPguUODuK34Y+EBhlyKSFhwY+NLFQQaev8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750428646; c=relaxed/simple;
+	bh=YAqDZHxmNX+RObv8DIq8wmyRMyMZqfUDCmP+WImAVpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bDHrbqqpJAJrvng5ogf7BqKwSyR0cz3DK3kGxTHDExbaO39MeAETN89dNRJOw2OMPgMSsgyLTcB4+zr8rZiv4IWSFTcQUxSwVi98P48VexxEsZJYxh03yLsSehz/ySVdtmhMb8BeiUYRdbhy8DCTOc6TO71ADY5Qi5W92T5/XHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=OxkGvU0F; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDYWmsOp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750428624; x=1781964624;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=oh/v2w4/zhPWXP4EzB7gL1be/QqJRqTBvUAfFOaWAUc=;
-  b=QDYWmsOp/ipDqnoNWJjnEewQ6li0C8XcHVgXV4q163gpgzCWPxYcl+yk
-   poZ8sH0z9wHFd2H44ifDtDRkmHInF/0pxlVxh1BDYmTk9UMjjHjctJig8
-   EZo/0sn4ZMZtisxwgrRUqqs3PJZFZA36Ha4QzJ/g/o+bkwIF9TFdEk1fX
-   kzfkiPNICZ7q+XCfQnOOhbDvHUmNoj/4haiQ2rnicUNNVkHK5ecY1RNzN
-   B9Vu8UCmCO4gpJ31gBW0Sa+52fw5QUetOl/JC74zDdA4+xPKSY6xpMTqr
-   injIVTronO0Vdhh/NiteJ8UEHqQzKdRKV0K2kuJCdq/Gel7mHOlaQr6W5
-   g==;
-X-CSE-ConnectionGUID: sra0lAeESuyEzD0JlquQag==
-X-CSE-MsgGUID: 5Xszxm5wRTiFHqhvK1FixQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52773893"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="52773893"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:10:17 -0700
-X-CSE-ConnectionGUID: go/KyU21QwulZwiiLyZ8Hw==
-X-CSE-MsgGUID: BwVXHC7YTdGL8/fIX9XIHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151452444"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:10:16 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 20 Jun 2025 07:10:16 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 07:10:16 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.59) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 20 Jun 2025 07:10:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m2sxG3zXt13OXlwPmEd3FLLD5jaoTvbudO/AZ83MmNnsCJzLOzupsb+HpWnA8Xsjl6YtffLRnUhHojRr1EevHLUvDwflbDmET4aFl5wxCa4CkZ/xeU/Jv69/vRLEzbz16X5uSqPpkkhULUBDrLUF4UWV0QiI5YFQh08fgSSS8fomTd5TuaHxNJDCGm7RKJISKhJQkkEBWWM/ftvqKFIHV+EXxqW3Ow9YCoDqL1DJtV9yUH1GI/UjyZPKw4u8ANCMHX7CjfCgAt/tz74PjpTlsg0FzV8yVeh9xePz3AQrZnb1AMTD/tnYSXyL3NmRXnR1GOKGsB/v4TRJa+TrPxbkiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BQIJrx5atcLjiUSbN4PrZGRUzzJ+kaBORMOiVEZvAhQ=;
- b=AMQ96OiliAes08y1RdhfKICZ9DiEiWXRbMZbRTRfdxanerjj+uBi1oDTpuZ4Hn1M5GY/ogQ/CFGSGU5hAU665GazHM0D1ig44VO1qC8lDmIoQsYtbifSXzBO3nNsefD9fAZYvhCMDGLmLf7nyFE7MWxaTZHCvYFVGh025lblo1ToTvPl5RN6U6YIkdd5Het+J4ERxphchgAoyczOvr8eVKJEK5ffPb2qOm7QzsJg/s1IW0epMsiZKdcTVzLRzYAFPx8+fOvQt+vZ0LVepfoC/HV5pZoiklXHmtRs6Np94PHkxhzEGA+qHvbf7AJqfoouwA4cXAfrUY37aWEG/I+l1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by DS0PR11MB8072.namprd11.prod.outlook.com (2603:10b6:8:12f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Fri, 20 Jun
- 2025 14:09:40 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%3]) with mapi id 15.20.8857.021; Fri, 20 Jun 2025
- 14:09:40 +0000
-Message-ID: <c898e879-26e6-4701-9baa-f9d2444e3137@intel.com>
-Date: Fri, 20 Jun 2025 16:09:34 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: qed: reduce stack usage for TLV processing
-To: Arnd Bergmann <arnd@kernel.org>
-CC: Manish Chopra <manishc@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Nathan
- Chancellor" <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Nick
- Desaulniers" <nick.desaulniers+lkml@gmail.com>, Bill Wendling
-	<morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<llvm@lists.linux.dev>
-References: <20250620130958.2581128-1-arnd@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250620130958.2581128-1-arnd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0317.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4ba::27) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="OxkGvU0F"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-86d0c5981b3so55064939f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750428644; x=1751033444; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cb95wT6YAeXhB7wAUnmyxgUJVnkrUiVyQ4loitF5Mh0=;
+        b=OxkGvU0FRZib6OX6MGK7Bjr6VPlDLSKHsegvdae/aVAsEe/kHcFFNPDbBDNuPGvdVC
+         0tBqJxesT+33InibM1Ge1xPmK3pt+0yJY0Vu0CA42Ks+PaRKX8THg+oyZ5rbWnyzaU7o
+         CrT7GA8WN+sRAzjZCzR0e7FzUj+pneXEIYX69YgbVf49k3MTR6EpY797+2P9hrrP8yBB
+         x9oVJKWJVhoOfk0uXj7PAG75Koc6fnJ4nH/BB0zw+FEAqZldMuJgSBWFINK/KY/phx1u
+         2eLJOo4nW2nmIOhSFM93QO9prYR36nPcSFdyE0MM6uk8AI7nO+HzebSy8iqC3cKo02VN
+         hAug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750428644; x=1751033444;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cb95wT6YAeXhB7wAUnmyxgUJVnkrUiVyQ4loitF5Mh0=;
+        b=MaXzfcPWyOTG7hxjU/czlo/5c7FTrld16tGA1E5ESktKX3hZ/EtlcqN1M4Sf4/Depx
+         /VHyjvqpnWH3Y5XwMKMkpfe4qnXfNE7ayoBwcv6j+B5rag7Kq3MPBt0xWw4YBoyd4vj1
+         5AtvURZnbFAdEipQ/Mis86DdkUA4QfJpWGfmcJQzXq0kLDxur2jDyW7R9/xcM3+U1JTh
+         jqH/lOY5eQYQLKhmBJySkrKbpX3FSxO+ynqECnbjCNLtCVWEVF9seSv5gYOPQSet+/WV
+         h4JsMET3boNRe+IJGSGMYQxa/d46dt1w0bI9mGjXV7qwWHbTxEWrfEEWrUiK4skWPQqS
+         BMtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXotNxP3Uxo2HA7BOx6JE15VSydoxC6M4uJtb8+Ey8zZVpSPXXtrm2Kla66IyNrZn7+QKZLgkkphnO3+WI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgSkkpWPMqlfU1kLgMEJHsFBnoDujyFffHAnmaP2tNtzyEueCq
+	9Cah2vRHESboSLfT3exBvorkDXa5kv9KwJ0jaoaeRn7KzhSuz6+GuRf6NxvHz8qXXl2l88EsvOY
+	zU48F
+X-Gm-Gg: ASbGnctH4DaA51jOFTxjuBwvolzIkuWdmV8G8a09jD6IG9PxUmVlCHWlfnPPK77Ajo/
+	JpoFDcv+CDAPLy7m7mLNGKqWHnJLvZeDwyXvtbfJlJhyVhO+WfktiCSLCreOK/2HDFGbgoMrBvZ
+	otFXmbw6EjRY+Jo4MLpfsfRxQV++XkNNxJ9cIHuF0G8fX6wkSoMEpM5JyhXNmQD1dhBc5VIohyV
+	R4AKbDgdetpXY9Kg5vs2HxQgpQSQ4zYH6xSpXDrZOI8swzinVTARWCYnlb9UHtqJ2G4RCXFWtSQ
+	ESYo86qmwjZVJsfaJbevksgR81ETYnr+XSIHSE2c3XIpycc6tMuexfxjBsqCJRU3KmUiTDY4gss
+	zdXdyCHXbIc3KYcQm8XlRGRq2Xg4wLA/r80uF
+X-Google-Smtp-Source: AGHT+IHOWUr/z3EkWBYHmgxBtlE4mt4YGXnWdQgUSVsQC0wQSTfNxZFXIK4wwFK7GGyxDqhayW89fg==
+X-Received: by 2002:a05:6602:26ca:b0:86d:5b3:3b88 with SMTP id ca18e2360f4ac-8762d1b0cedmr243625639f.1.1750428637859;
+        Fri, 20 Jun 2025 07:10:37 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8762b7adc23sm50782439f.35.2025.06.20.07.10.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 07:10:37 -0700 (PDT)
+Message-ID: <8126de92-0338-4cd0-98fc-4f8c37500201@riscstar.com>
+Date: Fri, 20 Jun 2025 09:10:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|DS0PR11MB8072:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21ecda2f-8275-4efc-3e74-08ddb004188f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Wnh4QkVCMVNlWHJYWm5LYjY3d1NhdzJzNWhFb2o1K3YwVmlidlJKeDlQVFhP?=
- =?utf-8?B?aThpdU5TVWY4K25WbzY4b2ExTDkveXpzMnhZVFc5NGNyTXc5dHNTSkE1U1dn?=
- =?utf-8?B?cGtEUlZYM0s0SDhDVTZkWjE3N0Y1M3NrM1ZjSWt3Q0lteEFDZXVmdGxBMFhJ?=
- =?utf-8?B?Vng2eFY1a3FjUHc3dlJDWkRwQm9NaTQ2SGlncE5VaGJRQUJwOURsY2tSUDUv?=
- =?utf-8?B?SVRhSFhIb1RBeHhOZDRrcFF5M1JTZTdBQUhBTEx1MUY3a0lCQlczdytqRzBI?=
- =?utf-8?B?RHUzNGZTeDJKbGQxOFJMYzFIdmNhVVFoT3pkN1RHNzE0c3BZRTNUSUcyQ1VH?=
- =?utf-8?B?Y1BFVDRVdUJ5T3pnVmkrb2NVZ0RNSTY0R2ZiVTl6bS9uZTliODA4L2NhMzZL?=
- =?utf-8?B?dGlMaCtKbWxXeFVvVkU2R2NFaHl2Y3h2VzhaeldhTlY0SVptZ0pQc0tKL0kv?=
- =?utf-8?B?MVVTWjNnY055eWhiN2FqODNmSzJJb08vN2JRd1FaR1pnU1VJTjlRSlpuRHBu?=
- =?utf-8?B?a09vdHprMTNSOEIxcVYvS2VGbW1Ga1lKMWx5R3RIbzR5VkU2VStyTzJodEtZ?=
- =?utf-8?B?a2ozc0k5c0RqbHFGajE5d3o5d28wWEFuZ0Z4alRHUGxycU9nYTJoSnlCZzNs?=
- =?utf-8?B?elhmV0Y0aDRDN0YrY3dTRHYxdWx0bnl2U3pqWGlBMUdJa3V6U1ZocmRYUEpa?=
- =?utf-8?B?Yk9GeEVLc1lLT1crb3czNmZBb1grNGwxZThOWkMxMElOSFZSWkpBd053bEpi?=
- =?utf-8?B?bnIvanZjUXJTZGFFUDdRQ2VoaHFCYTJnMG1zQlpnZjZ2RXJ6S3NmUnozcWlD?=
- =?utf-8?B?eGFhcnc0eVpySkd5d0VqOGNsazEyQitORUdwdHhsSHJSdjcwNHBlVDkxcXVD?=
- =?utf-8?B?cGR3RUZZVVJhU0U4c0RMeXNEaWd3azJkV0tnQjlia0ZXM2VhNGM1TFdGZ0J4?=
- =?utf-8?B?c21xMjllMEtSWndaSGh1aTIzZnBNRS92VVRtTU13ZFFEVUpnRjhGOERleWxB?=
- =?utf-8?B?eUt2K3F1K2dRUEF4SGdBdHNlajJERzBoZjg3UGhOOTloOEtDWWZZTlJrU0E5?=
- =?utf-8?B?aVFkRWRYZjA3bi9QSCsvYmlwa1dUQ1h5ZCtQNU1DYkFwdmZxQlNQOEFoeEl0?=
- =?utf-8?B?dUIzMkpYKzZJaDBwVHZTdU53L0dPL2ZQRUs5OEFNUXFqZlZBM2FVTTlzSG9y?=
- =?utf-8?B?QzVBeE1paHJTQnVGbm5ETi9YUUtxSWVmcW85Mi9DSEtQVVV5QVJOTW9VUm9r?=
- =?utf-8?B?ZVVhcGloY0o1SkhjSG1aZmxvQVhnait6dEhsN2puV2srVEczUUd1b0I2dXll?=
- =?utf-8?B?RzgzczkxWDFDWVllblh1bldTcS9TUkJIZldsd0s5NVFuUkx5Wk9CdmxRajh1?=
- =?utf-8?B?Q05zNnRuWWVVd0FVWWFXd1VUeWgzZnVMZVVtSlhIaGVEWktnL2lRTGZhanlK?=
- =?utf-8?B?ZFdMYmN1QWIrV0JpL2ZiTmN2eW53VVV5YkNsU3drVkpiQk5GaHU2eEdObUhX?=
- =?utf-8?B?NDI4Sm4zRkhhc3ZlYkZabUJSZmhLcDRkOU5wbGtqMUNtQWd2TUtyaDFlZ3hw?=
- =?utf-8?B?UmRnZWd5VkZocUtXUDJkU3IvTUhxTHlYdU5POUZ3dzFYVXpkdGRnc2FxbTRE?=
- =?utf-8?B?OFVnRU8rM0JvL3BMRzhHbDB3SkRLVWZTSXdabVc0OFZTQmxFMElzT044VlFr?=
- =?utf-8?B?OGs5d2tUU1dNTUxtUGVvTGZTZlQzb2g5ekxteURmWVZOU0VoVmhhR25tZkw5?=
- =?utf-8?B?eURSVmhvNnVITlJFbmlFK2Znek1FUExLUWNjbXB0bVcybjA0L1hENHVHTmxQ?=
- =?utf-8?B?eGZ0WEZVY2N2YlZFK2hGQkdNeVB6dW11emFVN29wUDZBcDM4Mmw3b2lEYWN6?=
- =?utf-8?B?b09XWFQ2ZUIyUnNQVUhEbytpTGdPVTB4Y3lDMkpUL3NJcFRhS1dQUzQvSTFF?=
- =?utf-8?Q?dsp0NKYT224=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ajBLZlRHYjVsZVlHRGNWUTFYU1RZaHZrQkZTSWQxZmRnYnJSZDR5QWJKcFhM?=
- =?utf-8?B?VDFobFFKUTNpU245OHUyU0xrdjV1NURlZCsxRE5VWnlubXVwbEQvaDcwUEcv?=
- =?utf-8?B?SW5DcmdGZ1ViQ0tlUHJJWWVRZ3pZTVRSME82c2pCQ0s3S0xZdmVYazZMZysr?=
- =?utf-8?B?M3VPNHVWK1k2ZGNhK29iUEhTVTFKRDF2SGl1V1RvZHAzaUVUTXEwS054dzJD?=
- =?utf-8?B?cnlSWHd6aUVJYWZMZzBBOHNOMEVQaVlwdmY1Yk9uVnhtRU55Qk8zWXBwMjBl?=
- =?utf-8?B?a0ppT2pZaXF0NXI2SlN0WTdMM3QrTU92UTNoRUlrK0l4bitTMW4rQmhOOWF4?=
- =?utf-8?B?eXBhTHRrSndhd2ZVUUVObU1iRHo3S0hESUEycFdmSk9XSHZoVW50SW9LVjFZ?=
- =?utf-8?B?ZUFwUCtQMzh0eXFZSzhSL3djcjlLb1VWVjhCQnVSejhwTjVpYWV2RHlTUXZ0?=
- =?utf-8?B?TEFidlAxLy82SWY3VUsvZWZWQkxkcHpjMS9oNllPTGg0RjFMeWhhZWM3R2lX?=
- =?utf-8?B?ZWlLOXkzYmZ4VExDaE41cEw0RnVhemJzMXBvWmw5b2U2N3lsNVNuSUlJK1Nu?=
- =?utf-8?B?WU4xUWRER3Z0SWZPanNmakNaWGJjRmxyTEV2eDBRMUQzN1NrN0ZJZXpPRVpS?=
- =?utf-8?B?bk1iU0NVUmRnMjdML1ZKNmV1d2w2cW83VXdYWlpKT3FNT2ozRGJBazQ2V3ox?=
- =?utf-8?B?V2QxU0QxRUU1cXZINFIvR0tadVNuNHBwbm91bXA3Ykp4VHdqYzR6cUJpbEVp?=
- =?utf-8?B?dTZBblk0ZXlXcFlxOTlySUZhUU15WG5ra2N0V2lkUCtQOWtWNXhHRmw5TXlw?=
- =?utf-8?B?MzRBRlppS0FQZHFJU1R2bkZZdHMwNGhXUmZCM3c3WStyUlJGcDg1RGVacmhL?=
- =?utf-8?B?bU1CczAwc0RmeVdrSU5xZmtMMk5DWGtwOEJPS0ZBSU5qZzRFQnFLYTFGTmpq?=
- =?utf-8?B?bU5tZHdMOVZ1bGtFbFY5ditVUHEraXJqck03bkhJblNlRFZtMjg5TkxOWmNr?=
- =?utf-8?B?L1d6MGxwaExmbkJVMkhyTlVFWlVqV2ErenMxM1dBZU8ybHQ2bkc1N3hTdk5T?=
- =?utf-8?B?Zllkd0RUNVRkVDZHbGFMVnZiV1NURUJYN21ZVlU3dk1SUUtlb0VKSmdjMEpq?=
- =?utf-8?B?OW5kTUxSUzZocUhjb25zOUJpOERscy9RV3VkWHYzODlqZ3ZrcVpTNUw4N3Fa?=
- =?utf-8?B?alNiWkt1MHljeE1IcVY0Vm5Tb0x3R3NDUW1NQjNDb1BDbFAwQ2xjSm9IdHpU?=
- =?utf-8?B?MTdzNzJLQy8zZExnOGNCR1JTNWJPTXZJTzZ5b0NhZmZha2hzUGhaVVJURlEv?=
- =?utf-8?B?dC9ubUVjTHZlZzhMQlg0WVg3clpPa1VNTFM5cHNFVTZ6TEFvZUtaeWxiZ05B?=
- =?utf-8?B?bXNZaDBFSGJXVkxaNzBoM1BOTTFKS0pBWE5Bd1lDRzJPd2N3MjlTa0thU0Z3?=
- =?utf-8?B?dFVvcXZXaFNxa2NMTmFhMHF0TFFMajdheW9xaG56K1M2ajJPNVBrSGF2eEM2?=
- =?utf-8?B?RXJQcDZHd3IvQTJjQUMyK0E0UjdZU3FZVDhQdGNNYzVrUllVR0c3YVZTU0hz?=
- =?utf-8?B?Ym40WXUyc01JajlaVWlkMVRLdHJGREpoT2lHbTRqV3BnS0pzT1ZJcC8zN1k4?=
- =?utf-8?B?aXYxZElWK0ZoMVJOVUdwVUR3ZktKaEVnd25OQzRBT2h0WmYwU2IyVnlYdXRm?=
- =?utf-8?B?YTh0eERHeHhIaDNMSGdVbk1GMmt6SVBhb0RsbDRwYldiQ1FCWmhyb0FDWFBj?=
- =?utf-8?B?TWgyUVpieFRubENYVjkzRGlONndwMGwyZWRQcndZeDY0ZnVzSTMvcTNYQms5?=
- =?utf-8?B?bndyQUduZ05RcEthNFF3UU5NanViWGx3TnVBZmJreHh6MjU3emZ0LzB5MTZS?=
- =?utf-8?B?NFpSZnR0T01tOWJ0K0RiaDh6WXowT0JBak16YmI0TkIweExCaUhJcHVtZVlO?=
- =?utf-8?B?NVIwTVRLSHNKcjh6WTl5UThheGdtcDI3c1pvSGtJUnBKdFVYTllzcHFrTHAw?=
- =?utf-8?B?S0luaFplK0RWK2JKMWMwR2FEVEUwMXhqdlRDS1F1TnVyTUZyS29MNmFCQVRK?=
- =?utf-8?B?MGRjZks0WXEzYjJUM21JR3UrcmJ5b0ZOUnZZU3k5dkFmd1BOY1A1cnNwK04r?=
- =?utf-8?B?VlM2anhnMXplVFljUCtCZVRzbEdLa213MDM0MDBla01lM0ZTS0kwV0FDOHRY?=
- =?utf-8?B?RlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21ecda2f-8275-4efc-3e74-08ddb004188f
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 14:09:40.2279
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9llvzMm9rEr0Btbx89j3LIqaqeE+w/VyHmGWtJV5L1fxzpMZ2zc3oniNyqXTIIZlNlMl/nPNEqv+chIM/8l51HC/z1T4yHggydpZ17aLmjw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8072
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] mfd: spacemit: add support for SpacemiT PMICs
+To: Lee Jones <lee@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, dlan@gentoo.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, troymitchell988@gmail.com, guodong@riscstar.com,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+ spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250613210150.1468845-1-elder@riscstar.com>
+ <20250613210150.1468845-3-elder@riscstar.com>
+ <20250619144023.GG795775@google.com>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250619144023.GG795775@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@kernel.org>
-Date: Fri, 20 Jun 2025 15:09:53 +0200
+On 6/19/25 9:40 AM, Lee Jones wrote:
+> On Fri, 13 Jun 2025, Alex Elder wrote:
+> 
+>> Add support for SpacemiT PMICs. Initially only the P1 PMIC is supported
+>> but the driver is structured to allow support for others to be added.
+>>
+>> The P1 PMIC is controlled by I2C, and is normally implemented with the
+>> SpacemiT K1 SoC.  This PMIC provides six buck converters and 12 LDO
+> 
+> six or 12.  Please pick a format and remain consistent.
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> clang gets a bit confused by the code in the qed_mfw_process_tlv_req and
-> ends up spilling registers to the stack hundreds of times. When sanitizers
-> are enabled, this can end up blowing the stack warning limit:
-> 
-> drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c:1244:5: error: stack frame size (1824) exceeds limit (1280) in 'qed_mfw_process_tlv_req' [-Werror,-Wframe-larger-than]
-> 
-> Apparently the problem is the complexity of qed_mfw_update_tlvs()
-> after inlining, and marking the four main branches of that function
-> as noinline_for_stack makes this problem completely go away, the stack
-> usage goes down to 100 bytes.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+"Numbers smaller than ten should be spelled out."
 
-Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+But I'll use 6 and 12.
 
-Thanks,
-Olek
+>> regulators.  It also implements a switch, watchdog timer, real-time clock,
+>> and more, but initially we will only support its regulators.
+> 
+> You have to provide support for more than one device for this to be
+> accepted into MFD.
+
+OK.  I'm looking at the other device functions to see if I
+can pick the easiest one.
+
+>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> ---
+>>   drivers/mfd/Kconfig         | 11 +++++
+>>   drivers/mfd/Makefile        |  1 +
+>>   drivers/mfd/spacemit-pmic.c | 91 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 103 insertions(+)
+>>   create mode 100644 drivers/mfd/spacemit-pmic.c
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 6fb3768e3d71c..c59ae6cc2dd8d 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1182,6 +1182,17 @@ config MFD_QCOM_RPM
+>>   	  Say M here if you want to include support for the Qualcomm RPM as a
+>>   	  module. This will build a module called "qcom_rpm".
+>>   
+>> +config MFD_SPACEMIT_PMIC
+>> +	tristate "SpacemiT PMIC"
+>> +	depends on ARCH_SPACEMIT || COMPILE_TEST
+>> +	depends on I2C && OF
+>> +	select MFD_CORE
+>> +	select REGMAP_I2C
+>> +	default ARCH_SPACEMIT
+>> +	help
+>> +	  This option enables support for SpacemiT I2C based PMICs.  At
+>> +	  this time only the P1 PMIC (used with the K1 SoC) is supported.
+>> +
+>>   config MFD_SPMI_PMIC
+>>   	tristate "Qualcomm SPMI PMICs"
+>>   	depends on ARCH_QCOM || COMPILE_TEST
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 79495f9f3457b..59d1ec8db3a3f 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -266,6 +266,7 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
+>>   obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
+>>   obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
+>>   obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+>> +obj-$(CONFIG_MFD_SPACEMIT_PMIC)	+= spacemit-pmic.o
+>>   obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+>>   obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+>>   obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
+>> diff --git a/drivers/mfd/spacemit-pmic.c b/drivers/mfd/spacemit-pmic.c
+>> new file mode 100644
+>> index 0000000000000..7c3c3e27236da
+>> --- /dev/null
+>> +++ b/drivers/mfd/spacemit-pmic.c
+>> @@ -0,0 +1,91 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
+>> + * Derived from code from:
+>> + *	Copyright (C) 2024 Troy Mitchell <troymitchell988@gmail.com>
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/types.h>
+>> +
+>> +struct spacemit_pmic_data {
+> 
+> s/data/ddata/
+
+I hadn't noticed that convention.  I'll use it.
+
+>> +	const struct regmap_config *regmap_config;
+>> +	const struct mfd_cell *mfd_cells;	/* array */
+> 
+> Hmm ... this is a red flag.  Let's see.
+> 
+>> +	size_t mfd_cell_count;
+>> +};
+>> +
+>> +static const struct regmap_config p1_regmap_config = {
+>> +	.reg_bits	= 8,
+>> +	.val_bits	= 8,
+>> +	.max_register	= 0xaa,
+>> +};
+>> +
+>> +/* The name field defines the *driver* name that should bind to the device */
+> 
+> This comment is superfluous.
+
+I'll delete it.
+
+I was expecting the driver to recognize the device, not
+the device specifying what driver to use, but I guess
+I'm used to the DT model.
+
+>> +static const struct mfd_cell p1_cells[] = {
+>> +	{
+>> +		.name		= "spacemit-p1-regulator",
+> 
+> This spacing is wonky.  Take a look at all the other drivers here.
+> 
+> Also, you probably want to use MFD_CELL_NAME().
+
+Yes, I see that does what I want.
+
+> One is not enough.
+> 
+>> +	},
+>> +};
+>> +
+>> +static const struct spacemit_pmic_data p1_pmic_data = {
+>> +	.regmap_config	= &p1_regmap_config,
+>> +	.mfd_cells	= p1_cells,
+>> +	.mfd_cell_count	= ARRAY_SIZE(p1_cells),
+>> +};
+>> +
+>> +static int spacemit_pmic_probe(struct i2c_client *client)
+>> +{
+>> +	const struct spacemit_pmic_data *data;
+>> +	struct device *dev = &client->dev;
+>> +	struct regmap *regmap;
+>> +
+>> +	/* We currently have no need for a device-specific structure */
+> 
+> Then why are we adding one?
+
+I don't understand, but it might be moot once I add support
+for another (sub)device.
+
+>> +	data = of_device_get_match_data(dev);
+>> +	regmap = devm_regmap_init_i2c(client, data->regmap_config);
+>> +	if (IS_ERR(regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(regmap),
+>> +				     "regmap initialization failed");
+>> +
+>> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
+>> +				    data->mfd_cells, data->mfd_cell_count,
+>> +				    NULL, 0, NULL);
+>> +}
+>> +
+>> +static const struct of_device_id spacemit_pmic_match[] = {
+>> +	{
+>> +		.compatible	= "spacemit,p1",
+>> +		.data		= &p1_pmic_data,
+> 
+> Ah, now I see.
+> 
+> We do not allow one data from registration mechanism (MFD) to be piped
+> through another (OF).  If you have to match platform data to device (you
+> don't), then pass through identifiers and match on those in a switch()
+> statement instead.
+
+I haven't done an MFD driver before and it took some time
+to get this working.  I'll tell you what led me to it.
+
+I used code posted by Troy Mitchell (plus downstream) as a
+starting point.
+   https://lore.kernel.org/lkml/20241230-k1-p1-v1-0-aa4e02b9f993@gmail.com/
+
+Krzysztof Kozlowski made this comment on Troy's DT binding:
+   Drop compatible, regulators are not re-usable blocks.
+
+So my goal was to have the PMIC regulators get bound to a
+driver without specifying a DT compatible string, and I
+found this worked.
+
+You say I don't need to match platform data to device, but
+if I did I would pass through identifiers.  Can you refer
+me to an example of code that correctly does what I should
+be doing instead?
+
+One other comment/question:
+   This driver is structured as if it could support a different
+   PMIC (in addition to P1).  Should I *not* do that, and simply
+   make a source file hard-coded for this one PMIC?
+
+>> +	},
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, spacemit_pmic_match);
+>> +
+>> +static struct i2c_driver spacemit_pmic_i2c_driver = {
+>> +	.driver = {
+>> +		.name = "spacemit-pmic",
+>> +		.of_match_table = spacemit_pmic_match,
+>> +	},
+>> +	.probe    = spacemit_pmic_probe,
+> 
+> Remove these odd tabs please.
+
+OK.
+
+>> +};
+>> +
+>> +static int __init spacemit_pmic_init(void)
+>> +{
+>> +	return i2c_add_driver(&spacemit_pmic_i2c_driver);
+>> +}
+>> +
+>> +static void __exit spacemit_pmic_exit(void)
+>> +{
+>> +	i2c_del_driver(&spacemit_pmic_i2c_driver);
+>> +}
+>> +
+> 
+> Remove this line.
+
+Sure.
+
+>> +module_init(spacemit_pmic_init);
+>> +module_exit(spacemit_pmic_exit);
+> 
+> Are you sure there isn't some boiler plate to do all of this?
+> 
+> Ah ha:
+> 
+>    module_i2c_driver()
+
+Thanks for Googling that for me.  And thank you very much
+for the review.
+
+					-Alex
+
+
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("SpacemiT multi-function PMIC driver");
+>> -- 
+>> 2.45.2
+>>
+> 
+
