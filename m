@@ -1,102 +1,146 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CE528B4FD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E392E2853F7;
+	Fri, 20 Jun 2025 14:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750428145; cv=none; b=DyCP0kvUf4AXK2vhvyzipZnqDQ2DIlq4zl1bJ7YFc+lkQvmA1fdpFedQxcr5ZwNZG70ykb4hGQDnj5V+WN2QLhUC1Rh9RNY5y9qNPIuAA3WRvXdwnzZvV2HlQ1oWTg75SX9JlEIVM2LYq3L0hevTL3Y/vmzfjPGNxou/j6h7cgc=
+	t=1750428206; cv=none; b=JRrwVukke+lEa6x66VB3z6kE3+VgsGFI1RCd+Fxv3SeQ61Pr4YhG9sJoXeTj5yd/TfAdZX8WYAMm4zblVfQr2IXlsePiFKnUB5JT38ADIdF1XQD9lVBZl/7at1kIeAEzSH7Rg+kOQPpKWmWgCf3l2/ffjJFTeRNRbdNkEOlvy4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750428145; c=relaxed/simple;
-	bh=wrglQsoKcEeOYOt0yvjVwUQOZYMIEJIvNwKImKH8jF8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cnEhvT4H2ORGOdJvB0/gQS7Mb8BMnmyqeaq9t7hbu+I8muXudiK9/ynGmOqVXNQ5b1PSykGIqV944BtrrDtlAFyM4ojXYkZaLihI2bYTDIGfu8jUka5ebSb506rz+/Q19bfT8FXMsWSBGmj56sX844p6dOp45cov7jdhQg3aZaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cRDPHC0C; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750428206; c=relaxed/simple;
+	bh=4NEDyJXdNqSWXOZ4emVLeSKU5MjypHaO00EcnF46Flc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J9k/9kEurnB9+hvHHN3hnohvsPgFKJX+wzYtzSh2831m19W0lOz67SeBnUJJTLPVmwJ09HX0DLH7sqxMIZqxyI9YBROGLiEQ8Ouv85miyI9CdK8Hyrt/VUbSYHtSfuNtq6GsK4XdfQDHi4+LZS0qLUc7Yduj6yWjUuBpS1kSh6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTNwZPRJ; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cRDPHC0C"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so21997545e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:02:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTNwZPRJ"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1321604b3a.1;
+        Fri, 20 Jun 2025 07:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750428142; x=1751032942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750428204; x=1751033004; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wrglQsoKcEeOYOt0yvjVwUQOZYMIEJIvNwKImKH8jF8=;
-        b=cRDPHC0CTym8PrEEOJ55+u8KjlkEHNtoXY5ENM6tLgskEGD4Pq63M1djWSXh4HWFxp
-         NHIIpI/szx/Rjoe27hBjJebTe7Xxht0rCcQJfFDKmTLd9xetN+hqgDyxrcEaY+6LgNzc
-         d/7zfMby5VtCbxMzna33QUc2MzAMZmEp/LEDVxBLOShaiZFtm75OTnAmwzwWM6piQxgq
-         sx8kOj496OluaA+Lo/tFTjwaW+Kwc2iPauQALLWsGJdlatbYH35efcSpEkR0kjyiNtzb
-         MWSczegOExsMx7r3PSb/HTaIruCyksW9ooswSl1q4tlUHnOrPbYKKx4D/IoUeNMY0nr2
-         5Txg==
+        bh=Xn7VkzjBGtxC5wocnjwA6tAAMdVwFSL8OdOVM5bwT48=;
+        b=NTNwZPRJxS3dUIW7EmHkxw5FW517yXmpV5Tigpqt1zDCoHo7lnHOQHDISsBUDYssCj
+         UM03F7jeWfYvB2QEkfFGtRXBncvbOShry6Xn4So1Dq9JKy6WwAaUjaKC7FUyUPn7pvGE
+         za100yTGHS/hXZQ4Gof5SOSTdlGWm6IbwAKOC9Qach/vSKObf6TTuUusqZ+koRItEzhE
+         EPRrZQ4goBwhkQc0/lZoe7S5EtH/ijW2Wqh8bDpqZF88u3Gvg/WqkGR3fcVj4Iw/A2/9
+         oOxGBRfNYB4D+VnLHvtsDyQ3ExtlszZnO0xOQWMEMdUy2VSEfxuZV7SoLmAufWMY+ORM
+         dMnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750428142; x=1751032942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750428204; x=1751033004;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wrglQsoKcEeOYOt0yvjVwUQOZYMIEJIvNwKImKH8jF8=;
-        b=VeSc0tRfl+ZhF+/PVrJKZARt4E9C5UxwRcjlJpIGp8qiHXV+Zr/Z/lv1K+5/rNvGGw
-         pEpQFsxaBgjW69RVpL5Xi7/EVY9Z76cXo9gLZWfhKHvGWmHuP1vsv8uJf4E3H/wvqflc
-         i6i6bUp9kWdFLqOrkPuBa/vP6ieym/Hx/SFhKS7Ayx4KLGgA/It6aQlZna6U5aDTU1of
-         DDgZBo+7clO8bqq9zVeFvcPGo7dbu5Z4mqeWwTsDQOoMT1WJWMGGFOL/3IK/PJh21BmQ
-         w0Z6I3+VILD1seTrHxlGbP+2s2YJd4aGgwBLpJPS1//Lt/YGooOduSRlAJ9wUBjUVwHd
-         FYTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXggI/Qq4U2Uw6osbyI7RHg2PhVjSbnjdZacSKOmERADRHLXfWUpft63gcxC2swJEtNH0pvVR5Ye+l/oSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4jkmv6peh08RcD0GzAq6Ci29uQqFJbtwX74sHtqkUA4YMeXMc
-	nzJHYuRYc/HpiaXEe6g/oUQ7JBfawbF0wel/JTz2u73qw2nPg/UiZUTGWXDtXoTPT89WmK1h2Ao
-	dwkjdwICH7GLeBRIidXkB2i451mh2MoAM32PxzMWn
-X-Gm-Gg: ASbGncvUAxCr1AX9sME1BXTblyaJO6sePXwdypiRbMMoffKrQRdLoGvlRSsDr9dGur5
-	GIRY2F62C1wlf1wBhifVD4TDX4bPs9Nl+OHc3nLnMWFrX+8AMk84WDsUgMOeoFBQqh4R7Tk35Ey
-	+apV45NdaENQXQr/zkGVgg2WBMe1IqKD9U//Jsum/Mm11FVKIXbVJQDsSeb8HCIhOf/MT2uB97A
-	A==
-X-Google-Smtp-Source: AGHT+IEutL1VNX/hRHqOTi+mnqSm7ws/5NToJ5fnCdAaVgC5P6bkQB47Cg6RbXBAVp8TtUFltoGDzmM/jRWhYrGYMfE=
-X-Received: by 2002:a05:600c:3115:b0:453:9b7:c214 with SMTP id
- 5b1f17b1804b1-453659b896emr28450745e9.29.1750428141761; Fri, 20 Jun 2025
- 07:02:21 -0700 (PDT)
+        bh=Xn7VkzjBGtxC5wocnjwA6tAAMdVwFSL8OdOVM5bwT48=;
+        b=KhqwCiXtOwyO87YJDO+ZNO12UcnSEwZjGb6ltHHWqCDCHmBSYBnDoWUKSW1U5asAVC
+         D1d/XsIpD8AYpspG8jj1TRNYUdfyMOWbqZQWrUTxQc4dnFD9yu42qafW/verc+hI++JB
+         WHc/Jf8SWAV23S8pWLiQeKiPpmoby7+EO/jUtkrVgNn5+TRzrc4DqvKr0KuA6gpU4Kjc
+         2yYzAurKwr5nqO5ZQQpNq/fM48PUt/ffekXt+48WQtACmr6NXAVUlAplQgIArLf1NEiq
+         qXf/WmzfgsVbUeucG5Z1pdeTMAZ9lnJGIOlM+v1jlBZhVStKXMTSNZ68rrikvWCwKojn
+         VofQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYlAtLfMrg6Qt5ohIIAQhRT9pHSMHStdO2uNIh3HRxeORY7TSmZaDoKK8Qi/RbviqE2+fAsrCS13t8sQ=@vger.kernel.org, AJvYcCWhccWjVzJ1nedQVOO8mjM/WuFhXpAqLE2pFbh+qxYbYeuo35TIBism91z2eDbaIodADP92w05WRSh5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCZYw8w/VFKumAb0Kbti1AsDLJvmM2o4UQtbjbIuldsOqWBEr8
+	wnuXiISwUk/Tlf+ag/+meDgUpBMeTI2reFa8j9g9F5ef/wtllCjZNV+6
+X-Gm-Gg: ASbGnctogEkzzcyMTIbKVVGVjsOdvo2mTg7bb/zjq/5YOdL+O8sj4sp+tIwAxFo+Q8v
+	sUkILuEaLHoE1Gh619RjB9OcKzKhrdfWUGbJTawmtGw0zO7XLLmmpmeaQ4brWCi4U5cQwV75w88
+	2pAUgLdxZ3hUQtrR+yBwQVobApKW66XtX0tsJocZoQ89tjDqndJbO7IANsS1FKIzBPg7woRtJcN
+	0qsJUDlr/Ty+oYitjiltgV7vFoIjr/dpZBKYSvD1JoqKWSNulL61oqRCte4L77WvXYcHEzKN7YX
+	/KZtnTkzi4lgqSM8cnyztkbpqHWv4QUkj6zTAZZcpqpF0EGTTychr8s0P7H5LWYmOyEA2kLmgQ=
+	=
+X-Google-Smtp-Source: AGHT+IEA8OM74XLIyYLhLaheuXwHNmIRKwJLELETRIVKeQTi78LCozw/MaDGR08IIgyqKTzIaWRMPQ==
+X-Received: by 2002:a05:6a21:900c:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2202931826cmr4005618637.16.1750428202241;
+        Fri, 20 Jun 2025 07:03:22 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a649388sm2135010b3a.113.2025.06.20.07.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 07:03:21 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: david@fromorbit.com
+Cc: cem@kernel.org,
+	chizhiling@163.com,
+	chizhiling@kylinos.cn,
+	djwong@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: Remove i_rwsem lock in buffered read
+Date: Fri, 20 Jun 2025 22:03:20 +0800
+Message-ID: <20250620140320.231780-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <Z23Ptl5cAnIiKx6W@dread.disaster.area>
+References: <Z23Ptl5cAnIiKx6W@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-num-v1-0-7ec3d3fb06c9@nvidia.com> <20250620-num-v1-1-7ec3d3fb06c9@nvidia.com>
- <CANiq72=BSnom-nQgzLvv-cqwSknK1uJ=CXGP51r0WRj1Y553Ew@mail.gmail.com> <DAREXAUV51B6.7X7TPOJKK249@nvidia.com>
-In-Reply-To: <DAREXAUV51B6.7X7TPOJKK249@nvidia.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 20 Jun 2025 16:02:07 +0200
-X-Gm-Features: Ac12FXwzBXdyGz8le1CMJiiIArNhimA33xIPls6XDWTBt2Clkd7qT2GytcDFqHE
-Message-ID: <CAH5fLghRJ7QqGKJdUq5Nic542cJsHKX_C+EL+xma_rFJrHd2QQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rust: add `num` module with `PowerOfTwo` type
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 3:59=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
-> > Similarly, if they stabilize the `Alignment` one (only) and we end up
-> > only using our `PowerOfTwo<T>` for `usize` and those use cases, then
-> > we should consider using the upstream one (and adding any/all methods
-> > that we need).
->
-> `Alignment` is very close to what we need, so I don't see a reason to
-> not adopt the same name at the very least.
->
-> This reminds me that I should also check whether upstream Rust would be
-> interested in `prev_multiple_of` and `last_set_bit`. The docs I've read
-> for contributing looked a bit intimidating, with RFCs to write and all.
-> Would you have a pointer for where I should start? Maybe a Zulip thread?
+On Fri, 27 Dec 2024 08:50:46 +1100, Dave Chinner <david@fromorbit.com> wrote:
+> On Thu, Dec 26, 2024 at 02:16:02PM +0800, Chi Zhiling wrote:
+> > From: Chi Zhiling <chizhiling@kylinos.cn>
+> > 
+> > Using an rwsem to protect file data ensures that we can always obtain a
+> > completed modification. But due to the lock, we need to wait for the
+> > write process to release the rwsem before we can read it, even if we are
+> > reading a different region of the file. This could take a lot of time
+> > when many processes need to write and read this file.
+> > 
+> > On the other hand, The ext4 filesystem and others do not hold the lock
+> > during buffered reading, which make the ext4 have better performance in
+> > that case. Therefore, I think it will be fine if we remove the lock in
+> > xfs, as most applications can handle this situation.
+> 
+> Nope.
+> 
+> This means that XFS loses high level serialisation of incoming IO
+> against operations like truncate, fallocate, pnfs operations, etc.
+> 
+> We've been through this multiple times before; the solution lies in
+> doing the work to make buffered writes use shared locking, not
+> removing shared locking from buffered reads.
 
-If you want to add a new library function, the correct procedure would
-be opening an ACP, which is more light-weight than the RFC process:
-https://std-dev-guide.rust-lang.org/development/feature-lifecycle.html
+Hi, Dave
 
-RFCs are mainly for much bigger changes.
+I have a question that I haven't figured out: If shared locking are used
+in buffer writes, how can the read/write atomicity mentioned by [0] provided
+by xfs be guaranteed?
 
-Alice
+  "  "I/O is intended to be atomic to ordinary files and pipes and FIFOs.
+  "  Atomic means that all the bytes from a single operation that started
+  "  out together end up together, without interleaving from other I/O
+  "  operations."
+  "  
+  "  i.e. that independent read()s should see a write() as a single
+  "  atomic change. hence if you do a read() concurrently with a write(),
+  "  the read should either run to completion before the write, or the
+  "  write run to completion before the read().
+  "  
+  "  XFS is the only linux filesystem that provides this behaviour.
+
+[0] https://lore.kernel.org/linux-xfs/20190325001044.GA23020@dastard/
+
+thanks,
+Jinliang Zheng :)
+
+> 
+> A couple of old discussions from the list:
+> 
+> https://lore.kernel.org/linux-xfs/CAOQ4uxi0pGczXBX7GRAFs88Uw0n1ERJZno3JSeZR71S1dXg+2w@mail.gmail.com/
+> https://lore.kernel.org/linux-xfs/20190404165737.30889-1-amir73il@gmail.com/
+> 
+> There are likely others - you can search for them yourself to get
+> more background information.
+> 
+> Fundamentally, though, removing locking from the read side is not
+> the answer to this buffered write IO exclusion problem....
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
