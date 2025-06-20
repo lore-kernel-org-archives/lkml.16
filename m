@@ -1,118 +1,84 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C76D2EE290
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209F52EF2A3
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433056; cv=none; b=lq3HfbHbqfSTNRaiZObM3LtwlmZdJ3hZ0IoeSPXd0qhXCk7b6biZ8iSxoD0DlidEj7VzyDQHFJS3hx1vlnJOeDKtgBdGWbY73mKm2k/aV2LYMRYic1Hs3H7yzAyKFEIRb66PRkmQjsUlQLUDQ/bXg+qi0vlTgJstx8SrWBnS15k=
+	t=1750433059; cv=none; b=oDdUPgXBPs7R3zYE6GxBfEIHd1uEglCLSsHLJKuQEGbxhihLftVneX28RiuQ6UlC/z0dU9LugVy1bzx7eomYxZQSLl+2mWUblUIHO1RCGU1+Ej0vgeFQIhMd+XsYBe0vzQaHmEzI06nVenKJApyBYY3yN6GVDL+ZghVOJq65EUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433056; c=relaxed/simple;
-	bh=Ya3VNWrROgaFZ5bH5z9BWL5PtUUf3ZVrEfyqFiIGvkY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Nb4lOnjbTamy17BJfDj4Tsr3W4FJAfMGUa1VBVuN8W5rzNgkcKstSSyl9vKCqWvUKXbxjha5cHSDYofXw7bddK2h1bX78jB8u6IDppaOBTY4jVYFvmn85cZnREa0SZzrpUt6Rgl/zT5dJckpxdRE5H6QeT+YAosqDyOBREX9Slg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gtpx77gL; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750433059; c=relaxed/simple;
+	bh=twoxbeTMGkniqCFrzdy3nm9knKsAh3KTQan5m/kwiBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OUEGG1QXhYjgRJzPQ2NuA7fJsbEO0t1vby4g7T0jQoPHoaWpAfvdr+j1ZvZbxH/Guqqh11h8AK48nDseR35236jxUa9nezN/JcqYGAhg9Zz9fkxgi7uJKSnZ0h953nwRDqP7OEUv0l2ZrNxhfm3zwx2eg0cdAxqOC3hCCk62o/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aa6wAJOJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gtpx77gL"
-Message-ID: <8a3ec239-7504-4c1a-86e7-4911be42e0a0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750433042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t363sv/PFQaoNjy1pWbaKZu3kCtrGkr9AZQHOKk936A=;
-	b=gtpx77gLDK9Fm38E3p6Pi+Wuj/afpDwEXtOVz+E+LgFm0HRy1OeW//Sk0k9zlhRZqKt1Wc
-	78c+YmWk74v0cZECq4uNiD4TEnPuOkNVbLxmVsFjhBrmfJlRLDYoV+LmjWTG8QJo9JXW+U
-	YZAu0afA+toFD0nY/1JZFRddXFf4Zu8=
-Date: Fri, 20 Jun 2025 08:23:48 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aa6wAJOJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F45C4CEF0;
+	Fri, 20 Jun 2025 15:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750433056;
+	bh=twoxbeTMGkniqCFrzdy3nm9knKsAh3KTQan5m/kwiBs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Aa6wAJOJNBmKK3dCwCp26/7VmVS4d/gR+fX44/oXGFHNJCkLGttEiwF8vEjdOeNky
+	 Ljz4OGtc69qWvEnlEYeglGCwpu7j5LtbfNBn1ggyzxg38nArwSqXQ5uZSUct7WnG9J
+	 F4Xaffwsi31iyTQR7nGD+lfzo5NJRgh3I62oacDppI4/5tf+fp6ZOYoRwUWeLpmw71
+	 X/xdGfbn8Eh8f3EPY2V2PuxtcAe0l2sCb4ZtAHvJkop2i7Mg8r+kn4GijzCAEK/kKn
+	 iLZ9lhJIb6vvcxmfHH5CuQo8p+lVymCClF8brY3SAPkeODzCvO7OMa5uPnrnq6jYOn
+	 fWYip5d4oyKhg==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 23/27] kthread: Include kthreadd to the managed affinity list
+Date: Fri, 20 Jun 2025 17:23:04 +0200
+Message-ID: <20250620152308.27492-24-frederic@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
+References: <20250620152308.27492-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] Monthly rdma report (Jun 2025)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-To: syzbot <syzbot+list130c9052d10c27bfc9e9@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <68552aae.a00a0220.137b3.003f.GAE@google.com>
- <a3781077-5f71-45e1-bd73-1a85d927fecd@linux.dev>
-In-Reply-To: <a3781077-5f71-45e1-bd73-1a85d927fecd@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+The unbound kthreads affinity management performed by cpuset is going to
+be imported to the kthread core code for consolidation purposes.
 
+Treat kthreadd just like any other kthread.
 
-在 2025/6/20 8:12, Zhu Yanjun 写道:
-> 在 2025/6/20 2:32, syzbot 写道:
->> Hello rdma maintainers/developers,
->>
->> This is a 31-day syzbot report for the rdma subsystem.
->> All related reports/information can be found at:
->> https://syzkaller.appspot.com/upstream/s/rdma
->>
->> During the period, 0 new issues were detected and 0 were fixed.
->> In total, 8 issues are still open and 65 have already been fixed.
->>
->> Some of the still happening issues:
->>
->> Ref Crashes Repro Title
->> <1> 462     No    INFO: task hung in rdma_dev_change_netns
->>                    https://syzkaller.appspot.com/bug? 
->> extid=73c5eab674c7e1e7012e
->> <2> 338     Yes   WARNING in rxe_pool_cleanup
->>                    https://syzkaller.appspot.com/bug? 
->> extid=221e213bf17f17e0d6cd
->> <3> 72      No    INFO: task hung in add_one_compat_dev (3)
->>                    https://syzkaller.appspot.com/bug? 
->> extid=6dee15fdb0606ef7b6ba
->> <4> 50      No    INFO: task hung in rdma_dev_exit_net (6)
->>                    https://syzkaller.appspot.com/bug? 
->> extid=3658758f38a2f0f062e7
->> <5> 28      Yes   WARNING in gid_table_release_one (3)
->>                    https://syzkaller.appspot.com/bug? 
->> extid=b0da83a6c0e2e2bddbd4
->> <6> 5       No    WARNING in rxe_skb_tx_dtor
->>                    https://syzkaller.appspot.com/bug? 
->> extid=8425ccfb599521edb153
-> 
-> To this rxe_skb_tx_dtor problem, I think I have posted a fix. Do you 
-> make tests with it?
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/kthread.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Should I file an official commit to confirm if this problem is fixed or not?
-
-Yanjun.Zhu
-
-> 
-> The link should be: https://lore.kernel.org/ 
-> all/6813a531.050a0220.14dd7d.0018.GAE@google.com/T/
-> 
-> Best Regards,
-> Yanjun.Zhu
-> 
->>
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> To disable reminders for individual bugs, reply with the following 
->> command:
->> #syz set <Ref> no-reminders
->>
->> To change bug's subsystems, reply with:
->> #syz set <Ref> subsystems: new-subsystem
->>
->> You may send multiple commands in a single email message.
-> 
-
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 138bb41ca916..4aeb09be29f0 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -821,12 +821,13 @@ int kthreadd(void *unused)
+ 	/* Setup a clean context for our children to inherit. */
+ 	set_task_comm(tsk, comm);
+ 	ignore_signals(tsk);
+-	set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_TYPE_KTHREAD));
+ 	set_mems_allowed(node_states[N_MEMORY]);
+ 
+ 	current->flags |= PF_NOFREEZE;
+ 	cgroup_init_kthreadd();
+ 
++	kthread_affine_node();
++
+ 	for (;;) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (list_empty(&kthread_create_list))
 -- 
-Best Regards,
-Yanjun.Zhu
+2.48.1
 
