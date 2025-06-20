@@ -1,133 +1,125 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0182221260
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F5A28F3;
+	Fri, 20 Jun 2025 08:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407276; cv=none; b=idv6Q5D5rGqhKKfJV4TsLZvSNi+GMtBLrzbp3TMf2wiaZ7r2jo3b+Qths30hW9SrXkH/zOK0UklCseQxey5Eaum6d1sl2N8ZcedmLgwi1AHAyhzZkHMH09FnueMkl8fnx94AWrRDkwE1unost7Ecv/VrhBIrZkJgS83AO2B7fEk=
+	t=1750407362; cv=none; b=YqJt16D5Ng8u1TjzSdDuNSGO2TPviCrpkspTPoSbQ6YiuJ54iX99UtNvQwtvzIsXY95lPLSzh5Bk8XmP62WY/1UXU9kuNaJIZNcO5O7dzLHDvLup6VgOggG3RJ4w296Eg6bxYtV/xOBxjY96xiJs2rAlsdcqxdsrtefsdSKKhBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407276; c=relaxed/simple;
-	bh=xfDkOff2/cp56isNgBDL74wTO4PNdFCvihi5zbefZmM=;
+	s=arc-20240116; t=1750407362; c=relaxed/simple;
+	bh=wgoyCtEiXxlezBvNBqyM0qd8zvtWEkhDLIA41gSe+KY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDO2qV8ghnSV7iPB2YT/T+xOnvMorZhUCShBdwwI7VCwYaUhUkGB9Wj40cRUIHv/QhxrxlkDc46C/q65TMM0vuv/ofyGSVscRe3njEDITHfxm59/gyBBemVHL+eJSAmJ6oc9vDdIVgVvMM84uVp95xZcQKPr78YmeM9lrXKG09g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ECCjE4i+; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1enz3dmm5IxqIvY99aFIYTd8ADnOmSFYbWz6Dcm0SzNxImEGWDwznNDUTSnc2v+EVLxNG1A+7WF4s0EiMNZcIC9XHn7cry/d8YJtiZOWy40/6TJ9hbOH4JKTur4FsZMJOX8m8aqOHaH2Jw3pAPhNQG6jiz/frYRWXhSKuOODl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DDVg+WAJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ECCjE4i+"
-Date: Fri, 20 Jun 2025 04:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750407268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ekidZJ9vjPqyDhRKbJdtTMUi2Cve88x65UZUoS2Frl8=;
-	b=ECCjE4i+Dds9rWpM99wY2zCPSK7fP73/Dgk1Uxqcl2IKNDzDjbHXxKJq3+ZsEtmAW+/6To
-	xsfdf4QsnqCIz8eiKVtX8VmVSOCJnkoULtAH4XuWVwGKaqAP4Bm5gqTA1NZQtqVEDbf9AK
-	xRaZVOiHyDXsydgfyqvT8OnMJLCnS7U=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Martin Steigerwald <martin@lichtvoll.de>
-Cc: Jani Partanen <jiipee@sotapeli.fi>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
-Message-ID: <hewwxyayvr33fcu5nzq4c2zqbyhcvg5ryev42cayh2gukvdiqj@vi36wbwxzhtr>
-References: <4xkggoquxqprvphz2hwnir7nnuygeybf2xzpr5a4qtj4cko6fk@dlrov4usdlzm>
- <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
- <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
- <3366564.44csPzL39Z@lichtvoll.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DDVg+WAJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=C2SozZJF+dRAW0Ug5ciknM6joODBVsslgQj4ViQKp00=; b=DDVg+WAJhj1HBfuYFYKza+kG2L
+	FZDDJqxrzufbuVfq0x4QTJmAmJ0FMVsnBwOlLjFj6hVVoMW7dJCtGaCs+6NssJ4r0Ob5Rgg3kdg7/
+	3ZM2qiGLMirbX96pM44FaW/99Tzp+eVWIigQ2BxxqFBY8og/GWpezZgHUL6VBmpcy81I+xGK1qTFN
+	rY97ZdWCggDOBwx40+aTaru34tQZzLHZaG3chkNviXSqshmmxzIw2tC/cDRYSs2T8KK3EmVXULnKo
+	x03Mq9I3JWZYHKTEYFyjJHMK1Yj3YzPBlgqlXsn2HERUb/8lk+ef5xse3pBEBAbVmJ8X/dyAbVflN
+	/X8Isljg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSWuV-0000000C3B1-2rb6;
+	Fri, 20 Jun 2025 08:15:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B3A69308989; Fri, 20 Jun 2025 10:15:42 +0200 (CEST)
+Date: Fri, 20 Jun 2025 10:15:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 08/14] unwind deferred: Use bitmask to determine
+ which callbacks to call
+Message-ID: <20250620081542.GK1613200@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010429.105907436@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3366564.44csPzL39Z@lichtvoll.de>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250611010429.105907436@goodmis.org>
 
-On Fri, Jun 20, 2025 at 09:12:21AM +0200, Martin Steigerwald wrote:
-> Hi Kent, hi,
-> 
-> Kent Overstreet - 20.06.25, 03:51:45 CEST:
-> > On Fri, Jun 20, 2025 at 04:25:58AM +0300, Jani Partanen wrote:
-> > > On 20/06/2025 4.09, Kent Overstreet wrote:
-> > > > I'm not seeing that _you_ get that.
-> > > 
-> > > How hard it is?
-> > > 
-> > > New feature window for 6.16 was 2 weeks ago.
-> > > 
-> > > rc<insert number here> is purely for fixing bugs, not adding new
-> > > features and potential new bugs.
-> > 
-> > That's an easy rule for the rest of the kernel, where all your mistakes
-> > are erased at a reboot. Filesystems don't have that luxury.
-> > 
-> > In the past, I've had to rush entire new on disk format features in
-> > response to issues I saw starting to arise - I think more than once, but
-> > the btree bitmap in the member info section was the big one that sticks
-> > in my mind; that one was very hectic, but 100% proved its worth.
-> 
-> Kent, from what I gathered, you'd like to change some window rules – at 
-> least for filesystems or new-in-kernel filesystems.
+On Tue, Jun 10, 2025 at 08:54:29PM -0400, Steven Rostedt wrote:
 
-There is a time and a place for rules, and there is a time and a place
-for using your head and exercising some common sense and judgement.
 
-I'm the one who's responsible for making sure that bcachefs users have a
-working filesystem. That means reading and responding to every bug
-report and keeping track of what's working and what's not in
-fs/bcachefs/. Not you, and not Linus.
+>  void unwind_deferred_cancel(struct unwind_work *work)
+>  {
+> +	struct task_struct *g, *t;
+> +
+>  	if (!work)
+>  		return;
+>  
+>  	guard(mutex)(&callback_mutex);
+>  	list_del(&work->list);
+> +
+> +	clear_bit(work->bit, &unwind_mask);
 
-There's no need for any of this micromanaging, which is what this has
-turned into. All it's been doing is generating conflict and drama.
+atomic bitop
 
-> > For a lot of users, compiling a kernel from some random git repository
-> > is a lot to ask. I spend a lot of time doing what amounts to support;
-> > that's just how it is these days. But rc kernels are packaged by most
-> > kernels, and we absolutely do not want to wait an additional 3 months
-> > for it to show up in a release kernel -
-> 
-> Those users should probably not use BCacheFS right now already to begin 
-> with but wait for it to be marked as stable?
+> +
+> +	guard(rcu)();
+> +	/* Clear this bit from all threads */
+> +	for_each_process_thread(g, t) {
+> +		clear_bit(work->bit, &t->unwind_info.unwind_mask);
+> +	}
+>  }
+>  
+>  int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+> @@ -256,6 +278,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+>  	memset(work, 0, sizeof(*work));
+>  
+>  	guard(mutex)(&callback_mutex);
+> +
+> +	/* See if there's a bit in the mask available */
+> +	if (unwind_mask == ~0UL)
+> +		return -EBUSY;
+> +
+> +	work->bit = ffz(unwind_mask);
+> +	unwind_mask |= BIT(work->bit);
 
-I've often told people that they should probably wait before switching,
-particularly when they need features that aren't ready yet (erasure
-coding), and things are not yet so trouble free that I would recommend
-normal users switch.
+regular or
 
-Besides the most basic "will it eat your data", there's a lot of other
-things to consider, like "is it providing stable backports yet" (I'm
-explicitly not) or "is there wonky behaviour or missing APIs still to be
-worked out" (yes, there definitely is, and I'm still triaging so there
-will be awhile).
+> +
+>  	list_add(&work->list, &callbacks);
+>  	work->func = func;
+>  	return 0;
+> @@ -267,6 +297,7 @@ void unwind_task_init(struct task_struct *task)
+>  
+>  	memset(info, 0, sizeof(*info));
+>  	init_task_work(&info->work, unwind_deferred_task_work);
+> +	info->unwind_mask = 0;
+>  }
 
-None of that changes my most basic responsibility.
+Which is somewhat inconsistent;
 
-> Kent Overstreet - 20.06.25, 03:09:07 CEST:
-> > There are a _lot_ of people who've been burned by btrfs. I've even been
-> > seeing more and more people in recent discussions talking about
-> > unrecoverable filesystems with XFS (!).
-> 
-> And I have seen a lot of threads on XFS over the years where XFS 
-> developers went great lengths to help users recover their data. I have 
-> seen those threads also on the BTRFS mailing list. Those users had no 
-> support contract, they did not pay anything for that free service either.
-> 
-> So I am not sure it is wise or even just accurate to implicitly imply that 
-> other than BCacheFS filesystem developers do not care about user data. 
-> From what I have seen I conclude: They do!
+  __clear_bit()/__set_bit()
 
-No, I'm not saying that they don't care about user data.
+or:
 
-I know most of the other filesystem developers, particularly the XFS
-ones; I'm not trying to disparage their work.
-
-But track records do matter, and bcachefs has a good one, and I intend
-to keep it that way.
+  unwind_mask &= ~BIT() / unwind_mask |= BIT()
