@@ -1,65 +1,155 @@
-Received: from mail.monkeyblade.net (shards.monkeyblade.net [23.128.96.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CF81E2606;
-	Fri, 20 Jun 2025 17:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.128.96.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610971DC075;
+	Fri, 20 Jun 2025 17:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441932; cv=none; b=tdGukG+47RegtISzCjiMEwSZUc2o0I8XAdRfayERCnqjADxVMiLWQ7MIXeOjvCme3OgCr9b44MG5yJYMiV+GYHe/XycqHZFFk2sjrzW1uIiLidHxf6/qPagYfvyFrIXaV8TjpR8O3evHFvZJlTYpQn+4L1foS/cC9vlPvywFPkQ=
+	t=1750442030; cv=none; b=SmPH2tRAXSzht6RfLW+jEwTe4pKxSgiD2v7Mi2EuXbA4iPct9p9xWX6Q6kg+MkMx4RdUZJY3tc/WxNwfL0T28WVmgvDRuxHuYY3Mh2arTBWlDm1UdZxW312FIcqsd6XQRv9BB0rVsBI2mJYJnFLJKF4m1ZSFo3aqDYmJt8Nl8gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441932; c=relaxed/simple;
-	bh=Dy+p15HC9zP/n/4KM5eMWzVkPkNU3THZSPGOgrzcbL0=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gJ15V3E4rkeanFpc/q68putI6teA3G/j/jK0RYZ9ZA2I3yDw3jyIrjsZrm3voTxX+JTo/+r+3E+kn284yba2y0bCQxsgvvinRI6iOT1ZnePqa9eChATZ3f9ItsAS5NWp4nbGf4cpe734lIwSaxL8n5+uh0OyVeH90syLKPXU0R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davemloft.net; spf=none smtp.mailfrom=davemloft.net; arc=none smtp.client-ip=23.128.96.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davemloft.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davemloft.net
-Received: from localhost (brnt-05-b2-v4wan-161083-cust293.vm7.cable.virginm.net [86.11.207.38])
-	by mail.monkeyblade.net (Postfix) with ESMTPSA id EFA01841F1AE;
-	Fri, 20 Jun 2025 10:52:06 -0700 (PDT)
-Date: Fri, 20 Jun 2025 18:52:02 +0100 (BST)
-Message-Id: <20250620.185202.1877972778102559754.davem@davemloft.net>
-To: arnd@kernel.org
-Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, arnd@arndb.de, horms@kernel.org, linux@treblig.org,
- aleksandr.loktionov@intel.com, dawid.osuchowski@linux.intel.com,
- jedrzej.jagielski@intel.com, mateusz.polchlopek@intel.com,
- piotr.kwapulinski@intel.com, slawomirx.mrozowicz@intel.com,
- martyna.szapar-mudlaw@linux.intel.com, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] ethernet: intel: fix building with large NR_CPUS
-From: David Miller <davem@davemloft.net>
-In-Reply-To: <20250620173158.794034-1-arnd@kernel.org>
-References: <20250620173158.794034-1-arnd@kernel.org>
-X-Mailer: Mew version 6.8 on Emacs 26.3
+	s=arc-20240116; t=1750442030; c=relaxed/simple;
+	bh=3r1V8Z/Gp2YPWtaOdAZ8uyXjTfYNapOfK8bg7Thxlvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a34oyMIEH1mLYUaEPuUceojnpKRzghrkVdIGGLfOn+cuO26Funfru1JLF5jZLXrblvbDtDzUVn6o1Rysh74aCREeeBkaQZOSZLNYNtL7OWOGaNwkOxyxV5ioAAh96aFxqUHS5mDhpkwPj9pw19xk+oepTEXHsRn2sfd4m/eO6QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ob4hsDJj; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ob4hsDJj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750442029; x=1781978029;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3r1V8Z/Gp2YPWtaOdAZ8uyXjTfYNapOfK8bg7Thxlvg=;
+  b=Ob4hsDJjUZ8nkIPf24jtU7O2ACBOA3Mia5VXzNbOqElXwbUuukOMRgK0
+   6Sh31tGxZ7XYw5HbAdfq5wOJ7Kh5HR29CQrxjhH2MbOvza1iXuw7JdJ0W
+   YJGYeWGsUj+965FiyYi/1WVKR6G6B9968gxKbyoqWDan3adw4/IMej+z0
+   LP2uZe1o6AORwYZ9VmdA3tNEeuVP2xGiMtGMhiZcPW5SAnKbVo0MAgP4o
+   FiYoElUSE6BnhTEapaX9YU/wDiHr3T5YElzeAG6fhlsBgXpIzPn5vKVId
+   EjY9R2V1a8qcdZZgQvDy6Pi/r2jI0vWf4OwXdTahKFNiC1ek4H6x0gF73
+   A==;
+X-CSE-ConnectionGUID: TSh0ciRdQpWqqzBXX7Si5Q==
+X-CSE-MsgGUID: JTNBTPPZQAilPrl6eahKKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="75246061"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="75246061"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:53:48 -0700
+X-CSE-ConnectionGUID: EmxsnnN8QjKmRLdf6pTwig==
+X-CSE-MsgGUID: c3uRYrctSaq6g3uPxc3LyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="151111509"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 20 Jun 2025 10:53:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 97CC8109; Fri, 20 Jun 2025 20:53:36 +0300 (EEST)
+Date: Fri, 20 Jun 2025 20:53:36 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv6 13/16] x86/traps: Handle LASS thrown #SS
+Message-ID: <p6nykttpomxtjw4py65ozxpuirviubhmhqu5paa75mnzk75kck@jb43wyhf5sn3>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-14-kirill.shutemov@linux.intel.com>
+ <08758240-fd38-4d90-9efa-354274e8bb8e@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail.monkeyblade.net [0.0.0.0]); Fri, 20 Jun 2025 10:52:10 -0700 (PDT)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08758240-fd38-4d90-9efa-354274e8bb8e@zytor.com>
 
-RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBrZXJuZWwub3JnPg0KRGF0ZTogRnJpLCAyMCBKdW4g
-MjAyNSAxOTozMToyNCArMDIwMA0KDQo+IEZyb206IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIu
-ZGU+DQo+IA0KPiBXaXRoIGxhcmdlIHZhbHVlcyBvZiBDT05GSUdfTlJfQ1BVUywgdGhyZWUgSW50
-ZWwgZXRoZXJuZXQgZHJpdmVycyBmYWlsIHRvDQo+IGNvbXBpbGUgbGlrZToNCj4gDQo+IEluIGZ1
-bmN0aW9uIKFpNDBlX2ZyZWVfcV92ZWN0b3KiLA0KPiAgICAgaW5saW5lZCBmcm9tIKFpNDBlX3Zz
-aV9hbGxvY19xX3ZlY3RvcnOiIGF0IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQw
-ZV9tYWluLmM6MTIxMTI6MzoNCj4gICA1NzEgfCAgICAgICAgIF9jb21waWxldGltZV9hc3NlcnQo
-Y29uZGl0aW9uLCBtc2csIF9fY29tcGlsZXRpbWVfYXNzZXJ0XywgX19DT1VOVEVSX18pDQo+IGlu
-Y2x1ZGUvbGludXgvcmN1cGRhdGUuaDoxMDg0OjE3OiBub3RlOiBpbiBleHBhbnNpb24gb2YgbWFj
-cm8goUJVSUxEX0JVR19PTqINCj4gIDEwODQgfCAgICAgICAgICAgICAgICAgQlVJTERfQlVHX09O
-KG9mZnNldG9mKHR5cGVvZigqKHB0cikpLCByaGYpID49IDQwOTYpOyAgICBcDQo+IGRyaXZlcnMv
-bmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9tYWluLmM6NTExMzo5OiBub3RlOiBpbiBleHBh
-bnNpb24gb2YgbWFjcm8goWtmcmVlX3JjdaINCj4gIDUxMTMgfCAgICAgICAgIGtmcmVlX3JjdShx
-X3ZlY3RvciwgcmN1KTsNCj4gICAgICAgfCAgICAgICAgIF5+fn5+fn5+fg0KPiANCj4gVGhlIHBy
-b2JsZW0gaXMgdGhhdCB0aGUgJ3JjdScgbWVtYmVyIGluICdxX3ZlY3RvcicgaXMgdG9vIGZhciBm
-cm9tIHRoZSBzdGFydA0KPiBvZiB0aGUgc3RydWN0dXJlLiBNb3ZlIHRoaXMgbWVtYmVyIGJlZm9y
-ZSB0aGUgQ1BVIG1hc2sgaW5zdGVhZCwgaW4gYWxsIHRocmVlDQo+IGRyaXZlcnMuDQo+IA0KPiBT
-aWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiAtLS0NCj4gdjI6
-IG1vdmUgcmN1IHRvIGp1c3QgYWZ0ZXIgdGhlIG5hcGlfc3RydWN0IFtBbGV4YW5kZXIgTG9iYWtp
-bl0NCg0KQWNrZWQtYnk6IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD4NCg==
+On Fri, Jun 20, 2025 at 08:20:12AM -0700, Xin Li wrote:
+> On 6/20/2025 6:53 AM, Kirill A. Shutemov wrote:
+> > From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > 
+> > LASS throws a #GP for any violations except for stack register accesses,
+> > in which case it throws a #SS instead. Handle this similarly to how other
+> > LASS violations are handled.
+> > 
+> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >   arch/x86/kernel/traps.c | 34 ++++++++++++++++++++++++++++------
+> >   1 file changed, 28 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> > index 0f558d3369a3..bd8f7e72b238 100644
+> > --- a/arch/x86/kernel/traps.c
+> > +++ b/arch/x86/kernel/traps.c
+> > @@ -866,6 +860,34 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+> >   	cond_local_irq_disable(regs);
+> >   }
+> > +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+> > +{
+> > +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
+> > +		enum kernel_gp_hint hint = GP_NO_HINT;
+> > +		unsigned long gp_addr;
+> > +
+> > +		if (user_mode(regs)) {
+> > +			gp_user_force_sig_segv(regs, X86_TRAP_GP, error_code, GPFSTR);
+> > +			return;
+> > +		}
+> 
+> Please add the following FRED code:
+> 
+> 		if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+> 		    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
+> 			return;
+> 
+> Because the following FRED fixup
+> 
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5105e7687ad3dffde77f6e4393b5530e83d672dc
+> 
+> is otherwise skipped, it is interpreted as a LASS #SS before reaching
+> the FRED fixup (which is indeed a userspace fault but triggered from
+> a specific kernel IP as described in the commit changelog).
+> 
+> The x86 selftest sigreturn_64 fails w/o the above fix.
+
+Okay, will do.
+
+> > +
+> > +		hint = get_kernel_gp_address(regs, &gp_addr);
+> > +		if (hint != GP_NO_HINT) {
+> > +			printk(GPFSTR ", %s 0x%lx", kernel_gp_hint_help[hint],
+> 
+> GPFSTR?
+> 
+> #define GPFSTR "general protection fault"
+> 
+> It is misleading here, you need something like SSFSTR which tells
+> exactly which exception caused it.
+
+Yep, thanks for catching that!
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
