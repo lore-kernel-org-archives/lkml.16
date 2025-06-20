@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9736E1E2607;
-	Fri, 20 Jun 2025 09:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE06B28033F;
+	Fri, 20 Jun 2025 09:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411207; cv=none; b=kUBCR1S6SASAEI5d811jb3BJk36P7tyhR7vHWnYwmX0BvxEEPxuN6tQh9ANxFO424/uZKT3ka9NwMmP4TbLu6quaex6+v7UmiQHIOV4svwwfKY4EGXq8eb5Qp9/3E7YxCDJejKrSCmxbI+Ind5XPqTyvdUlX0fq0BSyooJLxlyQ=
+	t=1750411217; cv=none; b=sGPSwnEyeEFjgrtIkWvOzHmik1yu7jjJZFC0UCenkW7GE/2RV/0FQkiC6z0yt6X9N/tCZdcCWiZfx8u6lRP+mITzqVWFI2ntGDB3Ixcj56RqNYJSjIc8pqYACp42FYiNkb1j0wVrpBxyxqbLvYorvr/VGmNS3Qvfw4B8MScOZ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411207; c=relaxed/simple;
-	bh=pYC/ISpQojUw9ozQVsIBqPPUCtFFg0eYzpwvNDiDyx4=;
+	s=arc-20240116; t=1750411217; c=relaxed/simple;
+	bh=ZclNXEJGgmtvivW3+zTBau1Wqx9MCt1Nu5jQDpqLs1U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjZ80T20Aq34I9rRsr7k0B0Zpv0FC6Rjomf4wkCi4tZcRoB2PeS8B7w17C/xi/jvs5mLFYo7dFx4IBddpdmePttBG3UwssCc0vLIKcc8pCqwOzW6jlwCRzbgqYN3AAVVkzv2QU4GKV9d4Knjh6lkURWf7T0uRIwt0xDmAi/tCMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkju6hwe; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=W95N3CwuT5oIM7RaMyt6ieqdwASNkwoKw8whQfibMQziAKfj477bM9IEebnHzWpp2AJWJWj12b2SNmmglxM5vNqWNMSOhURj8BP8xwfQ3Lg/KeO7eyfQM3hioplNvUWBA/UuGSqA4Ty7TV94RIjzZ79iFZTkPLwh5g8fJHNX9V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taqNcruz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkju6hwe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B687C4CEE3;
-	Fri, 20 Jun 2025 09:20:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taqNcruz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC6C7C4CEEF;
+	Fri, 20 Jun 2025 09:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750411207;
-	bh=pYC/ISpQojUw9ozQVsIBqPPUCtFFg0eYzpwvNDiDyx4=;
+	s=k20201202; t=1750411216;
+	bh=ZclNXEJGgmtvivW3+zTBau1Wqx9MCt1Nu5jQDpqLs1U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jkju6hweJ397tt5Z0cLK/rJHQ1FylaFrQKV8dUkoi1kpuLEJmRNDfqrkuLchnLAsn
-	 V7wTfCI0pPW6Jv9gf3lGSIulaNyiZskrDpQLO46ssykUI7x2XVaeYG3H23Lkeqq+5v
-	 V0uD8/VV34/q3q1oDXvhObSFre8bwEoNZ1KOK6yIYeb+lU3iJkZLheWpmHH3+XhpBg
-	 gHzVhCq/hLCvxdIC3lza5KFeaYHEIsEjGSruEE77puPXUFK8+CuK06eazj9FxwfFXb
-	 pwbJuaV1saLogvwyLJwRCpWQ0fdmVi1DMEh+aRm1Jumq0lSh3rATgjLYLG8g+OOKo2
-	 qFKLhOI3qI9yA==
-Message-ID: <1a8d023e-f27e-47ae-86ec-3f0760a7e74a@kernel.org>
-Date: Fri, 20 Jun 2025 11:19:59 +0200
+	b=taqNcruz4qiBDwEUxWLJi6i8RZdIS2nFjggQS6vFH30g5XqOf/aYaP5sPvxbPVwO+
+	 op9N6ifVe4ci97R1wvnuTwLjf98eH069n9Srxtgq4XS9vJ/EkGSdTJpJ3K3oNjzSWB
+	 kkTLr5ru2/Yj6BrW/auJ9rvi9F3BZLMVSwhmnjHWq1qPEzH13tDnuonBPuW2ujMaKt
+	 +cXI8l5vGDvKnbY7VrCS/v0S7uCR7466Z52GiYMXn3jtFhFyuqaR/Ll/RYFAEzwxQ5
+	 E2I2rr0C92H+JYHr2B36D4bgfDq9PNchbQ1gUlXRwmHfXAmEdoZGzTR1nk4Ff/RKdf
+	 izrQfbw4STafQ==
+Message-ID: <1a4b060e-475e-46a1-9ff5-aae16a7d326a@kernel.org>
+Date: Fri, 20 Jun 2025 11:20:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add Mettler-Toledo
+Subject: Re: [PATCH v2 2/4] dt-bindings: arm: fsl: Add Mettler-Toledo
+ Snowflake V2 board
 To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>, linux-kernel@vger.kernel.org
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
@@ -55,9 +56,9 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
 References: <20250620084512.31147-1-Wojciech.Dubowik@mt.com>
- <20250620084512.31147-2-Wojciech.Dubowik@mt.com>
-Content-Language: en-US
+ <20250620084512.31147-3-Wojciech.Dubowik@mt.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -101,36 +102,20 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250620084512.31147-2-Wojciech.Dubowik@mt.com>
+In-Reply-To: <20250620084512.31147-3-Wojciech.Dubowik@mt.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 20/06/2025 10:41, Wojciech Dubowik wrote:
-> Add the "mt" vendor prefix for Mettler-Toledo.
+> Add bindings for Mettler-Toledo Snowflake V2 terminal. The board
+> is using Kontron SL i.MX 8M Mini SoM.
+> Split the existing Kontron BL i.MX8MM as it uses the same module.
 > 
 > Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++--
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, just skip it entirely
-(please do not feel offended by me posting it here - no bad intentions
-intended, no patronizing, I just want to avoid wasted efforts). If you
-do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here ('b4 trailers -u ...'). However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
-</form letter>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
