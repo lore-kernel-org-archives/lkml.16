@@ -1,71 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612EB22576E;
-	Fri, 20 Jun 2025 06:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61A022539D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750402516; cv=none; b=sMTqghtgLAnolFaUpAM0ZBJQz7NglgqC1GzYl9LbtH1t0E0UV1Db/PNroDqYbl8i1MZIZtB8zttdM5WLXZP9w9ImXeR4Qx31UiMMg145JbAEO5I4JMwmhQJgMgqvezEjJvqDc8IFJuXB8C0A8k0VcsnEDB2XWMdAGvWXXYi03tk=
+	t=1750402522; cv=none; b=orBNv8wy66F5/X7Bw+ildqwl0rO7vY7ZNkR3t60HNOUVYUxBIdEEM69qOZg8KM2Vw5w6G9qlTvbfNnQEBuXmnXOtP/7JqbjWNd8nJQgs7KC388p7dBsEiH23XdPT9gaDxqe9JfDyJmuTMz4U7Cj5xBKcH6uQxb9bi98I6XlY9nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750402516; c=relaxed/simple;
-	bh=g2VnxAUXtleHi1yhq9BMIa6p7PhFKqx9nTY7Go9203c=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rJZC9oFVUQ00+qjogh6i6BU1fvES/VFrQPAkXDAtb+YlToLk/CBtzgp/CwvZSRZHC4rx+5qz0L+E91dn2Oz9tq5WCOd9hBWNu0oO76Z1DR6DD48pcUo6kTGBNN3JILAHZlRnxCownm80jR5wB2DUwAiet2Pdb7MICP+TZL/0Pls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrJKdlqu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750402522; c=relaxed/simple;
+	bh=cb1ncv5kKe+9beezyK8P8PEh4cB50d4o5qsPw+1gBfI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g8z/URz5i3Gnw8SPL2R5h1LJ/DPzbrGphfTpZpthEG8y394TOFnp5rUF3zsetG4/MILVZvmEnm/CtGKwR7cQRmrBgzSsPFakQxpnJrgvWR1Qykosj4Cp1diep8mhHYwVzaKXdnvEtWuRNQIK8GVdsyyDZ3xzTUtPkv8dVssmpo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Z7zW9rHg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrJKdlqu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC58C4CEE3;
-	Fri, 20 Jun 2025 06:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750402515;
-	bh=g2VnxAUXtleHi1yhq9BMIa6p7PhFKqx9nTY7Go9203c=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=RrJKdlquRLA4snTBHcyEDxFB9bG5zyeyVyrRlNoMow9Ah9DGNdF+DUELHobk9m3EJ
-	 /HfneiB1MzjufOZpCtM3Y0mgsxWPpq2urJNMlHMrgISIbhGbvYeiLw7qqSaSoCFfBq
-	 AvJnhcA9IyJilpk6HngyQoVxpaJ+FfYS1IjvezQcUOmDZ4RFEEnt2cGS9iv8aaWO4y
-	 KOjGcrZLvwqJNT8u5i5M+LW9eWGqnp4FadwEVr+E/ezjyF2a6JIalfbvw3f32nZ9Yv
-	 gKD1RHAY4wurtotNaYHCdWW3ltzBR+AxAcjrEc/Bf9ghbBNdx/558SJ1s2wB85es8t
-	 BV63s16pWsb4A==
-Date: Fri, 20 Jun 2025 08:55:13 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: VladTop46 <mcsm2654@gmail.com>
-cc: bentiss@kernel.org, linux-usb@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] USB HID initialization delay (~8s) for Semitek
- keyboard on kernel 6.15.*
-In-Reply-To: <c5a8fdd3-fc35-4055-9d1e-7a5b4b50db91@gmail.com>
-Message-ID: <snor7s95-5961-o5s7-440o-7q02r81ps057@xreary.bet>
-References: <c5a8fdd3-fc35-4055-9d1e-7a5b4b50db91@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Z7zW9rHg"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JNwtJ3017182
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:55:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/cra5HUnd+Onw8p9cvyHZDcLODFatDJov6W4y7HTf2Q=; b=Z7zW9rHgAvjhnm+7
+	kYL4yUZtbz0UIW6nnqrODR/VmfF+4C/5FGxkDS/zx7TzGL8C9Ct2iiAdlwdUKpSZ
+	SiAukqYqYzbaxcmKz4RTPXLA74cmmJNFYTepJ36kl/Ew21UnfcnQw3wUO7LwPE3E
+	w+5A1jmH402taX7tIQjYAY9JjCgmshTMMQAW/jzUi7xFIcCsfxGstp5AKbgJitbQ
+	SVWfbuzSyugfgB4/jWj98hadZnGarfXFrmDy+CI7pw+cXYlyzMIK71KxJHTB2nkN
+	S2P37muGUrtu8FvQ+BzKlYl1gG9jtEYfhRGz+lwHnUPZM+O0j1DvBunp3V5nHH52
+	5X/gmw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792caafvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:55:19 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-234f1acc707so14820735ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:55:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750402515; x=1751007315;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/cra5HUnd+Onw8p9cvyHZDcLODFatDJov6W4y7HTf2Q=;
+        b=dR8RaVch4E2WgT1tqirFpDQ+M4rriSXI+7JbUIl0wOZC3oMK7bCVysxK4wjsb/2DV1
+         ZqmTG4kWboo63KuK6eo2VUBnvShtG2LGYGB4mtVOiYv0zW8V0zFT8LQm3f6NCMaJ8tlR
+         SP6WX5iU5hIAf1zKA/9oL55SN3YaYxKn1nM7TPXTxukJFmrov20kqlBKoEmtdrBVbe+4
+         7xT+1k/qD2ncYVlFwO6Nyietgs/qjdOwQtUE+WQj7LuCBaQmbklxAnIFaml4/Zo5rjRL
+         fuUymo7FjIUp9yGHeJGbUOFq0ZVXQOexb+kyKF1csqNMkqSOcT7mS3s5zI8KjPuy6LMY
+         7d+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWSdHLz8o+E+EjfXQkcUH0AKXGgKLOJnVcok7RW4noi35CCnCFq/6CEuubUYFYStQ2sGJgklw000gL1Fg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4MA/XqY7XchdD/GDhuRfWbmvwT3TuLvQlHnzMWcl7dIGOo5pb
+	5/rl3pSpJRfo+2Ah+fM2cIJiBdZFfREfOXdaZAaDrM5nWxFza84/U0ix7zFbTklS7fgfSJ+GJ0W
+	woKTDBMQnPavXpsV5bPeGgXshQpTmaFDbhTcK64GMQzLOEYTcZmV+wQBzyA72iaALKiY=
+X-Gm-Gg: ASbGncvuT6Co2kmIW4+MUEg/lpRpQfQOXaGsFttPbAtx6Ju+ulAAoAFaVg/JURiFH9L
+	8connjID1SMOxdHtQNUBofQ9AFGFdwfyKk2n60/iT8g9zu87iHeRygfOwHeZ4wsDkVZHgaZ4FiB
+	B3r22dsQkJ9PLvvB/3OqOpiBhoZD6Lp+LgH2o+leFr81GrDDwtTzxiPqk98gXtu223igpfXTky4
+	1U1xNU/gRm4y6WxKZOqrUKr0bg0hAK+1zbxUNFB409KxSx/innGRtmBJB0AjHy4jh9crpWhJqQv
+	sxARfsUyBMyAPwFwJLa3fG6Bc8MVopbV
+X-Received: by 2002:a17:903:1b66:b0:234:c5c1:9b5f with SMTP id d9443c01a7336-237d99064ccmr28616685ad.16.1750402515073;
+        Thu, 19 Jun 2025 23:55:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGiXAnjhsU81dzFSNF8XeE5n0aYS1wi4Wc4hIGCqzrClvvAQg3nAWi7A56J6kwNx3saDQ1gfA==
+X-Received: by 2002:a17:903:1b66:b0:234:c5c1:9b5f with SMTP id d9443c01a7336-237d99064ccmr28616285ad.16.1750402514633;
+        Thu, 19 Jun 2025 23:55:14 -0700 (PDT)
+Received: from [10.213.111.143] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8701c0csm10636185ad.223.2025.06.19.23.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 23:55:14 -0700 (PDT)
+From: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Date: Fri, 20 Jun 2025 12:24:30 +0530
+Subject: [PATCH v3 3/4] drm/msm/adreno: Add Adreno X1-45 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-x1p-adreno-v3-3-56398c078c15@oss.qualcomm.com>
+References: <20250620-x1p-adreno-v3-0-56398c078c15@oss.qualcomm.com>
+In-Reply-To: <20250620-x1p-adreno-v3-0-56398c078c15@oss.qualcomm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750402486; l=2100;
+ i=akhilpo@oss.qualcomm.com; s=20240726; h=from:subject:message-id;
+ bh=cb1ncv5kKe+9beezyK8P8PEh4cB50d4o5qsPw+1gBfI=;
+ b=6DsTJ1+fRdhEPD5dnhpU8R/Gz1ebwrb9QGaqZxTAvYnxQjpNbqZZnZeVEtrXDr6XOrbHpho2d
+ D3lSYE0SnesC8otPnX0urguqEuklaUZlab1toQoIuaDx+Bast0rjRDM
+X-Developer-Key: i=akhilpo@oss.qualcomm.com; a=ed25519;
+ pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
+X-Proofpoint-GUID: XIw76-1SrGFZ_FSSbisEvK4kZF8eexpq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA1MSBTYWx0ZWRfX6EPIPDT72ZN5
+ VSnj+HDyVmSEldXHndV248KEysBMpkvD5tFOFTLDwUfOXH+wsKG0gf8mzRe+6ClAJwYLtvhZvBU
+ 2h+wB3XrtRayvwAj5XDJd74OlRV1PyfXsqxtrAh2x2f/Lakfpxj2Rb7S1lZB2oV/5iMcJQV354O
+ lVqWYjG+RtqJoYRG2TWSQrGOsYB/NnWJp8d6igZrhpMhLv/vES6zgnhUHUOzXz2/RjzvszopYrC
+ OTwf5SEl2Z0h2BC1fzjak8XelmSWGd48fmoQuJvPm8nXOM+iSYVS1UvgZb3lLHbgMyoxZJXGHVz
+ qnYdayrVJ8JsD2f23AlpITj2KdBo7rUlVb+DJr8YGfSSsS68WdhpYDBL6Bc8EK6RprB/anNji0s
+ NRrmWupz6uQND54kP5BWSSEqKMXr+qd6IwSQ14//yUD07vROsDFoRV8+IRwkw5KXdkIZ1F2I
+X-Proofpoint-ORIG-GUID: XIw76-1SrGFZ_FSSbisEvK4kZF8eexpq
+X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=685505d7 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=gxl3bz0cAAAA:8
+ a=xcvD53-FQScLkYWh0o0A:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+ a=kiRiLd-pWN9FGgpmzFdl:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_02,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=982
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506200051
 
-On Fri, 13 Jun 2025, VladTop46 wrote:
+Add support for Adreno X1-45 GPU present Snapdragon X1P42100
+series of compute chipsets. This GPU is a smaller version of
+X1-85 GPU with lower core count and smaller internal memories.
 
-> Hi Jiri and Benjamin,
-> 
-> I'm reporting a regression in USB HID initialization timing for the Skyloong
-> GK104 Pro keyboard (detected as "Semitek Gaming Keyboard", USB ID: 1ea7:0907),
-> which I observed when upgrading from Linux kernel 6.14 to 6.15.
-> 
-> Summary:
-> On kernel 6.15.2, the keyboard takes approximately 8 seconds longer to become
-> initialized and usable compared to 6.12.33-lts. The USB device is discovered
-> at the same time, but HID input registration is significantly delayed. After
-> that, the device functions normally.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 39 +++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Hmm, there were absolutely no changes going to hid-semitek driver at all 
-between these two versions, so it's probably either USB or Input related.
-
-Are you by any chance able to do git bisection easily?
-
-Thanks,
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+index 70f7ad806c34076352d84f32d62c2833422b6e5e..7748f92919b883bbcea839a61158ab52e6e4e79d 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+@@ -1474,6 +1474,45 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			},
+ 		},
+ 		.preempt_record_size = 3572 * SZ_1K,
++	}, {
++		.chip_ids = ADRENO_CHIP_IDS(0x43030c00),
++		.family = ADRENO_7XX_GEN2,
++		.fw = {
++			[ADRENO_FW_SQE] = "gen71500_sqe.fw",
++			[ADRENO_FW_GMU] = "gen71500_gmu.bin",
++		},
++		.gmem = SZ_1M + SZ_512K,
++		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_HAS_HW_APRIV |
++			  ADRENO_QUIRK_PREEMPTION,
++		.init = a6xx_gpu_init,
++		.a6xx = &(const struct a6xx_info) {
++			.hwcg = a740_hwcg,
++			.protect = &a730_protect,
++			.pwrup_reglist = &a7xx_pwrup_reglist,
++			.gmu_chipid = 0x70f0000,
++			.gmu_cgc_mode = 0x00020222,
++			.bcms = (const struct a6xx_bcm[]) {
++				{ .name = "SH0", .buswidth = 16 },
++				{ .name = "MC0", .buswidth = 4 },
++				{
++					.name = "ACV",
++					.fixed = true,
++					.perfmode = BIT(3),
++					.perfmode_bw = 16500000,
++				},
++				{ /* sentinel */ },
++			},
++		},
++		.preempt_record_size = 4192 * SZ_1K,
++		.speedbins = ADRENO_SPEEDBINS(
++			{ 0,   0 },
++			{ 294, 1 },
++			{ 263, 2 },
++			{ 233, 3 },
++			{ 141, 4 },
++		),
+ 	}
+ };
+ DECLARE_ADRENO_GPULIST(a7xx);
 
 -- 
-Jiri Kosina
-SUSE Labs
+2.48.1
 
