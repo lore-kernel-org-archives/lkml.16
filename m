@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209F52EF2A3
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299AF2EF290
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433059; cv=none; b=oDdUPgXBPs7R3zYE6GxBfEIHd1uEglCLSsHLJKuQEGbxhihLftVneX28RiuQ6UlC/z0dU9LugVy1bzx7eomYxZQSLl+2mWUblUIHO1RCGU1+Ej0vgeFQIhMd+XsYBe0vzQaHmEzI06nVenKJApyBYY3yN6GVDL+ZghVOJq65EUc=
+	t=1750433059; cv=none; b=LM16Tvq01cvm4IIq9uM5nE+A7KUeaEZlwjbjrQRTemFyFE0jv5m+7R6yhsui3AI3dLrWv1JvoMUIWcLN97N0RAaqx0M0GpEqrnSh7MBZC5LWBjwmzTtfFZRe+mDXt1TyRZRFt1k5hBtGn5WHw0EBj+0DnQuxXgfKdDC9r6wp+O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750433059; c=relaxed/simple;
-	bh=twoxbeTMGkniqCFrzdy3nm9knKsAh3KTQan5m/kwiBs=;
+	bh=UV3VyURymvSUapUQQPhpkbrDPxSIsZH5yBdm53mj+3g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OUEGG1QXhYjgRJzPQ2NuA7fJsbEO0t1vby4g7T0jQoPHoaWpAfvdr+j1ZvZbxH/Guqqh11h8AK48nDseR35236jxUa9nezN/JcqYGAhg9Zz9fkxgi7uJKSnZ0h953nwRDqP7OEUv0l2ZrNxhfm3zwx2eg0cdAxqOC3hCCk62o/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aa6wAJOJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fWD759cLcfi6Zm6ra2WW4paroIhEOv8RlWLcIEua2gEKaHfeTFD3B4KZTcu/4Yzp7H9WyKUhViRDL+Jtr85obcPBHiDlMbN6ZccWETkZ5cOw4ShxLdLmrfPX7m9Pva2xjsW3MUk3i8vQuCxEQWGRrVTJ/CVXbveplbMgwGWe7iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9AS5h+3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aa6wAJOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F45C4CEF0;
-	Fri, 20 Jun 2025 15:24:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9AS5h+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD72C4CEE3;
+	Fri, 20 Jun 2025 15:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433056;
-	bh=twoxbeTMGkniqCFrzdy3nm9knKsAh3KTQan5m/kwiBs=;
+	s=k20201202; t=1750433059;
+	bh=UV3VyURymvSUapUQQPhpkbrDPxSIsZH5yBdm53mj+3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Aa6wAJOJNBmKK3dCwCp26/7VmVS4d/gR+fX44/oXGFHNJCkLGttEiwF8vEjdOeNky
-	 Ljz4OGtc69qWvEnlEYeglGCwpu7j5LtbfNBn1ggyzxg38nArwSqXQ5uZSUct7WnG9J
-	 F4Xaffwsi31iyTQR7nGD+lfzo5NJRgh3I62oacDppI4/5tf+fp6ZOYoRwUWeLpmw71
-	 X/xdGfbn8Eh8f3EPY2V2PuxtcAe0l2sCb4ZtAHvJkop2i7Mg8r+kn4GijzCAEK/kKn
-	 iLZ9lhJIb6vvcxmfHH5CuQo8p+lVymCClF8brY3SAPkeODzCvO7OMa5uPnrnq6jYOn
-	 fWYip5d4oyKhg==
+	b=l9AS5h+3hJJV9B0ge45p7UVR+KMUPjC6LcP836Bc5B8IwxD235Pz1hB0H36fqcBLg
+	 ZzE27hZNJaQGuHHFiTzqpvGS+DZTQtpsc7+UBqgE9Zd+Mr00wbhPHnnGmFIaICjXe8
+	 Y4SDQaBwUaHyM8q/ue5b4Lch/Ygpy9dmWO+BnyuDRLynSeoAy9EyhYb6NujPGquXAE
+	 zNqgu4fJ5u0vzDdetDHY8WUFGa/tf2XJ+0qgZDeAOiuZ5sUtcifEp7uvIgUkxXQ0za
+	 FPnYeutDcjSc9YA69dbHiI6JXdZn55pUNUqIASnemI1pVWPd6AozI/frjxTsFI237T
+	 3N4QU1gqWluow==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
@@ -36,9 +36,9 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH 23/27] kthread: Include kthreadd to the managed affinity list
-Date: Fri, 20 Jun 2025 17:23:04 +0200
-Message-ID: <20250620152308.27492-24-frederic@kernel.org>
+Subject: [PATCH 24/27] kthread: Rely on HK_TYPE_DOMAIN for preferred affinity management
+Date: Fri, 20 Jun 2025 17:23:05 +0200
+Message-ID: <20250620152308.27492-25-frederic@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
 References: <20250620152308.27492-1-frederic@kernel.org>
@@ -50,35 +50,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The unbound kthreads affinity management performed by cpuset is going to
-be imported to the kthread core code for consolidation purposes.
+Unbound kthreads want to run neither on nohz_full CPUs nor on domain
+isolated CPUs. And since nohz_full implies domain isolation, checking
+the latter is enough to verify both.
 
-Treat kthreadd just like any other kthread.
+Therefore exclude kthreads from domain isolation.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/kthread.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/kthread.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 138bb41ca916..4aeb09be29f0 100644
+index 4aeb09be29f0..42cd6e119335 100644
 --- a/kernel/kthread.c
 +++ b/kernel/kthread.c
-@@ -821,12 +821,13 @@ int kthreadd(void *unused)
- 	/* Setup a clean context for our children to inherit. */
- 	set_task_comm(tsk, comm);
- 	ignore_signals(tsk);
--	set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_TYPE_KTHREAD));
- 	set_mems_allowed(node_states[N_MEMORY]);
+@@ -363,18 +363,20 @@ static void kthread_fetch_affinity(struct kthread *kthread, struct cpumask *cpum
+ {
+ 	const struct cpumask *pref;
  
- 	current->flags |= PF_NOFREEZE;
- 	cgroup_init_kthreadd();
- 
-+	kthread_affine_node();
++	guard(rcu)();
 +
- 	for (;;) {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 		if (list_empty(&kthread_create_list))
+ 	if (kthread->preferred_affinity) {
+ 		pref = kthread->preferred_affinity;
+ 	} else {
+ 		if (kthread->node == NUMA_NO_NODE)
+-			pref = housekeeping_cpumask(HK_TYPE_KTHREAD);
++			pref = housekeeping_cpumask(HK_TYPE_DOMAIN);
+ 		else
+ 			pref = cpumask_of_node(kthread->node);
+ 	}
+ 
+-	cpumask_and(cpumask, pref, housekeeping_cpumask(HK_TYPE_KTHREAD));
++	cpumask_and(cpumask, pref, housekeeping_cpumask(HK_TYPE_DOMAIN));
+ 	if (cpumask_empty(cpumask))
+-		cpumask_copy(cpumask, housekeeping_cpumask(HK_TYPE_KTHREAD));
++		cpumask_copy(cpumask, housekeeping_cpumask(HK_TYPE_DOMAIN));
+ }
+ 
+ static void kthread_affine_node(void)
 -- 
 2.48.1
 
