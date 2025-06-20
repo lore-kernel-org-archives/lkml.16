@@ -1,137 +1,115 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F819A297;
-	Fri, 20 Jun 2025 15:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043B319A297;
+	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434210; cv=none; b=J4qGb6FqkvoFB76s1GvD7uf0/23BTrWqHDA0JXNF/YHs9P/7sg8nZjXjKfNzsjglEijz6DIkg+gLJPNo9RrmgluAN8jmdAFgKCNlHNQTJuZN+EXNi92zMOQHTOwyEfS7lIHSW7pD1kAow85Uy5uZd7D+z1p6cbopALoP26twXC8=
+	t=1750434234; cv=none; b=dhyI/Ldd+scYEUSD8waaFxe19dPnj+fOkCp3P6BEbHXUmaihDqE/Y1ej3/PE0RXg87CogsdBIo54Kc1PL24OZeEdjR68NQa6YgXc1NtDIDyfbFR+E45lcayQYIRtpvVF0YebFxNBkr3UsylOmEIZOTK2hsNPemFbU2/quAGis5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434210; c=relaxed/simple;
-	bh=X3GP0rFGQWYb7D9EofmWO4CkjJb3nRBnJ4sS25K5GGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IsvrXsMgjr8CBMvONC3q+f7/Ah/0b9esLnj5vrOufTKWlVO/Z0XPY+gKz4Lfuu3QmaDVivXfgjrzvARkai9eeoItDYcJEA/42IKuVEUA6EDwPOYDZmlUUNJzbwy+0uNiGslozDlnEz7J6KNc6osyUS5AMrV0s3nVYd8mojHHdNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJ9yPT19; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750434234; c=relaxed/simple;
+	bh=1gkbm0Ahe3s4IB6dtM7/gc/Nr6esMFpIeX5/yPsyc1Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XwYlYDg7Cz1o/0aJwsDSfR2GbhMcomSrWmd6yMSgAoum+vIYRwU9foV2biSbGD4Y3tklKs7kYx2zDS1PRODU8agkAIsOuHuTdaMVzfXgmJ6ZfRJyMX2/+2Yo51q3O4ZzgxjcfdKxM0dqlvfxssRr+p7nLQZHGGzSpvjBS+lSKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xnep2/Mv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJ9yPT19"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cf214200so19174985e9.1;
-        Fri, 20 Jun 2025 08:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750434207; x=1751039007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
-        b=kJ9yPT19DCAwz1Ppqhgt5E5EPfhcTcUdsmqKqdNDGwUvwO0G70TeIRWsJMZlNOZgKn
-         x7ysjeBDWtEgon9dxyfjhA2WZdYV3W14KjHw/G1iE6tj0Ugf8FKkurB0tjoLAz7PQfHR
-         B8QJ0x2uS0XGmXhCXuYZed0bghvCYigKUvDQMdCVXrDBym4BBajVHTenScGdcOpsOH+d
-         ZFLIK3CxBXjo3wys4GqaKtr6AA6A24MTcKSGJtHJxF6tSCmqkApOeB4iLr95U2Wucz8/
-         Mqd6vZbJOP511sryiTNQ+dh0eWxZyIM9pEUJyzEgJf4XDKEa82xaSYHmCxHTAVFa37WT
-         c3+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750434207; x=1751039007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
-        b=jzW6BsUab7sm+GTy1z1oZU+kDaEsPmK/Tk14dsDKgx33BUbGvQ/vWk/a7lPOC40eRq
-         V93GGmqU9cyjNAA/CY6NvKFFAMqTimOH0V+/dH8SC757hAzo1kdo3sBRDttNMjTHQQnh
-         HE6izru26hT+v2tkbPnTG0NQVAP2CqO8aIuWN1Mr1VlZ3ClvvRG94cyZOokQJJpqNr/v
-         qpvvBw50yVOBGxim8CDQCRCyxu6HctKfKIaQM7q3TRRDr1aXZ+QnwrtwciSkXNhL9eea
-         pHWa4CLDA6TvicxihU15IYeeGWFHglnsQ8PdSSL3Mgi/4cFWPNkiiLM+Y5t17SSDhcqj
-         wQGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+siVY5SgCFWcxqvWRvdxa57R9pA8x6CzYuxAPVEEJYYMBpFuCdnt/sXsAf3r1FlwUBb8B+GWlbW6HCQ==@vger.kernel.org, AJvYcCUOQSeNRqib2Qafr27DCONOsoHVq5PEdUCjTON+8H4JXPiI7TgnINZYlNE+6YVDBpPe77ZEXKGnqD9HbhMF@vger.kernel.org, AJvYcCUcE1FhQxPLYD7e8cyzZySxGyms15ycSi/x8DmpilstWZw8JCrzmd1qM/PaVUnSGXacdYw6jqoNLDXH@vger.kernel.org, AJvYcCX4mv0tS8iaCrBBR7cak8ecNwc/6IJqoZoMXZQrVG1Rvn3Ly5gW3iP/dx6HvYxb0cCgbcbzroG2u1P2SRYrwjg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygE+fghR/FtOXGKPukRf2wYOW3Zg6z+1og7wGeO98ccodEU5Oj
-	lGjqUYVRl9KdvX6DFnC+YM2mSgNragH+fx+Gwzh715jNnRytSzFcbfQA
-X-Gm-Gg: ASbGncuPKjDaPf3kRQNglcfl+UUkIkIiaFH9qtQhs4AwlZgWvG/XkgSay+Iqm2SnQoH
-	hIP+ZY3ZOl+Dbut2sKPFjVHs0ojaK+rkHwS0af9jw2YE+HQfZMkz6ALJl6u5bmgw6GitL4C8+cR
-	4ZgeRJV+SbDNcM2nE4TwHwlbzmt+Mj5v3iowfaSorY4S2CE+vp9JJgIRxMKzmsOopaMLvfZu7eD
-	h+rPSVHo2/qx02qKltxq7KwLuJonzVYPooPBnZTkCjny4cYdS/MdOBhfGz3jlbgOQBaDK5eCq2D
-	p+Ezn2MFe7O5D3DvbV5zyvQLrlNPJWWBY5T8yP0uacyigMpsum4bf2l7i1YmaXxYasKH2a2Jz+9
-	Nh/WkFNbroWs9kpVzNFnUzrxOrRrBgROJOFPO
-X-Google-Smtp-Source: AGHT+IGOay+Dgmk/mALjZ37btoxDkdcv0+KYLeDqi25xqCLtwnCwdg8q4gUaX5ZM7cMj3xDEX0s+IA==
-X-Received: by 2002:a05:600c:3b8d:b0:44a:b7a3:b95f with SMTP id 5b1f17b1804b1-453659f82abmr28801445e9.25.1750434207082;
-        Fri, 20 Jun 2025 08:43:27 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb672sm29603795e9.6.2025.06.20.08.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:43:26 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Alex Hung <alex.hung@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Igor Korotin <igor.korotin.linux@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	Len Brown <lenb@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Subject: [PATCH v8 7/9] rust: platform: Set `OF_ID_TABLE` default to `None` in `Driver` trait
-Date: Fri, 20 Jun 2025 16:41:24 +0100
-Message-ID: <20250620154124.297158-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xnep2/Mv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B5A1C4CEE3;
+	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750434233;
+	bh=1gkbm0Ahe3s4IB6dtM7/gc/Nr6esMFpIeX5/yPsyc1Y=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Xnep2/MvdKDz/fdHmq2XY10w5uvObo11RdsEiCdlf+obnwW/860uuf3r37MAGFKxQ
+	 28faH4Z2e2Ptr2+nKQdmpSEtkpqcc73fjncWeDQU8mjP9JxE17VvVAXfcvU87ZHFi/
+	 EDVN5fOOCcaEIvW2Vmk+8RmJUj9eoPxOpjW694/0xfsyxyfkqyMfzw1Kp6lyWofRIr
+	 Mamo+p+0rRaXS9YrZT9VoTEQtpYPab2mTrORYIw9PD16sjtR9Ti7K0RUfhKVD0qwpN
+	 jTTa04qD7Z3YxDhGTguvgckMT6RewnkFOlBmbb83DYyNFKBJxs/hC+2jHTI/BuN1Mu
+	 KMVbaFFySn9oQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76497C7115B;
+	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
+From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
+Subject: [PATCH 00/11] ASoC: mediatek: Add support for MT6572 SoC
+Date: Fri, 20 Jun 2025 18:40:39 +0300
+Message-Id: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPeAVWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0NL3dwSM1NzI93UNHOLROMUE1NDMwsloOKCotS0zAqwQdGxtbUASpa
+ sVlgAAAA=
+X-Change-ID: 20250619-mt6572-ef78a3d45168
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+ Max Shevchenko <wctrl@proton.me>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750434231; l=1888;
+ i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
+ bh=1gkbm0Ahe3s4IB6dtM7/gc/Nr6esMFpIeX5/yPsyc1Y=;
+ b=3AEld+8wk5+1U1fLhIXFcIWHi3wiF54pBxW8LeyFpiSwe5e/VCsRfBazfxNwxh67svgValpwe
+ WLwLty6rQADAqyZaM7c8c8wsEzl+0990wJFZUTgodCzBj5BoVIqNY1r
+X-Developer-Key: i=wctrl@proton.me; a=ed25519;
+ pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
+X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
+ auth_id=421
+X-Original-From: Max Shevchenko <wctrl@proton.me>
+Reply-To: wctrl@proton.me
 
-Provide a default value of `None` for `Driver::OF_ID_TABLE` to simplify
-driver implementations.
+This series of patches adds support for the MT6572 SoC and
+the JTY D101 tablet and Lenovo A369i smartphone based on it.
 
-Drivers that do not require OpenFirmware matching no longer need to
-import the `of` module or define the constant explicitly.
-
-This reduces unnecessary boilerplate and avoids pulling in unused
-dependencies.
-
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+Signed-off-by: Max Shevchenko <wctrl@proton.me>
 ---
- rust/kernel/platform.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Max Shevchenko (11):
+      dt-bindings: serial: mediatek,uart: add MT6572
+      dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
+      dt-bindings: timer: mediatek: add MT6572
+      dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
+      dt-bindings: vendor-prefixes: add JTY
+      dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
+      ARM: mediatek: show the hardware name for the MT6572
+      ARM: mediatek: add MT6572 smp bring up code
+      ARM: dts: mediatek: add basic support for MT6572 SoC
+      ARM: dts: mediatek: add basic support for JTY D101 board
+      ARM: dts: mediatek: add basic support for Lenovo A369i board
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5923d29a0511..2436f55b579b 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -162,7 +162,7 @@ pub trait Driver: Send {
-     type IdInfo: 'static;
- 
-     /// The table of OF device ids supported by the driver.
--    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>>;
-+    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
- 
-     /// Platform driver probe.
-     ///
+ .../devicetree/bindings/arm/mediatek.yaml          |   5 +
+ .../mediatek,mt6577-sysirq.yaml                    |   1 +
+ .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
+ .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
+ arch/arm/boot/dts/mediatek/Makefile                |   2 +
+ arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  62 ++++++++++++
+ arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  57 +++++++++++
+ arch/arm/boot/dts/mediatek/mt6572.dtsi             | 105 +++++++++++++++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   4 +
+ arch/arm/mach-mediatek/mediatek.c                  |   1 +
+ arch/arm/mach-mediatek/platsmp.c                   |   7 ++
+ 13 files changed, 249 insertions(+)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250619-mt6572-ef78a3d45168
+
+Best regards,
 -- 
-2.43.0
+Max Shevchenko <wctrl@proton.me>
+
 
