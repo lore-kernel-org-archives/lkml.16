@@ -1,54 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CAFE56A;
-	Fri, 20 Jun 2025 17:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3C813774D;
+	Fri, 20 Jun 2025 17:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440724; cv=none; b=bMsQ9vDYViRMGVkIggysvLuJ4Ofn42qRHV5TwyVDsvVCexAS86PfaRvHn38wOayaYrHmQYkCWmwLcSKLreOskYsqIZktjIaA+iXjEEbhxmruxbrnpcsfi3WByryIZGgWcyylD9B69c8mRTvF8vTnD2ZvWp/quqUydzj1NOqMLeY=
+	t=1750440758; cv=none; b=LbMOwydS+HkWabOqWwj2KbKYAwRLMhp5ljI6dx1k67X1IkU0ZiGhRHeQNH40/hunPp+1EHqrlbtvmtUt0IzF1FIHJfhu9M70fe9qjjNMEsr1HYHjUcVgT2BvAiWV5kdqcCYQRD/l2FNq9q7rYsXFwCtwuy6tICDzg61d2f1lQcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440724; c=relaxed/simple;
-	bh=VQXf0OScI8qbzE6+t1uRec3PMKWSQ3rs/L0oXJEmBy4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ew1fyWqeHCleJtN62ZqHKwu2e5AEjMIEm11VGl8Sg9ansBM20CI9nyFJYUHckGLuxySxtKswu6QJNY1shs+9WOmflfMpvtVroRo9mZOUJh9664y+HqwlNVHTi6Y2fvXpzmy+bBKAl9zZIahUgfFaCPFIiIq4pvfTfU77nZvUzPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc4J2vDd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750440758; c=relaxed/simple;
+	bh=hUmxKxYrfLSvEtssqPOOtV8zd1BBWLh011LOtkMog40=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kaTuDSrdCVp6ejfNj+HI0TCZENKtmJzNjqTXkKoI/YXs2pmPFVdQWKEkZOYt+URuYfTakM3lN4wvLXRodIv6kHpGQVVHwWMaPwQQ3dl6x67GxXULhbPWFjm8tZLEqhKVP7I5K96AGvyefCB1QzBNcOqRAADdaevULmIqUAhb3t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afZMCWUM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc4J2vDd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034FBC4CEE3;
-	Fri, 20 Jun 2025 17:32:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afZMCWUM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEEDC4CEE3;
+	Fri, 20 Jun 2025 17:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750440724;
-	bh=VQXf0OScI8qbzE6+t1uRec3PMKWSQ3rs/L0oXJEmBy4=;
+	s=k20201202; t=1750440756;
+	bh=hUmxKxYrfLSvEtssqPOOtV8zd1BBWLh011LOtkMog40=;
 	h=From:To:Cc:Subject:Date:From;
-	b=gc4J2vDd/ffRYTMRHW4o0khYZmGwctSzs9Ew9Fq+/O//m7NEW5VW2okaWU52ZGtdl
-	 ncGNuqliiFIqFPxtoMN98vlJPl7LU2aVocrQr8/vbZPPG+2R1JraSesXZbgvSZkdB3
-	 0iaC+MnTHGNgbnZW3SsYuSBpbiN8UHh/SuKyINOY7z9tZyxxCzwbkkbU70AIfPIpSZ
-	 fzyP+eEQFnRSnPuZ5njwZI8DSIHmj19rmUpDRqN4Amx/YSI+10oDpdr1ebTuKcinlC
-	 C1h+q8T2z8rlDuLBpncAT+HAYwAXJ8rk+cqd028HIcEGl/k8ZE7ZSYwfsjH7JFIcOT
-	 /BSrPmqHQl3nQ==
+	b=afZMCWUMNiFexScGZnhQw4culXKOSZynp/wiuc2FpPbaZzjjG1GeNhO7FuGRmHzx7
+	 f4YsWE+k8TPzg3jb8z8g+T4GOFft/RgnkFO0tUERTvkEgS4NIzof15li+RdIbhzy8f
+	 UAvh+IdbbVf1d6L+l4xueOeF9ptnw3B6WZ/2vPnCfAH/44Z+JY1amVHjIrxV+YPedd
+	 +sv/fl94OxIW27eT3wzaJjl0IdDfKe4i50Y02DroP6EDL8yMLNkFIWK7CsTdw7waMN
+	 7KFm+KgJudHaMHMrbLMhkl+oFlihRYKp6lXz1v3H26dydis0Xf8jy/ySDLV4+NnBR6
+	 0UoUXJUPcaXCA==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
+To: Nilesh Javali <njavali@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Simon Horman <horms@kernel.org>,
+	Quinn Tran <qutran@marvell.com>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
 	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Dawid Osuchowski <dawid.osuchowski@linux.intel.com>,
-	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
-	Slawomir Mrozowicz <slawomirx.mrozowicz@intel.com>,
-	Martyna Szapar-Mudlaw <martyna.szapar-mudlaw@linux.intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ethernet: intel: fix building with large NR_CPUS
-Date: Fri, 20 Jun 2025 19:31:24 +0200
-Message-Id: <20250620173158.794034-1-arnd@kernel.org>
+Subject: [PATCH] [v2] scsi: qla2xxx: avoid stack frame size warning in qla_dfs
+Date: Fri, 20 Jun 2025 19:32:22 +0200
+Message-Id: <20250620173232.864179-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,92 +46,140 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-With large values of CONFIG_NR_CPUS, three Intel ethernet drivers fail to
-compile like:
+The qla2x00_dfs_tgt_port_database_show() function constructs a fake
+fc_port_t object on the stack, which depending on the configuration
+is large enough to exceed the stack size warning limit:
 
-In function ‘i40e_free_q_vector’,
-    inlined from ‘i40e_vsi_alloc_q_vectors’ at drivers/net/ethernet/intel/i40e/i40e_main.c:12112:3:
-  571 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-include/linux/rcupdate.h:1084:17: note: in expansion of macro ‘BUILD_BUG_ON’
- 1084 |                 BUILD_BUG_ON(offsetof(typeof(*(ptr)), rhf) >= 4096);    \
-drivers/net/ethernet/intel/i40e/i40e_main.c:5113:9: note: in expansion of macro ‘kfree_rcu’
- 5113 |         kfree_rcu(q_vector, rcu);
-      |         ^~~~~~~~~
+drivers/scsi/qla2xxx/qla_dfs.c:176:1: error: stack frame size (1392) exceeds limit (1280) in 'qla2x00_dfs_tgt_port_database_show' [-Werror,-Wframe-larger-than]
 
-The problem is that the 'rcu' member in 'q_vector' is too far from the start
-of the structure. Move this member before the CPU mask instead, in all three
-drivers.
+Rework this function to no longer need the structure but instead
+call a custom helper function that just prints the data directly
+from the port_database_24xx structure.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v2: move rcu to just after the napi_struct [Alexander Lobakin]
+v2: address review comments from ALOK TIWARI
 ---
- drivers/net/ethernet/intel/fm10k/fm10k.h | 3 ++-
- drivers/net/ethernet/intel/i40e/i40e.h   | 2 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe.h | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/scsi/qla2xxx/qla_dfs.c | 20 +++++---------
+ drivers/scsi/qla2xxx/qla_gbl.h |  1 +
+ drivers/scsi/qla2xxx/qla_mbx.c | 48 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 55 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/fm10k/fm10k.h b/drivers/net/ethernet/intel/fm10k/fm10k.h
-index 6119a4108838..65a2816142d9 100644
---- a/drivers/net/ethernet/intel/fm10k/fm10k.h
-+++ b/drivers/net/ethernet/intel/fm10k/fm10k.h
-@@ -189,13 +189,14 @@ struct fm10k_q_vector {
- 	struct fm10k_ring_container rx, tx;
+diff --git a/drivers/scsi/qla2xxx/qla_dfs.c b/drivers/scsi/qla2xxx/qla_dfs.c
+index 08273520c777..43970caca7b3 100644
+--- a/drivers/scsi/qla2xxx/qla_dfs.c
++++ b/drivers/scsi/qla2xxx/qla_dfs.c
+@@ -179,10 +179,9 @@ qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
+ 	struct qla_hw_data *ha = vha->hw;
+ 	struct gid_list_info *gid_list;
+ 	dma_addr_t gid_list_dma;
+-	fc_port_t fc_port;
+ 	char *id_iter;
+ 	int rc, i;
+-	uint16_t entries, loop_id;
++	uint16_t entries;
  
- 	struct napi_struct napi;
-+	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ 	seq_printf(s, "%s\n", vha->host_str);
+ 	gid_list = dma_alloc_coherent(&ha->pdev->dev,
+@@ -205,18 +204,11 @@ qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
+ 	seq_puts(s, "Port Name	Port ID		Loop ID\n");
+ 
+ 	for (i = 0; i < entries; i++) {
+-		struct gid_list_info *gid =
+-			(struct gid_list_info *)id_iter;
+-		loop_id = le16_to_cpu(gid->loop_id);
+-		memset(&fc_port, 0, sizeof(fc_port_t));
+-
+-		fc_port.loop_id = loop_id;
+-
+-		rc = qla24xx_gpdb_wait(vha, &fc_port, 0);
+-		seq_printf(s, "%8phC  %02x%02x%02x  %d\n",
+-			   fc_port.port_name, fc_port.d_id.b.domain,
+-			   fc_port.d_id.b.area, fc_port.d_id.b.al_pa,
+-			   fc_port.loop_id);
++		struct gid_list_info *gid = (struct gid_list_info *)id_iter;
 +
- 	cpumask_t affinity_mask;
- 	char name[IFNAMSIZ + 9];
++		rc = qla24xx_print_fc_port_id(vha, s, le16_to_cpu(gid->loop_id));
++		if (rc != QLA_SUCCESS)
++			break;
+ 		id_iter += ha->gid_list_info_size;
+ 	}
+ out_free_id_list:
+diff --git a/drivers/scsi/qla2xxx/qla_gbl.h b/drivers/scsi/qla2xxx/qla_gbl.h
+index 03e50e8fc08d..145defc420f2 100644
+--- a/drivers/scsi/qla2xxx/qla_gbl.h
++++ b/drivers/scsi/qla2xxx/qla_gbl.h
+@@ -557,6 +557,7 @@ qla26xx_dport_diagnostics_v2(scsi_qla_host_t *,
  
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *dbg_q_vector;
- #endif /* CONFIG_DEBUG_FS */
--	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ int qla24xx_send_mb_cmd(struct scsi_qla_host *, mbx_cmd_t *);
+ int qla24xx_gpdb_wait(struct scsi_qla_host *, fc_port_t *, u8);
++int qla24xx_print_fc_port_id(struct scsi_qla_host *, struct seq_file *, u16);
+ int qla24xx_gidlist_wait(struct scsi_qla_host *, void *, dma_addr_t,
+     uint16_t *);
+ int __qla24xx_parse_gpdb(struct scsi_qla_host *, fc_port_t *,
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 0cd6f3e14882..ae90c0973ca7 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -6597,6 +6597,54 @@ int qla24xx_send_mb_cmd(struct scsi_qla_host *vha, mbx_cmd_t *mcp)
+ 	return rval;
+ }
  
- 	/* for dynamic allocation of rings associated with this q_vector */
- 	struct fm10k_ring ring[] ____cacheline_internodealigned_in_smp;
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index 54d5fdc303ca..c429252859d3 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -946,6 +946,7 @@ struct i40e_q_vector {
- 	u16 reg_idx;		/* register index of the interrupt */
- 
- 	struct napi_struct napi;
-+	struct rcu_head rcu;	/* to avoid race with update stats on free */
- 
- 	struct i40e_ring_container rx;
- 	struct i40e_ring_container tx;
-@@ -956,7 +957,6 @@ struct i40e_q_vector {
- 	cpumask_t affinity_mask;
- 	struct irq_affinity_notify affinity_notify;
- 
--	struct rcu_head rcu;	/* to avoid race with update stats on free */
- 	char name[I40E_INT_NAME_STR_LEN];
- 	bool arm_wb_state;
- 	bool in_busy_poll;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe.h b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-index c6772cd2d802..3f9521d4e899 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-@@ -507,9 +507,10 @@ struct ixgbe_q_vector {
- 	struct ixgbe_ring_container rx, tx;
- 
- 	struct napi_struct napi;
-+	struct rcu_head rcu;	/* to avoid race with update stats on free */
++int qla24xx_print_fc_port_id(struct scsi_qla_host *vha, struct seq_file *s, u16 loop_id)
++{
++	int rval = QLA_FUNCTION_FAILED;
++	dma_addr_t pd_dma;
++	struct port_database_24xx *pd;
++	struct qla_hw_data *ha = vha->hw;
++	mbx_cmd_t mc;
 +
- 	cpumask_t affinity_mask;
- 	int numa_node;
--	struct rcu_head rcu;	/* to avoid race with update stats on free */
- 	char name[IFNAMSIZ + 9];
- 
- 	/* for dynamic allocation of rings associated with this q_vector */
++	if (!vha->hw->flags.fw_started)
++		goto done;
++
++	pd = dma_pool_zalloc(ha->s_dma_pool, GFP_KERNEL, &pd_dma);
++	if (pd == NULL) {
++		ql_log(ql_log_warn, vha, 0xd047,
++		    "Failed to allocate port database structure.\n");
++		goto done;
++	}
++
++	memset(&mc, 0, sizeof(mc));
++	mc.mb[0] = MBC_GET_PORT_DATABASE;
++	mc.mb[1] = loop_id;
++	mc.mb[2] = MSW(pd_dma);
++	mc.mb[3] = LSW(pd_dma);
++	mc.mb[6] = MSW(MSD(pd_dma));
++	mc.mb[7] = LSW(MSD(pd_dma));
++	mc.mb[9] = vha->vp_idx;
++
++	rval = qla24xx_send_mb_cmd(vha, &mc);
++	if (rval != QLA_SUCCESS) {
++		ql_dbg(ql_dbg_mbx, vha, 0x1193, "%s: fail\n", __func__);
++		goto done_free_sp;
++	}
++
++	ql_dbg(ql_dbg_mbx, vha, 0x1197, "%s: %8phC done\n",
++	    __func__, pd->port_name);
++
++	seq_printf(s, "%8phC  %02x%02x%02x  %d\n",
++		   pd->port_name, pd->port_id[0],
++		   pd->port_id[1], pd->port_id[2],
++		   loop_id);
++
++done_free_sp:
++	if (pd)
++		dma_pool_free(ha->s_dma_pool, pd, pd_dma);
++done:
++	return rval;
++}
++
+ /*
+  * qla24xx_gpdb_wait
+  * NOTE: Do not call this routine from DPC thread
 -- 
 2.39.5
 
