@@ -1,251 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666CE1754B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788112E611A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750438855; cv=none; b=PwOLfLU3MriKsK/VnVeLByXWBC8ZuQyutxzFZGE1/4Q7zxa5FgYm2cYlyM7smozIm+xyZLo5trkE/tmbe0DXm+JP1y8QQpgPczX8YbJoT21t09FLgmdakawTH1MW02FzKMiVlYR/13thRhrdGmwtRZ4jJQH7ZnPm8/qG0KmgShA=
+	t=1750438879; cv=none; b=ttpaOfDOb+Ewx1MvUHszaPYSIRmr7JFYOAS+idkUTf9mjv+ZGarwYPqfm4opgK3Od+RxcHvp7OgAdIkL8jtTBfGkXkFpH/iwQztLKFh4Nyb+5Qs0mForUjTCUJ9kWZFYSf7hyioWceaGiUuqNKB4OexLpPvm6zNqhNQNDfz1RwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750438855; c=relaxed/simple;
-	bh=u5j3oSDjt2m4XoKCZRShfgJ93sMeb2IJ60LHHDWjXUM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=h2rFwbgBVfL5wGKA0NA25DLj84aUXKNqk8fQbhRuvmhuCjKuFVf/B3Nn+p7p32LVn19YtuGbt1Az2dnAVWnNJGxC15NeqKtUS1c8CZVuSpj7VGM6ESuN0tVDf2/ghusQVNsdBFfqLTJS8CY8KfOW9c9I5uNEq/edlvgOTiMfpE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K0S6b7xp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FN79cN+c; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750438879; c=relaxed/simple;
+	bh=XAukmnt5QjBdMQI+xuahj+iBwVBMbadMcYelH+EV8+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZfwvpnFr57XoR6SWoGDwkNjE/cEhauq5y7JP4rBlXl35yAb1K4ur5z7Gv0/RShdBYun1RV+vSV5ZEuQ3oXDnl5n6HYJZDhrd9oLfKGJLfltA2hBhcmzNqUBOxfIyOsyGxa7d4K/Rba+EsC9GVIvoRQ4sCFZV28NMiXICnBtfkKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LXIuSAl6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K0S6b7xp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FN79cN+c"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750438851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5UK6tcGwGcSmp6JzY9pybOxQipHZHVqlupXH6Fcm41w=;
-	b=K0S6b7xp5Z92h7rDFcw8eBkKBCJTTtYfYYcKhIEeeBPsmh2VjFvFZwMRsfJnJ4TKyC+18P
-	QBb3ulqXvqqJu4kUXVM+2QSSTz3pIfSYkT2R4kKD1G01jOnZLKAullm8/xrrQjtVbcRcof
-	kedLik/uJWxcUCS0RbeUwiLrt348ri1mVCBx7AKlenJSEORkoaWiNGqoeCjsMcwJEaB30Y
-	aLNw2hracYCs1Af/H0FBCuVaRyeI23Xjf4OUK6plan1wQ5qyLprdBf2eVmYkhWjhJg5810
-	BYiWw84CZLnOG4isiUAY265jEboZJmy1Wx176a64IXh02xIKkSbB8JtEQ03fag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750438851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5UK6tcGwGcSmp6JzY9pybOxQipHZHVqlupXH6Fcm41w=;
-	b=FN79cN+cL9ikP9y/ScHmRnWsbDm/I+/3UNpLB+YdFvq/tKCnQUYs/jL45hJ4DEC3DlgsYC
-	QE/I0KPowCQbeqAA==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Waiman Long <longman@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
-In-Reply-To: <20250530142031.215594-7-gmonaco@redhat.com>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
- <20250530142031.215594-7-gmonaco@redhat.com>
-Date: Fri, 20 Jun 2025 19:00:50 +0200
-Message-ID: <875xgqqrel.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LXIuSAl6"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KGVAlb029044
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:01:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Fpu0l6974H5V385jR1/L6yeOq9JUIfEhJX1r1r81aaM=; b=LXIuSAl6/qDRZB8x
+	Rou07E5KSwJ2siNkOf3nRzeATHpXzlQBkuSyYIHUDMWKbO/ceb1UGe8aeHw1tRuV
+	+ALWNpKymXnEnJc8yCtBdXL71yc4l/lHODXnx99U3EOQAd/yeavU40JDasmldLF1
+	bM3fUiy0kAAIffnJB+O1IZn4sWUH3LQ1XxgIdenwpQ9ryYTqloVOQPrBr8MNlpfY
+	X11lR/oJ87wYWKTBtLQIs5+QdYm8dYMDDSKWxDJQMk7VSYu1TdVoOC3rv0YG6Ih5
+	7NR0cEOC7gKJL+/PCCh+FSb07j0Fcdsv9kOuohxSs25CEBa75BaBeWCJSDo4lTYM
+	K97zFQ==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47db82g22n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:01:16 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d094e04aa4so58755385a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:01:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750438876; x=1751043676;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fpu0l6974H5V385jR1/L6yeOq9JUIfEhJX1r1r81aaM=;
+        b=AAB8TXHUOyxI1PY+NDEQ81gtfT76WkOjUewWeDR5nkt+TgCr+1pDD8A3KQggP0RiaC
+         KP2KvyyRn7pzKC9TTWUjDdHahY1a6sYtfbuOjNUlOnGbXUfD2ud0QL7wYy90VRlJ/5mq
+         nGR9DnXElF22kSegphyqAcrv2onvihb7wx7rDW0I9hMK11z86dfUzFVo5rn9YiokZrgw
+         5DuoDiALRyx/GNa2kQQI4PYPIsWXfDMJZFkXARh5aU0nR6p7HO/wLtrxPD+lAo7A789A
+         2IP6qkt03t+XsrHYvhXpKn76/lLuYNxgBAP26SKRL6M4MX9ipMxGSHMYY6haeyX6Ch8Q
+         ULIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNclnExkhWWS99qEkKdLsP561fUpBAP0Y9ZUm8HWnjv79SAs/cQbr9xA0wXcZuVLsT53edsVGH42RyEeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR6pOl9/chk9dXhLrZFNhKxzXtFbq8EtUeM8/4iXRpPUZpi8n6
+	6+sNnsNcxdGDBTJ9U6PNFtOsv6LSU0xEkQsNRAh0aAtlI+bRGyWAZCi6sxujm76P36BLrUcQP0Q
+	HNL481B/SJ/S67Wzw6KU6PU7SSZOFMOV3cgmCWhJbWAIIGRAWBxc6ixh+/LIXj5g2URc=
+X-Gm-Gg: ASbGncst1Krf4NklXuyftG79YQvgl2tPQOSkU3+TgxXRl1vArv+TjW9g7X8r3TUbeI8
+	UNjt0zsZX7QkA7/txSNcBBOyxFnZsv/YVei05XhYC4GOXmKbi2q/RTY0o3SkDmJbdjN4OYZrAnt
+	MVK9KwolLv1tW4L+0iKOEvSQP7phJ+CpaLXGQceKnY/HcPdn7Ay++1ilGmXJdUpDQp6Fl0fZh/+
+	i7w7Zq1K7uFwO2wozfEGVSa90Y+ViGyCZ09Zlb6y8l4sF4h1oDCC93SEm3pI71wbi1LIAdDQZkH
+	/COW62TF+QqJm2Y8fCWhNb6XTWzEpJWd8GNUEHpXH5K5ZhVPx87A3BnuRqWpl/5c0E8ZEB0ovW9
+	bUXU=
+X-Received: by 2002:a05:620a:1707:b0:7d3:c69d:ed69 with SMTP id af79cd13be357-7d3f98ec727mr193722185a.6.1750438875916;
+        Fri, 20 Jun 2025 10:01:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG16STpHVdEHhYbxIqd3DOFgM6T+wJ9+inbvmdt4Ws0DP1ihUKEnE1P7W/LjHT61a5uRN3b1w==
+X-Received: by 2002:a05:620a:1707:b0:7d3:c69d:ed69 with SMTP id af79cd13be357-7d3f98ec727mr193718585a.6.1750438875323;
+        Fri, 20 Jun 2025 10:01:15 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a185797bbsm1647747a12.35.2025.06.20.10.00.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 10:00:46 -0700 (PDT)
+Message-ID: <2d3ff07d-1cd8-4eb6-8b3b-2d0d6f64445f@oss.qualcomm.com>
+Date: Fri, 20 Jun 2025 19:00:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/11] power: supply: qcom_smbx: program aicl rerun time
+To: Casey Connolly <casey.connolly@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-hardening@vger.kernel.org
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-11-ac5dec51b6e1@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250619-smb2-smb5-support-v1-11-ac5dec51b6e1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: eanhK0u7RXMSZYuPiabtq5yuZpT7AvHf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEyMCBTYWx0ZWRfX2dIESbFFSfvH
+ RK2RrhEheDiy3nrO7Dd7EwswztjIfHuMVG2vjmxxn3B/x+3FT46h0GpsyBI+gHPOCyH2XFZjg30
+ F9Be9Vvyw/0XOZqvFBGrDUd0qduluLHvVhsJ8iTzD7BfpnM0WlzRBkJB4h7Aw61ephBAfHpz4wP
+ XZ20WpQIMC7WKqI2U5dXg8ORm6koFo0gzx/uIjApiKMjLQapgUWsVXZfTR37xTa2cJu2bzxQPUq
+ dQStJ9l/O7LgXYnCAlmmPoAZjdI2V1NsS3XwSaVxbeG/Eat9+rDpriKJeH4Le4L5iJzPATbjI9i
+ jvhCEOHS0u6dDLKELqpabWc8ZqX0P5qBZpItKfMLVcgVOBjbKdofHdcMGxOPJUCshvCDyhDjFiH
+ l6h9RWnHt4WNij34EpCH3RlX0j45H9FwgX+eH7orrpQzM35xHpyF982ufPctxkguoAJ2syKN
+X-Authority-Analysis: v=2.4 cv=RaOQC0tv c=1 sm=1 tr=0 ts=685593dd cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=tPfAkDRKdS00ijgZXEcA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: eanhK0u7RXMSZYuPiabtq5yuZpT7AvHf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_07,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
+ phishscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200120
 
-On Fri, May 30 2025 at 16:20, Gabriele Monaco wrote:
-
-timer migation?
-
-> The timer migration mechanism allows active CPUs to pull timers from
-> idle ones to improve the overall idle time. This is however undesired
-> when CPU intensive workloads run on isolated cores, as the algorithm
-> would move the timers from housekeeping to isolated cores, negatively
-> affecting the isolation.
->
-> This effect was noticed on a 128 cores machine running oslat on the
-> isolated cores (1-31,33-63,65-95,97-127). The tool monopolises CPUs,
-> and the CPU with lowest count in a timer migration hierarchy (here 1
-> and 65) appears as always active and continuously pulls global timers,
-> from the housekeeping CPUs. This ends up moving driver work (e.g.
-> delayed work) to isolated CPUs and causes latency spikes:
->
-> before the change:
->
->  # oslat -c 1-31,33-63,65-95,97-127 -D 62s
->  ...
->   Maximum:     1203 10 3 4 ... 5 (us)
->
-> after the change:
->
->  # oslat -c 1-31,33-63,65-95,97-127 -D 62s
->  ...
->   Maximum:      10 4 3 4 3 ... 5 (us)
-
-It's nice to add numbers, but you should out them at the end _after_ you
-described the change. At this point 'after the change' makes no sense as
-the reader does not read backwards or jumps around randomly in the text.
-
-> Exclude isolated cores from the timer migration algorithm, extend the
-> concept of unavailable cores, currently used for offline ones, to
-> isolated ones:
-> * A core is unavailable if isolated or offline;
-> * A core is available if isolated and offline;
->
-> A core is considered unavailable as isolated if it belongs to:
-> * the isolcpus (domain) list
-> * an isolated cpuset
-> Except if it is:
-> * in the nohz_full list (already idle for the hierarchy)
-> * the nohz timekeeper core (must be available to handle global timers)
->
-> Due to how the timer migration algorithm works, any CPU part of the
-> hierarchy can have their global timers pulled by remote CPUs and have to
-> pull remote timers, only skipping pulling remote timers would break the
-> logic.
-> For this reason, we prevent isolated CPUs from pulling remote global
-
-s/we//
-
-> timers, but also the other way around: any global timer started on an
-> isolated CPU will run there. This does not break the concept of
-> isolation (global timers don't come from outside the CPU) and, if
-> considered inappropriate, can usually be mitigated with other isolation
-> techniques (e.g. IRQ pinning).
-
-> +#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-> +extern int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask);
-
-s/cpumask_var_t/struct cpumask */
-
-cpumask_var_t is only for declaration purposes to avoid ifdeffery, but a
-function always gets a pointer to the cpumask itself.
-
-> diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-> index 25439f961ccf8..a14fbca7457fe 100644
-> --- a/kernel/time/timer_migration.c
-> +++ b/kernel/time/timer_migration.c
-> @@ -10,6 +10,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/timerqueue.h>
->  #include <trace/events/ipi.h>
-> +#include <linux/sched/isolation.h>
+On 6/19/25 4:55 PM, Casey Connolly wrote:
+> We don't know what the bootloader programmed here, but we want to have a
+> consistent value. Program the automatic input current limit detection to
+> re-run every 3 seconds. This seems to be necessary at least for smb5.
+> 
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  drivers/power/supply/qcom_smbx.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
+> index d902f3f43548191d3d0310ce90e699918ed0f16f..b723dba5b86daefb238ee6aae19b1b7e5236fce3 100644
+> --- a/drivers/power/supply/qcom_smbx.c
+> +++ b/drivers/power/supply/qcom_smbx.c
+> @@ -1091,8 +1091,14 @@ static int smb_probe(struct platform_device *pdev)
+>  	if (rc < 0)
+>  		return dev_err_probe(chip->dev, rc,
+>  				     "Couldn't write fast charge current cfg");
 >  
->  #include "timer_migration.h"
->  #include "tick-internal.h"
-> @@ -1449,6 +1450,13 @@ static int tmigr_cpu_unavailable(unsigned int cpu)
->  	int migrator;
->  	u64 firstexp;
->  
-> +	/*
-> +	 * The tick CPU can be marked as isolated by the cpuset code, however
-> +	 * we cannot mark it as unavailable to avoid having no global migrator
-> +	 * for the nohz_full CPUs.
-> +	 */
-> +	if (!tick_nohz_cpu_hotpluggable(cpu))
-> +		return 0;
+> +	rc = regmap_write_bits(chip->regmap, chip->base + AICL_RERUN_TIME_CFG,
+> +			       AICL_RERUN_TIME_MASK, AIC_RERUN_TIME_3_SECS);
 
-This is really horribly confusing. This function is also invoked from
-the CPU offline hotplug callback and in context of CPU hotplug this
-check makes absolutely no sense at all.
+FWIW a random downstream clone I have sets 0x01 which is claimed to
+mean "every 12s" instead
 
-Please do this check in the smp function call which handles this
-isolation muck.
-
->  	raw_spin_lock_irq(&tmc->lock);
->  	tmc->available = false;
-
-This clearly lacks a check whether available is true or not. If it's
-false, it must return right here.
-
-To avoid goto or whatever ugly please convert that locking to a scoped
-guard in a seperate patch. Then you can simply do
-
-      if (!tmc->available)
-      	  return 0;
-
-inside the lock scope and the compiler will mop it up for you.
-
->  	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
-> @@ -1478,6 +1486,20 @@ static int tmigr_cpu_available(unsigned int cpu)
->  	if (WARN_ON_ONCE(!tmc->tmgroup))
->  		return -EINVAL;
->  
-> +	/*
-> +	 * Domain isolated CPUs don't participate in timer migration, nohz_full
-> +	 * CPUs are still part of the hierarchy but are always considered idle.
-> +	 * Additionally, the tick CPU during nohz_full cannot be disabled.
-> +	 * Checking here guarantees that CPUs isolated at boot (e.g. isolcpus)
-> +	 * are not marked as available when they first become online.
-> +	 * During runtime, any offline isolated CPU is also not incorrectly
-> +	 * marked as available once it gets back online.
-> +	 */
-> +	if ((!housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
-> +	     cpuset_cpu_is_isolated(cpu)) &&
-> +	    housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) &&
-> +	    tick_nohz_cpu_hotpluggable(cpu))
-> +		return 0;
-
-Same nonsense as above.
-
->  	raw_spin_lock_irq(&tmc->lock);
-
-Same missing check for available == true
-
->  	trace_tmigr_cpu_available(tmc);
->  	tmc->idle = timer_base_is_idle();
-> @@ -1489,6 +1511,38 @@ static int tmigr_cpu_available(unsigned int cpu)
->  	return 0;
->  }
->  
-> +static void tmigr_remote_cpu_unavailable(void *ignored)
-
-This is a SMP function call so what's the _remote_ for? It runs on the
-CPU on which the call is scheduled. Please make it entirely clear what
-this is about. This is about isolation and not about available. The fact
-that it sets/clears the availability is just an implementation detail.
-
-static void timgr_cpu_isolate(void *ignored)
-{
-	unsigned int cpu = smp_processor_id();
-
-        /* Big fat comment */
-	if (!tick_nohz_cpu_hotpluggable(cpu))
-        	return;
-                
-	tmigr_set_cpu_available(cpu);
-}
-
-> +{
-> +	tmigr_cpu_unavailable(smp_processor_id());
-> +}
-> +
-> +static void tmigr_remote_cpu_available(void *ignored)
-> +{
-> +	tmigr_cpu_available(smp_processor_id());
-> +}
-> +
-> +int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
-> +{
-> +	cpumask_var_t cpumask;
-> +	int ret = 0;
-> +
-> +	lockdep_assert_cpus_held();
-> +
-> +	if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	cpumask_and(cpumask, exclude_cpumask, tmigr_available_cpumask);
-> +	cpumask_and(cpumask, cpumask, housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
-> +	on_each_cpu_mask(cpumask, tmigr_remote_cpu_unavailable, NULL, 0);
-
-Why are those function calls async?
-
-Shouldn't it be guaranteed that the change has been committed once this
-function returns? If not then this wants a comment why it does not matter.
-
-Thanks,
-
-        tglx
+Konrad
