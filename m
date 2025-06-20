@@ -1,289 +1,355 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB18E259CBA
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23623C505;
+	Fri, 20 Jun 2025 22:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457947; cv=none; b=aXjWKT7rXERdFU3LwAbw9CpOu9jL+VjBn9LnTQ0ueQVYglU9sq8+i73yHmaMZgjjRpphMWBoC2x1K3BWXTh6/tJVWNmRYjuo0ZX6NA2HoDhTmwVGACXylde2sz+ZxNvpc4d67uADYfPdG8Vx0ksG/g0zIdYgC0re4P3NQJlcT+M=
+	t=1750458022; cv=none; b=WzbIXK1QkR80X4zw+j36Xej/zXUyd6iB2Mp+YCz/IcsT0NIxrjbQSppG251reqhGw5I26PhNouxqI0PqwUSds8qwDqRdYsWNgoRAdG4Kg+XUoWbS78np44IeArq5hgo4Ya7XA7t0vhZ0CK0sXSflxwlCj0BePoKG1PXD6avm9ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457947; c=relaxed/simple;
-	bh=DzV1iQPyhQYH/07BErYJfalFEt85HaMiwlc8OwgiWrI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NaEqVPZKUXrPd/I98cPBcOB/4HmeRROxD0oZAnxb+Z7K9W6MZAMhL/kcwh4FrAgXw/cqJ4oimNClqmRrTDwO3bN+MFxyEpAVgdjxnHiRddk6FQkvLqrGFLCp0RqvyRKL/dvm3iq0EaBoCASgq0QtxAintsx8JU0qGsF/yEGhxsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qx7ITm54; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1750458022; c=relaxed/simple;
+	bh=qHB0fqkbMgKmWT614pkeoUg7b5X7upr9aAVqBFaaggw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fzcZd/7XtDmYLGXBf7g7zmbpLmzBd2H50MQxn2wKF2MQNoHiS7VXS2/ya90/yU8XhBrWr/suVvvTnbKGCC/iTemsoVsIlyJuynljv1+HsMVGBZV8e3npMID6obAJoUkh3Ae1G3C6d4lJ84Wnkh6Wfv5YCFMZ65edYE3UBLKJ6ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=iVE6Hq+p; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qx7ITm54"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddc1af1e5bso53323285ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750457943; x=1751062743; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NzRy/DCIVlwO1UeSIhiO63SgndmbkqKBMoPqbIF1wck=;
-        b=Qx7ITm540uwjexD6neLrYrKihQOUxvcZmmJUb2h81mZSu9Jqwq67hE0F1XqiFvl95e
-         yOB4jMstYFSvydfMUfZ7Oxhz/V7C8x121nri++RcnISmmVEZiBKDEb/PLW9s2lr6oi+p
-         ePRzK7d6dj/3GdqD4+4poDtaF9+ebcvKkuqrXNZfXkCBK4TRYEpNdnUpIM3lKWxSyAU5
-         ObQeQ8GoGbcTywhaCnR+U2lLQRoxJz01ZQFIVw9wcAHRyDL2+Lybs+M3iBWJBVkPMn3k
-         ng66S098dcPL3M+G1GINgYLi/n/1cjrf4RK3OB612skTTW7U0NltUcgjqfCDwMN9hiXd
-         nkOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750457943; x=1751062743;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NzRy/DCIVlwO1UeSIhiO63SgndmbkqKBMoPqbIF1wck=;
-        b=gBJF8RZPtEYkCcTLfBSVgBZtGQoqFhxmXeIJ/+ReJaUaWePxeJB3PMbJtYfyRb2k/z
-         0aGm0a/4cHI/x4FH3Kz7mP2gSzoujCI9190D2RYENAp0UwSQ2CWvQv9zXrTZmTLdZwvB
-         nx+opp3EjVVH4jdc/8O+aKM6na2GflQY/Iliue4a/stahUdafvc2Z8+FBG1iq78WJxvJ
-         BHQ2dPnzjKsxZmeFTGGFQDEEdM8rx6z3aOHRQHXRWptb1xut/NkLs3x/uRRjFg3oX97+
-         CoZkX9Cmc9PQMSA3a8nIPJKS07wqbAmMaSLZtgovqX11VKEauqWDlsr28bIHEHWdU5gv
-         Ag3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0xyHg7gMElbTJ21nJAwgCsj4Qkn+PqPV9e5NOe78rq1Fx5rH2XdHQ8jzCK6L7330OQ2VeGDhBPUYQ2Es=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+D5p+zKPawe6sobO7FKu91QNBnSfGfAsy5GIA5QiC8mtJUe77
-	Q7ymlrkIbGWLAeYAQFRqcbixWLF9m8Il11fMuqwX0YPRXAZ/QIXJTzMum0AuhigpGG7buf/fWuv
-	q6oqeRosDWJWaZk9kR2tOmKHfIA==
-X-Google-Smtp-Source: AGHT+IGL0FZSPU1ilcGsH+T8e2Jo4op9tS5C/DjCI1eSwz135bo73pLwqVefVkcFUgBxqY2EeJDtp/6Z5o5Ovw5jOw==
-X-Received: from ilbdi5.prod.google.com ([2002:a05:6e02:1f85:b0:3dd:754f:1dc4])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c2f:b0:3dd:89b0:8e1b with SMTP id e9e14a558f8ab-3de38cbfed7mr58377885ab.15.1750457943154;
- Fri, 20 Jun 2025 15:19:03 -0700 (PDT)
-Date: Fri, 20 Jun 2025 22:13:25 +0000
-In-Reply-To: <20250620221326.1261128-1-coltonlewis@google.com>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="iVE6Hq+p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1750458012; bh=qHB0fqkbMgKmWT614pkeoUg7b5X7upr9aAVqBFaaggw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=iVE6Hq+pcNg2FfnGNByMbjpvehjarmWT7OQs2GajQbkSynVd2VgMuh/yKdzn7cZAF
+	 Wu6tWc9RFvx8Co/hPqQf4zQB/nhDADEcZjMcDyHRkjsejcGFBQji8bEsdD/LaDlxZO
+	 Xu2HzcMYCSx75i0o71wK6CmaK1LkMprg+RxjCPXc=
+Message-ID: <d4564d4b-9510-47f8-9930-65d3c4e90e6c@lucaweiss.eu>
+Date: Sat, 21 Jun 2025 00:20:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250620221326.1261128-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250620221326.1261128-26-coltonlewis@google.com>
-Subject: [PATCH v2 23/23] KVM: arm64: selftests: Add test case for partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: msm8953: Add device tree for
+ Billion Capture+
+Content-Language: en-US
+To: cristian_ci@protonmail.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org
+References: <20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com>
+ <20250620-rimob-initial-devicetree-v1-3-8e667ea21f82@protonmail.com>
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <20250620-rimob-initial-devicetree-v1-3-8e667ea21f82@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Run separate a test case for a partitioned PMU in vpmu_counter_access.
+Hi Cristian,
 
-An enum is created specifying whether we are testing the emulated or
-partitioned PMU and all the test functions are modified to take the
-implementation as an argument and make the difference in setup
-appropriately.
+On 20-06-2025 11:51 p.m., Cristian Cozzolino via B4 Relay wrote:
+> From: Cristian Cozzolino <cristian_ci@protonmail.com>
+> 
+> Billion Capture+ (flipkart,rimob) is a smartphone released in 2017, based
+> on Snapdragon 625 (MSM8953) SoC.
+> 
+> Add a device tree with initial support for:
+> 
+> - GPIO keys
+> - SDHCI (internal and external storage)
+> - USB Device Mode
+> - Regulators
+> - Simple framebuffer
 
-Because the test should still succeed even if we are on a machine
-where we have the capability but the ioctl fails because the driver
-was never configured properly, use __vcpu_ioctl to avoid checking the
-return code.
+Thanks for sending this upstream!
 
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
----
- tools/include/uapi/linux/kvm.h                |  2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c | 63 +++++++++++++------
- 2 files changed, 47 insertions(+), 18 deletions(-)
+> 
+> Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
+> ---
+>   arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+>   .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 251 +++++++++++++++++++++
+>   2 files changed, 252 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 140b0b2abfb555b8ef61bd9ed0217d8997800809..af3757ca017b6e3d8c579e43f647a71fc64c62b3 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -70,6 +70,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918hd.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-flipkart-rimob.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts b/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..9fc58bb4dae7b463691659f8e84a634529642b69
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts
+> @@ -0,0 +1,251 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2025, Cristian Cozzolino
+> + */
+> +/dts-v1/;
+> +
+> +#include "msm8953.dtsi"
+> +#include "pm8953.dtsi"
+> +#include "pmi8950.dtsi"
+> +
+> +/delete-node/ &cont_splash_mem;
+> +/delete-node/ &qseecom_mem;
+> +
+> +/ {
+> +	model = "Billion Capture+";
+> +	compatible = "flipkart,rimob", "qcom,msm8953";
+> +	chassis-type = "handset";
+> +	qcom,msm-id = <293 0>;
+> +	qcom,board-id = <0x340008 0>;
+> +
+> +	chosen {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		framebuffer@90001000 {
+> +			compatible = "simple-framebuffer";
+> +			reg = <0 0x90001000 0 (1920 * 1080 * 3)>;
+> +
+> +			width = <1080>;
+> +			height = <1920>;
+> +			stride = <(1080 * 3)>;
+> +			format = "r8g8b8";
+> +
+> +			power-domains = <&gcc MDSS_GDSC>;
+> +
+> +			clocks = <&gcc GCC_MDSS_AHB_CLK>,
+> +				 <&gcc GCC_MDSS_AXI_CLK>,
+> +				 <&gcc GCC_MDSS_VSYNC_CLK>,
+> +				 <&gcc GCC_MDSS_MDP_CLK>,
+> +				 <&gcc GCC_MDSS_BYTE0_CLK>,
+> +				 <&gcc GCC_MDSS_PCLK0_CLK>,
+> +				 <&gcc GCC_MDSS_ESC0_CLK>;
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&gpio_key_default>;
+> +
+> +		key-volume-up {
+> +			label = "Volume Up";
+> +			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			debounce-interval = <15>;
+> +		};
+> +	};
+> +
+> +	reserved-memory {
+> +		qseecom@0 {
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index b6ae8ad8934b..cb72b57b9b6c 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -930,6 +930,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_PARTITION_PMU 242
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1356,6 +1357,7 @@ struct kvm_vfio_spapr_tce {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+#define KVM_ARM_PARTITION_PMU	_IOWR(KVMIO, 0xce, u8)
- 
- struct kvm_enc_region {
- 	__u64 addr;
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index f16b3b27e32e..93259b73de7c 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -25,6 +25,16 @@
- /* The cycle counter bit position that's common among the PMU registers */
- #define ARMV8_PMU_CYCLE_IDX		31
- 
-+enum pmu_impl {
-+	EMULATED,
-+	PARTITIONED
-+};
-+
-+const char *pmu_impl_str[] = {
-+	"Emulated",
-+	"Partitioned"
-+};
-+
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -405,7 +415,7 @@ static void guest_code(uint64_t expected_pmcr_n)
- }
- 
- /* Create a VM that has one vCPU with PMUv3 configured. */
--static void create_vpmu_vm(void *guest_code)
-+static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
- {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver, ec;
-@@ -419,6 +429,7 @@ static void create_vpmu_vm(void *guest_code)
- 		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
- 		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
- 	};
-+	bool partition = impl;
- 
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,6 +460,9 @@ static void create_vpmu_vm(void *guest_code)
- 	/* Initialize vPMU */
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		__vcpu_ioctl(vpmu_vm.vcpu, KVM_ARM_PARTITION_PMU, &partition);
- }
- 
- static void destroy_vpmu_vm(void)
-@@ -475,12 +489,12 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
- 	}
- }
- 
--static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-+static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, enum pmu_impl impl, bool expect_fail)
- {
- 	struct kvm_vcpu *vcpu;
- 	uint64_t pmcr, pmcr_orig;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	pmcr_orig = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
-@@ -508,7 +522,7 @@ static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
-  * and run the test.
-  */
--static void run_access_test(uint64_t pmcr_n)
-+static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	uint64_t sp;
- 	struct kvm_vcpu *vcpu;
-@@ -516,7 +530,7 @@ static void run_access_test(uint64_t pmcr_n)
- 
- 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	/* Save the initial sp to restore them later to run the guest again */
-@@ -529,6 +543,7 @@ static void run_access_test(uint64_t pmcr_n)
- 	 * check if PMCR_EL0.N is preserved.
- 	 */
- 	vm_ioctl(vpmu_vm.vm, KVM_ARM_PREFERRED_TARGET, &init);
-+
- 	init.features[0] |= (1 << KVM_ARM_VCPU_PMU_V3);
- 	aarch64_vcpu_setup(vcpu, &init);
- 	vcpu_init_descriptor_tables(vcpu);
-@@ -550,14 +565,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
-  * Create a VM, and check if KVM handles the userspace accesses of
-  * the PMU register sets in @validity_check_reg_sets[] correctly.
-  */
--static void run_pmregs_validity_test(uint64_t pmcr_n)
-+static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	int i;
- 	struct kvm_vcpu *vcpu;
- 	uint64_t set_reg_id, clr_reg_id, reg_val;
- 	uint64_t valid_counters_mask, max_counters_mask;
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	valid_counters_mask = get_counters_mask(pmcr_n);
-@@ -607,11 +622,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
-  * the vCPU to @pmcr_n, which is larger than the host value.
-  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
-  */
--static void run_error_test(uint64_t pmcr_n)
-+static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
--	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-+	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, true);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, true);
- 	destroy_vpmu_vm();
- }
- 
-@@ -619,30 +634,42 @@ static void run_error_test(uint64_t pmcr_n)
-  * Return the default number of implemented PMU event counters excluding
-  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
-  */
--static uint64_t get_pmcr_n_limit(void)
-+static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
- {
- 	uint64_t pmcr;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
- 	destroy_vpmu_vm();
- 	return get_pmcr_n(pmcr);
- }
- 
--int main(void)
-+void test_pmu(enum pmu_impl impl)
- {
- 	uint64_t i, pmcr_n;
- 
--	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
-+
-+	pmcr_n = get_pmcr_n_limit(impl);
-+	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
- 
--	pmcr_n = get_pmcr_n_limit();
- 	for (i = 0; i <= pmcr_n; i++) {
--		run_access_test(i);
--		run_pmregs_validity_test(i);
-+		run_access_test(i, impl);
-+		run_pmregs_validity_test(i, impl);
- 	}
- 
- 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
--		run_error_test(i);
-+		run_error_test(i, impl);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+
-+	test_pmu(EMULATED);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		test_pmu(PARTITIONED);
- 
- 	return 0;
- }
--- 
-2.50.0.714.g196bf9f422-goog
+qseecom@84a00000 ?
+
+> +			reg = <0x00 0x84a00000 0x00 0x1900000>;
+> +			no-map;
+> +		};
+> +
+> +		cont_splash_mem: cont-splash@90001000 {
+> +			reg = <0x0 0x90001000 0x0 (1080 * 1920 * 3)>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	vph_pwr: vph-pwr-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph_pwr";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +
+> +&hsusb_phy {
+> +	vdd-supply = <&pm8953_l3>;
+> +	vdda-pll-supply = <&pm8953_l7>;
+> +	vdda-phy-dpdm-supply = <&pm8953_l13>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&pm8953_resin {
+> +	linux,code = <KEY_VOLUMEDOWN>;
+> +	status = "okay";
+> +};
+> +
+> +&rpm_requests {
+> +	regulators {
+> +		compatible = "qcom,rpm-pm8953-regulators";
+> +		vdd_s1-supply = <&vph_pwr>;
+> +		vdd_s2-supply = <&vph_pwr>;
+> +		vdd_s3-supply = <&vph_pwr>;
+> +		vdd_s4-supply = <&vph_pwr>;
+> +		vdd_s5-supply = <&vph_pwr>;
+> +		vdd_s6-supply = <&vph_pwr>;
+> +		vdd_s7-supply = <&vph_pwr>;
+> +		vdd_l1-supply = <&pm8953_s3>;
+> +		vdd_l2_l3-supply = <&pm8953_s3>;
+> +		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
+> +		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
+> +		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
+> +		vdd_l23-supply = <&pm8953_s3>;
+> +
+> +		pm8953_s1: s1 {
+> +			regulator-min-microvolt = <870000>;
+> +			regulator-max-microvolt = <1156000>;
+> +		};
+> +
+> +		pm8953_s3: s3 {
+> +			regulator-min-microvolt = <1224000>;
+> +			regulator-max-microvolt = <1224000>;
+> +		};
+> +
+> +		pm8953_s4: s4 {
+> +			regulator-min-microvolt = <1900000>;
+> +			regulator-max-microvolt = <2050000>;
+> +		};
+> +
+> +		pm8953_l1: l1 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1000000>;
+> +		};
+> +
+> +		pm8953_l2: l2 {
+> +			regulator-min-microvolt = <975000>;
+> +			regulator-max-microvolt = <1225000>;
+> +		};
+> +
+> +		pm8953_l3: l3 {
+> +			regulator-min-microvolt = <925000>;
+> +			regulator-max-microvolt = <925000>;
+> +		};
+> +
+> +		pm8953_l5: l5 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +		pm8953_l6: l6 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +		pm8953_l7: l7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1900000>;
+> +		};
+> +
+> +		pm8953_l8: l8 {
+> +			regulator-min-microvolt = <2900000>;
+> +			regulator-max-microvolt = <2900000>;
+> +		};
+> +
+> +		pm8953_l9: l9 {
+> +			regulator-min-microvolt = <3000000>;
+> +			regulator-max-microvolt = <3300000>;
+> +		};
+> +
+> +		pm8953_l10: l10 {
+> +			regulator-min-microvolt = <2850000>;
+> +			regulator-max-microvolt = <2850000>;
+> +		};
+> +
+> +		pm8953_l11: l11 {
+> +			regulator-min-microvolt = <2950000>;
+> +			regulator-max-microvolt = <2950000>;
+> +		};
+> +
+> +		pm8953_l12: l12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <2950000>;
+> +		};
+> +
+> +		pm8953_l13: l13 {
+> +			regulator-min-microvolt = <3125000>;
+> +			regulator-max-microvolt = <3125000>;
+> +		};
+> +
+> +		pm8953_l16: l16 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +		pm8953_l17: l17 {
+> +			regulator-min-microvolt = <2850000>;
+> +			regulator-max-microvolt = <2850000>;
+> +		};
+> +
+> +		pm8953_l19: l19 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1350000>;
+> +		};
+> +
+> +		pm8953_l22: l22 {
+> +			regulator-min-microvolt = <2800000>;
+> +			regulator-max-microvolt = <2800000>;
+> +		};
+> +
+> +		pm8953_l23: l23 {
+> +			regulator-min-microvolt = <975000>;
+> +			regulator-max-microvolt = <1225000>;
+> +		};
+> +	};
+> +};
+> +
+> +&sdhc_1 {
+> +	vmmc-supply = <&pm8953_l8>;
+> +	vqmmc-supply = <&pm8953_l5>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&sdhc_2 {
+> +	vmmc-supply = <&pm8953_l11>;
+> +	vqmmc-supply = <&pm8953_l12>;
+> +
+> +	cd-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
+> +
+> +	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
+> +	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off>;
+> +	pinctrl-names = "default", "sleep";
+> +
+> +	status = "okay";
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <0 4>, <135 4>;
+
+Any ideas what's connected to these pins? If you do, good to document 
+this like in other devices.
+
+Regards
+Luca
+
+> +
+> +	gpio_key_default: gpio-key-default-state {
+> +		pins = "gpio85";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_dwc3 {
+> +	dr_mode = "peripheral";
+> +};
+> 
 
