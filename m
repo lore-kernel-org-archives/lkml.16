@@ -1,120 +1,58 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F77D2253E0;
-	Fri, 20 Jun 2025 07:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7753A923;
+	Fri, 20 Jun 2025 07:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403405; cv=none; b=Y3TsYnZXwGMHupMPQGsitXHzgJaHqqbo+Go3hbsdAfXOjtm0vkenY+lEiJOcu/7slWWI7h3858PFfNM8fgB05KHYXfpBPQsdP8K1zpRdDCrJsruf2k3qNmQaA8Xt58Rk4zIXCT2qiV84Vg453mlCtiz7q82WDsbLjqdC1VDMXVA=
+	t=1750403447; cv=none; b=tdJnqd/gvzgiYIzxigrDgbEm5qZcVyeQ4mhnCGus8Resix1N5mTSOJi/iR/W3uvnP0+TwPLIRbVWfxM7qpFa9/ElzroJtP0025BjrMCTIUv7ZGEHtAwmG0JKBMVRXI0lWaBttuc43EUYIVaFeMSKHmYQAfNaXgvIWmDWjA6ad0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403405; c=relaxed/simple;
-	bh=VJVc/Bqimb/04dTPJhdiePqGlWXQYi6s6TXswEG790U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oH3wYroRFJLoyYi9A748EBqHBpHCwNa3MY9iHjYSWY/cQX5Pn58zRtjBg123kAtyUNyjdGi1q1ckdW27tBp0LyYC/PpmncCbWpuGNyBB3hJdpDF3U9Bv8tfKhslElccYEeSvyKihHfgf+60r7E+i1iv3PkOU8w+Izvdn5ABhN6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=aw8vMIFr; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750403447; c=relaxed/simple;
+	bh=3GSX6YXAI0S+M3oMEaj3CQTfqG2WzPNo2PRLr43C2U8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fJc38p1t53fFZbHRwanLSWBeA0Z/OqJPtvPhS8BZ7ZpfcKQjynnXOY4AKEmBdm/6gf6N/M9vzsLW3E/Y2pRXuUqY/Ni7Jqua/35rKkROxQuEgxuRNxK1HofA67s8PLQxrXrJN+5CRi7jSvJZ9I7C9KPaaGtsSOsZz5mcmPSgnkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndIy9O1+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="aw8vMIFr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750403401;
-	bh=VJVc/Bqimb/04dTPJhdiePqGlWXQYi6s6TXswEG790U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=aw8vMIFr+cXE2mO/q8Oyu1dt9tnCq1lFaxSAROzAWBthwSXvbUQkKB1U6L6uCSkLL
-	 2+acxXCyNDkhpz0/pbbOIZSy1x4qwTS3WjNq1nqRpnfLjTjFo0L1DCpeNywuHWsQNP
-	 /xmQNCIlx4wV06dP6nDW2tuKvxvIBMeL/eGduIs1nknST7JZlIbBB3mMSOWU/HGi7u
-	 y2y/qZTIOwZgrg6zSoXs3t0MtVzQOeK7/MmIoI9aK6W0XyouS7MCZ00VA2dRKTZQoU
-	 ypcf0Lm4d/vLU3gBemeyjhzLtybrXugWPxjIDkxa8T+/Qx3H+QvBYSdQjl4eD/aXfG
-	 wY/kl+cgKfeMA==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 40186640A0;
-	Fri, 20 Jun 2025 15:09:58 +0800 (AWST)
-Message-ID: <10d493cb37748aeb1f4c97856929845727c4c3bc.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 6/7] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com, 
- lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org,  krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
- vkoul@kernel.org,  kishon@kernel.org, linus.walleij@linaro.org,
- p.zabel@pengutronix.de,  linux-aspeed@lists.ozlabs.org,
- linux-pci@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org,  openbmc@lists.ozlabs.org,
- linux-gpio@vger.kernel.org
-Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
- wak@google.com,  yuxiaozhang@google.com, BMC-SW@aspeedtech.com
-Date: Fri, 20 Jun 2025 16:39:57 +0930
-In-Reply-To: <20250613033001.3153637-7-jacky_chou@aspeedtech.com>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
-	 <20250613033001.3153637-7-jacky_chou@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndIy9O1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB868C4CEE3;
+	Fri, 20 Jun 2025 07:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750403447;
+	bh=3GSX6YXAI0S+M3oMEaj3CQTfqG2WzPNo2PRLr43C2U8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=ndIy9O1+9pzmj0Om3fnJmwRk8T98H7Bc56jj4Fogx0XYe4BVYXPhpGkrKrvwUDfAm
+	 kreZm6nNkJu9hdxfM9bwjjFLiB7Ed1P580rT8rH8ORBzgu82qWtLRrICipysV6GUv9
+	 n2GUxuQORgl/wRUMhiKcsfi3i3iwLDKTSQR8hRThEzqF7HAouM0BnSZ5K51kruQNdb
+	 e8GNVaGp+YgJoOGOVGoHc4KcBB1bPUd2I91bvAo2Ul09wB4ZDqcn6wI98Gw5JgYVzx
+	 lX0eWAIkR6aoBCZE7EMuFqpiKyw+qnlKST4XovkLGLGoYeKmwfnrQJPbmzEyN5Mwic
+	 iihAvN/mVpLDw==
+Date: Fri, 20 Jun 2025 09:10:44 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Akira Inoue <niyarium@gmail.com>
+cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: lenovo: Add support for ThinkPad X1 Tablet Thin
+ Keyboard Gen2
+In-Reply-To: <20250612043439.1914003-1-niyarium@gmail.com>
+Message-ID: <p79o696p-2n02-6qs3-rsr5-40n8o2s38492@xreary.bet>
+References: <20250612043439.1914003-1-niyarium@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 2025-06-13 at 11:30 +0800, Jacky Chou wrote:
-> The PCIe RC PERST uses SSPRST# as PERST#=C2=A0 and enable this pin
-> to output.
->=20
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
-> =C2=A0drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 12 +++++++++++-
-> =C2=A01 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl=
-/aspeed/pinctrl-aspeed-g6.c
-> index 5a7cd0a88687..c751703acdb9 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-> @@ -17,6 +17,7 @@
-> =C2=A0#include "../pinctrl-utils.h"
-> =C2=A0#include "pinctrl-aspeed.h"
-> =C2=A0
-> +#define SCU040=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x04=
-0 /* Reset Control Set 1=C2=A0 */
-> =C2=A0#define SCU400=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00x400 /* Multi-function Pin Control #1=C2=A0 */
-> =C2=A0#define SCU404=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00x404 /* Multi-function Pin Control #2=C2=A0 */
-> =C2=A0#define SCU40C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00x40C /* Multi-function Pin Control #3=C2=A0 */
-> @@ -52,7 +53,7 @@
-> =C2=A0#define SCU6D0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00x6D0 /* Multi-function Pin Control #29 */
-> =C2=A0#define SCUC20=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00xC20 /* PCIE configuration Setting Control */
-> =C2=A0
-> -#define ASPEED_G6_NR_PINS 256
-> +#define ASPEED_G6_NR_PINS 258
-> =C2=A0
-> =C2=A0#define M24 0
-> =C2=A0SIG_EXPR_LIST_DECL_SESG(M24, MDC3, MDIO3, SIG_DESC_SET(SCU410, 0));
-> @@ -1636,6 +1637,12 @@ FUNC_DECL_1(USB11BHID, USBB);
-> =C2=A0FUNC_DECL_1(USB2BD, USBB);
-> =C2=A0FUNC_DECL_1(USB2BH, USBB);
-> =C2=A0
-> +#define D7 257
-> +SIG_EXPR_LIST_DECL_SESG(D7, RCRST, PCIERC1, SIG_DESC_SET(SCU040, 19),
+On Thu, 12 Jun 2025, Akira Inoue wrote:
 
-The documentation for SCU040[19] says it will assert the reset. I
-expect that's not what's desired.
+> Add "Thinkpad X1 Tablet Gen 2 Keyboard" PID to hid-lenovo driver to fix trackpoint not working issue.
+> 
+> Signed-off-by: Akira Inoue <niyarium@gmail.com>
 
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0SIG_DESC_=
-SET(SCU500, 24));
+Applied to hid.git#for-6.16/upstream-fixes. Thanks,
 
-SCU500[24] seems okay.
+-- 
+Jiri Kosina
+SUSE Labs
 
-> +PIN_DECL_(D7, SIG_EXPR_LIST_PTR(D7, RCRST));
-> +FUNC_GROUP_DECL(PCIERC1, D7);
-
-It only makes sense to describe pins with multiple functions. The other
-function this pin has is the reset line for the secondary service
-processor. Can we describe that too?
-
-Andrew
