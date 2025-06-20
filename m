@@ -1,189 +1,744 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74187293B60
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F6A2BF3EC
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432885; cv=none; b=ocapPdb0INUbbXOFPgBVPXT3BMqqxBdEaxw+EXSwvXt4TydN9Y/crytCC8dH306XmQgHLZdzkGdCanGkUsAl0xz8sv6Yl2BLHRHUbLHdlZyc6zD7gF3lc/eoffq/PUTOPD48JeuY5P/2CjxrvCRibAEwhBsVhNUkVFHZbg3PV8w=
+	t=1750432897; cv=none; b=uZ9ce/jUEqrRuuVWrDBB2jTC7ZpfiN4abL5mEVfCOmMsfR/VELDab/0RgdQTkH0rgyx91W2GWiAW8WBx8tRETc2mpEeeQgCx70frifVr0mwvUkKzfKhKCuUR+ofO009nvgIgPtcpKsw/jY5cstm1FJX+urOTTmA1pk6yC8nyJqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432885; c=relaxed/simple;
-	bh=NGKXyrXmAnq5h+4sZm+y6JHpIBFbUFI55nclZfYHOrg=;
+	s=arc-20240116; t=1750432897; c=relaxed/simple;
+	bh=ZNWN/AxMaZjDkqYItb81+abo5OAMF8kgmVW0rCZAtm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVw2snoYm9FVdbs13+vtS8txYnTFBuBMEFlaWaiYpZvuXBWZtbksLBHleAq9im9L+ZMhu/mV8D7iRNVmoM25fj+VHD+6j2vpcVN8HkfNrZusMTiDq94dXbP/rG+3GVV2MLdWqNdTOdlM2i8OgY/Yx4ralwpgC/QYTzC9tWpqCME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LRHoobpR; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CmJHowpfy3qQmFiM3dJZHbmjWr9tcVB5KyPMa7TcDAW9fGyil13+GpzuzxRBuQ9BOJO/kzl/km1gzDr8ZJImD6UMaHFnPmY73xpBnQZdXBTJJOiq+rUd9fBb5Sy/MD+2meWBYKBynoMGglXYzTqWlgY9y67J6CZekAhoEvcsg30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WTEY9Jda; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LRHoobpR"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a52874d593so1917633f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750432882; x=1751037682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sta3fUxiHRUCaiiX4FExFhgEUaAbU4c5kBRSH9xSC7c=;
-        b=LRHoobpR2ObG3QueTYpttfkKkBi4H+ch5J91eDsA/vrYmD43tmztE2upkEsGij72un
-         dprhUtZUjHJ12oMKE92Pv0JRLboBA4QSaxEczyEpDOfPSr88tS+SRGk7LXCRLI1MocnT
-         MPCc9lgBXviIF+CI1wQp6FCJqE8BFmxZCi+bLK1x1xqBry0aOwwZSylY68wnOBoIxvQB
-         B+3OPLdUIj8A1jTLHyvy8wKPCB5tGVQXPNGh0lccbpc9azUM4YLiU9tqnVPRJjoJm2nv
-         GVPKsaZRrjaKAGzOeIJAo5MP/YZ4Sc9TtGNn4KVqQccDhbvV22d4zb+WpwTMxHyCobAV
-         Egjw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTEY9Jda"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750432893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1piPOxakbi96QGxUT4kGXjaUgIRXevFIE11NPL1+hPc=;
+	b=WTEY9Jda+F6vMXRkB266xZ7vAQ05+UYQXYqwP7Nwyx80ZimJyR6rYdRYVR/+vumwPZzau+
+	kkXFlcOZ3KiuyyBVPh6gLDdGlLpOwDsA8/v5T02ty4yEoDVRqed+92Tm08dJEL9S0KoMkM
+	XsaEyUY4PYfIQyckFfegqcmvh/kM0Ws=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-301-tR5OQY_wNtmFVLt4YiGB-g-1; Fri, 20 Jun 2025 11:21:32 -0400
+X-MC-Unique: tR5OQY_wNtmFVLt4YiGB-g-1
+X-Mimecast-MFC-AGG-ID: tR5OQY_wNtmFVLt4YiGB-g_1750432891
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-23632fd6248so18328405ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:21:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750432882; x=1751037682;
+        d=1e100.net; s=20230601; t=1750432888; x=1751037688;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sta3fUxiHRUCaiiX4FExFhgEUaAbU4c5kBRSH9xSC7c=;
-        b=KlsBfuYPXI1hZZ1M+rIoaqZHntQ10CsLOnws91U7/NaiC62/aH5ZomziTfj9m2q9m4
-         sr8p4tEDmwt55qzbsQYiX1OTwKhMzXihRd6nWnAb198MPJFzdGguba8CHoc6DaIBX0+4
-         F0EIGx+TyJrlvN+oo/s8tCfivRIs++KmJ7YrzONd7jQ4H++fZ98fmfwKNO5Y415hU8yD
-         ng2apoa031zJmOIyYvw2A9c84MKpWuvjQwCKzTGKv5Vk/AoYWEETQCGcJv+1dh3oOjEI
-         Go7XmZ+yO7cd/C6fgxUye6B2oTfVNEKVlzGWFmrlia4ETxPrzbkZILBK9QlvGW2VLw3t
-         gQ6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXaeQkIJZqoVepbUD5gKmVWmtJN4lIaF4WJN0xL7ank2uV/RNP0MpL8Yyg5/9pXw5Gk9rVPIG2vLOCzzvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNi5gRT8DZ46ItpTDCKU1pdQT+5KeKrWixDpTO54BJEauaqums
-	nVjNeknqvafMgEWxxu5fVewkZQJV9mtQcXxSV37Q1F2ByQlzr4UNlO1s5m/JhmsyW5Q=
-X-Gm-Gg: ASbGnct1bIUVMX+KKwOHZIooUu5jh1hsAYrlquX5q1O0eVuNtG/lKgxkYb8C+4g95fy
-	lwfz9WUzwHwodc/RdMIMfa8mqjciVdNOi55ZxS2iIhlXsh99bX/ilPTgcriuv58iv2yInlp3NLO
-	yP0jWce+jDFQEcrEq7bOk1pC5x3RjI2nAVfackY5guhZYREgvhcYeOwJXiAkZPKJw6rBjEAXdrF
-	ulORABTFV4EfqVDmZwfBCqP2zxEnkcyuPIay2HKGCHZuT2zGkbRIbRMchrCdQkIA1s9SRW3dv0N
-	/OTxnXvEPAAkZ2psdwz9+dN6CC5Pj2Q2mTdTr4FMaj0gx8OyGXzM3ss+UWTqm0bBzYrDXOtbsAI
-	=
-X-Google-Smtp-Source: AGHT+IFR6donxKQAMnJkpy9OKo7simJAQ+vJa9rAZUeMB69UizOZEXYUaOuaRvzbch22Wuvot6sCEg==
-X-Received: by 2002:a05:6000:41d2:b0:3a4:d994:be4b with SMTP id ffacd0b85a97d-3a6d12c4551mr2668478f8f.1.1750432881506;
-        Fri, 20 Jun 2025 08:21:21 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e0488b7sm2105137a91.25.2025.06.20.08.21.14
+        bh=1piPOxakbi96QGxUT4kGXjaUgIRXevFIE11NPL1+hPc=;
+        b=OMFZ2pFzfAePDoPS/anCG/ANgToc0Y5gwcoXloI9LvMe6nj1Llako2cMaf+G8Jqddk
+         eNl/fnoAHxJ5/PZdJtDEdxcsnltj7SJiyYMWsaFyXTiecc2MqKLrhZ8zIk5e3+4NdoPx
+         CIlWB26V2tFuhU4RM+/ajuwdHO2AftuYizIZoIUEcX4smnDkRWgSt6vI2PWIuENUXppT
+         FBxSqm8URYdO1EqUV+f0/D1B0AikqdkNCLR48m7Wwnde6uR53HOUa2pgno3dT6IxLUL5
+         JY2Q+qYdmBrN8gUAgWgrpwIkVvcsDXS1z/poIsVuznWFltYqYEqpX1LGnkpOa/Jg9akR
+         WmCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQQCwCg7C7EVROBjpYIfS7GvZoQXZcOT72i1/9jalWrZ/kqORjfXZLJ/H2wXtGzernxYokIhvNQItiEro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEjspFATwy527Hq3v19Vqj+O7awiAcAqR/ltIXaiH9viFqJOeZ
+	WGYYDw/PK1NzQNM9l+GpcGFj0ydP3yKM9pf6Jvjaqch2ZQbSsfNBVOqSnWN82oQMT0EVVpNZbJw
+	ali+oI7Ph8tAAK/FqGVpiWBcOP7z4HudmjLJ5e+1k3n+W8xrFeVL5BOAkURtL0BpkpA==
+X-Gm-Gg: ASbGncvmPpsW0EAs0GRSlzAFirs0cAyijG5cLE8AKaKs7ZCPduNvhWKInxv+liUiFmu
+	IrsbipB9Z2P894zCz0zi3FvI7PdtMCw51qKOjNnATjEqWP1jpft2qs8gJi04G+AJy+T/jvqL9P1
+	MrUZ678jSqv/QboomxJ1Z8HYT92kI6yijCZ18QVOoyK0ejLhSjGV5WjVRl/fgnd1AMQfhA+ob20
+	qS5spu14hb5eH6You7SXa2M8ftkS9JuU3Muegl4WUOMyKyNpECntvvGej4NbQLyDlh9q6TPD+8H
+	rqF80Un7XbGTfg==
+X-Received: by 2002:a17:903:190:b0:234:a139:11ec with SMTP id d9443c01a7336-237d984a18fmr50957735ad.20.1750432888091;
+        Fri, 20 Jun 2025 08:21:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHMf9ipqas4ZoIOxL+ed9Gpq19+KmR3P+/FSP36axXmOC4aoNGQ0v43oHa0/JQOyNO6xRu2A==
+X-Received: by 2002:a17:903:190:b0:234:a139:11ec with SMTP id d9443c01a7336-237d984a18fmr50956885ad.20.1750432887366;
+        Fri, 20 Jun 2025 08:21:27 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f118ea01sm1932013a12.5.2025.06.20.08.21.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:21:20 -0700 (PDT)
-Date: Fri, 20 Jun 2025 17:21:08 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org, paulmck@kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH V2 2/5] panic: generalize panic_print's function to show
- sys info
-Message-ID: <aFV8ZFZ0Qy715hdR@pathway.suse.cz>
-References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
- <20250616010840.38258-3-feng.tang@linux.alibaba.com>
+        Fri, 20 Jun 2025 08:21:26 -0700 (PDT)
+Date: Fri, 20 Jun 2025 11:21:19 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, muchun.song@linux.dev,
+	hughd@google.com, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	jannh@google.com, ryan.roberts@arm.com, david@redhat.com,
+	jthoughton@google.com, graf@amazon.de, jgowans@amazon.com,
+	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es,
+	xmarcalx@amazon.com
+Subject: Re: [PATCH v3 1/6] mm: userfaultfd: generic continue for non
+ hugetlbfs
+Message-ID: <aFV8bz0GjPVe-IeZ@x1.local>
+References: <20250404154352.23078-1-kalyazin@amazon.com>
+ <20250404154352.23078-2-kalyazin@amazon.com>
+ <aEiwHjl4tsUt98sh@x1.local>
+ <36d96316-fd9b-4755-bb35-d1a2cea7bb7e@amazon.com>
+ <aEl9CNGLY0Sil7nq@x1.local>
+ <2097f155-c459-40e1-93e8-3d501ae66b42@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250616010840.38258-3-feng.tang@linux.alibaba.com>
+In-Reply-To: <2097f155-c459-40e1-93e8-3d501ae66b42@amazon.com>
 
-On Mon 2025-06-16 09:08:37, Feng Tang wrote:
-> 'panic_print' was introduced to help debugging kernel panic by dumping
-> different kinds of system information like tasks' call stack, memory,
-> ftrace buffer, etc. Acutually this function could also help debugging
-> cases like task-hung, soft/hard lockup, and other cases , where user
-> may need the snapshot of system info at that time.
+Hi, Nikita,
+
+On Fri, Jun 20, 2025 at 01:00:24PM +0100, Nikita Kalyazin wrote:
+> Thanks for explaining that.  I played a bit with it myself and it appears to
+> be working for the MISSING mode for both shmem and guest_memfd.  Attaching
+
+[1]
+
+> my sketch below.  Please let me know if this is how you see it.
 > 
-> Extract sys_show_info() function out of panic code to be used by other
-> kernel parts for debugging.
-> 
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -27,6 +27,7 @@
->  #include <linux/math.h>
->  #include <linux/minmax.h>
->  #include <linux/typecheck.h>
-> +#include <linux/sys_info.h>
+> I found that arguments and return values are significantly different between
+> the two request types, which may be a bit confusing, although we do not
+> expect many callers of those.
 
-There will be only few users of this API. There is no need to
-include it via this generic header which is included almost
-everywhere.
+Indeed.  Actually since I didn't yet get your reply, early this week I gave
+it a shot, and then I found the same thing that it'll be nice to keep the
+type checks all over the places.  It'll also be awkward if we want to add
+MISSING into the picture with the current req() interface (btw, IIUC you
+meant MINOR above, not MISSING).
 
-Some people are working hard on getting rid of this header file,
-see the comment at the beginning:
+Please have a look at what I came up with.  I didn't yet got a chance to
+post it, but it did compile all fine and pass the smoke tests here.  Feel
+free to take it over if you think that makes sense to you, or I can also
+post it officially after some more tests.
 
- * This header has combined a lot of unrelated to each other stuff.
- * The process of splitting its content is in progress while keeping
- * backward compatibility. That's why it's highly recommended NOT to
- * include this header inside another header file, especially under
- * generic or architectural include/ directory.
+So, ultimately I introduced a vm_uffd_ops to keep all the type checks.  I
+don't think I like the uffd_copy() interfacing too much, but it should
+still be the minimum changeset I can think of to generalize shmem as an
+userfault user / module, and finally drop "linux/shmem_fs.h" inclusion in
+the last patch.
 
-Instead, please include the new linux/sys_info.h in panic.c directly.
+It's also unfortunate that hugetlb won't be able to already use the API,
+similar to why we have hugetlb's fault() to BUG() and hard-coded it in
+handle_mm_fault().  However it'll at least start to use the rest API all
+fine, so as to generalize some hugetlb checks.
 
->  #include <linux/panic.h>
->  #include <linux/printk.h>
->  #include <linux/build_bug.h>
+The shmem definition looks like this:
 
-> --- /dev/null
-> +++ b/include/linux/sys_info.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_SYS_INFO_H
-> +#define _LINUX_SYS_INFO_H
-> +
-> +/*
-> + * SYS_SHOW_ALL_PRINTK_MSG is for panic case only, as it needs special
-> + * handling which only fits panic case.
+static const vm_uffd_ops shmem_uffd_ops = {
+	.uffd_features	= 	__VM_UFFD_FLAGS,
+	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
+				BIT(_UFFDIO_ZEROPAGE) |
+				BIT(_UFFDIO_WRITEPROTECT) |
+				BIT(_UFFDIO_CONTINUE) |
+				BIT(_UFFDIO_POISON),
+	.uffd_get_folio	=	shmem_uffd_get_folio,
+	.uffd_copy	=	shmem_mfill_atomic_pte,
+};
 
-This flags is really special. I would even rename it to match
-the function where it is used:
+Then guest-memfd can set (1) VM_UFFD_MINOR, (2) _UFFDIO_CONTINUE and
+provide uffd_get_folio() for supporting MINOR.
 
-#define PANIC_CONSOLE_REPLAY		0x00000020
+Let me know what do you think.
 
-And it would be better to do the rename (ALL_PRINTK_MSG ->
-CONSOLE_REPLAY) already in the 1st patch where panic_console_replay()
-was introduced.
+Thanks,
 
-Also it would make sense to update the documentation (in 1st patch),
-something like:
+===8<===
+From ca500177de122d32194f8bf4589faceeaaae2c0c Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Thu, 12 Jun 2025 11:51:58 -0400
+Subject: [PATCH 1/4] mm: Introduce vm_uffd_ops API
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4533,7 +4533,7 @@
- 			bit 2: print timer info
- 			bit 3: print locks info if CONFIG_LOCKDEP is on
- 			bit 4: print ftrace buffer
--			bit 5: print all printk messages in buffer
-+			bit 5: replay all messages on consoles at the end of panic
- 			bit 6: print all CPUs backtrace (if available in the arch)
- 			bit 7: print only tasks in uninterruptible (blocked) state
- 			*Be aware* that this option may print a _lot_ of lines,
+Introduce a generic userfaultfd API for vm_operations_struct, so that one
+vma, especially when as a module, can support userfaults without modifying
+the core files.  More importantly, when the module can be compiled out of
+the kernel.
 
-> + */
-> +#define SYS_SHOW_TASK_INFO		0x00000001
-> +#define SYS_SHOW_MEM_INFO		0x00000002
-> +#define SYS_SHOW_TIMER_INFO		0x00000004
-> +#define SYS_SHOW_LOCK_INFO		0x00000008
-> +#define SYS_SHOW_FTRACE_INFO		0x00000010
-> +#define SYS_SHOW_ALL_PRINTK_MSG		0x00000020
-> +#define SYS_SHOW_ALL_CPU_BT		0x00000040
-> +#define SYS_SHOW_BLOCKED_TASKS		0x00000080
-> +
-> +extern void sys_show_info(unsigned long info_mask);
+So, instead of having core mm referencing modules that may not ever exist,
+we need to have modules opt-in on core mm hooks instead.
 
-Please, do not use "extern" in new header files. This is from
-Documentation/process/coding-style.rst:
+After this API applied, if a module wants to support userfaultfd, the
+module should only need to touch its own file and properly define
+vm_uffd_ops, instead of changing anything in core mm.
 
-    Do not use the ``extern`` keyword with function declarations as this makes
-    lines longer and isn't strictly necessary.
+Note that such API will not work for anonymous. Core mm will process
+anonymous memory separately for userfault operations like before.
 
-Also the header file is named "sys_info" but the API is "sys_show_*info".
-It would be more user friendly to consistently use the same prefix
-for the entire API, for example:
+This patch only introduces the API alone so that we can start to move
+existing users over but without breaking them.
 
-#define SYS_INFO_TASK		0x00000001
-#define SYS_INFO_MEM		0x00000002
-#define SYS_INFO_TIMER		0x00000004
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/mm.h            | 71 +++++++++++++++++++++++++++++++++++
+ include/linux/userfaultfd_k.h | 12 ------
+ 2 files changed, 71 insertions(+), 12 deletions(-)
 
-void sys_info(unsigned long si_mask);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 98a606908307..8dfd83f01d3d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -576,6 +576,70 @@ struct vm_fault {
+ 					 */
+ };
+ 
++#ifdef CONFIG_USERFAULTFD
++/* A combined operation mode + behavior flags. */
++typedef unsigned int __bitwise uffd_flags_t;
++
++enum mfill_atomic_mode {
++	MFILL_ATOMIC_COPY,
++	MFILL_ATOMIC_ZEROPAGE,
++	MFILL_ATOMIC_CONTINUE,
++	MFILL_ATOMIC_POISON,
++	NR_MFILL_ATOMIC_MODES,
++};
++
++/* VMA userfaultfd operations */
++typedef struct {
++	/**
++	 * @uffd_features: features supported in bitmask.
++	 *
++	 * When the ops is defined, the driver must set non-zero features
++	 * to be a subset (or all) of: VM_UFFD_MISSING|WP|MINOR.
++	 */
++	unsigned long uffd_features;
++	/**
++	 * @uffd_ioctls: ioctls supported in bitmask.
++	 *
++	 * Userfaultfd ioctls supported by the module.  Below will always
++	 * be supported by default whenever a module provides vm_uffd_ops:
++	 *
++	 *   _UFFDIO_API, _UFFDIO_REGISTER, _UFFDIO_UNREGISTER, _UFFDIO_WAKE
++	 *
++	 * The module needs to provide all the rest optionally supported
++	 * ioctls.  For example, when VM_UFFD_MISSING was supported,
++	 * _UFFDIO_COPY must be supported as ioctl, while _UFFDIO_ZEROPAGE
++	 * is optional.
++	 */
++	unsigned long uffd_ioctls;
++	/**
++	 * uffd_get_folio: Handler to resolve UFFDIO_CONTINUE request.
++	 *
++	 * @inode: the inode for folio lookup
++	 * @pgoff: the pgoff of the folio
++	 * @folio: returned folio pointer
++	 *
++	 * Return: zero if succeeded, negative for errors.
++	 */
++	int (*uffd_get_folio)(struct inode *inode, pgoff_t pgoff,
++			      struct folio **folio);
++	/**
++	 * uffd_copy: Handler to resolve UFFDIO_COPY|ZEROPAGE request.
++	 *
++	 * @dst_pmd: target pmd to resolve page fault
++	 * @dst_vma: target vma
++	 * @dst_addr: target virtual address
++	 * @src_addr: source address to copy from
++	 * @flags: userfaultfd request flags
++	 * @foliop: previously allocated folio
++	 *
++	 * Return: zero if succeeded, negative for errors.
++	 */
++	int (*uffd_copy)(pmd_t *dst_pmd, struct vm_area_struct *dst_vma,
++			 unsigned long dst_addr, unsigned long src_addr,
++			 uffd_flags_t flags, struct folio **foliop);
++} vm_uffd_ops;
++#endif
++
+ /*
+  * These are the virtual MM functions - opening of an area, closing and
+  * unmapping it (needed to keep files on disk up-to-date etc), pointer
+@@ -653,6 +717,13 @@ struct vm_operations_struct {
+ 	 */
+ 	struct page *(*find_special_page)(struct vm_area_struct *vma,
+ 					  unsigned long addr);
++#ifdef CONFIG_USERFAULTFD
++	/*
++	 * Userfaultfd related ops.  Modules need to define this to support
++	 * userfaultfd.
++	 */
++	const vm_uffd_ops *userfaultfd_ops;
++#endif
+ };
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+index ccad58602846..e79c724b3b95 100644
+--- a/include/linux/userfaultfd_k.h
++++ b/include/linux/userfaultfd_k.h
+@@ -80,18 +80,6 @@ struct userfaultfd_ctx {
+ 
+ extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+ 
+-/* A combined operation mode + behavior flags. */
+-typedef unsigned int __bitwise uffd_flags_t;
+-
+-/* Mutually exclusive modes of operation. */
+-enum mfill_atomic_mode {
+-	MFILL_ATOMIC_COPY,
+-	MFILL_ATOMIC_ZEROPAGE,
+-	MFILL_ATOMIC_CONTINUE,
+-	MFILL_ATOMIC_POISON,
+-	NR_MFILL_ATOMIC_MODES,
+-};
+-
+ #define MFILL_ATOMIC_MODE_BITS (const_ilog2(NR_MFILL_ATOMIC_MODES - 1) + 1)
+ #define MFILL_ATOMIC_BIT(nr) BIT(MFILL_ATOMIC_MODE_BITS + (nr))
+ #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(nr))
+-- 
+2.49.0
 
-I am sorry that I did not tell your this in the RFC.
-I focused on the bigger picture at that time.
 
-> +#endif	/* _LINUX_SYS_INFO_H */
+From a7094b86d3308e91ac7ab785b7d71ae6cc4739f4 Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Wed, 11 Jun 2025 10:18:23 -0400
+Subject: [PATCH 2/4] mm/shmem: Support vm_uffd_ops API
 
-Best Regards,
-Petr
+Add support for the new vm_uffd_ops API for shmem.  Note that this only
+introduces the support, the API is not yet used by core mm.
+
+Cc: Hugh Dickins <hughd@google.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/shmem.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 0bc30dafad90..bd0a29000318 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3151,6 +3151,13 @@ static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+ #endif /* CONFIG_TMPFS_QUOTA */
+ 
+ #ifdef CONFIG_USERFAULTFD
++
++static int shmem_uffd_get_folio(struct inode *inode, pgoff_t pgoff,
++				struct folio **folio)
++{
++	return shmem_get_folio(inode, pgoff, 0, folio, SGP_NOALLOC);
++}
++
+ int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
+ 			   struct vm_area_struct *dst_vma,
+ 			   unsigned long dst_addr,
+@@ -5194,6 +5201,19 @@ static int shmem_error_remove_folio(struct address_space *mapping,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_USERFAULTFD
++static const vm_uffd_ops shmem_uffd_ops = {
++	.uffd_features	= 	__VM_UFFD_FLAGS,
++	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
++				BIT(_UFFDIO_ZEROPAGE) |
++				BIT(_UFFDIO_WRITEPROTECT) |
++				BIT(_UFFDIO_CONTINUE) |
++				BIT(_UFFDIO_POISON),
++	.uffd_get_folio	=	shmem_uffd_get_folio,
++	.uffd_copy	=	shmem_mfill_atomic_pte,
++};
++#endif
++
+ static const struct address_space_operations shmem_aops = {
+ 	.dirty_folio	= noop_dirty_folio,
+ #ifdef CONFIG_TMPFS
+@@ -5296,6 +5316,9 @@ static const struct vm_operations_struct shmem_vm_ops = {
+ 	.set_policy     = shmem_set_policy,
+ 	.get_policy     = shmem_get_policy,
+ #endif
++#ifdef CONFIG_USERFAULTFD
++	.userfaultfd_ops = &shmem_uffd_ops,
++#endif
+ };
+ 
+ static const struct vm_operations_struct shmem_anon_vm_ops = {
+@@ -5305,6 +5328,9 @@ static const struct vm_operations_struct shmem_anon_vm_ops = {
+ 	.set_policy     = shmem_set_policy,
+ 	.get_policy     = shmem_get_policy,
+ #endif
++#ifdef CONFIG_USERFAULTFD
++	.userfaultfd_ops = &shmem_uffd_ops,
++#endif
+ };
+ 
+ int shmem_init_fs_context(struct fs_context *fc)
+-- 
+2.49.0
+
+
+From fab8f8312982619ca80299d6cf35d5661cf61911 Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Wed, 11 Jun 2025 10:18:40 -0400
+Subject: [PATCH 3/4] mm/hugetlb: Support vm_uffd_ops API
+
+Add support for the new vm_uffd_ops API for hugetlb.  Note that this only
+introduces the support, the API is not yet used by core mm.
+
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/hugetlb.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 3d61ec17c15a..b9e473fab871 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5459,6 +5459,22 @@ static vm_fault_t hugetlb_vm_op_fault(struct vm_fault *vmf)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_USERFAULTFD
++static const vm_uffd_ops hugetlb_uffd_ops = {
++	.uffd_features	= 	__VM_UFFD_FLAGS,
++	/* _UFFDIO_ZEROPAGE not supported */
++	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
++				BIT(_UFFDIO_WRITEPROTECT) |
++				BIT(_UFFDIO_CONTINUE) |
++				BIT(_UFFDIO_POISON),
++	/*
++	 * Hugetlbfs still has its own hard-coded handler in userfaultfd,
++	 * due to limitations similar to vm_operations_struct.fault().
++	 * TODO: generalize it to use the API functions.
++	 */
++};
++#endif
++
+ /*
+  * When a new function is introduced to vm_operations_struct and added
+  * to hugetlb_vm_ops, please consider adding the function to shm_vm_ops.
+@@ -5472,6 +5488,9 @@ const struct vm_operations_struct hugetlb_vm_ops = {
+ 	.close = hugetlb_vm_op_close,
+ 	.may_split = hugetlb_vm_op_split,
+ 	.pagesize = hugetlb_vm_op_pagesize,
++#ifdef CONFIG_USERFAULTFD
++	.userfaultfd_ops = &hugetlb_uffd_ops,
++#endif
+ };
+ 
+ static pte_t make_huge_pte(struct vm_area_struct *vma, struct folio *folio,
+-- 
+2.49.0
+
+
+From de6ac50b189dc16b2d5759f67b32d528a6c9ccde Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Thu, 12 Jun 2025 11:55:08 -0400
+Subject: [PATCH 4/4] mm: Apply vm_uffd_ops API to core mm
+
+This patch completely moves the old userfaultfd core to use the new
+vm_uffd_ops API.  After this change, existing file systems will start to
+use the new API for userfault operations.
+
+When at it, moving vma_can_userfault() into mm/userfaultfd.c instead,
+because it's getting too big.  It's only used in slow paths so it shouldn't
+be an issue.
+
+This will also remove quite some hard-coded checks for either shmem or
+hugetlbfs.  Now all the old checks should still work but with vm_uffd_ops.
+
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/shmem_fs.h      |  14 -----
+ include/linux/userfaultfd_k.h |  46 ++++----------
+ mm/shmem.c                    |   2 +-
+ mm/userfaultfd.c              | 115 +++++++++++++++++++++++++---------
+ 4 files changed, 101 insertions(+), 76 deletions(-)
+
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index 6d0f9c599ff7..2f5b7b295cf6 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -195,20 +195,6 @@ static inline pgoff_t shmem_fallocend(struct inode *inode, pgoff_t eof)
+ extern bool shmem_charge(struct inode *inode, long pages);
+ extern void shmem_uncharge(struct inode *inode, long pages);
+ 
+-#ifdef CONFIG_USERFAULTFD
+-#ifdef CONFIG_SHMEM
+-extern int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
+-				  struct vm_area_struct *dst_vma,
+-				  unsigned long dst_addr,
+-				  unsigned long src_addr,
+-				  uffd_flags_t flags,
+-				  struct folio **foliop);
+-#else /* !CONFIG_SHMEM */
+-#define shmem_mfill_atomic_pte(dst_pmd, dst_vma, dst_addr, \
+-			       src_addr, flags, foliop) ({ BUG(); 0; })
+-#endif /* CONFIG_SHMEM */
+-#endif /* CONFIG_USERFAULTFD */
+-
+ /*
+  * Used space is stored as unsigned 64-bit value in bytes but
+  * quota core supports only signed 64-bit values so use that
+diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+index e79c724b3b95..4e56ad423a4a 100644
+--- a/include/linux/userfaultfd_k.h
++++ b/include/linux/userfaultfd_k.h
+@@ -85,9 +85,14 @@ extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+ #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(nr))
+ #define MFILL_ATOMIC_MODE_MASK ((__force uffd_flags_t) (MFILL_ATOMIC_BIT(0) - 1))
+ 
++static inline enum mfill_atomic_mode uffd_flags_get_mode(uffd_flags_t flags)
++{
++	return (enum mfill_atomic_mode)(flags & MFILL_ATOMIC_MODE_MASK);
++}
++
+ static inline bool uffd_flags_mode_is(uffd_flags_t flags, enum mfill_atomic_mode expected)
+ {
+-	return (flags & MFILL_ATOMIC_MODE_MASK) == ((__force uffd_flags_t) expected);
++	return uffd_flags_get_mode(flags) == expected;
+ }
+ 
+ static inline uffd_flags_t uffd_flags_set_mode(uffd_flags_t flags, enum mfill_atomic_mode mode)
+@@ -196,41 +201,16 @@ static inline bool userfaultfd_armed(struct vm_area_struct *vma)
+ 	return vma->vm_flags & __VM_UFFD_FLAGS;
+ }
+ 
+-static inline bool vma_can_userfault(struct vm_area_struct *vma,
+-				     unsigned long vm_flags,
+-				     bool wp_async)
++static inline const vm_uffd_ops *vma_get_uffd_ops(struct vm_area_struct *vma)
+ {
+-	vm_flags &= __VM_UFFD_FLAGS;
+-
+-	if (vma->vm_flags & VM_DROPPABLE)
+-		return false;
+-
+-	if ((vm_flags & VM_UFFD_MINOR) &&
+-	    (!is_vm_hugetlb_page(vma) && !vma_is_shmem(vma)))
+-		return false;
+-
+-	/*
+-	 * If wp async enabled, and WP is the only mode enabled, allow any
+-	 * memory type.
+-	 */
+-	if (wp_async && (vm_flags == VM_UFFD_WP))
+-		return true;
+-
+-#ifndef CONFIG_PTE_MARKER_UFFD_WP
+-	/*
+-	 * If user requested uffd-wp but not enabled pte markers for
+-	 * uffd-wp, then shmem & hugetlbfs are not supported but only
+-	 * anonymous.
+-	 */
+-	if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma))
+-		return false;
+-#endif
+-
+-	/* By default, allow any of anon|shmem|hugetlb */
+-	return vma_is_anonymous(vma) || is_vm_hugetlb_page(vma) ||
+-	    vma_is_shmem(vma);
++	if (vma->vm_ops && vma->vm_ops->userfaultfd_ops)
++		return vma->vm_ops->userfaultfd_ops;
++	return NULL;
+ }
+ 
++bool vma_can_userfault(struct vm_area_struct *vma,
++		       unsigned long vm_flags, bool wp_async);
++
+ static inline bool vma_has_uffd_without_event_remap(struct vm_area_struct *vma)
+ {
+ 	struct userfaultfd_ctx *uffd_ctx = vma->vm_userfaultfd_ctx.ctx;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index bd0a29000318..4d71fc7be358 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3158,7 +3158,7 @@ static int shmem_uffd_get_folio(struct inode *inode, pgoff_t pgoff,
+ 	return shmem_get_folio(inode, pgoff, 0, folio, SGP_NOALLOC);
+ }
+ 
+-int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
++static int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
+ 			   struct vm_area_struct *dst_vma,
+ 			   unsigned long dst_addr,
+ 			   unsigned long src_addr,
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 879505c6996f..61783ff2d335 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -14,12 +14,48 @@
+ #include <linux/userfaultfd_k.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/hugetlb.h>
+-#include <linux/shmem_fs.h>
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
+ #include "internal.h"
+ #include "swap.h"
+ 
++bool vma_can_userfault(struct vm_area_struct *vma,
++		       unsigned long vm_flags, bool wp_async)
++{
++	unsigned long supported;
++
++	if (vma->vm_flags & VM_DROPPABLE)
++		return false;
++
++	vm_flags &= __VM_UFFD_FLAGS;
++
++#ifndef CONFIG_PTE_MARKER_UFFD_WP
++	/*
++	 * If user requested uffd-wp but not enabled pte markers for
++	 * uffd-wp, then any file system (like shmem or hugetlbfs) are not
++	 * supported but only anonymous.
++	 */
++	if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma))
++		return false;
++#endif
++	/*
++	 * If wp async enabled, and WP is the only mode enabled, allow any
++	 * memory type.
++	 */
++	if (wp_async && (vm_flags == VM_UFFD_WP))
++		return true;
++
++	if (vma_is_anonymous(vma))
++		/* Anonymous has no page cache, MINOR not supported */
++		supported = VM_UFFD_MISSING | VM_UFFD_WP;
++	else if (vma_get_uffd_ops(vma))
++		supported = vma_get_uffd_ops(vma)->uffd_features;
++	else
++		return false;
++
++	return !(vm_flags & (~supported));
++}
++
+ static __always_inline
+ bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long dst_end)
+ {
+@@ -384,11 +420,15 @@ static int mfill_atomic_pte_continue(pmd_t *dst_pmd,
+ {
+ 	struct inode *inode = file_inode(dst_vma->vm_file);
+ 	pgoff_t pgoff = linear_page_index(dst_vma, dst_addr);
++	const vm_uffd_ops *uffd_ops = vma_get_uffd_ops(dst_vma);
+ 	struct folio *folio;
+ 	struct page *page;
+ 	int ret;
+ 
+-	ret = shmem_get_folio(inode, pgoff, 0, &folio, SGP_NOALLOC);
++	if (WARN_ON_ONCE(!uffd_ops || !uffd_ops->uffd_get_folio))
++		return -EINVAL;
++
++	ret = uffd_ops->uffd_get_folio(inode, pgoff, &folio);
+ 	/* Our caller expects us to return -EFAULT if we failed to find folio */
+ 	if (ret == -ENOENT)
+ 		ret = -EFAULT;
+@@ -504,18 +544,6 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
+ 	u32 hash;
+ 	struct address_space *mapping;
+ 
+-	/*
+-	 * There is no default zero huge page for all huge page sizes as
+-	 * supported by hugetlb.  A PMD_SIZE huge pages may exist as used
+-	 * by THP.  Since we can not reliably insert a zero page, this
+-	 * feature is not supported.
+-	 */
+-	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_ZEROPAGE)) {
+-		up_read(&ctx->map_changing_lock);
+-		uffd_mfill_unlock(dst_vma);
+-		return -EINVAL;
+-	}
+-
+ 	src_addr = src_start;
+ 	dst_addr = dst_start;
+ 	copied = 0;
+@@ -686,14 +714,55 @@ static __always_inline ssize_t mfill_atomic_pte(pmd_t *dst_pmd,
+ 			err = mfill_atomic_pte_zeropage(dst_pmd,
+ 						 dst_vma, dst_addr);
+ 	} else {
+-		err = shmem_mfill_atomic_pte(dst_pmd, dst_vma,
+-					     dst_addr, src_addr,
+-					     flags, foliop);
++		const vm_uffd_ops *uffd_ops = vma_get_uffd_ops(dst_vma);
++
++		if (WARN_ON_ONCE(!uffd_ops || !uffd_ops->uffd_copy)) {
++			err = -EINVAL;
++		} else {
++			err = uffd_ops->uffd_copy(dst_pmd, dst_vma,
++						  dst_addr, src_addr,
++						  flags, foliop);
++		}
+ 	}
+ 
+ 	return err;
+ }
+ 
++static inline bool
++vma_uffd_ops_supported(struct vm_area_struct *vma, uffd_flags_t flags)
++{
++	enum mfill_atomic_mode mode = uffd_flags_get_mode(flags);
++	const vm_uffd_ops *uffd_ops;
++	unsigned long uffd_ioctls;
++
++	if ((flags & MFILL_ATOMIC_WP) && !(vma->vm_flags & VM_UFFD_WP))
++		return false;
++
++	/* Anonymous supports everything except CONTINUE */
++	if (vma_is_anonymous(vma))
++		return mode != MFILL_ATOMIC_CONTINUE;
++
++	uffd_ops = vma_get_uffd_ops(vma);
++	if (!uffd_ops)
++		return false;
++
++	uffd_ioctls = uffd_ops->uffd_ioctls;
++	switch (mode) {
++	case MFILL_ATOMIC_COPY:
++		return uffd_ioctls & BIT(_UFFDIO_COPY);
++	case MFILL_ATOMIC_ZEROPAGE:
++		return uffd_ioctls & BIT(_UFFDIO_ZEROPAGE);
++	case MFILL_ATOMIC_CONTINUE:
++		if (!(vma->vm_flags & VM_SHARED))
++			return false;
++		return uffd_ioctls & BIT(_UFFDIO_CONTINUE);
++	case MFILL_ATOMIC_POISON:
++		return uffd_ioctls & BIT(_UFFDIO_POISON);
++	default:
++		return false;
++	}
++}
++
+ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
+ 					    unsigned long dst_start,
+ 					    unsigned long src_start,
+@@ -752,11 +821,7 @@ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
+ 	    dst_vma->vm_flags & VM_SHARED))
+ 		goto out_unlock;
+ 
+-	/*
+-	 * validate 'mode' now that we know the dst_vma: don't allow
+-	 * a wrprotect copy if the userfaultfd didn't register as WP.
+-	 */
+-	if ((flags & MFILL_ATOMIC_WP) && !(dst_vma->vm_flags & VM_UFFD_WP))
++	if (!vma_uffd_ops_supported(dst_vma, flags))
+ 		goto out_unlock;
+ 
+ 	/*
+@@ -766,12 +831,6 @@ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
+ 		return  mfill_atomic_hugetlb(ctx, dst_vma, dst_start,
+ 					     src_start, len, flags);
+ 
+-	if (!vma_is_anonymous(dst_vma) && !vma_is_shmem(dst_vma))
+-		goto out_unlock;
+-	if (!vma_is_shmem(dst_vma) &&
+-	    uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
+-		goto out_unlock;
+-
+ 	while (src_addr < src_start + len) {
+ 		pmd_t dst_pmdval;
+ 
+-- 
+2.49.0
+
+
+-- 
+Peter Xu
+
