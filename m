@@ -1,109 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEFB2E3387;
-	Fri, 20 Jun 2025 16:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5211DD543;
+	Fri, 20 Jun 2025 16:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436106; cv=none; b=oAuwhQLLwtiZasMFVTEnvxhFQAXnDSLLQINp19Sxlinujc/gs04N6q0zk60P3aNp8G6RV4/5Rf2jVEicw+8W64tpqQu/6MDR67Dno63kIkSdWxqqgoE2NBee6DnClWIJZEgAYE7YFviCfkeCX6aBELW/IeiHQH0OW2S8FKLHzLk=
+	t=1750436212; cv=none; b=EQ3/kdT8Vgm+PWhTm0IiWaYZBbdoIQDqEZ3lKfhuoMKkcnEj2P+bROupfqlgneyXz5PET/0XcRr1oyZdRWIguA9049hkxOwcI/ZU2wQenfIgzyB1RASGwtuly23+31TTseDHVBgOrBeZpeSjF67WDDqnRHwLBjX4kkSQN84oeQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436106; c=relaxed/simple;
-	bh=CJPn9bbmNcJ/RzelH8cowP+F52Wew3w01e0e4IXwTFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOqkPOQ/b5z8A3LkG0ql2jgjLu1pdhyOF/bAd01ykNwcYriEUEJNxI8bMINydEmlsDqQlBi9DfM2JxM+jdGie1a+NhohGS40DWckA/pKCkjGxBkYW4u2WwBM5TZSKRC6XLbW5/uFOSivo6itMIwB90ObP3V4y4dzHAODS9W2FNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j20KO7j+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750436212; c=relaxed/simple;
+	bh=OovyfZojvEvfK/IluwDmW7AttOfCw6eB1mMojJhah4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sAiqyEyYFNSmpdXvCKMeCMKNXozDEz7r4VWoYSxMBAWGHnx/AxxWTpm0RGD7rtLDJtRk45qSldXQM7WwQC+CoOgi+6/Zybm9L6gTbUr1mV4xg12p7kYZeu3pylS8ael7/lvr3szqIuNNV0YTqc0hgk/BEkbNttNutKRx1k/+kDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NzUAHSxL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j20KO7j+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE3;
-	Fri, 20 Jun 2025 16:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750436104;
-	bh=CJPn9bbmNcJ/RzelH8cowP+F52Wew3w01e0e4IXwTFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j20KO7j+j0nGfe1BWQ6zQlqbGUNcjR+S5/MTCQJs/ZBj2rc8+fnaSxmn8wUOk4BU0
-	 mmJkEoBdLAaCRZ5WWs9guEW9AEWs9qdqpRtsp49vgObbvEpbdrMb0eJTz8YMXtt92M
-	 2LJ2WJwAnUe9/CBbe50n2DIUBIAp8r3rQD1EJ46o=
-Date: Fri, 20 Jun 2025 18:15:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH net 1/4] auxiliary: Allow empty id
-Message-ID: <2025062045-velocity-finite-f31c@gregkh>
-References: <20250619200537.260017-1-sean.anderson@linux.dev>
- <20250619200537.260017-2-sean.anderson@linux.dev>
- <2025062004-essay-pecan-d5be@gregkh>
- <8b9662ab-580c-44ea-96ee-b3fe3d4672ff@linux.dev>
- <2025062006-detergent-spruce-5ae2@gregkh>
- <91a9e80a-1a45-470b-90cf-12faae67debd@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NzUAHSxL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=/UszJjjGrQLyE6OizYSxEL7kIKQs9jlpRaVnh3Txp7Q=; b=NzUAHSxLxUuaq+/uq+Gx6Hwl74
+	UwndDaca3nFD6rmDc20q3U3sbzuVWs8X13VCpClNfOxrkHzo2IdUHkE2bsFe7bX4p1Hyrkdd7ON61
+	rU5iK2IjOoGJWFL32Ma9HL/vjsVoL8AU8bH8XEFeWO67jkXgmSJhqZtUUpypOk/zI4w9xjdZevCmI
+	8VNInXcNw8qNMOhNS/ZyO4e+j3DdtGSF6cuyqGuJksihob2vSanG+POuEQU8e13asskUwt19ad5Ym
+	o3vvvUAjp1A/Mq79GNW4qsGDROAUDqqHtMYOybWLMEIl/i7EHtUWpA/O+VOyWoNC4weXBNF61y899
+	/wuIGeeA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSePg-0000000D3pz-2rbi;
+	Fri, 20 Jun 2025 16:16:24 +0000
+Message-ID: <756e93a2-7e42-4323-ae21-a5437e71148e@infradead.org>
+Date: Fri, 20 Jun 2025 09:16:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91a9e80a-1a45-470b-90cf-12faae67debd@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+To: Xin Li <xin@zytor.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Breno Leitao <leitao@debian.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+ Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>,
+ Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org,
+ Yian Chen <yian.chen@intel.com>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <25600557-9cd5-406c-9acf-abc163afde2d@infradead.org>
+ <98703493-109a-4795-8abd-6cfe10b941f4@zytor.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <98703493-109a-4795-8abd-6cfe10b941f4@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 12:09:29PM -0400, Sean Anderson wrote:
-> On 6/20/25 12:02, Greg Kroah-Hartman wrote:
-> > On Fri, Jun 20, 2025 at 11:37:40AM -0400, Sean Anderson wrote:
-> >> On 6/20/25 01:13, Greg Kroah-Hartman wrote:
-> >> > On Thu, Jun 19, 2025 at 04:05:34PM -0400, Sean Anderson wrote:
-> >> >> Support creating auxiliary devices with the id included as part of the
-> >> >> name. This allows for non-decimal ids, which may be more appropriate for
-> >> >> auxiliary devices created as children of memory-mapped devices. For
-> >> >> example, a name like "xilinx_emac.mac.802c0000" could be achieved by
-> >> >> setting .name to "mac.802c0000" and .id to AUXILIARY_DEVID_NONE.
-> >> > 
-> >> > I don't see the justification for this, sorry.  An id is just an id, it
-> >> > doesn't matter what is is and nothing should be relying on it to be the
-> >> > same across reboots or anywhere else.  The only requirement is that it
-> >> > be unique at this point in time in the system.
-> >> 
-> >> It identifies the device in log messages. Without this you have to read
-> >> sysfs to determine what device is (for example) producing an error.
-> > 
-> > That's fine, read sysfs :)
+
+
+On 6/20/25 9:12 AM, Xin Li wrote:
+> On 6/20/2025 9:02 AM, Randy Dunlap wrote:
+>>> +config X86_DISABLED_FEATURE_LASS
+>>> +    def_bool y
+>>> +    depends on !X86_64
+>> Please explain why this is   !X86_64.
 > 
-> I should not have to read sysfs to decode boot output. If there is an
-> error during boot I should be able to determine the offending device.
-> This very important when the boot process fails before init is started,
-> and very convenient otherwise. 
+> When NOT on X86_64, the LASS code should not be compiled.
 
-The boot log will show you the name of the device that is having a
-problem.  And you get to pick a portion of that name to make it make
-some kind of sense to users if you want.
+Ah yes, the double negative caught me.
 
-> >> This
-> >> may be inconvenient to do if the error prevents the system from booting.
-> >> This series converts a platform device with a legible ID like
-> >> "802c0000.ethernet" to an auxiliary device, and I believe descriptive
-> >> device names produce a better developer experience.
-> > 
-> > You can still have 802c0000.ethernet be the prefix of the name, that's
-> > fine.
-> 
-> This is not possible due to how the auxiliary bus works. If device's
-> name is in the form "foo.id", then the driver must have an
-> auxiliary_device_id in its id_table with .name = "foo". So the address
-> *must* come after the last period in the name.
+> But first of all, as I replied earlier, X86_DISABLED_FEATURE_LASS is
+> completely not needed.
 
-So what is the new name without this aux patch that looks so wrong?
-What is the current log line before and after the change you made?
+That's good.
 
-thanks,
+Thanks.
 
-greg k-h
+-- 
+~Randy
+
