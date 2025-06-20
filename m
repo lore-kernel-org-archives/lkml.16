@@ -1,103 +1,56 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A23228A1C5
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F2A95C;
+	Fri, 20 Jun 2025 13:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750425581; cv=none; b=WqXvB0S7bEMHq88Gj2n+iCAPlQr84TGkKDxR7gnBz9fiU2o4M9WrgerDO/ibxRQSsJoScAMWtT36FJBvm2HpZ0zQ9TjFgKV4Fq0BaXPzpp+ChpnFXHLc+YzT4MCcH0sY8kbbCmk4bAb1kK/r1djMt540acF4yFzUQqeRVX6B+jE=
+	t=1750425612; cv=none; b=aoHZ/pPdxYgl6hxntNAdjQ4UoumZh+iDQ+jwOqy50fI2XdumA1l2APF5Qh/gU3v2dCLLCPBicaXFmFg5LcqkxsLbyJegoCVQIJZU0qWHGNBuFzXyX8FMKMjYa7ly0p0eWTK/B0vq7ULeOXa+7CqciVwr0MBYt8Er4TvmF+YM1L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750425581; c=relaxed/simple;
-	bh=/Jmx+66TOxItbg8HTLul3CvVj6BerFXt/VvWzTEkq/Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nhsjP67jP1cxUDg/qkfgtnR/kyaFs1WUkwhgoPp1wF2c9mxpDByPSlA7xsTPyvMIGIEDFsJzjAzJSLTU8ODSlB5KPIhmlhKRt5gor7n8cOVcBPsDotfqXAqKcfWm1JIb0e5wGx23eZjp7880BvPXsLyoTHxRt1zCmgjIFkP2x/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WoZREOze; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750425612; c=relaxed/simple;
+	bh=flwZF01k22+K8skva0cXN6o1f53O8RCdfBgY2yLeLJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IldQBxd8rXLmG7gQ/NYhv5hVlRQr8AQZiXPj//p/MHcMOD/eeZqm9fVjgXg00V/6FLatVfd0zIIC8s2UVpvvO7+xpM9HkQZvFPl/aKgAsmqVycMNlMzQ8XpERA7I6bkaGM8Q1Bv+t0H6X1baXjaw+TNXrGe4DqOixGxvHoMSjS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9lNzGBx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WoZREOze"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a510432236so1442234f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750425576; x=1751030376; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Aoha9L5NfC+u+koSGou0cifrW4mZqVgDJX13pIfUHQ=;
-        b=WoZREOzeb+zAXjZKhvnwQe9WUOZQuXhTS5UniJrqYK3tPidstJWAZYNWn5NSdMmAlC
-         HWzyPTGlISJ+IWk4mysCgkd5QUwW3Qum46AbRv+FiLSQqptxdI4iRsyN/zTWSu03S2Te
-         iY4HUVoT1ta24ycXE83XgSQTrC/SmN6VaIngfgEWLMG0dWOG4HO3/fvZ/2RY0deLHF+o
-         WacOFMwgDNNbMIRofTbieCEOAcITwUgExqgogCbYALxvEwNn5/HU2UC8AC/Ir+vSNVOV
-         JLTVh0/WhEqfW5PIN+U+NpLf0Rvsc6I2Jfuaqa1kmUinJ9itpi3DxZ3xPgOU0Yzbu+Hv
-         vUjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750425576; x=1751030376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Aoha9L5NfC+u+koSGou0cifrW4mZqVgDJX13pIfUHQ=;
-        b=LvD0fu+79YS8tYK9xtKvZtShJmbVgX3Wh51aLLwRD6hJEboTxc1+Hj4WQEOc+5iQlz
-         Iz4ouAwdRozs4Gn8s1sKTfaCexk1WPA1lIZWfmcQywh4ubtJepxmlyg6X6hVyCSmLQoN
-         H+o6cubTkhqkec7VA64J/+VJfDvMKT7xTKY5n1CZ3zVHyow6LSw/+Tw2PJOhaLLv4YJI
-         8HaiPGdt7E8b5/bwdC060kZn+gNvhO7LmPsqSmEMVLpRX/C8b0L/Ve+wU8GAvZ1t+2Gz
-         Iw/k4t+LkmGaRi3uuQ3Xu8HeRnJkpejkIR38WArpO8h7OdcZY4dQQhpFcujdcU8H8GSb
-         +63g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9DQfpOJ3+WlqB1IxNy33dd11iXRItckT6glGmYOfsIscuB4TOL9wk60jptDhpGbB+qH5jzuvGgxR/zrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ7E17XjuI9ssN80qU7BIHCtB8MRMLm2R+CScT8MZrSn3SmQkQ
-	44hlKz2jOrsmB54Z4sumRbtJSgPOFo5+4NOHS+GQd/F3EpCciz6wmj6xcezl26X61n8zJgGCQbW
-	WQUS5eSYkdNcWH3VcjU3JvX9UHKf2VDMb3QqAe6CF
-X-Gm-Gg: ASbGncuG9vAo1FlMD/L7TcB3WwW5GBpxAlx+O4N62gAid+0d4g464Q3JF0gpcJLrD+y
-	2nktNRmTXKqI7gurqbHD6OerOVnqBVPAKQ2kpwuHr9qfZXSj318hI73WwU6tGViGngQj6OZ4eZs
-	rk1jsT/bNp/oF5ux/FpUeuqosbrOtHtSfj5pWa2TGBpHKHccDXq+4ZT70kIlI8PdlM68HhPOs=
-X-Google-Smtp-Source: AGHT+IEiKSTVrmmesXo9djdNTgNBcOgbeA3YEC4Na2tAHP73NDU3cx4wo+GQbuGrJ3JBFVyYCtkNV3TI4QLwPWl/cco=
-X-Received: by 2002:a05:6000:41d7:b0:3a4:e480:b5df with SMTP id
- ffacd0b85a97d-3a6d1325867mr1979922f8f.44.1750425576387; Fri, 20 Jun 2025
- 06:19:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9lNzGBx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF80C4CEE3;
+	Fri, 20 Jun 2025 13:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750425612;
+	bh=flwZF01k22+K8skva0cXN6o1f53O8RCdfBgY2yLeLJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G9lNzGBxUkynLzsG90EXw79hslD4rJ427bs5j7tS8AI9tfT0g6C4OlS+kM6/euxTo
+	 +UZ4liT/ZG5BfzZKG9tUz96OMrP+L/kbr1f/wloIUmAcaIg4DnwtwpWSrFgOWNsYwc
+	 8PiJBd79qP5kW5wkbsY+HK4MZHm+aVGzrnUjDfURX5Ra+RJiiGvVnR2idZBaGu68pv
+	 0aTGLMaN/+F36HeEZ9OoR82Beydb80bidcB5yFffnO/PRVwow1O+xnOKQI1lLcD/QH
+	 /KyJTSCZj8p+mLXqPXS886T/s23MAbwyLSXJ/pS9B+eS8W5r+h3o2yeUjBkpW5onGc
+	 E1gjr8gbZ68eQ==
+Date: Fri, 20 Jun 2025 14:20:08 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yue Haibing <yuehaibing@huawei.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] Bluetooth: Remove hci_conn_hash_lookup_state()
+Message-ID: <20250620132008.GM194429@horms.kernel.org>
+References: <20250620070345.2166957-1-yuehaibing@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-poll-table-null-v1-1-b3fe92a4fd0d@google.com> <DARD1ZC0W9QR.3CBLX6RYE65VU@kernel.org>
-In-Reply-To: <DARD1ZC0W9QR.3CBLX6RYE65VU@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 20 Jun 2025 15:19:22 +0200
-X-Gm-Features: Ac12FXyD8XjzFcyEMQs6Ycjlsh-M4ynT-jitRe_d1CuA3V-pe_mJelALY2Q-ze0
-Message-ID: <CAH5fLgh7n75Q4Txi29CxFG4nfkxzceqh=bMBDyYj01G_KC0vwg@mail.gmail.com>
-Subject: Re: [PATCH] poll: rust: allow poll_table ptrs to be null
-To: Benno Lossin <lossin@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Miguel Ojeda <ojeda@kernel.org>, Christian Brauner <brauner@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620070345.2166957-1-yuehaibing@huawei.com>
 
-On Fri, Jun 20, 2025 at 2:31=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> On Fri Jun 20, 2025 at 1:49 PM CEST, Alice Ryhl wrote:
-> >      ///
-> >      /// # Safety
-> >      ///
-> > -    /// The caller must ensure that for the duration of `'a`, the poin=
-ter will point at a valid poll
-> > -    /// table (as defined in the type invariants).
-> > -    ///
-> > -    /// The caller must also ensure that the `poll_table` is only acce=
-ssed via the returned
-> > -    /// reference for the duration of `'a`.
-> > -    pub unsafe fn from_ptr<'a>(ptr: *mut bindings::poll_table) -> &'a =
-mut PollTable {
->
-> Returning `Option<&'a mut PollTable>` is not an option? I'd like to
-> avoid wrapping raw pointers...
+On Fri, Jun 20, 2025 at 03:03:45PM +0800, Yue Haibing wrote:
+> Since commit 4aa42119d971 ("Bluetooth: Remove pending ACL connection
+> attempts") this function is unused.
+> 
+> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 
-You're going to make people handle the Option by early-returning if
-you do that, but that's wrong. You're supposed to treat null and
-non-null the same.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Alice
