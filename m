@@ -1,148 +1,182 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-ot1-f80.google.com (mail-ot1-f80.google.com [209.85.210.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7D928C2B5
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A725E237708
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429458; cv=none; b=tFeYc1C8yYgdB7Ba7FzR1j4/00b9iwr1rsdtPe3KeoL9aK8+4Syz+qfuCYLkkssv24oRHLTiItTUddYbdy0lZD+QzKD8kxcyWJq9FE2zjbNjhJUD0xIJHL/9f04EjeeUW3VlG+10lDh1+ww85RyBZt0bYyC3wctmGtG658wIMgc=
+	t=1750429544; cv=none; b=d71syteyLG1odsmbi5ApX0RZST95K+kQpvMEMrfbmF5Bj8iZGphp68CYAeUJU8f8T2EvUpuYziLtGjKqziorej8MjdBOwt2MsRhYGjU9Wmsg6p+Y+ZpQgI2PhorLQCbtfs2ARCEtdJst6NlPwIQ5lgBYHq2GmP6D0jWKAcf8XCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429458; c=relaxed/simple;
-	bh=8qIBDe8CC1qMzJmK1qpPswC5E3z8bq7oslqo1eXzTbA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=llcn5cFHK1Bgy1+Oz3kU0f13Cu7BbONkF9GBMWTLUNaRl52cX/M2Q5nYZYHKEy6z3z0IhLY/CxOI8YqDbt/r88QSY/CUvagUju+Mmlid4y9ZYcVgDD/Z5QHR/CgAzcdJXH3wIPlXHW7aMxXVoaASyFNLuxSjT8n1MX5UQZ1WIp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HRRI1Pm/; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HRRI1Pm/"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235dd77d11fso19561355ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:24:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750429456; x=1751034256; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yN9SVkscvf0ymifcjfPVbbXbvx2xgxruV+ORd9NfpdA=;
-        b=HRRI1Pm/GpAVewk9yMlXcfloaJ2jXLmuV/HVHcNDMYJ4ppm9MK0wqPndq9caChPJIl
-         5HRXoKBwN0O6OR8OPTP7x44EZzHAR5r59c02hkS+TcCf3WjWttEsBRZMoD5QWSvmrLU7
-         L+m3XzV0EIlQrmHIkXElRMQrYHd04LYIjwh1gobe7/z7/jgG1WSk+Frj9kHX/Nn454QQ
-         V1BjGTDt7S6BqyKWQOJmSjY6WwsEPHgcNT35j6lMSG8jpA5N4DYp0+wmgImWyfdI2FlF
-         bvuIb9mceYMs4joboRkcJ17sP/Rf7JXVhykX83fh+K3ICP9keDZ0YlJUOpc4XoZixCYf
-         akzg==
+	s=arc-20240116; t=1750429544; c=relaxed/simple;
+	bh=8HkaNlz/z1RF1iFtvf3rQwBjKFiBjnp+npALTuGZSxA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=itT4IUOr/BZd7Raa66hAtJ79a0w30ygY4OPtYLoxEjTgmar1TaRdxjhz4GdgvthehcdMskFnK64oDfXexoBSixnQVbIUrUrrvA0U2OQEzpR/rkQsDY/Efy4taL67Bln4GW7Wn2mZUG1yojvdUpLcLH7q+hiIcjG70eiaFTqlcD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-ot1-f80.google.com with SMTP id 46e09a7af769-735abe7be85so1221730a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:25:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750429456; x=1751034256;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yN9SVkscvf0ymifcjfPVbbXbvx2xgxruV+ORd9NfpdA=;
-        b=kRPGnvfpCsdk1zEnHnSmJ3+HriiRbbKiMs1ClSZZQlS2j5DD2xpdpSSsMaVknQ9xvg
-         MEkwc6YtzpqvCi5dKLpyicIJljbIf/JpuP5zQDLCyZNWpQbZpav6AVB57G2XNsBZdNqq
-         bK5IEBZg3dkeQJkeJUg/xHvILSsp+TssxGgA26Vcxq5gzxIMw4lTzNvKywJWsrGhu00y
-         B6iRpPO/hKwXN1q+ct1xFK8n8h/IgCtjvZ7Oxg5hyMCPX912svvVl+EqaPAqiV5I5/0W
-         SECq8GaJDIeB66xGUJicbUnbVEOAu/9J4eTtqE0/5zYk6i72HsvMRkxdvKWZVDbfKFHk
-         0KUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB3oyOqudV/7h8zXrCxWyfMYO3kICIHpaoD3i2sSuwYkTuOGfWK4j03yFXxoHM1HYr7Qmh/EapCwlGmXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYnG3Jk9hVPy0b/ekrLgIuQKnpXwXHPxtF9899Xo9tYgDmrsNN
-	RWbf0luAGYlI3JBMABbqR78cpcgwwQAmtb7ySVQeIxKmy13NEdGSpPblhBR1hg5fXUPBvEyxMAP
-	le9MxLA==
-X-Google-Smtp-Source: AGHT+IG+aInIJQRJW5MndgQr1v2uYYg3X1/828GUSXmS1eSJdsFhrtgCOHZvxiB2UNMND/jdB+uKu1yWnYs=
-X-Received: from plbkh5.prod.google.com ([2002:a17:903:645:b0:235:ed02:286a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec8c:b0:237:c8de:f289
- with SMTP id d9443c01a7336-237d996bf44mr45859345ad.36.1750429455987; Fri, 20
- Jun 2025 07:24:15 -0700 (PDT)
-Date: Fri, 20 Jun 2025 07:24:14 -0700
-In-Reply-To: <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com>
+        d=1e100.net; s=20230601; t=1750429542; x=1751034342;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KIuYEzj3Bif6xHXQrRqNZNi2f01/mYgvrmDFs7Ux7OQ=;
+        b=o7XlhwjOJLbtuvlIHj9T6e6ru1RYlTfCZ1Z0Y8ROW7d9P2aGrO8TaTffiNp2nqHeOk
+         rr8+fjC8Ro9DrGM+D9wQQ02IysD3LCpL1he8XKEbPabAjTyaIkzZZLoY/gjoC5oKb0VY
+         H+T9MU49WTaKclTvGPY2XbMUgEw06D9d9WcB76Eoa0j9SbFOC3QgTxrjRkveKRV5g8cG
+         5/PgS1MR8cf59xjW3PC5ulth7rlj1wsfqDJTvqAzWZM2Oe5mB+5f8yXO2aw/0rcKjUg7
+         UTIdDlhX3LVhaIziQnLaGA+47ypAjrq12TQdn2xFTn00ouDR4ZX3ZGtPQ6XDND7CFUmX
+         xvbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn1v69aVNNWAz6Seby8bvmb6sWypWjQTpeSyRraAQPnD5hLVjuR4sRdz8OCCjnnl/gm30FisehcEqgCfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy18jo3oNYLX1SXkuNvaic6pvGQm59SylVPgLPhbc2rwD9K3xXQ
+	zSKuW/7VkdWic3uduav2SV3tWdYVmFoxJRw6j2MiscSa5ivYE3+kieWKdcqTImNLSi+qho/2JuS
+	f2VALiLYNMK+2Rg5IPwA5XPmdFZJPOmxRMIwdpgEYjcLFeKDvfd9FWXOHJQ4=
+X-Google-Smtp-Source: AGHT+IEXiz8sVveXCQTPjG7tOrNybCKhuwdIDwWDwdtIv00EE8qa0rkZ3+oxvR+pBoU8uR5CxXxC7Y38HIFl91iYoZGmgbjOO0+w
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611095158.19398-1-adrian.hunter@intel.com>
- <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
- <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
- <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
- <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com>
-Message-ID: <aFVvDh7tTTXhX13f@google.com>
-Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-From: Sean Christopherson <seanjc@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
-	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:19cc:b0:3dd:b540:b795 with SMTP id
+ e9e14a558f8ab-3de3954f063mr26936825ab.3.1750429529031; Fri, 20 Jun 2025
+ 07:25:29 -0700 (PDT)
+Date: Fri, 20 Jun 2025 07:25:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68556f59.a00a0220.137b3.004e.GAE@google.com>
+Subject: [syzbot] [net?] [ext4?] general protection fault in clip_push
+From: syzbot <syzbot+1316233c4c6803382a8b@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 19, 2025, Adrian Hunter wrote:
-> On 19/06/2025 03:33, Sean Christopherson wrote:
-> > On Wed, Jun 18, 2025, Adrian Hunter wrote:
-> >> On 18/06/2025 09:00, Vishal Annapurve wrote:
-> >>> On Tue, Jun 17, 2025 at 10:50=E2=80=AFPM Adrian Hunter <adrian.hunter=
-@intel.com> wrote:
-> >>>>> Ability to clean up memslots from userspace without closing
-> >>>>> VM/guest_memfd handles is useful to keep reusing the same guest_mem=
-fds
-> >>>>> for the next boot iteration of the VM in case of reboot.
-> >>>>
-> >>>> TD lifecycle does not include reboot.  In other words, reboot is
-> >>>> done by shutting down the TD and then starting again with a new TD.
-> >>>>
-> >>>> AFAIK it is not currently possible to shut down without closing
-> >>>> guest_memfds since the guest_memfd holds a reference (users_count)
-> >>>> to struct kvm, and destruction begins when users_count hits zero.
-> >>>>
-> >>>
-> >>> gmem link support[1] allows associating existing guest_memfds with ne=
-w
-> >>> VM instances.
-> >>>
-> >>> Breakdown of the userspace VMM flow:
-> >>> 1) Create a new VM instance before closing guest_memfd files.
-> >>> 2) Link existing guest_memfd files with the new VM instance. -> This
-> >>> creates new set of files backed by the same inode but associated with
-> >>> the new VM instance.
-> >>
-> >> So what about:
-> >>
-> >> 2.5) Call KVM_TDX_TERMINATE_VM IOCTL
-> >>
-> >> Memory reclaimed after KVM_TDX_TERMINATE_VM will be done efficiently,
-> >> so avoid causing it to be reclaimed earlier.
-> >=20
-> > The problem is that setting kvm->vm_dead will prevent (3) from succeedi=
-ng.  If
-> > kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not /dev=
-/kvm the
-> > device, but rather devices bound to the VM) ioctls.
->=20
-> (3) is "Close the older guest memfd handles -> results in older VM instan=
-ce cleanup."
->=20
-> close() is not an IOCTL, so I do not understand.
+Hello,
 
-Sorry, I misread that as "Close the older guest memfd handles by deleting t=
-he
-memslots".
+syzbot found the following issue on:
 
-> > I intended that behavior, e.g. to guard against userspace blowing up KV=
-M because
-> > the hkid was released, I just didn't consider the memslots angle.
->=20
-> The patch was tested with QEMU which AFAICT does not touch  memslots when
-> shutting down.  Is there a reason to?
+HEAD commit:    41687a5c6f8b Merge tag 'spi-fix-v6.16-rc2' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ca5370580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=1316233c4c6803382a8b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17365d0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11cff5d4580000
 
-In this case, the VMM process is not shutting down.  To emulate a reboot, t=
-he
-VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.  Be=
-cause
-guest_memfd takes a reference to "struct kvm", through memslot bindings, me=
-mslots
-need to be manually destroyed so that all references are put and the VM is =
-freed
-by the kernel.  E.g. otherwise multiple reboots would manifest as memory le=
-akds
-and eventually OOM the host.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-41687a5c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c889133baca6/vmlinux-41687a5c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/288c0c860dbf/bzImage-41687a5c.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/ad66cd154f6a/mount_4.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=10818182580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1316233c4c6803382a8b@syzkaller.appspotmail.com
+
+EXT4-fs: Ignoring removed oldalloc option
+EXT4-fs (loop0): 1 truncate cleaned up
+EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: writeback.
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000001c: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x00000000000000e0-0x00000000000000e7]
+CPU: 0 UID: 0 PID: 5312 Comm: syz-executor180 Not tainted 6.16.0-rc2-syzkaller-00162-g41687a5c6f8b #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:clip_push+0x6dd/0x760 net/atm/clip.c:197
+Code: 20 8d aa 8c e8 e4 f6 5b fa 48 83 3d bc 23 64 0f 00 0f 85 94 f9 ff ff e8 a1 32 27 f7 48 8d bb e0 00 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 75 3c 8b ab e0 00 00 00 49 8d bd 40 01 00 00 be
+RSP: 0018:ffffc9000d4e7898 EFLAGS: 00010202
+RAX: 000000000000001c RBX: 0000000000000000 RCX: ffff888000f3c880
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000e0
+RBP: dffffc0000000000 R08: ffffffff8fa110f7 R09: 1ffffffff1f4221e
+R10: dffffc0000000000 R11: ffffffff8a9922e0 R12: ffffffff8a9922e0
+R13: ffff888031799000 R14: ffff8880429ce180 R15: ffff888031799578
+FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f074213de58 CR3: 000000003f358000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ vcc_destroy_socket net/atm/common.c:183 [inline]
+ vcc_release+0x15a/0x460 net/atm/common.c:205
+ __sock_release net/socket.c:647 [inline]
+ sock_close+0xc0/0x240 net/socket.c:1391
+ __fput+0x44c/0xa70 fs/file_table.c:465
+ task_work_run+0x1d1/0x260 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x6ad/0x22e0 kernel/exit.c:955
+ do_group_exit+0x21c/0x2d0 kernel/exit.c:1104
+ get_signal+0x1286/0x1340 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x9a/0x750 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop+0x75/0x110 kernel/entry/common.c:111
+ exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+ syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+ do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f07420ea849
+Code: Unable to access opcode bytes at 0x7f07420ea81f.
+RSP: 002b:00007f074209f198 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: 0000000000000001 RBX: 00007f07421716c8 RCX: 00007f07420ea849
+RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 00007f07421716cc
+RBP: 00007f07421716c0 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 65732f636f72702f R11: 0000000000000246 R12: 00007f074213e56c
+R13: 00007f074209f1a0 R14: 0031656c69662f2e R15: 0000200000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:clip_push+0x6dd/0x760 net/atm/clip.c:197
+Code: 20 8d aa 8c e8 e4 f6 5b fa 48 83 3d bc 23 64 0f 00 0f 85 94 f9 ff ff e8 a1 32 27 f7 48 8d bb e0 00 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 75 3c 8b ab e0 00 00 00 49 8d bd 40 01 00 00 be
+RSP: 0018:ffffc9000d4e7898 EFLAGS: 00010202
+RAX: 000000000000001c RBX: 0000000000000000 RCX: ffff888000f3c880
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000e0
+RBP: dffffc0000000000 R08: ffffffff8fa110f7 R09: 1ffffffff1f4221e
+R10: dffffc0000000000 R11: ffffffff8a9922e0 R12: ffffffff8a9922e0
+R13: ffff888031799000 R14: ffff8880429ce180 R15: ffff888031799578
+FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f074213de58 CR3: 00000000403da000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	20 8d aa 8c e8 e4    	and    %cl,-0x1b177356(%rbp)
+   6:	f6 5b fa             	negb   -0x6(%rbx)
+   9:	48 83 3d bc 23 64 0f 	cmpq   $0x0,0xf6423bc(%rip)        # 0xf6423cd
+  10:	00
+  11:	0f 85 94 f9 ff ff    	jne    0xfffff9ab
+  17:	e8 a1 32 27 f7       	call   0xf72732bd
+  1c:	48 8d bb e0 00 00 00 	lea    0xe0(%rbx),%rdi
+  23:	48 89 f8             	mov    %rdi,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	0f b6 04 28          	movzbl (%rax,%rbp,1),%eax <-- trapping instruction
+  2e:	84 c0                	test   %al,%al
+  30:	75 3c                	jne    0x6e
+  32:	8b ab e0 00 00 00    	mov    0xe0(%rbx),%ebp
+  38:	49 8d bd 40 01 00 00 	lea    0x140(%r13),%rdi
+  3f:	be                   	.byte 0xbe
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
