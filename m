@@ -1,201 +1,204 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2067.outbound.protection.outlook.com [40.107.93.67])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F98C21FF45;
-	Fri, 20 Jun 2025 19:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750449466; cv=fail; b=Devwy58PGz+lokQA1RB3LH4WolGB6CnfiUoXay3jgr5L0GKpq/crXgf4NkULw7TRj3Z7UZw85aBSoBMznIJPF0co0cfQeL1JY4PNANIh6gmWUfE69gX1xtxiND7wq6of7UOMGtrWITF3NYl1YbFypaOsQ78V0TIyhY9Tul9hBWM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750449466; c=relaxed/simple;
-	bh=8Yuw8gn42ZjuXRhKuq857gk1RXYKtITMAE12G9DfGY4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WC6ATReTMfk5aA7KWV1VKMItbHlHqqLBWH5ZzY0KHt1ZGkuqUd3RliJrDJ9jPUqdXrSD7hFpi+3GS1WUkLA55XVjzh+FyBbDiw2K+suN/rRpBqFspJDBwIocoRbMGW0J7ZeTJMXdmFCtv3Q5EVm5/uKPuDGCzohNPDKh7w1197o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VQVPixsz; arc=fail smtp.client-ip=40.107.93.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4CC2253EB;
+	Fri, 20 Jun 2025 19:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750449486; cv=none; b=mjPCXoFbiRZn0XJZkn3OzfL3ahQqxv20Am+KnKeAClofJu1fUfBu6UCjLWkoQ3pef4XH5HFVlRrmHn/ovjCBQXBiUtZ+QzvuaqtYgNPiR8DmgLAxKwCRn1dS+fIQ8jx2pUBBSTPEGzzWs2p2luT8jzGTadYBjT2FHZlBsl51sag=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750449486; c=relaxed/simple;
+	bh=qD7QOF0Eu3kbnHtl32Gda5bek7meSJSxrmTH5Gei8i8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vBvnUR2EPkAV58SIaJgT2nFOX3uQstqSXU/yBO2aZ+r9FcapI5Ac4csYbAh7zyqNTaOdla+YopQX03ys3bhWRIqgoIjQ5JfcsgANEqqzT2LwsJEJZGr+XuGEEjumfRtVOu0ttDx5FpYb6JG3mxFlhAxj9QxJQ8yDaqGhV7UOJ58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=v3EALXau; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VQVPixsz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zM5aYo+RbIlhqKx0u2GHL+d+PG9hh0jWOSVTw04bxE7/nwC4ZGbNE0CUBmYasLQww4qUH6SXhXZIK0MO0e79o6nXB/tJ/IOKWdyvs4WTOwN2ktisth5xyA+TqldnSBLT7l6znLJ9sYOzXSEcXashg1ulD75p2B47RWW+i46/yo7BKShRC0bTX+Rhb8a1Ky4rwGf1e6ilaDQG0YuWFCyL8MixPhkDVLhnkPWZ/puTevmD9A6PpKAvdxeRFSL95mU5EuSmGkDZjDPKIbWtODGLGy1eSJGb1ZQsphLRi9KAxg6Fy3057g10XeVMxvjhSsz1L1wlZ1CyNjggXiVimLoXAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IdLm2YnXuKwyO4SLRLi1J1oqh9mMbfA6wew4BPkfO8U=;
- b=FFj+3ntnjbs8BbB/j8VPEsMaFjzhofFC5TX4kAYIkmys+eRJRjUmdhQalOy/1Q22F7iwb25RxkbpJM5jLE3xZRY7hOrfpS81z4gYQj+1Y3DpRMolBfdaAOW/wJUlj+FbJV+bEVgu+a0/hTFli1Tnn8yT/TZ0jLMaiYDL3jP2DK2uLH/xyLEKoAbnxIEDjZ2UXqAEoobMy13hQAsG1qwqwQTnzQSxbGgbhHT1RtGQxtimzuCOitUYNfwXn6yDDni1fETLMgADltN7pNoWhXX7HLYklURtsPEFqUJwbiJzKg9j+lFHiaSIiUoM7c2tqFC0cj0RNWXaAwcOoil32LT38g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IdLm2YnXuKwyO4SLRLi1J1oqh9mMbfA6wew4BPkfO8U=;
- b=VQVPixszYmwGdjCfCjOMVLM5FzL5xfIpix+kYJMazuKUeRkxeuYDpTT+Ab72JOBETsogjq5sHw82LO/OWPYlkB8wTv8CY9mUU65JBeB34VFTBBw8aBTJAX32NpYQTjoysvVvUBa63tcGaUEIiwj3VC6lA+lkdc+IpX0pvcD9VFU=
-Received: from BN1PR12CA0028.namprd12.prod.outlook.com (2603:10b6:408:e1::33)
- by MW4PR12MB6730.namprd12.prod.outlook.com (2603:10b6:303:1ec::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Fri, 20 Jun
- 2025 19:57:41 +0000
-Received: from BN2PEPF00004FBA.namprd04.prod.outlook.com
- (2603:10b6:408:e1:cafe::de) by BN1PR12CA0028.outlook.office365.com
- (2603:10b6:408:e1::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.33 via Frontend Transport; Fri,
- 20 Jun 2025 19:57:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FBA.mail.protection.outlook.com (10.167.243.180) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8857.21 via Frontend Transport; Fri, 20 Jun 2025 19:57:40 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 20 Jun
- 2025 14:57:39 -0500
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 20 Jun 2025 14:57:39 -0500
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	"Tanmay Shah" <tanmay.shah@amd.com>
-Subject: [PATCH] remoteproc: xlnx: add shutdown callback
-Date: Fri, 20 Jun 2025 12:57:28 -0700
-Message-ID: <20250620195728.3216935-1-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="v3EALXau"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uShs7-0011ht-GO; Fri, 20 Jun 2025 21:57:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=vckMvA6jWBSBfECI0pQWoIeT/beoNl3jiVpNm9w7QOU=; b=v3EALXauZCD/fezkh9p8YZEVyV
+	7pReDOY3G6YsYt0yWKrufLOu3MgvjZd4ElvASaHFJWXxkG+yR0DdQdajYx0WMv8/MmXzwcGZBTnYb
+	njKy5NQpqFSICnPoQQt2Ah3bvyp4i5YapnANmBuhteTe7I+uJ4V0hu1qCLzaQwNCS/IFJf7MjwIwa
+	sAx6BtbatjUfuErgB0zQyfirBQ+RtR+9w9q02otKoB1Ru0dKljoI7PRGzNm4lMfxGdTHCGV0sbFGp
+	VYZKW+jNY7tm3a3YHRLRG0mO/Uv1S/DBMMQEngz9jHDGyRAXESNMlxeD9Ssql/zKyTHzmsqptaXOy
+	4lxOYanA==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uShs6-00044Z-Od; Fri, 20 Jun 2025 21:57:58 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uShrm-009FAR-5z; Fri, 20 Jun 2025 21:57:38 +0200
+Message-ID: <fbbbb112-e529-43a7-97a7-ca031a1fc448@rbox.co>
+Date: Fri, 20 Jun 2025 21:57:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: tanmay.shah@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBA:EE_|MW4PR12MB6730:EE_
-X-MS-Office365-Filtering-Correlation-Id: d944310d-ced8-44e5-387d-08ddb034b66e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cqJX7cPBnjzvRLAczaQ278wfhAn38tJSRftzp2xXJmsSp/MMkuMZM9J9/8vF?=
- =?us-ascii?Q?4LGCjzJ37oF2xZUtgOJIY0RyevzagJnd55I/BS8DsXhKln0+lamykfb+7vKK?=
- =?us-ascii?Q?9AvRgA2eAqxZ0FHeAEGLerwTW+AulCA7gjc9Q0BOPHEhH2VjXXUtAMJPMa90?=
- =?us-ascii?Q?iHYWYyJdxtkq/WIGBBzOQ+fSSZKZeYuFdixzjpCSOd52jXLxn2DwoiWQtoLr?=
- =?us-ascii?Q?S/9l5Qcnr/ALV/BGdQxxjEsYA4dK2mixJELC0mgbrjqQMmUGP4EvUOV1RtyI?=
- =?us-ascii?Q?886YiZfgEjV2h9+/8tY+gwEPMtbeZmA6OXQi0lGipznLYA5uwV66jJZNNLrK?=
- =?us-ascii?Q?oa4ZmavBTH5XzUnIBct36UQU2oQHWenUMk2N96lduGJNndHUMcsHEjQiyZAh?=
- =?us-ascii?Q?TzFqa8PSZclCK+dmYOgakgonAbANYJnNVvdVkwzhyWS8Zngnl/H9L55bO4fu?=
- =?us-ascii?Q?/2qsF3CAUFNuBQBbKMkWOHQMPJKZSJ9Jz1gBEF5jVFIpcnsUKnDvxe2q+2iE?=
- =?us-ascii?Q?qTI0TYu71WAJYUf+YRzBvawvULRKnEIoRL+Virpxtr8ruGhjvsudgtChvOIR?=
- =?us-ascii?Q?5PqEeJOAKw1hzynRWwJqjx7e/O93GrHv5pMCBQtdBEPDMmnYCqLXNo7puYaN?=
- =?us-ascii?Q?Nk4piKJQ7vdQZo8dXu3QneNEHVuFtyg99BQ50D5Sv8BuQrV3ran7cjvYOonM?=
- =?us-ascii?Q?78bo1kYKpf4/bYX66EivYYOAf1U12jRNmYIr777uKKTt30KbJukq/Z+sCbGa?=
- =?us-ascii?Q?RAp4APs1Jg82Ccx0qa1kWd6pYfNq6BTWKa9N7pg9BE7xHXSubblAeY2yo0uV?=
- =?us-ascii?Q?2N3681I4Cq3MlLo+uO1N91HO5+qvaUzJVtTJ4u02cnUmLMBiU0hpBGHjO57N?=
- =?us-ascii?Q?rtISiTgIvTiTRoCbKHnXGKrP+9Vn3tWtZqfZWFf0SSTYV0CGEZdrV7iAi2hG?=
- =?us-ascii?Q?jOQ7Lk2tTU2XXzbaFdrMPalD90Ju0qOpPixEG+B3mjIRbKGZX+5uZsYCcQFv?=
- =?us-ascii?Q?TUrZn/RJwmJbu9kiVBKrgbIZWvcjvVpRt/3vPY8xkGDHDO48tRiFCJXAEcde?=
- =?us-ascii?Q?YnvWLDDkDn3aZ3cPRUfFNMFKCxFYFKS8jlHM09BCbMk+DW8morJbpOzqRY6Q?=
- =?us-ascii?Q?dmxqdscm4ylVBqn6NLrosh/qIu2dtTN1yWPpUlC42sqXflizRfhUQPwI3Ja9?=
- =?us-ascii?Q?Iy4BMwEQRiY4o0yBZv52QL7rbLc15Mm5AiEVDPRObd+VQ6APu+k8e/lyiMl5?=
- =?us-ascii?Q?HZVxccGzQ0yYbOWirtgK5vXxAnMxwhv9xEFaVg9rZJr+ZFTiiptYqo3dfwnP?=
- =?us-ascii?Q?6BEtsNu16Ww4hlvuV3wDYyPHyTA9vlk0v4WrR4zXmucm9989rBSdj2sAN6Fl?=
- =?us-ascii?Q?nKGk//rRxvHwipvp8pmEB0wiYCczhezj7eat86zhrNd3503ssWVRhQMrT15V?=
- =?us-ascii?Q?OIpUZl4/RzWaB6z9Yba5fRnEkgMDQZESEBNy1ub7jROOKmOWlFHZ/BktPEZO?=
- =?us-ascii?Q?u2kAGVeURPWyawibsQfCZHLsZmrOUb+d3qUC?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 19:57:40.1528
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d944310d-ced8-44e5-387d-08ddb034b66e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6730
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+ <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
+ <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
+ <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
+ <cg25zc7ktl6glh5r7mfxjvbjqguq2s2rj6vk24ful7zg6ydwuz@tjtvbrmemtpw>
+ <4f0e2cc5-f3a0-4458-9954-438911e7d104@rbox.co>
+ <CAGxU2F65bh=jU6MVnhh=EzP19iayWATEezDFDd+c9o+K3Bf6YQ@mail.gmail.com>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <CAGxU2F65bh=jU6MVnhh=EzP19iayWATEezDFDd+c9o+K3Bf6YQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In case of kexec call, each driver's shutdown callback is called. Handle
-this call for rproc driver and shutdown/detach each core that was powered
-on before. This is needed for proper Life Cycle Management of remote
-processor. Otherwise on next linux boot, remote processor can't be
-started due to bad refcount of power-domain managed by platform
-management controller.
+On 6/20/25 16:43, Stefano Garzarella wrote:
+> On Fri, 20 Jun 2025 at 16:23, Michal Luczaj <mhal@rbox.co> wrote:
+>>
+>> On 6/20/25 15:20, Stefano Garzarella wrote:
+>>> On Fri, Jun 20, 2025 at 02:58:49PM +0200, Michal Luczaj wrote:
+>>>> On 6/20/25 10:32, Stefano Garzarella wrote:
+>>>>> On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
+>>>>>> Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
+>>>>>> Make sure pointers remain valid.
+>>>>>>
+>>>>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+>>>>>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
+>>>>>> Call Trace:
+>>>>>> __x64_sys_ioctl+0x12d/0x190
+>>>>>> do_syscall_64+0x92/0x1c0
+>>>>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>>>>>
+>>>>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>>>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>>>>>> ---
+>>>>>> net/vmw_vsock/af_vsock.c | 4 ++++
+>>>>>> 1 file changed, 4 insertions(+)
+>>>>>>
+>>>>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>>>>>> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
+>>>>>> --- a/net/vmw_vsock/af_vsock.c
+>>>>>> +++ b/net/vmw_vsock/af_vsock.c
+>>>>>> @@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>>>>>>
+>>>>>>    switch (cmd) {
+>>>>>>    case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
+>>>>>> +          mutex_lock(&vsock_register_mutex);
+>>>>>> +
+>>>>>>            /* To be compatible with the VMCI behavior, we prioritize the
+>>>>>>             * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+>>>>>>             */
+>>>>>> @@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>>>>>>            else if (transport_h2g)
+>>>>>>                    cid = transport_h2g->get_local_cid();
+>>>>>>
+>>>>>> +          mutex_unlock(&vsock_register_mutex);
+>>>>>
+>>>>>
+>>>>> What about if we introduce a new `vsock_get_local_cid`:
+>>>>>
+>>>>> u32 vsock_get_local_cid() {
+>>>>>     u32 cid = VMADDR_CID_ANY;
+>>>>>
+>>>>>     mutex_lock(&vsock_register_mutex);
+>>>>>     /* To be compatible with the VMCI behavior, we prioritize the
+>>>>>      * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+>>>>>      */
+>>>>>     if (transport_g2h)
+>>>>>             cid = transport_g2h->get_local_cid();
+>>>>>     else if (transport_h2g)
+>>>>>             cid = transport_h2g->get_local_cid();
+>>>>>     mutex_lock(&vsock_register_mutex);
+>>>>>
+>>>>>     return cid;
+>>>>> }
+>>>>>
+>>>>>
+>>>>> And we use it here, and in the place fixed by next patch?
+>>>>>
+>>>>> I think we can fix all in a single patch, the problem here is to call
+>>>>> transport_*->get_local_cid() without the lock IIUC.
+>>>>
+>>>> Do you mean:
+>>>>
+>>>> bool vsock_find_cid(unsigned int cid)
+>>>> {
+>>>> -       if (transport_g2h && cid == transport_g2h->get_local_cid())
+>>>> +       if (transport_g2h && cid == vsock_get_local_cid())
+>>>>                return true;
+>>>>
+>>>> ?
+>>>
+>>> Nope, I meant:
+>>>
+>>>   bool vsock_find_cid(unsigned int cid)
+>>>   {
+>>> -       if (transport_g2h && cid == transport_g2h->get_local_cid())
+>>> -               return true;
+>>> -
+>>> -       if (transport_h2g && cid == VMADDR_CID_HOST)
+>>> +       if (cid == vsock_get_local_cid())
+>>>                  return true;
+>>>
+>>>          if (transport_local && cid == VMADDR_CID_LOCAL)
+>>
+>> But it does change the behaviour, doesn't it? With this patch, (with g2h
+>> loaded) if cid fails to match g2h->get_local_cid(), we don't fall back to
+>> h2g case any more, i.e. no more comparing cid with VMADDR_CID_HOST.
+> 
+> It's friday... yep, you're right!
+> 
+>>
+>>> But now I'm thinking if we should also include `transport_local` in the
+>>> new `vsock_get_local_cid()`.
+>>>
+>>> I think that will fix an issue when calling
+>>> IOCTL_VM_SOCKETS_GET_LOCAL_CID and only vsock-loopback kernel module is
+>>> loaded, so maybe we can do 2 patches:
+>>>
+>>> 1. fix IOCTL_VM_SOCKETS_GET_LOCAL_CID to check also `transport_local`
+>>>     Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
+>>
+>> What would be the transport priority with transport_local thrown in? E.g.
+>> if we have both local and g2h, ioctl should return VMADDR_CID_LOCAL or
+>> transport_g2h->get_local_cid()?
+> 
+> Should return the G2H, LOCAL is more for debug/test, so I'd return it
+> only if anything else is loaded.
+>>>> 2. move that code in vsock_get_local_cid() with proper locking and use
+>>> it also in vsock_find_cid()
+>>>
+>>> WDYT?
+>>
+>> Yeah, sure about 1, I'll add it to the series. I'm just still not certain
+>> how useful vsock_get_local_cid() would be for vsock_find_cid().
+>>
+> 
+> Feel free to drop 1 too, we can send it later if it's not really
+> related to this issue.
 
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
- drivers/remoteproc/xlnx_r5_remoteproc.c | 40 +++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+I've added it to the end of this series (and marked the series as RFC), for
+ease of discussion.
 
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index 1af89782e116..30294e7fbc79 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -1463,6 +1463,45 @@ static void zynqmp_r5_cluster_exit(void *data)
- 	platform_set_drvdata(pdev, NULL);
- }
- 
-+/*
-+ * zynqmp_r5_remoteproc_shutdown()
-+ * Follow shutdown sequence in case of kexec call.
-+ *
-+ * @pdev: domain platform device for cluster
-+ *
-+ * Return: None.
-+ */
-+static void zynqmp_r5_remoteproc_shutdown(struct platform_device *pdev)
-+{
-+	const char *rproc_state_str = NULL;
-+	struct zynqmp_r5_cluster *cluster;
-+	struct zynqmp_r5_core *r5_core;
-+	struct rproc *rproc;
-+	int i, ret = 0;
-+
-+	cluster = platform_get_drvdata(pdev);
-+
-+	for (i = 0; i < cluster->core_count; i++) {
-+		r5_core = cluster->r5_cores[i];
-+		rproc = r5_core->rproc;
-+
-+		if (rproc->state == RPROC_RUNNING) {
-+			ret = rproc_shutdown(rproc);
-+			rproc_state_str = "shutdown";
-+		} else if (rproc->state == RPROC_ATTACHED) {
-+			ret = rproc_detach(rproc);
-+			rproc_state_str = "detach";
-+		} else {
-+			ret = 0;
-+		}
-+
-+		if (ret) {
-+			dev_err(cluster->dev, "failed to %s rproc %d\n",
-+				rproc_state_str, rproc->index);
-+		}
-+	}
-+}
-+
- /*
-  * zynqmp_r5_remoteproc_probe()
-  * parse device-tree, initialize hardware and allocate required resources
-@@ -1524,6 +1563,7 @@ static struct platform_driver zynqmp_r5_remoteproc_driver = {
- 		.name = "zynqmp_r5_remoteproc",
- 		.of_match_table = zynqmp_r5_remoteproc_match,
- 	},
-+	.shutdown = zynqmp_r5_remoteproc_shutdown,
- };
- module_platform_driver(zynqmp_r5_remoteproc_driver);
- 
+> About the series, maybe it is better to have a single patch that fixes
+> the access to ->get_local_cid() with proper locking.
+> But I don't have a strong opinion on that. I see it like a single
+> problem to fix, but up to you.
 
-base-commit: d293da1e4dbebb40560e4c6a417b29ce3393659a
--- 
-2.34.1
+Yeah, I get your point. So I've tried something similar in v2:
+https://lore.kernel.org/netdev/20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co/
 
