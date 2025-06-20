@@ -1,38 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0353228C84B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A659DE56A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440394; cv=none; b=ldfQdPfZgLQ1RpabZo6XFHHwF77/9B37VQUO/Ie7PjxpqQG8lM+dEW6R8K6xXylmNWnfPkd/f8UPe4bWbfmg72XxYOjbQBSUq6l1LqCIGTfiDgYFyRaA3+HYmwB+of/N/q+LPDBvYVKMWvw08glVnW8PgO6Z4mrc7I94AOvl6M8=
+	t=1750440395; cv=none; b=LhZI29gH9+4rHaE6uU0tRN1LIbRbQe11rbqRkMOlt1G932JYXsdk1TcjSQCy7mfdZMGkn1719a/krY+xa5Wf9UA8AXLY4wzMya26LqxZRtBHuvw06Nk1emY61p1zvCZHfsUMhJkp4hd8qoNoy3DvUfxF+U28AY+oVu47R9IgCN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440394; c=relaxed/simple;
-	bh=eURKx89tifYtRvo64Aw7HFuB7HFY32NXQwkjjiKjDKo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=d17tJlo2KjoYXZb2ye/PZLOCsgabqNprEua0ca2GgtnuyS+K4v2dViDx3MCz56HhRjxlPMUJgomXjBtfM0h6s7Puczr+U0JTpIUzm67MQLrTKB7gtGutrxzZ4iBjvTU21U7J+hn79TpJVWdb7EackEhLLhhp8KZdPhUIYo0dCq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Uo7BiYDk; arc=none smtp.client-ip=217.70.183.195
+	s=arc-20240116; t=1750440395; c=relaxed/simple;
+	bh=8jOkE58Ma35HYZMDPlOkOV7eaxR50Qoko8qp6IY1d/4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FAKmdnkmXZrWxQ50zshbqDwra6Pk6d0fT9eD5EWMjNzKCYWVHkBGIpSUpF0a5k6lJlERQZwmzf5U1/PcUQo7afHQfbV0MrXOrQ3ypggMHQVTjhAng4kPmltBlTfz+pL2wpXJwDsoY3QvJCw4dwGk5MsybIoLgwY8nYHfkQZ5M7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MshE/riH; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Uo7BiYDk"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D65D31FCF0;
-	Fri, 20 Jun 2025 17:26:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MshE/riH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6C4DB1FD3A;
+	Fri, 20 Jun 2025 17:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750440383;
+	t=1750440392;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=c8eSjCawGVWdlXECtniiqel92f7tcRDt7xWem+aFmR8=;
-	b=Uo7BiYDkOB639SbZDZrTQB8x/FlPXqbAfpy3NW6HlxT/14QPByIGKgYRMjXqQ0DLvJNrmp
-	lh6FbLj9Zg4P+gzGYQ1AciThA3u526I5xf5UKe9smPIA6RxH8Kbz8a1SfDNv5ixmnqvtvz
-	eqDX05zv7qpbLDX29k72i02jtTsA0/rGlMEoms8rafOwhs3flrRhbbvMt/p8bdq9yUB8Hv
-	9hO5tweQ9fsMMoF9XS/CVLtBu8G66SaXP32enH7JFdTEkccIZIWxub7WGj/UIiPrxExtnO
-	N8rOdHDwCIbNsXcujyWJ9NgLkxLZgZS24vQae5efwA5WozmBNRgfkQpXQIW50g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3vFKtUfBUhcJlO/W1NX74ubUlAjHwCKwupAMbbu7GUs=;
+	b=MshE/riHO2H9pB3v+OclS26BzTgwHdJp+0TPaqmFQ4AB3wwzC+ULwUoim+SmrJfQ5GNHeQ
+	rir8K7+rF+4cWaFX1oq5W8JDsgrXUcuIPvZC24yZxpLHdfYHmWPE8PsfIxvAFI10yqrrdq
+	PpZIEH/bTKF0G9WtWuz6x1xK4oTn4OuXadQ+UtC7Bl8siXFl8bf1evAhdslIXU8XTC9CgN
+	07VY6z/ZF40IcIbrhoAMWopsSGKuOQS9Ipd1gCqPy03uY6rSZWZ5hQ2olbTZKxvBveen2p
+	sN8SO3GTtixvCzBRoklWESMyng5LkC/tElt7cxgwtR7BQTnDyU8eiH6yQdc5BQ==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: [PATCH v8 0/5] drm/bridge: get/put the bridge returned by
+Date: Fri, 20 Jun 2025 19:26:17 +0200
+Subject: [PATCH v8 5/5] drm/probe-helper: put the bridge returned by
  drm_bridge_chain_get_first_bridge()
-Date: Fri, 20 Jun 2025 19:26:12 +0200
-Message-Id: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIALWZVWgC/y2N2wqDMBBEf0X2uQshtVL7K6UEza66YKNs0lIQ/
- 73by+M5w8xskFmFM1yqDZSfkmVJBudDBXHq0sgoZAze+ZNrvEPSO/YqZEk3z0vEkcv6KB8ffj5
- YUVIwHwbRXP4aez62sa49RWrA9lflQV7f7+tt399qKoyPiwAAAA==
-X-Change-ID: 20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-be39c442dcd6
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-5-0321845fcafb@bootlin.com>
+References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
+In-Reply-To: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
  Andrzej Hajda <andrzej.hajda@intel.com>, 
@@ -64,81 +64,35 @@ Cc: Hui Pu <Hui.Pu@gehealthcare.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejjefhgfffleevhefhfeduhedtfedttedtkefgkeeuieehtdeifeduveejffevgeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidru
- ggvpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehsthgvfhgrnhesrghgnhgvrhdrtghhpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhin
+ hdrtghomhdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhtvghfrghnsegrghhnvghrrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhm
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This series adds drm_bridge_get/put() calls for DRM bridges returned by
-drm_bridge_chain_get_first_bridge().
+The bridge returned by drm_bridge_chain_get_first_bridge() is
+refcounted. Put it when done.
 
-This is part of the work towards removal of bridges from a still existing
-DRM pipeline without use-after-free. The grand plan as discussed in [1].
-Here's the work breakdown (➜ marks the current series):
-
- 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
-    (based on devm_drm_bridge_alloc() [0])
-    A. ✔ add new alloc API and refcounting (in v6.16-rc1)
-    B. ✔ convert all bridge drivers to new API (now in drm-misc-next)
-    C. ✔ kunit tests (now in drm-misc-next)
-    D. … add get/put to drm_bridge_add/remove() + attach/detach()
-         and warn on old allocation pattern (under review)
-    E. ➜ add get/put on drm_bridge accessors
-       1. ➜ drm_bridge_chain_get_first_bridge() + add a cleanup action (this series)
-       2. drm_bridge_chain_get_last_bridge()
-       3. drm_bridge_get_prev_bridge()
-       4. drm_bridge_get_next_bridge()
-       5. drm_for_each_bridge_in_chain()
-       6. drm_bridge_connector_init
-       7. of_drm_find_bridge
-       8. drm_of_find_panel_or_bridge, *_of_get_bridge
-    F. debugfs improvements
- 2. handle gracefully atomic updates during bridge removal
- 3. avoid DSI host drivers to have dangling pointers to DSI devices
- 4. finish the hotplug bridge work, removing the "always-disconnected"
-    connector, moving code to the core and potentially removing the
-    hotplug-bridge itself (this needs to be clarified as points 1-3 are
-    developed)
-
-All the patches in this series have already been sent as part of the larger
-"[PATCH v7 00/11] drm/bridge: add devm_drm_bridge_alloc() with bridge
-refcount" series [2], hence the v8 number. They have all been Reviewed-by
-Maxime too, however they could bnot be applied at that time, awaiting the
-conversion of all bridge drivers to devm_drm_bridge_alloc(), now done (item
-1.A).
-
-I'm resending all patches to give them visibility now that they are ready
-to be applied. I have removed the R-by tag from patch 4 which had to be
-reworked on current code. All other patches are diff-identical.
-
-[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
-[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
-[2] https://lore.kernel.org/all/20250314-drm-bridge-refcount-v7-0-152571f8c694@bootlin.com/
-
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
-Changes in v8:
-- rebased on current drm-misc-next
-- Patch 4: reworked based on current code
-- Link to v7: https://lore.kernel.org/all/20250314-drm-bridge-refcount-v7-0-152571f8c694@bootlin.com/
 
+This patch was added in v7.
 ---
-Luca Ceresoli (5):
-      drm/bridge: add a cleanup action for scope-based drm_bridge_put() invocation
-      drm/bridge: get the bridge returned by drm_bridge_chain_get_first_bridge()
-      drm/mxsfb: put the bridge returned by drm_bridge_chain_get_first_bridge()
-      drm/atomic-helper: put the bridge returned by drm_bridge_chain_get_first_bridge()
-      drm/probe-helper: put the bridge returned by drm_bridge_chain_get_first_bridge()
+ drivers/gpu/drm/drm_probe_helper.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/gpu/drm/drm_atomic_helper.c |  7 +++++++
- drivers/gpu/drm/drm_probe_helper.c  |  1 +
- drivers/gpu/drm/mxsfb/lcdif_kms.c   |  3 ++-
- include/drm/drm_bridge.h            | 11 +++++++++--
- 4 files changed, 19 insertions(+), 3 deletions(-)
----
-base-commit: a59a271769149f0b8258507276f3d2a24370cbdb
-change-id: 20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-be39c442dcd6
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index 6b3541159c0ffdd6dc05b6a2324ec0de9d1c5474..09b12c30df69d44f099f119739b8d5d2f77907d5 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -119,6 +119,7 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+ 		*status = drm_bridge_chain_mode_valid(bridge,
+ 						      &connector->display_info,
+ 						      mode);
++		drm_bridge_put(bridge);
+ 		if (*status != MODE_OK) {
+ 			/* There is also no point in continuing for crtc check
+ 			 * here. */
 
-Best regards,
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+2.49.0
 
