@@ -1,278 +1,564 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD489257AF2;
-	Fri, 20 Jun 2025 11:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1AE257AF2;
+	Fri, 20 Jun 2025 11:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418107; cv=fail; b=m4dXl096a4oBKvHPmlfF4a+1XGwv8lHcyzQ7HTl2GDgZRQw7KgdlOdeNRyECeemG5X2QASQRA8vx96iUay9351aCdEqRpva2xupglUwdNSVdV/DR7In/w+gbj2sJ5T2QG05hKxwrqE8CwlSJZxUKCh6B5BGLwFFTZlIfNuNeQEI=
+	t=1750418117; cv=fail; b=Pos75dce6ke9GXQ/np3gnEizmTdHmOmmwDvR2TRAP2EpRBG5LahthEilGzccK0fuZvja3VEU8B1KN47HmBxpnMUeVcbvE1cqc9N+nDjo36dNc/49De1Ua2FfNaEv4ufU1AOVNmgj/dW72wFHMQDIH44Gt8+PQnOlOVXb5eyxu5A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418107; c=relaxed/simple;
-	bh=9YINdsqGziFg5Sfd0J0xana0ep3bOK0Lqmo75Vi2Ql8=;
+	s=arc-20240116; t=1750418117; c=relaxed/simple;
+	bh=m7Gz4oJneVTTX9zUlDes6xLwFOBUcIYufAvJMStT6O0=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aAXSLeZFB7AcUOk4srcUwjxr0KghItoBqvkkwxbYS2PiEPkPzk8stzvYk0tNozGHhOqNiuAEWKlWmMrSkHJbjJsi9YCikpVIlNqsnzCDdGYg3N6c2Tl8hhCLNQLGqXjiqFUEoNafwjq4AS1Dut7lMf1pyPNh0H4O20k4qREnFP0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jo0aHqTm; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:MIME-Version; b=pO72nnAYpFWmOmxq+pUFColAPW74/nrrTNsRViIuWjZdM/jMfwVS0q2rjBc584ejIiNKEidMk7vHH5Qp4einl1+HPNuLRFDNJf9ZoIzeGNWfvPgh8w0EmU5aK00PkQxtiImM7/LqhPAjTk2bL01/PN01geeZQStdeNKfkGkkmjw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cfmWqbhE; arc=fail smtp.client-ip=40.107.220.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jo0aHqTm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750418104; x=1781954104;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9YINdsqGziFg5Sfd0J0xana0ep3bOK0Lqmo75Vi2Ql8=;
-  b=Jo0aHqTmVTEXIT8Iwb1B5K3ak7opUlhu2oIOrrvdXjQDL0yjAeZ50A+F
-   bfdBKx3vwBdYq6eIcrA/4/dqDv/7dHnI1QdY9mtgJ+nmP0SoZTAJFEwns
-   Y4HuNvvrcf34z4szfKQNmagJzklnFXi3LwpaeIKtVpRBDeSOWtO5lNZbg
-   dgLf7j1TwjIKvarrmLiZpD53rx8NgeHCjpB+YHaqCR4vktMzzb5JEAXTo
-   l7y6zE968VUhtRzIl0hJAUel+RLu+Em+bXKyZ1jDSLmCjW+vN3ubGBT1W
-   hJn7gEFm1OGy5CtaWyWAGJJVWz748/pRAKHcOz82WHM27f1topZ+fJZ8Z
-   A==;
-X-CSE-ConnectionGUID: XQCB8j1JRJOnTu8S+VNMGw==
-X-CSE-MsgGUID: JoIk5RhRTY+yiPO8jjlF5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="64032664"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="64032664"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 04:15:03 -0700
-X-CSE-ConnectionGUID: XfnAHJEtQHCmQeAGNtvlFA==
-X-CSE-MsgGUID: T+TnzzQ1QnOQVlp3BhVS1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151443105"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 04:15:04 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 20 Jun 2025 04:15:03 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 04:15:03 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.79) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 20 Jun 2025 04:15:03 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cfmWqbhE"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WKoBCK3raFJP+R+NG9ZeCIQiX3AS9Oxs8Ntoq4ZbEtqVwGpoV9VAXj6ukbj4/uJ/l8e7pU03QFCHVGKGRVN97CP56qIgOIuMQI3229Q8qg8DA+8u3iFK8w1bQClAOXol0JfLNsI5oxitrlYAqfj8N2DivVJFp0o0vg2szR0qJgDKs7jl/6RdMLBIrZU945MoK84m029B6TldAVCRRnY6rbTFVbOh3BQec7vRny1oGvULPQewvwBKPETUzk8P8pSOMVKQDKnOYebH37BAyvYgljVxS177v5lDSY7ny/iufCQ8mcAvn7mSGse+EUvmBLBR9y/Bon6G3qA5s/u4uMvcOA==
+ b=WJT6igkxscUAqufKMPUYKTBueucXEjyNPa0wUuuGYIpVuLstMXwgY2vRFA+76Cc4UzNK8kKNAvZTO5OhRQH1lkQLbFrxGmSeFOHxyR2mQTzvQA6ITbz0VwPinmjQZyiMoMv3ff3HEmPfZjzr5rVJY7d42ruwgbQhkwMW8ZMj35+sRdgQskZ16Jdm3+RdsLBqHay1Q626JEnGutcQgR9wy2Z+bpJyyEojd9hpnFrTE4ZqFNVeiMbbYI8dXgQGCtzC8Lg/nMukxI9bAN12T6JzoRfHgIWIcvxsAtRSCJPnYNnOlfe3bWu7atDecogMc54O7s0jcxHnYlDjV+RsqRU2Ow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9YINdsqGziFg5Sfd0J0xana0ep3bOK0Lqmo75Vi2Ql8=;
- b=KKT+9zCkYCDE+FxfQ6rZ8IJ4rjqoaCK8WP6+JGGc+hGd7GPAFFQ2day12AxN/m7s3oMda2tLk9C30ebEOXtZZC+t8BfOTzVo9ATKe9GcMz4LVXLrOEvVWI52/lFYIhGWxP5XgzX7GAEEvUxhruXkXrVtdOmanCdU5leFnNqeeRkhRQGMefV5zQcg2kgz6g9DbDK2tphgARcyD2cPSNph6c6y/kKOvmZnbeyyj+HyYM7JVMZjl9/YbnEPMCBL+bpFFyw54UX4e/YryqrJjPLJnOzxYNLztZEfaHJ5uhA81kNg7AqGsjavWbRMGH4uZoc1Wj7BHfV9MOuNf4rxooSSUg==
+ bh=7QC/Pcry1LyLPg6N7vinib4eMvVQvOZslRrWH0dIMB0=;
+ b=riEWYxZTpMnEOEGfjVISWf/drj8sKWh/SpPT/Xmjay58yt23TGNbF4s1mG3eu1Ki/bSv0fbYKj1eF3PIuRmn0nzHfD5RP9BVwdT2gE06kcRgtsocV+fkBYbwiHoNFofXCYJkjemORbcNwc/Azo4raYLa196MDHtbgg7j+E8lBmC6jhdO8f3olkdTk7dodExKtA8eOVbUM/LbIcW4JzlNIpDPD/xH4w/ELoxI/iD6Nqw88yZytQRadSW0D86iucsXTXFcUbugy6PseNxFMGVyAJpZDRmRn6oX3c6cvuYkQFO8YdBVemU2K8t8Jg2w/iUX3XrgjbIdr254NeEDWSxjZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA3PR11MB8986.namprd11.prod.outlook.com (2603:10b6:208:577::21)
- by SA1PR11MB6845.namprd11.prod.outlook.com (2603:10b6:806:29f::11) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7QC/Pcry1LyLPg6N7vinib4eMvVQvOZslRrWH0dIMB0=;
+ b=cfmWqbhE9kbMjOwjsIEZa1Dm2TXtdSc9DOdlXs3aFoegBonWmE0xuL56sxh/mFCj0pRH1jJ3vR3NTL8+YEr28cEwu3/SysPsphl0+TC526in54h9Sk7+wO60mz5bi4qoWGi2+5Ib1KDFSD8sj91dm6oqLeg9uTRSzam9kTP9YsQ=
+Received: from DS7PR12MB6070.namprd12.prod.outlook.com (2603:10b6:8:9e::14) by
+ SJ5PPF2CD49510F.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::98f) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Fri, 20 Jun
- 2025 11:14:47 +0000
-Received: from IA3PR11MB8986.namprd11.prod.outlook.com
- ([fe80::395e:7a7f:e74c:5408]) by IA3PR11MB8986.namprd11.prod.outlook.com
- ([fe80::395e:7a7f:e74c:5408%7]) with mapi id 15.20.8769.022; Fri, 20 Jun 2025
- 11:14:47 +0000
-From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@kernel.org>,
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ethernet: intel: fix building with large NR_CPUS
-Thread-Topic: [PATCH] ethernet: intel: fix building with large NR_CPUS
-Thread-Index: AQHb4dQnTA09W37PlUC5S62KRsDEP7QL5UGg
-Date: Fri, 20 Jun 2025 11:14:47 +0000
-Message-ID: <IA3PR11MB89860269FDC8800AB6B30ECCE57CA@IA3PR11MB8986.namprd11.prod.outlook.com>
-References: <20250620111141.3365031-1-arnd@kernel.org>
-In-Reply-To: <20250620111141.3365031-1-arnd@kernel.org>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
+ 2025 11:15:12 +0000
+Received: from DS7PR12MB6070.namprd12.prod.outlook.com
+ ([fe80::b847:e013:8f93:f6e4]) by DS7PR12MB6070.namprd12.prod.outlook.com
+ ([fe80::b847:e013:8f93:f6e4%4]) with mapi id 15.20.8857.019; Fri, 20 Jun 2025
+ 11:15:11 +0000
+From: "Manne, Nava kishore" <nava.kishore.manne@amd.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+CC: "mdf@kernel.org" <mdf@kernel.org>, "hao.wu@intel.com" <hao.wu@intel.com>,
+	"yilun.xu@intel.com" <yilun.xu@intel.com>, "trix@redhat.com"
+	<trix@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
+	"saravanak@google.com" <saravanak@google.com>, "linux-fpga@vger.kernel.org"
+	<linux-fpga@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "git (AMD-Xilinx)" <git@amd.com>
+Subject: RE: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for
+ runtime FPGA configuration
+Thread-Topic: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for
+ runtime FPGA configuration
+Thread-Index: AQHbyHAvjfKTIyDsoE6M6pJ/SBy77bPue0MAgBDjfuCAAab5AIALDxoQ
+Date: Fri, 20 Jun 2025 11:15:11 +0000
+Message-ID:
+ <DS7PR12MB6070BC635C899C637EDE71F3CD7CA@DS7PR12MB6070.namprd12.prod.outlook.com>
+References: <20250519033950.2669858-1-nava.kishore.manne@amd.com>
+ <20250519033950.2669858-2-nava.kishore.manne@amd.com>
+ <aDxrUD9YjnFkWy3M@yilunxu-OptiPlex-7050>
+ <DS7PR12MB607015CAB2781E16A4EC110ECD74A@DS7PR12MB6070.namprd12.prod.outlook.com>
+ <aEv48IZSinWjJgBt@yilunxu-OptiPlex-7050>
+In-Reply-To: <aEv48IZSinWjJgBt@yilunxu-OptiPlex-7050>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-20T11:02:46.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
+ header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA3PR11MB8986:EE_|SA1PR11MB6845:EE_
-x-ms-office365-filtering-correlation-id: d523fb85-4172-44a7-af44-08ddafebaada
+x-ms-traffictypediagnostic: DS7PR12MB6070:EE_|SJ5PPF2CD49510F:EE_
+x-ms-office365-filtering-correlation-id: 6ae930ad-81e8-45c6-c9b4-08ddafebb953
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?SnhtZTZhR2xRcm1ENW1zdllSaUl2Nlc5RldrMDcyVVgvU3ExdWtNc1BVMUtR?=
- =?utf-8?B?L2dWaVZtd0FuYmxvZVlFZHVBcmwwaGVXcnhodngxSlR2WlhEc05meURJcVZU?=
- =?utf-8?B?YkJsVkxQbzZOaTdKVGJqR0o2KzVrbjErZXVtZ3VtK0JrT3Q3ckR5WjEzVzRH?=
- =?utf-8?B?L2hpTk5leFVSY1pqdXllYVN5TkN6WnptZmpvQTJ0RVdYMEwzRWdCUlVLTHlP?=
- =?utf-8?B?L0dkWlcwK2wvcHlJQlU0emgva3ZPSmhqUWh5VTFXSlJsYUFQSTUxTkRFdmht?=
- =?utf-8?B?S0pmenYwd2w3ZUNiSkE1QlZ5ZDRabjJMOUdwSUJKMjZINGZvMkVMck9iM1R3?=
- =?utf-8?B?WkFNb0N6UGZaTGNnUm5laFZrbTh2Z3VQWEo2aWtHLytIV3lYMzZFV3ByNFZi?=
- =?utf-8?B?K1RZcmNVc3JvUHB1YktQWi9KbDNRNUdnSWx0RGlyOWRxdFB2dHdJTXpvSTdI?=
- =?utf-8?B?cTlPcWhyVm1GTm83OVdZdlB3T3YzVmxCWUtmWS80cmtCUjlGRXRZdzZiejZC?=
- =?utf-8?B?N2I2RTZXUit5SjZTRk5GNzQ5RmRzYjNqUkUvaUFsVXZLYTR3aEh1U2lac0h3?=
- =?utf-8?B?M29jbVoyalVMRjZDd2pKM1JFMUFMVnh3clBwdnJ5cTRrZS9venlKUXRhb0sx?=
- =?utf-8?B?dmlsNStOT3VDMFhlbXlkdXhwQmhoZTVUazRvM2JSK1RsUEk4ekNYU3R2cDZY?=
- =?utf-8?B?b241endITWJRU1B2SWsxTGo0cHRVdWF5UFBUVGtNZVpjQkZ3MzdFa25FNGpP?=
- =?utf-8?B?dEt0L2paa0lPWW10T1grUDB2S0dIWlpaQzVLMnMrSzNrc3JEZHU3dkNFSWRs?=
- =?utf-8?B?bEpGQlo4ZUFNR1A0UHUxZnUvMVFiWlg1RngzaUJ0ejF6azJ0U1pTbGdYY25w?=
- =?utf-8?B?NldmTTFRSU1NN0JzVllXcnNEdVh6SEhQcEUyVmlnMm9mS2NaVUZFcHNFbDBZ?=
- =?utf-8?B?ZkJTWEJ0QXl5Z2dwQkR5d3krWlB0VGphZ2RvTC9JbjR2TUo5UVluTk41YTAw?=
- =?utf-8?B?K1ozR05XSXEzZ1dMSUk2VXpyZThHYk9xR0Q5V0J3OHArckdYRWk0cHhNV0JJ?=
- =?utf-8?B?NklRUjNFam80ak5mWGhLWFlFQnUwdEZXU21TSzhQeDIzVVcyc3B2azREaG8z?=
- =?utf-8?B?UWExa1ZGWVdWS3RHbVVwY1JxaEttWHp1MmF3dWFwTHlUTHF4QjdScUFBZmhO?=
- =?utf-8?B?M3JRekdlOVlERElCQzh1VDJNOXd2djh3VXlsaHovNGhMMXRCUytQVFl6bTVJ?=
- =?utf-8?B?Z0YwV2VrRmhpcnl2M2JpalVKUHlwVmU5c3U0L0xSN2dmVnlwSmg5azR2Y2E4?=
- =?utf-8?B?NTNiT2QrY1EwQVVsaktYWSsvckRKenBBS1RzbVNyRUZRbGFwTkVNaDJ6MTl6?=
- =?utf-8?B?aFk4MVhsaTBzdGdGUEwrd2h0OUJWRXlWZ1NpbDZGazZBcXQyaTlFUWpxcmRG?=
- =?utf-8?B?dUxrRmhmTlVCMnZxTnpNZFRyY1djRjNFaHRNMDRlcDFUdFp6TUE1T2h0T0ZJ?=
- =?utf-8?B?THR2QlNmVExINUcrb0pJY0ppd0pOSHptU0x6MHVyS2xnMDk1SXFiZWNGK29t?=
- =?utf-8?B?WUpJYmZDd2poaS9vSmhFSnNrelQ2a3lPZFNaeU9mRUtKRlorOU9UeUc3SzRI?=
- =?utf-8?B?dnBHKzNYTXZTQVdXTUg1dDFyMDAzeHRXT1ZQbWpKWDBEblovK2RIdjdKeWN3?=
- =?utf-8?B?bG5EWEZ0eS95bVc0S0pRbVI3TGxRV2l6WmpXUlJUaEZGSDVPNW1DNlNPYnVD?=
- =?utf-8?B?Rnp2Z2dqSDNxSUE4R0Q2RGQzYmFuVFNKN242ZUpLd0tqcU9mNHF2TlFySFYr?=
- =?utf-8?B?ZmhQQmQzYkl5RmdBUzhEWGhVeEFRNFlPTFFxMVdETmxreU5jR3ZObE02ZlZw?=
- =?utf-8?B?VS9qN1ZsSlk5ak9EbGR1VGxlN3plTk5PUlB4QVI0bnU2RldIN0Y3WWNyamlP?=
- =?utf-8?B?cG1yN1JRZko5Z0tFVjFsU3Q4LzFCdEJuREVSWFZDU3MyZ1B1MEpLV3ppb1Mx?=
- =?utf-8?Q?C4VAYzV3J6FbmBp1NbJ3HGr0soFcCE=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB8986.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?OWRPcHNXNFQyeE9iTW5tVnduSXlmMyt3WWRSZUdvTWpSSTlFcDRPZlFP?=
+ =?iso-2022-jp?B?dXdSSXhvR09tRmt0VjVhRXphWjR0Z1E5UmVaTlpLVTVMK1JaeU9UYkgx?=
+ =?iso-2022-jp?B?QkhXRkZSSlFtdjNCL2gzRENpZWtyVEt3Q0pqM25tQS9VaXFXam1keGxO?=
+ =?iso-2022-jp?B?enVOa0RORlVyOTZXbXVwaFdybDZSSWlFaERyWUNuWnB1SFJRZGRVSkRy?=
+ =?iso-2022-jp?B?TVM5L3ppSlhGSEJjc2t5bGVOMnIrczJEYitCMEJMYUc5em4zditQbEVU?=
+ =?iso-2022-jp?B?M1NsaVlPTTF5RlhMblNVNmpDL2wvV01lTCtSOEppZjhHeWorVWlRRDdH?=
+ =?iso-2022-jp?B?c0cxeFA3RFVqT2F6ZG0wcG41VThVMldzVkpYbFJKRWxFQU9mTlV3dWEw?=
+ =?iso-2022-jp?B?Tm5seDZSbWxZcXJDRGtCZEFDd1kvY3lLM0pkaDk2K09mN09IK3F3TURq?=
+ =?iso-2022-jp?B?cE1NRHV2ZUpwc3RUUkdycnkvQzFzRVZyeEZ1WThJMDJka3czRFBhT3Vv?=
+ =?iso-2022-jp?B?OVVBYUp1Uk1KSlAzUThGWk9Fd2hRZXR6bC9zYXFNbUVQcXhnbnFVQ0Ji?=
+ =?iso-2022-jp?B?SVlvYWxsTjdWYm9DTEJ6aXNDQ3N6YWQvKzBwZWkyTFg1YXFWeDVNc2Rk?=
+ =?iso-2022-jp?B?blRVcER4NDJGTndONTlHaXdEcjdqL1dXQlY5WUNvcjUvdEVxZUNkbzU0?=
+ =?iso-2022-jp?B?dUJGU3l3L3JGZEM3NGJBSmVvc2xOQkVXUnp0WEtJMTlVRU1QZkN4Tm1n?=
+ =?iso-2022-jp?B?eXBPQzZxbWpEWmhwYzdoT0JKUGlGZFBRdzJkbDdvR0g4eE5HdnNKcUV4?=
+ =?iso-2022-jp?B?SzVTeGVlRDhzT3QvVlJYTHlwY0hObUFXV1EzV2g0cGNOVEtsUUFMNGtM?=
+ =?iso-2022-jp?B?Z3ZNR0FTVEdaSWdvbTdmQnNwNC9tV3Izc2tNeHZyOG4yR0xwbXZBckQx?=
+ =?iso-2022-jp?B?b2JXenVDUk9IRTl3S3pzeEtuaEFsUm0wQmI0TFVkMGJ0ZzZuN3NOM3pa?=
+ =?iso-2022-jp?B?OVhnTTRQbllFdVE5SG9kSTN4Vmx6VlFFSWhuVzJvK0FrcHpLUnpnM3NM?=
+ =?iso-2022-jp?B?UGR5LzZHcnE3WTdXOEZyYS9lSmVEbGxKSktjdGZEYnRCZ0tWY2hvcmVZ?=
+ =?iso-2022-jp?B?dnJmYUdHdk0vTkJyYTVmNVlLdzNjLzcwMVJkeUszeTFDbGJFR1BrQVJB?=
+ =?iso-2022-jp?B?a01GeXdHVEVnUW1VSDUxdWpkWmV2YzJReTJscDV1Q1ZKRklIK2xaazlU?=
+ =?iso-2022-jp?B?NWxpV0dGWTZacDdDaWprQmJyVVhPand2MDhLam5ZNU8xTk1vMHNKNzkz?=
+ =?iso-2022-jp?B?UDZiUUw0TVhLT2Z3ZGZqZ21mQ3J0Mm5mMlMxZUg1VHpiNVZLNS95SzVN?=
+ =?iso-2022-jp?B?ek5tWUpTdnljTmNFbzlrem5JUDRSTWhlQ1c0VnVrMG5OZG1peU9aRG9I?=
+ =?iso-2022-jp?B?c29XdTM0SThCZ3U1MkdjMk54b25mZDBVamtpV0IxNldGZ0pZTlRXYWlt?=
+ =?iso-2022-jp?B?OGdOZ1dzc25qWFVXbTZxeVJqUVBScC9lTHNscXRHM0c0amc5YlJiWitl?=
+ =?iso-2022-jp?B?N1Y2U1F3R0Y5RzNEdnM5Q0tPaEZaRDhFbGFjRXg4RW0vRjgyc1pCUEJy?=
+ =?iso-2022-jp?B?bFhEdTJWWnRnMkkwUkxxZWMyZm5rWGh4TFIyQ1lYbHZESlZEODlqaGpW?=
+ =?iso-2022-jp?B?TzFHdS9yQnBDdnRJNGNleElmdVM3N29DdllVNm80VTNVUW1ZbzVzaUp5?=
+ =?iso-2022-jp?B?NGRreDVxbEdyZk5kVXc5SzFQWXlXUEIrWVFnZXhFT3NWbnVCQ1NPeDJn?=
+ =?iso-2022-jp?B?NDRLWGg3dU40aGVjbXcrOStwYVRVMWZiSWtzUUszSzdKM1RsK1FhNVJJ?=
+ =?iso-2022-jp?B?eVI1VW5CcStVSUk5aklLeEhkOHhKZjY2Q2V1dlBvQ3ZmajE2V0RMcURQ?=
+ =?iso-2022-jp?B?SWViRy9QVEVLdTJTTHU2cS82TTFsK2M4U0VpalFZaTdqbFNheGRMS05T?=
+ =?iso-2022-jp?B?L0tWU3dtdEIwVHkyZFgyOEZYQ3JBUU96cHYwZE84MjNSMjJwb3Vlenha?=
+ =?iso-2022-jp?B?bmxWUU9GRUxHdzBZTFVzM09hUmcrbUdPUlJzQUt4ME1SLzBCYkNFRVhl?=
+ =?iso-2022-jp?B?LytpenlvUXk2YXJlakZkY09NYW8wVEpjUHNTRUIwRmZHcWtXTFVKRkJp?=
+ =?iso-2022-jp?B?VzRrPQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MUVCZzdkcitQOXpzSCtrcmNrZjRyWHh2aUkzb0hNT2Z2WnFaVzNRSkI5TTFZ?=
- =?utf-8?B?SU9IUU5mc01PN3VZVnFhS1ZZTTQ1QVR1SE8ya3BSMVZNUVRVWGhGSEREa1JD?=
- =?utf-8?B?WUhKNlI0OS9xc2lxRi9HRkRLOFZsOVZtZG9sMXpzM2JzWkRRTUZsWTRWUFcw?=
- =?utf-8?B?SXlNT0Y5UmhrNDhPazQ3R2lwM0orTzlHZnVyeXVHSFVqZC9JNW5CWEgvRDBL?=
- =?utf-8?B?LzZJWWt6QW0vbHpZNlZJQU03WlQ0UG94VjZnejBKc2EwN1ZXbGpYY1Y4Z05m?=
- =?utf-8?B?SGg2cGF3MTRzYW9SeEw0TkY5SnJQUXd4dUNlK0J2QkZaMGJUdWpHZVdUckRI?=
- =?utf-8?B?eDNEcHJBTEU3MUtLVDR2N0Zhajd4U3hWYVNjU01lMkRBZFVlRVFPWDIyYkhw?=
- =?utf-8?B?SURlR3d5UDRPeU05NzBFamFZOElpNkw1R056UkFkT2F1M2hVOCtKbE5vQ3Fv?=
- =?utf-8?B?U2w1ZHdyTEw0UkRkRFFDKzZFVWIyNFBMeVlGQytyTkNiY0U0T3RjOHE3cmha?=
- =?utf-8?B?b0RCTzEvcmsyOGYvYmJwYlUrekU3QTRUMUVzVVhVdUx2NVZKR1VqTlFkQlhM?=
- =?utf-8?B?ZytvVjUxYWFLNWhMWFV2NzU4UkYvUVlIK3FZZytBakg4S3hLaTYwbFU4T2tW?=
- =?utf-8?B?OUJxcXlLTXY4N2JxRU54ZFpjRmFXTG1OZzVoZFhtc3Qrbjd1eUxlbVp6Z1Jz?=
- =?utf-8?B?anZwcW9BUFBreUd4SUo1MFNDTzZRM211ZVczQkZrbnRDMnNHT2MreU0wcnBH?=
- =?utf-8?B?ZjFkQ1YwNGM3UHd6WkFYdUhYam13bmtMbmhTUG56RXdiMlRkb2NnRTRVTkV4?=
- =?utf-8?B?cloxcUdFbFl0K1BDaGV0bnNaMXlJRE0rRHprTENONm41R0FNMnZram42MGQw?=
- =?utf-8?B?cGk5enJXTi9yUmR3RGx0T3pFZDJDU0kzUmF6WGVrdi9SYTlKVkRNUnB3REEv?=
- =?utf-8?B?SzJaZjluNUtmUmlLb3dPMkVBS1BXeWx1N1Z5R2lzcjlFZU9VOUROQW5UWVVs?=
- =?utf-8?B?TytJd1BiNkQzL1JWUEROblRuSmQ3TWpHZTdpMFBkNXNIclB1THlMQnZwbjdr?=
- =?utf-8?B?SHhkTmw5UDNMd2xsUG5JeHZyTG5tUmdrR0FmUGlhVkt2TkQrREh0b1dIQTJn?=
- =?utf-8?B?cml6aVk1bHFTOG9nNlJaYVI4MTNIUEVkb1FJeUY2WXVGMmZVQUtXVzA2eTdU?=
- =?utf-8?B?RkZnOFhFY2FLZG5FenZmcXdUTURkL085YXFJeTN5eXpZVmp4NDBrNlJZREFT?=
- =?utf-8?B?WGVWR0dyNy9NaG83NW5pOWlkUFVmak9KN1M3MUxUNFE0OWxjUDQwYnRSa0d3?=
- =?utf-8?B?VU9HZ3RHczludUpxRTNkblNjaHVlNW1mTC84Z1ROR0xQcEZhTm45OHYzWFd4?=
- =?utf-8?B?MjJpL0hwaks0R2M1NDUvekxBeXEraHNPT3RNdjZDd1NaR1NXTzJUMWhNS3Yw?=
- =?utf-8?B?UWtmdjhSOFlJM1NRdWdPZVhhN2phK3pyVUdSVlVvRThiRGJIaGRiODA0YXJz?=
- =?utf-8?B?SlE3eDRseXpQdXNoUnpJR1ZOaUtLUWVRak5QS0RQdENQOVJZMFhkbkw3OHU4?=
- =?utf-8?B?R2MySy8zM0JhQmxhSjFaT2IrZzhQQTR1VXZicHJjbGRHb3hWZmR3bUcvSmly?=
- =?utf-8?B?VmEvWXVZb2J4WHhZQm9SaFRtNG56bEM4SFNyclFVMURaWkE3d0Q5NFF5eWEr?=
- =?utf-8?B?SG5uSC9JZXk3WmcyanlMNXpZL2M2WExOMTBxOFo0MTlKZlNIUjczZ0JaQjMv?=
- =?utf-8?B?VVNtR1N2Uy9PeFVoSDNQblJDU2ZNbkM4elZsVEF5U2R0WjNudHpRRVUxQ1E3?=
- =?utf-8?B?bWVxOXduY1RYVjhHdHZmbkhBdExPZzV0YU5iTkZWSWU4WlVPV2hndlFZVmR5?=
- =?utf-8?B?ZEJEZFo0THhGZG5GYkVIMTBMQU5rMTY0WnJuVm1FOGc4bnYyWlBoMUV1ZGQ3?=
- =?utf-8?B?YVBYKzYydWVKWDNtZkp2VVVGV1gyMCt6cGtQcmZkNDFMUjBrT3phYnhiK1Bi?=
- =?utf-8?B?ZksvUEUwTUJxMkM0bXQ5M3hTMCs4a056d1djczhJMkJ6dlhlRWxnODJTMkNO?=
- =?utf-8?B?bm5KcnhySU5WZUZoWFE3RldDUk9rek5Ic2RGdHVCUlpoclp3Z2tyMFFXUXlw?=
- =?utf-8?B?QkYyMFlGL2tiZnZoalNqTVVYQTdadndhdlAxdzMwREdyYnJsRTJ3eXlFOVpM?=
- =?utf-8?B?a1E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?bDlnMU1hOS9XWHVHcGZ6YmhiOFVxZW9tTzRoUVJWaitpWEhyUDFaLzYy?=
+ =?iso-2022-jp?B?bzZTVDNYU3VHV2ZVNUpoK1g0ZzkxR3FuMnU1K1ZFNFhGZWtTZUlwODQ3?=
+ =?iso-2022-jp?B?R0xMRDZ6RG91OXdrbmJsRzJWdlk3VTRyZzllQUdLQ3kzSzNQNS9YMDhr?=
+ =?iso-2022-jp?B?Nmt4Yk1QMWVQem01R2o0RWRCYS9zUG56YkpzY2xqMjNER1hwU1FFeUt6?=
+ =?iso-2022-jp?B?SzNzSjlNS2lsSHkwYy9DVXBrdlE4VlR3N1hIZzlYa09VOExXbnBFem9R?=
+ =?iso-2022-jp?B?S0NpYW1KdGhxQ3BMODBIbTVWNS9sUnUvOFFWZmlrQnJEeExGOFNWNlpx?=
+ =?iso-2022-jp?B?NTVKcEtMWDdMM2x0ck4wL2ZyQ281OTVYOTAweW54eFVkY1k0M0ZCbFJj?=
+ =?iso-2022-jp?B?Vzg2OVJ2SkxQNnMvUlVJUzNuUlY3RGJWcXZqbXFUN1RTTVR1U2ZTdHRm?=
+ =?iso-2022-jp?B?Q0hHZXhOZGl1UGlpNm14aTByOHVyYTcvS3E1U2RGS1gyLzE3bkRZb3Jx?=
+ =?iso-2022-jp?B?NWpFb3liNGs3QjQ0bzZZMnBtL3JiTXRvVmMvNVZwNzN5Z3lJNXp2Lzhm?=
+ =?iso-2022-jp?B?REpDUElBSXVLdHhCYUhQVDJDcHRsQUI3RHZKTURSUVBabzBkaGZIWHN1?=
+ =?iso-2022-jp?B?N3M1ODB5WERnb1BkU2JsR3ljM0ZXU2t2b1Q5aEdhZUU0anFEMlVlKzJN?=
+ =?iso-2022-jp?B?TitTL1lFekhQYmRwUGNzWGJJNmJicmRRNllTN2VUTTl1ZHZYZHdnY2Fq?=
+ =?iso-2022-jp?B?QklNUFBWb2lyTnBVTmpLSFZpRnZ0aWwxVmxzVkJDT1NLQ0lkR2VXWVZw?=
+ =?iso-2022-jp?B?RlR6akJDMWtCMWgyWVRqQ04rc0paYlFMbUg0SXhoN2dmem9LL3A5V2xQ?=
+ =?iso-2022-jp?B?eS9BTkRqUGlBNEpTU1c3TlYzOWNTM2NiS2VlQXZQNDQ2NDJmMGltZTRk?=
+ =?iso-2022-jp?B?QVorMzVkT25jTXBka3ZzMEFGYlhNZ0tjd1l0bE1JY29NRUxIOXM3dTh3?=
+ =?iso-2022-jp?B?WHlHMkdzZkFYcGxkeWJHT2lDVnZtZXkrSHZKclJHK1puMWtpb3JxS2Fp?=
+ =?iso-2022-jp?B?alc3VDBJZncyREVzZHliTkw2RmpBRVo1dXpXaVhKQkFCdWY4ZndLczVr?=
+ =?iso-2022-jp?B?VEpnREEzQnZqVmRobXc4MlMreEFPSzlKT0dsb2ZNdS9lNXlPQmVjTHhY?=
+ =?iso-2022-jp?B?a0NyNUpCME0weFl4SjV0bThMeWdwWnJBam0wR3lmUURiSFdnU043R0l0?=
+ =?iso-2022-jp?B?QUhWeVNTSTYxWjRSaUU1d3B1VHIxUlJaM29kMUNraWVpQWUxcS9MWnF6?=
+ =?iso-2022-jp?B?UHpZTFRxR2JhRllYc0pyZGNIVWhDd0JVY3pNdzdvOVBlWkVUMkFOQ0p1?=
+ =?iso-2022-jp?B?b2V3UEtJS3Y4NFlKaVNPYVg0TEw2TWIvbkNZSTBkT0piOUtubXpuY1Qw?=
+ =?iso-2022-jp?B?MERWT1hjTCt5TUVvWGZPN0kwZGQ0Zno2M01HbjNGelMvRjZyY3VvU3pw?=
+ =?iso-2022-jp?B?MHRwWTRENGJEb1NuSVg0SzU2UThzZy9xb0NsYmFkWHZFR3pBMWRJb05V?=
+ =?iso-2022-jp?B?VEU5cXhpQzg0WUVrMkZ6Tkx4NGVKd0hWQWh3RFI4QnZYdjZoaE0yS1Q1?=
+ =?iso-2022-jp?B?S2ZqZmZmWTNpQmVmYXRLZ0FUTFQwbDluN1JGemgrK3YwUURQQ0JMMndt?=
+ =?iso-2022-jp?B?VUNMZktOeStHMWdnMGR4Z0hlUEpHcm9TOTA4WkxvemtGSDdva1BQZDdC?=
+ =?iso-2022-jp?B?UFN4N0xFSTBGUUxLdXQ3enREejNCSWR3eS9CbWFHZ1h0a3ZqK1FjUERS?=
+ =?iso-2022-jp?B?Q09mQmtwVTRtcU9Fd2ZXcXZEUDNXdXoybDdoZitUMmJJbkRYbTZwdWxw?=
+ =?iso-2022-jp?B?Vm5uNnRNbUtKOVI0amcvRjRZOE8wQ1VHZnk5RjVMaFNTRG0wNFlITTd1?=
+ =?iso-2022-jp?B?VFNtT3BoREltZDhqVjJzWkJjRWZ2V08zanEyQkVwVVVVa096OWIzM3Z3?=
+ =?iso-2022-jp?B?MlF1anc2bUFNajUxU3FsK294RDFoRk5LVWVsUUk5S2VOdThuWlBqa21t?=
+ =?iso-2022-jp?B?MTQ4SzB4SlpydUVzVEM1SG9rVjQ3WUQ3ZVAyUTZSd203MWlXam1zSVhH?=
+ =?iso-2022-jp?B?eWVITDhkOUFTNXVOUStwQlVicE83MnhOM2NOR0VraVhSWFpTSHRFN29I?=
+ =?iso-2022-jp?B?dGdWTDhEM3NkeEp5NVNtNmdjS0tLaGxLalZjL2gwYnd4NWJtcHl1cnBi?=
+ =?iso-2022-jp?B?RkRuY05FT1kzMlFWbjFTb3pFVzYycCtCVT0=?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB8986.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d523fb85-4172-44a7-af44-08ddafebaada
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 11:14:47.4845
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae930ad-81e8-45c6-c9b4-08ddafebb953
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 11:15:11.7748
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 47HI333Xh9By1//jdJYVQbcL90cl60mKAniI9DZYZ6KLfLIkTHiTOvPHS6hThP2Vsiisba3Wc+SsqwqqML3KCTgsZj7127L5dxZozXgavk0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6845
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-userprincipalname: 10ICcaG8Y5yfqWaPVWOmwoJsSR6BZRwaQcPZWYlPprpmVRHl8kg5KxVgisj2rmOF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF2CD49510F
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFubiA8
-YXJuZEBrZXJuZWwub3JnPg0KPiBTZW50OiBGcmlkYXksIEp1bmUgMjAsIDIwMjUgMToxMSBQTQ0K
-PiBUbzogTmd1eWVuLCBBbnRob255IEwgPGFudGhvbnkubC5uZ3V5ZW5AaW50ZWwuY29tPjsgS2l0
-c3plbCwNCj4gUHJ6ZW15c2xhdyA8cHJ6ZW15c2xhdy5raXRzemVsQGludGVsLmNvbT47IEFuZHJl
-dyBMdW5uDQo+IDxhbmRyZXcrbmV0ZGV2QGx1bm4uY2g+OyBEYXZpZCBTLiBNaWxsZXIgPGRhdmVt
-QGRhdmVtbG9mdC5uZXQ+OyBFcmljDQo+IER1bWF6ZXQgPGVkdW1hemV0QGdvb2dsZS5jb20+OyBK
-YWt1YiBLaWNpbnNraSA8a3ViYUBrZXJuZWwub3JnPjsgUGFvbG8NCj4gQWJlbmkgPHBhYmVuaUBy
-ZWRoYXQuY29tPg0KPiBDYzogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT47IExva3Rpb25v
-diwgQWxla3NhbmRyDQo+IDxhbGVrc2FuZHIubG9rdGlvbm92QGludGVsLmNvbT47IFNpbW9uIEhv
-cm1hbiA8aG9ybXNAa2VybmVsLm9yZz47DQo+IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wu
-b3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZw0KPiBTdWJqZWN0OiBbUEFUQ0hdIGV0aGVybmV0OiBpbnRlbDogZml4IGJ1aWxkaW5nIHdp
-dGggbGFyZ2UgTlJfQ1BVUw0KPiANCj4gRnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5k
-ZT4NCj4gDQo+IFdpdGggbGFyZ2UgdmFsdWVzIG9mIENPTkZJR19OUl9DUFVTLCB0aHJlZSBJbnRl
-bCBldGhlcm5ldCBkcml2ZXJzIGZhaWwNCj4gdG8gY29tcGlsZSBsaWtlOg0KPiANCj4gSW4gZnVu
-Y3Rpb24g4oCYaTQwZV9mcmVlX3FfdmVjdG9y4oCZLA0KPiAgICAgaW5saW5lZCBmcm9tIOKAmGk0
-MGVfdnNpX2FsbG9jX3FfdmVjdG9yc+KAmSBhdA0KPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRl
-bC9pNDBlL2k0MGVfbWFpbi5jOjEyMTEyOjM6DQo+ICAgNTcxIHwgICAgICAgICBfY29tcGlsZXRp
-bWVfYXNzZXJ0KGNvbmRpdGlvbiwgbXNnLA0KPiBfX2NvbXBpbGV0aW1lX2Fzc2VydF8sIF9fQ09V
-TlRFUl9fKQ0KPiBpbmNsdWRlL2xpbnV4L3JjdXBkYXRlLmg6MTA4NDoxNzogbm90ZTogaW4gZXhw
-YW5zaW9uIG9mIG1hY3JvDQo+IOKAmEJVSUxEX0JVR19PTuKAmQ0KPiAgMTA4NCB8ICAgICAgICAg
-ICAgICAgICBCVUlMRF9CVUdfT04ob2Zmc2V0b2YodHlwZW9mKCoocHRyKSksIHJoZikgPj0NCj4g
-NDA5Nik7ICAgIFwNCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaTQwZS9pNDBlX21haW4u
-Yzo1MTEzOjk6IG5vdGU6IGluIGV4cGFuc2lvbg0KPiBvZiBtYWNybyDigJhrZnJlZV9yY3XigJkN
-Cj4gIDUxMTMgfCAgICAgICAgIGtmcmVlX3JjdShxX3ZlY3RvciwgcmN1KTsNCj4gICAgICAgfCAg
-ICAgICAgIF5+fn5+fn5+fg0KPiANCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgJ3JjdScgbWVt
-YmVyIGluICdxX3ZlY3RvcicgaXMgdG9vIGZhciBmcm9tIHRoZQ0KPiBzdGFydCBvZiB0aGUgc3Ry
-dWN0dXJlLiBNb3ZlIHRoaXMgbWVtYmVyIGJlZm9yZSB0aGUgQ1BVIG1hc2sgaW5zdGVhZCwNCj4g
-aW4gYWxsIHRocmVlIGRyaXZlcnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5u
-IDxhcm5kQGFybmRiLmRlPg0KUmV2aWV3ZWQtYnk6IEFsZWtzYW5kciBMb2t0aW9ub3YgPGFsZWtz
-YW5kci5sb2t0aW9ub3ZAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0
-L2ludGVsL2ZtMTBrL2ZtMTBrLmggfCAyICstDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRl
-bC9pNDBlL2k0MGUuaCAgIHwgMiArLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhn
-YmUvaXhnYmUuaCB8IDIgKy0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAz
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2lu
-dGVsL2ZtMTBrL2ZtMTBrLmgNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9mbTEway9m
-bTEway5oDQo+IGluZGV4IDYxMTlhNDEwODgzOC4uNzU3YTZmZDgxYjdiIDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9mbTEway9mbTEway5oDQo+ICsrKyBiL2RyaXZl
-cnMvbmV0L2V0aGVybmV0L2ludGVsL2ZtMTBrL2ZtMTBrLmgNCj4gQEAgLTE4Nyw2ICsxODcsNyBA
-QCBzdHJ1Y3QgZm0xMGtfcV92ZWN0b3Igew0KPiAgCXUzMiBfX2lvbWVtICppdHI7CS8qIHBvaW50
-ZXIgdG8gSVRSIHJlZ2lzdGVyIGZvciB0aGlzIHZlY3Rvcg0KPiAqLw0KPiAgCXUxNiB2X2lkeDsJ
-CS8qIGluZGV4IG9mIHFfdmVjdG9yIHdpdGhpbiBpbnRlcmZhY2UgYXJyYXkNCj4gKi8NCj4gIAlz
-dHJ1Y3QgZm0xMGtfcmluZ19jb250YWluZXIgcngsIHR4Ow0KPiArCXN0cnVjdCByY3VfaGVhZCBy
-Y3U7CS8qIHRvIGF2b2lkIHJhY2Ugd2l0aCB1cGRhdGUgc3RhdHMgb24gZnJlZQ0KPiAqLw0KPiAN
-Cj4gIAlzdHJ1Y3QgbmFwaV9zdHJ1Y3QgbmFwaTsNCj4gIAljcHVtYXNrX3QgYWZmaW5pdHlfbWFz
-azsNCj4gQEAgLTE5NSw3ICsxOTYsNiBAQCBzdHJ1Y3QgZm0xMGtfcV92ZWN0b3IgeyAgI2lmZGVm
-IENPTkZJR19ERUJVR19GUw0KPiAgCXN0cnVjdCBkZW50cnkgKmRiZ19xX3ZlY3RvcjsNCj4gICNl
-bmRpZiAvKiBDT05GSUdfREVCVUdfRlMgKi8NCj4gLQlzdHJ1Y3QgcmN1X2hlYWQgcmN1OwkvKiB0
-byBhdm9pZCByYWNlIHdpdGggdXBkYXRlIHN0YXRzIG9uIGZyZWUNCj4gKi8NCj4gDQo+ICAJLyog
-Zm9yIGR5bmFtaWMgYWxsb2NhdGlvbiBvZiByaW5ncyBhc3NvY2lhdGVkIHdpdGggdGhpcw0KPiBx
-X3ZlY3RvciAqLw0KPiAgCXN0cnVjdCBmbTEwa19yaW5nIHJpbmdbXSBfX19fY2FjaGVsaW5lX2lu
-dGVybm9kZWFsaWduZWRfaW5fc21wOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJu
-ZXQvaW50ZWwvaTQwZS9pNDBlLmgNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9pNDBl
-L2k0MGUuaA0KPiBpbmRleCA1NGQ1ZmRjMzAzY2EuLjkxYWE4ODM2NmMwNSAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaTQwZS9pNDBlLmgNCj4gKysrIGIvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvaW50ZWwvaTQwZS9pNDBlLmgNCj4gQEAgLTk0NCw2ICs5NDQsNyBAQCBz
-dHJ1Y3QgaTQwZV9xX3ZlY3RvciB7DQo+IA0KPiAgCXUxNiB2X2lkeDsJCS8qIGluZGV4IGluIHRo
-ZSB2c2ktPnFfdmVjdG9yIGFycmF5LiAqLw0KPiAgCXUxNiByZWdfaWR4OwkJLyogcmVnaXN0ZXIg
-aW5kZXggb2YgdGhlIGludGVycnVwdCAqLw0KPiArCXN0cnVjdCByY3VfaGVhZCByY3U7CS8qIHRv
-IGF2b2lkIHJhY2Ugd2l0aCB1cGRhdGUgc3RhdHMgb24gZnJlZQ0KPiAqLw0KPiANCj4gIAlzdHJ1
-Y3QgbmFwaV9zdHJ1Y3QgbmFwaTsNCj4gDQo+IEBAIC05NTYsNyArOTU3LDYgQEAgc3RydWN0IGk0
-MGVfcV92ZWN0b3Igew0KPiAgCWNwdW1hc2tfdCBhZmZpbml0eV9tYXNrOw0KPiAgCXN0cnVjdCBp
-cnFfYWZmaW5pdHlfbm90aWZ5IGFmZmluaXR5X25vdGlmeTsNCj4gDQo+IC0Jc3RydWN0IHJjdV9o
-ZWFkIHJjdTsJLyogdG8gYXZvaWQgcmFjZSB3aXRoIHVwZGF0ZSBzdGF0cyBvbiBmcmVlDQo+ICov
-DQo+ICAJY2hhciBuYW1lW0k0MEVfSU5UX05BTUVfU1RSX0xFTl07DQo+ICAJYm9vbCBhcm1fd2Jf
-c3RhdGU7DQo+ICAJYm9vbCBpbl9idXN5X3BvbGw7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9pbnRlbC9peGdiZS9peGdiZS5oDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-aW50ZWwvaXhnYmUvaXhnYmUuaA0KPiBpbmRleCBjNjc3MmNkMmQ4MDIuLmM2Y2ZhYjBmZjlkMyAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhnYmUvaXhnYmUuaA0K
-PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9peGdiZS9peGdiZS5oDQo+IEBAIC01
-MDUsMTEgKzUwNSwxMSBAQCBzdHJ1Y3QgaXhnYmVfcV92ZWN0b3Igew0KPiAgCQkJCSAqIHJlcHJl
-c2VudHMgdGhlIHZlY3RvciBmb3IgdGhpcyByaW5nICovDQo+ICAJdTE2IGl0cjsJCS8qIEludGVy
-cnVwdCB0aHJvdHRsZSByYXRlIHdyaXR0ZW4gdG8gRUlUUg0KPiAqLw0KPiAgCXN0cnVjdCBpeGdi
-ZV9yaW5nX2NvbnRhaW5lciByeCwgdHg7DQo+ICsJc3RydWN0IHJjdV9oZWFkIHJjdTsJLyogdG8g
-YXZvaWQgcmFjZSB3aXRoIHVwZGF0ZSBzdGF0cyBvbiBmcmVlDQo+ICovDQo+IA0KPiAgCXN0cnVj
-dCBuYXBpX3N0cnVjdCBuYXBpOw0KPiAgCWNwdW1hc2tfdCBhZmZpbml0eV9tYXNrOw0KPiAgCWlu
-dCBudW1hX25vZGU7DQo+IC0Jc3RydWN0IHJjdV9oZWFkIHJjdTsJLyogdG8gYXZvaWQgcmFjZSB3
-aXRoIHVwZGF0ZSBzdGF0cyBvbiBmcmVlDQo+ICovDQo+ICAJY2hhciBuYW1lW0lGTkFNU0laICsg
-OV07DQo+IA0KPiAgCS8qIGZvciBkeW5hbWljIGFsbG9jYXRpb24gb2YgcmluZ3MgYXNzb2NpYXRl
-ZCB3aXRoIHRoaXMNCj4gcV92ZWN0b3IgKi8NCj4gLS0NCj4gMi4zOS41DQoNCg==
+[AMD Official Use Only - AMD Internal Distribution Only]
+
+Hi Yilun,
+
+> -----Original Message-----
+> From: Xu Yilun <yilun.xu@linux.intel.com>
+> Sent: Friday, June 13, 2025 3:40 PM
+> To: Manne, Nava kishore <nava.kishore.manne@amd.com>
+> Cc: mdf@kernel.org; hao.wu@intel.com; yilun.xu@intel.com; trix@redhat.com=
+;
+> robh@kernel.org; saravanak@google.com; linux-fpga@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; git (AMD-Xilinx)
+> <git@amd.com>
+> Subject: Re: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface for r=
+untime
+> FPGA configuration
+>
+> On Thu, Jun 12, 2025 at 09:05:21AM +0000, Manne, Nava kishore wrote:
+> > [AMD Official Use Only - AMD Internal Distribution Only]
+> >
+> > Hi Yilun,
+> >
+> >         Thanks for quick response.
+> > Please find my response inline.
+> >
+> > > -----Original Message-----
+> > > From: Xu Yilun <yilun.xu@linux.intel.com>
+> > > Sent: Sunday, June 1, 2025 8:32 PM
+> > > To: Manne, Nava kishore <nava.kishore.manne@amd.com>
+> > > Cc: mdf@kernel.org; hao.wu@intel.com; yilun.xu@intel.com;
+> > > trix@redhat.com; robh@kernel.org; saravanak@google.com;
+> > > linux-fpga@vger.kernel.org; linux- kernel@vger.kernel.org;
+> > > devicetree@vger.kernel.org; git (AMD-Xilinx) <git@amd.com>
+> > > Subject: Re: [RFC v3 1/1] fpga-region: Introduce ConfigFS interface
+> > > for runtime FPGA configuration
+> > >
+> > > On Mon, May 19, 2025 at 09:09:37AM +0530, Nava kishore Manne wrote:
+> > > > Introduces an ConfigFS interface within the fpga-region subsystem,
+> > > > providing a generic and standardized mechanism for configuring
+> > > > (or) reprogramming FPGAs during runtime. The newly added interface
+> > > > supports both OF (Open Firmware) and non-OF devices, leveraging
+> > > > vendor-specific callbacks (e.g., pre_config, post_config, removal,
+> > > > and status) to accommodate a wide range of device specific configur=
+ations.
+> > > >
+> > > > The ConfigFS interface ensures compatibility with both OF and
+> > > > non-OF devices, allowing for seamless FPGA reprogramming across
+> > > > diverse platforms.
+> > > >
+> > > > Vendor-specific callbacks are integrated into the interface,
+> > > > enabling custom FPGA pre_config, post_config, removal, and status
+> > > > reporting mechanisms, ensuring flexibility for vendor implementatio=
+ns.
+> > > >
+> > > > This solution enhances FPGA runtime management, supporting various
+> > > > device types and vendors, while ensuring compatibility with the
+> > > > current FPGA configuration flow.
+> > > >
+> > > > Signed-off-by: Nava kishore Manne <nava.kishore.manne@amd.com>
+> > > > ---
+> > > > Changes for v3:
+> > > >  - As discussed with Yilun, the implementation continues to use a
+> > > > callback-based  approach to seamlessly support both OF (Open
+> > > > Firmware) and non-OF devices via  vendor-specific hooks.
+> > > > Additionally, the earlier IOCTL-based interface has been  replaced
+> > > > with a more suitable ConfigFS-based mechanism to enable runtime FPG=
+A
+> configuration.
+> > > >
+> > > > Changes for v2:
+> > > >  - As discussed with Yilun, the implementation has been modified
+> > > > to utilize a  callback approach, enabling seamless handling of
+> > > > both OF and non-OF
+> > > devices.
+> > > >
+> > > >  - As suggested by Yilun in the POC code, we have moved away from
+> > > > using  void *args  as a parameter for ICOTL inputs to obtain the
+> > > > required user inputs. Instead, we are  utilizing the
+> > > > fpga_region_config_info structure to gather user inputs.
+> > > > Currently, this structure is implemented to support only OF
+> > > > devices, but we intend to extend
+> > > it by incorporating new members to accommodate non-OF devices in the =
+future.
+> > > >
+> > > >  drivers/fpga/fpga-region.c       | 196 +++++++++++++
+> > > >  drivers/fpga/of-fpga-region.c    | 474 +++++++++++++++++----------=
+----
+> > > >  include/linux/fpga/fpga-region.h |  34 +++
+> > > >  3 files changed, 493 insertions(+), 211 deletions(-)
+> > > >
+> > > > diff --git a/drivers/fpga/fpga-region.c
+> > > > b/drivers/fpga/fpga-region.c index 753cd142503e..d583fc22955b
+> > > > 100644
+> > > > --- a/drivers/fpga/fpga-region.c
+> > > > +++ b/drivers/fpga/fpga-region.c
+> > > > @@ -5,6 +5,7 @@
+> > > >   *  Copyright (C) 2013-2016 Altera Corporation
+> > > >   *  Copyright (C) 2017 Intel Corporation
+> > > >   */
+> > > > +#include <linux/configfs.h>
+> > > >  #include <linux/fpga/fpga-bridge.h>  #include
+> > > > <linux/fpga/fpga-mgr.h>  #include <linux/fpga/fpga-region.h> @@
+> > > > -180,6 +181,158 @@ static struct attribute *fpga_region_attrs[] =3D
+> > > > { };  ATTRIBUTE_GROUPS(fpga_region);
+> > > >
+> > > > +static struct fpga_region *item_to_fpga_region(struct config_item
+> > > > +*item) {
+> > > > +   return container_of(to_configfs_subsystem(to_config_group(item)=
+),
+> > > > +                       struct fpga_region, subsys); }
+> > > > +
+> > > > +/**
+> > > > + * fpga_region_image_store - Set firmware image name for FPGA
+> > > > +region
+> > > > + * This function sets the firmware image name for an FPGA region
+> > > > +through
+> > > configfs.
+> > > > + * @item: Configfs item representing the FPGA region
+> > > > + * @buf: Input buffer containing the firmware image name
+> > > > + * @count: Size of the input buffer
+> > > > + *
+> > > > + * Return: Number of bytes written on success, or negative errno o=
+n failure.
+> > > > + */
+> > > > +static ssize_t fpga_region_image_store(struct config_item *item,
+> > > > +const char *buf, size_t count) {
+> > > > +   struct fpga_region *region =3D item_to_fpga_region(item);
+> > > > +   struct device *dev =3D &region->dev;
+> > > > +   struct fpga_image_info *info;
+> > > > +   char firmware_name[NAME_MAX];
+> > > > +   char *s;
+> > > > +
+> > > > +   if (region->info) {
+> > > > +           dev_err(dev, "Region already has already configured.\n"=
+);
+> > > > +           return -EINVAL;
+> > > > +   }
+> > > > +
+> > > > +   info =3D fpga_image_info_alloc(dev);
+> > > > +   if (!info)
+> > > > +           return -ENOMEM;
+> > > > +
+> > > > +   /* copy to path buffer (and make sure it's always zero terminat=
+ed */
+> > > > +   count =3D snprintf(firmware_name, sizeof(firmware_name) - 1, "%=
+s", buf);
+> > > > +   firmware_name[sizeof(firmware_name) - 1] =3D '\0';
+> > > > +
+> > > > +   /* strip trailing newlines */
+> > > > +   s =3D firmware_name + strlen(firmware_name);
+> > > > +   while (s > firmware_name && *--s =3D=3D '\n')
+> > > > +           *s =3D '\0';
+> > > > +
+> > > > +   region->firmware_name =3D devm_kstrdup(dev, firmware_name,
+> > > GFP_KERNEL);
+> > > > +   if (!region->firmware_name)
+> > > > +           return -ENOMEM;
+> > > > +
+> > > > +   region->info =3D info;
+> > > > +
+> > > > +   return count;
+> > > > +}
+> > > > +
+> > > > +/**
+> > > > + * fpga_region_config_store - Trigger FPGA configuration via
+> > > > +configfs
+> > > > + * @item: Configfs item representing the FPGA region
+> > > > + * @buf: Input buffer containing the configuration command
+> > > > +(expects "1" to program, "0" to remove)
+> > > > + * @count: Size of the input buffer
+> > > > + *
+> > > > + * If the input is "1", this function performs:
+> > > > + *   1. region_pre_config() (if defined)
+> > >
+> > > Please define explicit workflow, and explicit expectation for each
+> > > callback, or this framework makes no sense. From your of-fpga-region
+> > > implementation, seems
+> > > pre_config() means "parse image", post_config() means "populate devic=
+es".
+> > >
+> > > > + *   2. Bitstream programming via fpga_region_program_fpga() (unle=
+ss
+> external
+> > > config flag is set)
+> > > > + *   3. region_post_config() (if defined)
+> > > > + *
+> > > > + * If the input is "0", it triggers region_remove() (if defined).
+> > > > + *
+> > > > + * Return: Number of bytes processed on success, or negative errno=
+ on
+> failure.
+> > >
+> > > Please put the uAPI description in Documentation/ABI/testing. Then
+> > > we could know the file path layout from userspace POV.
+> > >
+> > > > + */
+> > > > +static ssize_t fpga_region_config_store(struct config_item *item,
+> > > > +                                   const char *buf, size_t count)
+> > > > +{
+> > > > +   struct fpga_region *region =3D item_to_fpga_region(item);
+> > > > +   int config_value, ret =3D 0;
+> > > > +
+> > > > +   /* Parse input: must be "0" or "1" */
+> > > > +   if (kstrtoint(buf, 10, &config_value) || (config_value !=3D 0 &=
+&
+> > > > + config_value !=3D
+> > > 1))
+> > > > +           return -EINVAL;
+> > > > +
+> > > > +   /* Ensure fpga_image_info is available */
+> > > > +   if (!region->info)
+> > > > +           return -EINVAL;
+> > > > +
+> > > > +   if (config_value =3D=3D 1) {
+> > > > +           /* Pre-config */
+> > > > +           if (region->region_ops->region_pre_config) {
+> > > > +                   ret =3D region->region_ops->region_pre_config(r=
+egion);
+> > > > +                   if (ret)
+> > > > +                           return ret;
+> > > > +           }
+> > > > +
+> > > > +           /* Program bitstream if not external */
+> > > > +           if (!(region->info->flags & FPGA_MGR_EXTERNAL_CONFIG)) =
+{
+> > > > +                   ret =3D fpga_region_program_fpga(region);
+> > > > +                   if (ret)
+> > > > +                           return ret;
+> > > > +           }
+> > > > +
+> > > > +           /* Post-config */
+> > > > +           if (region->region_ops->region_post_config) {
+> > > > +                   ret =3D region->region_ops->region_post_config(=
+region);
+> > > > +                   if (ret)
+> > > > +                           return ret;
+> > > > +           }
+> > > > +
+> > > > +   } else {
+> > > > +           /* Remove configuration */
+> > > > +           if (region->region_ops->region_remove) {
+> > > > +                   ret =3D region->region_ops->region_remove(regio=
+n);
+> > > > +                   if (ret)
+> > > > +                           return ret;
+> > > > +           }
+> > > > +   }
+> > > > +
+> > > > +   return count;
+> > > > +}
+> > > > +
+> > > > +/* Define Attributes */
+> > > > +CONFIGFS_ATTR_WO(fpga_region_, image);
+> > > CONFIGFS_ATTR_WO(fpga_region_,
+> > > > +config);
+> > > > +
+> > > > +/* Attribute List */
+> > > > +static struct configfs_attribute *fpga_region_config_attrs[] =3D {
+> > > > +   &fpga_region_attr_image,
+> > > > +   &fpga_region_attr_config,
+> > > > +   NULL,
+> > > > +};
+> > > > +
+> > > > +/* ConfigFS Item Type */
+> > > > +static const struct config_item_type fpga_region_item_type =3D {
+> > > > +   .ct_attrs =3D fpga_region_config_attrs,
+> > > > +   .ct_owner =3D THIS_MODULE,
+> > > > +};
+> > >
+> > > I think this is still the sysfs methodology. My understanding from
+> > > configfs.rst is, use userspace interfaces to control the lifecycle of=
+ a kernel object.
+> > >
+> > > Now for existing kernel reprogramming flow, the image object for
+> > > fpga_region is the struct fpga_image_info. We need to associate the
+> > > struct with a config_item: alloc the struct fpga_image_info instance
+> > > by mkdir, expose necessary fields (enable_timeout_us,
+> > > disable_timeout_us, firmware_name, and the most important for
+> > > of-fpga-region - overlay blob ...) for user to fill/query via configf=
+s attributes. And
+> finally use a writeable attribute (e.g. load) to trigger fpga_region_prog=
+ram_fpga().
+> > >
+> >
+> > Thanks for the inputs. We've now implemented a ConfigFS-based
+> > reprogramming interface for fpga_region that aligns with the intended
+> > lifecycle-driven model described in configfs.rst.
+> >
+> > New Interface Usage Instructions:
+> > # 1. Mount configfs (if not already mounted) mkdir -p /configfs mount
+> > -t configfs configfs /configfs
+> >
+> > # 2. Create a region directory (e.g., region0) mkdir
+> > /configfs/fpga_regions/region0
+>
+> FPGA region is the device driver generated kernel object, so this per fpg=
+a_region
+> group should be created by kernel, not userspace.  User should create fpg=
+a_image
+> config_item under region group.
+>
+>   mkdir /configfs/fpga_region/region0/my_image
+>
+> >
+> > # 3. Copy your bitstream or overlay files to firmware path cp pl.dtbo
+> > /lib/firmware/
+> >
+> > # 4. Set the firmware name (e.g., overlay .dtbo) echo pl.dtbo >
+> > /configfs/fpga_regions/region0/image
+> >
+> > # 5. Trigger Programming/reprogramming echo 1 >
+> > /configfs/fpga_regions/region0/config
+>
+> My idea is, when an image item is first created, it is not activated, use=
+r needs to
+> read/write its attributes to initialize it, then we could have an attribu=
+te (e.g. enable) to
+> activate/reprograme the image.
+>
+> For example:
+>
+>   echo 1 > /configfs/fpga_regions/region0/my_image/enable
+>
+> >
+> > # 6. Unload/Reset the Programmable Logic echo 0 >
+> > /configfs/fpga_regions/region0/config
+>
+> Maybe we could just delete the image item for unloading
+>
+>   rmdir /configfs/fpga_region/region0/my_image
+>
+I=1B$B!G=1B(Bve implemented the FPGA Region ConfigFS interface with the fol=
+lowing hierarchy:
+
+/configfs
+=1B$B(&(!(!=1B(B fpga_regions             =1B$B"+=1B(B Registered via confi=
+gfs_register_subsystem()
+      =1B$B(&(!(!=1B(B region0                =1B$B"+=1B(B Added using conf=
+igfs_add_default_group()
+           =1B$B(&(!(!=1B(B my_image      =1B$B"+=1B(B Created via mkdir fr=
+om userspace
+                =1B$B('(!(!=1B(B firmware    =1B$B"+=1B(B Write firmware na=
+me here
+                =1B$B(&(!(!=1B(B config        =1B$B"+=1B(B Trigger program=
+ming/unloading
+Observation:
+If configfs is not mounted before configfs_add_default_group() is invoked
+(e.g., when regions are registered early via base DTB), the path
+/configfs/fpga_regions/region0 does not appear in userspace,
+even though it=1B$B!G=1B(Bs properly initialized in the kernel.
+
+This appears to be due to how default groups function.
+they require the configfs filesystem to be mounted prior to the group
+addition in order to be visible. As a result, the mount order becomes
+a strict dependency, which may affect or break early-boot FPGA flows
+where regions are created before configfs is available.
+
+Proposal:
+Use configfs_register_subsystem(&region->cfg_subsys) for each FPGA region
+instead of relying on configfs_add_default_group().
+
+This approach places each FPGA region directly under /configfs/region0,
+avoiding the timing issues associated with default groups.
+The interface becomes available as soon as configfs is mounted.
+regardless of when the region was registered
+(boot time via base DTB or dynamically via overlays).
+
+New user hierarchy:
+/configfs
+=1B$B(&(!(!=1B(B region0              =1B$B"+=1B(B Region appears as its ow=
+n root node
+      =1B$B(&(!(!=1B(B my_image   =1B$B"+=1B(B Created via mkdir from users=
+pace
+           =1B$B('(!(!=1B(B firmware =1B$B"+=1B(B Write firmware name here
+           =1B$B(&(!(!=1B(B config     =1B$B"+=1B(B Trigger programming/unl=
+oading
+
+Would like to know if this approach looks good, or if there are better
+suggestions to handle this scenario?
+
+Regards,
+Navakishore.
