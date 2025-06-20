@@ -1,108 +1,223 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94E728B3F6;
-	Fri, 20 Jun 2025 12:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C328E28C01C
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422249; cv=none; b=lyatex4T3CaK+4LZD748z6GeuvTBDdtNt1Bkh7GWillHn3mtpKbEkXhj4/ORxap61PDpFoi1TkqhShF+gAWwBNNMZbcqlWsaJ6hbokZWl9yL78Maja6azgCByvIlz5cZNEQ2vRngxxy+PzxjQhrY/3KmwFsjUsK0TGjdKGkEzTg=
+	t=1750422252; cv=none; b=kI5vONamuJRE97n4ekVg2OzyUmGg7ShSm54OsUw/UUt1x934F+YTcujTacBIB0hdy5nB14nvIc5ua+kkf8l+8CaN7TD3QPslvd7r4QpiOu67Fv5CH/qPxRJSxrEOTGlwMqPoUXJVVZwUlj1pi4LMs47WHVUEVPVtIAEii4QddOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422249; c=relaxed/simple;
-	bh=6nrvi+QqqYykM5GEPzyRSFfMhpwuBH9QcZ4diabLI3w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hi8ZA4WFWm6X2mNZ+GE3W7lwEyy0VmjC10Lu5GoJbUrBaP+4KomcUEB0FiDWX2kdv/91/VxFuK63cYlAL74OKOmf8vcvaTdNoRugZgNy4Me4uGNjr6kFjDKkRUW5o2+jayBBIOMmSiOVLZWWjX05PTowOZJSR6LxIH2ThzYpCPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hd5/UFsX; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750422252; c=relaxed/simple;
+	bh=RXzXQ8TqTmoYVGDEalpbzik0jifSJ3y2hzRDdGogep4=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=kGPlCRfs47ZUL8LISbDd7Bwta7dqxsEoHyEb1ecxs+VfYkZwKQKHkwsm/DSk5S3kKmQmFXARF6IB/HFGnZBlkN48QDGp/ywXcKMQtZqAAgVIDLhBZZ/CUOEZPCSoFBeIl1f9UWRFVYJKOzuWgStLqzD6hfEt4Xt9IxX2z4OmxSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Krq+s+QP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6KuqpHGB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G4j6zbd7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=S8uXG4Nf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd5/UFsX"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso342313666b.3;
-        Fri, 20 Jun 2025 05:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750422246; x=1751027046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zA6hTIsQgrOeAdYUcX5ilcB4HjpeFhO+PB7ko4583uA=;
-        b=hd5/UFsXq0ivJtbaXctaWt2XutUqaE/jfCURQQnn12dUxWAftvFBjT6wpdT3+xO4l7
-         BIHNE3wv3y4cHoc3vblAteB/ZvkWTJHKgRJ+ge5yWJixuqORQkCs1HPgOjYbr4wZUy1O
-         EE53zP7N+3lXuQiH3fqq8F98Ic1AZLdWaYDUY9iKpzKkXJQxCsCdhI0CxjN0gq5HXqDs
-         AU5lStEoE7enduDnuRyIVP6aAJJdShcURIem0wtylwyUDjUzmBR9UKcCK8PSKf92ihgB
-         mhIRUSLi/+h0NfH9jCprHkZwPsOnPe4tqlfwe/gD+S8Se9E+6lPZ4rR8fZEhoNLFJQKU
-         vc4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750422246; x=1751027046;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zA6hTIsQgrOeAdYUcX5ilcB4HjpeFhO+PB7ko4583uA=;
-        b=ImWOh9izPCofq5qtpV+BpDtHK29pwwtoP8EVj7DOa+7yGjIWJUU7oFl4WXS/8gqH2A
-         0D+DU/NgZQli6UOwoFmQ7YNB4o6xcw7oMP5aY2AtdXh23d/SE/R5dnpuZErIztw3YX7v
-         EWuCODkescAfUAlmCb+K1OVtQ2j3mZSbshlM9L0zO1nb141Y/zrdfbFt7Wk4pwyPBjaf
-         zT9LvuIt6p8Rn1zjfVZ1ck0rj8eZarpFFNQPZylgY9VlJFciHbjlfoxLJ0kpXMoRZnFp
-         +GaNXXSy6JML2uDx5ii2IiUG2s/WC+JtUHyix+zhkB8cb+IrgeqC5WBkns4eTI8fv0uI
-         QJ9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUuF+2CQR+73WcVnCoMVBC0NQagJgxw+nb82vxc0sNsQI5nK6oxhQsG6D3dm6HUF4IuJbWbGRJf7s3g@vger.kernel.org, AJvYcCVn+06LWlnb8m0+8PuljWky8IctpsJXYkprUaS+wbPlybJE7l3Ex4waMm7V91luMq3nWzK8yqqD/ZsFyy/P@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKpYrURjeZInCaO2t/04yNOLAKGyNkTUHDL9uFbtWZHkIvIvu+
-	HbG3HnselVus7uTmshF3iiaKRwbvAm3YFWCOvYWf/sEjW/Zzd2kuyQ1E
-X-Gm-Gg: ASbGnctpycQtO5fGJ4naXGKP40pI68mlY9vjJziOA0GMCIjKAB+kar8yfvVlnKnuTMK
-	JNb2OLgIJjfveKH9LL6r27xEcPEGbi+14mWjAiRwLJAH5kz367wI+GdcjT16UZrQsJJhaEaQjJ3
-	ZjiNi4IRNY3zukGUzMu9n789ZqCjvt0MMT/JkG2EcX84zPUVggq/uXEerIUbh05QcjkZJTiA8zr
-	QRzwDc4p2Iypig29PiMJmHW8s0hBPPhzm+qvn1WoZcR9emPYq76CtShXyuZfSSgv04LnITv0uf+
-	M9FfVUc6QB/3yz7r6VwuGXh3OgfzxQvFpSlbvAEOkmFi4VEXDXrI8i6nzlinM0tv2xJqa55Cs3U
-	XGoRJqOk3h0gz
-X-Google-Smtp-Source: AGHT+IHA5+LBdaB2RSQC4fqF+MAjuSpzpoHLN6lkxQFRUsBaPChC8fLCImRuFBr8LNu2vnk+E57W5Q==
-X-Received: by 2002:a17:907:c295:b0:ade:422d:3168 with SMTP id a640c23a62f3a-ae057b6cc35mr250486466b.37.1750422245959;
-        Fri, 20 Jun 2025 05:24:05 -0700 (PDT)
-Received: from wslxew242.. (11-127.static.abakusbp.net. [46.17.127.11])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e809f6sm154000566b.1.2025.06.20.05.24.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:24:05 -0700 (PDT)
-From: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] dt-bindings: arm: imx8mp: Add Ultratronik Ultra-MACH SBC
-Date: Fri, 20 Jun 2025 14:23:50 +0200
-Message-ID: <20250620122353.150700-3-goran.radni@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620122353.150700-1-goran.radni@gmail.com>
-References: <20250620122353.150700-1-goran.radni@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Krq+s+QP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6KuqpHGB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G4j6zbd7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="S8uXG4Nf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CACC11F38D;
+	Fri, 20 Jun 2025 12:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750422249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=JvhMaG3LPeg39/7bULRqdItTnUSq1YO2/hpHdIL5NGU=;
+	b=Krq+s+QP/ElAMEg4Ai+ZYyZPwSikLf1Q2aQWubhbBRumH44mPlZhDUhvfJMFMDa2+Ds3e6
+	5YmEo3ywDZptoZePGeDt2pObqYscpJNBocA6YDqJyqhGfyTyxOLYcEcSDzDzfWPRHfKQTC
+	VY054nRlW2/9LSKajnjhEBK5VMykVo0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750422249;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=JvhMaG3LPeg39/7bULRqdItTnUSq1YO2/hpHdIL5NGU=;
+	b=6KuqpHGBH/lfgkGhG/p9t5EaCuJb+aE0t+03914LKIjqpU3WFOz3a2rfu5XInLIFUoUrng
+	cg5kzA1Gb88UD0AQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=G4j6zbd7;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=S8uXG4Nf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750422248; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=JvhMaG3LPeg39/7bULRqdItTnUSq1YO2/hpHdIL5NGU=;
+	b=G4j6zbd7aOx4d14+ykgCqG++H64aGrNKCfuJd9ELqihWn7+8gaeeU5ZvWrJrW5B9Xc7vTq
+	Pq50RN2Q1Usl5BvuuKLKY3rhb0clc+tLO/yRP8lXVa4IT85kL1/Vs/mKF1/Mhcvrpk+Ym/
+	pzyWlcr8C3iULknJD9OSXcrbObi8RiI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750422248;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=JvhMaG3LPeg39/7bULRqdItTnUSq1YO2/hpHdIL5NGU=;
+	b=S8uXG4NfJKPKsGq14gpFNYtZJxrSPS7N8cyoDjla+i6dhrwXvB2HDabRQkORK23zNP6ADF
+	4pKEol8BOV3Pa1BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B16B136BA;
+	Fri, 20 Jun 2025 12:24:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n5bcI+hSVWj4JgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 12:24:08 +0000
+Date: Fri, 20 Jun 2025 14:24:08 +0200
+Message-ID: <877c16wqhj.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 6.16-rc3
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: CACC11F38D
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.51
+X-Spam-Level: 
 
-Document the Ultratronik Ultra-MACH SBC, based on the NXP i.MX8MP SoC.
+Linus,
 
-This board is manufactured by Ultratronik GmbH and uses the compatible
-string "ux,imx8mp-ultra-mach-sbc".
+please pull sound fixes for v6.16-rc3 from:
 
-Signed-off-by: Goran Rađenović <goran.radni@gmail.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.16-rc3
+
+The topmost commit is 33bdee12822d240caaa01aeac231eac42182fd64
+
+----------------------------------------------------------------
+
+sound fixes for 6.16-rc3
+
+A collection of small fixes.
+All changes are device-specific at this time.
+
+- Fixes for Cirrus codecs with SoundWire, including firmware name
+  updates
+- Fix for i.MX8 SoC DSP
+- Usual HD-audio, USB-audio, and ASoC AMD quirks
+- Fixes for legendary SoundBlaster AWE32 ISA device (a real one, we
+  still got a bug report after 25 years)
+- Minor build fixes
+
+----------------------------------------------------------------
+
+Brahmajit Das (1):
+      ALSA: ctxfi: Replace deprecated strcpy() with strscpy()
+
+Chris Chiu (1):
+      ALSA: hda/realtek: Fix built-in mic on ASUS VivoBook X513EA
+
+Edip Hazuri (1):
+      ALSA: hda/realtek - Add mute LED support for HP Victus 16-s1xxx and HP Victus 15-fa1xxx
+
+Edson Juliano Drosdeck (1):
+      ALSA: hda/realtek: Enable headset Mic on Positivo P15X
+
+Gabriel Santese (1):
+      ASoC: amd: yc: Add quirk for MSI Bravo 17 D7VF internal mic
+
+Harshit Mogalapalli (1):
+      ASoC: cs48l32: Fix a signedness bug in cs48l32_hw_params()
+
+Huacai Chen (1):
+      ASoC: loongson: Fix build warnings about export.h
+
+Jonathan Lane (1):
+      ALSA: hda/realtek: enable headset mic on Latitude 5420 Rugged
+
+Laurentiu Mihalcea (1):
+      ASoC: SOF: imx8: add core shutdown operation for imx8/imx8x
+
+Peter Ujfalusi (1):
+      ASoC: Intel: sof-function-topology-lib: Print out the unsupported dmic count
+
+Raven Black (1):
+      ASoC: amd: yc: update quirk data for HP Victus
+
+Richard Fitzgerald (5):
+      ALSA: hda/realtek: Add quirk for Asus GU605C
+      ASoC: cs35l56: Use SoundWire address as firmware name suffix for new silicon
+      ASoC: cs35l56: Use SoundWire address as alternate firmware suffix on L56 B0
+      ASoC: doc: cs35l56: Update to add new SoundWire firmware filename suffix
+      ASoC: doc: cs35l56: Add CS35L63 to the list of supported devices
+
+Simon Trimmer (1):
+      ALSA: hda/realtek: Add quirk for Asus GA605K
+
+Sven Peter (1):
+      ASoC: apple: mca: Drop default ARCH_APPLE in Kconfig
+
+Takashi Iwai (3):
+      ALSA: hda/intel: Add Thinkpad E15 to PM deny list
+      ALSA: sb: Don't allow changing the DMA mode during operations
+      ALSA: sb: Force to disable DMAs once when DMA mode is changed
+
+Thorsten Blum (1):
+      ASoC: sdw_utils: Fix potential NULL pointer deref in is_sdca_endpoint_present()
+
+Zhang Yi (1):
+      ASoC: codecs: ES8326: Modify initialization configuration
+
+wangdicheng (1):
+      ALSA: usb-audio: Rename ALSA kcontrol PCM and PCM1 for the KTMicro sound card
+
 ---
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index d3b5e6923e41..9cf2ab3b12db 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -1101,6 +1101,7 @@ properties:
-               - skov,imx8mp-skov-revb-mi1010ait-1cp1 # SKOV i.MX8MP climate control with 10.1" panel
-               - skov,imx8mp-skov-revc-bd500 # SKOV i.MX8MP climate control with LED frontplate
-               - skov,imx8mp-skov-revc-tian-g07017 # SKOV i.MX8MP climate control with 7" panel
-+              - ultratronik,imx8mp-ultra-mach-sbc # Ultratronik SBC i.MX8MP based board
-               - ysoft,imx8mp-iota2-lumpy  # Y Soft i.MX8MP IOTA2 Lumpy Board
-           - const: fsl,imx8mp
- 
--- 
-2.43.0
+ Documentation/sound/codecs/cs35l56.rst             | 24 ++++++--
+ sound/isa/sb/sb16_main.c                           |  7 +++
+ sound/pci/ctxfi/xfi.c                              |  4 +-
+ sound/pci/hda/hda_intel.c                          |  2 +
+ sound/pci/hda/patch_realtek.c                      | 30 +++++++++
+ sound/soc/amd/yc/acp6x-mach.c                      | 14 +++++
+ sound/soc/apple/Kconfig                            |  1 -
+ sound/soc/codecs/cs35l56-sdw.c                     | 18 +++---
+ sound/soc/codecs/cs35l56.c                         | 72 +++++++++++++++++++---
+ sound/soc/codecs/cs35l56.h                         |  3 +
+ sound/soc/codecs/cs48l32.c                         |  4 ++
+ sound/soc/codecs/es8326.c                          |  3 +-
+ sound/soc/codecs/wm_adsp.c                         | 27 +++++---
+ sound/soc/codecs/wm_adsp.h                         |  2 +
+ sound/soc/intel/common/sof-function-topology-lib.c |  3 +-
+ sound/soc/loongson/loongson_i2s.c                  |  1 +
+ sound/soc/sdw_utils/soc_sdw_utils.c                |  2 +
+ sound/soc/sof/imx/imx8.c                           | 15 +++++
+ sound/usb/mixer_maps.c                             | 12 ++++
+ 19 files changed, 207 insertions(+), 37 deletions(-)
 
