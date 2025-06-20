@@ -1,352 +1,153 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C226523F412
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B0BE56A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750460593; cv=none; b=bCRhkrsY5MoKv80ylbH0+Na7HFlV8IrEH68OLWL44jx2Pbg4G+vWNrPjudSC37bwOB/Q1XD6KjC1x57Qzl0wsa42MTHywwzJT+hScrOfnRMQK9l2b8z2RvU4KWg8JEyoECDp+wzjqX55q37oaIewfMkFNOdZmyYwBvo5ni02rd0=
+	t=1750460937; cv=none; b=DjKBFLt0hxZgSWOXmfamy8f2sHB/OHFo471a+xBXE0c3FAVHWToRTZe0EPQ0jp0Sivl0jYpFWSGXOqDtmBpsAT2wrXkbWWAJonYRrKT9APMvwv2O6NRdFydwr8GC3a5YaIiuVib9UebIweCgiEzAZmF8ovLBqpTn6meVhWTC13k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750460593; c=relaxed/simple;
-	bh=EBrJcSUnn0tjaoqzsso4+ZBe6J/hEnxNrY1vkz+KcA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B17griNPIvtysXUUVG6YuWDs8PlyPFVe13CEn+6vyfOfiMwWwS0rdW1yAsnevWtARJhQbycLdyTJikIOJ6EK9E4ak0e8Vex/sinWoVi0Z9HAAW3wSksSLJ3Uew43+SdZ+hfQZkXl6SydO1P3hyNZ0mjmhQQxdrtOYXvp8R0wnew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cBDZqcN5; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750460937; c=relaxed/simple;
+	bh=LrIKVw9uceU9PNljM3GXHP0UH4jzYFs66QOU9jwX1gg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=hOpGjJ4wQ0FaC0xHlyRZqR2H2XANdawWLArYnKGYB8VwdtYF+8SidtwSo3TdJpMYtDopERfsss0MJz6tiIZQbjXoSFs5KDs93dPcM++1wE8L6WMS3/hUfhmwoe1Qqce8GJQB1tpdT3vQj6DYPQ00xqhfVUIGbUO7YIEv4SdcYHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=RfxLm+7n; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cBDZqcN5"
-Date: Fri, 20 Jun 2025 16:02:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750460578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5tAZQ0spVVEZZIHmVQBC+dOaNCyVxTOIQXkIyXzUO5k=;
-	b=cBDZqcN5mHkTBb2IiWeX4Taf2j8l+UDr1mn+oTK+j21w/qkbzBLq/ddDQiIC1Y2SpIDFIK
-	h/4mxwtGV8jZX4pZyLpJHcY3/dARAsFd3pgXrbwYwsBxhc6g4m1d0okpnBlbRPqdRhW8LT
-	Co/XYkCK6dhGd4zgDHcMmcKGGsR7xo0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sascha Bischoff <Sascha.Bischoff@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
-	"maz@kernel.org" <maz@kernel.org>, Joey Gouly <Joey.Gouly@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	Timothy Hayes <Timothy.Hayes@arm.com>
-Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
-Message-ID: <aFXomXKBk1V9iYSa@linux.dev>
-References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
- <20250620160741.3513940-5-sascha.bischoff@arm.com>
- <aFXClKQRG3KNAD2y@linux.dev>
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RfxLm+7n"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a36748920cso1828357f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1750460934; x=1751065734; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=8K7VF56cCSHOQmH4rrNXHm6nXu5zATs+oNyo/btQdw8=;
+        b=RfxLm+7nWNiqEc3PgMtBbYTUw/L+T6OKwGYvm504npYhzBkVknFXzJVDY8JkvVhEUF
+         QoK0dq0N+k3NMRe2mDFzZJ6DYCFbpYojE+x2t5fhmoNIrqDPr0CRKSURVARBuYPJzKNC
+         0wVarOTZQKbBS45X6VNvSXDjbyUzFYTHwuGaY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750460934; x=1751065734;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8K7VF56cCSHOQmH4rrNXHm6nXu5zATs+oNyo/btQdw8=;
+        b=LK5wiyttNmAOGdXVj4Ha7CzFZdl4ZuON5uujqlRIBEhWCmZe9E/dxWKTPnT8IHrcj0
+         TfVmfiZLjcXQkUympx9ps8mXdovoFYDrhK9ES9gxNE7I//97FEjp/o2NLOudDrDiiBEF
+         y0I55dVx9hIGPI3tfDLpm+AJjsQWv3NzSWdMVhAWVt8gUteKq2ZnFs+ZLx/ieOhqkqLJ
+         Aj8eNzR2s/K86kmG31gcUh8Fo/uHKAU4Vr9GGEAB1yMVVZCG7OxuNkztMjRwIYfVBMQ/
+         ZaiOnyhWxB1lXf32rzgKqHiFaFD0oMHO8RJcWcbJsDM0kWaTNcEW4ej4u/QVXc7iH0JI
+         Wi4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUOh41F3anAf3lRcxiuZPWUEr9tp8gWvKoMoSHf603B02MbtdKOmKV+O2sM4mQaTK1UeT4K2u6Tz7dI304=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytFjW9WK6fEwAhstfEi8r7RsR7QuKLj6Dum/C4RdJmG+1EbIFk
+	O3peoFsA0rWB+LQUKXJiP8YR1y6o2WzB2CXGXeAhFfr1duLfLve97qMX5dAbuaBvQFY=
+X-Gm-Gg: ASbGncsOREyivF0XMs2236idyjZN/n3OWeN1xn5aOPjuaYMIYE4NlhrKxToVkzMfpUH
+	LlAfaV5pq/9mdgVPvEaRhXKMrKl7txK3zuLjjcIuQNdvxhGKa9ceSa2ZTxy2oH+8zgTk25NAbbo
+	kGd6uKnmff02BRoBLQ+7sAQKAeQKcA/+EXDxrScqu68zZcKQGqms3nl3J5IGoemPU+mCe7NHbwL
+	qgDWsjnqdz4KZKTekDa0BF44SYyA4yxREDkBcfSNtjDJtmdwmJOw2OhqHdNolBOQ3LbTHBDBnbB
+	CVeKaxeiycTMQqeFeDpBiwskIS+7LYpO1jTc8arO3iFDdZiDOE24n/E2dJJUVDgg5CRVMUDGDRt
+	D5tdW6k99IVzGfTfEUu2LOddqgf8=
+X-Google-Smtp-Source: AGHT+IGGVYXzErXFXuqWdpZbidTRzHjqEaCE+CrUvxDikjsokKsYjhP3LOanuYExDelRYdFsSrdp9A==
+X-Received: by 2002:a5d:5846:0:b0:3a5:2ec5:35a9 with SMTP id ffacd0b85a97d-3a6d12c45ccmr4299674f8f.3.1750460933871;
+        Fri, 20 Jun 2025 16:08:53 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647f29bdsm36635735e9.18.2025.06.20.16.08.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 16:08:53 -0700 (PDT)
+Message-ID: <262c0fd2-ac66-4ce7-903f-4062f1fe1d6e@citrix.com>
+Date: Sat, 21 Jun 2025 00:08:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFXClKQRG3KNAD2y@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+To: dave.hansen@intel.com
+Cc: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
+ alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
+ bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
+ christophe.leroy@csgroup.eu, corbet@lwn.net, daniel.sneddon@linux.intel.com,
+ dave.hansen@linux.intel.com, ebiggers@google.com, geert+renesas@glider.be,
+ houtao1@huawei.com, hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com,
+ jpoimboe@kernel.org, kai.huang@intel.com, kees@kernel.org,
+ kirill.shutemov@linux.intel.com, leitao@debian.org,
+ linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
+ luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
+ michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
+ namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
+ peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
+ sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
+ tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
+ vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
+ xiongwei.song@windriver.com, ytcoode@gmail.com
+References: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com>
+Subject: Re: [PATCHv6 07/16] x86/vsyscall: Reorganize the #PF emulation code
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 01:20:36PM -0700, Oliver Upton wrote:
-> Hi Sascha,
-> 
-> Thank you for posting this. Very excited to see the GICv5 enablement get
-> started.
-> 
-> On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
-> > Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
-> > GICv5 host to run GICv3-based VMs. This change enables the
-> > VHE/nVHE/hVHE/protected modes, but does not support nested
-> > virtualization.
-> 
-> Can't we just load the shadow state into the compat VGICv3? I'm worried
-> this has sharp edges on the UAPI side as well as users wanting to
-> migrate VMs to new hardware.
-> 
-> The guest hypervisor should only see GICv3-only or GICv5-only, we can
-> pretend FEAT_GCIE_LEGACY never existed :)
-> 
-> > Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
-> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> > ---
-> >  arch/arm64/include/asm/kvm_asm.h   |  2 ++
-> >  arch/arm64/include/asm/kvm_hyp.h   |  2 ++
-> >  arch/arm64/kvm/Makefile            |  3 +-
-> >  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 12 +++++++
-> >  arch/arm64/kvm/hyp/vgic-v3-sr.c    | 51 +++++++++++++++++++++++++-----
-> >  arch/arm64/kvm/sys_regs.c          | 10 +++++-
-> >  arch/arm64/kvm/vgic/vgic-init.c    |  6 ++--
-> >  arch/arm64/kvm/vgic/vgic-v3.c      |  6 ++++
-> >  arch/arm64/kvm/vgic/vgic-v5.c      | 14 ++++++++
-> >  arch/arm64/kvm/vgic/vgic.h         |  2 ++
-> >  include/kvm/arm_vgic.h             |  9 +++++-
-> >  11 files changed, 104 insertions(+), 13 deletions(-)
-> >  create mode 100644 arch/arm64/kvm/vgic/vgic-v5.c
-> > 
-> > diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-> > index bec227f9500a..ad1ef0460fd6 100644
-> > --- a/arch/arm64/include/asm/kvm_asm.h
-> > +++ b/arch/arm64/include/asm/kvm_asm.h
-> > @@ -81,6 +81,8 @@ enum __kvm_host_smccc_func {
-> >  	__KVM_HOST_SMCCC_FUNC___kvm_timer_set_cntvoff,
-> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_vmcr_aprs,
-> >  	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
-> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_enable,
-> > +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_disable,
-> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
-> >  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
-> >  	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
-> > diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> > index e6be1f5d0967..9c8adc5186ec 100644
-> > --- a/arch/arm64/include/asm/kvm_hyp.h
-> > +++ b/arch/arm64/include/asm/kvm_hyp.h
-> > @@ -85,6 +85,8 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if);
-> >  void __vgic_v3_save_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
-> >  void __vgic_v3_restore_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
-> >  int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
-> > +void __vgic_v3_compat_mode_enable(void);
-> > +void __vgic_v3_compat_mode_disable(void);
-> >  
-> >  #ifdef __KVM_NVHE_HYPERVISOR__
-> >  void __timer_enable_traps(struct kvm_vcpu *vcpu);
-> > diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-> > index 7c329e01c557..3ebc0570345c 100644
-> > --- a/arch/arm64/kvm/Makefile
-> > +++ b/arch/arm64/kvm/Makefile
-> > @@ -23,7 +23,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
-> >  	 vgic/vgic-v3.o vgic/vgic-v4.o \
-> >  	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
-> >  	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
-> > -	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o
-> > +	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
-> > +	 vgic/vgic-v5.o
-> >  
-> >  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
-> >  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
-> > diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > index e9198e56e784..61af55df60a9 100644
-> > --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > @@ -475,6 +475,16 @@ static void handle___vgic_v3_restore_vmcr_aprs(struct kvm_cpu_context *host_ctxt
-> >  	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
-> >  }
-> >  
-> > +static void handle___vgic_v3_compat_mode_enable(struct kvm_cpu_context *host_ctxt)
-> > +{
-> > +	__vgic_v3_compat_mode_enable();
-> > +}
-> > +
-> > +static void handle___vgic_v3_compat_mode_disable(struct kvm_cpu_context *host_ctxt)
-> > +{
-> > +	__vgic_v3_compat_mode_disable();
-> > +}
-> > +
-> >  static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
-> >  {
-> >  	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
-> > @@ -603,6 +613,8 @@ static const hcall_t host_hcall[] = {
-> >  	HANDLE_FUNC(__kvm_timer_set_cntvoff),
-> >  	HANDLE_FUNC(__vgic_v3_save_vmcr_aprs),
-> >  	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
-> > +	HANDLE_FUNC(__vgic_v3_compat_mode_enable),
-> > +	HANDLE_FUNC(__vgic_v3_compat_mode_disable),
-> >  	HANDLE_FUNC(__pkvm_init_vm),
-> >  	HANDLE_FUNC(__pkvm_init_vcpu),
-> >  	HANDLE_FUNC(__pkvm_teardown_vm),
-> > diff --git a/arch/arm64/kvm/hyp/vgic-v3-sr.c b/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> > index f162b0df5cae..b03b5f012226 100644
-> > --- a/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> > +++ b/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> > @@ -257,6 +257,18 @@ void __vgic_v3_restore_state(struct vgic_v3_cpu_if *cpu_if)
-> >  	}
-> >  }
-> >  
-> > +void __vgic_v3_compat_mode_enable(void)
-> > +{
-> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, 0, ICH_VCTLR_EL2_V3);
-> > +	isb();
-> > +}
-> > +
-> > +void __vgic_v3_compat_mode_disable(void)
-> > +{
-> > +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
-> > +	isb();
-> > +}
-> > +
-> 
-> It isn't clear to me what these ISBs are synchonizing against. AFAICT,
-> the whole compat thing is always visible and we can restore the rest of
-> the VGICv3 context before guaranteeing the enable bit has been observed.
-> 
-> Can we consolidate this into a single hyp call along with
-> __vgic_v3_*_vmcr_aprs()?
-> 
-> Last bit as an FYI, kvm_call_hyp() has an implied context synchronization upon
-> return, either because of ERET in nVHE or an explicit ISB on VHE.
+> But, the resulting code is wonky. It needs to do something more like this:
+>
+> 	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
+> 		return false;
+>
+> 	if (error_code & X86_PF_INSTR))
+> 		return __emulate_vsyscall(regs, address);
 
-Ah, reading the spec was a useful exercise. ICH_VMCR_EL2 is a modal
-register... I hear implementation folks *love* those :)
+To do this, LASS needs a proper interlink against NX || SMEP.
 
-Please do the aforementioned consolidation, at which point the purpose
-of the ISB should be apparent.
+If neither NX nor SMEP are active, the CPU does not report X86_PF_INSTR,
+meaning that fetches are reported as plain reads.
 
-> >  void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
-> >  {
-> >  	/*
-> > @@ -296,12 +308,19 @@ void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
-> >  	}
-> >  
-> >  	/*
-> > -	 * Prevent the guest from touching the ICC_SRE_EL1 system
-> > -	 * register. Note that this may not have any effect, as
-> > -	 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
-> > +	 * GICv5 BET0 FEAT_GCIE_LEGACY doesn't include ICC_SRE_EL2. This is due
-> > +	 * to be relaxed in a future spec release, likely BET1, at which point
-> > +	 * this in condition can be dropped again.
-> >  	 */
-> > -	write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
-> > -		     ICC_SRE_EL2);
-> > +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
-> > +		/*
-> > +		 * Prevent the guest from touching the ICC_SRE_EL1 system
-> > +		 * register. Note that this may not have any effect, as
-> > +		 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
-> > +		 */
-> > +		write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
-> > +			     ICC_SRE_EL2);
-> > +	}
-> >  
-> >  	/*
-> >  	 * If we need to trap system registers, we must write
-> > @@ -322,8 +341,14 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if)
-> >  		cpu_if->vgic_vmcr = read_gicreg(ICH_VMCR_EL2);
-> >  	}
-> >  
-> > -	val = read_gicreg(ICC_SRE_EL2);
-> > -	write_gicreg(val | ICC_SRE_EL2_ENABLE, ICC_SRE_EL2);
-> > +	/*
-> > +	 * Can be dropped in the future when GICv5 BET1 is released. See
-> > +	 * comment above.
-> > +	 */
-> > +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
-> 
-> Can we use the GCIE cpucap instead, possibly via a shared helper with
-> the driver?
-> 
-> > -	if (kvm_vgic_global_state.type == VGIC_V3) {
-> > +	if (kvm_vgic_global_state.type == VGIC_V3 || kvm_vgic_in_v3_compat_mode()) {
-> 
-> Can we do a helper for this too?
-> 
-> >  		val &= ~ID_AA64PFR0_EL1_GIC_MASK;
-> >  		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
-> >  	}
-> > @@ -1953,6 +1953,14 @@ static int set_id_aa64pfr0_el1(struct kvm_vcpu *vcpu,
-> >  	    (vcpu_has_nv(vcpu) && !FIELD_GET(ID_AA64PFR0_EL1_EL2, user_val)))
-> >  		return -EINVAL;
-> >  
-> > +	/*
-> > +	 * If we are running on a GICv5 host and support FEAT_GCIE_LEGACY, then
-> > +	 * we support GICv3. Fail attempts to do anything but set that to IMP.
-> > +	 */
-> > +	if (kvm_vgic_in_v3_compat_mode() &&
-> > +	    FIELD_GET(ID_AA64PFR0_EL1_GIC_MASK, user_val) != ID_AA64PFR0_EL1_GIC_IMP)
-> > +		return -EINVAL;
-> > +
-> 
-> 
-> 
-> >  	return set_id_reg(vcpu, rd, user_val);
-> >  }
-> >  
-> > diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-> > index eb1205654ac8..5f6506e297c1 100644
-> > --- a/arch/arm64/kvm/vgic/vgic-init.c
-> > +++ b/arch/arm64/kvm/vgic/vgic-init.c
-> > @@ -674,10 +674,12 @@ void kvm_vgic_init_cpu_hardware(void)
-> >  	 * We want to make sure the list registers start out clear so that we
-> >  	 * only have the program the used registers.
-> >  	 */
-> > -	if (kvm_vgic_global_state.type == VGIC_V2)
-> > +	if (kvm_vgic_global_state.type == VGIC_V2) {
-> >  		vgic_v2_init_lrs();
-> > -	else
-> > +	} else if (kvm_vgic_global_state.type == VGIC_V3 ||
-> > +		   kvm_vgic_in_v3_compat_mode()) {
-> >  		kvm_call_hyp(__vgic_v3_init_lrs);
-> > +	}
-> >  }
-> >  
-> >  /**
-> > diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-> > index b9ad7c42c5b0..b5df4d36821d 100644
-> > --- a/arch/arm64/kvm/vgic/vgic-v3.c
-> > +++ b/arch/arm64/kvm/vgic/vgic-v3.c
-> > @@ -734,6 +734,9 @@ void vgic_v3_load(struct kvm_vcpu *vcpu)
-> >  {
-> >  	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
-> >  
-> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
-> > +		kvm_call_hyp(__vgic_v3_compat_mode_enable);
-> > +
-> >  	/* If the vgic is nested, perform the full state loading */
-> >  	if (vgic_state_is_nested(vcpu)) {
-> >  		vgic_v3_load_nested(vcpu);
-> > @@ -764,4 +767,7 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
-> >  
-> >  	if (has_vhe())
-> >  		__vgic_v3_deactivate_traps(cpu_if);
-> > +
-> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
-> > +		kvm_call_hyp(__vgic_v3_compat_mode_disable);
+This leads to some fun corner cases in SMAP and now LASS too for virt.
 
-Do we need to eagerly disable compat mode or can we just configure the
-VGIC correctly for the intended vCPU at load()?
-
-> >  }
-> > diff --git a/arch/arm64/kvm/vgic/vgic-v5.c b/arch/arm64/kvm/vgic/vgic-v5.c
-> > new file mode 100644
-> > index 000000000000..57199449ca0f
-> > --- /dev/null
-> > +++ b/arch/arm64/kvm/vgic/vgic-v5.c
-> > @@ -0,0 +1,14 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +#include <kvm/arm_vgic.h>
-> > +
-> > +#include "vgic.h"
-> > +
-> > +inline bool kvm_vgic_in_v3_compat_mode(void)a
-> 
-> nit: we're generally trusting of the compiler to 'do the right thing'
-> and avoid explicit inline specifiers unless necessary.
-> 
-> > +{
-> > +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif) &&
-> > +	    kvm_vgic_global_state.has_gcie_v3_compat)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> 
-> This should be a per-VM thing once KVM support for GICv5 lands. Can you
-> get ahead of that and take a KVM pointer that goes unused. Maybe rename
-> it:
-> 
-> bool vgic_is_v3_compat(struct kvm *kvm)
-> 
-> Or something similar.
-> 
-> Thanks,
-> Oliver
-> 
+~Andrew
