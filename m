@@ -1,975 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37C627BF8E;
-	Fri, 20 Jun 2025 10:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76BD255250;
+	Fri, 20 Jun 2025 10:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417119; cv=none; b=WRv9y5GFODa8uSjd+qAvEPOpjYMGrHAFHBIrHIopXY6X5JYk1yBwsl4ULrcBiU8isbqFDWPzt+T0EJPW0+XAh9mw02lUUGk2BFmu3gJhX7xcBPiP3UH27qNWtURNK5qklRHTalPa1hwqjmNAtYrE51jYjwntF68IuyYBDi9lyDg=
+	t=1750417173; cv=none; b=ejb/ga1wLGCDqhpOKzKUVP8QEjkwMNum1Jszw6Do92avN0ZwZSJyXQpPdu0NFhOKoqqM/Fkdhc5P5MoLLO/NXUNc8Fhh4zRL9oZscezuRykHE/SopYg5kMvgDwGvTLIX6n0pNMO9M9vQNLOuZnfq+ktvaTzH0LBVwk86gfkghLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417119; c=relaxed/simple;
-	bh=8nZUcWjrQZa0T3ieZR/ZxkUVvoGuNiUvRy0FWZZtdPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g8peNnVIt2HsGT49WSPycNKcD8cIHDvC1HQsQBhXvv+mYgZOveN2m45irACzzdDxTX16IZ3PYd4uHxOn53cx109NLHkh//15/h+LMV+oy1xObS6N5YzUBV5Ze7uHUBaYSkHoXK01V/jzes4wBUvep+OgmCzh6Vlnya1IYu/YeFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kAh1nlsB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750417173; c=relaxed/simple;
+	bh=0Gh0K0xRFhKRF8AXu7ZZ0JwytEf4US5iUdrDtxqErbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cGKHqwKGUF2d4FMZgJGd4z2ilAN3XxcOAK29Ika5EJLU+djDHzeVIAta3a4e9vnMeVV/Fdrs3b0KviEWiPcDVHof35lJXCuArZ4JHlggfxR71MK38oG9yZp2+63bSX2EIpF2w0Q077YRtTKG76QLpYRYZl/shDoaLKqFQ0BXjeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=piaOoly6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kAh1nlsB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C65FC4CEE3;
-	Fri, 20 Jun 2025 10:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417117;
-	bh=8nZUcWjrQZa0T3ieZR/ZxkUVvoGuNiUvRy0FWZZtdPg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kAh1nlsBeYRFMbXmZVuuBlIGkgDXfGAGwmURF+xQ33K6tF0G6KljggVmx+O4CSdKf
-	 kTJPRyIsBHcV7cTQqQg1aAC6c+VMAxtv0rL5fiyzzafl0F7jwBQV9UjFOfiMKgSxGy
-	 4rddiNDDE3IgGqJBtniT79u2LdgHaMk9RSxx6/sbhF7G5LcFNFg4uG3K9HdvHuUo0D
-	 SiC5krlIxN7jtP30eHixiD+eWmop2Tp2xtrp8wOJryHWCVtVaRTaj/Ab2ajgfqN8gQ
-	 uMthMo847I74L7H+lqCv+xAfLo6uSFVbAgh87azuWJVR5mN2qc3n4k9wSOb7sX4C5I
-	 u5bBqqNDXufQg==
-Date: Fri, 20 Jun 2025 12:58:26 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Ignacio Encinas Rubio"
- <ignacio@iencinas.com>, "Jan Stancek" <jstancek@redhat.com>, "Marco Elver"
- <elver@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Ruben Wauters"
- <rubenru09@aol.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
- joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
- peterz@infradead.org, stern@rowland.harvard.edu
-Subject: Re: [PATCH v7 04/17] tools: ynl_gen_rst.py: Split library from
- command line tool
-Message-ID: <20250620125826.681d8872@sal.lan>
-In-Reply-To: <m2plf0ey9h.fsf@gmail.com>
-References: <cover.1750315578.git.mchehab+huawei@kernel.org>
-	<4e26583ad1d8a05ba40cada4213c95120bd45efc.1750315578.git.mchehab+huawei@kernel.org>
-	<m2plf0ey9h.fsf@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="piaOoly6"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K8lRtW032388;
+	Fri, 20 Jun 2025 10:59:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+fu3w1v+rnRjSpeA3zYgBtl1n21MunfueBeCZusnnoY=; b=piaOoly6EaAIiN7U
+	8wcBVDuu1kSFF/VDqUgC6HVgaWjRhDpvJEXDmrBnWkyYO54BDZlF1bcvMlFs1Cdi
+	FCa3+eHUyeVnKgWs4BD1DBeSf30jV7AQjNg8vr02y9B1qg0PQETBR4FZks3CJ0UN
+	+qTKIy0hNJqHkdL/KmccVfQTOPuZUb2bsEDMlsyIvIq/8SHzIKZDCdEtNH7gm1Lj
+	VToOMgEv0D5ANZZGkYWHii7XeaKGehGFs6ZbkXdEjzKWp5Oq6YLqshH/IV3nvu59
+	hHbqDabh1dncMTEgkSaY5/fMQl/oRBaon0bUna580mN34MIaWEQuNLkbZ0t3OQ9C
+	hzGFAg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928mtwkn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 10:59:25 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55KAxPTX015654
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 10:59:25 GMT
+Received: from [10.216.41.11] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 20 Jun
+ 2025 03:59:19 -0700
+Message-ID: <71b180b4-6f4d-457e-89ad-0021c455d773@quicinc.com>
+Date: Fri, 20 Jun 2025 16:29:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] soc: qcom: geni-se: Enable QUPs on SA8255p
+ Qualcomm platforms
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <SlCtr38wFck_Zdxg3nfChaMwe2uSvlQdfRCutdXc-Z2BTqoUOPd9Z9QY0cdREgcdxl40k41wXpszBkVTBB2T7A==@protonmail.internalid>
+ <20250606172114.6618-4-quic_ptalari@quicinc.com>
+ <2eea0b19-1a82-428a-8c04-74ee465e7516@linaro.org>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <2eea0b19-1a82-428a-8c04-74ee465e7516@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA3OSBTYWx0ZWRfX/b7i/UZpB1fx
+ Rnw+A058r46sTPyiIi8/JkcRMc7JbXQ4C5K3JlNLFged+aV5e3T1LLg6hqaiDT5ZVfedULbk8h4
+ LLbnGkh20QF1cgIo2Ja9ulNcZhzR2EVPHavkn1TAhx1Q2QaPyOyosrqmjoQgoGl48nc3x1NbARx
+ b9yf6HwHxxDYqDRucGOhWdhJfcIJaT3kF8Vuw2XKsJk/EUVFDVB9oO0jjXelVl5XRr5S5SoYqlw
+ eycaSGU5z8DQIvEN3EdxfFPraHLlEAaP+YHbh72IARJht2+0oQ7N+zyB8IOqOs0GLHmrmxUIweT
+ qKT9fP695Tdb09wdH0vcErx3ZmqQZg+JXyPOfOFQ+5HRBYNYLvAc4W3MWuxEaO9HLICIiX91ux7
+ rUcJOxTK6HbJ7omoDuBF8k+NCid5p/L//mUf3SQzYJB8jIjkDXSTziFafEf1V9eBqBerL8y1
+X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=68553f0d cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=YZsGvGvhtn17Bq1j2ksA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 9u2nym_CVBotSDrQCwnF4QyaB-xE6RG5
+X-Proofpoint-ORIG-GUID: 9u2nym_CVBotSDrQCwnF4QyaB-xE6RG5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_04,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506200079
 
-Em Thu, 19 Jun 2025 13:01:14 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
+HI Bryan,
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> > +
-> > +    def generate_main_index_rst(self, output: str, index_dir: str) -> None:
-> > +        """Generate the `networking_spec/index` content and write to the file"""
-> > +        lines = []
-> > +
-> > +        lines.append(self.fmt.rst_header())
-> > +        lines.append(self.fmt.rst_label("specs"))
-> > +        lines.append(self.fmt.rst_title("Netlink Family Specifications"))
-> > +        lines.append(self.fmt.rst_toctree(1))
-> > +
-> > +        index_fname = os.path.basename(output)
-> > +        base, ext = os.path.splitext(index_fname)
-> > +
-> > +        if not index_dir:
-> > +            index_dir = os.path.dirname(output)
-> > +
-> > +        logging.debug(f"Looking for {ext} files in %s", index_dir)
-> > +        for filename in sorted(os.listdir(index_dir)):
-> > +            if not filename.endswith(ext) or filename == index_fname:
-> > +                continue
-> > +            base, ext = os.path.splitext(filename)
-> > +            lines.append(f"   {base}\n")
-> > +
-> > +        logging.debug("Writing an index file at %s", output)
-> > +
-> > +        return "".join(lines)  
+Thank you for review.
+
+On 6/17/2025 12:23 AM, Bryan O'Donoghue wrote:
+> On 06/06/2025 18:21, Praveen Talari wrote:
+>> On the sa8255p platform, resources such as clocks,interconnects
+>> and TLMM (GPIO) configurations are managed by firmware.
+>>
+>> Introduce a platform data function callback to distinguish whether
+>> resource control is performed by firmware or directly by the driver
+>> in linux.
+>>
+>> The refactor ensures clear differentiation of resource
+>> management mechanisms, improving maintainability and flexibility
+>> in handling platform-specific configurations.
+>>
+>> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+>> ---
+>> v5 -> v6
+>> - replaced dev_err with dev_err_probe
 > 
-> Did you miss my comment on v5 to not move this from ynl_gen_rst.py,
-> since it is not needed and gets removed in a later patch.
+> You've missed two opportunities for dev_err_probe() in this submission.
+
+Thank you for pointing out. Yes i can see two more dev_err in new API.
+Will address in next patch.
+
 > 
-> > @@ -411,7 +65,6 @@ def write_to_rstfile(content: str, filename: str) -> None:
-> >  
-> >  def generate_main_index_rst(output: str) -> None:
-> >      """Generate the `networking_spec/index` content and write to the file"""
-> > -    lines = []
-> >  
-> >      lines.append(rst_header())
-> >      lines.append(rst_label("specs"))
-> > @@ -426,7 +79,7 @@ def generate_main_index_rst(output: str) -> None:
-> >          lines.append(f"   {filename.replace('.rst', '')}\n")
-> >  
-> >      logging.debug("Writing an index file at %s", output)
-> > -    write_to_rstfile("".join(lines), output)
-> > +    write_to_rstfile(msg, output)  
+>> - added a check for desc->num_clks with MAX_CLKS, an error if
+>>    the specified num_clks in descriptor exceeds defined MAX_CLKS.
+>> - removed min_t which is not necessary.
+>> - renamed callback function names to resources_init.
+>> - resolved kernel bot warning error by documenting function
+>>    pointer in geni_se_desc structure.
+>>
+>> v3 -> v4
+>> - declared an empty struct for sa8255p and added check as num clks.
+>> - Added version log after ---
+>>
+>> v1 -> v2
+>> - changed datatype of i from int to unsigned int as per comment.
+>> ---
+>>   drivers/soc/qcom/qcom-geni-se.c | 77 +++++++++++++++++++++------------
+>>   1 file changed, 49 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/qcom-geni-se.c 
+>> b/drivers/soc/qcom/qcom-geni-se.c
+>> index 4cb959106efa..5c727b9a17e9 100644
+>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>> @@ -101,10 +101,13 @@ struct geni_wrapper {
+>>    * struct geni_se_desc - Data structure to represent the QUP Wrapper 
+>> resources
+>>    * @clks:        Name of the primary & optional secondary AHB clocks
+>>    * @num_clks:        Count of clock names
+>> + * @resources_init:    Function pointer for initializing QUP Wrapper 
+>> resources
+>>    */
+>>   struct geni_se_desc {
+>>       unsigned int num_clks;
+>>       const char * const *clks;
+>> +    int (*resources_init)(struct geni_wrapper *wrapper,
+>> +                  const struct geni_se_desc *desc);
+>>   };
+>>
+>>   static const char * const icc_path_names[] = {"qup-core", "qup-config",
+>> @@ -891,10 +894,47 @@ int geni_icc_disable(struct geni_se *se)
+>>   }
+>>   EXPORT_SYMBOL_GPL(geni_icc_disable);
+>>
+>> +static int geni_se_resource_init(struct geni_wrapper *wrapper,
+>> +                 const struct geni_se_desc *desc)
+>> +{
+>> +    struct device *dev = wrapper->dev;
+>> +    int ret;
+>> +    unsigned int i;
+>> +
+>> +    if (desc->num_clks > MAX_CLKS)
+>> +        return dev_err_probe(dev, -EINVAL,
+>> +                     "Too many clocks specified in descriptor:%u (max 
+>> allowed: %u)\n",
+>> +                     desc->num_clks, MAX_CLKS);
 > 
-> The changes leave this function broken. Bot lines and msg never get
-> defined.
+> I think this is an extraneous add, we should trust the array indexes 
+> inside our own driver that we control.
+> 
+> Actually why do we have a MAX_CLKS ? We specify a list of clk names with 
 
-I fixed the change at generate_main_index_rst and dropped it from
-the doc_parser.py.
+MAX_CLKS is needed for static declaration of "struct clk_bulk_data 
+clK[MAX_CLKS]" which is need to save clk related info.
 
-I did a small change at the logic for it to accept both .rst and .yaml
-there, as it makes easier to test it with:
+otherwise we allocate dynamic memory instead of static.
 
-	tools/net/ynl/pyynl/ynl_gen_rst.py -x -o Documentation/netlink/specs/foo.rst
+> aggregate-initialisation and ARRAY_SIZE() of the aggregate.
+> 
+> Like so:
+> 
+> static const char * const qup_clks[] = {
+>          "m-ahb",
+>          "s-ahb",
+> };
+> 
+> static const struct geni_se_desc qup_desc = {
+>          .clks = qup_clks,
+>          .num_clks = ARRAY_SIZE(qup_clks),
+> 
+>> +
+>> +    wrapper->num_clks = desc->num_clks;
+>> +
+>> +    for (i = 0; i < wrapper->num_clks; ++i)
+>> +        wrapper->clks[i].id = desc->clks[i];
+>> +
+>> +    ret = of_count_phandle_with_args(dev->of_node, "clocks", 
+>> "#clock-cells");
+>> +    if (ret < 0)
+>> +        return dev_err_probe(dev, ret, "invalid clocks property at 
+>> %pOF\n", dev->of_node);
+>> +
+>> +    if (ret < wrapper->num_clks) {
+>> +        dev_err(dev, "invalid clocks count at %pOF, expected %d 
+>> entries\n",
+>> +            dev->of_node, wrapper->num_clks);
+>> +        return -EINVAL;
+>> +    }
+> 
+> This code OTOH makes way more sense as we are validating our internal 
+> num_clks variable which we have enumerated ourselves against a DT input 
+> which we are consuming.
 
-While I'll be sending it at the next version, I'm placing
-the modified version below:
+Yes, we have fixed clks which are enumerated in desc wrt DT.
 
----
-
-[PATCH v7.1 04/17] tools: ynl_gen_rst.py: Split library from command line tool
-
-As we'll be using the Netlink specs parser inside a Sphinx
-extension, move the library part from the command line parser.
-
-While here, change the code which generates an index file
-to parse inputs from both .rst and .yaml extensions. With
-that, the tool can easily be tested with:
-
-	tools/net/ynl/pyynl/ynl_gen_rst.py -x -o Documentation/netlink/specs/foo.rst
-
-Without needing to first generate a temp directory with the
-rst files.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/tools/net/ynl/pyynl/lib/__init__.py b/tools/net/ynl/pyynl/lib/__init__.py
-index 71518b9842ee..5f266ebe4526 100644
---- a/tools/net/ynl/pyynl/lib/__init__.py
-+++ b/tools/net/ynl/pyynl/lib/__init__.py
-@@ -4,6 +4,8 @@ from .nlspec import SpecAttr, SpecAttrSet, SpecEnumEntry, SpecEnumSet, \
-     SpecFamily, SpecOperation, SpecSubMessage, SpecSubMessageFormat
- from .ynl import YnlFamily, Netlink, NlError
- 
-+from .doc_generator import YnlDocGenerator
-+
- __all__ = ["SpecAttr", "SpecAttrSet", "SpecEnumEntry", "SpecEnumSet",
-            "SpecFamily", "SpecOperation", "SpecSubMessage", "SpecSubMessageFormat",
-            "YnlFamily", "Netlink", "NlError"]
-diff --git a/tools/net/ynl/pyynl/lib/doc_generator.py b/tools/net/ynl/pyynl/lib/doc_generator.py
-new file mode 100644
-index 000000000000..80e468086693
---- /dev/null
-+++ b/tools/net/ynl/pyynl/lib/doc_generator.py
-@@ -0,0 +1,382 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# -*- coding: utf-8; mode: python -*-
-+
-+"""
-+    Class to auto generate the documentation for Netlink specifications.
-+
-+    :copyright:  Copyright (C) 2023  Breno Leitao <leitao@debian.org>
-+    :license:    GPL Version 2, June 1991 see linux/COPYING for details.
-+
-+    This class performs extensive parsing to the Linux kernel's netlink YAML
-+    spec files, in an effort to avoid needing to heavily mark up the original
-+    YAML file.
-+
-+    This code is split in two classes:
-+        1) RST formatters: Use to convert a string to a RST output
-+        2) YAML Netlink (YNL) doc generator: Generate docs from YAML data
-+"""
-+
-+from typing import Any, Dict, List
-+import os.path
-+import sys
-+import argparse
-+import logging
-+import yaml
-+
-+
-+# ==============
-+# RST Formatters
-+# ==============
-+class RstFormatters:
-+    SPACE_PER_LEVEL = 4
-+
-+    @staticmethod
-+    def headroom(level: int) -> str:
-+        """Return space to format"""
-+        return " " * (level * RstFormatters.SPACE_PER_LEVEL)
-+
-+
-+    @staticmethod
-+    def bold(text: str) -> str:
-+        """Format bold text"""
-+        return f"**{text}**"
-+
-+
-+    @staticmethod
-+    def inline(text: str) -> str:
-+        """Format inline text"""
-+        return f"``{text}``"
-+
-+
-+    @staticmethod
-+    def sanitize(text: str) -> str:
-+        """Remove newlines and multiple spaces"""
-+        # This is useful for some fields that are spread across multiple lines
-+        return str(text).replace("\n", " ").strip()
-+
-+
-+    def rst_fields(self, key: str, value: str, level: int = 0) -> str:
-+        """Return a RST formatted field"""
-+        return self.headroom(level) + f":{key}: {value}"
-+
-+
-+    def rst_definition(self, key: str, value: Any, level: int = 0) -> str:
-+        """Format a single rst definition"""
-+        return self.headroom(level) + key + "\n" + self.headroom(level + 1) + str(value)
-+
-+
-+    def rst_paragraph(self, paragraph: str, level: int = 0) -> str:
-+        """Return a formatted paragraph"""
-+        return self.headroom(level) + paragraph
-+
-+
-+    def rst_bullet(self, item: str, level: int = 0) -> str:
-+        """Return a formatted a bullet"""
-+        return self.headroom(level) + f"- {item}"
-+
-+
-+    @staticmethod
-+    def rst_subsection(title: str) -> str:
-+        """Add a sub-section to the document"""
-+        return f"{title}\n" + "-" * len(title)
-+
-+
-+    @staticmethod
-+    def rst_subsubsection(title: str) -> str:
-+        """Add a sub-sub-section to the document"""
-+        return f"{title}\n" + "~" * len(title)
-+
-+
-+    @staticmethod
-+    def rst_section(namespace: str, prefix: str, title: str) -> str:
-+        """Add a section to the document"""
-+        return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
-+
-+
-+    @staticmethod
-+    def rst_subtitle(title: str) -> str:
-+        """Add a subtitle to the document"""
-+        return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
-+
-+
-+    @staticmethod
-+    def rst_title(title: str) -> str:
-+        """Add a title to the document"""
-+        return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
-+
-+
-+    def rst_list_inline(self, list_: List[str], level: int = 0) -> str:
-+        """Format a list using inlines"""
-+        return self.headroom(level) + "[" + ", ".join(self.inline(i) for i in list_) + "]"
-+
-+
-+    @staticmethod
-+    def rst_ref(namespace: str, prefix: str, name: str) -> str:
-+        """Add a hyperlink to the document"""
-+        mappings = {'enum': 'definition',
-+                    'fixed-header': 'definition',
-+                    'nested-attributes': 'attribute-set',
-+                    'struct': 'definition'}
-+        if prefix in mappings:
-+            prefix = mappings[prefix]
-+        return f":ref:`{namespace}-{prefix}-{name}`"
-+
-+
-+    def rst_header(self) -> str:
-+        """The headers for all the auto generated RST files"""
-+        lines = []
-+
-+        lines.append(self.rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
-+        lines.append(self.rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
-+
-+        return "\n".join(lines)
-+
-+
-+    @staticmethod
-+    def rst_toctree(maxdepth: int = 2) -> str:
-+        """Generate a toctree RST primitive"""
-+        lines = []
-+
-+        lines.append(".. toctree::")
-+        lines.append(f"   :maxdepth: {maxdepth}\n\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    @staticmethod
-+    def rst_label(title: str) -> str:
-+        """Return a formatted label"""
-+        return f".. _{title}:\n\n"
-+
-+# =======
-+# Parsers
-+# =======
-+class YnlDocGenerator:
-+
-+    fmt = RstFormatters()
-+
-+    def parse_mcast_group(self, mcast_group: List[Dict[str, Any]]) -> str:
-+        """Parse 'multicast' group list and return a formatted string"""
-+        lines = []
-+        for group in mcast_group:
-+            lines.append(self.fmt.rst_bullet(group["name"]))
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_do(self, do_dict: Dict[str, Any], level: int = 0) -> str:
-+        """Parse 'do' section and return a formatted string"""
-+        lines = []
-+        for key in do_dict.keys():
-+            lines.append(self.fmt.rst_paragraph(self.fmt.bold(key), level + 1))
-+            if key in ['request', 'reply']:
-+                lines.append(self.parse_do_attributes(do_dict[key], level + 1) + "\n")
-+            else:
-+                lines.append(self.fmt.headroom(level + 2) + do_dict[key] + "\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_do_attributes(self, attrs: Dict[str, Any], level: int = 0) -> str:
-+        """Parse 'attributes' section"""
-+        if "attributes" not in attrs:
-+            return ""
-+        lines = [self.fmt.rst_fields("attributes", self.fmt.rst_list_inline(attrs["attributes"]), level + 1)]
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_operations(self, operations: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse operations block"""
-+        preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
-+        linkable = ["fixed-header", "attribute-set"]
-+        lines = []
-+
-+        for operation in operations:
-+            lines.append(self.fmt.rst_section(namespace, 'operation', operation["name"]))
-+            lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
-+
-+            for key in operation.keys():
-+                if key in preprocessed:
-+                    # Skip the special fields
-+                    continue
-+                value = operation[key]
-+                if key in linkable:
-+                    value = self.fmt.rst_ref(namespace, key, value)
-+                lines.append(self.fmt.rst_fields(key, value, 0))
-+            if 'flags' in operation:
-+                lines.append(self.fmt.rst_fields('flags', self.fmt.rst_list_inline(operation['flags'])))
-+
-+            if "do" in operation:
-+                lines.append(self.fmt.rst_paragraph(":do:", 0))
-+                lines.append(self.parse_do(operation["do"], 0))
-+            if "dump" in operation:
-+                lines.append(self.fmt.rst_paragraph(":dump:", 0))
-+                lines.append(self.parse_do(operation["dump"], 0))
-+
-+            # New line after fields
-+            lines.append("\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_entries(self, entries: List[Dict[str, Any]], level: int) -> str:
-+        """Parse a list of entries"""
-+        ignored = ["pad"]
-+        lines = []
-+        for entry in entries:
-+            if isinstance(entry, dict):
-+                # entries could be a list or a dictionary
-+                field_name = entry.get("name", "")
-+                if field_name in ignored:
-+                    continue
-+                type_ = entry.get("type")
-+                if type_:
-+                    field_name += f" ({self.fmt.inline(type_)})"
-+                lines.append(
-+                    self.fmt.rst_fields(field_name, self.fmt.sanitize(entry.get("doc", "")), level)
-+                )
-+            elif isinstance(entry, list):
-+                lines.append(self.fmt.rst_list_inline(entry, level))
-+            else:
-+                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)), level))
-+
-+        lines.append("\n")
-+        return "\n".join(lines)
-+
-+
-+    def parse_definitions(self, defs: Dict[str, Any], namespace: str) -> str:
-+        """Parse definitions section"""
-+        preprocessed = ["name", "entries", "members"]
-+        ignored = ["render-max"]  # This is not printed
-+        lines = []
-+
-+        for definition in defs:
-+            lines.append(self.fmt.rst_section(namespace, 'definition', definition["name"]))
-+            for k in definition.keys():
-+                if k in preprocessed + ignored:
-+                    continue
-+                lines.append(self.fmt.rst_fields(k, self.fmt.sanitize(definition[k]), 0))
-+
-+            # Field list needs to finish with a new line
-+            lines.append("\n")
-+            if "entries" in definition:
-+                lines.append(self.fmt.rst_paragraph(":entries:", 0))
-+                lines.append(self.parse_entries(definition["entries"], 1))
-+            if "members" in definition:
-+                lines.append(self.fmt.rst_paragraph(":members:", 0))
-+                lines.append(self.parse_entries(definition["members"], 1))
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_attr_sets(self, entries: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse attribute from attribute-set"""
-+        preprocessed = ["name", "type"]
-+        linkable = ["enum", "nested-attributes", "struct", "sub-message"]
-+        ignored = ["checks"]
-+        lines = []
-+
-+        for entry in entries:
-+            lines.append(self.fmt.rst_section(namespace, 'attribute-set', entry["name"]))
-+            for attr in entry["attributes"]:
-+                type_ = attr.get("type")
-+                attr_line = attr["name"]
-+                if type_:
-+                    # Add the attribute type in the same line
-+                    attr_line += f" ({self.fmt.inline(type_)})"
-+
-+                lines.append(self.fmt.rst_subsubsection(attr_line))
-+
-+                for k in attr.keys():
-+                    if k in preprocessed + ignored:
-+                        continue
-+                    if k in linkable:
-+                        value = self.fmt.rst_ref(namespace, k, attr[k])
-+                    else:
-+                        value = self.fmt.sanitize(attr[k])
-+                    lines.append(self.fmt.rst_fields(k, value, 0))
-+                lines.append("\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_sub_messages(self, entries: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse sub-message definitions"""
-+        lines = []
-+
-+        for entry in entries:
-+            lines.append(self.fmt.rst_section(namespace, 'sub-message', entry["name"]))
-+            for fmt in entry["formats"]:
-+                value = fmt["value"]
-+
-+                lines.append(self.fmt.rst_bullet(self.fmt.bold(value)))
-+                for attr in ['fixed-header', 'attribute-set']:
-+                    if attr in fmt:
-+                        lines.append(self.fmt.rst_fields(attr,
-+                                                self.fmt.rst_ref(namespace, attr, fmt[attr]),
-+                                                1))
-+                lines.append("\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_yaml(self, obj: Dict[str, Any]) -> str:
-+        """Format the whole YAML into a RST string"""
-+        lines = []
-+
-+        # Main header
-+
-+        family = obj['name']
-+
-+        lines.append(self.fmt.rst_header())
-+        lines.append(self.fmt.rst_label("netlink-" + family))
-+
-+        title = f"Family ``{family}`` netlink specification"
-+        lines.append(self.fmt.rst_title(title))
-+        lines.append(self.fmt.rst_paragraph(".. contents:: :depth: 3\n"))
-+
-+        if "doc" in obj:
-+            lines.append(self.fmt.rst_subtitle("Summary"))
-+            lines.append(self.fmt.rst_paragraph(obj["doc"], 0))
-+
-+        # Operations
-+        if "operations" in obj:
-+            lines.append(self.fmt.rst_subtitle("Operations"))
-+            lines.append(self.parse_operations(obj["operations"]["list"], family))
-+
-+        # Multicast groups
-+        if "mcast-groups" in obj:
-+            lines.append(self.fmt.rst_subtitle("Multicast groups"))
-+            lines.append(self.parse_mcast_group(obj["mcast-groups"]["list"]))
-+
-+        # Definitions
-+        if "definitions" in obj:
-+            lines.append(self.fmt.rst_subtitle("Definitions"))
-+            lines.append(self.parse_definitions(obj["definitions"], family))
-+
-+        # Attributes set
-+        if "attribute-sets" in obj:
-+            lines.append(self.fmt.rst_subtitle("Attribute sets"))
-+            lines.append(self.parse_attr_sets(obj["attribute-sets"], family))
-+
-+        # Sub-messages
-+        if "sub-messages" in obj:
-+            lines.append(self.fmt.rst_subtitle("Sub-messages"))
-+            lines.append(self.parse_sub_messages(obj["sub-messages"], family))
-+
-+        return "\n".join(lines)
-+
-+
-+    # Main functions
-+    # ==============
-+
-+
-+    def parse_yaml_file(self, filename: str) -> str:
-+        """Transform the YAML specified by filename into an RST-formatted string"""
-+        with open(filename, "r", encoding="utf-8") as spec_file:
-+            yaml_data = yaml.safe_load(spec_file)
-+            content = self.parse_yaml(yaml_data)
-+
-+        return content
-diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-index 7bfb8ceeeefc..010315fad498 100755
---- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-+++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-@@ -10,354 +10,17 @@
- 
-     This script performs extensive parsing to the Linux kernel's netlink YAML
-     spec files, in an effort to avoid needing to heavily mark up the original
--    YAML file.
--
--    This code is split in three big parts:
--        1) RST formatters: Use to convert a string to a RST output
--        2) Parser helpers: Functions to parse the YAML data structure
--        3) Main function and small helpers
-+    YAML file. It uses the library code from scripts/lib.
- """
- 
--from typing import Any, Dict, List
- import os.path
-+import pathlib
- import sys
- import argparse
- import logging
--import yaml
--
--
--SPACE_PER_LEVEL = 4
--
--
--# RST Formatters
--# ==============
--def headroom(level: int) -> str:
--    """Return space to format"""
--    return " " * (level * SPACE_PER_LEVEL)
--
--
--def bold(text: str) -> str:
--    """Format bold text"""
--    return f"**{text}**"
--
--
--def inline(text: str) -> str:
--    """Format inline text"""
--    return f"``{text}``"
--
--
--def sanitize(text: str) -> str:
--    """Remove newlines and multiple spaces"""
--    # This is useful for some fields that are spread across multiple lines
--    return str(text).replace("\n", " ").strip()
--
--
--def rst_fields(key: str, value: str, level: int = 0) -> str:
--    """Return a RST formatted field"""
--    return headroom(level) + f":{key}: {value}"
--
--
--def rst_definition(key: str, value: Any, level: int = 0) -> str:
--    """Format a single rst definition"""
--    return headroom(level) + key + "\n" + headroom(level + 1) + str(value)
--
--
--def rst_paragraph(paragraph: str, level: int = 0) -> str:
--    """Return a formatted paragraph"""
--    return headroom(level) + paragraph
--
--
--def rst_bullet(item: str, level: int = 0) -> str:
--    """Return a formatted a bullet"""
--    return headroom(level) + f"- {item}"
--
--
--def rst_subsection(title: str) -> str:
--    """Add a sub-section to the document"""
--    return f"{title}\n" + "-" * len(title)
--
--
--def rst_subsubsection(title: str) -> str:
--    """Add a sub-sub-section to the document"""
--    return f"{title}\n" + "~" * len(title)
--
--
--def rst_section(namespace: str, prefix: str, title: str) -> str:
--    """Add a section to the document"""
--    return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
--
--
--def rst_subtitle(title: str) -> str:
--    """Add a subtitle to the document"""
--    return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
--
--
--def rst_title(title: str) -> str:
--    """Add a title to the document"""
--    return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
--
--
--def rst_list_inline(list_: List[str], level: int = 0) -> str:
--    """Format a list using inlines"""
--    return headroom(level) + "[" + ", ".join(inline(i) for i in list_) + "]"
--
--
--def rst_ref(namespace: str, prefix: str, name: str) -> str:
--    """Add a hyperlink to the document"""
--    mappings = {'enum': 'definition',
--                'fixed-header': 'definition',
--                'nested-attributes': 'attribute-set',
--                'struct': 'definition'}
--    if prefix in mappings:
--        prefix = mappings[prefix]
--    return f":ref:`{namespace}-{prefix}-{name}`"
--
--
--def rst_header() -> str:
--    """The headers for all the auto generated RST files"""
--    lines = []
--
--    lines.append(rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
--    lines.append(rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
--
--    return "\n".join(lines)
--
--
--def rst_toctree(maxdepth: int = 2) -> str:
--    """Generate a toctree RST primitive"""
--    lines = []
--
--    lines.append(".. toctree::")
--    lines.append(f"   :maxdepth: {maxdepth}\n\n")
--
--    return "\n".join(lines)
--
--
--def rst_label(title: str) -> str:
--    """Return a formatted label"""
--    return f".. _{title}:\n\n"
--
--
--# Parsers
--# =======
--
--
--def parse_mcast_group(mcast_group: List[Dict[str, Any]]) -> str:
--    """Parse 'multicast' group list and return a formatted string"""
--    lines = []
--    for group in mcast_group:
--        lines.append(rst_bullet(group["name"]))
--
--    return "\n".join(lines)
--
--
--def parse_do(do_dict: Dict[str, Any], level: int = 0) -> str:
--    """Parse 'do' section and return a formatted string"""
--    lines = []
--    for key in do_dict.keys():
--        lines.append(rst_paragraph(bold(key), level + 1))
--        if key in ['request', 'reply']:
--            lines.append(parse_do_attributes(do_dict[key], level + 1) + "\n")
--        else:
--            lines.append(headroom(level + 2) + do_dict[key] + "\n")
--
--    return "\n".join(lines)
--
--
--def parse_do_attributes(attrs: Dict[str, Any], level: int = 0) -> str:
--    """Parse 'attributes' section"""
--    if "attributes" not in attrs:
--        return ""
--    lines = [rst_fields("attributes", rst_list_inline(attrs["attributes"]), level + 1)]
--
--    return "\n".join(lines)
--
--
--def parse_operations(operations: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse operations block"""
--    preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
--    linkable = ["fixed-header", "attribute-set"]
--    lines = []
--
--    for operation in operations:
--        lines.append(rst_section(namespace, 'operation', operation["name"]))
--        lines.append(rst_paragraph(operation["doc"]) + "\n")
--
--        for key in operation.keys():
--            if key in preprocessed:
--                # Skip the special fields
--                continue
--            value = operation[key]
--            if key in linkable:
--                value = rst_ref(namespace, key, value)
--            lines.append(rst_fields(key, value, 0))
--        if 'flags' in operation:
--            lines.append(rst_fields('flags', rst_list_inline(operation['flags'])))
--
--        if "do" in operation:
--            lines.append(rst_paragraph(":do:", 0))
--            lines.append(parse_do(operation["do"], 0))
--        if "dump" in operation:
--            lines.append(rst_paragraph(":dump:", 0))
--            lines.append(parse_do(operation["dump"], 0))
--
--        # New line after fields
--        lines.append("\n")
--
--    return "\n".join(lines)
--
--
--def parse_entries(entries: List[Dict[str, Any]], level: int) -> str:
--    """Parse a list of entries"""
--    ignored = ["pad"]
--    lines = []
--    for entry in entries:
--        if isinstance(entry, dict):
--            # entries could be a list or a dictionary
--            field_name = entry.get("name", "")
--            if field_name in ignored:
--                continue
--            type_ = entry.get("type")
--            if type_:
--                field_name += f" ({inline(type_)})"
--            lines.append(
--                rst_fields(field_name, sanitize(entry.get("doc", "")), level)
--            )
--        elif isinstance(entry, list):
--            lines.append(rst_list_inline(entry, level))
--        else:
--            lines.append(rst_bullet(inline(sanitize(entry)), level))
--
--    lines.append("\n")
--    return "\n".join(lines)
--
--
--def parse_definitions(defs: Dict[str, Any], namespace: str) -> str:
--    """Parse definitions section"""
--    preprocessed = ["name", "entries", "members"]
--    ignored = ["render-max"]  # This is not printed
--    lines = []
--
--    for definition in defs:
--        lines.append(rst_section(namespace, 'definition', definition["name"]))
--        for k in definition.keys():
--            if k in preprocessed + ignored:
--                continue
--            lines.append(rst_fields(k, sanitize(definition[k]), 0))
--
--        # Field list needs to finish with a new line
--        lines.append("\n")
--        if "entries" in definition:
--            lines.append(rst_paragraph(":entries:", 0))
--            lines.append(parse_entries(definition["entries"], 1))
--        if "members" in definition:
--            lines.append(rst_paragraph(":members:", 0))
--            lines.append(parse_entries(definition["members"], 1))
--
--    return "\n".join(lines)
--
--
--def parse_attr_sets(entries: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse attribute from attribute-set"""
--    preprocessed = ["name", "type"]
--    linkable = ["enum", "nested-attributes", "struct", "sub-message"]
--    ignored = ["checks"]
--    lines = []
--
--    for entry in entries:
--        lines.append(rst_section(namespace, 'attribute-set', entry["name"]))
--        for attr in entry["attributes"]:
--            type_ = attr.get("type")
--            attr_line = attr["name"]
--            if type_:
--                # Add the attribute type in the same line
--                attr_line += f" ({inline(type_)})"
--
--            lines.append(rst_subsubsection(attr_line))
--
--            for k in attr.keys():
--                if k in preprocessed + ignored:
--                    continue
--                if k in linkable:
--                    value = rst_ref(namespace, k, attr[k])
--                else:
--                    value = sanitize(attr[k])
--                lines.append(rst_fields(k, value, 0))
--            lines.append("\n")
--
--    return "\n".join(lines)
--
--
--def parse_sub_messages(entries: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse sub-message definitions"""
--    lines = []
--
--    for entry in entries:
--        lines.append(rst_section(namespace, 'sub-message', entry["name"]))
--        for fmt in entry["formats"]:
--            value = fmt["value"]
--
--            lines.append(rst_bullet(bold(value)))
--            for attr in ['fixed-header', 'attribute-set']:
--                if attr in fmt:
--                    lines.append(rst_fields(attr,
--                                            rst_ref(namespace, attr, fmt[attr]),
--                                            1))
--            lines.append("\n")
--
--    return "\n".join(lines)
--
--
--def parse_yaml(obj: Dict[str, Any]) -> str:
--    """Format the whole YAML into a RST string"""
--    lines = []
--
--    # Main header
--
--    family = obj['name']
--
--    lines.append(rst_header())
--    lines.append(rst_label("netlink-" + family))
--
--    title = f"Family ``{family}`` netlink specification"
--    lines.append(rst_title(title))
--    lines.append(rst_paragraph(".. contents:: :depth: 3\n"))
--
--    if "doc" in obj:
--        lines.append(rst_subtitle("Summary"))
--        lines.append(rst_paragraph(obj["doc"], 0))
--
--    # Operations
--    if "operations" in obj:
--        lines.append(rst_subtitle("Operations"))
--        lines.append(parse_operations(obj["operations"]["list"], family))
--
--    # Multicast groups
--    if "mcast-groups" in obj:
--        lines.append(rst_subtitle("Multicast groups"))
--        lines.append(parse_mcast_group(obj["mcast-groups"]["list"]))
--
--    # Definitions
--    if "definitions" in obj:
--        lines.append(rst_subtitle("Definitions"))
--        lines.append(parse_definitions(obj["definitions"], family))
--
--    # Attributes set
--    if "attribute-sets" in obj:
--        lines.append(rst_subtitle("Attribute sets"))
--        lines.append(parse_attr_sets(obj["attribute-sets"], family))
--
--    # Sub-messages
--    if "sub-messages" in obj:
--        lines.append(rst_subtitle("Sub-messages"))
--        lines.append(parse_sub_messages(obj["sub-messages"], family))
--
--    return "\n".join(lines)
--
--
--# Main functions
--# ==============
- 
-+sys.path.append(pathlib.Path(__file__).resolve().parent.as_posix())
-+from lib import YnlDocGenerator    # pylint: disable=C0413
- 
- def parse_arguments() -> argparse.Namespace:
-     """Parse arguments from user"""
-@@ -392,15 +55,6 @@ def parse_arguments() -> argparse.Namespace:
-     return args
- 
- 
--def parse_yaml_file(filename: str) -> str:
--    """Transform the YAML specified by filename into an RST-formatted string"""
--    with open(filename, "r", encoding="utf-8") as spec_file:
--        yaml_data = yaml.safe_load(spec_file)
--        content = parse_yaml(yaml_data)
--
--    return content
--
--
- def write_to_rstfile(content: str, filename: str) -> None:
-     """Write the generated content into an RST file"""
-     logging.debug("Saving RST file to %s", filename)
-@@ -409,21 +63,22 @@ def write_to_rstfile(content: str, filename: str) -> None:
-         rst_file.write(content)
- 
- 
--def generate_main_index_rst(output: str) -> None:
-+def generate_main_index_rst(parser: YnlDocGenerator, output: str) -> None:
-     """Generate the `networking_spec/index` content and write to the file"""
-     lines = []
- 
--    lines.append(rst_header())
--    lines.append(rst_label("specs"))
--    lines.append(rst_title("Netlink Family Specifications"))
--    lines.append(rst_toctree(1))
-+    lines.append(parser.fmt.rst_header())
-+    lines.append(parser.fmt.rst_label("specs"))
-+    lines.append(parser.fmt.rst_title("Netlink Family Specifications"))
-+    lines.append(parser.fmt.rst_toctree(1))
- 
-     index_dir = os.path.dirname(output)
-     logging.debug("Looking for .rst files in %s", index_dir)
-     for filename in sorted(os.listdir(index_dir)):
--        if not filename.endswith(".rst") or filename == "index.rst":
-+        base, ext = os.path.splitext(filename)
-+        if filename == "index.rst" or ext not in [".rst", ".yaml"]:
-             continue
--        lines.append(f"   {filename.replace('.rst', '')}\n")
-+        lines.append(f"   {base}\n")
- 
-     logging.debug("Writing an index file at %s", output)
-     write_to_rstfile("".join(lines), output)
-@@ -434,10 +89,12 @@ def main() -> None:
- 
-     args = parse_arguments()
- 
-+    parser = YnlDocGenerator()
-+
-     if args.input:
-         logging.debug("Parsing %s", args.input)
-         try:
--            content = parse_yaml_file(os.path.join(args.input))
-+            content = parser.parse_yaml_file(os.path.join(args.input))
-         except Exception as exception:
-             logging.warning("Failed to parse %s.", args.input)
-             logging.warning(exception)
-@@ -447,7 +104,7 @@ def main() -> None:
- 
-     if args.index:
-         # Generate the index RST file
--        generate_main_index_rst(args.output)
-+        generate_main_index_rst(parser, args.output)
- 
- 
- if __name__ == "__main__":
-
-
-
+> 
+>> +
+>> +    ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+>> +    if (ret) {
+>> +        dev_err(dev, "Err getting clks %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    return ret;
+>> +}
+>> +
+>>   static int geni_se_probe(struct platform_device *pdev)
+>>   {
+>>       struct device *dev = &pdev->dev;
+>>       struct geni_wrapper *wrapper;
+>> +    const struct geni_se_desc *desc;
+>>       int ret;
+>>
+>>       wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+>> @@ -906,36 +946,12 @@ static int geni_se_probe(struct platform_device 
+>> *pdev)
+>>       if (IS_ERR(wrapper->base))
+>>           return PTR_ERR(wrapper->base);
+>>
+>> -    if (!has_acpi_companion(&pdev->dev)) {
+>> -        const struct geni_se_desc *desc;
+>> -        int i;
+>> -
+>> -        desc = device_get_match_data(&pdev->dev);
+>> -        if (!desc)
+>> -            return -EINVAL;
+>> -
+>> -        wrapper->num_clks = min_t(unsigned int, desc->num_clks, 
+>> MAX_CLKS);
+>> -
+>> -        for (i = 0; i < wrapper->num_clks; ++i)
+>> -            wrapper->clks[i].id = desc->clks[i];
+>> -
+>> -        ret = of_count_phandle_with_args(dev->of_node, "clocks", 
+>> "#clock-cells");
+>> -        if (ret < 0) {
+>> -            dev_err(dev, "invalid clocks property at %pOF\n", 
+>> dev->of_node);
+>> -            return ret;
+>> -        }
+>> +    desc = device_get_match_data(&pdev->dev);
+>>
+>> -        if (ret < wrapper->num_clks) {
+>> -            dev_err(dev, "invalid clocks count at %pOF, expected %d 
+>> entries\n",
+>> -                dev->of_node, wrapper->num_clks);
+>> +    if (!has_acpi_companion(&pdev->dev) && desc->num_clks) {
+>> +        ret = desc->resources_init(wrapper, desc);
+>> +        if (ret)
+>>               return -EINVAL;
+>> -        }
+>> -
+>> -        ret = devm_clk_bulk_get(dev, wrapper->num_clks, wrapper->clks);
+>> -        if (ret) {
+>> -            dev_err(dev, "Err getting clks %d\n", ret);
+>> -            return ret;
+>> -        }
+>>       }
+>>
+>>       dev_set_drvdata(dev, wrapper);
+>> @@ -951,8 +967,11 @@ static const char * const qup_clks[] = {
+>>   static const struct geni_se_desc qup_desc = {
+>>       .clks = qup_clks,
+>>       .num_clks = ARRAY_SIZE(qup_clks),
+>> +    .resources_init = geni_se_resource_init,
+>>   };
+>>
+>> +static const struct geni_se_desc sa8255p_qup_desc;
+>> +
+>>   static const char * const i2c_master_hub_clks[] = {
+>>       "s-ahb",
+>>   };
+>> @@ -960,11 +979,13 @@ static const char * const i2c_master_hub_clks[] = {
+>>   static const struct geni_se_desc i2c_master_hub_desc = {
+>>       .clks = i2c_master_hub_clks,
+>>       .num_clks = ARRAY_SIZE(i2c_master_hub_clks),
+>> +    .resources_init = geni_se_resource_init,
+>>   };
+>>
+>>   static const struct of_device_id geni_se_dt_match[] = {
+>>       { .compatible = "qcom,geni-se-qup", .data = &qup_desc },
+>>       { .compatible = "qcom,geni-se-i2c-master-hub", .data = 
+>> &i2c_master_hub_desc },
+>> +    { .compatible = "qcom,sa8255p-geni-se-qup", .data = 
+>> &sa8255p_qup_desc },
+>>       {}
+>>   };
+>>   MODULE_DEVICE_TABLE(of, geni_se_dt_match);
+>> -- 
+>> 2.17.1
+>>
+>>
+> 
+> ---
+> bod
