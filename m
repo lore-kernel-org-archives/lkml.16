@@ -1,122 +1,190 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06220237A3B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695D7246BC5
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408611; cv=none; b=hjEz0xrevrK52rlyTljiseUh8s56b51qXM7ROCgNXZOOqFN3tcAby4KW3nqLCo6Pzwodb5VcEfB0DXcSZ7tCA9jpFKHC5x2Yl7bcrqdQ6jDvp0bUEoD4iEi/jk1cmat0o/C9j/w3KHgqlDjP+ghlwZ0XHXwENRFR/YH+tBCl38s=
+	t=1750408685; cv=none; b=H0IMtSr3wNXwTYRezzYGhnMzYoYaiCMuRJB0XJcche/1Z34cWy3szJeNUE9VfMHzi0GwpZYsVmMhLJsHG86zU0EHDW/j6PzKEV/sMRBxDhmIJngz5b31ABBX9/XE3YSTM0RiTTtlUUlPxXwbkL+nHXF5pS5mA2qePa1KyD3dl0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408611; c=relaxed/simple;
-	bh=lM8ClZuxWRG/dPj6dEzB4uWbxDPqXAWHFLGyuMbLk5k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MeKWlSDX5CqUwWbRoFkd+KFpSBDt9EJLsU4o1wO+jJu9+Mvcm6lk+XINd0XlbjNfKv+QdFqQhFZUriOd20cwOQsnQfrJ1q814D+b9PpCZFrzFietAhL6ca+WAs7B66Oxgd5K87/33qzYRl9D54FfkA3Qq3TZ3bCUC5GY+vveGng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LGJjM7O6; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750408685; c=relaxed/simple;
+	bh=/X0onNxIoHCituHUtODJAVeY5Sgv6GC2RODQR2Tb0Wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WrQp9DgeBMSUYcZFipPgknsL2v1d/P3YnQ1xzQI0jyWJfjIMscbX+X4OVwb0ADVIPYPuOvCz90TG9zomENeC/aNUYocr9DIx9l8Evqim+U5gef/jYFd4Rfv4QSPJ/QTreQ6aKOvIOxYDGni9oOaFIy8rvL6CK6uJLOs2krO0GIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEZ9bBLg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGJjM7O6"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so1501314f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750408608; x=1751013408; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hU7fzM9iDfstegkNAKIaUxvWPHDRAUDT6UmYmOI8JOY=;
-        b=LGJjM7O60ftIF9yHwzbdcDA5J/61ILIjNh4UCFaqalwRRdstiZhGXRIfcVTyi3TgvT
-         G2KRswmxBVnkEW/agFM2JcBiedad7f3yFE6joMUl/pNtIkOLMBQq5sCXf7uLpGW0OeoC
-         8Sl+ODpqfWgrJT/Wx2t9RKJazgZC07FzF+mG1XaRUKJCiyr8At1xFzS9CSwgN96q8sBT
-         Nj/qvKof+F6gG6PYM0Wl5x38BF3uSnVJGrh8P7v6zAX2HSbSa0+RybC3yQVI+2pxR3F0
-         1mUaoOuGbdnFb6Q+f/6PF8k0NjmWgDt7ZtWunAKg2Iu3j6+2yT713nBLdrMw/mWV5iNG
-         fu+g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEZ9bBLg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750408682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Eog4yVEfqOklks2EjdMhzqPgmpWjhS9NGkes1JaQ9/0=;
+	b=hEZ9bBLghkkbijuQcSsjaVawoES3YlWLGoUxuI91KKvv+A9MH6AnZBQhAFcPUGEcZfGTk9
+	tCE9TtI/P3pAFvLVGStxpOXbtbtoSLFhIEqeTgpGlaDoXGsMbsKpcceIw77eIm4WJ5fkOC
+	c64mRxXyn6Ojwxtk7UxAzdrNEBkUlxc=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-132-WxnBSvnONd2neI0_KuQ6-w-1; Fri, 20 Jun 2025 04:38:00 -0400
+X-MC-Unique: WxnBSvnONd2neI0_KuQ6-w-1
+X-Mimecast-MFC-AGG-ID: WxnBSvnONd2neI0_KuQ6-w_1750408679
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb5f71b363so30873396d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:38:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408608; x=1751013408;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hU7fzM9iDfstegkNAKIaUxvWPHDRAUDT6UmYmOI8JOY=;
-        b=XHSK8+Fx9K16ZNDxRYmRsD8jej8sDDcpQDTPkKBe4NfRXVdoi7dQ9OmQdWnxHkauwI
-         rwNZh5Iz0u26uTzWGhSfrqamEHhDDwaEJg/up1Nz/vLlt69+sNPhUY9wo50YFoG3+HYf
-         g3N/xiy8OUnBoDxgCpFwjrTOFOb8Q1kzXLHCimdlY+JKA332jwfZ0Kc9fC5V+FeSiwi1
-         ZD2npYJ0y0zpb/1lD6sVQyW+54Orzn6K7UHmHfzjbyDfkINwACMaHSo0Ammk3bi0Qh6W
-         GBLvMKJSY/LlxT1Pl2qzAEwdPtrkSTDmHLz2ONXBYcV93yuNnQa/4Spcco7cOV6sQBxb
-         NRgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtSEOxmvmP7F5OmE6is9F4lV3ClruWfkTwxh7QFdTtCY0k7tQvu9KqsOZQBNOTb2eEjLFeaM2NoDf/QaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXsYK4i2NFfBJXwKGABaUTJ8JYMWcnLJR1Vq6IlaTo3i+doyAT
-	hjRu5+NOGc8XbcHoeXQX1Jc0rWOa7spIF/wrdXRSMaWsoiyc9qLl34OxMJtnJQzqx05AnR2OlXA
-	4/5ejHX6/ZEOIjrzsQlRi1pmaY7fLtOut+VYtnjI8
-X-Gm-Gg: ASbGncsBClEuOFQkL3Rf5jOFOQ7vWKSW4yJMYGoWVcXmCtsXu+jFWjiiW/0C+GP+OTy
-	agX+fBriejpubDV7aP/yRl0PMOHQ5O/+4A0zmXbl6pp9XOuR5aPwp6XGAw9d9caJgqcFJiHp0Jt
-	5NW6ObOnKIkNTLOCVOZiVwOaMsl64JXbOFbT8Z6fkSgqEUxmJvex0JYzhHUorsMioK3QnU+wU/v
-	A==
-X-Google-Smtp-Source: AGHT+IF4NsF4vxMOuxqxg8w50Y/+yHUkifBXKj0sFTc0mzTUo5N50IwMGJ5DvJzRBAJAGH5qKJWeKheEKgq3xvDVGG0=
-X-Received: by 2002:a05:6000:4201:b0:3a5:3062:793a with SMTP id
- ffacd0b85a97d-3a6d12fba1dmr1372232f8f.33.1750408608086; Fri, 20 Jun 2025
- 01:36:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750408679; x=1751013479;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eog4yVEfqOklks2EjdMhzqPgmpWjhS9NGkes1JaQ9/0=;
+        b=tHLnarY+fBmDBiNlPraVQYO6Q4gD5J5g6ErJBg8TqUO3hu5/itFPoRvc8+QN1Ijgav
+         FEZ4ERJA0b5eAeL+R5C6MLYu7aJbAISmHR4IF+9yB1m0lk3VzdER9DheG1rpaB3jnANT
+         9PDL55kQbOSwkACir8V8LAtFYrSekasZqa6//x7XzH75oQHg8chnxTQlNRccu5Cedc6l
+         1uHIivohYJqOhckjxVOt7OjmKJ1AalOzBTfVrFanIXJYzfnZC0Soy3Hla5gVnKWeXKVy
+         JFTE8jYK5yobd7KTMldYlS43pY0Xg/8YygWGMcqPTvhhzFeVFwZcnv3xlyvC+EjI1mcF
+         Unlg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1tjH1fj+OAZtSYkYb2dcrYGmYAYCRuhZCh9JaOPv8z44QIGR9dqe6wDE3LYOkO/VC5FZ4NfdA5buwsf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyotTnk5DZfnBuBJnS3svYANhtZnNc11pVsMo0L4i00v4isz1JK
+	/DbFtmWh0SSAXVJ8nVBGUnoCyVX+cjxhkrRxGTecwiBewSZV/WM1VNiDSsWd5FWPzKC99Ar/lJh
+	/rgk2O7vKT0IOX44gbTB/UQvhm6FwHNjcOK6Wb6fkUCCfMpEk0aS9uKiZTTtQjVj4aA==
+X-Gm-Gg: ASbGncve8oy1hFhMbOm7RcBm0TjigIzF2mTP9KwzwpvDlE4cdBRzjGypvacSymPC/Kv
+	ghKDFaZQZONuWPandftWNGl9B3AzENWNAixrIHDdM4Ike3aF6pz3p2//f1dVJ2oVFKWnW9dokbl
+	Y9eMDnVq7zgZivLTnWTHqBfjUJqlSSTcAl++yPvio8TR8DiwVi5qTfji3ibCx28/HynvvRS/MhD
+	gL3jPVVOi9xBXSKhTh1d68/+wSnEkrve/GYh4DjUkO632eiAfTMkmI/YVnFoiDFyxWx97bCPn2f
+	8VX9JGGB+ZRWGrShyqHCJJsKv41T
+X-Received: by 2002:a05:6214:21ef:b0:6e8:fbb7:675b with SMTP id 6a1803df08f44-6fd0a5bb050mr37553616d6.32.1750408679569;
+        Fri, 20 Jun 2025 01:37:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmA3h6ErxX85wD5sSfG+Vzbb3PR/XLuB7HFc0jjVgeWIZox/+0PegblvBekonQcxrwvk7ztQ==
+X-Received: by 2002:a05:6214:21ef:b0:6e8:fbb7:675b with SMTP id 6a1803df08f44-6fd0a5bb050mr37553336d6.32.1750408679168;
+        Fri, 20 Jun 2025 01:37:59 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.182.199])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0957f69bsm9353816d6.96.2025.06.20.01.37.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 01:37:58 -0700 (PDT)
+Date: Fri, 20 Jun 2025 10:37:49 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 3/3] vsock: Fix transport_* TOCTOU
+Message-ID: <qvdeycblu6lsk7me77wsgoi3b5fyspz4gnrvl3m5lrqobveqwv@fhuhssggsxtk>
+References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+ <20250618-vsock-transports-toctou-v1-3-dd2d2ede9052@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620082954.540955-1-bqe@google.com>
-In-Reply-To: <20250620082954.540955-1-bqe@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 20 Jun 2025 10:36:36 +0200
-X-Gm-Features: Ac12FXwsALrO-m84HwB3vGvFIw9yO1_lS0Ap7fbgrdBUZ90ZAMgj4rZv-EvpFWY
-Message-ID: <CAH5fLgg134vuCCtL5B5vKY8LxAWJqTyY=Fr_xtAwBMTZ6WLX5g@mail.gmail.com>
-Subject: Re: [PATCH v13 0/5] rust: adds Bitmap API, ID pool and bindings
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250618-vsock-transports-toctou-v1-3-dd2d2ede9052@rbox.co>
 
-On Fri, Jun 20, 2025 at 10:29=E2=80=AFAM Burak Emir <bqe@google.com> wrote:
+On Wed, Jun 18, 2025 at 02:34:02PM +0200, Michal Luczaj wrote:
+>Transport assignment may race with module unload. Protect new_transport
+>from becoming a stale pointer.
 >
-> This series adds a Rust bitmap API for porting the approach from
-> commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
-> to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+>This also takes care of an insecure call in vsock_use_local_transport();
+>add a lockdep assert.
 >
-> The Rust bitmap API provides a safe abstraction to underlying bitmap
-> and bitops operations. For now, only includes method necessary for
-> dbitmap.h, more can be added later. We perform bounds checks for
-> hardening, violations are programmer errors that result in panics.
+>BUG: unable to handle page fault for address: fffffbfff8056000
+>Oops: Oops: 0000 [#1] SMP KASAN
+>RIP: 0010:vsock_assign_transport+0x366/0x600
+>Call Trace:
+> vsock_connect+0x59c/0xc40
+> __sys_connect+0xe8/0x100
+> __x64_sys_connect+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
 >
-> We include set_bit_atomic and clear_bit_atomic operations. One has
-> to avoid races with non-atomic operations, which is ensure by the
-> Rust type system: either callers have shared references &bitmap in
-> which case the mutations are atomic operations. Or there is a
-> exclusive reference &mut bitmap, in which case there is no concurrent
-> access.
+>Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> net/vmw_vsock/af_vsock.c | 24 +++++++++++++++++++-----
+> 1 file changed, 19 insertions(+), 5 deletions(-)
 >
-> This series includes an optimization to represent the bitmap inline,
-> as suggested by Yury.
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 337540efc237c8bc482a6730948fc773c00854f1..133d7c8d2231e5c2e5e6a697de3b104fe05d8020 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -407,6 +407,8 @@ EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
 >
-> We ran a simple microbenchmark which shows that overall the Rust API
-> can be expected to be about 4.5% slower than C API.
+> static bool vsock_use_local_transport(unsigned int remote_cid)
+> {
+>+	lockdep_assert_held(&vsock_register_mutex);
+>+
+> 	if (!transport_local)
+> 		return false;
 >
-> We also introduce a Rust API in id_pool.rs that would replace
-> dbitmap.h from the commit referenced above. This data structure is couple=
-d
-> with the bitmap API and adds support for growing and shrinking, along
-> with fine-grained control over when allocation happens.
-> The Binder code needs this since it holds a spinlock at the time it
-> discovers that growing is necessary; this has to be release
-> for performing a memory allocation with GFP_KERNEL that may cause
-> sleep.  We includes example doctests that demonstrate this usage.
+>@@ -464,6 +466,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
 >
-> This is v13, see [v12] for previous state. Thanks everyone for all the
-> helpful comments, this series has improved significantly as a result of
-> your work.
+> 	remote_flags = vsk->remote_addr.svm_flags;
+>
+>+	mutex_lock(&vsock_register_mutex);
+>+
+> 	switch (sk->sk_type) {
+> 	case SOCK_DGRAM:
+> 		new_transport = transport_dgram;
+>@@ -479,12 +483,15 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+> 			new_transport = transport_h2g;
+> 		break;
+> 	default:
+>-		return -ESOCKTNOSUPPORT;
+>+		ret = -ESOCKTNOSUPPORT;
+>+		goto unlock;
+> 	}
+>
+> 	if (vsk->transport) {
+>-		if (vsk->transport == new_transport)
+>-			return 0;
+>+		if (vsk->transport == new_transport) {
+>+			ret = 0;
+>+			goto unlock;
+>+		}
+>
+> 		/* transport->release() must be called with sock lock acquired.
+> 		 * This path can only be taken during vsock_connect(), where we
+>@@ -508,8 +515,12 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+> 	/* We increase the module refcnt to prevent the transport unloading
+> 	 * while there are open sockets assigned to it.
+> 	 */
+>-	if (!new_transport || !try_module_get(new_transport->module))
+>-		return -ENODEV;
+>+	if (!new_transport || !try_module_get(new_transport->module)) {
+>+		ret = -ENODEV;
+>+		goto unlock;
+>+	}
+>+
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+I'd add a comment here to explain that we can release it since we
+successfully increased the `new_transport` refcnt.
+
+>+	mutex_unlock(&vsock_register_mutex);
+>
+> 	if (sk->sk_type == SOCK_SEQPACKET) {
+> 		if (!new_transport->seqpacket_allow ||
+>@@ -528,6 +539,9 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+> 	vsk->transport = new_transport;
+>
+> 	return 0;
+>+unlock:
+
+I'd call it `err:` so it's clear is the error path.
+
+Thanks,
+Stefano
+
+>+	mutex_unlock(&vsock_register_mutex);
+>+	return ret;
+> }
+> EXPORT_SYMBOL_GPL(vsock_assign_transport);
+>
+>
+>-- 
+>2.49.0
+>
+
