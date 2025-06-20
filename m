@@ -1,153 +1,240 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1F12857DE
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31311236442
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424656; cv=none; b=rUpZfi5RO9s2vsyB/POWoYplCpIk2047009Uvz2/FolA0c+U68rWYxG/TM4Rl5HZbIe7+6QNLeldiNlFNggRrYHFWY3QPTNa6IdxlpQcioIpPbMPf4Sc0dvClu9ZCGTGne93aGY9PBFErpxRKO2qDFGi0Gwk7m2jNyeZ1CdN1nE=
+	t=1750424705; cv=none; b=C22XaPjWXWez4Di34KLXRByhnHtM7U/EIzqkvqEAAi8FRdGU1FD0S9eooN1jl1PuzpnMXoVkpMG3CU6uBqMoSBMINeFGKLL1NvS/lS9+3JiLEnfKO/kQyFQeoKzpEbSjB1C4Ezn5CyMW8igeOpqoiVCIPM4Hywrk9libkHmx2YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424656; c=relaxed/simple;
-	bh=8xzRYna+3js/ZU7PKL4VsvV8120qgK725oSHwN4oeqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODtDCxqfe3YnD5fJBP5VZQQSSOYIx/5TkucpqHyDMmvlwlCGMuckXgjn4n6mmsU08F/Ylsa6992JNrcqk/SdlkoSF7VVrb0QE0PxXik83XcEnwOzsdtUiIzMnjbv8+IbdrpB+eqfcfGgFwCdn4xBPYhHS6eyPm6tBecRMS0n7K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zX6RSH/E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nh+hv8rR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J3qtFgYX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L0w8dxyW; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750424705; c=relaxed/simple;
+	bh=2YdG+o9yyXjFTHBMglWNk/zaHuQ+KY9OfnhjNqkzLKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cMpbHZbE28T6vaeTb3+a8yEUf+Tlw2n4goNVwqF/AHBfEHtVI+6xkeTxzIaHTWXZbs/BIoqdY7PT2xSd3WjdGAx52v2+5+gbBI1W9qqO6D9kAbYbBSlo26Aoh/mUgP7KxpxmjlPhuKKNM1LvuoMDR/Y22QQmDJRGQ64FbDbDmHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ljyAvX6y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ekurzktQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ljyAvX6y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ekurzktQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zX6RSH/E";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nh+hv8rR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J3qtFgYX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L0w8dxyW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ljyAvX6y";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ekurzktQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ljyAvX6y";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ekurzktQ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 368F61F38D;
-	Fri, 20 Jun 2025 13:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750424650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 674641F38D;
+	Fri, 20 Jun 2025 13:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750424702; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=daWLKQl2/0cgVx8ffNyLfCOsf+I6Pzyyw2AepgbtRX0=;
-	b=zX6RSH/E1caNjcBgklWgZsm5Y/DMKlYXsbv6G/xsAFF/Lf8GVHyuj/MG42YdRUOQZrUq4q
-	zRMpWaxVLsJk0i1xUq/cmTBZyVBPKR2ByqwA6KDgWRTbRF6kmrInAaqL7zX05RHsGaZm9Z
-	L+XoVlS1EDbkEmdRK0AbFsS+6ZMi1uI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750424650;
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g5Vh7PQtzn7ctlN5CnoQKtRomFBLSHgBU4H7pj3uRrk=;
+	b=ljyAvX6yHma/vYwnb9hA/aUwoGPEdPzAE0Lku4ZszVg9ngpFDAAV9y8h9IOk9/8LSZifSm
+	2D1YskRtGmlQ6YkpvU+ClBdQUiRqb5UH13EMulrhF/hRhsc2JQS7RoavC6B5tgbgmheYKo
+	B5d6zM8ZKu6EcooKUYv6BpDsouNS3p8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750424702;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=daWLKQl2/0cgVx8ffNyLfCOsf+I6Pzyyw2AepgbtRX0=;
-	b=nh+hv8rRDlhFQFcofmha9TNcenwSDqo3w6PCqC5Qscu9vvAZp+AGzrHGTs5Qy9r8st0t2w
-	zHN90KYGDxsoDlBw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g5Vh7PQtzn7ctlN5CnoQKtRomFBLSHgBU4H7pj3uRrk=;
+	b=ekurzktQlwUwBQk6RQd4alsVf73brvr3Gmcz6Wms3xm2o7HFuQdO9ZSZmtgE+nYWUljY//
+	JgD73G8wv9V2JpDA==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=J3qtFgYX;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=L0w8dxyW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750424645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750424702; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=daWLKQl2/0cgVx8ffNyLfCOsf+I6Pzyyw2AepgbtRX0=;
-	b=J3qtFgYXaiEtPWNY2b+WVQipK4Bkth6OuexnmnM02JWlLHRs/lsKu/MfcMxY5eFBu1gPc1
-	GExCZ5WZwZtIgz5d4OmvkIp56Fq3PGIG9PqNeoupog2Vf09rm/jNu7jhmry4CMoiGAYNKf
-	yJOPkW9yNQs++Hr/krGac1h0pFIUfNo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750424645;
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g5Vh7PQtzn7ctlN5CnoQKtRomFBLSHgBU4H7pj3uRrk=;
+	b=ljyAvX6yHma/vYwnb9hA/aUwoGPEdPzAE0Lku4ZszVg9ngpFDAAV9y8h9IOk9/8LSZifSm
+	2D1YskRtGmlQ6YkpvU+ClBdQUiRqb5UH13EMulrhF/hRhsc2JQS7RoavC6B5tgbgmheYKo
+	B5d6zM8ZKu6EcooKUYv6BpDsouNS3p8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750424702;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=daWLKQl2/0cgVx8ffNyLfCOsf+I6Pzyyw2AepgbtRX0=;
-	b=L0w8dxyWrX/SkfEqgHoXO7wqXYLGAXVLD+LJwG8CFOYVSKtrGdYJtGKAFyznE1DvwlZ+sO
-	xB9rOeQnC4q0B0CQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g5Vh7PQtzn7ctlN5CnoQKtRomFBLSHgBU4H7pj3uRrk=;
+	b=ekurzktQlwUwBQk6RQd4alsVf73brvr3Gmcz6Wms3xm2o7HFuQdO9ZSZmtgE+nYWUljY//
+	JgD73G8wv9V2JpDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B8FF4136BA;
-	Fri, 20 Jun 2025 13:04:03 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48D63136BA;
+	Fri, 20 Jun 2025 13:05:02 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id O8puKkNcVWijMgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 20 Jun 2025 13:04:03 +0000
-Date: Fri, 20 Jun 2025 15:04:02 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, nvdimm@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH RFC 02/14] mm: drop highest_memmap_pfn
-Message-ID: <aFVcQh3sLFJe2-fS@localhost.localdomain>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-3-david@redhat.com>
+	id GIBfEX5cVWjlMgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 20 Jun 2025 13:05:02 +0000
+Message-ID: <8c4a4ea2-1eab-47dd-9b65-d60cfac16577@suse.cz>
+Date: Fri, 20 Jun 2025 15:05:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617154345.2494405-3-david@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 368F61F38D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] mm/madvise: remove the visitor pattern and thread
+ anon_vma state
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Jann Horn <jannh@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Lance Yang <ioworker0@gmail.com>,
+ SeongJae Park <sj@kernel.org>, Suren Baghdasaryan <surenb@google.com>
+References: <cover.1750363557.git.lorenzo.stoakes@oracle.com>
+ <4239e727b98763856b86cbd9eeaa0ba792eb2394.1750363557.git.lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <4239e727b98763856b86cbd9eeaa0ba792eb2394.1750363557.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	R_RATELIMIT(0.00)[to_ip_from(RL88oxspsx4bg3gu1yybyqiqt4)];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid,suse.de:dkim,suse.de:email]
-X-Spam-Score: -4.51
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,nvidia.com,linux.alibaba.com,oracle.com,arm.com,kernel.org,google.com,kvack.org,vger.kernel.org,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,oracle.com:email,suse.cz:mid]
 X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Tue, Jun 17, 2025 at 05:43:33PM +0200, David Hildenbrand wrote:
-> Now unused, so let's drop it.
+On 6/19/25 22:26, Lorenzo Stoakes wrote:
+> Now we have the madvise_behavior helper struct we no longer need to mess
+> around with void* pointers in order to propagate anon_vma_name, and this
+> means we can get rid of the confusing and inconsistent visitor pattern
+> implementation in madvise_vma_anon_name().
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> This means we now have a single state object that threads through most of
+> madvise()'s logic and a single code path which executes the majority of
+> madvise() behaviour (we maintain separate logic for failure injection and
+> memory population for the time being).
+> 
+> Note that users cannot inadvertently cause this behaviour to occur, as
+> madvise_behavior_valid() would reject it.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+This paragraph is a bit confusing. I've inferred from the code you're
+talking about the new internal negative values, but the preceding paragraphs
+don't mention them. Could you explain in more detail what the patch does?
+I.e. adding the new struct madvise_behavior field and the new behavior value(s).
 
+> Doing this results in a can_modify_vma_madv() check for anonymous VMA name
+> changes, however this will cause no issues as this operation is not
+> prohibited.
+> 
+> We can also then reuse more code and drop the redundant
+> madvise_vma_anon_name() function altogether.
+> 
+> Additionally separate out behaviours that update VMAs from those that do
+> not.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
--- 
-Oscar Salvador
-SUSE Labs
+> @@ -1325,21 +1388,25 @@ static int madvise_vma_behavior(struct vm_area_struct *vma,
+>  		if (error)
+>  			goto out;
+>  		break;
+> -	case MADV_COLLAPSE:
+> -		return madvise_collapse(vma, prev, start, end);
+> -	case MADV_GUARD_INSTALL:
+> -		return madvise_guard_install(vma, prev, start, end);
+> -	case MADV_GUARD_REMOVE:
+> -		return madvise_guard_remove(vma, prev, start, end);
+> +	case __MADV_SET_ANON_VMA_NAME:
+> +	case __MADV_CLEAR_ANON_VMA_NAME:
+> +		/* Only anonymous mappings can be named */
+> +		if (vma->vm_file && !vma_is_anon_shmem(vma))
+> +			return -EBADF;
+> +		break;
+>  	}
+>  
+>  	/* We cannot provide prev in this lock mode. */
+> -	VM_WARN_ON_ONCE(arg->lock_mode == MADVISE_VMA_READ_LOCK);
+> -	anon_name = anon_vma_name(vma);
+> -	anon_vma_name_get(anon_name);
+> +	VM_WARN_ON_ONCE(madv_behavior->lock_mode == MADVISE_VMA_READ_LOCK);
+> +
+> +	if (!is_anon_vma_name(behavior)) {
+> +		anon_name = anon_vma_name(vma);
+> +		anon_vma_name_get(anon_name);
+> +	}
+>  	error = madvise_update_vma(vma, prev, start, end, new_flags,
+>  				   anon_name);
+> -	anon_vma_name_put(anon_name);
+> +	if (!is_anon_vma_name(behavior))
+> +		anon_vma_name_put(anon_name);
+
+This is not new, but the refactoring made it very visible that we're doing
+get/put on anon_name exactly in cases where we're not messing with anon_name
+so it might look buggy. Some explanatory comment would be thus nice,
+otherwise people need to git blame for commit 942341dcc5748.
+
+Otherwise LGTM, will wait with tag for v2 as you replied elsewhere there
+will be changes. Thanks!
+
