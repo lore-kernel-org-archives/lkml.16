@@ -1,71 +1,72 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340FD27D760
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE210284663
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750412889; cv=none; b=tLwCQfnpXNNdEJwVZ18wxZrpEdsu9fB7tBOSPefwBqti7lxmCJl6SXVXwaROZeYi90xY0xhK89nM+9511AXPgbGdm9gBhad5OrMtPWXzJSajuygCfWpfOqKLxv/3qtJqDZf0IfMf2FNZ11TCErQopsH+TCjcGsat1FycBlUPwHg=
+	t=1750412894; cv=none; b=SAabzm0zFxp9eoqEIx8QHDg1BCDIXmlHdFWyTUb119Y/pHCKA7nv/6dPsk5UIbh/CxQuBZrTu9E0atjuzWMnfUW+SrCNCCByiC6+E5H6AhK8UZe5dj9BqQP1zmizhmlOEu+toew0MUJubI3flRmvijC2b1pMCw+msLa2iRIWvTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750412889; c=relaxed/simple;
-	bh=Foo8N1ByPXw7pRJL9szKAq8k19HUMKIBe+nurzNGMvo=;
+	s=arc-20240116; t=1750412894; c=relaxed/simple;
+	bh=TMNUjB0edUTWbjur/upj1Gemotpik/RMht0HzVflnuo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IczsVcb7tAFgb0R6LfJ847eR02Logukh9yCTfoMtnZwREEgfwsNQ5ViLkqSmDNPDDENGPsW4PydKrrWMVttLl0HhCMaRnCaoi3HnZ1pGV7rCFhpW1zINE4aAoe2XhJgJUmdcUp5IJL8DlGNqUlPgCXalzuEFYIR4pR4Dva7sT/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jqvfX9C8; arc=none smtp.client-ip=209.85.219.42
+	 To:Cc:Content-Type; b=q0aXXRD9Gjzk2yMDMlBjJ6Z/c6XEITtALqr0jT+yICiELe/kQcug/NqY88hCpXJflU4yzOYzM7z/3+cjApDlliVmis/orA5pTJ5sFPc7Euz8iKGdcelOKgFc1kRKM3JGvCwNZvcsWvxqZ+bhRRaiOD9UKIhB6PI6jOFNj/cqK6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DxEqxHcb; arc=none smtp.client-ip=209.85.219.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jqvfX9C8"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6faf66905baso23560736d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:48:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxEqxHcb"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fb0a05b56cso34923976d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750412886; x=1751017686; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750412892; x=1751017692; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DndvyFRTSAgM5D73M0v7ksCHL2JCkKxBFAb632e7kGM=;
-        b=jqvfX9C8Sv5U7HHeCdPFtMXUq9Q6U2oI99TZPcRy4srDDKOWEvWQLkjWWmdOmdBQR8
-         1wxqFdjgcM7fyJxyEjLRqElMT6myShavEkTA/unwL1OIpaW9sV+sCsTRF7ArKgvn5MGT
-         SQCZkQ4kBw9Zv7CfhhlV4mMCKIJpQx9KsE0pN16KNCNQxL2Hb2UoKYpsj/cm8ONilY2v
-         uMuRXpPa+VO1gKiLppp+5euro7agOz5zqSwQbKYk3Dsh7f89Pw9RzeLljChgJuvAJdT7
-         M65tQ2hPCT17C7Pgtmcaql8LsCxnOaDCRRkueDRjksbH+2uhB1Jk50iOm5iuFD6zEoDF
-         dNng==
+        bh=MIooeVQBeU1oilE68/t1OOxnZlo4N5Q+8wCcBmLllxI=;
+        b=DxEqxHcbjNdmJ1LMVoh+srdRhbrXz65zCA531cHHMYwXsQsVSHy08J2c9QV6FhhZfA
+         HBqQS5U0MRR8l4/WXD2W6vXeEE9wlgjAux41K7+mAAD5oz2qfY9nE3TYLmpFbGCCVvWv
+         yUS2vOI2QvnTMzemciuXInmvImqjG6lLTQa8BehofChZfrKY7QAQZhggxhGOdxhILfkG
+         MpmPPqRpNwhlh0J2Culcw3fRj+9sYk6hTDXm3viySq6mD1mhQ+zJqS/XvN5vaWutvMz/
+         i97Ry9QFLiyOgbV1k51V2bLvNDe/QKkOZnQW6dG2w4GsIYrbdvrNqL4X6D+o8/u/qEvX
+         SiGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750412886; x=1751017686;
+        d=1e100.net; s=20230601; t=1750412892; x=1751017692;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DndvyFRTSAgM5D73M0v7ksCHL2JCkKxBFAb632e7kGM=;
-        b=gd80pcB78j/HPIPtoTonRJrDfyV2voQsQjLOKTtRN3/Oo2HmSqKueofBrEHh82to5P
-         11qjeWAT2Bcjwf/gwymfN3LFuHenKa3NMQJmsC8s+fzclUdcZ4bCNj+KQ1z9YjNGfVz5
-         7e/FqNQCtMgl2FZzVgRgYowKEmNYl234O8f4imgQFv+NMoHNV0aSqCB1aoX088aFWCNi
-         YpK4KyC2EfsWbrsNkIxT9ZCdLKg5X76c5Bdd3K8gSQuoEwbx5OVCper2KM0ze++j1sI+
-         eCmbFcm1ioDSDb9nmveq4iTSRE+JlXgfeycxzKUe/PbKrP6uKpgm2FhRWXEHBkkKaZ+C
-         KOnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvLZa12lg6LrcnfJEkMyoVa07A9auKpQSLTD8NFWJdxTB3aob23U384vdbwWYGZOf++KxrtGrp/dm4/jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAZQmghJajxr5az5v+tH8pqojhx3HMFCRPPDsetv5yAq/y9wlJ
-	8pcGOvxJ+h5UHFtCUYv6A8BxRqK0AlK4yEUPC9Sn3oSM38Qb4klihUZDy9eWixpXHEYrBrZwfrY
-	GmSAloNt6YqVtZoXwzVK2Vt0XXwH9UlPKMNvMpm69
-X-Gm-Gg: ASbGncuaseKoRNebH9jPmwl7FoEIYsPdinHy1sZ1hsCoPeDvgAN6JOFR0t205IoR6j/
-	EATJlgYpLjs8JbF06EgZqLMe6R6eYs5dUDMsoM2n3z7f1csYFz+gdzP1FbzKVsKvsZJ0Li44SRv
-	NPGXoKsV1O0vTAOhdIBf/U33n0KbXUhzOBl0/Rbr8Qqj9pXAzqDQjC4LEs7nOIxf5kGcNnoTUqM
-	9asnw==
-X-Google-Smtp-Source: AGHT+IH2VbZ8sTk8CXNiHNzNudykkei9NhU3ukDwMiIblAxulTl5eCamk8ZeKq8qXzyhGE0u7cw13qLap5kso8QKIUQ=
-X-Received: by 2002:a05:6214:20c4:b0:6fb:96:36b0 with SMTP id
- 6a1803df08f44-6fd0a576ff9mr32766906d6.31.1750412885855; Fri, 20 Jun 2025
- 02:48:05 -0700 (PDT)
+        bh=MIooeVQBeU1oilE68/t1OOxnZlo4N5Q+8wCcBmLllxI=;
+        b=Cr5AGRAMxGh4SmKE4HwmnlhhsgDzR2jWg5Fn1TPD99LluxKZgG/U2gltOswC3THuue
+         3A/t3NfzMnUuoHVm9ViTsMrNLl59EpyYfNp0OdoJHSO+o1H2JekIUccad+d2IYe2dIg7
+         Tbtj4fRRTURXnmn5QTr1f7VVhkr2r0ngRd6wixrlCG1sdF6Q7++jxmtE9IvpQ2Tnxd3z
+         YcrblwPFcimG4xrxMXW+dNX3z2z7huvIrgyGBgcT00ix92GYwA7iw6CFLHSv94fmnecf
+         BLLjrTiKdjq0uun+m+ypoJps5rneiiocP7/l6y0fmajpHWqnUaw7X1xhY9VCctkB2NJv
+         83KA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmhZ8QYQai0EULGmSkOVf2LGZZ6WXNUScbcU+E8Nq5/OSFQveI9zqEke3arr7/o87XKETHZZ1FXYFr52c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp4l17wehr7zrHEV4Sg82NsfFE4Rnv5XY3IZP4ygDQ4VZTUfHT
+	sRdXIrRT/njIV7DqK+IDeJn4kEHI5S6W9YN2V3+pCF2sp3HJqnNxz/nl5N5ij+06VbeSD1V53Do
+	Gy+ktyXi0G7W+E3BpsU4MuvUbDYZZHcCxgiDals2G
+X-Gm-Gg: ASbGncvftgzP7mr326cU0400Zn65lZDX9BUSOLm6lsZLT+HXfTyVBmh3+2shYyT+fvV
+	rorvPcoXJhbSEIbZ/AWapTSBS42fXaNw2EpEPQQGOKUxWZ5Zdrx0VCNHfBMRGrXFfAaLvhQt4Ya
+	YCJtziU77bUo5eS+wfJ1+LBUkf72CDOF7pS/e+0jLSvADZkgm5ow+dtmD+3Ghrkrrh/uJk04Bcy
+	e6auQ==
+X-Google-Smtp-Source: AGHT+IF3hfRWwfu8d+uu7377W+fT4nOapBohpTadRVU47G95rcPljItCrNSHpbMlCO1DkFItjQy4chIkWP0pOrd4/zo=
+X-Received: by 2002:a05:6214:cc1:b0:6fb:4e9a:663d with SMTP id
+ 6a1803df08f44-6fd0a4c1508mr37022636d6.17.1750412891540; Fri, 20 Jun 2025
+ 02:48:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de> <20250611-kunit-kselftests-v3-14-55e3d148cbc6@linutronix.de>
-In-Reply-To: <20250611-kunit-kselftests-v3-14-55e3d148cbc6@linutronix.de>
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de> <20250611-kunit-kselftests-v3-11-55e3d148cbc6@linutronix.de>
+In-Reply-To: <20250611-kunit-kselftests-v3-11-55e3d148cbc6@linutronix.de>
 From: David Gow <davidgow@google.com>
-Date: Fri, 20 Jun 2025 17:47:52 +0800
-X-Gm-Features: Ac12FXzP5bbs3Fo55AZsi6RK7Qdw2kJoFi-CbyZ0DxjszonEa7qJje79mecmEZY
-Message-ID: <CABVgOSneoHqQ_1fgQYvE_jj3cZ=wgaxZA7U4-7V0Cqi2JD4yAA@mail.gmail.com>
-Subject: Re: [PATCH v3 14/16] kunit: uapi: Add example for UAPI tests
+Date: Fri, 20 Jun 2025 17:47:58 +0800
+X-Gm-Features: Ac12FXwanhL_6ajC96LXETu4jC3ictaYERJTwd0X40ut3IHtQwdsByb3lXzq8q0
+Message-ID: <CABVgOSmVPStp91aSLpSMs1618r7j2JCA8Xbt4BnBz7-97fO+-A@mail.gmail.com>
+Subject: Re: [PATCH v3 11/16] kunit: Always descend into kunit directory
+ during build
 To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
 	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
@@ -80,19 +81,27 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org
 	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	workflows@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000004ed1a90637fdc2ea"
+	boundary="000000000000a460d80637fdc298"
 
---0000000000004ed1a90637fdc2ea
+--000000000000a460d80637fdc298
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, 11 Jun 2025 at 15:38, Thomas Wei=C3=9Fschuh
 <thomas.weissschuh@linutronix.de> wrote:
 >
-> Extend the example to show how to run a userspace executable.
+> An upcoming change will add 'userprogs' to the kunit subdirectory.
+> For kbuild to properly clean up these build artifacts the subdirectory
+> needs to be always processed.
+>
+> Pushing the special logic for hook.o into the kunit Makefile also makes t=
+he
+> logic easier to understand.
 >
 > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
+
+I'm quite happy with this.
 
 Reviewed-by: David Gow <davidgow@google.com>
 
@@ -100,113 +109,55 @@ Cheers,
 -- David
 
 
-
->  lib/kunit/Makefile             |  9 ++++++++-
->  lib/kunit/kunit-example-test.c | 15 +++++++++++++++
->  lib/kunit/kunit-example-uapi.c | 22 ++++++++++++++++++++++
->  3 files changed, 45 insertions(+), 1 deletion(-)
+>  lib/Makefile       | 4 ----
+>  lib/kunit/Makefile | 2 +-
+>  2 files changed, 1 insertion(+), 5 deletions(-)
 >
+> diff --git a/lib/Makefile b/lib/Makefile
+> index c38582f187dd81916113319072e5cfef26f26c84..698566135091cc3bf0054f195=
+4b434dc3325364a 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -108,11 +108,7 @@ test_fpu-y :=3D test_fpu_glue.o test_fpu_impl.o
+>  CFLAGS_test_fpu_impl.o +=3D $(CC_FLAGS_FPU)
+>  CFLAGS_REMOVE_test_fpu_impl.o +=3D $(CC_FLAGS_NO_FPU)
+>
+> -# Some KUnit files (hooks.o) need to be built-in even when KUnit is a mo=
+dule,
+> -# so we can't just use obj-$(CONFIG_KUNIT).
+> -ifdef CONFIG_KUNIT
+>  obj-y +=3D kunit/
+> -endif
+>
+>  ifeq ($(CONFIG_DEBUG_KOBJECT),y)
+>  CFLAGS_kobject.o +=3D -DDEBUG
 > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> index dafa09bd4241c24d31c4c19edecb67bf724127d7..e406a31df1df834a87961663d=
-e0b7921b59481c2 100644
+> index 5aa51978e456ab3bb60c12071a26cf2bdcb1b508..656f1fa35abcc635e67d5b4cb=
+1bc586b48415ac5 100644
 > --- a/lib/kunit/Makefile
 > +++ b/lib/kunit/Makefile
-> @@ -30,4 +30,11 @@ obj-$(CONFIG_KUNIT_TEST) +=3D          string-stream-t=
-est.o
->  obj-$(CONFIG_KUNIT_TEST) +=3D            assert_test.o
+> @@ -17,7 +17,7 @@ kunit-objs +=3D                         debugfs.o
 >  endif
 >
-> -obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=3D    kunit-example-test.o
-> +userprogs +=3D                           kunit-example-uapi
-> +kunit-example-uapi-userccflags :=3D      -static
-> +kunit-example-uapi-nolibc :=3D           $(CONFIG_ARCH_HAS_NOLIBC)
-> +blobs +=3D                               kunit-example-uapi.blob.o
-> +
-> +obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=3D    kunit-example-mod.o
-> +kunit-example-mod-y +=3D                 kunit-example-test.o
-> +kunit-example-mod-$(CONFIG_KUNIT_UAPI) +=3D kunit-example-uapi.blob.o
-> diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-tes=
-t.c
-> index 3056d6bc705d0a8f196f0f4412e679dbb0e03114..b2681a6e047dfd6fea4a7cca6=
-0e81651d09c2eae 100644
-> --- a/lib/kunit/kunit-example-test.c
-> +++ b/lib/kunit/kunit-example-test.c
-> @@ -6,8 +6,11 @@
->   * Author: Brendan Higgins <brendanhiggins@google.com>
->   */
+>  # KUnit 'hooks' are built-in even when KUnit is built as a module.
+> -obj-y +=3D                               hooks.o
+> +obj-$(if $(CONFIG_KUNIT),y) +=3D         hooks.o
 >
-> +#include <linux/blob.h>
-> +
->  #include <kunit/test.h>
->  #include <kunit/static_stub.h>
-> +#include <kunit/uapi.h>
->
->  /*
->   * This is the most fundamental element of KUnit, the test case. A test =
-case
-> @@ -277,6 +280,17 @@ static void example_slow_test(struct kunit *test)
->         KUNIT_EXPECT_EQ(test, 1 + 1, 2);
->  }
->
-> +/*
-> + * This test shows the usage of UAPI tests.
-> + */
-> +static void example_uapi_test(struct kunit *test)
-> +{
-> +       if (IS_ENABLED(CONFIG_KUNIT_UAPI))
-> +               kunit_uapi_run_kselftest(test, BLOB(kunit_example_uapi));
-> +       else
-> +               kunit_skip(test, "CONFIG_KUNIT_UAPI is not enabled");
-> +}
-> +
->  /*
->   * Here we make a list of all the test cases we want to add to the test =
-suite
->   * below.
-> @@ -297,6 +311,7 @@ static struct kunit_case example_test_cases[] =3D {
->         KUNIT_CASE(example_priv_test),
->         KUNIT_CASE_PARAM(example_params_test, example_gen_params),
->         KUNIT_CASE_SLOW(example_slow_test),
-> +       KUNIT_CASE(example_uapi_test),
->         {}
->  };
->
-> diff --git a/lib/kunit/kunit-example-uapi.c b/lib/kunit/kunit-example-uap=
-i.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..4ce657050dd4a576632a41ca0=
-309c4cb5134ce14
-> --- /dev/null
-> +++ b/lib/kunit/kunit-example-uapi.c
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * KUnit Userspace example test.
-> + *
-> + * Copyright (C) 2025, Linutronix GmbH.
-> + * Author: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> + *
-> + * This is *userspace* code.
-> + */
-> +
-> +#include "../../tools/testing/selftests/kselftest.h"
-> +
-> +int main(void)
-> +{
-> +       ksft_print_header();
-> +       ksft_set_plan(4);
-> +       ksft_test_result_pass("userspace test 1\n");
-> +       ksft_test_result_pass("userspace test 2\n");
-> +       ksft_test_result_skip("userspace test 3: some reason\n");
-> +       ksft_test_result_pass("userspace test 4\n");
-> +       ksft_finished();
-> +}
+>  obj-$(CONFIG_KUNIT_TEST) +=3D            kunit-test.o
+>  obj-$(CONFIG_KUNIT_TEST) +=3D            platform-test.o
 >
 > --
 > 2.49.0
 >
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/kunit-dev=
+/20250611-kunit-kselftests-v3-11-55e3d148cbc6%40linutronix.de.
 
---0000000000004ed1a90637fdc2ea
+--000000000000a460d80637fdc298
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -296,13 +247,13 @@ Vumvw5QTHe29TYxSiusovM6OD5y0I+4zaIaYDx/AtF0mMOFXb1MDyynf1CDxhtkgnrBUseHSOU2e
 MYs7IqzRap5xsgpJS+t7cp/P8fdlCNvsXss9zZa279tKwaxR0U2IzGxRGsWKGxDysn1HT6pqMDGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAUXA7LnOuRz2DvkWTeMc
-0TANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgBKYtzZEa4Ddg4+3QCmnZ1mh5rwLd
-AZafAWLn84sKTGowGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NjIwMDk0ODA2WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+0TANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgaBrznGvcp3hv1G/qo/a5Wwrm4nkA
+h8wSfIRsgQy6pAgwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NjIwMDk0ODEyWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAkO/uXk7By+DTBuP3+z/H9J2VjZMPjifQSGosbr4ua+g3dIf5YVQSMtXLiSvWHKqe
-fGh/XxB43pw0sxKR5Zv36amn3S4Ty9yFa/SGM21ajxnTxf/qmtAYGijeR5G3rkC9jRsXmgZNys9m
-VbwJEId29GCVKjgE7Zp7qcJGraFh529WnfY6nzWEyoicbO3P0UJ2wtCRU0PKC4V5Q+T3B2rnL4pG
-b2Ef2bJKNVaWM4ahgBY1ibDzEadfaHhOUJ1RgBXDfsAmeOSg3/+DQIblabOf/09+j1ThpG2Ho2/h
-4jENXtPe/GivL0YPpKjsHaGUOdrDL9mE5qKfO6Mvb8aQXmTmQg==
---0000000000004ed1a90637fdc2ea--
+AQEBBQAEggEAA1VpT4ySetim2z2YWn4C69klNXOryCHHPFkSmpLHxdTyVW7Ig1l7jybcdRSu6DdH
+IIktjjYZLZLAiR2ZJ3anMz03lGcFoRejXG72sZiSLRWVXflQSbitWjpcBw3qzPcHUD9x/wWdKl9i
+8IaD6+VmM8lAjyhv8FOJRDMBErN5uZOdvIxK3etkqdigUjYkPfgObee2iVvIDuaUTDuagQcn9pt7
+x2mppPu6IKbSzaGDltbgr5pGBbz7fmRIGUHIlDTReXG8YB6xxo9F3MjIL37dRyR7PfMCYB4cO650
+LbNSUvojQy8cDjARiL9xBXF1rdDti7mrTHwq/bDtlnuKx+T/nw==
+--000000000000a460d80637fdc298--
