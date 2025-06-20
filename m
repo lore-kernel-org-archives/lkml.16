@@ -1,139 +1,118 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A22217BB21;
-	Fri, 20 Jun 2025 17:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ECB17BB21
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750439987; cv=none; b=Vb/JpgjIamebTjmdS/p93j4PgSTOTTYw65u3FRZBHn+gxn0y1VrbnjGCa5DhU/pZhOJOIeGQZRu8PPbIAmdTsgZMZB6vEZCrgROA/CVn2yn03DjRQ9TglQB+H3RR1SeEu++LJpEYzXs9QUP4Q41ab0KJKxUXB2jNNADI9qwivwM=
+	t=1750440048; cv=none; b=UylWqloHHrr6hrnu5OdwANgI5HIxCIErH5sMTQkDGcf9LoSVbLaaG/P3PcamYIqu+PZQJC5MrZBc5p+1H1eLKMSlYJ28CngIhxAG7a2AT56mdH4bsU4a8kzbPZ4iUYn1bg/bbggf85tfZivkuP5atp/JOkDnhya7a3mDDATwGNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750439987; c=relaxed/simple;
-	bh=yTfyFomlAYC23JbMLP0F6GGfzLOVzSnfY0H8zplrHpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TckTo2cKgoBQXnVmmWom2Al5IqxCVy6V60XJIQyatiIqLO5wdak+ZvS75Cof8vGfQ5lSiYO34DIl5LP8uN41Q8nD7n4YS1DDTRiqmHzyut2IKJD0c5PtygBHJfrz3N8oWXYq7jbNrq4WphNruBkKA/uN/wq2gVA6+geBAopodoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6fzGPxR; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750440048; c=relaxed/simple;
+	bh=7H0fGYjbt2p71NCXLWJbMz2qxs1wwA9sa/Mf9Huru7A=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=dCF92ES3rZwugJ6HlW7VdIDADqgLJlqZcoqPT7d9qV7FNBnJQA4r8486jdYQ54DjtEwnNjzD5FsODWwmjB0fFGt3kXbSfJIP4zHReli2gCHwriapUcaM1p2x9L4IAtpYKZYi2EZ3g2Id9XLjxqpjib/PgL1J8rr3Fa1mItPA1rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G2TkRkrU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6fzGPxR"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d54214adso15738445e9.3;
-        Fri, 20 Jun 2025 10:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750439984; x=1751044784; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Nqp5RyaLWU1LSai70owrzduSyRWQ7M8PeiJ+ff4U6jY=;
-        b=O6fzGPxRVDVP8hp7MYS0bl5TuByK344YR4ZVcOKca7aCfTdj4u2+JXs19ZrTbLydg/
-         lGmCLG8GE0/i6Wz4Oxd+lAmmgU+fct2YGax9JCTrONIzyAadbEZ5+zcdUbmKXu+W0IqY
-         AhwrBMO6gnqskvQxtGrSnW5FN3AmySNXaEA3WGONBC3WI5KSVIg45DH6HHcORR3tfi/g
-         ThEOOEQB1Ha17g8592Pj693cvBwEN5GFjLgi2XK/qrQGdo6cHAbE7hSG1P33/qAPXQJP
-         NqpjVyowZ5bbSLa32E+x373m+e35VXDfGiaFH9gUDoHr7lGae0suvqGlVbRjhGEHFpyP
-         /aHw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2TkRkrU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750440046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7H0fGYjbt2p71NCXLWJbMz2qxs1wwA9sa/Mf9Huru7A=;
+	b=G2TkRkrUz1sjUQEy2Pe5R8J8OZ6pAh+qzwqGqW1xd+Ui7IKpUN2CkcDt9KcerZ3W7OjrWW
+	Vu8i2LoUum2o+v4l+gNBsr7MhBCI2w1WQa+LtDk8DCzv70k/tYQuuSWfBm3a3uYg+/RUJ5
+	JMfQ97XCvMDFVefv3gvDtzXQWLW6MOs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-222-tn5vpgw-OwOwD-l9gu-PpA-1; Fri, 20 Jun 2025 13:20:44 -0400
+X-MC-Unique: tn5vpgw-OwOwD-l9gu-PpA-1
+X-Mimecast-MFC-AGG-ID: tn5vpgw-OwOwD-l9gu-PpA_1750440043
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ae020026569so188371166b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:20:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750439984; x=1751044784;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nqp5RyaLWU1LSai70owrzduSyRWQ7M8PeiJ+ff4U6jY=;
-        b=TrGcoMorWESnX7LTZ9qjI1pmX8PfjqHArkwKX8g52KZyGlMrORLG+gHUq5qOQP6yt3
-         iPAjCR/ygPp1zRnRYiNtkhaYMGsR3+upUENuN9Ru4nWCHbpSA0TiKFgx6symLoV6S4ZV
-         3TRVsHyF7o/nnS01qH5aWO8kak8pxdRj6ERF4yc6s03qhAU/sG9D/D2/5fipJZgImXR1
-         1c8SQSwTM6l66IuqBxDKFl6EysFghMFl77MqlrwC/3EfISZ6cPPOaoVSCqu9SyRLmDKb
-         m9IOiDG+41NhQ99Ty1TtHTAlyWiq018+wIzmyef6psShZ/X+OD6tcerBsd07Ym0W3UmM
-         J7Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl0rVkcMv5MorGu18/OELIf1Tj6Bt9JWpUJCbDa9d1XGxp7Ayq7R4HNdhaQF4flMrUR8TeDHxbEuTtMimh68w=@vger.kernel.org, AJvYcCXymmKpu469Za5CF4es1z0xWDigMpS7myPWHUgVFJFWt09JIdYOKbfa5p8ij5yFBkB+g7kQNUOv/WOvrxQl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHa1QOIyx5rLvd5RF/tjS/BSIbG/PNs6Xucy/PgWvvgX7rqqRZ
-	CKvksxwmA+k9HiICb1/ePreHyRlE5vrBEJSNKeAAhJzP9bTHG2W3Q+WsY7zCOTwg7Rw=
-X-Gm-Gg: ASbGncv7HhD7v+X50bSQsLUmWE0J/kbR74GJm12cA20tpty3ZROTtrvH4OVQEXEgGhg
-	yV+2pX7Y130hewPgyhbC6DkBhDHbSz9KHa8n6JN9mdq2PjatVlI4RvODol48N/yRdMOyaaAExOR
-	/cQYc3WGdVc0LFPUytqINWV3MLoidgWQxNkwFG9ivyqwZBbie1spfym9k7E1cpjaz9YpD5T0fBt
-	NmxD+IxWSJW7jQozKd++4ShzmW9AgQmu/JoPlhxnj5ZDSZ1XrLj6xlyUEYejfS6mKL786EvEEfw
-	mwZj5XgytbV6/837CTAA+FUvds3ZTF2ir3zgW3JsVStQzeKiFkhoovaUmYHpRtLDXdxMezSo1rF
-	xynBqOTb+lrdkKAgvo1oUq9VL1F/dbrl1bNPKfriicS0dy52SzuP/Dg==
-X-Google-Smtp-Source: AGHT+IG7nUurIlUkJSmJUrsRS663QPvCJsqVcHeV3pcLn+ixZg+fKc92NRxtysFHaINml1r46SFseQ==
-X-Received: by 2002:a5d:584d:0:b0:3a5:42:b17b with SMTP id ffacd0b85a97d-3a6d1322b83mr2901841f8f.29.1750439984381;
-        Fri, 20 Jun 2025 10:19:44 -0700 (PDT)
-Received: from ?IPV6:2a02:8012:e013:0:9139:5f50:46fd:9f3f? ([2a02:8012:e013:0:9139:5f50:46fd:9f3f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18215sm2553836f8f.29.2025.06.20.10.19.43
+        d=1e100.net; s=20230601; t=1750440043; x=1751044843;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7H0fGYjbt2p71NCXLWJbMz2qxs1wwA9sa/Mf9Huru7A=;
+        b=v74xuh63Ebymmix/gwmU+hAPej5l94swr5WJxlh1A6k/c43vGslqOQNHuzL6Xe0gbv
+         k090NNY3CC2pt1U0rVcTRatvy7UxTFBN9M3rzAgm0EeySkdNqCghPRYdfMa/jh1KaOeC
+         XyXzimMUemZ1ktCXqhKy6NHuxtCrsEMokhzdqubJUl60LGd43Sy/OLa46k3Q+YRBtnR4
+         24CXEBTTwPQZ4Jh8xPD3YPYMe5Qdq9qYKX1HxkeU/wxDvVD1U7Hn8JLIdq9WOzrICi5b
+         XXwfwBVnDpHkSusrlLsCJPjkpYHCYr/rc1jZ1nxR4B3Sg9cNjE7i7sR9QJWTK9TKyNXR
+         dlTg==
+X-Gm-Message-State: AOJu0Yzx3aWB/JrU6I2rT/HLPHhzFkhS16a3wRO57GTwvfg0MEaCodXm
+	KtM8mv+1pDPmgjG+0EdjYqDRL2AR6YQUDomnyGQgMRqFLmCX0b5F6l9NFC5qvUyF03zfWQPSnk3
+	IGl/cryy22dVv0pdJQ2u5QoLet9xKjMtPyGnQ1lDhHt9s7csJW+ewlqWEJ5Z92Lg6fw==
+X-Gm-Gg: ASbGncsLSVeVGksUkyK+t/GAytUCFaQ0xwVxYE6h3lCZGpLP6fdZfINXoVFZ2QBbvwd
+	pngBniwNJJyAGCQa1TiF/axa1V+obYoVTDMBaCyRIMwiPnm/5K3PU9wo/YzGx4FDQPV1jCOvnMT
+	JE6mUsGBr5G4mRRalNiMYktANp1UjVVu5uQKIq1EdzJSlTFUBu10zrDUEeEACP1q7bOCScSeBcE
+	/D91xggphR0OqKcWlYGgpEDYpdmN7+bCfr1Sbwl8KLonvKH0GvrMvN4REqxF6XSc65fYe0PO/QJ
+	4RLBmgGqezuekpbvujJ7
+X-Received: by 2002:a17:907:7f8c:b0:ae0:16e7:3d45 with SMTP id a640c23a62f3a-ae0579520b0mr365711366b.5.1750440043336;
+        Fri, 20 Jun 2025 10:20:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDcRVxZng+oGBUNfoH5ARE40YRyymx8NWH6kz5sovCOec8moiDLjoMXSwpfLU/ALjiRAvAnw==
+X-Received: by 2002:a17:907:7f8c:b0:ae0:16e7:3d45 with SMTP id a640c23a62f3a-ae0579520b0mr365708266b.5.1750440042909;
+        Fri, 20 Jun 2025 10:20:42 -0700 (PDT)
+Received: from [127.0.0.1] ([195.174.132.161])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e7f949sm191789566b.34.2025.06.20.10.20.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 10:19:43 -0700 (PDT)
-Message-ID: <bda377bf-10f8-49d9-8e58-ec957a40e4d7@gmail.com>
-Date: Fri, 20 Jun 2025 18:19:43 +0100
+        Fri, 20 Jun 2025 10:20:42 -0700 (PDT)
+Date: Fri, 20 Jun 2025 17:20:38 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.org>
+Message-ID: <70fe4209-4a31-4957-a658-727081f8291a@redhat.com>
+In-Reply-To: <2606da6a-3a13-4db6-855e-8dcc61c45b45@linuxfoundation.org>
+References: <20250613091229.21500-1-gmonaco@redhat.com> <20250613091229.21500-4-gmonaco@redhat.com> <2606da6a-3a13-4db6-855e-8dcc61c45b45@linuxfoundation.org>
+Subject: Re: [RESEND PATCH v13 3/3] selftests/rseq: Add test for mm_cid
+ compaction
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tpm: Fix the timeout & use ktime
-To: Jarkko Sakkinen <jarkko@kernel.org>, "Orlov, Ivan" <iorlov@amazon.co.uk>
-Cc: "peterhuewe@gmx.de" <peterhuewe@gmx.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
- "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Woodhouse, David" <dwmw@amazon.co.uk>
-References: <20250611162508.85149-1-iorlov@amazon.com>
- <aEm2p-2p3W3Xw5OU@kernel.org>
-Content-Language: en-US
-From: "Orlov, Ivan" <ivan.orlov0322@gmail.com>
-In-Reply-To: <aEm2p-2p3W3Xw5OU@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <70fe4209-4a31-4957-a658-727081f8291a@redhat.com>
 
-On 11/06/2025 18:02, Jarkko Sakkinen wrote:
->> Instead, perform the check in the following way:
->>
->> 1. Read the current timestamp
->> 2. Read the completion status. If completed, return the result
->> 3. Sleep
->> 4. Check if the timestamp read at step 1 exceeds the timeout. Return
->>     an error if it does
->> 5. Goto 1
->>
->> Also, use ktime instead of jiffes as a more reliable and precise timing
->> source.
-> 
-> "also", i.e. a logically separate change which should be split up to
-> a separate patch.
-> 
+2025-06-18T21:04:30Z Shuah Khan <skhan@linuxfoundation.org>:
 
-Got it, will send this enhancement as a separate patch.
+> On 6/13/25 03:12, Gabriele Monaco wrote:
+>> A task in the kernel (task_mm_cid_work) runs somewhat periodically to
+>> compact the mm_cid for each process. Add a test to validate that it runs
+>> correctly and timely.
+>> The test spawns 1 thread pinned to each CPU, then each thread, including
+>> the main one, runs in short bursts for some time. During this period, the
+>> mm_cids should be spanning all numbers between 0 and nproc.
+>> At the end of this phase, a thread with high enough mm_cid (>= nproc/2)
+>> is selected to be the new leader, all other threads terminate.
+>> After some time, the only running thread should see 0 as mm_cid, if that
+>> doesn't happen, the compaction mechanism didn't work and the test fails.
+>> The test never fails if only 1 core is available, in which case, we
+>> cannot test anything as the only available mm_cid is 0.
+>> Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+>
+> Mathieu,
+>
+> Let me know if you would like me to take this through my tree.
+>
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
->> +		curr_time = ktime_get();
->>   		u8 status = tpm_chip_status(chip);
->>   		if ((status & chip->ops->req_complete_mask) ==
->>   		    chip->ops->req_complete_val)
->> @@ -140,7 +149,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->>   
->>   		tpm_msleep(TPM_TIMEOUT_POLL);
->>   		rmb();
->> -	} while (time_before(jiffies, stop));
->> +	} while (ktime_before(curr_time, timeout));
-> 
-> 
-> Wouldn't it be simpler fix to just check completion after dropping out
-> of the loop?
-> 
+Thanks for the Ack, just to add some context: the test is flaky without the previous patches, would it still be alright to pull it before them?
 
-yes, this should also solve the problem without taking additional space 
-on the stack with new vars. Will update in V2, thanks!
-
-> And declare this before tpm_try_transmit():
-> 
-> static bool tpm_transmit_completed(struct tpm_chip *chip)
-> {
-> 	u8 status = tpm_chip_status(chip);
-> 	
-> 	return (status & chip->ops->req_complete_mask) == chip->ops->req_complete_val;
-> }
-> 
-
-Cool, will do.
-
-Thanks for the review and sorry for the late reply.
-
---
-Kind regards,
-Ivan Orlov
+Thanks,
+Gabriele
 
