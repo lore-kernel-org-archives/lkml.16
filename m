@@ -1,178 +1,131 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFFA1E835D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF5D1B4132;
+	Fri, 20 Jun 2025 03:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750389862; cv=none; b=PbKp3xuMeEmOsgISngmBR2RHQNAiItUIuIhuynPLZQU33pwHNaTQHs+7ZI7wpHRJ/w96esq3TZZuJOsxLiQwsfySKhypEcfoGTA/R0VhnG5XGXfNZqEq6rX20KHYuS0TGiW6kq+Pj1o0EnpEEcB4SmVzf3qGwAVfmNzNj2rKklM=
+	t=1750389893; cv=none; b=eJaqjt2pr2eeCGQ4XkiJsSJz9Tt1+vT2N4Og1C5xHNff5wtGP8Df5lBJlDOy/lYPX8KspqomoQZQYnx4wYSg72238bqnW17JMJRDW7T/mZAs6hdbDiiMDMMLZcYonHPONLP9A0zsmvj51QEbvoGEaGZV/NEwmvFJRIEnjIM6mvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750389862; c=relaxed/simple;
-	bh=SYK+UWbrGNX3UbkkR8jkQm/pIxA9wBivQLpXpvCwK4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rrX5kUIPbQgLvbAFZWHlwmi7Zi8nawg7XiPLnqaX+K0Owe/R8R6qno4VLKdZo0HkpQ6ujxVDRc6NK0R1Oo6lY/CtebhCMYCgvcBzDo0rgN8KmdpS104l431mOPgOKOqb0elRenneluElxw69nnhuF0O7k9ql3YsYHXfBhGuRtE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bo6RUVHE; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1750389893; c=relaxed/simple;
+	bh=UfJg4yAjOiMV+y31IsOK24NxXe4OLpOYc7tVNgaUOJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbmBwJddnxAtEyv1r27XFgBSYMyHB6MDJz2DAQxebtuuDwoNIWQ2sgfHR/1E+8fTj9EXFPL+u6jrIQXhmB86GnoqTOieS1HHX+eQOkj84TACMEdkzXeCMD4WYMLwHhU1UlCCLAqNvftQgJxemRYzvDJd4fH+o9Xybo58cLUOypQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTuyqtTN; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bo6RUVHE"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747fc7506d4so990674b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 20:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTuyqtTN"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b31d8dd18cbso1426136a12.3;
+        Thu, 19 Jun 2025 20:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750389859; x=1750994659; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2YzMDv78WPG5/xYOI3b72eSmmaa1xBCqOTfcIeZ+L0=;
-        b=bo6RUVHEWj/aNYwXo+exHdKMyNT9eaDfbshbnp7uwMLRiI5XUuL7N+OocSQAKHCmEJ
-         5KtGZk0WCGgOovC3XQucCpXaq9pz6/NIY8+6dEyZj920Wku6UgRflxnj1YDImZ9dSCqV
-         gBj5W8q4LEzod2CAgqQbi/iWh02ImbWvos7FqcqBpEXp2xevp1EitbZXfBx0BtJI24Dx
-         WT9T8zsKHA3bDO9Ebo3fyPMIZW0O8Vzi6Mq6U1eD4IK8WL39rzjfsw3yHlsS6Z29PnqM
-         r67c0z0f91pBiCriqyqPbg4Gs+TOY+M258LLJvMEmWnAF8f1EV4jQGgSY35cFfaVjodr
-         GS0g==
+        d=gmail.com; s=20230601; t=1750389891; x=1750994691; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FaBuppIXlBQzOfFRhw26Sdi46V73lR3ulh4+iDiaoY8=;
+        b=YTuyqtTNpIDQ9EJGpYiYX6+EAcprzfFJzT1gysuxnYfek2sL7mZLJ0RzHP8oEVbS3h
+         pDjUsYsT3nwB+Bahkfb2aJsN28q585Rzscjx5t4XBqpEtba1WVyVRMVocbrKv35Z8DtF
+         PcMwdAx/E+I3Ps4pOGII6IKgT9lxSLKxcSN2FR3sPvp0r60CKF//8r/OA5zbWqCdo5N7
+         AP/AJ9EdCCxna6TshZdAIbmvqXHBDMtKU9asHBqzLi3go4LjXD1oE9MJEABDDoDO4Lm5
+         qzanpBHE5DR5vEGjCp0DQCNqMw7S4bXwY4Rs+rbCd2eJnJPtq0pFsgvPd7AfRXqcgma1
+         9gUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750389859; x=1750994659;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z2YzMDv78WPG5/xYOI3b72eSmmaa1xBCqOTfcIeZ+L0=;
-        b=V27F/IDMA93BPsMHbJ9TFq7XqR4KnHs4sWlgp9K0gZQxS9CX7g0qysmmGTv9ydzygc
-         0cfEECkT2CIjFrDuCHyBp2MIaMuDLaZ/ih7ST1PDcZ2NsYNOwI7iK6VmJjLMAmipt/Qb
-         VnRU7U7GTrK5rQBn+nOWJvL9jDk+SKnei9FHLth5+1yXDpoXkl9dIXKnmOSPbA30v2pa
-         AxXoUg8+rucrPMqr4qy61P38L1I3FG2WJDvKsh5vQHB5ky0Egdi6wOJwJpf8XklX5n5w
-         9R4utMaWR2CcfE41hAXtIXlSZN0bUUPICY6gk4HNjAmkuE+2IunW1k/NnkGEjVNyp45W
-         BCqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDyxH84jF2jy+G1qDhvJPbPHudhCxVoKyODC55HeAgUJqq5JJaCJKuXgy5HdsOUN3iRB6jOV645oUH+bc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNW9m8+0e7ndvTj6FWz/UlOBm+HhN5HGgB/6XFU9+LgNw8xr5s
-	sxTgkPqqrSgawdwasqpSZzR0gpY5qit9fr7UUGKs80Xg94iyG+aa5/H88Gv/rzyu87E=
-X-Gm-Gg: ASbGncuv5fUwsJy8ENg8OOER/5W55g67tpus1XUO3/uawhORNxdKKHibywW8D2xZZRa
-	sMG9IBYNbWJMSI+s+ekxrcAAWPmZsP/E8cFiP6WFCktfGztUnyN7Ggza8g9DreDRO0jFTn6vvMb
-	HyVCOzM+oPmdichbJ9sL9fs2FKljmisv2M++VdGMQ3rHMUD0YCjpU20IAyBVvs3rsLXnxlI1gD7
-	0V3OzLtt0roc9FKzAdzLuUAlhIiOfoa0a7ss/XOuLIvQTmeCendu6oL5HDDQnVx9XuY9prVKKaV
-	5ZXXqTkeRtBI4L3adRvNxM332CcZnzff3KoTGJtlesrFT/tUW/13Uo5T7eMAPws58oLzSHoDWzV
-	t32QpHtbgtwU3
-X-Google-Smtp-Source: AGHT+IGXeKmUfFbuX8aA0TnmPyTEPtqZ2Lj0/H9EkIAI3yrkuvUIjWM6dz6wmIwtNCHRZ1tMl1fTIg==
-X-Received: by 2002:a05:6a20:6a23:b0:1f5:7007:9eb8 with SMTP id adf61e73a8af0-22026e94585mr1952273637.16.1750389858932;
-        Thu, 19 Jun 2025 20:24:18 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f12423e3sm490565a12.47.2025.06.19.20.24.15
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Jun 2025 20:24:18 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com,
-	jgg@ziepe.ca,
-	david@redhat.com
-Cc: peterx@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com
-Subject: [PATCH v5 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
-Date: Fri, 20 Jun 2025 11:23:44 +0800
-Message-ID: <20250620032344.13382-4-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250620032344.13382-1-lizhe.67@bytedance.com>
-References: <20250620032344.13382-1-lizhe.67@bytedance.com>
+        d=1e100.net; s=20230601; t=1750389891; x=1750994691;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FaBuppIXlBQzOfFRhw26Sdi46V73lR3ulh4+iDiaoY8=;
+        b=IN+5+KOKB8PvphzHq0s8ID0gNsnw2R2kiDLgGDaKnHV5ioHCr6E/JLctPDrUQ36KpB
+         3+luE+MaAHv4tOvf9wXTi/OJ+K3tE8QIP+Z0YhMVcNWz4CtbZ7T9meiB/u795y4mT6sJ
+         VL3PErXO9Aacz968jCpZccgybE84Eem5euWDrWJx/YNtzGl9sQXR9IQg1FgWhUzMo2U+
+         lMwi84LqOJ5PM/QFKaVWJYC5JktYnBKBmhUF0NhEZu4FuPb18tRNdN/4/KQOt8wsjz2z
+         AES6Fv47GusDKkyqRC3mGgs3m0NFlwSxHV1H4ymv8qOoIVIe29+f6IakSHQDWI3sTKza
+         1n7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVxcS6qhy8UyCIqGuxi7O7xMV/il5N4BWp1gXTFRtY7uUcpGvwRrJbk4GM5T0fdRZR9LkO7POODQ3o=@vger.kernel.org, AJvYcCXa/P7QZm5lybk68irIYzQqE2ybtpXY6Og/jlm9q4L/tBgLvB2PQ7/i5aBgD/9JQHtDlej0AJG5xqhZqQ==@vger.kernel.org, AJvYcCXsibkX3+RMEF/ktOpmbJDALYMYQqNRcL/72RCelC6tD9CuGBdWSwgUIU3zYJvNfv8vqhMm8QARriBiS38d@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeosllWKtSyuO0KRVaaiE+QJba2uRzi+d4nZjmeqVj6/Sh22dv
+	SPfOMbC5zGyO9qQFXjbOsN7N0YKCt7Ke4JNZ9bk6z/G2Q+kcPheTAVhmjkqYUQ==
+X-Gm-Gg: ASbGncuXJYb0G67irUcd65tTVZV6jcJOlLdxgvOVj9LAAD7AJKDkCj2rHKbLNyZgkFT
+	WK2Y8DilizP6y+0QgOx+++SgEOw89FvtcLkf83WHvOM68GmUxEHeKmfXkDHTEuceeJHFxS9HVvW
+	oQPKEaR+csMYIhsipC2FJUNNAtp3uqyRcmQSvNIksKFgthC9txGpwuIEFU87x//vFNTpEbkPneQ
+	9KPvLuntYDeOkl/Od8eNUreOVgYUSbGXoeRp9LbP6syacv9OArFNqKEtprVu+wYsst+81He7ao4
+	C3X/t3Gpt8c/kA48bMO6llpgG+FDsC3Gcw5WkrFecmUgtTeqOR8RtdORnN6VfE0mn9tuYy5S
+X-Google-Smtp-Source: AGHT+IG+vaalCxAVq2BC6r08xK89yfNGR2G2wwij9kS1tlP4LtkR20HLJSGApwZY+YCuk+dWsqKg2g==
+X-Received: by 2002:a17:903:46cb:b0:236:6f5f:cac1 with SMTP id d9443c01a7336-237d998df09mr18762565ad.46.1750389890817;
+        Thu, 19 Jun 2025 20:24:50 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8640dc6sm6621245ad.146.2025.06.19.20.24.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 20:24:49 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 40C7E4209E8C; Fri, 20 Jun 2025 10:24:47 +0700 (WIB)
+Date: Fri, 20 Jun 2025 10:24:47 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [PATCH 0/4] Slurp (squash) ext4 subdocs
+Message-ID: <aFTUf2IZ72d9BODs@archie.me>
+References: <20250618111544.22602-1-bagasdotme@gmail.com>
+ <87bjqjh5dr.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0Ws6ZzGjYlbKevTo"
+Content-Disposition: inline
+In-Reply-To: <87bjqjh5dr.fsf@trenco.lwn.net>
 
-From: Li Zhe <lizhe.67@bytedance.com>
 
-When vfio_unpin_pages_remote() is called with a range of addresses that
-includes large folios, the function currently performs individual
-put_pfn() operations for each page. This can lead to significant
-performance overheads, especially when dealing with large ranges of pages.
+--0Ws6ZzGjYlbKevTo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It would be very rare for reserved PFNs and non reserved will to be mixed
-within the same range. So this patch utilizes the has_rsvd variable
-introduced in the previous patch to determine whether batch put_pfn()
-operations can be performed. Moreover, compared to put_pfn(),
-unpin_user_page_range_dirty_lock() is capable of handling large folio
-scenarios more efficiently.
+On Thu, Jun 19, 2025 at 01:56:48PM -0600, Jonathan Corbet wrote:
+> Bagas Sanjaya <bagasdotme@gmail.com> writes:
+>=20
+> > Let's slurp (squash) the subdocs instead. This will make the master docs
+> > larger of course (although not as big as KVM API docs), but one can use
+> > cross-reference labels without hitting aforementioned warning bug. Also,
+> > docs directory structure is tidier with only 4 files (master docs and
+> > about.rst). As a bonus, also reduce toctree depth as to not spill the
+> > whole hierarchy.
+>=20
+> "slurp" is not exactly a technical term that will make sense to readers
+> of the changelogs.
+>=20
+> But, more importantly... Might it be that the current file structure
+> reflects the way the authors wanted to manage the docs?  It seems to me
+> that just organizing the existing files into a proper toctree would be
+> rather less churny and yield useful results, no?
+>=20
 
-The performance test results, based on v6.15, for completing the 16G VFIO
-IOMMU DMA unmapping, obtained through unit test[1] with slight
-modifications[2], are as follows.
+Agreed. The toctree approach was indeed my first thought ([1]).
 
-Base(v6.15):
-./vfio-pci-mem-dma-map 0000:03:00.0 16
-------- AVERAGE (MADV_HUGEPAGE) --------
-VFIO MAP DMA in 0.047 s (338.6 GB/s)
-VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
-------- AVERAGE (MAP_POPULATE) --------
-VFIO MAP DMA in 0.280 s (57.2 GB/s)
-VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
-------- AVERAGE (HUGETLBFS) --------
-VFIO MAP DMA in 0.052 s (308.3 GB/s)
-VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
+Thanks.
 
-Map[3] + This patchset:
-------- AVERAGE (MADV_HUGEPAGE) --------
-VFIO MAP DMA in 0.028 s (563.9 GB/s)
-VFIO UNMAP DMA in 0.049 s (325.1 GB/s)
-------- AVERAGE (MAP_POPULATE) --------
-VFIO MAP DMA in 0.292 s (54.7 GB/s)
-VFIO UNMAP DMA in 0.292 s (54.9 GB/s)
-------- AVERAGE (HUGETLBFS) --------
-VFIO MAP DMA in 0.033 s (491.3 GB/s)
-VFIO UNMAP DMA in 0.049 s (323.9 GB/s)
+[1]: https://lore.kernel.org/linux-doc/aEpAD2jcemzvoJlQ@archie.me/
 
-For large folio, we achieve an approximate 64% performance improvement
-in the VFIO UNMAP DMA item. For small folios, the performance test
-results appear to show no significant changes.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-[1]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
-[2]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
-[3]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+--0Ws6ZzGjYlbKevTo
+Content-Type: application/pgp-signature; name=signature.asc
 
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
- drivers/vfio/vfio_iommu_type1.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 8827e315e3d8..88a54b44df5b 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -806,17 +806,29 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 	return pinned;
- }
- 
-+static inline void put_valid_unreserved_pfns(unsigned long start_pfn,
-+		unsigned long npage, int prot)
-+{
-+	unpin_user_page_range_dirty_lock(pfn_to_page(start_pfn), npage,
-+					 prot & IOMMU_WRITE);
-+}
-+
- static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
- 				    unsigned long pfn, unsigned long npage,
- 				    bool do_accounting)
- {
- 	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
--	long i;
- 
--	for (i = 0; i < npage; i++)
--		if (put_pfn(pfn++, dma->prot))
--			unlocked++;
-+	if (dma->has_rsvd) {
-+		long i;
- 
-+		for (i = 0; i < npage; i++)
-+			if (put_pfn(pfn++, dma->prot))
-+				unlocked++;
-+	} else {
-+		put_valid_unreserved_pfns(pfn, npage, dma->prot);
-+		unlocked = npage;
-+	}
- 	if (do_accounting)
- 		vfio_lock_acct(dma, locked - unlocked, true);
- 
--- 
-2.20.1
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFTUeQAKCRD2uYlJVVFO
+o2lHAP9OBooD4BhMSfSNF05P4yDJYZroEygDCD5eDsGMXCpLcgEA/kmmZn8B4lnw
+7Z2lZTqouXwaj6ZrNpBwKL3n7BQ9nQI=
+=+/sY
+-----END PGP SIGNATURE-----
 
+--0Ws6ZzGjYlbKevTo--
