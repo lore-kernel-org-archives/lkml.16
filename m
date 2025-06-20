@@ -1,359 +1,227 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50F223E354
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408215; cv=none; b=CAZkaaL+FH5qKY3AVhxkamlWakFlpZv7Bf+XYbVmHXrEDEQTfkCqyHhi07twV+LI4p/FzDbA67MIcAe3laQXI/8b11+Z1F0B5VHta8lKDGtLPnOzbanWwYz43LqR+KprVQtTUnzvZCT8jggyrwdQ7coyZxRmoWbC+1dE2OMfZrE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408215; c=relaxed/simple;
-	bh=DC2BcT6tzYClbZYZJqXu3LH8qcVEnahy7EXm3bUVOGQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mhIv1R7yblkHQbIAE2BKeZnU89xwei+BT45XN+6EmJXsOuJuoKQD4VRHAgf+NmeEF+soOqs7QRauxD5CRKT2W8dqsCg4IMjyoZly4c+PFmuDu+xfwFg4YPQxz3G/Fe6MHnCWNUI4DmzEstWRSZOcfuXxp+1oYxCj+I0VXGozPec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jZbW8mbz; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60830E84F;
+	Fri, 20 Jun 2025 08:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750408267; cv=fail; b=PCnn+KQ189qK6Rczy2Ig+sZaJV6Tw9/Gir2RRvSt5SVAdFqt/Oiw2be9YK6h7ZmzrB//Pk+HxXd8LOKO7J5pFMAVxk7f63WDMQrc2r/oPZ6+wGGVlJmPos5u3cHee/h2PdQ0W1gWm1qe/CCEVK918iLm8WZ9/0b/EdkVOmB5tWM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750408267; c=relaxed/simple;
+	bh=sj/7/6pEtdml5z25g8LcOy234/vMbj3A280vuH4WRe0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dJNEaMKjr/cypRPJNWNLYX6i+L15L6UnZTmygSEerXUAMBWpE2RRX1V2fiWIzSmNifPV2IV/PM2ANNouxbFrVmxR9P1hBTdrrc4Asjid+zL5xK09hga+zVWlHZrgcD2Oix+951AIFbEE6uY29F1aNPDGZhwMrEMt5iqgJ+NgTtE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ix0L+mAQ; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZbW8mbz"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450d64026baso9602225e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750408210; x=1751013010; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fo1XIHJX7wN0reCSMWdLWyFEb50yUvDP7DmO8CGhQYU=;
-        b=jZbW8mbz/6AWa0Q5/lbEzcQFNx1NAe6bbbRuokyqWR0dB1+05R/+Sxqxt0Mky996Ro
-         5as5TrY/KOScB6T+kwLd8ebd2C9Vt9D5OKgsJgsZbrJf4KX1z9rG+5wWHafmd6B6SNQV
-         4AOtkKBcbTmxbGL/opmPCMQCl0PdrfB0vMFknioWMx6Vx72ASTkwD0X4yn6A81pcSdXE
-         UzTKEqNWA4Xj/RJ0JQOhbelpaW8DSeCUCbfahTfo2zDKeZKKuhY2FfrLAWQHuFJS92kg
-         vrqK1I/ramZv1fm1s9Rc+3jkNM7qp4A7KijyDTa0M52YDBoliNf1PU/5RDufIqOGGS7m
-         QT3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408210; x=1751013010;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fo1XIHJX7wN0reCSMWdLWyFEb50yUvDP7DmO8CGhQYU=;
-        b=tp9S4blHtPO4of3g1yZB8S6DMUPFAsTg0z68utbKcyDp0NBUyoo7ihuDe6CqHD4UX+
-         uUjYFM6EMcorn54uPJ2Kq4uA6jPr/rg6rH35zoTXZ6MJMM0SC6sojUX/XE9lev3ib4Cl
-         wAPgZp4STBqEv+CX7vJKQ/SXBb9wVmP+3Eoa+aWuE5ESN4D9cmH6m70E7lkCh/rlkdCG
-         dWaQuXl5VN8D/Gv+zQq3WKEZkJTa5aBkLm3O7TQaFJMufpMl3IFhgveU4YCVrOy4tkWa
-         LTLQtD9D1oW+dawS7k91ZClbefpeqc0TTeqiz6dyuMY8sY2xlQJCnU65pc2migTHFLyF
-         B0xA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFmZL1T+NTnaSt57Tk7noC4AEPAGTRRaRiYCy18UfXiLkM3Y4iwefAhplJbeDo34a7qRvvgQxhUdyEB5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3q0Ysrgu6otvE1M9ZXGTINufTZVgQXITd1HEUPav6f0LVzIen
-	+ol+TmDbmZg99AWdff4ekjbhzMwCta8+N/kShoi75WNc0tgXdexVEAihu1fi0vN+7G8NCA==
-X-Google-Smtp-Source: AGHT+IEyM0sGVUlhxD2p0JWSwudsUtmKTxZwiS0gAaHxbzzT/tKEU+5EQ5qEBbiip1YAMmf397PPhzw=
-X-Received: from wmsp5.prod.google.com ([2002:a05:600c:1d85:b0:453:dda:a53d])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:37c5:b0:453:cd0:903c
- with SMTP id 5b1f17b1804b1-453659be41bmr14887385e9.2.1750408210167; Fri, 20
- Jun 2025 01:30:10 -0700 (PDT)
-Date: Fri, 20 Jun 2025 08:29:50 +0000
-In-Reply-To: <20250620082954.540955-1-bqe@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ix0L+mAQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750408266; x=1781944266;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=sj/7/6pEtdml5z25g8LcOy234/vMbj3A280vuH4WRe0=;
+  b=Ix0L+mAQme9zVL3vdCMMf9MgA0mgrstsmy3O8fu3s23mtEJmzlAwVKBB
+   S68D6e4im99ytSbooVdt2k/En9Ru283t26j9FX64a9y29f5ubC4GVvXQK
+   PD8wJzDW5tW92NdpmgDF5gK3UTsieKpan9HBmqSP9aLtaeVIfpncY/yzF
+   MbzZG9Tqk1XO62J5XES7H4xGZ6voZMp5TucItmnFfs0wwd6dYpOCFvq8h
+   EHQq0TkGZweiMEonrYvOGq+5iqKMC1+/vr3UmMEdZNrQhBj2f+iSRVbuW
+   3kRkTKqReM1XdrkPhmuk62IfKjXIsAgQ6/7sJ5uXBAipjMa7bSArh5TsQ
+   g==;
+X-CSE-ConnectionGUID: nOT2zIVrTG6VcrfHvp1dXg==
+X-CSE-MsgGUID: SXuT0hSXQdeVaTEVT+q3pQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52365693"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="52365693"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 01:31:05 -0700
+X-CSE-ConnectionGUID: pcvmEt0bQMW8Miy9Swyo5A==
+X-CSE-MsgGUID: VwaMYyINSri0WDD0v6DgFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="150346232"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 01:31:05 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 01:31:04 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 01:31:04 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.45) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 01:31:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YVWG8kdZU/CDM6qU9R00ed+gZtyLZxJT/AW4ovNLVlkW1rGBeFHgZQdhQhFWKOY17BeVP41udIh8Fbb8hT0S1zOvLYBx/QWrTXXDk1mNd9iHNL2Nuy/MrYror2YLty29l72g/J+rTAP6AGwCMz/CX8BFAqyJDMNknfexAMqkAecNWbbOQNucgCZYhK5cCMMtd7/0IN/lgswm+asY3bOLkCPeP2SaIq+zawCQs+Ta5oJHPvj9yCvRN0AozdC2Xr0NCuldtesf1a4gEZKL6pFBLP/fIY1N7nXw/UghbvUFAvIx4QUoRqKiqab6h/89LIhz+zh5N20XTwXTXI7Jo5QOlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sj/7/6pEtdml5z25g8LcOy234/vMbj3A280vuH4WRe0=;
+ b=pcTkJLXyv/JrEjG9OWYSD3tEAKjdP5Jz5tTC5W3zx7v2mPPIfwfMDqnrCiDYr14RASgKYWfusEPpUJpbF7qEjkww/FqnTmJYf8gtWFptmuXGB+qcC9nK+1/+bCfT7uwav1qoFNkLxR8Iua+cRXan3IACMq5xXH5fg9FcfeIWSJUypHzo8MBcKK1hYIHAOq29gXMJuUQKk9Gh15mkbJM2L/XCTKsCvZzpIGV/WDwoVyHDjomlfxdNzomru/bqGArUHUZ4mcu/eCAc2A9qGPePHivyubCsuoeSd4YwcM2LaQ7dZ/9ZUCOcO4Vu5z84L/G8Ul1cWOL+dIm4DQSB4jxNSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA3PR11MB9254.namprd11.prod.outlook.com (2603:10b6:208:573::10)
+ by PH3PPF10FBEE80C.namprd11.prod.outlook.com (2603:10b6:518:1::d09) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Fri, 20 Jun
+ 2025 08:30:48 +0000
+Received: from IA3PR11MB9254.namprd11.prod.outlook.com
+ ([fe80::8547:f00:c13c:8fc7]) by IA3PR11MB9254.namprd11.prod.outlook.com
+ ([fe80::8547:f00:c13c:8fc7%5]) with mapi id 15.20.8857.016; Fri, 20 Jun 2025
+ 08:30:48 +0000
+From: "Song, Yoong Siang" <yoong.siang.song@intel.com>
+To: Brett Creeley <bcreeley@amd.com>, "Nguyen, Anthony L"
+	<anthony.l.nguyen@intel.com>, "David S . Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, "Alexei
+ Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	"Gomes, Vinicius" <vinicius.gomes@intel.com>, Jonathan Corbet
+	<corbet@lwn.net>, "Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>,
+	Shinas Rasheed <srasheed@marvell.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+	Brett Creeley <brett.creeley@amd.com>, "Blanco Alcaine, Hector"
+	<hector.blanco.alcaine@intel.com>, "Hay, Joshua A" <joshua.a.hay@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, "Keller, Jacob E"
+	<jacob.e.keller@intel.com>, Kurt Kanzenbach <kurt@linutronix.de>, "Marcin
+ Szycik" <marcin.szycik@linux.intel.com>
+CC: "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to ethtool
+ NFC using Default Queue
+Thread-Topic: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to
+ ethtool NFC using Default Queue
+Thread-Index: AQHb4TAVcBc1dnZR302Va4jTpPeIkrQKoQyAgAEVrgA=
+Date: Fri, 20 Jun 2025 08:30:47 +0000
+Message-ID: <IA3PR11MB925440EB3352EC0E164DBB06D87CA@IA3PR11MB9254.namprd11.prod.outlook.com>
+References: <20250619153738.2788568-1-yoong.siang.song@intel.com>
+ <5b77d33a-5668-42bc-802d-d2c5d95c1e7e@amd.com>
+In-Reply-To: <5b77d33a-5668-42bc-802d-d2c5d95c1e7e@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA3PR11MB9254:EE_|PH3PPF10FBEE80C:EE_
+x-ms-office365-filtering-correlation-id: 8c5d1623-95cf-4c29-6e57-08ddafd4c209
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?TDAvN29RQzQ1T2tvRkFkRG9GSGM4aDFPbFZoVjhVWkx4OUtONXFYMFhSVm5P?=
+ =?utf-8?B?YUZXdDNIVVRUUXEzK2V5QkMxbGxtV2tnL2ZwMGxtMjNuMFhUbk0wSndFSmNF?=
+ =?utf-8?B?dDI0R2s5Yk5taDdWd051aWhPY0JuR3NQc3ZtbW9tQzl1QU5VM1BZOHlqeEhZ?=
+ =?utf-8?B?R2hhNEthTGpYVUJLS2Z0SGViWkdvOER5ekR3N1VScm00Qi9iTHRBdE5VRy9H?=
+ =?utf-8?B?YW9uSkgrZ2tENWZOUkFzWEtOdmVWcXkwNE5pSEJTSzloeFR5M1o5S1hTcVg2?=
+ =?utf-8?B?Yk9lTjZ4Yk8vbzRLZ1pLS3ZFMGZiMkE5Ym9HNk15NXpuSy9wOE9YRlErTWxO?=
+ =?utf-8?B?L0NpeHBoZVFYcXpQR3djY0d6b2VTMzlOcFlBcXhub0ZvdjBPT1BveEpaVzZQ?=
+ =?utf-8?B?ZUJYd2ZmMHpEQ2plK0o5ZDk2UGE2a1JzVTR6TmRzbE1MQ2JUVEVCRnlLRkhX?=
+ =?utf-8?B?SWZkS1hYdUtGQTlVZFR5N0VsL0szS0hQUm84UVMvVGZsc25JUjNYMWdFSHNu?=
+ =?utf-8?B?Ynh0Z05TcnNNcWhwaU1jaXlFd2ozNDM3c3R1eC9zWkdQMkkzRER5QXdESEZo?=
+ =?utf-8?B?Lzg5UllDRGtpbkplVWt6amwyRWRPbXZCMlZLM2ozZ2p0NWM3ZjNFODFsa1RB?=
+ =?utf-8?B?N3NDV2ltQ21ZSTR3UTVVVEYwcERxVnZzSjVQYitETnkwaDltWmhJZVI4Vkc3?=
+ =?utf-8?B?d0g0UW9zTDBGSmJRTkp6WkpCWGhUcnBQOGN4M0RQNEV6aWpyQnNoRE5xN285?=
+ =?utf-8?B?Vi9ITnV6cmF5a1h3NkcxQ29DcFJEZzdhREw5NE16bnZqV3gxNGxVSkljb1Vh?=
+ =?utf-8?B?dXpYbTIwdTVoL0JnUGt0ODl1bS9JeEV3VnZXcm5ZbzJ2RjdvSTNCL0Jmd2R6?=
+ =?utf-8?B?TVpFUHV2czRCdUVoREhwNnJ0U3ZtZkxadHpDL3gybFcxRVRiOUd3OW9MTzVo?=
+ =?utf-8?B?ZjNyTVc2dXZ1WlNFWVRQNWFlaGtyZURYQ2tVNXpya3kvK2p3WVZ4enVjdFdY?=
+ =?utf-8?B?MytMbm5ydUtWK2FpR1JRUTFiS2dudHNDQnV0RHZLVlQzUWNlSlVqYTFvZGtw?=
+ =?utf-8?B?NXoxdFJQSk9zQ2V1bWMydkhuZkI3RDJTRzB4VE5sZ0ZpSURQUTEwRGVBVENI?=
+ =?utf-8?B?L1RLK0Z1ZEtiTDV3MjgxM240UE5IN2Q4VVBuLzNiTC8rdmUvMjNSYmJkalBX?=
+ =?utf-8?B?VWsyQWw4bWxNN0dEUFJ5MUFXeFlXZVdCOHJkZWRacWlIUU1TV0tuekdpZy9J?=
+ =?utf-8?B?K09SZGV0TW5mcE94R0dEaXF2S3ZkZmcyV3pJeDhzckszZ0hCd1E4a2Mxc2FQ?=
+ =?utf-8?B?YXlQQ2o1UU5oOXZHZVFWWWJWWjFFblltejg1cUNUM21hNnJQd0N0cklRRjhy?=
+ =?utf-8?B?YkNVUXRpVVFibm5NcCtVQ3U3aDkxYTFwQUExZXMwMGNJbHpSMzNCZE1ISjFa?=
+ =?utf-8?B?dzVwWmx2aWt4WkRVRkQ3M3hSdzIyWkcwU0Y0M3kyOWRxT0FDZXFIbkVadVFa?=
+ =?utf-8?B?b1pkOGNKeWVoVmdUZjZ5TWJ5dVd4U1k4ZU1aZjk5d3pRRXN4WG9zTlQrdDRT?=
+ =?utf-8?B?c2lLMGttWlliYlZEZjl6bW9qanYxaGNuQmlLMzYrckt4RGR1aVVaVWZxb0ps?=
+ =?utf-8?B?d2E5YXdxdVdsU1UxcjlqU0lMNVNwWU5ualF3dzB1VE5BNi9YbWk1cmdMSGM1?=
+ =?utf-8?B?YThNV0tDbmdrSmh0MFp1SnYrc1JiMHYyeitsWFpzZGR6WkZ1UWxIUk84Rktm?=
+ =?utf-8?B?eEkxbEpremJLWWo0dkYwdWFMT1RtSU5vNDUydGJLamw4TTI1b1NEMnA0Rk1u?=
+ =?utf-8?B?ek9STmVTREUxeEM2SGVXRU14bzhVYTdHM0ZWaEt1bm9QYU9MOTA5MzAxZHQ1?=
+ =?utf-8?B?NVpBSkI5MnRZK0ViQlJWT3JMVkdxZUlVRDh0c09YQzFVZE81Y2E4ZEZPckRP?=
+ =?utf-8?B?bmVOVjd3UkdwVVgvSSs5cm0rOVZtYUlBc05OUlBwMHAvQVNCdjJrTDhpdFFh?=
+ =?utf-8?Q?7ty+H3cZSvns7yy9JXHCJd1YjjGwPc=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB9254.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eHc0bFRJMFJRZkJwUXZVZHRWbTVzaEE2N0FqN0JESzV4T0hwWkhpV0VOMWUy?=
+ =?utf-8?B?YVZOTWVPTFgzVlZpaVBaL0dyYnhzZVlXWEpnQ3pDczF0M1VKYWNKRWVNU0pL?=
+ =?utf-8?B?NUV5K3RwRDlkMU1PQy9NMDZvU2pmU0w4cGFRbjRWSlkvbXphSXplM2dhYkdU?=
+ =?utf-8?B?WWhxNFEyNVVTM013NXFmRUQ0YTJuTThQMm9pQjdqdFM5V1Z3eU8yQVgzanh5?=
+ =?utf-8?B?cnpPS3dicURkQmFyUVFBR3dkUE9lLzhBWVVuR052UWM4YUMvVmxCdll3VVRs?=
+ =?utf-8?B?bUxONjBHdEpPckE0R1hWOHZsaGs3QVBqbkc4MzlZS1NqdDhhWnlIK2gzWHkr?=
+ =?utf-8?B?Umh1SFBwMjdXVEpUc1ZQQytURWtiUzIxdTJUTWlJb2Z0SEIrTnVDM0RaOCsx?=
+ =?utf-8?B?ZU9kTCs0YzRrazVtOXJ6RlpwNXRGVU1EZ1Ewdk9VVjZYZTBZTHFwZ0JiUUNt?=
+ =?utf-8?B?QWFwc2Z4bkhPaVF1SjFCbFFQTTEvalAvUjNmK2JNa1VpMzNPT05kUlJMMXJr?=
+ =?utf-8?B?RzdKOThoRXFsdWFOZlFBODcwUHVjeFJCSXVjUTlNMmxYM01id21SRjdaaEdC?=
+ =?utf-8?B?RFpEdFdwNGlsTm9OS1FlUzV2M0Z2Tk9JcVVzaGdBV25xSW00MkZnQ0xweTBG?=
+ =?utf-8?B?WVhGL2hjNVNTVVhhNVBqN3ZpNXF4aFpSUzFac3p1UHZtR0JBM1FUNlRwUzZw?=
+ =?utf-8?B?bG9rVkJ6WjZ6cGJPZTRWYTlpMUJqSXY1NXhCeHZzbm5RZ2ErM2crOHBKTW5K?=
+ =?utf-8?B?N1lHaitxYmhlMkFBaS9QTGY3ektkcmF3T1R4UDIzczkrNEZyZ3dXRUxvbWQy?=
+ =?utf-8?B?VFFFM1FZM0k4TFh3cnU2S1lhZ01MUlJ4cW8xR292U21GbHJ1TkJ2Q2hzVWZm?=
+ =?utf-8?B?MkxoYU9vaFl0bHpsYWhwNGZCTDBRNVdZTTVocFpOOFVaM1NHSEJ2cG1Qc1pC?=
+ =?utf-8?B?QmdvT3V0KzBWdEFkbU5JaU1ySzdob0RoS084b1phR0pjTitIdXpTcU9RRjFh?=
+ =?utf-8?B?YjdQVk9RV0tNTFNCM1lYY21CYjllZVBaVHFobzVuUDFRZ0kvVkZXNytUbmo5?=
+ =?utf-8?B?UnBlaU40UGxsdUFrWlVhWkVMRzRDOTVaM3ZQcjVUMTFIMHVJdFY2bmdTaU5j?=
+ =?utf-8?B?RHlaZk5SVU1TMExyWkhiTGJQTlBQdy9Ud21XS3FSajhUcVFNWHZnS3dLT0pp?=
+ =?utf-8?B?czMrcDUvamZCeGhUN0N4VzVidEYxSGFxbURSWk1lMWVMMENhbW9GZ1drT2Q5?=
+ =?utf-8?B?TkpZb2ZIWWc2RGNzZlhEU2E3VjQ4YVNTTnRUbmIvWUhHRDhSeWYzV21Ed1po?=
+ =?utf-8?B?TTdsVGQrTTVWWmk4U0VSUUZmL0hCdkhUTm5wZVQ3NWZNcUVXdlpVTzdtQ3lU?=
+ =?utf-8?B?VzBtcG5yV2RvNjF2RktKT2VJNld0bFdkN1FxZEM1U1luaFg5azdCbU5mYzYz?=
+ =?utf-8?B?eVkxOHFuNjlSbnJaZjFaYjJkSU9nQU54TSt3VTlJYWNNSlBZd0tLTHgrS0ZD?=
+ =?utf-8?B?enFXTHNUQUxyMDFaY1M1dVJzQUk1ZDJoeXJjSUt1bW1TY2MwSVhyOHJmUWlE?=
+ =?utf-8?B?UnoyVEhqMWR2emx4czhGbFJGSkVlNnFIV3hzVXRFaHYzeEJqT0Q0NEo5K0Rq?=
+ =?utf-8?B?dWRWeitHb1FNWVRHMjZuNHBzNHRkdVV3S2xONThLZHhEQTJaME16MWRWdGxJ?=
+ =?utf-8?B?eCtuSndVREM4cDNMTXV0TTM3OWhKUWV0cUY2aDVyVEJDSHNINCs0L0c1eVdV?=
+ =?utf-8?B?SlpFWER4emxtQWxpaEluYnNDUEJma3pWb1V0RGx6MG9yTDlxbmZmUnlpUmJE?=
+ =?utf-8?B?TGtKL2JoR0xkdUgwaEdoTTByRXgxVDIxTjdOWTMvc3h3QUUzOFlwWHZmcHhn?=
+ =?utf-8?B?bEpSQUV2bWszc2hjUG1jN2lMRXI2V2pDRm4yNktWKzdPTTJOMnlyek5ZZnpM?=
+ =?utf-8?B?ZTF0UlllcnBmdWp4Zmkwc2p4TXhHd2FOMjlTMC9zMG43RWx6RUZVQ0lJRGVT?=
+ =?utf-8?B?S2VCeGVLYmxBNG9jdkZhcXVtRWhuUlZPcjc2b2MwemxacGJ5Rm1JUUVsVith?=
+ =?utf-8?B?RGRxaUpOTnJvandFSWZUOXdoc3Vyc2tYNmZDM054VSt3MDBRb1RJaUV0MWlB?=
+ =?utf-8?B?SXdVajd3TkpoS1hNSjFxeldCK0JRcjZXRmk5MUJtOEt5UDQ4eTVybzlNRlo0?=
+ =?utf-8?B?a0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250620082954.540955-1-bqe@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250620082954.540955-6-bqe@google.com>
-Subject: [PATCH v13 5/5] rust: add dynamic ID pool abstraction for bitmap
-From: Burak Emir <bqe@google.com>
-To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB9254.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5d1623-95cf-4c29-6e57-08ddafd4c209
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 08:30:47.9190
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X4jsZgMUfZGxReUb3Fhh2dTlebq0/Rih+t+2+Oh4CIbeC0q5N30T15BZZiwrfSMtu6lwOaRg4UNECzcPc28t/9GFp9MhRlWeL16i7Eee6Q0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF10FBEE80C
+X-OriginatorOrg: intel.com
 
-This is a port of the Binder data structure introduced in commit
-15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-Rust.
-
-Like drivers/android/dbitmap.h, the ID pool abstraction lets
-clients acquire and release IDs. The implementation uses a bitmap to
-know what IDs are in use, and gives clients fine-grained control over
-the time of allocation. This fine-grained control is needed in the
-Android Binder. We provide an example that release a spinlock for
-allocation and unit tests (rustdoc examples).
-
-The implementation does not permit shrinking below capacity below
-BITS_PER_LONG.
-
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Suggested-by: Yury Norov <yury.norov@gmail.com>
-Signed-off-by: Burak Emir <bqe@google.com>
----
- MAINTAINERS            |   1 +
- rust/kernel/id_pool.rs | 226 +++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs     |   1 +
- 3 files changed, 228 insertions(+)
- create mode 100644 rust/kernel/id_pool.rs
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 92511c925db8..49acd6d327dc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4210,6 +4210,7 @@ R:	Yury Norov <yury.norov@gmail.com>
- S:	Maintained
- F:	lib/find_bit_benchmark_rust.rs
- F:	rust/kernel/bitmap.rs
-+F:	rust/kernel/id_pool.rs
- 
- BITOPS API
- M:	Yury Norov <yury.norov@gmail.com>
-diff --git a/rust/kernel/id_pool.rs b/rust/kernel/id_pool.rs
-new file mode 100644
-index 000000000000..a41a3404213c
---- /dev/null
-+++ b/rust/kernel/id_pool.rs
-@@ -0,0 +1,226 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2025 Google LLC.
-+
-+//! Rust API for an ID pool backed by a [`BitmapVec`].
-+
-+use crate::alloc::{AllocError, Flags};
-+use crate::bitmap::BitmapVec;
-+
-+const BITS_PER_LONG: usize = bindings::BITS_PER_LONG as usize;
-+
-+/// Represents a dynamic ID pool backed by a [`BitmapVec`].
-+///
-+/// Clients acquire and release IDs from unset bits in a bitmap.
-+///
-+/// The capacity of the ID pool may be adjusted by users as
-+/// needed. The API supports the scenario where users need precise control
-+/// over the time of allocation of a new backing bitmap, which may require
-+/// release of spinlock.
-+/// Due to concurrent updates, all operations are re-verified to determine
-+/// if the grow or shrink is sill valid.
-+///
-+/// # Examples
-+///
-+/// Basic usage
-+///
-+/// ```
-+/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+/// use kernel::id_pool::IdPool;
-+///
-+/// let mut pool = IdPool::new(64, GFP_KERNEL)?;
-+/// for i in 0..64 {
-+///     assert_eq!(i, pool.acquire_next_id(i).ok_or(ENOSPC)?);
-+/// }
-+///
-+/// pool.release_id(23);
-+/// assert_eq!(23, pool.acquire_next_id(0).ok_or(ENOSPC)?);
-+///
-+/// assert_eq!(None, pool.acquire_next_id(0));  // time to realloc.
-+/// let resizer = pool.grow_request().ok_or(ENOSPC)?.realloc(GFP_KERNEL)?;
-+/// pool.grow(resizer);
-+///
-+/// assert_eq!(pool.acquire_next_id(0), Some(64));
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
-+/// Releasing spinlock to grow the pool
-+///
-+/// ```no_run
-+/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+/// use kernel::sync::{new_spinlock, SpinLock};
-+/// use kernel::id_pool::IdPool;
-+///
-+/// fn get_id_maybe_realloc(guarded_pool: &SpinLock<IdPool>) -> Result<usize, AllocError> {
-+///     let mut pool = guarded_pool.lock();
-+///     loop {
-+///         match pool.acquire_next_id(0) {
-+///             Some(index) => return Ok(index),
-+///             None => {
-+///                 let alloc_request = pool.grow_request();
-+///                 drop(pool);
-+///                 let resizer = alloc_request.ok_or(AllocError)?.realloc(GFP_KERNEL)?;
-+///                 pool = guarded_pool.lock();
-+///                 pool.grow(resizer)
-+///             }
-+///         }
-+///     }
-+/// }
-+/// ```
-+pub struct IdPool {
-+    map: BitmapVec,
-+}
-+
-+/// Indicates that an [`IdPool`] should change to a new target size.
-+pub struct ReallocRequest {
-+    num_ids: usize,
-+}
-+
-+/// Contains a [`BitmapVec`] of a size suitable for reallocating [`IdPool`].
-+pub struct PoolResizer {
-+    new: BitmapVec,
-+}
-+
-+impl ReallocRequest {
-+    /// Allocates a new backing [`BitmapVec`] for [`IdPool`].
-+    ///
-+    /// This method only prepares reallocation and does not complete it.
-+    /// Reallocation will complete after passing the [`PoolResizer`] to the
-+    /// [`IdPool::grow`] or [`IdPool::shrink`] operation, which will check
-+    /// that reallocation still makes sense.
-+    pub fn realloc(&self, flags: Flags) -> Result<PoolResizer, AllocError> {
-+        let new = BitmapVec::new(self.num_ids, flags)?;
-+        Ok(PoolResizer { new })
-+    }
-+}
-+
-+impl IdPool {
-+    /// Constructs a new [`IdPool`].
-+    ///
-+    /// A capacity below [`BITS_PER_LONG`] is adjusted to
-+    /// [`BITS_PER_LONG`].
-+    ///
-+    /// [`BITS_PER_LONG`]: srctree/include/asm-generic/bitsperlong.h
-+    #[inline]
-+    pub fn new(num_ids: usize, flags: Flags) -> Result<Self, AllocError> {
-+        let num_ids = core::cmp::max(num_ids, BITS_PER_LONG);
-+        let map = BitmapVec::new(num_ids, flags)?;
-+        Ok(Self { map })
-+    }
-+
-+    /// Returns how many IDs this pool can currently have.
-+    #[inline]
-+    pub fn capacity(&self) -> usize {
-+        self.map.len()
-+    }
-+
-+    /// Returns a [`ReallocRequest`] if the [`IdPool`] can be shrunk, [`None`] otherwise.
-+    ///
-+    /// The capacity of an [`IdPool`] cannot be shrunk below [`BITS_PER_LONG`].
-+    ///
-+    /// [`BITS_PER_LONG`]: srctree/include/asm-generic/bitsperlong.h
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+    /// use kernel::id_pool::{ReallocRequest, IdPool};
-+    ///
-+    /// let mut pool = IdPool::new(1024, GFP_KERNEL)?;
-+    /// let alloc_request = pool.shrink_request().ok_or(AllocError)?;
-+    /// let resizer = alloc_request.realloc(GFP_KERNEL)?;
-+    /// pool.shrink(resizer);
-+    /// assert_eq!(pool.capacity(), kernel::bindings::BITS_PER_LONG as usize);
-+    /// # Ok::<(), AllocError>(())
-+    /// ```
-+    #[inline]
-+    pub fn shrink_request(&self) -> Option<ReallocRequest> {
-+        let cap = self.capacity();
-+        // Shrinking below [`BITS_PER_LONG`] is never possible.
-+        if cap <= BITS_PER_LONG {
-+            return None;
-+        }
-+        // Determine if the bitmap can shrink based on the position of
-+        // its last set bit. If the bit is within the first quarter of
-+        // the bitmap then shrinking is possible. In this case, the
-+        // bitmap should shrink to half its current size.
-+        let Some(bit) = self.map.last_bit() else {
-+            return Some(ReallocRequest {
-+                num_ids: BITS_PER_LONG,
-+            });
-+        };
-+        if bit >= (cap / 4) {
-+            return None;
-+        }
-+        let num_ids = usize::max(BITS_PER_LONG, cap / 2);
-+        Some(ReallocRequest { num_ids })
-+    }
-+
-+    /// Shrinks pool by using a new [`BitmapVec`], if still possible.
-+    #[inline]
-+    pub fn shrink(&mut self, mut resizer: PoolResizer) {
-+        // Between request to shrink that led to allocation of `resizer` and now,
-+        // bits may have changed.
-+        // Verify that shrinking is still possible. In case shrinking to
-+        // the size of `resizer` is no longer possible, do nothing,
-+        // drop `resizer` and move on.
-+        let Some(updated) = self.shrink_request() else {
-+            return;
-+        };
-+        if updated.num_ids > resizer.new.len() {
-+            return;
-+        }
-+
-+        resizer.new.copy_and_extend(&self.map);
-+        self.map = resizer.new;
-+    }
-+
-+    /// Returns a [`ReallocRequest`] for growing this [`IdPool`], if possible.
-+    ///
-+    /// The capacity of an [`IdPool`] cannot be grown above [`i32::MAX`].
-+    #[inline]
-+    pub fn grow_request(&self) -> Option<ReallocRequest> {
-+        let num_ids = self.capacity() * 2;
-+        if num_ids > i32::MAX.try_into().unwrap() {
-+            return None;
-+        }
-+        Some(ReallocRequest { num_ids })
-+    }
-+
-+    /// Grows pool by using a new [`BitmapVec`], if still necessary.
-+    ///
-+    /// The `resizer` arguments has to be obtained by calling [`Self::grow_request`]
-+    /// on this object and performing a [`ReallocRequest::realloc`].
-+    #[inline]
-+    pub fn grow(&mut self, mut resizer: PoolResizer) {
-+        // Between request to grow that led to allocation of `resizer` and now,
-+        // another thread may have already grown the capacity.
-+        // In this case, do nothing, drop `resizer` and move on.
-+        if resizer.new.len() <= self.capacity() {
-+            return;
-+        }
-+
-+        resizer.new.copy_and_extend(&self.map);
-+        self.map = resizer.new;
-+    }
-+
-+    /// Acquires a new ID by finding and setting the next zero bit in the
-+    /// bitmap.
-+    ///
-+    /// Upon success, returns its index. Otherwise, returns [`None`]
-+    /// to indicate that a [`Self::grow_request`] is needed.
-+    #[inline]
-+    pub fn acquire_next_id(&mut self, offset: usize) -> Option<usize> {
-+        let next_zero_bit = self.map.next_zero_bit(offset);
-+        if let Some(nr) = next_zero_bit {
-+            self.map.set_bit(nr);
-+        }
-+        next_zero_bit
-+    }
-+
-+    /// Releases an ID.
-+    #[inline]
-+    pub fn release_id(&mut self, id: usize) {
-+        self.map.clear_bit(id);
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 8ae5f1ee0308..569c8b87031f 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -79,6 +79,7 @@
- #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
- pub mod firmware;
- pub mod fs;
-+pub mod id_pool;
- pub mod init;
- pub mod io;
- pub mod ioctl;
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
-
+T24gVGh1cnNkYXksIEp1bmUgMTksIDIwMjUgMTE6NDkgUE0sIEJyZXR0IENyZWVsZXkgPGJjcmVl
+bGV5QGFtZC5jb20+IHdyb3RlOg0KPk9uIDYvMTkvMjAyNSA4OjM3IEFNLCBTb25nIFlvb25nIFNp
+YW5nIHdyb3RlOg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2ln
+Yy9pZ2MuaA0KPmIvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaWdjL2lnYy5oDQo+PiBpbmRl
+eCAxNTI1YWUyNWZkM2UuLmM1ODBlY2M5NTRiZSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvbmV0
+L2V0aGVybmV0L2ludGVsL2lnYy9pZ2MuaA0KPj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+aW50ZWwvaWdjL2lnYy5oDQo+PiBAQCAtNDA2LDEwICs0MDYsNiBAQCBleHRlcm4gY2hhciBpZ2Nf
+ZHJpdmVyX25hbWVbXTsNCj4+ICAgI2RlZmluZSBJR0NfRkxBR19SU1NfRklFTERfSVBWNF9VRFAg
+ICAgQklUKDYpDQo+PiAgICNkZWZpbmUgSUdDX0ZMQUdfUlNTX0ZJRUxEX0lQVjZfVURQICAgIEJJ
+VCg3KQ0KPj4NCj4+IC0jZGVmaW5lIElHQ19NUlFDX0VOQUJMRV9SU1NfTVEgICAgICAgICAweDAw
+MDAwMDAyDQo+PiAtI2RlZmluZSBJR0NfTVJRQ19SU1NfRklFTERfSVBWNF9VRFAgICAgMHgwMDQw
+MDAwMA0KPj4gLSNkZWZpbmUgSUdDX01SUUNfUlNTX0ZJRUxEX0lQVjZfVURQICAgIDB4MDA4MDAw
+MDANCj4+IC0NCj4NCj5TbWFsbCBuaXQsIGJ1dCBtb3ZpbmcgdGhlc2UgZmllbGRzIHNlZW1zIGxp
+a2UgYSBzZXBhcmF0ZSBwYXRjaCBzaW5jZQ0KPm1vdmluZyB0aGVtIGlzbid0IHBhcnQgb2YgdGhl
+IHdpbGRjYXJkIHJ1bGUgY2hhbmdlcy4NCj4NCj5UaGFua3MsDQo+DQo+QnJldHQNCg0KSGkgQnJl
+dHQsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaC4NCk5vIHByb2JsZW0sIEkgY2Fu
+IHNwbGl0IHRoZSBwYXRjaCBpbnRvIHR3byBhbmQgc3VibWl0IHYzLg0KDQpUaGFua3MgJiBSZWdh
+cmRzDQpTaWFuZw0K
