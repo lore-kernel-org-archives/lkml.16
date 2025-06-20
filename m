@@ -1,146 +1,107 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from the.earth.li (the.earth.li [93.93.131.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E392E2853F7;
-	Fri, 20 Jun 2025 14:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D598A28B4FD;
+	Fri, 20 Jun 2025 14:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750428206; cv=none; b=JRrwVukke+lEa6x66VB3z6kE3+VgsGFI1RCd+Fxv3SeQ61Pr4YhG9sJoXeTj5yd/TfAdZX8WYAMm4zblVfQr2IXlsePiFKnUB5JT38ADIdF1XQD9lVBZl/7at1kIeAEzSH7Rg+kOQPpKWmWgCf3l2/ffjJFTeRNRbdNkEOlvy4Y=
+	t=1750428216; cv=none; b=qqljjeWhoUKvZuwRcieKrpO+IUUfdVN4XD8bVYpRxQwdyMtvJMT8iqSBP5zAozRQRx36noT1yZiBw60q4z4hIK9Kf6vgWU6yX8gt3YPu1M2CvCPPyypapGWfOpUcR8VUu6KDhQ320v6xj4UYzWi5kGlUozghIrqzqH1/FMc5gMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750428206; c=relaxed/simple;
-	bh=4NEDyJXdNqSWXOZ4emVLeSKU5MjypHaO00EcnF46Flc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J9k/9kEurnB9+hvHHN3hnohvsPgFKJX+wzYtzSh2831m19W0lOz67SeBnUJJTLPVmwJ09HX0DLH7sqxMIZqxyI9YBROGLiEQ8Ouv85miyI9CdK8Hyrt/VUbSYHtSfuNtq6GsK4XdfQDHi4+LZS0qLUc7Yduj6yWjUuBpS1kSh6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTNwZPRJ; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750428216; c=relaxed/simple;
+	bh=XDSYm0LAP+6mIAyG1KOcL1BQwmwnediG65sYR4tURfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qq2lwmfEStidVtc0lttl5cnuRSZxZKUfxhDqPEmGsmqsS0O1lRDAJJp4Gh3XIFx23yHZXciCCRx0/s60CoNWH6gwcmq9zBF4yYV33H6nFE7EErnez7DeSbgxbULXU/03pEPP6mQsVQPRCRYEZ7JXNv1UYTQHyCU2eUfOeOcsQWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=Xev9waoG; arc=none smtp.client-ip=93.93.131.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTNwZPRJ"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1321604b3a.1;
-        Fri, 20 Jun 2025 07:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750428204; x=1751033004; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xn7VkzjBGtxC5wocnjwA6tAAMdVwFSL8OdOVM5bwT48=;
-        b=NTNwZPRJxS3dUIW7EmHkxw5FW517yXmpV5Tigpqt1zDCoHo7lnHOQHDISsBUDYssCj
-         UM03F7jeWfYvB2QEkfFGtRXBncvbOShry6Xn4So1Dq9JKy6WwAaUjaKC7FUyUPn7pvGE
-         za100yTGHS/hXZQ4Gof5SOSTdlGWm6IbwAKOC9Qach/vSKObf6TTuUusqZ+koRItEzhE
-         EPRrZQ4goBwhkQc0/lZoe7S5EtH/ijW2Wqh8bDpqZF88u3Gvg/WqkGR3fcVj4Iw/A2/9
-         oOxGBRfNYB4D+VnLHvtsDyQ3ExtlszZnO0xOQWMEMdUy2VSEfxuZV7SoLmAufWMY+ORM
-         dMnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750428204; x=1751033004;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xn7VkzjBGtxC5wocnjwA6tAAMdVwFSL8OdOVM5bwT48=;
-        b=KhqwCiXtOwyO87YJDO+ZNO12UcnSEwZjGb6ltHHWqCDCHmBSYBnDoWUKSW1U5asAVC
-         D1d/XsIpD8AYpspG8jj1TRNYUdfyMOWbqZQWrUTxQc4dnFD9yu42qafW/verc+hI++JB
-         WHc/Jf8SWAV23S8pWLiQeKiPpmoby7+EO/jUtkrVgNn5+TRzrc4DqvKr0KuA6gpU4Kjc
-         2yYzAurKwr5nqO5ZQQpNq/fM48PUt/ffekXt+48WQtACmr6NXAVUlAplQgIArLf1NEiq
-         qXf/WmzfgsVbUeucG5Z1pdeTMAZ9lnJGIOlM+v1jlBZhVStKXMTSNZ68rrikvWCwKojn
-         VofQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHYlAtLfMrg6Qt5ohIIAQhRT9pHSMHStdO2uNIh3HRxeORY7TSmZaDoKK8Qi/RbviqE2+fAsrCS13t8sQ=@vger.kernel.org, AJvYcCWhccWjVzJ1nedQVOO8mjM/WuFhXpAqLE2pFbh+qxYbYeuo35TIBism91z2eDbaIodADP92w05WRSh5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCZYw8w/VFKumAb0Kbti1AsDLJvmM2o4UQtbjbIuldsOqWBEr8
-	wnuXiISwUk/Tlf+ag/+meDgUpBMeTI2reFa8j9g9F5ef/wtllCjZNV+6
-X-Gm-Gg: ASbGnctogEkzzcyMTIbKVVGVjsOdvo2mTg7bb/zjq/5YOdL+O8sj4sp+tIwAxFo+Q8v
-	sUkILuEaLHoE1Gh619RjB9OcKzKhrdfWUGbJTawmtGw0zO7XLLmmpmeaQ4brWCi4U5cQwV75w88
-	2pAUgLdxZ3hUQtrR+yBwQVobApKW66XtX0tsJocZoQ89tjDqndJbO7IANsS1FKIzBPg7woRtJcN
-	0qsJUDlr/Ty+oYitjiltgV7vFoIjr/dpZBKYSvD1JoqKWSNulL61oqRCte4L77WvXYcHEzKN7YX
-	/KZtnTkzi4lgqSM8cnyztkbpqHWv4QUkj6zTAZZcpqpF0EGTTychr8s0P7H5LWYmOyEA2kLmgQ=
-	=
-X-Google-Smtp-Source: AGHT+IEA8OM74XLIyYLhLaheuXwHNmIRKwJLELETRIVKeQTi78LCozw/MaDGR08IIgyqKTzIaWRMPQ==
-X-Received: by 2002:a05:6a21:900c:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2202931826cmr4005618637.16.1750428202241;
-        Fri, 20 Jun 2025 07:03:22 -0700 (PDT)
-Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a649388sm2135010b3a.113.2025.06.20.07.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 07:03:21 -0700 (PDT)
-From: Jinliang Zheng <alexjlzheng@gmail.com>
-X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
-To: david@fromorbit.com
-Cc: cem@kernel.org,
-	chizhiling@163.com,
-	chizhiling@kylinos.cn,
-	djwong@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: Remove i_rwsem lock in buffered read
-Date: Fri, 20 Jun 2025 22:03:20 +0800
-Message-ID: <20250620140320.231780-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <Z23Ptl5cAnIiKx6W@dread.disaster.area>
-References: <Z23Ptl5cAnIiKx6W@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="Xev9waoG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+	s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
+	Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=DDBlc6X06W7RqhIMTP6H4wGHxtmOyxhuVoFdQGnU/JY=; b=Xev9waoGKB/yOZL6DtC7FSYtoD
+	mHdKnQepePRvZsJPJS3oD/FFwxtGfk3CE9H7zItG/4MMQVk3O32pKSxBeNP2BRahz75ZYudDPs8DX
+	rOj82yKRit66GJqEbH+VPIMCvUF68oX6xN9fptWj38nVc+lDLfb95FUEiUn58H1Vdy5usU8P4k28Q
+	7R9jmo28pTsNy6mP/Rs5LLe8+cNJIAMUzv2o+SskQCnrItxwlTx0XfHFrJy80FeTcKST6IPviMFpO
+	7+935TRYzFGl/ujRWYWevVkyC/oxBeJXH9ZNiHmK6kuAJC/d5P+dc07m55WOB1m0zI5j8nsk6Cxe3
+	Zr0JeV8w==;
+Received: from noodles by the.earth.li with local (Exim 4.96)
+	(envelope-from <noodles@earth.li>)
+	id 1uSbjI-00E85J-0d;
+	Fri, 20 Jun 2025 14:24:28 +0100
+Date: Fri, 20 Jun 2025 14:24:28 +0100
+From: Jonathan McDowell <noodles@earth.li>
+To: "Orlov, Ivan" <iorlov@amazon.co.uk>
+Cc: "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+	"jarkko@kernel.org" <jarkko@kernel.org>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [PATCH] tpm: Fix the timeout & use ktime
+Message-ID: <aFVhDDewVHneFXnO@earth.li>
+References: <20250611162508.85149-1-iorlov@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250611162508.85149-1-iorlov@amazon.com>
 
-On Fri, 27 Dec 2024 08:50:46 +1100, Dave Chinner <david@fromorbit.com> wrote:
-> On Thu, Dec 26, 2024 at 02:16:02PM +0800, Chi Zhiling wrote:
-> > From: Chi Zhiling <chizhiling@kylinos.cn>
-> > 
-> > Using an rwsem to protect file data ensures that we can always obtain a
-> > completed modification. But due to the lock, we need to wait for the
-> > write process to release the rwsem before we can read it, even if we are
-> > reading a different region of the file. This could take a lot of time
-> > when many processes need to write and read this file.
-> > 
-> > On the other hand, The ext4 filesystem and others do not hold the lock
-> > during buffered reading, which make the ext4 have better performance in
-> > that case. Therefore, I think it will be fine if we remove the lock in
-> > xfs, as most applications can handle this situation.
-> 
-> Nope.
-> 
-> This means that XFS loses high level serialisation of incoming IO
-> against operations like truncate, fallocate, pnfs operations, etc.
-> 
-> We've been through this multiple times before; the solution lies in
-> doing the work to make buffered writes use shared locking, not
-> removing shared locking from buffered reads.
+On Wed, Jun 11, 2025 at 04:25:24PM +0000, Orlov, Ivan wrote:
+>The current implementation of timeout detection works in the following
+>way:
+>
+>1. Read completion status. If completed, return the data
+>2. Sleep for some time (usleep_range)
+>3. Check for timeout using current jiffies value. Return an error if
+>   timed out
+>4. Goto 1
+>
+>usleep_range doesn't guarantee it's always going to wake up strictly in
+>(min, max) range, so such a situation is possible:
+>
+>1. Driver reads completion status. No completion yet
+>2. Process sleeps indefinitely. In the meantime, TPM responds
+>3. We check for timeout without checking for the completion again.
+>   Result is lost.
 
-Hi, Dave
+This looks similar to the issue I fixed in 7146dffa875c ('Fix timeout
+handling when waiting for TPM status'), I assume you're actually seeing
+it in your systems? I think we're starting to see it (rarely) now the
+other issues are fixed in our builds. As a similar approach does the
+following work?
 
-I have a question that I haven't figured out: If shared locking are used
-in buffer writes, how can the read/write atomicity mentioned by [0] provided
-by xfs be guaranteed?
-
-  "  "I/O is intended to be atomic to ordinary files and pipes and FIFOs.
-  "  Atomic means that all the bytes from a single operation that started
-  "  out together end up together, without interleaving from other I/O
-  "  operations."
-  "  
-  "  i.e. that independent read()s should see a write() as a single
-  "  atomic change. hence if you do a read() concurrently with a write(),
-  "  the read should either run to completion before the write, or the
-  "  write run to completion before the read().
-  "  
-  "  XFS is the only linux filesystem that provides this behaviour.
-
-[0] https://lore.kernel.org/linux-xfs/20190325001044.GA23020@dastard/
-
-thanks,
-Jinliang Zheng :)
-
-> 
-> A couple of old discussions from the list:
-> 
-> https://lore.kernel.org/linux-xfs/CAOQ4uxi0pGczXBX7GRAFs88Uw0n1ERJZno3JSeZR71S1dXg+2w@mail.gmail.com/
-> https://lore.kernel.org/linux-xfs/20190404165737.30889-1-amir73il@gmail.com/
-> 
-> There are likely others - you can search for them yourself to get
-> more background information.
-> 
-> Fundamentally, though, removing locking from the read side is not
-> the answer to this buffered write IO exclusion problem....
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index 8d7e4da6ed53..18ae0767fa60 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -127,7 +127,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+  		goto out_recv;
+  
+  	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
+-	do {
++	while (true) {
+  		u8 status = tpm_chip_status(chip);
+  		if ((status & chip->ops->req_complete_mask) ==
+  		    chip->ops->req_complete_val)
+@@ -138,9 +138,12 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+  			return -ECANCELED;
+  		}
+  
++		if (time_after(jiffies, stop))
++			break;
++
+  		tpm_msleep(TPM_TIMEOUT_POLL);
+  		rmb();
+-	} while (time_before(jiffies, stop));
++	}
+  
+  	tpm_chip_cancel(chip);
+  	dev_err(&chip->dev, "Operation Timed out\n");
