@@ -1,216 +1,281 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2087.outbound.protection.outlook.com [40.107.100.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901FA285412;
-	Fri, 20 Jun 2025 12:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E0A28A400
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421367; cv=fail; b=fjUn3YfQPBkaygC1qXzcyoSUJadzuVgsa+izsLHK+1bUlNtJKMNt+BiGbXZEDkS4xFkI+phAUtzMGviLoog1mTij0Cc4AF+cQJQYWTGhUSpE5K9sR/rlDUsrlzZG5mPa/cSlH7PWo1S8IBqyQm+9TB8U297obmRm0n+ewzeCtn8=
+	t=1750421396; cv=fail; b=WGY6+5bNXR35pm/L9h5Pa6clPPWDn92vBPspEJ3I8/7vi3fYeVkGUq0hUxhmYAro5L6MB+IFImSELDQjDjUUcis63U7O+utO5MasI+gOZvUtElzNNEGIa/Pp6Lb/I6+1zLS9Ya68iDN6rEKZ3YwPT6YwfS3aqLMLTktrLFG2x+A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421367; c=relaxed/simple;
-	bh=xxBvBGUuyzPmvbi6vKMnTFKd5+NYfHxaVd1hfFOWB28=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qYXNmEqAEvgEziCiz9Iv/qEjOSlll1s6fdjbENfl234d26GXHRqYgC4gqg0G1mxEN+doEvEh+f4TKZ0d8SaU6UicsoShr9YHTi7bRnW5vJnIWP6OWszcjR2Leyq0ylm0devAJQMmJdapvGPyzx9+MLm6/rA1yiZKM1jdYDB+uWM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eI4OGlMY; arc=fail smtp.client-ip=40.107.236.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1750421396; c=relaxed/simple;
+	bh=UU7aRT5xJcqWCBN7m75VyVocoP7EixtDsaVOPU+2MGo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TW2gvn6DGKKbJFtkZ0zuxm/9GFhgsQiKLisTYeDAjwmmA49wjXWY6qlEGeqb3HXRU/kurQE66GZkRIyJ11i1gqubZ7kJ8f6lc/3TPIVS3R2FSlKEbbA6H4s81gCBPWJDmr5JlvvEYGfGI/RROFqu5hK0qyKBM+F02XsvT0DGcPs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=l/Fl5Bzh; arc=fail smtp.client-ip=40.107.100.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eI4OGlMY"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="l/Fl5Bzh"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bv1p1qzWqrLxoaYLbr6+jm/G4/Lwcvyb2Kn5rR2Xjsa1Le5K+lCTNHlukGzXtZavi6N43DQrpf7o/hY08d0FH8PYzCak3HbaVqKYtYPI7SKklh485vaO8LlDu4RBnALZQrtEI4zQuRDrRKkPGB1o8zqKGUdVfFuRiKSc9Xi4XJS/SnFPpOyDdOXMzRV2ZKjk4CQngOkSF/IU4p/qxtkhiQ2fJYp+LQaC+tLw/SJyAnU7plPnWpZFW23Wyn0/i3STHEpOLMZrlCF+N4o9N0GiSoXEc9Z3aiU1r+BAJu8ODfbfKM6J1j8NLHFe3Ta5bEJ5qGCpsvHYdyy43RKhKwm9vw==
+ b=MuGTStW1+xWUADR9ewRd7croixHr0XO8FsOGAC2OHgXdeJZUiWhuMjwYHmI+6R5MRgKHHLQvXNPbYpFoOHpmDrN/ZIjjPzQpj1GilFwDBIIOupIejpvuATecK9c9BWimsYAfiTvKz6OVSaXMUEJNvcLPl2Uu9B+npp3QCCYE/yGDcNaSEtd1DNn0x/YgIknnndzV66JfVuGuMd2duXdStqRTjCzsTTzmzVQFPR2sQwOr7gvdczPPoG9j7V44K9jK4KTk4Shu/bohkqoFlI9u7T0fCor7Ckib2u+DB1axxdDdKlR5PySeUfz5yK3T5kOtQn5htW5k4QfiHiAhybMy7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2NPUbXozireUW8qyIUSqGVxFzb6lHW1IZfIY9VbbzLc=;
- b=Mm+RwasPd6fR+myJ09a6mxAj8A4ZOCzB7Zo6wDjSozVTntkdpXVYIVWPkyoDkHNKguq7OAbkjRQ0JrnZOUTUVtA5xaCQE8f98i36FrBE+DiI5VkcSsk14zlcKIQYX8Z9s8bN7QSjyr4w0+PrOSatPatJumdFxTufFnIdHuWUmqQoMQdvG8ww/Q245ggbIfYn6ubl6vk/WbBGoolKZvc9vW0mNflCv7Opaehj2KaNj13xNofNWOaWM+OWrkePu7G1e2dfcwdX9YMx+zvhksX9srlgksJf5tdC9BkXsTaPLgmTK69OxzYYR8R8p0ELfBovNf1P6Batt58Wok613m+ghg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=f0I97Tz+e5F+JYnG24pF1mcUDS3gen7NrOIvGi0Lhzc=;
+ b=ADHpZdVSujyD2UiJlRV/Z3DYHLnlYvH2e4yHJ1f4JWoXRdRWf0iKSom07G6Y+X93HDl0AHCTJKzYpcjrGe4RZn3IEvRcBXHwnvkfT9QQD2gdp+icLqMK6KrW+lQPQKSYIu9cZjgelNEF5YQlxdDT74SArM84cJETFpfgf28/1DjjJW3UpBv0zS5Y6/HGUvGacGNh0N+V9CJiZp7IhmkYL3UH4vK53RFXbi9rxgldgjLgLIjWWVBGg4CDWDooPBESFplG/X2y2bsvst38G1Yi1nCOEzXtxyfjk7BoroFJIXRf0I4pS2LztvdGcryHliAvgRFxvJMKWAkEHYUhREEISg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2NPUbXozireUW8qyIUSqGVxFzb6lHW1IZfIY9VbbzLc=;
- b=eI4OGlMYnj+IokGfhO8LjE9dBbkJFXeUkqjaFsyAmmwDXO5cDSAwFOIf85VRPEuAyi0AyIlsHGmXseBp0J80loxCYtcIn1w5KIdLph1R5Rm+wwONgVhaOa6TThqNBPEHPdmhNjOxJFmUc8e0ZjCAehYEdQcJXoIbQWJRF0DEQ1g=
-Received: from DS7PR12MB8249.namprd12.prod.outlook.com (2603:10b6:8:ea::16) by
- SA1PR12MB8644.namprd12.prod.outlook.com (2603:10b6:806:384::17) with
+ bh=f0I97Tz+e5F+JYnG24pF1mcUDS3gen7NrOIvGi0Lhzc=;
+ b=l/Fl5BzhvJWSt5wxmCrGBt2xrvcIqPUYRy6xDGDI5CgfPEKL9UJFwl4zYCRirkKCjt6rGy1l3Ia/Sa28wJ6onUsPgm9FJ28RzL7LqJVRtBfdOfWfV4U0rOUmuCaVu6VHaPz/RMkIdG9x/TXlIx/Yo65/Ug0I68xX2+yl6wHavGPpXSski0PnHpp9Uub5jWs630EGY/VlNb19Ge6AREYU8tX+kKyuPNhVI3LYDHIoxlXC7pHZCW105YyqZhCBwILd1oOxkLuWnHY5H+nrV15/dM+ax0LJ24CWci+eJxIQXXXe2QcfmSNHMEGjRVfARJDonm3IukOEAQWZbhRl0btPhw==
+Received: from BL1PR13CA0210.namprd13.prod.outlook.com (2603:10b6:208:2be::35)
+ by MW6PR12MB8758.namprd12.prod.outlook.com (2603:10b6:303:23d::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Fri, 20 Jun
- 2025 12:09:20 +0000
-Received: from DS7PR12MB8249.namprd12.prod.outlook.com
- ([fe80::eeb0:6d7a:ce8d:a5cb]) by DS7PR12MB8249.namprd12.prod.outlook.com
- ([fe80::eeb0:6d7a:ce8d:a5cb%6]) with mapi id 15.20.8857.019; Fri, 20 Jun 2025
- 12:09:19 +0000
-From: "Rao, Appana Durga Kedareswara" <appana.durga.kedareswara.rao@amd.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
-CC: "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "Simek, Michal" <michal.simek@amd.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>, "git (AMD-Xilinx)" <git@amd.com>, "Vanukuri,
- Meher Thanmaiee" <MeherThanmaiee.Vanukuri@amd.com>
-Subject: RE: [PATCH v4 2/3] clocksource: timer-cadence-ttc: Support TTC device
- configured as PWM
-Thread-Topic: [PATCH v4 2/3] clocksource: timer-cadence-ttc: Support TTC
- device configured as PWM
-Thread-Index: AQHbZ0HQx65y/GwqLEerJm99AExLJrOClJ2AgIpUmbA=
-Date: Fri, 20 Jun 2025 12:09:19 +0000
-Message-ID:
- <DS7PR12MB824987018AAB745E38C638728F7CA@DS7PR12MB8249.namprd12.prod.outlook.com>
-References: <20250115113556.2832282-1-mubin.sayyed@amd.com>
- <20250115113556.2832282-3-mubin.sayyed@amd.com>
- <hwnhz4yr6vzz3oav4gq7qptejjy3rdwff7iveawaxexf3tbngr@pnrxi6jkpw3k>
-In-Reply-To: <hwnhz4yr6vzz3oav4gq7qptejjy3rdwff7iveawaxexf3tbngr@pnrxi6jkpw3k>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-20T12:07:15.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR12MB8249:EE_|SA1PR12MB8644:EE_
-x-ms-office365-filtering-correlation-id: 686b93fb-d1f3-493d-6104-08ddaff34951
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?SPZbRTBS3+Ach+ksA5e/ke7A9lwq8oup9X3IYoSB1DFsDxsKYjeqoiWwGF?=
- =?iso-8859-1?Q?/kz26Oco3U2+bWyCii0f1cpOZagw1mPxRRsk6b5MahCHNa924OwTrzX778?=
- =?iso-8859-1?Q?eEa9UC7CrlTASV7NLbTtjB5DigfbfCJdp8UKRmKJQg1TAVl1eUnBipLhs6?=
- =?iso-8859-1?Q?R/Po5vqpws3e7ssMsnYh33uKDugYdW+vpxESddQYrlUmh3GgPiLL5kj0SJ?=
- =?iso-8859-1?Q?sMlq31Y8L4leCyJSFmUVAmfrkZV6A4HX1IVmaQYELETgXCQDCdzqByt8+j?=
- =?iso-8859-1?Q?cd5me04Mbi9llKeNgRzJ8Jc6M6zSKyCYRF/WQIMyz8TtzUDcUYYMl/gQLk?=
- =?iso-8859-1?Q?yYj20B3wlBADJbT8kyk45910lmbl+NQdHMaMCAbKqDM0H9BpYS/6b9rntw?=
- =?iso-8859-1?Q?Pi0gZzVVKJD3d2yoKrj+dPZBFitSf+Tbem69+BSoHgLxlM3Kb5ReINEKYA?=
- =?iso-8859-1?Q?vlQGsWIHcQ2zgLnTqAsocHSQCDYZ8ye5k/5IwLKnMcRkUJS83NEOBUi++C?=
- =?iso-8859-1?Q?TDGiyPVjod3ad3g8ZSugUvzQeF40t5vU3HFIgrlBZBwx/zlUMUvYhepnvR?=
- =?iso-8859-1?Q?7hgERTJtSh3jA2RxR6GAdk1048SAO0UxklMHSdUk1HiWUnFQHpH3oHn0HM?=
- =?iso-8859-1?Q?hrCKbmceDabwJ7tJ2c7324Gksv//5CXe0s8VUHFcf9MhYRY4eSLH1W9lZJ?=
- =?iso-8859-1?Q?LitBP7vUUyskEyzAFrS0wyKPC0kMmmvyum0ieu30SP9/dqh5k73JD7wcIy?=
- =?iso-8859-1?Q?69xePssG95/2KtqyKF4m7s2h+B/aAvpY65YiQvCXyL+EL3kVaa0nn65SOO?=
- =?iso-8859-1?Q?0BnVq2b126hRwgtYXNNLsgNKQrEbIwt1/U9netNpna7iXK0UOiy5YVz6VJ?=
- =?iso-8859-1?Q?MFoFIjomHrPc3Ye4hwdGJvrFRByIeNoObK+jWqSm3pEasiuOVg/Wl2aRM5?=
- =?iso-8859-1?Q?EGb+yPVnPpkvyhSQdwXTWMKcITB6FftqhWXcFOKuXtKVbzefQlsM5JYNE7?=
- =?iso-8859-1?Q?wIS+xH6+Ee8lluU1/GegTFXIucArUUWvTmXeUujxih2YdA7Vow8FqCxS8H?=
- =?iso-8859-1?Q?4QsJDOxNrs7kpXJ3PvCFGssxzzexTeZYAREZVUUdJRFLRySb5Al9H9T9AG?=
- =?iso-8859-1?Q?ARqDSEAQN4Ag31+aVcE+oJHd06pV+I52OwEBgcw6LqmSbxH13aTVXbkOuG?=
- =?iso-8859-1?Q?Kwbe6af3if1M1dYupe+6SrMkG8EErybS5nA4QRYW/WveI1JzS9azEqT1X7?=
- =?iso-8859-1?Q?2urpVa1uxlfjAO5fTli9ZzZxBaFsp38iw1MevNL3hxNMYjcIY0imrInhrk?=
- =?iso-8859-1?Q?/nJGGu+M29G9ts9qt6m2Wgf9steQ6oS8teUP9jpq/K5rxiDG55jAr75J2U?=
- =?iso-8859-1?Q?TB4RaNA4dXpdetpvrXAHxbQryq70advMn2cpNtkUZ+GoXm6nhMMjM8woz5?=
- =?iso-8859-1?Q?mH1YSXoSA74kwSew0Zr/0YMYkhrvBU86dHJyhm5W/n8W3YLtg0CNQ/g0Su?=
- =?iso-8859-1?Q?d9St12TxcDq6EpJsgnld6hQSuBYTYOa2tqfe2wzw74DU+rxRDfqpgcwMmg?=
- =?iso-8859-1?Q?nMhbQcU=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8249.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?6ZB7MwEm2gMUdQ6yHb3D9AUi6WXBXX1oSc266GIhDzXnCcs1BoBGkVcgQA?=
- =?iso-8859-1?Q?3liSS89u/Gv4yKGL3gVGtCzQkieNlpfv0xAYHau6zRclx3YgSRRFUfoTcY?=
- =?iso-8859-1?Q?ZeQAEYZOtUi1ti5bvnNlEV2Sbgi4meTRCdzMH9A54qJ2jTWNBHhfyxAmR9?=
- =?iso-8859-1?Q?LAjiIgUThR18/3hXR7o7RauvQhabebTwGiIKGyye6JEtdx2BMC6Va70PKr?=
- =?iso-8859-1?Q?EunXqu7w9TIRcwSbKax2yVSADeMvxJCkV/iKLwTevD8GcQlfjvoHSnwTiE?=
- =?iso-8859-1?Q?dc4zCkEGbmlAtY15hWKsM4rYIjklD5vgImmaX8A+PaqqmSIQbVWX9hP8KI?=
- =?iso-8859-1?Q?yp143i1VXoP50RtsmCLdZOEWKYBM7QdbfF45gJmofnEOvjzT62VD3uMyf/?=
- =?iso-8859-1?Q?PPIWf/16dBj3P2eSnia7iRGU4tE1nCVlEnJ+hqBe7DqUikIb4pyK/tR1+S?=
- =?iso-8859-1?Q?PGpRvWiS35Th6HtiDhbLgu50mVBDDjzqbx0PzAP8OL0FJt5/5SaGjle2En?=
- =?iso-8859-1?Q?GTZT6n+BYXIhTVzBRbadATSdJhsN3ouxyB/lwwZ3i/E1tuQp8AmmGJugOt?=
- =?iso-8859-1?Q?uTntiAa1Q0spFIAos4w4kQziqiK9i1zC1h9OG1m+xvaX2JuPKBGScwMo7s?=
- =?iso-8859-1?Q?e4RlR9g5Wfr7C/qmts2iNe/bi4O3OItqFJKWnq5HZBJnRT+sZV0BF2fgUO?=
- =?iso-8859-1?Q?5S7hdPKKJ/Dh7TsFujUeDgXCnpitl2DdYaszRxpdar/jywVLw6LzdR3PKL?=
- =?iso-8859-1?Q?qZn8Ar2x9wReDxc/OCk9gt05yel8y0Ntsnw54AjtlQosfxbVzDoYPAe6pP?=
- =?iso-8859-1?Q?L3wBjzQvCRXJYKtf0Z0ZSxuaIVAYsaIqxHn2JC1iSEx6+R0YzdawOmYdjH?=
- =?iso-8859-1?Q?5sjaufXwHSIE48SFWxgN/L1Fr1w0fYxm5yrLyx3YGe65YxM6Adi7VZAi41?=
- =?iso-8859-1?Q?Rs+LWBVcry9KyfZWmXl5/yPvEbthkanEXCwSizl0gx/zqoA9td1gGlIXHx?=
- =?iso-8859-1?Q?eOTFSNQVJ9u+uOxC+77/DM6EyqvBkVU/eNf8qdn7DKiyceCMMICXsDo60d?=
- =?iso-8859-1?Q?ULFik99KG9K2FEAMMxw4F9lh7lOwFEy3K/nKum9THUOYVpZ4b0Lj976BPq?=
- =?iso-8859-1?Q?iVIHMfkSUMzMn8lPT5lDzvHz4ASw1iWfAPgVryW3EIAFu4y+taVVb1Vt1F?=
- =?iso-8859-1?Q?UDU1CO/G9MnUEHVDyWUyEfkHqH0Yl2e2QGtUra9q4OSO6ZiIs6KFF4Kuot?=
- =?iso-8859-1?Q?SYZDkwyMlk+Tp9gqcJl+OWJprB3AHoGQEgv6W3RFrfFU0Q/AFOB3Z4uCmM?=
- =?iso-8859-1?Q?xkWFlCFZZZ28EO4s9DkeTWCqYMiYDAxjzkdHJKffedaX2yTpzvZtm5vvV4?=
- =?iso-8859-1?Q?uCVldokQeBxOolq2NQRytp9uLEeHkIyzt6SjmNx6tAKrmBRAdOrtZcUQAf?=
- =?iso-8859-1?Q?4cGj0dDTl7L3rkvND3UXtgICcJjKoAYEaW5UPSJCqr8Hemm3OXDY6T0mPS?=
- =?iso-8859-1?Q?oj703AkmXtUHy3Uzl98EcfhUK8AQhoUwHMKBbykr1GSyOLnTaGZFdrw3SK?=
- =?iso-8859-1?Q?3gyG8vZAtQDGv0DOy/B8U8HD8TwTg9SuR2/yZzOq31kQZLHY5dv7tkgHVt?=
- =?iso-8859-1?Q?A96+5yvQ33Gb4=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ 2025 12:09:50 +0000
+Received: from BN1PEPF00005FFD.namprd05.prod.outlook.com
+ (2603:10b6:208:2be:cafe::8) by BL1PR13CA0210.outlook.office365.com
+ (2603:10b6:208:2be::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.11 via Frontend Transport; Fri,
+ 20 Jun 2025 12:09:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN1PEPF00005FFD.mail.protection.outlook.com (10.167.243.229) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Fri, 20 Jun 2025 12:09:50 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 20 Jun
+ 2025 05:09:47 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 20 Jun 2025 05:09:47 -0700
+Received: from localhost.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 20 Jun 2025 05:09:47 -0700
+From: <ankita@nvidia.com>
+To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <joey.gouly@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<ryan.roberts@arm.com>, <shahuang@redhat.com>, <lpieralisi@kernel.org>,
+	<david@redhat.com>, <ddutile@redhat.com>, <seanjc@google.com>
+CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
+	<kjaju@nvidia.com>, <targupta@nvidia.com>, <vsethi@nvidia.com>,
+	<acurrid@nvidia.com>, <apopple@nvidia.com>, <jhubbard@nvidia.com>,
+	<danw@nvidia.com>, <zhiw@nvidia.com>, <mochs@nvidia.com>,
+	<udhoke@nvidia.com>, <dnigam@nvidia.com>, <alex.williamson@redhat.com>,
+	<sebastianene@google.com>, <coltonlewis@google.com>, <kevin.tian@intel.com>,
+	<yi.l.liu@intel.com>, <ardb@kernel.org>, <akpm@linux-foundation.org>,
+	<gshan@redhat.com>, <linux-mm@kvack.org>, <tabba@google.com>,
+	<qperret@google.com>, <kvmarm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<maobibo@loongson.cn>
+Subject: [PATCH v8 0/6] KVM: arm64: Map GPU device memory as cacheable
+Date: Fri, 20 Jun 2025 12:09:40 +0000
+Message-ID: <20250620120946.2991-1-ankita@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8249.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 686b93fb-d1f3-493d-6104-08ddaff34951
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 12:09:19.8041
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFD:EE_|MW6PR12MB8758:EE_
+X-MS-Office365-Filtering-Correlation-Id: d94a9223-17a5-4342-5f23-08ddaff35b5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|7416014|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DizwvAtgdFxI6vOVgz1+YugKT3HwuQ/7nTCCsdil3eQpbQ/f3iwjlyjbLr59?=
+ =?us-ascii?Q?uXnya9L6reYWCMHcbs3SyEUcZIAXZK5zIGxuRn2u1GQGMV/dRjhXQvHP8cSX?=
+ =?us-ascii?Q?HJpvxXVZ9ezR4bmXORHseml/uG/GVnn3eNSWGNN5ijVTorPyes7Ac53o6zky?=
+ =?us-ascii?Q?ya0MmSyySQnhnup2yr0gwWQQKPiO7JkyFZdZjoGGrFHayYqpRcTO78+AaHmE?=
+ =?us-ascii?Q?qcLooqEpZCyy34rPeLc1+bNSifDJopAcCdNhC23kLjy69rA04p9PKbePFIRF?=
+ =?us-ascii?Q?x+JU8cZSNe7UH9i7SIcrtWBz5plSOBxesJUCYsL6tqD7e7apaAIjbCzbyQfN?=
+ =?us-ascii?Q?MhsJLS9ThmH+h7VIHDFTG2wpDtoQcezyzuvykaS5IliZ1haj9zQweaRkg9za?=
+ =?us-ascii?Q?Y1fVcdw8q6XHPjzvqRd5WobAxTG885OjhAthhMH/Cmq75bKP3gVqHqP7MGr2?=
+ =?us-ascii?Q?LKNS2jpVb0Nj1cUOIJa70JCQaKzCKdUEK5mtYTwslrBHyVgZ3qjasdjz2sOx?=
+ =?us-ascii?Q?mzTqABhcC19NGPjCUveJZtgoLvGrrGjvZA4BdBIhDPNDHwh+vx4wY1srZgnX?=
+ =?us-ascii?Q?AFLV+Mndxjp/Y1R7y4iebFk2tqwFvHIQxj7SamIv4R2nMNL7KcPZPU7rcLwy?=
+ =?us-ascii?Q?SaIIEdmxcrbgXAnlPIJweYeplpn1UrJFO+JKEeJYcKXqyklLe2dNhaHhvsyv?=
+ =?us-ascii?Q?u3ARBenoKOL3xP15nd+v7S8rxFJrEsiUpfr+L4DDfHmRCCLT6j3lNou+85gh?=
+ =?us-ascii?Q?GKRvustwjB/FghsjImrz7nHtJRIU5ixEB3soFSHkoMEuVOmjYq87ZuTQz0Zb?=
+ =?us-ascii?Q?MDN9ghd63DOLVMK42jYvzhMONGvqRBC24ih+XIYEFRxINLlZVdcfvixF4R/Z?=
+ =?us-ascii?Q?ja3rOdiOhX4g8hwfU9CiztOVQ8xxm4syjENY3VvYkpstpNAzFdZvGs45Q7GK?=
+ =?us-ascii?Q?1EF5K6KPMmWxuH4qXQixzK+SUlIwxBVmqEN8abypwtehjvh2ez1PxYOeEcZu?=
+ =?us-ascii?Q?KSARWOg/11D5P8PRiqAE14NUQHcZPvUHUcZcx+b5FrG7HqXWhdpxzV+WURdo?=
+ =?us-ascii?Q?v44sSZljjcqXFpcij++58j9TlhrpuvSAg0xKCL+SiiPbfplRxZXMo2Ez7+Cd?=
+ =?us-ascii?Q?KQ6JyVhT3C90QNWoOKE9c7SgSGdiElJXcYPN3V8TqiYbDntowhK35Jx/5BKH?=
+ =?us-ascii?Q?xgZyyY8kAg1k1/8QpcI0e7eyP0wPfw+pOMxu6gA4L4b67HZr/dE58pIT2Yxv?=
+ =?us-ascii?Q?O0BtO2FmlpiADfUazwjn0vSUsDZv84MTBbpQHf6TxibCoV+PXF3THKQOYR4z?=
+ =?us-ascii?Q?rIlNVQLFLtJBW4KO87R+e9OZWGceFV9PSwCTMQZ1ekmnpSprqc2Nylk5t9vV?=
+ =?us-ascii?Q?p3VWY4c7PeDc0Lbz12+VYuuz/6j0UzZ7YEpT8foDqxmyPe/JX/J2dOrFy/ac?=
+ =?us-ascii?Q?/nt4O2HboIBSptvMdwfkNTGNVaREUwgNyML/PjKrf09GEUE40jiaCGtX9RNm?=
+ =?us-ascii?Q?MEGubjP1k+6g9gHUzbmKLuOCfYugkbQAc/q/0RSIN1/w2rV2zXek4whfm9MO?=
+ =?us-ascii?Q?HO920t1wPIL9QKkbEJE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(7416014)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 12:09:50.0003
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1X+/A8q0uWQRz2xQU3tW0yNA7atgNd/Q3fnZ3m5gIEHvRK8YmiMy7avMhqIe8Jck
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8644
+X-MS-Exchange-CrossTenant-Network-Message-Id: d94a9223-17a5-4342-5f23-08ddaff35b5f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00005FFD.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8758
 
-[AMD Official Use Only - AMD Internal Distribution Only]
+From: Ankit Agrawal <ankita@nvidia.com>
 
-Hi Uwe,
+Grace based platforms such as Grace Hopper/Blackwell Superchips have
+CPU accessible cache coherent GPU memory. The GPU device memory is
+essentially a DDR memory and retains properties such as cacheability,
+unaligned accesses, atomics and handling of executable faults. This
+requires the device memory to be mapped as NORMAL in stage-2.
 
-<Snip>
-> > +   /*
-> > +    * If pwm-cells property is present in TTC node,
-> > +    * it would be treated as PWM device.
-> > +    */
-> > +   if (of_property_read_bool(timer, "#pwm-cells")) {
-> > +           #if defined(CONFIG_PWM_CADENCE)
-> > +           ttc_config->is_pwm_mode =3D true;
-> > +                   return ttc_pwm_probe(pdev);
->
-> strange indention. Maybe use
->
->       if (IS_REACHABLE(CONFIG_PWM_CADENCE))
->
-> This is an unusal way to bind the PWM driver. I'd prefer creation of sepa=
-rate device
-> in the PWM case. I wonder if it can happen that ttc_pwm_probe() is called=
- during
-> boot before pwm_init() completed. Or use an auxbus device to distinguish =
-between
-> timer and pwm?
->
+Today KVM forces the memory to either NORMAL or DEVICE_nGnRE depending
+on whether the memory region is added to the kernel. The KVM code is
+thus restrictive and prevents device memory that is not added to the
+kernel to be marked as cacheable. The patch aims to solve this.
 
-Sorry for the delay in response the upstreaming of the TTC PWM driver was p=
-reviously managed by Mubin. Since his departure from the organization, I wi=
-ll be taking over and continuing the upstreaming effort.
+A cachebility check is made by consulting the VMA pgprot value. If
+the pgprot mapping type is cacheable, it is considered safe to be
+mapped cacheable as the KVM S2 will have the same Normal memory type
+as the VMA has in the S1 and KVM has no additional responsibility
+for safety.
 
-I have reviewed the v1 to v4 patch series along with all the associated fee=
-dback. In response to the concerns raised regarding the use of auxbus, I wo=
-uld like to propose an alternative solution: registering the PWM functional=
-ity as a separate platform driver using a distinct compatible string. This =
-would allow the PWM driver to be probed only when the specific compatible s=
-tring is present, while the timer driver would be used otherwise.
+Note when FWB (Force Write Back) is not enabled, the kernel expects to
+trivially do cache management by flushing the memory by linearly
+converting a kvm_pte to phys_addr to a KVA. The cache management thus
+relies on memory being mapped. Since the GPU device memory is not kernel
+mapped, exit when the FWB is not supported. Similarly, ARM64_HAS_CACHE_DIC
+allows KVM to avoid flushing the icache and turns icache_inval_pou() into
+a NOP. So the cacheable PFNMAP is made contingent on these two hardware
+features.
 
-If this approach is agreeable, I will proceed with preparing the v5 patch a=
-ccordingly(after fixing other review comments along with this change) other=
-wise will explore the auxbus device please let me know your thoughts.
+The ability to safely do the cacheable mapping of PFNMAP is exposed
+through a KVM capability for userspace consumption.
 
-Regards,
-Kedar.
-> > +           #else
-> > +                   return -ENODEV;
-> > +           #endif
-> > +   }
-> > +   dev_set_drvdata(&pdev->dev, ttc_config);
-> > +
-> >     if (initialized)
-> >             return 0;
-> >
->
-> Best regards
-> Uwe
+The changes are heavily influenced by the discussions among
+maintainers Marc Zyngier and Oliver Upton besides Jason Gunthorpe,
+Catalin Marinas, David Hildenbrand, Sean Christopherson [1]. Many
+thanks for their valuable suggestions.
+
+Applied over next-20250610 and tested on the Grace Blackwell
+platform by booting up VM, loading NVIDIA module [2] and running
+nvidia-smi in the VM.
+
+To run CUDA workloads, there is a dependency on the IOMMUFD and the
+Nested Page Table patches being worked on separately by Nicolin Chen.
+(nicolinc@nvidia.com). NVIDIA has provided git repositories which
+includes all the requisite kernel [3] and Qemu [4] patches in case
+one wants to try.
+
+v7 -> v8
+1. Renamed device variable to s2_force_noncacheable. (Jason Gunthorpe,
+Catalin Marinas)
+2. Updated code location that block S1 cacheable, S2 non-cacheable mapping.
+(Jason Gunthorpe, Catalin Marinas)
+3. Added comments in the code for COW and cacheability checks.
+(Jason Gunthorpe, Catalin Marinas)
+4. Reorganised the code to setup s2_force_noncacheable variable.
+(Jason Gunthorpe).
+5. Collected Reviewed-By on patch 4/6. (Catalin Marinas)
+
+v6 -> v7
+1. New patch to rename symbols to more accurately reflect the
+CMO usage functionality (Jason Gunthorpe).
+2. Updated the block cacheable PFNMAP patch invert the cacheability
+check function (Sean Christopherson).
+3. Removed the memslot flag KVM_MEM_ENABLE_CACHEABLE_PFNMAP.
+(Jason Gunthorpe, Sean Christopherson, Oliver Upton).
+4. Commit message changes in 2/5. (Jason Gunthorpe)
+
+v5 -> v6
+1. 2/5 updated to add kvm_arch_supports_cacheable_pfnmap weak
+definition to avoid build warnings. (Donald Dutile).
+
+v4 -> v5
+1. Invert the check to allow MT_DEVICE_* or NORMAL_NC instead of
+disallowing MT_NORMAL in 1/5. (Catalin Marinas)
+2. Removed usage of stage2_has_fwb and directly using the FWB
+cap check. (Oliver Upton)
+3. Introduced kvm_arch_supports_cacheable_pfnmap to check if
+the prereq features are present. (David Hildenbrand)
+
+v3 -> v4
+1. Fixed a security bug due to mismatched attributes between S1 and
+S2 mapping to move it to a separate patch. Suggestion by
+Jason Gunthorpe (jgg@nvidia.com).
+2. New minor patch to change the scope of the FWB support indicator
+function.
+3. Patch to introduce a new memslot flag. Suggestion by Oliver Upton
+(oliver.upton@linux.dev) and Marc Zyngier (maz@kernel.org)
+4. Patch to introduce a new KVM cap to expose cacheable PFNMAP support.
+Suggestion by Marc Zyngier (maz@kernel.org).
+5. Added checks for ARM64_HAS_CACHE_DIC. Suggestion by Catalin Marinas
+(catalin.marinas@arm.com)
+
+v2 -> v3
+1. Restricted the new changes to check for cacheability to VM_PFNMAP
+   based on David Hildenbrand's (david@redhat.com) suggestion.
+2. Removed the MTE checks based on Jason Gunthorpe's (jgg@nvidia.com)
+   observation that it already done earlier in
+   kvm_arch_prepare_memory_region.
+3. Dropped the pfn_valid() checks based on suggestions by
+   Catalin Marinas (catalin.marinas@arm.com).
+4. Removed the code for exec fault handling as it is not needed
+   anymore.
+
+v1 -> v2
+1. Removed kvm_is_device_pfn() as a determiner for device type memory
+   determination. Instead using pfn_valid()
+2. Added handling for MTE.
+3. Minor cleanup.
+
+Link: https://lore.kernel.org/all/20250310103008.3471-1-ankita@nvidia.com [1]
+Link: https://github.com/NVIDIA/open-gpu-kernel-modules [2]
+Link: https://github.com/NVIDIA/NV-Kernels/tree/6.8_ghvirt [3]
+Link: https://github.com/NVIDIA/QEMU/tree/6.8_ghvirt_iommufd_vcmdq [4]
+
+v7 Link:
+Link: https://lore.kernel.org/all/20250618065541.50049-1-ankita@nvidia.com/
+
+Ankit Agrawal (6):
+  KVM: arm64: Rename the device variable to s2_force_noncacheable
+  KVM: arm64: Update the check to detect device memory
+  KVM: arm64: Block cacheable PFNMAP mapping
+  KVM: arm64: New function to determine hardware cache management
+    support
+  KVM: arm64: Allow cacheable stage 2 mapping using VMA flags
+  KVM: arm64: Expose new KVM cap for cacheable PFNMAP
+
+ Documentation/virt/kvm/api.rst |  13 ++-
+ arch/arm64/kvm/arm.c           |   7 ++
+ arch/arm64/kvm/mmu.c           | 145 ++++++++++++++++++++++++++++-----
+ include/linux/kvm_host.h       |   2 +
+ include/uapi/linux/kvm.h       |   1 +
+ virt/kvm/kvm_main.c            |   5 ++
+ 6 files changed, 151 insertions(+), 22 deletions(-)
+
+-- 
+2.34.1
+
