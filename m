@@ -1,55 +1,73 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662A92EBDF0;
-	Fri, 20 Jun 2025 15:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8162D3A86
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434373; cv=none; b=MwfBvpP249xZJIHG4kVrUliI5CRnwxBOMYTeoiDYPg7VIV4DGuLM42woF+FrOt3k0EbW5OIb7A46/MvKoYSs4+SKv8DpJlYMmP+UtnJ7QC0uk42tzULOQ0Yv5bz2qOiNdc6VCZxTG6vpItLc/U9jmAX8xiA5vf2T4OpHScJR3CA=
+	t=1750434423; cv=none; b=Y9Se4zPJGhI8rEHE1jlIAME9GkkwfO/jrtiGkQiVhdI+YU2mJuG7jd8nSFBrolxWFV5h3RQoKoQRT+yWDwQiEDRhfuoSu8SfmtQs+BmIzakXIj3lVd8HOhNVJ32096hdzZmH5pj7xqbRRucaVOTnNzIDi+3u814BYHi5E9ANgG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434373; c=relaxed/simple;
-	bh=z3+EbKKsksPaYGeqv0T8bAxEan67c93CBJV5WVPnYFM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vb2qBDltJHa7jjVLtqMQPeFPUEuqZfRvsW85zZSKAZuqqodsPguNO6ow8OdswIgBO1yXgwhIV4ZVw3/Watovasny7Bgb6UAxIdfFGJziAZISB3Zz6QhLHmEr6Zd04DGxwqDcZMZAkSGh9UqS/eUjQFPWdDtlWIxjAPY0FBNiojI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KEA4cHs8; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750434423; c=relaxed/simple;
+	bh=buqInb5mqkNDwL+7hQIeuQgXeAKtV/p8V+7Iql6hX8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GTLEcG2lX70Snv+3NZ/FMW3+YaFLZZpeTLgSExW3QQ1nrIMzX4Qg0YCWU9MOMxiPEetgfht0g03XrBHDd8Y0CzBpbOCCf3DrU0bi3taMAgCXEKxcinh1f2JB1L6KkyZ7UdFxmFeSgiPf8DK4XccJRACeL8LTgHMwyuJ8dTpsXA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QgYSFcVM; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KEA4cHs8"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55KFjgaL698508;
-	Fri, 20 Jun 2025 10:45:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750434342;
-	bh=K3hFN5dq7YOejTLa+4FEAejSPJ7VJDkEOvGoTt+ZXJE=;
-	h=From:To:CC:Subject:Date;
-	b=KEA4cHs8IikWdiuHge2SXGf5/hQt08Bs4BpAB4KwkW6udTevgEHiYwRY9rlcJ+kGH
-	 97raLTPQ1Vj5U4ED3eSb0uQo5QR4ervrPfYVaqvsjcq5lWG18SRZXvF5or7FQx7oSi
-	 ZS+4BxTxgko7hm5wYVB/ip7E8MATqpy2LEI0NeT8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55KFjfZs806765
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 20 Jun 2025 10:45:42 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 20
- Jun 2025 10:45:41 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 20 Jun 2025 10:45:41 -0500
-Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55KFjfPZ3189272;
-	Fri, 20 Jun 2025 10:45:41 -0500
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
-        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>
-Subject: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size allocation
-Date: Fri, 20 Jun 2025 10:45:41 -0500
-Message-ID: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QgYSFcVM"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so15231445e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750434419; x=1751039219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWO2G/DbpRwwDVi2ObC8ypf7TcnofMBz/4xVPLOm7vU=;
+        b=QgYSFcVM+qtX+bYBHHiUvopNXM9Ya6ujRbKuCcKraZ5JKjbVk36l4Aa0jWZ0WRuBGu
+         vCRv8WnlH6vzfvrqes22EdTigaRyRgOQZiQQDyZPaWjOiZGWMcY4F5u/7sEFoRc2xTZB
+         oaiaPoYXfc7VNCdmt3+N1ZXGSAa1AWyPm1HtquIUveu7GALlvfhMluTCdm9fINNYaepL
+         q3+iaZgtDilKA36Z7twzhzlKbWT0WM2Qqdaad6z4kXH4o8o810EU63X8lVBrINbgj5b+
+         0Ggh2M1ltPZNvTJ1BUahDS6AhyVE+d8Ktgffx6NDhEEXF4BFkWAFMadkWQqTr5bLjrve
+         DRIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750434419; x=1751039219;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PWO2G/DbpRwwDVi2ObC8ypf7TcnofMBz/4xVPLOm7vU=;
+        b=nIhD9bjnBh7x9vuy8uSnyeGUaE4jtiu+f7gDurwmlU4WA6GkIQCqyKU7bGAIOM8HiW
+         cyuUXUoSMR/52ynsNssDp+cVd7wm3s1Dlj5oEgAaczIhsDBVlLMtezVh0w2REWLbIimS
+         N8Tte62iq6kFK1swAqqWPnVLSJDYQ6s8L5w2v6oi4BtM1gNvVYpKlgNXHOwhs6adhv0F
+         kvlYO5qB308n5yw22Hu1hRSpA1yObpjNjn80xBTeGoFmuyE/vuiUMoqImZw0E8dGzoiG
+         A1Re+EX/Ost25HNfL/JMWdiMKDN64wMSwT9F0iRnT7QHsgCpiHrMCIpU+AwyV7IQmmwd
+         IgkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXvlQqbQiOJTM/fT1BgyBO5QdljCESVnncuOIho9F70NDr3BBptb1e7gmKGPa2BWffxwt9hZnws8kQGh8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh7hzTKtdNRz66I5uD0CC7QcOSsAoZM/tYnmjdKxeZcNkInL6+
+	Su5Fq1CoxgYhSJoJjcZDAnwD9Xlk7EowKp42qNfgh7nPwXG7UllbyqxzThLHtcVN/Nc=
+X-Gm-Gg: ASbGnctlz0lRD2QGB3QZxXOQ8qAyOcDHBpRrwdjQBt6sAlwHu3Zb0kMPke92AatyzMT
+	QZR+O4WN3zAl12YiC2k7VPQQqADcaQhm2M7yg9iyWMPreCZuOY+BSXBz9Ia9LyISPVWfCgI+shE
+	KV/HXAt0awf/k1cjnIl4+YIMeVJVbEQqGDf8PrnVHdzXAvvlx++m9A7zZiWGzeeeh+kJcUdhS5s
+	4jqO8txgF16DqhBeeBk8zx+kyvgX4K8Y4NcC8QlW/aA5CzJKeBnTgesqiPW+JSZzvh/sAKyL9sQ
+	PAfxIcgaSh5hRz3Q4Diwd78ybPs4J0uiRwrAV/BfIHfHbrRkFdgP5tRF8xb/pg==
+X-Google-Smtp-Source: AGHT+IG+CZmZfbLPrVn3DthMJ9P4F7yBCo2NT+F1A0hHwe66P2j0wSF6m5Ao5UpWm9U/Nvwk9K1L7g==
+X-Received: by 2002:a05:600c:1546:b0:453:1058:f8c1 with SMTP id 5b1f17b1804b1-45365392159mr33025775e9.3.1750434419139;
+        Fri, 20 Jun 2025 08:46:59 -0700 (PDT)
+Received: from zovi.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647071f4sm29390755e9.34.2025.06.20.08.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:46:58 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH] s390/boot: Use -D__DISABLE_EXPORTS
+Date: Fri, 20 Jun 2025 17:45:49 +0200
+Message-ID: <20250620154649.116068-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,98 +75,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In probe(), two arrays of structs are allocated with the devm_kmalloc()
-function, but the memory size of the allocations were given as the arrays'
-length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
-the second devm_kmalloc call). The memory size should have been the total
-memory needed.
+Files in the arch/s390/boot directory reuse logic from the rest of the
+kernel by including certain C and assembly files from the kernel and lib
+directories. Some of these included files contain EXPORT_SYMBOL directives.
+For instance, arch/s390/boot/cmdline.c includes lib/cmdline.c, which
+exports the get_option() function.
 
-This led to a heap overflow when the struct array was used. The issue was
-first discovered with the PocketBeagle2 and BeaglePlay. The common and
-device-specific structs are now allocated one at a time within the loop.
+This inclusion triggers genksyms processing for the files in
+arch/s390/boot, which is unnecessary and slows down the build.
+Additionally, when KBUILD_SYMTYPES=1 is set, the generated symtypes data
+contain exported symbols that are duplicated with the main kernel. This
+duplication can confuse external kABI tools that process the symtypes data.
 
-Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
-Reported-by: Dhruva Gole <d-gole@ti.com>
-Closes: https://lore.kernel.org/all/20250619153526.297398-1-d-gole@ti.com/
-Tested-by: Robert Nelson <robertcnelson@gmail.com>
-Acked-by: Andrew Davis <afd@ti.com>
-Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Address this issue by compiling the files in arch/s390/boot with
+-D__DISABLE_EXPORTS.
+
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
-v2: Update commit message explanation & tags.
----
- drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/s390/boot/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
-index b16b300d7f45..5e67fdc88f49 100644
---- a/drivers/regulator/tps65219-regulator.c
-+++ b/drivers/regulator/tps65219-regulator.c
-@@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
- 					     pmic->rdesc[i].name);
- 	}
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index bee49626be4b..0986c7c67eaf 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -19,8 +19,8 @@ CC_FLAGS_MARCH_MINIMUM := -march=z10
  
--	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
--	if (!irq_data)
--		return -ENOMEM;
--
- 	for (i = 0; i < pmic->common_irq_size; ++i) {
- 		irq_type = &pmic->common_irq_types[i];
- 		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
- 		if (irq < 0)
- 			return -EINVAL;
+ KBUILD_AFLAGS := $(filter-out $(CC_FLAGS_MARCH),$(KBUILD_AFLAGS_DECOMPRESSOR))
+ KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_MARCH),$(KBUILD_CFLAGS_DECOMPRESSOR))
+-KBUILD_AFLAGS += $(CC_FLAGS_MARCH_MINIMUM)
+-KBUILD_CFLAGS += $(CC_FLAGS_MARCH_MINIMUM)
++KBUILD_AFLAGS += $(CC_FLAGS_MARCH_MINIMUM) -D__DISABLE_EXPORTS
++KBUILD_CFLAGS += $(CC_FLAGS_MARCH_MINIMUM) -D__DISABLE_EXPORTS
  
--		irq_data[i].dev = tps->dev;
--		irq_data[i].type = irq_type;
-+		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
-+		if (!irq_data)
-+			return -ENOMEM;
-+
-+		irq_data->dev = tps->dev;
-+		irq_data->type = irq_type;
- 		error = devm_request_threaded_irq(tps->dev, irq, NULL,
- 						  tps65219_regulator_irq_handler,
- 						  IRQF_ONESHOT,
- 						  irq_type->irq_name,
--						  &irq_data[i]);
-+						  irq_data);
- 		if (error)
- 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
- 					     "Failed to request %s IRQ %d: %d\n",
- 					     irq_type->irq_name, irq, error);
- 	}
+ CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
  
--	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
--	if (!irq_data)
--		return -ENOMEM;
--
- 	for (i = 0; i < pmic->dev_irq_size; ++i) {
- 		irq_type = &pmic->irq_types[i];
- 		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
- 		if (irq < 0)
- 			return -EINVAL;
- 
--		irq_data[i].dev = tps->dev;
--		irq_data[i].type = irq_type;
-+		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
-+		if (!irq_data)
-+			return -ENOMEM;
-+
-+		irq_data->dev = tps->dev;
-+		irq_data->type = irq_type;
- 		error = devm_request_threaded_irq(tps->dev, irq, NULL,
- 						  tps65219_regulator_irq_handler,
- 						  IRQF_ONESHOT,
- 						  irq_type->irq_name,
--						  &irq_data[i]);
-+						  irq_data);
- 		if (error)
- 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
- 					     "Failed to request %s IRQ %d: %d\n",
 
 base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
 -- 
-2.43.0
+2.49.0
 
