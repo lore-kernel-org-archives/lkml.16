@@ -1,134 +1,109 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9472926FA64;
-	Fri, 20 Jun 2025 10:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51657254AE1;
+	Fri, 20 Jun 2025 10:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750415797; cv=none; b=OxP3n46ad21ysnQxtWjOPTm6NbiqyLx6F72XteZ9lGyaElqwfK11B2lavyxTaeII47nCMCrF/Xv0B6/jIfKAaeOKgyZQmiYuVBd/kskyVWNboqVKlzvSqY3PEBC+3QCQUfhqMjSgkvYMlqNJAD0s0qaNXVwspSh+mEAioXZpuCQ=
+	t=1750415826; cv=none; b=CccJNCeAgMf9VoyEzrH7YJIoqF38Z488pgSh4PwWt2cLS407/2Ulk8c+4Jodd/curJEhD5azOUHpRs0w6WTrGfd9Lbb4viOgyDCR8DDWb+RvxKz3QVPyz6CAo/WoYTZL3hTcERc+Tku1PAcDMp6RqtlnN+xqFlIFv8S6p1QsBY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750415797; c=relaxed/simple;
-	bh=61tzGfGbgQLnSFeKKZHQCEC5cxZqFDsy8PIqZYAdbrw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qsOaJgn453TQaiVrUEtZvbTEZ3oozsi5nIt7h4zjrrLDhaOeGvkGsEF/+5x+eiZY7jFm0Xuy2mlpoe1soiK/5F78+D4E6vDL4kAXke0e5v0FY+/S8uMz4eEMp9DIEx4yvmOoS4wb6VKN6JuyntyDSUYCf7jmVqMZs+V/V65gf/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOOaSA7N; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1750415826; c=relaxed/simple;
+	bh=VS3JJVcLM8e+/C9GKlienZfWElI7EwidERPeL2fcH/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K+D3lzI//c7CvXT4A0oluAfZfo4zRbQK+UhB134hPYBYMXfCwVPiO+KKXP7Y/e6Fz0UTvuo78t46WXE5BsewBvOjS3Ody3eGkZbt2e1Ys7jlzk4FqdWJRPvY4+IRIlVtY9qTCbFk+Nj4veZLGXySmc+iMVML+FvhzJE11C08Vq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OXN6OcwT; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOOaSA7N"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1119016b3a.1;
-        Fri, 20 Jun 2025 03:36:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXN6OcwT"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e1d710d8so23628575ad.1;
+        Fri, 20 Jun 2025 03:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750415795; x=1751020595; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5PrIwQHjw/p9hrLI0cyhFU0inaUVzxNVCt/CIe/61mQ=;
-        b=MOOaSA7NtXDJUSeU7MO+DI/QUwIxohUfWlRkSFZ8BSRSO1LyIe3WsXbtT/rufyOp9D
-         epnfrQhqzSTMsDYd0Ajvt1lyPsW40tW3HLHozIbH/JittwXiqVmi4hz2DzexiHMgRC83
-         GADyWHPH+hJX+7clFZOlzWI0fSy23PXsshdpsNooqK5d7vbPTgobB8mbttXPNH5iWBdE
-         yFjpDoBZe8eqOayDi9p+hJxX5HbvfUMwsF8XiV8iCGzSZ/f223Btydz+O3ukHBWYO6U9
-         1MfB5rG8aJ9cDDmFyJLmrMgchw3CcJZwbj0suJgz2NSN2a0IO0dtSwkt5d1X2E8Yj2FR
-         ggKQ==
+        d=gmail.com; s=20230601; t=1750415824; x=1751020624; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EzFnKyjtp6zgHtcCmzpcFM78spPpMQ5at1Z7orqizdM=;
+        b=OXN6OcwTovRi9s4+A62Cq3vV6GdoSV2fBLcZkEYSWrdMXkaCWtD+TQVSw9KuXS3DWR
+         Zovip5qZk1gerIzKAtVp9K6Ycl52N+tgMOSTtsLwSIrgTD4d1yAoEKdjsgYFK4seN7vn
+         r532JOhVo+lt3K2kgla892uxQ/wsE+dL/GjugvI4bG90XM+r1/dgaa1dFnHc6bKUvVx/
+         ZpXJHjc/Y4xfLKfsowXicxbU6JY/SoV1c5qhc4OyTyxKLf/qi1bsHtdV3iPaYIJkTDDZ
+         ge/oVZ5HLo3y7mCmFOQiXXI9CDkx4RdSiSWxrPXGHq4DQBmTQbHj6pQpzDmD30mQ/QCD
+         CB3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750415795; x=1751020595;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750415824; x=1751020624;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5PrIwQHjw/p9hrLI0cyhFU0inaUVzxNVCt/CIe/61mQ=;
-        b=R+3NFLH7J1NcyRJdsfUASsHlZT8AiPcJVw8qpe3r1jGKcyWlTYTUYwdA9wvc+BEt4G
-         rV/z+ERpsmzo8eQQe9xpI83xGWTq9EgcjJoaZM6rEYtX79k920ls8tqJgxaTZEPtLeOZ
-         ZqG4grJImHOzezBR9jQb2zGjs0ynu68qPO2q4cXU4GchW5PuC3tCcgVxgwvVmjgedZGn
-         Bp7sBbqBPikbYiMQ2fIZfde8IdafXbGvP+HNt6XuXTPK5RVP6No0mR6wgPQdMMHNqW3N
-         Bh2Cn013ytpwAORXwWJeUeWTFgF8T4eZ+ZobrTubxsjIfogWn+33XQI7xnz2TG7kKZUT
-         xSwA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1589WkqxBx7F4CI7vHOVybeHh+1krFio9fNLPrt/F4KO2ZWWPRP2qlPdDfDhZbsKdVUEj9Lr7@vger.kernel.org, AJvYcCUQcBobS6hG3oeiQzy/AkX0HO78J9JHzVtf+sCthLAm/oKSHRHgqTwpj1dyACbwBMD9GgSgrDZ3kWsOD2+9@vger.kernel.org, AJvYcCWRH8i1/u+vNP0ULF5BD5rbGkKdFZmO9Zji4pge6Ukcw6jxsbe0L9Gz6bW84m/Vpsg7x45W6RIWkBd1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/6B38GarOpuSXYsTQUIYF6wEC7ZsY8Z69cF/938pyqseyjrsK
-	YZTJpTP763UD5PsQBO/YGhXYc3/iKcPWXBSWSeBFj5oIxk9b3MzLGE1s
-X-Gm-Gg: ASbGncsqj443zy4Zo1hBewSv59HsXUqLAWsKb2YREzIjTJ8HuLg4CLmKHPFpdG046hG
-	/4l/1BoeI+ZetTyWtfeYRIyt3njZrAjyZvHJ/q7afs1oG19n/f8D90K1fwmajIxSPOELR6gX0xJ
-	Nl72RJuuiBERwyl5k8a+sOn1XDWyCGztkdbmxQ4uYHA4rv+5CnlDYoCU4tjqWMf1t1RnhwkT3+v
-	jsp2NwUXyo1GIdC7VzCpnUCDCn+HR6pX6K4y5cH/j+5vFjaY++7noSxb9BaDuLZshO5nrMmxGZX
-	xLSPjbc3MdNBMj/Z1oKXI2w4J5w7FYGk86DpREXGwUb8PA2g5XvCRU/XlfZC61ausRL6b7Jjtcy
-	3RIVySxpumm8=
-X-Google-Smtp-Source: AGHT+IFc4Q10D8OQtMZi2Dtm3qf1ST8pz1u/NxWiETOVzSYrkkbcHnd7yIU8yT784naKdOMQMa/5mQ==
-X-Received: by 2002:a05:6a20:1593:b0:21f:54e0:b0a3 with SMTP id adf61e73a8af0-22029176202mr3058959637.2.1750415794665;
-        Fri, 20 Jun 2025 03:36:34 -0700 (PDT)
-Received: from [127.0.1.1] (061092221177.ctinets.com. [61.92.221.177])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7490a674eb6sm1779230b3a.144.2025.06.20.03.36.32
+        bh=EzFnKyjtp6zgHtcCmzpcFM78spPpMQ5at1Z7orqizdM=;
+        b=tygzPlB1UKLrX4wUvHs2HwfnMVkP//ZMgdwWABZl1D9Ce//QZo7Xzk0Lqvr6HzkVso
+         AH3S/kehCaYhGNFTgRjCBrr3JBzITx4WJ+sKulM1yq5nAxo7PfH3J7V8yHSDxXEal8kr
+         jGZ5j7WBq15opAPtqJLTHt0bOCj4GLqQPcUx70Nm0aegVSZ4w6RQUDhLiJp3XnlX7zuF
+         t5XWAIcxy612agt1qYVQrr1megQdlc+SaM+VyOgcB4qkMaKp/xilkhEi6kMUUd5rBQgM
+         bP1rhTngCe6zIgccpUuOpAXTtQ782BJc1w3tk1b8lC/gawFvdpba6Sx1l2SjBY/1qDma
+         scHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpTAAPOC2rPnu+Helxu1n5z3FuJRakEZTyixCr0meNjJSoaCxg0e31XnM04QPXw8mGZC1v/Dbf@vger.kernel.org, AJvYcCX01u1zXkgOvK0xUlaHcm7EFGOqcO8Wg7zkck3ED3BPrsExer+K66ZMJz1N+CVSfDVc3zLxLZzcQCYZOIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzH5FX3r1gqqNDyNBOsc5TeQzWUJIzWENx3EWACOnR6oNRt1AY
+	2pmOJSSwY7bhHRChtXadc8zMybQzSKF61UDzOxaUhtXWe6cDWZaYtsNZ
+X-Gm-Gg: ASbGnctHmm1UVNFFDq54nE46UM3PZBkgdzFAmRQ3mZ7HDrViaueKC2mD1yTnjHhEOa9
+	LTr4ZchRW3toD6koG639pvn415hM4dlWFMiOrfBIGmbmCKrUeh0TxMbRzkwRODgpMvCCRip+E+3
+	CVqAgxzZUZE2BApmOTAvJOcuNX1wOWFve4DbdVWC/8+w3QOLdVpsZEsXAmgIFV2qvD/AJRGx8qf
+	j7u1Ja0R76uNgzuuG3lTnSBC5F0BLyy5rxZUik15ODBd5lRkncPhW+bn1W/xqODKMX6ISVBmbna
+	CHAIIROktRjUnbGQnT9TyESRXbM/OEuIL21CWnPpQF8TU3G5jnGqyfz4fnyAdQIW0WrmSojKqXd
+	S27DREw==
+X-Google-Smtp-Source: AGHT+IFHciKNELGCLQrx8i2bmHdeHbV6hiXtNE+JqkjF7+uOfgOBIvu+M3yZCjLl65a5EWLbBvlH6g==
+X-Received: by 2002:a17:903:2a8d:b0:234:986c:66d4 with SMTP id d9443c01a7336-237d9851e1dmr35751955ad.26.1750415824490;
+        Fri, 20 Jun 2025 03:37:04 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c66:adfa:3ba4:a43a:db76:7cb])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83c0b61sm15249775ad.54.2025.06.20.03.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 03:36:34 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Fri, 20 Jun 2025 18:35:36 +0800
-Subject: [PATCH v2] arm64: dts: apple: t8012-j132: Include touchbar
- framebuffer node
+        Fri, 20 Jun 2025 03:37:04 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: jhs@mojatatu.com,
+	xiyou.wangcong@gmail.com,
+	jiri@resnulli.us
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH v2 net-next] net/sched: replace strncpy with strscpy
+Date: Fri, 20 Jun 2025 16:06:53 +0530
+Message-ID: <20250620103653.6957-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-j132-fb-v2-1-65f100182085@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAHc5VWgC/2XMSwrCMBSF4a2UOzaSB02sI/chHeTZXrFNSSQoJ
- Xs3durwPxy+HbJP6DNcux2SL5gxri34qQM763XyBF1r4JT3VHJKHkxwEgxxyvXyopxQ1EF7b8k
- HfB/SfWw9Y37F9Dngwn7rv1EYYcRYOQhldKBmuE2LxufZxgXGWusXVoRMD54AAAA=
-X-Change-ID: 20250620-j132-fb-d7d5687d370d
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=986; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=61tzGfGbgQLnSFeKKZHQCEC5cxZqFDsy8PIqZYAdbrw=;
- b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBoVTmpH7C123HN9er4olInMFkdcbOHWIYV8pnYG
- B04Py1NkqGJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaFU5qQAKCRABygi3psUI
- JEsjD/48isIZsVW9mZVR2PW1U4M3BDzHiqAL09krcSNQRq8Wcq53au1xxRfYAmRdGhkH0W3wwTG
- TUx9cjx62SnX4s3VXjucX222dQv5r5eU+sAQQj9ieFpkV9ssSUJGFTySHsoLwOk/2zFXkA59x1g
- TeQP+zVBjd/W7PXMH/mgav7rUs9UarxEhVj7LjagusBrW+q8s4d2Du1X8xwLFFZkX6o8nbat6JR
- Mh/VKvCxQdn49CFCzS6fN/Hj6C/IY9+luO9s85wGZdFQiGrprxHXpjiZ4V3XkJ5kpK/GE4jgLid
- 16SjSvlUYXyUENw7UoFU7MUTUZ6fP5aayAkRqHqEIyhQUeHAVP9ihEU/U9RUviiPfE34ug+AVrU
- 5KxK+1ZR5E5m5SlfLt6qGiF9fXCS3W8gIN3+LT6mlWcECfky17dqyUMHuWCABXKv6musUoKULgn
- gAeFjgNG5KdWdv1UMnm4BNtxW6RkOo/fTruFE/wwHyqEuZ7Y+qf/2ax13g15oyeXp/61+Z1BLi6
- DaD++Se1zd7eYOe101biQdLG0RbPyx30VBMz3PC93RlR67JuxKfrTcYYOYw4cumpJJQ2DTmXlV5
- 3o3bHjRMgAcDoTR+q/PrQmVyPi+5rPnaK7Hbc4/uN4FNxtXaWKh1A+zQqJgxe1j8DBSHt/Qeg8o
- ukrsyXeu8tnx8jg==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
+Content-Transfer-Encoding: 8bit
 
-Apple T2 MacBookPro15,2 (j132) has a touchbar so include the framebuffer
-node.
+Replace the deprecated strncpy() with the two-argument version of
+strscpy() as the destination is an array
+and buffer should be NUL-terminated.
 
-Cc: stable@vger.kernel.org
-Fixes: 4efbcb623e9bc ("arm64: dts: apple: Add T2 devices")
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 ---
-Changes in v2:
-- CC stable list in Sign-off area. No content change.
----
- arch/arm64/boot/dts/apple/t8012-j132.dts | 1 +
- 1 file changed, 1 insertion(+)
+ net/sched/em_text.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/apple/t8012-j132.dts b/arch/arm64/boot/dts/apple/t8012-j132.dts
-index 778a69be18dd81ab49076fb39ca4bc82f551e40f..7dcac51703ff60e0a6ef0929572a70adb65b580f 100644
---- a/arch/arm64/boot/dts/apple/t8012-j132.dts
-+++ b/arch/arm64/boot/dts/apple/t8012-j132.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
+diff --git a/net/sched/em_text.c b/net/sched/em_text.c
+index 420c66203b17..6b3d0af72c39 100644
+--- a/net/sched/em_text.c
++++ b/net/sched/em_text.c
+@@ -108,7 +108,7 @@ static int em_text_dump(struct sk_buff *skb, struct tcf_ematch *m)
+ 	struct text_match *tm = EM_TEXT_PRIV(m);
+ 	struct tcf_em_text conf;
  
- #include "t8012-jxxx.dtsi"
-+#include "t8012-touchbar.dtsi"
- 
- / {
- 	model = "Apple T2 MacBookPro15,2 (j132)";
-
----
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-change-id: 20250620-j132-fb-d7d5687d370d
-
-Best regards,
+-	strncpy(conf.algo, tm->config->ops->name, sizeof(conf.algo) - 1);
++	strscpy(conf.algo, tm->config->ops->name);
+ 	conf.from_offset = tm->from_offset;
+ 	conf.to_offset = tm->to_offset;
+ 	conf.from_layer = tm->from_layer;
 -- 
-Nick Chan <towinchenmi@gmail.com>
+2.49.0
 
