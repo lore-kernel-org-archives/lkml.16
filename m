@@ -1,153 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3E9186A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE786EBE
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750379593; cv=none; b=cvLuN9VLklvz3+3vOpftoOyLiNwsigvgEm/jBYlHk/2NzfEFgf9vlhgUCMawLwZbNNzsNwDIEpYerqJI27QTNiZ5gSplme+Fu9q+InAe/7ETKJN5AHkCpzyg14+jxw8jrHGdZEjcccZgtg+DUY7+LzixaTFwYg40nYI6pv956pU=
+	t=1750379785; cv=none; b=Mofx+a9r6222w8kiklMVKDmQePVMtdf5fi1JwfPUau2zctK4qy0grrxm5s+4oUJxV2DsfquhQLFxcEiZ/O0C6yzZr6F+mgWLOe6NJ/ssos/71nFx5hjL5ld2A2QqrnontUs2WQFe4sYPqXIsRz8uydL/lZ2MPX9FKAVULxpPn0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750379593; c=relaxed/simple;
-	bh=dEjH+FSN3ipBFal1GleYoxDYC0kKtc29ALoxhYDANVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bIK3C4tg8BWPFpNQpZVTtifBdtMpCtP431LfaCHT2Vm6wmswPC26hHX8ku0KIMJ5FMFBC360BQV0A+PmdfhJW1IKFr8Zv0P8Vl/0VFbzq2w5KLIJdQWT7x42aHVyCVssus4UATeEGVtjFYv3zn4Bze3QOUm8W0g7lrXkrzhEdqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DJCimJmD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DJCimJmD"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K0OqL8007541
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:33:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ksoABJXXvx1N7hucQ6NraV5GRYy+LrljohBAACfBYU8=; b=DJCimJmDniSrnAi/
-	lA/7GdTkSTITFfbx7hE+c7yk2g602L6WarirUSqXbmomuzG85xCqRWCm+DqHZvdP
-	9sASt+NHpnbS2QAvojqcT7ZWsHG6qS9Ll2Kw3jDSQ1DFddyHWq1irh7NfGXmsIm3
-	bo9ZThfwlcLMHlxVGSEF7aQPQyI2skZCgriJk5QZVjRQylrPeE1zixBHplcbbnJu
-	2kkHR/gYDYG66WMZBcW2Qnq/m93eZrzpQeBXhuSg/lyH/px2bSHO16IWh0VD1Vi+
-	eop16Qi9ZMAncCgq8h0J2r3C3VOo25V7qFUPdU/HDvL7wtwVm7zBldTx4h2sPM0q
-	IalWCA==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47c9kruc5p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:33:11 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b26e33ae9d5so1411078a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750379590; x=1750984390;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ksoABJXXvx1N7hucQ6NraV5GRYy+LrljohBAACfBYU8=;
-        b=HueXIpCo5vETuSJtOaAgF7Z/8gDcyG6uMXqN9KEOleXXJoAYiXYiiPHM8yHjiJakpP
-         RP62QKQhcr4yvl7lUBAXDPoPvvp37h1kBiWUGY2LcjfwOuAT2DWpBMBkM6wrKaokRYZz
-         gpfbk9a8vkrVbgFa/QoW/KdOvzfaOaPqCn2NCfa7epc3Q1RPz7gG2dHolMn/Y+qjJxPM
-         3TLSaMF4+rR+1kbE0KdgRRQQ8k4NgoQtd57bIknDB+1wmu8bJgDGspnwC/Lm2gomRCWr
-         gxXdyNvQ055Aqy0cZPLx4G1uKtfRB8B2i9eZ4It5mNh2TfVQj161LV36H9ox0MksaB7I
-         zTzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnBvSKe+CB/rJ+auZbLlqZ8gjAiPnxBffIVprZUDe9TQRINYbKy/JKHV4dhXdlifoBVzfK9FNtyjCb8Hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv+vBXvWmfhUV95+kocz1aaMzIoVXdIhtj7f/3/bhqRSfsaCfc
-	eSZtRBAYDz93UuddMg2jO1PP5+mhstqH4sVpNVCdq4NMUPFQQ6nZHZNaUTXRE4umyMqJlcTlska
-	G8ookFCNrVoEf8gqPDmJDMu0+N2zlVKoSXjo00KI6j1hwf1F1PaOWBs4ww/H9DKcAD0A=
-X-Gm-Gg: ASbGncurRIObw2bBKdPJXym+FZbQlZ5TW1bwW8JInBmDjl5SkWBUz4Ug9nmiVF5r3o0
-	TnGHuZO5RG11227vgbdu+GQ6A/5YHXDXCWeEbRR1BzY6qd1yVIjhVekAAMYM5f5xjRLBViBZ5Uf
-	VpoITJ7J36HRDQVHj1vv/4QsnIzWnLqHkA0KL96uZ0OtHh9GOzBV40j/KMqUuoG9l9Hi33UZ9Qu
-	rvzQ0rW0yc0qdkbt74BIg7Wcq7xna+WsppAmiG3xsPuDP/M0ZPfCnWoL8nJrpJCS32ViwI8gahf
-	1M7CHDUXxXeg1fKAJDRASInaixFM5rBzIZwL4BjVYrRyQpAxelmKOTMIWu2SMKTDBJ27qCw7RBH
-	Clz71S2caTPpxvQ4=
-X-Received: by 2002:a05:6a20:244e:b0:21f:77e2:13a0 with SMTP id adf61e73a8af0-22026e13231mr1171731637.5.1750379590480;
-        Thu, 19 Jun 2025 17:33:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoDIsNEyUlki7ZjrTI9GVJS+GocIYC/rwWPCWnAG3PSWetKeeD6OC1n37shGoNB4dnpm//FA==
-X-Received: by 2002:a05:6a20:244e:b0:21f:77e2:13a0 with SMTP id adf61e73a8af0-22026e13231mr1171695637.5.1750379590051;
-        Thu, 19 Jun 2025 17:33:10 -0700 (PDT)
-Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a69bb81sm708272b3a.156.2025.06.19.17.33.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 17:33:09 -0700 (PDT)
-Message-ID: <37561ac8-ac0f-4744-9495-c7589544d4bb@oss.qualcomm.com>
-Date: Thu, 19 Jun 2025 17:33:08 -0700
+	s=arc-20240116; t=1750379785; c=relaxed/simple;
+	bh=OO0KG1oSZUM8zb9pkCVYpDzSMHUSOqGx92lQEBiI9Ao=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=qfzDHUUD214T6+BBCbcyq60+a7G/rsZQQqzeoYBP3qZLomtkEfRWWZ/MmALLcQxQuIuZuuKTmpau8qiEST+Zc6PvO/LeI31hgsW/vYsIQcNkGsZh+nseT3HPFbn48Z+rvcSJt1cjdMDaSCHfjdsvZypRfnvrdjoM1P6ok3KELTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bNdnR5NBzz8RVF5;
+	Fri, 20 Jun 2025 08:36:11 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl2.zte.com.cn with SMTP id 55K0ZNLI087195;
+	Fri, 20 Jun 2025 08:35:23 +0800 (+08)
+	(envelope-from jiang.peng9@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid31;
+	Fri, 20 Jun 2025 08:35:24 +0800 (CST)
+Date: Fri, 20 Jun 2025 08:35:24 +0800 (CST)
+X-Zmail-TransId: 2afa6854acccffffffffe61-b190f
+X-Mailer: Zmail v1.0
+Message-ID: <20250620083524585H-Y-shkbXkJSd-9if1hTB@zte.com.cn>
+In-Reply-To: <0f535bed-f4d4-4565-8f21-b10070f793e8@suse.com>
+References: 20250618100153468I5faNUAhCdtMA01OuuTKC@zte.com.cn,0f535bed-f4d4-4565-8f21-b10070f793e8@suse.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv5 0/5] wifi: ath9k: add ahb OF support
-To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, nbd@nbd.name,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250609030851.17739-1-rosenp@gmail.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250609030851.17739-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: cRAVpC9PQiSp-SvoISRqA_jv7ufNKaaR
-X-Authority-Analysis: v=2.4 cv=UPTdHDfy c=1 sm=1 tr=0 ts=6854ac47 cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=e70TP3dOR9hTogukJ0528Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=aMoWnUFRsw3tUzfFL3sA:9
- a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDAwMiBTYWx0ZWRfX970SGWb7QG3J
- AennQw4VJu7xK79CVFOxZseucD9rjVUUAAphiiE6C40H3jcFzm4R4/Yum6+G/0U/haHB+qDMdAf
- DfwLHAeS14p9UsGSngl2xbwzBDmLj8AtAnN/l3Aptfn2/GA136H/lRcxveRtbPgbC2WGIrtjMEh
- BcxM4AdD7SfmbTeT9Wjq3uZ6XADHr+mf/VVKvfvK+bAEkkd3IeOlPQy7TShz08rDW/ItXCYjkr8
- qYezzC7sODJIVH6W46CEXdCial1ncuGD9Ifp9AnXs+WpYFxqd40skUYPZagD10ugzodvpmRkGLO
- zJW1QBjv37ckAreHqCz927w2jHfkOBpv589olmI3rep6OtHPnW90O2fC6d3zjQhomGzUft1WA9l
- yS/HN+66dTQ15QnUwBEmAjuWX/Du1nbufmCA7gmuKc5oW+Esu/4RD2CKMN8iynbJMQKzqYJh
-X-Proofpoint-ORIG-GUID: cRAVpC9PQiSp-SvoISRqA_jv7ufNKaaR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-19_08,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 mlxlogscore=799 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200002
+Mime-Version: 1.0
+From: <jiang.peng9@zte.com.cn>
+To: <jgross@suse.com>
+Cc: <sstabellini@kernel.org>, <oleksandr_tyshchenko@epam.com>,
+        <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
+        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0geGVuL3hlbmJ1czogZml4IFc9MSBidWlsZCB3YXJuaW5nIGluIHhlbmJ1c192YV9kZXZfZXJyb3IgZnVuY3Rpb24=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55K0ZNLI087195
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6854ACFB.003/4bNdnR5NBzz8RVF5
 
-On 6/8/2025 8:08 PM, Rosen Penev wrote:
-> First two commits are small cleanups to make the changes of the third
-> simpler. The fourth actually adds dts definitions to use ahb.
-> 
-> v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
-> v3: Use qcom prefix and wifi suffix as in other ath drivers.
-> v4: fix up dts example in Documentation
-> v5: move back to using qca prefix. It makes no sense to diverge between
-> all the other drivers for MIPS based qualcomm devices. qcom as a prefix
-> is used for Quallcomm's ARM(64) stuff.
-> 
-> Rosen Penev (5):
->   wifi: ath9k: ahb: reorder declarations
->   wifi: ath9k: ahb: reorder includes
->   wifi: ath9k: ahb: replace id_table with of
->   dt-bindings: net: wireless: ath9k: add OF bindings
->   mips: dts: qca: add wmac support
-> 
->  .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++-
->  arch/mips/boot/dts/qca/ar9132.dtsi            |  9 +++
->  .../boot/dts/qca/ar9132_tl_wr1043nd_v1.dts    |  4 ++
->  arch/mips/boot/dts/qca/ar9331.dtsi            |  9 +++
->  arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  4 ++
->  .../mips/boot/dts/qca/ar9331_dragino_ms14.dts |  4 ++
->  arch/mips/boot/dts/qca/ar9331_omega.dts       |  4 ++
->  .../qca/ar9331_openembed_som9331_board.dts    |  4 ++
->  arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts   |  4 ++
->  drivers/net/wireless/ath/ath9k/ahb.c          | 60 +++++++------------
->  10 files changed, 84 insertions(+), 41 deletions(-)
-> 
+> I'm fine with the changes as such, but please send the patch as a
+> plain text email (no HTML). Otherwise I'm not able to apply it.
+>
+> You should look into Documentation/process/email-clients.rst in the
+> kernel source tree.
 
-DT team, should I take this series through my tree?
-Toke, Ack?
+My sincere apologies for the HTML format issue. Thank you for your patience and for pointing me to the email guidelines  - I truly appreciate the guidance.
+I'll resend the patch immediately as a plain text email to ensure it can be properly applied.
 
-/jeff
+Thank you again for your understanding and for taking the time to review this.
+
+Best regards
+Peng
