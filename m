@@ -1,148 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6057221281;
-	Fri, 20 Jun 2025 06:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08FAD221290
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750400987; cv=none; b=Ck66zEOQnmR55bVcLWJz6kwZmZrywGrik8QA6mJ3pC2Jj7gJ9BG0A4TA4ofbQ5IDWwcfZ7bnElQHUxoirYBDdtIkWwPuGP4fBX0DV7x8korE0p3mY4+vl2Ob3DwvXdy6tLJotv02E94V2S9Yh3b6TsVtPzvC0Tvx7SvQfGpNDOE=
+	t=1750401005; cv=none; b=oSddXycv+85k6JW1YoSmADFQ+SiMgMvPYBKPG6PO2NZ9I5Mzs975XnmeFJmoGTyFyyGzh9W3LMIyIfBDyDcSHi927lmyUXLcns1bm86AVgj9QMDOgNr6POcSj/VuL4e801qvUK2z5IWGvXsCu+3LmiT1QT3mkCkXMNonaNCOCak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750400987; c=relaxed/simple;
-	bh=hD7ZFg2oUF1zO6JNaxETcxrUQ675xpCMaUgDOQcTzEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gXBlxMsv7wsth6Vkkjx47uFPNJumFzA1vetaSeI+fUB9urT33Ri0098AViSCbNhVVcGtrsdTnicY3G/QXg4hANPVE/ah3QfxiqScenFq8JeS3p2Aq7yubexivUAmFWNdfk3mC1cY7t+MDVPoSwn2qJO1sVv6Q8H3lGI7mhNtd2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPY0ed+K; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPY0ed+K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750400986; x=1781936986;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hD7ZFg2oUF1zO6JNaxETcxrUQ675xpCMaUgDOQcTzEY=;
-  b=cPY0ed+KlXLhLj/xRyNAfkv21G0adHWoBWkrPifBshVNK+BstnSHzVKP
-   XAi+e4fAk94Cwh6mhbIh/pP1qVQaelFWVD44CIlI/g9VCE4xQsj+blnom
-   IDueJibQqASwaXXwDEwzmOblzZhyUbUIXivPu7STR6NEtVVKRQVsdcidV
-   NbXClVULZJvc8zZDzUGrlwKHS1IpZMpJcfAc47xGaOXcfvBkisA2wi44m
-   l8aDCH3tIucwNm9yK0MHSrj5hoYoe1fa2L3hGcN8k1vCE8eFCVWpw/nJ1
-   GKva3AL3tsy+LeqS/wvhV3AVlz5g0rCjNOvseRDR4/SQc3cRrjLWDnUXZ
-   Q==;
-X-CSE-ConnectionGUID: yCKS7getRb+p98N8s1m30g==
-X-CSE-MsgGUID: Ig6XqNNeS8i4fL61A15K2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52799571"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="52799571"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 23:29:43 -0700
-X-CSE-ConnectionGUID: 6/qi+xb+SXS8ZP7Y8EHbmg==
-X-CSE-MsgGUID: kCKCdyveR5aVl7otqVCwdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="151370535"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 19 Jun 2025 23:29:38 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSVFn-000LR1-28;
-	Fri, 20 Jun 2025 06:29:35 +0000
-Date: Fri, 20 Jun 2025 14:28:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>,
-	linux-security-module@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, john.johansen@canonical.com,
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-	mic@digikod.net, kees@kernel.org, stephen.smalley.work@gmail.com,
-	casey@schaufler-ca.com, takedakn@nttdata.co.jp,
-	penguin-kernel@i-love.sakura.ne.jp, song@kernel.org,
-	linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+	s=arc-20240116; t=1750401005; c=relaxed/simple;
+	bh=ndDVKrpY8hPr55MamAh+uliDP+m6d/vRSWkwjOVyyJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mcggu9wyGcrk5euMEJq04KUguIWbXxbSS9yiUdMnp4Ms5FY8ZhPE4NrQlfy82xvewGiElta+Bc3Ag4+xl9AZRM8nj33jrSvKhnXSDXeugMYmemfaAtLohK5nSGzWH0TXDwsgy0k/pmWghfGAvbV9qXl5xQw+7tVeC6xIDg4k9Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-cc-6854ffe17f4d
+From: Yunjeong Mun <yunjeong.mun@sk.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>
-Subject: Re: [PATCH v2 3/3] AppArmor: add support for lsm_config_self_policy
- and lsm_config_system_policy
-Message-ID: <202506201414.tHOEthTb-lkp@intel.com>
-References: <20250619181600.478038-4-maxime.belair@canonical.com>
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: Re: [PATCH] samples/damon: add parameters for node0 memory usage
+Date: Fri, 20 Jun 2025 15:29:46 +0900
+Message-ID: <20250620062951.1572-1-yunjeong.mun@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250619164636.58743-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619181600.478038-4-maxime.belair@canonical.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsXC9ZZnke7D/yEZBv+ncVvMWb+GzeLJ/9+s
+	Fpd3zWGzuLfmP6vF4a9vmBxYPTat6mTz2PRpErvHiRm/WTxebJ7J6PF5k1wAaxSXTUpqTmZZ
+	apG+XQJXxvrdbxkLpnFVLJvVzdTAOJ2ji5GTQ0LARGLqvwcsMPb1rmvMIDabgIbEwUMnwWwR
+	AUWJc48vsnYxcnEwC6xmlNg8uZ0NJCEs4Clx68VERhCbRUBV4kjzBrA4r4C5xN6u5UwQQzUl
+	Gi7dA7M5BYwlnrU0g9lCAjwSrzbsZ4SoF5Q4OfMJ2BHMAvISzVtnM4MskxCYwSZx9OE+qOsk
+	JQ6uuMEygZF/FpKeWUh6FjAyrWIUyswry03MzDHRy6jMy6zQS87P3cQIDM5ltX+idzB+uhB8
+	iFGAg1GJh3fHl+AMIdbEsuLK3EOMEhzMSiK8i0/4ZQjxpiRWVqUW5ccXleakFh9ilOZgURLn
+	NfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgVF9+/OSp3CvHF0sydq/bG1K9I5eTve7mHcHqk3tz
+	vA8cuVpzW5zTi33exGbFtydevIjfWvVKh1ufO64otqZmzp2Q27ue+e1lya1jFHINffvtacix
+	2GU2d6/9OXJR8tF9pjUaW9bX13GrGUX7Bcx7yRz1bsHOircPb2/KKO8U3/3kgNaVp5eTNyux
+	FGckGmoxFxUnAgC+LTaISgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOLMWRmVeSWpSXmKPExsXCNUNWR/fB/5AMg//LrS3mrF/DZvHk/29W
+	i8/PXjNbHJ57ktXi8q45bBb31vxntTj89Q2TA7vHplWdbB6bPk1i9zgx4zeLx4vNMxk9vt32
+	8Fj84gOTx+dNcgHsUVw2Kak5mWWpRfp2CVwZ63e/ZSyYxlWxbFY3UwPjdI4uRk4OCQETietd
+	15hBbDYBDYmDh06C2SICihLnHl9k7WLk4mAWWM0osXlyOxtIQljAU+LWi4mMIDaLgKrEkeYN
+	YHFeAXOJvV3LmSCGako0XLoHZnMKGEs8a2kGs4UEeCRebdjPCFEvKHFy5hMWEJtZQF6ieets
+	5gmMPLOQpGYhSS1gZFrFKJKZV5abmJljqlecnVGZl1mhl5yfu4kRGHzLav9M3MH45bL7IUYB
+	DkYlHt4dX4IzhFgTy4orcw8xSnAwK4nwLj7hlyHEm5JYWZValB9fVJqTWnyIUZqDRUmc1ys8
+	NUFIID2xJDU7NbUgtQgmy8TBKdXAeL9Csst5XbyQztygMz33ryv/P6rOefOqgF/WpxWN/Z++
+	n6p1kHN5Lias8ZWX0yq1/80rg8c37EzYTt79tv2V3nS1IwuStfxmXtec97zyyev10VrlF1IF
+	M0y43k5+u1zont8CJ6mubaKlhTG+955dmuBQwn1kj8nacp656o8fbCg9o+vCfPPNJiWW4oxE
+	Qy3mouJEACWiEao6AgAA
+X-CFilter-Loop: Reflected
 
-Hi Maxime,
+Hi Andrew, please check the patch below. I missed CC'ing you on the previous
+email.
 
-kernel test robot noticed the following build warnings:
+On Thu, 19 Jun 2025 09:46:36 -0700 SeongJae Park <sj@kernel.org> wrote:
+> On Thu, 19 Jun 2025 14:03:12 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
+> 
+> > This patch changes the hard-coded quota goal metric values into sysfs
+> > knobs: `node0_mem_used_bp` and `node0_mem_free_bp`. These knobs
+> > represent the used and free memory ratio of node0 in basis points
+> > (bp, where 1 bp = 0.01%). As mentioned in [1], this patch is developed
+> > under the assumption that node0 is always the fast-tier in a two-tiers
+> > memory setup.
+> > 
+> > [1] https://lore.kernel.org/linux-mm/20250420194030.75838-8-sj@kernel.org/
+> 
+> Thank you for this patch.  Please note that this is just a sample code, and
+> hence there will be no strict user space compatibility support.
+> 
 
-[auto build test WARNING on 9c32cda43eb78f78c73aee4aa344b777714e259b]
+Thanks for reviewing. As you said, this mtier sample module needs further 
+development for final version, like automatically detecting memory tiers and
+adding some useful knobs. May I continue working on the mtier module? 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-B-lair/Wire-up-lsm_config_self_policy-and-lsm_config_system_policy-syscalls/20250620-022714
-base:   9c32cda43eb78f78c73aee4aa344b777714e259b
-patch link:    https://lore.kernel.org/r/20250619181600.478038-4-maxime.belair%40canonical.com
-patch subject: [PATCH v2 3/3] AppArmor: add support for lsm_config_self_policy and lsm_config_system_policy
-config: x86_64-buildonly-randconfig-002-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201414.tHOEthTb-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506201414.tHOEthTb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506201414.tHOEthTb-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> security/apparmor/apparmorfs.c:454: warning: Function parameter or struct member 'name' not described in 'aa_profile_load_ns_name'
->> security/apparmor/apparmorfs.c:454: warning: Function parameter or struct member 'name_size' not described in 'aa_profile_load_ns_name'
->> security/apparmor/apparmorfs.c:454: warning: Function parameter or struct member 'buf' not described in 'aa_profile_load_ns_name'
->> security/apparmor/apparmorfs.c:454: warning: Function parameter or struct member 'size' not described in 'aa_profile_load_ns_name'
->> security/apparmor/apparmorfs.c:454: warning: Function parameter or struct member 'ppos' not described in 'aa_profile_load_ns_name'
---
->> security/apparmor/lsm.c:1287: warning: Function parameter or struct member 'lsm_id' not described in 'apparmor_lsm_config_self_policy'
->> security/apparmor/lsm.c:1287: warning: Function parameter or struct member 'op' not described in 'apparmor_lsm_config_self_policy'
->> security/apparmor/lsm.c:1287: warning: Function parameter or struct member 'flags' not described in 'apparmor_lsm_config_self_policy'
->> security/apparmor/lsm.c:1318: warning: Function parameter or struct member 'lsm_id' not described in 'apparmor_lsm_config_system_policy'
->> security/apparmor/lsm.c:1318: warning: Function parameter or struct member 'op' not described in 'apparmor_lsm_config_system_policy'
->> security/apparmor/lsm.c:1318: warning: Function parameter or struct member 'flags' not described in 'apparmor_lsm_config_system_policy'
-
-
-vim +454 security/apparmor/apparmorfs.c
-
-   441	
-   442	/**
-   443	 * aa_profile_load_ns_name - load a profile into the current namespace identified by name
-   444	 * @name The name of the namesapce to load the policy in. "" for root_ns
-   445	 * @name_size size of @name. 0 For root ns
-   446	 * @buf buffer containing the user-provided policy
-   447	 * @size size of @buf
-   448	 * @ppos position pointer in the file
-   449	 *
-   450	 * Returns: 0 on success, negative value on error
-   451	 */
-   452	ssize_t aa_profile_load_ns_name(char *name, size_t name_size, const void __user *buf,
-   453					size_t size, loff_t *ppos)
- > 454	{
-   455		struct aa_ns *ns;
-   456	
-   457		if (name_size == 0)
-   458			ns = aa_get_ns(root_ns);
-   459		else
-   460			ns = aa_lookupn_ns(root_ns, name, name_size);
-   461	
-   462		if (!ns)
-   463			return -EINVAL;
-   464	
-   465		int error = policy_update(AA_MAY_LOAD_POLICY | AA_MAY_REPLACE_POLICY,
-   466					  buf, size, ppos, ns);
-   467	
-   468		aa_put_ns(ns);
-   469	
-   470		return error >= 0 ? 0 : error;
-   471	}
-   472	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > 
+> > Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
+> > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> 
+> Reviewed-by: SeongJae Park <sj@kernel.org>
+> 
+> 
+> Thanks,
+> SJ
+> 
+> [...]
