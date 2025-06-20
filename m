@@ -1,117 +1,130 @@
-Received: from lf-2-31.ptr.blmpb.com (lf-2-31.ptr.blmpb.com [101.36.218.31])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE223229B1E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.36.218.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68187238C08;
+	Fri, 20 Jun 2025 09:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750412961; cv=none; b=tsdAp5HsgswNqQnLdDTa5826kvuK/SdnmqrH1GlLcjk64Cv28zI6dT/dHg7N04Wt8zyQkZKmwAG1ZeH9otywW8NNXNjS+yCdUPL0aGepSdqtYMd0NNlNnl4/FHoRgbkeZE6bfUj2YjQIby0x53dQIgXEero4RdN/LgaC3kes/dA=
+	t=1750412984; cv=none; b=NaziDEHL3fJa9oYc1Yann4kTrwSZHWtg9g/hRuVBKrKSlnj6qeXzeUvzVSmJ6qdLmFGQtfBp2fVa6Iih4i7B5qvnlw01JoZ6LxahFnWbXZiKRhumUgDvTdQ0zCTUWW8QrGhUXfAxf+Ai2yVLmOl1CgEetCg50gkGyB1gXYIZ5W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750412961; c=relaxed/simple;
-	bh=wojTjQClLQ48UTC77W0gkindItOoWRV1+r38k6nb3Yc=;
-	h=From:Mime-Version:Content-Type:To:Cc:Message-Id:References:
-	 Subject:Date:In-Reply-To; b=aqUcBxKSWiwmptrvCPjP2bJq7oZys2q8krzr0UCWxzmRMK5SJqSpEmKd23wIj269vQz2DUmEoPnvivkBMID0z5T9XF4UgmsmN/iY0frdKTyQMBbpaSDBvktqCr20PzN424+5ATd6LzezBgBvisJcrNBE+uRO9PwUC1HbVvjVfXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=AF1ceC70; arc=none smtp.client-ip=101.36.218.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750412984; c=relaxed/simple;
+	bh=qTnLGaYE4mSJe4XGJd9c1paMNelCcWBLch1kHcCtYSY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U6Vtp29dtAwFGb3ctVR3JQYYelz7LIBpcTe/vyXA+aaN1jA453o9Pls4hF6BubUGYVULC4Fq+bWGDVQfxd34BA16T5wq93oh5GbQMSUN5uKHLTphq3Ds5qj4KYgt0x/7cGTlwzk/HOw/3u8BODFzfWz+veN8vRyiSUKTOHErzLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qy5eFkUC; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="AF1ceC70"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750412220;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=oeXxAIqzohSWPmedTEZHs1J1ce2tPrIZS+IBTNkDcr8=;
- b=AF1ceC70Y+GV1+D5xXqF8udpzakQZUwAaNT0se6YcyniphkrwbqLYF07pg7LFWVsj6AXhn
- ucJsWNwhk0Pc2leTiU3TP4ZBO0g4f+bhz/5VpimV1wsuuPGV6k2pz9hDJGEoxrE7C7mDpo
- iBduWSrtu80KrA7BPBWMls5kAbnv8Md5ytYL/Jwu2SSRatUNpYL7ykWF4yEIdpdxAaQx/Q
- nVP91BdtnmUaNCozzGXNhqk3byAgjosMXepeX01JU7vEDOugHXFNEn50O1VHKIXNsR5YNo
- bOSZBeeGmtEeFPk5krB62IYteWYdUdyYO7h6qi2K/Bc48uRVg7XsYRo0eBo80w==
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy5eFkUC"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2350fc2591dso13450855ad.1;
+        Fri, 20 Jun 2025 02:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750412982; x=1751017782; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wm9uNcsgLmLy2CTce8UTPVgm6JKmZNFE7FHPVZSoHGI=;
+        b=Qy5eFkUCQbtRZPWkAJkbqb5xcXmIegciFmjgd7AhW/5Zt9UfEfQzFXG5V05T4Makpi
+         32kC23OsZ/w7IbnaZF0kMbEeeDelPjc1HzI7Hmcwlbf5IfBIvkv9SZ+WtUUuGiad41gp
+         MSoQ8l8MDkVX9UDwl/eK/xO4o+uM5jduWtQhocbJ/jbqeaDL8Nwy9sWgGJsqFqsLnuXD
+         1FpkzaPOZYQb7HNvU7qipY2szK0lUq5gfrKixUuZrdMl2eg4qn2TfrLpEBJY3r7MqwSR
+         eLMj0ktw2xHoCs2CCXmcyt4tYpWvSFGAoPbi7zBjbzmeUEtVfsq8Jqd8VegjHeIYVyUB
+         NBMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750412982; x=1751017782;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wm9uNcsgLmLy2CTce8UTPVgm6JKmZNFE7FHPVZSoHGI=;
+        b=ZBqF5vYtrFILMNbBqtLMsnz9uNvlg8Dj5P+q8BNmWkt9fj5CwnYuZp+W8RIYWFDeca
+         m3Fx4CFL3rPgSVPe06pa59ujarhGhCPwcDcdp9Le2t/ja2QQwe1TCT1ET6Zg3jOCaOv6
+         GXgpIwChzrFY6hy4axR37WJmQwD0PIbbV/yBcZWeE/PwfZud30OXqKLfYMSBxJpvvffL
+         +Ky215KEughQK0pCvokI8vuzSPfoFCEojNXTzXzv/BGnSLbeh5heb3zGxXYbyyGxbxmF
+         OIEdNnDs0f32McJwIvtJkjxYpX31Ral4WsQgvgyjzHWNlPZOu9zh0/v+pWtCbwWsVBSO
+         ijkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPSrTo+ZCf+RXa9aOng6jTmWpuqvUM9u6r3HtAz60hfGq/kmDpTfkeeNoH4J2vNzRhPHME4l99@vger.kernel.org, AJvYcCUVcnKsujr30g0fwJIGqGgW3YiSPMqNa/vJ9A2tIGreFAvIWz0GqKmxkWAG6AI42zOyJIHr+G3B9W37ZZgM@vger.kernel.org, AJvYcCX5c6F16Y3uw5TTZzoXkeCZ9pwBxebdSlbxa/Z+i/z4UlqXfPwkzcVqwyrrdcAOIr+zB876Ni3EjtKL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzch1SEgJqTvMq9B3Fq5pHeddTp/LeqyIJPkbEXyo4dBx8nYbUG
+	yPabS9fE3aZiA2r4HqvYElr2LY84txw4+P4h79QgFzgStr/PpWM+gytRG9lA6CKe
+X-Gm-Gg: ASbGncsE3gjdstqNK8KU4aQOlvsDh7ahKwxXSOF9Vol4TPBfOluC8//5O6g0N4h1Qei
+	SAK6YTiwW4CAZ4Fso5tSbvbAkWB64+iXMoUtaMvc3AAbSBAp7n85ZFxVGAgEHbcmg1ja4A25FP5
+	tGgjVRP7G7qlDNJfE4jQEVhhl6yxwXhbowUvEm/CE1HTWiwHiefhqcicWAvh93sLPqfUTqZaBpG
+	G9/mjmF6NjmRiDFoGkEKlGtiVdr8Mt5e6iCxucLNnnAS5rFop1P/ipEIOT93Oad51TCPSJQPKen
+	F6uXKp+uscQXuVUtljXCXGDZ2zKvFCJXO7dWQ4tk6evpzlb0BEGoMoTVCvymjikLlsyJMUBjNRI
+	nXjbdXUl1lOs=
+X-Google-Smtp-Source: AGHT+IH6Be5gP3+3exFSkxm22vF5iZh7JCUxNtdjaBLajdekU8Xmj0n59/agYpsJTUMoVM2m4rUZ0Q==
+X-Received: by 2002:a17:903:32ca:b0:215:a303:24e9 with SMTP id d9443c01a7336-237daf6593emr27765085ad.3.1750412982159;
+        Fri, 20 Jun 2025 02:49:42 -0700 (PDT)
+Received: from [127.0.1.1] (061092221177.ctinets.com. [61.92.221.177])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-237d86ef88bsm14167885ad.219.2025.06.20.02.49.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 02:49:41 -0700 (PDT)
+From: Nick Chan <towinchenmi@gmail.com>
+Date: Fri, 20 Jun 2025 17:49:11 +0800
+Subject: [PATCH] arm64: dts: apple: t8012-j132: Include touchbar
+ framebuffer node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Received: from [127.0.0.1] ([180.165.3.105]) by smtp.feishu.cn with ESMTPS; Fri, 20 Jun 2025 17:36:57 +0800
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=UTF-8
-X-Lms-Return-Path: <lba+268552bba+7b8ac4+vger.kernel.org+liujingqi@lanxincomputing.com>
-To: <zhouquan@iscas.ac.cn>, <anup@brainfault.org>, <ajones@ventanamicro.com>, 
-	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
-	<palmer@dabbelt.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
-	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>
-Message-Id: <193a6972-2498-4661-8b76-4303819ca0b2@lanxincomputing.com>
-Content-Language: en-US
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-References: <cover.1750164414.git.zhouquan@iscas.ac.cn> <553bacc4f66e815975bb8ee0e4696397407b0a82.1750164414.git.zhouquan@iscas.ac.cn>
-Subject: Re: [PATCH 1/5] RISC-V: KVM: Provide UAPI for Zicbop block size
-Date: Fri, 20 Jun 2025 17:36:55 +0800
-In-Reply-To: <553bacc4f66e815975bb8ee0e4696397407b0a82.1750164414.git.zhouquan@iscas.ac.cn>
+Message-Id: <20250620-j132-fb-v1-1-bc6937baf0b9@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJYuVWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyMD3SxDYyPdtCTdFPMUUzML8xRjc4MUJaDqgqLUtMwKsEnRsbW1ADN
+ YMSFZAAAA
+X-Change-ID: 20250620-j132-fb-d7d5687d370d
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, stable@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Nick Chan <towinchenmi@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=882; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=qTnLGaYE4mSJe4XGJd9c1paMNelCcWBLch1kHcCtYSY=;
+ b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBoVS6zKNgfrxDu4IxQuG+XErH6r6Vm9rzm0pebd
+ Z3LpvEPtguJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaFUuswAKCRABygi3psUI
+ JHJoD/0c+i2KQVhxj9K7upj3umunHHR5iGCOEG7jxFTtrsE+9UuVngAG8qtLOrYp/X9GUmrrZ2t
+ YjB8zqTSrGCkMZgDCQSvVnYq7RApDSyigQQ36SWV5Lh0zMI7tuF4rx1m8MgENCWOqRwZKEK64UX
+ MBz8IOTYYDcFK+G5Dj9SL2QLI9HQWxAjpS13aSuYZ6+jT0s4U06FeLHcrPlOg8V+5os/NVVo+/q
+ Zx4GZs+Gtry/8S1DKD3+TARaqvlCXS5qZiEvnGwCEOochN2Xh/DHTQqUlrjhAVL3XQn1DiN1hMQ
+ EBd2Feg6UYw+iXnzywYNLUJZYcYGpD6SGYjwnxXBpJ1iN4izrVDbcXaSYfcrzlLhLBPyFDU1MQE
+ oKCoPZco6WkgKXu6Ocnj1rMY7OqrrvGYT4ii2JrimT3DE1hf2BkIwfb1SIh5+aElTHTR056aGOW
+ YIy7brULuGRblckBPK5MZZfsKFNaPgrwNN2BEj1C152m/CZgQmFouQG2X3BQZjdMLNtksmVCQ16
+ SnmdffQVXD3VCC8cK6iALZdxHjRAhAFBCbTaRGg76wX/Be4wEiOniKeQAwHSAXi17FE+cjwdL3q
+ luHN2WxpWowukCRgX/7ADKFDgaLOUxVo95rtVpeUopwEB4llG89OR/eUN4QiImlW+nfZ2mvXQ5a
+ 1taNYho8VbNMnHg==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-On 6/17/2025 9:10 PM, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
->
-> We're about to allow guests to use the Zicbop extension.
-> KVM userspace needs to know the cache block size in order to
-> properly advertise it to the guest. Provide a virtual config
-> register for userspace to get it with the GET_ONE_REG API, but
-> setting it cannot be supported, so disallow SET_ONE_REG.
->
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->   arch/riscv/include/uapi/asm/kvm.h |  1 +
->   arch/riscv/kvm/vcpu_onereg.c      | 11 +++++++++++
->   2 files changed, 12 insertions(+)
->
-> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> index 5f59fd226cc5..0863ca178066 100644
-> --- a/arch/riscv/include/uapi/asm/kvm.h
-> +++ b/arch/riscv/include/uapi/asm/kvm.h
-> @@ -55,6 +55,7 @@ struct kvm_riscv_config {
->   	unsigned long mimpid;
->   	unsigned long zicboz_block_size;
->   	unsigned long satp_mode;
-> +	unsigned long zicbop_block_size;
->   };
->   
->   /* CORE registers for KVM_GET_ONE_REG and KVM_SET_ONE_REG */
-> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-> index 2e1b646f0d61..b08a22eaa7a7 100644
-> --- a/arch/riscv/kvm/vcpu_onereg.c
-> +++ b/arch/riscv/kvm/vcpu_onereg.c
-> @@ -256,6 +256,11 @@ static int kvm_riscv_vcpu_get_reg_config(struct kvm_vcpu *vcpu,
->   			return -ENOENT;
->   		reg_val = riscv_cboz_block_size;
->   		break;
-> +	case KVM_REG_RISCV_CONFIG_REG(zicbop_block_size):
-> +		if (!riscv_isa_extension_available(vcpu->arch.isa, ZICBOP))
-> +			return -ENOENT;
-> +		reg_val = riscv_cbop_block_size;
-> +		break;
->   	case KVM_REG_RISCV_CONFIG_REG(mvendorid):
->   		reg_val = vcpu->arch.mvendorid;
->   		break;
-> @@ -347,6 +352,12 @@ static int kvm_riscv_vcpu_set_reg_config(struct kvm_vcpu *vcpu,
->   		if (reg_val != riscv_cboz_block_size)
->   			return -EINVAL;
->   		break;
-> +	case KVM_REG_RISCV_CONFIG_REG(zicbop_block_size):
-> +		if (!riscv_isa_extension_available(vcpu->arch.isa, ZICBOP))
-> +			return -ENOENT;
-> +		if (reg_val != riscv_cbop_block_size)
+Apple T2 MacBookPro15,2 (j132) has a touchbar so include the framebuffer
+node.
 
-Seems "riscv_cbop_block_size" has not been declared.
-Otherwise,
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+Fixes: 4efbcb623e9bc ("arm64: dts: apple: Add T2 devices")
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+ arch/arm64/boot/dts/apple/t8012-j132.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Nutty
+diff --git a/arch/arm64/boot/dts/apple/t8012-j132.dts b/arch/arm64/boot/dts/apple/t8012-j132.dts
+index 778a69be18dd81ab49076fb39ca4bc82f551e40f..7dcac51703ff60e0a6ef0929572a70adb65b580f 100644
+--- a/arch/arm64/boot/dts/apple/t8012-j132.dts
++++ b/arch/arm64/boot/dts/apple/t8012-j132.dts
+@@ -7,6 +7,7 @@
+ /dts-v1/;
+ 
+ #include "t8012-jxxx.dtsi"
++#include "t8012-touchbar.dtsi"
+ 
+ / {
+ 	model = "Apple T2 MacBookPro15,2 (j132)";
 
-> +			return -EINVAL;
-> +		break;
->   	case KVM_REG_RISCV_CONFIG_REG(mvendorid):
->   		if (reg_val == vcpu->arch.mvendorid)
->   			break;
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250620-j132-fb-d7d5687d370d
+
+Best regards,
+-- 
+Nick Chan <towinchenmi@gmail.com>
+
