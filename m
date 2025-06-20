@@ -1,47 +1,142 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023081.outbound.protection.outlook.com [52.101.127.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B173E233D98
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407467; cv=none; b=NiaAPwc7IvaEjeXCotwwcw1DatIhJrhGHFDHsW6s8EilsMv02fVuVTGC2TnRaLuegHC/zvIz5RK2GlhDFngWMOHEKjo+SgNJQbcolIY8GZ6EFz6WOJdLU7Dqu47uH0H64DBXHmg73DOEp4ZGasEFDwMIqN7HpHtGGJOp6LiFjb8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407467; c=relaxed/simple;
-	bh=EET+Ub2PCmP7Q4lxK8BbW1nyMdsbzr6cy2tkrC92uK4=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 MIME-Version:Date; b=oKzFynKGJYGvacXlAuU9Isl1ax4cs0KEJqisWtyz8qI3hvwZjb+NF0687sL9Pm9YdYBiVZEuLKy+TXs5BsNr7RvEDJ5WREcyXq695qp/f+skeY6ZRSYvxuDhql1IyRUK13jL7SAD4OluRkXQq1/bh8CXiCW201ZJ398a7VSCV/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ejzSGMQx; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67466233D98;
+	Fri, 20 Jun 2025 08:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750407507; cv=fail; b=WptZd4dQVCuxfy9nykVlP2/Kn4hEa/7siS/Gb9es5VzBnhYV2Xmq6M3KXO09Mhtn7JB2hkq4Dcvr1A9R5uiU+MI/PlSDxrxKReFs3PSv3zcAsP1D+RjBZ8slil4vOvZDlZ3GEH5x/QUmmPtbzWuYFmrVkUS1TxKYQGYdjdEwczw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750407507; c=relaxed/simple;
+	bh=KgAjJGPcGiUK/qRO0SUskcS3ceJh1Z/5PbXugPy9MLY=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=brbfZMFCMYNUk0vteeW1woGKxXXjx96e9BwN9rQFubQXGB7HknBIlqTo1d8zvf/kPzALshME3ka0w27R6OYafA6FzH/TDmHMNdru67GdUGd8Qju+Qhg0zMEPlkl2OebptHXxD33fUb3F+l9wqX3Z17ctQE5vZSwoS9L5+wSm4WY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=mzPiDxzE; arc=fail smtp.client-ip=52.101.127.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ejzSGMQx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Date:MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Cc:To:From:Subject:Message-ID:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=7jx/91bHphTZFNH/U6DqHakgzRWsMhRo3MBcddPZayU=;
-	t=1750407465; x=1751617065; b=ejzSGMQxn+WBszZULZ1tJBOetdf4DZzpeVvKiSgGdCB7JVl
-	0UOYD42x+1IpbWDBzFRGVZcNUAo1X0wIB58ywE3JPoMRjHNxI/hUCK4mhcPnOFl5+fnUsRThltRX6
-	BcXDR2oljm7GxXq9gPxbQ+3meoQ2iWBb8Z4f+nDP5PF9Popo2JluCbmqU9aeCXF/m/B9jRNYYTHwH
-	IqpEhC6E55xKjY0qDlTYMSEMZp44bOWSCtkk8MwD2mlz0Vk9fYW/VelB6fWMCoEAQii336iBCGPaL
-	TxjinF/G3H3xRnVI799Sy2C1zMuY1WUl6L2+nADX9DTalyVDVPG3k1AiIlExciJw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1uSWau-00000002Yjk-2ZjM;
-	Fri, 20 Jun 2025 09:55:29 +0200
-Message-ID: <d1d08a207844b98d0beba96f48beaf73e30c3bd2.camel@sipsolutions.net>
-Subject: Re: [PATCH v9 04/13] x86/um: nommu: syscall handling
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Hajime Tazaki <thehajime@gmail.com>, linux-um@lists.infradead.org
-Cc: ricarkol@google.com, Liam.Howlett@oracle.com,
- linux-kernel@vger.kernel.org
-In-Reply-To: <bc5a2a14d41add7a2a44b12a21d9ccfa68a6baa5.1750294482.git.thehajime@gmail.com> (sfid-20250619_030454_005867_6CC4C80D)
-References: <cover.1750294482.git.thehajime@gmail.com>
-	 <bc5a2a14d41add7a2a44b12a21d9ccfa68a6baa5.1750294482.git.thehajime@gmail.com>
-	 (sfid-20250619_030454_005867_6CC4C80D)
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="mzPiDxzE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dsfcxRj78O4S4I/FYWFEIWGjkEjsuZg4ywFkLO+1upKJDtGXIfe+qP5+zBemVA8LdSUhmu84W+9yt512LYM5IXsg1BlxB0JRpsvatbV4L0f0a+gtCxS95p+ig2PtGV9xGx5W/M7/ZMZTaXl8WUDT7g8+BPI8VuT4VQoyh8d3K/YJ8E8ojjAllnStOToM+48VPwOiPAJ+wyFbqy/BG9Wj1UbysQ5X6g8IRlOecIIWS9VrSsX5A2LdeG82cHsmSDcBJoZvsYBK/7rXdjrKjscXucfiUX0NTvSzBoIrTGV+bh/eVNqkvOKJmh9VnrM4cjIyfmwGvwWFkzJRGZRmSYiKqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KgAjJGPcGiUK/qRO0SUskcS3ceJh1Z/5PbXugPy9MLY=;
+ b=IYKF+FFoGrGqbb7d5MYD2itHShInI31DXKAAFCeeVcQGXJP50G2pOJ7WW0bhJk5uI0QvxemOArzOC3TCIEZIt12JmsyDL/+H9Hs8CcQhkI/3RyHRO+BERuvVG9J/zuU6JiRWvlM1VFe1VxTWzboMejm7vY5QJ7bT1nhSmm8AjeGa37wDeIh7RqaDhidiN4jp2SZFTvD1/CzG/5+eJwfKIOSlhUHIkOtzh8Xud9cpF5TF4tPbZrOUooK94EOdJU2i/hOcLHHcpR8610H1j5d7/G8DWysPUbzWLagSg2+4tNx3UN5+oqWW9/5Lnr2arxs9oVHftz+YUt9egRp9QHLlZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KgAjJGPcGiUK/qRO0SUskcS3ceJh1Z/5PbXugPy9MLY=;
+ b=mzPiDxzEX+o0bLb0BL6PxZzhDpfpx3H+Z1anl84LYMWfSCFwVPbCdntnRd+Gqr2I+PNP1MaIcBWyttsSuLvSTX0LX1M1Q07C1OTVRK1C2JpSIzikRAz722sDgkvMjGTIBVYG3bkGx4UUoLrBaEvKQXXzJaY6VMVbANis5IF5lceBZfa29adBxl/XRVNTFu2bMmlFWuAl4MKMc0xIy034ATDe6H5AZfANLU7Ahr8KFlBGW9GHEn+wi9OGaFGmmOQb5Ztx1oMidY158uH8Q4Rl1HkMNH2hT5oWdAxgiMW7QCiOopyqpENEdv94t93FdcI3aBG2FLfpkDVrT1iSywrdMw==
+Received: from SEYPR06MB7072.apcprd06.prod.outlook.com (2603:1096:101:1db::9)
+ by SE3PR06MB8106.apcprd06.prod.outlook.com (2603:1096:101:2e7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Fri, 20 Jun
+ 2025 08:18:20 +0000
+Received: from SEYPR06MB7072.apcprd06.prod.outlook.com
+ ([fe80::427f:4d26:e479:7659]) by SEYPR06MB7072.apcprd06.prod.outlook.com
+ ([fe80::427f:4d26:e479:7659%4]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
+ 08:18:20 +0000
+From: Cool Lee <cool_lee@aspeedtech.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>, "adrian.hunter@intel.com"
+	<adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+	"joel@jms.id.au" <joel@jms.id.au>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-mmc@vger.kernel.org"
+	<linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
+Subject: RE: [PATCH 4/8] mmc: sdhci-of-aspeed: Get max clockk by using default
+ api
+Thread-Topic: [PATCH 4/8] mmc: sdhci-of-aspeed: Get max clockk by using
+ default api
+Thread-Index: AQHb3/ov45KkSg/hF0GO21HRVpxlyLQKDv+w
+Date: Fri, 20 Jun 2025 08:18:19 +0000
+Message-ID:
+ <SEYPR06MB7072929C8CA435855ACC3A04957CA@SEYPR06MB7072.apcprd06.prod.outlook.com>
+References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	 <20250615035803.3752235-5-cool_lee@aspeedtech.com>
+ <4c380a2936fc5c1f37750f231eb48edc17aefa68.camel@codeconstruct.com.au>
+In-Reply-To:
+ <4c380a2936fc5c1f37750f231eb48edc17aefa68.camel@codeconstruct.com.au>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB7072:EE_|SE3PR06MB8106:EE_
+x-ms-office365-filtering-correlation-id: bdabbf9a-8b7f-483d-46a8-08ddafd30437
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?1CQGu2MEqYoujlXMmvl8vGY7D+cGdOEi8gwhyYz4AArbcR4wZlCTKQrno3?=
+ =?iso-8859-1?Q?m+FJ6uBiVe0FXrI5PT8WGAPZoSKJoCxsp26JyxmPG0JsxceQmGPepBJV9k?=
+ =?iso-8859-1?Q?YZsjFmWJ7dHi1JScf3rqlgoHuVU1OdCvHzLxOamipcRg21QgUcIzM63lZf?=
+ =?iso-8859-1?Q?qJ4IS7FbwHn9XWJZpNxK9VAm+eOIGD7e/dYWEuDTAFjau+Jp8sEdvyNhLd?=
+ =?iso-8859-1?Q?R9lCznhDkzhJhrd4WH6jbu+7qr6BuVU6goCqKpG8saW2367ll+XEAfI5Gd?=
+ =?iso-8859-1?Q?EqwTFOW9Fpztn9Z0atWACtdo83rxAXWeOhfMzCG1rUoyjTjNdzopnwa6jc?=
+ =?iso-8859-1?Q?wpYvfJU7juehYqAENNvsSavCjECBgIjjURmVfbbbUwJkG7WoQ02uu1kc5a?=
+ =?iso-8859-1?Q?V7+q5y8o1HCHU78wYQ6LJy58lK63o0RqlqYOw9jpgL640b4LxjYt4KfNoa?=
+ =?iso-8859-1?Q?JroN2OQe7l0yi2iS1+Fsq+Ag09mKwGAq6vdUh1fymESvAabDcGaLuNMzh+?=
+ =?iso-8859-1?Q?tjpNVDl1a636bYc+ej9xjcnRGikq1EzcPCe0Qf/erpMRRzXJsr/HP9ASC2?=
+ =?iso-8859-1?Q?/zZgB5Rh8fdFzKweVeoeoE1M6IwO5oMwazvnIhGWhV9PMlGPeY6feZ5i9z?=
+ =?iso-8859-1?Q?xUq7HWAr2PlYuUxw3HTiszJCpsa4IyEAkPG4tM6XlP0mNLS9/f6ksxwcN7?=
+ =?iso-8859-1?Q?PBQ7Vk3CG64nAsL4aYGh0ui+MMMQna9mB5XymH5rAiwfQS6KImG6PSYPGH?=
+ =?iso-8859-1?Q?Ej79WyaClyFuD5PIEEuEY7ri9HLkLXRT111RZnyl5WB/HdDir2VXNrRTem?=
+ =?iso-8859-1?Q?mz0HrhjibDYS4V5WdGpGD8hP+jtV4HZR8/It/n7kkD0ulqcASANQtesyFD?=
+ =?iso-8859-1?Q?LaC4gATsxvKBokHwsJxCay/ZOBzBiMsdTRbtdDPDYyZGr0vrtZNtBrUDXk?=
+ =?iso-8859-1?Q?woQChfpSyXZvQWjNW0J+9u3DBmHKDTMfVIiLwbeceC2MFq5w1R4ZjgnohE?=
+ =?iso-8859-1?Q?I4JldK+TdrIp4yhTN1Wg0/qRo8Lg+KGRveHGOCaxCfRcDQXsuUzyd+ZDMe?=
+ =?iso-8859-1?Q?LXY3BUevuQ1KDttIgr9fNvfE2K+n8rnT9OCCAHefJgthAc7yk7w2YDoK8F?=
+ =?iso-8859-1?Q?G0soozf4VDkF4qmFueEAOrHZFps7RcCVhqwHWhpkzlCEkQ9QSg76sUI0uN?=
+ =?iso-8859-1?Q?RO/F/vZWHVD6ufceeDNfnfG7cIPrfuvRTOPEexGRcQnoHuDF5vjnv/C9T3?=
+ =?iso-8859-1?Q?ZSmjWqPjLCc+YrkC4M69KGYmoJ/Ad+rzWfE9vT/9n9f9IrkVfydqow+ujE?=
+ =?iso-8859-1?Q?au5hb82qj5ihiwj3qb+r/omUu4F3OGeCqYacdCPqRQ5VhYsOfGCxcr5W21?=
+ =?iso-8859-1?Q?TnkztGTKdLW0obpiAYmCFU3d+tyLGPrJuoYtReAfMP4KTYzcGMPAnN+pXx?=
+ =?iso-8859-1?Q?qywQrORwRUR5q4CHPoaYc23coiTik69MPCw6KOIaUDF6OUQGHx6Wgo0rjz?=
+ =?iso-8859-1?Q?BQEg52/1Xm9DwD+W3Dev2x4mKd84UKgRQ9be7Z6lR+C/EteYgWRJOCbwkg?=
+ =?iso-8859-1?Q?aJ6iXmhhxka8ugIfxLpHUejFGmgy?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB7072.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?i6t6EFCr6OtTmiXuVm2dapBEMHh/FBAEFRXj6+JgsT7wQ+QXX/vUQE4FpO?=
+ =?iso-8859-1?Q?KOtpx8Ya5Z/QT8eSoAp2Qg36sKJOrEZKWBTdK4+1PvDW1y8fyewAeumNDA?=
+ =?iso-8859-1?Q?eHDD9S5MS439BLEdWApzWhGhWfn4NeBGXRP1ldyydWkwWtARe+uy3aBERO?=
+ =?iso-8859-1?Q?I9JeG50E+wshrY85kywizGv3B4iHjZCeJVVeKf3A+hJt3T7SZYSzSyUrFA?=
+ =?iso-8859-1?Q?8/Gv7p2O/H+VOZb2DW8As43bF3REi1Xb9F5EAEAEvwbg5l58zwKAu3GH13?=
+ =?iso-8859-1?Q?V5sTU+EzmxW/dsYZHCIPv35aUFQA2oeAx+ZX65O8Bz1W98Gkr8OucYkE2E?=
+ =?iso-8859-1?Q?iQb17f6npUn4d5loRsEMMtv7b4PJn2D2//cTso3x9RBIAoX4nb+uWngRWW?=
+ =?iso-8859-1?Q?mffIefkbUEa9SN3Cvr3SQVZbjrfkg22LixDawkOibLCrmW6angkR4g1ryu?=
+ =?iso-8859-1?Q?aLKt7P1A/hM/WZ3DYDtFfgRT3+MTPZqO53F8ksRCJvxwvzvpmiNs0dQU7P?=
+ =?iso-8859-1?Q?cms+Stj93U/CPMRrkighjLoRq0+pJwHDki11vhmwF2mSIkpDQrB3DdWEp0?=
+ =?iso-8859-1?Q?EDqi4Cuqxp14c023QvNlEX/osFdQ6giZvHn2Vti1m5NvgGlBcFG9Yc2xrz?=
+ =?iso-8859-1?Q?bHZDA1sVmF/6X9gAtPQzdXbvJ/P6FFv5I1Rk4eFq6Nf1Sg6vdO91V3EFku?=
+ =?iso-8859-1?Q?3a87iNXoNX4swrEGw7eMiDU7mVQmmTonWwEirbvzM+4asPt15MkhK1GgtB?=
+ =?iso-8859-1?Q?xgJk06UP9eDfQsigpsUDNSWq+G4AkilhSWmbr4ozgFwI5ZXCwhRdEJNxO+?=
+ =?iso-8859-1?Q?vhJ4l1IRsQdZth0lScmZiee39JDqb6oO8+Re0c//aFS1vT59cWkRq/i3UU?=
+ =?iso-8859-1?Q?jBQWJhtbJJ42R29kul65E61PjBiWuylelL8nl9f3HURlUNrQWp/lPiICgb?=
+ =?iso-8859-1?Q?RTTcz3EOBw8J+OYT73/8QHu2ByftxR7fjhdXLA5nIPNKa4FOVMHN3yCn9H?=
+ =?iso-8859-1?Q?Fa4XVoDLdfDlX4n9zeQB2awPZe6+g+QIC+/jxw5FF+PkT2McMHWGY/oZc8?=
+ =?iso-8859-1?Q?ouqdBai2pR1ceSNcwJ2toKzs9Ji3Pi1YkH6eAH8sQRi9/ne2oJWxaDtPkW?=
+ =?iso-8859-1?Q?NwQdqI+VM3DuMuzth46zsHaFkDC2jXRIbzuGrQJsou1KoseYo4IKnrcwbw?=
+ =?iso-8859-1?Q?awAec/gQRP0RVX8wmar4iGc4821RkPHcTLhlKvaivAxOKsZSRfPSS3lJ6i?=
+ =?iso-8859-1?Q?+NfwSsaxnJQuACiCO+e9HfPEahk7fogGPoZQNtsrtX9UUQ2ZRDtzSp3hcZ?=
+ =?iso-8859-1?Q?5ifuv/cswW7fXTzH4EaVdfL5I8U3Txomo7ObucNBg5ERL/MdZ8JMMyX5Qy?=
+ =?iso-8859-1?Q?Cr59+JY7C5p8Ua3u1pPDBkI2D2ssZzP8bn2RHS8Aw4q+h7SQSqenLEpGxx?=
+ =?iso-8859-1?Q?+8dJgVsb0ocfjG3UOXMinwkdhL1zOnF0LfianOWrs+c7D9Oe0TDA4pMZ20?=
+ =?iso-8859-1?Q?caX8nBe8cjAaZZOn8VP2VXgzazHn9LR3Sz4wtuf17AWgvMq8sNrkDp1f+r?=
+ =?iso-8859-1?Q?6HMxLymEljMK1EEeG+FNNLNjXL+1c9L9xCZznm8IwzYbEkEeaXDQapziJ9?=
+ =?iso-8859-1?Q?6aXPCjjTxXrWkUwptok7NOTrE8itBR3+bX?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,271 +144,70 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 19 Jun 2025 12:31:53 +0200
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-malware-bazaar: not-scanned
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB7072.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdabbf9a-8b7f-483d-46a8-08ddafd30437
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 08:18:19.9713
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xeChORrD0t3I9RKpytOxn47InKN/4pIPnZY9RiW3x7RW3H2lJjUFOtSRNS6YgEpq1qB60Pc3OWDgDbGVkJDWqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE3PR06MB8106
 
-Hi,
 
-On Thu, 2025-06-19 at 10:04 +0900, Hajime Tazaki wrote:
-> This commit introduces an entry point of syscall interface for !MMU
-> mode. It uses an entry function, __kernel_vsyscall, a kernel-wide global
-> symbol accessible from any locations.
+> > Don't limit clock frequency by f_max.
+> >
+> > Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
+> > ---
+> > =A0drivers/mmc/host/sdhci-of-aspeed.c | 10 +---------
+> > =A01 file changed, 1 insertion(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c
+> > b/drivers/mmc/host/sdhci-of-aspeed.c
+> > index 10160a706334..2bdd93a3f91f 100644
+> > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> > @@ -288,14 +288,6 @@ static void aspeed_sdhci_set_clock(struct
+> > sdhci_host *host, unsigned int clock)
+> > =A0=A0=A0=A0=A0=A0=A0=A0sdhci_enable_clk(host, clk);
+> > =A0}
+> >
+> > -static unsigned int aspeed_sdhci_get_max_clock(struct sdhci_host
+> > *host) -{
+> > -=A0=A0=A0=A0=A0=A0=A0if (host->mmc->f_max)
+> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return host->mmc->f_max;
+> > -
+> > -=A0=A0=A0=A0=A0=A0=A0return sdhci_pltfm_clk_get_max_clock(host);
+> > -}
+> > -
+> > =A0static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int
+> > width)
+> > =A0{
+> > =A0=A0=A0=A0=A0=A0=A0=A0struct sdhci_pltfm_host *pltfm_priv; @@ -446,7 =
++438,7 @@
+> > static int aspeed_sdhci_execute_tuning(struct sdhci_host *host, u32
+> > opcode)
+> > =A0static const struct sdhci_ops aspeed_sdhci_ops =3D {
+> > =A0=A0=A0=A0=A0=A0=A0=A0.read_l =3D aspeed_sdhci_readl,
+> > =A0=A0=A0=A0=A0=A0=A0=A0.set_clock =3D aspeed_sdhci_set_clock,
+> > -=A0=A0=A0=A0=A0=A0=A0.get_max_clock =3D aspeed_sdhci_get_max_clock,
+> > +=A0=A0=A0=A0=A0=A0=A0.get_max_clock =3D sdhci_pltfm_clk_get_max_clock,
 >=20
-> Although it isn't in the scope of this commit, it can be also exposed
-> via vdso image which is directly accessible from userspace. A standard
-> library (i.e., libc) can utilize this entry point to implement syscall
-> wrapper; we can also use this by hooking syscall for unmodified userspace
-> applications/libraries, which will be implemented in the subsequent
-> commit.
+> This was used to limit the maximum bus speed via the devicetree. See:
 >=20
-> This only supports 64-bit mode of x86 architecture.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?h=3D
+> v6.16-rc2&id=3D0a0e8d7501cda79c9b20f6011814e2ec9b473ade
 >=20
-> Signed-off-by: Hajime Tazaki <thehajime@gmail.com>
-> Signed-off-by: Ricardo Koller <ricarkol@google.com>
-> ---
-> =C2=A0arch/x86/um/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 4 ++
-> =C2=A0arch/x86/um/nommu/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 8 +++
-> =C2=A0arch/x86/um/nommu/do_syscall_64.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 37 ++++++++++
-> =C2=A0arch/x86/um/nommu/entry_64.S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 91 +++++++++++++++++++++++++
-> =C2=A0arch/x86/um/nommu/syscalls.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 16 +++++
-> =C2=A0arch/x86/um/shared/sysdep/syscalls_64.h |=C2=A0 6 ++
-> =C2=A06 files changed, 162 insertions(+)
-> =C2=A0create mode 100644 arch/x86/um/nommu/Makefile
-> =C2=A0create mode 100644 arch/x86/um/nommu/do_syscall_64.c
-> =C2=A0create mode 100644 arch/x86/um/nommu/entry_64.S
-> =C2=A0create mode 100644 arch/x86/um/nommu/syscalls.h
+> Why remove it? There's no discussion of the motivation in the commit
+> message.
+Yes, you're right. There is no need to change this. I will remove this.
+My original thinking is changing to use default sdhci_set_clock and sdhci_g=
+et_max_clock that we can simplify the code.
+But the aspeed_sdhci_set_clock handles different divider by legacy projects=
+, so I keep that but just missed the get_max_clock.
+
 >=20
-> diff --git a/arch/x86/um/Makefile b/arch/x86/um/Makefile
-> index b42c31cd2390..227af2a987e2 100644
-> --- a/arch/x86/um/Makefile
-> +++ b/arch/x86/um/Makefile
-> @@ -32,6 +32,10 @@ obj-y +=3D syscalls_64.o vdso/
-> =C2=A0subarch-y =3D ../lib/csum-partial_64.o ../lib/memcpy_64.o \
-> =C2=A0	../lib/memmove_64.o ../lib/memset_64.o
-> =C2=A0
-> +ifneq ($(CONFIG_MMU),y)
-> +obj-y +=3D nommu/
-> +endif
-> +
-> =C2=A0endif
-> =C2=A0
-> =C2=A0subarch-$(CONFIG_MODULES) +=3D ../kernel/module.o
-> diff --git a/arch/x86/um/nommu/Makefile b/arch/x86/um/nommu/Makefile
-> new file mode 100644
-> index 000000000000..d72c63afffa5
-> --- /dev/null
-> +++ b/arch/x86/um/nommu/Makefile
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +ifeq ($(CONFIG_X86_32),y)
-> +	BITS :=3D 32
-> +else
-> +	BITS :=3D 64
-> +endif
-> +
-> +obj-y =3D do_syscall_$(BITS).o entry_$(BITS).o
-> diff --git a/arch/x86/um/nommu/do_syscall_64.c b/arch/x86/um/nommu/do_sys=
-call_64.c
-> new file mode 100644
-> index 000000000000..5d0fa83e7fdc
-> --- /dev/null
-> +++ b/arch/x86/um/nommu/do_syscall_64.c
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/ptrace.h>
-> +#include <kern_util.h>
-> +#include <sysdep/syscalls.h>
-> +#include <os.h>
-> +
-> +__visible void do_syscall_64(struct pt_regs *regs)
-> +{
-> +	int syscall;
-> +
-> +	syscall =3D PT_SYSCALL_NR(regs->regs.gp);
-> +	UPT_SYSCALL_NR(&regs->regs) =3D syscall;
-> +
-> +	pr_debug("syscall(%d) (current=3D%lx) (fn=3D%lx)\n",
-> +		 syscall, (unsigned long)current,
-> +		 (unsigned long)sys_call_table[syscall]);
-
-You probably want to drop the pr_debug from the syscall path.
-
-> +	if (likely(syscall < NR_syscalls)) {
-> +		PT_REGS_SET_SYSCALL_RETURN(regs,
-> +				EXECUTE_SYSCALL(syscall, regs));
-> +	}
-> +
-> +	pr_debug("syscall(%d) --> %lx\n", syscall,
-> +		regs->regs.gp[HOST_AX]);
-> +
-> +	PT_REGS_SYSCALL_RET(regs) =3D regs->regs.gp[HOST_AX];
-> +
-> +	/* execve succeeded */
-> +	if (syscall =3D=3D __NR_execve && regs->regs.gp[HOST_AX] =3D=3D 0)
-> +		userspace(&current->thread.regs.regs);
-
-That said, this is what I am stumbling over. Why do you need to jump
-into userspace() here? It seems odd to me to need a special case in the
-syscall path itself.
-Aren't there other possibilities to hook/override the kernel task
-state?
-
-> +
-> +	/* force do_signal() --> is_syscall() */
-> +	set_thread_flag(TIF_SIGPENDING);
-> +	interrupt_end();
-
-Same here. The MMU UML code seems to also do this, but restricted to
-ptrace'd processes? Maybe I am just missing something obvious =E2=80=A6
-
-Benjamin
-
-> +}
-> diff --git a/arch/x86/um/nommu/entry_64.S b/arch/x86/um/nommu/entry_64.S
-> new file mode 100644
-> index 000000000000..e9bfc7b93c84
-> --- /dev/null
-> +++ b/arch/x86/um/nommu/entry_64.S
-> @@ -0,0 +1,91 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <asm/errno.h>
-> +
-> +#include <linux/linkage.h>
-> +#include <asm/percpu.h>
-> +#include <asm/desc.h>
-> +
-> +#include "../entry/calling.h"
-> +
-> +#ifdef CONFIG_SMP
-> +#error need to stash these variables somewhere else
-> +#endif
-> +
-> +#define UM_GLOBAL_VAR(x) .data; .align 8; .globl x; x:; .long 0
-> +
-> +UM_GLOBAL_VAR(current_top_of_stack)
-> +UM_GLOBAL_VAR(current_ptregs)
-> +
-> +.code64
-> +.section .entry.text, "ax"
-> +
-> +.align 8
-> +#undef ENTRY
-> +#define ENTRY(x) .text; .globl x; .type x,%function; x:
-> +#undef END
-> +#define END(x)=C2=A0=C2=A0 .size x, . - x
-> +
-> +/*
-> + * %rcx has the return address (we set it before entering __kernel_vsysc=
-all).
-> + *
-> + * Registers on entry:
-> + * rax=C2=A0 system call number
-> + * rcx=C2=A0 return address
-> + * rdi=C2=A0 arg0
-> + * rsi=C2=A0 arg1
-> + * rdx=C2=A0 arg2
-> + * r10=C2=A0 arg3
-> + * r8=C2=A0=C2=A0 arg4
-> + * r9=C2=A0=C2=A0 arg5
-> + *
-> + * (note: we are allowed to mess with r11: r11 is callee-clobbered
-> + * register in C ABI)
-> + */
-> +ENTRY(__kernel_vsyscall)
-> +
-> +	movq	%rsp, %r11
-> +
-> +	/* Point rsp to the top of the ptregs array, so we can
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 just fill i=
-t with a bunch of push'es. */
-> +	movq	current_ptregs, %rsp
-> +
-> +	/* 8 bytes * 20 registers (plus 8 for the push) */
-> +	addq	$168, %rsp
-> +
-> +	/* Construct struct pt_regs on stack */
-> +	pushq	$0		/* pt_regs->ss (index 20) */
-> +	pushq=C2=A0=C2=A0 %r11		/* pt_regs->sp */
-> +	pushfq			/* pt_regs->flags */
-> +	pushq	$0		/* pt_regs->cs */
-> +	pushq	%rcx		/* pt_regs->ip */
-> +	pushq	%rax		/* pt_regs->orig_ax */
-> +
-> +	PUSH_AND_CLEAR_REGS rax=3D$-ENOSYS
-> +
-> +	mov %rsp, %rdi
-> +
-> +	/*
-> +	 * Switch to current top of stack, so "current->" points
-> +	 * to the right task.
-> +	 */
-> +	movq	current_top_of_stack, %rsp
-> +
-> +	call	do_syscall_64
-> +
-> +	movq	current_ptregs, %rsp
-> +
-> +	POP_REGS
-> +
-> +	addq	$8, %rsp	/* skip orig_ax */
-> +	popq	%rcx		/* pt_regs->ip */
-> +	addq	$8, %rsp	/* skip cs */
-> +	addq	$8, %rsp	/* skip flags */
-> +	popq	%rsp
-> +
-> +	/*
-> +	* not return w/ ret but w/ jmp as the stack is already popped before
-> +	* entering __kernel_vsyscall
-> +	*/
-> +	jmp	*%rcx
-> +
-> +END(__kernel_vsyscall)
-> diff --git a/arch/x86/um/nommu/syscalls.h b/arch/x86/um/nommu/syscalls.h
-> new file mode 100644
-> index 000000000000..a2433756b1fc
-> --- /dev/null
-> +++ b/arch/x86/um/nommu/syscalls.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __UM_NOMMU_SYSCALLS_H
-> +#define __UM_NOMMU_SYSCALLS_H
-> +
-> +
-> +#define task_top_of_stack(task) \
-> +({									\
-> +	unsigned long __ptr =3D (unsigned long)task->stack;	\
-> +	__ptr +=3D THREAD_SIZE;			\
-> +	__ptr;					\
-> +})
-> +
-> +extern long current_top_of_stack;
-> +extern long current_ptregs;
-> +
-> +#endif
-> diff --git a/arch/x86/um/shared/sysdep/syscalls_64.h b/arch/x86/um/shared=
-/sysdep/syscalls_64.h
-> index b6b997225841..ffd80ee3b9dc 100644
-> --- a/arch/x86/um/shared/sysdep/syscalls_64.h
-> +++ b/arch/x86/um/shared/sysdep/syscalls_64.h
-> @@ -25,4 +25,10 @@ extern syscall_handler_t *sys_call_table[];
-> =C2=A0extern syscall_handler_t sys_modify_ldt;
-> =C2=A0extern syscall_handler_t sys_arch_prctl;
-> =C2=A0
-> +#ifndef CONFIG_MMU
-> +extern void do_syscall_64(struct pt_regs *regs);
-> +extern long __kernel_vsyscall(int64_t a0, int64_t a1, int64_t a2, int64_=
-t a3,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int64_t a4, int64_t a5, int64_t a6);
-> +#endif
-> +
-> =C2=A0#endif
-
+> Andrew
