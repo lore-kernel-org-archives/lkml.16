@@ -1,94 +1,76 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2511B960;
-	Fri, 20 Jun 2025 00:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E155A2F2E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750381140; cv=none; b=JnDXvcBPdl+EGfR6ILlmZRzDweVn8SV7V5mKQOnTwdE6q/dP646LSYK/wi9TDMYilY2tSIAU5PuSXyKaz37AGcxfBZSTnHZS1Yrm68R+0+bzx+0G92VxmS2zS6GNIBwmNjx6Q1QY+wR3ui4pdthPdivlIXqqIFdhA8FMlEZE05U=
+	t=1750381388; cv=none; b=JCDyfaj7+yv8Hup+eILxfrjVB35W7tKcMRTDqtE7PkLUriz0UryXVQx7/EgE4W99DnAhMHbbhODehNBsPYlLXKlccf6FmOXqMf7FpLhEAnR8hpEhs1QCCgvi+oPLJkqDVVSnoGc5kFCfSlQheMfhq1YC+jx/RYB0iLwVzOxJbn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750381140; c=relaxed/simple;
-	bh=q2i8Qs3911Kk0ltdtj9t/YiGVSyWNAeuUcRyaXFa/hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ko4IkAXsRLOloFJvxUxSqiHadxqKOJSkdzYh8B5O2NxHSeZBVptDY1ErBk/bzhT/UKn7JwK1PKg28xxO0Dryoq3YKVL86UQsyZFqVThQ7nowmSx+q0J3kWlORyShjUgEsAxFhoq5nJxr2HKePHdkX96SXd8pX9CIMK6ppgrPCVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpRth+7T; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpRth+7T"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b9dfb842so11852625ad.1;
-        Thu, 19 Jun 2025 17:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750381138; x=1750985938; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gNfLmL2GJ/LJtjmF47jC/MYcsOmvEuwoo9HPi2OM56c=;
-        b=gpRth+7T263A7pb/iRhJvWRuhSnhw7Jw/GroHxUKkh9qztxOt0mU97+AoQpg/Afako
-         hbdTwepekd4UAjdjrQp1eTAPygSB/rXmkHGS5G9hSxdy2enuRYQcmM53p2dMzHpedSlB
-         pU4cm9hV26UBXvdSqZmkIS0J0VPodKfHKJlPsoTE2+GYyneNNho9+1gJRZZjUK4IINBe
-         SBUTV9WvyCfV1zs+mhorJN/GGTHbB3hdVM1rSoLWv28ucSwD8gv9vdqUBT13h8Vef3Rv
-         Sjh4XLin+bJPx10H8k9YVztNLHJOXBPkzIe8T1KWwWOAEVEAuOS1XoxneoIdqehzNqBd
-         etzg==
+	s=arc-20240116; t=1750381388; c=relaxed/simple;
+	bh=2c/vJaW+171fgL3caWJoyLPvSgz/ccsa48tvrkMMnp8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kFXTLLVjfXOGgZ+Ttclwg4m3qegvn0wOHy+dA+g+Gg1+xmGf3gx7YEVGX+2OUxjcVwwND2OM+4NsvXXR9mFjro8k5KS7po2nlUdzQq7+VGA7jcmdH3qEX1c8/yamwCn8RVx8TzdJOiTFpe6Cebt0dd6FDt7HcwmOY4YMM8u2bhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cf306fc68so231113839f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:03:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750381138; x=1750985938;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gNfLmL2GJ/LJtjmF47jC/MYcsOmvEuwoo9HPi2OM56c=;
-        b=k0fwZOCwdkam43A7KmmbQjOMgdsO+qLUcWUOW0cJ53u+bQqKsNi1qhp4Cu8mLAvCQX
-         3hHEtTFILI0IWlgZsYiCGrS0WmL8LYkTbptKEPflKNbE9aBJPynXtWc2csg4MCJlGVRs
-         y7oNipyZ5Ao0s7uofOKRNUQHxKrHXaqprF0hRrcJs9/V1lawvb4eNpnIHyqrqXuf0gWd
-         ++sKUlvCgztHesIRqkvpJyPBcWIcbvofwoAVO6DwItsn15pnMDyRQ6422VaRWPmGT1sB
-         SR+sY13Lz3pvyRvr9N3ku/yoIFmH7rmqFRD2sanLGRfIc/wmehxizP+teE3SFduUc37L
-         1BXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjXIcy9M+afoL34fgqKs3a0ZFd6DxcW6y3YHsZH/kn5i2ShDK/Uvy2tVhhfs7b5AzChJ5FnsL9ydZvtDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6OFo9XFtQGBgdI8k2AJ8Gvbmn7Sn1+rhYbw7BmxxpOgfRgyif
-	Tj3X2D4w1e7AcOyJTP34uMS2l3Cqibxcp19k11d2j97TLfoy/dWoPv/B
-X-Gm-Gg: ASbGncs7bBWr8pX+umSQnVqzth6tyaEkS6/i1dRRR88Nfzzlar43X+V2W/wUwptHx5F
-	YUqBjwT9ZatrL6mV04ti612XNwp5fsfqHxltRDjk8214FPXQbWxtpQq8qU4jbxE2sK2EXL1iAAZ
-	IuwOAeXKatZSBHZ7zMCvijIUfDEx5Hvjrb+K3YtK/oWU9bosx40ND/iGdVAMSrQQ97fN/7t7vPT
-	dXM26ZA3RtouMV+MO7L8hvEb0XXw+p8JmfB9tE//INzsF4xf3dkaaTPM/LAD8h192q6Eczd0Qlc
-	aHxD2xSG1EFxScmNpBpbcle9MzdqCNgeFPKxmJZk8Eyrbd1+PwuEQKcJUfqeGA==
-X-Google-Smtp-Source: AGHT+IHi7aECeHZRnPC7vw6NES/MMPC6y4QJZ8P+xcgs4+ESGezFPvNV2kX2PNH9co3DTZQXCAXUPg==
-X-Received: by 2002:a17:902:f54a:b0:235:f3df:bc1f with SMTP id d9443c01a7336-237d9ab626bmr11772325ad.36.1750381138271;
-        Thu, 19 Jun 2025 17:58:58 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-237d83cf981sm5109995ad.59.2025.06.19.17.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 17:58:57 -0700 (PDT)
-Date: Fri, 20 Jun 2025 08:58:55 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] riscv: dts: sophgo: sg2044: Add missing
- riscv,cbop-block-size property
-Message-ID: <os55zbba4lz5dkbrejz6pzsxn3o2brtchxvp5sdjrqubavwoxi@ktyfnjaqchwm>
-References: <20250613074513.1683624-1-inochiama@gmail.com>
- <175013680588.1018298.10559632401541865399.b4-ty@gmail.com>
- <MA0P287MB226203FCCC7A25D2140ACE01FE7DA@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+        d=1e100.net; s=20230601; t=1750381385; x=1750986185;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i5J7ba5hUuqmYXm8j+n1MWcxRGCM+HuokHSDcxyja/Y=;
+        b=bjYPxn6BCIQfcKcOuohJUTjPM6XbcFwl2pnjt+f2Xv9nIpxAlK114PjT2WniqlC8va
+         X0qOgqRY4VfQJsHYd96baYvX9aFqRv3njIMRDBIn5PjepWqkponpv7vw5P6ppYEfrB8m
+         pg74A4ZQqHOk1D45a5SHvupYq1u8XAqJJu5AEFyMr3a/P37e70inhMzUoMdZu1StUg54
+         1K1VxIDR4SJ5WUC5BR+FW3gSWKGyp/SJS4YtrfwDKAag8FoirixPDlUjQtVPs2DnxbKm
+         1U4NQVQG6tFYHdM+uI20dP65/UyZvhBQEyWm3psotC/Q0Eo+i/44Lopms+gH7JcepqCh
+         2wYw==
+X-Gm-Message-State: AOJu0YzU+R1sxvBuedFJT/5tbyVJZTZunUE+cwr+iA59MukdcUAJeUjX
+	6Dx9B2m6cTPJ+rsOq0qPBFwf0AoTan+d3C6mQyznllxu7TYvD93MtohUdxC2y3jKlkrOZo8/eWW
+	Kx9aPHQeYtAym55nTFnNiL3gaU3ipPdpItfcLSbDyDg5Py8KHLR0ENuD2RiI=
+X-Google-Smtp-Source: AGHT+IHarrBpz7y9uocpwIiM/HI9cpo4+GPRjHYg/LWC5CDY4O+2/6rbhwmuwC0q/7DZzqZ0jrTMAwABW/+lZGMc83QYPUT0TUXh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MA0P287MB226203FCCC7A25D2140ACE01FE7DA@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+X-Received: by 2002:a05:6e02:221e:b0:3dd:d6c0:cccd with SMTP id
+ e9e14a558f8ab-3de38ca54bemr9316705ab.13.1750381385093; Thu, 19 Jun 2025
+ 18:03:05 -0700 (PDT)
+Date: Thu, 19 Jun 2025 18:03:05 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6854b349.a00a0220.137b3.0026.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 19, 2025 at 03:30:31PM +0800, Chen Wang wrote:
-> Why not apply this to fixes so we can pull this soon?
-> 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-It is not a critical change, just a forgotten property.
-I think it is OK to leave it to the new version and
-reduce some work for pr.
+***
 
-Regards,
-Inochi
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
+
+#syz test
+
+diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+index f22b44827e92..fe0f18a0fb63 100644
+--- a/drivers/misc/vmw_vmci/vmci_context.c
++++ b/drivers/misc/vmw_vmci/vmci_context.c
+@@ -314,7 +314,7 @@ int vmci_ctx_enqueue_datagram(u32 cid, struct vmci_datagram *dg)
+ 	}
+ 
+ 	/* Allocate guest call entry and add it to the target VM's queue. */
+-	dq_entry = kmalloc(sizeof(*dq_entry), GFP_KERNEL);
++	dq_entry = kzalloc(sizeof(*dq_entry), GFP_KERNEL);
+ 	if (dq_entry == NULL) {
+ 		pr_warn("Failed to allocate memory for datagram\n");
+ 		vmci_ctx_put(context);
