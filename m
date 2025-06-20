@@ -1,225 +1,207 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD3C1FBEA6;
-	Fri, 20 Jun 2025 18:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FCE1FBEA6
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750445537; cv=none; b=HN4O6WSXVsjx8xHBYwn/6F3+/hOFZ+h1uMfEPnCb29EMrcbxwlNCMOlm4M6BnzDdD+4vjlauUA+fbbBwYQa39xTGRnAdRhT5qFLtczqjw0vlJk9UMpCzkI/YqUtYJFEyLI2myrR3LbAjH4gLWbwRpiNCmhlRNlOjOE8s7l8yi6g=
+	t=1750445767; cv=none; b=WFNAtzbFw3n/QLfQE4NZyIe0CaIXsSKlQYkZ6RoMWH2OYxX6+Cxi+7ZlGmSYY3iSZpO5jnkxMzNi2PMRChEbfGw27a3PO9ocfKuCXdsLR6UcrBhI62T8BQLUdPa2RgX/mKG0gs3DBhMTcNrb70tGVzK/++OnS7MZPPyCX3OcXyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750445537; c=relaxed/simple;
-	bh=d61578dvdp+7dqnHw6aOy57T/vUq2K6C3ebottvLP48=;
+	s=arc-20240116; t=1750445767; c=relaxed/simple;
+	bh=3ZWv6pJ1P+qO2ceUT6OkaGab4GTeMQ7MCR6CHcmWpCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWYTztVJ8siMjlw/RptzY1kdLJKo1b9+igC6a4KAD8J5rGwv0E+l+pTKjx1vWPd+PZKtHFiZAyJifnHnYQUtW/hG1lQcBn9dyN4srjozEgfrtrMvbdzz7fqs7IakSa3u9NJhLnB1ClMJtiDry6wI6xoStrk6ezKZngeBhyUOnPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmD5PAnh; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8qvVhfEfL5izya4na0NJufIypKwel6MbSFJ5V+xYEKYcn+pNtLMkZ+hqbc0aPTJbnUtlB2mX7m5N0z+LxXl0n7jTYDI7holDA+VNkGHHeqOHcYlHiapj1XpWgKU4gVlCrGzD2MY22Y08rDSzxFFwyFd3iy6AVUyo3IT7ofW7Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=TUOacAVa; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmD5PAnh"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453643020bdso10073495e9.1;
-        Fri, 20 Jun 2025 11:52:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="TUOacAVa"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234bfe37cccso29092355ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750445534; x=1751050334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3SuvVprvH+lcp/bEtCacgmv7HR7bf4BfFOrawh5qnz0=;
-        b=UmD5PAnhN1FWtTsoi2uEoa5bKnMIRNJ/hpkTweFkaiS1/aWTHG6lgas92Qv6OQVTZy
-         QhrrWrTd9GCfOxvXUaa/gjMgaIOw5TCm/1CRoJI9ar/amdowY9oFyCr+U2j3Rimx7329
-         ibc9Sxjw5RKXCU6yYAMQ65C4+zdbTpoMFnsgYj8TvP6YUGY+ZKDUZEbZGS/itF2O6QEF
-         qNSTcHIlyV026MJR9zJ1+HfgJ3HPnu0fJ7//qunFQc8NqeewhhItExL8F0kdgIuGhlYv
-         ua4NDGT4IDFW7VGOD0DRrhyyRoXj5pEijKMIkcnef6j71ACTXyRtvWcZJOVX3ueIL2E6
-         Jwog==
+        d=wbinvd.org; s=wbinvd; t=1750445765; x=1751050565; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f+HEITA2dX1aYujll3OHX4xef5VcGiuOk2/IfTQS9/w=;
+        b=TUOacAVapBINL7VI52FTcvNyAV254i4UYEFexav26NO0oZHgsq51IH0zP9xVAqi2lj
+         NEIUx/k74bv9zzhDR4JlQb9M8zLzD33NgNGM/zQkrXRPcmLSysmbk/CtvIscAjATrUk0
+         e4dvPPVtnnGEYGJoMC8XN6iYBStNem/tl47zvajWAGPeeWMvdykAkgLqYHfmU/shrKWZ
+         +CeGSxbRDavvuCspdfA7TK/6EqDz+FopoiiwqoFD+VaMvf7Sn+UuHAaAQI4qtSS/DPy1
+         EogJJwzSE8SmMiUPq6XpcApoBOOsiKHUZUln5sMK6H2OOYCfwcgVdwX7swb6Jiiq1lST
+         5NrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750445534; x=1751050334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3SuvVprvH+lcp/bEtCacgmv7HR7bf4BfFOrawh5qnz0=;
-        b=vU7FYhSENAiCvZZSg64TVGCYOiKzbYnAoDYhPuhv5u2mX/kbXMEm/r4EIWK4JhdfRL
-         s+HOkusbd5nQRSOiyqFF8PId+syJp1lPEeL2mEipXg92a0VLFNQGSaiDJafdLkwoltc0
-         fPtZaTGoM3s6EI/GuUKhuzlNczNrf71fMHK0W/q1kx/6+9GvcUSbOmmZ6C47FUmMDcQN
-         KVo9SyXHU0f4j+2Yu4ZeVKDwMWjMUHLM4I5D5QWmvvuEcNavlpsoeYiH/NT1x8cKf6iD
-         nKXmVC9EAFRnykHg+9S+WcYJuxNeoO/S4AxGdzs1BR8wlF23M6+r7iI9iNgkmdHK7oXA
-         RMLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQbuEopdS+pk0Ce8FmoNP/Uawc9Vhk+hQUGsHBtH/99YzdINxJ6rq5CdLzqk4k8ojnDOydLH4E5iPma3Hg@vger.kernel.org, AJvYcCUYXNYH3ByCxlvMqTG/49nBlHMcxKm825gCEuXAoWeECJcxuD9j4Qnr95tPGUkeFmu/7fi+bTLQfoXL@vger.kernel.org, AJvYcCUZ/2BUgUa/eCs7V9DvP4clpxuaBsXL1IK4B773Ccy7O6i7oySaMXyUX3WhAXvuGkVCoUjoC585PeGJ@vger.kernel.org, AJvYcCWVBU8T0M+zj3eEKOEfMT8zXamRfvw2M4FEPXZ73BV2B3JZovYFdln1DmBA2TIiXBknXSzkworfa+q+@vger.kernel.org, AJvYcCWw/OCPwxtMEOnpcyuSAhWcV9OJLhrUODOYqeHRjLnnUxtCf0M5smGIJSQg831xBjMKoDWNeziOneA4@vger.kernel.org
-X-Gm-Message-State: AOJu0YycEPjU4rG1G0irUlBmpeerXp1HoI+N9R+4P5ACivxlFNAHG4RH
-	fZHLxXW+0NL9RRx5hh3UoDbngv+zMMNbf7R+l3/ttFp83xS2QUkZHg78
-X-Gm-Gg: ASbGncuEAyR99lhafaCx4HtmbEQ294b1t71FYNMrxQregrzI+VjIQdW0JlxBeghI+aE
-	wTT3u1hanicjp550+AdGunmdGfjvuUxgSgEsxwPUCT7n8Qfa7eeiAurCzOQEl7G7DPGagH4EDp6
-	fqja3N2HL8hNi7mL+F3ZJPdrfneNc9V3tC5CIKTEkWYunUYLXZ9OhXAae+Rc+uAvscJzJImWXE2
-	ZopYJvfuoUb/B87BCGENQ3BXk1xYvauYYpNdmvw/OYGEGDFZSu3MhcSFT4dlV7eeeNV0GDynXJQ
-	zBfdhRcYac+4UoTeRnpnRi4rFaOhF0RwISvc90JBkD3QVB+PuMDvW+Yqf0UlzEMRDCdvCNLOVCu
-	w4VMyeVNojvQ1bdEcajaVYzyJ/oMMQDsuBaGP4WXmuCAc+Kh0ysbySnxtv2qrhhvQZmv/gWcZ2A
-	==
-X-Google-Smtp-Source: AGHT+IFyJDFhnRLMDV+Vtu5Y/1Vd85itLGHwRZWROszXt6mNgeAMTKnEZ8wy1wyvkiYXDy+Ydv3bFA==
-X-Received: by 2002:adf:9dd2:0:b0:3a5:39bb:3d61 with SMTP id ffacd0b85a97d-3a6d1322a3dmr3100604f8f.27.1750445533322;
-        Fri, 20 Jun 2025 11:52:13 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com (dynamic-176-002-177-020.176.2.pool.telefonica.de. [176.2.177.20])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c073sm2777413f8f.58.2025.06.20.11.52.12
+        d=1e100.net; s=20230601; t=1750445765; x=1751050565;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+HEITA2dX1aYujll3OHX4xef5VcGiuOk2/IfTQS9/w=;
+        b=Tz2XCYvsQKncTp5DWaYDrLg17Z24FCh4Zcm3ECCzsyzD/nu4YrzbbB8+O0bvkPrBBE
+         r24uv8BPK7ApBAhlBIgsK6edAIEiyDvAZnJ/VU4nGwYJwOJs3zLJAgxqntysWE0A4KIu
+         TbIuRExctNClSMhhxnnRPSORcqi2/4Iga8+p4Ew0eB8cvgXqrug0gJEthOt2ymXCHXkc
+         Rhl1Zwxwdr0UOyFyJ2Ize4l0ULYx6laGGWDBYm91Hk/gc+RMGFQMeJm0OYJnbccVs9xy
+         P+CI+abapKBWI6OtRZC7EY2DbzGssu2+JJTtuNqgm78Us0DwbPpQ6WmFv0pDXcycHPUB
+         gIxw==
+X-Gm-Message-State: AOJu0Yz9JwJ+QsBgg25mwtMbmvAKjYrlTXVk7Pev4NYs2y9hssbarSj6
+	2fi/FdGZtkBuvCyMOEg2beL/omZ2l7Osd2xn4w29CfVlSJKZSSEh+pkT3CQuPP+k05+B3zXDS3q
+	lbdjK
+X-Gm-Gg: ASbGncsTDvt4E7e5uT2g30dF7uat3MRbP0NcOvtAH45FyWGVZtY3Mr361EgVkUFgCfz
+	j2uFd/WylnfYEBksFp6V8XxCm9HrecYNqVeJB5o/1osLQlPW/5ERNxQ2p15LDhdiLdd3f2kN9MR
+	9BGwYYcLQglJEAepSkV/HRyLOYsAOzdPRvMiwFD4qi+zM0hSLqBQnKN/aCW+D+2VVRVlHwbIA+h
+	pG27YdtX4y5wArf/H3ZAltnhk53uPpoVIuh6G5GCUPaI2oOylBcqBJ2qIf519qyVaOGJj8L/Wvc
+	WM1Ja6l3egAuw83WvrLs6fuLvFG+FidKtDq8iWzC+N2gVcrSkHZWg65VnE5CC4PJgZoFV85oRSq
+	PK60nSiJUw+khPqMsuDIUUVl7P1+0R0A=
+X-Google-Smtp-Source: AGHT+IGApfVMQ/tLs1d+ctuFzl6TsPvurszXNSONVg0mc9GC9mInqbAOaqj3jfgWHImeLHUAJzcrvw==
+X-Received: by 2002:a17:903:1a83:b0:234:c549:d9dd with SMTP id d9443c01a7336-237d9ac3da1mr63538045ad.48.1750445764601;
+        Fri, 20 Jun 2025 11:56:04 -0700 (PDT)
+Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83eefc9sm23685645ad.74.2025.06.20.11.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 11:52:12 -0700 (PDT)
-Date: Fri, 20 Jun 2025 20:52:10 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] iio: adc: Add offload support for ad4052
-Message-ID: <hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-6-cf1e44c516d4@analog.com>
- <20250614112022.24bf9212@jic23-huawei>
+        Fri, 20 Jun 2025 11:56:04 -0700 (PDT)
+Date: Fri, 20 Jun 2025 11:56:01 -0700
+From: Calvin Owens <calvin@wbinvd.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, "Lai, Yi" <yi1.lai@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
+ hash
+Message-ID: <aFWuwdJUEUD8VcTJ@mozart.vkv.me>
+References: <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
+ <20250617095037.sOnrJlPX@linutronix.de>
+ <aFGTmn_CFkuTbP4i@mozart.vkv.me>
+ <20250618160333.PdGB89yt@linutronix.de>
+ <aFLuDoX9BGBUC3tW@mozart.vkv.me>
+ <20250618170924.Z34OXf1E@linutronix.de>
+ <aFMoDcWy-OzE3yoV@mozart.vkv.me>
+ <aFNCHS-5LLywIAC7@mozart.vkv.me>
+ <aFR8EuMg82aMCvjo@mozart.vkv.me>
+ <20250620103110.xd5CEFDs@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250614112022.24bf9212@jic23-huawei>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250620103110.xd5CEFDs@linutronix.de>
 
-On Sat, Jun 14, 2025 at 11:20:22AM +0100, Jonathan Cameron wrote:
-> On Tue, 10 Jun 2025 09:34:39 +0200
-> Jorge Marques <jorge.marques@analog.com> wrote:
+On Friday 06/20 at 12:31 +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-19 14:07:30 [-0700], Calvin Owens wrote:
+> > > Machine #2 oopsed with the GCC kernel after just over an hour:
+> > > 
+> > >     BUG: unable to handle page fault for address: ffff88a91eac4458
+> > >     RIP: 0010:futex_hash+0x16/0x90
+> …
+> > >     Call Trace:
+> > >      <TASK>
+> > >      futex_wait_setup+0x51/0x1b0
+> …
 > 
-> > Support SPI offload with appropriate FPGA firmware. Since the SPI-Engine
-> > offload module always sends 32-bit data to the DMA engine, the
-> > scantype.storagebytes is set to 32-bit and the SPI transfer length is
-> > based on the scantype.realbits. This combination allows to optimize the
-> > SPI to transfer only 2 or 3 bytes (depending on the granularity and
-> > mode), while the number of samples are computed correctly by tools on
-> > top of the iio scantype.
+> The futex_hash_bucket pointer has an invalid ->priv pointer.
+> This could be use-after-free or double-free. I've been looking through
+> your config and you don't have CONFIG_SLAB_FREELIST_* set. I don't
+> remember which one but one of the two has a "primitiv" double free
+> detection. 
+> 
+> …
+> > I am not able to reproduce the oops at all with these options:
 > > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> Minor comments inline.  I think they are all follow up from comments on
-> earlier patches that apply here as well.
+> >     * DEBUG_PAGEALLOC_ENABLE_DEFAULT
+> >     * SLUB_DEBUG_ON
 > 
-> > ---
-> >  drivers/iio/adc/ad4052.c | 244 ++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 242 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad4052.c b/drivers/iio/adc/ad4052.c
-> > index 842f5972a1c58701addf5243e7b87da9c26c773f..7d32dc4701ddb0204b5505a650ce7caafc2cb5ed 100644
-> > --- a/drivers/iio/adc/ad4052.c
-> > +++ b/drivers/iio/adc/ad4052.c
-> > @@ -11,6 +11,8 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/err.h>
-> >  #include <linux/gpio/consumer.h>
-> > +#include <linux/iio/buffer.h>
-> > +#include <linux/iio/buffer-dmaengine.h>
-> >  #include <linux/iio/iio.h>
-> >  #include <linux/iio/sysfs.h>
-> >  #include <linux/interrupt.h>
-> > @@ -23,6 +25,8 @@
-> >  #include <linux/regmap.h>
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/spi/spi.h>
-> > +#include <linux/spi/offload/consumer.h>
-> > +#include <linux/spi/offload/provider.h>
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> >  #include <linux/units.h>
-> > @@ -111,6 +115,7 @@ enum ad4052_interrupt_en {
-> >  
-> >  struct ad4052_chip_info {
-> >  	const struct iio_chan_spec channels[1];
-> > +	const struct iio_chan_spec offload_channels[1];
-> 
-> If there is only ever one of these drop the array.
-> 
-Hi Jonathan,
+> SLUB_DEBUG_ON is something that would "reliably" notice double free.
+> If you drop SLUB_DEBUG_ON (but keep SLUB_DEBUG) then you can boot with
+> slab_debug=f keeping only the consistency checks. The "poison" checks
+> would be excluded for instance. That allocation is kvzalloc() but it
+> should be small on your machine to avoid vmalloc() and use only
+> kmalloc().
 
-It is hard to predict if no other similar device will have only two
-channels. But I would say most drivers end-up having more channels.
-> 
-> >  
-> > +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
-> > +				      struct iio_chan_spec const *chan)
-> > +{
-> > +	struct ad4052_state *st = iio_priv(indio_dev);
-> > +	const struct iio_scan_type *scan_type;
-> > +	struct spi_transfer *xfer = &st->offload_xfer;
-> > +
-> > +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-> > +	if (IS_ERR(scan_type))
-> > +		return PTR_ERR(scan_type);
-> > +
-> > +	xfer->bits_per_word = scan_type->realbits;
-> > +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-> > +	xfer->len = scan_type->realbits == 24 ? 4 : 2;
-> 
-> Same question on length vs bits_per_word applies here as in the earlier
-> patch.
-> 
-To be able to optimize the SPI message, len must be a multiple of 16
-bits. To achieve maximum throughput, no extra bits (and therefore SCLK
-clock cycles) must be transferred during the SPI transfer. This is set
-by bits_per_word, 24-bits means 24 SCLK.
+I'll try slab_debug=f next.
 
-Finally, storagebits is the number of bits actually used to store the
-reading, and for the offload channel is the DMA width, always 32-bits.
-An abstraction to obtain the DMA width should be created, so the 32-bits
-value is not hard-coded into the driver, still, for this series, it is.
+> > I'm also experimenting with stress-ng as a reproducer, no luck so far.
+> 
+> Not sure what you are using there. I think cargo does:
+> - lock/ unlock in a threads
+> - create new thread which triggers auto-resize
+> - auto-resize gets delayed due to lock/ unlock in other threads (the
+>   reference is held)
 
-> > +	xfer->speed_hz = AD4052_SPI_MAX_ADC_XFER_SPEED(st->vio_uv);
-> > +
-> > +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer, 1);
-> > +	st->offload_msg.offload = st->offload;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int ad4052_set_oversampling_ratio(struct iio_dev *indio_dev,
-> >  					 const struct iio_chan_spec *chan,
-> >  					 unsigned int val)
-> > @@ -838,6 +873,87 @@ static int ad4052_write_raw(struct iio_dev *indio_dev,
-> >  	return ret;
-> >  }
-> 
-> >  static int __ad4052_validate_trigger_sources(struct of_phandle_args *trigger_sources)
-> >  {
-> >  	switch (trigger_sources->args[1]) {
-> > +	case AD4052_TRIGGER_PIN_GP0:
-> > +		return trigger_sources->args[0] == AD4052_TRIGGER_EVENT_EITHER_THRESH ?
-> > +		       0 : -EINVAL;
-> >  	case AD4052_TRIGGER_PIN_GP1:
-> >  		return trigger_sources->args[0] == AD4052_TRIGGER_EVENT_DATA_READY ?
-> >  		       0 : -EINVAL;
-> > @@ -903,14 +1092,45 @@ static int ad4052_validate_trigger_sources(struct iio_dev *indio_dev)
-> >  	int ret;
-> >  
-> >  	np = st->spi->dev.of_node;
-> > +	for (u8 i = 0; i < 2; i++) {
-> > +		ret = of_parse_phandle_with_args(np, "trigger-sources",
-> > +						 "#trigger-source-cells", i,
-> > +						 &trigger_sources);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		ret = __ad4052_validate_trigger_sources(&trigger_sources);
-> > +		of_node_put(trigger_sources.np);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return ret;
-> 
-> I think this is always 0. So return 0; preferred to make that explicit.
-> 
-Well, this whole method is deleted for v4 due to the trigger-sources
-discussion. Per following David suggestion, gp0 is assumed drdy and gp1
-threshold events, unless the parent (spi offload) trigger-sources says
-otherwise (gp1).
+I've tried various combinations of --io, --fork, --exec, --futex, --cpu,
+--vm, and --forkheavy. It's not mixing the operations in threads as I
+understand it, so I guess it won't ever do anything like what you're
+describing no matter what stressors I run?
 
-Best regards,
-Jorge
-> > +}
-> > 
+I did get this message once, something I haven't seen before:
+
+    [33024.247423] [    T281] sched: DL replenish lagged too much
+
+...but maybe that's my fault for overloading it so much.
+
+> And now something happens leading to what we see.
+> _Maybe_ the cargo application terminates/ execs before the new struct is
+> assigned in an unexpected way.
+> The regular hash bucket has reference counting so it should raise
+> warnings if it goes wrong. I haven't seen those.
 > 
+> > A third machine with an older Skylake CPU died overnight, but nothing
+> > was logged over netconsole. Luckily it actually has a serial header on
+> > the motherboard, so that's wired up and it's running again, maybe it
+> > dies in a different way that might be a better clue...
+> 
+> So far I *think* that cargo does something that I don't expect and this
+> leads to a memory double-free. The SLUB_DEBUG_ON hopefully delays the
+> process long enough that the double free does not trigger.
+> 
+> I think I'm going to look for a random rust packet that is using cargo
+> for building (unless you have a recommendation) and look what it is
+> doing. It was always cargo after all. Maybe this brings some light.
+
+The list of things in my big build that use cargo is pretty short:
+
+    === Dependendency Snapshot ===
+    Dep    =mc:house:cargo-native.do_install
+    Package=mc:house:cargo-native.do_populate_sysroot
+    RDep   =mc:house:cargo-c-native.do_prepare_recipe_sysroot
+            mc:house:cargo-native.do_create_spdx
+            mc:house:cbindgen-native.do_prepare_recipe_sysroot
+            mc:house:librsvg-native.do_prepare_recipe_sysroot
+            mc:house:librsvg.do_prepare_recipe_sysroot
+            mc:house:libstd-rs.do_prepare_recipe_sysroot
+            mc:house:python3-maturin-native.do_prepare_recipe_sysroot
+            mc:house:python3-maturin-native.do_populate_sysroot
+            mc:house:python3-rpds-py.do_prepare_recipe_sysroot
+            mc:house:python3-setuptools-rust-native.do_prepare_recipe_sysroot
+
+I've tried building each of those targets alone (and all of them
+together) in a loop, but that hasn't triggered anything. I guess that
+other concurrent builds are necessary to trigger whatever this is.
+
+I tried using stress-ng --vm and --cpu together to "load up" the machine
+while running the isolated targets, but that hasn't worked either.
+
+If you want to run *exactly* what I am, clone this unholy mess:
+
+    https://github.com/jcalvinowens/meta-house
+
+...setup for yocto and install kas as described here:
+
+    https://docs.yoctoproject.org/ref-manual/system-requirements.html#ubuntu-and-debian
+    https://github.com/jcalvinowens/meta-house/blob/6f6a9c643169fc37ba809f7230261d0e5255b6d7/README.md#kas
+
+...and run (for the 32-thread machine):
+
+    BB_NUMBER_THREADS="48" PARALLEL_MAKE="-j 36" kas build kas/walnascar.yaml -- -k
+
+Fair warning, it needs a *lot* of RAM at the high concurrency, I have
+96GB with 128GB of swap to spill into. It needs ~500GB of disk space if
+it runs to completion and downloads ~15GB of tarballs when it starts.
+
+Annoyingly it won't work if the system compiler is gcc-15 right now (the
+verison of glib it has won't build, haven't had a chance to fix it yet).
+
+> > > > Thanks,
+> > > > Calvin
+> 
+> Sebastian
