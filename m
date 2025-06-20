@@ -1,106 +1,176 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0A2E7181
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03F2D4B6F;
+	Fri, 20 Jun 2025 16:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437379; cv=none; b=jsmYMPzhtJXvxs2OhsJfrSNF9BvwqbMo/P5YJjD5Z0VR6k4aloY7i7gv1v4XboLf5jR+1RLOR/z13xhmpKuPPFj7HjiJMuYKEYltrxNDONL8XoHpZK+4TNs9RtpcIC7+XjHVDCQEuQYwp/IwYl3iI1yGEEohsXY7gzmdBRiMTyg=
+	t=1750437611; cv=none; b=m1TSgJxcHdngSsd4rZEaGfXiQZmkwcAqy99/NnVulhIGxpWuRgFKeh0YWN8Zvw7wBx2sk1xohkyTWSrMGd4oK6761fGrJB296uhFh3NvdEzJAmWKx7lMaPmDwxlhBkbpox9EFZnodi8WgYR9J7hGNQMGCtdV/JW555bGx4G/zko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437379; c=relaxed/simple;
-	bh=GB2QSxOXPLCCKsHcC8diOJcoWq3MI5uEslI8P9rodFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EdZBO9/++KvB/L6Rk2OpVIueNlA4iYyrROSGmFkXbWC984+069mxR7wZ16Y1h9i7i52kbmpHi7zv/ht6KCtuCOaD9RIZ+vvVNaAzLgIXQjmcMNibzh4DIi4RKZb7y1FIaRaEuQcEvZlCztKuh+6QdWOxX4Siw0hHO+BP2WG3Mmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oiJ8q5Zx; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oiJ8q5Zx"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6fac7147cb8so37242336d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750437376; x=1751042176; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uJYXWxLY4HLgWwCr48sF3PGs/sRochGTLyGIU3biNNU=;
-        b=oiJ8q5ZxlJxp+suKVtHETfd+oplSmO/PROqPOYkLX4hSxvBrrRDknEV1ZCM1co0Ek6
-         zvFaMXSQEjYPJtEBbgUaKkDwBFzhLV85ueDNUpbMRcl+J2UL1JFTitZU5v6n+3QjvpQs
-         dvvnHjDwuwoC9TYYyLeF47AGe9wqpHZgw8fC+ueuVmb7qcLelKFAnAYFXsrskrhik6zp
-         er7iHb8XgtBiGZgghOqi1nkMCLeaY5N37DknTF3N9HbBASpmwAhRF4B9WuJEDk1MXgCd
-         DG8RQonK26ylknlq+WTEnBUx9RaJyHz0bOHkQIcjccj3dxzqJB6EJsWT8RU0Vvtyevd8
-         SX6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750437376; x=1751042176;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJYXWxLY4HLgWwCr48sF3PGs/sRochGTLyGIU3biNNU=;
-        b=DQzCn+y3eLCtOXSQl2MjW48zqf/gGwhlC4u534xP2dadWH5ZcJxLbzUGuCx1lSQ4jk
-         sWK8uOr3EPZVsLDlVSaIk/TC8EM7lJj7h3arbF/pBOZOVcyqpwJCOX7u+ltOnKgrTPfF
-         +wWSLH3ZhWIzGXuYw/6sGun87cGGldNqma+ILl+C6yenVXbq+kbg9shHHETfCrxSdjS/
-         OtLtmb/2eyHtXlb6d73XuMXiFt9Kc40GV0lHzyWP2YQdc/zf0e8z63SYCCN7CsSyb4G8
-         vjzUf9tDHMbH+fChEYTwXss8aVjt1fQlKjZHIjzGtUlNT76wa50cWx8sKRdGCj0wC7ae
-         YDrg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0gerNWvGW4bV5DFkPSpEZfHHaCKblCLhPhDshjUd6zRlYPJIfCbRzE/RIVMc8FoviaaYs/ule7OO90vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiOhQz9Rv0EwHGzQyNT5o7bfeosaPeSIJPFQh/U6AGoBvegICC
-	zW4O9fAH6/J9MkJOeW5PK4OfIY5JLRpPmQMBQiLwdaQBYABY+p6Na153Rdac6/xrIKk=
-X-Gm-Gg: ASbGnctg+p/V4500VFn95EXhPmNgE1uLmDegkuDiMn418UX8/FNXT4GCn0mkSeex1MG
-	uD32yt95Bi4KbaEhYBtsQpKsiHh4q110Dmudzgv21sJ+mKNgZAb/RC4Z+vRlpg6FdNhHtQkVoe9
-	xqSFkuDP2l5y+2N+2EPKJaLBWthBpGpv4CmCquTliaafL1FCmoAD2Ak1/dDd6TwPw8Hsx5no+IG
-	c/xM0b4A28ZtHiRVWV7e8k09xjuxh5rcp/Bmjd0fHnoHIe9z2b4x2qZp+wk3dV53K40StBBbwOy
-	gQaVgM2VTH4oYl1CHANVfpq2OjwAcV7XLmDVXKCcsbuR+0SHIVDsgz7E5D14PtXYWkwvFmeCOdM
-	cGZ95C4HrK5FtztPwpvson1esSz1krahbrudDwg==
-X-Google-Smtp-Source: AGHT+IHyontIEkY5vAgGgYhS+U+r5SqIyyHQ9UkviOZGeU6jrV3bzO+5OOnHkugt3y3GJ2IEIkVU5A==
-X-Received: by 2002:ad4:5de4:0:b0:6fa:ccb6:602a with SMTP id 6a1803df08f44-6fd0a51b3d7mr63974736d6.20.1750437376130;
-        Fri, 20 Jun 2025 09:36:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd09596e6bsm13876946d6.100.2025.06.20.09.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 09:36:15 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uSeit-00000000EsP-10Pb;
-	Fri, 20 Jun 2025 13:36:15 -0300
-Date: Fri, 20 Jun 2025 13:36:15 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
-Message-ID: <20250620163615.GC39770@ziepe.ca>
-References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
- <20250619131232.69208-4-benjamin.gaignard@collabora.com>
- <20250619134752.GB1643390@ziepe.ca>
- <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
- <20250619165928.GA10257@ziepe.ca>
- <e034a111-93eb-42e8-a533-46553b4f5588@collabora.com>
- <20250620120509.GA39770@ziepe.ca>
- <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
+	s=arc-20240116; t=1750437611; c=relaxed/simple;
+	bh=6MOrDPSqajVX9dglL2iIpKlky0ZC16o6M1J4f7fNxNY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K0PXggmM8itYYwLSdOgJekXP++PjdKx3q2brdUI1nThWBzUYDuCzj7RrTCVDg5BL3JvqbIwnb2V1ezS0UbXKfNCxJjqIZ7WP1SzgiwJrmS7iGCzDRC+mq7u41zEDSXyl/UI/9ZAVw7ZPwXv09G/GvPFBQqGCRE4SxVZHrhJ58ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bP36y4ySyz6L5jx;
+	Sat, 21 Jun 2025 00:37:46 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BC89B1402F3;
+	Sat, 21 Jun 2025 00:40:05 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 20 Jun
+ 2025 18:40:04 +0200
+Date: Fri, 20 Jun 2025 17:40:01 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
+ set cxl label format
+Message-ID: <20250620174001.00003aa2@huawei.com>
+In-Reply-To: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Jun 20, 2025 at 03:52:46PM +0200, Benjamin Gaignard wrote:
-> > > vsi_iommu_suspend() and vsi_iommu_resume() will also have to take the lock
-> > > before calling vsi_iommu_disable() and vsi_iommu_enable().
-> > Yes, if they use iommu->domain that seems good
-> > 
-> > If the above locking is a problem then I'd use the group mutex instead
-> > during resume/suspend. The attach functions are already called with
-> > the group mutex held.
+On Tue, 17 Jun 2025 18:09:25 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
+> Accordingly updated label index version
 > 
-> Does group mutex is also called when using vsi_iommu_map or vsi_iommu_unmap ?
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+A few local comments.  I'll need to read on to figure out how this
+fits in generally.
 
-No
+> ---
+>  drivers/nvdimm/dimm.c      |  1 +
+>  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
+>  drivers/nvdimm/label.c     | 16 ++++++++++++----
+>  drivers/nvdimm/nd.h        |  1 +
+>  include/linux/libnvdimm.h  |  3 +++
+>  5 files changed, 27 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+> index 91d9163ee303..8753b5cd91cc 100644
+> --- a/drivers/nvdimm/dimm.c
+> +++ b/drivers/nvdimm/dimm.c
+> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
+>  	if (rc < 0)
+>  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
+>  
+> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
+>  
+>  	/*
+>  	 * EACCES failures reading the namespace label-area-properties
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index 21498d461fde..e8f545f889fd 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -18,6 +18,16 @@
+>  
+>  static DEFINE_IDA(dimm_ida);
+>  
+> +bool nvdimm_check_cxl_label_format(struct device *dev)
+> +{
+> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+> +
+> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
+> +		return true;
+> +
+> +	return false;
 
-Jason
+	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
+
+Unless this is going to get more complex in later patches, in which case
+may be fine to ignore this comment.
+
+> +}
+> +
+>  /*
+>   * Retrieve bus and dimm handle and return if this bus supports
+>   * get_config_data commands
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index 082253a3a956..48b5ba90216d 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
+> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
+>  		- (unsigned long) to_namespace_index(ndd, 0);
+>  	nsindex->labeloff = __cpu_to_le64(offset);
+>  	nsindex->nslot = __cpu_to_le32(nslot);
+> -	nsindex->major = __cpu_to_le16(1);
+> -	if (sizeof_namespace_label(ndd) < 256)
+> +
+> +	/* Support CXL LSA 2.1 label format */
+
+Might be good to sprinkle some extra details in the references.
+E.g. CXL r3.2 Table 9-9 Label Index Block Layout
+
+> +	if (ndd->cxl) {
+> +		nsindex->major = __cpu_to_le16(2);
+>  		nsindex->minor = __cpu_to_le16(1);
+> -	else
+> -		nsindex->minor = __cpu_to_le16(2);
+> +	} else {
+> +		nsindex->major = __cpu_to_le16(1);
+
+Same for these.  Case of making reviewers jobs easier by
+giving them breadcrumb trails to follow.
+
+> +		if (sizeof_namespace_label(ndd) < 256)
+> +			nsindex->minor = __cpu_to_le16(1);
+> +		else
+> +			nsindex->minor = __cpu_to_le16(2);
+> +	}
+> +
+>  	nsindex->checksum = __cpu_to_le64(0);
+>  	if (flags & ND_NSINDEX_INIT) {
+>  		unsigned long *free = (unsigned long *) nsindex->free;
+> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> index 5ca06e9a2d29..304f0e9904f1 100644
+> --- a/drivers/nvdimm/nd.h
+> +++ b/drivers/nvdimm/nd.h
+> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
+>  void nvdimm_set_locked(struct device *dev);
+>  void nvdimm_clear_locked(struct device *dev);
+>  int nvdimm_security_setup_events(struct device *dev);
+> +bool nvdimm_check_cxl_label_format(struct device *dev);
+>  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
+>  int nvdimm_security_unlock(struct device *dev);
+>  #else
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index e772aae71843..0a55900842c8 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -44,6 +44,9 @@ enum {
+>  	/* dimm provider wants synchronous registration by __nvdimm_create() */
+>  	NDD_REGISTER_SYNC = 8,
+>  
+> +	/* dimm supports region labels (LSA Format 2.1) */
+> +	NDD_CXL_LABEL = 9,
+> +
+>  	/* need to set a limit somewhere, but yes, this is likely overkill */
+>  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
+>  	ND_CMD_MAX_ELEM = 5,
+
