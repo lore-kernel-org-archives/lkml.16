@@ -1,173 +1,164 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013033.outbound.protection.outlook.com [40.107.162.33])
+Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DF0801;
-	Fri, 20 Jun 2025 03:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750389350; cv=fail; b=VAcNALgWxN1f3fuoPH1jrHqrW8/2JWfUeVy6ZBVSpYYAEPA+mXgUQg3nECpsQ3hVws16cEwj0a22J4zUlZ4fPuNE7SXMAXPVRxTYov9TFAcPN4YKvxIFpvqmo1o49kmU6jupzqnrxIyTP6aizVEgSCeL7nh6wb8Uc/vtIZpNlMk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750389350; c=relaxed/simple;
-	bh=ckOmEssfbEmT0p27j+5bh9DDX2sWI5EKmBG9ky5/gQE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=B8m31BEGuXNJDkJWZZCIdwXyLfnPwnEZOZJQWZ1adL7JgNZyFGXO1+bmstL4xsdWLp1zh4IsKyOHDwbhUYc4i7tmbpS4IfmjkWUZDuw0BRzFX72fTSjhx9C+YSydW7Iyz/y+lMD4im0tZdIpZb4R7Q9Q7BbrkRr8BVvKi1ZPNUc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BT/xQCmN; arc=fail smtp.client-ip=40.107.162.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF058801
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750389368; cv=none; b=Kvrbxob/fHY/U/sJng10k9pO5HOPmJqU//TTTbiO6F28RGNHB2ArBHqvAZRdW2COD+iqPA1bCXsx632uyyb+v2gk7rxrp0QcK9gptim3RbDAts/OzXx07vFONbZ3yR99pLV6UXiKuRaQ+kKjcDXge+QyiOF0aiZyKGOKCkD0x6M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750389368; c=relaxed/simple;
+	bh=O2GvBgg/BxYhZTydzvibsdx6k/2knZD4ueSDzAgPU9A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ag6AuA/QsZxxDHw0tUuciDXUzqM1q2AxCAk5Y12PMQBDXAV4EV1SoFrg6tSuimJkkrPzjCr1lsEwda0AEmXW+dSex8kBjHL3EoK/fXHdNKyIJpG1dzt7eXmxHc7gGx/Itn2nR6oYj/IYFRqIf9AV4GbIoH0703aEo/f6XqS2wOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=Cs6G+hpC; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=KRB4Yd3X; arc=none smtp.client-ip=210.171.160.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BT/xQCmN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vsmSqUQ3omYzy6/zqkXwxuHQNznzTT3GW65isqc3XExaQL0rIZJMIt9BHBf4UEnjyMCiUlfJLNscQW8GIBXEgwBVXTrN5vMpbSLOvlrFJLPWtLG5htJBTjI+qF59rtVUnQbUOaH2SHutgMToj9tB5od/I4M4ABcDQNyoLsbbkV1YdGCXQ/knsXVMBqjx/UzvvMF3TjyK9Vobbc1oc8WIiAw+LbWHhBibNhM56jimdz3P114eixu+aI8YLjdRVVMqhUJU4tXRHfICEPVGeq8F2kofNNEk3P8j1oUjqh/adYRtkKR8uWPRCC+fXb8X7whgQEezkzkIEkCQ8S+9Hzh6Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3/DX3Q9EYi4KMa8NNWzr4ViYm4Mk+zZZmk7itgClLsQ=;
- b=yOV5e/hJ/w0WlNuGggpds2WOcY5ctoOOLqv0vu9Ehl27ntI/KVnVK71ib6iztKpCvwh1GKnOXq48ggXI1WqvWuThenqFcJqWZoDrImw1BpHqgEivROvVnL0qP4MD1KRyNMca3rRhJBfTk07f2Q/PS7tpVG3amZQrxugDFLwJhG9URtc3TF/z+lg+GQlyXj1DPSlXnI4QAUJIp0yWuomraWH0/iIgAFjn9nqNrQQfSkyTZ3YuwzdEbLxni5TpHLbeKFz6SjP56/I+I8ermK4r7IJQEYRp3fPXZ/xla3GiL6JElYUIXSeFckfyX71H5clIyEn/woeWiIf/g5xGaGxuNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3/DX3Q9EYi4KMa8NNWzr4ViYm4Mk+zZZmk7itgClLsQ=;
- b=BT/xQCmNJ/3F4Dfr0wmlVhhVph15+5sV1M47LkkkoJCWFNqCc8RrR+hXBdcdb5JOTs0ON+WqTohQS3iQ70f/XtSoOXHNFkHTNNcVT79ZYZbUtTZ1ORwmUkS54usL+T0EarXCc3ovEu9/D2ffPB9o2K7w2rNZ1Su25Rk8fwqbDFf0YzF6F1CB8527r3Pf/544AyQ1x9w1uJmznUq9Ebog1/YGLiA+EqM5tLaKteXd+dh1tr6de/jsdhMqTMZksGQH65u5EeD7iFkpMMgBVky99QQp73zLz1OpL2IYNbW8k1MQWqe/LNQA4Ufhx4+/c1S74NugZKY7BMktg1yCzRQf8g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AM8PR04MB7875.eurprd04.prod.outlook.com (2603:10a6:20b:236::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.35; Fri, 20 Jun
- 2025 03:15:46 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
- 03:15:46 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] PCI: imx6: Add external reference clock mode support
-Date: Fri, 20 Jun 2025 11:13:48 +0800
-Message-Id: <20250620031350.674442-1-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0175.apcprd04.prod.outlook.com
- (2603:1096:4:14::13) To AS8PR04MB8676.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::10)
+	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="Cs6G+hpC";
+	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="KRB4Yd3X"
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+	by mail.parknet.co.jp (Postfix) with ESMTPSA id 9A38E26F75D5;
+	Fri, 20 Jun 2025 12:16:01 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114; t=1750389361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lIT+A3Ph7WWNHmUmXCYqK/z9hZmbl30OP3CAfbAILAo=;
+	b=Cs6G+hpCngjQibUcMvGhq4nhxa8WyNCTrpv/fXFJMFmBT1SbLKD692Tp/N4nDe3B7FH+t2
+	VgMlrRpa0F+xMFbDpOkBUFIz8Ubg6x8ydxY484GYCxAews3PCVRBgOC3Ieaxpo4tJRbdwl
+	tsLe8VtGkIH/qzm3tClYmqDGFoH05a6bwtZR9DHtvoDpU7XrBB5fYBuzOHUPtJmmtLHRmV
+	4Ytl1aUH9Uk6xNIi9aNv8Dld9qMc+85Mm4BQBIOFHHC8b6GAgkx6ZtalexsK3DI1tqvod/
+	cpeQq07RjgwKzQDXauxQiRUtPgtQH4nq2KdITqldSTmvVLPoWBfHGpGm+6CuRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114-ed25519; t=1750389361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lIT+A3Ph7WWNHmUmXCYqK/z9hZmbl30OP3CAfbAILAo=;
+	b=KRB4Yd3XBAYdBQ+0uAr+BEFTGapXvRN6F3esGVC+eKOqMUBZ+cUrUUDLTaSBOxJFxeAU0p
+	HclfnHrOch+bVTBg==
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 55K3G0ro013301
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 12:16:01 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 55K3G0jf040331
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 12:16:00 +0900
+Received: (from hirofumi@localhost)
+	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 55K3FxZK040330;
+	Fri, 20 Jun 2025 12:15:59 +0900
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Li Chen <me@linux.beauty>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] fs: fat: Prevent fsfuzzer from dominating the console
+In-Reply-To: <20250620020231.9292-1-me@linux.beauty>
+References: <20250620020231.9292-1-me@linux.beauty>
+Date: Fri, 20 Jun 2025 12:15:59 +0900
+Message-ID: <87a563w1ao.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|AM8PR04MB7875:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fd91d2b-b22f-4f12-0c40-08ddafa8bf76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|7416014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VDXtv6cAN04pk/jnvUNEMPBs1dUGj2dkaA/jQ69c/yzXuQ8GcpuoblY3N5pm?=
- =?us-ascii?Q?iwFJuwRuFmZXS6CwxkSqHPu1HlqjknTfnp3BHklz87R5a+aQ3IDnmsL5FdGo?=
- =?us-ascii?Q?4TB3EvIwNivsCsvHuRBGbYzhyxCmC+fLArF0UmUX63j7sZhf3PSyUTHjgYGJ?=
- =?us-ascii?Q?B4kOZE9ZOXzVF09y0SC2nDkh5bS6SfPaWlzXscLgDG70iBjcziuJUQshgXXG?=
- =?us-ascii?Q?ajy1wFosOVzDPH+I8AHKUOgtFdK7tAMZJCnLQ14hMaOR/CRY9R4VMRLYVJ9P?=
- =?us-ascii?Q?JySXydiu7+VUguFlupw+Kvdjb9tgZ5FbkRxo1/klXz308fUclnyn9GoL9r7/?=
- =?us-ascii?Q?EUsN/SeOedXFjnKTEiPjny/nmtcFl0e1PeDsQXuzYYAC3KymRYm+aFEaGAXH?=
- =?us-ascii?Q?iCYTkUQNqIf0+Wm523ogQakKkQ2qXHSC4v5H3iphGQVV4GSy5XrtiBMZXkAb?=
- =?us-ascii?Q?Y/geS84ahLhY7Jns53Y+SQmdfN+UGcX/B5mEeBA/5ECp/3/pU/s4SQSlze+h?=
- =?us-ascii?Q?VXdE9SRjIZxTWUhZWZLvkpzQuf2TL+GnPG10EcZLjNdNQ5o78kHwYkiAeENl?=
- =?us-ascii?Q?6QU7BJSUNOCN+mzJEZkLDMEwXmQCr8CMST1Fw/AHXkPKAuZoPJ2FvGmrpc0Y?=
- =?us-ascii?Q?PI8VR7UIfc38LxKw7fz+6sT/1i9Eprp0deqwqAW41tc3/kiFGt27K5MnmyOl?=
- =?us-ascii?Q?M2lCNEw05b6iwLt56SSHCG6Lv1ENUGefo/7uHuEWgXgoVc6pzh4wYCOkGD12?=
- =?us-ascii?Q?RTxb+qRp+fu7+864fFPhf5f6txQwZwDdNYsUS9PtumnaHLKs4VtmAn+SWCun?=
- =?us-ascii?Q?CYQCeiQhc0uBdm+9u21kZXmFIn/7pU6Mspwk9aNrzIvpSbpEz6K1rrvRPGUV?=
- =?us-ascii?Q?yV/U+/iIDi0WcdK6rbSQIJq+ILUFadGXVa8PpVT2AVvtp5EoI+k99gVA0ZT1?=
- =?us-ascii?Q?2xFkOXQLCi01pJ9t0oD3QMVpkxLEwe5Wg76P0vW9KzllEMBZtgyIitfDHfZF?=
- =?us-ascii?Q?FHEwDTQ7oCEQ+AJoIhl+jfBEB6TpXZlmhTs8h1qPg8zMClND3jBy2fg0k65W?=
- =?us-ascii?Q?0qoDnJJRms8FjZLbgN4+rgQ3y3nWrZqjWnEp2u0t+uUhvj3Mcziu9JCi+CIH?=
- =?us-ascii?Q?0WGyyqXFLwJiUrcqNludGSB4A30G0r6D+d/oPoKtowg2e55HNsPocDcE6ZYY?=
- =?us-ascii?Q?5BmmxFUjpAR4+z0X3xu134IOSZEexsNBo+7oAgIaTjJXWRM+O7y5t4vByoWo?=
- =?us-ascii?Q?gFeR/eK+NLFSluC7B4iLiohNK0/fc+CYO13XamD4RvSOD97vBLuFdeYoesB2?=
- =?us-ascii?Q?hcoMPnUto6HxIbyY8im0YDo2I7hl3rfC7fd5FHJmNy9NWpHeluPVF9ist/rV?=
- =?us-ascii?Q?C5vl/Y9isOpdpa3AqU9fZtpyH/HCm3bzyA/Gx071TUzg/0FEmCe4HS4ZLjuz?=
- =?us-ascii?Q?lGhwowrFtCT6nxlHGEjrn+y/OC48RtyHiqGzOfprCsLopPmBS0I/+wB/aaO9?=
- =?us-ascii?Q?sZ+aWA+Ev6/kbrY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(7416014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EYkifc83sgiqgRe+Hpuk9HC3sCsnLmSmBZtOuLtR6p8KK9ggUM5yFbuvxtGI?=
- =?us-ascii?Q?XO7QMCs6GLqlNBZ8NllIQPTSGTDX8zs3q2YGuUmcJPiYlJ8lTNlhCvVb0cu5?=
- =?us-ascii?Q?QV4mOLbMNajvuL238AjJ9VdZoVbJNUgsIrSMUKoBgfdBI+0M4HJn0gI/0r/Y?=
- =?us-ascii?Q?ubs8ICasbV0AMqdVBRdlKx+BtpkNvwMLqJfb1zVfP9msypYF90ZM37+GVUCX?=
- =?us-ascii?Q?RB+Ofwwzn0+v3pimdVPQMd4jnf7zEzp6ZjVnlIrqLzXEIZ6xa7LowtKcZ0J1?=
- =?us-ascii?Q?lMfBt0eG/+UHqAjfaua9QE/PSzqv8f0aB78rILoI15ptXJuUT+J3h+kX/5eO?=
- =?us-ascii?Q?z1JT86g1bCyyoRZnnlpStJLWRBO9SJV+oqdaRTFHLN+pUm18a1Co2glD7TbT?=
- =?us-ascii?Q?0He6S/4a3WSW+xoWOcUmaP4GpyVOy6J02hmrioQx8oTwv4roUFKTWZYTFnJz?=
- =?us-ascii?Q?SYMmjEO3xPDAv4j1OUh28MB67N86B195Iu6PrQ9R5rxy21uOlVfqqdqYhCI+?=
- =?us-ascii?Q?Jgt8ly2+Vg3hMZJoIdHd3g4tbcppDkJiHZAdX3/PthGhKRrVO9oLHEF3af1j?=
- =?us-ascii?Q?+sEp4xsUxkRkHeknspaiOlM237TP2jpd/ObGCDHXk6J542j5vtaIWoVBq7Xd?=
- =?us-ascii?Q?yL5UFlksFqbKs/q9Fy4fHdP2OY4aLU4eeYYvNqFeTXYyzcIlv0JwM+iVfVJp?=
- =?us-ascii?Q?Yiwh2c1/c5EQKlatXQCvq5IUpk6hvpYFvXzeity747qIVSbFDEVYA1FizIUG?=
- =?us-ascii?Q?hc3KY4aomTx/pSopVPf3bkoJl/ACWpwYkTDMCReZYFqE+pstKH5wPssaCBe2?=
- =?us-ascii?Q?rhybtC7k7wzsKqv2JZ6KygGJIHUKtGGCDQzH9CW4Og/id/ZK/XiNqlwSsDxM?=
- =?us-ascii?Q?6Pz0bB494CSMo7xYb5HXJ+qPyZFDmBtck/UO9kzfF7dJ348em/g12mZzLVJs?=
- =?us-ascii?Q?FnAKsh+g85pTYCN33LpSVPw0ElEycezU21upuwbOziEzRK7Ivrrz83coIeLe?=
- =?us-ascii?Q?veUjdLeu5xTmxCoVDFwxZ9IQ66ExLFrxCMWn3SivsCvFIx6rHbNINJ1qgE/r?=
- =?us-ascii?Q?iiUEClqgL6JZs9xJheK46VQwDifQ3W3UhPNTd9Ij6FhMN/i03lL+5nZkSQxC?=
- =?us-ascii?Q?tuiJtQAW8CdSTVcngT00xbcvCjNiNjweheYaxoBChoU4v2FWD76jKlf45KRD?=
- =?us-ascii?Q?Uz0iTYNNFQ3LA4QPjixpLSsLSNJOA05wfAaBQpKPRKWcD410/iatouEEVRHC?=
- =?us-ascii?Q?KowP+EdfE5DhO8/LLtU2I20fvcGL/u3EdG3bGwPpdo91SNOJL0t9SV8oBXJm?=
- =?us-ascii?Q?5T8RCJYO1QCFccQeeBm7aUQHHi0IxLdzzzT6AqPKX3Sg5tjgwmbZyCCkFrN3?=
- =?us-ascii?Q?RgXu3PwibKXQ2ZSLWCZ5wf2iQZME3wEECkR+a8a943A1IefGSrOtTBkf6Twh?=
- =?us-ascii?Q?/KLnePai5YeftL+B2f/C2WDKY+EEvbDLgOkjkHzGmDdwetArFY2v2PYBbkzt?=
- =?us-ascii?Q?AhbkkgzhJJbcbp9WarKpCaIYLuxG8KLqHo0R4mAzcw0WDXBNdO02mHvVtJuj?=
- =?us-ascii?Q?FlJgyjQbWYUvgnKSoKU9aCYTITqhepAXLPlUBtA/?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fd91d2b-b22f-4f12-0c40-08ddafa8bf76
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 03:15:46.2356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rH9v+/NKKtri6RFeVofCzC/Ugnlv3fHjBLMR2J83LYk3vnUo6bj+euYSDxKc7c9bBY2Wh29fbDcuEtSL72M/Zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7875
+Content-Type: text/plain
 
-On i.MX, the PCIe reference clock might come from either internal system
-PLL or external clock source. Add the external reference clock source
-for reference clock.
+Li Chen <me@linux.beauty> writes:
 
-Main change in v3:
-- Update the logic check external reference clock mode is enabled or
-  not in driver codes.
+> From: Li Chen <chenl311@chinatelecom.cn>
+>
+> fsfuzzer may make many invalid access for FAT-fs and generate many kmsg
+> like "FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)".
+>
+> For platforms & os that enables hardware serial device whose speed are
+> slow, this may cause softlockup easily.
+>
+> So let's ratelimit the error log.
+>
+> The log as below:
+> [11916.242560] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.254485] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.266388] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.278287] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.290180] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.302068] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.313962] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.325848] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.337732] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.349619] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.361505] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.373391] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.385272] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.397144] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.409025] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.420909] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.432791] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.444674] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.456558] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.468446] FAT-fs (loop2): error, invalid access to FAT (entry 0x00000ccb)
+> [11916.480352] watchdog: BUG: soft lockup - CPU#58 stuck for 26s! [cat:2446035]
+> [11916.480357] Modules linked in: ...
+> [11916.480503] CPU: 58 PID: 2446035 Comm: cat Kdump: loaded Tainted: ...
+> [11916.480508] Hardware name: vclusters VSFT5000 B/VSFT5000 B, BIOS ...
+> [11916.480510] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [11916.480513] pc : console_emit_next_record+0x1b4/0x288
+> [11916.480524] lr : console_emit_next_record+0x1ac/0x288
+> [11916.480525] sp : ffff80009bcdae90
+> [11916.480527] x29: ffff80009bcdaec0 x28: ffff800082513810 x27: 0000000000000001
+> [11916.480530] x26: 0000000000000001 x25: ffff800081f66000 x24: 0000000000000000
+> [11916.480533] x23: 0000000000000000 x22: ffff80009bcdaf8f x21: 0000000000000001
+> [11916.480535] x20: 0000000000000000 x19: ffff800082513810 x18: ffffffffffffffff
+> [11916.480538] x17: 0000000000000002 x16: 0000000000000001 x15: ffff80009bcdab30
+> [11916.480541] x14: 0000000000000000 x13: 205d353330363434 x12: 32545b5d36343438
+> [11916.480543] x11: 652820544146206f x10: 7420737365636361 x9 : ffff800080159a6c
+> [11916.480546] x8 : 69202c726f727265 x7 : 545b5d3634343836 x6 : 342e36313931315b
+> [11916.480549] x5 : ffff800082513a01 x4 : ffff80009bcdad31 x3 : 0000000000000000
+> [11916.480551] x2 : 00000000ffffffff x1 : 0000000001b9b000 x0 : ffff8000836cef00
+> [11916.480554] Call trace:
+> [11916.480557]  console_emit_next_record+0x1b4/0x288
+> [11916.480560]  console_flush_all+0xcc/0x190
+> [11916.480563]  console_unlock+0x78/0x138
+> [11916.480565]  vprintk_emit+0x1c4/0x210
+> [11916.480568]  vprintk_default+0x40/0x58
+> [11916.480570]  vprintk+0x84/0xc8
+> [11916.480572]  _printk+0x68/0xa0
+> [11916.480578]  _fat_msg+0x6c/0xa0 [fat]
+> [11916.480593]  __fat_fs_error+0xf8/0x118 [fat]
+> [11916.480601]  fat_ent_read+0x164/0x238 [fat]
+> [11916.480609]  fat_get_cluster+0x180/0x2c8 [fat]
+> [11916.480617]  fat_get_mapped_cluster+0xb8/0x170 [fat]
+>
+> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
 
-Main change in v2:
-- Fix yamllint warning.
-- Refine the driver codes.
+Looks good.
 
-[PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
-[PATCH v3 2/2] PCI: imx6: Add external reference clock mode support
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml |  7 ++++++-
-drivers/pci/controller/dwc/pci-imx6.c                     | 20 +++++++++++++-------
-2 files changed, 19 insertions(+), 8 deletions(-)
+Thanks.
 
+> ---
+> Changelog:
+> v2: use fat_fs_error_ratelimit instead as suggested by OGAWA Hirofumi
+>
+>  fs/fat/fatent.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+> index 1db348f8f887a..a7061c2ad8e4d 100644
+> --- a/fs/fat/fatent.c
+> +++ b/fs/fat/fatent.c
+> @@ -356,7 +356,7 @@ int fat_ent_read(struct inode *inode, struct fat_entry *fatent, int entry)
+>  
+>  	if (!fat_valid_entry(sbi, entry)) {
+>  		fatent_brelse(fatent);
+> -		fat_fs_error(sb, "invalid access to FAT (entry 0x%08x)", entry);
+> +		fat_fs_error_ratelimit(sb, "invalid access to FAT (entry 0x%08x)", entry);
+>  		return -EIO;
+>  	}
 
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
