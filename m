@@ -1,76 +1,96 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E155A2F2E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9430763CF;
+	Fri, 20 Jun 2025 01:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750381388; cv=none; b=JCDyfaj7+yv8Hup+eILxfrjVB35W7tKcMRTDqtE7PkLUriz0UryXVQx7/EgE4W99DnAhMHbbhODehNBsPYlLXKlccf6FmOXqMf7FpLhEAnR8hpEhs1QCCgvi+oPLJkqDVVSnoGc5kFCfSlQheMfhq1YC+jx/RYB0iLwVzOxJbn0=
+	t=1750381472; cv=none; b=sppGvoo9ReeTscjtIzQDIklkZ/7rRhJTyrmJvjWs1sX1dpnvHQQcD0Z1KXtS1oET/f/tocWipdmKBbCVd81jbJ16eT1knjC/shs9gUJtw84R4W/qNUFNlLi0Dbt5pbxi/jJvvWeDRWMCLYT3fBDwQ9uVLPDOB04+6HiRvv6qI3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750381388; c=relaxed/simple;
-	bh=2c/vJaW+171fgL3caWJoyLPvSgz/ccsa48tvrkMMnp8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kFXTLLVjfXOGgZ+Ttclwg4m3qegvn0wOHy+dA+g+Gg1+xmGf3gx7YEVGX+2OUxjcVwwND2OM+4NsvXXR9mFjro8k5KS7po2nlUdzQq7+VGA7jcmdH3qEX1c8/yamwCn8RVx8TzdJOiTFpe6Cebt0dd6FDt7HcwmOY4YMM8u2bhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cf306fc68so231113839f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 18:03:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750381385; x=1750986185;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5J7ba5hUuqmYXm8j+n1MWcxRGCM+HuokHSDcxyja/Y=;
-        b=bjYPxn6BCIQfcKcOuohJUTjPM6XbcFwl2pnjt+f2Xv9nIpxAlK114PjT2WniqlC8va
-         X0qOgqRY4VfQJsHYd96baYvX9aFqRv3njIMRDBIn5PjepWqkponpv7vw5P6ppYEfrB8m
-         pg74A4ZQqHOk1D45a5SHvupYq1u8XAqJJu5AEFyMr3a/P37e70inhMzUoMdZu1StUg54
-         1K1VxIDR4SJ5WUC5BR+FW3gSWKGyp/SJS4YtrfwDKAag8FoirixPDlUjQtVPs2DnxbKm
-         1U4NQVQG6tFYHdM+uI20dP65/UyZvhBQEyWm3psotC/Q0Eo+i/44Lopms+gH7JcepqCh
-         2wYw==
-X-Gm-Message-State: AOJu0YzU+R1sxvBuedFJT/5tbyVJZTZunUE+cwr+iA59MukdcUAJeUjX
-	6Dx9B2m6cTPJ+rsOq0qPBFwf0AoTan+d3C6mQyznllxu7TYvD93MtohUdxC2y3jKlkrOZo8/eWW
-	Kx9aPHQeYtAym55nTFnNiL3gaU3ipPdpItfcLSbDyDg5Py8KHLR0ENuD2RiI=
-X-Google-Smtp-Source: AGHT+IHarrBpz7y9uocpwIiM/HI9cpo4+GPRjHYg/LWC5CDY4O+2/6rbhwmuwC0q/7DZzqZ0jrTMAwABW/+lZGMc83QYPUT0TUXh
+	s=arc-20240116; t=1750381472; c=relaxed/simple;
+	bh=1RU9OFwdAOgI84I9GEHqAphNSYKWAXhPW6s13EAF1Vs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RkE47B2yV31BDTGhU77tl748RznVx/9r1kdzs5WXJhtdqcicnhy2nYrYpYnTdmIhvITuOiM7Yo76epJBTRryZUufCHNFoN+kVRpJQAgx5G//05sWfzplLNIToGCIbNJEyBif+cvpgLrBZkw+xyS58W4T508UqLkNAsUsJZBAz4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S2aHwtrP; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S2aHwtrP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=8/
+	2XLIJnNinS9+K18/3lu/lVK35HJN1wS4il3Erb/Fo=; b=S2aHwtrPdIB5hr7uA+
+	v2AOZf1lXUj73jKH/JRl7oJY9VIaz2wpvyfFIMUmQZehwkTlMBKHiSlgPivcRpma
+	oXoLMXd9J1QyUMbOaOqh1FJa//L9Rr8dAOaM+QvjwA6ij+MCZLnUTueve4Cpjaw5
+	A/oJpP6S/wFYOzt+bs5/foHUY=
+Received: from 163.com (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgAHrIF3s1Ro7thPAQ--.27905S2;
+	Fri, 20 Jun 2025 09:03:53 +0800 (CST)
+From: chenyuan <chenyuan_fl@163.com>
+To: linus.walleij@linaro.org,
+	wens@csie.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	chenyuan_fl@163.com,
+	chenyuan <chenyuan@kylinos.cn>
+Subject: [PATCH] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
+Date: Fri, 20 Jun 2025 09:03:45 +0800
+Message-Id: <20250620010345.11247-1-chenyuan_fl@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:221e:b0:3dd:d6c0:cccd with SMTP id
- e9e14a558f8ab-3de38ca54bemr9316705ab.13.1750381385093; Thu, 19 Jun 2025
- 18:03:05 -0700 (PDT)
-Date: Thu, 19 Jun 2025 18:03:05 -0700
-In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6854b349.a00a0220.137b3.0026.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
- vmci_host_unlocked_ioctl (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgAHrIF3s1Ro7thPAQ--.27905S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw45KF45JF17Xr1UGF48JFb_yoW8Xryxpa
+	yfGry5Ar4rJF4Sg3yay398ZFy3Gan7J3y5G3Wj934Yvrn8Arn8Xr15KFWjyw4DCrWrXr1S
+	vF4DA3429r1DA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEL0e9UUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiUQxyvWhUp3X19gAAs-
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+From: chenyuan <chenyuan@kylinos.cn>
 
-***
+In sunxi_pctrl_dt_node_to_map(), when krealloc() fails to resize the pinctrl_map
+array, the function returns -ENOMEM directly without freeing the previously
+allocated *map buffer. This results in a memory leak of the original kmalloc_array
+allocation.
 
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
-Author: lizhi.xu@windriver.com
+Fix: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
+Signed-off-by: chenyuan <chenyuan@kylinos.cn>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-#syz test
-
-diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
-index f22b44827e92..fe0f18a0fb63 100644
---- a/drivers/misc/vmw_vmci/vmci_context.c
-+++ b/drivers/misc/vmw_vmci/vmci_context.c
-@@ -314,7 +314,7 @@ int vmci_ctx_enqueue_datagram(u32 cid, struct vmci_datagram *dg)
- 	}
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index bf8612d72daa..d63859a2a64e 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -408,6 +408,7 @@ static int sunxi_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	const char *function, *pin_prop;
+ 	const char *group;
+ 	int ret, npins, nmaps, configlen = 0, i = 0;
++	struct pinctrl_map *new_map;
  
- 	/* Allocate guest call entry and add it to the target VM's queue. */
--	dq_entry = kmalloc(sizeof(*dq_entry), GFP_KERNEL);
-+	dq_entry = kzalloc(sizeof(*dq_entry), GFP_KERNEL);
- 	if (dq_entry == NULL) {
- 		pr_warn("Failed to allocate memory for datagram\n");
- 		vmci_ctx_put(context);
+ 	*map = NULL;
+ 	*num_maps = 0;
+@@ -482,9 +483,13 @@ static int sunxi_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	 * We know have the number of maps we need, we can resize our
+ 	 * map array
+ 	 */
+-	*map = krealloc(*map, i * sizeof(struct pinctrl_map), GFP_KERNEL);
+-	if (!*map)
+-		return -ENOMEM;
++	new_map = krealloc(*map, i * sizeof(struct pinctrl_map), GFP_KERNEL);
++	if (!new_map) {
++		ret = -ENOMEM;
++		goto err_free_map;
++	}
++
++	*map = new_map;
+ 
+ 	return 0;
+ 
+-- 
+2.25.1
+
