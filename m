@@ -1,128 +1,107 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D12137E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC7F231852;
+	Fri, 20 Jun 2025 21:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750454526; cv=none; b=SIQnpIx1ihXscikAoZ/LdontYNel7zdMYHcQwXdTPt6Brih/2hsICFeO+nij4ehqQhM3vkbNWHADYkcVXCXQeCqpCXGUgHrYE97Gyxn+faqBXnEqt/vaLK48QEOgXp1qQrxdtMYOBFlA8n1QDHh9uqVqCZW8I1Y+sydF2pmlSYY=
+	t=1750454547; cv=none; b=NCTw2UGVyqgMowNvje37gc53OPi+A4B+mMc4MExnFMPPyh21i7kX8F5wbO3gYDjRQZzqPeTYVOvUjOXLiG2F1KLwvQLpe3OcV3ChZGUOQG6iIB2Mq8P7AFYx5KExVRft22JX3O7U5EVWNSd6V0vj1kZ7utZBE8ugq2EHghXWP5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750454526; c=relaxed/simple;
-	bh=L1ecn8Y9NOV83HEMfX3X19e8U2tPunQpsGM2rhiinNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GWTTgb47IwqQa+z2tH09FSBIWsmsnoy4yaarCWgN6eOp/17+FHPjmJyMuikPinJSQr1yLSCX/z3oJV4XrlHyfnxZVnHouk/WgneA+o5/QfoHjpCBwhuKsuIHuof9LQaeMv+Zz++KfJxkmR3hAyX7KgVu7xdspMmujbVT1HZVCl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j7P5cShV; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750454547; c=relaxed/simple;
+	bh=dV3Jy9NnYhxv9pwS57266rWpyqIu2BA9UUDcU6w3+3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ARcq5AX6N5NGeiQEHFGvmhN8ACeYGp16Qqc4ZthfEZL9PET7pei3eOmlqHPBi9W3JzsR1vRujWmXgceOk4BmBgL2svlkWXYk9R2ixIHSviqFyTkKS9KSnbaNkKBq9xVJeh5ttM5hMpyW/KB1kKfSa0+ZZI746f62SzNkWp9fnrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UR1JBimV; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j7P5cShV"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2357c61cda7so14695ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:22:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR1JBimV"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e8276224c65so2498716276.0;
+        Fri, 20 Jun 2025 14:22:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750454525; x=1751059325; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kZ6fyBYRwb8NLMCE1iyqV7/OmIfJzXWHP/9vAp5jm8A=;
-        b=j7P5cShVvbivwBQtDRjcF1ouVUI0aA9BFqEc6PkFGCRRVKJ2l+ChIE7b0gcrEPGrZs
-         lAKSQvJlrwk7Xc/zSPvev0/vd0xas9zgVJdAX2+rCedtGMRsNnRVXyAAJtlq/wdTdmUd
-         iZMduikgX0cXsa4+JTT2qkufzmk1xq1bXlStvjGKQTC9tjoElZz4rvXiqGa7xB27kzea
-         yZxfM2c0VRcKJk/CGORJ66ey7uPUYuLHrW6d5+AEGLViF37MI5SrSbMp56P4zC7IZxEH
-         +K07ArIarng3o73yMYqvis0ws9MnuuQVuLPX7IZPgboGkr0ppv6EbyjvNf1BThMyuSSM
-         m2pA==
+        d=gmail.com; s=20230601; t=1750454545; x=1751059345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vxkVpxASpJDNQW3tOLs5qKIfpGXFz7KzoPzNyvaDxSs=;
+        b=UR1JBimVjVXxBEEiagseOKsxDNibcNmT7mEOOx4sLK6OAVdIovieu3ygdcEipzzNeR
+         qgQXslXpXO/nlfFu10x6k/xK7Vjbui8mMoEuCfgno1N4rFCZToRz0uy13K1UJ3qGQUs3
+         N3thNPbNJMh06VelubAOUO3ty15MX7COQDG8p2v//vD2AQJ1Uuch2UWWgyqNkIfwfn35
+         0amXiq0Z8JllF9K32TTvBPCDbFDb8N719cAG2VlNYUbJNf6MHFYO7lUWM0z8Q1N8r5VW
+         bDGrADIKOxrnMaRlzHbM2H2+k2vT2/z5JngOMgJO9waA7wcKU5fCoajaAL5y9fUJPwg8
+         LtJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750454525; x=1751059325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kZ6fyBYRwb8NLMCE1iyqV7/OmIfJzXWHP/9vAp5jm8A=;
-        b=XofSorrbgIZ6H/zLC0Sxrp4d/UHErGfyLgHOnA0LpbhcyXOk+1lB/789fNU0AbbhOt
-         wdteC84v6s+mzVIWAZCXwx0MybvKD3hisLIyFarjLfgpl7oJ7M7yrwHIP0RbnVtHj086
-         YEIrSA+mwpkRciEdY1vCp3hc1Nw/Sd/3ukAchivauQl+NgjZA0Iv83N0jpdyDhLNYQyj
-         Ff7nBc9D7zqbZCZVGt/AzPU+s/uGZvHXgzuRE9gdR6vr2Z22gcGtE+K2oE5EB34Eyaf9
-         x2v2mqR+/6ldPbMdClscy8fJh0C3HqGD6KjtN1RMFCRJ6m52xvwIDFn+r3CQ6R6jXJUb
-         8pTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWi1FSd2sm4Misav+pLXmtrkwNSHnxnf0zDksJHQM6EMpyiyY14K4W2ZOWDN5nZtOk3uMzSYahD0Pcumh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3ft8QlMGH8bgyKh7wuIj8YeMCQXrdRPNZO8LebGeq8+/E/o34
-	ShAWyS2IruDhsQeEQWzMV9YDYFlzjpjYRYJe+bPF/xqgzdErk6XDZ6FK24egMFsOyeaURlSGWBO
-	D0ryZu+q/85Fx5kD2MufUMB18EmitvGMNBvjT2PrC
-X-Gm-Gg: ASbGnctumjB8qMCKvUkwSeimBUwGcno90cBDt5S/1/t63J9KigUtkJ4bvj7AkK9UTVb
-	Daj0xi19/PxMup3JIuIMShjzYclGE/j5/kIXVtFQ63Ux22AoPLB1Zq7eSYqlTE7qcUQrmbzzwXe
-	ftFynoTGK3hXtA/7DlGWUrpK47YDRe52Zgbho2zs5TfcThjNs97S/n1yT2VUvjafLTTS41S4r2M
-	w==
-X-Google-Smtp-Source: AGHT+IEhAijABev1ooBQkfRNbIkjNR/9RBhG89GC15CaC3tPY3bPJX4Y4pXZGCjBMtcu+SC/ixfrv8JPQEVVGpYgLC8=
-X-Received: by 2002:a17:902:d4c2:b0:235:e8da:8e1 with SMTP id
- d9443c01a7336-237e481577amr762195ad.18.1750454524367; Fri, 20 Jun 2025
- 14:22:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750454545; x=1751059345;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vxkVpxASpJDNQW3tOLs5qKIfpGXFz7KzoPzNyvaDxSs=;
+        b=GeeZ3F2ubgIWeOrfLlxRTNSGPmmYliXTZqYAHI8AfZ5DYb+y7UlP81rtAqvYjET/D8
+         LYb6Zb27gGKJfJqmYL7Y3VStbAaswRZ0HjYp9GocKvjSxYr+TO9u9wy9uYEyXZaFxE+f
+         8rC1EJHGjzxHvJUpTHARHC1rnu0KBoewFWBEycL3kOYOtiQCZdtg2+R0RljsmbKhE/DM
+         OT1uiyNnKbuq4ciKgGH805LDNm+clRn8k15dpye8Crtua8Dsoy7UE9iBjo3BpGi15qUm
+         eMGe4a8CPtYABPRwMaPzqEEVsoMOtfQVZ4txmQ7PKpgDcDi78NlMbfn1AWSqZLbl9rzw
+         UkOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPVpnwNlhY/BWguyi6TDx0+kypMKRIs0yQL9uDA0b8xHyrJ2JoA2fd6YrIYu2eLuHi20obtDticmlw1qE=@vger.kernel.org, AJvYcCWKGKiXZ4GSG5pzpIgT2GgY+v5mKwlBd1fPm6ADJC3q12d5TyRZqb26JXm9/qJ+C7MMv26lsnP+wU9I5Qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx57BA5I3VpLA4W3nKSsaCFv2QfnEofkf1BptEF9tE1sITvDfS
+	fS9qRMwU0nk3SFEkDTnI58V1QZEt42YwFYxN0MIB2ufQl3t/KFoztIJ9
+X-Gm-Gg: ASbGnctcKGuYZDyCXoL/03P/leH7FVM68pPwOSNAeK6xAVa5LOHSumOiJvzgcotZomb
+	OrMtyKri0mQ9x1yTSk9hjkmHnT21bo24FWYOLxcMDyP4Cihu3rFuMh11gQoO0BbTAKdFLRb7fPd
+	Qzot/zmKqppErepP3kNXezpQd8Vo7zvkpgiKZdB8/FOwTryY/wU5XL6zN4QHuCQZiP6OT79vJc+
+	qZX5d3x7HRAKByDVZN4FQNFfY01B/V69YmxZTaB8kUe0EOikrJRhTHtdlykaZm+Tgd+ZjDzRcU0
+	EsyIewaVQZNbkb1/3GoV8Vx6H+ztn+h4SBT9ywN5TKPqBV+1KhexpTxh6PMW5Eg3+VC4A5hSZKW
+	e
+X-Google-Smtp-Source: AGHT+IEs4dDHr+MA34wrmGiZCnGhbnZSFLRHoLgIwtLun4PtPz4LB+7u9RKBzziDkVLaUgHJBH5clw==
+X-Received: by 2002:a05:6902:2081:b0:e82:12a2:dfc1 with SMTP id 3f1490d57ef6-e842bd3372emr5781504276.46.1750454544998;
+        Fri, 20 Jun 2025 14:22:24 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842aaf16b5sm857151276.16.2025.06.20.14.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 14:22:24 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-usb: dw2102: fix null-ptr-deref in dw3101_i2c_transfer
+Date: Fri, 20 Jun 2025 17:22:22 -0400
+Message-Id: <20250620212222.3204215-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611095158.19398-1-adrian.hunter@intel.com>
- <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
- <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
- <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
- <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
- <1cbf706a7daa837bb755188cf42869c5424f4a18.camel@intel.com>
-In-Reply-To: <1cbf706a7daa837bb755188cf42869c5424f4a18.camel@intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Fri, 20 Jun 2025 14:21:52 -0700
-X-Gm-Features: AX0GCFs9meOMY9_1Q9V3C3CdaLDIJcvn3mSwJRL8K7bYt2CzMsxYXXjpAvfDbXE
-Message-ID: <CAGtprH8+iz1GqgPhH3g8jGA3yqjJXUF7qu6W6TOhv0stsa5Ohg@mail.gmail.com>
-Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "Hunter, Adrian" <adrian.hunter@intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Gao, Chao" <chao.gao@intel.com>, "Huang, Kai" <kai.huang@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Chatre, Reinette" <reinette.chatre@intel.com>, 
-	"Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, 
-	"tony.lindgren@linux.intel.com" <tony.lindgren@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 11:59=E2=80=AFAM Edgecombe, Rick P
-<rick.p.edgecombe@intel.com> wrote:
->
-> On Fri, 2025-06-20 at 07:24 -0700, Sean Christopherson wrote:
-> > > The patch was tested with QEMU which AFAICT does not touch  memslots =
-when
-> > > shutting down.  Is there a reason to?
-> >
-> > In this case, the VMM process is not shutting down.  To emulate a reboo=
-t, the
-> > VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.
-> > Because guest_memfd takes a reference to "struct kvm", through memslot
-> > bindings, memslots need to be manually destroyed so that all references=
- are
-> > put and the VM is freed by the kernel.
->
-> Sorry if I'm being dumb, but why does it do this? It saves freeing/alloca=
-ting
-> the guestmemfd pages? Or the in-place data gets reused somehow?
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. We add check on
+msg.len to prevent crash.
 
-The goal is just to be able to reuse the same physical memory for the
-next boot of the guest. Freeing and faulting-in the same amount of
-memory is redundant and time-consuming for large VM sizes.
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
+fix null-ptr-deref in az6027_i2c_xfer()")
 
->
-> The series Vishal linked has some kind of SEV state transfer thing. How i=
-s it
-> intended to work for TDX?
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/usb/dvb-usb/dw2102.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The series[1] unblocks intrahost-migration [2] and reboot usecases.
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
+index 7c9d09d49da4..8f694d8d52bc 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -562,7 +562,10 @@ static int dw3101_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 		}
+ 		case(DW2102_RC_QUERY): {
+ 			u8 ibuf[2];
+-
++			if (msg[0].len < 2) {
++				ret = -EOPNOTSUPP;
++				goto unlock;
++			}
+ 			dw210x_op_rw(d->udev, 0xb8, 0, 0,
+ 				     ibuf, 2, DW210X_READ_MSG);
+ 			memcpy(msg[0].buf, ibuf, 2);
+-- 
+2.34.1
 
-[1] https://lore.kernel.org/lkml/cover.1747368092.git.afranji@google.com/#t
-[2] https://lore.kernel.org/lkml/cover.1749672978.git.afranji@google.com/#t
-
->
-> >   E.g. otherwise multiple reboots would manifest as memory leakds and
-> > eventually OOM the host.
->
-> This is in the case of future guestmemfd functionality? Or today?
-
-Intrahost-migration and guest reboot are important usecases for Google
-to support guest VM lifecycles.
