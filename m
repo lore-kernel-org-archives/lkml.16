@@ -1,96 +1,72 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DC62EA737;
-	Fri, 20 Jun 2025 18:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FB72DFF17
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443090; cv=none; b=lMknaz5k6m4NDolhICQ/S4dANO9dFDSiSH2QHRTL973ThoRM/zjRHqnQz7sPsElzqY47IGQHAf7zaPZqcpv8N6j/2fpnv7yfjQi0O0gNjTVCdZOCCF0BxbnOQNO08MLycdX64/tVpOyqZbhaafziNjsXLaI5SaZ5T1a60ZpezDw=
+	t=1750443110; cv=none; b=sGxmjJVhpJPRRD78O2TiUWKLY7DpWirjwrrtLbVJUymvT2MRpwsNdAKEOGBfRxpIb9gcfoAB2pfGaXRx0ekRD9rWUQcVVc3ZhG63QmJeeV3d5xw4u4+3U9YG7ryw8ddl3o6oSnAWyq+6OESz1XrpaYEk0vfRhk9EH4q4JiFoD1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443090; c=relaxed/simple;
-	bh=lSokGwWrTbP2w0Z66opvrz8zVvFcpyUebe8RxlTyZE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PmYwJ0I8ni7M6iWaMfsAQY57r9xkQino0h6K/L0YWzYhKEJpgcb0SOSkfWLGOu4E8C7RZUNQlU3BoH1esu+pQyL95gv/W2XBunoiY3RRTyIo9Vg1DPp5JcBIdD8wbzP51ZsTEnu7FtHY17idTiskLyqkF20DF8uhgTJPJoT+Tcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=gljf9ICt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pjqcciv+; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1750443110; c=relaxed/simple;
+	bh=S5W+2wzhOf70gLHouOcf3i1hTYAKPJZKpUoJye4dZ1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PN8gKKteZ4jnyHdKPXZmj92agUX227TAVu8VX/ITnvH0ooEdnDPO6ODyAeovInBYaZke2U21rphksbY1gLSPuXXnlxBjA0dECPx9tiFcQhLczx8oSnW0H2YTR8c57Lttlhiu4tnxEEsQ9Zw/cHgrjAGWn+gTMqUsknFo9an6hfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GfAaz1+j; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="gljf9ICt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pjqcciv+"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id 8CF3E1380452;
-	Fri, 20 Jun 2025 14:11:26 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Fri, 20 Jun 2025 14:11:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1750443086; x=
-	1750529486; bh=7Ykv1WdH4LN+2KFW44tucEmnHyrkAkxKCk4JhHN/PwA=; b=g
-	ljf9ICtn+X+z8zxwNDRDewHfl8ECDDVBVsq43S2FcVliq8K4Z50LTYM5DuJF/q9Q
-	Z5kvmjaHYd7QgWVQwev9X3blbxmtYIKSgb5sgLpQ4ccDgNHUvug+DTgpyDrrF3iP
-	fVLjdEtOOED0Q8zEGx46hveht3eZK2M4DzvfG9ykLVMSJP0yUrJSB5s7hqaqzIay
-	JquovmmNJwwJocdCE+p3ezpsm+5yXeMIi9VY1qOMtsXNTxqX+YneGfJ2AB3KtUYL
-	RVg1vTT+5FveGGvV3Y7Vxwjwoab6TnqO/9mUPcntxo0HnAjSP7C24bkaY4cQIw80
-	/3eM8IhFL4kEyGWzpn9IA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1750443086; x=1750529486; bh=7
-	Ykv1WdH4LN+2KFW44tucEmnHyrkAkxKCk4JhHN/PwA=; b=pjqcciv+lBW2Htzrp
-	PhK6WOlkPxS3Y+aCRwV3FE+A0anC5kWthJnQEexiAFCAnnHTrR8mcb8e7KkdaPLZ
-	oG0Ucun8Gs+xF6916w7OnGuVfXXVkHsNHFHzufCVKF6u5DtAsA0P7lOngAF9kYj+
-	/+KP6pXAtZ1INbYqgvO/qbo+3mPkFTl+daBTveyswVhdOKtmN8kHHg1GS3rte3eD
-	4htvSsWeXa1nqtPGw5tMDQrCG2r6FYs+uPr8K1X87Z8jRhYhCEBReT0+l8LlMao4
-	NwAr8TvwODvDEV9CFy2SVxPFyBLoKdfQwTTH3mJStagmatbEcDX3egFNO1o5pqds
-	Nh/aQ==
-X-ME-Sender: <xms:TaRVaEsWzAmJI77s8IdbqvkK1mf4a1mchrx7sUTOFCvGKVkzBD284A>
-    <xme:TaRVaBf8Bmdoknykbe-Pvp4aI9bOVGG5o3FO4SwzlcMDNkL3sWOGvaXEhRH_FdWsT
-    bOItwbrTH6UL6WzBko>
-X-ME-Received: <xmr:TaRVaPxXCnMQlFLIzZppO7It2ZuqggJrc6ASr-jyLiGMvX2F3XgOxmOYUkfXHW0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdeltdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhush
-    hpvggtthffohhmrghinhculdegledmnegoteeftdduqddtudculdduhedmnecujfgurhep
-    hffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrh
-    hsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggft
-    rfgrthhtvghrnhepjeeltedtgeeigeekffethfduheevtdfhveejheeukeejgfdvvdevve
-    egteehieeunecuffhomhgrihhnpehsohhurhgtvghfohhrghgvrdhnvghtnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqd
-    hlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepkedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphhtthhopehh
-    uggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvh
-    hinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghp
-    ihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtth
-    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepghgurghmjhgrnhesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:TaRVaHNKpy9uwYt1mSbzQ3erixZ7_DCFs0f0U5QzJHJyHVR1hroftA>
-    <xmx:TaRVaE_JZS8VdoR3drAANYThAk_Tme6AnZrt1hW6wsQhuadToUHMhg>
-    <xmx:TaRVaPVM7jjGF_m3UvZpsvrnO4esCddvi8bKvAVqxWpfgVLeiKPlnA>
-    <xmx:TaRVaNdzFDFMbWYvh26bsrpQPvMJ3NjvsYncgmFdtAg8-btiUA_pPw>
-    <xmx:TqRVaCM1BHo8XsBPrgUl0i_IgRTYo3wVf2YFlu6KrMe1a3X93Yg_V4_e>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 20 Jun 2025 14:11:24 -0400 (EDT)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfAaz1+j"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2352400344aso22824255ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750443108; x=1751047908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pvtTJ1kHeCmxTLbmdO2cHISakb3o5Bb3qadp7bFl/tA=;
+        b=GfAaz1+j+Idu1qfAVaWdZJ9lTcHoKqdxX8OIektYk4J3e/OFcFPuLSB/O2/JmzyFDP
+         PNuZdPcDusB0BFiRg8amLE27gnU2Gc4FXCCh0rHxgUV1ShXI6+a24viLYlsqEtx0AnWa
+         WRcEZ0ABaSydvCR3SgxBqvajB107VZBufYRUq3NdHVd0PG1loxLDjszrx8CWsGjyWGmi
+         4p9ZCgKWFdbX58LwmU1ZoebBNa1WKnIEeSpdkO1whXf39h/FqySNLUzqk07HASqbowBZ
+         eA7zRprzw9VmNWxGUx09rjCNbR/iBY1VrzG3S/7jbrhcYv13wmp1k3N/eBz5X3AQ9K8l
+         5a6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750443108; x=1751047908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pvtTJ1kHeCmxTLbmdO2cHISakb3o5Bb3qadp7bFl/tA=;
+        b=me3i3PzdKNgh5qZKVaGpwLpVOul81Xgd8yR52pk7cVciqhHZt3PqTA8ZDeFugZA2sQ
+         AFfOXrFHPGFNbBj47h6zqw/B0FVCAk82MgbPydEtNLyAW7XOJ8Uigz33EMB71uAeh7IN
+         ZI+k2F+cRCZ0AFFFfWBhYn3L+sKAOjOYZ5J/Z0z6nmdwEkjyCldl2585WIUxYpu3ptzg
+         dJMgj2VRHmjiJ+YdUlWSBooZ/ykUyi3ZiJpDeLsbpFTJF72CXdctURSKKKOUszlkIeZA
+         jHxAYTKBDiOqEs33xoPdw4Z92QCojCPSKgEvqlMr5Vr7+gJhjKZq6bli3PlQKOdGszA0
+         GUoA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+hCmDOsghKUUVRWzasKdEWWLetO5CQR1j64dZ4dt2s0DGMgNi9yOkVgmaadgDjkRM7BN2xsWu+krHkFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOPZ6HWClcbI81aamQYyszt8OsMQXE7pfoRnn2Lpwm14mJfumB
+	QquA2b5dbt5fZXA/mager3Z1cro+gQUTdSwNmNLE24y5pmZiVHTUMJ/j2uID0g1p
+X-Gm-Gg: ASbGncurDANFWFq1bnmMkBIDkByt+6vkF4zuDBABtTeBlkSe8e7XdAX+at+ixADzexu
+	iCGG2aBWR+nrsmY9lUP16y8UTSRVKQB/jbh6UIv0sj0eG8n5jsLAieHzfk4a+Ubw8KJ8gwPSmLM
+	z8ngzHqCX94FSsriQSLm8cpo3jwjsTryHnh2TnpcnPblZSt+coO/dTl4CBLwn2sZG3a+jG0/UUm
+	OfuijYo+3hQdQawfWR0ZcPNqqiNvgFe5GYrmomumognnHOPxAtrMJXaQgHn3pBZAjijXsqN6GrI
+	24pcjPVRdSX3VdbLwRbBtHB29YDD41v7PXY6AS/ucu1ttcwwnq9jtxnA33uSxm8=
+X-Google-Smtp-Source: AGHT+IEkKualNq3kDWX54ZvRRoM63Hsk4wstuNdFVMQrD/3uSyOxwAAD1THoibWhcQxW2+2hUuNthg==
+X-Received: by 2002:a17:902:d2c6:b0:235:f45f:ed53 with SMTP id d9443c01a7336-237d99b8f35mr62267535ad.33.1750443108280;
+        Fri, 20 Jun 2025 11:11:48 -0700 (PDT)
+Received: from p920.. ([2001:569:799a:1600:9fdb:eae:b35c:757c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83d0bedsm23005985ad.67.2025.06.20.11.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 11:11:47 -0700 (PDT)
+From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+To: alexander.usyskin@intel.com
+Cc: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
-	Damjan Georgievski <gdamjan@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
-Date: Fri, 20 Jun 2025 14:11:10 -0400
-Message-ID: <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Moon Hee Lee <moonhee.lee.ca@gmail.com>
+Subject: [PATCH] mei: bus: replace sprintf/scnprintf with sysfs_emit in show functions
+Date: Fri, 20 Jun 2025 11:11:44 -0700
+Message-ID: <20250620181144.10750-1-moonhee.lee.ca@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,31 +75,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-2025 Thinkpads F11 key launch the Intel Unison app on Windows,
-which does some sort of smart sharing between laptop and phone.
+Update all device attribute show callbacks in the MEI bus driver to use
+sysfs_emit(), as recommended by Documentation/filesystems/sysfs.rst.
 
-Map this key event to KEY_LINK_PHONE as the closest thing we have.
-This prevents an error message being displayed on key press.
+This improves consistency and aligns with current sysfs guidelines,
+even though the existing use of sprintf/scnprintf is functionally safe.
 
-Reported-by: Damjan Georgievski<gdamjan@gmail.com>
-Closes: https://sourceforge.net/p/ibm-acpi/mailman/message/59189556/
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
 ---
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/mei/bus.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index e1c7bd06fa12..2155ec682b08 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -3295,6 +3295,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
- 	 */
- 	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
- 	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
-+	{ KE_KEY, 0x1402, { KEY_LINK_PHONE } },
- 	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
- 	{ KE_END }
- };
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 67176caf5416..bc124a15006e 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -1156,7 +1156,7 @@ static ssize_t name_show(struct device *dev, struct device_attribute *a,
+ {
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%s", cldev->name);
++	return sysfs_emit(buf, "%s", cldev->name);
+ }
+ static DEVICE_ATTR_RO(name);
+ 
+@@ -1166,7 +1166,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
+ 
+-	return sprintf(buf, "%pUl", uuid);
++	return sysfs_emit(buf, "%pUl", uuid);
+ }
+ static DEVICE_ATTR_RO(uuid);
+ 
+@@ -1176,7 +1176,7 @@ static ssize_t version_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 version = mei_me_cl_ver(cldev->me_cl);
+ 
+-	return sprintf(buf, "%02X", version);
++	return sysfs_emit(buf, "%02X", version);
+ }
+ static DEVICE_ATTR_RO(version);
+ 
+@@ -1187,8 +1187,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	const uuid_le *uuid = mei_me_cl_uuid(cldev->me_cl);
+ 	u8 version = mei_me_cl_ver(cldev->me_cl);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "mei:%s:%pUl:%02X:",
+-			 cldev->name, uuid, version);
++	return sysfs_emit(buf, "mei:%s:%pUl:%02X:", cldev->name, uuid, version);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -1198,7 +1197,7 @@ static ssize_t max_conn_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 maxconn = mei_me_cl_max_conn(cldev->me_cl);
+ 
+-	return sprintf(buf, "%d", maxconn);
++	return sysfs_emit(buf, "%d", maxconn);
+ }
+ static DEVICE_ATTR_RO(max_conn);
+ 
+@@ -1208,7 +1207,7 @@ static ssize_t fixed_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u8 fixed = mei_me_cl_fixed(cldev->me_cl);
+ 
+-	return sprintf(buf, "%d", fixed);
++	return sysfs_emit(buf, "%d", fixed);
+ }
+ static DEVICE_ATTR_RO(fixed);
+ 
+@@ -1218,7 +1217,7 @@ static ssize_t vtag_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	bool vt = mei_me_cl_vt(cldev->me_cl);
+ 
+-	return sprintf(buf, "%d", vt);
++	return sysfs_emit(buf, "%d", vt);
+ }
+ static DEVICE_ATTR_RO(vtag);
+ 
+@@ -1228,7 +1227,7 @@ static ssize_t max_len_show(struct device *dev, struct device_attribute *a,
+ 	struct mei_cl_device *cldev = to_mei_cl_device(dev);
+ 	u32 maxlen = mei_me_cl_max_len(cldev->me_cl);
+ 
+-	return sprintf(buf, "%u", maxlen);
++	return sysfs_emit(buf, "%u", maxlen);
+ }
+ static DEVICE_ATTR_RO(max_len);
+ 
 -- 
 2.43.0
 
