@@ -1,48 +1,43 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600928ECFC
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430542; cv=none; b=DYvDMeFrTe/OhhBwOP4QEJtMyXvOG3N/mkHE8kodChc3bN6IBu6cecdfsdi+8IIofyPmLtE0izvcAnD9vQXo9urME8rlVWKRDdmrLHKgRYu/Bcsg/OeNHyqRpoh3O7/i3+fEXEni4ngG8c03ypIvvV+AEWiGEVyS/0pVXjdFx+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430542; c=relaxed/simple;
-	bh=h+YAWoHQ3v8UlilqwmJ1ekcVmuwSw/vDYFONIAtvu58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YVWcHf0bKgjVtWI4KPK/bWvVGLpIt62BdxrSrr4eoduPo8fHAyAiubEBzZ2t8i+ofLPbKxRUHnz2CVEPtzjnkdmkra6O5UHfJ81SNBiLDMIN+G/3Do6Mbb703ohQGDKguZQYD6GBInL/1pyjF6oqoUFX+NLGVgCeumWgMwPaZwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hcUFAaTb; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1642828E579;
+	Fri, 20 Jun 2025 14:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750430552; cv=pass; b=ko+cXHiESTbTsl+k3HOmQSkpJYrz5VL1XL/LNHLPl5UeJlszPaWuR30wjK7n0DAkMxwJdfTq4WIX+t2lD5+Qr5f/+YFHHawCFHwX/JiL68bRPzy55cqM082K9pZWyh4TE/FlnVxMmN2S+8I1n3d5vR1UAT7HIh0jWfGGgweLzis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750430552; c=relaxed/simple;
+	bh=rMJu2UXBnvM9uD9OHpHx6JI8BGT6zoxThOLhRn3Aijw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mSLw1EAbAar6AmzaKFiCswUxvjkNhoM8ll1Ano5XSM4spN9BdMgpR7O8lp0BeXLlvvRqEzJg8B19aI9hak9Uz1sk49iG3sQNJ5/g43g9pca7zewUImYfKzrDENYzhXMMnx+9rKfBFT97qkEuoiUOGGCPOVK89QuZ4MjjNj4ImvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=eeBxYF7s; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hcUFAaTb"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55KEg42J323400;
-	Fri, 20 Jun 2025 09:42:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750430524;
-	bh=jDJmtsqpNaS2MUMDPjXt8puYBGShfidvE6+OEKBxG1I=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=hcUFAaTbrxlBZz5MS9yf4pU5Yv2mYMKvbqhFvl331FL7peA/AJ+zyV3pc1uDLxcl+
-	 Bc6zL4H13EAisLT2pn9zwERDvpA+QNeqWySFmAH6qgkNcotN8QwCVpIbQiTlkpl+5+
-	 Tv5XhyLS4bCC8djgbw9Lmebyx43nt3u3Ms8MlYMk=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55KEg3be1861484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 20 Jun 2025 09:42:03 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 20
- Jun 2025 09:42:03 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 20 Jun 2025 09:42:03 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55KEfxkL3111049;
-	Fri, 20 Jun 2025 09:42:00 -0500
-Message-ID: <21e81030-189f-4f21-8800-f62cb351a3d6@ti.com>
-Date: Fri, 20 Jun 2025 20:11:59 +0530
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="eeBxYF7s"
+ARC-Seal: i=1; a=rsa-sha256; t=1750430529; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QQdc9mPxR21z/9fW611G9vSMqf7TsDD27B7xiWMPks+eyo2+3ZeYj5m/DLkJrmt1I1HtgTB0wbFUR09QywUhWsqzCCeNf3jTYFU0eAUphFWdx0mI1regBAGCvCwPYik6HADPRbwJG6JyG2RMh5P4G2H48xH/9ehi3+ErNJwhNpo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750430529; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0RgeqPv/W813/uRIAYius/Svm9hUK+Z0QxNA+vZX/e0=; 
+	b=BPGm4OMEh4iJHEQuXmOmQsjy79cZnAnSA3FYnTDkVEQPaUzcN4p/YDaCJhdy7KRgXUts3FztdupVCsxFYnjcvIpeS1PSwgap4qhL551ZLpPy2wI+LeeNxpxMq7ogqYm+WI3ZJiaQRDvJ6pA/YNOOjvdjWhWcUdZ9DLgMbevZ8p8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
+	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750430528;
+	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=0RgeqPv/W813/uRIAYius/Svm9hUK+Z0QxNA+vZX/e0=;
+	b=eeBxYF7sktRJuUwtk9bJLpOwGIhCSnAjt9GkIFf2aMQlsB6mkNzNb9higiqQOBpw
+	DngTI9DNQlNFkBjewa5cJE1lSQ/GzsYKv0XVZlpyYhyum0km3MS9mwQNZDfkydDd3M8
+	FMxgGiQHKNpIfYWgVsSFYiEyW6dduLrearp1cDRI=
+Received: by mx.zohomail.com with SMTPS id 1750430526349829.0777010527344;
+	Fri, 20 Jun 2025 07:42:06 -0700 (PDT)
+Message-ID: <3337df6c-f800-4610-8689-fbd4b4a5d07a@collabora.com>
+Date: Fri, 20 Jun 2025 16:42:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,203 +45,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] phy: cadence: cdns-dphy: Fix PLL lock and
- O_CMN_READY polling
-To: Vinod Koul <vkoul@kernel.org>
-CC: <kishon@kernel.org>, <mripard@kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <sakari.ailus@linux.intel.com>,
-        <u.kleine-koenig@baylibre.com>, <vigneshr@ti.com>,
-        <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>, <r-donadkar@ti.com>,
-        <tomi.valkeinen@ideasonboard.com>
-References: <20250502033451.2291330-1-devarsht@ti.com>
- <20250502033451.2291330-2-devarsht@ti.com> <aCRwmohPq5E2RsGC@vaman>
+Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com
+References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+ <20250619131232.69208-4-benjamin.gaignard@collabora.com>
+ <20250619134752.GB1643390@ziepe.ca>
+ <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
+ <20250619165928.GA10257@ziepe.ca>
+ <e034a111-93eb-42e8-a533-46553b4f5588@collabora.com>
+ <20250620120509.GA39770@ziepe.ca>
+ <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
 Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <aCRwmohPq5E2RsGC@vaman>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Vinod,
 
-Thanks for the review.
+Le 20/06/2025 à 15:52, Benjamin Gaignard a écrit :
+>
+> Le 20/06/2025 à 14:05, Jason Gunthorpe a écrit :
+>> On Fri, Jun 20, 2025 at 10:57:49AM +0200, Benjamin Gaignard wrote:
+>>> Le 19/06/2025 à 18:59, Jason Gunthorpe a écrit :
+>>>> On Thu, Jun 19, 2025 at 06:27:52PM +0200, Benjamin Gaignard wrote:
+>>>>> Le 19/06/2025 à 15:47, Jason Gunthorpe a écrit :
+>>>>>> Ugh. This ignores the gfp flags that are passed into map because you
+>>>>>> have to force atomic due to the spinlock that shouldn't be there :(
+>>>>>> This means it does not set GFP_KERNEL_ACCOUNT when required. It 
+>>>>>> would
+>>>>>> be better to continue to use the passed in GFP flags but override 
+>>>>>> them
+>>>>>> to atomic mode.
+>>>>> I will add a gfp_t parameter and use it like that:
+>>>>> page_table = iommu_alloc_pages_sz(gfp | GFP_ATOMIC | GFP_DMA32, 
+>>>>> SPAGE_SIZE);
+>>>> This will or together GFP_ATOMIC and GFP_KERNEL, I don't think that
+>>>> works..
+>>> I have test it, I don't see conflicts or errors. What worries you ?
+>> Just looking at the bitmaps I'm not sure? Did you run with lockdep?
+>
+> Yes and it complains about that.
+> I see that sun50i driver have more less the same struct than my driver
+> but doesn't use lock. I will try see if I can remove the lock.
 
-On 14/05/25 15:59, Vinod Koul wrote:
-> On 02-05-25, 09:04, Devarsh Thakkar wrote:
->> PLL lockup and O_CMN_READY assertion can only happen after common state
->> machine gets enabled (by programming DPHY_CMN_SSM register), but driver was
->> polling them before the common state machine was enabled. To fix this :
+I have replace the two spinlock by a mutex in vsi_iommu structure.
+It seems it works well and lockdep doesn't complain anymore.
+
+>
+>>>>>>> +static int vsi_iommu_attach_device(struct iommu_domain *domain,
+>>>>>>> +                   struct device *dev)
+>>>>>>> +{
+>>>>>>> +    struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
+>>>>>>> +    struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+>>>>>>> +    unsigned long flags;
+>>>>>>> +    int ret;
+>>>>>>> +
+>>>>>>> +    if (WARN_ON(!iommu))
+>>>>>>> +        return -ENODEV;
+>>>>>>> +
+>>>>>>> +    /* iommu already attached */
+>>>>>>> +    if (iommu->domain == domain)
+>>>>>>> +        return 0;
+>>>>>>> +
+>>>>>>> +    ret = vsi_iommu_identity_attach(&vsi_identity_domain, dev);
+>>>>>>> +    if (ret)
+>>>>>>> +        return ret;
+>>>>>> Hurm, this is actually quite bad, now that it is clear the HW is 
+>>>>>> in an
+>>>>>> identity mode it is actually a security problem for VFIO to 
+>>>>>> switch the
+>>>>>> translation to identity during attach_device. I'd really prefer new
+>>>>>> drivers don't make this mistake.
+>>>>>>
+>>>>>> It seems the main thing motivating this is the fact a linked list 
+>>>>>> has
+>>>>>> only a single iommu->node so you can't attach the iommu to both the
+>>>>>> new/old domain and atomically update the page table base.
+>>>>>>
+>>>>>> Is it possible for the HW to do a blocking behavior? That would 
+>>>>>> be an
+>>>>>> easy fix.. You should always be able to force this by allocating a
+>>>>>> shared top page table level during probe time and making it entirely
+>>>>>> empty while staying always in the paging mode. Maybe there is a less
+>>>>>> expensive way.
+>>>>>>
+>>>>>> Otherwise you probably have work more like the other drivers and
+>>>>>> allocate a struct for each attachment so you can have the iommu
+>>>>>> attached two domains during the switch over and never drop to an
+>>>>>> identity mode.
+>>>>> I will remove the switch to identity domain and it will works fine.
+>>>> You'll loose invalidations..
+>>>>
+>>>> Maybe the easiest thing is to squish vsi_iommu_enable() and reorganize
+>>>> it so that the spinlock is held across the register programming and
+>>>> then you can atomically under the lock change the registers and change
+>>>> the linked list. The register write cannot fail so this is fine.
+>>>>
+>>>> This should probably also flush the iotlb inside the lock.
+>>> I will try to summarize:
+>>> in vsi_iommu_attach_device() I should:
+>>> - take the lock
+>>> - do nothing if the domain is the same.
+>>> - if iommu is used (ie powered up):
+>>>    - update the registers to enable the iommu
+>>>    - flush
+>>>    - update the link list
+>>> - update iommu->domain
+>>> - release the lock
+>> That sounds believable, yes.. Though can you do the "powered up" checks
+>> inside the spinlock - are they sleeping? Can they be done before the
+>> spinlock?
 >>
->> - Add new function callbacks for polling on PLL lock and O_CMN_READY
->>    assertion.
->> - As state machine and clocks get enabled in power_on callback only, move
->>    the clock related programming part from configure callback to power_on
->>    callback and poll for the PLL lockup and O_CMN_READY assertion after
->>    state machine gets enabled.
->> - The configure callback only saves the PLL configuration received from the
->>    client driver which will be applied later on in power_on callback.
->> - Add checks to ensure configure is called before power_on and state
->>    machine is in disabled state before power_on callback is called.
->> - Disable state machine in power_off so that client driver can
->>    re-configure the PLL by following up a power_off, configure, power_on
->>    sequence.
+>>> in vsi_iommu_identity_attach() I should:
+>>> - take the lock
+>>> - do nothing if the domain is the same.
+>>> - if iommu is used (ie powered up):
+>>>    - disable the iommu
+>>>    - remove the node from the list
+>>> - update iommu->domain
+>>> - release the lock
+>> And maybe flush too? How does the caching hw work at this point? You
+>> can't have stale entries in the cache when you switch back to an
+>> enabled/translating configuration. So either the HW flushes implicitly
+>> or you need to add a flush somewhere..
+>
+> I do not have the documentation for the hardware but it seems that
+> enable/disable are enough to do the job.
+>
+>
+>>> vsi_iommu_suspend() and vsi_iommu_resume() will also have to take 
+>>> the lock
+>>> before calling vsi_iommu_disable() and vsi_iommu_enable().
+>> Yes, if they use iommu->domain that seems good
 >>
->> Cc: stable@vger.kernel.org
->> Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
->> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->> ---
->> V3:
->> - Move out clock programming logic to power_on as PLL polling and enable
->>    can happen only after SSM enable
->> - Disable state machine on power off
+>> If the above locking is a problem then I'd use the group mutex instead
+>> during resume/suspend. The attach functions are already called with
+>> the group mutex held.
+>
+> Does group mutex is also called when using vsi_iommu_map or 
+> vsi_iommu_unmap ?
+>
 >>
->> V2:
->> - Return error code on polling timeout
->> - Moved out calibration logic to separate patch
+>>> Do I have to switch to identity domain in vsi_iommu_attach_device()
+>>> before applying the requested domain ?
+>> No, that is what creates the security problem. What you want is to
+>> update the HW registers in a way that the HW just changes hitlessly
+>> from one translation to another, then flush the cache.
 >>
->>   drivers/phy/cadence/cdns-dphy.c | 109 +++++++++++++++++++++++++-------
->>   1 file changed, 85 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
->> index ed87a3970f83..a94109a63788 100644
->> --- a/drivers/phy/cadence/cdns-dphy.c
->> +++ b/drivers/phy/cadence/cdns-dphy.c
->> @@ -79,6 +79,7 @@ struct cdns_dphy_cfg {
->>   	u8 pll_ipdiv;
->>   	u8 pll_opdiv;
->>   	u16 pll_fbdiv;
->> +	u64 hs_clk_rate;
->>   	unsigned int nlanes;
->>   };
->>   
->> @@ -99,6 +100,8 @@ struct cdns_dphy_ops {
->>   	void (*set_pll_cfg)(struct cdns_dphy *dphy,
->>   			    const struct cdns_dphy_cfg *cfg);
->>   	unsigned long (*get_wakeup_time_ns)(struct cdns_dphy *dphy);
->> +	int (*wait_for_pll_lock)(struct cdns_dphy *dphy);
->> +	int (*wait_for_cmn_ready)(struct cdns_dphy *dphy);
->>   };
->>   
->>   struct cdns_dphy {
->> @@ -108,6 +111,8 @@ struct cdns_dphy {
->>   	struct clk *pll_ref_clk;
->>   	const struct cdns_dphy_ops *ops;
->>   	struct phy *phy;
->> +	bool is_configured;
->> +	bool is_powered;
->>   };
->>   
->>   /* Order of bands is important since the index is the band number. */
->> @@ -191,6 +196,26 @@ static unsigned long cdns_dphy_get_wakeup_time_ns(struct cdns_dphy *dphy)
->>   	return dphy->ops->get_wakeup_time_ns(dphy);
->>   }
->>   
->> +static int cdns_dphy_wait_for_pll_lock(struct cdns_dphy *dphy)
->> +{
->> +	int ret = 0;
->> +
->> +	if (dphy->ops->wait_for_pll_lock)
->> +		ret = dphy->ops->wait_for_pll_lock(dphy);
->> +
->> +	return ret;
->> +}
->> +
->> +static int cdns_dphy_wait_for_cmn_ready(struct cdns_dphy *dphy)
->> +{
->> +	int ret = 0;
->> +
->> +	if (dphy->ops->wait_for_cmn_ready)
->> +		ret = dphy->ops->wait_for_cmn_ready(dphy);
->> +
->> +	return ret;
-> 
-> We can drop ret from both, also it is called only once, so maybe open
-> code this one line?
-> 
-
-Agreed.
-
->> +}
->> +
->>   static unsigned long cdns_dphy_ref_get_wakeup_time_ns(struct cdns_dphy *dphy)
->>   {
->>   	/* Default wakeup time is 800 ns (in a simulated environment). */
->> @@ -232,7 +257,6 @@ static unsigned long cdns_dphy_j721e_get_wakeup_time_ns(struct cdns_dphy *dphy)
->>   static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
->>   					const struct cdns_dphy_cfg *cfg)
->>   {
->> -	u32 status;
->>   
->>   	/*
->>   	 * set the PWM and PLL Byteclk divider settings to recommended values
->> @@ -249,13 +273,6 @@ static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
->>   
->>   	writel(DPHY_TX_J721E_WIZ_LANE_RSTB,
->>   	       dphy->regs + DPHY_TX_J721E_WIZ_RST_CTRL);
->> -
->> -	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
->> -			   (status & DPHY_TX_WIZ_PLL_LOCK), 0, POLL_TIMEOUT_US);
->> -
->> -	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
->> -			   (status & DPHY_TX_WIZ_O_CMN_READY), 0,
->> -			   POLL_TIMEOUT_US);
->>   }
->>   
->>   static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
->> @@ -263,6 +280,23 @@ static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
->>   	writel(div, dphy->regs + DPHY_TX_J721E_WIZ_PSM_FREQ);
->>   }
->>   
->> +static int cdns_dphy_j721e_wait_for_pll_lock(struct cdns_dphy *dphy)
->> +{
->> +	u32 status;
->> +
->> +	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
->> +			       status & DPHY_TX_WIZ_PLL_LOCK, 0, POLL_TIMEOUT_US);
->> +}
->> +
->> +static int cdns_dphy_j721e_wait_for_cmn_ready(struct cdns_dphy *dphy)
->> +{
->> +	u32 status;
->> +
->> +	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
->> +			       status & DPHY_TX_WIZ_O_CMN_READY, 0,
->> +			       POLL_TIMEOUT_US);
->> +}
->> +
->>   /*
->>    * This is the reference implementation of DPHY hooks. Specific integration of
->>    * this IP may have to re-implement some of them depending on how they decided
->> @@ -278,6 +312,8 @@ static const struct cdns_dphy_ops j721e_dphy_ops = {
->>   	.get_wakeup_time_ns = cdns_dphy_j721e_get_wakeup_time_ns,
->>   	.set_pll_cfg = cdns_dphy_j721e_set_pll_cfg,
->>   	.set_psm_div = cdns_dphy_j721e_set_psm_div,
->> +	.wait_for_pll_lock = cdns_dphy_j721e_wait_for_pll_lock,
->> +	.wait_for_cmn_ready = cdns_dphy_j721e_wait_for_cmn_ready,
->>   };
->>   
->>   static int cdns_dphy_config_from_opts(struct phy *phy,
->> @@ -298,6 +334,7 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
->>   		return ret;
->>   
->>   	opts->wakeup = cdns_dphy_get_wakeup_time_ns(dphy) / 1000;
->> +	cfg->hs_clk_rate = opts->hs_clk_rate;
->>   
->>   	return 0;
->>   }
->> @@ -334,13 +371,23 @@ static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
->>   static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
->>   {
->>   	struct cdns_dphy *dphy = phy_get_drvdata(phy);
->> -	struct cdns_dphy_cfg cfg = { 0 };
->> -	int ret, band_ctrl;
->> -	unsigned int reg;
->> +	int ret = 0;
-> 
-> Superfluous init
-> 
-
-Agreed. I will do the fixups in next revision.
-
-Thanks,
-Devarsh
+>> Jason
