@@ -1,104 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F12B23814A;
-	Fri, 20 Jun 2025 21:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15395223DCE;
+	Fri, 20 Jun 2025 21:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750455666; cv=none; b=vBPA9YPcNhtHtYmcuH1G8/j+9qehU62oTqyF6HIdk86h3nQAosG3LtEstCP7292ip7NG/PPFOrnSHDikU/jZP5DRgVN/dbHWsaSgMUyefrbeQb75UySAF4GZ12BVXEMYR6eNo54kghHj8QNMSO1wrtQPtYPE40VreL/xb3bBatc=
+	t=1750455703; cv=none; b=Eyt6Mjk/S+i2SStSvyNUIcxKOZlC6AVDuWZNn+ODK8bqRl+VTUwOEsSrxAuM9s6OizcDc7GPMjDqv8frRzS4EaqyN1l9LcRmADF/HMecjmlJXqkaqtuckCnPF5QElMAr16dzx3qNptVY5vgj+UbaZLrwZNCU6UfnR46VJDAZCu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750455666; c=relaxed/simple;
-	bh=rKjdBQKmlk3ftyyNyRJyICUhNkVNb/3e3jwzM9KV5lw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c41vHiIj+TlXLQk2zM3qttnvm692TbnCXKOgENM62pOVxJ8Yp5jjW4cj7iTs0uH/OqUl2Q37KzTHdXn4UEaNoJqf//pzzkwEqVlt1yqhbsh6R3DswcuNSxyHTTZ1gTUypnq3n4nXPbpXsEFFKHu1IWtJQ+qWZZqs3yztI5oyVHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2Q/EiGE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750455703; c=relaxed/simple;
+	bh=4Ft72Nr3kzVywy6TOavol3W71SO2Q3KhMx60de80J9E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgdi5IQpHV5I5VMQ1kwjNS6W34O8hP0lztZxyPmCLbqHgFxrJRVEJtySEbazbhBw88dSLCdBbbtpGfXAejZ15Ho6elwfhkuUk0SjnR4St12Tk7Hufwra3+cLaF5TQlyYWjwlThrO61I2XU63Qg9tfWBWhQ7jbfNpc6nDvxNfyTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nOwJDIKj; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2Q/EiGE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84B9C4CEE3;
-	Fri, 20 Jun 2025 21:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750455665;
-	bh=rKjdBQKmlk3ftyyNyRJyICUhNkVNb/3e3jwzM9KV5lw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y2Q/EiGEGh/O7kruofaRpkbSXvdSBv37Z3Avg+hm/eQ4M+QcsQVG836aM91JY9AA7
-	 D2CXnmtUc0FF9PozAXT2neLUnYa5DNgSB2FCXrzn4aiHxKUd67KrR74m98pXh9V1J8
-	 C05nfgS7u4+FyBfrFMS8oZ/TZCnN0tQT+VWdxBmgDp2i4TRYXHZRb5Ottr0WFLl2ND
-	 IKwysLFwOqghQ/coH4eNJP51/EzPSmxImV+EFvHxU+itQymtsHmY0UrxMo7h3pt72p
-	 1ss3wfmh+VE6+RLIzgTaG3PmbWSiIlSxzvzPHWt0NRf4kHi6f5WkFd7vdgK2usYVdK
-	 8ohjiqag8p3TA==
-Date: Fri, 20 Jun 2025 14:41:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] perf: generate events for BPF metadata
-Message-ID: <aFXVbkxNoHOVyFwy@google.com>
-References: <20250606215246.2419387-1-blakejones@google.com>
- <aEnLBgCTuuZjeakP@google.com>
- <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
- <CAP_z_CjRB6MwNrXW_o_XyWSwcXZKpVHyGZoj1udJU4uBu1iw=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOwJDIKj"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e82596e88c4so2119593276.1;
+        Fri, 20 Jun 2025 14:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750455701; x=1751060501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8uAahrOS33o7sgUXOZ2rcoYNIsua8jD0KjR6EQqfEsE=;
+        b=nOwJDIKjsw9jNAv/2FUkgrvce422QwghnOKNi7USHmr/BZLgaxGrHVOYNvNYg1GjY+
+         1P8n6Cz9LmZPtBWe8onGBo7B6rTq/bjVqq9znN08xEHAZ39nhW1/Izm0iFCeTrGiOjet
+         nie3LfGkLGrsZaSJDfnbvI2TX+FN/Xu4eNPFh6ujVUQiJRKi82BLauqdkSBxhogeLCTe
+         MI/6nKmZnr0S72pir3jlZwsC52618Z8LUq52fa4aUG9st0ZgYynCp6DA5Yw2MnbNHqYI
+         Ldfq8X6bFRRUh2YQ1f966Sv79pd4v5bPzeI1kaROtF1hdb+ONdFlwF6RZkw0Dx76NJah
+         CpjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750455701; x=1751060501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8uAahrOS33o7sgUXOZ2rcoYNIsua8jD0KjR6EQqfEsE=;
+        b=FtkrkS9kw7sLT4Xq2T3mPv4hiQlDJW2t6UxammgvXEI+tdXtxoxkKliOE3Kq4ObGHp
+         uQ4s5txnwcapLbpcikOgO/ddCv65Mrm3XdZlpAUSfqyo2ezOBCiWxjFvXWKcwSbkiq3K
+         V8KzOeRXpujFYrfCXaswKr/2mdjQ5FWqVTY4PJVkhvUTNrJn87nfF5y4tXE63TWVdLoq
+         SC9bhFLgz+vPMnw/PPyE/sgsaAJ6sW0cCqSRbKuhX7LmGntBZG90jUiagZZeybGraRrB
+         FNXeqjzk5sF+Uk7eVAXNuZr3+vZdTTJ5owIiCwrv/e9cpunBmxZgyaiGLZtNWRddLK/l
+         WO2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU0InpqP5dKbCcd8wlc6jQteozoEOSwm8MJjrCJm9eURyXo/9cxUtm3eYTfiq2uET1nZEIivMJxgJ1H0VE=@vger.kernel.org, AJvYcCVyuZTlkcWPW72zv2EyJ8gSwHbB+WBm+Fb0JLuYVgLky9xzZ7/o+O7Lediw6gGpQkYS9vYpd/2J/4EhKWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt866eFY/wOH+ws3EsP7DJ1nL8OIQ9weKpnsxtvx5kHrQor4na
+	Kd2nrwKW7010mob96k5IBPUpjcFxC0P3bOXHx/r5ipMNKi9ihhJaSmiw
+X-Gm-Gg: ASbGncsKyZ9DQhhOLJsAsIDilWKCB1tcXbuFJbVo383PX42xCRIdwMC3dE0LUSKG3z8
+	P8KvCvEwB+8ZNtBd+USabc6HbVFr2qZyZ+l4qYm/3RcepevxyX/Su4iJy2+G7ijgX+mDjoHcAux
+	lU5PmUwvAkRBY1u0gLfIrc5z3Q7RDEmujzbwCNq9amaVmndieKeDBXgegXwhQjCZ35RIiDFknHR
+	rVAEORgJnBQXPi5KhgrRvujKwA6Wz0vKNDrwH2skb9VNG4LGgDLI1sE0M0Ti6azf9S9cgQYHrN7
+	uXKyhyCNIXiwFsvA29bUxX75gBsBCsptvGv+ACRyTc4mzDmOi0cF3371FLDwksWVPFidANBnPy1
+	v
+X-Google-Smtp-Source: AGHT+IHeXdhoQ2nRO39pjKloDWk33DX/i8jd5QX1dRew5XBLdy1rsgIznRHcWftril4Hpft3Ei2lpg==
+X-Received: by 2002:a05:690c:6910:b0:70e:7503:1180 with SMTP id 00721157ae682-712c63b2084mr74607287b3.1.1750455700979;
+        Fri, 20 Jun 2025 14:41:40 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4bec110sm5836707b3.105.2025.06.20.14.41.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 14:41:40 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-usb-v2: ec168: fix null-ptr-deref in ec168_i2c_xfer
+Date: Fri, 20 Jun 2025 17:41:38 -0400
+Message-Id: <20250620214138.3224843-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP_z_CjRB6MwNrXW_o_XyWSwcXZKpVHyGZoj1udJU4uBu1iw=g@mail.gmail.com>
 
-Hi Blake,
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. Although there are some
+existing checks on msg.len, they do not cover all buffer access
+points. Therefore, we add an additional check on msg.len to
+prevent potential crashes.
 
-On Wed, Jun 11, 2025 at 06:02:55PM -0700, Blake Jones wrote:
-> On Wed, Jun 11, 2025 at 5:39 PM Blake Jones <blakejones@google.com> wrote:
-> > Is there anything written up about how to set up a machine so that
-> > "make build-test" works reliably?
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
+fix null-ptr-deref in az6027_i2c_xfer()")
 
-Sorry for the trouble.  I found it needs more work.
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/usb/dvb-usb-v2/ec168.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> Barring that, I've confirmed that each of my new patches builds successfully
-> under the following build commands: (I have a copy of libbpf that supports
-> ".emit_strings" in /usr/local/include)
-> 
->     cd tools/perf
->     make clean
->     make NO_LIBTRACEEVENT=1 LIBBPF_DYNAMIC=1 LIBBPF_INCLUDE=/usr/local/include
->     ./perf check feature libbpf-strings
-> 
->     make clean
->     make NO_LIBTRACEEVENT=1
->     ./perf check feature libbpf-strings
-> 
->     make clean
->     make NO_LIBTRACEEVENT=1 NO_LIBBPF=1
->     ./perf check feature libbpf-strings
-> 
-> Please let me know if that seems like sufficient testing.
-
-Looks ok to me and thanks for doing this.
-
-Namhyung
+diff --git a/drivers/media/usb/dvb-usb-v2/ec168.c b/drivers/media/usb/dvb-usb-v2/ec168.c
+index 973b32356b17..a72fc009269e 100644
+--- a/drivers/media/usb/dvb-usb-v2/ec168.c
++++ b/drivers/media/usb/dvb-usb-v2/ec168.c
+@@ -115,7 +115,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 	while (i < num) {
+ 		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
+ 			if (msg[i].addr == ec168_ec100_config.demod_address) {
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 1 || msg[i+1].len < 1) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+@@ -135,7 +135,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 			}
+ 		} else {
+ 			if (msg[i].addr == ec168_ec100_config.demod_address) {
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 2) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+@@ -147,7 +147,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 				ret = ec168_ctrl_msg(d, &req);
+ 				i += 1;
+ 			} else {
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 2) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+-- 
+2.34.1
 
