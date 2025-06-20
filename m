@@ -1,159 +1,168 @@
-Received: from mail.lichtvoll.de (lichtvoll.de [37.120.160.25])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D5430E85C;
-	Fri, 20 Jun 2025 07:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.160.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E15522539C;
+	Fri, 20 Jun 2025 07:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750404020; cv=none; b=KrH4qZOB+EftGcQlCqJa+h0M2UjhHvRgk632GzIjqSJv/aKJ84rm7JOpZQprJ5JGoqp48u0Jir1SBl4ms724l5zG5FzXhO3jLhGAQ6D1Db2jQXqFoYXhzWXj2ezudxgdQOCa6pZTwfWoaIdO/AtsL7ZxTjovrzbenLbXIg1XPnU=
+	t=1750404029; cv=none; b=gv2xNb/hWlYJdiJcohZKdWEAefGpeiBblPVHNrB3794kkpiFci1WzjguB71GR+721QeXVagMtn6NsgvGrNOJm5TfSo0XgoTx1RiMlK1QL/a9l4PR6YZeZYiNCG4p7cIUJSjO9BQPiE6ugxV+/0SCrg4sf8fOHTD6cSNGGa3Unvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750404020; c=relaxed/simple;
-	bh=640FEkkWd+camIx2PfPKgGyzSdcB8xu/mk++Zu4dM30=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nPnyetH+xJE8ijgQ8GtLDeyzWk5Av1MgTqAqLmwCbxe8vs+5+bj4ArFsryZZIB/0hc+2fs7/yLTg1ZE+0ustnSnakcrY0YQRD0wVXDQ1YSATOOTOgwJJiml9shXbGWcjh1O8d17oD9cdEt7qcXGItMkzumdA+TNyUpu3ezZaaqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=37.120.160.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id 406E510F721;
-	Fri, 20 Jun 2025 07:12:24 +0000 (UTC)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: Jani Partanen <jiipee@sotapeli.fi>,
- Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
-Date: Fri, 20 Jun 2025 09:12:21 +0200
-Message-ID: <3366564.44csPzL39Z@lichtvoll.de>
-In-Reply-To: <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
-References:
- <4xkggoquxqprvphz2hwnir7nnuygeybf2xzpr5a4qtj4cko6fk@dlrov4usdlzm>
- <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
- <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
+	s=arc-20240116; t=1750404029; c=relaxed/simple;
+	bh=gqjlaZJ+q89fC79xcakYesG1QlqkNn2XS7HbrMbpcjk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VSNr6ck5OakqYolIHqvFVBk215PBz0bD2dqFIYFrkV4gMWOmvdunKJHM1e0J6UwujQESat49l5FFPke8Lz3+B2n+TPixQsKQXA1YUaM+Lt1phw5FROJxXbhoNYCHL7u7d20CVDtsL/v+qLTzziREX8K7XM1T0y2f/yCYRczISEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XWZwS7wx; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XWZwS7wx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E83D24435F;
+	Fri, 20 Jun 2025 07:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750404019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gqjlaZJ+q89fC79xcakYesG1QlqkNn2XS7HbrMbpcjk=;
+	b=XWZwS7wxCfITzL6ctTmVJLoU51sWuqsriK7h3kkLrhn1MdW31Iapjz3r3DfZrYmDfaPnuz
+	77//beURjdLB0DHilkkzjYITcS6Jb0jdHYWx53oztXJpjPRcHwsVyxakC7O64LcSSQv08U
+	wkYZFDw72XhjuJIUeWuObMkt4yVH6/zd2Z0+kj8u/OizuYdFPa2payz1AvY8h34XYgijX4
+	/ueUpRK4MbyOipFdhPHnlqLdXX0x5wUjoiplOGDClT2r7k4SMLn/9GEDfTH8HDz0nDzQQN
+	McT/bRStixeljeTLTW3hi+BmZNmZrUJN/0ThDcOErwWAJ5tMZ1rdt/iMULZpJQ==
+Message-ID: <3e97885af5323dec728f40dc0176f7f82cdabf14.camel@bootlin.com>
+Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x
+ and set MRU to 32768 for better performance.
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+To: Aleksander Morgado <aleksander.morgado@gmail.com>, Manivannan Sadhasivam
+	 <mani@kernel.org>
+Cc: thomas.perrot@bootlin.com, Adam Xue <zxue@semtech.com>, Aleksander
+ Morgado	 <aleksander@aleksander.es>, manivannan.sadhasivam@linaro.org, 
+	slark_xiao@163.com, johan+linaro@kernel.org, quic_vpernami@quicinc.com, 
+	tglx@linutronix.de, fabio.porcedda@gmail.com, quic_msarkar@quicinc.com, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	imocanu@semtech.com
+Date: Fri, 20 Jun 2025 09:20:16 +0200
+In-Reply-To: <CAA3JqEfpuwn5OL6SasVGRU82+2+D5nNXk-WALzcnWnuz9384kQ@mail.gmail.com>
+References: <20250528175943.12739-1-zxue@semtech.com>
+	 <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
+	 <CAA3JqEfpuwn5OL6SasVGRU82+2+D5nNXk-WALzcnWnuz9384kQ@mail.gmail.com>
+Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
+ keydata=mQGNBF+/ZOUBDAC2DghCjZvmgYcve02OG7dGZ7Iy58uEwne3LB7w7nRwdAxKw7ZaiVqwY
+ O+yNGVi+GVx7oA6Wn4pv46z+QDRLQiq6OseuXhkSGCg7U/yBCUq12B/GRGO1Qt2Qi1mJJT1s+1qZ5
+ Gxv6Nypz9qKVn94GM2bR1hXBga0t87vBpebThOHmX5d/0dqIcVxRCM7onNb0dDyRoVgLS5rBhQzrL
+ CMrJaCy39xZUy0J1SOlH4Mgk6EhJIPYY4wlzikGX6urg+Tc9EjGd78ry0e0p5U5qgjFR5QGJDy1Gn
+ U3CfwbT9sowdCASDbQDUoltlv2iWJCLa0xl97KVchCa0pr7HKbFA3J5SLKqFYUBCkFL+5WudYlz2n
+ XxiUgyviMQxyK+ij66kEi6/2zFDAecd43pHV7790ptqZBC3Jc67Emj7Vo3ShX6RXPPxxbeCTOF2uk
+ I45aJ9XcVFH/MFE96NjXj8uahnIsiTPyuCUoJu8tj7TSQyue874qJqVQvqlFyt2aZYJZ8ruq8AEQE
+ AAbQpVGhvbWFzIFBlcnJvdCA8dGhvbWFzLnBlcnJvdEBib290bGluLmNvbT6JAc4EEwEIADgCGwMF
+ CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCX79mdwAKCRCfw
+ AsFcf4K7fhbC/wP0kSl6id2E/K3+UdXk6CLMVRbCFLCREzQs5WFpQ6l/I0WGOamhrOgegdszheiVF
+ orlUP8d37XSpFAqydhKGaN78V5Dps0Wmwm4lIlS4MtQXJtSLUHXDJLIZLW0pw8tiPLKsd1o/yDkXE
+ dnpsjJTRG6SdDSHnyOB2/gh4p+yTaLytFdARk/r4/P26+L+FiH0fFl+RnBt19LPklfKgeDc7GwIif
+ ja+nIWpp3W23DAUuI6xduEut25Q89yu7Ci8CliLfAiLy9bIGjBQWU2Y+1/j/7KuPj6VbBsZWLTZY0
+ hUmpJSTnWAqc9SMsNxo7NSQuddgviz5e2tqucaRqxP02FGzNa8U4NAKdWaXrlHG5Dglj9XH0DK+SH
+ +c96qqFewYD8VPQ6XAGxQcXbrtJmiMor1R2DfziispLRvJcfYs8xqabbCtoS3ouXB9XRi8hn7A2kh
+ ME1ryS+Oh63JshXHnw6bmjCpVd/p+fGLIGU6A47pJOpviKR4jEO84pl2ejtDZ3Tc=
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-qLElnF2v/FGCh2j2pzne"
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdejjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefvhhhomhgrshcurfgvrhhrohhtuceothhhohhmrghsrdhpvghrrhhothessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudetieefiedvveehgfetueevteduleffffeuleduleeftdffffekveduvedufeffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrvdegtdgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhpvghrrhhothessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheprghlvghkshgrnhguvghrrdhmohhrghgrughosehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvrhhrohhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepiiiguhgvsehsvghmthgvtghhrdgtohhmpdhrtghpthhtoheprghlv
+ ghkshgrnhguvghrsegrlhgvkhhsrghnuggvrhdrvghspdhrtghpthhtohepmhgrnhhivhgrnhhnrghnrdhsrgguhhgrshhivhgrmheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhlrghrkhgpgihirghoseduieefrdgtohhmpdhrtghpthhtohepjhhohhgrnhdolhhinhgrrhhosehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thomas.perrot@bootlin.com
+
+
+--=-qLElnF2v/FGCh2j2pzne
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Hi Kent, hi,
+Hello,
 
-Kent Overstreet - 20.06.25, 03:51:45 CEST:
-> On Fri, Jun 20, 2025 at 04:25:58AM +0300, Jani Partanen wrote:
-> > On 20/06/2025 4.09, Kent Overstreet wrote:
-> > > I'm not seeing that _you_ get that.
+On Tue, 2025-06-17 at 16:58 +0200, Aleksander Morgado wrote:
+> On Tue, Jun 17, 2025 at 11:27=E2=80=AFAM Manivannan Sadhasivam
+> <mani@kernel.org> wrote:
 > >=20
-> > How hard it is?
+> > On Wed, May 28, 2025 at 10:59:43AM -0700, Adam Xue wrote:
 > >=20
-> > New feature window for 6.16 was 2 weeks ago.
+> > + Thomas and Aleksander (for EM919X related question)
 > >=20
-> > rc<insert number here> is purely for fixing bugs, not adding new
-> > features and potential new bugs.
+> > > Add MHI controller config for EM929x. It uses the same
+> > > configuration
+> > > as EM919x. Also set the MRU to 32768 to improve downlink
+> > > throughput.
+> > >=20
+> >=20
+> > This also affects the EM919X modem. So I want either Thomas or
+> > Aleksander to
+> > confirm that it doesn't cause any regression.
+
+Sorry, I no longer have the modem to test.
+
+Kind regards,
+Thomas Perrot
+
+> >=20
+> > Rest looks good to me.
+> >=20
+> > - Mani
+> >=20
+> > > 02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc
+> > > Device 0308
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Subsystem: Device 18d7:0301
+> > >=20
+> > > Signed-off-by: Adam Xue <zxue@semtech.com>
+> > > ---
+> > > =C2=A0drivers/bus/mhi/host/pci_generic.c | 4 ++++
+> > > =C2=A01 file changed, 4 insertions(+)
+> > >=20
+> > > diff --git a/drivers/bus/mhi/host/pci_generic.c
+> > > b/drivers/bus/mhi/host/pci_generic.c
+> > > index 03aa88795209..9bf8e7991745 100644
+> > > --- a/drivers/bus/mhi/host/pci_generic.c
+> > > +++ b/drivers/bus/mhi/host/pci_generic.c
+> > > @@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info
+> > > mhi_sierra_em919x_info =3D {
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .config =3D &modem_sierra_em919x_confi=
+g,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .bar_num =3D MHI_PCI_DEFAULT_BAR_NUM,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dma_data_width =3D 32,
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0 .mru_default =3D 32768,
 >=20
-> That's an easy rule for the rest of the kernel, where all your mistakes
-> are erased at a reboot. Filesystems don't have that luxury.
+> I cannot test this now, I need to look for the EM9191 that I know I
+> have somewhere, but this default MRU update feels right. Hopefully
+> Thomas can verify.
 >=20
-> In the past, I've had to rush entire new on disk format features in
-> response to issues I saw starting to arise - I think more than once, but
-> the btree bitmap in the member info section was the big one that sticks
-> in my mind; that one was very hectic, but 100% proved its worth.
 
-Kent, from what I gathered, you'd like to change some window rules =E2=80=
-=93 at=20
-least for filesystems or new-in-kernel filesystems.
-
-And from what I observed: You try to do so by just not adhering to at=20
-least one of those rules at least once in a while. Maybe for a good=20
-reason, but still, you just do not adhere to the rule of only fixes. Or at=
-=20
-the very least, you define a fix to be something that is (way) more than a=
-=20
-fix for other kernel developers.
-
-It may make sense to change some merge window rules or it may not, I don't=
-=20
-know. However=E2=80=A6 from what I observe:
-
-Just unilaterally changing a rule or redefining a word in that rule may=20
-not be a sustainable and working (!) approach to go about it. Just from=20
-observing the communication pattern here I conclude that.
-
-I'd rather recommend to bring this up the next opportunity you can discuss=
-=20
-it with fellow kernel developers, ideally while meeting face to face.=20
-Cause let's face it: The Linux kernel is a team effort.
-
-If you stick to your approach about merge window rules and many other=20
-kernel developers including Linus stick to their rules this will go in=20
-circles.
-
-Indefinitely so.
-
-Not sure whether that is a good use of your time. But your call really.
-
-So how about adhering to the current rules for now and bringing up the=20
-topic in a meeting you will have at one point in the future?
-
-Just my two cents from observing the repeated (!) communication pattern=20
-here. Cause it is not at all the first time the discussion arrives exactly=
-=20
-at this point.
-
-> For a lot of users, compiling a kernel from some random git repository
-> is a lot to ask. I spend a lot of time doing what amounts to support;
-> that's just how it is these days. But rc kernels are packaged by most
-> kernels, and we absolutely do not want to wait an additional 3 months
-> for it to show up in a release kernel -
-
-Those users should probably not use BCacheFS right now already to begin=20
-with but wait for it to be marked as stable?
-
-It reminds my about Debian Unstable users wanting the newest and greatest=20
-and then complaining that at times some things are not stable. Which is=20
-the very definition of what can happen in Debian Unstable.
-
-I meanwhile use BCacheFS. On Devuan. But for now that means I have to=20
-compile BCacheFS tools myself, and better also the kernel to have the=20
-latest and probably greatest during the hard freeze of Debian.
-
-And I use it for data that is backed up or that I can afford to loose.
+--=20
+Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
 
-And about what you wrote in your previous mail:
+--=-qLElnF2v/FGCh2j2pzne
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Kent Overstreet - 20.06.25, 03:09:07 CEST:
-> There are a _lot_ of people who've been burned by btrfs. I've even been
-> seeing more and more people in recent discussions talking about
-> unrecoverable filesystems with XFS (!).
+-----BEGIN PGP SIGNATURE-----
 
-And I have seen a lot of threads on XFS over the years where XFS=20
-developers went great lengths to help users recover their data. I have=20
-seen those threads also on the BTRFS mailing list. Those users had no=20
-support contract, they did not pay anything for that free service either.
+iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmhVC7AACgkQn8ALBXH+
+Cu0yUQv/XPmHO4NAvMPDo/MK58xTroprptIJ6ErWiRESwYazftvufSjs2m9tfWE2
+IFkAwq2XRTyBZ62FqxunPUWdDT4warAyblM9/WuIXG3MJAyvyyEGYjbws7Yto4ku
+7MOpsHomNe99lJPA9G+6LMwpTQO8oGJ5qCIBI8eKtiZF4+Q6JcF8oVru9tPqjedQ
+1TiWT/XKXdF0Y6gZtX1F9IGhK+vJQdk3tcPflNTcdbkl6+g8aCuKZMvovHnEuP8G
+J51E/issVj66sK/HlLzggEEcovBf0uO/kPSbMrUxtcUOPnQI/E2wJUdCQZ2QGeLg
+Qr0aFwUox+07k7pZ7M9cdwnHCoCjVLKwM/ACh2NNvBhMjRZag5NpLbKMv4psWVFu
+JLorw1j8BMIjVUOCJnSoi4RYmq6nWXYmzIahN6hf7Dcy2esm2dvv9lvycLbGnLnW
+Colin0TCGyPVe7XP+xw4erugMAYBx9zTbnds3hz/obeO91U5Z9z7uN1/Jl+dAsGX
+/pGSVTDZ
+=2Jx7
+-----END PGP SIGNATURE-----
 
-So I am not sure it is wise or even just accurate to implicitly imply that=
-=20
-other than BCacheFS filesystem developers do not care about user data.=20
-=46rom what I have seen I conclude: They do!
-
-But maybe that is not even the point: Other filesystems are maintained by=20
-other people and they do what they think is best. If you like to see a=20
-change in some merge window rules for what you try to achieve with=20
-BCacheFS you can independently from what other filesystem developers do=20
-ask for a slot to talk in one of the next face to face kernel developer=20
-meetings.
-
-Best,
-=2D-=20
-Martin
-
-
+--=-qLElnF2v/FGCh2j2pzne--
