@@ -1,124 +1,146 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15395223DCE;
-	Fri, 20 Jun 2025 21:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793DF223DCE;
+	Fri, 20 Jun 2025 21:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750455703; cv=none; b=Eyt6Mjk/S+i2SStSvyNUIcxKOZlC6AVDuWZNn+ODK8bqRl+VTUwOEsSrxAuM9s6OizcDc7GPMjDqv8frRzS4EaqyN1l9LcRmADF/HMecjmlJXqkaqtuckCnPF5QElMAr16dzx3qNptVY5vgj+UbaZLrwZNCU6UfnR46VJDAZCu8=
+	t=1750455743; cv=none; b=fqfICg/dXcEjof9+JVMb/SmKvxzB0kFUWWGhAp5RTMxr2s+hkuLXhUmPMdL81gDrKCNE68yVZvUnHvXrXOwOV1wGuo219f8D90NGpGAtMWC+WTfDE3pzCYfs1nBGNvxXpepHFNn5H0nZPyjcpfbskyQZ+shnWUcEEk1ot1uwbf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750455703; c=relaxed/simple;
-	bh=4Ft72Nr3kzVywy6TOavol3W71SO2Q3KhMx60de80J9E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgdi5IQpHV5I5VMQ1kwjNS6W34O8hP0lztZxyPmCLbqHgFxrJRVEJtySEbazbhBw88dSLCdBbbtpGfXAejZ15Ho6elwfhkuUk0SjnR4St12Tk7Hufwra3+cLaF5TQlyYWjwlThrO61I2XU63Qg9tfWBWhQ7jbfNpc6nDvxNfyTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nOwJDIKj; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750455743; c=relaxed/simple;
+	bh=MDo5BKeBcgPmn7NbWD5LBoZwmlxlCqcmLzLHc7Iu6cI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rbLQ8stLcV1Q6vr+dSbhG9J7qtpWKW8PXzC1beCHiffAp/P1yqNjIIT7Vjd7ZjJev7qb5FLr0GFJGvWhyQmTYyEuS9ku8MM5f+KbfbTiM5IVQ3LuHxZkcjMKaIFZHCrzYpAeCVhEGe+hiMQPbXHRy9lOZZLOgDBKNhNJkM4QQWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKmi1RUP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOwJDIKj"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e82596e88c4so2119593276.1;
-        Fri, 20 Jun 2025 14:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750455701; x=1751060501; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8uAahrOS33o7sgUXOZ2rcoYNIsua8jD0KjR6EQqfEsE=;
-        b=nOwJDIKjsw9jNAv/2FUkgrvce422QwghnOKNi7USHmr/BZLgaxGrHVOYNvNYg1GjY+
-         1P8n6Cz9LmZPtBWe8onGBo7B6rTq/bjVqq9znN08xEHAZ39nhW1/Izm0iFCeTrGiOjet
-         nie3LfGkLGrsZaSJDfnbvI2TX+FN/Xu4eNPFh6ujVUQiJRKi82BLauqdkSBxhogeLCTe
-         MI/6nKmZnr0S72pir3jlZwsC52618Z8LUq52fa4aUG9st0ZgYynCp6DA5Yw2MnbNHqYI
-         Ldfq8X6bFRRUh2YQ1f966Sv79pd4v5bPzeI1kaROtF1hdb+ONdFlwF6RZkw0Dx76NJah
-         CpjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750455701; x=1751060501;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8uAahrOS33o7sgUXOZ2rcoYNIsua8jD0KjR6EQqfEsE=;
-        b=FtkrkS9kw7sLT4Xq2T3mPv4hiQlDJW2t6UxammgvXEI+tdXtxoxkKliOE3Kq4ObGHp
-         uQ4s5txnwcapLbpcikOgO/ddCv65Mrm3XdZlpAUSfqyo2ezOBCiWxjFvXWKcwSbkiq3K
-         V8KzOeRXpujFYrfCXaswKr/2mdjQ5FWqVTY4PJVkhvUTNrJn87nfF5y4tXE63TWVdLoq
-         SC9bhFLgz+vPMnw/PPyE/sgsaAJ6sW0cCqSRbKuhX7LmGntBZG90jUiagZZeybGraRrB
-         FNXeqjzk5sF+Uk7eVAXNuZr3+vZdTTJ5owIiCwrv/e9cpunBmxZgyaiGLZtNWRddLK/l
-         WO2A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0InpqP5dKbCcd8wlc6jQteozoEOSwm8MJjrCJm9eURyXo/9cxUtm3eYTfiq2uET1nZEIivMJxgJ1H0VE=@vger.kernel.org, AJvYcCVyuZTlkcWPW72zv2EyJ8gSwHbB+WBm+Fb0JLuYVgLky9xzZ7/o+O7Lediw6gGpQkYS9vYpd/2J/4EhKWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt866eFY/wOH+ws3EsP7DJ1nL8OIQ9weKpnsxtvx5kHrQor4na
-	Kd2nrwKW7010mob96k5IBPUpjcFxC0P3bOXHx/r5ipMNKi9ihhJaSmiw
-X-Gm-Gg: ASbGncsKyZ9DQhhOLJsAsIDilWKCB1tcXbuFJbVo383PX42xCRIdwMC3dE0LUSKG3z8
-	P8KvCvEwB+8ZNtBd+USabc6HbVFr2qZyZ+l4qYm/3RcepevxyX/Su4iJy2+G7ijgX+mDjoHcAux
-	lU5PmUwvAkRBY1u0gLfIrc5z3Q7RDEmujzbwCNq9amaVmndieKeDBXgegXwhQjCZ35RIiDFknHR
-	rVAEORgJnBQXPi5KhgrRvujKwA6Wz0vKNDrwH2skb9VNG4LGgDLI1sE0M0Ti6azf9S9cgQYHrN7
-	uXKyhyCNIXiwFsvA29bUxX75gBsBCsptvGv+ACRyTc4mzDmOi0cF3371FLDwksWVPFidANBnPy1
-	v
-X-Google-Smtp-Source: AGHT+IHeXdhoQ2nRO39pjKloDWk33DX/i8jd5QX1dRew5XBLdy1rsgIznRHcWftril4Hpft3Ei2lpg==
-X-Received: by 2002:a05:690c:6910:b0:70e:7503:1180 with SMTP id 00721157ae682-712c63b2084mr74607287b3.1.1750455700979;
-        Fri, 20 Jun 2025 14:41:40 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4bec110sm5836707b3.105.2025.06.20.14.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:41:40 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: mchehab@kernel.org
-Cc: alexguo1023@gmail.com,
-	hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: dvb-usb-v2: ec168: fix null-ptr-deref in ec168_i2c_xfer
-Date: Fri, 20 Jun 2025 17:41:38 -0400
-Message-Id: <20250620214138.3224843-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKmi1RUP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12075C4CEF2;
+	Fri, 20 Jun 2025 21:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750455743;
+	bh=MDo5BKeBcgPmn7NbWD5LBoZwmlxlCqcmLzLHc7Iu6cI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sKmi1RUPHyAecYUQbi/pwabxNAlkzVrYy6AqvldSnOqjnXiM9ah+WBuLx7p589i8B
+	 Go9hOZzmo6SL1mXIwf5oNijBXoOkBIpS4Bddo1vN5mK5C3J94IcjGCIDbwax1Cslxr
+	 Am4iJZS1nWf2FLdVmjPKpNrcv9keYcbFNRfgqiCusKYbwnqb03m793abgSaehaySoe
+	 +7xY52/d6D2lfCxehbI7Efw3pPUcbBESZp1+/9FIoJaHnRh7uNLOG8VETApljsEq5E
+	 UHT44cYBnfsXUJ3v1R6G2oLonLdTTDn7UZNm5+n0E0fzknE2tlOPILY8j0ROsnY5PG
+	 MW6O2Q8TSWK6g==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5533303070cso2227524e87.2;
+        Fri, 20 Jun 2025 14:42:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW8+s9ZRnGSAfopNJayTsaeq6XvMT/TF4+mpRk/hg1YGP5I/308rIhYlt9sGx7dNTLOmfHhYZQS0UGlig==@vger.kernel.org, AJvYcCWnLqbu3NcJwtJqXTZJ3fltiSfAVlo6kp0WjsxQnnmH0js8ZVyzIOh2zJEmdv0rpBOfeCzpFWuqqg9VCA==@vger.kernel.org, AJvYcCXDS8chZU4s63eWTvZ1Dm3z/GwX7gHH2golwJ09KvtpF783uThLiuFdM31oObC2pY9JBFtNjmTeR2Tpbw==@vger.kernel.org, AJvYcCXbYtk47KhG2YhoYinGeamXD/vx9OCx3aviPrlhLx6xYldoGab1n4vTKKbK/MgZCMD6x1dCvH10F0jSh/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl3hsOJlKoylU+urbAevXlaVRqwC6uShRMaii1paDSd5cgtIgI
+	I+Zx5LNd4BAAZ7JO0/kBlGXIgAxOSoRCc3gA1TvYC6vW112y6LYPcY039VLZM8c42TygQLgIzQN
+	TF+hMp8raSrUSpOMH8U7V7TaJsUUgpQU=
+X-Google-Smtp-Source: AGHT+IF4zL8HzdSoyp3X55tccHF1RCClcd5RW2imn5+lno/a8Scx+LS0VpX+b6I1a2EEkQVz388BFVI8Z0Ese3QFfg0=
+X-Received: by 2002:a05:6512:3f22:b0:553:a32a:6c2 with SMTP id
+ 2adb3069b0e04-553e3b99756mr1583899e87.6.1750455741405; Fri, 20 Jun 2025
+ 14:42:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616014019.415791-1-ebiggers@kernel.org>
+In-Reply-To: <20250616014019.415791-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 20 Jun 2025 23:42:09 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEun-5OnM9tUEkG31aHjhAJn=fXrdQTqSJTBC1idZhoqQ@mail.gmail.com>
+X-Gm-Features: AX0GCFv7xLQ-CGFr1i8AgPSK06Jy3OHs0QlN0RpC7Mpe2EtNiMuW6iQTuZTZV3s
+Message-ID: <CAMj1kXEun-5OnM9tUEkG31aHjhAJn=fXrdQTqSJTBC1idZhoqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] SHA-512 library functions
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	sparclinux@vger.kernel.org, x86@kernel.org, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-msg is controlled by user. If accessing msg.buf without sanity
-check, null pointer deref would happen. Although there are some
-existing checks on msg.len, they do not cover all buffer access
-points. Therefore, we add an additional check on msg.len to
-prevent potential crashes.
+On Mon, 16 Jun 2025 at 03:41, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> This series applies to v6.16-rc1 and is targeting the libcrypto-next
+> tree.  It is also available at:
+>
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha512-lib-v2
+>
+> This series adds support for SHA-384, SHA-512, HMAC-SHA384, and
+> HMAC-SHA512 to lib/crypto/.  The new functions take advantage of the
+> kernel's existing architecture-optimized implementations of the SHA-512
+> compression function.  The new functions are fully tested using KUnit.
+>
+> To avoid duplicating all arch-optimized implementations of the SHA-512
+> compression function (~3000 lines of code total), they are moved into
+> lib/crypto/ rather than copied.  To make the "sha384", "sha512",
+> "hmac(sha384)", and "hmac(sha512)" crypto_shash algorithms in the
+> old-school crypto API continue to be properly optimized after that, they
+> are reimplemented on top of lib/crypto/, which is straightforward.
+>
+> The following lists some of the design choices and conventions that I've
+> followed in more detail.  Where these differ from the code or APIs for
+> other algorithms (e.g., SHA-256 in some cases), I'd like to do it this
+> way going forward and plan to fix up the other algorithms accordingly:
+>
+> - APIs are fully documented with kerneldoc comments.
+>
+> - APIs cannot fail, and return void.
+>
+> - APIs work in all contexts.  This doesn't mean that they *should* be
+>   called in all contexts, but rather they always just work as expected.
+>
+> - Tests are KUnit tests, and they are fairly thorough (more thorough
+>   than crypto/testmgr.c) and also optionally include benchmarks.
+>
+> - Architecture-optimized code is integrated the same way I'm doing it
+>   for lib/crc/: it's in subdirectories lib/crypto/$(SRCARCH), it's
+>   enabled by default, and it's inlined into the same module as the
+>   generic code.  This solves a number of problems; for more details, see
+>   https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org
+>
+> - HMAC support is a first-class citizen.
+>
+> - APIs handle zeroization, when applicable.
+>
+> - Message contexts are *_ctx instead of *_state.  It's shorter, avoids
+>   ambiguity with the compression function state, and matches OpenSSL.
+>
+> - Length arguments are size_t, are in bytes, are named len or *_len, and
+>   immediately follow the corresponding buffer.  "Object" being operated
+>   on is first argument; outputs otherwise follow inputs.
+>
+> - The structures for different algorithms use different types, which
+>   prevents usage errors where functions are mixed up between algorithms.
+>
+> - The compression function state is strongly typed, not a plain array.
+>
+> Changed in v2:
+> - Added "crypto: sha512 - use same state format as legacy drivers"
+> - Fixed build on user-mode Linux
+> - Fixed W=1 build warning by adding <linux/export.h>
+> - Optimized __sha512_final() and __hmac_sha512_final() slightly
+>
+> Eric Biggers (17):
+>   crypto: sha512 - rename conflicting symbols
+>   lib/crypto/sha512: add support for SHA-384 and SHA-512
+>   lib/crypto/sha512: add HMAC-SHA384 and HMAC-SHA512 support
+>   lib/crypto/sha512: add KUnit tests for SHA-384 and SHA-512
+>   lib/crypto/sha256: add KUnit tests for SHA-224 and SHA-256
+>   crypto: riscv/sha512 - stop depending on sha512_generic_block_fn
+>   crypto: sha512 - replace sha512_generic with wrapper around SHA-512
+>     library
+>   crypto: sha512 - use same state format as legacy drivers
+>   lib/crypto/sha512: migrate arm-optimized SHA-512 code to library
+>   lib/crypto/sha512: migrate arm64-optimized SHA-512 code to library
+>   mips: cavium-octeon: move octeon-crypto.h into asm directory
+>   lib/crypto/sha512: migrate mips-optimized SHA-512 code to library
+>   lib/crypto/sha512: migrate riscv-optimized SHA-512 code to library
+>   lib/crypto/sha512: migrate s390-optimized SHA-512 code to library
+>   lib/crypto/sha512: migrate sparc-optimized SHA-512 code to library
+>   lib/crypto/sha512: migrate x86-optimized SHA-512 code to library
+>   crypto: sha512 - remove sha512_base.h
+>
 
-Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
-fix null-ptr-deref in az6027_i2c_xfer()")
+For the series,
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/media/usb/dvb-usb-v2/ec168.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/usb/dvb-usb-v2/ec168.c b/drivers/media/usb/dvb-usb-v2/ec168.c
-index 973b32356b17..a72fc009269e 100644
---- a/drivers/media/usb/dvb-usb-v2/ec168.c
-+++ b/drivers/media/usb/dvb-usb-v2/ec168.c
-@@ -115,7 +115,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
- 	while (i < num) {
- 		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
- 			if (msg[i].addr == ec168_ec100_config.demod_address) {
--				if (msg[i].len < 1) {
-+				if (msg[i].len < 1 || msg[i+1].len < 1) {
- 					i = -EOPNOTSUPP;
- 					break;
- 				}
-@@ -135,7 +135,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
- 			}
- 		} else {
- 			if (msg[i].addr == ec168_ec100_config.demod_address) {
--				if (msg[i].len < 1) {
-+				if (msg[i].len < 2) {
- 					i = -EOPNOTSUPP;
- 					break;
- 				}
-@@ -147,7 +147,7 @@ static int ec168_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
- 				ret = ec168_ctrl_msg(d, &req);
- 				i += 1;
- 			} else {
--				if (msg[i].len < 1) {
-+				if (msg[i].len < 2) {
- 					i = -EOPNOTSUPP;
- 					break;
- 				}
--- 
-2.34.1
-
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
