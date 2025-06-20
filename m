@@ -1,103 +1,48 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562FE12A177;
-	Fri, 20 Jun 2025 15:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B12D29CF;
+	Fri, 20 Jun 2025 15:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433193; cv=none; b=O4fUTSQmDUPgzoqIonOXmVXjSPABvA3Bddw5eY6/UJjoViaMzBzCoAgCLrr8jGiTvenLdIBTjDOjimyQxmTMwqbldssEpNzGAwVjbvWedvCqkWXfX8nM2JfE4/HZTFI4y6kM0x4f2QPRENRv4bPcYitUvL/OizuFm3oSJs5DUJU=
+	t=1750433209; cv=none; b=XoRdJg1jQAZqwfj3hYxQbLOE9M2c7yqh9mQaoj7c1pHXPbxgVgSacqTaHMUwf57uPq+mjwp/Onj6ibt3totR8gt+NmkziG+18cpGBMdJ+ul7EjMWFJO8MVic9bAsqydHYGyOMDUk/JQrgxvauZwz0GNuY1r2vamfOYnj7/agSBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433193; c=relaxed/simple;
-	bh=E4agwpxGFwqFeVJHeOCM9PGifChpw9gXLh90YWEsmCM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=XVs9FfIZbNlW3Sc3s/NsmqKkarNpcL7ytDN8MexQNcIron30SQ60+qQ+2Y+cTASSypaOVWzJv04YTsHN5cr2v1KN8LNIkXjVOq0rVNAWJoeiaJzvo2j5PCMgGVCGZsYk8xWQaC6T8bQJAcWL+CqTOYMPNjOKvnL34t/SfypMyJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.tugraz.at; spf=pass smtp.mailfrom=student.tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=eR29HlEw; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=student.tugraz.at
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="eR29HlEw"
-Received: from [10.0.0.5] (178-189-174-90.adsl.highway.telekom.at [178.189.174.90])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4bP1L86r7hz1LQwm;
-	Fri, 20 Jun 2025 17:17:20 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailrelay.tugraz.at 4bP1L86r7hz1LQwm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1750432641;
-	bh=9ajYOC1IbfhtjE7fvp73fh+D1VdWRvU4dVnosjwrY8k=;
-	h=Date:To:Cc:References:Subject:From:In-Reply-To:From;
-	b=eR29HlEwJg3v3GBMZqac+sDtM+0wyFt3SvPD0p9LjNopg1EjYMM0M6vyLdnqvrXNt
-	 35fZmhTZBygX5vK75wqZ2aMzAnVr7vm8arNSxdn5dFxuVfJWXHB29VqZ6kEH4F7Ne+
-	 AFKhQBOUAlWjx4yGSaa6kq1o1y0ZNhADwCGN5hS0=
-Message-ID: <46b1a3d8-c77d-44bc-9d92-edc32d7b88eb@student.tugraz.at>
-Date: Fri, 20 Jun 2025 17:17:20 +0200
+	s=arc-20240116; t=1750433209; c=relaxed/simple;
+	bh=+0zhKy1g6PNtANTN6ZpcZbuS0dBxEP0BtiSLjAgOTp4=;
+	h=From:Subject:Date:Message-ID:To; b=eYTi9WJnA3qS2pw6VkqTOl6gHQsNX8AOQnk71de4GVGszfA+Ncc7alktapTCpSc986ry7jsNluxWIhVra1BDrYJxTbHEE3x1ygXlxfHSysQJUozX55FtVV+2YSA9+/TSWwxLqEebyE3x+U8k8DT0cDiQZ/FXD+2l1xrj2PZt4yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A66C7C4CEE3;
+	Fri, 20 Jun 2025 15:26:49 +0000 (UTC)
+From: Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 6.6.94-rt56
+Date: Fri, 20 Jun 2025 15:26:05 -0000
+Message-ID: <175043316566.669148.13236685764068104135@demetrius>
+To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@oracle.com>,Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: tytso@mit.edu
-Cc: jiipee@sotapeli.fi, kent.overstreet@linux.dev,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, martin@lichtvoll.de,
- torvalds@linux-foundation.org
-References: <20250620124346.GB3571269@mit.edu>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
-Content-Language: en-US
-From: Christoph Heinrich <christoph.heinrich@student.tugraz.at>
-In-Reply-To: <20250620124346.GB3571269@mit.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TUG-Backscatter-control: gmwzW8oMfNreqDqbcncFhA
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: 0.0
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
 
-> On Fri, Jun 20, 2025 at 04:14:24AM -0400, Kent Overstreet wrote:
->> 
->> There is a time and a place for rules, and there is a time and a place
->> for using your head and exercising some common sense and judgement.
->> 
->> I'm the one who's responsible for making sure that bcachefs users have a
->> working filesystem. That means reading and responding to every bug
->> report and keeping track of what's working and what's not in
->> fs/bcachefs/. Not you, and not Linus.
-> 
-> Kent, the risk as always of adding features after the merge window is
-> that you might introduce regressions.  This is especially true if you
-> are making changes to relatively sensitive portions of any file system
-> --- such as journalling.
-> > The rules around the merge window is something which the vast majority
-> of the kernel developers have agreeded upon for well over a decade.
-> And it is Linus's responsibility to *enforce* those rules.
-While bcachefs is marked as experimental, perhaps the rules should be
-somewhat relaxed. After all those rules were made in the context of
-"stable" parts of the kernel and thus might not be the best strategy
-for parts explicitly marked as experimental.
+Hello RT-list!
 
-After following bcachefs development for a while now, I'd be totally
-fine with him pushing new features up to rc5 or so.
-Of course such a relaxed rule set should be agreed upon _before_
-sending something.
+I'm pleased to announce the 6.6.94-rt56 stable release.
 
-> If, as you say, bcachefs is experimental, and no sane person should be
-> trusting their data on it, then perhaps this shouldn't be urgent.  On
-> the flip side, perhaps if you are claiming that people should be using
-> it for critical data, then perhaps your care for user's data safety
-> should be.... revisted.
+You can get this release via the git tree at:
 
-Considering bcachefs's track record of not loosing data, it shouldn't
-be surprising that some people start trusting it, despite being marked
-experimental. With that one fs being saved by journal rewind, I guess
-we're back to nobody ever loosing any data to bcachefs, which is quite
-impressive.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-FWIW I'm running two multi device filesystems with bcachefs right
-now. They are purely for bulk storage so far, so I'm not the best
-advocate for daily use stability. However I've been lurking in IRC ever
-since Kent saved my ass after I screwed up one of those filesystems
-(100% user error, wouldn't have blamed it on the fs for loosing it),
-and after watching him work his magic for other users, I'd trust
-bcachefs more to not permanently eat my data then other filesystems.
+  branch: v6.6-rt
+  Head SHA1: d2cfda749eb5e01dd572b9e293dca7cfdb4ccb8a
 
-- Christoph
+Or to build 6.6.94-rt56 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.6.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.6.94.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/patch-6.6.94-rt56.patch.xz
+
+
+Enjoy!
+Clark
