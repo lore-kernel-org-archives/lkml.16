@@ -1,81 +1,176 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8D1264A97;
-	Fri, 20 Jun 2025 10:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A23219E8D;
+	Fri, 20 Jun 2025 10:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750416293; cv=none; b=gNmmGRy5alATQBT50cp4MU69D4jUaTUVExomc4eatNfQNySNMKYOiO4DBuCXGC+l9PhepfECzeyUC7gXdBRBvQb05OeNlgLnFXY1BjHIM9MVSZ7n94Ia50insJHLLDvZTE5GEENhRrOCznl0b+ZRNryuJkOKEjvfgWDZx+iJwvA=
+	t=1750416370; cv=none; b=UL/dcL8MX9/amaS4Omh1urwunjbQkTEVSoZ6TBvt3FKzbaWjhEm7COx0WYVT7HpM0ndjFztLAH1zvfxDv9MGubwIyUpRUVr8YD36MFz4QRpHxeksrF2Ow97/VtNU4ThaRIF8hEIJ2vl049Ju7tvgOpVm6M0RnlRpCnkcU2p02b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750416293; c=relaxed/simple;
-	bh=sn/hyt1c0VCkcr8vXMO+BQcUYCwSDgiHcd4pafoMzBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U9k7rtVcFwgprw+0RGUvkBG8aVEg8zMbzou80yyt4d43lOKR1Q48d7+pcmw7aDBBWMkJKueznKN33V7ePQJWH0wC3p3fdJHO1sL9Ku0oZuu5+psX3+2Wp4UgmVrkoUlhY1CXHfMs0gmNplvp/QVlgd6LuRFUpEnU8JRc02e6Yus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Gjpy6Q0s; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1750416370; c=relaxed/simple;
+	bh=Q+j9oZw/v/MeLULzqR7Js8GlISBHCoAvMB5UyRvP22c=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OVItJtzfSSz8c48Oo6PSpLOPbKshjry4JxUU56WpuSdtZ/Xu9NzRRMoRxML3QDg98jftiyMV734ypJg0sDC4JkhEF9fIxEs1Pco1cFbUwb831Rvo0hqjgnG1ORUFMJicwfGmKWb5JonR/ZYm5U79Jls1jL3B3EVVXdaH5XOPXZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XX3eB2cP; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Gjpy6Q0s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=E6NpiPrYTwALDtKz4Xo4CAOrnjqTcZtEQ2HVXqcTS0c=; b=Gjpy6Q0sKwh6AFiY4TGtAC7cU/
-	JUK0+UG0Mjnp2hEHiNtteiPOxf9cdPvx5YRDNYhTrh2Ci2Z/AYju00OGsjM1MFDXw5KpIM2s9qLoz
-	4Hxc3Ld9HeT7SmrgLOUC7/ej1VJ3wHaO6mgK9zqMkAhichj9AKUuyxVLLJyyUXDBZSqkVgmRjUJjI
-	3FfZSwItxTBhu8JAyI253+5EPjYrMu7ViqAwOJedra7bBNkKFbOL6LNgK3WxTsveh6A04KJnspgKI
-	PyK+sUriknvtIHUiSnNPcJBCq+lFOfOfH0535EAnyrfdCqnGZSID66W1J7YepvUimT7tYz/DCkr/8
-	aPVeyuZA==;
-Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uSZEi-00015m-Bw; Fri, 20 Jun 2025 12:44:44 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Quentin Schulz <foss+kernel@0leil.net>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v2 0/3] arm64: dts: rockchip: support camera module on Haikou Video Demo on PX30 Ringneck
-Date: Fri, 20 Jun 2025 12:44:34 +0200
-Message-ID: <175041626982.1561125.14591843219943750860.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250610-ringneck-haikou-video-demo-cam-v2-0-de1bf87e0732@cherry.de>
-References: <20250610-ringneck-haikou-video-demo-cam-v2-0-de1bf87e0732@cherry.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX3eB2cP"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23694cec0feso15251195ad.2;
+        Fri, 20 Jun 2025 03:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750416368; x=1751021168; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VuzPxfWTRlSyQwCFyPkqYH7z4kShkKHo8PIEM41jRko=;
+        b=XX3eB2cPIMLhnJEmEb8QFgmvymt+vNMlYrI/rvmsY4cnCkn5qiE7Phg7mREvf/zV1P
+         ul2cZ/fzjv+G+wi3pA+aGnrmmirhdyrXTJvTIpPoGFKoGkpMdOPWpEx7V2jigN2w9eNZ
+         1HG663+pGtp2tEgIN8fyV2TmIbUQTRnC9tmlkEsmlrAsDO+jYtkOAn1t0hm7nXsWsLzm
+         l29p2VDvhKwtAD7FL8dDgZAMB4cPhsb0XQSn4PMRxx6JlLTVBlxJjJUfWVLdyfb0JY9I
+         cJHui/+v3ioLIdox3fyhxkezb8HgEObro+L+8JI4gmI3T83DQIfyEDE46cNrgSbB2nKe
+         BrvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750416368; x=1751021168;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VuzPxfWTRlSyQwCFyPkqYH7z4kShkKHo8PIEM41jRko=;
+        b=dbNRtYmDixdz7DNuh4qpPUpA+yW4Y8y1T/DH8VAQiGPosEmXg/FhvcZl/nMc9lUb0O
+         N8V7jONRArL4T2vLaO7yBLbKY5nghJbiH1ySHnRi5BsVxlydUvC918SppEEtRh7/lLjM
+         uYXLVdQrn4dl8ambpruTwb7ZiWbbtbf7hLRcwYivfTPg1QJSc2HXMHBbdUQrcOgZ1wEb
+         AHTc+2OJMoxgVuQZXFcWRBp4w1ylhUsv+sxNrpmlnJPnG1dQ3siwZ9H0jam42iIvN68D
+         EiVa4NwaQeD7/IKzGVNvC5mw+ml8T/hkyHRcv5sz4+EGrhUKVLZnEKk3Bk0bpPNHCjiF
+         GKfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAdNmgV4uUqSBd2rt9uTqC6mE4t0Nuq5xt+WD7sPs80l8J1deSn0KZdNR3Cf6ygTt/bX0kajKxrbE5E8nb@vger.kernel.org, AJvYcCXFIrJKY6QvU+KIq1cKd60O6RNnXm1iBiKoXPBW2Xhxr0GbZ+NHtpT396ZzH7ef61cdpx8NkKt/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfgbL0Ms5wimuI01GIXh6pfBWz8I8n0Nu2rz7bXetJSvzxy3uA
+	OROj/7Dn8VnK1CkwDofbNpGAF7I6q2DjrSpPZoFrbsEUXgabMgGMQO/hEia4Meo6J64GuQ==
+X-Gm-Gg: ASbGncsEQBg7NsChhmzJHAy6exhlNbq7ZDdtOIBtu+Z54doqOmVmfDGk/nNwY0Rzg+p
+	0AQQNY9oSIQYyPge7tqa7YCHmLg7lBunC/weNToJKy29qdBs7zTGObfqD+R+qFZtXofzAZqNnHc
+	DLl+2v5f2TOLCcw8+CHt88/9fkk1AP3loXXtzcS9hcWv/WNQwFALZe/Gu+U8OOe+M3iFC42FLCe
+	GLpJRvp1j+H/LcupBz7WitBkXcJKqPaJUUO951KKrg9HXX8xRHxCiCgMfmtEhD1QrssfPsUBtt+
+	tFlbyFflcGwwoFeZ3wuFBbPQXkl4NRGjgxKvGNj7/sdD1FUxsfxAdOCj1LzZJT4w4qcJMoBq
+X-Google-Smtp-Source: AGHT+IHoD15oqSTAkNo1bhHhXLPWwnOmc9K3Fbtyp1EyYtc49G58RUu1kxJACku3Hk6L8rKeoYohOQ==
+X-Received: by 2002:a17:903:1b66:b0:234:d2fb:2d0e with SMTP id d9443c01a7336-237d96dfe41mr41656695ad.10.1750416368106;
+        Fri, 20 Jun 2025 03:46:08 -0700 (PDT)
+Received: from smtpclient.apple ([202.8.105.124])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86db251sm15081465ad.213.2025.06.20.03.46.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Jun 2025 03:46:07 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
+From: Jemmy Wong <jemmywong512@gmail.com>
+In-Reply-To: <2dd7rwkxuirjqpxzdvplt26vgfydomu56j3dkmr37765zk67pd@aou7jw4d6wtq>
+Date: Fri, 20 Jun 2025 18:45:54 +0800
+Cc: Jemmy <jemmywong512@gmail.com>,
+ Waiman Long <longman@redhat.com>,
+ cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9BDD726A-2EAE-46C3-9D00-004E051B8F5B@gmail.com>
+References: <20250606161841.44354-1-jemmywong512@gmail.com>
+ <2dd7rwkxuirjqpxzdvplt26vgfydomu56j3dkmr37765zk67pd@aou7jw4d6wtq>
+To: =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ tj@kernel.org,
+ hannes@cmpxchg.org
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
 
-On Tue, 10 Jun 2025 18:22:15 +0200, Quentin Schulz wrote:
-> The first patch is fixing dtc warnings related to the ISP on PX30.
-> Sadly there's still one due to there only be one port in PX30's ISP and
-> still address-cells and size-cells properties set. The "issue" is that
-> there are actually two ports (see binding) so we shouldn't really remove
-> it, but the binding requires a bus-type property (either parallel or
-> bt656 mode) for the port@1, which we cannot know from the SoC PoV.
-> 
-> [...]
+Hi Michal, Tejun, Johannes,
 
-Applied, thanks!
+Thank you, Michal, for supporting this modernization effort to adopt =
+guard constructs.
 
-[1/3] arm64: dts: rockchip: fix endpoint dtc warning for PX30 ISP
-      commit: 5ddb2d46852997a28f8d77153e225611a8268b74
-[2/3] arm64: dts: rockchip: px30: add label to first port of ISP
-      commit: 9ad8e83d8abd083c701e75d7fe664c706daf6d56
-[3/3] arm64: dts: rockchip: support camera module on Haikou Video Demo on PX30 Ringneck
-      commit: 99680fd394b912bf133b5b1e45aced1b7aea1d2e
+With 3,326 instances already in use across the kernel upstream,
+guards offer improved safety and readability.
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+I look forward to working with the community to integrate them into =
+cgroup=20
+and welcome feedback to ensure a smooth transition.
+
+Best,
+Jemmy
+
+> On Jun 17, 2025, at 5:08=E2=80=AFPM, Michal Koutn=C3=BD =
+<mkoutny@suse.com> wrote:
+>=20
+> Hello.
+>=20
+> I understand why this might have been controversial but I'm surprised =
+it
+> remains so when the lock guards are already used in the kernel code.
+> Documentation/process/coding-style.rst isn't partisan in either way.
+>=20
+> Johannes:
+>> heebeejeebees - it's asymmetric and critical sections don't stand out
+>> visually at all.
+> - I'd say that's the point of it for functions that are made to
+>  manipulate data structures under the lock. Not to spoil the code.
+> - Yes, it's a different coding style that one has to get used to.
+>=20
+>> extra indentation
+> - deeper indentation =3D=3D deeper locking, wary of that
+> - although I admit, in some cases of the reworked code, it's overly =
+deep
+>=20
+> Further reasoning is laid out in include/linux/cleanup.h. I noticed
+> there exists no_free_ptr() macro and that suggests an idea for =
+analogous
+> no_exit_class() (or unguard()) macro (essential an unlock + signal for
+> compiler to not call cleanup function after this BB).
+>=20
+> Tejun:
+>> There are no practical benefits to converting the code base at this =
+point.
+>=20
+> I'd expect future backports (into such code) to be more robust wrt
+> pairing errors.
+> At the same time this is also my biggest concern about this change, =
+the
+> wide-spread diff would make current backporting more difficult.  (But
+> I'd counter argue that one should think forward here.)
+>=20
+>=20
+> Further benefits I see:
+> - it is fewer lines (code is to the point),
+> - reliable cleanup paths,
+> - it is modern and evolution step forward (given such constructs
+>  eventually emerge in various languages).
+>=20
+>=20
+> On Sat, Jun 07, 2025 at 12:18:38AM +0800, Jemmy Wong =
+<jemmywong512@gmail.com> wrote:
+>> v1 changes:
+>> - remove guard support for BPF
+>> - split patch into parts
+>>=20
+>> v0 link:
+>> =
+https://lore.kernel.org/all/20250605211053.19200-1-jemmywong512@gmail.com/=
+
+>>=20
+>> Jemmy Wong (3):
+>>  cgroup: add lock guard support for cgroup_muetx
+>>  cgroup: add lock guard support for css_set_lock and rcu
+>>  cgroup: add lock guard support for others
+>=20
+> As for the series in general
+> - I'm still in favor of pursuing it (with remarks to individual
+>  patches),
+> - it's a good opportunity to also to append sparse =
+__acquires/__releases
+>  cleanup to it (see also [1]).
+>=20
+> Regards,
+> Michal
+>=20
+> [1] https://lore.kernel.org/r/Z_6z2-qqLI7dbl8h@slm.duckdns.org
+>=20
+
