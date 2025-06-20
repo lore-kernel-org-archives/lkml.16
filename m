@@ -1,111 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F42421A425;
-	Fri, 20 Jun 2025 11:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B90289E1B;
+	Fri, 20 Jun 2025 11:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419533; cv=none; b=jVXagAcgJpGHdtLUEu0AvG4T3Kv4KuIHL9QjXocu9IY61zlheN8ZGKnRT0xYnbKDEJLirdl61E5ep+KJZOQduXp9fygLsZmb9DTCrweSpullqszbaBv6fXjsLbj/en8JRxEnTQsKjNRFIM7yKnupGpnzw2ge+dwaszUUjeqAlW0=
+	t=1750419551; cv=none; b=VdxFMnNzGgn9yKIe/aKiRr5s8h4S6/vj29xpylCPy8HR2yi6cSfY7WtDJZ6VOuMISAW1ez2NxuaQcCNTXtINswxU1vn0E0WGESdW+UKBX5BZ+zP7FkNpgdx9KPCMjK8Dlx6OtmIEs85gpi5osJpW0ZPV3zpsh4tGSKW08F8KSvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419533; c=relaxed/simple;
-	bh=wldGJgpWJX2/0ox4U/bhSDHg+C5dlQXJ/dU+3159yuc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fbolBHXGIGiVquGPOViWPZiSVyU0u9EEDraeLs0ZI680HrqWtUwZEOZX4FsGUbzoa/jWLPMsdWru6nl2SgjgbfnGnXMEuOfWQAHEaMjZeM0Bgo2dH3049tOKyri2q9WrmxHIf2Y9d1fb2y/fIUr6Z6gCyiXgzvrM+MpxGVAitJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dldju2PV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750419551; c=relaxed/simple;
+	bh=wlMSg2riugAfkN85IR0d+QwxYeOTHn4R4XxsXr3+82I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q8iqsvbYY+QJeAP+h5FE6ho85yV0hM5viyO6RMv/1bUuPMTYS/DJS6P+yy9n3ZMaaP8LlB8WRLTrwOSbZOYRnAgMGWeKVKNF3G1LyDgzG0DlDckVO39zQesNjkBFYXBTWtGLrh+zn5G8vTLvuNCqXP22QrYZQHnB8AqjQmximOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfhSYPMu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dldju2PV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCFFBC4CEE3;
-	Fri, 20 Jun 2025 11:38:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfhSYPMu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C154C4CEE3;
+	Fri, 20 Jun 2025 11:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750419532;
-	bh=wldGJgpWJX2/0ox4U/bhSDHg+C5dlQXJ/dU+3159yuc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dldju2PVtEAP0iOcKTNK5vE2o3MW/EilJAOJSK3Zx1GIX0B85uwHE0Zjzq3HyMT+V
-	 HqBbayBwnJ5Q7J0u56Lb8OyHOi7e7CjiiHbHBwQKDNJ9Rv9aYo4kCH+cUfTeeBlHR/
-	 miZPL9NIQkQYSoWD16p407/1I6M3WntWtqTNZY0KWLNS3WFEF5/FB0jRNDKSYilNiT
-	 gskxkUb9r4fXjYLKnkdDVV5t+DU76gRayPyDHD6xl4vzh8nvMm1Ie0WL//VL94xHYP
-	 ln6rxkqW78au2X2/u3+vYRJ6Ha9AfYmv9CX+4L12K/PmWCpgbM6CgkFD049HJxzwMV
-	 zhjT+iPhEqMHA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
-Date: Fri, 20 Jun 2025 13:38:31 +0200
-Message-Id: <20250620113846.3950478-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1750419551;
+	bh=wlMSg2riugAfkN85IR0d+QwxYeOTHn4R4XxsXr3+82I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tfhSYPMufvABKiFV/9fY8FJUQu2RGHa7314EGdcvwvKRV/HR+kLV5fuf90UfIJWYc
+	 7ST7sXuTt2cEKvHPBW5j04HroR54BA2sxX5YTzDS8pV5MY22yooE3AKwP77SKVmal4
+	 jXy67ke1l/6C2+fIxU+suWkeh9g6LyAu8uDpTxj9Ib9LkHApjLL/f+EBwpu/rPLfSp
+	 6sIyokJrHWKcdEdUGgt4CBF0VxOITrk3sdYHx52XxB7ARX3FzvcePHwThFaG2J7lNE
+	 gF4aaN9i9z9+CdhyiGglZtKL/ZXDXHs4JW1XiEPb3C3pk2UYt4ViwGlv6w60MhuFm7
+	 QbdVHbuj64tpw==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b435ef653so15905741fa.2;
+        Fri, 20 Jun 2025 04:39:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgw7MCv818aVSXCBh/F3veBTGGaPaIfloShQxTAto6JJe/fdUPtLKUVEtaSplIpn7NEnUDtph/JhdquWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0d8DI8Iqi1bTTAM5SUdJ9RTIS9x3zcrvHeayBZnvDZzXBk/UY
+	ENmbieoSfiUSwf4qQ4E16LrZGPuNbM/T7notvMhFqOrK/5PThoCimd2eauVP/E1yNiVO7G1WjHF
+	tMxYCgxQIxElCxoV3Nz7E04WMkabnjYk=
+X-Google-Smtp-Source: AGHT+IFS6pYf1hoEDVGPVtohGNV2l8Me/be+PTgIC1679iU9mPhI9K4uWXdozzPLGEskHfgZ0nrLVH9A8nSFOVSp7/I=
+X-Received: by 2002:a05:6512:3f10:b0:553:522f:61bb with SMTP id
+ 2adb3069b0e04-553e3b9a494mr1057793e87.12.1750419549990; Fri, 20 Jun 2025
+ 04:39:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250620111607.984534-1-vkuznets@redhat.com>
+In-Reply-To: <20250620111607.984534-1-vkuznets@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 20 Jun 2025 13:38:56 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXESncEk_gtG_CV7XnMJTnZWEOs+Dj8jMHzsvuFvyOsLLw@mail.gmail.com>
+X-Gm-Features: AX0GCFuuhr8MQbjwRSlAcE07yepOSaP-QcfzpK6ASqV62EM63LWxHnwJ05Z9SqQ
+Message-ID: <CAMj1kXESncEk_gtG_CV7XnMJTnZWEOs+Dj8jMHzsvuFvyOsLLw@mail.gmail.com>
+Subject: Re: [PATCH v2] efi: Fix .data section size calculations when .sbat is present
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: linux-efi@vger.kernel.org, Peter Jones <pjones@redhat.com>, 
+	Gerd Hoffmann <kraxel@redhat.com>, Heinrich Schuchardt <heinrich.schuchardt@gmx.de>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 20 Jun 2025 at 13:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Commit 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT
+> section") neglected to adjust the sizes of the .data section when
+> CONFIG_EFI_SBAT_FILE is set. As the result, the produced PE binary is
+> incorrect and some tools complain about it. E.g. 'sbsign' reports:
+>
+>  # sbsign --key my.key --cert my.crt arch/arm64/boot/vmlinuz.efi
+>  warning: file-aligned section .data extends beyond end of file
+>  warning: checksum areas are greater than image size. Invalid section table?
+>
+> Note, '__data_size' is also used in the PE optional header and it is not
+> entirely clear whether .sbat needs to be accounted as part of
+> SizeOfInitializedData or not. As the header seems to be unused by the real
+> world firmware, keeping the field equal to __data_size.
+>
+> Fixes: 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT section")
+> Reported-by: Heinrich Schuchardt <heinrich.schuchardt@gmx.de>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+> Changes in v2: drop PE optional header adjustment [Ard]
+> ---
+>  drivers/firmware/efi/libstub/zboot.lds | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
+> index 4b8d5cd3dfa2..367907eb7d86 100644
+> --- a/drivers/firmware/efi/libstub/zboot.lds
+> +++ b/drivers/firmware/efi/libstub/zboot.lds
+> @@ -58,6 +58,6 @@ SECTIONS
+>  PROVIDE(__efistub__gzdata_size =
+>                 ABSOLUTE(__efistub__gzdata_end - __efistub__gzdata_start));
+>
+> -PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
+> -PROVIDE(__data_size = ABSOLUTE(_end - _etext));
+> +PROVIDE(__data_rawsize = ABSOLUTE(_edata - _data));
+> +PROVIDE(__data_size = ABSOLUTE(_end - _data));
+>  PROVIDE(__sbat_size = ABSOLUTE(_esbat - _sbat));
+> --
+> 2.49.0
+>
+>
 
-clang versions before version 18 manage to badly optimize the bpf
-verifier, with lots of variable spills leading to excessive stack
-usage in addition to likely rather slow code:
-
-kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
-kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
-
-Turn off the sanitizer in the two functions that suffer the most from
-this when using one of the affected clang version.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/bpf/verifier.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 2fa797a6d6a2..7724c7a56d79 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_env *env, bool *do_print_state)
- 	return 0;
- }
- 
--static int do_check(struct bpf_verifier_env *env)
-+#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
-+/* old clang versions cause excessive stack usage here */
-+#define __workaround_kasan  __disable_sanitizer_instrumentation
-+#else
-+#define __workaround_kasan
-+#endif
-+
-+static __workaround_kasan int do_check(struct bpf_verifier_env *env)
- {
- 	bool pop_log = !(env->log.level & BPF_LOG_LEVEL2);
- 	struct bpf_verifier_state *state = env->cur_state;
-@@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verifier_env *env, struct bpf_insn *pat
- /* Do various post-verification rewrites in a single program pass.
-  * These rewrites simplify JIT and interpreter implementations.
-  */
--static int do_misc_fixups(struct bpf_verifier_env *env)
-+static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env *env)
- {
- 	struct bpf_prog *prog = env->prog;
- 	enum bpf_attach_type eatype = prog->expected_attach_type;
--- 
-2.39.5
-
+Thanks, I've queued this up now.
