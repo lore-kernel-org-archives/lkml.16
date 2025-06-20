@@ -1,236 +1,290 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2088.outbound.protection.outlook.com [40.107.236.88])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92324223DDE;
-	Fri, 20 Jun 2025 19:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750447235; cv=fail; b=NZ3KVBfvZZwzHSpUNHskAywDb36oDJx42j1VqRAVlksi2HMtAokPAkG9D2LZpyVyXJklg5ChjXs0Ppk5NC/k1tos+kjIs5B362KPft5va6jiLqKHS+C6NXY7uNYhBlz2jsfqLBjK9rw93lU5HSYKTMwrN0GiC2HWsmZdS7Wbb38=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750447235; c=relaxed/simple;
-	bh=E/+IJMx2BDEYp1q/zu8Lozv5LRsTa+vzyyjhVTaUzYg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OtH2Do7o1l59hkg6Jg1mgFzcLnB+5Yt9QusE1Wy3fQclep1Ze+MTrneT1kt734AGedhehFYES1lJ9jE280XYRf7RDH7w8blf1A13ET96Gjb75P7g0gF2UEBAskszdaWxgdFf8Ge7WBh6TaDyhMqe31aKjDQ5bqiyt84lIC0tGqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TAXGaNmT; arc=fail smtp.client-ip=40.107.236.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588AA136988
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 19:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750447554; cv=none; b=bhUx9JZN2FsS77M6IssdEN1SVt9VAk0G+UVQV4MpDs8DhVv1XlYSJUVORxQZZMiOt38MfnHRKwFx7h1UmrNhXRtCcRZDzwzi3quOPPoJ6Liy0CCfAH4jiETixQ7NRBaxbrrB4VRH2P0zp7gONbjq1lOCtxo/eOfVb3x97x70Yzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750447554; c=relaxed/simple;
+	bh=trw4k6x6wf8zoNXKTzsH1Sgck6t2ntYdxhfE1fbShwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iQPs6Ht3swlpDtEL0x5T9YtyJq2p5pVRa1HG/sTydlh2BU/gGFcympyo9JrLwCNm0sLqlGjb8ZlWTd8NNhUBC/9zBDH5E0+ZuXod/qNaP3y8pE/jk5nLmU2wVt/AWe4x6uOSUSwOzCgYJxblgmnvpjOANs3mmvycd/Xs1tbas30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XzEQQaUO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TAXGaNmT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DXdPLAfE7GbspEJYFW77WEsL6LjDrgOYdkYgrwJavNvhnGnV9QbkwrXJj7FX4jjc6wsQDmjnuAtuSnjft3/aFYQdjZYX8rkrkHEZszc0oICTYT5AbwvBWaUrfF1V1KFkA8+VBN0Jy04uJeCcQacfHXmrsfMKeapb8EKydD2gZaI/jyZSVPUwVnxVmGq5Wtets0BCt5NzCLT6Rv1xgPhqsRm0gzgN1u65Rstm21vrk0pRweTt/xt5Eyt1hmClNFF7x/TgMEU0oT/DH80RJdW3UkcONsWEyT3mJjnGHMJzLRWjju1gu+y5EOkDnKfnM4O6qhPk3nPbzfUbZaSZd3rWMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nLuWc4VdonxYcSp7jQUYGIq1ddLLNcDF9Wbpks8/+X0=;
- b=hBzfBJTdiGzvhVaLaVqgcpCx4Ys1d3tBALAzr8J2fvwR0mCgz4IWp87BUuuC9gg8Srq+UmZj8dWzvmGEyY8ShKupN3vA3ocCnAOqpD9kmGZDE4lkYTK+AUSbT++LXYsoJZt10JgVk7vxKgbuLfuh6bEfAdMTvbyt7I1zrn6tcs84ciliwusd9VAiylSHgjhFTR+ha5shbw5IcQV1xHtrkL5GH4f3j06de/X2/KuSMkqbxRcFPqG4gvZdEEHLrVIaPa42FQArVotcs3cHxcza03hdGTUllBOYrQq8jpCNPat++Bi9RjAa7FcWZXJXy/rOskJoWzuQCbQaigCXLdCoCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nLuWc4VdonxYcSp7jQUYGIq1ddLLNcDF9Wbpks8/+X0=;
- b=TAXGaNmTbbJfQlQRMUXPVr+hkVrHWQNqvHy4yQHlMO52JnR7tsko0+nChwVx4AyXnCk7IKs7FQvRey027fwaKebUYUCdPRxbVzouEQxsKhfHX59vlqduzrGZWgjOaW9M7sGHt3vml6Qxtg839AE4RvhpPIIxoyhaCKi3hn6taCw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by PH7PR12MB8054.namprd12.prod.outlook.com (2603:10b6:510:27f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Fri, 20 Jun
- 2025 19:20:28 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8857.019; Fri, 20 Jun 2025
- 19:20:28 +0000
-Message-ID: <a0ce9850-cde4-4e17-997b-ad06a76a23d6@amd.com>
-Date: Fri, 20 Jun 2025 14:20:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] crypto/ccp: Fix locking on alloc failure handling
-Content-Language: en-US
-To: Alexey Kardashevskiy <aik@amd.com>, linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ashish Kalra <ashish.kalra@amd.com>,
- John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Michael Roth <michael.roth@amd.com>
-References: <20250617094354.1357771-1-aik@amd.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250617094354.1357771-1-aik@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0133.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::18) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XzEQQaUO"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KHfQ2J029563;
+	Fri, 20 Jun 2025 19:25:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=EzKdDN
+	SogT7qa8XNSCLU+lLpVHZNT7y3NzhPg6rIr24=; b=XzEQQaUOUvuVbsGUCS3EUD
+	z0reV2EW6tnUktv7KbJ8lz3fR9HL+d89QCGWjcOQA0522jul3Ng2ptsNA6GdUbNv
+	hNqgnFMFw9SATVDPbJfiKvF6tw6ZcVNOTD2+vHt5rRN5UQYfdq6OFjdgddWMSGKy
+	mgUg42coXK5JgrqRSJC4TThtnUQeMfmW1tlSYSw81iCnAm+2e974GiTpcTe8rUYL
+	qoIiYMJ8hOZ217FQPIqtJCjpGbNyBLLcpOtWwXgbMa18XR5ZYQsEWn6bmKDzGWzo
+	Afd71SWix16dAW6cMk4M0LETar6MnD0GPpXbt1GMmYBYn6R6nNdyBpdXUW5m68Ow
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790ku5q7f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 19:25:22 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55KJO0j7030189;
+	Fri, 20 Jun 2025 19:25:21 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4790ku5q7c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 19:25:21 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KHAumI005494;
+	Fri, 20 Jun 2025 19:25:20 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479mwmmn8p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 19:25:20 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KJPJW833358396
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 19:25:19 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8B56858055;
+	Fri, 20 Jun 2025 19:25:19 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E43CF58043;
+	Fri, 20 Jun 2025 19:25:09 +0000 (GMT)
+Received: from [9.43.92.183] (unknown [9.43.92.183])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 20 Jun 2025 19:25:09 +0000 (GMT)
+Message-ID: <8c98fff7-fef3-494a-98a3-4b6d4cc2e6d1@linux.ibm.com>
+Date: Sat, 21 Jun 2025 00:55:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|PH7PR12MB8054:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80a9d22e-1fdf-45e2-8408-08ddb02f83e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ODY5VGlEU2x1bDloUy9BcmZxMnF3V0RRZmd5ZWlrOGY1VEF0MGkrM29uOVdt?=
- =?utf-8?B?S01YRGtCd1B2VXhhcVYvQkp1bWU1cU5mbG1IOVUyNkplcnVpRmhJemtOS0FM?=
- =?utf-8?B?SUdZSGovNlB3ak03alpkOHhVb0FONzJEeFFPdFZZczdua2I2SzY5Z0UyRml1?=
- =?utf-8?B?dUlzNnZQNUhuUEV0WlNyUEwySDVqWGtnSmdqbDBZVUxBSTZ1aVplMWY0dHhH?=
- =?utf-8?B?T1Vkdk4rcmd1Q0RrdFd6TGNCSEpyb0oxdnpjV21YVWRCWGlGVE9JanhHRkhM?=
- =?utf-8?B?eWp6dHN4L1FEQUhkbmlCZjh0NFI3Q2ZzbTViRDRPdWhYQ01rWFY0dTMwZWVS?=
- =?utf-8?B?aXVQYlRPbEtLcE5Tc1FNeHZUZ3FYUGVJaEFCVHpyUE94THY1VmcwQzFCN3Bk?=
- =?utf-8?B?NWs4Q0dKbytlVnkxcGhUSk1BWFRMUEk1QTB2V09VdXNXRFgxOTN1dnJab3dP?=
- =?utf-8?B?M1d6NzJFS21sUGJtZ3lCWVpPbUVzR0V0VGpFeDVpcmdXV1ZYYmpPNFFQakM5?=
- =?utf-8?B?N3RQMWlPczFnWHluSmxrc1kvUGorRG1uNHNjcUU0UnRmRUVjUlNNT1JCS2xL?=
- =?utf-8?B?OVgwRWZhTGlRaFVrb3RXWTFyaGg1UU1WNXdNc1hySG9JL2EzaWNkMlQ2eEpJ?=
- =?utf-8?B?VnBFLy9HdlFWQUptL05CeitzSWVZU0s3NW82Ym1OYURtZVN0S0RucVZPZ2Qr?=
- =?utf-8?B?NUJZVlNFaDFpR3dodnVaeWlJNkFwM25VUmpXU0IvekJENC9wRVA0bFRNODZY?=
- =?utf-8?B?cmROK2NvQ2h4SDRFZmN0V1JUeU9WMVlzUUhzY1BNOHgwYUF0WWhGQ1creG1y?=
- =?utf-8?B?Rys4dzlTcXVoUXFEdytrOTB6TEZ0eUxtY0c3a2YzQTBjVkZ6YmtGQmdQYU4z?=
- =?utf-8?B?R290ZXlGbXR2WitTdmh2Zk1CVmVHd0NZWFV3N1k2MGd3cnVSN3lJNGpqNk5O?=
- =?utf-8?B?L3VtQnkwOXhTTjQwZWN1YWFUbmh5WVdzclFEYUFFdHdjS0lTbXVpUmorSjdn?=
- =?utf-8?B?NTBCazJJODNodHNvQ3pwYUNmRVgrT3VjRnlOSHQ2TUVYQzdGUWRteHBjRTlU?=
- =?utf-8?B?MDVUNExCVDZRYS85dXZXTWdkVnFKUU1oNy90ckRQdCtkbVVod0p4R0xvcFN4?=
- =?utf-8?B?S3ZjeW4yTnRvaEJrRTdwL3dmVUZyREdBaUZHcExJUmthMUZ4Q0U4SWsxTWVo?=
- =?utf-8?B?STFtOG9yWkdOYkh0andIR0pKNzdyTlNVUGY1K3l5NUJzejVaU1hJSEQ2bTlV?=
- =?utf-8?B?Vy9MdWxHSjRWU2tERU9JcWwyZE9OT0RCTnJndEM1ZzJsMTFWL2JFbWN6T3dV?=
- =?utf-8?B?amJMYmdSTFBxRkVDa1QvdDZsUmk3ODV6TlIxNGVWMnNsc01uMFRWcUdESnkx?=
- =?utf-8?B?eU5ybGZDZWF6RHF2clhTalFOTzE5a0FIeTlQL2NibjloK3lnMTRnbUYxSmRX?=
- =?utf-8?B?Ly9vR2hYNVhPWXA4NzRnRENYL3JCTXIxUU5NOVdiYmdmVHpGVlo5ZzFLaTRR?=
- =?utf-8?B?Q1JlS0dyckpuK1VKeTBqQTlUR0hQcmV4d0FacmVDbnhibGNTa3B4ODFEY3FH?=
- =?utf-8?B?dkFnUXVXcUtZd1c3ZU9qV0Fsc21QRXBHOE01UHJQYmtZb3JwZFNzVkhoYkFT?=
- =?utf-8?B?QnVsT05MMytkaGIvWEdlcDNlUkttaDY3eXZqa3Rrc2pmazJNcHVJdFVXVWtH?=
- =?utf-8?B?Yk5wWDh1SWRuNkVBcmNlazRLQmlKazJhRFpXb1Z6ZkFQMkk5VzFiMFlBOHdC?=
- =?utf-8?B?Tm00c2krbzZHZUZyTDA0bmxpSTc5NjJBbTIxYnh1eHVLL1BOc3Z2SmhCQjUz?=
- =?utf-8?B?MnQ1ajEwZXljbHNDR2JFRXhDN29wdkpwN28rSmliRUl4Tnk2Q2NSVzlmeXVh?=
- =?utf-8?B?VHpDNENQb01BZnV4T3BvVkhNUUFEYm8rTUdMcU1mRUVGT2dVOVZoTHpNMmxY?=
- =?utf-8?Q?o8Rjy9tU01g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djhUdVlBNlpNbHdRZTZySWpyRm9MT1JNaVZ3NnFOKzFOVXRxVlVIa1pzWXpp?=
- =?utf-8?B?UUlzOWNWWGFPTkU0RTh1SlpwQTJLbWNycEpqMVNqR3NDTitBYnRRTHMxSW1Z?=
- =?utf-8?B?dmxkM1NlNFR4WFd2bVdmOG9kY21ZeFMzeTVUR2ZnRmNrc0Q5Lzk3ajN1eHps?=
- =?utf-8?B?RzY2b1BlTytmZzBYc3I0RVdEbGhqVzk4QmdxTzBBWDhhQmcrT0laaWMrT2tw?=
- =?utf-8?B?VXBhSTFMM2ptOWhMRGxFZmpDKzQwSlVvamJKZGRRRmsxaFR6S2R3THZRWkUv?=
- =?utf-8?B?TnRHSk5TUWZnUnF6ZEh2YWFhWlBCZ3EzZ1Q0WCsxUGNoRVBvbERoeVp2OUc2?=
- =?utf-8?B?ODN5N0NMK3ZTRWl1cnB4dDdEamR3S010OERaTzJveHdEWHc3N2RVTFVpT3JB?=
- =?utf-8?B?WDgwazFDNnVmUllENnQ0dG9qQml4dFRPdGg0RHJkUm5naVE2OEFqWUFCcW1u?=
- =?utf-8?B?UTY3dGxGa0h4VVFHYjdFcDdKWG5rbEJkRUx3ckJBY1VjVHFsRTJaa1FMeWZw?=
- =?utf-8?B?d3JxTUJVaGt1eWN2RnY3SnBlbUZyY3hTT0tRRDRJMFVhVjFkOTRrVVFQMFow?=
- =?utf-8?B?OFBZNE9YVnFVbGkyRjE2MVVxMHJCOExKdGY0ZWs2dzlrdy9MZXo5cVBYL3Jt?=
- =?utf-8?B?RHYyZnZtWnpnajdTYUtWTVBlc05iczlUQTBiZ1BaWEZLM1Q0TGpNbVhyZW12?=
- =?utf-8?B?ZHpzRGttWFJCVzEveUlNZ21mcm9zZUJRaDk5SzZEdXo0eDRZam9RSUJFRmpF?=
- =?utf-8?B?QUxlZ3RhdUJvejVVSU5WQUs3bGFVWkoxM3dnZWpRWmMxbUZiQ3BKdW5XVU04?=
- =?utf-8?B?OU9pbEpHc3BUdWlvMTArSDd4TEhyeEJSYW0wcE1ZOGNHQ1h6Q083RE1XeE9u?=
- =?utf-8?B?S2d6L0Zlc0gwL0hhV01MYTNJdkRwU2R4Sk1rVHNSVzEydWlrNDZhVUhNN1U1?=
- =?utf-8?B?NHIxWkhCOGdqeE1vZjJxd0ZoWHBITlBwK0xxc09uMmZyUmVGNFZ4bWk1cmFO?=
- =?utf-8?B?VkFCK01QZU12QmFUT3JkK2syZkVhU3ZzYnJKb1ZqajIrSCtwUTl6WmRxWUpC?=
- =?utf-8?B?TitsSWdZRzJTTlRJelkwZXA1cm50UUFkYkxCODlkNC91d1lrV0FLcWFhZ2h1?=
- =?utf-8?B?dUtEeTYyWXdsMmlIVVIvNTZ0VHF1YWxTeFJpY01lNGJBUG5aYkk3MnE2T2p5?=
- =?utf-8?B?RjdsT2czQXBvZFJqR2pKS0h4bXhmaHpkenlCSEpiRHdwS3RmVXpLdXliYXJj?=
- =?utf-8?B?eXMxU2ZHajFrTkxucFlXVGYrTmU4K2NKOVhua1ZqcjA0WGd4d0UwQXlnZjkv?=
- =?utf-8?B?YWF6eWVKQXBiejhISzdiZWIzdkVUdjRKc0QrNU42d0UzejhXVW9kZEdYc1BD?=
- =?utf-8?B?emUrMFVIMXhLcnpqTWNtVFRWRytGVWpDemo1bm03cCtJYTdvQVFSSjRQRzNp?=
- =?utf-8?B?N0lUY0ZHMHhEVytMOUhYb2doMGlkbjJ2dWxneVp1K0k4SzRkcEx0ZDdUTy9Y?=
- =?utf-8?B?ak41bHpIeDFFVVRwYU0xSVBST0RnMjc2UkltL1ZmTnFqWGVSbGlYWnhJeS9m?=
- =?utf-8?B?K1ViSUtQaUdJSU1uUEFhWXIzWEJpOC9uYnE2MFFGaGtpWG1OME9uOWdZekFR?=
- =?utf-8?B?R2M3Tlk2V3lnclRkam11QUNGY1hRYmszakkrTmM4Q25ReHFrYzJ4UTdQMC82?=
- =?utf-8?B?ZXN4T0FwYjhHWlVnTEJ6RXV3bmxrcUJVZ1VnVCtrTHVKdXVTNlU3eHNCaXJa?=
- =?utf-8?B?U0dESDQxTlZybzA0R1B6MkJGMytMS2ZUVzIvT3J3SzlsMC9ETU1XSkFrTEdp?=
- =?utf-8?B?WlVpNFZCKzlSbFQrTXlqaFRYaEZKRXhUTkFsdzdHT2hUM3ovTHIva2xCbjYv?=
- =?utf-8?B?YUc0bnJjMUNLVENxNUU3bnlVTTk1RlBacittb0g1TkhMeGxMVlZTM1dJbVhZ?=
- =?utf-8?B?bzFPeDkrSm9Jbk1MRDFIYzVLQmo0WkFwaUIvcU01RkQxTkZMOG8yU1VIY3Ax?=
- =?utf-8?B?RFFEQkJMeFFhRVFubTQyd0swNFdESXJhbW1lS3V3SEg2WjZRaHZucUR2SmRU?=
- =?utf-8?B?RlBjNTE0eVhMY3NiSHFyenRvdEZBZnBFVlN6RjJZNVpEbHFWZlNDWkU4SXh5?=
- =?utf-8?Q?ZFMV+Rc5Qz6AjJ9AVdJ/Ln4qC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80a9d22e-1fdf-45e2-8408-08ddb02f83e9
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 19:20:28.1840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dEUbiR/o46gnWpPuVbtrBAHD808BcsjaOd/jn6snTd2t2Ssml+rv6FU0OjhqU/D+7nYAU+Q52YHkd3ytINmfMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8054
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC patch v3 00/20] Cache aware scheduling
+To: Tim Chen <tim.c.chen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        "Gautham R . Shenoy" <gautham.shenoy@amd.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Vincent Guittot
+ <vincent.guittot@linaro.org>,
+        Libo Chen <libo.chen@oracle.com>, Abel Wu <wuyun.abel@bytedance.com>,
+        Hillf Danton <hdanton@sina.com>, Len Brown <len.brown@intel.com>,
+        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <cover.1750268218.git.tim.c.chen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7w-YSLLY9OOFG8ztZOSd61W-WsZK1FGO
+X-Proofpoint-ORIG-GUID: dgXXsIFN_3OLgLjwbSxgXDsdLF4LJDTc
+X-Authority-Analysis: v=2.4 cv=KaDSsRYD c=1 sm=1 tr=0 ts=6855b5a2 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=UXawlTFlhs7-HPM11owA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEzNCBTYWx0ZWRfX48s00Nzo2rtY Ln0Q2jzi0okns9IABR8fTKJGCvz5D8gxtdoE1aMv6fq7VVh6T7nSj9TFfSxMb8zSQJ1PR5AkPiX LrNu3hLvTfDyDE0bB9yz83O9J+iFvvzrwGop/CCk+cjHxpRA2nPChep7ALXa1jGp/7l24AGLFKr
+ YnTe+//ESIHnju55E6OsLn3Zz/n4Is8hJkfYDw6478mNbIEldV4VZZcwBYTFOP5uaFumt+ExThV Q+DwHvRdkOkgmSl5iryeCS9ZtPcNk4avN5IPOKYe1MwIgU5+gQy08tEnGg33JxDN2cyUFTwU+/e r+jkJ+aqFhA5jtt5ZB0Bc09iR2F8SBNWP02CvNSFP7sGv4fkC/UoIVbHuUS4wL3KLTeL3IP1RWq
+ neT4m1qSBNyv0M2LKDaIK6yvRtR+cVwlQhAzsNghvsGCsS9s/KznrV0G3sVsLQR33jwVAeLg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_08,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200134
 
-On 6/17/25 04:43, Alexey Kardashevskiy wrote:
-> The __snp_alloc_firmware_pages() helper allocates pages in the firmware
-> state (alloc + rmpupdate). In case of failed rmpupdate, it tries
-> reclaiming pages with already changed state. This requires calling
-> the PSP firmware and since there is sev_cmd_mutex to guard such calls,
-> the helper takes a "locked" parameter so specify if the lock needs to
-> be held.
-> 
-> Most calls happen from snp_alloc_firmware_page() which executes without
-> the lock. However
-> 
-> commit 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
-> 
-> switched sev_fw_alloc() from alloc_pages() (which does not call the PSP) to
-> __snp_alloc_firmware_pages() (which does) but did not account for the fact
-> that sev_fw_alloc() is called from __sev_platform_init_locked()
-> (via __sev_platform_init_handle_tmr()) and executes with the lock held.
-> 
-> Add a "locked" parameter to __snp_alloc_firmware_pages().
-> Make sev_fw_alloc() use the new parameter to prevent potential deadlock in
-> rmp_mark_pages_firmware() if rmpupdate() failed.
+Hi Tim,
 
-Would it make sense to add the locked parameter to sev_fw_alloc(), too?
-Right now there is only one caller of sev_fw_alloc(), but in the future,
-if some other path should call sev_fw_alloc() and that path doesn't have
-the lock, then we'll miss taking it.
+On 18/06/25 23:57, Tim Chen wrote:
+> This is the third revision of the cache aware scheduling patches,
+> based on the original patch proposed by Peter[1].
+>  
+> The goal of the patch series is to aggregate tasks sharing data
+> to the same cache domain, thereby reducing cache bouncing and
+> cache misses, and improve data access efficiency. In the current
+> implementation, threads within the same process are considered
+> as entities that potentially share resources.
+>  
+> In previous versions, aggregation of tasks were done in the
+> wake up path, without making load balancing paths aware of
+> LLC (Last-Level-Cache) preference. This led to the following
+> problems:
+> 
+> 1) Aggregation of tasks during wake up led to load imbalance
+>    between LLCs
+> 2) Load balancing tried to even out the load between LLCs
+> 3) Wake up tasks aggregation happened at a faster rate and
+>    load balancing moved tasks in opposite directions, leading
+>    to continuous and excessive task migrations and regressions
+>    in benchmarks like schbench.
+> 
+> In this version, load balancing is made cache-aware. The main
+> idea of cache-aware load balancing consists of two parts:
+> 
+> 1) Identify tasks that prefer to run on their hottest LLC and
+>    move them there.
+> 2) Prevent generic load balancing from moving a task out of
+>    its hottest LLC.
+> 
+> By default, LLC task aggregation during wake-up is disabled.
+> Conversely, cache-aware load balancing is enabled by default.
+> For easier comparison, two scheduler features are introduced:
+> SCHED_CACHE_WAKE and SCHED_CACHE_LB, which control cache-aware
+> wake up and cache-aware load balancing, respectively. By default,
+> NO_SCHED_CACHE_WAKE and SCHED_CACHE_LB are set, so tasks aggregation
+> is only done on load balancing.
+
+Tested this patch series on a Power11 system with 28 cores and 224 CPUs.
+LLC on this platform spans 4 threads.
+
+schbench:
+                        baseline (sd%)        baseline+cacheaware (sd%)      %change
+Lat 50.0th-worker-1        6.33 (24.12%)           6.00 (28.87%)               5.21%
+Lat 90.0th-worker-1        7.67 ( 7.53%)           7.67 (32.83%)               0.00%
+Lat 99.0th-worker-1        8.67 ( 6.66%)           9.33 (37.63%)              -7.61%
+Lat 99.9th-worker-1       21.33 (63.99%)          12.33 (28.47%)              42.19%
+
+Lat 50.0th-worker-2        4.33 (13.32%)           5.67 (10.19%)             -30.95%
+Lat 90.0th-worker-2        5.67 (20.38%)           7.67 ( 7.53%)             -35.27%
+Lat 99.0th-worker-2        7.33 ( 7.87%)           8.33 ( 6.93%)             -13.64%
+Lat 99.9th-worker-2       11.67 (24.74%)          10.33 (11.17%)              11.48%
+
+Lat 50.0th-worker-4        5.00 ( 0.00%)           7.00 ( 0.00%)             -40.00%
+Lat 90.0th-worker-4        7.00 ( 0.00%)           9.67 ( 5.97%)             -38.14%
+Lat 99.0th-worker-4        8.00 ( 0.00%)          11.33 (13.48%)             -41.62%
+Lat 99.9th-worker-4       10.33 ( 5.59%)          14.00 ( 7.14%)             -35.53%
+
+Lat 50.0th-worker-8        4.33 (13.32%)           5.67 (10.19%)             -30.95%
+Lat 90.0th-worker-8        6.33 (18.23%)           8.67 ( 6.66%)             -36.99%
+Lat 99.0th-worker-8        7.67 ( 7.53%)          10.33 ( 5.59%)             -34.69%
+Lat 99.9th-worker-8       10.00 (10.00%)          12.33 ( 4.68%)             -23.30%
+
+Lat 50.0th-worker-16       4.00 ( 0.00%)           5.00 ( 0.00%)             -25.00%
+Lat 90.0th-worker-16       6.33 ( 9.12%)           7.67 ( 7.53%)             -21.21%
+Lat 99.0th-worker-16       8.00 ( 0.00%)          10.33 ( 5.59%)             -29.13%
+Lat 99.9th-worker-16      12.00 ( 8.33%)          13.33 ( 4.33%)             -11.08%
+
+Lat 50.0th-worker-32       5.00 ( 0.00%)           5.33 (10.83%)              -6.60%
+Lat 90.0th-worker-32       7.00 ( 0.00%)           8.67 (17.63%)             -23.86%
+Lat 99.0th-worker-32      10.67 (14.32%)          12.67 ( 4.56%)             -18.75%
+Lat 99.9th-worker-32      14.67 ( 3.94%)          19.00 (13.93%)             -29.49%
+
+Lat 50.0th-worker-64       5.33 (10.83%)           6.67 ( 8.66%)             -25.14%
+Lat 90.0th-worker-64      10.00 (17.32%)          14.33 ( 4.03%)             -43.30%
+Lat 99.0th-worker-64      14.00 ( 7.14%)          16.67 ( 3.46%)             -19.07%
+Lat 99.9th-worker-64      55.00 (56.69%)          47.00 (61.92%)              14.55%
+
+Lat 50.0th-worker-128      8.00 ( 0.00%)           8.67 (13.32%)              -8.38%
+Lat 90.0th-worker-128     13.33 ( 4.33%)          14.33 ( 8.06%)              -7.50%
+Lat 99.0th-worker-128     16.00 ( 0.00%)          20.00 ( 8.66%)             -25.00%
+Lat 99.9th-worker-128   2258.33 (83.80%)        2974.67 (21.82%)             -31.72%
+
+Lat 50.0th-worker-256     47.67 ( 2.42%)          45.33 ( 3.37%)               4.91%
+Lat 90.0th-worker-256   3470.67 ( 1.88%)        3558.67 ( 0.47%)              -2.54%
+Lat 99.0th-worker-256   9040.00 ( 2.76%)        9050.67 ( 0.41%)              -0.12%
+Lat 99.9th-worker-256  13824.00 (20.07%)       13104.00 ( 6.84%)               5.21%
+
+The above data shows mostly regression both in the lesser and
+higher load cases.
+
+
+Hackbench pipe:
+
+Pairs   Baseline Avg (s) (Std%)     Patched Avg (s) (Std%)      % Change
+2       2.987 (1.19%)               2.414 (17.99%)              24.06%
+4       7.702 (12.53%)              7.228 (18.37%)               6.16%
+8       14.141 (1.32%)              13.109 (1.46%)               7.29%
+15      27.571 (6.53%)              29.460 (8.71%)              -6.84%
+30      65.118 (4.49%)              61.352 (4.00%)               5.78%
+45      105.086 (9.75%)             97.970 (4.26%)               6.77%
+60      149.221 (6.91%)             154.176 (4.17%)             -3.32%
+75      199.278 (1.21%)             198.680 (1.37%)              0.30%
+
+A lot of run to run variation is seen in hackbench runs. So hard to tell
+on the performance but looks better than schbench.
+
+In Power 10 and Power 11, The LLC size is relatively smaller (4 CPUs)
+when compared to platforms like sapphire rapids and Milan. Didn't go
+through this series yet. Will go through and try to understand why
+schbench is not happy on Power systems.
+
+Meanwhile, Wanted to know your thoughts on how does smaller LLC
+size get impacted with this patch?
 
 Thanks,
-Tom
+Madadi Vineeth Reddy
+
 
 > 
-> Fixes: 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
->  drivers/crypto/ccp/sev-dev.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> With above default settings, task migrations occur less frequently
+> and no longer happen in the latency-sensitive wake-up path.
 > 
-> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-> index 3451bada884e..16a11d5efe46 100644
-> --- a/drivers/crypto/ccp/sev-dev.c
-> +++ b/drivers/crypto/ccp/sev-dev.c
-> @@ -434,7 +434,7 @@ static int rmp_mark_pages_firmware(unsigned long paddr, unsigned int npages, boo
->  	return rc;
->  }
->  
-> -static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
-> +static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order, bool locked)
->  {
->  	unsigned long npages = 1ul << order, paddr;
->  	struct sev_device *sev;
-> @@ -453,7 +453,7 @@ static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
->  		return page;
->  
->  	paddr = __pa((unsigned long)page_address(page));
-> -	if (rmp_mark_pages_firmware(paddr, npages, false))
-> +	if (rmp_mark_pages_firmware(paddr, npages, locked))
->  		return NULL;
->  
->  	return page;
-> @@ -463,7 +463,7 @@ void *snp_alloc_firmware_page(gfp_t gfp_mask)
->  {
->  	struct page *page;
->  
-> -	page = __snp_alloc_firmware_pages(gfp_mask, 0);
-> +	page = __snp_alloc_firmware_pages(gfp_mask, 0, false);
->  
->  	return page ? page_address(page) : NULL;
->  }
-> @@ -498,7 +498,7 @@ static void *sev_fw_alloc(unsigned long len)
->  {
->  	struct page *page;
->  
-> -	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len));
-> +	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len), true);
->  	if (!page)
->  		return NULL;
->  
+
+[..snip..]
+
+> 
+> Chen Yu (3):
+>   sched: Several fixes for cache aware scheduling
+>   sched: Avoid task migration within its preferred LLC
+>   sched: Save the per LLC utilization for better cache aware scheduling
+> 
+> K Prateek Nayak (1):
+>   sched: Avoid calculating the cpumask if the system is overloaded
+> 
+> Peter Zijlstra (1):
+>   sched: Cache aware load-balancing
+> 
+> Tim Chen (15):
+>   sched: Add hysteresis to switch a task's preferred LLC
+>   sched: Add helper function to decide whether to allow cache aware
+>     scheduling
+>   sched: Set up LLC indexing
+>   sched: Introduce task preferred LLC field
+>   sched: Calculate the number of tasks that have LLC preference on a
+>     runqueue
+>   sched: Introduce per runqueue task LLC preference counter
+>   sched: Calculate the total number of preferred LLC tasks during load
+>     balance
+>   sched: Tag the sched group as llc_balance if it has tasks prefer other
+>     LLC
+>   sched: Introduce update_llc_busiest() to deal with groups having
+>     preferred LLC tasks
+>   sched: Introduce a new migration_type to track the preferred LLC load
+>     balance
+>   sched: Consider LLC locality for active balance
+>   sched: Consider LLC preference when picking tasks from busiest queue
+>   sched: Do not migrate task if it is moving out of its preferred LLC
+>   sched: Introduce SCHED_CACHE_LB to control cache aware load balance
+>   sched: Introduce SCHED_CACHE_WAKE to control LLC aggregation on wake
+>     up
+> 
+>  include/linux/mm_types.h       |  44 ++
+>  include/linux/sched.h          |   8 +
+>  include/linux/sched/topology.h |   3 +
+>  init/Kconfig                   |   4 +
+>  init/init_task.c               |   3 +
+>  kernel/fork.c                  |   5 +
+>  kernel/sched/core.c            |  25 +-
+>  kernel/sched/debug.c           |   4 +
+>  kernel/sched/fair.c            | 859 ++++++++++++++++++++++++++++++++-
+>  kernel/sched/features.h        |   3 +
+>  kernel/sched/sched.h           |  23 +
+>  kernel/sched/topology.c        |  29 ++
+>  12 files changed, 982 insertions(+), 28 deletions(-)
+> 
+
