@@ -1,214 +1,206 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93B6231824
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427375; cv=none; b=t2BTa11JpjNn8vN1qgXr4DxZqF3L5TBNRdqgN+jKkcb9R70/3b1ciVoiJ7y2MoJ5QCPnZZjvveFBJc++sV/TuRvkhI+HCF2skVAxEYPp+t0nevIpHejHNXSUnf4OKXiT7r94LdfIswqG8DJeOmNFPKQf5F3PJrMB41euBKcdZks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750427375; c=relaxed/simple;
-	bh=ysjSoxrfjHCJtU9TLC8AsFztHdpl+jy45IKuqm4HGPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MmjBW7asXHH/UaC+kKhyoNE/CQhtwpEgLamwXovxB5sVrA6HO/Ack/NxYYJEtKiyDL3qN6vklKNvsyqEZgFVFla3KvgHhSF2LjFQE36R/MWjDKxa6Ow0KLvi0SNvcT0lCtYdQTtJvcMgVSJByQu+t2xjiKSVTmqa9kGSLzsZA14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lCUxN6Ly; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Idb3ZSY7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lCUxN6Ly; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Idb3ZSY7; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D024028B51F
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750427395; cv=fail; b=p0GoJjbCPOi4OkQ6/pUPyk//KB7t3VHTOh2Vec000b5N2F9HnE5C5ia8OEkKd6cM36i1EHdLsIqnrMaOgoltXs0Ns0AVbzqxYCfCyYo0A5BA8V07Vu7MbxyrYjHKbHMf40Qb5Pzk++abaReF/Y0RZNLoao0K0jRjqoWz3i9sfmc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750427395; c=relaxed/simple;
+	bh=HKLpnE1JWhr5Q0eyeX+yLaujW77zkAnV42GC6yrhyv8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NjgVfbSZUFaPkuRfDgWacTpV/n0gJane3WyjUW6VOU2QOwcAKQr5Az1umzYbefEP6SLT3IA4Q35AGyUG96kODF5jeElCZpwIhwlPDwn56+wPDeZ/RTdGrOnCrKztYQqKXuFhl04txqoYdAkGE3fhY/+kqMsabyj+spgnJQ7lDpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SPB1F17G; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lCUxN6Ly";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Idb3ZSY7";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lCUxN6Ly";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Idb3ZSY7"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B19341F38D;
-	Fri, 20 Jun 2025 13:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750427371; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aY8KveTtkVaitUtryZn4N+/URSNBx+XDU9OFTbFeT/0=;
-	b=lCUxN6LyVqMmlp2Xq/RY+LsPRVYQprf2oVPUsBLAzfZX0nSCz0f4oTw3QqV+H8zBFAe995
-	9Yv0GAMOA/Y+7YcN4HvEHEgsdiXlbWHhzcPu+6KBuSPS1dQfN058cptwOWhqpTWmBROeWg
-	bpzoSDXb3AuOefMVc7oajV+/I50bWOY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750427371;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aY8KveTtkVaitUtryZn4N+/URSNBx+XDU9OFTbFeT/0=;
-	b=Idb3ZSY7RUytIDT4fQGkN6FtVLuNSnDwS5ARhZWA6XjhhVmU9+othhjSsebTCM9Yme8nuG
-	HApfGLn3VUcuqoBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=lCUxN6Ly;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Idb3ZSY7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750427371; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aY8KveTtkVaitUtryZn4N+/URSNBx+XDU9OFTbFeT/0=;
-	b=lCUxN6LyVqMmlp2Xq/RY+LsPRVYQprf2oVPUsBLAzfZX0nSCz0f4oTw3QqV+H8zBFAe995
-	9Yv0GAMOA/Y+7YcN4HvEHEgsdiXlbWHhzcPu+6KBuSPS1dQfN058cptwOWhqpTWmBROeWg
-	bpzoSDXb3AuOefMVc7oajV+/I50bWOY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750427371;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aY8KveTtkVaitUtryZn4N+/URSNBx+XDU9OFTbFeT/0=;
-	b=Idb3ZSY7RUytIDT4fQGkN6FtVLuNSnDwS5ARhZWA6XjhhVmU9+othhjSsebTCM9Yme8nuG
-	HApfGLn3VUcuqoBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CBEE13736;
-	Fri, 20 Jun 2025 13:49:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id omnAIetmVWgJQAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 20 Jun 2025 13:49:31 +0000
-Message-ID: <7b08cd65-6797-4678-9c24-a3ffad7acb53@suse.cz>
-Date: Fri, 20 Jun 2025 15:49:31 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SPB1F17G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750427394; x=1781963394;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HKLpnE1JWhr5Q0eyeX+yLaujW77zkAnV42GC6yrhyv8=;
+  b=SPB1F17GzMFOl9/Ik+aJ2WFf/rcU6Dajf1jQZiMaABrq/Zbryh/6fL7q
+   O/nxume2ZZsdpP8IrBnsRtVnHHbKiCg/Ka/DTDLdIGU+X9O8uIzgz0tSU
+   7JhUIHCpcmqyUFxroNJpEM0m4IsyYR//D1S9ZTqVVXbVBpIMyLKMCxZlq
+   LdWSJgSDoVyw2alkiU6Mh0EyiqZI/W69dS7TeSKukNFpSX4EPvmtjlnqo
+   YTbK+09qFQzALyWUhe2SIyiPUfi1q3zgtWZHqGuja6xOmsoi7rFrkgFN/
+   BX75fhofUQoml4SFBLAiTy7BIr1N4ukZ2DZPOKTKwOSyGmeiUw7UuSFly
+   g==;
+X-CSE-ConnectionGUID: 7uKNFIiWSdOnERmWTRafow==
+X-CSE-MsgGUID: 9PJVfJhJQKqXuzCxk1jNlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63743221"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="63743221"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:49:53 -0700
+X-CSE-ConnectionGUID: EJDtXL7QSDux9olxhPTM7Q==
+X-CSE-MsgGUID: KE8KNJ4pRvK77WV4sS43/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="151469875"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:49:53 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 06:49:53 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 06:49:53 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.43)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 06:49:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fBGZyzU+cTCHf3sxHiqLsxFkJT+QT8p4pOExnA0Nix4qDJqsnd3pqLMfgWckn7BoBTE3U2OfcY69h4D6G1DG7qygKX+0ipLRX4qvnmnTXCuXd4okvr8lWitzRMkqVWowC+Nv8TbHXJ5apgIXdbQ+/LsthIcjWDlH37pAv2cxgL1GOKTBh80FxoyWOy8gIoNZ8Nd3oQtPlr815eYmI6afPR5roK/rY1EkHPOKA7fIBemhaHylh9pq+Gx6FRzV4xJPsqeRwsMoVJ+w0OcdixdOjYTklJEZdwZtnXQL+t4UpwC2y4pWNEtdYG9EAvtagWBnaq9TSywKhCO6RoXT1sbY7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l4HI36QnJKKW516YzMHvNQUrVH8CHHV6MNiONE6ASyo=;
+ b=E/mZ6/yNkDjyWM7SOdseCSVweMpqfVhu4pHOsym2b8ZgB1Rlp8icT6s7zsgB0AjycnApXzB2qumkSzx281934d2R3YN71ivkzmUjdgH6IR+DfLsSiuIfMma5apZSLopZJZq7ke+ja/eq91khqPTUiskT4dpLkT5lSjWGG4vcmCZlk1ej6VlcQPRW2qQP251dPVZuNNrEYxh5jnyKNsA4v46VFcm8UL+7NjQgmC1ktaE9vpr5tDzFoGStbQHnVnX1Swv8CptPa40B2T80p52Ue9yAGsvr/a008vuSKHzVp+6705RB2Iqxx3f8Wvb+QV/Gtp6ncZHy3VwEv/6Fs8lmoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
+ by DM6PR11MB4625.namprd11.prod.outlook.com (2603:10b6:5:2a8::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 20 Jun
+ 2025 13:49:51 +0000
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563%4]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
+ 13:49:51 +0000
+Date: Fri, 20 Jun 2025 09:49:46 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Badal Nilawar <badal.nilawar@intel.com>
+CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <anshuman.gupta@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>,
+	<daniele.ceraolospurio@intel.com>, <jgg@nvidia.com>
+Subject: Re: [PATCH v3 07/10] drm/xe/xe_late_bind_fw: Reload late binding fw
+ in S2Idle/S3 resume
+Message-ID: <aFVm-lidsDMMDSit@intel.com>
+References: <20250618190007.2932322-1-badal.nilawar@intel.com>
+ <20250618190007.2932322-8-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250618190007.2932322-8-badal.nilawar@intel.com>
+X-ClientProxiedBy: BYAPR02CA0071.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::48) To CYYPR11MB8430.namprd11.prod.outlook.com
+ (2603:10b6:930:c6::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] mm/madvise: thread VMA range state through
- madvise_behavior
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Jann Horn <jannh@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Lance Yang <ioworker0@gmail.com>,
- SeongJae Park <sj@kernel.org>, Suren Baghdasaryan <surenb@google.com>
-References: <cover.1750363557.git.lorenzo.stoakes@oracle.com>
- <a520417243ce7f8122de05a0420f964a922e392a.1750363557.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <a520417243ce7f8122de05a0420f964a922e392a.1750363557.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,nvidia.com,linux.alibaba.com,oracle.com,arm.com,kernel.org,google.com,kvack.org,vger.kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid,suse.cz:email];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B19341F38D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|DM6PR11MB4625:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e673e16-3959-4bb9-b70a-08ddb0015415
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?9cydJ6qJ8bXV+p9clrZkS6bKYHPImaSNVAgI8V/q8K7wAk232zjiS1RkW0lN?=
+ =?us-ascii?Q?R1U7rux5VpKYKzNxSHBqFgzeSAf+maIxT1JdSkkMH5cL2LUZkC3n111eCpqD?=
+ =?us-ascii?Q?K1zy96mzLMZe7Ukrqn30fbCzgN/kawAZXjPzIXgEJT7iZwLhl3rfihEZoA40?=
+ =?us-ascii?Q?Ug1KqFj3CKD7Yxucyng8/hFRL9FcZric+BOqNixZB6nA33awTu7cJTYsKCvf?=
+ =?us-ascii?Q?z/eTgI3vliHXRpZ+0TzEX6PHfLD9SCX+me3Y4h0tUahsgpdTrXK2w1mMIb7e?=
+ =?us-ascii?Q?nJRvf13OYuxMzQCT1IKpTbgr1Cp1+Mx/L2tu1cYY9eWrV5FBswvwVAPLW7uf?=
+ =?us-ascii?Q?ZhGgwSHmkGqzl218fym7jSspX0n/4AN2AmSX7nm1eIYkPQrSCCSajPdpjEX7?=
+ =?us-ascii?Q?5Mxf6OPFST5Tfit0eRO32JpIj5BU66Hqeh3pPW/LgGBGc8J1yTcmm+5ndoXh?=
+ =?us-ascii?Q?XBsTswFNYk3LTGjq1D6qvLYbJlGCeXGj4GXQB+jeP/GNMHQQFY1IUYboKIuM?=
+ =?us-ascii?Q?HID7jwi/t0KYYQgYIYhve2XqmEJSM7unkil7gZsaMr+2sUpDlVwkTJ4yQbMo?=
+ =?us-ascii?Q?KmM6HQFHR2ho7CNh/Am9ZpRDWgj3W/RtecXT55CUb0CzTHu4TTV5wOsum1/R?=
+ =?us-ascii?Q?t6EJ+BBm9qVrrvSvgwsj3aVW9Osgqe5uVjfIsgrMTroaWLywX0wRUMNZamQV?=
+ =?us-ascii?Q?qOVqmhzJGmnNumdNLQoTbwoaqWkk9uth2oQMH1ufV/sRjm24l4vnpffhqzTq?=
+ =?us-ascii?Q?kfDYPvTEIE5yJpLwt5UaNtvcsMR3x6TBfSeyb60mfV0dHaaOrQEoFHKgkpPY?=
+ =?us-ascii?Q?JuzwOJP/7IMA7A0rmJxkeD1mTHzWqzClQ1Yy6+PXa/kZaSHZKICjwmFGmJNm?=
+ =?us-ascii?Q?ZdV4pIXsvBJcz8HpCvQP20M5IA6liuzQUaxgQl72u11FPwF2DMEVgqW/Sxk/?=
+ =?us-ascii?Q?qfocnBJiANpNJg8EljNfeMAVWmDZ2r5RGCSTE+f5Qr63zjRVlmwDsvTKfsBN?=
+ =?us-ascii?Q?h4+3nXNj0WOHXtkyWMlbc0QRtqQBOmZ+hPL+6u20vcP0afLR43vH1CNrPfNk?=
+ =?us-ascii?Q?69dxAOQuh8iiD97y2BOvA2YbQMxmrBYqNoG3V/6naKZ1wigjO9KaQHhzDCuz?=
+ =?us-ascii?Q?gqTxF36ZEsYDT/3W62tyFacovmEVD/wp5D+VpX3fLHOILOTx7KRsiLlJ8Ki0?=
+ =?us-ascii?Q?Q3nAHQTKDrLC2DZLPTxN+4p6Bdm4yLxyaVPRXEBuaufvVTn2vaw/Rydwp0OH?=
+ =?us-ascii?Q?A7qb70buC+MOKzPTrzhhJ1vPEiImOaua9cpRf49UkbRcMfJpQoLRFZ2odOwu?=
+ =?us-ascii?Q?qRM+CBI2chsODTiqon+7PVe2f7zXqFKGwzST5Rc6pKSLlhCSVVKHMrzvE4Bi?=
+ =?us-ascii?Q?dKq7PRi4SSDLIcAuJ4CVaJtH5ywC8vAIQwz6RCZikAE9VPgS1Q=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ChmemYKp5u9Md1eGfv7Y4fI01wz/40epET49FM38lyzQUQluOOOjMTNWalwL?=
+ =?us-ascii?Q?+P3XeKG0sh43uWJ7KcOES+S1pqpnRntHwQO4qma9g19c9j3mgdt1wxLPSkr2?=
+ =?us-ascii?Q?UpswfkMGKIs6Pmozvv+4QPuDpuBPDA9DQ9sFmau+/WAYcO+Qx8qh8YOSoRId?=
+ =?us-ascii?Q?WwADKVvLj0JcOxK60J9/5AkkHX4dun81fp4gofx0VWCYn+FAQWMR/16gFBmM?=
+ =?us-ascii?Q?GzXRYHqIUNCz5A7kQKrUCSkz2csxEn+PHgRM9JBwfdMQecbjBI0PzLoCGc4b?=
+ =?us-ascii?Q?mqgb2HYzS2G/OQJpbyDS8t0w9H7Zc3TDdiE72WsnVeFvBCP8ONLRjRM7Teiy?=
+ =?us-ascii?Q?0Q/JKTA4MiGmIiH539B/TAKWv9IIQ7RBunzpfj0CxsuXQxbw5RCAph+JexY4?=
+ =?us-ascii?Q?oDkf8FxbPKPbWmV5zTOrgG6gC151vE1ZEMYWFMVbQ3YSZ0f538ehQa2VTpRr?=
+ =?us-ascii?Q?RatV9cDlJBYUIM4BcwmYvMONMtqvfhTJlfok8213vsuQ3sqH/0TTGruawsIU?=
+ =?us-ascii?Q?OYhKnFnCwv4qoc65p0/2uRsXjbyPQJaaMHjdmqTwDdVXWUz4bp/2MQ1cBQal?=
+ =?us-ascii?Q?nsdpIlp7mCSoen8I/KKI/WXamZgo+x4SlGn7HnNH9tp9Cr5XZpsS5Zo52VEq?=
+ =?us-ascii?Q?eDHukqg8NtfY4FfL0ojPMc2gnKqThx6DNT0csB/x7jE6yBdBPuUGnAzasC/n?=
+ =?us-ascii?Q?Jirn8LpqhVW7izcTD25vPlOkOvnIGrTWoVHAkDxIuLMuDVaNCdHKCykebCzb?=
+ =?us-ascii?Q?mlG5kV4GfM66CjRmsDGYXY+kRFIMXquCJAXBtQcm2Jd0kX1GnfkQE1eNfZlP?=
+ =?us-ascii?Q?fAWaG/6bc6qqTgeFvSsoev/QqRaCFcVG6Dv8lcig085IfzuNrVyXOLRopS+k?=
+ =?us-ascii?Q?QuJVwgN6lWwbKusklD703PLNH9GNWfwKrxmNryUHprd2iiCNTtviVObkUJbL?=
+ =?us-ascii?Q?VUFora5oDEBVZH/QrufFmo6lkjVhTQpiErD0tFIBTeLPwXh++Wft5IeiO03U?=
+ =?us-ascii?Q?ryCJ7FUl5MGDfTVQg6bKvUeRkdoMofSH6G+BqimtJ3PcWth4kgX3lo2EC63T?=
+ =?us-ascii?Q?eg5kqRbHUn/caM9z4oL18D3LAXWOh1dSaJXdGT/X2LaK7sdEz7Nr3xYV4fTW?=
+ =?us-ascii?Q?VqCVyryrSTrdWDVHoa2LvOdcJ99MgxWk0xFy/65QFedMgCV4KwV0QOPahOd0?=
+ =?us-ascii?Q?A46YDXtQzgz6hv9JuBK6HKrimEesouYhuBXcfMD1EUmV2RzT3g428Hxnevjo?=
+ =?us-ascii?Q?p8MlJwaFU11VFuUnfZOsdUA8ime+2N5gHUNFzJO4ueARlO3fRG4wqmhtsQMG?=
+ =?us-ascii?Q?QtpiotiI+Efr/aIBFJ83JMuC5M14J1ERLFuclS25KwtXFsCHCNGOvnmHjKN8?=
+ =?us-ascii?Q?V2Tp3xHQL9IgcPYDomajY++Zb9RT1RJq49BDTKmPTt8jeJR5T00Yoxt+eoYU?=
+ =?us-ascii?Q?rU1Zif1+JhMYcLzsYpKaAWhq/o3c9qKZeGbhREWPWCsW/t7vQ1D4z5r/0NIy?=
+ =?us-ascii?Q?OUC1m++4NJd4qAa60Fa9TMBITNRwtb8jpAOb2k9PQpfV3hr+HiY16KRnuLyX?=
+ =?us-ascii?Q?wHf66F4Ls3n9rWQKA8j0RHnFRrAn3uPatcoApXPD?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e673e16-3959-4bb9-b70a-08ddb0015415
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 13:49:51.0575
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cgMKpxgPco2iPaCd60OeQUlbx3UYDFhdlCNjPaz8bkpulgyFiNtFN8rJfqPAD2trVLtlfEQSE6a2B84gW4btGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4625
+X-OriginatorOrg: intel.com
 
-On 6/19/25 22:26, Lorenzo Stoakes wrote:
-> Rather than updating start and a confusing local parameter 'tmp' in
-> madvise_walk_vmas(), instead store the current range being operated upon in
-> the struct madvise_behavior helper object in a range pair and use this
-> consistently in all operations.
-
-Yeah much better but it still took me a bit to understand that "end" is now
-the original range->end that doesn't change during the iterations. Maybe
-make it const and comment?
-
-> This makes it clearer what is going on and opens the door to further
-> cleanup now we store state regarding what is currently being operated upon
-> here.
+On Thu, Jun 19, 2025 at 12:30:04AM +0530, Badal Nilawar wrote:
+> Reload late binding fw during S2Idle/S3 resume.
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
 > ---
->  mm/madvise.c | 101 ++++++++++++++++++++++++++++-----------------------
->  1 file changed, 55 insertions(+), 46 deletions(-)
+>  drivers/gpu/drm/xe/xe_pm.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 47485653c2a1..6faa38b92111 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -58,17 +58,26 @@ enum madvise_lock_mode {
->  	MADVISE_VMA_READ_LOCK,
->  };
+> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+> index 91923fd4af80..6c44a075a6ab 100644
+> --- a/drivers/gpu/drm/xe/xe_pm.c
+> +++ b/drivers/gpu/drm/xe/xe_pm.c
+> @@ -205,6 +205,9 @@ int xe_pm_resume(struct xe_device *xe)
 >  
-> +struct madvise_behavior_range {
-> +	unsigned long start, end;
+>  	xe_pxp_pm_resume(xe->pxp);
+>  
+> +	if (xe->d3cold.allowed)
+> +		xe_late_bind_fw_load(&xe->late_bind);
 
-I also thought multiple names on one line is only done for local variables,
-but always separate declarations in structs. But I don't know if it's
-documented as such or if there are pre-existing counter examples. Consider
-it a non-binding agreement with Zi :)
+something seems off here... d3cold allowed should only be used
+for the runtime pm portion from the cases we can lose power like d3cold.
+But we don't use that in the s3 path.
 
-Thanks!
+We should probably have 2 different calls here. unconditionally call
+in the regular/system suspend path and conditionally call in the runtime one.
+
+> +
+>  	drm_dbg(&xe->drm, "Device resumed\n");
+>  	return 0;
+>  err:
+> -- 
+> 2.34.1
+> 
