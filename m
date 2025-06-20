@@ -1,82 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF44221FC0;
-	Fri, 20 Jun 2025 12:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78509221FC0;
+	Fri, 20 Jun 2025 12:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422799; cv=none; b=foTglVF0mf2kJxXhM273WlaEIsNnP5DjiiLeNoUWwNAI3whNsw5nMMxF4JUdVT+JOJA7sHl9pDKX8lgeg/N4sb4i7KnmjNsxOy/IX/WALoKus8U7wU3210Vg4o0Q823wPCT3R7xD9quFgHL6WNUo6ayvVdCHtpvdtNRuIxNnP88=
+	t=1750422803; cv=none; b=Ca6P+70ZAzWaWYXknkgcoAq5skj0dRKShEZuWXlghIyQ1HKEbgGFBPKUCqztTMd9vbE8OkgB8qeQ/Pi+FiXFgLNcmSFouWlPFNBnnLz8mdWnOPk37ZpJAEbmmx0cQeM13igE1HZUhei42LBovlHmZsk8YXzlDm3I7gLM1ilwrTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422799; c=relaxed/simple;
-	bh=8lXtsibUqhfDv7u5UfJVjn6rzJDXDt2W0ozpaZZ+90A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lcTNtZ1K2w6s40YdLsS3fsotuJHmgC40FIuVSq2ESCbd3kI880uXku9woFh7FC3BVZe7gFna8IzkHHlHhMsqfUhDhIjwZdvgYwKQNbbgZcpyrACBEG8LtXIzgTEURAi5FA3MIoPk/9lzGaM790y9uGNeaZ9RjcYelUoNZJmpb18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8096116F2;
-	Fri, 20 Jun 2025 05:32:57 -0700 (PDT)
-Received: from [10.57.27.59] (unknown [10.57.27.59])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F05803F58B;
-	Fri, 20 Jun 2025 05:33:13 -0700 (PDT)
-Message-ID: <562662d4-69ca-4d0e-ad0d-fd8cece417e0@arm.com>
-Date: Fri, 20 Jun 2025 13:33:11 +0100
+	s=arc-20240116; t=1750422803; c=relaxed/simple;
+	bh=DaGgyoq4tptnaaMFKQ5NAr1kA6WiOSlnJM6CJ4wUsz0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gJ+bVN8Y3exJfNOLXP+KVsi0yf4f8TjYpW3fzhl7Xp7+FLNk+3Ig5O7p6itZEnVQ4t1yPcyt5L3nVGqKhzVM9cIAMqQzHTZNlSLf04ivjaEpS5JJFGl6fs6xXHvvUjazr1yfqRx8Wswp8xW8ksfldE/4P7YTW1gLrWCDY1Yc78g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bzVI3fgB; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bzVI3fgB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C0EB51FD3B;
+	Fri, 20 Jun 2025 12:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750422799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0nTWKYvxlcW790wtzf4aEgMXnEq9wDwuPS3BdqPXpms=;
+	b=bzVI3fgBtk/4M0taOrX2MmN8vxYXjkqdVLqs0XdmXB5/F5yK0tX7pj1MqqXTnthypSg4/F
+	4712mYfUb+ZktLTOOx99CpoN4dOZjcrBx2Lx37Fj5EsXTCkwra/y7K34dKWk3OXgzT1xSf
+	NQFLn2VuKdzYkZCOKu3E+QP741rpVNaYbSEhVMefO7hLwMET/R8TBU9lNou+5vFZ99SgEZ
+	nBbGa1HAj1aTEvdw3gcqxKqmjxEK4/lk+5APH8ZbG8ZF2kSnk64chRLbro3kMgCvXH68Hd
+	gzrvFDW4YyKj03IpVK0tRGIAI2WwE/UB/+0xMqREPYK6qOfJ3jfwgKiCOdJH/Q==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH ethtool-next 0/2] Add support for PSE priority feature.
+Date: Fri, 20 Jun 2025 14:33:05 +0200
+Message-Id: <20250620-b4-feature_poe_pw_budget-v1-0-0bdb7d2b9c8f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 2/4] PCI: rockchip: Set Target Link Speed before
- retraining
-To: Geraldo Nascimento <geraldogabriel@gmail.com>,
- linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rick wertenbroek <rick.wertenbroek@gmail.com>,
- linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <1966f8ddc4a81426b4f1f48c22bea9b4a6e6297c.1749833987.git.geraldogabriel@gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <1966f8ddc4a81426b4f1f48c22bea9b4a6e6297c.1749833987.git.geraldogabriel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAFVVWgC/x2MwQqDMBAFf0X23IUYYin9lVIk6osulESS1Qriv
+ zf0MIc5zJxUkAWFns1JGbsUSbFKe2toXHycwTJVJ2usa61xPDgO8Lpl9GuqfPthm2YoGw887ta
+ Fseuo5mtGkOO/fhF00ZQ+HHEova/rB65O5794AAAA
+To: Oleksij Rempel <o.rempel@pengutronix.de>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Michal Kubecek <mkubecek@suse.cz>
+Cc: Kyle Swenson <kyle.swenson@est.tech>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugefgudfftefhtdeghedtieeiueevleeludeiieetjeekteehleehfeetuefggeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehkhihlvgdrshifvghnshhonhesvghsthdrthgvtghhpdhrtghpthhtoheprghnughrv
+ gifsehluhhnnhdrtghhpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmkhhusggvtggvkhesshhushgvrdgtii
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
-> Current code may fail Gen2 retraining if Target Link Speed
-> is set to 2.5 GT/s in Link Control and Status Register 2.
-> Set it to 5.0 GT/s accordingly.
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-I have max-link-speed overridden to 2 in my local DTB, and indeed this 
-seems to make my NVMe report a 5.0 GT/s link where previously it was 
-still downgrading to 2.5, so:
+Add support for PSE (Power Sourcing Equipment) priority management and
+event monitoring capabilities.
 
-Tested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (2):
+      update UAPI header copies
+      ethtool: pse-pd: Add PSE priority and event monitoring support
 
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
->   drivers/pci/controller/pcie-rockchip-host.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 8489d51e01ca..467e3fc377f7 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -341,6 +341,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->   		 * Enable retrain for gen2. This should be configured only after
->   		 * gen1 finished.
->   		 */
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
-> +		status &= ~PCI_EXP_LNKCTL2_TLS;
-> +		status |= PCI_EXP_LNKCTL2_TLS_5_0GT;
-> +		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
->   		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
->   		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->   		status |= PCI_EXP_LNKCTL_RL;
+ ethtool.8.in                           |  13 ++++
+ ethtool.c                              |   1 +
+ netlink/monitor.c                      |   8 ++
+ netlink/netlink.h                      |   1 +
+ netlink/pse-pd.c                       |  88 ++++++++++++++++++++++
+ uapi/linux/ethtool.h                   | 134 +++++++++++++++++----------------
+ uapi/linux/ethtool_netlink_generated.h |  59 +++++++++++++--
+ uapi/linux/if_link.h                   |  16 ++++
+ 8 files changed, 250 insertions(+), 70 deletions(-)
+---
+base-commit: 64226907d0d6734bef5098eb343fd2194cd140e2
+change-id: 20241204-b4-feature_poe_pw_budget-0aee8624fc55
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
