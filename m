@@ -1,70 +1,70 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC11246BC5
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE38F2475CF
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750460534; cv=none; b=gFIWNs4RbJFbdzk2ZmepgaUtYE+FGB0IpGn7wakHSESVWoEHuFsXnQCOKAkY1+Ju+GypS7tIknutv60Ux+U+EP8me27BbTlRO5EXvnkjmr68FMXV0UVp/Y8S5oOZUAE059bsEM8BclpAr5q0u4nzZLrrZh4Bs2noMxj8EY6HNZQ=
+	t=1750460537; cv=none; b=YobWyGWDAEOY/+EGMaxxKD7s6IF3YdchEjerxBhBjz4enBXWt6ZCYjdtItjQ6yIJMWSD8ZjtYJOJAA/cuoRYx06H9kgWS1D6KHkNQTjoEbe5SNiYmZ6BVRdM0QqE1KFdGjkp6Qq7UyKDuglR9lIjaMi4yoO5zp03c4j0k4X5OII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750460534; c=relaxed/simple;
-	bh=XnkfGep55I541ApHJD2QZdhM5aWbZnlK1BM5kBi3CyY=;
+	s=arc-20240116; t=1750460537; c=relaxed/simple;
+	bh=+4QAOhOKs2z7oraV6eBDU1rFC07YSDwir0q0MOueysk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n84RXTJ+/quXEcgc3TbrelvcYiIiEljbu4Aw5ZG4/ihm6aTexBHs8g8lFoDWHwmVHY2LRG3nL6lcJ/Z2tFawc+YtfKOTtd3FB7uxIYq6AJJizYpGAvtyC4MLITZsXtpXEFEAlvJakxESRUtNCwvwJP0tv/5tfAMx0W4X3bcpvYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0eW5L0/; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=XC0bmctV/9tm8SQnZJ5Ym7/x7KJRszS9nBHJ6MiSi2nFMdQrnB0jxfalC7jwc22hV3upWG9ja6VJKQA6fLc0504vvBJLE33SDyWypt1UQ+o+yx2s9F/BGxD58MNc+ua6Iolq8tVpD1cZWXQd4xcr3i0saMJ/ksP4h0y0xZWg2yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jv/9zFN6; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0eW5L0/"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d09a17d2f7so206233685a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:02:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jv/9zFN6"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e81826d5b72so2275498276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750460532; x=1751065332; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750460535; x=1751065335; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6QuG91aj9FVspnq30Ro0SdZ3sAijtIfNiwe75Boh82w=;
-        b=O0eW5L0/1NgWgJ7MfnjvPxaxFIo80HbzeMeuehLA2Zq3M8Ow9Xhgw/Jnq+pG7OMV7p
-         1RxMY5BxQKi3pnCjIZDMffGXb9Rr2cDyiIK/hqtG6FZ4+N+cUi/A4+A8qqg+URtMFkHr
-         A0xUAMVJVbOwQsJ1ai3x49v2TKzg6n7p5P+M915b6dDqI1MXGm6kaH4Ghgf2xPosT1IH
-         eaC1rpeM8RVUP0V9gGTa3/16D2bntw2ezZvaV4ON4ZgdO+1o7S5zhawfWu0PdSvugw1c
-         IUrX4RtrMvFTdgJLQ3VaLP7aCi1bZY7yJ+j1a7bspbUDPL+AW+SPkbXW7mIrj7bkHe3a
-         RPHA==
+        bh=Db/PBlmmdvlLRb0OpTrQ2lhYAsbpFgBOYRSGmdSJSFc=;
+        b=jv/9zFN644TxSJ38ojRRDbmzIdvCJAcTZgKO3YbOf+qGlUhxvU85gI74E/ucxMHaFX
+         8XLSyEMpUGC/78UtWN/erP2BTQymxPbXhvfIteBDzmJviR4dAROVGEHhCbbspTom6+PS
+         6Uc2eLGS08CMIlLdS3Wxai0OCE5gKHTGZG/NQFELfmmnpp2EkW4YRhbTo/nXBExWe54M
+         0Rqe/NfZ8leD4sEUXMAP/YoISbq3I0xXuHsAeawHbi8Ziuk+xt9fxhXo9AvNyBI1YCzM
+         QWuhoEDCqHLaogN8cN6RachUl0qi5RyQUoCU4+lccmR0FODXtx63Ck4oSTQTjOb3085L
+         Hoow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750460532; x=1751065332;
+        d=1e100.net; s=20230601; t=1750460535; x=1751065335;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6QuG91aj9FVspnq30Ro0SdZ3sAijtIfNiwe75Boh82w=;
-        b=IsByEaltvNjTRuNLwpc4VEp3zwV4/dlfBiw3BpJG8VoAdelj6cwxrXeOr62ggbTGEi
-         GEy3+t4CubYm1eSrJg0vC4dib3I2MEtMgnQxjS/hZ3LQr4KOxjRikyjU3dbxlxGW/7yU
-         unqDZxnqcADBFxhIrYIRwvdRPbaCgccLpmp0BC7xFYqMyi4qQw5Z5wJjLzXJo0WGGtXV
-         xsfVGACut6HWxfgF1rcOwKmg3/a+RZrPQnIcz+N5kkIzZU5nwA49tll9YkANdL9h4XNP
-         xVO/5P6wOfU8jCzK7aj4xqJlUl4xi7dXWcZWwmUzLeoO1JpoN2cSTIPu+3o+H+xaMcfh
-         Q4cA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5A3/62nk0/GUuaVAHu9D+oZV71JrFbf/2Xgtp92EBvyVqUVTpnu9BJ2I2ErvksGtOAgwa/F/9nCewzGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVW6bM7sYw93GRRcrkeGYhax+w3WP3/0I0iOINBydDR36oJt+H
-	WzFYczhtfH0N8OyMZBghhrSy1Zqp/pmJz+kxvJ/lrk6b6TrM02mI4HWJItWIH9jf
-X-Gm-Gg: ASbGncvEdWGMw04msX5CvJmOK54fZUtk3hN2NnsYv5ROMYdaoMv6yRqJ0EgegfHWuJA
-	Snnznww/S3Yf90K6TiaoEHt6mRL4eZk+FuEV3LibjZI2oJvbXpoZU8VhNIzN7TMehTBttmldfut
-	94epltJToU5R5bzYZzX7usr3Ccg+qqLZmaDWd79KAaNfFPVjhmJVXE+ClvHKJ8A2U7FBdZr/DN4
-	Lb0adbUed42oqhPN/msytKgcGssuSMtCzzJ7bU39mxAzqxSXS2N2auTQWP8Z6c6prQouGd6fdU3
-	rT3z44rueQCi+pHqzpNfEJKBI1JWtxxIvTLkR0VPo6oAozKcJe1Zz2xlrfslF6szEOBa4vtRNnD
-	DSA==
-X-Google-Smtp-Source: AGHT+IGNj3h+Rpu5SikVNW6ff7BWM+PCiJO4+wXZXfuc9+jR2gtExRzEx3jNWUJZg4Y3tr/pE5qFMw==
-X-Received: by 2002:a05:6902:2388:b0:e84:2a27:f30f with SMTP id 3f1490d57ef6-e842bb4bab9mr5748413276.0.1750460521069;
-        Fri, 20 Jun 2025 16:02:01 -0700 (PDT)
+        bh=Db/PBlmmdvlLRb0OpTrQ2lhYAsbpFgBOYRSGmdSJSFc=;
+        b=O3dXrC1/DgrQP+zgZspl0tql3R0GTG4RQ5835RiIABpPk5rTbkFP7+aXtRD0YWf1t7
+         HpBX8MMQT0v5tuaXwMaZAMEKf6iRPmsxcp8gI5olOLqfsSy/7ydEg6nlTwb7p1gA4D5F
+         T5MlqxxlKNfPQssbjtMVUA4stfGttAFryDTuNZ+cEsNu6mcAS9z694leI1xpvkC2rXN+
+         h0po5JANxZPYqtoHT0e6PnRqfQrWpw73061mO7VGolZwE0flQIovMkETf442/BkNyT4h
+         L/LIuTBhvbcxEcO8F610AqiEyGpQnml/9sgp2tkWiSim48A/wshzEQqdB0IYbozcRHAP
+         zAYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvtmjZi5/JugXkcrJzN4jUXMT5aU7SveTj15SFA4dZbxS03LvlpDQ4zcCawDp8uHd7PQNsFT7Y9FHcACU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgIRaYgPB82i3tsknN8RmdU6bTofQGjA5xLDWXwRgBeV4w1PNn
+	AvmNeXTIIpNe7v6aR+4edwyqUw1q53M5ekfJDIrUS5D8ek1fuszscyVR
+X-Gm-Gg: ASbGncvBzPFjTnJ671Zkv5h39E1ye+kvM6fduVxUn7i9FfOLxGTcY4trqa8poKxUEA2
+	/haXgn2OY2ZRqwZb1924lCPMUQ4PdYt22orpm1bf01s1gQBQCMq4e5gGNTXFu/4F7LfFkLl56je
+	pXljXz4rZKBEpnD6b9YTV3+qfB/eY5OCyqzZze9/xYptPbdj1uXb5BBzLF+5uzsTpQ/1JwizbyB
+	KpoWJ5oPuaVUvaBLIlBLsq+IPWak7Mess839VuJxueecykX7bAqJqUZeBSenWi6vwcgaLbj07u5
+	6jI0am1t74wlKY75A1hySze3TQprQ3YWnQzBKBop/fV8LD0ZnuYXprbBUZJNvp36jrj889FbG8s
+	jwQ==
+X-Google-Smtp-Source: AGHT+IFfUdRyAKzd3krLdg3gt4t2ly61Edez5IEL/6WvTR//gcqM18VgUmR0T8XfbyhdJzT9KCn0jQ==
+X-Received: by 2002:a05:6902:2746:b0:e81:cab6:6db5 with SMTP id 3f1490d57ef6-e842bc6df3dmr5841712276.8.1750460534533;
+        Fri, 20 Jun 2025 16:02:14 -0700 (PDT)
 Received: from Slackware.localdomain ([191.96.150.102])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.01.58
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.02.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 16:02:00 -0700 (PDT)
+        Fri, 20 Jun 2025 16:02:13 -0700 (PDT)
 From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 To: dan.carpenter@linaro.org
 Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] Eliminate the full path to the script in usage output
-Date: Sat, 21 Jun 2025 04:08:52 +0530
-Message-ID: <88fe1267b23608c27ba4e6dbe69c12a49dab4290.1750459100.git.unixbhaskar@gmail.com>
+Subject: [PATCH 8/9] Usage shows without the full path to the script
+Date: Sat, 21 Jun 2025 04:08:57 +0530
+Message-ID: <502715cbb8c9cf7843a3d140a1d8affb2b0a8679.1750459100.git.unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.46.3
 In-Reply-To: <cover.1750459100.git.unixbhaskar@gmail.com>
 References: <cover.1750459100.git.unixbhaskar@gmail.com>
@@ -76,23 +76,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Clean to the usage outputted text without full path of the script
+Eliminate full path to the script.
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- smatch_scripts/filter_kernel_deref_check.sh | 2 +-
+ smatch_scripts/gen_implicit_dependencies.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/smatch_scripts/filter_kernel_deref_check.sh b/smatch_scripts/filter_kernel_deref_check.sh
-index c70d7994ead9..88071a464c45 100755
---- a/smatch_scripts/filter_kernel_deref_check.sh
-+++ b/smatch_scripts/filter_kernel_deref_check.sh
-@@ -2,7 +2,7 @@
+diff --git a/smatch_scripts/gen_implicit_dependencies.sh b/smatch_scripts/gen_implicit_dependencies.sh
+index bb6217437507..d6e21bf63bd6 100755
+--- a/smatch_scripts/gen_implicit_dependencies.sh
++++ b/smatch_scripts/gen_implicit_dependencies.sh
+@@ -4,7 +4,7 @@ file=$1
+ project=$(echo "$2" | cut -d = -f 2)
 
- file=$1
  if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages>"
-+	echo "Usage:  $(basename $0) <file with smatch messages>"
+-    echo "Usage:  $0 <file with smatch messages> -p=<project>"
++	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
      exit 1
  fi
 
