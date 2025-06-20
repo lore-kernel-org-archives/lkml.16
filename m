@@ -1,55 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFA1F5842
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B21317BB21;
+	Fri, 20 Jun 2025 17:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440071; cv=none; b=m+1bMv22xUbOctRubP2CJldNjcJq2cBQNneEdbGWPPstZUFbRpS+obqApsBVAK1rXjzS1VFXjsxLHUJRnr11G0YWwpL0g59vcEnMinVm9C5QwFpa1HHObJ7R2m3sLJZkL3l+oyop5XT9ojK5qdmdfqVR+maqZX4VvJuz8gX+9yU=
+	t=1750440108; cv=none; b=nCOB5j2vO4bS+qBEOio/toPUHtsmz3KvUAUyJS6YeCkKlDNFCN/JIPRqMsM6tVIqkpD5/dSkg2CLHuugStPuUor7404J4tMiI1LAXpJjUPRGA5ytNv9GNzxmNTaOqrG1c8pGlsIpAdOEJA+SNcMZSvOLcy3keh3L7JSv10RvRH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440071; c=relaxed/simple;
-	bh=t6w5g9PHHJ0JICEUNKNQrpwD7Yaeo4JQujpqVDAF6tI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZGy14+53MN3ZmgSNaHIbID8XleXX52aT/e7TUNyVMFMW7Q5f0DNWm0IKYw++IgJ1nA1yWn8S1079uQSe5xwRTNUdkMSy+pfiLKA9dN6+DCHd7MDXBTs2m4FunKyTxYrtk7ZvPZGl2Bw8SjqEOVLvD2bXtSj8ACVrysrSChJqcog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5lbiMfD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750440108; c=relaxed/simple;
+	bh=hWEBnXWWMQEMCGSzUFl0Z0gKr4yJBOS5vfs/3+bHSRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hJDtfZE0jMsGWqWSEoaF/RlNdeUKE2u1YZVEzfzbHB9S0i2R/tv7ror5ASebtkK2+Sp3aADJyIqOn5HGo/1u+lI+hgue1AsqOUO/TqoDi8fch4OTxNHSMyRNSqOLlt292gMYK7JDd6Xna0yasEWH+4lzP8LDfJG4jh2n5XvP6Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GzzY9Efl; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5lbiMfD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A7BC4CEE3;
-	Fri, 20 Jun 2025 17:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750440071;
-	bh=t6w5g9PHHJ0JICEUNKNQrpwD7Yaeo4JQujpqVDAF6tI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r5lbiMfDny1QstFlimSGvFGFtKmO3FDPV+hWhclfVN7fGQbsgtAsjr9LewoakZQlI
-	 db51yK6ywvkHkjxmPktB8ChBw8oXPZmYF1RVXes/KgiG8p9nqKMNrj5TA248S27zYg
-	 z5xr0Fxa4Uu+CXhm2ip8Y3ICqrmHX/0Kc92469agpxveDCO6JgYiqO+GWnCZDc901Z
-	 0ln5VdxSoxY+24cuXux7qDbJwATtBto7Y9TNOJLR1RD7U2KJUHPmBVJYl6FDCZYGH7
-	 Qw0d6h52zz6hXR+1wP1gWcpeHWstYP+iIgzg/YRojeIXwgeoIoT6TqpkB1kbuPNYop
-	 XcQtg7MfAPK0w==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzzY9Efl"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-71101668dedso18147887b3.1;
+        Fri, 20 Jun 2025 10:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750440106; x=1751044906; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvS3KMtz9AvK+cQpsMLXwD2ffJ5jVL2vkB80StYNZLs=;
+        b=GzzY9EflJtK5UChsvZHkLi5OyAR14wwrjyycEjKRlRItMd09PhZF5Tlmtg0ITX4WyA
+         qaNb9y/GlsoCYXIwOe+cOufTdsMuTbKe8EkxYigZntMk7u/mB2s8DLzcI1Sr6l2Wa+Cl
+         xUV4ebmSo3g0Y+Iun00X0amh+9XT/QJg9Mdv/HHiSPyDHZhHS5lNM8YamdkT768KRh97
+         GLPzujWF8pJfAfVo0XUHV8WT0Tq4QF1Dz+DMWxFoRG36JWRzPZdSkHFqeJST5xiJQVa6
+         CJv8K8bcASl0+7Zzj7WCwEYHEvPiTTZpgSbNd+ndLH5BVb/6LvKehSY+Amr3Q4khTuHm
+         xUDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750440106; x=1751044906;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fvS3KMtz9AvK+cQpsMLXwD2ffJ5jVL2vkB80StYNZLs=;
+        b=COYXNWiLtBzgTLKjq8EJltNJye73uJqmryMTmgl+vRZOo8TsGpLnDLnW+vU3b0ZSPQ
+         hHLAT4db6jqZFUXW0Qz+RQpgK6FM5qdGmnTd6HZ9AhMtzHWyFcIsHGQMNlNPyCtaU/tX
+         eoBjdSAtei+BD0S42PoYydTJfItAZisliCeS4+y8Xdsr504DbTuLB1FlR7hNI7Uh90ea
+         F81NNNiFCapPT5uJp3z7L3c/K2Odw8YuQmSU1MxiDd5yyb7R4WBXqU6TRbHoHh8ek8R/
+         dSk4eKVgTd8r6QWJ7q6YA+VZxMYSZNk29/bYf7vNtsrDv9eVHaehjWUjG+h7VlPumPDO
+         zWRA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5is5kkLMDkz5XE0J7IxTBEaTDtzoLUl8dxqxB4u7zKBtlZbeCv4hIWAv23vow38UGnSe+iID6lbt2@vger.kernel.org, AJvYcCWQLhoOnOTN1NuFPhyGuOwuOwhs+OUewQaXglnjls8nk0I4Jzrk6fctvNw1yc9mr//GGHsK9XT470GrUDNi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy15XxEoOhazczRKiBGtpnvrJhbCgTVq3JLIsCqkAKBxLxK2U9i
+	M61KHsBdTEsXGQzZB05BM5sbGt3Qz3FaQcpbu31hf1YZPZSyPo0cTADM
+X-Gm-Gg: ASbGncvj5RfMLbknzLaNJgq0ihvnubYcGHIHEFQDtrR4qXMVIwax1xgmorFevP/Haix
+	O2uUuHnI4ZAopGLn4zVqG66jOWkLwZsFr/aiDWLk+YqV4jdMOkes19oRcX1KwQGaSEvzNqh/M1b
+	sh0SHdesLC/Io+5D0NrcKc39U/e6Q95xgbpTpEoGaK0wVXr1Iwx3cCJdjpBWU5+ygVwK1UcwnoP
+	1oXQGxiVrPrC4gBArxjXRuKi2k548BqkFO7Hqc6rf3ULQS2K3ilV0G/cNaRgIRgq+u2YQVAvKZm
+	7muT8897NngkJ2yjV+0PmdyQIzzh+EKoPOsycqBwSwzITNGeEEQU75WMCFvqh4usPZykTzg=
+X-Google-Smtp-Source: AGHT+IEHjO40uKSkV7nfam+/N57foyW5wCOVz4cX1+zGDB4XHw1dSOQQdikhvdY9IR7c5chzXB9wCg==
+X-Received: by 2002:a05:690c:6f86:b0:70e:7ae4:59f4 with SMTP id 00721157ae682-712c6517768mr50267987b3.17.1750440106089;
+        Fri, 20 Jun 2025 10:21:46 -0700 (PDT)
+Received: from localhost.localdomain ([192.34.165.40])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4a4a7besm5004037b3.52.2025.06.20.10.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 10:21:45 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v2 0/5] madvise cleanup
-Date: Fri, 20 Jun 2025 10:21:08 -0700
-Message-Id: <20250620172108.95944-1-sj@kernel.org>
+	John Clark <inindev@gmail.com>
+Subject: [PATCH v2 0/2] Add FriendlyElec NanoPi M5 support for Rockchip RK3576
+Date: Fri, 20 Jun 2025 13:21:39 -0400
+Message-Id: <20250620172141.173266-1-inindev@gmail.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1750433500.git.lorenzo.stoakes@oracle.com>
-References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,56 +77,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Jun 2025 16:33:00 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+This series adds device tree support for the FriendlyElec NanoPi M5 board,
+powered by the Rockchip RK3576 SoC (4x Cortex-A72, 4x Cortex-A53, Mali-G52
+MC3 GPU, 6 TOPS NPU). The patches enable basic booting and connectivity,
+including dual 1Gbps Ethernet, USB 3.2, microSD, M.2 PCIe NVMe, and HDMI.
 
-> This is a series of patches that helps address a number of historic
-> problems in the madvise() implementation:
-> 
-> * Eliminate the visitor pattern and having the code which is implemented
->   for both the anon_vma_name implementation and ordinary madvise()
->   operations use the same madvise_vma_behavior() implementation.
-> 
-> * Thread state through the madvise_behavior state object - this object,
->   very usefully introduced by SJ, is already used to transmit state through
->   operations. This series extends this by having all madvise() operations
->   use this, including anon_vma_name.
-> 
-> * Thread range, VMA state through madvise_behavior - This helps avoid a lot
->   of the confusing code around range and VMA state and again keeps things
->   consistent and with a single 'source of truth'.
-> 
-> * Addressing the very strange behaviour around the passed around struct
->   vm_area_struct **prev pointer - all read-only users do absolutely nothing
->   with the prev pointer. The only function that uses it is
->   madvise_update_vma(), and in all cases prev is always reset to
->   VMA.
-> 
->   Fix this by no longer having aything but madvise_update_vma() reference
->   prev, and having madvise_walk_vmas() update prev in each
->   instance. Additionally make it clear that the meaningful change in vma
->   state is when madvise_update_vma() potentially merges a VMA, so
->   explicitly retrieve the VMA in this case.
-> 
-> * Update and clarify the madvise_walk_vmas() function - this is a source of
->   a great deal of confusion, so simplify, stop using prev = NULL to signify
->   that the mmap lock has been dropped (!) and make that explicit, and add
->   some comments to explain what's going on.
-> 
-> v2:
-> * Propagated tags (thanks everyone!)
-> * Don't separate out __MADV_SET_ANON_VMA_NAME and __MADV_SET_CLEAR_VMA_NAME,
+Changes in v2:
+- Fixed DT schema warnings (Rob Herring):
+  - Renamed spi-nor@0 to flash@0
+  - Renamed pmic@23 pinctrl nodes to end with -pins
+  - Renamed hym8563@51 to rtc@51 and removed clock-frequency
+  - Renamed button@1 to button-user
+- Addressed Heiko Stuebner's feedback:
+  - Sorted non-addressed nodes alphabetically
+  - Added blank lines in regulator nodes
+  - Improved fspi1m1_pins comment to clarify SPI NOR flash pinmux
+  - Moved status property in saradc to last
 
-FWIW.  If this cover letter is added to the first patch, like Andrew usually
-does, as-is, checkpatch.pl may warn like below.
+Patch 1: Updates DT bindings in rockchip.yaml
+Patch 2: Adds NanoPi M5 device tree and Makefile entry
 
-   WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+No MAINTAINERS update needed, as the new file is covered by the existing
+ARM/Rockchip SoC entry.
 
-Obviously no real problem and I don't really care.  I just found this since my
-tool (hkml) runs checkpatch.pl after adding the cover letter to the first
-patch, and hence this is just FWIW.
+Tested on NanoPi M5 with successful boot and feature validation.
 
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+John Clark (2):
+  dt-bindings: arm: rockchip: add FriendlyElec NanoPi M5 board
+  arm64: dts: rockchip: Add FriendlyElec NanoPi M5 support
 
-Thanks,
-SJ
+ .../devicetree/bindings/arm/rockchip.yaml     |    6 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3576-nanopi-m5.dts    | 1001 +++++++++++++++++
+ 3 files changed, 1008 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-nanopi-m5.dts
 
-[...]
+-- 
+2.39.5
+
