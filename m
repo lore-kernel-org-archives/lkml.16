@@ -1,105 +1,113 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE12EAB6A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7729E2E4241;
+	Fri, 20 Jun 2025 18:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443477; cv=none; b=bGMD9cYXCizveLqIiOsZpdmoYFJgF6bYRKScq873OetFWWubDVfJYyHWzIkRkJ9pou6p6/zdwWN+rGeR9doRCbaLgE/N4bZuFb6K/lgPCNxW2Mmn+jGTBqS3P6AzXB5RuDib4Q05CHrk/glwahp3z6HZbsW+XR3WuQ0taV6Wp0o=
+	t=1750443520; cv=none; b=smi0eoMqdAUb+EtvNpXNsfLMdr0DmEakmmAO98rWW/jFT2r3B7VP/ZxyIgJzjtrfUDHqSWC+xxdc11Lnw6BUlesrfMRfSsY9hKVF3yOfE5CjvXaGIw/8gmJ6Rhks7WK9qLk8r9B7TnOyoaBhTC8dzTvXZygFJz61Ew2HIprMwYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443477; c=relaxed/simple;
-	bh=FXb5Ooh1SoKLFB+GF1YDuF7hepy8ALKLUWQZf6h1mvk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tVORXoATKcRbmepcOeysLAV8v7Q1zY10UeXR7RdDKx+gzyyF7ZNZdkrCbBkfOFPMDOPWe3tCiAORuV9GEXFoEEJON3YUivCnSPHFw+HppyEkuSOSDs2AKpi6V3o0Vz+F+jC+zB8Ubgy2ZldtGR41fcZ4wMsNdMNtILo3LXUIjz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s+a/oUsk; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
+	s=arc-20240116; t=1750443520; c=relaxed/simple;
+	bh=/NTEe4LX2305a/082hD0ht8grH/4J99i57GtOdHR6eA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K0GETpJY3yvLAlUZfcaLcO3gg0F2fhpHPWqQmUhBZSCWi487UBGUTaMxXn5qeGF36Su23VqdvzVHNnfhpYq2xMzgR+A0H4/qxQ5XTMpkCQxIbZ5BfLRRTIduYITJ1mQfGbAPJuloGQ+P0d9bl4mp/ck2RQ5hRwlA/yN9BvDvkhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URxGbqtH; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s+a/oUsk"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31814efd1cso1373507a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URxGbqtH"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a54700a463so1246512f8f.1;
+        Fri, 20 Jun 2025 11:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750443475; x=1751048275; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsGE8lw3KH/D0SLaONE7VxsA+KaDyJNSSOZHiKLjPmQ=;
-        b=s+a/oUskKmcHuRT2SSVKgz62vOwzlPIDfpB2UmecpycwElDkDzMHteeJ7S/IPoihGS
-         HYsbDLMELB4M2PSQyLSY+joLpN8OlXQ5RRw9+GZGvseZr4jXVEDXt5aXgc+wDoxygoO7
-         KxZUmmCAM2exo89e2d4g1DF77yiGQw4g2ZaIS0vCiLaazsGaP/qDU9k7ajMa1NhTAcgq
-         JrDSd7/VwjfyF2zqKMWK+rLUz+hW+MvoHZkLZPlGUBg8jk2Bnj0yd4XKKUCXaTpSHgP4
-         m7e8CMSj5K0gghN0QcA1BQfqBfd+gh0VHXJPPJO0LdMIQf8XXDzhH4JOzJxgZObQ8pIH
-         1NbA==
+        d=gmail.com; s=20230601; t=1750443515; x=1751048315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HhMV4vNytMAJBBpa9RjxnYZPyihfBUf6q6MsqT87Yqc=;
+        b=URxGbqtHAwvz0KT1uNfUhpH+FAL6mpEfHvCpRqRyyINewHTuyrtsoV8vai0/klBJ9s
+         OOQUyZo6G+0wHTCsS60xjoKQD2suXFWKz4Q+hCp2Xk6VcSRwWfw6ILrsMVH8C1/vWQKu
+         DI0OlpGO2fQZNR5boKBXPbdLvtoBJlpiq4DEJ+rV+SXWafdNVcTSfsTlRlBAA3xXmvH6
+         27mj9Zuqyx36Duca/1b8j72ksEFWOII4wXnGZhMA2tr/RrBYNjMO4HXviUeMphEqI+D4
+         MbIgExCdNT1amCYPUq99Uim8bL5T1j6fr//MRR3HS+iNxAH8ky25X+k1rEIKZastTp3C
+         s1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750443475; x=1751048275;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsGE8lw3KH/D0SLaONE7VxsA+KaDyJNSSOZHiKLjPmQ=;
-        b=iMjLXbRFImK6xHYqiPRK7bAEADJGV8wiKxKKd/w+xbo7Ug9eEBAChhEEIusSnbzLXE
-         w6ZSocyYeHs8ZQo5H5jjH/N9uj+VU7IdKBOC+5GJ1pH4a5egRz6gCnFwp3/3mu4BcWvP
-         ZVp/EytSoBE9ZILsICW68Z4SwSxXUoq2iPgWmdDygGCjGEubKwgAOWRAXg81eRWcyCpL
-         9EFlS15bsrGWcjXwCw8XUAlM4lT9tVphph3c1bhLWUj+XduBpPqJbp31gnH/vsy23Jq8
-         1MiDmtb1ZHd8S1463g2SUo+2H/TfOkMpD03Otg1L/RSqmyVv5kaMsJBW/1D8kMsBJgz4
-         7QVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhQ5rKj+tWle868tgw9nsm1s497FLdPA/uI96EyYdiOMX4ALL+ao8bRvpjphemPRL37IoXj6Fv67PaozQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnxGZqL69x3NtiDT0F/Eec1c16OI8AvecEl5iOfahEUYlUw9H7
-	/ZrF4yY1h8nG6+kFB3EgRWcaTxqFvhY611JbebdhzUdi6EN4Kt1AWPvfmVdcY72HGvaqhDfV7Ko
-	3yOAzSH8Vq0XGnP/8TRs6opyqE1ZrJQ==
-X-Google-Smtp-Source: AGHT+IHypcBEXCfetti6ZSKrWADvOCJp2Q3YDfRe9x9eHf0/IU91QwPfM1r/wCQjgAiUHhCtBoksoPLTGqQX3VT8HmY=
-X-Received: from pfiv28.prod.google.com ([2002:aa7:99dc:0:b0:746:2ceb:2ec0])
- (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:7f8a:b0:220:eef:e8f0 with SMTP id adf61e73a8af0-22026e479cdmr6696633637.23.1750443475053;
- Fri, 20 Jun 2025 11:17:55 -0700 (PDT)
-Date: Fri, 20 Jun 2025 11:17:09 -0700
-In-Reply-To: <20250620181719.1399856-1-willmcvicker@google.com>
+        d=1e100.net; s=20230601; t=1750443515; x=1751048315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HhMV4vNytMAJBBpa9RjxnYZPyihfBUf6q6MsqT87Yqc=;
+        b=cSEcM1q6ulfHo4PLFQpNPBqbE2hLtqGdiKLDc6ihLhHsJ5g0tYioA3LeK40RSsrlHG
+         iQ1FhOoeDaLE7e6lEFwjWhUEIOKaXxr3Z+i6tbw58sf6UJ1kc6heP4vw+fOmtW6gxlRJ
+         IlcYqYEkK5wmN+XZMlbEYfHb2iL2AY+N7t27DX3O7eYWH2fA75aZwgvDU67X9ok+5SRC
+         Lfwt06ce+/xmuDcfwZ+HAGkafDJTSfFIajaGZDAVtLgj26hkNay5z1LaNouYSevkrP2G
+         WBSC/mUVrgcyBv6oY41afuflz29OhftAhl5R81XkTyTiGXeliReEByCDTuucm12rIGQC
+         MrRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV01UXPBWt8OwC/9mptkaBDa74Ab5Lx4CFLFphFvp8/eSTf/uoJHYaEjJrLa94CRNUDG8YVyYHHVAVPJthNaA5rhLCDQm9b@vger.kernel.org, AJvYcCWKtNJM5VJN1q/AUmwjuVZEKOd17p9j2E0trAFhiAYgkdkl1kCMMty4QuZL6KfK9zJGXcDR9Sy8ZBPszgBH@vger.kernel.org, AJvYcCX+puBlZ6ljYFeLcjhMdt44avlrObtyzkUonVUmSvyTVwpytezF9MdcLPra1lJzYqCyWTG9Fi91aMufpIxC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXt7Jc2lJsFOWiODoUCeYUHGy/1GJwcGFfJGVDcxuj+MIEcrtJ
+	OBSoZ+UNq1ybGbvsD8402K50RMcsG17qm9uudA2V4B2PgVYwtkbYxnbagkPx8SpSFb2b3GTOinu
+	wLtN922t46t0zSygMsjxCoRjAS1ynLB8=
+X-Gm-Gg: ASbGncseJttrpocMfGgm+5dqX3yKfVJSYGCE03eGtEpaTFZv2vON4AFBD3KHY0OGvrw
+	jR087xjFPIm5HsdNXcAPNSzj27IGqIDZb+FAPT2hE4knXkPGiZNbMZsBcxxL4xMAh41nkIBoKmh
+	OiuYyTHRmn7gb6JC0NCTMEjHKewnLOG+tIuxd7jZ+cCLyE9vbJVZLH0/v9V7DD6rRqTY4JP/liy
+	yPBOTj2778=
+X-Google-Smtp-Source: AGHT+IERIFJDmPI5Mw1ELsO//3RTQwrHGmyoE7/KP5ElN4R3G1PWZpc1vQ2nU+JugdZ2pTBPpOEBKu8rdfjZoKFkLyU=
+X-Received: by 2002:a05:6000:26c8:b0:3a5:8977:e0f8 with SMTP id
+ ffacd0b85a97d-3a6d27e16f5mr3057936f8f.19.1750443514689; Fri, 20 Jun 2025
+ 11:18:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250620181719.1399856-1-willmcvicker@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250620181719.1399856-7-willmcvicker@google.com>
-Subject: [PATCH v4 6/6] arm64: exynos: Drop select CLKSRC_EXYNOS_MCT
-From: Will McVicker <willmcvicker@google.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>
-Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>, 
-	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	John Stultz <jstultz@google.com>, Youngmin Nam <youngmin.nam@samsung.com>, 
-	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+MIME-Version: 1.0
+References: <20250619220114.3956120-1-song@kernel.org> <20250619220114.3956120-6-song@kernel.org>
+In-Reply-To: <20250619220114.3956120-6-song@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 20 Jun 2025 11:18:23 -0700
+X-Gm-Features: Ac12FXw3XqXyYvhqyw1ob3gjWc9KnOgD0rHoHKU7ZY9Bk53Kb-1LHiUxKohpROA
+Message-ID: <CAADnVQLCyk4O6w4WRxTKcQsEdZ3y6_CNc4mBF2ieT9m51E+2Lw@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 5/5] bpf: Make bpf_cgroup_read_xattr available
+ to cgroup and struct_ops progs
+To: Song Liu <song@kernel.org>
+Cc: bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since the Exynos MCT driver can be built as a module for some Arm64 SoCs
-like gs101, drop force-selecting it as a built-in driver by ARCH_EXYNOS
-and instead depend on `default y if ARCH_EXYNOS` to select it
-automatically. This allows platforms like Android to build the driver as
-a module if desired.
+On Thu, Jun 19, 2025 at 3:02=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+>
+> cgroup BPF programs and struct_ops BPF programs (such as sched_ext), need
+> bpf_cgroup_read_xattr. Make bpf_cgroup_read_xattr available to these prog
+> types.
 
-Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
-Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
-Signed-off-by: Will McVicker <willmcvicker@google.com>
----
- arch/arm64/Kconfig.platforms | 1 -
- 1 file changed, 1 deletion(-)
+...
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a541bb029aa4..46825b02d099 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -109,7 +109,6 @@ config ARCH_BLAIZE
- config ARCH_EXYNOS
- 	bool "Samsung Exynos SoC family"
- 	select COMMON_CLK_SAMSUNG
--	select CLKSRC_EXYNOS_MCT
- 	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
- 	select EXYNOS_PMU
- 	select PINCTRL
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
+> +       ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_LSM, &bpf_lsm_fs_=
+kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
+, &bpf_fs_kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SKB=
+, &bpf_fs_kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
+K, &bpf_fs_kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_DEV=
+ICE, &bpf_fs_kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
+K_ADDR, &bpf_fs_kfunc_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SYS=
+CTL, &bpf_fs_kfunc_set);
+> +       return ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCK=
+OPT, &bpf_fs_kfunc_set);
 
+No need to artificially restrict it like this.
+bpf_cgroup_read_xattr() is generic enough and the verifier will enforce
+the safety due to KF_RCU.
+Just add it to common_btf_ids.
