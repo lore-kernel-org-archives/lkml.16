@@ -1,133 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AB317BB21;
-	Fri, 20 Jun 2025 17:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D5D17BB21
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440214; cv=none; b=dqptes4kWSMZrcRLFeUDlnK1fMMq1nTFGgzU6YnRzJqJmIYtO/xBdimW0bSFK4BbKjej/bylvnv4HQF4GCQ/y4/eizQHSgnkOac5/w9DgvkN0BGkdKQNIUlXcYjrqFHukBUVyMmExa9xcG9gW7fDJjshcJH/bbplddlj6qMXdtc=
+	t=1750440262; cv=none; b=Uz/pGCKwhOCbcMvr3HkczOLWW3cQe2OBEF0dX1+PiISul0s1/Ld5AurUhR5vKNc485TbG8V9gPaGoditbKw34aJWTpmV3iE3ij/EeLEVBi1zKdrgcYVq5wNEEB/XikqoC37/ef4lE/haWnYQfB9rzG8p1QWoybExI80+xmE8UbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440214; c=relaxed/simple;
-	bh=R9ugcuZA8sFkO9nmq4EUkSdbDzH0n9+ehDZOAJ50d2k=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=OazdzkAkNB82XjRjBTOGn14wSttvbPTB0me/O6aCADfNzg+4YBY3o2TStr+bQY7chMi5+kzHnma08bptRp7ki53nxlDSqx6BCtZqq/WQRrPsiM+k+dyiAatAthAimMrkq/PuJ2KergivaZKWFZXjrDixZpOR+YBtWsDdL5j+TYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=Y75w36KU; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1750440262; c=relaxed/simple;
+	bh=ouz3BUK71qOdTrcFId1tCc8lvLAtnHB4kyG9Fz0uMwQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rxnBbBflH0Qlrr49hlMmIy7r9YRoCo26zGD616yjU9x0MkhTaixnrMn+CagNfPxMJbiKfi2afKZK3di9oZm25SxWJ1H83EM4kUZL1rF4z+N7jmJGepJtoIwpsbWc/Re9s1QjcUC14oP4ZrtJqG85trmLz1lrPMCeVrEvJ9wlg/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FrFtQNNZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="Y75w36KU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1750440204; x=1751045004; i=frank-w@public-files.de;
-	bh=jZzKv95/qPQLk4dOIL8/uUJV/xuG6bhVSFJOYUTBAoM=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Y75w36KUGxBxAvlr/ia4dk6Kfo/AcCpsmbzQM9pP2G2YjNxYzk/5Gw2Z7UwguDt1
-	 xMmGN9HizcSspCopryykWAHYXJZZuQgfkltueB5aKbmbCypMXLgskAfgCVBLqC+GB
-	 xGlAZxAsZQQM9e8+7y1WpH1FxqI99VtcKkcODEMG2a7MwZaxolhLr6ksnSBTG2UHs
-	 yOb6MDa2sN4+is83ufCx/2yKO9LM9CCF9CZRb29JhU97FyjUIs9pP+9+J/sM4KjnA
-	 d+AArFFU55s/Lud6VNeAW92DSNzn2XbxIwIyAkqAYzRqXLkam2ruqoJRHQq9NrAFw
-	 vReBGfYLdLDiqLT7SA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [100.67.37.206] ([100.67.37.206]) by
- trinity-msg-rest-gmx-gmx-live-b647dc579-p5cg7 (via HTTP); Fri, 20 Jun 2025
- 17:23:24 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FrFtQNNZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750440259;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ouz3BUK71qOdTrcFId1tCc8lvLAtnHB4kyG9Fz0uMwQ=;
+	b=FrFtQNNZWBJGFhyARZ1gYXZ8in0T4az4ge2N3ISe75OywxmX379QClpmIWrh+mw2g8MUbA
+	nAwbFGD02jF/9H0hApOcJgMy7608UqrZCX2UCsWP8n6kz79RwPghea8rfxPAGxUJg9YwH4
+	48pqdK5xJPDli1udoX3Y/o5COSUugNs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-201-dbnMaKyGPTeri0UCjoOYGw-1; Fri, 20 Jun 2025 13:24:18 -0400
+X-MC-Unique: dbnMaKyGPTeri0UCjoOYGw-1
+X-Mimecast-MFC-AGG-ID: dbnMaKyGPTeri0UCjoOYGw_1750440257
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a58939191eso1016876f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:24:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750440257; x=1751045057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ouz3BUK71qOdTrcFId1tCc8lvLAtnHB4kyG9Fz0uMwQ=;
+        b=wSREoFO55fkLieNSfpU5H2UtOxRM8aEfz1/XIinu24+WUIyuofMYNHIEhMuYf7LAII
+         qvsdCO8jta96vRqpk+qOxBtEPTG4h3u2+4WuGKIcNoUjeZJeVXLmHgRWL59RAeLEDBpt
+         cPbKH7sk4w6Oy3/9XrWmS9QBB7JVwB0xAy4MEFozkkL1pWRObBX+0sLrQ799dEF2odqU
+         ExYA9OM3EOcd2IAUKtH878EooLKonhID/Wfqt7W+h7DY+TR5ehfYhZ76lmt2pj5ygV/A
+         NzpST0i+SBViW7NwpFoNZSbmwww+Ko5N/DJZhacFMrlVjnlYyGI9KPvsKuh0xM5ONUgL
+         GfJg==
+X-Gm-Message-State: AOJu0YzDbDZTIsukPoyUJ8Mb1pRQoI4RzyBNGdH4sRnzWg5y+tvjfR5S
+	CDv7lUTjdC6OST4cEc5ydiYm5PBOo/sqDyPJ8IbZvlQydOn9t3e+0D5Fv3nTfF8ZS6cvN3dAQha
+	So52wVSFNADdOk643KQ0xahE+oOmn5iOUum+77vYklXqe1LQpCYWYze968gP5tEOFgObn2k18nY
+	eA0UhU9CcvXG73owbSUr3d+6VijlzJ0+iFBJ5cae12
+X-Gm-Gg: ASbGncvJqvOIWP5b+w8UaQgHTP8CuL4Tha1dokl/V/Sd2oUBV0dFKoIAjPlbbwsPx57
+	WHFenUX0ROF8s30ApKwPrBfRo5wN3pXmASwJcWzH++ZwsjG2N8Fel8hM85SPhJ3MXcPK8dcCC2z
+	ubMHo=
+X-Received: by 2002:a05:6000:4021:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a6d1190d3fmr3089888f8f.1.1750440257152;
+        Fri, 20 Jun 2025 10:24:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzSNBBR9lh2YVwg0otvhsrN0GZIOUDSmvBzwBZQnhs02lqRP/ovcayV2ZrRxHVdI4ad6FdQbT+m6pkvwdWTMk=
+X-Received: by 2002:a05:6000:4021:b0:3a5:88e9:a54f with SMTP id
+ ffacd0b85a97d-3a6d1190d3fmr3089867f8f.1.1750440256798; Fri, 20 Jun 2025
+ 10:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-f6d57547-e653-4444-bdce-48975fab0f55-1750440204231@trinity-msg-rest-gmx-gmx-live-b647dc579-p5cg7>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: linux@fw-web.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
- cw00.choi@samsung.com, djakov@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andrew@lunn.ch, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com
-Cc: jia-wei.chang@mediatek.com, johnson.wang@mediatek.com,
- arinc.unal@arinc9.com, Landen.Chao@mediatek.com, dqfext@gmail.com,
- sean.wang@mediatek.com, daniel@makrotopia.org, lorenzo@kernel.org,
- nbd@nbd.name, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Aw: [PATCH v5 06/13] arm64: dts: mediatek: mt7988: add basic
- ethernet-nodes
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 17:23:24 +0000
-In-Reply-To: <20250620083555.6886-7-linux@fw-web.de>
-References: <20250620083555.6886-1-linux@fw-web.de>
- <20250620083555.6886-7-linux@fw-web.de>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:LLXkIlgtAkWlv31f/hwKzDWFIFD7uJCQ7JVO3uSoGjB8MaqlfHEWiN8bymQPoCHE9Rkr9
- gQRUfMcQMdq9w9g1SxMZPnMrdg6cdNs1vUiydP7WUSb52ReRk5IoHDL38qaysgQub/2UTeH3Ke/f
- D3Djl6851xSk0t9I79P6EdxWUyblB0+zjJomuwdUzKQ99wAJLx6w2pn8Ft2D5Sao1rHTbB/7+i4k
- 18pnFAGt+jQOMNEuEdPi0YUuo+eVIIPTNDPskO8geEgdbuI9kLDmtEJJ5C1WqjxoLkmEWy1oRU41
- w0dKMufwwbGxLFEsQY08CaFuBbYycS/vBnT1l2ms6DSRkOaANk17T4LFD0sy8E8oRE=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vCoJMTloeCM=;tIllx58HLY+UYiXc3pq3eS/80XW
- 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
+References: <20250619180159.187358-1-pbonzini@redhat.com> <3133d5e9-18d3-499a-a24d-170be7fb8357@intel.com>
+ <CABgObfaN=tcx=_38HnnPfE0_a+jRdk_UPdZT6rVgCTSNLEuLUw@mail.gmail.com> <b003b2c8-66fc-4600-9873-aa5201415b94@intel.com>
+In-Reply-To: <b003b2c8-66fc-4600-9873-aa5201415b94@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 20 Jun 2025 19:24:05 +0200
+X-Gm-Features: Ac12FXy-GTA8U_5UssPP3xQlLeaRcgwss_Pc_eC2Tf8z0JTOgXpp0nOdWVbSL54
+Message-ID: <CABgObfadU2_XLM8yGQrx9rDswfW3Dby10_nxzTBUdYGASQuOaw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: "Kernel Mailing List, Linux" <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, reinette.chatre@intel.com, 
+	"Lindgren, Tony" <tony.lindgren@intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	Yan Zhao <yan.y.zhao@intel.com>, mikko.ylinen@linux.intel.com, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Gesendet: Freitag, 20. Juni 2025 um 10:35
-> Von: "Frank Wunderlich" <linux@fw-web.de>
-> +
-> +		eth: ethernet@15100000 {
-> +			compatible = "mediatek,mt7988-eth";
-> +			reg = <0 0x15100000 0 0x80000>, <0 0x15400000 0 0x200000>;
-> +			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-> +                                     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-> +                                     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-> +                                     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
+On Fri, Jun 20, 2025 at 2:48=E2=80=AFPM Xiaoyao Li <xiaoyao.li@intel.com> w=
+rote:
+> > The interface I chose is that KVM always exits, but it initializes the
+> > output values such that userspace can leave them untouched for unknown
+> > TDVMCALLs or unknown leaves. So there is no need for this.
+> >
+> > Querying kernel support of other services can be added later, but
+> > unless the GHCI adds more input or output fields to TdVmCallInfo there
+> > is no need to limit the userspace exit to leaf 1.
+>
+> I meant the case where KVM is going to support another optional TDVMCALL
+> leaf in the future, e.g., SetEventNotifyInterrupt. At that time,
+> userspace needs to differentiate between old KVM which only supports
+> <GetQuote> and new KVM which supports both <GetQuote> and
+> <SetEventNotifyInterrupt>.
 
-sorry, i messed up the whitespaces (spaces instead of tabs), fixed it locally but
-seems not recreated the patch-files (and not run checkpatch.pl again).
-I send new version when net-binding is reviewed, ok?
+Yeah, I see what you mean now. Userspace cannot know which TDVMCALL
+will exit, other than GET_QUOTE which we know is in the first part.
 
-> +				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "fe0", "fe1", "fe2", "fe3", "pdma0",
-> +					  "pdma1", "pdma2", "pdma3";
+By the way I'm tempted to implement SetupEventNotifyInterrupt as well,
+it's just a handful of lines of code.
+
+Paolo
 
