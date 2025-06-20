@@ -1,70 +1,70 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABAF246BBA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC11246BC5
 	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750460534; cv=none; b=sD0iCG5rSji4dcIM9914ezXdllQIu5+ep8XcBDZwC3deNTXDS1Sr46882pnefrNFpusiZMaqtIxDxpn4j1ka4ppdbItSz1GiPuAour+FcdIwOpsqgxVeYjgbkJPqTrAVCZibcH+u9XY0I8GUSJ6xSjlUWpeP3AwJnKFhnTnav6s=
+	t=1750460534; cv=none; b=gFIWNs4RbJFbdzk2ZmepgaUtYE+FGB0IpGn7wakHSESVWoEHuFsXnQCOKAkY1+Ju+GypS7tIknutv60Ux+U+EP8me27BbTlRO5EXvnkjmr68FMXV0UVp/Y8S5oOZUAE059bsEM8BclpAr5q0u4nzZLrrZh4Bs2noMxj8EY6HNZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750460534; c=relaxed/simple;
-	bh=1lvQKCp9n+oKaAXB121H8fPPhHQwfZZD/QhUPBYTciI=;
+	bh=XnkfGep55I541ApHJD2QZdhM5aWbZnlK1BM5kBi3CyY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aAlI5bB/6G8gPrny9daMvfaWGuU5WMc2wzPC1fWo7nZE4S9p3HFtkptvbzEeRBaTARa+QkzkvT81Q6AR776TvwDur/HNIBFwRp4Lz70IZ6fmaZWSMX67mWLoerN00z7Hxp8dfDGxsSaqw0q2V3Cc7YMkJZiPdV+RuFxHyH91Tmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgnvNV/E; arc=none smtp.client-ip=209.85.219.170
+	 MIME-Version; b=n84RXTJ+/quXEcgc3TbrelvcYiIiEljbu4Aw5ZG4/ihm6aTexBHs8g8lFoDWHwmVHY2LRG3nL6lcJ/Z2tFawc+YtfKOTtd3FB7uxIYq6AJJizYpGAvtyC4MLITZsXtpXEFEAlvJakxESRUtNCwvwJP0tv/5tfAMx0W4X3bcpvYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0eW5L0/; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgnvNV/E"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e73e9e18556so2348873276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:02:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0eW5L0/"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d09a17d2f7so206233685a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1750460532; x=1751065332; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JS5x0lPmv/9YrJ9NWJaaoBaN+jFbkNMf5RYhq2FuHjY=;
-        b=PgnvNV/EhCzMCcu//CHOhnAWSrtvfRdgTpk/ONftlod8G2fLRrlOqAqs8dMn9DZkJ1
-         3nOtnQgPRKjPpJ7gB8IhSUK6vJ3bcbXjmonbaDjb1nVot0VsgDOhA3U39x7cBb8rW8Gy
-         nXjQr8Xzb/+fRUKEcoxwUEyQM1hXdeBanJmfo9bV4b8JHVDuk4ZOSVXX136bzzC65WCd
-         p513J2mfuQxO4TwUTe9dMu9a5VT9Epu+HPjk78JNfAdiuUM8S+3FNud0qhikHwsXDUxb
-         LwTzL2+Lmm2bY6CjkVxIVNvVagNEpz/BUEfQkgDZeVG7M9bD2jTgfJVgMziVpI01G7pu
-         AScA==
+        bh=6QuG91aj9FVspnq30Ro0SdZ3sAijtIfNiwe75Boh82w=;
+        b=O0eW5L0/1NgWgJ7MfnjvPxaxFIo80HbzeMeuehLA2Zq3M8Ow9Xhgw/Jnq+pG7OMV7p
+         1RxMY5BxQKi3pnCjIZDMffGXb9Rr2cDyiIK/hqtG6FZ4+N+cUi/A4+A8qqg+URtMFkHr
+         A0xUAMVJVbOwQsJ1ai3x49v2TKzg6n7p5P+M915b6dDqI1MXGm6kaH4Ghgf2xPosT1IH
+         eaC1rpeM8RVUP0V9gGTa3/16D2bntw2ezZvaV4ON4ZgdO+1o7S5zhawfWu0PdSvugw1c
+         IUrX4RtrMvFTdgJLQ3VaLP7aCi1bZY7yJ+j1a7bspbUDPL+AW+SPkbXW7mIrj7bkHe3a
+         RPHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750460532; x=1751065332;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JS5x0lPmv/9YrJ9NWJaaoBaN+jFbkNMf5RYhq2FuHjY=;
-        b=gRI6TFIJ6gBQRso/sJXtdKXLiNacboCWvxMC/nBYJt4QEu+a/j7yMScKcuZr9jbJKN
-         6V0KBKpCCUb80cyY7uVOb4dRjOLJbF8AJDJ2cnt/uiiy6i+ARPFc+PDy4dlbpDbAA2R5
-         MDAqgmdVEo5nMyivyQ7aI4pSCCVJkfe4ZknzmriqHkHGCRbc6gmBPaEn7u1bT0xuGGbd
-         JKKwDK9ENGjkyDG3nvjzABsji9Fq0jlaXzLW1VfxH+7XXtD58jQ/wS/10Po74maVzeAF
-         gokyTILERLduk3FOx1Q05LZEQr7w9N8s8ZHWab+dzrbgkcnxGuj3rncYOZ0CcgjrTxOL
-         FqKw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1d9dktdaey6GaPBY0eHYIUGUUVhWA/8/3SV9JE45oLAlAGyKfxG64qUdW9vlgz3Zvics4D00oASA7Bdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRk95083d8fPefOm9PkbsxCvdikBoNoMTSPcbid/dghkx+zicJ
-	Qhmd90/fEzCMA8lWZD6REQ/UrbgZz/s7WG099+f7/CuCCyEkL/W2p/VF
-X-Gm-Gg: ASbGnctxYZmcC9lgYroBpDiK8KtnUYdGSRmna071K4jV/N0LV3Zgj5iikwEywLAWbxf
-	4QRtmB2Q7Udvwbv96dha7tE0d7OkodcAyWo5DB0+5c6VsXzUrWRON1Fhebop+xpfZwfy9LDomhU
-	LeSEu/CFcGfRv5/W2ATmpBPD6Rg9LS+yLNVIHNEOzCHEz03KfRpozX7aQhulRLtE/wr/zJkpi8J
-	/wYAxWY/aZ73cqT6C9tdWqQ2DS1oSWeLlvTPQWuBtzk4H6+/U3OtoJhxJxCECYhP7R8hUAw4OUA
-	lbIsI7c7gaUEMZSclVLHCoPSZ2igW9fb+3QyIYYjQ8V5xlhHy58ZDcpnbeNgDDhb8quWC8bnDvq
-	Adw==
-X-Google-Smtp-Source: AGHT+IHjvdkJUEaWAFgjCBfsfMl8s3mvhayhTVsi/j5UEW2Ir0aFNCt96betsTsHuHASHhOW617vPg==
-X-Received: by 2002:a05:6902:1547:b0:e84:3495:808b with SMTP id 3f1490d57ef6-e84349594c4mr3793213276.15.1750460531937;
-        Fri, 20 Jun 2025 16:02:11 -0700 (PDT)
+        bh=6QuG91aj9FVspnq30Ro0SdZ3sAijtIfNiwe75Boh82w=;
+        b=IsByEaltvNjTRuNLwpc4VEp3zwV4/dlfBiw3BpJG8VoAdelj6cwxrXeOr62ggbTGEi
+         GEy3+t4CubYm1eSrJg0vC4dib3I2MEtMgnQxjS/hZ3LQr4KOxjRikyjU3dbxlxGW/7yU
+         unqDZxnqcADBFxhIrYIRwvdRPbaCgccLpmp0BC7xFYqMyi4qQw5Z5wJjLzXJo0WGGtXV
+         xsfVGACut6HWxfgF1rcOwKmg3/a+RZrPQnIcz+N5kkIzZU5nwA49tll9YkANdL9h4XNP
+         xVO/5P6wOfU8jCzK7aj4xqJlUl4xi7dXWcZWwmUzLeoO1JpoN2cSTIPu+3o+H+xaMcfh
+         Q4cA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5A3/62nk0/GUuaVAHu9D+oZV71JrFbf/2Xgtp92EBvyVqUVTpnu9BJ2I2ErvksGtOAgwa/F/9nCewzGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVW6bM7sYw93GRRcrkeGYhax+w3WP3/0I0iOINBydDR36oJt+H
+	WzFYczhtfH0N8OyMZBghhrSy1Zqp/pmJz+kxvJ/lrk6b6TrM02mI4HWJItWIH9jf
+X-Gm-Gg: ASbGncvEdWGMw04msX5CvJmOK54fZUtk3hN2NnsYv5ROMYdaoMv6yRqJ0EgegfHWuJA
+	Snnznww/S3Yf90K6TiaoEHt6mRL4eZk+FuEV3LibjZI2oJvbXpoZU8VhNIzN7TMehTBttmldfut
+	94epltJToU5R5bzYZzX7usr3Ccg+qqLZmaDWd79KAaNfFPVjhmJVXE+ClvHKJ8A2U7FBdZr/DN4
+	Lb0adbUed42oqhPN/msytKgcGssuSMtCzzJ7bU39mxAzqxSXS2N2auTQWP8Z6c6prQouGd6fdU3
+	rT3z44rueQCi+pHqzpNfEJKBI1JWtxxIvTLkR0VPo6oAozKcJe1Zz2xlrfslF6szEOBa4vtRNnD
+	DSA==
+X-Google-Smtp-Source: AGHT+IGNj3h+Rpu5SikVNW6ff7BWM+PCiJO4+wXZXfuc9+jR2gtExRzEx3jNWUJZg4Y3tr/pE5qFMw==
+X-Received: by 2002:a05:6902:2388:b0:e84:2a27:f30f with SMTP id 3f1490d57ef6-e842bb4bab9mr5748413276.0.1750460521069;
+        Fri, 20 Jun 2025 16:02:01 -0700 (PDT)
 Received: from Slackware.localdomain ([191.96.150.102])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.02.09
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.01.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 16:02:11 -0700 (PDT)
+        Fri, 20 Jun 2025 16:02:00 -0700 (PDT)
 From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 To: dan.carpenter@linaro.org
 Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 7/9] Took away the full path to the script
-Date: Sat, 21 Jun 2025 04:08:56 +0530
-Message-ID: <36ceffe2dcf5490fb76e4995e8307ef08fc3ba27.1750459100.git.unixbhaskar@gmail.com>
+Subject: [PATCH 3/9] Eliminate the full path to the script in usage output
+Date: Sat, 21 Jun 2025 04:08:52 +0530
+Message-ID: <88fe1267b23608c27ba4e6dbe69c12a49dab4290.1750459100.git.unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.46.3
 In-Reply-To: <cover.1750459100.git.unixbhaskar@gmail.com>
 References: <cover.1750459100.git.unixbhaskar@gmail.com>
@@ -76,23 +76,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Eliminate full to the script.
+Clean to the usage outputted text without full path of the script
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- smatch_scripts/gen_dma_funcs.sh | 2 +-
+ smatch_scripts/filter_kernel_deref_check.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/smatch_scripts/gen_dma_funcs.sh b/smatch_scripts/gen_dma_funcs.sh
-index 7346963b8529..1a3fc5f0d612 100755
---- a/smatch_scripts/gen_dma_funcs.sh
-+++ b/smatch_scripts/gen_dma_funcs.sh
-@@ -4,7 +4,7 @@ file=$1
- project=$(echo "$2" | cut -d = -f 2)
+diff --git a/smatch_scripts/filter_kernel_deref_check.sh b/smatch_scripts/filter_kernel_deref_check.sh
+index c70d7994ead9..88071a464c45 100755
+--- a/smatch_scripts/filter_kernel_deref_check.sh
++++ b/smatch_scripts/filter_kernel_deref_check.sh
+@@ -2,7 +2,7 @@
 
+ file=$1
  if [[ "$file" = "" ]] ; then
--    echo "Usage:  $0 <file with smatch messages> -p=<project>"
-+	echo "Usage:  $(basename $0) <file with smatch messages> -p=<project>"
+-    echo "Usage:  $0 <file with smatch messages>"
++	echo "Usage:  $(basename $0) <file with smatch messages>"
      exit 1
  fi
 
