@@ -1,143 +1,233 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3A82A8C1;
-	Fri, 20 Jun 2025 05:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0BC2A8C1;
+	Fri, 20 Jun 2025 05:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750395638; cv=none; b=KyGtX4agTYVsxlhXyIMd5v2a1YLnzBdV/tu5Jj4gS84mpfLe+pKI32cjxf25FiZMThLsH3Azho8BaPxnVdnxzc0/oMhVNDVbN4tCbEJ47E1nUAcsw6HTTxMfZ2OlKG4Nsevjunqcgt+UVqDg/Dct6kTquxFjJBoHviZRABHVs/w=
+	t=1750395743; cv=none; b=DyesaGLr/Ez9YIUFBcfeUD85CA2Jd7vFaHdOpoVkfr2J4kkKms3UxfA1GFj3knTbqWtvEd+xBoEP7X+RSsQ3h6x0CDuUYkppc2FzpBCV55jjwy6KbQHcwwe2AzUSTkxFcZH7Whk1ufEupGkT/ek2NnNsR9yBy33HLg/OkaSO0DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750395638; c=relaxed/simple;
-	bh=ieHcvHe3oWKPR+PtGQ+16Jb/v+Qn0GU2mnFbBNymSEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r0ExSeWhk29LKu3C8VWWcFd2eQJnucZHi6DJ6y+VAy1FidR7hsiDSZ9cuK1WsaBxiH84f77+QvaiOYd0zaJTprTqYjDCQ5ZMBJunTTNcWy5T2pOviC7gtGIHF3mUC93g3hgDofQk60/rFMMMUxMA22zojRCoTJ8sWOJfUQ2bD68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bNlfV52YzzYQv05;
-	Fri, 20 Jun 2025 13:00:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9EDE51A121F;
-	Fri, 20 Jun 2025 13:00:33 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2Dw6lRoMqdLQA--.187S3;
-	Fri, 20 Jun 2025 13:00:33 +0800 (CST)
-Message-ID: <00d60446-f380-4480-b643-2b63669ebccc@huaweicloud.com>
-Date: Fri, 20 Jun 2025 13:00:32 +0800
+	s=arc-20240116; t=1750395743; c=relaxed/simple;
+	bh=D9l67I4gVQ1Zk7K1SD18ucSocCnCM8EvcaI1dWXIpis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jaW0+kzoOYjVgRZYXmMHg3PNtKOyD0BCTfK8W/axF4fnCXsGESdOZpDehg/RiaFLL7cvPngKe1kCt/6VU0F6exXmYqflRTwVaS3e9o63Nx7k4suvyEYfJngy1Q0VcPi3mJDGqsS+dYKr11qP+8qixXnE5MvS0jfgS3i59bG/c80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ksO9gZ48; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ksO9gZ48"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56176C4CEE3;
+	Fri, 20 Jun 2025 05:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750395742;
+	bh=D9l67I4gVQ1Zk7K1SD18ucSocCnCM8EvcaI1dWXIpis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ksO9gZ48Ucnptc+udebuWMyQsSgJYaVlDw5nZFSowhmwnScVLR5NgleScED/xgcxF
+	 9Z/IElzQpDNcCyROEv3mvyaJ35Yfrx0vUGNvvt5nup+yMJoTPJkmjf9VJ6+5pQ1EQI
+	 aICfckMyyWxRGjyoquAYOq6Ny7u8KwzfCMQ2hUac=
+Date: Fri, 20 Jun 2025 07:02:19 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>,
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <2025062058-caddie-rendering-3bf1@gregkh>
+References: <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com>
+ <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+ <20250619152814.GK795775@google.com>
+ <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+ <2025061910-skies-outgoing-89cc@gregkh>
+ <644dfd66-ad30-47cb-9ec4-50d9a003433b@roeck-us.net>
+ <2025061914-sternum-factoid-4269@gregkh>
+ <CAOoeyxUcB1xc_kMBADWoV8RnnFJ+uCYa_kJ7_BdyR8W_WZfsAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] ext4: restart handle if credits are insufficient
- during allocating blocks
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-4-yi.zhang@huaweicloud.com>
- <7nw5sxwibqmp6zuuanb6eklkxnm5n536fpgzqus6pxts37q2ix@vlpsd2muuj6w>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <7nw5sxwibqmp6zuuanb6eklkxnm5n536fpgzqus6pxts37q2ix@vlpsd2muuj6w>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgD3W2Dw6lRoMqdLQA--.187S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw17GF1rtryDXrykJrWxCrg_yoW5Xw15pF
-	WfCF1Ykr43W34Uuan2qws5Zr1fXw4jyrW7JryfGF9YvayDCw13KF48JFn0ya4Yvrs3WF4j
-	vr4jy345Wa1FyrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
-	mii3UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxUcB1xc_kMBADWoV8RnnFJ+uCYa_kJ7_BdyR8W_WZfsAg@mail.gmail.com>
 
-On 2025/6/20 0:33, Jan Kara wrote:
-> On Wed 11-06-25 19:16:22, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> After large folios are supported on ext4, writing back a sufficiently
->> large and discontinuous folio may consume a significant number of
->> journal credits, placing considerable strain on the journal. For
->> example, in a 20GB filesystem with 1K block size and 1MB journal size,
->> writing back a 2MB folio could require thousands of credits in the
->> worst-case scenario (when each block is discontinuous and distributed
->> across different block groups), potentially exceeding the journal size.
->> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
->> when delalloc is not enabled.
->>
->> Fix this by ensuring that there are sufficient journal credits before
->> allocating an extent in mpage_map_one_extent() and _ext4_get_block(). If
->> there are not enough credits, return -EAGAIN, exit the current mapping
->> loop, restart a new handle and a new transaction, and allocating blocks
->> on this folio again in the next iteration.
->>
->> Suggested-by: Jan Kara <jack@suse.cz>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+On Fri, Jun 20, 2025 at 10:54:44AM +0800, Ming Yu wrote:
+> Dear Guenter and Greg,
 > 
-> ...
+> Thank you for reviewing,
 > 
->>  static int _ext4_get_block(struct inode *inode, sector_t iblock,
->>  			   struct buffer_head *bh, int flags)
->>  {
->>  	struct ext4_map_blocks map;
->> +	handle_t *handle = ext4_journal_current_handle();
->>  	int ret = 0;
->>  
->>  	if (ext4_has_inline_data(inode))
->>  		return -ERANGE;
->>  
->> +	/* Make sure transaction has enough credits for this extent */
->> +	if (flags & EXT4_GET_BLOCKS_CREATE) {
->> +		ret = ext4_journal_ensure_extent_credits(handle, inode);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->>  	map.m_lblk = iblock;
->>  	map.m_len = bh->b_size >> inode->i_blkbits;
->>  
->> -	ret = ext4_map_blocks(ext4_journal_current_handle(), inode, &map,
->> -			      flags);
->> +	ret = ext4_map_blocks(handle, inode, &map, flags);
+> Greg KH <gregkh@linuxfoundation.org> 於 2025年6月20日 週五 上午1:18寫道：
+> >
+> > On Thu, Jun 19, 2025 at 09:58:04AM -0700, Guenter Roeck wrote:
+> > > On 6/19/25 09:20, Greg KH wrote:
+> > > > On Fri, Jun 20, 2025 at 12:03:01AM +0800, Ming Yu wrote:
+> > > > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午11:28寫道：
+> > > > > >
+> > > > > > On Thu, 19 Jun 2025, Ming Yu wrote:
+> > > > > >
+> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
+> > > > > > > >
+> > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > > > >
+> > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
+> > > > > > > > > >
+> > > > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > > > > > >
+> > > > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > > Dear Lee,
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Thank you for reviewing,
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > ...
+> > > > > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Why have we gone back to this silly numbering scheme?
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > What happened to using IDA in the child driver?
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > In a previous version, I tried to maintain a static IDA in each
+> > > > > > > > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > > > > > > > > > > > devices are bound to the same driver — in that case, the IDs are not
+> > > > > > > > > > > > > fixed and become unusable for my purpose.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Not sure I understand.
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > > > > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > > > > > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > > > > > > > > > > However, when a second NCT6694 device is connected to the system, it
+> > > > > > > > > > > will receive IDs 16~31.
+> > > > > > > > > > > Because of this behavior, I switched back to using platform_device->id.
+> > > > > > > > > >
+> > > > > > > > > > Each of the devices will probe once.
+> > > > > > > > > >
+> > > > > > > > > > The first one will be given 0, the second will be given 1, etc.
+> > > > > > > > > >
+> > > > > > > > > > Why would you give multiple IDs to a single device bound to a driver?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
+> > > > > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+> > > > > > > > > is independently addressable, has its own register region, and can
+> > > > > > > > > operate in isolation. The IDs are used to distinguish between these
+> > > > > > > > > instances.
+> > > > > > > > > For example, the GPIO driver will be probed 16 times, allocating 16
+> > > > > > > > > separate gpio_chip instances to control 8 GPIO lines each.
+> > > > > > > > >
+> > > > > > > > > If another device binds to this driver, it is expected to expose
+> > > > > > > > > peripherals with the same structure and behavior.
+> > > > > > > >
+> > > > > > > > I still don't see why having a per-device IDA wouldn't render each
+> > > > > > > > probed device with its own ID.  Just as you have above.
+> > > > > > > >
+> > > > > > >
+> > > > > > > For example, when the MFD driver and the I2C sub-driver are loaded,
+> > > > > > > connecting the first NCT6694 USB device to the system results in 6
+> > > > > > > nct6694-i2c platform devices being created and bound to the
+> > > > > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
+> > > > > > >
+> > > > > > > However, when a second NCT6694 USB device is connected, its
+> > > > > > > corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
+> > > > > > > instead of 0 through 5 as I originally expected.
+> > > > > > >
+> > > > > > > If I've misunderstood something, please feel free to correct me. Thank you!
+> > > > > >
+> > > > > > In the code above you register 6 I2C devices.  Each device will be
+> > > > > > assigned a platform ID 0 through 5. The .probe() function in the I2C
+> > > > > > driver will be executed 6 times.  In each of those calls to .probe(),
+> > > > > > instead of pre-allocating a contiguous assignment of IDs here, you
+> > > > > > should be able to use IDA in .probe() to allocate those same device IDs
+> > > > > > 0 through 5.
+> > > > > >
+> > > > > > What am I missing here?
+> > > > > >
+> > > > >
+> > > > > You're absolutely right in the scenario where a single NCT6694 device
+> > > > > is present. However, I’m wondering how we should handle the case where
+> > > > > a second or even third NCT6694 device is bound to the same MFD driver.
+> > > > > In that situation, the sub-drivers using a static IDA will continue
+> > > > > allocating increasing IDs, rather than restarting from 0 for each
+> > > > > device. How should this be handled?
+> > > >
+> > > > What is wrong with increasing ids?  The id value means nothing, they
+> > > > just have to be unique.
+> > > >
+> > >
+> > > Unless they are used in the client driver as index into an array, as in
+> > > "this is the Nth instance of this device for this chip". There has to be
+> > > _some_ means to pass N to the client driver.
+> >
+> > Ick, that should just be walking the list of child devices instead, as
+> > obviously no one is hard coding array sizes for devices these days,
+> > right?  :)
+> >
+> > Anyway, sure, if you _have_ to have a specific id, then use a specific
+> > id, but really, it should not matter.
+> >
 > 
-> Good spotting with ext4_page_mkwrite() and ext4_write_begin() also needing
-> this treatment! But rather then hiding the transaction extension in
-> _ext4_get_block() I'd do this in ext4_block_write_begin() where it is much
-> more obvious (and also it is much more obvious who needs to be prepared for
-> handling EAGAIN error). Otherwise the patch looks good!
+> I need fixed IDs in order to communicate with the sub-devices
+> correctly. For instance, the I2C driver registers 6 devices, and the
+> userspace interface needs to know which specific I2C controller (e.g.,
+> index 0 ~ 5) to target with custom commands. Using fixed IDs allow the
+> driver to maintain a consistent mapping between device instances and
+> register sets.
 > 
+> I'm open to better alternatives, but so far, using fixed
+> platform_device->id has been the most straightforward way to achieve
+> this.
 
-Yes, I completely agree with you. However, unfortunately, do this in
-ext4_block_write_begin() only works for ext4_write_begin().
-ext4_page_mkwrite() does not call ext4_block_write_begin() to allocate
-blocks, it call the vfs helper __block_write_begin_int() instead.
+The kernel is not responsible for numbering devices in a determinisitic
+way like this, so be very careful.  Userspace can implement whatever
+policy it wants to figure out what device id is what actual device, by
+using tools like udev and the like.  See how it does this today by
+looking at your /dev/disks/ directory on your system at the symlinks.
 
-vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
-{
-	...
-	if (!ext4_should_journal_data(inode)) {
-		err = block_page_mkwrite(vma, vmf, get_block);
-	...
-}
+So good luck with this, but again, it's not the kernel's job to keep
+device numbering static across boots, that is not something we guarantee
+at all.
 
+Perhaps you should not be using mfd for this?  Perhaps something like
+the auxbus would work better?
 
-So...
+thanks,
 
-Thanks,
-Yi.
-
+greg k-h
