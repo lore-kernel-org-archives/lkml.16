@@ -1,131 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1938F30E824;
-	Fri, 20 Jun 2025 08:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D353130E824
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406561; cv=none; b=S6YABDI16DdAI6KD/5YdXErmO+0OZKXt333TLN8cZNioUvb7R/MX3uFZdN+XgVPGpUf2iZNkYcU0u/PsbbezaEGuKXmLl2scLpEqJHpoeABw75nvywPP+93GNv6PjE47FsJqWSmK3yNbSVEzq6smPAigR6V6PKreARYr6USeA8Y=
+	t=1750406566; cv=none; b=lop3c+zv78UQOEvtZqnB/2ZJlLvlUv/4TBbME3iHv8hCfkHaClVu7PXFtAEJjEPZ9b8cbz/+FyZYuw2mC+Kq7i6XsIIXGif43WifS7RVPhpqqdscWdOQLXWsLtATGjf0eUMuw0bzlUpBT0coomXzODRHoKlObIse53wpmmp+7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406561; c=relaxed/simple;
-	bh=zR9P41fSivBylvTIgh8isbmn30vkfpgRB7a+NPqHr1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OE3JJf+67AEjrzJgm8ke4dc3k1FlAXIlXmy5M3MjRVQFxgmjlV2mWzn5wvqdxXuBPfo9z1GI4YpgzAYM1cmBhnydjydgWGnswR5g1aFq3SN8bZ/eD62CcqiR5JG9v2vg/3mGWYSyAtAuryQyD2uVSJR86ZI6XqJ3lEHhh0SBtJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37CE5176A;
-	Fri, 20 Jun 2025 01:02:18 -0700 (PDT)
-Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 713BE3F66E;
-	Fri, 20 Jun 2025 01:02:34 -0700 (PDT)
-Message-ID: <68cdf649-a273-4d83-b862-6b675a793f18@arm.com>
-Date: Fri, 20 Jun 2025 13:32:31 +0530
+	s=arc-20240116; t=1750406566; c=relaxed/simple;
+	bh=2WZG8C7fEPTVbWiFa390P0pvJ1bfNM8X1R0mT18KTCA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PcePvHAYz1a1Ve0+1aO4vEyjlnUs7+zgc3h1ZJeBlOE5Pr0AGAKlEv7xovaMEHNC92OIVyw2xCNB6uRn0aCATkAw0FdZNV+T2CHDJ16D/3+qx4dkDPUCvIt2eFzNVDHZU8V4iWqdaGTbhnYH8D9jQOBred2row/p9TqwLBGAmCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xSQ3BENt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2aimzrqE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J2vGJ/wp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=S9mNe68W; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xSQ3BENt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2aimzrqE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J2vGJ/wp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="S9mNe68W"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D5E33211F4;
+	Fri, 20 Jun 2025 08:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750406561; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBdfHxgDJgOqigYeEcGRcZAqNtzox+8jCwZpAsLzJwI=;
+	b=xSQ3BENt0Ey4p9oXPf0aelaBSBPr8+LPQqrGMLhP1AVzamyhjuYVucUZTNzDJgqlce/K2G
+	97Jcc2atr+yGHI3e/Auixrzkm2wrhLQ4/YwsblB1HbngO/qsRuB6SnX1Th4y7zAuQ9rDpF
+	Uqg/s175w8fSbn/WQM2ZTxkEV3P9P4Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750406561;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBdfHxgDJgOqigYeEcGRcZAqNtzox+8jCwZpAsLzJwI=;
+	b=2aimzrqEVwTK2LNFM5vo/pNUEkftGIX5KjW+76JjYfvZB6SUOtNQtLjNlNDPe3EG606Kgl
+	w2mH3V8TwvVuCHCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="J2vGJ/wp";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=S9mNe68W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750406551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBdfHxgDJgOqigYeEcGRcZAqNtzox+8jCwZpAsLzJwI=;
+	b=J2vGJ/wpVUD8Ta/tzNw2e9U/MXAuddlSr+2kYlC5eOfOULs544qSJNE4PRyC7TbGQ37/p7
+	ZRHDoDXnvIlZ0YAtML6MU3Gas2ufK/tD148/qLUrz9QbKTJecnUZXU6gNe5da9L5Wbvqr2
+	cIPR0vTZdT6orXIqGbdIGz75xfcse1w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750406551;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBdfHxgDJgOqigYeEcGRcZAqNtzox+8jCwZpAsLzJwI=;
+	b=S9mNe68WrNAyNiu/zjtEUn2GQHJ+vl9DqdbvRSAnyJX2/+dBVZ+6SPCG7khxKgHvCVp8+4
+	ngyw5qXXPaC1viCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 954D713736;
+	Fri, 20 Jun 2025 08:02:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mUsII5cVVWgJWQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 08:02:31 +0000
+Date: Fri, 20 Jun 2025 10:02:31 +0200
+Message-ID: <87tt4ax2lk.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: wangdicheng <wangdich9700@163.com>
+Cc: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: Re: [PATCH v2] ALSA: hda/realtek: Fixup ft alc257 rename alc3328
+In-Reply-To: <20250619071745.149299-1-wangdich9700@163.com>
+References: <20250619071745.149299-1-wangdich9700@163.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
- <20250618041235.1716143-2-anshuman.khandual@arm.com>
- <aFQYVPmStsIIFcMW@pathway.suse.cz>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <aFQYVPmStsIIFcMW@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ASN_FAIL(0.00)[7.9.0.0.4.6.0.0.0.5.1.0.0.1.0.0.4.0.1.0.1.8.2.b.0.4.e.d.7.0.a.2.asn6.rspamd.com:query timed out];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[163.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RSPAMD_URIBL_FAIL(0.00)[kylinos.cn:server fail];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,perex.cz,suse.com,vger.kernel.org,alsa-project.org,lists.infradead.org,kylinos.cn];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: D5E33211F4
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -5.51
 
-On 19/06/25 7:31 PM, Petr Mladek wrote:
-> On Wed 2025-06-18 09:42:34, Anshuman Khandual wrote:
->> Add a new format for printing page table entries.
+On Thu, 19 Jun 2025 09:17:45 +0200,
+wangdicheng wrote:
 > 
-> How many users do you explect, please?
+> Audio ALC3328 recognized as ALC257, updated PCI ID0x10EC12F0 to rename it to 3328
 > 
-> This patch adds only one caller. It does not justify the added complexity.
+> Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
 
-Understood.
+Applied now.  Thanks.
 
-The idea is to convert all page table entry prints through out the tree
-both in generic and platform code. Added just a single generic example
-here for this being a RFC proposal. Will go through similar instances
-and be back with more comprehensive change set.
 
-> 
->> @@ -2542,6 +2545,23 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->>  		default:
->>  			return error_string(buf, end, "(einval)", spec);
->>  		}
->> +	case 'p':
-> 
-> Please, do not opencode this in the already very long switch().
-> Move it to a helper function.
-Sure, will do.
-
-> 
-> 
->> +		if (fmt[1] == 't' && fmt[2] == 'e') {
->> +			pte_t *pte = (pte_t *)ptr;
-> 
-> If the value (pointer) gets dereferenced then please add a basic
-> check:
-
-Sure, will do.
-
-> 
-> 	if (check_pointer(&buf, end, ptr, spec))
-> 		return buf;
-> 
->> +			spec.field_width = 10;
->> +			spec.precision = 8;
-> 
-> Is she precision = 8 really needed?
-> I guess that .field_width + ZEROPAD would do the trick.
-> 
-> And them maybe special_hex_number() might be used instead of number()
-> and safe a lot of code.
-
-Agreed. Andy also might have suggested about special_hex_number() helper
-on the other thread. Will try and use the helper instead.
-
-> 
->> +			spec.base = 16;
->> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
->> +			if (sizeof(pte_t) == sizeof(u64)) {
->> +				u64 val = pte_val(*pte);
->> +
->> +				return number(buf, end, val, spec);
->> +			}
->> +			WARN_ONCE(1, "Non standard pte_t\n");
-> 
-> This is nasty. It should be a compile-time check. And the code should
-
-Something like BUILD_BUG_ON() against pte_t as either u64 or u32 aka all
-the sizes the print format is going to support and it should pass on all
-platforms ?
-
-> get fixed on all architectures. If it is not easy then> it might be a signal that the generic %ppte flag is not a good idea.
-
-Understood.
-
-> 
->> +			return error_string(buf, end, "(einval)", spec);
->> +		}
->> +		fallthrough;
->>  	default:
->>  		return default_pointer(buf, end, ptr, spec);
->>  	}
-> 
-> Best Regards,
-> Petr
-
-Thanks for your review.
+Takashi
