@@ -1,116 +1,102 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C332E15098F
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750386489; cv=pass; b=MQg/8D8gTV5mJJWsV0yEEBqcfOViiCQBCyjKeTtEKVJUR6Z7jopYQE81Y/IvEu8SfIyVUviNL8xX5s3XejHN2kFZKIoML/iqDjdTY+oD598mI6aZf8GRG7Hu0o9DqM8tJKp2iXH4CDcYlS7iscpR5GpsjOoq48b5MzfpiC7m3Rw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750386489; c=relaxed/simple;
-	bh=cRMjQnGbRLO2a/lzUo7NWb9b766pWsz2zW9Pr0ijW5I=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=HFGGG0Y23CpFVUYATFcltOnEO1GcxffRsL66C/cztzxao1OMxwfaw2DUqHX2klhJQH83091KfntX/bz9OAkzQA1sfquuV/CO72Fsi42Yz/0Rbs26xYdmOOnZVU80h8zgGJh9uVtRymgRKafDaqHWchLJcROvFwfV1xIfPhBLefE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=d+dE8qlz; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936DA190696;
+	Fri, 20 Jun 2025 02:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750386756; cv=none; b=pL0scqBwkYi7RM4dFO83TS+eJK00aKVIn0tNb2TAx3wEFVAkXgQBhhRjXM4l/8gvGJS5RXx+6h7uV8CfzdiMcG0HuZfux78c8T13ugIZPjpHYALqCTkBd4fVmrD4yJb3hZvkj6AsmU5ZKMeJgUpHi6jQuN/bS7p9vkkE1Bs0prY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750386756; c=relaxed/simple;
+	bh=nFwAjdcCBmuCFAWX9WMeLyT+AO0LFKWNtBekZcA+g8k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HIcdaNUlXb/F5nqWqG0IW+P80QzzQoyC5EO9gF0cBBpMfkoPmcJGSNHqdpTtEOd8tc3ckJZ2t+y6kSzFLE3xs6CIxbG5g36FXPNdwDKLw6UbbELoOP84BdQ5tbdYt2FWxQRXduod63ww7OVMWhLCBaSdCXqWktmlvogATdC6m04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlycR+Vu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="d+dE8qlz"
-ARC-Seal: i=1; a=rsa-sha256; t=1750386454; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EVQcQ+dSr9dWPN0m6N4kBxweGO/KQI026kdyC/r+tvaYu52c5m//HDcPFm39abYHOlo5UiEL02KSxLKBZzZqrO9Lmj3C0bFdFRMaLs8RuqrGsJX+Ih12YFtSElIjVPhQBWs9tV9UzMHvkCo7UcF1+K/eVoRAGVLhGYWy0E2oE5g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750386454; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=e8cKjkVou50pLK/2YYUB58h1KPp8lfD6jgUscJYxNvA=; 
-	b=GpyUz2SMhLeik7Zm1wxraou/ahBAST+0UG24edX8ehZ/UszAKOb90nezJWttSoVW9DSN/DZ2XKS+8pRONNQWhR/dA4q7shMNuvM8RZhH6yylI5Wt1T7ycofow8+2fpLK1PE9kpBmiu60J6bIEBwITrofGHDs9U/PPdbHJOVkgJI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750386454;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=e8cKjkVou50pLK/2YYUB58h1KPp8lfD6jgUscJYxNvA=;
-	b=d+dE8qlzqyWIDGPRruYmgS5xpeZhHyJ2dhZbXmGTnrhRARJ9o1iF8K2wQQr1TNq+
-	E6X980DCqHGIU55Bll8HwubILWQWZwKbj/6IwkAMFZipef6aKyhrdiMCSDx8KtRaSzu
-	mAkxGslawa41W6YqkHzy/hNrU/6mm8zOyVoCezu8=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1750386451383502.4636524387738; Thu, 19 Jun 2025 19:27:31 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:27:31 +0800
-From: Li Chen <me@linux.beauty>
-To: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
-	"Borislav Petkov" <bp@alien8.de>,
-	"Dave Hansen" <dave.hansen@linux.intel.com>, "x86" <x86@kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <1978b29a34b.dbd6def8716427.2074630307673917130@linux.beauty>
-In-Reply-To: <1965cae22a0.12ab5a70c833868.7155412488566097801@linux.beauty>
-References: <1965cae22a0.12ab5a70c833868.7155412488566097801@linux.beauty>
-Subject: Re: [PATCH RESEND] x86/smpboot: avoid SMT domain attach/destroy if
- SMT is not enabled
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlycR+Vu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21192C4AF09;
+	Fri, 20 Jun 2025 02:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750386756;
+	bh=nFwAjdcCBmuCFAWX9WMeLyT+AO0LFKWNtBekZcA+g8k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GlycR+VuvjLYWJ4I6djxLbVZVOzZ5BvQsJCFfnrDbSddUWNzItrgfXapLUgX4uSWk
+	 u0LbGElgQ5mUj+S+oybZpaaU6nCBGtooAQO5Euuew+Z2G7JPc99cS35PgpOdhqevei
+	 ujJ9DZLdZmYdn+oERg4qAcTCDGL4g1rboV49D3TZrmUK3A50DcPOlbQDLGfxWHIA4u
+	 mfDAcaU78A8qEda9EraXNakPpYIL8nGwxuwzLJO1z/tgWRSEU4JQ9E4VrgCzUozPpp
+	 9eTJ+/zNWXOSa/JwypVoFSHApRF+ByMIwTa24xDDx+Xm58XmZm8Yvsc05tg2v6FcnH
+	 MfeCEt2hsXXvg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1359573e87.0;
+        Thu, 19 Jun 2025 19:32:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU6A+Ck5kl7P9h/AyJj9hyWwGKOgDACIQD+wFRX/cpAdaxr48HgkooldeBpZjz8UzMSFumbYbJwZ+3vOPo=@vger.kernel.org, AJvYcCV37OHktKV8YqPKZfBu4/7h5F5fl0Um9f+PiFD5ZoRQ5BgF/8EkENBWtApxJPdgb3VeTDJNRlM5@vger.kernel.org, AJvYcCWC9MzDG7IOoISMvDWsATaEUCWRxzK4PYLGr8JqakUMW4xGiJn2oI4aWVyBvE5Zx9u8NduaQBjw41+dEn+Y@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe/m6pQ6BjZJG4VyVIfLGsTzQBn7QHwxdcuiw5/ab58/ds7bnX
+	9ffloSGj42CtmoXnSrY0ziLNxtY/G1GzGSZ7nTqKUbjo4xztqwZ+xZ65Spd3kzHsHYvCLcl5UPT
+	aI79L+BD5NMYYW2XIwqosTumtIIH55ZM=
+X-Google-Smtp-Source: AGHT+IF7KhN1uteG5Uxd3myLT7qqu+b6R67w8bIpo5CxMzP2p2xxNhvi+eJk2suEmLF/ecrta0Tla3VG3jH7pCkyRH4=
+X-Received: by 2002:a05:6512:31d5:b0:553:2d93:d31 with SMTP id
+ 2adb3069b0e04-553e3bd0367mr416872e87.22.1750386754813; Thu, 19 Jun 2025
+ 19:32:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250618-arm-expand-include-unified-h-path-v1-1-aef6eb4c44ca@kernel.org>
+In-Reply-To: <20250618-arm-expand-include-unified-h-path-v1-1-aef6eb4c44ca@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 20 Jun 2025 11:31:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAREwF0Yn6R80+1WnrJpHe4vXcjMdqUqqEU=cL1++Yk9SA@mail.gmail.com>
+X-Gm-Features: AX0GCFto2VXAU61sRbn1UlLUs-rN5P4yoY-wp1BS5Fvn7pkoy54ZTWiHwmO_VTc
+Message-ID: <CAK7LNAREwF0Yn6R80+1WnrJpHe4vXcjMdqUqqEU=cL1++Yk9SA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Use an absolute path to unified.h in KBUILD_AFLAGS
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	stable@vger.kernel.org, KernelCI bot <bot@kernelci.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
 
-Gentle ping.
+On Thu, Jun 19, 2025 at 4:29=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> After commit d5c8d6e0fa61 ("kbuild: Update assembler calls to use proper
+> flags and language target"), which updated as-instr to use the
+> 'assembler-with-cpp' language option, the Kbuild version of as-instr
+> always fails internally for arch/arm with
+>
+>   <command-line>: fatal error: asm/unified.h: No such file or directory
+>   compilation terminated.
+>
+> because '-include' flags are now taken into account by the compiler
+> driver and as-instr does not have '$(LINUXINCLUDE)', so unified.h is not
+> found.
+>
+> This went unnoticed at the time of the Kbuild change because the last
+> use of as-instr in Kbuild that arch/arm could reach was removed in 5.7
+> by commit 541ad0150ca4 ("arm: Remove 32bit KVM host support") but a
+> stable backport of the Kbuild change to before that point exposed this
+> potential issue if one were to be reintroduced.
+>
+> Follow the general pattern of '-include' paths throughout the tree and
+> make unified.h absolute using '$(srctree)' to ensure KBUILD_AFLAGS can
+> be used independently.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: d5c8d6e0fa61 ("kbuild: Update assembler calls to use proper flags =
+and language target")
+> Reported-by: KernelCI bot <bot@kernelci.org>
+> Closes: https://lore.kernel.org/CACo-S-1qbCX4WAVFA63dWfHtrRHZBTyyr2js8Lx=
+=3DAz03XHTTHg@mail.gmail.com/
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
- ---- On Tue, 22 Apr 2025 16:47:18 +0800  Li Chen <me@linux.beauty> wrote -=
+
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+
+
+
+
+
 --=20
- > From: Li Chen <chenl311@chinatelecom.cn>
- >=20
- > Currently, the SMT domain is added into sched_domain_topology
- > by default if CONFIG_SCHED_SMT is enabled.
- >=20
- > If cpu_attach_domain finds that the CPU SMT domain=E2=80=99s cpumask_wei=
-ght
- > is just 1, it will destroy_sched_domain it.
- >=20
- > On a large machine, such as one with 512 cores, this results in
- > 512 redundant domain attach/destroy operations.
- >=20
- > We can avoid these unnecessary operations by simply checking
- > cpu_smt_num_threads and not inserting SMT domain into x86_topology if SM=
-T
- > is not enabled.
- >=20
- > Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
- > ---
- >=20
- > [RESEND] because I forgot to add any mailing list previously.
- >=20
- > arch/x86/kernel/smpboot.c | 8 +++++---
- > 1 file changed, 5 insertions(+), 3 deletions(-)
- >=20
- > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
- > index d6cf1e23c2a3..da6192e1af12 100644
- > --- a/arch/x86/kernel/smpboot.c
- > +++ b/arch/x86/kernel/smpboot.c
- > @@ -485,9 +485,11 @@ static void __init build_sched_topology(void)
- >     int i =3D 0;
- >=20
- > #ifdef CONFIG_SCHED_SMT
- > -    x86_topology[i++] =3D (struct sched_domain_topology_level){
- > -        cpu_smt_mask, cpu_smt_flags, SD_INIT_NAME(SMT)
- > -    };
- > +    if (cpu_smt_num_threads > 1) {
- > +        x86_topology[i++] =3D (struct sched_domain_topology_level){
- > +            cpu_smt_mask, cpu_smt_flags, SD_INIT_NAME(SMT)
- > +        };
- > +    }
- > #endif
- > #ifdef CONFIG_SCHED_CLUSTER
- >     x86_topology[i++] =3D (struct sched_domain_topology_level){
- > --
- > 2.48.1
- >=20
- >=20
-
-Regards,
-Li
+Best Regards
+Masahiro Yamada
