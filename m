@@ -1,77 +1,141 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4C625EFBD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0998C28368C;
+	Fri, 20 Jun 2025 10:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413606; cv=none; b=JZ6hPvinWmnXpCoGFokUQOs9BTawaoQPGuHWqiKjBVemN01eZ6EPKmwBrpVJbkMdOaxEqS8hVi5JlmGEiv6vPrOxxvvy3xF7J5AKvHAYcOPZHpyIQUa1zZlcAdKxV1o3Lhut4IMlmDYZV/csJrJLzf5/Sg2KW/N7eW3LbRG3w10=
+	t=1750413607; cv=none; b=oTP8/O0HOiauvudjpFM2jsW0vmYm4tqjBFSs/+DPDrWzP3i492XJCs6yFWBChhzDnBbr95vibOEs0z2m7eOQE4jIOFc6DZ7a5jB5bn1p4ThKHSylyAqmPm5IDVPCGF11oZ7DrHwQuaXolagjV0YeACMAPrf0++AtUDqvTqo2ZbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413606; c=relaxed/simple;
-	bh=J8v50XXcHs2LqKAUBjBc6/S9CP1OrS9SIRED0TDTwp8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ISA0XNcGS9lXERAkbPFkYwiYZ4qjmCxjbem4bm2MngqybkvVdR72h+MJvX2F/jBzcahjjheiMJ4UQ4ekqrfebpYqpCEzKcn7kL5xGWf7KeZSvJbSEajLPunTTFcjiQ2PMMENInizzMS1wAvvmVCyZH6ymCt0WhGFQPcTNvCW04U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=MHtOtQFC; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750413607; c=relaxed/simple;
+	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YSkO8U45oCrFqayz1TmWhszDCVWYC+ojnd2/YGa3kTzDeVIGdUSsjOZmBaNnqydx1Eruch6v132VQfRSyeABUmu4mNM+7j/yB1mDw1sZhH+k1wfKS6blvfVxjuUyvOOkNLu4noqiLYQf4ZPUXaicFzRdyD3mla5kOpqCy+C2qyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+TqVJ89; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="MHtOtQFC"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750413595; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=4cnI0OaEuBfKBwhMYC30kL+gQC7VbBBAf/kqL/GN16A=;
-	b=MHtOtQFCAbRUjsomsb2aMTx5aXehYrCsh124XQREz2TkRczC5oOi0SGOVr5pt/d+MKJudV6MmYK/xL/VfopFQ4gUkt+JJKkXnJOEEg4Rqcz+YTKpGFlIxv/Aj9nkBz22Tl3LgMrBz6MpIxIktuOXcA2mAHriNGUOW5WMbAqlJ9M=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WeKSK1H_1750413592 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 20 Jun 2025 17:59:53 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  Jonathan.Cameron@huawei.com,  dave.hansen@intel.com,  gourry@gourry.net,
-  hannes@cmpxchg.org,  mgorman@techsingularity.net,  mingo@redhat.com,
-  peterz@infradead.org,  raghavendra.kt@amd.com,  riel@surriel.com,
-  rientjes@google.com,  sj@kernel.org,  weixugc@google.com,
-  willy@infradead.org,  ziy@nvidia.com,  dave@stgolabs.net,
-  nifan.cxl@gmail.com,  xuezhengchu@huawei.com,  yiannis@zptcorp.com,
-  akpm@linux-foundation.org,  david@redhat.com
-Subject: Re: [RFC PATCH v1 0/4] Kernel thread based async batch migration
-In-Reply-To: <cc947beb-2b4c-459a-a388-fe020856f523@amd.com> (Bharata B. Rao's
-	message of "Fri, 20 Jun 2025 14:28:33 +0530")
-References: <20250616133931.206626-1-bharata@amd.com>
-	<87bjqi3ohx.fsf@DESKTOP-5N7EMDA>
-	<cc947beb-2b4c-459a-a388-fe020856f523@amd.com>
-Date: Fri, 20 Jun 2025 17:59:52 +0800
-Message-ID: <87zfe220o7.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+TqVJ89"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A4EC4CEE3;
+	Fri, 20 Jun 2025 10:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750413606;
+	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=W+TqVJ896c/dwB23Q2KDA8VvHqx5c64JMtk/c7PBTuo+CgFnCRzmEd9WvcX4A8ZXm
+	 5IOUf6CBnN1tkRp+QnUPBo9NJrbX0WghyUZLZzdiPnQ4U9eZ0KqLVY7Gwd30CF5Bf6
+	 46jqE7295eoeG+BecPycXAsXFcr+QNPTj97VEqMsrPqsfpm3Pvng2s5h2YSeac3DUB
+	 ioF0oFStcf+vyMkIAoY44tO5C/FjObUuuqCyJ96+SqE31DrF/tSKD18xOMkJRulGYj
+	 DzuS/Q2pZCIs5ne1SIod+H/w0R/lCPGvJy/rwDA8tEad6ugP9RuGzrLYeogsGo0bRI
+	 DcgFkDXOHLAPA==
+Message-ID: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
+Date: Fri, 20 Jun 2025 12:00:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
+To: Xiang Shen <turyshen@gmail.com>, acelan.kao@canonical.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250620003849.54442-1-turyshen@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250620003849.54442-1-turyshen@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Bharata B Rao <bharata@amd.com> writes:
+Hi,
 
-> On 20-Jun-25 12:09 PM, Huang, Ying wrote:
->> Bharata B Rao <bharata@amd.com> writes:
->> <snip>
->> 
->> I don't think page flag + scanning is a good idea.If the
->
-> If extended page flags is not the ideal location (I chose it in this
-> version only to get something going quickly), we can look at maintaining
-> per-pfn allocation for the required hot page metadata separately.
->
-> Or is your concern specifically with scanning? What problems do you
-> see?
->
-> It is the cost or the possibility of not identifying the migrate-ready
-> pages in time? Or something else??
+On 20-Jun-25 2:38 AM, Xiang Shen wrote:
+> Fix checkpatch code style errors:
+> 
+> ERROR: do not use assignment in if condition
+> +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> 
+> ERROR: do not use assignment in if condition
+> +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> 
+> Signed-off-by: Xiang Shen <turyshen@gmail.com>
 
-We may need to scan a large number of pages to identify a page to
-promote.  This will waste CPU cycles and pollute cache.
+Thank you for your patch, but this change really does not make
+the code more readable.
 
----
-Best Regards,
-Huang, Ying
+The contrary the suggested changes are making the code harder
+to read, so NACK.
+
+Note checkpatch is just a tool, sometimes there are good reasons
+to deviate from the style checks done by checkpatch.
+
+Next time when submitting a patch to fix checkpatch issues please
+take a look at the resulting code after the patch and only submit
+the patch upstream if it actually is an improvement.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
+>  1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+> index 232cd12e3c9f..bcc97b06844e 100644
+> --- a/drivers/platform/x86/intel/vbtn.c
+> +++ b/drivers/platform/x86/intel/vbtn.c
+> @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+>  
+>  	guard(mutex)(&priv->mutex);
+>  
+> -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
+> +	if (ke) {
+>  		if (!priv->has_buttons) {
+>  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
+>  				 event);
+>  			return;
+>  		}
+>  		input_dev = priv->buttons_dev;
+> -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> -		if (!priv->has_switches) {
+> -			/* See dual_accel_detect.h for more info */
+> -			if (priv->dual_accel)
+> -				return;
+> -
+> -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> -			ret = input_register_device(priv->switches_dev);
+> -			if (ret)
+> -				return;
+> -
+> -			priv->has_switches = true;
+> -		}
+> -		input_dev = priv->switches_dev;
+>  	} else {
+> -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> -		return;
+> +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
+> +		if (ke) {
+> +			if (!priv->has_switches) {
+> +				/* See dual_accel_detect.h for more info */
+> +				if (priv->dual_accel)
+> +					return;
+> +
+> +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> +				ret = input_register_device(priv->switches_dev);
+> +				if (ret)
+> +					return;
+> +
+> +				priv->has_switches = true;
+> +			}
+> +			input_dev = priv->switches_dev;
+> +		} else {
+> +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> +			return;
+> +		}
+>  	}
+>  
+>  	if (priv->wakeup_mode) {
+
