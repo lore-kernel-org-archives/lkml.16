@@ -1,122 +1,125 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E7B237708;
-	Fri, 20 Jun 2025 14:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C1E128ECEA
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429548; cv=none; b=J2nl4+Ojt0UQ88DnCWPkrOKtGlPe7kDjHT8f77ThK+0TkGrkfzREX5/5OgqxUH/YG4PMG7W6AFK6yuZL3efboYnU4UBzoNykbAMzdFrfJRlaHBBMWSMWMzFfQZnBxiYv7/CS37j32uslfkTwE6BwP4quii4brBzvJyW5QARoxG0=
+	t=1750429560; cv=none; b=Daxnm+Gr7gJUBiUSjoZIxW1eN8RQE5vGOf6kIsx47NPG/uh5oci0/hGx56ckFKUeUtJXkAK4XEullDaB7RAvFWRB7W0mRTxGU1pYVzAJVcccT65QOFlTbFn5DUx+HsVN+ZyyyNZrPFLwrRYhVK166tf+S9um5hl9eeIQ25u0ZYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429548; c=relaxed/simple;
-	bh=7jyi2aExXsCpMgjGTB3Gp6G2Viuvd7hBtvNjogcC6oo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nwuEcGzl9tHHo2WpcGyuJsIOITcZEe3n5AzndZpXWBgFC5GtvqW+V4kPi1wfPP5jU3OAPYJLix/TIP1hEiFQPFjOLTb3fH3zhtA8fvfzK1fOwvVdTrRoLdYWUEIhxnhDHeeoy34Q7XMl5H9mASBddxHTnZcoQ4Ski33/b025tYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PkSQ8SJS; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750429560; c=relaxed/simple;
+	bh=Wz43VhyzXLI3tkq4wLJNxYA/MiOsTk6gwhnynaD+T64=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BOitL2/Xzyb8CV9aY02ydQpUtBsVDZFbTOIKDTt7JgveUg8diX3rXYJSrwkWLhoL7SqPqgssVMxOWfTL/c41jreAeby0YNtNg+bDp+Rst17lcPb8CjZLLzUGZF1U+Dw3uAQI+1mR/GDCzcpoGxRM4L1rq10VRv6QgK7tT19bieA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dFWf2DLR; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkSQ8SJS"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ef62066eso24798105ad.3;
-        Fri, 20 Jun 2025 07:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750429547; x=1751034347; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mt0UxcsIQbrh7erVicbBBO1vqCNvobmzw4o72dRhMOc=;
-        b=PkSQ8SJSGdRtPDq3+Pf/sHMWo8B87EL2UT52FD6BL/AgAfi3yh+yFgQdXvsz1D8BZU
-         0DEfdwTwxrBfK6rHKduvTJwfC3g50sPvaX2iDDWmusM06gvB2MhEl1tw8Re6pX4R70j/
-         X9M01yEnday6UCfJ2v2cZSl1O2hY9sVRnzdFbhfCWQicE3OULOwxrSPWXfZMaHFcL19e
-         NyBEs2Uat2cBrUZ8zdJa/JrAKvDFqfKs4tPBD4zEenhVuZb6o9Q9CLyUhZU2/ISjxmPN
-         283pqTgQ7moEjSmz4+QbSErSEtQ92W/1vOcvjvBSBc0+bt0m5BDybGLcPgDxVh+MEidA
-         76aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750429547; x=1751034347;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mt0UxcsIQbrh7erVicbBBO1vqCNvobmzw4o72dRhMOc=;
-        b=inmFBciLL4y2OWD2NqsYpthKVk+WTJ0y+j9/21K6iOgQ9dZK3CObrkNYKu0d1v30SW
-         gRjW+N7LXwBJEQhymaTUUMq4ObkZHiyrnlFKr+xHWwXDqquwV/e0DUnP3U7MBjBEDuvu
-         C1v/pbgJUScWGGgJiaQzQ+6blVMVXQF/cs4j+6jHeI5JBojMsGL8fMif+X/rzlQhwSE9
-         cjpUVCOYFx0aOHxN9iw/BGnCCvdPL0XtkXJzkMCMRMPEJxPVuawJFl5CanvHs4eXxmhZ
-         rp3i952tOW5TdbGKSbgHjw1bqH4n8wqdx52aZP34X6dfP5NzK8iETv/Fxo8CX63a42Mv
-         AVcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYkgJzNl9rblG3oIrfrUS1KKoTRTDVng+kQZvm846qQQDEHZ3Rb5RHYEnHsP6h7O2vZXtWXUwzJwc=@vger.kernel.org, AJvYcCWZDgegXh+9t3m9fE7wRr7bQ5vvP1hZKxD+k2EshnonFNfETgi3678ENaaPFUIORVx30k0QW5NKcTGm9uve@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywyh6mH0amuTKibvxC7J/u4v8FtFxP4RbYxs1JEBPkbCPkcCXU6
-	2dyaRrTo7UeTL/p9jikIwjLA/AHHi+y+n7jHwXFamBcVjXzu+Pa8keMzvbRrONB2oCd78ksC
-X-Gm-Gg: ASbGncsZ1NhDxmO8/9Tu5g3iM2183ypkOLOXkcRIdBAPedPOg3qix/6mhL2wDj1RXKS
-	v3a204Z3CCmZMkJ2h2O8hj+wDbVW5ndoAW4EqmzVCxhGOuxJ6vstwXplCKGAjxsZFOOoh1ZJ1Pw
-	u87GjMbjGWQSjopwXfsrybEYuVrq5MS29uwskkZZXj+CNZ/+doupnogt0EBZeZIxvQ1tXqSrS4p
-	kRjnpbtigHBUELLi3G0sslzgL6xPcBK74MR9yaLmErmFrCf9a9zwkL3X7KN3+mUmxc1M6+LU9ZU
-	lR9o8WQt9pYKSNg3BtUsXa+hcgf7Z3LfZ6nl3HPHSxiy17j14M8XeI+Ybyd5WvTXR1cEoYVLLBc
-	+
-X-Google-Smtp-Source: AGHT+IFll20vV4ynGEgWpnSAhVmzio10K+2+NYrQyup3kjW7y/aHFbbZ1VqDies/v11+K5p29Xl8nA==
-X-Received: by 2002:a17:903:1c6:b0:235:e9fe:83c0 with SMTP id d9443c01a7336-237d9852f68mr45071205ad.27.1750429546517;
-        Fri, 20 Jun 2025 07:25:46 -0700 (PDT)
-Received: from localhost.localdomain ([45.8.186.102])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860aeacsm19272025ad.119.2025.06.20.07.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 07:25:46 -0700 (PDT)
-From: Yuanye Ma <yuanye.ma20@gmail.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net
-Cc: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dFWf2DLR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=F+
+	s4TZGtiHn5gpEh51Yl96vuZmpTgHkH1W8sWQddU3s=; b=dFWf2DLRaIijy++jwd
+	36zibg8Z5ji2gJZOvEbNwPjeztztb1GgARlbb8Y6CX/f76JYMua+RhifnSZ7hlFF
+	rNkP2+FqpJAcH/4ueVMzeGCCI9y+pqHpSYSv4w0/bSxPFtTlweuLP9TJHucGYkCp
+	QUuQr0oZ/ffAqAOFTlhXsbSR8=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgAH_Q0yb1VoK7KqAA--.17605S4;
+	Fri, 20 Jun 2025 22:25:04 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: akpm@linux-foundation.org,
+	urezki@gmail.com
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Yuanye Ma <yuanye.ma20@gmail.com>
-Subject: [PATCH] docs: f2fs: fix typos in f2fs.rst
-Date: Thu, 19 Jun 2025 06:55:46 +0800
-Message-ID: <20250618225546.104949-1-yuanye.ma20@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	harry.yoo@oracle.com,
+	kent.overstreet@linux.dev,
+	surenb@google.com,
+	David Wang <00107082@163.com>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH] lib/test_vmalloc.c: demote vmalloc_test_init to late_initcall
+Date: Fri, 20 Jun 2025 22:24:48 +0800
+Message-Id: <20250620142448.653645-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <202506181351.bba867dd-lkp@intel.com>
+References: <202506181351.bba867dd-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgAH_Q0yb1VoK7KqAA--.17605S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWF1kZw4DCrWruF1fGFy8Zrb_yoW5ZF17pF
+	WUXr1UKrZ5Jr1xGr4UAry8X3W8tayDAa1DGw13Xr9YvF1UKw47Xrn7tr48Zrn0yFWkuF43
+	tr4vya18KF1UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pREzuJUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBpyqmhVbwsGZwAAsq
 
-This patch fixes two minor typos in Documentation/filesystems/f2fs.rst:
+Commit 2d76e79315e4 ("lib/test_vmalloc.c: allow built-in execution")
+enable test_vmalloc module to be built into kernel directly, but
+vmalloc_test_init depends on alloc_tag module via alloc_tag_top_users().
 
-- "ramdom" → "random"
-- "reenable" → "re-enable"
+When a kernel build with following config:
 
-The changes improve spelling and consistency in the documentation.
+CONFIG_TEST_VMALLOC=y
+CONFIG_MEM_ALLOC_PROFILING=y
+CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y
+CONFIG_MEM_ALLOC_PROFILING_DEBUG=y
 
-These issues were identified using the 'codespell' tool with the
-following command:
+If vmalloc_test_init() run before alloc_tag_init(), memory
+failure tests would invoke alloc_tag_top_users() which is not
+ready to use and cause kernel BUG:
 
-  $ find Documentation/ -path Documentation/translations -prune -o \
-    -name '*.rst' -print | xargs codespell
+ [  135.116045] BUG: kernel NULL pointer dereference, address: 0000000000000030
+ [  135.116063] #PF: supervisor read access in kernel mode
+ [  135.116074] #PF: error_code(0x0000) - not-present page
+ [  135.116085] PGD 0 P4D 0
+ [  135.116094] Oops: Oops: 0000 [#1] SMP NOPTI
+ [  135.116123] Tainted: [E]=UNSIGNED_MODULE
+ [  135.116132] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+ [  135.116148] RIP: 0010:down_read_trylock+0x1d/0x80
+ [  135.116188] RSP: 0000:ffffb5e481a9b8f8 EFLAGS: 00010246
+ [  135.116200] RAX: ffff93dc8a5ac700 RBX: 0000000000000030 RCX: 8000000000000007
+ [  135.116214] RDX: 0000000000000001 RSI: 000000000000000a RDI: ffffffff93d2e733
+ [  135.116228] RBP: ffffb5e481a9b9a0 R08: 0000000000000000 R09: 0000000000000003
+ [  135.116241] R10: ffffb5e481a9b860 R11: ffffffff94ec6328 R12: ffffb5e481a9b9b0
+ [  135.116255] R13: 0000000000000003 R14: 0000000000000001 R15: ffffffff94e0c580
+ [  135.116271] FS:  00007fd41947e540(0000) GS:ffff93dd6654a000(0000) knlGS:0000000000000000
+ [  135.116286] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [  135.116298] CR2: 0000000000000030 CR3: 00000001099f8000 CR4: 0000000000350ef0
+ [  135.116314] Call Trace:
+ [  135.116321]  <TASK>
+ [  135.116328]  codetag_trylock_module_list+0x9/0x20
+ [  135.116342]  alloc_tag_top_users+0x153/0x1b0
+ [  135.116354]  ? srso_return_thunk+0x5/0x5f
+ [  135.116365]  ? _printk+0x57/0x80
+ [  135.116378]  __show_mem+0xeb/0x210
+ [  135.116394]  ? dump_header+0x2ce/0x3e0
+ [  135.116405]  dump_header+0x2ce/0x3e0
 
-Signed-off-by: Yuanye Ma <yuanye.ma20@gmail.com>
+Demote vmalloc_test_init to late_initcall can make sure alloc_tag
+module got initialized before test_vmalloc module.
+
+Link: https://lore.kernel.org/lkml/20250620100258.595495-1-00107082@163.com/
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202506181351.bba867dd-lkp@intel.com
+Fixes: 2d76e79315e4 ("lib/test_vmalloc.c: allow built-in execution")
+Signed-off-by: David Wang <00107082@163.com>
 ---
- Documentation/filesystems/f2fs.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/test_vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 440e4ae74e44..8eeb7ea14f61 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -218,7 +218,7 @@ mode=%s			 Control block allocation mode which supports "adaptive"
- 			 fragmentation/after-GC situation itself. The developers use these
- 			 modes to understand filesystem fragmentation/after-GC condition well,
- 			 and eventually get some insights to handle them better.
--			 In "fragment:segment", f2fs allocates a new segment in ramdom
-+			 In "fragment:segment", f2fs allocates a new segment in random
- 			 position. With this, we can simulate the after-GC condition.
- 			 In "fragment:block", we can scatter block allocation with
- 			 "max_fragment_chunk" and "max_fragment_hole" sysfs nodes.
-@@ -261,7 +261,7 @@ test_dummy_encryption=%s
- 			 The argument may be either "v1" or "v2", in order to
- 			 select the corresponding fscrypt policy version.
- checkpoint=%s[:%u[%]]	 Set to "disable" to turn off checkpointing. Set to "enable"
--			 to reenable checkpointing. Is enabled by default. While
-+			 to re-enable checkpointing. Is enabled by default. While
- 			 disabled, any unmounting or unexpected shutdowns will cause
- 			 the filesystem contents to appear as they did when the
- 			 filesystem was mounted with that option.
+diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
+index 1b0b59549aaf..5af009df56ad 100644
+--- a/lib/test_vmalloc.c
++++ b/lib/test_vmalloc.c
+@@ -598,7 +598,7 @@ static int __init vmalloc_test_init(void)
+ 	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
+ }
+ 
+-module_init(vmalloc_test_init)
++late_initcall(vmalloc_test_init)
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Uladzislau Rezki");
 -- 
-2.48.1
+2.39.2
 
