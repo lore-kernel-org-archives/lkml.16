@@ -1,119 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCBB1B960;
-	Fri, 20 Jun 2025 02:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F59139566;
+	Fri, 20 Jun 2025 02:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385448; cv=none; b=bpQHydcRUIA8JgMvs7eviQbhq0nyZFmxwDXEbYOwgVBkKlcE5rM3ofJhP1nIoZ2dEs5qWY8/pC+PoOPfw6T/KyhdGrXoM1UB4CTzJxyMt5AES4Qk6tBx7AIEQZZf1hli4Ezntdc/d49PEaNNcIz+BBR29B4lz9W9irW3mpARt4c=
+	t=1750385473; cv=none; b=fClA2U/vsWaj7zpXrm7FKumc4mjRgkW3HV6hqegd+rbjQ9fOIbpAVFdNTdFdCj6Rno0BNiTPVe7OoCD8FiVm2hHG+tVFkj88u5YDxV5vTUDdn82kJVpmf206bvgToies+nqbL2S94NDz4fQxiYXQTnDQc+YYky8SZssKaDJsLTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385448; c=relaxed/simple;
-	bh=rpzwXgI/wdC7PukYCLNNXUJc379rvolsooYpGoXrrOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ce6KIabed3YY5BOhjrzf02W+ZatNYEfCy1xJYdP9OKSOOB+M4WWONvwxoHY/tJEQNyF6gymNDu/UIdvJXUbN1xXtxJil4SXA3wNzcD8p3bJX/XVeYrMqJLpSPilMEya9IRgejZMjKkuFLNjnJkMQ7dlvC4slSWn54wzffmTRADU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TQeEgBwb; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TQeEgBwb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750385446; x=1781921446;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rpzwXgI/wdC7PukYCLNNXUJc379rvolsooYpGoXrrOY=;
-  b=TQeEgBwbop3+wL3nC8o+qxZuuYGnxOviqJSXzBWCtT0qEWpT29hIQ1OZ
-   8VAC10q84Hru2dwSbJzlFXMhKryMTKYn8Xi6xSfHzTtZsmaLOKSxUWU+B
-   UPeRBDcDZxNN51v731Jya0myGaZislXOSW+dkAvSIXHy/2f+f5KEZQKPH
-   wmDVOqV7XeL3V80toAGfqoZEdUyWDODU2zsSLLBCM4v2NpIung+QUaWmN
-   XO+0VB9wYPtDvvX5OV2r3uE+d1hlLJpBlkRQn66WcyNjpCj30BoLYk2F7
-   LhWuybnodv48kGoKuG0qyv9GS4VH8VFzChFwhq+lr4PYL7ksD5rSI3Trm
-   A==;
-X-CSE-ConnectionGUID: gKKL4bELSouQHZHrbFuY5Q==
-X-CSE-MsgGUID: KUw4jjH7QyeRoTy2KnAoUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70206496"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="70206496"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 19:10:45 -0700
-X-CSE-ConnectionGUID: AvN2NqDvTuGjkDIam9sXCA==
-X-CSE-MsgGUID: jXyP6gc6RP2Bo7n7WapLvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="151321290"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 19:10:43 -0700
-Message-ID: <e6cbc907-92bd-4101-8eca-190bcfadb69f@linux.intel.com>
-Date: Fri, 20 Jun 2025 10:10:40 +0800
+	s=arc-20240116; t=1750385473; c=relaxed/simple;
+	bh=WxkctBJ0jCZqdoeGHMGJGwqBrieziUXQFy8IO6qKzRc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kNa1C3CVrkQv65i8AWF2oiq72uz/IvgJ5auibiOgmX1JWp2SN++YFQYrQQabnswB5UEbgMPL0Q+PVURqUsVToW7QiazjJzHLLAhMebB8kBKhm/JZ/c476VqoM8sHq964Vur68i2gC34QvoI/BMkvuNgzMLuxXM/h/AjPi5iIeXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d10f43b24d7b11f0b29709d653e92f7d-20250620
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:bd91bd8b-fc08-4058-b5c9-5d4a264640f1,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:f09a35d0aab9661bfb5527c1412db2d3,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: d10f43b24d7b11f0b29709d653e92f7d-20250620
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <tanze@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1212513940; Fri, 20 Jun 2025 10:11:03 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id C0FF516001A02;
+	Fri, 20 Jun 2025 10:11:02 +0800 (CST)
+X-ns-mid: postfix-6854C335-550397538
+Received: from localhost.localdomain (unknown [10.42.12.96])
+	by node4.com.cn (NSMail) with ESMTPA id 3A50A16001A00;
+	Fri, 20 Jun 2025 02:11:01 +0000 (UTC)
+From: tanze <tanze@kylinos.cn>
+To: peterz@infradead.org,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	tanze <tanze@kylinos.cn>
+Subject: [PATCH 0/1] CANCELLED: [PATCH v2] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
+Date: Fri, 20 Jun 2025 10:10:58 +0800
+Message-Id: <20250620021058.1421409-1-tanze@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
+References: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
-To: Xiaoyao Li <xiaoyao.li@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com
-Cc: rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
- reinette.chatre@intel.com, tony.lindgren@intel.com,
- isaku.yamahata@intel.com, yan.y.zhao@intel.com,
- mikko.ylinen@linux.intel.com, kirill.shutemov@intel.com, jiewen.yao@intel.com
-References: <20250619180159.187358-1-pbonzini@redhat.com>
- <3133d5e9-18d3-499a-a24d-170be7fb8357@intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <3133d5e9-18d3-499a-a24d-170be7fb8357@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
+Please **disregard** my previous patch ([PATCH v2 perf/x86/zhaoxin: Fix i=
+nstructions=E2=80=A6]).  I will resend a corrected version asap.
 
-On 6/20/2025 9:30 AM, Xiaoyao Li wrote:
-> On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
->> This is a refresh of Binbin's patches with a change to the userspace
->> API.  I am consolidating everything into a single KVM_EXIT_TDX and
->> adding to the contract that userspace is free to ignore it *except*
->> for having to reenter the guest with KVM_RUN.
->>
->> If in the future this does not work, it should be possible to introduce
->> an opt-in interface.  Hopefully that will not be necessary.
->
-> For <GetTdVmCallInfo> exit, I think KVM still needs to report which TDVMCALL leaf will exit to userspace, to differentiate between different KVMs.
-
-Yes, I planned a v2 to expose the bitmap of TDVMCALLs that KVM will exit to
-userspace VMM for handling via KVM_TDX_CAPABILITIES.
-
->
-> But it's not a must for current <GetQuote> since it exits to userspace from day 0. So that we can leave the report interface until KVM needs to support user exit of another TDVMCALL leaf.
-
-Agree. This report interface can be added later when needed.
-
-About the compatibility:
-Since <GetQuote> is the only optional TDVMCALL for now and KVM always exit to
-userspace for <GetQuote>, a userspace VMM can always set the bit for <GetQuote>
-if it's supported in userspace.
-Then
-- First KVM release + new userspace VMM release with report interface.
-   Userspace will see nothing reported by the interface, and it always sets
-   <GetQuote> , which is expected.
-- New KVM release with report interface + first userspace VMM release
-   Userspace doesn't know the report interface and it only sets <GetQuote>, which
-   is expected.
-
->
->> Paolo
->>
->> Binbin Wu (3):
->>    KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
->>    KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
->>    KVM: TDX: Exit to userspace for GetTdVmCallInfo
->>
->>   Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
->>   arch/x86/include/asm/shared/tdx.h |  1 +
->>   arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
->>   include/uapi/linux/kvm.h          | 22 +++++++++
->>   4 files changed, 154 insertions(+), 8 deletions(-)
->>
->
-
+Sorry for the noise.
