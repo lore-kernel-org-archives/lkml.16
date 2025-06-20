@@ -1,146 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793DF223DCE;
-	Fri, 20 Jun 2025 21:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4EB19E98C;
+	Fri, 20 Jun 2025 21:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750455743; cv=none; b=fqfICg/dXcEjof9+JVMb/SmKvxzB0kFUWWGhAp5RTMxr2s+hkuLXhUmPMdL81gDrKCNE68yVZvUnHvXrXOwOV1wGuo219f8D90NGpGAtMWC+WTfDE3pzCYfs1nBGNvxXpepHFNn5H0nZPyjcpfbskyQZ+shnWUcEEk1ot1uwbf8=
+	t=1750455855; cv=none; b=doVFvOtmO0nP3R2LBcfjEQ7O/uYNyUt63SApteVbLXxdbJJ60B5hQxWy+OPhri5f0F8SH2Qv0qRU0/U6PQTcqlL+EPBlQftDDe3elpby2R8BEgJSfxSTQYANAUYwmXbzUSJ+rQxOwmQrDmzcXqJcViFdN43tzBWqXFnJ6sF2G+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750455743; c=relaxed/simple;
-	bh=MDo5BKeBcgPmn7NbWD5LBoZwmlxlCqcmLzLHc7Iu6cI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rbLQ8stLcV1Q6vr+dSbhG9J7qtpWKW8PXzC1beCHiffAp/P1yqNjIIT7Vjd7ZjJev7qb5FLr0GFJGvWhyQmTYyEuS9ku8MM5f+KbfbTiM5IVQ3LuHxZkcjMKaIFZHCrzYpAeCVhEGe+hiMQPbXHRy9lOZZLOgDBKNhNJkM4QQWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKmi1RUP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKmi1RUP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12075C4CEF2;
-	Fri, 20 Jun 2025 21:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750455743;
-	bh=MDo5BKeBcgPmn7NbWD5LBoZwmlxlCqcmLzLHc7Iu6cI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sKmi1RUPHyAecYUQbi/pwabxNAlkzVrYy6AqvldSnOqjnXiM9ah+WBuLx7p589i8B
-	 Go9hOZzmo6SL1mXIwf5oNijBXoOkBIpS4Bddo1vN5mK5C3J94IcjGCIDbwax1Cslxr
-	 Am4iJZS1nWf2FLdVmjPKpNrcv9keYcbFNRfgqiCusKYbwnqb03m793abgSaehaySoe
-	 +7xY52/d6D2lfCxehbI7Efw3pPUcbBESZp1+/9FIoJaHnRh7uNLOG8VETApljsEq5E
-	 UHT44cYBnfsXUJ3v1R6G2oLonLdTTDn7UZNm5+n0E0fzknE2tlOPILY8j0ROsnY5PG
-	 MW6O2Q8TSWK6g==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5533303070cso2227524e87.2;
-        Fri, 20 Jun 2025 14:42:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW8+s9ZRnGSAfopNJayTsaeq6XvMT/TF4+mpRk/hg1YGP5I/308rIhYlt9sGx7dNTLOmfHhYZQS0UGlig==@vger.kernel.org, AJvYcCWnLqbu3NcJwtJqXTZJ3fltiSfAVlo6kp0WjsxQnnmH0js8ZVyzIOh2zJEmdv0rpBOfeCzpFWuqqg9VCA==@vger.kernel.org, AJvYcCXDS8chZU4s63eWTvZ1Dm3z/GwX7gHH2golwJ09KvtpF783uThLiuFdM31oObC2pY9JBFtNjmTeR2Tpbw==@vger.kernel.org, AJvYcCXbYtk47KhG2YhoYinGeamXD/vx9OCx3aviPrlhLx6xYldoGab1n4vTKKbK/MgZCMD6x1dCvH10F0jSh/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl3hsOJlKoylU+urbAevXlaVRqwC6uShRMaii1paDSd5cgtIgI
-	I+Zx5LNd4BAAZ7JO0/kBlGXIgAxOSoRCc3gA1TvYC6vW112y6LYPcY039VLZM8c42TygQLgIzQN
-	TF+hMp8raSrUSpOMH8U7V7TaJsUUgpQU=
-X-Google-Smtp-Source: AGHT+IF4zL8HzdSoyp3X55tccHF1RCClcd5RW2imn5+lno/a8Scx+LS0VpX+b6I1a2EEkQVz388BFVI8Z0Ese3QFfg0=
-X-Received: by 2002:a05:6512:3f22:b0:553:a32a:6c2 with SMTP id
- 2adb3069b0e04-553e3b99756mr1583899e87.6.1750455741405; Fri, 20 Jun 2025
- 14:42:21 -0700 (PDT)
+	s=arc-20240116; t=1750455855; c=relaxed/simple;
+	bh=mQctioBJ1PwKUeFBdxOeT7Fnq831mTiUSQkFvW92slg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sv3Q08KHtmoma+lWQssUJubqVreB7h2cI7yPJo8caUyEucA47dDKe0uYNtKoOAEc1y3JsaZ/rS9PJlGit4c9VJyfkhZ0+C4Dckqxieq/HF/Ak8qesuTf8A1p+t0Mi94HmPLamWGry9HRmCW3ESxKWO8VrbhoiShWWsNIPHRAH+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB1C9169C;
+	Fri, 20 Jun 2025 14:43:53 -0700 (PDT)
+Received: from usa.arm.com (unknown [10.57.48.228])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C71483F673;
+	Fri, 20 Jun 2025 14:44:09 -0700 (PDT)
+From: Aishwarya <aishwarya.tcv@arm.com>
+To: quic_nitirawa@quicinc.com
+Cc: James.Bottomley@HansenPartnership.com,
+	aishwarya.tcv@arm.com,
+	andersson@kernel.org,
+	bvanassche@acm.org,
+	dmitry.baryshkov@oss.qualcomm.com,
+	kishon@kernel.org,
+	konrad.dybcio@oss.qualcomm.com,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	martin.petersen@oracle.com,
+	neil.armstrong@linaro.org,
+	quic_cang@quicinc.com,
+	quic_rdwivedi@quicinc.com,
+	vkoul@kernel.org,
+	broonie@kernel.org
+Subject: Re: [PATCH V6 10/10] scsi: ufs: qcom : Refactor phy_power_on/off calls
+Date: Fri, 20 Jun 2025 22:44:08 +0100
+Message-Id: <20250620214408.11028-1-aishwarya.tcv@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <9c846734-9267-442d-bba0-578d993650c1@quicinc.com>
+References: <9c846734-9267-442d-bba0-578d993650c1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616014019.415791-1-ebiggers@kernel.org>
-In-Reply-To: <20250616014019.415791-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 20 Jun 2025 23:42:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEun-5OnM9tUEkG31aHjhAJn=fXrdQTqSJTBC1idZhoqQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv7xLQ-CGFr1i8AgPSK06Jy3OHs0QlN0RpC7Mpe2EtNiMuW6iQTuZTZV3s
-Message-ID: <CAMj1kXEun-5OnM9tUEkG31aHjhAJn=fXrdQTqSJTBC1idZhoqQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] SHA-512 library functions
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	sparclinux@vger.kernel.org, x86@kernel.org, 
-	"Jason A . Donenfeld" <Jason@zx2c4.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 16 Jun 2025 at 03:41, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> This series applies to v6.16-rc1 and is targeting the libcrypto-next
-> tree.  It is also available at:
->
->     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha512-lib-v2
->
-> This series adds support for SHA-384, SHA-512, HMAC-SHA384, and
-> HMAC-SHA512 to lib/crypto/.  The new functions take advantage of the
-> kernel's existing architecture-optimized implementations of the SHA-512
-> compression function.  The new functions are fully tested using KUnit.
->
-> To avoid duplicating all arch-optimized implementations of the SHA-512
-> compression function (~3000 lines of code total), they are moved into
-> lib/crypto/ rather than copied.  To make the "sha384", "sha512",
-> "hmac(sha384)", and "hmac(sha512)" crypto_shash algorithms in the
-> old-school crypto API continue to be properly optimized after that, they
-> are reimplemented on top of lib/crypto/, which is straightforward.
->
-> The following lists some of the design choices and conventions that I've
-> followed in more detail.  Where these differ from the code or APIs for
-> other algorithms (e.g., SHA-256 in some cases), I'd like to do it this
-> way going forward and plan to fix up the other algorithms accordingly:
->
-> - APIs are fully documented with kerneldoc comments.
->
-> - APIs cannot fail, and return void.
->
-> - APIs work in all contexts.  This doesn't mean that they *should* be
->   called in all contexts, but rather they always just work as expected.
->
-> - Tests are KUnit tests, and they are fairly thorough (more thorough
->   than crypto/testmgr.c) and also optionally include benchmarks.
->
-> - Architecture-optimized code is integrated the same way I'm doing it
->   for lib/crc/: it's in subdirectories lib/crypto/$(SRCARCH), it's
->   enabled by default, and it's inlined into the same module as the
->   generic code.  This solves a number of problems; for more details, see
->   https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org
->
-> - HMAC support is a first-class citizen.
->
-> - APIs handle zeroization, when applicable.
->
-> - Message contexts are *_ctx instead of *_state.  It's shorter, avoids
->   ambiguity with the compression function state, and matches OpenSSL.
->
-> - Length arguments are size_t, are in bytes, are named len or *_len, and
->   immediately follow the corresponding buffer.  "Object" being operated
->   on is first argument; outputs otherwise follow inputs.
->
-> - The structures for different algorithms use different types, which
->   prevents usage errors where functions are mixed up between algorithms.
->
-> - The compression function state is strongly typed, not a plain array.
->
-> Changed in v2:
-> - Added "crypto: sha512 - use same state format as legacy drivers"
-> - Fixed build on user-mode Linux
-> - Fixed W=1 build warning by adding <linux/export.h>
-> - Optimized __sha512_final() and __hmac_sha512_final() slightly
->
-> Eric Biggers (17):
->   crypto: sha512 - rename conflicting symbols
->   lib/crypto/sha512: add support for SHA-384 and SHA-512
->   lib/crypto/sha512: add HMAC-SHA384 and HMAC-SHA512 support
->   lib/crypto/sha512: add KUnit tests for SHA-384 and SHA-512
->   lib/crypto/sha256: add KUnit tests for SHA-224 and SHA-256
->   crypto: riscv/sha512 - stop depending on sha512_generic_block_fn
->   crypto: sha512 - replace sha512_generic with wrapper around SHA-512
->     library
->   crypto: sha512 - use same state format as legacy drivers
->   lib/crypto/sha512: migrate arm-optimized SHA-512 code to library
->   lib/crypto/sha512: migrate arm64-optimized SHA-512 code to library
->   mips: cavium-octeon: move octeon-crypto.h into asm directory
->   lib/crypto/sha512: migrate mips-optimized SHA-512 code to library
->   lib/crypto/sha512: migrate riscv-optimized SHA-512 code to library
->   lib/crypto/sha512: migrate s390-optimized SHA-512 code to library
->   lib/crypto/sha512: migrate sparc-optimized SHA-512 code to library
->   lib/crypto/sha512: migrate x86-optimized SHA-512 code to library
->   crypto: sha512 - remove sha512_base.h
->
+Hi Nitin,
 
-For the series,
+To clarify — the defconfig kernel does boot successfully on our Arm64
+Qualcomm platforms (RB5 and DB845C). However, starting from
+next-20250613, we are seeing the following three test failures in the
+`bootrr` baseline test in our CI environment:
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+  - baseline.bootrr.scsi-disk-device0-probed
+  - dmesg.alert
+  - dmesg.emerg
+
+Test suite:
+  https://github.com/kernelci/bootrr/tree/main
+
+These failures are due to kernel alerts seen in the boot logs. A relevant
+snippet is shown below:
+
+  kern  :alert : Unable to handle kernel NULL pointer dereference at
+  virtual address 0000000000000000
+  kern  :alert : Mem abort info:
+  kern  :alert :   ESR = 0x0000000096000004
+  kern  :alert :   EC = 0x25: DABT (current EL), IL = 32 bits
+  kern  :alert :   SET = 0, FnV = 0
+  kern  :alert :   EA = 0, S1PTW = 0
+  kern  :alert :   FSC = 0x04: level 0 translation fault
+  kern  :alert : Data abort info:
+  kern  :alert :   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  kern  :alert :   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  kern  :alert :   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+  kern  :alert : user pgtable: 4k pages, 48-bit VAs, pgdp=0000000109c41000
+  kern  :alert : [0000000000000000] pgd=0000000000000000
+  <LAVA_SIGNAL_TESTCASE TEST_CASE_ID=alert RESULT=fail UNITS=lines
+  MEASUREMENT=13>
+
+  kern  :emerg : Internal error: Oops: 0000000096000004 [#1] SMP
+  kern  :emerg : Code: a90157f3 aa0003f3 f90013f6 f9405c15 (f94002b6)
+  <LAVA_SIGNAL_TESTCASE TEST_CASE_ID=emerg RESULT=fail UNITS=lines
+  MEASUREMENT=2>
+
+Please let me know if you need full logs or further details to help
+with debugging.
+
+Thanks,
+Aishwarya
