@@ -1,67 +1,66 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115F4284B3E
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4152836A2
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750415500; cv=none; b=Wq3S1oqHoX+Xm0DeKzSu4Tgo4pIb8uob8EC0z6T//4GstrK1IPduKwJHAgPjnXOYIP3ssDiPySF1SqrnW/AKtXqJ6zYdi68LBLkfdZdXg8hHjMUVENO2UUYBPfi+pdNBrC+prS3g2I7MYzvhcV4MjYx0xFR2DJw79lXRzlst0fs=
+	t=1750415501; cv=none; b=t1u+vyGicotVpKqsoojl9p3JmtT5r+SEF3hMvMDo6zg28k6cBXzqnCiSnNuywHMoTtJWOEy9+zVDgoHd1qmjbCkeq+eDNC0S1gGMZtK7hEaRRWfX2q5y22SS6BKsiJZpVP0J3qGXL7hgH4A2EEAmIjQwBH4ZAnuhvvvJ1ytMB0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750415500; c=relaxed/simple;
-	bh=d04Nc6/zavO+68KQ3Z8w4PpWXB7iws3XS1jyTPHwCgw=;
+	s=arc-20240116; t=1750415501; c=relaxed/simple;
+	bh=aUgglQRYn7bTkMkwBI8lk1cjN4alca4VUVFQsxvzbtU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T0d6R4w+/32eJ5cEl7FwlGJVrhkESF26JK/MOD6WihnhWCaeOuoRJecbetMGTfPN0Bs05bdZulmGXx3tDIOOkevTuhw7fxSHvOit4R7j1Tid20x03MHbNRoKqQUvHqLbJJje9QNmQFB46FlBHhSnvuZzebpKKvuvxJZukaF+YCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=nYBHb4TX; arc=none smtp.client-ip=209.85.218.49
+	 In-Reply-To:To:Cc; b=RlRG0JKAu8mdqScdIFqZUrC7pJf6VMkgtlpANh22mHq+QtsAFDz5romc8tV9BPnEKXaKD9JhLtL5jNPHBBSrcq9QGezS+13xNtvfnUInIqpuKoG5Fyx355XspFzNrSVlhXL6NJ7iyldyBMD/i8HsVgVZ/8W1rusuSmd08jjjXl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Ef3hi0+N; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="nYBHb4TX"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so265752466b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:31:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Ef3hi0+N"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso2728759a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750415495; x=1751020295; darn=vger.kernel.org;
+        d=fairphone.com; s=fair; t=1750415496; x=1751020296; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=t2iMhnvf5EQaGrzDAr8D2TdFfXYKdA4ikA05GtxeBtI=;
-        b=nYBHb4TXWv4Am7gyFjTEEPFBiof1UAdlu9k00l/TVyqsDz2Y8He+xWDpauNmlMmHM2
-         sNOELYFOhvQUqP9gc0dKYaHcWL/TzSHXGJPpmIa9/b8zXAQht9RSKWE1uzaiG4SQtG6l
-         1/uMlBEzYNZmvcBWDPZJEgj0KEGpdQ4hVa7SU8G1c9QSmP4qCg3tF1SrnFKKnyyMBCFg
-         80bu26Ova4EsXjCTd/zbUqLN9W2Ad06711oCd5E9HzMdEEHav6gbOrf/tzp14G3b0M/F
-         10K6YwHS/kqEBl/Ye/YVkcIAfijy+tAfFoYQ0VnzipOGFn00rvHh6W1yt7JdTL8kK73A
-         Z55g==
+        bh=rx+JsSfgW45704ajaCZP3Z6JsbN0dOsJusfnG4fSCwM=;
+        b=Ef3hi0+N+Z5WWS/agg0jMBcgMKFfGfwH0xEmeaAAB+F68900rK3SVA8+qHojPbj1vZ
+         9kKAA57TBZCuXc9TtEPev9+7udaZt8nVu6WbguIts1TCaqISdirKeEA5df23r0cbDzZG
+         wm2mpvCiNeadzcJ9XhEMPqfGFE956uiqRL4P1AMQZCBEXqZ5mlyYU07S2fpMP3a/99a0
+         jweoa3yIREfEDV/ARYmJja/4+IcGIATA/+fsBzg62Rzx4F+rV46YXxmJaYj5xKUfbncl
+         V+aw5ViNlZ13q67WGo0PXRvSbLKj07mXaH2Q5oqhARu3RnZ00edtuE2oBHYFTGDumtyR
+         apVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750415495; x=1751020295;
+        d=1e100.net; s=20230601; t=1750415496; x=1751020296;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t2iMhnvf5EQaGrzDAr8D2TdFfXYKdA4ikA05GtxeBtI=;
-        b=OP6sss9CrbwvTUpgqZMjtIi5ghyoCmA5/m14MtqH+arhZFFpTEH/6GU8p4ZszsrRRz
-         4Mot+okyhkiK97alR/ZBc7kA/Ick26Ewv9/cARB051h8BeZ4QsjEACcLyilQTim6WjCy
-         ELbsc7OkxUvxrfIs+OuWmTK/5JCT+re9AZpIlSML03Tt+7RzqNtlwC7+vbEtbjLM2uzH
-         A+U651XTAyo3SlMb4MX1eDHkpVpbDcA9gTmGu0pq4BOiN/i3Oi6iJzYjhhIHB5g3fulx
-         27nOlyPejgv0KVHSz4jSmtxeGbxa5Mewmw9bdMAwf97d+0iJ8flzPe5VsAW/O0phqFED
-         kaFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKA9hBlZdOndi9i0FuP3bbjUDBDzvgLSsz6gDqo8poIkKpx9zrq6aUHwnM+8oFinv9S53Bxa7HMeMEzH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+n9cMVzNqF4FgDkQ9Mw0+xR0BF+TVBt/Jo0JiJt1nN8p7mHTH
-	RsQWIgFKFBa15jYzLihv843Bx8Lx5izW+Mqbe188f2MmMi7vCMTmio44p9+QGq7mwX0=
-X-Gm-Gg: ASbGncs0AMtH4QN+dozK9ZxxX3T73fdtaS11e1Mki/kOoNPOhaHUTR9wvvmV5JV63Ev
-	VzmXiU4Dg5PbYGd/RVdOU9n6KLuxorjtfFv+DGoLnlIfLE5a0uodJffhMsZPyiVmlIz6N6fIIr0
-	rqPPSloO+QfOPqGlTD9BXB8jvGpe6YEEjH8CHf+NhcuWRnJjz1LKkF3OWghAwKJPYBsOy7E6Eep
-	5V3xzpOfZnkJKFEPNNenwAXD5l/UjN+X6MzQTOZyXJfeNuYyhUgm+LmlpmcJfSZtX4Pp57xBVvt
-	tV2pdGv8fobOCB68hRcGifePOpqFdcAj9er9rnUp+Tz4vupbbcyIiMYhbt8YluA8Fsonn4Zu3WP
-	zY57YXg3cw4tal55G6TiSyJVtTmJHzS/BzQ6Bs6hMz1E=
-X-Google-Smtp-Source: AGHT+IFSpq+n0pTlSttcHCNoQdEWNKKFQKqrUEc9bXWtRz+fgibBvmNaNt5W95K1E/I9mpYWKSpYIQ==
-X-Received: by 2002:a17:907:2d89:b0:adb:e08:5e71 with SMTP id a640c23a62f3a-ae0579930e0mr234979566b.17.1750415495176;
-        Fri, 20 Jun 2025 03:31:35 -0700 (PDT)
+        bh=rx+JsSfgW45704ajaCZP3Z6JsbN0dOsJusfnG4fSCwM=;
+        b=vZWmiiscm1HljhtZQW7Fd+yf3KpM8eY5rQf6LjXD/za/AUJKDv1cnB2tIUqRoV2tiH
+         dI4sJiR0mByb61uQRROrmaYD0PlZgFjDTqxqvOcEvNpSt7XDFRvTyJ2fuqwMJmKXXGcV
+         h8sYuQvZSuvW9yJYkO4UHTEBV2u4sX8Y0X6GwY/oMcTI65MI42QgP1Tv3ia9vNTIKIAz
+         2ypp4BPe304RaOz4jjwEUHRaOIh5I91or4m2SEOUVxcb9iSBGWCq7pVFJCzjZPN5FkSV
+         o5mtl7kDhZh1e9k3kPi713hy7FRSqDB9Cjol5DsIY6NU+H4anGyLfdPLFmVxbxtI8ap0
+         +r3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWUCtswM+qe965ZdUe+lheOzTn0iD+VFo7EEn4Dsh+BQTP1quwGrdTlzgB8zyX0Us2ci0n5BWpgrWQmHRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjh70e0TY1jgcf3AM3cneq7WvwSihlKzknYiNHAqQ/iuW3FPPG
+	qwPDLU7ONZFgwb6661CUeKiEmM/i3pcOCqmBqZ9+7HiNh4CgzcohQUAsdxdmJaU0QfE=
+X-Gm-Gg: ASbGnctPZyv836q5B10piG35QM3mIu8Abjnf0U34P+gGSKlUtP2+xR8m/CKQ1TeEL5l
+	2WUS7xk2YS313HJS55veeJl4frGyGmiIgfIAOVxXwUIbFYjelj2hVBtXUHWwy+gVlICBVE/al8Z
+	iiUqRFlTo3cMHsD/oNPokjGOKzkMRIf4dlIldmCy2Il33Otlr/nSYGDGlW3r+n9OopVIMM7K4VW
+	0CaqYph6oLxorWlu2gcdTY+a6KJcs6brRH2Ff75QLW2ZCwJybqakvLuRIJY3qIKXAYp3qIb439n
+	S0I/z9ZYKE5swuF1EJ8mpelV9Nc8SSxa8JK7cdbIZbbt55IqYpwLc/6tX00BvERq7de8jZshhAR
+	1wZEBrxbMNXtDUq0PRDZ5SY75scliflmQ
+X-Google-Smtp-Source: AGHT+IFojvse3lqX+gqKA0HNP3nkQ76ONpxVInRK6fKU0+nbCKCU4x5vFpvTAQSlT7CHl0bt8sS96g==
+X-Received: by 2002:a17:907:3ccb:b0:ad5:4440:23 with SMTP id a640c23a62f3a-ae057f21fcdmr207244766b.50.1750415496144;
+        Fri, 20 Jun 2025 03:31:36 -0700 (PDT)
 Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6f5csm138047366b.122.2025.06.20.03.31.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6f5csm138047366b.122.2025.06.20.03.31.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 03:31:34 -0700 (PDT)
+        Fri, 20 Jun 2025 03:31:35 -0700 (PDT)
 From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Fri, 20 Jun 2025 12:31:26 +0200
-Subject: [PATCH 2/3] drm/sysfb: simpledrm: Add support for interconnect
- paths
+Date: Fri, 20 Jun 2025 12:31:27 +0200
+Subject: [PATCH 3/3] fbdev/simplefb: Add support for interconnect paths
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-simple-drm-fb-icc-v1-2-d92142e8f74f@fairphone.com>
+Message-Id: <20250620-simple-drm-fb-icc-v1-3-d92142e8f74f@fairphone.com>
 References: <20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com>
 In-Reply-To: <20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -84,11 +83,11 @@ Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Luca Weiss <luca.weiss@fairphone.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750415493; l=3566;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750415493; l=3509;
  i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=d04Nc6/zavO+68KQ3Z8w4PpWXB7iws3XS1jyTPHwCgw=;
- b=OSCxYbk+zEmgHOxlnlJRAUggV3hgQS7+vk3wWQc+tTa51GNZjK7RbLR0z3Knt58EHBfB/eyny
- jamZmL7PXsQAdWIECU8g+Y44oAzAB4KcTf8rQG9xPOUXnsp8dcOdowe
+ bh=aUgglQRYn7bTkMkwBI8lk1cjN4alca4VUVFQsxvzbtU=;
+ b=q76OcxFnlNqs8zk3v5IaY0TIGBj4kLjAwREPukb0aGjW2/MaP/fIm50kqwa8fh+iuaE1x69fK
+ +4EOmwW3pikCwZOl7W1EI5MmfpyvVdzGesSDUA4icHlf9y6PepTL2jt
 X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
  pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
@@ -99,33 +98,33 @@ paths.
 
 Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- drivers/gpu/drm/sysfb/simpledrm.c | 83 +++++++++++++++++++++++++++++++++++++++
+ drivers/video/fbdev/simplefb.c | 83 ++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 83 insertions(+)
 
-diff --git a/drivers/gpu/drm/sysfb/simpledrm.c b/drivers/gpu/drm/sysfb/simpledrm.c
-index a1c3119330deffc9e122b83941f3697e5b87f277..9643f7c1734ab558d52779d7c45465dbe1d85762 100644
---- a/drivers/gpu/drm/sysfb/simpledrm.c
-+++ b/drivers/gpu/drm/sysfb/simpledrm.c
-@@ -9,6 +9,7 @@
- #include <linux/platform_device.h>
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index be95fcddce4c8ca794826b805cd7dad2985bd637..ca73e079fd13550ddc779e84db80f7f9b743d074 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -27,6 +27,7 @@
+ #include <linux/parser.h>
  #include <linux/pm_domain.h>
  #include <linux/regulator/consumer.h>
 +#include <linux/interconnect.h>
  
- #include <drm/clients/drm_client_setup.h>
- #include <drm/drm_atomic.h>
-@@ -225,6 +226,10 @@ struct simpledrm_device {
- 	struct device **pwr_dom_devs;
- 	struct device_link **pwr_dom_links;
+ static const struct fb_fix_screeninfo simplefb_fix = {
+ 	.id		= "simple",
+@@ -89,6 +90,10 @@ struct simplefb_par {
+ 	u32 regulator_count;
+ 	struct regulator **regulators;
  #endif
 +#if defined CONFIG_OF && defined CONFIG_INTERCONNECT
 +	unsigned int icc_count;
 +	struct icc_path **icc_paths;
 +#endif
+ };
  
- 	/* modesetting */
- 	u32 formats[DRM_SYSFB_PLANE_NFORMATS(1)];
-@@ -547,6 +552,81 @@ static int simpledrm_device_attach_genpd(struct simpledrm_device *sdev)
+ static void simplefb_clocks_destroy(struct simplefb_par *par);
+@@ -525,6 +530,80 @@ static int simplefb_attach_genpds(struct simplefb_par *par,
  }
  #endif
  
@@ -133,20 +132,21 @@ index a1c3119330deffc9e122b83941f3697e5b87f277..9643f7c1734ab558d52779d7c45465db
 +/*
 + * Generic interconnect path handling code.
 + */
-+static void simpledrm_device_detach_icc(void *res)
++static void simplefb_detach_icc(void *res)
 +{
-+	struct simpledrm_device *sdev = res;
++	struct simplefb_par *par = res;
 +	int i;
 +
-+	for (i = sdev->icc_count - 1; i >= 0; i--) {
-+		if (!IS_ERR_OR_NULL(sdev->icc_paths[i]))
-+			icc_put(sdev->icc_paths[i]);
++	for (i = par->icc_count - 1; i >= 0; i--) {
++		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
++			icc_put(par->icc_paths[i]);
 +	}
 +}
 +
-+static int simpledrm_device_attach_icc(struct simpledrm_device *sdev)
++static int simplefb_attach_icc(struct simplefb_par *par,
++			       struct platform_device *pdev)
 +{
-+	struct device *dev = sdev->sysfb.dev.dev;
++	struct device *dev = &pdev->dev;
 +	int ret, count, i;
 +
 +	count = of_count_phandle_with_args(dev->of_node, "interconnects",
@@ -156,66 +156,65 @@ index a1c3119330deffc9e122b83941f3697e5b87f277..9643f7c1734ab558d52779d7c45465db
 +
 +	/* An interconnect path consists of two elements */
 +	if (count % 2) {
-+		drm_err(&sdev->sysfb.dev,
-+			"invalid interconnects value\n");
++		dev_err(dev, "invalid interconnects value\n");
 +		return -EINVAL;
 +	}
-+	sdev->icc_count = count / 2;
++	par->icc_count = count / 2;
 +
-+	sdev->icc_paths = devm_kcalloc(dev, sdev->icc_count,
-+					       sizeof(*sdev->icc_paths),
-+					       GFP_KERNEL);
-+	if (!sdev->icc_paths)
++	par->icc_paths = devm_kcalloc(dev, par->icc_count,
++				      sizeof(*par->icc_paths),
++				      GFP_KERNEL);
++	if (!par->icc_paths)
 +		return -ENOMEM;
 +
-+	for (i = 0; i < sdev->icc_count; i++) {
-+		sdev->icc_paths[i] = of_icc_get_by_index(dev, i);
-+		if (IS_ERR_OR_NULL(sdev->icc_paths[i])) {
-+			ret = PTR_ERR(sdev->icc_paths[i]);
++	for (i = 0; i < par->icc_count; i++) {
++		par->icc_paths[i] = of_icc_get_by_index(dev, i);
++		if (IS_ERR_OR_NULL(par->icc_paths[i])) {
++			ret = PTR_ERR(par->icc_paths[i]);
 +			if (ret == -EPROBE_DEFER)
 +				goto err;
-+			drm_err(&sdev->sysfb.dev, "failed to get interconnect path %u: %d\n",
-+				i, ret);
++			dev_err(dev, "failed to get interconnect path %u: %d\n", i, ret);
 +			continue;
 +		}
 +
-+		ret = icc_set_bw(sdev->icc_paths[i], 0, UINT_MAX);
++		ret = icc_set_bw(par->icc_paths[i], 0, UINT_MAX);
 +		if (ret) {
-+			drm_err(&sdev->sysfb.dev, "failed to set interconnect bandwidth %u: %d\n",
-+				i, ret);
++			dev_err(dev, "failed to set interconnect bandwidth %u: %d\n", i, ret);
 +			continue;
 +		}
 +	}
 +
-+	return devm_add_action_or_reset(dev, simpledrm_device_detach_icc, sdev);
++	return devm_add_action_or_reset(dev, simplefb_detach_icc, par);
 +
 +err:
 +	while (i) {
 +		--i;
-+		if (!IS_ERR_OR_NULL(sdev->icc_paths[i]))
-+			icc_put(sdev->icc_paths[i]);
++		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
++			icc_put(par->icc_paths[i]);
 +	}
 +	return ret;
 +}
 +#else
-+static int simpledrm_device_attach_icc(struct simpledrm_device *sdev)
++static int simplefb_attach_icc(struct simplefb_par *par,
++			       struct platform_device *pdev)
 +{
 +	return 0;
 +}
 +#endif
 +
- /*
-  * Modesetting
-  */
-@@ -633,6 +713,9 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
- 	if (ret)
- 		return ERR_PTR(ret);
- 	ret = simpledrm_device_attach_genpd(sdev);
-+	if (ret)
-+		return ERR_PTR(ret);
-+	ret = simpledrm_device_attach_icc(sdev);
- 	if (ret)
- 		return ERR_PTR(ret);
+ static int simplefb_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -615,6 +694,10 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto error_regulators;
+ 
++	ret = simplefb_attach_icc(par, pdev);
++	if (ret < 0)
++		goto error_regulators;
++
+ 	simplefb_clocks_enable(par, pdev);
+ 	simplefb_regulators_enable(par, pdev);
  
 
 -- 
