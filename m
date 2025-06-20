@@ -1,431 +1,184 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012038.outbound.protection.outlook.com [52.101.66.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425230E826;
-	Fri, 20 Jun 2025 04:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750395304; cv=none; b=i9IV+ihVoJn+vYDkqTGytrrZOxkrTYGjMWg/BkbpmkjDGk9+5OGZ4mpwwzAuLRO5CwESbULsTaXQ0EwZFJvagJORV0VjsV9TGlMzAEwwojTE6y03cyYfkgRYM+7sqjZnhRum5/7oL21jpljRbiOWJSG2uQeNIz+QEG3mhs+zWF0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750395304; c=relaxed/simple;
-	bh=kRdDy5xR4DMrpKASpGjfghpNYOqB5ZW7UM2bjB4JI6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTEyQLaoKAM7Xhrwjw6Vd4DXl/serE4i4bMKrVolktcHo+CbzqEwwegyxL8H07BiOH3o1Vg1KcJnsFdIij5s7v5Ea1ObWBxKxTYo7BSWJ/Pr3yT0l2y9f+dzAlZB9YsRhtsdnzF6zhbM0R7sA+WoHA+uDQ91w5n603466sV4vjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=L5RrDMqh; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3034C30E826;
+	Fri, 20 Jun 2025 04:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750395353; cv=fail; b=C2it9CvoqcGby1mBMBCaVIzgSqRKcOmQMXWyr68w0hWO2z5bXzP/NlD1UDMdKq22eZ8FWYTMEAeCRhUsZpHwSV0byeRdy7LTVgoeDyPnzuAg3XWpZIySEgYTNgcCxDLBc54NoSlZidOfN0uRIsjp7UoCq5UmJeDH0wVRzm9siHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750395353; c=relaxed/simple;
+	bh=ARkg33rY7XjfTHfa9bbdCwN8OQjX+WV2E2jALtbE/SA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JL8Y5jTvBrO976m+GCuVzyWvBOeBk6XkZ8ldcFHeYYLmJPbSaLUGfczKv2mU9oChKa0k2kpJRmwgkCdtwPLJVMSAETozyjofHU2ObaBWnSAEgHcUz8YHpBZIbsyofQDJsplK4a9oNBvW3/LYU70THBPM5Sha2U0yH1ygrg8jVV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=in.bosch.com; spf=pass smtp.mailfrom=in.bosch.com; dkim=pass (2048-bit key) header.d=in.bosch.com header.i=@in.bosch.com header.b=hhzbaqRL; arc=fail smtp.client-ip=52.101.66.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=in.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="L5RrDMqh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750395299;
-	bh=kRdDy5xR4DMrpKASpGjfghpNYOqB5ZW7UM2bjB4JI6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L5RrDMqhXaC/og6UARIFKPP6GeWj3are9iG2ySO4G2hA452B2VdnaoFQ0mmxEOR2V
-	 KxWA0GdxiCV6GDsO8WSHJsxLWmTAB3tZ6jgmmhb3t9ikYEu/s9Yv3kQu51yLQyPYBc
-	 UvtwdG4CyOnRnpn76BbnSpStgyIIoKW4mSr38Few=
-Date: Fri, 20 Jun 2025 06:54:58 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: lschyi@chromium.org
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Sung-Chi Li <lschyi@google.com>
-Subject: Re: [PATCH v4 2/3] hwmon: (cros_ec) add PWM control over fans
-Message-ID: <de84c7c1-a2ee-4fda-aae7-f749b661b412@t-8ch.de>
-References: <20250619-cros_ec_fan-v4-0-ca11548ce449@chromium.org>
- <20250619-cros_ec_fan-v4-2-ca11548ce449@chromium.org>
+	dkim=pass (2048-bit key) header.d=in.bosch.com header.i=@in.bosch.com header.b="hhzbaqRL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FrZ0+VVJ3lYKI6eMUUP8MLXL+plIWVpR5LM2QAa/PvLwYGi5NO+OJ/UMm5pwOqrjV235XiZS5uPSJ15xscd6vmDHFqqwCBKuuxRS80ohQGi0CRt6/AsJB8YqnQkJc68ij4bI9E6aiNLKyc5CCX9s9VpJ+JsbCE58/yu2YKdiRctCFEAZA7KIJwvDVtprmarY1oDEwgUh6rLI9aOuzAua2UHY/Z0RyfLJXHm61U6TFNTYF8DiUAlErbKDPrXgmPcpVsqOI2Gqx4JKp8YcH2ZnSaYc6a3MkukdK3BXCRT57TPkhYBU8wUsWjuFlsiqk9ypZNM2u2qCAwNzvuVA0XDFbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TLM8xQMykI6kPN6iZcoGXkeGAbMrW4qm+3q+RKFWlZo=;
+ b=r/9DNO1JfWuPOGh/NbpfOhQEi28jLnIz7ZJ0fhPq+YhVjgNYQixC4b08c8HZtiFUV+L2y1T/FM2NajgnpI7jYtdcWOr3TNhZP8pjJCDYVK3FHr4CpN1soIxyIav1rx1Ysde3tnPprn5KOGcNrHc/kFArBQWfi58nLpxH/e3n9YW/aK6SmgIWk2LJsNyDpWHoW8BVRbkV8uKhCIxE3grO1RH52+H6JjPdNZBNpOSi9JLcWzaWnOO700YB6Iv9IjQqpRlo2pMpDSrldLs8lGUhHvMPxd8hIJpv5ARKigvFSGs77AADjk+7T1JHO8uExGdqF55TQykKeq+XLNXkEwgQFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.205) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=in.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=in.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=in.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TLM8xQMykI6kPN6iZcoGXkeGAbMrW4qm+3q+RKFWlZo=;
+ b=hhzbaqRLqADL+LotvbPC6dRgcsFf531yHA9yEqQ+aEEYZkBAL+ryJka/C/m2SIixo3epw6sluf+57fEAk5stptoTa9nJEnBXBdagzpeo05u0o+RldWYIjyortkkZrwiq7x2e8dJ1pGqVwuzGAogHS6VxFHAlLbtQptE8C5TLbmMkLPRpiQvIFk6HEo0VNnb5SAybv8R+e7lrEnKE68klBggMRj6n4vXFxGUUbz80zC24ak22d8XiTqweyzw22WOtXAYy7V96RoTEtkCn2soUBfaNzOpUvmZd4HNfp7Kqbk2BPaikmhhHhwKCL0tMmUCDxhclV6NWaMDf3ANUOzTiKg==
+Received: from AS8PR04CA0199.eurprd04.prod.outlook.com (2603:10a6:20b:2f3::24)
+ by GV2PR10MB6068.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:7e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 20 Jun
+ 2025 04:55:43 +0000
+Received: from AM1PEPF000252DD.eurprd07.prod.outlook.com
+ (2603:10a6:20b:2f3:cafe::c6) by AS8PR04CA0199.outlook.office365.com
+ (2603:10a6:20b:2f3::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.25 via Frontend Transport; Fri,
+ 20 Jun 2025 04:55:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
+ smtp.mailfrom=in.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=in.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of in.bosch.com designates
+ 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.205) by
+ AM1PEPF000252DD.mail.protection.outlook.com (10.167.16.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Fri, 20 Jun 2025 04:55:43 +0000
+Received: from FE-EXCAS2000.de.bosch.com (10.139.217.199) by eop.bosch-org.com
+ (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Fri, 20 Jun
+ 2025 06:55:37 +0200
+Received: from RNGMBX3003.de.bosch.com (10.124.11.208) by
+ FE-EXCAS2000.de.bosch.com (10.139.217.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.57; Fri, 20 Jun 2025 06:55:37 +0200
+Received: from COB-C-005HH.cob.apac.bosch.com (10.169.242.187) by
+ smtp.app.bosch.com (10.124.11.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Fri, 20 Jun 2025 06:55:35 +0200
+From: <liquancin.mereenamathai@in.bosch.com>
+To: <linux-iio@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <jic23@kernel.org>,
+	<dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+	<vassilisamir@gmail.com>, <marcelo.schmitt1@gmail.com>,
+	<javier.carrasco.cruz@gmail.com>, <Xu.Zhang@cn.bosch.com>,
+	<Maoting.Bian@cn.bosch.com>, <Liquancin.MereenaMathai@in.bosch.com>,
+	Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
+Subject: [PATCH v1 0/2] Add BMP390 IIO driver, device tree bindings and support
+Date: Fri, 20 Jun 2025 10:24:53 +0530
+Message-ID: <20250620045456.1151-1-liquancin.mereenamathai@in.bosch.com>
+X-Mailer: git-send-email 2.47.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250619-cros_ec_fan-v4-2-ca11548ce449@chromium.org>
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM1PEPF000252DD:EE_|GV2PR10MB6068:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58a1bd7a-49c1-417d-f8e7-08ddafb6b678
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aocXfmLxBgCmI0pvsW2XuEWTc7wSqQ+ylEK78Gf2ZhOtv/7vNKBvrSD7zWwV?=
+ =?us-ascii?Q?w4q9Eu8Km4CkWUrM19SVhEaP8h6byH+ls53wV8OjSJrcruL6As4ER73gTH7j?=
+ =?us-ascii?Q?8sW+x3hlQhCO0MAYpfux3WBrgjMSiQnNzLVKE0zbCdvTFDMADYLt5b0Z43vO?=
+ =?us-ascii?Q?E711j2p+v56zFdtxeJZJEtcf1Ij4AbxpNeTgbdyryr0t/9Z5sUrbRqZTWzQl?=
+ =?us-ascii?Q?p9LVpSfuPz97tFMMVWTKnCJMWXPwJ9aNt/vP6Emgr6Jx2hkbnDLxuDQak2Jj?=
+ =?us-ascii?Q?pPIuj5q5H80xMARR9f6yIR2aQ2/eQi48LR26Aj/jCO3YTpCjV2Fr/V20GkYZ?=
+ =?us-ascii?Q?NUBGDI5Tcfba58uLXVPwdngVRYJz0i1DAOrEe/fKX91ggV40mJ9SAQG0lxnL?=
+ =?us-ascii?Q?YOIvnxkPQmfhc3JRQ3xHw8QHuHrAxuIKrjT5UOqZ3S7m5dSsG/55ULKPbSdH?=
+ =?us-ascii?Q?JkxPX58uktO9ApmUvhst12Gma8G0bfzMIYrkZ4iTweQc0s+RSuDcQY1cL8DW?=
+ =?us-ascii?Q?hm/ZjOVX1fxb+WNwTwjvGhTMmJ+O0HVlkwui2vh5Pv9VtDqAUuC5UNLcljjP?=
+ =?us-ascii?Q?CpiUR+t4lZxE4nG6HN1C044PPgBmxuNHyOy1JBSCCEMtJkThS3ZyAfrFFdw4?=
+ =?us-ascii?Q?UwolvEuiJFuqBWxzw2Wxx73UkpHcCFzJZWtRpUqywZD6Ae98ulXg+aRDdH7m?=
+ =?us-ascii?Q?wE/2oQ1kek5ZZMmSQDJ/WY8Mir50PJxIWf4EwMd81LlNirZTS3PuYiOVSWrH?=
+ =?us-ascii?Q?2pGmrf7tOzzQsDESv10Y+Mrgnl7tBeUMzc54mNu2+PpckqnwwDglUq4lbsMq?=
+ =?us-ascii?Q?NGYaHpCvalK0jkk+ee4z1r5NgIOImUFf1kIGXhwbPMMf5iwAdOpoziAUTgxA?=
+ =?us-ascii?Q?Un4TAcX7rqgg0wiATLyyyJtqvxn2pJ1F7r5zH5fGjjotsAXEVuyi1sBQdJ6U?=
+ =?us-ascii?Q?lfgPhvSeHyQ/CXMeq/Gg+6/ikJiFBH7qeRnPK7sKhf8R3oEna2WDFtIEXG6u?=
+ =?us-ascii?Q?ukvUCEBpC0XUHoYK8z2zk57EksjRf0dfjjA5qYtNQrRt41YOcEN9lopj58dD?=
+ =?us-ascii?Q?+zc9cQbWFj+/rEu7Jt4GxNmki/8y76mvvjECBVEi3ThuWd3LtNtGik6nQv0c?=
+ =?us-ascii?Q?aQrYRYxjSzrcVlhwREVgDkoKlWfbW6xI01TS6etJVmCgcVzf+1f6BmcFazDT?=
+ =?us-ascii?Q?WutWw78eobusxMteaeyTh5UUhGIDp5lTX/7Y0Sksm/jL4nVuaY4ygDthdSIi?=
+ =?us-ascii?Q?aB+iqKIYP/Iy/iqQgR9Sjs1i5o8ZNlGUlve87GFsCXuSw/iYp2lGSqM8SnH3?=
+ =?us-ascii?Q?FV2q/hf+BMno/4toVavsQvUi+diHoWbsAPO16GRU1dl6aA52r5fUTkxG+afH?=
+ =?us-ascii?Q?5AhGHGGzhZa8HN/yDLmhSCFF2JbHl4Rr22poEywZCuvIGY3dE6h/u1CA0EDL?=
+ =?us-ascii?Q?Yjqz5iIGaDBX4eg6Nnx5T6sJSRN+qds7j/+FKBsrgRA8u3F+Ir451MbwfYWN?=
+ =?us-ascii?Q?1FqpabgLjld9bvY+KZ3bKsJh11T54BsALroR?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: in.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 04:55:43.6064
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58a1bd7a-49c1-417d-f8e7-08ddafb6b678
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM1PEPF000252DD.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR10MB6068
 
-On 2025-06-19 15:42:55+0800, Sung-Chi Li via B4 Relay wrote:
-> From: Sung-Chi Li <lschyi@chromium.org>
-> 
-> Newer EC firmware supports controlling fans through host commands, so
-> adding corresponding implementations for controlling these fans in the
-> driver for other kernel services and userspace to control them.
-> 
-> The driver will first probe the supported host command versions (get and
-> set of fan PWM values, get and set of fan control mode) to see if the
-> connected EC fulfills the requirements of controlling the fan, then
-> exposes corresponding sysfs nodes for userspace to control the fan with
-> corresponding read and write implementations.
-> As EC will automatically change the fan mode to auto when the device is
-> suspended, the power management hooks are added as well to keep the fan
-> control mode and fan PWM value consistent during suspend and resume. As
-> we need to access the hwmon device in the power management hook, update
-> the driver by storing the hwmon device in the driver data as well.
-> 
-> Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
+From: Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
 
-Some tiny nitpicks below. With these fixed:
+This patch series adds support for the Bosch BMP390 pressure sensor to the
+Linux IIO subsystem. It includes the main driver implementation as well as
+the necessary device tree bindings for integration on supported platforms.
 
-Acked-by: Thomas Weißschuh <linux@weissschuh.net>
+Patch 1 adds the IIO driver for the BMP390 pressure sensor.
+Patch 2 introduces the device tree bindings documentation.
 
-> ---
->  Documentation/hwmon/cros_ec_hwmon.rst |   5 +-
->  drivers/hwmon/cros_ec_hwmon.c         | 225 ++++++++++++++++++++++++++++++++++
->  2 files changed, 229 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/hwmon/cros_ec_hwmon.rst b/Documentation/hwmon/cros_ec_hwmon.rst
-> index 47ecae983bdbef4bfcafc5dd2fff3de039f77f8e..355557a08c9a54b4c177bafde3743e7dc02218be 100644
-> --- a/Documentation/hwmon/cros_ec_hwmon.rst
-> +++ b/Documentation/hwmon/cros_ec_hwmon.rst
-> @@ -23,4 +23,7 @@ ChromeOS embedded controller used in Chromebooks and other devices.
->  
->  The channel labels exposed via hwmon are retrieved from the EC itself.
->  
-> -Fan and temperature readings are supported.
-> +Fan and temperature readings are supported. PWM fan control is also supported if
-> +the EC also supports setting fan PWM values and fan mode. Note that EC will
-> +switch fan control mode back to auto when suspended. This driver will restore
-> +the fan state to what they were before suspended when resumed.
-> diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
-> index 5514cf780b8beab272670d6591ed298ddac5afbf..c0c4ffa6f85419edf5dacd730192e7f1c28e2e5c 100644
-> --- a/drivers/hwmon/cros_ec_hwmon.c
-> +++ b/drivers/hwmon/cros_ec_hwmon.c
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/device.h>
->  #include <linux/hwmon.h>
-> +#include <linux/math.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -17,10 +18,17 @@
->  
->  #define DRV_NAME	"cros-ec-hwmon"
->  
-> +#define CROS_EC_HWMON_PWM_GET_FAN_DUTY_CMD_VERSION	0
-> +#define CROS_EC_HWMON_PWM_SET_FAN_DUTY_CMD_VERSION	1
-> +#define CROS_EC_HWMON_THERMAL_AUTO_FAN_CTRL_CMD_VERSION	2
-> +
->  struct cros_ec_hwmon_priv {
->  	struct cros_ec_device *cros_ec;
->  	const char *temp_sensor_names[EC_TEMP_SENSOR_ENTRIES + EC_TEMP_SENSOR_B_ENTRIES];
->  	u8 usable_fans;
-> +	bool fan_control_supported;
-> +	u8 manual_fans; /* bits to indicate whether the fan is set to manual */
-> +	u8 manual_fan_pwm[EC_FAN_SPEED_ENTRIES];
->  };
->  
->  static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index, u16 *speed)
-> @@ -36,6 +44,42 @@ static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index
->  	return 0;
->  }
->  
-> +static int cros_ec_hwmon_read_pwm_value(struct cros_ec_device *cros_ec, u8 index, u8 *pwm_value)
-> +{
-> +	struct ec_params_pwm_get_fan_duty req = {
-> +		.fan_idx = index,
-> +	};
-> +	struct ec_response_pwm_get_fan_duty resp;
-> +	int ret;
-> +
-> +	ret = cros_ec_cmd(cros_ec, CROS_EC_HWMON_PWM_GET_FAN_DUTY_CMD_VERSION,
-> +			  EC_CMD_PWM_GET_FAN_DUTY, &req, sizeof(req), &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*pwm_value = (u8)DIV_ROUND_CLOSEST(le32_to_cpu(resp.percent) * 255, 100);
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_hwmon_read_pwm_enable(struct cros_ec_device *cros_ec, u8 index,
-> +					 u8 *control_method)
-> +{
-> +	struct ec_params_auto_fan_ctrl_v2 req = {
-> +		.cmd = EC_AUTO_FAN_CONTROL_CMD_GET,
-> +		.fan_idx = index,
-> +	};
-> +	struct ec_response_auto_fan_control resp;
-> +	int ret;
-> +
-> +	ret = cros_ec_cmd(cros_ec, CROS_EC_HWMON_THERMAL_AUTO_FAN_CTRL_CMD_VERSION,
-> +			  EC_CMD_THERMAL_AUTO_FAN_CTRL, &req, sizeof(req), &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*control_method = resp.is_auto ? 2 : 1;
-> +	return 0;
-> +}
-> +
->  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
->  {
->  	unsigned int offset;
-> @@ -75,6 +119,8 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->  {
->  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
->  	int ret = -EOPNOTSUPP;
-> +	u8 control_method;
-> +	u8 pwm_value;
->  	u16 speed;
->  	u8 temp;
->  
-> @@ -92,6 +138,16 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->  			if (ret == 0)
->  				*val = cros_ec_hwmon_is_error_fan(speed);
->  		}
-> +	} else if (type == hwmon_pwm) {
-> +		if (attr == hwmon_pwm_enable) {
-> +			ret = cros_ec_hwmon_read_pwm_enable(priv->cros_ec, channel, &control_method);
-> +			if (ret == 0)
-> +				*val = control_method;
-> +		} else if (attr == hwmon_pwm_input) {
-> +			ret = cros_ec_hwmon_read_pwm_value(priv->cros_ec, channel, &pwm_value);
-> +			if (ret == 0)
-> +				*val = pwm_value;
-> +		}
->  	} else if (type == hwmon_temp) {
->  		if (attr == hwmon_temp_input) {
->  			ret = cros_ec_hwmon_read_temp(priv->cros_ec, channel, &temp);
-> @@ -124,6 +180,74 @@ static int cros_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types
->  	return -EOPNOTSUPP;
->  }
->  
-> +static int cros_ec_hwmon_set_fan_pwm_val(struct cros_ec_device *cros_ec, u8 index, u8 val)
-> +{
-> +	struct ec_params_pwm_set_fan_duty_v1 req = {
-> +		.fan_idx = index,
-> +		.percent = DIV_ROUND_CLOSEST((uint32_t)val * 100, 255),
-> +	};
-> +	int ret;
-> +
-> +	ret = cros_ec_cmd(cros_ec, CROS_EC_HWMON_PWM_SET_FAN_DUTY_CMD_VERSION,
-> +			  EC_CMD_PWM_SET_FAN_DUTY, &req, sizeof(req), NULL, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_hwmon_write_pwm_input(struct cros_ec_device *cros_ec, u8 index, u8 val)
-> +{
-> +	u8 control_method;
-> +	int ret;
-> +
-> +	ret = cros_ec_hwmon_read_pwm_enable(cros_ec, index, &control_method);
-> +	if (ret)
-> +		return ret;
-> +	if (control_method != 1)
-> +		return -EOPNOTSUPP;
-> +
-> +	return cros_ec_hwmon_set_fan_pwm_val(cros_ec, index, val);
-> +}
-> +
-> +static int cros_ec_hwmon_write_pwm_enable(struct cros_ec_device *cros_ec, u8 index, u8 val)
-> +{
-> +	struct ec_params_auto_fan_ctrl_v2 req = {
-> +		.fan_idx = index,
-> +		.cmd = EC_AUTO_FAN_CONTROL_CMD_SET,
-> +	};
-> +	int ret;
-> +
-> +	/* No CROS EC supports no fan speed control */
+Liquancin Mereena Mathai (2):
+  Add the iio driver for bosch pressure sensor bmp390. The bmp390 is a
+    pressure sensor module. It will support SPI and I2C protocol based
+    on configuration.
+  dt-bindings: iio driver: Add BMP390 pressure sensor device tree
+    binding
 
-CrOS
+ .../bindings/iio/pressure/bosch,bmp390.yaml   |   65 +
+ MAINTAINERS                                   |    7 +
+ drivers/iio/pressure/Kconfig                  |   26 +
+ drivers/iio/pressure/Makefile                 |    1 +
+ drivers/iio/pressure/bmp390/Kconfig           |   29 +
+ drivers/iio/pressure/bmp390/Makefile          |   32 +
+ drivers/iio/pressure/bmp390/bmp3.c            | 2781 +++++++++++++++++
+ drivers/iio/pressure/bmp390/bmp3.h            |  537 ++++
+ drivers/iio/pressure/bmp390/bmp390_driver.c   | 1604 ++++++++++
+ drivers/iio/pressure/bmp390/bmp390_driver.h   |  232 ++
+ drivers/iio/pressure/bmp390/bmp390_i2c.c      |  328 ++
+ .../iio/pressure/bmp390/bmp390_iio_buffer.c   |  220 ++
+ drivers/iio/pressure/bmp390/bmp390_spi.c      |  286 ++
+ drivers/iio/pressure/bmp390/bmp3_defs.h       |  871 ++++++
+ drivers/iio/pressure/bmp390/bmp3_selftest.c   |  184 ++
+ drivers/iio/pressure/bmp390/bmp3_selftest.h   |   93 +
+ 16 files changed, 7296 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/bosch,bmp390.yaml
+ create mode 100644 drivers/iio/pressure/bmp390/Kconfig
+ create mode 100644 drivers/iio/pressure/bmp390/Makefile
+ create mode 100644 drivers/iio/pressure/bmp390/bmp3.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp3.h
+ create mode 100644 drivers/iio/pressure/bmp390/bmp390_driver.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp390_driver.h
+ create mode 100644 drivers/iio/pressure/bmp390/bmp390_i2c.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp390_iio_buffer.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp390_spi.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp3_defs.h
+ create mode 100644 drivers/iio/pressure/bmp390/bmp3_selftest.c
+ create mode 100644 drivers/iio/pressure/bmp390/bmp3_selftest.h
 
-> +	if (val == 0)
-> +		return -EOPNOTSUPP;
-> +
-> +	req.set_auto = (val != 1) ? true : false;
-> +	ret = cros_ec_cmd(cros_ec, CROS_EC_HWMON_THERMAL_AUTO_FAN_CTRL_CMD_VERSION,
-> +			  EC_CMD_THERMAL_AUTO_FAN_CTRL, &req, sizeof(req), NULL, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_hwmon_write(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-> +			       int channel, long val)
-> +{
-> +	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> +
-> +	if (type == hwmon_pwm) {
-> +		switch (attr) {
-> +		case hwmon_pwm_input:
-> +			return cros_ec_hwmon_write_pwm_input(priv->cros_ec, channel, val);
-> +		case hwmon_pwm_enable:
-> +			return cros_ec_hwmon_write_pwm_enable(priv->cros_ec, channel, val);
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
->  					u32 attr, int channel)
->  {
-> @@ -132,6 +256,9 @@ static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_type
->  	if (type == hwmon_fan) {
->  		if (priv->usable_fans & BIT(channel))
->  			return 0444;
-> +	} else if (type == hwmon_pwm) {
-> +		if (priv->fan_control_supported && priv->usable_fans & BIT(channel))
-> +			return 0644;
->  	} else if (type == hwmon_temp) {
->  		if (priv->temp_sensor_names[channel])
->  			return 0444;
-> @@ -146,6 +273,11 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
->  			   HWMON_F_INPUT | HWMON_F_FAULT,
->  			   HWMON_F_INPUT | HWMON_F_FAULT,
->  			   HWMON_F_INPUT | HWMON_F_FAULT),
-> +	HWMON_CHANNEL_INFO(pwm,
-> +			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
-> +			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
-> +			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
-> +			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
->  	HWMON_CHANNEL_INFO(temp,
->  			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
->  			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
-> @@ -177,6 +309,7 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
->  static const struct hwmon_ops cros_ec_hwmon_ops = {
->  	.read = cros_ec_hwmon_read,
->  	.read_string = cros_ec_hwmon_read_string,
-> +	.write = cros_ec_hwmon_write,
->  	.is_visible = cros_ec_hwmon_is_visible,
->  };
->  
-> @@ -232,6 +365,22 @@ static void cros_ec_hwmon_probe_fans(struct cros_ec_hwmon_priv *priv)
->  	}
->  }
->  
-> +static inline bool is_cros_ec_cmd_available(struct cros_ec_device *cros_ec,
-> +					    u16 cmd, u8 version)
-> +{
-> +	int ret;
-> +
-> +	ret = cros_ec_get_cmd_versions(cros_ec, cmd);
-> +	return ret >= 0 && (ret & EC_VER_MASK(version));
-> +}
-> +
-> +static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cros_ec)
-> +{
-> +	return is_cros_ec_cmd_available(cros_ec, EC_CMD_PWM_GET_FAN_DUTY, CROS_EC_HWMON_PWM_GET_FAN_DUTY_CMD_VERSION) &&
-> +	       is_cros_ec_cmd_available(cros_ec, EC_CMD_PWM_SET_FAN_DUTY, CROS_EC_HWMON_PWM_SET_FAN_DUTY_CMD_VERSION) &&
-> +	       is_cros_ec_cmd_available(cros_ec, EC_CMD_THERMAL_AUTO_FAN_CTRL, CROS_EC_HWMON_THERMAL_AUTO_FAN_CTRL_CMD_VERSION);
-> +}
-> +
->  static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -258,13 +407,87 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  
->  	cros_ec_hwmon_probe_temp_sensors(dev, priv, thermal_version);
->  	cros_ec_hwmon_probe_fans(priv);
-> +	priv->fan_control_supported = cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
->  
->  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
->  							 &cros_ec_hwmon_chip_info, NULL);
-> +	platform_set_drvdata(pdev, priv);
->  
->  	return PTR_ERR_OR_ZERO(hwmon_dev);
->  }
->  
-> +static int cros_ec_hwmon_suspend(struct platform_device *pdev, pm_message_t state)
-> +{
-> +	struct cros_ec_hwmon_priv *priv = platform_get_drvdata(pdev);
-> +	u8 control_method;
-> +	size_t i;
-> +	int ret;
-> +
-> +	if (!priv->fan_control_supported)
-> +		return 0;
-> +
-> +	/* EC sets fan control to auto after suspended, store settings before suspending. */
-> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> +		if (!(priv->usable_fans & BIT(i)))
-> +			continue;
-> +
-> +		ret = cros_ec_hwmon_read_pwm_enable(priv->cros_ec, i, &control_method);
-> +		if (ret) {
-> +			dev_warn(&pdev->dev, "failed to get mode setting for fan %zu: %d\n", i, ret);
-> +			continue;
-> +		}
-> +
-> +		if (control_method != 1) {
-> +			priv->manual_fans &= ~BIT(i);
-> +			continue;
-> +		} else {
-> +			priv->manual_fans |= BIT(i);
-> +		}
-> +
-> +		ret = cros_ec_hwmon_read_pwm_value(
-> +			priv->cros_ec, i, &priv->manual_fan_pwm[i]);
+-- 
+2.20.1
 
-Drop linebreak.
-
-> +		/*
-> +		 * If storing the value failed, invalidate the stored mode value by setting it
-> +		 * to auto control. EC will automatically switch to auto mode for that fan after
-> +		 * suspended.
-> +		 */
-> +		if (ret) {
-> +			dev_warn(&pdev->dev, "failed to get PWM setting for fan %zu: %pe\n", i, ERR_PTR(ret));
-> +			priv->manual_fans &= ~BIT(i);
-> +			continue;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_hwmon_resume(struct platform_device *pdev)
-> +{
-> +	const struct cros_ec_hwmon_priv *priv = platform_get_drvdata(pdev);
-> +	size_t i;
-> +	int ret;
-> +
-> +	if (!priv->fan_control_supported)
-> +		return 0;
-> +
-> +	/* EC sets fan control to auto after suspend, restore to settings before suspend. */
-> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> +		if (!(priv->manual_fans & BIT(i)))
-> +			continue;
-> +
-> +		/*
-> +		 * Setting fan PWM value to EC will change the mode to manual for that fan in EC as
-> +		 * well, so we do not need to issue a separate fan mode to manual call.
-> +		 */
-> +		ret = cros_ec_hwmon_set_fan_pwm_val(
-> +			priv->cros_ec, i, priv->manual_fan_pwm[i]);
-
-Drop the linebreak, the line is shorter than the ones around it.
-
-> +		if (ret)
-> +			dev_warn(&pdev->dev, "failed to restore settings for fan %zu: %d\n", i, ret);
-
-Also use %pe instead of %d.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct platform_device_id cros_ec_hwmon_id[] = {
->  	{ DRV_NAME, 0 },
->  	{}
-> @@ -273,6 +496,8 @@ static const struct platform_device_id cros_ec_hwmon_id[] = {
->  static struct platform_driver cros_ec_hwmon_driver = {
->  	.driver.name	= DRV_NAME,
->  	.probe		= cros_ec_hwmon_probe,
-> +	.suspend	= pm_ptr(cros_ec_hwmon_suspend),
-> +	.resume		= pm_ptr(cros_ec_hwmon_resume),
->  	.id_table	= cros_ec_hwmon_id,
->  };
->  module_platform_driver(cros_ec_hwmon_driver);
-> 
-> -- 
-> 2.50.0.rc2.701.gf1e915cc24-goog
-> 
-> 
