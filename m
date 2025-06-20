@@ -1,86 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BF735950;
-	Fri, 20 Jun 2025 01:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2171030E820;
+	Fri, 20 Jun 2025 01:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750382960; cv=none; b=TrSjNG3CE94rmwYcpzpZMaSyIb0qBeyp7/n2oDyP6pdcMTOBpDmHiuXiU+B4Tn4yE9jXgopnguxebC2RpM81GuvdYp5K+75CgjtXxQsN+ueUuiZJik80kI3EfgFbWX+7sDkpmmsfJ8x+GtAcNygXscTI/CAtNYoKzQ+ClIDmxuA=
+	t=1750383040; cv=none; b=HO24zPjpXROQjrJpAWIVA9S7MRdNiMMsLd/vizQw8ZwaOVak8mJmY61hvW8PjNM0bvnLvpztwmHf9Su3TBKvGd0LepoH9wEVvrQpmhULRsDxRmyV8LcHEM9+Q5InRWFGCROxYsKRWGgBDKft/b/gVyW+h1QD1Ag2Tcc1Yq0oUFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750382960; c=relaxed/simple;
-	bh=0gmfdf4OAtz954mnULUTEX2hkGqUAO+fPptmUl1h4wQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BluFBrM1y06LuuLRDsHRdKbVw3BsVsH8B6EyU9DCizSn1AV1iVDrZR1TLEQm0jVCstXz9rWy+yV0+0zDYLbsfsTnc8xbjjHptuhj1eOdA0x9fwEm8q/p5H3MS03+r+3PlxjtREqQl+UGZrtuQeT8cjaWsrt+Te24uBK/489VKQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80045113E;
-	Thu, 19 Jun 2025 18:28:57 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7620F3F673;
-	Thu, 19 Jun 2025 18:29:15 -0700 (PDT)
-Date: Fri, 20 Jun 2025 02:28:03 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
- linux-sunxi@lists.linux.dev, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: reset: sun55i-a523-r-ccu: Add missing
- PPU0 reset
-Message-ID: <20250620022803.13e7c34c@minigeek.lan>
-In-Reply-To: <20250619171025.3359384-2-wens@kernel.org>
-References: <20250619171025.3359384-1-wens@kernel.org>
-	<20250619171025.3359384-2-wens@kernel.org>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1750383040; c=relaxed/simple;
+	bh=ySgRnI6zQBvmEVFM6GiaIrkiwvfvdT9BZ3dD9QwjPRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GxWsCaTynXbsRCEmT4q2o4a0v/t2ktmVSbopOcv7pkBmFBkjC0wNA9bzlLR7prN55tZTkK8ajUw8Lwa9BWj+1Q4ZzarnDAB5ZZkkAweFND4esUfbgiufav8qNXeCmhAedhhwCYwv1D978qkoeD77Dt3vGvJ7OKhA0etqc+QJuKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=defGWc5l; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="defGWc5l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750383039; x=1781919039;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ySgRnI6zQBvmEVFM6GiaIrkiwvfvdT9BZ3dD9QwjPRE=;
+  b=defGWc5l+M+0pxljs6HnPoyO736p7N9PsmARVSom/F0AbsP19RdPQ0wc
+   azmTNgyXpVOuUoDwrrrMZM61SZFD8MXOZKyFbcEMEa+nJhuED4CW3BlRD
+   +amWkR8moUVQTMiCUnNFHXDEv/wouwLWPHTiyWfD04dz7wuaQj4SPQfAn
+   TNgna29Dh895M+AmJ3pBSizPuz9c79RdO4PqopUXV7G85zhEzbCVCRyCi
+   pA7FfbMoEBhDluGt26EXXZZNt0hZg0mcDtjYXJzlym9/9HRRycjcKqQnj
+   tx3Dt9nR9+tZOgf7jIyKBDz7HKcJq+hAMyMmWAQjRMr6dIAqdFUvNa+dY
+   g==;
+X-CSE-ConnectionGUID: u6GFlxepR2+DdVMil/xgjQ==
+X-CSE-MsgGUID: WwDFMw4QQ7StUOqq2UBwmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52508574"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="52508574"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 18:30:37 -0700
+X-CSE-ConnectionGUID: 6VYokZolTyKhAXXm5tVRog==
+X-CSE-MsgGUID: Jfga7mUpQEut13tpMjmdeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="181800456"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 18:30:33 -0700
+Message-ID: <3133d5e9-18d3-499a-a24d-170be7fb8357@intel.com>
+Date: Fri, 20 Jun 2025 09:30:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, seanjc@google.com
+Cc: rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
+ reinette.chatre@intel.com, tony.lindgren@intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com,
+ mikko.ylinen@linux.intel.com, kirill.shutemov@intel.com,
+ jiewen.yao@intel.com, binbin.wu@linux.intel.com
+References: <20250619180159.187358-1-pbonzini@redhat.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250619180159.187358-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025 01:10:24 +0800
-Chen-Yu Tsai <wens@kernel.org> wrote:
-
-> From: Chen-Yu Tsai <wens@csie.org>
+On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
+> This is a refresh of Binbin's patches with a change to the userspace
+> API.  I am consolidating everything into a single KVM_EXIT_TDX and
+> adding to the contract that userspace is free to ignore it *except*
+> for having to reenter the guest with KVM_RUN.
 > 
-> There is a PPU0 reset control bit in the same register as the PPU1
-> reset control. This missing reset control is for the PCK-600 unit
-> in the SoC. Manual tests show that the reset control indeed exists,
-> and if not configured, the system will hang when the PCK-600 registers
-> are accessed.
+> If in the future this does not work, it should be possible to introduce
+> an opt-in interface.  Hopefully that will not be necessary.
 
-Confirmed by experiment.
+For <GetTdVmCallInfo> exit, I think KVM still needs to report which 
+TDVMCALL leaf will exit to userspace, to differentiate between different 
+KVMs.
 
-> Add a reset entry for it at the end of the existing ones.
+But it's not a must for current <GetQuote> since it exits to userspace 
+from day 0. So that we can leave the report interface until KVM needs to 
+support user exit of another TDVMCALL leaf.
+
+> Paolo
 > 
-> Fixes: 52dbf84857f0 ("dt-bindings: clk: sunxi-ng: document two Allwinner A523 CCUs")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
-> ---
->  include/dt-bindings/reset/sun55i-a523-r-ccu.h | 1 +
->  1 file changed, 1 insertion(+)
+> Binbin Wu (3):
+>    KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+>    KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+>    KVM: TDX: Exit to userspace for GetTdVmCallInfo
 > 
-> diff --git a/include/dt-bindings/reset/sun55i-a523-r-ccu.h b/include/dt-bindings/reset/sun55i-a523-r-ccu.h
-> index dd6fbb372e19..eb31ae9958d6 100644
-> --- a/include/dt-bindings/reset/sun55i-a523-r-ccu.h
-> +++ b/include/dt-bindings/reset/sun55i-a523-r-ccu.h
-> @@ -21,5 +21,6 @@
->  #define RST_BUS_R_IR_RX		12
->  #define RST_BUS_R_RTC		13
->  #define RST_BUS_R_CPUCFG	14
-> +#define RST_BUS_R_PPU0		15
->  
->  #endif /* _DT_BINDINGS_RST_SUN55I_A523_R_CCU_H_ */
+>   Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
+>   arch/x86/include/asm/shared/tdx.h |  1 +
+>   arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
+>   include/uapi/linux/kvm.h          | 22 +++++++++
+>   4 files changed, 154 insertions(+), 8 deletions(-)
+> 
 
