@@ -1,144 +1,149 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3B1322E;
-	Fri, 20 Jun 2025 03:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1EB1E2607;
+	Fri, 20 Jun 2025 03:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750391555; cv=none; b=c/KS4TqzLcHKNJ7wBxi1IPygupXQY9+Q/edhmK4AvKRcZsakdaEjX4DdTddlS9WgI/qW94aycVxFJS3b0P5ayVoYC8dTYqHjobDGY/H9cgz81qCpMoalzTr231BYIlIjwSjafOFdX5w2DlLAAQr+4uTKcZHsn4cxrhKX/kY9low=
+	t=1750391636; cv=none; b=rb+jqH1Iro7Yr5ZvtmpszYOlUkp6lZ0hm3JM2zujF1k9/RgsdSgLNeZtYuN+X4SyMRVcJBe+34aIonam500j8Wi2tcUfk/y4mzg9ZxCBnSc/2CiVH7zj+l8H4jF3WKYuLCvBT+uFaYoR8k0DFZ1OlxyGNgy/JUqj0yOGohe43Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750391555; c=relaxed/simple;
-	bh=C5pcRfu/ST9Gldh0BomV8pIqszrfWCFt78LFG8aUIV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sfIquxwLBh0yA0LoqsLN3IY0Jw0mpB9Zun2ZNtwh8KUPih2O8qsQByyIHEcmZRL4IBA0JArA1vuu2J2ET3dP2U9Esm52Ynabx1/Cf1KhunxeRguIaGgOhUa8A/kjlxjJc2TrVzmrzFZZolMcA9MUIbTk79G7xW6OYjAQfnMThSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d20451c016so90817285a.1;
-        Thu, 19 Jun 2025 20:52:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750391553; x=1750996353;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lCQU+V6gMlWdniVWGhqWR9mP13FlyOJFFSWy/2Jh23o=;
-        b=ldF6HiPrmi0VLEe8KsFCmcKyzKd7QReaBJScVdOIV8yOLpCCGP8FtP+7IJbQmu7VY8
-         eeg829i7e4d+ysGT4LH8LKTzAaxSILNyhPQSVLLFz5DlVoC52LhotL8ooCsgAgNB7VTc
-         0ddc1p5Zoo+y2mmvR9Z+kfyCfl2yZoqzqKaZnHPjnwORMEEoLjASyEWtQ9g2lvSYO323
-         2R5zQA1TyKJipl9L9/ljIxe6lKS/pb402wHjnkKvHKQi8CTuymARPFbH6OIXBNPs5U1W
-         4TOU/bz+Lt276ksX7ro66PeFVetICtBpOEcmRvQc3/dPoIZObTcPeUnx4zhFntiPTKC8
-         pf9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgBNz8AcHxQ06DF4lPv1rKSDU/u/pPBAzx+5+u47NQe/XqEnOH/Md6sduLrTqYq/fvsNmE8PdPVVdoQLA=@vger.kernel.org, AJvYcCXfkcmz418OVh6zi4ItFl6VUqJp+CP6gVn8IbGmCK1iWmE/tRv5rR/+Xvq0ELxUiRAhMngRqWxRC+ChyohAuCon@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbgkpZoV9kyaSLEtvjUU2M3HYDLmhc77QcaSLG3k779FbwnOM7
-	sAAUu4lYrhlMzZq5xFV1Ke//bh/lwyUaFy2ypLHrlGNWIA1GRhW9+ocn
-X-Gm-Gg: ASbGncuWs9Qf8H0vzAXfxbFACLJ8cXEC0mx8zpbc2rcJ1jM5PdJH0ZAPJYzVuRvFR8L
-	jIA+EaWbAK2eKZTBpKnabgpJg+dfUmYUt7MUSjtdy7lEYnwpkOiqzUeuoF6cDZh0VZgzaCKYqoW
-	hrXSif7naEsL7dUWsbNBXMJOYoG5HCUPDkDRUeNBM/hcmg3dtx0cP5GQyKVJBEhWp7/HdvYvZKg
-	VMKzYV30BC8EdhKANFugAo6IOxgy4T+6b1Zx/Wrmg1iqi3Bhk5C8LkyEQxXdvarqjPIxsRRdT9r
-	oPU3/aqaONwCr89k7w8rlKXUz//W44HrfDU7oFY8NgMsp5CGmvFBbhdv4wRuAdFzlfW5B9PK1B/
-	oA930cUhh95SuTCdBpSbqrg==
-X-Google-Smtp-Source: AGHT+IEcwI2hpTQWwwrqRmJsRHqV5X+NhjnxJ43A/nMvH6M6u4hE8wmvqWIX9pdcyRhKFD/jUr7kKA==
-X-Received: by 2002:a05:620a:2912:b0:7ce:f58e:7e9c with SMTP id af79cd13be357-7d3f98c1dadmr239724785a.7.1750391552779;
-        Thu, 19 Jun 2025 20:52:32 -0700 (PDT)
-Received: from localhost.localdomain (ip171.ip-51-81-44.us. [51.81.44.171])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99a57b4sm49044285a.27.2025.06.19.20.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 20:52:32 -0700 (PDT)
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	Jan Kara <jack@suse.cz>
-Cc: zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] selftests/filesystems/mount-notify: fix unused unused result warning
-Date: Fri, 20 Jun 2025 11:50:48 +0800
-Message-ID: <20250620035125.2938774-2-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750391636; c=relaxed/simple;
+	bh=ZbMmurYJaKY5lkw0VcwClw93/1JlV36rPOejef/6RLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
+	 In-Reply-To:Content-Type; b=GEioNvHMpuvPezEEbwAMgTpVhey11+SVFDSIOShKmWmTRMbt6HVaCFgs6sTWmZX1kj1yA0lJNjEc7r7JW2IbfdZoX5eKkSLYysx0k0hUxVjtuc7/5gyUBc+YpBvEfbI4O88smCBzXRn8pQyAuo7V95JDqJKPtQ6R4FFIutwsAWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bNk7k2SW8z2BdWC;
+	Fri, 20 Jun 2025 11:52:18 +0800 (CST)
+Received: from kwepemo100006.china.huawei.com (unknown [7.202.195.47])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C2B1140294;
+	Fri, 20 Jun 2025 11:53:48 +0800 (CST)
+Received: from [10.67.121.58] (10.67.121.58) by kwepemo100006.china.huawei.com
+ (7.202.195.47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 20 Jun
+ 2025 11:53:47 +0800
+Message-ID: <ff65b997-eb14-798f-1d2f-c375bf763e71@hisilicon.com>
+Date: Fri, 20 Jun 2025 11:53:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v2 2/2] cpufreq: CPPC: Dont read counters for idle CPUs
+To: Prashant Malani <pmalani@google.com>
+References: <20250619000925.415528-1-pmalani@google.com>
+ <20250619000925.415528-3-pmalani@google.com>
+CC: Ben Segall <bsegall@google.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
+	<juri.lelli@redhat.com>, open list <linux-kernel@vger.kernel.org>, "open
+ list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, Mel Gorman
+	<mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Valentin Schneider
+	<vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Viresh
+ Kumar <viresh.kumar@linaro.org>, Ionela Voinescu <ionela.voinescu@arm.com>,
+	Beata Michalska <beata.michalska@arm.com>, z00813676
+	<zhenglifeng1@huawei.com>
+From: Jie Zhan <zhanjie9@hisilicon.com>
+In-Reply-To: <20250619000925.415528-3-pmalani@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemo100006.china.huawei.com (7.202.195.47)
 
-When running `make kselftest`, the following compilation warning was encountered:
+Hi Prashant,
 
-mount-notify_test.c: In function ‘fanotify_rmdir’:
-mount-notify_test.c:490:17: warning: ignoring return value of ‘chdir’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-  490 |                 chdir("/");
-      |                 ^~~~~~~~~~
+Thanks for spotting this.
+Cc'd a few more developers.
 
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
-Changes in v2:
-- Apply changes suggested by Shuah Khan
-- Link to v1: https://lore.kernel.org/all/20250610020758.2798787-2-chenlinxuan@uniontech.com/
----
- .../filesystems/mount-notify/mount-notify_test.c  | 15 ++++++++++-----
- .../mount-notify/mount-notify_test_ns.c           | 15 ++++++++++-----
- 2 files changed, 20 insertions(+), 10 deletions(-)
+Jie
 
-diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-index 5a3b0ace1a88c..f8e0c6b06e2d9 100644
---- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-+++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
-@@ -458,12 +458,17 @@ TEST_F(fanotify, rmdir)
- 	ASSERT_GE(ret, 0);
- 
- 	if (ret == 0) {
--		chdir("/");
--		unshare(CLONE_NEWNS);
--		mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
--		umount2("/a", MNT_DETACH);
-+		if (chdir("/"))
-+			exit(-1);
-+		if (unshare(CLONE_NEWNS))
-+			exit(-1);
-+		if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
-+			exit(-1);
-+		if (umount2("/a", MNT_DETACH))
-+			exit(-1);
- 		// This triggers a detach in the other namespace
--		rmdir("/a");
-+		if (rmdir("/a"))
-+			exit(-1);
- 		exit(0);
- 	}
- 	wait(NULL);
-diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
-index d91946e69591a..d6a6a7ee87028 100644
---- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
-+++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test_ns.c
-@@ -486,12 +486,17 @@ TEST_F(fanotify, rmdir)
- 	ASSERT_GE(ret, 0);
- 
- 	if (ret == 0) {
--		chdir("/");
--		unshare(CLONE_NEWNS);
--		mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
--		umount2("/a", MNT_DETACH);
-+		if (chdir("/"))
-+			exit(-1);
-+		if (unshare(CLONE_NEWNS))
-+			exit(-1);
-+		if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
-+			exit(-1);
-+		if (umount2("/a", MNT_DETACH))
-+			exit(-1);
- 		// This triggers a detach in the other namespace
--		rmdir("/a");
-+		if (rmdir("/a"))
-+			exit(-1);
- 		exit(0);
- 	}
- 	wait(NULL);
--- 
-2.43.0
+On 19/06/2025 08:09, Prashant Malani wrote:
+> AMU performance counters tend to be inaccurate when measured on idle CPUs.
+> On an idle CPU which is programmed to 3.4 GHz (verified through firmware),
+> here is a measurement and calculation of operating frequency:
+> 
+> t0: ref=899127636, del=3012458473
+> t1: ref=899129626, del=3012466509
+> perf=40
 
+In this case, the target cpu is mostly idle but not fully idle during the
+sampling window since the counter grows a little bit.
+Perhaps some interrupts happen to run on the cpu shortly.
+
+Thus, the actual issue is the accuracy of frequency sampling becomes poor
+when the delta of counters are too small to obtain a reliable accuracy.
+
+Would it be more sensible to put a minimum threshold of the delta of
+counters when sampling the frequency?
+
+If the threshold is not met, we can go to the existing out_invalid_counters
+path.  Then we don't have to export idle_cpu() either, and BTW, that ABI
+doesn't seem to be synchronous at all, i.e. the cpu might be busy when we
+check and then become idle when sampling.
+
+> 
+> For reference, when we measure the same CPU with stress-ng running, we have
+> a more accurate result:
+> t0: ref=30751756418, del=104490567689
+> t1: ref=30751760628, del=104490582296
+> perf=34
+> 
+> (t0 and t1 are 2 microseconds apart)
+> 
+> In the above, the prescribed method[1] of calculating frequency from CPPC
+> counters was used.
+> 
+> The follow-on effect is that the inaccurate frequency is stashed in the
+> cpufreq policy struct when the CPU is brought online. Since CPUs are mostly
+> idle when they are brought online, this means cpufreq has an inaccurate
+> view of the programmed clock rate.
+> 
+> Consequently, if userspace tries to actually set the frequency to the
+> previously erroneous rate (4 GHz in the above example), cpufreq returns
+> early without calling in to the CPPC driver to send the relevant PCC
+> command; it thinks the CPU is already at that frequency.
+> 
+> Update the CPPC get_rate() code to skip sampling counters if we know a CPU
+> is idle, and go directly to the fallback response of returning the
+> “desired” frequency. The code intends to do that anyway if the counters
+> happen to return an “idle” reading.
+> 
+> [1] https://docs.kernel.org/admin-guide/acpi/cppc_sysfs.html#computing-average-delivered-performance
+> 
+> Signed-off-by: Prashant Malani <pmalani@google.com>
+> ---
+> 
+> Changes in v2:
+> - Add sched.h header for usage when compiled as module.
+> 
+>  drivers/cpufreq/cppc_cpufreq.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index b7c688a5659c..5ed04774e569 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/cpufreq.h>
+>  #include <linux/irq_work.h>
+>  #include <linux/kthread.h>
+> +#include <linux/sched.h>
+>  #include <linux/time.h>
+>  #include <linux/vmalloc.h>
+>  #include <uapi/linux/sched/types.h>
+> @@ -753,6 +754,10 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpu)
+>  
+>  	cpufreq_cpu_put(policy);
+>  
+> +	/* Idle CPUs have unreliable counters, so skip to the end. */
+> +	if (idle_cpu(cpu))
+> +		goto out_invalid_counters;
+> +
+>  	ret = cppc_get_perf_ctrs_sample(cpu, &fb_ctrs_t0, &fb_ctrs_t1);
+>  	if (ret) {
+>  		if (ret == -EFAULT)
