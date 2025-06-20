@@ -1,78 +1,590 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out28-172.mail.aliyun.com (out28-172.mail.aliyun.com [115.124.28.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879F92836B4;
-	Fri, 20 Jun 2025 11:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99DC1D54F7;
+	Fri, 20 Jun 2025 11:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417704; cv=none; b=iWz+Af9sshsreLnbQoz4LRfykxWKEanO9qAfgCVcT+bYvdmR3STNa8ST2i6EjkN8TQQzQ2nBN68DI3J+Ia95mBE3CHzKilrSIYlRF4BPPqNZ7E3alH8bbl8s4H/GOCL00pdUTyuOc3865O1MXKmYbpnjxT0y8UuYi5dqj82xvGM=
+	t=1750417749; cv=none; b=liRmNrAaJapyKDZ6PxGvSdMIUGipXqmaPs2A7msLQZRqft9NaVf0IK7UPJTHPAG6woxekC5AebDeMYzzNfRJnNv3KkTEb3K53AuXfDaySsInURxZpqGgEF33PT0dQmwO2PFbhHKGQyfsp8p4R5pXYDGtHj7bBdyo4smbrXk7mHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417704; c=relaxed/simple;
-	bh=2NBxXKmqGGjyq6HMaYrlf7xajIm8cc3GiP94xNDB6i4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=auItk9ubjUXlrmzFNgpU4E2+0P9QIEWERMtyY5PEkGRgtoDTpUABEbBntdXs2/45bW4U9C09l+qCj65OtyVe9RcUjqpfAHBq+/mdE2m1pSdU4vC+Zg9JiOKJ1NrdK8zsGpDXq5kOnlXA5ShSsrIqa43u21TR4ZgFCkXPQW1jFcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjjBf/5M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjjBf/5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEA0C4CEE3;
-	Fri, 20 Jun 2025 11:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417704;
-	bh=2NBxXKmqGGjyq6HMaYrlf7xajIm8cc3GiP94xNDB6i4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LjjBf/5McKbcCoOOsrH1IiNv4wMUmIhLy9TFYTL6DdtVJMrOV2oRZ2ub3d6ihJ4WI
-	 Ff9lxErrcJvjmghr3M0coHjJk1a0mVBmq3mmxXpWPp1orJy9SzdZYds9LN0WIuMSJ7
-	 2w9bEMNbyLPY19UxNq/hz+agFhQcEG8+3LItQa3jDaV9RxmRNWbmmQadxCycZ98vNP
-	 sOzxswfvaQ5A9HRpICFGpVOTPwrV2XtSCXGXMv54Tp/joSOuyhQ4a8km2rtWzP4q8t
-	 B0XyNTemjs4NKPjLqsmCBNU1PrKa4PrOw5T4zPqhFQnzltZop/JOCWtRBVcGyOPFLS
-	 objqki628vj2A==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Hans de Goede <hansg@kernel.org>,
-	linux-leds@vger.kernel.org,
+	s=arc-20240116; t=1750417749; c=relaxed/simple;
+	bh=N6/17k3x0rqvIB/Qjy0i+X3RWwN0KsJPSXVo6LD5EKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m0Gp/DGNekfuB6Iz7gzvPC6YNYb0qpyRwcPpb5OlJi04T9C4TVlw3/xn7KTfPA/4rasMUCLv+LN5QLX8mtcXKI6X+FRCEBlcYDxcm0QK/1vn8cDqiGIHXV2X8GEP9lg5xXhaD6hyjEeND2oTR6AieDDiFGmAv+WuE9yrkSL7SVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.dRGCZkJ_1750417733 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 20 Jun 2025 19:08:54 +0800
+From: wangweidong.a@awinic.com
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	wangweidong.a@awinic.com,
+	zhujun2@cmss.chinamobile.com,
+	colin.i.king@gmail.com,
+	thorsten.blum@linux.dev,
+	u.kleine-koenig@baylibre.com,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: trigger: ledtrig-cpu:: enforce NR_CPUS limit in Kconfig
-Date: Fri, 20 Jun 2025 13:08:15 +0200
-Message-Id: <20250620110820.3364008-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+Cc: yijiangtao@awinic.com
+Subject: [PATCH V2] ASoC: codecs: Add calibration function to aw88399 chip
+Date: Fri, 20 Jun 2025 19:08:44 +0800
+Message-ID: <20250620110845.379383-1-wangweidong.a@awinic.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Weidong Wang <wangweidong.a@awinic.com>
 
-This driver fails build testing with larger values of CONFIG_NR_CPUS:
+Add calibration functionality to the aw88399 chip.
+When the chip is in working condition, calibration
+can be achieved by configuring the chip's internal DSP
+and save the calibration values in cali_re.
 
-drivers/leds/trigger/ledtrig-cpu.c: In function ‘ledtrig_cpu_init’:
-include/linux/compiler_types.h:571:45: error: call to ‘__compiletime_assert_726’ declared with attribute error: BUILD_BUG_ON failed: CONFIG_NR_CPUS > 9999
-drivers/leds/trigger/ledtrig-cpu.c:137:9: note: in expansion of macro ‘BUILD_BUG_ON’
-  137 |         BUILD_BUG_ON(CONFIG_NR_CPUS > 9999);
-
-Enforce this limit in Kconfig instead to avoid the build failure.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Weidong Wang <wangweidong.a@awinic.com>
 ---
- drivers/leds/trigger/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/aw88395/aw88395_device.h |  19 ++
+ sound/soc/codecs/aw88399.c                | 391 +++++++++++++++++++++-
+ sound/soc/codecs/aw88399.h                |  34 ++
+ 3 files changed, 442 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
-index c11282a74b5a..e07bd17cfe35 100644
---- a/drivers/leds/trigger/Kconfig
-+++ b/drivers/leds/trigger/Kconfig
-@@ -65,6 +65,7 @@ config LEDS_TRIGGER_BACKLIGHT
- config LEDS_TRIGGER_CPU
- 	bool "LED CPU Trigger"
- 	depends on !PREEMPT_RT
-+	depends on NR_CPUS <= 9999
- 	help
- 	  This allows LEDs to be controlled by active CPUs. This shows
- 	  the active CPUs across an array of LEDs so you can see which
+diff --git a/sound/soc/codecs/aw88395/aw88395_device.h b/sound/soc/codecs/aw88395/aw88395_device.h
+index 0f750f654f3e..c1e7c0b6af5c 100644
+--- a/sound/soc/codecs/aw88395/aw88395_device.h
++++ b/sound/soc/codecs/aw88395/aw88395_device.h
+@@ -102,6 +102,11 @@ struct aw_profctrl_desc {
+ 	unsigned int cur_mode;
+ };
+ 
++enum {
++	CALI_RESULT_NORMAL,
++	CALI_RESULT_ERROR,
++};
++
+ struct aw_volume_desc {
+ 	unsigned int init_volume;
+ 	unsigned int mute_volume;
+@@ -124,9 +129,23 @@ struct aw_cali_delay_desc {
+ 	unsigned int delay;
+ };
+ 
++#define AW_CALI_CFG_NUM (4)
++struct cali_cfg {
++	uint32_t data[AW_CALI_CFG_NUM];
++};
++
++struct aw_cali_backup_desc {
++	unsigned int dsp_ng_cfg;
++	unsigned int dsp_lp_cfg;
++};
++
+ struct aw_cali_desc {
+ 	u32 cali_re;
+ 	u32 ra;
++	uint16_t cali_result;
++	uint16_t store_vol;
++	struct cali_cfg cali_cfg;
++	struct aw_cali_backup_desc backup_info;
+ };
+ 
+ struct aw_container {
+diff --git a/sound/soc/codecs/aw88399.c b/sound/soc/codecs/aw88399.c
+index 4b90133e5ab4..8273b9b92c64 100644
+--- a/sound/soc/codecs/aw88399.c
++++ b/sound/soc/codecs/aw88399.c
+@@ -13,6 +13,7 @@
+ #include <linux/firmware.h>
+ #include <linux/minmax.h>
+ #include <linux/regmap.h>
++#include <linux/sort.h>
+ #include <sound/soc.h>
+ #include "aw88399.h"
+ #include "aw88395/aw88395_device.h"
+@@ -45,6 +46,67 @@ static int aw_dev_dsp_write_16bit(struct aw_device *aw_dev,
+ 	return 0;
+ }
+ 
++static int aw_dev_dsp_write_32bit(struct aw_device *aw_dev,
++		unsigned short dsp_addr, unsigned int dsp_data)
++{
++	unsigned int temp_data;
++	int ret;
++
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMADD_REG, dsp_addr);
++	if (ret) {
++		dev_err(aw_dev->dev, "%s write addr error, ret=%d", __func__, ret);
++		return ret;
++	}
++
++	temp_data = dsp_data & AW88395_DSP_16_DATA_MASK;
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMDAT_REG, temp_data);
++	if (ret) {
++		dev_err(aw_dev->dev, "%s write datal error, ret=%d", __func__, ret);
++		return ret;
++	}
++
++	temp_data = dsp_data >> 16;
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMDAT_REG, temp_data);
++	if (ret)
++		dev_err(aw_dev->dev, "%s write datah error, ret=%d", __func__, ret);
++
++	return ret;
++}
++
++static int aw_dev_dsp_write(struct aw_device *aw_dev,
++		unsigned short dsp_addr, unsigned int dsp_data, unsigned char data_type)
++{
++	unsigned int reg_value;
++	int ret;
++
++	mutex_lock(&aw_dev->dsp_lock);
++	switch (data_type) {
++	case AW88395_DSP_16_DATA:
++		ret = aw_dev_dsp_write_16bit(aw_dev, dsp_addr, dsp_data);
++		if (ret)
++			dev_err(aw_dev->dev, "write dsp_addr[0x%x] 16-bit dsp_data[0x%x] failed",
++					dsp_addr, dsp_data);
++		break;
++	case AW88395_DSP_32_DATA:
++		ret = aw_dev_dsp_write_32bit(aw_dev, dsp_addr, dsp_data);
++		if (ret)
++			dev_err(aw_dev->dev, "write dsp_addr[0x%x] 32-bit dsp_data[0x%x] failed",
++					dsp_addr, dsp_data);
++		break;
++	default:
++		dev_err(aw_dev->dev, "data type[%d] unsupported", data_type);
++		ret = -EINVAL;
++		break;
++	}
++
++	/* clear dsp chip select state*/
++	if (regmap_read(aw_dev->regmap, 0x00, &reg_value))
++		dev_err(aw_dev->dev, "%s fail to clear chip state. Err=%d\n", __func__, ret);
++	mutex_unlock(&aw_dev->dsp_lock);
++
++	return ret;
++}
++
+ static int aw_dev_dsp_read_16bit(struct aw_device *aw_dev,
+ 		unsigned short dsp_addr, unsigned int *dsp_data)
+ {
+@@ -452,14 +514,14 @@ static int aw_dev_set_vcalb(struct aw88399 *aw88399)
+ 	case AW88399_DEV_VDSEL_VSENSE:
+ 		ret = aw88399_dev_get_vcalk(aw88399, &vcalk);
+ 		vcal_k = vcalk * AW88399_VCABLK_FACTOR + AW88399_CABL_BASE_VALUE;
+-		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_FACTOR / AW88399_ISCAL_FACTOR /
++		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_FACTOR / AW88399_ISCAL_FACTOR *
+ 			ical_k / vcal_k * aw88399->vcalb_init_val;
+ 		break;
+ 	case AW88399_DEV_VDSEL_DAC:
+ 		ret = aw88399_dev_get_internal_vcalk(aw88399, &vcalk);
+ 		vcal_k = vcalk * AW88399_VCABLK_DAC_FACTOR + AW88399_CABL_BASE_VALUE;
+ 		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_DAC_FACTOR /
+-					AW88399_ISCAL_DAC_FACTOR / ical_k /
++					AW88399_ISCAL_DAC_FACTOR * ical_k /
+ 					vcal_k * aw88399->vcalb_init_val;
+ 		break;
+ 	default:
+@@ -1356,6 +1418,324 @@ static struct snd_soc_dai_driver aw88399_dai[] = {
+ 	},
+ };
+ 
++static void aw_cali_svc_run_mute(struct aw_device *aw_dev, uint16_t cali_result)
++{
++	if (cali_result == CALI_RESULT_ERROR)
++		aw88399_dev_mute(aw_dev, true);
++	else if (cali_result == CALI_RESULT_NORMAL)
++		aw88399_dev_mute(aw_dev, false);
++}
++
++static int aw_cali_svc_get_cali_cfg(struct aw_device *aw_dev)
++{
++	struct cali_cfg *cali_cfg = &aw_dev->cali_desc.cali_cfg;
++	int ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH,
++					&cali_cfg->data[0], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH,
++					&cali_cfg->data[1], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_ADPZ_USTEPN,
++					&cali_cfg->data[2], AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_RE_ALPHA,
++					&cali_cfg->data[3], AW88399_DSP_16_DATA);
++
++	return ret;
++}
++
++static int aw_cali_svc_set_cali_cfg(struct aw_device *aw_dev,
++				struct cali_cfg cali_cfg)
++{
++	int ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH,
++					cali_cfg.data[0], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH,
++					cali_cfg.data[1], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_ADPZ_USTEPN,
++					cali_cfg.data[2], AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_RE_ALPHA,
++					cali_cfg.data[3], AW88399_DSP_16_DATA);
++
++	return ret;
++}
++
++static int aw_cali_svc_cali_en(struct aw_device *aw_dev, bool cali_en)
++{
++	struct cali_cfg set_cfg;
++	int ret;
++
++	aw_dev_dsp_enable(aw_dev, false);
++	if (cali_en) {
++		regmap_update_bits(aw_dev->regmap, AW88399_DBGCTRL_REG,
++				~AW883XX_DSP_NG_EN_MASK, AW883XX_DSP_NG_EN_DISABLE_VALUE);
++		aw_dev_dsp_write(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++				AW88399_DSP_LOW_POWER_SWITCH_DISABLE, AW88399_DSP_16_DATA);
++
++		ret = aw_cali_svc_get_cali_cfg(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "get cali cfg failed");
++			aw_dev_dsp_enable(aw_dev, true);
++			return ret;
++		}
++		set_cfg.data[0] = 0;
++		set_cfg.data[1] = 0;
++		set_cfg.data[2] = -1;
++		set_cfg.data[3] = 1;
++
++		ret = aw_cali_svc_set_cali_cfg(aw_dev, set_cfg);
++		if (ret) {
++			dev_err(aw_dev->dev, "set cali cfg failed");
++			aw_cali_svc_set_cali_cfg(aw_dev, aw_dev->cali_desc.cali_cfg);
++			aw_dev_dsp_enable(aw_dev, true);
++			return ret;
++		}
++	} else {
++		aw_cali_svc_set_cali_cfg(aw_dev, aw_dev->cali_desc.cali_cfg);
++	}
++
++	aw_dev_dsp_enable(aw_dev, true);
++
++	return 0;
++}
++
++static int aw_cali_svc_cali_run_dsp_vol(struct aw_device *aw_dev, bool enable)
++{
++	unsigned int reg_val;
++	int ret;
++
++	if (enable) {
++		ret = regmap_read(aw_dev->regmap, AW88399_DSPCFG_REG, &reg_val);
++		if (ret) {
++			dev_err(aw_dev->dev, "read reg 0x%x failed", AW88399_DSPCFG_REG);
++			return ret;
++		}
++
++		aw_dev->cali_desc.store_vol = reg_val & (~AW88399_DSP_VOL_MASK);
++		ret = regmap_update_bits(aw_dev->regmap, AW88399_DSPCFG_REG,
++				~AW88399_DSP_VOL_MASK, AW88399_DSP_VOL_MUTE);
++	} else {
++		ret = regmap_update_bits(aw_dev->regmap, AW88399_DSPCFG_REG,
++				~AW88399_DSP_VOL_MASK, aw_dev->cali_desc.store_vol);
++	}
++
++	return ret;
++}
++
++static void aw_cali_svc_backup_info(struct aw_device *aw_dev)
++{
++	struct aw_cali_backup_desc *backup_desc = &aw_dev->cali_desc.backup_info;
++	unsigned int reg_val, dsp_val;
++
++	regmap_read(aw_dev->regmap, AW88399_DBGCTRL_REG, &reg_val);
++	backup_desc->dsp_ng_cfg = reg_val & (~AW883XX_DSP_NG_EN_MASK);
++
++	aw_dev_dsp_read(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++			&dsp_val, AW88399_DSP_16_DATA);
++
++	backup_desc->dsp_lp_cfg = dsp_val;
++}
++
++static void aw_cali_svc_recover_info(struct aw_device *aw_dev)
++{
++	struct aw_cali_backup_desc *backup_desc = &aw_dev->cali_desc.backup_info;
++
++	regmap_update_bits(aw_dev->regmap, AW88399_DBGCTRL_REG,
++			~AW883XX_DSP_NG_EN_MASK, backup_desc->dsp_ng_cfg);
++
++	aw_dev_dsp_write(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++			backup_desc->dsp_lp_cfg, AW88399_DSP_16_DATA);
++}
++
++static int aw_cali_svc_cali_re_mode_enable(struct aw_device *aw_dev, bool is_enable)
++{
++	int ret;
++
++	if (is_enable) {
++		ret = aw_dev_check_syspll(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "pll check failed cannot start");
++			return ret;
++		}
++
++		ret = aw_dev_get_dsp_status(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "dsp status error\n");
++			return ret;
++		}
++
++		aw_cali_svc_backup_info(aw_dev);
++		ret = aw_cali_svc_cali_en(aw_dev, true);
++		if (ret) {
++			dev_err(aw_dev->dev, "aw_cali_svc_cali_en failed\n");
++			return ret;
++		}
++
++		ret = aw_cali_svc_cali_run_dsp_vol(aw_dev, true);
++		if (ret) {
++			aw_cali_svc_cali_en(aw_dev, false);
++			return ret;
++		}
++
++	} else {
++		aw_cali_svc_cali_run_dsp_vol(aw_dev, false);
++		aw_cali_svc_recover_info(aw_dev);
++		aw_cali_svc_cali_en(aw_dev, false);
++	}
++
++	return 0;
++}
++
++static int aw_cali_svc_get_dev_re(struct aw_device *aw_dev,
++					uint32_t *re)
++{
++	uint32_t dsp_re, show_re;
++	int ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CALRE, &dsp_re, AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	show_re = AW88399_DSP_RE_TO_SHOW_RE(dsp_re, AW88399_DSP_REG_CALRE_SHIFT);
++
++	*re = (uint32_t)(show_re - aw_dev->cali_desc.ra);
++
++	return 0;
++}
++
++static void aw_cali_svc_del_max_min_ave_algo(uint32_t *data, int data_size, uint32_t *dsp_re)
++{
++	int sum = 0, i;
++
++	for (i = 1; i < data_size - 1; i++)
++		sum += data[i];
++
++	*dsp_re = sum / (data_size - AW_CALI_DATA_SUM_RM);
++}
++
++static int aw_cali_svc_get_iv_st(struct aw_device *aw_dev)
++{
++	unsigned int reg_data;
++	int ret, i;
++
++	for (i = 0; i < AW_GET_IV_CNT_MAX; i++) {
++		ret = regmap_read(aw_dev->regmap, AW88399_ASR1_REG, &reg_data);
++		if (ret) {
++			dev_err(aw_dev->dev, "read 0x%x failed", AW88399_ASR1_REG);
++			return ret;
++		}
++
++		reg_data &= (~AW88399_REABS_MASK);
++		if (!reg_data)
++			return 0;
++		msleep(30);
++	}
++
++	dev_err(aw_dev->dev, "IV data abnormal, please check");
++
++	return -EINVAL;
++}
++
++static int compare_ints(const void *a, const void *b)
++{
++	return *(int *)a - *(int *)b;
++}
++
++static int aw_cali_svc_get_smooth_cali_re(struct aw_device *aw_dev)
++{
++	uint32_t re_temp[AW_CALI_READ_CNT_MAX];
++	uint32_t dsp_re;
++	int ret, i;
++
++	for (i = 0; i < AW_CALI_READ_CNT_MAX; i++) {
++		ret = aw_cali_svc_get_dev_re(aw_dev, &re_temp[i]);
++		if (ret)
++			goto cali_re_fail;
++		msleep(30);
++	}
++
++	sort(re_temp, AW_CALI_READ_CNT_MAX, sizeof(uint32_t), compare_ints, NULL);
++
++	aw_cali_svc_del_max_min_ave_algo(re_temp, AW_CALI_READ_CNT_MAX, &dsp_re);
++
++	ret = aw_cali_svc_get_iv_st(aw_dev);
++	if (ret) {
++		dev_err(aw_dev->dev, "get iv data failed");
++		goto cali_re_fail;
++	}
++
++	if (dsp_re < AW88399_CALI_RE_MIN || dsp_re > AW88399_CALI_RE_MAX) {
++		dev_err(aw_dev->dev, "out range re value: [%d]mohm", dsp_re);
++		aw_dev->cali_desc.cali_re = dsp_re;
++		aw_dev->cali_desc.cali_result = CALI_RESULT_ERROR;
++		aw_cali_svc_run_mute(aw_dev, aw_dev->cali_desc.cali_result);
++
++		return 0;
++	}
++
++	aw_dev->cali_desc.cali_result = CALI_RESULT_NORMAL;
++
++	aw_dev->cali_desc.cali_re = dsp_re;
++	dev_dbg(aw_dev->dev, "re[%d]mohm", aw_dev->cali_desc.cali_re);
++
++	aw_dev_dsp_enable(aw_dev, false);
++	aw_dev_update_cali_re(&aw_dev->cali_desc);
++	aw_dev_dsp_enable(aw_dev, true);
++
++	return 0;
++
++cali_re_fail:
++	aw_dev->cali_desc.cali_result = CALI_RESULT_ERROR;
++	aw_cali_svc_run_mute(aw_dev, aw_dev->cali_desc.cali_result);
++	return -EINVAL;
++}
++
++static int aw_cali_svc_dev_cali_re(struct aw88399 *aw88399)
++{
++	struct aw_device *aw_dev = aw88399->aw_pa;
++	int ret;
++
++	mutex_lock(&aw88399->lock);
++	aw_cali_svc_run_mute(aw_dev, CALI_RESULT_NORMAL);
++
++	ret = aw_cali_svc_cali_re_mode_enable(aw_dev, true);
++	if (ret) {
++		dev_err(aw_dev->dev, "start cali re failed\n");
++		goto re_mode_err;
++	}
++
++	msleep(3000);
++
++	ret = aw_cali_svc_get_smooth_cali_re(aw_dev);
++	if (ret)
++		dev_err(aw_dev->dev, "get cali re failed");
++
++	aw_cali_svc_cali_re_mode_enable(aw_dev, false);
++
++re_mode_err:
++	mutex_unlock(&aw88399->lock);
++
++	return ret;
++}
++
+ static int aw88399_get_fade_in_time(struct snd_kcontrol *kcontrol,
+ 	struct snd_ctl_elem_value *ucontrol)
+ {
+@@ -1588,6 +1968,13 @@ static int aw88399_re_get(struct snd_kcontrol *kcontrol,
+ 	struct snd_soc_component *codec = snd_soc_kcontrol_component(kcontrol);
+ 	struct aw88399 *aw88399 = snd_soc_component_get_drvdata(codec);
+ 	struct aw_device *aw_dev = aw88399->aw_pa;
++	int ret;
++
++	if (aw_dev->status) {
++		ret = aw_cali_svc_dev_cali_re(aw88399);
++		if (ret)
++			return -EPERM;
++	}
+ 
+ 	ucontrol->value.integer.value[0] = aw_dev->cali_desc.cali_re;
+ 
+diff --git a/sound/soc/codecs/aw88399.h b/sound/soc/codecs/aw88399.h
+index 5e9cdf725d3d..7bb6df0822fe 100644
+--- a/sound/soc/codecs/aw88399.h
++++ b/sound/soc/codecs/aw88399.h
+@@ -451,6 +451,24 @@
+ #define AW88399_WDT_CNT_MASK		\
+ 	(~(((1<<AW88399_WDT_CNT_BITS_LEN)-1) << AW88399_WDT_CNT_START_BIT))
+ 
++#define AW88399_REABS_START_BIT	(3)
++#define AW88399_REABS_BITS_LEN		(1)
++#define AW88399_REABS_MASK		\
++	(~(((1<<AW88399_REABS_BITS_LEN)-1) << AW88399_REABS_START_BIT))
++
++#define AW88399_DSP_VOL_START_BIT	(8)
++#define AW88399_DSP_VOL_BITS_LEN	(8)
++#define AW88399_DSP_VOL_MASK		\
++	(~(((1<<AW88399_DSP_VOL_BITS_LEN)-1) << AW88399_DSP_VOL_START_BIT))
++
++#define AW883XX_DSP_NG_EN_START	(13)
++#define AW883XX_DSP_NG_EN_LEN		(1)
++#define AW883XX_DSP_NG_EN_MASK		\
++	(~(((1 << AW883XX_DSP_NG_EN_LEN) - 1) << AW883XX_DSP_NG_EN_START))
++#define AW883XX_DSP_NG_EN_DISABLE	(0)
++#define AW883XX_DSP_NG_EN_DISABLE_VALUE	\
++	(AW883XX_DSP_NG_EN_DISABLE << AW883XX_DSP_NG_EN_START)
++
+ #define AW88399_VOLUME_STEP_DB			(64)
+ #define AW88399_VOL_DEFAULT_VALUE		(0)
+ #define AW88399_DSP_ODD_NUM_BIT_TEST		(0x5555)
+@@ -507,6 +525,22 @@
+ #define FADE_TIME_MAX		100000
+ #define FADE_TIME_MIN		0
+ 
++#define AW_CALI_READ_CNT_MAX			(8)
++#define AW88399_DSP_REG_CALRE			(0x8141)
++#define AW88399_DSP_REG_CALRE_SHIFT		(10)
++#define AW_CALI_DATA_SUM_RM			(2)
++
++#define AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH	(0x9B4C)
++#define AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH	(0x9B4E)
++#define AW88399_DSP_REG_CFG_ADPZ_USTEPN	(0x9B6E)
++#define AW88399_DSP_REG_CFG_RE_ALPHA		(0x9BD4)
++#define AW_GET_IV_CNT_MAX			(6)
++
++#define AW88399_DSP_VOL_MUTE			(0XFF00)
++
++#define AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR	(0x9BEC)
++#define AW88399_DSP_LOW_POWER_SWITCH_DISABLE	(0x110b)
++
+ #define AW88399_PROFILE_EXT(xname, profile_info, profile_get, profile_set) \
+ { \
+ 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, \
+
+base-commit: 41687a5c6f8b07ad0850d6c46452376d54fe9b65
 -- 
-2.39.5
+2.47.0
 
