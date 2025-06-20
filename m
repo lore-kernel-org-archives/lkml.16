@@ -1,129 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA027FB12;
-	Fri, 20 Jun 2025 09:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8362C207A08;
+	Fri, 20 Jun 2025 09:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410658; cv=none; b=m5TWL3zclouRf7UoyMLzDwwCAWS+x2nMxH30RAJMZe8hJHP+50j9BMHNU1rcHGVKx657gUPynZa6+eQfy8/nEWaubKYQVDiFiCEnGjyaGpYYo7v/9sGJfyIZo90zwBWkntJzNEKVWBYP0I/HVwKgz6eA2f2sLGJsdSU5AufQx8E=
+	t=1750410763; cv=none; b=gyAMEZe5Q8aazQ+NtWvVMgcaoQwm2+Zi+Wl8AiO67EX8ib+Nb8pogK5SHa/dEABxCGKg0hyzl0feMzJI4MhLn/zX7VT0S4FKuojNkmm7q6/kzsFdjusXU/Yvy7tiAJtiorTE04ViFmKpNxSlUSECMh4BJP3VPex3jbsQZ4yvHno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410658; c=relaxed/simple;
-	bh=ubDse/6nWJd5Iv7Enf1Qe9halXvlhEPQotOXpmNQr8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGxEslalpmUBPUUzZMBlVYHCT2REG5wcTilu3Fmj5KFk0qthEIRs/K7pWoIkjTckZ0nImNnRaBIYu1IZIXP63VN1cWsTo7OTh982WoR9EU3BVm9Qd3JEo6ngfbqtd/F8c+MPwePHBFI6vKVHoLj1uLQRxe8rusjC/gfsco66vYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFoufkfW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750410763; c=relaxed/simple;
+	bh=r872EI1TVMcD9PYgG5ikEb647F3E7MD3WHZnPBLJ+qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wlt3rb0t7pFmyJbi5gz2BTyNjM3jN5yGTFvPBjp3nX4bw1jGC3/PA1shCG3aDwDWK7B2QoVEqA46WTRhvajwjYfoRudkTwRqpqTfkya3GQ+BbeKKYslzhzaRHnCHbv3wMk+Ty5S9ORrQnmgYSxu3xOKGFTEQ4dkoemTQ9lQE0C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=pMjv3keH; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFoufkfW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC72C4CEE3;
-	Fri, 20 Jun 2025 09:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750410658;
-	bh=ubDse/6nWJd5Iv7Enf1Qe9halXvlhEPQotOXpmNQr8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VFoufkfWVmvGR4hpJY/Al8zDV+pMjqU8S5KnlZZKKJDa+rK9gYXqFeLUgp5fJIXxM
-	 DTmr9OKNMcUw0wR9zJ9Jj28NicciZS5MKLx7yx2/iSBjP1WhedbgYAGGBU9JDigM3I
-	 p8kPiHFdQTqSkjwqC2+wv5zvhrmodaZjLV18969Ze4x7EE4pF661yutbWN5h1b+fgw
-	 e7+zaf/5B9peqzp23Ofqy4cJ6q/MgrPph2bvjYL7HoUE1+OEmUC4xWtxqXmfayoSjq
-	 4ntOhmYVwaSkqYEbGgLL80n+jCAsLZAhdiA3vzi5modEq5+BSascCUngTnJslellWe
-	 EZ69uAy38cQmw==
-Date: Fri, 20 Jun 2025 11:10:55 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Samuel Holland <samuel@sholland.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Raphael Gallais-Pou <rgallaispou@gmail.com>, 
-	Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 01/16] drm/panel: get/put panel reference in
- drm_panel_add/remove()
-Message-ID: <20250620-conscious-purring-ant-b0a64e@houat>
-References: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
- <20250619-b4-of_drm_find_panel_part1-v2-1-0df94aecc43d@redhat.com>
- <20250620103353.5b43b86f@booty>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="pMjv3keH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=+77mLNRKP7S3a1EeDVlp4Z40e4a+H2yITmtvU3k1wSo=; b=pMjv3keHGRwyvE7kWF7p/mXjzW
+	JLeyfMK7GJJvLwDxXLm5Si6mdN0/M9RoKoW7y6er0Wnli5GymY1sGpesPmVaz29O3PfK6UJkAhA9J
+	ElEuWdlbwBto0BRnWao1uRmBP/OKGeg5e4gR91ayq7n4bR4kpH0o76AZ+VRXaubvgRSNQttyhqJJA
+	S7mVWqaBggV9Y0O0egMXAjI8hSrFsWeToX8SNfocUFdISuhSJ5Pr4QQvO8skYL2hx/KmKEa3oewbm
+	bs2woefRQcUsCwIODVuhC4OwAWkJs9ucxpVRwVFCbud6yH/Rz92aq5/qSl58HjCdVdNWkiHfVFmC+
+	gwZlUe9A==;
+Received: from 85-207-219-154.static.bluetone.cz ([85.207.219.154] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uSXnS-00088r-9A; Fri, 20 Jun 2025 11:12:30 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: John Clark <inindev@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ John Clark <inindev@gmail.com>
+Subject:
+ Re: [PATCH v1 2/2] arm64: dts: rockchip: Add FriendlyElec NanoPi M5 support
+Date: Fri, 20 Jun 2025 11:12:29 +0200
+Message-ID: <2432603.PIDvDuAF1L@phil>
+In-Reply-To: <20250616212214.139585-3-inindev@gmail.com>
+References:
+ <20250616212214.139585-1-inindev@gmail.com>
+ <20250616212214.139585-3-inindev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="ayfn3kll3fl323i3"
-Content-Disposition: inline
-In-Reply-To: <20250620103353.5b43b86f@booty>
-
-
---ayfn3kll3fl323i3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 01/16] drm/panel: get/put panel reference in
- drm_panel_add/remove()
-MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Jun 20, 2025 at 10:33:53AM +0200, Luca Ceresoli wrote:
-> Hello Anusha,
->=20
-> On Thu, 19 Jun 2025 14:15:53 -0500
-> Anusha Srivatsa <asrivats@redhat.com> wrote:
->=20
-> > Take the panel reference and put it back as required.
-> > drm_panel_add() and drm_panel_remove() add a panel to
-> > the global registry and removes a panel respectively.
-> > Use get() and put() helpers to keep up with refcounting.
-> >=20
-> > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
->=20
-> This patch is good.
->=20
-> I'd just point out that this must be applied only after all drivers
-> have been converted to the the _alloc API, otherwise with the following
-> sequence:
->=20
->   panel =3D devm_kzalloc();
->   drm_panel_init(panel);
->   drm_panel_add(panel);
->   ...
->   drm_panel_remove(panel); <-----
->=20
-> at the drm_panel_remove() you'd have a warning:
->=20
->   refcount_t: addition on 0; use-after-free.
->=20
-> So, if all panel drivers are converted:
+Hi,
 
-Not all panels are yet:
-$ rg -l drm_panel_init -- drivers/gpu/drm/panel/ | wc -l
-20
+Am Montag, 16. Juni 2025, 23:22:14 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b John Clark:
+> Add device tree for FriendlyElec NanoPi M5 with Rockchip RK3576 SoC
+> (4x Cortex-A72, 4x Cortex-A53, Mali-G52 MC3 GPU, 6 TOPS NPU). Enables
+> basic booting and connectivity.
+>=20
+> Supported features:
+> - RK3576 SoC
+> - 4GB/8GB/16GB LPDDR4X/LPDDR5 RAM
+> - 16MB SPI Nor Flash
+> - 2x 1Gbps Ethernet
+> - 2x USB 3.2 Gen 1 Type-A ports
+> - microSD UHS-I
+> - M.2 M-Key PCIe 2.1 x1 NVMe support
+> - HDMI 1.4/2.0 (up to 4096x2304@60Hz)
+> - 30-pin GPIO (2x SPI, 4x UART, 3x I2C, 5x PWM, 20x GPIO)
+> - Debug UART
+> - RTC with HYM8563TS
+> - Power via USB-C (PD, 6V~20V)
+>=20
+> Signed-off-by: John Clark <inindev@gmail.com>
+> ---
 
-Maxime
+apart from the schema problems, Rob's bot found, I saw some additional
+nitpicks below.
 
---ayfn3kll3fl323i3
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+[...]
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFUlmgAKCRAnX84Zoj2+
-dkiPAYCIte+2tBryJpZRpT6kkEN41Ec91k+s449YnA84pL1ey4OrFgVdTNOesLxw
-e9unZSUBf2dd1SlD3wpyZKqM8nylg4Tzep9Jj6nmiEtL32rA/nKwRv5XVAdwV+o6
-JgigwCZp3A==
-=nfps
------END PGP SIGNATURE-----
+> +	sound {
+[...]
+> +	};
+> +
+> +	vcc_12v_dcin: regulator-vcc-12v-dcin {
 
---ayfn3kll3fl323i3--
+nodes without addresses should get sorted by nodename
+aka regulator-* before sound.
+
+Phandles count into the sorting only below in the
+&phandle {}; parts
+
+
+> +		compatible =3D "regulator-fixed";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt =3D <12000000>;
+> +		regulator-max-microvolt =3D <12000000>;
+> +		regulator-name =3D "vcc_12v_dcin";
+
+blank lines between properties and subnodes please.
+same for other regulators below and also the pmic.
+
+> +		regulator-state-mem {
+> +			regulator-on-in-suspend;
+> +		};
+> +	};
+> +
+
+> +&fspi1m1_pins {
+> +	rockchip,pins =3D
+> +		/* clk, d0~4 */
+
+comment could state a tiny bit more what is changed compared to
+the "original" pin settings
+
+> +		<1 RK_PD5 3 &pcfg_pull_none>,
+> +		<1 RK_PC4 3 &pcfg_pull_none>,
+> +		<1 RK_PC5 3 &pcfg_pull_none>,
+> +		<1 RK_PC6 3 &pcfg_pull_none>,
+> +		<1 RK_PC7 3 &pcfg_pull_none>;
+> +};
+
+
+
+
+> +&saradc {
+> +	status =3D "okay";
+> +	vref-supply =3D <&vcca_1v8_s0>;
+
+status is the last property
+
+> +};
+
+
+
+
