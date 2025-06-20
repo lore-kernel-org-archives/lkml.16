@@ -1,110 +1,98 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5211DD543;
-	Fri, 20 Jun 2025 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42C11DD543
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436212; cv=none; b=EQ3/kdT8Vgm+PWhTm0IiWaYZBbdoIQDqEZ3lKfhuoMKkcnEj2P+bROupfqlgneyXz5PET/0XcRr1oyZdRWIguA9049hkxOwcI/ZU2wQenfIgzyB1RASGwtuly23+31TTseDHVBgOrBeZpeSjF67WDDqnRHwLBjX4kkSQN84oeQk=
+	t=1750436232; cv=none; b=BKaHwKdNzAaO2QgFihNCHzQ3jXnXZ9jMPvtw7AieEfQSVvTFNnAGdUeALJRwtPszwkmeMRMADpqH+dTNv+FZ554Opp2IuGn2hcImu4Vhspc4x/olgHwOC8aBuXpV3vQQslbRhT0tdMsP+lgIFeHj92qwYjIyfUFh4gCrMW9GfmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436212; c=relaxed/simple;
-	bh=OovyfZojvEvfK/IluwDmW7AttOfCw6eB1mMojJhah4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sAiqyEyYFNSmpdXvCKMeCMKNXozDEz7r4VWoYSxMBAWGHnx/AxxWTpm0RGD7rtLDJtRk45qSldXQM7WwQC+CoOgi+6/Zybm9L6gTbUr1mV4xg12p7kYZeu3pylS8ael7/lvr3szqIuNNV0YTqc0hgk/BEkbNttNutKRx1k/+kDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NzUAHSxL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750436232; c=relaxed/simple;
+	bh=sHOHb/kdSli3XrfPYzOTC5BVSj7i87pNZyL9RXYb4zY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UGGyO3bus1m7Gq6GchknlD6+Z8kc2RL0jDsCkr04dJ4Cf+OnSndFMCIYqXFnDS6L7GQjSNX7W8lA+AzRCosWTF8JUM3IBLKvhHPMmZlX9H7N7cjD/XYm9Cy2g9yk7cGQbWbTA1ddT7UOjxxUFXKusbddtm+7/1cW+OEsVmqPRSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNk38V/e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NzUAHSxL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=/UszJjjGrQLyE6OizYSxEL7kIKQs9jlpRaVnh3Txp7Q=; b=NzUAHSxLxUuaq+/uq+Gx6Hwl74
-	UwndDaca3nFD6rmDc20q3U3sbzuVWs8X13VCpClNfOxrkHzo2IdUHkE2bsFe7bX4p1Hyrkdd7ON61
-	rU5iK2IjOoGJWFL32Ma9HL/vjsVoL8AU8bH8XEFeWO67jkXgmSJhqZtUUpypOk/zI4w9xjdZevCmI
-	8VNInXcNw8qNMOhNS/ZyO4e+j3DdtGSF6cuyqGuJksihob2vSanG+POuEQU8e13asskUwt19ad5Ym
-	o3vvvUAjp1A/Mq79GNW4qsGDROAUDqqHtMYOybWLMEIl/i7EHtUWpA/O+VOyWoNC4weXBNF61y899
-	/wuIGeeA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSePg-0000000D3pz-2rbi;
-	Fri, 20 Jun 2025 16:16:24 +0000
-Message-ID: <756e93a2-7e42-4323-ae21-a5437e71148e@infradead.org>
-Date: Fri, 20 Jun 2025 09:16:13 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNk38V/e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DE1C4CEE3;
+	Fri, 20 Jun 2025 16:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750436232;
+	bh=sHOHb/kdSli3XrfPYzOTC5BVSj7i87pNZyL9RXYb4zY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=WNk38V/eUpny13KTvQg4Yv2OaZJNYm9hDA3zdwabhEwIrReuLjnSL1ATt5lX0q5fW
+	 hTbjQ5b++WWm05DuXC2ZWUfKyw7RLNwUb/6biBjyMeNzvau9Qw1vYKTvaxN9BUn+tN
+	 fuRklBj8qxpezeIOz4KsUb85dtPom/S6whkDcLrBAXar1VRozEcezb/6g3VT/WSi/j
+	 H5f8x8HYU9tKMq+8kcizCV8x03KiN5c7UxIRATgRAXaESMD2+qnz5HpN+Xi0V+ebGO
+	 Dk2KlRJe13T1vo5DxG2t+NPk3Z9gEEbmNg/4MbHaFSFLm7M87h/QnBnVTTi3wdYJtU
+	 nm5sPsrE+62qA==
+Date: Fri, 20 Jun 2025 11:17:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 03/27] PCI: Protect against concurrent change of
+ housekeeping cpumask
+Message-ID: <20250620161710.GA1296438@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-To: Xin Li <xin@zytor.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
- Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
- Ingo Molnar <mingo@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Daniel Sneddon <daniel.sneddon@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
- Breno Leitao <leitao@debian.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
- Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
- Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
- Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
- Changbin Du <changbin.du@huawei.com>,
- Huang Shijie <shijie@os.amperecomputing.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org,
- Yian Chen <yian.chen@intel.com>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <25600557-9cd5-406c-9acf-abc163afde2d@infradead.org>
- <98703493-109a-4795-8abd-6cfe10b941f4@zytor.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <98703493-109a-4795-8abd-6cfe10b941f4@zytor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620152308.27492-4-frederic@kernel.org>
 
+On Fri, Jun 20, 2025 at 05:22:44PM +0200, Frederic Weisbecker wrote:
+> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
+> therefore be made modifyable at runtime. Synchronize against the cpumask
+> update using appropriate locking.
 
+s/modifyable/modifiable/
 
-On 6/20/25 9:12 AM, Xin Li wrote:
-> On 6/20/2025 9:02 AM, Randy Dunlap wrote:
->>> +config X86_DISABLED_FEATURE_LASS
->>> +    def_bool y
->>> +    depends on !X86_64
->> Please explain why this is   !X86_64.
+> Queue and wait for the PCI call to complete while holding the
+> housekeeping rwsem. This way the housekeeping update side doesn't need
+> to propagate its changes to PCI.
+
+What PCI call are we waiting for?  I see housekeeping_lock(), but I
+assume that's doing some housekeeping-related mutual exclusion, not
+waiting for PCI work.
+
+I don't know how to use housekeeping_lock() or when it's needed.  Can
+you add some guidance here and at the housekeeping_lock() definition?
+
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  drivers/pci/pci-driver.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> When NOT on X86_64, the LASS code should not be compiled.
-
-Ah yes, the double negative caught me.
-
-> But first of all, as I replied earlier, X86_DISABLED_FEATURE_LASS is
-> completely not needed.
-
-That's good.
-
-Thanks.
-
--- 
-~Randy
-
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 67db34fd10ee..459d211a408b 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -362,7 +362,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  	dev->is_probed = 1;
+>  
+>  	cpu_hotplug_disable();
+> -
+> +	housekeeping_lock();
+>  	/*
+>  	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
+>  	 * device is probed from work_on_cpu() of the Physical device.
+> @@ -392,6 +392,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  		error = local_pci_probe(&ddi);
+>  out:
+>  	dev->is_probed = 0;
+> +	housekeeping_unlock();
+>  	cpu_hotplug_enable();
+>  	return error;
+>  }
+> -- 
+> 2.48.1
+> 
