@@ -1,122 +1,75 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A3D1DF97D;
-	Fri, 20 Jun 2025 21:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ABF137E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750454365; cv=none; b=fANKB1uSFICz5AeHp9qF9kcJafYoTC7Tu8vFTwKQRpn1ZOVM2C7venawOLmHRHGLVYmmjUiiDPV1HxCYusCP6zsz4RXpUfyUO8piyh+vLmIgXSdHsAmmrMCRAyPy2WogJKHLP9uiGgOMnnUNCjTHxKoHzsEAsVNuHTEtmbAOKb0=
+	t=1750454427; cv=none; b=CKA7c2Q/VA6fjXvDtX8tw7QBn7qu+en5jk472hu+GMMyBKMIEcOj55+zIHOM8yBYP4+D642ZPKht37Jb7HS0rVSkoi6IUG2RGIjhbyaGQ7/S3RSZoujBjQhV4QVJ2Vi3znlwUlViVtR7OEcR5Q0lnJwNfkGH8qxFdwO4ZgLFzok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750454365; c=relaxed/simple;
-	bh=z4cn/akX/dDAjxMey9oCI0QTO+zIUDN3GLRvcTU/Cq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ozYXa6O1SHXbytp256T6pau3SuMkip/DHTm7I1CCfqRym32bxUIKxi/+nEABhF95V030xRSKSZA+c5re7oEhoS31QA1yR6UuUV4gQaI72NK1CE9pLcbUnRiZGAwLX6AUQPrUT8FfedZ5Tv9KzSaODDo29P8kOvs40xtLlty0LAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzNNAocy; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750454427; c=relaxed/simple;
+	bh=ZaEOR90hBsx9FAE+6dDtMjZHVKAuyFTQtXg0oHatjVQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R1PXcqA45gyMWv/sOY5OyM2Uw6yzKEOfXkyoMK0poo5/XAU5dkG15bqJRGwCbXMOsIPbPg5bjav6pAfbZHu+ae6yi7UBk7leIf6ZXDShcgZKp47n3CvneIOsLxkIGH1kR0cv4BjHhL7DTPjP1ph46Ef4UcCUdhmxOGNz4dhVEvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y30U/PDp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=THGwC4If; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzNNAocy"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-710e344bbf9so24259217b3.2;
-        Fri, 20 Jun 2025 14:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750454362; x=1751059162; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1mPdM6cTcll7M51bPTHRCE/W3UzCGQQJNLvsR4d37PI=;
-        b=bzNNAocyFSSsJBmE7YnP7+EXjMQU+2v7Eb4/fGCikh+YSNV1RPPopUyzcIe9cEwjjI
-         TCCcLk9k3k/WZi4SrXnJAJv+FwZWzPRdVbDS9G7X1cz02UhorgKLWJHd4LHIP82ugmYK
-         mIJI3bvQdgM0cIhIBRtLLoht91FQzBURY5j+NgqFwfgcxIq4z2W9YYdwycU94M/vdSJW
-         MYINq8wvrKvkV/MoULWbaC9XCeohixscNG085fbzzKNCCraKjjHSzBAY/YDzGydFVDhf
-         B5pTuRFdd5tMzAEvQnOt+MAP4YfGUiPSgTytrRztZh11xIcHZsH5MM4b+eApWZ59B3SV
-         Vv8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750454362; x=1751059162;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1mPdM6cTcll7M51bPTHRCE/W3UzCGQQJNLvsR4d37PI=;
-        b=LpZwFa5+EqQ/2vnpow2yZxSy94tzJ3P9AJoh/A9FqhICQ6W6NCoKpMnaYHdNQUk7vo
-         +kiRjH60V5nKAfHBRHq8RzksGafAO8eDRL2dZ76fmLGEdAJrkdUw4ML2RgXvbSIjkC6w
-         qsASxVR0H5E8/aWQ5/I4cs3DW0guoBhjkwtPrIVsU3FCk7M592nXsaz3FZ2ckaXXkWiw
-         xYT4xpDOgLn0YI1iplJzo/ndppzy9g5R3somojt5m+tF9djQ3j8yq/mdvf3wA1md2sK5
-         tSINyL53Mf/kWBcKLgP4+vYR1vLoXsYGt+wwHsz8bwaiMCFvXaAWnsfflwhNsgCO+ACm
-         gN5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVluqyJt8XwHAyUk9v+e0YCn3rnVqNzuVKE9EWgyyvTvaUb57letR25K6kgKbwgnqEic0XoutUS7e1zvD4=@vger.kernel.org, AJvYcCXo/oSK1iscb95BL0dQH2cY6c6noGj6oe5wPv4BiE7oI3N3HJCkZThdZn2ZZqOuYm0YAQd5Qo1Qtv7f3tE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNktzGfBIPtmUMrN9Zq0C5pV4Z5ksqunq42PUVfJk0MRNecoT6
-	IO2jHjJUfAOHRpbp48WrKW+TpbQmYTtImcz3jvTIToj1eiLLV5pbVh78
-X-Gm-Gg: ASbGncsOHyLxtL/ylqLttY3J+rJsIuYDOKRYlXfxylDIwkD6KnrNS8GYRwBYoF1b5fp
-	LWVo3nBm+o6E7LCEK5SexiD1Mqo4PNeoUQ/WQL1SqWME4ZfBhFuqBLl8ykHx6/KLr542s/X5lT1
-	nI7chq7af3wuaJg5meSuAeKiHtvjYbYMmCKOuV6McdXDwUg9AwGypPzpF3R7rl6uQFdAPvX28b9
-	1RBEAx1hqwcBg5sx19bCmtACv+kkQWfHv+v/QQPMxwycG8J74fKYcNc6ElerqSUjKy3JzvMpH8m
-	LhMFZN3PNRp+gJa7NAMI/3C7GQ/0nc2L8HhK4RCdL6hmAVgByX9K9M3K+XC+uzfOSOCJ0ciHC7C
-	S
-X-Google-Smtp-Source: AGHT+IFUw6qdop+WoEmBwfciQg2VXbNbCLvf7lkfO87ikecmOVb3bEOq/bqWAK5K0wr+5RlQ2Y3xCw==
-X-Received: by 2002:a05:690c:4d06:b0:709:197d:5d3c with SMTP id 00721157ae682-712c63bd66emr71461467b3.11.1750454361892;
-        Fri, 20 Jun 2025 14:19:21 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4bec110sm5766727b3.105.2025.06.20.14.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:19:21 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: mchehab@kernel.org
-Cc: alexguo1023@gmail.com,
-	hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: usb: dvb-usb: fix null-ptr-deref in dw2104_i2c_transfer
-Date: Fri, 20 Jun 2025 17:19:19 -0400
-Message-Id: <20250620211919.3200929-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y30U/PDp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="THGwC4If"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750454423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q84NISkayGt4iFfCyp3cgaIA6uA9XD2L6yoXpNu0zAI=;
+	b=y30U/PDpmFXXTmJBQ39F2mUnlII8wu1jlEm9lfVukC3InCZSTwFiQ7KdYrCOYP9oy152ZW
+	kdNgQ6kkUp5//UnoTthdC85N9aoPjzPErsGJwyyJHXIG0XBU4JRDBMtZOh3B7Ux+nIlcd/
+	hiDwhdPNEfSXCdInnHL3K5AjqhB48/8rlXevTEBRY44ZIVw2QalnR3lyRPoj9JMfsyat9d
+	6eagelmAZAKZunV0cgnarbYqd308gVzO2Y2PXvFfTIfFuUzKQsAjKeP+sRzHe+zi+YRiTK
+	znZHTRDOziciP515+T+POBHdWDY9B4kmuCO0Vqx62JqeJrBPWpp60XiVJ5rx8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750454423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q84NISkayGt4iFfCyp3cgaIA6uA9XD2L6yoXpNu0zAI=;
+	b=THGwC4Ifbbb1NuNp6yjXWMZ+lDfqQE4TLxquhbk7TIxg+F68GtXDNNIJDsQcvGLKN7aU3b
+	9lsbeQnF1ELJn5Dg==
+To: Khalid Ali <khaliidcaliy@gmail.com>, peterz@infradead.org, luto@kernel.org
+Cc: linux-kernel@vger.kernel.org, Khalid Ali <khaliidcaliy@gmail.com>
+Subject: Re: [PATCH v2] kernel/entry: Remove some redundancy checks on
+ syscall works
+In-Reply-To: <20250615082833.858-1-khaliidcaliy@gmail.com>
+References: <20250615082833.858-1-khaliidcaliy@gmail.com>
+Date: Fri, 20 Jun 2025 23:20:22 +0200
+Message-ID: <87jz56p0tl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-msg is controlled by user. If accessing msg.buf without sanity
-check, null pointer deref would happen. We add check on
-msg.len to prevent crash.
+On Sun, Jun 15 2025 at 08:28, Khalid Ali wrote:
 
-Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
-fix null-ptr-deref in az6027_i2c_xfer()")
+Same prefix comment as for the other patch.
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/media/usb/dvb-usb/dw2102.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> Use SYSCALL_WORK_SYSCALL_AUDIT to check if audit needs to be done
+> instead of audit context for consistency to other syscall work bit
+> checks.
 
-diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
-index 4fecf2f965e9..7c9d09d49da4 100644
---- a/drivers/media/usb/dvb-usb/dw2102.c
-+++ b/drivers/media/usb/dvb-usb/dw2102.c
-@@ -405,6 +405,8 @@ static int dw2104_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[], i
- 	for (j = 0; j < num; j++) {
- 		switch (msg[j].addr) {
- 		case(DW2102_RC_QUERY): {
-+			if (msg[j].len < 2)
-+				return -EOPNOTSUPP;
- 			u8 ibuf[2];
- 
- 			dw210x_op_rw(d->udev, 0xb8, 0, 0,
-@@ -413,6 +415,8 @@ static int dw2104_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[], i
- 			break;
- 		}
- 		case(DW2102_VOLTAGE_CTRL): {
-+			if (msg[j].len < 1)
-+				return -EOPNOTSUPP;
- 			u8 obuf[2];
- 
- 			obuf[0] = 0x30;
-@@ -427,6 +431,8 @@ static int dw2104_i2c_transfer(struct i2c_adapter *adap, struct i2c_msg msg[], i
- 		 * case 0x60: ts2020, stv6110, stb6100
- 		 */
- 		default: {
-+			if (msg[j].len < 1)
-+				return -EOPNOTSUPP;
- 			if (msg[j].flags == I2C_M_RD) {
- 				/* read registers */
- 				u8  ibuf[MAX_XFER_SIZE];
--- 
-2.34.1
+This does not explain why this is correct. I explained it to you here:
+
+     https://lore.kernel.org/all/87frg2q1w7.ffs@tglx
+
+You also missed the fact that audit_syscall_entry() has yet another
+check for audit context, which means there is still redundancy, right?
+
+Thanks,
+
+        tglx
+
 
