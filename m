@@ -1,180 +1,140 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14ACF299AA4;
-	Fri, 20 Jun 2025 13:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E15128B40A;
+	Fri, 20 Jun 2025 13:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750426937; cv=none; b=tRXCN0IFMApnyBweXDbUbja2fpJ4Ef6nShadT6xpYiHX+Wuk0WUm8AtQSc5qLiTQeAHjV4Xi9rRgaE7U934r7Q4uVe4VszORYPkSrkrQnMW10oVuTqpkw+oHHc2H+SfkE57VE2Dz9sWS8AfKAwho0MWogJg0dYdaU9hCiPiRL5c=
+	t=1750427028; cv=none; b=AsHTYPIlWOvGK/vUkm+arasoQHVGnKpQTFTO1rrjm1foEybNa99nDovPdxge+h77qYLIyrPJUzj1BBQQPraaBxajLdhhml4GjtdARpXUTLvXilKD8kO5W/4qvsUCveNb/eP/NNzD4gsfX0PhcKC8rl2GmoHM8e4KIsaBRDKNWM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750426937; c=relaxed/simple;
-	bh=frII0sqlDiSbWDSlPxgeD6vfP+S0Yy8Kxk0CZ2aQw6A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TvnDARjaI6WUzxHxJQcXiIV1P/1HLO8bh6KaBk+r0gyCNI3nBwUGA9wFzl4astEzGHXM7/GnzczvpJRHWpOrq6XKBhivTCa+TFyXI/HMKaYfMg6Ihfco9bAQgXADHWDXb5wDaOdEhFgFqr1TOSXlVE1aVtNibi4DXkj098A345g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mWhbQ3ZV; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750427028; c=relaxed/simple;
+	bh=kE6T0xVo349h12vhdsOptOJ59XBo3V1Vl/qYHwIDF5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBh1ZJcprnri825iPoPDufSVmoS6ATFS5ctV+lMHH6NGRvnuOZS79GDIdr6md+T1FL4EkZnhWzqCdtiNIc/N6ReElBsFA7rUwuIimXcnPcyYQ3sqIBR5MDo0xNQiteeaCiLihubUmcv38gtyxOB4xngbQLFOnNoI9VNSOTZIxUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Uek3h/ox; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hj9fDcoQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWhbQ3ZV"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2366e5e4dbaso15180215ad.1;
-        Fri, 20 Jun 2025 06:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750426935; x=1751031735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dNBwt43MHIWMmmpsxqwqFsalJ3qguFb5ELzUaUDEscI=;
-        b=mWhbQ3ZVVl+XHyg6FVw0TnYpT393xVic+wDp0QyC/0MgEA8qLRb/vh3+F5NDahQgRw
-         oxDPTAGLhqXG54pIBjR7C7JKZHAM+PPwrXAtFnMlX+G9T/0syzvwPoRdu8E1TVF9FTt2
-         DPAITh66IOOiZFkmiLYsECHF9S+qLmsdGmKqkHuUZIolcwZEWcoHIOBPMedPjMjY441f
-         d0CZsw0I7u2hmqMEeR/sD6PCpgJGO4WyPQ2Z5f24wXR8CAhDA5AH1FMNwtfd282Ibgrx
-         dKMxzz7g6uu+JqIi3wC8gpJBpcrNzYGcxsB94Oxb94Q8CSJ70GLrofCI2q542iBR8yfb
-         B/iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750426935; x=1751031735;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dNBwt43MHIWMmmpsxqwqFsalJ3qguFb5ELzUaUDEscI=;
-        b=VfensFfG0sqVGm72Lfl8cZTFM/v3aLhslcO1OsPqQ7f4aQ3RIh9Mdki8oaLpS9iuBR
-         NHv1NlgaAThVxk55qyyEPJpCpiBMOvqU2Gc8j81bSGVALj66iXj49NXQVNb8HGdnZw9B
-         v++/hxYAyDY2Z7Nkeh9il7T00jIiF48G1bfI1CGiHFSvrkqtd/ebprnceQkrB2YZMx//
-         dGy58/s9G5pSFaIPvAWqdPvUjVxYwc2yoH4eO/pDxoVvcqHhCbbtnAWhAncAk0qBL0qn
-         NfUxdeNXbEBkuoFcSFJgrNnm3EvEAW08WJrcDh51bUTn6ARovKH8BUvFp4WEueNPp0Qn
-         X1vg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWELuJrelnblK9mlDW24Zcz0kCUKapSvoT9GeLQGchK44aEUZ/irrbo3yg6inPYcGlVDvEX3HGTeynQfzM@vger.kernel.org, AJvYcCWYcimRkUFryAClIkaKfk9I2+D1tFHnXdDBTRM4Ny+h/UBxteUN1IPSbIsoLfTW2cOOqOGvtXGK@vger.kernel.org, AJvYcCXKmhF1lAgyWHBmMMKKmcLqjSXejV9ZctnCpTnYroqD3eaXQOFJ/UMY1nzB2fz36U4/1SiQkoFkFa1R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfdynu0H7bRqp8vBaLgc8OVnqJs9PP3ZpEnNEgJgO8Bjj6hIL4
-	4vji+Fi/nUtEck0edHzZbda+rXFAPBY+/HaAzvwFb1HgKQpYB9+GkYlv
-X-Gm-Gg: ASbGncstoCXBNSwQUQD+V8QwFWTcfcarZCnsp1rYqxLXJAOVe0hFdHvk3z455Tr/p+q
-	NGodGH6eXb38KJKkBt+BFDDZasz0ov+Dh0Lhgp+dXaD05im7AXPzEdnokwo9+PjAf7MopVp6poH
-	+cPBmSMViAtb6WXxFsSo6uWP0K1Kdwyo0drBJdmFTaE3oxN53p0WIcw5HFMv6J/1Aq9JmtCRqSA
-	g6Slg4nlwfZZ5ZwlQfWLKM8sU4LkL1Zod0pOjkkhcZO8jAh45LYiXNQigfJPyc0y3fFlI35MVVo
-	VvaboNYkcK+Pb0OyoDa4VDHMY4rj2jgvzGXlZfaaDqdDe26+WfRAjvM2Za5rgavARU+Ayd4Gc8e
-	GQRzg
-X-Google-Smtp-Source: AGHT+IG7wam8fQo1fx9LX6RAyzqtMQVwrj4OaPZzWacH85+bQVS4c210WpX0nCi0F8AReA91nXk5kw==
-X-Received: by 2002:a17:903:1665:b0:231:d0da:5e1f with SMTP id d9443c01a7336-237db0d8ea3mr39974165ad.21.1750426935169;
-        Fri, 20 Jun 2025 06:42:15 -0700 (PDT)
-Received: from localhost.localdomain ([207.34.150.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d861047fsm18885505ad.134.2025.06.20.06.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 06:42:14 -0700 (PDT)
-From: Kyle Hendry <kylehendrydev@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Russell King <linux@armlinux.org.uk>
-Cc: noltari@gmail.com,
-	jonas.gorski@gmail.com,
-	Kyle Hendry <kylehendrydev@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next 6/6] net: dsa: b53: mmap: Implement bcm63xx ephy power control
-Date: Fri, 20 Jun 2025 06:41:21 -0700
-Message-ID: <20250620134132.5195-7-kylehendrydev@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620134132.5195-1-kylehendrydev@gmail.com>
-References: <20250620134132.5195-1-kylehendrydev@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uek3h/ox";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hj9fDcoQ"
+Date: Fri, 20 Jun 2025 15:43:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750427024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6e5LiVdLYV1MWzKzm2m1QtrQk2Nr/rVHB48W5asO8Cg=;
+	b=Uek3h/ox5BdHyjedKfonkpQexvpQ9o7KIUuDiu7fe3874JF9ZCdFhjafKo2geauJlK8u0N
+	5St4VbJtIg8TijyGaDbDPyFiiiPNuR6uTpnJHYZGQQdTJVrwuBzSOlxXHy83CoTYg5zrmi
+	UHVRZc9YwXxrYARSdqnBI1nyTX1KRtp0+s8naFhXeR0NQdiFnJy+YG02GPyU6IZWToqS30
+	HGdped6jS8ckUjTlEUMAmyV1Y1AZDt74DxeulpgQufmVZbFR1HIbdXMVcy1VHfruB7+W8z
+	ia6+enwyHC3umAf6Vv69ImHbaKaq4TCnZo0sSY8v4qt5x+esnqoXl2CGYOVlWA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750427024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6e5LiVdLYV1MWzKzm2m1QtrQk2Nr/rVHB48W5asO8Cg=;
+	b=hj9fDcoQDkyXcjztkkuYK+FdVDHyH2XXIcdl+2TM6PadC4dD9JUEMU+mDkWDXpM8kEkwz0
+	BIGtpZnNbb1N+6Cg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: David Gow <davidgow@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v3 13/16] kunit: Introduce UAPI testing framework
+Message-ID: <20250620152344-fadbb8ae-0a86-4938-b05d-00da66fc05c5@linutronix.de>
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+ <20250611-kunit-kselftests-v3-13-55e3d148cbc6@linutronix.de>
+ <CABVgOSmdcOZ0+-k=SM4LibOVMKtcbF27p6N40kuDX_axTPZ=QQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABVgOSmdcOZ0+-k=SM4LibOVMKtcbF27p6N40kuDX_axTPZ=QQ@mail.gmail.com>
 
-Implement the phy enable/disable calls for b53 mmap, and
-set the power down registers in the ephy control register
-appropriately.
+On Fri, Jun 20, 2025 at 05:47:39PM +0800, David Gow wrote:
+> On Wed, 11 Jun 2025 at 15:38, Thomas Weiﬂschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > Enable running UAPI tests as part of kunit.
+> > The selftests are embedded into the kernel image and their output is
+> > forwarded to kunit for unified reporting.
+> >
+> > The implementation reuses parts of usermode drivers and usermode
+> > helpers. However these frameworks are not used directly as they make it
+> > impossible to retrieve a thread's exit code.
+> >
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> >
+> > ---
+> 
+> It feels to me like there are three features hidden in here:
+> - KUnit helpers for manipulating vfs files
+> - A way of having KUnit tests run userspace helpers
+> - The full framework for writing/running whole tests in userspace.
+> 
+> It's really the first two which excite me personally most -- as they
+> give us a sort-of inverse to the kselftest "helper module" paradigm --
+> so we can test things which are impossible to test from within
+> kernelspace.
 
-Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
----
- drivers/net/dsa/b53/b53_mmap.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+For me it is only the third feature that I really care about right now.
+But I do expect users for the first two to pop up at some point and these are
+obviously valid usecases.
 
-diff --git a/drivers/net/dsa/b53/b53_mmap.c b/drivers/net/dsa/b53/b53_mmap.c
-index a4a2f2965bcc..cf34a7d1048f 100644
---- a/drivers/net/dsa/b53/b53_mmap.c
-+++ b/drivers/net/dsa/b53/b53_mmap.c
-@@ -29,6 +29,7 @@
- #include "b53_priv.h"
- 
- #define BCM63XX_EPHY_REG 0x3C
-+#define BCM63XX_EPHY_POWER_DOWN_BIAS BIT(24)
- 
- struct b53_phy_info {
- 	u32 chip_id;
-@@ -264,6 +265,53 @@ static void bcm63xx_ephy_reset(struct regmap *regmap, int num_ephy)
- 	regmap_update_bits(regmap, BCM63XX_EPHY_REG, mask, mask);
- }
- 
-+static void bcm63xx_ephy_set(struct b53_device *dev, int port, bool enable)
-+{
-+	struct b53_mmap_priv *priv = dev->priv;
-+	const struct b53_phy_info *info = priv->phy_info;
-+	u32 val, mask;
-+	int i;
-+
-+	if (enable) {
-+		val = 0;
-+		mask = (info->mask << info->ephy_offset[port])
-+				| BCM63XX_EPHY_POWER_DOWN_BIAS;
-+		regmap_update_bits(priv->gpio_ctrl, BCM63XX_EPHY_REG, mask, val);
-+	} else {
-+		if (!regmap_read(priv->gpio_ctrl, BCM63XX_EPHY_REG, &val)) {
-+			val |= info->mask << info->ephy_offset[port];
-+			/*Check if all phys are full off and set bias bit*/
-+			for (i = 0; i < info->num_ephy; i++) {
-+				mask = info->mask << info->ephy_offset[i];
-+				if ((val & mask) != mask)
-+					break;
-+			}
-+
-+			if (i == info->num_ephy)
-+				val |= BCM63XX_EPHY_POWER_DOWN_BIAS;
-+
-+			/*Might need a lock around the read/write*/
-+			regmap_write(priv->gpio_ctrl, BCM63XX_EPHY_REG, val);
-+		}
-+	}
-+}
-+
-+static void b53_mmap_phy_enable(struct b53_device *dev, int port)
-+{
-+	struct b53_mmap_priv *priv = dev->priv;
-+
-+	if (priv->phy_info && port < priv->phy_info->num_ephy)
-+		bcm63xx_ephy_set(dev, port, true);
-+}
-+
-+static void b53_mmap_phy_disable(struct b53_device *dev, int port)
-+{
-+	struct b53_mmap_priv *priv = dev->priv;
-+
-+	if (priv->phy_info && port < priv->phy_info->num_ephy)
-+		bcm63xx_ephy_set(dev, port, false);
-+}
-+
- static const struct b53_io_ops b53_mmap_ops = {
- 	.read8 = b53_mmap_read8,
- 	.read16 = b53_mmap_read16,
-@@ -277,6 +325,8 @@ static const struct b53_io_ops b53_mmap_ops = {
- 	.write64 = b53_mmap_write64,
- 	.phy_read16 = b53_mmap_phy_read16,
- 	.phy_write16 = b53_mmap_phy_write16,
-+	.phy_enable = b53_mmap_phy_enable,
-+	.phy_disable = b53_mmap_phy_disable,
- };
- 
- static int b53_mmap_probe_of(struct platform_device *pdev,
--- 
-2.43.0
+> So maybe those APIs should be exposed separately (so a
+> test can be written mostly in kernel-space using the KUnit framework
+> APIs, and just call out to a helper where needed). But I'm happy for
+> them to stay private functions until we have a test which actually
+> needs them.
 
+Agreed, let's expose it when there are users.
+
+> > Currently this depends on CONFIG_KUNIT=y as it uses some non-exported
+> > symbols around process management.
+> 
+> That's fine for now, IMHO, but will make it difficult to use this on,
+> e.g., Red Hat setups, where CONFIG_KUNIT=m. Hopefully we can resolve
+> this by exporting some of the symbols?
+
+I'll try to use the new EXPORT_SYMBOL_GPL_FOR_MODULES() on these symbols and
+see what the maintainers say about it.
+
+> In general, I'm happy with the implementation here. The fs stuff
+> probably needs a closer look from someone who knows the vfs better
+> than me, though.
+> 
+> Nevertheless,
+> Reviewed-by: David Gow <davidgow@google.com>
+
+Thanks
+
+> 
+> Cheers,
+> -- David
+> 
+> > ---
+> >  Documentation/dev-tools/kunit/api/index.rst |   5 +
+> >  Documentation/dev-tools/kunit/api/uapi.rst  |  12 ++
+> >  include/kunit/uapi.h                        |  24 +++
+> >  lib/kunit/Kconfig                           |  10 +
+> >  lib/kunit/Makefile                          |   2 +
+> >  lib/kunit/uapi.c                            | 287 ++++++++++++++++++++++++++++
+> >  6 files changed, 340 insertions(+)
+
+<snip>
