@@ -1,105 +1,102 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FD519E98C;
-	Fri, 20 Jun 2025 22:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088CA19E98C;
+	Fri, 20 Jun 2025 22:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750458669; cv=none; b=FSHhctPnhH2VK+SU8Xv0yVpUIfdtHfWAj+C+uzXdfvtNhw+0U7ATa0SYMewF7VAKCxieiT30r5Il82wjSFSzqWRZ423KcWylHYzmkzdREY/qqpJb38nuWBDAbwQpiP3qdy10KTqxZRZ6Ee3SmponE2P97az48Lkb7H6OoAOfwdg=
+	t=1750459055; cv=none; b=VMdUGqcx4McZ/7uz9YTfzALzuLdEwWxQXd0Ql20I+09Kd/+ACmVNlZnD9A/ngBA/hJOcIpJ2pQ+eI87Ei49+I2WQ2CwAOLDnbbTsbo1Nvj9VcsMsZjOF+v0PkMlUNPjRcjbLbZuWSKFDo7CzK9DEZf9m0imJxAqUaWMPdeJQWp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750458669; c=relaxed/simple;
-	bh=IvV8y7FgT6Z9NQTic4jjwW6fRJ9gYHOpKpv9Msn6yHY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=u9mQju16IA7/4IHGZPrTVN7rz1AK9eaiFd818bQpayHuAQCY5uQD+n4275RF5swfKOFhw36JnhuaWBWbnvmJIjUo2+Zbw1B8FO62CeL/A7jDrir8DfZmsb9n5+9jbQ8ESOTXLz39kAj8/KVf81G+YvPdq0SKkyAl4x+5i2wEy84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=cKKXzbi2; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750459055; c=relaxed/simple;
+	bh=2rMyA/wzA7o1DmB+D1HVrWEoJH5/9feYghQ21/NivpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8Ij1y7NDea2E5Qko8CYQT0kkC2SYaRV84WlptFuaTFn17obRfoET0wLvRLZWoSv54qFOtQ/tTCjOlpS2xNNGPGV1sprDYbFl1muwnFg7dOgD/ZdtmTbeLG9Gf4Ku3GQXaZR37s/LBTWmZ57elTdYKKBUmQlEvcyY/hXZY9e54g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTejO0pf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cKKXzbi2"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55KMTekk2664527
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 20 Jun 2025 15:29:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55KMTekk2664527
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750458584;
-	bh=NFHsX281PHfMaq1TZr3LtRwyyKn/XB9//Vw62Ww9rmU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=cKKXzbi2zOSggWzu9GRYGPur0hcsu3P5H+oiJF9qlkLF6VQwT/8dYBxlWN4dau/px
-	 TsgL5BqWsv60nY29wBtoGxda/qKI1a0q+UjVuWJnDFTQmQtEdTTQ8PM3l//kIAxaWJ
-	 nAvJNusN3AJUtX+StSfrXBtSrJtNt9ygICBi4vPFUMH0JIxm3lDg7kURtrPL6TDhh6
-	 8eUp0ETVQzftcOztul4p+M7/1rxdNKvEZ/HYbb8FBeL2Df/Z4+4Oy9Qmglem9/FnWv
-	 Nb3cxdB2Q23CAfzObW+s4MBPhJo60V+hJpZrgYDET9XrkttaeFWUrKCHLAUNOToAoR
-	 kBFiaScqVT4Bw==
-Date: Fri, 20 Jun 2025 15:29:40 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>, dave.hansen@intel.com
-CC: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
-        alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
-        bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
-        christophe.leroy@csgroup.eu, corbet@lwn.net,
-        daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com,
-        ebiggers@google.com, geert+renesas@glider.be, houtao1@huawei.com,
-        jgg@ziepe.ca, jgross@suse.com, jpoimboe@kernel.org,
-        kai.huang@intel.com, kees@kernel.org, kirill.shutemov@linux.intel.com,
-        leitao@debian.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux@rasmusvillemoes.dk, luto@kernel.org,
-        mcgrof@kernel.org, mhiramat@kernel.org, michael.roth@amd.com,
-        mingo@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
-        sandipan.das@amd.com, shijie@os.amperecomputing.com,
-        sohil.mehta@intel.com, tglx@linutronix.de, tj@kernel.org,
-        tony.luck@intel.com, vegard.nossum@oracle.com, x86@kernel.org,
-        xin3.li@intel.com, xiongwei.song@windriver.com, ytcoode@gmail.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCHv6_00/16=5D_x86=3A_Enable_Lin?=
- =?US-ASCII?Q?ear_Address_Space_Separation_support?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1aa5fb31-ce23-4c9f-ba1b-d5dc93402209@citrix.com>
-References: <61af62d9-4cd0-485f-8f0c-2da981f52695@intel.com> <1aa5fb31-ce23-4c9f-ba1b-d5dc93402209@citrix.com>
-Message-ID: <97B65822-F133-4F7C-AFCD-6E3BB1EDCF9F@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTejO0pf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50BBC4CEE3;
+	Fri, 20 Jun 2025 22:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750459054;
+	bh=2rMyA/wzA7o1DmB+D1HVrWEoJH5/9feYghQ21/NivpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uTejO0pfo5WHe4wXrxMlp5mqT/DBSJu+XO9aDZ1MZA8Zd0s8v7sLbfl49CG4jfNuR
+	 OMk2aNBPr5Qx+5VtFfEq86VNQXfaKsE+HgxZiS1D/c7db4wlxCQl3VPCiC4gNFbZ3N
+	 7+LKBMz/niXgjFn1NMjy/zlakfUlyoDtyivx8MnBPYfpy8cw+sd05harFmF0cU+8yq
+	 z34VxbLnv0mDhrRkJw6UE9DI/PvK2Ko41+yGOasZFDlhSgOy1vlTNi46Tlgy5cdK6J
+	 gN87YeaHYqnVA/OcERIvUiT1lTyuqD4nLFIdwdQEOOw1Fn5f21IbA3BpqHyUfUMsJo
+	 E4gzbmUv0ob4A==
+Date: Sat, 21 Jun 2025 00:37:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Remo Senekowitsch <remo@buenzli.dev>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Mark Brown <broonie@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
+ reference args examples
+Message-ID: <aFXipz-B1vEYkww9@cassiopeiae>
+References: <20250616154511.1862909-1-remo@buenzli.dev>
+ <20250616154511.1862909-4-remo@buenzli.dev>
+ <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
 
-On June 20, 2025 3:04:53 PM PDT, Andrew Cooper <andrew=2Ecooper3@citrix=2Ec=
-om> wrote:
->> Most of the cover letter here reads like an Intel whitepaper=2E That's =
-not
->> the worst thing in the world, but I think it glosses over one very
->> important point:
->>
->> 	Had it been available, LASS alone would have mitigated Meltdown=2E
->>
->> Could we say this up front in a prominent place, please?
->
->I'm going to nitpick=2E :)
->
->Yes, LASS would have made Meltdown a far less major problem than it was,
->but I don't think that phrasing is fair=2E=C2=A0 As I recall, LASS was
->literally invented as a "what would have been useful?" exercise in the
->wake of Meltdown=2E
->
->However, a less well known/researched area of Meltdown, which would not
->be addressed by LASS, is the ability to pend stores to read-only memory
->and proceed with the expectation that they'll success=2E
->
->Other things which would have helped would have been PKS (and this *was*
->asked for ahead of Skylake launching=2E=2E=2E)
->
->The other important thing about LASS is that it does cut off a whole
->class of sidechannels=2E=C2=A0 This halts definitely-rogue speculation, b=
-ut is
->useful for non-speculative security too=2E
->
->~Andrew
+On Tue, Jun 17, 2025 at 08:01:08AM -0500, Rob Herring wrote:
+> On Mon, Jun 16, 2025 at 10:45 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
+> >
+> > Add some example usage of the device property methods for reading
+> > DT/ACPI/swnode child nodes and reference args.
+> >
+> > Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> > ---
+> >  drivers/of/unittest-data/tests-platform.dtsi |  7 +++++++
+> >  samples/rust/rust_driver_platform.rs         | 13 ++++++++++++-
+> >  2 files changed, 19 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
+> > index 50a51f38afb6..509eb614ab2b 100644
+> > --- a/drivers/of/unittest-data/tests-platform.dtsi
+> > +++ b/drivers/of/unittest-data/tests-platform.dtsi
+> > @@ -40,6 +40,13 @@ test-device@2 {
+> >
+> >                                 test,u32-prop = <0xdeadbeef>;
+> >                                 test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
+> > +
+> > +                               ref_child_0: child@0 {
+> 
+> child-0 or you need to add 'reg' property if you keep the unit-address.
 
-Could you clarify what you mean with "pend stores to read-only memory?"
+Adding child nodes here creates the following dt-test failues.
+
+	[    1.031239] ### dt-test ### FAIL of_unittest_platform_populate():1862 Could not create device for node 'child'
+	[    1.031647] ### dt-test ### FAIL of_unittest_platform_populate():1862 Could not create device for node 'child'
+
+@Rob: What do you suggest?
+
+> 
+> > +                                       test,ref-arg = <&ref_child_1 0x20 0x32>;
+> > +                               };
+> > +                               ref_child_1: child@1 {
+> > +                                       test,ref-arg = <&ref_child_0 0x10 0x64>;
+> > +                               };
+> >                         };
+> >                 };
