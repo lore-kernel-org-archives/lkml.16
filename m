@@ -1,98 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2A030E830
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491E730E830
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443047; cv=none; b=Am8Z36wVsTKcma0aQcafGmBa9mCY9t6EAlrZs+Jt+VF0gkhVi8IjUContw/MM2OnHkEESFEE13xI/mio7nFkCs7JgAOt1/ewjgGdGCrBSNo+b9SuE8Hm3NEoY7WkglZ2BImIthY7RxiT8FgsnOpeOD/fyoX6NTymyIbrYgCR5Cg=
+	t=1750443086; cv=none; b=e7LxfBLDDaVCkIBuC/6xurMOEK24HGVHuSi7I/0knlYaVqBqL9Mpgrqn0WIA0BMp01nbb3FnWb4TiIJzM/okUXijjE+fdcKGNUodsYKkEGlgmQrR3P+WRDy1hJc7+rMuFCkjNK4Q3aJCFhwgOYe9CQBb6ZXOkOwT4RHpngFTW/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443047; c=relaxed/simple;
-	bh=J8Nl1w3Bz4qNvS66v1+AAKgiyqE2IyU1rywepTjaUug=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CIvyXx/n4fJavN/OqSjY23lJ+tukDZt/MsA8eb9PWqCSpBvzBryeeWPNiQHfXvwAl6a8pJ/6Vf9mXHCT/naalj1rcshC7euGPmZIK62LjdJD4dAhllDKcK3QHMnxwM6znr6zYBm03qBHSfpImTAzET1UuI1q3cIisqIRNo/qOmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKOPja0W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750443086; c=relaxed/simple;
+	bh=UHvHChrgG5t1z1XdYwrjPeORXMs45w/rp2wXZzO+P9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqvvqM/e9fEWy0B13cIsSNcudsuzYS+2v42qr0qvGo+hQ1wybz/SiY0fsT7LHpkqJlUTZvu7NpQIgoWSHJwQmUmwxO6yMSoCD8J0wZdy5iqdcSIbNT9BMkNULZD5W3VUfHD4TyIHv/FWz5+DJKzxALWhdMsllff1DU+GTmfdvgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQ4jfbH2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FkSgmwEa; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQ4jfbH2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FkSgmwEa; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKOPja0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0423AC4CEE3;
-	Fri, 20 Jun 2025 18:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750443047;
-	bh=J8Nl1w3Bz4qNvS66v1+AAKgiyqE2IyU1rywepTjaUug=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SKOPja0WBwkiJLxWLGFy579v5Nb+o5AceZhAJqVD7Rhgj8k5cgNZp4i3+KG72WMmp
-	 sZ3WgxQOeb+40SjTYlQlrNLWUg5paqBEyVdkTjgf2/u3uIdDyJ7vBdnHUNV1PBzfLm
-	 6TIxswvB8MLjBFqCmnMVHqOnF3K7hRoHZryx/76TioYT0V35jGqud3XBvuehzzkY2d
-	 q3UC3z4+6x0RuLVDuYeED9L9aO+IZxA/ME1Jbn/ZaG5gkae16HfX0qaLhMKktugf72
-	 6so3S03wC9+ijwSatL7kDsAKZHwEi10ODUlUvjopGPcArLP02Ihxi7xvtTds7flNg4
-	 iHMxBKgGsnVMw==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v2 5/5] mm/madvise: eliminate very confusing manipulation of prev VMA
-Date: Fri, 20 Jun 2025 11:10:44 -0700
-Message-Id: <20250620181044.96643-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <63d281c5df2e64225ab5b4bda398b45e22818701.1750433500.git.lorenzo.stoakes@oracle.com>
-References: 
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQ4jfbH2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FkSgmwEa";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQ4jfbH2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FkSgmwEa"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2BAFE1F390;
+	Fri, 20 Jun 2025 18:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750443081; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9wNCyoAtgIAvJijllAWHlslig+KAc6oaM2vaNgyMkiM=;
+	b=QQ4jfbH2nf45VaK4NaygGchxSxjvAnBo7ze/NGwgK6XivCdj4hbaJUgrRG6Ii+nUsoDg0/
+	dKD0XtrQ5WHHr3nP81fs8uDicD37/SUAepGENZYRSFmz0o5KITub4Dx3dUilD8ZuogJVFP
+	74DUATe5QdMrbyyr1OzGMRr8msZCPx8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750443081;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9wNCyoAtgIAvJijllAWHlslig+KAc6oaM2vaNgyMkiM=;
+	b=FkSgmwEaB4NvL6x2VN1Tj7UhrEo8MuOdS9/HQt4ivzx86lJk0muDbw2ZZDNQ9NEznxzUmr
+	rBtES02FP09ODSBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QQ4jfbH2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=FkSgmwEa
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750443081; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9wNCyoAtgIAvJijllAWHlslig+KAc6oaM2vaNgyMkiM=;
+	b=QQ4jfbH2nf45VaK4NaygGchxSxjvAnBo7ze/NGwgK6XivCdj4hbaJUgrRG6Ii+nUsoDg0/
+	dKD0XtrQ5WHHr3nP81fs8uDicD37/SUAepGENZYRSFmz0o5KITub4Dx3dUilD8ZuogJVFP
+	74DUATe5QdMrbyyr1OzGMRr8msZCPx8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750443081;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9wNCyoAtgIAvJijllAWHlslig+KAc6oaM2vaNgyMkiM=;
+	b=FkSgmwEaB4NvL6x2VN1Tj7UhrEo8MuOdS9/HQt4ivzx86lJk0muDbw2ZZDNQ9NEznxzUmr
+	rBtES02FP09ODSBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 849CC13736;
+	Fri, 20 Jun 2025 18:11:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ksaeHEekVWjtDQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 20 Jun 2025 18:11:19 +0000
+Date: Fri, 20 Jun 2025 19:11:13 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, nvdimm@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH RFC 02/14] mm: drop highest_memmap_pfn
+Message-ID: <3ippshswsyi3gxhnfwxs2eat25633az3v6csdhx2xwx5cx7atr@5kq763xxyyy6>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-3-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617154345.2494405-3-david@redhat.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL89xh3ijk4gdpeanxbepagf1s)];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 2BAFE1F390
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-On Fri, 20 Jun 2025 16:33:05 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+On Tue, Jun 17, 2025 at 05:43:33PM +0200, David Hildenbrand wrote:
+> Now unused, so let's drop it.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-> The madvise code has for the longest time had very confusing code around
-> the 'prev' VMA pointer passed around various functions which, in all cases
-> except madvise_update_vma(), is unused and instead simply updated as soon
-> as the function is invoked.
-> 
-> To compound the confusion, the prev pointer is also used to indicate to the
-> caller that the mmap lock has been dropped and that we can therefore not
-> safely access the end of the current VMA (which might have been updated by
-> madvise_update_vma()).
-> 
-> Clear up this confusion by not setting prev = vma anywhere except in
-> madvise_walk_vmas(), update all references to prev which will always be
-> equal to vma after madvise_vma_behavior() is invoked, and adding a flag to
-> indicate that the lock has been dropped to make this explicit.
-> 
-> Additionally, drop a redundant BUG_ON() from madvise_collapse(), which is
-> simply reiterating the BUG_ON(mmap_locked) above it (note that BUG_ON() is
-> not appropriate here, but we leave existing code as-is).
-> 
-> We finally adjust the madvise_walk_vmas() logic to be a little clearer -
-> delaying the assignment of the end of the range to the start of the new
-> range until the last moment and handling the lock being dropped scenario
-> immediately.
-> 
-> Additionally add some explanatory comments.
-> 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
-
-
-Thanks,
-SJ
-
-[...]
+-- 
+Pedro
