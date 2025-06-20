@@ -1,102 +1,70 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C518C1FBEA6
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F01FBEA6;
+	Fri, 20 Jun 2025 20:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450298; cv=none; b=iSDXY1Jf2J3gtoVcqw3Jx1pJNm/ps8I7CUg/7b4sQd7t8ndyZWw711kkG/GtAQaEle95aKqCGDwQVjtGy4m4JN++HYuANaDrljCCtRSFLQJB6bqEvbF0xXnIhh3GL/Vw8D9yNP0fKApohJOo7YBiOIZYKPvn44TZyTrDk7VKUZQ=
+	t=1750450352; cv=none; b=u50XeCBIUJzRc5FWspezvdy0S/wf4Q3sEp5YhdBIdyWx3Q8LyhjLX+1J1D36CoE1Q0dJmrKDVk49aQ7Kf+aHFwZAu2uB9dLa/MnoPesA8LU3megXoEgkWng7JDEzp1awAsP2rNiAQPHpza63lKTByC85Skp8NEXroRkBCo2neOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450298; c=relaxed/simple;
-	bh=06GnvigVw80N40B/suNCISJJXnPz6kAxd3FkcENkWCs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WyPG+FneDCOYsE1Eytd4nFT7Md5UWQ4dUt3KNeBNG/XODbwkJKXJRZro6g/Y0psPczoImRDzTzRbZaRGdBTD7Zl7vMSX48NN7RN5IQoWbAK3K/c6yDYJJnyD5aurXRagy7URwMpma3+UaSQNwKOebjXlQ9uu4qnf9O1eoWfHpig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1uSi5B-0008Rs-7l; Fri, 20 Jun 2025 22:11:29 +0200
-Message-ID: <5b80ca5883ccf930e6cbe6da8f5c219e0346295f.camel@pengutronix.de>
-Subject: Re: [PATCH v2 4/6] drm/etnaviv: Identify GPU already when binding
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Gert Wollny <gert.wollny@collabora.com>, Russell King
- <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
- <christian.gmeiner@gmail.com>
-Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 20 Jun 2025 22:11:27 +0200
-In-Reply-To: <20250618204400.21808-5-gert.wollny@collabora.com>
-References: <20250618204400.21808-1-gert.wollny@collabora.com>
-	 <20250618204400.21808-5-gert.wollny@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1750450352; c=relaxed/simple;
+	bh=YYSRaHlyrbAaccJjfWsT2+6At5/W7em9BngvMnpBJ7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBYVsYa8yMjOIUoQVb7sgtJzevpMycKi/jrqi7jKuGJjtJ1yYgpDxGXLiuW9xRxxJHK5wCeCf8kkv5laUK4nX494DMjeQTigogIpKP7mNwSPAYL8zpr7yr82DUiwdiY4FHLAxJIUpmcX8wd+1T70+eIUDmtAHlMe6u3uLjb5rIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsGqfWUB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsGqfWUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27238C4CEE3;
+	Fri, 20 Jun 2025 20:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750450352;
+	bh=YYSRaHlyrbAaccJjfWsT2+6At5/W7em9BngvMnpBJ7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qsGqfWUBMxMbTb06I0yd5YGUxXNtIqY9C2qg9XBKc0LFsUBYSLoOZ3Edes/2KQfkW
+	 vEe7G/RNEy3Izz7DzbdSWjv1k3kKZXO2EztDEvNAEA7odHtl5DES3cCNV3kZsOV3fX
+	 0Bp92mmvwpdDScPjVqplz58xvHba3974/MMnECQSh3SNiIOmOh8r/HY2DZaJewleg/
+	 M4kpJClZ2Qib3cnbZ6nhC+B7qTjySx46eT0XG0UvUYVlBgR+VHqZ5UDfSlhV0n3ndl
+	 P7dMAKWYXSzgOyZn7nkffk2BtyMMyUbT4axml4XWX9jHbc6Oa5LrWHdlAUgLNoWG+z
+	 +79zW+MBAyRCQ==
+Date: Fri, 20 Jun 2025 21:12:26 +0100
+From: Simon Horman <horms@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Daniel Golle <daniel@makrotopia.org>, arinc.unal@arinc9.com
+Subject: Re: [net-next v6 1/4] net: ethernet: mtk_eth_soc: support named IRQs
+Message-ID: <20250620201226.GF9190@horms.kernel.org>
+References: <20250619132125.78368-1-linux@fw-web.de>
+ <20250619132125.78368-2-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619132125.78368-2-linux@fw-web.de>
 
-Am Mittwoch, dem 18.06.2025 um 22:43 +0200 schrieb Gert Wollny:
-> This is required to know whether to be able to avoid allocating
-> the flop reset data if non of the available GPUs actually need
-> it.
->=20
-I'm surprised that this works on your platform at all. You can not move
-the identification here, as the GPU is still treated as suspended in
-etnaviv_gpu_bind, so on platforms with clock or power gating reading
-the ID registers will cause aborts or system hangs.
+On Thu, Jun 19, 2025 at 03:21:21PM +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Add named interrupts and keep index based fallback for existing
+> devicetrees.
+> 
+> Currently only rx and tx IRQs are defined to be used with mt7988, but
+> later extended with RSS/LRO support.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-Regards,
-Lucas
-
-> Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etna=
-viv/etnaviv_gpu.c
-> index cf0d9049bcf1..dc8a7ff3e797 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -829,14 +829,6 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
->  		goto fail;
->  	}
-> =20
-> -	etnaviv_hw_identify(gpu);
-> -
-> -	if (gpu->identity.model =3D=3D 0) {
-> -		dev_err(gpu->dev, "Unknown GPU model\n");
-> -		ret =3D -ENXIO;
-> -		goto fail;
-> -	}
-> -
->  	if (gpu->identity.nn_core_count > 0)
->  		dev_warn(gpu->dev, "etnaviv has been instantiated on a NPU, "
->                                     "for which the UAPI is still experime=
-ntal\n");
-> @@ -1808,6 +1800,13 @@ static int etnaviv_gpu_bind(struct device *dev, st=
-ruct device *master,
->  	INIT_WORK(&gpu->sync_point_work, sync_point_worker);
->  	init_waitqueue_head(&gpu->fence_event);
-> =20
-> +	etnaviv_hw_identify(gpu);
-> +
-> +	if (gpu->identity.model =3D=3D 0) {
-> +		dev_err(gpu->dev, "Unknown GPU model\n");
-> +		ret =3D -ENXIO;
-> +		goto out_sched;
-> +	}
->  	priv->gpu[priv->num_gpus++] =3D gpu;
-> =20
->  	return 0;
+Reviewed-by: Simon Horman <horms@kernel.org>
 
