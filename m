@@ -1,168 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB9B221DAC;
-	Fri, 20 Jun 2025 22:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8110821B9DB
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 22:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457526; cv=none; b=u3DH0l1A66G4zJk6gT0jyR9my5XtRMM1x8KB54Rd5a+fkRWUj2ujmKe+wLWFCf95ZxlS/V5AaSnyHMEUyo9kqLcq+kKjE2CJN3YAv5A5POXq2K8akyYmKD1QT0FH0euZFTEniVJ3K72fTQrU0UO0OA/cokmOoMfireXL5t1nzqI=
+	t=1750457791; cv=none; b=hveiVjy0KcnimM3wGam7X+pLwyLN95jY3tufgk+M/p0uyuZKoj2XKpTKpyt5AURzWHK7F9qD1qitj+YOekXwLTCBNt3iNDX9SitjdFRPiTI7kO8DlRU0s+ZLmOYH6ycisTQwdVpeGCVQ+lp8ir2C28QoF5i9T7jnC6OYBqjBTLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457526; c=relaxed/simple;
-	bh=wTDpmuMLI1jmsJXs5SO5HcqWlMfheX5Tl55J4mYQJRU=;
+	s=arc-20240116; t=1750457791; c=relaxed/simple;
+	bh=DiznFfKK4GJWBk8WW4xN3lBklSm/HLutSphgJ/8W54s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lvgUW4wXZSt+WGGOop1el3llgEAs2nyu8Q6Rm3xMZr5QAaHwBoQ3Q/HUVRVPF0eGV7OO4r8lEgpGYq1FeqFwXsIaqNoLn57t9KIsV82lXgf9b8sJTJ7nkew06b5hOCgpqOmVtj5kSG4uvSdMmge8Q7Zdf/uqqh9L4gaepbb5Jdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LojU7jDA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1U8OjMk8A5W8aFjoPXUOQp+RXTqi5COD9HZw/1JEPaixWIfBYVq+m52ivbJ1yK265DZ7ol+ZA4svzLVdgP+ShayMoNQbDxE74VvKcP65QI1MbKu/khS90qnhhW1LYIkmnv8tC8gjixaKubFwgWUQokgI9H4y0rGBRZaeD6kxeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XLvlj6ar; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LojU7jDA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69F6C4CEE3;
-	Fri, 20 Jun 2025 22:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750457526;
-	bh=wTDpmuMLI1jmsJXs5SO5HcqWlMfheX5Tl55J4mYQJRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LojU7jDABaRMMIPyJ1x620YVNRDj3CBPbmanfnRiqAVo1tsK9zYH5OCl4kfRBPQUM
-	 IVvI86KRUFedOD0RCqXjoaGve4iZyNJ4TeLvF6L4ET8dRPFWMn6qFErAJx44XX6xi+
-	 Pk2uadCXq1VfRvf0/N0uLFHErkb8i4YhNiLih/Vz4O99SERJI8qI1t1twkWAlrJkPj
-	 3I3gnvUyZOCbLO3qdbI8lVukAXoxM8OpGI2+78pdgDaqxXxj86g+N0cAztCLxiPPVu
-	 kbuMOZAWRbegqTG/avGqFka1ZM8nQgIV09ZY+KXzDq+L/eM/3FTLpXEo1OO4KhwzFm
-	 bbe2yPdI/XPPA==
-Date: Fri, 20 Jun 2025 15:12:04 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-Message-ID: <aFXctF683XlLmiRy@google.com>
-References: <20250611233239.3098064-1-ctshao@google.com>
- <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
- <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
- <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
- <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XLvlj6ar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750457790; x=1781993790;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DiznFfKK4GJWBk8WW4xN3lBklSm/HLutSphgJ/8W54s=;
+  b=XLvlj6arA7TiooTMAu0bOa0ul018IewgLemRKCKdIDCM/WXE5zM5Z+12
+   7CvGhQGJL/E7aX5N3ony5Dd2X2eByhJzwX1pAklpLoa0dTNYudFF9wpq+
+   xAONIsPdG2Z+EmSxM3mm5hRdS5AXFzaWT0AAJFDiQ3wb7KpLUgp5/6rbi
+   405urIamVqp5/N0QviaFIxrk9t02j59kswGEXemze/O4qClovIzvjgPez
+   uxkcdgvWx74QrtAQUawpamVeK77W6hL6YB1uRYyeG5+nCG3XgWmdVyyQ4
+   Yq2nKmd5OBJj1t2Q9MqHZdvIEIRn6FubQ7vX/aH5YMZCDznLBqWimDNec
+   A==;
+X-CSE-ConnectionGUID: wVto3eQhQh6sUNnca17QOA==
+X-CSE-MsgGUID: jLzF8WAcR128c/vwnXldLQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52694019"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="52694019"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 15:16:29 -0700
+X-CSE-ConnectionGUID: 0IFH3uNeSOGycdSCpEQoXA==
+X-CSE-MsgGUID: NTGemIsmQRiQH1cMf6dTqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="188255524"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 20 Jun 2025 15:16:26 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSk23-000MBy-0z;
+	Fri, 20 Jun 2025 22:16:23 +0000
+Date: Sat, 21 Jun 2025 06:15:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
+ driver
+Message-ID: <202506210652.ipUFDU5B-lkp@intel.com>
+References: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com>
+In-Reply-To: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 
-Hi CT,
+Hi Binbin,
 
-On Thu, Jun 12, 2025 at 03:55:59PM -0700, Chun-Tse Shao wrote:
-> Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
-> better aligned to json mode, which is using `aggregate-nunber`. But
-> anyway I think any name other than `cpus` is better.
-> v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
+kernel test robot noticed the following build warnings:
 
-I think "aggregation-count" is a better name, maybe abbreviated to
-"ag_cnt".  Can we rename the JSON as well?  I'm not sure if it's
-documented somewhere.
+[auto build test WARNING on 8ffcb7560b4a15faf821df95e3ab532b2b020f8c]
 
-Thanks,
-Namhyung
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250620-100856
+base:   8ffcb7560b4a15faf821df95e3ab532b2b020f8c
+patch link:    https://lore.kernel.org/r/82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+config: x86_64-randconfig-123-20250621 (https://download.01.org/0day-ci/archive/20250621/202506210652.ipUFDU5B-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210652.ipUFDU5B-lkp@intel.com/reproduce)
 
-> 
-> 
-> On Wed, Jun 11, 2025 at 10:12 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, Jun 11, 2025 at 8:18 PM Chun-Tse Shao <ctshao@google.com> wrote:
-> > >
-> > > Thanks for your test, Ian!
-> > >
-> > > I wonder if `nr_pmus` makes sense, since the column would be shared
-> > > with multiple different pmus. WDYT?
-> >
-> > So each PMU in sysfs has a cpumask that specifies which CPUs perf
-> > should pass to perf_event_open. For example, on a two socket machine
-> > the cpumask will typically have the first CPU of each socket. If the
-> > cpumask (or cpus) file isn't present then the cpumask is implicitly
-> > all online CPUs. Given that the aggregation number is the number of
-> > CPUs in the cpumask multiplied by the number of PMUs, I think the most
-> > neutral name is probably "counters" possibly shortened down to "ctrs".
-> > I suspect others have better suggestions :-)
-> >
-> > Thanks,
-> > Ian
-> >
-> > > -CT
-> > >
-> > > On Wed, Jun 11, 2025 at 5:16 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Wed, Jun 11, 2025 at 4:36 PM Chun-Tse Shao <ctshao@google.com> wrote:
-> > > > >
-> > > > > Follow up:
-> > > > > lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
-> > > > >
-> > > > > The patch adds unit aggregation during evsel merge the aggregated uncore
-> > > > > counters.
-> > > > >
-> > > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > > > > cpumask="0,120"
-> > > > > Before:
-> > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > >   #           time socket cpus             counts unit events
-> > > > >        1.001085024 S0        1         9615386315      clockticks
-> > > > >        1.001085024 S1        1         9614287448      clockticks
-> > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > >   #           time node   cpus             counts unit events
-> > > > >        1.001029867 N0        1         3205726984      clockticks
-> > > > >        1.001029867 N1        1         3205444421      clockticks
-> > > > >        1.001029867 N2        1         3205234018      clockticks
-> > > > >        1.001029867 N3        1         3205224660      clockticks
-> > > > >        1.001029867 N4        1         3205207213      clockticks
-> > > > >        1.001029867 N5        1         3205528246      clockticks
-> > > > > After:
-> > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > >   #           time socket cpus             counts unit events
-> > > >
-> > > > I wonder if there is a better column heading than "cpus" given that
-> > > > these are imc PMUs.
-> > > >
-> > > > >        1.001022937 S0       12         9621463177      clockticks
-> > > > >        1.001022937 S1       12         9619804949      clockticks
-> > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > >   #           time node   cpus             counts unit events
-> > > > >        1.001029867 N0        4         3206782080      clockticks
-> > > > >        1.001029867 N1        4         3207025354      clockticks
-> > > > >        1.001029867 N2        4         3207067946      clockticks
-> > > > >        1.001029867 N3        4         3206871733      clockticks
-> > > > >        1.001029867 N4        4         3206199005      clockticks
-> > > > >        1.001029867 N5        4         3205525058      clockticks
-> > > > >
-> > > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > >
-> > > Added Namhyung's ack from the previous email.
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > > >
-> > > > Tested-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > > ---
-> > > > >  tools/perf/util/stat.c | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > > > index 355a7d5c8ab8..52266d773353 100644
-> > > > > --- a/tools/perf/util/stat.c
-> > > > > +++ b/tools/perf/util/stat.c
-> > > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
-> > > > >                 struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
-> > > > >
-> > > > >                 /* NB: don't increase aggr.nr for aliases */
-> > > > > +               ps_a->aggr[i].nr += ps_b->aggr[i].nr;
-> > > > >
-> > > > >                 aggr_counts_a->val += aggr_counts_b->val;
-> > > > >                 aggr_counts_a->ena += aggr_counts_b->ena;
-> > > > > --
-> > > > > 2.50.0.rc1.591.g9c95f17f64-goog
-> > > > >
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506210652.ipUFDU5B-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/mfd/ls2k-bmc-core.c:75:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected char *mode @@     got void [noderef] __iomem * @@
+   drivers/mfd/ls2k-bmc-core.c:75:14: sparse:     expected char *mode
+   drivers/mfd/ls2k-bmc-core.c:75:14: sparse:     got void [noderef] __iomem *
+
+vim +75 drivers/mfd/ls2k-bmc-core.c
+
+    64	
+    65	/*
+    66	 * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
+    67	 * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
+    68	 */
+    69	static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
+    70	{
+    71		char *mode;
+    72		int depth, ret;
+    73	
+    74		/* The last 16M of PCI BAR0 is used to store the resolution string. */
+  > 75		mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+    76		if (!mode)
+    77			return -ENOMEM;
+    78	
+    79		/* The resolution field starts with the flag "video=". */
+    80		if (!strncmp(mode, "video=", 6))
+    81			mode = mode + 6;
+    82	
+    83		ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
+    84		if (ret)
+    85			return ret;
+    86	
+    87		ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
+    88		if (ret)
+    89			return ret;
+    90	
+    91		ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
+    92		if (ret)
+    93			return ret;
+    94	
+    95		pd->stride = pd->width * depth / 8;
+    96		pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
+    97	
+    98		return 0;
+    99	}
+   100	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
