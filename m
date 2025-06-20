@@ -1,65 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA6B2512F0;
-	Fri, 20 Jun 2025 09:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE0127E051
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410024; cv=none; b=t4L33mRvTjYVTXu3ta7m3r7VW6Sh4PoVM0XyQth6jmJWV8MDuRhlEG/BdmpuRDhnDxApu6nYCktOFI9/ylKu3os52iI3aQ/kOaPpEO+pz8sFXWz1ED64q+pYGhsRtL5bbB4wSJzjjJJvMXsIGTDjy6qYxJRt+J0uf2BVSuEljx0=
+	t=1750410086; cv=none; b=sX3PmC+TRevImNj9IU9MEY7zotUXjXVw9SebqGt7GNNGePgjy+OANAmn+j+FBWmPuMDvauttnOnoD1Qm7rV8lKedQkQW4y+LPmH9/6DPZMoF8YVl43sRN12ALt7DBtDa3AyvfJLdNle2uOxBWg6mOVz9xhP5FR5tqkwZePUFXP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410024; c=relaxed/simple;
-	bh=V3FC9tL6wka3q2KjeuJK53nDAzxYB4CGcXkfNXuEbfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nPP/hPoD+mRoK8PDBt8ZPXeYLrKN41CW4BgeEYkOI3HOl2whgSurbGLS/GgMLfTbFo4F1pvwBc3lbgBxBy0e8BAyWLVOK8lI1D5gsD1cfxcuUOUfvslHkBl/sF+aVR+hWwcpQ0lYz+Eim1v2vpyHI/im9EdINuiiAkUkF8q1ptk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIjhVyr0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750410086; c=relaxed/simple;
+	bh=YrP2gC6yzF7+01sD+adEWpkCL/eUCTLHQ55D7CZnBEA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=CEq4xotKPMBdxszvxVOCvI0dz+pwdfVX3Qg6Dais63hd/+Z226lhcxSWpA5udKCVdrRvXug0LUiwvrzfCBPyGRU4DEv+k53FvCSAHjOz6EfcMeFDg8bUi0KaRYIG7QCEcfXO42ujq+vHIHvbaJU1SH02dGecP4EPMzJpoykGweQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=LGsGSgIV; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIjhVyr0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67ED1C4CEE3;
-	Fri, 20 Jun 2025 09:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750410024;
-	bh=V3FC9tL6wka3q2KjeuJK53nDAzxYB4CGcXkfNXuEbfg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mIjhVyr0ArBxchw9QX7AHlciYhE7Hvc1gG504TxKVkB5x2ZkmJHmBEsXGAopL8G8G
-	 DVQ+G77e+3izffybwy+2KlKcgix3FABjyF/lJpmxMR2aUTbV0IZT3QEZnyxfyHEotl
-	 zby7lpfBwd1q+MgUMRMnPlnTweb5fn0YQJO5k++7Udn8zp6Icrhk1YmXJ7LRL+GcXk
-	 /aVWhaEFVpKmu2a9eDY87+DSaWrS7nqevrBZG5MjicaCZd/DHoRmHgkbHTbt0ofrTH
-	 zUbz0Zk5F/y3owGfpZ457JSTxg6rUMqjRESKQAzz6UyQ+mPqN+C3izGTQlR066Is/W
-	 Zb81XDMC12mPg==
-Message-ID: <e9f96821-6dc2-4488-b470-199415fc2548@kernel.org>
-Date: Fri, 20 Jun 2025 10:00:21 +0100
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="LGsGSgIV"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae04ce9153aso207807466b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750410082; x=1751014882; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BSgGeI6RPkNX/6Nx7o+CdwyAntQHm7sGCCxVWOem2w8=;
+        b=LGsGSgIV1QOsEbm4P8phGCqfn54CXCS2MA4qCKXCKvy1D+ysntkeA6eUfd6A/5Ub0J
+         SiS5GSq1elwhdOwPPSRAF3l74NdM2iq/v7t5LfHzhP6SoZGQ8QgcGTwPF84dCmeqCoVh
+         arvmepCP86SAv3phx/hBcXy9RFKLBqRRGU8MKAKjIXlUljB+UO/riQ+7H1xOLMItb4/f
+         VDdgI/qCaVpKvVKlhQav5bscnPapHoX+LMfLG4yddlLknU1YY4sOswuZbgDmRmNROqi5
+         ZYMvN6XvaZakG5yNZt8q7f2chKhrp4LENsWJcj56Evi0nj3vIJmBQlO6tQkoiYNKn0ro
+         MM8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750410082; x=1751014882;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BSgGeI6RPkNX/6Nx7o+CdwyAntQHm7sGCCxVWOem2w8=;
+        b=j3eDaUOOlyr6ih97MXVTN8+KIgAbYadeSDXdDyfymznMCzrxNsuxP1JeFAvUHnT3NS
+         g8MAkwoGlNfucvuEtyIs7tJ7bMRY3j+YWswid4GQ4f3ipju2T2rIlQZGqMaLmPMAXHxE
+         Gb0SZ/WDtlhiFqFqggVHUPv8Wqql52Uk7IaEQ1HdsyzSOl0444Q2MmIqKU3FkfbkH0iy
+         0eO7VmUMFH45VlOjakvrDGHncX69fPwtnA1zPwxZdfFfL06rVt/meWd7Y1RXud/YA2hd
+         hYXu0yuMTXqlJnEuM7hTZy6xIWXrPI8YdVb9S5PPR0Q3n+PyCNoRlLuBdDm6k5tRzMvy
+         WbUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnb+jFDmX9N1J5VhDclxqJjZdcOTQR75EI4RwP/PzsUbVJDokZMuXeAVhQZfd8K7XDSKu6F6Uw2UCHZBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqqZwHTxeSqWgEI31A+L6qI77RX7MKBWmlWfHu11KGz5LRWktV
+	hmiSL9oN5C6llMgQOmqsd3nMfRiBJBUUS2YxbUMq5oOCyAMvpOd5ixqluvej7oWshZ4=
+X-Gm-Gg: ASbGncuggY+HkNL7haDy28PoLkzMcn0MwZF1mDSTb8Kdkp/yVwmiFfnuh9EQXdsX9bs
+	ex48XsRn/cTyjGLCYIIiTzLgGCkdYVPuI07YTN1g0Pl+UUz+OH8gf34lBvhGVFJLqvAD89PY6Vj
+	eqOQShGkCd5Sbi9477WGGrchSWT2dgvs5G6mA+S6GJWY1+oB9bpxZu+TCYBHW19YfNBGYJepOKS
+	l7Nz1vNdsMB7lEOegMKjPZK9u5xn1J3Kvt960nw7XPCakCQeoi7s0DEZjrDDt9O4xzTmMmtyyUY
+	ODCdOYguP7CkPBNr9lusDrDWt3UBiC2FEqX/kn2+/AXc6LkoHxL/nCBDn60DlApLTBNu0pixjl3
+	LJgUeZuER2x1G8Qy5sastOuITkIG+615l71/ZQFBXGA==
+X-Google-Smtp-Source: AGHT+IEhyS+3Hkk2TlhfDWZUPUo2xBTpBDeJOyfp0vYr2FDqO4tGaGom5OMtaz2UPfLrKxD1kEZb1Q==
+X-Received: by 2002:a17:907:3d16:b0:ad8:959c:c567 with SMTP id a640c23a62f3a-ae05ae211a0mr151097266b.10.1750410082254;
+        Fri, 20 Jun 2025 02:01:22 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae05408300dsm129887466b.95.2025.06.20.02.01.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 02:01:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] bpftool: Fix memory leak in dump_xx_nlmsg on realloc
- failure
-To: Yuan Chen <chenyuan_fl@163.com>, ast@kernel.org,
- alexei.starovoitov@gmail.com
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yuan Chen <chenyuan@kylinos.cn>
-References: <CAADnVQLy0_FsjRLt2n9R0Rs90VvLQYbkSiji6usaoB_bf4+tYg@mail.gmail.com>
- <20250620012133.14819-1-chenyuan_fl@163.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <20250620012133.14819-1-chenyuan_fl@163.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Fri, 20 Jun 2025 11:01:21 +0200
+Message-Id: <DAR8L6C8LIOH.A6EGWUZJ2NN4@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
+ <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
+ Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-2025-06-20 09:21 UTC+0800 ~ Yuan Chen <chenyuan_fl@163.com>
-> From: Yuan Chen <chenyuan@kylinos.cn>
-> 
-> In function dump_xx_nlmsg(), when realloc() fails to allocate memory,
-> the original pointer to the buffer is overwritten with NULL. This causes
-> a memory leak because the previously allocated buffer becomes unreachable
-> without being freed.
-> 
-> Fixes: 7900efc19214 ("tools/bpf: bpftool: improve output format for bpftool net")
-> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
+On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
+> Introduce support for the SMB5 charger found on pm8150b and other more
+> modern Qualcomm SoCs.
+>
+> SMB5 is largely similar to SMB2, with a few register differences. The
+> main difference is the new Type-C hardware block which some registers
+> are moved to.
+>
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
 
-Reviewed-by: Quentin Monnet <qmo@kernel.org>
+<snip>
 
-Thanks!
+> +static int smb_get_prop_health(struct smb_chip *chip, int *val)
+> +{
+> +	switch (chip->gen) {
+> +	case SMB2:
+> +		return smb2_get_prop_health(chip, val);
+> +	case SMB5:
+> +		return smb5_get_prop_health(chip, val);
+> +	}
+> +}
+
+This doesn't compile for me:
+
+drivers/power/supply/qcom_smbx.c: In function 'smb_get_prop_health':
+drivers/power/supply/qcom_smbx.c:588:1: error: control reaches end of non-v=
+oid function [-Werror=3Dreturn-type]
+  588 | }
+      | ^
+
+Regards
+Luca
