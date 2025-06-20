@@ -1,111 +1,79 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C822E8E1D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD3C1FBEA6;
+	Fri, 20 Jun 2025 18:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750445388; cv=none; b=ibFS5nXS1r6SPjLCGkvLg5dbjtp3ajgtJiVoYaDZQzAiPX7tlODiInaw3QSQv58UIZB5G1mjK8b0p8syH4Uhg7yqBisfnyBkfxUXnsq3WzYiWphm9V/ZHoSVyzugbTIJAln3r78vZQXjwDxiU/rS6LbDRWwOKjXgOhowUAcVsb4=
+	t=1750445537; cv=none; b=HN4O6WSXVsjx8xHBYwn/6F3+/hOFZ+h1uMfEPnCb29EMrcbxwlNCMOlm4M6BnzDdD+4vjlauUA+fbbBwYQa39xTGRnAdRhT5qFLtczqjw0vlJk9UMpCzkI/YqUtYJFEyLI2myrR3LbAjH4gLWbwRpiNCmhlRNlOjOE8s7l8yi6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750445388; c=relaxed/simple;
-	bh=moJYz9KTOVCIx14VqQgsxvkkDcTyQFefHhQk8HOQd28=;
+	s=arc-20240116; t=1750445537; c=relaxed/simple;
+	bh=d61578dvdp+7dqnHw6aOy57T/vUq2K6C3ebottvLP48=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pmQpYzkf6cX1extlTaUi3plYgiED+mQkAHY60xNqJNPpURVnlYKhmfkdNUKyl1oA5Sx6CBZAJ7ZDfXsYObZjz+zqSpHUIxWIiiOJH9B+sinn0Ml30R8dfUISLloF7IMs5KM2iXW7NBrURr65SMhzpR9Wsya0ulFs9/FtooZmpwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iTRbb3x/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cFGjpwls; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F4PkB7qi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eaXfd8nK; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZWYTztVJ8siMjlw/RptzY1kdLJKo1b9+igC6a4KAD8J5rGwv0E+l+pTKjx1vWPd+PZKtHFiZAyJifnHnYQUtW/hG1lQcBn9dyN4srjozEgfrtrMvbdzz7fqs7IakSa3u9NJhLnB1ClMJtiDry6wI6xoStrk6ezKZngeBhyUOnPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmD5PAnh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iTRbb3x/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cFGjpwls";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F4PkB7qi";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eaXfd8nK"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1E8701F399;
-	Fri, 20 Jun 2025 18:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750445385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HsDMuMlCrsQpPWi7dij7vagoFn+Y8urO2hbzs//mY48=;
-	b=iTRbb3x/V1lVM3Mhyi3s5ejBxmiyemjZIafhwxsD7XY0G8Fvztr4+/yfaUzFWpQCaQ7he6
-	spU/wDU/PzMd9+ousiGxEHLQ3DpIVToKWVEWXTwNAIbUXpEqRNSCY/pzq8MyFkucXbpV93
-	q0BXor/aYRH1TRvouGM+8/j5O8/w8Fo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750445385;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HsDMuMlCrsQpPWi7dij7vagoFn+Y8urO2hbzs//mY48=;
-	b=cFGjpwlseUMli0Zg2Ce4CyNJDuOhKI+G5tWZwV5jo/wU5Nt0SX+31D2YMcdTSAAFCvpr5+
-	XSzChU7TKqXeQvAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=F4PkB7qi;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eaXfd8nK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750445384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HsDMuMlCrsQpPWi7dij7vagoFn+Y8urO2hbzs//mY48=;
-	b=F4PkB7qiZM4gc+sXtq6YRdReJEQZw4WnaMkSZdRdQt3fRvVcXw8FK8qGmycDIzZS2pxKEj
-	fWRXHgJ6+k1yDfeVw22ZBkA3IhqB562G2GBWEJNKImRrDXcChCx3Rk81WR8XJdaORwPea5
-	kWLbkp+ZbM+hPBuD92qSfQIglZT7Xh8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750445384;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HsDMuMlCrsQpPWi7dij7vagoFn+Y8urO2hbzs//mY48=;
-	b=eaXfd8nKvkgKNmVYQhlW4y9ZpoM3hIUyaifM1lv4LIbZrxVxmDr4VyWiPqwYfVI2ytnB4P
-	/LKoanusS1MW6vDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A00E136BA;
-	Fri, 20 Jun 2025 18:49:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QRKIIkStVWinFwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 20 Jun 2025 18:49:40 +0000
-Date: Fri, 20 Jun 2025 19:49:34 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S . Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
-	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Hugh Dickins <hughd@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <oevjoalbpopfydsazxa4fh4tjyy3zxgpdb3jttyryxyo5x5rmo@nezt4ycsaf7x>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmD5PAnh"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453643020bdso10073495e9.1;
+        Fri, 20 Jun 2025 11:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750445534; x=1751050334; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3SuvVprvH+lcp/bEtCacgmv7HR7bf4BfFOrawh5qnz0=;
+        b=UmD5PAnhN1FWtTsoi2uEoa5bKnMIRNJ/hpkTweFkaiS1/aWTHG6lgas92Qv6OQVTZy
+         QhrrWrTd9GCfOxvXUaa/gjMgaIOw5TCm/1CRoJI9ar/amdowY9oFyCr+U2j3Rimx7329
+         ibc9Sxjw5RKXCU6yYAMQ65C4+zdbTpoMFnsgYj8TvP6YUGY+ZKDUZEbZGS/itF2O6QEF
+         qNSTcHIlyV026MJR9zJ1+HfgJ3HPnu0fJ7//qunFQc8NqeewhhItExL8F0kdgIuGhlYv
+         ua4NDGT4IDFW7VGOD0DRrhyyRoXj5pEijKMIkcnef6j71ACTXyRtvWcZJOVX3ueIL2E6
+         Jwog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750445534; x=1751050334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3SuvVprvH+lcp/bEtCacgmv7HR7bf4BfFOrawh5qnz0=;
+        b=vU7FYhSENAiCvZZSg64TVGCYOiKzbYnAoDYhPuhv5u2mX/kbXMEm/r4EIWK4JhdfRL
+         s+HOkusbd5nQRSOiyqFF8PId+syJp1lPEeL2mEipXg92a0VLFNQGSaiDJafdLkwoltc0
+         fPtZaTGoM3s6EI/GuUKhuzlNczNrf71fMHK0W/q1kx/6+9GvcUSbOmmZ6C47FUmMDcQN
+         KVo9SyXHU0f4j+2Yu4ZeVKDwMWjMUHLM4I5D5QWmvvuEcNavlpsoeYiH/NT1x8cKf6iD
+         nKXmVC9EAFRnykHg+9S+WcYJuxNeoO/S4AxGdzs1BR8wlF23M6+r7iI9iNgkmdHK7oXA
+         RMLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQbuEopdS+pk0Ce8FmoNP/Uawc9Vhk+hQUGsHBtH/99YzdINxJ6rq5CdLzqk4k8ojnDOydLH4E5iPma3Hg@vger.kernel.org, AJvYcCUYXNYH3ByCxlvMqTG/49nBlHMcxKm825gCEuXAoWeECJcxuD9j4Qnr95tPGUkeFmu/7fi+bTLQfoXL@vger.kernel.org, AJvYcCUZ/2BUgUa/eCs7V9DvP4clpxuaBsXL1IK4B773Ccy7O6i7oySaMXyUX3WhAXvuGkVCoUjoC585PeGJ@vger.kernel.org, AJvYcCWVBU8T0M+zj3eEKOEfMT8zXamRfvw2M4FEPXZ73BV2B3JZovYFdln1DmBA2TIiXBknXSzkworfa+q+@vger.kernel.org, AJvYcCWw/OCPwxtMEOnpcyuSAhWcV9OJLhrUODOYqeHRjLnnUxtCf0M5smGIJSQg831xBjMKoDWNeziOneA4@vger.kernel.org
+X-Gm-Message-State: AOJu0YycEPjU4rG1G0irUlBmpeerXp1HoI+N9R+4P5ACivxlFNAHG4RH
+	fZHLxXW+0NL9RRx5hh3UoDbngv+zMMNbf7R+l3/ttFp83xS2QUkZHg78
+X-Gm-Gg: ASbGncuEAyR99lhafaCx4HtmbEQ294b1t71FYNMrxQregrzI+VjIQdW0JlxBeghI+aE
+	wTT3u1hanicjp550+AdGunmdGfjvuUxgSgEsxwPUCT7n8Qfa7eeiAurCzOQEl7G7DPGagH4EDp6
+	fqja3N2HL8hNi7mL+F3ZJPdrfneNc9V3tC5CIKTEkWYunUYLXZ9OhXAae+Rc+uAvscJzJImWXE2
+	ZopYJvfuoUb/B87BCGENQ3BXk1xYvauYYpNdmvw/OYGEGDFZSu3MhcSFT4dlV7eeeNV0GDynXJQ
+	zBfdhRcYac+4UoTeRnpnRi4rFaOhF0RwISvc90JBkD3QVB+PuMDvW+Yqf0UlzEMRDCdvCNLOVCu
+	w4VMyeVNojvQ1bdEcajaVYzyJ/oMMQDsuBaGP4WXmuCAc+Kh0ysbySnxtv2qrhhvQZmv/gWcZ2A
+	==
+X-Google-Smtp-Source: AGHT+IFyJDFhnRLMDV+Vtu5Y/1Vd85itLGHwRZWROszXt6mNgeAMTKnEZ8wy1wyvkiYXDy+Ydv3bFA==
+X-Received: by 2002:adf:9dd2:0:b0:3a5:39bb:3d61 with SMTP id ffacd0b85a97d-3a6d1322a3dmr3100604f8f.27.1750445533322;
+        Fri, 20 Jun 2025 11:52:13 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com (dynamic-176-002-177-020.176.2.pool.telefonica.de. [176.2.177.20])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c073sm2777413f8f.58.2025.06.20.11.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 11:52:12 -0700 (PDT)
+Date: Fri, 20 Jun 2025 20:52:10 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] iio: adc: Add offload support for ad4052
+Message-ID: <hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+ <20250610-iio-driver-ad4052-v3-6-cf1e44c516d4@analog.com>
+ <20250614112022.24bf9212@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -114,62 +82,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email,oracle.com:email];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_GT_50(0.00)[64];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1E8701F399
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+In-Reply-To: <20250614112022.24bf9212@jic23-huawei>
 
-On Wed, Jun 18, 2025 at 08:42:53PM +0100, Lorenzo Stoakes wrote:
-> The core kernel code is currently very inconsistent in its use of
-> vm_flags_t vs. unsigned long. This prevents us from changing the type of
-> vm_flags_t in the future and is simply not correct, so correct this.
+On Sat, Jun 14, 2025 at 11:20:22AM +0100, Jonathan Cameron wrote:
+> On Tue, 10 Jun 2025 09:34:39 +0200
+> Jorge Marques <jorge.marques@analog.com> wrote:
 > 
-> While this results in rather a lot of churn, it is a critical pre-requisite
-> for a future planned change to VMA flag type.
+> > Support SPI offload with appropriate FPGA firmware. Since the SPI-Engine
+> > offload module always sends 32-bit data to the DMA engine, the
+> > scantype.storagebytes is set to 32-bit and the SPI transfer length is
+> > based on the scantype.realbits. This combination allows to optimize the
+> > SPI to transfer only 2 or 3 bytes (depending on the granularity and
+> > mode), while the number of samples are computed correctly by tools on
+> > top of the iio scantype.
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> Minor comments inline.  I think they are all follow up from comments on
+> earlier patches that apply here as well.
 > 
-> Additionally, update VMA userland tests to account for the changes.
+> > ---
+> >  drivers/iio/adc/ad4052.c | 244 ++++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 242 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad4052.c b/drivers/iio/adc/ad4052.c
+> > index 842f5972a1c58701addf5243e7b87da9c26c773f..7d32dc4701ddb0204b5505a650ce7caafc2cb5ed 100644
+> > --- a/drivers/iio/adc/ad4052.c
+> > +++ b/drivers/iio/adc/ad4052.c
+> > @@ -11,6 +11,8 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/err.h>
+> >  #include <linux/gpio/consumer.h>
+> > +#include <linux/iio/buffer.h>
+> > +#include <linux/iio/buffer-dmaengine.h>
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/sysfs.h>
+> >  #include <linux/interrupt.h>
+> > @@ -23,6 +25,8 @@
+> >  #include <linux/regmap.h>
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/spi/spi.h>
+> > +#include <linux/spi/offload/consumer.h>
+> > +#include <linux/spi/offload/provider.h>
+> >  #include <linux/string.h>
+> >  #include <linux/types.h>
+> >  #include <linux/units.h>
+> > @@ -111,6 +115,7 @@ enum ad4052_interrupt_en {
+> >  
+> >  struct ad4052_chip_info {
+> >  	const struct iio_chan_spec channels[1];
+> > +	const struct iio_chan_spec offload_channels[1];
 > 
-> To make review easier and to break things into smaller parts, driver and
-> architecture-specific changes is left for a subsequent commit.
+> If there is only ever one of these drop the array.
 > 
-> The code has been adjusted to cascade the changes across all calling code
-> as far as is needed.
-> 
-> We will adjust architecture-specific and driver code in a subsequent patch.
-> 
-> Overall, this patch does not introduce any functional change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Hi Jonathan,
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+It is hard to predict if no other similar device will have only two
+channels. But I would say most drivers end-up having more channels.
+> 
+> >  
+> > +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
+> > +				      struct iio_chan_spec const *chan)
+> > +{
+> > +	struct ad4052_state *st = iio_priv(indio_dev);
+> > +	const struct iio_scan_type *scan_type;
+> > +	struct spi_transfer *xfer = &st->offload_xfer;
+> > +
+> > +	scan_type = iio_get_current_scan_type(indio_dev, chan);
+> > +	if (IS_ERR(scan_type))
+> > +		return PTR_ERR(scan_type);
+> > +
+> > +	xfer->bits_per_word = scan_type->realbits;
+> > +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+> > +	xfer->len = scan_type->realbits == 24 ? 4 : 2;
+> 
+> Same question on length vs bits_per_word applies here as in the earlier
+> patch.
+> 
+To be able to optimize the SPI message, len must be a multiple of 16
+bits. To achieve maximum throughput, no extra bits (and therefore SCLK
+clock cycles) must be transferred during the SPI transfer. This is set
+by bits_per_word, 24-bits means 24 SCLK.
 
--- 
-Pedro
+Finally, storagebits is the number of bits actually used to store the
+reading, and for the offload channel is the DMA width, always 32-bits.
+An abstraction to obtain the DMA width should be created, so the 32-bits
+value is not hard-coded into the driver, still, for this series, it is.
+
+> > +	xfer->speed_hz = AD4052_SPI_MAX_ADC_XFER_SPEED(st->vio_uv);
+> > +
+> > +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer, 1);
+> > +	st->offload_msg.offload = st->offload;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int ad4052_set_oversampling_ratio(struct iio_dev *indio_dev,
+> >  					 const struct iio_chan_spec *chan,
+> >  					 unsigned int val)
+> > @@ -838,6 +873,87 @@ static int ad4052_write_raw(struct iio_dev *indio_dev,
+> >  	return ret;
+> >  }
+> 
+> >  static int __ad4052_validate_trigger_sources(struct of_phandle_args *trigger_sources)
+> >  {
+> >  	switch (trigger_sources->args[1]) {
+> > +	case AD4052_TRIGGER_PIN_GP0:
+> > +		return trigger_sources->args[0] == AD4052_TRIGGER_EVENT_EITHER_THRESH ?
+> > +		       0 : -EINVAL;
+> >  	case AD4052_TRIGGER_PIN_GP1:
+> >  		return trigger_sources->args[0] == AD4052_TRIGGER_EVENT_DATA_READY ?
+> >  		       0 : -EINVAL;
+> > @@ -903,14 +1092,45 @@ static int ad4052_validate_trigger_sources(struct iio_dev *indio_dev)
+> >  	int ret;
+> >  
+> >  	np = st->spi->dev.of_node;
+> > +	for (u8 i = 0; i < 2; i++) {
+> > +		ret = of_parse_phandle_with_args(np, "trigger-sources",
+> > +						 "#trigger-source-cells", i,
+> > +						 &trigger_sources);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret = __ad4052_validate_trigger_sources(&trigger_sources);
+> > +		of_node_put(trigger_sources.np);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	return ret;
+> 
+> I think this is always 0. So return 0; preferred to make that explicit.
+> 
+Well, this whole method is deleted for v4 due to the trigger-sources
+discussion. Per following David suggestion, gp0 is assumed drdy and gp1
+threshold events, unless the parent (spi offload) trigger-sources says
+otherwise (gp1).
+
+Best regards,
+Jorge
+> > +}
+> > 
+> 
