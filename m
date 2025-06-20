@@ -1,94 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632E6289E1F;
-	Fri, 20 Jun 2025 12:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD21263F5B
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421249; cv=none; b=L6g9nA/LwN1Im01PoMwINYOcFY2FxZ2YPQFjDc3SX4Bt3J1guGL2rFGKdh/XvoK5VbPONui3Qs5QVHlEnFZ12/O7Gx97WFgQcBJ5lVzCFk1Jk1esmf4HHOrn3Gldd1rj4NaFWJPe1i6q0VGcM1llUoSsMpAMj4vxoLYjnKUjZN8=
+	t=1750421305; cv=none; b=EIDnT/KSIAqI/zNZAlMjLEZTfYcFk/jTEAs+161MimTWPIfUQStB9J0JLh9lQv74Pe5Gwr/WEOB1t4E4EKhrobul0benkVxlY21kg3H3FworaHc+2eaowJVS2C/86GmtE7EJWb5Wb0OcyTaYBIe8YKp8vSYithY7GGMQsTMbS/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421249; c=relaxed/simple;
-	bh=I3sZjEFvcTCYLdlufKW87LIGuVUGoPbgZ1U3ea4YMG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oL5v3hvpCpehz+GtE6bwe3nh2LFkVQEOJMWyC4KmCpxoefVrcbvYB27+YtAjGATSTjRa1/p1nrI6MuHpXzbbCjFA9dHiowqLHJRCtXil/tFDu2hZhx+wVcwN2aqQeLmjr9hOHLRHzsXEna79oQciSACFZUYOJ6s906v6741JK44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnPJv1/J; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750421305; c=relaxed/simple;
+	bh=NBzdre9NgtizA5cyu5ssuTUFGpGinr6k0RX+SHNCvt4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bO8xTXCaFrSxAhapDwmAKshPQXR8ONn6j0yWQVHilgOJyor8/FdVrFoUZtVkWbnOroMWaK9V0+J1RyCiwJyYny54AaO6GbOqGbCt/ptbU1f607/ajOdnnR6Ln+A626SCpD4FJY90v6iXY8BeJ595hLlTPDUV2MC9Tqby6K/q58E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bflz84RN; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnPJv1/J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750421247; x=1781957247;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I3sZjEFvcTCYLdlufKW87LIGuVUGoPbgZ1U3ea4YMG8=;
-  b=dnPJv1/JDzn2JHG4Y0R1vZ7GkUjg8bP2+Ac2bNP9d61OuCJM+386gxoV
-   15aaMB8xntxmOZjmkx4gaUES1lUNSj4QjJqPuD0KpZHS1D6eoKBltX71C
-   sxgFtvdB7mvEgOZiWuYieKQCNNf7YI1Wl/JCrY8xDhwAZaoz/Krko+X1l
-   ZS2XZiqv+XxhKDD6pNVdzU+q2w+QrdspP6S9Np235zmYCQ8kRgNo4SjHz
-   9XWg6qqthrki2CDKHiDtukr3tPnL/LA9aKdfR80FcLxGIN+mOkXYzi8fA
-   QFYcV69xoz3GGy9DvlroBXYOd//iypDYZcIVYKzML7fjKkXCwwXsKevSb
-   Q==;
-X-CSE-ConnectionGUID: Fuh3aMq6TeiaPt1vjJ2clQ==
-X-CSE-MsgGUID: I7lJflNJQAGhjpYpU93v5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52649718"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="52649718"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:07:27 -0700
-X-CSE-ConnectionGUID: fguDYWZWQByvLefjZ2/mIw==
-X-CSE-MsgGUID: XNhXfj9eTlGgZBeEmQbmHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="156709436"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:07:26 -0700
-Date: Fri, 20 Jun 2025 15:07:21 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] clk: renesas: rzv2h: use devm_kmemdup_array()
-Message-ID: <aFVO-QtE3D3dU7y8@black.fi.intel.com>
-References: <20250610072809.1808464-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bflz84RN"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d4cba0so14536145ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750421303; x=1751026103; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x1fjBUL2XYvHrykgkOfMnXaOkNrBJXoSMebmbae1qII=;
+        b=bflz84RNcxZgSiSwV65UBAaRFy9owsvcxVB9U8+RFNfTr/dTq5v1bIw/R5FuR80vy7
+         +lPTIsl16UwsgdyaYROmyGyZoCH4K94EJRxdSkupp2RQhMqqj68TYd6c3v1d07eSTSnP
+         uiGWDxtIUEwrHiz6V51Xny4xoURye+hg+t0qCKswpFji5HBypeRxCtg6pEOCWEyXnqn0
+         lhnf1AxvARpdol3tz9krp6eANrbeiepVC4ztHZFWIu8HW2kaQP6AqzSmDkdMkYtJ4kMt
+         FSBLSJ41DNfpF8vtWPafjwrSPKRdmhkbVWvFlE/sTmKBsLaerw6sA/o53b9D5+D+MARL
+         1+LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750421303; x=1751026103;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x1fjBUL2XYvHrykgkOfMnXaOkNrBJXoSMebmbae1qII=;
+        b=qbS3cMJOR30wU15tnz2HYHCm81d6LZWOFVWD/TRp7+NPjFCm8V3Dcs3yQvrQrRUSHa
+         i8FKDwrqXl5uxnVB12o+5hK12bNz8fA3fEdWq/Ud3ECbbdnLPk0Z+7KHUs9zHjAXbvNa
+         BWoAVtcSdiaAC/9JvOmUAhlDWusySuBuxcbZRAFW0+Hehe6QZTzXbnt4amaC5srflgxC
+         eCXaUP06ooYV/+uIJnkaZQxqWcv/wo+q08mSu9aYS4wbqmiJZXY9h/Z5Kd2X+rifp84d
+         yixa2feLUEstad3frq7yeJ6owe0ZDd41X27qLl2gJFC9w5FmBUjKVY+HvvE97weWpKrU
+         Zkkg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgL0o+Pd7K/v78DQdNUQTMoJ//4deFPsl8gQRcWqlNGqwctZfCoOj6S6cs9OaQQbvGCuUIB0Redx/MCY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjrlNrHl/LhFjuTsy8n5kcnY0H1x8qoO1apdePGQhlb/ayNeTn
+	fPaMloY3JMLRl4Yw7Pix9b/iPDkvXq64Fw2gm4Dln2KgaaoTjOerBQgoSw908SroJbo=
+X-Gm-Gg: ASbGncvRkNN6b5I1/m/CCo7NCp2KL9A8dKLyHU31IBUmSI7ErAlHi5JU+inXsxQCgpw
+	MXe4BsOSIs+o7vTHwx/scVyrfqloo5HHqqQDRmppUT2ewfJCTSkVd9RIXQwWNfOtpr8vgA5lLCX
+	euGcGOnmhnFYjtyKWdxTVL8LPWxLjxuJr7j/5tH5Yt8pZUJF0dHVMio0YQuD7wW/O1bX6g/KIie
+	DYXjDIy+rlSbga3F5ngL2XuvJz1AnXbtj+xiAemJaQNI/bch4dB0soFDMwgrdnRCGceC2xTDiZs
+	zvCU6OquSEHk3R9SDYvTOGsTZ1oO8KKBFBPSxJ7P1LvjJspnVpTJW+Xx5+4W4DLLkyd18EPLfJZ
+	sBO+A1Bmbaqfft34InW+elKMOs7ibP1nvEQ==
+X-Google-Smtp-Source: AGHT+IGycHzAhUJJAN9cpgp+5Y+FIXbfgDE2lvPamJQsbOi0tfEHUE8qePJHDEgGxwDJWS+qCgrtVg==
+X-Received: by 2002:a17:903:1988:b0:234:f182:a734 with SMTP id d9443c01a7336-237d9954d7dmr41126535ad.31.1750421303295;
+        Fri, 20 Jun 2025 05:08:23 -0700 (PDT)
+Received: from alexghiti.eu.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8664731sm17063945ad.155.2025.06.20.05.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 05:08:22 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Fri, 20 Jun 2025 12:08:11 +0000
+Subject: [PATCH] riscv: Fix sparse warning in vendor_extensions/sifive.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610072809.1808464-1-raag.jadav@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-dev-alex-fix_sparse_sifive_v1-v1-1-efa3a6f93846@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIACtPVWgC/x3MWwqDMBBG4a2Eee5ALlrFrZQSQv2tA6IhA0EQ9
+ 97Qxw8O5yJFEShN5qKCKirH3uAehj5r2r9gmZvJW9/bp7c8o3LacPIiZ9SciiKqLFIRq+MOLlg
+ M8GMI1B65oHX//+t93z9FVBIabwAAAA==
+X-Change-ID: 20250620-dev-alex-fix_sparse_sifive_v1-4e130e7e2833
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Cyan Yang <cyan.yang@sifive.com>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1614;
+ i=alexghiti@rivosinc.com; h=from:subject:message-id;
+ bh=NBzdre9NgtizA5cyu5ssuTUFGpGinr6k0RX+SHNCvt4=;
+ b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJC/Y3nfbjQHPYnKbowX3HWUfd5d8wWzG3IWWmu+8ZOd
+ r2dbSNXRykLgxgHg6yYIouCeUJXi/3Z+tl/Lr2HmcPKBDKEgYtTACbybQojw9PtcupSx3e9LN9Q
+ 42T8XUS+w+zuzcLfkpOu2JYoVwQpVDAybC8oE3rvUXh55+IT6mp+VX4tU0+wTcoSsvlhISTj8fE
+ RAwA=
+X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp;
+ fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
 
-On Tue, Jun 10, 2025 at 12:58:09PM +0530, Raag Jadav wrote:
-> Convert to use devm_kmemdup_array() which is more robust.
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
+sparse reports the following warning:
 
-Bump. Anything I can do to move this forward?
+arch/riscv/kernel/vendor_extensions/sifive.c:11:33: sparse: sparse: symbol 'riscv_isa_vendor_ext_sifive' was not declared. Should it be static?
 
-Raag
+So as this struct is only used in this file, make it static.
 
->  drivers/clk/renesas/rzv2h-cpg.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
-> index bcc496e8cbcd..57ba8755025c 100644
-> --- a/drivers/clk/renesas/rzv2h-cpg.c
-> +++ b/drivers/clk/renesas/rzv2h-cpg.c
-> @@ -1004,8 +1004,8 @@ static int __init rzv2h_cpg_probe(struct platform_device *pdev)
->  	/* Adjust for CPG_BUS_m_MSTOP starting from m = 1 */
->  	priv->mstop_count -= 16;
->  
-> -	priv->resets = devm_kmemdup(dev, info->resets, sizeof(*info->resets) *
-> -				    info->num_resets, GFP_KERNEL);
-> +	priv->resets = devm_kmemdup_array(dev, info->resets, info->num_resets,
-> +					  sizeof(*info->resets), GFP_KERNEL);
->  	if (!priv->resets)
->  		return -ENOMEM;
->  
-> -- 
-> 2.34.1
-> 
+Fixes: 2d147d77ae6e ("riscv: Add SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505072100.TZlEp8h1-lkp@intel.com/
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/kernel/vendor_extensions/sifive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/vendor_extensions/sifive.c b/arch/riscv/kernel/vendor_extensions/sifive.c
+index 1411337dc1e61aba0b844902f356625048c85abc..8fcf67e8c07facd1bfdbc0e18dd9b43102f22145 100644
+--- a/arch/riscv/kernel/vendor_extensions/sifive.c
++++ b/arch/riscv/kernel/vendor_extensions/sifive.c
+@@ -8,7 +8,7 @@
+ #include <linux/types.h>
+ 
+ /* All SiFive vendor extensions supported in Linux */
+-const struct riscv_isa_ext_data riscv_isa_vendor_ext_sifive[] = {
++static const struct riscv_isa_ext_data riscv_isa_vendor_ext_sifive[] = {
+ 	__RISCV_ISA_EXT_DATA(xsfvfnrclipxfqf, RISCV_ISA_VENDOR_EXT_XSFVFNRCLIPXFQF),
+ 	__RISCV_ISA_EXT_DATA(xsfvfwmaccqqq, RISCV_ISA_VENDOR_EXT_XSFVFWMACCQQQ),
+ 	__RISCV_ISA_EXT_DATA(xsfvqmaccdod, RISCV_ISA_VENDOR_EXT_XSFVQMACCDOD),
+
+---
+base-commit: e10a0dc2d21fd742c8d6ba042a98c05815011f9d
+change-id: 20250620-dev-alex-fix_sparse_sifive_v1-4e130e7e2833
+
+Best regards,
+-- 
+Alexandre Ghiti <alexghiti@rivosinc.com>
+
