@@ -1,273 +1,250 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013007.outbound.protection.outlook.com [40.107.162.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED57D2820D7;
-	Fri, 20 Jun 2025 09:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411710; cv=none; b=f3Y2bUA1VCUt+R9FQUiFewYrFZEmL8nnAw6DWqqsjsRu7BNVrndiOcYDiqAxRyi+bHnZytESl7np065P+j/9misGtDKQefSa288FC1dUR+s9LxulSDFsryJFL9/zDtd7VrCMGRNp1P+MxFYuqI8M5Yt9XtB8BFdcQhcFoSq01bs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411710; c=relaxed/simple;
-	bh=knVDR/Pst0l0QQNgdTPf2UPxlZW5sCob3oxd2wHjePI=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=OvaXWnRzI0ba6Vi9yDfoxvm4gHY8HYRqR1ghHigMApYdCvF4d6VlBaJZUTnV+HCinJO9uLEtsSlo9BpguPkul7WfcwEM5tnlgvAYwrVloLy2Eea4DrWB3dWI23MzCmGcRF1dZTZjlCARQ0uICitqg9JlmSbWJhRgUZV4tx3fvco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bNsbR5CJMzYQv21;
-	Fri, 20 Jun 2025 17:28:19 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A6EF41A0C2D;
-	Fri, 20 Jun 2025 17:28:18 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCtKVVo5jVfQA--.2368S3;
-	Fri, 20 Jun 2025 17:28:14 +0800 (CST)
-Subject: Re: [syzbot] [block?] possible deadlock in bdev_release
-To: syzbot <syzbot+2bcecf3c38cb3e8fdc8d@syzkaller.appspotmail.com>,
- axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com, Ming Lei <ming.lei@redhat.com>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <6855034f.a00a0220.137b3.0031.GAE@google.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <c572fb51-80ca-b664-2c9d-493d7caca1f5@huaweicloud.com>
-Date: Fri, 20 Jun 2025 17:28:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C2A283C82;
+	Fri, 20 Jun 2025 09:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.7
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750411715; cv=fail; b=VVq1WZznBangLgaa3vKKxr+RHZS7h3iP/TF/kGCPhW+MaMohDNAct0AtirRb6t6MfkVQukACYdDWCy5YGTgo6zJQR1EqZOfMxKBrsrGYmOJ5UBDh1Z2UzJzbxA3LpfJCrbT5ZcB00DK6L6FYty5KxHbpIMBRJawKzmZXkxKHf6I=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750411715; c=relaxed/simple;
+	bh=F1nJTc7M9Ug5EGjLJ3aWr0Q4CeiVdUFfu7X3WvrxQ9g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QXU/Mkjp/XL/BLLBmxGVC3VWhQx6H9wHnoYoDsJIg7OjuWody+k9FGiiEC6BzQF2ejPsHVDRLDOOssaETUtIEy/1MjFH3ySNd8t1bj8W6Op32FxiVBVI+qGE7bonYzYpPWB9j3Olx1Tk5CJFbO8ZQe3DNV0iEcC406BlH6/zItQ=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Vmj61XdU; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Vmj61XdU; arc=fail smtp.client-ip=40.107.162.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Vmj61XdU";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Vmj61XdU"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=w6JPLN+DdwxV0gvE0d8pZdXL1UaI+Ekkx3yNllCRBwehYQZw8y2tehjSxtDu78EakhRLtemkNcZzBOjoXtEfao6xVBxJ04WrZ6cIJiM+T9hW2GMNrsWJ60ZbkTzPmL4iZdxGtZ8f4xdGGDOIe65qv+DTh9F2f7P8JGYjEPRZOULiTEofkQICs0LBiSsgawhfotXjLO2neeNyuSgybvNL+ILzYVvG8PyS2subAm9j8mw0C27dcDWTpDNpc60daQDb7XJplukKpwpNjh6MLDzvgy3G442qPsv+OlqVUXZfNs/Yv2QcWImitf5F/hioNtQr0e45gPcxgib7jZv03A6Neg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F1nJTc7M9Ug5EGjLJ3aWr0Q4CeiVdUFfu7X3WvrxQ9g=;
+ b=bm12sA5x3qe+M3kIt1Pkb+4/UJVcuQkMfdrzhOn45hnuupKgNqd1PUxV9XUdETGfuLT2Fhv45z0E1oGYAGb0ikNClpeuO3gWwbi1JxT7583WcWTMk+r7IXKLKV2P0Ga3WNAjwn9+Wlf3r0OLAPc+AHg/fczMW8Ssqa+RVJ1wfiYl9cpNHvHtDzZP3U40ttRU2efanxZzIVig4hkAHYR5/vOug4OSNXUwtps/whX3GOcU35mFG3ot9ir4XyVmC3pkEISDW9off2fo1iPyqzOR/1ScQrWo5mYauDlDapfm2JmnjjD5/KYEXryjRvXYuiQRcsakOOMrTwxCGLYt4Z7WaQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=oss.nxp.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F1nJTc7M9Ug5EGjLJ3aWr0Q4CeiVdUFfu7X3WvrxQ9g=;
+ b=Vmj61XdU8m32a3FNz6FKibfjFebaXFQv6JkH6GeLf9zJPggY1rfrwu5LvyYnfqWQMqfpjAQk54MUGdNvCDsYCR7hV4mLPtC/z2DpTbYMejpvd7l37qs6dLBYA170XSpHJsiqKYXUSncUthXtLyDLk8xT7PAOoBu42TeG5EsM+8o=
+Received: from PR1P264CA0070.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:2cc::10)
+ by DU2PR08MB10185.eurprd08.prod.outlook.com (2603:10a6:10:49e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
+ 2025 09:28:28 +0000
+Received: from AMS0EPF000001B5.eurprd05.prod.outlook.com
+ (2603:10a6:102:2cc:cafe::9d) by PR1P264CA0070.outlook.office365.com
+ (2603:10a6:102:2cc::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.25 via Frontend Transport; Fri,
+ 20 Jun 2025 09:28:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF000001B5.mail.protection.outlook.com (10.167.16.169) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.21
+ via Frontend Transport; Fri, 20 Jun 2025 09:28:26 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GnHE7p1wpbWOlD3XvAylLndHavORHIVgE+hUwlG5HYVmQ80uJHQDQDjs9EvoGpM6aICJ3z98IugW/fr7atSBAGUoysOOYcWi9PPpBK6uVO+5EK3bzwwnPBcNOdBgAyTtcDUQs6aZ8lXEK5GzTDxvQdraVTpTrAbppqQqBS9IE2eJdwFylrCsHYesFIF0RKmaFtT80nWX0eC5nmRwSpvlXSMXKtbh+r392tOWMXikrdXAic1Hh/BryYT589Jn0etKfgo4tBdrQMWKt3WeE3xITObI44qB9VU/xMxkpKqFUPrV4gZLyZKyJz9C0JmtXK/QYtUml8oo2prgfykO0wbQag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F1nJTc7M9Ug5EGjLJ3aWr0Q4CeiVdUFfu7X3WvrxQ9g=;
+ b=EP18PGiQ4KIPeI+HpiHwO/9iCKn6sZDbrtxaho47t/nTMan19dDNWrXk7ZMl/AzqyPXWr0IsBpShOICLgjPnTXbdWwgAgZxuuc7Jj1AaVdkyKpwjvvUJuZXdYZ+gx3dXiCYVOU7mZfFkuXvlda+3iRXYb0pOY3WY91g41fwA0vHkruV7tuse7a8lihGS++IbOMNBj97zjzWUs5XdcV9fFblxoBsYn+JqMRfs3sjOmJKIQVBF5ilituNyFAMYlTUB6D0tlLB7rUozvBMWfIDlQKZJ9tl4f0zrm4ixnNmdjmFfLxoAqAZBDMvzwFPVQSAevJ47AbBxNGIseIrI3abqdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F1nJTc7M9Ug5EGjLJ3aWr0Q4CeiVdUFfu7X3WvrxQ9g=;
+ b=Vmj61XdU8m32a3FNz6FKibfjFebaXFQv6JkH6GeLf9zJPggY1rfrwu5LvyYnfqWQMqfpjAQk54MUGdNvCDsYCR7hV4mLPtC/z2DpTbYMejpvd7l37qs6dLBYA170XSpHJsiqKYXUSncUthXtLyDLk8xT7PAOoBu42TeG5EsM+8o=
+Received: from PAWPR08MB9966.eurprd08.prod.outlook.com (2603:10a6:102:35e::5)
+ by AS8PR08MB9193.eurprd08.prod.outlook.com (2603:10a6:20b:57d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.36; Fri, 20 Jun
+ 2025 09:27:53 +0000
+Received: from PAWPR08MB9966.eurprd08.prod.outlook.com
+ ([fe80::be59:a46b:ae74:347c]) by PAWPR08MB9966.eurprd08.prod.outlook.com
+ ([fe80::be59:a46b:ae74:347c%5]) with mapi id 15.20.8857.019; Fri, 20 Jun 2025
+ 09:27:53 +0000
+From: Philip Radford <Philip.Radford@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "arm-scmi@vger.kernel.org"
+	<arm-scmi@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Cristian
+ Marussi <Cristian.Marussi@arm.com>, Luke Parkin <Luke.Parkin@arm.com>
+Subject: RE: [PATCH 0/4] firmware: arm_scmi: Add xfer inflight debug and trace
+Thread-Topic: [PATCH 0/4] firmware: arm_scmi: Add xfer inflight debug and
+ trace
+Thread-Index: AQHb4RSKr8fZZD8ejkycuWOIE0be7LQLvX0AgAAK6BA=
+Date: Fri, 20 Jun 2025 09:27:52 +0000
+Message-ID:
+ <PAWPR08MB9966E79130C52CA8460AC4B7897CA@PAWPR08MB9966.eurprd08.prod.outlook.com>
+References: <20250619122004.3705976-1-philip.radford@arm.com>
+ <20250620084634.GB27519@nxa18884-linux>
+In-Reply-To: <20250620084634.GB27519@nxa18884-linux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic:
+	PAWPR08MB9966:EE_|AS8PR08MB9193:EE_|AMS0EPF000001B5:EE_|DU2PR08MB10185:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7c5cc54-9bfb-40dc-e6e3-08ddafdccfc6
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?nlr/rwie1S8NUIah5o/9j27v5/x5SrSzH5+fZ1OTcBMvYW6XL0MPdPv/OTa3?=
+ =?us-ascii?Q?YYGztTZVL/yhmD0HFH6gsVY3D0waGyll+ZytpcoOrf5rlr54vMD40EChmqxR?=
+ =?us-ascii?Q?hvrJbFtPd+3Xa0xyxdDg4GRtjSwynyDaLCrKkHscSj3Op92y++OZiYSM5jTy?=
+ =?us-ascii?Q?WWFsNMyfFe+IcWMuoKco2AE+O2KVJrpbN2bNrlnuvWhJxDQHvspMwxJNvdmf?=
+ =?us-ascii?Q?Agq3df8qcRUd0tONJAFimGOMl5Mx7adxYgV8pLrcaXDZMS5lyiFwj7sKZEA6?=
+ =?us-ascii?Q?x9jSRFekVlhFpHL8k2uI8d1RxwAi7Qq9e6a1yldZktG1CuNNyJeXep4yEaQu?=
+ =?us-ascii?Q?NNOiYj82uehJYzRhUkiAxKWYyh7M15PIwNhnjJHAJUyE8jjt3g8dkXAe5OoL?=
+ =?us-ascii?Q?ILcJigTyKhhqSj9uBDKqpyw5EYQIGMenvroNJNjWkdKWimgEF7sDRbVH1EtP?=
+ =?us-ascii?Q?Cx4AsH8P3k7LnCsC01fNdLp9OVv43xS8ZzlwDUkCUFU7Y4yr1+GRkkXzngbG?=
+ =?us-ascii?Q?zMzK2XCfdaQ+NaUAKJ/cPxi3mv6I0LLrrwNsGD1qzPL1GdemVX9vNRhH3/pg?=
+ =?us-ascii?Q?u7H7aLMMzfrOeSg/mzIURmi41wIrkpf1kKG/PYKNYDD3UFc8fSfn/yGhlywi?=
+ =?us-ascii?Q?7z5hlP2mbZll9rzDTRm1C33PIsycpuEUmnhMdUs3okNIeyvsY/ei4obTpn3K?=
+ =?us-ascii?Q?gufG2JlJkoyDVMIZBqWB5BizGXbUcZO5MF+5JuN9rAndlQ+BH/BXMQaTh6bz?=
+ =?us-ascii?Q?5Pr9NfjrGUkcZ8CaphkCok7d71ijxyqq5F4CXyW0BNQgsNJSCVnzrh87QRE2?=
+ =?us-ascii?Q?GpqRbf3fGEgJk8aK35jJ8ptVBjtmJ0AhkN7c/mCyWlzBqpaivpy9MKIUPEa5?=
+ =?us-ascii?Q?MtOnlx1ara9jzAAAO6cVNB/4FbNqqpTwfauAW/eOFwq1l+wigixdEvJCpR+n?=
+ =?us-ascii?Q?bdSJ44Ys4+Olrdskovket0ABOdQrp5hcLOXScG9Vg7BmOxgqfr2grMis7QuV?=
+ =?us-ascii?Q?f445P5yR/hKuNOrWVCZyuITOkIcUL3J7Y3hnwAhwO8qA+1vt84aOJtqs1kGC?=
+ =?us-ascii?Q?CFi1dgGAHLr4jQFU6pfjGMyg44ju36OKlWErD0M1zZ9YLk6FoXxI2hHs0JbW?=
+ =?us-ascii?Q?MAi+QH2a/VpfHUnIdpJf1F/NLMC3+fjXDpaPv9B1+IsgymB6fatgQxS0qTv/?=
+ =?us-ascii?Q?2zFZAqFFbNWpuPvaLpa5U8DqcBzwZJAfom4L84T8VVMCecISVK+rxxjUfo1Y?=
+ =?us-ascii?Q?k+9JE5jNIAs4Q3Sz8yoimRULfBN16Wi4ubOeVQc5I8o5jIU8tj0hjQdc2a7G?=
+ =?us-ascii?Q?NZATNPjtNyOAvrvMLFrDc7dCcFbcghBOn2GtwKbDBra4VKBeBbZfbMG8d9GX?=
+ =?us-ascii?Q?lS/ZWGbDAYlJ+mOEBmIzZDrTs+ShyM2Y57yJl+o4QZPXQHkYq5SgWRqc6euI?=
+ =?us-ascii?Q?xxmu+AM5XxIljTH2AH4ewgqaWYDl2vqoqydPPmGMXPo0SWAlSd6z2fuO/hbz?=
+ =?us-ascii?Q?FILLwpHoNqxIl0w=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR08MB9966.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6855034f.a00a0220.137b3.0031.GAE@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCtKVVo5jVfQA--.2368S3
-X-Coremail-Antispam: 1UD129KBjvJXoWfJrW8WrWktF4DJr17Kr45ZFb_yoWkJr15pF
-	W5WFZ7JrWjq348ZayIqw1a9ry8Zw15Cw13CFn7tr1rAFsIkr17Jw1vvFsxWryDKr92yF9x
-	t3Z8WFW093WUXrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwx
-	hLUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9193
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF000001B5.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	23440808-f0a8-4185-8b33-08ddafdcbb8d
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|14060799003|35042699022|1800799024|376014|36860700013|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ah/cc/FHb+TfZos/qkfCGyOXzkKr4rOix15GMq/nXe6PERV41Y6zdVPj6jdP?=
+ =?us-ascii?Q?F4/m4qfebwXtZvoK9gV0bNV5Qi+YF4NmU41AxtGHw1PzJ3+BQEdoJcyvHGex?=
+ =?us-ascii?Q?N2WFR39tUxsJZrDH1enr7SozQheTdEBInVF6Vd9IwUkjnya3NGZJhGek+qyp?=
+ =?us-ascii?Q?tqvfWkes8l53OGynxiOFNt1Q4GD+E8dqt/iiY1wqTfWoFG3JAAZPQrNO6wa/?=
+ =?us-ascii?Q?zZuGCWDvftb1SaxivoMYRxdbBVvXCtuCzq4lag1Ki3bxgzKMSVV5HcrxlenQ?=
+ =?us-ascii?Q?c46LG9HB1VktIOYe7GONJUkbiMmLDscUYFziyC7Fab/c0amW6aLbbtp0wd6h?=
+ =?us-ascii?Q?JF831PZPaaewQmQ1FOMDkzdiKOBNJWzrcyjNcwNyTETCObiCB0ajv4k7E7FW?=
+ =?us-ascii?Q?CLYEis9ZCf0ULOUJ1LJ+EHUapC5vn3IQ6xUoYRH/JVQckHReYXgnuQQsFqlR?=
+ =?us-ascii?Q?9lyi7dSG6PR47lkx6p41PnqIVapT0dpc4qIZ+GXAawqPhj9vGvxaOTreXQZ3?=
+ =?us-ascii?Q?XdQl/H1D1x3kFnd/dtsZMUHWCcP6Rm8G1p41XkQjob6cjU6h3XkqptBSpyfW?=
+ =?us-ascii?Q?tTsv/6libraM8hnp6HdVFEA/wrzP1zQ2fzCzd1N+jEv6iG7HKeA//z+nH4rx?=
+ =?us-ascii?Q?tv+X9fqyFAqAiShUBtluMPKsPrr4K2Ld0oJbJroAlUUUZlcGfiiAVngtATcT?=
+ =?us-ascii?Q?pm6SbAvNnmZF+M4uSCSBCUyRfugNwQALlKK5K+qG6BXiwq5kRrkdtrqQsDXs?=
+ =?us-ascii?Q?bZQLd7z+G73ZKbRROZzmzyZCkkEVkX3/am65jshgvbfypiGuSzSgStpCSK7H?=
+ =?us-ascii?Q?ygHDFApfQpqnSWRZ6FJNU+BPVt3vKN6CaBCoVnkbBYbmB9naA7KCYHFN51Ld?=
+ =?us-ascii?Q?RVaFHhJW3mi0O2SDNTZ+gffLs8u2wcFGqIqol4kbG82m6w+wx6YdYyaT3FuP?=
+ =?us-ascii?Q?cTh8WxvRNcuoJ62I686jO7ibXdWHYD3JN2B8gB0gpdxAu1yH6e7TLZLmdbbM?=
+ =?us-ascii?Q?btOh0cX4YXUfjaJhRruOhIMsINuFwFiCbtvJtDoB9D4abxwlP9dN9WHsnoKE?=
+ =?us-ascii?Q?u6A6Y134XszMWOZnXml5hRQQXRaAUUquOENT/7NLN29aM4vQWxlD352fDLCP?=
+ =?us-ascii?Q?5JjheG6sepf1jcmZ+/rYvAbe+K+U7v8ArkYSEND1vyuwZg7a03r+NeoirUW6?=
+ =?us-ascii?Q?QXI/SS4k0wteIanJMMVddN6x3shIKVV0+GYAUujmVc9uWwrd+s4VOaL2jALb?=
+ =?us-ascii?Q?i5hiyDq7FJULuRjaIjGCr3OkleeL1s6FCV2NVgtiufrsTQIcr5dJMnq4Poo5?=
+ =?us-ascii?Q?kKBCXVd8qK7waCh9ACvvno9b5NZvahb3y/OGZXF9/W0nSrjqh+fPrleIqs0/?=
+ =?us-ascii?Q?skmq9+MoN8ngVDEiQ4IhEdZcuzbfviJsZKdf6q6KbGs+IX65ttzBeoiiWkq6?=
+ =?us-ascii?Q?qL53GFGUBx2WLuoh1c9OtK0KDu90pAy08OwFYw02qGRQutGgupqCnZjWMJhi?=
+ =?us-ascii?Q?pBUvUcPC0Ajr0LKDkr92VtsxFlpKEkOdK8ZN?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(14060799003)(35042699022)(1800799024)(376014)(36860700013)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 09:28:26.9139
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7c5cc54-9bfb-40dc-e6e3-08ddafdccfc6
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001B5.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR08MB10185
+
+
+
+> -----Original Message-----
+> From: Peng Fan <peng.fan@oss.nxp.com>
+> Sent: Friday, June 20, 2025 9:47 AM
+> To: Philip Radford <Philip.Radford@arm.com>
 
 Hi,
+Thanks for the review.
 
-+CC Ming
+> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; a=
+rm-
+> scmi@vger.kernel.org; Sudeep Holla <Sudeep.Holla@arm.com>; Cristian
+> Marussi <Cristian.Marussi@arm.com>; Luke Parkin <Luke.Parkin@arm.com>
+> Subject: Re: [PATCH 0/4] firmware: arm_scmi: Add xfer inflight debug and
+> trace
+>=20
+> On Thu, Jun 19, 2025 at 12:20:00PM +0000, Philip Radford wrote:
+> >Hi all,
+> >
+> >This series adds a new counter to the Arm SCMI firmware driver to track
+> >the number of in-flight message transfers during debug and trace. This
+> >will be useful for examining behaviour under a large load with regards
+> >to concurrent messages being sent and received. As the counter only give=
+s
+> >a live value, printing the value in trace allows logging of the in-fligh=
+t
+> >xfers.
+>=20
+> Just a general question, is this counter count in flight messages
+> for a scmi instance or it is per transport? I ask because
+> one scmi instance could have multiple mailboxes. If counting based
+> on scmi instance, it may not be that accurate.
+>=20
+> Thanks,
+> Peng
+>=20
 
-在 2025/06/20 14:44, syzbot 写道:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    306e57988197 Merge patch "riscv: defconfig: run savedefcon..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git for-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12cc0182580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=618b9468db3872f5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2bcecf3c38cb3e8fdc8d
-> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: riscv64
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-306e5798.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/5fee9bbe87f3/vmlinux-306e5798.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/e959580bb405/Image-306e5798.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+2bcecf3c38cb3e8fdc8d@syzkaller.appspotmail.com
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 6.16.0-rc1-syzkaller-g306e57988197 #0 Not tainted
-> ------------------------------------------------------
-> syz.1.344/5839 is trying to acquire lock:
-> ffffaf8019912a30 (&nbd->config_lock){+.+.}-{4:4}, at: refcount_dec_and_mutex_lock+0x60/0xd8 lib/refcount.c:118
-> 
-> but task is already holding lock:
-> ffffaf8019fae358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_release+0x12c/0x600 block/bdev.c:1128
-> 
-> which lock already depends on the new lock.
-> 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #2 (&disk->open_mutex){+.+.}-{4:4}:
->         lock_acquire kernel/locking/lockdep.c:5871 [inline]
->         lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
->         __mutex_lock_common kernel/locking/mutex.c:602 [inline]
->         __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
->         mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
->         __del_gendisk+0x132/0xac6 block/genhd.c:706
->         del_gendisk+0xf6/0x19a block/genhd.c:819
->         nbd_dev_remove+0x3c/0xf2 drivers/block/nbd.c:268
->         nbd_dev_remove_work+0x1c/0x26 drivers/block/nbd.c:284
->         process_one_work+0x96a/0x1f32 kernel/workqueue.c:3238
->         process_scheduled_works kernel/workqueue.c:3321 [inline]
->         worker_thread+0x5ce/0xde8 kernel/workqueue.c:3402
->         kthread+0x39c/0x7d4 kernel/kthread.c:464
->         ret_from_fork_kernel+0x2a/0xbb2 arch/riscv/kernel/process.c:214
->         ret_from_fork_kernel_asm+0x16/0x18 arch/riscv/kernel/entry.S:327
-> 
-> -> #1 (&set->update_nr_hwq_lock){++++}-{4:4}:
->         lock_acquire kernel/locking/lockdep.c:5871 [inline]
->         lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
->         down_write+0x9c/0x19a kernel/locking/rwsem.c:1577
->         blk_mq_update_nr_hw_queues+0x3e/0xb86 block/blk-mq.c:5041
->         nbd_start_device+0x140/0xb2c drivers/block/nbd.c:1476
->         nbd_genl_connect+0xae0/0x1b24 drivers/block/nbd.c:2201
->         genl_family_rcv_msg_doit+0x206/0x2e6 net/netlink/genetlink.c:1115
->         genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
->         genl_rcv_msg+0x514/0x78e net/netlink/genetlink.c:1210
->         netlink_rcv_skb+0x206/0x3be net/netlink/af_netlink.c:2534
->         genl_rcv+0x36/0x4c net/netlink/genetlink.c:1219
->         netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
->         netlink_unicast+0x4f0/0x82c net/netlink/af_netlink.c:1339
->         netlink_sendmsg+0x85e/0xdd6 net/netlink/af_netlink.c:1883
->         sock_sendmsg_nosec net/socket.c:712 [inline]
->         __sock_sendmsg+0xcc/0x160 net/socket.c:727
->         ____sys_sendmsg+0x63e/0x79c net/socket.c:2566
->         ___sys_sendmsg+0x144/0x1e6 net/socket.c:2620
->         __sys_sendmsg+0x188/0x246 net/socket.c:2652
->         __do_sys_sendmsg net/socket.c:2657 [inline]
->         __se_sys_sendmsg net/socket.c:2655 [inline]
->         __riscv_sys_sendmsg+0x70/0xa2 net/socket.c:2655
->         syscall_handler+0x94/0x118 arch/riscv/include/asm/syscall.h:112
->         do_trap_ecall_u+0x396/0x530 arch/riscv/kernel/traps.c:341
->         handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-> 
-> -> #0 (&nbd->config_lock){+.+.}-{4:4}:
->         check_noncircular+0x132/0x146 kernel/locking/lockdep.c:2178
->         check_prev_add kernel/locking/lockdep.c:3168 [inline]
->         check_prevs_add kernel/locking/lockdep.c:3287 [inline]
->         validate_chain kernel/locking/lockdep.c:3911 [inline]
->         __lock_acquire+0x12b2/0x24ea kernel/locking/lockdep.c:5240
->         lock_acquire kernel/locking/lockdep.c:5871 [inline]
->         lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
->         __mutex_lock_common kernel/locking/mutex.c:602 [inline]
->         __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
->         mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
->         refcount_dec_and_mutex_lock+0x60/0xd8 lib/refcount.c:118
->         nbd_config_put+0x3a/0x610 drivers/block/nbd.c:1423
->         nbd_release+0x94/0x15c drivers/block/nbd.c:1735
->         blkdev_put_whole+0xac/0xee block/bdev.c:721
->         bdev_release+0x3fe/0x600 block/bdev.c:1144
->         blkdev_release+0x1a/0x26 block/fops.c:684
->         __fput+0x382/0xa8c fs/file_table.c:465
->         ____fput+0x1c/0x26 fs/file_table.c:493
->         task_work_run+0x16a/0x25e kernel/task_work.c:227
->         resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->         exit_to_user_mode_loop+0x118/0x134 kernel/entry/common.c:114
->         exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
->         syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
->         syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
->         do_trap_ecall_u+0x3f0/0x530 arch/riscv/kernel/traps.c:355
->         handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-> 
-> other info that might help us debug this:
+Yes, you are correct that the counter is per instance, as are the other cou=
+nters.
+This would mean that if you have multiple channels you would see the total
+number of inflight xfers across all channels, limited to that instance.
+If the inflight counter is non-zero and something is wrong, it would not be
+apparent which channel had an issue, however this is the same for the other
+counters.
 
-The lock order looks problematic:
+I feel like this series is a helpful addition to the current counters, but =
+what you
+have pointed out is something that could be reworked in a future series?
 
-t0: disk->open_mutex -> nbd->config_lock
-t1: nbd->config_lock -> set->update_nr_hwq_lock
-t2: set->update_nr_hwq_lock -> disk->open_mutex
-
-However,the above deadlock is not possible because nbd reference should
-still be positive at t0, hence nbd_dev_remove_work() from t2 can't be
-triggered concurrently.
-
-Thanks,
-Kuai
-
-> 
-> Chain exists of:
->    &nbd->config_lock --> &set->update_nr_hwq_lock --> &disk->open_mutex
-> 
->   Possible unsafe locking scenario:
-> 
->         CPU0                    CPU1
->         ----                    ----
->    lock(&disk->open_mutex);
->                                 lock(&set->update_nr_hwq_lock);
->                                 lock(&disk->open_mutex);
->    lock(&nbd->config_lock);
-> 
->   *** DEADLOCK ***
-> 
-> 1 lock held by syz.1.344/5839:
->   #0: ffffaf8019fae358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_release+0x12c/0x600 block/bdev.c:1128
-> 
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 5839 Comm: syz.1.344 Not tainted 6.16.0-rc1-syzkaller-g306e57988197 #0 PREEMPT
-> Hardware name: riscv-virtio,qemu (DT)
-> Call Trace:
-> [<ffffffff80078bbe>] dump_backtrace+0x2e/0x3c arch/riscv/kernel/stacktrace.c:132
-> [<ffffffff8000327a>] show_stack+0x30/0x3c arch/riscv/kernel/stacktrace.c:138
-> [<ffffffff8006103e>] __dump_stack lib/dump_stack.c:94 [inline]
-> [<ffffffff8006103e>] dump_stack_lvl+0x12e/0x1a6 lib/dump_stack.c:120
-> [<ffffffff800610d2>] dump_stack+0x1c/0x24 lib/dump_stack.c:129
-> [<ffffffff802ce116>] print_circular_bug+0x254/0x29a kernel/locking/lockdep.c:2046
-> [<ffffffff802ce28e>] check_noncircular+0x132/0x146 kernel/locking/lockdep.c:2178
-> [<ffffffff802d1468>] check_prev_add kernel/locking/lockdep.c:3168 [inline]
-> [<ffffffff802d1468>] check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-> [<ffffffff802d1468>] validate_chain kernel/locking/lockdep.c:3911 [inline]
-> [<ffffffff802d1468>] __lock_acquire+0x12b2/0x24ea kernel/locking/lockdep.c:5240
-> [<ffffffff802d32de>] lock_acquire kernel/locking/lockdep.c:5871 [inline]
-> [<ffffffff802d32de>] lock_acquire+0x1ac/0x448 kernel/locking/lockdep.c:5828
-> [<ffffffff8630e424>] __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-> [<ffffffff8630e424>] __mutex_lock+0x166/0x1292 kernel/locking/mutex.c:747
-> [<ffffffff8630f564>] mutex_lock_nested+0x14/0x1c kernel/locking/mutex.c:799
-> [<ffffffff8173119c>] refcount_dec_and_mutex_lock+0x60/0xd8 lib/refcount.c:118
-> [<ffffffff82c30b40>] nbd_config_put+0x3a/0x610 drivers/block/nbd.c:1423
-> [<ffffffff82c31336>] nbd_release+0x94/0x15c drivers/block/nbd.c:1735
-> [<ffffffff815304f6>] blkdev_put_whole+0xac/0xee block/bdev.c:721
-> [<ffffffff81534274>] bdev_release+0x3fe/0x600 block/bdev.c:1144
-> [<ffffffff81535462>] blkdev_release+0x1a/0x26 block/fops.c:684
-> [<ffffffff80bfbe7a>] __fput+0x382/0xa8c fs/file_table.c:465
-> [<ffffffff80bfc632>] ____fput+0x1c/0x26 fs/file_table.c:493
-> [<ffffffff801d7c16>] task_work_run+0x16a/0x25e kernel/task_work.c:227
-> [<ffffffff803b556e>] resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-> [<ffffffff803b556e>] exit_to_user_mode_loop+0x118/0x134 kernel/entry/common.c:114
-> [<ffffffff862fcc8c>] exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
-> [<ffffffff862fcc8c>] syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
-> [<ffffffff862fcc8c>] syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
-> [<ffffffff862fcc8c>] do_trap_ecall_u+0x3f0/0x530 arch/riscv/kernel/traps.c:355
-> [<ffffffff863250ca>] handle_exception+0x146/0x152 arch/riscv/kernel/entry.S:197
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
-> .
-> 
-
+Regards,
+Phil
