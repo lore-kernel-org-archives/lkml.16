@@ -1,159 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BDB2D29CF;
-	Fri, 20 Jun 2025 15:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67952E763C;
+	Fri, 20 Jun 2025 15:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434328; cv=none; b=QRogJs42MKdVwhlZiVBfTz3zZs66NS0Hg4E46IwRczOcmGmR/z9nQ9anKLL9MkFfI6a0RYBY+wm7+w0oskS9NKEC8ACrtUROvW5uyaFV2jSMdUOm5sZjFl4ETT2/xJLbkDjeDlZjq9hHnM5UzyrvX6KVJagnLgX2B3LNDfCWGRY=
+	t=1750434340; cv=none; b=NnWMfv9uqAn3A74WPpRSWUDb0bkP3ub0ezahdabSdLjeUzGlq8YgjNQhj/halTEHA18fRnGc+SLlOSsAfRyLAumDerf0GAT3gjOeKhOPj4RlncyzuB0+ZrPhLm42qu9rLx+PFCLQ+5WSGMEvkcDLSzvBhwftpSzyH8FKCYNt554=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434328; c=relaxed/simple;
-	bh=Zd84NnTL2fRFyvN5Ij331Z+OZS7ttEjUlHQ/6RFI/04=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKINPUeL6zBO/VDhoW9pGpAso1R9Ay+oqY+S2KM42bghvZOtGYVUYAeDIr/i6xMQT2mCuEVLGoBhH2w0/Fm8UUtN9ulEKSpsFCzncVZ+Pt5g/lwVKMpUiaMjZMkXmFZuBtgRyRtsIB2hNC7eHNFvMlZvwx0ZvbZK/TB149Fejjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvNFgUXl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750434340; c=relaxed/simple;
+	bh=fCZg+qa6/P+Asbd0KRfxqaW80M7dwYJ1XuU8KBHp+rI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pw1HrWcN2wXsQdMrJPz6Wvej7FAo+MU4h7CzU1fZ+UnNZQmk8UyGiuxSo1c1Je++gfXgBPFrs0/LbVgo8mXg5HWS2bx0udQsocb7Zgxr5jfTSE52NpU+i2TdCGcHtfZtpgM2HkraxymaBn1Dq1xZMIhxtzbItTjmnTGi8o/9pGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oos1hSQm; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvNFgUXl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EDBDC4CEE3;
-	Fri, 20 Jun 2025 15:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750434328;
-	bh=Zd84NnTL2fRFyvN5Ij331Z+OZS7ttEjUlHQ/6RFI/04=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AvNFgUXlACUxkFVn3xM0WDk9PfcqX0bEtt58WjDUroFsIckjvXLM5rbsVSMxYfQwd
-	 DrwW5lGOQ36ScXDNd/s+Nzk5qIoWxH2j2p9rJiuk6frrcJxGhL3V2mRF7gAp2o2J++
-	 LEsUQveLs0d60HhUbPNnYO2UzzTIGdsd8u+LlVV5fC8DNTmD8XnYXocT75x23eJGSt
-	 nlQOL+H9zoRz8f0eyuvRmM2u2ulQRt3a4jowazEvB6vtAtuWnNNzrFgui9omfagcZN
-	 JDnUvXb2Rpe8IxpZ5iUleDbzUpRdtQkL7Rob+3jzYql6LfkHzl2teaq1K2JwyJwbG5
-	 DU2DM+nE/l0Sw==
-Message-ID: <1788be57-2c26-4bfc-97bf-7d9a0abe3861@kernel.org>
-Date: Fri, 20 Jun 2025 17:45:23 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oos1hSQm"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d54214adso15157165e9.3;
+        Fri, 20 Jun 2025 08:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750434337; x=1751039137; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
+        b=Oos1hSQmL3OFjFa45TXg9QQlZ1ny/4S0FXwRelAY8qKVvBx4ppwtOroYVLCLw2AIv0
+         /9gSVrkE7T7eV5PD591ENT6tST24QSUs1ePcem1Ay322kMVXzLUhAn2s6GtYJtOVTLMy
+         WUAJMyCZeJQn2dTPdfyEN05CA1hned80a+auoEXBSErAgIuoVBXdutqTpXhQzGCDElYK
+         cgRg3QEAwdozWYtw7PwBygCdBMAUQY6vvhoLidpgMJf0L4d1fnyzOGG1EMelBPRe5ynE
+         eDdNLT+mNcNQT8CzbPwILMFelX5YX3Hzq/fN7UxOhe7K4lJoCpDzATeR/ck6vewjjRjz
+         fyiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750434337; x=1751039137;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
+        b=sHCR+nVyNJjdBN+jFMumCjKs8Sqfwv8L2UtX8rQvuZ2IuSue1buOEf4C0tfbau42Xi
+         4WMkKmyhpguPVSlU+4n55lwX7ReGGCrdeUnq2fM505+GL7fzjhlOFv+RZRNa2ELGa660
+         J2Ax8E9obL/+nlkGuYmJja6k9BN7BcPDG78+M1JGo92nzBj7L31wQOtkzCERTzqT1mrf
+         QnDcd4jNGEqRusgx5YtCI279oBJwYWuLMFjkV6Vun9R0F6LAAwn4pdAM+iySsPClaK9U
+         UrMbZv+aO1yd8gyFOVZdaEvFm2twjabmmqgKHLZtT87nT4IXFcD7R8mPDlbttxkYPusK
+         iUMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIuBYKJMj7GB8GidO0zaJ62y++VRLiNa8f2sGgUo8VeauQWtf8nU5M5rubjYAWUYjHLFpaiP0nldd1+sM1@vger.kernel.org, AJvYcCWDc2BXFxLB/ZOP799DKInUn2GmA4MIoJRZRriAAvAeAvCmQUzLXCs5cqWgNRqohsLwT2XfGxwJYpS+@vger.kernel.org, AJvYcCXJHhjcoiXMFQWYdrLqOp0zXhTVd8scTJQTxShHQhaRa4ftaUBR9Eh0BHZD9haQkQiEmPhY+y+ACxhFUPVhk34=@vger.kernel.org, AJvYcCXUsimV84OrPqc/Vp7qFYwDCq21KsWKz5q02F2V4BXrDeq2DuEXHfX7vqzrZMSEWyPJIdXrsopk9lHQkg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6OO4VkDigmHyQsbpBdHYKngCgZqln49cku1mirBoToeTsoz37
+	BRQz8r47dMqSAWrLa57I5hmdE9ptlBkbfnGkaeFERIqLuqqnJzGJ5UTC
+X-Gm-Gg: ASbGncsQSTw/Xha0dCid/INaZvlTceyojVSTetNlViut2HeiJ3R8FSciaYdYCSptKvN
+	SCNwwigOAXxXHaQrOPdJsiCkDoTTSUrLjVHHCADbBPqy6wMfm8l51eGO35DuwEhlnAxAoCGpygl
+	erncvLMiogu9Y2lS4qSgFDN4Y5UbrU95ZcYtku4R65AAASQxohxasx4XtxdOikUUNvsW0j3DLlo
+	Tisy8ZMkvzrcScj43VZffVopqpZwdchERPGaGOIumxyfRaeBWOljpCh/cK60XheCZFGKp2cG1Z6
+	bDiNghc8QxP/rNWbYmDxlh+y0ikb6bHjehcjKlO6Kb57GQxw1ovNhA45235FJzj0sL/8yzIWxhv
+	Vr+fRtqYQbc7NTF0aL1khiIuCvmmTtBqin3Ar
+X-Google-Smtp-Source: AGHT+IH2C53yc23XxCYNlV8ObdMQtnKhsc1hQMOEdirQJq6qRcmhyC9b16FY1hfzZAuThldE6PXaFQ==
+X-Received: by 2002:a05:600c:c103:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-45368780588mr10681265e9.28.1750434336707;
+        Fri, 20 Jun 2025 08:45:36 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f19e7dsm2478995f8f.38.2025.06.20.08.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:45:35 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Alex Hung <alex.hung@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Igor Korotin <igor.korotin.linux@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Len Brown <lenb@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>
+Subject: [PATCH v8 8/9] rust: platform: Add ACPI match table support to `Driver` trait
+Date: Fri, 20 Jun 2025 16:43:34 +0100
+Message-ID: <20250620154334.298320-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv5 0/5] wifi: ath9k: add ahb OF support
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
- nbd@nbd.name, Johannes Berg <johannes@sipsolutions.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250609030851.17739-1-rosenp@gmail.com>
- <37561ac8-ac0f-4744-9495-c7589544d4bb@oss.qualcomm.com>
- <ef0db40a-14d1-4670-82ca-f724a0eeee0d@kernel.org>
- <ddc48fa7-3fca-46a3-9224-11c0c3fce4a4@kernel.org>
- <4a3ad8a6-90a9-45c5-bbdf-7b91d3c18e51@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <4a3ad8a6-90a9-45c5-bbdf-7b91d3c18e51@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/06/2025 17:27, Jeff Johnson wrote:
-> On 6/19/2025 10:39 PM, Krzysztof Kozlowski wrote:
->> On 20/06/2025 07:32, Krzysztof Kozlowski wrote:
->>> On 20/06/2025 02:33, Jeff Johnson wrote:
->>>> On 6/8/2025 8:08 PM, Rosen Penev wrote:
->>>>> First two commits are small cleanups to make the changes of the third
->>>>> simpler. The fourth actually adds dts definitions to use ahb.
->>>>>
->>>>> v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
->>>>> v3: Use qcom prefix and wifi suffix as in other ath drivers.
->>>>> v4: fix up dts example in Documentation
->>>>> v5: move back to using qca prefix. It makes no sense to diverge between
->>>>> all the other drivers for MIPS based qualcomm devices. qcom as a prefix
->>>>> is used for Quallcomm's ARM(64) stuff.
->>>>>
->>>>> Rosen Penev (5):
->>>>>   wifi: ath9k: ahb: reorder declarations
->>>>>   wifi: ath9k: ahb: reorder includes
->>>>>   wifi: ath9k: ahb: replace id_table with of
->>>>>   dt-bindings: net: wireless: ath9k: add OF bindings
->>>>>   mips: dts: qca: add wmac support
->>>>>
->>>>>  .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++-
->>>>>  arch/mips/boot/dts/qca/ar9132.dtsi            |  9 +++
->>>>>  .../boot/dts/qca/ar9132_tl_wr1043nd_v1.dts    |  4 ++
->>>>>  arch/mips/boot/dts/qca/ar9331.dtsi            |  9 +++
->>>>>  arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  4 ++
->>>>>  .../mips/boot/dts/qca/ar9331_dragino_ms14.dts |  4 ++
->>>>>  arch/mips/boot/dts/qca/ar9331_omega.dts       |  4 ++
->>>>>  .../qca/ar9331_openembed_som9331_board.dts    |  4 ++
->>>>>  arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts   |  4 ++
->>>>>  drivers/net/wireless/ath/ath9k/ahb.c          | 60 +++++++------------
->>>>>  10 files changed, 84 insertions(+), 41 deletions(-)
->>>>>
->>>>
->>>> DT team, should I take this series through my tree?
->>>> Toke, Ack?
->>> No, of course not. The same as you asked some time ago: DTS never, NEVER
->>> goes via driver subsystem tree.
->>>
->>
->> Heh, you do not have any subsystem maintainers acks or reviews on DTS,
->> so this should not be considered. It's like me taking wireless patches
->> without your acks.
-> 
-> That is why I was looking for clarification.
-> All the DT stuff had your R-B and hence why I asked Toke for his Ack.
-> Will DT team take the entire series (I'm ok with that)?
-> Or just the DTS and I should take the rest?
+Extend the `platform::Driver` trait to support ACPI device matching by
+adding the `ACPI_ID_TABLE` constant.
 
-It's not the DT team, we are not taking any DTS patches ever but
-platform or SoC maintainers are taking DTS for their platform. So please
-take only your subsystem - wireless drivers and wireless DT bindings -
-leaving DTS for platform/SoC maintainers.
+This allows Rust platform drivers to define ACPI match tables alongside
+their existing OF match tables. These changes mirror the existing OF
+support and allow Rust platform drivers to match devices based on ACPI
+identifiers.
 
-Best regards,
-Krzysztof
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ rust/kernel/platform.rs | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 2436f55b579b..0d00ab9acef7 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -37,12 +37,18 @@ unsafe fn register(
+             None => core::ptr::null(),
+         };
+ 
++        let acpi_table = match T::ACPI_ID_TABLE {
++            Some(table) => table.as_ptr(),
++            None => core::ptr::null(),
++        };
++
+         // SAFETY: It's safe to set the fields of `struct platform_driver` on initialization.
+         unsafe {
+             (*pdrv.get()).driver.name = name.as_char_ptr();
+             (*pdrv.get()).probe = Some(Self::probe_callback);
+             (*pdrv.get()).remove = Some(Self::remove_callback);
+             (*pdrv.get()).driver.of_match_table = of_table;
++            (*pdrv.get()).driver.acpi_match_table = acpi_table;
+         }
+ 
+         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+@@ -96,7 +102,7 @@ fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+     }
+ 
+     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+-        None
++        T::ACPI_ID_TABLE
+     }
+ }
+ 
+@@ -127,7 +133,7 @@ macro_rules! module_platform_driver {
+ /// # Example
+ ///
+ ///```
+-/// # use kernel::{bindings, c_str, device::Core, of, platform};
++/// # use kernel::{acpi, bindings, c_str, device::Core, of, platform};
+ ///
+ /// struct MyDriver;
+ ///
+@@ -140,9 +146,19 @@ macro_rules! module_platform_driver {
+ ///     ]
+ /// );
+ ///
++/// kernel::acpi_device_table!(
++///     ACPI_TABLE,
++///     MODULE_ACPI_TABLE,
++///     <MyDriver as platform::Driver>::IdInfo,
++///     [
++///         (acpi::DeviceId::new(b"TST0001"), ())
++///     ]
++/// );
++///
+ /// impl platform::Driver for MyDriver {
+ ///     type IdInfo = ();
+ ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
++///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+ ///
+ ///     fn probe(
+ ///         _pdev: &platform::Device<Core>,
+@@ -164,6 +180,9 @@ pub trait Driver: Send {
+     /// The table of OF device ids supported by the driver.
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+ 
++    /// The table of ACPI device ids supported by the driver.
++    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
++
+     /// Platform driver probe.
+     ///
+     /// Called when a new platform device is added or discovered.
+-- 
+2.43.0
+
