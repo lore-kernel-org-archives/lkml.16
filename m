@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3753D2DBF45;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03A2DFF2F;
 	Fri, 20 Jun 2025 15:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434234; cv=none; b=AzT3Da+9hyYbynftR86pfLudxw4LDVKNa3gF9Tf3vbFGnNWt+pCAMG+vWXQoqKtLkssaCKpSayxyxabOyJrGdKunaqiUBrruhvpO7JAHNiqav99KUswL2O+/StHSjSPG2jkJd90r1cL1mZV3+jazxMgobsiI5pTQkvLZPMihhlc=
+	t=1750434234; cv=none; b=sfWjzrHyfyccLHoJjXjph5hUEgFlJ2HkIs7LPlKd23KxvWx3K2Ikmm+c8Q4RQ0y5y4SVzmqd1SyW08PXOexmW0hyn8HTx/XAGJ8Z0WwKFio9j+7hY7hosc89X4UA+ZJI+ZTzM4+cYLsTcAra4pcmKylvDNnu6rmlAE4GvegTIFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750434234; c=relaxed/simple;
-	bh=Uybg34ONCi1PiPWXXJtnORZRidX9fKV+ZB6A14EWDK8=;
+	bh=Rj7KD75WcgJtvIqW6RZMxDs0u6BFvPI2J2iy6HHQGz8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c0atXJOs5Te72+QWxNgXfdYutDXc4DS98UiY6ujLaj3HlkTp+jarh8OgCIK4BbzKbNXBRC7z+VJAEl+qqfRkgZMcwB3XWhyMmAp9h2vBx9s1o13uvFS7OoHNdQ3Bk3VWInRStOUsX5/IgIau/Rli4M26fus3AolTp+7offMDBCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Re3c5ByU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gsYYfnrhR8pTQ76YgPT++O6iwc0ingujM6nHYCq9pESTbVO0YCylcLIj5Am/ZkFVJ2onD+iWPR4XN1spoez6PDTloqlo55b2yn/6zPDpTFQsvGLuqTc/MNoSWw0nCiovsSc3u9vL/e0XkyefMgyKZckfuJC37VbFKpzpFLFOjXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xj8EFzrj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Re3c5ByU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C5B1EC4CEF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xj8EFzrj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E9F4EC4CEFB;
 	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750434233;
-	bh=Uybg34ONCi1PiPWXXJtnORZRidX9fKV+ZB6A14EWDK8=;
+	s=k20201202; t=1750434234;
+	bh=Rj7KD75WcgJtvIqW6RZMxDs0u6BFvPI2J2iy6HHQGz8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Re3c5ByU3H94DFDU+2m3umuAWviPlxWbcL2f9gkwtla2KeJuYCIBJZdFRf6hZGyFP
-	 mAxAXCP7RIqBv+stJfkEGZ8t+MvPNeeczipVQ8i8+tNhPOd26CUhurJDCvorT59JuN
-	 a8lomXo6PcNwxSlXCoYPtRNP7/XnqPPgEzAgJuanSJQT3F6J0re/fAZMPJI2/9tiBJ
-	 nuWgvKrFIXPCC7HkCZzNZEKPJefrqxVRQUTaLznsKBaI+No7gKX6/yw+e5xsJLEjS0
-	 muDxc8bqewjR6kAsuabgUg78nP5LDiuPvmOSCrTqwZouMnxTxIjosL5SFUl64A2UO0
-	 cfZENJKZcGZOw==
+	b=Xj8EFzrjQnbGovpoALtOdnmSuU8QU7uuMv2+npD2yE/PfAvS85RXI6MtV5hZN6H+M
+	 kObJ/vF28wGu2QdNh/XOMaMk5Gizd73k34Vt0RXlxbqMXJYTR9jkg49Wt7w3Qy55NS
+	 k8g3AGzqa5hbWtTJg9NELzOilUpWUfu69UQ0sLJvQYxR34IR3y2B/R4J3zii6Go918
+	 N3FaUQLnBmmcsxcfnyh1flXkiFzi4z7m/x91ylGZ/vt10kBcYi+Dxx1WuiBEtN556Y
+	 STmc6mUFnts2SLjqV/6+RtPDNpBLx5rBHfWDtgmsvbtb6AuUpFas+7o+4RuvKSwelY
+	 2SJmsjmoQczgg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88AC7115B;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F8CC7115B;
 	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
 From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Fri, 20 Jun 2025 18:40:44 +0300
-Subject: [PATCH 05/11] dt-bindings: vendor-prefixes: add JTY
+Date: Fri, 20 Jun 2025 18:40:47 +0300
+Subject: [PATCH 08/11] ARM: mediatek: add MT6572 smp bring up code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-mt6572-v1-5-e2d47820f042@proton.me>
+Message-Id: <20250620-mt6572-v1-8-e2d47820f042@proton.me>
 References: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
 In-Reply-To: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -59,11 +59,11 @@ Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
  Max Shevchenko <wctrl@proton.me>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750434231; l=808;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750434231; l=1857;
  i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=qkgh9NSe5C5X30r4tLops4d54dSNCo6iOJTAIZMBoyI=;
- b=kO4OmP4BxOqIVa2atkaH6K79hBsbJY9G6vCDkKW5XfQA11HDIqxK22P0FfCRaTbVk7LvAnXjC
- T6elsaqLM2LC8784F08bgPT0g4HnsRkftkaSst2AdhRmqxy/yCoc4+V
+ bh=T8VXT+/gkb+tLiu+YbfKUS6YHMSUIjr+TS94R7QyjLU=;
+ b=gaVOQG/JP38ntFBWyX8QqYCp36/uojX4tLGegknkDl4SPhVEeGu2m0ySgQlrNY+MWL3qoU0m1
+ wx/W1N8/ohvDJCC7EeRtd8/ZTvbXyZ/pqKdOLHs2HlNyvUn32hpmEjs
 X-Developer-Key: i=wctrl@proton.me; a=ed25519;
  pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
 X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
@@ -73,27 +73,54 @@ Reply-To: wctrl@proton.me
 
 From: Max Shevchenko <wctrl@proton.me>
 
-JTY produced low-cost Android tablets based on various
-MediaTek MT65xx SoCs.
+Add support for booting the secondary CPU on the MT6572 SoC.
 
 Signed-off-by: Max Shevchenko <wctrl@proton.me>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-mediatek/Kconfig   | 4 ++++
+ arch/arm/mach-mediatek/platsmp.c | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 86f6a19b28ae217643bf7a63a471f74819d18238..517bd129288c96483ffe358127ce8e16f60d902b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -782,6 +782,8 @@ patternProperties:
-     description: Jide Tech
-   "^joz,.*":
-     description: JOZ BV
-+  "^jty,.*":
-+    description: JTY
-   "^kam,.*":
-     description: Kamstrup A/S
-   "^karo,.*":
+diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+index 35a3430c7942d897106bb32916df78347113798a..638eabad2dd37ee56244fc036cb76af135aee416 100644
+--- a/arch/arm/mach-mediatek/Kconfig
++++ b/arch/arm/mach-mediatek/Kconfig
+@@ -15,6 +15,10 @@ config MACH_MT2701
+ 	bool "MediaTek MT2701 SoCs support"
+ 	default ARCH_MEDIATEK
+ 
++config MACH_MT6572
++	bool "MediaTek MT6572 SoCs support"
++	default ARCH_MEDIATEK
++
+ config MACH_MT6589
+ 	bool "MediaTek MT6589 SoCs support"
+ 	default ARCH_MEDIATEK
+diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
+index 16a4ee6c959050474c5535ac6a65d92b29482d53..bbd26d423bdef23629ec5ca9d9c61903748988b7 100644
+--- a/arch/arm/mach-mediatek/platsmp.c
++++ b/arch/arm/mach-mediatek/platsmp.c
+@@ -29,6 +29,12 @@ static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
+ 	{ 0x3f8, 0x3f8, 0x3f8 },
+ };
+ 
++static const struct mtk_smp_boot_info mtk_mt6572_boot = {
++	0x10001400, 0x08,
++	{ 0x534c4131 },
++	{ 0x0c },
++};
++
+ static const struct mtk_smp_boot_info mtk_mt6589_boot = {
+ 	0x10002000, 0x34,
+ 	{ 0x534c4131, 0x4c415332, 0x41534c33 },
+@@ -49,6 +55,7 @@ static const struct of_device_id mtk_tz_smp_boot_infos[] __initconst = {
+ };
+ 
+ static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
++	{ .compatible   = "mediatek,mt6572", .data = &mtk_mt6572_boot },
+ 	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
+ 	{ .compatible   = "mediatek,mt7623", .data = &mtk_mt7623_boot },
+ 	{ .compatible   = "mediatek,mt7629", .data = &mtk_mt7623_boot },
 
 -- 
 2.50.0
