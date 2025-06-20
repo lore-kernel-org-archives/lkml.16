@@ -1,427 +1,265 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCAA2EAB69
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144362E8E1D;
+	Fri, 20 Jun 2025 20:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450960; cv=none; b=ifZNUq7N6yc5I0YZU5BNOjTxx4Kp7CQj2y1WYKMB7bmtY5fzscypBhY4ZB7/rPm1QiBQX+W8+EDXRvjHJtKcZuAwdYzV9Ky023V4yauALW/jZ9cV+s8m3sMCRY9y6oCDWT7ZxAv1Iig6nYDqeE2hN8M0+enPZD0e7VcAeCRrDCE=
+	t=1750450987; cv=none; b=BqLYTBghcn/Lhmngux7s+cNwv+edxvmPxGOhJl3yL5QcLJYAEnG6Xc1dYKlm+/auxdMM27GX9+b2MsyHUHG9cDHKaUDI+cwrO9FGyL8azGdFduf6O5G7dQEHziCggn1KqhQwF9w6w99bnsWvpdHZK2QRH3kQoIcOzavQ9Q+41RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450960; c=relaxed/simple;
-	bh=C+uxgod9CTvG8HEvmlGSRhpd6q3U26YYp5CKertPOT8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IM5lF6EPqqOT0h5MlT5KZAYXbnNUMWvJtN7zkUJAj1yRodB1m4w+tuuiBb5pk0AsxDA24v8PL/rEVkq1Gr0Hu1234ugwfwVLMiGiX7tSbNihGS/NhPz145FQPMnQN9X+acA6IIb6KkKI8s5kaRQa3QDOBEnzWG7JC6UA2nRcSYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1uSiFr-0001je-05; Fri, 20 Jun 2025 22:22:31 +0200
-Message-ID: <3197df27de7438c67558060414bff16662cb155a.camel@pengutronix.de>
-Subject: Re: [PATCH v2 5/6] drm/etnaviv: Add PPU flop reset
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Gert Wollny <gert.wollny@collabora.com>, Russell King
- <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
- <christian.gmeiner@gmail.com>
-Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 20 Jun 2025 22:22:30 +0200
-In-Reply-To: <20250618204400.21808-6-gert.wollny@collabora.com>
-References: <20250618204400.21808-1-gert.wollny@collabora.com>
-	 <20250618204400.21808-6-gert.wollny@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1750450987; c=relaxed/simple;
+	bh=xQt7jUNQ+jESbD6JRt2kJr1MVEcQ6cRayAxKiKBD8c0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0pUWhFxp//PMalt5xOBmHkuQrZv6aid/Y6ZMPBiZ4IS7IzIguAPUTG+J8iPK2P4wPEqxJUt4Bmwdwg0EW7gxCEdUcCscqliefwZQufMpDP6+F5ZEK2uerrJM4vXwcPoe1DhzbT5Sp/nypEPGXF4ba/oDIF2f+78Pb/In0TEO8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfpRamic; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfpRamic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5A0C4CEE3;
+	Fri, 20 Jun 2025 20:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750450986;
+	bh=xQt7jUNQ+jESbD6JRt2kJr1MVEcQ6cRayAxKiKBD8c0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VfpRamicirXVWkyA9VhWVwQVlkufg85XNdsy2cWrr44lzUBIe00Z/Na/EQ6iQcif1
+	 QQkYkcIqI3rgYljlkxWXQPCPTfAHErVc6x6MFeZs1x4XBab/OiMix+LczfvQaxHN3P
+	 efKKJJSAExJvA0WIKXW0Ga5k8Lm6mzy9N918ACc9Xr1Hli0MrHYfvpqtuLEJApF6CJ
+	 R/VYlbhZvt/B94osCJW3PmELwq3YnfywosqGG7upBQWhzUrQXwNkXjZ5UrOgynuzch
+	 o0rKYknEiV/NEnaEnvczuSbBj0unZtYUTmjUun958sZU3fW9jVvWoU8R/UC1kW2TsK
+	 qIeB1LQAyn/fA==
+Date: Fri, 20 Jun 2025 13:23:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf debug: Add function symbols to dump_stack
+Message-ID: <aFXDKO-aLWzA3M2H@google.com>
+References: <20250611221521.722045-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250611221521.722045-1-irogers@google.com>
 
-Am Mittwoch, dem 18.06.2025 um 22:43 +0200 schrieb Gert Wollny:
-> The PPU flop reset is required on some hardware to clear the
-> temporary registers. This implementation follows the code
-> implemented in the public galcore kernel module code to this
-> for the PPU.
->=20
-> v2: - Move flop reset data to etnaviv_drm_private and initialize it
->       from etnaviv_gpu_bind (Lucas)
->     - Prepare code for more chip IDs and other flop reset types
->     - do some cleanups and function name renaming
->=20
-> Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
+On Wed, Jun 11, 2025 at 03:15:21PM -0700, Ian Rogers wrote:
+> Symbolize stack traces by creating a live machine. Add this
+> functionality to dump_stack and switch dump_stack users to use
+> it. Switch TUI to use it. Add stack traces to the child test function
+> which can be useful to diagnose blocked code.
+> 
+> Example output:
+> ```
+>   8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
+> ^C
+> Signal (2) while running tests.
+> Terminating tests with the same signal
+> Internal test harness failure. Completing any started tests:
+> :  8: PERF_RECORD_* events & perf_sample fields:
+> 
+> ---- unexpected signal (2) ----
+>     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
+>     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
+>     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
+>     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
+>     #4 0x7f4a91f01f68 in __sleep sleep.c:55
+>     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
+>     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
+>     #7 0x5590fb5b83ab in start_command run-command.c:127
+>     #8 0x5590fb621572 in start_test builtin-test.c:467
+>     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
+>     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
+>     #11 0x5590fb5a9099 in run_builtin perf.c:351
+>     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
+>     #13 0x5590fb5a9499 in run_argv perf.c:451
+>     #14 0x5590fb5a97e2 in main perf.c:558
+>     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
+>     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>     #17 0x5590fb4fd6d1 in _start perf[436d1]
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  drivers/gpu/drm/etnaviv/Makefile             |   1 +
->  drivers/gpu/drm/etnaviv/etnaviv_buffer.c     |   6 +
->  drivers/gpu/drm/etnaviv/etnaviv_drv.c        |   2 +
->  drivers/gpu/drm/etnaviv/etnaviv_drv.h        |   3 +
->  drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c | 205 +++++++++++++++++++
->  drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h |  25 +++
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c        |   6 +
->  7 files changed, 248 insertions(+)
->  create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
->  create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
->=20
-> diff --git a/drivers/gpu/drm/etnaviv/Makefile b/drivers/gpu/drm/etnaviv/M=
-akefile
-> index 46e5ffad69a6..903101e8751a 100644
-> --- a/drivers/gpu/drm/etnaviv/Makefile
-> +++ b/drivers/gpu/drm/etnaviv/Makefile
-> @@ -14,6 +14,7 @@ etnaviv-y :=3D \
->  	etnaviv_iommu.o \
->  	etnaviv_mmu.o \
->  	etnaviv_perfmon.o \
-> +	etnaviv_flop_reset.o \
->  	etnaviv_sched.o
-> =20
->  obj-$(CONFIG_DRM_ETNAVIV)	+=3D etnaviv.o
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/e=
-tnaviv/etnaviv_buffer.c
-> index 9e007d977efe..a2da3212592f 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-> @@ -18,6 +18,8 @@
->  #include "state_3d.xml.h"
->  #include "cmdstream.xml.h"
-> =20
-> +#include "etnaviv_flop_reset.h"
-> +
->  static void etnaviv_cmd_select_pipe(struct etnaviv_gpu *gpu,
->  	struct etnaviv_cmdbuf *buffer, u8 pipe)
+>  tools/perf/tests/builtin-test.c | 15 +++++++-
+>  tools/perf/ui/tui/setup.c       |  2 +-
+>  tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
+>  tools/perf/util/debug.h         |  1 +
+>  4 files changed, 69 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 45d3d8b3317a..80375ca39a37 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -6,6 +6,9 @@
+>   */
+>  #include <fcntl.h>
+>  #include <errno.h>
+> +#ifdef HAVE_BACKTRACE_SUPPORT
+> +#include <execinfo.h>
+> +#endif
+>  #include <poll.h>
+>  #include <unistd.h>
+>  #include <setjmp.h>
+> @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+>  
+>  static void child_test_sig_handler(int sig)
 >  {
-> @@ -100,6 +102,10 @@ u16 etnaviv_buffer_init(struct etnaviv_gpu *gpu)
->  	/* initialize buffer */
->  	buffer->user_size =3D 0;
-> =20
-> +	/* Queue in PPU flop reset */
-> +	if (etnaviv_flop_reset_ppu_require(&gpu->identity))
-> +		etnaviv_flop_reset_ppu_run(gpu);
+> +#ifdef HAVE_BACKTRACE_SUPPORT
+> +	void *stackdump[32];
+> +	size_t stackdump_size;
+> +#endif
 > +
->  	CMD_WAIT(buffer, gpu->fe_waitcycles);
->  	CMD_LINK(buffer, 2,
->  		 etnaviv_cmdbuf_get_va(buffer, &gpu->mmu_context->cmdbuf_mapping)
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etna=
-viv/etnaviv_drv.c
-> index 3e91747ed339..73dc1c00c027 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> @@ -604,6 +604,8 @@ static void etnaviv_unbind(struct device *dev)
-> =20
->  	xa_destroy(&priv->active_contexts);
-> =20
-> +	kfree(priv->flop_reset_data_ppu);
-> +
-Missing etnaviv_cmdbuf_free().
-
->  	drm->dev_private =3D NULL;
->  	kfree(priv);
-> =20
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etna=
-viv/etnaviv_drv.h
-> index b3eb1662e90c..20dad16fd554 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-> @@ -48,6 +48,9 @@ struct etnaviv_drm_private {
->  	/* list of GEM objects: */
->  	struct mutex gem_lock;
->  	struct list_head gem_list;
-> +
-> +	/* ppu flop reset data */
-> +	struct etnaviv_cmdbuf *flop_reset_data_ppu;
->  };
-> =20
->  int etnaviv_ioctl_gem_submit(struct drm_device *dev, void *data,
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c b/drivers/gpu/d=
-rm/etnaviv/etnaviv_flop_reset.c
-> new file mode 100644
-> index 000000000000..c33647e96636
-> --- /dev/null
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
-> @@ -0,0 +1,205 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Etnaviv Project
-> + */
-> +
-> +#include "asm-generic/int-ll64.h"
-> +#include "etnaviv_buffer.h"
-> +#include "etnaviv_cmdbuf.h"
-> +#include "state_3d.xml.h"
-> +
-> +#include "etnaviv_flop_reset.h"
-> +
-> +enum etnaviv_flop_reset_type {
-> +	flop_reset_ppu =3D 1 << 0,
-> +	flop_reset_nn =3D 1 << 1,
-> +	flop_reset_tp =3D 1 << 2
-> +};
-> +
-> +#define PPU_IMAGE_STRIDE 64
-> +#define PPU_IMAGE_XSIZE 64
-> +#define PPU_IMAGE_YSIZE 6
-> +
-> +#define PPU_FLOP_RESET_INSTR_DWORD_COUNT 16
-> +
-> +static void
-> +etnaviv_emit_flop_reset_state_ppu(struct etnaviv_cmdbuf *cmdbuf,
-> +				  u32 buffer_base,
-> +				  u32 input_offset,
-> +				  u32 output_offset,
-> +				  u32 shader_offset,
-> +				  u32 shader_size,
-> +				  u32 shader_register_count)
+> +	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
+> +#ifdef HAVE_BACKTRACE_SUPPORT
+> +	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+> +	__dump_stack(stderr, stackdump, stackdump_size);
+> +#endif
+>  	siglongjmp(run_test_jmp_buf, sig);
+>  }
+>  
+> @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
+>  
+>  	err = sigsetjmp(run_test_jmp_buf, 1);
+>  	if (err) {
+> -		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
+> +		/* Received signal. */
+>  		err = err > 0 ? -err : -1;
+>  		goto err_out;
+>  	}
+> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> index 16c6eff4d241..022534eed68c 100644
+> --- a/tools/perf/ui/tui/setup.c
+> +++ b/tools/perf/ui/tui/setup.c
+> @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+>  
+>  	printf("-------- backtrace --------\n");
+>  	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+> -	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
+> +	__dump_stack(stdout, stackdump, size);
+>  
+>  	exit(0);
+>  }
+> diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+> index f9ef7d045c92..8987ac250079 100644
+> --- a/tools/perf/util/debug.c
+> +++ b/tools/perf/util/debug.c
+> @@ -14,11 +14,18 @@
+>  #ifdef HAVE_BACKTRACE_SUPPORT
+>  #include <execinfo.h>
+>  #endif
+> +#include "addr_location.h"
+>  #include "color.h"
+> -#include "event.h"
+>  #include "debug.h"
+> +#include "event.h"
+> +#include "machine.h"
+> +#include "map.h"
+>  #include "print_binary.h"
+> +#include "srcline.h"
+> +#include "symbol.h"
+> +#include "synthetic-events.h"
+>  #include "target.h"
+> +#include "thread.h"
+>  #include "trace-event.h"
+>  #include "ui/helpline.h"
+>  #include "ui/ui.h"
+> @@ -298,21 +305,56 @@ void perf_debug_setup(void)
+>  	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
+>  }
+>  
+> +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
 > +{
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_API_MODE,
-> +		               VIVS_GL_API_MODE_OPENCL);
-> +	CMD_SEM(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-> +	CMD_STALL(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+> +	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
+> +	pid_t pid = getpid();
+> +	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
+> +	struct thread *thread = NULL;
 > +
-> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(0), 4);
+> +	if (machine)
+> +		thread = machine__find_thread(machine, pid, pid);
 > +
-> +	OUT(cmdbuf, buffer_base + input_offset);
-> +	OUT(cmdbuf, PPU_IMAGE_STRIDE);
-> +	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
-> +	OUT(cmdbuf, 0x444051f0);
-> +	OUT(cmdbuf, 0xffffffff);
-> +
-> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(4), 4);
-> +	OUT(cmdbuf, buffer_base + output_offset);
-> +	OUT(cmdbuf, PPU_IMAGE_STRIDE);
-> +	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
-> +	OUT(cmdbuf, 0x444051f0);
-> +	OUT(cmdbuf, 0xffffffff);
-> +
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_CONFIG,
-> +		               VIVS_CL_CONFIG_DIMENSIONS(2) |
-> +		               VIVS_CL_CONFIG_VALUE_ORDER(3));
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_INVALIDATE, 0x1f);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_VARYING_NUM_COMPONENTS(0), 0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_TEMP_REGISTER_CONTROL,
-> +		               shader_register_count);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_SAMPLER_BASE, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_UNIFORM_BASE, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_LOW, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_HIGH,
-> +		               shader_size / 16);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INST_ADDR,
-> +		               buffer_base + shader_offset);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_SH_CONFIG,
-> +		               VIVS_SH_CONFIG_RTNE_ROUNDING);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_CONTROL,
-> +		               VIVS_VS_ICACHE_CONTROL_ENABLE);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_COUNT,
-> +		               shader_size / 16 - 1);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INPUT_COUNT, 0x1f01);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_HALTI5_UNK008A0, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PA_VS_OUTPUT_COUNT, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_VARYING_TOTAL_COMPONENTS, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_CONTROL_EXT, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_OUTPUT_COUNT, 0x1);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_HALTI5_SH_SPECIALS, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_PREFETCH, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_UNK00924, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_THREAD_ALLOCATION, 0x1);
-> +
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_X, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Y, 0x0);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Z, 0x0);
-> +
-> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_CL_WORKGROUP_COUNT_X, 9);
-> +	OUT(cmdbuf, 0xf);
-> +	OUT(cmdbuf, 0x5);
-> +	OUT(cmdbuf, 0xffffffff);
-> +	OUT(cmdbuf, 0x0);
-> +	OUT(cmdbuf, 0x0);
-> +	OUT(cmdbuf, 0x3ff);
-> +	OUT(cmdbuf, 0x0);
-> +	OUT(cmdbuf, 0x4);
-> +	OUT(cmdbuf, 0x1);
-> +	OUT(cmdbuf, 0x0);
-> +
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_KICKER, 0xbadabeeb);
-> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_FLUSH_CACHE,
-> +		               VIVS_GL_FLUSH_CACHE_SHADER_L1 |
-> +		               VIVS_GL_FLUSH_CACHE_UNK10 |
-> +		               VIVS_GL_FLUSH_CACHE_UNK11);
-> +}
-> +
-> +static void
-> +etnaviv_flop_reset_ppu_fill_input(u32 *buffer, u32 size)
-> +{
-> +	for (int i =3D 0; i < size/4; ++i, ++buffer)
-> +		*buffer =3D 0x01010101;
-> +}
-> +
-> +static void
-> +etnaviv_flop_reset_ppu_set_shader(u8 *dest)
-> +{
-> +	const u32 inst[PPU_FLOP_RESET_INSTR_DWORD_COUNT] =3D {
-> +		/* img_load.u8 r1, c0, r0.xy */
-> +		0x78011779, 0x39000804, 0x00A90050, 0x00000000,
-> +		/* img_load.u8 r2, c0, r0.xy */
-> +		0x78021779, 0x39000804, 0x00A90050, 0x00000000,
-> +		/* dp2x8 r1, r1, r2, c3_512 */
-> +		0xB8017145, 0x390018FC, 0x01C90140, 0x40390028,
-> +		/* img_store.u8 r1, c2, r0.xy, r1 */
-> +		0x380007BA, 0x39001804, 0x00A90050, 0x00390018,
-> +	};
-> +	memcpy(dest, inst, sizeof(inst));
-> +}
-> +
-> +static struct etnaviv_flop_reset_entry {
-> +	u16 chip_model;
-> +	u16 revision;
-> +	u32 flags;
-> +} etnaviv_flop_reset_db [] =3D {
-> +	{
-> +		.chip_model =3D 0x8000,
-> +		.revision =3D 0x6205,
-> +		.flags =3D flop_reset_ppu
-> +	},
-> +};
-> +
-> +bool
-> +etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_=
-id)
-> +{
-> +	const struct etnaviv_flop_reset_entry *e =3D etnaviv_flop_reset_db;
-> +
-> +	for (int i =3D 0; i < ARRAY_SIZE(etnaviv_flop_reset_db); ++i, ++e) {
-> +		if (chip_id->model =3D=3D e->chip_model &&
-> +		    chip_id->revision =3D=3D e->revision)
-> +			return (e->flags & flop_reset_ppu) !=3D 0;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static const u32 image_data_size =3D PPU_IMAGE_STRIDE * PPU_IMAGE_YSIZE;
-> +static const u32 output_offset =3D ALIGN(image_data_size, 64);
-> +static const u32 shader_offset =3D ALIGN(output_offset + image_data_size=
-, 64);
-> +static const u32 shader_size =3D PPU_FLOP_RESET_INSTR_DWORD_COUNT * size=
-of(u32);
-> +static const u32 shader_register_count =3D 3;
-> +static const u32 buffer_size =3D shader_offset + shader_size;
-> +
-> +void
-> +etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv)
-> +{
-> +	/* Get some space from the rung buffer to put the payload
-                                   ^ ring
-> +	   (input and output image, and shader), we keep this buffer
-> +	   for the whole life time the driver is bound */
-
-This isn't the comment style used throughout the driver.
-
-> +	priv->flop_reset_data_ppu =3D
-> +	  kzalloc(sizeof(*priv->flop_reset_data_ppu), GFP_KERNEL);
-> +
-> +	etnaviv_cmdbuf_init(priv->cmdbuf_suballoc,
-> +			    priv->flop_reset_data_ppu, buffer_size);
-> +
-> +	void *buffer_base =3D priv->flop_reset_data_ppu->vaddr;
-> +
-> +	u32 *input_data =3D (u32 *)buffer_base;
-> +	etnaviv_flop_reset_ppu_fill_input(input_data, image_data_size);
-> +
-> +	u8 *shader_data =3D (u8 *)buffer_base + shader_offset;
-> +	etnaviv_flop_reset_ppu_set_shader(shader_data);
-> +}
-> +
-> +void
-> +etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu)
-> +{
-> +	struct etnaviv_drm_private *priv =3D gpu->drm->dev_private;
-> +
-> +	if (!priv->flop_reset_data_ppu) {
-> +		pr_err("Flop reset data was not initialized, skipping\n");
+> +	if (!machine || !thread) {
+> +		/*
+> +		 * Backtrace functions are async signal safe. Fall back on them
+> +		 * if machine/thread creation fails.
+> +		 */
+> +		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
+> +		machine__delete(machine);
 > +		return;
 > +	}
 > +
-> +	u32 buffer_base =3D etnaviv_cmdbuf_get_va(priv->flop_reset_data_ppu,
-> +						&gpu->mmu_context->cmdbuf_mapping);
+> +	for (size_t i = 0; i < stackdump_size; i++) {
+> +		struct addr_location al;
+> +		u64 addr = (u64)stackdump[i];
 > +
-> +	etnaviv_emit_flop_reset_state_ppu(&gpu->buffer,
-> +					  buffer_base,
-> +					  0,
-> +					  output_offset,
-> +					  shader_offset,
-> +					  shader_size,
-> +					  shader_register_count);
+> +		addr_location__init(&al);
+> +		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al))
+
+It seems addr_location__exit(&al) is needed here.
+
+Thanks,
+Namhyung
+
+
+> +			continue;
+> +
+> +		al.sym = map__find_symbol(al.map, al.addr);
+> +		if (al.sym)
+> +			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
+> +		else
+> +			fprintf(file, "    #%zd %p ", i, stackdump[i]);
+> +
+> +		map__fprintf_srcline(al.map, al.addr, "", file);
+> +		fprintf(file, "\n");
+> +		addr_location__exit(&al);
+> +	}
+> +	thread__put(thread);
+> +	machine__delete(machine);
 > +}
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h b/drivers/gpu/d=
-rm/etnaviv/etnaviv_flop_reset.h
-> new file mode 100644
-> index 000000000000..f51cece75507
-> --- /dev/null
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
-> @@ -0,0 +1,25 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Etnaviv Project
-> + */
 > +
-> +
-> +#ifndef etnaviv_flop_reset_h
-> +#define etnaviv_flop_reset_h
-> +
-> +#include <linux/types.h>
-> +
-> +struct etnaviv_chip_identity;
-> +struct etnaviv_drm_private;
-> +struct etnaviv_gpu;
-> +
-> +bool
-> +etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_=
-id);
-> +
-> +void
-> +etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv);
-> +
-> +void
-> +etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu);
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etna=
-viv/etnaviv_gpu.c
-> index dc8a7ff3e797..0d1dc1b1d98d 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -18,6 +18,7 @@
-> =20
->  #include "etnaviv_cmdbuf.h"
->  #include "etnaviv_dump.h"
-> +#include "etnaviv_flop_reset.h"
->  #include "etnaviv_gpu.h"
->  #include "etnaviv_gem.h"
->  #include "etnaviv_mmu.h"
-> @@ -1807,6 +1808,11 @@ static int etnaviv_gpu_bind(struct device *dev, st=
-ruct device *master,
->  		ret =3D -ENXIO;
->  		goto out_sched;
->  	}
-> +
-> +	if (etnaviv_flop_reset_ppu_require(&gpu->identity) &&
-> +	    !priv->flop_reset_data_ppu)
-> +		etnaviv_flop_reset_ppu_init(priv);
-> +
-I don't see why you would need to do this in the bind callback. You
-should be able to move this to etnaviv_gpu_init(), so you have the
-needed identification data. gpu_init is also executed serially over all
-GPUs in the device, so there is no problem with potential races there.
-
-Regards,
-Lucas
-
->  	priv->gpu[priv->num_gpus++] =3D gpu;
-> =20
->  	return 0;
-
+>  /* Obtain a backtrace and print it to stdout. */
+>  #ifdef HAVE_BACKTRACE_SUPPORT
+>  void dump_stack(void)
+>  {
+> -	void *array[16];
+> -	size_t size = backtrace(array, ARRAY_SIZE(array));
+> -	char **strings = backtrace_symbols(array, size);
+> -	size_t i;
+> -
+> -	printf("Obtained %zd stack frames.\n", size);
+> -
+> -	for (i = 0; i < size; i++)
+> -		printf("%s\n", strings[i]);
+> +	void *stackdump[32];
+> +	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+>  
+> -	free(strings);
+> +	__dump_stack(stdout, stackdump, size);
+>  }
+>  #else
+>  void dump_stack(void) {}
+> diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+> index a4026d1fd6a3..6b737e195ce1 100644
+> --- a/tools/perf/util/debug.h
+> +++ b/tools/perf/util/debug.h
+> @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
+>  void perf_debug_setup(void);
+>  int perf_quiet_option(void);
+>  
+> +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
+>  void dump_stack(void);
+>  void sighandler_dump_stack(int sig);
+>  
+> -- 
+> 2.50.0.rc1.591.g9c95f17f64-goog
+> 
