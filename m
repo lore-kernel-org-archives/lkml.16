@@ -1,132 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D097215A8;
-	Fri, 20 Jun 2025 06:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A2030E844;
+	Fri, 20 Jun 2025 06:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750399256; cv=none; b=i5Gw+bN/SxRn5BbKMRppw1iOIr79FG/Z76SHWu9tuyNM8Lm3RaC9qyKZ5vp1sWTF74UK6378ZKs9y1HX8fLxfVNeeKUeYB8Osgy7dyZAaRMPZTxgjOLa/fdOTjGVUURNzIvZhnlQrur9yG7kHo4bDFay/0hJJrkWqMSWy0lvfGk=
+	t=1750399435; cv=none; b=siX+nRaGIBpxJj2h7y74y7k5AmqM3+BBPBhgpESw47FivLRPhjUMGR2SMVcsMhkr26JWVInaU3tEddI7njXKzEBRHdgfM+olYO/8ISAbKGaneD7B8TRem+i1BE4X5ZBjATaTvUqwFl1Dr4CNGMzaZR/uhkkCoM2HWpfpeXFM2R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750399256; c=relaxed/simple;
-	bh=7YKn9rIqYNQmQxOunpyDKEKMAmTTgsAH/S8GgLWFWHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WfQAZsFOXwGSPHe8JnYFl8SjS6UtMElANSgocmET0okcp9I+2O84B6Cx09crHTM63QkDI96cvrQVfrG/+KdK5A+yy79S1Ebs0SMndK/fa+etQuB1l/zOkwD3r+MDbggOccclvncr5wMLo3w9vPNSAdICBZGWObZ6/onl6/p9BZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48362176A;
-	Thu, 19 Jun 2025 23:00:34 -0700 (PDT)
-Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 518583F66E;
-	Thu, 19 Jun 2025 23:00:50 -0700 (PDT)
-Message-ID: <9f3fdc4f-2f44-4a3b-9b8b-425003b0be99@arm.com>
-Date: Fri, 20 Jun 2025 11:30:47 +0530
+	s=arc-20240116; t=1750399435; c=relaxed/simple;
+	bh=dEqEwodf7vN0SzfGLCwlM4Gw236rbgLtIL+40tlnfMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DcFnFJGGYkUs6Oj+zXK1D8Uhq8g23WKNWTa+bAVBB3/YSQHuhyWQChEY1pGFBmI6rRB6o7hblO6lf7UY1iLrWDWSrV1aEwTMkPho4h5GBgo/lGkSaYGW+klQ34MikBpOjznM+0Ff696t894Rsr6dzBG35J3EAeBOw0fhoHNQDsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CCDWQLhN; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CCDWQLhN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750399428;
+	bh=QFgAX2IQC6Co+8zhnEdRbkLqxWE/aIwH3xsg4x19bik=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CCDWQLhNzsIqvnB2tJVyRmVDje/XrtNfE02EeJav/Sox+QtVpbNVrsISI7htTN3/d
+	 DCIa4/ff52KlgKZZ5lxK+svftXDLcAkojicyjsmNxxIyLJiMk8ugYUKoyljY0YCWom
+	 L02pWAE6+8Bz21r1q4Joldnxt+XC29gEogGqhGXGQgqq7EgML01odS9WePV/Rnc/aP
+	 wsP4f5b/3nYHM9jGm0I8uohcHMSPWpPSN5kwX4YiozsaPiLHHnLrPcfaUrfd3/ylMg
+	 azIzACeLx9iD9wtJZSsVnm2TB3S0a/Wbg02nmg321vzeKoQgOl6Q81bqylObI/IN5T
+	 PQleklrfGhbzw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bNn3S1dyjz4x11;
+	Fri, 20 Jun 2025 16:03:48 +1000 (AEST)
+Date: Fri, 20 Jun 2025 16:03:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lee Jones <lee@kernel.org>
+Cc: Abinash Singh <abinashlalotra@gmail.com>, Abinash Singh
+ <abinashsinghlalotra@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the mfd tree with the mfd-fixes tree
+Message-ID: <20250620160345.48fd2d50@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
-To: Petr Mladek <pmladek@suse.com>, Pedro Falcato <pfalcato@suse.de>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
- <20250618041235.1716143-2-anshuman.khandual@arm.com>
- <b589b96f-a771-42f1-b14a-0f90db9fb55e@redhat.com>
- <5d037cb6-91a7-47b7-a902-c3e36f2adefb@arm.com>
- <dc5fb92c-6636-4dce-bc66-181345f79abf@redhat.com>
- <ihe6ueejcemrscqzuieunap6sk2z2yb7xr7szr77nue6qpcvm3@qnwvbvqlwdn5>
- <aFQLtrSGxcscq9No@pathway.suse.cz>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <aFQLtrSGxcscq9No@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/qAjJ+C_uXe.ic9MtoV+Nzq.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/qAjJ+C_uXe.ic9MtoV+Nzq.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 19/06/25 6:38 PM, Petr Mladek wrote:
-> On Wed 2025-06-18 19:16:00, Pedro Falcato wrote:
->> On Wed, Jun 18, 2025 at 10:44:20AM +0200, David Hildenbrand wrote:
->>> On 18.06.25 10:37, Anshuman Khandual wrote:
->>>>
->>>>
->>>> On 18/06/25 1:48 PM, David Hildenbrand wrote:
->>>>> On 18.06.25 06:12, Anshuman Khandual wrote:
->>>>>> Add a new format for printing page table entries.
->>>>>>
->>>>>> Cc: Petr Mladek <pmladek@suse.com>
->>>>>> Cc: Steven Rostedt <rostedt@goodmis.org>
->>>>>> Cc: Jonathan Corbet <corbet@lwn.net>
->>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>> Cc: David Hildenbrand <david@redhat.com>
->>>>>> Cc: linux-doc@vger.kernel.org
->>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>> Cc: linux-mm@kvack.org
->>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>> ---
->>>>>>    Documentation/core-api/printk-formats.rst | 14 ++++++++++++++
->>>>>>    lib/vsprintf.c                            | 20 ++++++++++++++++++++
->>>>>>    mm/memory.c                               |  5 ++---
->>>>>>    scripts/checkpatch.pl                     |  2 +-
->>>>>>    4 files changed, 37 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
->>>>>> index 4b7f3646ec6ce..75a110b059ee1 100644
->>>>>> --- a/Documentation/core-api/printk-formats.rst
->>>>>> +++ b/Documentation/core-api/printk-formats.rst
->>>>>> @@ -689,6 +689,20 @@ Rust
->>>>>>    Only intended to be used from Rust code to format ``core::fmt::Arguments``.
->>>>>>    Do *not* use it from C.
->>>>>>    +Page Table Entry
->>>>>> +----------------
->>>>>> +
->>>>>> +::
->>>>>> +        %ppte
->>>>>> +
->>>>>> +Print standard page table entry pte_t.
->>>>>> +
->>>>>> +Passed by reference.
->>>>>
->>>>> Curious, why the decision to pass by reference?
->>>>
->>>> Just to make this via %p<> based address mechanism. But wondering
->>>> will it be better for the pte to be represented via value instead
->>>> of reference ?
->>>
->>> We commonly pass ptes to functions through value, not reference, that's why
->>> I am asking.
->>
->>
->> All printf/printk extensions in the kernel follow %p<some letters> and use
->> pointers because %p takes pointers, so it lets us use -Wformat with no issues.
->>
->> So yes, taking a pte_t * is required.
-> 
-> Correct. But the pointer is usually needed because the %pxx format
-> need to access a structure.
+Today's linux-next merge of the mfd tree got a conflict in:
 
-Right.
+  drivers/mfd/twl4030-irq.c
 
-> 
-> Passing a pointer is another potential source of errors. I mean that
-> the callers might pass an invalid pointer by mistake...
+between commit:
 
-Agreed - could be a source of error when not used properly.
+  d9d79e4f7dc9 ("mfd: Fix building without CONFIG_OF")
 
-> 
-> Another aspect is performance. It is likely not a big deal for classic
-> printk() which is a slow path. But trace_printk() tries to optimize
-> the speed by deferred formatting where possible, see vbin_printf()
-> and bstr_printf().
-> 
-> I think that this is not a blocker for this patchset. But you should
-> know that using %pxx has a cost.
-Got it - thanks for the explanation.
+from the mfd-fixes tree and commit:
 
+  3d77b3cc7cc8 ("mfd: twl4030-irq: Remove redundant 'node' variable")
+
+from the mfd tree.
+
+I fixed it up (I just used the former) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qAjJ+C_uXe.ic9MtoV+Nzq.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhU+cEACgkQAVBC80lX
+0Gx1zwf/cAn4az/cyRuPeFBWsEi/BmNzpgZROkAh1J2Yg2jmQBbJ2HNE40Fed95k
+6K4No65T71orKztZyIDzP5iHXkGrImoIQ+iStN+R0ujBepduDlzrsyKX9t9/7nsi
+KPySuoTh65uOiutVmP64AfGYxoESHaJEO2f/DMrmwABORwEcntShVEkHc9Zgrvgm
+TsWX6F7u5B3J8cWS7plBVEi/jfWS3ELnRznMiDoYfICgZpsgrk0nvC7PGW9RygoT
+DESW5DPrI0EZAT+UZb5KjvMPeBY0jEWPXxONH3y6XSlYtMD3BHc6c6JDGwxoOlyQ
+ts9Z/QNWFVAn6M7LMmh0JDF0DYEuSg==
+=2B5T
+-----END PGP SIGNATURE-----
+
+--Sig_/qAjJ+C_uXe.ic9MtoV+Nzq.--
