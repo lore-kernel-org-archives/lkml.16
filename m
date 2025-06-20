@@ -1,201 +1,203 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18644228CB7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA1622A1E9;
+	Fri, 20 Jun 2025 08:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406909; cv=none; b=PDDJ8wjxbNe6kb7yWYztVhxdVMYP6Tg/Q6RbGd68tGALm9gismtFEo275V4HwkJ668m/pqtHG7993trBuGLDhmF++s8dG4eAvcyHELHLbB5V2Eu6vENvKg47tu9BFUlj7RxZLV2bxGAuJCb4XZb9kJQzuDwf5P2SWwSjT7oWOG0=
+	t=1750406943; cv=none; b=HPGfc55r6Tjt5+uT/iXVV1ox71r1+u/5+1ItQPP7V1LNcx34yqp1MZKH/i+1qpquDsxrdGrTAHkXc5eAjJesSb6FUkLa4NK6wkEYvm6tpvox3U9kfKv3kLGJxpLp86zSG4o81rpYjvQBvpVy1If7dW7H1tSyvK7aspXEYIqopBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406909; c=relaxed/simple;
-	bh=NipG+R1HSqrOutF194LS2lOBry1ZSTPOGAOiG1WLH2I=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uM/u8FBZcVSap7lqzk8KzVlTS2ur8knTLKhWxgC11BPwBXCGFnumWl3oy4nQ8EoDt5q+rds5Uxbd0P6VM1lXLhwZYWEzoVnDhdHFs4KuGAXbeONOzxdw4+NjhlhbLtRiNMG47VOmkjVgz1gLIPEANe/qxn+WSex+7JNZAArMY1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mENgvfgx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UA32LeFt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mENgvfgx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UA32LeFt; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mENgvfgx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UA32LeFt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mENgvfgx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UA32LeFt"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1750406943; c=relaxed/simple;
+	bh=pxqPziK15Wg3g2t9bTkyy7xbwTJ8XZFDrgsd4s2deVw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=nU8K/tnjtTEdkvVZu6sec0raZ/7a7aWUE3IFdh1j456j/tLHHl8RZEkGwBSToHCe6QpVQ0oT0BKN7ojG9rIJJcicyF4KdcJ0afefNDg2/C2M4TqRrXLKLXpclVaodmz+JeTCwUpIwPsNxcKDtM+9bOsZ7eFKy7PNPR+1XOwW/KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 276552120C;
-	Fri, 20 Jun 2025 08:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750406906; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kitalKWwj2PLPPIA5AYxJj4Huph94hkJpS/bc2LqCak=;
-	b=mENgvfgxD722g7rJ7Jzb/R7XlPqR93jKSSeJVJnDaW9DNFCe1ouKDfVAhOLCqN9nhCLcfY
-	gtAtiuuNBzP5FiM/Cn0W0ydba80mlFY++4BqwviNDH4KBgw1CHh3cXwN9I/IP63tw3Wt5d
-	lI12ea8VVLX9k65oJQWn2NGfHHKmoO4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750406906;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kitalKWwj2PLPPIA5AYxJj4Huph94hkJpS/bc2LqCak=;
-	b=UA32LeFtDrF1+oWjEniiLC4pSaR6V8rnHhhw/Nf9pc5FKhQegO6RR7ZF7n89qbUGP+BPPV
-	JbieakaIg4SnRcCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mENgvfgx;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=UA32LeFt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750406906; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kitalKWwj2PLPPIA5AYxJj4Huph94hkJpS/bc2LqCak=;
-	b=mENgvfgxD722g7rJ7Jzb/R7XlPqR93jKSSeJVJnDaW9DNFCe1ouKDfVAhOLCqN9nhCLcfY
-	gtAtiuuNBzP5FiM/Cn0W0ydba80mlFY++4BqwviNDH4KBgw1CHh3cXwN9I/IP63tw3Wt5d
-	lI12ea8VVLX9k65oJQWn2NGfHHKmoO4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750406906;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kitalKWwj2PLPPIA5AYxJj4Huph94hkJpS/bc2LqCak=;
-	b=UA32LeFtDrF1+oWjEniiLC4pSaR6V8rnHhhw/Nf9pc5FKhQegO6RR7ZF7n89qbUGP+BPPV
-	JbieakaIg4SnRcCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D41A013A9C;
-	Fri, 20 Jun 2025 08:08:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GBWKMvkWVWgcWwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 20 Jun 2025 08:08:25 +0000
-Date: Fri, 20 Jun 2025 10:08:25 +0200
-Message-ID: <87pleyx2bq.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: mixer_oss: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <DA7484EA-83F7-496A-AB9F-2370BBBC0883@linux.dev>
-References: <20250618223631.1244-2-thorsten.blum@linux.dev>
-	<20250618224926.GS1880847@ZenIV>
-	<DA7484EA-83F7-496A-AB9F-2370BBBC0883@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bNqqg07y6z4xfxK;
+	Fri, 20 Jun 2025 16:08:47 +0800 (CST)
+Received: from xaxapp04.zte.com.cn ([10.99.98.157])
+	by mse-fl2.zte.com.cn with SMTP id 55K88WkU022600;
+	Fri, 20 Jun 2025 16:08:32 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Fri, 20 Jun 2025 16:08:34 +0800 (CST)
+Date: Fri, 20 Jun 2025 16:08:34 +0800 (CST)
+X-Zmail-TransId: 2afa68551702562-5cd67
+X-Mailer: Zmail v1.0
+Message-ID: <20250620160834242DDgecL4HF8b1OBLiZnnrl@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 276552120C
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[wanadoo.fr];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,perex.cz,suse.com,wanadoo.fr,suse.de,vger.kernel.org];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
-X-Spam-Level: 
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <geert+renesas@glider.be>
+Cc: <changhuang.liang@starfivetech.com>, <geert+renesas@glider.be>,
+        <magnus.damm@gmail.com>, <heiko@sntech.de>, <alim.akhtar@samsung.com>,
+        <walker.chen@starfivetech.com>, <sebastian.reichel@collabora.com>,
+        <detlev.casanova@collabora.com>, <finley.xiao@rock-chips.com>,
+        <shawn.lin@rock-chips.com>, <pgwipeout@gmail.com>,
+        <shao.mingyin@zte.com.cn>, <linux-pm@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYzXSBwbWRvbWFpbjogVXNlIHN0cl9lbmFibGVfZGlzYWJsZSgpIGFuZCBzdHJfb25fb2ZmKCkgaGVscGVycw==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55K88WkU022600
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6855170F.000/4bNqqg07y6z4xfxK
 
-On Thu, 19 Jun 2025 14:50:04 +0200,
-Thorsten Blum wrote:
-> 
-> On 19. Jun 2025, at 00:49, Al Viro wrote:
-> > On Thu, Jun 19, 2025 at 12:36:29AM +0200, Thorsten Blum wrote:
-> >> strcpy() is deprecated; use strscpy() instead.
-> >> 
-> >> No functional changes intended.
-> > 
-> > Have you actually read the damn thing?  Seriously, look at the uses
-> > of 'str' downstream.  The only thing it is ever passed to is strcmp().
-> > 
-> > In other words, why do we need to copy it anywhere?  What's wrong with
-> > having char *str instead of that array and replacing strcpy() with
-> > plain and simple pointer assignment?
-> 
-> I read it, but didn't question whether copying was actually necessary.
-> 
-> However, it looks like 'ptr->name' can originate from userland (via proc
-> file - see the function comment), which could make using 'char *str'
-> directly unsafe, unless I'm missing something.
-> 
-> Something like this would skip one copy while keeping it safe:
-> 
-> char tmp_str[64];
-> char *str;
-> 
-> strscpy(tmp_str, ptr->name);
-> if (!strcmp(tmp_str, "Master"))
-> 	str = "Mix";
-> else if (!strcmp(tmp_str, "Master Mono"))
-> 	str = "Mix Mono";
-> else
-> 	str = tmp_str;
+From: Shao Mingyin <shao.mingyin@zte.com.cn>
 
-Al is right, we should optimize it instead.  As it's been already a
-string copied to a kernel, and the string is certainly NUL-terminated,
-hence there is no need to worry about using the pointer.
-It'd be something like:
+Use str_enable_disable() and str_on_off() helper instead of open
+coding the same.
 
---- a/sound/core/oss/mixer_oss.c
-+++ b/sound/core/oss/mixer_oss.c
-@@ -991,7 +991,7 @@ static int snd_mixer_oss_build_input(struct snd_mixer_oss *mixer,
- 	struct slot *pslot;
- 	struct snd_kcontrol *kctl;
- 	struct snd_mixer_oss_slot *rslot;
--	char str[64];	
-+	const char *str;
- 	
- 	/* check if already assigned */
- 	if (mixer->slots[ptr->oss_id].get_volume && ! replace_old)
-@@ -1014,11 +1014,11 @@ static int snd_mixer_oss_build_input(struct snd_mixer_oss *mixer,
- 			
- 		if (kctl->info(kctl, uinfo))
- 			return 0;
--		strcpy(str, ptr->name);
-+		str = ptr->name;
- 		if (!strcmp(str, "Master"))
--			strcpy(str, "Mix");
--		if (!strcmp(str, "Master Mono"))
--			strcpy(str, "Mix Mono");
-+			str = "Mix";
-+		else if (!strcmp(str, "Master Mono"))
-+			str = "Mix Mono";
- 		slot.capture_item = 0;
- 		if (!strcmp(uinfo->value.enumerated.name, str)) {
- 			slot.present |= SNDRV_MIXER_OSS_PRESENT_CAPTURE;
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+Reviewed-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+v3:
+preserve the original patch format to avoid whitespace-damaged
+ drivers/pmdomain/renesas/rcar-gen4-sysc.c    | 3 ++-
+ drivers/pmdomain/renesas/rcar-sysc.c         | 3 ++-
+ drivers/pmdomain/rockchip/pm-domains.c       | 3 ++-
+ drivers/pmdomain/samsung/exynos-pm-domains.c | 6 +++---
+ drivers/pmdomain/starfive/jh71xx-pmu.c       | 7 ++++---
+ 5 files changed, 13 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+index e001b5c25bed..c8aa7538e95f 100644
+--- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
++#include <linux/string_choices.h>
 
-thanks,
+ #include "rcar-gen4-sysc.h"
 
-Takashi
+@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
+  out:
+ 	spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
+
+-	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+ 		 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
+ 	return ret;
+ }
+diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
+index 047495f54e8a..dae01ca0ef6a 100644
+--- a/drivers/pmdomain/renesas/rcar-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-sysc.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/soc/renesas/rcar-sysc.h>
++#include <linux/string_choices.h>
+
+ #include "rcar-sysc.h"
+
+@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
+
+ 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
+
+-	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+ 		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
+ 	return ret;
+ }
+diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+index 4cce407bb1eb..0681c763f843 100644
+--- a/drivers/pmdomain/rockchip/pm-domains.c
++++ b/drivers/pmdomain/rockchip/pm-domains.c
+@@ -21,6 +21,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/string_choices.h>
+ #include <soc/rockchip/pm_domains.h>
+ #include <soc/rockchip/rockchip_sip.h>
+ #include <dt-bindings/power/px30-power.h>
+@@ -595,7 +596,7 @@ static int rockchip_do_pmu_set_power_domain(struct rockchip_pm_domain *pd,
+ 					is_on == on, 0, 10000);
+ 	if (ret) {
+ 		dev_err(pmu->dev, "failed to set domain '%s' %s, val=%d\n",
+-			genpd->name, on ? "on" : "off", is_on);
++			genpd->name, str_on_off(on), is_on);
+ 		return ret;
+ 	}
+
+diff --git a/drivers/pmdomain/samsung/exynos-pm-domains.c b/drivers/pmdomain/samsung/exynos-pm-domains.c
+index 9b502e8751d1..1a892c611dad 100644
+--- a/drivers/pmdomain/samsung/exynos-pm-domains.c
++++ b/drivers/pmdomain/samsung/exynos-pm-domains.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/pm_domain.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+@@ -38,7 +39,6 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+ 	struct exynos_pm_domain *pd;
+ 	void __iomem *base;
+ 	u32 timeout, pwr;
+-	char *op;
+
+ 	pd = container_of(domain, struct exynos_pm_domain, pd);
+ 	base = pd->base;
+@@ -51,8 +51,8 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+
+ 	while ((readl_relaxed(base + 0x4) & pd->local_pwr_cfg) != pwr) {
+ 		if (!timeout) {
+-			op = (power_on) ? "enable" : "disable";
+-			pr_err("Power domain %s %s failed\n", domain->name, op);
++			pr_err("Power domain %s %s failed\n", domain->name,
++			       str_enable_disable(power_on));
+ 			return -ETIMEDOUT;
+ 		}
+ 		timeout--;
+diff --git a/drivers/pmdomain/starfive/jh71xx-pmu.c b/drivers/pmdomain/starfive/jh71xx-pmu.c
+index 74720c09a6e3..dc3e109e273a 100644
+--- a/drivers/pmdomain/starfive/jh71xx-pmu.c
++++ b/drivers/pmdomain/starfive/jh71xx-pmu.c
+@@ -12,6 +12,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
++#include <linux/string_choices.h>
+ #include <dt-bindings/power/starfive,jh7110-pmu.h>
+
+ /* register offset */
+@@ -155,7 +156,7 @@ static int jh7110_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
+
+ 	if (ret) {
+ 		dev_err(pmu->dev, "%s: failed to power %s\n",
+-			pmd->genpd.name, on ? "on" : "off");
++			pmd->genpd.name, str_on_off(on));
+ 		return -ETIMEDOUT;
+ 	}
+
+@@ -197,8 +198,8 @@ static int jh71xx_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
+ 	}
+
+ 	if (is_on == on) {
+-		dev_dbg(pmu->dev, "pm domain [%s] is already %sable status.\n",
+-			pmd->genpd.name, on ? "en" : "dis");
++		dev_dbg(pmu->dev, "pm domain [%s] is already %s status.\n",
++			pmd->genpd.name, str_enable_disable(on));
+ 		return 0;
+ 	}
+
+-- 
+2.25.1
