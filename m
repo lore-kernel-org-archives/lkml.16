@@ -1,176 +1,187 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03F2D4B6F;
-	Fri, 20 Jun 2025 16:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88CE1E0E0B
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437611; cv=none; b=m1TSgJxcHdngSsd4rZEaGfXiQZmkwcAqy99/NnVulhIGxpWuRgFKeh0YWN8Zvw7wBx2sk1xohkyTWSrMGd4oK6761fGrJB296uhFh3NvdEzJAmWKx7lMaPmDwxlhBkbpox9EFZnodi8WgYR9J7hGNQMGCtdV/JW555bGx4G/zko=
+	t=1750437839; cv=none; b=k5VAt6+qCbZWWT4kcfHwmrdJhQsSzGFaq82igH3Efs9fYM2kC2JypIpLpf1oD6Gmjq5Ip/QwZmbnFPPoRRwJOOyyNGYZ9i7gtwVbAXjEzAkGXjWprAGTDcVyMBFUPnJkbSbpiu6cpTO5wp8iuR0E8Mtw6RP9h/Y6SL4Vdi4Rve4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437611; c=relaxed/simple;
-	bh=6MOrDPSqajVX9dglL2iIpKlky0ZC16o6M1J4f7fNxNY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K0PXggmM8itYYwLSdOgJekXP++PjdKx3q2brdUI1nThWBzUYDuCzj7RrTCVDg5BL3JvqbIwnb2V1ezS0UbXKfNCxJjqIZ7WP1SzgiwJrmS7iGCzDRC+mq7u41zEDSXyl/UI/9ZAVw7ZPwXv09G/GvPFBQqGCRE4SxVZHrhJ58ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bP36y4ySyz6L5jx;
-	Sat, 21 Jun 2025 00:37:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BC89B1402F3;
-	Sat, 21 Jun 2025 00:40:05 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 20 Jun
- 2025 18:40:04 +0200
-Date: Fri, 20 Jun 2025 17:40:01 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
- set cxl label format
-Message-ID: <20250620174001.00003aa2@huawei.com>
-In-Reply-To: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
-	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750437839; c=relaxed/simple;
+	bh=0EVbeZfTsrFJAs+fr1YOAKUVFiNAZHXZYc7YeBvgxJY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JlZ0mMsU39GXq2g42onqWxYGbjyAP6IPkblPbCm0MbvllB1u0IKAcBkZRlAhoeMkuEx6elm+Y7bK/+9+fnHhEzjzvzqEQnZaZZVze90sorHd4PNT9fchQ3ATKkVQka5aapeqYVKTSecbxjQAozCpUYvaawI1pUYDGRa1X2S5Pcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a32g3JZd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a32g3JZd"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KG2Ojd008997
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=xuEtKw7CVCzY7rX/A/xyoVgknCTtkl+u8Ne
+	wJyyFkL0=; b=a32g3JZdmtZ7HgruRhHyloY0BtIP7txAXMeGc328069AO5u68dp
+	4pO/s8182d+JHKc9QZoL+xqSsaXXypI4zrf+Ehch+N1PZUdDx9x7OEZYCyuwszol
+	qaNVpd3ogAsfZlQUoKqYWZsXCl8VeORlDxk+yp62LxRCge1cSP+quurQfimUEgOy
+	Wdm7oMvsFq9xuzCATJcD56m9KmxOfmeJ19eiRyl7ZbVFNHOjE0WrthwRCkLiNS1T
+	U9PEM9de/aju61emu0olGlCz7/qP5jXksor5XuQF9lprZJy9XxZjhD49kmoZVe/7
+	vCB0oV9xencAggRhS/+iNlaIyJ0m6cAmvpg==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47date03ks-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:43:56 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7491814d6f2so393187b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:43:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750437835; x=1751042635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xuEtKw7CVCzY7rX/A/xyoVgknCTtkl+u8NewJyyFkL0=;
+        b=UDpOye0OahU063nNyRyGK4koDIjRlDqN+GxixRhiXXSN7VvUzKM+7k1uHhTcvcHT/Z
+         ORA3mccQwN8DBi4v68BG65uScSjZeod50Pe70TrsLX1KT7qIvF0qlmt6n4nkdToroewD
+         k22XdaFZf6e90VmxQvWXWbx/pLEpBbfehEpqaWPMfxVGsR/syyl3eZf+mzqJLlMtU4cw
+         OzgpaJbXoRiIaLPQdDOOsMZzOnLsyzKs+yXEVbXKg8wUm0Wp+1vcbwXkSeH6y1dOAuHr
+         tzWYLJjax0tdHfZjGiIhoqSTeupTH8zoiTJFVullpyxBGsmVuHi2K6AqCSezKcJX7L6i
+         C2Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCVB6tEcLV/wS6Tq1PKrI9aoEtJBGCR1m85U5L+jyj1rRwN2IBesAvCCvZDwg6pqc08UBLGR+n9DlwNllQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk2DqLBKC6s3b0wX2r2YbVAP9MELF79YeKEkdlcOy3IKBTDxVu
+	zZbyNLtu4kRxZiRKyzykHzyVq0/s4LuRKc24cmf69kjgOSL/bWBaxpHn9JpmxrPj3QpcMzIxVvM
+	++iIzXxXiyF9A+2W9DxJN0Reaqr6x8RpF12bktD4l4L6cQb5A3vZrmIRZJv0R2lHVxKk=
+X-Gm-Gg: ASbGnctUbWmBpebkqd2MrT0FZrV2XhAuy0jKM/yjcNdMEEsxUngZjDgXOHmqbKaqq6R
+	e/rZ5B1gLVR2k8gGneIGm+PLCewNUAEi0DyYl5UYl35eX0VtTrqjreitKs0F+5MoCHtPX5LiYQt
+	/h5R2oCgfSHaU9hHG/hC22Ku+0RdwBnAPXEpf8ac23V1V5Te2MF6t9Y4wDIQP/+FCj2NV0ueRV+
+	IGFu91UhkyItQZcki2X8X7vsY7V+B4cKWn2IPw6wvuXbyjjQZWNM9jT+d6zAz9ABvm5w0eCpcXa
+	7EEKODDXbpJlcjDxGv5Mbcg6hWtw5VgwOsdiDYQSYOxuTOPwrw==
+X-Received: by 2002:a05:6a00:2789:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-7490d6089e3mr4881808b3a.13.1750437835188;
+        Fri, 20 Jun 2025 09:43:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+mlnNp+NYv/5F3VQSUkNQ13bw4oYCkNCD2zEFLoQeeMCUK09WXH/1bwz8n1x/AWHoK21U8A==
+X-Received: by 2002:a05:6a00:2789:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-7490d6089e3mr4881763b3a.13.1750437834662;
+        Fri, 20 Jun 2025 09:43:54 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6490c9sm2386919b3a.110.2025.06.20.09.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:43:54 -0700 (PDT)
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Subject: [PATCH] pinmux: fix race causing mux_owner NULL with active mux_usecount
+Date: Fri, 20 Jun 2025 22:13:24 +0530
+Message-Id: <20250620164324.3616153-1-mukesh.ojha@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExOCBTYWx0ZWRfX5EgO21G4KZUE
+ LwQeElJtLUdfMZm3CetE2rbFo41yb48Fw2k/qHCvQWCe/1nmSB+1ZBsScqFBnLOGr8PDKGJB0Xx
+ 88KlAgJeGHkUlrm5zC/xZ/yfJv8DrEC6uendVeorbdcMRbkfD49riugxWoksMH5vtRz7I/1d09j
+ M2ie1NeZn+6Bp4/C3ye+8+txp9SJIXscSA7woY2zIZBooPlC+6CEm7bVv6DwCH/lfHhOFOZnCRI
+ OgajJuI1qQYudcu1fMAs41Mw8lyg5LO9Ng+RRvVsMDvJrC/6hsTCmHiOXM3k7ad+Tbs7xoRC+OJ
+ RLlUgHMDHMuizN6hGqiNg6F3doBPTf+RLZModZg8nt5nhqp1LDk+HjAb4WfqMEPkfbdnjDN4n8n
+ 6+656bJbQ7gptf1wsxSugSj+DIuk/HE5X1C1fxNsco4VLHCRFbyqSW4RZHYvjCdXOHhq7sLT
+X-Proofpoint-GUID: LdsHh6pL8Rdw4lqShHzYyu-oI3nSLeIs
+X-Authority-Analysis: v=2.4 cv=DO6P4zNb c=1 sm=1 tr=0 ts=68558fcc cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=PkRvFfspCsMwYezBOQkA:9
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-ORIG-GUID: LdsHh6pL8Rdw4lqShHzYyu-oI3nSLeIs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_07,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200118
 
-On Tue, 17 Jun 2025 18:09:25 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+Commit  ("pinmux: Use sequential access to access desc->pinmux data")
+tried to address the issue when two client of the same gpio calls
+pinctrl_select_state() for the same functionality, was resulting in
+NULL pointer issue while accessing desc->mux_owner. However, issue
+was not completely fixed due to the way it was handled and it can
+still result in the same NULL pointer.
 
-> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
-> Accordingly updated label index version
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-A few local comments.  I'll need to read on to figure out how this
-fits in generally.
+The issue occurs due to the following interleaving:
 
-> ---
->  drivers/nvdimm/dimm.c      |  1 +
->  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
->  drivers/nvdimm/label.c     | 16 ++++++++++++----
->  drivers/nvdimm/nd.h        |  1 +
->  include/linux/libnvdimm.h  |  3 +++
->  5 files changed, 27 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-> index 91d9163ee303..8753b5cd91cc 100644
-> --- a/drivers/nvdimm/dimm.c
-> +++ b/drivers/nvdimm/dimm.c
-> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
->  	if (rc < 0)
->  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
->  
-> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
->  
->  	/*
->  	 * EACCES failures reading the namespace label-area-properties
-> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-> index 21498d461fde..e8f545f889fd 100644
-> --- a/drivers/nvdimm/dimm_devs.c
-> +++ b/drivers/nvdimm/dimm_devs.c
-> @@ -18,6 +18,16 @@
->  
->  static DEFINE_IDA(dimm_ida);
->  
-> +bool nvdimm_check_cxl_label_format(struct device *dev)
-> +{
-> +	struct nvdimm *nvdimm = to_nvdimm(dev);
-> +
-> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
-> +		return true;
-> +
-> +	return false;
+     cpu0 (process A)                   cpu1 (process B)
 
-	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
+      pin_request() {                   pin_free() {
 
-Unless this is going to get more complex in later patches, in which case
-may be fine to ignore this comment.
+                                         mutex_lock()
+                                         desc->mux_usecount--; //becomes 0
+                                         ..
+                                         mutex_unlock()
 
-> +}
-> +
->  /*
->   * Retrieve bus and dimm handle and return if this bus supports
->   * get_config_data commands
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 082253a3a956..48b5ba90216d 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
->  		- (unsigned long) to_namespace_index(ndd, 0);
->  	nsindex->labeloff = __cpu_to_le64(offset);
->  	nsindex->nslot = __cpu_to_le32(nslot);
-> -	nsindex->major = __cpu_to_le16(1);
-> -	if (sizeof_namespace_label(ndd) < 256)
-> +
-> +	/* Support CXL LSA 2.1 label format */
+  mutex_lock(desc->mux)
+  desc->mux_usecount++; // becomes 1
+  desc->mux_owner = owner;
+  mutex_unlock(desc->mux)
 
-Might be good to sprinkle some extra details in the references.
-E.g. CXL r3.2 Table 9-9 Label Index Block Layout
+                                         mutex_lock(desc->mux)
+                                         desc->mux_owner = NULL;
+                                         mutex_unlock(desc->mux)
 
-> +	if (ndd->cxl) {
-> +		nsindex->major = __cpu_to_le16(2);
->  		nsindex->minor = __cpu_to_le16(1);
-> -	else
-> -		nsindex->minor = __cpu_to_le16(2);
-> +	} else {
-> +		nsindex->major = __cpu_to_le16(1);
+This sequence leads to a state where the pin appears to be in use
+(`mux_usecount == 1`) but has no owner (`mux_owner == NULL`), which can
+cause NULL pointer on next pin_request on the same pin.
 
-Same for these.  Case of making reviewers jobs easier by
-giving them breadcrumb trails to follow.
+Ensure that updates to mux_usecount and mux_owner are performed
+atomically under the same lock. Only clear mux_owner when mux_usecount
+reaches zero and no new owner has been assigned.
 
-> +		if (sizeof_namespace_label(ndd) < 256)
-> +			nsindex->minor = __cpu_to_le16(1);
-> +		else
-> +			nsindex->minor = __cpu_to_le16(2);
-> +	}
-> +
->  	nsindex->checksum = __cpu_to_le64(0);
->  	if (flags & ND_NSINDEX_INIT) {
->  		unsigned long *free = (unsigned long *) nsindex->free;
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index 5ca06e9a2d29..304f0e9904f1 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
->  void nvdimm_set_locked(struct device *dev);
->  void nvdimm_clear_locked(struct device *dev);
->  int nvdimm_security_setup_events(struct device *dev);
-> +bool nvdimm_check_cxl_label_format(struct device *dev);
->  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
->  int nvdimm_security_unlock(struct device *dev);
->  #else
-> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> index e772aae71843..0a55900842c8 100644
-> --- a/include/linux/libnvdimm.h
-> +++ b/include/linux/libnvdimm.h
-> @@ -44,6 +44,9 @@ enum {
->  	/* dimm provider wants synchronous registration by __nvdimm_create() */
->  	NDD_REGISTER_SYNC = 8,
->  
-> +	/* dimm supports region labels (LSA Format 2.1) */
-> +	NDD_CXL_LABEL = 9,
-> +
->  	/* need to set a limit somewhere, but yes, this is likely overkill */
->  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
->  	ND_CMD_MAX_ELEM = 5,
+Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+---
+ drivers/pinctrl/pinmux.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 0743190da59e..1cea04d57ca2 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -235,19 +235,9 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
+ 			desc->mux_usecount--;
+ 			if (desc->mux_usecount)
+ 				return NULL;
+-		}
+-	}
+ 
+-	/*
+-	 * If there is no kind of request function for the pin we just assume
+-	 * we got it by default and proceed.
+-	 */
+-	if (gpio_range && ops->gpio_disable_free)
+-		ops->gpio_disable_free(pctldev, gpio_range, pin);
+-	else if (ops->free)
+-		ops->free(pctldev, pin);
++		}
+ 
+-	scoped_guard(mutex, &desc->mux_lock) {
+ 		if (gpio_range) {
+ 			owner = desc->gpio_owner;
+ 			desc->gpio_owner = NULL;
+@@ -258,6 +248,15 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
+ 		}
+ 	}
+ 
++	/*
++	 * If there is no kind of request function for the pin we just assume
++	 * we got it by default and proceed.
++	 */
++	if (gpio_range && ops->gpio_disable_free)
++		ops->gpio_disable_free(pctldev, gpio_range, pin);
++	else if (ops->free)
++		ops->free(pctldev, pin);
++
+ 	module_put(pctldev->owner);
+ 
+ 	return owner;
+-- 
+2.34.1
 
