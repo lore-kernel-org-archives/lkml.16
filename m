@@ -1,200 +1,123 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA311C8606
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E23030E85E;
+	Fri, 20 Jun 2025 15:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750431766; cv=none; b=llBnwII+1xm5HHaXYuBmWN9Xw9VEGbWQzVcxDlmKGa/teavP1Eh4svUX/DXY3w7oYH+7Zhv9CmXnQYOQB/G0o2TbUYII41hRDRkDqWrfrYbVXeVISN71t+ujC4uL1EQdXEH9khtS0n2ppwWkqoBrfcukBJubP4kM01PMOUFU8ro=
+	t=1750431968; cv=none; b=nlSBwIPeGuLsnTBsac/ICQwNS7P6zQpH6jJh50lB6Zq72YWGTcMnoDZsptDO+1yfrpc/beqKPNiT/TXC2mOzKTavIdiEa6GBkXtuwgFXg2jnIT6Ryx+qqKgE52W6mET2RTs9Fi8oZHC2bE+FtZxUaTWnX78yX/MhNrngc79HyEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750431766; c=relaxed/simple;
-	bh=w8SC+mnoDfArwleYd1kd16Cin1zRXMNbephHzfYPW74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I3Uc1Flf0hJv9sxWs9o2OvwniNLE1befpyrr94Ryd9vczUr1L7kJMPp/6z7HVBSyCqtgftc/UVzqenE/DddWbNuXWIpW2lPQEaleTSsivUTSHqoKuE4i8l9fuo6FSHcRgYQs7stiGuJRToCmNmK4OFO24pJ92MKi44PGXrw39+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=B7/Pt1mm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZt61WnA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=B7/Pt1mm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZt61WnA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750431968; c=relaxed/simple;
+	bh=ksFoRy/K+QsZuP+UMssBVlk6SssmE35N4Xgff7AljiI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mb+Ca80S1Ypon649xPRHoJGenJDHSFvhFLgYWyCX0PjVKXJZC75zE5myEDGb595oila+YVysjv1OqJTfFVt9gORFHeyFhkPZi/VHcgcSNPzeiHpKS9F7PoEfXkAion7zZ2jq42I3prADToo15YJcx2bWwa8FaUNRVKCXGEX5j5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpbWGLV6; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="B7/Pt1mm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZt61WnA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="B7/Pt1mm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZt61WnA"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1D7371F395;
-	Fri, 20 Jun 2025 15:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750431762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AODa7oa4i6x0lNrbcGzLQQp/kA8Y1++zrgCJA76zdMg=;
-	b=B7/Pt1mmDvuTZ3/yQDzR1vCr9/FquvxV0JPf0dSq728mpuFppHsxw6dgENsV0hSnHRDwQb
-	yeN1iNMh++8pLL7riTf+bwghZxO7Spxqfg8rzr0a76n5U8r7f8HpHjbLgTpaCDecnD4JAy
-	dtkqx7M4Aloe90O/pkir93QcGqXrmFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750431762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AODa7oa4i6x0lNrbcGzLQQp/kA8Y1++zrgCJA76zdMg=;
-	b=gZt61WnA0ZQvCnSLh1QNldCpBQHHfIp44ELUuaiyrOx6xMcO7zkn/7Md7UY2wC96Gamc+b
-	+S52mqOz+2mXDNBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750431762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AODa7oa4i6x0lNrbcGzLQQp/kA8Y1++zrgCJA76zdMg=;
-	b=B7/Pt1mmDvuTZ3/yQDzR1vCr9/FquvxV0JPf0dSq728mpuFppHsxw6dgENsV0hSnHRDwQb
-	yeN1iNMh++8pLL7riTf+bwghZxO7Spxqfg8rzr0a76n5U8r7f8HpHjbLgTpaCDecnD4JAy
-	dtkqx7M4Aloe90O/pkir93QcGqXrmFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750431762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AODa7oa4i6x0lNrbcGzLQQp/kA8Y1++zrgCJA76zdMg=;
-	b=gZt61WnA0ZQvCnSLh1QNldCpBQHHfIp44ELUuaiyrOx6xMcO7zkn/7Md7UY2wC96Gamc+b
-	+S52mqOz+2mXDNBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFD89136BA;
-	Fri, 20 Jun 2025 15:02:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kKzFORF4VWjMVwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 20 Jun 2025 15:02:41 +0000
-Message-ID: <c9a1c792-ef57-49d1-a17d-31e45dd0d8d0@suse.cz>
-Date: Fri, 20 Jun 2025 17:02:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpbWGLV6"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31f22d706aso729127a12.0;
+        Fri, 20 Jun 2025 08:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750431965; x=1751036765; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
+        b=KpbWGLV6wxjXuKgGo83HpxXZsFIZddJtObNUKj2aGxsqGYjqpp0bxQbDm9MTn0/vYN
+         1EEYI8zvJMD2/WCO8qS0mKW39VMcJyYeXf0s1rrs7l8sS4aekAfYpk9mtW+WBy3ZiCWP
+         VajyY4HHotEacJsu8wi0ajL4SaijaySgIKRT3bEzX7LBhZA1Is6r3ySABIhxVUXppatj
+         0gOouHp7YFq7a9JAbeNedTX+FumAG66vSkf9kq8+A9pg0rOMqfHKcfQpbI0uZI1RPjmu
+         3h6raVSsF28gP+tpoHkaurce9xfO/16cSkYuLpKa/CdQjkgnCvk1Bqs3lxBaNIRocI7+
+         kGXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750431965; x=1751036765;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
+        b=nfjM9xx8W+/K1bAWWiklwyhtz7DZCMLdosYWgC03b4hj8Wn66zoELiVOZenHxzCk0R
+         mOQwqjTUn6ulOqm2nj/gAHAclcmPvWwgfZyKW4JE7b28iURTnND4Pfe1ZCu7vyc3tCYq
+         ayYQL1jFC3ZMwb8cPQIbt4gZxdyojMDdhp/iG0wJh/SV895AQXqJFZ0H1Gz+VoZQW0M+
+         Wxqsz6BrvoycJBUIEUssjR5zlrppqOr48/YWu2ErvYV7HXBc1nIO5d1vkb0mvOJAuzF8
+         I18IsZLTFXtSd1qQVV4jYuud1Cba2Z4K65Pa6y3JXXIDIjkMXLxFLvuH7n1thyxIUeh6
+         AagA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsu0wqrbEAg5MFabqDRy1shDDEmpymJEN2cL+MtWmHpi8UAimoeY0LDaQ5oimVJVhtFjXjF8MsXrdXST0h@vger.kernel.org, AJvYcCVKdDZwKKVOxz29BqzZtI3BuUgVw5y1E4HHmrtXQ1dFjK/3cxc3OgD4BAqloBgHv5oD/ZoKboqEBgy30Q0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeNEjJKyAndgiXxd+/rZ1EO8QxTCzK45BYqBaSR68rQrQ1uif2
+	4qieE0jLTaFH1EjgwPvPnakhVGQTGpYQoHe6Rj9/1DWvbjh29BD3u93oTsSnm2oFb+4qk07cBzP
+	/BEzGp/HNjQKxK9PqurzGzg6yZsJtsSg=
+X-Gm-Gg: ASbGncsJbVjWmMrNAIydF2DjLUsBoIdXQqwTm7x7169Fp/jnAAlrIi692sG0x6DzjZ5
+	60kshfg7oLnZxFP6q/DiOk1nOYyE/IV5+tcG8iU5eIcoaOMltCVNWWCp22dLt/rth9dk+cBbT0+
+	qlvpv7pkprAsDwsVNDpZochAdHWt5wu3YRlU0pvu285gYMcMJTkqM=
+X-Google-Smtp-Source: AGHT+IFs1wDL+Fq34XOMDcxJYXK2p83tODMKFqB5EPpzMmEwzoywgbh28enfu/rjuNlD9SkE6FZWERHQsPwWGgXgmr4=
+X-Received: by 2002:a17:90b:538d:b0:313:283e:e87c with SMTP id
+ 98e67ed59e1d1-3159d6347famr5079508a91.3.1750431964650; Fri, 20 Jun 2025
+ 08:06:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] mm/madvise: eliminate very confusing manipulation of
- prev VMA
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Jann Horn <jannh@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Lance Yang <ioworker0@gmail.com>,
- SeongJae Park <sj@kernel.org>, Suren Baghdasaryan <surenb@google.com>
-References: <cover.1750363557.git.lorenzo.stoakes@oracle.com>
- <441f6b68c62bff6aff68bd1befe90ffc1576b56f.1750363557.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <441f6b68c62bff6aff68bd1befe90ffc1576b56f.1750363557.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,nvidia.com,linux.alibaba.com,oracle.com,arm.com,kernel.org,google.com,kvack.org,vger.kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,oracle.com:email]
-X-Spam-Level: 
+References: <20250613110829.122371-1-ltykernel@gmail.com> <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Fri, 20 Jun 2025 23:05:28 +0800
+X-Gm-Features: Ac12FXzP9tlv4Hr8yWE5eMb2orG3vvSitxGnMHugM7FMpfdlgMpzp9R-ZhuwjoA
+Message-ID: <CAMvTesAscN2MyqJXpcbwcXWC-6-en6U_c03M+2=zcMF0bLv4iw@mail.gmail.com>
+Subject: Re: [RFC Patch v2 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
+	"Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, Tianyu Lan <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/19/25 22:26, Lorenzo Stoakes wrote:
-> The madvise code has for the longest time had very confusing code around
-> the 'prev' VMA pointer passed around various functions which, in all cases
-> except madvise_update_vma(), is unused and instead simply updated as soon
-> as the function is invoked.
-> 
-> To compound the confusion, the prev pointer is also used to indicate to the
-> caller that the mmap lock has been dropped and that we can therefore not
-> safely access the end of the current VMA (which might have been updated by
-> madvise_update_vma()).
-> 
-> Clear up this confusion by not setting prev = vma anywhere except in
-> madvise_walk_vmas(), update all references to prev which will always be
-> equal to vma after madvise_vma_behavior() is invoked, and adding a flag to
-> indicate that the lock has been dropped to make this explicit.
-> 
-> Additionally, drop a redundant BUG_ON() from madvise_collapse(), which is
-> simply reiterating the BUG_ON(mmap_locked) above it (note that BUG_ON() is
-> not appropriate here, but we leave existing code as-is).
-> 
-> We finally adjust the madvise_walk_vmas() logic to be a little clearer -
-> delaying the assignment of the end of the range to the start of the new
-> range until the last moment and handling the lock being dropped scenario
-> immediately.
-> 
-> Additionally add some explanatory comments.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Fri, Jun 20, 2025 at 10:17=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
+om> wrote:
+>
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, June 13, 2025 4:08 A=
+M
+> >
+> > Secure AVIC is a new hardware feature in the AMD64
+> > architecture to allow SEV-SNP guests to prevent the
+> > hypervisor from generating unexpected interrupts to
+> > a vCPU or otherwise violate architectural assumptions
+> > around APIC behavior.
+> >
+> > Each vCPU has a guest-allocated APIC backing page of
+> > size 4K, which maintains APIC state for that vCPU.
+> > APIC backing page's ALLOWED_IRR field indicates the
+> > interrupt vectors which the guest allows the hypervisor
+> > to send.
+> >
+> > This patchset is to enable the feature for Hyper-V
+> > platform. Patch "Expose x2apic_savic_update_vector()"
+> > is to expose new fucntion and device driver and arch
+> > code may update AVIC backing page ALLOWED_IRR field to
+> > allow Hyper-V inject associated vector.
+>
+> The last sentence above seems to be leftover from v1 of the
+> patch set and is no longer accurate. Please update.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Thank you very much, Michael!  Will update.
+>
+> Additional observation:  These patches depend on
+> CC_ATTR_SNP_SECURE_AVIC, which is not set when operating
+> in VTOM mode (i.e., a paravisor is present). So evidently Linux
+> on Hyper-V must handle the Secure AVIC only when Linux is
+> running as the paravisor in VTL2 (CONFIG_HYPERV_VTL_MODE=3Dy),
+> or when running as an SEV-SNP guest with no paravisor. Is
+> that correct?
 
-Much nicer now, thanks!
+This patchset enables Secure AVIC function for enlightened SEV-SNP guest
+which uses c-bit to encrypt/decrypt guest memory.
 
+--=20
+Thanks
+Tianyu Lan
