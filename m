@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7EC2ECEA4
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010F02ED151;
+	Fri, 20 Jun 2025 15:24:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433042; cv=none; b=NgT2H5KaE2FOZ+viLJLOo1hrLkQdv9RRDIsZ1tfdV4gtRvK25UJnfLUGuFStyCp9tISWnCJDW7dKdY5tTLwqTRIZZXYfBbkluCMuI0wpr2AnmS082/TV3jn0DbIPOFqJKT8SwrqX35tA565BdKDPSN969F9b+sank/84XbRnF/8=
+	t=1750433045; cv=none; b=mm+R3zu8gonFJMHIvsqV/sXs5CWwO6WMrxw0nAUI7HtIBwTAIRNdTsXbX0RjVauFHS7CE/9ZHTxK3+ZWH5cauNkxoXQ3BmshBUbdFRV5rOZbHjTsDsaV2PBQ7DQLzP5eQx40Ipwmj3TO74a/EVYmvgvVMD2sMGgMjr1Lg63F/Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433042; c=relaxed/simple;
-	bh=7S3CpVL6musulW7mm8cZzqVZcBLY7SkCm9k5f0nN0Cc=;
+	s=arc-20240116; t=1750433045; c=relaxed/simple;
+	bh=9V0n3RkIDJ8tgZuANPwTkG5LhMQIqvQ3Cah86/5LM3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NIdKoy/hoVsnHO8DiTmC4GP373nzHdSkz4o/+6LiFuB7dvgfh/y+YhPvGFii0E3++TvOwLVj7JfWegqTmHnQtL1g6zdu1hHeOTiULrXawC1ZJiBEnLqiYGrhmOTeQkWYem52CrXA/3l4PJ5YvUOEiTniNnOwMbrzYoPivekJKVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utNbcnMD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UI7gGzEPqetwJaE/fsenpxa6/N/N5TaWqFqivz+eSDnFll+TZWh5/StmgWPexIcyJwRIQznxN7+uFOYUjIk0zRIBHQnGdzh72t6IFUYWo82Y187eP1fxiMeAkZe2a7EijI33GfhjHQ1fqD/A+DbX8znc7uSFrHJDHbkVAT6KZlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hy9+tazX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utNbcnMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CEEC4CEF0;
-	Fri, 20 Jun 2025 15:23:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hy9+tazX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46AD0C4CEE3;
+	Fri, 20 Jun 2025 15:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433041;
-	bh=7S3CpVL6musulW7mm8cZzqVZcBLY7SkCm9k5f0nN0Cc=;
+	s=k20201202; t=1750433044;
+	bh=9V0n3RkIDJ8tgZuANPwTkG5LhMQIqvQ3Cah86/5LM3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=utNbcnMDJu/YLI/m4XSsSSTIdVdwIeqVEAjH7AgIx3D6VKXFn4skDnOTrHOoCMbQk
-	 01x9V0JVqAdLoqkVCsc+E5oVb5/Q0yXNy0+GcoGkuT95M/n56WSfDzV+ppSIHh+8eH
-	 WMedA5yPeC7mYpiNxNcSLKMUn+/6EcyqUUkKUotROdtp+84g+mFY/wegouzQCLqfHF
-	 k5A/nQjSvEyGtlKogMlvtUEMc5G9CamOIRrNGhPjAw7kyRZXkDqDZ8Ym9t/tAm1RH6
-	 IND+cMVAvxDqjBuULmW5YFVCGzO7SQWECP2ple3oRL/wIEhXipu9Pqd4bZEdzPhDKd
-	 ZDi8rwJfD4wDg==
+	b=Hy9+tazXLVopXk6HxaS8WpZzonRumoRBM7gZXiF9a6M93nejHjUhbe9VIbFBqge0T
+	 jbCdJLjnKueb0sAmzqGq8JCBq6yPC5MzrxmpdYx7LjSZMmLOdpH/ECIaPtQMmmlVb5
+	 JUrkONdygArMKD/JDMaRx77MDimWrumB2A3MsPpEVzN5w4KYyAioabVYXSHdoMUU0H
+	 JRp9rUx2vaOxtaskQSShCw6H1p11GCfx3xwMaorTXQbGF+mtr98TBpuRUkw02MDlQ7
+	 1xXYL0cDe3yeZWnZxtxu3iyvU7x1QVBP7b9UU4/7o1rxTnG/Jeow9ygu+jtedtbG/2
+	 wgTpjuxmFnE9g==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
 	Ingo Molnar <mingo@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -38,10 +40,10 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Waiman Long <longman@redhat.com>,
-	linux-mm@kvack.org
-Subject: [PATCH 17/27] sched/isolation: Flush vmstat workqueues on cpuset isolated partition change
-Date: Fri, 20 Jun 2025 17:22:58 +0200
-Message-ID: <20250620152308.27492-18-frederic@kernel.org>
+	cgroups@vger.kernel.org
+Subject: [PATCH 18/27] cpuset: Propagate cpuset isolation update to workqueue through housekeeping
+Date: Fri, 20 Jun 2025 17:22:59 +0200
+Message-ID: <20250620152308.27492-19-frederic@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250620152308.27492-1-frederic@kernel.org>
 References: <20250620152308.27492-1-frederic@kernel.org>
@@ -51,85 +53,156 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The HK_TYPE_DOMAIN housekeeping cpumask is now modifyable at runtime.
-In order to synchronize against vmstat workqueue to make sure
-that no asynchronous vmstat work is still pending or executing on a
-newly made isolated CPU, the housekeeping susbsystem must flush the
-vmstat workqueues.
+Until now, cpuset would propagate isolated partition changes to
+workqueues so that unbound workers get properly reaffined.
 
-This involves flushing the whole mm_percpu_wq workqueue, shared with
-LRU drain, introducing here a welcome side effect.
+Since housekeeping now centralizes, synchronize and propagates isolation
+cpumask changes, perform the work from that subsystem for consolidation
+and consistency purposes.
 
+Suggested-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- include/linux/vmstat.h   | 2 ++
- kernel/sched/isolation.c | 1 +
- kernel/sched/sched.h     | 1 +
- mm/vmstat.c              | 5 +++++
- 4 files changed, 9 insertions(+)
+ include/linux/workqueue.h |  2 +-
+ init/Kconfig              |  1 +
+ kernel/cgroup/cpuset.c    | 14 ++++++--------
+ kernel/sched/isolation.c  |  4 +++-
+ kernel/workqueue.c        |  2 +-
+ 5 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
-index b2ccb6845595..ba7caacdf356 100644
---- a/include/linux/vmstat.h
-+++ b/include/linux/vmstat.h
-@@ -303,6 +303,7 @@ int calculate_pressure_threshold(struct zone *zone);
- int calculate_normal_threshold(struct zone *zone);
- void set_pgdat_percpu_threshold(pg_data_t *pgdat,
- 				int (*calculate_pressure)(struct zone *));
-+void vmstat_flush_workqueue(void);
- #else /* CONFIG_SMP */
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 6e30f275da77..8a32c594bba1 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -581,7 +581,7 @@ struct workqueue_attrs *alloc_workqueue_attrs(void);
+ void free_workqueue_attrs(struct workqueue_attrs *attrs);
+ int apply_workqueue_attrs(struct workqueue_struct *wq,
+ 			  const struct workqueue_attrs *attrs);
+-extern int workqueue_unbound_exclude_cpumask(cpumask_var_t cpumask);
++extern int workqueue_unbound_exclude_cpumask(const struct cpumask *cpumask);
  
- /*
-@@ -403,6 +404,7 @@ static inline void __dec_node_page_state(struct page *page,
- static inline void refresh_zone_stat_thresholds(void) { }
- static inline void cpu_vm_stats_fold(int cpu) { }
- static inline void quiet_vmstat(void) { }
-+static inline void vmstat_flush_workqueue(void) { }
+ extern bool queue_work_on(int cpu, struct workqueue_struct *wq,
+ 			struct work_struct *work);
+diff --git a/init/Kconfig b/init/Kconfig
+index af4c2f085455..b7cbb6e01e8d 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1205,6 +1205,7 @@ config CPUSETS
+ 	bool "Cpuset controller"
+ 	depends on SMP
+ 	select UNION_FIND
++	select CPU_ISOLATION
+ 	help
+ 	  This option will let you create and manage CPUSETs which
+ 	  allow dynamically partitioning a system into sets of CPUs and
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 5f169a56f06c..98b1ea0ad336 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -1340,7 +1340,7 @@ static bool partition_xcpus_del(int old_prs, struct cpuset *parent,
+ 	return isolcpus_updated;
+ }
  
- static inline void drain_zonestat(struct zone *zone,
- 			struct per_cpu_zonestat *pzstats) { }
+-static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
++static void update_housekeeping_cpumask(bool isolcpus_updated)
+ {
+ 	int ret;
+ 
+@@ -1349,8 +1349,6 @@ static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
+ 	if (!isolcpus_updated)
+ 		return;
+ 
+-	ret = workqueue_unbound_exclude_cpumask(isolated_cpus);
+-	WARN_ON_ONCE(ret < 0);
+ 	ret = housekeeping_update(isolated_cpus, HK_TYPE_DOMAIN);
+ 	WARN_ON_ONCE(ret < 0);
+ }
+@@ -1473,7 +1471,7 @@ static int remote_partition_enable(struct cpuset *cs, int new_prs,
+ 	list_add(&cs->remote_sibling, &remote_children);
+ 	cpumask_copy(cs->effective_xcpus, tmp->new_cpus);
+ 	spin_unlock_irq(&callback_lock);
+-	update_unbound_workqueue_cpumask(isolcpus_updated);
++	update_housekeeping_cpumask(isolcpus_updated);
+ 	cpuset_force_rebuild();
+ 	cs->prs_err = 0;
+ 
+@@ -1514,7 +1512,7 @@ static void remote_partition_disable(struct cpuset *cs, struct tmpmasks *tmp)
+ 	compute_effective_exclusive_cpumask(cs, NULL, NULL);
+ 	reset_partition_data(cs);
+ 	spin_unlock_irq(&callback_lock);
+-	update_unbound_workqueue_cpumask(isolcpus_updated);
++	update_housekeeping_cpumask(isolcpus_updated);
+ 	cpuset_force_rebuild();
+ 
+ 	/*
+@@ -1583,7 +1581,7 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
+ 	if (xcpus)
+ 		cpumask_copy(cs->exclusive_cpus, xcpus);
+ 	spin_unlock_irq(&callback_lock);
+-	update_unbound_workqueue_cpumask(isolcpus_updated);
++	update_housekeeping_cpumask(isolcpus_updated);
+ 	if (adding || deleting)
+ 		cpuset_force_rebuild();
+ 
+@@ -1947,7 +1945,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
+ 		WARN_ON_ONCE(parent->nr_subparts < 0);
+ 	}
+ 	spin_unlock_irq(&callback_lock);
+-	update_unbound_workqueue_cpumask(isolcpus_updated);
++	update_housekeeping_cpumask(isolcpus_updated);
+ 
+ 	if ((old_prs != new_prs) && (cmd == partcmd_update))
+ 		update_partition_exclusive_flag(cs, new_prs);
+@@ -2972,7 +2970,7 @@ static int update_prstate(struct cpuset *cs, int new_prs)
+ 	else if (isolcpus_updated)
+ 		isolated_cpus_update(old_prs, new_prs, cs->effective_xcpus);
+ 	spin_unlock_irq(&callback_lock);
+-	update_unbound_workqueue_cpumask(isolcpus_updated);
++	update_housekeeping_cpumask(isolcpus_updated);
+ 
+ 	/* Force update if switching back to member & update effective_xcpus */
+ 	update_cpumasks_hier(cs, &tmpmask, !new_prs);
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 6fb0c7956516..0119685796be 100644
+index 0119685796be..e4e4fcd4cb2c 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -141,6 +141,7 @@ int housekeeping_update(struct cpumask *mask, enum hk_type type)
- 	synchronize_rcu();
+@@ -116,6 +116,7 @@ EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
+ int housekeeping_update(struct cpumask *mask, enum hk_type type)
+ {
+ 	struct cpumask *trial, *old = NULL;
++	int err;
+ 
+ 	if (type != HK_TYPE_DOMAIN)
+ 		return -ENOTSUPP;
+@@ -142,10 +143,11 @@ int housekeeping_update(struct cpumask *mask, enum hk_type type)
  
  	mem_cgroup_flush_workqueue();
-+	vmstat_flush_workqueue();
+ 	vmstat_flush_workqueue();
++	err = workqueue_unbound_exclude_cpumask(housekeeping_cpumask(type));
  
  	kfree(old);
  
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 53107c021fe9..e2c4258cb818 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -69,6 +69,7 @@
- #include <linux/types.h>
- #include <linux/u64_stats_sync_api.h>
- #include <linux/uaccess.h>
-+#include <linux/vmstat.h>
- #include <linux/wait_api.h>
- #include <linux/wait_bit.h>
- #include <linux/workqueue_api.h>
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 53123675fe31..5d462fe12548 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -2095,6 +2095,11 @@ static void vmstat_shepherd(struct work_struct *w);
+-	return 0;
++	return err;
+ }
  
- static DECLARE_DEFERRABLE_WORK(shepherd, vmstat_shepherd);
- 
-+void vmstat_flush_workqueue(void)
-+{
-+	flush_workqueue(mm_percpu_wq);
-+}
-+
- static void vmstat_shepherd(struct work_struct *w)
+ void __init housekeeping_init(void)
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 97f37b5bae66..e55fcf980c5d 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -6948,7 +6948,7 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
+  * This function can be called from cpuset code to provide a set of isolated
+  * CPUs that should be excluded from wq_unbound_cpumask.
+  */
+-int workqueue_unbound_exclude_cpumask(cpumask_var_t exclude_cpumask)
++int workqueue_unbound_exclude_cpumask(const struct cpumask *exclude_cpumask)
  {
- 	int cpu;
+ 	cpumask_var_t cpumask;
+ 	int ret = 0;
 -- 
 2.48.1
 
