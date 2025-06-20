@@ -1,128 +1,118 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A7426E6F0
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873E9253951;
+	Fri, 20 Jun 2025 08:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408817; cv=none; b=HgmmhvF2qwPlwfEGLehA2PKtMvPe10M4eoMayu3hTt1GYSvZiZfzQsA8yjUyaUZYbcgWmCWgu4t2Pza6T2q6QPU6ykaCJvbpUb9DJYm6fFG+8Ce4hetGlYCUJopuXCCXciUIZDZi2vG4Kfdro9Sh1ZFZf5YQS3bEmdLa3DqVju0=
+	t=1750408861; cv=none; b=FIsjsBBTWNaMqwekx6p3dW8oI4GhU/zZwbRKsDYT5ujpEMOVgBaIbhaIRsEX+gRbgNUiQGoylEOgP+/bfNO2CfMrPbWMs0M4nFZAHnrzu/19hT0CF6jjzQGs0HGgGdNPRwiU1/bzHYxQ3qmb5OvaaZEasdY2zs5SXeDPi2YiYyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408817; c=relaxed/simple;
-	bh=a3mQToStIF6B1IdwttoHX1nYEJ1tyZcwTnGtOMKW35Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=CXo/oJ5xOu8faS+/DR8na8mycCcXLcrQkjUiB+FkDvcPQQ/+MI6BqP4x2Sysg0Zj1k/p87yyj/v2blP2/UfuAGxEo5C4FmcX81ogHNi1cI572m0keP4FoF6YW65RQeX0jmv7qcnStr551pVkUVKaWslA1uQ9/ybsJsXbNTw6wBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=OzsPiecT; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1750408861; c=relaxed/simple;
+	bh=l0WJerzI2FKlTiZkjLsDHwtinoN8RrzlFcZl7zeIW84=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c3R2/HhYfUGUHRllQS7Cdi42Y2qG2F4a1wloOuSo5zm9fCIdUBYPKcHkiHdoyNVkRI2bnckAp/goPPIm0KG+ae/B32Rhb19VGMulK/pnA0GDJ5va9jKBDxz/T7dkzffT+UgSMOpvL0WB2ToOU1AFssB/3Y+jIg0pulZROluZXK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NVwdrFY/; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="OzsPiecT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so2502257a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:40:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVwdrFY/"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a6f6d07bb5so17689151cf.2;
+        Fri, 20 Jun 2025 01:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750408813; x=1751013613; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750408858; x=1751013658; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xb6LSPnM0jp92EEKrNM76UM1fccTcugFDTVrUIjKDq8=;
-        b=OzsPiecTJAWEDjY3lZVKGcTxZo1IjiJb6A2krnBK+QO63UFoy2xb0TJC7c+x27xhqC
-         K8WPcXa8R5ILdCCXOBByLgtcytWRNtmsOZ9/JG/zthzGETQq/2fYFtvwclG094H+UI+0
-         nIz53UkqIJZt+ICtDSDObVG9OvQ9ORUvlDGym3Rx80kk+BY9BrFKR3rrtR/BriuTB9/k
-         M/9Nc9ti9da3+kBYbgfP9Wv4qci+5XbGRDaxp6aALp25RvhqKygC2Ard7nq2Fz63Xxum
-         zc4keaPBkwSVzswBkmkNS+1zSyoieN9aWB+bkf3FQ4vcVozl3HdC9lkHMHw+qMQ/jObH
-         8r3A==
+        bh=yhJ28lUu4tutQ9PFgn6HlLDINbOKz5/YrrzszsyspMw=;
+        b=NVwdrFY/ksaN9wyDGiKyyB+bOdeZl8+T35+scnSYn7ldgy3bCMrpSRdo3kaVT7GpTT
+         a6W0Gv8T2cSu8G5A1GpY2wCJKkjIbpa0SdJow8c0hv9Icay70HldDBUwXrcAMEgof3u7
+         3sr/PXpc1JkcMrGd01bHU7aLE5cyc9gFH3/EPezTjQFaP8JYYekPGE2ruJ4cWT3gWXBQ
+         ofJLLCE3V7d2OH4n9y3h7bETiN88t76J3gvxPXYgTIdho2E1Ws5x2arwkq80LLVg/MOn
+         I1HSm5m0CP/6j3pO9jCAChpzrxh6ievFLLhYHL1g8KpDHmww68Tm5o/ZSdAx/VLznrif
+         Q4dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408813; x=1751013613;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xb6LSPnM0jp92EEKrNM76UM1fccTcugFDTVrUIjKDq8=;
-        b=NlAFZECcYlrPCPmvPzGmh5GYZiYTdRHwTwev2fuHt06JUdnT2hB+wQtJrv9wpRYC/4
-         GB/8ugDMXmag7BLR0bIhZqk1oEYE2raNXIdinOKIPvMQ9pA8lh3kJLUOcnjJs19lLjIZ
-         IP3YNfTPhLJPSBRtaPEaZPl3VqfhXZNu1K5EIt3mpt9NiYXVleEjsqrMi7LIqazov8ef
-         ln126NffLwtXGjLddt9XaZBdMINZMwBWfIOBBo9RoZNRWqqY9BWEE8uUh9ADljSewJ+1
-         vrVZ8iOGao5yNVMTllgyETTyZ+k9fV4AieGKHiLm6iJ89AC+ZJ1q1ejSsCAGF/4J3SrC
-         yRFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSiaMOs5IXi2AENhqiJ3YT+BM3RqSqHBvvb0SefvnwNwbUxc9lphhc03r47iocD0YEd5sTZWzAGRSvZrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM24VbxuNSXQruRWWAIJfTGJm0sEhUq9EH8DcVhcyKlI4wUEAC
-	OJA6DWc3LHk3c7mIc6M0zK4TQJsjQq4W7uXJbUuEj9/502V4YLlK3+kC7lVbiHLdPkw=
-X-Gm-Gg: ASbGncuiO+t0lmifInm6e9RRXpirfhXUwZiM5KhREQKmss0y03K5lVM0DHsHAU11nM0
-	YsTovX5QebCTi4BzVAeOsY4FR6p8VfUX0aVvxSrAWBJoVnGpZqSt3XtbyTT8mo1QEWo038LnNW1
-	M1EjqNU2ehFmUD6A1Y3o7i6OLmVIFl4PJECxGvOCGY5brGZ9C1nsBFqTNeAXL+6uiCqBOesrUCK
-	KD9528qlMqF5CjXAxUzJekJ3cMPGGsAZDGiRbKzJclIHMA7UA5v0/0JyXgLvn9NPwb6zO2YbyTu
-	e0Lm9+XiNGdWlPV+3uFi+Fi/N43wTc4R92kmitG9e/xdAVLGFEcrDlX+rxHOm34l7+TdSfHsQDz
-	BJQ80QxflXodrdKTCD5nCp5I9g9aqyvU=
-X-Google-Smtp-Source: AGHT+IHSanY7BYLP4aWQy8kFVBDTWraG5UXAI4rv0kvSKzHjiyN5FBJKlVrNJSNccFlJIgG0wJH/Gg==
-X-Received: by 2002:a05:6402:35d3:b0:606:bd9d:a772 with SMTP id 4fb4d7f45d1cf-60a1d18ee41mr1852590a12.24.1750408813427;
-        Fri, 20 Jun 2025 01:40:13 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a1854362csm1084336a12.20.2025.06.20.01.40.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 01:40:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750408858; x=1751013658;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yhJ28lUu4tutQ9PFgn6HlLDINbOKz5/YrrzszsyspMw=;
+        b=JwdtbHOFKNu86cFRW+wT/rjtoO8u4hIDRDkEB5/oMIi+BlWkY9jrk9k7am6kFmH7uJ
+         H5GR0Sp0r/3QPzsRAPjVpHTw5KyDE/nRGfm1xIJRH/MxgNGF/ewaK7vs6Ac0XWXU4Sl5
+         /xsxlSETYUtOvGBY88yryeIfi6kJi8mLHAXK2Dtd6QJnfoW7JnGAZcpNnyxO5Zw6G/CU
+         DlFV7LzvWhlT6Q+7HG0sftXKpMCglqAjjLeyfxaNHDGsuO8c5cYEgfiaOF6Kze3qTUiu
+         XtC6Y6URMCIcDzLQ879wEIfgKH5Vuy1QuU2zuJLtfu8pkDXhah5/F4m012YOkMAuaaHO
+         pzAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV/yvq/ZlrHDnD80XmMGrLDA27Fb/pqT7dylRXkkh25gKVUijYwZqrau5vbHsE/WL1MV/WBPv2@vger.kernel.org, AJvYcCVmhpbp/f2N8ZUn0QeDm7fxynF8Y+tOtZoW2bF9GKn1I3dkQTI+2Zo8spOwQJvZUHWv0aYA4U+nySufdUbR@vger.kernel.org, AJvYcCX5N8VFd0L6uoouOSOxZcsFE5Ty6WhOofNfgPHj/J/CBwHQ46su3hWNu/iO36QEJH5ldQNM5nYnCS/p@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUypkyITBCwF/30M7GpC+V0QVJIgIiNlx6UXGVKpkWqlkE7I5S
+	MHAnrKImp2pzAlf7d946QUKN3ViEJ9oTVxX4v3JuRpRTDb7xc+nWZp+CmgsUzrBwD5bAp2iI2S7
+	GQzvDNxdhILqpCjyBY/BuFTTd92VHB9s=
+X-Gm-Gg: ASbGncs44QO4HMltWUaOuYEARhoHdom0zOvSboxFcazvcpWk9U8epVVI3qoJSsw3Rqj
+	0Ua93g4uj7B96gPjKcrgrSAal3sHbCd8llyaz7Uth3wkFyO/DGX4/LHc8DgX/lwEk3G22qtzEtp
+	tZiz9tE5oC9nL1kGE1+N7oNwXpLco3Ot2yVa/dXeFOst7S
+X-Google-Smtp-Source: AGHT+IEk9QAe1bgLQ65TsS0eFYzhtXpG1Dw6rWlKdy3d7hwrH5nqqmF5IjgTeOnwx7f0dHroCwGo1uFKO/+rc8rs2tU=
+X-Received: by 2002:ac8:57ce:0:b0:4a7:74ed:cd49 with SMTP id
+ d75a77b69052e-4a77a1c4b80mr30180401cf.19.1750408858127; Fri, 20 Jun 2025
+ 01:40:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250614-sige5-updates-v2-0-3bb31b02623c@gmail.com> <175036770856.1520003.17823147228060153634.b4-ty@sntech.de>
+In-Reply-To: <175036770856.1520003.17823147228060153634.b4-ty@sntech.de>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Fri, 20 Jun 2025 12:40:49 +0400
+X-Gm-Features: AX0GCFvyM96QmV7htM0KHUFL5y6LOg8SAG7kA6gR9Sm54nshs6x8Ht0AaNoM6u4
+Message-ID: <CABjd4Yzz9mh0G5BhpPOGAoadD-A5eX4kdsF8rGrWk82hAE-MYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] arm64: dts: rockchip: enable further peripherals
+ on ArmSoM Sige5
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Detlev Casanova <detlev.casanova@collabora.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 10:40:12 +0200
-Message-Id: <DAR84ZHFZOJI.3CRLDTISWFUEQ@fairphone.com>
-Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
- Reichel" <sebastian.reichel@collabora.com>,
- <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 10/11] MAINTAINERS: add myself as smbx charger driver
- maintainer
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
- <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
- Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-10-ac5dec51b6e1@linaro.org>
-In-Reply-To: <20250619-smb2-smb5-support-v1-10-ac5dec51b6e1@linaro.org>
 
-Hi Casey,
-
-On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
-> Missed when this originally went upstream, add myself to the MAINTAINERS
-> file for this driver.
+On Fri, Jun 20, 2025 at 1:17=E2=80=AFAM Heiko Stuebner <heiko@sntech.de> wr=
+ote:
 >
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c2b570ed5f2f28341a3bcb7b699cbb250ffa2a88..a32e53d89c29cacf6e456258c=
-4c7c0206cf8abf2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20565,8 +20565,15 @@ L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/mtd/qcom,nandc.yaml
->  F:	drivers/mtd/nand/raw/qcom_nandc.c
-> =20
-> +QUALCOMM SMB2 CHARGER DRIVER
+> On Sat, 14 Jun 2025 22:14:32 +0400, Alexey Charkov wrote:
+> > Link up the CPU regulators for DVFS, enable WiFi and Bluetooth.
+> >
+> > Different board versions use different incompatible WiFi/Bluetooth modu=
+les
+> > so split the version-specific bits out into an overlay. Basic WiFi
+> > functionality works even without an overlay, but OOB interrupts and
+> > all Bluetooth stuff requires one.
+> >
+> > [...]
+>
+> Applied, thanks!
+>
+> [1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
+>       commit: c76bcc7d1f24e90a2d7b98d1e523d7524269fc56
+> [2/4] arm64: dts: rockchip: add SDIO controller on RK3576
+>       commit: e490f854b46369b096f3d09c0c6a00f340425136
+> [3/4] arm64: dts: rockchip: add version-independent WiFi/BT nodes on Sige=
+5
+>       commit: 358ccc1d8b242b8c659e5e177caef174624e8cb6
+> [4/4] arm64: dts: rockchip: add overlay for the WiFi/BT module on Sige5 v=
+1.2
+>       commit: a8cdcbe6a9f64f56ee24c9e8325fb89cf41a5d63
+>
+> Patch 1 as fix for v6.16
+>
+> I've also fixed the wifi@1 node in the overlay - which was using
+> spaces instead of tabs.
 
-SMB2/SMB5 or SMBX probably?
+Thanks Heiko! It's annoying that YAML doesn't like tabs, so copying
+from binding examples is not a universally good idea :)
 
-Regards
-Luca
+By the way, is there any tool that helps catch those?
 
-> +M:	Casey Connolly <casey.connolly@linaro.org>
-> +L:	linux-arm-msm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.y=
-aml
-> +F:	drivers/power/supply/qcom_smbx_charger.c
-> +
->  QUALCOMM QSEECOM DRIVER
->  M:	Maximilian Luz <luzmaximilian@gmail.com>
->  L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
-
+Best regards,
+Alexey
