@@ -1,115 +1,101 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9120421A45A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2182219A7D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750398504; cv=none; b=eEmj+6n6JaHEnpft04b3Sk3uFYpiHh2v/BV46SFSt5DTXo6xz+PuN3iN2WkGMSvGiaxzobYwB+PGCUI0ClSn1Fy9HCocREem6GBRpqvk/AejrD2JllBFv5NTZKYv7U8jbPeLw2jT1PyUNrSssXAq7m3OANoj0m9sNxPI76moDIY=
+	t=1750398536; cv=none; b=uDJ8w6a5hkCfLwmAHQtUBIoqyouRX9gQsiSVljaCCJetFO1UgfZcFovknYrOmP36WTu6NAxMnoDDgPB7fAvfQp0vE5TFCF9vYfVURLoP7mXUOHJgJ2B7ZycO7qRp7jAYxh8vw2mXf7fWZMrf52Rrwd9jUsR16U9HVZv63UacfiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750398504; c=relaxed/simple;
-	bh=S75fM3nM9TnsR7L4uT55yoIs2jbn/4LAz5Rs4K4sh/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZvJFIC21hQMvsjbIyvFRjrKFSlISK87+j8v6OsusGBNrUQVUoSdR6fGrNU4U5h5xL5f/GlswF7KA2PZCKLtO0ghA0bzgpGu0uUXjeNJKxWXoIfToK2KyzoPSLKPJ6Yk52f3aEqfPzznqhSjvy45lW2fj5ls2AadI683iq/bNh3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e5c9e2va; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1750398536; c=relaxed/simple;
+	bh=V8QkqaxQAQuLib4lqq1N57Z30hykUI80qoFkT3dO3vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teKLdcwvIv1h0HkXqnrWVCwdrsfpHMII3gsXZbMQ5+xaO28H4h2CYTri1uprBEONg8l7Q3zrhWhSShU18bVWUI1JKfFh0XP3hKfo6lJnm4LXHJHYlS+L/7qzJctDafrUxP299DU5fV4dIOloxUjuyNXvLFrwj+A25UWHZVwg18E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UNNNhMuV; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e5c9e2va"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so10964955ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:48:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UNNNhMuV"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso1073556b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750398502; x=1751003302; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
-        b=e5c9e2vaRW27In8sJjFRZX4JAI6HG/qpTqecPVPmhdDDh6dBKKkKkB7SKyp1/JL1HJ
-         foJX4G9ulj7wOEVhqCnV/M/s7xAYtPf+ycwZ3ZLR5z+Tres4nzpQAR3NWoHE1wjDqgJA
-         R2Ggroh+enLgInAeji9CmeyzxLA2XQbF8S/vw=
+        d=chromium.org; s=google; t=1750398532; x=1751003332; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+lBZelaHP5PPmkOntc4jTfDIo6tAIeer+XpixIir8SA=;
+        b=UNNNhMuVDZ+We/cFGC69fE5rQ05UsYm1OrhWL+/LBlYdnwlC2uEJn4ws4MzxoLk2EE
+         u/hKR+z5wHJ8sQumcLX9igKUut2iFA7LsBPL/TZkSTlEMtCURzf7xcV1vSEy71UkClOu
+         o5EN21lxxn8FLhfrfekR0jse5DRfzBoxBbit4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750398502; x=1751003302;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
-        b=a5Nn/IzfbHaEpmHqiesMMZn78SLkDkR3S9B//o9GkfwqrYLj+UKHCE7zuebkYX5r9B
-         ycZlmwF+hVTicGXotuoMBkqv0DF6IhHwDmzKdG2u7J+fx4lo2SeQ1OdSgve55XImyaDC
-         x64ahYGbyf4P9zGu9KdyASP53FahK68WfX34fOuPLGPYJ+LpsKkzo37DRDc70YEoIJUK
-         AUxjMmMSTilP9BPChAA1sVoInJlPbDRZ23WY+YU9B+CrDs/1oCZe3wUeo+8fZeroDs2U
-         AmZJi0yjoLkzTK5u0UT+uYL9JAhBAJ/2ViaXYbR0592N0SN8PpXAsRYhEccq2pONp+3Q
-         vOLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeD093Stljwz/qeB2g9ivszZ4mchXMmV624bCZPmF9JLZVNblD0PsK75w7dQ8Y2SZ7Tx+3fJAvC0guV1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEOMCuNQaDnv0G+zhxDAUNn4iEhjImy5/CuPW9OandDXtJYpvM
-	kY31321bjim+tS+j1P0crE7bSB8EcbSAqWsykzUoyytSNTM/nHbCC2PjMa51hPTB9rH+D3HByv0
-	xcDQ=
-X-Gm-Gg: ASbGncvfKtFx0iEseAlQUB2zmF1XTe0x5ZY5GnVqjGW2FU96y0HpJM9CEsx5A5wxq4Y
-	rtiIKDtniNojaZzb0dspQ1kuoZAprevehwalj38pH3dVtdq4QMgjpJIwqbFQNKnEFp3jaVqo5d4
-	M+EQiVUSbo2V5TTEDgUbo70UXObihcGzKaJLT0WfrHZFzLPiguJpAZLBQFIRK3gCIBz7StGA48G
-	20KIuvaFbhxWViYgu1E008/hc4oiP5a2JQgDPpK9ejtQvQQG0hl1+PTNlSFpkZewRuCTNGfJqP/
-	IFXiJ2Z8j2NdqyC2OjlMy3kVryF9iIaJb027EaKcCnV02y9QzM5O5q3Kr2c1x3Z1prsd1IHlgXS
-	tvScAUqEtdD5KtFnht0s=
-X-Google-Smtp-Source: AGHT+IFJk0gn2Y3dKhWc3pdhP6/fnoHggpA9+Dt/AssUIqPkRx2PlFX9KNpf7G7AZbo7eFSKogQnog==
-X-Received: by 2002:a17:903:1988:b0:234:f182:a734 with SMTP id d9443c01a7336-237d9954d7dmr24314205ad.31.1750398501768;
-        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
-Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:8f2b:74f7:bc26:564e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83937bcsm9215265ad.43.2025.06.19.22.48.19
+        d=1e100.net; s=20230601; t=1750398532; x=1751003332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+lBZelaHP5PPmkOntc4jTfDIo6tAIeer+XpixIir8SA=;
+        b=mF7z//ufqVeMLg2/Hau/RZj/orzqdv45KROF/GBUMiAQyC7bmTQIhDL9f8+r6WbOfv
+         YhQsHGgPOmUEhZAgjmMXwX1NaDwjA7olV7EMqvnHpsKo25VYkd3DB46DUZqVsr/irftQ
+         96BaRnTxOARzmO+vCwEU3IA3uv/OeD/ztK6W9BtDJYgDtpe1RmpejKnnRDlWcDTcfGvI
+         CZJmbmDOpsjsSPN/G2bwlS4pPseWMMzLr793ul9FbT6ZnaHkBQ2KYDYYuE1ZoRghfLYx
+         53IV8O0KLDRRD2V2uvBazFd1QONQjE3h8P0MA9zJnEQeMfD2FlTTPtHSfPQQriI7dvHP
+         1A4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU6zNjJnRbhjltUxIABNejDKkAacf7sdxDZMeHwReKguci8j9A1H03/OYK460puxdC8hdc4K4wO5Qm3jDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRdutCt14IBlAtbJrCP11A1s2Mko9NBvr/Fa7Yj9ZIdDnideP/
+	1VrcbMX4TnGqNzKk6b5Ke1zUzBw9gwMcX+mmoyE0FmXOHrlQJvgnSG9fn47NwB5cEw==
+X-Gm-Gg: ASbGncuOpIX5fg6QJKS5bAUiZSNySMA6dMpu7i94YpBJdWtSUCVqUlSr8cIacs5GUF7
+	Mb1krd/BbIno10jzo1HxpXWN0IMeDw1Ik0/ZhbhE74lMaVwC6GiliJDbjWkxEOT/e/z+fjnPeUg
+	vu6G2BECrp1ZhjbCCh+/nIRIxUftsCTCo0rwpmHoLm4hzEeBEHvkC61iLkGfZUyClwvlQAvm1bc
+	v3N15TxpDj9cIpTl87QV3wry+NLp1YyhvO78tX5QWhJx6TK7tNJxrmjPzLm2CFe2XXvOv9AXBTP
+	hhS6EFcUZJ6B9nBveXrv16y5z+XTrMXgKNbIWZFBYM45BdIjJoUGVlZKa8iwmKF0k9fGO5XTaM3
+	8
+X-Google-Smtp-Source: AGHT+IFnwY3Uttwxpg43v/GRn75nmvSevZmO5+9GhZLPDpi3uUpewN6wR/MISTt/iaWqRSujZovrjw==
+X-Received: by 2002:a05:6a20:7f8d:b0:21a:de8e:44b1 with SMTP id adf61e73a8af0-22026e6bde2mr3126942637.34.1750398531939;
+        Thu, 19 Jun 2025 22:48:51 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:e574:cc97:5a5d:2a87])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a626333sm1142575b3a.73.2025.06.19.22.48.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
-From: Naoya Tezuka <naoyatezuka@chromium.org>
-To: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Naoya Tezuka <naoyatezuka@chromium.org>
-Subject: [PATCH] pstore/ram: Validate ECC parameters against Reed-Solomon constraint
-Date: Fri, 20 Jun 2025 14:47:57 +0900
-Message-ID: <20250620054757.1006729-1-naoyatezuka@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+        Thu, 19 Jun 2025 22:48:51 -0700 (PDT)
+Date: Fri, 20 Jun 2025 14:48:47 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>, 
+	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
+Message-ID: <osoyo6valq3slgx5snl4dqw5bc23aogqoqmjdt7zct4izuie3e@pjmakfrsgjgm>
+References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
+ <20250520123544.4087208-1-senozhatsky@chromium.org>
+ <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
+ <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
+ <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
+ <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
+ <76mwzuvqxrpml7zm3ebqaqcoimjwjda27xfyqracb7zp4cf5qv@ykpy5yabmegu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76mwzuvqxrpml7zm3ebqaqcoimjwjda27xfyqracb7zp4cf5qv@ykpy5yabmegu>
 
-The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
-BUG_ON(), where `n` is `block_size + ecc_size` and `m` is `symsize` for
-the pstore RAM backend. A driver providing invalid parameters can trigger
-this, leading to a kernel panic. For more details on the theory behind:
-https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
+On (25/06/20 13:53), Sergey Senozhatsky wrote:
+> On (25/05/26 23:12), Sergey Senozhatsky wrote:
+[..]
+> Surprisingly enough, this did not help.
+> 
+> Jan, one more silly question:
+> 
+> fsnotify_get_mark_safe() and fsnotify_put_mark_wake() can be called on
+> NULL mark.  Is it possible that between fsnotify_prepare_user_wait(iter_info)
+> and fsnotify_finish_user_wait(iter_info) iter_info->marks[type] changes in
+> such a way that creates imbalance?  That is, fsnotify_finish_user_wait() sees
+> more NULL marks and hence does not rollback all the group->user_waits
+> increments that fsnotify_prepare_user_wait() did?
 
-This issue was discovered during develop chromeos_pstore driver:
-https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
+No, that doesn't seem to be possible.  Sorry for the noise.
 
-Add a check to validate this constraint before initializing Reed-Solomon
-codec. On failure, return -EINVAL to prevent the panic.
-
-Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
----
- fs/pstore/ram_core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-index f1848cdd6d34..c7a2ff9c5a6c 100644
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -212,6 +212,14 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
- 		return -EINVAL;
- 	}
- 
-+	if (prz->ecc_info.block_size + prz->ecc_info.ecc_size >
-+	    (1 << prz->ecc_info.symsize) - 1) {
-+		pr_err("%s: invalid ecc parameters (block_size = %d, ecc_size = %d, symsize = %d\n",
-+		       __func__, prz->ecc_info.block_size,
-+		       prz->ecc_info.ecc_size, prz->ecc_info.symsize);
-+		return -EINVAL;
-+	}
-+
- 	prz->buffer_size -= ecc_total;
- 	prz->par_buffer = buffer->data + prz->buffer_size;
- 	prz->par_header = prz->par_buffer +
--- 
-2.50.0.rc2.701.gf1e915cc24-goog
-
+My another silly idea was, fsnotify_put_mark_wake() is called in a loop
+and it tests group->shutdown locklessly, as far as I can tell, so maybe
+there is a speculative load and we use stale/"cached" group->shutdown
+value w/o ever waking up ->notification_waitq.  Am running out of ideas.
