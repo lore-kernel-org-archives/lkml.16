@@ -1,95 +1,106 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8A7A59;
-	Fri, 20 Jun 2025 01:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA82DA59;
+	Fri, 20 Jun 2025 01:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750384277; cv=none; b=K/PWzfJIqS10IXTJP3fheCBVxEdHEu0SrKXB9P3AnAJnBa2tv5kO8/QUVE+a+jcwZABxglf1mruB4P9X5Qu4j6+bZJkfUcHwH7GR3Q1ZFUU9L9MFXWVgSINgl9jbE/JDOyc5qVYUnBgLSOCGDXimUu98Z4GhdCOr/GbD28MMXjQ=
+	t=1750384283; cv=none; b=phktzfNHNxjQ+bEkpL4g/WpYPXwknPICh/f/OQvfwHiGydTToWKVfqT7jbT7NYTlVEZp3NxBSOA8IZ3FjlojgTTAQVbZLPE/iWly3Dl2owylF1k+pTKm9AXMmF4DR78as1qNLC5K6RtbQBAs0lmEb+AUhr4qKHk3LKgxkh58kNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750384277; c=relaxed/simple;
-	bh=OzTYdDM5QOAK90iSCpBC+SNf3hrDZRU2+8gRs9tim1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qNbjLivFdR+l/OsYzfRxDhUtD5XL2PSlwmCt3J3YKWqHGpNw53aw6VXjeqkmRKYC0sQiipPBEOEeVhZ+wYX07v7x9KrNlRln8jZYbtYNxeidGWMdZVLCBmnycY5MO+BeXMdV/Se/jXSsSQ3kpWPio+bO1oxyN+iepskMNtgNqzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bNgLh25Hwz10XKF;
-	Fri, 20 Jun 2025 09:46:36 +0800 (CST)
-Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C80D180B34;
-	Fri, 20 Jun 2025 09:51:11 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
- (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 20 Jun
- 2025 09:51:09 +0800
-Message-ID: <50b9d0ce-df97-498f-8750-8a9e41a60f9c@huawei.com>
-Date: Fri, 20 Jun 2025 09:51:08 +0800
+	s=arc-20240116; t=1750384283; c=relaxed/simple;
+	bh=JJl4egwEehwUZ9lH0qcCNVO5URPGIQgATOlSnKgy/dM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QuHIh3R6z89vLzgnoZXijz433ceSj08R23DLQtxxai74gQZZI4mSGbJALIbdv2IEqq1Nc+qr3gEFlcIho9qLpNfGAQHnHal6BbkDleR7sn/F7eErYFEf13flkDMA9nvk1dHsNPRmpycMt6wkYW37Vk7lJgJuPz2vz8KQkIVjSp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0d52c4a04d7911f0b29709d653e92f7d-20250620
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:d07b890e-8626-4e28-b4c1-0b936ee9a319,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:1fe8f3f658406ec0294878cbf4dc8644,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 0d52c4a04d7911f0b29709d653e92f7d-20250620
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <tanze@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1622837771; Fri, 20 Jun 2025 09:51:15 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 9D54716001CC7;
+	Fri, 20 Jun 2025 09:51:15 +0800 (CST)
+X-ns-mid: postfix-6854BE93-415760410
+Received: from localhost.localdomain (unknown [10.42.12.96])
+	by node4.com.cn (NSMail) with ESMTPA id C601616001CC7;
+	Fri, 20 Jun 2025 01:51:14 +0000 (UTC)
+From: tanze <tanze@kylinos.cn>
+To: peterz@infradead.org,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	tanze <tanze@kylinos.cn>
+Subject: [PATCH v2 v2] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
+Date: Fri, 20 Jun 2025 09:51:09 +0800
+Message-Id: <20250620015109.1416808-1-tanze@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
+References: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] ext4: move the calculation of wbc->nr_to_write to
- mpage_folio_done()
-To: Zhang Yi <yi.zhang@huaweicloud.com>, <linux-ext4@vger.kernel.org>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
-	<ojaswin@linux.ibm.com>, <yi.zhang@huawei.com>, <yukuai3@huawei.com>,
-	<yangerkun@huawei.com>
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
- <20250611111625.1668035-2-yi.zhang@huaweicloud.com>
-Content-Language: en-US
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <20250611111625.1668035-2-yi.zhang@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500013.china.huawei.com (7.185.36.188)
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/6/11 19:16, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
->
-> mpage_folio_done() should be a more appropriate place than
-> mpage_submit_folio() for updating the wbc->nr_to_write after we have
-> submitted a fully mapped folio. Preparing to make mpage_submit_folio()
-> allows to submit partially mapped folio that is still under processing.
->
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Makes sense. Feel free to add:
+Perf's instructions event tests on Zhaoxin CPUs may exhibit:
 
-Reviewed-by: Baokun Li <libaokun1@huawei.com>
-> ---
->   fs/ext4/inode.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index be9a4cba35fd..3a086fee7989 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -2024,7 +2024,10 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
->   
->   static void mpage_folio_done(struct mpage_da_data *mpd, struct folio *folio)
->   {
-> -	mpd->first_page += folio_nr_pages(folio);
-> +	unsigned long nr_pages = folio_nr_pages(folio);
-> +
-> +	mpd->first_page += nr_pages;
-> +	mpd->wbc->nr_to_write -= nr_pages;
->   	folio_unlock(folio);
->   }
->   
-> @@ -2055,8 +2058,6 @@ static int mpage_submit_folio(struct mpage_da_data *mpd, struct folio *folio)
->   	    !ext4_verity_in_progress(mpd->inode))
->   		len = size & (len - 1);
->   	err = ext4_bio_write_folio(&mpd->io_submit, folio, len);
-> -	if (!err)
-> -		mpd->wbc->nr_to_write -= folio_nr_pages(folio);
->   
->   	return err;
->   }
+  $perf stat -e instructions,cycles ls -l
 
+  ......
+  Performance counter stats for 'ls -l':
+
+                 0      instructions                     #    0.00  insn =
+per cycle
+         9,488,278      cycles
+
+       0.004365407 seconds time elapsed
+
+       0.003303000 seconds user
+       0.001099000 seconds sys
+
+The absence of the fixedctr member leads to an incorrect hwc->event_base
+value on Zhaoxin CPUs, causing a discrepancy in the instruction count
+reported by perf stat. This commit resolves the instruction count issue
+by properly initializing the fixedctr member.
+
+Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
+
+Signed-off-by: tanze <tanze@kylinos.cn>
+---
+ arch/x86/events/zhaoxin/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/cor=
+e.c
+index 4bdfcf091200..3fc3f9abece9 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst =3D=
+ {
+ 	.schedule_events	=3D x86_schedule_events,
+ 	.eventsel		=3D MSR_ARCH_PERFMON_EVENTSEL0,
+ 	.perfctr		=3D MSR_ARCH_PERFMON_PERFCTR0,
++	.fixedctr		=3D MSR_ARCH_PERFMON_FIXED_CTR0,
+ 	.event_map		=3D zhaoxin_pmu_event_map,
+ 	.max_events		=3D ARRAY_SIZE(zx_pmon_event_map),
+ 	.apic			=3D 1,
+--=20
+2.25.1
 
