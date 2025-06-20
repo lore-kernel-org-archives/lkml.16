@@ -1,151 +1,311 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A285328B4FA
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E7928B4EB
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424242; cv=none; b=MpFsPvYCFJerN4++q8rOuq6g2XCXWOgyu+JU1u8Eg91UCD0fMNMLnkUDAInmxoKPC94fqkfVNapsJ3M6tJxGPN6MABjPdAxCa5r9gl4tow6n78UliLukZ4l86NAlz0E8zmEOTnm52Jt4hVVjNLNcesxBVIlMF1ZV9UgGL14I0wU=
+	t=1750424275; cv=none; b=M86g4D9WJBJ7AKUaVq4HTLFZDK2MAUNVEMq5i1qwhiRt1aeP7yhsQkPJ/MjHS+tePiZbYSP3eqwUHasMsVm3iif5/XkMH9SiQhV8AzzR0mn50ZDz6YEQCcaudurCssw+3jJDqWrGpjB/eASHr9W451ZOvWwI+u64g/TmzBhSGXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424242; c=relaxed/simple;
-	bh=ZyoTYsQDNqC4ASdY8p85g50AZ3yiJ1AdxeTRJtDg77U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i7aN28a87esNODHoxP515EE8KYn20OmRXD/dfcHdzjvBykDiPxJTMeXehg4d+X5NRuCEHXaZErhIpAOAURX2t8NWYl8YoNDT8XoLI+6tx2a3g/YwVFGHlhqneg5Vi8E8TnNJLlepFwpllbbk4EQvRrvsHo01DlkXgySfcz0rWAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VWYv0w5E; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750424275; c=relaxed/simple;
+	bh=QlEprds3Zybg0FowxuXO8i2smkbJaZCX8P4B+brlGhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BwdtZGWcMwjYETCF3rX19jc+PFOpVsvGBP4WI/xYA2EhLCtc7gZ2JN6vHZLaqVy384docvw+G5cNQHZzAz09LWcb1lkNvCHbSk653O9VRUcncGqsWcjwGrA+WJaItJhUUPN4c4bTMY4e6rIYz82HGiLG/gwyvpfvti0exyR+kIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TwyX0df8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NVysyb1a; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dfS7ZhsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ual1WZqK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VWYv0w5E"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso295784f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750424239; x=1751029039; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GzeSMYEXqxw9EDBrJFxz07iXPEJN1v7Rpat5YouCMlM=;
-        b=VWYv0w5ECnxvvSntBqxXAG/2y9MUQWDCC5BNtmI3W3KrEtTA0pYDPslmuxKCmzN8yF
-         dT2XT/6v/oKTamH+yASQt4MAm9UJyRi7Lw9EDEAAl+VP8brhjrwhVTqjc0OI3NhQepTk
-         E3x7hlsBpmXSbK7qA/cMoY7rIFCYYNwiDO8Z9pm1nJkWOPQhjNsFrYu2CR/pKPHOsERp
-         gosVz4Henc0Ad+iB9RTcHABS2OkgrkjtrL+ft9abPQVItpyL9zCIBRj49Sd8irPBYDLv
-         vr4XJxaS2SkYbJRE6NCngaPSi+mcfKPy8aeiwj+bb9Lh4V+qRY3xrND/5pI5QNCNvOXz
-         BMCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750424239; x=1751029039;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GzeSMYEXqxw9EDBrJFxz07iXPEJN1v7Rpat5YouCMlM=;
-        b=KXoXHzAABde9T/a3TZ7Yd++e6B+zpnCuOnqmJtAKMdV9fU13XEc01JYL6GTQz1iiHa
-         vdAHjs1W0IKv/Tb2XxbyP9NBRoQ6pqVTidFYC0JLZHYjfVQzwXzMBfbuuicmrd0URRUO
-         Ha1dZkkuuseEQI0uBRUozZtHjXDJB9JFt2vT0g4zYOeYo1UZDSLPlIaI0hKDfM7i+f6w
-         ks5hY/sgWcxTzfR7ipyVXiegTFUpY+j60Wpx/ZGpDAXMNhfdIE4RayS/KnRJ4XUqbmjz
-         dFLskauMlHgjx1GDjfqtuE/ffRyjvLkIPjZOO6nHjNDa8E0pcakhPSWH+rHtknkG4vEV
-         4xdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqTCanHrDR3LeBcpta8p+olCtat6Lqf5hV6R/PyZkKyIIeOpm1U0m3IeLziGKeNiTHOzIQXB5c1339a8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrku6SZmPX7VhsoFvAEk23LRVijCsMSpoGkLf5T/cOwPMS2RDc
-	+llRv4PfAjv/nri8NzzIOCCNbO/iG06uNysDURe5hwLng9gafekZOc7sj5/CfMATFFo=
-X-Gm-Gg: ASbGnct7NUMLnefZQhyn6+p1njci+tHKrrnzbWc3Lmeq/0FgXHY2JTGZO8LpGCrURRW
-	0x/YPVNNRImRBpH2R6BsuUdHqDUc37IVKlb1shxLNMLcaO1fyTFOWRb5vzBAULGk6Gcwm/51JaS
-	nUBcLPZa+Qgi3HiqlJXAQdE1/KKSy624PLXdJKRFJyaSHDS7gIo2zccBC13rnhS0VY9RD25/qUq
-	az6EweOhAos4yNZCZ9vL8tLk/os+ua8W3+pc6DzDQId8pUDd1nyJyT08qyAIZQvyWWN85K49NUF
-	l1TFqdHG42F6ZDU/nhlWuk2Bbiqgsk26VpJ1vm+2xdXADbDoYWAeTYgPPwghwc6pSXMTa3nA0KX
-	uXF6z+CkeC5O7IA5ZFdP4ruFxcTk4MDmYQ2X/wXD5DtkM4hlO8IMJ
-X-Google-Smtp-Source: AGHT+IEg1ePRqgAqTiaCaALU4AHtQC/KnDMq5o0Lao+2uolphJ/oiQH50dZWBNhS6gt7jRyQjFtv5Q==
-X-Received: by 2002:a05:6000:3111:b0:3a4:eeeb:7e89 with SMTP id ffacd0b85a97d-3a6d12ae20bmr911198f8f.7.1750424238916;
-        Fri, 20 Jun 2025 05:57:18 -0700 (PDT)
-Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4535e9844c3sm59336975e9.11.2025.06.20.05.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:57:18 -0700 (PDT)
-From: Petr Tesarik <ptesarik@suse.com>
-To: Paolo Abeni <pabeni@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	netdev@vger.kernel.org (open list:NETWORKING [TCP])
-Cc: David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH net v2 2/2] tcp_metrics: use ssthresh value from dst if there is no metrics
-Date: Fri, 20 Jun 2025 14:56:44 +0200
-Message-ID: <20250620125644.1045603-3-ptesarik@suse.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250620125644.1045603-1-ptesarik@suse.com>
-References: <20250620125644.1045603-1-ptesarik@suse.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TwyX0df8";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NVysyb1a";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dfS7ZhsK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ual1WZqK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5D7081F82B;
+	Fri, 20 Jun 2025 12:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750424271;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
+	b=TwyX0df8ZNKIsDzgybk2NJmwnxXRy4xOENAGbTpnCNpOi4BCRzaikRx0HDRUJUUGFPwarR
+	jPOcOiI4lv7KGgnVHZzzMaPi6MfWdGL7IxLt6z/yv0hw16qebLBH60duC57hrnK9AEqgfp
+	tzva3OCIORcXs/mqcguG8JKl0T1xWDI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750424271;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
+	b=NVysyb1adbyrTijaaCwULk0nmGx4rmZzyXsU6r9TXypGAcQsH5B1GegOUq2llyrTuMKlzR
+	2yQBRLiNa8/XPvDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750424270;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
+	b=dfS7ZhsK/E4hPjHm7lu7QXGdeOsUgUnowtpfCVYq4ApL0SbLyM2+icolKjQlFftKo85YJY
+	5WiQBHjwi6tP7E/HBsr4ptqoQqgnHEphOfjXUMaolPGrVzcYexw8m3cNiCbGaPe3dhkZ3J
+	m64z7XNE8z28Lz+JXgznPRsB6O9nME8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750424270;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=96llgKQkpMP5/Q1GRcNpKSRfzo6zptpaBirZ/WzEBC4=;
+	b=Ual1WZqK/66pKfc/z1EbvB924eCz08tLtKzADMSEO6vh1UH2/hI5kKGrxwwp+FLzQ4tdCk
+	KVBLrju4TJAGG2Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 27D5A136BA;
+	Fri, 20 Jun 2025 12:57:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2Z2ACc5aVWisMAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 12:57:50 +0000
+Date: Fri, 20 Jun 2025 14:57:44 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: index buffer_tree using node size
+Message-ID: <20250620125744.GT4037@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250612084724.3149616-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612084724.3149616-1-neelx@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:replyto]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
 
-If there is no cached TCP metrics entry for a connection, initialize
-tp->snd_ssthresh from the corresponding dst entry. Of course, this value
-may have to be clamped to tp->snd_cwnd_clamp, but let's not copy and paste
-the existing code. Instead, move the check to the common path.
+On Thu, Jun 12, 2025 at 10:47:23AM +0200, Daniel Vacek wrote:
+> So far we are deriving the buffer tree index using the sector size. But each
+> extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
+> 
+> For example the typical and quite common configuration uses sector size of 4KiB
+> and node size of 16KiB. In this case it means the buffer tree is using up to
+> the maximum of 25% of it's slots. Or in other words at least 75% of the tree
+> slots are wasted as never used.
+> 
+> We can score significant memory savings on the required tree nodes by indexing
+> the tree using the node size instead. As a result far less slots are wasted
+> and the tree can now use up to all 100% of it's slots this way.
+> 
+> Note: This works even with unaligned tree blocks as we can still get unique
+>       index by doing eb->start >> nodesize_shift.
 
-When ssthresh value is zero, the connection should enter initial slow
-start, indicated by setting tp->snd_ssthresh to infinity (ignoring the
-value of tp->snd_cwnd_clamp). Move this check against zero to the common
-path, too.
+Can we have at least some numbers? As we've talked about it and you
+showed me the number of radix nodes or other internal xarray structures
+before/after.
 
-Fixes: 51c5d0c4b169 ("tcp: Maintain dynamic metrics in local cache.")
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
----
- net/ipv4/tcp_metrics.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
+> Reviewed-by: Qu Wenruo <wqu@suse.com>
+> ---
+> v2 changes:
+>  * Note that this is still correct even with unaligned tree blocks.
+>  * Rename node_bits to nodesize_bits to stay consistent.
+>  * Move the nodesize_bits member next to nodesize and make it u32.
+> 
+> ---
+>  fs/btrfs/disk-io.c   |  1 +
+>  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+>  fs/btrfs/fs.h        |  3 ++-
+>  3 files changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> index 0d6ad7512f217..3d465258f15b7 100644
+> --- a/fs/btrfs/disk-io.c
+> +++ b/fs/btrfs/disk-io.c
+> @@ -3396,6 +3396,7 @@ int __cold open_ctree(struct super_block *sb, struct btrfs_fs_devices *fs_device
+>  	fs_info->delalloc_batch = sectorsize * 512 * (1 + ilog2(nr_cpu_ids));
+>  
+>  	fs_info->nodesize = nodesize;
+> +	fs_info->nodesize_bits = ilog2(nodesize);
+>  	fs_info->sectorsize = sectorsize;
+>  	fs_info->sectorsize_bits = ilog2(sectorsize);
+>  	fs_info->csums_per_leaf = BTRFS_MAX_ITEM_SIZE(fs_info) / fs_info->csum_size;
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index e9ba80a56172d..a55c7c7eb8990 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffer_for_io(struct extent_buffer *e
+>  	 */
+>  	spin_lock(&eb->refs_lock);
+>  	if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
+> -		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
+> +		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
+>  		unsigned long flags;
+>  
+>  		set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+> @@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer *eb)
+>  static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
+>  {
+>  	struct btrfs_fs_info *fs_info = eb->fs_info;
+> -	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
+> +	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
+>  	unsigned long flags;
+>  
+>  	xas_lock_irqsave(&xas, flags);
+> @@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
+>  static void buffer_tree_clear_mark(const struct extent_buffer *eb, xa_mark_t mark)
+>  {
+>  	struct btrfs_fs_info *fs_info = eb->fs_info;
+> -	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
+> +	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->nodesize_bits);
+>  	unsigned long flags;
+>  
+>  	xas_lock_irqsave(&xas, flags);
+> @@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(struct btrfs_fs_info *fs_info,
+>  	rcu_read_lock();
+>  	while ((eb = find_get_eb(&xas, end, tag)) != NULL) {
+>  		if (!eb_batch_add(batch, eb)) {
+> -			*start = ((eb->start + eb->len) >> fs_info->sectorsize_bits);
+> +			*start = (eb->start + eb->len) >> fs_info->nodesize_bits;
 
-diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
-index dd8f3457bd72..6f7172ea8bc8 100644
---- a/net/ipv4/tcp_metrics.c
-+++ b/net/ipv4/tcp_metrics.c
-@@ -473,12 +473,13 @@ void tcp_init_metrics(struct sock *sk)
- 	/* ssthresh may have been reduced unnecessarily during.
- 	 * 3WHS. Restore it back to its initial default.
- 	 */
--	tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
-+	tp->snd_ssthresh = 0;
- 	if (!dst)
- 		goto reset;
- 
- 	if (dst_metric_locked(dst, RTAX_CWND))
- 		tp->snd_cwnd_clamp = dst_metric(dst, RTAX_CWND);
-+	tp->snd_ssthresh = dst_metric(dst, RTAX_SSTHRESH);
- 
- 	rcu_read_lock();
- 	tm = tcp_get_metrics(sk, dst, false);
-@@ -487,13 +488,8 @@ void tcp_init_metrics(struct sock *sk)
- 		goto reset;
- 	}
- 
--	val = READ_ONCE(net->ipv4.sysctl_tcp_no_ssthresh_metrics_save) ?
--	      0 : tcp_metric_get(tm, TCP_METRIC_SSTHRESH);
--	if (val) {
--		tp->snd_ssthresh = val;
--		if (tp->snd_ssthresh > tp->snd_cwnd_clamp)
--			tp->snd_ssthresh = tp->snd_cwnd_clamp;
--	}
-+	if (!READ_ONCE(net->ipv4.sysctl_tcp_no_ssthresh_metrics_save))
-+		tp->snd_ssthresh = tcp_metric_get(tm, TCP_METRIC_SSTHRESH);
- 	val = tcp_metric_get(tm, TCP_METRIC_REORDERING);
- 	if (val && tp->reordering != val)
- 		tp->reordering = val;
-@@ -537,6 +533,11 @@ void tcp_init_metrics(struct sock *sk)
- 
- 		inet_csk(sk)->icsk_rto = TCP_TIMEOUT_FALLBACK;
- 	}
-+
-+	if (!tp->snd_ssthresh)
-+		tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
-+	else if (tp->snd_ssthresh > tp->snd_cwnd_clamp)
-+		tp->snd_ssthresh = tp->snd_cwnd_clamp;
- }
- 
- bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst)
--- 
-2.49.0
+In other places you drop the outer ( ) from the shifts, please keep it
+if it's there (or add if it's missing).
 
+>  			goto out;
+>  		}
+>  	}
+> @@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_nolock(
+>  		struct btrfs_fs_info *fs_info, u64 start)
+>  {
+>  	struct extent_buffer *eb;
+> -	unsigned long index = (start >> fs_info->sectorsize_bits);
+> +	unsigned long index = start >> fs_info->nodesize_bits;
+>  
+>  	rcu_read_lock();
+>  	eb = xa_load(&fs_info->buffer_tree, index);
+> @@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btrfs_fs_info *fs_info, u64 start,
+>  				      u64 end)
+>  {
+>  	struct eb_batch batch;
+> -	unsigned long start_index = (start >> fs_info->sectorsize_bits);
+> -	unsigned long end_index = (end >> fs_info->sectorsize_bits);
+> +	unsigned long start_index = start >> fs_info->nodesize_bits;
+> +	unsigned long end_index = end >> fs_info->nodesize_bits;
+>  
+>  	eb_batch_init(&batch);
+>  	while (start_index <= end_index) {
+> @@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space *mapping,
+>  
+>  	eb_batch_init(&batch);
+>  	if (wbc->range_cyclic) {
+> -		index = ((mapping->writeback_index << PAGE_SHIFT) >> fs_info->sectorsize_bits);
+> +		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->nodesize_bits;
+>  		end = -1;
+>  
+>  		/*
+> @@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space *mapping,
+>  		 */
+>  		scanned = (index == 0);
+>  	} else {
+> -		index = (wbc->range_start >> fs_info->sectorsize_bits);
+> -		end = (wbc->range_end >> fs_info->sectorsize_bits);
+> +		index = wbc->range_start >> fs_info->nodesize_bits;
+> +		end = wbc->range_end >> fs_info->nodesize_bits;
+>  
+>  		scanned = 1;
+>  	}
+> @@ -3038,7 +3038,7 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
+>  	eb->fs_info = fs_info;
+>  again:
+>  	xa_lock_irq(&fs_info->buffer_tree);
+> -	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->sectorsize_bits,
+> +	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->nodesize_bits,
+>  			      NULL, eb, GFP_NOFS);
+>  	if (xa_is_err(exists)) {
+>  		ret = xa_err(exists);
+> @@ -3355,7 +3355,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+>  again:
+>  	xa_lock_irq(&fs_info->buffer_tree);
+>  	existing_eb = __xa_cmpxchg(&fs_info->buffer_tree,
+> -				   start >> fs_info->sectorsize_bits, NULL, eb,
+> +				   start >> fs_info->nodesize_bits, NULL, eb,
+>  				   GFP_NOFS);
+>  	if (xa_is_err(existing_eb)) {
+>  		ret = xa_err(existing_eb);
+> @@ -3458,7 +3458,7 @@ static int release_extent_buffer(struct extent_buffer *eb)
+>  		 * in this case.
+>  		 */
+>  		xa_cmpxchg_irq(&fs_info->buffer_tree,
+> -			       eb->start >> fs_info->sectorsize_bits, eb, NULL,
+> +			       eb->start >> fs_info->nodesize_bits, eb, NULL,
+>  			       GFP_ATOMIC);
+>  
+>  		btrfs_leak_debug_del_eb(eb);
+> @@ -4300,9 +4300,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
+>  {
+>  	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
+>  	struct extent_buffer *eb;
+> -	unsigned long start = (folio_pos(folio) >> fs_info->sectorsize_bits);
+> +	unsigned long start = folio_pos(folio) >> fs_info->nodesize_bits;
+>  	unsigned long index = start;
+> -	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
+> +	unsigned long end = index + (PAGE_SIZE >> fs_info->nodesize_bits) - 1;
+>  	int ret;
+>  
+>  	xa_lock_irq(&fs_info->buffer_tree);
+> diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+> index b239e4b8421cf..fd7cbbe3515d6 100644
+> --- a/fs/btrfs/fs.h
+> +++ b/fs/btrfs/fs.h
+> @@ -781,7 +781,7 @@ struct btrfs_fs_info {
+>  
+>  	struct btrfs_delayed_root *delayed_root;
+>  
+> -	/* Entries are eb->start / sectorsize */
+> +	/* Entries are eb->start >> nodesize_bits */
+>  	struct xarray buffer_tree;
+>  
+>  	/* Next backup root to be overwritten */
+> @@ -813,6 +813,7 @@ struct btrfs_fs_info {
+>  
+>  	/* Cached block sizes */
+>  	u32 nodesize;
+> +	u32 nodesize_bits;
+>  	u32 sectorsize;
+>  	/* ilog2 of sectorsize, use to avoid 64bit division */
+>  	u32 sectorsize_bits;
+> -- 
+> 2.47.2
+> 
