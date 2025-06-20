@@ -1,147 +1,139 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7C28B4FA
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F0728AB11;
+	Fri, 20 Jun 2025 12:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424293; cv=none; b=TemyU3cSYgq6p2L/WlZosgqp8tsTGOI9q7F+zHGispjDtYWmK1/eHy04lE2vsRUbM9a+VpR9IEMpSw6ZGo88zIhYIz/UjwPe+bOUJi1NqYwbaTXInFs85452STvZPVEMUUumgMFygyD0mW1OftXJNaq1aTAGF+bvqSauJino+PM=
+	t=1750424341; cv=none; b=VAM24dqbOBf8CNVOVfq4mUdgFQlnbmD1TZSoISx62mMaILOQ0HQ/t832aVm8AsdqhZqdogS2C+sfelVLNuYLwUvqQrKsZfrPffVTzTV/aX08EGPVhDhud4a5JrOPdrHiHZve+Xzs6tQavjMwUdvWTyI44xBijtbRt7D2gWTGOtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424293; c=relaxed/simple;
-	bh=6RRXZ9NAblpUYRu/VW+XQm+2TcYtFhybPosOtENnoGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kpT4G1cKk+6VF0tsvtNG5Qag0eJIJphBN0D6RCcC4Bf5rqpBfUuSQDeNcq1ry88s1jncc9JBRZdc7HHgfAAdNvSkOWTFuLrzTdqtWbIJSlh59fDDiCrwoHMKwwto2KLdiV9fQ9pmpiU0Utj0Mm+DhxJtm2gVo8HWx71ee3fregg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yztXB/a1; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750424341; c=relaxed/simple;
+	bh=KIYnJyvfLLQZY8dOiAzbOJCNFpN9oV15l1W65TMa9q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T1u+afvOpxmxQRaWTn71qrOmq6GTXqpa/V8DNqEy+hH3Jhkwa5XRrGYXj4s5fo6G/RP+L1EVuXtbKPJj2j8IAapP4FExshwL34WDtyHi5HTr8hXS1fqTyrrz0okO2RzNEMNj5jAXVSsNQ2tm7KDs0UMRRXN85TimwV9n2BxgYXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=EHG1iWW4; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yztXB/a1"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-453643020bdso7211555e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750424289; x=1751029089; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S/UUEbhV8ajjp746akkPruIBfbnU99PXnYMQ4IdmFPM=;
-        b=yztXB/a1o6gfKKx7N7PZiYeSOqQ0ooVT9eMgFqiHYflEiC5GwP6HP/fUflJD7iPr3G
-         fSoiPpoKribvGgXvCZIc7BpgRZX4AIaTWu2HKGlmvQ3WQy2o5yOGexK86Jmjh9UHuM78
-         ynRykpnsQSzVwtbhUclYlhqrd63npz/6uZPKEPymUeMQze7EeL0/soHgyA8UxHlZPvtf
-         bU3gl7+fUg4gIhulzry9Zxa+72KT5Yy+lNz8KA38XOTwe49vVsa/43jvRddI3pyWRM2j
-         S5I9WFE7RS/rT32CE5evZdISGfYm6ab2u+sbvz/zN+F2h7Wc04c8v54WAcjOFf6wqaGn
-         T+UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750424289; x=1751029089;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S/UUEbhV8ajjp746akkPruIBfbnU99PXnYMQ4IdmFPM=;
-        b=PEiC0hn9brmCApP8Bjr/DKJXLhhEk6O+ryNYkP1OwfuNFptCQGnUrVqRI2NN9zTUFY
-         nztBF4pZF3L/jIti8bDy+WKi/+I6Kl5NG4OlzR2Vicstg2Y9gVnP7K5Peyd/0h51LEWW
-         JC98YbxaAjBGp/G+d29/w++N8KV77zveINAhvD/wQhqIsibVSoPeN8fd4vBcqK2iCwkl
-         b4nQsOaoaZhlwrorRWJrARdayEGOZ+rnG1Kz/F5TDG8TKzovoWXEUPD02z+hRjJZM8Bh
-         bmJoTHWJGimlcp7EjaQySuvpmC9s9Wtn4IncNzCQvaAvacHaHsFX1nU3lwhH3t6Bl2gK
-         HFyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIWZMzcRSTadgsn4e0429rj9rEL60ixlY61QD/z/cHoWDbUkurm/MLaqEWBpSoRqbdYlgfU8v9kY+P10A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy0sEwwS99WbiNEBBJE6JSaEj82NoK3ZoLgD3G6kxYRpter5N6
-	YcdCaC+hlNdBB9KMVxLEaqeZMoAA09v1DZ8GGZkhRJ298aNqcFRJpblJ7Do/tmPv/Kw=
-X-Gm-Gg: ASbGnctO98z3m11bsgGkSxUmzzEUWIPkns10Gw6DuHYtJPaENTbsp26NCSx3/3/E9/t
-	MjeevH/3A9Chi0D/6ryCZYnNBnCr54PZ6nTqBCUns/Bfmut4EyWcz7usIIS0aebGVXHP7vSfS29
-	KOS3Lkh1nsSDF8h/lZRP+TntVxioO1evj4OqSANDqORlbYjKZjPBc7Jxl1SswikBtT3vOTrd2Qf
-	f2A54+zgVDhDuDKkwk2x/wjiypEQAB4/H25hiSz7CnYRS6TC/XMUvgNwZ35HTwg9DZJYju+OPAk
-	x5VNdG2Ygb2Q+Du77AH1sGkm/3bP51LI10D98qQBiTEp47O3l6vbw9g4
-X-Google-Smtp-Source: AGHT+IHl6y9iDOY49BAwFOs7hG/RVLZtEdamyODfITzZyzn1WTV0Rp2hfZc46KqzKtqhWHW1oYFryg==
-X-Received: by 2002:a05:600c:1546:b0:441:d4e8:76c6 with SMTP id 5b1f17b1804b1-453659f7a4emr26830995e9.30.1750424288649;
-        Fri, 20 Jun 2025 05:58:08 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:69fe:2655:53a6:f735])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535fdf82f9sm50522975e9.29.2025.06.20.05.58.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:58:08 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 20 Jun 2025 14:58:01 +0200
-Subject: [PATCH 1/2] gpio: constify arguments of gpiod_is_equal()
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="EHG1iWW4"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uSbKW-00HLP1-Rv; Fri, 20 Jun 2025 14:58:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=UJ5ca2MMOgMZ7TfbXbB+tMHmzuecN31xCJX2LHjhkXY=; b=EHG1iWW4prYz57diPMlrZfKzRd
+	Wm5yHA6y+2DnHSwKSCDjdnVn6GB7+/3KynUgYybTQ2gelTklCJrUa0tB66sE6IEigz9VmSDaAdZyR
+	aE5x8pR/jgzdqWO2qT0F/lsG7UmHErTNafMRngOe+4mAjl7S0kwgL9zObOmIV3K/AXK3spnf8BqCQ
+	swLAQztNr/5nEzpVo6wwg1TGQLFpq9LRbgLH+Lotx7pY+e/ndzrUA5lMfwuaT2gzu6q/F91njuz5E
+	ypDo1p3svj4MQM5hb5XR4eelQ25AGj3XMaJ1Yl8pUExrGZzAKDJVfsEl6RnzjzpnzrTep47YtEaEw
+	5XKGpcoA==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uSbKW-0003JG-7c; Fri, 20 Jun 2025 14:58:52 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uSbKU-00Ammu-RA; Fri, 20 Jun 2025 14:58:50 +0200
+Message-ID: <fd2923f1-b242-42c2-8493-201901df1706@rbox.co>
+Date: Fri, 20 Jun 2025 14:58:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+ <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
+ <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-gpiod-is-equal-improv-v1-1-a75060505d2c@linaro.org>
-References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
-In-Reply-To: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1817;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=FpJCLQ1y/BknIVva7DOCHXJ1+kmF6FqDtTgwQexrEh0=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoVVre5Sc32Twv5BcYpPMVGPHChYJ8/JoOAye48
- 5AVCXdnGB+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFVa3gAKCRARpy6gFHHX
- cj5AD/9piOt7IVjVp9FjH/cQcPahXk6fvo4mPXvdun0rAOJIODDyTdAnB65002dDppCqJkfKrOq
- dhuvhHtlyZKd6esT7wldixMFMs7WjmhNCcWU0jDoGmtYkp4lzZZiusvmYmxkim1Cccv2gWZUNzx
- 1v7TTP/sNc6qUZar6whwmNju/c3ZYWtXASORXHgS3qhNXEO5LbyzPJldDHId6UlBRn5nQ2UIUKw
- 5nHSJAcO5YatepPrJU7HVtd+DYzkfLc7QmuZxfV4V4hivC8lqMPUc7rLQOGTvHiJ4Azum2+0oAA
- BSn5W20Ad38t9AI8rez+M8INjYqh9nSHiNs8NdZOgkW3S7tG8O+tKXTMtEY/Ju8gGTTWIhkJMFu
- hM5KFGu4nN2cZna8ekTFJ5Pd4W/+p830PakpKlcV01aQj5vRMX97NkJ1oah+jKKGoZVhXM46/07
- XE8rneK46zH+GQDN0blrEFn4Qo+xPrQw6zdhHn0Is9pwJ6LBi4N5QkL88Wsrm7u0kiaavIqBbhr
- ePZ1Gs2uR/mmXu1yWd8emSI1bSGe1W370AN+0U89IvtqprSBfYf8aStfdMwrSkpTMMAtiLYBdzJ
- 6pNt+2LyrGEJYNhyS7Q7DleE8wzHuVA7upuqg4+vipmvPDWMtuhMk9vm+hgD9sEmDWU46j6/Y0V
- rFaMVptt7zGsdnA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 6/20/25 10:32, Stefano Garzarella wrote:
+> On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
+>> Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
+>> Make sure pointers remain valid.
+>>
+>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
+>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
+>> Call Trace:
+>> __x64_sys_ioctl+0x12d/0x190
+>> do_syscall_64+0x92/0x1c0
+>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>
+>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>> ---
+>> net/vmw_vsock/af_vsock.c | 4 ++++
+>> 1 file changed, 4 insertions(+)
+>>
+>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
+>> --- a/net/vmw_vsock/af_vsock.c
+>> +++ b/net/vmw_vsock/af_vsock.c
+>> @@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>>
+>> 	switch (cmd) {
+>> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
+>> +		mutex_lock(&vsock_register_mutex);
+>> +
+>> 		/* To be compatible with the VMCI behavior, we prioritize the
+>> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+>> 		 */
+>> @@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+>> 		else if (transport_h2g)
+>> 			cid = transport_h2g->get_local_cid();
+>>
+>> +		mutex_unlock(&vsock_register_mutex);
+> 
+> 
+> What about if we introduce a new `vsock_get_local_cid`:
+> 
+> u32 vsock_get_local_cid() {
+> 	u32 cid = VMADDR_CID_ANY;
+> 
+> 	mutex_lock(&vsock_register_mutex);
+> 	/* To be compatible with the VMCI behavior, we prioritize the
+> 	 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
+> 	 */
+> 	if (transport_g2h)
+> 		cid = transport_g2h->get_local_cid();
+> 	else if (transport_h2g)
+> 		cid = transport_h2g->get_local_cid();
+> 	mutex_lock(&vsock_register_mutex);
+> 
+> 	return cid;
+> }
+> 
+> 
+> And we use it here, and in the place fixed by next patch?
+> 
+> I think we can fix all in a single patch, the problem here is to call 
+> transport_*->get_local_cid() without the lock IIUC.
 
-This function is not meant to modify the GPIO descriptors in any way so
-we can safely constify both arguments.
+Do you mean:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c        | 2 +-
- include/linux/gpio/consumer.h | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 5b0b4fc975435290a03410f1e33fea28dd6fea08..6b4f94c3887fcbe1d90a0ff5800100e9ae7ad5b9 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -286,7 +286,7 @@ EXPORT_SYMBOL_GPL(gpiod_to_gpio_device);
-  * Returns:
-  * True if the descriptors refer to the same physical pin. False otherwise.
-  */
--bool gpiod_is_equal(struct gpio_desc *desc, struct gpio_desc *other)
-+bool gpiod_is_equal(const struct gpio_desc *desc, const struct gpio_desc *other)
+ bool vsock_find_cid(unsigned int cid)
  {
- 	return desc == other;
- }
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index f0b1982da0cc78b85af8bd61474cc2fe0dd73c98..00df68c514051434e6fa67dc2307c6a8ce4ce3df 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -181,7 +181,8 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      enum gpiod_flags flags,
- 					      const char *label);
- 
--bool gpiod_is_equal(struct gpio_desc *desc, struct gpio_desc *other);
-+bool gpiod_is_equal(const struct gpio_desc *desc,
-+		    const struct gpio_desc *other);
- 
- #else /* CONFIG_GPIOLIB */
- 
-@@ -551,7 +552,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- }
- 
- static inline bool
--gpiod_is_equal(struct gpio_desc *desc, struct gpio_desc *other)
-+gpiod_is_equal(const struct gpio_desc *desc, const struct gpio_desc *other)
- {
- 	WARN_ON(desc || other);
- 	return false;
+-       if (transport_g2h && cid == transport_g2h->get_local_cid())
++       if (transport_g2h && cid == vsock_get_local_cid())
+                return true;
 
--- 
-2.48.1
+?
+
+So we need to check transport_g2h twice; in vsock_find_cid() and then again
+in vsock_get_local_cid(), right?
 
