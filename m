@@ -1,110 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1505630E853;
-	Fri, 20 Jun 2025 19:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD65221FBF;
+	Fri, 20 Jun 2025 19:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750448980; cv=none; b=a1EA5odBIE90Zj37p/j9iCr6cCbG0lcup99gEW983NcDV+ZTOvhr/VoyIFL1svFE/CNhJBPOZcWEtwT/tnYa1PtUIuMY9NpWD0LvG0kEvFwOPX+vsoxeeGl88F1WxMTqAeJo/sBBkhJNu6tq4nFrLJVhe7ZC/B1mmUh+6iZmRHI=
+	t=1750448989; cv=none; b=V6oB/vlqZu5rGX+SdhnrxE+dFoPzc0Ivae8XKxc5t7IKeaFVeg/A9dYgfxipKtZgX5PZeWdyGWkZJLgOXaX071Njg0664zW8sKhsHsu9SNUZUTqDx1+UbROakZvOpoY45Iso9ftha2UZWsqPgLN6OIrI9XfJp88zDpblqE2Y+mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750448980; c=relaxed/simple;
-	bh=5aeRSISf8T2KpdIT6VWtcBAh1mivh6uTlAYZbJUNV4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HaKLxu8aflqbxQZx7VdS70GbIQ2NDYUyEHeo4ahktbWSvkoPH7YI850EyLFXLTKgNlp099rVieK2zIF9hGmwsGnOD6afeF1R9F7xfV8Eg1UGz4WYFW0J8F39jlyNGkJEPjf5UHxPD/wQlisAJYbFBx3rOqdpTI2VKHdjNrWZ+a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGciXiIZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750448989; c=relaxed/simple;
+	bh=z+HfKDdsyzsrpnsoLJvtgubg3CCA3Ue1+63lfUDySZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kj+uUjv7JQjehaxIzcxd6RGODe59ML6YY9vpqtjaeFDEu+giBR8xwOGcZEjNPIKNhAN8kX/URsw6sG1CEzDPwk2OCZC/U1QRJijDjbkWrNqmiXfEMfYVD+OyWM2F63eeDr4kynq7CR/D/XCF9lfE55k7aF0zRs2TcwCOJv+Icdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DhQc/S03; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGciXiIZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DFEFC4CEE3;
-	Fri, 20 Jun 2025 19:49:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DhQc/S03"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F499C4CEED;
+	Fri, 20 Jun 2025 19:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750448977;
-	bh=5aeRSISf8T2KpdIT6VWtcBAh1mivh6uTlAYZbJUNV4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iGciXiIZO9MuMOUYidbxt24x1Wf6GsNYR9ZTwenAo0h7FHZ7t3tJXyZEcWFFv67Hu
-	 0dAhhIpBxVnCREs3782l840LxmOfGhKtj0G2XW0BPzWDav8Vg5iOkb4OVD9hN3ZpRg
-	 dDpBRrFQjvYoWZ08h3EhHCa5jZCQq3nZQ0vYjIy+iajjogyI2fjaIHCXfZzhU+uNWT
-	 pCefnFHda7u8y1U4e+UoeBX14ON2HUDHgxylj4wWbYh07G0FY+Af3QPde9gEyupoS5
-	 bNdcrHdMbDwTUwGtMBTaKZsckro7V1Lde/Vc4i9P/8B0UQC671x882owbHTIH1i9y3
-	 lE1MZ36QKgI6g==
-Date: Fri, 20 Jun 2025 12:49:35 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Collin Funk <collin.funk1@gmail.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash
- dialect.
-Message-ID: <aFW7T9DH9WrjtgJ-@google.com>
-References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
- <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
+	s=k20201202; t=1750448989;
+	bh=z+HfKDdsyzsrpnsoLJvtgubg3CCA3Ue1+63lfUDySZI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DhQc/S03WVGLEuYA0WHsMALbHN0I+FjpCcxQivpMEIFSl1ywqChIvJ4g3l9JeJNHp
+	 +j1KhC6nu9RmuzOfrawbE4gYDehN+xYl9C/AaTt93wrTDJBoNRkmHQLqZn34p6zaVF
+	 Ht3mmktQu2vJr23lCTgxfQKvYCGSn/2EglOuqrLyYFjnyqzaHv9YeBVL58mIs2ATWl
+	 72Q3S8yCUKA7YyBbeIvsi8FgUSgWnnqTmumAAuNZjGEsGTelXTMLAougv4LxgcALdP
+	 cwTMuaa3MEXHooFOiH8NC/DOuIdkLAQG9bZx1nqiNykUnS2zWxc93yIG5uBC7CNA0P
+	 5SuIJmNTkg6HA==
+Date: Fri, 20 Jun 2025 14:49:47 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	=?utf-8?B?TMawxqFuZyBWaeG7h3QgSG/DoG5n?= <tcm4095@gmail.com>,
+	Joel Mathew Thomas <proxy0@tutamail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: [GIT PULL] PCI fixes for v6.16
+Message-ID: <20250620194947.GA1311741@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
 
-Hello,
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
-On Thu, Jun 19, 2025 at 11:28:46AM +0100, James Clark wrote:
-> 
-> 
-> On 13/06/2025 4:36 am, Collin Funk wrote:
-> > When someone has a global shellcheckrc file, for example at
-> > ~/.config/shellcheckrc, with the directive 'shell=sh', building perf
-> > will fail with many shellcheck errors like:
-> > 
-> >      In tests/shell/base_probe/test_adding_kernel.sh line 294:
-> >      (( TEST_RESULT += $? ))
-> >      ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
-> > 
-> >      For more information:
-> >        https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone ((..)) is...
-> >      make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kernel.sh.shellcheck_log] Error 1
-> > 
-> > Passing the '-s bash' option ensures that it runs correctly regardless
-> > of a developers global configuration.
-> > 
-> > Signed-off-by: Collin Funk <collin.funk1@gmail.com>
-> > ---
-> >   tools/perf/tests/Build | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> > index 2181f5a92148..26efc5d20f6c 100644
-> > --- a/tools/perf/tests/Build
-> > +++ b/tools/perf/tests/Build
-> > @@ -89,7 +89,7 @@ endif
-> >   $(OUTPUT)%.shellcheck_log: %
-> >   	$(call rule_mkdir)
-> > -	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-> > +	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-> >   perf-test-y += $(SHELL_TEST_LOGS)
-> 
-> If we're enforcing bash style with static analysis shouldn't we also change
-> all the hashbangs to bash? Recently there have been changes to change sh to
-> bash in some of the tests so presumably the hard rule for sh is no more?
-> 
-> In the past I've had to replace bashisms that didn't work in sh but it would
-> be nice to have only one language to write tests in. I doubt anyone running
-> the tests today is running somewhere without bash, or that changing it will
-> break anything. If anything it will fix more bashisms that have already been
-> written.
-> 
-> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
-> tools/perf/tests
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
 
-Thanks for raising the concern.  I agree that having one standard is a
-way to go but I really don't have preference between those shells.
+are available in the Git repository at:
 
-Thanks,
-Namhyung
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-fixes-1
 
+for you to fetch changes up to bbf10cd686835d5a4b8566dc73a3b00b4cd7932a:
+
+  PCI: pciehp: Ignore belated Presence Detect Changed caused by DPC (2025-06-18 10:10:19 -0500)
+
+----------------------------------------------------------------
+
+- Set up runtime PM even for devices that lack a PM Capability as we did
+  before 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
+  initializing"), which broke resume in some VFIO scenarios (Mario
+  Limonciello)
+
+- Ignore pciehp Presence Detect Changed events caused by DPC, even if they
+  occur after a Data Link Layer State Changed event, to fix a VFIO GPU
+  passthrough regression in v6.13 (Lukas Wunner)
+
+----------------------------------------------------------------
+Lukas Wunner (1):
+      PCI: pciehp: Ignore belated Presence Detect Changed caused by DPC
+
+Mario Limonciello (1):
+      PCI/PM: Set up runtime PM even for devices without PCI PM
+
+ drivers/pci/hotplug/pciehp_hpc.c | 2 +-
+ drivers/pci/pci.c                | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
