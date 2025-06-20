@@ -1,55 +1,143 @@
-Received: from out28-65.mail.aliyun.com (out28-65.mail.aliyun.com [115.124.28.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AA31DED53;
-	Fri, 20 Jun 2025 05:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B940380;
+	Fri, 20 Jun 2025 05:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750398285; cv=none; b=Xq0D5szUZCKgxE1YcpRkAISqpr4u7AnXhLYlIS396SHZi4e4C4t3HPaLHCYck92Vq0cAs1uiVNmunqZOKOsC2b+6HAwS1MiLXZJnhwhWc1apVIG59zl2ps5FT2b1HvfkfSO9uQPXGkGJ5Zny5xp1m3S4roD51apiN8wAdephDkc=
+	t=1750398347; cv=none; b=On9E7mvsUVAuCLoQGMWtlAfurRiKkRS0f/8tyEApH4UkM8TzFjjFBj6b0wPly+0ziJAZTRoZtKVh9leWS5OzZvdac7BxpfooUNqoJ8L0u3FYUVWFyFNCCHs0PTYDpiLR2LPVIp7kngVvXrS7U8up/ReUCKaSnw3iKRQPnCfSDhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750398285; c=relaxed/simple;
-	bh=7k8+Y/w2qZUhh6BqouZYxeP0tLwrf349HJCudLLDX88=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rQEMcj34NLJARu+TRUBJDOF3STpTGwcgIFg6jtHTJye5ysTEfSNq3aYqlhrSH2PFR47DDAcm8zYQ5tjjt8M7/GS0tGHqj6S3d9I8rOqDnoaPl8JEmmjSgOL6IicsN0BZrC5s8Cnudqj6rsocp9mFiKHPU1jyFbCxRV2vys6Fbqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=myth5.com; spf=pass smtp.mailfrom=myth5.com; arc=none smtp.client-ip=115.124.28.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=myth5.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=myth5.com
-Received: from precision-5560..(mailfrom:myth5@myth5.com fp:SMTPD_---.dQz1H9s_1750397323 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 20 Jun 2025 13:28:50 +0800
-From: "fangzhong.zhou" <myth5@myth5.com>
-To: wsa+renesas@sang-engineering.com
-Cc: westeri@kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"fangzhong.zhou" <myth5@myth5.com>
-Subject: [PATCH] i2c: Force DLL0945 touchpad i2c freq to 100khz
-Date: Fri, 20 Jun 2025 13:28:31 +0800
-Message-ID: <20250620052832.26614-1-myth5@myth5.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1750398347; c=relaxed/simple;
+	bh=zKYwjILYaQAPYlBM1770fKrIAlknXwMfFEvVljOlCHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u4H+hRkcwvTeFuVRFdp12WPueWKEAc3MOqBLbS1b3G/ZWKuzic35c53U0rgur7KpiHL8kgnOnG3o4XUo9hayJlcprJDhSxGe4lZxhjwM+hNnK+KVq2T4wc3Iq+Hti/EEj395Iw65gAz4vFaA7lEZM0S1N0t3+0R+hNXC7Y/KZRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q31SyGJ1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q31SyGJ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2C7C4CEE3;
+	Fri, 20 Jun 2025 05:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750398347;
+	bh=zKYwjILYaQAPYlBM1770fKrIAlknXwMfFEvVljOlCHM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q31SyGJ19ASUx8SjtzAN0IrpTm4g9RqGt2KFKaGVT4Awpw5RpefAxZ29vVcePlF1F
+	 Nu1BLPFgeqSdUOpJydoCdVqQelCgsvEHzoXbEsBI97rqtqCTZhKX2+ancGnf8jzqg3
+	 2u1of7zacglwKKn+bQj0e0uxHeo/yfNkJ2zSjtQid0S8lR4PJYHr5M78OoJTjIpsmh
+	 wh2wUuGMIqWwsxFQh+depRY/byzZQ38xwVspE21vpBWV38GSdQ/T8mhRgrHBm3cj+V
+	 x9hy/rpVuTrg4LKKkNycEtW4Qs/RIfiAvYt6kaIeZ3jX1k73Vg1ZMWKM+BX34LqbiY
+	 AarjHav00I47A==
+Message-ID: <ca0f85f9-3908-4c7d-add3-905e9e6f634c@kernel.org>
+Date: Fri, 20 Jun 2025 07:45:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] dt-bindings: iio driver: Add BMP390 pressure
+ sensor device tree binding
+To: liquancin.mereenamathai@in.bosch.com, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, jic23@kernel.org, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, vassilisamir@gmail.com,
+ marcelo.schmitt1@gmail.com, javier.carrasco.cruz@gmail.com,
+ Xu.Zhang@cn.bosch.com, Maoting.Bian@cn.bosch.com
+References: <20250620045456.1151-1-liquancin.mereenamathai@in.bosch.com>
+ <20250620045456.1151-3-liquancin.mereenamathai@in.bosch.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620045456.1151-3-liquancin.mereenamathai@in.bosch.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: fangzhong.zhou <myth5@myth5.com>
----
- drivers/i2c/i2c-core-acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+On 20/06/2025 06:54, liquancin.mereenamathai@in.bosch.com wrote:
+> From: Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
+> 
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index d2499f302b50..5b424637bbaf 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -371,6 +371,7 @@ static const struct acpi_device_id i2c_acpi_force_100khz_device_ids[] = {
- 	 * a 400KHz frequency. The root cause of the issue is not known.
- 	 */
- 	{ "ELAN06FA", 0 },
-+	{ "DLL0945", 0 },
- 	{}
- };
-2.48.1
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
+
+> Signed-off-by: Liquancin Mereena Mathai <liquancin.mereenamathai@in.bosch.com>
+
+
+A nit, subject: drop second/last, redundant "device tree bindings". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+And drop driver. Bindings are not for drivers.
+
+There are several issues in the binding at first glance, but I won't
+review it due to lack of testing. Look at other bindings and don't
+repeat common mistakes. Just take other RECENT binding as starting point.
+
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+
+
+Best regards,
+Krzysztof
