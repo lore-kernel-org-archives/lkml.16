@@ -1,74 +1,43 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2BA2343C7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE95B137E;
+	Fri, 20 Jun 2025 21:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750454829; cv=none; b=mxgjU/HmlNoxedSqOOUpRlgzKKF+UFjnv6Lxt2g0EZf49OeaEp4LOx2uFn8XtnXAK6Fjm9kOUzOdHVg9/AnUejKh5UHYI+9ggQ+BiYWg6XyB/mL611IMOW7KZKbHEjdXQxNh9BG1QyQKxIQ2rybE+vWmgv10TulxPfrPd8LsIJc=
+	t=1750454866; cv=none; b=ixaAlfHumRd+qSevKVilDFfGrInbEvyto9RFl6TiV58ypoxCBwKT6wOUWp4yyoane6Q4DUKVeXVZtqy5Yy0YbnWIVBmoscxeVhWX1yOI97/+IOuF5W0/trul+vZOs5Z701PxW3jNomyPYSnlU3I+IQzyyyVM5WigMVIsu+fMwBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750454829; c=relaxed/simple;
-	bh=adJEqqccC/OWk4epgRiBDb2jy/SGZ/j4cV93OH6WJZQ=;
+	s=arc-20240116; t=1750454866; c=relaxed/simple;
+	bh=p+s2U0fmyhm9d55BemGKbD2X2i9CJZsBrPbvF4f3HF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kO4FkrB67GwXItdpsHFAIDkhiPZAtvunLCCLAoXv4N4F0uP2pPVwUJOKhBTW9wZJbh4mG9yG2tlenJMHF274sIbQYPP0/s1muebB02GMwBOeWj01fvIIbtWYWwGfhPfjIcbnS3wXtS838whjp7aG6skRGzNJy2tFFHae3R8M72A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NkjJ1cOI; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvB/MkAsjS9fWOEgxjPmsjh7QV5xAQjTSYMFnTVugEiOXZKVoNkgHBZjZEFArkRRvnBlB5WoTfceTZlnbj9o+eaLa8Ug5S+YqejFX2yRcdIsr82VvLr8oUVJ7rs1wcl8btDHlSIEw0l3QqAEvMiBJPZmjEv3AKVcA5Nx013Nk9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ds5LwgI/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkjJ1cOI"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-40791b696a2so614352b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750454826; x=1751059626; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iMIFRsdkyNFzMJ+x7jyoP2b6n5xXmdf/8m2IFfM2q7c=;
-        b=NkjJ1cOIk+FxTV8GjF8oJw8PaOnd0bosMflzGIUhfsLKoHQhYjObmJ1fB53b/akD+k
-         kF5WpcVUmrLx77zUbSP8VEHSCDegTFWryxmn5yCTyXfsEqT+OSyrRU1BiumVh55qA8Vk
-         LXuaKJJ7JO6U5mV010xy7DQpsHGYkBEB9LfCmTH3ErjVI2vv5A4qnUuuduVdJU0kDkDQ
-         FnxHWlix8ZpN8bFdivDbcz8u+sqxMkzvLkkcwS5JNFE7di+pW95duQbYIjoWUAoBoIV8
-         DMNCv1eHG9E8qoGzU0SGuWn1XvnS3/qZrOkzDbgUpP8pysFTCa2jR/mfrUirNOIyDy66
-         So0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750454826; x=1751059626;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iMIFRsdkyNFzMJ+x7jyoP2b6n5xXmdf/8m2IFfM2q7c=;
-        b=iyGaFFNuURIjZ8uQBmfBB24Qk+j/QfkkRWrbq/Nd9cu6lEJgV4HF7guiuVricMvCcR
-         yEO2SDD52QQGuQWhT44LddR0ttCWKTlOGjkz6/u6ibbibOmai4F3a6fP9pE9bfi4j9WH
-         cNSDy0wyJeqCpWjhoBdqUmhAoP/c53luof2Jc7cai+117dMwsq5wmOfAoThUsbeIx4TF
-         7YTUIA6PLEdUQxCef61qpkTDh7TsCPAsI0IdoyyW7fnSOqKr70kEZFhe2JdkHtr3vLoW
-         pXyGYEQCb49eYuiSQBkk67f8McttnDJIdY3/9DczVgy/l/On/M87wVeavWxXFoG4kkix
-         ss1A==
-X-Gm-Message-State: AOJu0YwrQvqp1PsrdpyMkvM2l398dA/vhc2TTYfj1I4GEcicyPvxw+oJ
-	Zz5eBNhFklGiRFVmMg1Xtu2XYOU1KHF/xTd+xxDKy4AiZFjEMl36l+cBs4cpbkfLji7LkdPCoN+
-	Oe0he
-X-Gm-Gg: ASbGncu9pkxuBgBQm3LDxRBfabjLT9OB2p/A/RZWnAMw55i3mOVzmyTehb/uYm0daL3
-	ralZMs/diZBHsr3MKLQxcuL7jwDLBOhGHd400jpH13YowtXJSkWXjDE4LGlK49XY/JpE6rA2aZU
-	Tf/zlk3dOLx6HvPLZDH0/SPjyKsfrpFmJpeB56oDJrQc0kcFqhH8sS3kECgR4TqJIQtPp41jECU
-	97F+4kCJikkAcfiYyBkazueZBw21MCcc0sZ09S8zO2CsbQ4Z9pCe9GBuf0j+Lc/YyZXRaaCRmQM
-	1o4aZZu9T7sPunMF6wM7AsgXpZ55yBZQgMeaGmPSyVnjwAsUNiwu4/rYbxN7CahTL3M9ag==
-X-Google-Smtp-Source: AGHT+IESnwOrs/dDV5b5ifwpLpIA2to3QsVlAToKotqflwsgrSLGEX6wnpXNqOonKrdb5B/s7K5ZVA==
-X-Received: by 2002:a05:6808:3a05:b0:408:fe75:41b1 with SMTP id 5614622812f47-40ac6f00417mr3259549b6e.29.1750454826289;
-        Fri, 20 Jun 2025 14:27:06 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:35a7:a70f:9610:a99b])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90aeee82sm478413a34.11.2025.06.20.14.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:27:05 -0700 (PDT)
-Date: Sat, 21 Jun 2025 00:27:03 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ds5LwgI/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BFEC4CEE3;
+	Fri, 20 Jun 2025 21:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750454864;
+	bh=p+s2U0fmyhm9d55BemGKbD2X2i9CJZsBrPbvF4f3HF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ds5LwgI/bYZ6UOF1Y/q/iX9FiABAyMDbuJLEnx5x38j/VZwT3Ng9Z3m65OW2qs2fM
+	 JucWLQfkRXHRF/k4xkXgc07zo5nqDSEsaGDhRAW2uKqEJ0Ya22MmmxFlNewsXkBIGl
+	 G+FrikxHSQuYMlAzbqYH+w0a5m65Yj5TmMy8Wu6+YllIXCPIU1jTnIceE5RS4SchJa
+	 oBIu6H2ACmQVFniDwWpxpEctn78VfYHZ2rcoLF9+LAON4EWnajq8hfdkbyH/1wWxLc
+	 ATqrJrOS8V2VAvOYGKlyvJN5Nwm3eIMmt0692knVIoBUkOSjluJwa2mKRrsTgnI61b
+	 ysFwAcUy8QOXw==
+Date: Fri, 20 Jun 2025 14:27:42 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, etienne.carriere@st.com,
-	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
-	d-gole@ti.com, souvik.chakravarty@arm.com
-Subject: Re: [RFC PATCH 4/7] firmware: arm_scmi: Add System Telemetry driver
-Message-ID: <f2c0a0d9-6a1b-42c7-a180-e04e357dbbb5@suswa.mountain>
-References: <20250620192813.2463367-1-cristian.marussi@arm.com>
- <20250620192813.2463367-5-cristian.marussi@arm.com>
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 00/17] SHA-512 library functions
+Message-ID: <20250620212742.GB5460@quark>
+References: <20250616014019.415791-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,152 +46,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620192813.2463367-5-cristian.marussi@arm.com>
+In-Reply-To: <20250616014019.415791-1-ebiggers@kernel.org>
 
-On Fri, Jun 20, 2025 at 08:28:10PM +0100, Cristian Marussi wrote:
-> +//TODO Review available interval show
-> +#define BUF_SZ	1024
-> +static inline ssize_t
-> +__available_update_show(char *buf,
-> +			const struct scmi_telemetry_update_interval *intervals)
-> +{
-> +	int len = 0, num_intervals = intervals->num;
-> +	char available[BUF_SZ];
-> +
-> +	for (int i = 0; i < num_intervals; i++) {
-> +		len += scnprintf(available + len, BUF_SZ - len, "%u ",
-> +				 intervals->update_intervals[i]);
-> +	}
-> +
-> +	available[len - 1] = '\0';
+On Sun, Jun 15, 2025 at 06:40:02PM -0700, Eric Biggers wrote:
+> This series applies to v6.16-rc1 and is targeting the libcrypto-next
+> tree.  It is also available at:
+> 
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha512-lib-v2
+> 
+> This series adds support for SHA-384, SHA-512, HMAC-SHA384, and
+> HMAC-SHA512 to lib/crypto/.  The new functions take advantage of the
+> kernel's existing architecture-optimized implementations of the SHA-512
+> compression function.  The new functions are fully tested using KUnit.
 
-No need.  scnprintf() will already have put a NUL terminator there.
-Unless num_intervals <= 0 in which case this will corrupt memory.
+FYI, applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-next
 
-> +
-> +	return sysfs_emit(buf, "%s\n", available);
-> +}
+Additional reviews and acks would be greatly appreciated, though!
 
-[ snip ]
+As per Linus's request, I reordered the KUnit tests (patches 4-5) to be last.
+I'll try to keep them last as additional non-test patches get applied.
 
-> +static int scmi_telemetry_groups_initialize(struct device *dev,
-> +					    struct scmi_tlm_instance *ti)
-> +{
-> +	int ret;
-> +
-> +	if (ti->info->num_groups == 0)
-> +		return 0;
-> +
-> +	ret = scmi_telemetry_dev_register(&ti->groups_dev, &ti->dev, "groups");
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (int i = 0; i < ti->info->num_groups; i++) {
-> +		const struct scmi_telemetry_group *grp = &ti->info->des_groups[i];
-> +		struct scmi_tlm_grp_dev *gdev;
-> +		char name[16];
-> +
-> +		gdev = devm_kzalloc(dev, sizeof(*gdev), GFP_KERNEL);
-> +		if (!gdev) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		gdev->tsp = ti->tsp;
-> +		gdev->grp = grp;
-> +		gdev->dev.groups = scmi_grp_groups;
-> +
-> +		snprintf(name, 8, "%d", grp->id);
+I also adjusted commit titles slightly to match what I'm planning to use for
+lib/crypto and lib/crc going forwards:
+    
+        lib/(crypto|crc): ((algorithm|arch|arch/algorithm):)? Subject
 
-s/8/sizeof(name)/?
+    e.g.
 
-> +		ret = scmi_telemetry_dev_register(&gdev->dev,
-> +						  &ti->groups_dev, name);
-> +		if (ret)
-> +			goto err;
-> +
-> +		if (ti->info->per_group_config_support) {
-> +			sysfs_add_file_to_group(&gdev->dev.kobj,
-> +						&dev_attr_grp_current_update.attr,
-> +						NULL);
-> +			sysfs_add_file_to_group(&gdev->dev.kobj,
-> +						&dev_attr_grp_intervals_discrete.attr,
-> +						NULL);
-> +			sysfs_add_file_to_group(&gdev->dev.kobj,
-> +						&dev_attr_grp_available_intervals.attr,
-> +						NULL);
-> +		}
-> +	}
-> +
-> +	dev_info(dev, "Found %d Telemetry GROUPS resources.\n",
-> +		 ti->info->num_groups);
-> +
-> +	return 0;
-> +
-> +err:
-> +	scmi_telemetry_dev_unregister(&ti->groups_dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int scmi_telemetry_des_initialize(struct device *dev,
-> +					 struct scmi_tlm_instance *ti)
-> +{
-> +	int ret;
-> +
-> +	ret = scmi_telemetry_dev_register(&ti->des_dev, &ti->dev, "des");
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (int i = 0; i < ti->info->num_de; i++) {
-> +		const struct scmi_telemetry_de *de = ti->info->des[i];
-> +		struct scmi_tlm_de_dev *tdev;
-> +		char name[16];
-> +
-> +		tdev = devm_kzalloc(dev, sizeof(*tdev), GFP_KERNEL);
-> +		if (!tdev) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		tdev->tsp = ti->tsp;
-> +		tdev->de = de;
-> +		tdev->dev.groups = scmi_des_groups;
-> +
-> +		/*XXX What about of ID/name digits-length used ? */
-> +		snprintf(name, 8, "0x%04X", de->id);
+        lib/crypto: sha512: Add KUnit tests for SHA-384 and SHA-512
+        lib/crypto: x86: Move arch/x86/lib/crypto/ into lib/crypto/
+        lib/crypto: x86/sha512: Migrate optimized SHA-512 code to library
+        lib/crypto: Explicitly include <linux/export.h>
 
-s/8/sizeof(name)/?
-
-regards,
-dan carpenter
-
-> +		ret = scmi_telemetry_dev_register(&tdev->dev,
-> +						  &ti->des_dev, name);
-> +		if (ret)
-> +			goto err;
-> +
-> +		if (de->name)
-> +			sysfs_add_file_to_group(&tdev->dev.kobj,
-> +						&dev_attr_name.attr, NULL);
-> +		if (de->tstamp_support) {
-> +			sysfs_add_file_to_group(&tdev->dev.kobj,
-> +						&dev_attr_tstamp_exp.attr,
-> +						NULL);
-> +			sysfs_add_file_to_group(&tdev->dev.kobj,
-> +						&dev_attr_tstamp_enable.attr,
-> +						NULL);
-> +		}
-> +	}
-> +
-> +	dev_info(dev, "Found %d Telemetry DE resources.\n",
-> +		 ti->info->num_de);
-> +
-> +	return 0;
-> +
-> +err:
-> +	scmi_telemetry_dev_unregister(&ti->des_dev);
-> +
-> +	return ret;
-> +}
-
+- Eric
