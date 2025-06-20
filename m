@@ -1,124 +1,99 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530241A28D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B3328B407
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750426628; cv=none; b=lVn4Oopxih7KJp1UPmG2ptQiBXHzJSprApfVJMDQUugfRI80tp5R31uklE8v3fOopQnUCbENafgubw/4I+GeVUKbsNL1uM7bTQtixJtD1j5kGSLpRKv1FItv/pceHjfbViZ6LL4WB7a1aaoG0efKm291r4YzXpEfK1cG1Cv+UGI=
+	t=1750426865; cv=none; b=P8hgTkl+EZ5wqIAwHWFdTZxnGRiQvsbpK1nPlzrrp1i8kdDYF8OceX2inOtEFIEXDuATDBnR34HtixlD43AvTewj0HnLpnyYZe6lchV6KLYgxJjPH+syt5ODTlerpeV/K2GIqujJ5cXkOsPCA3qro7s0/MyaL1ouXgsWFWlLPLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750426628; c=relaxed/simple;
-	bh=M0YT2iBaogn/DyTFdR1V9sCYLGYvYdijypQw0oPDd3E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YdOHIc5znDrnfYwmwLXZrNxhPtS7qvPhXWqeC/1PjUSsEGF79x13pt5/TU8kwa6bEswjZrDjyuAKM0l4WwUhJs2986GTSjKqiSPoJipmIOFMAYO5+bAHpQiUxbOPz5o9XVDJmWkM14mrWdbrJkJQx308nzN3oQsrg9i2e17oc1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ci4zGjDF; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750426865; c=relaxed/simple;
+	bh=n9lamK2M4jeoV3u+ch8DUguzgx5u0p3/AcTzsc6YeHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GpeU3Y+JDkwhfUYFDVnyDpx/vQPwcwoPN+Z5nFGXMpo1jESDsq2iw452sphZem/kZV9LmPb/g7kHKi0PHhxsr/VMmethLryrzsHOKOPoG2AiRIt50tH/25eWh/e1XxoLfhnlHRcw6sJgyYDmCtTdB74/p2hRyLAnHdC0zz+zMLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T3E6a2dK; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ci4zGjDF"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5533303070cso1791787e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:37:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3E6a2dK"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad93ff9f714so331894966b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:41:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750426625; x=1751031425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4aJt4fkup5IZNsrpvVhEKVipXbYCZJtOBbKMV7cDmJU=;
-        b=ci4zGjDFWHYuu0WmVl9fluwbbv4bE3t1sFzuIOyfRkehuAcoUZGUJxGMVSMMcKexJW
-         unnVOFcFe5J+nMU7ujtEflCPJtY1/W3PwYcLpfDYy6zATpZID/wdXvcp1GdQV2ZLedDK
-         7B45w58ZmPPlXVczKv5mG+UIx1sQO7luYxJH2AeymvpOuoohxY6knJoXJ2JIo2W05cxU
-         TsjtlMGYlwsiCv+p9lGnTIZLygFNNzaV3n0TBaywRiRlxnn3/PtAfQG+Viqcpy832DSM
-         jLt+X0nsyvlBz9S4lKp7KEk8HkIEbDsrEHoiv19C4+Q54SWDRfMshHMQ5KYQ/W9EULwj
-         kL+g==
+        d=linaro.org; s=google; t=1750426862; x=1751031662; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hpVfOGJFxIZYsmMRUwFwqfFQVYB9k3K3K32rB5+Q7vw=;
+        b=T3E6a2dKO6EJt/ZGMyVidGSHj1EUtxwE22SI3/jIQ/uAT5pMzEaEzPVUfNxNcF01xa
+         CLdo9gPcMO5OXPPEv6n/m4jRblrnfxJbHd+RcP3PLJC2u2dz+D67T1znsh07sPeBABLp
+         K9a1c2r7Mk3pVhkpxegl/R/Ro4avbfSQEAkuDYvTSMYY7jGswN/xmcmE7699J+rAtx5t
+         yDhUBvvxMxdzYpL3N9bT+4Wmaw0HsYXfPTj/dhqfUFRcrYX/fSUM4P2AtA5QuBXu2SwB
+         pPTwGbdOZYqtllHLej3UTc+UfAjYgEGbUX4gFfVsrvHny3CzNobJkFAgE/YUiUWAKLoE
+         E7xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750426625; x=1751031425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4aJt4fkup5IZNsrpvVhEKVipXbYCZJtOBbKMV7cDmJU=;
-        b=Y5SwT9lByg6lY7EJKqcbYPt+JbdaTF8sqk4LyK2Yq9OXhmLwsXwx99iFpVSRFcZxCC
-         nOsF3pi9uN1m1shFmukNYCkR7AIgkWWjfUm97fcCjbPEoNcSlmyXAkiqPs8vxqhBzSx5
-         xCAFxhhWRg2Z9d5cfNE5AInKtEFb9oVy++FPdRyjUSnKPzeLXpoXZ8ICB9FVQZkYbcrJ
-         jNkvTHdp9m8eRiN2DSMXwWMi3xb5JVCSu3c27Jy93NNQf0xC7ziWhzPCvTKcAz4Hz3iC
-         6WeFzpyEUKDrWrxsJg+Xjwzlgr5LHYHSYkk5F8zpGj4Fjln9Ia+E78IMzQNb8DSmZYWE
-         69MA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPbK/S7wRy0ac3V6+qLeijSXodLb/sFL7eyutYwyiW4bRcpcatY78IQIRgwT0wLlDtLKimJ8hezKXTuQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKjUzUrev1cbmkmYFd4lp7objWdEqBUu6B4UdfvVuWmiZRUJ7A
-	0WHqlC6bDnNZlGkHD/UUjzaOQz8dVWAofZPBWxGBtIvmnjIjmLsK9EfH8D4UbfLqisK6ZUi8San
-	hTCnHc6g40+IAGuggIYzKbDeqJdh5GpwLH94AdMsFcw==
-X-Gm-Gg: ASbGncteWngRW7OrW+4ta2DbBW5nyWWhrkOHQEaZ8wDIMgoiIHepGMgoRKJ3Hf8PITk
-	AXpxGqEfyIO2NH6MiUbHEgb1AaxCNaMkd8REwanC6q7li7sGnwxzuP6IObrBmo8I6EMoSRwUDQ8
-	toLbDTehpOgKAcl7keqLkONZSTcqkbbKkq5ZEPMqVV2qpIrvRbvBUsECoOiN8J2Uo4k82mRCq2C
-	yo=
-X-Google-Smtp-Source: AGHT+IF5fLhfuC8hz4Rv1krK7DbtYye+VXaU6bceTUWd3ZX5FC4oEcmGEW+wthmMe7jT3GYqphVFIC0r8DxUKFP+CT8=
-X-Received: by 2002:ac2:4e06:0:b0:553:37e7:867c with SMTP id
- 2adb3069b0e04-553e3d028b0mr1105854e87.50.1750426625405; Fri, 20 Jun 2025
- 06:37:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750426862; x=1751031662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpVfOGJFxIZYsmMRUwFwqfFQVYB9k3K3K32rB5+Q7vw=;
+        b=bt8oeGtp1XYRB1xgjmeYFMgC1hfqeYac7kgrb7pxX6Er2VQZN6zmDhNm+cy4EhHv5c
+         CSxKdyd5hX1Y2Yg/nYXqhZ01ImNSSyYGjSpm7ezPC8Ab/ds9iLp0R7sMoxnn5AFpGBlq
+         KTQUr2++Drd9LVVx25ROQzMbN958U0oASmFcRLi8XWyHo8QPHUUyz3V6S2uFLV2JOZAX
+         gARmJPVmbuawOD37Jg6VSne4DgaqU4nCz8kkzHWcuxMbjbBpoiMgDcohsgERZrn1R+1P
+         httu0Jfn6JxaQlviobZ0mh8dpPsHdInWUMpFsuiHaJGE3b8zyCslePZD5/lR6NSW9+Gn
+         eQGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoXVxM0hfhHk1e9UJOeTLllhIo0P6mkK66zYvB1HQ2Q/GS8/OWoNmCscEoQ2eDNx1cH0F0KakGhkU3Zok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHtkpOEQ8qaHrdPl9/JC9M4fdyUYJy7fS5ULPsSc5Aavlfd4to
+	IuXQv93nml7nMtMjnpLMJHgBJQvoCd2iWboImb4/23Kri8f3jjTPevfpWqMjTE5zpt0=
+X-Gm-Gg: ASbGncuboZVXey0KwoFn99Gbu3xCJWdsCmMJLjzpTsNU85OZNCV0NxOe9Xf8VrAkOAh
+	VEPamTBHzPbhFaT4JrvdM6nQ7PW3VnGoY39go/CN9u/w0QkXx75LA3DDA2ZV+G2GUhtp+x1f0Rf
+	S4z57kuNXzcREbB/4ee4GVmXgDiAPv+wRIObbI3GGFHn7oFzZLfcl7oQpve4fU+ySWs8oClsDXt
+	piLSkrPQML3YP1S0gLyeZGbHHKUtr4/RamRIvkySVsgbh8Byq1Q/3euFGnmZfcBB3OT4oMhuHBW
+	h8UvSu8g9AwzF4myP7orI9hbdqgAuxwiAm0il1UidWJSe9N9G5l79xwl0VM=
+X-Google-Smtp-Source: AGHT+IGYKKslvR/1stzFoNBWMle6YgYw/c/0QW8ncwoZLD0lcIICIhoOzA/vRygSUJ7ruQCVGYAWdg==
+X-Received: by 2002:a17:906:6a19:b0:ad8:9466:3344 with SMTP id a640c23a62f3a-ae057b98feamr276291966b.43.1750426861719;
+        Fri, 20 Jun 2025 06:41:01 -0700 (PDT)
+Received: from linaro.org ([82.79.186.23])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080a98sm168650466b.90.2025.06.20.06.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 06:41:00 -0700 (PDT)
+Date: Fri, 20 Jun 2025 16:40:59 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Stephen Boyd <swboyd@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/dp: include linux/io.h
+Message-ID: <aFVk6+4pIMQs2imz@linaro.org>
+References: <20250620124747.1928114-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620130814.2580678-1-arnd@kernel.org>
-In-Reply-To: <20250620130814.2580678-1-arnd@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 20 Jun 2025 15:36:53 +0200
-X-Gm-Features: AX0GCFveiLVvzbVVb4pbzshJs5knTsbLzp0XOfzNaJNTrqpVl3158pRzAoNLUfc
-Message-ID: <CAMRc=Mep0SNj6anWcmaNh4v8Z=J7eomujU69Gz_exuG2Wsd=8A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: zynq: add CONFIG_OF dependency
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Pratap Nirujogi <pratap.nirujogi@amd.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620124747.1928114-1-arnd@kernel.org>
 
-On Fri, Jun 20, 2025 at 3:08=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
+On 25-06-20 14:47:43, Arnd Bergmann wrote:
 > From: Arnd Bergmann <arnd@arndb.de>
->
-> The zynq driver can be enabled for compile-testing on builds without
-> CONFIG_OF, leading to a link error:
->
-> ld.lld-21: error: undefined symbol: pinconf_generic_dt_node_to_map
->  referenced by pinconf-generic.h:231 (/home/arnd/arm-soc/include/linux/pi=
-nctrl/pinconf-generic.h:231)
->           drivers/pinctrl/pinctrl-zynq.o:(pinconf_generic_dt_node_to_map_=
-all) in archive vmlinux.a
->
-> Prevent this with the proper compile time dependency.
->
-> Fixes: 1982621decaf ("pinctrl: Allow compile testing for K210, TB10X and =
-ZYNQ")
+> 
+> The driver started using readl/writel, which are defined in linux/io.h,
+> so this needs to be included here:
+> 
+> drivers/gpu/drm/msm/dp/dp_panel.c:33:9: error: call to undeclared function 'readl_relaxed'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>    33 |         return readl_relaxed(panel->link_base + offset);
+> 
+> Fixes: 9d47325ee063 ("drm/msm/dp: drop the msm_dp_catalog module")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/pinctrl/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 753692e9ecf5..ddd11668457c 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -603,6 +603,7 @@ config PINCTRL_TH1520
->  config PINCTRL_ZYNQ
->         bool "Pinctrl driver for Xilinx Zynq"
->         depends on ARCH_ZYNQ || COMPILE_TEST
-> +       depends on OF
->         select PINMUX
->         select GENERIC_PINCONF
->         help
-> --
-> 2.39.5
->
->
 
-I don't think this is the actual problem. I can build (and link)
-pinctrl-zynq with COMPILE_OF disabled alright. Can you paste the
-entire offending .config somewhere?
-
-Bartosz
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
