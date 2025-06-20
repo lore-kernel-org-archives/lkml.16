@@ -1,193 +1,109 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC912BD5BC
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEFB2E3387;
+	Fri, 20 Jun 2025 16:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436071; cv=none; b=iLLoceokGOTBfA2spjbYXi3BIeHJYj/8hD2RLohuecsgQza1TjswSLPdn4zxaL0yV7yA0GJxH/FH1BehCR62GT1Bna/TQu5U3nyN5bpy41ihSl0RCJVE5oE+LcgmRtFCgWrlTAZ42owQIamd3gKPu+Xe0BOGDeVvXuoSdxMnXPg=
+	t=1750436106; cv=none; b=oAuwhQLLwtiZasMFVTEnvxhFQAXnDSLLQINp19Sxlinujc/gs04N6q0zk60P3aNp8G6RV4/5Rf2jVEicw+8W64tpqQu/6MDR67Dno63kIkSdWxqqgoE2NBee6DnClWIJZEgAYE7YFviCfkeCX6aBELW/IeiHQH0OW2S8FKLHzLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436071; c=relaxed/simple;
-	bh=p5D8/aW27kbX0p2wRhLgeswwER2pm71Y7qToCZROLbE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fj6uf6SYjT0T62Zhp2huz7kxP2FCfnS4/Z7MhWoBK3GvJ6X9LcLnAwwRpSzMnXzsT9y2zVycTXbu8At4P96zl+zdG3zZXCJZg0BvQfEo5oPFCTwPz0eEYAJKsaIkrXDoE+i1Bin7MhJ95iVuJ8yAxz7etFzh0VsNMs5Te/apaiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5qwWUjU; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750436106; c=relaxed/simple;
+	bh=CJPn9bbmNcJ/RzelH8cowP+F52Wew3w01e0e4IXwTFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOqkPOQ/b5z8A3LkG0ql2jgjLu1pdhyOF/bAd01ykNwcYriEUEJNxI8bMINydEmlsDqQlBi9DfM2JxM+jdGie1a+NhohGS40DWckA/pKCkjGxBkYW4u2WwBM5TZSKRC6XLbW5/uFOSivo6itMIwB90ObP3V4y4dzHAODS9W2FNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j20KO7j+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5qwWUjU"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2348ac8e0b4so330105ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750436069; x=1751040869; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xZsIAdGa11vtA1TG+jbx7sf0e6kFWPgdhscMjBBcNVA=;
-        b=Z5qwWUjU1qpnU22ZkHXGYAKtZW/3yXhrHjep8DKADf30X2Sy9igBzriuXl6ZbPPbLE
-         omcu0fW2cVVoOtT8MJL/5NAZOmzHclD2PQAE/ATe+LV3Enevny7IAMBJ/c7bCYd30kQS
-         iycjwcpJJt8E165Aib9SZHfEsYxJJ+W4RYrX65KEdoYw7pAoJax5ub2BmcR478pX6BSx
-         Sofa7qU6vNiARSFJYK2QzzVqLSNVjxyIh/wTH9xRg3MHvrTQAf7+CEKDZ1NnZfVdztNX
-         TEv6ly9AUOLTAaK2GymLxyd8ePMl0agkxlzLvK8cvpdWi2Wzi7do5Ab1uosaa+6FrBnn
-         AWsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750436069; x=1751040869;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xZsIAdGa11vtA1TG+jbx7sf0e6kFWPgdhscMjBBcNVA=;
-        b=jQvHhrlbBx4ayPseT7CTr+IwbNFfHsARl8jx8OV53Y0OQpdJfj6pE0harzXRlz8Hfs
-         nSgmzu628g/QGnjdVxcE1iElR1+Av/RI2MsfPvBFwktiz0e+Go65Fco618ZwTP3DeVc8
-         4IoVYypJ40yu6V2T85zBCbSDrsz1YdLVy9C/4aQRtYBOrXH65S/wjQCqoIWl56Mzna/K
-         qDlXkTuHgYtVMBhV0cq44++fyQC88JAy76JYno5k7ayUA+y9h8SZGZGT52+mZ+NWnEhj
-         6ZMxiS8dARdv1LLSvdiJfNHlX1yHNorVQU/QivpXV/1kM9/Xdlg3LCtnynU2xBEGdCGa
-         dZ/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXuFPV8/LcquNvalTj+lx/djr/3eCVWVl+b70cUnJg0e/7fTC0M18UT1gulCRsKegzl7NkEkmtsCjjjIu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5UUbCR5GRfOfWT5ZG+hySiR/mu20I5cZlGL7bgallgZs28/Yi
-	DxsAvHjDFNjFgW8++3A0QGbHPfP472pEUJP0afS4JeHHGNXgqkaFZiIyxjjVzpOdApdNY91L5C+
-	jyRVJYDbHPs45XMm0HPCOwHE2KEGNLS8252yOd2x4
-X-Gm-Gg: ASbGnctTAzGUAv+XmSkLcDEs0ADBw4yRfG4fbW05rQ4eFrRakaYORzcOa3CZdrIg5Ht
-	y0FgPe34Yt2g0TXNZ04/mcbBFK042K1t2zSPkOcESuYHc+oqHGD13TN51VEUq3aN1gv8t8Vx1IS
-	u0LOIXAZsxrAAEN2r3v05G4R5vWHqBd+f5PpoHyFGcYjEWOyOobfeEanAmBb+okCTML5QnEhQzt
-	bY=
-X-Google-Smtp-Source: AGHT+IFwztnWYZyWskuMZ6QePnr2u2gub9rQqxv7fvGCN7Q2KpBipT2yB0bHqaW9hS41LIkES2H8hNQKyVacSC/6WGg=
-X-Received: by 2002:a17:902:dac3:b0:22e:766f:d66e with SMTP id
- d9443c01a7336-237cc9d9a42mr5651145ad.12.1750436068202; Fri, 20 Jun 2025
- 09:14:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j20KO7j+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE3;
+	Fri, 20 Jun 2025 16:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750436104;
+	bh=CJPn9bbmNcJ/RzelH8cowP+F52Wew3w01e0e4IXwTFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j20KO7j+j0nGfe1BWQ6zQlqbGUNcjR+S5/MTCQJs/ZBj2rc8+fnaSxmn8wUOk4BU0
+	 mmJkEoBdLAaCRZ5WWs9guEW9AEWs9qdqpRtsp49vgObbvEpbdrMb0eJTz8YMXtt92M
+	 2LJ2WJwAnUe9/CBbe50n2DIUBIAp8r3rQD1EJ46o=
+Date: Fri, 20 Jun 2025 18:15:02 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH net 1/4] auxiliary: Allow empty id
+Message-ID: <2025062045-velocity-finite-f31c@gregkh>
+References: <20250619200537.260017-1-sean.anderson@linux.dev>
+ <20250619200537.260017-2-sean.anderson@linux.dev>
+ <2025062004-essay-pecan-d5be@gregkh>
+ <8b9662ab-580c-44ea-96ee-b3fe3d4672ff@linux.dev>
+ <2025062006-detergent-spruce-5ae2@gregkh>
+ <91a9e80a-1a45-470b-90cf-12faae67debd@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611095158.19398-1-adrian.hunter@intel.com>
- <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
- <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
- <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
- <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
-In-Reply-To: <aFVvDh7tTTXhX13f@google.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Fri, 20 Jun 2025 09:14:16 -0700
-X-Gm-Features: AX0GCFvQU5heU-EA5hAAaoycralLiOtD4dbHf5_JljOFwLfRVDkvPnZlUFri348
-Message-ID: <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
-Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-To: Sean Christopherson <seanjc@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
-	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91a9e80a-1a45-470b-90cf-12faae67debd@linux.dev>
 
-On Fri, Jun 20, 2025 at 7:24=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Thu, Jun 19, 2025, Adrian Hunter wrote:
-> > On 19/06/2025 03:33, Sean Christopherson wrote:
-> > > On Wed, Jun 18, 2025, Adrian Hunter wrote:
-> > >> On 18/06/2025 09:00, Vishal Annapurve wrote:
-> > >>> On Tue, Jun 17, 2025 at 10:50=E2=80=AFPM Adrian Hunter <adrian.hunt=
-er@intel.com> wrote:
-> > >>>>> Ability to clean up memslots from userspace without closing
-> > >>>>> VM/guest_memfd handles is useful to keep reusing the same guest_m=
-emfds
-> > >>>>> for the next boot iteration of the VM in case of reboot.
-> > >>>>
-> > >>>> TD lifecycle does not include reboot.  In other words, reboot is
-> > >>>> done by shutting down the TD and then starting again with a new TD=
-.
-> > >>>>
-> > >>>> AFAIK it is not currently possible to shut down without closing
-> > >>>> guest_memfds since the guest_memfd holds a reference (users_count)
-> > >>>> to struct kvm, and destruction begins when users_count hits zero.
-> > >>>>
-> > >>>
-> > >>> gmem link support[1] allows associating existing guest_memfds with =
-new
-> > >>> VM instances.
-> > >>>
-> > >>> Breakdown of the userspace VMM flow:
-> > >>> 1) Create a new VM instance before closing guest_memfd files.
-> > >>> 2) Link existing guest_memfd files with the new VM instance. -> Thi=
-s
-> > >>> creates new set of files backed by the same inode but associated wi=
-th
-> > >>> the new VM instance.
-> > >>
-> > >> So what about:
-> > >>
-> > >> 2.5) Call KVM_TDX_TERMINATE_VM IOCTL
-> > >>
-> > >> Memory reclaimed after KVM_TDX_TERMINATE_VM will be done efficiently=
-,
-> > >> so avoid causing it to be reclaimed earlier.
-> > >
-> > > The problem is that setting kvm->vm_dead will prevent (3) from succee=
-ding.  If
-> > > kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not /d=
-ev/kvm the
-> > > device, but rather devices bound to the VM) ioctls.
-> >
-> > (3) is "Close the older guest memfd handles -> results in older VM inst=
-ance cleanup."
-> >
-> > close() is not an IOCTL, so I do not understand.
->
-> Sorry, I misread that as "Close the older guest memfd handles by deleting=
- the
-> memslots".
->
-> > > I intended that behavior, e.g. to guard against userspace blowing up =
-KVM because
-> > > the hkid was released, I just didn't consider the memslots angle.
-> >
-> > The patch was tested with QEMU which AFAICT does not touch  memslots wh=
-en
-> > shutting down.  Is there a reason to?
->
-> In this case, the VMM process is not shutting down.  To emulate a reboot,=
- the
-> VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.  =
-Because
-> guest_memfd takes a reference to "struct kvm", through memslot bindings, =
-memslots
+On Fri, Jun 20, 2025 at 12:09:29PM -0400, Sean Anderson wrote:
+> On 6/20/25 12:02, Greg Kroah-Hartman wrote:
+> > On Fri, Jun 20, 2025 at 11:37:40AM -0400, Sean Anderson wrote:
+> >> On 6/20/25 01:13, Greg Kroah-Hartman wrote:
+> >> > On Thu, Jun 19, 2025 at 04:05:34PM -0400, Sean Anderson wrote:
+> >> >> Support creating auxiliary devices with the id included as part of the
+> >> >> name. This allows for non-decimal ids, which may be more appropriate for
+> >> >> auxiliary devices created as children of memory-mapped devices. For
+> >> >> example, a name like "xilinx_emac.mac.802c0000" could be achieved by
+> >> >> setting .name to "mac.802c0000" and .id to AUXILIARY_DEVID_NONE.
+> >> > 
+> >> > I don't see the justification for this, sorry.  An id is just an id, it
+> >> > doesn't matter what is is and nothing should be relying on it to be the
+> >> > same across reboots or anywhere else.  The only requirement is that it
+> >> > be unique at this point in time in the system.
+> >> 
+> >> It identifies the device in log messages. Without this you have to read
+> >> sysfs to determine what device is (for example) producing an error.
+> > 
+> > That's fine, read sysfs :)
+> 
+> I should not have to read sysfs to decode boot output. If there is an
+> error during boot I should be able to determine the offending device.
+> This very important when the boot process fails before init is started,
+> and very convenient otherwise. 
 
-guest_memfd takes a reference on the "struct kvm" only on
-creation/linking, currently memslot binding doesn't add additional
-references.
+The boot log will show you the name of the device that is having a
+problem.  And you get to pick a portion of that name to make it make
+some kind of sense to users if you want.
 
-Adrian's suggestion makes sense and it should be functional but I am
-running into some issues which likely need to be resolved on the
-userspace side. I will keep this thread updated.
+> >> This
+> >> may be inconvenient to do if the error prevents the system from booting.
+> >> This series converts a platform device with a legible ID like
+> >> "802c0000.ethernet" to an auxiliary device, and I believe descriptive
+> >> device names produce a better developer experience.
+> > 
+> > You can still have 802c0000.ethernet be the prefix of the name, that's
+> > fine.
+> 
+> This is not possible due to how the auxiliary bus works. If device's
+> name is in the form "foo.id", then the driver must have an
+> auxiliary_device_id in its id_table with .name = "foo". So the address
+> *must* come after the last period in the name.
 
-Currently testing this reboot flow:
-1) Issue KVM_TDX_TERMINATE_VM on the old VM.
-2) Close the VM fd.
-3) Create a new VM fd.
-4) Link the old guest_memfd handles to the new VM fd.
-5) Close the old guest_memfd handles.
-6) Register memslots on the new VM using the linked guest_memfd handles.
+So what is the new name without this aux patch that looks so wrong?
+What is the current log line before and after the change you made?
 
-That being said, I still see the value in what Sean suggested.
-" Remove vm_dead and instead reject ioctls based on vm_bugged, and simply r=
-ely
-    on KVM_REQ_VM_DEAD to prevent running the guest."
+thanks,
 
-This will help with:
-1) Keeping the cleanup sequence as close as possible to the normal VM
-cleanup sequence.
-2) Actual VM destruction happens at step 5 from the above mentioned
-flow, if there is any cleanup that happens asynchronously, userspace
-can enforce synchronous cleanup by executing graceful VM shutdown
-stages before step 2 above.
-
-And IIUC the goal here is to achieve exactly what Sean suggested above
-i.e. prevent running the guest after KVM_TDX_TERMINATE_VM is issued.
-
-> need to be manually destroyed so that all references are put and the VM i=
-s freed
-> by the kernel.  E.g. otherwise multiple reboots would manifest as memory =
-leakds
-> and eventually OOM the host.
+greg k-h
