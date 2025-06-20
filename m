@@ -1,52 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3449E289353;
-	Fri, 20 Jun 2025 11:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FAE25F98D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417817; cv=none; b=b/kNymzKnbwy7rIhGbfU+j1mLjzxqW+4v7F7z54FFx6SHTf+eQFJycGTcZ1ZFQ2xlsb+fRfdy3FY9ODOJKJni63453/LkHjTVppp/6g8mp1+Zs6CX5iCERZyJ8jmbE7c7hBHbcTye6lml6Vel6/wWcu0KmsnPY8rJla9FiC6fFg=
+	t=1750417850; cv=none; b=Z1AbDU9v03xbW2F3Xsp/IUwtxWMQyqQ91BChvOsNYcNICnl0uNw/NXrlzEYk2/Hvmbfsqbu9nI0AsAPR5oPeB0gj4p176qiSBGriwXlRAqU2FIi0Prr+POLpni2EWjB3Fuh56oHVa0oh+DCl9MBuH+Bk08LmJFlHX2cEsFwULKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417817; c=relaxed/simple;
-	bh=uvtVP1aYMUTlFmGxU79MyL6lu/a9tI++Kn5yo964ngw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VZZIbJCt/BIBPiRXnxxGU3LrBTqMhW9UhoDmIa1/2960dzFOI7Jg3fBnu2QmQMIDruoMtBUzyjQXWzSZhiHJ06yWi3Xs+DJYToTkiQp15RLb9HiUU1Nem2/pW4anBEjYK5qa2sDw3VXJGY4ujKrUU6z80CytR1cRzONJdkVUjtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2wrkJE1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750417850; c=relaxed/simple;
+	bh=svtDzZdrbdSl/3pbNWLxGgua09eH0cIx0j2lbmFQQ6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uifZjX/2iyoNYn6/vCxj6/hXW3VbAbfvAMjJCglsh+JtMwdOXY8XHDknqt0viwbyYgx1raM6FpJEGP3o4QcujCPcEtSuYQ5Z6dWv+Xg7ASnnRNwxKpIREqEUnw9qlKb1gNsYpK7pf5rJQpHUO8I/x9rKfMJoyWFPdtuq0ejWgX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OE/g/KUq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2wrkJE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C3AC4CEEE;
-	Fri, 20 Jun 2025 11:10:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OE/g/KUq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B5EC4CEE3;
+	Fri, 20 Jun 2025 11:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417816;
-	bh=uvtVP1aYMUTlFmGxU79MyL6lu/a9tI++Kn5yo964ngw=;
+	s=k20201202; t=1750417849;
+	bh=svtDzZdrbdSl/3pbNWLxGgua09eH0cIx0j2lbmFQQ6Y=;
 	h=From:To:Cc:Subject:Date:From;
-	b=r2wrkJE1oBEwAImWqC6gxhqDrazO1wRs7uEh2lluKtKamtV693IR8cEbvcTjZ7Poe
-	 2Vn8xWR1r2oZKa+Q+WAn2+VZ+n+rg0fdHrn42gcJxEKuftfK0LVRRDJQGgzW7JFgFQ
-	 KoBqQPjS3nOOYaC3h85xyvP6hiRtfHqOvpQ7JN0oGdtv7SIGhoQdhJrB/mIDLi2m82
-	 ukfHIR4KB+v+OYP9EK1y1TQKsyOn2rqvl8jJaxeVIpBGhMuFqmObKnvc+xx3Utlbp5
-	 Tcym8jdkbEu6qYJHM65kl5QFEQWW7+sLYEw8K9tE9Jw7579bcqyEBEkt0EoEeS1ahB
-	 BZXzF/c/BH+qg==
+	b=OE/g/KUqf6uDvHAIqq2sQf/EQI/0gI93Jut3ZlNqhccuKnf6/PxUMDSGxLZeUlqpB
+	 bd+ax3IAwKsyKNGZwjpE/Ezpr5EnButk0yzGY+Y2LHoUgNdYO7EjC+LxAu9N5oW6h7
+	 pnCMRHXmWcPR4v7x0fuUvkj/xC06+6BIw7kYXusfa68/irxvjtbEafa4p8FyrpCsUj
+	 rfB+nxOsQC8tI9m4r+QtgtU5KpdtDM2fjjBCiAU8mSCllI+/1/skNEoQTxocPUqlWZ
+	 UHRpT9BypJLuUuIUa2nvwbAjRSvpeLd7DQxe+h9939UaZvS4YvlMnvd+kUdSfhHTxC
+	 37qirA946Vpyw==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eli Cohen <elic@nvidia.com>,
-	Shay Drory <shayd@nvidia.com>,
-	Jacob Keller <jacob.e.keller@intel.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Erez Shitrit <erezsh@nvidia.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Yevgeny Kliteynik <kliteyn@nvidia.com>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	James Morse <james.morse@arm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] [RFC] net/mlx5: don't build with CONFIG_CPUMASK_OFFSTACK
-Date: Fri, 20 Jun 2025 13:10:04 +0200
-Message-Id: <20250620111010.3364606-1-arnd@kernel.org>
+Subject: [PATCH] arm64: move smp_send_stop() cpu mask off stack
+Date: Fri, 20 Jun 2025 13:10:41 +0200
+Message-Id: <20250620111045.3364827-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,58 +46,38 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Local cpumask_t variables must be wrapped with alloc_cpumask_var() or
-similar helpers, to allow building with ridiculous values of CONFIG_NR_CPUS:
+For really large values of CONFIG_NR_CPUS, a CPU mask value should
+not be put on the stack:
 
-drivers/net/ethernet/mellanox/mlx5/core/eq.c: In function ‘comp_irq_request_sf’:
-drivers/net/ethernet/mellanox/mlx5/core/eq.c:897:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_ctrl_irq_request’:
-drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:494:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_irq_request_vector’:
-drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:561:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c: In function ‘irq_pool_request_irq’:
-drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c:74:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+arch/arm64/kernel/smp.c:1188:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
 
-The mlx5 driver used to do this correctly in the past, but was changed
-to use local 'irq_affinity_desc' structures in at least four places,
-which ends up having the mask on the stack again.
+This could be achieved using alloc_cpumask_var(), which makes it
+depend on CONFIG_CPUMASK_OFFSTACK, but as this function is already
+serialized and can only run on one CPU, making the variable 'static'
+is easier.
 
-It is not easily possible to use alloc_cpumask_var() again without
-reverting that patch, so work around this by disallowing this drivers
-on kernels that rely on CONFIG_CPUMASK_OFFSTACK.
-
-Fixes: bbac70c74183 ("net/mlx5: Use newer affinity descriptor")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-This is probably not a great idea since most enterprise distros do
-enable both CPUMASK_OFFSTACK and MLX5, and any ideas for how to sort
-this out better would be helpful.
+ arch/arm64/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I mainly tried setting CONFIG_NR_CPUS to an unrealistic value for my
-own compile testing, to see which files run into this problem. I have
-managed to come up with better fixes for the other three I found, but
-not this one.
----
- drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-index 6ec7d6e0181d..7c2da240ffdb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-@@ -8,6 +8,7 @@ config MLX5_CORE
- 	depends on PCI
- 	select AUXILIARY_BUS
- 	select NET_DEVLINK
-+	depends on !CPUMASK_OFFSTACK
- 	depends on VXLAN || !VXLAN
- 	depends on MLXFW || !MLXFW
- 	depends on PTP_1588_CLOCK_OPTIONAL
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 15987100c0cf..5c605dc7f5be 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -1107,7 +1107,7 @@ static inline unsigned int num_other_online_cpus(void)
+ void smp_send_stop(void)
+ {
+ 	static unsigned long stop_in_progress;
+-	cpumask_t mask;
++	static cpumask_t mask;
+ 	unsigned long timeout;
+ 
+ 	/*
 -- 
 2.39.5
 
