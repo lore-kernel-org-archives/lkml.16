@@ -1,140 +1,149 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8016C184
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E5A17E;
+	Fri, 20 Jun 2025 00:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750377967; cv=none; b=NqJCCSt/0FxTQFf71nnSz6wZoX9CiDZ9dNTb6vZwD/nm0M1eS93p+UjUlux/cyfxdOOXvoJIOMLJuFrHYsUofumtpm6UDlCYKqVfCH8AaxJswb2qzjlNxm5VsgRJu+FUQZYgc/j9UEiEEGP5P1GtW5zxeDV349Y2iOwUPKvNpMM=
+	t=1750378196; cv=none; b=GIaTLdAkzG2baSVDHZicdNcxLiZPKqgdk6dFzN8xA1WxihCyt3k4TfitK+TvahgYwtzGpwmNSuVw1n9wKeLo18T5Sg0CuSrnOGlKScuPRwivN06NDdFQUJ1XLBwwsbZcOnPqDHnJeSDRT7L9rdA2qxK5gXK994Cp+sIgjXNxBew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750377967; c=relaxed/simple;
-	bh=JkFflt00HwGBgpwGpZrGJCFYuhnAd1RuJtPkKV7KaYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QA0zEzR6TjjQTSOCEZNgbpfTVzCaP+SnQ5+14Z2Sf+3qWEuXucIbcdLz4MukiWV7AB/F8t/8JaUVcedXI8IjgJprYLbIO2kXiabtE1260AEP1pEXPSW1nNtdT8c3DEP/T1NmM35flCdTpdvouy+4nKIe5R+fY7/fFV0m25Kd6wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cWbAjkbs; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750378196; c=relaxed/simple;
+	bh=HSWDTkiENb9QVCvsSKTOLA5Za4cXfjHuD1bhBwgQahI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JvMMxVA0d5Ei+gljI21FgFCWqC9O+8uZqG4DkgF/lNBKffiTSJClBO3F8mTNl5+OisrUIxLNhtldIy/G0pjRIjq5cnCTBEI8GhsFlJirbTh9EkZeKc26lu1NIWlfdeqWkRpWk2F+GVD9YwnufBUXA52bnmUAHb5a4Gcu+ldLOUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=shSP1Q0K; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cWbAjkbs"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747fba9f962so916636b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750377966; x=1750982766; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOMw0IV4VLyIUr0PdhWaeTYCxS85gyQwv89WQzcbTao=;
-        b=cWbAjkbs6vHvLevEsIMMAZj0lVdMxoVKE3fPlkjRDL5pbp2XJusrRBsOJtDSE1lf+x
-         KmHXbGw3EuvLjoVR5pLABlckqPQv7J7nfuZyWx2o5gZ9XL/dd6290K5k2z0D9e8pC+rX
-         bAZKoBInC2zz3MISZg7wIbP4OOVQ48v+dWpj0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750377966; x=1750982766;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qOMw0IV4VLyIUr0PdhWaeTYCxS85gyQwv89WQzcbTao=;
-        b=jp4pwHO3T7OQm5UY2sf+5gbYc81639hpRUyOntZsai14nBv7F9hOhCs2xRz7lZDIS3
-         MHXRdaADeDsf8DuUfqocU29Ej9XHUxbOMCH213vLvcsj341DNhK0wAuZnTbtIwB438LQ
-         Vt3KfPdWMwmmx2CG6amw/ZJCuYVRFrFJA6RQ4fsvmWBovMo3d+k6PUb0CTheYdDh+r17
-         2l5lvpSVLYOtuNhCr8wMT1BicN+b+bl9akemd6f3r6SeAzdWZaeA9jWzdvt3G+ax4q3c
-         ZiS8mQfTKtVDbuob7brXGKxOLsd98TgFg0YefIItwTKa9ESVrGnD4Ka2+kbN4wEiQf9V
-         tTSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzxBwNqNppn23xqKWxVLptGwtsVKHz9YpLyZeqt7At3dUrPIsK85xbe9Bjd7Y5D9drxIwReWH8VTCrTE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye3ugyFUHeSC4gktJ6iU69y5uX5k5NVB2/ikoWsl//XK81KWiM
-	KV5V1kXo3V931iMqDP5z48eWp06F8ISHKmXQ/FTs55xOAJQoPt/5TrOouiDB8pCvfsdIOve+kRV
-	M3Pa3tg==
-X-Gm-Gg: ASbGnct+1E7Ut/nCKKzjpwMOIiYnY/PhC9rV2u0CTVkxEPUJzCMqqpQyY6MCmEfvB/I
-	uIJUA7DzkxM8xLWZ5odjpY6FGFkNa8bic/hB1vyykZuVBPE2JC37weSn5IH45npVEcoHXhj6MMn
-	1koHMdxQAaJh5TDsjRer7mZbwkL+5fminpK0V1NBVI+R9IpdB1yB2EVei211rki1sGHPG3CUuJN
-	YUrBV5Vk23M/y+9FeallaVf4Y4dIV+38xIKUv2Lbg+fSQsSc/P1gapNCmrSHZOYrgxLZLjXAtFo
-	h+DLcuxhfPMCNxx3Xbj/YnbdOBCFh7p/fszGqYUVCAjLe80jtC63JJ+yI0x4DzbiiaGIKJnft90
-	+eTBMzvAALF4/v1oio0ynGQfTIQ==
-X-Google-Smtp-Source: AGHT+IEnafTDL9gm3piwR1q4n3x45Hc7s6pR0nuJE4cWcZLpc1ZqJcMtfgvU6BzwJF4ZQGLnw83mlw==
-X-Received: by 2002:a05:6a00:4b53:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-7490f54939fmr500231b3a.8.1750377965568;
-        Thu, 19 Jun 2025 17:06:05 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a65ad6bsm704629b3a.133.2025.06.19.17.06.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 17:06:04 -0700 (PDT)
-Message-ID: <fab224f5-fa6f-4df0-8b43-4f296e554f8f@broadcom.com>
-Date: Thu, 19 Jun 2025 17:06:03 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="shSP1Q0K"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55K09P8L522555;
+	Thu, 19 Jun 2025 19:09:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750378165;
+	bh=FtWQxf5tl4efAN+J0l3NXsSBKduvItD57zeS0fuHU2g=;
+	h=From:To:CC:Subject:Date;
+	b=shSP1Q0KSKIJmO9mZpJB2lNwoKF4hk04kGQ+bkSbJZ+om/+zhdlFxSpa4AgBq2T0/
+	 2f9eSjlX2Uf3PCbtVlSXFoKVoJ4KcvIT0YElKathJ2zRZiBrnMUsWY2lxe3RfrMbQE
+	 btnTn+q40Cx4swpUAIYCs8GkGpPyzSdjV6N+S48o=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55K09PUY158192
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 19 Jun 2025 19:09:25 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 19
+ Jun 2025 19:09:25 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 19 Jun 2025 19:09:24 -0500
+Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55K09OiF2244230;
+	Thu, 19 Jun 2025 19:09:24 -0500
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
+        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>
+Subject: [PATCH] regulator: tps65219: Fix devm_kmalloc size allocation
+Date: Thu, 19 Jun 2025 19:09:24 -0500
+Message-ID: <20250620000924.2636542-1-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
- CONFIG_PCI_PWRCTL enabled
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
- Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne
- <nsaenz@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Jim Quinlan
- <james.quinlan@broadcom.com>, bcm-kernel-feedback-list@broadcom.com,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250527222522.GA12969@bhelgaas>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250527222522.GA12969@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/27/25 15:25, 'Bjorn Helgaas' via BCM-KERNEL-FEEDBACK-LIST,PDL wrote:
-> On Sat, May 24, 2025 at 02:21:04PM +0530, Manivannan Sadhasivam wrote:
->> On Sat, May 24, 2025 at 08:29:46AM +0200, Lukas Wunner wrote:
->>> On Fri, May 23, 2025 at 09:42:07PM -0500, Bjorn Helgaas wrote:
->>>> What I would prefer is something like the first paragraph in that
->>>> section: the #ifdef in a header file that declares the function and
->>>> defines a no-op stub, with the implementation in some pwrctrl file.
->>>
->>> pci_pwrctrl_create_device() is static, but it is possible to #ifdef
->>> the whole function in the .c file and provide the stub in an #else
->>> branch.  That's easier to follow than #ifdef'ing portions of the
->>> function.
->>>
->>
->> +1
-> 
-> I dropped the ball here and didn't get any fix for this in v6.15.
+In probe(), devm_kmalloc uses pmic->common_irq_size to allocate an array of
+2 bytes, but pmic->common_irq_size is being used like an array of structs.
+The param sent should've been pmic->common_irq_size * sizeof(*irq_data).
+This led to an issue with the kmalloc'd buffer being corrupted and EVM boot
+issues. The common and device-specific structs are now allocated one at a
+time within the loop.
 
-Any chance we could target a fix to be back ported into 6.15 stable? Do 
-you need people to help you test it?
+Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
+Reported-by: Dhruva Gole <d-gole@ti.com>
+Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+---
+ drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
+index d80749cdae1d..d77ca486879f 100644
+--- a/drivers/regulator/tps65219-regulator.c
++++ b/drivers/regulator/tps65219-regulator.c
+@@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
+ 					     pmic->rdesc[i].name);
+ 	}
+ 
+-	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
+-	if (!irq_data)
+-		return -ENOMEM;
+-
+ 	for (i = 0; i < pmic->common_irq_size; ++i) {
+ 		irq_type = &pmic->common_irq_types[i];
+ 		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+ 		if (irq < 0)
+ 			return -EINVAL;
+ 
+-		irq_data[i].dev = tps->dev;
+-		irq_data[i].type = irq_type;
++		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
++		if (!irq_data)
++			return -ENOMEM;
++
++		irq_data->dev = tps->dev;
++		irq_data->type = irq_type;
+ 		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+ 						  tps65219_regulator_irq_handler,
+ 						  IRQF_ONESHOT,
+ 						  irq_type->irq_name,
+-						  &irq_data[i]);
++						  irq_data);
+ 		if (error)
+ 			return dev_err_probe(tps->dev, error,
+ 					     "Failed to request %s IRQ %d\n",
+ 					     irq_type->irq_name, irq);
+ 	}
+ 
+-	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
+-	if (!irq_data)
+-		return -ENOMEM;
+-
+ 	for (i = 0; i < pmic->dev_irq_size; ++i) {
+ 		irq_type = &pmic->irq_types[i];
+ 		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+ 		if (irq < 0)
+ 			return -EINVAL;
+ 
+-		irq_data[i].dev = tps->dev;
+-		irq_data[i].type = irq_type;
++		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
++		if (!irq_data)
++			return -ENOMEM;
++
++		irq_data->dev = tps->dev;
++		irq_data->type = irq_type;
+ 		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+ 						  tps65219_regulator_irq_handler,
+ 						  IRQF_ONESHOT,
+ 						  irq_type->irq_name,
+-						  &irq_data[i]);
++						  irq_data);
+ 		if (error)
+ 			return dev_err_probe(tps->dev, error,
+ 					     "Failed to request %s IRQ %d\n",
+
+base-commit: 5c8013ae2e86ec36b07500ba4cacb14ab4d6f728
+prerequisite-patch-id: cd76c901948780de20e932cf620806959e2177b1
+prerequisite-patch-id: e847098a38d07e5ff31e8c80d86d9702d132fdad
+prerequisite-patch-id: e6a01f111e527c6da442f6756f8daa4e79d0fa3c
 -- 
-Florian
+2.43.0
+
