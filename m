@@ -1,143 +1,193 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D6A28A415;
-	Fri, 20 Jun 2025 16:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC912BD5BC
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436055; cv=none; b=FtuUejq/wDhNBUkJfyrF2oiu/9W11M2l4+9ljmZ/2g0rcEbeFfKkFukZyx8SbEZ3nMp76klRBzPiYbPJNB9Yxb43F3h/2iy28+s8/zFSgm+8ep2Ah1bK+VzG7vqs74LrvzZqE7L3eIFF5FiK7b8krk9SGb0NIAn+8iojKSJ2wSk=
+	t=1750436071; cv=none; b=iLLoceokGOTBfA2spjbYXi3BIeHJYj/8hD2RLohuecsgQza1TjswSLPdn4zxaL0yV7yA0GJxH/FH1BehCR62GT1Bna/TQu5U3nyN5bpy41ihSl0RCJVE5oE+LcgmRtFCgWrlTAZ42owQIamd3gKPu+Xe0BOGDeVvXuoSdxMnXPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436055; c=relaxed/simple;
-	bh=xl0/m7vCTDCJ0eBO6PHDRHnK1Zkd7aaRC+ojI3/LrNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GTLoUY5o2HfpDdpbw7kr306v7/a9sFbb9CF3Gc1RmTpsf23erIC6rUMKVwwp0UkNgPn9PJz0pIfXQvSONR2P2Df3o29VyN3hxDhCe5f/YzpFav6IAyDTajX9t17cVNBMiilOWdifUKb7GwdlfMTYvjzRoEUYOffkveMEqhublCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=NoWCCOpi; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750436071; c=relaxed/simple;
+	bh=p5D8/aW27kbX0p2wRhLgeswwER2pm71Y7qToCZROLbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fj6uf6SYjT0T62Zhp2huz7kxP2FCfnS4/Z7MhWoBK3GvJ6X9LcLnAwwRpSzMnXzsT9y2zVycTXbu8At4P96zl+zdG3zZXCJZg0BvQfEo5oPFCTwPz0eEYAJKsaIkrXDoE+i1Bin7MhJ95iVuJ8yAxz7etFzh0VsNMs5Te/apaiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5qwWUjU; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NoWCCOpi"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55KGCOU92549536
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 20 Jun 2025 09:12:25 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55KGCOU92549536
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750435949;
-	bh=od7VOU+Vgb8+R5vxfgKCe9w48z7ysNa+RJDKpFTFMrk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NoWCCOpiahyyyMkwLm0Z8Zf5fjEhS5Hexwzxgl/OeAD2fsaCRNRSebZJXp7aF8pIR
-	 6z5p2JPtgfJuYyMZKr66F1fNNROopW381MG2/nqP1od5JrnuECmMtc2EdYRjvPkIGJ
-	 zkpj1CNwWaKgYtJLCxHMsW1pDQW5KU0CoxmJUGwecj8ZBxaFaKN4BzHm1nJBG2cbZa
-	 JioC3k1ZCNTJhAkrk7iulKgyMXFnnNhZWDldmi4elM7CdycWQcOH3fxLSoeg0P8idr
-	 PqoFr5gBQGfXJr5IoEub99KBdsBEgpoVkn/hwV21Eqq38JCJBDaajKjc1XKu+y7xFh
-	 QDRd1MVtZAnpQ==
-Message-ID: <98703493-109a-4795-8abd-6cfe10b941f4@zytor.com>
-Date: Fri, 20 Jun 2025 09:12:23 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5qwWUjU"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2348ac8e0b4so330105ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750436069; x=1751040869; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZsIAdGa11vtA1TG+jbx7sf0e6kFWPgdhscMjBBcNVA=;
+        b=Z5qwWUjU1qpnU22ZkHXGYAKtZW/3yXhrHjep8DKADf30X2Sy9igBzriuXl6ZbPPbLE
+         omcu0fW2cVVoOtT8MJL/5NAZOmzHclD2PQAE/ATe+LV3Enevny7IAMBJ/c7bCYd30kQS
+         iycjwcpJJt8E165Aib9SZHfEsYxJJ+W4RYrX65KEdoYw7pAoJax5ub2BmcR478pX6BSx
+         Sofa7qU6vNiARSFJYK2QzzVqLSNVjxyIh/wTH9xRg3MHvrTQAf7+CEKDZ1NnZfVdztNX
+         TEv6ly9AUOLTAaK2GymLxyd8ePMl0agkxlzLvK8cvpdWi2Wzi7do5Ab1uosaa+6FrBnn
+         AWsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750436069; x=1751040869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xZsIAdGa11vtA1TG+jbx7sf0e6kFWPgdhscMjBBcNVA=;
+        b=jQvHhrlbBx4ayPseT7CTr+IwbNFfHsARl8jx8OV53Y0OQpdJfj6pE0harzXRlz8Hfs
+         nSgmzu628g/QGnjdVxcE1iElR1+Av/RI2MsfPvBFwktiz0e+Go65Fco618ZwTP3DeVc8
+         4IoVYypJ40yu6V2T85zBCbSDrsz1YdLVy9C/4aQRtYBOrXH65S/wjQCqoIWl56Mzna/K
+         qDlXkTuHgYtVMBhV0cq44++fyQC88JAy76JYno5k7ayUA+y9h8SZGZGT52+mZ+NWnEhj
+         6ZMxiS8dARdv1LLSvdiJfNHlX1yHNorVQU/QivpXV/1kM9/Xdlg3LCtnynU2xBEGdCGa
+         dZ/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuFPV8/LcquNvalTj+lx/djr/3eCVWVl+b70cUnJg0e/7fTC0M18UT1gulCRsKegzl7NkEkmtsCjjjIu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5UUbCR5GRfOfWT5ZG+hySiR/mu20I5cZlGL7bgallgZs28/Yi
+	DxsAvHjDFNjFgW8++3A0QGbHPfP472pEUJP0afS4JeHHGNXgqkaFZiIyxjjVzpOdApdNY91L5C+
+	jyRVJYDbHPs45XMm0HPCOwHE2KEGNLS8252yOd2x4
+X-Gm-Gg: ASbGnctTAzGUAv+XmSkLcDEs0ADBw4yRfG4fbW05rQ4eFrRakaYORzcOa3CZdrIg5Ht
+	y0FgPe34Yt2g0TXNZ04/mcbBFK042K1t2zSPkOcESuYHc+oqHGD13TN51VEUq3aN1gv8t8Vx1IS
+	u0LOIXAZsxrAAEN2r3v05G4R5vWHqBd+f5PpoHyFGcYjEWOyOobfeEanAmBb+okCTML5QnEhQzt
+	bY=
+X-Google-Smtp-Source: AGHT+IFwztnWYZyWskuMZ6QePnr2u2gub9rQqxv7fvGCN7Q2KpBipT2yB0bHqaW9hS41LIkES2H8hNQKyVacSC/6WGg=
+X-Received: by 2002:a17:902:dac3:b0:22e:766f:d66e with SMTP id
+ d9443c01a7336-237cc9d9a42mr5651145ad.12.1750436068202; Fri, 20 Jun 2025
+ 09:14:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-To: Randy Dunlap <rdunlap@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Xiongwei Song <xiongwei.song@windriver.com>,
-        Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
-        Breno Leitao <leitao@debian.org>,
-        Rick Edgecombe
- <rick.p.edgecombe@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-        Juergen Gross <jgross@suse.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
-        Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-        Huang Shijie <shijie@os.amperecomputing.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <25600557-9cd5-406c-9acf-abc163afde2d@infradead.org>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <25600557-9cd5-406c-9acf-abc163afde2d@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250611095158.19398-1-adrian.hunter@intel.com>
+ <20250611095158.19398-2-adrian.hunter@intel.com> <CAGtprH_cpbPLvW2rSc2o7BsYWYZKNR6QAEsA4X-X77=2A7s=yg@mail.gmail.com>
+ <e86aa631-bedd-44b4-b95a-9e941d14b059@intel.com> <CAGtprH_PwNkZUUx5+SoZcCmXAqcgfFkzprfNRH8HY3wcOm+1eg@mail.gmail.com>
+ <0df27aaf-51be-4003-b8a7-8e623075709e@intel.com> <aFNa7L74tjztduT-@google.com>
+ <4b6918e4-adba-48b2-931c-4d428a2775fc@intel.com> <aFVvDh7tTTXhX13f@google.com>
+In-Reply-To: <aFVvDh7tTTXhX13f@google.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Fri, 20 Jun 2025 09:14:16 -0700
+X-Gm-Features: AX0GCFvQU5heU-EA5hAAaoycralLiOtD4dbHf5_JljOFwLfRVDkvPnZlUFri348
+Message-ID: <CAGtprH-an308biSmM=c=W2FS2XeOWM9CxB3vWu9D=LD__baWUQ@mail.gmail.com>
+Subject: Re: [PATCH V4 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+To: Sean Christopherson <seanjc@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/2025 9:02 AM, Randy Dunlap wrote:
->> +config X86_DISABLED_FEATURE_LASS
->> +	def_bool y
->> +	depends on !X86_64
-> Please explain why this is   !X86_64.
+On Fri, Jun 20, 2025 at 7:24=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Thu, Jun 19, 2025, Adrian Hunter wrote:
+> > On 19/06/2025 03:33, Sean Christopherson wrote:
+> > > On Wed, Jun 18, 2025, Adrian Hunter wrote:
+> > >> On 18/06/2025 09:00, Vishal Annapurve wrote:
+> > >>> On Tue, Jun 17, 2025 at 10:50=E2=80=AFPM Adrian Hunter <adrian.hunt=
+er@intel.com> wrote:
+> > >>>>> Ability to clean up memslots from userspace without closing
+> > >>>>> VM/guest_memfd handles is useful to keep reusing the same guest_m=
+emfds
+> > >>>>> for the next boot iteration of the VM in case of reboot.
+> > >>>>
+> > >>>> TD lifecycle does not include reboot.  In other words, reboot is
+> > >>>> done by shutting down the TD and then starting again with a new TD=
+.
+> > >>>>
+> > >>>> AFAIK it is not currently possible to shut down without closing
+> > >>>> guest_memfds since the guest_memfd holds a reference (users_count)
+> > >>>> to struct kvm, and destruction begins when users_count hits zero.
+> > >>>>
+> > >>>
+> > >>> gmem link support[1] allows associating existing guest_memfds with =
+new
+> > >>> VM instances.
+> > >>>
+> > >>> Breakdown of the userspace VMM flow:
+> > >>> 1) Create a new VM instance before closing guest_memfd files.
+> > >>> 2) Link existing guest_memfd files with the new VM instance. -> Thi=
+s
+> > >>> creates new set of files backed by the same inode but associated wi=
+th
+> > >>> the new VM instance.
+> > >>
+> > >> So what about:
+> > >>
+> > >> 2.5) Call KVM_TDX_TERMINATE_VM IOCTL
+> > >>
+> > >> Memory reclaimed after KVM_TDX_TERMINATE_VM will be done efficiently=
+,
+> > >> so avoid causing it to be reclaimed earlier.
+> > >
+> > > The problem is that setting kvm->vm_dead will prevent (3) from succee=
+ding.  If
+> > > kvm->vm_dead is set, KVM will reject all vCPU, VM, and device (not /d=
+ev/kvm the
+> > > device, but rather devices bound to the VM) ioctls.
+> >
+> > (3) is "Close the older guest memfd handles -> results in older VM inst=
+ance cleanup."
+> >
+> > close() is not an IOCTL, so I do not understand.
+>
+> Sorry, I misread that as "Close the older guest memfd handles by deleting=
+ the
+> memslots".
+>
+> > > I intended that behavior, e.g. to guard against userspace blowing up =
+KVM because
+> > > the hkid was released, I just didn't consider the memslots angle.
+> >
+> > The patch was tested with QEMU which AFAICT does not touch  memslots wh=
+en
+> > shutting down.  Is there a reason to?
+>
+> In this case, the VMM process is not shutting down.  To emulate a reboot,=
+ the
+> VMM destroys the VM, but reuses the guest_memfd files for the "new" VM.  =
+Because
+> guest_memfd takes a reference to "struct kvm", through memslot bindings, =
+memslots
 
-When NOT on X86_64, the LASS code should not be compiled.
+guest_memfd takes a reference on the "struct kvm" only on
+creation/linking, currently memslot binding doesn't add additional
+references.
 
-But first of all, as I replied earlier, X86_DISABLED_FEATURE_LASS is
-completely not needed.
+Adrian's suggestion makes sense and it should be functional but I am
+running into some issues which likely need to be resolved on the
+userspace side. I will keep this thread updated.
 
-Thanks!
-     Xin
+Currently testing this reboot flow:
+1) Issue KVM_TDX_TERMINATE_VM on the old VM.
+2) Close the VM fd.
+3) Create a new VM fd.
+4) Link the old guest_memfd handles to the new VM fd.
+5) Close the old guest_memfd handles.
+6) Register memslots on the new VM using the linked guest_memfd handles.
 
+That being said, I still see the value in what Sean suggested.
+" Remove vm_dead and instead reject ioctls based on vm_bugged, and simply r=
+ely
+    on KVM_REQ_VM_DEAD to prevent running the guest."
 
+This will help with:
+1) Keeping the cleanup sequence as close as possible to the normal VM
+cleanup sequence.
+2) Actual VM destruction happens at step 5 from the above mentioned
+flow, if there is any cleanup that happens asynchronously, userspace
+can enforce synchronous cleanup by executing graceful VM shutdown
+stages before step 2 above.
+
+And IIUC the goal here is to achieve exactly what Sean suggested above
+i.e. prevent running the guest after KVM_TDX_TERMINATE_VM is issued.
+
+> need to be manually destroyed so that all references are put and the VM i=
+s freed
+> by the kernel.  E.g. otherwise multiple reboots would manifest as memory =
+leakds
+> and eventually OOM the host.
