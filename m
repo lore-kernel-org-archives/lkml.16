@@ -1,181 +1,100 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A50183A14;
-	Fri, 20 Jun 2025 15:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920BD1CAA6D;
+	Fri, 20 Jun 2025 15:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432633; cv=none; b=OMg4EHq7PPBOOIogIqJlnHKhfECLVTD8yP0IxV2oxGY+A+C2K1SjXcuMfN8zyhU1W47DxmrReQ1gmoHgPSHIqd0ipDaoEF5wkBMpxjdLo7M/C84imbLnJBcnfkNS02Ak2XNuV+o0+8JAezU05VUAcmp5+1YgHR7p4AVnTMAx+cQ=
+	t=1750432769; cv=none; b=O7liH9ol7XpikNotJtY3M2HVzlMfoMmaFgio/ulxn8zRCvdL/xIMO0/ZW5XHg5Ppd9rL4ACSYwonQMrIY7o0fkkDfuOMtcFzTTwuPcsKrcWd7cBeYYjSNTPvvlmXK9COwQmCJkCN8rfodk+uwF2rCpanpFCc+EpO7wokCoFvPus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432633; c=relaxed/simple;
-	bh=fcDRVRsB7kTTxKbuSPIJvammikJeVCV2Sey5irOixwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ghv0KNt7iEbRGFbyaCi+ZKSKZ+doP6YppLARMOnN2MlMqpI79cglQhItIF0wE00YpZOm4CXwj70FpJ1fAjEqH5zQJ5Bug+FlbnwqlZJSgABwrnnRtHf0T0SBkHkYaL165UGjerkkFL7Z4TwdchZ6+YJlu6jQdaxw9076MjaHlDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kF8cYHf6; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750432769; c=relaxed/simple;
+	bh=D+NBxxS/s7lAkhzv5kblgQFQ0K3/wljS6mGdAQtA3R8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UDMyegvKHTRpX+LpawwiUNoZ3Mstl/yFunk5mpif1+liLmmRxTycx2ibYRtY8OMC7hvC/bAYuQMsz+Uw/Z0vMCzwo4dEsc5ycwtbarQl4Q6CGLajcMOREZv1q4mjvP/uzD1+4WUordkwPxEQTufwHslEsS3qzl8r5fQk+5PIPTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sj6aKunY; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF8cYHf6"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so22613685e9.1;
-        Fri, 20 Jun 2025 08:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750432630; x=1751037430; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g9Z79uO0bQTG7SBiWvsssoDMq0Ao6no6bKJ2a4NfcKE=;
-        b=kF8cYHf62bxcZr6i97MsG7gwmNPJ9T1ne3HsWKIKm8shgtGUsy+Ist0a+2L2hDUUxm
-         O2C9JYakrgUZXYL6vvJsBaxo4n/MEjckn6YbLiwED4DIUMye2lyKhsNYvnpzKM+LwiP2
-         3L6ElgWX6Dwv6yXL3hL1d7uM06qceuufxSBiLqpYtI51zI9h7LLWiWrws61dSmPfRLIM
-         my/bX/YFWyRm6W4Sh0vrg0NrIhFvLh2mG0/5HE1IXi8VDuDx2vveG+KscbS9jJ8rwA+d
-         4iaEUw8McUpMWn+ojk3wOU+8HoN/C2b/friyxHrlaem6M/74+aV+8c1OgT+Qf1wQNYBd
-         hFDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750432630; x=1751037430;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g9Z79uO0bQTG7SBiWvsssoDMq0Ao6no6bKJ2a4NfcKE=;
-        b=VRFQae9Mx0NpxnvXJnWZ2ePRdSBWxNnkDmk1YPJQKrYF2RoDG4/V/vF83dUC9w0+Ie
-         NHhiE38vUY4LPCiQe41A0qhh/XcjVtA+aPi4Z6PH6C5w8jhmh28Kpa33HU/lBr2dP2Ip
-         rKqU0jKJDkx3SP3iMlQpIq/p3/5XwpVCJUEhMrW2qMVsbGHivpAsyGkW5d341H6z98vn
-         IWrOoeepHdJ1muuCjVJA5mTIC3cdZtFp5YIPDhDNzxWwsn13iAVFRcLB8KSEMMbM4NQP
-         1KwTojkxfXGJjG3vcBVe7s7+vsVvGwZN/A6A8OlOiMOdFPYHtpeQHYQ69qUucbgo54SY
-         dDvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOxjW9U/+l478DEbxTCUOVYk0NsuxjTBhUdVxsjGzHIC8YNiQMw0AC/YhLzMZNS5n0j1R66mO1g7ebOg==@vger.kernel.org, AJvYcCWR+vEJ798LZkfSamDp0WeowNnqYnR57VsB6Yu7drlB4GvlqMJlFmbbE8XaxIXj0+YoQHJxVBUsttVnwWWX@vger.kernel.org, AJvYcCWyXKD/SlACaVfXXfVfWVl/XrKhOidu+jpXdnhyJEgPnwliIyRzMexzoH7RhlkjkLfS7Yi4Qu1igRrs@vger.kernel.org, AJvYcCX7iGae6ZyWM/QgmTMIVtzP7Ui3grc6sMAgtJ+Xp5rRiCV7Is0Ymj/UAzRjNic4ecdO1cS+qUFHv5R5YL3oLDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+zRRbiqgU3vctI7koNW1LoSGU4IRHWkNrYfYiqS+K0UzU23ue
-	uDdXQS1YC5T67DxxMyXkaQlARcyJcYBfpxJIY0/Zwuttl8LOy0J/yD/Takm96G8N3TU=
-X-Gm-Gg: ASbGncs8sB7oA8xQ4cAA4xeIuT4W+kOPRI9ShUBbwJfZb+2uGEvaBiadE/X80lYOTz/
-	PKWZc/zby1GTKCeVbIM0eL7Gq8pPetoXWDtJTyMQUOVMCzDpAx8bQUIQJhQm803LQW48XB6M/e5
-	9yHVRi9Skn5XrkdAlA5QqRWEdquUvj2TLC5wPOPU3amYcfFo/KnLNZ6DhoWO9pALV73drag0KA1
-	ZOPRF4eXFyi0AUuH76J0SQ1OXzmlY5SGHRrJwZqcv7TWBOAjTwi5vfQ9JAJOiDp07T8C7JDl6p0
-	Gtt4vzMlDFUjM9DgR8yfxlvFz29gfyiwyt1VPAoQHy6zIpNj5ayTSGyHAdhc14GGNGFtQoM6EVu
-	rT67pxC/Hfn06tUapDApKWPPqUgFf6/NH4OFzFXk=
-X-Google-Smtp-Source: AGHT+IEHFgrcMTbzofDrxYhszmZSjhSU+Dr+aUv88uObflo1lT+8kHGwGwDfULZbO4ZhDjQFQW/1LA==
-X-Received: by 2002:a05:600c:3582:b0:43c:ee3f:2c3 with SMTP id 5b1f17b1804b1-45369ade30amr4425595e9.7.1750432629909;
-        Fri, 20 Jun 2025 08:17:09 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1d1bbsm2343322f8f.41.2025.06.20.08.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:17:09 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Alex Hung <alex.hung@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Igor Korotin <igor.korotin.linux@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	Len Brown <lenb@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Subject: [PATCH v8 1/9] rust: device: implement FwNode::is_of_node()
-Date: Fri, 20 Jun 2025 16:15:04 +0100
-Message-ID: <20250620151504.278766-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sj6aKunY"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55KFJEa6694542;
+	Fri, 20 Jun 2025 10:19:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750432754;
+	bh=cmNHTwVBLJviuFOTOh0wl60eo4uFjud5nAeWBEfxhVA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=sj6aKunYigUauKJDygtl1MeGQJ4aB0kaAb0DxzJY5KPtfQcsT5yuyfdMLZx6mj8oA
+	 UFHeUS5p1j2Mk+0yd5526GP6oOOSnRRtg77UWB4YhT8/tE3lfh6q2naootGnGye/uj
+	 TUrP4EmIwMVQEpeUfCsIfVN5XhexOFSCtqYEbosw=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55KFJD9i1886801
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 20 Jun 2025 10:19:13 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 20
+ Jun 2025 10:19:13 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 20 Jun 2025 10:19:13 -0500
+Received: from [10.249.32.27] ([10.249.32.27])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55KFJCAI3401552;
+	Fri, 20 Jun 2025 10:19:12 -0500
+Message-ID: <c517f657-ec34-4878-9b09-31c48134347e@ti.com>
+Date: Fri, 20 Jun 2025 10:19:12 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] regulator: tps65219: Fix devm_kmalloc size allocation
+To: Robert Nelson <robertcnelson@gmail.com>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
+        <d-gole@ti.com>, <jkridner@gmail.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
+        <afd@ti.com>
+References: <20250620000924.2636542-1-s-ramamoorthy@ti.com>
+ <CAOCHtYgweLhO4nNhNLtJ-_25guqER7ohDf7TNy8WNFwo898wPw@mail.gmail.com>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <CAOCHtYgweLhO4nNhNLtJ-_25guqER7ohDf7TNy8WNFwo898wPw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Danilo Krummrich <dakr@kernel.org>
+Hi Robert,
 
-Implement FwNode::is_of_node() in order to check whether a FwNode
-instance is embedded in a struct device_node.
+On 6/20/2025 8:30 AM, Robert Nelson wrote:
+> On Thu, Jun 19, 2025 at 7:09 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>> In probe(), devm_kmalloc uses pmic->common_irq_size to allocate an array of
+>> 2 bytes, but pmic->common_irq_size is being used like an array of structs.
+>> The param sent should've been pmic->common_irq_size * sizeof(*irq_data).
+>> This led to an issue with the kmalloc'd buffer being corrupted and EVM boot
+>> issues. The common and device-specific structs are now allocated one at a
+>> time within the loop.
+>>
+>> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
+>> Reported-by: Dhruva Gole <d-gole@ti.com>
+>> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+> Thanks Shree!  Starting testing on PB2/BeaglePlay's..
+>
+>
+>> base-commit: 5c8013ae2e86ec36b07500ba4cacb14ab4d6f728
+>> prerequisite-patch-id: cd76c901948780de20e932cf620806959e2177b1
+>> prerequisite-patch-id: e847098a38d07e5ff31e8c80d86d9702d132fdad
+>> prerequisite-patch-id: e6a01f111e527c6da442f6756f8daa4e79d0fa3c
+> ps, worked around these 3 missing in v6.16-rc2, which git tree do you
+> have them staged?
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- MAINTAINERS                    | 1 +
- rust/helpers/helpers.c         | 1 +
- rust/helpers/of.c              | 8 ++++++++
- rust/kernel/device/property.rs | 7 +++++++
- 4 files changed, 17 insertions(+)
- create mode 100644 rust/helpers/of.c
+I have them staged in master, but those 3 commits (see links below) snuck in. 
+I'll rebase this commit on a new branch & remove those for v2.
+https://lore.kernel.org/all/aB3hiEM0CB8m_X8m@stanley.mountain/
+https://lore.kernel.org/all/175034639178.919047.12885250485072078236.b4-ty@kernel.org/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f724cd556f4..1e918319cff4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18579,6 +18579,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- F:	Documentation/ABI/testing/sysfs-firmware-ofw
- F:	drivers/of/
- F:	include/linux/of*.h
-+F:	rust/helpers/of.c
- F:	rust/kernel/of.rs
- F:	scripts/dtc/
- F:	tools/testing/selftests/dt/
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index ed00695af971..041a8112eb9e 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -26,6 +26,7 @@
- #include "kunit.c"
- #include "mm.c"
- #include "mutex.c"
-+#include "of.c"
- #include "page.c"
- #include "platform.c"
- #include "pci.c"
-diff --git a/rust/helpers/of.c b/rust/helpers/of.c
-new file mode 100644
-index 000000000000..86b51167c913
---- /dev/null
-+++ b/rust/helpers/of.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/of.h>
-+
-+bool rust_helper_is_of_node(const struct fwnode_handle *fwnode)
-+{
-+	return is_of_node(fwnode);
-+}
-diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-index 838509111e57..63fe4b6ee6bc 100644
---- a/rust/kernel/device/property.rs
-+++ b/rust/kernel/device/property.rs
-@@ -61,6 +61,13 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-         self.0.get()
-     }
- 
-+    /// Returns `true` if `&self` is an OF node, `false` otherwise.
-+    pub fn is_of_node(&self) -> bool {
-+        // SAFETY: The type invariant of `Self` guarantees that `self.as_raw() is a pointer to a
-+        // valid `struct fwnode_handle`.
-+        unsafe { bindings::is_of_node(self.as_raw()) }
-+    }
-+
-     /// Returns an object that implements [`Display`](core::fmt::Display) for
-     /// printing the name of a node.
-     ///
--- 
-2.43.0
-
+>
+> Regards,
+>
