@@ -1,157 +1,162 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA2222577C;
-	Fri, 20 Jun 2025 19:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC27B2ECE9B;
+	Fri, 20 Jun 2025 19:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750449201; cv=none; b=jJyBYjGdPpawRzxwoGdhyEl7GNs4xjw2IFNxZK+19AtqxYbs7O2dek+5D3WCeQWLmmbzjyLWzI4m6qLegEMcaKHLxxW4mH0efcpxPFK93dSBA8xciEskM7KpO+G5MdhZcE5NFQ71ZIaSg2QYbLnsW8RglsT2xwyHPkykZ/E/FII=
+	t=1750449210; cv=none; b=N0hl44+gVoSNF6E/IbskMyWnGZKDo544cindB+9uFJiTTrextmN3NCr7lw3C8DzbxmvHjY4ahQacAtQJiQwesoUnSA90kEsqmC9aR3iTez4o7gNACWr6lJ2OcVkSAj+ccxQQeqfRNUVDP/qyJseLVWvZIzY+/qiluBof5u2TajU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750449201; c=relaxed/simple;
-	bh=qXzQaYDyZ22wVOw3OB4twS41M4U5ybMKs8ALKHqH37A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jGiPjTjV0+ufDf7Hdncy2d1iJOrUnfzplRPqUUrx9C1PEh9BjKFxQROlgSAVFq7HdbykgFHEk/Iw8cpeiunAbQi3wbokzDAUOiiS8Q2rceZDjuPuMEgfGQU3kO9H7IoP+o9PMP/M7ZBpKUcKuSK2ATzURl/fQgHq1Q8u9OyewU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=vAM2/3RR; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750449210; c=relaxed/simple;
+	bh=RNFe6OsXiIa25lThIwwSEn6qb0BH3hZlmmOumOwKmL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EaHYxQWOjUiSbvbNes+IZeu+KFy1uvkIuvft4apovDSK1xO0woS6eHkO/EUc6c44SFRe1rlATc1RmkMSx4BCzV5CLFJ81bfbdLP33rElXUPhJOwLjNWSKxNdGKAJcVmgDpi9eagvvJ0EOaCdH7MwC889GFvsWWSa7CgXxQWOEPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tSnZnlBp; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="vAM2/3RR"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uShnZ-000fBs-F7; Fri, 20 Jun 2025 21:53:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=lfAYRwZDSdZ+Y8WOrfpvUOazYa4OR/cUBrBuUO7BMjs=; b=vAM2/3RRZazC/b2aX7VWvbZ/df
-	4QEKIhNKUIQ4CCmnOSX2KWt4KJPDU0YxCf2idnRPKpGoezBi0+6Uhvf3FXrd9Ku3nyDMJBWiLkOAP
-	nQK5MS2MLkpXuhIgGoZeZQTHSGaShh6K7ehSgsApavPlqK2J6Pbba8bhrJdZxbP/ha1d0xIpguEWE
-	xORwdOxdXrr/PRui9kV7mbV7TocmPIC5VLL1k8XRRniUL+rARSufeMe0lM4sdGF3deHmAL8KL8l97
-	TvGBrmV8nEpPnNIWiVFB5F5uqHXqKDb+P7QiBskRYCca3kS/b37yT87BfzsjxDypXjZpAxt3NUQWr
-	viPsLQqQ==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uShnZ-0003iV-2s; Fri, 20 Jun 2025 21:53:17 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uShnD-00CRMQ-En; Fri, 20 Jun 2025 21:52:55 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Fri, 20 Jun 2025 21:52:44 +0200
-Subject: [PATCH RFC net v2 2/3] vsock: Fix transport_* TOCTOU
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tSnZnlBp"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id ShmauIDQsBqt7Shmauhv5q; Fri, 20 Jun 2025 21:52:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1750449136;
+	bh=2bElo9HwhnRSM0NAT+XlQ6v5ReuWUrVRquq0Qs1cSFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=tSnZnlBpqXBKoYO84tVJ44EYQOtH3COuTe5YqwirKz/RLlfZCR+99hjQVvErnZJIq
+	 UJslU3anrpYhVkh6fr4b6zyhVexsACxeNhipuhthLWx6smtD0etTBxD6kTFfnDCoiX
+	 eag906y51+aGJDcUXM17MTkQZLZvgacjFub3ahci/G/S2PkvLWaQSOHbgVMxbauzQ6
+	 TK7ontWUHFFOJD7YwstaKnCsRcO2YKUrZd8KpHHeqUIZinvy9vHtvtmnXZXppsnU5+
+	 BzZAN1WvXtQGSP4qGf8X3EwBAk2KiBqN6wD1XuT9nfsl6mqKma6cJFGoVUlz6r7U7J
+	 OOGYLIPvaRBFw==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 20 Jun 2025 21:52:16 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <72d03217-16a4-4700-952b-a98b68a37140@wanadoo.fr>
+Date: Fri, 20 Jun 2025 21:52:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-vsock-transports-toctou-v2-2-02ebd20b1d03@rbox.co>
-References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
-In-Reply-To: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tpm: Replace scnprintf() with sysfs_emit() and
+ sysfs_emit_at() in sysfs show functions
+To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, peterhuewe@gmx.de,
+ jarkko@kernel.org
+Cc: jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Transport assignment may race with module unload. Protect new_transport
-from becoming a stale pointer.
+Le 19/06/2025 à 14:37, Chelsy Ratnawat a écrit :
+> Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
+> sysfs show functions. These helpers are preferred in sysfs callbacks
+> because they automatically handle buffer sizing (PAGE_SIZE) and
+> improve safety and readability.
+> 
+> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> ---
+>   drivers/char/tpm/tpm_ppi.c | 26 +++++++++++++-------------
+>   1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+> index bc7b1b4501b3..421c6264bac9 100644
+> --- a/drivers/char/tpm/tpm_ppi.c
+> +++ b/drivers/char/tpm/tpm_ppi.c
+> @@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+>   {
+>   	struct tpm_chip *chip = to_tpm_chip(dev);
+>   
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
+> +	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+>   }
+>   
+>   static ssize_t tpm_show_ppi_request(struct device *dev,
+> @@ -87,11 +87,11 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>   		else {
+>   			req = obj->package.elements[1].integer.value;
+>   			if (tpm_ppi_req_has_parameter(req))
+> -				size = scnprintf(buf, PAGE_SIZE,
+> +				size = sysfs_emit(buf,
+>   				    "%llu %llu\n", req,
+>   				    obj->package.elements[2].integer.value);
+>   			else
+> -				size = scnprintf(buf, PAGE_SIZE,
+> +				size = sysfs_emit(buf,
+>   						"%llu\n", req);
+>   		}
+>   	} else if (obj->package.count == 2 &&
+> @@ -100,7 +100,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>   		if (obj->package.elements[0].integer.value)
+>   			size = -EFAULT;
+>   		else
+> -			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
+> +			size = sysfs_emit(buf, "%llu\n",
+>   				 obj->package.elements[1].integer.value);
+>   	}
+>   
+> @@ -211,9 +211,9 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
+>   	}
+>   
+>   	if (ret < ARRAY_SIZE(info) - 1)
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
+> +		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
+>   	else
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
+> +		status = sysfs_emit(buf, "%d: %s\n", ret,
+>   				   info[ARRAY_SIZE(info)-1]);
+>   	return status;
+>   }
+> @@ -255,22 +255,22 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
+>   	res = ret_obj[2].integer.value;
+>   	if (req) {
+>   		if (res == 0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0: Success");
+>   		else if (res == 0xFFFFFFF0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0xFFFFFFF0: User Abort");
+>   		else if (res == 0xFFFFFFF1)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+>   					   "0xFFFFFFF1: BIOS Failure");
+>   		else if (res >= 1 && res <= 0x00000FFF)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+>   					   req, res, "Corresponding TPM error");
+>   		else
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+>   					   req, res, "Error");
+>   	} else {
+> -		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
+> +		status = sysfs_emit(buf, "%llu: %s\n",
+>   				   req, "No Recent Request");
+>   	}
+>   
+> @@ -314,7 +314,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+>   		}
+>   
+>   		if (ret > 0 && ret < ARRAY_SIZE(info))
+> -			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
+> +			str += sysfs_emit_at(str, "%d %d: %s\n",
 
-This also takes care of an insecure call in vsock_use_local_transport();
-add a lockdep assert.
+sysfs_emit_at() does not work like that.
+But does this code even compile?
 
-BUG: unable to handle page fault for address: fffffbfff8056000
-Oops: Oops: 0000 [#1] SMP KASAN
-RIP: 0010:vsock_assign_transport+0x366/0x600
-Call Trace:
- vsock_connect+0x59c/0xc40
- __sys_connect+0xe8/0x100
- __x64_sys_connect+0x6e/0xc0
- do_syscall_64+0x92/0x1c0
- entry_SYSCALL_64_after_hwframe+0x4b/0x53
+CJ
 
-Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- net/vmw_vsock/af_vsock.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 63a920af5bfe6960306a3e5eeae0cbf30648985e..a1b1073a2c89f865fcdb58b38d8e7feffcf1544f 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -407,6 +407,8 @@ EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
- 
- static bool vsock_use_local_transport(unsigned int remote_cid)
- {
-+	lockdep_assert_held(&vsock_register_mutex);
-+
- 	if (!transport_local)
- 		return false;
- 
-@@ -464,6 +466,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
- 
- 	remote_flags = vsk->remote_addr.svm_flags;
- 
-+	mutex_lock(&vsock_register_mutex);
-+
- 	switch (sk->sk_type) {
- 	case SOCK_DGRAM:
- 		new_transport = transport_dgram;
-@@ -479,12 +483,15 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
- 			new_transport = transport_h2g;
- 		break;
- 	default:
--		return -ESOCKTNOSUPPORT;
-+		ret = -ESOCKTNOSUPPORT;
-+		goto err;
- 	}
- 
- 	if (vsk->transport) {
--		if (vsk->transport == new_transport)
--			return 0;
-+		if (vsk->transport == new_transport) {
-+			ret = 0;
-+			goto err;
-+		}
- 
- 		/* transport->release() must be called with sock lock acquired.
- 		 * This path can only be taken during vsock_connect(), where we
-@@ -508,8 +515,16 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
- 	/* We increase the module refcnt to prevent the transport unloading
- 	 * while there are open sockets assigned to it.
- 	 */
--	if (!new_transport || !try_module_get(new_transport->module))
--		return -ENODEV;
-+	if (!new_transport || !try_module_get(new_transport->module)) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	/* It's safe to release the mutex after a successful try_module_get().
-+	 * Whichever transport `new_transport` points at, it won't go await
-+	 * until the last module_put() below or in vsock_deassign_transport().
-+	 */
-+	mutex_unlock(&vsock_register_mutex);
- 
- 	if (sk->sk_type == SOCK_SEQPACKET) {
- 		if (!new_transport->seqpacket_allow ||
-@@ -528,6 +543,9 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
- 	vsk->transport = new_transport;
- 
- 	return 0;
-+err:
-+	mutex_unlock(&vsock_register_mutex);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(vsock_assign_transport);
- 
-
--- 
-2.49.0
+>   					 i, ret, info[ret]);
+>   	}
+>   
 
