@@ -1,223 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB772EAB77
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F792EA73D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750444409; cv=none; b=It1QzxvvPg3uvCaCvFSVJSfoTZIrKOL/vk8RrN0pk5xzolycpgWUZZNNMdVp1SJICbD/iuNmEsdLmz+daCLY+lQ6K1GuV5mV6d0FT9xJPgdxsoB18PbRd/ZV/PGODtnABNC8B1pv5WVFdVroxGYEs8bZ05Wy1ujsrLVTPclnhrg=
+	t=1750444441; cv=none; b=Xa2PA3HA3Z1Qo8bU9fcglgplIjMCKu+nFpo8f/weCTenP3lvqn+jRoRBnz1tSFS9G/0heNCHY0Wq4j5VoHQvMLsivrxtU7MeYGE8FndZHvgq8lEpo2cH/0F3dzZqCORU5myNp41XbVZJkyYUbMSaiKzxWblkthLWKwd9GCpC3VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750444409; c=relaxed/simple;
-	bh=8cVPpSr+mU5S9qcFTSUXu67cECcT35LV1GY6aRl8nZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eDp8zsl251xyWRKVxQAFzp4HGHuG6aOmRmo52jL+99zXvGr5ik6m7Ax4icK4hn0XkuLJX/wDsl3dpwOXX+DeREcMCccRPmTHwX1tfQovzilnYIf0cAvXOaZHVpethe6FHJEq7mySQ5Ft6KAa8RaY/CIwB3dwiQ4TohZtHUCwLsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b2rfdr6C; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750444441; c=relaxed/simple;
+	bh=9iYNcVBaPb4Hwav7FShaIAw0RUnIu6JSzpcwtAcLNMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQU9kwUSM4g8mLe6GFfEqbiSPfWZopk7+yodlViLGog+lksQ6sgrK1oz4i/HAhgZZdCEP5l6ydCOYz5qyllAXOXPLNIP+KAGALSpAAp4jER1PI0CqjcSUHOsuIndWNISd5DjdlcCgzluWvQXYyDmmvZBp9WxThYpu7/VIika2/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bON0PG+W; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2rfdr6C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750444407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JpXRTC8ElKaQS5y8IzEdVna0lTiUycxLE9BUUGVG3ys=;
-	b=b2rfdr6C3mKM9Qn0NTfPhtfRIhUFCqTbbGyRqYMOK1tinEtLeG8UpDyt2EZwWeeHWRWQo8
-	TXNnV2Xr7u5bHabl7BVWTQOhKOKF5IiPblsi2QvOAttY/RpP3YEIASucJge5D4TiNxNt9P
-	AQYCdWFt4JtHwp5DdroAzQ7bA1FQdnA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-452-UkjG2CVcNSumYHnuofQ6Bw-1; Fri,
- 20 Jun 2025 14:33:22 -0400
-X-MC-Unique: UkjG2CVcNSumYHnuofQ6Bw-1
-X-Mimecast-MFC-AGG-ID: UkjG2CVcNSumYHnuofQ6Bw_1750444400
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD9CE195608F;
-	Fri, 20 Jun 2025 18:33:19 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B18DD180045B;
-	Fri, 20 Jun 2025 18:33:17 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	adrian.hunter@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	mikko.ylinen@linux.intel.com,
-	kirill.shutemov@intel.com,
-	jiewen.yao@intel.com,
-	binbin.wu@linux.intel.com
-Subject: [PATCH 3/3] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-Date: Fri, 20 Jun 2025 14:33:08 -0400
-Message-ID: <20250620183308.197917-4-pbonzini@redhat.com>
-In-Reply-To: <20250620183308.197917-1-pbonzini@redhat.com>
-References: <20250620183308.197917-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bON0PG+W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750444440; x=1781980440;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9iYNcVBaPb4Hwav7FShaIAw0RUnIu6JSzpcwtAcLNMM=;
+  b=bON0PG+WCm0K1xEj5MItQQMJKO0HpI7c/IU24RIB17Gv5Rbagsuc7gHL
+   hm9FEqMFnBxZAzCS+BL2o1y/0fRny0qUF4iOT/EnCghQau/8aoLKhQMEW
+   ZxG0T7JW1Q+bfbYBrP5aDT2Mu1DLKAuRi+pkHv8vA164Nld5M+v3Ku1S0
+   JQ2bKWH44y5vegR7Nz1PHKFAUOrjviCKWKvESDm2JJDRZxbQHK3DrlWaz
+   3qtrSFkVVS3ZBpngh8n1BnVBTVQPfyVi0pG9Juso+0oWj43hBi3YvO3x+
+   1zdhJHGpzCkk9ThXv+a9lf71etYt5ibzJjRG4ked6FWRuAy1/gfdM1LQo
+   g==;
+X-CSE-ConnectionGUID: 7hA6w9kWQTGO9g3F+4WEzQ==
+X-CSE-MsgGUID: MDxbWQlvQUGmH3s7kYjvSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52418275"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="52418275"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 11:33:59 -0700
+X-CSE-ConnectionGUID: KE/vH0clTAqEFqMxLdv6Nw==
+X-CSE-MsgGUID: xzV2Q7uAQQeGURIg7qUp5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="150779283"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 20 Jun 2025 11:33:56 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSgYj-000M42-1D;
+	Fri, 20 Jun 2025 18:33:53 +0000
+Date: Sat, 21 Jun 2025 02:33:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
+ driver
+Message-ID: <202506210204.LVZc2VG2-lkp@intel.com>
+References: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 
-From: Binbin Wu <binbin.wu@linux.intel.com>
+Hi Binbin,
 
-Exit to userspace for TDG.VP.VMCALL<GetTdVmCallInfo> via KVM_EXIT_TDX,
-to allow userspace to provide information about the support of
-TDVMCALLs when r12 is 1 for the TDVMCALLs beyond the GHCI base API.
+kernel test robot noticed the following build errors:
 
-GHCI spec defines the GHCI base TDVMCALLs: <GetTdVmCallInfo>, <MapGPA>,
-<ReportFatalError>, <Instruction.CPUID>, <#VE.RequestMMIO>,
-<Instruction.HLT>, <Instruction.IO>, <Instruction.RDMSR> and
-<Instruction.WRMSR>. They must be supported by VMM to support TDX guests.
+[auto build test ERROR on 8ffcb7560b4a15faf821df95e3ab532b2b020f8c]
 
-For GetTdVmCallInfo
-- When leaf (r12) to enumerate TDVMCALL functionality is set to 0,
-  successful execution indicates all GHCI base TDVMCALLs listed above are
-  supported.
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250620-100856
+base:   8ffcb7560b4a15faf821df95e3ab532b2b020f8c
+patch link:    https://lore.kernel.org/r/82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20250621/202506210204.LVZc2VG2-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210204.LVZc2VG2-lkp@intel.com/reproduce)
 
-  Update the KVM TDX document with the set of the GHCI base APIs.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506210204.LVZc2VG2-lkp@intel.com/
 
-- When leaf (r12) to enumerate TDVMCALL functionality is set to 1, it
-  indicates the TDX guest is querying the supported TDVMCALLs beyond
-  the GHCI base TDVMCALLs.
-  Exit to userspace to let userspace set the TDVMCALL sub-function bit(s)
-  accordingly to the leaf outputs.  KVM could set the TDVMCALL bit(s)
-  supported by itself when the TDVMCALLs don't need support from userspace
-  after returning from userspace and before entering guest. Currently, no
-  such TDVMCALLs implemented, KVM just sets the values returned from
-  userspace.
+All error/warnings (new ones prefixed by >>):
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
-[Adjust userspace API. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- Documentation/virt/kvm/api.rst | 10 ++++++++
- arch/x86/kvm/vmx/tdx.c         | 43 ++++++++++++++++++++++++++++++----
- include/uapi/linux/kvm.h       |  5 ++++
- 3 files changed, 54 insertions(+), 4 deletions(-)
+>> drivers/mfd/ls2k-bmc-core.c:152:1: warning: data definition has no type or storage class
+     152 | module_pci_driver(ls2k_bmc_driver);
+         | ^~~~~~~~~~~~~~~~~
+>> drivers/mfd/ls2k-bmc-core.c:152:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Wimplicit-int]
+>> drivers/mfd/ls2k-bmc-core.c:152:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+>> drivers/mfd/ls2k-bmc-core.c:146:26: warning: 'ls2k_bmc_driver' defined but not used [-Wunused-variable]
+     146 | static struct pci_driver ls2k_bmc_driver = {
+         |                          ^~~~~~~~~~~~~~~
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 115ec3c2b641..9abf93ee5f65 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7191,6 +7191,11 @@ The valid value for 'flags' is:
- 					u64 gpa;
- 					u64 size;
- 				} get_quote;
-+				struct {
-+					u64 ret;
-+					u64 leaf;
-+					u64 r11, r12, r13, r14;
-+				} get_tdvmcall_info;
- 			};
- 		} tdx;
- 
-@@ -7216,6 +7221,11 @@ queued successfully, the TDX guest can poll the status field in the
- shared-memory area to check whether the Quote generation is completed or
- not. When completed, the generated Quote is returned via the same buffer.
- 
-+* ``TDVMCALL_GET_TD_VM_CALL_INFO``: the guest has requested the support
-+status of TDVMCALLs.  The output values for the given leaf should be
-+placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
-+field of the union.
-+
- KVM may add support for more values in the future that may cause a userspace
- exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
- it will enter with output fields already valid; in the common case, the
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b619a3478983..1ad20c273f3b 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1451,18 +1451,53 @@ static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+static int tdx_complete_get_td_vm_call_info(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_tdx *tdx = to_tdx(vcpu);
-+
-+	tdvmcall_set_return_code(vcpu, vcpu->run->tdx.get_tdvmcall_info.ret);
-+
-+	/*
-+	 * For now, there is no TDVMCALL beyond GHCI base API supported by KVM
-+	 * directly without the support from userspace, just set the value
-+	 * returned from userspace.
-+	 */
-+	tdx->vp_enter_args.r11 = vcpu->run->tdx.get_tdvmcall_info.r11;
-+	tdx->vp_enter_args.r12 = vcpu->run->tdx.get_tdvmcall_info.r12;
-+	tdx->vp_enter_args.r13 = vcpu->run->tdx.get_tdvmcall_info.r13;
-+	tdx->vp_enter_args.r14 = vcpu->run->tdx.get_tdvmcall_info.r14;
-+
-+	return 1;
-+}
-+
- static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_tdx *tdx = to_tdx(vcpu);
- 
--	if (tdx->vp_enter_args.r12)
--		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
--	else {
-+	switch (tdx->vp_enter_args.r12) {
-+	case 0:
- 		tdx->vp_enter_args.r11 = 0;
-+		tdx->vp_enter_args.r12 = 0;
- 		tdx->vp_enter_args.r13 = 0;
- 		tdx->vp_enter_args.r14 = 0;
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_SUCCESS);
-+		return 1;
-+	case 1:
-+		vcpu->run->tdx.get_tdvmcall_info.leaf = tdx->vp_enter_args.r12;
-+		vcpu->run->exit_reason = KVM_EXIT_TDX;
-+		vcpu->run->tdx.flags = 0;
-+		vcpu->run->tdx.nr = TDVMCALL_GET_TD_VM_CALL_INFO;
-+		vcpu->run->tdx.get_tdvmcall_info.ret = TDVMCALL_STATUS_SUCCESS;
-+		vcpu->run->tdx.get_tdvmcall_info.r11 = 0;
-+		vcpu->run->tdx.get_tdvmcall_info.r12 = 0;
-+		vcpu->run->tdx.get_tdvmcall_info.r13 = 0;
-+		vcpu->run->tdx.get_tdvmcall_info.r14 = 0;
-+		vcpu->arch.complete_userspace_io = tdx_complete_get_td_vm_call_info;
-+		return 0;
-+	default:
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
-+		return 1;
- 	}
--	return 1;
- }
- 
- static int tdx_complete_simple(struct kvm_vcpu *vcpu)
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index e23e7286ad1a..37891580d05d 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -462,6 +462,11 @@ struct kvm_run {
- 					__u64 gpa;
- 					__u64 size;
- 				} get_quote;
-+				struct {
-+					__u64 ret;
-+					__u64 leaf;
-+					__u64 r11, r12, r13, r14;
-+				} get_tdvmcall_info;
- 			};
- 		} tdx;
- 		/* Fix the size of the union. */
+
+vim +152 drivers/mfd/ls2k-bmc-core.c
+
+   145	
+ > 146	static struct pci_driver ls2k_bmc_driver = {
+   147		.name = "ls2k-bmc",
+   148		.id_table = ls2k_bmc_devices,
+   149		.probe = ls2k_bmc_probe,
+   150		.remove = ls2k_bmc_remove,
+   151	};
+ > 152	module_pci_driver(ls2k_bmc_driver);
+   153	
+
 -- 
-2.43.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
