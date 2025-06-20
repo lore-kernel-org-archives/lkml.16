@@ -1,159 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9189714D2A0
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DC314D2A0
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408345; cv=none; b=jDY6qtcCFBQa3byXHNfhQjITzkoyEc/ZmsQF97Zr+M50t+zDX0K4Eg6ftR8ZDC/hncF96KdVuwfy/Jv3U882QP96hTWIoCOFldEGpX05Kcj2A23wgM+yiU48zD57BAhPoKMJmnEDPdifbUGBDlfEIFpTFnnckyVXiuQNEqoD3aQ=
+	t=1750408372; cv=none; b=loOnAJCywfOXgdYBbFKAweZni2LGVnz4eTFxII+gua2fVQH2Vasm0sidB8B7bZG9CR2678AsPlHNzUeRZJCPnHupdBRWopUSPIDr3YAF7KZSI1dsMUhREufKXr2cs0qZWXyZZuObbtsaHjrcKki43QymtAgnI5sggT+PPyLt8dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408345; c=relaxed/simple;
-	bh=5YOM2lPpH7PXWuJm9EXV7JiVObmQ3cui1GYbQMMQ0kM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdABIvCMhoAJO67Nksv30D4cFxG+8n4IGCxnmGBLj4CvT/a8PlGFhkc7m/pwctRmm1rEHlzoDiOnTBuqWdhD3Ry6ndSPzvruhaxxa0UjAOcXbuk/rLShBOEkEWGrhLcQAIVIpLiqNb0qQLhc0v9X04XtjKx7VvD3mA1ppluj7I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cog5BKNa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750408372; c=relaxed/simple;
+	bh=uCRX1nuFoRtnYCJ9KxkhvaXyEHuuLMZXm5m+SDOqDbc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qcp9b4PFSOcHPMZWMP4Pevl80J3RSbtsqVUyGi2PRWRehvsVVqfzxweMfCiun3SWV2ZpjValkGJa4LgVpNvdrSkEFlDsj9CiUgTz51N1gsIbY8fp3Qw5+ckqU3XVjEusPry3s+4iE3XpaP7HPOLN8nJTnu772BO8RFaQ85VuGZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VFENuXvo; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cog5BKNa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750408342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EELna4tg5NHVDqDl5GH+k+fVb8iZXQcOHnkW1YCeC7k=;
-	b=cog5BKNaLnVwvt4Bd2COJNy5kL68BBwUyuB0W9RNDkSvzrEJU5LBsnxvzrbpZgcDr7VigD
-	eZ8pv3cICfelhaF3jjmfmraNaoDWgrf0wdhxLowbuw45T23ApmONRr92b3amb4TdDO4NpG
-	2baFK1XNzkAOGzhq1A9vULvIbpL3/kc=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-alzvQ_DjORiTtLCOHA9WVQ-1; Fri, 20 Jun 2025 04:32:19 -0400
-X-MC-Unique: alzvQ_DjORiTtLCOHA9WVQ-1
-X-Mimecast-MFC-AGG-ID: alzvQ_DjORiTtLCOHA9WVQ_1750408339
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-31327b2f8e4so1539755a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408339; x=1751013139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VFENuXvo"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad572ba1347so254561266b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750408367; x=1751013167; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EELna4tg5NHVDqDl5GH+k+fVb8iZXQcOHnkW1YCeC7k=;
-        b=YtAoHfFwoqaUo8i+uAcJ5GDCd2UZpmEGhsLkqsXtu56Yl/0Wil5A4SUjRh+zWKToWd
-         Qan7yixrrC8Le7bhL6HfLOaZX1wqwNgWFCyVVJoeq9gy6S9A0n22Dc2979ZK9G/R6ks8
-         9CTmEUui3gipiWCHNpmuOnt674T2JHWJqchkkqkLYWD3/gfRdCJwI8Pul97MCyVU79fD
-         FOEz4gLD6VeoeQQu07xOSMaA0HgQ9FPjFAI7MaSwXH14wgamY8rAJlBIqjsbReI/bHJP
-         b12kMr/ECZcfu4pdknGAOFAmlyAL4OPbs1CvVf8XtWiQujwqT6iSMHyX6NEFFtLocSrx
-         MZBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVN0tDWe/UasfWMi6WPZ2VEhVIf4PxYDm+hZEQKW0JHWrEnyueatOZy2ovWrNX2S8vrhDZbIYpTdiKHcBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJFtG10TNK8WJBhm3eTinIXT0QqTsO6Uc20DhovMcbEoZKtzEa
-	z7Q2TBOZpCTBJjpKyu9O07D9GIF1LQ/18x+yLOo2BtKULOVxLGa4z8/yXDrnL7imGJ4bzsjwx8X
-	Q+oHf+HgCDsvsqBU3ho5P9zhHNkrwc9LKIBq5tsXOeBQDAMItzb1eDBMbOKkfrOx27g==
-X-Gm-Gg: ASbGncteP7eVxRldqCCnwO8joPc1tzLWqCF9I1TkyLzWUqGeiaeH1w9aZStgFYhBIOW
-	Ed8rEfM31evr3Lu97La4z/HeQwFl6Toq+ZAiFEwt0j7hRliO/yKQ2Y+W3h69nbptWqv1dg1eiv5
-	maLQrNP8HENJJWjHj6vDzi+reUy0RKKuIFEehjtdOb9zHhMMEifO1ubggVIZtdtPqCZedpxbnG3
-	MzeU4X0LwRHmcLAcboHE1zlTmkH51a7Fa6oR4vzsDvdya3ImQRushxX2p9T+qI5+koa0QGZHHnI
-	tv4tEjS183rngd0jMEXjkCFigra7
-X-Received: by 2002:a17:90b:51c3:b0:313:17ec:80ec with SMTP id 98e67ed59e1d1-3159d8dc9a8mr2836309a91.26.1750408338646;
-        Fri, 20 Jun 2025 01:32:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHpEPY7m8XnpO27bAGr683g+jQ02JBIyUY70+ykZ6RPi1orD37Zz6VwI1lcx8EihVOJArcpTg==
-X-Received: by 2002:a17:90b:51c3:b0:313:17ec:80ec with SMTP id 98e67ed59e1d1-3159d8dc9a8mr2836275a91.26.1750408338174;
-        Fri, 20 Jun 2025 01:32:18 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.182.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8614baesm12447485ad.137.2025.06.20.01.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 01:32:17 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:32:04 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/3] vsock: Fix transport_{h2g,g2h} TOCTOU
-Message-ID: <r2ms45yka7e2ont3zi5t3oqyuextkwuapixlxskoeclt2uaum2@3zzo5mqd56fs>
-References: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
- <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
+        bh=V8wmox5wbVcYBtpfIK7MG/8DvxWobEdHxrXsqDBn3p4=;
+        b=VFENuXvoioCDXe7y11RzJpf5LfSpJM8ZBZQrmdFwVa9P1pllZLMgAyYrQIiiB/OJz7
+         gRXbVrmqjeDQTMgwTC1krPkWNC7cyaopYYOpAByxDy0IEhZCZ8nq8IvQJPpjQOwRx6gu
+         0qSj/diqKD2m2us1YB9CJgS8xjfyjJZJ96CoG3rQ0C4mmykpQ9KG+5olg4jc9Rrxd6S+
+         +xpaXcM25QmB+smxKWlin8WjljPa5qGj9hOmKrxUci0DJjnX+bF2Z/7Cn9PPaLwaOydd
+         XrkaoQVuJigLhZrag8hnJbNAblg1tS1dLW3gYsNKaJ/ZWbteG29spKCsMETboIXVKgXl
+         b9yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750408367; x=1751013167;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V8wmox5wbVcYBtpfIK7MG/8DvxWobEdHxrXsqDBn3p4=;
+        b=BiOS29m8NJq1HfgCdijZ7in1rCrgY4Zo3jbn0olHjJLTqtjfc44s0PlVyzNexrgdm7
+         md8TrxnnwIgEtA9+wOVDIH1lyWYRos9kcu2iofdLV8TBI8ocWGBmyhyLHVrXB1GWHNrh
+         ml9Yq1Xl+kkI9FTya/xWNsPoCfebX6r29lZ0hBPnuP/KetBe/QHkVk14YNF68sdz1huW
+         HeXE7upsfoZ7KAf0YyRuFnjAEylCEqlmiMDFyFmWXlGjG3tXvseuI/rDwzbN+ZWQ11Yt
+         P9TgAyYSqde+Jw+OlfuDbUJ07PilgqAnRehK4cjdlQsuYzL6bLq/xKVRGANLZwUH4n2n
+         fcug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3VJCHcc1jkF919jcALMnYQAvVmMF2mFEO43T+OCDwrB8VNTUwQMUnDYhESwdpanlAD9tdCCqy2y+/9Sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9yp7y664mLWfZ85j0PZ1dAF6zgt7jqvDR8FXwCPg2xehXZeze
+	a6CfizIKX/3j+S2RqTG0EAmR3xY+TFIdzWV+xkMjUA/IcsLbsXvkRh6pkh3kocGlXTlPLldqnLs
+	CZEn8IS9dmzT8IZdOJhWT+sd0PCrtQdT4cIy6HHr6fhw6Tz3XfY8k27VFzw==
+X-Gm-Gg: ASbGncsuRwTn3IRnyzNL0UiF+R/BcuQdkwgkEHhbwQ+t3zxwe+YFuTdEy5V/Rtn6LRb
+	5+X1j3hnUCjBQIrtyovffsRKccqRpNwg9gbVQahrrAhe2AUgooLnpN/l+9MwShjPhmqbwNhFFE9
+	JO9sjj/krs/G3c7u7F8mhBtAvFcLwPxTqOIZxE9GU1sbecYwOlGLqWOB/zGt1WftnlvALoeQ+b+
+	+x97c4d/Nhn7Bw=
+X-Google-Smtp-Source: AGHT+IHx6J8pSPzVkYMOpBzKscIvIHoFXttHdd3oJL6N7iJycLVydQtv5A9bOfHWJYcvOjYYwszDL1FSgGmT97f5ndY=
+X-Received: by 2002:a17:907:6088:b0:ade:31eb:66f7 with SMTP id
+ a640c23a62f3a-ae057cde4e4mr190530466b.58.1750408367380; Fri, 20 Jun 2025
+ 01:32:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250618-vsock-transports-toctou-v1-1-dd2d2ede9052@rbox.co>
+References: <202506191949.o3SMu8Zn-lkp@intel.com>
+In-Reply-To: <202506191949.o3SMu8Zn-lkp@intel.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Fri, 20 Jun 2025 10:32:36 +0200
+X-Gm-Features: Ac12FXxRGK7YwYdzqjI318B5Gj8dNC_z7UGrx_SbEPCsKkcykY33W_qwUXLotv4
+Message-ID: <CAHVXubi46zgpKkKmGZvu7mNdfBLAsjgpLauLEfysUP05FMtyCQ@mail.gmail.com>
+Subject: Re: include/linux/ftrace.h:190:9: error: call to undeclared function
+ 'arch_ftrace_get_regs'; ISO C99 and later do not support implicit function declarations
+To: kernel test robot <lkp@intel.com>
+Cc: Andy Chiu <andy.chiu@sifive.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 02:34:00PM +0200, Michal Luczaj wrote:
->Checking transport_{h2g,g2h} != NULL may race with vsock_core_unregister().
->Make sure pointers remain valid.
+On Thu, Jun 19, 2025 at 1:21=E2=80=AFPM kernel test robot <lkp@intel.com> w=
+rote:
 >
->KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
->Call Trace:
-> __x64_sys_ioctl+0x12d/0x190
-> do_syscall_64+0x92/0x1c0
-> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+> head:   fb4d33ab452ea254e2c319bac5703d1b56d895bf
+> commit: d0262e907e2991ae09ca476281fc8cae3ec57850 riscv: ftrace: support P=
+REEMPT
+> date:   2 weeks ago
+> config: riscv-randconfig-r071-20250619 (https://download.01.org/0day-ci/a=
+rchive/20250619/202506191949.o3SMu8Zn-lkp@intel.com/config)
+> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 8=
+75b36a8742437b95f623bab1e0332562c7b4b3f)
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250619/202506191949.o3SMu8Zn-lkp@intel.com/reproduce)
 >
->Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> net/vmw_vsock/af_vsock.c | 4 ++++
-> 1 file changed, 4 insertions(+)
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506191949.o3SMu8Zn-lkp=
+@intel.com/
 >
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 2e7a3034e965db30b6ee295370d866e6d8b1c341..047d1bc773fab9c315a6ccd383a451fa11fb703e 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -2541,6 +2541,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
+> All errors (new ones prefixed by >>):
 >
-> 	switch (cmd) {
-> 	case IOCTL_VM_SOCKETS_GET_LOCAL_CID:
->+		mutex_lock(&vsock_register_mutex);
->+
-> 		/* To be compatible with the VMCI behavior, we prioritize the
-> 		 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
-> 		 */
->@@ -2549,6 +2551,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
-> 		else if (transport_h2g)
-> 			cid = transport_h2g->get_local_cid();
->
->+		mutex_unlock(&vsock_register_mutex);
+>    In file included from arch/riscv/kernel/asm-offsets.c:10:
+> >> include/linux/ftrace.h:190:9: error: call to undeclared function 'arch=
+_ftrace_get_regs'; ISO C99 and later do not support implicit function decla=
+rations [-Wimplicit-function-declaration]
+>      190 |         return arch_ftrace_get_regs(fregs);
+>          |                ^
+>    include/linux/ftrace.h:190:9: note: did you mean 'ftrace_get_regs'?
+>    include/linux/ftrace.h:185:40: note: 'ftrace_get_regs' declared here
+>      185 | static __always_inline struct pt_regs *ftrace_get_regs(struct =
+ftrace_regs *fregs)
+>          |                                        ^
+>      186 | {
+>      187 |         if (!fregs)
+>      188 |                 return NULL;
+>      189 |
+>      190 |         return arch_ftrace_get_regs(fregs);
+>          |                ~~~~~~~~~~~~~~~~~~~~
+>          |                ftrace_get_regs
+> >> include/linux/ftrace.h:190:9: error: incompatible integer to pointer c=
+onversion returning 'int' from a function with result type 'struct pt_regs =
+*' [-Wint-conversion]
+>      190 |         return arch_ftrace_get_regs(fregs);
+>          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-What about if we introduce a new `vsock_get_local_cid`:
+This is what I came up with because after fixing this ^, we get other
+similar failures. My level of confidence on this one is pretty low
+though, so if someone can confirm, that'd be nice:
 
-u32 vsock_get_local_cid() {
-	u32 cid = VMADDR_CID_ANY;
+diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrac=
+e.h
+index 22ebea3c2b26c..28319c50d0315 100644
+--- a/arch/riscv/include/asm/ftrace.h
++++ b/arch/riscv/include/asm/ftrace.h
+@@ -49,7 +49,7 @@ struct dyn_arch_ftrace {
+ };
+ #endif
 
-	mutex_lock(&vsock_register_mutex);
-	/* To be compatible with the VMCI behavior, we prioritize the
-	 * guest CID instead of well-know host CID (VMADDR_CID_HOST).
-	 */
-	if (transport_g2h)
-		cid = transport_g2h->get_local_cid();
-	else if (transport_h2g)
-		cid = transport_h2g->get_local_cid();
-	mutex_lock(&vsock_register_mutex);
+-#ifdef CONFIG_DYNAMIC_FTRACE
++#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+ /*
+  * A general call in RISC-V is a pair of insts:
+  * 1) auipc: setting high-20 pc-related bits to ra register
+@@ -117,7 +117,6 @@ struct dyn_ftrace;
+ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+ #define ftrace_init_nop ftrace_init_nop
 
-	return cid;
-}
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+ #define arch_ftrace_get_regs(regs) NULL
+ #define HAVE_ARCH_FTRACE_REGS
+ struct ftrace_ops;
+@@ -233,8 +232,6 @@ static inline void
+arch_ftrace_set_direct_caller(struct ftrace_regs *fregs, unsi
+ }
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
 
+-#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+-
+ #endif /* __ASSEMBLY__ */
 
-And we use it here, and in the place fixed by next patch?
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offset=
+s.c
+index 6e8c0d6feae9e..f29b33358a328 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -505,7 +505,7 @@ void asm_offsets(void)
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+ #endif
 
-I think we can fix all in a single patch, the problem here is to call 
-transport_*->get_local_cid() without the lock IIUC.
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
++#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+        DEFINE(FREGS_SIZE_ON_STACK, ALIGN(sizeof(struct
+__arch_ftrace_regs), STACK_ALIGN));
+        DEFINE(FREGS_EPC,           offsetof(struct __arch_ftrace_regs, epc=
+));
+        DEFINE(FREGS_RA,            offsetof(struct __arch_ftrace_regs, ra)=
+);
+
 
 Thanks,
-Stefano
 
->+
-> 		if (put_user(cid, p) != 0)
-> 			retval = -EFAULT;
-> 		break;
->
->-- 
->2.49.0
->
+Alex
 
+>    2 errors generated.
+>    make[3]: *** [scripts/Makefile.build:98: arch/riscv/kernel/asm-offsets=
+.s] Error 1
+>    make[3]: Target 'prepare' not remade because of errors.
+>    make[2]: *** [Makefile:1282: prepare0] Error 2
+>    make[2]: Target 'prepare' not remade because of errors.
+>    make[1]: *** [Makefile:248: __sub-make] Error 2
+>    make[1]: Target 'prepare' not remade because of errors.
+>    make: *** [Makefile:248: __sub-make] Error 2
+>    make: Target 'prepare' not remade because of errors.
+>
+>
+> vim +/arch_ftrace_get_regs +190 include/linux/ftrace.h
+>
+> 762abbc0d09f7a Masami Hiramatsu (Google  2024-12-26  184)
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  185) static __always=
+_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  186) {
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  187)       if (!freg=
+s)
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  188)               r=
+eturn NULL;
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  189)
+> 02a474ca266a47 Steven Rostedt (VMware    2020-10-27 @190)       return ar=
+ch_ftrace_get_regs(fregs);
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  191) }
+> d19ad0775dcd64 Steven Rostedt (VMware    2020-10-28  192)
+>
+> :::::: The code at line 190 was first introduced by commit
+> :::::: 02a474ca266a47ea8f4d5a11f4ffa120f83730ad ftrace/x86: Allow for arg=
+uments to be passed in to ftrace_regs by default
+>
+> :::::: TO: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> :::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
