@@ -1,175 +1,113 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE31F236A70
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C2923AB98
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750409513; cv=none; b=L8LBDmYCM+kI5DxwnkOWBd7BS6iKuSVJCpItQcO2L+PfbZxKbMdCb5ACpI1e8JItRUptpQTbIr5TnrgF0hcVEW4GmlV1NoD1sbFyVUy9WCt5pGUqaaKaG97T2jIQieRy/rZzFr/D4nYVLjb2uuC0l7u6o3BvqdIIEV7tkv4K7Qs=
+	t=1750409521; cv=none; b=jxIJdjslPT0bvAE5dLJ8tK/xj+4PNJ1CyuI8Z1gqSz25IxF7dP6EXhIpWRJNALqiLFfhp9yv0js+sSdJcrUG+s3+ZELLX4LBhEJLYV/D2LoJ0O1iZbC8XqWUHgU0iMKRR7wZWz8VI7QcgR+1QUhkXb5qyW288j+04t8xware/dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750409513; c=relaxed/simple;
-	bh=fCuTA6LPdyrFAjMo1EhgMA4VBvcMEs7/AdDuWpFs4DA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NOtKTTYZ6mJ3/K4O/G7E2r9jZv/z7SHE4+XtP7cx2Q9/7MQCcPVAB6KX8iWK4bMKcRByS2/zoCglnksw0K1+pzV+7txUDXStfoqMbns0q2xTCliBlhAljaUDrSETZwmfcsd+yUq1lAb54N3yGocn0ncuBD48QYLBp3W7GgUIFRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uSXTO-0000IF-5M; Fri, 20 Jun 2025 10:51:46 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uSXTN-004QzW-28;
-	Fri, 20 Jun 2025 10:51:45 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uSXTN-007nXi-1r;
-	Fri, 20 Jun 2025 10:51:45 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	Phil Elwell <phil@raspberrypi.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v1 1/1] net: usb: lan78xx: fix WARN in __netif_napi_del_locked on disconnect
-Date: Fri, 20 Jun 2025 10:51:44 +0200
-Message-Id: <20250620085144.1858723-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750409521; c=relaxed/simple;
+	bh=wgq+pPQlLwigoibbI4Mg+rGu4bWJwFQ6I/BJULaB7/w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jt4OfgQU/BuOFP3OYzO6pkZCNFzEz1Z6OjT+IHBwqUnYxKihHV/oUybkfBUXcV6imUSX0gGr4CQU6g+GLV+7D8OdzBGCcpirc0wn8B9nCNvtN8SuGqiNGor3SHHwWMj4ydCuyLi4DL3p0W/MSwCQuLnHwrsL9Aaav6WEMKmDRBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VaAop4LQ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VaAop4LQ"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K7TDvI023584;
+	Fri, 20 Jun 2025 08:51:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=7z86dh
+	4qXhNZTYI7PvvY2BHZbsWCQbSOuedQNshZIAQ=; b=VaAop4LQi1tDz+S2SE0oB2
+	bVkcpZJjY8k37nmcio1QZGyqxCK0YjpZhBi7xbhNtmbsd5BX6kEr+Wu7p9amWETw
+	/LUElFcYHnuKUER+9LE0yMj3vjx2eNjBtfIicOC1RZhlj+qYcBAXw8WEFh8A6gaa
+	YFoENTjpjU3kogNlfe5ISxXzIxKPrnDyU+A8A61fzTFKaq3fgSUE9JQSctGBcYST
+	DwqiFVhAruTKP7xeQp6uqZKVMoQAsN4GRfzEAODeQ2cHyIX8CM+n3TM6HiWtS737
+	+YoZHqX1DpC71VmetsaFRIOL1AexsfYcUMPXSQETCXvPLwr6Q75uHcFJu5LEhncQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4794qps8nb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 08:51:51 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55K8p8g8002153;
+	Fri, 20 Jun 2025 08:51:51 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4794qps8n9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 08:51:51 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55K4kMvx011236;
+	Fri, 20 Jun 2025 08:51:50 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 479kdttgx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 08:51:50 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55K8pn3O27722412
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 08:51:50 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AD09058045;
+	Fri, 20 Jun 2025 08:51:49 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 32F3558050;
+	Fri, 20 Jun 2025 08:51:47 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com (unknown [9.90.171.232])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 20 Jun 2025 08:51:46 +0000 (GMT)
+Message-ID: <f617320f0afc758e408b3f2bd525ac942729c83e.camel@linux.ibm.com>
+Subject: Re: [PATCH] misc: ocxl: Replace scnprintf() with sysfs_emit() in
+ sysfs show functions
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: Ankit Chauhan <ankitchauhan2065@gmail.com>, fbarrat@linux.ibm.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date: Fri, 20 Jun 2025 18:51:45 +1000
+In-Reply-To: <20250620024705.11321-1-ankitchauhan2065@gmail.com>
+References: <20250620024705.11321-1-ankitchauhan2065@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: s0yeC42CHfrGHiF9sxlppQA7CrNi-twi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA2NCBTYWx0ZWRfX/DjREGvYfGkF sw8VRNx8HZDogKyJcnAtGoj3xtknJqhtdYIMayQU6oqbzHSpQoXio7Ap/GAq/3BUTSZA1ny1S9n NEjOSvPGZ4bC1QzhZhwHmMI5A7MXSPS14IAMihX5bT/ItWAVF1eWNdTit+BQOqUNcRQwCGysulK
+ DAXMlYKl/CxQbbcx7XM/iB7GTfDefCJdp2aclceK6UUZkmuZmYCTmi7EJIhaT0BzM4+M46Qqaqu KE1AG+HOtbEtFQPpwbdDbGqva8XSNUMLQ4Tm76/ymw0NEPsgG0CzhIRPmsh0VAR4V65bCPQilce QyOtH2J8PxJ2wJHAiuoKZ3M08RbCFnwJshRNylJk5XYC2gQt2BxC6GF9MLkYJ7FbNsrt7N2x9U7
+ sJaX0QddOH95mZ/gIVJ3oyIkpYnjDG5FLEmaDXlsZosvawO/4DKUKztV6OMsX8Bhy7KKK4Dd
+X-Authority-Analysis: v=2.4 cv=NYfm13D4 c=1 sm=1 tr=0 ts=68552127 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=wAt-YwC9e8J5cFVFfmUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: HiMfCx_T6oSwTWmiVMC8VdL7YE42I-bk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_03,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=639 mlxscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200064
 
-A WARN may be triggered in __netif_napi_del_locked() during USB device
-disconnect:
+On Fri, 2025-06-20 at 08:17 +0530, Ankit Chauhan wrote:
+> Replace scnprintf() with sysfs_emit() in sysfs show functions.
+> These helpers are preferred in sysfs callbacks because they
+> automatically
+> handle buffer size and improve safety and readability.
+>=20
+> Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
 
-  WARNING: CPU: 0 PID: 11 at net/core/dev.c:7417 __netif_napi_del_locked+0x2b4/0x350
+Thanks for the cleanup!
 
-This occurs because NAPI remains enabled when the device is unplugged and
-teardown begins. While `napi_disable()` was previously called in the
-`lan78xx_stop()` path, that function is not invoked on disconnect. Instead,
-when using PHYLINK, the `mac_link_down()` callback is guaranteed to run
-during disconnect, making it the correct place to disable NAPI.
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-Similarly, move `napi_enable()` to `mac_link_up()` to pair the lifecycle
-with actual MAC state.
-
-Full trace:
- lan78xx 1-1:1.0 enu1: Failed to read register index 0x000000c4. ret = -ENODEV
- lan78xx 1-1:1.0 enu1: Failed to set MAC down with error -ENODEV
- lan78xx 1-1:1.0 enu1: Link is Down
- lan78xx 1-1:1.0 enu1: Failed to read register index 0x00000120. ret = -ENODEV
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 11 at net/core/dev.c:7417 __netif_napi_del_locked+0x2b4/0x350
- Modules linked in: flexcan can_dev fuse
- CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Not tainted 6.16.0-rc2-00624-ge926949dab03 #9 PREEMPT
- Hardware name: SKOV IMX8MP CPU revC - bd500 (DT)
- Workqueue: usb_hub_wq hub_event
- pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
- pc : __netif_napi_del_locked+0x2b4/0x350
- lr : __netif_napi_del_locked+0x7c/0x350
- sp : ffffffc085b673c0
- x29: ffffffc085b673c0 x28: ffffff800b7f2000 x27: ffffff800b7f20d8
- x26: ffffff80110bcf58 x25: ffffff80110bd978 x24: 1ffffff0022179eb
- x23: ffffff80110bc000 x22: ffffff800b7f5000 x21: ffffff80110bc000
- x20: ffffff80110bcf38 x19: ffffff80110bcf28 x18: dfffffc000000000
- x17: ffffffc081578940 x16: ffffffc08284cee0 x15: 0000000000000028
- x14: 0000000000000006 x13: 0000000000040000 x12: ffffffb0022179e8
- x11: 1ffffff0022179e7 x10: ffffffb0022179e7 x9 : dfffffc000000000
- x8 : 0000004ffdde8619 x7 : ffffff80110bcf3f x6 : 0000000000000001
- x5 : ffffff80110bcf38 x4 : ffffff80110bcf38 x3 : 0000000000000000
- x2 : 0000000000000000 x1 : 1ffffff0022179e7 x0 : 0000000000000000
- Call trace:
-  __netif_napi_del_locked+0x2b4/0x350 (P)
-  lan78xx_disconnect+0xf4/0x360
-  usb_unbind_interface+0x158/0x718
-  device_remove+0x100/0x150
-  device_release_driver_internal+0x308/0x478
-  device_release_driver+0x1c/0x30
-  bus_remove_device+0x1a8/0x368
-  device_del+0x2e0/0x7b0
-  usb_disable_device+0x244/0x540
-  usb_disconnect+0x220/0x758
-  hub_event+0x105c/0x35e0
-  process_one_work+0x760/0x17b0
-  worker_thread+0x768/0xce8
-  kthread+0x3bc/0x690
-  ret_from_fork+0x10/0x20
- irq event stamp: 211604
- hardirqs last  enabled at (211603): [<ffffffc0828cc9ec>] _raw_spin_unlock_irqrestore+0x84/0x98
- hardirqs last disabled at (211604): [<ffffffc0828a9a84>] el1_dbg+0x24/0x80
- softirqs last  enabled at (211296): [<ffffffc080095f10>] handle_softirqs+0x820/0xbc8
- softirqs last disabled at (210993): [<ffffffc080010288>] __do_softirq+0x18/0x20
- ---[ end trace 0000000000000000 ]---
- lan78xx 1-1:1.0 enu1: failed to kill vid 0081/0
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-This patch is intended for `net-next` since the issue existed before the
-PHYLINK migration, but is more naturally and cleanly addressed now that
-PHYLINK manages link state transitions.
----
- drivers/net/usb/lan78xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 565b9847e2ab..598fe0390112 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2281,6 +2281,7 @@ static void lan78xx_mac_link_down(struct phylink_config *config,
- 	int ret;
-
- 	netif_stop_queue(net);
-+	napi_disable(&dev->napi);
-
- 	/* MAC reset will not de-assert TXEN/RXEN, we need to stop them
- 	 * manually before reset. TX and RX should be disabled before running
-@@ -2505,6 +2506,7 @@ static void lan78xx_mac_link_up(struct phylink_config *config,
- 	if (ret < 0)
- 		goto link_up_fail;
-
-+	napi_enable(&dev->napi);
- 	netif_start_queue(net);
-
- 	return;
-@@ -3421,7 +3423,6 @@ static int lan78xx_open(struct net_device *net)
-
- 	lan78xx_init_stats(dev);
-
--	napi_enable(&dev->napi);
-
- 	set_bit(EVENT_DEV_OPEN, &dev->flags);
-
-@@ -3494,7 +3495,6 @@ static int lan78xx_stop(struct net_device *net)
- 		timer_delete_sync(&dev->stat_monitor);
-
- 	clear_bit(EVENT_DEV_OPEN, &dev->flags);
--	napi_disable(&dev->napi);
-
- 	lan78xx_terminate_urbs(dev);
-
---
-2.39.5
-
+--=20
+Andrew Donnellan    OzLabs, ADL Canberra
+ajd@linux.ibm.com   IBM Australia Limited
