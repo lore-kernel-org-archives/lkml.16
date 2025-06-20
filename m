@@ -1,122 +1,99 @@
-Received: from sg-1-12.ptr.blmpb.com (sg-1-12.ptr.blmpb.com [118.26.132.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C943288CA7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B8027D773;
+	Fri, 20 Jun 2025 10:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413789; cv=none; b=DeFnkTmEtcF1Wk1UwRJcq+dtiQBoMKOdcor7Vvw+l8XCwp/pz8qVR/Fi6wNzvuD22TJKtEJkdp9oAKVSNYX6MaxDHl5OQjMU6pLevV2/Rxe3XTOlf7GTYhQmenxs3iziPYT95jCTMSAdiq3sE3b9YxAZKXji0Feerq80+nMBueA=
+	t=1750413802; cv=none; b=oP+8aLp81EE+2mL3qnMZGBthRi+HuO/BQpQDRaBfi1WWwSB7tcLjQfS9Nr+w3mrxABINvOTAn6D778dp0HH6dEeNawnaYhlmo7AOcTJBllspGxEdz2d7sFNzDluH0cQWccdC2Nz8L7fSZeSzmc6fW72j1N60u2K0zeh2fqrIRtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413789; c=relaxed/simple;
-	bh=VenEYCmf5+Cq+F3aAXFyGG+0DCgLJ/B+npgqLEJSSaY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:In-Reply-To:Subject:
-	 References:To:Cc:From; b=pA7F7jBnNLZ3ahv8Fw2bZa23Ou2/sOvvjyy7AXl5HyX7e+p2lZrjuZrvKZCdtg0yXkZYbz7iNPjUZ+u2qA3xeTEF/br/RjPv8NhdAPN7ItkKnwm1lniJKhuVWrZ5AZaLPwk+TAXY0QwO385wNbTP3cwl3R242UI50Jo5KeN7WGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=ahss/Lio; arc=none smtp.client-ip=118.26.132.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750413802; c=relaxed/simple;
+	bh=iKc91cdYdfE1q/34hs9vETkYhsg7TdYC4qPkcuYH0do=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UT3/LXWw5/+nTuCCeqcj8MTAk1z2EhfiztWPJjxj4l6kj6UWmBamEcXF4TM9mPu2JlrsYfPw6uJxHwoPJ/fcoVCnns3QD/rOKAuVFl42ZMah3X2IAHHcdQXci4HQxLXFjUZEis+tqInHocK9z6qcTH2saL7bl2gFle90uaeZqBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NMyYRy+N; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="ahss/Lio"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750412979;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=RUHHvhpWyqtsBfoigWTcvYU+iHd7K6l5Yp1DjgDh7AU=;
- b=ahss/Lio4bMsKuefCMkJwlpMefSVD8gPXtmHvRyXbcDszSC7bouYBCIZ7fQr93OAEWZDWx
- tyDmQ9xx7xbkftZs0nW/bSFMccWTVrA9zn0hDUXai5Lj3V0uiqIFhofqVwaNFo/t2Hbwcq
- BmmrP5PpLwIhSivq4I8QpSabfYSQC6LxAOY1SO7n8uqE3pVozjY3pofWTadRDO8eq2Fxud
- 8L05RyhYISrdlr90Q8X4K+d8zltgE7nMrwHusMlgBdVbc0P9P4ogx2vpI5sVC76T65omoj
- qsY0ubgG0/GTA606dKE+oVv+LWOG4yuzEt+875u0JWVfcyvZJz1UQswDlOtJFQ==
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NMyYRy+N"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ECEAC43191;
+	Fri, 20 Jun 2025 10:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750413793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i4izFgzZ5VPbCB317VwjTDgDBibegjlGP0F7T7bAVpM=;
+	b=NMyYRy+NchvpVq26Lyf/CmXOc7kl5vdr928epMCxdtfsz6Dml2NY+roReLQzEONGFwnpl/
+	yFRAAF1bIp753ZSFDhglsCU09vecz02+z80fmVzkLWUo5uwfApJbg/svsECspPwRETuusx
+	DSHmJeHC85baGQJS8tjKFuKEd352Urur1ugt6UvIWb6C2tEAhXH4xh0sVi97UGvToU4XDT
+	2MTTboj6pLz2qaM+tRx8m7XenALxY7OaRaEVeW3rIToGjPUr67vmOBKYUmbqpigepcHpNK
+	IKTnHu11krZA8kuKAYDeaTvvb3BOnY4FKdX4aiOY6FqD3Wvg9LRAUWwfYqrGkQ==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Fri, 20 Jun 2025 12:02:39 +0200
+Subject: [PATCH net-next 1/2] dt-bindings: pse: tps23881: Clarify channels
+ property description
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-User-Agent: Mozilla Thunderbird
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date: Fri, 20 Jun 2025 17:49:35 +0800
-Message-Id: <e2b5fcd8-cb72-43ff-802a-57983880e377@lanxincomputing.com>
-In-Reply-To: <effe218d368a37e397b6526f876b33322dbb6e20.1750164414.git.zhouquan@iscas.ac.cn>
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-Subject: Re: [PATCH 3/5] RISC-V: KVM: Allow bfloat16 extension for Guest/VM
-X-Lms-Return-Path: <lba+268552eb1+4be682+vger.kernel.org+liujingqi@lanxincomputing.com>
-Content-Language: en-US
-Received: from [127.0.0.1] ([180.165.3.105]) by smtp.feishu.cn with ESMTPS; Fri, 20 Jun 2025 17:49:36 +0800
-References: <cover.1750164414.git.zhouquan@iscas.ac.cn> <effe218d368a37e397b6526f876b33322dbb6e20.1750164414.git.zhouquan@iscas.ac.cn>
-To: <zhouquan@iscas.ac.cn>, <anup@brainfault.org>, <ajones@ventanamicro.com>, 
-	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
-	<palmer@dabbelt.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
-	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+Message-Id: <20250620-poe_doc_improve-v1-1-96357bb95d52@bootlin.com>
+References: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
+In-Reply-To: <20250620-poe_doc_improve-v1-0-96357bb95d52@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Piotr Kubik <piotr.kubik@adtran.com>, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-dd21f
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnr
+ dgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 6/17/2025 9:10 PM, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
->
-> Extend the KVM ISA extension ONE_REG interface to allow KVM user space
-> to detect and enable Zfbmin/Zvfbfmin/Zvfbfwma extension for Guest/VM.
->
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->   arch/riscv/include/uapi/asm/kvm.h | 3 +++
->   arch/riscv/kvm/vcpu_onereg.c      | 6 ++++++
->   2 files changed, 9 insertions(+)
->
-> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> index 56959d277e86..79a5ac86597c 100644
-> --- a/arch/riscv/include/uapi/asm/kvm.h
-> +++ b/arch/riscv/include/uapi/asm/kvm.h
-> @@ -186,6 +186,9 @@ enum KVM_RISCV_ISA_EXT_ID {
->   	KVM_RISCV_ISA_EXT_ZAAMO,
->   	KVM_RISCV_ISA_EXT_ZALRSC,
->   	KVM_RISCV_ISA_EXT_ZICBOP,
-> +	KVM_RISCV_ISA_EXT_ZFBFMIN,
-> +	KVM_RISCV_ISA_EXT_ZVFBFMIN,
-> +	KVM_RISCV_ISA_EXT_ZVFBFWMA,
->   	KVM_RISCV_ISA_EXT_MAX,
->   };
->   
-> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-> index d444ec9e9e8e..2ba3f2c942ee 100644
-> --- a/arch/riscv/kvm/vcpu_onereg.c
-> +++ b/arch/riscv/kvm/vcpu_onereg.c
-> @@ -65,6 +65,7 @@ static const unsigned long kvm_isa_ext_arr[] = {
->   	KVM_ISA_EXT_ARR(ZCF),
->   	KVM_ISA_EXT_ARR(ZCMOP),
->   	KVM_ISA_EXT_ARR(ZFA),
-> +	KVM_ISA_EXT_ARR(ZFBFMIN),
->   	KVM_ISA_EXT_ARR(ZFH),
->   	KVM_ISA_EXT_ARR(ZFHMIN),
->   	KVM_ISA_EXT_ARR(ZICBOM),
-> @@ -89,6 +90,8 @@ static const unsigned long kvm_isa_ext_arr[] = {
->   	KVM_ISA_EXT_ARR(ZTSO),
->   	KVM_ISA_EXT_ARR(ZVBB),
->   	KVM_ISA_EXT_ARR(ZVBC),
-> +	KVM_ISA_EXT_ARR(ZVFBFMIN),
-> +	KVM_ISA_EXT_ARR(ZVFBFWMA),
->   	KVM_ISA_EXT_ARR(ZVFH),
->   	KVM_ISA_EXT_ARR(ZVFHMIN),
->   	KVM_ISA_EXT_ARR(ZVKB),
-> @@ -170,6 +173,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
->   	case KVM_RISCV_ISA_EXT_ZCF:
->   	case KVM_RISCV_ISA_EXT_ZCMOP:
->   	case KVM_RISCV_ISA_EXT_ZFA:
-> +	case KVM_RISCV_ISA_EXT_ZFBFMIN:
->   	case KVM_RISCV_ISA_EXT_ZFH:
->   	case KVM_RISCV_ISA_EXT_ZFHMIN:
->   	case KVM_RISCV_ISA_EXT_ZICBOP:
-> @@ -192,6 +196,8 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
->   	case KVM_RISCV_ISA_EXT_ZTSO:
->   	case KVM_RISCV_ISA_EXT_ZVBB:
->   	case KVM_RISCV_ISA_EXT_ZVBC:
-> +	case KVM_RISCV_ISA_EXT_ZVFBFMIN:
-> +	case KVM_RISCV_ISA_EXT_ZVFBFWMA:
->   	case KVM_RISCV_ISA_EXT_ZVFH:
->   	case KVM_RISCV_ISA_EXT_ZVFHMIN:
->   	case KVM_RISCV_ISA_EXT_ZVKB:
+Improve the channels property description to better explain the
+relationship between physical delivery channels and PSE PI pairsets.
+The previous description was unclear about how channels are referenced
+and used in the port matrix mapping.
 
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+ Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Thanks,
-Nutty
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
+index 3a5f960d8489..bb1ee3398655 100644
+--- a/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
++++ b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
+@@ -30,10 +30,12 @@ properties:
+     maxItems: 1
+ 
+   channels:
+-    description: each set of 8 ports can be assigned to one physical
+-      channels or two for PoE4. This parameter describes the configuration
+-      of the ports conversion matrix that establishes relationship between
+-      the logical ports and the physical channels.
++    description: |
++      Defines the 8 physical delivery channels on the controller that can
++      be referenced by PSE PIs through their "pairsets" property. The actual
++      port matrix mapping is created when PSE PIs reference these channels in
++      their pairsets. For 4-pair operation, two channels from the same group
++      (0-3 or 4-7) must be referenced by a single PSE PI.
+     type: object
+     additionalProperties: false
+ 
+
+-- 
+2.43.0
+
