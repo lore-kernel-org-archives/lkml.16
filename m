@@ -1,120 +1,150 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183471C8632;
-	Fri, 20 Jun 2025 03:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04535819
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388413; cv=none; b=MLNTY8LJcjpkVPormPYPY5qyGDqk5MLcCw7uffIs8ZRJqx8Mco/9VZCR6gJwChEKOKTTH27QdRfntmtSTikc9OxMJfFSsA7ZTCi1Ss6gaTDvNiP5Cwz4UJ4+Ir2Ffsn99BFkwEGbLqoajGukdBcvbL7MyFRLCFqCXf7zWT+lT0w=
+	t=1750388462; cv=none; b=W1ku2gceM6WR+xlvWAVwMlv6CAHgWp+uzPF/r4va2lxMYavOld3B8dmq7UoxKb8mYOYGHGRI0eCXlERFlAKZ2rYRDe6X9GaaLcf4hnJDa9dmZAl6yYQmyUWI2HNBmzXcfBTH5HH0gsZ6GWgw3vUOfJFK8RVpVB7xaqBV83C4mX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388413; c=relaxed/simple;
-	bh=492FkEcbUqlitli7afwsSzul8nCEhg3OOiELnPHhD0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eApFHcZNWjFt6us0rJrtMkYr4ZfA4qDRaNTyZiM4ePj1RrMWmQB1C14ahmZzYCCJDPCklmTil91TVbGWIs+3brPvohdjrJAmmVEH+rNt6JdQoExcQxsZXu9bGPr9VFw2AgXjJ/gJODEO6hGOXMTfeWZOXn1O0CAYpfZg8V9pfHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ch7S/74U; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750388462; c=relaxed/simple;
+	bh=yK0QfK4ZZxsvW9hBbrEOHPwZIvhCT7JXP6hfmrcRiuA=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ijDUTzyQHq2pmKMZY1dePI3FXY6MomLMkp913905OMONVlMqM6NbI3GqNvpDG6BNa6arkG7YjDxf5usoPrVr6W6J0qA3TZlRm1ay0wW5nNEsTe9kEthl5QXKnxeICRf4Epz1G3tepaUaGQz5mO09IYUAi7o2VQU3myVleLoT9L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pi1JJyOn; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ch7S/74U"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cfb79177so7152785e9.0;
-        Thu, 19 Jun 2025 20:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750388410; x=1750993210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ap5dRT8eTtOkg8Wh5kHr4/xuZQ7FxGdTJiWZWoXWBZA=;
-        b=ch7S/74UGPW5tqHHhimIC6AlsThoNicwoRNPMmXjtoSuoEHCBiK7ChldCDxOSjURKH
-         e/uibot8bJbu9/885u2B+ooI7BHwsKW5Ht3PcPzn0bZyBI7UZpWdEUAjHNZVwhWxf30m
-         NKxccYV5nry9Gh2mbt8xmXAtFhqezlD343Cl3RoPFxW9X/exmNUw/BmZOLucGdAVEOT0
-         8zIDt4gUNeBmC43IwLkGtni9u442yf8qo52IgHi9eYGeTAgm+e5MxXTO+/eHv8mPNyiu
-         zpqmKSTBhd9WprBbBTrk/lmY1mqSUOAPnttHMll2Qso1zPw6OW4tbUOViA6xsURyUDaR
-         jaXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750388410; x=1750993210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ap5dRT8eTtOkg8Wh5kHr4/xuZQ7FxGdTJiWZWoXWBZA=;
-        b=AeR7ZncJrVlBAlVTBfYT+/VDVDNFZpQi2klTCQuJU9/2B1pDxGxS7JSDnFwbGOx8o/
-         FCnuREMVrDGBsRLLgCVEnE6Ztb3zEHXO5c0+HgrqfBbfcIEgdU5gG5QBSQFRQmutRbWk
-         5oVKFlGbDOqck6kqVJPoLdGFrrvoApb5i9Bq6WfRCXDn0p+C9JvmIo3ELrscxPq/g/Od
-         ELxBoA7q/f2JGHjjCUpSSRpxL8PYrCztGQYMCgqdBzfOQLLIpfkaxlduqLTvHm4W0fKp
-         BE86mjgq0Xlp6reGVtgv/N+81Jzvh5/st4IH1dt6QIVBtKpiUzl7tmINTfIC0OOOwz6R
-         5dcg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6p4JN9JuP0HeEcJaFFuY28QahhsR7ut+Lwc121W4+9at74EhVQV4UnrISdKEZH95ONoOwawsAkqJrZ9E4k7wdilTD@vger.kernel.org, AJvYcCVq+Lz1vs9rK/Fa7E2rSyaqkYvHD0ye2wnILPzi7ptGJOfW0Hpp3wHzm2pyhdK37winvxhowfnqbpzpCoab@vger.kernel.org, AJvYcCXNRHji9m09eTjEK3A2g+BzGg3X01ycXAxNwVMA7TLLWRYZzya7pgwceotpVz9pZo1EvEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy35cH12Beo8R4DaYp4JpQryFFLfAXTMnJwh0nAjeVdIH02zAOU
-	GcanvuMzDEXF/vzmOjpZgtotW8sXxD+IRm1l7XBjr6TO5JVg28/J0kftoXPvx1ZBxAWCRWb/gpK
-	g5rUEL4SFTm3TF4M8EVam8vmJ+P4SR0Q=
-X-Gm-Gg: ASbGncvo6FQoiizkIX69rxsL0YHPojEJQJJ2RdRHRDdrOB1f1A3G8Vn7IXw5zZYawPS
-	ZW1vsPHL72LNJ5yNbMilDeyRe+ti1bZ/O1CvM5UlGw6Zk90r2F7/j4cwMBiUcqk4rGyFyyCky9W
-	3R16E/WHfRX5UtVUP+zNLgfNAcJtoiFopWbbo7YNdr82I8MRV4DhlgiURFoftw2K5c+/R/LP5fr
-	tnRwxDXTHs=
-X-Google-Smtp-Source: AGHT+IGsnhG6fTAAT1UObGDFDFR647lPms9A8JEG/JJiKLiJ1UD/icxHvsb5XUs4Md6E5j0VCaYuwe5RdMxO1nOqvSk=
-X-Received: by 2002:a05:6000:4182:b0:3a4:eecd:f4d2 with SMTP id
- ffacd0b85a97d-3a6d12dafc8mr721486f8f.38.1750388410067; Thu, 19 Jun 2025
- 20:00:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pi1JJyOn"
+X-UUID: c83ec1a24d8211f0b33aeb1e7f16c2b6-20250620
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yK0QfK4ZZxsvW9hBbrEOHPwZIvhCT7JXP6hfmrcRiuA=;
+	b=pi1JJyOnWxkyPEfTE5AYixZMXKSt8WyfyXAcX9lineZ2knnwS9U7whZmzzoSIwAX65vp2htCCLc+WoCugLimEHbs5xRjZ17tsfAxLtwcSl0o/osDblSy/OlDcUnMoaVxS6Epk34o5v9+WhU94/6soy9DdKgA7Qls4PkzMoBNUPo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:4749fcf9-ad0f-4c20-8efd-db8f9ab52877,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:09905cf,CLOUDID:f4b8a828-fdd2-4021-9c0c-83548fdcf243,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: c83ec1a24d8211f0b33aeb1e7f16c2b6-20250620
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 453986597; Fri, 20 Jun 2025 11:00:54 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 20 Jun 2025 11:00:53 +0800
+Received: from [10.233.130.16] (10.233.130.16) by mtkmbs13n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.1258.39 via Frontend
+ Transport; Fri, 20 Jun 2025 11:00:53 +0800
+Message-ID: <6ec534be0618de3e2b4d81555e5f24155326c0b9.camel@mediatek.com>
+Subject: Re: [RFC PATCH 1/1] sched/deadline: Fix RT task potential
+ starvation when expiry time passed
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Juri Lelli <juri.lelli@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, "Ben
+ Segall" <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, jstultz
+	<jstultz@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+Date: Fri, 20 Jun 2025 11:00:53 +0800
+In-Reply-To: <aFQM8TdZIIvvGv8T@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250615131129.954975-1-kuyo.chang@mediatek.com>
+	 <aFAyN4rfssKmbUE5@jlelli-thinkpadt14gen4.remote.csb>
+	 <089882f95b1b910f7feecddd0ad9b17f38394c64.camel@mediatek.com>
+	 <aFQM8TdZIIvvGv8T@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619034257.70520-1-chen.dylane@linux.dev> <20250619034257.70520-2-chen.dylane@linux.dev>
- <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com> <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev>
-In-Reply-To: <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 19 Jun 2025 19:59:58 -0700
-X-Gm-Features: Ac12FXwaZwTIE2k7zGGdi2J1vur8ZmKROFqRXFOqv5Xmlf0XVxISh9G5k-LHsFc
-Message-ID: <CAADnVQJcdVCKPu8aPPj5hZExNTFYAYTd5xkF=Ljfm__+ugirGg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 7:46=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 2025/6/20 01:17, Alexei Starovoitov =E5=86=99=E9=81=93:
-> > On Wed, Jun 18, 2025 at 8:44=E2=80=AFPM Tao Chen <chen.dylane@linux.dev=
-> wrote:
-> >>
-> >> Show kprobe_multi link info with fdinfo, the info as follows:
-> >>
-> >> link_type:      kprobe_multi
-> >> link_id:        1
-> >> prog_tag:       a15b7646cb7f3322
-> >> prog_id:        21
-> >> type:   kprobe_multi
-> >
-> > ..
-> >
-> >> +       seq_printf(seq,
-> >> +                  "type:\t%s\n"
-> >> +                  "kprobe_cnt:\t%u\n"
-> >> +                  "missed:\t%lu\n",
-> >> +                  kmulti_link->flags =3D=3D BPF_F_KPROBE_MULTI_RETURN=
- ? "kretprobe_multi" :
-> >> +                                        "kprobe_multi",
-> >
-> > why print the same info twice ?
-> > seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
-> > in bpf_link_show_fdinfo() already did it in a cleaner way.
-> >
->
-> link_type only shows 'kprobe_multi', maybe we can show the format like:
+On Thu, 2025-06-19 at 15:13 +0200, Juri Lelli wrote:
+>=20
+> External email : Please do not click links or open attachments until
+> you have verified the sender or the content.
+>=20
+>=20
+> On 18/06/25 22:20, Kuyo Chang wrote:
+>=20
+> ...
+>=20
+> > When dl_defer_running =3D 1 and the running time has been exhausted,
+> > it means that the dl_server should stop at this point.
+> > However, if start_dl_timer() returns a failure, it indicates that
+> > the
+> > actual time spent consuming the running time was unexpectedly long.
+> >=20
+> > At this point, there are two options:
+> > [as-is] 1. re-enqueuing the dl entity with ENQUEUE_REPLENISH will
+> > clear
+> > the throttled flag
+> > and re-enqueue the dl entity to keep the fair_server running.
+> > enqueue_dl_entity(dl_se, ENQUEUE_REPLENISH);
+> > =3D> replenish_dl_entity
+> > =C2=A0 =3D> replenish_dl_new_period(dl_se, rq);
+> > =C2=A0 =3D> dl_se->dl_yielded =3D 0;
+> > =C2=A0 =3D> dl_se->dl_throttled =3D 0;
+> > =3D> __enqueue_dl_entity(dl_se);
+> >=20
+> > [to-be] 2. To avoid RT latency, the fair_server should remain
+> > throttled
+> > while replenishing the dl_se.
+> > Once replenishing is complete, we can ensure that a timer is
+> > successfully started.
+> > When the timer is triggered, the throttled state will be cleared,
+> > ensuring that RT tasks can execute during this interval.
+> >=20
+> > It is a policy decision for dealing with the case of failure in
+> > start_dl_timer().
+> > The second approach is better for real-time (RT) latency in my
+> > opinion,
+> > as RT tasks must be prioritized.
+>=20
+> OK, I think I see your points, but I am still not sure I fully
+> understand the link with the issue you describe in the changelog -
+> the
+> relation with "DL replenish lagged too much", that is.
+>=20
+> Could you please expand on the details of the situation that is
+> opening
+> up for the issue your patch is addressing? Do you know why we hit the
+> corner case that causes the warning in the first place?
+>=20
 
-Ohh. Especially so. It would be wrong and confusing to display:
-link_type:      kprobe_multi
-type: kretprobe_multi
+"DL replenish lagged too much" means the fair_server took much longer
+than expected to use up its running time,
+so the deadline fell way behind the clock (which is also why
+start_dl_timer() failed).=20
+In this situation, just replenishing one dl_period isn=E2=80=99t enough to
+catch up.
+=20
+A corner case is when there are too many IRQs or IPIs in the system.
+In this case, runtime gets consumed very slowly, and the fair_server
+keep running without being throttled.
+Even the runtime is exhausted finally, the fair_server would be
+restarted immediately.
+In the end, IRQs, IPIs, and fair tasks can take over the whole system,
+no chance for RT tasks to run.
 
-Let's fix 'link_type' to display it properly.
+> I would like to understand exactly what we are trying to fix before
+> deciding how to fix it, sorry if I am being dense. :-)
+>=20
+> Thanks,
+> Juri
+>=20
+
