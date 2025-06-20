@@ -1,121 +1,170 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031B018E20;
-	Fri, 20 Jun 2025 17:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB291FDA6D
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440913; cv=none; b=GC/ibMYBmFG/J+9Bl0AiyxXcSKBtPlGffFMya8++tZXn4cTLyIXnCxqahFS7RwK3w/LXEXVPecfkfOQcqQ61LVRct5z3KBekwz1xudorm4MDAves+Wmnmsde2Mw/Lb3jcsEA4W/A2IpUcO9+Pa9KWJwc2b+PPKu3CMUJEIKm2+k=
+	t=1750441035; cv=none; b=pLL3Cma4PmdmjpA8ZPHpHYKP2+osRflym54F+R879gTOGFP/41H+uQG4JL6j287YKzZNcCPI8knqAedjSHg50RByKI6b5Pg6T3dQH1VgW5LHy9e8jGeMdAkFtpefMwAi3mc85+JwKpst4G3lt62ONccMNyn33M5ZwzEoAl3+RGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440913; c=relaxed/simple;
-	bh=AgDsktD0a5AkGVgIpm4akmO9rDfL6WCNI0qCVJifB8I=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=LIXQPGG40SnM+4pB3bEw1Ovjo4KDJsZg78GnLblxbHR5nqt8OhdiGEXC84OJgFAJn1K0/NQdesUU0ctHAmFjbuKtWWQOlsU6B7RmFGhYzTZTUrtwZUjPHQra1Ga3WDS6h5WtKAvJA0VJlvRLEkjeqWXmNyRB4/RxmgVD1EPz8vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EDF6BpMq; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750441035; c=relaxed/simple;
+	bh=PS5s/QBW43OvzQxcKYQhEXkr0Batot5Uxg2zA/CNRwU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=i3pl6PaeQB5UYlLllzsghwcbYw/Zbvzt8vCLYjclabMnt/b+VooRm/GTwRmWFD5xWYuvKzXfy5in/jqmyuAQWMHbu56wtrTtgKkYtcb3HVCI4LmFCVOxqKZNi1zAlq7QVtx8d+EtEveBVKMFA+c08u5g2kNjk95Xg/Voyk0LjOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=RfUgABe+; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDF6BpMq"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60707b740a6so3151135a12.0;
-        Fri, 20 Jun 2025 10:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750440909; x=1751045709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mg3yw4vaCMy+lJRKgBJCUBFDQZaT3XMALMfqYzvwLVc=;
-        b=EDF6BpMqlRrm8Mg1CmFObIl0veJeWviLXTb91wABwQRzN6M6hfbhb8J7lfE3LDnH48
-         l1B6V0Sx+0CotEQ0o0+feUq4wqA2G/6rJAt+opxweph9+W9f6tMPyZzZxG8I3e7Z5Kud
-         pon8BcR48tsfwFHGgIZoq8MhztL2IJ+GlxbfYEWv3LwahKc6COcQoiIrYeCw7up+urit
-         r63BrnBQ9eY5c3AfTS/T12TbXOuSO3GSQDKE1XPax6x5PciyKE+dFNFP43q5dnIa153S
-         KV3QneAYXHTM3i/Y8N4C1FcPpYCV2/PjlEx6SaSMzY1bl3sxlFNA2hhbRbztoK6wrepc
-         PM8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750440909; x=1751045709;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mg3yw4vaCMy+lJRKgBJCUBFDQZaT3XMALMfqYzvwLVc=;
-        b=kqtBSfmWAAEn9T+VAMOrjdhsmaLL5T+F5Avk1EDkVq5Au9nTJ8YinqMccMU2ZJ2F6a
-         VtdFVJrO5gzJ2DRsSVgx3GYUhU59qgRKYmetws+ccB9ZDyrUEX7DnRJq2wUHHcSWvgIa
-         zFpC1VQYR2H4q3pe1j9P4wh9m8R9/h0wsbeA6kp2utwR1NXCLtIvuvPz+J3lUtkGDb3o
-         2uaxCdctiiP0rQYXFC7HUEqgyjvtCbhn7O/Xg5iOCJi8MOIYUFeirTrZr67v7nH9LOLp
-         eErPuh6GHPMuLZ3akcedf4ofCvX9kaBoKWKyl7xji+yPdPGNPSK9hzoSOh7OiOs8Wffy
-         DQ7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLWKf/pcWuLkC9Mn5DcnHXxIJ3ZX8uLsd3fSq776yDvN4bwBc0UQsew3h72xSMTnMmx9artiPv9f8=@vger.kernel.org, AJvYcCXc6q3LADFU26/OcDDCQJszKJPRe+LJJHMuJU4oyLn2gw63ycK9oy4W7yJXvAXfqWzJtFJdBgsxKDnasnM1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzslz5x/6taFn/tIaH7LBO/PNd8dBmXrOhrd1MMQz3uBAflczeP
-	3TznEQhtFXKQNNqgCDBz1EixHtuA7EnV8UI9/CW4dtTjyyNwB3IUAe8loV+oQQ==
-X-Gm-Gg: ASbGncvivoz1qqvuyKxivk+POTdKuEmVAYeIAm8lK26hMAEeXevJ1a0Gnhx9FajIlbq
-	b3HGqz0vArwRL/28+q5/o/68I6CUor3TeEFNbrjBeKEKCEoo1Q4RPAhY6eBBoC63wxci+L/mBAQ
-	mR8uTYYqIgItAbCJileLbqKLmWs0xn75RiR4DJD68fqc9qehM5dh7yUevFvZ3EaP0dbs4bGBnLD
-	rUtpl7FINNqDEL45R0Caz/G39iodiTZwnBBw98JSv+mlxtE+jHFG0Hli6AoiZRlF2WTf3XjULdp
-	jPcIYhg4urZKobadJDeJJzCPZ2aH4HJjYdcK7yHf/ikBMnfxX2ipnW1fUbZ/UYpiPukoFD/GIg9
-	RZyYV8YjyQxA+/d6rels7K+iPf/QHDU2aBoGrxwXZfA==
-X-Google-Smtp-Source: AGHT+IHST8t81MCtxY4AMugTj8+KZTk5dCvc7no0T46qRYJ/lTm1HFaW77DCtJbEy9i6uLRW2VFUew==
-X-Received: by 2002:a17:907:9816:b0:ad8:9b24:9d16 with SMTP id a640c23a62f3a-ae0579cd970mr352011866b.6.1750440908981;
-        Fri, 20 Jun 2025 10:35:08 -0700 (PDT)
-Received: from masalkhi.. (dynamic-176-003-044-193.176.3.pool.telefonica.de. [176.3.44.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60a1851449asm1698953a12.2.2025.06.20.10.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 10:35:08 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: wsa+renesas@sang-engineering.com,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC] i2c: Skip i2c_for_each_dev() when detection is not supported
-Date: Fri, 20 Jun 2025 17:31:21 +0000
-Message-ID: <20250620173121.15752-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="RfUgABe+"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KEeA4m025086;
+	Fri, 20 Jun 2025 13:37:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=LFhHY
+	4/QVtIa0kQIgs/Sgv+DYjNYIL6mAP1r7dJR0Rw=; b=RfUgABe+9IpWGGGmhZMao
+	0OVvYG6tXvPU7O/xX50yJy2b+fNshgx3/H6zCyUrU6R5/taKlVSTcrhmBXahZlLc
+	PVlPqvvHdp/me073w4F+Cq7RUrKdQBDsi7Un+BPk3RCEUgmgOd0SdlIZcRRWOUkr
+	jibX1t10/zxrBFDCOOnYKvMHOjPhDitXFm/fayMPC65b3kMgZbSC3HJ+bwNGB0Z2
+	pifLaocR0uCguVP3brT8NlT3Ji9ja+j8N25DCTpxa0wRNq6s0xPWyrWyfaEnywpR
+	oqo2oBuybepRrVqH3Kd8lpTGFGot4U1/vXM6NKWbJqaI5C59loij3np23zqFvwXz
+	Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47d350auvn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 13:37:00 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 55KHaxTG008660
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 20 Jun 2025 13:36:59 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 20 Jun 2025 13:36:59 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Fri, 20 Jun 2025 13:36:59 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Fri, 20 Jun 2025 13:36:59 -0400
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.32.14.29])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55KHajbK030665;
+	Fri, 20 Jun 2025 13:36:49 -0400
+From: Jorge Marques <jorge.marques@analog.com>
+Date: Fri, 20 Jun 2025 18:54:59 +0200
+Subject: [PATCH 1/3] i3c: master: Add inline i3c_master_readsl and
+ i3c_master_writesl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250620-i3c-writesl-readsl-v1-1-e0aa1c014dff@analog.com>
+References: <20250620-i3c-writesl-readsl-v1-0-e0aa1c014dff@analog.com>
+In-Reply-To: <20250620-i3c-writesl-readsl-v1-0-e0aa1c014dff@analog.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Frank Li
+	<Frank.Li@nxp.com>,
+        =?utf-8?q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>
+CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        "Jorge
+ Marques" <jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750438498; l=1842;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=PS5s/QBW43OvzQxcKYQhEXkr0Batot5Uxg2zA/CNRwU=;
+ b=mEAEkZYVoburTPfWo12Tpjwgh0p1lOuw69ATrEK+H/3fePr3tg5OSfgLxOt3CF5AQKhWw1Zqc
+ O7gDLrOq6CjBifIWM/+Z6pEfrXJTl8bn3GJBmyvxKYvHcGXlmNxeHfj
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=WJB/XmsR c=1 sm=1 tr=0 ts=68559c3c cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=QMVJh2PuZ69kPaAn0y8A:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEyMyBTYWx0ZWRfX4DPtIMrfW8Ih
+ ybiw3lJtKnsPrM/DQ/LkX8RUzRmSDkBnnlVlFqOrPIAeuN44382zmsYIPZ6OL7Ky3h6yvY/d3iQ
+ 9ekbfZPk9dXThwWNxhXJU9Nq0zIrhd4OFhhtB3mTL3o4bgF2HsdFBj0M6cqdoKXKrUKYHTGVlG8
+ JkOprhkzDG5NyvcgLy+Y+U5Pj1tWJjSczq+lVcd4Y1caLWAXR83qxntE55GzLCP8JmBYu5UYni1
+ N87WF+eVkEnY+/MIpcBaZrJOmTt0k0qtaqV2qZov1ZnPWGaishx94HPWHZTHOicVNGoFGvVim+H
+ dS5rrizNL6z61lZ8jLTbs/0Ew6429Znn9fiJN76o9Vy9JzWcpDSeszVBWEGw5rVF2drj5NuvcvU
+ EyBE3dVIyjpO7Y8geoiVDyZduM7w70XVzAqkHTVbP9iXszyOsvC9Knu1lmZMIcvGX0YlFRe4
+X-Proofpoint-ORIG-GUID: QjVbuyybouWu7aZyG29c2_lSPx1DZvCu
+X-Proofpoint-GUID: QjVbuyybouWu7aZyG29c2_lSPx1DZvCu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_07,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=720 suspectscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 clxscore=1011 spamscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200123
 
-While reviewing the I2C core, I noticed that i2c_for_each_dev() is
-invoked in i2c_register_driver() regardless of whether the driver
-actually supports device detection, as follow:
+The i3c abstraction excepts u8 buffers, but some controllers have a bus
+width of 32-bits and don't support flagging valid bytes, so it is
+required to read/write long words and to use memcpy on the remainder of
+the number of bytes by 32-bits to not write/read outside the buffer
+bounds.
 
-    /* When registration returns, the driver core
-     * will have called probe() for all matching-dbut-unbound devices.
-     */
-    res = driver_register(&driver->driver);
-    if (res)
-        return res;
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+ include/linux/i3c/master.h | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-    pr_debug("driver [%s] registered\n", driver->driver.name);
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index c67922ece617d6320c0c7e4838c2e7edda8c19f5..11401f2acb42e4d3a60df33b7c794d8a0360cdc2 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -674,6 +674,42 @@ i3c_master_get_bus(struct i3c_master_controller *master)
+ 	return &master->bus;
+ }
+ 
++/**
++ * i3c_master_writesl- Write bytes to long memory region from byte array
++ * @addr: Register to write to
++ * @bytes: Pointer to the data bytes to write
++ * @nbytes: Number of bytes to write
++ */
++static inline void i3c_master_writesl(void __iomem *addr, const u8 *bytes,
++				      int nbytes)
++{
++writesl(addr, bytes, nbytes / 4);
++	if (nbytes & 3) {
++		u32 tmp = 0;
++
++		memcpy(&tmp, bytes + (nbytes & ~3), nbytes & 3);
++		writel(tmp, addr);
++	}
++}
++
++/**
++ * i3c_master_readsl - Read bytes from long memory region to byte array
++ * @addr: Register to read from
++ * @bytes: Pointer to the buffer to store read bytes
++ * @nbytes: Number of bytes to read
++ */
++static inline void i3c_master_readsl(const void __iomem *addr, u8 *bytes,
++				     int nbytes)
++{
++readsl(addr, bytes, nbytes / 4);
++	if (nbytes & 3) {
++		u32 tmp;
++
++		tmp = readl(addr);
++		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
++	}
++}
++
+ struct i3c_generic_ibi_pool;
+ 
+ struct i3c_generic_ibi_pool *
 
-    i2c_for_each_dev(driver, __process_new_driver);
+-- 
+2.49.0
 
 
-However, the first check inside i2c_detect() is:
-
-    if (!driver->detect || !address_list)
-        return 0;
-
-This check happens only after iterating over all registered I2C devices
-via i2c_for_each_dev(). Unless I am missing something, this seems to me
-just wasting processing time for drivers that do not support detection.
-
-To avoid this, I propose guarding the call to i2c_for_each_dev() like this:
-
-    /* When registration returns, the driver core
-     * will have called probe() for all matching-dbut-unbound devices.
-     */
-    res = driver_register(&driver->driver);
-    if (res)
-        return res;
-
-    pr_debug("driver [%s] registered\n", driver->driver.name);
-
-    if (driver->detect && driver->address_list)
-        i2c_for_each_dev(driver, __process_new_driver);
-
-This would ensure that i2c_detect() is only called when there is an
-actual possibility of detection succeeding, making the driver registration
-path more efficient.
-
-Please let me know if this change makes sense. I would be happy to submit
-a patch.
-
-Best regards,
-Abd-Alrhman Masalkhi
