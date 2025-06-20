@@ -1,105 +1,91 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B1A1DED5C
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFA029B0
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750392945; cv=none; b=HdAaGE4M2ZV37giEHBDqF0iGD/SGVFQWfuZ/IuLwuXBpBnGxIR/tdT6esOYD51z834w74uEYIJt9VNjcCx9AujxYe7sjVFrjZ6Etz/ttKi0SiQxG8OYlHMGJa1eima5gTTlK+k+v0+y40Zn5DgHFIEMhTD8jlcfqLs7kDaDvVD0=
+	t=1750393263; cv=none; b=s1P4wx4+zOnTvrWV7Dap1HvfC0Ma1rkfvPG9lAaVWCmVXMMIMrAJGcg8GIj2KbMu92i5v5aPc1a6mLRYyQmo0t9zJC2ZDMQpO/chSVe2lHLL8udpCTL2CwYKm5mvfqyUSnVTDvS+HBjamBZOws2sDuH4yR+cGOOW+p3OTq4aoXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750392945; c=relaxed/simple;
-	bh=YLWQMqNIvRlBfGk0BLWS3fV/fwt0ymSLhyYJlFptfh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuNkz0vGbTCEJZeJFCFHxMaYjjcE/qW7r7B9y4z/GVyag5LT9HfnQR1rZPIf9p0ea+TOShzcqvyXka08aoHsu8MlAZ4iGkSbgXApzmD2S/8uph5YuT92yjSux748JItcYzx6zJxIq8oxlLo/jSIWGYdT4qqhM/l9reVT5Xlj8DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YEkFLov/; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YEkFLov/"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b2c2c762a89so1102612a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750392943; x=1750997743; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Cy3TvWpi+fL3vF5Ha79/V2lVstK62EgvNVGAMRApv8=;
-        b=YEkFLov/WQIWuhLmZDWWJe2cWf4v8UBCgfy2YVFNsUYca32ARfcffuqURpNLlXa0P3
-         a6yk3IgwFBh/SWOiuYN0sS2P6JX4EGS1MdNHw2yzkUv6MUT6nVGtUcSEXEsa8Y3hiWnB
-         MT2uxk0evfU4HfPMKu0VFLvrMBUG/MrR+oeh8=
+	s=arc-20240116; t=1750393263; c=relaxed/simple;
+	bh=A1GpjTS5DB+uZDUTzSdf1VAwAiSNnfHCQ2bX5v+31as=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZqaNw8VmS/8wCCwevZ5e6A7GZj5hnzQ8Dy1G+LiEEG+FjlkkHkd/l0FkHs6R8Gd846usBfJUcA1PGcS6Ng70YengMm/6Z6JoWa07WBNrE/4gNdbh5LTbKQFqC4pF3WE7xWtibwSf3vRcIujrCXz2Fhj+Q2iugN6YgZ0mK/DUw1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so16945495ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 21:21:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750392943; x=1750997743;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Cy3TvWpi+fL3vF5Ha79/V2lVstK62EgvNVGAMRApv8=;
-        b=LpCvjKJrER9zd8uxSiNPnXxscnK4hwp45VgrrkTMF57IMqn8uirOtloogBUcTXO+0f
-         hD4Qe2SAxBfZmwlmf3ggzz5Qxt8M+7vpHARSnFT3fwlJxQgCrpNWEpvO1rRd8bwQjsJO
-         aNs7XM+e8Iq90JNdR3SHwPbDNUXQPXk02tO6anR8v+SugKCVt6c6gvUvkcZha8WzUD1t
-         8HHcb1Mnup8Xjsp7hcatNvQEy3Lw1DiJ23AuDPwLWrE+1iaMpQJHNNPGRJhL6CnYtLDo
-         dsRT634dVv8mL/sLJN0i2oTDaiPrUHc/Uz3x6FFq3CDEE9El2T42cY8t7cR+0iFRaf7d
-         pKwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqmlf98fLTEeAT5kd0gVKuYqWc7xkFKGIkbGY445a8g6a2hAaXRWk7LE5/sApeiVAIB/NerrsZw5XlHFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybXNqqkxodgfpBqncwtqTZ9S4wvlXzQTEFAgsVMdcgOMZUlNVr
-	SupHxPQE0/OYWMCm42BhKUtz0cAQEE4oZbJDadvDOv0eS61BkvvX4Yj+BgW/V9g/5w==
-X-Gm-Gg: ASbGncu/0JeyPszbp2W5zn8hscFRC+A3qWNXOneIHjGeWUBpd2OkYhFQRbe7uSD6XtM
-	8bKUxok0/vhtBIxDPO+wsa6uZp0JV60YMbyzuc03syAfubaWyE4rsuwQc+z9sYrG1Gv7jvIeOW+
-	e/VQDDTQBXaUaWhp6KPqfwo8xYv+zRc4VlCDKaA4J8BzE5j6EQ+9mFKpe8yqHpKPMHyVClUlIBb
-	U6TlwozM5yJuDGYMiLdzNHTsMWTarkTm5EHuUXYifUEmplag8mceXWfGOkUSGz/hvEk6OQzxH9j
-	J7zByqWAy9sBa9yDibhabSEE12wekPYhpNT9P0P3t/GVtGNwckRxi/gjDYrkRRo4hw==
-X-Google-Smtp-Source: AGHT+IHyRQSDJnGbDBeHS4nxGGY7VJhOz+gP/6YwMppzmVpF//i5uNQcMgRPidqOfnDokaVjIXIERA==
-X-Received: by 2002:a17:90b:51c6:b0:312:f88d:25f9 with SMTP id 98e67ed59e1d1-3159d628b88mr2709052a91.7.1750392943134;
-        Thu, 19 Jun 2025 21:15:43 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:e574:cc97:5a5d:2a87])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df812e1sm755960a91.16.2025.06.19.21.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 21:15:42 -0700 (PDT)
-Date: Fri, 20 Jun 2025 13:15:38 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Richard Chang <richardycc@google.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>, bgeffon@google.com, 
-	liumartin@google.com, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH] zram: support asynchronous writeback
-Message-ID: <x54netqswex6fpv46nlmeea3ebnm32xnwask4zxw7nmcn7tqdz@4mu4hwsa7hsb>
-References: <20250618132622.3730219-1-richardycc@google.com>
- <n6sls56srw265fmyuebz6ciqyxqshxyqb53th23kr5d64rwmub@ibdehcnedro6>
- <CALC_0q8-98y0v_jV6QOFTKRAGhJ4nCXZ=q9wutLZPCE0KnKymw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750393261; x=1750998061;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VznbCQacy3m13Q8Ajr0kgsJBCd0p8qXaHBYKP5bk0Ls=;
+        b=hSRxNh2oxABGihtk2d5XahntN3R5TNL+ArYE27Jj6lRq4k5tSYp7lXYNzyblH89NAm
+         7CMIO989A+m2nicJgwNvfPNfEZ7K9ka3S8tKPZALkKRYy/eO6jZCojEiejeUqByndTkZ
+         rqGdtYJzVDL7MGrnUKRcJSsfVEkIIogiALBrlLbXxJl5p/sPE9kyhpjiv8uvuePpMA2s
+         TiRIExMsVE53pXkAz+G4DBomp7IlmP94cqm9i24r1MzN8FEocm1FDuDYivAU45g6n1Ms
+         sQcQgyOmGe35WpUGDk6uDazYC0HGu1cORGwQLKlgldar1jhqnpJv/ys9XC7jApTIGyOH
+         gcGQ==
+X-Gm-Message-State: AOJu0Ywv7Jy6prnIqEUU5/dZMJ2/AHnMlH+awIdDo1/J5JQgPdywyG3o
+	tkvl0tpLHUN2xVVRf4vNm1nM6bml8EJRPMWG/4GL1iw/5sVm/nNvFzuA64HynvoTaW+z3xuNXB5
+	Jwo/Cmu8Y3nPdEuWHJkoqy6sQ9Y4S4n9XhEjA4fiez1UL0BK/YTKRl6FCcf8=
+X-Google-Smtp-Source: AGHT+IEOFYGpCZO2GkfkPImiCPtCPyiPZRclqp3C8jwiIDzqJ+JO9EPknzYmtQHhlo0EqXC5mz7rGuXxynbUy1kg/Q/B7yEjUCe5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALC_0q8-98y0v_jV6QOFTKRAGhJ4nCXZ=q9wutLZPCE0KnKymw@mail.gmail.com>
+X-Received: by 2002:a05:6e02:1905:b0:3dd:ebb5:6382 with SMTP id
+ e9e14a558f8ab-3de38c1becemr14820325ab.4.1750393261009; Thu, 19 Jun 2025
+ 21:21:01 -0700 (PDT)
+Date: Thu, 19 Jun 2025 21:21:00 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6854e1ac.a00a0220.137b3.002a.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-On (25/06/20 12:09), Richard Chang wrote:
-> Hi Sergey,
-> The main idea is to replace submit_bio_wait() to submit_bio(), remove
-> the one-by-one IO, and rely on the underlying backing device to handle
-> the asynchronous IO requests.
-> From my testing results on Android, the idle writeback speed increased 27%.
->
-> idle writeback for 185072 4k-pages (~723 MiB)
-> $ echo all > /sys/block/zram0/idle
-> $ time echo idle > /sys/block/zram0/writeback
-> 
-> Async writeback:
-> 0m02.49s real     0m00.00s user     0m01.19s system
-> 0m02.32s real     0m00.00s user     0m00.89s system
-> 0m02.35s real     0m00.00s user     0m00.93s system
-> 0m02.29s real     0m00.00s user     0m00.88s system
-> 
-> Sync writeback:
-> 0m03.09s real     0m00.00s user     0m01.07s system
-> 0m03.18s real     0m00.00s user     0m01.12s system
-> 0m03.47s real     0m00.00s user     0m01.16s system
-> 0m03.36s real     0m00.00s user     0m01.27s system
+***
 
-Has this been tested on exactly same data sets? page-to-page comparable?
-We decompress before writeback, so if the data had different compression
-ratios, different number of incompressible objects, etc. then the results
-are not directly comparable.
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
+
+#syz test
+
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index b64944367ac5..fc5b49b05afd 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -385,14 +385,20 @@ static int vmci_host_do_send_datagram(struct vmci_host_dev *vmci_host_dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	dg = memdup_user((void __user *)(uintptr_t)send_info.addr,
+-			 send_info.len);
+-	if (IS_ERR(dg)) {
++	dg = kzalloc(send_info.len, GFP_KERNEL);
++
++	if (IS_ERR_OR_NULL(dg)) {
+ 		vmci_ioctl_err(
+ 			"cannot allocate memory to dispatch datagram\n");
+ 		return PTR_ERR(dg);
+ 	}
+ 
++	if (copy_from_user(dg, send_info.addr, send_info.len)) {
++		vmci_ioctl_err("copy datagram fails\n");
++		kfree(dg);
++		return -EFAULT;
++	}
++
+ 	if (VMCI_DG_SIZE(dg) != send_info.len) {
+ 		vmci_ioctl_err("datagram size mismatch\n");
+ 		kfree(dg);
