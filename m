@@ -1,132 +1,260 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68192BD5AF;
-	Fri, 20 Jun 2025 14:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD5C27E06D;
+	Fri, 20 Jun 2025 14:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750431235; cv=none; b=MJgPDON//q1n61o0C5T+uoqMK7cF1K/92Hwp9N+wevN1VxU1vJInS0ucfbLG1I1Cg6IwIZDi4bLRZ2U6zBerI0vj+Fzjs3ud3bwp86dcF6NMpM9FGlMNXJmfu8FEeHPD874x2ML0rIBFdJiduuX4oxgCH5bZPQOj0oL+zlxsBl8=
+	t=1750431271; cv=none; b=IKa5GLQOGI5bHPOzWUgI7HnK7GRM1985QWK2yCX1CNvFpm/p7L70wNUlA0MFttUKaH0EokRlolHmHfVO65tx0Ea24uH6H08Wio+BMOTCAZBs2/YW+rMgtZTwEt0GN1SfdU8wG+oDNxFdMoPDbi5MMXEdG1eL9AnKBi1ni++oPcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750431235; c=relaxed/simple;
-	bh=5HJHKUKnSy0X8qereFxAeJBjXssNqqPNsci6MxFY3eo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aOBZTjtqrXANbW7+Cx/nVH7KA2A7SisV4bg/opLI0ptU/p3yWzaSBBG5YF4uJPCU5GswrIwMqE9boIqqJ/1w+0GSaOENu8x9SOfXBBT6Y+JVMrgoV7YZ/8qgv/2BdpK9FPMvLBFbG2ZD4AXPaprJkIZlrlSEVoAKvGMQnuodisE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JRZ5pFbv; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750431271; c=relaxed/simple;
+	bh=2lQ3H1t6+IN+7snjljZ9bQpsGdJOcZIe4RxA3UQstrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPDwvKq7QcJevPz2YEWoCscXsDFrEgwZCcs2mniltQx+Ta6fp8MbifXPWSZw0WXwKr/8rvqQfdiYaF6iVp55yGd9XF+uA9UHUHw9qQnVtqS5uErJ17aV4dxYh1XqpUShA51X5gZhUt+KABqVQxvYYHSkSGeLQbJeO/AIpWl48W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tx0+Mufu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JRZ5pFbv"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K9hfjr016396;
-	Fri, 20 Jun 2025 14:53:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vBq5jk
-	WYpGasBWlEG+JUqZZjNkz2GJoDETICN+CG4pM=; b=JRZ5pFbvCCkwbotWi/CwNH
-	oqjzlscI2yXCn8HXMP5mdQCQuL0EGn0oeP8iIQZETwcbOkEpz9PFMtmTK4qHraZH
-	cRm85wLX99h1KKvx5xwsz7T+/U7hzh5XjgqC+1enxWKy2Xx7DR76iGgTeA6FOiWn
-	HOjXrg4XaODhakRg//mBAeYLS3x0pJcAPKzcubODd1v1eJz96RkitO0uT/0zzkyc
-	Qkw9j2yFvFy89V6OBPoq4yFi8yKVYjr6mvqbILbxX1+GO0Vos1pLHcxs1Yqw374g
-	SqQY0cXy8fqApUJVkcw+jn9pCQ0AA14TPM1oTV78tki+CwWvd4FsrIPYqxnxMUDQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 478ygnuvj6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:53:22 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDidtc005514;
-	Fri, 20 Jun 2025 14:53:21 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479mwmkk8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:53:21 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KErGo927656938
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Jun 2025 14:53:16 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2FD0E5805D;
-	Fri, 20 Jun 2025 14:53:21 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFEB858054;
-	Fri, 20 Jun 2025 14:53:17 +0000 (GMT)
-Received: from [9.124.223.89] (unknown [9.124.223.89])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Jun 2025 14:53:17 +0000 (GMT)
-Message-ID: <9841e7bf-7429-44fa-a8e2-a39f54c69d84@linux.ibm.com>
-Date: Fri, 20 Jun 2025 20:23:16 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tx0+Mufu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A8FC4CEE3;
+	Fri, 20 Jun 2025 14:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750431271;
+	bh=2lQ3H1t6+IN+7snjljZ9bQpsGdJOcZIe4RxA3UQstrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tx0+Mufuzq1sVt+Blo8kgoP9ETj8PphYr9ucL1jeurZO5sYHBCghVqs6J2W4QcxHZ
+	 fu/THVoIBYXBvO7RDklmks7AV0ihuZZq7LeEjAjZAYif3/Vh7IRwwtUGAlFffhc942
+	 W4hHegzafNPDL2eVkIsgz+PpwY4rfXMkYBMaehhI=
+Date: Fri, 20 Jun 2025 16:54:28 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: nicolas.bouchinet@oss.cyber.gouv.fr
+Cc: Alan Stern <stern@rowland.harvard.edu>,
+	Kannappan R <r.kannappan@intel.com>,
+	Sabyrzhan Tasbolatov <snovitoll@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Pawel Laszczak <pawell@cadence.com>, Ma Ke <make_ruc2021@163.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>,
+	Luc Bonnafoux <luc.bonnafoux@oss.cyber.gouv.fr>,
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] usb: core: Introduce usb authentication feature
+Message-ID: <2025062059-dangling-coping-1e17@gregkh>
+References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
+ <20250620-usb_authentication-v1-2-0d92261a5779@ssi.gouv.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix validate_addr helper
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anshuman.khandual@arm.com, ryan.roberts@arm.com,
-        lorenzo.stoakes@oracle.com, david@redhat.com
-References: <20250620111150.50344-1-dev.jain@arm.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <20250620111150.50344-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwNSBTYWx0ZWRfX548P3ByGJ1B9 w4MIOdo7UFmZ0aX0CdaYF9MFTGlwTTG+r4Zf7tBsdH8K8bYlhTwnIERTdUFpHvwwNbram2Wo53e Swbv1ynsJjfv0lcGiHkepC9iev/9Z73O4OMrcVGRH5Jv5u7X2Sz5pEpTlIDvPVHR14UHA/BgL6t
- jP+vOqiP9ze5Xogomx0CoiBYhLeB+GHqnQ0X/53dXLNL/x9BclQ0Dk2cESPMtwpHSBd36DBCW5X leGekoiDoMgcFV2zNchlt53+7B+uipBW4n+TqqmVTtD+dgIKc7XN4EBxGT79g52hsk5Jhn/6yth bq7dwJssRpiqT2eeHc6FRMU9TiK34S954olGBXTCbzsO+9EG5AsZiTDLGBlYwdBXhfbi6HuTPIp
- qmCebe98q8GjnkDub1jM/FQpDKYXVOxxd1sGyo9ErKnwS7WPRR6zD62L08IsCs5Eimvi0gnB
-X-Authority-Analysis: v=2.4 cv=fYSty1QF c=1 sm=1 tr=0 ts=685575e2 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=H2XVYxjsRQ50NXrrMqMA:9 a=QEXdDO2ut3YA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: lRQVLwiZdDPryQ5uzdmJaZg62wJwLdtY
-X-Proofpoint-GUID: lRQVLwiZdDPryQ5uzdmJaZg62wJwLdtY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_06,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620-usb_authentication-v1-2-0d92261a5779@ssi.gouv.fr>
 
+First off, thanks so much for doing this work, I've been wondering if
+anyone would ever do it :)
 
-On 6/20/25 4:41 PM, Dev Jain wrote:
-> validate_addr() function checks whether the address returned by mmap()
-> lies in the low or high VA space, according to whether a high addr hint
-> was passed or not. The fix commit mentioned below changed the code in
-> such a way that this function will always return failure when passed
-> high_addr == 1; addr will be >= HIGH_ADDR_MARK always, we will fall
-> down to "if (addr < HIGH_ADDR_MARK)" and return failure. Fix this.
->
-> Fixes: d1d86ce28d0f ("selftests/mm: virtual_address_range: conform to TAP format output")
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->   tools/testing/selftests/mm/virtual_address_range.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> index b380e102b22f..169dbd692bf5 100644
-> --- a/tools/testing/selftests/mm/virtual_address_range.c
-> +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> @@ -77,8 +77,11 @@ static void validate_addr(char *ptr, int high_addr)
->   {
->   	unsigned long addr = (unsigned long) ptr;
->   
-> -	if (high_addr && addr < HIGH_ADDR_MARK)
-> -		ksft_exit_fail_msg("Bad address %lx\n", addr);
-> +	if (high_addr) {
-> +		if (addr < HIGH_ADDR_MARK)
-> +			ksft_exit_fail_msg("Bad address %lx\n", addr);
-> +		return;
+Just a few quick review comments that you might want to do for the next
+round of your patches for some basic style things:
+
+On Fri, Jun 20, 2025 at 04:27:17PM +0200, nicolas.bouchinet@oss.cyber.gouv.fr wrote:
+> +#include <linux/types.h>
+> +#include <linux/usb.h>
+> +#include <linux/usb/ch9.h>
+> +#include <linux/usb/hcd.h>
+> +#include <linux/usb/quirks.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/device.h>
+> +#include <linux/delay.h>
+> +#include <asm/byteorder.h>
+> +
+> +#include "authent_netlink.h"
+> +
+> +#include "authent.h"
+
+No need for the blank lines there.
+
+> +static int usb_authent_req_digest(struct usb_device *dev, uint8_t *const buffer,
+> +				  uint8_t digest[256], uint8_t *mask)
+> +{
+> +	int ret = 0;
+> +	struct usb_authent_digest_resp *digest_resp = NULL;
+> +
+> +	if (unlikely((buffer == NULL || mask == NULL))) {
+> +		pr_err("invalid arguments\n");
+> +		return -EINVAL;
 > +	}
->   
->   	if (addr > HIGH_ADDR_MARK)
->   		ksft_exit_fail_msg("Bad address %lx\n", addr);
+> +	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), AUTH_IN, USB_DIR_IN,
+> +			      (USB_SECURITY_PROTOCOL_VERSION << 8) +
+> +				      USB_AUTHENT_DIGEST_REQ_TYPE,
+> +			      0, buffer, 260, USB_CTRL_GET_TIMEOUT);
+> +	if (ret < 0) {
+> +		pr_err("Failed to get digest: %d\n", ret);
+> +		ret = -ECOMM;
+> +		goto exit;
+> +	}
+> +
+> +	// Parse received digest response
+> +	digest_resp = (struct usb_authent_digest_resp *)buffer;
+> +	pr_notice("received digest response:\n");
+> +	pr_notice("	protocolVersion: %x\n", digest_resp->protocolVersion);
+> +	pr_notice("	messageType: %x\n", digest_resp->messageType);
+> +	pr_notice("	capability: %x\n", digest_resp->capability);
+> +	pr_notice("	slotMask: %x\n", digest_resp->slotMask);
+
+Always use the dev_*() macros instead of pr_*() ones as that way you
+know what device is making the message please.
+
+> +
+> +	*mask = digest_resp->slotMask;
+> +	memcpy(digest, digest_resp->digests, 256);
+> +
+> +	ret = 0;
+> +
+> +exit:
+> +
+> +	return ret;
+> +}
+> +
+> +struct usb_auth_cert_req {
+> +	uint16_t offset;
+> +	uint16_t length;
+> +} __packed;
+
+Kernel types are u16, not uint16_t.  The uint*_t types are from
+userspace C code, not kernel code.  Yes, they are slowly sliding in in
+places, but let's not do that unless really required for some specific
+reason.
+
+And why packed?
+
+And what about endian issues, the data from the devices should be in a
+specific format, right?
 
 
-This looks good to me. Feel free to add
+> +
+> +/**
+> + * @brief Request a specific part of a certificate chain from the device
 
-Reviewed-by: Donet Tom <donettom@linux.ibm.com>
+Are you sure this is proper kerneldoc style?  Does this build properly?
 
+> + *
+> + * Context: task context, might sleep
+> + *
+> + * Possible errors:
+> + *  - ECOMM : failed to send or receive a message to the device
+> + *  - EINVAL : if buffer or cert_part is NULL
+> + *
+> + * @param [in]     dev       : handle to the USB device
+> + * @param [in,out] buffer    : buffer used for communication, caller allocated
+> + * @param [in]     slot      : slot in which to read the certificate
+> + * @param [in]     offset    : at which the certificate fragment must be read
+> + * @param [in]     length    : of the certificate fragment to read
+> + * @param [out]    cert_part : buffer to hold the fragment, caller allocated
+
+Again, I don't think this is kerneldoc format.  Please build the kernel
+documentation output and see what this results in.
+
+> + *
+> + * @return 0 on SUCCESS else an error code
+> + */
+> +static int usb_auth_read_cert_part(struct usb_device *dev, uint8_t *const buffer,
+> +				   const uint8_t slot, const uint16_t offset,
+> +				   const uint16_t length, uint8_t *cert_part)
+> +{
+> +	struct usb_auth_cert_req cert_req = { 0 };
+> +	int ret = -1;
+
+Use real error values, not random integers :)
+
+> +
+> +	if (unlikely(buffer == NULL || cert_part == NULL)) {
+
+Only use likely/unlikely if you can measure the speed difference.  For
+USB, and probe sequences, that will never be the casae.
+
+> +		pr_err("invalid argument\n");
+
+Again, dev_err()?
+
+But how can these parameters not be set properly?  You control how they
+are called, no need to always verify that you wrote the code properly :)
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	cert_req.offset = offset;
+> +	cert_req.length = length;
+> +
+> +	// AUTH OUT request transfer
+> +	memcpy(buffer, &cert_req, sizeof(struct usb_auth_cert_req));
+> +	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), AUTH_OUT,
+> +			      USB_DIR_OUT,
+> +			      (USB_SECURITY_PROTOCOL_VERSION << 8) +
+> +				      USB_AUTHENT_CERTIFICATE_REQ_TYPE,
+> +			      (slot << 8), buffer,
+> +			      sizeof(struct usb_auth_cert_req),
+> +			      USB_CTRL_GET_TIMEOUT);
+> +	if (ret < 0) {
+> +		pr_err("Failed to send certificate request: %d\n", ret);
+> +		ret = -ECOMM;
+> +		goto cleanup;
+> +	}
+> +
+> +	// AUTH IN certificate read
+> +	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), AUTH_IN, USB_DIR_IN,
+> +			      (USB_SECURITY_PROTOCOL_VERSION << 8) +
+> +				      USB_AUTHENT_CERTIFICATE_RESP_TYPE,
+> +			      (slot << 8), buffer, length + 4,
+> +			      USB_CTRL_GET_TIMEOUT);
+> +	if (ret < 0) {
+> +		pr_notice("Failed to get certificate from peripheral: %d\n", ret);
+> +		ret = -ECOMM;
+> +		goto cleanup;
+> +	}
+> +
+> +	// TODO: parse received header
+> +	memcpy(cert_part, buffer + 4, length);
+> +
+> +	ret = 0;
+> +
+> +cleanup:
+> +
+> +	return ret;
+
+As "cleanup:" does nothing, no need for it, just return the error value
+above when you were doing a goto line.
+
+> +}
+> +
+> +/**
+> + * usb_authent_read_certificate - Read a device certificate
+> + * @dev:		[in] pointer to the usb device to query
+> + * @buffer:		[inout] buffer to hold request data, caller allocated
+> + * @slot:		[in] certificate chain to be read
+> + * @cert_der:   [out] buffer to hold received certificate chain
+> + * @cert_len:   [out] length of received certificate
+> + *
+> + * Context: task context, might sleep.
+> + *
+> + * Possible errors:
+> + *  - EINVAL : NULL pointer or invalid slot value
+> + *  - ECOMM  : failed to send request to device
+> + *  - ENOMEM : failed to allocate memory for certificate
+> + *
+> + * Return: If successful, zero. Otherwise, a negative  error number.
+> + */
+> +static int usb_authent_read_certificate(struct usb_device *dev, uint8_t *const buffer,
+> +					uint8_t slot, uint8_t **cert_der, size_t *cert_len)
+> +{
+> +	uint16_t read_offset = 0;
+> +	uint16_t read_length = 0;
+> +	uint8_t chain_part[64] = { 0 };
+
+Again, u16 and u8 please.
+
+thanks,
+
+greg k-h
