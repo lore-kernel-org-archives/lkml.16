@@ -1,126 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6509017BB21;
-	Fri, 20 Jun 2025 17:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A22217BB21;
+	Fri, 20 Jun 2025 17:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750439951; cv=none; b=mM5kAG+hWZrhb/YvSXyuS9wfXPyHJKTOpsOnE0ncSYHhqQu5ycfnzWBzH1e1+rXyEoO4x+8PaRk1omXSBiIGDTsxjAMkflJHMfs+QVPMmQOxpZsGvilsqaEKvwk7tH1s59HAuX4NTtRtdXw8piI++LyWir6RE84/PzVdFiHdV5k=
+	t=1750439987; cv=none; b=Vb/JpgjIamebTjmdS/p93j4PgSTOTTYw65u3FRZBHn+gxn0y1VrbnjGCa5DhU/pZhOJOIeGQZRu8PPbIAmdTsgZMZB6vEZCrgROA/CVn2yn03DjRQ9TglQB+H3RR1SeEu++LJpEYzXs9QUP4Q41ab0KJKxUXB2jNNADI9qwivwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750439951; c=relaxed/simple;
-	bh=dQDvIe8kEpS/KzWDhduzOi7rUZbsWr72XpJrQFUH1DE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sbGs+cSSOy6TU90uvjCN6EgWHUOhNKwNw3U3bKhVqFdJr8D0R2zAG+X7FponMViE4FPbtytM8GlMsNEeqgAcHAdGY18xBaKVRLPZV8uuicUXbZWaFKuNYCcbJlbmHyaCRj6jUuSshQn7Pl1EAi4IhTMcIKLyFrrL3IT7BhnqAEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O7ZLSe/Q; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750439987; c=relaxed/simple;
+	bh=yTfyFomlAYC23JbMLP0F6GGfzLOVzSnfY0H8zplrHpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TckTo2cKgoBQXnVmmWom2Al5IqxCVy6V60XJIQyatiIqLO5wdak+ZvS75Cof8vGfQ5lSiYO34DIl5LP8uN41Q8nD7n4YS1DDTRiqmHzyut2IKJD0c5PtygBHJfrz3N8oWXYq7jbNrq4WphNruBkKA/uN/wq2gVA6+geBAopodoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6fzGPxR; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O7ZLSe/Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750439950; x=1781975950;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dQDvIe8kEpS/KzWDhduzOi7rUZbsWr72XpJrQFUH1DE=;
-  b=O7ZLSe/QPtkgVEPG1YMJwOydAXB/ZmkO9VgyJCYqRFNGMAjrX99pdE+g
-   a9hjWHj5T0usdc2SKf/zhbjZvH7fpEaFduNq06FJRtPFUZsDKm75R5djp
-   MkwXCcPeZMHgoF9+o4JD7gxrx1eMz+ybKad1uW+lEXL+Km4k7U1WbSfmU
-   9Vsw7LO1KljpPF8LugcKrEgZ4CTRaThdeWxiTE893L4PG+afEwEfWy97a
-   cIyVH88YEIirsrEzGEdAqy5WgKnHZTmeKQhLJPhsRgWBhkOyvgx+BfuOP
-   uW6N+y/YglmyhqcKb1jHXXygsnsjPk90Iz7NQURtiZRSuBcNKt1RQc3pm
-   w==;
-X-CSE-ConnectionGUID: d2nSgGS/T5aBGlCSgqVRXg==
-X-CSE-MsgGUID: OAu7kV9sQYSb4+NLZO9DWg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="64146989"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="64146989"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:19:09 -0700
-X-CSE-ConnectionGUID: PEfm1VHzRRCCMeqjwOiyHg==
-X-CSE-MsgGUID: bAJr5kusQtOHInOrgsg17A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="151179342"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 20 Jun 2025 10:18:59 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D0767109; Fri, 20 Jun 2025 20:18:56 +0300 (EEST)
-Date: Fri, 20 Jun 2025 20:18:56 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv6 03/16] x86/alternatives: Disable LASS when patching
- kernel alternatives
-Message-ID: <kal5vsl6lpxo4ygli4yj2y5cqrosh2qxm5buxoh6d6ba4dloqe@nkxti3f7vrhj>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-4-kirill.shutemov@linux.intel.com>
- <15335559-bbb2-4da1-bbb9-878edf05437c@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6fzGPxR"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d54214adso15738445e9.3;
+        Fri, 20 Jun 2025 10:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750439984; x=1751044784; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Nqp5RyaLWU1LSai70owrzduSyRWQ7M8PeiJ+ff4U6jY=;
+        b=O6fzGPxRVDVP8hp7MYS0bl5TuByK344YR4ZVcOKca7aCfTdj4u2+JXs19ZrTbLydg/
+         lGmCLG8GE0/i6Wz4Oxd+lAmmgU+fct2YGax9JCTrONIzyAadbEZ5+zcdUbmKXu+W0IqY
+         AhwrBMO6gnqskvQxtGrSnW5FN3AmySNXaEA3WGONBC3WI5KSVIg45DH6HHcORR3tfi/g
+         ThEOOEQB1Ha17g8592Pj693cvBwEN5GFjLgi2XK/qrQGdo6cHAbE7hSG1P33/qAPXQJP
+         NqpjVyowZ5bbSLa32E+x373m+e35VXDfGiaFH9gUDoHr7lGae0suvqGlVbRjhGEHFpyP
+         /aHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750439984; x=1751044784;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nqp5RyaLWU1LSai70owrzduSyRWQ7M8PeiJ+ff4U6jY=;
+        b=TrGcoMorWESnX7LTZ9qjI1pmX8PfjqHArkwKX8g52KZyGlMrORLG+gHUq5qOQP6yt3
+         iPAjCR/ygPp1zRnRYiNtkhaYMGsR3+upUENuN9Ru4nWCHbpSA0TiKFgx6symLoV6S4ZV
+         3TRVsHyF7o/nnS01qH5aWO8kak8pxdRj6ERF4yc6s03qhAU/sG9D/D2/5fipJZgImXR1
+         1c8SQSwTM6l66IuqBxDKFl6EysFghMFl77MqlrwC/3EfISZ6cPPOaoVSCqu9SyRLmDKb
+         m9IOiDG+41NhQ99Ty1TtHTAlyWiq018+wIzmyef6psShZ/X+OD6tcerBsd07Ym0W3UmM
+         J7Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl0rVkcMv5MorGu18/OELIf1Tj6Bt9JWpUJCbDa9d1XGxp7Ayq7R4HNdhaQF4flMrUR8TeDHxbEuTtMimh68w=@vger.kernel.org, AJvYcCXymmKpu469Za5CF4es1z0xWDigMpS7myPWHUgVFJFWt09JIdYOKbfa5p8ij5yFBkB+g7kQNUOv/WOvrxQl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHa1QOIyx5rLvd5RF/tjS/BSIbG/PNs6Xucy/PgWvvgX7rqqRZ
+	CKvksxwmA+k9HiICb1/ePreHyRlE5vrBEJSNKeAAhJzP9bTHG2W3Q+WsY7zCOTwg7Rw=
+X-Gm-Gg: ASbGncv7HhD7v+X50bSQsLUmWE0J/kbR74GJm12cA20tpty3ZROTtrvH4OVQEXEgGhg
+	yV+2pX7Y130hewPgyhbC6DkBhDHbSz9KHa8n6JN9mdq2PjatVlI4RvODol48N/yRdMOyaaAExOR
+	/cQYc3WGdVc0LFPUytqINWV3MLoidgWQxNkwFG9ivyqwZBbie1spfym9k7E1cpjaz9YpD5T0fBt
+	NmxD+IxWSJW7jQozKd++4ShzmW9AgQmu/JoPlhxnj5ZDSZ1XrLj6xlyUEYejfS6mKL786EvEEfw
+	mwZj5XgytbV6/837CTAA+FUvds3ZTF2ir3zgW3JsVStQzeKiFkhoovaUmYHpRtLDXdxMezSo1rF
+	xynBqOTb+lrdkKAgvo1oUq9VL1F/dbrl1bNPKfriicS0dy52SzuP/Dg==
+X-Google-Smtp-Source: AGHT+IG7nUurIlUkJSmJUrsRS663QPvCJsqVcHeV3pcLn+ixZg+fKc92NRxtysFHaINml1r46SFseQ==
+X-Received: by 2002:a5d:584d:0:b0:3a5:42:b17b with SMTP id ffacd0b85a97d-3a6d1322b83mr2901841f8f.29.1750439984381;
+        Fri, 20 Jun 2025 10:19:44 -0700 (PDT)
+Received: from ?IPV6:2a02:8012:e013:0:9139:5f50:46fd:9f3f? ([2a02:8012:e013:0:9139:5f50:46fd:9f3f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18215sm2553836f8f.29.2025.06.20.10.19.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 10:19:43 -0700 (PDT)
+Message-ID: <bda377bf-10f8-49d9-8e58-ec957a40e4d7@gmail.com>
+Date: Fri, 20 Jun 2025 18:19:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15335559-bbb2-4da1-bbb9-878edf05437c@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tpm: Fix the timeout & use ktime
+To: Jarkko Sakkinen <jarkko@kernel.org>, "Orlov, Ivan" <iorlov@amazon.co.uk>
+Cc: "peterhuewe@gmx.de" <peterhuewe@gmx.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+ "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Woodhouse, David" <dwmw@amazon.co.uk>
+References: <20250611162508.85149-1-iorlov@amazon.com>
+ <aEm2p-2p3W3Xw5OU@kernel.org>
+Content-Language: en-US
+From: "Orlov, Ivan" <ivan.orlov0322@gmail.com>
+In-Reply-To: <aEm2p-2p3W3Xw5OU@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 08:33:57AM -0700, Dave Hansen wrote:
-> On 6/20/25 06:53, Kirill A. Shutemov wrote:
-> > +/*
-> > + * poking_init() initializes the text poking address from the lower half of the
-> > + * address space. Relax LASS enforcement when accessing the poking address.
-> > + */
+On 11/06/2025 18:02, Jarkko Sakkinen wrote:
+>> Instead, perform the check in the following way:
+>>
+>> 1. Read the current timestamp
+>> 2. Read the completion status. If completed, return the result
+>> 3. Sleep
+>> 4. Check if the timestamp read at step 1 exceeds the timeout. Return
+>>     an error if it does
+>> 5. Goto 1
+>>
+>> Also, use ktime instead of jiffes as a more reliable and precise timing
+>> source.
 > 
-> This does not read quite right. I think there's some unnecessary
-> confusiuon about initializing the address versus the contents. But
-> either way, how about:
+> "also", i.e. a logically separate change which should be split up to
+> a separate patch.
 > 
-> /*
->  * Text poking creates and uses a mapping in the lower half of the
->  * address space. Relax LASS enforcement when accessing the poking
->  * address.
->  */
 
-Looks good. Will update, thanks!
-> 
-> >  static void text_poke_memset(void *dst, const void *src, size_t len)
-> >  {
-> >  	int c = *(const int *)src;
-> >  
-> > -	memset(dst, c, len);
-> > +	lass_stac();
-> > +	__inline_memset(dst, c, len);
-> > +	lass_clac();
-> >  }
-> 
-> Yeah, this patch small enough that lass_{stac,clac}() are definitely
-> misplaced in this series. Just move them into this patch.
+Got it, will send this enhancement as a separate patch.
 
-Okay, makes sense.
+>> +		curr_time = ktime_get();
+>>   		u8 status = tpm_chip_status(chip);
+>>   		if ((status & chip->ops->req_complete_mask) ==
+>>   		    chip->ops->req_complete_val)
+>> @@ -140,7 +149,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>>   
+>>   		tpm_msleep(TPM_TIMEOUT_POLL);
+>>   		rmb();
+>> -	} while (time_before(jiffies, stop));
+>> +	} while (ktime_before(curr_time, timeout));
+> 
+> 
+> Wouldn't it be simpler fix to just check completion after dropping out
+> of the loop?
+> 
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+yes, this should also solve the problem without taking additional space 
+on the stack with new vars. Will update in V2, thanks!
+
+> And declare this before tpm_try_transmit():
+> 
+> static bool tpm_transmit_completed(struct tpm_chip *chip)
+> {
+> 	u8 status = tpm_chip_status(chip);
+> 	
+> 	return (status & chip->ops->req_complete_mask) == chip->ops->req_complete_val;
+> }
+> 
+
+Cool, will do.
+
+Thanks for the review and sorry for the late reply.
+
+--
+Kind regards,
+Ivan Orlov
+
