@@ -1,94 +1,85 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08FAD221290
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F1930E844;
+	Fri, 20 Jun 2025 06:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750401005; cv=none; b=oSddXycv+85k6JW1YoSmADFQ+SiMgMvPYBKPG6PO2NZ9I5Mzs975XnmeFJmoGTyFyyGzh9W3LMIyIfBDyDcSHi927lmyUXLcns1bm86AVgj9QMDOgNr6POcSj/VuL4e801qvUK2z5IWGvXsCu+3LmiT1QT3mkCkXMNonaNCOCak=
+	t=1750401065; cv=none; b=tYlV636hG9lm4uGHzLWCCSPJalq5inazqbFoEvxnB7b6h5Ap8ZZeLbhCR3T59tkt+R7mZQbfLhS3800zTeJJcI9lWp2kixxXg7d12DwYfdiiUUpfDwgZ+HA/x3EXZnd0Y0fmM24L09tjvdRgsavvVmoPB94fnxXHlXHbIE//A6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750401005; c=relaxed/simple;
-	bh=ndDVKrpY8hPr55MamAh+uliDP+m6d/vRSWkwjOVyyJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mcggu9wyGcrk5euMEJq04KUguIWbXxbSS9yiUdMnp4Ms5FY8ZhPE4NrQlfy82xvewGiElta+Bc3Ag4+xl9AZRM8nj33jrSvKhnXSDXeugMYmemfaAtLohK5nSGzWH0TXDwsgy0k/pmWghfGAvbV9qXl5xQw+7tVeC6xIDg4k9Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-cc-6854ffe17f4d
-From: Yunjeong Mun <yunjeong.mun@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: Re: [PATCH] samples/damon: add parameters for node0 memory usage
-Date: Fri, 20 Jun 2025 15:29:46 +0900
-Message-ID: <20250620062951.1572-1-yunjeong.mun@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250619164636.58743-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1750401065; c=relaxed/simple;
+	bh=FfQO/3Gko0umHfvQNq8LkRrn8BCHd44Qw+u8nsZ5xdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gIpl9j9zW7etLE1fs3j5dEdvq90+WzTKhMKj6dyIiBaPuy/LFBZ2NGaFdV9xf5wpdmsjQBtlKpK9U0UrMoTllpq0nrCEreDdqEmucuNtCccy0p4BOxyYT4N5aSUvGagefqB88hTR2eF+3voqY5ZujNseLqECiDKq7B6oLIrVV68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4397B176A;
+	Thu, 19 Jun 2025 23:30:42 -0700 (PDT)
+Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8773F66E;
+	Thu, 19 Jun 2025 23:30:58 -0700 (PDT)
+Message-ID: <670878b5-23fc-4b11-b585-9ddd43576963@arm.com>
+Date: Fri, 20 Jun 2025 12:00:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <1eceff0f-4df8-4716-8e3c-e2cb9e142511@redhat.com>
+ <ba8ec54d-586e-4bde-95c6-1dc2a9a937fb@arm.com>
+ <8f41d3ed-d490-4207-a907-75090c81bfc9@redhat.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <8f41d3ed-d490-4207-a907-75090c81bfc9@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsXC9ZZnke7D/yEZBv+ncVvMWb+GzeLJ/9+s
-	Fpd3zWGzuLfmP6vF4a9vmBxYPTat6mTz2PRpErvHiRm/WTxebJ7J6PF5k1wAaxSXTUpqTmZZ
-	apG+XQJXxvrdbxkLpnFVLJvVzdTAOJ2ji5GTQ0LARGLqvwcsMPb1rmvMIDabgIbEwUMnwWwR
-	AUWJc48vsnYxcnEwC6xmlNg8uZ0NJCEs4Clx68VERhCbRUBV4kjzBrA4r4C5xN6u5UwQQzUl
-	Gi7dA7M5BYwlnrU0g9lCAjwSrzbsZ4SoF5Q4OfMJ2BHMAvISzVtnM4MskxCYwSZx9OE+qOsk
-	JQ6uuMEygZF/FpKeWUh6FjAyrWIUyswry03MzDHRy6jMy6zQS87P3cQIDM5ltX+idzB+uhB8
-	iFGAg1GJh3fHl+AMIdbEsuLK3EOMEhzMSiK8i0/4ZQjxpiRWVqUW5ccXleakFh9ilOZgURLn
-	NfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgVF9+/OSp3CvHF0sydq/bG1K9I5eTve7mHcHqk3tz
-	vA8cuVpzW5zTi33exGbFtydevIjfWvVKh1ufO64otqZmzp2Q27ue+e1lya1jFHINffvtacix
-	2GU2d6/9OXJR8tF9pjUaW9bX13GrGUX7Bcx7yRz1bsHOircPb2/KKO8U3/3kgNaVp5eTNyux
-	FGckGmoxFxUnAgC+LTaISgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOLMWRmVeSWpSXmKPExsXCNUNWR/fB/5AMg//LrS3mrF/DZvHk/29W
-	i8/PXjNbHJ57ktXi8q45bBb31vxntTj89Q2TA7vHplWdbB6bPk1i9zgx4zeLx4vNMxk9vt32
-	8Fj84gOTx+dNcgHsUVw2Kak5mWWpRfp2CVwZ63e/ZSyYxlWxbFY3UwPjdI4uRk4OCQETietd
-	15hBbDYBDYmDh06C2SICihLnHl9k7WLk4mAWWM0osXlyOxtIQljAU+LWi4mMIDaLgKrEkeYN
-	YHFeAXOJvV3LmSCGako0XLoHZnMKGEs8a2kGs4UEeCRebdjPCFEvKHFy5hMWEJtZQF6ieets
-	5gmMPLOQpGYhSS1gZFrFKJKZV5abmJljqlecnVGZl1mhl5yfu4kRGHzLav9M3MH45bL7IUYB
-	DkYlHt4dX4IzhFgTy4orcw8xSnAwK4nwLj7hlyHEm5JYWZValB9fVJqTWnyIUZqDRUmc1ys8
-	NUFIID2xJDU7NbUgtQgmy8TBKdXAeL9Csst5XbyQztygMz33ryv/P6rOefOqgF/WpxWN/Z++
-	n6p1kHN5Lias8ZWX0yq1/80rg8c37EzYTt79tv2V3nS1IwuStfxmXtec97zyyev10VrlF1IF
-	M0y43k5+u1zont8CJ6mubaKlhTG+955dmuBQwn1kj8nacp656o8fbCg9o+vCfPPNJiWW4oxE
-	Qy3mouJEACWiEao6AgAA
-X-CFilter-Loop: Reflected
 
-Hi Andrew, please check the patch below. I missed CC'ing you on the previous
-email.
 
-On Thu, 19 Jun 2025 09:46:36 -0700 SeongJae Park <sj@kernel.org> wrote:
-> On Thu, 19 Jun 2025 14:03:12 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
-> 
-> > This patch changes the hard-coded quota goal metric values into sysfs
-> > knobs: `node0_mem_used_bp` and `node0_mem_free_bp`. These knobs
-> > represent the used and free memory ratio of node0 in basis points
-> > (bp, where 1 bp = 0.01%). As mentioned in [1], this patch is developed
-> > under the assumption that node0 is always the fast-tier in a two-tiers
-> > memory setup.
-> > 
-> > [1] https://lore.kernel.org/linux-mm/20250420194030.75838-8-sj@kernel.org/
-> 
-> Thank you for this patch.  Please note that this is just a sample code, and
-> hence there will be no strict user space compatibility support.
-> 
 
-Thanks for reviewing. As you said, this mtier sample module needs further 
-development for final version, like automatically detecting memory tiers and
-adding some useful knobs. May I continue working on the mtier module? 
+On 18/06/25 2:13 PM, David Hildenbrand wrote:
+> On 18.06.25 10:33, Anshuman Khandual wrote:
+>>
+>>
+>> On 18/06/25 1:49 PM, David Hildenbrand wrote:
+>>>> +    case 'p':
+>>>> +        if (fmt[1] == 't' && fmt[2] == 'e') {
+>>>> +            pte_t *pte = (pte_t *)ptr;
+>>>> +
+>>>> +            spec.field_width = 10;
+>>>> +            spec.precision = 8;
+>>>> +            spec.base = 16;
+>>>> +            spec.flags = SPECIAL | SMALL | ZEROPAD;
+>>>> +            if (sizeof(pte_t) == sizeof(u64)) {
+>>>> +                u64 val = pte_val(*pte);
+>>>> +
+>>>> +                return number(buf, end, val, spec);
+>>>> +            }
+>>>> +            WARN_ONCE(1, "Non standard pte_t\n");
+>>>
+>>> What about 32bit with 32bit pte_t?
+>>
+>> Ahh, missed that. Just wondering which all platforms might
+>> care about the 32 bit pte representation.
+> 
+> I think e.g., 32bit arm has 32bit ptes?
+> 
+> arch/arm/include/asm/pgtable-2level-types.h
+> 
+> typedef u32 pteval_t;
+> ...
+> typedef struct { pteval_t pte; } pte_t;
 
-> > 
-> > Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
-> > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> 
-> Reviewed-by: SeongJae Park <sj@kernel.org>
-> 
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+Right, missed that. I will accommodate 32 bit representations.
+
