@@ -1,69 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D5D298247
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02195299A9E
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424935; cv=none; b=Jg/JHjBepujAR4UL7JdMUbq/HBn2qR87aUB22wL3DEgn0pkyx3ObUsr/eSsUg1myLIVjDFZa544XqaygINfgxluByyikL0nLWHaDKONCN3rmv9uR+WS7PvOgalGjaEB69hv3sGt4SxNuDHF9NEnOs/ksyWHVKvaooaSLyxyFSUU=
+	t=1750424943; cv=none; b=QnQ+SvUfqTAZFPnDNFK8hklI7nZHnbS12+PlavXykEr/f3+HUSpMBeJOKDOSRKNpAjoR9VPZSN8YxEB1IMWWGONQ6/+oLh22fdK5/R5GCZDfi350AR8kpA97Eyg5sIO9h9YfA7+eNnWlDBFoMft/kap7VCLdN0bp/pGDnPtr4KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424935; c=relaxed/simple;
-	bh=upRLbOWOTskpWJQ5/croZAO1F99vBYZo3efafwHLVVs=;
+	s=arc-20240116; t=1750424943; c=relaxed/simple;
+	bh=r704CciIs6S8l1HQAxMJ8T5ehpg4WbCdT2WeOTpKhmA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P+SfOLHjwXheTQjTfXoW9pIU35udJtkNaih0OHEWHnyaPK3tJqX8NPl87+bu4iTFIrY75ZVZi+CtLeCg63cKtIOTmCY8ZvWBpjTFY4bKISK1T52Rc+XlQqQnoPMgJi7Q3uJlekbWfvd0vMUeyA2EBHLuUVbbpp840p9t6xPpR2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LPZi3w+N; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=k7N+deWWHSm4JXuC0fuEmAmDTnFbrYgbdsZdufAUYU0l8XWe1ue1vmdh0Cv3XdmbVKEDA/uqoCndeptk/fB1TaqPj844UcqoX0Lf3JmKFSxOtUNCh+ASXVybN5MBPISKtEEsmCz/Kq4Yxj1M0A4RGe7zvXqmkqGZppT1o6UOV0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AYwH43wz; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LPZi3w+N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYwH43wz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750424932;
+	s=mimecast20190719; t=1750424940;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3VsEn91YkrzZR4A/Mgdq4+jTVTrvyIrxkItYrsxgKtg=;
-	b=LPZi3w+NrGXt3j6d1vGC6r5avU3eAGyKTsrh7m9EIeFzU6JiCoXPOq5BDvxr4GMpW75mmM
-	3Fby8yUc2gExa3SVohkg+Nkql18bg/t+PjURvTHMOB2D+Z0d7VOjVW5xXnHIJqW1GJwZ91
-	qOaCPEd9jD2AXKPn+yV/ROUryLWd1MI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dM1iIgQEOaOLBHShUWBj9x+RovZVG7Za/6uALilylTw=;
+	b=AYwH43wzpj3b+tIulaSovDTTVS4J3ruRn3RmfL759qMDxGAMpl5G9lmTe+MYv6DbcJpVMa
+	AP24oRjVVYqogwHBvxVxEOPt6G/FnVGYX5gvrCKcz0FKezRspUOIowag7yHjd+eznlpy/d
+	0JihPkpNAPJKD/jBG6l5lD1wqkTLDXg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-221-CvaYzrAsPKysNVrPz3MCgA-1; Fri, 20 Jun 2025 09:08:51 -0400
-X-MC-Unique: CvaYzrAsPKysNVrPz3MCgA-1
-X-Mimecast-MFC-AGG-ID: CvaYzrAsPKysNVrPz3MCgA_1750424930
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a58939191eso891462f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:08:51 -0700 (PDT)
+ us-mta-608-kmZyjoBMOUGCOXm6Kkg1cQ-1; Fri, 20 Jun 2025 09:08:58 -0400
+X-MC-Unique: kmZyjoBMOUGCOXm6Kkg1cQ-1
+X-Mimecast-MFC-AGG-ID: kmZyjoBMOUGCOXm6Kkg1cQ_1750424938
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1057763f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:08:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750424930; x=1751029730;
+        d=1e100.net; s=20230601; t=1750424937; x=1751029737;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3VsEn91YkrzZR4A/Mgdq4+jTVTrvyIrxkItYrsxgKtg=;
-        b=hfULtNaUZ3g3XTJDlkROkTxE4tWPBVExblE8n5tbupuNe2JuoBmLncGAhAQCCJZxmE
-         v9RsHr2ZCeqOSinc80gIQqDJELcbiU1xLLy9qWHkGknh6RNeBm3gpslc7LUvAmlaMT4R
-         Z0nuKXFwnajhJ4BayVdbh0OvVAR1P/r4tQtucWHn2TfxVBROEzUMtoHlK5VnZfCS/D8m
-         QncTY1ecN9T6QQMCNNjfCC0fDcOfeK5h6VwVbYprREpJOlN73KbRTzFoFaXWhadBiU06
-         8e4g9BCZeXanLvmt874NyQRdwkGupJidiYfwE6XZHvcCmz+sTgzOs0104aQsQXNf9wcC
-         Bd4Q==
-X-Gm-Message-State: AOJu0YxVP0atTtFHzZQFJ5Tjs0cv4KenpX3qTO615qdFwNBrQZti2h6b
-	hgPSWGDszHF1P/I/zx+rRkFKzh3enV3lj2GXGzx5J3zKnT2lKmoux+fLuoDTW7IpPCs1LkyaORI
-	1q8121jpE5olYGz4C7rgTZKuOQeNXyJwQAZlNMIEVCLkuGuoeOKZzmq2spu828d40+6MIB7f2xA
-	==
-X-Gm-Gg: ASbGnctpHT1s8moqzXlXOuCyNmXMo3YLzDMEneV/1fY39/r7Bm2dIt2yKhV5b+cNAFv
-	x0nOES0pfrq3gAKLKwSWelDtWEn0YuTBE1H022UlwHr7nY88T/juX6H4+NmyBf/fWUchaC8zG/X
-	BFsLTstvOdKJ/c01U8BwcZShqgU4dHuRgvzcDQ/ZJe5wyyZeu4aJCrhuS3FSLaNKzoYlXSjKJFA
-	GKzpdnNq6cpXtZiSd/2b1fBkUYcAPP7c959r+ys8I0O39ZzaYzUhSTxJ4EGqmkdowJZofr8t9oo
-	hJbc6N02Z89k50+mWnI14s23imRw5QXPIWQ=
-X-Received: by 2002:a05:6000:2484:b0:3a4:ddde:13e4 with SMTP id ffacd0b85a97d-3a6d12eb394mr2179364f8f.58.1750424929552;
-        Fri, 20 Jun 2025 06:08:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6J1XzXAkrwIk+wJqXhYpgZ7P5H+/wRdPeseCTHYPIt8eTkRipb+nkvNVEX6eFh42F8eJ+sA==
-X-Received: by 2002:a05:6000:2484:b0:3a4:ddde:13e4 with SMTP id ffacd0b85a97d-3a6d12eb394mr2179299f8f.58.1750424928851;
-        Fri, 20 Jun 2025 06:08:48 -0700 (PDT)
+        bh=dM1iIgQEOaOLBHShUWBj9x+RovZVG7Za/6uALilylTw=;
+        b=n+coGao73yG5gGm61Jl9aua/fPw5pyZpKRcdIvx10RJ4a7Qj2iM0wz7OGKy/QrOqkz
+         bJ9ZmwPQFFdbBisVK6zNQG4hnhVqaPCB7NBR22w4xEL7pSc/ik8C0uWF/0X2Sibq/G0Z
+         D/vsYNyzWBf+ONcCmyh3WgiusURxvP1H2XIjIQ6ffF9ubvdTOkc2/VKuGnnDwBd8Ntkp
+         yrMzo2+0ZpAd8r3b0hmQVBIQa2ik3GPRFliyXQoYllkoNUyBfC3ecOPYxPJUguU3nGUz
+         k2De5EO9uwlMXAgXw1wADtG9VPmAVue4cjCRNHm+zbDmGe9PGtaEW7kGwws3qnqIEgv6
+         JWTA==
+X-Gm-Message-State: AOJu0YwjGK7e3P1hfPhBRlkI3hgS7x90IEUncNEusWdZx3mnDEJ7QnFW
+	hLNexxak96B4XAPapE8wwRi6EStEFVvcOYnQSnSZX5INYO5ROBh6ijvTAHUtRCOkAtXxnGF2QMm
+	+vi7x9m2/6uItYwt4QKAvyN2FpmYX3HfmAmCKS2BtqiiVaGdkRxZZH3zMUUhQQiD8VA==
+X-Gm-Gg: ASbGncsLua3lhvb34J2+jajxQcU32SU9U7K8buouRZxMWyIsFSZmS7YD7E7MLFX+0xh
+	w7DEmgVI4+VKowSXCbQPcYFmOuAB+xyXp1pzpGyyxFaVISVmGiqxQUTrpuRyjqw3YXCuakMjO6j
+	no6R1/REqaO9Xgj3JoAuGzPqYnCxFKEO+pxTYA0EDzOYI4WY8WXQHTaQv3caTzTX7NVPPv5/+53
+	U3xHBaNUWrdVxSIJgTBRFXJAZiMoOZHavWLt8gPpcohGgNM8CA0chB4FDXJcOVDmuwxksw3ckFI
+	ZP8jdjxddUNcKCt6z8kDDHkf9Ob0I6YEwPc=
+X-Received: by 2002:a05:6000:23c1:b0:3a4:fcc3:4a14 with SMTP id ffacd0b85a97d-3a6d13176fbmr1522860f8f.34.1750424937550;
+        Fri, 20 Jun 2025 06:08:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErCfEU/IVq7uI6YOAV42Q6eu/6bPqI5NWLxqRlPFpxO3LmsQRBOu3Tts8nxYdGgHaYTR596A==
+X-Received: by 2002:a05:6000:23c1:b0:3a4:fcc3:4a14 with SMTP id ffacd0b85a97d-3a6d13176fbmr1522807f8f.34.1750424936821;
+        Fri, 20 Jun 2025 06:08:56 -0700 (PDT)
 Received: from localhost.localdomain ([193.207.146.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d11909f4sm2017336f8f.88.2025.06.20.06.08.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f18215sm2026391f8f.29.2025.06.20.06.08.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 06:08:48 -0700 (PDT)
+        Fri, 20 Jun 2025 06:08:55 -0700 (PDT)
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: Jarkko Sakkinen <jarkko@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -83,11 +82,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Sumit Garg <sumit.garg@oss.qualcomm.com>
-Subject: [PATCH v6 3/4] tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
-Date: Fri, 20 Jun 2025 15:08:09 +0200
-Message-ID: <20250620130810.99069-4-sgarzare@redhat.com>
+	Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH v6 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+Date: Fri, 20 Jun 2025 15:08:10 +0200
+Message-ID: <20250620130810.99069-5-sgarzare@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250620130810.99069-1-sgarzare@redhat.com>
 References: <20250620130810.99069-1-sgarzare@redhat.com>
@@ -108,175 +106,80 @@ Enable synchronous send() with TPM_CHIP_FLAG_SYNC, which implies that
 ->send() already fills the provided buffer with a response, and ->recv()
 is not implemented.
 
-Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+Keep using the same pre-allocated buffer to avoid having to allocate
+it for each command. We need the buffer to have the header required by
+the SVSM protocol and the command contiguous in memory.
+
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
 v5:
 - changed order and parameter names to match tpm_try_transmit() [Jarkko]
 v4:
-- added Sumit's R-b
 - reworked commit description [Jarkko]
-v2:
-- set TPM_CHIP_FLAG_SYNC and support it in the new send()
-- removed Jens' T-b
-v1:
-- added Jens' T-b
 ---
- drivers/char/tpm/tpm_ftpm_tee.h |  4 ---
- drivers/char/tpm/tpm_ftpm_tee.c | 64 ++++++++++-----------------------
- 2 files changed, 19 insertions(+), 49 deletions(-)
+ drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
-index e39903b7ea07..8d5c3f0d2879 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.h
-+++ b/drivers/char/tpm/tpm_ftpm_tee.h
-@@ -22,16 +22,12 @@
-  * struct ftpm_tee_private - fTPM's private data
-  * @chip:     struct tpm_chip instance registered with tpm framework.
-  * @session:  fTPM TA session identifier.
-- * @resp_len: cached response buffer length.
-- * @resp_buf: cached response buffer.
-  * @ctx:      TEE context handler.
-  * @shm:      Memory pool shared with fTPM TA in TEE.
-  */
- struct ftpm_tee_private {
- 	struct tpm_chip *chip;
- 	u32 session;
--	size_t resp_len;
--	u8 resp_buf[MAX_RESPONSE_SIZE];
- 	struct tee_context *ctx;
- 	struct tee_shm *shm;
+diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+index 0847cbf450b4..f5ba0f64850b 100644
+--- a/drivers/char/tpm/tpm_svsm.c
++++ b/drivers/char/tpm/tpm_svsm.c
+@@ -26,37 +26,31 @@ struct tpm_svsm_priv {
  };
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index dbad83bf798e..4e63c30aeaf1 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -31,47 +31,19 @@ static const uuid_t ftpm_ta_uuid =
- 		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
  
- /**
-- * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
-- * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
-- * @buf:	the buffer to store data.
-- * @count:	the number of bytes to read.
-- *
-- * Return:
-- *	In case of success the number of bytes received.
-- *	On failure, -errno.
-- */
--static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
--{
--	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
--	size_t len;
--
--	len = pvt_data->resp_len;
--	if (count < len) {
--		dev_err(&chip->dev,
--			"%s: Invalid size in recv: count=%zd, resp_len=%zd\n",
--			__func__, count, len);
--		return -EIO;
--	}
--
--	memcpy(buf, pvt_data->resp_buf, len);
--	pvt_data->resp_len = 0;
--
--	return len;
+ static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+-			 size_t len)
++			 size_t cmd_len)
+ {
+ 	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+ 	int ret;
+ 
+-	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
++	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/*
+ 	 * The SVSM call uses the same buffer for the command and for the
+-	 * response, so after this call, the buffer will contain the response
+-	 * that can be used by .recv() op.
++	 * response, so after this call, the buffer will contain the response.
++	 *
++	 * Note: we have to use an internal buffer because the device in SVSM
++	 * expects the svsm_vtpm header + data to be physically contiguous.
+ 	 */
+-	return snp_svsm_vtpm_send_command(priv->buffer);
 -}
 -
--/**
-- * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
-+ * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory
-+ * and retrieve the response.
-  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
-- * @buf:	the buffer to send.
-+ * @buf:	the buffer to send and to store the response.
-  * @bufsiz:	the size of the buffer.
-- * @len:	the number of bytes to send.
-+ * @cmd_len:	the number of bytes to send.
-  *
-  * Return:
-- *	In case of success, returns 0.
-+ *	In case of success, returns the number of bytes received.
-  *	On failure, -errno
-  */
- static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
--				size_t len)
-+				size_t cmd_len)
- {
- 	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
- 	size_t resp_len;
-@@ -82,16 +54,15 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
- 	struct tee_param command_params[4];
- 	struct tee_shm *shm = pvt_data->shm;
+-static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+-{
+-	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
++	ret = snp_svsm_vtpm_send_command(priv->buffer);
++	if (ret)
++		return ret;
  
--	if (len > MAX_COMMAND_SIZE) {
-+	if (cmd_len > MAX_COMMAND_SIZE) {
- 		dev_err(&chip->dev,
- 			"%s: len=%zd exceeds MAX_COMMAND_SIZE supported by fTPM TA\n",
--			__func__, len);
-+			__func__, cmd_len);
- 		return -EIO;
- 	}
- 
- 	memset(&transceive_args, 0, sizeof(transceive_args));
- 	memset(command_params, 0, sizeof(command_params));
--	pvt_data->resp_len = 0;
- 
- 	/* Invoke FTPM_OPTEE_TA_SUBMIT_COMMAND function of fTPM TA */
- 	transceive_args = (struct tee_ioctl_invoke_arg) {
-@@ -105,7 +76,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
- 		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
- 		.u.memref = {
- 			.shm = shm,
--			.size = len,
-+			.size = cmd_len,
- 			.shm_offs = 0,
- 		},
- 	};
-@@ -117,7 +88,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
- 		return PTR_ERR(temp_buf);
- 	}
- 	memset(temp_buf, 0, (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE));
--	memcpy(temp_buf, buf, len);
-+	memcpy(temp_buf, buf, cmd_len);
- 
- 	command_params[1] = (struct tee_param) {
- 		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
-@@ -158,17 +129,20 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
- 			__func__, resp_len);
- 		return -EIO;
- 	}
-+	if (resp_len > bufsiz) {
-+		dev_err(&chip->dev,
-+			"%s: resp_len=%zd exceeds bufsiz=%zd\n",
-+			__func__, resp_len, bufsiz);
-+		return -EIO;
-+	}
- 
--	/* sanity checks look good, cache the response */
--	memcpy(pvt_data->resp_buf, temp_buf, resp_len);
--	pvt_data->resp_len = resp_len;
-+	memcpy(buf, temp_buf, resp_len);
- 
--	return 0;
-+	return resp_len;
+-	/*
+-	 * The internal buffer contains the response after we send the command
+-	 * to SVSM.
+-	 */
+-	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
++	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, bufsiz);
  }
  
- static const struct tpm_class_ops ftpm_tee_tpm_ops = {
+ static struct tpm_class_ops tpm_chip_ops = {
  	.flags = TPM_OPS_AUTO_STARTUP,
--	.recv = ftpm_tee_tpm_op_recv,
- 	.send = ftpm_tee_tpm_op_send,
+-	.recv = tpm_svsm_recv,
+ 	.send = tpm_svsm_send,
  };
  
-@@ -253,7 +227,7 @@ static int ftpm_tee_probe(struct device *dev)
- 	}
+@@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
  
- 	pvt_data->chip = chip;
--	pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2;
-+	pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_SYNC;
+ 	dev_set_drvdata(&chip->dev, priv);
  
- 	/* Create a character device for the fTPM */
- 	rc = tpm_chip_register(pvt_data->chip);
++	chip->flags |= TPM_CHIP_FLAG_SYNC;
+ 	err = tpm2_probe(chip);
+ 	if (err)
+ 		return err;
 -- 
 2.49.0
 
