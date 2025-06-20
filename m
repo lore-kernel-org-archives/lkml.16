@@ -1,83 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FAE25F98D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74EF78F4A;
+	Fri, 20 Jun 2025 11:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417850; cv=none; b=Z1AbDU9v03xbW2F3Xsp/IUwtxWMQyqQ91BChvOsNYcNICnl0uNw/NXrlzEYk2/Hvmbfsqbu9nI0AsAPR5oPeB0gj4p176qiSBGriwXlRAqU2FIi0Prr+POLpni2EWjB3Fuh56oHVa0oh+DCl9MBuH+Bk08LmJFlHX2cEsFwULKU=
+	t=1750417896; cv=none; b=osSqXhdnNQ2lx4uBVnZmaPNCsTiLaYHL2BOXlWucq+XnRSrWw5zEW8fQ96LBNikLRGt1vJICgjKoLj83dytp7mLjcXnYqvn1pl1b7IgQS4liWB6y3nC4Bf8zYZZi25NvBCy0Oi1foGhYMzixLZm6uE1udPmmFgiAKrOeZ1+JC28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417850; c=relaxed/simple;
-	bh=svtDzZdrbdSl/3pbNWLxGgua09eH0cIx0j2lbmFQQ6Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uifZjX/2iyoNYn6/vCxj6/hXW3VbAbfvAMjJCglsh+JtMwdOXY8XHDknqt0viwbyYgx1raM6FpJEGP3o4QcujCPcEtSuYQ5Z6dWv+Xg7ASnnRNwxKpIREqEUnw9qlKb1gNsYpK7pf5rJQpHUO8I/x9rKfMJoyWFPdtuq0ejWgX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OE/g/KUq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750417896; c=relaxed/simple;
+	bh=cy8sb2YDbk+4p5WEKcAZTmU3ATHgsbRxuH4N1gObOTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZJf4Frj1okx3cWlK5C2+XtiUUWPZngtTCMa6MkVLBK+w20IRdpH2ogLZqQtGtlyRTNk1JTBP6YJm5Hz94+j5GDLOLzNc+XO2t/1xN1xVcqQo9Rspg8W6+QmR6QHL0NHEEgcu1z1WAyb+DXljwt/aS+nOXxN2SptDAg9cJ5WrSr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElxpZUBO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OE/g/KUq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B5EC4CEE3;
-	Fri, 20 Jun 2025 11:10:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElxpZUBO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D362EC4CEEF;
+	Fri, 20 Jun 2025 11:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417849;
-	bh=svtDzZdrbdSl/3pbNWLxGgua09eH0cIx0j2lbmFQQ6Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OE/g/KUqf6uDvHAIqq2sQf/EQI/0gI93Jut3ZlNqhccuKnf6/PxUMDSGxLZeUlqpB
-	 bd+ax3IAwKsyKNGZwjpE/Ezpr5EnButk0yzGY+Y2LHoUgNdYO7EjC+LxAu9N5oW6h7
-	 pnCMRHXmWcPR4v7x0fuUvkj/xC06+6BIw7kYXusfa68/irxvjtbEafa4p8FyrpCsUj
-	 rfB+nxOsQC8tI9m4r+QtgtU5KpdtDM2fjjBCiAU8mSCllI+/1/skNEoQTxocPUqlWZ
-	 UHRpT9BypJLuUuIUa2nvwbAjRSvpeLd7DQxe+h9939UaZvS4YvlMnvd+kUdSfhHTxC
-	 37qirA946Vpyw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	James Morse <james.morse@arm.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: move smp_send_stop() cpu mask off stack
-Date: Fri, 20 Jun 2025 13:10:41 +0200
-Message-Id: <20250620111045.3364827-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1750417896;
+	bh=cy8sb2YDbk+4p5WEKcAZTmU3ATHgsbRxuH4N1gObOTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ElxpZUBOZmvrsdxg74RJrDytXLNkKxuV1WJrFuNjc6FiAfbUt6pTYbCs35UFmY7pY
+	 wsyKF9Y9fEMFJVRKcbARShGfctlvKUBQa8G7jle93yaXJiR0kfoSi0sOi2TNdtUJhS
+	 U5cGstDMuEns1H4X1fDkmrb9Z3xBUqoWHwHVgNs4qs43GCmd1aWmqR2Zgz6vfugnvb
+	 MSjljU2AvZ2lBJ7KqbCQgWeU93fvRmdgHOgIAi39KL/IgrIJPL5llFUfHHqB+63XKv
+	 lnfpYP2CumtpVIANYhWwWGRBd9bFGYfd06UT20lQ0XIoNf5KEsxmkVhMiw4VioIM7C
+	 U2+S0oon+RqnA==
+Date: Fri, 20 Jun 2025 13:11:30 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	Waiman Long <longman@redhat.com>, Kees Cook <kees@kernel.org>
+Subject: Re: register_syctl_init error in linux-next-20250612
+Message-ID: <agdzhkcb7f7w7zmcivjx6gnlilwglvd526pp3p5cgkdricwfx4@6iduwkqkerjp>
+References: <20250612175515.3251-1-spasswolf@web.de>
+ <mve232hzw4tqc5rnqlacofzlygqks7uirkumfmibrnmzcmpywh@kpchyerpb4ju>
+ <3eec91e437e2b9861e069a6c63e80b2bfd7e9802.camel@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3ftl5bdt5sbuceua"
+Content-Disposition: inline
+In-Reply-To: <3eec91e437e2b9861e069a6c63e80b2bfd7e9802.camel@web.de>
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-For really large values of CONFIG_NR_CPUS, a CPU mask value should
-not be put on the stack:
+--3ftl5bdt5sbuceua
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-arch/arm64/kernel/smp.c:1188:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+On Fri, Jun 20, 2025 at 11:37:40AM +0200, Bert Karwatzki wrote:
+> Am Donnerstag, dem 19.06.2025 um 14:39 +0200 schrieb Joel Granados:
+> > On Thu, Jun 12, 2025 at 07:55:13PM +0200, Bert Karwatzki wrote:
+> > > When starting evolution (gnome email client) on my debian sid with
+> > > linux-next-20250612 I get the following error message on the terminal
+> > > emulator (the Gtk messages also occur  when):
+> > >=20
+> > > Gtk-Message: 13:34:49.069: Failed to load module "colorreload-gtk-mod=
+ule"
+> > > Gtk-Message: 13:34:49.070: Failed to load module "window-decorations-=
+gtk-module"
+> > > Gtk-Message: 13:34:51.012: Failed to load module "colorreload-gtk-mod=
+ule"
+> > > Gtk-Message: 13:34:51.013: Failed to load module "window-decorations-=
+gtk-module"
+> > > bwrap: Can't read /proc/sys/kernel/overflowuid: No such file or direc=
+tory
+> > >=20
+> > > ** (org.gnome.Evolution:3327): ERROR **: 13:34:51.245: Failed to full=
+y launch dbus-proxy: Der Kindprozess wurde mit Status 1 beendet
+> > > Trace/Breakpoint ausgel=F6st
+> > >=20
+> > > and the following message in dmesg:
+> > >=20
+> > > [  305.600587] [      T3327] traps: evolution[3327] trap int3 ip:7f64=
+442d3ab7 sp:7ffc9f4e94d0 error:0 in libglib-2.0.so.0.8400.2[66ab7,7f644428c=
+000+a1000]
+> > >=20
+> > > I bisected this to commit cf47285025e6 ("locking/rtmutex: Move max_lo=
+ck_depth
+> > > into rtmutex.c"). The absence of /proc/sys/kernel/overflow{uid,gid} s=
+eems to be the related
+> > > to the start failure, in affected kernel version the files are absent=
+ while they're present
+> > > when evolution starts normally.
+> > I just tested with next-20250619 and I see /proc/sys/kernel/overflow{ui=
+d,gid}
+> >=20
+> > >=20
+> > > Also when booting next-20250612 I get this error message regarding ma=
+x_lock_depth and
+> > > rtmutex_sysctl_table:
+> > >=20
+> > > [    0.234399] [         T1] sysctl duplicate entry: /kernel/max_lock=
+_depth
+> > > [    0.234402] [         T1] failed when register_sysctl_sz rtmutex_s=
+ysctl_table to kernel
+> > > [    0.234405] [         T1] sysctl duplicate entry: /kernel/max_lock=
+_depth
+> > > [    0.234407] [         T1] failed when register_sysctl_sz rtmutex_s=
+ysctl_table to kernel
+> > And I do not see these messages in my dmesg. And
+> > /proc/sys/kernel/max_lock_depth exists.
+> >=20
+> > Maybe its something that only happened with the version from the 12th?
+> > Could you test again with the version from the 19?
+> >=20
+> > Best
+>=20
+> I tested next-202506{12,17,19} and sysctl-next and they all show the bugg=
+y behaviour.
+> CONFIG_PREEMPT_RT=3Dy is needed for the bug to appear.
+Hey
 
-This could be achieved using alloc_cpumask_var(), which makes it
-depend on CONFIG_CPUMASK_OFFSTACK, but as this function is already
-serialized and can only run on one CPU, making the variable 'static'
-is easier.
+I have managed to reproduce, thx for the clarification.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Did you have the chance to test with the patch that I sent?
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 15987100c0cf..5c605dc7f5be 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -1107,7 +1107,7 @@ static inline unsigned int num_other_online_cpus(void)
- void smp_send_stop(void)
- {
- 	static unsigned long stop_in_progress;
--	cpumask_t mask;
-+	static cpumask_t mask;
- 	unsigned long timeout;
- 
- 	/*
--- 
-2.39.5
+Best
 
+--=20
+
+Joel Granados
+
+--3ftl5bdt5sbuceua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmhVQdIACgkQupfNUreW
+QU/v8wv/ZhjouvkFYifNjmtHxzTJCtzTU4FCu14BOYUBCLwecWcuDOuFCKTxstU9
+SHYDtiTmz65VpGzPc8LQS1FuIVB1Gyq+lpqXuc4v1Ndzfm8qNq9WhTXiY5IpAa5i
+oePrARLXzlezLgYVa0liaoH55t6Q3fjSog9zyHtQ79t1qOtaTjqLqc2Bxwls//uF
+OGv+1OE6doUmHBGy753O/3AD3COT8qYzzXUwio68tGGgidp2MEx213LAlmskMSSy
+tTSk8oX0ki4vw14a/ICsz64RavF4JJfKN2//ipcTUTq+Qs+SxBbtUsq52rJz5WpF
+oTkI2rKbPgF2vM/Cwui92iyU7BHa7FQjyTt8huPAkyaznTZpL/ZcW1Jk/ixxtv0A
+T5A5YMWY/zsMAsVuG183Vs7LzZN1K+bxOVARd0cbAK2Gvp9LuH9X6xOufbqTHifL
+fmyk4GM1quec/e93NFR5RC+gtqL65hebZYI5l3DwSE7TwYntA/rQJWumPrG2enHW
+XioLk98m
+=P9mq
+-----END PGP SIGNATURE-----
+
+--3ftl5bdt5sbuceua--
