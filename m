@@ -1,63 +1,65 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EFB221DAC
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 22:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772BB221DAC;
+	Fri, 20 Jun 2025 22:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457099; cv=none; b=gbEGOeCaeJ/onFF1Hfwk1fcWdl/iPQhhYo+32IXcYVn+gPkn2/oCcHpuuV7sr/Hs/rq9qy9Rck6V1GkTQhtI0BDYn+fHY+2vStwDrA2//j97DJnw15eY9XXyLV9WyDwnFiTOLHrkOCjDXCFtw0/lChv2gXagqxZj/YanqAmNidg=
+	t=1750457182; cv=none; b=ZFzsswkZfP8mr+TpiKnINyC3X9EAAMX+me6eaLirRIBGpEme4IJcV3SZT4U+7YOmFc4dQMoVlokNw6cxyAJEqJ0vLyymZEJm20QvRbDS7rFnGC2/7/oN+cTVg0bhb+s7Qp4DB0uFqordfq0b+sRA8Kr+QfbuD6Qm1SFjuEreQ6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457099; c=relaxed/simple;
-	bh=qKO47JUuOeYylxbkUaI8PyJvTVsk6wydJd+Heew7j0Q=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=RTfg2F7qnveEpO3oAheQgn3ZEB9decAEN/WA8vCHOl+UbYKfbo8suGgLxoZMyddjNirpzr8LriVWfaGi6ykO2ozr8nZHIQLTVdqVU1BeSKM1uTKV/Rg0dNQIkCqmi/1hDFaqYQizskL2zsgz5QefQLpye6dUi/nbKnLCjNVzeTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=BXOOPKFp; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1750457182; c=relaxed/simple;
+	bh=H8bLbm8mQ5ONpzCJ5rL6mWTR4959rBNGjMmqbfMAJKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=quv9t8fcXRa3cl+T/B0chAKuMEMvK3mZEjaKqVBUG1pNa39UaSvVBlesMc4tFqaS6CQ6wWPXlbcIiwTZq+Vyt2W4w5qrnyDT9kt6RaAuE7O9/AN33RYPKHAgAh+X/yH5Y3ShLjpw8FGt/FdXJBgKRwY4UoH0OP3ab1woA89vpL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKK7sG80; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BXOOPKFp"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450cfb79177so12173735e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:04:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKK7sG80"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-adb4e36904bso453607866b.1;
+        Fri, 20 Jun 2025 15:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1750457096; x=1751061896; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=T8uvyBLImuMcilKTjMXqSxIOYKLWiCOZqiuUgZlbFHE=;
-        b=BXOOPKFpNFXSAUqQwMDG3rStpim9bXseKStuhrEd5Epg6cwTX85D26Fbs3GMJ6lK2M
-         0nIG8NqLx/stj5eazAxDpZyNXYy+ijZleS41xbnvblvh8DfRXQx+qkrZTZ9LVX/d0y7k
-         uduOs8nIZda0jSjZ5hqWzF1uSuRgJWifzuRv4=
+        d=gmail.com; s=20230601; t=1750457179; x=1751061979; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/nZ5vLwAzsNnnPm1vpVhd40+MzAtASMHps3Kb30tzxE=;
+        b=VKK7sG80WDD05slSwWtDQHHyX4BoAoEDC5l5Y+MV5WX2kbsweHhzHmH5Wxbm7SFNlH
+         PmpBObpJ3XxrIVcSoH0F6TYLRIHTPD/943oBPyawQEl+KUeY0wlsa4q4glfI+14LupqO
+         G1PhWu1M7a48U+V6avLqKjtHfLpJKR9v50Y3Q133G6jOyGi1iUuEcXFWNiXJNtTXGqWV
+         uC2gQMTWm0F+PimJDPBSxC46rptGpKJKcG3MHN7x8IRFfPcSS418J2/W1s5FJsBo6bQU
+         G38V4HbG6mDpoLEas5zwDgRXtRMMeC3ZfI1KpG+c1GoNBJF+xQK2bYF43GD7HRB6PmwL
+         F7ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750457096; x=1751061896;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8uvyBLImuMcilKTjMXqSxIOYKLWiCOZqiuUgZlbFHE=;
-        b=OPRF8huI+nOD1Dpz7pwFDyLPedkLddBHygfItDnUAzTyyLH9+kkZaobAzJ+I69FBna
-         0m3cQrXUEnVEK3GYnZFI5EaCFv0LhXpgAJe2bziDfmwE6I4BPpdA609EwGI0j3rLif7q
-         2Ym62nZjEZjyVTRNkIomO2SPxT6Z4jtJRWdLOSPfViHaIKxkU1o7flgxlb44FgpQ/Fjc
-         KgXgnrtDT/07QEp7H4rfKpWQSlf9KjM0T8J+WRzpgPDYQcBFRH+wBnviKTFOIiXnkgQk
-         fgQ4Iut/+WmmJQyDJWxfssFQ5sL6c3pV4mNwx/46zPp0t+kT5o567h7ruVAj6mHUTfPN
-         AoAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRlYY0XyyGtI0iTK1brNRJzBooyUZT9FG3DB8pStTi4OxOt6M9xP68Ps+hhp2RyhQ+FUIpaqu8MP/XSWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZTf6jUL7EdfmmD/SysGupx7HgOqQ+aszK5cUK1pgegcZmV1Km
-	WG8mueVt9rX+2iEEygEy8RjHOMZk1M+ucI9xKwMGIvdE9i3i1gmdOexRNRlT7YBbq4Y=
-X-Gm-Gg: ASbGncs41sf6EKhEto/TojpdlQzYb7qrPcxStMa1VICyAfpR1UX//nbNL4b/t55l/c9
-	i2kC5OLLwkoYDVXw/QRW/b1OMqR7a2pw+VMlGhpdROe4vN1nrUXR4YUe4sCB7yOyGCz5bjoLX/a
-	Zwy9ScEk+8Gr108o6WbWa7Ow2Y6PPCVHNqI2YqN3LuvDbYml342qFTZgnIFUSvDNs96TcmidX8o
-	/+c0sHAIeciGSd26d60Hkbl7UGaadLqAR0NpBd36xg0CX5WuZzXvIBKu1taDlbHgfD/tEIMDVUK
-	xSQ17M+33UDhMBXBWGj7+s0nACF1M0S4/RFX8pT1gpUrf85aOnAzVXW+AApwT6DwBCfKJUEGYFf
-	sGDge6+g2ysJTAK/ETZaEz3+8z/o=
-X-Google-Smtp-Source: AGHT+IF6TPHwFiRLRjNFUMsfj1E0KbTbLeSrxFBj3Izkb3vF6rF/CpISXhdDyQjItHncOEQak6nvPw==
-X-Received: by 2002:a05:600c:314f:b0:442:e9eb:1b48 with SMTP id 5b1f17b1804b1-453659ba5a3mr38824305e9.24.1750457095655;
-        Fri, 20 Jun 2025 15:04:55 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1188247sm3046998f8f.76.2025.06.20.15.04.54
+        d=1e100.net; s=20230601; t=1750457179; x=1751061979;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/nZ5vLwAzsNnnPm1vpVhd40+MzAtASMHps3Kb30tzxE=;
+        b=i6RyLoB9CTpMzslgo/6/17BjfsuWadCN9eBowN0MeLFF7SoG44Wnp8Njr8FyTIv8J9
+         HSDvfuN+IKm9TnhDEIoNTWk+eFwvN2Qqx87V493PmON1KpUUCUQPey+Q0jJiuCygMita
+         rEgyq68xyT5tSvxFTX+mMmqjkR1IUS062runLlnSAdge+Ok5XUcWP3UP/V/beNQhx3Xm
+         5evhGtt4N++ESglhx3yzbJbej83GB7A0vL/Nu434apX1xvm87cwBeLSspoZ3fmEtdz1Q
+         0aHyLa332iL3uaxMMQGRfn8m1931a1jHtITzdwzF51zfWe1xiHnOGP5xRldLTHpWnCBW
+         vDoA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1eblzd5toEo75zzJjNCSOyGaxbFae7muhiXmynWJpkIIsV4XosWwf9bCr2ktb+EfbGYlD8dlT5Z9k/njfdg==@vger.kernel.org, AJvYcCVUwxRtehTxa/mdOrBm0FH6fvGE0fpcGYAq0+IdVTr3WoTXktNhc98TeTEQ6ZcC5qbVAyoIcBe9Mnxy@vger.kernel.org, AJvYcCW6fY1Mlv2m5yOsHgrGe5A1cqXdwbC7UDlXsvF9G5vnAET8a8K5/bzlOoh/B+VvgzI4aK9aGNmlOEu7MsLx@vger.kernel.org, AJvYcCWyXcw4JoP8h1UIkT2EKyVzGIZgKri6P/lbwn3K3+5/C25M1nhW/hBB31jK9r+YWb6irE/KcJD5hLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyavWSwGOY+mUbeuT2Y7oI9bCgZEAzbOXBGUimim8MZ1byU2sgR
+	VRGnj38ZSLuJI9+CQ+2UHk4S6yAUg8IVp/l3oixvIZn9bb6v0tpcP8E=
+X-Gm-Gg: ASbGnctPU8a+RclwvOU1PIt9ffvp0kiDRYGHD+DaU6qaM/kuw6BDCrfVqIklZ/xC5dz
+	aJhpysU7x/uClOjuuvvE4ArsvzTM/Z1FKU6Cp+akwCK5MlVvr8Wn7wt3Z7S3dO6iEvc9Ex51q3D
+	Vi75bGlWLvwjTWZ5/lQ17b82PSHMrw/pNPmeKUKHMKbDTmzJM79iSwRH/mNX1yp5eVBhEEmqQge
+	USZHp32JfLuB4+c8qqKY860l0ftV6hNKzwZW4Y5y4r7KSW1cprREbxfk79OSSS2a8MHCOoa8yuU
+	u2ysIFkGiFVz8KIMRWxNkX20dCGdUp8p+EXG1W2LtfFcvvCLtRieygSMZw8bYpbZITv1nvZumQ=
+	=
+X-Google-Smtp-Source: AGHT+IEYDHPLPS/aiLsylQmdV4aS29FcdoVYkARHkjeD3JC5HuUi2/GalehZw8KEnx2WXwNuzXZgDw==
+X-Received: by 2002:a17:907:1ca8:b0:ade:35fc:1a73 with SMTP id a640c23a62f3a-ae057f9e1b6mr483910966b.55.1750457178076;
+        Fri, 20 Jun 2025 15:06:18 -0700 (PDT)
+Received: from [192.168.20.26] ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054083406sm227701466b.75.2025.06.20.15.06.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 15:04:55 -0700 (PDT)
-Message-ID: <1aa5fb31-ce23-4c9f-ba1b-d5dc93402209@citrix.com>
-Date: Fri, 20 Jun 2025 23:04:53 +0100
+        Fri, 20 Jun 2025 15:06:17 -0700 (PDT)
+Message-ID: <970c41dc-e89b-4963-abbe-398dc3d53110@gmail.com>
+Date: Sat, 21 Jun 2025 00:06:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,101 +67,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: dave.hansen@intel.com
-Cc: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
- alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
- bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
- christophe.leroy@csgroup.eu, corbet@lwn.net, daniel.sneddon@linux.intel.com,
- dave.hansen@linux.intel.com, ebiggers@google.com, geert+renesas@glider.be,
- houtao1@huawei.com, hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com,
- jpoimboe@kernel.org, kai.huang@intel.com, kees@kernel.org,
- kirill.shutemov@linux.intel.com, leitao@debian.org,
- linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
- luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
- michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
- namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
- sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
- tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
- vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
- xiongwei.song@windriver.com, ytcoode@gmail.com
-References: <61af62d9-4cd0-485f-8f0c-2da981f52695@intel.com>
-Subject: Re: [PATCHv6 00/16] x86: Enable Linear Address Space Separation
- support
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <61af62d9-4cd0-485f-8f0c-2da981f52695@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/4] Support for Adreno X1-45 GPU
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-pm@vger.kernel.org, Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250620-x1p-adreno-v3-0-56398c078c15@oss.qualcomm.com>
+Content-Language: en-US
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+In-Reply-To: <20250620-x1p-adreno-v3-0-56398c078c15@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Most of the cover letter here reads like an Intel whitepaper. That's not
-> the worst thing in the world, but I think it glosses over one very
-> important point:
+
+On 6/20/25 08:54, Akhil P Oommen wrote:
+> Add support for X1-45 GPU found in X1P41200 chipset (8 cpu core
+> version). X1-45 is a smaller version of X1-85 with lower core count and
+> smaller memories. From UMD perspective, this is similar to "FD735"
+> present in Mesa.
 >
-> 	Had it been available, LASS alone would have mitigated Meltdown.
+> Tested Glmark & Vkmark on Debian Gnome desktop.
 >
-> Could we say this up front in a prominent place, please?
+> I think Bjorn can pick the DT patch and Rob Clark can pick up the rest.
+>
+> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
 
-I'm going to nitpick. :)
+Hi,
 
-Yes, LASS would have made Meltdown a far less major problem than it was,
-but I don't think that phrasing is fair.  As I recall, LASS was
-literally invented as a "what would have been useful?" exercise in the
-wake of Meltdown.
+Thanks for the long awaited series!
+Works on Asus Zenbook A14 UX3407QA (x1-26-100), tested on Ubuntu 24.10 
+with Gnome 47 on Wayland.
 
-However, a less well known/researched area of Meltdown, which would not
-be addressed by LASS, is the ability to pend stores to read-only memory
-and proceed with the expectation that they'll success.
+Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com> # x1-26-100
 
-Other things which would have helped would have been PKS (and this *was*
-asked for ahead of Skylake launching...)
+Regards,
+Alex
 
-The other important thing about LASS is that it does cut off a whole
-class of sidechannels.  This halts definitely-rogue speculation, but is
-useful for non-speculative security too.
-
-~Andrew
+> ---
+> Changes in v3:
+> - Rebased on v6.16-rc1
+> - Fixed speedbin table in drm/msm
+> - Corrected the regex for the adreno opp node (Krzysztof)
+> - Replace underscore with hypen in DT node names (Krzysztof)
+> - Link to v2: https://lore.kernel.org/r/20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com
+>
+> Changes in v2:
+> - Skip 'delete-property' wherever it is unnecessary (Dmitry)
+> - Reorder dt nodes alphabetically (Konrad)
+> - A new patch#1 to fix the dtbs_check error
+> - Link to v1: https://lore.kernel.org/r/20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com
+>
+> ---
+> Akhil P Oommen (4):
+>        dt-bindings: opp: adreno: Update regex of OPP entry
+>        arm64: defconfig: Enable X1P42100 GPUCC driver
+>        drm/msm/adreno: Add Adreno X1-45 support
+>        arm64: dts: qcom: Add GPU support to X1P42100 SoC
+>
+>   .../bindings/opp/opp-v2-qcom-adreno.yaml           |   2 +-
+>   arch/arm64/boot/dts/qcom/x1e80100.dtsi             |   7 ++
+>   arch/arm64/boot/dts/qcom/x1p42100-crd.dts          |   4 +
+>   arch/arm64/boot/dts/qcom/x1p42100.dtsi             | 120 ++++++++++++++++++++-
+>   arch/arm64/configs/defconfig                       |   1 +
+>   drivers/gpu/drm/msm/adreno/a6xx_catalog.c          |  39 +++++++
+>   6 files changed, 170 insertions(+), 3 deletions(-)
+> ---
+> base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+> change-id: 20250603-x1p-adreno-219da2fd4ca4
+>
+> Best regards,
