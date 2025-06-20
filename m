@@ -1,30 +1,33 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BEF27FD6D;
-	Fri, 20 Jun 2025 09:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9736E1E2607;
+	Fri, 20 Jun 2025 09:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411195; cv=none; b=B/j7jQHsTF5mMht77UDJa4Ph158zHvvFVkxhqYhv/C436+hliOcQoFTWETR77jnTxfdZa+Gs7AoCdAtRVPkd10vHMLx11hpBz9S8jbJt8ssanJNONT1lJXK3HgCoymLJLnGL/4sdcY4a1TEe06TGyJ1FjUCLOXJo1boOTdS76Ig=
+	t=1750411207; cv=none; b=kUBCR1S6SASAEI5d811jb3BJk36P7tyhR7vHWnYwmX0BvxEEPxuN6tQh9ANxFO424/uZKT3ka9NwMmP4TbLu6quaex6+v7UmiQHIOV4svwwfKY4EGXq8eb5Qp9/3E7YxCDJejKrSCmxbI+Ind5XPqTyvdUlX0fq0BSyooJLxlyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411195; c=relaxed/simple;
-	bh=vP0fc3TzCtBVwLfvGk9UEI9JOSs+hbFuxkv7gvF18Ms=;
+	s=arc-20240116; t=1750411207; c=relaxed/simple;
+	bh=pYC/ISpQojUw9ozQVsIBqPPUCtFFg0eYzpwvNDiDyx4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iMstGSNTTBzw8s6jAka+y5vxqKOZCFSqpaS/ixbzWN66Z7O1S99tMd+yULqaN+hvwmiEQVlGWuZyYpZyjWG0mBzASGW4JFAurDTDKOJ9ybs5Bz8aASdG2jehgrooiUOBoYxZNTSU91Z6zRdQJaR8pLdDCvtAirbm7HM/oFp46mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TgFPF5WE; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=TjZ80T20Aq34I9rRsr7k0B0Zpv0FC6Rjomf4wkCi4tZcRoB2PeS8B7w17C/xi/jvs5mLFYo7dFx4IBddpdmePttBG3UwssCc0vLIKcc8pCqwOzW6jlwCRzbgqYN3AAVVkzv2QU4GKV9d4Knjh6lkURWf7T0uRIwt0xDmAi/tCMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkju6hwe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TgFPF5WE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=e4VtYTu1vknHIVj4povD3h+Ci+kpMZER4RskT3rQmUw=;
-	b=TgFPF5WEvtfBqnMmPQs4Qbx/cPIvVtabLqMcH9kSVdIQ5SaqVMuiswXLjRZdJu
-	MOo6yW77aiydyqiwP0xAIfmaKcqanrQLOooIYI43P/kCmLlgk4j0n/4CF5NWwMQ2
-	qVxtAfeOVcD94cedajNaOVUD4agtGm7nIz149uVNv6AoY=
-Received: from [10.42.12.155] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDX3qulJ1VoWdx4AQ--.21834S2;
-	Fri, 20 Jun 2025 17:19:34 +0800 (CST)
-Message-ID: <9d95bb75-586c-48dc-9e34-432cc13fd99f@163.com>
-Date: Fri, 20 Jun 2025 17:19:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkju6hwe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B687C4CEE3;
+	Fri, 20 Jun 2025 09:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750411207;
+	bh=pYC/ISpQojUw9ozQVsIBqPPUCtFFg0eYzpwvNDiDyx4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jkju6hweJ397tt5Z0cLK/rJHQ1FylaFrQKV8dUkoi1kpuLEJmRNDfqrkuLchnLAsn
+	 V7wTfCI0pPW6Jv9gf3lGSIulaNyiZskrDpQLO46ssykUI7x2XVaeYG3H23Lkeqq+5v
+	 V0uD8/VV34/q3q1oDXvhObSFre8bwEoNZ1KOK6yIYeb+lU3iJkZLheWpmHH3+XhpBg
+	 gHzVhCq/hLCvxdIC3lza5KFeaYHEIsEjGSruEE77puPXUFK8+CuK06eazj9FxwfFXb
+	 pwbJuaV1saLogvwyLJwRCpWQ0fdmVi1DMEh+aRm1Jumq0lSh3rATgjLYLG8g+OOKo2
+	 qFKLhOI3qI9yA==
+Message-ID: <1a8d023e-f27e-47ae-86ec-3f0760a7e74a@kernel.org>
+Date: Fri, 20 Jun 2025 11:19:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,138 +35,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usbip: convert to use faux_device
+Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add Mettler-Toledo
+To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Marek Vasut <marex@denx.de>, Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Markus Niebel <Markus.Niebel@tq-group.com>, Frank Li <Frank.Li@nxp.com>,
+ =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+ Michael Walle <mwalle@kernel.org>, Heiko Schocher <hs@denx.de>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>,
+ Max Merchel <Max.Merchel@ew.tq-group.com>, Tim Harvey
+ <tharvey@gateworks.com>, Primoz Fiser <primoz.fiser@norik.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Manivannan Sadhasivam <mani@kernel.org>,
+ Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250620084512.31147-1-Wojciech.Dubowik@mt.com>
+ <20250620084512.31147-2-Wojciech.Dubowik@mt.com>
 Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- zhouzongmin@kylinos.cn
-References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
- <20250604065410.76069-1-min_halo@163.com>
- <2025061926-paycheck-footnote-a2b8@gregkh>
- <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
- <2025062010-hardiness-flashily-cb0f@gregkh>
-From: Zongmin Zhou <min_halo@163.com>
-In-Reply-To: <2025062010-hardiness-flashily-cb0f@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgDX3qulJ1VoWdx4AQ--.21834S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur1fJry7Zr15ZFWUXFykAFb_yoWrKF13pF
-	ZxJFZYkr4qkF42gFsFgF1xXw1Fkw4Sy3y5Cr9rJry7X3yYkr95uFy7Kry5C393trWIkwnI
-	vr4DKas8WFyUZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U-6pQUUUUU=
-X-CM-SenderInfo: pplqsxxdorqiywtou0bp/1tbixxFyq2hUvbrrkwACsO
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250620084512.31147-2-Wojciech.Dubowik@mt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 20/06/2025 10:41, Wojciech Dubowik wrote:
+> Add the "mt" vendor prefix for Mettler-Toledo.
+> 
+> Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 2025/6/20 12:29, Greg KH wrote:
-> On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
->> On 2025/6/19 19:01, Greg KH wrote:
->>> On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
->>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>
->>>> The vhci driver does not need to create a platform device,
->>>> it only did so because it was simple to do that in order to
->>>> get a place in sysfs to hang some device-specific attributes.
->>>> Now the faux device interface is more appropriate,change it
->>>> over to use the faux bus instead.
->>>>
->>>> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>> ---
->>>> Changes in v2:
->>>> - don't change faux create api,just call probe on vhci_hcd_init.
->>>>
->>>>    drivers/usb/usbip/vhci.h             |  4 +-
->>>>    drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
->>>>    drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
->>>>    tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
->>>>    4 files changed, 72 insertions(+), 88 deletions(-)
->>> I get the following build errors from this patch:
->>>
->>> drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
->>>    1462 | static int vhci_hcd_resume(struct faux_device *fdev)
->>>         |            ^~~~~~~~~~~~~~~
->>> drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
->>>    1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
->>>         |            ^~~~~~~~~~~~~~~~
->>> cc1: all warnings being treated as errors
->>>
->>> Are you sure you tested this?
->> I apologize for not enabling -Werror, which resulted in missing this error
->> warning.
->> I have tested usbip feature use the new patch,but not test system
->> suspend/resume.
->> The faux bus type don't add pm function,and vhci-hcd driver can't register
->> it.
->> Maybe have to add suspend/resume for it.like below:
->> static const struct bus_type faux_bus_type = {
->>      .name        = "faux",
->>      .match        = faux_match,
->>      .probe        = faux_probe,
->>      .remove        = faux_remove,
->>      .resume     = faux_resume,
->>      .suspend    = faux_suspend,
->> };
->>
->> Is that right?
->> Your expertise would be greatly valued.
-> As this is not real hardware, why do you need the suspend/resume
-> callbacks at all?  What is happening here that requires them?
-@greg,
-The vhci_hcd_suspend/vhci_hcd_resume interfaces are not designed for 
-this faux device, but rather to
-manipulate the HCD_FLAG_HW_ACCESSIBLE bit in the hcd flags associated 
-with the faux device.
-For example:
-During system standby: clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
-During system wakeup: set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, just skip it entirely
+(please do not feel offended by me posting it here - no bad intentions
+intended, no patronizing, I just want to avoid wasted efforts). If you
+do not know the process, here is a short explanation:
 
-Previously, these two functions were registered through platform_driver,
-but faux bus does not have the relevant interface, so they were not called,
-resulting in this compilation warning error.
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here ('b4 trailers -u ...'). However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for tags received on the version they apply.
 
-This raises the question: Should the faux bus implement PM-related 
-interface?
-I'm uncertain whether these functions are essential for the vhci-hcd 
-driver or if they can be safely removed.
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
+</form letter>
 
-However, during system standby/wakeup tests with remote USB devices 
-bound to the vhci-hcd driver,
-I observed consistent failure scenarios across both the original 
-platform bus and faux bus patch implementations.
-
-Failure Modes
-a.Failed standby with auto-wakeup(Log excerpt):
-[ 1449.065592][T10238] PM: suspend entry (s2idle)
-[ 1449.106146][T10238] Filesystems sync: 0.040 seconds
-[ 1449.216189][T10238] Freezing user space processes
-[ 1449.219474][T10238] Freezing user space processes completed (elapsed 
-0.002 seconds)
-[ 1449.219887][T10238] OOM killer disabled.
-[ 1449.220090][T10238] Freezing remaining freezable tasks
-[ 1469.222372][T10238] Freezing remaining freezable tasks failed after 
-20.002 seconds (0 tasks refusing to freeze, wq_busy=1):
-[ 1469.225038][T10238] Showing freezable workqueues that are still busy:
-[ 1469.226176][T10238] workqueue events_freezable_pwr_efficient: flags=0x86
-[ 1469.227453][T10238]   pwq 20: cpus=0-3 node=0 flags=0x4 nice=0 
-active=1 refcnt=2
-[ 1469.227463][T10238]     in-flight: 268:disk_events_workfn
-[ 1469.233559][T10238] Restarting kernel threads ... done.
-[ 1469.235119][T10238] OOM killer enabled.
-[ 1469.235849][T10238] Restarting tasks ... done.
-[ 1469.240121][T10238] random: crng reseeded on system resumption
-[ 1469.241176][T10238] PM: suspend exit
-
-b.Failed standby with black screen freeze:
-[ 1820.667073][T11454] PM: suspend entry (s2idle)
-
-@Shuah，
-I wonder if you has encountered this issue? When a USB device is 
-attached to vhci-hcd,
-is it not possible to put the system into standby mode?
-
-Thanks.
-
-> thanks,
->
-> greg k-h
-
+Best regards,
+Krzysztof
