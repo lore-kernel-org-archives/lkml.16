@@ -1,105 +1,169 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2376727FD6D
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BEF27FD6D;
+	Fri, 20 Jun 2025 09:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750411051; cv=none; b=W/1z5o5FTdqReJ34tBNzGtc3PcfdRX18C30MFrlfWaGVdkd5uRi+lZb0I0VT9dyJB4Dmmwmv3RQP0F0CpdswsrYIhsCZCjPcPjvfqWt3Ax22lgYQhWzEMkUYynlZGIIUODjCqww91YT8zt2ar+F2JMtonhDN94rABLDcan1Cccg=
+	t=1750411195; cv=none; b=B/j7jQHsTF5mMht77UDJa4Ph158zHvvFVkxhqYhv/C436+hliOcQoFTWETR77jnTxfdZa+Gs7AoCdAtRVPkd10vHMLx11hpBz9S8jbJt8ssanJNONT1lJXK3HgCoymLJLnGL/4sdcY4a1TEe06TGyJ1FjUCLOXJo1boOTdS76Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750411051; c=relaxed/simple;
-	bh=ixQNp5ANh6UfdRBKRrYl0UcGHfvIBMJLk6zo1If86DE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gFumlOVqDBkPrU2aMCvG/Sf4abYBVnx0KhlDgYU1obLhMdnz/g75qADYvfmhIOUINqtNB03jd/sOdCHYhbMHjHbrsyOEQmtbGuVzTDYPosOlo4ZKc407LJtJuz6I9bd55/goN9REW5G+cAnCGzdm/m4vtarOhnzz2NQEMA6X8tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BoPTQRvM; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1750411195; c=relaxed/simple;
+	bh=vP0fc3TzCtBVwLfvGk9UEI9JOSs+hbFuxkv7gvF18Ms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iMstGSNTTBzw8s6jAka+y5vxqKOZCFSqpaS/ixbzWN66Z7O1S99tMd+yULqaN+hvwmiEQVlGWuZyYpZyjWG0mBzASGW4JFAurDTDKOJ9ybs5Bz8aASdG2jehgrooiUOBoYxZNTSU91Z6zRdQJaR8pLdDCvtAirbm7HM/oFp46mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TgFPF5WE; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BoPTQRvM"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1844141b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750411049; x=1751015849; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dNLJBKjnEtfhUDU8FDwmcm2NO13Gl9xrFkTR60m39TU=;
-        b=BoPTQRvMiaVsA+UWQUH2P9nYxUe9LPYI7ycwAMzYnje1T4RAewcYY9ygI7E6PXhkC1
-         ez/qgMsUnW2jAGIiFlgiUz9hrA/DHcYCBAqQSZcZxQ0nHO5tDnvVDqVW9eaSNEjhj4z3
-         e5U13FIS7A21MckQBbxKbm5/ryOifWfJ4ix11Ey7PJB4Goqh1fH/5kFoac7VBXvDvdEd
-         7rE6mTCRUOa2pnvCX91VnYltOo+9DmgatdCjGM1XkvhONxL8aR90KfI8X/I9jy4ialNo
-         Uuy2gr4XvjZ6qB/w4mVvLd6U4aVYsj5kH+lUyg1aq0l83g/5D7PxZtzyUoMcN3jF+31T
-         ZF5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750411049; x=1751015849;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dNLJBKjnEtfhUDU8FDwmcm2NO13Gl9xrFkTR60m39TU=;
-        b=D4GtwmwFDZS8cADFPTpUlqxgyZOM/QFq5Dkxf258go+bQzTCn8OBS1vlcZB6aIXJHU
-         zhEe8Obfs6jw4hq2jVsHAI8BMERFwZa+wCS/zy5vlTXZZTbdzsxvy/y9krypRHk267HB
-         8ygPOFOHn5Pem3rox1C/Dq889IvHQwyDL/O3ntzQOpyLdHuESfJvSRVsBovwPPQYjX7F
-         Gz+WatpApk1vCHPWAFOxQ6F9gAGhGfG8Cxesl2ygI3K5L9OHYIVJutQoqZMU2usqZbAk
-         Zb8EnomAOWCyzNawFb46vIempPuIZmbvZiDoOxm28aa+kwBdi4+epn0+VRUN2toSL/b7
-         1JqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBTczU2rND1gkrC8HHgm6zzTguSl3Gs8jzIsFDAC6VdKWtZ4nvcCknX4fIg8YsuP9vC1aSVnp7ctfCVfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0hJasKwvIcF6dHuYUAYLeh8/QxlKtQIfM73mWFW2mgUFfZBP7
-	mFGXHuS3wx65ECgcRzRJB6v8o8OwSF2rg5e0QKP1VC+HWOm47yiHuhbS7fpHD1ClkEc=
-X-Gm-Gg: ASbGnctDo43P4Iq1TZ1mdpr29t7EwqxnYKH/WOeL39ho643wiSyQXVBurTi09KwjFAX
-	aukfyXtreNEA3zP65B9DFmQRRzSDleg4h1Is/5dL2dcQqY+A+ZjWKhGkttvvF60joUoilWgt1vP
-	jwttUWuRpqErevh2Ih7EfqNMMpKOdMhfDd2Evompx1rbyl0MmWNVGpBLngqWmt7hf4M2Thldk13
-	xQb4ALja0bY8eRX5l1LIC9EX4c7+aSysTgt7EO9P0CnVq8jMjj5VQi+6j/zzlIYTuK8rbp4fYfn
-	Q4pv1scUQ2FG+STd53uGBqU8pu5QDm/0b1fS4JohRkh2/+RyeXKd7Pvy8gyopFjMPaQs5eUzhha
-	In6HVFkNNOJaai5AyZleaxRKwEyfedTuVruPZivvvbgzI7JUnDZEbLTM=
-X-Google-Smtp-Source: AGHT+IFl+mvsVS8E+myUXJyeRA0NPyQGQ4vLveBBEzuD3+Qemhmjod5mWIqNQeJQuwr4ZVik1pW6cw==
-X-Received: by 2002:a05:6a00:2789:b0:730:95a6:3761 with SMTP id d2e1a72fcca58-7490d4f533amr4072727b3a.3.1750411049294;
-        Fri, 20 Jun 2025 02:17:29 -0700 (PDT)
-Received: from J9GPGXL7NT.bytedance.net ([61.213.176.56])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a4a488esm1643231b3a.63.2025.06.20.02.17.25
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 20 Jun 2025 02:17:28 -0700 (PDT)
-From: Xu Lu <luxu.kernel@bytedance.com>
-To: anup@brainfault.org,
-	atish.patra@linux.dev,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr
-Cc: kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Xu Lu <luxu.kernel@bytedance.com>
-Subject: [PATCH] RISC-V: KVM: Delegate illegal instruction fault
-Date: Fri, 20 Jun 2025 17:17:20 +0800
-Message-Id: <20250620091720.85633-1-luxu.kernel@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TgFPF5WE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=e4VtYTu1vknHIVj4povD3h+Ci+kpMZER4RskT3rQmUw=;
+	b=TgFPF5WEvtfBqnMmPQs4Qbx/cPIvVtabLqMcH9kSVdIQ5SaqVMuiswXLjRZdJu
+	MOo6yW77aiydyqiwP0xAIfmaKcqanrQLOooIYI43P/kCmLlgk4j0n/4CF5NWwMQ2
+	qVxtAfeOVcD94cedajNaOVUD4agtGm7nIz149uVNv6AoY=
+Received: from [10.42.12.155] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDX3qulJ1VoWdx4AQ--.21834S2;
+	Fri, 20 Jun 2025 17:19:34 +0800 (CST)
+Message-ID: <9d95bb75-586c-48dc-9e34-432cc13fd99f@163.com>
+Date: Fri, 20 Jun 2025 17:19:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] usbip: convert to use faux_device
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ zhouzongmin@kylinos.cn
+References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
+ <20250604065410.76069-1-min_halo@163.com>
+ <2025061926-paycheck-footnote-a2b8@gregkh>
+ <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
+ <2025062010-hardiness-flashily-cb0f@gregkh>
+From: Zongmin Zhou <min_halo@163.com>
+In-Reply-To: <2025062010-hardiness-flashily-cb0f@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgDX3qulJ1VoWdx4AQ--.21834S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxur1fJry7Zr15ZFWUXFykAFb_yoWrKF13pF
+	ZxJFZYkr4qkF42gFsFgF1xXw1Fkw4Sy3y5Cr9rJry7X3yYkr95uFy7Kry5C393trWIkwnI
+	vr4DKas8WFyUZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U-6pQUUUUU=
+X-CM-SenderInfo: pplqsxxdorqiywtou0bp/1tbixxFyq2hUvbrrkwACsO
 
-Delegate illegal instruction fault to VS mode in default to avoid such
-exceptions being trapped to HS and redirected back to VS.
 
-Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
----
- arch/riscv/include/asm/kvm_host.h | 1 +
- 1 file changed, 1 insertion(+)
+On 2025/6/20 12:29, Greg KH wrote:
+> On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
+>> On 2025/6/19 19:01, Greg KH wrote:
+>>> On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
+>>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+>>>>
+>>>> The vhci driver does not need to create a platform device,
+>>>> it only did so because it was simple to do that in order to
+>>>> get a place in sysfs to hang some device-specific attributes.
+>>>> Now the faux device interface is more appropriate,change it
+>>>> over to use the faux bus instead.
+>>>>
+>>>> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
+>>>> ---
+>>>> Changes in v2:
+>>>> - don't change faux create api,just call probe on vhci_hcd_init.
+>>>>
+>>>>    drivers/usb/usbip/vhci.h             |  4 +-
+>>>>    drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
+>>>>    drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
+>>>>    tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
+>>>>    4 files changed, 72 insertions(+), 88 deletions(-)
+>>> I get the following build errors from this patch:
+>>>
+>>> drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
+>>>    1462 | static int vhci_hcd_resume(struct faux_device *fdev)
+>>>         |            ^~~~~~~~~~~~~~~
+>>> drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
+>>>    1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
+>>>         |            ^~~~~~~~~~~~~~~~
+>>> cc1: all warnings being treated as errors
+>>>
+>>> Are you sure you tested this?
+>> I apologize for not enabling -Werror, which resulted in missing this error
+>> warning.
+>> I have tested usbip feature use the new patch,but not test system
+>> suspend/resume.
+>> The faux bus type don't add pm function,and vhci-hcd driver can't register
+>> it.
+>> Maybe have to add suspend/resume for it.like below:
+>> static const struct bus_type faux_bus_type = {
+>>      .name        = "faux",
+>>      .match        = faux_match,
+>>      .probe        = faux_probe,
+>>      .remove        = faux_remove,
+>>      .resume     = faux_resume,
+>>      .suspend    = faux_suspend,
+>> };
+>>
+>> Is that right?
+>> Your expertise would be greatly valued.
+> As this is not real hardware, why do you need the suspend/resume
+> callbacks at all?  What is happening here that requires them?
+@greg,
+The vhci_hcd_suspend/vhci_hcd_resume interfaces are not designed for 
+this faux device, but rather to
+manipulate the HCD_FLAG_HW_ACCESSIBLE bit in the hcd flags associated 
+with the faux device.
+For example:
+During system standby: clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
+During system wakeup: set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 85cfebc32e4cf..97cc2c0dba73a 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -48,6 +48,7 @@
- 					 BIT(EXC_SYSCALL)         | \
- 					 BIT(EXC_INST_PAGE_FAULT) | \
- 					 BIT(EXC_LOAD_PAGE_FAULT) | \
-+					 BIT(EXC_INST_ILLEGAL)    | \
- 					 BIT(EXC_STORE_PAGE_FAULT))
- 
- #define KVM_HIDELEG_DEFAULT		(BIT(IRQ_VS_SOFT)  | \
--- 
-2.20.1
+Previously, these two functions were registered through platform_driver,
+but faux bus does not have the relevant interface, so they were not called,
+resulting in this compilation warning error.
+
+This raises the question: Should the faux bus implement PM-related 
+interface?
+I'm uncertain whether these functions are essential for the vhci-hcd 
+driver or if they can be safely removed.
+
+However, during system standby/wakeup tests with remote USB devices 
+bound to the vhci-hcd driver,
+I observed consistent failure scenarios across both the original 
+platform bus and faux bus patch implementations.
+
+Failure Modes
+a.Failed standby with auto-wakeup(Log excerpt):
+[ 1449.065592][T10238] PM: suspend entry (s2idle)
+[ 1449.106146][T10238] Filesystems sync: 0.040 seconds
+[ 1449.216189][T10238] Freezing user space processes
+[ 1449.219474][T10238] Freezing user space processes completed (elapsed 
+0.002 seconds)
+[ 1449.219887][T10238] OOM killer disabled.
+[ 1449.220090][T10238] Freezing remaining freezable tasks
+[ 1469.222372][T10238] Freezing remaining freezable tasks failed after 
+20.002 seconds (0 tasks refusing to freeze, wq_busy=1):
+[ 1469.225038][T10238] Showing freezable workqueues that are still busy:
+[ 1469.226176][T10238] workqueue events_freezable_pwr_efficient: flags=0x86
+[ 1469.227453][T10238]   pwq 20: cpus=0-3 node=0 flags=0x4 nice=0 
+active=1 refcnt=2
+[ 1469.227463][T10238]     in-flight: 268:disk_events_workfn
+[ 1469.233559][T10238] Restarting kernel threads ... done.
+[ 1469.235119][T10238] OOM killer enabled.
+[ 1469.235849][T10238] Restarting tasks ... done.
+[ 1469.240121][T10238] random: crng reseeded on system resumption
+[ 1469.241176][T10238] PM: suspend exit
+
+b.Failed standby with black screen freeze:
+[ 1820.667073][T11454] PM: suspend entry (s2idle)
+
+@Shuah，
+I wonder if you has encountered this issue? When a USB device is 
+attached to vhci-hcd,
+is it not possible to put the system into standby mode?
+
+Thanks.
+
+> thanks,
+>
+> greg k-h
 
