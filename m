@@ -1,187 +1,102 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492C7A923;
-	Fri, 20 Jun 2025 07:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF790A923;
+	Fri, 20 Jun 2025 07:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403211; cv=none; b=DfrkVUzq0BDXB0Sz6bsHVUaOzuwwCR+pFWc2lk6Lq2DkBJ4d0QPNTx6xEpY5xfLoRSGLqh6cPbE3gs3xpVWtKhdyTy8KJkQrqz38GvpBVrcu1q500+6/pae3uwUO3JY8IWPnwSD8vzaEd3Fp6d2s26wPM+T+4CCxsBTnGxXoH/w=
+	t=1750403354; cv=none; b=PzLC5qgslV6QarNnslIM2k9OzpXQVisBjNuP4ytNDiy9Osg+KPubIQR7kRlvfxTiIX5sWwrPLDEl9CoT/F3xOWzHOax31T+GiRg/zs06NeXEfsqdpJxY8P413JdJCOruI2btlN4j7dj/YR0OLsPDkrUrufkwTIAlKtpFRbCVtQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403211; c=relaxed/simple;
-	bh=SmlS60NEZr5Ej2L3lqp8/4Woh0GdyTocO/ohWGtU/wE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oFKmljl0JKpKbS1aWfmSS4+aAZ5R/QjFMfb9IVzWRNHTlgH1MU3edWCbbul3MMmfDuhbLAUa1Vi13fT0mXPKav2GOXZl8yA4h/jDCjsAv3sUbASXMV+3JKFp7wK3LMmGFEeR9jf4w6mcfRGROKfFimxwHQrjTYNTYtEKSfxaRWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HfbPMewg; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1750403354; c=relaxed/simple;
+	bh=M0OVidBb/1rU2itOG2o5tpQdcSqZhBs/xPlRD1ZyRcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dkIrb9xSr3zxiMIKxY+2HSNZBJwfQLjPKgvjLjn9Qgr+iTZYyZ4eYMQt4u+W9COuLTdNxQ3emEatGOOaDLOmDsUqr47Ztr08x6wNjpC9mDLVvTIuEUCOBSPYKH18ITDyJ6ZckCadYFLKATKowUsqjHU7rn7JPGkeG4q/ZTS4a0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVy9Mncs; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HfbPMewg"
-Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.139])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E11FC20277C1;
-	Fri, 20 Jun 2025 00:06:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E11FC20277C1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750403209;
-	bh=BYw4HgDjdqu8ShsUkQvASB2T/It7pcAPBrXZBA0uP9g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HfbPMewgwqH5KJNI5vwxsdw0myCJ0sif8gqxXSuR2Cgq4vg7L+OII6X3VoZWFn/nM
-	 zmf15hUM4/agFreUv3xTu7pOB4V3nydSO97OB8zlKIZCJ9yAp7sDooJ8lbskeZCCsJ
-	 L/tGFjUVGpxPfUvEktcmkjQx6AOEelJYVJXhz3dM=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	namjain@linux.microsoft.com,
-	stable@vger.kernel.org
-Subject: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring buffer
-Date: Fri, 20 Jun 2025 12:36:18 +0530
-Message-Id: <20250620070618.3097-1-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVy9Mncs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750403353; x=1781939353;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=M0OVidBb/1rU2itOG2o5tpQdcSqZhBs/xPlRD1ZyRcs=;
+  b=BVy9MncsDkWkeB012EfKw5M6gTqxe9hY+fZ+p083K/KJ6swnZXULnsbn
+   MNOC3WNNo8/U4O9b8+7RRYzoPQ6JY6B+Tn5T+SndKJJ+kL7cPl4appm5n
+   s9IdIBxUkBL61N/DeTpwWGbGwVqYL8qHTVaWA8rclJ1gEKC+lwbjhnIKE
+   F8McMrRZeuog8u4eZWk3IJnKnAdHJCBHgexDCZAnp+vuLivwFJCnzsNL+
+   siiQgmvCvXs3YTp+/awh8NV1vNu82/GF/p15ygc9N/7SG69q6T8uPBhlS
+   PDs7IaXFxWH/sed+NOWXZlO6nCHD2Itd8M1DX06uYiftz/YaTDvTDDbOo
+   w==;
+X-CSE-ConnectionGUID: ko7iqLL6QbS2+Oio1pTFPw==
+X-CSE-MsgGUID: LP6AtqlhRkmNEblqAsgKUQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51769330"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="51769330"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 00:09:12 -0700
+X-CSE-ConnectionGUID: Gr7O5rRBSOWwJ6j1j3sv5A==
+X-CSE-MsgGUID: e2PD9KtqR6mbu6ctuZd/jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="150324857"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 00:09:08 -0700
+Message-ID: <12894e27-7e80-4b48-97cf-5b1b98b51059@linux.intel.com>
+Date: Fri, 20 Jun 2025 15:09:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
+To: Paolo Bonzini <pbonzini@redhat.com>, seanjc@google.com
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
+ reinette.chatre@intel.com, xiaoyao.li@intel.com, tony.lindgren@intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com,
+ mikko.ylinen@linux.intel.com, kirill.shutemov@intel.com, jiewen.yao@intel.com
+References: <20250619180159.187358-1-pbonzini@redhat.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250619180159.187358-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Size of ring buffer, as defined in uio_hv_generic driver, is no longer
-fixed to 16 KB. This creates a problem in fcopy, since this size was
-hardcoded. With the change in place to make ring sysfs node actually
-reflect the size of underlying ring buffer, it is safe to get the size
-of ring sysfs file and use it for ring buffer size in fcopy daemon.
-Fix the issue of disparity in ring buffer size, by making it dynamic
-in fcopy uio daemon.
 
-Cc: stable@vger.kernel.org
-Fixes: 0315fef2aff9 ("uio_hv_generic: Align ring size to system page")
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
- tools/hv/hv_fcopy_uio_daemon.c | 65 ++++++++++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 7 deletions(-)
 
-diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-index 0198321d14a2..da2b27d6af0e 100644
---- a/tools/hv/hv_fcopy_uio_daemon.c
-+++ b/tools/hv/hv_fcopy_uio_daemon.c
-@@ -36,6 +36,7 @@
- #define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
- 
- #define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
-+#define FCOPY_CHANNELS_PATH	"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels"
- 
- #define FCOPY_VER_COUNT		1
- static const int fcopy_versions[] = {
-@@ -47,9 +48,51 @@ static const int fw_versions[] = {
- 	UTIL_FW_VERSION
- };
- 
--#define HV_RING_SIZE		0x4000 /* 16KB ring buffer size */
-+#define HV_RING_SIZE_DEFAULT	0x4000 /* 16KB ring buffer size default */
- 
--static unsigned char desc[HV_RING_SIZE];
-+static uint32_t get_ring_buffer_size(void)
-+{
-+	char ring_path[PATH_MAX];
-+	DIR *dir;
-+	struct dirent *entry;
-+	struct stat st;
-+	uint32_t ring_size = 0;
-+
-+	/* Find the channel directory */
-+	dir = opendir(FCOPY_CHANNELS_PATH);
-+	if (!dir) {
-+		syslog(LOG_ERR, "Failed to open channels directory, using default ring size");
-+		return HV_RING_SIZE_DEFAULT;
-+	}
-+
-+	while ((entry = readdir(dir)) != NULL) {
-+		if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
-+		    strcmp(entry->d_name, "..") != 0) {
-+			snprintf(ring_path, sizeof(ring_path), "%s/%s/ring",
-+				 FCOPY_CHANNELS_PATH, entry->d_name);
-+
-+			if (stat(ring_path, &st) == 0) {
-+				/* stat returns size of Tx, Rx rings combined, so take half of it */
-+				ring_size = (uint32_t)st.st_size / 2;
-+				syslog(LOG_INFO, "Ring buffer size from %s: %u bytes",
-+				       ring_path, ring_size);
-+				break;
-+			}
-+		}
-+	}
-+
-+	closedir(dir);
-+
-+	if (!ring_size) {
-+		ring_size = HV_RING_SIZE_DEFAULT;
-+		syslog(LOG_ERR, "Could not determine ring size, using default: %u bytes",
-+		       HV_RING_SIZE_DEFAULT);
-+	}
-+
-+	return ring_size;
-+}
-+
-+static unsigned char *desc;
- 
- static int target_fd;
- static char target_fname[PATH_MAX];
-@@ -406,7 +449,8 @@ int main(int argc, char *argv[])
- 	int daemonize = 1, long_index = 0, opt, ret = -EINVAL;
- 	struct vmbus_br txbr, rxbr;
- 	void *ring;
--	uint32_t len = HV_RING_SIZE;
-+	uint32_t ring_size = get_ring_buffer_size();
-+	uint32_t len = ring_size;
- 	char uio_name[NAME_MAX] = {0};
- 	char uio_dev_path[PATH_MAX] = {0};
- 
-@@ -416,6 +460,13 @@ int main(int argc, char *argv[])
- 		{0,		0,		   0,  0   }
- 	};
- 
-+	desc = (unsigned char *)malloc(ring_size * sizeof(unsigned char));
-+	if (!desc) {
-+		syslog(LOG_ERR, "malloc failed for desc buffer");
-+		ret = -ENOMEM;
-+		goto exit;
-+	}
-+
- 	while ((opt = getopt_long(argc, argv, "hn", long_options,
- 				  &long_index)) != -1) {
- 		switch (opt) {
-@@ -448,14 +499,14 @@ int main(int argc, char *argv[])
- 		goto exit;
- 	}
- 
--	ring = vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
-+	ring = vmbus_uio_map(&fcopy_fd, ring_size);
- 	if (!ring) {
- 		ret = errno;
- 		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(ret));
- 		goto close;
- 	}
--	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
--	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
-+	vmbus_br_setup(&txbr, ring, ring_size);
-+	vmbus_br_setup(&rxbr, (char *)ring + ring_size, ring_size);
- 
- 	rxbr.vbr->imask = 0;
- 
-@@ -472,7 +523,7 @@ int main(int argc, char *argv[])
- 			goto close;
- 		}
- 
--		len = HV_RING_SIZE;
-+		len = ring_size;
- 		ret = rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
- 		if (unlikely(ret <= 0)) {
- 			/* This indicates a failure to communicate (or worse) */
+On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
+> This is a refresh of Binbin's patches with a change to the userspace
+> API.  I am consolidating everything into a single KVM_EXIT_TDX and
+> adding to the contract that userspace is free to ignore it *except*
+> for having to reenter the guest with KVM_RUN.
+>
+> If in the future this does not work, it should be possible to introduce
+> an opt-in interface.  Hopefully that will not be necessary.
+>
+> Paolo
+>
+> Binbin Wu (3):
+>    KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+>    KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+>    KVM: TDX: Exit to userspace for GetTdVmCallInfo
+>
+>   Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
+>   arch/x86/include/asm/shared/tdx.h |  1 +
+>   arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
+>   include/uapi/linux/kvm.h          | 22 +++++++++
+>   4 files changed, 154 insertions(+), 8 deletions(-)
+>
+Tested the patch set with the TDX kvm-unit-tests, TDX enhanced KVM selftests,
+booting a Linux TD, and TDX related test cases defined in the LKVS test suite
+as described in:
+https://github.com/intel/lkvs/blob/main/KVM/docs/lkvs_on_avocado.md
 
-base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
--- 
-2.34.1
+Xiaoyao has tested the flow for GetQuote and had some comments for small issues
+on qemu patch:
+https://mail.gnu.org/archive/html/qemu-devel/2025-06/msg03154.html
+
 
