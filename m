@@ -1,475 +1,204 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011033.outbound.protection.outlook.com [52.101.65.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69775230BFF
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406231; cv=none; b=c2yGo7biJKIRfxE6q/ngpPNxXCkBzmHB+l27JrL2DFo5cHep7aculMumOlH+y7SOVW/JQOdgrLY/uUy6v1Rm8ZpiVPsOVv9/fdTGjZP/8WaQob3S/KzzJjlVqHTOW6IAJqgx+uctlUYOXEVQ/irWA62GVvMspfG6/HihbYVRsP8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406231; c=relaxed/simple;
-	bh=E66FO4TlDEMveG8Mp/qvgJsOs0+3QC7n9o4L6TQe5yA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VaNV66rhQm7MK7LJepVs5aF3xbqDoOAN8uUaMAzPL0mGJumppkUu9UmR5U3yJfG4T9DP920sV/jq2DKaugI2rEY+7PT7d99PbimtrMUMkmUxufxVUqGuJQ8hlisin8io4Tku4H+6HjrIuePIAJgCMU846RyRlsLSBsk3DLVXGZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYwnn9oG; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A308223183F
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750406248; cv=fail; b=nQ+yzfZ2fw+RHUU1Uh9ILXvTTnE0c/mRCLHN4fSoF/UkaYNBTfPGtFOJYMfj+Rmztu6CmG0vIPcmczQDUAL4EyeY4mVRmLEpz7Xsnj64JiZJa5U5x33evP17KcJo23raM2G4zlmR0x2fnZHTT5zNjG5OZe1CR7ICEUvcgK3wq60=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750406248; c=relaxed/simple;
+	bh=zKda50V2hSjAw2K/xEfdbQwOdQtvVOkcI5ZAhnKWCfE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=DeU0kMZNFjC9hr9oLaQqxLelLOblfcN0JmvfckfSzhiGg+CRqVbSgjOOIGTbRI50hAS/+mj53/NX95LMw1jxqsiuLHtqS1CmlInzrD+rEewrUlOGboQPOYgRuUUJdHhojFWe50OU0X3qA2cStWPnGV+X+VtEtw0YCFf7vh9tHS8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs-soprasteria.com; spf=pass smtp.mailfrom=cs-soprasteria.com; dkim=pass (2048-bit key) header.d=cs-soprasteria.com header.i=@cs-soprasteria.com header.b=GfFdzd0G; arc=fail smtp.client-ip=52.101.65.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs-soprasteria.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs-soprasteria.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYwnn9oG"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-addda47ebeaso321703666b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 00:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750406228; x=1751011028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EbjPmpN4k4kj61gbTaIz/v/P03tQOZqrCSncxNOLHhc=;
-        b=WYwnn9oGggNGT4nr71o4bola0aZP22pwwZQK30ba79HbnEvlwpr6B+Spso0ZHSac4o
-         eV4/w3arh3XDQSdo17VCgH2maY/4gXjebZrk7D05//keveqDu5r0NMblOwDZETGkEcFy
-         6B9CExSvt2xzy705AtFlfxpN1nTJ+Sm/rBbV1QYIdpRChvo0NX/WsiEg02Dosj3e1Z6X
-         pyu97eM3QO1pigW8JWkEcuZqBWium02LMZGWuYMLnsCoDucukamum5b7CftOJ3/ZNCyz
-         8LxMuwwlsMnFBTOZhWqs5/ydrz9UsurI8+iDSZ9+ExAFju/4T+a8+tvuhsa3nq/dVk8e
-         0j3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750406228; x=1751011028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EbjPmpN4k4kj61gbTaIz/v/P03tQOZqrCSncxNOLHhc=;
-        b=EiwsjuMxBOWfmfsbOb6NnrKwJwtrwqLDTbg9I3bDd8G3ijTlir4+OsBZAwzX2FdYpy
-         Aoa86jDKDXp+PaoFxk04p3rEhSbBdPeLaoTnSYaG4VpvlxPYyYzLTGZcMw0LCVmSyqyw
-         QgOtF4rxfD9azEz9HSuxJxtQmC98mpkWNZnzV1xarSO6YpLPclms6gIrMxcyB3OSF3fY
-         0g5KnvK4kCJ1PzOXO/Y7Y8jeg7P2NsitiYU9XC8rI617stp1FEh2rhwEtFI2edgwijT/
-         fsgqrLdCtVAbyrCyYULl1w2gfDkqa9z8A9q7Ign2zaxPueZvMqueS3gfL7QpGXr4VPTD
-         BRzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXocNGZuOIjVqSg0LoqFn8F/yG+agWtD0Z3stCoxX7hIeJ/Ha1xQtPMtH+pQmcBIYSR+blTsYag3whTZRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7kApEGxKVI678QxaTEU4ea6Tdr7nVCgPeKXyD7Q6WPwmR39En
-	+JB/eosTzwk2clKb8X8nrHTDFUmm3QIeXVAsMN8aoOUBnBcYL2WJJ4/iPlqXCgO8Vu2KA0CTdri
-	L1V9stpiEJ/7UkaunyRQdQfRXp054ueW/eyxH
-X-Gm-Gg: ASbGncuzgrmO5q7md7/upg0la1bMdtJk6TB2IqrkW8DDqlS4rOdnNDA9jECRwpskrGd
-	gGuHEIU2g6HiSrdZojUEfjtIw1Bz5CyG0qYGPzIQKQ58sRaDuwlHKgUDFK9w0m2pfl+9S2LfBDX
-	6dWlrDwKIDkYsdhP+8NQtNH8Z1BXC3BkTVBzvkFlv41/8=
-X-Google-Smtp-Source: AGHT+IF+6VAuUMy2Nvt0MZJBmp7cJebHTpZAwXCTt5iJxnNBDyghc8/sLzCVmrIXjVnN1BmUqSI7tUkqqvgBuxrWVds=
-X-Received: by 2002:a17:906:d7e3:b0:ad5:1bfd:30d2 with SMTP id
- a640c23a62f3a-ae057c1b50fmr165637966b.55.1750406227316; Fri, 20 Jun 2025
- 00:57:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cs-soprasteria.com header.i=@cs-soprasteria.com header.b="GfFdzd0G"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HnAYQUMR0FwZww47ZVKFlNrOFYhcJgmYgD9EN529Su+qirQqdEwKF0ce35H42Z0Re0BOlBKc0CkZK9/fYQO0RquvAH0rVqBsUutWuSzHkZK23M2ult4qFBlLktwoCiuv4C0tRB0+muhrRrkZ9+M80gDbNS0+or21xaQBUoyoIwtsIDAuMa5ch46XI/KGlkw5PmkgZR4Blm0qatRMa3roUlSYRVDiCh4WJCncII+52YQua8HR40JJcGH3kfQKDKFAGD2ppq8Me4Ri7opwxW1rbR2fR+LCA2uJ7vANZV5eSxccQovzuZ4lHJvGrkMFDw+WQRHTYRMu0QYn+NcZ7N90Xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zKda50V2hSjAw2K/xEfdbQwOdQtvVOkcI5ZAhnKWCfE=;
+ b=ItImZwawpcRGMkqHg514abD2vQXynZ/aTi6zTKwAIzyKrdCTol+0YuHLFsu8IGRBwGb1HNV220VWBaV7sJPbMUBPm+DWFDnt733BdWK25G9f/GOKD70GgXmQRFDdVgld6dmDAfzpHRIoQBWv1o5HoLVtc0iYPGcnedd8JnQjchyJUh3KYtlcAxp+2UwKE8M+9yLHdpJTUQnVn8zJVXX7OXxh3rEfaNPAnJy0v+RCRo7EQH3nQfVWUeqkK0nQifXO1km9VhS0n7Ujx4fnPGC+GKaD4wsE7fJck8JKQKiXV4I+VLvh5d4y93jJqXVS19xjxvR5PKOc6TsNGD0NZkdW8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cs-soprasteria.com; dmarc=pass action=none
+ header.from=cs-soprasteria.com; dkim=pass header.d=cs-soprasteria.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs-soprasteria.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zKda50V2hSjAw2K/xEfdbQwOdQtvVOkcI5ZAhnKWCfE=;
+ b=GfFdzd0G5cdHF5YR++UaRl8QRR1UcMuJZwQ2LfQ1kKvopcXsmf1q1LXGg2RrOi+r0+rHJUdaqtwqj6dZCC/xcjWEqo0CJ0K9NRV4875UJeW4j88+dgxAtsvhAm2ZJy+sDRf9k+ZgzOtdrelBFjDBfb36BXELyClKzXn0UeUfmXH9ZfUvH0xwuqTFFSYfVr35x7zuIhVUOiFpA+wKvTsWKaBhNUor3SsFb6kTVuNuK1nTZr+Pge1p1W7hHxzembS/mLcNBIT1dB786/2BRygSqgxBlC1+eqekexPzI/ijMd9/pazeuGvAyKe4q85yvrAzL9Mjd8yE19i2Glm2+lwdLg==
+Received: from AM0PR07MB6196.eurprd07.prod.outlook.com (2603:10a6:208:ed::33)
+ by PAWPR07MB9663.eurprd07.prod.outlook.com (2603:10a6:102:383::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Fri, 20 Jun
+ 2025 07:57:23 +0000
+Received: from AM0PR07MB6196.eurprd07.prod.outlook.com
+ ([fe80::7cb7:ff63:d358:1a]) by AM0PR07MB6196.eurprd07.prod.outlook.com
+ ([fe80::7cb7:ff63:d358:1a%7]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
+ 07:57:23 +0000
+From: LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+CC: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] powerpc: floppy: Add missing checks after DMA map
+Thread-Topic: [PATCH v2] powerpc: floppy: Add missing checks after DMA map
+Thread-Index: AQHb4bjJD4aKwG/kmECO6INc1n60OrQLrneA
+Date: Fri, 20 Jun 2025 07:57:23 +0000
+Message-ID: <b54bbe95-7136-4ea7-a6e6-8bf0e1d12a7b@cs-soprasteria.com>
+References: <20250620075602.12575-1-fourier.thomas@gmail.com>
+In-Reply-To: <20250620075602.12575-1-fourier.thomas@gmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cs-soprasteria.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM0PR07MB6196:EE_|PAWPR07MB9663:EE_
+x-ms-office365-filtering-correlation-id: 337cd805-61a8-46ce-1036-08ddafd01760
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?R2hRN241WU5QWGcxMVVUWWhTd3dPS0JlVE1PVk1pa01MTUxrWkFBQU5BTElv?=
+ =?utf-8?B?eWVBS3RsYWE2ZU1wbW9rMzRaQ3JHYlJzaVRLc3hJZHl0WFkzR1prcVkySzFn?=
+ =?utf-8?B?SDA4SlRaYU9PNTc1dzZjNk8raFUwVUZtS3RMQzl0M25sNWZ6TFFOaVd6UnJa?=
+ =?utf-8?B?aU5ERkg1ZXM3eDkwRUpPd2lzWHJGR2RqT1UxRFA4elJFeUo3ekhObjNoQUh1?=
+ =?utf-8?B?Wis1UUJyRi91MXZEeHFQa0x5S1pNR3dvMmpkZThKeHhKZUloc2locVVIZVJh?=
+ =?utf-8?B?aVJiY2N4b1ExNnNPLzNWbFpITEZjbVJsaTQybVdWSWs2RENyQVNsLzVwNFlT?=
+ =?utf-8?B?dmFGeGpocU9vbmtGeWdrRkNuL2duRkRiL05lbWRiT3JlZU96NHIxSTFaMzZs?=
+ =?utf-8?B?NnRSNTBCUWt4MWlGT2V3bGF1c3p1UWdjem15T0tWNmY2RkxPWkRXN1Zsd3Vp?=
+ =?utf-8?B?RURKVDIzdUZIQmJDdTk0dHJTTlJlWmFaQ2NkVjdJWDlNQ0ZqSWRqYk0rNHhh?=
+ =?utf-8?B?cUpEc2ZSREp2c0E3b09tNjJGaWp1UklybE5oZzNOMkcwRWxLTDZqYVRZOWhs?=
+ =?utf-8?B?THd1dXN3Z1pBVEdWSzNjVlNSUFN0aXB2bUs0SVdCc1JlenRTNUsxNi9Qc29i?=
+ =?utf-8?B?WXRNNjhKWjNWTDNZVjhyNWxaanR2UWNaWHNrY3p0VDREU1lHcDVOR0lsVTZ6?=
+ =?utf-8?B?c0hVZndxYktoRkxQYktobitaVjNMRUNWNGtpTjN2L1MyNUxrN2wxQ29WM2JM?=
+ =?utf-8?B?SXgrejlvcHoycEduQ1dBbVF4K1ljbXJqcWNmZnB0MmF1eGtOczhuRzVjUEUv?=
+ =?utf-8?B?aDJFcFJBWUtzaDNMQlUwU0wrUXY4Y3JlNkFDenhOam5OVTJ2THFTYTQzRm8x?=
+ =?utf-8?B?MnRYUGI2WEJIM3dkMXY2UXNQZnRVN0R5YVpoWkQ1d3dVZUtUaHVKNmJ1bWE2?=
+ =?utf-8?B?YnBmdkd4Y1hUZlFzR21XSUdnWDBDdHF4aHNTTFpjbmJXOUVZTklMV2ducVBD?=
+ =?utf-8?B?eXlPMkJ3M1lBWW41V0pQRVFpajMxL1BvN05tWTlIWFAwWk5tTkJQQU81YTR1?=
+ =?utf-8?B?YjIreWZGT2Uybm5leVVuaVpXaHpGMGpuQkdLOGV0K0IrMG4zb004SURuRndE?=
+ =?utf-8?B?eHQ4cXJpN3Z2bjk0a2FhQVZHOURLS1VYK043dWFEOE5jL25sT3IzTy9JOXBD?=
+ =?utf-8?B?T3lKa29aNWtMNldna0psNDRRYmFqTWZ0Z3lCUm9wK2hiTzVsSnBWSTJxY1lh?=
+ =?utf-8?B?cE0zMDVoNnhsNHl3K1BHZm5kSlpWTlQ1TEpTMHg5UGkvT1hRSytiRTRKNkM1?=
+ =?utf-8?B?WDRTRUtiUzA1N2VZeGpQRjd5VG8zQlU1bDRkQ0ZpSE1vaTNWM1gxcmdEblFN?=
+ =?utf-8?B?T0MwYUptWnJVKzRRa2h6MzVmTHcwQnFpRHhacTlXTlU2eXVML21xdmgyQ0ox?=
+ =?utf-8?B?WG80TDRSaGxnYmNTQXR3MDRxWm1pOWhQdEVkVmZwdmZzMnkwWUVhVVhkVFNO?=
+ =?utf-8?B?cWJsd3laZVNLYWFQYm1mNmxiVEU4azFobGthcVBTMld5VzJwaWxXOUh2VlRU?=
+ =?utf-8?B?bzBReGpOV25WOUxQb2p0alBkdzVJaU4wN2hnS0dSNHJPWFlLa1V6VlovbEpL?=
+ =?utf-8?B?ZVh0bGJ2WW1RazNyYUhqQ1BocnlFNEVjcTBhZHJ5aEVTNkhMV1ZvVjI2UzQ5?=
+ =?utf-8?B?RWw4UGdncjBzVnQyR291c3Y5cENLMHZ0cUU0aVFyM0lOYmdGRU9nN3dkbWJK?=
+ =?utf-8?B?NVVNTnk3bDZiS1I1TXVPN0lTVGUwd2lubnlFZUxtTW9PUWtMWkx3enAvM2Qr?=
+ =?utf-8?B?L2xEelRQY29OSExsV015ZkRub3MxdlJGYVBTS0NraHFYTVl0cHFSY0hxU2l6?=
+ =?utf-8?B?cy9IWVl5V09CSUpoUWRvVGRUZG4yVUwzekN2bnRZWENXVU9FM0gvZ2VjOFZQ?=
+ =?utf-8?B?SnVuNitScnVvdkZkVGxUczFqYXRhTVVuY1llNDdQR3U5Y0FmNXR2OUpWR2Nz?=
+ =?utf-8?B?OUp2NXJxaC9RPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR07MB6196.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cVgwbFFFa3hNK3ArcVY0VkNpcFZDVzBDYWZZUXh4OC92cGhvK2dtb1JjTmMx?=
+ =?utf-8?B?UjFjZVJaY0g0OW5VNTJJQTh1eE9KYzFkU2M0bnNXNlRCcUtTRGIyTzQrR0Ni?=
+ =?utf-8?B?L3Q2VzBpclZQNDg3ZTVobC91c21BbzF5RzhKaVV2aGV0UlRhZHFpUjk2OTlS?=
+ =?utf-8?B?YVU4VHhpY3hIbWxTQWh3RXlnOE1nR1Nuc1ZzL2l2UElNYmpZNVZiZWszcytz?=
+ =?utf-8?B?UjNwNmJDWjRxNG5kK3BmbStmU0tMN09JMURzekVya2NXMmRnTFhYdXJCVExB?=
+ =?utf-8?B?NnlZaXNmNGFUblBZME9SN0NwL1dxMXZSQURPT3A3S0g4eGRvcTZLb09IYzdO?=
+ =?utf-8?B?bnN0THkzZ2Y4anFUZDNVNDZXcmFSMGhVU1B4dGZFeXl4NXYzZlJIcWNlS3Fk?=
+ =?utf-8?B?UHdpSnBuZjI5SGdUd3N5NENwOUxuS29CQ2hwa1N6T3pSWVRuUm1iSFA1SUti?=
+ =?utf-8?B?MmROT0JNVzZIamx0MytHOTU5TDV4NkJVSFNnczZCcTM5enprdVY0RVgxa2VL?=
+ =?utf-8?B?ZFhxb1hHMVVwcEhOY2VMYmgxbGhsaFA1WWlxcWtCZFRxVmpQQ1dWZFZiSTkr?=
+ =?utf-8?B?MGVPZGhDTXdSeEtVd3E1U3U4SkVKV2F2Z2VMU01qUHhjaU9VTy9PL0I5MVk2?=
+ =?utf-8?B?NU9GZXlrZHlmanJ2SWpKTVFIdzhpYW5sNHBseWFBaWd4blRoZ2gvNnoyQ2ll?=
+ =?utf-8?B?Y0FMQllwNnprMi9KZDMrY3FPNjZOQjBCMzcrL3gzT0JZdy9ZbjZwM1ZReEFo?=
+ =?utf-8?B?cVRmRnVwY3NpMjdUM1ByR1RFeUxpZFdJdjNDd0FSVStFeGpTcTZlT2RGemJ6?=
+ =?utf-8?B?SkpuVUxua3BTVXJFV2VMWEl0OHdXVzM2OXBwMDRjdnJNdXVKQ0xMRmpNdWU1?=
+ =?utf-8?B?N1Zkc1YzVUlDbmhveWdtWTNlaCtJTjBBNDBrN1RoNnUxa1ExdlZVVmoydlk0?=
+ =?utf-8?B?eURQRFFxbmhIcys0aTVxREJOMUU1dzNwSzE5aVhhdXJkeWl0d2JPQWJIVFNs?=
+ =?utf-8?B?SEtWOGNXYWJGd1JHK1ZVNGcxTnV3NDhkUEV1TEJORkoxbEEzQkVqNFlVenV4?=
+ =?utf-8?B?Z2U0c0J6Y2FocEVwSXY2NGxqQ1VCeUpuWlhpeVNJRmhsVmpUYUQ0MTBoYnM0?=
+ =?utf-8?B?d0oycysxOTV3Z2Q3bUZhbmd3eksxekJyZGVHcWVqaTBzTXRpWjhHcTZpOWNz?=
+ =?utf-8?B?L0FHWXFGeE0zSWs2Y0Z2UGxjSERhZXM4TEJ0UkJTRHZUVmN4L2ZoaGcvNktp?=
+ =?utf-8?B?T3IyVU8zaEwwSGdrREhiYUJSYnhtRFhWcWFHWVVHMnJRbzhDMzhVL0ZHTVFo?=
+ =?utf-8?B?RzdGU2xXRWNIYWVTUmszZk1mc2wwcHVCdDFWLzh4dnRjVlBiMFFuQURYUXRa?=
+ =?utf-8?B?WHp4bnhkNDVUZEZzRjVnSDNHeTIyaXNMSmhERnhBT0h5VEFHbmZMUXBpd3RV?=
+ =?utf-8?B?dFhKKy9uUGdFMDdVcEkrNFQySjI0S0M2WnVBUTBNQWZBeVoraGlUanFOZ2k2?=
+ =?utf-8?B?eE9taWl4TmVoUmx2Z1h0dUcrZGdBSm5BVWtsdEpPdDhqdktLVHRyTkM5Zlp3?=
+ =?utf-8?B?YWxHQS9rb0xnZU1NTXozZW5oZE5HTk4rZWN2UVF5ZlNUc2lLK1Q4cDNSR0dY?=
+ =?utf-8?B?ODhrSUM2dlVzQUE4YzJEcnNJRDdTaEY0ZG45alVmeXh5eGI2WjFqeWtPUzJj?=
+ =?utf-8?B?NTlGb1cvV0piOFQ1Rk5QQW1Wb0dScGJVOTFUaUtHRFRyVFhaUk5aWXM1ZXlu?=
+ =?utf-8?B?cXZFK3pHMHc3U1V6WnRhRzIzQURxTGV2aVZLbnR1eFNocVp5aml3czlMWTlL?=
+ =?utf-8?B?dGF0YWFaZ1UvUXd1TWRkT2ZPZUsxNVM4TnVMMDU1YStETzkxa3lDRDd5YlhO?=
+ =?utf-8?B?bFhPcHUvNnBqK0VTSTlrbklxcnhNZXNXSFRxdlBpYjZVUWt0NHlBZ1BFWVNH?=
+ =?utf-8?B?US83UlhKeWRJeVpBdnRGTHZKOWtBVjE4UFVaSkdSOUxtbENXTHBRYS9xWXlZ?=
+ =?utf-8?B?L2REdUt4VStYRnN0ZkJuZ2kzNW9pVjJzVHlSQ1lXcEkyKzVvbzUrZ2pXQk1K?=
+ =?utf-8?B?STlidmxoUHJGRWdGZnJOc2w2dnlZS2Z3ZkVhalVTU2pnS3ZNSmE3UDZEZWZO?=
+ =?utf-8?B?Qm5Lc1RtSDRIMnRGVGRTTXZPWVY4a29HL1EzcmhweWRkQXhqT3dVdTNuY2pt?=
+ =?utf-8?B?ZEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <45DA32F81B12444080B219897FE72CA6@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510125948.2383778-1-xavier_qy@163.com> <99a0a2c8-d98e-4c81-9207-c55c72c00872@arm.com>
- <CAEmg6AUBf1wVjXSoqBseWffLbixUV7U-nY52ScKCeNXwrkBcqg@mail.gmail.com> <225fd9dd-2b97-4ec6-a9a6-fe148c4b901e@arm.com>
-In-Reply-To: <225fd9dd-2b97-4ec6-a9a6-fe148c4b901e@arm.com>
-From: Xavier Xia <xavier.qyxia@gmail.com>
-Date: Fri, 20 Jun 2025 15:56:55 +0800
-X-Gm-Features: AX0GCFvm3O18WCJzWjEGbk5vI8Iresz2_k3HB_QhB7hJ_3Y61_BnRY6cB-c-gac
-Message-ID: <CAEmg6AW0ZoKf_8XK7EjA2sE6HEL3Tneg7-CKakTNdgZrd585Ng@mail.gmail.com>
-Subject: Re: [PATCH v6] arm64/mm: Optimize loop to reduce redundant operations
- of contpte_ptep_get
-To: Ryan Roberts <ryan.roberts@arm.com>, will@kernel.org
-Cc: Xavier Xia <xavier_qy@163.com>, 21cnbao@gmail.com, dev.jain@arm.com, 
-	ioworker0@gmail.com, akpm@linux-foundation.org, catalin.marinas@arm.com, 
-	david@redhat.com, gshan@redhat.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, willy@infradead.org, ziy@nvidia.com, 
-	Barry Song <baohua@kernel.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: cs-soprasteria.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR07MB6196.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 337cd805-61a8-46ce-1036-08ddafd01760
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 07:57:23.6479
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8b87af7d-8647-4dc7-8df4-5f69a2011bb5
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tt/1zvHsdF+3MNXlg6X+LNpPCNm6e3a82Hz/svw5eJIgbXMWVkrALlzZmg5h5T0wfvflnjGI0QJxg5N4iIg0C+QweNbTKMVEK4YASH1YQm3aP1jG6AQloQ7PYZA6SpGX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR07MB9663
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 04
+X-MS-Exchange-CrossPremises-AuthSource: AM0PR07MB6196.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-messagesource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC:
+X-MS-Exchange-CrossPremises-originalclientipaddress: 93.17.236.2
+X-MS-Exchange-CrossPremises-transporttraffictype: Email
+X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
+X-OrganizationHeadersPreserved: PAWPR07MB9663.eurprd07.prod.outlook.com
 
-Hi all,
-
-May I follow up: Does this patch require any further changes? Is it
-now meeting the merging criteria?
-
---
-
-Thanks,
-Xavier
-
-On Thu, Jun 5, 2025 at 3:16=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com> =
-wrote:
->
-> On 05/06/2025 06:54, Xavier Xia wrote:
-> > Hi Ryan,
-> >
-> > Thank you for your review, and for reproducing and verifying the test c=
-ases.
-> > I am using a Gmail email to reply to your message, hoping you can recei=
-ve it.
-> > Please check the details below.
->
-> Ahh yes, this arrived in my inbox without issue!
->
-> Thanks,
-> Ryan
->
->
-> >
-> >
-> >
-> > On Thu, Jun 5, 2025 at 11:20=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.=
-com> wrote:
-> >>
-> >> On 10/05/2025 13:59, Xavier Xia wrote:
-> >>> This commit optimizes the contpte_ptep_get and contpte_ptep_get_lockl=
-ess
-> >>> function by adding early termination logic. It checks if the dirty an=
-d
-> >>> young bits of orig_pte are already set and skips redundant bit-settin=
-g
-> >>> operations during the loop. This reduces unnecessary iterations and
-> >>> improves performance.
-> >>>
-> >>> In order to verify the optimization performance, a test function has =
-been
-> >>> designed. The function's execution time and instruction statistics ha=
-ve
-> >>> been traced using perf, and the following are the operation results o=
-n a
-> >>> certain Qualcomm mobile phone chip:
-> >>>
-> >>> Test Code:
-> >>
-> >> nit: It would have been good to include the source for the whole progr=
-am,
-> >> including #includes and the main() function to make it quicker for oth=
-ers to get
-> >> up and running.
-> >
-> > OK, I will pay attention to it in the future. This test case is quite
-> > simple, so I didn't add it.
-> >
-> >>
-> >>>
-> >>>       #define PAGE_SIZE 4096
-> >>>       #define CONT_PTES 16
-> >>>       #define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
-> >>>       #define YOUNG_BIT 8
-> >>>       void rwdata(char *buf)
-> >>>       {
-> >>>               for (size_t i =3D 0; i < TEST_SIZE; i +=3D PAGE_SIZE) {
-> >>>                       buf[i] =3D 'a';
-> >>>                       volatile char c =3D buf[i];
-> >>>               }
-> >>>       }
-> >>>       void clear_young_dirty(char *buf)
-> >>>       {
-> >>>               if (madvise(buf, TEST_SIZE, MADV_FREE) =3D=3D -1) {
-> >>>                       perror("madvise free failed");
-> >>>                       free(buf);
-> >>>                       exit(EXIT_FAILURE);
-> >>>               }
-> >>>               if (madvise(buf, TEST_SIZE, MADV_COLD) =3D=3D -1) {
-> >>>                       perror("madvise free failed");
-> >>>                       free(buf);
-> >>>                       exit(EXIT_FAILURE);
-> >>>               }
-> >>
-> >> nit: MADV_FREE clears both young and dirty so I don't think MADV_COLD =
-is
-> >> required? (MADV_COLD only clears young I think?)
-> >
-> > You're right, MADV_COLD here can probably be removed.
-> >
-> >>
-> >>>       }
-> >>>       void set_one_young(char *buf)
-> >>>       {
-> >>>               for (size_t i =3D 0; i < TEST_SIZE; i +=3D CONT_PTES * =
-PAGE_SIZE) {
-> >>>                       volatile char c =3D buf[i + YOUNG_BIT * PAGE_SI=
-ZE];
-> >>>               }
-> >>>       }
-> >>>
-> >>>       void test_contpte_perf() {
-> >>>               char *buf;
-> >>>               int ret =3D posix_memalign((void **)&buf, CONT_PTES * P=
-AGE_SIZE,
-> >>>                               TEST_SIZE);
-> >>>               if ((ret !=3D 0) || ((unsigned long)buf % CONT_PTES * P=
-AGE_SIZE)) {
-> >>>                       perror("posix_memalign failed");
-> >>>                       exit(EXIT_FAILURE);
-> >>>               }
-> >>>
-> >>>               rwdata(buf);
-> >>>       #if TEST_CASE2 || TEST_CASE3
-> >>>               clear_young_dirty(buf);
-> >>>       #endif
-> >>>       #if TEST_CASE2
-> >>>               set_one_young(buf);
-> >>>       #endif
-> >>>
-> >>>               for (int j =3D 0; j < 500; j++) {
-> >>>                       mlock(buf, TEST_SIZE);
-> >>>
-> >>>                       munlock(buf, TEST_SIZE);
-> >>>               }
-> >>>               free(buf);
-> >>>       }
-> >>>
-> >>>       Descriptions of three test scenarios
-> >>>
-> >>> Scenario 1
-> >>>       The data of all 16 PTEs are both dirty and young.
-> >>>       #define TEST_CASE2 0
-> >>>       #define TEST_CASE3 0
-> >>>
-> >>> Scenario 2
-> >>>       Among the 16 PTEs, only the 8th one is young, and there are no =
-dirty ones.
-> >>>       #define TEST_CASE2 1
-> >>>       #define TEST_CASE3 0
-> >>>
-> >>> Scenario 3
-> >>>       Among the 16 PTEs, there are neither young nor dirty ones.
-> >>>       #define TEST_CASE2 0
-> >>>       #define TEST_CASE3 1
-> >>>
-> >>> Test results
-> >>>
-> >>> |Scenario 1         |       Original|       Optimized|
-> >>> |-------------------|---------------|----------------|
-> >>> |instructions       |    37912436160|     18731580031|
-> >>> |test time          |         4.2797|          2.2949|
-> >>> |overhead of        |               |                |
-> >>> |contpte_ptep_get() |         21.31%|           4.80%|
-> >>>
-> >>> |Scenario 2         |       Original|       Optimized|
-> >>> |-------------------|---------------|----------------|
-> >>> |instructions       |    36701270862|     36115790086|
-> >>> |test time          |         3.2335|          3.0874|
-> >>> |Overhead of        |               |                |
-> >>> |contpte_ptep_get() |         32.26%|          33.57%|
-> >>>
-> >>> |Scenario 3         |       Original|       Optimized|
-> >>> |-------------------|---------------|----------------|
-> >>> |instructions       |    36706279735|     36750881878|
-> >>> |test time          |         3.2008|          3.1249|
-> >>> |Overhead of        |               |                |
-> >>> |contpte_ptep_get() |         31.94%|          34.59%|
-> >>>
-> >>> For Scenario 1, optimized code can achieve an instruction benefit of =
-50.59%
-> >>> and a time benefit of 46.38%.
-> >>> For Scenario 2, optimized code can achieve an instruction count benef=
-it of
-> >>> 1.6% and a time benefit of 4.5%.
-> >>> For Scenario 3, since all the PTEs have neither the young nor the dir=
-ty
-> >>> flag, the branches taken by optimized code should be the same as thos=
-e of
-> >>> the original code. In fact, the test results of optimized code seem t=
-o be
-> >>> closer to those of the original code.
-> >>
-> >> I re-ran these tests on Apple M2 with 4K base pages + 64K mTHP.
-> >>
-> >> Scenario 1: reduced to 56% of baseline execution time
-> >> Scenario 2: reduced to 89% of baseline execution time
-> >> Scenario 3: reduced to 91% of baseline execution time
-> >>
-> >> I'm pretty amazed that scenario 3 got faster given it is doing the sam=
-e number
-> >> of loops.
-> >
-> > It seems that the data you obtained is similar to my test data. For
-> > scenario 3, it's
-> > faster even when running the same code, which I can't quite figure out =
-either.
-> >
-> >>>
-> >>> It can be proven through test function that the optimization for
-> >>> contpte_ptep_get is effective. Since the logic of contpte_ptep_get_lo=
-ckless
-> >>> is similar to that of contpte_ptep_get, the same optimization scheme =
-is
-> >>> also adopted for it.
-> >>>
-> >>> Reviewed-by: Barry Song <baohua@kernel.org>
-> >>> Signed-off-by: Xavier Xia <xavier_qy@163.com>
-> >>
-> >> I don't love the extra complexity, but this version is much tidier. Wh=
-ile the
-> >> micro-benchmark is clearly contrived, it shows that there will be case=
-s where it
-> >> will be faster and there are no cases where it is slower. This will pr=
-obably be
-> >> more valuable for 16K kernels because the number of PTEs in a contpte =
-block is
-> >> 128 there:
-> >
-> > Okay, this version has been revised multiple times based on your
-> > previous feedback
-> > and Barry's comments, and it seems much less complicated to understand =
-now. :)
-> >
-> >>
-> >> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> >> Tested-by: Ryan Roberts <ryan.roberts@arm.com>
-> >>
-> >>> ---
-> >>> Changes in v6:
-> >>> - Move prot =3D pte_pgprot(pte_mkold(pte_mkclean(pte))) into the cont=
-pte_is_consistent(),
-> >>>   as suggested by Barry.
-> >>> - Link to v5: https://lore.kernel.org/all/20250509122728.2379466-1-xa=
-vier_qy@163.com/
-> >>>
-> >>> Changes in v5:
-> >>> - Replace macro CHECK_CONTPTE_CONSISTENCY with inline function contpt=
-e_is_consistent
-> >>>   for improved readability and clarity, as suggested by Barry.
-> >>> - Link to v4: https://lore.kernel.org/all/20250508070353.2370826-1-xa=
-vier_qy@163.com/
-> >>>
-> >>> Changes in v4:
-> >>> - Convert macro CHECK_CONTPTE_FLAG to an internal loop for better rea=
-dability.
-> >>> - Refactor contpte_ptep_get_lockless using the same optimization logi=
-c, as suggested by Ryan.
-> >>> - Link to v3: https://lore.kernel.org/all/3d338f91.8c71.1965cd8b1b8.C=
-oremail.xavier_qy@163.com/
-> >>> ---
-> >>>  arch/arm64/mm/contpte.c | 74 +++++++++++++++++++++++++++++++++++----=
---
-> >>>  1 file changed, 64 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> >>> index bcac4f55f9c1..71efe7dff0ad 100644
-> >>> --- a/arch/arm64/mm/contpte.c
-> >>> +++ b/arch/arm64/mm/contpte.c
-> >>> @@ -169,17 +169,46 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_=
-pte)
-> >>>       for (i =3D 0; i < CONT_PTES; i++, ptep++) {
-> >>>               pte =3D __ptep_get(ptep);
-> >>>
-> >>> -             if (pte_dirty(pte))
-> >>> +             if (pte_dirty(pte)) {
-> >>>                       orig_pte =3D pte_mkdirty(orig_pte);
-> >>> -
-> >>> -             if (pte_young(pte))
-> >>> +                     for (; i < CONT_PTES; i++, ptep++) {
-> >>> +                             pte =3D __ptep_get(ptep);
-> >>> +                             if (pte_young(pte)) {
-> >>> +                                     orig_pte =3D pte_mkyoung(orig_p=
-te);
-> >>> +                                     break;
-> >>> +                             }
-> >>> +                     }
-> >>> +                     break;
-> >>> +             }
-> >>> +
-> >>> +             if (pte_young(pte)) {
-> >>>                       orig_pte =3D pte_mkyoung(orig_pte);
-> >>> +                     i++;
-> >>> +                     ptep++;
-> >>> +                     for (; i < CONT_PTES; i++, ptep++) {
-> >>> +                             pte =3D __ptep_get(ptep);
-> >>> +                             if (pte_dirty(pte)) {
-> >>> +                                     orig_pte =3D pte_mkdirty(orig_p=
-te);
-> >>> +                                     break;
-> >>> +                             }
-> >>> +                     }
-> >>> +                     break;
-> >>> +             }
-> >>>       }
-> >>>
-> >>>       return orig_pte;
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(contpte_ptep_get);
-> >>>
-> >>> +static inline bool contpte_is_consistent(pte_t pte, unsigned long pf=
-n,
-> >>> +                                     pgprot_t orig_prot)
-> >>> +{
-> >>> +     pgprot_t prot =3D pte_pgprot(pte_mkold(pte_mkclean(pte)));
-> >>> +
-> >>> +     return pte_valid_cont(pte) && pte_pfn(pte) =3D=3D pfn &&
-> >>> +                     pgprot_val(prot) =3D=3D pgprot_val(orig_prot);
-> >>> +}
-> >>> +
-> >>>  pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
-> >>>  {
-> >>>       /*
-> >>> @@ -202,7 +231,6 @@ pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
-> >>>       pgprot_t orig_prot;
-> >>>       unsigned long pfn;
-> >>>       pte_t orig_pte;
-> >>> -     pgprot_t prot;
-> >>>       pte_t *ptep;
-> >>>       pte_t pte;
-> >>>       int i;
-> >>> @@ -219,18 +247,44 @@ pte_t contpte_ptep_get_lockless(pte_t *orig_pte=
-p)
-> >>>
-> >>>       for (i =3D 0; i < CONT_PTES; i++, ptep++, pfn++) {
-> >>>               pte =3D __ptep_get(ptep);
-> >>> -             prot =3D pte_pgprot(pte_mkold(pte_mkclean(pte)));
-> >>>
-> >>> -             if (!pte_valid_cont(pte) ||
-> >>> -                pte_pfn(pte) !=3D pfn ||
-> >>> -                pgprot_val(prot) !=3D pgprot_val(orig_prot))
-> >>> +             if (!contpte_is_consistent(pte, pfn, orig_prot))
-> >>>                       goto retry;
-> >>>
-> >>> -             if (pte_dirty(pte))
-> >>> +             if (pte_dirty(pte)) {
-> >>>                       orig_pte =3D pte_mkdirty(orig_pte);
-> >>> +                     for (; i < CONT_PTES; i++, ptep++, pfn++) {
-> >>> +                             pte =3D __ptep_get(ptep);
-> >>> +
-> >>> +                             if (!contpte_is_consistent(pte, pfn, or=
-ig_prot))
-> >>> +                                     goto retry;
-> >>> +
-> >>> +                             if (pte_young(pte)) {
-> >>> +                                     orig_pte =3D pte_mkyoung(orig_p=
-te);
-> >>> +                                     break;
-> >>> +                             }
-> >>> +                     }
-> >>> +                     break;
-> >>
-> >> I considered for a while whether it is safe for contpte_ptep_get_lockl=
-ess() to
-> >> exit early having not seen every PTE in the contpte block and confirme=
-d that
-> >> they are all consistent. I eventually concluded that it is, as long as=
- all the
-> >> PTEs that it does check are consistent I believe this is fine.
-> >
-> > So, it looks like my changes here will be okay.
-> >
-> >>
-> >>> +             }
-> >>>
-> >>> -             if (pte_young(pte))
-> >>> +             if (pte_young(pte)) {
-> >>>                       orig_pte =3D pte_mkyoung(orig_pte);
-> >>> +                     i++;
-> >>> +                     ptep++;
-> >>> +                     pfn++;
-> >>> +                     for (; i < CONT_PTES; i++, ptep++, pfn++) {
-> >>> +                             pte =3D __ptep_get(ptep);
-> >>> +
-> >>> +                             if (!contpte_is_consistent(pte, pfn, or=
-ig_prot))
-> >>> +                                     goto retry;
-> >>> +
-> >>> +                             if (pte_dirty(pte)) {
-> >>> +                                     orig_pte =3D pte_mkdirty(orig_p=
-te);
-> >>> +                                     break;
-> >>> +                             }
-> >>> +                     }
-> >>> +                     break;
-> >>> +             }
-> >>>       }
-> >>>
-> >>>       return orig_pte;
-> >>
->
+DQoNCkxlIDIwLzA2LzIwMjUgw6AgMDk6NTUsIFRob21hcyBGb3VyaWVyIGEgw6ljcml0wqA6DQo+
+IFtWb3VzIG5lIHJlY2V2ZXogcGFzIHNvdXZlbnQgZGUgY291cnJpZXJzIGRlIGZvdXJpZXIudGhv
+bWFzQGdtYWlsLmNvbS4gRMOpY291dnJleiBwb3VycXVvaSBjZWNpIGVzdCBpbXBvcnRhbnQgw6Ag
+aHR0cHM6Ly9ha2EubXMvTGVhcm5BYm91dFNlbmRlcklkZW50aWZpY2F0aW9uIF0NCj4gDQo+IFRo
+ZSBETUEgbWFwIGZ1bmN0aW9ucyBjYW4gZmFpbCBhbmQgc2hvdWxkIGJlIHRlc3RlZCBmb3IgZXJy
+b3JzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIEZvdXJpZXIgPGZvdXJpZXIudGhvbWFz
+QGdtYWlsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUu
+bGVyb3lAY3Nncm91cC5ldT4NCg0KPiAtLS0NCj4gICBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20v
+ZmxvcHB5LmggfCA1ICsrKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2Fz
+bS9mbG9wcHkuaCBiL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9mbG9wcHkuaA0KPiBpbmRleCBm
+OGNlMTc4YjQzYjcuLjM0YWJmOGJlYTJjYyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2lu
+Y2x1ZGUvYXNtL2Zsb3BweS5oDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9mbG9w
+cHkuaA0KPiBAQCAtMTQ0LDkgKzE0NCwxMiBAQCBzdGF0aWMgaW50IGhhcmRfZG1hX3NldHVwKGNo
+YXIgKmFkZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSwgaW50IG1vZGUsIGludCBpbykNCj4gICAgICAg
+ICAgICAgICAgICBidXNfYWRkciA9IDA7DQo+ICAgICAgICAgIH0NCj4gDQo+IC0gICAgICAgaWYg
+KCFidXNfYWRkcikgIC8qIG5lZWQgdG8gbWFwIGl0ICovDQo+ICsgICAgICAgaWYgKCFidXNfYWRk
+cikgeyAgICAgICAgLyogbmVlZCB0byBtYXAgaXQgKi8NCj4gICAgICAgICAgICAgICAgICBidXNf
+YWRkciA9IGRtYV9tYXBfc2luZ2xlKCZpc2FfYnJpZGdlX3BjaWRldi0+ZGV2LCBhZGRyLCBzaXpl
+LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGlyKTsNCj4g
+KyAgICAgICAgICAgICAgIGlmIChkbWFfbWFwcGluZ19lcnJvcigmaXNhX2JyaWRnZV9wY2lkZXYt
+PmRldiwgYnVzX2FkZHIpKQ0KPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01F
+TTsNCj4gKyAgICAgICB9DQo+IA0KPiAgICAgICAgICAvKiByZW1lbWJlciB0aGlzIG9uZSBhcyBw
+cmV2ICovDQo+ICAgICAgICAgIHByZXZfYWRkciA9IGFkZHI7DQo+IC0tDQo+IDIuNDMuMA0KPiAN
+Cg0K
