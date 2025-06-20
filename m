@@ -1,75 +1,145 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AEA2248AE
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1054B2248AE;
+	Fri, 20 Jun 2025 06:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750402358; cv=none; b=AT45gwGW+Y/uJ7g4gmP1ivzHCgNRP0dmXdr0FRoYBlOUWc96PJtyXxJiCRVqFPsEODmk9FYCc8PKfGNq3BqtHh6F90TQmC/1vwnyu9EfpZrterxoBEO+lxnRIZasy18p8xPeRNavbpPm6CJFc07dUTlvGyGA+YlfEW3oFJs2GEk=
+	t=1750402437; cv=none; b=aQHkkPIsGJ9Z3kOpoWkk+jy17E7BEEsfABXVtgEGGgYeWVe2yAWJi5XP6fZISxhlvo3IWSsjNMHaxTXdH8JwgYMaUwsXgr4ce6CsnwIkwShiofd21mEtkJ7F3JexUjw4oMEgTJNN/60pcwrny+7xFfnmdk5GUtzFmv7k57L34Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750402358; c=relaxed/simple;
-	bh=i3qJPEOZSBMcOOTdTL3n26PwhBqhw+NNisPw06PYWKQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=VM60Hc9DK3CqslvZg+i+GgL1iQqYnFMdXu3d+sgI/4fgoTYOiJFeTldag4Q8Cm2q/AFRe2VVrCdRWGFkDMKEnQXAGDa7/Cp/x0zk0SgCD5QKdv3VcCu+ocXEt0kwiqjEmJ1btvGFHz5c+2YGh4Q71Qk5FHyFU1DKubJ+COXY12M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3de0dc57859so14260015ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:52:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750402355; x=1751007155;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/EH5omuFfkyKrBBvQT4tQ/G4Bs0xRq7JOfAnuQvpOU=;
-        b=dR9OIXy1G17Guu1odXoVn2e7/RV3i0SPvO+waEKaoW/SaqHFcdimPLT6cu1Bsl9qsx
-         bfZWpQNa7t6p+UAEhP6gsUECZh1C7kEqqk05UkJs8vqn0AVgxq7eVBZ43gQUyH5/mmQ+
-         acnLsq+pDt1sNHbrRv2BEoM73l/9wnLnpjDqQu2omO5CJ4chIQh4Vny5iaFg0OOVxbVg
-         bNZM3a/8YO91ylZPDovD7IP+KxHxSCxD1lsQ2PIzY5ikZwIQpkagE+pewfP6HI38OJpT
-         2Xu9bD8PSjHZQYvg6PDWMZF/zffb4sSvGtHJLg4jxaC0gFwljhvz6vJQMpkeKdn9G5+P
-         Ei8Q==
-X-Gm-Message-State: AOJu0YziGBt5M2WjUjTF8WfF8svj6V2cAPo9Xhm8XI95frRa72HGAkAG
-	vadc1vRuQvw6d/GQwpbFZ6QuN6kof/d62o/ose6elRrRDs2r5tKSuclCoq2/UHdEspYJGR9fo6M
-	2t9yNGLdjqm2K+9Y4sPiBWFS2EJlaFSgf6IcyyzUAjw4LYtH0rSrk/nvD3p4=
-X-Google-Smtp-Source: AGHT+IFY0ShTF9Q3c5DGKsY/r1ktd7RWg7sN9IF7V49M//EsdPWx84YUzkEQ3kgESS/B5rO8Tf8WbQ/uaPb9/3hJW1X9tOui8SoS
+	s=arc-20240116; t=1750402437; c=relaxed/simple;
+	bh=kyK0UqsUZUVJN9QD+HtqwYYQTPrhE9A1IVF6VjtuSPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HORqKeszjDd+g5b+7KjuNPrgMexfGuO6hgCpgv94Jsgpa1N0bdLJmF/DyVpIUo+WkTSivj6dGAtvYwlhlQo9uyOWwBSkvr4k5asHnKlLkJInwcjsml4MsZwn6ks1/8+9oo7WNjVWcOh12580MVmyJiY9af/dB4lIurr8uzvTYC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55F9F176A;
+	Thu, 19 Jun 2025 23:53:34 -0700 (PDT)
+Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADD2D3F673;
+	Thu, 19 Jun 2025 23:53:50 -0700 (PDT)
+Message-ID: <92a89dbb-7031-459a-ad5a-69b29b08cfc8@arm.com>
+Date: Fri, 20 Jun 2025 12:23:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3102:b0:3dc:7c9e:c3aa with SMTP id
- e9e14a558f8ab-3de38cc2b51mr17092785ab.21.1750402355608; Thu, 19 Jun 2025
- 23:52:35 -0700 (PDT)
-Date: Thu, 19 Jun 2025 23:52:35 -0700
-In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68550533.a00a0220.137b3.0034.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
- vmci_host_unlocked_ioctl (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mm@kvack.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <aFL7frrstgpzzgan@smile.fi.intel.com>
+ <0d437b3e-37b5-4e98-90bc-afa6c8150e77@arm.com>
+ <aFP7wwKD_yeRRuI_@black.fi.intel.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <aFP7wwKD_yeRRuI_@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
 
-***
 
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
-Author: lizhi.xu@windriver.com
+On 19/06/25 5:30 PM, Andy Shevchenko wrote:
+> On Thu, Jun 19, 2025 at 03:05:10PM +0530, Anshuman Khandual wrote:
+>> On 18/06/25 11:16 PM, Andy Shevchenko wrote:
+>>> On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
+>>>> Add a new format for printing page table entries.
+>>>
+>>>> Cc: Petr Mladek <pmladek@suse.com>
+>>>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>>>> Cc: Jonathan Corbet <corbet@lwn.net>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>> Cc: linux-doc@vger.kernel.org
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: linux-mm@kvack.org
+>>>
+>>> Please. move these to be after the '---' cutter line below. Just leave SoB tag
+>>> alone. This will have the same effect w/o polluting commit message.
+>>>
+>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>> ---
+>>>
+>>> (somewhere here is a good place for all your Cc: tags)
+>>
+>> Is not it better to also capture the Cc: list in the commit message.
+> 
+> No it's worse. One may easily get the same from lore. Can you give a good
+> justification for the polluting message with 8 lines over a single line of the
+> useful information, please?
 
-#syz test
+Will drop the Cc: list from the commit message and move it below '---'
+cutter line as suggested earlier.
 
-diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
-index b64944367ac5..e67e6ae48e83 100644
---- a/drivers/misc/vmw_vmci/vmci_host.c
-+++ b/drivers/misc/vmw_vmci/vmci_host.c
-@@ -398,6 +398,7 @@ static int vmci_host_do_send_datagram(struct vmci_host_dev *vmci_host_dev,
- 		kfree(dg);
- 		return -EINVAL;
- 	}
-+	memset(dg + 27, 0, 4);
- 
- 	pr_devel("Datagram dst (handle=0x%x:0x%x) src (handle=0x%x:0x%x), payload (size=%llu bytes)\n",
- 		 dg->dst.context, dg->dst.resource,
+> 
+>> Seems like such has been the practice for various patches on the MM
+>> list. But not sure if that is an expected standard for all patches.
+> 
+> It's not an MM subsystem.
+> 
+> ...
+> 
+>>>> +Print standard page table entry pte_t.
+>>>> +
+>>>> +Passed by reference.
+>>>> +
+>>>> +Examples for a 64 bit page table entry, given &(u64)0xc0ffee::
+>>>
+>>> What does this mean?
+>>
+>> 64 bit address containing value the 0xc0ffee
+> 
+> Please, make it 64-bit address. The example as is is quite confusing.
+Agreed it is some what confusing - will fix it.
+
+> 
+>>>> +        %ppte   0x00c0ffee
+>>>
+>>> Can it be ever 64-bit?
+>> I am sorry - did not get that. pte_t contained value can be 64
+>> bits if that's what you meant.
+> 
+> Yes, see above why I have such a question.
+
+Got it.
+
+> 
+> ...
+> 
+>>>> +			spec.field_width = 10;
+>>>> +			spec.precision = 8;
+>>>> +			spec.base = 16;
+>>>> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
+>>>
+>>> Do not duplicate code we have already in the file.
+>> I am sorry - did not get that. Is the above flag combination some
+>> how wrong ?
+> 
+> It's dup. Please, take your time to find the very similar piece of code in one
+> of the helper functions we have.
+
+Are you referring to special_hex_number() ?
+
+> 
+> I recommend you to look at the history of the changes in this file for when the
+> new specifier was added and how it is implemented> 
+> ...
+> 
+>> Could you please kindly elaborate on the code duplication problem
+>> you have mentioned earlier. I might not understand your concern
+>> here correctly.
+> 
+> Just find the same or similar pieces of code elsewhere in the same file.
+> Use them.
+> Will go through previous print format additions and re-work the patches
+accommodating various suggestions. Thanks for your review.
+
