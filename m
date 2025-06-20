@@ -1,141 +1,241 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC32C25A2BF;
-	Fri, 20 Jun 2025 08:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C166253934;
+	Fri, 20 Jun 2025 08:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750409638; cv=none; b=fRIL630On5cXKDOHYhz+IiAPg/6LZWobxp70/BwB30ujauItxlrxdGnB5aDnlbl0VnrfnFwAMe/lJRWHNyA8gH6BGFovOApEw/6npHofUiUelrSRZV9dyP0UaVeyHCB4DcCja0G338qcT8h2+OM7wcOk06phLM0f/v7wofiDmgg=
+	t=1750409712; cv=none; b=osrL2gKSH/KF/k/7kT+qJhxiR0DohGnqLv1QUllGoLht90RczCx2BuxQ9LvIQFqIOYCK5z/I/klcE+w8CNFR/CBFwJXHxc/V8nma7PXraCilCJDRkX7at50NJGqQY/M7SaQbLs3eLsl9WtuyvRtTUzi0a3yZZLSl56O9IlFB/sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750409638; c=relaxed/simple;
-	bh=ZEt28yDbA4jtYRWH6czwZyX0Dir/c+EuR469f9IcAXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kFIcQmEUIhOf5eRFrIB5ES+5zXt7GKRQQj79Vke+sCs5WlqPSCclaBGqQmnQvUHiwJVDOgfOLGQLbtIKsAQu5DsCZlBTRLelvVH0jyAj1hrGDRJXABJwZ2HZ+NbqMHnO1I+OSewrATPdL3nYMqjQYbWd2oc2cddOg732TMwMnAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KUYsZUCn; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1750409712; c=relaxed/simple;
+	bh=bVAYXmi1mGHMSd3f6pN5I21LAjlBO11vnhsVsIy5x8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jKlGETbFaSbaGBYT3mARvFS1vQjNmKSYk6V6poRI5LbGCZe8u1+HVhSOsk9Wec9XZGij69UVad8iU/dbs+UrvXJdeaq19duFP8ROqYG8LjVAr4Y6/1UZ2eHwvVn0Sa0Z5ncF1HIhULJ5AKNT1fhYjY1AME2bkqBQLmAfnn09UPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HKS3Vlj+; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUYsZUCn"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad572ba1347so257348866b.1;
-        Fri, 20 Jun 2025 01:53:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKS3Vlj+"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-748f54dfa5fso1081902b3a.2;
+        Fri, 20 Jun 2025 01:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750409635; x=1751014435; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2oDHB+zxUhZlGRcm/DzvHNAM53q/XnxVlugvAZmBNkM=;
-        b=KUYsZUCn3gtKI+wq7PdCRFx0Qaz/Q1lMjj3NDz1TNbDmz3EkipLIdc10GWKfWvUx05
-         scdpGaxeyT3nvEau4Au9pzza6GSk/rGWmlwPbp2nPULsnL9xS2QK3SUD1rxHae8rvM7H
-         YTUlQ5ibPpF9jYAvnfv5JLUFKZuAlHx1VBMZBxwGvnkk4NCSh6WxlP5cED4qs5tQshdw
-         ZStQ+g5jE9JsCe9nPiD6w5tOdDe6iVJakrO3xSDV6cJfPs5XxSVcAa5xqrNPbjJC3ymm
-         RN8p5yqB3DrBdAOqV12aJfFXPTQDZ/N/E95x/AvdnVvO5lOSlL5vqhKNMeSoAHaLXNuF
-         CtpA==
+        d=gmail.com; s=20230601; t=1750409710; x=1751014510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Iv3oZXqRsz+u6cGWSKhTrYlL4O94V/iX3UEF0MlMpEU=;
+        b=HKS3Vlj+3YXvovL0JcgAxL2ZXT5qFo4hs47TZ6admL1meDS2iG7tSOIkN2MEfugs7U
+         GnXw22c+8VLe3f+coSwRT0WkfF6TgXJvHEFzUU92rKWVpPWzqTFpq3hHn3b657+W8RXo
+         ePlfWuZg8vTvtc71Idag9tlWxKom19X4Xxdr53NpyiHKBpyz0qJDZJNrjiJF4mw+cwk1
+         xw32of1vT0OfWW0dQD2ot0dOLNhrLyT7VP1dZLN4VXfQidgHooGA9/B7Z06HQXY0EGpR
+         YL7bO1Vzbctw2B4GZId4sFx3iPTL7zBToPyoD4Lx11GowZSrZyEcpVBrmzKQCexUdYhu
+         IyUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750409635; x=1751014435;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2oDHB+zxUhZlGRcm/DzvHNAM53q/XnxVlugvAZmBNkM=;
-        b=lZUHtl73BbpdNpovkMIVglnimyEEb5GzSfmzKhzEf671BRrudDag04G0qp81R+My4Y
-         NctIMtAiuKu+0TuqcMgjxhIW6mYIwnoHJseZKOtRoUY62tjuiZwQ2ex9V1961FY9GVXA
-         URGWL9Hkb9s2VCIinQl3W7KuDqEY+Wy+lCx7hXVYiWGC39ZTfUyMHegVhth7uMPwPmCO
-         nNLURNxtN4hYB4kiupXRtf8V2eGEc4HajUXElDK30U5p+m+QC2ujVaUIlICOpORaQqbS
-         TgbVHL06kkr6aeBS8hdAQ8JkAQlaaSNgjvXPO3b3g8SsCtUE/hf3Z+F+CLVkD0poDjzR
-         un1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUPKCdBZ64H/7UrLPFYQmhdgoda5kR1JhuWDzlo5Jt380dONr1dm3PaTsCX2hw83VpCxUnEcc1J2E14@vger.kernel.org, AJvYcCWuYNYjSRW2P0JoYKPQa/ZwQ5dCRbNTQ62VGFHvrjOPFywNiidcl6BXu9kDguU1bwGxEj0VDejkfrUXehDP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHUPQDoN0b1+qLT7Ito1QvPCgm7COV2umu/TAvkHy5OgQpXu/E
-	arHNX/UjqiAS1KMa/EY1CGI89N8Q3ABV4wGdbY4qsC29mhG5bbeVS5zc
-X-Gm-Gg: ASbGncueW7kOGgAhPa730OcA60iFJdhxVMqFWk8GkVmDaeB8HGn72x+zwSwfFxSleTo
-	xmWE7WYtrNhps6Z91V7Q+WW7o9IgCwLD/y3rhqQ9KnUw8jJuPV2QO3rg2SgKDoUf+m+tBjfu6vi
-	bJlMpNk3/+VlszBFowgvtnbn0D/HSKzrCJgu5XmScObDWCID5F9AVzAXvMqVUa6Q4LmhxljZLt3
-	mu76e3pu4qKsa3QmS2hqedQqUPns8vNx65acA9/lz3uvwnh7iU3aDJ8fVh5zt8pHj19HQlexPKS
-	Tb+VVn+DAE3IC6LetQF93CQV+/3KaDTBn6Qn6QyIVwtiR1iVB+/9ZhzbKfFXgzSoQAEEhlkYNQT
-	K9nzAWh4lz/iR0E4A34KCYnEf5O6p
-X-Google-Smtp-Source: AGHT+IG7t3T/8GGCzsIAufX7eYyvKOcvytMBZuwIkdFld6x0jpQAVkc/E1ovqXbmyvsDnmRHziZMFQ==
-X-Received: by 2002:a17:907:3c82:b0:ad8:914b:7d0b with SMTP id a640c23a62f3a-ae0579cd940mr193333766b.11.1750409634864;
-        Fri, 20 Jun 2025 01:53:54 -0700 (PDT)
-Received: from [192.168.1.130] (11-127.static.abakusbp.net. [46.17.127.11])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6f5csm125316566b.122.2025.06.20.01.53.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 01:53:54 -0700 (PDT)
-Message-ID: <e2cd9f09-b984-4409-9b3b-7b6335dd23ea@gmail.com>
-Date: Fri, 20 Jun 2025 10:53:52 +0200
+        d=1e100.net; s=20230601; t=1750409710; x=1751014510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Iv3oZXqRsz+u6cGWSKhTrYlL4O94V/iX3UEF0MlMpEU=;
+        b=WZOe+FV2D1ZQ8v0H/BWmOY1J8yZp6gpNRjfUbwW8Y2C+Z3bb21MDNR8V1Sjn5LoSuQ
+         eDNHumKHEx8qXPAR1FcjX+2snQz5mnMbHGlKjdJa9JJzKQCgway8k+58uk7EMa+USJU4
+         BveoSw1o9c8BJNp6X/VVetAYCzZ/p6oLfoMA6oqROZ9J4Xi9O+sZWfp4Sry/RxHdICAk
+         nSrMapepxrF2yH6aFvHg9ftTS4GXXE0nDi7eCP8VqwKz080gQBN+X1XwUH9GrnZ3mWWP
+         06IsW+rNDhd1xLelyHqRrUehNGbyFYMPZD+zP9LODZGRtCmtyoGsI0Y4mSBsGoEcTrfp
+         dnTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVKK1dqybV7LFm95U8M4C1iuV4CIBz5rh65VhlJIsoBGE27ZQdbmjR5IB0HsmKIL2J0yi2p4uHEDKXya0=@vger.kernel.org, AJvYcCVUya2w0zgMIEeKZBMqjGUjKXqt2NJgWjh0Lc1IYT3df3bLNS5H4Y5N1SroTcUWV0sOk1dIYjwimfQ=@vger.kernel.org, AJvYcCWOCr292hxzUQjOqK3Vaa7bxont85+7FeZXMl7plNDfs1ulD7rxJPcep82k31IfM5E27tilScW9ui5yYBsa/dU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS9zIWh3koZfDc2Cmy101qSenxkVHeRw+/h164rhAbBJ6JPFbi
+	DggRkYfCB1Srndq5N9RlJQfHw0tySNJ6lrcqGnWBxoGW+vW3QSEKo3pU
+X-Gm-Gg: ASbGncu8PmOmC1V33W3p85O9AIxvf9vLffNPrwpZqjnfbTy1l7kYBvgsDDHb/uIvgr4
+	CDTCCqSMjc+7qzeal5bYGVm1c7DrMjmxLHCIAP/xbOqkA3duT/Q/1mKAUMNaWi8TDtrkGhv3nMg
+	nRDg2ulDojPPLzoZtJdweqGZdhQT7C92Pn1SvEFdQ0EygnCMoon6aNgpO/ddwuAxo+PlwmAeYnc
+	1OwzwInVSP10S1rqJphAaIaXccDDdj//X4pJe/9zuY3mp9q4Y6cUSdjyR6xHJ27RZHrV7SrYkG3
+	pbNVLKvPVVcvNsBEzExSPEjCzeqmFcR8fIgSlo1JtBjL1NOeMm56msv6NJbf
+X-Google-Smtp-Source: AGHT+IF67WJrN3hf2vcD3jXzZM/KBmIBc10Qpir3d5KV+HevWSCQcanboakFIo/NmXsywHkFLR7yIg==
+X-Received: by 2002:a05:6a00:a1f:b0:748:2e1a:84e3 with SMTP id d2e1a72fcca58-7490d9aae0emr3470234b3a.8.1750409710050;
+        Fri, 20 Jun 2025 01:55:10 -0700 (PDT)
+Received: from pop-os.. ([103.21.124.79])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a66a819sm1549985b3a.139.2025.06.20.01.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 01:55:09 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	linux-pm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abhinav Ananthu <abhinav.ogl@gmail.com>
+Subject: [PATCH] rust: cpufreq: use c_ types from kernel prelude
+Date: Fri, 20 Jun 2025 14:22:30 +0530
+Message-Id: <20250620085229.18250-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: imx8mp: Add Ultratronik
- Ultra-MACH SBC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: boerge.struempfel@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250611113039.304742-1-goran.radni@gmail.com>
- <20250611113039.304742-3-goran.radni@gmail.com>
- <20250612-snobbish-outrageous-nyala-dca804@kuoka>
- <26194c8d-c16f-4293-8c0f-5c674e09a1ba@gmail.com>
- <578ea477-c68c-4427-8013-550bf4f9c05b@kernel.org>
-Content-Language: en-US
-From: Goran Radenovic <goran.radni@gmail.com>
-In-Reply-To: <578ea477-c68c-4427-8013-550bf4f9c05b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Update cpufreq FFI callback signatures to use `c_int` from the `kernel::prelude`,
+rather than accessing it explicitly through `kernel::ffi::c_int`.
 
+Although these types are defined in the `ffi` crate, they are re-exported
+via `kernel::prelude`. This aligns with the Rust-for-Linux coding
+guidelines and ensures proper C ABI compatibility across platforms.
 
-Krzysztof Kozlowski wrote:
-> On 12/06/2025 12:09, Goran Radenovic wrote:
->> Hi Krzysztof,
->>
->> Thanks for the feedback, and you're absolutely right — I made a mistake
->> here.
->>
->> That said, I’m still a bit confused by your earlier comment:
->>
->>       "That's just part of the standard/first enum."
->>
->> I’m introducing a new board from a new manufacturer, so I expected to
->> add a new enum block — similar to how it's done for other vendor entries
-> 
-> No, you are expected to add to existing enum.
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ rust/kernel/cpufreq.rs | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-Very well, I'll add the entry to the existing `description: i.MX8MP 
-based Boards` block.
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 481a6d2dc362..fda7301c404e 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -1061,7 +1061,7 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     /// - The pointer arguments must be valid pointers.
+-    unsafe extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++    unsafe extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1094,7 +1094,7 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     /// - The pointer arguments must be valid pointers.
+-    unsafe extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++    unsafe extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1111,7 +1111,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn offline_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1128,7 +1128,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn suspend_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1143,7 +1143,7 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     /// - The pointer arguments must be valid pointers.
+-    unsafe extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++    unsafe extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1173,7 +1173,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn verify_callback(
+         ptr: *mut bindings::cpufreq_policy_data,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1190,7 +1190,7 @@ impl<T: Driver> Registration<T> {
+     /// - The pointer arguments must be valid pointers.
+     unsafe extern "C" fn setpolicy_callback(
+         ptr: *mut bindings::cpufreq_policy,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1209,7 +1209,7 @@ impl<T: Driver> Registration<T> {
+         ptr: *mut bindings::cpufreq_policy,
+         target_freq: c_uint,
+         relation: c_uint,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1227,7 +1227,7 @@ impl<T: Driver> Registration<T> {
+     unsafe extern "C" fn target_index_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: c_uint,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1250,7 +1250,7 @@ impl<T: Driver> Registration<T> {
+     unsafe extern "C" fn fast_switch_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         target_freq: c_uint,
+-    ) -> kernel::ffi::c_uint {
++    ) -> c_uint {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+         let policy = unsafe { Policy::from_raw_mut(ptr) };
+@@ -1285,7 +1285,7 @@ impl<T: Driver> Registration<T> {
+     unsafe extern "C" fn get_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: c_uint,
+-    ) -> kernel::ffi::c_uint {
++    ) -> c_uint {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+         let policy = unsafe { Policy::from_raw_mut(ptr) };
+@@ -1306,7 +1306,7 @@ impl<T: Driver> Registration<T> {
+     unsafe extern "C" fn target_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: c_uint,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+@@ -1325,7 +1325,7 @@ impl<T: Driver> Registration<T> {
+     /// # Safety
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+-    unsafe extern "C" fn get_callback(cpu: c_uint) -> kernel::ffi::c_uint {
++    unsafe extern "C" fn get_callback(cpu: c_uint) -> c_uint {
+         // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
+         let cpu_id = unsafe { CpuId::from_u32_unchecked(cpu) };
+ 
+@@ -1351,7 +1351,7 @@ impl<T: Driver> Registration<T> {
+     ///
+     /// - This function may only be called from the cpufreq C infrastructure.
+     /// - The pointer arguments must be valid pointers.
+-    unsafe extern "C" fn bios_limit_callback(cpu: c_int, limit: *mut c_uint) -> kernel::ffi::c_int {
++    unsafe extern "C" fn bios_limit_callback(cpu: c_int, limit: *mut c_uint) -> c_int {
+         // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
+         let cpu_id = unsafe { CpuId::from_i32_unchecked(cpu) };
+ 
+@@ -1372,7 +1372,7 @@ impl<T: Driver> Registration<T> {
+     unsafe extern "C" fn set_boost_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         state: c_int,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+             // lifetime of `policy`.
+-- 
+2.34.1
 
-> 
->> in the same file. I ran dt_binding_check, and it passed without errors
->> for this structure.
-> 
-> Not possible. The syntax is clearly wrong, so there is no way it passed
-> any tests. And Rob's report is a proof of that.
-> 
-
-You are right for v2. I was referring to v1. Sorry for the confusion.
-
->>
->> Could you clarify which “standard/first enum” you were referring to?
->> Should all i.MX8MP-based boards share a single enum block, regardless of
->> vendor?
-> 
-> Don't they? Look around in this file.
-> 
-
-I did, and I've learned something.
-
->>
->> Thanks again for your guidance.
-> 
-> Don't top post but reply inline.
-> 
-
-Ok, thank you for the correction.
-
-> Best regards,
-> Krzysztof
-
-
-Best regards
-Goran
