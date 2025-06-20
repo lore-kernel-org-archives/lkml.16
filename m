@@ -1,186 +1,173 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A525928A3FA;
-	Fri, 20 Jun 2025 13:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750427600; cv=pass; b=dKh7nF3U33Yxw7G8jnf+uqFjA2scoLB4dZWA6U1FWA3qIkIa5xzFmQXC00+Ra+7Oq20STIApIgXFfVjI6WfLk6TSjDUxJCXk0QqcJZ9UrUENt+ci1kHsJ9GG/RXzB9/wDqzoaM7oL918P5adXQB4xwNGhz/VHIYCzl5/kxwnYMs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750427600; c=relaxed/simple;
-	bh=k67JtgBrtKH5c8MilgA2/jhp1oqwbs+SGFRe0IdC070=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T6jD852rPQibHQtEzBx3j1hfvPLm6ige6Av5GfGmvhsNb96cidtKImeqYdYg8stpBcmBayOhOC8pdr1cmvtyyMKYLBpDNNkINNw/c7ea6duXP2JmELLQf1An7BwxrcgWMaSEVU1clGkbfVR4GLxvei0YA8z1qhcA8/dVDpxgiYo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=XMz83gLG; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DC528DEE2;
+	Fri, 20 Jun 2025 13:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750427624; cv=none; b=iSsglfokh8g2KmzOQVvBtWuHQRrrQTfnFIvv1EwbPU3SBoxMKwOKPt+5MKhE+yvQ6bM2rAUAN5nTG0MgkEhQyHVeSmTgprcDt1oXNRO3R8OI2ZgvSo4cKp8Jr8WFYk4nDUY1QtSBw3WxaBBHZGS1vOTYBB32kPSzGDzCYdUjgt4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750427624; c=relaxed/simple;
+	bh=h40PihXpB9iHOwNDiJJbUFtLgaN/sYMLV1i+eEZYFIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GiIiksG77A+a+fdd1ANyGB1Swzat3Ckzx2zAi/d8U8xYNfJIzTHcxoiGSU18EZHowwQthyd7VirkeORb4Kd+OIDlOodplPuh+0JWsQcWUHu5VZWEr2Emh2yJ+crExcNwJ0bjuyJWZnrvAbfZmlQ8EjTsPgKc9YFpzBDV7QO5iJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ma6T2s/i; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="XMz83gLG"
-ARC-Seal: i=1; a=rsa-sha256; t=1750427571; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TXFOrOvEz7z1ai2laSiHdc57LGo4WZ9k8SJkVhzrfhqnwR0b1rPncIkqMG4VX7ZpvyYelO0JBnkmhrDGjgGNrpwvL0TZWo94GZaOUrP9myK6Isj2y5llSo/uUrvLQed+opagwHRuo6jvJ5DavjSyw1jIYOsgxMftmwnigA714k0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750427571; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=V459JMUmyF9w2CF7odfd6vdr2BDTmJkRuH7Scgg3lLo=; 
-	b=MMTZaNXtnwEFO2WRdtoGadqLqAnzc/YzvA/W7Z2ArWiZ9cqNU/hUQfcLQz7ulhlcUlCExzCFwcpkxKIRch4wnIQqGxO8FpNFOfKNOtYKSO5v+JHODAaPbzxqXk0EJgb8OY3pLxG0u5SR9olb2fiMMO990y9JuMXKp99EdfKR/90=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750427571;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=V459JMUmyF9w2CF7odfd6vdr2BDTmJkRuH7Scgg3lLo=;
-	b=XMz83gLGVocBQQxhMXW3P41Im4nz6IP8qnRncCfexbBczpHYl1RS8MFGcilrvPYa
-	gCE6lYBG8nfrS65sPW5tCrhl4mTSHQSVEhOyY6KOT13Ijf6FE/ha3v2o/A2qCdvvEkw
-	32AsJPhSZf6Hzk8n3E2138cANxh3Z8xrQfCPOdmQ=
-Received: by mx.zohomail.com with SMTPS id 1750427570159193.5196944847704;
-	Fri, 20 Jun 2025 06:52:50 -0700 (PDT)
-Message-ID: <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
-Date: Fri, 20 Jun 2025 15:52:46 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ma6T2s/i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750427623; x=1781963623;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=h40PihXpB9iHOwNDiJJbUFtLgaN/sYMLV1i+eEZYFIo=;
+  b=ma6T2s/i7SAHriKhPHluT134caMbX7mgQL/yyAYkejzPOd15UezI7v9Z
+   bepSRs30gHWkWR9V3CDws3KbHCev4M2CcFYpF13QUAMbNrRXDnnNn3622
+   JF6MKkZFSlZz+UUgH037nAws5hISDE4wKqLPeWprhhhYz7lEPPdJpPQAA
+   w6kf+jXLTxxm6KI2PDukWRaV7FjZ1wzOsPI5Z68YGMvNz5vBgmBggPO/S
+   +VcWp2JkLa1cb/Q5fstlr47TXZtktr7X4GUZG3QR98vhGEEWYzudcxfmp
+   MO4oK/Lr4w59jY0e+abK5a+Kiq0IkWvMJSUgHkrPQ8SMG2jh8ABnJFtlM
+   g==;
+X-CSE-ConnectionGUID: ovwq3ew3T6S5sd31dfC4Ag==
+X-CSE-MsgGUID: notcJf6rRv+lDL75VpN8SA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="55326036"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="55326036"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:53:42 -0700
+X-CSE-ConnectionGUID: x0qZTSbeT1yoykLIkNVsYg==
+X-CSE-MsgGUID: Q6PjjxAGR2uAPZDdxXUW/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="151227068"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 20 Jun 2025 06:53:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 6B31F1F8; Fri, 20 Jun 2025 16:53:28 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv6 03/16] x86/alternatives: Disable LASS when patching kernel alternatives
+Date: Fri, 20 Jun 2025 16:53:11 +0300
+Message-ID: <20250620135325.3300848-4-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
- nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- kernel@collabora.com
-References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
- <20250619131232.69208-4-benjamin.gaignard@collabora.com>
- <20250619134752.GB1643390@ziepe.ca>
- <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
- <20250619165928.GA10257@ziepe.ca>
- <e034a111-93eb-42e8-a533-46553b4f5588@collabora.com>
- <20250620120509.GA39770@ziepe.ca>
-Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20250620120509.GA39770@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: Sohil Mehta <sohil.mehta@intel.com>
 
-Le 20/06/2025 à 14:05, Jason Gunthorpe a écrit :
-> On Fri, Jun 20, 2025 at 10:57:49AM +0200, Benjamin Gaignard wrote:
->> Le 19/06/2025 à 18:59, Jason Gunthorpe a écrit :
->>> On Thu, Jun 19, 2025 at 06:27:52PM +0200, Benjamin Gaignard wrote:
->>>> Le 19/06/2025 à 15:47, Jason Gunthorpe a écrit :
->>>>> Ugh. This ignores the gfp flags that are passed into map because you
->>>>> have to force atomic due to the spinlock that shouldn't be there :(
->>>>> This means it does not set GFP_KERNEL_ACCOUNT when required. It would
->>>>> be better to continue to use the passed in GFP flags but override them
->>>>> to atomic mode.
->>>> I will add a gfp_t parameter and use it like that:
->>>> page_table = iommu_alloc_pages_sz(gfp | GFP_ATOMIC | GFP_DMA32, SPAGE_SIZE);
->>> This will or together GFP_ATOMIC and GFP_KERNEL, I don't think that
->>> works..
->> I have test it, I don't see conflicts or errors. What worries you ?
-> Just looking at the bitmaps I'm not sure? Did you run with lockdep?
+For patching, the kernel initializes a temporary mm area in the lower
+half of the address range. See commit 4fc19708b165 ("x86/alternatives:
+Initialize temporary mm for patching").
 
-Yes and it complains about that.
-I see that sun50i driver have more less the same struct than my driver
-but doesn't use lock. I will try see if I can remove the lock.
+Disable LASS enforcement during patching using the stac()/clac()
+instructions to avoid triggering a #GP fault.
 
->>>>>> +static int vsi_iommu_attach_device(struct iommu_domain *domain,
->>>>>> +				   struct device *dev)
->>>>>> +{
->>>>>> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
->>>>>> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
->>>>>> +	unsigned long flags;
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	if (WARN_ON(!iommu))
->>>>>> +		return -ENODEV;
->>>>>> +
->>>>>> +	/* iommu already attached */
->>>>>> +	if (iommu->domain == domain)
->>>>>> +		return 0;
->>>>>> +
->>>>>> +	ret = vsi_iommu_identity_attach(&vsi_identity_domain, dev);
->>>>>> +	if (ret)
->>>>>> +		return ret;
->>>>> Hurm, this is actually quite bad, now that it is clear the HW is in an
->>>>> identity mode it is actually a security problem for VFIO to switch the
->>>>> translation to identity during attach_device. I'd really prefer new
->>>>> drivers don't make this mistake.
->>>>>
->>>>> It seems the main thing motivating this is the fact a linked list has
->>>>> only a single iommu->node so you can't attach the iommu to both the
->>>>> new/old domain and atomically update the page table base.
->>>>>
->>>>> Is it possible for the HW to do a blocking behavior? That would be an
->>>>> easy fix.. You should always be able to force this by allocating a
->>>>> shared top page table level during probe time and making it entirely
->>>>> empty while staying always in the paging mode. Maybe there is a less
->>>>> expensive way.
->>>>>
->>>>> Otherwise you probably have work more like the other drivers and
->>>>> allocate a struct for each attachment so you can have the iommu
->>>>> attached two domains during the switch over and never drop to an
->>>>> identity mode.
->>>> I will remove the switch to identity domain and it will works fine.
->>> You'll loose invalidations..
->>>
->>> Maybe the easiest thing is to squish vsi_iommu_enable() and reorganize
->>> it so that the spinlock is held across the register programming and
->>> then you can atomically under the lock change the registers and change
->>> the linked list. The register write cannot fail so this is fine.
->>>
->>> This should probably also flush the iotlb inside the lock.
->> I will try to summarize:
->> in vsi_iommu_attach_device() I should:
->> - take the lock
->> - do nothing if the domain is the same.
->> - if iommu is used (ie powered up):
->>    - update the registers to enable the iommu
->>    - flush
->>    - update the link list
->> - update iommu->domain
->> - release the lock
-> That sounds believable, yes.. Though can you do the "powered up" checks
-> inside the spinlock - are they sleeping? Can they be done before the
-> spinlock?
->
->> in vsi_iommu_identity_attach() I should:
->> - take the lock
->> - do nothing if the domain is the same.
->> - if iommu is used (ie powered up):
->>    - disable the iommu
->>    - remove the node from the list
->> - update iommu->domain
->> - release the lock
-> And maybe flush too? How does the caching hw work at this point? You
-> can't have stale entries in the cache when you switch back to an
-> enabled/translating configuration. So either the HW flushes implicitly
-> or you need to add a flush somewhere..
+The objtool warns due to a call to a non-allowed function that exists
+outside of the stac/clac guard, or references to any function with a
+dynamic function pointer inside the guard. See the Objtool warnings
+section #9 in the document tools/objtool/Documentation/objtool.txt.
 
-I do not have the documentation for the hardware but it seems that
-enable/disable are enough to do the job.
-  
+Considering that patching is usually small, replace the memcpy and
+memset functions in the text poking functions with their inline versions
+respectively.
 
->   
->> vsi_iommu_suspend() and vsi_iommu_resume() will also have to take the lock
->> before calling vsi_iommu_disable() and vsi_iommu_enable().
-> Yes, if they use iommu->domain that seems good
->
-> If the above locking is a problem then I'd use the group mutex instead
-> during resume/suspend. The attach functions are already called with
-> the group mutex held.
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/kernel/alternative.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Does group mutex is also called when using vsi_iommu_map or vsi_iommu_unmap ?
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 9ae80fa904a2..0b9f41ed6af7 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2447,16 +2447,24 @@ void __init_or_module text_poke_early(void *addr, const void *opcode,
+ __ro_after_init struct mm_struct *text_poke_mm;
+ __ro_after_init unsigned long text_poke_mm_addr;
+ 
++/*
++ * poking_init() initializes the text poking address from the lower half of the
++ * address space. Relax LASS enforcement when accessing the poking address.
++ */
+ static void text_poke_memcpy(void *dst, const void *src, size_t len)
+ {
+-	memcpy(dst, src, len);
++	lass_stac();
++	__inline_memcpy(dst, src, len);
++	lass_clac();
+ }
+ 
+ static void text_poke_memset(void *dst, const void *src, size_t len)
+ {
+ 	int c = *(const int *)src;
+ 
+-	memset(dst, c, len);
++	lass_stac();
++	__inline_memset(dst, c, len);
++	lass_clac();
+ }
+ 
+ typedef void text_poke_f(void *dst, const void *src, size_t len);
+-- 
+2.47.2
 
->
->> Do I have to switch to identity domain in vsi_iommu_attach_device()
->> before applying the requested domain ?
-> No, that is what creates the security problem. What you want is to
-> update the HW registers in a way that the HW just changes hitlessly
-> from one translation to another, then flush the cache.
->
-> Jason
