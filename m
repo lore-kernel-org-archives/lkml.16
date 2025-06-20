@@ -1,206 +1,119 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DCB225777;
-	Fri, 20 Jun 2025 13:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750426428; cv=fail; b=LYD7jG1wh+7NE0canEo/HLxNqkfG4ypj141OPM7QrQDAUU+sWf/06EaO/UfIX5/LDtu6CqlgWv7zws/6rBqNPTG1PZ2T6M8/HRjsUB6zWS2v2VrgG6ldce4R6/ABI6DNiAaLRngoONOFz7dxbsCPIf0fYRYfJ+zpZ0rMWPr0e3M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750426428; c=relaxed/simple;
-	bh=3CbnkJpQorWkKvAdlEU73vDE5M7IrTfUTM6dC4Ibml0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=B2LsieyF/AzAP2RXesnAIuZbrlufr88CHi+pac01VIOn7A2HOeZYxEnDNOyNjc+7GRQtPCpgUajy/8IilP8pTtdnct/Sn4IJw7faYLlVdvk8D7Wi+o7J/SHrieIhdb6SGh63YF7CmtFn9xVGDdFM8d5m/X3dvLf9DXQnt9l7xWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=P5PbL1cx; arc=fail smtp.client-ip=40.107.93.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7087A225777;
+	Fri, 20 Jun 2025 13:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750426475; cv=none; b=FipC3Vry0HJixadxCZvJ1Keg7RoZF2ah1pK/yXv33DcCmNeut6hKMb5h6iCeeKxT7Qt4hG3wdtZ20QIjFof/TTfMpAWziRQKgIFHVi7r239GtkGpmheUxB7em10100m1B45ekUhl/NXqncckl19CYusvmF6tKEPpAWz5G5llmUM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750426475; c=relaxed/simple;
+	bh=KdYvDLV3w025s18KRQwH11gAXy1yiUiz9j2G1EjCbbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M9LN0W3eYoJATsZ1uNTSVQ5BI+akGTOx2uits+TLDPWi8LLbxP5uu6rJCYGj0+AxbKwphdg9NWd0IOE7PwU2X1oJ/gyey+CgaCJLBfH05mJ3Doe6z9blVsT4Mn36/A8G7WxArHXaRAVQeqvMyCwvw3RE7uySh2QIDQpBEFauIwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaMXWg1p; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="P5PbL1cx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u6JjrX+gb4SDSFA1VaENBZtMI8DlHBgQl4xG/5qAvt7snkPvMSMD15nTsEAmngxz9uR1JaIQNwAM91V7WFBpUIvVbAOI9P0X9QQ4qDDeGyd4gtkSj8HvifmKLzwrQUISOX1As/D/2yyO3hiKcEj+G7FnJyS9Bw1ZV22ZK2WQHzxsYG/mVJV+GwfX8S1p9G5hnNvpBRlMwVncbGE6AhNLcemVUuOE38kr26hJ0y0zVsBhcJM7/482HPW3B4pDC5TKWRwjmsbCXeiRmbN9r0frVvhJeGKw1r10zBTh0no6LKg+zra3CtG+nxZpSvg+6aYRlB4Q2vfDyBxeE4dsxIh2Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xygbyzZHae6tydkYniJwhIIk/scOFSSy783gdS074qc=;
- b=OdHd+sQJDpqOcc5QfKaKwUqPhju2Yf9Bc9pEyrmivUozBB8DB0nAtNAVDBEuRaCk0tMhH2nUjzGuYi9Ywn+nf5RC55BHgQfedj455yGtkvtAuo4sdqlVb/81+jcsKZ0eidoVtARJ/Q0ZcgyNcQ/pRF8pIJvh9C09xxd5wYlZMlXNIghQUHyzhUvnz8/tzkCiYTIXDlXuAdWInQuMAbFiXl9KHT0/pDu9g6P62m4GsXXIUNEKKeuYmWIjsS0DBlmihYiVDs+WXbkWEjzIs2yUkjBa74en2bpBeFkvgRNv8m5/mOsw1VPGtw56HN3FRH0rxA/Px42h77ykbUlTdTU6/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xygbyzZHae6tydkYniJwhIIk/scOFSSy783gdS074qc=;
- b=P5PbL1cxc1TdLe+tdqfDPGlPxh3TKxgJ6JSO+m9sY3uBrzx3fWeTRISvZczgCBgVEQOEu4ADT6s3sNBMnoCeL8icaI+SlY2LiAIYkxRhNRf8P1IDihXIdjI2nmzT1xtgoM3l3Uy3HnDg6q6XnHWEpTSRKO8pb/rXPM13hKLjHq7oJaiLWRTLAqXpsC8FvgFVgzYjDZPntd6gKtzkFtffymQX/+PN2k+qNvSxjLSDTah0EORQGA4xyVmMMDaGWwVL9LmtZJX93yJvzvKCYSlrB/UzuEmN55PveFgPXpcSHFX65fsUiz5R5PrW2mi0d9WDWdzSEPUebH9XmmCyo0CQbA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
- by LV8PR12MB9450.namprd12.prod.outlook.com (2603:10b6:408:202::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
- 2025 13:33:43 +0000
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c]) by IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c%4]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
- 13:33:43 +0000
-Date: Fri, 20 Jun 2025 13:33:36 +0000
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: Arnd Bergmann <arnd@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eli Cohen <elic@nvidia.com>, Shay Drory <shayd@nvidia.com>, 
-	Jacob Keller <jacob.e.keller@intel.com>, moshe@nvidia.com
-Cc: Arnd Bergmann <arnd@arndb.de>, Erez Shitrit <erezsh@nvidia.com>, 
-	Cosmin Ratiu <cratiu@nvidia.com>, Yevgeny Kliteynik <kliteyn@nvidia.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, mbloch@nvidia.com
-Subject: Re: [PATCH] [RFC] net/mlx5: don't build with CONFIG_CPUMASK_OFFSTACK
-Message-ID: <lumrrt47kax45kmx37jw4w652f6biunsfnlkkthxsebbcfpso6@tuyiykihlisc>
-References: <20250620111010.3364606-1-arnd@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250620111010.3364606-1-arnd@kernel.org>
-X-ClientProxiedBy: TL2P290CA0006.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:2::6)
- To IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaMXWg1p"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so15333715e9.3;
+        Fri, 20 Jun 2025 06:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750426472; x=1751031272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mtx9NszNi9lugOX4De6l4R92z6p4vsxHe6L4kOW45Uk=;
+        b=FaMXWg1p2uAhfER2TzK72Ff+8UMvlqn2scLII0iDmi4nVAsLVhQtUDZ2zisklH78ad
+         zvhf+DkIukJaiuWeFZ3rfR9q9OJ+qyFE68s+kXOcJv4I8cjebMuC3ezMpm31Q2T4JKSc
+         3lqPP9Z2ZdGLMW42jWzGNT1hMkregpdoyHaUcIYpr1mUJrCFZdznd0Y+JGXVwXBJOEZy
+         wgZDfQ0CXlcsEgARcmc/O5whQhWve3K+OeiNMH1xHF2oSFde4GQ7fDVgvc7lee38I4iI
+         DH1dceFebsMNppY9x1B3oWhopMW0r+ZU3RwXhf6ZY8UyEEs3tdbBOALhyJaqYSszfClr
+         pzAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750426472; x=1751031272;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mtx9NszNi9lugOX4De6l4R92z6p4vsxHe6L4kOW45Uk=;
+        b=FFuht9ugDlCvYXnaIfoEteVrUfaZals2Kl99fCuBKIbet3qWTE/D+Zzz9gPzOlOANO
+         if0Loe0aj0L8s6aQtY/ObnxxjX/IRkH6WiLEpnPjxcHuD8yXdKdNXWEXEZxjIyedUA5B
+         0ze2iptwu6q43sbhKCxR10IdkHzcKONOZ+LD94+3u007gM5vQDWKGeavn3NjY1/9QoQ4
+         803OwofwZMJk8kVtEF7BbZw3SGSvM/eOYmVWq6RmmeC90t2QaOFkxeNGCOqmQmdwFZVz
+         teRcyF4sdvDAVtLTaK1t6/EY2QI1CynBjOUvyGmuRJDiRT7RGY7ZzXFpN8TkRjPOHVNv
+         RDLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLUVrSP+qRoL/7m/r24mw7JEU02wZ5+YqJGgvifMRdAwFkD1oJKWG0kRorTiavFvAGdl8qFselOcqEIFk=@vger.kernel.org, AJvYcCXedUssavJk+D4nFhngWFZtZ+YdH9I6hhH+vsGGqJm6Sz7egOztwAJvbOEW+YycQSJmXmeiv6TMwIU4shdFjyndtQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpw5mLv8wpEkdTaRDd36MWlNvPLwcOwcxUxrFFM1TYNZJAdSW7
+	psjLTiCyKAdctD/4ESOV8P0IlGB+NMGGQLz5heUtJ9qTJhnUwnnXGige
+X-Gm-Gg: ASbGncuA48MKSI+Pt19pcgkIBItcQeaKMxYf7Lx9PjyAIaH/+t6T3Dfa98vzw9i0Ir/
+	5ZxSD9vpCO+P7IHllFzsqqMVOOWKmAwrWb+pNwQEpQK5n+IUs9/dEStR4ZhNYEePPDaXB+Vj0Df
+	BaLmApCZxr+7KGhk52ha5BIjJDXZ2x2NBFvW2yoLO/wmtZwr05+Y7vhhVDkfrfW4Ed/poP8Vd9x
+	TFDFgax4Z/FaaBTiaWPXkQ3pJ960YrOwdq3rI+hGcGOtTz4/u+1p4JsshE/LknKCBK9B+rFHnaF
+	b8at/6bAKRW43DiCH1wZu6yupMgqTB3ocW/QpXycrs/G7/5YZ4L/dE83FGcUMCKh4ffB/JYM1zW
+	1fgYgeNeNEV+VdsCfkLeJUGGpYxUoSM+Jk+A=
+X-Google-Smtp-Source: AGHT+IFtQyBDnW4T1Jvb5QOCjB4fHJiRrbtGNhV9cNoRrVe7TyYWvDyU13igPiP9nmo26VamWyuM4g==
+X-Received: by 2002:a05:6000:2906:b0:3a5:2cb5:6429 with SMTP id ffacd0b85a97d-3a6d12e2203mr2441994f8f.43.1750426471502;
+        Fri, 20 Jun 2025 06:34:31 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1d902sm2062730f8f.43.2025.06.20.06.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 06:34:29 -0700 (PDT)
+Date: Fri, 20 Jun 2025 14:34:25 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo
+ <acme@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] vdso: Switch get/put unaligned from packed
+ struct to memcpy
+Message-ID: <20250620143425.6d654bf6@pumpkin>
+In-Reply-To: <20250617205320.1580946-2-irogers@google.com>
+References: <20250617205320.1580946-1-irogers@google.com>
+	<20250617205320.1580946-2-irogers@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9031:EE_|LV8PR12MB9450:EE_
-X-MS-Office365-Filtering-Correlation-Id: ffff300e-7659-4a84-bda7-08ddafff130a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020|27256017;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q2IxUk9ZSGRleFRPSC9UOUhQbGEwNm8zUmFzTVc2QmZpNUkzYjJOVXNwcU15?=
- =?utf-8?B?eHZBc0FySS9xYUIvWXBXTnRMRkdoN1RaYzJIdjIvSzdTM3padTNZMUFoZ29L?=
- =?utf-8?B?cHBKU0YzTWlueFFkQ3huVDEzWHJLVEpjQ0xFWHVGdUN3RDhtR2Rocjg4Mk1S?=
- =?utf-8?B?aUpCb1ZpWGhQNVp5OGxoQnB5RGE2OTAwVkdtM09neDBJTkVoeEhwSHEzNFQ1?=
- =?utf-8?B?UEhsQ0JPdW1BRmlKbjBkNU9wZENzNXNIZjNkTDZwRjBydjdjS2N5U0dISFRC?=
- =?utf-8?B?MjRhK1lWbWdGWGVMSUpaVnQrNzRHcHdhL2xKYXJMRUhQNGVDNTNVZ3R1UjZJ?=
- =?utf-8?B?UmdiVDhyQjBLY3RHdmttZDVNRGJVMHBpUUh0ZndIR0YzMHl4RCtycHdvemIw?=
- =?utf-8?B?QzZ1eFVwdGlnTlZrN0RWWVBBcWVnOGE0VUI2RytESktoVVB5aU5Nd2NDREcr?=
- =?utf-8?B?NzdzejFRc1ZUY2R3VnJsQWR1S2lUNi9wSm43MC9CeUxWUzR6bndTZG4xVXJm?=
- =?utf-8?B?aElrUlh1R0E5MkMrU2pldHNrYmdmRnMzV3VKcWhpOXdKd0JsQlJsbDFJYlZG?=
- =?utf-8?B?bUpITU9UTVU5TkhhdVNsNmJ0OVR0UzFyM0NlQzY2M0EvSDBUSDI0QnQ0Yyty?=
- =?utf-8?B?R3VSazZ2b29VemFTMThmUm9pTzdVa1dneVV0YStjbFdybzk5ZDBkSE5LU0d2?=
- =?utf-8?B?czFEbklETTJmRlF6NC9nNHJMOWdKVEFobTM3Z2hpYUJ2VWhGNHM0VW9za0hl?=
- =?utf-8?B?RUJBRyt1YWpxTWpSNmpyVXhRVUtSOVVPZEVqMHlOT09oQ0VYK1ZURFQ3MzRD?=
- =?utf-8?B?aU9BRWt6NEpvYjJ0bEIvZFlIUGpyaEhYTk85WTl4cFFOYnFkeVFCT1gwdjlr?=
- =?utf-8?B?K3NDcHdRNEZTWTNCQUZxMjY0QUFLUVNvejVqbUxSM0t4YTVlUkpYc0dTaDY4?=
- =?utf-8?B?d1p4M1YrRjlLSlR6OWxuMk52eFdiRzdxWXNkYWZmQ0UwUkR2d1hIaEJ1dzBX?=
- =?utf-8?B?cHBMeXFkdHBkWU9IUFh6ay9YWGNHSGZaVVJ2M1RvT1BYT1JoeUpjRFE4dlFy?=
- =?utf-8?B?V1IxMjdFdVliMk5WNWNQVy9BV0Z4c1JzUWgrZ0h6Z1F6MzdTSWRYNFFzM1da?=
- =?utf-8?B?Zi9VN0tKTFJMbVJ2Y2k3cmJFYWF0b0t0SXJTTTRMb2s2ZDZrbjFrbU9ySTRG?=
- =?utf-8?B?cjk3dGtrVmEvOC9mMUpYRE1Bdm0wZGhOeGNyK1Bka2dmWkdYKzdLNGtvV0xh?=
- =?utf-8?B?aERaYXNNZitLcy9DRnE2bmN2NEFnK29HZUU5MTFPQnk2TW1Ccks5QklucXVB?=
- =?utf-8?B?UThnYzQ2T2YrOUtVNDY4SUlEaUttS2Q3MXRvVU96VytIVkJ3bjZrTXV4QWpJ?=
- =?utf-8?B?ZFNybVg3TXJSQjU3WnJUaW10OGwzanVQQlQxYTFSN3Fvc2lNRW0zVXpwd3JY?=
- =?utf-8?B?NFJ5Tkd3QXA2cXFiSGIxQWlEWmJzdnp6TFVid3V0M1h5KzRYOGQ3dEp4T0l1?=
- =?utf-8?B?K0JXbXlLTzJBTE82RUpTRjgyNlIzNXgzdk1qNm84QUNlRVIrUVpsYkpuaUJF?=
- =?utf-8?B?dmord0UyVlphWXJKQlVROHQzQndyRk9zNDVwVC9jTXZ2bEUrNUYxMGp1cWVw?=
- =?utf-8?B?M2NiUGRKaXRuSTFBNVFmMTlNMmd0S0hEWkZzSlVjREl0ZTFVeHgyVkwvTXJU?=
- =?utf-8?B?RGM2Nk1aNzBIZEZNdHh3WXpEc2lMMGRPSHBaREcxZFBOdU95OW5pZkJvbEIy?=
- =?utf-8?B?UGU0bFNmWU5vekxKQmRQOGtSNTlPbXRWNDlZSGNhY01wMFB2cEtZRHVRK055?=
- =?utf-8?B?VWJNbERNS2FMUU1DSHBZejVTOEVIdzJjWGlFZ1E0cDg4QUNjUndkTDdUMS9x?=
- =?utf-8?B?aFVCS3BHckNRTFVqcFR3MXRLbEwyYWFBNG8yMU9CWHlrV21wZnYzTFNhMWJk?=
- =?utf-8?B?UVY2YXJGTTVETy9NZW5zWHlZb3k5TEh3Wm8rbnIzV2ZQSXhhRUdBTEZFdndE?=
- =?utf-8?Q?Q3o3lbu9BZmZVAdwiUX/ZgfumWx2OI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9031.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020)(27256017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ylk2eGN4ZjczZzJZdnBXTktmOFJNVHpaRllMWUV6UmI0VUVXZWpyNTVXNXl1?=
- =?utf-8?B?bjM1SjhFaGRla25qZ1RUS0cvZ3NoU2VzL05MMVpub0E5K05PR3c0UjNuRkdi?=
- =?utf-8?B?TlV2S2tRQnRhVG5LYmZXTnhLaDk3bGtXRXN2QUc4aVRZMFI3RmQwK0RXY2Nu?=
- =?utf-8?B?cTE0YmdqTFR5Y1ZGK0xMRDZkSzNxWE1ydVZqcW83ZVVWVVU4dE5paFdyelRI?=
- =?utf-8?B?bmZYQlZUcGs3WUFjOVVEYmJDdWUwNCtXczhuRFdiNkV3Z0lHOFlGVzRRZkhO?=
- =?utf-8?B?UGRnTTFOSm5IeCtwV3ZyUmUxSHJFbGlSRHNwTlMvSEEvVTBkYnpMdDhtSGIw?=
- =?utf-8?B?ZEFNb24vdHpuOWdoY2Z4SkMzRGJyY2ZWN05KOXFkV3Z6TEI1MXRhcDJQZzlC?=
- =?utf-8?B?VG9sdnJIb2NJM0o4ZVZlTUdEMHhPSFZXNW0yZzBMOGFrTG5KbFhuNVhPcERq?=
- =?utf-8?B?RGhxSjlITVJNbk5jWGsrZm1oVFVmTkUybXRTa3doUU03d1BYNzZCL2drcnV2?=
- =?utf-8?B?UW9HTysxYmxFSTEwUjg3OXNlN2owL0w2eklSSGR3RFBEK3NOVjdENWh2bU9z?=
- =?utf-8?B?WE1ZeFJMVmFoMHNsdVZESk9aNVJNOGwrc2htUjhybnVONE51TGJLYlI1UEkv?=
- =?utf-8?B?TTYxRDdvM2VaYk83eVJGUVpMam1PeHRzdnlaT1ZDc21sSGNmalk2NEdYWGla?=
- =?utf-8?B?TmZKL2tnY0pObFdNdU81YVNKMS9zTGpVVFhxc1RqUC9WM3hqaFp3VkhLN1h3?=
- =?utf-8?B?dmJtNUZkRFFyWVIwNUpYNGdyM0FvOEFOa0x5TTlyRVVZOThDcTE3WlpXZmRH?=
- =?utf-8?B?L2dJaG9nYUFUNS96YVRneWtMOXVYMVNLUGU1L2FlN3luYTdKdmszamxMQjJl?=
- =?utf-8?B?ajk4ODFYUVhpLytqOVlpNXVkZXlPVm5ieWVmRExzTnR0dnlxcTBwRUpwcWFF?=
- =?utf-8?B?eG5pV0NOMEZuaTIrMTBiUlFkYldRWEdMZFJYZCtod1NqbVgrRlcrVGVBWnlY?=
- =?utf-8?B?ZXZSS2JGZW55VlJXYWJpbFN1NDY5dXlJdEo0RUQ1WGUvd01FVHh0cjFrU2JC?=
- =?utf-8?B?cW5XQm9mREpFYy9OK3JncldXeGhRNG5rOE9aYWlvRkdqT3UwYVBkcTErY3hL?=
- =?utf-8?B?amVDbEVvNnJDSzFKTlZWSzcrVXA2RVhTRkxGLzJiQUlocWtieENxdncrWUdZ?=
- =?utf-8?B?WGpkdjRNTHZydWxzT1N5RVFmT2tlSjhLOVVmbFlsTU9obE0yck1tWmV0ZlZD?=
- =?utf-8?B?aENLN3kwZVZwVjF3QkdwYWtJK0ZXWkxSMDhmVzlxa0lsV0hJeUlYYzRrcXVs?=
- =?utf-8?B?NFVqL0VSWkt1VlI1V3BkcGg3U3c2VWR3QXprTmJQODlHUzhFS0o5TnhveTJD?=
- =?utf-8?B?N0ZEa0NZcjFlNFlCaXJseTZKZXFjUU9oSXpxc3BRMjc0K0l2aXNZSlJ3MS9y?=
- =?utf-8?B?RU8zUkVLQ01JTWo1OWMvSGxCNzFRSitpT0U1UHR2VGZDVlhIYVpVSGpQdWVK?=
- =?utf-8?B?U3VsT3pOd0ozSzd5S0JMTDQxRWZUL2dQL1ZDd1F0a3VreHcxVERPTCtJVGNT?=
- =?utf-8?B?eEhqYm9WSzVDaDhCMEZ4Q3RWdmlkODZxc1djdzNWWTRGY3E5NnJHd0kwZ2ts?=
- =?utf-8?B?TWdVT2ltMFFuaDQ4QXFqQzlka3M4eW5VZXpFa2dZenpacitUOFFaTUdjek5F?=
- =?utf-8?B?dGZyWGhreEtISndvNlpDWk1Va0NIZ2xIcVpMNmpiOG5kNlJiL09Yb2JHc3lo?=
- =?utf-8?B?cURRM1VESEk5OEZVR0prMUlwOHdaR2xUOWtCTHlWa1diZHJkMlFVTDBNLzZX?=
- =?utf-8?B?MmQxbkduM0xCQ2tkL3FGQmRtS01zNWZPOEV2ejhrbjVZTU90MXMrdExIeCs3?=
- =?utf-8?B?TnNhREdvT0h5Tzlyb2IvbWdHcG5mNzRxWXU0cHJ6akF4OEZZRW0xVUFjMGV1?=
- =?utf-8?B?RHVnMXVXSm1KZksrcVdUV0ZYamJDejJGa21xK2IzZ0xzcVFhbmNidkNwYkhz?=
- =?utf-8?B?S2ZHemVZdTdHdCtZNDhkdUdpMjNXcHltV3BQNWhrSEg3OGMwODUwakQ2czNj?=
- =?utf-8?B?N3VTRmlzVWcwRTgxM2JQL1g5T2hGNmRpSDZ5bnlDL1BUUU10amZSdDcyeGlD?=
- =?utf-8?Q?yJFJHYANbCW5HKJt57sqvBwIU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffff300e-7659-4a84-bda7-08ddafff130a
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9031.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 13:33:42.9243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PHK3DLL+Dr9ZkQ6qsdQWZsHwnpQH9oHz4/Z6LCjMZDqDGdEW7fyvHKKm3SKx0zXWu08DzInD8rP9PBXnNXmkZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9450
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 01:10:04PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Local cpumask_t variables must be wrapped with alloc_cpumask_var() or
-> similar helpers, to allow building with ridiculous values of CONFIG_NR_CPUS:
-> 
-> drivers/net/ethernet/mellanox/mlx5/core/eq.c: In function ‘comp_irq_request_sf’:
-> drivers/net/ethernet/mellanox/mlx5/core/eq.c:897:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-> drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_ctrl_irq_request’:
-> drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:494:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-> drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c: In function ‘mlx5_irq_request_vector’:
-> drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:561:1: error: the frame size of 8560 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-> drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c: In function ‘irq_pool_request_irq’:
-> drivers/net/ethernet/mellanox/mlx5/core/irq_affinity.c:74:1: error: the frame size of 8544 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-> 
-> The mlx5 driver used to do this correctly in the past, but was changed
-> to use local 'irq_affinity_desc' structures in at least four places,
-> which ends up having the mask on the stack again.
-> 
-> It is not easily possible to use alloc_cpumask_var() again without
-> reverting that patch, so work around this by disallowing this drivers
-> on kernels that rely on CONFIG_CPUMASK_OFFSTACK.
-> 
-> Fixes: bbac70c74183 ("net/mlx5: Use newer affinity descriptor")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> This is probably not a great idea since most enterprise distros do
-> enable both CPUMASK_OFFSTACK and MLX5, and any ideas for how to sort
-> this out better would be helpful.
-> 
-> I mainly tried setting CONFIG_NR_CPUS to an unrealistic value for my
-> own compile testing, to see which files run into this problem. I have
-> managed to come up with better fixes for the other three I found, but
-> not this one.
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-Thanks for the catch! We will look into this and provide a proper patch.
+On Tue, 17 Jun 2025 13:53:18 -0700
+Ian Rogers <irogers@google.com> wrote:
 
-Thanks,
-Dragos
+> Type punning is necessary for get/put unaligned but the use of a
+> packed struct violates strict aliasing rules, requiring
+> -fno-strict-aliasing to be passed to the C compiler. Switch to using
+> memcpy so that -fno-strict-aliasing isn't necessary.
+>....							\
+> +/**
+> + * __put_unaligned_t - write an unaligned value to memory.
+> + * @type:	the type of the value to store.
+> + * @val:	the value to store.
+> + * @ptr:	the pointer to store to.
+> + *
+> + * Use memcpy to affect an unaligned type sized store avoiding undefined
+> + * behavior from approaches like type punning that require -fno-strict-aliasing
+> + * in order to be correct. The void* cast silences ubsan warnings.
+> + */
+> +#define __put_unaligned_t(type, val, ptr) do {				\
+> +	type __put_unaligned_val = (val);				\
+> +	__builtin_memcpy((void *)(ptr), &__put_unaligned_val,		\
+> +			 sizeof(__put_unaligned_val));			\
+>  } while (0)
+
+Does that actually work?
+If 'ptr' has type 'long *' gcc will (validly according to C) assume
+it is aligned and will generate a misaligned memory write.
+The (void *) cast make no difference.
+
+Using (void *)(long)(ptr) might lose the alignment.
+Otherwise you may need to use OPTIMISER_HIDE_VAR() and live
+with the extra register-register move it tends to generate.
+
+	David
