@@ -1,61 +1,63 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D107728B501;
-	Fri, 20 Jun 2025 12:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970AC28A400;
+	Fri, 20 Jun 2025 12:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421459; cv=none; b=FpBPM10W63jgXRdRX66lphfqYOOd2S/CyAmV/eGk2hSBvx5Lfi5HsyaV22anCvWFCrxtjOQ5ulmIpBZptveIPux5sBZCe8aKSOTUW+mKgS0jrQJMfLEpKYu9iHKfUTJ5z3XHsAJYQpe3XWrCimSdC1Gk/6bYB3Io6E4IjPYG/Bw=
+	t=1750421461; cv=none; b=dyPaRh8d/VFfJK818lpTTmZe8JDgyNQsmrpaN+A99xIqvdySevBCaOEQ01a5xPJMCMZ/bGGHt83RBTheKlCSE+v4AfxmyF6yShEc2KT4bDkeezimV2WSVoYnbd7XJPggWFqCNSzhfc2bYo7pWn6CEkKa+8D16DBCJxUMjxg8BQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421459; c=relaxed/simple;
-	bh=Gdsl7ltgcSSl1T/a9BRg4IRgPzHjEOcp1Ptwab5s3L0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eIuAGB/rFXoLk0zn0uA2ElLRCKg2BdO51Vyf2Z2m5cIurpVpQ3Jr89reHwSId/MQ5rBi1xbKpL1hToj5eYEv6zyT3aXhREAwmpIpldn6FWqPvjaxmCZeJkvqWXWmbW2LtfcJ0E1hZJk3uKHLIfVswRB6BK8+j+11miKqlD7wV0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwjA8Iek; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1750421461; c=relaxed/simple;
+	bh=t5LY8Rk2V9T1SuPJFFqFqeyhfok/EQE+CyfbfekrVmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m7SSsCthK3pC9QiIsxI6MHXx7KMTnVUwEahU+UNiQlrtyKFgse4/q5v++xvuRB9tnzwUTUNtgLWm9rxKFKyLZAgsuNu0OFEKToSycR5W2v/MREEFLSa481E6O/S6AOuMtkf8cu/Kafga8FVB2JON2xMYKQGZBhWPW8ZylwDlZHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U0rcAiaB; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwjA8Iek"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a54700a463so1018127f8f.1;
-        Fri, 20 Jun 2025 05:10:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0rcAiaB"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45348bff79fso20445775e9.2;
+        Fri, 20 Jun 2025 05:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750421455; x=1751026255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yaHis4TQolxCGd0DYXkBS/c5nHz2SDiffjSBzhVvE0s=;
-        b=fwjA8IekJk2ubVvPN+3LjzH/Crik+HB1qyYI8ymy9p5sUjEcqYgjQcrnOeiWC/F76T
-         7RbX58201wzC5gc/uSeTzIQXMA1viMBSycBkYoFLKZt+mZ2+Nnbzh2giQKbggCRi6VLi
-         YFQBQnlQpMZYjStJ39+tAUzzHMbkvdhja91ucA1lzD8T6vahr8t88DvbFY5O86Jr4BFa
-         04PMu2wxQyfA51rq2OkG2SDPCFY1oSmi6jloPVnpRm8cEtBzZKC4gAJoTjQGEalxk+wb
-         dMm5ibHS0Afu7c9nKHYcRi/TjlwczcXJXPKJBpsE8L/FNLWu0BddwbogQyWox1+9GUPR
-         rboQ==
+        d=gmail.com; s=20230601; t=1750421458; x=1751026258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G7Ctr0sAUnlzzIgUBHaJtPIdj3XkekwHUxG2jV9iga8=;
+        b=U0rcAiaBIDYojlEQpILTvDvVP938GktKOojjL5bYGcVFqq8Qg5YcRd3is+bLIi0Oe8
+         DvUSyu0Ea4xrDBb/ltUs730K+qhMVGzsCrwgeMq/nZaA2zw/E3HMzkOXhjNipwnfrZ96
+         UnEn0SeE7etigIPE+LjIAWy7cO6N8uo8UrNgbaCq96pkQy5XW7zbj+UKw5zXz4Zl0esK
+         eZvL5Bt8D3DWADwWmUbly3IEL1SIJ9nD2RtsR2ceB7GJx32Dumg04D+ztHqB6jlB0Maj
+         aWCKDou1bOPPcOicOcOWCWSwq9Up9y1XIamYTpGEGu2fyZAm90W617BplPcKxYOQ1l/R
+         ZA7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750421455; x=1751026255;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yaHis4TQolxCGd0DYXkBS/c5nHz2SDiffjSBzhVvE0s=;
-        b=QfaysvQcXfWLumCQjDNc9RR+2DHB2cEDNQj9Xp/xmk0rzwPnQ+tc+uJljNpsiR44OR
-         cc96vb1KE1ZMz9pLMzgO1/r+hXyzHf9CpFnhTwZQkWy2ZVJw+2wWMbbU1Q0G2amoYNj2
-         8xYthIDJdKeQrozEY8AUCS2D9xsfwu9p9PKVHoybMadLnyxdDAICjhtfLqe1tFv00L/p
-         ZvnNzJNyTCUC9lD0Oef24+F0lKmke0Q2F3sZdcTahNUrZ2Gar7OkBeFQUuk56ISVWyHB
-         ljavJIs4FozGg2dZi9MTCC8cFVOz1n/52tygAm27NAnqO/YoB55zTWVT27+mybozTylp
-         du5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVXMrTTUC1IXZIvxSkVXjBxiqpZcDEvMuEiphLKpBtca3R1Nzs07y/ewpcxGQLIn6Q0EIx2Qiu2I+jOzgTd@vger.kernel.org, AJvYcCWRwJp5fHt/6ope5XVAUTiHl5sIjlmYxsKI34r4LDgYqd5YPrdYFCnediEDIzqjRAjFT8TBxOWP269N@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGF2XCaut2ePO3PiedV23kSLyo5OyfFrBuI0MoTZaRf/7SkWjI
-	qsIdrJ7XZDwdLHYx6ELOGyCD36dfZ4jd9muqWOyA5CeBiKcLDn/g3ZaE
-X-Gm-Gg: ASbGnctjtIpvGZgxCmKm62oOWXPe+Vfs6TtpSzLknOTUYIH2tD+FhrjfU5lrepyez/4
-	qg64r9RSQFbrazM8HOJcWRHmHD0d3FClUMJcJKxYXEYBWtgzEOdY88j7aDqfZ9f9eQIH7eGfuof
-	s6PKgONxIvtYcxUBdBRybEgAxtg0InSUVeiQzMI/WfuqqJV6tzpQKQqihAnqOv4vGs+dlfLt4v1
-	RV32x8GWvqEtPjeWMOEiAseMZoILlP/8dDysZrIHoRkJ9CszPmoEmpMQ80MoaLR7rGq/JBosnLO
-	54U2USjod8AxJz3rHvhqbwJOTySW85wJo9prTQq3K6BsZFfyfW2OUBP759JphyR+6XFN2pmO72C
-	/uknt7dGU6g==
-X-Google-Smtp-Source: AGHT+IHUnxU4a+Lid6u3sR5kgimhf4N4hEUSoyeS3GWqYTWIGu4WGeSGmL7q3DCvDAIvHah6NwVE3A==
-X-Received: by 2002:a05:6000:2282:b0:3a5:270e:7d3 with SMTP id ffacd0b85a97d-3a6d27e16ccmr1728088f8f.13.1750421454825;
-        Fri, 20 Jun 2025 05:10:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750421458; x=1751026258;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7Ctr0sAUnlzzIgUBHaJtPIdj3XkekwHUxG2jV9iga8=;
+        b=Wxd5awKVrG95HcT3nGeUGqw+RLpbBCYAELcUENKvJcc+7TBDGHFzmFo5Nnz8CaVovh
+         xGw/ZfxhbuBymVYTTT/cskL7S933dedARptRY0PY6xImyTb8lNBlBBryDe4aXK85om42
+         zl4uxmHaU25K5J0qvAz7wVKcS6qUfQzWt3VtBpGMOjwmyqAT4MQu5C6yKdHeUNMv4dbY
+         SIDIeX7QltWWkX9wlc+5eaLJpWArIRxFyAuIWNPjKI5TkqHQNMfg1eEPeLuhP0Yb3cMf
+         98gA7Uv7sJQBKkNR1daoLIIBUabXg6vQyVRyxZ/m+V8gV+kad3jmR8sT1tai8E5Tglcj
+         lkGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMlhTrtexVzpcdc/afGyAXBsV39tN9yiPpnCCYxsOGHruG1VFmndzimkY8WJRMug/9YoLhjQbdERPt703K@vger.kernel.org, AJvYcCVoOdOnni9hye0sGqHFIjNXpqT9/Qm5F4cmbkeMWNnf4mk9bQV6dikHBwr51Jl8sHs2/2mrZhEGAaD6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeD+9Fyan0UQjdhqxHq1AUojssSPyCQF+7Y7c1VBCJM3ZjW2Cl
+	NEq56lo4pXPJCK1Yqx+B0YW9OjA7PHTD1zMIx7mxUsLPc4d5ZeozVoDP
+X-Gm-Gg: ASbGncv40bhaJnm8BDmQSG6LjaDuJjfAJJRpQUtv7QUmzSlFpVypeLFzgwv4PxCGrGd
+	WWR+tokPZu4iMYTlO+Upqf+F231MTsN4UKWT6yX2IqoNDykHQ9yPnRAYqsRDFTr19qjdebSTGoD
+	Z93V0kU6+lb2K5C+Mcu6EfVSFlUIeLx980pTwFcsLJOZpRjqy+CptS0xFXOwkIHlCvh+bxBuPxw
+	R5yRbwqn4IwPbP1+x1ZrsjLlu5bv5i5kQsanJv+W1NkEBf/DcdWnbsASDfiwynSLEL8hxUXtsma
+	LAbkoYRkIpk+tw02wuJu0JH1Wy/lryW5Lark/iHbJNO0q0a1RDKWUBLQsTx5CmoC+B59yfosrNY
+	VQnhQq26eYQ==
+X-Google-Smtp-Source: AGHT+IHaOExDLaVeAObJbB/ZuHQIB9OYyqDeqVnJko81Jz0V+bWTynIkB7t4gq4X48FFhAk4LQls7A==
+X-Received: by 2002:a05:600c:b86:b0:441:b076:fce8 with SMTP id 5b1f17b1804b1-453659c0bb9mr27538835e9.14.1750421457507;
+        Fri, 20 Jun 2025 05:10:57 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:e188:15d5:9cc6:1db])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97a915sm58234645e9.7.2025.06.20.05.10.53
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97a915sm58234645e9.7.2025.06.20.05.10.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:10:54 -0700 (PDT)
+        Fri, 20 Jun 2025 05:10:56 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -70,10 +72,12 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 0/3] Add CN15 eMMC and SD overlays for RZ/V2N and RZ/V2H EVKs
-Date: Fri, 20 Jun 2025 13:10:42 +0100
-Message-ID: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 2/3] arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Rename fixed regulator node names
+Date: Fri, 20 Jun 2025 13:10:44 +0100
+Message-ID: <20250620121045.56114-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,40 +88,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi all,
+Rename "regulator0" to "regulator-0p8v" and "regulator1" to
+"regulator-3p3v" for consistency as done in the RZ/V2N EVK.
 
-This series introduces device tree overlays for the RZ/V2N and RZ/V2H EVKs
-to support the eMMC and microSD sub-boards connected via the CN15 connector.
-The overlays utilize shared DTSI fragments for common configurations, and
-also update the base board DTS files to define necessary aliases and
-regulator nodes.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (3):
-  arm64: dts: renesas: Add CN15 eMMC and SD overlays for RZ/V2N EVK
-  arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Rename fixed regulator
-    node names
-  arm64: dts: renesas: Add CN15 eMMC and SD overlays for RZ/V2H EVK
-
- arch/arm64/boot/dts/renesas/Makefile          |  8 +++
- .../r9a09g056n48-rzv2n-evk-cn15-emmc.dtso     | 15 +++++
- .../r9a09g056n48-rzv2n-evk-cn15-sd.dtso       | 16 +++++
- .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 10 +++
- .../r9a09g057h44-rzv2h-evk-cn15-emmc.dtso     | 15 +++++
- .../r9a09g057h44-rzv2h-evk-cn15-sd.dtso       | 16 +++++
- .../dts/renesas/r9a09g057h44-rzv2h-evk.dts    | 14 +++-
- .../renesas/rzv2-evk-cn15-emmc-common.dtsi    | 46 +++++++++++++
- .../dts/renesas/rzv2-evk-cn15-sd-common.dtsi  | 67 +++++++++++++++++++
- 9 files changed, 205 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-emmc.dtso
- create mode 100644 arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso
- create mode 100644 arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-emmc.dtso
- create mode 100644 arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-sd.dtso
- create mode 100644 arch/arm64/boot/dts/renesas/rzv2-evk-cn15-emmc-common.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/rzv2-evk-cn15-sd-common.dtsi
-
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+index 655a30c63ab1..01b2e0c7c7db 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
++++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+@@ -45,7 +45,7 @@ memory@240000000 {
+ 		reg = <0x2 0x40000000 0x2 0x00000000>;
+ 	};
+ 
+-	reg_0p8v: regulator0 {
++	reg_0p8v: regulator-0p8v {
+ 		compatible = "regulator-fixed";
+ 
+ 		regulator-name = "fixed-0.8V";
+@@ -55,7 +55,7 @@ reg_0p8v: regulator0 {
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_3p3v: regulator1 {
++	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 
+ 		regulator-name = "fixed-3.3V";
 -- 
 2.49.0
 
