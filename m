@@ -1,175 +1,152 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281312356C7;
-	Fri, 20 Jun 2025 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC10327F75A;
+	Fri, 20 Jun 2025 09:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410491; cv=none; b=s6DBL62dofiFp5XQ6DyHr52maBKDlq0/DjoozaAOa/mCghKfSRlQtLQeTWieyWf6n4+SROU9wHtfUbdM6kjXblTvSCAe22ZmbYrCbbQR8OMG83tEyrpcK4JnylAuHTlqy4scKb02YShj5alnvS7Q/fgZTZU/pi3xzgoiYe0fHxc=
+	t=1750410536; cv=none; b=WyhDfBo75F/uYdlfX7kuyvYU4zaUwBqNyYMPrSXK5R99OMWahWzRN0KO5QF1TXGiDEhpmgq+FpFwb2PoMsfmkmuDpczoFKSs2+EsISsnytmVVIco2+mu8Jkwy3j+2oBbwwL8Hf98W1TR0YMXn5qfd/Kyb+TRDmF4XazOSrh2CD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410491; c=relaxed/simple;
-	bh=eAH/XWhV0YrJEAGt/Il57b1YBMEoAFiYpmzuX8AHFt8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S9aHkGu3Ew+t+w85P+XHf6EfWOqBYaFNPMlQ8h9FJOabknLe4yJnmaXlf3fOT0Li0sxm+Dq2uBEMpXGiZ1nByDzglt/w19k5Z00LYduvbRH5RzaWU3fwrWXZw/A9Unm3XkFx6jbITBiSpce/Y94N3Fj+f6Tpy/Z2WTp9J1NfaCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AHCFnIGU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750410536; c=relaxed/simple;
+	bh=sJU7lHm4pRbDDCHELSdh0N+34gnYoo1IYGg9oZmZhKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f4qvyKzGny55XWisl2qabmllbqNndcY1157G33r3Kv+1rSVdRWjubf3LugfpVobQj9aZ4rehXL0LYoM6E3YDmNIVCmf17wJG/g14p8eJ3qXM8FFWmUNMwAyh3HsjxUUmEYbt9+q51oCCcPkPOnBdf3aMgTRYmfZAVeHImlbckjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPe2h0UY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AHCFnIGU"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K4VgT2018588;
-	Fri, 20 Jun 2025 09:08:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wIlhP34fZrQL0p3bEORFQhswmsGeT8lZPBkZZMP17rs=; b=AHCFnIGUFKfKXYWZ
-	aS/x5MPtNs0J7TUd/fnYOYr9AwI7lSqFe7Ov/AIbS/wEX9cqgQRNh3NwtdbkJF2C
-	ei0mCVUICWGpcds3t+HEMwIIvl72dpejpGGPPh7T7qHqX/x5xwZiU4bwAU2kp3RE
-	uVx+OdZTxDtSDhgnD+vbPVpYYPtEDUqt4dTUtEsIF8tKf1j35LYJ8WJi+h4oeJIL
-	odQYQi2TdNzBi5sctkAuiBNje/8BwHuv/aNtPudeikvCieCPWTH57+ZHBcATPl7y
-	ZYI/LRJBhPv1yodx8b2Vd70BYxJ8dlp4hPO6MeaPH4X/Rc10e/SODMRpz0c4u8Cv
-	J0FfzQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47d0pcgqe7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 09:08:05 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55K985Bh014393
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 09:08:05 GMT
-Received: from [10.217.216.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 20 Jun
- 2025 02:07:59 -0700
-Message-ID: <9e345e90-58e6-4755-a0af-8e0b4ccd5d44@quicinc.com>
-Date: Fri, 20 Jun 2025 14:37:56 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPe2h0UY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750410535; x=1781946535;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sJU7lHm4pRbDDCHELSdh0N+34gnYoo1IYGg9oZmZhKQ=;
+  b=PPe2h0UYJb4QYTW0llqbqGKq0RXvJoqwbdDTK7tpcsJMANdqYqLXi4ZE
+   rXMowUG4pntBK51ULDiZAAUWL0q3fEpQEj57oAnMlPbkoXw/BmqW4nBpk
+   Jb6PWjLBgFQbNqr71Ec78hGjqZ1REDZM2uICnUoA2DLmH+wS32+8wz/Qw
+   5jt6FTlF5J2kR+LDKTa45cHI4vlaPSkVQ7szX2jDxKKXVKDXfBpZovOTq
+   9jlCWMe3aa57Xf3KXlT3nbQRFMTvpEe4RCbHxiTCBcDBO8RwbNJ9Fj3Kt
+   9NIpbmxPMFkTAnhBAxQGCs6BmC5OOXylwnwPiMP9gJbJJ6z6luDWLv2A2
+   g==;
+X-CSE-ConnectionGUID: 5SqK9WU7QC6cbq4HR2nFMw==
+X-CSE-MsgGUID: IBo+VHAXR2iw/tWGZrUblw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="75196982"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="75196982"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 02:08:55 -0700
+X-CSE-ConnectionGUID: /tLf/rXMSlG6qy6I84uRtw==
+X-CSE-MsgGUID: HyzA8WKCSuy0PWwnypJbZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="151402076"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 20 Jun 2025 02:08:51 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSXjt-000LYI-1Q;
+	Fri, 20 Jun 2025 09:08:49 +0000
+Date: Fri, 20 Jun 2025 17:08:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: Re: [net-next, 09/10] bng_en: Initialize default configuration
+Message-ID: <202506201622.Cn1MMNfm-lkp@intel.com>
+References: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
- max-sd-hs-frequency property
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <kernel@oss.qualcomm.com>
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
- <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
- <d1ffbcf5-967a-4c1e-9f2c-becc5fb6c6ed@quicinc.com>
- <a3796e76-d597-4c0d-ae7c-d042cce564a5@kernel.org>
-Content-Language: en-US
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <a3796e76-d597-4c0d-ae7c-d042cce564a5@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XTSWE4Sv_90BkLJb9rPSjfcXl0D6EZSz
-X-Authority-Analysis: v=2.4 cv=YKyfyQGx c=1 sm=1 tr=0 ts=685524f5 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=fBqTZhuuraqRRh6TpvYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: XTSWE4Sv_90BkLJb9rPSjfcXl0D6EZSz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA2NiBTYWx0ZWRfXy4Gu4uIaBaMU
- lwAjqpLkzirQKGcuMkU0noOto5ZU3gCNj/NSjNQ97Zm2/i6856vPyPG5CE5/YKZfjLoGU0HtIGg
- 5+5jA9k8J7Yh2UaW8toGIealWcefe4emBd8fzJqoa0zz9CKwOdpudoGcBpoAmVgtJVIvT8bq2Qb
- nTLMQxfzdoHTErQ5W5gdK7+wHMcztGeySEC/WTLs1YzT51hsagQyDFz7n3K+ocuPiRk8lBVvIps
- 8IRJRep8Xjrb3TGyi3xrF9k9c5p1C/xIMjY5w1n2plA+33C8SfsAr+vya8wuWAmczPKg+jWBe72
- o7lCEau0rTMETRtNLlvFu3nIr+0zu507vrClcgJdunr+PZYF3Rq+B09LfsDCBrXlbRfJp8rdIIc
- +iFdrLwtBEfFJ6E6aDUOt8qn+2JUetXoL/Hap29ooVOtrRelXHPFtfBFIdrX5M1cpUV7vMZF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_03,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 
+Hi Vikas,
 
+kernel test robot noticed the following build warnings:
 
-On 6/18/2025 2:38 PM, Krzysztof Kozlowski wrote:
-> On 18/06/2025 10:38, Sarthak Garg wrote:
->>
->>
->> On 6/18/2025 1:13 PM, Krzysztof Kozlowski wrote:
->>> On 18/06/2025 09:28, Sarthak Garg wrote:
->>>> Introduce a new optional device tree property `max-sd-hs-frequency` to
->>>> limit the maximum frequency (in Hz) used for SD cards operating in
->>>> High-Speed (HS) mode.
->>>>
->>>> This property is useful for platforms with vendor-specific hardware
->>>> constraints, such as the presence of a level shifter that cannot
->>>> reliably support the default 50 MHz HS frequency. It allows the host
->>>> driver to cap the HS mode frequency accordingly.
->>>>
->>>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->>>> ---
->>>>    .../devicetree/bindings/mmc/mmc-controller-common.yaml | 10 ++++++++++
->>>>    1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>>> index 9a7235439759..1976f5f8c401 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->>>> @@ -93,6 +93,16 @@ properties:
->>>>        minimum: 400000
->>>>        maximum: 384000000
->>>>    
->>>> +  max-sd-hs-frequency:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description: |
->>>> +      Maximum frequency (in Hz) to be used for SD cards operating in
->>>> +      High-Speed (HS) mode. This is useful for platforms with vendor-specific
->>>> +      limitations, such as the presence of a level shifter that cannot support
->>>> +      the default 50 MHz HS frequency or other.
->>>> +    minimum: 400000
->>>> +    maximum: 50000000
->>>
->>> This might be fine, but your DTS suggests clearly this is SoC compatible
->>> deducible, which I already said at v1.
->>>
->>> So now you send v3 which is the same as v1, so you get the same comments.
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Introducing this flag no longer becomes SoC compatible because as per
->> discussions in V2 patchset with Ulf and Konrad this new property can be
->> used by any vendor who wants to limit the HS mode frequency due to any
->> reason. Thats why moved to this generic approach again in V3 as compared
->> to compatible based approach in V2.
-> 
-> The are no arguments provided in favor, so my review from v1 stays. You
-> get the same comments.
-> 
-> Best regards,
-> Krzysztof
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250619]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-@Ulf, @Konrad — since you previously supported the idea of a generic 
-property for HS frequency limitation, could you please share your 
-thoughts on whether this still seems like a valid approach?
+url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250618144743.843815-10-vikas.gupta%40broadcom.com
+patch subject: [net-next, 09/10] bng_en: Initialize default configuration
+config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250620/202506201622.Cn1MMNfm-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 8.5.0
 
-Best regards,
-Sarthak
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506201622.Cn1MMNfm-lkp@intel.com/
+
+New smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:533 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
+
+Old smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:372 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:542 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
+
+vim +533 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+
+   511	
+   512	static int bnge_net_init_dflt_rings(struct bnge_dev *bd, bool sh)
+   513	{
+   514		u16 dflt_rings, max_rx_rings, max_tx_rings, rc;
+   515	
+   516		if (sh)
+   517			bd->flags |= BNGE_EN_SHARED_CHNL;
+   518	
+   519		dflt_rings = netif_get_num_default_rss_queues();
+   520	
+   521		rc = bnge_get_dflt_rings(bd, &max_rx_rings, &max_tx_rings, sh);
+   522		if (rc)
+   523			return rc;
+   524		bd->rx_nr_rings = min_t(u16, dflt_rings, max_rx_rings);
+   525		bd->tx_nr_rings_per_tc = min_t(u16, dflt_rings, max_tx_rings);
+   526		if (sh)
+   527			bnge_trim_dflt_sh_rings(bd);
+   528		else
+   529			bd->nq_nr_rings = bd->tx_nr_rings_per_tc + bd->rx_nr_rings;
+   530		bd->tx_nr_rings = bd->tx_nr_rings_per_tc;
+   531	
+   532		rc = bnge_reserve_rings(bd);
+ > 533		if (rc && rc != -ENODEV)
+   534			dev_warn(bd->dev, "Unable to reserve tx rings\n");
+   535		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   536		if (sh)
+   537			bnge_trim_dflt_sh_rings(bd);
+   538	
+   539		/* Rings may have been reduced, re-reserve them again */
+   540		if (bnge_need_reserve_rings(bd)) {
+   541			rc = bnge_reserve_rings(bd);
+   542			if (rc && rc != -ENODEV)
+   543				dev_warn(bd->dev, "Fewer rings reservation failed\n");
+   544			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   545		}
+   546		if (rc) {
+   547			bd->tx_nr_rings = 0;
+   548			bd->rx_nr_rings = 0;
+   549		}
+   550	
+   551		return rc;
+   552	}
+   553	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
