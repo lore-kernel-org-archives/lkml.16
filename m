@@ -1,178 +1,256 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497B928A3E4;
-	Fri, 20 Jun 2025 14:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429609; cv=none; b=ryoFjYzmYiScoTa4rqGWtNYXSip3BX/kyfDWvnbxt7dOEmwSHSvfbhVjoeVYdIORRxzVsrIuETiRIqif/n5I4WwXUD7euuS38KaCNVpcRxfMpQkuepThWarrMO0dDbP+dRHk9h4KfQzr5R2cD4diqVDNRgvcGscO5ckq8ZjeNbo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429609; c=relaxed/simple;
-	bh=+pWQPw+Ca2mJz3X31Q1pGdLyshBfBAfKJlr9EFmlMsk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uENAsiovztx/izpAaJyLZI7JaH2G/CLIoJyiVALE5oxjXmDvhjIxkSOxSVd4Z4itIytrlEgrpMPsYXfAYxAtCTiAInvsXkmh07no2AK2Lj4zAp1EfknkIc+63bfs+xen/2j3hkk8cNO2BoQTBY0FfYxEPDzpEg/4BldhPFpbYRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RucEdvV2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D14E291864;
+	Fri, 20 Jun 2025 14:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750429615; cv=fail; b=WVaR09Us0z3Kfo3IZcaGyc5FtymRHJ3IvSz6Sa8clq6J5iEheTrCwykxxRJGD8rSNJj/A7Tepqi1nDbd/JZeAPS66zqDq+gkGBvRRF6FTGeLYyOdsTnCtfWRRYI0cUfBtIFCzsjTNdjmYnNqFy+Bwavcrx88IlDa5kjiIUzn+28=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750429615; c=relaxed/simple;
+	bh=HxVrumi7W8ItT5Sa5jnNEqQZSWqIJPsuK6bYitz5X30=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rKWUmt2LSHQXDJhbxYqEnKfdhdXo2VOu80nB5dNCYQw9pAIFcJNAcuv1ESdVKCSIyqr6fYLB5SKHRdtLyre798iPUhlgeO+b7DiuL7R69AIlHHrnT9O0cPN4rvR4IelOQTrm/+mAavnM5TzuCXdKhHBmOIYdlfQRSnlrOlNvICY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PBEZgSAO; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RucEdvV2"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K7H9dZ009657;
-	Fri, 20 Jun 2025 14:26:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tXkJ67cMbeMVJ9YZw29ONigI2pwCgXoma9QCqa3pX88=; b=RucEdvV2mPKLvwI5
-	T6F7UEO3Tui9rGeReMnhUQq29KoXO/B/CYurSOFM0aaRmYzHTtsVBaf7uxgg70XI
-	q1ZcCrG2Oky/TU46flij+fW9QPKUCMe1c7LS8QxMtC3hFIFTQeQ5/tHVBmnk8k2r
-	uh47MfhZE6cIdpyl5rso7iOUi0METaeQYPMyqqZ7nPQaB9IowQEmpTGX0DeZP+70
-	vgmR/JZhPUKAao1bcCB5T3KU14AI8OZYN8FGE+OVTcMRYRJB5PD0xi07/0Yj+x/R
-	B7wCS8I5sAwmxZeJ15uSjm9+XBpTaMjUollDjpd6+u223GOZM1BNNwRXyllEh0xP
-	3dn02Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47d340155f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:26:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55KEQJbN023197
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:26:19 GMT
-Received: from [10.216.13.27] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 20 Jun
- 2025 07:26:13 -0700
-Message-ID: <9c846734-9267-442d-bba0-578d993650c1@quicinc.com>
-Date: Fri, 20 Jun 2025 19:55:58 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PBEZgSAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750429614; x=1781965614;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=HxVrumi7W8ItT5Sa5jnNEqQZSWqIJPsuK6bYitz5X30=;
+  b=PBEZgSAOLIhAsWsCGyyR8V7cJhFnKapib4wD1U/nRJFxPeQYJUqB+fWS
+   0+G2luPWvPsnz2XuNYDMAe4vi+Ab5mYs2SIF/4uNU40B6CfY/Sdi7Bvxu
+   eViiJw8Pph1zNerJFUxZJ1ypLov9Ha7vqHkIx6mWGo3IeyPCFF30LRReZ
+   VSuJPvKgM7cmPXMrCiyv1Q6avvBDlH20tfakVdNk00/0MDRZEAiNhs2ex
+   QsrIh3pmQxngyCZgRQepcBwrgbm/u+1bl1/CKZwULdzyTORtyWDnLvuMB
+   XUC8kdhZNlFxwEbgSmNa19azqtHfbAODyAjCJtBPIqpYAKPgpApgqSDZo
+   w==;
+X-CSE-ConnectionGUID: ikTUlOAJRuecQrn12g3ZFA==
+X-CSE-MsgGUID: +HsgJ8G2RA22pFIHc0lxwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63747482"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="63747482"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:26:53 -0700
+X-CSE-ConnectionGUID: 13XofRcORqSf+alMLIrwJg==
+X-CSE-MsgGUID: XzIGcX5kR3afdu+QI7IgiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="150520305"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 07:26:52 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 07:26:51 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 20 Jun 2025 07:26:51 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (40.107.96.59) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 20 Jun 2025 07:26:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nEYEUYaMhcqr8DIg3Vr5+7cgHys+ND0PCi1nhAJjjeA3cONtmesHrsr1GV4tS9iQM8CWkPBykMRnoNABJCVQi06xZgKXakmD7Bo+cYBu5iddMHkg4q6rQlDHR8KQX9/KiZ2A9rpYO6PJCMGDiWZRiu3iBFi01bQyHd8eh3YZ1D/k7vOamcjw0t0usJESdgln+uJ5D6GmcSM6B1RC+/cKJpzk8KCrJC1jK0q1fym6jOOGDVXqrEwzy79+sBmfVU5uWyBUsPFZv6tsRLg733GTgmYbc9o7YnvUnVfqVYqe9C6ObL+uq5IDJVR7/7z5/rjLqNbPNNaPhoVMG6I4Xa74gQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8jbW1hxlsBfVb031X4/DxVQ+dRzTUHrkWnyocxLoqDY=;
+ b=kHzikUfy/OeEIDRvl3m0RKfGFGlEVwg5/NZ4p6LYfje88nyz/7q2njXChmhj3lYPu3+mnG5KgRBiVKTKCCqi3t5F8/IDapRz0vfPJFwmdlPyKKSsyUIEY+dy3+TQshKKv2C/hHufccZ6zaxqIuUHszlzSz4aO4i5C6n8WMZQz2y7PQFLfBMPUs4FXGsbYs8kAlKErwJnGv5+L1YfD4Yi9DmBCCaomZq1nKdry7C7nvsIGyMPVLxF4gIfrstQ8dbAZiy+GfU48SpoM2J/E6uPUGNStby5x+vV17kmWPgS75cTnp8ynMAU7d0W/7N7WUhUR6otZ/5yktX8JG2MimQufg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by DM6PR11MB4644.namprd11.prod.outlook.com (2603:10b6:5:28f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 20 Jun
+ 2025 14:26:34 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%3]) with mapi id 15.20.8857.021; Fri, 20 Jun 2025
+ 14:26:34 +0000
+Message-ID: <80e0d302-7c43-4435-9d74-f1950878216d@intel.com>
+Date: Fri, 20 Jun 2025 16:26:28 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3] ethernet: atl1: Add missing DMA mapping error
+ checks
+To: Thomas Fourier <fourier.thomas@gmail.com>
+CC: Chris Snook <chris.snook@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Ingo
+ Molnar" <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jeff Garzik
+	<jeff@garzik.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250618142220.75936-2-fourier.thomas@gmail.com>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250618142220.75936-2-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU2PR04CA0244.eurprd04.prod.outlook.com
+ (2603:10a6:10:28e::9) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 10/10] scsi: ufs: qcom : Refactor phy_power_on/off
- calls
-To: Aishwarya <aishwarya.tcv@arm.com>
-CC: <James.Bottomley@HansenPartnership.com>, <andersson@kernel.org>,
-        <bvanassche@acm.org>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <kishon@kernel.org>, <konrad.dybcio@oss.qualcomm.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-scsi@vger.kernel.org>,
-        <manivannan.sadhasivam@linaro.org>, <martin.petersen@oracle.com>,
-        <neil.armstrong@linaro.org>, <quic_cang@quicinc.com>,
-        <quic_rdwivedi@quicinc.com>, <vkoul@kernel.org>
-References: <20250526153821.7918-11-quic_nitirawa@quicinc.com>
- <20250619135302.9192-1-aishwarya.tcv@arm.com>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <20250619135302.9192-1-aishwarya.tcv@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ZHYQYXUdS1hDqa-RbOPXtdnN-IZwsXyx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwMyBTYWx0ZWRfX7wUCeFZ/MuQ2
- uVV2KVg+Gmu+Zg2yHEdVhWakIyNIdlOIQnsYwcHdtymxTLgmlDNwzImLMcJS/3oym6Qu93oGmJn
- 3u0Nx/1fyU6dqbp1koyKdP+2cx7wTBB0/rIOUIcHJGJb8VK//7avb92NMoXG4ekQf0FsoWd0jiX
- PHAi+2McHCwUh1wgoMQn6lkhe2nr6MMM+n/bjSnm4sHRaAcg28u3/obBfJ1F+8v51RMUfKTSIlk
- IDUdGS1dINPxwaymt2TtK1RVK3xNiogFL7LybBl1GeLv773CzxrrqePOOe8OTmjdSjKDBeg/jA7
- uwhnKPO8USsvAbgxyYPfejU/Tj30X+hCOcAMgJp56Ewmarj/mWN8LYMND/yyA9dAEYEQCIxTwuU
- hicCo8bppRDyepwSZdOlzFaymUwnYZHFsJrRiSp8Nv2rMYIOrqVjaJv7InulMhRbT+D++sLi
-X-Authority-Analysis: v=2.4 cv=JLE7s9Kb c=1 sm=1 tr=0 ts=68556f8c cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=ydUYT1VdIsrJ1VNw940A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: ZHYQYXUdS1hDqa-RbOPXtdnN-IZwsXyx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 mlxlogscore=999 adultscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200103
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|DM6PR11MB4644:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60f9e8d8-6d53-4a7f-e0c2-08ddb0067509
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eCt5d1NIWlpmU3kxQkZ4N3hVM2JLS0tmbXVsMVdJdGVtL1U5ZEJjR1lzdlY3?=
+ =?utf-8?B?WGR0Umk0b2FkdDA3RU14ZUgrMmt3ZDlFaWxhbTM1anRBbVNUZlBIRGVpT2NG?=
+ =?utf-8?B?c2xpbkhROFR1QzRUNTdyeEVkWDB3VkVrSlhvZG1sNTBUUWFVUm01bURySjhK?=
+ =?utf-8?B?c1dZMmRHazdaZEh3d0cyZzFxc2RPNkZKSVRDTUowdkZzSlorRlNtNTErYThG?=
+ =?utf-8?B?TE9Sc1pZKzNWcHhSUnBYMTdYeTh0ZXh4YURXcTEvdzFzNForSmtQbVkybUdi?=
+ =?utf-8?B?OVFYQ2RNVlZhWU43ZjExRTZBbjNzN2IwWHJtdmp1dWpIb2p0eUpDRXVOQlhy?=
+ =?utf-8?B?clBxc2h6anhodjB0Rzh5LzZZMmpnZ3lUZnROdGFSSHNVVzJ5Um53Q2VTYnd4?=
+ =?utf-8?B?MXJad2d2YUlUeGQzYUhOOWxXL3o3SEphSTdIclRWMVZsWEcyMk00ZDhiZGxT?=
+ =?utf-8?B?NnRsczhyR3lxM2M4Y0xRbGVwdWFvdWlDZWlOa0R3WkVqSVIxM1phb1JoSTcx?=
+ =?utf-8?B?UGYwMkhKeXVnVGFCQVAxSFB4ek1PTFlPb1N1Snk0UWdDRHJOMGJYM0I3WnhJ?=
+ =?utf-8?B?b1FldkkzM3AwUGNGc0hZZ2ZnRktBWlV3aVgzeUhoL1VMT2VFNUxQSmUreUVP?=
+ =?utf-8?B?cm9rMmNqKzNldDduUUFyN2lBYUFEMGtnc2dCRHc3aDdwQXRPVlUxbVJQbzQ0?=
+ =?utf-8?B?c2hFQU9zczBsV2hKSE53c3d1dFpHTlhRS25TU0RtbDlLYzBjUUJZVU8ydFZa?=
+ =?utf-8?B?REJtK2tGR3RpVytvcGN1UVBQUzRZUzBxbkFRWTVBczBKVk9oZklwd1VIWGF0?=
+ =?utf-8?B?RXlwTVo1enl0Rkh3bVByZmJ0SkFVZkZranl3dXZRa0pjVFQzS1F2TUNUTG5I?=
+ =?utf-8?B?a0poYmdBbVBPVzh1ZDhvNkRqMkZDT0dnMGtlRVk5V09iYmdQSnh6MTlIa0dF?=
+ =?utf-8?B?cDB2M0FZTFl0TkNxVWdEYXdadlRRcHZEOW9aU2dEd0dlcWd3aGVqMERWV0xM?=
+ =?utf-8?B?OG03WWVTZXVKTnI2UVNTeUtOKzF4OU1odHNqWk5lNTZrZTNVV2VmNjdZSXFn?=
+ =?utf-8?B?M1plS0RJSVBJa292cC9IRFJyMzF5YitlK3R3U0lib3Y2aVM2ejc3NkRGa1ph?=
+ =?utf-8?B?TzJLV0N6em90NFVvZzdOSVAvYlBjenZQeVhnQmV5cjlUT004YzF5QytJcFA4?=
+ =?utf-8?B?bzhnbkxPRERuTUVzSkdCbzRxcEQ3bkZtYXNjN2YvWlFhNWJURkxSaWpFMGNH?=
+ =?utf-8?B?blJqaUlzSVhrekx2T2RCeVppbE9xWTdlbFVySmNwM1JueEFoUk43eVFueWxK?=
+ =?utf-8?B?ZTE5R21TSTZVbzJIdU1zbHJ3VWJvL0V0NEZVSWVBTVI0blFSOGwvYlZrUW1a?=
+ =?utf-8?B?YUpWaUxLU1kxb2hSaGFGc0h3S2dBTnJLRDA0WS9xNDJwS3M2YjB1RTlITTdQ?=
+ =?utf-8?B?QVN0T1ZvK2VLUmlmamxncVI1SDJJeWMrSVdXOHFkWkNrSWtoTDBDbUF5MHN3?=
+ =?utf-8?B?NHhUeE9XZzYwUHlXdG9qUkJIYTNiOWhLUGt6azlFejQwK3pENzhjazR6V0pZ?=
+ =?utf-8?B?TC9VdVk3VUUxUWFqalF4Z2VPY09MWGMwYk9iR1NzZlRZVkJGN245N3h5UXY0?=
+ =?utf-8?B?bUd0Tm5LZ3h6K0NuLyt0b2djYWhaNnZ0S1E4MjhwNkhEN0ZoVittVGhZUWd4?=
+ =?utf-8?B?ODBTdVhjVmdrQjhBVTZnRlB0bUZ3WlBIN0ppUlFzL1Y0WExsNFJkazcwcG5B?=
+ =?utf-8?B?eWhRd3E5TWdyejI4dFJ2K0pBOElCcXVacmxqOExvSjBkSm9NZXM4K2wxV1c5?=
+ =?utf-8?B?YUt0MHg5Z0wzUkJFU3lOZVJ5ZjNMd3I3blF3am9EK0FyNGU5cnRoRGJQdkZu?=
+ =?utf-8?B?M0RlTWNhWkRIMGlQQUtrMFZuTnFqRzBKVjBpcUdJQVdFamprSUZiMW5MdFkz?=
+ =?utf-8?Q?gvbGkUIIJb8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1RBMmo4OVJPQVRqM1N2bXBDN2VLdmVldFZ3QThhb1NrbG9ZcUk2NWxmYjVq?=
+ =?utf-8?B?NG5xQlBpYnEweDZCY0RBTWszb3BTU3VLTHpCa0dtRTVMZVlralBQNVdHK0Jk?=
+ =?utf-8?B?RTFtc0tvWmg0THh1TG4yYTRacjVrTXdRQzMxUHhBU2xPRHBlTTh5b1VjRU5k?=
+ =?utf-8?B?RXJGNWRyWWxxTVlEUVJiSEovZHRvZDNlQnBZNWNzTExUc202WlRmZDlPQ0Mr?=
+ =?utf-8?B?cmMrMjVLeVR5ZEM5a25uWVZBYmllMG85NkYrdXVSNUtrZ3p6ampYVzM1NFRE?=
+ =?utf-8?B?TnpQOERscWRiUWtyYXQ1Qk1wRDhVRkg2dXpVYUNIbDZUNk1qb29RbGdOZWNL?=
+ =?utf-8?B?cXZZRkN6VE11cktZQm5LYnQrRUEydHhwazI5aVlqWEhuZTR1Mi9mSVU5WHBx?=
+ =?utf-8?B?MXlqeERJTVF0RUpsOHhTZzRaQnpicThtb0dwb28zZGowNTVmdzZGVkkxRE01?=
+ =?utf-8?B?bWNQQXpZMzg3NFZLbmVKYkEvaUlhTVI5Z21JTzZOSXRsdXNucUYxSDh6ODVN?=
+ =?utf-8?B?bHVKd0JWdjZ2ZFhmNmRuMmRoUWdWckhteUp2SXdqeXNTZ0IwTnhHYzkrYWxJ?=
+ =?utf-8?B?S2Q2bWYvSjVWbDRoQmxCM1U3SnppcTQvaEJNSWtvcUNKRUFIclZ4Ni85RnV0?=
+ =?utf-8?B?OGM2dVUyZTd5RWYyeFl1TEQzVGY2K2N3UElNa3F6a2ZaOUFpQWRNd1BTc3JJ?=
+ =?utf-8?B?Y2VYSmRxUDRDSEFMUXg5bHk3SUZMUFp6RWlQeGpzVnh3bzJIcC9sZEtjaDM2?=
+ =?utf-8?B?TkJFOVZWSk0raCtlQUg2MTlXdFlFQmpUeUdGQmoxU1U2VUJWV2JiK2hocy9i?=
+ =?utf-8?B?aVVQTHNRdTRPYlFOS0FRcSsydWtqTkd4aDJVTll5VlBZUWNVMWRWVUN5aENS?=
+ =?utf-8?B?UWFQYUJIaXpkWGdmbmtDUnhYSWRCSUtHak9HSVFnS244VXB5MkZOQUR3V1lo?=
+ =?utf-8?B?RXhsQ09iSVp4QVlZY0EyZS84ZFRhRDNsMEE0TGdlL25hblRyMTZ6Y3FPT2dv?=
+ =?utf-8?B?VDc2ZnIvY2pXRFFGejdlbVlWUUdxSStOUHVWbDFiMmM1aEhzMFlvQWRSYTNB?=
+ =?utf-8?B?RXRZOFB6WmZnN2pMVEZwWVlGdFRHNkRBemRCTlA0QTRsT0l0TE9nOGJIeWh4?=
+ =?utf-8?B?WDBRWFdwTmg2S2daTGh2eVRPYXhBekFLTmp1bGV0TjFFc2tteDBrMWZjbkpn?=
+ =?utf-8?B?V3hnTXhxZmdacGNYMmdqcXp5OGd0Sk9zZisrK1VXVm8vN3NXbzl2Y2NFSmdD?=
+ =?utf-8?B?ZE96VWczYmdwTHpaaUFCZnphRkxSVXFQQlAyb3NKakNObWlwbWVIM2VTZ3lC?=
+ =?utf-8?B?TndNbzZlN2hHQUhXc1VlWFVWa3B2UVBzdDFHcDBoVUx6UzZNR2oyMWRiTWdT?=
+ =?utf-8?B?U1kyZm42NWpZKzNCV3RkeE9CeDhUb0x6NjE5REMvUXZvRTN1VFZ4YncyOURj?=
+ =?utf-8?B?dkFDOWpIOTFkR0pKc0VMZkU4Z052WG1YRmtlU2RGY1JrbWVpaUI1UzhDODdP?=
+ =?utf-8?B?U08wdys5Q3pmaGJ1bUZKRmxLRlBtdW5DNTBKUEZUTlE0cit3ejNvL0lqZWY1?=
+ =?utf-8?B?K0swajI0VWlVQVI1TE1KSkczZWRoNFRCQ0F2MXgyZ3VzMmozcm5vQk1BSnJo?=
+ =?utf-8?B?alhsM1VXZ0NDK0RpakRlOU1yYWp2ZS9pb0w5aTgvUlA0NTR5MjE2bkFCWWdk?=
+ =?utf-8?B?TlkxM0pkd2N2M3ZUTVBNYmt3K1NJa25MV1l0ZWhFS0x0SVdXNUh5dXY5V0N1?=
+ =?utf-8?B?THhsZU1SQnNVZFlwd01oUURVVUtEeU92TWk4bExBRE9va0sxUkowcC9RVm1U?=
+ =?utf-8?B?KzFLM0FJQ1pqdkpuTTNUVXVLRGtZWEFRMUxGSWFkOW9jbkVGcGxiVkJySkx3?=
+ =?utf-8?B?eXdnZkhCVGgwWUQ0NjBoZm5XUHNRWlpTOE1qdUxITlo4R1FMTDBCUlVPTTNQ?=
+ =?utf-8?B?WmQ5S2ZvYUxwOCtKVXA0ZWR2ZWFOTVNxcHJzZlEzM2Q0ZHBuT044Qm1MTlZH?=
+ =?utf-8?B?allxUHh5cWFheEQvUzF1bXpsTzhmZWwzeEFEckJVaUwzWlM5QWEvYk1VQnFi?=
+ =?utf-8?B?SzBMN2VtQWgzL3QrQi9hb010a1cyRW9ENURIbUt0OTFYVWtLYmROQ2dZUEdE?=
+ =?utf-8?B?aXRsM2xkY0JoR0kzMVJ5TXpqTFlsMm1UWndDVyt0L2tnUGIxV1IySmd2c1Rw?=
+ =?utf-8?B?Unc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60f9e8d8-6d53-4a7f-e0c2-08ddb0067509
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 14:26:34.0609
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 40sTjH+bxLMqw1pMYtl5hqoqmSb6+aA9Q4I588NbsNy0UUw97PodIB0gXCYYjv8m/ShMqKX/Mkic9rOmqgT/SD6HEeI9zORwvIMpwRtk9Tc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4644
+X-OriginatorOrg: intel.com
 
-On 6/19/2025 7:23 PM, Aishwarya wrote:
-> Hi Nitin,
+From: Thomas Fourier <fourier.thomas@gmail.com>
+Date: Wed, 18 Jun 2025 16:22:16 +0200
+
+> The `dma_map_XXX()` functions can fail and must be checked using
+> `dma_mapping_error()`.  This patch adds proper error handling for all
+> DMA mapping calls.
 > 
-> When booting the kernel from next-20250619 on Arm64 Qualcomm boards
-> (RB5 and DB845C), we observe that the baseline bootr test fails due to
-> dmesg.emerg errors in our CI environment.
+> In `atl1_alloc_rx_buffers()`, if DMA mapping fails, the buffer is
+> deallocated and marked accordingly.
 > 
-> A full git bisect (log included below) points to this patch as the
-> culprit. The issue was introduced sometime from tag next-20250616 in
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git.
+> In `atl1_tx_map()`, previously mapped buffers are unmapped and the
+> packet is dropped on failure.
+> 
+> Fixes: f3cc28c79760 ("Add Attansic L1 ethernet driver.")
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+>  drivers/net/ethernet/atheros/atlx/atl1.c | 50 +++++++++++++++++++++---
+>  1 file changed, 44 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/atheros/atlx/atl1.c b/drivers/net/ethernet/atheros/atlx/atl1.c
+> index cfdb546a09e7..9b53d87bf6ab 100644
+> --- a/drivers/net/ethernet/atheros/atlx/atl1.c
+> +++ b/drivers/net/ethernet/atheros/atlx/atl1.c
+> @@ -1861,14 +1861,21 @@ static u16 atl1_alloc_rx_buffers(struct atl1_adapter *adapter)
+>  			break;
+>  		}
+>  
+> -		buffer_info->alloced = 1;
+> -		buffer_info->skb = skb;
+> -		buffer_info->length = (u16) adapter->rx_buffer_len;
+>  		page = virt_to_page(skb->data);
+>  		offset = offset_in_page(skb->data);
+>  		buffer_info->dma = dma_map_page(&pdev->dev, page, offset,
+>  						adapter->rx_buffer_len,
+>  						DMA_FROM_DEVICE);
+> +		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
+> +			kfree_skb(skb);
+> +			adapter->soft_stats.rx_dropped++;
+> +			break;
+> +		}
+> +
+> +		buffer_info->alloced = 1;
+> +		buffer_info->skb = skb;
+> +		buffer_info->length = (u16)adapter->rx_buffer_len;
+> +
+>  		rfd_desc->buffer_addr = cpu_to_le64(buffer_info->dma);
+>  		rfd_desc->buf_len = cpu_to_le16(adapter->rx_buffer_len);
+>  		rfd_desc->coalese = 0;
+> @@ -2183,8 +2190,8 @@ static int atl1_tx_csum(struct atl1_adapter *adapter, struct sk_buff *skb,
+>  	return 0;
+>  }
+>  
+> -static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+> -	struct tx_packet_desc *ptpd)
+> +static int atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+> +		       struct tx_packet_desc *ptpd)
 
-
-Hi Aishwarya,
-
-I tested booting the QRB5165 using the qrb5165-rb5.dtb with the latest 
-upstream tip multiple times, and each time it successfully booted to the 
-shell without any issues.
-
-Are you encountering a boot failure, or is there a specific test case 
-you're running that triggers the problem? If so, could you please share 
-the dmesg log to help check further.
+Since it only returns either 0 or -ENOMEM, it can be boolean instead
+(true for success, false for mapping fail).
 
 Thanks,
-Nitin
-
-> 
-> This issue is not present in v6.16-rc2
-> 
-> Here’s a sample of the failure observed on the RB5 board:
-> lert :   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> kern  :alert :   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> kern  :alert :   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> kern  :alert : user pgtable: 4k pages, 48-bit VAs, pgdp=0000000102c4c000
-> kern  :alert : [0000000000000000] pgd=0000000000000000
-> kern  :emerg : Internal error: Oops: 0000000096000004 [#1]  SMP
-> kern  :emerg : Code: a90157f3 aa0003f3 f90013f6 f9405c15 (f94002b6)
-> <8>[   30.933289] <LAVA_SIGNAL_TESTCASE TEST_CASE_ID=emerg RESULT=fail UNITS=lines MEASUREMENT=2>
-> + <8>[   30.943798] <LAVA_SIGNAL_ENDRUN 0_dmesg 1000325_2.4.4.1>
-> set +x
-> 
-> Git bisection log:
-> git bisect start
-> # status: waiting for both good and bad commits
-> # good: [9afe652958c3ee88f24df1e4a97f298afce89407] Merge tag 'x86_urgent_for_6.16-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect good 9afe652958c3ee88f24df1e4a97f298afce89407
-> # status: waiting for bad commit, 1 good commit known
-> # bad: [4325743c7e209ae7845293679a4de94b969f2bef] Add linux-next specific files for 20250617
-> git bisect bad 4325743c7e209ae7845293679a4de94b969f2bef
-> # good: [436c8cbbcb18deb96100cd9f33f1efedddc31d9c] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git
-> git bisect good 436c8cbbcb18deb96100cd9f33f1efedddc31d9c
-> # good: [183d224083773ca4a84a458fb608efecff19e19e] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
-> git bisect good 183d224083773ca4a84a458fb608efecff19e19e
-> # good: [1347ff0c0e510f1a6adb78259a2a0ddfac41d258] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
-> git bisect good 1347ff0c0e510f1a6adb78259a2a0ddfac41d258
-> # bad: [b09bd04eabb1994257f4c11d0ed25ff03517d3ec] Merge branch 'gpio/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-> git bisect bad b09bd04eabb1994257f4c11d0ed25ff03517d3ec
-> # good: [70bc9e18653c20fbcb47184d9498ad7bd7b7d6be] Merge branch 'togreg' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-> git bisect good 70bc9e18653c20fbcb47184d9498ad7bd7b7d6be
-> # bad: [3a847fb85c9d47e61ad5d9d54b762a3e99a08084] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
-> git bisect bad 3a847fb85c9d47e61ad5d9d54b762a3e99a08084
-> # skip: [50355ac70d4f104e2f82bfbd0658c129027ebb37] dt-bindings: phy: Convert marvell,comphy-cp110 to DT schema
-> git bisect skip 50355ac70d4f104e2f82bfbd0658c129027ebb37
-> # good: [acc6b0d73d902d3296d8c77878a9b508c2c6a5bf] phy: qcom-qmp-ufs: Rename qmp_ufs_power_off
-> git bisect good acc6b0d73d902d3296d8c77878a9b508c2c6a5bf
-> # bad: [35b629b28afd72a14ed573f1b180dc4ab1bf7e19] dt-bindings: phy: Convert ti,dm816x-usb-phy to DT schema
-> git bisect bad 35b629b28afd72a14ed573f1b180dc4ab1bf7e19
-> # bad: [66acaf8f6b0bcc273f8356b2a77baa90b177014c] dt-bindings: phy: Convert img,pistachio-usb-phy to DT schema
-> git bisect bad 66acaf8f6b0bcc273f8356b2a77baa90b177014c
-> # bad: [f151f3a6ebe184b5f8c9abe58fe2d63f9950139b] dt-bindings: phy: Convert brcm,ns2-drd-phy to DT schema
-> git bisect bad f151f3a6ebe184b5f8c9abe58fe2d63f9950139b
-> # bad: [77d2fa54a94574f767d5fb296b6b8e011eba0c8e] scsi: ufs: qcom : Refactor phy_power_on/off calls
-> git bisect bad 77d2fa54a94574f767d5fb296b6b8e011eba0c8e
-> # good: [7f600f0e193a6638135026c3718ac296ed3f5044] phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and Inline qmp_ufs_com_exit()
-> git bisect good 7f600f0e193a6638135026c3718ac296ed3f5044
-> # good: [a079b2d715340482e425ff136b55810ab8279800] phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
-> git bisect good a079b2d715340482e425ff136b55810ab8279800
-> # first bad commit: [77d2fa54a94574f767d5fb296b6b8e011eba0c8e] scsi: ufs: qcom : Refactor phy_power_on/off calls
-> 
-> Thanks,
-> Aishwarya
-
+Olek
