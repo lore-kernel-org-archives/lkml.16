@@ -1,132 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C8E27FD70;
-	Fri, 20 Jun 2025 12:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8C1221FC0
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422905; cv=none; b=RVLgmQMLkfUScpIXHWruBGabi4X3MT1hQgpCwP7Du45BCV+lSiKoPIBazPhtSRJgisfL6NzInml9RkPiSDv7odT/thXIFGSIEPQBrLznk73fPWwKM8cypkJIflzJ6bZbN44zBbDzE18JzSmRxjYatbMhIHOAK1NQmGAm9+gcqio=
+	t=1750422947; cv=none; b=rSFiLvy1HrLswDOYH2gxdw3+yXc/Ko+6ZkEYZjkOj9/UMLQ5ppgXm1n22fVWSvZX9+7+2X4Ax9doMXZ4vCczOeblJIXzsgmPuzcvP62rNGpMv5Z+jS3mkDZqHzh8i0HwUG4Tx8Fc4nYH6IBqS8l33D7Ip+6Yoau3FsulHcIwIxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422905; c=relaxed/simple;
-	bh=9IwHx1ycZVunLvTXSX8sEoPbE6sQNp/e9ufqlAuaOfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kD1gEXw18ahefTmJmTBTmj23WTB7J+W6JSTZPhIB+Ws29pLPrDyANsmWKoivB6cBV7Ek1I2PYsh5AijhKB2v3xoGFoQaGPd4CMr3b0/h5P84g3XXhGcTlvb3aW6RhdLVn3hveur8uUlssYYa1USRVFvRNblEyGPvxrfmTcRRK10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTY8Vg82; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTY8Vg82"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750422903; x=1781958903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9IwHx1ycZVunLvTXSX8sEoPbE6sQNp/e9ufqlAuaOfE=;
-  b=WTY8Vg82IGuO5E0c3ER3OIvQdiDAtKMxSHkWGWRLTbOV1uLwBiZp6Eyc
-   VPbJAsRGDpRI0TZRmfKvGtnOEw8f6ZFTApadcqlcUFR91lQeKnrlAXD6V
-   9/GPIzY9kngWNmrpNpdb6umPItkJhQD33ezLRtuRYNnv+fotn7OyFej+a
-   vmKIPLhFmxlcrDDZn0bmvRaG9uyHH2zDz4c1aqZFJfGNOplyUNUAEH6fk
-   8sw0ao3GmRJcIU98vCBZYmcO8KWvunCURINvye1DpaAx7bpiLwL3uTZgI
-   QkTAoj20e5egzf9B3h6IlOxWkt8nV4289xFgs80qa19yg2k6koLa2uznA
-   Q==;
-X-CSE-ConnectionGUID: n+377PdsQ5+JxD25d+YvaQ==
-X-CSE-MsgGUID: DJVkDuSUSROJWnsp5A1Rrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70120723"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="70120723"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:35:02 -0700
-X-CSE-ConnectionGUID: bITupucfQ1uya1BhorC9oQ==
-X-CSE-MsgGUID: V3erBMLwS9+9Q2LFfNo8yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151436682"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:34:57 -0700
-Message-ID: <f633077e-a28a-4c6e-81b3-7a36044f8bae@intel.com>
-Date: Fri, 20 Jun 2025 20:34:53 +0800
+	s=arc-20240116; t=1750422947; c=relaxed/simple;
+	bh=Gu4jaSl8lqGVfzPCdbGH2jzFTk6xz/rBKrwIbv7GIwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PrzDEOZTNDmJjSYNUBXvb5iL8Tot/64B2eu0edFPm6weUBDBUNOnNDja7PugNP9pa5NJyYMz8XPW0kHsytChuIO9rWsksjxEnCsqTch5uUuSf/bKSi5sUGuf4OlhwqZdVxns2/ehUv1L4LD2RLPEGAUNoSk5VttIE9HAwH6I0rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96FC8C4CEE3;
+	Fri, 20 Jun 2025 12:35:44 +0000 (UTC)
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Song Liu <song@kernel.org>,
+	Dylan Hatch <dylanbhatch@google.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+Subject: Re: [PATCH v7] arm64/module: Use text-poke API for late relocations.
+Date: Fri, 20 Jun 2025 13:35:41 +0100
+Message-Id: <175042293849.3925078.10159804916524712470.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250603223417.3700218-1-dylanbhatch@google.com>
+References: <20250603223417.3700218-1-dylanbhatch@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Kernel Mailing List, Linux" <linux-kernel@vger.kernel.org>,
- kvm <kvm@vger.kernel.org>, Sean Christopherson <seanjc@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>, "Huang, Kai"
- <kai.huang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>,
- reinette.chatre@intel.com, "Lindgren, Tony" <tony.lindgren@intel.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>, Yan Zhao
- <yan.y.zhao@intel.com>, mikko.ylinen@linux.intel.com,
- "Shutemov, Kirill" <kirill.shutemov@intel.com>,
- "Yao, Jiewen" <jiewen.yao@intel.com>, Binbin Wu <binbin.wu@linux.intel.com>
-References: <20250619180159.187358-1-pbonzini@redhat.com>
- <20250619180159.187358-4-pbonzini@redhat.com>
- <cc443335-442d-4ed0-aa01-a6bf5c27b39c@intel.com>
- <CABgObfaeYdKeYQb+6j6j6u5ytasgb=t2z03cQvkG2c+owfOCgg@mail.gmail.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <CABgObfaeYdKeYQb+6j6j6u5ytasgb=t2z03cQvkG2c+owfOCgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 6/20/2025 8:03 PM, Paolo Bonzini wrote:
-> Il ven 20 giu 2025, 03:21 Xiaoyao Li <xiaoyao.li@intel.com> ha scritto:
->>
->>>                tdx->vp_enter_args.r11 = 0;
->>> +             tdx->vp_enter_args.r12 = 0;
->>>                tdx->vp_enter_args.r13 = 0;
->>>                tdx->vp_enter_args.r14 = 0;
->>> +             return 1;
->>
->> Though it looks OK to return all-0 for r12 == 0 and undefined case of
->> r12 > 1, I prefer returning TDVMCALL_STATUS_INVALID_OPERAND for
->> undefined case.
+On Tue, 03 Jun 2025 22:34:17 +0000, Dylan Hatch wrote:
+> To enable late module patching, livepatch modules need to be able to
+> apply some of their relocations well after being loaded. In this
+> scenario however, the livepatch module text and data is already RX-only,
+> so special treatment is needed to make the late relocations possible. To
+> do this, use the text-poking API for these late relocations.
 > 
+> This patch is partially based off commit 88fc078a7a8f6 ("x86/module: Use
+> text_poke() for late relocations").
 > 
->  From the GHCI I wasn't sure that TDVMCALL_STATUS_INVALID_OPERAND is a
-> valid result at all.
+> [...]
 
-It's part of the new GHCI change, which currently is still in draft 
-state. (Sorry for not informing you)
+Applied to arm64 (for-next/livepatch), thanks!
 
-The proposed GHCI update defines VMCALL_OPERAND_INVALID for the case of 
-input R12 value is not supported. So for VMM that doesn't implement the 
-enumeration for the optional leafs when r12 = 1 can return this status 
-code. As well, VMM can return this status code for the case of input R12 
- >= 2, to avoid the VMM introduces its own defined behavior.
+[1/1] arm64/module: Use text-poke API for late relocations.
+      https://git.kernel.org/arm64/c/91b89a634487
 
-> Paolo
-> 
->>
->> So please make above "case 0:", and make the "default:" return
->> TDVMCALL_STATUS_INVALID_OPERAND
->>
->>>        }
->>> -     return 1;
->>>    }
->>>
->>>    static int tdx_complete_simple(struct kvm_vcpu *vcpu)
->>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->>> index 6708bc88ae69..fb3b4cd8d662 100644
->>> --- a/include/uapi/linux/kvm.h
->>> +++ b/include/uapi/linux/kvm.h
->>> @@ -461,6 +461,11 @@ struct kvm_run {
->>>                                        __u64 gpa;
->>>                                        __u64 size;
->>>                                } get_quote;
->>> +                             struct {
->>> +                                     __u64 ret;
->>> +                                     __u64 leaf;
->>> +                                     __u64 r11, r12, r13, r14;
->>> +                             } get_tdvmcall_info;
->>>                        };
->>>                } tdx;
->>>                /* Fix the size of the union. */
->>
-> 
-> 
+-- 
+Catalin
 
