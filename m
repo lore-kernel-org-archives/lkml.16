@@ -1,109 +1,88 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.pv.icloud.com (p-west1-cluster6-host6-snip4-1.eps.apple.com [57.103.67.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2F0293B42
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6711728FD
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430360; cv=none; b=U6rk2/n7PY5lI0E2dVlWlscsoJTqIEoGaI+c9U+ZRuJinfG/I/5Rikb8dh872DqRgmmGk8E0CwUCwPTh3ti+oVGV4icgXfxkjIvPVGkH6RSRJ5w0rUwJ5797SVC/qm5kHPA4efBhArMzm41VPGpbR1EHWFXpZ95f5cYJUK5TYvg=
+	t=1750430464; cv=none; b=tSPTNjqbsROH0SHWU+u86nBCdURB2QoOIBJWMBMWLC2Mj1vLuWL9BHACLMaXHwWRUpp8ZRJYZ6cF0TvME7d3QL2RJNQoohfUS/wvp0l/QTT+By8i5dHvhDSe3JVv0tyGyyt0Lre7pJv/E97D45Mqiik1CdvhvwnanMq8eJQH+to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430360; c=relaxed/simple;
-	bh=f0ERDdgXgTFaM2bAnZ1S200y/0WNSgNRatRYt7yg6uI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dcOO5pSRpOun7Dg+KQ2y3Ddsnx4y3qo7z3uPcaB70nJGgSU7fVPUeMN3PkSrp63EiWUpPQbOf8k27yLrIJXV40FopInfCv0/DAAZ6VlWomedpv8rs505dDP6Fm8vFYoB+lKCaoxEr0x6ceI9/j25RDLLJELXBAkGLLesqhG3MeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=prQ6WZeM; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750430464; c=relaxed/simple;
+	bh=Yr+ep9SP3wZo2lIt6ezTm0HZej0HrNsBVylBhnhIYUg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fxDHxkBJc0Ndnfhia8Bxhrl82c00tSfJZkkR9pxANv0KK6gDTNb2ZF4RwCOyweVYK67uB2nZ2KaRwVXcwROm3B3tn1jcAEHXnSldx1vbnYCcvA1wnWbfcgDcT1e8FWKp3540MCrTYPzHgFcn1MIMgzERxW9Mfmy2kWOMZ86km+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Q66a8I1Z; arc=none smtp.client-ip=57.103.67.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="prQ6WZeM"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313c3915345so2805293a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750430358; x=1751035158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9hYeG/lN/dobWu+WOAuHe6WhQ/AJqqM1f1NumulS6iw=;
-        b=prQ6WZeM43BAwpR9FC90IHzjncCnp6YhwukGsupN30bc+kL1HWYuCbMQM3a1oqsaN5
-         z11t9avcrlAINPKbWyeZi8HosYfkJnskirPNingt5EAbMnk5OdCQvoY8H6OtvYJrM+N5
-         HsReVGPJzD7fSRzB+/F5gCI6x0QUV4SOL1vaC/vwEMU23TbOzgNLOwtkU8VwnKmAYIxv
-         ibqbooNpJBa3MzsF5HL7Ie0IzdH/cyjYSBlPopVArDP/QM1tmsyyrvxZaxuvLnoN+FYT
-         2g1iRK/D3+75Z5BaH9O0386RwYVnT7RaAap7KTG+5MMpcG3LBB7N4WPm1qoOjwPKUJx3
-         NY9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750430358; x=1751035158;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9hYeG/lN/dobWu+WOAuHe6WhQ/AJqqM1f1NumulS6iw=;
-        b=XzSCimDl2hmiAOp388IUmfBOI5S3XNp1nE34aOxeaPfJlqQFD+sCczMhpW92/mv4dW
-         JSsk3qCwiZQXcNcheBwqB13J0CGwApHrsD2Iy5fMsyrqh6vH0yfF7xdoTjX5ydNeAbNN
-         ccLVyd17wgCvaNENhHq9cxRMb02Xr8n4ddZxAa6Ws0WDgkt2FKbv7KYGVIpH7Z1pf71N
-         rr8+nJw/rQM5jxU6lFZca7aNxW4MTfkhT/9jU5mV7Yf3AH+QxYVgGNf5HWfp4Uno69x3
-         M9zVtP8mw9hODiVceiBPswu3/TNCMXzahsEmLTRta2gW/oo1kAqNpsvCZIVsgh1sIaFD
-         J4pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Bhdy/GL4XijkTgRsbvfJ6bvTfK4ES63BYcm4YeS3H5VlUbgdM/v/w4M1jFjm7tGZV4tHKctzPM2eHZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1idPAPj6Kfv3haoOBhsrNP7AIhH8sdqT7vy980Af6IbwiZYoi
-	dZeE8QlLtCta+r0Krp4EzfcbtjYCQbH/weYvnkTyiOhwDgDtJqAPmUJYXYiTIbT6ixhShqL5BXx
-	aFhKo+g==
-X-Google-Smtp-Source: AGHT+IEu/kAyF65SAfQsKleZ41Vg0owDojNFVAMM/0F6gElDwFbB1sj7AbPvBVKqQ3YY8zBgnoMiSm1QDmM=
-X-Received: from pjbee15.prod.google.com ([2002:a17:90a:fc4f:b0:314:d44:4108])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e87:b0:312:51a9:5d44
- with SMTP id 98e67ed59e1d1-3159d61a5c5mr5175181a91.5.1750430358355; Fri, 20
- Jun 2025 07:39:18 -0700 (PDT)
-Date: Fri, 20 Jun 2025 07:39:16 -0700
-In-Reply-To: <2eqjnjnszlmhlnvw6kcve4exjnpy7skguypwtmxutb2gecs3an@gcou53thsqww>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Q66a8I1Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=wF3Cv7ZPj3TEQM73gyxKYcZbCi2Jh6tueIr0k8ljcLo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=Q66a8I1Z/aR2b7RGm5Q6sYI6Iw04iUOaCjS2C+7CMPY53xHQYOScXel6aofQ46fwm
+	 MnB92lgBZMtOqduOKQhYUB8bFw6nRcOT/OdLJGLamcyTDBp681UFGq39OV1jlh99FA
+	 GAYiK5e9zQmLri2sQicdEJk99d4rNUeUVzqiaZD7tg6b+zqmmiyZl7iuKPqYIlmrfE
+	 e1ijUm1nkhu7Sky2YTq3SJ5dJCZaLMTUjflcJ+6WR6JcOm9GFJ/YtJhUIIVPAG6E1i
+	 o4XjIrlu7RgIQ6+U+KXyX4RLa5YBMAFZxvg5i0JyLyjHmpBtkOUrlI2SVh7wkgLPrr
+	 NwnK3s8n1TfHw==
+Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 53A94180509E;
+	Fri, 20 Jun 2025 14:41:01 +0000 (UTC)
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 577A51805FC2;
+	Fri, 20 Jun 2025 14:35:43 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH 0/3] char: misc: Trivial cleanup
+Date: Fri, 20 Jun 2025 22:35:17 +0800
+Message-Id: <20250620-fix_mischar-v1-0-6c2716bbf1fa@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-19-seanjc@google.com>
- <2eqjnjnszlmhlnvw6kcve4exjnpy7skguypwtmxutb2gecs3an@gcou53thsqww>
-Message-ID: <aFVylP1XzMoqocOx@google.com>
-Subject: Re: [PATCH v3 17/62] KVM: SVM: Add enable_ipiv param, never set
- IsRunning if disabled
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKVxVWgC/x2MQQqAIBAAvyJ7TrBFC/tKRERutYcsFCIQ/97Sc
+ RhmCmRKTBkGVSDRw5mvKNA2CtZjiTtpDsKABp3p0OiN3/nkLDLp3ttAFp13HkGKO5Ho/zZOtX4
+ CmZYmXQAAAA==
+X-Change-ID: 20250620-fix_mischar-794de4259592
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ Zijun Hu <zijun.hu@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwNCBTYWx0ZWRfX60BpvrXIp5Li
+ 18Nu5haFSxSZL55W15zqb6Damaha4qZiKz8YhoMB2YCsU9ZTVhMIyOJK1rhizeS3zWhbmoJ+3UD
+ fnZgY40USta3g9blHJeIxlIjPFFR1RRQbQ+R1K5RvU7z7iDPtto7MhxiEtaPAIdl2wzp+mOymdA
+ yjoKZ1L+zwUyAuE6354Ota7ALm8dr6JZ3xPLvSlRqx5B6NJb9kpc/jkqsuYiLyFDleAjknvz/A9
+ 9pidiPGucde/MFCOBzi+K+vekfww0S8mruEldEEB6TuqogM+6iCbA5LYj5H5b6F4Ac0i2yQ5g=
+X-Proofpoint-GUID: ZX_ekh5SYk3MZHbTtQB2DCwtFzG1Hw4L
+X-Proofpoint-ORIG-GUID: ZX_ekh5SYk3MZHbTtQB2DCwtFzG1Hw4L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
+ mlxlogscore=958 clxscore=1015 suspectscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2506060001 definitions=main-2506200104
 
-On Thu, Jun 19, 2025, Naveen N Rao wrote:
-> On Wed, Jun 11, 2025 at 03:45:20PM -0700, Sean Christopherson wrote:
-> > From: Maxim Levitsky <mlevitsk@redhat.com>
-> >=20
-> > Let userspace "disable" IPI virtualization for AVIC via the enable_ipiv
-> > module param, by never setting IsRunning.  SVM doesn't provide a way to
-> > disable IPI virtualization in hardware, but by ensuring CPUs never see
-> > IsRunning=3D1, every IPI in the guest (except for self-IPIs) will gener=
-ate a
-> > VM-Exit.
->=20
-> I think this is good to have regardless of the erratum. Not sure about VM=
-X,
-> but does it make sense to intercept writes to the self-ipi MSR as well?
+This patch series is to do trivial cleanup for miscdevice driver.
 
-That doesn't work for AVIC, i.e. if the guest is MMIO to access the virtual=
- APIC.
+Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
+---
+Zijun Hu (3):
+      char: misc: Remove redundant forward declarations
+      char: misc: Rename a local variable in misc_init()
+      char: misc: Fix improper and inaccurate error code returned by misc_init()
 
-Regardless, I don't see any reason to manually intercept self-IPIs when IPI
-virtualization is disabled.  AFAIK, there's no need to do so for correctnes=
-s,
-and Intel's self-IPI virtualization isn't tied to IPI virtualization either=
-.
-Self-IPI virtualization is enabled by virtual interrupt delivery, which in =
-turn
-is enabled by KVM when enable_apicv is true:
+ drivers/char/misc.c        | 10 +++++-----
+ include/linux/miscdevice.h |  3 ---
+ 2 files changed, 5 insertions(+), 8 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250620-fix_mischar-794de4259592
 
-  Self-IPI virtualization occurs only if the =E2=80=9Cvirtual-interrupt del=
-ivery=E2=80=9D
-  VM-execution control is 1.
+Best regards,
+-- 
+Zijun Hu <zijun.hu@oss.qualcomm.com>
+
