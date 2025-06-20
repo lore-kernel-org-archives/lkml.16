@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3253730E83E;
-	Fri, 20 Jun 2025 11:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ACA28A409;
+	Fri, 20 Jun 2025 11:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418075; cv=none; b=oMSs0T2NolzVJct1i+4nVjrwDgNMeJKYPk1eF4pZTla8CL4i1ZWzGQwiqSoP4LLl/svz1G7Kq2Yn+Wt5lizJfusA10tFJoVHR50wSUf7pX6rWzUSpZKKx4x5vDHBHUP2LY+c6RKZCUk5IPf+jGbDPa2ObadS84MFdd7VDrfqzRY=
+	t=1750418104; cv=none; b=qy6KCgL9JbKUxZkfmwLAJalt9oTF2iIpsToLLNIl6DdKGb/xvhtguu7toj/zlZnFP+sbFVelDHzp87grvqSVrbiy+KYHGDexM8G00jUqOVViqrRCfSBf1VurlgqMcT3ErE1mk7iVwTEqQbd55mGpmVFAF/8PGXcdSpVbCNwB6M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418075; c=relaxed/simple;
-	bh=fFW0nj5wKajZBoxD+NK/ptNflE3yLPKttfp9Lz+wirI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QJLxkjzvGb0VARtxe7Ahn7EbZAhkGK7Tz/dj1Vm9vNNb5q+lERrvhkuAFPa/Q1DbFWK1RiHehLkXIyTykZUXrzwQtGg8J+3yIC9Bx44Z7EDPQnVZpxznIshvUCkLvMH0wJC3f2lCoqEA1GGOjS0GMlgR88KbRqwkIVFwry+9/Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfcSvTP2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750418104; c=relaxed/simple;
+	bh=fHGPT6U5lkOL40pG3L6uGrMxMnoD5rKHLmnMjGJM4HY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hkX5sgu3geEGQGkKjKw+irTizaX02IMjz7Z7HsaQ2qq4aS567urX49KIORy9NfvZlVQuvbou6aVF16NmFyWqVTYHUksaGt2fn2sTGENLfoyLeAYWLYH37rGFewbVYG2eu0T148wuz2A5hKeJEQfChkjC4x9LP9qUKxtAZ3siaHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGab8+3s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfcSvTP2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BF5C4CEE3;
-	Fri, 20 Jun 2025 11:14:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGab8+3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B40FC4CEE3;
+	Fri, 20 Jun 2025 11:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418075;
-	bh=fFW0nj5wKajZBoxD+NK/ptNflE3yLPKttfp9Lz+wirI=;
+	s=k20201202; t=1750418103;
+	bh=fHGPT6U5lkOL40pG3L6uGrMxMnoD5rKHLmnMjGJM4HY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=pfcSvTP2hDTGoGFpx+wgbFLNAe14F1ZAtJFntSgbnCARjLt2kkn/gaM3muchpfYts
-	 EsgBZvKsCk7xvF51hkAd3WRjkQPAmFJyxd02cL4RrIGLxEqOg3g9TFJcxyUPZBQxB1
-	 xiria440gVVMqf0gLmj7oikBSOycoXF0dzpg4gApGTyDkIP83PNVT+H/ms5HG6MV+W
-	 3h9WxUqrcZqEsunlc0JPbTDUSHvALYpq5/h8Xg05iSanM/n6qZJV4vog5IKNAA4Eha
-	 V/Ey0pmAm+mCoxQkt2MhnKWTq9VuWhJqOGgfMTfBROJ/qDJ6YecqkAVZ+72Rgj3D3+
-	 8AWZz764BmHAQ==
+	b=uGab8+3sBVTk65V/vppELrITzxhLlKqt/PCYK2f5nMEGtMUyW+WIkJqwPgnLVFOyD
+	 0fOKKPXlQl2KqwX26lksY/qNWuHp64d58okXUTeKO05KvGbmxfxtujqIg7djsQItzi
+	 X/UCt4M8DmP71vRTg/TgUNm3J0KZ/Ha5+XWyfIdRrErxW4igRLUx073rB392UUO+Q7
+	 BqLkXJWXWW8bkrS+QlHFwcj25XZECy2qpTtzvpB8exo60fWc736uctEizzutPd5tvj
+	 DNmipNK8nm9LkGqS4yzR1xjYBgdOqe4pWSX9mdNFpOYuTbW/3q2qerphMxmEB3CxcZ
+	 khkyzLPXi98Ew==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Yu Jiaoliang <yujiaoliang@vivo.com>,
-	Akihiro Tsukada <tskd08@gmail.com>,
-	linux-media@vger.kernel.org,
+	Jacky Bai <ping.bai@nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: mxl5005s: reduce stack usage in MXL5005_ControlInit
-Date: Fri, 20 Jun 2025 13:14:23 +0200
-Message-Id: <20250620111430.3365987-1-arnd@kernel.org>
+Subject: [PATCH] cpufreq: armada-8k: make both cpu masks static
+Date: Fri, 20 Jun 2025 13:14:53 +0200
+Message-Id: <20250620111459.3366195-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,48 +52,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-This function initializes two large structures with arrays. On at least parisc,
-the specific code sequence here leads to a badly misoptimized output from
-the compiler along with a warning about the resulting excessive stack usage
-from many spilled variables:
+An earlier patch marked one of the two CPU masks as 'static' to reduce stack
+usage, but if CONFIG_NR_CPUS is large enough, the function still produces
+a warning for compile testing:
 
-drivers/media/tuners/mxl5005s.c: In function 'MXL5005_ControlInit.isra':
-drivers/media/tuners/mxl5005s.c:1660:1: warning: the frame size of 1400 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+drivers/cpufreq/armada-8k-cpufreq.c: In function 'armada_8k_cpufreq_init':
+drivers/cpufreq/armada-8k-cpufreq.c:203:1: error: the frame size of 1416 bytes is larger than 1408 bytes [-Werror=frame-larger-than=]
 
-Splitting this one function into two functions avoids this because there
-are few temporaries that can be spilled to the stack in each of the smaller
-structures, so this avoids the warning and also improves readability.
+Normally this should be done using alloc_cpumask_var(), but since the
+driver already has a static mask and the probe function is not called
+concurrently, use the same trick for both.
 
+Fixes: 1ffec650d07f ("cpufreq: armada-8k: Avoid excessive stack usage")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/media/tuners/mxl5005s.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/cpufreq/armada-8k-cpufreq.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/tuners/mxl5005s.c b/drivers/media/tuners/mxl5005s.c
-index 0e811c5eae6c..8f262c7f62f5 100644
---- a/drivers/media/tuners/mxl5005s.c
-+++ b/drivers/media/tuners/mxl5005s.c
-@@ -1174,7 +1174,12 @@ static u16 MXL5005_ControlInit(struct dvb_frontend *fe)
- 	state->Init_Ctrl[39].bit[0] = 3;
- 	state->Init_Ctrl[39].val[0] = 1;
+diff --git a/drivers/cpufreq/armada-8k-cpufreq.c b/drivers/cpufreq/armada-8k-cpufreq.c
+index 5a3545bd0d8d..006f4c554dd7 100644
+--- a/drivers/cpufreq/armada-8k-cpufreq.c
++++ b/drivers/cpufreq/armada-8k-cpufreq.c
+@@ -132,7 +132,7 @@ static int __init armada_8k_cpufreq_init(void)
+ 	int ret = 0, opps_index = 0, cpu, nb_cpus;
+ 	struct freq_table *freq_tables;
+ 	struct device_node *node;
+-	static struct cpumask cpus;
++	static struct cpumask cpus, shared_cpus;
  
-+	return 0;
-+}
+ 	node = of_find_matching_node_and_match(NULL, armada_8k_cpufreq_of_match,
+ 					       NULL);
+@@ -154,7 +154,6 @@ static int __init armada_8k_cpufreq_init(void)
+ 	 * divisions of it).
+ 	 */
+ 	for_each_cpu(cpu, &cpus) {
+-		struct cpumask shared_cpus;
+ 		struct device *cpu_dev;
+ 		struct clk *clk;
  
-+static u16 MXL5005_ControlInitCH(struct dvb_frontend *fe)
-+{
-+	struct mxl5005s_state *state = fe->tuner_priv;
- 	state->CH_Ctrl_Num = CHCTRL_NUM ;
- 
- 	state->CH_Ctrl[0].Ctrl_Num = DN_POLY ;
-@@ -1663,6 +1668,7 @@ static void InitTunerControls(struct dvb_frontend *fe)
- {
- 	MXL5005_RegisterInit(fe);
- 	MXL5005_ControlInit(fe);
-+	MXL5005_ControlInitCH(fe);
- #ifdef _MXL_INTERNAL
- 	MXL5005_MXLControlInit(fe);
- #endif
 -- 
 2.39.5
 
