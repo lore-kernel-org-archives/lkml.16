@@ -1,110 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078562853EF;
-	Fri, 20 Jun 2025 11:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA7327E7D9;
+	Fri, 20 Jun 2025 11:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418968; cv=none; b=mQDEzhGenSMUo+HZFfkul3KICuo0s+qM3unQ3WnDOUaVF4E6aoYMBwxpm+JXaagFd2KmNorU0ZTqlS1WMxw3Mw94lGXi4D9sPprzpgQc/8QBDn1DwuTyq/26NvRsf9kO3pznt3v1XLRU4B8XYetv0a1MIuTuuEsB30S2L/JOzjk=
+	t=1750419005; cv=none; b=Cmfr7iwqed0PL3uxoYX/6Q+3hvhpFuJixZOUPSmdo+2ra0K3BuTaBszVPvFdCaKWtvTUt2+a8X0ZrZonkUUL/9knlgpbYmBW9MRgtxfDuFT7eCTcRv1PoVPJg/vl4J3iEur3fH9GHBupeENWf6H5juW+Dr/nXtaftOmFAvb9VRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418968; c=relaxed/simple;
-	bh=toY/8RlMvZbaSXxFKcYu2G72F3PE0BpQoMJH1XDj3DE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=U1K1UXJixmF4s5ZdEYb3FvlSpMSfiik+zRXTsYpoh8WpVj6jaH/syH6P0gy2Q7Thi+9V8O1gpn7btMEIMHgcD2X2lSZQM3tyYivLw6vaQAr7kPYUN54x40S5iuezIVnN+vlBYCbredDyhk7TQxcEz47LLEjZrgne9ASWavNYVSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rACp/zYB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750419005; c=relaxed/simple;
+	bh=u448jzyYDYymD2jHYZMheiM/0ZHuiGizT/yHf2Wx23k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rmvPyQarrWBpsbM7r3XiZpnGKZxHYEhpsUE32ffKVJ8NxnCMcl9inR7vM6XcijAcvvWlZvKJD52A5WeocvJ5To0B2uBbJPxc8DRxRh1YODoCTUGXyPQigsPBIXrBuAlsFO3kAYRbBtrsk95PxnFGE4YFnoAZmmXgw/jSEEyAppw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luPXHCkz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rACp/zYB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC79C4CEED;
-	Fri, 20 Jun 2025 11:29:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luPXHCkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139A2C4CEE3;
+	Fri, 20 Jun 2025 11:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418967;
-	bh=toY/8RlMvZbaSXxFKcYu2G72F3PE0BpQoMJH1XDj3DE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=rACp/zYBSDuBwdyMyauNMZ+PtNQx4mAX0MagrZFICgxBbzDorvHD3BbX77sBhT4+z
-	 YCKWHq0j+0+7Zr5yt7rwmQvq3WFij9ipXbZQbjNjdazhhQgANwugyh0Y+imrI/ov+Z
-	 TjDQjEBI9Mib/oZvblQav2X4I56jy6I4qisn4X5YdmcsF/gBpuNGzWhDljGMtJP8Bb
-	 WfKA9JqMokqJYELT8W93LE13kleX7tRhc+Io20uMLYH7sXMilpkZT+qVZFmF/89NKy
-	 BSRDXanCFJqHjtmhuqOtFFGz0sdptrc9+v0y1dAvwYTpvqLWm30FazxxM7FSfPvmcb
-	 V15wQSiEcZpeQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <DAQIXKJ9VMS6.2044WT0FQQCVC@kernel.org> (Benno Lossin's message
-	of "Thu, 19 Jun 2025 14:55:03 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
-	<aa9d7lhjQuDhyNw8zShbtfPFK19W5awx7cPJgC-2X4fGv2yUTnn0jqyIHfMN4wyuaYoS3fU6Fqe_wFteVUGtUg==@protonmail.internalid>
-	<DAPYMAB44RUZ.7NIWDUWY1UYF@kernel.org> <87v7or7wiv.fsf@kernel.org>
-	<cYt7F9EQzCCQcq4wPsJlpuXF6bXYHVEq7yhlX8MMQbBIFr2zkJLktttiIwEl7oD5aaaFKp1Mco39U3mkfTvrGw==@protonmail.internalid>
-	<DAQIXKJ9VMS6.2044WT0FQQCVC@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 20 Jun 2025 12:31:05 +0200
-Message-ID: <87o6ui66xi.fsf@kernel.org>
+	s=k20201202; t=1750419004;
+	bh=u448jzyYDYymD2jHYZMheiM/0ZHuiGizT/yHf2Wx23k=;
+	h=From:Date:Subject:To:Cc:From;
+	b=luPXHCkzNsBfM44ygLmgfv6czfsRoHMO9uhA3vJZMbkSHwcJiGUVCEGjn1tHZiKwt
+	 tXAkjh023T0bRTdN14Vw+bST0+oC2vsKd+wm0ykSAYJotgjIoHPyVmPn1th/FFI/rg
+	 qagksfm9gSv4W5Jz8hxZZtPZn5TjATDG+b4xEwX4djOtzmqdWE1hpbV0CCn55qrPmG
+	 lm0rOwwrigYPTnyW3gyNwZ8sue+lx4ot+2Ydd9+84R8DU96ROdvEPvMqbQFyxmY7po
+	 9bIJV9eZc7PBdD1VcvaJkCjfFM1gogRV19ioay4+dCnNWon8y0awpH1vqIdhK+9+oU
+	 X4MnMLFCBBhyg==
+From: Mark Brown <broonie@kernel.org>
+Date: Fri, 20 Jun 2025 12:28:48 +0100
+Subject: [PATCH] arm64: Filter out SME hwcaps when FEAT_SME isn't
+ implemented
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-arm64-sme-filter-hwcaps-v1-1-02b9d3c2d8ef@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAO9FVWgC/x3MTQqDQAxA4atI1g1odMbiVUoXo2Y0UH9Iigri3
+ R1cfov3TjBWYYMmO0F5E5NlTiheGXRjmAdG6ZOBcnK5L94YdPIV2sQY5fdnxXHvwmrY1r6kiqL
+ z5CDVq3KU4zl/vtd1A6yPPuNpAAAA
+X-Change-ID: 20250618-arm64-sme-filter-hwcaps-b763242f5625
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Yury Khrustalev <yury.khrustalev@arm.com>, Mark Brown <broonie@kernel.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-08c49
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7065; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=u448jzyYDYymD2jHYZMheiM/0ZHuiGizT/yHf2Wx23k=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoVUY6N40qMRjDa/t+oU0dUn6BKFuIevcr482sk
+ WxunWEZHtGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaFVGOgAKCRAk1otyXVSH
+ 0OmUB/9i40oT/lKh218FYkmI8A6uxpN1pSx3oWx/NdRgqlPo4QORaHxqo6khYUeKYykRW2dIvgr
+ Cn5CWq+LnAkJYCoBF0QziqNLqp4yMg3ugtSwB7xkqUy+X1xR4JPyEK+wC6BpI5QiRiHhbQpxEJ8
+ gZITuuf0xfITjy2Wu9UAOGKcdRTuT41ie3TUup0qmkFXl0S5JTRDaxe2Nsk+ALgXfchi0yqPdye
+ 2vFCw56cGbowsCP+yV249rt9/R3tJ6dKet6VJpKKgesw/7Dy2dq0HfDX04VVGdwQPbMb0oRPlfY
+ 2uaZG14wAXExgtGwlnaLk0S99kT1tVT9gRx99LbIvXOCzHH2
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-"Benno Lossin" <lossin@kernel.org> writes:
+We have a number of hwcaps for various SME subfeatures enumerated via
+ID_AA64SMFR0_EL1. Currently we advertise these without cross checking
+against the main SME feature, advertised in ID_AA64PFR1_EL1.SME which
+means that if the two are out of sync userspace can see a confusing
+situation where SME subfeatures are advertised without the base SME
+hwcap. This can be readily triggered by using the arm64.nosme override
+which only masks out ID_AA64PFR1_EL1.SME, and there have also been
+reports of VMMs which do the same thing.
 
-> On Thu Jun 19, 2025 at 2:20 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+Fix this as we did previously for SVE in 064737920bdb ("arm64: Filter
+out SVE hwcaps when FEAT_SVE isn't implemented") by filtering out the
+SME subfeature hwcaps when FEAT_SME is not present.
 
-[...]
+Fixes: 5e64b862c482 ("arm64/sme: Basic enumeration support")
+Reported-by: Yury Khrustalev <yury.khrustalev@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ arch/arm64/kernel/cpufeature.c | 57 ++++++++++++++++++++++++------------------
+ 1 file changed, 32 insertions(+), 25 deletions(-)
 
->>>> +    crate::error::from_result(|| {
->>>> +        let new_value = T::try_from_param_arg(arg)?;
->>>> +
->>>> +        // SAFETY: By function safety requirements `param` is be valid for reads.
->>>> +        let old_value = unsafe { (*param).__bindgen_anon_1.arg as *mut T };
->>>> +
->>>> +        // SAFETY: By function safety requirements, the target of `old_value` is valid for writes
->>>> +        // and is initialized.
->>>> +        unsafe { *old_value = new_value };
->>>
->>> So if we keep the `ModuleParam: Copy` bound from above, then we don't
->>> need to drop the type here (as `Copy` implies `!Drop`). So we could also
->>> remove the requirement for initialized memory and use `ptr::write` here
->>> instead. Thoughts?
->>
->> Yes, that is the rationale for the `Copy` bound. What would be the
->> benefit of using `ptr::write`? They should be equivalent for `Copy`
->> types, right.
->
-> They should be equivalent, but if we drop the requirement that the value
-> is initialized to begin with, then removing `Copy` will result in UB
-> here.
->
->> I was using `ptr::replace`, but Alice suggested the pace expression
->> assignment instead, since I was not using the old value.
->
-> That makes sense, but if we also remove the initialized requirement,
-> then I would prefer `ptr::write`.
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index b34044e20128..e151585c6cca 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -3135,6 +3135,13 @@ static bool has_sve_feature(const struct arm64_cpu_capabilities *cap, int scope)
+ }
+ #endif
+ 
++#ifdef CONFIG_ARM64_SME
++static bool has_sme_feature(const struct arm64_cpu_capabilities *cap, int scope)
++{
++	return system_supports_sme() && has_user_cpuid_feature(cap, scope);
++}
++#endif
++
+ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(ID_AA64ISAR0_EL1, AES, PMULL, CAP_HWCAP, KERNEL_HWCAP_PMULL),
+ 	HWCAP_CAP(ID_AA64ISAR0_EL1, AES, AES, CAP_HWCAP, KERNEL_HWCAP_AES),
+@@ -3223,31 +3230,31 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(ID_AA64ISAR2_EL1, BC, IMP, CAP_HWCAP, KERNEL_HWCAP_HBC),
+ #ifdef CONFIG_ARM64_SME
+ 	HWCAP_CAP(ID_AA64PFR1_EL1, SME, IMP, CAP_HWCAP, KERNEL_HWCAP_SME),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, FA64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_FA64),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, LUTv2, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_LUTV2),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SMEver, SME2p2, CAP_HWCAP, KERNEL_HWCAP_SME2P2),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SMEver, SME2p1, CAP_HWCAP, KERNEL_HWCAP_SME2P1),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SMEver, SME2, CAP_HWCAP, KERNEL_HWCAP_SME2),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, I16I64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I16I64),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F64F64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F64F64),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, I16I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I16I32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, B16B16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_B16B16),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F16F16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F16F16),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F8F16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F8F16),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F8F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F8F32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, I8I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I8I32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F16F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F16F32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, B16F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_B16F32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, BI32I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_BI32I32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, F32F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F32F32),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SF8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8FMA),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SF8DP4, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8DP4),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SF8DP2, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8DP2),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SBitPerm, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SBITPERM),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, AES, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_AES),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SFEXPA, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SFEXPA),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, STMOP, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_STMOP),
+-	HWCAP_CAP(ID_AA64SMFR0_EL1, SMOP4, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SMOP4),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, FA64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_FA64),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, LUTv2, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_LUTV2),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SMEver, SME2p2, CAP_HWCAP, KERNEL_HWCAP_SME2P2),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SMEver, SME2p1, CAP_HWCAP, KERNEL_HWCAP_SME2P1),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SMEver, SME2, CAP_HWCAP, KERNEL_HWCAP_SME2),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, I16I64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I16I64),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F64F64, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F64F64),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, I16I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I16I32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, B16B16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_B16B16),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F16F16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F16F16),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F8F16, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F8F16),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F8F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F8F32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, I8I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_I8I32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F16F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F16F32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, B16F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_B16F32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, BI32I32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_BI32I32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, F32F32, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_F32F32),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SF8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8FMA),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SF8DP4, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8DP4),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SF8DP2, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SF8DP2),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SBitPerm, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SBITPERM),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, AES, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_AES),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SFEXPA, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SFEXPA),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, STMOP, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_STMOP),
++	HWCAP_CAP_MATCH_ID(has_sme_feature, ID_AA64SMFR0_EL1, SMOP4, IMP, CAP_HWCAP, KERNEL_HWCAP_SME_SMOP4),
+ #endif /* CONFIG_ARM64_SME */
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8CVT, IMP, CAP_HWCAP, KERNEL_HWCAP_F8CVT),
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_F8FMA),
 
-OK, we can do that.
-
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250618-arm64-sme-filter-hwcaps-b763242f5625
 
 Best regards,
-Andreas Hindborg
-
+--  
+Mark Brown <broonie@kernel.org>
 
