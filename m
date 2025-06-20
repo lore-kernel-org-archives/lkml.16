@@ -1,201 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6985A1D54F7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5FF289353
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417665; cv=none; b=Qoqrj9n1yhyrvNEODsnVvg4b1Kd0jqWMqA4i6i48nNfPeErTKEitwMgdhUPX5yM/BqXhu+v2pG78kwg2NMV9vs0PESE5Yp9vIVMYx5gJjgqp6IqZax8Lh5W7q+JflQCdXxdx7r30/RwoegQnp5p/xQLsfxMa1wdWPJnjsgtTKwA=
+	t=1750417674; cv=none; b=MzKgAjbGmjVX3R3AOe7AjSWbj2E2N7u5ltPwgbgjaE5GKPI2rMT8B08VbdnCSIPzoQztbBsEf9KzyYyFx2M85Y001uo+MqJVzBlDceIObuJK9o6i29DFjxIV81GjIFLvidyHNBXii2CGQiMuVi7vjvcWj/XnwHQcKIL4GrO9UFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417665; c=relaxed/simple;
-	bh=CigLereCZe6ocaLo3SuKk8vwfiZ20m04vzD/+v2lvgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QcK4W63V66gP8yB3jAV37lTdduPTKepHdV3qQXoInDFJKi+usuI+Ck1ezmp5Q+UD46oi8S7Kw5DeS1aQHP/LLRtnlnrUIsCvEBfVhLzFqgjvMef2ih/ltPSBZJcu7ZGgfub1VVQvdiWMLe4F6aXzTnYQi0veUQi4N2xCMvWDE40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZNaFjfw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750417674; c=relaxed/simple;
+	bh=5HesFEa+oG4aphhrLr+nJlzSqRvni+h3KcLsQ1xkANk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SXmouawLZxLVRWy6jklhyV1iSO+tVnkS4s98RI5d1TdejLWYENloj7bQLN2IH8DhpotAedQddLbHrsx2kMi+oxg49HASFU/BCvrEqfFBmEGUeL1QmHRCMYfkv7aagBsazzFb7k1zlIP65PWVtyKmdhHNG8K6Dk+nTMF6Wdh7XWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=pCk3JC2i; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZNaFjfw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E41C4CEE3;
-	Fri, 20 Jun 2025 11:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417664;
-	bh=CigLereCZe6ocaLo3SuKk8vwfiZ20m04vzD/+v2lvgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VZNaFjfwQxegOrI76Gf9If9HUoK7T+Wenvq/WDhWA2mTXLdhVVQqRdkgj237Nh14N
-	 KI7OJIQiyFGV5mGB2KAh5u1gZstoJ24Zhmat6zhRR0dX5w+3boEn0vrD95xqzXDYor
-	 fq36Aa7xp7zdAIRu7nV7ki52fofqqq5U8qjH66Nw0lV+A9I13C6g+T+s/bPr4Yu1BK
-	 5YnwiNGAv+f8w1D2Ul1eIn7TjN1n4C2Zc0Uturc2FOcL4gn+GeWGzFVpBSqXCFHBqF
-	 0fS2hq6NreYau7AXaHwIDTp3Vn5KeiAGpt/H5IJ+hrSjho+SW8I5WEDDe0PAkHq2r2
-	 LKPyS+0GkGSug==
-Date: Fri, 20 Jun 2025 11:42:28 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: register_syctl_init error in linux-next-20250612
-Message-ID: <szadjbcldmcirdtgiv6wowqumlk4cbthb37f3e42lzcbt4tnla@ilp4m6quqk4b>
-References: <20250612175515.3251-1-spasswolf@web.de>
- <vvorpevngfle6budlgqhmj3f25lb77czzyvd5aa6jil7zkaqgp@weanygri324r>
- <11898dd756020687c2016a37af3c948b350bdbbc.camel@web.de>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="pCk3JC2i"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-adfb562266cso313938466b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750417670; x=1751022470; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j56NnU+C4rZ3igsVwK0poqCyRvUi8MRY+wsVdUJRvmo=;
+        b=pCk3JC2itRdrtMHpyl/KtfjpWU4/ubo3IODY1ZqbHYJub+ClHinzIsX3uYkPTr+Wkv
+         HKO2JsK4TAtsFdWcVXv3OHo9ufi+3URf7L+R/Ssym+7xES/KvVRriZ+Zk+D3Ep5Q/5/4
+         4jnfOjKDrCRQ8q9nDp82slDwXOixhgwOKXdgvgtc1etb+I85yn/uq2EK9vZGtVX2nuBU
+         95wQxRuOJh0LRvU7e4dc2atXOAJAySSbqWrQXQX/ib23dH9+BH+rsCrNiJTljXt610VW
+         HVmuHHppIuwAPJMX5aB2PE8mW1ztCMXNafL5JOc8rwzwlJBK5dujv7P2nqIgf1PuZgjc
+         zoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750417670; x=1751022470;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j56NnU+C4rZ3igsVwK0poqCyRvUi8MRY+wsVdUJRvmo=;
+        b=kq18itsUNh5RJ8a7A+C+sNvNX1chnq7l0hoALays9NCsA/J6RgcQ/yLyw0MWoqLzhE
+         unBV1MEXUx5Yd5UZra6YyLxRyKPZnXgZaF7qW1/5VtwFJ5EYI1JwyOWGesTg2ydqhVhV
+         pdrvI8/pEn9GV5B3VN+IqhrK8XV/QeciUHpF68F5s0FaerxMM/ArKzmMUM8XBL2+qirx
+         4cQvWJdsA+etcenDx8bF5CJlouzATmhsvWHCX6u0b1G8Kpen/zUtAUZUr4OXB5udogHg
+         IXZeNsdF2SO9+aV0BL3mwImh+laki+ENbseQRZq6U2CDPMR5TzUApWv/L8OitHWTVzR8
+         59BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXv+S3WCXuFKV+1My2AzNAOvnIrJzsstd8Ul72EFRD992Bz3h/VK8GIj6YCCeeHHUW98RivtVtRRyccVyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbtgSkdu+o+QzJccIBK6yVBvoU5HjyCX7nrwskiyZcJNsTEH+n
+	l9VtV8HMb/dm4zAY8KTOcVel11r9f46ng5RBY46a2BZ8mgC8jzcjkIaHYMjUh0Zbqxk=
+X-Gm-Gg: ASbGncsT+7Zadm+ldm21Gy254QN37S9XRhyMb1qVv1ulDuSNVSMVTUgZPcBYjEV4UUC
+	AEHNggnDTMBmYPWQOi4tfL7K/kcMMGrl9L+xIfqmTwb+jRGfYM+38bzZbr4UQ7yF7R9mgzGDDlH
+	hBDVluC16PKIWluzTPmAc6Hq4QWpRA4y45BW7oEpnu/P84Eu9UMHR5OrGpg7kpuzXK3/37tQfhD
+	CHi4rcBeg3+erge4qsr6MxiMeE8IxAKifs5VIi5bqVkexZEVaqdcAzGT/BWkC+I7YLBs6hjdbCA
+	QkHpHxYc6Z1i49hsKfiDpO8vlhhsMZkB+FsQl3ZToFWEIX+62bZFbSyZS88pSKFBeayPXzPPewy
+	5DTpauSdiK9BlgC9Gt26XZp2/g0M2RCU=
+X-Google-Smtp-Source: AGHT+IHi2VbmsYUmEDnp9Sif2RGnVt1dOueBmIGckoT6F8WA4k68tCAYn7k5QT+Eg9xqzhehbqW5mA==
+X-Received: by 2002:a17:906:6a03:b0:ad8:8621:9241 with SMTP id a640c23a62f3a-ae057c7eef2mr239743066b.54.1750417670525;
+        Fri, 20 Jun 2025 04:07:50 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4c90sm147879866b.62.2025.06.20.04.07.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 04:07:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3jubu2pejz6gje7k"
-Content-Disposition: inline
-In-Reply-To: <11898dd756020687c2016a37af3c948b350bdbbc.camel@web.de>
-
-
---3jubu2pejz6gje7k
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 13:07:49 +0200
+Message-Id: <DARBA03BEQA1.3KLHCBFNTVXKJ@fairphone.com>
+Cc: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] fbdev/simplefb: Add support for interconnect paths
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>, "Hans de Goede"
+ <hdegoede@redhat.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Javier Martinez Canillas"
+ <javierm@redhat.com>, "Helge Deller" <deller@gmx.de>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250620-simple-drm-fb-icc-v1-0-d92142e8f74f@fairphone.com>
+ <20250620-simple-drm-fb-icc-v1-3-d92142e8f74f@fairphone.com>
+ <cf29862b-496b-4825-aa0f-493eb44838a5@suse.de>
+In-Reply-To: <cf29862b-496b-4825-aa0f-493eb44838a5@suse.de>
 
-On Thu, Jun 19, 2025 at 04:09:04PM +0200, Bert Karwatzki wrote:
-> Am Donnerstag, dem 19.06.2025 um 13:50 +0200 schrieb Joel Granados:
-> > Hey Bert
-> >=20
-> > Thx for the report.
-> >=20
-> > I just tested on my https://git.kernel.org/pub/scm/linux/kernel/git/sys=
-ctl/sysctl.git/log/?h=3Dsysctl-next
-> > and can't see the issue. Maybe its something that I'm missing in the
-> > configuration. Do you happen to have your the .config that you used?
-=2E..
-> > > +#endif
-> > >  };
-> > > =20
-> > >  int __init sysctl_init_bases(void)
-> > >=20
-> > >=20
-> > > Bert Karwatzki
->=20
-> I'm running next-20250617 (but I'll also try your sysctl-next branch) wit=
-h PREEMPT_RT=3Dy, my current theory is that
-> the init_rtmutex_sysctl() is corrupting the rbtree (if I remove init_rtmu=
-tex_sysctl() everything works
-> (with the same .config)), and in the process=A0removes the overflow{uid,g=
-id} files.
+Hi Thomas,
 
-I think that the error occurs when the register gets called several
-times for the same path, returns an error resulting in a undefined
-state. I see that rtmutex.c is included from 4 files, I also see that the
-registration happens 4 times.
+On Fri Jun 20, 2025 at 1:02 PM CEST, Thomas Zimmermann wrote:
+> Hi
+>
+> Am 20.06.25 um 12:31 schrieb Luca Weiss:
+>> Some devices might require keeping an interconnect path alive so that
+>> the framebuffer continues working. Add support for that by setting the
+>> bandwidth requirements appropriately for all provided interconnect
+>> paths.
+>>
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>   drivers/video/fbdev/simplefb.c | 83 ++++++++++++++++++++++++++++++++++=
+++++++++
+>>   1 file changed, 83 insertions(+)
+>>
+>> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simple=
+fb.c
+>> index be95fcddce4c8ca794826b805cd7dad2985bd637..ca73e079fd13550ddc779e84=
+db80f7f9b743d074 100644
+>> --- a/drivers/video/fbdev/simplefb.c
+>> +++ b/drivers/video/fbdev/simplefb.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/parser.h>
+>>   #include <linux/pm_domain.h>
+>>   #include <linux/regulator/consumer.h>
+>> +#include <linux/interconnect.h>
+>
+> With alphabetical sorting:
+>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-I just did not understand what was being done in my initial patch. The
-fix is to put the sysctl registration in some "main" file (rtmutx_api?)
-and to keep the max_lock_depth variable there as well (like it was
-originally)
+Thanks for the reviews!
 
+For both simpledrm.c and simplefb.c, the includes are not strictly
+alphabetically sorted (1 mis-sort in simpledrm, 3 in simplefb), shall I
+just try and slot it into the best fitting place, or make them sorted in
+my patch? Or I can add a separate commit for each driver before to sort
+them.
 
-This is my proposal, Does it solve your issue?
+Let me know!
 
-
-diff --git i/include/linux/rtmutex.h w/include/linux/rtmutex.h
-index dc9a51cda97c..fa9f1021541e 100644
---- i/include/linux/rtmutex.h
-+++ w/include/linux/rtmutex.h
-@@ -18,6 +18,8 @@
- #include <linux/rbtree_types.h>
- #include <linux/spinlock_types_raw.h>
-=20
-+extern int max_lock_depth;
-+
- struct rt_mutex_base {
- 	raw_spinlock_t		wait_lock;
- 	struct rb_root_cached   waiters;
-diff --git i/kernel/locking/rtmutex.c w/kernel/locking/rtmutex.c
-index 705a0e0fd72a..c80902eacd79 100644
---- i/kernel/locking/rtmutex.c
-+++ w/kernel/locking/rtmutex.c
-@@ -29,29 +29,6 @@
- #include "rtmutex_common.h"
- #include "lock_events.h"
-=20
--/*
-- * Max number of times we'll walk the boosting chain:
-- */
--static int max_lock_depth =3D 1024;
--
--static const struct ctl_table rtmutex_sysctl_table[] =3D {
--	{
--		.procname	=3D "max_lock_depth",
--		.data		=3D &max_lock_depth,
--		.maxlen		=3D sizeof(int),
--		.mode		=3D 0644,
--		.proc_handler	=3D proc_dointvec,
--	},
--};
--
--static int __init init_rtmutex_sysctl(void)
--{
--	register_sysctl_init("kernel", rtmutex_sysctl_table);
--	return 0;
--}
--
--subsys_initcall(init_rtmutex_sysctl);
--
- #ifndef WW_RT
- # define build_ww_mutex()	(false)
- # define ww_container_of(rtm)	NULL
-diff --git i/kernel/locking/rtmutex_api.c w/kernel/locking/rtmutex_api.c
-index 9e00ea0e5cfa..4fa1acceaebb 100644
---- i/kernel/locking/rtmutex_api.c
-+++ w/kernel/locking/rtmutex_api.c
-@@ -8,6 +8,30 @@
- #define RT_MUTEX_BUILD_MUTEX
- #include "rtmutex.c"
-=20
-+/*
-+ * Max number of times we'll walk the boosting chain:
-+ */
-+int max_lock_depth =3D 1024;
-+
-+static const struct ctl_table rtmutex_sysctl_table[] =3D {
-+	{
-+		.procname	=3D "max_lock_depth",
-+		.data		=3D &max_lock_depth,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_dointvec,
-+	},
-+};
-+
-+static int __init init_rtmutex_sysctl(void)
-+{
-+	printk("registering rtmutex");
-+	register_sysctl_init("kernel", rtmutex_sysctl_table);
-+	return 0;
-+}
-+
-+subsys_initcall(init_rtmutex_sysctl);
-+
- /*
-  * Debug aware fast / slowpath lock,trylock,unlock
-  *
+Regards
+Luca
 
 
---=20
+>
+> Best regards
+> Thomas
+>
+>
+>>  =20
+>>   static const struct fb_fix_screeninfo simplefb_fix =3D {
+>>   	.id		=3D "simple",
+>> @@ -89,6 +90,10 @@ struct simplefb_par {
+>>   	u32 regulator_count;
+>>   	struct regulator **regulators;
+>>   #endif
+>> +#if defined CONFIG_OF && defined CONFIG_INTERCONNECT
+>> +	unsigned int icc_count;
+>> +	struct icc_path **icc_paths;
+>> +#endif
+>>   };
+>>  =20
+>>   static void simplefb_clocks_destroy(struct simplefb_par *par);
+>> @@ -525,6 +530,80 @@ static int simplefb_attach_genpds(struct simplefb_p=
+ar *par,
+>>   }
+>>   #endif
+>>  =20
+>> +#if defined CONFIG_OF && defined CONFIG_PM_GENERIC_DOMAINS
+>> +/*
+>> + * Generic interconnect path handling code.
+>> + */
+>> +static void simplefb_detach_icc(void *res)
+>> +{
+>> +	struct simplefb_par *par =3D res;
+>> +	int i;
+>> +
+>> +	for (i =3D par->icc_count - 1; i >=3D 0; i--) {
+>> +		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
+>> +			icc_put(par->icc_paths[i]);
+>> +	}
+>> +}
+>> +
+>> +static int simplefb_attach_icc(struct simplefb_par *par,
+>> +			       struct platform_device *pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	int ret, count, i;
+>> +
+>> +	count =3D of_count_phandle_with_args(dev->of_node, "interconnects",
+>> +							 "#interconnect-cells");
+>> +	if (count < 0)
+>> +		return 0;
+>> +
+>> +	/* An interconnect path consists of two elements */
+>> +	if (count % 2) {
+>> +		dev_err(dev, "invalid interconnects value\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	par->icc_count =3D count / 2;
+>> +
+>> +	par->icc_paths =3D devm_kcalloc(dev, par->icc_count,
+>> +				      sizeof(*par->icc_paths),
+>> +				      GFP_KERNEL);
+>> +	if (!par->icc_paths)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i =3D 0; i < par->icc_count; i++) {
+>> +		par->icc_paths[i] =3D of_icc_get_by_index(dev, i);
+>> +		if (IS_ERR_OR_NULL(par->icc_paths[i])) {
+>> +			ret =3D PTR_ERR(par->icc_paths[i]);
+>> +			if (ret =3D=3D -EPROBE_DEFER)
+>> +				goto err;
+>> +			dev_err(dev, "failed to get interconnect path %u: %d\n", i, ret);
+>> +			continue;
+>> +		}
+>> +
+>> +		ret =3D icc_set_bw(par->icc_paths[i], 0, UINT_MAX);
+>> +		if (ret) {
+>> +			dev_err(dev, "failed to set interconnect bandwidth %u: %d\n", i, ret=
+);
+>> +			continue;
+>> +		}
+>> +	}
+>> +
+>> +	return devm_add_action_or_reset(dev, simplefb_detach_icc, par);
+>> +
+>> +err:
+>> +	while (i) {
+>> +		--i;
+>> +		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
+>> +			icc_put(par->icc_paths[i]);
+>> +	}
+>> +	return ret;
+>> +}
+>> +#else
+>> +static int simplefb_attach_icc(struct simplefb_par *par,
+>> +			       struct platform_device *pdev)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>>   static int simplefb_probe(struct platform_device *pdev)
+>>   {
+>>   	int ret;
+>> @@ -615,6 +694,10 @@ static int simplefb_probe(struct platform_device *p=
+dev)
+>>   	if (ret < 0)
+>>   		goto error_regulators;
+>>  =20
+>> +	ret =3D simplefb_attach_icc(par, pdev);
+>> +	if (ret < 0)
+>> +		goto error_regulators;
+>> +
+>>   	simplefb_clocks_enable(par, pdev);
+>>   	simplefb_regulators_enable(par, pdev);
+>>  =20
+>>
 
-Joel Granados
-
---3jubu2pejz6gje7k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmhVLQQACgkQupfNUreW
-QU9wfQv9EEs98fDOojiKBdSXxhA9PkvERiDG3zo9aQsiZUaFZkmQm/zfsBgWK+Ej
-gFWF+t68/HiNYLLRf/iAvEEtJgdng2hO7yD2W5OyZKFz1RyplABWm84VUR+F7WhW
-LMiayPU9+IWQk9LnKdFG+xa0sUcht2CO1XXBbt1ijq5mq/xG4ZnlL4BrVrfbgGuJ
-TpP7FL9zanS2nDWFTb4ZkSEgFQOHzEERgRA0lqfg52hgPkmdpBNjw7H4JSaoq2ps
-T4hdcVGtK4QKlAswgBXiTko7jPGiBlwhRB4wRRMs2RoGl8jIKqioxZWTp2n1A2kj
-Aevj/LcRzrLhzohgyZLnNEaFu767jA2Zx3kXDUgT2tjD+iG4FMOOgtGXSYrrGUZC
-hF/lvY7ZW9ZPJxDm1cvGvJ9OfJHCmFDnFRzi/ev9Ux/NMJ8p8/AD0o+z9aaOittu
-/J4x/zHrzm8soVKmdKoTHOoxgMHXls2qmYyf572TpR83IxfLHlZUv3psyG6hLd9G
-pDVPCMD0
-=7Pzx
------END PGP SIGNATURE-----
-
---3jubu2pejz6gje7k--
