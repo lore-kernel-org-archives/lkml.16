@@ -1,102 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B90289E1B;
-	Fri, 20 Jun 2025 11:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B575728A1F6;
+	Fri, 20 Jun 2025 11:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419551; cv=none; b=VdxFMnNzGgn9yKIe/aKiRr5s8h4S6/vj29xpylCPy8HR2yi6cSfY7WtDJZ6VOuMISAW1ez2NxuaQcCNTXtINswxU1vn0E0WGESdW+UKBX5BZ+zP7FkNpgdx9KPCMjK8Dlx6OtmIEs85gpi5osJpW0ZPV3zpsh4tGSKW08F8KSvQ=
+	t=1750419563; cv=none; b=ZL+iijTf3jOgNKvEJCxdmXrfvF4CUSGGlp3NWb2gPd0ceE58f09+cWLawCsEL/HrQeSh7ZTn+TSbXIJloFan/KxIthPzoH12rn8srfgERFM9borR5PNtVMjE/8TIDAHGbQ0LhyOJQGIeCio6IPFczF6UQ+x9+lvzgpUWaP9GRFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419551; c=relaxed/simple;
-	bh=wlMSg2riugAfkN85IR0d+QwxYeOTHn4R4XxsXr3+82I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8iqsvbYY+QJeAP+h5FE6ho85yV0hM5viyO6RMv/1bUuPMTYS/DJS6P+yy9n3ZMaaP8LlB8WRLTrwOSbZOYRnAgMGWeKVKNF3G1LyDgzG0DlDckVO39zQesNjkBFYXBTWtGLrh+zn5G8vTLvuNCqXP22QrYZQHnB8AqjQmximOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfhSYPMu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750419563; c=relaxed/simple;
+	bh=o0Q+jJlE+4KCD6McJOZBcBxadKWIt+MWEaZEfa3c2ao=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=edKbv72K2U0NpQ57+v/NsfarsnjwP8hvY1sksmzZoN6qnDygomqbZMcGTIFk5r8vCgUHuHOQTXaB65NUKhE6fZcTDPgWd/Np8NZnh94erOcE/mWaO/5ZLjS9QDyZHfMcl6CWe5yCJ7v70vjxnjUXL02R1QrC9FHB9eB4aw75XKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwUKN0kI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfhSYPMu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C154C4CEE3;
-	Fri, 20 Jun 2025 11:39:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwUKN0kI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5105FC4CEEE;
+	Fri, 20 Jun 2025 11:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750419551;
-	bh=wlMSg2riugAfkN85IR0d+QwxYeOTHn4R4XxsXr3+82I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tfhSYPMufvABKiFV/9fY8FJUQu2RGHa7314EGdcvwvKRV/HR+kLV5fuf90UfIJWYc
-	 7ST7sXuTt2cEKvHPBW5j04HroR54BA2sxX5YTzDS8pV5MY22yooE3AKwP77SKVmal4
-	 jXy67ke1l/6C2+fIxU+suWkeh9g6LyAu8uDpTxj9Ib9LkHApjLL/f+EBwpu/rPLfSp
-	 6sIyokJrHWKcdEdUGgt4CBF0VxOITrk3sdYHx52XxB7ARX3FzvcePHwThFaG2J7lNE
-	 gF4aaN9i9z9+CdhyiGglZtKL/ZXDXHs4JW1XiEPb3C3pk2UYt4ViwGlv6w60MhuFm7
-	 QbdVHbuj64tpw==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b435ef653so15905741fa.2;
-        Fri, 20 Jun 2025 04:39:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgw7MCv818aVSXCBh/F3veBTGGaPaIfloShQxTAto6JJe/fdUPtLKUVEtaSplIpn7NEnUDtph/JhdquWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0d8DI8Iqi1bTTAM5SUdJ9RTIS9x3zcrvHeayBZnvDZzXBk/UY
-	ENmbieoSfiUSwf4qQ4E16LrZGPuNbM/T7notvMhFqOrK/5PThoCimd2eauVP/E1yNiVO7G1WjHF
-	tMxYCgxQIxElCxoV3Nz7E04WMkabnjYk=
-X-Google-Smtp-Source: AGHT+IFS6pYf1hoEDVGPVtohGNV2l8Me/be+PTgIC1679iU9mPhI9K4uWXdozzPLGEskHfgZ0nrLVH9A8nSFOVSp7/I=
-X-Received: by 2002:a05:6512:3f10:b0:553:522f:61bb with SMTP id
- 2adb3069b0e04-553e3b9a494mr1057793e87.12.1750419549990; Fri, 20 Jun 2025
- 04:39:09 -0700 (PDT)
+	s=k20201202; t=1750419563;
+	bh=o0Q+jJlE+4KCD6McJOZBcBxadKWIt+MWEaZEfa3c2ao=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GwUKN0kIheVSXlhTIoNOAhfnK5snShTKokOhfRJK4Z/Wp6aHhtmwc/VILq+poE5J4
+	 sesBzPtFZ+EnQc1Tr2YPzPt8HYEPERU8x35s0J9dA93RL7qVdHY9VPb400f52baBrL
+	 Kzny6Hk8YOfbaPWHgXFHhHNeIhbxskrHz/xUaMS7qoHXNLmxH7DPQGNhuFVhfJzJ/7
+	 GX7DJMK79/zjmu2GuP+I462YBIHF/peuzaM4YqGuAKUfqA38H8BzpTfx8xLYqqRfeC
+	 IGkfDGJMwjgW+r//6sG6J1ToB7rKgwSgcny8xTL12Sq/gGyDzInoMjsLJmFcPuwoDS
+	 /IS+6KXzKODdQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Nilesh Javali <njavali@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Quinn Tran <qutran@marvell.com>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: qla2xxx: avoid stack frame size warning in qla_dfs
+Date: Fri, 20 Jun 2025 13:39:11 +0200
+Message-Id: <20250620113919.3974443-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620111607.984534-1-vkuznets@redhat.com>
-In-Reply-To: <20250620111607.984534-1-vkuznets@redhat.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 20 Jun 2025 13:38:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXESncEk_gtG_CV7XnMJTnZWEOs+Dj8jMHzsvuFvyOsLLw@mail.gmail.com>
-X-Gm-Features: AX0GCFuuhr8MQbjwRSlAcE07yepOSaP-QcfzpK6ASqV62EM63LWxHnwJ05Z9SqQ
-Message-ID: <CAMj1kXESncEk_gtG_CV7XnMJTnZWEOs+Dj8jMHzsvuFvyOsLLw@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: Fix .data section size calculations when .sbat is present
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: linux-efi@vger.kernel.org, Peter Jones <pjones@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Heinrich Schuchardt <heinrich.schuchardt@gmx.de>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Jun 2025 at 13:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Commit 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT
-> section") neglected to adjust the sizes of the .data section when
-> CONFIG_EFI_SBAT_FILE is set. As the result, the produced PE binary is
-> incorrect and some tools complain about it. E.g. 'sbsign' reports:
->
->  # sbsign --key my.key --cert my.crt arch/arm64/boot/vmlinuz.efi
->  warning: file-aligned section .data extends beyond end of file
->  warning: checksum areas are greater than image size. Invalid section table?
->
-> Note, '__data_size' is also used in the PE optional header and it is not
-> entirely clear whether .sbat needs to be accounted as part of
-> SizeOfInitializedData or not. As the header seems to be unused by the real
-> world firmware, keeping the field equal to __data_size.
->
-> Fixes: 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT section")
-> Reported-by: Heinrich Schuchardt <heinrich.schuchardt@gmx.de>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
-> Changes in v2: drop PE optional header adjustment [Ard]
-> ---
->  drivers/firmware/efi/libstub/zboot.lds | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
-> index 4b8d5cd3dfa2..367907eb7d86 100644
-> --- a/drivers/firmware/efi/libstub/zboot.lds
-> +++ b/drivers/firmware/efi/libstub/zboot.lds
-> @@ -58,6 +58,6 @@ SECTIONS
->  PROVIDE(__efistub__gzdata_size =
->                 ABSOLUTE(__efistub__gzdata_end - __efistub__gzdata_start));
->
-> -PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
-> -PROVIDE(__data_size = ABSOLUTE(_end - _etext));
-> +PROVIDE(__data_rawsize = ABSOLUTE(_edata - _data));
-> +PROVIDE(__data_size = ABSOLUTE(_end - _data));
->  PROVIDE(__sbat_size = ABSOLUTE(_esbat - _sbat));
-> --
-> 2.49.0
->
->
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thanks, I've queued this up now.
+The qla2x00_dfs_tgt_port_database_show() function constructs a fake
+fc_port_t object on the stack, which depending on the configuration
+is large enough to exceed the stack size warning limit:
+
+drivers/scsi/qla2xxx/qla_dfs.c:176:1: error: stack frame size (1392) exceeds limit (1280) in 'qla2x00_dfs_tgt_port_database_show' [-Werror,-Wframe-larger-than]
+
+Rework this function to no longer need the structure but instead
+call a custom helper function that just prints the data directly
+from the port_database_24xx structure.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I don't have this hardware and tried restructing the code in
+a way that makes sense to me. This should be tested on an actual
+device before it gets applied.
+---
+ drivers/scsi/qla2xxx/qla_dfs.c | 20 +++++---------
+ drivers/scsi/qla2xxx/qla_gbl.h |  1 +
+ drivers/scsi/qla2xxx/qla_mbx.c | 49 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 56 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_dfs.c b/drivers/scsi/qla2xxx/qla_dfs.c
+index 08273520c777..43970caca7b3 100644
+--- a/drivers/scsi/qla2xxx/qla_dfs.c
++++ b/drivers/scsi/qla2xxx/qla_dfs.c
+@@ -179,10 +179,9 @@ qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
+ 	struct qla_hw_data *ha = vha->hw;
+ 	struct gid_list_info *gid_list;
+ 	dma_addr_t gid_list_dma;
+-	fc_port_t fc_port;
+ 	char *id_iter;
+ 	int rc, i;
+-	uint16_t entries, loop_id;
++	uint16_t entries;
+ 
+ 	seq_printf(s, "%s\n", vha->host_str);
+ 	gid_list = dma_alloc_coherent(&ha->pdev->dev,
+@@ -205,18 +204,11 @@ qla2x00_dfs_tgt_port_database_show(struct seq_file *s, void *unused)
+ 	seq_puts(s, "Port Name	Port ID		Loop ID\n");
+ 
+ 	for (i = 0; i < entries; i++) {
+-		struct gid_list_info *gid =
+-			(struct gid_list_info *)id_iter;
+-		loop_id = le16_to_cpu(gid->loop_id);
+-		memset(&fc_port, 0, sizeof(fc_port_t));
+-
+-		fc_port.loop_id = loop_id;
+-
+-		rc = qla24xx_gpdb_wait(vha, &fc_port, 0);
+-		seq_printf(s, "%8phC  %02x%02x%02x  %d\n",
+-			   fc_port.port_name, fc_port.d_id.b.domain,
+-			   fc_port.d_id.b.area, fc_port.d_id.b.al_pa,
+-			   fc_port.loop_id);
++		struct gid_list_info *gid = (struct gid_list_info *)id_iter;
++
++		rc = qla24xx_print_fc_port_id(vha, s, le16_to_cpu(gid->loop_id));
++		if (rc != QLA_SUCCESS)
++			break;
+ 		id_iter += ha->gid_list_info_size;
+ 	}
+ out_free_id_list:
+diff --git a/drivers/scsi/qla2xxx/qla_gbl.h b/drivers/scsi/qla2xxx/qla_gbl.h
+index 03e50e8fc08d..145defc420f2 100644
+--- a/drivers/scsi/qla2xxx/qla_gbl.h
++++ b/drivers/scsi/qla2xxx/qla_gbl.h
+@@ -557,6 +557,7 @@ qla26xx_dport_diagnostics_v2(scsi_qla_host_t *,
+ 
+ int qla24xx_send_mb_cmd(struct scsi_qla_host *, mbx_cmd_t *);
+ int qla24xx_gpdb_wait(struct scsi_qla_host *, fc_port_t *, u8);
++int qla24xx_print_fc_port_id(struct scsi_qla_host *, struct seq_file *, u16);
+ int qla24xx_gidlist_wait(struct scsi_qla_host *, void *, dma_addr_t,
+     uint16_t *);
+ int __qla24xx_parse_gpdb(struct scsi_qla_host *, fc_port_t *,
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 0cd6f3e14882..a51b9704cf4b 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -6597,6 +6597,55 @@ int qla24xx_send_mb_cmd(struct scsi_qla_host *vha, mbx_cmd_t *mcp)
+ 	return rval;
+ }
+ 
++int qla24xx_print_fc_port_id(struct scsi_qla_host *vha, struct seq_file *s, u16 loop_id)
++{
++	int rval = QLA_FUNCTION_FAILED;
++	dma_addr_t pd_dma;
++	struct port_database_24xx *pd;
++	struct qla_hw_data *ha = vha->hw;
++	mbx_cmd_t mc;
++
++	if (!vha->hw->flags.fw_started)
++		goto done;
++
++	pd = dma_pool_zalloc(ha->s_dma_pool, GFP_KERNEL, &pd_dma);
++	if (pd  == NULL) {
++		ql_log(ql_log_warn, vha, 0xd047,
++		    "Failed to allocate port database structure.\n");
++		goto done_free_sp;
++	}
++
++	memset(&mc, 0, sizeof(mc));
++	mc.mb[0] = MBC_GET_PORT_DATABASE;
++	mc.mb[1] = loop_id;
++	mc.mb[2] = MSW(pd_dma);
++	mc.mb[3] = LSW(pd_dma);
++	mc.mb[6] = MSW(MSD(pd_dma));
++	mc.mb[7] = LSW(MSD(pd_dma));
++	mc.mb[9] = vha->vp_idx;
++	mc.mb[10] = 0;
++
++	rval = qla24xx_send_mb_cmd(vha, &mc);
++	if (rval != QLA_SUCCESS) {
++		ql_dbg(ql_dbg_mbx, vha, 0x1193, "%s: fail\n", __func__);
++		goto done_free_sp;
++	}
++
++	ql_dbg(ql_dbg_mbx, vha, 0x1197, "%s: %8phC done\n",
++	    __func__, pd->port_name);
++
++	seq_printf(s, "%8phC  %02x%02x%02x  %d\n",
++		   pd->port_name, pd->port_id[0],
++		   pd->port_id[1], pd->port_id[2],
++		   loop_id);
++
++done_free_sp:
++	if (pd)
++		dma_pool_free(ha->s_dma_pool, pd, pd_dma);
++done:
++	return rval;
++}
++
+ /*
+  * qla24xx_gpdb_wait
+  * NOTE: Do not call this routine from DPC thread
+-- 
+2.39.5
+
