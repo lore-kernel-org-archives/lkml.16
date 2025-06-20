@@ -1,125 +1,152 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C73023AB98
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D608D23AB98;
+	Fri, 20 Jun 2025 08:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750409344; cv=none; b=sxyuknp1a95HbNZzMIaDIOY+YvRbZLft0GUNIbVVlYsXeXcVrAa7nfRe9A7ktoqEoN+sOUOjEKuaH9X5VDguzkH3Ki9obWWZTKeStRPTQ1if4d1QupilEii66SR7WzuB/BvbdRDxaeQgpqmAA9ncqLeVezbACBqW2DWl3wtEqB8=
+	t=1750409414; cv=none; b=bniMEZNu2P+eU9ehuEwfUZ3PTwH/Q4XPY004r24TznLNlLrn7qk61ML6FKR77tpoPRQvHh3MSaLhgRHYy9UoYrx+ADl65EifZ9pGd8aNJ7Lzf6UGEObzvO0l28/S5zdMBP4+QKHIDNOxazAVgOQh8VE55X8VcXXlvWrasb8j5cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750409344; c=relaxed/simple;
-	bh=4Cduu0PiAyTfHMt0xDlKWHudMH6r4p0zCoccUUb9VSg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RL5bjaWbSVhq5ZZrq9fD0XQUtHYtCwQtCX8R8DJmxfQWOp182SCFqI/lHMhowIOV67Fspm4b6+brUSAtKaKoQVHhFguoP6hI8E26729dQK07U0EyZjusD8eKs1VkhihSOaJ4RLQjDlj5GIoiSCGp9P4vS9wHjeXa3x2/Vd5VoFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so16297585ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:49:02 -0700 (PDT)
+	s=arc-20240116; t=1750409414; c=relaxed/simple;
+	bh=fMqy+8/3TT5p0kYWCyolzeW2u0xrjSaTAga4krQp6B8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nf8o9IJVdS+wRutWypRCdQ89UZZfQbULAs0xEJQU46qrS4u+pFt76YmO/DSdCSSGV4yFla2zM4sF58lD56OqwYhm5h8sQrdUSY83jJbsM4xVYDvGrRE9qxjIq2ul3FCVa1Y35R/WC/i+m4JMpOGQU44pW7Ks+g9ZcUS4DQNjXmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Win2QS6R; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Win2QS6R"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234bfe37cccso20589345ad.0;
+        Fri, 20 Jun 2025 01:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750409412; x=1751014212; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9f++1L9JPARRRmhscC5vGTt/mbYkerHL7J3e8y04jzM=;
+        b=Win2QS6R72190Xk+w0cCWR1jGcEEqLfMXl7wnPY3Aa2OM8dhHfGsxeqerE9Qcckxms
+         FZu6ieGWvRFHctKBmer6xOMz41BSaSfErGnJyRE/JgBfZEx5i6+F6AEek0cyrckmO2hP
+         stdTa6/12tmFExxcqHB4NWhyi22Mz66V2mPPxdu7kZm84jqKFmhBSGat/dOmVx0xYWmG
+         JFp3OagXPgI3/FX/qx1ABHC3GAU9+E1BoT2jd+gfhGkgVP6Qv9I5SIRlpz5OAFavmBaF
+         z2rqG7AkiuWfDY4QDO6sRLGnq5p3Z7ac8luCSechkuzQrhk8Xi2Z+ACj8Zme8dCbkqub
+         4PAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750409342; x=1751014142;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jdVW9F5ZncPgUoo0T9QdBpdyAP6BE2IsFqHGJoXzcUU=;
-        b=bTofCCSwlCMgRrv4UH+xEmUESJWvU/tALrGeFMXOclRiG1avWRdwuPfkTNuTxYQPNl
-         ZlaYMS0xnIj6hipi8NJtQdn0SeVQi6pXyyAsdSLfFGPdqaiAznWeHXifZuIx721yAz6h
-         2A6px8Ldi7c15lmK8+/aAKJZvskzY46hkt/ehNYdIDj5r/X5GzBa9PaVr70nQH0se2ZV
-         uoaIGPq9CAZpQgmzpZFf3xiqbBfY3q9cidmTSrvKVyyxer+bqClPLWUaoRnOP0kHfRd8
-         3ulhcbXpioF7joaE7Zvr9MiL92TtxqqMiWugq06P4jVg52rdBK4eA39u8Qg6RJKlAL+8
-         sb7A==
-X-Gm-Message-State: AOJu0Yx9bPtSHduLyoXvmeLOgYAXIQAUXeY7HxzhYOY/aLRXsX7RRilU
-	VSO8zECWUJ5Gqtkk2zOahaPQIkoCheL4Vy9Jzjw8Lx45TQWVFTHoXVzGefhKUdFtBnowYnxqMvy
-	vNd1qUd5lJyJaJ0X/s5IIdWhknyijSUqPsXbS8O9rgQm5EOjg/AloZ4zbtYw=
-X-Google-Smtp-Source: AGHT+IFd7ePwM9n9WVIbCODZaaf1w58MJuDctisSI2dGknDQfIgaSyEplP8OaTAQsKlo4x3FMK3twAKI2eLWzbKFM+jnVaXp1vN2
+        d=1e100.net; s=20230601; t=1750409412; x=1751014212;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9f++1L9JPARRRmhscC5vGTt/mbYkerHL7J3e8y04jzM=;
+        b=a72TpT+3nddYx0s3BTi4giTULauOsFiillHX1Xk5DWMdnIAln9Dbi+5YI4ASK07rid
+         J8Darkh8KRybGD0cHsYwCEd4FvQHTOaw4KzmKTR2QZsFByLK3YBmtYTgzk4nS8gyoiEC
+         y1F6OG9croQw/zzU3f9tFQlPp7QhPl6zCfEayKBsICtJ0YUR5ltSmDSUK0OQuHY9hVuY
+         VQKGDKfiVH0FCULpm05ScMSHVSisFpGmlYEmqQmT5ZaYjV9LqvB/ZhJ9T7FwYqIOlcGM
+         /qjxeIqKgKmrmPcA5lHvkZoErLIrptnOUAkz9PFbocRL6Hg15B50OYh6AYbvdYQrgTn3
+         fKZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUr4EC5Y6aSOTu1/X7wWgSt6Ufouqo/Xu4eDuJrepov2s84EINLoh0VBlJvB3zoYv9GJXJAP75lkCvm@vger.kernel.org, AJvYcCWkrHAMh1aP8ebrwxYNtKSfPt4+eu6s67hB5BEkQllHzBzbQ/C4HIqH6v4ON48vwo7utpMZtbIUEwhcP8e4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJpHyW2a+ytVT+DVQHxMDbDv4ruInYWsRhw8HLx3ZfUI5YkVwx
+	AzJZXYQ24M4gxbVDo+LcKwhJjjwHjR3SGL79EBS6FJGWH9oxuNQiSUpevHLGhZNd
+X-Gm-Gg: ASbGncuFm/Oy98N0BKTL8Lw6kJ8UqyqVeEnoEew9bwsdG/Vj8Vk5nhb8hDnhuTGMObK
+	UVEJpNY+Sn37AJVD8YD0twdM80ej0xf5s70+4uU4vYpFXdNepoLdi66J39lpwG4ogDHZGc6brI4
+	oo7CzndBlXpVYwE2MvkH/tx1iq05PS8Y02/fA61OAA4GM9KSHK4MCL0XcjfV7ITOfDTTpJRZI9g
+	aR4M9yo7HHWSasqbS69R/MoqDp3zA7lntpd+awpp4habu984LrZbzraIcKMuOZWX0yPIrZ/fepf
+	OTKjvrv2RyjvnWqxz6FOcq3YA7AFqYwIvr+5FYw/FzW0q8g3lKo7YOTksAOmghTgCZmOejB4VA=
+	=
+X-Google-Smtp-Source: AGHT+IE7cwLWsLGRcruAimZFYCSBtpeIi+1mCmFGKF6W7wxEKUlXxQkrtfZf+apkbYxuGjT/r0KjJQ==
+X-Received: by 2002:a17:903:32c9:b0:236:9c95:6585 with SMTP id d9443c01a7336-237d9917e0cmr34397695ad.32.1750409411695;
+        Fri, 20 Jun 2025 01:50:11 -0700 (PDT)
+Received: from localhost.localdomain ([118.46.108.16])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a8a8sm12735285ad.132.2025.06.20.01.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 01:50:11 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: stable@vger.kernel.org
+Cc: tytso@mit.edu,
+	jack@suse.com,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com,
+	Jeongjun Park <aha310510@gmail.com>,
+	Jan Kara <jack@suse.cz>,
+	stable@kernel.org
+Subject: [PATCH 5.4.y] jbd2: fix data-race and null-ptr-deref in jbd2_journal_dirty_metadata()
+Date: Fri, 20 Jun 2025 17:49:58 +0900
+Message-ID: <20250620084958.26672-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <2025062052-vigorous-overlaid-8bec@gregkh>
+References: <2025062052-vigorous-overlaid-8bec@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b83:b0:3dd:c4ed:39c0 with SMTP id
- e9e14a558f8ab-3de38c159a7mr23626995ab.1.1750409342359; Fri, 20 Jun 2025
- 01:49:02 -0700 (PDT)
-Date: Fri, 20 Jun 2025 01:49:02 -0700
-In-Reply-To: <20250620065230.1552640-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6855207e.a00a0220.137b3.003b.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+commit af98b0157adf6504fade79b3e6cb260c4ff68e37 upstream.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+Since handle->h_transaction may be a NULL pointer, so we should change it
+to call is_handle_aborted(handle) first before dereferencing it.
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _inline_copy_to_user include/linux/uaccess.h:196 [inline]
- _copy_to_user+0xcc/0x120 lib/usercopy.c:26
- copy_to_user include/linux/uaccess.h:225 [inline]
- vmci_host_do_receive_datagram drivers/misc/vmw_vmci/vmci_host.c:439 [inline]
- vmci_host_unlocked_ioctl+0x1d05/0x5260 drivers/misc/vmw_vmci/vmci_host.c:933
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+And the following data-race was reported in my fuzzer:
 
-Uninit was stored to memory at:
- kmemdup_noprof+0xb0/0x100 mm/util.c:139
- kmemdup_noprof include/linux/fortify-string.h:765 [inline]
- dg_dispatch_as_host drivers/misc/vmw_vmci/vmci_datagram.c:272 [inline]
- vmci_datagram_dispatch+0x4eb/0x1560 drivers/misc/vmw_vmci/vmci_datagram.c:340
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:257 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x88e/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
- vmci_host_do_init_context drivers/misc/vmw_vmci/vmci_host.c:341 [inline]
- vmci_host_unlocked_ioctl+0x45c1/0x5260 drivers/misc/vmw_vmci/vmci_host.c:929
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x23c/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+==================================================================
+BUG: KCSAN: data-race in jbd2_journal_dirty_metadata / jbd2_journal_dirty_metadata
 
-Local variable ev.i.i created at:
- ctx_fire_notification drivers/misc/vmw_vmci/vmci_context.c:248 [inline]
- ctx_free_ctx drivers/misc/vmw_vmci/vmci_context.c:435 [inline]
- kref_put include/linux/kref.h:65 [inline]
- vmci_ctx_put+0x76b/0x15d0 drivers/misc/vmw_vmci/vmci_context.c:497
- vmci_ctx_destroy+0x15d/0x250 drivers/misc/vmw_vmci/vmci_context.c:195
+write to 0xffff888011024104 of 4 bytes by task 10881 on cpu 1:
+ jbd2_journal_dirty_metadata+0x2a5/0x770 fs/jbd2/transaction.c:1556
+ __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
+ ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
+ ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
+ __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
+ ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
+....
 
-Bytes 28-31 of 40 are uninitialized
-Memory access of size 40 starts at ffff8880231f26c0
-Data copied to user address 000000000000a4bf
+read to 0xffff888011024104 of 4 bytes by task 10880 on cpu 0:
+ jbd2_journal_dirty_metadata+0xf2/0x770 fs/jbd2/transaction.c:1512
+ __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
+ ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
+ ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
+ __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
+ ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
+....
 
-CPU: 0 UID: 0 PID: 6787 Comm: syz.0.16 Not tainted 6.16.0-rc2-syzkaller-00231-g75f5f23f8787-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
+value changed: 0x00000000 -> 0x00000001
+==================================================================
 
+This issue is caused by missing data-race annotation for jh->b_modified.
+Therefore, the missing annotation needs to be added.
 
-Tested on:
+Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
+Fixes: 6e06ae88edae ("jbd2: speedup jbd2_journal_dirty_metadata()")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://patch.msgid.link/20250514130855.99010-1-aha310510@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+---
+ fs/jbd2/transaction.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-commit:         75f5f23f Merge tag 'block-6.16-20250619' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14a13d0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db26f33438d76de9
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15f39d0c580000
-
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 91c2d3f6d1b3..72e9297d6adc 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1419,7 +1419,6 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+ 		goto out;
+ 	}
+ 
+-	journal = transaction->t_journal;
+ 	jbd_lock_bh_state(bh);
+ 
+ 	if (is_handle_aborted(handle)) {
+@@ -1434,6 +1433,8 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+ 		goto out_unlock_bh;
+ 	}
+ 
++	journal = transaction->t_journal;
++
+ 	if (jh->b_modified == 0) {
+ 		/*
+ 		 * This buffer's got modified and becoming part
+--
