@@ -1,150 +1,196 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2134.outbound.protection.outlook.com [40.107.101.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04535819
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388462; cv=none; b=W1ku2gceM6WR+xlvWAVwMlv6CAHgWp+uzPF/r4va2lxMYavOld3B8dmq7UoxKb8mYOYGHGRI0eCXlERFlAKZ2rYRDe6X9GaaLcf4hnJDa9dmZAl6yYQmyUWI2HNBmzXcfBTH5HH0gsZ6GWgw3vUOfJFK8RVpVB7xaqBV83C4mX8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388462; c=relaxed/simple;
-	bh=yK0QfK4ZZxsvW9hBbrEOHPwZIvhCT7JXP6hfmrcRiuA=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ijDUTzyQHq2pmKMZY1dePI3FXY6MomLMkp913905OMONVlMqM6NbI3GqNvpDG6BNa6arkG7YjDxf5usoPrVr6W6J0qA3TZlRm1ay0wW5nNEsTe9kEthl5QXKnxeICRf4Epz1G3tepaUaGQz5mO09IYUAi7o2VQU3myVleLoT9L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pi1JJyOn; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F22E1D6DB4
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750388467; cv=fail; b=t71LrPuXaEpi/aDLbZbECC+shvvjF6UvbV1sSGPC6KiQ8O3EYkrrO9wTpOKL7629Cg1JC6Vi1SN9u9svzWzJPIwP0hbtiasf/ur7w1h4Zvw0hfQpJl54LkSE3gs1qbaXLOcscOlXxWRdH3Bsy925S3PY6xHxkDqIwxEFEjZEOFU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750388467; c=relaxed/simple;
+	bh=mYeBqAu82YOjA7zyOsQKRltsqEoQ81PPTbVZhHKGKus=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pp4iLGWSrHf3BWnI7FRVhc2yYoNe8o3irWOIcFxUjT+HAR12A8kMkx3ko+8AaI2mkotb+OCauYiDqE9KpXFw+7B3QRkottnygE+e/x+yjPyZb2HXbDkX5+2IcwLOFxKGuKCTV5lIaSsYoDguSv9DCWxlxu7RxT8pzD5dTwIVejg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=fail (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b=FJTrcGD6 reason="key not found in DNS"; arc=fail smtp.client-ip=40.107.101.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pi1JJyOn"
-X-UUID: c83ec1a24d8211f0b33aeb1e7f16c2b6-20250620
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yK0QfK4ZZxsvW9hBbrEOHPwZIvhCT7JXP6hfmrcRiuA=;
-	b=pi1JJyOnWxkyPEfTE5AYixZMXKSt8WyfyXAcX9lineZ2knnwS9U7whZmzzoSIwAX65vp2htCCLc+WoCugLimEHbs5xRjZ17tsfAxLtwcSl0o/osDblSy/OlDcUnMoaVxS6Epk34o5v9+WhU94/6soy9DdKgA7Qls4PkzMoBNUPo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.3,REQID:4749fcf9-ad0f-4c20-8efd-db8f9ab52877,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:09905cf,CLOUDID:f4b8a828-fdd2-4021-9c0c-83548fdcf243,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
-	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c83ec1a24d8211f0b33aeb1e7f16c2b6-20250620
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <kuyo.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 453986597; Fri, 20 Jun 2025 11:00:54 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 20 Jun 2025 11:00:53 +0800
-Received: from [10.233.130.16] (10.233.130.16) by mtkmbs13n2.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.2.1258.39 via Frontend
- Transport; Fri, 20 Jun 2025 11:00:53 +0800
-Message-ID: <6ec534be0618de3e2b4d81555e5f24155326c0b9.camel@mediatek.com>
-Subject: Re: [RFC PATCH 1/1] sched/deadline: Fix RT task potential
- starvation when expiry time passed
-From: Kuyo Chang <kuyo.chang@mediatek.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, "Ben
- Segall" <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
- Schneider" <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, jstultz
-	<jstultz@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Date: Fri, 20 Jun 2025 11:00:53 +0800
-In-Reply-To: <aFQM8TdZIIvvGv8T@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250615131129.954975-1-kuyo.chang@mediatek.com>
-	 <aFAyN4rfssKmbUE5@jlelli-thinkpadt14gen4.remote.csb>
-	 <089882f95b1b910f7feecddd0ad9b17f38394c64.camel@mediatek.com>
-	 <aFQM8TdZIIvvGv8T@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="FJTrcGD6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SPL3Rae4zRSbs0WufCggqinmGaUAoYMS2tBME5QRnNof+d23T4kTSjZBIZuGtUVdvg8KZvTIs8emuNoSXTxLfWeeZWtN5nwjx4OnuBHDgL5QJixlOgmtarCd8oKATVfJDqhnij6oDLIZo54Z/zmoyMscgGCwKtR605b6Nr8R2RBiDc401XMcQ2M9RZeV84gBEZVY4+BXzzJM3D+/gFia1nuVU9p7/GedomUhFLUUTWJLnTh6pnE+1YAprKFmYafpgXcPToB3CsHhJDRZ877ttrCD5sH3Iek0hu1xQzJsBtjyRXHXzSBjdjLtrtnftTRWyF27eQ3F86BDPyY88oV4jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KH79cQgeSEnmldumrRHdpYvZ5RbF8f3C+ELVmC6vIcc=;
+ b=QUBDjk7kGOtc5nPwkf2cYf3Wks9Ozyw1Ee9AWPhPwAjIS5y9VlDZ0TPuJwPySAf13FYlMvVMlAkXXkZ97KLDoNzB/45j/d/JcPNdoC/KCRntxfQUKp8c3CI9+6iJZKKMTkA6IV/ldR5cjUefkrEcfodjn1dCu/UfR8J7z9OjHRSvYtJZCg4FrWgZT6H4t+nkfgO4H/3z9NHCOyXjfxTnjfm0I/XGSU6dSZAoHJ/L5xPgIvCpRV2Oruf1LC09c0nKlmF5o+l4g6y1oCjtT64VIwRRsTEA40YDVXw5uDwpcq6yRpn9yOR/aPeaS9DcIhij6DRPwZ6m2o+rn0o9R8iJTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KH79cQgeSEnmldumrRHdpYvZ5RbF8f3C+ELVmC6vIcc=;
+ b=FJTrcGD64EgfHMOM2q07pJF8hmo/5JAfGujL4xVyddciuZRix1qygM7OLxZyTaBVfuFcAvafVA4W5GKraDHUpRi02jLk/8v8e8K4OyvRCcwoJPzp+lYLVaCi5teCWz9qd1eN879z6h76Kul1W421hVZ4E6Mz/jT9fDW+M90qEos=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amperemail.onmicrosoft.com;
+Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
+ DS7PR01MB7543.prod.exchangelabs.com (2603:10b6:8:72::7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.28; Fri, 20 Jun 2025 03:01:02 +0000
+Received: from PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::6926:a627:118e:8050]) by PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::6926:a627:118e:8050%6]) with mapi id 15.20.8813.020; Fri, 20 Jun 2025
+ 03:01:02 +0000
+Message-ID: <cf675887-49e0-45a9-9008-33c0c6f1edf1@amperemail.onmicrosoft.com>
+Date: Fri, 20 Jun 2025 11:00:45 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: set the se->vlag strictly following the paper
+To: Vincent Guittot <vincent.guittot@linaro.org>,
+ Huang Shijie <shijie@os.amperecomputing.com>
+Cc: mingo@redhat.com, peterz@infradead.org, patches@amperecomputing.com,
+ cl@linux.com, yang@os.amperecomputing.com, juri.lelli@redhat.com,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+References: <20250619031942.25474-1-shijie@os.amperecomputing.com>
+ <CAKfTPtBUJa4A2V3XR8EwYVPxiY=ENZr1=Jg5R3E75r5XnrnRPg@mail.gmail.com>
+Content-Language: en-GB
+From: Shijie Huang <shijie@amperemail.onmicrosoft.com>
+In-Reply-To: <CAKfTPtBUJa4A2V3XR8EwYVPxiY=ENZr1=Jg5R3E75r5XnrnRPg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:4:195::13) To PH0PR01MB7975.prod.exchangelabs.com
+ (2603:10b6:510:26d::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|DS7PR01MB7543:EE_
+X-MS-Office365-Filtering-Correlation-Id: cec607e7-7d47-4610-012b-08ddafa6b0ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RWVnU0dyeGZWRVpEdytDZDlpaGQzWitXcS9JWldMdGtTTmJCQVhwUnFOSFVF?=
+ =?utf-8?B?T1VTYkFSZUgrSWpwcC9FUlFEMkwwcGw1VWJhQXpjZVFieDdUWU42VTFJYldw?=
+ =?utf-8?B?azZQT1d4WXQvNFV2bnRpcWtMSzFEZjdiNjV3anR2SGI2OHN0TXlLa3RFZzcy?=
+ =?utf-8?B?WVVIUzRNQVdjVTRHWlhoOE1CMWhkNFpXSHBQU1UwZUZyTXpPVVBaRHNkd01M?=
+ =?utf-8?B?RHdNWDlWeVduOG9PQS90ZjhzQUJ1a2JOclk5ck9adjhaK1E1VDZhcE9tT0ZN?=
+ =?utf-8?B?M0ZNeSt5VVlkVXJmdzZvSnlYY3ZXYUVOcWFoS05QUUc5b0YvL3dKZW54R29p?=
+ =?utf-8?B?U0w5bFJndkZPTWtFdjZmaC95NEVFQkhOMFpRcU45QkZwZ0lRZUc0NEdCU2Z2?=
+ =?utf-8?B?Qm8zT2F4bjd3SHRKK1RCTGFZa1pkN3hkeGkrR2dBbStjYzlUTXhpR0RkemVC?=
+ =?utf-8?B?eGpwTUZXK3ZDVWNIUmtVVTJRa0MybkJ0WU9EQjE3NGJFa2JJVGgxRVU4cGJY?=
+ =?utf-8?B?YmtyZGRVRHpiTkFodGVQRDdCZTBERDlIQlk4Tk8wMkFOcHEwRGVjMC95eGRR?=
+ =?utf-8?B?Z3c4R1RSZG5RVGFCT1RjSHd6Z0gycnpWL041WmE2NTNEM0Zvcm1LYWNZRGFY?=
+ =?utf-8?B?TzJVbXF3b1ZIQ2hxbVM1dkdFLytPWjR2R2kwZGIzSEZYOTBnUURvUE9maFll?=
+ =?utf-8?B?ZkFoZzdCbHY1QTgxcXFjVENNekdEVlNsbUV5Yzd0b1UvUjZjQmdyN1Z4N08v?=
+ =?utf-8?B?N1RCWFVZaERyYi9xNEt1eCtGQXN1V3RwU0k5eSswa0ZDWmpOV1dybFc5MG1Q?=
+ =?utf-8?B?eGtWZy9ua3RJSjJWbHA3UHE1VUtYbHJ6OXRXT2wwSkZWQUhvT3JLT1hkN29h?=
+ =?utf-8?B?N1BicHFEbDJIN2xpN0JDS3RiUkQrUzBiRlh0SXhhRDRKcHlJSEhySmRmOGVm?=
+ =?utf-8?B?YzlzRmpnVldRVjJvd1ErSzdsNnpXMWgxWEdWQmJLRkFLcVNDa3Y1ckJnZUVI?=
+ =?utf-8?B?bld2NC9kU2phM1YxRFV5aEJFT3kxUXRvdXl3WEl2QjdHalZhcDhmZ0xsaHlG?=
+ =?utf-8?B?R1lMQndlN1JhVG5DMVpxTW1mU3dUWG9ZK1JyRTFhMzdaU2k4RzEzbGNkRWRB?=
+ =?utf-8?B?cVhpOHIrN1FuNWZQZGlPV05pSHZKQ1NkNTlxZlRJUFphamZhdmR2dVVVdWgz?=
+ =?utf-8?B?ZStlZkZiT3lWKzlaTWowVTIzenUwQ0cveWR1bGlMYXpMaEF0SGd5eDN1dUZX?=
+ =?utf-8?B?UHphWlZYOXpFK2w0MEc1bGl4QXp5S29SVVF1TEJyZVBzTjJRbUxWbE1LOW54?=
+ =?utf-8?B?NHFjTHhPR1lCeFU1aVRVZzF4THl4MUx0OThabDFHU3hka3piOHZFN2NsdVdq?=
+ =?utf-8?B?QmJJbkl2TTJEOCtTUjRKSjZ3akRDMEdQY3pKS25lOTNtRjM1Nlc1QmNoU1lW?=
+ =?utf-8?B?V1JkZXRjZ2oxTUpDMExIY3FPdkVtT3Q3ZkhGdExIenUvZjRlUGRLcjY3ZXJv?=
+ =?utf-8?B?bEZGZnN2aVUrNEViaWpHUXQrNFRVWEFHYWVabmtSb0ttS2V2S1l1Y1V0MFQy?=
+ =?utf-8?B?MDhNUFg2R2o2VjJWbXZ4UU9SemZ4cy9jalEvK2RUa3VoZEp2VjlPQmVmZS8r?=
+ =?utf-8?B?RHlCRUlrK20xdk9RZGpsY2NtTTFDRXhacjFwMGdVb0NBbFhaZUZXMTNrS21Z?=
+ =?utf-8?B?NEhObC9CaDhJYWpGeS9udnR3elAxbkJOL2NYNzBITDBKeEhlU0hGaUk3SnVm?=
+ =?utf-8?B?bGJFOGVzcSsvNG5HYko1SkdnRGhJMEFuMGxoOUxoOWFXVDBVMHNadGdpT29o?=
+ =?utf-8?B?ckIxeU5hMHlLczd1aEZTdUl1ekw0ZE1sZU1HNjVxUFYxbmtobDVERW42Wk1C?=
+ =?utf-8?B?bmpaTGxNZllmcUprUmdIeEp5Q2JIWEdKbDFMd29lYTN5Rmc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WHN5TTJidzZ2a2l2Z3RqRkVEL1orK0FKNHkvbUhONHBxTzgxcFU0SWZZNkht?=
+ =?utf-8?B?a0VrcXMrNldpcVJKZjB0ZDE0c2RvOWdPT293bU9PL0dlNS93VEFBYzgzc29X?=
+ =?utf-8?B?anZ3RFRta0tqSEYva2lXUWFRUXBYTHJHUlc0clBsOG9mUDQzVEpicnh5RzRa?=
+ =?utf-8?B?WmNwOFpmb1ZtRDAwYXh4eDlKblNPU0J5eGN3czA0TUxEMHdIOEVqYnVtVUJ4?=
+ =?utf-8?B?VWRrM3hSOGx5VGFLb1ZyRXpsSy85QWh1V2ZJK2dHYjNzcXFVZ1ZYbDU0c2NR?=
+ =?utf-8?B?NFlxemFCZlFTQXU1aHdCVEh4WW1iZEJ5czVPNnIxWS9idFBONGNVaSt1RTE1?=
+ =?utf-8?B?cGdZZzhML1UzQjNGTTFERFZHSlRYY1E1emc0dnNTMkdKZy8vY2NOR3h0RDRT?=
+ =?utf-8?B?bjVOSkFqN3FNVUN4cnJKSjBJdHVQYWw5a0RBRXNxOTR4WktMbzFNQnRseGly?=
+ =?utf-8?B?YzlacjBIcFFJTDMyK3RjeCtUUGJxMkdhVDZuNW9vNWlyMWp1d2tJUGVxOG1B?=
+ =?utf-8?B?R3pFL0EyTWc5M1NTdjJXeGV6MGlkdWVGY3NiUnJ2T1A3VUJacEc1YUNUQmJx?=
+ =?utf-8?B?OEJ0T2Y5SElvL0o3TklCdVI0NTZFU2diZ01ITzcybUJJeGZLb0FUTzN5QThF?=
+ =?utf-8?B?WHBkdmZYMVh4enlDRENYNHNicXg1a0xoTzZTSkRwUy9VVGVpQWdJR2NBVytE?=
+ =?utf-8?B?TzRHTkM2MDVUVHZFdDEwSWdUck9sUlBxam5pODVhUjFxMUJMSGJFaGZnbitZ?=
+ =?utf-8?B?OGJmMVdOWmtyL0RpVFpJdGJybFhOdGt6ODZ4ZHBkcC95bkdqK3FFUE1zQ1M1?=
+ =?utf-8?B?RVd4SnZQMlRnSjJMQnZEZ0NiQ1lBSlFDN09HNXliUEU2V1B6dnJGOE4wUFVU?=
+ =?utf-8?B?ZGhqa2pVT1BwRlJVUHJRU0FSOGk0YmpqcE4rSHJvL0JkSjVqQ3g0YnVsd2ZU?=
+ =?utf-8?B?N0huMTRETjlXYWZTYzdNd2VjcG1wSW5mZjFPSTFNTXJiSGRrRTNMdDRubzND?=
+ =?utf-8?B?aTBuRms1QTh0dnpjVzNJd2xIcTgwOXVNQXBNbUs3ZjFGVy9ONkYvdzRtMXB5?=
+ =?utf-8?B?TnBkUjhBVGVpY204SDgvOHN5Z2loYkcwMjNuYW5JaVlWbEJnY1J4L2xkbnJp?=
+ =?utf-8?B?ZDZ2U0RSTkNQNW1JWDVtUEVMYjVsWDB0SjhtSU9ZMitTODRYZGFYeTBBRTY4?=
+ =?utf-8?B?L2RGb2VHSnppYThDRDlRTGxqYVpmUVRmUTRkUmF1RHRPdXA4ZGpXRUdBZXRn?=
+ =?utf-8?B?OHFDTTlmMThDSzF6R1NXYmk4Tis2Uk1ka2ZPYm0rbWdmb1NVU1RqTDVqZXhG?=
+ =?utf-8?B?bHY3L3FVRWNpUlRObm9JQ21pdjRFdXJCb1RCaWN5MHZTZEcxSXkvQmY5Q3dG?=
+ =?utf-8?B?SGtmV3dFWlNUWWFtbHQzV1IyQkNkSTBrc1JqM0V2WDdySUVNLzRNZ2dGQnV0?=
+ =?utf-8?B?eE51WnBpRWVjZVZmb1p0eXQ4dUN2YjdYck9DQmlqQ29FRVhPclUxeXZIVk9o?=
+ =?utf-8?B?K3RSVnJIUWsyUWJ2RXhBT0p4c1ErZnlGa3N5eXc2L1ZjVS9iSU9MTGxOandR?=
+ =?utf-8?B?RWxGMnlSMG1paE9BdFF4N1FncUp3OFFISysrVmZ6QnpYUDRIVkdwUU1XQ1h1?=
+ =?utf-8?B?RzhHZ0cvcXk0K09HSU8xSnZuNkwxZmRxZDE2RW5oTG5LbHNjVnZNbXU0dEZz?=
+ =?utf-8?B?M2pvZjFMYmdYZmxHc2krSDA2UGl2UWllRXBkdlpoQ2Y4dExMWGx5YjJPcHJW?=
+ =?utf-8?B?MVBxZHR3SUtCRlkyYXh5WTRvY0hjODVMQzlIQXhhSjkwb1RmUEl0OVc3TnNt?=
+ =?utf-8?B?dm9kaG9BaU9UOERJejVJdGcyNExxcytQYkxzdzE0MnIwTWdaVmFFbElRZXUy?=
+ =?utf-8?B?Njg2UU5QcVpneWs1T0JxRk9YR0VTa3VtbGhYbVVmVXF2cXNKcy96YTh5ZlJU?=
+ =?utf-8?B?QzV2K2J4bTYzeStNWWdsZUdWYXkzSWZySzBnUFZWWHphd3phMTFLMDEybzZH?=
+ =?utf-8?B?Mmc0K0tMWlRQWGFPT1BXYmRSMXB6RmROQzBFUjFYNVNIV1A5aDBabU1wMU82?=
+ =?utf-8?B?bGFOWXZvSzduTjM4VVZVSEV2TGZ2MTRhM0t1cHp5MlNBSEpydWxDYm8xdkh0?=
+ =?utf-8?B?MktRVk1RbGxzcjRmNTNKOThlVFZWbTFEcEhEdkg3RWdTUkh2WXh3a3pzbzNa?=
+ =?utf-8?Q?P679ihRrpsYZPG5veogj6rI=3D?=
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cec607e7-7d47-4610-012b-08ddafa6b0ac
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 03:01:02.4560
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PRCtUEbnBWqIjz03Q5zYLZq56w7RyubulKhDSQISY5gvenf+QJrshBocu0bwsoAImxSBA1C525Gu0V6ER+nnU2tk6a66eyL7MsKWMLaKTtjBtsCRVFBaHRkWLjATlDqb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR01MB7543
 
-On Thu, 2025-06-19 at 15:13 +0200, Juri Lelli wrote:
->=20
-> External email : Please do not click links or open attachments until
-> you have verified the sender or the content.
->=20
->=20
-> On 18/06/25 22:20, Kuyo Chang wrote:
->=20
-> ...
->=20
-> > When dl_defer_running =3D 1 and the running time has been exhausted,
-> > it means that the dl_server should stop at this point.
-> > However, if start_dl_timer() returns a failure, it indicates that
-> > the
-> > actual time spent consuming the running time was unexpectedly long.
-> >=20
-> > At this point, there are two options:
-> > [as-is] 1. re-enqueuing the dl entity with ENQUEUE_REPLENISH will
-> > clear
-> > the throttled flag
-> > and re-enqueue the dl entity to keep the fair_server running.
-> > enqueue_dl_entity(dl_se, ENQUEUE_REPLENISH);
-> > =3D> replenish_dl_entity
-> > =C2=A0 =3D> replenish_dl_new_period(dl_se, rq);
-> > =C2=A0 =3D> dl_se->dl_yielded =3D 0;
-> > =C2=A0 =3D> dl_se->dl_throttled =3D 0;
-> > =3D> __enqueue_dl_entity(dl_se);
-> >=20
-> > [to-be] 2. To avoid RT latency, the fair_server should remain
-> > throttled
-> > while replenishing the dl_se.
-> > Once replenishing is complete, we can ensure that a timer is
-> > successfully started.
-> > When the timer is triggered, the throttled state will be cleared,
-> > ensuring that RT tasks can execute during this interval.
-> >=20
-> > It is a policy decision for dealing with the case of failure in
-> > start_dl_timer().
-> > The second approach is better for real-time (RT) latency in my
-> > opinion,
-> > as RT tasks must be prioritized.
->=20
-> OK, I think I see your points, but I am still not sure I fully
-> understand the link with the issue you describe in the changelog -
-> the
-> relation with "DL replenish lagged too much", that is.
->=20
-> Could you please expand on the details of the situation that is
-> opening
-> up for the issue your patch is addressing? Do you know why we hit the
-> corner case that causes the warning in the first place?
->=20
 
-"DL replenish lagged too much" means the fair_server took much longer
-than expected to use up its running time,
-so the deadline fell way behind the clock (which is also why
-start_dl_timer() failed).=20
-In this situation, just replenishing one dl_period isn=E2=80=99t enough to
-catch up.
-=20
-A corner case is when there are too many IRQs or IPIs in the system.
-In this case, runtime gets consumed very slowly, and the fair_server
-keep running without being throttled.
-Even the runtime is exhausted finally, the fair_server would be
-restarted immediately.
-In the end, IRQs, IPIs, and fair tasks can take over the whole system,
-no chance for RT tasks to run.
+On 2025/6/19 21:53, Vincent Guittot wrote:
+> On Thu, 19 Jun 2025 at 05:20, Huang Shijie
+> <shijie@os.amperecomputing.com> wrote:
+>>  From the paper, the lag should follow the limit:
+>>       -r_max < lag < max(r_max, q)
+>>
+>> But current code makes the lag follow the limit:
+>>       -max(r_max, q) < lag < max(r_max, q)
+>>
+>> This patch introduces limit_hi/limit_lo/r_max, and
+>> make the lag follow the paper strictly.
+> We don't strictly follow the paper. Typically, paper assumes that a
+> task will not run more than its slice r before deciding which task is
+> the next to run. But this is not our case as we must wait for a sched
+> event like the tick before picking next  task which can be longer than
+> the slice r
+>
+> Side note, we don't have a fix definition of the quantum q which is
+> something between 0 and a tick (and even more currently with run to
+> parity) as we wait for the next the tick to pick another task
+>
+> This means that a task can run a full tick period even if its slice is
+> shorter than the tick period
 
-> I would like to understand exactly what we are trying to fix before
-> deciding how to fix it, sorry if I am being dense. :-)
->=20
-> Thanks,
-> Juri
->=20
+Thanks for the explanations.
+
+But if we enable the HRTICK, the task will run to match its slice.
+
+
+Thanks
+
+Huang Shijie
 
