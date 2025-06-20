@@ -1,186 +1,173 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B2117583;
-	Fri, 20 Jun 2025 07:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F0335958;
+	Fri, 20 Jun 2025 07:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750405391; cv=none; b=fSXivlRpZZgNLJudhEHxpSFWxvyJOMFtjeWS1LQ1mDw86Cuq0s1CJntYL4uAoB7S+P3hve3/qgUPplhye70NjnrEdXv4FRDyqw3OwaCbSxUP6FqPTx7KgHKohFt89OGjmKjS+vdEWXXHoM/EadGQ4/mBaIBw1IF+ZDEPwLMKSDg=
+	t=1750405549; cv=none; b=D2EZVk5E95O9DrVtwyXxUjMctah12FPX2XKh1EmnFngdsLEqiJKEArPUstpRdcRlx4IhsB3KJ/z36DgIHZw+Qf2Nmo/I4LNK32UJeKV6/beGq5iviqG5b5WUBLVt+kUlHJjGUcZ97gf2Um82JisLSFsd8BnU4W3BmQuxwoQE7Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750405391; c=relaxed/simple;
-	bh=i7/0+Wyt/F5MZdrfVE3XpgV5j2JngVJirMoqeFq65mM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rVgyDb8r1NhKzQCusKCikYbzeBTw/q5Wh4BaqZwrBnUZFSXvt4GB0X4IC2ddhUI+32TaDSzlXn0uTnsqNrfOWVaCKQvjEYgxg9V3OXh3K4yQsrBeoGlklre9/SNRwQamq4ncmpuIWkifs9stOUCWdEgYhp+SRI/BfRsEGj0+yoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Upnbze+o; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750405549; c=relaxed/simple;
+	bh=RbnTkvnJP1Ebdtqwc/VhKT85ujDu26dnLeIL9eViZj8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R/0IAm372DSIoED4UD6K61PHy7+yAk6lPDjDr/jqnoHYBor+gkULTGxMhysBwoIvp16a7mhx2FM4bi+yX4x8eI+fQtRAyjaULPuhwbTbSp2p8Hltwu3C9ENx7co4yEBloaHVfT4Dgbz7bz/mchK+x4AujcADhWH3NZ0ZooRgSYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fcR2AwBf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5KX7Hbri; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Upnbze+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750405387;
-	bh=i7/0+Wyt/F5MZdrfVE3XpgV5j2JngVJirMoqeFq65mM=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=Upnbze+oVWrWajZF7Trx4o5DhGMK8sIHMGHpedbaCKqqtEzEprWId2j66qzhef1bm
-	 J9uJtaYs+/1SEB2aSPJ9pceE+xxxmsSko5D6WB3iFM1HLjGZWSt+9KPdnTLLLmU8v8
-	 Fqc/fkKtMQ4w0EMq9aVmDZI+7Od1rYSluSUwxzxU/M2xS0oFV5F9nElZaS1moTpqZm
-	 8LvfocHfXNLAHQK3gqFaVP8IgmZjRUFNNU6KRhYoLpAxsFaFBC4dvdhesOQb6epLmi
-	 tq02Jf4MQiyKjrB9dwKawzpt+7BRh/oBrud9XU2qj6pQi9T8DY8m3UhcNz2LLEj8bL
-	 hjekzPsCkiziQ==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id D16F3640A0;
-	Fri, 20 Jun 2025 15:43:06 +0800 (AWST)
-Message-ID: <2d17ec4f5f9e2cfd75902217a8dd621538a73bc2.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 1/8] mmc: sdhci-of-aspeed: Fix sdhci software reset
- can't be cleared issue.
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Cool Lee <cool_lee@aspeedtech.com>, "adrian.hunter@intel.com"
- <adrian.hunter@intel.com>, "ulf.hansson@linaro.org"
- <ulf.hansson@linaro.org>,  "joel@jms.id.au" <joel@jms.id.au>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, 
- "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
- "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
- "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
-Date: Fri, 20 Jun 2025 17:13:06 +0930
-In-Reply-To: <TYSPR06MB7068A5F04CE0A5BDB03073C0957DA@TYSPR06MB7068.apcprd06.prod.outlook.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-	 <20250615035803.3752235-2-cool_lee@aspeedtech.com>
-	 <80f56269175d8658ba1ab4a1fe9a43d18294ca60.camel@codeconstruct.com.au>
-	 <TYSPR06MB7068A5F04CE0A5BDB03073C0957DA@TYSPR06MB7068.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fcR2AwBf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5KX7Hbri"
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750405544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yiOx0UJc6/4EKhHUrNBpnoe5RzXYaQsljD5jorHuO9U=;
+	b=fcR2AwBfoJuarhXpV1pAN5qQaHOipR3HK/EyhllabDDjEDaA7FR8QoqR1zzakUuFtSFevU
+	12/cTQFHmNuLal8bg5Q1QrRgNb3NLshTlXzw2yQHo/7JKQgzZEE2Cx/r6k8mzbMPerRBxH
+	iwzGfJJai3NDQsDtH+aLY4J0YaH31ll8AsZlDi0fesj8oVnnSiApOX7qFz1np6JqRQZptl
+	kK/+tfdHPSbIjitbXKYv+fZJDEuGmXssd/y3KGacea55/GuFQqIxoqqTV55OACUCXMLX18
+	UtW7kBR6nOksyZkuQ0lwBDPkm86+f7f/dytdB0RLYliWkxUv7DPEyVFT5PFaVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750405544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yiOx0UJc6/4EKhHUrNBpnoe5RzXYaQsljD5jorHuO9U=;
+	b=5KX7HbriTjtu5BozbLOQv3iJmoMYE97BbpEOOj0WHHXHajNS8xQGCx+I/x2fRMUCv+rvcP
+	upkDcLbTGDSYlyAw==
+To: Song Yoong Siang <yoong.siang.song@intel.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Richard Cochran
+ <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Vinicius Costa Gomes
+ <vinicius.gomes@intel.com>, Jonathan Corbet <corbet@lwn.net>, Przemek
+ Kitszel <przemyslaw.kitszel@intel.com>, Shinas Rasheed
+ <srasheed@marvell.com>, Kevin Tian <kevin.tian@intel.com>, Brett Creeley
+ <brett.creeley@amd.com>, Blanco Alcaine Hector
+ <hector.blanco.alcaine@intel.com>, Joshua Hay <joshua.a.hay@intel.com>,
+ Sasha Neftin <sasha.neftin@intel.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, Jacob Keller <jacob.e.keller@intel.com>, Wojciech
+ Drewek <wojciech.drewek@intel.com>, Marcin Szycik
+ <marcin.szycik@linux.intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH iwl-next,v2 1/1] igc: Add wildcard rule support to
+ ethtool NFC using Default Queue
+In-Reply-To: <20250619153738.2788568-1-yoong.siang.song@intel.com>
+References: <20250619153738.2788568-1-yoong.siang.song@intel.com>
+Date: Fri, 20 Jun 2025 09:45:42 +0200
+Message-ID: <8734bux3dl.fsf@jax.kurt.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Hello,
+--=-=-=
+Content-Type: text/plain
 
-On Thu, 2025-06-19 at 06:53 +0000, Cool Lee wrote:
->=20
-> > > Replace sdhci software reset by scu reset from top.
-> > >=20
-> > > Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
-> >=20
-> > Can you please add a Fixes: tag?
-> This patch wasn't used to fix a commit. This is a workaround for a hardwa=
-re bug.
+On Thu Jun 19 2025, Song Yoong Siang wrote:
+> Introduce support for a lowest priority wildcard (catch-all) rule in
+> ethtool's Network Flow Classification (NFC) for the igc driver. The
+> wildcard rule directs all unmatched network traffic, including traffic not
+> captured by Receive Side Scaling (RSS), to a specified queue. This
+> functionality utilizes the Default Queue feature available in I225/I226
+> hardware.
+>
+> The implementation has been validated on Intel ADL-S systems with two
+> back-to-back connected I226 network interfaces.
+>
+> Testing Procedure:
+> 1. On the Device Under Test (DUT), verify the initial statistic:
+>    $ ethtool -S enp1s0 | grep rx_q.*packets
+>         rx_queue_0_packets: 0
+>         rx_queue_1_packets: 0
+>         rx_queue_2_packets: 0
+>         rx_queue_3_packets: 0
+>
+> 2. From the Link Partner, send 10 ARP packets:
+>    $ arping -c 10 -I enp170s0 169.254.1.2
+>
+> 3. On the DUT, verify the packet reception on Queue 0:
+>    $ ethtool -S enp1s0 | grep rx_q.*packets
+>         rx_queue_0_packets: 10
+>         rx_queue_1_packets: 0
+>         rx_queue_2_packets: 0
+>         rx_queue_3_packets: 0
+>
+> 4. On the DUT, add a wildcard rule to route all packets to Queue 3:
+>    $ sudo ethtool -N enp1s0 flow-type ether queue 3
+>
+> 5. From the Link Partner, send another 10 ARP packets:
+>    $ arping -c 10 -I enp170s0 169.254.1.2
+>
+> 6. Now, packets are routed to Queue 3 by the wildcard (Default Queue) rule:
+>    $ ethtool -S enp1s0 | grep rx_q.*packets
+>         rx_queue_0_packets: 10
+>         rx_queue_1_packets: 0
+>         rx_queue_2_packets: 0
+>         rx_queue_3_packets: 10
+>
+> 7. On the DUT, add a EtherType rule to route ARP packet to Queue 1:
+>    $ sudo ethtool -N enp1s0 flow-type ether proto 0x0806 queue 1
+>
+> 8. From the Link Partner, send another 10 ARP packets:
+>    $ arping -c 10 -I enp170s0 169.254.1.2
+>
+> 9. Now, packets are routed to Queue 1 by the EtherType rule because it is
+>    higher priority than the wildcard (Default Queue) rule:
+>    $ ethtool -S enp1s0 | grep rx_q.*packets
+>         rx_queue_0_packets: 10
+>         rx_queue_1_packets: 10
+>         rx_queue_2_packets: 0
+>         rx_queue_3_packets: 10
+>
+> 10. On the DUT, delete all the NFC rules:
+>     $ sudo ethtool -N enp1s0 delete 63
+>     $ sudo ethtool -N enp1s0 delete 64
+>
+> 11. From the Link Partner, send another 10 ARP packets:
+>     $ arping -c 10 -I enp170s0 169.254.1.2
+>
+> 12. Now, packets are routed to Queue 0 because the value of Default Queue
+>     is reset back to 0:
+>     $ ethtool -S enp1s0 | grep rx_q.*packets
+>          rx_queue_0_packets: 20
+>          rx_queue_1_packets: 10
+>          rx_queue_2_packets: 0
+>          rx_queue_3_packets: 10
+>
+> Co-developed-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
+> Signed-off-by: Blanco Alcaine Hector <hector.blanco.alcaine@intel.com>
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
 
-A hardware bug in which SoCs? AST2400-AST2700? Or just the AST2700?
+Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
 
-> For this condition, do I need a Fixes?
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If the bug exists for all SoCs it's a deficiency in the original driver
-and so should have a Fixes: tag.
+-----BEGIN PGP SIGNATURE-----
 
-> >=20
-
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i < ARRAY_SIZE(reg_array); i++)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sdh=
-ci_writel(host, save_array[i],
-> > > +reg_array[i]);
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0sdhci_writew(host, tran_mode,
-> > SDHCI_TRANSFER_MODE);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0writel(mmc8_mode, aspeed_sdc->regs);
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0aspeed_sdhci_set_clock(host, host->clock);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sdhci_reset(host, mask);
-> >=20
-> > Given that we do this after the SCU reset above, what exactly is the SC=
-U reset
-> > fixing? Can you provide more details?
-> The issue is sdhci Software Reset ALL (0x12C[24]) cannot complete which m=
-eans it's always being 1 and not back to 0.
-> The root cause is when sdhci dma operates, it might hold some state signa=
-ls which is not well cleared by Software Reset. These signals prevent Softw=
-are Reset to be cleared.
-> This is a hardware issue so that the workaround is resetting whole SDHCI =
-controller from SCU reset.
-
-Can you please put these details in the commit message?
-
->=20
-> >=20
-> > > +}
-> > > +
-> > > =C2=A0static const struct sdhci_ops aspeed_sdhci_ops =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.read_l =3D aspeed_sd=
-hci_readl,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.set_clock =3D aspeed=
-_sdhci_set_clock,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.get_max_clock =3D as=
-peed_sdhci_get_max_clock,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.set_bus_width =3D as=
-peed_sdhci_set_bus_width,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.get_timeout_clock =
-=3D sdhci_pltfm_clk_get_max_clock,
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.reset =3D sdhci_reset,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.reset =3D aspeed_sdhci_re=
-set,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.set_uhs_signaling =
-=3D sdhci_set_uhs_signaling,
-> > > =C2=A0};
-> > >=20
-> > > @@ -535,6 +582,12 @@ static int aspeed_sdc_probe(struct
-> > > platform_device *pdev)
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0spin_lock_init(&sdc->=
-lock);
-> > >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sdc->rst =3D devm_reset_co=
-ntrol_get(&pdev->dev, NULL);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!IS_ERR(sdc->rst)) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0reset_control_assert(sdc->rst);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0reset_control_deassert(sdc->rst);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > +
-> >=20
-> > The clock driver for the AST2400, AST2500 and AST2600 manages the reset=
- as
-> > part of managing the clock[1][2].
-> >=20
-> > [1]:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers
-> > /clk/clk-aspeed.c?h=3Dv6.16-rc2#n71
-> > [2]:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers
-> > /clk/clk-aspeed.c?h=3Dv6.16-rc2#n209
-> >=20
-> > What you have here asks for a resets property, but that's not currently
-> > specified in the devicetree binding.
-> >=20
-> > So: is the clock driver not doing the right thing given we enable the c=
-lock
-> > directly below this hunk? If not, should we fix that instead?
-> >=20
-> > We can add the resets property to the binding, but I'd also like a bett=
-er
-> > explanation of the problem.
-> For legacy projects, the clock property handles reset simultaneously in t=
-he clock driver.
-> For new project AST2700, clock and reset are separated, and we add a rese=
-t property to the binding.
-> Hence, the patch won't affect until the reset property to the binding.
-> Should I add the reset property in this patch serious?
-
-Yes, please.
-
-Andrew
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmhVEaYTHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgmuJEACJBgobj3CkAve16FGrjD3Zh4+IiYSY
+J/o1/mJPvAyf5YhYEgQBOdqAn+w8jGBapT+RZ5ZlykRmPhjHcXIoxdi3Z7g6+u3K
+gG1ymQZVbFT3NcPv5+AZHzd5825wUJJkYrJoX4MpouK6hCmw5dDPK/Eu7yg6qmhj
+6bh43bt7LeZSL7KSDfGJXagYLhzVuFUI63/HSTICQz7mpd0/6qhEPW9qf4TEZZVV
+bZXXO2UYJvmc01VFiEk0nFyPKEMYMW1VUvPeAZn+Y6FpvkqGj5iyKgktbiqHwuYn
+BT3dEr3Io03pZn7ceuiOXF5eSGaTYvECeAx50vHvjIXwzITF9mqiNLQiEXA/hpHy
+D0RlenWbdauzgaB7gDVxt2Z+FhH9MhSmTWblFeVlFgKcZt+Oz+bQwEsIlzsnhi/z
+MaendoQO12/HMPRBx5LCzEwxxd+/jxUYullWCS9IYvwTErojLYCtTSsZ98XbqBd8
+AsXfOuDvKGNUt6/AL5H6shQWk2l8RUUPcP58W9CnO4eo+BQqQ2x5P0HxhsqTK8SS
+pU7de1jVOAsffe3D/Ee+t0/n2NFFWjIcQ2P45jLtDXsCeXVCo2hdHlL2VIkvGNiJ
+rKUWejs6zdwUg5Q3D+SX1yvi2TXaFZ30X95RYwiP8uzX+Hui5HwZcHtO5VAd2VCi
+hIODG5E/V6fKqA==
+=SVhz
+-----END PGP SIGNATURE-----
+--=-=-=--
