@@ -1,101 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D6A21FF29
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC7A221260;
+	Fri, 20 Jun 2025 11:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418178; cv=none; b=V17C2RZg3oKd5XC4jraptMZsIa2VhruTCeTtMvqZTM+h51RhbQ25J06uIQLScCZ8SCMyyXxbUqrD2loMEik6uL3NRpNzIHXmHL8E+PA07L97tOb/cPXnGk1hMq9ZYTeBK5bsYYdhqVkUYoXsLAJtC594Nz7qOcNZxpGCrwPu4Rc=
+	t=1750418213; cv=none; b=pVqbrdCEVCortInJrz4j1mE+WaMB2j/9HwXgMfnXB2w3kwek1JOMEs+O/8kCQsMKB9fcNtUpmWnOdwYPyBP6SaEvmBEfZ8uHTpvGLq9mrL1u8tOHc3YbTVT5UE17gYLpmGTpG8wh5G1DEUqn7wSQj1x7JASHO+cbXct7je3Hbho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418178; c=relaxed/simple;
-	bh=VpWF4/4W4NmQRZCNm2UxcqzHHT8ImMzvVW/eZ6Tt+Hc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WgG2mvgMko3MwqcZ6LMRYYgVg7PvPJISsfdt9GCRkS8v7/NeHspiloC1tyC/veDHhzL+xIo8YCdedd1Q+AAo922AYDceTTb+4vQhYmk/ZXQvS8h0MCC9FfbET0rA2X68n+O6X5eAbjeyeTWhTRW/iF/+LzaMWMuUiCNfSx0UvBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wg1+uUKP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750418213; c=relaxed/simple;
+	bh=7FV8atmM6ULayl5/hDZbPvE1HWgIwwZOidLt2BkSKbQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cbMnB/HgClhsIAjgVYQd2ATyn+kzaTBSXe1WyugJ2Tb3VS47lFXtgJ8Oaw5Bravk9LDIXek85zaV/3weMWRhhEgpbpbTidgsCAx4Ml7K/QPIhIEo9ksdBXBZ4LBC+dUl3T8hRvWxXzkCDyQH8cVtSQnsDvGNwQWM60NFqPY02wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i5qQt3Oa; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wg1+uUKP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750418175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0abdLyJa8VMRSoFUkI0FzGzOUZGFDdeAgxdmKWR9Zgo=;
-	b=Wg1+uUKPZySC6g97bvbqAUiYcXjlAh8tnMI1Hr+n3Wluj3SZoEEKp2PXaO4fhYu3E19dlq
-	lk/gV5zAZ+IksCPKsmMsRCKGgY9FBCQ6Bu4mATqVid8JltcCZHfjTLN3EbKg4iKYXgAg8E
-	KS9rW35REyUmOhc4zAPED626osMzhR0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-513-OySj42DhPYeXSJ--atzGxA-1; Fri,
- 20 Jun 2025 07:16:12 -0400
-X-MC-Unique: OySj42DhPYeXSJ--atzGxA-1
-X-Mimecast-MFC-AGG-ID: OySj42DhPYeXSJ--atzGxA_1750418171
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 294091956095;
-	Fri, 20 Jun 2025 11:16:11 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.33.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C391419560B2;
-	Fri, 20 Jun 2025 11:16:08 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: linux-efi@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Peter Jones <pjones@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Heinrich Schuchardt <heinrich.schuchardt@gmx.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] efi: Fix .data section size calculations when .sbat is present
-Date: Fri, 20 Jun 2025 13:16:07 +0200
-Message-ID: <20250620111607.984534-1-vkuznets@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i5qQt3Oa"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750418202; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=7+9nhCOVGIzCFiDtp94CVoN8wnMB/5TEpBypcppi+RM=;
+	b=i5qQt3OaXCB51bhe5MQbHz4GRPt2XmguQVrF2eG0mPYlI6arc/2rA+PaBLy8MC3rWgilSwP3g63QpgtajERmKnQcnyEj9WZ7kltXZ+vl1R/xKufZO7V8SIHHZ9vrp2zLm+ED4Mbwmm3m4NyIce17kkTTylZ9jpxQSG/sbOa2aBg=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WeKdQHt_1750418195 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 20 Jun 2025 19:16:41 +0800
+From: cp0613@linux.alibaba.com
+To: yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk,
+	arnd@arndb.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr
+Cc: linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Pei <cp0613@linux.alibaba.com>
+Subject: [PATCH 0/2] Implementing bitops rotate using riscv Zbb extension
+Date: Fri, 20 Jun 2025 19:16:08 +0800
+Message-ID: <20250620111610.52750-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Commit 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT
-section") neglected to adjust the sizes of the .data section when
-CONFIG_EFI_SBAT_FILE is set. As the result, the produced PE binary is
-incorrect and some tools complain about it. E.g. 'sbsign' reports:
+From: Chen Pei <cp0613@linux.alibaba.com>
 
- # sbsign --key my.key --cert my.crt arch/arm64/boot/vmlinuz.efi
- warning: file-aligned section .data extends beyond end of file
- warning: checksum areas are greater than image size. Invalid section table?
+This patch series moves the ror*/rol* functions from include/linux/bitops.h
+to include/asm-generic/bitops/rotate.h as a generic implementation.
 
-Note, '__data_size' is also used in the PE optional header and it is not
-entirely clear whether .sbat needs to be accounted as part of
-SizeOfInitializedData or not. As the header seems to be unused by the real
-world firmware, keeping the field equal to __data_size.
+At the same time, an optimized implementation is made based on the bitwise
+rotation instructions provided by the RISC-V Zbb extension[1].
 
-Fixes: 0f9a1739dd0e ("efi: zboot specific mechanism for embedding SBAT section")
-Reported-by: Heinrich Schuchardt <heinrich.schuchardt@gmx.de>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes in v2: drop PE optional header adjustment [Ard]
----
- drivers/firmware/efi/libstub/zboot.lds | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Based on the RISC-V processor XUANTIE C908, I tested the performance of
+sha3_generic. Compared with the generic implementation, the RISC-V Zbb
+instruction implementation performance increased by an average of 6.87%.
 
-diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
-index 4b8d5cd3dfa2..367907eb7d86 100644
---- a/drivers/firmware/efi/libstub/zboot.lds
-+++ b/drivers/firmware/efi/libstub/zboot.lds
-@@ -58,6 +58,6 @@ SECTIONS
- PROVIDE(__efistub__gzdata_size =
- 		ABSOLUTE(__efistub__gzdata_end - __efistub__gzdata_start));
- 
--PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
--PROVIDE(__data_size = ABSOLUTE(_end - _etext));
-+PROVIDE(__data_rawsize = ABSOLUTE(_edata - _data));
-+PROVIDE(__data_size = ABSOLUTE(_end - _data));
- PROVIDE(__sbat_size = ABSOLUTE(_esbat - _sbat));
+Test method:
+1. CONFIG_CRYPTO_TEST=m
+2. modprobe tcrypt mode=322 sec=3
+Different parameters will be selected to test the performance of sha3-224.
+
+[1] https://github.com/riscv/riscv-bitmanip/
+
+Chen Pei (2):
+  bitops: generic rotate
+  bitops: rotate: Add riscv implementation using Zbb extension
+
+ arch/riscv/include/asm/bitops.h     | 127 ++++++++++++++++++++++++++++
+ include/asm-generic/bitops.h        |   2 +-
+ include/asm-generic/bitops/rotate.h |  97 +++++++++++++++++++++
+ include/linux/bitops.h              |  80 ------------------
+ tools/include/asm-generic/bitops.h  |   2 +-
+ 5 files changed, 226 insertions(+), 82 deletions(-)
+ create mode 100644 include/asm-generic/bitops/rotate.h
+
 -- 
 2.49.0
 
