@@ -1,176 +1,119 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FCE21D3D1
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43E521D001
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 05:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750398996; cv=none; b=qzZejRoGcbxgnHKa2L2wwzNM4qTGFpGWFFQXKG3rR+5ydo0kGprTMeeKGaDaf3tNuNMH+CXDrK18r/1unnC39qVMpzDp4RDDUjBMCZ/p62xqYxI6/wkl7pPXAGhQ2n/llXF2GC0OMXnPE4QmBPMAZILJHi/2ma6rIzG3cyq4IGg=
+	t=1750399011; cv=none; b=Exdy3e9CrvDfIYsy3zyo08M/6Tm0Os5kXKVEumNKYTJmDw9BL57Ik+szGgRRX3ncaqGq7YuhlTki46T1Mc166R9bZpJZe68e2yWZiPRtFV6d58rHBqcBFvEhW/OxmzYYnwNYyr/g+zU9/DHVKX2pq5M9ZbeXZUXVQGFt3g0/oe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750398996; c=relaxed/simple;
-	bh=5/mWVtLGD24gCM1si9RPcf5SvCDoz6p53AqCSJC9PcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rFWPWBPicRXaA9UVUe2wHe9pd1NZPx6MzBJazIz4UM7IQSLroCI1bTtq5283TViGrrPmYZ5jSWWBu/ql6fv56QpAKamnQ88uM5PG+va7d3pburFPv9U9Rtl0Oq35JLAVPR9XwCCitMyaQFguBPBAdQTmtvnwFLtA8diShIHEWB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IFJWUep7; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750399011; c=relaxed/simple;
+	bh=QmxzrQ1XE5dR6+/jxjBGLJSVr0bsJPDR+Gf4o5oyzoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YZAFlNk1gACV1GG3q2n511DmsDOnhZVUtd9uz0U5w2f5bfpym+pSO6u5NglOTM4BuLEWNJuG/QB7raiFWxpXu1nadsKRKoz2XtFvWlIQjyj+ReIdmtGQhWt2oDLS/vS3ITmhIQU7MFyGteNlIgx7mqst1gqwl8f5dCIY14/BJS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZYhEyOZS; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IFJWUep7"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so296615f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:56:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYhEyOZS"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2348ac8e0b4so239005ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 22:56:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750398993; x=1751003793; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=6xdA68MYggUa1w4ukHSrMIxDEwDuDuAxvHXLdqvwJY0=;
-        b=IFJWUep74XQpWvrWThwcpOyqeIArG/WGF0RSkIDu3e8VXObyjJYuKDwCp8pVy63VsL
-         6qF7ohcrAtD1J5bMSVzRu1v0q6JM5rOh01GjDBaw5cTfuNXLkjYT8EqSg2lbOFGAPuxa
-         GcSYsFMBjTrE7Rqp2liQii/xE9OQe/KlOPoZnbR+rs194xvyVit7xCE4GB5RYJjiHM4z
-         Tf6Nh49ncqUgiErfWc+Fi7dN3+aNbGX4N3SQEFER8UzcCyhUyVAiMGH1MTXMh2Xk2ybN
-         hk++uQl2TbCvaDA4eUYw6B+MB3xHR5eSm4Jt4BrvdSMeZNTU74xbiWKiONDkWpzSfV69
-         LvuQ==
+        d=google.com; s=20230601; t=1750399009; x=1751003809; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wxpxNicPnor4y8vQEH+jSbLfvejhtfEVW8wIzxz3DXI=;
+        b=ZYhEyOZSkM1OUIRV4egrcN+wiFY1kKxeXSBoAnahtJoOZ07prhAQj9UmurMrycnBd+
+         EuS45OAO8HyD3YaobKxzQxo1fyVLYVqjoxaGc5zHuveyK9s8FMbZ5W8MZWsEOVxAoWtk
+         9B0KdTjebBjdTVCln3nGBpEIzjR7Ajh6WJh5SSfGU4HT9fsNwEnylLlKLmIi7uQG1Pg1
+         AKUbac8PGGKT0xLeFMCim5GuYMLV9wDgTPjWb7GIn3122/wOJalUvVH/07lck9nYlEWv
+         XAKA6K/VHpL3XMWd6HvDH3dp0Xs+hmFqbEtC/xdERunKqSSnna61paH6EzmMvWYZwM0v
+         zH7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750398993; x=1751003793;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6xdA68MYggUa1w4ukHSrMIxDEwDuDuAxvHXLdqvwJY0=;
-        b=qqatztollJHmaG1rptU3fCibdJH0n1WsyX27kV3+HBwDy03fv6mkOspdXlKEPIf9wm
-         m7LZTy2p8u+4I8fPj+xch3DyC+iGzwnWF9fDTSAvFYH8r0coXc1P99OWQrVrJdLxrPTA
-         bv1Ghcz9uybnKnb3cup9MA2XBAVRPciL/iqo+jm5OHoDhG69OM2TM/eKSkCNWqz3TYPd
-         x3mT4Mb41nw+sfRxRutuv6sma2AV5dQ9WOC+aMkG3adYSv6XXo4gzp6RUsZgFuDJ9G/0
-         yu7q4vCQRgA65GC7vfnMDg7OGXNSL3zk7sio/kmWDUMUJiXcvRpT47aduyIr1uaE+y83
-         2ToA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZj//KjEHK2AIt9QIECRsmUyJ+tSb+ORFVfMT4LOLRcqaMYQZh9X0tJbWJBNw+zsZ2nMHp/Y+Qjr7GAZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmAxPtxK/7DN0FN7zqpkKMLoF2wxs86EPxX7wAngZHpPM2Pghl
-	HyviboIaDbXrNqUkpldTFNPH9dRTn9fHm3ZeE9s/N5UEH0+qT+bmR0PjQN56ym2Qyvw=
-X-Gm-Gg: ASbGnctC9bT6G9X8DAgcYs7+2pvRETAInGYnNXJcr7BnL8idCLghSHERUFLP+xokc1u
-	TjksUd10JBjqslN/llS0bPJQgNS1sAFGRROe4WiPgqDVA3OSNtdJkTU5ylFeggqWfftnwKfKaqo
-	l543XyNPI//lbBr6L5tyDc3crDAPN0DDgnkzo+5PdEIKMdIf+RDITqK7CLa98Gu8clVXfXt6H9L
-	ZVNuCVkO5CCRvG67v3/mhDcDicoQwKMZZSWcIYogbnZi/6n+jiWOQkus2CNi9h7/Xgsjs1fPM0j
-	H4pA4wYjTc9XV/rJC8wr9wXRrq6aCqJEkJvGLjA4/sS9ZEdSv58Y/1L2wszpsNqeThQp7ztEDTI
-	G2kf/AG8=
-X-Google-Smtp-Source: AGHT+IG3gZgWQ6JAyDSzJW9KbdQ4hIpZgLdkML6+8ZihoNGPY7Ys650erfeEVxWvpsawBniEN4L/cg==
-X-Received: by 2002:a05:600c:a09:b0:453:c39:d0b1 with SMTP id 5b1f17b1804b1-453653ba8cemr4510965e9.2.1750398992874;
-        Thu, 19 Jun 2025 22:56:32 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45365af83easm9867515e9.25.2025.06.19.22.56.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 22:56:32 -0700 (PDT)
-Message-ID: <6068badd-8d33-4660-aef8-81de15d9b566@linaro.org>
-Date: Fri, 20 Jun 2025 07:56:30 +0200
+        d=1e100.net; s=20230601; t=1750399009; x=1751003809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wxpxNicPnor4y8vQEH+jSbLfvejhtfEVW8wIzxz3DXI=;
+        b=MB0B2QvplncnwPBN6R7TqL7kTXfYGwWcR3YwPD729t9lIzfSPybCL26wXrIiEKD/R/
+         pMeyT/CQ2a5PLVNbvZ0Pn6V7+lnrKQaO/8av/c99TKoAyYbSr9tq/++A4sqtK3YcnNgg
+         36LyXbdMHHFLtSc74kY0F7POACIqB+7TzaYgXvqofT4qVmqdCnZhnasokfPxkEz9BIJB
+         HUlSY2E5XBqaZnypQPLwVZ0KYzQefn57KfnFU5VlIXi13TI46D9eYvo6QD0lwVzP6Mf8
+         SgJlk1T7uOsf0YY8pBK5Ms+fE0w5NWZz6fx90fHPZ/87m8hpDlgx3c/kvpVU66TJnCqu
+         mwJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOZEgcgzA2AwWEI73MOWS42rss18JbuNFb+m2JflnmJTpeM1CxjOSiKcNw+EFEgveIGz3CBT4XMZK8Dy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyciXeFfiZLny4pdci8hFiW9z4F5HxCjw6g6BPcqfzSJdjjzL6j
+	Ss0heV4EIZuoRhjiFimoBM0bKpJZgvJhyvvD9acR4C7ExjYIlAFGmO4oxQlRmVQ9IRakDpEIRl/
+	NGc8LWqo/0ZU3PNfwlhfDiRdkcHc4V/zTaouNYMw=
+X-Gm-Gg: ASbGncvWkh8MMrh8cwtrCp970Wn4ulOkb0dXHWBjUipvc0FirmSgsxXxexI/7wt+sbz
+	qMsJifUhdePoanW7W0XxkqOOOrGz1UGW0l87ugMSP6y7kEX00t27x1nMRuve263VdIbdWr9qfh7
+	+wbkkO5s5ogaggAsc+PdKhF/p8Pok+woznfDzcfydX
+X-Google-Smtp-Source: AGHT+IE0fbJcpE3a5EWlRlBwzmwzf74XJIWhUKbxVW9udfBkda1c7D5doedK1kwFwVY18nvlCbeXmzQvOHd9GK/23H8=
+X-Received: by 2002:a17:902:ce11:b0:236:9402:a610 with SMTP id
+ d9443c01a7336-237cca9ac6dmr4107045ad.22.1750399008899; Thu, 19 Jun 2025
+ 22:56:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: clock: qcom,sm8450-videocc: Add minItems
- property
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-0-02e83aeba280@quicinc.com>
- <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-1-02e83aeba280@quicinc.com>
- <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
- <5ed72663-da54-46a4-8f44-1ceda4a7d0d9@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <5ed72663-da54-46a4-8f44-1ceda4a7d0d9@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250618132622.3730219-1-richardycc@google.com>
+ <n6sls56srw265fmyuebz6ciqyxqshxyqb53th23kr5d64rwmub@ibdehcnedro6>
+ <CALC_0q8-98y0v_jV6QOFTKRAGhJ4nCXZ=q9wutLZPCE0KnKymw@mail.gmail.com> <x54netqswex6fpv46nlmeea3ebnm32xnwask4zxw7nmcn7tqdz@4mu4hwsa7hsb>
+In-Reply-To: <x54netqswex6fpv46nlmeea3ebnm32xnwask4zxw7nmcn7tqdz@4mu4hwsa7hsb>
+From: Richard Chang <richardycc@google.com>
+Date: Fri, 20 Jun 2025 13:56:36 +0800
+X-Gm-Features: AX0GCFs5Hupz_gafVprFl7uNHbD4US3FsNSuhKS2U7_w7YEQD3JEd08YVfAk1SA
+Message-ID: <CALC_0q-aRtNS8c00nCD0key27UH9-_2kW=PoXQKrLQ5bg6MU_A@mail.gmail.com>
+Subject: Re: [PATCH] zram: support asynchronous writeback
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>, bgeffon@google.com, 
+	liumartin@google.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/06/2025 12:20, Jagadeesh Kona wrote:
-> 
-> 
-> On 6/18/2025 11:56 AM, Krzysztof Kozlowski wrote:
->> On 17/06/2025 21:07, Jagadeesh Kona wrote:
->>> Add minItems as 1 for power-domains and required-opps properties
->>> to allow this binding to be compatible with both single and multiple
->>> power domains.
->>
->> This is your hardware, so you know how it works thus I expect here
->> arguments why this is correct from the hardware point of view. Without
->> this, it is impossible to judge whether this is a correct change.
->>
->> If I overlook this now, it will be used in discussions by other qcom
->> engineers, so unfortunately you see, you need to prepare perfect commits
->> now...
->>
-> 
-> These clk controllers mainly require MMCX power domain to be enabled to access
-> the clock registers. But to configure the cam & video PLLs in probe, an additional
-> MXC power domain also needs to be enabled.
+Hi Sergey,
+I copied three linux-6.16-rc2.tar.gz tarball files as the data set.
 
+Test Flow:
+- mkfs on the zram device, mount it
+- cp tarball files
+- do idle writeback
+- check bd_stat writes 185072 pages
 
-Then your patch is not correct. Anyway, you should explain the hardware
-in commit msg, why this domain is optional in the hardware.
-
-> 
-> Since the initial DTS changes only added MMCX power domain, this change is required
-> to be backward compatible with older DTS and avoid ABI breakage as discussed in below
-> thread.
-
-
-So you send incorrect hardware description allowing something which will
-not work? Or how exactly?
-
-Best regards,
-Krzysztof
+On Fri, Jun 20, 2025 at 12:15=E2=80=AFPM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> Hi,
+>
+> On (25/06/20 12:09), Richard Chang wrote:
+> > Hi Sergey,
+> > The main idea is to replace submit_bio_wait() to submit_bio(), remove
+> > the one-by-one IO, and rely on the underlying backing device to handle
+> > the asynchronous IO requests.
+> > From my testing results on Android, the idle writeback speed increased =
+27%.
+> >
+> > idle writeback for 185072 4k-pages (~723 MiB)
+> > $ echo all > /sys/block/zram0/idle
+> > $ time echo idle > /sys/block/zram0/writeback
+> >
+> > Async writeback:
+> > 0m02.49s real     0m00.00s user     0m01.19s system
+> > 0m02.32s real     0m00.00s user     0m00.89s system
+> > 0m02.35s real     0m00.00s user     0m00.93s system
+> > 0m02.29s real     0m00.00s user     0m00.88s system
+> >
+> > Sync writeback:
+> > 0m03.09s real     0m00.00s user     0m01.07s system
+> > 0m03.18s real     0m00.00s user     0m01.12s system
+> > 0m03.47s real     0m00.00s user     0m01.16s system
+> > 0m03.36s real     0m00.00s user     0m01.27s system
+>
+> Has this been tested on exactly same data sets? page-to-page comparable?
+> We decompress before writeback, so if the data had different compression
+> ratios, different number of incompressible objects, etc. then the results
+> are not directly comparable.
