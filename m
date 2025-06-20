@@ -1,70 +1,70 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76630241116
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FE9242927
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750460518; cv=none; b=HXMtIUcMSpO9uruZN6aoOAgp2CQfopR4u+I6zXxWJvJpnANJxK/bHek8fpoNNix6EIV067IMSh4E2gWHseeVseA55IFXaaE9lNbk3xslW9+pNVAjdXkBcDQflhx+bEPtReN1/fPsVEvbrSZa2NF8FeAmACOFjgl1HuFclIARd10=
+	t=1750460520; cv=none; b=ZM5bm01gTXgrGpfX3NjaXseJ+kZlFQNQnUYsRNfarycqwwvPHUPrROi8hnnrW7Zq6i8tS2IlyWkwG1eylnKf3rgwcvR6F5/xaKPbu62l4NEhUAmY4WC8UfpsZ2wKL0JC34ExMdAoz91NTO3JEnHRsjz3QDLWekRg7jsVY2+iYrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750460518; c=relaxed/simple;
-	bh=hZF2/K5LUC1X6Ro6SUAnPmnqhWHkrsl3oAupIaU8Ibc=;
+	s=arc-20240116; t=1750460520; c=relaxed/simple;
+	bh=1zDua3kfs+AWNrJS2QHWoGx4JHS3YgeHabYItBYVWXE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jy7XwYPtIEPYkZou/4ZgeAVx2zVHAHev3obb6p89mwbZErcsIzQwgSCXWK+O42Q1d3et1de0nL1t7lPO5kyYRVLG4wrOk/jO5fcddROYgt5lbPtngrSOKW+RyxnEBzW5CNbrxRXQAGo8MsyQmCTeUtu3ZVpn1rpBIdNqNWO3v2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXiXfseC; arc=none smtp.client-ip=209.85.219.181
+	 MIME-Version; b=XJzplWWsxhkdUZIkIwdwKcFZ0bS+SVCDIM/dH4vP7Mi9gMZc6pUecD+XKeBYEETiuldpKdQWlKAjKXxtxdvyX4OYVgbFBmXJBM5NEOaiOjd4YbEnfZaeHVWLpP/5Cma2a2SvnCpxCUEDZ32wL1ihHnKUnZXdGngt+gUA7wUujSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nON1KO5Y; arc=none smtp.client-ip=209.85.219.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXiXfseC"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso2224990276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:01:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nON1KO5Y"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e818a572828so1774419276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750460515; x=1751065315; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750460518; x=1751065318; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wo2J4qkP1GaTlr0PKOfpFx/Fh4KIdWYU8BmTs1ZbZs0=;
-        b=MXiXfseCGIQ6E9h5aK65cSeGNDs4b3E9VTEYeTC59zGxe3jmOSu02WHALWXn+bdIz1
-         cbX0Iq187J1kLtP1Jm3fplpLmhiED0EpYb5yrxFstSTmngefoZ1XufcxEH1awRgxMbGt
-         hJAsIHXcgEhYIbRYpoLxvQov0O8dBlyRMaxmTCJmE3Jj1eIRHUQEOoSGspBECk+xMIfq
-         lXsq0dKcK5FulCm5Hq36Od/XynJKfYECc26W5USfSYdi8KwlG3n7BknyzJPj7yeFtNB6
-         L1Lr6I/QzUHFFeR16K/ZDdgUIEaYZeum2872aavqP1+CT4EbKAkZLnUA4uY/txEJ8YBT
-         fV2w==
+        bh=d54D6hE532iClrbhRqB5gQBbclVOCF7XOr3ODdKOfkU=;
+        b=nON1KO5YMuLGSn1JmqYhWY9c3R3tD5xmS0XxK5SicNUBVP6/2KfviKo2cbAql7Azhg
+         9zrQN766wxBYbua4N5QjEKU1icP2AIFr6QHi4G85Owno8+uFWciRYNOBkwIJvWQ/VcXV
+         bRqMsRy35vd8LgYzRo4Hgh6AWGndjn7M+N5pWA3fIWmBBS4cvkA9rcqF6bOzo18CFH43
+         HhdJVTl7x3PNEcamfVSE9ThO0vEj4v0SjqkDKElzJ3Z7pbC0RcDtsxEsmQOwJszkd4wz
+         uitaZLdoQTNhzc7SgP0lQnAAa/7FgigCeR7A+Ws9Nl/WQV78aj+5IZU6WbPCUKcj5Klc
+         RANg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750460515; x=1751065315;
+        d=1e100.net; s=20230601; t=1750460518; x=1751065318;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wo2J4qkP1GaTlr0PKOfpFx/Fh4KIdWYU8BmTs1ZbZs0=;
-        b=xCAoTDT/JdMbGj26pgHppnmtnRgT50ZjoTZoNonewjcziKfQuOxzANVw1ixQK1q3Un
-         RHQ2P/U7IwUcp9dBule37gLkZpM+20PHwKlhsQ016ct4hm0cLHyxKpSV/PgJ+HeDnON/
-         Pr470oa/Y2EdLyiLzfCn9kyEjBoSGKLzPI6Qnbg/cHCJ36hJYfCe6C//RmnN0S5c/ge3
-         H/g0KAfTtQpGBf4SLf3fj6TTb63MJs8UL1NzEKyiwAtmwGiz+hr3iS15JZ7nrOOzYqWw
-         uftDPtdT2kfQFU1Q7vwQkTahPbufRzAkKCBIIrCyGL2CkRdOQJV6gEtL0L9UhZJmfBPx
-         6kUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXS/HE//4NjmIqCh/Zv9hWOY38Y938mvrizYQ8z89eEwoJThsjKDxSjHQ1UfPvDMu+Olch7k93TinqdKSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj3JR2scLiyuR4jEzz0Fg60DO184gYPwNZBXTVIMZgjtogb7Mz
-	muNoCF8kuK4NArqUENIJ42CE4MYm1j9X6kF5om3u9oja/pdaVWmF2NBo8P4Tt0qT
-X-Gm-Gg: ASbGncvloTCX5/k9ojvWBFzeDuc3D1QM+NQieyhWEXH7XNbZK9dQErFa/RUw8QaYOjw
-	bh3mvZLCvrJXAyzIxVf70SwOuJOERost/tKz5Mu3swE+LYSHCfyN9LiSTX0Z4CuHpckvd8vegCh
-	I1rCJ1ZsgGUvmREMTRA8PQSskChrNQER26k0GQu6abpdoDXOaXgp0aYKCM0unhdEMVQS+x5IcAB
-	gUFFbSHK4t/QV9y6MJgPo5/rzmdIDvZmeg9pcApRv5zyTxAfgxt0jmoF/ukynBJe3PjJYgdgnoh
-	MpWg8iu8Jxos8uYJU1P0p/Ipx8bV9T68IUW0tzK+ZX9O8QU+8PFzYY3R9Ql+fztcZhRgkjLfVx2
-	fyc82V+/01Hsl
-X-Google-Smtp-Source: AGHT+IF0TEeCkxpDfY5j2YO0G6N7o+6FuOVUXfs9uSl0UmsgqRFjr9EOr1Ys462MhWHZjCY+J0brVg==
-X-Received: by 2002:a05:6902:18c3:b0:e7e:fa65:8fd8 with SMTP id 3f1490d57ef6-e842bc88d84mr6273130276.17.1750460515297;
-        Fri, 20 Jun 2025 16:01:55 -0700 (PDT)
+        bh=d54D6hE532iClrbhRqB5gQBbclVOCF7XOr3ODdKOfkU=;
+        b=Mr7ZFY6aT7V86gC7My+9Na3Pt8CZ6DwKGRv22ZjG2nrCoi3SHYWUnm1A/5YuU+oF/r
+         VkYRq4h/oiQ7dnAjAShZXrBNW0j1LNisHKrSyiKg3EXxaTwKXzBGGepqMB9e8QC/ZLsA
+         B9kFZKpB6n1HYkf1JeSUsWQ+Rw7Nsrt7HaeTVOfKMlzcAwluuPEDlq93fVdlJFCPlS3l
+         K9O5Ko+P/rUyk6uQpIaYBSE1oXR1wgs6NUpjDFcZa87cysYJNJRval5c3DevnjffzVzu
+         Rnlr33KAXx0/1Uk+9/g5g+hOMYAwNmJYon9ahOEm3S0yfFYUV/QfK/2dzONNAlZ9xdr5
+         wuPA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1GWRm1l7VECsP6eziGl0bL/pyWds0IjhOH6Qi1O/mrTvB7BLx4GqagADXDZ4CajsWGJkER8si1mY29PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwduXDCRlt7QWHQxEtpnwRhcTn8yslGrI9te/tnnc/hTDTr4ots
+	Iyfb/1f/L9UdTCZKWDWbcEsRPILjNE8UMnPAv0/V9JtGdPlYf3l9jPG9
+X-Gm-Gg: ASbGncvzKsFPVCBA3kt5fTzkWsDHVlycaGWuVqtA0GWs91wEW+BCX3Ie1AuPk077XLs
+	yNHosIIFBLBBNkBMKem/g7QrvB9QenP4xTw2Eu2aKdp2P6BbBgbDckCgQxe0p2jw67rt3uG3KAd
+	AjBe4ANVdNkvYhDyhZLh6Xl6N5oetjCMXXoduOmPQcSTHJfoZXz4qTRf7v5t2zRTFGP8KEFCtCf
+	cxPxE/nZbdNlHDL6X5OFj06XSzQDLCe2xh2pS47LXRmQQefo1oECSeniBeQSycjg6jiKt0/mmhK
+	wgb6nnRy9033FXeq6lt+SJjgyLIvZnK2SLwwQXgpGOqCs8XrF5kcP5T7UvwmhDt5JzQKXrjVIV7
+	DTQ==
+X-Google-Smtp-Source: AGHT+IEYnfAsarGvjhUKLVc06gyJ6C+12pvVnF47nOegJohz0xkXS9e+NgVaDChg/KSmyB9JBuTSfQ==
+X-Received: by 2002:a05:6902:200b:b0:e84:1bca:f21d with SMTP id 3f1490d57ef6-e842bcf2509mr6789860276.25.1750460518156;
+        Fri, 20 Jun 2025 16:01:58 -0700 (PDT)
 Received: from Slackware.localdomain ([191.96.150.102])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.01.52
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac984b4sm893270276.48.2025.06.20.16.01.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 16:01:54 -0700 (PDT)
+        Fri, 20 Jun 2025 16:01:57 -0700 (PDT)
 From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 To: dan.carpenter@linaro.org
 Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] Replace pipes with a binary for cpu core count
-Date: Sat, 21 Jun 2025 04:08:50 +0530
-Message-ID: <919ba691212bbc1436ce1f54ad072caf73c13022.1750459100.git.unixbhaskar@gmail.com>
+Subject: [PATCH 2/9] Looks nicer in usage output without the full path of the script
+Date: Sat, 21 Jun 2025 04:08:51 +0530
+Message-ID: <afef23e087d4ea73b1700b1effacdcaa46663d35.1750459100.git.unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.46.3
 In-Reply-To: <cover.1750459100.git.unixbhaskar@gmail.com>
 References: <cover.1750459100.git.unixbhaskar@gmail.com>
@@ -76,26 +76,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change the piped series with nproc binary,hopefully for better readability
+Add basename to scriptname for the clean look of the output.
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- smatch_scripts/build_generic_data.sh | 2 +-
+ smatch_scripts/build_kernel_data.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/smatch_scripts/build_generic_data.sh b/smatch_scripts/build_generic_data.sh
-index b18ceff8320c..c88ad3fcfc0f 100755
---- a/smatch_scripts/build_generic_data.sh
-+++ b/smatch_scripts/build_generic_data.sh
-@@ -3,7 +3,7 @@
- # This is a generic script to parse --info output.  For the kernel, don't use
- # this script, use build_kernel_data.sh instead.
+diff --git a/smatch_scripts/build_kernel_data.sh b/smatch_scripts/build_kernel_data.sh
+index 87f1f0639c55..c338da6e43e4 100755
+--- a/smatch_scripts/build_kernel_data.sh
++++ b/smatch_scripts/build_kernel_data.sh
+@@ -6,7 +6,7 @@ PROJECT=kernel
 
--NR_CPU=$(cat /proc/cpuinfo | grep ^processor | wc -l)
-+NR_CPU=$(nproc)
- SCRIPT_DIR=$(dirname $0)
- DATA_DIR=smatch_data
- PROJECT=smatch_generic
+ function usage {
+     echo
+-    echo "Usage:  $0"
++    echo "Usage:  $(basename $0)"
+     echo "Updates the smatch_data/ directory and builds the smatch database"
+     echo
+     exit 1
 --
 2.46.3
 
