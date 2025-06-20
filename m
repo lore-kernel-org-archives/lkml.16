@@ -1,104 +1,104 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7713430E837;
-	Fri, 20 Jun 2025 06:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA19121FF58
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750400756; cv=none; b=SQPSODkyrrdSce5F1hHMpsCm85x4dJbbctmMqOkj/Gna6EuYBHpe1DdDf6ilYZZaoXz1AlqiVgXAX+ESzqVKhtsi4DADhUx7NFs/6r0quBSBKAceZiJ/J4B8lX2grt6eP74uM/rRN33OcSPkKLDxeiI9Chp02o078RvaCe4nZ1E=
+	t=1750400794; cv=none; b=LJtPIKmFNXYcKyy1rlX72DNUkeB6sM6YYcEPUWVZqeBuEQbocYlv8CL5vtlfq7PpQLQFD86pxJvQGjfAIeyhV3oEPPZX6OFfGqqKEaTEWBel0tOJ2CCq2CyJbmo90cXKgdiXOAzEmS99Bez18KGjrkt17vsufQbeWKLjfoG+OKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750400756; c=relaxed/simple;
-	bh=HeuYZMsC9WsSiMUpmqqe0M3z0iwrxrWn7R8Czqja7Co=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DYkjamto25uNhQ6vJmGK5nHhsXquQ1Gy6cMU4SiAjdDa4WSANX8VV0Mqm61ENCx+FhsEAQbttHmqMcrY5KATgGJz7U5Bwy4bgX95qm+wJlNDt0++H96GKOBNch9LfQ9VWKe6SHI1cR16fYS+U20ETArFxZ/e/U3lEFbe70C2t8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=KXifEzUg; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750400794; c=relaxed/simple;
+	bh=nfv7fyyMGgpGBArq4sCElYAOSU/nRvtwEU+IIzRH2N0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dWfmkvbybQ3dJV+fJS+yZkXszc3PlYdGuzqDWQyfum7acncrKj4aEuKIP6PNKZDuBigbl0qPvl4dToCEmgStCHPIXE2PEyNcP/r5wkVg/r9bGwZvBAZUzVtomHRIF0yNBttwjbGcNkhXGvVK1g4TrGhrx3WJVPYQ3ohcsuBMzSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BR9IUD8S; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="KXifEzUg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750400750;
-	bh=HeuYZMsC9WsSiMUpmqqe0M3z0iwrxrWn7R8Czqja7Co=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KXifEzUgUP5oogEUgfxYXUvo0+ZE4B6Y5AjhwTwC0AykM3w1FC+7pF+jUWSMhzefL
-	 CivXgonieQSyHUacztzurorFb4fwwccraax9Co1aXrXO6nuhh0NNBmhPqvfaWTZdof
-	 SPZHhVJmY9U6ePBcvZWfHZjsC46HUTXbBhf6SffmywGIztUrqb/+dKpzmCDZThHs0f
-	 wBHMdv6ljIYj+KEulcdDMQmqfxqi++QThGq6i+pjVphzUPvpGBwNCPVCZKumLyVBpk
-	 7WN+lIe3s/FXcT9Pbd5Y9tTQntf9e4iXVpxbvy6Wxyo2ws8jgJYWMhpgyxEFy4IOqc
-	 bV7vT2roNn1ZQ==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 44C7664426;
-	Fri, 20 Jun 2025 14:25:46 +0800 (AWST)
-Message-ID: <8120f04c23f14ac48671a0af45838536a4600e98.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 1/2]
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Leo Wang <leo.jt.wang@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Kees Cook
- <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,  "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
- Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, Leo Wang
-	 <leo.jt.wang@fii-foxconn.com>, Conor Dooley <conor.dooley@microchip.com>
-Date: Fri, 20 Jun 2025 15:55:44 +0930
-In-Reply-To: <20250618-add-support-for-meta-clemente-bmc-v1-1-e5ca669ee47b@fii-foxconn.com>
-References: 
-	<20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com>
-	 <20250618-add-support-for-meta-clemente-bmc-v1-1-e5ca669ee47b@fii-foxconn.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BR9IUD8S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750400791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YBfXFz4P2bTTX7NrGjRC7/OUsN+WdybtXffQ8S+mwq8=;
+	b=BR9IUD8ShjY1FUTqTEZNpPQ8sOZlMwfHavTe8eOl/fwDKBO1cOKqrF80p40nDW6oNI6m47
+	rkZNhBiCnTSXHw2vJYG6QBxM54Zibu8se1l8jw4rzmovghmKkWCHl2vRXtwYTBqkMiCKJl
+	G8i8iPpVxePNWuTd9L2sl2nEbjcm04s=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-EDJ9_kkjOrWu3v0bgaLXQw-1; Fri, 20 Jun 2025 02:26:28 -0400
+X-MC-Unique: EDJ9_kkjOrWu3v0bgaLXQw-1
+X-Mimecast-MFC-AGG-ID: EDJ9_kkjOrWu3v0bgaLXQw_1750400788
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-31218e2d5b0so2433730a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Jun 2025 23:26:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750400788; x=1751005588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YBfXFz4P2bTTX7NrGjRC7/OUsN+WdybtXffQ8S+mwq8=;
+        b=H3mffV8J9ft+0zlGVSEiQG6WL4OGzq7aTdc1Y0IXDZrq9B/43o/YtY/9iQH0qN7aEx
+         0+TTBfHc/ee3rAjxSRNdxmIrxOUYBRKwOd0yo2/1EMnqOwp4Nn/se3ZMCdjBJJXM0kXG
+         jFz0SxpzKEtZHCmiva6IEizGoQ6VorvhGZIqd2foBdQWBTbxgZPZ9q7ukJqm23conPzU
+         fwa0pwmEIRRNzYcGwq5OLAH+nSoN4FpH8jggU35fBQNSsGDkMfqfwDbBn8jC/j+uTC2w
+         8L9JBOV7R39pd9sP5rfZSH8chgs14v6/eBW17VEHYbkZ7T+S61nv1orIbOHzz3z/SY/r
+         AK9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWq2hxRdyGC3Cein2V/bby/gRWMCM5xU04goAyJj6g4u22hDt0hQDAcqjs8XHqVfu840D6ePbu2k0xnVsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws/w8VfQ9aeNrKX81+4RPrPVIxGSR2HNQ25whW0FSVvtnoNH0j
+	aTTIiS2s85XLMi3Y3erk3WwOoBRpcyVwkRmUYfMbGT9D/vwtTTWsFodh7/6gmpmsCNUZ2C0fPx+
+	GOETSCMRux3KrBqao45HtL9asbmbjO6XS9sCXXZndNI4E8tw82vDVhM4CzOoQ85qBlya2YS1yNc
+	O5qMAI9WnNmoK7/w87fRqkQYNorqTFjuoGjUcJPsaG
+X-Gm-Gg: ASbGncvAWNXxiGLU7CAY8fz9tiSDG6nlxcZmVx6u77yFPg0rBXXfrGGtHLNlxNSuIkD
+	WS5WvtLodwKC3eMu6xx4LENHIM67Que5ttP6/KNvSZca3TQbj+rntglAmQmBsZl8lDtK+m1TK1r
+	Otqw==
+X-Received: by 2002:a17:90b:5685:b0:311:da03:3437 with SMTP id 98e67ed59e1d1-3159d8d8913mr2634784a91.27.1750400787915;
+        Thu, 19 Jun 2025 23:26:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrfSt05c3qwaOpwK1EXvMYLkUyiY2ouZ/WY58fueqk/Z4N/CP07OyfnNOzZ6tOetmvre0TZnYjmVeJdD3H3Ao=
+X-Received: by 2002:a17:90b:5685:b0:311:da03:3437 with SMTP id
+ 98e67ed59e1d1-3159d8d8913mr2634757a91.27.1750400787571; Thu, 19 Jun 2025
+ 23:26:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250606115012.1331551-1-eperezma@redhat.com> <aEZ2SYAXdqffWoqk@infradead.org>
+In-Reply-To: <aEZ2SYAXdqffWoqk@infradead.org>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Fri, 20 Jun 2025 08:25:50 +0200
+X-Gm-Features: AX0GCFtY271naYjEH-Rfnmg4mrMPUjzaTJaGTs06KwU10BRf_Xo7vYV5K9mdIpc
+Message-ID: <CAJaqyWek+ckdXFZdhpcXwDB7a5X=PMSktEADVpR5Nbi-n+MR0w@mail.gmail.com>
+Subject: Re: [RFC 0/6] Add multiple address spaces support to VDUSE
+To: Christoph Hellwig <hch@infradead.org>
+Cc: jasowang@redhat.com, Yongji Xie <xieyongji@bytedance.com>, 
+	Cindy Lu <lulu@redhat.com>, linux-kernel@vger.kernel.org, 
+	Stefano Garzarella <sgarzare@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Maxime Coquelin <mcoqueli@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Laurent Vivier <lvivier@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Leo,
+On Mon, Jun 9, 2025 at 7:51=E2=80=AFAM Christoph Hellwig <hch@infradead.org=
+> wrote:
+>
+> Before you add new features to vduse, please remove the broken abuse of
+> the DMA API first.  Without that no new feature work should go into
+> this code.
+>
 
-The patch subject should not be the path to the affected file. Can you
-please fix that? Follow the lead of other patches that have recently
-touched the file.
+Hi Christoph,
 
-Thanks,
+This code does not touch the DMA API at all. Actually, we could even
+remove all the DMA code and these changes would work the same. Can't
+we just continue with this series and remove the abuse of the DMA API
+in parallel?
 
-Andrew
+If you detect broken uses of the DMA API I've missed please let me
+know and I'll be happy to remove or change them.
 
-On Wed, 2025-06-18 at 17:40 +0800, Leo Wang wrote:
-> Document the new compatibles used on Meta Clemente.
->=20
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
-> ---
-> =C2=A0Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> index
-> 01333ac111fbb076582a6c0e801903c3500b459f..ff3fea63cecd99ec2dc56d3cf71
-> 403f897681a98 100644
-> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> @@ -81,6 +81,7 @@ properties:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - asus,x4tf-bmc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - facebook,bletchley-bmc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - facebook,catalina-bmc
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 - facebook,clemente-bmc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - facebook,cloudripper-bmc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - facebook,elbert-bmc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - facebook,fuji-bmc
->=20
+Thanks!
 
