@@ -1,450 +1,227 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D5330E841
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750419305; cv=none; b=JAn4S35dD7o1lF1ZNIMOpUCAl+q7kymPW2I2/lLh/w0MGaPua72WWk8ougdQNMj1+6e+hi22l006Cmw1+0nkWKLzHmH3Fe6+OscRTfinfBtxU/PF1wYzfyMYCMUoLCjM9Q57kuc5P6eieAN1r6PyEc9NSA1F+E0oco/QcXQ+BHo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750419305; c=relaxed/simple;
-	bh=C5K/F1laE9qdNLGB8CDNTMrSsKsYcDWEdnytvsjaSfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EqsPdNTXxQBbcj5q7SKg7IlQZTSZ3oOtj0K+CZZl1oc7c7nMr9qwIZ4169Kg+Gd05aRwI80YlUmexUFrvOLU45W3W+pGZcsykpFC8K9khmheOcTZZpsHb1Q8eKuMGa8C2oC+zDsa+TiJV+cvlrsBfto4uyyEr9nTRCSOVqKsGAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KUN3ft+L; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED30263F5B;
+	Fri, 20 Jun 2025 11:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750419338; cv=fail; b=Du9JypC/V/IATiJdE1V/keclctAO5J/fDtBsewFqdS9oCrpPq/SD3Y8AQrQGq/DioMoggqF5zz2hDckI82LLQmjL4cSKv7X0GlpY41VicoGS7rvULP+CbIOPh3ruA76nIpjexw19Jm0zj/OABHKl5Zh51cCCG9jvSFn4LSZHPko=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750419338; c=relaxed/simple;
+	bh=i0HNpKk8+B1tYmhqORup236KdKMngFeGMRQleY3hucg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nNY7f5IKOyFQ8hUofb1s08whAkYIXkZ+BZpDmhdo8lb9mgiHxacac3ovL39O0fJGwvwEwiRmyTwbZaKt6Gry49yy4+JLCq5B/1zLHN1sWEH22d1uq2tR0s4Or6Wmdqy4pw/8RhLBe2L5qMPWfdXOkyMVIbmwo3tedpS854DZ/MA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=MZoUwByq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aUz8SM4y; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUN3ft+L"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450ce671a08so11090745e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:35:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZoUwByq";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aUz8SM4y"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K7fdIi023111;
+	Fri, 20 Jun 2025 11:35:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=45OU25aWxCF7jmJjhac4Ii5JRMbeUsdRmYZ03qFBDkQ=; b=
+	MZoUwByqlJodH8DwrE13sFTFh0fcwxSFQujxErJso4BTwUWj+7u5GL4f5jfJEDy+
+	/FVFDDvCPPPOXdJfoisrvz8Gtz8QJHo8gSTsSKP+dXbjYUZSy4wexTf21nSWZGfC
+	B3geH4pDz0YX0IURjUs0ewS172B2xQL+bBIv++scwoxwZFYdvx+Mqe5zN0Rpn+B4
+	O4WFk9D+hfJdHKDUIAwVqt4mwCVWGQ11hiPAalEPqddUx4Wqk2SE8SCwMuwG2Du8
+	vvNmy1kpum1d8PH5gdzebuuSkujkxk3XaAP67sSVTWztJXVXxp+38Ik1sIdhh201
+	CB5O8EG/duUDE+ATm2YLUA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4uhew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 11:35:13 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55K9S585038549;
+	Fri, 20 Jun 2025 11:35:12 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2057.outbound.protection.outlook.com [40.107.236.57])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhcu0vg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 11:35:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iHkwEcM7yPj3Hdq6m2y/KOGr+fPYAd7Z20EpxlkZOmqnwBkkZS8k46IPnVuwHu8PzpUtcY24dTUJNz24/N80bvqH+EC8+B1SYTe+bqS3JEAQIhwjnZk6W1azXAPFkaZGcFZkeyJ5a2KgAmSXMlNaZ3dikBDg6fNlAWUTqPlvBAH+F1DlwIWWTnC96QXBke2hF+YiL5isvg9fZFw8kiGWxcXj5Ge3hu7pP9QxJ4/mkCCeJ4eRSDK8QuAHclrRNKftMOl/Ad6HRo9dvkY487PND1vmviP+TexYh2V1hRpzB/5lcG+d5CCtCrjTe00JrWIKqyeBpSF0if7M9cwkdtxs2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=45OU25aWxCF7jmJjhac4Ii5JRMbeUsdRmYZ03qFBDkQ=;
+ b=btcEvPs1kgUBkovNgYxEOQHof5IiautnSvGiYM3l9+JYf8MBknhErHRVXO5kepPj1Ph82mIdvdTKVqrfDltafVH507gzsL1lMKu1eMvOeYywUwdu3YU2yeYJpN7uTs5l9fC1lk+HsGs5v8BYL+I82C+iarI0oT8JUqb3jMpHjJEframdYFJ1fp0uk+Vp5oxZp8FRAzqArH1K99g9heZ0GcuwPIEzMNrmVloow1sBSG1XPu84szc/2dBnjM6hPSfZq55BHeS9Bwj1ZridvkdWnGQeAsHmrWyKFb5xAM6akqkZ+ud4GykMTcxoVCDUPTvqiRYzfyKczBwxQGrHh+0z3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750419301; x=1751024101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mSb/WJqG6Ly3nh1AG/W9OmaMQWkMp8HS6RDgfGbzx/I=;
-        b=KUN3ft+Lg3o8FP2MdBd4KuhZ0uCwoxmkxwV0JPkFPG78od9+Ycz1kx3UDTcibaHTUH
-         rYypg19MMjhcCad1SjVX64/ZTACcw5sDV0h2lSnf+bcz0JJ1OEf/OSBBTtEDT9Uy5UA1
-         MzjKWZwKQ3FJLC1v64MLjxAAaMbuBIH85KO99CoG6t5a2r8E9XRNW2bjm7CEoQcoJXdl
-         neO072/98UifGU8PkVwHrhxp3+csLdkha8WWnd5cyHPvQWoMCJEocP699YdyTM0Yo2m2
-         kpFJqX80YmkhLRt/VmBSd4sOqvO9n0Z56V485CzQFGGaGAU2L32bKFKpaeSO4ed6Vm5d
-         RZZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750419301; x=1751024101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSb/WJqG6Ly3nh1AG/W9OmaMQWkMp8HS6RDgfGbzx/I=;
-        b=e+PU80C+O8QbCiV9ofQUhQOK23ttPCILzYrWJ6svpjL/Ips+A84VFkOGZphq7uu07i
-         lxmiIC4Cba+Bf9sJI53mOs3clkS/ds83J6N+aNetkKw7URKQpaqciJDJH+Vi0mYDkKnl
-         z48SObBteOsRx2t4UK/9unUEtnYpiwtIewy/78amiCcOVgEw0nu28bph+MptglDKYWmD
-         DVmgVAheoFBWfHA2gkVonFVA+7FhUW5oj9tBFBeFPCotsU213RG7kY6pjqbZzKmpAtf8
-         6qD0QASV2qtma7a+Kz/b3511XpjjbtFIQX8SiOIBSvxLlArP2F59XUGiuRQCr4eYPChe
-         ITPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzp4JItg06+hrfmFGS4OKejsETKy0qrzhifIO+/y39TME9STPzqwknaiRNaKwqPnc8+Rbs2Q+uPlPTd2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztdJH9FNeaeP4tNOl2Rtm5cm6qG4cbWdtf/Bs3Yo+Sf17JiQ45
-	kEgEwkojwyzGA2B2se7MMaVXFweB3mKwJ9bbMpOGTYOHYuiMiYFraS1bmXtFaOqVVbA=
-X-Gm-Gg: ASbGncv1bJEHT+uF6PFHQulMTcAbhdYa1pHUwZdamY0WynW0D5yt5EU8WPm11MUwVKQ
-	0ZRavv81vBin7GX/XSMBsgh0wcbjq/+3H151Y802PrcE5z6Tjk8sq0Yyy0dbbFL5HhXzy6zHbWE
-	hZrjB6aFVytOthcVhn2Ta25G5z9zQ5qkyAS/B+pGCnsGHJA8YhqS+g7ijbo3ziFynosqKevv0rF
-	9bBH6Kbase+eNPF8IGo3A3BLv/dIci+c6TYIjtzBWfqrdyambv+TPLquw2POkndva3P1aZSPrMD
-	PCBwfRlXNVxFxq/1jdJiV/8QZGaEUb1Dy95vp319alHqua2ect9N8xFe/cpyeULi08aQ+eHY88B
-	9UymBiJCLsgh3zIFis44Nz0429lr3Q3pBfHZBeQ==
-X-Google-Smtp-Source: AGHT+IE1sXxRjLWuyIxfMRq0XXnIfr9OoB0veGRrzBhEEckmil/o3iPtYIVQriMIP2J3nRsToyH7gw==
-X-Received: by 2002:a05:600c:3b15:b0:450:cf46:5510 with SMTP id 5b1f17b1804b1-453656c3641mr24495235e9.29.1750419301323;
-        Fri, 20 Jun 2025 04:35:01 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebcecb5sm56839975e9.37.2025.06.20.04.34.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 04:35:00 -0700 (PDT)
-Message-ID: <0ee2a535-82e9-4916-9755-a68695167715@linaro.org>
-Date: Fri, 20 Jun 2025 12:34:58 +0100
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=45OU25aWxCF7jmJjhac4Ii5JRMbeUsdRmYZ03qFBDkQ=;
+ b=aUz8SM4ya4RnNaz2wdK/8ywU31EGFMtdMbg3L0xGTqfKWdrAcn1rbmLAXIoapP/y+jpoWUVYNuh53YyTqBbU1S/eoN1hWLi+uk7QvhkiqP5gj2FjIjt2Qbc8jGi8+51qOywIOuftxCoQ0DGjl/u+wqGd+HOYAtXRRyHfc5MBdt0=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by DS0PR10MB8102.namprd10.prod.outlook.com (2603:10b6:8:202::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
+ 2025 11:35:10 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%7]) with mapi id 15.20.8857.022; Fri, 20 Jun 2025
+ 11:35:10 +0000
+Message-ID: <98c7b752-5d09-46b0-b137-5843523f3ddf@oracle.com>
+Date: Fri, 20 Jun 2025 12:35:04 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] block: use chunk_sectors when evaluating stacked
+ atomic write limits
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+        yukuai3@huawei.com, hch@lst.de, nilay@linux.ibm.com, axboe@kernel.dk,
+        dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
+        ojaswin@linux.ibm.com
+References: <20250618083737.4084373-1-john.g.garry@oracle.com>
+ <20250618083737.4084373-6-john.g.garry@oracle.com>
+ <yq1tt4bt9y5.fsf@ca-mkp.ca.oracle.com>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <yq1tt4bt9y5.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0189.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a4::14) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 07/13] media: rockchip: add driver for mipi csi-2
- receiver
-To: michael.riesch@collabora.com, Mehdi Djait <mehdi.djait@linux.intel.com>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Gerald Loacker <gerald.loacker@wolfvision.net>,
- Markus Elfring <Markus.Elfring@web.de>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Collabora Kernel Team <kernel@collabora.com>,
- Paul Kocialkowski <paulk@sys-base.io>,
- Alexander Shiyan <eagle.alexander923@gmail.com>,
- Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20240220-rk3568-vicap-v8-0-9d9cbc4b524d@collabora.com>
- <20240220-rk3568-vicap-v8-7-9d9cbc4b524d@collabora.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240220-rk3568-vicap-v8-7-9d9cbc4b524d@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS0PR10MB8102:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb706326-3220-4156-8838-08ddafee8347
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aDJDY1pwcEw2ZitBd2VPRTdaRjJaaWlvaEx1eW8yOWdiK3dBcjcwWWtSNDE4?=
+ =?utf-8?B?eG1oVEp1MUgzQWNTVlZJSDBDYnZyYjJoVXhPVThDaE51alB0d29seXhPdWtM?=
+ =?utf-8?B?OTRkNjVqL0dUYURtUjdCZ2JmdE42UThFY1VqWkJVRHAzZW1NaWw5ZWxCYllk?=
+ =?utf-8?B?QnlSV3FGNHNrK1pwTXpyTWQwb3p1QUZjRjM2UzZjWWlWNkVrSDFwV0FINDVz?=
+ =?utf-8?B?ZEhZVDlWWlhFaDI4TzBiOFFXVUtnMXZtK2VnbHgzNkVPcWFENkVvMmUxKzhh?=
+ =?utf-8?B?TExIQnAyMk9GM1RxMHNCYWpiM1EyUmR6OXVtVTNOZi94aFBPR2YzODNOV3N0?=
+ =?utf-8?B?T3gzc1oweUEzMEhmbmNFaEtuRWp0S0krOEhWbEZxcGNvSngvOG9wVW50eDZp?=
+ =?utf-8?B?bGxWdkR4YWZYd3V1RmRBQ1Z6M1B3Y05nWVJFMTErbkJuUDBOMy8wT2hwZVdU?=
+ =?utf-8?B?a0VTVnE1QUV0aVloRUJhU3NxZ1VxWjBCaW9UWUw3T0kzbEFBNGFkaUxPWmlq?=
+ =?utf-8?B?ZEFjd2I2d0ZYY0R0VUZIdEFsekNFYkFUZkpteW5pNkZVS0UzYlBZZng2dHRS?=
+ =?utf-8?B?a1h0eFNoYkF3SGxadE1OcGt6bXNBU0JyNnRIRGJkQ1pEekRZK2lrU3RCeVhW?=
+ =?utf-8?B?VHhjejkzdWdJTEgwMjU5M0diNzJmOG4rVlh5TVdmT0dzamVSb05DS25JbHJT?=
+ =?utf-8?B?eGozNlJ1MWdnTWVGN0xQUkIwbzhxMHEwTStqTFNkQW9iWnRtK0VUWGdCdno1?=
+ =?utf-8?B?aHAydGJSd0h0a2U0OTFyenFaRkVMRmxMQlFkbXRyeUNxMVlFd09ZdnhHOEZZ?=
+ =?utf-8?B?bWluWDVHeFFBOXJnSVgvR1JZS043a3Q4d3JXWVFHWHFJclhPQzlieFhHaUZx?=
+ =?utf-8?B?dEMzeWRGSC9HUlZZTU1oMXg1REM4ZjhaVS9hcnhWT1g5ME9VN0ZHU05BbkFB?=
+ =?utf-8?B?NUtwWmVyYmgxVXBqQXliakxxSUswSThzM3M0QlhUekxlcTVIazM2TU5xN0d6?=
+ =?utf-8?B?cTFBbDBaZWFOWUZoSjNDeXpvOXByaTllYnFhbW1qaXhNT0d6TVRCYVRoc1hn?=
+ =?utf-8?B?NVpteFZUbS9oWlpHNS8yZ25vc1VTRlhHOVE2RTNJU2tRL1dUYnNyb2ZvQjc0?=
+ =?utf-8?B?RHZBcjRWUG53TENIM2czODlvc2pUZGhZUUpiRGtnR0RMb2R5RTlDckhiS29L?=
+ =?utf-8?B?MjRLY25tLzVMSjhPUWZKajFyK3k1V3JKb3EvSXFwY3VPMlMyRUlKc1ZJaDR4?=
+ =?utf-8?B?OStPNUpSY1pkZGVDcTZMME52a1JBbTZjd2tYeS9iajdzWWpFWjcvbDRhbFUy?=
+ =?utf-8?B?Q09QTDIrU1R6ci9RS0F3UGtZdmxRYVJ1UTZTZG1XbTQxd0ozNUgvRkUyNk95?=
+ =?utf-8?B?ZlpSUVh6SFJhMmtZeUsxeDlBbEVVaTg1cUNqRjZBRUxSVVhJSXIwMEwwNGFZ?=
+ =?utf-8?B?cjBpblZiZWVhSE5UZERHaFBDa2lxaXY0MDdDSVZIbGlnNjBRaHlIaTR6d0RU?=
+ =?utf-8?B?UUpUK0VNT1Z6U21UcllkeWN1MHZWajNBTkRIenoyVkJ0K3NaTTZ2WHhyS2Ra?=
+ =?utf-8?B?Q0RnVlJpNmZVQU0yeEJ3UnFnK1dBVGJWVzRnc3dKSit5eHFSeFRKK3lTM1I5?=
+ =?utf-8?B?dWdWOXpUL2hwSDl2dzg2RWRKYjl3TmVXTmtvRDExb1B1VFJqY3YweE12elZh?=
+ =?utf-8?B?ZFdJLzVvemJJckExTnh4OHhXK3Z2MFFSWllISzRYUTFZMkRrcEFLMmo4RXZ4?=
+ =?utf-8?B?bG5vOVRkNG0xZUsyd3AwYU1JVytpTUY3NnNmdlphSzhPdmprTkJNQ2FSbjFx?=
+ =?utf-8?B?blNjMWsrL2R6VzcvcElUVTRYREZtbnNGZkFHcE04d1lsNndrU1N2M3ZMT3Z2?=
+ =?utf-8?B?ZWJ3YjRrSzB2cXhlVTFOUlBabjF5YXQ5ZzlKR3AvcXIwUTR0Sm80UEpyY1k1?=
+ =?utf-8?Q?b6X4eT9gAPU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YU1NakZPV1ZQS29sWEJZbjFQMjlMOGZwZ3dEM1U1cTNmY2hjckVJN2xMOHp0?=
+ =?utf-8?B?aFdtWGYyWGtOYTlnNm51bWJGVHNjVUFrSjVUUnBRc2ZTbjY3WEVackwxMm9Q?=
+ =?utf-8?B?NkFIL092SlBhQ1poSlovK3ZidVNVd0lPM2xtQUlZUGZVL0xQc2MyOE9BUFRN?=
+ =?utf-8?B?N3JIcGdHZDJURTlyZjhFNzVNRFFiNGV6YUh4QXliZlF6RVBWa1R5b2ZnbE1y?=
+ =?utf-8?B?ZWVaSktIKytEYStNRDk3ZzExdzA5S2NCUGovVTh6QndKQ1pWVnNhOFcwVFlG?=
+ =?utf-8?B?aWMwbk5FTmVLVnBzSHFXNDlCSkJ6N2JNS01qa1h2K3U0Zll5UTlsWTg3L1B3?=
+ =?utf-8?B?a0k1eWc2S2Y0R3B6Wm4vais5WWw3T2NWdDUyS2V4d3M5Z0xERVRod0hhQkEw?=
+ =?utf-8?B?ZnZFTFFjemZRL0Z4bmZxWHU3UDV2TGd0RVNGV0pJdGNHOWF4Z3lTc2FlcEts?=
+ =?utf-8?B?MXZLODdmWlJ3WWlTa3c0aDVyYW43L0RYN1g1anNtdGNNVzZxUjR1M0lDUXNx?=
+ =?utf-8?B?NVllMTYveDVmdmVJY1RvR0pmSjFscXpMZEZSdFFqcENxc1Q3T1VCZjB5RFZV?=
+ =?utf-8?B?dzR6N3FodWlBbnlkMHQ5cXFoK2dQZE9BRTJYMldFWEZtTm91QVlkQU5BcGZs?=
+ =?utf-8?B?VGZzKzJzNDlpeUhlNk5TZWtCZk5wM1J4cElITWJhaGl2a1NhMHhYYzFzL2Jj?=
+ =?utf-8?B?T0o3RkdLZS9kMjRZODFtS1lEazNNMk9xUHJLM09Oa1hwWDZsaE85Sks5bFZS?=
+ =?utf-8?B?QUdMbTBVbkJObVF0V2VHWk1HcTVzbmhrQUJYaEZ3dklGUE5SNFo2YThLNUlV?=
+ =?utf-8?B?OW5lNFk4cjU2QTdrVEFxREZnclN1bmx1WjdEOEt1VGhhdVRBS3pCL1VDUzE0?=
+ =?utf-8?B?RCtIN3Fram9HWVRGZ2k1cjNlc3oyVVF4SGZZWnZyc0JpTHZSR1dadW5IQ1FG?=
+ =?utf-8?B?T1dIUUNUMGdXYkM3L2F0N0d3WG92VWFIVEpjVmFwbkhYNnlGTGpYczZrUkIx?=
+ =?utf-8?B?LzlkcTdLSGJORjRjbFRrV1ArQXJHb2h6TmVPNFhIVWtkVVdvZ2hUMWZoMU41?=
+ =?utf-8?B?R2JQcXZRUThMTGFqV2pVMEpvT1N6R004bDNXN0l0L09ISzBGT0wxeTVsa3pQ?=
+ =?utf-8?B?TVBmbUJtclVham5MUnFydmZsKzR4MGlqZ1RKVkQ0R0NqK3ludHE2UXNsVDBr?=
+ =?utf-8?B?OVBLTm5hckNSNE1Ia0s1L1RHUTg4enF2YnpzdmsxbklWbmdmem8vbFowSUxU?=
+ =?utf-8?B?U0dWM3MvdnBVQTlYR1hnMTA3MHZ3Ny9VTkZSL0htQUMwaWpsN2FZeWZmUnZi?=
+ =?utf-8?B?NXBEQllBd2FFQ2RmdjZGVUhIeHo2YUluM2dmVE43MGJ3ZXl4aTFmOG5udVgy?=
+ =?utf-8?B?bjBlR25KbElqZ00zQTBGSWZmcHN0eWtUMmQ1NVlxUzE5eFN0U1EvR3JxYXkv?=
+ =?utf-8?B?aGRZU1d0STlZMDZjalNiVXZZUlNZSVBpbkdHRVVYQW4xeVNzQWlXcHMxSUtF?=
+ =?utf-8?B?M0s3bTNHWldwbXRWKzloejNPZFEzRE5uUEJBNTd3TGJrWUx5djZFUU44SkJj?=
+ =?utf-8?B?bUVyTG1YQkQyUW5seHRVVGhieHpTNWlOaHEzczdYVnJJM3VKK2UxWU16Zm1m?=
+ =?utf-8?B?a1NJYlU5SVdFamdwMHBUYmh1OTJ6S2JKK1Y1M2U3OEpmemQzR0t2RDF6ZGVV?=
+ =?utf-8?B?eFdhUlhadm1lcjJrUjNGYStoc0JCV2VxUGxseWhRNG9ySU05WHJaTnU5YXF1?=
+ =?utf-8?B?ZmhFS2lReUl1YUF4NGxhK2cyTkpsaGlLaE52TzFWSHJnajZIaHpMMlpTUEhW?=
+ =?utf-8?B?dU5Gay9uSEJGblB3bVlPTGRXcStMak1oTHBoei93TWo2bHdqSWkzQmVqR05x?=
+ =?utf-8?B?T2VaQ3k2MnkrRUxIWWlSOWlYK0F2OUloazZFZFZLRWdFRVJXbWpNS0M0clRk?=
+ =?utf-8?B?MTB1bGdybDZJSXVpOWtYMSsvUS9qN2l6UDFjZ0diMXdkRjJMNW5iWFoyOHlG?=
+ =?utf-8?B?R0pKT3FPZ0toN1V0QUFPSHNpZ2p6SGVmUlZIYytVQU9zMTVDSUVIUVBIVnVX?=
+ =?utf-8?B?NFdlbzN3ZHdnalIzSitRL0ZmbnNTWG4vcGZxUXpqSHpYSkEwYmdtOVM3UG1K?=
+ =?utf-8?B?UVlsYjhUZ1h1dWxSMjF1OXpuNy8zWjRaM2dac29DcDNwRUhoMXFVZVp0aE50?=
+ =?utf-8?B?bVE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	hmWULIJPsQCvP2liOcxFE84DHoU8BdRf1oP3XV4tVUiLoDn2sGJBBHPPcuPzjWnuNia6Ehb+40DFOThq9Q+U5NKLcgMi+3yOmSffQlrErVDmjmFMx6Pi7Bf8EZsyF31+gXFgZTFhkumBwXRSnZoVB8LBnKE3OzBTzZI0DiqKA3m9SbPBe2fTjL+1L0ijPlzmSXjC5425SsL6y15hZXFVQV/WqHK+Kh58ji/LwjP+drEKWGjVdLuISz38NaOjdONO54hhpsBDI3wykFsD2HCHl82zqlT3mq9Pyrd6TQBGpO2mg948a1lkmnlgUly2AvJz5Q3seOAmA1647blE/7NwbfRJdI/AmkN6w3MTuObRmtafsLjk5gKd6JakT83KWHMZMhAXLbEmYEDPNoAzc9yDUQlWOxN5I7CS4JhYeVU9/ITa4bUYsEh2OpE3Pn69XAqBD1nziB6hyXpt8xEW/3yv1Y9/1u5hzqVCyji7RS8T/p+GAD9fTiT4jaxZi2obD5vH3bd26F5TipxlGfBTcqIV7riOGv4HsH4otSrm37kcSqOaMxf0989E28aQCO+keMCsQX3GO11NMAIkfFosiSheMh5+fHZK9UvSKrjI/g+ANgM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb706326-3220-4156-8838-08ddafee8347
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 11:35:09.9527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JlLwrxJvUuWYR2T+zZWGlvYZ8IEdsHLwOh5yPluF49OwK2bCFgUt3nsVPSBTDsJIna30inEWeeFVA9+nOkHJyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8102
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_04,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506200084
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA4MyBTYWx0ZWRfX3phQ/SO3B8co dZiMl47/6tlvF6rN3dhD9dN7F+T+SJ5MOrXaMkbPDndnCmMe2v5QluoEYX3mKlC91XzgHhqlMgo cBOWDHziJoXHZwBVsI8Hn5mwo8akoiJCzzUwcey8XmjvjL+QewDpUAliIvlkaO424rIifWz5vkK
+ o1o09aKpWRhat1iFgcH/eEg1tpEPZGXfHSV3nIyfSO/Lytije0uXdHnj5R4/CpM1bqfbA4bd3Mv eJT8+XBN+dQTPyfgVKGQ06CkvGMU7WOBAzDCIO6mPcFpkecklyaBAIv2H3cFeRyq6q57fGXb3Fy esHW3/RSHeVWk7hY7iA8Uby6Ag+stUu7H1J2SUMHNOlJL6JrqYQXWkXqL98nr98GH8ipiO635F0
+ rPs5AxC+MgYDoisXAklB4gmM8Cnup69CMR0oJUDj8lJ+8iuwA9vb/J+k5xDGc4U/ySyV0vFK
+X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=68554771 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=nQR27uK35VafCFBPkXcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 cc=ntf awl=host:13206
+X-Proofpoint-GUID: JZYuTDCnZYMyzDhbFZX7oRDkLub6lU3x
+X-Proofpoint-ORIG-GUID: JZYuTDCnZYMyzDhbFZX7oRDkLub6lU3x
 
-On 11/06/2025 18:06, Michael Riesch via B4 Relay wrote:
-> From: Michael Riesch <michael.riesch@collabora.com>
+On 20/06/2025 03:40, Martin K. Petersen wrote:
+>> Furthermore, io_min may be mutated when stacking devices, and this
+>> makes it a poor candidate to hold the stripe size. Such an example (of
+>> when io_min may change) would be when the io_min is less than the
+>> physical block size.
+> io_min is not allowed to be smaller than the physical_block_size. How
+> did we end up violating that requirement?
 > 
-> The Rockchip RK3568 MIPI CSI-2 Receiver is a CSI-2 bridge with one
-> input port and one output port. It receives the data with the help
-> of an external MIPI PHY (C-PHY or D-PHY) and passes it to the
-> Rockchip RK3568 Video Capture (VICAP) block.
-> 
-> Add a V4L2 subdevice driver for this unit.
-> 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> ---
->   MAINTAINERS                                    |   1 +
->   drivers/media/platform/rockchip/Kconfig        |   1 +
->   drivers/media/platform/rockchip/Makefile       |   1 +
->   drivers/media/platform/rockchip/rkcsi/Kconfig  |  16 +
->   drivers/media/platform/rockchip/rkcsi/Makefile |   3 +
->   drivers/media/platform/rockchip/rkcsi/rkcsi.c  | 735 +++++++++++++++++++++++++
->   6 files changed, 757 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 40d806c206be..5b9228f6ddae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21463,6 +21463,7 @@ M:	Michael Riesch <michael.riesch@collabora.com>
->   L:	linux-media@vger.kernel.org
->   S:	Maintained
->   F:	Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml
-> +F:	drivers/media/platform/rockchip/rkcsi/
->   
->   ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
->   M:	Daniel Golle <daniel@makrotopia.org>
-> diff --git a/drivers/media/platform/rockchip/Kconfig b/drivers/media/platform/rockchip/Kconfig
-> index 549f4e9f443e..96b38768c17e 100644
-> --- a/drivers/media/platform/rockchip/Kconfig
-> +++ b/drivers/media/platform/rockchip/Kconfig
-> @@ -4,4 +4,5 @@ comment "Rockchip media platform drivers"
->   
->   source "drivers/media/platform/rockchip/rga/Kconfig"
->   source "drivers/media/platform/rockchip/rkcif/Kconfig"
-> +source "drivers/media/platform/rockchip/rkcsi/Kconfig"
->   source "drivers/media/platform/rockchip/rkisp1/Kconfig"
-> diff --git a/drivers/media/platform/rockchip/Makefile b/drivers/media/platform/rockchip/Makefile
-> index 6aba32c8830c..932be2d3fdd6 100644
-> --- a/drivers/media/platform/rockchip/Makefile
-> +++ b/drivers/media/platform/rockchip/Makefile
-> @@ -1,4 +1,5 @@
->   # SPDX-License-Identifier: GPL-2.0-only
->   obj-y += rga/
->   obj-y += rkcif/
-> +obj-y += rkcsi/
->   obj-y += rkisp1/
-> diff --git a/drivers/media/platform/rockchip/rkcsi/Kconfig b/drivers/media/platform/rockchip/rkcsi/Kconfig
-> new file mode 100644
-> index 000000000000..d8004198c386
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/rkcsi/Kconfig
-> @@ -0,0 +1,16 @@
-> +config VIDEO_ROCKCHIP_CSI
-> +	tristate "Rockchip MIPI CSI-2 Receiver"
-> +	depends on VIDEO_DEV
-> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> +	depends on V4L_PLATFORM_DRIVERS
-> +	depends on PM && COMMON_CLK
-> +	select MEDIA_CONTROLLER
-> +	select V4L2_FWNODE
-> +	select VIDEO_V4L2_SUBDEV_API
-> +	help
-> +	  This is a driver for Rockchip MIPI CSI-2 Receiver. It is featured
-> +	  in various Rockchips SoCs, usually in combination with a Video
-> +	  Capture (VICAP) unit (see Rockchip Camera Interface (CIF) driver).
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called rockchip-mipi-csi.
-> diff --git a/drivers/media/platform/rockchip/rkcsi/Makefile b/drivers/media/platform/rockchip/rkcsi/Makefile
-> new file mode 100644
-> index 000000000000..147712cbb68a
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/rkcsi/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_VIDEO_ROCKCHIP_CSI) += rockchip-mipi-csi.o
-> +rockchip-mipi-csi-objs += rkcsi.o
-> diff --git a/drivers/media/platform/rockchip/rkcsi/rkcsi.c b/drivers/media/platform/rockchip/rkcsi/rkcsi.c
-> new file mode 100644
-> index 000000000000..eaad3608337e
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/rkcsi/rkcsi.c
-> @@ -0,0 +1,735 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Rockchip MIPI CSI-2 Receiver Driver
-> + *
-> + * Copyright (C) 2019 Rockchip Electronics Co., Ltd.
-> + * Copyright (C) 2025 Michael Riesch <michael.riesch@wolfvision.net>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/reset.h>
-> +
-> +#include <media/mipi-csi2.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +#define CSI2HOST_N_LANES     0x04
-> +#define CSI2HOST_CSI2_RESETN 0x10
-> +#define CSI2HOST_PHY_STATE   0x14
-> +#define CSI2HOST_ERR1	     0x20
-> +#define CSI2HOST_ERR2	     0x24
-> +#define CSI2HOST_MSK1	     0x28
-> +#define CSI2HOST_MSK2	     0x2c
-> +#define CSI2HOST_CONTROL     0x40
-> +
-> +#define SW_CPHY_EN(x)	     ((x) << 0)
-> +#define SW_DSI_EN(x)	     ((x) << 4)
-> +#define SW_DATATYPE_FS(x)    ((x) << 8)
-> +#define SW_DATATYPE_FE(x)    ((x) << 14)
-> +#define SW_DATATYPE_LS(x)    ((x) << 20)
-> +#define SW_DATATYPE_LE(x)    ((x) << 26)
-> +
-> +#define RKCSI_CLKS_MAX	     1
-> +
-> +enum {
-> +	RKCSI_PAD_SINK,
-> +	RKCSI_PAD_SRC,
-> +	RKCSI_PAD_MAX,
-> +};
-> +
-> +struct rkcsi_format {
-> +	u32 code;
-> +	u8 depth;
-> +	u8 csi_dt;
-> +};
-> +
-> +struct rkcsi_device {
-> +	struct device *dev;
-> +
-> +	void __iomem *base_addr;
-> +	struct clk_bulk_data *clks;
-> +	unsigned int clks_num;
-> +	struct phy *phy;
-> +	struct reset_control *reset;
-> +
-> +	const struct rkcsi_format *formats;
-> +	unsigned int formats_num;
-> +
-> +	struct media_pad pads[RKCSI_PAD_MAX];
-> +	struct v4l2_async_notifier notifier;
-> +	struct v4l2_fwnode_endpoint vep;
-> +	struct v4l2_subdev sd;
-> +
-> +	struct v4l2_subdev *source_sd;
-> +	u32 source_pad;
-> +};
-> +
-> +static const struct v4l2_mbus_framefmt default_format = {
-> +	.width = 3840,
-> +	.height = 2160,
-> +	.code = MEDIA_BUS_FMT_SRGGB10_1X10,
-> +	.field = V4L2_FIELD_NONE,
-> +	.colorspace = V4L2_COLORSPACE_RAW,
-> +	.ycbcr_enc = V4L2_YCBCR_ENC_601,
-> +	.quantization = V4L2_QUANTIZATION_FULL_RANGE,
-> +	.xfer_func = V4L2_XFER_FUNC_NONE,
-> +};
-> +
-> +static const struct rkcsi_format formats[] = {
-> +	/* YUV formats */
-> +	{
-> +		.code = MEDIA_BUS_FMT_YUYV8_1X16,
-> +		.depth = 16,
-> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_UYVY8_1X16,
-> +		.depth = 16,
-> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_YVYU8_1X16,
-> +		.depth = 16,
-> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_VYUY8_1X16,
-> +		.depth = 16,
-> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
-> +	},
-> +	/* RGB formats */
-> +	{
-> +		.code = MEDIA_BUS_FMT_RGB888_1X24,
-> +		.depth = 24,
-> +		.csi_dt = MIPI_CSI2_DT_RGB888,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_BGR888_1X24,
-> +		.depth = 24,
-> +		.csi_dt = MIPI_CSI2_DT_RGB888,
-> +	},
-> +	/* Bayer formats */
-> +	{
-> +		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
-> +		.depth = 8,
-> +		.csi_dt = MIPI_CSI2_DT_RAW8,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
-> +		.depth = 8,
-> +		.csi_dt = MIPI_CSI2_DT_RAW8,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
-> +		.depth = 8,
-> +		.csi_dt = MIPI_CSI2_DT_RAW8,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
-> +		.depth = 8,
-> +		.csi_dt = MIPI_CSI2_DT_RAW8,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
-> +		.depth = 10,
-> +		.csi_dt = MIPI_CSI2_DT_RAW10,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
-> +		.depth = 10,
-> +		.csi_dt = MIPI_CSI2_DT_RAW10,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
-> +		.depth = 10,
-> +		.csi_dt = MIPI_CSI2_DT_RAW10,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
-> +		.depth = 10,
-> +		.csi_dt = MIPI_CSI2_DT_RAW10,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
-> +		.depth = 12,
-> +		.csi_dt = MIPI_CSI2_DT_RAW12,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
-> +		.depth = 12,
-> +		.csi_dt = MIPI_CSI2_DT_RAW12,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
-> +		.depth = 12,
-> +		.csi_dt = MIPI_CSI2_DT_RAW12,
-> +	},
-> +	{
-> +		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
-> +		.depth = 12,
-> +		.csi_dt = MIPI_CSI2_DT_RAW12,
-> +	},
-> +};
-> +
-> +static inline struct rkcsi_device *to_rkcsi(struct v4l2_subdev *sd)
-> +{
-> +	return container_of(sd, struct rkcsi_device, sd);
-> +}
-> +
-> +static inline __maybe_unused void rkcsi_write(struct rkcsi_device *csi_dev,
-> +					      unsigned int addr, u32 val)
-> +{
-> +	writel(val, csi_dev->base_addr + addr);
-> +}
-> +
-> +static inline __maybe_unused u32 rkcsi_read(struct rkcsi_device *csi_dev,
-> +					    unsigned int addr)
-> +{
-> +	return readl(csi_dev->base_addr + addr);
-> +}
-> +
-> +static const struct rkcsi_format *
-> +rkcsi_find_format(struct rkcsi_device *csi_dev, u32 mbus_code)
-> +{
-> +	const struct rkcsi_format *format;
-> +
-> +	WARN_ON(csi_dev->formats_num == 0);
-> +
-> +	for (int i = 0; i < csi_dev->formats_num; i++) {
-> +		format = &csi_dev->formats[i];
-> +		if (format->code == mbus_code)
-> +			return format;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static int rkcsi_start(struct rkcsi_device *csi_dev)
-> +{
-> +	struct media_pad *source_pad =
-> +		&csi_dev->source_sd->entity.pads[csi_dev->source_pad];
-> +	enum v4l2_mbus_type bus_type = csi_dev->vep.bus_type;
-> +	union phy_configure_opts opts;
-> +	s64 link_freq;
-> +	u32 lanes = csi_dev->vep.bus.mipi_csi2.num_data_lanes;
-> +	u32 control = 0;
-> +	int ret;
-> +
-> +	if (lanes < 1 || lanes > 4)
-> +		return -EINVAL;
-> +
-> +	/* set mult and div to 0, thus completely rely on V4L2_CID_LINK_FREQ */
-> +	link_freq = v4l2_get_link_freq(source_pad, 0, 0);
-> +	if (link_freq <= 0)
-> +		return -EINVAL;
-> +
-> +	if (bus_type == V4L2_MBUS_CSI2_DPHY) {
-> +		struct phy_configure_opts_mipi_dphy *cfg = &opts.mipi_dphy;
-> +
-> +		phy_mipi_dphy_get_default_config_for_hsclk(link_freq * 2, lanes,
-> +							   cfg);
-> +		phy_set_mode(csi_dev->phy, PHY_MODE_MIPI_DPHY);
-> +		phy_configure(csi_dev->phy, &opts);
+>    logical_block_size <= physical_block_size <= io_min <= io_opt
 
-This function can return an error, shouldn't you be capturing it ?
+I should have been a bit less ambiguous in my words.
 
-drivers/phy/rockchip/phy-rockchip-innoc-csidphy.c::rockchip_inno_csidphy_configure();
+I meant that if we try to set the stacked device io_min (from the stripe 
+size) less than the bottom device phys block size, then this leads to 
+the stacked device io_min being set to the bottom device phys block 
+size. That's what I mean by mutating. And that's why it's a bad idea to 
+assume that the stripe size is in io_min.
 
-> +
-> +		control |= SW_CPHY_EN(0);
-> +
-> +	} else if (bus_type == V4L2_MBUS_CSI2_CPHY) {
-> +		control |= SW_CPHY_EN(1);
+Having said that, we should probably reject this even being allowed – we 
+should not have physical blocks straddling stripes.
 
-Do you need to flag this when you are returning an error ?
-
-Other than that looks pretty good.
-
----
-bod
