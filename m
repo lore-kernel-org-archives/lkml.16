@@ -1,132 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785342E8DF7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765D2D662C;
+	Fri, 20 Jun 2025 15:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433318; cv=none; b=hYs3xuHv94+YXtoPf9+EY7DOJtDcm669XP7sU3gBblp1UxgROEdv4M0Y4N06r2lEynN4nfgb6ZfputkeX2qLfXOxtNVb71I9lN4KKf1xunAZ8IMOwEqJZ+ygdGEky5JLn8JqtBuRVhRYUo9PJCj5FEfVgxNa8zEVKeI640EVNxk=
+	t=1750433318; cv=none; b=B1vqydtuosWiEdHnxfqkwQc0dkVdRfU4KWm993HOEgRRx8XEaIhOznXvS8B5s/SUPDYqtQEabccXaPLLYW8ii0KQxGbVpAPQzdluvqRN5y4FtG6ijWGBsCjwryTqtFUML2qkPJWna2AkzMK/hFLqYLzS8Iuvg1BQ3WObNAFNrNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750433318; c=relaxed/simple;
-	bh=u+xPzEuEAEP6yiVJSO581cpWVqlYy9aICaz+1YmCR+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DFfJqh7B4f73kxBnzPe9wQDOOh/HSVrfxqienUbl4uKQdzM97OPOKuCI3AxaxtCphFy/AMyN4cNwXyqRoZzjwQ6C5fPi9FPKPXP10X1hhdEk62AILHr9AT0tgIs0Sf7acqMSQrvaNokjDjk17mPF0TX1QfFHTwcjaFRpXldSFBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B02E16F2;
-	Fri, 20 Jun 2025 08:28:16 -0700 (PDT)
-Received: from [10.1.30.22] (e122027.cambridge.arm.com [10.1.30.22])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DDF83F673;
-	Fri, 20 Jun 2025 08:28:33 -0700 (PDT)
-Message-ID: <057bf373-7860-4b93-93c2-218adbff61a2@arm.com>
-Date: Fri, 20 Jun 2025 16:28:31 +0100
+	bh=/OSx8K3K9f23Ji1lCrXseDYUHiUlLiZTgManhWt2jPM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0Zk+7sbSq5HsO3wFnAIXx0c61yxFMLImqSCr7pnZof8K/w20cA8EUe2ZoPFUHfXFOLR7rixetxlFaTsgVLaBQb8YCL5tuxN5tD1MLREoFEChhlaFlsmmcm72o/cB0ozLgKUu0zspbUf5gQBkdyiwq/8oFg3BtnqL96PtmNTY24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id A3C9744EF1;
+	Fri, 20 Jun 2025 17:28:26 +0200 (CEST)
+From: Gabriel Goller <g.goller@proxmox.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] ipv6: enable per-interface forwarding
+Date: Fri, 20 Jun 2025 17:28:13 +0200
+Message-Id: <20250620152813.1617783-1-g.goller@proxmox.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] drm/panthor: Introduce sampling sessions to handle
- userspace clients
-To: Lukas Zapolskas <lukas.zapolskas@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>
-References: <cover.1747148172.git.lukas.zapolskas@arm.com>
- <0319137f966f2dbffc54e51f7a2a3cbac837507b.1747148172.git.lukas.zapolskas@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <0319137f966f2dbffc54e51f7a2a3cbac837507b.1747148172.git.lukas.zapolskas@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Lukas,
+It is currently impossible to enable ipv6 forwarding on a per-interface
+basis like in ipv4. To enable forwarding on an ipv6 interface we need to
+enable it on all interfaces and disable it on the other interfaces using
+a netfilter rule. This is especially cumbersome if you have lots of
+interface and only want to enable forwarding on a few. According to the
+sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
+for all interfaces, while the interface-specific
+`net.ipv6.conf.<interface>.forwarding` configures the interface
+Host/Router configuration.
 
-I was going to try testing this out, but it doesn't look functional. See
-below.
+This patch modifies the forwarding logic to check both the global
+forwarding flag AND the per-interface forwarding flag. Packets are
+forwarded if either the global setting (conf.all.forwarding) OR the
+interface-specific setting (conf.<interface>.forwarding) is enabled.
+This allows enabling forwarding on individual interfaces without
+setting the global option.
 
-On 16/05/2025 16:49, Lukas Zapolskas wrote:
-[...]
-> diff --git a/drivers/gpu/drm/panthor/panthor_perf.c b/drivers/gpu/drm/panthor/panthor_perf.c
-> index 9365ce9fed04..15fa533731f3 100644
-> --- a/drivers/gpu/drm/panthor/panthor_perf.c
-> +++ b/drivers/gpu/drm/panthor/panthor_perf.c
-> @@ -2,13 +2,177 @@
->  /* Copyright 2023 Collabora Ltd */
->  /* Copyright 2025 Arm ltd. */
->  
-> -#include <linux/bitops.h>
-> +#include <drm/drm_gem.h>
->  #include <drm/panthor_drm.h>
-> +#include <linux/bitops.h>
-> +#include <linux/circ_buf.h>
->  
->  #include "panthor_device.h"
->  #include "panthor_fw.h"
->  #include "panthor_perf.h"
->  
-> +/**
-> + * PANTHOR_PERF_EM_BITS - Number of bits in a user-facing enable mask. This must correspond
-> + *                        to the maximum number of counters available for selection on the newest
-> + *                        Mali GPUs (128 as of the Mali-Gx15).
-> + */
-> +#define PANTHOR_PERF_EM_BITS (BITS_PER_TYPE(u64) * 2)
-> +
-> +enum panthor_perf_session_state {
-> +	/** @PANTHOR_PERF_SESSION_ACTIVE: The session is active and can be used for sampling. */
-> +	PANTHOR_PERF_SESSION_ACTIVE = 0,
-> +
-> +	/**
-> +	 * @PANTHOR_PERF_SESSION_OVERFLOW: The session encountered an overflow in one of the
-> +	 *                                 counters during the last sampling period. This flag
-> +	 *                                 gets propagated as part of samples emitted for this
-> +	 *                                 session, to ensure the userspace client can gracefully
-> +	 *                                 handle this data corruption.
-> +	 */
-> +	PANTHOR_PERF_SESSION_OVERFLOW,
-> +
-> +	/* Must be last */
-> +	PANTHOR_PERF_SESSION_MAX,
-> +};
-> +
-> +struct panthor_perf_enable_masks {
-> +	/**
-> +	 * @mask: Array of bitmasks indicating the counters userspace requested, where
-> +	 *        one bit represents a single counter. Used to build the firmware configuration
-> +	 *        and ensure that userspace clients obtain only the counters they requested.
-> +	 */
-> +	unsigned long mask[DRM_PANTHOR_PERF_BLOCK_MAX][BITS_TO_LONGS(PANTHOR_PERF_EM_BITS)];
-> +};
-> +
-> +struct panthor_perf_counter_block {
-> +	struct drm_panthor_perf_block_header header;
-> +	u64 counters[];
-> +};
+This change won't allow a `Router`-state interface without forwarding
+capabilities anymore, but (with my limited knowledge) I don't think that
+should be a problem?
 
-I think something has gone rather wrong in a rebasing. This struct was
-already added in patch 2. So this causes a build error (that the kernel
-test robot caught too).
+This is quite an impacting change, so I don't really expect this to get
+merged. I'm more interested in hearing your feedback and if something
+like this would even be considered?
 
-[...]
-> @@ -72,6 +236,122 @@ static void panthor_perf_info_init(struct panthor_device *ptdev)
->  	perf_info->sample_size = session_get_user_sample_size(perf_info);
->  }
->  
-> +static struct panthor_perf_enable_masks *panthor_perf_create_em(struct drm_panthor_perf_cmd_setup
-> +		*setup_args)
+[0]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
-There's some code style mis-formatting like this - which is then fixed
-up in patch 5. So it looks like you've applied fixups to the wrong commit.
+Signed-off-by: Gabriel Goller <g.goller@proxmox.com>
+---
+ net/ipv6/ip6_output.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Also this series will need rebasing because there's some upstream
-changes that it's now conflicting with. The base commit looks pretty
-ancient now.
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 7bd29a9ff0db..a7e33ab0946c 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -509,7 +509,8 @@ int ip6_forward(struct sk_buff *skb)
+ 	u32 mtu;
+ 
+ 	idev = __in6_dev_get_safely(dev_get_by_index_rcu(net, IP6CB(skb)->iif));
+-	if (READ_ONCE(net->ipv6.devconf_all->forwarding) == 0)
++	if ((idev && READ_ONCE(idev->cnf.forwarding) == 0) &&
++	    READ_ONCE(net->ipv6.devconf_all->forwarding) == 0)
+ 		goto error;
+ 
+ 	if (skb->pkt_type != PACKET_HOST)
+-- 
+2.39.5
 
-Thanks,
-Steve
 
