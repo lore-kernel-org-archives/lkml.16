@@ -1,162 +1,110 @@
-Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC27B2ECE9B;
-	Fri, 20 Jun 2025 19:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058582253EB
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 19:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750449210; cv=none; b=N0hl44+gVoSNF6E/IbskMyWnGZKDo544cindB+9uFJiTTrextmN3NCr7lw3C8DzbxmvHjY4ahQacAtQJiQwesoUnSA90kEsqmC9aR3iTez4o7gNACWr6lJ2OcVkSAj+ccxQQeqfRNUVDP/qyJseLVWvZIzY+/qiluBof5u2TajU=
+	t=1750449283; cv=none; b=igkCzqk7/rTnGb3ZyjBXm1Ge4iyfI1AkUJRR1DIkGiPUvI/xg2IwaAgHCmEPNcPboTA7+v0HS8JiaxJqUqfAiEbtK7JTnxDmu98QbC8BhiggfxIfpDFEG5GKre/JTq0+7FeSdh5Os7FAu/REY6CJzhZQ+ACpseT5PfzY9OkCRNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750449210; c=relaxed/simple;
-	bh=RNFe6OsXiIa25lThIwwSEn6qb0BH3hZlmmOumOwKmL8=;
+	s=arc-20240116; t=1750449283; c=relaxed/simple;
+	bh=gwW/ZJH1VLIkz6MGwVX4aHnvXoTlVx/vj9jo9qbl9zI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EaHYxQWOjUiSbvbNes+IZeu+KFy1uvkIuvft4apovDSK1xO0woS6eHkO/EUc6c44SFRe1rlATc1RmkMSx4BCzV5CLFJ81bfbdLP33rElXUPhJOwLjNWSKxNdGKAJcVmgDpi9eagvvJ0EOaCdH7MwC889GFvsWWSa7CgXxQWOEPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tSnZnlBp; arc=none smtp.client-ip=80.12.242.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=KXjPsdJKhCthCLTPYF6qttQeodERZSpUDqmcYSPalaCvy1c9XCn/OTDJpCxd3AI7nW9qrgO+vSQ84A/ZAD9re+zVALkdPfzQlixX1ez75UFD7sLIyLW8+MpnQ4k5hrMdq6TMvMcSrVBLR1+Pe/xSpW5Hb76Qov12OvF0uPo1CDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VgxayH6b; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tSnZnlBp"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id ShmauIDQsBqt7Shmauhv5q; Fri, 20 Jun 2025 21:52:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1750449136;
-	bh=2bElo9HwhnRSM0NAT+XlQ6v5ReuWUrVRquq0Qs1cSFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=tSnZnlBpqXBKoYO84tVJ44EYQOtH3COuTe5YqwirKz/RLlfZCR+99hjQVvErnZJIq
-	 UJslU3anrpYhVkh6fr4b6zyhVexsACxeNhipuhthLWx6smtD0etTBxD6kTFfnDCoiX
-	 eag906y51+aGJDcUXM17MTkQZLZvgacjFub3ahci/G/S2PkvLWaQSOHbgVMxbauzQ6
-	 TK7ontWUHFFOJD7YwstaKnCsRcO2YKUrZd8KpHHeqUIZinvy9vHtvtmnXZXppsnU5+
-	 BzZAN1WvXtQGSP4qGf8X3EwBAk2KiBqN6wD1XuT9nfsl6mqKma6cJFGoVUlz6r7U7J
-	 OOGYLIPvaRBFw==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Fri, 20 Jun 2025 21:52:16 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <72d03217-16a4-4700-952b-a98b68a37140@wanadoo.fr>
-Date: Fri, 20 Jun 2025 21:52:14 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VgxayH6b"
+Message-ID: <5ff84c99-46a2-4dde-a1f4-f49b09b0b15f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750449278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B9890C/fAgtvvt0ndaoyPFp5S+6tCMCjaOU36i0zlJk=;
+	b=VgxayH6bRXn9jSnHSGefKyUi69i6ZbZ1L2hKf+wfXjXRHL5Peg5g2TxObTti+rt28g2NUr
+	BRiLjX9Ne+JoQOQy0iykdbVrDVjTb9fVLsqrTxwC0pFXvDJS8S/cX1rnb53Bmfh4gxSqwI
+	S6a6ddIFT7t8OsyGaKDNe6uhnID9Jf8=
+Date: Sat, 21 Jun 2025 03:54:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tpm: Replace scnprintf() with sysfs_emit() and
- sysfs_emit_at() in sysfs show functions
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, peterhuewe@gmx.de,
- jarkko@kernel.org
-Cc: jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250619123707.399022-1-chelsyratnawat2001@gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Add load_time in bpf_prog fdinfo
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20250620051017.111559-1-chen.dylane@linux.dev>
+ <CAADnVQLd9Z1nfp+WBdMLaZ7EP-+A9QEDdOhZaL0YTaygtKD2Hg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAADnVQLd9Z1nfp+WBdMLaZ7EP-+A9QEDdOhZaL0YTaygtKD2Hg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Le 19/06/2025 à 14:37, Chelsy Ratnawat a écrit :
-> Replace calls to scnprintf() with sysfs_emit() and sysfs_emit_at() in
-> sysfs show functions. These helpers are preferred in sysfs callbacks
-> because they automatically handle buffer sizing (PAGE_SIZE) and
-> improve safety and readability.
+在 2025/6/21 02:27, Alexei Starovoitov 写道:
+> On Thu, Jun 19, 2025 at 10:10 PM Tao Chen <chen.dylane@linux.dev> wrote:
+>>
+>> The field run_time_ns can tell us the run time of the bpf_prog,
+>> and load_time_s can tell us how long the bpf_prog loaded on the
+>> machine.
+>>
+>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>> ---
+>>   kernel/bpf/syscall.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+>> index 51ba1a7aa43..407841ea296 100644
+>> --- a/kernel/bpf/syscall.c
+>> +++ b/kernel/bpf/syscall.c
+>> @@ -2438,6 +2438,7 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
+>>          const struct bpf_prog *prog = filp->private_data;
+>>          char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+>>          struct bpf_prog_kstats stats;
+>> +       u64 now = ktime_get_boottime_ns();
+>>
+>>          bpf_prog_get_stats(prog, &stats);
+>>          bin2hex(prog_tag, prog->tag, sizeof(prog->tag));
+>> @@ -2450,7 +2451,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
+>>                     "run_time_ns:\t%llu\n"
+>>                     "run_cnt:\t%llu\n"
+>>                     "recursion_misses:\t%llu\n"
+>> -                  "verified_insns:\t%u\n",
+>> +                  "verified_insns:\t%u\n"
+>> +                  "load_time_s:\t%llu\n",
+>>                     prog->type,
+>>                     prog->jited,
+>>                     prog_tag,
+>> @@ -2459,7 +2461,8 @@ static void bpf_prog_show_fdinfo(struct seq_file *m, struct file *filp)
+>>                     stats.nsecs,
+>>                     stats.cnt,
+>>                     stats.misses,
+>> -                  prog->aux->verified_insns);
+>> +                  prog->aux->verified_insns,
+>> +                  (now - prog->aux->load_time) / NSEC_PER_SEC);
 > 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-> ---
->   drivers/char/tpm/tpm_ppi.c | 26 +++++++++++++-------------
->   1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
-> index bc7b1b4501b3..421c6264bac9 100644
-> --- a/drivers/char/tpm/tpm_ppi.c
-> +++ b/drivers/char/tpm/tpm_ppi.c
-> @@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
->   {
->   	struct tpm_chip *chip = to_tpm_chip(dev);
->   
-> -	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
-> +	return sysfs_emit(buf, "%s\n", chip->ppi_version);
->   }
->   
->   static ssize_t tpm_show_ppi_request(struct device *dev,
-> @@ -87,11 +87,11 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
->   		else {
->   			req = obj->package.elements[1].integer.value;
->   			if (tpm_ppi_req_has_parameter(req))
-> -				size = scnprintf(buf, PAGE_SIZE,
-> +				size = sysfs_emit(buf,
->   				    "%llu %llu\n", req,
->   				    obj->package.elements[2].integer.value);
->   			else
-> -				size = scnprintf(buf, PAGE_SIZE,
-> +				size = sysfs_emit(buf,
->   						"%llu\n", req);
->   		}
->   	} else if (obj->package.count == 2 &&
-> @@ -100,7 +100,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
->   		if (obj->package.elements[0].integer.value)
->   			size = -EFAULT;
->   		else
-> -			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
-> +			size = sysfs_emit(buf, "%llu\n",
->   				 obj->package.elements[1].integer.value);
->   	}
->   
-> @@ -211,9 +211,9 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
->   	}
->   
->   	if (ret < ARRAY_SIZE(info) - 1)
-> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
-> +		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
->   	else
-> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
-> +		status = sysfs_emit(buf, "%d: %s\n", ret,
->   				   info[ARRAY_SIZE(info)-1]);
->   	return status;
->   }
-> @@ -255,22 +255,22 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
->   	res = ret_obj[2].integer.value;
->   	if (req) {
->   		if (res == 0)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->   					   "0: Success");
->   		else if (res == 0xFFFFFFF0)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->   					   "0xFFFFFFF0: User Abort");
->   		else if (res == 0xFFFFFFF1)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
-> +			status = sysfs_emit(buf, "%llu %s\n", req,
->   					   "0xFFFFFFF1: BIOS Failure");
->   		else if (res >= 1 && res <= 0x00000FFF)
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
-> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
->   					   req, res, "Corresponding TPM error");
->   		else
-> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
-> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
->   					   req, res, "Error");
->   	} else {
-> -		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
-> +		status = sysfs_emit(buf, "%llu: %s\n",
->   				   req, "No Recent Request");
->   	}
->   
-> @@ -314,7 +314,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
->   		}
->   
->   		if (ret > 0 && ret < ARRAY_SIZE(info))
-> -			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
-> +			str += sysfs_emit_at(str, "%d %d: %s\n",
+> I don't like where it's going.
+> Soon fdinfo will be printing the xlated insns of the prog too,
+> since why not?
+> Let's stop here. We have syscall query api-s for that and
+> bpftool to print such things.
+> No more fdinfo "improvements".
 
-sysfs_emit_at() does not work like that.
-But does this code even compile?
+Got it, Alexei, thanks for your patient explanation.
 
-CJ
-
->   					 i, ret, info[ret]);
->   	}
->   
-
+-- 
+Best Regards
+Tao Chen
