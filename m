@@ -1,80 +1,89 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589F22080E8;
-	Fri, 20 Jun 2025 12:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172022836B4
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 12:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422398; cv=none; b=dXz9iPMA5TdJeK/WSsVRq9jHxRXe/VbGSDojL+o0O9Tfl/DuB79kTHIlPAIl7n1ScVYOuZXb0ILxlpY9I0kxDgWC5W3GCT6fjxDN/FPSQLaxHj0fg8AHMbXaI9mVluxFaz3NG9AH7jrLzxvNj9wEW0Ka/TSHexXdDLZ7h+EeDSc=
+	t=1750422441; cv=none; b=oxE2pf2nwkRGZHv3tkbZp4FzvWGgMc7sk4a3QdYJgwM+timS0I/lvfLEeM0aNHyYp7khfp18JNFPULJCkRxbtGg41r7O1Pw5wBJg5HEQGkrIy4xbOtdz7qapNW687kTHlv+0B9lzv00y/WYZqr0BsjOX61/FPBLXSPP92t128Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422398; c=relaxed/simple;
-	bh=fgzYl4aH6iI0tjTv9jxNK75vM6b9nLzYeirPJhe6RsQ=;
+	s=arc-20240116; t=1750422441; c=relaxed/simple;
+	bh=tX37v4gyoxennChCQjy16+67csIbio+cpP+xJt9Rkwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/fNhKGPeWCCmo7JVtdHvN+hvDDbeZiAskCMZ1IYu+QejRpMgALKDlkkCueg1mhYSMRwGvw25rFVjAMMGf1Pir9LmTzFbI8i2R3OWCwIETTYRiANgh9ZFFNfg7OBKp4xg6pYEYDIo5Cde4G8GjRfSfOemHnFgucUB9uFJDkPYok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sd9PF8Dd; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RL/1fpZymbgFyboyxCrWaMHDO/xENw2TN+yj5ziALfxaZb6MajJqNrC8DB6sGiMfKaPhQ1y0kcz7QXO5tlxwnPlqX0mOQfRrm1h3+0gobI5EG8Mz2aBDS64X3RUC46uVQ5Kc5PSyvwoq/DWjsr6+QkyqecDdk1rRGTYJysOSIGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sd9PF8Dd"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747fba9f962so1291047b3a.0;
-        Fri, 20 Jun 2025 05:26:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750422396; x=1751027196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p7ARiXudRcsVDm3GaWtxNNIcJ4AykF/rfMCwYdzsnKw=;
-        b=Sd9PF8Ddtl5TXdydfPjRAy5MIaZwM41j6nYO9CaslL6rqj6p9q9uhVtxfR077fTdCC
-         3/UZN1x3xRIt5P4vDbAg130qRjr4yRmFoUj8pghzPgAITh3Lao+MoCR1I5lonOVP5PRQ
-         HQXdpdzutZkHifySfB0shmayIb/uMudwk/AUevjp1roGddo5hxCrEJ+GGPfaoEROVV9H
-         j77IDFJknIQTeeXTGpMD7lhgLvWGCe7GBjyGvN17cNsqKjfW+vq9WXRE11SFTqrjJl0t
-         6F9wrab7/S2NP2HFH+ZKhBwOwxeuRPHLCKzndtbb+FgwqdwlJ/lna03Wh0gAvVG5geg3
-         c2lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750422396; x=1751027196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p7ARiXudRcsVDm3GaWtxNNIcJ4AykF/rfMCwYdzsnKw=;
-        b=Sdvd2yp4+KbIoRObTS64mQLa+FilU0uRlt3ln0j2Il/niLv+ZqbDZGIEeamCMBkCmO
-         XocIfq7dJyryQfN9Gz8sVE1ooU7pUjnkDhQj07cPiKVwtkMYMs3Fh5PoBBxJrniaM4Xo
-         PULPCzMzPQuGIpCUBg42bk4dsDgVQkwoNJimNzAHNdH9/I8qm6aJaMbS9wqJvc6AqpLU
-         28Ikmhxa3pF5UZTmvoGtjZdTUk2fE3eCCx9RubEJJjkkgq7r+4dK0NDxpGfbP/JrvqB/
-         KdV1nDYVg15Js+Y5cCgEi7utIYn6Gj9ECjTsZbWwbtXvppjcUZ+LxD7jNmWirw+tC5qn
-         Tq2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVIHjst02YcDLfS1bE8II/cWrsyc7V0Cgclkb9/CrEhsFN+VWZEPrAKmdVBy4RORUibPl2mqbvaY6vS@vger.kernel.org, AJvYcCVIiS6AcDIjJPuLQ6DawZVD08CE+nmKuLBGXbdNvqQeTfGY7+1hVO3O59SJ2IljKqn2tuNnZcb7s5YHZoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG38jqPF652FZ4Ufg4qf41zh3j0InoTSWpuFPHCB4P9/S71NtS
-	4cmE/REOO/zjhU4yjNn9toZTneTu2iUeLc2lV8xEviA7xtFuaKM6gvES
-X-Gm-Gg: ASbGnctfu99pvvTXMW/8b2wBckprsAzWFxUlbj2Nrk9rQFACOlJlBvNJCBnOresxD9C
-	5MgPVk2SeU0unDuQ6HKLjfXywRqunPtBZcx1WA2uregItpamPyvO8zB9x/s70UDBZHlq/El03By
-	IMhAJXfb/Os68jw0YysNcM06/LSPrLWFOJRfxFj+XR3qqS7eejItexNM1WmRR6Z204HSwrS/9T3
-	q/Vkwbb6d/9RLeQP06sYFo70W8yG8CnUwYfFC1p5W3UO1DOuhfQysZIeetU8YK/yHHglvEHS+ey
-	4Jh3YNCWv6fsip8mMfOPlG9836fXvFIyQBeWyysPyVVb+8gyqg==
-X-Google-Smtp-Source: AGHT+IHnSxrJDupZ3OPyegK3Fz6jZqTNQdZvWSKyqjh1BSv5jMmoQ/P/ubeKmDuHCyMxy9L2ZLnnvg==
-X-Received: by 2002:aa7:9f05:0:b0:742:b928:59cb with SMTP id d2e1a72fcca58-7490f572337mr2605669b3a.7.1750422396458;
-        Fri, 20 Jun 2025 05:26:36 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:cab9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f118f2basm1364196a12.9.2025.06.20.05.26.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:26:35 -0700 (PDT)
-Date: Fri, 20 Jun 2025 09:26:29 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
-Message-ID: <aFVTdYWxuq9YzVQR@geday>
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
- <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 32E1B1F38D;
+	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750422437;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
+	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
+	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
+	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750422437;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
+	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
+	vyfJy1YIyjMN4CBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=XTKisOjD;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=x1VXfJZv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750422437;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
+	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
+	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
+	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750422437;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
+	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
+	vyfJy1YIyjMN4CBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 130BF136BA;
+	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PoZwBKVTVWjXJwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 12:27:17 +0000
+Date: Fri, 20 Jun 2025 14:27:15 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Brahmajit Das <listout@listout.xyz>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, kees@kernel.org, ailiop@suse.com,
+	Mark Harmstone <mark@harmstone.com>
+Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
+Message-ID: <20250620122715.GR4037@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250619153904.25889-1-listout@listout.xyz>
+ <20250620014344.27589-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,40 +92,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
+In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 32E1B1F38D
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[twin.jikos.cz:mid,suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.21
+X-Spam-Level: 
 
-On Fri, Jun 20, 2025 at 01:04:46PM +0100, Robin Murphy wrote:
-> On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
-> > Current code enables only Lane 0 because pwr_cnt will be incremented
-> > on first call to the function. Use for-loop to enable all 4 lanes
-> > through GRF.
+On Fri, Jun 20, 2025 at 07:13:44AM +0530, Brahmajit Das wrote:
+> strcpy is deprecated due to lack of bounds checking. This patch replaces
+> strcpy with strscpy, the recommended alternative for null terminated
+> strings, to follow best practices.
 > 
-> If this was really necessary, then surely it would also need the 
-> equivalent changes in rockchip_pcie_phy_power_off() too?
+> There are instances where strscpy cannot be used such as where both the
+> source and destination are character pointers. In that instance we can
+> use sysfs_emit or a memcpy.
 > 
-> However, I'm not sure it *is* necessary - the NVMe on my RK3399 board 
-> happily claims to be using an x4 link, so I stuck a print of inst->index 
-> in this function, and sure enough I do see it being called for each 
-> instance already:
+> Update in v2: using sysfs_emit instead of scnprintf
+> Update in v3: Removed string.h in xattr, since we are not using any
+> fucntions from string.h and fixed length in memcpy in volumes.c
+
+This should be placed under the "---" marker. If it's a new information
+relevant for the patch then it should be a normal part of the changelog.
+
+> No functional changes intended.
+
+No need to write this.
+
 > 
-> [    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
-> [    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
-> [    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
-> [    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
-> 
+> Link: https://github.com/KSPP/linux/issues/88
 
-Hi Robin, and thanks for caring, it's excellent to rely on your
-extensive expertise on ARM in general and RK3399 specifically!
+No newline here.
 
-However, on my board I'm positive it does not work without proposed
-patch and I get stuck with x1 link without it.
+> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
+> Suggested-by: Mark Harmstone <mark@harmstone.com>
+> Signed-off-by: Brahmajit Das <listout@listout.xyz>
 
-There are currently very similar patches applied downstream to Armbian
-and OpenWRT so at least I'm confident that is not only my board which is
-quirky and other people experienced the same problem.
-
-Thanks,
-Geraldo Nascimento
-
-> Thanks,
-> Robin.
+Otherwise it looks good, thanks.
