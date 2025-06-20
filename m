@@ -1,69 +1,144 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3381CAA6D;
-	Fri, 20 Jun 2025 15:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BB58F5B;
+	Fri, 20 Jun 2025 15:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432819; cv=none; b=FJeG7Hf8PCP043SSPaR5Z/mZgsh3J+BZrtLXFshUgSa8epeB99zTaIEFI83zk93d6GGoPfAFrWMUfVF9ZYaZodWrIzoApkVYeWUrCOqe52jLTFlmn2V/kswqCzx/ukbONQruVOVp2YS8NQj2vQ1OjTCxftbJtVkm7l/XXebfZfM=
+	t=1750432856; cv=none; b=HLl2gkPJCIf3Aff5NEqLdA+jkwg9qkdTp4Grlr+S5g3owbibVg1Jx/KT8whRV3IgBmXoOYv8dfJhlFGjClyfZ32A9F8afSHm+XkK6vJ6q2O6R6boicj7o0MAZb6Y/P2eCTYfq2wrUtjMMuushT4S94nYL2Uu4Sb3B5tos0eS/ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432819; c=relaxed/simple;
-	bh=Bjw4igONTZMN0gbQCYTC4dWBbsRKO814NFvkJmuqDJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1txBpZvyJAfPqK2V0PRrSlRSwd4uSQz890/63vWrL6QzmVmwv1zuXE6s90+GFQtTRNVZKbDpj6xrUcQ2x7ZmR/MtlrQgIVgnfRpM6j/+OTbOsU0iUmg5nlfRYD1+pk+LZ3SzjKnEwlnIgvAooF0Dh3izcyguR8t4fewHnOa1u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=meFjEi4T; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750432856; c=relaxed/simple;
+	bh=8+3R0drlRKnn/JI35OglwAOSwdC9nd8AtxSqpjzELK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sRO/08XOT4Ac5ZrgraaZ1EL2VaMinfYdytQLJd5+FVDOq5Neg/bcva9ZBi+v3lnh93cQP+XCCz+HOMdX4i9+IZk9CwG9sWYfIWb3AhiRjekXaSkx/V2jOwNrQUHWtgU5aa65tJnes6HKLDdJNtbhyRkICpjGOZhDpfKvnvhijVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIEEU1Op; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="meFjEi4T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=wC4XMhb/ugJMHtgboBDIqG7VsfLdmfyiCDLnrrMdqgw=; b=me
-	FjEi4TjbSs2bqGS2UkhmQI6dIPZlDEJQi52eJZ9fRzQinJrdDRref7cOviQ4XhgkNpx9n0+MrHl5Y
-	cMVVW/N+t//bnVy6eCvqXUX45ZpHdLcXnk3AWEauvVkq2dvwdbG1+lFzKjrTSo4KVnB3m9fHPKnTr
-	3pLyTPjKZgs1W7U=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uSdX5-00GWJ2-Gq; Fri, 20 Jun 2025 17:19:59 +0200
-Date: Fri, 20 Jun 2025 17:19:59 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kamil =?iso-8859-1?Q?Hor=E1k_=282N=29?= <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/3] net: phy: bcm5481x: Implement MII-Lite mode
-Message-ID: <f8662437-58ea-4ae5-8fbc-eb06e22f5a1c@lunn.ch>
-References: <20250620134430.1849344-1-kamilh@axis.com>
- <20250620134430.1849344-2-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIEEU1Op"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453066fad06so13046655e9.2;
+        Fri, 20 Jun 2025 08:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750432853; x=1751037653; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M/KIHO86ldP5ZYoE2kwfFWlV69Tw5RaRQj/rKy8DDRg=;
+        b=NIEEU1OpZ6bGXPEtZBJLe7vQYxJLQ/8YHga8PDGa70rCR21LdPdt/saNOifOY35g2y
+         A+mNnv2ZNjWDYqYSA6TsTDEb25dG6opTvdRRCFsndRtDIEsfoPaiI6G7lbq2fSAjP+7P
+         DPl6lOMctefpXzGoW/8zBf/k7AC2LmQ+5hNO/arqnTM2MbQz65K1NXWDdF3LUUpB9P7a
+         PYs+z4498JHILdGfnH6z/wwzDCwhiyLZLZ1Pm6UMwC6Oe/LE41YgwLUJVkG7IWy6zYb8
+         Xb5HBUm7WjxJOSSr8g8wKiy/pxMeZIUVlxHlIKwlfuKu49ihpoMsZKpjfrjCOHD8XLSZ
+         99Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750432853; x=1751037653;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=M/KIHO86ldP5ZYoE2kwfFWlV69Tw5RaRQj/rKy8DDRg=;
+        b=l4CB78TFljm0hmdrfQGiH6dMKD14/tom9jhqZtF1m/whDczcZSC8EBEYJ7ZCJ/U4Gt
+         xHKpSB+y9xx3eCo90imCMNt6TFhJLHlcCEUuov2rYIzxori9dCMkxU2fbSxxPbXG8llz
+         bD/lY9f15GiXVDXWl6920EsOEHpMqcLSq/VmGhAaEWuaKJukL0+A5nXuV1BDPgi52GdT
+         Au+OUniGzI/Eza6RM2D87AOQjqJjxdByixA8SweaXfp6fEqhOuj5j9lwOnEJ09x1qC0L
+         XOpK05tYkllbqA7zqLH/U7FX8M/XEDMlFIk4lyK07BAuov2abg7oS4mbmiaSU6m16aFq
+         HZcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6c/v3LmRQ64RHS5aoq+sZen4Kn35T3PYjdcLIy2ksUp7yz2Fsk4CAC92Eac+0IVfdmnwh7iPK3cQV@vger.kernel.org, AJvYcCVDqeXgwImvlrxz6L9aXPG46iOhOerZA2+kPWmjaGyTKiyvaW8ayJxYqI/PjjlbdggqmRy9QAVHestmYdPg@vger.kernel.org, AJvYcCWFIrxNcTrErk8cwO5vNHlDFkpuFtLCYUe4S31/PwoQ9eFMLLEp6BXyXRg/FJosSFKnE2niPQLv/KZppQ==@vger.kernel.org, AJvYcCX34AKeNPHwFwqznjZp0sjrILWuYKXvTbZEv/U+1n6JBgdJUqVzxzvh9T3l/ZLn/2c8nkYbdwvRDOi43GZ1nqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXLdJRtorhJ8hcJHIMfhcSfU81yfkLxPkYW4SAaK6JduR01VBh
+	j2ZlWsb9f0pmIgSZ1cp3EHPs3OXcfABZzZmAkG7/fEnopQXJYpeMfcqk
+X-Gm-Gg: ASbGncsH4gLSMM43DJEwLrp7Hl/bUkEUPENpWlLC1P/9YwoAzG8yasKleBUhsShd+bN
+	Vlh68JoHIIGxhaWxZ+opa+sKVg37z8a5+1B9Hj94rGNiK5GPHhXeUzAKiZhy1/aUeg8+cPGqYs8
+	d3KJQHdKkVd2iIsEfrSRZ53cyPuPv+KKx2Kgu2GBzH10NhoA8wOVyMikj4cgj+6kOWxv4asL0vm
+	WeW9tNaiBpzwyRua2xbKDFPH1QFktfJJ7u4khzJRvABtK9uHEbjZ/ILCeDCyvVVO1L75dwZnCLg
+	b+EqTUMXmSoWVaSBmee4jAQlsjQdPtuYXwo5PmkLAomE6QQPe5w6+qtK9k34Ha5V096/Oie2DG6
+	MOYjseJVaVfdfqkOD+5iHt1MvnDXfu2q63S8R7Q2wdjrheoTG3w==
+X-Google-Smtp-Source: AGHT+IFWKYgJk3mh4dufOnojkp3+ym/Cq+duMM+/JKKRWEtc/dnqzc4ndzC9W90pmrbOVECY/4YLeA==
+X-Received: by 2002:a05:600c:46cb:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-4536877fc08mr16646495e9.30.1750432853078;
+        Fri, 20 Jun 2025 08:20:53 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d1508sm28563515e9.12.2025.06.20.08.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:20:52 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Alex Hung <alex.hung@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Igor Korotin <igor.korotin.linux@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Len Brown <lenb@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>
+Subject: [PATCH v8 2/9] samples: rust: platform: don't call as_ref() repeatedly
+Date: Fri, 20 Jun 2025 16:18:49 +0100
+Message-ID: <20250620151849.281238-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250620134430.1849344-2-kamilh@axis.com>
 
-On Fri, Jun 20, 2025 at 03:44:28PM +0200, Kamil Horák (2N) wrote:
-> The Broadcom bcm54810 and bcm54811 PHYs are capable to operate in
-> simplified MII mode, without TXER, RXER, CRS and COL signals as defined
-> for the MII. While the PHY can be strapped for MII mode, the selection
-> between MII and MII-Lite must be done by software.
+From: Danilo Krummrich <dakr@kernel.org>
 
-Please could you say more about what mii-lite is. Rather than adding a
-bool DT property, i'm asking myself should we add interface mode for
-it?
+In SampleDriver::probe() don't call pdev.as_ref() repeatedly, instead
+introduce a dedicated &Device.
 
-Is it a mode of its own? MII normally means Fast Ethernet, 100Mbps. Is
-that what MII-Lite supports? How does it differ from RMII? Should we
-be calling this PHY_INTERFACE_MODE_LMII?
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ samples/rust/rust_driver_platform.rs | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-	Andrew
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index c0abf78d0683..000bb915af60 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -32,13 +32,15 @@ fn probe(
+         pdev: &platform::Device<Core>,
+         info: Option<&Self::IdInfo>,
+     ) -> Result<Pin<KBox<Self>>> {
+-        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
++        let dev = pdev.as_ref();
++
++        dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
+ 
+         if let Some(info) = info {
+-            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
++            dev_info!(dev, "Probed with info: '{}'.\n", info.0);
+         }
+ 
+-        Self::properties_parse(pdev.as_ref())?;
++        Self::properties_parse(dev)?;
+ 
+         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
+ 
+-- 
+2.43.0
+
