@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED6B2E4241;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1C42E06C7;
 	Fri, 20 Jun 2025 15:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434234; cv=none; b=or+h7u1WysKgmdf8IoB80y2Oj/0Se+7ZIG335Sl+PgQKWvZa8jzwgxpfeW8BFVg2mLBUN+m79yZPsM7sbnQwfAo/EhSmSfarMw28GgLcCTD+jDAkJvE9ud1bzOj+QvI0dPM7n1bG6LtAtNI3NyvMLVNdWw8P0p9VGvwZNb37da4=
+	t=1750434234; cv=none; b=CMU2pOLiW2h20dGXY+QBsOPyR6IaS4uFZ324mKNoSbYdIEaY+in+SePk2+Hd3FXeVXDNMS/T1EEJEQ0Lk1JI2hQSpZ3XOW5MXN/BTYz75SNCYRw4t8EBmYTPfqsukfZqFUXPxWARZVcUDVOJeIOlTsB0hOGXabg54NOPzXGmeVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750434234; c=relaxed/simple;
-	bh=n3mrHhbKnKUpC1kN1NJ7p70/oxST9+GlzZGgUiw5Xms=;
+	bh=3FBI0Jwg53Z+q657ZRTd9Kza++11o1eGhB+nORUB1cI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kO7Btjb5ySETZTtq5T3Qrw7aTSoq7SjyZHK+pMxGBNFDzHbI/Ih7QUMQ80h02T5nJT98diaTgwYqJ5ZKrGYIrLwDndiIttd7u5L3fA9w2NUeUPDF3iI4AlD+3MA4wKprs8aetgzs4KrNMAch2h3iDveV/Bmu9DFJRwO4Y7olzoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0cdnnRC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JXNTGIQ31W38w2XsHWfcxxSyA/jd4PsJLpbdZLT8DKyiy8+ja8xWlt4ODEMjtB4KKXxB3jOQ0uaqcKym0M3ky9MjiuaEJm0tjVU7JynBZrzFrGppkSoU1PIDzKrVhpFo9tresLG2eW5qu5qhRguLjIX4ZjUZs3JBgsKg7K5fmHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gjvhrv7H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0cdnnRC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DF8FC4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gjvhrv7H"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07377C113CF;
 	Fri, 20 Jun 2025 15:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750434234;
-	bh=n3mrHhbKnKUpC1kN1NJ7p70/oxST9+GlzZGgUiw5Xms=;
+	bh=3FBI0Jwg53Z+q657ZRTd9Kza++11o1eGhB+nORUB1cI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=c0cdnnRCMiUXGUWRZKXjuQmmed1u1TmtaK0z2m8n7D0R3KpYtieyKYq4ZU2adkxIK
-	 v0XfH4uedfuYeKiHMFP/WclYAZhKY/C1gN9p58PpigwzJHHd4OF/t9QvlFAS7J6oAa
-	 3Rny6oFVXm99QF49ZNpZXtJ45gqFsbi0fCk2G+AZw54v0yOYQKbYAgZeWodi+nx597
-	 XHHwEhh31CO5H1aYuPX1V+6TOp63xuChlkMFwWYdzPAeV44NdUJ8RS00DqnEthGzBY
-	 THsRre7+TYNJtEQumx0l1yeNmf43bLJKBWuVoH1BBgoaowhdSPy8WERy/YK3d1buPp
-	 dIUXQ9PUJs8Ww==
+	b=Gjvhrv7HjrQ4v4aqIMxviFUFTCTY4GDzOfNBDprYAYl+TBrexIxB7HDQQNbENt5sv
+	 BgAy8+GpK/WAAUieQSqS3GX+TT6yZwgvTpHPJjwbECJt44vNOlhtzEi38Gzl/77NK1
+	 R36TtrHiKtt6npiOi76218owif+h7gidYVyIZUCsUwrPXMn/ESFe7SYGimrgN6a30c
+	 yOEVOsQHHOPBDgsEGPMI1WgRZuBf1alZbaPl6IJbAiHLbB4q+N2FGIKnNNVASAKUKv
+	 0V6pN4ffnKTSEIba/BI6JdtbBRvTKB5EuCRePtLQbIAXhbqAR+30lS9jjx9vCxbiLU
+	 GdM5U9xoTwMUg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1343DC7115B;
-	Fri, 20 Jun 2025 15:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE75EC7115C;
+	Fri, 20 Jun 2025 15:43:53 +0000 (UTC)
 From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Fri, 20 Jun 2025 18:40:50 +0300
-Subject: [PATCH 11/11] ARM: dts: mediatek: add basic support for Lenovo
- A369i board
+Date: Fri, 20 Jun 2025 18:40:48 +0300
+Subject: [PATCH 09/11] ARM: dts: mediatek: add basic support for MT6572 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-mt6572-v1-11-e2d47820f042@proton.me>
+Message-Id: <20250620-mt6572-v1-9-e2d47820f042@proton.me>
 References: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
 In-Reply-To: <20250620-mt6572-v1-0-e2d47820f042@proton.me>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -60,11 +59,11 @@ Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
  Max Shevchenko <wctrl@proton.me>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750434231; l=2299;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750434231; l=3093;
  i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=lTjo3ihR3gUlpL1GW0vPSnD1O+oT6SyQn7cpI3Gt7SU=;
- b=AJjRsHDZP2J6V9EgEJwBSC0mqa9ApUP+Ke6oP/dYMgZ8GuD8lxcVsUuCuG0TjHk29w5JOc3sR
- L2O+R7DD6/3CnY8tLfMAxbq+ollMI5/867XTIes34t+guE0rQF2NjyT
+ bh=yLz+8+oRVysKR8AFBuER+Y8kTu+TRBNb+mijfqNvpZQ=;
+ b=bCdHvRnt9g7pM6K/Ch8qxCTRPC38eiYofcpVy4YvxOPA4ID6G44+elWtfszhzVGa1ZXYT7DJs
+ kT9NpWpkFrmDlt9SWyPb/lyzmJm32pt4TRwrG0EeUR4ebCiFm0wdJGp
 X-Developer-Key: i=wctrl@proton.me; a=ed25519;
  pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
 X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
@@ -74,90 +73,123 @@ Reply-To: wctrl@proton.me
 
 From: Max Shevchenko <wctrl@proton.me>
 
-This smartphone uses a MediaTek MT6572 system-on-chip with 512MB of RAM.
-It can currently boot into initramfs with a working UART and
-Simple Framebuffer using already initialized panel by the bootloader.
+Add basic support for the MediaTek MT6572 SoC.
 
 Signed-off-by: Max Shevchenko <wctrl@proton.me>
 ---
- arch/arm/boot/dts/mediatek/Makefile                |  1 +
- arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts | 57 ++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+ arch/arm/boot/dts/mediatek/mt6572.dtsi | 105 +++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mediatek/Makefile b/arch/arm/boot/dts/mediatek/Makefile
-index cb869a1aaec21a1d99f7f2a829b84672a3f52726..e48de3efeb3b9ab00108cc28afa8da525d0ec14a 100644
---- a/arch/arm/boot/dts/mediatek/Makefile
-+++ b/arch/arm/boot/dts/mediatek/Makefile
-@@ -2,6 +2,7 @@
- dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt2701-evb.dtb \
- 	mt6572-jty-d101.dtb \
-+	mt6572-lenovo-a369i.dtb \
- 	mt6580-evbp1.dtb \
- 	mt6582-prestigio-pmt5008-3g.dtb \
- 	mt6589-aquaris5.dtb \
-diff --git a/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts b/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts
+diff --git a/arch/arm/boot/dts/mediatek/mt6572.dtsi b/arch/arm/boot/dts/mediatek/mt6572.dtsi
 new file mode 100644
-index 0000000000000000000000000000000000000000..da8865a6b7e4f0e346f42504b3f8a4db61cb240e
+index 0000000000000000000000000000000000000000..dd12231ca745be7455e99391abd2d708f2f1a8a9
 --- /dev/null
-+++ b/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts
-@@ -0,0 +1,57 @@
++++ b/arch/arm/boot/dts/mediatek/mt6572.dtsi
+@@ -0,0 +1,105 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
 + */
 +
-+/dts-v1/;
-+#include "mt6572.dtsi"
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
 +/ {
-+	model = "Lenovo A369i";
-+	compatible = "lenovo,a369i", "mediatek,mt6572";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "mediatek,mt6572";
++	interrupt-parent = <&sysirq>;
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
++	cpus {
 +		#address-cells = <1>;
-+		#size-cells = <1>;
-+		stdout-path = "serial0:921600n8";
++		#size-cells = <0>;
++		enable-method = "mediatek,mt6589-smp";
 +
-+		framebuffer: framebuffer@9fa00000 {
-+			compatible = "simple-framebuffer";
-+			memory-region = <&framebuffer_reserved>;
-+			width = <480>;
-+			height = <800>;
-+			stride = <(480 * 2)>;
-+			format = "r5g6b5";
-+			status = "okay";
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
 +		};
 +	};
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
++	system_clk: dummy13m {
++		compatible = "fixed-clock";
++		clock-frequency = <13000000>;
++		#clock-cells = <0>;
 +	};
 +
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		connsys@80000000 {
-+			reg = <0x80000000 0x100000>;
-+			no-map;
-+		};
-+
-+		framebuffer_reserved: framebuffer@9fa00000 {
-+			reg = <0x9fa00000 0x600000>;
-+			no-map;
-+		};
++	rtc_clk: dummy32k {
++		compatible = "fixed-clock";
++		clock-frequency = <32000>;
++		#clock-cells = <0>;
 +	};
-+};
 +
-+&uart0 {
-+	status = "okay";
++	uart_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	watchdog: watchdog@10007000 {
++		compatible = "mediatek,mt6572-wdt",
++			     "mediatek,mt6589-wdt";
++		reg = <0x10007000 0x100>;
++		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
++		timeout-sec = <15>;
++		#reset-cells = <1>;
++	};
++
++	timer: timer@10008000 {
++		compatible = "mediatek,mt6572-timer",
++			     "mediatek,mt6577-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&system_clk>, <&rtc_clk>;
++		clock-names = "system-clk", "rtc-clk";
++	};
++
++	sysirq: interrupt-controller@10200100 {
++		compatible = "mediatek,mt6572-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0x10200100 0x1c>;
++	};
++
++	gic: interrupt-controller@10211000 {
++		compatible = "arm,cortex-a7-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0x10211000 0x1000>,
++		      <0x10212000 0x2000>,
++		      <0x10214000 0x2000>,
++		      <0x10216000 0x2000>;
++	};
++
++	uart0: serial@11005000 {
++		compatible = "mediatek,mt6572-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0x11005000 0x400>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart1: serial@11006000 {
++		compatible = "mediatek,mt6572-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0x11006000 0x400>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
 +};
 
 -- 
