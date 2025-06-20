@@ -1,147 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC40E56A;
-	Fri, 20 Jun 2025 23:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A120723C505
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 23:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750461207; cv=none; b=a/cyZondp3EUEoq2hu60RmFx4sorsf+hK3k/cX7i0TCteferx0qr2+dP245c20WXAbsEYITNHcWFkH1HeSWdttf5P/Coii2AlSgqrmxg5NjCiN3HEJhvE5UJDBjP4CRhNkFnhaqMWnLi60eJjP/pcDWIbi/F7q0h5eHRF0xlCYE=
+	t=1750461208; cv=none; b=oZTO8SY67bxVb6Q5ifXJbZNHeUHKjqRyfUz7LCOMHAMXVcKEYlLmJGUxJ78ZthE1Z/Yk1tBmfRwxa/oSxU8A+MIvf//RkhRBlweCaRIYug8+fCXaE/wExdf8WngC+3XzqNAUhMzicupC6pJvfgKbX5uM//iterDnN1jrA7DxCQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750461207; c=relaxed/simple;
-	bh=1xpPvJzOsq9DyhQrcWjfxPukK6gyCTgayP5/Qcf3zaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=twKmdGT0nxWWKb9atx67bGxik2f6f5FZddRiI13Kb06qW2vhYnDchUC1JVPeYja2qiLECzuFVmkKTzw5JA9PO3sDU/DbcL4n7EDddo84C+k52CoR0d38nWnytwPfLn/sJudsKQ+mkkSJiwlKwwHkGeoLVNBKgyqZ07R1ddnBfK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7orA/bU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750461208; c=relaxed/simple;
+	bh=ejHsLwAI1iRBNNL/r378fhaYBbN+C4pKbNfS8unnfJQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OIRgMbpfArn3KMUWBWQM/lKLtD638D7RqyXRenl67CMAa5bb52ulwtiLDLLZQDoLZ8RHSIz1s1cy0aRJPDdnvMYfc6F7ZcO34XmOc78w4fwD23P/fUQHvECBQC03D/PNJYSkrGf/T4CwkIR5UcElEJ1GH25rz/lPFrdv50aeR3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KEXAd2A2; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7orA/bU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16DBDC4CEEE;
-	Fri, 20 Jun 2025 23:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750461207;
-	bh=1xpPvJzOsq9DyhQrcWjfxPukK6gyCTgayP5/Qcf3zaQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A7orA/bUeaj039gU6uXCNkJVJ+7HNLZK3/vXJVFbY/cEDDnp9fLkjucRqdaahjbYX
-	 UHEgsdUTstMPOC6DPQoorO2CKuD+Wa1m2OXdgXbvhyh+OvMiymUa8fnifZEo7VAa47
-	 TVhuStpQOJ/6DcdrHFcktuBJ9zYU4P2YKdJV7U/LQxOIBeo8IG81yOckZ07OfGh+Lc
-	 pRSmDZTtW32XSxInOnbpsILSxfF7s1e7RDdKQwKMLW/WorFZflrstw4s+IH42W2QT7
-	 8uIxZ66WqKeKPAT1MkdQeeWVtmE6GIn+b9xTQW3Ity2StRdJnv0glJSo+idiArFQra
-	 moIrcsXrc33+g==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in migrate_{hot,cold} actions
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KEXAd2A2"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235e1d66fa6so26460815ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750461206; x=1751066006; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EJmLTmvvg0E7izo+/RvoiskKc3ULA4/sxq8y6FuVrPg=;
+        b=KEXAd2A2sODuHx7sG9Wwy3BI+9Utmu6d63EiVGpqPcoiB2kGyvTVQkFzXqo8Xd8x9w
+         yCKL/Hk3CiM4OoQFG4aofv33cgnEAAHSIkyO3KP0CpUXEvy5+550ZQ6rLVUfvAnfCtq/
+         ShcAYEG/j4zWhCeKv9sS5zEdHGrrOgs78m7iuPc7nbG1vr3o69dq6rZyUe3QMpVx7W2n
+         3K1i72cU/SM3LLr8WLMP/5PfnxUW6YWM69gVUeS7CsZI8Us+0HEQD+iPyRNUDW2k+Sd1
+         PwiqlMDz9ARogGs4e8YALGsZQ27FCghGheWQednVVslxvBtebsR/RvwguQap8o/0KLhf
+         sSEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750461206; x=1751066006;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EJmLTmvvg0E7izo+/RvoiskKc3ULA4/sxq8y6FuVrPg=;
+        b=wo3l11Y+CK2+E23boL1p8Btja3BepiWfblhVwmnUaeSpjF+bOean1Nu2OQk2OX5Epz
+         nTLRwsbi9YSiHR8Q4FWOX76hMMH2COFzl74Gdkpp+O2vMHKk7qBYBU9lgH8pt+yLCgow
+         /bjAt5rNrWgvTq1y4NtPFsvZ79Pv0FCzVO1/2uDV3loCyFtR0y6SQx3/3Y3DAQ70dfAk
+         ljeWeOPWM+Gmpb3kaFrz4ZV1R59apZ5NqQUt2GIphmrje29pd7c36v70f4gUPRZPhHyA
+         ikNZkhPptZKICOLTkgCI0Kimi8rSIkTObZrfCL/d0bnPwDjKCsVFzdxBdL/bECBmQNcG
+         5G8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWu6HhjFgkJI6fzeFD9r5oE5ly2v/xXxzKYm0sq9mf/xIm6rp+pNlBwXP1mAUxR+aowGD3blNj7MhZZIgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp78ywmf4aOH4s6+EsI6FHNjYGp+r64Xf1DdMzXuqWLTpjYqaE
+	T9D5yWxG0hnrYuPWS2lV8pXZMoHFulf7i1DlJDgKSZaNDKyIW65xBxNZjD3CGDyLp+pAf8QjCR1
+	XO+ttww==
+X-Google-Smtp-Source: AGHT+IGpU0wSWZv0e+j+oZwhTfTGLz89dqX4GbiY2Zh4+crAkClvle5QmNlBgbXfUiTTYto+Kj/e9VYps/E=
+X-Received: from pjboe18.prod.google.com ([2002:a17:90b:3952:b0:312:f88d:25f6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c43:b0:234:a139:1206
+ with SMTP id d9443c01a7336-237d9accb06mr73650445ad.40.1750461206033; Fri, 20
+ Jun 2025 16:13:26 -0700 (PDT)
 Date: Fri, 20 Jun 2025 16:13:24 -0700
-Message-Id: <20250620231324.99607-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <CAMvvPS4imbSprPPZ3dtPBK2i3DZPffYn3d4rASMoNwcTeHCWqg@mail.gmail.com>
-References: 
+In-Reply-To: <20250326193619.3714986-7-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250326193619.3714986-1-yosry.ahmed@linux.dev> <20250326193619.3714986-7-yosry.ahmed@linux.dev>
+Message-ID: <aFXrFKvZcJ3dN4k_@google.com>
+Subject: Re: [RFC PATCH 06/24] KVM: SEV: Track ASID->vCPU instead of ASID->VMCB
+From: Sean Christopherson <seanjc@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Rik van Riel <riel@surriel.com>, Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 20 Jun 2025 16:47:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-
-> Hi SeongJae,
+On Wed, Mar 26, 2025, Yosry Ahmed wrote:
+> SEV currently tracks the ASID to VMCB mapping for each physical CPU.
+> This is required to flush the ASID when a new VMCB using the same ASID
+> is run on the same CPU. Practically, there is a single VMCB for each
+> vCPU using SEV. Furthermore, TLB flushes on nested transitions between
+> VMCB01 and VMCB02 are handled separately (see
+> nested_svm_transition_tlb_flush()).
 > 
-> On Fri, Jun 20, 2025 at 3:21 PM SeongJae Park <sj@kernel.org> wrote:
-> >
-[...]
-> > Also, even for general use case, I think such user-space intervention is not
-> > too much request.  Please let me know if I'm wrong.
+> In preparation for generalizing the tracking and making the tracking
+> more expensive, start tracking the ASID to vCPU mapping instead. This
+> will allow for the tracking to be moved to a cheaper code path when
+> vCPUs are switched.
 > 
-> You are correct. The userspace tool would be coming up with the
-> weights, so it would not be hard for it to write those weights to two
-> places. I coupled the weights used in DAMON and weighted interleaving
-> for this revision and the previous because I could not think of a use
-> case where you would want to use different weights for allocation time
-> and migration, so it felt silly to have two different places with the
-> same data. However, I don't feel too strongly about this, so I'm
-> willing to defer to your judgement.
-
-Thank you for being kind and flexible about the decision.  One such use case I
-can think off the top of my head is when users want to do memory tiering, and
-there are multiple nodes of same tier.  For example, if users want to migrate
-hot pages in a node to the upper tier, and there are multiple nodes for the
-tier, users may want to do the migration with same weight, or in proportion to
-their free space.
-
-So let's push this way for now.  Nothing is set on the stone, so please feel
-free to let me know if you feel differently later.
-
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> ---
+>  arch/x86/kvm/svm/sev.c | 12 ++++++------
+>  arch/x86/kvm/svm/svm.c |  2 +-
+>  arch/x86/kvm/svm/svm.h |  4 ++--
+>  3 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> Also, our userspace tool updates these weights somewhat frequently,
-> several times per minute, when it detects a change in the bandwidth
-> utilization of the system to calibrate the interleave ratio. I am
-> concerned about how frequent changes to the scheme via the sysfs
-> interface will affect the effectiveness of DAMON's page sampling. From
-> what I understand, updates to the sysfs aren't saved until the user
-> writes to some sysfs file to commit them,
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index d613f81addf1c..ddb4d5b211ed7 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -240,7 +240,7 @@ static void sev_asid_free(struct kvm_sev_info *sev)
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		sd = per_cpu_ptr(&svm_data, cpu);
+> -		sd->sev_vmcbs[sev->asid] = NULL;
+> +		sd->sev_vcpus[sev->asid] = NULL;
+>  	}
+>  
+>  	mutex_unlock(&sev_bitmap_lock);
+> @@ -3081,8 +3081,8 @@ int sev_cpu_init(struct svm_cpu_data *sd)
+>  	if (!sev_enabled)
+>  		return 0;
+>  
+> -	sd->sev_vmcbs = kcalloc(nr_asids, sizeof(void *), GFP_KERNEL);
+> -	if (!sd->sev_vmcbs)
+> +	sd->sev_vcpus = kcalloc(nr_asids, sizeof(void *), GFP_KERNEL);
+> +	if (!sd->sev_vcpus)
+>  		return -ENOMEM;
+>  
+>  	return 0;
+> @@ -3471,14 +3471,14 @@ int pre_sev_run(struct vcpu_svm *svm, int cpu)
+>  	/*
+>  	 * Flush guest TLB:
+>  	 *
+> -	 * 1) when different VMCB for the same ASID is to be run on the same host CPU.
+> +	 * 1) when different vCPU for the same ASID is to be run on the same host CPU.
 
-This is correct.
+Tom, can you clarity what an ASID actually tags when NPT is in use?
 
-> then the damon context is
-> recreated from scratch.  Would this throw away all the previous sampling work
-> done and work splitting and merging regions?
+The more I think about all of this, the less it makes sense.  The *entire* point
+of an ASID is to tag TLB entries so that a flush isn't required when running code
+for the same address space.
 
-This is how an early version of DAMON sysfs interface was working.  Your
-concern was true for the version.  Hence, we implemented online tuning
-feature[1].  If you use DAMON user-space tool, 'damo tune'[2] is the command
-for using this feature.  So, as long as you use the feature, updating weights
-several times per minute shouldn't make such issues.
+The main problem I'm struggling with is that, as usual, the APM doesn't properly
+document anything, and just gives "suggestions" for the VMM.  *sigh*
 
-[1] https://lore.kernel.org/20220429160606.127307-1-sj@kernel.org
-[2] https://github.com/damonitor/damo/blob/next/USAGE.md#damo-tune
+As I read it, these snippets from the APM are saying ASIDs tag only GPA=>PA entries
+when NPT is in use.
 
-> I am not
-> super familiar with how the sysfs interface interacts with the rest of
-> the system, so this concern might be entirely unfounded, but I would
-> appreciate some clarification here.
+  TLB entries are tagged with Address Space Identifier (ASID) bits to distinguish
+  different guest virtual address spaces when shadow page tables are used, or
+  different guest physical address spaces when nested page tables are used. The
+  VMM can choose a software strategy in which it keeps multiple shadow page tables,
+  and/or multiple nested page tables in processors that support nested paging,
+  up-to-date; the VMM can allocate a different ASID for each shadow or nested
+  page table. This allows switching to a new process in a guest under shadow
+  paging (changing CR3 contents), or to a new guest under nested paging (changing
+  nCR3 contents), without flushing the TLBs.
 
-Thank you for asking.  Please feel free to ask any more questions as you need!
+  Note that because an ASID is associated with the guest's physical address
+  space, it is common across all of the guest's virtual address spaces within a
+  processor. This differs from shadow page tables where ASIDs tag individual
+  guest virtual address spaces. Note also that the same ASID may or may not be
+  associated with the same address space across all processors in a
+  multiprocessor system, for either nested tables or shadow tables; this depends
+  on how the VMM manages ASID assignment.
 
-[...]
-> > This may require writing not small amount of code, especially for DAMON sysfs
-> > interface.  I think it is doable, though.  If you don't mind, I'd like to
-> > quickly make a prototype and share with you.
-> >
-> > What do you think?
-> 
-> That sounds good to me! Having a prototype from you for the sysfs
-> interface would certainly be helpful, but if you're busy, I can take a
-> pass at it as well.
+But then the "15.16.1 TLB Flush" section says this, without any qualification
+whatsoever that it applies only to shadow paging.
 
-Great.  I will try to do this by this weekend.
+  A MOV-to-CR3, a task switch that changes CR3, or clearing or setting CR0.PG or
+  bits PGE, PAE, PSE of CR4 affects only the TLB entries belonging to the current
+  ASID, regardless of whether the operation occurred in host or guest mode. The
+  current ASID is 0 when the CPU is not inside a guest context.
 
-[...]
-> Thank you for your help and feedback!
+And honestly, tagging only GPA=>PA entries doesn't make any sense, because
+GVA=>GPA needs to be tagged with *something*.  And the APM doesn't say anything
+about caching GPA=>PA translations, only about caching VA=>PA.
 
-The pleasure if mine!
+The thing that doesn't fit is that SEV+ uses ASIDs on a per-VM basis.  I suggested
+per-VM ASIDs for all VM types based solely on that fact, but now I'm wondering if
+it's SEV+ that crazy and broken.  Because if ASIDs also tag GVA=>GPA, then SEV has
+a massive architectural security hole, e.g. a malicious hypervisor can coerce the
+CPU into using a stale GVA=>GPA TLB entry by switching vCPUs and letting guest
+process with CR3=x access memory for guest process with CR3=y.  But again, if
+ASIDs don't tag GVA=>GPA, then what provides isolation between vCPUs!?!?!
 
+Assuming ASIDs tag VA=>PA (i.e. the combined GVA=>GPA=>PA translation), then I
+take back my suggestion to use per-VM ASIDs, and instead propose we treat ASIDs
+like VPIDs, i.e. use per-vCPU ASIDs (well, technically per-VMCB, because nested).
+All server SKUs I've checked (Rome, Milan, Genoa, and Turin) support 0x8000 ASIDs.
+That makes the ~512 ASIDs reserved for SEV+ a drop in the bucket, i.e. still leaves
+~32k ASIDs up for grabs, which means KVM can concurrently run ~16k vCPUs *with*
+nested VMs without having to fallback to flushing when scheduling in a new vCPU.
 
-Thanks,
-SJ
+That way we don't need the complexity of the xarray ASID=>vCPU tracking for common
+code.  And as a bonus, the logic for VMX vs. SVM is very, very similar.
 
-[...]
+Given the SEV+ uses the ASID as the handle for the guest's encryption key,
+changing that behavior isn't an option.  Though I still don't see how that isn't
+a security flaw.  Regardless, I definitely don't think it's something we should
+follow.
