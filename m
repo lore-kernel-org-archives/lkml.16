@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E00030E844;
-	Fri, 20 Jun 2025 06:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE3E220F36
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750401247; cv=none; b=RguyiIrCE4mA1IfdUm5+AWFIsw1NeCcCnby5OS/19khar7f53txhKH1i6qAJ85x7yXDLsyRhwh5x8QZol54tbkB8DqyuUX5yWMXRe70mwDWShYWeoC819g15ewmWEJ5O8+q2qdbeSOL4xqm9ArzES37cWfO1rrhwgXTmLKMGIDw=
+	t=1750401248; cv=none; b=Paif83/UIJR4VQRoWmc2opx2xd85jf+YasKVX1PlzuM6Kb14ZOTL684q63eJJQzOe3LhMXCFwbwuXUcQnBP3UatYsvLoVHpxKyW9e1lxmuKi1QMnnG1dcGU1nwnUwX0tN/7DDSxOjff+Udle+djbCtcvFDa+oXk0j81ohIyTxlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750401247; c=relaxed/simple;
-	bh=IuRwyOKneJCSkVWyLAcFAEowDNOyO1GkwmbicDcNxCY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Cl7b3roS6kxL7mNdDSCujaC8sA1osFKA/BggE4xrKOBzpvlYZKhDuM5D8wEQsNuB5JK/OYzQ/wN0+sKZOjXCfteh0XZUSg8ur3KslKerjqrjLn/dz07z2vSkZfT8eyWuNsNZRA6irXcgkxl/5svAhBRMr3+G3VrljRPHQFvL288=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lk6ejsEW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750401248; c=relaxed/simple;
+	bh=dVLl9EUNjWGmiCDhYmFZI0+MgMZZogKvTobR1Gx3A2c=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mRnuXvGFRQy+2IEJsicgNjBDfywzAQWpmk3IGq4garzVe3rJUpHWickoNKNDJ8Qc+JvZVNcINckHROKrfbkthXrPKv1byScoKP0LLWFNV/lYTmwcmUq4dk8uf/1XDrkAO/ocKW8WQmU5bBBoRP794lsMV1OQbgJBmn4HKs+tSfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJAVlss/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lk6ejsEW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD66C4CEE3;
-	Fri, 20 Jun 2025 06:34:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJAVlss/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6F1C4CEED;
+	Fri, 20 Jun 2025 06:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750401247;
-	bh=IuRwyOKneJCSkVWyLAcFAEowDNOyO1GkwmbicDcNxCY=;
+	s=k20201202; t=1750401248;
+	bh=dVLl9EUNjWGmiCDhYmFZI0+MgMZZogKvTobR1Gx3A2c=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=lk6ejsEW34nyj0jbAi+W0p23wmxjzGn1Ka7Ebw52k0/yRKCneOztTHBSuJbG8MM+h
-	 361HMPbtPYocgxeiicEIP8z9S/CcI2XsmoKycAHvGtR83kDFSVkhkgAUKuWm4knsqa
-	 bKx0/4KjSgxBcddcEuA3lA0R6sBaCVUtgJkeQzX3P50a0ELrMOrIndpGz23N4yHR6l
-	 13ynuPR52Bb8x9HNz3fkzgLo/sejigBzKzwYMGlrk88S7KgovBrPeNlvVLQXO91NX0
-	 37r/t2H1xeIFBbhnXSyx24tn3DuJ4oVfkHPArJ6hru/ii0YDZK4Q7iEghWse1sjNFP
-	 kBCXLAsUsu1sA==
+	b=tJAVlss/09O6zE7KKmNPbBz0UmB+exM4jzNe60pNIN97PKIsUGVuuIrBueB2KvOWX
+	 mCZA3Brz50zjPKeCS1BNv/0y9BUwtQmoEBKzE4Vn9p8f3JuOtQv6JswrlnD7NhA0dK
+	 Rf+uQA6fQcccDtJjqIMgAUGjmsJkgnaSMzKZdOl8Eoe0v6XS8xWQR6kpVcNZr2OSbk
+	 9RhzGQsTiCt0dB+o3I/Sa/ksf7qPDmaCq3hgcN/ZHQbYJqneiS7fxUFO5ZQsRYI87Q
+	 NFYTrLu1kJ2iKTHKQrp2RPm2101U9cFEdYt6+3OvLJvugx2MmqNDhcpmml3lNIcOgt
+	 /paObgyybkJQw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C1D38111DD;
-	Fri, 20 Jun 2025 06:34:36 +0000 (UTC)
-Subject: Re: [GIT PULL] Crypto Fixes for 6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC2638111DD;
+	Fri, 20 Jun 2025 06:34:37 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.16-rc3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aFTS1jNQ6DB51gUs@gondor.apana.org.au>
-References: <aFTS1jNQ6DB51gUs@gondor.apana.org.au>
+In-Reply-To: <CAPM=9txjJTL-dgwgrZbsiQzAHxe97vQ6mrttCxnf0okZQ5t3gQ@mail.gmail.com>
+References: <CAPM=9txjJTL-dgwgrZbsiQzAHxe97vQ6mrttCxnf0okZQ5t3gQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aFTS1jNQ6DB51gUs@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p5
-X-PR-Tracked-Commit-Id: df29f60369ccec0aa17d7eed7e2ae1fcdc9be6d4
+X-PR-Tracked-Message-Id: <CAPM=9txjJTL-dgwgrZbsiQzAHxe97vQ6mrttCxnf0okZQ5t3gQ@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-06-20
+X-PR-Tracked-Commit-Id: b8de9b21e8499a09ef424e101a8703e8e1866bfd
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0fa5248255a1f4cc87f35610f2762d9cdd919246
-Message-Id: <175040127473.1104049.8048882044326007827.pr-tracker-bot@kernel.org>
-Date: Fri, 20 Jun 2025 06:34:34 +0000
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+X-PR-Merge-Commit-Id: 5f2b6c5f6b692c696a232d12c43b8e41c0d393b9
+Message-Id: <175040127634.1104049.1483328524375191524.pr-tracker-bot@kernel.org>
+Date: Fri, 20 Jun 2025 06:34:36 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 20 Jun 2025 11:17:42 +0800:
+The pull request you sent on Fri, 20 Jun 2025 13:25:32 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p5
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-06-20
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0fa5248255a1f4cc87f35610f2762d9cdd919246
+https://git.kernel.org/torvalds/c/5f2b6c5f6b692c696a232d12c43b8e41c0d393b9
 
 Thank you!
 
