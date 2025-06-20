@@ -1,176 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0A21401B;
-	Fri, 20 Jun 2025 11:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4072F257AF2
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418351; cv=none; b=FfXa97Qho9tqbUE7c71Lk2NW585aCr6kex3+dulJyE5rMdQcgDU0vWQ72ct0tyzxtnsPARJ5IE8RqDZoJ7T1rDbP0KVDS7rACAtjmKVNGI76Zbrd/FzwK+5FAwPvyKKqMKKvH1ue3KJJDyN4m0RssfJUNc2dQAbmEmt6SCbvh7M=
+	t=1750418381; cv=none; b=j1xer/AvnXa/YdfKtnD3AzNIiSEDTclDEVrsSgFrB8hNmdJFLcZ2Fx+iXv+6PAIF8h9cJ/FliVdSVqQdl5SbhFYJbP11w8+dn+cmQNYLFFHV0OmREs1BHHhC7mearCdC1j84bE3oFxBq63e/o1SrQADNH9SE/dtRRkaqx247qEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418351; c=relaxed/simple;
-	bh=HCi3L5oYzZ4C1LKFJ08vKgxl9GTxpSyrU6Ns4txdrog=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DmYTapwL+3xdzfod4OdLm3ajyljOFD35WyAY26hBrPP62xV+gefGOy6GXxQYx2krYUQv1fDdpWpN4I0Y14DmYfimSUh7CxytS7dkZPGvVst+BvL+ve6Lte3HUkuxJDyIDrTBKyCp1eJU+3HoSoQxVBOFx9Iq0GKlXThlQeP3A1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBl3KgI+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBl3KgI+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010F7C4CEE3;
-	Fri, 20 Jun 2025 11:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418351;
-	bh=HCi3L5oYzZ4C1LKFJ08vKgxl9GTxpSyrU6Ns4txdrog=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iBl3KgI+KjED+iAe372S5+ro0Tqhpe9CzrPWkruf3mM9YO3Q6wI42an95qUMrdnKA
-	 dozCkNIaqWg5oVKMsH8oNMOyzXYcD+9OyGbTA5p9WFVmprUV3F/mqrn+zYM3P83dUn
-	 tLL6Mpy/Nn7noz8zI5y8roVMJFGK5agM861A4sGuMYDdJXtnBgEdRqfWP18PFhN9j0
-	 ejxCd+FjZ+E0of6UHQpTRmdDmvnQXBCrHjoIMaVl6T6kyGX8v9RBXx5Q9JsnCgt7Sh
-	 B2Ejb4CgDAoa7SiJ5VjTjjhssYnuKmvE4nGyKs4xCVSIXevj1hdAdl3jfG3Cv32yLD
-	 RMZGKtfaTCqMQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jiri Pirko <jiri@resnulli.us>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] lib: test_objagg: split test_hints_case() into two functions
-Date: Fri, 20 Jun 2025 13:19:04 +0200
-Message-Id: <20250620111907.3395296-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750418381; c=relaxed/simple;
+	bh=Frx48Dj5vtpyGFe0IeU8eaW0Gaf1W+H03xtEuNJVg5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qhxi7W9PmqPrzZEcdkrZv9x0bfc6cBT6C/QAmvdn6+wNenO4EfY0kbLR8XMgl0ED52GAeUTPl3O8C9xvvYbNmL+Ja4HjgSAKWELAUo1UHTvSysAxSg0Q+7clRYOOWDsqPOOXTcVoEAVWLH+LMKbRP3wwN76ykWxLixgovDLoxuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D909C176A;
+	Fri, 20 Jun 2025 04:19:18 -0700 (PDT)
+Received: from [10.57.31.151] (unknown [10.57.31.151])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C72773F673;
+	Fri, 20 Jun 2025 04:19:35 -0700 (PDT)
+Message-ID: <340d76b8-c3a6-4116-ae51-ac4e4ee6a994@arm.com>
+Date: Fri, 20 Jun 2025 12:19:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/rockchip: prevent iommus dead loop when two masters
+ share one IOMMU
+To: Simon Xue <xxm@rock-chips.com>, joro@8bytes.org, will@kernel.org,
+ heiko@sntech.de
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250620073945.572523-1-xxm@rock-chips.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250620073945.572523-1-xxm@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 2025-06-20 8:39 am, Simon Xue wrote:
+> When two masters share an IOMMU, calling ops->of_xlate during
+> the second master's driver init may overwrite iommu->domain set
+> by the first. This causes the check if (iommu->domain == domain)
+> in rk_iommu_attach_device() to fail, resulting in the same
+> iommu->node being added twice to &rk_domain->iommus, which can
+> lead to an infinite loop in subsequent &rk_domain->iommus operations.
 
-With sanitizers enabled, this function uses a lot of stack, causing
-a harmless warning:
+Indeed this is a property of the IOMMU instance itself so it really 
+should be initialised before registration, irrespective of client 
+devices. FWIW, if it's possible to take an unexpected 
+RK_MMU_IRQ_PAGE_FAULT immediately after requesting the IRQ (e.g. in a 
+kdump kernel after a crash with the hardware still running) then I think 
+the current code could probably end up dereferencing NULL in 
+report_iommu_fault() as well.
 
-lib/test_objagg.c: In function 'test_hints_case.constprop':
-lib/test_objagg.c:994:1: error: the frame size of 1440 bytes is larger than 1408 bytes [-Werror=frame-larger-than=]
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Most of this is from the two 'struct world' structures. Since most of
-the work in this function is duplicated for the two, split it up into
-separate functions that each use one of them.
+And probably also:
 
-The combined stack usage is still the same here, but there is no warning
-any more, and the code is still safe because of the known call chain.
+Cc: stable@vger.kernel.org
+Fixes: 25c2325575cc ("iommu/rockchip: Add missing set_platform_dma_ops 
+callback")
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/test_objagg.c | 77 +++++++++++++++++++++++++++--------------------
- 1 file changed, 45 insertions(+), 32 deletions(-)
+Thanks,
+Robin.
 
-diff --git a/lib/test_objagg.c b/lib/test_objagg.c
-index d34df4306b87..a67b8ef5c5be 100644
---- a/lib/test_objagg.c
-+++ b/lib/test_objagg.c
-@@ -906,50 +906,22 @@ static int check_expect_hints_stats(struct objagg_hints *objagg_hints,
- 	return err;
- }
- 
--static int test_hints_case(const struct hints_case *hints_case)
-+static int test_hints_case2(const struct hints_case *hints_case,
-+			    struct objagg_hints *hints, struct objagg *objagg)
- {
- 	struct objagg_obj *objagg_obj;
--	struct objagg_hints *hints;
- 	struct world world2 = {};
--	struct world world = {};
- 	struct objagg *objagg2;
--	struct objagg *objagg;
- 	const char *errmsg;
- 	int i;
- 	int err;
- 
--	objagg = objagg_create(&delta_ops, NULL, &world);
--	if (IS_ERR(objagg))
--		return PTR_ERR(objagg);
--
--	for (i = 0; i < hints_case->key_ids_count; i++) {
--		objagg_obj = world_obj_get(&world, objagg,
--					   hints_case->key_ids[i]);
--		if (IS_ERR(objagg_obj)) {
--			err = PTR_ERR(objagg_obj);
--			goto err_world_obj_get;
--		}
--	}
--
--	pr_debug_stats(objagg);
--	err = check_expect_stats(objagg, &hints_case->expect_stats, &errmsg);
--	if (err) {
--		pr_err("Stats: %s\n", errmsg);
--		goto err_check_expect_stats;
--	}
--
--	hints = objagg_hints_get(objagg, OBJAGG_OPT_ALGO_SIMPLE_GREEDY);
--	if (IS_ERR(hints)) {
--		err = PTR_ERR(hints);
--		goto err_hints_get;
--	}
--
- 	pr_debug_hints_stats(hints);
- 	err = check_expect_hints_stats(hints, &hints_case->expect_stats_hints,
- 				       &errmsg);
- 	if (err) {
- 		pr_err("Hints stats: %s\n", errmsg);
--		goto err_check_expect_hints_stats;
-+		return err;
- 	}
- 
- 	objagg2 = objagg_create(&delta_ops, hints, &world2);
-@@ -981,7 +953,48 @@ static int test_hints_case(const struct hints_case *hints_case)
- 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
- 	i = hints_case->key_ids_count;
- 	objagg_destroy(objagg2);
--err_check_expect_hints_stats:
-+
-+	return err;
-+}
-+
-+static int test_hints_case(const struct hints_case *hints_case)
-+{
-+	struct objagg_obj *objagg_obj;
-+	struct objagg_hints *hints;
-+	struct world world = {};
-+	struct objagg *objagg;
-+	const char *errmsg;
-+	int i;
-+	int err;
-+
-+	objagg = objagg_create(&delta_ops, NULL, &world);
-+	if (IS_ERR(objagg))
-+		return PTR_ERR(objagg);
-+
-+	for (i = 0; i < hints_case->key_ids_count; i++) {
-+		objagg_obj = world_obj_get(&world, objagg,
-+					   hints_case->key_ids[i]);
-+		if (IS_ERR(objagg_obj)) {
-+			err = PTR_ERR(objagg_obj);
-+			goto err_world_obj_get;
-+		}
-+	}
-+
-+	pr_debug_stats(objagg);
-+	err = check_expect_stats(objagg, &hints_case->expect_stats, &errmsg);
-+	if (err) {
-+		pr_err("Stats: %s\n", errmsg);
-+		goto err_check_expect_stats;
-+	}
-+
-+	hints = objagg_hints_get(objagg, OBJAGG_OPT_ALGO_SIMPLE_GREEDY);
-+	if (IS_ERR(hints)) {
-+		err = PTR_ERR(hints);
-+		goto err_hints_get;
-+	}
-+
-+	err = test_hints_case2(hints_case, hints, objagg);
-+
- 	objagg_hints_put(hints);
- err_hints_get:
- err_check_expect_stats:
--- 
-2.39.5
+> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> ---
+>   drivers/iommu/rockchip-iommu.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+> index 22f74ba33a0e..e6bb3c784017 100644
+> --- a/drivers/iommu/rockchip-iommu.c
+> +++ b/drivers/iommu/rockchip-iommu.c
+> @@ -1157,7 +1157,6 @@ static int rk_iommu_of_xlate(struct device *dev,
+>   		return -ENOMEM;
+>   
+>   	data->iommu = platform_get_drvdata(iommu_dev);
+> -	data->iommu->domain = &rk_identity_domain;
+>   	dev_iommu_priv_set(dev, data);
+>   
+>   	platform_device_put(iommu_dev);
+> @@ -1195,6 +1194,8 @@ static int rk_iommu_probe(struct platform_device *pdev)
+>   	if (!iommu)
+>   		return -ENOMEM;
+>   
+> +	iommu->domain = &rk_identity_domain;
+> +
+>   	platform_set_drvdata(pdev, iommu);
+>   	iommu->dev = dev;
+>   	iommu->num_mmu = 0;
 
