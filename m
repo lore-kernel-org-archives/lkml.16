@@ -1,136 +1,160 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2AC1E47B7
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13937280002;
+	Fri, 20 Jun 2025 11:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750420346; cv=none; b=V314elPwZDs6uXOnNTiM7yvHP+PYxfX+7OlEc1ptx/iBQKhEeYoMxVoOi6PE3efPbMoHCPQf+k0KMY4zdeEvbK3iPFPwL73t5+CPzGRTTy8q10BeSfWS7l5AVxAXqhQ48v/abc2WrV/fBaEtQmsG0sUSwfE7VUW9VcaW1T5XbCw=
+	t=1750420347; cv=none; b=P07SawJ6C0uHC5h7GWzmwTUf778vdWFYUVD4kEVSXUp3S6g38POwj4S+Cp0T3G7SA6BU+M8ho+gFxn2rVFvYY0fjuPItbrS+Pr3EfMnHQnD69WVweYmDXcwOnpKTopMaZZDmZ7WiNxIWiuKUCWN+vqB4FIk3keNSpXh3ZE+EMeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750420346; c=relaxed/simple;
-	bh=4Sx9MiZEkzQTOqPTHOV0KIKZIeQYY9r1ZxN2d4/+8+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=crrGnO9dzWRVkDi56+f37Ruwo88w/zpYyqXLRhvrxHteQxa45d9QvzrfG/0gx7XfckTyRMOiu07XDI6jus5WkOOOnySLoO2YrwjoBcby09qZkEUPYoTv2169PkHJglubGiL/SrZ7Ln6wRovm+4vxiFu+CaE+/23AstR5HF1bpFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uMbZLKc7; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1750420347; c=relaxed/simple;
+	bh=+a2uJy8Ukno04bfheCrhKeTa95Ow8PXF5cGshA7yz6Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u0u0JiOdD0tXD2JP91vcL6xH8IkoNY9LzeaeHvQymG1OBvzImP+6SRrDIZ3PPX88KtnTikhMX3AlZXu56A73utlEfT4WSb1asE2zv2t+jVsuTU7UvAXZ5xnCC5bJQhq726Dl/YKVSTTAp3iu5sbRuwFGQVL4Pml1l7t85J42WMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAM63k8e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uMbZLKc7"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747fba9f962so1268889b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 04:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750420343; x=1751025143; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nNPD3caLacQ3mJRAHDqinnGbqP8uVwxmMugF1g1Heu8=;
-        b=uMbZLKc7fo2/8hMrmPZu91Szyi40BLIQsiVWoGBloHcEOueEJTa/uwv4LbCY63CcyU
-         n7j6nBLCUu3KPa4UFkaBIuyqdGzYzq6Ci0aIEUBOf6p9fo4hb1/9RCCENlIDT4WkXMVV
-         T4KIopk+FLVLLP6fLjRvlylhhM0cj+HIha45LZX0Mpv4YYf2yp+z4uBRdmQl//kVOjPk
-         hscYKZ1+Bqarnb4XBQraAznVIFLzfcUtbx4NZ6rT/Yd7YQUq+AWkOxEe0QdNOa/xmEo7
-         Ew6cmk8Cs8jZ8tG1i9t9D+sh8J6TtWvk4FCw6vZQGHa9zGCYB6SXVJZ/ylgYmYD85VE0
-         S0fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750420343; x=1751025143;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nNPD3caLacQ3mJRAHDqinnGbqP8uVwxmMugF1g1Heu8=;
-        b=ZV5MEnhl3d9Z3JE1oVP20Cb3Fsay87OaCWQYH2YNt0yoyMFIxTG5E4Ah2gOA7XUcHQ
-         3emWg1UQmLHCbOiqJl12I735vyAF89gcuoRhOQmU5MGwMs14LqY4I8HoyKp6WG2hWSlR
-         IoNJ5s1kHb8p/WZ4uoZRPyOcaxRy6Wm1AHukEcaNN+zQD7NxqyJ5GA4JZ+f+WJA/Y+9l
-         lmFjvmqzBdZwRg3P6tzP6aTqmWawteueMftx4N6Hj+E45PagGKX7hLHA+c6nn3VfcZsl
-         Ky6VLItBnNd1MVTEFHxfiYOkWd5rAOIWEAbGoVu/DssjctDDUD0bO7d3NBg+nbkfBwKi
-         +raA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQeFM0kCV3zcSxt+5j9JfAclGIEJLQixA9B3DUS4wVoM7B0Bs+lYC6bMXqrhJtq8FTIc/2ySF++1r48Ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy97bjdx+1qIYpAk5mtMVz0upyjUjdDqJI0m9qaN5JoW0D3S6Ae
-	Ox6+kTFFkKm6PFJBvA4o59Pay1BAHWuP1B6jbZHapR5EjSc7SAUbfbsNCMCS+WzM7HE=
-X-Gm-Gg: ASbGncuk7iigLyN6vBE2NJY7Wdox75ZK/wzu2UVcea3uwqWTW7GbS07je3XC5J8F8wu
-	isCSqc7sOCJ/TN29mGcBniwVslZrZyeHoSTgNlWBTB1T12Hm7jFYvwt4/5lWG5X7UKhRHZ3aj0r
-	YWuewidTujgLJo8IR1KfW5YZjFZM08+2cDiLYzmqGzHS1dQF4K2qH85JV+mh2uf2sP6/EdJmS25
-	gcQyMVVojOhuc4yEvCjgdLhr1ws2vDCKslv8sMDL85UmsGIvjuwZPihGPK0YjcADkfKxxhyaoK1
-	mJXra4AThx/xyntPKEHs/XUQxqqCd5nqN407e4kujyaI2ahGYZy6u0FMbovtKN6+mxgIV2YKovo
-	lchLYK60TC8QxgDRGqlIzkwWQiaS914hVtPUCdQ5iPg==
-X-Google-Smtp-Source: AGHT+IH+A11YxuprorYt1GU54KdKygUhbJ+NrGRjacRyjJFPFXl2ZTZ8ayflSWXljvQoqnmWXIlNYA==
-X-Received: by 2002:a05:6a20:a106:b0:21c:fa68:9da6 with SMTP id adf61e73a8af0-220291cdb15mr3344166637.8.1750420343408;
-        Fri, 20 Jun 2025 04:52:23 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a64b1c9sm1834000b3a.115.2025.06.20.04.52.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 04:52:22 -0700 (PDT)
-Message-ID: <e435366d-f561-41d6-ad25-9f8c96e61f24@rivosinc.com>
-Date: Fri, 20 Jun 2025 13:52:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAM63k8e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A36C4CEE3;
+	Fri, 20 Jun 2025 11:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750420346;
+	bh=+a2uJy8Ukno04bfheCrhKeTa95Ow8PXF5cGshA7yz6Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sAM63k8eDUDlD1/Tw36rnZmA3QSz6217JgZNBjEMvH8jv04lonKDsvRNaE42EoVtl
+	 +oDUfpSKg3r7R4CId960Xvg/0xuRqTw2XaLgFvtfT/CdYNslA6O63NenfHtdIPhuz8
+	 uLqKFJJt4rbxwzjTSI2KanQ87uoIbl4wU7NJg9AjDj3/QnOwY13LIkLstKeKVKTWzW
+	 8yXvr+xTQ168CfGBRyQjzM/XV1nV21ZqSpltBlel2GznE+/YDLnIKs85uGNJIWEuv/
+	 hbZOP04L9A5tFYkS5R2YsfKsZ9u2zpVM7t2ks2yxFjL4zN/ESG0FJKiP51MgIzcofC
+	 8KG4HuSebqfUw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <87ikkq648o.fsf@kernel.org> (Andreas Hindborg's message of "Fri,
+	20 Jun 2025 13:29:11 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+	<COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid>
+	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Fri, 20 Jun 2025 13:52:16 +0200
+Message-ID: <87cyay6367.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "riscv: misaligned: fix sleeping function called
- during misaligned access handling"
-To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Nylon Chen <nylon.chen@sifive.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20250620110939.1642735-1-namcao@linutronix.de>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250620110939.1642735-1-namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+
+Andreas Hindborg <a.hindborg@kernel.org> writes:
+
+> "Benno Lossin" <lossin@kernel.org> writes:
+>
+>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+>>> +/// A wrapper for kernel parameters.
+>>> +///
+>>> +/// This type is instantiated by the [`module!`] macro when module parameters are
+>>> +/// defined. You should never need to instantiate this type directly.
+>>> +///
+>>> +/// Note: This type is `pub` because it is used by module crates to access
+>>> +/// parameter values.
+>>> +#[repr(transparent)]
+>>> +pub struct ModuleParamAccess<T> {
+>>> +    data: core::cell::UnsafeCell<T>,
+>>> +}
+>>> +
+>>> +// SAFETY: We only create shared references to the contents of this container,
+>>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
+>>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
+>>> +
+>>> +impl<T> ModuleParamAccess<T> {
+>>> +    #[doc(hidden)]
+>>> +    pub const fn new(value: T) -> Self {
+>>> +        Self {
+>>> +            data: core::cell::UnsafeCell::new(value),
+>>> +        }
+>>> +    }
+>>> +
+>>> +    /// Get a shared reference to the parameter value.
+>>> +    // Note: When sysfs access to parameters are enabled, we have to pass in a
+>>> +    // held lock guard here.
+>>> +    pub fn get(&self) -> &T {
+>>> +        // SAFETY: As we only support read only parameters with no sysfs
+>>> +        // exposure, the kernel will not touch the parameter data after module
+>>> +        // initialization.
+>>
+>> This should be a type invariant. But I'm having difficulty defining one
+>> that's actually correct: after parsing the parameter, this is written
+>> to, but when is that actually?
+>
+> For built-in modules it is during kernel initialization. For loadable
+> modules, it during module load. No code from the module will execute
+> before parameters are set.
+>
+>> Would we eventually execute other Rust
+>> code during that time? (for example when we allow custom parameter
+>> parsing)
+>
+> I don't think we will need to synchronize because of custom parameter
+> parsing. Parameters are initialized sequentially. It is not a problem if
+> the custom parameter parsing code name other parameters, because they
+> are all initialized to valid values (as they are statics).
+>
+>>
+>> This function also must never be `const` because of the following:
+>>
+>>     module! {
+>>         // ...
+>>         params: {
+>>             my_param: i64 {
+>>                 default: 0,
+>>                 description: "",
+>>             },
+>>         },
+>>     }
+>>
+>>     static BAD: &'static i64 = module_parameters::my_param.get();
+>>
+>> AFAIK, this static will be executed before loading module parameters and
+>> thus it makes writing to the parameter UB.
+>
+> As I understand, the static will be initialized by a constant expression
+> evaluated at compile time. I am not sure what happens when this is
+> evaluated in const context:
+>
+>     pub fn get(&self) -> &T {
+>         // SAFETY: As we only support read only parameters with no sysfs
+>         // exposure, the kernel will not touch the parameter data after module
+>         // initialization.
+>         unsafe { &*self.data.get() }
+>     }
+>
+> Why would that not be OK? I would assume the compiler builds a dependency graph
+> when initializing statics?
+
+It seems the compiler builds a dependency graph to check:
+
+https://play.rust-lang.org/?version=nightly&mode=debug&edition=2024&gist=7a4d129a3fd2ae39a0aab9df3878a3d3
 
 
+Best regards,
+Andreas Hindborg
 
-On 20/06/2025 13:09, Nam Cao wrote:
-> This reverts commit 61a74ad25462 ("riscv: misaligned: fix sleeping function
-> called during misaligned access handling"). The commit addresses a sleeping
-> in atomic context problem, but it is not the correct fix as explained by
-> Clément:
-> 
-> "Using nofault would lead to failure to read from user memory that is paged
-> out for instance. This is not really acceptable, we should handle user
-> misaligned access even at an address that would generate a page fault."
-> 
-> This bug has been properly fixed by commit 453805f0a28f ("riscv:
-> misaligned: enable IRQs while handling misaligned accesses").
-> 
-> Revert this improper fix.
-> 
-> Link: https://lore.kernel.org/linux-riscv/b779beed-e44e-4a5e-9551-4647682b0d21@rivosinc.com/
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: stable@vger.kernel.org
-> ---
->  arch/riscv/kernel/traps_misaligned.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-> index dd8e4af6583f4..93043924fe6c6 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -454,7 +454,7 @@ static int handle_scalar_misaligned_load(struct pt_regs *regs)
->  
->  	val.data_u64 = 0;
->  	if (user_mode(regs)) {
-> -		if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
-> +		if (copy_from_user(&val, (u8 __user *)addr, len))
->  			return -1;
->  	} else {
->  		memcpy(&val, (u8 *)addr, len);
-> @@ -555,7 +555,7 @@ static int handle_scalar_misaligned_store(struct pt_regs *regs)
->  		return -EOPNOTSUPP;
->  
->  	if (user_mode(regs)) {
-> -		if (copy_to_user_nofault((u8 __user *)addr, &val, len))
-> +		if (copy_to_user((u8 __user *)addr, &val, len))
->  			return -1;
->  	} else {
->  		memcpy((u8 *)addr, &val, len);
 
-Hi Nam,
-
-Reviewed-by: Clément Léger <cleger@rivosinc.com>
-
-Thanks for noticing that.
 
