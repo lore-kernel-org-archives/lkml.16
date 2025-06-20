@@ -1,56 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ECF1401B;
-	Fri, 20 Jun 2025 11:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0A21401B;
+	Fri, 20 Jun 2025 11:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750418311; cv=none; b=MVMSOsAkHmvxUcJglBZ5L+yz/XRLRJUgoXVe0Ataxl9Aol7tT+S19sYGlggLRN6Q333YbhBBYkgWFaD+kJtSrg2538l53yUcDQbh/SJE741SX/sDVBGp1b1LKOLTonS8vSImBaZ+G8blIwAZBDDllC0yB0PRXCLKz0sbf7EyHw4=
+	t=1750418351; cv=none; b=FfXa97Qho9tqbUE7c71Lk2NW585aCr6kex3+dulJyE5rMdQcgDU0vWQ72ct0tyzxtnsPARJ5IE8RqDZoJ7T1rDbP0KVDS7rACAtjmKVNGI76Zbrd/FzwK+5FAwPvyKKqMKKvH1ue3KJJDyN4m0RssfJUNc2dQAbmEmt6SCbvh7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750418311; c=relaxed/simple;
-	bh=GzeWP4djQPFAJn699mpS/mLYTmBt8cmn0T9XsL6bfQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jqHGYvO5VxRGz88IvU6pi0xNKnCjUMp9er8QoeZbunDVga20mo5cmy4Aj+cHcesiBX859XWXYrTteIvn2Cia6lIYZpPG8xOeyPtvsw0MEltZ9Xm33kBVky/4bSaEatO6+/I3XtRjlJRisuWk/3jJMmerXk8V7LteAL8jRbp4vyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0zxzlzK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750418351; c=relaxed/simple;
+	bh=HCi3L5oYzZ4C1LKFJ08vKgxl9GTxpSyrU6Ns4txdrog=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DmYTapwL+3xdzfod4OdLm3ajyljOFD35WyAY26hBrPP62xV+gefGOy6GXxQYx2krYUQv1fDdpWpN4I0Y14DmYfimSUh7CxytS7dkZPGvVst+BvL+ve6Lte3HUkuxJDyIDrTBKyCp1eJU+3HoSoQxVBOFx9Iq0GKlXThlQeP3A1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBl3KgI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0zxzlzK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6339C4CEE3;
-	Fri, 20 Jun 2025 11:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBl3KgI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010F7C4CEE3;
+	Fri, 20 Jun 2025 11:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750418310;
-	bh=GzeWP4djQPFAJn699mpS/mLYTmBt8cmn0T9XsL6bfQw=;
+	s=k20201202; t=1750418351;
+	bh=HCi3L5oYzZ4C1LKFJ08vKgxl9GTxpSyrU6Ns4txdrog=;
 	h=From:To:Cc:Subject:Date:From;
-	b=a0zxzlzKAh+IvrQIpt4x3A3DeiYbTWKo+AkpLk1sljVMr/AQI4ohgXpAKTY2eM0DP
-	 QTTilxgSkDIrLQKahcMWc23bvfLKlGJe7cflmVHvAr5krdnINxbmcJ0kjqODZdVVdm
-	 gARq6R51AvFWDxKq9HanJakEIZTX/IONIS0YzROSralXTIQ9w/a7VJL96KHH4KfvWs
-	 ieP54O81vZA2Hg2DVxBBK8MQyfX/rbSwjkkctGDRpJdyvdNoJJ/QTL3/0leEqr8Zto
-	 zMIoMqca0X4k6i+hLIWuoN644TSIbnSvpAj8MY0WVLUTGfDiGCO0TsI6CppMNvtz+0
-	 a5qDzlHk85Elw==
+	b=iBl3KgI+KjED+iAe372S5+ro0Tqhpe9CzrPWkruf3mM9YO3Q6wI42an95qUMrdnKA
+	 dozCkNIaqWg5oVKMsH8oNMOyzXYcD+9OyGbTA5p9WFVmprUV3F/mqrn+zYM3P83dUn
+	 tLL6Mpy/Nn7noz8zI5y8roVMJFGK5agM861A4sGuMYDdJXtnBgEdRqfWP18PFhN9j0
+	 ejxCd+FjZ+E0of6UHQpTRmdDmvnQXBCrHjoIMaVl6T6kyGX8v9RBXx5Q9JsnCgt7Sh
+	 B2Ejb4CgDAoa7SiJ5VjTjjhssYnuKmvE4nGyKs4xCVSIXevj1hdAdl3jfG3Cv32yLD
+	 RMZGKtfaTCqMQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Ashutosh Dixit <ashutosh.dixit@intel.com>,
-	Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jiri Pirko <jiri@resnulli.us>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Matt Roper <matthew.d.roper@intel.com>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Nam Cao <namcao@linutronix.de>,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] i915: fix build error some more
-Date: Fri, 20 Jun 2025 13:18:18 +0200
-Message-Id: <20250620111824.3395007-1-arnd@kernel.org>
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] lib: test_objagg: split test_hints_case() into two functions
+Date: Fri, 20 Jun 2025 13:19:04 +0200
+Message-Id: <20250620111907.3395296-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,40 +45,132 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-An earlier patch fixed a build failure with clang, but I still see the
-same problem with some configurations using gcc:
+With sanitizers enabled, this function uses a lot of stack, causing
+a harmless warning:
 
-drivers/gpu/drm/i915/i915_pmu.c: In function 'config_mask':
-include/linux/compiler_types.h:568:38: error: call to '__compiletime_assert_462' declared with attribute error: BUILD_BUG_ON failed: bit > BITS_PER_TYPE(typeof_member(struct i915_pmu, enable)) - 1
-drivers/gpu/drm/i915/i915_pmu.c:116:3: note: in expansion of macro 'BUILD_BUG_ON'
-  116 |   BUILD_BUG_ON(bit >
+lib/test_objagg.c: In function 'test_hints_case.constprop':
+lib/test_objagg.c:994:1: error: the frame size of 1440 bytes is larger than 1408 bytes [-Werror=frame-larger-than=]
 
-As I understand it, the problem is that the function is not always fully
-inlined, but the __builtin_constant_p() can still evaluate the argument
-as being constant.
+Most of this is from the two 'struct world' structures. Since most of
+the work in this function is duplicated for the two, split it up into
+separate functions that each use one of them.
 
-Marking it as __always_inline so far works for me in all configurations.
+The combined stack usage is still the same here, but there is no warning
+any more, and the code is still safe because of the known call chain.
 
-Fixes: a7137b1825b5 ("drm/i915/pmu: Fix build error with GCOV and AutoFDO enabled")
-Fixes: a644fde77ff7 ("drm/i915/pmu: Change bitmask of enabled events to u32")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/i915/i915_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_objagg.c | 77 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 45 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
-index 990bfaba3ce4..5bc696bfbb0f 100644
---- a/drivers/gpu/drm/i915/i915_pmu.c
-+++ b/drivers/gpu/drm/i915/i915_pmu.c
-@@ -108,7 +108,7 @@ static unsigned int config_bit(const u64 config)
- 		return other_bit(config);
+diff --git a/lib/test_objagg.c b/lib/test_objagg.c
+index d34df4306b87..a67b8ef5c5be 100644
+--- a/lib/test_objagg.c
++++ b/lib/test_objagg.c
+@@ -906,50 +906,22 @@ static int check_expect_hints_stats(struct objagg_hints *objagg_hints,
+ 	return err;
  }
  
--static u32 config_mask(const u64 config)
-+static __always_inline u32 config_mask(const u64 config)
+-static int test_hints_case(const struct hints_case *hints_case)
++static int test_hints_case2(const struct hints_case *hints_case,
++			    struct objagg_hints *hints, struct objagg *objagg)
  {
- 	unsigned int bit = config_bit(config);
+ 	struct objagg_obj *objagg_obj;
+-	struct objagg_hints *hints;
+ 	struct world world2 = {};
+-	struct world world = {};
+ 	struct objagg *objagg2;
+-	struct objagg *objagg;
+ 	const char *errmsg;
+ 	int i;
+ 	int err;
  
+-	objagg = objagg_create(&delta_ops, NULL, &world);
+-	if (IS_ERR(objagg))
+-		return PTR_ERR(objagg);
+-
+-	for (i = 0; i < hints_case->key_ids_count; i++) {
+-		objagg_obj = world_obj_get(&world, objagg,
+-					   hints_case->key_ids[i]);
+-		if (IS_ERR(objagg_obj)) {
+-			err = PTR_ERR(objagg_obj);
+-			goto err_world_obj_get;
+-		}
+-	}
+-
+-	pr_debug_stats(objagg);
+-	err = check_expect_stats(objagg, &hints_case->expect_stats, &errmsg);
+-	if (err) {
+-		pr_err("Stats: %s\n", errmsg);
+-		goto err_check_expect_stats;
+-	}
+-
+-	hints = objagg_hints_get(objagg, OBJAGG_OPT_ALGO_SIMPLE_GREEDY);
+-	if (IS_ERR(hints)) {
+-		err = PTR_ERR(hints);
+-		goto err_hints_get;
+-	}
+-
+ 	pr_debug_hints_stats(hints);
+ 	err = check_expect_hints_stats(hints, &hints_case->expect_stats_hints,
+ 				       &errmsg);
+ 	if (err) {
+ 		pr_err("Hints stats: %s\n", errmsg);
+-		goto err_check_expect_hints_stats;
++		return err;
+ 	}
+ 
+ 	objagg2 = objagg_create(&delta_ops, hints, &world2);
+@@ -981,7 +953,48 @@ static int test_hints_case(const struct hints_case *hints_case)
+ 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
+ 	i = hints_case->key_ids_count;
+ 	objagg_destroy(objagg2);
+-err_check_expect_hints_stats:
++
++	return err;
++}
++
++static int test_hints_case(const struct hints_case *hints_case)
++{
++	struct objagg_obj *objagg_obj;
++	struct objagg_hints *hints;
++	struct world world = {};
++	struct objagg *objagg;
++	const char *errmsg;
++	int i;
++	int err;
++
++	objagg = objagg_create(&delta_ops, NULL, &world);
++	if (IS_ERR(objagg))
++		return PTR_ERR(objagg);
++
++	for (i = 0; i < hints_case->key_ids_count; i++) {
++		objagg_obj = world_obj_get(&world, objagg,
++					   hints_case->key_ids[i]);
++		if (IS_ERR(objagg_obj)) {
++			err = PTR_ERR(objagg_obj);
++			goto err_world_obj_get;
++		}
++	}
++
++	pr_debug_stats(objagg);
++	err = check_expect_stats(objagg, &hints_case->expect_stats, &errmsg);
++	if (err) {
++		pr_err("Stats: %s\n", errmsg);
++		goto err_check_expect_stats;
++	}
++
++	hints = objagg_hints_get(objagg, OBJAGG_OPT_ALGO_SIMPLE_GREEDY);
++	if (IS_ERR(hints)) {
++		err = PTR_ERR(hints);
++		goto err_hints_get;
++	}
++
++	err = test_hints_case2(hints_case, hints, objagg);
++
+ 	objagg_hints_put(hints);
+ err_hints_get:
+ err_check_expect_stats:
 -- 
 2.39.5
 
