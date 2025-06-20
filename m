@@ -1,115 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E6D22A7FD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146E228CB7
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406718; cv=none; b=oE30lAV/zqqqAaPQueuKtpUz7pcNDCFudsE/uFkkNeRINFV+r3dnTRN5k8AYhnoKnEukkm9YZTByZYRVLpjt39GIQugoozPMnamq/PSJJRGs2vgOqcBF4W6Ie6j8FWy/hrqUx3hjWiMuoEb93VnlVq2gWm2OlhXC/LOJDf6usYI=
+	t=1750406794; cv=none; b=dZWufJL9R0ncnSIteAfYGBaPieDe808jHRcyiD5ngZdbIsUHuXvQ0NMw30akqULSP3gBfaUSTgyScQ7eROLBskmwg5suc60KVMEQrJi3QqTYwlrzWDdSAGbu4sljAGJ+++8JIhrQmF/Ms6UruKLe5BXPp3XX0lLQMGStzpucrwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406718; c=relaxed/simple;
-	bh=5KC7JaBi27FJopmR5k6s/NBwaDLKbC0pWa+YTPzaINA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0u87XqgGIdnqfdZA8gxliuXANHeksBrziaUfLzLZr5u2I1RCktiRTYUTINTsYlWfq8q5rC9nVqjd+93EVhWniaFgJONzB/dMKV1zo4mS2rlSSptTreQHRBokQWmwa/6hwIr4NOw8rHVHePJ83xnfPNZAzxq6iHYWXRsoQ4xoHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XJaLQ0YC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750406794; c=relaxed/simple;
+	bh=KnTtT7H0BDAXwRML/nK7OxrH7+Yn6paLBhETbSoOyfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DZSeNdnLFRHJvf9LwZVgnCzZ8jDzBWLzca32LAGLq2jh20eF3y1QfCjCYzbsJgwNw6TixJn1H9szccNoAWHE2pqx6XWZLkOBZ6EhnYUefXAcn2SBxnq8qHTaURxXMl4UdXorvOf+UeZJgqNM7yWTMd77g+xxOyRezsMqBVRjcLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Tek1Y5Ec; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJaLQ0YC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750406715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FZ6wdfT3r/PmlG/U6lgGdDA1+cv2EsGLU4a4QuReN6U=;
-	b=XJaLQ0YCR4VDyc9THRHr0AfuHHNRtdq7NvYLw7MeCZ6eLQzKBa1seEM5H+lQjZhS9tU50P
-	vyGad37jpHrphpxvSIqv8kmqpjK0C/0JRTWjofqi/G1qsNTsBAmdcd2Gw9wh1EegoKDp/X
-	fU6Qp+xfQSdW1dApWdRW7cKxIMWo5uY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-30-dp5gH5tkOeeOVjixIIFxoA-1; Fri,
- 20 Jun 2025 04:05:11 -0400
-X-MC-Unique: dp5gH5tkOeeOVjixIIFxoA-1
-X-Mimecast-MFC-AGG-ID: dp5gH5tkOeeOVjixIIFxoA_1750406709
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88715195608C;
-	Fri, 20 Jun 2025 08:05:07 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.28])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 583F918003FC;
-	Fri, 20 Jun 2025 08:05:03 +0000 (UTC)
-Date: Fri, 20 Jun 2025 16:04:59 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Barry Song <baohua@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/28] mm, swap: check swap table directly for checking
- cache
-Message-ID: <aFUWKzlSD9GKPuP/@MiWiFi-R3L-srv>
-References: <20250514201729.48420-1-ryncsn@gmail.com>
- <20250514201729.48420-21-ryncsn@gmail.com>
- <aFPoiuJcBGl2E3sh@MiWiFi-R3L-srv>
- <CAMgjq7AoJ+m64e2rWFFjU943D8kCZoR_e+Hd8LnT3bAy=gTT_w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Tek1Y5Ec"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453608ed113so14646765e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1750406791; x=1751011591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2eNUIeZ5UwiRp6oWlkiO1U+c9h/DGgR+XfrLwmwISU=;
+        b=Tek1Y5Ec147rJi2m9BtQcujHPuixf8oYvA8faTq8BVHSkKxOLLjFunpuC4qGUvmhYa
+         iV2Dt81p/NKuhdT9hwn/9JQ78cYwWMehS3PQaC+AbV4wn5SMK7dsDGVtlniY/cl9rhGp
+         qpZGD93AVDa2el/l/6eHs2Xsebc8aEb9JFICo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750406791; x=1751011591;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w2eNUIeZ5UwiRp6oWlkiO1U+c9h/DGgR+XfrLwmwISU=;
+        b=JsCr7v/ag/W6GcthrCLZkWw/GtjKHfpLTEpLtyjOBl49cqvDnQxMdqbf4nhYH1+gpc
+         E7ZoWUykPRgJHvJqZMRSM7Jzzv1B93Oksg3exQxoXe403BRVrwUOCLSA7pKNhRSajE1G
+         3udxjGaEHLiByy81mlQIQSySnM9B0oP00kKGnbHXjJ5HXulvzwSa+2e0sVTHkunn7sts
+         cX3GQorO7z6VsyttBcTUipKf2PdgYq9jy/qRJR+K1OtnLMl4txm3KxzFGbVakWCtCSVU
+         05bSUKIpKqfz6oY4DEyjkufzB2t0uYW3pZgooaFs86xcvQCO+qImuhTDYSVe5dcp07tI
+         iQCw==
+X-Gm-Message-State: AOJu0Yz6KyUwm9Xk5aSRTFLVIw0kK4MgrEoYfRWEr3vgAjDMir3lYCCz
+	cOgj1Sp75WrtMVpNVgNhsa1R3mLBHBLbJWgaQYG4EMb1fCiO4tHxpvFiQTmsWmwie57reZZQzo3
+	Yv/09
+X-Gm-Gg: ASbGnctyck+PEoxmVI94hRdcpDoybnT9EFMMAgnE9NQ5VEL7a7u1LB7k6q7NE8qiJDP
+	7KjhZ4s0iFXpYv4w8Dn7h14pRhOm4pv8pHgW8bya05GzR2IetRdj2gfJbX4Ht+pk2Qbt7GidLMo
+	Dxz+xH3bF8hy2bimVI/aUkmGVzVHVgfUOW+mPjyBCt90aqbm2pGxSMPAM1nRz7IhNIz+T2H5DLX
+	ee+VNyGRkBXA+R6RvqM45jHhZ54mkql8yTJqqwpf8PdEZMSdxilt4Xd7g9ofQCZQbCvr2ArQK7B
+	TjoQ076HD+/ENZxD89fjKnS+7C5dLlJ9F+e+UIit7gL3ie1BZ/uk3mS+bDjjNJCZd3t2C65ra7M
+	yNKJwhGguy8TeJI6OxUmt5ffjASdrqeNtsiz6UDbKs8Idc/kGY7nc
+X-Google-Smtp-Source: AGHT+IGex2m7oBS93TBsbAaINT6CSOEuBu1mC17t+mWbAEvl99cHeitnaXtcBxitr8TCel6t0Kgqvw==
+X-Received: by 2002:a05:600c:4fc1:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-453659c4832mr14575205e9.6.1750406790643;
+        Fri, 20 Jun 2025 01:06:30 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.43.224])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebd02basm50137905e9.39.2025.06.20.01.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 01:06:30 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: michael@amarulasolutions.com,
+	linux-amarula@amarulasolutions.com,
+	Frank Li <Frank.Li@nxp.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Markus Niebel <Markus.Niebel@tq-group.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Rob Herring <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v6 0/5] Support i.MX28 Amarula rmm board
+Date: Fri, 20 Jun 2025 10:06:16 +0200
+Message-ID: <20250620080626.3580397-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7AoJ+m64e2rWFFjU943D8kCZoR_e+Hd8LnT3bAy=gTT_w@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 06/19/25 at 06:50pm, Kairui Song wrote:
-> On Thu, Jun 19, 2025 at 6:38 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 05/15/25 at 04:17am, Kairui Song wrote:
-> > > From: Kairui Song <kasong@tencent.com>
-> > >
-> > > Instead of looking at the swap map, check swap table directly to tell if
-> > > a swap entry has cache. Prepare for remove SWAP_HAS_CACHE.
-> >
-> > But you actually check both the swap table entry and swap map entry in
-> > this patch, or do I miss anything?
-> 
-> Hi, Baoquan
-> 
-> >
-> > E.g
-> >
-> > if (!swap_count(si->swap_map[offset]) && swp_te_is_folio(swp_te))
-> 
-> Yes, the count info is still in the swap_map now, I'm only converting
-> the HAS_CACHE check to use swp_te_t here. We'll remove swap_map in
-> later patches and use the swp_te_t solely to get both info.
+The series adds support for i.MX28 Amarula rmm board.
 
-Ah, I see it now. That's why the subject is saying it's checking swap table
-for checking cache. Then it's fine to me, even though it's a little
-confusing. 
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 128 Mbytes DRAM DDR2
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
 
-> 
-> The reason some checks are added to check the swap_count is that:
-> Before this patch, `swap_map[offset] == SWAP_HAS_CACHE` implies the
-> count is zero too. So if HAS_CACHE is moved to swp_te_t, we still need
-> to check the count separately. The overhead will be gone very soon in
-> a later patch.
+Changes in v6:
+- Drop [PATCH v5 1/6] "dt-bindings: mfd: convert mxs-lradc bindings
+  to json-schema" because applied by Lee Jones.
 
-Got it, that sounds great, thanks.
+Changes in v5:
+- In mxs-lradc.txt:
+  - Fix deacription formating
+- In imx28-amarula-rmm.dts:
+  - Drop #address-cells from gpmi node
 
+Changes in v4:
+- In mxs-lradc.txt:
+  - Fix typo Low-Resoulution -> Low-Resolution'
+  - Wrap lines at 80 char.
+  - Drop '|' from the description
+  - Describe what each interrupt is for.
+  - Move touchscreen-wires constraint for imx28 to the top level
+- In imx28-amarula-rmm.dts:
+  - Drop label property (deprecated) under the leds sub-nodes.
+  - Add microSD comment above the ssp0 node.
+- Add patch 5/6 "ARM: mxs_defconfig: Cleanup mxs_defconfig"
+- Add patch 6/6 "ARM: mxs_defconfig: select new drivers used by
+  imx28-amarula-rmm"
+
+Changes in v3:
+- In imx28-amarula-rmm.dts:
+  - Drop xceiver-supply property from can0 node.
+  - Rearrange the order of specific nodes and properties
+    alphabetically.
+
+Changes in v2:
+- In imx28-amarula-rmm.dts:
+  - Replace '-' with '@' for the pinctrl sub-nodes.
+  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
+  - Drop LCD reset hog pin.
+  - Add correct #address-cells and #size-cells to gpmi node.
+  - Replace edt-ft5x06@38 with touchscreen@38.
+- Drop from commit messages all references to LCD display.
+- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
+  json-schema".
+
+Dario Binacchi (5):
+  ARM: dts: imx28: add pwm7 muxing options
+  dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+  ARM: dts: mxs: support i.MX28 Amarula rmm board
+  ARM: mxs_defconfig: Cleanup mxs_defconfig
+  ARM: mxs_defconfig: select new drivers used by imx28-amarula-rmm
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+ .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 300 ++++++++++++++++++
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |  10 +
+ arch/arm/configs/mxs_defconfig                |  14 +-
+ 5 files changed, 315 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+
+-- 
+2.43.0
+
+base-commit: fb5103df1b24f6cf8bdb333b24bbdf45d4186b0e
+branch: imx28-amarula-rmm
