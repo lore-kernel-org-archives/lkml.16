@@ -1,109 +1,115 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF0F2EA746
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378A22EB5AD;
+	Fri, 20 Jun 2025 17:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441246; cv=none; b=oyqHiZl0cjPdlV1mO0Lsc5O+0bKCRoPwvwTPVOarnVd3GrpgLlE8BSh1xmbqkbkCXQbQxKYbcN7jYR8fExFZhkjaz+WosJ8Mw+gvxOCg5YpgIQxVn/gyX+qqufB7lcL0ifNf21QdpK4ISvZApowrdduhvelmeBFi3QMCWGdBX7k=
+	t=1750441252; cv=none; b=gudWV0kX742hHw9l8F5Ffvw9PWVF3/RliwfpBhCKlpA93y5YOuDoc5bIMBz0Hf56+/r927L+XTLQ8B8S3Pvv9GoH3FUlDPyHaWuUmPUTd7Lkaz8VIF2ygwqg7NA1itQA6PTEdusVUzHGJTlFZUFCkZTBgFzBcZ2w4iNOiax++Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441246; c=relaxed/simple;
-	bh=t8gN8BSzphkAW0QD/TlbFY2nTXHFMLr/Gq3m0QI9RqE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eS5rjfqjA+/GEs8P9OU8or1xkVeDQqxeRty0aDiaMwNRsVPS4IeTtU+PkFZJSjOzM4XsuUBFFXlOyI/pzsjZRGK+/APgynEbbCJfExaLHZH1FIGWfks6IDbzV/ymhLmz1yh0R1UGG0tWjajV85kNmvnF3Bb/1qaFjnOz2uxApyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NLi2R1s7; arc=none smtp.client-ip=209.85.160.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1750441252; c=relaxed/simple;
+	bh=NRGSRyTah5ICBT0QVblczXDuitpxn/LFY+zhFSrKnus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozl3oXX7KqqB0/r2AsEi8BoC3op3eWtu8Q4QkOWO0Ws2a5EH+HSRBLfp6SQQWmSIloSqq6NCzagiBCw2vrHyxu/jlu65d1ih/X5yCnuUFYxXuaxlyjB4kWTTGlV/yDBkSLBEZcKshuean8e44SeoLCkg7gHO1uIlJ2BWCnJygqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KEYSZ7Ic; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NLi2R1s7"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2eae95dfae3so1987702fac.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750441244; x=1751046044; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
-        b=NLi2R1s7s4YZUFha+BC3uVwByA1vg392Roak6KPoEBw8ciU7lYkfT+Cozp4BZHYVq1
-         OlIa0YaiZ2oEIiruWUbkbs+/21xm5v0uVAJ3GV3QvYMmWSqnprQU0D3zm9sM7/uA6ZPC
-         nw8pb7q3lQ04pqykA7I+62Dxb/AMm7KCiSBxdRe2qf+4lzj2h7ZlkKj8vcqBWY8/ZBvD
-         iC1/V6ocnFoxgICmHPvkHO1BYsyi0ppmspWyDlSYVChRdMc+nmr5ULdazJDLGoGLRCVx
-         MvRURMlJEPsBxpnIB74BgMWGA+UHw2Pxro7eXlDfxIijrmZ7SR5+1ZU8MXtOASSzt5OA
-         i6Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750441244; x=1751046044;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
-        b=QC4KOTsvQILed7ZDUxsH56bAYk8POJTT8chM29mz177QZ6dENVVIVoYLdi2bMMq5a3
-         5K1nQgi90aHpuzNWz6tsVxc0hY5r6di2LsbjaFZNVhDRcc1OSOlDcqLI2eAYrWZ2FXIc
-         Bl+XlGdfXLh6wGZdhek9FQAzVzr2JgeBJlPLfALS75RtVEng65giQ+xYjbZMeZW3QiRy
-         YNwohbOQO+Og7Dg9G3DoLfpqfFViPRHZ2GPT4D81foDJFDLPeLJMDiu0Ns7SlkHTRPwG
-         9azyw3Wz0z0d6M6HsVm7B2PhLd0bWKnAwpfKPN5/QzXDLksdqp84Hoty49WgJX4bpVNR
-         ofkQ==
-X-Gm-Message-State: AOJu0YzskHMDaowLcf4gFJhjrxyvkfmnWsGYd4Yjr2U3M2Bvu6T5bZdZ
-	9j0nQzmWaRWzggOOHBU1n5ZBTj5ZIAlmFwPeGww5vgkxqc6VEjKuaYwarzyBjCPQAiRW4T4/VS3
-	P5dqsDwoW7Vg1ao8wZz6JO3FSPmCeYVW67M2SDaC+ehEDCGOeU5GEf1IEZF/tpKoiOf5NuIRL7J
-	lFzEG5eCzfxsvVpFkdKlwr5zaUoysVm4a45VNdpP9UvdYD
-X-Google-Smtp-Source: AGHT+IF5ieJyxM2jpeX8ReeQCqqYbc2omjzhKC3iAdcOfEZPgq49LzyPKkUyU/UM5XjMtO8PvFh2R0DiQE0=
-X-Received: from oabuw9.prod.google.com ([2002:a05:6870:ae89:b0:2b8:ed65:d4c7])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:6387:b0:2d6:241:aed5
- with SMTP id 586e51a60fabf-2eeee89c171mr2521624fac.26.1750441243845; Fri, 20
- Jun 2025 10:40:43 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:40:09 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KEYSZ7Ic"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750441251; x=1781977251;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NRGSRyTah5ICBT0QVblczXDuitpxn/LFY+zhFSrKnus=;
+  b=KEYSZ7IcR++AAyn3Kfl/qsrDYhoJITcyBzcUm6lgzHo4SzvIcVig3amv
+   alnKdLxh5GbptWo8uc+FyP9CTr0CAsdw1yqp7j+DbLiEZh5fnC9xSZ56q
+   lEZRrrewJYK/9NTR+rVSjyhUlGUJlyee2hQ/Q/oGZOOGHSDtmSzm5l7vY
+   bJsAo17RxxKLCbK9y3M/zsNDIZhb65EXJA06SZQ4Hx+3DUJ/rYrX7M6mc
+   MKzPZ3ixloXxH90Z3XBbS/BgjzXIx7ikgdURMH1vPSDpqng0lB28lRPeR
+   HGQdcsa3AqgFpOA7r+j5X3RO22ex9AYHBYwfo3I5NEZuIhwprYj9UXOVu
+   w==;
+X-CSE-ConnectionGUID: 1WZr/DZoQwGgzgv0a3unxg==
+X-CSE-MsgGUID: B8aOE63URzCZdtInQ3R0Gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52586070"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="52586070"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:40:50 -0700
+X-CSE-ConnectionGUID: RH6NSA+vRnOBwGunq1Sriw==
+X-CSE-MsgGUID: 967yrwNfSTCe7ac8Cpd9sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="150459518"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 20 Jun 2025 10:40:47 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSfjI-000M1Q-0R;
+	Fri, 20 Jun 2025 17:40:44 +0000
+Date: Sat, 21 Jun 2025 01:40:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>
+Cc: oe-kbuild-all@lists.linux.dev, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Chuck Cannon <chuck.cannon@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 2/2] firmware: arm_scmi: power_control: Set
+ SCMI_SYSPOWER_IDLE in pm resume
+Message-ID: <202506210114.2Ix0TkA0-lkp@intel.com>
+References: <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250620174034.819894-1-ctshao@google.com>
-Subject: [PATCH v1] perf test: Replace grep perl regexp with awk
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: wy.shih90@gmail.com, Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
-	tmricht@linux.ibm.com, leo.yan@arm.com, atrajeev@linux.vnet.ibm.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620-scmi-pm-v1-2-c2f02cae5122@nxp.com>
 
-perl is not universal on all machines and should be replaced with awk,
-which is much more common.
+Hi Peng,
 
-Before:
-  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-  --- start ---
-  test child forked, pid 145431
-  grep: Perl matching not supported in a --disable-perl-regexp build
+kernel test robot noticed the following build warnings:
 
-  FAIL: could not add event
-  ---- end(-1) ----
-  121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-After:
-  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-  121: probe libc's inet_pton & backtrace it with ping                 : Ok
+[auto build test WARNING on 4325743c7e209ae7845293679a4de94b969f2bef]
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Peng-Fan-OSS/firmware-arm_scmi-bus-Add-pm-ops/20250620-114042
+base:   4325743c7e209ae7845293679a4de94b969f2bef
+patch link:    https://lore.kernel.org/r/20250620-scmi-pm-v1-2-c2f02cae5122%40nxp.com
+patch subject: [PATCH 2/2] firmware: arm_scmi: power_control: Set SCMI_SYSPOWER_IDLE in pm resume
+config: arm-randconfig-002-20250621 (https://download.01.org/0day-ci/archive/20250621/202506210114.2Ix0TkA0-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210114.2Ix0TkA0-lkp@intel.com/reproduce)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index c4bab5b5cc59..aaa5ee06ae18 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
- add_libc_inet_pton_event() {
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506210114.2Ix0TkA0-lkp@intel.com/
 
- 	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
--			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
-+			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
-+			("\\(on inet_pton in " l "\\)") {print $1}')
+All warnings (new ones prefixed by >>):
 
- 	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
- 		printf "FAIL: could not add event\n"
---
-2.50.0.rc2.701.gf1e915cc24-goog
+>> drivers/firmware/arm_scmi/scmi_power_control.c:363:12: warning: 'scmi_system_power_resume' defined but not used [-Wunused-function]
+     363 | static int scmi_system_power_resume(struct device *dev)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~
 
+
+vim +/scmi_system_power_resume +363 drivers/firmware/arm_scmi/scmi_power_control.c
+
+   362	
+ > 363	static int scmi_system_power_resume(struct device *dev)
+   364	{
+   365	
+   366		struct scmi_syspower_conf *sc = dev_get_drvdata(dev);
+   367	
+   368		sc->state = SCMI_SYSPOWER_IDLE;
+   369	
+   370		return 0;
+   371	}
+   372	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
