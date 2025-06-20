@@ -1,102 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898AD28DF2D;
-	Fri, 20 Jun 2025 12:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318982836B4;
+	Fri, 20 Jun 2025 12:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421790; cv=none; b=KRfHmi0hwJK2pbi9UeHjkO8Gc3lAvpqrAUuUvEc9AEwGoXiw77cBPplpWDGTRBH5vOaMOimRtaHBBWw8kU9j9h4D7JDYFzUYttBugh4uvAlxx07kX+Lbpg8K0n48Epy9V/IbUrRTsXFtk1fkf1kjL/qLZNw3yxQpli+UrXzgFvk=
+	t=1750421874; cv=none; b=SCABHAyVN+4N5u2Jb5QIGDcAqitTyZrih5CITeXNIUBIxzhN16Kw3FgHkq0vfL4sWpYtowv1hxfzO+7RvaqsGTaifl6TesZciVOd8JqsNupLLF40BlCdHOQNyqq0XUXFTPKilNvrtXw+5H+cgSjG5t0NODpnQeZUcsHl84OhCgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421790; c=relaxed/simple;
-	bh=pWP3awNGNqNzs2Jc1fgQrbrmUVdGOnDCHnAUtdTgQA4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NMUZbcnCR/Ssdt0BaXJMTuYdnqCu++/T/VUoXv3gL46c1ggWObPCDzQYkGZzBIHd+nEXH/PY9f1o93t+KVBJ4PLvG2nZfZHBy8P9RFCnWDyoZTlSvFYm7HeeZTK507hFriBqpFE0DT0uxYX660D4ZfYMoYec3R0bz+To/YrBUTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JKHOTJc8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750421874; c=relaxed/simple;
+	bh=I1SSuyFnlPzNJ3Iz4UM7jzuOhjZg40BZvC3l0Eu1Ry8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ewXtY0/lQW9ipPO34fzCG6vn5xKfmQur6fTCDGvC92OcTm2gDwTScWV7NLiAZQjzxfp7Q9eKizcOMEiCnxUHHM0KES46gru/SVHx5t4D4euPvN2FALyvyZlaYonJ2mvMNdZapJVMPd+8adIDd/adDj7lLoOqrm3twzhQAO6XvOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JYFU+TYQ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JKHOTJc8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1601CC4CEF1;
-	Fri, 20 Jun 2025 12:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750421789;
-	bh=pWP3awNGNqNzs2Jc1fgQrbrmUVdGOnDCHnAUtdTgQA4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=JKHOTJc8pZ6wYgeTmlP247h3ltTbC124gHeAL8gUoXYSMzzATq45slvZa3dqukAuy
-	 lE1I87Taj9TMorFZjBvZhDA950iXrmEiGuNg/kyInjL/5G8K7pk4pFPMZ6ETX+/v82
-	 kB6gsHuovsCDgRdIYmVjBcHjEK8tCEYzll+jcmX5zI+vxtnY/RpI8eMCm4ZoPMy1BU
-	 ehFm3Ost23xvR3p4IgLyCGrLL0PjOxttRLpuxbLYGb7COYTaYUwQLU6SKi3eRP51oo
-	 mqmXSsKUpy8m/1Rl3/yfnjGridLvqM0dDojOLZulFB3I7452vgGsU0AJGQV1XmBkWA
-	 4ebdbDI0Fzm4Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 20 Jun 2025 08:16:06 -0400
-Subject: [PATCH 6/6] sunrpc: make svc_tcp_sendmsg() take a signed sentp
- pointer
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JYFU+TYQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DBB9B43289;
+	Fri, 20 Jun 2025 12:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750421870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I1SSuyFnlPzNJ3Iz4UM7jzuOhjZg40BZvC3l0Eu1Ry8=;
+	b=JYFU+TYQN5WlP1fjExoaIPpe/LY+osCh2qlhxDLSdfvSe1tSy7ZIOv4MAE5cQo0AJ+QVxX
+	yclK82aCufpuCAG4/l7zSb9tE3PwQHUeyJsvGFdoc68J+qwmYaEVT8whFgREt4Y3WEdKBd
+	K3uNHCUlmQ0neHB7aNZ+tIFwOnXuvC1ClTRKmIk1PG/O0pr6SViDcWEDZ4N5MdaQ+Lv0Dp
+	1o61cVFM4b13QGmOyaAVg4mMdj9UZITW3xaD5xu5WFT992fTvAex0kd3Z+a5ZC2WzcAzeP
+	yzkzEXFdty5x7STvMhR9RMRyjvQWXoPGSSOmaFUIdvlxjrsrDrzQWtkEcZGGdA==
+Date: Fri, 20 Jun 2025 14:17:47 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kernel test robot
+ <lkp@intel.com>, thomas.petazzoni@bootlin.com, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] ethtool: pse-pd: Add missing linux/export.h
+ include
+Message-ID: <20250620141747.471b8d6b@kmaincent-XPS-13-7390>
+In-Reply-To: <20250620101452.GE194429@horms.kernel.org>
+References: <20250619162547.1989468-1-kory.maincent@bootlin.com>
+	<20250620101452.GE194429@horms.kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-rpc-6-17-v1-6-a309177d713b@kernel.org>
-References: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
-In-Reply-To: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1166; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=pWP3awNGNqNzs2Jc1fgQrbrmUVdGOnDCHnAUtdTgQA4=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoVVEWkIR8ZjAdi3/ACXz3eHnVV+XOTwjHzUWKN
- 5oRJsT59DiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFVRFgAKCRAADmhBGVaC
- FT1/EACfBu4ZnoPCGgD/wNFboovwWST2gmiiPQ6QfDvfGt48wbXxqlbUPz0FyS3VBfr0bxML8V3
- RUS3oe5jW0UjLbHHwM6HJrgWlz6pua2O1sLuyAH+sSYhySKp/7kXBMiOpc5kIVQ49mLDlTLvOPV
- eEvCJfeBjTFjFAlCeuqx0T8Y/iJC3I0BZ/wi03v3bkTyX2PRfbrXo+V+wJt4ibafgpXx7+4B8rs
- eb747i/qLStDXDYXaAr7KmTxGdNo7oLo1JUhK/YM5URtESoNjPN5Ez56zM0LpVnpuwFzMj8Tgu2
- 3Vc+Kyqxml3VDKl7NL/8tjGqQqv0TZoevLZFk1IpmYczTNQhUMPdf7t3kzrXnvSyMi5NOjeAWvU
- Q4mWschx5Ltux+1kIgUwnOuwF+imFa1UjH0DEc528KoWgjFQxlxVMebIFD6/5k5c5kXRp0osUZb
- 5dPA8NFfHMdVfBlvcT7/TDleisDHUlXHHOIk6OPC60nia2vuLoLyuxlg6Hb8g6zFPYbjFiLNbsX
- Joel5d35ifTr6pRZ33ytmZpcBITroMqMeIG2kEEBnZU92PRsmn9t8IvndmzT4Je+09zDn18XaJL
- DT9+1uG+cTjB5r0CV3sfcoZpv7Av6WjT616iq8DAysfW5PWZ+9255jzVoT7DabrigpVujF29HlU
- OujS26nJ0YIsZbw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekfeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlkhhpsehinhhtvghlr
+ dgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: kory.maincent@bootlin.com
 
-The return value of sock_sendmsg() is signed, and svc_tcp_sendto() wants
-a signed value to return.
+Le Fri, 20 Jun 2025 11:14:52 +0100,
+Simon Horman <horms@kernel.org> a =C3=A9crit :
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- net/sunrpc/svcsock.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> On Thu, Jun 19, 2025 at 06:25:47PM +0200, Kory Maincent wrote:
+> > Fix missing linux/export.h header include in net/ethtool/pse-pd.c to re=
+solve
+> > build warning reported by the kernel test robot.
+> >=20
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202506200024.T3O0FWeR-lkp@intel.c=
+om/
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
+>=20
+> Hi Kory, all,
+>=20
+> The change that introduced this warning introduced a log of such warnings.
+> Including a lot in the Networking subsystem. (I did not count them.)
+>=20
+> So I agree with the point from Sean Christopherson [*] is that if the pat=
+ch
+> that introduced the warnings isn't reverted then a more comprehensive
+> approach is needed to address these warnings.
+>=20
+> [*] Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h
+> header inclusion https://lore.kernel.org/netdev/aEl9kO81-kp0hhw0@google.c=
+om/
 
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index e1c85123b445bf387e09565c025d8dd815187a07..46c156b121db43c1bd1806a08a3a9bf08b332699 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1197,7 +1197,7 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
-  * that the pages backing @xdr are unchanging.
-  */
- static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
--			   rpc_fraghdr marker, unsigned int *sentp)
-+			   rpc_fraghdr marker, int *sentp)
- {
- 	struct msghdr msg = {
- 		.msg_flags	= MSG_SPLICE_PAGES,
-@@ -1247,8 +1247,7 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 	struct xdr_buf *xdr = &rqstp->rq_res;
- 	rpc_fraghdr marker = cpu_to_be32(RPC_LAST_STREAM_FRAGMENT |
- 					 (u32)xdr->len);
--	unsigned int sent;
--	int err;
-+	int sent, err;
- 
- 	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
- 	rqstp->rq_xprt_ctxt = NULL;
+Ok, thanks for the info.
 
--- 
-2.49.0
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
