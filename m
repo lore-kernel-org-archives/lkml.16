@@ -1,339 +1,203 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6DD235073
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB477A59;
+	Fri, 20 Jun 2025 20:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450875; cv=none; b=awVbQJw3dy/EfYEq8pfCPc+Kv+QvFz3NEmybckIdqJcw8b2XmDdC1kKbQ2cX4rVFbx1OmLq0/Rqp41EGtf9kob8Ut9oBUjKzK8DC2S11NoV3j7sgrMKNuL1mYNMrKnTWwh+s1OgjU7bd+GGnf2B7n2WP033sJcM/P1P0e2xzp84=
+	t=1750450920; cv=none; b=GZWJgwcjXwSaoijrZmdzMl8MS1VExudDfhnQ/i47pkP5BGYch0AnPk6PSyqX54KUGBjAu7JvRZ1Nn4jF66RhJRlYUhqWCwJoGLmCB01hgtCxV0bj53h+EL0zfVZzQ8k3oOtpvUZ8KD5BvUcycJa+afhKe6du4HPjZcTXQ//XgHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450875; c=relaxed/simple;
-	bh=CeheS3/N3d0YsxD2iHCBzG3hpN9N+WOXn37z1HfdSVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Omdu9NdFsv7guXQflE8iVn9l8r5NmXgeXLIVBWh6Kgh5Qj7YJ1OPD7+BJMu2Nx934DQbnaevk4GbKtDWYNLoVJb0jLGDQ+bB8xy1FkQLQIYHBFhR+YmnCdWbkqk03Dld5dd3qjLTpdtqpo22ab8U4tbS0Uc2TRkOHmTC+CVDSYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QFYgtk8I; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750450920; c=relaxed/simple;
+	bh=DSJoF1mmIlt0f+sq2JpaTh+bEPUAbP03ftsUdi/PiDE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=klUIJDgNscaAlZxgMJ0OHFfKyh1VBNLoKg/GKvms2R/G1XuBJa2RC8EyC1PoP9uBA4/C6L8Wd/5jlLmr8WdhAJn7RqK40fYYIk5KEnzArqm4FsIqAC8SE3M03OkCFGv4rb0OSHaGOqmLU268SgSou6nG3nGFyBs+K+ZqqnrzzF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0lDXwoa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QFYgtk8I"
-Date: Fri, 20 Jun 2025 13:20:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750450859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pdtWMoCinyj89bjdjI6OzYDNaMakww7IsU4AzJ521M=;
-	b=QFYgtk8IHCNJ2IufikHWLfCT60VrcIOlQ3tXXqV41huMzW1qweQtKUcUyknhvkGp0CAG5F
-	N+u0FqUVlUCV3ude8SmDGj5HhMLMZJY/17UUbpfszawkWB0SyFFGCEon1d0yBH1QwrIpcl
-	nAmgF2/zXqNYxx7Z+qwVaf4b8siQcaU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sascha Bischoff <Sascha.Bischoff@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
-	"maz@kernel.org" <maz@kernel.org>, Joey Gouly <Joey.Gouly@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	Timothy Hayes <Timothy.Hayes@arm.com>
-Subject: Re: [PATCH 4/5] KVM: arm64: gic-v5: Support GICv3 compat
-Message-ID: <aFXClKQRG3KNAD2y@linux.dev>
-References: <20250620160741.3513940-1-sascha.bischoff@arm.com>
- <20250620160741.3513940-5-sascha.bischoff@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0lDXwoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C62AC4CEE3;
+	Fri, 20 Jun 2025 20:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750450918;
+	bh=DSJoF1mmIlt0f+sq2JpaTh+bEPUAbP03ftsUdi/PiDE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V0lDXwoaLY7y3wa9IueyszW7SzAJtLyNASt+zI7oSHK4CT1+NZjjnxu1DWtqempnq
+	 dsghHnhRtAgQThuHTOUqXic5oYjdEaI7EplWKGHPxO8djv9QqSMK36QYbZU0dMdYcC
+	 ial/nqvMsOLe87iJw2xDVi0DkSJLXDQwLrPispU/Zu/V2lBu4CxXWZB2MSubJnechE
+	 xxuCcuNEBcYKOYUNj5eiF3r43moAfLWD5zrm+5I95/NpjDpCMMKuJL1VIjxwgsaUNe
+	 0CiH3ibZ2VUNQY9kqaWFOHFR/G42pg0EfJwb02121h1Pn+1ae3Uvf5CcRf2kxc6wXU
+	 m+WFPO7mMp9JA==
+From: SeongJae Park <sj@kernel.org>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: Re: [RFC PATCH v2 0/2] mm/damon/paddr: Allow interleaving in migrate_{hot,cold} actions
+Date: Fri, 20 Jun 2025 13:21:55 -0700
+Message-Id: <20250620202155.98021-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250620180458.5041-1-bijan311@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620160741.3513940-5-sascha.bischoff@arm.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-Hi Sascha,
+Hi Bijan,
 
-Thank you for posting this. Very excited to see the GICv5 enablement get
-started.
+On Fri, 20 Jun 2025 13:04:56 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
 
-On Fri, Jun 20, 2025 at 04:07:51PM +0000, Sascha Bischoff wrote:
-> Add support for GICv3 compat mode (FEAT_GCIE_LEGACY) which allows a
-> GICv5 host to run GICv3-based VMs. This change enables the
-> VHE/nVHE/hVHE/protected modes, but does not support nested
-> virtualization.
+[...]
+> This patch set adds the mechanism for dynamically changing how application
+> data is interleaved across nodes while leaving the policy of what the
+> interleave weights should be to userspace. It does this by modifying the
+> migrate_{hot,cold} DAMOS actions to allow passing in a list of migration
+> targets to their target_nid parameter. When this is done, the
+> migrate_{hot,cold} actions will migrate pages between the specified nodes
+> using the global interleave weights found at
+> /sys/kernel/mm/mempolicy/weighted_interleave/node<N>. This functionality
+> can be used to dynamically adjust how pages are interleaved by changing the
+> global weights. When only a single migration target is passed to
+> target_nid, the migrate_{hot,cold} actions will act the same as before.
 
-Can't we just load the shadow state into the compat VGICv3? I'm worried
-this has sharp edges on the UAPI side as well as users wanting to
-migrate VMs to new hardware.
+This means users are required to manipulate two interfaces.  DAMON sysfs for
+target nodes, and weighted_interleave sysfs for weights.  I don't think this
+coupling is very ideal.
 
-The guest hypervisor should only see GICv3-only or GICv5-only, we can
-pretend FEAT_GCIE_LEGACY never existed :)
+Off the opt of my head, I concern if users could mistakenly forget updating one
+of those, since the requirement is not very clear.  I think the interface
+should clearly explain that.  For example, writing a special keywords, say,
+"use_interleave_weights" to target_nid parameter sysfs file.  But, even in the
+case, users who update weighted_interleave might foget updating target nodes on
+DAMON interface.
 
-> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> ---
->  arch/arm64/include/asm/kvm_asm.h   |  2 ++
->  arch/arm64/include/asm/kvm_hyp.h   |  2 ++
->  arch/arm64/kvm/Makefile            |  3 +-
->  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 12 +++++++
->  arch/arm64/kvm/hyp/vgic-v3-sr.c    | 51 +++++++++++++++++++++++++-----
->  arch/arm64/kvm/sys_regs.c          | 10 +++++-
->  arch/arm64/kvm/vgic/vgic-init.c    |  6 ++--
->  arch/arm64/kvm/vgic/vgic-v3.c      |  6 ++++
->  arch/arm64/kvm/vgic/vgic-v5.c      | 14 ++++++++
->  arch/arm64/kvm/vgic/vgic.h         |  2 ++
->  include/kvm/arm_vgic.h             |  9 +++++-
->  11 files changed, 104 insertions(+), 13 deletions(-)
->  create mode 100644 arch/arm64/kvm/vgic/vgic-v5.c
+I think letting DAMOS_MIGRATE_{HOT,COLD} to use all nodes as migration target
+when the special keyword is given is one of better options.  This is what I
+suggested to the previous version of this patch series.  But now I think it
+would be better if we could just remove this coupling.
+
+I understand a sort of this coupling is inevitable if the kernel should make
+the connection between DAMON and weighted interleaving itself, without
+user-space help.  But now I think we could get user-space help, according to
+below.  Please keep reading.
+
+[...]
+> As a toy example, imagine some application that uses 75% of the local
+> bandwidth. Assuming sufficient capacity, when running alone, we want to
+> keep that application's data in local memory. However, if a second
+> instance of that application begins, using the same amount of bandwidth,
+> it would be best to interleave the data of both processes to alleviate the
+> bandwidth pressure from the local node. Likewise, when one of the processes
+> ends, the data should be moves back to local memory.
 > 
-> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-> index bec227f9500a..ad1ef0460fd6 100644
-> --- a/arch/arm64/include/asm/kvm_asm.h
-> +++ b/arch/arm64/include/asm/kvm_asm.h
-> @@ -81,6 +81,8 @@ enum __kvm_host_smccc_func {
->  	__KVM_HOST_SMCCC_FUNC___kvm_timer_set_cntvoff,
->  	__KVM_HOST_SMCCC_FUNC___vgic_v3_save_vmcr_aprs,
->  	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
-> +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_enable,
-> +	__KVM_HOST_SMCCC_FUNC___vgic_v3_compat_mode_disable,
->  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vm,
->  	__KVM_HOST_SMCCC_FUNC___pkvm_init_vcpu,
->  	__KVM_HOST_SMCCC_FUNC___pkvm_teardown_vm,
-> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> index e6be1f5d0967..9c8adc5186ec 100644
-> --- a/arch/arm64/include/asm/kvm_hyp.h
-> +++ b/arch/arm64/include/asm/kvm_hyp.h
-> @@ -85,6 +85,8 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if);
->  void __vgic_v3_save_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
->  void __vgic_v3_restore_vmcr_aprs(struct vgic_v3_cpu_if *cpu_if);
->  int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
-> +void __vgic_v3_compat_mode_enable(void);
-> +void __vgic_v3_compat_mode_disable(void);
->  
->  #ifdef __KVM_NVHE_HYPERVISOR__
->  void __timer_enable_traps(struct kvm_vcpu *vcpu);
-> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-> index 7c329e01c557..3ebc0570345c 100644
-> --- a/arch/arm64/kvm/Makefile
-> +++ b/arch/arm64/kvm/Makefile
-> @@ -23,7 +23,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
->  	 vgic/vgic-v3.o vgic/vgic-v4.o \
->  	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
->  	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
-> -	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o
-> +	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
-> +	 vgic/vgic-v5.o
->  
->  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
->  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> index e9198e56e784..61af55df60a9 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> @@ -475,6 +475,16 @@ static void handle___vgic_v3_restore_vmcr_aprs(struct kvm_cpu_context *host_ctxt
->  	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
->  }
->  
-> +static void handle___vgic_v3_compat_mode_enable(struct kvm_cpu_context *host_ctxt)
-> +{
-> +	__vgic_v3_compat_mode_enable();
-> +}
-> +
-> +static void handle___vgic_v3_compat_mode_disable(struct kvm_cpu_context *host_ctxt)
-> +{
-> +	__vgic_v3_compat_mode_disable();
-> +}
-> +
->  static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
->  {
->  	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
-> @@ -603,6 +613,8 @@ static const hcall_t host_hcall[] = {
->  	HANDLE_FUNC(__kvm_timer_set_cntvoff),
->  	HANDLE_FUNC(__vgic_v3_save_vmcr_aprs),
->  	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
-> +	HANDLE_FUNC(__vgic_v3_compat_mode_enable),
-> +	HANDLE_FUNC(__vgic_v3_compat_mode_disable),
->  	HANDLE_FUNC(__pkvm_init_vm),
->  	HANDLE_FUNC(__pkvm_init_vcpu),
->  	HANDLE_FUNC(__pkvm_teardown_vm),
-> diff --git a/arch/arm64/kvm/hyp/vgic-v3-sr.c b/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> index f162b0df5cae..b03b5f012226 100644
-> --- a/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> +++ b/arch/arm64/kvm/hyp/vgic-v3-sr.c
-> @@ -257,6 +257,18 @@ void __vgic_v3_restore_state(struct vgic_v3_cpu_if *cpu_if)
->  	}
->  }
->  
-> +void __vgic_v3_compat_mode_enable(void)
-> +{
-> +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, 0, ICH_VCTLR_EL2_V3);
-> +	isb();
-> +}
-> +
-> +void __vgic_v3_compat_mode_disable(void)
-> +{
-> +	sysreg_clear_set_s(SYS_ICH_VCTLR_EL2, ICH_VCTLR_EL2_V3, 0);
-> +	isb();
-> +}
-> +
+> We imagine there would be a userspace application that would monitor system
+> performance characteristics, such as bandwidth utilization or memory access
+> latency, and uses that information to tune the interleave weights. Others
+> seem to have come to a similar conclusion in previous discussions [3].
+> We are currently working on a userspace program that does this, but it is
+> not quite ready to be published yet.
 
-It isn't clear to me what these ISBs are synchonizing against. AFAICT,
-the whole compat thing is always visible and we can restore the rest of
-the VGICv3 context before guaranteeing the enable bit has been observed.
+So, at least in this toy example, we have user-space control.  Then, I think we
+could decouple DAMON and weighted interleaving, and ask the usr-space tool to
+be the connection between those.  That is, extend DAMOS_MIGRATE_{HOT,COLD} to
+let users specify migration target nodes and their weights.  And ask the
+user-space tool to periodically read weighted interleaving parameters that
+could be auto-tuned, and update DAMOS_MIGRATE_{HOT,COLD} parameters
+accordingly.  Actually the user-space tool on this example is making the
+weights by itself, so this should be easy work to do?
 
-Can we consolidate this into a single hyp call along with
-__vgic_v3_*_vmcr_aprs()?
+Also, even for general use case, I think such user-space intervention is not
+too much request.  Please let me know if I'm wrong.
 
-Last bit as an FYI, kvm_call_hyp() has an implied context synchronization upon
-return, either because of ERET in nVHE or an explicit ISB on VHE.
+> 
+> We believe DAMON is the correct venue for the interleaving mechanism for a
+> few reasons. First, we noticed that we don't ahve to migrate all of the
+> application's pages to improve performance. we just need to migrate the
+> frequently accessed pages. DAMON's existing hotness traching is very useful
+> for this. Second, DAMON's quota system can be used to ensure we are not
+> using too much bandwidth for migrations. Finally, as Ying pointed out [4],
+> a complete solution must also handle when a memory node is at capacity. The
+> existing migrate_cold action can be used in conjunction with the
+> functionality added in this patch set to provide that complete solution.
 
->  void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
->  {
->  	/*
-> @@ -296,12 +308,19 @@ void __vgic_v3_activate_traps(struct vgic_v3_cpu_if *cpu_if)
->  	}
->  
->  	/*
-> -	 * Prevent the guest from touching the ICC_SRE_EL1 system
-> -	 * register. Note that this may not have any effect, as
-> -	 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
-> +	 * GICv5 BET0 FEAT_GCIE_LEGACY doesn't include ICC_SRE_EL2. This is due
-> +	 * to be relaxed in a future spec release, likely BET1, at which point
-> +	 * this in condition can be dropped again.
->  	 */
-> -	write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
-> -		     ICC_SRE_EL2);
-> +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
-> +		/*
-> +		 * Prevent the guest from touching the ICC_SRE_EL1 system
-> +		 * register. Note that this may not have any effect, as
-> +		 * ICC_SRE_EL2.Enable being RAO/WI is a valid implementation.
-> +		 */
-> +		write_gicreg(read_gicreg(ICC_SRE_EL2) & ~ICC_SRE_EL2_ENABLE,
-> +			     ICC_SRE_EL2);
-> +	}
->  
->  	/*
->  	 * If we need to trap system registers, we must write
-> @@ -322,8 +341,14 @@ void __vgic_v3_deactivate_traps(struct vgic_v3_cpu_if *cpu_if)
->  		cpu_if->vgic_vmcr = read_gicreg(ICH_VMCR_EL2);
->  	}
->  
-> -	val = read_gicreg(ICC_SRE_EL2);
-> -	write_gicreg(val | ICC_SRE_EL2_ENABLE, ICC_SRE_EL2);
-> +	/*
-> +	 * Can be dropped in the future when GICv5 BET1 is released. See
-> +	 * comment above.
-> +	 */
-> +	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif)) {
+These make perfect sense to me.  Thank you for adding this great summary.
 
-Can we use the GCIE cpucap instead, possibly via a shared helper with
-the driver?
+> 
+> Functionality Test
+> ==================
+[...]
+> Performance Test
+> ================
+[...]
+> Updating the interleave weights, and having DAMON migrate the workload
+> data according to the weights resulted in an approximately 25% speedup.
 
-> -	if (kvm_vgic_global_state.type == VGIC_V3) {
-> +	if (kvm_vgic_global_state.type == VGIC_V3 || kvm_vgic_in_v3_compat_mode()) {
+Awesome.  Thank you for conducting this great tests and sharing the results!
 
-Can we do a helper for this too?
+> 
+> Questions for Reviewers
+> =======================
+> 1. Are you happy with the changes to the DAMON sysfs interface?
 
->  		val &= ~ID_AA64PFR0_EL1_GIC_MASK;
->  		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
->  	}
-> @@ -1953,6 +1953,14 @@ static int set_id_aa64pfr0_el1(struct kvm_vcpu *vcpu,
->  	    (vcpu_has_nv(vcpu) && !FIELD_GET(ID_AA64PFR0_EL1_EL2, user_val)))
->  		return -EINVAL;
->  
-> +	/*
-> +	 * If we are running on a GICv5 host and support FEAT_GCIE_LEGACY, then
-> +	 * we support GICv3. Fail attempts to do anything but set that to IMP.
-> +	 */
-> +	if (kvm_vgic_in_v3_compat_mode() &&
-> +	    FIELD_GET(ID_AA64PFR0_EL1_GIC_MASK, user_val) != ID_AA64PFR0_EL1_GIC_IMP)
-> +		return -EINVAL;
-> +
+I'm happy with it for RFC level implementation.  And in my opinion, you now
+proved this is a good idea.  For next steps toward mainline landing, I'd like
+to suggest below interface change.
 
+Let's allow users specify DAMOS_MIGRATE_{HOT,COLD} target nodes and weights
+using only DAMON interface.  And let the user-space tool do the synchronization
+with weighted interleaving or other required works.
 
+This may require writing not small amount of code, especially for DAMON sysfs
+interface.  I think it is doable, though.  If you don't mind, I'd like to
+quickly make a prototype and share with you.
 
->  	return set_id_reg(vcpu, rd, user_val);
->  }
->  
-> diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-> index eb1205654ac8..5f6506e297c1 100644
-> --- a/arch/arm64/kvm/vgic/vgic-init.c
-> +++ b/arch/arm64/kvm/vgic/vgic-init.c
-> @@ -674,10 +674,12 @@ void kvm_vgic_init_cpu_hardware(void)
->  	 * We want to make sure the list registers start out clear so that we
->  	 * only have the program the used registers.
->  	 */
-> -	if (kvm_vgic_global_state.type == VGIC_V2)
-> +	if (kvm_vgic_global_state.type == VGIC_V2) {
->  		vgic_v2_init_lrs();
-> -	else
-> +	} else if (kvm_vgic_global_state.type == VGIC_V3 ||
-> +		   kvm_vgic_in_v3_compat_mode()) {
->  		kvm_call_hyp(__vgic_v3_init_lrs);
-> +	}
->  }
->  
->  /**
-> diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-> index b9ad7c42c5b0..b5df4d36821d 100644
-> --- a/arch/arm64/kvm/vgic/vgic-v3.c
-> +++ b/arch/arm64/kvm/vgic/vgic-v3.c
-> @@ -734,6 +734,9 @@ void vgic_v3_load(struct kvm_vcpu *vcpu)
->  {
->  	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
->  
-> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
-> +		kvm_call_hyp(__vgic_v3_compat_mode_enable);
-> +
->  	/* If the vgic is nested, perform the full state loading */
->  	if (vgic_state_is_nested(vcpu)) {
->  		vgic_v3_load_nested(vcpu);
-> @@ -764,4 +767,7 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
->  
->  	if (has_vhe())
->  		__vgic_v3_deactivate_traps(cpu_if);
-> +
-> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif))
-> +		kvm_call_hyp(__vgic_v3_compat_mode_disable);
->  }
-> diff --git a/arch/arm64/kvm/vgic/vgic-v5.c b/arch/arm64/kvm/vgic/vgic-v5.c
-> new file mode 100644
-> index 000000000000..57199449ca0f
-> --- /dev/null
-> +++ b/arch/arm64/kvm/vgic/vgic-v5.c
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <kvm/arm_vgic.h>
-> +
-> +#include "vgic.h"
-> +
-> +inline bool kvm_vgic_in_v3_compat_mode(void)a
+What do you think?
 
-nit: we're generally trusting of the compiler to 'do the right thing'
-and avoid explicit inline specifiers unless necessary.
+> 2. Setting an interleave weight to 0 is currently not allowed. This makes
+>    sense when the weights are only used for allocation. Does it make sense
+>    to allow 0 weights now?
 
-> +{
-> +	if (static_branch_unlikely(&kvm_vgic_global_state.gicv5_cpuif) &&
-> +	    kvm_vgic_global_state.has_gcie_v3_compat)
-> +		return true;
-> +
-> +	return false;
-> +}
+I have no opinion, and would like to let mempolicy folks make voices.  But if
+we go on the decoupling approach as I suggested above, we can do this
+discussion in a separate thread :)
 
-This should be a per-VM thing once KVM support for GICv5 lands. Can you
-get ahead of that and take a KVM pointer that goes unused. Maybe rename
-it:
+[...]
+> Revision History
+> ================
+> Changes from v1
+> (https://lore.kernel.org/linux-mm/20250612181330.31236-1-bijan311@gmail.com/)
+> - Reuse migrate_{hot,cold} actions instead of creating a new action
+> - Remove vaddr implementation
+> - Remove most of the use of mempolicy, instead duplicate the interleave
+>   logic and access interleave weights directly
+> - Write more about the use case in the cover letter
+> - Write about why DAMON was used for this in the cover letter
+> - Add correctness test to the cover letter
+> - Add performance test
 
-bool vgic_is_v3_compat(struct kvm *kvm)
+Again, thank you for revisioning.  Please bear in mind with me at next steps.
+I believe this work is very promising.
 
-Or something similar.
 
 Thanks,
-Oliver
+SJ
+
+[...]
