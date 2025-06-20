@@ -1,169 +1,133 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2F2980D3
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E799E2980D3
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750432012; cv=none; b=eGjSH5cYA15MnrAw3E6MwQNs8HEVw/qGh+NFZ6bdjbqpElEPfhtTdxIB+gj8PxMjdeHpLTGOdCrmX8F+0qfbcduUUOAWGfJnKajQY+CgulaBTdkKWdsku3naFc8kIOkUT96edZBQeyVvPx+x4CZMTIw43t/1q9d2DUcV2WRaMvI=
+	t=1750432045; cv=none; b=QjkoYuS3fm8i1k+eYyYrIyJRXTsB9TK8goV+xZUX9buEh1hQSqUK+pd4f7HZ8pHuesN5SSND501fdEbncL7LYBm5d2hhrNUWYbloer2NPVfX5X1QCNbiJYGbybc++afuWzBYwXTS9SUnAH5H0i0TNlQ6bRveoO06fJqIz35PbFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750432012; c=relaxed/simple;
-	bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W/dI3hNnKGUx3j6uOXP4moCg+fk7lbdTQX7Pwc4z0k8vFVYcTmOIq5ZPOo9e8GEKmkon2q0q9Yw/T12f7ZV0GTR3xmv6tpPaKeCF4ekOedwVr1XIR/Msn6uaJf2n7Loaey7sb/lJofzfjKnpGFNiRHrGv96vwCakrlqDLVRxdX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=zmv6Hlun; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1750432045; c=relaxed/simple;
+	bh=WFzZ8/hAlrg7KOFutWt4QXV5blgpjPBkAIpDmUErhKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fYcmHK+svKUHHf901zV+fiTG06MOFkIsGyBATuv+mvkx8nsa9dMw+RgQhlg4/m7q+67T29OmPb6NG+iDhF2k7WKS6eBFftdhjG2Y+XdJb18f66C2EDZTNfdI8KGSsUQadpOfV1hwoDsoANLXhsJqy3W76PA2USbnNaGhxaYE8ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yCfDjnxB; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="zmv6Hlun"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fafdd322d3so21205316d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1750432009; x=1751036809; darn=vger.kernel.org;
-        h=mime-version:user-agent:autocrypt:references:in-reply-to:date:cc:to
-         :from:subject:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
-        b=zmv6Hlun5MD8eXUeWIFU/QwIGl0gg+q0NuMqEX5rk3xctKJ5wvM+AhlGgqWAhos15T
-         muqK4nHHco6V2ok+CGfJ7/KXrXdiqEPvRY2kaLvYGD+fCgTLOojH4h90WpNDhQiyhDbv
-         tUwm5+p4/j4UkSp8EYZF1WFWw+haRorRKKt0jHJ+OXarfEFbkuNzQcBotZLOAtaXzfZ9
-         AW4W5pKXsLMu/Z7BrxhbPSWMr7FSPnLIw0Kme5cdZZUS7RVpbc0C9ajc5JxPELaWEnHF
-         3+5akoEoVPNTmfXAR2bwVUcR8U/y2P0Vny5VVOjs+9P1EDnnll+VOxEArFJPREWGmOrG
-         CfjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750432009; x=1751036809;
-        h=mime-version:user-agent:autocrypt:references:in-reply-to:date:cc:to
-         :from:subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LSJDkcrrLoGkZMF1EcEy87q2AqYWTZd7Xq9u6uACDbA=;
-        b=kollfuiEdlPrx0dHhFx2vO/AcJ0v3QHHQImd66E1takAGx52ihtBZtCgfTgMs7IHl0
-         LY27n3hJLvhQV4IuMaqom/seLxObUxO/PLiPJaaBp7Q2S7jNqc5Izaz5Hxu8Rhue6Xq/
-         qwTSlu1VIUVhsLEFyLKV/1tiSuN+I0+iVcgQZKB7F/qcju0tdN4n5W7X1GIUzY/2buvt
-         8qBTFiCDfRhlvZqwki3/Wmao+PxcpZxWau/EtkdCqTgXeYxfdJepTtatUfmyILAShkrI
-         gdkU1A8a4ICPBFabFfdzKVPfcWi5SisbH5dRY/1p0tMUVH/5Dm6SyhsH3imDu+FnPzTe
-         LqKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqgTPjpNP7cf1oRiOURzfJeMGye+rzKLJA5sd/Jpg9X55WkdC7kpZG494nuaKUQF3lLLpoI28OZpoFl54=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0WGzODQ7/iko5cOER6BKVloNjnKrEEru8XaiSjrc2OqhjDDOF
-	M6c4q1+bxhaKEE8SpMQzZR0+VNRLAA/59lANmsRzsola3ORT6yI8mlddIEhStxVuR04=
-X-Gm-Gg: ASbGnctDlU3GeJ4ntI3VzrtE+QKt9pdQZj/4EtIXa1fdfiK6tmhvMzRYJUa5JPQSYWz
-	BbRBteV2IPgBf4hcaakmjdaTl2YfMGkQztgFKkKmAOejRwCMIc7L9fZ2AShZ22teGRMSUqgEVKQ
-	mojH+ezhMqcyNz6q7CgPXEhY+Y3LGZpNE2h/9lkuXZ0kXe9frIv+jV6IMjSRMiALSq7J7v/d8c8
-	zXkXITXVca7anjj0alDqerQYSX8ukdz0Ylo2Vao3Y++BFNNeN3NsNUwk13GpWCrgMRFAH3vK6jT
-	OFgdLqBsoG3UmJKTP3JGbkLDHF2xnh/VgLRPHl5pQakGwSVMigaiwCRGNFDYLCXeZoM=
-X-Google-Smtp-Source: AGHT+IFSbdWcJq6maD1xUyD31N97nxqkeERkrPfl+oPHZ7odb6VWFZL/FFDSL0pRREpka1+wvb6uPw==
-X-Received: by 2002:a05:6214:2463:b0:6f8:8fdf:f460 with SMTP id 6a1803df08f44-6fd0a461262mr40636306d6.9.1750432009010;
-        Fri, 20 Jun 2025 08:06:49 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b699::c41? ([2606:6d00:17:b699::c41])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd095a3f94sm12971696d6.111.2025.06.20.08.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:06:47 -0700 (PDT)
-Message-ID: <82d38c0dc93255da3195a919dc650ef8fc07e7f2.camel@ndufresne.ca>
-Subject: Re: [PATCH RESEND 1/2] media: dt-bindings: nxp,imx8-jpeg: Add
- compatible strings for IMX95 JPEG
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Shawn Guo
-	 <shawnguo2@yeah.net>
-Cc: Frank Li <Frank.Li@nxp.com>, mirela.rabulea@nxp.com, mchehab@kernel.org,
- 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- shawnguo@kernel.org, 	s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, 	imx@lists.linux.dev, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, 	ming.qian@nxp.com
-Date: Fri, 20 Jun 2025 11:06:45 -0400
-In-Reply-To: <6898ce74-808d-4976-b04e-31737396a86c@linaro.org>
-References: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
-	 <20250521173444.310641-1-Frank.Li@nxp.com>
-	 <eef5ccd99d82dd33e3a4ecdb5d4a5b75ccb0b972.camel@ndufresne.ca>
-	 <aFORokzx/sImgDtA@dragon>
-	 <d46d73f84e78daf152962ffb5cce7dd3ae0920d1.camel@ndufresne.ca>
-	 <6898ce74-808d-4976-b04e-31737396a86c@linaro.org>
-Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual;
- keydata=mDMEaCN2ixYJKwYBBAHaRw8BAQdAM0EHepTful3JOIzcPv6ekHOenE1u0vDG1gdHFrChD
- /e0MU5pY29sYXMgRHVmcmVzbmUgPG5pY29sYXMuZHVmcmVzbmVAY29sbGFib3JhLmNvbT6ImQQTFg
- oAQQIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBO8NUoEVxMPCGgRvEtlBlFEpYHL0BQJ
- oLLLGBQkJZfd1AAoJENlBlFEpYHL0BEkA/3qkWYt99myYFSmTJUF8UB/7OroEm3vr1HRqXeQe9Qp2
- AP0bsoAe6KjEPa/pJfuJ2khrOPPHxvyt/PBNbI5BYcIABLQnTmljb2xhcyBEdWZyZXNuZSA8bmljb
- 2xhc0BuZHVmcmVzbmUuY2E+iJkEExYKAEECGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQ
- TvDVKBFcTDwhoEbxLZQZRRKWBy9AUCaCyy+AUJCWX3dQAKCRDZQZRRKWBy9FJ5AQCNy8SX8DpHbLa
- cy58vgDwyIpB89mok9eWGGejY9mqpRwEAhHzs+/n5xlVlM3bqy1yHnAzJqVwqBE1D0jG0a9V6VQI=
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-6BjHJSIIonN27c8RdqsP"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yCfDjnxB"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55KF75Ib692041;
+	Fri, 20 Jun 2025 10:07:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750432025;
+	bh=Sr+ph/pByqHoPvRkp+egq+sXgmbRpPQXF5FzTyrqF0U=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=yCfDjnxBEoR0o3YuAHucdWr3dd3utGjNT0ewvKkPJ2TC+X/3P9c0PWomepFyfmMR4
+	 IgdM0saz9TcRuQGGsWsTZ4YmAWKdRFxP0QvM+FcAu89fc0c60CdrPjuDX7j8df1pUz
+	 oUYJJmuSe2C5lJgtJBMUd5AdzLhPgrFzCMl4Vrn8=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55KF75pZ1878626
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 20 Jun 2025 10:07:05 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 20
+ Jun 2025 10:07:05 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 20 Jun 2025 10:07:05 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55KF71PA3387048;
+	Fri, 20 Jun 2025 10:07:01 -0500
+Message-ID: <e19bb1d6-307c-4ed4-b353-5d2e0668f6fb@ti.com>
+Date: Fri, 20 Jun 2025 20:37:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] phy: cadence: cdns-dphy: Fix PLL lock and
+ O_CMN_READY polling
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+CC: <sakari.ailus@linux.intel.com>, <u.kleine-koenig@baylibre.com>,
+        <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>,
+        <r-donadkar@ti.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
+        <mripard@kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250502033451.2291330-1-devarsht@ti.com>
+ <20250502033451.2291330-2-devarsht@ti.com>
+ <218ba1a0-068d-4bb2-bba2-2739afa7f470@ideasonboard.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <218ba1a0-068d-4bb2-bba2-2739afa7f470@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi,
+
+On 18/06/25 15:31, Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 02/05/2025 06:34, Devarsh Thakkar wrote:
+>> PLL lockup and O_CMN_READY assertion can only happen after common state
+>> machine gets enabled (by programming DPHY_CMN_SSM register), but driver was
+>> polling them before the common state machine was enabled. To fix this :
+>>
+>> - Add new function callbacks for polling on PLL lock and O_CMN_READY
+>>    assertion.
+>> - As state machine and clocks get enabled in power_on callback only, move
+>>    the clock related programming part from configure callback to power_on
+>>    callback and poll for the PLL lockup and O_CMN_READY assertion after
+>>    state machine gets enabled.
+>> - The configure callback only saves the PLL configuration received from the
+>>    client driver which will be applied later on in power_on callback.
+>> - Add checks to ensure configure is called before power_on and state
+>>    machine is in disabled state before power_on callback is called.
+>> - Disable state machine in power_off so that client driver can
+>>    re-configure the PLL by following up a power_off, configure, power_on
+>>    sequence.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
+>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>> ---
+>> V3:
+>> - Move out clock programming logic to power_on as PLL polling and enable
+>>    can happen only after SSM enable
+>> - Disable state machine on power off
+>>
+>> V2:
+>> - Return error code on polling timeout
+>> - Moved out calibration logic to separate patch
+>>
+>>   drivers/phy/cadence/cdns-dphy.c | 109 +++++++++++++++++++++++++-------
+>>   1 file changed, 85 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
+>> index ed87a3970f83..a94109a63788 100644
+>> --- a/drivers/phy/cadence/cdns-dphy.c
+>> +++ b/drivers/phy/cadence/cdns-dphy.c
+>> @@ -79,6 +79,7 @@ struct cdns_dphy_cfg {
+>>   	u8 pll_ipdiv;
+>>   	u8 pll_opdiv;
+>>   	u16 pll_fbdiv;
+>> +	u64 hs_clk_rate;
+> 
+> This has a minor conflict with my cdns-dsi series, as I also add
+> hs_clk_rate but as u32. Also, applying both serieses,
+> cdns_dphy_config_from_opts() becomes odd as the hs_clk_rate will be
+> assigned back and forth between opts and cfg. Can you check this?
+
+Understood. I think after re-basing on top of your patch, I don't need 
+to assign cfg->hs_clk_rate in cdns_dphy_config_from_opts since you 
+already assigned it to realized clock value in 
+cdns_dsi_get_dphy_pll_cfg. I can rebase on top of your series.
 
 
---=-6BjHJSIIonN27c8RdqsP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le vendredi 20 juin 2025 =C3=A0 07:54 +0200, Krzysztof Kozlowski a =C3=A9cr=
-it=C2=A0:
-> On 19/06/2025 19:16, Nicolas Dufresne wrote:
-> > Le jeudi 19 juin 2025 =C3=A0 12:27 +0800, Shawn Guo a =C3=A9crit=C2=A0:
-> > > On Fri, May 23, 2025 at 07:22:04PM -0400, Nicolas Dufresne wrote:
-> > > > Hi,
-> > > >=20
-> > > > Le mercredi 21 mai 2025 =C3=A0 13:34 -0400, Frank Li a =C3=A9crit=
-=C2=A0:
-> > > > > Add compatible strings "nxp,imx95-jpgdec" and "nxp,imx95-jpgenc",=
- which
-> > > > > are backward compatible with "nxp,imx8qxp-jpgdec" and
-> > > > > "nxp,imx8qxp-jpegenc". i.MX95 just need one power domain which co=
-mbine
-> > > > > wrap and all slots together. Reduce minItems of power-domains to =
-1 for
-> > > > > i.MX95 and keep the same restriction for others.
-> > > > >=20
-> > > > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > >=20
-> > > > Acked-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > > >=20
-> > > > Krzysztof, will you take this one once the DTS part is ready ?
-> > >=20
-> > > dt-bindings is the prerequisite of DTS.=C2=A0 DTS patch looks good to=
- me
-> > > and I'm waiting for dt-bindings part to be applied first.
-> >=20
-> > I was waiting for sign of life on the DTS part, we usually get some ack=
-,
-> > which is good sign we can take the bindings.
->=20
-> Such process never happens. DT bindings are the prerequisite here and
-> platform maintainers wait for bindings to be accepted before taking DTS
-> or even sometimes reviewing DTS. Why even bother to review DTS if it
-> follows entirely incorrect binding?
-
-You are the one requesting DTS with DT bindings for review purpose. You've
-done so regularly this year.
-
-As for review process, Ack are a workaround to a black whole in our review
-process. Patches without any reply can either be un-reviewed due to lack
-of time, or accepted. You do whatever you like, I'm just saying that clarit=
-y
-can help to coordinate.
-
-regards,
-Nicolas
-
->=20
-> Best regards,
-> Krzysztof
-
---=-6BjHJSIIonN27c8RdqsP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTvDVKBFcTDwhoEbxLZQZRRKWBy9AUCaFV5BQAKCRDZQZRRKWBy
-9KazAQCZpPC27cOiLrCeirOx9KtegKeVBpOKvNdcjZFKHZg+0AD+OJGvNGaHn+Di
-rFaOSJG8M735rmjWeSPrkNAWKU2s4Qc=
-=Chy2
------END PGP SIGNATURE-----
-
---=-6BjHJSIIonN27c8RdqsP--
+Regards
+Devarsh
