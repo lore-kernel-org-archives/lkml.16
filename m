@@ -1,141 +1,132 @@
-Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA16928368C
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6721FBEB9;
+	Fri, 20 Jun 2025 10:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413617; cv=none; b=GIeoYpnEIGH4bf/ouV9avnvMP+4mV/NiWAClVbZ2cJl7GK2tf/2POHCB+QYjgjwt9185ZUzGYQIBRD51EGmjisvRTQg/6dLKP0ZXBW2FMfogxAsOGzTXoX2El/tcqLMLGePMwyBNJBon/kl34hEVuuEU+/Nb1X7iHfGSo08MsEQ=
+	t=1750413626; cv=none; b=jhH5lycAFB7eKSJgEpjovFsnGjuMxgyQoST4IywoRcKJJ7mb7ba7kFabT8bJdIPKcCQMzi1dD4fOgaguCt6V8tRkDf6x3rB3jH4d9b3TdKkRUKX0YJ3rPCBFmHPsbKLrqvPZyvFOJEVfKZvwhewIYXHuqbJzihrkgcIR1lH1Ek4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413617; c=relaxed/simple;
-	bh=rKaljkqEUrjUUYISCTJvN0+VAGfaDFBRT5j3tv3rmRA=;
-	h=Message-Id:Content-Type:In-Reply-To:Subject:Date:References:To:Cc:
-	 From:Mime-Version; b=Q7Ffwc6dHBvOEO2Q80RRW5cjqafb1pi1sKT4et2Fh+VpTPa/1zMCM8gDglMYleP05PBo9zkcPITuoITWjVYVlNIi2FXLWOR1XsIjywY2k9jp+4QeyP8IxElwRiAV+oJ+lqpurQF2tnXnNBD6Sl+wXVopFq6Caan/mr0emKNSsag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=Yeyt9eQC; arc=none smtp.client-ip=118.26.132.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750413626; c=relaxed/simple;
+	bh=olKXWgZQjhsUkuz2YNRyJhyf9whoZXlTfn3ASsScarA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=er72mKFquHahbbHc5/i4Y7bjuUo6jTZL2oTciFRu8i7iyFku4/CQfRiKp+ZUn0PgM+C39A0MbHRLVVbWOeGO0NhQHHYRxuqhipYEtNZvLTfyyF3J0VEJHDxaj3aedlEdu08m5Hl07HfeFGjILELYVlRgvxPRxwgimDm22ZIXj9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3MWFsKl; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="Yeyt9eQC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750413523;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=lva+y9NB39YGFOB+2A2HkG7HC06lS3LbJWgBT7uypq8=;
- b=Yeyt9eQCUIPOIMBgdiTlkn39j5upI7p97RnORCsqR3eq1k4XsnU5SMeULErSGmHZ606uAS
- 6wIjfQ3Vt1Yme4fclC/oHjfUQK/2wtd6WpyQuXvuptrGS3BYNfHDD7ut3HynILEmzTT/1T
- rrnYyqUxwWx0gI2HqhG1qsRIe/533Cvd36qzwiymqHd3jwUMp58SkO6zqJ/SAKChpGQL4F
- c7gXZp0jLjUn2bORe3+IV5R2t50OQwMyuDsg7mVslvHUJye7bdQhFmQ4WS2jaSL/F1v6HV
- ED9JqaK8TCk+w/66wOS1hSfLGWGsJW17KqZLJ2BwleuG7fS30iMZqAz9YZcABw==
-Message-Id: <2acb706f-fb20-45ef-a8c8-762e193ca548@lanxincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
-Content-Transfer-Encoding: 7bit
-User-Agent: Mozilla Thunderbird
-X-Lms-Return-Path: <lba+2685530d1+006e4f+vger.kernel.org+liujingqi@lanxincomputing.com>
-Subject: Re: [PATCH 5/5] KVM: riscv: selftests: Add bfloat16 extension to get-reg-list test
-Date: Fri, 20 Jun 2025 17:58:38 +0800
-References: <cover.1750164414.git.zhouquan@iscas.ac.cn> <65752029ed1ae331a9ac867a6fef2e63a797569e.1750164414.git.zhouquan@iscas.ac.cn>
-To: <zhouquan@iscas.ac.cn>, <anup@brainfault.org>, <ajones@ventanamicro.com>, 
-	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
-	<palmer@dabbelt.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
-	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3MWFsKl"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso1188957b3a.2;
+        Fri, 20 Jun 2025 03:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750413622; x=1751018422; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m3/m6Ii9CNtXvzHeVzuWLYEX2B8FFoJZCUGYI3grWJM=;
+        b=G3MWFsKlL2oGnQ5eYszfiWwzfkiG+DecwoIUb79Q9CDvdexONmV4PakVHmZCoaUdGE
+         /Tjv3JrUOW6gzWkibUMUWtXrfLx6/TaDWxdUUaBFwWXWZtNB+XH26dn6J1fb8ifpqz05
+         xfXAjviZLDPGtKK/jKzC8GAbM8iZ8nBKJ5TViS+GuNdoaKJDNqtXLR7V72xU5qPFe2l4
+         99cgp5pmLvEut4a3LBDLOadnX3t/bgNFkkvs/XcRksga1Bz8suQCt6nKmVXTHPI6wOQr
+         tgF7ANDcsWQ2TQFtKDS3vjBd9U6iycRsoJG770n0geFONeUs2SbdiTHLqVBBckpdULYB
+         Zq8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750413622; x=1751018422;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m3/m6Ii9CNtXvzHeVzuWLYEX2B8FFoJZCUGYI3grWJM=;
+        b=hDlklehS81qMOQ9galhypSS2rOk+Iz+fIuo3M2IRYPFJOvavZK9gKqgrKpTxvfacYW
+         CaLkL16Tmynthj/zKm9e5q+NOLBFWHzD9k+2OGgRaKlmOmAsmE3pe/FNYls8GLzAEFkv
+         ykZAw7FNNx6WwSeaRq2SNzxSV6MPASraaovv2N41Q0ZizmX56LUv86X3LAo2sss7k70j
+         ht8Yp+Ol5sjMpv/1aDKfh1YrRk7xLHJfHqqAdG0HD64sgdG2uePvfaaL/OwBm2pglRvl
+         Gtn16froDhXYELLMoawoMS1f2r1sas8VtGBhekABLypXA3ByaEtpJv7JLVJelUCc6bvJ
+         x60Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVFIPuEuD5qBMwy9ED4wDK4uw6zY7at3wpIgcVZ0BAXcxP9+JlP1CK1X19w1P0JrUICpZN3jwEwR/hUZMs=@vger.kernel.org, AJvYcCXSrxhMWk2TnE23w/enEMpyyV7oVkvu99CHaoc30IVHTNYzG2t0btRbS3+tTw6zUczSAfdFAQykmk4=@vger.kernel.org, AJvYcCXijxDFMNcnsQcp/biHdMcMXT5JGqDenX9JFmpEv0OI8cFDDvqemLxM+MZcqXu3QxIdWqsPLSoExB4k2TPslAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAk7+/oIpvCLIQs3VqhaG4H3dgWDgawZpnYpSak+DvxUUxFyJA
+	mJHj2iznlllVrUbgMONdfD16b4Y1+5JbbOa9RTwOtfWj/vv0/AKqUW8e
+X-Gm-Gg: ASbGncvquFmLzhNpFAUMTuTZwpZKKWIE644AVvgwfydoFob3WUSg0vkeldmjSdfMbEi
+	A2znOIOszBUy/eNbe72NJRCeTOnpfCqPcmFK8w1LqNjoaQIYPaun6Jai/cav3DLBrDgt6HBGlDc
+	rBNzw8pd43U+8NUyD1U7xyHW6N8+mZjjj6DoNckDWBepGmOL39n0qzCghrboH1uJLUTfwTssmhC
+	sT6DSIZG+TT+bblb9KY2JEW35qoBVhEaCW09T8qjetJQWTu6W5zT7ZRfPaKZo+c0YI0hx9Kq5vL
+	FZ+JDY5HCO9OeE5LE3bJpOCheVTULqgTFtv9osLPr2Ma8ytpy63rUjkFkEGk
+X-Google-Smtp-Source: AGHT+IEmqSX4AKlleCPKAgbXutcHO2f/Xpc08haGuQzz05YQ9otNxjDLec2RllEvNRSBiZPw0ATUDA==
+X-Received: by 2002:a05:6a00:238c:b0:746:2a0b:3dc8 with SMTP id d2e1a72fcca58-7490dac586emr3067302b3a.17.1750413622064;
+        Fri, 20 Jun 2025 03:00:22 -0700 (PDT)
+Received: from pop-os.. ([103.21.124.79])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a4ac6b2sm1701768b3a.69.2025.06.20.03.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 03:00:21 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: vireshk@kernel.org,
+	nm@ti.com,
+	sboyd@kernel.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	linux-pm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abhinav Ananthu <abhinav.ogl@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH] rust: opp: use c_* types via kernel prelude
+Date: Fri, 20 Jun 2025 15:29:21 +0530
+Message-Id: <20250620095920.20765-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Received: from [127.0.0.1] ([180.165.3.105]) by smtp.feishu.cn with ESMTPS; Fri, 20 Jun 2025 17:58:40 +0800
-Content-Language: en-US
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 6/17/2025 9:10 PM, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
->
-> The KVM RISC-V allows Zfbfmin/Zvfbfmin/Zvfbfwma extensions for Guest/VM
-> so add them to get-reg-list test.
->
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->   tools/testing/selftests/kvm/riscv/get-reg-list.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-> index ebdc34b58bad..e5a07e000b66 100644
-> --- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-> +++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-> @@ -80,6 +80,7 @@ bool filter_reg(__u64 reg)
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCMOP:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
-> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFBFMIN:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOM:
-> @@ -104,6 +105,8 @@ bool filter_reg(__u64 reg)
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZTSO:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBB:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBC:
-> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFMIN:
-> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFBFWMA:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFH:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFHMIN:
->   	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVKB:
-> @@ -535,6 +538,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
->   		KVM_ISA_EXT_ARR(ZCF),
->   		KVM_ISA_EXT_ARR(ZCMOP),
->   		KVM_ISA_EXT_ARR(ZFA),
-> +		KVM_ISA_EXT_ARR(ZFBFMIN),
->   		KVM_ISA_EXT_ARR(ZFH),
->   		KVM_ISA_EXT_ARR(ZFHMIN),
->   		KVM_ISA_EXT_ARR(ZICBOM),
-> @@ -559,6 +563,8 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
->   		KVM_ISA_EXT_ARR(ZTSO),
->   		KVM_ISA_EXT_ARR(ZVBB),
->   		KVM_ISA_EXT_ARR(ZVBC),
-> +		KVM_ISA_EXT_ARR(ZVFBFMIN),
-> +		KVM_ISA_EXT_ARR(ZVFBFWMA),
->   		KVM_ISA_EXT_ARR(ZVFH),
->   		KVM_ISA_EXT_ARR(ZVFHMIN),
->   		KVM_ISA_EXT_ARR(ZVKB),
-> @@ -1138,6 +1144,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zcmop, ZCMOP);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
-> +KVM_ISA_EXT_SIMPLE_CONFIG(zfbfmin, ZFBFMIN);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
->   KVM_ISA_EXT_SUBLIST_CONFIG(zicbom, ZICBOM);
-> @@ -1162,6 +1169,8 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zkt, ZKT);
->   KVM_ISA_EXT_SIMPLE_CONFIG(ztso, ZTSO);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zvbb, ZVBB);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zvbc, ZVBC);
-> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfmin, ZVFBFMIN);
-> +KVM_ISA_EXT_SIMPLE_CONFIG(zvfbfwma, ZVFBFWMA);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zvfh, ZVFH);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zvfhmin, ZVFHMIN);
->   KVM_ISA_EXT_SIMPLE_CONFIG(zvkb, ZVKB);
-> @@ -1213,6 +1222,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
->   	&config_zcf,
->   	&config_zcmop,
->   	&config_zfa,
-> +	&config_zfbfmin,
->   	&config_zfh,
->   	&config_zfhmin,
->   	&config_zicbom,
-> @@ -1237,6 +1247,8 @@ struct vcpu_reg_list *vcpu_configs[] = {
->   	&config_ztso,
->   	&config_zvbb,
->   	&config_zvbc,
-> +	&config_zvfbfmin,
-> +	&config_zvfbfwma,
->   	&config_zvfh,
->   	&config_zvfhmin,
->   	&config_zvkb,
+Update OPP FFI callback signatures to use `c_int` from the `kernel::prelude`,
+instead of accessing it via `kernel::ffi::c_int`.
 
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+Although these types are defined in a crate named `ffi`, they are re-exported
+via the `kernel::prelude` and should be used from there. This aligns with the
+Rust-for-Linux coding guidelines and ensures ABI correctness when interfacing
+with C code.
 
-Thanks,
-Nutty
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ rust/kernel/opp.rs | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index a566fc3e7dcb..846583da9a2f 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -514,9 +514,9 @@ extern "C" fn config_clks(
+         dev: *mut bindings::device,
+         opp_table: *mut bindings::opp_table,
+         opp: *mut bindings::dev_pm_opp,
+-        _data: *mut kernel::ffi::c_void,
++        _data: *mut c_void,
+         scaling_down: bool,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: 'dev' is guaranteed by the C code to be valid.
+             let dev = unsafe { Device::get_device(dev) };
+@@ -540,8 +540,8 @@ extern "C" fn config_regulators(
+         old_opp: *mut bindings::dev_pm_opp,
+         new_opp: *mut bindings::dev_pm_opp,
+         regulators: *mut *mut bindings::regulator,
+-        count: kernel::ffi::c_uint,
+-    ) -> kernel::ffi::c_int {
++        count: c_uint,
++    ) -> c_int {
+         from_result(|| {
+             // SAFETY: 'dev' is guaranteed by the C code to be valid.
+             let dev = unsafe { Device::get_device(dev) };
+-- 
+2.34.1
+
