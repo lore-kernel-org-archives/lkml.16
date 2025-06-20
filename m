@@ -1,110 +1,93 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F295E56A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 01:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9F030E820;
+	Fri, 20 Jun 2025 01:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750384326; cv=none; b=cMDX1AVHt3j1QAq4obf80Bk585g555+GmtkH4qePKnP+rSTraUDW9RteMkmHlDhzBw8aGtRpPAHcU/StRMzwQnNgFAtrdT06dRMN8Q12kgteWHlV4+M5gF3enWTJyP+F2MqUXmavoucu7VizlFQf6D5iAtaMO3SjDMrUpJ2Khug=
+	t=1750384450; cv=none; b=GDc3Os1yTclXGl5Mpmk/KBDdcxlhQfS28vOapJWfDGUn0/z/iglW5BZ43whOiKtc0L93nNk8gKUavdpbZgKe87V/Jqr7juN9GvNG8h1cTiaAyrz2YOuIj50KeYSchbUXioZkiMoVv+NPh0TQ/eIpjUHHPCdDSfLKvag7lIOeGkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750384326; c=relaxed/simple;
-	bh=ppaOq2L7Bv4b8aWinnrXOmddG/0jCPB5B87Z4oUiAlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sK2CKP0B7tG256j42/k8/vl/xz26kUAXqwdfiJzJFExQrVAnO08prdiLby5Xe0QrkUh3JsUqw3LirvmkVZyACS213NccnFCE6XtNtjYYz/OFw1SODQVRMJZNu3MJ26dAVjNCBjZUCRRcaQMbwL9GhAAn3yZLfGfpD1JS4dVa6VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iuEhRBEI; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750384450; c=relaxed/simple;
+	bh=HgKJ66InTHc5FcGkiLK7686jr3/n9jhyfn/anAugw0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G+mkTAD3nJm6N2uooGzca8Za8lRc1X71IfzJmOUp+ZnrN7rP4qrv66KqztQHSdn/H1NBzuG4Olg5Q+0E9RFQTrakgugZvvv+UOmTAM7U0NGCWsowLDsk2nvSHuDGlmHU/wV2+IuL97gOMQGfYaoDr8gkALXbOmY2B7wXzoRdZBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I3jJ0Jah; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iuEhRBEI"
-Date: Thu, 19 Jun 2025 21:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750384311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/zw5DBz4TZsHz5LLDF++yx1xMq2LHRMhz7o0BGjg6o0=;
-	b=iuEhRBEIFtwEWR2y2SUxU2oLMU/GLPvODYhMK3ZQgcgdymKTBn9Z4eFmX837siVlTlhjWy
-	LRKTt+7o5V9aVolVB+Ud+N17X9urpD6PJ88QGBw6om1z1ooflHlGGZ67IPYo4sGxNxKFGE
-	BQh/XIBME/YR8sSkg00a9qwi2qiudtA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Jani Partanen <jiipee@sotapeli.fi>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
-Message-ID: <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
-References: <4xkggoquxqprvphz2hwnir7nnuygeybf2xzpr5a4qtj4cko6fk@dlrov4usdlzm>
- <CAHk-=wi2ae794_MyuW1XJAR64RDkDLUsRHvSemuWAkO6T45=YA@mail.gmail.com>
- <lyvczhllyn5ove3ibecnacu323yv4sm5snpiwrddw7tyjxo55z@6xea7oo5yqkn>
- <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I3jJ0Jah"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=je
+	Mo98SG+3dISIhlQop9C8b7HiFoi5Bn5yZa+1PM7Go=; b=I3jJ0Jah6hpt1VOky1
+	4GRcq8n5/JtBbOhcDMBAEWiNZjkMafBptWOU1viNRVWr4ga7qFRfqcNSRTY6fP4h
+	03hlt830HJBPjLbFoOvt4KVEA5DbY+gSNQ3WqIjYfHwWD7lqK/J2bJdh2mB49sXM
+	XCHHtX0EHl+Xy7j/qsvlC3uso=
+Received: from 163.com (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnpiEtv1RoUz5tAA--.15576S2;
+	Fri, 20 Jun 2025 09:53:49 +0800 (CST)
+From: Yuan Chen <chenyuan_fl@163.com>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenyuan_fl@163.com,
+	Yuan Chen <chenyuan@kylinos.cn>
+Subject: [PATCH] pinctrl: berlin: fix memory leak in berlin_pinctrl_build_state()
+Date: Fri, 20 Jun 2025 09:53:43 +0800
+Message-Id: <20250620015343.21494-1-chenyuan_fl@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgDnpiEtv1RoUz5tAA--.15576S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw4UXrW5ZFy3Xr4rAr1kXwb_yoW8XFW5pa
+	98CF1jkr1UJr4Iqr1rJrZavFy3Gan7tw4UW34jg347Zw45JryktFs8KryYq3yDu398Ar1S
+	va15ZwnFv3ZayrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pioa0DUUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiUQdyvWhUs9eAxgACsF
 
-On Fri, Jun 20, 2025 at 04:25:58AM +0300, Jani Partanen wrote:
-> 
-> On 20/06/2025 4.09, Kent Overstreet wrote:
-> > I'm not seeing that _you_ get that.
-> 
-> 
-> How hard it is?
-> 
-> New feature window for 6.16 was 2 weeks ago.
-> 
-> rc<insert number here> is purely for fixing bugs, not adding new features
-> and potential new bugs.
+From: Yuan Chen <chenyuan@kylinos.cn>
 
-That's an easy rule for the rest of the kernel, where all your mistakes
-are erased at a reboot. Filesystems don't have that luxury.
+In the original implementation, krealloc() failure handling incorrectly
+assigned the original memory pointer to NULL after kfree(), causing a
+memory leak when reallocation failed.
 
-In the past, I've had to rush entire new on disk format features in
-response to issues I saw starting to arise - I think more than once, but
-the btree bitmap in the member info section was the big one that sticks
-in my mind; that one was very hectic, but 100% proved its worth.
+Fixes: de845036f997 ("pinctrl: berlin: fix error return code of berlin_pinctrl_build_state()")
+Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
+---
+ drivers/pinctrl/berlin/berlin.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Thankfully, we're well past that. This time, we're just talking about a
-~70 line patch that just picks overwrites instead of updates from the
-journal and sorts them in reverse order.
+diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin/berlin.c
+index c372a2a24be4..9dc2da8056b7 100644
+--- a/drivers/pinctrl/berlin/berlin.c
++++ b/drivers/pinctrl/berlin/berlin.c
+@@ -204,6 +204,7 @@ static int berlin_pinctrl_build_state(struct platform_device *pdev)
+ 	const struct berlin_desc_group *desc_group;
+ 	const struct berlin_desc_function *desc_function;
+ 	int i, max_functions = 0;
++	struct pinfunction *new_functions;
+ 
+ 	pctrl->nfunctions = 0;
+ 
+@@ -229,12 +230,15 @@ static int berlin_pinctrl_build_state(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	pctrl->functions = krealloc(pctrl->functions,
++	new_functions = krealloc(pctrl->functions,
+ 				    pctrl->nfunctions * sizeof(*pctrl->functions),
+ 				    GFP_KERNEL);
+-	if (!pctrl->functions)
++	if (!new_functions) {
++		kfree(pctrl->functions);
+ 		return -ENOMEM;
++	}
+ 
++	pctrl->functions = new_functions;
+ 	/* map functions to theirs groups */
+ 	for (i = 0; i < pctrl->desc->ngroups; i++) {
+ 		desc_group = pctrl->desc->groups + i;
+-- 
+2.25.1
 
-So your next question might be - why not leave that in a branch for the
-users that need it until the next merge window?
-
-For a lot of users, compiling a kernel from some random git repository
-is a lot to ask. I spend a lot of time doing what amounts to support;
-that's just how it is these days. But rc kernels are packaged by most
-kernels, and we absolutely do not want to wait an additional 3 months
-for it to show up in a release kernel -
-
-For something that might be the difference between losing a filesystem
-and getting it back.
-
-There's also a couple patches for tracepoints and introspection
-improvements; I don't know if Linus was referring to those. But those
-are important too.
-
-I think at least as much about "how do I make this codebase easy to
-debug; how do I make it _practical_ to support and QA when it's running
-on random user machines in the wild" as I do about the debugging itself.
-That's at least as important as the debugging; making it maintainable.
-
-Partly that's about maintaining a quick feedback cycle between myself
-and the users reporting issues; that builds trust, brings people into
-the community, turns into opportunities to teach them more about testing
-and QA and bug reporting.
-
-I also never cease to be amazed how often I add some bit of logging or
-improve a tracepoint or some introspection - and then a week later I'm
-working on something else and it's exactly the thing I need.
-
-IOW - it's not just about fixing the bugs, it's about how we fix the
-bugs.
-
-Tools to repair, tools to debug, it's all just tools, all the way
-down...
