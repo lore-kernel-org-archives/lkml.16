@@ -1,104 +1,133 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C9F253F16
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3B9253F16
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437307; cv=none; b=RXKFjkCuihfky5nheWewJ8jYb6X+OIkO9sp8GLU83kKXXEev6hdD6SIwYX1uKcxpQAT41SOzpUyKpYl7dATt+pt3M1eHCVrhrHqBBPpuKiv/joO+f3Wlhj6qGwd5blvRtsFdVdKOhCy56Z9XhfAMDByUfmgptSGxOoSnF589BK0=
+	t=1750437314; cv=none; b=CTOgzhF6h5gv3zswgBs3pyPAYqIcpd2DYLHdvTUGWHWMUxc7cUFIsaONPMuK9vwAZQ+bF02PR9m7a50GbHXm7fQcFwCqG19IS33N+4+noyEMqFhcdikgA1xLVXv+fycPQGR1B/pmZjouaOVFJ88Tiv78HSOFUZDAUzWTWnbmYwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437307; c=relaxed/simple;
-	bh=oaTRh4ds681QZcVYWaTXlb4ef8A2ijup6tRtesQ4SOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YfEC9lM4Nu00pJAduJfRg/57pmRrGK7mMp0jpgvDEXNIF/qaaMnot/26UcaBIH3iNg1OlQWKJUXu5o/qsyyuwjG8WnlkxVRUmNK89MLxDJsE/oIHPutoggKICzykIPTlgMEJoBuy61PCWY5MwGBIFQP7TSB56h+eo5EqI/oNhkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Q3rbwmNe; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750437314; c=relaxed/simple;
+	bh=NfmPX0yVFBBCDiBkKX9NhyYVI/32o1GQomiZQ8lwj04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fqqew/IFfUbiaL/DUc472BF3F6tel7oWxaWj6YjMCXrvSJAMg1AzCu9lZ92AzTtcElwrl8ph/4/ckUWR1QiVvEIT5W/lk4JbameEEOhnjQwrFQr4spscGLS6GUv13cxwlpv4tU5oePIPgmOcBd9XrrkqIgaXeS8p2QEU5dz8JlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=AFtBDGY4; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Q3rbwmNe"
-Message-ID: <3ff0f1eb-fd69-4452-9e24-738f47b0203e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750437301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Pt53J5CQyhMhBy2UHYMO8n7eZQLEZ2R9chwdbp1yGI=;
-	b=Q3rbwmNeb2YVBcJopM73p3v4MtiDUNCI9mWHG/TFSwVNnPebD7QaF4/BgqM6fUTV7RSs9t
-	x+sOduJiZ5MM0tyEsz7TPTu7MzYQCtScim8OhAay/pUoPBcdUtSbz0uCTrxgrMWhOi/f+z
-	5PFLJIp/YGxBuCohTNfV+cGUbHXzL2Y=
-Date: Fri, 20 Jun 2025 12:34:56 -0400
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AFtBDGY4"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a442a3a2bfso30978841cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 09:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750437311; x=1751042111; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hFurqnYI+L7RUrkwAcAgkoscsXJUHEF+OS7OBiZvdjs=;
+        b=AFtBDGY4u//+OcRGgsNP2nNIl3GkBu06cDTBoTr3GbiDOsqI32jTwaU1J+XH9lwAvY
+         hWaQh/mJv0874X3toBckXmF6Ik6GcU2KxrGTumygmVBWqGFj7NHeafpVOTHWKmdlRENh
+         n2+pcbtl98j62d7pnsl+OI9JndziiQK4dy2pJgt23PDx0YcfufkGQmzooiCFr6RuglOl
+         cF+pVDRa0xj+bG76O1evGjZt4D5wi4KYclCUHuuHbnnbokf+t1EfIwY+zSTJ3ujMBOnE
+         /eW1Hkn/8Ihp8Rbn6mmN6W2AIg87vLWzMAVELW3JLKTO9ff8QvQpR1R8xFzqh/+0TWJd
+         1mKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750437311; x=1751042111;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hFurqnYI+L7RUrkwAcAgkoscsXJUHEF+OS7OBiZvdjs=;
+        b=T6bCCXnWNyOczZlMIjD82WL7OiblHf0YIdRVrO1w2Z10+VzmuqSCjPFdHa4bWyIKnN
+         Yti/3UvB9dJWyIIHCoLAY2CrIBVy8hQiju4aAfsb0AWsVCqwASRz+QOG30+yfn7RWtO6
+         jcpjR0CBpyXSHrYSJR/W0OW0kSgUFGVyhNqICyCldLgowgymiEGTa00iQJQofGA7GcCZ
+         3p4EZQQNYOZvFw9GvuiCKhTxGzflaf3p2twBkODM49cgM0/YZX22tEaHuRWzmpHWyPXh
+         fSold8P6kmWMnufYt5FBmiaftV9XxqCZ6GL7Sg5iPJgMuYWf9yy0/wT0840SnQ5f6OKG
+         AOEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfg2VduXf3q29slUBB2769hR+DnFqchDZpTNp7wrXYkH2rQrJexF/4D3AMO+gSAZvLVVQ1XCiHKyoB488=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFtkxoAYz4lqIpjFsVLkyTO040Zg+GA9eR7UDO2PERmduJM+3n
+	vR5JNxo5jOOEVYjWQ44o71Gn0f7Wnm623oAV4LkctIOW3UELLRr/rLF9Y3yppDRgCfs=
+X-Gm-Gg: ASbGncsdliUWL540l4wW5EIWA/XWYCH+TDP6XUWnYjTHieIOG2ZvFQr3aMM7hjgc2fZ
+	BYMNtSZ07JfPhq02DQ/OT1nY6QbT8e+CLp1drCO+lKczCH3PxWTy2WJZJ7qzrZ9/mbr+po6yS3C
+	SgOR0NokMLpsPN34nGngu+7rZBxhHoRvgrHOUeWVvrBnggqI4FOGhP+1xRVl3PMrcsGw90w4AAA
+	Z2HaUfmtOk/h8+e2QemPnOg12M5QNAwCUgkCZ8r/wE19uY1MMo5YhKj7AOu0VJy3jcv68tVO+Pm
+	QqbuMWaR+9wDDzVAO76l/iIMnKMJ4gIlxiaP4LBCtpOlmoz8xGuQfrNiH/De2/JoTMJSzZapu63
+	C+Pr/i+wqU0zWVaUcALd+m91uhoxjSDq6ut+Q0g==
+X-Google-Smtp-Source: AGHT+IFA6k631lKxrYTYm+6L/JASXk2MoP+urHg89b8SmimDGgONLFl8B84S2EQnZ661ul3HBMs1NQ==
+X-Received: by 2002:a05:622a:1307:b0:4a7:2357:dc81 with SMTP id d75a77b69052e-4a77a23abbfmr54566761cf.3.1750437311156;
+        Fri, 20 Jun 2025 09:35:11 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779d9dbfesm10698501cf.36.2025.06.20.09.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:35:10 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uSehp-00000000Es0-48hW;
+	Fri, 20 Jun 2025 13:35:09 -0300
+Date: Fri, 20 Jun 2025 13:35:09 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v3 3/5] iommu: Add verisilicon IOMMU driver
+Message-ID: <20250620163509.GB39770@ziepe.ca>
+References: <20250619131232.69208-1-benjamin.gaignard@collabora.com>
+ <20250619131232.69208-4-benjamin.gaignard@collabora.com>
+ <20250619134752.GB1643390@ziepe.ca>
+ <073ffe14-d631-4a4f-8668-ddeb7d611448@collabora.com>
+ <20250619165928.GA10257@ziepe.ca>
+ <e034a111-93eb-42e8-a533-46553b4f5588@collabora.com>
+ <20250620120509.GA39770@ziepe.ca>
+ <d9a1b9ab-b6ab-4364-a1b7-df4debc21bc1@collabora.com>
+ <3337df6c-f800-4610-8689-fbd4b4a5d07a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net 0/4] net: axienet: Fix deferred probe loop
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
- Saravana Kannan <saravanak@google.com>, Leon Romanovsky <leon@kernel.org>,
- Dave Ertman <david.m.ertman@intel.com>, linux-kernel@vger.kernel.org,
- Ira Weiny <ira.weiny@intel.com>, linux-arm-kernel@lists.infradead.org,
- Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250619200537.260017-1-sean.anderson@linux.dev>
- <2025062004-sandblast-overjoyed-6fe9@gregkh>
- <56f52836-545a-45aa-8a6b-04aa589c2583@linux.dev>
- <2025062054-tameness-canal-2204@gregkh>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <2025062054-tameness-canal-2204@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3337df6c-f800-4610-8689-fbd4b4a5d07a@collabora.com>
 
-On 6/20/25 12:01, Greg Kroah-Hartman wrote:
-> On Fri, Jun 20, 2025 at 11:41:52AM -0400, Sean Anderson wrote:
->> On 6/20/25 01:10, Greg Kroah-Hartman wrote:
->> > On Thu, Jun 19, 2025 at 04:05:33PM -0400, Sean Anderson wrote:
->> >> Upon further investigation, the EPROBE_DEFER loop outlined in [1] can
->> >> occur even without the PCS subsystem, as described in patch 4/4. The
->> >> second patch is a general fix, and could be applied even without the
->> >> auxdev conversion.
->> >> 
->> >> [1] https://lore.kernel.org/all/20250610183459.3395328-1-sean.anderson@linux.dev/
->> > 
->> > I have no idea what this summary means at all, which isn't a good start
->> > to a patch series :(
->> > 
->> > What problem are you trying to solve?
->> 
->> See patch 4/4.
+On Fri, Jun 20, 2025 at 04:42:02PM +0200, Benjamin Gaignard wrote:
 > 
-> That's not what should be in patch 0/4 then, right?
+> Le 20/06/2025 à 15:52, Benjamin Gaignard a écrit :
+> > 
+> > Le 20/06/2025 à 14:05, Jason Gunthorpe a écrit :
+> > > On Fri, Jun 20, 2025 at 10:57:49AM +0200, Benjamin Gaignard wrote:
+> > > > Le 19/06/2025 à 18:59, Jason Gunthorpe a écrit :
+> > > > > On Thu, Jun 19, 2025 at 06:27:52PM +0200, Benjamin Gaignard wrote:
+> > > > > > Le 19/06/2025 à 15:47, Jason Gunthorpe a écrit :
+> > > > > > > Ugh. This ignores the gfp flags that are passed into map because you
+> > > > > > > have to force atomic due to the spinlock that shouldn't be there :(
+> > > > > > > This means it does not set GFP_KERNEL_ACCOUNT when
+> > > > > > > required. It would
+> > > > > > > be better to continue to use the passed in GFP flags
+> > > > > > > but override them
+> > > > > > > to atomic mode.
+> > > > > > I will add a gfp_t parameter and use it like that:
+> > > > > > page_table = iommu_alloc_pages_sz(gfp | GFP_ATOMIC |
+> > > > > > GFP_DMA32, SPAGE_SIZE);
+> > > > > This will or together GFP_ATOMIC and GFP_KERNEL, I don't think that
+> > > > > works..
+> > > > I have test it, I don't see conflicts or errors. What worries you ?
+> > > Just looking at the bitmaps I'm not sure? Did you run with lockdep?
+> > 
+> > Yes and it complains about that.
+> > I see that sun50i driver have more less the same struct than my driver
+> > but doesn't use lock. I will try see if I can remove the lock.
 > 
->> > What overall solution did you come up with?
->> 
->> See patch 4/4.
-> 
-> Again, why write a 0/4 summary at all then?
+> I have replace the two spinlock by a mutex in vsi_iommu structure.
+> It seems it works well and lockdep doesn't complain anymore.
 
-So if I decide in v2 that some patch other than "auxiliary: Allow empty
-id" has to come first then the series still has the same subject. This
-makes it easier for maintainers to figure out which v1 the v2 is for.
+You cannot use a sleeping lock within the map/unmap
+functions. Removing the lock is hard for your case because you have
+the cache flushing problem.
 
->> > Who is supposed to be reviewing any of this?
->> 
->> Netdev. Hence "PATCH net".
->> 
->> And see [1] above for background. I will quote it more-extensively next time.
-> 
-> Referring to random links doesn't always work as we deal with thousands
-> of patches daily, and sometimes don't even have internet access (like
-> when reviewing patches on long flights/train rides...)
+Maybe mask GFP_KERNEL off and then or back in GFP_ATOMIC.
 
-Well, the link contains the message-id, so you are more than welcome to
-look it up in your email client. But to spare you the trouble I will
-quote from it next time in addition to linking.
-
---Sean
+Jason
