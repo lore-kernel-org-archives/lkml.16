@@ -1,39 +1,39 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host6-snip4-1.eps.apple.com [57.103.67.74])
+Received: from outbound.pv.icloud.com (p-west1-cluster6-host10-snip4-10.eps.apple.com [57.103.67.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6711728FD
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1E128F51C
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430464; cv=none; b=tSPTNjqbsROH0SHWU+u86nBCdURB2QoOIBJWMBMWLC2Mj1vLuWL9BHACLMaXHwWRUpp8ZRJYZ6cF0TvME7d3QL2RJNQoohfUS/wvp0l/QTT+By8i5dHvhDSe3JVv0tyGyyt0Lre7pJv/E97D45Mqiik1CdvhvwnanMq8eJQH+to=
+	t=1750430466; cv=none; b=DgE/oaPrVpJu0E4q2Tseh+K64fmWEZHCjl1tGZMb+fgKjCzO1aj83FymJS6oOPGgvKuoeS7d37AhS77LbkBCJtYE1iBCMncwoyOoWxXpzBoE2XwjiPsTH6JJHatTaTL44WeybxJxxQMc6bp+4Ig4H6YlcfOAOKHaok6qgvWxiUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430464; c=relaxed/simple;
-	bh=Yr+ep9SP3wZo2lIt6ezTm0HZej0HrNsBVylBhnhIYUg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fxDHxkBJc0Ndnfhia8Bxhrl82c00tSfJZkkR9pxANv0KK6gDTNb2ZF4RwCOyweVYK67uB2nZ2KaRwVXcwROm3B3tn1jcAEHXnSldx1vbnYCcvA1wnWbfcgDcT1e8FWKp3540MCrTYPzHgFcn1MIMgzERxW9Mfmy2kWOMZ86km+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Q66a8I1Z; arc=none smtp.client-ip=57.103.67.74
+	s=arc-20240116; t=1750430466; c=relaxed/simple;
+	bh=LcjSt/nGvmhhZqhV1lbIlUfcRdmY1AVKoDE4Y0rZ778=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YDOU3SiVrfwC/JggIaivIllnenc0O1ahPTzjytgwGUgk4Ofu3sUsdHTU2ib4t/58gQ2I//ago1pK++lP/JQNTMs3JcK8Tt9lNgqbNpD/FD2BbPvFiIxnAMTzotSC1/i2ngWhOtjmiq8hWAVrOzIinGKyOrlgNR/A7EatgaVW9aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=eEpw3Row; arc=none smtp.client-ip=57.103.67.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Q66a8I1Z"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="eEpw3Row"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=wF3Cv7ZPj3TEQM73gyxKYcZbCi2Jh6tueIr0k8ljcLo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
-	b=Q66a8I1Z/aR2b7RGm5Q6sYI6Iw04iUOaCjS2C+7CMPY53xHQYOScXel6aofQ46fwm
-	 MnB92lgBZMtOqduOKQhYUB8bFw6nRcOT/OdLJGLamcyTDBp681UFGq39OV1jlh99FA
-	 GAYiK5e9zQmLri2sQicdEJk99d4rNUeUVzqiaZD7tg6b+zqmmiyZl7iuKPqYIlmrfE
-	 e1ijUm1nkhu7Sky2YTq3SJ5dJCZaLMTUjflcJ+6WR6JcOm9GFJ/YtJhUIIVPAG6E1i
-	 o4XjIrlu7RgIQ6+U+KXyX4RLa5YBMAFZxvg5i0JyLyjHmpBtkOUrlI2SVh7wkgLPrr
-	 NwnK3s8n1TfHw==
+	s=1a1hai; bh=5/FS7i6cquSDZ1MGYBD/5C+ATw4jDtBL80jA52quSRE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=eEpw3RowqRWvDRng5yO8Tk9PhFhD8bC2arA5GNrtExPIbDshOG2dIdFOMLBAQ9rUI
+	 Xxqsrl4stmrvAQr0LZ7RwpAdSqxb3f0C1C3fM3tEsbZfqX3Bez+tqUwMf57fgagQsw
+	 eXhSKELBApjaTVM3FNnf0xuqX2nvF3S3L2lsh8Ij+PiCXPKclb7mdxLKVL2q3zZoIg
+	 0QIzWcvopCJwGVGIWzvV5KcNTy8YiVx9o4ZYW5a83qG+skZZpgwQHpgelnp2EtXz/m
+	 Ocbio96hdBb0TLYICWc0UBG6Jv1tAUYiQ2lCNOjaylmVLmKUIqzVPY1TvwNY9gsCCd
+	 i+1VfRt4nCq2Q==
 Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 53A94180509E;
-	Fri, 20 Jun 2025 14:41:01 +0000 (UTC)
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 7D4011803BE5;
+	Fri, 20 Jun 2025 14:41:03 +0000 (UTC)
 Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 577A51805FC2;
-	Fri, 20 Jun 2025 14:35:43 +0000 (UTC)
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id AEF97180B565;
+	Fri, 20 Jun 2025 14:35:44 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Subject: [PATCH 0/3] char: misc: Trivial cleanup
-Date: Fri, 20 Jun 2025 22:35:17 +0800
-Message-Id: <20250620-fix_mischar-v1-0-6c2716bbf1fa@oss.qualcomm.com>
+Date: Fri, 20 Jun 2025 22:35:18 +0800
+Subject: [PATCH 1/3] char: misc: Remove redundant forward declarations
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,47 +42,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKVxVWgC/x2MQQqAIBAAvyJ7TrBFC/tKRERutYcsFCIQ/97Sc
- RhmCmRKTBkGVSDRw5mvKNA2CtZjiTtpDsKABp3p0OiN3/nkLDLp3ttAFp13HkGKO5Ho/zZOtX4
- CmZYmXQAAAA==
-X-Change-ID: 20250620-fix_mischar-794de4259592
+Message-Id: <20250620-fix_mischar-v1-1-6c2716bbf1fa@oss.qualcomm.com>
+References: <20250620-fix_mischar-v1-0-6c2716bbf1fa@oss.qualcomm.com>
+In-Reply-To: <20250620-fix_mischar-v1-0-6c2716bbf1fa@oss.qualcomm.com>
 To: Arnd Bergmann <arnd@arndb.de>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
  Zijun Hu <zijun.hu@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwNCBTYWx0ZWRfX60BpvrXIp5Li
- 18Nu5haFSxSZL55W15zqb6Damaha4qZiKz8YhoMB2YCsU9ZTVhMIyOJK1rhizeS3zWhbmoJ+3UD
- fnZgY40USta3g9blHJeIxlIjPFFR1RRQbQ+R1K5RvU7z7iDPtto7MhxiEtaPAIdl2wzp+mOymdA
- yjoKZ1L+zwUyAuE6354Ota7ALm8dr6JZ3xPLvSlRqx5B6NJb9kpc/jkqsuYiLyFDleAjknvz/A9
- 9pidiPGucde/MFCOBzi+K+vekfww0S8mruEldEEB6TuqogM+6iCbA5LYj5H5b6F4Ac0i2yQ5g=
-X-Proofpoint-GUID: ZX_ekh5SYk3MZHbTtQB2DCwtFzG1Hw4L
-X-Proofpoint-ORIG-GUID: ZX_ekh5SYk3MZHbTtQB2DCwtFzG1Hw4L
+X-Proofpoint-GUID: XDqqMO63qnK1jeRaF1pOA8Zw7036sNkg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwNCBTYWx0ZWRfX0pe9SC4zM4yE
+ 16neVigBTlcuOF/+0SDZzHhkTKpndT75MNgf+UDT8kKBWUL9KPdEmzKyH2glQXm3r4D4acvfYxR
+ WxZgZJhT0WOFNOSoCogihBp13jC7sj5WDsiJfqb6Sy+mjZL9lA+E0JqVP1Zl61oud/JAirWRtuk
+ fjtA/VS3vmUotOxj3fAy/vWk/buRSN7ykzqnvxKzaJ+hgIkjW/detFIk0vBcIJycOXTMXmnhRoP
+ 712tD7B9peYz1/Mjozz85EQJcMruSP/Q1zshpE2Aefa1NQ5QGIaMDQrAkKKpfVa1rEm9D5GOc=
+X-Proofpoint-ORIG-GUID: XDqqMO63qnK1jeRaF1pOA8Zw7036sNkg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
- mlxlogscore=958 clxscore=1015 suspectscore=0 mlxscore=0 phishscore=0
- malwarescore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
+ spamscore=0 suspectscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
+ mlxscore=0 phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.22.0-2506060001 definitions=main-2506200104
 
-This patch series is to do trivial cleanup for miscdevice driver.
+From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+
+Header miscdevice.h includes linux/device.h which has definations for
+below two forward declarations directly or indirectly:
+
+struct device;
+struct attribute_group;
+
+Remove these redundant forward declarations from miscdevice.h
 
 Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
 ---
-Zijun Hu (3):
-      char: misc: Remove redundant forward declarations
-      char: misc: Rename a local variable in misc_init()
-      char: misc: Fix improper and inaccurate error code returned by misc_init()
+ include/linux/miscdevice.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
- drivers/char/misc.c        | 10 +++++-----
- include/linux/miscdevice.h |  3 ---
- 2 files changed, 5 insertions(+), 8 deletions(-)
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250620-fix_mischar-794de4259592
+diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
+index 69e110c2b86a9b16c1637778a25e1eebb3fd0111..3e6deb00fc8535a7571f85489c74979e18385bad 100644
+--- a/include/linux/miscdevice.h
++++ b/include/linux/miscdevice.h
+@@ -73,9 +73,6 @@
+ #define RFKILL_MINOR		242
+ #define MISC_DYNAMIC_MINOR	255
+ 
+-struct device;
+-struct attribute_group;
+-
+ struct miscdevice {
+ 	int minor;
+ 	const char *name;
 
-Best regards,
 -- 
-Zijun Hu <zijun.hu@oss.qualcomm.com>
+2.34.1
 
