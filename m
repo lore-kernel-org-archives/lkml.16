@@ -1,84 +1,82 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5669E2EB5D6
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E36A2EBBAB
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434350; cv=none; b=pED9jzLTDVGl6X8+p65YTTR3Cl2kmxPaDwfvFaHaIH0vJJrtAfL2+ULc3YAEgXZDXGnK+toJe5fY9Hf03IjSJUS26uP8/1Lo5JFz980ZTvBTMK5dhJ/R0aUTqgak8te8PCio5LGEqonCHVofFHLBYoSRHKW+W3gC1f11t5CqwyI=
+	t=1750434351; cv=none; b=bmTlnw2D7+uv1LF8GQrp0kdqtOGaoCR+4Hnx2nRCHuqV2SW5Si3BWjDKuYMFhclMDCtjjaiD45w1XXRlPQsrKgWdhrQbgnvInoK3M6OubSDR4nNG4c6rmk2GNPTVS4JH/ogyyzz/oIJ0MQBew+0QSHgUXghjybQc+r54Br/QSEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434350; c=relaxed/simple;
-	bh=nXgUqQdyDTDmUCSlus96vQ7zp/8O8nNWvr6C6TQ8+ag=;
+	s=arc-20240116; t=1750434351; c=relaxed/simple;
+	bh=MYuEJE+0SdySaYO3CVU/uvi2cgNQjyHkEeNQNPJjWt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ezFYa7F8XSYvOliOSf5/J4e1pXYN6S7UAy1cblfRiL7RzGbBR1Upr7XYlSU49GlWB454PNGT5ZjytugyrxwVFJXc3sqZvQKNMvkDO77sKVhgCsjpA1bUAps/uFwmnM54S7sPaDOH4Cmn6xnY9ve1eZS5k8aSMPNgo1R7xasaUU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fBdG1v4O; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=myF1l+aCCYxJVdZGOJYVRMQliIN2polQx9dTDNdeOs4th0OMCm7ftiljOYLToCySFF7pL5WrVCPHthbvTojWy+XJWK/N46HTRxxv/zhdH8rg4h1yROPflZysWnYvKiooW9DHGeRA4xH4Xw+q/SoT/UHwcCwt29LbHJQP/Z9bYXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AvviTS9f; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fBdG1v4O"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KD2N9p001999
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:48 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AvviTS9f"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KD1K9c013410
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=C2Mw8hDedlh
-	HIu8wE01JvXGicmu3xM3Nu6IiIJHmMkU=; b=fBdG1v4OHwDOATjWpu/VacCWiaE
-	KMa/eig7Meb6q+zYF5fn4ALlF7D7vCgah2Pzdw9mk21oLl/RJXvd1bArRnao224E
-	7QsXk62dWFUEDU0HWZb3KfVxH4UHvQIETWDnGamP5hbffECt93++APkU8/j0+nEl
-	9PGhnbFs8hjfmhDbHPwuQuSYjqaDiER/VovIZKevpDIDekCOV4xKt7HJzHn7U/OE
-	kmx/HT/WnOuSD30vtekl41h1edn0m9JU0JS+OwmF75FuRIFrAzuFt2FHst7SFaJZ
-	tOtj+JCzNvHijNFRw97Xn2t+aItkUtuzLOLisgZvNsfjyIWo9kDSlp72S3g==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 479qp62d05-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=IBNhqEhlbdF
+	Pkj+kCuKLrjIW5Ve2xstiu6VBwj267oo=; b=AvviTS9f6YCfBfqr5RxjM/w0mcB
+	ZeBKRk0jNK8bNr6inafZx1LJ/Gy5dAoSpznk/4QKl8qv4lW4Pd1BrEzF+Gny/jCY
+	bTxbrjYfu1iS4IqLH3YwwboDiT120HmoAH9sI+mdn6Ow0FkzEzS57cqyvtMpsQ2N
+	/QMUMDPCkiY6sCEBWZSe4Q0zDNEniBQwRhnTTj6vQHrxe2aBejhBSUyXcyLBT5ZY
+	rUFfc55w9ubPwxaaAyKdsffHZQxdd9JR/YwrOm00vx3yZQOF3rAyx5izkXPllGjG
+	xDEKdACYyJSGcLi577870cRSSeQXTDgS18X946FVkuN/V1zFl8or6GV98oA==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792cabxrd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:48 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-234dbbc4899so32943625ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:45:48 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:45:49 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2356ce66d7cso25695475ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:45:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750434347; x=1751039147;
+        d=1e100.net; s=20230601; t=1750434348; x=1751039148;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C2Mw8hDedlhHIu8wE01JvXGicmu3xM3Nu6IiIJHmMkU=;
-        b=DQLfRjpMFx+NNUZt8I9EhjsGKEpavlG+BA/4tWsyNOAPSIaDPGqqUiI1d6BKuvsb5E
-         yG4U87dK43irU4aQC59/vhRLq11okIzlmp8YEKl17efKQChLeSMccFNa00mhQ03lSRzy
-         6OoasTrr4vqIGCharJV/C4eCEddFWFIGxZZCHuQwzr70YiQzH/b+o7i7uVKtlf2Jc94q
-         W50WXCiPfQgrfEHtTRL5pa+xuTfcis2IijNF54pNVS6J+lGqo6D1u5pLCng6u4XUQmqF
-         x++OWOMdaICzr9VV5ZqZiCxI3mVtOAwnC9BZkRLUw1XIWGUn0UlDXrEcFNU7SoI1Or4G
-         jOIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSjdnRE61fMOdcbSNyoHqb7fzq4uqs2UApdSHe38Z8NaPChIeSXRQlbAvWrYTXUksu/EnCBFy+auTBheg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxtB+9ZXzupletVWpyE1W1wB69xJA+XXC0MWCrYAF28CM0xo/I
-	rTQ4s2s4l3AVF41PQw9BhPeylWWM4iLdCIH5gCIbrgZIIQVkb3sy5kxoA2/dZz10pupk5o07DP5
-	PWkeXmCvgLY6N6OgBAQBB7KsoU64M4cC02rQyP1jXQCx8Gv4WPITbUDnD9/CxxgLRtG4d3VI5DB
-	Q=
-X-Gm-Gg: ASbGncuxhrxTQxMc6E3U16HABiSII+c5tes6Uyi9S6vjcJyyqSRYcBVnZrHMI0Z8nPc
-	JQ28caNXJe1R4EZtn1IxNnTPMmw2HJo6yJ7ADLuu9mSSBvX9xgZHj/WGE4jYCg3kn1jwwTxVyq1
-	A6MK53P12v/rGT4hVTysJAhh20nhwKTTjqFUVNGCnGo7jSZqDYPGP91avZ8rg+uWFvYX2lvlNQw
-	emQPGqMSXmlBxzrMTHoX+UUGONUr6OLSs7FvoupM1aBSWKNyoMh6FbuaYm2gE0c+FCaYx5MXDFb
-	mGRMl39nuY/vXCeP6XFZkUVBEMgGWlzb
-X-Received: by 2002:a17:902:f70d:b0:234:e3b7:5ce0 with SMTP id d9443c01a7336-237d99d83f3mr42383285ad.47.1750434347245;
-        Fri, 20 Jun 2025 08:45:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDiFB/XTk6onD/OV+d4aZvXfxm168CHsEY2UxE+rWdnNuvA7GDtDI7V0CiMaCnXa9H6JV/nw==
-X-Received: by 2002:a17:902:f70d:b0:234:e3b7:5ce0 with SMTP id d9443c01a7336-237d99d83f3mr42383045ad.47.1750434346876;
-        Fri, 20 Jun 2025 08:45:46 -0700 (PDT)
+        bh=IBNhqEhlbdFPkj+kCuKLrjIW5Ve2xstiu6VBwj267oo=;
+        b=taJjpvMW/1Pmg/CpzwUxUG18Atxn4Xs6HkAa6CbeYl3mDAQcPmieSw7+uqUfsbHoSR
+         cTG1+qvnDQxlFKvTzzBCb3bAC/GGWohWspNOVwXEOnj/1wZ9PFwKfy0F43GW0q2Do6qj
+         2FJNYHf5/hrDejwIvitEK7bzPwTSKB7aBGi1DA0AkReA3j5zZ9QWk5IO/ekyEtVBLDyN
+         Rn6TkwqoABGRYzlnsyI+2f2wK/ZIK9UbvhMFD1q/VbCZKCxQATdfUW26mPrME3eq6FST
+         OR7+/L7vNxCqB+YQPCaFcGqbeVqf+gPM9MSy/j8BInElztCAO5dZiyNDQhxZjHc1YDka
+         jnow==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCngp9DEwpzeyDugmmMy5PGnJL9agHPms9bl3bP30pmNcttVze13gEK9UY7h6qR+kbIlwhFhlRLhO9Bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFBxKumI/ayIS6ODimvXyWsORv8Xh3rVJNIW0H/QOwbtGrQ3pF
+	4y2YQVBkaQJERM4jPQ+pulKhgkE39lEdWrQfylLJuGY4DPaFLOsvDTxwTHSNn392sBwT2cpVMBp
+	S1zW4hVQiRCa6kMWT9EFycqhf1Zol5STxowiDGsOHMx1xpnImDcD7pdW8G5BuoYRnRwc=
+X-Gm-Gg: ASbGncteS0pUtOkiiKXuBrAB/XPs49SbAAZX+EHiK0HvyOW9u2kpFr1gaoLb12HahW2
+	a2sVxXHPw7XmmuPvRWrdewG1EQxEK608XE8/wW9J2XyYgINaMxfqUl7+1A8kaBlF61fPhCyJQnS
+	XIiRqYPU2UGIVJF+cgut+0YMRPE4fp5FeRqAa+9jgZSOqpqERe9IhZUF2FuWup7xw8PQgn0aUJj
+	nXnyPnvcjmUtFThHwXOhgNMb01nFcZkuJVN/1RGVC2TL2qFJ8vJ1Sig2HOeG0OyIWlgeoYPnT8X
+	nZH14SZdFEbBZTHuE7W3ae3qC89lsaGI
+X-Received: by 2002:a17:903:166b:b0:234:b123:b4ff with SMTP id d9443c01a7336-237d9870a0amr41976055ad.21.1750434348475;
+        Fri, 20 Jun 2025 08:45:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3uiV9mVqMw9I/3jinpD0YtzGr6J2SplRLMbVB/rccnB3N+Yx+1W+hkGE50i19U8Yzi4Uw5g==
+X-Received: by 2002:a17:903:166b:b0:234:b123:b4ff with SMTP id d9443c01a7336-237d9870a0amr41975625ad.21.1750434348053;
+        Fri, 20 Jun 2025 08:45:48 -0700 (PDT)
 Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d875c1f7sm20922405ad.257.2025.06.20.08.45.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8640dc6sm20800765ad.146.2025.06.20.08.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:45:46 -0700 (PDT)
+        Fri, 20 Jun 2025 08:45:47 -0700 (PDT)
 From: Rob Clark <robin.clark@oss.qualcomm.com>
 To: dri-devel@lists.freedesktop.org
 Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         Danilo Krummrich <dakr@redhat.com>,
         Rob Clark <robin.clark@oss.qualcomm.com>,
-        Danilo Krummrich <dakr@kernel.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 1/2] drm/gpuvm: Fix doc comments
-Date: Fri, 20 Jun 2025 08:45:35 -0700
-Message-ID: <20250620154537.89514-2-robin.clark@oss.qualcomm.com>
+Subject: [PATCH v3 2/2] drm/gpuvm: Add locking helpers
+Date: Fri, 20 Jun 2025 08:45:36 -0700
+Message-ID: <20250620154537.89514-3-robin.clark@oss.qualcomm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250620154537.89514-1-robin.clark@oss.qualcomm.com>
 References: <20250620154537.89514-1-robin.clark@oss.qualcomm.com>
@@ -89,71 +87,205 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: VUoh6afxTMn3oN6BuSTx3FQLuIIhgD0V
-X-Proofpoint-ORIG-GUID: VUoh6afxTMn3oN6BuSTx3FQLuIIhgD0V
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExMiBTYWx0ZWRfX1YniDWdzaKYo
- yeBs5sYWK82SSLSRl0o7s0Kpfrq6znIEOnLTNrmsPBiROFQZgkjzwPu0aOaCgMkA0sp/bxHw1OR
- E75arS6xnqHjKZsZjU376Ru3h9wHolD2ZUVBqTmFbdZxaYcXGguTAgY1XzvK62m5KOhZRIhc93Y
- DCVQbgVF80KtZ6CKhnGNVwK1BHoGf3dp14HhJUsxjFfa97OvvBdC9TukK4xhssFqyx0nEo2xlwJ
- g7r6uZh8F373gTltG44GrTrrcGcXooR1QDCUbt12YDGvTXrARaxQqP8fpovo2/3XIAhRC1KUYV9
- lDNRicrPHT2nlmRSs2hxeGpHXIii7wPZcxskhxkukfR9VY0Ja5FsTw9ZcovjJsKQfYMoy2Rkvfa
- EpopLUnqRZrSx0UBGWAQnYDsv3MnkalX1NQe2T3C1SSWylhiLu8T3LZljjgJSeZkIvgul1J0
-X-Authority-Analysis: v=2.4 cv=fMc53Yae c=1 sm=1 tr=0 ts=6855822c cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
- a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=5Yek0j1-lJT91Je3aSMA:9
- a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19 a=0bXxn9q0MV6snEgNplNhOjQmxlI=:19
- a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-GUID: S9RbULr1PzzRSTSt1I0u0vKnXarS2BLU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExMiBTYWx0ZWRfXwbDXbIpW4oPO
+ QAR3AWHoyf9+SiQOETWuY5COg3/GwoG3K+N6fU/pGwqp9Gk++1/sHDv3EMEh1gXlNyVVkwggnEJ
+ c97ZziKNHYIto8/N3DEYXkaEF1Rw1beI5T9mj1QgTDYvaGJfyXFeZ+bqa3xmht6vylVR/TIsTUY
+ WFtBtSEeOUQepUo1QPP8jjqfVYd7wpCK7nnZL++K0t12rNauUDSXKIYP5ghB5rXaXq5+/zWl81q
+ xVL2Xhpob0CMvcYb9NxqECHoo5wRk8LUJKes0amtvb6eNgRs7DcoxCvDRNAuFf7bSZ53JWPMWG8
+ 3atphe/htvIiMBqO4FxEpkd0IW8BG4/qMz85YPm0nYYFT1TCuH3tAAAe90CAd9tiNhPQmWSaVhv
+ Z/lm6A3bOVjq6RfaAh6avREHjNYYQ6j3pCWUBHkvdxWoSNJQmV/n0dxg5env5bv/Ya9snA97
+X-Proofpoint-ORIG-GUID: S9RbULr1PzzRSTSt1I0u0vKnXarS2BLU
+X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=6855822d cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=EUspDBNiAAAA:8 a=gXmLzIc8hE4PcKHQkQgA:9 a=GvdueXVYPmCkWapjIL-Q:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-20_06,2025-06-20_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506200112
 
-Correctly summerize drm_gpuvm_sm_map/unmap, and fix the parameter order
-and names.  Just something I noticed in passing.
+For UNMAP/REMAP steps we could be needing to lock objects that are not
+explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
+VAs.  These helpers handle locking/preparing the needed objects.
 
-v2: Don't rename the arg names in prototypes to match function
-    declarations [Danilo]
+Note that these functions do not strictly require the VM changes to be
+applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
+the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
+call result in a differing sequence of steps when the VM changes are
+actually applied, it will be the same set of GEM objects involved, so
+the locking is still correct.
+
+v2: Rename to drm_gpuvm_sm_*_exec_locked() [Danilo]
+v3: Expand comments to show expected usage, and explain how the usage
+    is safe in the case of overlapping driver VM_BIND ops.
 
 Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
-Acked-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpu/drm/drm_gpuvm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_gpuvm.c | 126 ++++++++++++++++++++++++++++++++++++
+ include/drm/drm_gpuvm.h     |   8 +++
+ 2 files changed, 134 insertions(+)
 
 diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-index f9eb56f24bef..0ca717130541 100644
+index 0ca717130541..a811471b888e 100644
 --- a/drivers/gpu/drm/drm_gpuvm.c
 +++ b/drivers/gpu/drm/drm_gpuvm.c
-@@ -2299,13 +2299,13 @@ __drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm,
+@@ -2390,6 +2390,132 @@ drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
  }
+ EXPORT_SYMBOL_GPL(drm_gpuvm_sm_unmap);
  
- /**
-- * drm_gpuvm_sm_map() - creates the &drm_gpuva_op split/merge steps
-+ * drm_gpuvm_sm_map() - calls the &drm_gpuva_op split/merge steps
-  * @gpuvm: the &drm_gpuvm representing the GPU VA space
-+ * @priv: pointer to a driver private data structure
-  * @req_addr: the start address of the new mapping
-  * @req_range: the range of the new mapping
-  * @req_obj: the &drm_gem_object to map
-  * @req_offset: the offset within the &drm_gem_object
-- * @priv: pointer to a driver private data structure
-  *
-  * This function iterates the given range of the GPU VA space. It utilizes the
-  * &drm_gpuvm_ops to call back into the driver providing the split and merge
-@@ -2349,7 +2349,7 @@ drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
- EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map);
++static int
++drm_gpuva_sm_step_lock(struct drm_gpuva_op *op, void *priv)
++{
++	struct drm_exec *exec = priv;
++
++	switch (op->op) {
++	case DRM_GPUVA_OP_REMAP:
++		if (op->remap.unmap->va->gem.obj)
++			return drm_exec_lock_obj(exec, op->remap.unmap->va->gem.obj);
++		return 0;
++	case DRM_GPUVA_OP_UNMAP:
++		if (op->unmap.va->gem.obj)
++			return drm_exec_lock_obj(exec, op->unmap.va->gem.obj);
++		return 0;
++	default:
++		return 0;
++	}
++}
++
++static const struct drm_gpuvm_ops lock_ops = {
++	.sm_step_map = drm_gpuva_sm_step_lock,
++	.sm_step_remap = drm_gpuva_sm_step_lock,
++	.sm_step_unmap = drm_gpuva_sm_step_lock,
++};
++
++/**
++ * drm_gpuvm_sm_map_exec_lock() - locks the objects touched by a drm_gpuvm_sm_map()
++ * @gpuvm: the &drm_gpuvm representing the GPU VA space
++ * @exec: the &drm_exec locking context
++ * @num_fences: for newly mapped objects, the # of fences to reserve
++ * @req_addr: the start address of the range to unmap
++ * @req_range: the range of the mappings to unmap
++ * @req_obj: the &drm_gem_object to map
++ * @req_offset: the offset within the &drm_gem_object
++ *
++ * This function locks (drm_exec_lock_obj()) objects that will be unmapped/
++ * remapped, and locks+prepares (drm_exec_prepare_object()) objects that
++ * will be newly mapped.
++ *
++ * The expected usage is:
++ *
++ *    vm_bind {
++ *        struct drm_exec exec;
++ *
++ *        // IGNORE_DUPLICATES is required, INTERRUPTIBLE_WAIT is recommended:
++ *        drm_exec_init(&exec, IGNORE_DUPLICATES | INTERRUPTIBLE_WAIT, 0);
++ *
++ *        drm_exec_until_all_locked (&exec) {
++ *            for_each_vm_bind_operation {
++ *                switch (op->op) {
++ *                case DRIVER_OP_UNMAP:
++ *                    ret = drm_gpuvm_sm_unmap_exec_lock(gpuvm, &exec, op->addr, op->range);
++ *                    break;
++ *                case DRIVER_OP_MAP:
++ *                    ret = drm_gpuvm_sm_map_exec_lock(gpuvm, &exec, num_fences,
++ *                                                     op->addr, op->range,
++ *                                                     obj, op->obj_offset);
++ *                    break;
++ *                }
++ *
++ *                drm_exec_retry_on_contention(&exec);
++ *                if (ret)
++ *                    return ret;
++ *            }
++ *        }
++ *    }
++ *
++ * This enables all locking to be performed before the driver begins modifying
++ * the VM.  This is safe to do in the case of overlapping DRIVER_VM_BIND_OPs,
++ * where an earlier op can alter the sequence of steps generated for a later
++ * op, because the later altered step will involve the same GEM object(s)
++ * already seen in the earlier locking step.  For example:
++ *
++ * 1) An earlier driver DRIVER_OP_UNMAP op removes the need for a
++ *    DRM_GPUVA_OP_REMAP/UNMAP step.  This is safe because we've already
++ *    locked the GEM object in the earlier DRIVER_OP_UNMAP op.
++ *
++ * 2) An earlier DRIVER_OP_MAP op overlaps with a later DRIVER_OP_MAP/UNMAP
++ *    op, introducing a DRM_GPUVA_OP_REMAP/UNMAP that wouldn't have been
++ *    required without the earlier DRIVER_OP_MAP.  This is safe because we've
++ *    already locked the GEM object in the earlier DRIVER_OP_MAP step.
++ *
++ * Returns: 0 on success or a negative error codec
++ */
++int
++drm_gpuvm_sm_map_exec_lock(struct drm_gpuvm *gpuvm,
++			   struct drm_exec *exec, unsigned int num_fences,
++			   u64 req_addr, u64 req_range,
++			   struct drm_gem_object *req_obj, u64 req_offset)
++{
++	if (req_obj) {
++		int ret = drm_exec_prepare_obj(exec, req_obj, num_fences);
++		if (ret)
++			return ret;
++	}
++
++	return __drm_gpuvm_sm_map(gpuvm, &lock_ops, exec,
++				  req_addr, req_range,
++				  req_obj, req_offset);
++
++}
++EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map_exec_lock);
++
++/**
++ * drm_gpuvm_sm_unmap_exec_lock() - locks the objects touched by drm_gpuvm_sm_unmap()
++ * @gpuvm: the &drm_gpuvm representing the GPU VA space
++ * @exec: the &drm_exec locking context
++ * @req_addr: the start address of the range to unmap
++ * @req_range: the range of the mappings to unmap
++ *
++ * This function locks (drm_exec_lock_obj()) objects that will be unmapped/
++ * remapped by drm_gpuvm_sm_unmap().
++ *
++ * See drm_gpuvm_sm_map_exec_lock() for expected usage.
++ *
++ * Returns: 0 on success or a negative error code
++ */
++int
++drm_gpuvm_sm_unmap_exec_lock(struct drm_gpuvm *gpuvm, struct drm_exec *exec,
++			     u64 req_addr, u64 req_range)
++{
++	return __drm_gpuvm_sm_unmap(gpuvm, &lock_ops, exec,
++				    req_addr, req_range);
++}
++EXPORT_SYMBOL_GPL(drm_gpuvm_sm_unmap_exec_lock);
++
+ static struct drm_gpuva_op *
+ gpuva_op_alloc(struct drm_gpuvm *gpuvm)
+ {
+diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+index 2a9629377633..274532facfd6 100644
+--- a/include/drm/drm_gpuvm.h
++++ b/include/drm/drm_gpuvm.h
+@@ -1211,6 +1211,14 @@ int drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
+ int drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
+ 		       u64 addr, u64 range);
  
- /**
-- * drm_gpuvm_sm_unmap() - creates the &drm_gpuva_ops to split on unmap
-+ * drm_gpuvm_sm_unmap() - calls the &drm_gpuva_ops to split on unmap
-  * @gpuvm: the &drm_gpuvm representing the GPU VA space
-  * @priv: pointer to a driver private data structure
-  * @req_addr: the start address of the range to unmap
++int drm_gpuvm_sm_map_exec_lock(struct drm_gpuvm *gpuvm,
++			  struct drm_exec *exec, unsigned int num_fences,
++			  u64 req_addr, u64 req_range,
++			  struct drm_gem_object *obj, u64 offset);
++
++int drm_gpuvm_sm_unmap_exec_lock(struct drm_gpuvm *gpuvm, struct drm_exec *exec,
++				 u64 req_addr, u64 req_range);
++
+ void drm_gpuva_map(struct drm_gpuvm *gpuvm,
+ 		   struct drm_gpuva *va,
+ 		   struct drm_gpuva_op_map *op);
 -- 
 2.49.0
 
