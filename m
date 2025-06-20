@@ -1,161 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E72D8DC9;
-	Fri, 20 Jun 2025 15:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD712EA144
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 15:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433322; cv=none; b=NRafKBaDYCIsrVV2KyfLBVVUa45NNwuRkg1DQWleYtKokN/bOuTBxuSRCX8e9kwQ3I2Ptvp8zyaCHa510lziPMffnzruk8Mv2JsB97U1jdnZ7U33iX+q4lJg8AdkHiaHvibSoxyideyE0A4/CqNhoIo8+FILXS46WZE7HIkhMfM=
+	t=1750433325; cv=none; b=n22YYCdHA7VA/H9Y/JTOTde8XOReq4emWgx5ZliKibCzgKBRSzU+Xxo7bOOOEfiBsA+lq9+04CRBH4nF5Av/EMIioMazH52+ZEVHc2Tz4WiYUeBzeA9A/8DE4OzVlLrfq7WMAkg/nZjXPUjQL0H8nRA6lAOj1jOyf0A+3jEh7xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433322; c=relaxed/simple;
-	bh=s48sv8cQZxsP+ITyE0jtnLWoulZ7jFl//mGYqYmUOIg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WNSBrJy3X+M7spsJhd6N4LS9jPyxfrOvUfTLcRzvSNy0TqumU0LS1ZXMffqJIlJFZyH4bQT4DQUblqiMeChBYGgo167w+ScXLmhIK/J3vMFBXeAV1vxMQ5VK9JZpVp3F9iomEpC6oidpvT2reyeZX2aRWppyRnVcyOMyUob9QlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/yh1qX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750433325; c=relaxed/simple;
+	bh=4ifyr5HwnktnFxdMvxkYPi1tDYPvTrYNXWPX3/Gw/bM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBErDBIC364c/AiOXvjrJoTNaLMpBxl4aw58EFSEs9bTDbbDWwGt2nhvYnBy/MOBXVf4dwTxKcR8Ec9A2Li0mVL6KGoex2Lj9zqRnTWf002NZyFoWlfwZcRAflqs9lfToZr9mkn2xa666CpoNAJxC+Fuxbo9YZm7WkLzsJqfvis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IyIT9VXP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/yh1qX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C94AC4CEE3;
-	Fri, 20 Jun 2025 15:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750433321;
-	bh=s48sv8cQZxsP+ITyE0jtnLWoulZ7jFl//mGYqYmUOIg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=T/yh1qX0eOHqOk94aDuQCH2s/qyRkQqpZOboUNJPj1MkPrHAk+mivll/EFLYhzA7f
-	 51EJzq8JQEYwojbFGTMMqW12eR1/0K7+g2HmvP53X7MKTLUHGOAfrHaV8iilcThtc6
-	 sVv0v8ZjR6dqxfG5qCP6CtkkmrWdn9BZmEtYHvEj0z/5M5TmBF07beiIaXyekd/2iE
-	 +KnXqSCm582ZUC5wd1mGmLvlP/Wa3MTNzDL3rka4g6wU4pEz3QQ+oFF3MB1sV03xP7
-	 QeCrWMn1J+rjPifsv0xMED4VVllS/gk9xNPfbErfrnQipu0Ej/NbYCJe5LTZkG9wpg
-	 rz1b+ci1aoT6Q==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
-  Jason Gunthorpe <jgg@ziepe.ca>,  jasonmiu@google.com,  graf@amazon.com,
-  changyuanl@google.com,  dmatlack@google.com,  rientjes@google.com,
-  corbet@lwn.net,  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
-  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
-  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
-  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
-  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
-  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-In-Reply-To: <CA+CK2bDqO4SkUpiFahfUx2MUiE8oae9HmuaghPAnCwaJZpoTwQ@mail.gmail.com>
-References: <mafs0sekfts2i.fsf@kernel.org>
-	<CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
-	<mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
-	<CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
-	<mafs05xgtw5wn.fsf@kernel.org>
-	<CA+CK2bDWAPSmTdnD7vw4G00nPsM8R_Zefs_G+9zvSqTJqPb9Lg@mail.gmail.com>
-	<aFLr7RDKraQk8Gvt@kernel.org>
-	<CA+CK2bAnCRu+k=Q78eA4kcAebxA9NgOorhwRqu-WxC913YBsBw@mail.gmail.com>
-	<CA+CK2bB3P1vX658ErkP4_-L6WZSOCcenEwUdX1qS=poDjs=i+A@mail.gmail.com>
-	<aFP7wwCviqxujKDg@kernel.org>
-	<CA+CK2bDqO4SkUpiFahfUx2MUiE8oae9HmuaghPAnCwaJZpoTwQ@mail.gmail.com>
-Date: Fri, 20 Jun 2025 17:28:31 +0200
-Message-ID: <mafs0ikkqv3ds.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IyIT9VXP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750433317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gqWJUasBkQtdvrq4yCSG9fuArz1J0NNTveYdexIZwI=;
+	b=IyIT9VXPOY2aiBjKmRHIvopXY8Y0MPYLvv+sWXv6XKsZ39ZFZy7lKyfX+ybZ+EEvtf7SSj
+	6eiF4B2L5PjYFToLLaE9ETTK2UQ+GMG/ZQQVCdv7EmmWiMyPYSr/4Drx+NwQFZU9+0CAEX
+	rEKVOFpm7JVscwXwjFrPJklgavOBcJc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-219-BfdEqYcIOo2YT6DT3SEXwQ-1; Fri, 20 Jun 2025 11:28:35 -0400
+X-MC-Unique: BfdEqYcIOo2YT6DT3SEXwQ-1
+X-Mimecast-MFC-AGG-ID: BfdEqYcIOo2YT6DT3SEXwQ_1750433314
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so9728705e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:28:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750433313; x=1751038113;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1gqWJUasBkQtdvrq4yCSG9fuArz1J0NNTveYdexIZwI=;
+        b=efE5foWzl1cUwfVRm2K43Q0nVqmvR3n73gwh1osqQ+OUpKYru6HRxvAnECxYBmEeAg
+         8kIn8icgjWL/I9zr7oOZAN/LM8A8NXq6bMvu94jMe1AMEqedoGIlaXjwBGkc0xXof8To
+         jY+LFVjciG9PpYSAuPHMdQmQslu3+BjkbA87gizqNLseJFBW3HIBaDvJmVzngIO0Hgup
+         NHEg1eYaOY31o3FIffYXZ1dfSeYPyYNx+vU+CR1ZHPkB+3p2cxG9BSZZrqFx0SeJRn8r
+         Mp2t/rKes/REGoSH+hnqnu/06fqLBMml3MidnOTDd6YgDVGmyV0YOkjkkNt+9NOQp6sS
+         kn4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVad0t//4OSea7hI4gFgPQ5BE0uCv6mQfOXiRb+NQ1MOlUKcA65KaFRnlgoNbGzTd7NttqDb47qXBwc4mo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlTqtxZq5AaYVLuuXmpKwQVhEOPfuSJAlbDykfNmhuy/oSvTs2
+	LiyxpdGwFD9/3S9dcAZzEsAuQHtu+k4KSQ8kkTtqhUGwQyg0Gwzbru1YriC7g3eS8+Q1y/xrkRF
+	r2xEuyOx/0wPUwPat4zp7JZQGc3Upu7MnBpK6P5eamrDoG0uEdKAa1nRXpXHqc48equgiGVDXDg
+	==
+X-Gm-Gg: ASbGncsP58iBWdR+iT+TR0/cBc2zDsm+rsw5eB6bHb3iHCNxZ1OhQjg0x4MOHJURqii
+	xxCz7ApmLm1CSAF86agy3LzEjigZ4Hr7d1tpwZDujsdKfnJ5aBY6lI21MIqoan5ghuEmbtSNqpH
+	67LAHxaTyWBandpordVr/moPOsKWb1fz2zDgSjqyJCQ7QgfSkirNo4WLZ6Po+H90Mce+GADYeuR
+	SLjmvQEbQZsgIeDMzwDhtVysM+yXBgTJ4tY166MxAUVfwbAXphwfoGFNitCiegeOZQsfNiD9xNH
+	XuGIO0AYAGBJhAFyxgRHP8wGwdKrGvjX4TyvRVVJih0nvYGx56vu
+X-Received: by 2002:a05:600c:3112:b0:450:6b55:cf91 with SMTP id 5b1f17b1804b1-453659be4a1mr30214215e9.6.1750433312966;
+        Fri, 20 Jun 2025 08:28:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKY+dYrr143FLk/XG0o0u1D9fPvHuSZMjgZhsHAersc8CLX74Nsye96HTYZhCJfKJjFFdYQw==
+X-Received: by 2002:a05:600c:3112:b0:450:6b55:cf91 with SMTP id 5b1f17b1804b1-453659be4a1mr30214045e9.6.1750433312573;
+        Fri, 20 Jun 2025 08:28:32 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.47.238.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1050dsm2433175f8f.19.2025.06.20.08.28.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:28:31 -0700 (PDT)
+Date: Fri, 20 Jun 2025 17:28:28 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: luca abeni <luca.abeni@santannapisa.it>
+Cc: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>
+Subject: Re: SCHED_DEADLINE tasks missing their deadline with
+ SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
+Message-ID: <aFV-HEwOTq0a37ax@jlelli-thinkpadt14gen4.remote.csb>
+References: <92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
+ <20250523214603.043833e3@nowhere>
+ <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
+ <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
+ <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
+ <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
+ <880890e699117e02d984ba2bb391c63be5fd71e8.camel@codethink.co.uk>
+ <aFUqELdqM8VcyNCh@jlelli-thinkpadt14gen4.remote.csb>
+ <20250620113745.6833bccb@luca64>
+ <20250620161606.2ff81fb1@nowhere>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620161606.2ff81fb1@nowhere>
 
-Hi Pasha,
+On 20/06/25 16:16, luca abeni wrote:
+> On Fri, 20 Jun 2025 11:37:45 +0200
+> luca abeni <luca.abeni@santannapisa.it> wrote:
+> [...]
+> > > Luca, Vineeth (for the recent introduction of max_bw), maybe we
+> > > could take a step back and re-check (and maybe and document better
+> > > :) what each variable is meant to do and how it gets updated?  
+> > 
+> > I am not sure about the funny values initially assigned to these
+> > variables, but I can surely provide some documentation about what
+> > these variables represent... I am going to look at this and I'll send
+> > some comments or patches.
+> 
+> So, I had a look tying to to remember the situation... This is my
+> current understanding:
+> - the max_bw field should be just the maximum amount of CPU bandwidth we
+>   want to use with reclaiming... It is rt_runtime_us / rt_period_us; I
+>   guess it is cached in this field just to avoid computing it every
+>   time.
+>   So, max_bw should be updated only when
+>   /proc/sys/kernel/sched_rt_{runtime,period}_us are written
+> - the extra_bw field represents an additional amount of CPU bandwidth
+>   we can reclaim on each core (the original m-GRUB algorithm just
+>   reclaimed Uinact, the utilization of inactive tasks).
+>   It is initialized to Umax when no SCHED_DEADLINE tasks exist and
 
-On Thu, Jun 19 2025, Pasha Tatashin wrote:
+Is Umax == max_bw from above?
 
-[...]
->> And it has to be done before kexec load, at least until we resolve this.
->
-> The before kexec load constrained has been fixed. The only
-> "finalization" constraint we have is it should be before
-> reboot(LINUX_REBOOT_CMD_KEXEC) and only because memory allocations
-> during kernel shutdown are undesirable. Once KHO moves away from a
-> monolithic state machine this constraint disappears. Kernel components
-> could preserve their resources at appropriate times, not necessarily
-> tied to a shutdown-time. For live update scenarios, LUO already
-> orchestrates this timing.
->
->> Currently this is triggered either by KHO debugfs or by LUO ioctls. If we
->> completely drop KHO debugfs and notifiers, we still need something that
->> would trigger the magic.
->
-> An external "magic trigger" for KHO (like the current finalize
-> notifier or debugfs command) is necessary for scenarios like live
-> update, where userspace resources are being preserved in a coordinated
-> fashion just before kexec.
->
-> For kernel-internal resources that are unrelated to such a
-> userspace-driven live update flow, the respective kernel components
-> should directly use KHO's primitive preservation APIs
-> (kho_preserve_folio, etc.) when they need to mark their resources for
-> handover. No separate, state machine or external trigger should be
-> required for these individual, self-contained preservation acts.
+>   should be decreased by Ui when a task with utilization Ui becomes
+>   SCHED_DEADLINE (and increased by Ui when the SCHED_DEADLINE task
+>   terminates or changes scheduling policy). Since this value is
+>   per_core, Ui is divided by the number of cores in the root domain...
+>   From what you write, I guess extra_bw is not correctly
+>   initialized/updated when a new root domain is created?
 
-For kernel-internal components, I think this makes a lot of sense,
-especially now that we don't need to get everything done by kexec load
-time. I suppose the liveupdate_reboot() call at reboot time to prepare
-final things can be useful, but subsystems can just as well register
-reboot notifiers to get the same notification.
+It looks like so yeah. After boot and when domains are dinamically
+created. But, I am still not 100%, I only see weird numbers that I
+struggle to relate with what you say above. :)
 
->
->> I'm not saying we should keep KHO debugfs and notifiers, I'm saying that if
->> we make LUO the only thing driving KHO, liveupdate is not an appropriate
->> name.
->
-> LUO drives KHO specifically for the purpose of live updates. If a
-> different userspace use-case emerges that needs another distinct
-> purpose (e.g., not to preserve a FD a or a device across kernel reboot
-> (i.e. something for which LUO does not provide uAPI)), then that would
-> probably need a separate from LUO uAPI instead of extending the LUO
-> uAPI.
+> All this information is probably not properly documented... Should I
+> improve the description in Documentation/scheduler/sched-deadline.rst
+> or do you prefer some comments in kernel/sched/deadline.c? (or .h?)
 
-Outside of hypervisor live update, I have a very clear use case in mind:
-userspace memory handover (on guest side). Say a guest running an
-in-memory cache like memcached with many gigabytes of cache wants to
-reboot. It can just shove the cache into a memfd, give it to LUO, and
-restore it after reboot. Some services that suffer from long reboots are
-looking into using this to reduce downtime. Since it pretty much
-overlaps with the hypervisor work for now, I haven't been talking about
-it as much.
+I think ideally both. sched-deadline.rst should probably contain the
+whole picture with more information and .c/.h the condendensed version.
 
-Would you also call this use case "live update"? Does it also fit with
-your vision of where LUO should go?
+Thanks!
+Juri
 
-If not, why do you think we should have a parallel set of uAPIs that do
-similar work? Why can't we accommodate other use cases under one API,
-especially as long as they don't have conflicting goals? In practice,
-outside of s/luo/khoctl/g, I don't think much would change as of now.
-The state machine and APIs will stay the same.
-
-When those use cases start to diverge from the liveupdate, or conflict
-with it, we can then decide to have a separate interface for them, but
-when going the other way round, we won't end up with a somewhat
-confusing name for a more widely applicable technology.
-
-I've been thinking about the naming since the start, but I didn't want
-to bikeshed on it too much. But if we are also talking about the scope
-of LUO, then I think this is a conversation worth having.
-
-PS: I don't have real data, but I have a feeling that after luo/khoctl
-    mature, more use cases will come out of the woodwork to optimize
-    reboots.
-
--- 
-Regards,
-Pratyush Yadav
