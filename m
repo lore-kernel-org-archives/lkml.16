@@ -1,92 +1,202 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF844E56A;
-	Fri, 20 Jun 2025 17:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D35E56A
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440370; cv=none; b=eY6yVgaVo81CjP8yaTRDkgEwCMv3ZG5bDNGjgkP6BW+AXgaehzhLEKB/fBSGkSZ6E4KPmRK+Prdub3L+9PTc5/nPRE/1gkjelEohHGKZPqDjiCXHmrnBG2m+R/5A5TXNLuSULj+sEPnEYO7shB5/XaekRS3NqDRVbJqHqx2Kbuk=
+	t=1750440375; cv=none; b=p35JxFox2mueujziLj2doKzXzBHIjMHmN1E23KlmjZ16/TZTvLSonzQT3Nr3LrNJ/bozHqY8/++ltTguv6XLEYfveB/vAiHL270jPDNC55gvrvI/aao9NSur5uNXQJmDveckxTev6xd+zzxiqIcoxMtzLLWAWgiWNUXc6vckcUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440370; c=relaxed/simple;
-	bh=1GJLN+aSgHB5kDHzgDzSMRMTM28do7yo+RBsf+cjyuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VGAE7nQNvyjtXi25DxjvcbzlOgxPsP2JyFREr/FuRFUUaQiyAADv1zwCau4hQ1cDdBEiUHdanHZOjRZD3MOpje9OGrnzgeSN7lMp9ukTVou9A+xnXqs315Gu1g9rRnmemhSPem4TVHNOFHk8m/+Ytxge3WlimwizzHa00qlq3nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iu37dXfv; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750440375; c=relaxed/simple;
+	bh=DMDp7KdSg0OADmqXMvg+hhhIHuQ3+bHuc1JTtsSwrkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lkndpjqJKxqWo3X2QWHl8bcWR9YdiepRT5uy9y53cMqnfRs6Jw08bf6NwWvwRj5uct7U/ifcre4GFtPsQNsdzjgXza7VrJYnIYGh5iAFtlqzeDZGhlajN5IzWGK3/9RfdPa+2Hd5YRRk/xAqkJCcOI5OOz+r6GBzYGknug+fyiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D6KCD2ZG; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iu37dXfv"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b31c9d96bcbso341726a12.3;
-        Fri, 20 Jun 2025 10:26:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D6KCD2ZG"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-876231b81d5so160786739f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750440368; x=1751045168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1GJLN+aSgHB5kDHzgDzSMRMTM28do7yo+RBsf+cjyuY=;
-        b=Iu37dXfvrQeVznVF0OcxPduFkd7i6lvCPEEpy+//4S1jSsLaeGXWIPA/nr8WjjMGT4
-         JrsxoFKYbcOqV9Hvr/7FrPcMcavRGFxID9j1o2Gwpk2AJmj0+2v71NAptoZ/b92R4uOC
-         Ld7XAHoGyF1982iLoq+dDR8q6D9HH6vr6pxWjyrbCtrv3EZL79a+A7dr20U3ntBf3k6V
-         /wcM8P64CILzLoHgOp+6q72+BbEsNuoE7wWni03TQJdsdtZOhnWhscnFd9QkGAOlz6wt
-         USYrZFEH9uqhDoWLF7+bTgyGJYiSnI0+s2x8Ig2xYCXC+FGiuoeYZhExKbcrm1aHBNGh
-         9Qgg==
+        d=linuxfoundation.org; s=google; t=1750440372; x=1751045172; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qMdgn8VeeI3SGgeQXZkzCb+QOrUsQueKBj98VA1GvRo=;
+        b=D6KCD2ZGhxNZkKRy/ghsKIDKOMElOtUg7zH0N2/SMptp+uehuSsPsA5xgruyysugoF
+         Ydxr+btzmrm+aGFk/aQTyOhX0+8UVlJR8PqxhphUL9W830Yfjjby6rM/DuJAN5/bg9FY
+         1EsX+TNl0AmwsgtW5/TW9OJU3QsiJ0AAq6LDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750440368; x=1751045168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1GJLN+aSgHB5kDHzgDzSMRMTM28do7yo+RBsf+cjyuY=;
-        b=wbzXIhEHnV6T3B2xYNpkcVNAt1yMYiAdhN9HyVKBm6DDBQ8pimfxaQLfybMGl2pM8k
-         w+fv/emzd9r+OcdbToLNvCowOM2VuB19zqJV9tRqKLdoOaoLo76ovN5OhwFLblTbtLlW
-         ija7w7jnuHkXU7haP1hBItdRw5mRGqUGhliJEd8O1WcXGHwMs86VsN7WZro7dkOmIKDS
-         /R1Fk2gA+4c3wd4bS5JvFgbwBDQ4CMYkd1C+ryxJn7JXhRJpuLVqN9R13npcXWr4zpJz
-         7+US23SQRGhZWP/cZXLhsnchdeTxJ673uh1wsCDf9VdVmhsAxZJGm0kKNOwPL5nGm5qx
-         343w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfX3HvrsB4Ox3I1ce58wwF/vCw+74YChvBb3wa6QJcMiLDYSco2BY5RRMZrZtsx4z7dm7u5wL5PB3j9NU=@vger.kernel.org, AJvYcCWWDh5HUGlf0AbAu7AYIdxy+GBcBghW6HEh/veg3M4KYU5NWzI/gob0lag4Td21KgOCJlpnF3huGeDpNCN368Q=@vger.kernel.org, AJvYcCX1KN4TAdv6i92Y302y1fIroUFUiP+9nVt82FLEZjvMGxhePF/rHNvGo0cd85nnux13eUXIMDtb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzochrQthq4FTnluJju2jK8AKwt4UkPZ4yMJuNnL84T9lOZWw7v
-	GFEK6fuPU+GPpXdMdjuGUtlRCmS7fEwYfuFso1YgrVyp9RkH6cPNxqCI+KnQSNjyR6gX2dt08e8
-	sgv6Q2Gz6XqZAg7Ae8mHoMRkmEdzjH18=
-X-Gm-Gg: ASbGncsYn51XIJGPPhfCmE2wKtORBLcZLf2KgU04pITZHy8Wuz56kr285E8bHmstXT7
-	VFZr3ODNiy824UO4y+VOp3XeRjnIX5wDMrK2DD5X62wMTUeOOKyyGz1P5+aOtpzlEQzBcUx8fmI
-	d7dHflex6Kerfv0f1k+vaxKFLdnWqhzhAadIIwXeEGlDMQM4LbLIrxPg==
-X-Google-Smtp-Source: AGHT+IFfbmplBHvbHaFiKNC87qzTe7B1C05hqspv3Fk4CreaROvbg/PcMTllXCXpIodUbd/uk7dh+D3aVXQkeK3BSwc=
-X-Received: by 2002:a17:90b:2dd0:b0:311:e9a6:332e with SMTP id
- 98e67ed59e1d1-3159d577a7bmr2283296a91.0.1750440367956; Fri, 20 Jun 2025
- 10:26:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750440372; x=1751045172;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qMdgn8VeeI3SGgeQXZkzCb+QOrUsQueKBj98VA1GvRo=;
+        b=nSZporHcdzWmQJy9M0th4HyzxqnA/AaTUe4MgzLdWZkuTvxrabPH2NqqClr6vS1LAb
+         IQ+elosRt0Oti4B/04IaHNZ1oHEmdXEj2r/BCI7VSnSGRtWqlgyqci9G2Qm3RfDpRgTS
+         K5324CV7yumx2eDw75BdTmKLddHh9hDVf06OiqsuDkfCTlTIySGlRKpxGVlnpkmShKZA
+         D1Jv77plPpIlFO6ECLgaH2vgofxTyg7TiMIBH5MHbnlmYYdR3VV4ff/6YNuRPLUd21t5
+         yEuWONGE55uNVrBb4htx4W83qNcEUqPdSwW5OypzE1jzfLPRZuPnQTx5fcuTDC5xiGOL
+         WL6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzYAF8vELIuYYxxLrZmVYJOoH/EgMzpMyONmdYIhXav/5M6Uq2OHtCR4aoQLcGaVaK+ngetbBDgtZKXAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3wypyyiQ2TaHAq/K5XTU0HeMNWpHPNUFMU5y2x9qecg8F+yY/
+	8eQqkoKdS1HBWeeQX2K0kyjftKmEefYqDrNxVa6xljwGLeoualL2Z9gtKRE7nS0FiEo=
+X-Gm-Gg: ASbGncudRMpnMm0p/kQJt58M7pLMY2x760lfwsZqYegRvF5TN+ZXAQia4EK3MrfM9Hv
+	gUyWKXCwvi6I4jpfDXQ7vBxg1HXbwuHnkpAC/CdidZDa2LRGPyCoHXRLIWGFoeHkzQGM4A9N1Rz
+	ajUV7R0gC1AGifIN+5A/BYZEi1W8QWaX5iA/7iDDh+pvAgHl0LqSnGteeZVkwuSHEhgDYzEmpTO
+	S39WB1RJTlWQgwkFFD+rBw80UmKJtgpOZ7017ArnSOhYPndDQm0o0UPFt1QQ99oKAn8uNGoruc1
+	QIdzu80oJRtt9mWYDffLQKJmOxZvIEw6JjrrXgtt2TfxJfh/jXRvVh79iaBWykKFju4rCprdOw=
+	=
+X-Google-Smtp-Source: AGHT+IGPqrLcEbc+zJorqkrwKIBd+2amU6zwdAIEOSPTFzmh/L/RFTuNfBUdby9GSMEYeFYE0aSWoQ==
+X-Received: by 2002:a05:6e02:3a03:b0:3de:251c:211e with SMTP id e9e14a558f8ab-3de38cbf701mr36839325ab.17.1750440372219;
+        Fri, 20 Jun 2025 10:26:12 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5019e05048dsm473385173.83.2025.06.20.10.26.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 10:26:11 -0700 (PDT)
+Message-ID: <2e0bbc5a-e74a-4fb5-884c-686dbaf99caf@linuxfoundation.org>
+Date: Fri, 20 Jun 2025 11:26:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ-ks9mazp=gSqDEzUuh0eTvj6pBET-z2zz7XQzmu9at=4V03A@mail.gmail.com>
- <20250620.075443.1954975894369072064.fujita.tomonori@gmail.com>
- <CAJ-ks9n-iQAiwN3CVnJP164kPEgwq5nj-E5S7BnZrYdBWoo16g@mail.gmail.com> <20250620.100539.89068405138839860.fujita.tomonori@gmail.com>
-In-Reply-To: <20250620.100539.89068405138839860.fujita.tomonori@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 20 Jun 2025 19:25:53 +0200
-X-Gm-Features: Ac12FXxNpfpq-RxxpQaS8W4C6ZgjUq7qMNX1ENHm2lv65fLGv9-ZiK1x6jApYr4
-Message-ID: <CANiq72=R=wM2Xoj1B5gOZGBGj3RWYdUN1DEwVZjTrqPL4DmJ1Q@mail.gmail.com>
-Subject: Re: [PATCH] rust: cast to the proper type
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: tamird@gmail.com, aliceryhl@google.com, tmgross@umich.edu, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, dakr@kernel.org, davem@davemloft.net, andrew@lunn.ch, 
-	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] usbip: convert to use faux_device
+To: Greg KH <gregkh@linuxfoundation.org>, Zongmin Zhou <min_halo@163.com>
+Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ zhouzongmin@kylinos.cn, Shuah Khan <skhan@linuxfoundation.org>
+References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
+ <20250604065410.76069-1-min_halo@163.com>
+ <2025061926-paycheck-footnote-a2b8@gregkh>
+ <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
+ <2025062010-hardiness-flashily-cb0f@gregkh>
+ <9d95bb75-586c-48dc-9e34-432cc13fd99f@163.com>
+ <2025062004-navy-emboss-4743@gregkh>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <2025062004-navy-emboss-4743@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 3:05=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
->
-> With the tag dropped,
->
-> Acked-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+On 6/20/25 03:27, Greg KH wrote:
+> On Fri, Jun 20, 2025 at 05:19:33PM +0800, Zongmin Zhou wrote:
+>>
+>> On 2025/6/20 12:29, Greg KH wrote:
+>>> On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
+>>>> On 2025/6/19 19:01, Greg KH wrote:
+>>>>> On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
+>>>>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+>>>>>>
+>>>>>> The vhci driver does not need to create a platform device,
+>>>>>> it only did so because it was simple to do that in order to
+>>>>>> get a place in sysfs to hang some device-specific attributes.
+>>>>>> Now the faux device interface is more appropriate,change it
+>>>>>> over to use the faux bus instead.
+>>>>>>
+>>>>>> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
+>>>>>> ---
+>>>>>> Changes in v2:
+>>>>>> - don't change faux create api,just call probe on vhci_hcd_init.
+>>>>>>
+>>>>>>     drivers/usb/usbip/vhci.h             |  4 +-
+>>>>>>     drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
+>>>>>>     drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
+>>>>>>     tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
+>>>>>>     4 files changed, 72 insertions(+), 88 deletions(-)
+>>>>> I get the following build errors from this patch:
+>>>>>
+>>>>> drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
+>>>>>     1462 | static int vhci_hcd_resume(struct faux_device *fdev)
+>>>>>          |            ^~~~~~~~~~~~~~~
+>>>>> drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
+>>>>>     1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
+>>>>>          |            ^~~~~~~~~~~~~~~~
+>>>>> cc1: all warnings being treated as errors
+>>>>>
+>>>>> Are you sure you tested this?
+>>>> I apologize for not enabling -Werror, which resulted in missing this error
+>>>> warning.
+>>>> I have tested usbip feature use the new patch,but not test system
+>>>> suspend/resume.
+>>>> The faux bus type don't add pm function,and vhci-hcd driver can't register
+>>>> it.
+>>>> Maybe have to add suspend/resume for it.like below:
+>>>> static const struct bus_type faux_bus_type = {
+>>>>       .name        = "faux",
+>>>>       .match        = faux_match,
+>>>>       .probe        = faux_probe,
+>>>>       .remove        = faux_remove,
+>>>>       .resume     = faux_resume,
+>>>>       .suspend    = faux_suspend,
+>>>> };
+>>>>
+>>>> Is that right?
+>>>> Your expertise would be greatly valued.
+>>> As this is not real hardware, why do you need the suspend/resume
+>>> callbacks at all?  What is happening here that requires them?
+>> @greg,
+>> The vhci_hcd_suspend/vhci_hcd_resume interfaces are not designed for this
+>> faux device, but rather to
+>> manipulate the HCD_FLAG_HW_ACCESSIBLE bit in the hcd flags associated with
+>> the faux device.
+>> For example:
+>> During system standby: clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
+>> During system wakeup: set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
+>>
+>> Previously, these two functions were registered through platform_driver,
+>> but faux bus does not have the relevant interface, so they were not called,
+>> resulting in this compilation warning error.
+>>
+>> This raises the question: Should the faux bus implement PM-related
+>> interface?
+>> I'm uncertain whether these functions are essential for the vhci-hcd driver
+>> or if they can be safely removed.
+>>
+>> However, during system standby/wakeup tests with remote USB devices bound to
+>> the vhci-hcd driver,
+>> I observed consistent failure scenarios across both the original platform
+>> bus and faux bus patch implementations.
 
-I guess this will go via netdev, but if you want me to pick it up,
-please let me know.
+suspend and resume hooks have been in the code from beginning
+in the CONFIG_PM path. The original authors are skeptical about
+what should happen during suspend"
 
-Cheers,
-Miguel
+/* what should happen for USB/IP under suspend/resume? */
+suspend hook checks for active connections and sends EBBUSY
+back to pm core.
+
+Active connection means any of the ports are in USB_PORT_STAT_CONNECTION
+state. So as long as there are active connections between vhci client
+and the host, suspend won't work. So we really don't know what happens
+to the active connections if there are no suspend/resume hooks.
+
+If there are no active connections, then it will clear the HCD_FLAG_HW_ACCESSIBLE
+bit and returns to pm core to continue with suspend.
+
+resume sets the HCD_FLAG_HW_ACCESSIBLE flag to indicate hardware is accessible
+and initiates port status poll.
+
+- suspend hook prevents suspend
+
+With faux device since there is no suspend and resume hook, I would expect
+these hooks are not a factor in suspend and resume.
+
+vhci_hcd is a special case virtual driver as it is a proxy for controlling
+hardware on the host.
+
+Zongmin,
+
+Do suspend/resume work when vhci_hcd is not loaded?
+What happens when when system suspends and resumes with faux device?
+Can you send me dmesg logs and pm logs?
+
+thanks,
+-- Shuah
+
+
+
+
