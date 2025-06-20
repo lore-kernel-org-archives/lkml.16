@@ -1,120 +1,124 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F8514D2A0;
-	Fri, 20 Jun 2025 08:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9FE218EBF;
+	Fri, 20 Jun 2025 08:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408451; cv=none; b=ZNGZQcc8wJfqPwPlVbw3s1R5q6loZXCvY1hW1AIGJ0K9uShTzmSDmpx8yyUwXqTzI1GrZzVKh4DOCZw4LIbzwtsA8g163TEAYpHhI2Co+ysReEIGAC3s3zHn7KpdZJhfY3iW8XdZJjWAlaFRMMUNTRi7oe5rd2Gc2KUrBvT1Dgk=
+	t=1750408522; cv=none; b=tZBfOSbDsEdJbYdc5ZzaSdIDslxDoV12BkNDs6V/PmLZTC+ggw4gctv+PDoZbEu3Ip8ja01PdOi9b0LX4MeoTlFUrMwuFr/LXt5eNOUejFyy3PG1gPsIxqe+MEDNGHw932h1tVaAgmj7gca5MbC7Icoj/4oly9Li1TmxQJu2Zyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408451; c=relaxed/simple;
-	bh=m2+1Jf63p+eryKj1QfsbNx2w8kSuf3w3Tygti8IwXz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=obfe2FE1b+jXmfDBAHgvGJpejzw9Ppx1LhROfweGM/+kj1aE+hEDYlbFJHeYocNghAEJT3VXPd7qsChpvoX5PQ+TEsm0/CWEFjl5FiMJAZpeVCnzpQPIXWVkOvMMduSevTXVB55Ox4m+m5JLDXxBvW+Cup3bN1ThVxi6Oe7YP1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZDorirDa; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750408522; c=relaxed/simple;
+	bh=5vgG1+o5zvUvcy9IV1oX0v/oDHQeoYwHQUnEwHesPoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tJyQ5WHk6T/O3QAaaeWIiWWUmCD/DegKkbjNKLa8kBfrE3eTgUMRpbsargVcJ8QPNdhAZK4S/UEzlD8CdbHSg68C17nShjqgJCewfkXr/ek1egZJ0QUmmQOr9t/KFePK/FimhIrfRqEMT/tf7jqdx9YYSuGYGgIekGwu5crkyGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1Vy+sm6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZDorirDa"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0B77143887;
-	Fri, 20 Jun 2025 08:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750408441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4T0Z/wKoqLmnZWVx5qElF2JVZUpRD4o2zM/wrspldp0=;
-	b=ZDorirDaJiVzEhZ+Dy5FPuY8TciEHIDL8biqP15QbS75l5K+mN/9vhPvUetmMwpkDRzfOQ
-	WHb7+TFsKrBH1rRjrZR+jzIh2KfQOQ0Mq82vWl0vh8WPSNr8xmzHZiQ0V32deavtB6Ok9Y
-	DOPJz+azWbHlfM+uSiIKZ4sA+6NuKrXe1ohvO3vS/ughrEkDvC5c7zCwTdep9PWkmfGdO1
-	QHICWKbWeAgfVett5jhC2c18sCM92MjX78cWfymdnXj2SRdFgpm8isir0uDWN+o+tVg+eY
-	hQ2cniRepzW0GW0m+iIWQz54dDccAHp9LBbrgg4viHJtDjOCw6lwehfeLI81IQ==
-Date: Fri, 20 Jun 2025 10:33:53 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <jessica.zhang@oss.qualcomm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
- Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Robert
- Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>, Seung-Woo Kim
- <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>, Tomi Valkeinen
- <tomi.valkeinen+renesas@ideasonboard.com>, Kieran Bingham
- <kieran.bingham+renesas@ideasonboard.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das
- <biju.das.jz@bp.renesas.com>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Alain Volmat <alain.volmat@foss.st.com>,
- Raphael Gallais-Pou <rgallaispou@gmail.com>, Stefan Agner
- <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, Linus Walleij
- <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>,
- Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter
- <jonathanh@nvidia.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 01/16] drm/panel: get/put panel reference in
- drm_panel_add/remove()
-Message-ID: <20250620103353.5b43b86f@booty>
-In-Reply-To: <20250619-b4-of_drm_find_panel_part1-v2-1-0df94aecc43d@redhat.com>
-References: <20250619-b4-of_drm_find_panel_part1-v2-0-0df94aecc43d@redhat.com>
-	<20250619-b4-of_drm_find_panel_part1-v2-1-0df94aecc43d@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1Vy+sm6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E900BC4CEE3;
+	Fri, 20 Jun 2025 08:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750408522;
+	bh=5vgG1+o5zvUvcy9IV1oX0v/oDHQeoYwHQUnEwHesPoo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z1Vy+sm681/k9NWqGx6RHL0cVDfPgc1yhukI/2LseV8I4KzPG+7fDxsWuqoVpgD29
+	 UMsZ7ABpZRfmsNX9hjKZBxdOg1I8N3gBwUe3QQXiFpbiv/PUfwGqELDuHo4pVz7G8F
+	 1laifqmyGnZ/6u239bBC227+R6+H0HYvlyyqaF7gAbjtpSJNC3SZtq18lOSF1T9+Fa
+	 gIrP8Hrj6hSssDYJ+1GE+I7fS1hMrGNsVp1bHxJIFBU3LjdLyF2o/HUl5STnECGBb5
+	 4JI7BmZ9rrdcuo3t35ZyiY5BGWxPyrERtnzXUiAJVqs4k3DHmIVaBCUE+m7NK5OZ1w
+	 xwa+fRWQy2ENg==
+Message-ID: <96ee2939-d0d6-439e-bde4-1e5476214c5a@kernel.org>
+Date: Fri, 20 Jun 2025 10:35:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] media: dt-bindings: Add regulator current load
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
+ todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, akapatra@quicinc.com,
+ hariramp@quicinc.com
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_svankada@quicinc.com, quic_depengs@quicinc.com,
+ quic_vikramsa@quicinc.com
+References: <20250620040736.3032667-1-quic_wenmliu@quicinc.com>
+ <20250620040736.3032667-2-quic_wenmliu@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620040736.3032667-2-quic_wenmliu@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdejleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeegpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepjhgvshhsihgtrgdriihhrghnghesohhsshdrq
- hhurghltghomhhmrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghh
 
-Hello Anusha,
-
-On Thu, 19 Jun 2025 14:15:53 -0500
-Anusha Srivatsa <asrivats@redhat.com> wrote:
-
-> Take the panel reference and put it back as required.
-> drm_panel_add() and drm_panel_remove() add a panel to
-> the global registry and removes a panel respectively.
-> Use get() and put() helpers to keep up with refcounting.
+On 20/06/2025 06:07, Wenmeng Liu wrote:
+> Add regulator current load support for vdda-phy vdda-pll.
 > 
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+>  .../devicetree/bindings/media/qcom,sc7280-camss.yaml        | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-This patch is good.
+This patch fails on so many levels... do internal reviews first.
 
-I'd just point out that this must be applied only after all drivers
-have been converted to the the _alloc API, otherwise with the following
-sequence:
+Use existing properties, see regulators. If not, use existing unit
+suffixes. Otherwise it is just another downstream property you send us,
+to which we responded many times - don't.
 
-  panel = devm_kzalloc();
-  drm_panel_init(panel);
-  drm_panel_add(panel);
-  ...
-  drm_panel_remove(panel); <-----
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-at the drm_panel_remove() you'd have a warning:
+Read meeting notes from internal discussions where you discussed this
+already.
 
-  refcount_t: addition on 0; use-after-free.
-
-So, if all panel drivers are converted:
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Best regards,
+Krzysztof
