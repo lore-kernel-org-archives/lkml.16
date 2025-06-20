@@ -1,149 +1,170 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2593D29D0E;
-	Fri, 20 Jun 2025 00:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3B17485;
+	Fri, 20 Jun 2025 00:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750379954; cv=none; b=Z75pBs/fCYyOWNHDFyyiBujITb3pjJi48fYCXE/QMZLqvr7SyZwzGvl+ZEZIS4emHGbtWz3Xuw2yyTcf7C4Xrvh16AOjV2t5xKxjoeyCR5c7l53H3LBk/f9XV45L8p5U1y2wvSQNX4wJRPZ4OBV0KEmuSDqNDxt8HysIzLNBHY4=
+	t=1750380079; cv=none; b=GHW6B68fH6K6EJsLxsetBP/8NaBiY4affiXUJeNVWeujPxbcSo2OF771lrlB8lcLx6X59KRXvYcoNkeb8i/wyLGd58yQ6D8RZqgd4thB1xOb5VPcXZ/NRw7LcT5Wertr6mLNXMN6EfJJ4LN6O2T8qTYYp3HzLSdsdaJyj5BERIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750379954; c=relaxed/simple;
-	bh=l1/IBbUcNDQFheW+9eiIMgANLamPBAEjZlIoFP/QBjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qgu5Z7bovQ/qzq5/gN6e1f7jfr12LMEW48SDPbrJtgxNc5/xgJ3S8Rpg8klESsUC29CKIzxnrj9iDEBFF0AhmHTyQo0jpQwBphjfvqzP9qDJb4kXtGTdpfEodNm7jSjX/NO0MqeysFBxaeoBmKRDe9FR60DwavtdWWiYnZVNprU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2cYMFHi; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750380079; c=relaxed/simple;
+	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FvRdTeexeTTQ4/i65scJIav6HQKRJsG0gQ9q00D5tviJBcQPD7i8721lX6dVnp120f5YSUEQvo6ZzwuKIVHvbUd2pVDeHsxzF4uARBjC95o2iha6o9Fn3VbM4bDP8d6cAnNPmPVDxG0y+y8+oA9F99ANXDyOkb+KV0ffBw1pqxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/WMn6SV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2cYMFHi"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23694cec0feso11695295ad.2;
-        Thu, 19 Jun 2025 17:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750379952; x=1750984752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTUCGUOoWGw9YgkFlv+/jq28S9YuS0p6EeVu3wom0RI=;
-        b=A2cYMFHiRYC5s2eXwoLh3sWcOxC+ZpRGC1GAzVAQ85yUbL8QgX++gDU6Id0G6gwoW6
-         YvsNrs4QUdJ3C+5GrJKY8MOqNFSIvbbYCy/79Oz2LAXEd5OR9u4aLUU/lfYuGpmruHBz
-         O3bftpFMjNkvnFnqvbog4TPMTPVyQdDKacJuU3LYcuAkjkVn9Equd1Vs9/mUpeGvZCRF
-         66ogblNxBlQLObXUsyuN82xtcc21xZkFKtpgVbK3UYvOVCnPn2/PyKZWxmi4RvVfS/0u
-         kl3iUBxRZ6uaYKqcmCWMQmTV056n7KU81tf4zCJcSNDgR9WRQPLo1QTn4zffzXtGvfgP
-         jIMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750379952; x=1750984752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LTUCGUOoWGw9YgkFlv+/jq28S9YuS0p6EeVu3wom0RI=;
-        b=Y/vlB2DNQfKVCVEnHH2dLKUQoz+fdffcKorQoD1/zZNBdOtuCnWALRqtfvQtbZ5Inh
-         PJ1xQLOVmx3btwrkThqHNGDmdmUwcmLOTKPg/K9M4aHjY0wED/YOks3TAZOOmnzcdBYx
-         xiAQi36H/1vA8setO0htENQWZSIXx9iXnIyb1AXYeHx54L3zHDO2L15+OGQhqy83HBs+
-         7WTJtbI6xfvtDMMuNyT2D0tW6/3zxzZ8Ed+Fu7rZjC8j0bnS4/X+ZEl81Mlm2cQxNp85
-         2zW2/accxstD5oVjU1JO1Y/wIunpxGlRfeKCSw7rGvcKpg/b2bQHIhJuUd77AWGIkbfB
-         Gsjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOA2+tADQ1QCcsoZW74uY4GbuKer4/P9A3EYqsii60iPPmkA7Q+EkGs8ENnRT9ujPoVWtk+6BEsh9l4rq722/RcRry@vger.kernel.org
-X-Gm-Message-State: AOJu0YzipeVH5fiZGY1ZUV1sKoKl1dt+92O+pJoOyRDj5K7/6zjvNXoR
-	oyuDMDqblC1d5giDMol18sPebUFOqNNWJe/uvpM31tZotR/qHfgcjAe7
-X-Gm-Gg: ASbGncsgoHyqCPhV1mNnZxs/A6Pxty+Cs/kWxlklrMoeznzEtzanvn0qwp/eNpYho5G
-	SgZ6aXBibU1ZgC6vfGRTDGoUJ5LGYeEJO0dv1TfPikQ5rz5L3cDCiZU5012JdjKXQ3wXknZh7JD
-	xqCNgqSsUcc8yv0CW/uGOUkVQmfzF6qhaPbCmH/yRzH3JCSq5zmScEcI/beJ9DoOHJvzP+IpJnW
-	6e2uMe3H2Fz9NQOJ85KllwPF/fd5IF/ZMNKFMhfu8D7bHOP7BV9EP1VA0f8dLnyEtpqwpYnnB69
-	vMFQouqYxD4MULRSX4wosn+KwwBfj6zKAp3hfwAHuSC3eLGJrEaG4WU3eoTczGd7bc37c3gxXbp
-	ujfg/PY2J
-X-Google-Smtp-Source: AGHT+IEsnon49573ykf7HKyk7csiHL4sl7FYS54aTs8DO+25TgfY+CL+ZJa6gTTuL0rTW5Ou+vUM6Q==
-X-Received: by 2002:a17:903:320e:b0:234:e8db:431d with SMTP id d9443c01a7336-237d9764d8cmr12455965ad.20.1750379952177;
-        Thu, 19 Jun 2025 17:39:12 -0700 (PDT)
-Received: from localhost.localdomain ([203.123.65.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a8a8sm4578445ad.132.2025.06.19.17.39.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Jun 2025 17:39:11 -0700 (PDT)
-From: Xiang Shen <turyshen@gmail.com>
-To: acelan.kao@canonical.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Xiang Shen <turyshen@gmail.com>
-Subject: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-Date: Fri, 20 Jun 2025 10:38:49 +1000
-Message-ID: <20250620003849.54442-1-turyshen@gmail.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/WMn6SV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FDFC4CEEA;
+	Fri, 20 Jun 2025 00:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750380079;
+	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M/WMn6SVuP+u5/SFJBpyzTJFMcNyPoxrKhOIQtECO3z4mpG3ocURkDWFKGo9DppC2
+	 0WKDK1XDKV9drzyHE5TabrD5I/nBz1uZBOadgqY8MULiwcbYfiSOco8BPLP+KhUi+T
+	 rb9F4tw6F97kpk7NIjNf9pa4LuKbaZU8pCErk2+dd2MnXBIx1x8Vqj+dG+vpOmymDm
+	 hzR5GPMNdbFK+MMt4qWaKzgkvRiW7Sle+nw3Bat2t3vIZc1JUH08UDATQafIzYzVdl
+	 ihubzytYA7iWfT4os6R9Ytl3S/QEVJ0ZW1jjqgiB1F56KlsWN47d0sfxwN2Y1JCw1C
+	 E/Eq5ElaQJCbQ==
+Date: Fri, 20 Jun 2025 09:41:16 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools:bootconfig:scripts: Put back the comments where
+ they should be
+Message-Id: <20250620094116.366eff08bc65f682cc1da74b@kernel.org>
+In-Reply-To: <20250521115018.32392-1-unixbhaskar@gmail.com>
+References: <20250521115018.32392-1-unixbhaskar@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Fix checkpatch code style errors:
+On Wed, 21 May 2025 17:16:51 +0530
+Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
 
-ERROR: do not use assignment in if condition
-+	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> Mundane adjustment to the comments, where they should belong.
+> 
+> Does it change the functionality? NO
+> 
+> Does it improve the readability? Probably and that is why.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  tools/bootconfig/scripts/ftrace.sh | 35 ++++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
+> index 186eed923041..e2a075879db4 100644
+> --- a/tools/bootconfig/scripts/ftrace.sh
+> +++ b/tools/bootconfig/scripts/ftrace.sh
+> @@ -1,23 +1,28 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> 
+> -clear_trace() { # reset trace output
+> -    echo > trace
+> + # reset trace output
+> +clear_trace() {
+> +
+> +	 echo > trace
+>  }
+> 
+> -disable_tracing() { # stop trace recording
+> +# stop trace recording
+> +disable_tracing() {
+>      echo 0 > tracing_on
+>  }
+> 
+> -enable_tracing() { # start trace recording
+> +# start trace recording
+> +enable_tracing() {
+>      echo 1 > tracing_on
+>  }
+> 
+> -reset_tracer() { # reset the current tracer
+> +# reset the current tracer
+> +reset_tracer() {
+>      echo nop > current_tracer
+>  }
+> 
+> +# remove action triggers first
+>  reset_trigger_file() {
+> -    # remove action triggers first
+>      grep -H ':on[^:]*(' $@ |
+>      while read line; do
+>          cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
+> @@ -32,21 +37,25 @@ reset_trigger_file() {
+>      done
+>  }
+> 
+> -reset_trigger() { # reset all current setting triggers
+> +# reset all current setting triggers
+> +reset_trigger() {
+>      if [ -d events/synthetic ]; then
+>          reset_trigger_file events/synthetic/*/trigger
+>      fi
+>      reset_trigger_file events/*/*/trigger
+>  }
+> 
+> -reset_events_filter() { # reset all current setting filters
+> +# reset all current setting filters
+> +reset_events_filter() {
+>      grep -v ^none events/*/*/filter |
+>      while read line; do
+>  	echo 0 > `echo $line | cut -f1 -d:`
+>      done
+>  }
+> 
+> -reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
+> +# reset all triggers in set_ftrace_filter
+> +
 
-ERROR: do not use assignment in if condition
-+	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+Why this has an empty line after comment?
 
-Signed-off-by: Xiang Shen <turyshen@gmail.com>
----
- drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+> +reset_ftrace_filter() {
+>      if [ ! -f set_ftrace_filter ]; then
+>        return 0
+>      fi
+> @@ -78,17 +87,21 @@ disable_events() {
+>      echo 0 > events/enable
+>  }
+> 
+> -clear_synthetic_events() { # reset all current synthetic events
+> +# reset all current synthetic events
+> +
 
-diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-index 232cd12e3c9f..bcc97b06844e 100644
---- a/drivers/platform/x86/intel/vbtn.c
-+++ b/drivers/platform/x86/intel/vbtn.c
-@@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- 	guard(mutex)(&priv->mutex);
- 
--	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-+	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-+	if (ke) {
- 		if (!priv->has_buttons) {
- 			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
- 				 event);
- 			return;
- 		}
- 		input_dev = priv->buttons_dev;
--	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
--		if (!priv->has_switches) {
--			/* See dual_accel_detect.h for more info */
--			if (priv->dual_accel)
--				return;
--
--			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
--			ret = input_register_device(priv->switches_dev);
--			if (ret)
--				return;
--
--			priv->has_switches = true;
--		}
--		input_dev = priv->switches_dev;
- 	} else {
--		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
--		return;
-+		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-+		if (ke) {
-+			if (!priv->has_switches) {
-+				/* See dual_accel_detect.h for more info */
-+				if (priv->dual_accel)
-+					return;
-+
-+				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-+				ret = input_register_device(priv->switches_dev);
-+				if (ret)
-+					return;
-+
-+				priv->has_switches = true;
-+			}
-+			input_dev = priv->switches_dev;
-+		} else {
-+			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-+			return;
-+		}
- 	}
- 
- 	if (priv->wakeup_mode) {
+Ditto.
+
+> + clear_synthetic_events() {
+>      grep -v ^# synthetic_events |
+>      while read line; do
+>          echo "!$line" >> synthetic_events
+>      done
+>  }
+> 
+> -initialize_ftrace() { # Reset ftrace to initial-state
+> +# Reset ftrace to initial-state
+>  # As the initial state, ftrace will be set to nop tracer,
+>  # no events, no triggers, no filters, no function filters,
+>  # no probes, and tracing on.
+> +
+
+Here too.
+
+> +initialize_ftrace() {
+>      disable_tracing
+>      reset_tracer
+>      reset_trigger
+> --
+> 2.49.0
+> 
+
+Thanks,
+
 -- 
-2.46.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
