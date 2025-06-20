@@ -1,363 +1,160 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CD20137923
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 02:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5A514F9EB;
+	Fri, 20 Jun 2025 02:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385229; cv=none; b=QlSOX9OUUtGW+P6XQf87mFcZXcCM7F2+MnZojwdiFEOFYTsaTPZd4Zkyzgw3XDGoSpjCMqaaJ8wkNSSaGvUAg/DswTRSOGuT9GG3QiBREVwFnN0WNt+ReksZS+jFrcYRUkLez08MNMgFU4VM6qv6h1yd3ZTw/FSMjZO86dYmNCQ=
+	t=1750385233; cv=none; b=iGVXabIPlEuUskDif25pccjiVGG1nsU38vFAtDLCiWutpAOiGZZmz9YH8/7xWWwoDZZZPPUPF3zbfV/Lby5hyHJzM1t6VGzv3xA/zlHec6Ut+2OUQa8JTNOqM7HNM8Cyi2kM2ST4chBSkkVPB4qRX9pufZCoOJuuKbf+in6fRbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385229; c=relaxed/simple;
-	bh=DWknwKotnt0Hj/llco6PrfPeLe9yxonKiqB0O/ZseB8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c0CwUcsvgLK5OQmd98G6XV0YEFV/7hqaQoSbycro4Iz3HfB94pR4ItkGttLyyOOzTCHf2+SdjJnlZPKNZby9puV2KcYPrP3BYHAogf4FYXb8r/UkViygQj5Gq62MvFT+M65aBAJDCrYjJ6pv9KK//CB6PIPUC2rWywDKteKaDk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8BxjaxAwlRofCMaAQ--.26073S3;
-	Fri, 20 Jun 2025 10:06:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowMCx7MQuwlRodNIhAQ--.36930S5;
-	Fri, 20 Jun 2025 10:06:49 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	wangyao@lemote.com,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: [PATCH v5 3/3] ipmi: Add Loongson-2K BMC support
-Date: Fri, 20 Jun 2025 10:06:29 +0800
-Message-ID: <ec61b6009ad669c366a6303f070352b666fecd7a.1750301674.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1750301674.git.zhoubinbin@loongson.cn>
-References: <cover.1750301674.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1750385233; c=relaxed/simple;
+	bh=kYNKNmk6YJhkY5ahWJHqPWl9frwIrTQY4JiPKuXITvo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CyzunNmL6/uqqFdx6hsELjzwTWVf/mJhO0AxPShnf+rsHY0CJhHaCTBvRWX5W9LCqga6LNye1xpTi5hzYz0nVSZs9+w2yv283/vuRRaw1mHtLPHGk7SVth1J+2032XYzVqji9MzvfYNVt3C3zz6BhfnZhI1uZMKE6aXhKfruzmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dBy+VZn3; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dBy+VZn3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1750385214;
+	bh=b7wJ/bqV+s097aiwL/uQ42PKXT60gGGw54i379c/L/k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=dBy+VZn3r+Ap8LvUthCh5zC1u41b+a8by+32IFtte6g6Z4ooi44XHUmpX8f+XWPYP
+	 6f+MzX2mu8y5Wg5L5VMNFsW53BbKMp+p68BGcmBWBd6BSD86NrYPeqeMy68BIeMfEI
+	 5DtCYSuBhfVILkuIX2AhbEpY+yMbMnxn0/svAq8E=
+X-QQ-mid: zesmtpsz9t1750385208t3897f19b
+X-QQ-Originating-IP: cg7FGxWJmLEfZWjIyhD73nBa2uYPvIjGl0K+HayZnYA=
+Received: from mail-yw1-f172.google.com ( [209.85.128.172])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 20 Jun 2025 10:06:47 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10565298664502637221
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e302191a3so13114227b3.2;
+        Thu, 19 Jun 2025 19:06:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ7wIDPLB9jKHGcg6s9zlIqmiVK3QJHDpVOTfBwCyRPsp8Ziu66eZpNEcl++KgBn46PbY/V4+rkitXcOg8FHOC@vger.kernel.org, AJvYcCXxv59aiLZqXOqJR5NohAluVNRTjhKpqLPjzFLwapKffdPrJytP4O1zbL00cNumSI7k57rA3uA/vXeE8lg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUTb/Pr1wmtfx1SQfF9SYfazoNgDbSyuxpWo6j3OUzI295Rri8
+	jq5k+AbHIN/q5W8aH0mi5F2F58UkoZwOBuhegbL+LnKO9igKphbRnUiWPkSTd65arAkXyKRAyeZ
+	hckXwgrzb6MiX4VGWgfUFJaOncF0nkHw=
+X-Google-Smtp-Source: AGHT+IEuCT0NfTStQwX1w1oAE43j3dpE6iffgZEEN2Sc4FCect6ZxQcJb+R0nE1Iql9bHLN19lLPDxtazvv569ESkhw=
+X-Received: by 2002:a05:690c:7447:b0:70c:b882:305 with SMTP id
+ 00721157ae682-712c68d0bdcmr17286227b3.36.1750385206198; Thu, 19 Jun 2025
+ 19:06:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7MQuwlRodNIhAQ--.36930S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ar17WF1rKFWxGw45Xw4UWrX_yoWfWryxpa
-	1aya47Cr48tF47K397ZryDWFyrC3ZxWa4rtr47W34ruFWj934vgr1vya4fAry7tFy0q3y3
-	JrZ8ArW3WF13JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY
-	6Fy7McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcPrcDUUUU
+References: <20250610020758.2798787-2-chenlinxuan@uniontech.com>
+ <6972404e-0237-47b9-8e3e-15551bea3440@linuxfoundation.org>
+ <CAC1kPDPg0AN9Ft3SNM6JDcZf=XD1oinqeAMzuRpZF3nzemZ=Kg@mail.gmail.com>
+ <265ebc1f-b0c0-4c57-92b2-41714469c7f5@linuxfoundation.org>
+ <91817e12-54c4-4241-b895-2e452a00e0c4@nvidia.com> <f73fa51e-87e5-4805-bbbc-a7af9b50a1d8@linuxfoundation.org>
+In-Reply-To: <f73fa51e-87e5-4805-bbbc-a7af9b50a1d8@linuxfoundation.org>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Fri, 20 Jun 2025 10:06:34 +0800
+X-Gmail-Original-Message-ID: <9BB87B5BE7E0A790+CAC1kPDMW=htR_4EHCz6T=GVTOvfq6urqzUWDGev9MEfi26deWg@mail.gmail.com>
+X-Gm-Features: AX0GCFumwtCnOIIPi8b0T3Xu7a243MLsXhutl7Hmd9KazaB5QGtU_DEXeoliyo4
+Message-ID: <CAC1kPDMW=htR_4EHCz6T=GVTOvfq6urqzUWDGev9MEfi26deWg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] selftests: Suppress unused variable warning
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: John Hubbard <jhubbard@nvidia.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi <mszeredi@redhat.com>, Jan Kara <jack@suse.cz>, 
+	zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NCjYbQ0FTrEVuaYYI+06ZdbCxVC6SvtE5cuf+bjIPthEUcFsy4YAwW5j
+	B1paOYneLLAnHvv3YFJoZ218IZ3UyegDBeDl5srbxeY/poBxYam1fq+V+LYAak8ghJY2iHQ
+	neHbQVjx0UQ45acrkq44zcC28ncIf6K1SgeQhlI1Le+97ptl10e9AstkXrEOpGTUrHkeFAp
+	JDRdYnUaj2o4muCXmuKnpybjxRXbS9GY+Dw+q3RZZ3JDRkAuRix0qdWhZB5KazctZ8Vbg0/
+	HnflBDhOI5wnADCoDvejd7JGnjWauGgViJd1VISDWMNCrqOmpYCtJbtvhTW1X112UvFRIDH
+	IUFjExWPxJmjAjDLyZufy6StfWGRHQ/c55r2xMsx7CVnI98QeBRVpFi1SR4oL5zno1zRGMB
+	Ew9kdkzRgq5hxTX8z5c9yMw9tq+Y96AQ8vptIyjJ0TyR5oyZYnKlMe284FBzP87u6B5tHOO
+	bNkR2qwzjq8iPzZLDgOEXYGZYyFcD83kEOPI48V0k1xT7f2OxQGSFRpJqFB0rwXbx8Uflq7
+	wqTgEPMjqDiJwscdfCNOhywrWUMFIr03rh50OrrL87yA7vFUVXCv0frBccqzWj/MD0WzD4d
+	irfjkvCf0Qaa94xW1dCGvBtdZivnCb46+StSQ2z8/GLdbTy7JOIzMBoYTDy7H1yb29y+lLE
+	H5lwIlGroUze9wnv8/W2qKY9FtNR1awoT2PyYTQkYf6TaMi2CWzvMCZ04FuBwWfKpcrrolm
+	6aaX9YY9ZiQ/hBauJGmsVNAPqL0LE5Bk5lWA1lnJuVjCY5zf3JbtrbOE8yzPKINJMQpnFa+
+	46jxWmRlloqZDx3D7RsGtyk86P30Y8h5M5sfELWZ2W2Ia/XQkDU8Ta2PlOUi03DKSlP3tZP
+	BUHVyZwkNHROs+bQl7j5mFBWrIOUheiDxrwWsXRePh8Fz3azYCw/aL/Gk40jSbzzN7OOcnQ
+	c706L44STa/ekM5nxAj5NizztNqymkwVcK/SKW5UAAoHukk2L+hch0+oWWnNWLzc2km6uEP
+	WMzzMMmhKU8NKSmvqlNTIClB+rcowj3Cs9V/wO0WxGyQUsmP4iyW6N8ODq/dHErKdgyx/RR
+	A==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-This patch adds Loongson-2K BMC IPMI support.
+On Fri, Jun 20, 2025 at 5:41=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.o=
+rg> wrote:
+>
+> On 6/19/25 13:00, John Hubbard wrote:
+> > On 6/19/25 10:00 AM, Shuah Khan wrote:
+> >> On 6/19/25 01:46, Chen Linxuan wrote:
+> >>> On Thu, Jun 19, 2025 at 5:23=E2=80=AFAM Shuah Khan <skhan@linuxfounda=
+tion.org> wrote:
+> >>>> On 6/9/25 20:07, Chen Linxuan wrote:
+> > ...
+> >>>>> diff --git a/tools/testing/selftests/filesystems/mount-notify/mount=
+- notify_test.c b/tools/testing/selftests/filesystems/mount-notify/ mount-n=
+otify_test.c
+> >>>>> index 63ce708d93ed0..34afe27b7978f 100644
+> >>>>> --- a/tools/testing/selftests/filesystems/mount-notify/mount- notif=
+y_test.c
+> >>>>> +++ b/tools/testing/selftests/filesystems/mount-notify/mount- notif=
+y_test.c
+> >>>>> @@ -465,7 +465,9 @@ TEST_F(fanotify, rmdir)
+> >>>>>        ASSERT_GE(ret, 0);
+> >>>>>
+> >>>>>        if (ret =3D=3D 0) {
+> >>>>> -             chdir("/");
+> >>>>> +             // Suppress -Wunused-result
+> >>>>> +             // Ref: https://gcc.gnu.org/bugzilla/show_bug.cgi? id=
+=3D66425#c34
+> >>>>> +             (void) !chdir("/");
+> >
+> > This is quite ugly. :)
 
-According to the existing design, we use software simulation to
-implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+I agree with you. :)
 
-Also since both host side and BMC side read and write kcs status, fifo flag
-is used to ensure data consistency.
+> >
+> >>>>>> Why not fix the problem the right way by checking the return value=
+.
+> >>>> Suppressing the error isn't useful.
+> >>>
+> >>> The code is already handling cleanup in error cases,
+> >>> and I don't think checking the result of chdir would be useful here.
 
-The single KCS message block is as follows:
+I think I was mistaken earlier. Here we are in the child process after
+a fork, not handling an error case.
+I think simply calling exit(-1) here when chdir failed should be
+enough to make the test fail in the parent process.
+Maybe we should do the same for other similar calls as well. I will
+send a v2 soon.
 
-+-------------------------------------------------------------------------+
-|FIFO flags| KCS register data | CMD data | KCS version | WR REQ | WR ACK |
-+-------------------------------------------------------------------------+
-
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/char/ipmi/Kconfig        |   7 ++
- drivers/char/ipmi/Makefile       |   1 +
- drivers/char/ipmi/ipmi_si.h      |   7 ++
- drivers/char/ipmi/ipmi_si_intf.c |   4 +
- drivers/char/ipmi/ipmi_si_ls2k.c | 189 +++++++++++++++++++++++++++++++
- 5 files changed, 208 insertions(+)
- create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
-
-diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
-index f4adc6feb3b2..92bed266d07c 100644
---- a/drivers/char/ipmi/Kconfig
-+++ b/drivers/char/ipmi/Kconfig
-@@ -84,6 +84,13 @@ config IPMI_IPMB
- 	  bus, and it also supports direct messaging on the bus using
- 	  IPMB direct messages.  This module requires I2C support.
- 
-+config IPMI_LS2K
-+	bool 'Loongson-2K IPMI interface'
-+	depends on LOONGARCH
-+	select MFD_LS2K_BMC_CORE
-+	help
-+	  Provides a driver for Loongson-2K IPMI interfaces.
-+
- config IPMI_POWERNV
- 	depends on PPC_POWERNV
- 	tristate 'POWERNV (OPAL firmware) IPMI interface'
-diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-index e0944547c9d0..4ea450a82242 100644
---- a/drivers/char/ipmi/Makefile
-+++ b/drivers/char/ipmi/Makefile
-@@ -8,6 +8,7 @@ ipmi_si-y := ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.o ipmi_bt_sm.o \
- 	ipmi_si_mem_io.o
- ipmi_si-$(CONFIG_HAS_IOPORT) += ipmi_si_port_io.o
- ipmi_si-$(CONFIG_PCI) += ipmi_si_pci.o
-+ipmi_si-$(CONFIG_IPMI_LS2K) += ipmi_si_ls2k.o
- ipmi_si-$(CONFIG_PARISC) += ipmi_si_parisc.o
- 
- obj-$(CONFIG_IPMI_HANDLER) += ipmi_msghandler.o
-diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
-index 508c3fd45877..687835b53da5 100644
---- a/drivers/char/ipmi/ipmi_si.h
-+++ b/drivers/char/ipmi/ipmi_si.h
-@@ -101,6 +101,13 @@ void ipmi_si_pci_shutdown(void);
- static inline void ipmi_si_pci_init(void) { }
- static inline void ipmi_si_pci_shutdown(void) { }
- #endif
-+#ifdef CONFIG_IPMI_LS2K
-+void ipmi_si_ls2k_init(void);
-+void ipmi_si_ls2k_shutdown(void);
-+#else
-+static inline void ipmi_si_ls2k_init(void) { }
-+static inline void ipmi_si_ls2k_shutdown(void) { }
-+#endif
- #ifdef CONFIG_PARISC
- void ipmi_si_parisc_init(void);
- void ipmi_si_parisc_shutdown(void);
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 7fe891783a37..2060ac2d8d31 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2120,6 +2120,8 @@ static int __init init_ipmi_si(void)
- 
- 	ipmi_si_pci_init();
- 
-+	ipmi_si_ls2k_init();
-+
- 	ipmi_si_parisc_init();
- 
- 	mutex_lock(&smi_infos_lock);
-@@ -2334,6 +2336,8 @@ static void cleanup_ipmi_si(void)
- 
- 	ipmi_si_pci_shutdown();
- 
-+	ipmi_si_ls2k_shutdown();
-+
- 	ipmi_si_parisc_shutdown();
- 
- 	ipmi_si_platform_shutdown();
-diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si_ls2k.c
-new file mode 100644
-index 000000000000..7b360056f9c5
---- /dev/null
-+++ b/drivers/char/ipmi/ipmi_si_ls2k.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for Loongson-2K BMC IPMI interface
-+ *
-+ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-+ *
-+ * Authors:
-+ *	Chong Qiao <qiaochong@loongson.cn>
-+ *	Binbin Zhou <zhoubinbin@loongson.cn>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+
-+#include "ipmi_si.h"
-+
-+#define LS2K_KCS_FIFO_IBFH	0x0
-+#define LS2K_KCS_FIFO_IBFT	0x1
-+#define LS2K_KCS_FIFO_OBFH	0x2
-+#define LS2K_KCS_FIFO_OBFT	0x3
-+
-+/* KCS registers */
-+#define LS2K_KCS_REG_STS	0x4
-+#define LS2K_KCS_REG_DATA_OUT	0x5
-+#define LS2K_KCS_REG_DATA_IN	0x6
-+#define LS2K_KCS_REG_CMD	0x8
-+
-+#define LS2K_KCS_CMD_DATA	0xa
-+#define LS2K_KCS_VERSION	0xb
-+#define LS2K_KCS_WR_REQ		0xc
-+#define LS2K_KCS_WR_ACK		0x10
-+
-+#define LS2K_KCS_STS_OBF	BIT(0)
-+#define LS2K_KCS_STS_IBF	BIT(1)
-+#define LS2K_KCS_STS_SMS_ATN	BIT(2)
-+#define LS2K_KCS_STS_CMD	BIT(3)
-+
-+#define LS2K_KCS_DATA_MASK	(LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS2K_KCS_STS_CMD)
-+
-+static bool ls2k_registered;
-+
-+static unsigned char ls2k_mem_inb_v0(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	int reg_offset;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_STS;
-+	} else {
-+		writeb(readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_STS_OBF, addr + LS2K_KCS_REG_STS);
-+		reg_offset = LS2K_KCS_REG_DATA_OUT;
-+	}
-+
-+	return readb(addr + reg_offset);
-+}
-+
-+static unsigned char ls2k_mem_inb_v1(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char inb = 0, cmd;
-+	bool obf, ibf;
-+
-+	obf = readb(addr + LS2K_KCS_FIFO_OBFH) ^ readb(addr + LS2K_KCS_FIFO_OBFT);
-+	ibf = readb(addr + LS2K_KCS_FIFO_IBFH) ^ readb(addr + LS2K_KCS_FIFO_IBFT);
-+	cmd = readb(addr + LS2K_KCS_CMD_DATA);
-+
-+	if (offset & BIT(0)) {
-+		inb = readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_DATA_MASK;
-+		inb |= FIELD_PREP(LS2K_KCS_STS_OBF, obf)
-+		    | FIELD_PREP(LS2K_KCS_STS_IBF, ibf)
-+		    | FIELD_PREP(LS2K_KCS_STS_CMD, cmd);
-+	} else {
-+		inb = readb(addr + LS2K_KCS_REG_DATA_OUT);
-+		writeb(readb(addr + LS2K_KCS_FIFO_OBFH), addr + LS2K_KCS_FIFO_OBFT);
-+	}
-+
-+	return inb;
-+}
-+
-+static void ls2k_mem_outb_v0(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char sts = readb(addr + LS2K_KCS_REG_STS);
-+	int reg_offset;
-+
-+	if (sts & LS2K_KCS_STS_IBF)
-+		return;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_CMD;
-+		sts |= LS2K_KCS_STS_CMD;
-+	} else {
-+		reg_offset = LS2K_KCS_REG_DATA_IN;
-+		sts &= ~LS2K_KCS_STS_CMD;
-+	}
-+
-+	writew(val, addr + reg_offset);
-+	writeb(sts | LS2K_KCS_STS_IBF, addr + LS2K_KCS_REG_STS);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_outb_v1(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char ibfh, ibft;
-+	int reg_offset;
-+
-+	ibfh = readb(addr + LS2K_KCS_FIFO_IBFH);
-+	ibft = readb(addr + LS2K_KCS_FIFO_IBFT);
-+
-+	if (ibfh ^ ibft)
-+		return;
-+
-+	reg_offset = (offset & BIT(0)) ? LS2K_KCS_REG_CMD : LS2K_KCS_REG_DATA_IN;
-+	writew(val, addr + reg_offset);
-+
-+	writeb(offset & BIT(0), addr + LS2K_KCS_CMD_DATA);
-+	writeb(!ibft, addr + LS2K_KCS_FIFO_IBFH);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_cleanup(struct si_sm_io *io)
-+{
-+	if (io->addr)
-+		iounmap(io->addr);
-+}
-+
-+static int ipmi_ls2k_mem_setup(struct si_sm_io *io)
-+{
-+	unsigned char version;
-+
-+	io->addr = ioremap(io->addr_data, io->regspacing);
-+	if (!io->addr)
-+		return -EIO;
-+
-+	version = readb(io->addr + LS2K_KCS_VERSION);
-+
-+	io->inputb = version ? ls2k_mem_inb_v1 : ls2k_mem_inb_v0;
-+	io->outputb = version ? ls2k_mem_outb_v1 : ls2k_mem_outb_v0;
-+	io->io_cleanup = ls2k_mem_cleanup;
-+
-+	return 0;
-+}
-+
-+static int ipmi_ls2k_probe(struct platform_device *pdev)
-+{
-+	struct si_sm_io io;
-+
-+	memset(&io, 0, sizeof(io));
-+
-+	io.si_info	= &ipmi_kcs_si_info;
-+	io.io_setup	= ipmi_ls2k_mem_setup;
-+	io.addr_data	= pdev->resource[0].start;
-+	io.regspacing	= resource_size(&pdev->resource[0]);
-+	io.dev		= &pdev->dev;
-+
-+	dev_dbg(&pdev->dev, "addr 0x%lx, spacing %d.\n", io.addr_data, io.regspacing);
-+
-+	return ipmi_si_add_smi(&io);
-+}
-+
-+static void ipmi_ls2k_remove(struct platform_device *pdev)
-+{
-+	ipmi_si_remove_by_dev(&pdev->dev);
-+}
-+
-+struct platform_driver ipmi_ls2k_platform_driver = {
-+	.driver = {
-+		.name = "ls2k-ipmi-si",
-+	},
-+	.probe	= ipmi_ls2k_probe,
-+	.remove	= ipmi_ls2k_remove,
-+};
-+
-+void ipmi_si_ls2k_init(void)
-+{
-+	platform_driver_register(&ipmi_ls2k_platform_driver);
-+	ls2k_registered = true;
-+}
-+
-+void ipmi_si_ls2k_shutdown(void)
-+{
-+	if (ls2k_registered)
-+		platform_driver_unregister(&ipmi_ls2k_platform_driver);
-+}
--- 
-2.47.1
-
+> >>
+> >
+> > Why not just fail with the appropriate test result, if chdir() fails
+> > here, instead of making a bit of a mess with odd void casts to a
+> > negated return value, and a reference to a compiler bug report?
+> >
+> > Really, Shuah is putting you on the right path here.
+>
+> Ha. I didn't ask to suppress the error with the cast. I asked
+> to check the return and fail.
+>
+> >
+> >> We check for chdir() in several tools in the kernel. Add a check for
+> >> it instead of suppressing the [-Wunused-result] - suppressing doesn't
+> >> do any good.
+>
+> This is what I said.
+>
+> thanks,
+> -- Shuah
+>
+>
