@@ -1,245 +1,121 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AF828DF1F;
-	Fri, 20 Jun 2025 14:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFAF28CF73
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430592; cv=none; b=dQd6+/0qshCHIhHlA1DUe+7lwCJQGV2W1OmfDAbicCXvphiw7QCjG/9zDppHuR8R5p0JQcBTKzSjUYOIVk4LXuQeWyApoVzC2QaCzr3C1lRz27keaj5PJVG6EsC9OcAWQrmdRRcv67vSSpT20pqIZEHhnsO6Nj76uPkMm1Gmet4=
+	t=1750430606; cv=none; b=knZYlnovjjPMtrd0Ib5/U1lk4run+WQHxvFIPXSTvTATYtqkf94Zml4uG0D/c1ip81JJjxQt8/XKyR3ghnxbnpkcq7iCqfcKg04cMLgv0BrBbV4ToSnKsF3VXPNEENhSFko6860EgAzjplP095ftvLuvriWNLWlDyiHFS3ZgNTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430592; c=relaxed/simple;
-	bh=XA2XtaQFY5JwiKn9pbwDxeF/R6eSdkFkct68OHPhRvI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=psv6iu0zkdzhkGiQ1abcoyyAa3uB56Bh6lIMgS8u6LeTpsSKUfbXqaTinYmtBDMUOVG7L71/W3nbOsFC8CiMqI95ddR62V0UMSgF9BzBRoJlAf77Yi2bAD1iFXKA96g/Z41UTOonfJuCXKDOm5wnW06SYBX3AmI5ehCvOafiq/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hb5o0dc5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GK+xBRhv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750430606; c=relaxed/simple;
+	bh=GaZeC3b19Lss9cuHmvYQt3eAyVG70HYyhb4xdv8u7pE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jxu+VApxSTdZQ2FcTy1RP1plOLzHxgZxmMxq0VB/SchEviPN4D37gtHZHYwJkht4FPufsPqoJshvbf09uw6GOrgHrbrjvfeNeGdV/FIgEvJE608fv3phw3G4a2kKB8YIZI4hYXwDzWsQwwZAKfcO6RHY1gvQuCpN3xneibk7+CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Zl3GmeIu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hb5o0dc5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GK+xBRhv"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750430588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zf9eZNGS/J7cqsYhd+Ez8QubB3SKjLSoDlWDiWnAjOA=;
-	b=hb5o0dc5GvKPdYV2/5l5iL+pdghzJ2cRGQIbp7KrHSBtdO/MvYQA9hh0euy5xWrNs0MPpg
-	RJU0iL6518QlFrA1pAP7KYd/L+m8HX1RZQSqEWaVhhxDWnphvEtVas/jU/v33PqkNo4p/w
-	40jWxyWIXW6IBniJKMlSY3cetMBiJcGrOnGX2Xs2vHEHEUTXEVlDpZytucx+jIxnwveFTq
-	BZJA1eQMDblJv1+5SDfDNEMJchkbmNGr27nSwY6VaSoVmE9guI6vTlXJWRplUxCfPC/7ww
-	RlS3OC5noZq6jer3COwBLhR0eLTaieuys/mBmz0Ws3fNPoPKuu/Is+R12ktaFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750430588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zf9eZNGS/J7cqsYhd+Ez8QubB3SKjLSoDlWDiWnAjOA=;
-	b=GK+xBRhvIL3VuhN/qjyFnX59zi7Ek/5vSo7O6W52qAcr05hqeOrgmxcBFIwe5uMC0oARw/
-	vIV++n1IzWc76PCQ==
-To: Petr Mladek <pmladek@suse.com>, Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Jason
- Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>,
- Douglas Anderson <dianders@chromium.org>, Richard Weinberger
- <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes
- Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
- linux-um@lists.infradead.org
-Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
- suspending/resuming all consoles
-In-Reply-To: <aExBo-8cVOy6GegR@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
- <aExBo-8cVOy6GegR@pathway.suse.cz>
-Date: Fri, 20 Jun 2025 16:49:07 +0206
-Message-ID: <84y0tmiidg.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Zl3GmeIu"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KDHOFe018584
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:43:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=YAhoTHSslWHI/eVI5RR5ldeEIDPqTzprLbe
+	uErvpeQ4=; b=Zl3GmeIuf0dgfyvT0aSr9VnNCZ/6LpbW5f9OlDK4aCKSHamBuJz
+	uPMG4E/kYChX8HWWeUK4RdZwyZdp16pbU9ZqiVF3ZO8p5oOSLCYli7BqmPl5A89Z
+	n+WvQpRnjPXFmJvQeawf1PEwUxD2Qc+Thy/HsfOqWhOwjf/yMv3UWDEbjs3owgz6
+	ua0YL+WHP7uD6us0YZHYgbrszrukHrC1Nz1eiDI2qpbSC1sHp8Gqm8H1wrLSilYr
+	q6iaeu91vOIZi8CkaI7SE5rD9jucllprKZ6mowldd3+nRBPwIED8TlTY8uQe7NzG
+	kvYifR59cDNOP+Qoaq/4V3mUii4UFLMXLAw==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9kk8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:43:22 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235dd77d11fso19676295ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:43:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750430601; x=1751035401;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YAhoTHSslWHI/eVI5RR5ldeEIDPqTzprLbeuErvpeQ4=;
+        b=rqMrsxdd3KoGmwWAnpfAwOW8XBBM24R3HuP/BshOEpdv7rRpmd5JoVQO3uaB26pKry
+         3mTVOX/bzcPcG5s0b5rbLW4ttmSW/aIIper16VuTIkNOWPsfEWc7WLj+OCaScXGM0B/+
+         I6cluZqCsX2IWhDXeuouHr8nsTio7OmfZLLdjLis0ub8IPjTaD4PQMx7QEFVlpMdohj4
+         mFprzgsEt98UjxSCPnbH+wtyRTfoE4zbJcCK58PgbGPgt24az/V6GafwnF9eMs+IixBh
+         jTzX/VDIVH34SgHKHaq38xbRJ99ImNkasSOfNyT0C/OOtMsXDboF8DLTG/73q7RwbtRq
+         P8yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJF9fuvSffdZWlLnsPaYNq/DH2nQNBUiSsHNuj/tVuO5WJ15WGgjpxaNUIz1+moTyN+9qnB//6Ywcv1kI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9Sb+siZ/Vv+L70345z16sT/peHo/R/4uodiSyeEyrfQZX9+7M
+	EF0GUHoRQX7/U7NTCCqh9vR3nE2cFm7sP1FthzZJTWcnu8FzIRZgUHoCaiCM0LoixD19NHS6qwj
+	xiFZFDpRclPjLI8mpqFqfRbnqDnJulgFjnlwxPBkRvOkz/86AbiU7DGwuhDOLixbyB80=
+X-Gm-Gg: ASbGncuWr+3B7O6iLkVovNIO0kX+WHOWnijbDPh4gmVve/BABSyhLZJKfZONHRxXwR4
+	aIwlU36Ge/SwW/H7WDvS9QTPcdrUsvdrr/tY9soFH/tHOoZZsDge/CuJk2hkSF6WMsfvWlK1ckd
+	6LjRtCvw53/XbqzZZcz8Vg4VydjDChba/VvyVZYLFUNggth8WyPjQcUFhyp+Tt6xBnS6OICB6nI
+	1A4go/oJfcWMnaf60YZMNeW9t5c+SP/JVwj2fAn5s0dwoO5etKj3U+VpjVQfxll02cx+5njuykV
+	WQBpF6gCtbyo5RGergjjhv0NDpl79AXX
+X-Received: by 2002:a17:903:320e:b0:235:2403:77c7 with SMTP id d9443c01a7336-237d997f3eamr46312805ad.37.1750430601395;
+        Fri, 20 Jun 2025 07:43:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKsJtreskCbpXvBM14rVJruFPEilAe5QcPvqswZYUDdmFWdwF5fK+Gys5jp5oB13njFvevOQ==
+X-Received: by 2002:a17:903:320e:b0:235:2403:77c7 with SMTP id d9443c01a7336-237d997f3eamr46312525ad.37.1750430601017;
+        Fri, 20 Jun 2025 07:43:21 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83fc120sm19865865ad.87.2025.06.20.07.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 07:43:20 -0700 (PDT)
+From: Rob Clark <robin.clark@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Daniel Stone <daniels@collabora.com>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        David Airlie <airlied@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 0/2] drm/fourcc: Add additional float formats
+Date: Fri, 20 Jun 2025 07:43:07 -0700
+Message-ID: <20250620144310.82590-1-robin.clark@oss.qualcomm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: CD1D23fw3JKhIYj0_lCg_arSec8WVmAl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDEwNCBTYWx0ZWRfX2Cwc+vS0h40M
+ 1CwRu4cCNkMXkJBx59UzzGUYW8Xc2gqrRTPRf6Uii4BFUxgQKuopS90EhngKwxGYtusNpbxmSZX
+ AXjhcUI6sn8ObSYZNO8ScCLuD650MmdgBLR3p3W0bYCFz1OJL4P7RlC6DhT+rIDDHHJVN93J9y3
+ XYOsp5LLhvZKGQB1HlaRjsKgmt52wiZAIBlM7tWC8KlQnE+yZ1VeFABDBX4LBBoD8lRXJ3Hne7K
+ zWvCwFmjOmGZZNZhoaqEkjXNI6MBBjb4V4pgLs8S/6ZZgbUssfAxvpJtvtoHCSZIVvivOXiUWTo
+ UVmqnd0NDvPQxCKa4P33K+3fq2J4KFuJSWrO0bAsbnyTqXVSmHHzAGgmYKAksSnsJ9U4TLYDz33
+ m6nMvYcP+RmXFguWJXWv20MbliIPM0936rLxHsanTMQ8BnI7B8jNCk/iEhtDr+q1/SEfKRbl
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=6855738a cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=wxOPRAE1bK0FDlpJDKYA:9 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: CD1D23fw3JKhIYj0_lCg_arSec8WVmAl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506200104
 
-On 2025-06-13, Petr Mladek <pmladek@suse.com> wrote:
->> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
->> index fd12efcc4aeda8883773d9807bc215f6e5cdf71a..72de12396e6f1bc5234acfdf=
-6dcc393acf88d216 100644
->> --- a/kernel/printk/nbcon.c
->> +++ b/kernel/printk/nbcon.c
->> @@ -1147,7 +1147,7 @@ static bool nbcon_kthread_should_wakeup(struct con=
-sole *con, struct nbcon_contex
->>  	cookie =3D console_srcu_read_lock();
->>=20=20
->>  	flags =3D console_srcu_read_flags(con);
->> -	if (console_is_usable(con, flags, false)) {
->> +	if (console_is_usable(con, flags, false, consoles_suspended)) {
->
-> The new global console_suspended value has the be synchronized the
-> same way as the current CON_SUSPENDED per-console flag.
-> It means that the value must be:
->
->   + updated only under console_list_lock together with
->     synchronize_rcu().
->
->   + read using READ_ONCE() under console_srcu_read_lock()
+GPUs support 1/2/3/4 component f16 and f32 formats.  Define the missing
+fourcc's needed to import/export these formats, and/or create with gbm.
 
-Yes.
+Rob Clark (2):
+  drm/fourcc: Add missing half-float formats
+  drm/fourcc: Add 32b float formats
 
-> I am going to propose more solutions because no one is obviously
-> the best one.
+ include/uapi/drm/drm_fourcc.h | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-[...]
+-- 
+2.49.0
 
-> Variant C:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> Remove even @flags parameter from console_is_usable() and read both
-> values there directly.
->
-> Many callers read @flags only because they call console_is_usable().
-> The change would simplify the code.
->
-> But there are few exceptions:
->
->   1. __nbcon_atomic_flush_pending(), console_flush_all(),
->      and legacy_kthread_should_wakeup() pass @flags to
->      console_is_usable() and also check CON_NBCON flag.
->
->      But CON_NBCON flag is special. It is statically initialized
->      and never set/cleared at runtime. It can be checked without
->      READ_ONCE(). Well, we still might want to be sure that
->      the struct console can't disappear.
->
->      IMHO, this can be solved by a helper function:
->
-> 	/**
-> 	 * console_srcu_is_nbcon - Locklessly check whether the console is nbcon
-> 	 * @con:	struct console pointer of console to check
-> 	 *
-> 	 * Requires console_srcu_read_lock to be held, which implies that @con m=
-ight
-> 	 * be a registered console. The purpose of holding console_srcu_read_loc=
-k is
-> 	 * to guarantee that no exit/cleanup routines will run if the console
-> 	 * is currently undergoing unregistration.
-> 	 *
-> 	 * If the caller is holding the console_list_lock or it is _certain_ that
-> 	 * @con is not and will not become registered, the caller may read
-> 	 * @con->flags directly instead.
-> 	 *
-> 	 * Context: Any context.
-> 	 * Return: True when CON_NBCON flag is set.
-> 	 */
-> 	static inline bool console_is_nbcon(const struct console *con)
-> 	{
-> 		WARN_ON_ONCE(!console_srcu_read_lock_is_held());
->
-> 		/*
-> 		 * The CON_NBCON flag is statically initialized and is never
-> 		 * set or cleared at runtime.
-> 		return data_race(con->flags & CON_NBCON);
-> 	}
-
-Agreed.
-
->    2. Another exception is __pr_flush() where console_is_usable() is
->       called twice with @use_atomic set "true" and "false".
->
->       We would want to read "con->flags" only once here. A solution
->       would be to add a parameter to check both con->write_atomic
->       and con->write_thread in a single call.
-
-Or it could become a bitmask of printing types to check:
-
-#define ATOMIC_PRINTING 0x1
-#define NONATOMIC_PRINTING 0x2
-
-and then __pr_flush() looks like:
-
-if (!console_is_usable(c, flags, ATOMIC_PRINTING|NONATOMIC_PRINTING)
-
->       But it might actually be enough to check is with the "false"
->       value because "con->write_thread()" is mandatory for nbcon
->       consoles. And legacy consoles do not distinguish atomic mode.
-
-A bit tricky, but you are right.
-
->
->
-> Variant D:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> We need to distinguish the global and per-console "suspended" flag
-> because they might be nested. But we could use a separate flag
-> for the global setting.
->
-> I mean that:
->
->     + console_suspend() would set CON_SUSPENDED flag
->     + console_suspend_all() would set CON_SUSPENDED_ALL flag
->
-> They both will be in con->flags.
->
-> Pros:
->
->     + It is easy to implement.
->
-> Cons:
->
->     + It feels a bit ugly.
->
->
-> My opinion:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> I personally prefer the variant C because:
->
->   + Removes one parameter from console_is_usable().
->
->   + The lockless synchronization of both global and per-console
->     flags is hidden in console_is_usable().
->
->   + The global console_suspended flag will be stored in global
->     variable (in compare with variant D).
->
-> What do you think, please?
->
-> Best Regards,
-> Petr
->
->
-> PS: The commit message and the cover letter should better explain
->     the background of this change.
->
->     It would be great if the cover letter described the bigger
->     picture, especially the history of the console_suspended,
->     CON_SUSPENDED, and CON_ENABLED flags. It might use info
->     from
->     https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.suse.cz/
->     and maybe even this link.
->
->     Also this commit message should mention that it partly reverts
->     the commit 9e70a5e109a4a233678 ("printk: Add per-console
->     suspended state"). But it is not simple revert because
->     we need to preserve the synchronization using
->     the console_list_lock for writing and SRCU for reading.
-
---=20
-John Ogness
-Linutronix GmbH | Bahnhofstra=C3=9Fe 3 | D-88690 Uhldingen-M=C3=BChlhofen
-Phone: +49 7556 25 999 20; Fax.: +49 7556 25 999 99
-
-Hinweise zum Datenschutz finden Sie hier (Information on data privacy
-can be found here): https://linutronix.de/legal/data-protection.php
-
-Linutronix GmbH | Firmensitz (Registered Office): Uhldingen-M=C3=BChlhofen |
-Registergericht (Registration Court): Amtsgericht Freiburg i.Br., HRB700
-806 | Gesch=C3=A4ftsf=C3=BChrer (Managing Directors): Harry Demas, Heinz Eg=
-ger,
-Thomas Gleixner, Yin Sorrell, Jeffrey Schneiderman
