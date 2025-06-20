@@ -1,113 +1,109 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7729E2E4241;
-	Fri, 20 Jun 2025 18:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFF91D6DB4
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443520; cv=none; b=smi0eoMqdAUb+EtvNpXNsfLMdr0DmEakmmAO98rWW/jFT2r3B7VP/ZxyIgJzjtrfUDHqSWC+xxdc11Lnw6BUlesrfMRfSsY9hKVF3yOfE5CjvXaGIw/8gmJ6Rhks7WK9qLk8r9B7TnOyoaBhTC8dzTvXZygFJz61Ew2HIprMwYE=
+	t=1750443644; cv=none; b=YtzNQEqOjLaFGtBWTCnhnYDlBWtPfVnRcTqIVFFw7LAgB4kENKMk8W8xq6zfGbn003/jaiVUqyk6lthC4luTKzPVO7+DXxSGARXo46R86orZa1pdzYeWM3UKBP+6K8HTf0l1TUMj7KclTuD6ZFDT1VMvay8CT1B+rLpx70L54DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443520; c=relaxed/simple;
-	bh=/NTEe4LX2305a/082hD0ht8grH/4J99i57GtOdHR6eA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K0GETpJY3yvLAlUZfcaLcO3gg0F2fhpHPWqQmUhBZSCWi487UBGUTaMxXn5qeGF36Su23VqdvzVHNnfhpYq2xMzgR+A0H4/qxQ5XTMpkCQxIbZ5BfLRRTIduYITJ1mQfGbAPJuloGQ+P0d9bl4mp/ck2RQ5hRwlA/yN9BvDvkhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URxGbqtH; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750443644; c=relaxed/simple;
+	bh=6u8C8M8Hg3lVZITVmwYlqyMTRE7W4LXnZp4RY2sG32s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tSVT8MXWCHEuMsR7bFGuCM6/X/itc0FNks0r2fYSyEiCW9FDH5Idujqiz4d1ggJD3HHVvB9KUzoJtKUnO3KeJFUFHdvk3PxFGSIRcpT8yIa7DQ1w8VYh4qmBj1jBg989VhY/wTYIohIj48oEtzEEesEXIgwmN4jt5rkCnKqxKeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=pQ20kFmX; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URxGbqtH"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a54700a463so1246512f8f.1;
-        Fri, 20 Jun 2025 11:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750443515; x=1751048315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HhMV4vNytMAJBBpa9RjxnYZPyihfBUf6q6MsqT87Yqc=;
-        b=URxGbqtHAwvz0KT1uNfUhpH+FAL6mpEfHvCpRqRyyINewHTuyrtsoV8vai0/klBJ9s
-         OOQUyZo6G+0wHTCsS60xjoKQD2suXFWKz4Q+hCp2Xk6VcSRwWfw6ILrsMVH8C1/vWQKu
-         DI0OlpGO2fQZNR5boKBXPbdLvtoBJlpiq4DEJ+rV+SXWafdNVcTSfsTlRlBAA3xXmvH6
-         27mj9Zuqyx36Duca/1b8j72ksEFWOII4wXnGZhMA2tr/RrBYNjMO4HXviUeMphEqI+D4
-         MbIgExCdNT1amCYPUq99Uim8bL5T1j6fr//MRR3HS+iNxAH8ky25X+k1rEIKZastTp3C
-         s1xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750443515; x=1751048315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HhMV4vNytMAJBBpa9RjxnYZPyihfBUf6q6MsqT87Yqc=;
-        b=cSEcM1q6ulfHo4PLFQpNPBqbE2hLtqGdiKLDc6ihLhHsJ5g0tYioA3LeK40RSsrlHG
-         iQ1FhOoeDaLE7e6lEFwjWhUEIOKaXxr3Z+i6tbw58sf6UJ1kc6heP4vw+fOmtW6gxlRJ
-         IlcYqYEkK5wmN+XZMlbEYfHb2iL2AY+N7t27DX3O7eYWH2fA75aZwgvDU67X9ok+5SRC
-         Lfwt06ce+/xmuDcfwZ+HAGkafDJTSfFIajaGZDAVtLgj26hkNay5z1LaNouYSevkrP2G
-         WBSC/mUVrgcyBv6oY41afuflz29OhftAhl5R81XkTyTiGXeliReEByCDTuucm12rIGQC
-         MrRw==
-X-Forwarded-Encrypted: i=1; AJvYcCV01UXPBWt8OwC/9mptkaBDa74Ab5Lx4CFLFphFvp8/eSTf/uoJHYaEjJrLa94CRNUDG8YVyYHHVAVPJthNaA5rhLCDQm9b@vger.kernel.org, AJvYcCWKtNJM5VJN1q/AUmwjuVZEKOd17p9j2E0trAFhiAYgkdkl1kCMMty4QuZL6KfK9zJGXcDR9Sy8ZBPszgBH@vger.kernel.org, AJvYcCX+puBlZ6ljYFeLcjhMdt44avlrObtyzkUonVUmSvyTVwpytezF9MdcLPra1lJzYqCyWTG9Fi91aMufpIxC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXt7Jc2lJsFOWiODoUCeYUHGy/1GJwcGFfJGVDcxuj+MIEcrtJ
-	OBSoZ+UNq1ybGbvsD8402K50RMcsG17qm9uudA2V4B2PgVYwtkbYxnbagkPx8SpSFb2b3GTOinu
-	wLtN922t46t0zSygMsjxCoRjAS1ynLB8=
-X-Gm-Gg: ASbGncseJttrpocMfGgm+5dqX3yKfVJSYGCE03eGtEpaTFZv2vON4AFBD3KHY0OGvrw
-	jR087xjFPIm5HsdNXcAPNSzj27IGqIDZb+FAPT2hE4knXkPGiZNbMZsBcxxL4xMAh41nkIBoKmh
-	OiuYyTHRmn7gb6JC0NCTMEjHKewnLOG+tIuxd7jZ+cCLyE9vbJVZLH0/v9V7DD6rRqTY4JP/liy
-	yPBOTj2778=
-X-Google-Smtp-Source: AGHT+IERIFJDmPI5Mw1ELsO//3RTQwrHGmyoE7/KP5ElN4R3G1PWZpc1vQ2nU+JugdZ2pTBPpOEBKu8rdfjZoKFkLyU=
-X-Received: by 2002:a05:6000:26c8:b0:3a5:8977:e0f8 with SMTP id
- ffacd0b85a97d-3a6d27e16f5mr3057936f8f.19.1750443514689; Fri, 20 Jun 2025
- 11:18:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="pQ20kFmX"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id D195FC0000F9;
+	Fri, 20 Jun 2025 11:14:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com D195FC0000F9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1750443293;
+	bh=6u8C8M8Hg3lVZITVmwYlqyMTRE7W4LXnZp4RY2sG32s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pQ20kFmXJ0sNCg9+BpP/rDrmO6aRZS/ClWxSQQTXeASQ04hg8zi24TJuiYikPtsDc
+	 2M4VTxF00PS78X/X+f+AEdGKC8RaA5XCHk71TXlBX5Qy1yTSTUbKqPIfsc6OoISBNY
+	 b7xAaXBHz7B4SPrmDh2fUFbBXC0CFEVQCtSMdlig=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id B4E28180004FC;
+	Fri, 20 Jun 2025 11:14:53 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Shanker Donthineni <sdonthineni@nvidia.com>
+Subject: [PATCH] scripts/gdb: Fix interrupts.py after maple tree conversion
+Date: Fri, 20 Jun 2025 11:14:46 -0700
+Message-ID: <20250620181446.477246-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619220114.3956120-1-song@kernel.org> <20250619220114.3956120-6-song@kernel.org>
-In-Reply-To: <20250619220114.3956120-6-song@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 20 Jun 2025 11:18:23 -0700
-X-Gm-Features: Ac12FXw3XqXyYvhqyw1ob3gjWc9KnOgD0rHoHKU7ZY9Bk53Kb-1LHiUxKohpROA
-Message-ID: <CAADnVQLCyk4O6w4WRxTKcQsEdZ3y6_CNc4mBF2ieT9m51E+2Lw@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 5/5] bpf: Make bpf_cgroup_read_xattr available
- to cgroup and struct_ops progs
-To: Song Liu <song@kernel.org>
-Cc: bpf <bpf@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 3:02=E2=80=AFPM Song Liu <song@kernel.org> wrote:
->
-> cgroup BPF programs and struct_ops BPF programs (such as sched_ext), need
-> bpf_cgroup_read_xattr. Make bpf_cgroup_read_xattr available to these prog
-> types.
+In commit 721255b9826b ("genirq: Use a maple tree for interrupt
+descriptor management"), the irq_desc_tree was replaced with a
+sparse_irqs tree using a maple tree structure. In the interest of
+providing both a minimal bugfix as well as something that is unlikely to
+break in the future, invoke the irq_to_desc() function directly from
+within GDB in order to obtain the interrupt number. This requires us to
+handle the gdb.error exception to continue walking the tree.
 
-...
+Fixes: 721255b9826b ("genirq: Use a maple tree for interrupt descriptor management")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ scripts/gdb/linux/interrupts.py | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-> +       ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_LSM, &bpf_lsm_fs_=
-kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
-, &bpf_fs_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SKB=
-, &bpf_fs_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
-K, &bpf_fs_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_DEV=
-ICE, &bpf_fs_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
-K_ADDR, &bpf_fs_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SYS=
-CTL, &bpf_fs_kfunc_set);
-> +       return ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCK=
-OPT, &bpf_fs_kfunc_set);
+diff --git a/scripts/gdb/linux/interrupts.py b/scripts/gdb/linux/interrupts.py
+index 616a5f26377a..81bfa09f45fb 100644
+--- a/scripts/gdb/linux/interrupts.py
++++ b/scripts/gdb/linux/interrupts.py
+@@ -7,7 +7,6 @@ import gdb
+ from linux import constants
+ from linux import cpus
+ from linux import utils
+-from linux import radixtree
+ 
+ irq_desc_type = utils.CachedType("struct irq_desc")
+ 
+@@ -23,12 +22,11 @@ def irqd_is_level(desc):
+ def show_irq_desc(prec, irq):
+     text = ""
+ 
+-    desc = radixtree.lookup(gdb.parse_and_eval("&irq_desc_tree"), irq)
+-    if desc is None:
+-        return text
+-
+-    desc = desc.cast(irq_desc_type.get_type())
+-    if desc is None:
++    try:
++        desc = gdb.parse_and_eval(f"irq_to_desc({irq})")
++        if desc == 0:
++            return text
++    except gdb.error:
+         return text
+ 
+     if irq_settings_is_hidden(desc):
+@@ -221,7 +219,7 @@ class LxInterruptList(gdb.Command):
+             gdb.write("CPU%-8d" % cpu)
+         gdb.write("\n")
+ 
+-        if utils.gdb_eval_or_none("&irq_desc_tree") is None:
++        if utils.gdb_eval_or_none("&irq_desc_tree") or utils.gdb_eval_or_none("&sparse_irqs") is None:
+             return
+ 
+         for irq in range(nr_irqs):
+-- 
+2.43.0
 
-No need to artificially restrict it like this.
-bpf_cgroup_read_xattr() is generic enough and the verifier will enforce
-the safety due to KF_RCU.
-Just add it to common_btf_ids.
