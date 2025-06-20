@@ -1,114 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596F51F03C7;
-	Fri, 20 Jun 2025 17:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CAFE56A;
+	Fri, 20 Jun 2025 17:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440690; cv=none; b=rw66UTOsN1Jq4b0E/R2we4C5pdeEXwPni+uugu9s1ezaUUlzIEGH8EJqeeMdTfi66Q/az/nkay68XWHyLYeTv55Vsjpdh53rZbD6sMEPcRC7g4rYYbbaIfo0w86hu6Qto9fq77oJwSTSmq0jrrRTrc/eDHu/fJmnK3oJ4ga4w8U=
+	t=1750440724; cv=none; b=bMsQ9vDYViRMGVkIggysvLuJ4Ofn42qRHV5TwyVDsvVCexAS86PfaRvHn38wOayaYrHmQYkCWmwLcSKLreOskYsqIZktjIaA+iXjEEbhxmruxbrnpcsfi3WByryIZGgWcyylD9B69c8mRTvF8vTnD2ZvWp/quqUydzj1NOqMLeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440690; c=relaxed/simple;
-	bh=MCJBmCnyJELdwnimYECzk7tUYaiPn0GwNjQCQ+gCzYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iULZEg9N+ZFG62u5On85eC1LJYdTt3195wPZcMNlgrnq6wHN9rlPqdNW2lr92BoMCcKlBgY4i99PsXK1cpICru0mmp+kDO+XCVg2gNxxvherJgJemjMDTQxCMNNnWIgdpHwfuUCxisqs1+GeQCzj9fZDOkpAffmqzuS1dbIUG3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFpWuaIJ; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750440724; c=relaxed/simple;
+	bh=VQXf0OScI8qbzE6+t1uRec3PMKWSQ3rs/L0oXJEmBy4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ew1fyWqeHCleJtN62ZqHKwu2e5AEjMIEm11VGl8Sg9ansBM20CI9nyFJYUHckGLuxySxtKswu6QJNY1shs+9WOmflfMpvtVroRo9mZOUJh9664y+HqwlNVHTi6Y2fvXpzmy+bBKAl9zZIahUgfFaCPFIiIq4pvfTfU77nZvUzPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc4J2vDd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFpWuaIJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750440690; x=1781976690;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MCJBmCnyJELdwnimYECzk7tUYaiPn0GwNjQCQ+gCzYI=;
-  b=SFpWuaIJxl7LuDi7zD3CMnO7i/ZYKsKtB1waLV//JrELfQLsyn0PCJDi
-   SJlcNnoywBrLIdc+fVx3aM63gcTZ0Lh8J+MoNGaxV+UMgYvSP05Z8bH4y
-   jX/16Vh2RtkQ3gf0Yf5G/zHOotw3u0qQA8pUfAHmYrdAhpxfyWpwFEBO6
-   HWGqKOZgm4AZUH7lWpIUmvRQkrgBuhhNNeLYeLZxEmJs7TyIoTqL5GCkS
-   KWm+ghiV3u8xM2FvfmskkVXCmcO0/ZhmKo9a2L4UNJFIqa/wJ5yXiZ/A9
-   uE4vYe1D7C1V3lebqFkDh7RGHIc9QMBVB1RqsHiSioaFRWkNIYJC83L8B
-   Q==;
-X-CSE-ConnectionGUID: BpBpmkrSTAOiWwn4XwHSAA==
-X-CSE-MsgGUID: azF0R2lKRum+aXzUOD2csw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52642485"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="52642485"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:31:28 -0700
-X-CSE-ConnectionGUID: 0nCgDcPRRmS29HR0Ox+sFw==
-X-CSE-MsgGUID: /U721Y/eRLC9+caxN/kv0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="151511068"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 20 Jun 2025 10:31:15 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 59B1A109; Fri, 20 Jun 2025 20:31:14 +0300 (EEST)
-Date: Fri, 20 Jun 2025 20:31:14 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-Message-ID: <tfpekzid4hu4xguq3fetosyltg3owjy2cactqklohfohalhbza@hx7qdrpcymrn>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <d3055288-c640-4df3-978e-abb97b1610e7@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc4J2vDd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034FBC4CEE3;
+	Fri, 20 Jun 2025 17:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750440724;
+	bh=VQXf0OScI8qbzE6+t1uRec3PMKWSQ3rs/L0oXJEmBy4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gc4J2vDd/ffRYTMRHW4o0khYZmGwctSzs9Ew9Fq+/O//m7NEW5VW2okaWU52ZGtdl
+	 ncGNuqliiFIqFPxtoMN98vlJPl7LU2aVocrQr8/vbZPPG+2R1JraSesXZbgvSZkdB3
+	 0iaC+MnTHGNgbnZW3SsYuSBpbiN8UHh/SuKyINOY7z9tZyxxCzwbkkbU70AIfPIpSZ
+	 fzyP+eEQFnRSnPuZ5njwZI8DSIHmj19rmUpDRqN4Amx/YSI+10oDpdr1ebTuKcinlC
+	 C1h+q8T2z8rlDuLBpncAT+HAYwAXJ8rk+cqd028HIcEGl/k8ZE7ZSYwfsjH7JFIcOT
+	 /BSrPmqHQl3nQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Simon Horman <horms@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Dawid Osuchowski <dawid.osuchowski@linux.intel.com>,
+	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
+	Slawomir Mrozowicz <slawomirx.mrozowicz@intel.com>,
+	Martyna Szapar-Mudlaw <martyna.szapar-mudlaw@linux.intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] ethernet: intel: fix building with large NR_CPUS
+Date: Fri, 20 Jun 2025 19:31:24 +0200
+Message-Id: <20250620173158.794034-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3055288-c640-4df3-978e-abb97b1610e7@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 08:36:30AM -0700, Xin Li wrote:
-> On 6/20/2025 6:53 AM, Kirill A. Shutemov wrote:
-> > diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
-> > index 250c10627ab3..9574c198fc08 100644
-> > --- a/arch/x86/Kconfig.cpufeatures
-> > +++ b/arch/x86/Kconfig.cpufeatures
-> > @@ -124,6 +124,10 @@ config X86_DISABLED_FEATURE_PCID
-> >   	def_bool y
-> >   	depends on !X86_64
-> > +config X86_DISABLED_FEATURE_LASS
-> > +	def_bool y
-> > +	depends on !X86_64
-> > +
-> >   config X86_DISABLED_FEATURE_PKU
-> >   	def_bool y
-> >   	depends on !X86_INTEL_MEMORY_PROTECTION_KEYS
-> 
-> You don't need to add X86_DISABLED_FEATURE_LASS, because the LASS code
-> is NOT optional at build time, i.e., you now don't have CONFIG_X86_LASS.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Hmm. But it is optional. It depends on CONFIG_X86_64. I don't think we
-want it to be advertised on 32-bit kernels.
+With large values of CONFIG_NR_CPUS, three Intel ethernet drivers fail to
+compile like:
 
+In function ‘i40e_free_q_vector’,
+    inlined from ‘i40e_vsi_alloc_q_vectors’ at drivers/net/ethernet/intel/i40e/i40e_main.c:12112:3:
+  571 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+include/linux/rcupdate.h:1084:17: note: in expansion of macro ‘BUILD_BUG_ON’
+ 1084 |                 BUILD_BUG_ON(offsetof(typeof(*(ptr)), rhf) >= 4096);    \
+drivers/net/ethernet/intel/i40e/i40e_main.c:5113:9: note: in expansion of macro ‘kfree_rcu’
+ 5113 |         kfree_rcu(q_vector, rcu);
+      |         ^~~~~~~~~
+
+The problem is that the 'rcu' member in 'q_vector' is too far from the start
+of the structure. Move this member before the CPU mask instead, in all three
+drivers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: move rcu to just after the napi_struct [Alexander Lobakin]
+---
+ drivers/net/ethernet/intel/fm10k/fm10k.h | 3 ++-
+ drivers/net/ethernet/intel/i40e/i40e.h   | 2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe.h | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k.h b/drivers/net/ethernet/intel/fm10k/fm10k.h
+index 6119a4108838..65a2816142d9 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k.h
++++ b/drivers/net/ethernet/intel/fm10k/fm10k.h
+@@ -189,13 +189,14 @@ struct fm10k_q_vector {
+ 	struct fm10k_ring_container rx, tx;
+ 
+ 	struct napi_struct napi;
++	struct rcu_head rcu;	/* to avoid race with update stats on free */
++
+ 	cpumask_t affinity_mask;
+ 	char name[IFNAMSIZ + 9];
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dbg_q_vector;
+ #endif /* CONFIG_DEBUG_FS */
+-	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ 
+ 	/* for dynamic allocation of rings associated with this q_vector */
+ 	struct fm10k_ring ring[] ____cacheline_internodealigned_in_smp;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
+index 54d5fdc303ca..c429252859d3 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e.h
++++ b/drivers/net/ethernet/intel/i40e/i40e.h
+@@ -946,6 +946,7 @@ struct i40e_q_vector {
+ 	u16 reg_idx;		/* register index of the interrupt */
+ 
+ 	struct napi_struct napi;
++	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ 
+ 	struct i40e_ring_container rx;
+ 	struct i40e_ring_container tx;
+@@ -956,7 +957,6 @@ struct i40e_q_vector {
+ 	cpumask_t affinity_mask;
+ 	struct irq_affinity_notify affinity_notify;
+ 
+-	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ 	char name[I40E_INT_NAME_STR_LEN];
+ 	bool arm_wb_state;
+ 	bool in_busy_poll;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe.h b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
+index c6772cd2d802..3f9521d4e899 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe.h
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
+@@ -507,9 +507,10 @@ struct ixgbe_q_vector {
+ 	struct ixgbe_ring_container rx, tx;
+ 
+ 	struct napi_struct napi;
++	struct rcu_head rcu;	/* to avoid race with update stats on free */
++
+ 	cpumask_t affinity_mask;
+ 	int numa_node;
+-	struct rcu_head rcu;	/* to avoid race with update stats on free */
+ 	char name[IFNAMSIZ + 9];
+ 
+ 	/* for dynamic allocation of rings associated with this q_vector */
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.39.5
+
