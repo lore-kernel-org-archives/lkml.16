@@ -1,163 +1,197 @@
-Received: from delivery.antispam.mailspamprotection.com (delivery.antispam.mailspamprotection.com [185.56.87.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51EF21516E;
-	Fri, 20 Jun 2025 18:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.56.87.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443366; cv=pass; b=dBvqu8kcHuWjzuQ9CjXfdVl4xVcKAzNwdeLVBUwANKNzBXgECydcC24arPLXtpOAduZpoRubbUUkA9+sfFjEO4bAtTGZu9dm2Mi2qaDssyEPR7q2/XFEtco1l5mSspRoccNU7H9D2Q9NuqNfrTk35absP5gK85ufutk6tqQT3bQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443366; c=relaxed/simple;
-	bh=5xnwn57hToUPm8QF6wQM7Wxtz/nSB0bNz8XLEqhjj0o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CcgMDchsYXBTd2L8fxSDXDggm9eVtlJFr9bFR/QVt2mlplpcj6w4w3UYTK9RY1l8W2P4KXkTabkf40QeUzinBP+2l/0ikr3GE5icY/sAm7wCyI8hyFOWs8W85HnAU9IAupff+trzKLW6i5AlOeR//Co13eii2z+VloDIv+Z6g4A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valla.it; spf=pass smtp.mailfrom=valla.it; dkim=pass (1024-bit key) header.d=antispam.mailspamprotection.com header.i=@antispam.mailspamprotection.com header.b=n4GjbPnC; dkim=pass (1024-bit key) header.d=valla.it header.i=@valla.it header.b=Ai0PM/MS; arc=pass smtp.client-ip=185.56.87.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valla.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valla.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68AD21D59F
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750443460; cv=none; b=ptSxRumhCgDflcEgxSnv8nNau69Cz4HAqXu3f7yRu0tkVffa54VffNvbo8daUZa1o8+t7zyPXZsgVyqiSn+yim0md83khD894pAnYJnMPnpSFoYlJa9+Jn6hNc1k6iFUGJ5T2w+ljrUGToxH+W00Luh+jf30oJgZmP05Xjsz4yM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750443460; c=relaxed/simple;
+	bh=J0/LzDB5Lh1XrCrxj+Jd3W69MZlCOE748yQMhLe42C0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Sjb8MIIWo+T9ndxcVBjEs7vaT4TkJsDqxWVst4RTx1+XbMw0V0RUdgmcmdcq+nGfSYDPzK0JB025QlTc0LbwhITmfwDrPLYk2brdsswFQ/urn+DEIMRhZ79hGjK5sotUDE6BDFN6Jalr2+NZP86p0YWhgPB8/O4qJym15VfQ180=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1cOcCDJU; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antispam.mailspamprotection.com header.i=@antispam.mailspamprotection.com header.b="n4GjbPnC";
-	dkim=pass (1024-bit key) header.d=valla.it header.i=@valla.it header.b="Ai0PM/MS"
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=instance-europe-west4-srw8.prod.antispam.mailspamprotection.com; s=arckey; t=1750443363;
-	 b=KeT/n9feh9wPIC40j49ZpdG6Nnp3UH0voYtAFPOeWprKWu3SYhgprSzz+XFA4bk/4iq+NJ0Qli
-	  q0HDf843vvKwTYa4SCag90guUGetZ1lQchQ8V3nDVf2mlJbVUCPh4vArYPQUJ/80H/CHjXcgsl
-	  +Yq/237vc292pC2/8dKUFqD45TTkopYeKgllpx4KzYNoeYU4YgPbfE0dZW5vnh7D3llAIw2Kf9
-	  khdGRvA3VaK5IEVEeZXH3eYwJxovRoGoAz3IpnQQ1awtVYvgHcMKWgia7uwcLxv52R5xelhLai
-	  VKv67uIXbGx+Y11pMoFCWl5TDgmX9GHMZm8bAF4hmm9vVQ==;
-ARC-Authentication-Results: i=1; instance-europe-west4-srw8.prod.antispam.mailspamprotection.com; smtp.remote-ip=35.214.173.214;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=instance-europe-west4-srw8.prod.antispam.mailspamprotection.com; s=arckey; t=1750443363;
-	bh=5xnwn57hToUPm8QF6wQM7Wxtz/nSB0bNz8XLEqhjj0o=;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	  Message-ID:Date:Subject:Cc:To:From:DKIM-Signature:DKIM-Signature;
-	b=Z0qoFNAr1t1IdGLay//CKw5YKYNwmF4Hd2CvJTOO/ne0Ni0XQV6YnZJ5b8umt+mKx3nEDTY+ul
-	  2gh1Rpb8k2BUxOviCvyf76ZvKmcVi2VkrtW49MOrs8dX/BL/ybbTWk+tLKoGU6d0N7z+F2XtbA
-	  N55FQ1N5EhK6iHoLtsiIXaIlUFXEEuWjXeH4XFMESnjRYGqFUp2/k2XErPqPrVGkF/eo6MJmS5
-	  e1na/WvFtrVc+dXOvaQXs5qzPiRROWPHhP0FSR6fB6ARY2NDZfsgtDkDRg4/8VwvTF57BNDWp8
-	  1S/V7Nxz8ky3yid1jCOmkg+9KbT/Bvth5BX4aSImRYWwsQ==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=antispam.mailspamprotection.com; s=default; h=CFBL-Feedback-ID:CFBL-Address
-	:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Reply-To:List-Unsubscribe;
-	bh=3LVEzoRSold9GVypbu5ltp+xX0GVkhV3+mynLXoiQZA=; b=n4GjbPnCloUpXz4rNw7cWhCIP7
-	Gv5+coj9Veu7Ymm4XagwPo/SBLCu/KUBjHBQk5AkkHunVKdpI3HSTBg/jBvMdL27O9apzm/wiSbI1
-	gvCAB+mi03u14W6XBeh9ZAme+Z6l9rmivf8Ex0M/h/qRCnBHSmOb0mRBQUq+K3CrDktI=;
-Received: from 214.173.214.35.bc.googleusercontent.com ([35.214.173.214] helo=esm19.siteground.biz)
-	by instance-europe-west4-s8d9.prod.antispam.mailspamprotection.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <francesco@valla.it>)
-	id 1uSe6B-00000008F2G-1mcI;
-	Fri, 20 Jun 2025 15:56:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=valla.it;
-	s=default; h=Date:Subject:Cc:To:From:list-help:list-unsubscribe:
-	list-subscribe:list-post:list-owner:list-archive;
-	bh=3LVEzoRSold9GVypbu5ltp+xX0GVkhV3+mynLXoiQZA=; b=Ai0PM/MSA3RrtHq/pVxozvFBb1
-	eYVoaJKyULwWR+OuPDhBoQCzgNUu84c0SH9K0+RYSSZOUheO9JMqU/Ajm6YFQeJGKiVD7OFwd+sSb
-	ImY9RfmBPzb730BHd6NwTaOM6tWfPejdC2ZQfMLBmdJhiPvYQs6j0qO+q2GmeZE/q8Kk=;
-Received: from [82.60.196.243] (port=62607 helo=fedora-2.fritz.box)
-	by esm19.siteground.biz with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <francesco@valla.it>)
-	id 1uSe5y-00000000DoG-1ZGg;
-	Fri, 20 Jun 2025 15:56:02 +0000
-From: Francesco Valla <francesco@valla.it>
-To: Sebastian Reichel <sre@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
- linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- linux-pm@vger.kernel.org, =?UTF-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
- Guenter Roeck <groeck@chromium.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
-Subject:
- Re: [PATCH v11 6/7] power: reset: add PSCR NVMEM Driver for Recording Power
- State Change Reasons
-Date: Fri, 20 Jun 2025 17:56:01 +0200
-Message-ID: <3135893.lGaqSPkdTl@fedora-2.fritz.box>
-In-Reply-To: <20250618120255.3141862-7-o.rempel@pengutronix.de>
-References:
- <20250618120255.3141862-1-o.rempel@pengutronix.de>
- <20250618120255.3141862-7-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1cOcCDJU"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747af0bf0ebso1597335b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 11:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750443457; x=1751048257; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AoOqUmI/ukeAvOCDfitszVNrmRf7QCXDZ9hIanYDn+c=;
+        b=1cOcCDJUcTwMR+oD+jY2XiyKO+stmrnQ0pIzqKaa9zfmcz7W0XKvqaOm+0Iteu9g+0
+         xvNUmLt05Yvxk7Uy/qlPIsAPy5AsOLWZrrwUr5rzqXLCnbYfwHWzHEyFc897/ueVR3Bb
+         GBjHvf4Bm3aq0Spe7OhaYA65EdclcVmpLzU7NflZWVAs2NkLKCzZqpMqKIGtahkfom73
+         LDX7xRWD0lKzrf368yv0fOr6F0Gix2ZORJZ3qp6Bweldf3DRiEO62BF3Yiuhx9ac/Mwi
+         4MwflAW1Hiy2ctcWvDI5cjHrVsJyBAwNd5hdoykCFqq41OQc03Ho42MxbB1C7QeisU6K
+         uxxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750443457; x=1751048257;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AoOqUmI/ukeAvOCDfitszVNrmRf7QCXDZ9hIanYDn+c=;
+        b=nzjMJ5tPUFVo1OGXpOcfPMranxvKP29fiJczPxB8BNMxxysIpop1Ri7sy5j7kjmJq2
+         carj3LV82IKvSFSR1s6m6SwOKqp9QFLJ3z+CZQ939f4DpNFqpQliKQ9/UTmgcCrkcCs8
+         59PvkVhFoPvXreXjevPd+uK3fhmTBX+hLDKxZUd6lbfqEBBRTsUyXIxl3qgWgrGTDdu1
+         1U1DKNssDiViyZbhoGNpCJQ8bsQSo4DHKyrohaZ8rdrDfqXvJALikZMeiliaoIx++BfP
+         XUCdqkCZHiMjGoUuw4BI7U+iY03OrtljwxJDl8tdQtw8ftG+23brHggHqmFHu0cSCgRr
+         0xtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ4K7LMRG4BhnzDSH24lAUAKMrL+dLwhJkhHqHCmtURKWOrUSsdKmMV4ic8TbGMl7AvROkJkfnqDBpU7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySYlCkRlxly3UN1SXCVxtjlzCB+Q+R8k2tEr3jwfJHItjVdT1n
+	9ibr4fAlZxfC6hLnzqPZdziYs7xNN/Lj/UdxorxIPGTIcHpxw+Vrdh1PpCcZZgtL34pvxKMrZqM
+	mOrKjPpB2hGXZIBSEh0+89HvTUZAQmw==
+X-Google-Smtp-Source: AGHT+IGLyMBA9YVtduYhTCnTre04zoapWO94rFAMkDl8DZB2kVIM8sEEP0xqi2SKfllFUVq4GFuWa2lUG16t4cETsX4=
+X-Received: from pfbly4.prod.google.com ([2002:a05:6a00:7584:b0:749:d28:4ca2])
+ (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:238c:b0:742:ae7e:7da8 with SMTP id d2e1a72fcca58-7490d64699fmr6106675b3a.8.1750443456920;
+ Fri, 20 Jun 2025 11:17:36 -0700 (PDT)
+Date: Fri, 20 Jun 2025 11:17:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - esm19.siteground.biz
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - valla.it
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-SGantispam-id: 2ae7087a56985d2acc2a7b87f96cc4c3
-AntiSpam-DLS: false
-AntiSpam-DLSP: 
-AntiSpam-DLSRS: 
-AntiSpam-TS: 1.0
-CFBL-Address: feedback@antispam.mailspamprotection.com; report=arf
-CFBL-Feedback-ID: 1uSe6B-00000008F2G-1mcI-feedback@antispam.mailspamprotection.com
-Authentication-Results: instance-europe-west4-srw8.prod.antispam.mailspamprotection.com;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250620181719.1399856-1-willmcvicker@google.com>
+Subject: [PATCH v4 0/6] Add module support for Arm64 Exynos MCT driver
+From: Will McVicker <willmcvicker@google.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>
+Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>, 
+	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	John Stultz <jstultz@google.com>, Youngmin Nam <youngmin.nam@samsung.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Oleksij,
+This series adds support to build the Arm64 Exynos MCT driver as a module.
+This is only possible on Arm64 SoCs since they can use the Arm architected
+timer as the clocksource. Once the Exynos MCT module is loaded and the
+device probes, the MCT is used as the wakeup source for the arch_timer to
+ensure the device can wakeup from the "c2" idle state.
 
-On Wednesday, 18 June 2025 at 14:02:54 Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> This driver utilizes the Power State Change Reasons Recording (PSCRR)
-> framework to store specific power state change information, such as
-> shutdown or reboot reasons, into a designated non-volatile memory
-> (NVMEM) cell.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v6:
-> - rename pscr_reason to psc_reason
-> changes v5:
-> - avoid a build against NVMEM=m
-> changes v4:
-> - remove devicetree dependencies
-> ---
->  drivers/power/reset/Kconfig       |  22 +++
->  drivers/power/reset/Makefile      |   1 +
->  drivers/power/reset/pscrr-nvmem.c | 254 ++++++++++++++++++++++++++++++
->  3 files changed, 277 insertions(+)
->  create mode 100644 drivers/power/reset/pscrr-nvmem.c
-> 
+These patches are originally from the downstream Pixel 6 (gs101) kernel
+found at [1] and have been adapted for upstream. Not only has the Exynos MC=
+T
+driver been shipping as a module in the field with Android, but I've also
+tested this series with the upstream kernel on my Pixel 6 Pro.
 
-Tested-by: Francesco Valla <francesco@valla.it>
+In addition, I verified that the Exynos MCT module cannot be unloaded on my
+Pixel 6. This is due to /sys/module/exynos_mct/refcnt > 0. So if you try,
+you'll get this:
 
-I tested this on a i.MX93 FRDM using the on-board EEPROM as storage and
-a single-byte cell. Unfortunately, the on-board RTC does not have a
-scratchpad.
+  root@google-gs:~# rmmod exynos_mct
+  rmmod: ERROR: Module exynos_mct is in use
+  root@google-gs:~# cat /sys/module/exynos_mct/refcnt
+  9
 
-PSCR was set in two different ways during subsequent tests:
+Thanks,
+Will
 
- - manually from userspace
- - simulating a over-temperature condition through the emul_temp sysfs
+Note1, instructions to build and flash a Pixel 6 device with the upstream
+kernel can be found at [2].
 
-In both cases, it was re-read correctly after reboot.
+Note2, this series is based off of krzk/for-next commit a15edf91668b ("Merg=
+e
+branch 'next/dt64' into for-next") with [3] on top.
 
-This will be very useful to detect and debug anomalous shutdowns or
-reboots on the field.
+[1] https://android.googlesource.com/kernel/gs/+log/refs/heads/android-gs-r=
+aviole-5.10-android12-d1
+[2] https://git.codelinaro.org/linaro/googlelt/pixelscripts/-/blob/clo/main=
+/README.md?ref_type=3Dheads
+[3] https://lore.kernel.org/linux-arm-kernel/20250602151853.1942521-1-danie=
+l.lezcano@linaro.org/
 
-Thank you!
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Donghoon Yu <hoony.yu@samsung.com>
+Cc: Hosung Kim <hosung0.kim@samsung.com>
+Cc: kernel-team@android.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: John Stultz <jstultz@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Youngmin Nam <youngmin.nam@samsung.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
 
-Regards,
-Francesco
+---
+Changes in v4:
+- Missed the "v3" string in the previous series for the actual patches
+- Re-generated patches with --base a15edf91668beefdb5171c53fa698c9b43dd1e0d
+  for kernel test robot.
 
+Changes in v3:
+- Rebased on top of Daniel's timer modularization prep series [3] and
+  krzk/for-next commit a15edf91668b ("Merge branch 'next/dt64' into
+  for-next")
+- Added owner references to Exynos MCT clocksource and clockevent objects.
+- Dropped #ifdef MODULE conditional section in favor of just using
+  module_platform_driver() which will properly handle setting up the
+  of_device_id table based on if the driver is built-in or a module.
+- Update commit message for patch 2 based on John's feedback.
+- Dropped DT change from v2 as it was picked up by Krzysztof for CPU Idle.
+
+Changes in v2:
+- Re-worked patch v1 5 based on Rob Herring's review to use the compatible
+  data for retrieving the mct_init function pointer.
+- Updated the Kconfig logic to disallow building the Exynos MCT driver as
+  a module for ARM32 configurations based on Krzysztof Kozlowski's findings=
+.
+- Added comments and clarified commit messages in patches 1 and 2 based on
+  reviews from John Stultz and Youngmin Nam.
+- Fixed an issue found during testing that resulted in the device getting
+  stuck on boot. This is included in v2 as patch 5.
+- Collected *-by tags
+- Rebased to the latest linux-next/master.
+---
+=20
+
+Donghoon Yu (1):
+  clocksource/drivers/exynos_mct: Add module support
+
+Hosung Kim (1):
+  clocksource/drivers/exynos_mct: Set local timer interrupts as percpu
+
+Will McVicker (4):
+  of/irq: Export of_irq_count for modules
+  clocksource/drivers/exynos_mct: Don't register as a sched_clock on
+    arm64
+  clocksource/drivers/exynos_mct: Fix uninitialized irq name warning
+  arm64: exynos: Drop select CLKSRC_EXYNOS_MCT
+
+ arch/arm64/Kconfig.platforms     |  1 -
+ drivers/clocksource/Kconfig      |  3 +-
+ drivers/clocksource/exynos_mct.c | 75 ++++++++++++++++++++++++++------
+ drivers/of/irq.c                 |  1 +
+ 4 files changed, 64 insertions(+), 16 deletions(-)
+
+
+base-commit: a15edf91668beefdb5171c53fa698c9b43dd1e0d
+prerequisite-patch-id: 0c5b7e9fb27295e0c125c537ac80d1eb16cef60d
+prerequisite-patch-id: 6a9b683baee83ddc2b2fada31479b27b53469759
+prerequisite-patch-id: b9cbd59ff2f4c905001ecb02868d20fb004034cc
+prerequisite-patch-id: cdde1a76624089aa818cb35e612f880107bdc073
+prerequisite-patch-id: cec67e07038c7aa93a2b53879781626d738cd199
+prerequisite-patch-id: 8fda377fcaf407026f04f2a547086cf1ecf4efc9
+prerequisite-patch-id: dce925ac224bb361c74fdb23126fab53e7c5c26b
+--=20
+2.50.0.rc2.761.g2dc52ea45b-goog
 
