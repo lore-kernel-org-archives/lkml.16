@@ -1,96 +1,70 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16BA1FBEB9;
-	Fri, 20 Jun 2025 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386EC1FBEB9;
+	Fri, 20 Jun 2025 10:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750414491; cv=none; b=uUaWSb06yTe4auTyqII/i7CcIAqA6G1M95v4UxvwtoTTErkE6dFELB7DPwCNaqp/dS3LRJYA7Qjyimh58nb/CVmr/NLM0Z6l5udSCqd9oXGZqTPrFvqixuD1akA2B08ewOcO06a5I4W0T1icmVT6A3/sYBoRV2Pt+BR8uUli++o=
+	t=1750414497; cv=none; b=oXZjlHf+FCk4Y+GwPUeogV2R3HNgK5LuAB6nePpESM1NDDLO+H5cQriw3KZXZO9nnRRt4cboH3aPVJn9q3YhG3Hl9LX2F5+hPLOMJuTrFUQaLi+v91Fv4ARp4abu9uMaASkSrRqEVVuUNZLGWwggDuRsCLpkl3cl/tKS3mD2xqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750414491; c=relaxed/simple;
-	bh=0/NydzBglUSC3hLY6MPcT/TYFF4UUzGCsloUfeL5Veo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bqgnIhQfXy0RHjis8qdbWt4/CkHcndtlYVLnVI0UquCxG7S4SDnDfO8dPdaW9qWNJYD2QIrh6g48Lg8+M2M1SwuUiXCUzCf6GCM7oORPmPpb5vspfDYB1CLEGig2+uV7RBUnPxwL13p0o3iRwob301BvwCsMzFd58W/t/ynpwrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P44K86L3; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750414497; c=relaxed/simple;
+	bh=gmYnWUgVbpVz71xZgezEBy5kzOlS3gfZl+tiLY5ZUEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NuG0qFL3I3gXz7JFlttMEidecfvtgwj55/xjoE+KfYIo5AoSqLGPzejfawz+M7Oux9Omkwl+dVjM3bALvKa2ZlvUc98DTL5Zih9TtASV5u+szV2sMbVwEAbzgl/YZ86KttwLh81Ajb0R1xjm82AwfBD9wMtUcDXCh9DrHIcbbKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjA05+o9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P44K86L3"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-313290ea247so294411a91.3;
-        Fri, 20 Jun 2025 03:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750414489; x=1751019289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0/NydzBglUSC3hLY6MPcT/TYFF4UUzGCsloUfeL5Veo=;
-        b=P44K86L3YNKZ/8R1kajnRJrDslwxwCvTTaMKy+RQRQanzLqnJVCw9VUEAmtAF9BNfW
-         AlntpnBxWBXjdNAO6ftNSBNHWx/dtgz1VBsuwM85wC6MZUjmmaYnCch1UyvCvgtqpNti
-         sgWoKIDkJKLpFOJni4HeuBGkGCNb+u8P1DagcKY4twimGdbVt65rTwRA/rUqJo+xNwdR
-         GuT/7QTRgSNojvVWPXJanUDLchgfbo2davAneWJWP2zYgjG4YJ5NoDtADMamvCYZcZjT
-         5WGNqRxFhFZSq3oSuaNiISEuBy6TUjVP+fhDzhoaa8sCMyRVpHrAp7vaRpuKi8Uk0LK3
-         HE6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750414489; x=1751019289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0/NydzBglUSC3hLY6MPcT/TYFF4UUzGCsloUfeL5Veo=;
-        b=st6AGtiNYwoe6BxxPLjU1iemuYXVbF6CYsvHrd5/agASx7Pi/ApRQUh8VC4Id6oXJo
-         Y+7J0GsHkDYJP6nzm5aai9iltEe495Kj5d+/YBY4RoBqwMJs/ToZ+5XLsVbv0qtzRmlY
-         QBtBFT9GaVAciSP2WoF7xmnKczUMZucrPxLsE04BpShtL28cVQXgI0zl+3+tolHwkUfA
-         zynVKihqGswPe/rrX+sKCkU1GESrPqwh2BUkwcImBZEUsCxGbQ/QAars/QDlKVtFENXf
-         Nirjpfj+iqyALMUgmBB13PukyJZGSd6YRxaFOp1oKrYULBZQPxGA/wqSzncgS/jFGlJm
-         Qq1w==
-X-Forwarded-Encrypted: i=1; AJvYcCW9nnauwb18KF9qtKF6GIJgKKu4Fb5w6e/dI0IJnZmaJ8ZARA1uItmR7XrjX7enXZJjl/PuSbLqrP8=@vger.kernel.org, AJvYcCWFQlcd/xEXVynVkP1CGZe7OVJHv7Rw7EU9abrnqnA/upb2z048RmZ0NIw3jBklljmrZ/iE+5iKiKgqLkg=@vger.kernel.org, AJvYcCXLxEsh5zLsdwubPH1jyqIgYdavQnSfNsy/u4cBsfo2SAHfOdmCbu1FzimQXz2nd+AcNo6uS86mfDwCkEB+mFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxugeo51A17+IhSqaBqmjBh68eyfz4nFLuL5k7JdEIDe4OkFhRG
-	aIwD2esxyAmLc14LGpXovEZriVFgsv2wB7WtKQRp9u5BdFlTuTbcd8p8FQw9iMHlD0u1qMzZzd7
-	48G36IMnBkejYsKDKpWNHWHcWo8hdPc0=
-X-Gm-Gg: ASbGnctiEoULDrcp/f2zDzpa+TTVmvU0IHBEoN1FYSDeqEOmrI7FTFoYEm01Fud7oTj
-	V2LZGwqpZnDUro2L9AQfdO7Y1nONOYQp93b3XfEM5APja0DrJ93WREVtOa+RTi5egiiuNhg+yMN
-	97rK6TS+zQAc2mrHtjiWtMsbcZGEyH0VKI9Rkv3dxAOYRGfUOyX7t5
-X-Google-Smtp-Source: AGHT+IGLbG03uIdIKjDmZb3/x7pPUaTgeFpfxlRzklJ39io1r9KXnw5eU12ARqN276HzeEn9SJ07vWuNIzIeJzcnrm8=
-X-Received: by 2002:a17:90b:5105:b0:312:1d2d:18f8 with SMTP id
- 98e67ed59e1d1-3159d8facf9mr1331919a91.7.1750414489032; Fri, 20 Jun 2025
- 03:14:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjA05+o9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC81C4CEE3;
+	Fri, 20 Jun 2025 10:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750414496;
+	bh=gmYnWUgVbpVz71xZgezEBy5kzOlS3gfZl+tiLY5ZUEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fjA05+o9aVPlz0mihZQGcFmqCrQNFA5/9trIybvBNzEUaSPELT6dl9tjDAFu+UG38
+	 yjbceUiiBQVDtVq9NhqZxZUDxHOfCyprKmuw/CdEN7FDawNwRx43cmmrQhjdBNz/q4
+	 aU3wGpCAmz628B0L8f+3Gwa4TQywTxUOuktrB9NnfJkZiMI88PDDLEDU3xlg2TeXwY
+	 LR3W95HVKmiftR2yoEz1mflRLjRBCjCDJxOHwpQRZqHJWrcQGqnJDCmLBw8atrNBT3
+	 0Vb2dhgRBchc7NcT3JsA+hewmgl8Wa0uHQCIJIrbxZ1pAaXmmCoxc+qfNF8sdGjHs5
+	 v1w99bSVGxiDQ==
+Date: Fri, 20 Jun 2025 11:14:52 +0100
+From: Simon Horman <horms@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>, thomas.petazzoni@bootlin.com,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] ethtool: pse-pd: Add missing linux/export.h
+ include
+Message-ID: <20250620101452.GE194429@horms.kernel.org>
+References: <20250619162547.1989468-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620095920.20765-1-abhinav.ogl@gmail.com>
-In-Reply-To: <20250620095920.20765-1-abhinav.ogl@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 20 Jun 2025 12:14:36 +0200
-X-Gm-Features: Ac12FXw9NrQ7Z20VT84HWGtqBjMjNPitnvcngGJyK7jRgUS5odM-7SJJbs0OFNU
-Message-ID: <CANiq72=OdGRRkxdvSd5bLPkQcfXXFUj4_8LLjVONzpWx5--shw@mail.gmail.com>
-Subject: Re: [PATCH] rust: opp: use c_* types via kernel prelude
-To: Abhinav Ananthu <abhinav.ogl@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, 
-	linux-pm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619162547.1989468-1-kory.maincent@bootlin.com>
 
-On Fri, Jun 20, 2025 at 12:00=E2=80=AFPM Abhinav Ananthu <abhinav.ogl@gmail=
-.com> wrote:
->
-> Although these types are defined in a crate named `ffi`, they are re-expo=
-rted
-> via the `kernel::prelude` and should be used from there. This aligns with=
- the
-> Rust-for-Linux coding guidelines and ensures ABI correctness when interfa=
-cing
-> with C code.
+On Thu, Jun 19, 2025 at 06:25:47PM +0200, Kory Maincent wrote:
+> Fix missing linux/export.h header include in net/ethtool/pse-pd.c to resolve
+> build warning reported by the kernel test robot.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506200024.T3O0FWeR-lkp@intel.com/
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-By the way, thanks for sending these, and please feel free to clean up
-the rest -- we have a bunch of instances of this in the tree :)
+Hi Kory, all,
 
-Happy to create an issue about it.
+The change that introduced this warning introduced a log of such warnings.
+Including a lot in the Networking subsystem. (I did not count them.)
 
-Cheers,
-Miguel
+So I agree with the point from Sean Christopherson [*] is that if the patch
+that introduced the warnings isn't reverted then a more comprehensive
+approach is needed to address these warnings.
+
+[*] Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
+    https://lore.kernel.org/netdev/aEl9kO81-kp0hhw0@google.com/
