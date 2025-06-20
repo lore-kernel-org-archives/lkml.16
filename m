@@ -1,197 +1,277 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E887527E06D;
-	Fri, 20 Jun 2025 16:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435345; cv=fail; b=L3PYICVH+N5pEdtVRw/mmWbvR82NoI3XSXjT574ipmxjGyD9b3r7ihODZX4HQf6vcJTFPU+lri/KRgEnKsP3XKScZbhwCHiKNBSTPb03gFRUn8ocP+aye9HbHCJjujw2lpywXQr4Vsidu6lK5M8pNDogUfwM2/rd2JRkVNE9l1E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435345; c=relaxed/simple;
-	bh=ZVXZ/BiO0Z13kiyYSFhCmQmbWjpjeD0t2W7y5uER7hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWxbJPCsH2kdkYDdTJdvMZKXjGRQshDrXFvzRfCBIuZLcNBhOMDzPMJUw3DJge7mzPGgD5lLizJxtkR03SzWLHxM0eEEcXFylpvm2iZfGPjZPztqIwwiwwSUM9Y6h1COZkMAXtXB4vnXe6Dp6DaWP9R6hQCPcx2Jno73mUe6WUQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=lkRJ2hbD; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=O6YzjzZj; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBF119A297;
+	Fri, 20 Jun 2025 16:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750435384; cv=none; b=sswSssM0r9OmM0XweBaVCmzzQjm8p3Tn13OH8fG8cxyU4Cn6ZP8F10bYT1hFXmSwm9bFNhLNuyxHMAl1A/mgoT4zNTWLE7tuUZ761dZkY1/dTGehEjo8sr7KKdBiqkilBr2iVuDhLcRfi/NXduZQJOsXPw8eusBV1r3NWmXODjM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750435384; c=relaxed/simple;
+	bh=W3DvKeM4EqzLWasnxKnmL5cXYh+j/mu4ated+XvGcS8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=czn9gOQKHklmH9UUiqOPtj7UhU5B9/E5mA9a6clPa8fMvHpJQulZLqRez2cO76R5aKjwdjb3UR0ygkP1fS/8XysybsMOn8awVQ+OEanF0f/TbPiVpIttZLEQwZ1JupCJ7eYlD+naAZy6se/lVAFhlqncVBy1tXyAd6GIyMlr5CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKr5Lo38; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lkRJ2hbD";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="O6YzjzZj"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K5ioWg008732;
-	Fri, 20 Jun 2025 11:02:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=Ybncetze6ooH3NxPaO
-	5W1y2wICc4/t1f7kEjXGNZIQc=; b=lkRJ2hbDkXzj5Mb7f4tygRzDPxfQR10mfV
-	2HDMyupBkRfRfeP74k5iHKCju2/cVnq6Pw5thjSgOgxGkNLdQdCiWpwjE7JeR30H
-	BunzAAbJ5ILHUGUPPWffNA1P3RUYYhhc5o9ZJV7L4zgw5PEjrwz1mZqlrSAQngvK
-	IltQN5hHeSl/Nj9uw5nn7q6SKUI0uxwn06K1X33wIDUIlv+Poe52PcvFTHVptpwK
-	C8aKNpqSBYaoVbzZa+rUosWM2128NsIigIDB/xLvwauNjq7nrevxfiUb69plZhOJ
-	iYbMvd0438g26arbocmI7PidfCrBxiAG4smk0J3VRU7mobJoAf2g==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2137.outbound.protection.outlook.com [40.107.220.137])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 47bsfnvfsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 11:02:01 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IxKQ18rMkJsmvXCdWx3YrH60hr7U8jRu+I22sExi6vxDn+X3aH6Y0yrd993AeqrpqvrPYzmi6g3ESJqI1zcfMaJwqQV0yIuFhCKZICs3BM5Fli3/WO2e+u4ZYzl72WiVOdYEA4op2nDQGEJDuYeYiTXY8D6u1E8fdatGUGrrrH//GU/ZSQYOoUjRM23V32TRIiqGFkS7UmTPwh7U9LGphxl1mrU6fpDpT6o0LzMGHs3VBGMwnm+M7vnNbnFxroR0QOe5G/Ltp4k3lbkWz8gINPhlZtIiKh97zrsYvVQScZecyn/WneuA/V8w2OFR1u5Vm1WjEqFcKIO4bk+z7JF3yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ybncetze6ooH3NxPaO5W1y2wICc4/t1f7kEjXGNZIQc=;
- b=JqrR/3ktzCtNSU1NGJsv97VkfYiH3kSMEuMmqDFhVHMSwBDd3r7igbioCWCYGI/rE2ihAXQEdZ3eILnTi/oss6CMWzDKDr6HA1yT2obqmM88UbP3VJtyW+ltpz1LFY96X4lRRtV4KsgIEGjZsqnuCgc6QmawD+kE5dr8cDRGR+nags4npRo432FAWoIuL8E2aWGuUP0aiIJVFciEcXt/QuwlxEFZZpxltUfSnzW4HUG1/TwLfUKGPGABa7YOUKtaEokn8KhjJo1bxusGHuCE3WZF1H991Nck3TAwf8pzALSjI8bnP14+zr5J+1fiUe14vSXMndRTV5LHcQqIbfe7VQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKr5Lo38"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a76ea97cefso21101751cf.2;
+        Fri, 20 Jun 2025 09:03:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ybncetze6ooH3NxPaO5W1y2wICc4/t1f7kEjXGNZIQc=;
- b=O6YzjzZjunAodfEFkGVLDDsSLqb1qlPRZAbYXexqFOMfcum9rHlImJHQsNhBI4cU+RaNyvUsoWL8hscnK5sMVDGoFt675ufXLx6QV6/54iFl7WNF3ehoUTsZPtaXbfs1bJu7P8swkg+1n6hTkGLXeu19Q/S1yggN3SgOK3do3no=
-Received: from BY3PR10CA0010.namprd10.prod.outlook.com (2603:10b6:a03:255::15)
- by SJ0PR19MB4638.namprd19.prod.outlook.com (2603:10b6:a03:279::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 20 Jun
- 2025 16:01:59 +0000
-Received: from SJ5PEPF000001EB.namprd05.prod.outlook.com
- (2603:10b6:a03:255:cafe::dc) by BY3PR10CA0010.outlook.office365.com
- (2603:10b6:a03:255::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.25 via Frontend Transport; Fri,
- 20 Jun 2025 16:01:59 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SJ5PEPF000001EB.mail.protection.outlook.com (10.167.242.199) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.21
- via Frontend Transport; Fri, 20 Jun 2025 16:01:58 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 9EA04406540;
-	Fri, 20 Jun 2025 16:01:56 +0000 (UTC)
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 7AE00820249;
-	Fri, 20 Jun 2025 16:01:56 +0000 (UTC)
-Date: Fri, 20 Jun 2025 17:01:55 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, patches@opensource.cirrus.com,
-        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shengjiu.wang@gmail.com
-Subject: Re: [PATCH v3] ASoC: wm8524: enable constraints when sysclk is
- configured.
-Message-ID: <aFWF84HMipnQTOxs@opensource.cirrus.com>
-References: <20250620021403.624303-1-shengjiu.wang@nxp.com>
- <aFUbGFNAISmamfv8@opensource.cirrus.com>
- <aFUfEgY9hfhB3lKO@opensource.cirrus.com>
- <aFVXLMtEOuXFL8B-@finisterre.sirena.org.uk>
+        d=gmail.com; s=20230601; t=1750435382; x=1751040182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rvqqy5YTKLkCqgHETfYa8hhkLZxk0yPmImTHTMo7/0s=;
+        b=NKr5Lo38ybJ/lZIdhjTcTVOPPCOrIAlNxKFbaa29WgANxbeB6i3ZYzb+z3+cosdvop
+         292vQDB7X8jb/XjRtqr7e+xHO6seGkWifC7fp7jLRd3crmtRm1sHlO11S0rBEU4nlaMg
+         g8xYzZK1ouCD6Hthm8hZHQvK57DYe86NjPe0Yyw9ClamO3iAo9VAtUzGNhUZcwKr0FhE
+         IIrOM++iHIg7T0Xqqr9BLftVFUFBayLoM/xarm20q0/iY/oPEKIMV6WRCtlcC8tjntdw
+         9F3OCEQOMimxoRCruM04ZRLmLBIaA+KwGzEpJWJZtJa521wmTXxYcMKveYRG3kKpbrke
+         GGhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750435382; x=1751040182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvqqy5YTKLkCqgHETfYa8hhkLZxk0yPmImTHTMo7/0s=;
+        b=qDbwgaf/VomVO960NvVMfEyd8TgBiPDP44ex6Mq+HQ9s3BI/HcG4wZCYPzzQuIWYg+
+         8iJ9a+vih6xe3nhT43W1smE2QrCuOoX80Po09apgbJl1WLXGS5NRJ5ibGfVqYZDLnhoO
+         Usv6rRhbPGKKjJeG3Ej5wDDP2Y06eJu8iSeCYP73wuzFCxhNHFEya1DIsB/Ct8F4g0C3
+         dN8voV6dFBk3ycsy9zaVIdVTPHW0+xpq+BA2CfmrN2YQHtvsZWEuDLnullVK7mQvbLeF
+         oL1CsoqLwokYyuQRnHemzTBiTku8M1L3TP+UHcyrwV1KzJRakhb9w7oaqxZGhO5iqGxW
+         yGIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+H3KxgbmictsqB0ONlnq4jOvvnn95hkvn+9207aqkj5i3wWMxECZOWFEcnAiLufQ22yCV6kMwlLsF@vger.kernel.org, AJvYcCWyDiMHyerDxIeBEPp9MaIeqWMwUXn2VrICCZuDYwydEH+zGH+3wxpZy7KmMHBi3zvKxfUkTMNatINMW+IX@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLzgAgPC2co3IBeXs5z/0E/IgTBiJj4z2ws4J4sGwiuvCmrb+e
+	G9jNd0Krar0+rCbvkI4yytw+PaG71BwOw5Ji38rEfBvQIqFzIUcrE8uijdQh5WhAZak1xtBLpWR
+	YKXoorC2aNJSK3qK2CmGbUiwJLjPCGFY=
+X-Gm-Gg: ASbGncszGV5uC0EkDjoJmGUJWpSjbyMLBfTv0+9YiBi94pSgmOAiQitnkl6jAl7bkWB
+	NfFiOFe9W5FjAE6ozpR1Soxgf6Fm1EKlMj+Pn7XTfHNZWpctyyp53zTFG63g8P9NBr2SIW254DU
+	ObTFgTZ68ntXqwEadlutbXev+nLT2bu1iBlc4eXjpKzfXy7tq3W8Toy9/j5enBGA2AfKbuOGTKc
+	gEy
+X-Google-Smtp-Source: AGHT+IEbRIf1llrIp083n5cVXqVqWOQqhIoBknN8uXJqch8RV+Pe1B/1Kqh6XJDtTUh7xY9AjMghXr/jUe/Nc2Ohsfc=
+X-Received: by 2002:a05:622a:22a2:b0:4a7:6ddf:f7d6 with SMTP id
+ d75a77b69052e-4a77a1f5fe1mr37932691cf.10.1750435381694; Fri, 20 Jun 2025
+ 09:03:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFVXLMtEOuXFL8B-@finisterre.sirena.org.uk>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EB:EE_|SJ0PR19MB4638:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ce662b6-fa33-4117-f1d1-08ddb013c942
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|61400799027|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UaN7GYD8c0KSkoTfGhMGG43Aqjqjd443zaN576+Pm1SOR4GMoY0foPzgaTHJ?=
- =?us-ascii?Q?syAhhPZYt/KnSLFoxaJe16vBADIPqcQsyk532kcGOfTvz0M744dXUbJITZUT?=
- =?us-ascii?Q?xRgHXv/SSP1kJaecM1zuswW8N0kYYzcRCUbVerRLFz5wsGho5yJoFg4HBMEB?=
- =?us-ascii?Q?uYRsSjRPiYMuNvtarOhob94g0nNgcPPpKaTTEstWCm3/3p4Gn0DmlX3WaKTC?=
- =?us-ascii?Q?HBx49N0AXAPnap8vj3Yod+x/SRDy9GncGGq+J8WPaBe/8U1M+Suss8x+01Mb?=
- =?us-ascii?Q?vQXMjE7cLIHkbUkAiIayZgp2rxLlA/yoC9e8zCIKmwiUeeBHUfvFWjm6ToZH?=
- =?us-ascii?Q?iZmYZSaD59tKwQkHHlV68zhF3vRFslAzTzyhWNRwt2/8+KJ3RuCrvbb19bEY?=
- =?us-ascii?Q?JIwURYwQh8CAN/RoKvDDj9bIUc2nGJWzMOIF8o46lShyHr/PizEuZR1Mld3K?=
- =?us-ascii?Q?ctEyOVqX5gimQW0+uyAQUrDpJKLxaj7/qLOizZ02h3v2ACdF4TkJRWPaTARI?=
- =?us-ascii?Q?YTxfMVR2IuthN+9p56rSgDjaz44COwgDdzOCVlO3Ni0NpDX4KDPsxM2SYMKv?=
- =?us-ascii?Q?AOvP+HgtIIhI0ZcvkJMc9I6kF63mWEEI4Q91CpB8mOhVZr8qE++051fdIIXz?=
- =?us-ascii?Q?A2uonB08iaSc6TAbbB0sVtcI3Ny+LxAI+0fgcZDXNaDY+lXP4s7DF7anQwqV?=
- =?us-ascii?Q?nfjVZwnm7/yp56sKJVZZt6n1KlDVPSzkRhjO4ZSoG9/rgcMfR2lVcvijhyX3?=
- =?us-ascii?Q?XTEkBUZKDQhrCrluU0eOmAi2TUPyuOq43nyuRSA7T9ElvsuDOQJ4T2rIXV0L?=
- =?us-ascii?Q?aNQ2XnC+Z3ib7dagR/PAdwRMeLLljfWZkEL+fjtPPWYBkEdMddiuu8nkN7iv?=
- =?us-ascii?Q?Yki2xaId4hzhhYLh/9g038Edi+/EAhMbFVhDBkubX/doWZO/WcK6vRqtGuKk?=
- =?us-ascii?Q?p0H2U92VBGWRHIjJg5boO6URGVvED7Nj2mCrHNvKMNwN6Nfb+LvM6TPFgIne?=
- =?us-ascii?Q?1D3wLGriTfXdhGREphUFbdwgJ0wkDbaqUUxHqNGcyw05edUZgqfQVXYWz4Km?=
- =?us-ascii?Q?gjS6hY5A/VERK4+LWbOOlP3Bswivhr1TuDHJ0+xKPz4ZlRzt7AHTQpasMJpP?=
- =?us-ascii?Q?JZ/H3fMJsBIXvezbPbdDM1Qf1fJz+xnvoLOtldosMu7RPrBeqMe33v+o7D08?=
- =?us-ascii?Q?xiJ+V2z+Wsasr+FM+cSL9MSo/Gyg0dCKiySVQkrTl5pqaWskc1oGWy/J0sGB?=
- =?us-ascii?Q?kRq5/sh46RuGpP3njvgJQO11OxFIXNdYNCoC3Qj66w1HqRlGxs4X7F6CBmtU?=
- =?us-ascii?Q?MSl+rK+2n4ngjRU6ymr9KfNWnGeHToQycl6Cp5B7rNIwvdgvo8z2UDYxVTwS?=
- =?us-ascii?Q?dKkeFdFCKa7h2b8OcqQOBaISCvqZObWIAe5mtrgV4ipe+Zyqtd3SpEOH/qsY?=
- =?us-ascii?Q?yQu8FxJQy9fNsi1GstDcUV1+KYqsTf8aGr38JctLlLB2CkcRnMFkjN94Npa7?=
- =?us-ascii?Q?jEWPYzvIRXbdkoP8alqY/UR0uQhKw4Th+XGA?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(61400799027)(376014)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 16:01:58.0545
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ce662b6-fa33-4117-f1d1-08ddb013c942
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR19MB4638
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDExMyBTYWx0ZWRfX0G8Sni3becjb fjakd7TRyYJKONzzkI7FTRY4J/jbhX21k1K0hQzIqNM8wsMw9TcbPL/MwIAl1/fllffOUGRhHeg J5o0IX3NKy8xIzJfMjLO+KKVlc2mJw0wdRFUQ22XnJEtj8ykjYA7wh16guGQsXlpqovmQHsbkdA
- wjkod252GjCEF9/Q8NfwSl9a8HuSKrcmtyKyClCxzCiMxErxcI7aE3Ih+vCe3BCKbAkvlCHwTZH Dbj/k4aafexIV/uGzcpjmCmTsjlXhmiqJKAypDig+4qAZCLyV1azOKb/iHF5hM55b1tYk479KXX 6ZTIBZotpug5RP/tBXGakSnxVPAFB/EZuVvWgtcDFJM+tOO29/tjzaT2h9m+3ndzwv7mq6ZQQQx
- UmU6dP0KWaa7lZYd+pEWb2s0DhfXoyKLniOk6fnYU/o0NkaeOYgBuzJ9OWhAxvR71rYQIvSg
-X-Authority-Analysis: v=2.4 cv=Z4HsHGRA c=1 sm=1 tr=0 ts=685585fa cx=c_pps a=uhh9Xr6CjD6FiqEknFfS7A==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=b3tIn090y3fWIpd2EkwA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: zmUiNpPU07N2Uccj1J8RIz7Ao-_WrOp1
-X-Proofpoint-ORIG-GUID: zmUiNpPU07N2Uccj1J8RIz7Ao-_WrOp1
-X-Proofpoint-Spam-Reason: safe
+References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <80ACAAAE-F522-4199-9048-ADE69F6E1128@gmail.com> <CABjd4YyVJv0NmF9LsGWQ-O44MGjT5=FFeUjbg5rJ6XkNgjxb+g@mail.gmail.com>
+ <3286422.5fSG56mABF@workhorse> <CABjd4Yy0rjET+TyA3pNGrzfKd1xKKG1AjWFFLsgb+mgDpu_TRg@mail.gmail.com>
+In-Reply-To: <CABjd4Yy0rjET+TyA3pNGrzfKd1xKKG1AjWFFLsgb+mgDpu_TRg@mail.gmail.com>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Fri, 20 Jun 2025 20:02:50 +0400
+X-Gm-Features: AX0GCFvdN48ERIfe-GKBbQO5ahvzTNBpETI9sWZVQzOBmONmFE6WTCwT7mhrfFQ
+Message-ID: <CABjd4YwrBurnKOAqXK_wFj0c7bEV-PZ682_-1y_VNMPvFrJ-Aw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	XiaoDong Huang <derrick.huang@rock-chips.com>
+Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 01:42:20PM +0100, Mark Brown wrote:
-> On Fri, Jun 20, 2025 at 09:42:58AM +0100, Charles Keepax wrote:
-> > On Fri, Jun 20, 2025 at 09:26:00AM +0100, Charles Keepax wrote:
-> 
-> > > This is kinda the opposite of what I was hoping we could do. The
-> > > idea was to make sure we returned an error if we can't support
-> > > the given rate. So if we don't have the constraint, we check the
-> > > value in hw_params. This looks like it checks in hw_params only
-> > > in the case the constraint existed, but in that case there is no
-> > > need to check because we had the constraint.
-> 
-> > Although perhaps I am mistaken here, I guess is the clock has
-> > been set by the machine driver then we would pass this check.
-> > Would it perhaps make more sense to return an error rather than
-> > zero here?
-> 
-> The link hw_params() should be run before the CODEC ones so we would be
-> able to insist on the clocks having been configured first.  
-> 
-> Or I wonder if it might be easier to just implement clock API support in
-> the driver and if we get a MCLK we set it to a sensible value here?
-> That wouldn't work if the MCLK is coming from the other DAI though.
-> Also I'm really not sure how this bikeshed fits into the design concept
-> here.
+On Wed, Jun 18, 2025 at 6:48=E2=80=AFPM Alexey Charkov <alchark@gmail.com> =
+wrote:
+>
+> On Wed, Jun 18, 2025 at 6:06=E2=80=AFPM Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > Hello,
+> >
+> > +Cc Jonas Karlman as he is intimately familiar with RK3576 clock shenan=
+igans by now,
+> >
+> > On Wednesday, 18 June 2025 15:51:45 Central European Summer Time Alexey=
+ Charkov wrote:
+> > > On Sun, Jun 15, 2025 at 8:00=E2=80=AFPM Piotr Oniszczuk
+> > > <piotr.oniszczuk@gmail.com> wrote:
+> > > >
+> > > >
+> > > >
+> > > > > Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.=
+com> w dniu 9 cze 2025, o godz. 16:05:
+> > > > >
+> > > > > On Sun, Jun 8, 2025 at 11:24=E2=80=AFAM Piotr Oniszczuk
+> > > > > <piotr.oniszczuk@gmail.com> wrote:
+> > > > >>> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmai=
+l.com> w dniu 5 cze 2025, o godz. 15:42:
+> > > > >>>> Alexey,
+> > > > >>>> I see you are using rk3576 board like me (nanopi-m5)
+> > > > >>>> Have you on your board correctly working cpu dvfs?
+> > > > >>>> I mean: [1][desired clocks reported by kernel sysfs are in pai=
+r with [2[]cur clocks?
+> > > > >>>> In my case i see mine cpu lives totally on it=E2=80=99s own wi=
+th dvfs:
+> > > > >>>
+> > > > >>> Hi Piotr,
+> > > > >>>
+> > > > >>> I haven't tried to validate actual running frequencies vs. requ=
+ested
+> > > > >>> frequencies, but subjective performance and power consumption s=
+eem to
+> > > > >>> be in line with what I expect.
+> > > > >>
+> > > > >> well - my subjective l&f is that  - currently - my rk3576 seems =
+=E2=80=9Eslower" than i.e. 4xA53 h618.
+> > > > >
+> > > > > In my experience, native compilation of GCC 14 using 8 threads on
+> > > > > RK3576 (mainline with passive cooling and throttling enabled): 2 =
+hours
+> > > > > 6 minutes, on RK3588 (mainline with passive cooling via Radxa Roc=
+k 5B
+> > > > > case and throttling enabled but never kicking in): 1 hour 10 minu=
+tes
+> > > >
+> > > > by curiosity i looked randomly on 3576 vs 3588:
+> > > > multithread passmark: 3675 (https://www.cpubenchmark.net/cpu.php?cp=
+u=3DRockchip+RK3576&id=3D6213)
+> > > > multithread passmark: 4530 (https://www.cpubenchmark.net/cpu.php?cp=
+u=3DRockchip+RK3588&id=3D4906)
+> > > >
+> > > > assuming 3588 as baseline, 3576 is approx 20% slower on multithread=
+ passmark (has ~0,8 comp power of 3588)
+> > > > 70 min compile on 3588 should take something like ~86min on 3576.
+> > > > In your case 126min compile on 3576 shows 3576 offers 0,55 comp pow=
+er of 3588.
+> > > > Roughly 3576 should do this task in 40min less than you currently s=
+ee i think
+> > > >
+> > > >
+> > > > > Can't see how u-boot would affect CPU speed in Linux, as long as =
+you
+> > > > > use comparable ATF images. Do you use the same kernel and dtb in =
+all
+> > > > > these cases? Also, what's your thermal setup?
+> > > >
+> > > > yes. in all cases only change was: uboot & atf
+> > > > thermal is based on recent collabora series (+ recent pooling fix f=
+or clocks return from throttling)
+> > > >
+> > > > >
+> > > > >
+> > > > > Not sure UX is a particularly good measure of CPU performance, as=
+ long
+> > > > > as you've got a properly accelerated DRM graphics pipeline. More
+> > > > > likely 2D/3D and memory.
+> > > >
+> > > > indeed.
+> > > > For quantified look i=E2=80=99m looking on v.simple approach to est=
+imate real clock is http://uob-hpc.github.io/2017/11/22/arm-clock-freq.html
+> > > > by curiosity i looked what it reports on a53/a55/a72/a76 and it is =
+surprisingly accurate :-)
+> > > > on mine 3576 with collabora uboot+mainline atf is hows 800MHz (and =
+in perf. gov it seems to be constant)
+> > > >
+> > > > >
+> > > > > There might be some difference in how PVTPLL behaves on RK3576 vs=
+.
+> > > > > RK3588. But frankly first I would check if you are using comparab=
+le
+> > > > > ATF implementations (e.g. upstream TF-A in both cases), kernels a=
+nd
+> > > > > thermal environment :)
+> > > >
+> > > > all tests: the same 6.15.2 mainline + some collabora patches
+> > > >
+> > > > diffs were:
+> > > > 1.collabora uboot[1] + mainline atf 2.13
+> > > > 2.collabora uboot[1] + rockchip rkbin bl31 blob
+> > > > 3.vendor uboot (bin dump from friendlyelec ubuntu image)
+> > > >
+> > > > on 1/2 i see kind of issue with clock values (i.e. perf gov gives c=
+onstant 800MHz on mainline atf).
+> > > > 3 seems to perform better - (i.e. perf gov gives constant 1500MHz s=
+o all is snappier/faster)
+> > >
+> > > There is indeed something weird going on. I've tried running sbc-benc=
+h
+> > > [1], and even though I observe dynamically varying CPU frequencies
+> > > after boot with schedutil governor, once sbc-bench switches the
+> > > governor to "performance" and goes through the OPPs in descending
+> > > frequency order, the CPUs seem to get stuck at the last applied low
+> > > frequency. Even after max frequency gets reverted from 408 MHz to
+> > > something higher, even after I switch the governor to something else =
+-
+> > > no matter what. Only a reboot gets the higher frequencies 'unstuck'
+> > > for me.
+> > >
+> > > These are all observed at around 55C SoC temperature, so throttling i=
+s
+> > > not an issue. Regulators are stuck at 950000 uV - way above 700000 uV
+> > > that the 408 MHz OPP requires (and power readings seem to match: I'm
+> > > getting about 2.3W consumption at 408 MHz in idle vs. normal idle
+> > > reading of 1.4W at around 1 GHz).
+> > >
+> > > Not sure what's going on here, and I don't remember seeing anything
+> > > similar on RK3588. Thoughts welcome.
+> >
+> > This may once again be a "accidentally uses wrong clock IDs" type
+> > situation. The other possibility is that we're getting confused
+> > between what we think the clock rate is and what SCMI actually set
+> > the clock rate to.
+> >
+> > Things to check is whether the right clock controller (scmi vs cru)
+> > and the right clock id (check ATF source for this) is used.
+>
+> Clock IDs in the kernel seem to match those in ATF, but I've noticed
+> what appears to be a buffer overflow in some of the SCMI clock names
+> defined in the opensource TF-A (thanks GCC 15 and its zealous
+> warnings):
 
-I think clock framework stuff is probably more work than makes
-sense here.
+After some more testing, I tend to confirm what Piotr observed
+earlier. Namely, frequency scaling acts weird on any ATF version (be
+it binary BL31 or opensource TF-A), as long as mainline u-boot is
+used. Using the u-boot binary extracted from the ArmSoM QWRT image
+does not lead to "stuck" CPU frequencies when running sbc-bench.
 
-If you are happy with this as is I don't object to it getting
-merged, ultimately if the machine driver doesn't configure the
-clock that is a bug in the machine driver and it will likely be
-relatively obvious audibily so the returning an error is really
-just a nice to have.
+I'm getting this with the exact same kernel build (6.16-rc1 with some
+Sige5 related patches, namely v2 of this series, Nicolas' USB
+enablement series and TSADC). The only other difference is that the
+binary u-boot doesn't have EFI support, so I had to boot into the
+ARM64 uncompressed Image instead of vmlinuz.efi, but those were both
+taken from the same build.
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+What I'm observing during the sbc-bench run:
+ - It switches the cpufreq governor from schedutil to performance
+ - It goes through all CPU OPPs in descending frequency order
+ --- While it does that when booted using mainline u-boot +
+vmlinuz.efi: "hardware limits" line in "cpupower -c 0,4
+frequency-info" changes with each OPP change (the max frequency
+getting reduced sequentially), then it resets to the initial full
+range, but the actual frequency stays stuck at the lowest possible
+value
+ --- While it does that when booted using binary u-boot + Image:
+"hardware limits" line in "cpupower -c 0,4 frequency-info" doesn't
+change, but the actual frequency gets reduced sequentially. Then after
+the iteration over all OPPs is completed it returns to the highest
+possible value, and adjusts dynamically based on thermal throttling as
+the benchmark progresses
 
-Thanks,
-Charles
+So it seems that it's not really linked to SCMI clocks or PVTPLL per
+se, but rather what the binary u-boot configures differently vs.
+mainline before the kernel takes over, or something in other firmware
+services that the binary u-boot provides (?)
+
+I'm wondering if there is any clock related functionality in the
+OP-TEE? I didn't have any OP-TEE image in my mainline u-boot builds
+(frankly, I don't even know where to grab one), but the binary u-boot
+from ArmSoM advertises the following:
+
+I/TC: OP-TEE version: 3.13.0-791-g185dc3c92 #hisping.lin (gcc version
+10.2.1 20201103 (GNU Toolchain for the A-profile Architecture
+10.2-2020.11 (arm-10.16))) #2 Tue Apr 16 11:05:25 CST 2024 aarch64,
+fwver: v1.01
+
+Any thoughts would be much appreciated.
+
+Best regards,
+Alexey
