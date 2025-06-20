@@ -1,193 +1,110 @@
-Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680AC28FD;
-	Fri, 20 Jun 2025 14:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B29A293B42
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430346; cv=none; b=FykTK8v3Nvr8YLyXMyqUL9onPjvCTB3JJ00TRL4MtpmUX/tuB3miIbKWw9kk/VR8MIkk9XctulFyymjSS6dyMZlU1TDtL//pM3i5N8keWeh1dRYgLxYEaAqwCg6PriaM0uf3hTCaF36B2zfbKRP3v1al2VQwEImYiK+Zgd/fizo=
+	t=1750430351; cv=none; b=BQVfGiyZ2XbAwqC/LpNx63XNwrux3vHhB/zTHVBSC2Qlmt1KQ65gQ5LIhg81z95J7QS55XWCGTM/YResd3GAQx8TN515zU9K4Z27rcWHMGpr/utDskrv4ASpoH//Knkhramua+Ive4poCRC/u24yAdOdc9ZTHCrfciswFwlGBy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430346; c=relaxed/simple;
-	bh=GXfhSEQtzREoIv/G+KioVKxr9pE5y3dI9y/hyAVzvYU=;
+	s=arc-20240116; t=1750430351; c=relaxed/simple;
+	bh=9u/UMVsbOfvdlKqQkHWv5U8ETyNtq+tbaBw59i8gUmc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VOACQJgJeWryed9+Qw19nXXjNbpfX0Vbw7to7QS3UrUDTCIC4C8IIKt3HCrWTK6qCEzULjK528xM70zeQt6d5ajsn+lbJXJ9BPciG99Gl8d3IrUrncLj60BqyA8pTDnJ2alP7sUXzDrDWRfc7s4Ojoa6xAaT0Iadpczy5TdUVt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kG0AjHQs; arc=none smtp.client-ip=209.85.219.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=mGihRiYU3DNeXUVIjzF8+hrZjyW/yiZUgMZkcRvmglBIETGpQssPM/kD82pHUN8gXIgtu2LxC6Is0o5sR/hNwfCZKWrPHabgyvzddja59Kj25auRegc2KKQuirJSR2vYNp+249vO0sTKwD3aiuZtUrmy7MpYpKpQYqh3FIBUHD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g2oy9MDM; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG0AjHQs"
-Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e8275f110c6so1559974276.2;
-        Fri, 20 Jun 2025 07:39:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g2oy9MDM"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553644b8f56so1963492e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750430343; x=1751035143; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750430348; x=1751035148; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jwzj9SK0aHKRv0bEfUf04rTwKrHOht8Mlzar8pF+Has=;
-        b=kG0AjHQsAi8Sz102m0qEbjR5x1yMi4GNPsrxParz92SumTSt0AO0YshAegCxRqfcNu
-         +sfgd+y1FyfHl9gw6VZsI+OnGGBC5h7clY1UuumoNmYSsGfjggOGRrXPfeSPoXw+mR7b
-         U1oF0H2cifMvs/MmcKPzxjzAIbUhOaFvuRyRW/kLgJ/Dukv4isp5xJrlhD3yU3Ryu0qL
-         39+FLepuq22QVfuwkH738A//cUsRsjtxn+HtBjV9Tk/mzR4Mm4y4tALihin1cxNLSqiF
-         avopf0U+oNmpgb03Hqln2gnaDEvDK1ItnaC4H47SqtaCK2C5eqdoTeRyzCjgtiqJTEcF
-         pgjQ==
+        bh=8q9jPK46zsApDPOL6C1LivQIOx9eji9C57xl6gLXKoI=;
+        b=g2oy9MDMdwlIDSWJAB+obLA89NKRH36+WzefQSTB/H6XBp+I/h4ivjsS4Qwt49bhHE
+         ANTuXdAzl/T3pQ4OkL7NL2U7+5dFFhOK+NI2Nmh6IpMiViEqaAydxdHqZLm1QYWXNBm5
+         gVnsbSO+VsB3nzZ4w+FnPBOVfRTepa8oSt0bF3WLUdgJgnkLn93EFaC5wuOSCctDpYCO
+         pC4MBXNN5hs7QL8SH7rEqrVeGUDdlGV9JBvu5gDVhVYDn90KbCyWvZaMv1R1C4JLB5RQ
+         YKIaHyuzRYw/zo8ScQe9q/rXK1ij2ArRGzpTDcNzoG15okb4bNeu6rme2Q2aEju4mAz+
+         SuWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750430343; x=1751035143;
+        d=1e100.net; s=20230601; t=1750430348; x=1751035148;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jwzj9SK0aHKRv0bEfUf04rTwKrHOht8Mlzar8pF+Has=;
-        b=xCkZTTvfn+4Asa473e0Ib3aTm+CvxDhsp7g2PQBVPSs88gVz8mdmps9GneIydujLLs
-         Rwh9Br5FUc5JwCL+UVRzAvtF7+wCCBwfDooDrYhxBlNR/qdk67ejCz5ShQzJDesqP8Rl
-         0xFbGTBdXS87HJIPhIYRVFuCDdxU4FunQKl8C73RJcmBQD2cPMI0XclLDW3rbvpQxyGQ
-         whF4+UWFVOgK9vBarApfCnHaWkBW9XQLCwso0bCQw/07VuQ56K26zqDcjfyOgHNHtdI7
-         yTf9XjLB7Nbwtod4Bg186fWvCPj9MqXove+MlVoBx1JA1b8D02x9ApyaJrYbWRJ2zPut
-         opxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6ysuPVndIUb/0rxgLFKsDqC3Krt3AYdYSF62vhyOoFo6z9bPr77Wj37gMFKHqgOcfbCA=@vger.kernel.org, AJvYcCXruP4pCkfLiF27FDcVMWWT2bVOR8yllKGqHCSg8E9w44v3HBt5q5U4s/kv7Th+x2oKplf8r3YLo6WL66T2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaevA8xXva4rRkV5y/Wg1oKXuo5SOOIV488atTPvxBIbvQepNb
-	P6TwhFMYq+kfmRkvn5Djk3vd3ol1WkMcnQQfClsVtlTEXj/jBVa/TB10vnXJNvwMBfrSPso7nZE
-	EQht1+G4pBQvXW+tkQ2uAxVYwAzD0Ti4=
-X-Gm-Gg: ASbGncs5wn559D7V+cp58zxz8o4y8g6BvLqCczLfBhykw8AdHq9cdauLaKerR5Zpphk
-	qCJ0N60zwLQ6ibGTJKi2wVL6ny8B6DPoUfefbDVtFf3hDaNvso2hULm0VItJbeIlmAlzuX1iO4b
-	cubxXwdyRchsONLonyaD0tI2a4C2ZCsHvO96TqjLIWuCH8H/yKJvV/VA==
-X-Google-Smtp-Source: AGHT+IEhmV47KRzCLJuFrjGZNNmzZHcc6s0uq8ijlkfL0DWNrYq/D/nIZMGYq1uzXP6Iwj4qOJnvp519uUE45duOGT0=
-X-Received: by 2002:a05:6902:1617:b0:e82:65e3:86bc with SMTP id
- 3f1490d57ef6-e842bd33744mr4200776276.47.1750430343186; Fri, 20 Jun 2025
- 07:39:03 -0700 (PDT)
+        bh=8q9jPK46zsApDPOL6C1LivQIOx9eji9C57xl6gLXKoI=;
+        b=OxSMACerauATBio6tH8agwDpLLHl9ENCx5CTr2KoMh2Ui05boBnH6shjO9AxooPn/P
+         5v1wRLHP49neT9AywtnzSrYpAQbe4gVZlHS8xThnZexzQvNDj761TkJzn4G+Ey3ck6qH
+         AT2PFFmy1Efaal+ai6dm2s/8sedyL5V4mwDSEMObpJ/NXw7NHHFv1MI02vp+2CrGEkZa
+         GA/Nhts4fyr60rHkDcrZovFW3xLy6Uj3yanPKFDdrwB8dXMjwlShp0B/X84MH661N/Kw
+         Mz2b7wh2drK2tbiOX4eSxf3RaGeODeGuBYFu9Nw8egxIAyAFG/os/vQe92idSr8a1nq2
+         QVYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfiG95CqGbtzgCZrSa8k2B/olQ/eoNvs43gr0u2w3wKZzulJ8/2uDCIxG1587hzctd22mwlcNUDOWZD80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxncTwvDPZ2lvQhxj7Kq5L4FQdUlLM5kVeAdTaXE/m3W/v/NUS4
+	UpmfpprJcWS+LMm5RY8NzbVNr1AURACDxAfh6IiHnHkkG+lzGiijqobZ1oTPOc4HZeBFl+m5ltL
+	Sj4prvDil9l/QfVWwKVdIUE5m8pPE1+2aOPUWbaHgXg==
+X-Gm-Gg: ASbGncvR5sQY4EL0mIAE9aFkKnjflCHj/Ntzh4PHHmGTZCa7jfzgHgebiVV8iv2TPM/
+	746d5srcG2OX4vHOXwcvTwYMoqI/eGn7jo/tc9/BnpPBz/0/KbmbWygPqPAHJsNTNNlAp2S+zio
+	cFESJAHZWk7U79+Rqacb3JKTi8zuqGnpcO9KoDf8/MsKIKrdicS2PO3OP1DCcTE47ByhTX4fbFV
+	P0=
+X-Google-Smtp-Source: AGHT+IGjkgwvxLakGNgWVvM7O0xCSzMb0/KOdOUYDjcrFuGeTYUFULoeqZ3P82uB5n31lfl8yIBpzNsOJDI6YzmRriU=
+X-Received: by 2002:a05:6512:12c8:b0:553:2868:6357 with SMTP id
+ 2adb3069b0e04-553e3d0b13emr1195210e87.50.1750430347854; Fri, 20 Jun 2025
+ 07:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618085609.1876111-1-dongml2@chinatelecom.cn> <CAADnVQ+5HOFu=bwQekwZOmOe+FKk26UJW=S1wZY3bSye_7C23w@mail.gmail.com>
-In-Reply-To: <CAADnVQ+5HOFu=bwQekwZOmOe+FKk26UJW=S1wZY3bSye_7C23w@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Fri, 20 Jun 2025 22:38:55 +0800
-X-Gm-Features: Ac12FXyX_xPzPsNXEJvIAmjf_kBoDJjLo0yOhcINjHv3H7GZUQwPToqSD5L4ASY
-Message-ID: <CADxym3Yh630_NqGsvg3=w_D=K1WdvJ1v=7gvEYg4k0x_jAKAUA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: make update_prog_stats always_inline
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Menglong Dong <dongml2@chinatelecom.cn>
+References: <20250620130814.2580678-1-arnd@kernel.org> <CAMRc=Mep0SNj6anWcmaNh4v8Z=J7eomujU69Gz_exuG2Wsd=8A@mail.gmail.com>
+ <d05578a6-eedc-4c2e-94e3-e00fa293e4bb@app.fastmail.com>
+In-Reply-To: <d05578a6-eedc-4c2e-94e3-e00fa293e4bb@app.fastmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 20 Jun 2025 16:38:57 +0200
+X-Gm-Features: AX0GCFtvUEeaX9wqytjxNnYHkYskGpO6_dyNTKYjcEvttmf-q8EDtdSXs8QVaiI
+Message-ID: <CAMRc=Menh3dPXbA7dJCRLRXu=FtQ19gwWLsDaWfjw=+nn2Bweg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: zynq: add CONFIG_OF dependency
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Pratap Nirujogi <pratap.nirujogi@amd.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 2:07=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On Fri, Jun 20, 2025 at 3:46=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
 >
-> On Wed, Jun 18, 2025 at 1:58=E2=80=AFAM Menglong Dong <menglong8.dong@gma=
-il.com> wrote:
+> On Fri, Jun 20, 2025, at 15:36, Bartosz Golaszewski wrote:
+> > On Fri, Jun 20, 2025 at 3:08=E2=80=AFPM Arnd Bergmann <arnd@kernel.org>=
+ wrote:
+>
+> >> --- a/drivers/pinctrl/Kconfig
+> >> +++ b/drivers/pinctrl/Kconfig
+> >> @@ -603,6 +603,7 @@ config PINCTRL_TH1520
+> >>  config PINCTRL_ZYNQ
+> >>         bool "Pinctrl driver for Xilinx Zynq"
+> >>         depends on ARCH_ZYNQ || COMPILE_TEST
+> >> +       depends on OF
+> >>         select PINMUX
+>
 > >
-> > The function update_prog_stats() will be called in the bpf trampoline.
-> > Make it always_inline to reduce the overhead.
+> > I don't think this is the actual problem. I can build (and link)
+> > pinctrl-zynq with COMPILE_OF disabled alright. Can you paste the
+> > entire offending .config somewhere?
 >
-> What kind of difference did you measure ?
+> This is from a randconfig build: https://pastebin.com/ism57RPe
+>
+>      Arnd
 
-Hi, Alexei. I think I made some things wrong. The update_prog_stats is alre=
-ady
-optimized by the compiler for the current code by inline it. I observed the=
- CPU
-consumption of update_prog_stats() by perf in my global trampoline, but it
-doesn't exist in bpf trampoline.
+Right. I don't have the time to look into untangling it but in general
+all OF interfaces have relevant stubs so `depends on OF` should not be
+needed. But it's more complex here in pinctrl so I'm fine with this
+for now.
 
-Anyway, I think it is worth to make it inline manually here, as we can't re=
-ly on
-the compiler all the time. When I add noinline to update_prog_stats(), the
-performance of bench/trig-fentry decrease from 120M/s to 113M/s.
-
->
-> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > ---
-> >  kernel/bpf/trampoline.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> > index c4b1a98ff726..134bcfd00b15 100644
-> > --- a/kernel/bpf/trampoline.c
-> > +++ b/kernel/bpf/trampoline.c
-> > @@ -911,8 +911,8 @@ static u64 notrace __bpf_prog_enter_recur(struct bp=
-f_prog *prog, struct bpf_tram
-> >         return bpf_prog_start_time();
-> >  }
-> >
-> > -static void notrace update_prog_stats(struct bpf_prog *prog,
-> > -                                     u64 start)
-> > +static __always_inline void notrace update_prog_stats(struct bpf_prog =
-*prog,
-> > +                                                     u64 start)
-> >  {
->
-> How about the following instead:
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index c4b1a98ff726..728bb2845f41 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -911,28 +911,23 @@ static u64 notrace __bpf_prog_enter_recur(struct
-> bpf_prog *prog, struct bpf_tram
->      return bpf_prog_start_time();
->  }
->
-> -static void notrace update_prog_stats(struct bpf_prog *prog,
-> -                      u64 start)
-> +static noinline void notrace __update_prog_stats(struct bpf_prog *prog,
-
-Does "noinline" have any special meaning here? It seems that
-we don't need it :/
-
-> +                         u64 start)
->  {
->      struct bpf_prog_stats *stats;
-> -
-> -    if (static_branch_unlikely(&bpf_stats_enabled_key) &&
-> -        /* static_key could be enabled in __bpf_prog_enter*
-> -         * and disabled in __bpf_prog_exit*.
-> -         * And vice versa.
-> -         * Hence check that 'start' is valid.
-> -         */
-> -        start > NO_START_TIME) {
-> -        u64 duration =3D sched_clock() - start;
-> -        unsigned long flags;
-> -
-> -        stats =3D this_cpu_ptr(prog->stats);
-> -        flags =3D u64_stats_update_begin_irqsave(&stats->syncp);
-> -        u64_stats_inc(&stats->cnt);
-> -        u64_stats_add(&stats->nsecs, duration);
-> -        u64_stats_update_end_irqrestore(&stats->syncp, flags);
-> -    }
-> +    u64 duration =3D sched_clock() - start;
-> +    unsigned long flags;
-> +
-> +    stats =3D this_cpu_ptr(prog->stats);
-> +    flags =3D u64_stats_update_begin_irqsave(&stats->syncp);
-> +    u64_stats_inc(&stats->cnt);
-> +    u64_stats_add(&stats->nsecs, duration);
-> +    u64_stats_update_end_irqrestore(&stats->syncp, flags);
->  }
-> +#define update_prog_stats(prog, start) \
-> +    if (static_branch_unlikely(&bpf_stats_enabled_key) && \
-> +        start > NO_START_TIME) \
-> +        __update_prog_stats(prog, start)
->
->  static void notrace __bpf_prog_exit_recur(struct bpf_prog *prog, u64 sta=
-rt,
->                        struct bpf_tramp_run_ctx *run_ctx)
->
->
-> Maybe
-> if (start > NO_START_TIME)
-> should stay within __update_prog_stats().
->
-> pls run a few experiments.
-
-Yeah, I think it is much better in this way. And the performance stay exact=
-ly
-the same after the midifition, which means it has the same effect as
-the compiler's automatical optimization.
-
-Thanks!
-Menglong Dong
+Bartosz
