@@ -1,150 +1,70 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF6EF2E610B
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 16:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB2F28A415;
+	Fri, 20 Jun 2025 16:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435849; cv=none; b=J8ceGxpWNmhNvBdfelUElqDy+3NBWleNZx/zYbowxd6jIbSgNOiHMdi+3lySZ8fPjtdgSfdEruMnaCY2tHy0sC6QPmm5G0vAgF1+IwPq7id4Rff+RxinHPyOCpPlomw0f5dXZVA8QqDuTSGmfK8nJafBmb++O157GzLnOZqPM/8=
+	t=1750435868; cv=none; b=q+6Nldt0Eijyfr4Qgio1tmbzZGLicMFdThOovLX4nMvtQAa+cAfkSUPGLY+eLYBQUzJAA80YYElVE+6E2H1c1PrC483wpvAhVEiUj71wlRYk6KuygUxdKUXh9LscyxTFvo9wvLAk+ce1O7AKVZWALctPTagot2KVYFWqdD9drEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435849; c=relaxed/simple;
-	bh=VU2bZVSWS7Y7D+L7/7Dt5pIdIlosy1fuUbSFKypwv5o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fwSmdREqNd61xIJ1rcWz39UEmQK3C45lUhjZEYSRGuyOqd3nX391ml4VcEUZOV5+7Ip7rtGAxeZxKPENAtnBUf0GpEuJnwn663PonhOWW2tKeprpOIVD2Px5CEnoSe+dEaiPr2oI2BR+gBcqWlQz8AbFIGrubKl468HJZO7S4mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A26016F2;
-	Fri, 20 Jun 2025 09:10:27 -0700 (PDT)
-Received: from [10.1.30.146] (XHFQ2J9959.cambridge.arm.com [10.1.30.146])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 207873F58B;
-	Fri, 20 Jun 2025 09:10:42 -0700 (PDT)
-Message-ID: <7105112f-b0bb-4191-b3c9-93522162319c@arm.com>
-Date: Fri, 20 Jun 2025 17:10:41 +0100
+	s=arc-20240116; t=1750435868; c=relaxed/simple;
+	bh=cMsToKQra6SoEZ95WA5ciGsWf0ZfqId5fb1Qz7oO9DU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YEKrI05J9oXMkAwbj9yehXCiqwSPCqbkjt+IwhhbLpQH9GB4FeDAzVQuHwfUnn0CZZVrKxcNpmctTe3470hbx072WTMv9J/M08Q5tPYT4DBqyFBTUYelHopqoSHW92Dr4OhaN1PDEpsBU6PZKiH+AvP72YIKE3aF4G0fqtUa55s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEDlYaNv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEDlYaNv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CB0C4CEE3;
+	Fri, 20 Jun 2025 16:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750435868;
+	bh=cMsToKQra6SoEZ95WA5ciGsWf0ZfqId5fb1Qz7oO9DU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WEDlYaNvKP9R2dVWR7oICRpdxQzvkL5qnNUactE0pDORRyNS0fibiV0zkqcBaL7ck
+	 hix2D8/avFGsT3dH38Jb1X5sOuyQhhs+3B6jRLGc04zlEIrbOgX9B1qPDyqrso//ce
+	 m++niAIjlwJeT6Kkr1fkf3nFnf0OVpUq2pQnZFNdOSHQv+boWkWQ5S4YMVTgQ7B2A5
+	 pB5EW4gGq1WOxJZ6Ii8FvheNMUhF+EGe5JPUq40bKJjSJdIN03EQLQ2DRUfwaplRYG
+	 gNKha0txWR3TOKDh55QHKv7YX+0ZpDqwTV+oS0OEvfs5wyNfgTHtIHRdHP/UvdW52a
+	 5uxGlX+gGT5Fw==
+From: SeongJae Park <sj@kernel.org>
+To: Yunjeong Mun <yunjeong.mun@sk.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: Re: [PATCH] samples/damon: add parameters for node0 memory usage
+Date: Fri, 20 Jun 2025 09:11:05 -0700
+Message-Id: <20250620161105.44460-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250620062951.1572-1-yunjeong.mun@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/4] arm64/mm: Elide tlbi in contpte_convert() under
- BBML2
-Content-Language: en-GB
-To: Catalin Marinas <catalin.marinas@arm.com>,
- =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
-Cc: yang@os.amperecomputing.com, will@kernel.org, jean-philippe@linaro.org,
- robin.murphy@arm.com, joro@8bytes.org, maz@kernel.org,
- oliver.upton@linux.dev, joey.gouly@arm.com, james.morse@arm.com,
- broonie@kernel.org, ardb@kernel.org, baohua@kernel.org,
- suzuki.poulose@arm.com, david@redhat.com, jgg@ziepe.ca, nicolinc@nvidia.com,
- jsnitsel@redhat.com, mshavit@google.com, kevin.tian@intel.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev
-References: <20250617095104.6772-1-miko.lenczewski@arm.com>
- <20250617095104.6772-5-miko.lenczewski@arm.com> <aFRlDSZ2PPnHixjc@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <aFRlDSZ2PPnHixjc@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 19/06/2025 20:29, Catalin Marinas wrote:
-> On Tue, Jun 17, 2025 at 09:51:04AM +0000, Mikołaj Lenczewski wrote:
->> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
->> index bcac4f55f9c1..203357061d0a 100644
->> --- a/arch/arm64/mm/contpte.c
->> +++ b/arch/arm64/mm/contpte.c
->> @@ -68,7 +68,144 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
->>  			pte = pte_mkyoung(pte);
->>  	}
->>  
->> -	__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
->> +	/*
->> +	 * On eliding the __tlb_flush_range() under BBML2+noabort:
->> +	 *
->> +	 * NOTE: Instead of using N=16 as the contiguous block length, we use
->> +	 *       N=4 for clarity.
->> +	 *
->> +	 * NOTE: 'n' and 'c' are used to denote the "contiguous bit" being
->> +	 *       unset and set, respectively.
->> +	 *
->> +	 * We worry about two cases where contiguous bit is used:
->> +	 *  - When folding N smaller non-contiguous ptes as 1 contiguous block.
->> +	 *  - When unfolding a contiguous block into N smaller non-contiguous ptes.
->> +	 *
->> +	 * Currently, the BBML0 folding case looks as follows:
->> +	 *
->> +	 *  0) Initial page-table layout:
->> +	 *
->> +	 *   +----+----+----+----+
->> +	 *   |RO,n|RO,n|RO,n|RW,n| <--- last page being set as RO
->> +	 *   +----+----+----+----+
->> +	 *
->> +	 *  1) Aggregate AF + dirty flags using __ptep_get_and_clear():
->> +	 *
->> +	 *   +----+----+----+----+
->> +	 *   |  0 |  0 |  0 |  0 |
->> +	 *   +----+----+----+----+
->> +	 *
->> +	 *  2) __flush_tlb_range():
->> +	 *
->> +	 *   |____ tlbi + dsb ____|
->> +	 *
->> +	 *  3) __set_ptes() to repaint contiguous block:
->> +	 *
->> +	 *   +----+----+----+----+
->> +	 *   |RO,c|RO,c|RO,c|RO,c|
->> +	 *   +----+----+----+----+
-> 
-> From the initial layout to point (3), we are also changing the
-> permission. Given the rules you mentioned in the Arm ARM, I think that's
-> safe (hardware seeing either the old or the new attributes). The
-> FEAT_BBM description, however, only talks about change between larger
-> and smaller blocks but no mention of also changing the attributes at the
-> same time. Hopefully the microarchitects claiming certain CPUs don't
-> generate conflict aborts understood what Linux does.
-> 
->> +	 *
->> +	 *  4) The kernel will eventually __flush_tlb() for changed page:
->> +	 *
->> +	 *                  |____| <--- tlbi + dsb
-> [...]
->> +	 * It is also important to note that at the end of the BBML2 folding
->> +	 * case, we are still left with potentially all N TLB entries still
->> +	 * cached (the N-1 non-contiguous ptes, and the single contiguous
->> +	 * block). However, over time, natural TLB pressure will cause the
->> +	 * non-contiguous pte TLB entries to be flushed, leaving only the
->> +	 * contiguous block TLB entry. This means that omitting the tlbi+dsb is
->> +	 * not only correct, but also keeps our eventual performance benefits.
-> 
-> Step 4 above implies some TLB flushing from the core code eventually.
-> What is the situation mentioned in the paragraph above? Is it only until
-> we get the TLB flushing from the core code?
+On Fri, 20 Jun 2025 15:29:46 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
 
-I think the point that Miko is making here is that at some point between step 3
-and 4, we could end up with up to any 3 of the original small entries as well as
-the large entry in the TLB. Then the flush at step 4 will only remove the small
-entry at the last entry and the large entry - i.e. it will only remove the
-entries that overlap the region that the tlbi targets, and up to 3 of the small
-entries may be left in the TLB after step 4. Our rationale here was that this is
-safe due to BBML2 and it will naturally sort itself out over time with natural
-eviction.
+[...]
+> Thanks for reviewing. As you said, this mtier sample module needs further 
+> development for final version, like automatically detecting memory tiers and
+> adding some useful knobs.
 
-> 
-> [...]
->> +	if (!system_supports_bbml2_noabort())
->> +		__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
->>  
->>  	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
-> 
-> Eliding the TLBI here is all good but looking at the overall set_ptes(),
-> why do we bother with unfold+fold for BBML2? Can we not just change
-> them in place without going through __ptep_get_and_clear()?
+I believe such additional features could be useful sample that could help
+people figure out how they could build real products.
 
-We need to collect the access and dirty bits so we can apply the aggregate
-across all entries. We can only accurately collect the access and dirty bits if
-we go via invalid, otherwise the HW could update after we have read the old
-entry but before we have written the new entry.
+> May I continue working on the mtier module? 
+
+Yes, of course.  That would be awesome and helpful.
+
 
 Thanks,
-Ryan
+SJ
 
+[...]
