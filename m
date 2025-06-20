@@ -1,68 +1,124 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F59139566;
-	Fri, 20 Jun 2025 02:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737D454640;
+	Fri, 20 Jun 2025 02:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385473; cv=none; b=fClA2U/vsWaj7zpXrm7FKumc4mjRgkW3HV6hqegd+rbjQ9fOIbpAVFdNTdFdCj6Rno0BNiTPVe7OoCD8FiVm2hHG+tVFkj88u5YDxV5vTUDdn82kJVpmf206bvgToies+nqbL2S94NDz4fQxiYXQTnDQc+YYky8SZssKaDJsLTk=
+	t=1750385494; cv=none; b=LvCeIX6N5fFELMZEQVORxPjQTkr5oZlxBRFGwrCmkpYzWPzNWqg+xy/h+6F+sjNTCzgf5UxLSIHRPte2L67PvvhfSakqewWLUsWR1Z9Olroe6TkZgoAUPbxluIBdqQyh3JtkzwGG51lRvuVZY1SL3JEkjaZxxnU4GdknwufBcpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385473; c=relaxed/simple;
-	bh=WxkctBJ0jCZqdoeGHMGJGwqBrieziUXQFy8IO6qKzRc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kNa1C3CVrkQv65i8AWF2oiq72uz/IvgJ5auibiOgmX1JWp2SN++YFQYrQQabnswB5UEbgMPL0Q+PVURqUsVToW7QiazjJzHLLAhMebB8kBKhm/JZ/c476VqoM8sHq964Vur68i2gC34QvoI/BMkvuNgzMLuxXM/h/AjPi5iIeXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d10f43b24d7b11f0b29709d653e92f7d-20250620
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:bd91bd8b-fc08-4058-b5c9-5d4a264640f1,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:f09a35d0aab9661bfb5527c1412db2d3,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d10f43b24d7b11f0b29709d653e92f7d-20250620
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <tanze@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1212513940; Fri, 20 Jun 2025 10:11:03 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id C0FF516001A02;
-	Fri, 20 Jun 2025 10:11:02 +0800 (CST)
-X-ns-mid: postfix-6854C335-550397538
-Received: from localhost.localdomain (unknown [10.42.12.96])
-	by node4.com.cn (NSMail) with ESMTPA id 3A50A16001A00;
-	Fri, 20 Jun 2025 02:11:01 +0000 (UTC)
-From: tanze <tanze@kylinos.cn>
-To: peterz@infradead.org,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	tanze <tanze@kylinos.cn>
-Subject: [PATCH 0/1] CANCELLED: [PATCH v2] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
-Date: Fri, 20 Jun 2025 10:10:58 +0800
-Message-Id: <20250620021058.1421409-1-tanze@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
-References: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
+	s=arc-20240116; t=1750385494; c=relaxed/simple;
+	bh=+fL+7lATRHrgFf9ezte8Bme9gjvIBxptmslEwxQX6sM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=V1zyZGBfyu01L3qatOJyq8wWZ1Rj72RzWmnE6L886MhHhOPKP13pZrCdz+absxsPxNEPiMzFydO9GeCHQ9WNlTjv3UbaO6Z+b/JWwEXL/ZCRWO1OhxPNaW9r84CdGDLAZjkm/OZjizHJ2k1NFjCjD++8szHyyKNXVzqiR0O0X7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IF9APY0x; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IF9APY0x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750385483;
+	bh=6HDe+9Ljqo+nDEd8bs6ab9WT5YyIev4S5ZAFB9tvjBo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IF9APY0xmStNXrOksWJNFwhuznP2uKSrIQTdWQnBIBBNbukJu4XZH2sS4eg9QuDbX
+	 BDN2CCf1PIzpaiUkyQcn/5oblwxkEbpNpR4Cko22vl36e6UXADEeVj/WNbbnvua3wL
+	 uI78cZeCB2WZKD0MuVp85p5XhltcwKWp3afTDwuTtvzGEuTWLTPatH9J29TEl6R+GW
+	 r+qdIathvBDb7L3uRSsai7G2q26q7qsH4oUxD86F1M39Bri8iZ46oTgq+j/XYpnvXu
+	 nuUgTR9ffgns/s3w7/x+iTiCq9jbBLa8XmFLkrOMeVsiH9KH5ugX0JPWt9YY8PNAKP
+	 +phfAsTqHZJUA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bNgvH4Hc3z4xM2;
+	Fri, 20 Jun 2025 12:11:23 +1000 (AEST)
+Date: Fri, 20 Jun 2025 12:11:22 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Christian Brauner <brauner@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the net-next tree with the vfs-brauner
+ tree
+Message-ID: <20250620121122.344c1d0d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="Sig_/GoVKaWfXr/MwIgi9T5i7uLR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/GoVKaWfXr/MwIgi9T5i7uLR
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-Please **disregard** my previous patch ([PATCH v2 perf/x86/zhaoxin: Fix i=
-nstructions=E2=80=A6]).  I will resend a corrected version asap.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Sorry for the noise.
+  net/core/net_namespace.c
+
+between commit:
+
+  9b0240b3ccc3 ("netns: use stable inode number for initial mount ns")
+
+from the vfs-brauner tree and commit:
+
+  8f2079f8da5b ("net: add symlinks to ref_tracker_dir for netns")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/core/net_namespace.c
+index 03cf87d3b380,d0f607507ee8..000000000000
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@@ -796,11 -821,10 +821,15 @@@ static __net_init int net_ns_net_init(s
+  #ifdef CONFIG_NET_NS
+  	net->ns.ops =3D &netns_operations;
+  #endif
+ -	ret =3D ns_alloc_inum(&net->ns);
+ +	if (net =3D=3D &init_net) {
+ +		net->ns.inum =3D PROC_NET_INIT_INO;
+- 		return 0;
+++		ret =3D 0;
+++	} else {
+++		ret =3D ns_alloc_inum(&net->ns);
+ +	}
+- 	return ns_alloc_inum(&net->ns);
++ 	if (!ret)
++ 		net_ns_net_debugfs(net);
++ 	return ret;
+  }
+ =20
+  static __net_exit void net_ns_net_exit(struct net *net)
+
+--Sig_/GoVKaWfXr/MwIgi9T5i7uLR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhUw0oACgkQAVBC80lX
+0GyXQgf6AoiOljcx1KzsIjArxkW71/NjyFf/axCnp5/x8esey8QPXYn1PwOQR19M
+blLUaBSPbHc+SEksKvNmwC8SHwUmoLozs0pKxilH0+kGEvK2/Lq96iD0S8C2yihS
+0+NvIxeSxxiEINX6nn+9mn4awz7oGdB1zEfEfSD5EdW1xdlAv++lW5dngGoE/Hp/
+q/gO6e7g5Jd+H6kVERbtrmNfDOkmRvDDKjqrlJ4CCxOjflrFGEhCPacYRi7aPQAu
+lulv8nhB6fJ5HSGEyxsXD8bkhEjmVqZAeKCL6Yiuayi7Yf9Z+KjBtGw1yrEQG3A2
+9bQVzmSsz8WvtZaRS/dWb+QRK85hpQ==
+=Nc8N
+-----END PGP SIGNATURE-----
+
+--Sig_/GoVKaWfXr/MwIgi9T5i7uLR--
