@@ -1,130 +1,230 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68187238C08;
-	Fri, 20 Jun 2025 09:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07256229B1E;
+	Fri, 20 Jun 2025 09:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750412984; cv=none; b=NaziDEHL3fJa9oYc1Yann4kTrwSZHWtg9g/hRuVBKrKSlnj6qeXzeUvzVSmJ6qdLmFGQtfBp2fVa6Iih4i7B5qvnlw01JoZ6LxahFnWbXZiKRhumUgDvTdQ0zCTUWW8QrGhUXfAxf+Ai2yVLmOl1CgEetCg50gkGyB1gXYIZ5W8=
+	t=1750412996; cv=none; b=lupqht0WCiVy1+nvai8FVJYTj6LkBgLUgYoICNZvnvhsaJ/7boXDEfYGaUF6OUklTMYtKXfqe/InbZSGzaUdJsFAXf5RWoTh3GWiF2Wq4qP8qAGMOnLMGM0Guxcuv+/wJGwaQBZouQ8Z2OhPzX0NDiX6JvvP65a/6QAmh9kE/mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750412984; c=relaxed/simple;
-	bh=qTnLGaYE4mSJe4XGJd9c1paMNelCcWBLch1kHcCtYSY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U6Vtp29dtAwFGb3ctVR3JQYYelz7LIBpcTe/vyXA+aaN1jA453o9Pls4hF6BubUGYVULC4Fq+bWGDVQfxd34BA16T5wq93oh5GbQMSUN5uKHLTphq3Ds5qj4KYgt0x/7cGTlwzk/HOw/3u8BODFzfWz+veN8vRyiSUKTOHErzLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qy5eFkUC; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750412996; c=relaxed/simple;
+	bh=w/IZIUlVfxj6StexsGKbT+cS5xQ+MpOOiUS9y+RIgOM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=M12bKEE3Jtzx7T9mM+thB3YCHtQembrS6Nxb8+MynrEFl8rbTxeXNVQFgAceXFlMmyigBRiaylzRI4mcEBapKXQy+qA3wEFvwwzYGnfe8xWaikBfCONKT8Zgbe8pxReU3UgzZJvhAiOcS6mDWfpyO0W1L5fyCN/rfhEv4gzgcGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TmbV8Tx7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gPnPk2fo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy5eFkUC"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2350fc2591dso13450855ad.1;
-        Fri, 20 Jun 2025 02:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750412982; x=1751017782; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wm9uNcsgLmLy2CTce8UTPVgm6JKmZNFE7FHPVZSoHGI=;
-        b=Qy5eFkUCQbtRZPWkAJkbqb5xcXmIegciFmjgd7AhW/5Zt9UfEfQzFXG5V05T4Makpi
-         32kC23OsZ/w7IbnaZF0kMbEeeDelPjc1HzI7Hmcwlbf5IfBIvkv9SZ+WtUUuGiad41gp
-         MSoQ8l8MDkVX9UDwl/eK/xO4o+uM5jduWtQhocbJ/jbqeaDL8Nwy9sWgGJsqFqsLnuXD
-         1FpkzaPOZYQb7HNvU7qipY2szK0lUq5gfrKixUuZrdMl2eg4qn2TfrLpEBJY3r7MqwSR
-         eLMj0ktw2xHoCs2CCXmcyt4tYpWvSFGAoPbi7zBjbzmeUEtVfsq8Jqd8VegjHeIYVyUB
-         NBMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750412982; x=1751017782;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wm9uNcsgLmLy2CTce8UTPVgm6JKmZNFE7FHPVZSoHGI=;
-        b=ZBqF5vYtrFILMNbBqtLMsnz9uNvlg8Dj5P+q8BNmWkt9fj5CwnYuZp+W8RIYWFDeca
-         m3Fx4CFL3rPgSVPe06pa59ujarhGhCPwcDcdp9Le2t/ja2QQwe1TCT1ET6Zg3jOCaOv6
-         GXgpIwChzrFY6hy4axR37WJmQwD0PIbbV/yBcZWeE/PwfZud30OXqKLfYMSBxJpvvffL
-         +Ky215KEughQK0pCvokI8vuzSPfoFCEojNXTzXzv/BGnSLbeh5heb3zGxXYbyyGxbxmF
-         OIEdNnDs0f32McJwIvtJkjxYpX31Ral4WsQgvgyjzHWNlPZOu9zh0/v+pWtCbwWsVBSO
-         ijkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPSrTo+ZCf+RXa9aOng6jTmWpuqvUM9u6r3HtAz60hfGq/kmDpTfkeeNoH4J2vNzRhPHME4l99@vger.kernel.org, AJvYcCUVcnKsujr30g0fwJIGqGgW3YiSPMqNa/vJ9A2tIGreFAvIWz0GqKmxkWAG6AI42zOyJIHr+G3B9W37ZZgM@vger.kernel.org, AJvYcCX5c6F16Y3uw5TTZzoXkeCZ9pwBxebdSlbxa/Z+i/z4UlqXfPwkzcVqwyrrdcAOIr+zB876Ni3EjtKL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzch1SEgJqTvMq9B3Fq5pHeddTp/LeqyIJPkbEXyo4dBx8nYbUG
-	yPabS9fE3aZiA2r4HqvYElr2LY84txw4+P4h79QgFzgStr/PpWM+gytRG9lA6CKe
-X-Gm-Gg: ASbGncsE3gjdstqNK8KU4aQOlvsDh7ahKwxXSOF9Vol4TPBfOluC8//5O6g0N4h1Qei
-	SAK6YTiwW4CAZ4Fso5tSbvbAkWB64+iXMoUtaMvc3AAbSBAp7n85ZFxVGAgEHbcmg1ja4A25FP5
-	tGgjVRP7G7qlDNJfE4jQEVhhl6yxwXhbowUvEm/CE1HTWiwHiefhqcicWAvh93sLPqfUTqZaBpG
-	G9/mjmF6NjmRiDFoGkEKlGtiVdr8Mt5e6iCxucLNnnAS5rFop1P/ipEIOT93Oad51TCPSJQPKen
-	F6uXKp+uscQXuVUtljXCXGDZ2zKvFCJXO7dWQ4tk6evpzlb0BEGoMoTVCvymjikLlsyJMUBjNRI
-	nXjbdXUl1lOs=
-X-Google-Smtp-Source: AGHT+IH6Be5gP3+3exFSkxm22vF5iZh7JCUxNtdjaBLajdekU8Xmj0n59/agYpsJTUMoVM2m4rUZ0Q==
-X-Received: by 2002:a17:903:32ca:b0:215:a303:24e9 with SMTP id d9443c01a7336-237daf6593emr27765085ad.3.1750412982159;
-        Fri, 20 Jun 2025 02:49:42 -0700 (PDT)
-Received: from [127.0.1.1] (061092221177.ctinets.com. [61.92.221.177])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-237d86ef88bsm14167885ad.219.2025.06.20.02.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 02:49:41 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Fri, 20 Jun 2025 17:49:11 +0800
-Subject: [PATCH] arm64: dts: apple: t8012-j132: Include touchbar
- framebuffer node
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TmbV8Tx7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gPnPk2fo"
+Date: Fri, 20 Jun 2025 09:49:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750412993;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8u8Le9QKzGFGeU/8gqppJD2C6i2QDdK14vNaGZ922/Q=;
+	b=TmbV8Tx7drPYltkK9wAJX+9oHuWFacNRBYohUlkjB8PHk+DixVjlfqB8GjapLDL309PiiT
+	mU5imBsRYqaTTCRnNpAMbwKck+A+DMFdjVo51jEKNVToMUg6J1/mPoLaQmKhEn5UoIaXuX
+	wPeMKYzL/ngpiOjoHDa4FD3aKBpD4/xlgxCxV0ogC46r6dCv7v4htBGxCQTpMiEZWbac/E
+	fv38fUyIzds/xssjYNJLut/SIxIcQh0Ab+GHhmoSaSmYnrqfzXFfHDSvgBRD4qccFRnNdu
+	rRsnu51Om3s0EN+fkYU8PiOogAk10ioQFqdzPRbS5dF7g4+4zjEc1mfHzwWAPg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750412993;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8u8Le9QKzGFGeU/8gqppJD2C6i2QDdK14vNaGZ922/Q=;
+	b=gPnPk2foodbeGvtELtdBIOauQ1mnqylpBp9S08z1gjEqf0vux89s0rcneeknUKWg8UtNlz
+	Wlt25eyWa9rsZpDg==
+From: "tip-bot2 for Tejun Heo" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/core: Reorganize cgroup bandwidth control
+ interface file reads
+Cc: Tejun Heo <tj@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250614012346.2358261-4-tj@kernel.org>
+References: <20250614012346.2358261-4-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <175041299243.406.8917774484930071478.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-j132-fb-v1-1-bc6937baf0b9@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAJYuVWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyMD3SxDYyPdtCTdFPMUUzML8xRjc4MUJaDqgqLUtMwKsEnRsbW1ADN
- YMSFZAAAA
-X-Change-ID: 20250620-j132-fb-d7d5687d370d
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, stable@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=882; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=qTnLGaYE4mSJe4XGJd9c1paMNelCcWBLch1kHcCtYSY=;
- b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBoVS6zKNgfrxDu4IxQuG+XErH6r6Vm9rzm0pebd
- Z3LpvEPtguJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaFUuswAKCRABygi3psUI
- JHJoD/0c+i2KQVhxj9K7upj3umunHHR5iGCOEG7jxFTtrsE+9UuVngAG8qtLOrYp/X9GUmrrZ2t
- YjB8zqTSrGCkMZgDCQSvVnYq7RApDSyigQQ36SWV5Lh0zMI7tuF4rx1m8MgENCWOqRwZKEK64UX
- MBz8IOTYYDcFK+G5Dj9SL2QLI9HQWxAjpS13aSuYZ6+jT0s4U06FeLHcrPlOg8V+5os/NVVo+/q
- Zx4GZs+Gtry/8S1DKD3+TARaqvlCXS5qZiEvnGwCEOochN2Xh/DHTQqUlrjhAVL3XQn1DiN1hMQ
- EBd2Feg6UYw+iXnzywYNLUJZYcYGpD6SGYjwnxXBpJ1iN4izrVDbcXaSYfcrzlLhLBPyFDU1MQE
- oKCoPZco6WkgKXu6Ocnj1rMY7OqrrvGYT4ii2JrimT3DE1hf2BkIwfb1SIh5+aElTHTR056aGOW
- YIy7brULuGRblckBPK5MZZfsKFNaPgrwNN2BEj1C152m/CZgQmFouQG2X3BQZjdMLNtksmVCQ16
- SnmdffQVXD3VCC8cK6iALZdxHjRAhAFBCbTaRGg76wX/Be4wEiOniKeQAwHSAXi17FE+cjwdL3q
- luHN2WxpWowukCRgX/7ADKFDgaLOUxVo95rtVpeUopwEB4llG89OR/eUN4QiImlW+nfZ2mvXQ5a
- 1taNYho8VbNMnHg==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-Apple T2 MacBookPro15,2 (j132) has a touchbar so include the framebuffer
-node.
+The following commit has been merged into the sched/core branch of tip:
 
-Fixes: 4efbcb623e9bc ("arm64: dts: apple: Add T2 devices")
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+Commit-ID:     43e33f53e25687ca870248d1939cfade0164426c
+Gitweb:        https://git.kernel.org/tip/43e33f53e25687ca870248d1939cfade0164426c
+Author:        Tejun Heo <tj@kernel.org>
+AuthorDate:    Fri, 13 Jun 2025 15:23:29 -10:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 18 Jun 2025 13:59:57 +02:00
+
+sched/core: Reorganize cgroup bandwidth control interface file reads
+
+- Update tg_get_cfs_*() to return u64 values. These are now used as the low
+  level accessors to the fair's bandwidth configuration parameters.
+  Translation to usecs takes place in these functions.
+
+- Add tg_bandwidth() which reads all three bandwidth parameters using
+  tg_get_cfs_*().
+
+- Reimplement cgroup interface read functions using tg_bandwidth(). Drop cfs
+  from the function names.
+
+This is to prepare for adding bandwidth control support to sched_ext.
+tg_bandwidth() will be used as the muxing point similar to tg_weight(). No
+functional changes.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250614012346.2358261-4-tj@kernel.org
 ---
- arch/arm64/boot/dts/apple/t8012-j132.dts | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 58 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/apple/t8012-j132.dts b/arch/arm64/boot/dts/apple/t8012-j132.dts
-index 778a69be18dd81ab49076fb39ca4bc82f551e40f..7dcac51703ff60e0a6ef0929572a70adb65b580f 100644
---- a/arch/arm64/boot/dts/apple/t8012-j132.dts
-+++ b/arch/arm64/boot/dts/apple/t8012-j132.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dc9668a..8de93a3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -9404,7 +9404,7 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
+ 	return 0;
+ }
  
- #include "t8012-jxxx.dtsi"
-+#include "t8012-touchbar.dtsi"
+-static long tg_get_cfs_period(struct task_group *tg)
++static u64 tg_get_cfs_period(struct task_group *tg)
+ {
+ 	u64 cfs_period_us;
  
- / {
- 	model = "Apple T2 MacBookPro15,2 (j132)";
-
----
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-change-id: 20250620-j132-fb-d7d5687d370d
-
-Best regards,
--- 
-Nick Chan <towinchenmi@gmail.com>
-
+@@ -9414,12 +9414,12 @@ static long tg_get_cfs_period(struct task_group *tg)
+ 	return cfs_period_us;
+ }
+ 
+-static long tg_get_cfs_quota(struct task_group *tg)
++static u64 tg_get_cfs_quota(struct task_group *tg)
+ {
+ 	u64 quota_us;
+ 
+ 	if (tg->cfs_bandwidth.quota == RUNTIME_INF)
+-		return -1;
++		return RUNTIME_INF;
+ 
+ 	quota_us = tg->cfs_bandwidth.quota;
+ 	do_div(quota_us, NSEC_PER_USEC);
+@@ -9427,7 +9427,7 @@ static long tg_get_cfs_quota(struct task_group *tg)
+ 	return quota_us;
+ }
+ 
+-static long tg_get_cfs_burst(struct task_group *tg)
++static u64 tg_get_cfs_burst(struct task_group *tg)
+ {
+ 	u64 burst_us;
+ 
+@@ -9614,22 +9614,42 @@ static int cpu_cfs_local_stat_show(struct seq_file *sf, void *v)
+ 	return 0;
+ }
+ 
+-static u64 cpu_cfs_period_read_u64(struct cgroup_subsys_state *css,
+-				   struct cftype *cft)
++static void tg_bandwidth(struct task_group *tg,
++			 u64 *period_us_p, u64 *quota_us_p, u64 *burst_us_p)
+ {
+-	return tg_get_cfs_period(css_tg(css));
++	if (period_us_p)
++		*period_us_p = tg_get_cfs_period(tg);
++	if (quota_us_p)
++		*quota_us_p = tg_get_cfs_quota(tg);
++	if (burst_us_p)
++		*burst_us_p = tg_get_cfs_burst(tg);
+ }
+ 
+-static s64 cpu_cfs_quota_read_s64(struct cgroup_subsys_state *css,
+-				  struct cftype *cft)
++static u64 cpu_period_read_u64(struct cgroup_subsys_state *css,
++			       struct cftype *cft)
+ {
+-	return tg_get_cfs_quota(css_tg(css));
++	u64 period_us;
++
++	tg_bandwidth(css_tg(css), &period_us, NULL, NULL);
++	return period_us;
+ }
+ 
+-static u64 cpu_cfs_burst_read_u64(struct cgroup_subsys_state *css,
+-				  struct cftype *cft)
++static s64 cpu_quota_read_s64(struct cgroup_subsys_state *css,
++			      struct cftype *cft)
+ {
+-	return tg_get_cfs_burst(css_tg(css));
++	u64 quota_us;
++
++	tg_bandwidth(css_tg(css), NULL, &quota_us, NULL);
++	return quota_us;	/* (s64)RUNTIME_INF becomes -1 */
++}
++
++static u64 cpu_burst_read_u64(struct cgroup_subsys_state *css,
++			      struct cftype *cft)
++{
++	u64 burst_us;
++
++	tg_bandwidth(css_tg(css), NULL, NULL, &burst_us);
++	return burst_us;
+ }
+ 
+ static int cpu_cfs_period_write_u64(struct cgroup_subsys_state *css,
+@@ -9712,17 +9732,17 @@ static struct cftype cpu_legacy_files[] = {
+ #ifdef CONFIG_CFS_BANDWIDTH
+ 	{
+ 		.name = "cfs_period_us",
+-		.read_u64 = cpu_cfs_period_read_u64,
++		.read_u64 = cpu_period_read_u64,
+ 		.write_u64 = cpu_cfs_period_write_u64,
+ 	},
+ 	{
+ 		.name = "cfs_quota_us",
+-		.read_s64 = cpu_cfs_quota_read_s64,
++		.read_s64 = cpu_quota_read_s64,
+ 		.write_s64 = cpu_cfs_quota_write_s64,
+ 	},
+ 	{
+ 		.name = "cfs_burst_us",
+-		.read_u64 = cpu_cfs_burst_read_u64,
++		.read_u64 = cpu_burst_read_u64,
+ 		.write_u64 = cpu_cfs_burst_write_u64,
+ 	},
+ 	{
+@@ -9944,8 +9964,10 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
+ static int cpu_max_show(struct seq_file *sf, void *v)
+ {
+ 	struct task_group *tg = css_tg(seq_css(sf));
++	u64 period_us, quota_us;
+ 
+-	cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg));
++	tg_bandwidth(tg, &period_us, &quota_us, NULL);
++	cpu_period_quota_print(sf, period_us, quota_us);
+ 	return 0;
+ }
+ 
+@@ -9996,7 +10018,7 @@ static struct cftype cpu_files[] = {
+ 	{
+ 		.name = "max.burst",
+ 		.flags = CFTYPE_NOT_ON_ROOT,
+-		.read_u64 = cpu_cfs_burst_read_u64,
++		.read_u64 = cpu_burst_read_u64,
+ 		.write_u64 = cpu_cfs_burst_write_u64,
+ 	},
+ #endif /* CONFIG_CFS_BANDWIDTH */
