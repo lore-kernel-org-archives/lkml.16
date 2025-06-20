@@ -1,73 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F8D2356B4;
-	Fri, 20 Jun 2025 08:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0182221260
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 08:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407183; cv=none; b=iLFmklkuO5D/1/CDWr8zYf3OqqQBGupd+wWG1gfXwJTJmnCJaPTjmLq941SyCZvK0+uei60YlNqJeP7WX22dr7hWsqZ6BAgWtgrha4w5BGZ1MkC4K156kUzcicuE9PE/Om7soG7Z93nC5SSpoYGCyjJRxUyKbBehSPCAJr2aluE=
+	t=1750407276; cv=none; b=idv6Q5D5rGqhKKfJV4TsLZvSNi+GMtBLrzbp3TMf2wiaZ7r2jo3b+Qths30hW9SrXkH/zOK0UklCseQxey5Eaum6d1sl2N8ZcedmLgwi1AHAyhzZkHMH09FnueMkl8fnx94AWrRDkwE1unost7Ecv/VrhBIrZkJgS83AO2B7fEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407183; c=relaxed/simple;
-	bh=z8UDxO/OcLukhXKZ6GZRQPrtUnvInsX/2UomE+yR66s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d1y2ootx5OHA7J2s2l4+y3X/iYDCtMb7ksq14bVrDKXp+HcG81/CEAD6aWLH0xxV1oPSLGjuJWQyjiw+8hsfrWqpBajSl9AcxRqMmGdR06x8S3ZFPAafXVI6bTk0RgTgWFrEqnwv2GJzeC+dUbwws5fm5oX+IDMY5NCB0l9yLp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BE77176A;
-	Fri, 20 Jun 2025 01:12:40 -0700 (PDT)
-Received: from [10.164.146.15] (J09HK2D2RT.blr.arm.com [10.164.146.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1382A3F66E;
-	Fri, 20 Jun 2025 01:12:55 -0700 (PDT)
-Message-ID: <d5a86ef8-a58c-4abc-8312-08406c847edc@arm.com>
-Date: Fri, 20 Jun 2025 13:42:53 +0530
+	s=arc-20240116; t=1750407276; c=relaxed/simple;
+	bh=xfDkOff2/cp56isNgBDL74wTO4PNdFCvihi5zbefZmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MDO2qV8ghnSV7iPB2YT/T+xOnvMorZhUCShBdwwI7VCwYaUhUkGB9Wj40cRUIHv/QhxrxlkDc46C/q65TMM0vuv/ofyGSVscRe3njEDITHfxm59/gyBBemVHL+eJSAmJ6oc9vDdIVgVvMM84uVp95xZcQKPr78YmeM9lrXKG09g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ECCjE4i+; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ECCjE4i+"
+Date: Fri, 20 Jun 2025 04:14:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750407268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ekidZJ9vjPqyDhRKbJdtTMUi2Cve88x65UZUoS2Frl8=;
+	b=ECCjE4i+Dds9rWpM99wY2zCPSK7fP73/Dgk1Uxqcl2IKNDzDjbHXxKJq3+ZsEtmAW+/6To
+	xsfdf4QsnqCIz8eiKVtX8VmVSOCJnkoULtAH4XuWVwGKaqAP4Bm5gqTA1NZQtqVEDbf9AK
+	xRaZVOiHyDXsydgfyqvT8OnMJLCnS7U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Martin Steigerwald <martin@lichtvoll.de>
+Cc: Jani Partanen <jiipee@sotapeli.fi>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
+Message-ID: <hewwxyayvr33fcu5nzq4c2zqbyhcvg5ryev42cayh2gukvdiqj@vi36wbwxzhtr>
+References: <4xkggoquxqprvphz2hwnir7nnuygeybf2xzpr5a4qtj4cko6fk@dlrov4usdlzm>
+ <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
+ <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
+ <3366564.44csPzL39Z@lichtvoll.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
- <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
- <20250618041235.1716143-2-anshuman.khandual@arm.com>
- <aFQP8LzVMctf6XH5@casper.infradead.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <aFQP8LzVMctf6XH5@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3366564.44csPzL39Z@lichtvoll.de>
+X-Migadu-Flow: FLOW_OUT
 
-On 19/06/25 6:56 PM, Matthew Wilcox wrote:
-> On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
->> +++ b/mm/memory.c
->> @@ -522,9 +522,8 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
->>  	mapping = vma->vm_file ? vma->vm_file->f_mapping : NULL;
->>  	index = linear_page_index(vma, addr);
->>  
->> -	pr_alert("BUG: Bad page map in process %s  pte:%08llx pmd:%08llx\n",
->> -		 current->comm,
->> -		 (long long)pte_val(pte), (long long)pmd_val(*pmd));
->> +	pr_alert("BUG: Bad page map in process %s  pte:%ppte pmd:%ppte\n",
->> +		 current->comm, &pte, pmd);
+On Fri, Jun 20, 2025 at 09:12:21AM +0200, Martin Steigerwald wrote:
+> Hi Kent, hi,
 > 
-> Unfortunately, the one example you've converted shows why this is a bad
-> idea.  You're passing a pmd_t pointer to a function which is assuming a
-> pte_t pointer.  And a pmd_t and a pte_t are sometimes different sizes!
-> (eg sometimes one is 64 bit and the other 32 bit).
-
-As discussed on a separate thread, this might be addressed via separate
-printf formats for each page table level e.g %ppte, %ppmd, and %ppud etc. 
-
+> Kent Overstreet - 20.06.25, 03:51:45 CEST:
+> > On Fri, Jun 20, 2025 at 04:25:58AM +0300, Jani Partanen wrote:
+> > > On 20/06/2025 4.09, Kent Overstreet wrote:
+> > > > I'm not seeing that _you_ get that.
+> > > 
+> > > How hard it is?
+> > > 
+> > > New feature window for 6.16 was 2 weeks ago.
+> > > 
+> > > rc<insert number here> is purely for fixing bugs, not adding new
+> > > features and potential new bugs.
+> > 
+> > That's an easy rule for the rest of the kernel, where all your mistakes
+> > are erased at a reboot. Filesystems don't have that luxury.
+> > 
+> > In the past, I've had to rush entire new on disk format features in
+> > response to issues I saw starting to arise - I think more than once, but
+> > the btree bitmap in the member info section was the big one that sticks
+> > in my mind; that one was very hectic, but 100% proved its worth.
 > 
-> So no, NACK.
+> Kent, from what I gathered, you'd like to change some window rules – at 
+> least for filesystems or new-in-kernel filesystems.
+
+There is a time and a place for rules, and there is a time and a place
+for using your head and exercising some common sense and judgement.
+
+I'm the one who's responsible for making sure that bcachefs users have a
+working filesystem. That means reading and responding to every bug
+report and keeping track of what's working and what's not in
+fs/bcachefs/. Not you, and not Linus.
+
+There's no need for any of this micromanaging, which is what this has
+turned into. All it's been doing is generating conflict and drama.
+
+> > For a lot of users, compiling a kernel from some random git repository
+> > is a lot to ask. I spend a lot of time doing what amounts to support;
+> > that's just how it is these days. But rc kernels are packaged by most
+> > kernels, and we absolutely do not want to wait an additional 3 months
+> > for it to show up in a release kernel -
 > 
+> Those users should probably not use BCacheFS right now already to begin 
+> with but wait for it to be marked as stable?
 
+I've often told people that they should probably wait before switching,
+particularly when they need features that aren't ready yet (erasure
+coding), and things are not yet so trouble free that I would recommend
+normal users switch.
 
+Besides the most basic "will it eat your data", there's a lot of other
+things to consider, like "is it providing stable backports yet" (I'm
+explicitly not) or "is there wonky behaviour or missing APIs still to be
+worked out" (yes, there definitely is, and I'm still triaging so there
+will be awhile).
+
+None of that changes my most basic responsibility.
+
+> Kent Overstreet - 20.06.25, 03:09:07 CEST:
+> > There are a _lot_ of people who've been burned by btrfs. I've even been
+> > seeing more and more people in recent discussions talking about
+> > unrecoverable filesystems with XFS (!).
+> 
+> And I have seen a lot of threads on XFS over the years where XFS 
+> developers went great lengths to help users recover their data. I have 
+> seen those threads also on the BTRFS mailing list. Those users had no 
+> support contract, they did not pay anything for that free service either.
+> 
+> So I am not sure it is wise or even just accurate to implicitly imply that 
+> other than BCacheFS filesystem developers do not care about user data. 
+> From what I have seen I conclude: They do!
+
+No, I'm not saying that they don't care about user data.
+
+I know most of the other filesystem developers, particularly the XFS
+ones; I'm not trying to disparage their work.
+
+But track records do matter, and bcachefs has a good one, and I intend
+to keep it that way.
