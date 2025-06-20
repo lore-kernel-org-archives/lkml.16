@@ -1,186 +1,115 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022A6238D57;
-	Fri, 20 Jun 2025 14:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2491A2BD5B2;
+	Fri, 20 Jun 2025 14:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750431383; cv=none; b=u19uTKnGcr9vO9Vlky155lSWomgQWe8CWdvKV4/M7WgnInxd+0enE9NNTYrtNSbiR1cVf9O1bIJS8MnmXv5OXF/4CU2A+XHCeal1sbmAa2hs9ZOGrxLcAvz+dEzNEELlNbX/Mj13hOQH54bcCTrKZQecMDym8b18hMBMT5e+NWU=
+	t=1750431404; cv=none; b=facMwWWbYDSN41B0VKukap3UEDK9a2QEqO9KQd2kfyHfeDZyCqY7Vf82lvI70sajGfPK92XUHSXA3zMWqpUM3YXetkNfi2a3QHEVDwqKSl2HaLLHKVLOUfeFuWLsvo03RK8Fg9uPNolhqTOd/opb3PsTUbK8Cs+s7gjztfJXVtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750431383; c=relaxed/simple;
-	bh=KeAdY4d0cQANbJNGCRb8Z3ipjjE1ByYddMKzzlWqmpM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VsYTDJ1FN5rrmvzynLP6n8SpRFq28Xdvn3gK5ru8AxA/sIcBd4xrSQND/oFG7nY/E9ew8i8LSLjSSVBSbPDIp9scWPyVepoJXKhIFkI/cx6onr7kjjIWzDl0pCmPsrHDJcD8QxSaCpgm876STg71glFnF+OjVJ8Tlm+QWnN7dxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=jiHtZcP+; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1750431404; c=relaxed/simple;
+	bh=UkSrktSOg3YT49HTJ0lLuUoG6GbizoE9w6yhT72IHIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQrc4Fe/Et25Rme6vT46P4U9GJxh5zXf8bnrW0hQym+5gD+xq1xWvsZHR9B+lHouS15x0RceyDH/lmAcQRJ8ZUteewW+P+aWckMqglN9p62t0CV0plnTwQihufdKbf8nwiCl0z63chdwDeDC3JQo7QwG5TK3f58UI4d7/hm1Xgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qAmC/gaW; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="jiHtZcP+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1750431373;
-	bh=d+9Oljaa8nVwFXMldUvn8KGLEXEO6mQB0rGIcsdEKuE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=jiHtZcP+Z63+TnW4X2nDakt6soxRpOBJnD1uM9FdWOxUeNRwuQ0IpARvAI5KSAAKq
-	 y54fIB+CWpvNqYOVAAGKgWfMHer5wXfi3M0tdYsYMYgvmDRW9TXg/dwKgrb48EXaOU
-	 UzPZX40NbULm1QDstGUcYbN/lxD85lkiqkvQc1Ls=
-X-QQ-mid: zesmtpgz5t1750431369t3a4ec14a
-X-QQ-Originating-IP: we/QfigL6tmmNVqvgAIa+m2z/XvXE2l0eBX/THfP+4w=
-Received: from mail-yw1-f178.google.com ( [209.85.128.178])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 20 Jun 2025 22:56:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5536147073178439197
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70e302191a3so18311847b3.2;
-        Fri, 20 Jun 2025 07:56:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWxmwlxLyKodCM634dBy12RBfxYwQ24uICxrgMF7r7xvL+AiiFueSOoUhrmwLr1he6xIPa7nVcl8obbjg=@vger.kernel.org, AJvYcCVAbGuDCdlZmuj0pE/IyNOYwhC3gEF4lwHmtssumWz7iw9C1sogTaLl2BcnpVPjQfWxVcDK19YLQNhsqrfZrW9v@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUfQl4CZ1+dBuErybvyu0dfaGGV5w8jT2lqgJiUKx9Q8HVCnsO
-	JuvGhoZxmtqdVZAz5uDLlC/P78w5vce/b2lu9IoPUFZAFw0c3mJQ3pq0rnGK3aNAhxc19eLCqkd
-	A0jdTbZWqkZFEqYFio/ILHBwlI716iZg=
-X-Google-Smtp-Source: AGHT+IE4iv2qEvM8iF1q7CQ+2AU5TZ1FwuqsVLITl3Uh/iQfGo6kjpbytbiftf4SKsLOj/ViXWRfU3Ulh9UUj+j/oIM=
-X-Received: by 2002:a05:690c:61ca:b0:70d:ffaf:48e1 with SMTP id
- 00721157ae682-712c63ed67dmr42413407b3.9.1750431366218; Fri, 20 Jun 2025
- 07:56:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qAmC/gaW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=O/jZjNo754y8qhJ/PUhLRJEDi9tOJZ9ysoGunWSd/Pg=; b=qAmC/gaW/hDih7Sc0s+DEgDlk3
+	/r3ar2kJyp4sZ9xyaM5FYOBtyMMjiTOkPMhW9VzHfEGDEcEeX7Fyazf3yQ8yXkQAa3WyLk5fgRKTK
+	Iuw5uEaCJZHgNvgRhCxdh48HXsPF8/7L2eNMsrhugYIZPIOJgGxS/8uBI67rgQUsbt/H2z5UuFUYQ
+	gLI56cs17iCLLOTeGkMLesfK7KJVRkDb9FCFmwo3iFQe/qLQVhVjBxdoaSTXYZEaR4ivShNBqudiW
+	hSlejcd5R67Ak5sz51LIvq0kLrg5mkwEmXdyQlW1it5qzM6GkFezAvOQakw+IZt27HYKqd6mmixqb
+	GMKSycsg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45204)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uSdAG-00015l-0m;
+	Fri, 20 Jun 2025 15:56:24 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uSdA0-0000WH-02;
+	Fri, 20 Jun 2025 15:56:08 +0100
+Date: Fri, 20 Jun 2025 15:56:07 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mark Einon <mark.einon@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Keyur Chudgar <keyur@os.amperecomputing.com>,
+	Quan Nguyen <quan@os.amperecomputing.com>,
+	=?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+	Michael Chan <michael.chan@broadcom.com>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Jian Shen <shenjian15@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Steve Glendinning <steve.glendinning@shawell.net>,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next RFC] net: Throw ASSERT_RTNL into phy_detach
+Message-ID: <aFV2h4w3MLtjyfPb@shell.armlinux.org.uk>
+References: <20250620143341.2158655-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620035125.2938774-2-chenlinxuan@uniontech.com> <213adda0-1db2-46e7-9342-cc97fbd58d96@collabora.com>
-In-Reply-To: <213adda0-1db2-46e7-9342-cc97fbd58d96@collabora.com>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Fri, 20 Jun 2025 22:55:55 +0800
-X-Gmail-Original-Message-ID: <0C9854C6041AF5C1+CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
-X-Gm-Features: AX0GCFv1RrpcOagRj6rVm3UUQF6GLHA5GNpSdpRGU3MN1Y4zYRM4DSpmFcdMLpE
-Message-ID: <CAC1kPDMUUc3c7Ofyr7vXiW_Yt-kwrAOHK=9kQd5uCm2vv4h1gA@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests/filesystems/mount-notify: fix unused unused
- result warning
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Miklos Szeredi <mszeredi@redhat.com>, Jan Kara <jack@suse.cz>, 
-	zhanjun@uniontech.com, niecheng1@uniontech.com, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: NBkE/PP8DpFYfkDXBULGrQ4bPGlzJ5DeIvTJ5mfcD2P0JfSV3IfKc88W
-	8pi/IDsHKYhYJofZv4MXhZ0hNBsYPbxI0zkJILVaroPxcQMVoVGbNnuuZi0yx4+IUc/eXzv
-	KnwEnaKRO+TSpSNh25Hizy4fZAZGKl6Vug5ketwkckSeRKYTZBuEdRPDaUgRWGEHacql44s
-	5528eD7X4LNwg7K4xFEUFEqtIjRcw+H1/67jJUKCx0S0DEtlQFOhC1WX1ZI2NGj4pCtsy/C
-	QYJwAwraq3Ci80K04dWyXkh7Mnrn42Rgb5rk7NaELmFqKC5kTajyfDl7H91pDTplusd8xRB
-	iE+ekmZ6X1CoqZtZ3cdEGkocBm3fKD4SqSXUO3shYGx3hEIBSYnS5n3oXR2n15GOwA6lDu/
-	0Obf5eZ+iqK0i82nAchlkidZZPqruqkebsB9nQJyEt8b3UpllDl8KFCuVdWpMYfjmpuAs0h
-	8HYX22wLMJ1NfBTzIodNO1FXiCc9AEwYhCzCkQcEKw+dodt/w+AnNTX1VtclYhFBzHrviJ/
-	/kDFYpAEHB498Cx4ebFSs2nfqbnEpXaaqQxq9YvwbVtzO4lyoJ0dyckLRFs51sMzOvkkjHG
-	hJH6vy3sGLCwVnTcF2I7oJumoObin7qcvUex92Ilhxr9dn2QbTAnIXWs2oXctNSc9S0ZeWy
-	CYhi7ab5/Kjt13VJPdMRyUGmkhpKE3mbty20E9hCjbx13m8M6lGf8se2ERlqlyYW5Wfp/VI
-	SqY+iLO9w8VHlyghup5qEjD7HPSkqud2mSnsTLErZmNWnYEgu7Y9dmQEBiGJEhx1SM6Nbg0
-	cRf/He7kbIQpLaWGM0hKszLJ3vEDfm7EPQ3Ng3JFxPQh45XR96rSYiVDIh7h6JMRiZoXc9H
-	dO/g00mNz11LLpbNByTGK5n03pAcAac1mjBTno0DSbF+pNxM4uhJREylSmRcXhzG7wsCDN/
-	meV7L9lWkReJGozTXp3+ljOT2dhECEx2qm8lT8pnq61lVCcNidj6M00LNx4Dkjwt94BwS/m
-	4jlBCfkbIc4+gfKzEazSG7Rz73yIbJqH6yjMQ9PFRRfe94OcA06kpRNfZSrzCe9E6vSW+62
-	Cn3WBO02K8l0uLQIiUd6k0=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620143341.2158655-1-kory.maincent@bootlin.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Fri, Jun 20, 2025 at 10:46=E2=80=AFPM Muhammad Usama Anjum
-<usama.anjum@collabora.com> wrote:
->
-> On 6/20/25 8:50 AM, Chen Linxuan wrote:
-> > When running `make kselftest`, the following compilation warning was en=
-countered:
-> >
-> > mount-notify_test.c: In function =E2=80=98fanotify_rmdir=E2=80=99:
-> > mount-notify_test.c:490:17: warning: ignoring return value of =E2=80=98=
-chdir=E2=80=99 declared with attribute =E2=80=98warn_unused_result=E2=80=99=
- [-Wunused-result]
-> >   490 |                 chdir("/");
-> >       |                 ^~~~~~~~~~
-> >
-> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> > ---
-> > Changes in v2:
-> > - Apply changes suggested by Shuah Khan
-> > - Link to v1: https://lore.kernel.org/all/20250610020758.2798787-2-chen=
-linxuan@uniontech.com/
-> > ---
-> >  .../filesystems/mount-notify/mount-notify_test.c  | 15 ++++++++++-----
-> >  .../mount-notify/mount-notify_test_ns.c           | 15 ++++++++++-----
-> >  2 files changed, 20 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-not=
-ify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_=
-test.c
-> > index 5a3b0ace1a88c..f8e0c6b06e2d9 100644
-> > --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
-t.c
-> > +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
-t.c
-> > @@ -458,12 +458,17 @@ TEST_F(fanotify, rmdir)
-> >       ASSERT_GE(ret, 0);
-> >
-> >       if (ret =3D=3D 0) {
-> > -             chdir("/");
-> > -             unshare(CLONE_NEWNS);
-> > -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
-> > -             umount2("/a", MNT_DETACH);
-> > +             if (chdir("/"))
-> Please use the APIs provided by the kselftest_harness.h instead of checki=
-ng
-> return types manually. For example:
-> use ASSERT_EQ(chdir("/", 0)).
+On Fri, Jun 20, 2025 at 04:33:27PM +0200, Kory Maincent wrote:
+> phy_detach needs the rtnl lock to be held. It should have been added before
+> to avoid this massive change among lots of net drivers but there was no
+> clear evidence of such needs at that time. This imply a lock change in
+> this API. Add phy_detach_rtnl, phy_diconnect_rtnl, phylink_connect_phy_rtnl
+> and phylink_fwnode_phy_connect_rtnl helpers to take the lock before calling
+> their respective function.
 
-Are you sure=EF=BC=9FWe're in a forked sub process here.
+Please don't increase the number of API functions for phylink for the
+long term. I'd prefer all callers of the phylink phy_connect functions
+be updated to hold the RTNL, just like phylink_disconnect() requires.
 
->
-> > +                     exit(-1);
-> > +             if (unshare(CLONE_NEWNS))
-> > +                     exit(-1);
-> > +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
-> > +                     exit(-1);
-> > +             if (umount2("/a", MNT_DETACH))
-> > +                     exit(-1);
-> >               // This triggers a detach in the other namespace
-> > -             rmdir("/a");
-> > +             if (rmdir("/a"))
-> > +                     exit(-1);
-> >               exit(0);
-> >       }
-> >       wait(NULL);
-> > diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-not=
-ify_test_ns.c b/tools/testing/selftests/filesystems/mount-notify/mount-noti=
-fy_test_ns.c
-> > index d91946e69591a..d6a6a7ee87028 100644
-> > --- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
-t_ns.c
-> > +++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_tes=
-t_ns.c
-> > @@ -486,12 +486,17 @@ TEST_F(fanotify, rmdir)
-> >       ASSERT_GE(ret, 0);
-> >
-> >       if (ret =3D=3D 0) {
-> > -             chdir("/");
-> > -             unshare(CLONE_NEWNS);
-> > -             mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
-> > -             umount2("/a", MNT_DETACH);
-> > +             if (chdir("/"))
-> > +                     exit(-1);
-> > +             if (unshare(CLONE_NEWNS))
-> > +                     exit(-1);
-> > +             if (mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL))
-> > +                     exit(-1);
-> > +             if (umount2("/a", MNT_DETACH))
-> > +                     exit(-1);
-> >               // This triggers a detach in the other namespace
-> > -             rmdir("/a");
-> > +             if (rmdir("/a"))
-> > +                     exit(-1);
-> >               exit(0);
-> >       }
-> >       wait(NULL);
->
->
->
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
