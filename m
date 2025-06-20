@@ -1,122 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C29F21C17D;
-	Fri, 20 Jun 2025 12:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFD221C17D;
+	Fri, 20 Jun 2025 12:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423662; cv=none; b=D3N7B9Tv6ZHErvyLx6+EKsiVEB6sSYBs+Gb8o7jwK2P3s8LYWaOru0JSodeb5sCyiEXtsYYjtTHOvf5tEWlLvfpsqQu93GL7lgfSBHSLZgsmSaj4E30b0KF4phnCbpMpNe5HyOo/CBQWP3OT3tqbwytFB2/gbIlZEDR5E1A6n5Y=
+	t=1750423673; cv=none; b=pWql/43phXz6ww727aqIcrHA+4VKmqpniwEr06irPo9ESWabF9hu8eXmoU1NuRpduF93/8vVc3RXoTCcSE9Z92HzdOdYIHR5ALrqmxywC4t1Ol1kK9kNb+oDyu1Htl3EhLjurUCBDekJx/C/Foh8S3+NyqHAeWSoNsRn6ZT5LDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423662; c=relaxed/simple;
-	bh=WxQdWAW0bSSHvBvtVzl7jN97x6tGEWp71VMdnr6DKR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMi9FC/ohhfq0EUE3N54B1lzj6ti3oXR5haaWrhbNlAEhaaAly7nYWVCb0RV3qmZu7jY28Za/uaRXDH36iYAkO+H/Q7NBDa3IeCiKK2cndNizHlsyCGCJ6Y7m0Ybf0NUOWjkElkDE52Q2rxRgk9x8M/Jyyv5psCjSrlDj2mGyEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC8216F2;
-	Fri, 20 Jun 2025 05:47:20 -0700 (PDT)
-Received: from [10.57.27.59] (unknown [10.57.27.59])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895973F58B;
-	Fri, 20 Jun 2025 05:47:37 -0700 (PDT)
-Message-ID: <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
-Date: Fri, 20 Jun 2025 13:47:35 +0100
+	s=arc-20240116; t=1750423673; c=relaxed/simple;
+	bh=PohVpKV1EcWKh5h1vwR17he9CFGObdq89GBQaGriu4M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ewXq3UdSzFR+nUF44NhaIpmB5Yq4odV3+Np2cBitdDcUtsGBvCMK5mohrQheWynsI99rvIzHhHZciKnNKWggLTgeN5iyBPwLVFZrjbiMFY0WVfVjERLpLRcuknYhghiK1UggaJOOIhBktduPwBnZzTbmq6gsXFJYCqvLl6xlzxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYQCReGR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYQCReGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5991C4CEE3;
+	Fri, 20 Jun 2025 12:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750423673;
+	bh=PohVpKV1EcWKh5h1vwR17he9CFGObdq89GBQaGriu4M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YYQCReGRiY4bge2iScXEUhsyAwUA9zO30x+YLAZPrOw5ZXaXBYK7YdgNyiK7I7YMQ
+	 3lm/LWDFqRwcJ5U5Nb6uZcwYxghT3T+K7UkaUq7zVKw3XmQc/ngnzoSaMtqdJsqhjE
+	 TZb2O2acTpYm80M6MEaGtebmYBqavX9lYPPdU7p+D5z+SL5dc8jQI4eKf/m5LFeJxI
+	 3+KfojPvF2NP/q3rVmjlJaYcuNk41lp6TCCl+qKNHRSqXL0lUGNLZ+XtnRbt9ffU56
+	 UVWnbFFldiVaUUkqP+/nVqRQSisNR0qtfcft5qdPBi60WHAXGHW9AUSbIHZhH1+uC5
+	 IGv6JYbx9zZZg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Stephen Boyd <swboyd@chromium.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm/dp: include linux/io.h
+Date: Fri, 20 Jun 2025 14:47:43 +0200
+Message-Id: <20250620124747.1928114-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rick wertenbroek <rick.wertenbroek@gmail.com>,
- linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
- <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com> <aFVTdYWxuq9YzVQR@geday>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <aFVTdYWxuq9YzVQR@geday>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-20 1:26 pm, Geraldo Nascimento wrote:
-> On Fri, Jun 20, 2025 at 01:04:46PM +0100, Robin Murphy wrote:
->> On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
->>> Current code enables only Lane 0 because pwr_cnt will be incremented
->>> on first call to the function. Use for-loop to enable all 4 lanes
->>> through GRF.
->>
->> If this was really necessary, then surely it would also need the
->> equivalent changes in rockchip_pcie_phy_power_off() too?
->>
->> However, I'm not sure it *is* necessary - the NVMe on my RK3399 board
->> happily claims to be using an x4 link, so I stuck a print of inst->index
->> in this function, and sure enough I do see it being called for each
->> instance already:
->>
->> [    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
->> [    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
->> [    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
->> [    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
->>
-> 
-> Hi Robin, and thanks for caring, it's excellent to rely on your
-> extensive expertise on ARM in general and RK3399 specifically!
-> 
-> However, on my board I'm positive it does not work without proposed
-> patch and I get stuck with x1 link without it.
-> 
-> There are currently very similar patches applied downstream to Armbian
-> and OpenWRT so at least I'm confident that is not only my board which is
-> quirky and other people experienced the same problem.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Ah, I put that print at the top of the function - on second look now I
-see that there's an awkward mix of per-lane and global data, and pwr_cnt
-is actually the latter. Sure enough, moving the print past that check I
-only see it once.
+The driver started using readl/writel, which are defined in linux/io.h,
+so this needs to be included here:
 
-However, I still don't think blindly enabling all the lanes is the right
-thing to do either; I'd imagine something like the (untested) diff below
-would be more appropriate. That would then seem to balance with what
-power_off is doing.
+drivers/gpu/drm/msm/dp/dp_panel.c:33:9: error: call to undeclared function 'readl_relaxed'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   33 |         return readl_relaxed(panel->link_base + offset);
 
-Thanks,
-Robin.
+Fixes: 9d47325ee063 ("drm/msm/dp: drop the msm_dp_catalog module")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/msm/dp/dp_panel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
------>8-----
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index bd44af36c67a..a34a983db16c 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -160,11 +160,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
-  
-  	guard(mutex)(&rk_phy->pcie_mutex);
-  
--	if (rk_phy->pwr_cnt++) {
--		return 0;
--	}
--
--	err = reset_control_deassert(rk_phy->phy_rst);
-+	if (rk_phy->pwr_cnt++)
-+		err = reset_control_deassert(rk_phy->phy_rst);
-  	if (err) {
-  		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-  		rk_phy->pwr_cnt--;
-@@ -181,6 +178,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
-  		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-  				   PHY_LANE_IDLE_MASK,
-  				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+	if (rk_phy->pwr_cnt)
-+		return 0;
-  
-  	/*
-  	 * No documented timeout value for phy operation below,
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+index 489e39f6c0ac..ecd5d3665541 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.c
++++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+  */
++#include <linux/io.h>
+ 
+ #include "dp_panel.h"
+ #include "dp_reg.h"
+-- 
+2.39.5
 
