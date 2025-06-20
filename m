@@ -1,49 +1,71 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08867283FD1
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA451FBEB9
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413884; cv=none; b=Gs03I7OhBj/i5jVcouOiST8injBVnmiekoqfB4YNgy0OrsjAJoi6evjURyBYCy8g4mwKQtIrsTW8mC0OTrvm9OYeB2uGHEreY4rkzkznfg4SjIZHvkTrtY/KCG505Dr6SJhYEhS4/28sQGYoqA5azeUKPpAJ423iKwrqc2ES9cA=
+	t=1750414088; cv=none; b=Zy4IpdJBnHiVLG+V/rLu2UmVOH+acrEhXNjgmsP0zykcoEG0TUPAIPFDQben5rMubR2KU3lb8J1OdI1sWJBJ2KYgPsAlHPLNY0GrNceqd+OmRFFPfyfUdRXtUuwytm395fuFGncpol2m+HII0XgPr1Fwx2/63HbhpZEd87zttnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413884; c=relaxed/simple;
-	bh=c6LONFfZ0yM++gULrwbPfTOzdtWv9AB/e46wpXvuVyY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uTp+tkXjKmnNputE2hSQnbkoFEO+ZOTHkgH6DOFUW4kbGbzLwcsxRCyN1Hoo+BbEv3ISZU78mRYQ6o+bArHOu8qFoB+NfPA0gZ/qOT25Nyuz6At4IBeu6ckwUg6xTdvpWNep0lauX3kpMAgSGDMxLlV9nxqEhCSRrjFShGC7gDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CgLswvgZ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750414088; c=relaxed/simple;
+	bh=XY36gJsAaxDXpLuaSGFXNIXxl3b5SC3ehYUOY4xNNHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gEDn6aq6fbiC7CIEDMctIds/rXya2sbgUJWgSBODcADuZPLaC4gSvhQrVGr9anUOACF4pJk75FX+72X0pTaMRr5CIMXAsSMQugQZBD8rbAPutJcm6OY6CDZ90avoum1ocY4KLV4yGU1hiIZguya1cYI+1VHfPvS0fovouStq0xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFXQrroo; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CgLswvgZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=60
-	9TVC0hOBK6dMhgn8tSTcczNdyVWJ/RBOSw15FKE+Y=; b=CgLswvgZJ9CPhVq7O1
-	ElIxKBwU3TuS9durqa2XM5A6FByXdn/DWNUajWRb5sn2DWChXTzzJ5OsqrrDIlVX
-	kLU6MUwW2vViF3rut3GRnP0vl+HIvnMYbAHXRD77VxYsXKESGAXMuFqHQ4mmaLMK
-	TEIGzxq1ZAinf0DWWklxfhZr8=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXf77TMVVoqyBpAQ--.37413S4;
-	Fri, 20 Jun 2025 18:03:14 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: oliver.sang@intel.com,
-	urezki@gmail.com
-Cc: ahuang12@lenovo.com,
-	akpm@linux-foundation.org,
-	bhe@redhat.com,
-	hch@infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFXQrroo"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2c2c762a89so1297123a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:08:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750414086; x=1751018886; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N5IA6x+u4DmQUuB45wrZXuVzs1GUU+hrDbxsqjQ68lw=;
+        b=PFXQrroodDybYeiNsG31g6mnB+FgXH6SfFUb4oDBQL3ayZvUWEULcL6SuAHbnnioqP
+         ZFqCULLAS7OaxUrwjRNCLp/n0Hgr7DirJ4UsrAovu7qln4g1P9+umFLXGlGyLTjXQSjS
+         MBeg/19PPGq55nr86iMe0bOjk+XoXyDJlPmi20Y0mEXGEIbGpWcS8LhirOwp3QTBxnHf
+         O2YAJ+l0kTXBttcuiQs+sd84wgWQt2prHo6WzAfgtIVbkoccEI2a8PZjbYI4Y+Z425SQ
+         5phHOdvjjlyAAIYTFhGZdNXWrVLbbQ/3lu1IdJTso8goxlQlevV8eks4a/3gGN5iTnzH
+         ifzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750414086; x=1751018886;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N5IA6x+u4DmQUuB45wrZXuVzs1GUU+hrDbxsqjQ68lw=;
+        b=TFIfsoKeiEmU4HlVm99DhWqXPAqb4G0BX22fHmHqyYXJWoWKYz6ap00kBVrME0Bhmq
+         Sa/wpzNGlkGzf+6G20jrZCfGMq8pUeTzUNjNUDRE+fIqVKYwc/YCNdCDIH69GFT7Xtxb
+         yQ9zJDxEKJoRBT7WTxqycu8ipVsyvAF+LbA30L5En5TcnH6SZVdoINCqhD3hNlhOrM86
+         5UKnNJbrkSa6aGDAdhO91/mbLpcA4qXEg6MUx8liO/ZXXs7fhOf21hvTrX5Y3G7eqIqB
+         Z8yXT/vEaNK5pZS2zKAXNG3LAHAb1sH5WSwGI7Ca3l6p4VSNlFbpQvN6lfL+BRkuzrr4
+         lJDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXhR+kja6AwHBD7EWBA7hmlyLXQkkSovds1mNbOWbnLCUVXgys9CGGt8YLDE8AssgiYOa1G9xPe3Bsqe8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAFblLnZCMsjxbb28DNWOwoJ4YsKLEUhPXcAtXHhO+3ARTjJ2/
+	FvU7+JMhBPFy+xPlzkn0Nu0/ZANIZZtDJOzuWxbmwlQ+vA+5bkPkA7qf
+X-Gm-Gg: ASbGncvvl/uwndl8Hxxu95Yte4IWf6xD3VFt4nR/cW2H65RhgHwYeUcR+cRV6Vo4fAZ
+	koQ0x3iNwfh6yhplD3kuioj+K4fscF7lmi5PWlzYFMmBeLtIS1TyBvMdpGlkpDMtDhTo/0IEgsE
+	YFd6F/h3FM7EAvRiYhEki0Au9Oy/6wangfjXYwA95SaZCEn2/MLcg3FKMLh7RhJeyM+HFimanSw
+	qoEywWdvmB8V5MV0tQbEmioqmLT/ISTYGbmImA2gJg78fXffDuC33ZRsCFZR1N2VcFkp/9mKLIf
+	lQC7YJyn5iuotQQs4Js12ykBbbzhOsNUAwVO2HPrxg7jCRvYbPOCeR7t+Sp3ih5zQ/RHSWw=
+X-Google-Smtp-Source: AGHT+IEv1rhyUYa88QjjgSF1FGS7CGtwVqmjMOwj0bRiFKgksOqCgonmHtvy7aEefOi/ZO5fyU9KsQ==
+X-Received: by 2002:a17:90b:38c6:b0:313:27e5:7ff1 with SMTP id 98e67ed59e1d1-3159d628b64mr3541299a91.1.1750414086447;
+        Fri, 20 Jun 2025 03:08:06 -0700 (PDT)
+Received: from localhost ([202.43.239.100])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a318733sm3842921a91.38.2025.06.20.03.08.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Jun 2025 03:08:06 -0700 (PDT)
+From: Jiazi Li <jqqlijiazi@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>
+Cc: Jiazi Li <jqqlijiazi@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lkp@intel.com,
-	mjguzik@gmail.com,
-	oe-lkp@lists.linux.dev,
-	harry.yoo@oracle.com,
-	kent.overstreet@linux.dev,
-	surenb@google.com
-Subject: CONFIG_TEST_VMALLOC=y conflict/race with alloc_tag_init
-Date: Fri, 20 Jun 2025 18:02:58 +0800
-Message-Id: <20250620100258.595495-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <202506181351.bba867dd-lkp@intel.com>
-References: <202506181351.bba867dd-lkp@intel.com>
+	"mingzhu.wang" <mingzhu.wang@transsion.com>
+Subject: [PATCH v2] kthread: update comment for __to_kthread
+Date: Fri, 20 Jun 2025 18:07:56 +0800
+Message-ID: <20250620100801.23185-1-jqqlijiazi@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,107 +73,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgCXf77TMVVoqyBpAQ--.37413S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGrWUWFWUZw47uF17Zr43KFg_yoW5KFWUpa
-	yfXry7Ca95J3yxCrW7K34v9ryFqw4DGw1UJF42vayF9rnIkr4UCr1DKryIqFyUXFWYya9Y
-	qFs7tF4vkr1UZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U6HqxUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBpyqmhVMBM2swAAsJ
 
-On Wed, Jun 18, 2025 at 02:25:37PM +0800, kernel test robot wrote:
-> 
-> Hello,
-> 
-> for this change, we reported
-> "[linux-next:master] [lib/test_vmalloc.c]  7fc85b92db: Mem-Info"
-> in
-> https://lore.kernel.org/all/202505071555.e757f1e0-lkp@intel.com/
-> 
-> at that time, we made some tests with x86_64 config which runs well.
-> 
-> now we noticed the commit is in mainline now.
+With commit 343f4c49f243 ("kthread: Don't allocate kthread_struct
+for init and umh") and commit 753550eb0ce1 ("fork: Explicitly set
+PF_KTHREAD"), umh task no longer have struct kthread and PF_KTHREAD flag.
 
-> the config still has expected diff with parent:
-> 
-> --- /pkg/linux/x86_64-randconfig-161-20250614/gcc-12/7a73348e5d4715b5565a53f21c01ea7b54e46cbd/.config   2025-06-17 14:40:29.481052101 +0800
-> +++ /pkg/linux/x86_64-randconfig-161-20250614/gcc-12/2d76e79315e403aab595d4c8830b7a46c19f0f3b/.config   2025-06-17 14:41:18.448543738 +0800
-> @@ -7551,7 +7551,7 @@ CONFIG_TEST_IDA=m
->  CONFIG_TEST_MISC_MINOR=m
->  # CONFIG_TEST_LKM is not set
->  CONFIG_TEST_BITOPS=m
-> -CONFIG_TEST_VMALLOC=m
-> +CONFIG_TEST_VMALLOC=y
->  # CONFIG_TEST_BPF is not set
->  CONFIG_FIND_BIT_BENCHMARK=m
->  # CONFIG_TEST_FIRMWARE is not set
-> 
-> 
-> then we noticed similar random issue with x86_64 randconfig this time.
-> 
-> 7a73348e5d4715b5 2d76e79315e403aab595d4c8830
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :199         34%          67:200   dmesg.KASAN:null-ptr-deref_in_range[#-#]
->            :199         34%          67:200   dmesg.Kernel_panic-not_syncing:Fatal_exception
->            :199         34%          67:200   dmesg.Mem-Info
->            :199         34%          67:200   dmesg.Oops:general_protection_fault,probably_for_non-canonical_address#:#[##]SMP_KASAN
->            :199         34%          67:200   dmesg.RIP:down_read_trylock
-> 
-> we don't have enough knowledge to understand the relationship between code
-> change and the random issues. just report what we obsverved in our tests FYI.
-> 
+Update the comment to describe what the current rules are to detect
+is something is a kthread.
 
-I think this is caused by a race between vmalloc_test_init and alloc_tag_init.
+Suggested-by Eric W . Biederman <ebiederm@xmission.com>
+Signed-off-by: Jiazi Li <jqqlijiazi@gmail.com>
+Signed-off-by: mingzhu.wang <mingzhu.wang@transsion.com>
 
-vmalloc_test actually depends on alloc_tag via alloc_tag_top_users, because when
-memory allocation fails show_mem() would invoke alloc_tag_top_users.
+---
+Changes in v2:
+- describe current rules for detect
+---
+---
+ kernel/kthread.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-With following configuration:
-
-CONFIG_TEST_VMALLOC=y
-CONFIG_MEM_ALLOC_PROFILING=y
-CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y
-CONFIG_MEM_ALLOC_PROFILING_DEBUG=y
-
-If vmalloc_test_init starts before alloc_tag_init, show_mem() would cause
-a NULL deference because alloc_tag_cttype was not init yet.
-
-I add some debug to confirm this theory
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index d48b80f3f007..9b8e7501010f 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -133,6 +133,8 @@ size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sl
-        struct codetag *ct;
-        struct codetag_bytes n;
-        unsigned int i, nr = 0;
-+       pr_info("memory profiling alloc top %d: %llx\n", mem_profiling_support, (long long)alloc_tag_cttype);
-+       return 0;
- 
-        if (can_sleep)
-                codetag_lock_module_list(alloc_tag_cttype, true);
-@@ -831,6 +833,7 @@ static int __init alloc_tag_init(void)
-                shutdown_mem_profiling(true);
-                return PTR_ERR(alloc_tag_cttype);
-        }
-+       pr_info("memory profiling ready %d: %llx\n", mem_profiling_support, (long long)alloc_tag_cttype);
- 
-        return 0;
- }
-
-When bootup the kernel, the log shows:
-
-$ sudo dmesg -T | grep profiling
-[Fri Jun 20 17:29:35 2025] memory profiling alloc top 1: 0  <--- alloc_tag_cttype == NULL
-[Fri Jun 20 17:30:24 2025] memory profiling ready 1: ffff9b1641aa06c0
-
-
-vmalloc_test_init should happened after alloc_tag_init if CONFIG_TEST_VMALLOC=y,
-or mem_show() should check whether alloc_tag is done initialized when calling
-alloc_tag_top_users
-
-
-
-David
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 85fc068f0083..0e98b228a8ef 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -88,13 +88,12 @@ static inline struct kthread *to_kthread(struct task_struct *k)
+ /*
+  * Variant of to_kthread() that doesn't assume @p is a kthread.
+  *
+- * Per construction; when:
++ * When "(p->flags & PF_KTHREAD)" is set the task is a kthread and will
++ * always remain a kthread.  For kthreads p->worker_private always
++ * points to a struct kthread.  For tasks that are not kthreads
++ * p->worker_private is used to point to other things.
+  *
+- *   (p->flags & PF_KTHREAD) && p->worker_private
+- *
+- * the task is both a kthread and struct kthread is persistent. However
+- * PF_KTHREAD on it's own is not, kernel_thread() can exec() (See umh.c and
+- * begin_new_exec()).
++ * Return NULL for any task that is not a kthread.
+  */
+ static inline struct kthread *__to_kthread(struct task_struct *p)
+ {
+-- 
+2.49.0
 
