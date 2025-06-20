@@ -1,102 +1,50 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87A919A297;
-	Fri, 20 Jun 2025 15:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3323C28B3E2;
+	Fri, 20 Jun 2025 15:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433943; cv=none; b=BzmJS2E9pTuKYwaBWzb3ZCa1StIynaA3DWZrrR0ao/ChzUbRmdTGtvc5t9Lf+gRDWslTZnh1lFW0t1WWdDE+nJF2C4Yi7Nwhl6UgHj10H1RLW5CL2OpeovAPqmkCEtvFzWdmeZjs9t57on/dwYRcmOf6U3QQGw1I2j5c7gbXklc=
+	t=1750433994; cv=none; b=nrWgveYnYYcLYwYhVlsQ1C8pytO0VuUsZvB9iqf9T0lQEBgENVgVyO36P9uccDHJZnK3I2l2E4czQbge/PbcL7gj8R2Jqt15J1n67AI1W5jsPFtiOuo0hQZO3BpnVGoa/1whBdH8Xp1P9Ieeel02xu5b43gaTM7xVJRf+5Uh5Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433943; c=relaxed/simple;
-	bh=kdiPdMh5+sRzNgtYRKj/S0sAtUte5v+zpvWVg0DO3wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ch5qtOPcd0Wjabr/4wqjNFw/njH8Ieqj8OhdVuXWLOxYLkvWy21xGEyeavlxnLZUberuBkc3QPWp0S3/6K7/LvqT/6/p1n3kVqb+24Nwwg5rMR2yfXMqZILcJstCZvWYKWMC7vklqdIBwz24wjU3BJaYqamQxOqWjaGNDfT+daA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8C4J6+/; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750433994; c=relaxed/simple;
+	bh=VfsPGuEjqXcBsg9RvSh06ru5pxcJQVGthExdWYPZvBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PJm0G82Tc5HSAbE2P/S89iexO2Wf4Gczh2tRWwZpm2V3C+14HT0P2dLCltm4sFxWSuUv9HY+l8GvvAxtl0E3SOCvFVabpf+jjcgxelmLzwOMBx12GPr1os0+kbKHHdx48vV0a4H6OldiVPgYWRoG06p8RyO8PQseZ6PcxTNZGb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TNV/ff+m; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8C4J6+/"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so14548045e9.1;
-        Fri, 20 Jun 2025 08:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750433940; x=1751038740; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=f8C4J6+/wg6QDOROSMmYbZ0GaohbAYmB1NCpq+JNCD6g5PzcOwFtYBUIzSyWZ/Wr5U
-         zVaVjhS0AgsvlOebSkSK5BOR48g56bs0DWYnng4UwCXH6s7cwJFVSKreKYC2/hB8xiFd
-         lrp5oTOpchNWDWv+UXs7tNXR7GHOBdnY7LZw9z7pDIDjNi8YFm2zScoIUjNY7kHKsSV4
-         iaM4Lgx7YEezRGkBhozRSl9JLzbjkHN/orKXmzfG4lJPicJ2tU0zkkn5mHuR+8n3xwym
-         MwH9Gcbl3t51tvO0tQah5HrH/KawqhXQHRpxewpGHrCcobwTzKvSOol6csHgXlqkwh8z
-         nLTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750433940; x=1751038740;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=GJvtxk7fx3+S+adiKpz8GM/yQ8DpkBBWyooNZ0dvwPDlp0t/Pexm4pKPWpRZ0K3DgK
-         G7gONSM5ggooY/BvoDkxBGsF0a7Ihlk3L3eTkkDL2xaaD0ZK/5j9qP6U5CgZ4DTmF3h7
-         FwST8E5flromyBj4j4+30hanoLIN2W5KeB6+IixpPF7xWvNG3OY4VQvdLuwI4aLqq+il
-         Sop875q4yrHa6JcC/Lfy6ftYMGeSHdozR9W3Q1HDl0HfK9xHZQaHZBM7GMe3uHgHnpao
-         ariOXvXCihYoSz0fkNJfubgNMVdsm93mqAbUefJLyx6MUnPDs9fUIQEl6ZiM9Tcabl2N
-         H50Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV3YP7tRD3c3jI3ZmOywU1OLxCIhsNVM5okp7RhERaE9GQSkAB1qkaD3Pb6QkKUweHeHU3rwj1AfapK@vger.kernel.org, AJvYcCVVl73jjX6cAuFjEnoyEBMQYdMuRkAUSSTAos0Vfn4op+fBpmuwWDasCNShRjjjCdwgjAj5APJVJNn4SaPreD8=@vger.kernel.org, AJvYcCWBlJIgaSl0qMqDHknpShnN5D/CCW4taphFV70i1Tptadw3x6uF//6HGkUg/O2QDR+8YaEClKUaN/VpMQ==@vger.kernel.org, AJvYcCXqn6+8g2JSq9Qvgn6MV6DQ8MKCHWYM2jvu5VkhJJFsF+gDs5Yac2b9xsZMhOJoqRfcxrTWMUCFrBNCu9S7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ5DVI/slNwimObtWSKpeO9uFD36DGrTbQMgn21PVHUR68s5SN
-	vSu1QTO7jkLxCDFx0k8NuotUAtce1b2vWFAA+IBUAHOcmIi3Ij/RPflX
-X-Gm-Gg: ASbGnct66P1fiE5xef0h9U9R/fm7yrMHkAHvhDOPB8vG4LDrrAIeheSfnVqLrkZVNJg
-	Mv+NQT5SfDJrEz4xmnbRl9mHegfZSGX8b/zbejrmyqaq3NRoJd4ZPqwsgSZWrwbJYp4NzuuZzGW
-	g2M+V/ZJaYMir/aRnWKN0ZUkpVeyDqS5z6QLy4JlYqUgNeQ0Y6pIkqETztZGLog1/1yt1HTSrRl
-	QlPO633LTpmuPigQh0MqU9fh1vmem5UXY0X0vtzGv4h1UbRto7hYBTwDj2ALsdV7KPScrkLYPPq
-	WOq41ci0iluewTqymCrS7+tV/Ipi/Lh+LzVjLKw80mZOEDR/6bgwgANHYjTSqs/rfX5VUctIW+i
-	NQiDjDkn4w2AvFouUhLTf3T09ymtQxyWvIGqV
-X-Google-Smtp-Source: AGHT+IHBTlMifqap8Yx6rGoRjLGMK3thDNHDyszupBIkp4SOG430SYgjLtQZVOEL2dpCSM+Fq0Q+Ww==
-X-Received: by 2002:a05:600c:1c02:b0:453:9b3:5b58 with SMTP id 5b1f17b1804b1-45365e4a008mr26113405e9.4.1750433939906;
-        Fri, 20 Jun 2025 08:38:59 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c6b2sm2392627f8f.46.2025.06.20.08.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 08:38:58 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Alex Hung <alex.hung@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Igor Korotin <igor.korotin.linux@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TNV/ff+m"
+Received: from LAPTOP-I1KNRUTF.home (unknown [40.68.205.236])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CF07E2117589;
+	Fri, 20 Jun 2025 08:39:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF07E2117589
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750433992;
+	bh=i4K0lmrsYGvyT8FPcTPS32aag7itn+Eq0ksyOKJ7odQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TNV/ff+mXTEzVQxOpBmqtPVUa8ny7aK1sKVTSlUACRqVMrfa+iDelQ8//5D8fXAQi
+	 q7s1iYZ86nJESzPx/9Ny0fA6XaSteBuoJWGJesE7v+GqkuQhlnYLM0wji6F1OFlp4w
+	 UpjafgTXICwm4v5PZ7kPbDarpCw+0hwNDzoAxGE4=
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To: "Sean Christopherson" <seanjc@google.com>,
+	"Vitaly Kuznetsov" <vkuznets@redhat.com>,
+	"Paolo Bonzini" <pbonzini@redhat.com>,
+	kvm@vger.kernel.org
+Cc: "Dave Hansen" <dave.hansen@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	Len Brown <lenb@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Subject: [PATCH v8 5/9] rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
-Date: Fri, 20 Jun 2025 16:36:56 +0100
-Message-ID: <20250620153656.294468-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+	alanjiang@microsoft.com,
+	chinang.ma@microsoft.com,
+	andrea.pellegrini@microsoft.com,
+	"Kevin Tian" <kevin.tian@intel.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	"Haiyang Zhang" <haiyangz@microsoft.com>,
+	"Wei Liu" <wei.liu@kernel.org>,
+	"Dexuan Cui" <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Subject: [RFC PATCH 0/1] Tweak TLB flushing when VMX is running on Hyper-V
+Date: Fri, 20 Jun 2025 17:39:13 +0200
+Message-Id: <cover.1750432368.git.jpiotrowski@linux.microsoft.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,73 +53,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the `of_id_info` methods in the `Adapter` trait to reduce
-duplication. Previously, the method had two versions selected
-via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
-single method by using `#[cfg]` blocks within the method body.
+Hi Sean/Parolo/Vitaly,
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- rust/kernel/driver.rs | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+Wanted to get your opinion on this change. Let me first introduce the scenario:
 
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..cb62b75a0c0e 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -147,30 +147,32 @@ pub trait Adapter {
-     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
-     ///
-     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
--    #[cfg(CONFIG_OF)]
-     fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        let table = Self::of_id_table()?;
-+        #[cfg(not(CONFIG_OF))]
-+        {
-+            let _ = dev;
-+            return None;
-+        }
- 
--        // SAFETY:
--        // - `table` has static lifetime, hence it's valid for read,
--        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
--        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
-+        #[cfg(CONFIG_OF)]
-+        {
-+            let table = Self::of_id_table()?;
- 
--        if raw_id.is_null() {
--            None
--        } else {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
--            // does not add additional invariants, so it's safe to transmute.
--            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-+            // SAFETY:
-+            // - `table` has static lifetime, hence it's valid for read,
-+            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+            let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
- 
--            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
--        }
--    }
-+            if raw_id.is_null() {
-+                None
-+            } else {
-+                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+                // does not add additional invariants, so it's safe to transmute.
-+                let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
- 
--    #[cfg(not(CONFIG_OF))]
--    #[allow(missing_docs)]
--    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        None
-+                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+            }
-+        }
-     }
- 
-     /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
+We have been testing kata containers (containers wrapped in VM) in Azure, and
+found some significant issues with TLB flushing. This is a popular workload and
+requires launching many nested VMs quickly. When testing on a 64 core Intel VM
+(D64s_v5 in case someone is wondering), spinning up some 150-ish nested VMs in
+parallel, performance starts getting worse the more nested VMs are already
+running, CPU usage spikes to 100% on all cores and doesn't settle even when all
+nested VMs boot up. On an idle system a single nested VMs boots within seconds,
+but once we have a couple dozen running or so (doing nothing inside), boot time
+gets longer and longer for each new nested VM, they start hitting startup
+timeout etc. In some cases we never reach the point where all nested VMs are
+up and running.
+
+Investigating the issue we found that this can't be reproduced on AMD and on
+Intel when EPT is disabled. In both these cases the scenario completes within
+20s or so. TPD_MMU or not doesn't make a difference. With EPT=Y the case takes
+minutes.Out of curiousity I also ran the test case on an n4-standard-64 VM on
+GCP and found that EPT=Y runs in ~30s, while EPT=N runs in ~20s (which I found
+slightly interesting).
+
+So that's when we starting looking at the TLB flushing code and found that
+INVEPT.global is used on every CPU migration and that it's an expensive
+function on Hyper-V. It also has an impact on every running nested VM, so we
+end up with lots of INVEPT.global calls - we reach 2000 calls/s before we're
+essentially stuck in 100% guest ttime.  That's why I'm looking at tweaking the
+TLB flushing behavior to avoid it. I came across past discussions on this topic
+([^1]) and after some thinking see two options:
+
+1. Do you see a way to optimize this generically to avoid KVM_REQ_TLB_FLUSH on
+migration in current KVM? In nested (as in: KVM running nested) I think we
+rarely see CPU pinning used the way we it is on baremetal so it's not a rare of
+an operation. Much has also changed since [^1] and with kvm_mmu_reset_context()
+still being called in many paths we might be over flushing. Perhaps a loop
+flushing individual roots with roles that do not have a post_set_xxx hook that
+does flushing?
+
+2. We can approach this in a Hyper-V specific way, using the dedicated flush
+hypercall, which is what the following RFC patch does. This hypercall acts as a
+broadcast INVEPT.single. I believe that using the flush hypercall in
+flush_tlb_current() is sufficient to ensure the right semantics and correctness.
+The one thing I haven't made up my mind about yet is whether we could still use
+a flush of the current root on migration or not - I can imagine at most an
+INVEPT.single, I also haven't yet figured out how that could be plumbed in if
+it's really necessary (can't put it in KVM_REQ_TLB_FLUSH because that would
+break the assumption that it is stronger than KVM_REQ_TLB_FLUSH_CURRENT).
+
+With 2. the performance is comparable to EPT=N on Intel, roughly 20s for the
+test scenario.
+
+Let me know what you think about this and if you have any suggestions.
+
+Best wishes,
+Jeremi
+
+[^1]: https://lore.kernel.org/kvm/YQljNBBp%2FEousNBk@google.com/
+
+Jeremi Piotrowski (1):
+  KVM: VMX: Use Hyper-V EPT flush for local TLB flushes
+
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/vmx/vmx.c          | 20 +++++++++++++++++---
+ arch/x86/kvm/vmx/vmx_onhyperv.h |  6 ++++++
+ arch/x86/kvm/x86.c              |  3 +++
+ 4 files changed, 27 insertions(+), 3 deletions(-)
+
 -- 
-2.43.0
+2.39.5
 
