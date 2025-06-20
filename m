@@ -1,394 +1,193 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2054.outbound.protection.outlook.com [40.107.101.54])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF4C1B87F2;
-	Fri, 20 Jun 2025 02:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B75B136351;
+	Fri, 20 Jun 2025 02:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750387958; cv=fail; b=Pl2nZMixqjPDiEOl4m1xd7MTvYQ5Gb7TAdBsjFHm3eDh5L0AqvUMhN3w5uTwBfauKLbVxJa3mfLqzZwhNTNEiiUGmLMSjYtS58EFpCvPv68AIGPhQAftipIIPwV9GD/ltdwybTY5Jr/NByJ4z7qOVUb1iCaom1CBGmIPUmDhhf4=
+	t=1750388093; cv=fail; b=smKfCsFZSR94FxxCQIWkXcbWKYf5KaWNLulfuQpJBaaOqIiJP977D6zn/2KF6aAGywyYD70yknzvotXxmKY5OqV/XQH+K+fGAZOYRyxOat1xbFVApDYtGxLPlGF9Eo3dI6T7WMv7V+FJlTzsER4VY3DDlDF9cngKfQte91eGUQ8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750387958; c=relaxed/simple;
-	bh=ZxXmrcC95CnsqdGCdg0TCyrOr4W6rfW7wCeJk0l55lA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jd8lSUjXpCFpzRRGUiYHq/puevp70JRz2/KkseT9DPL/CUQehi1EM7qqfiixs7CPyF+WFJq2fC4yIrXi6AfSbkLIdb3B1l/QShd8o1OwpyUxBCwddAJ1f3F9K2HWICoFCCw/TdM+kjfbEluEzZC14/X6yTVD5IsS28KNVa8CDtI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EIdpvdw2; arc=fail smtp.client-ip=40.107.101.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1750388093; c=relaxed/simple;
+	bh=lLO/WFwAKGSZapb1PYEG5zWkpvzJFwIjb9JtdevWkhc=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=PxOE9FVVP8Jv80/e2EScfbVPdPwGhM/4dZpyoO++sX2ILc/4PHz13CnW7ki4g/whi9c23/7mIFDY02BWk4gQTSR35mRQ+t2sDuquPhQFGiekYgS3F8AssbwGgyYH6aQ66cKe8pbG7L39u/vP7eQ+1TKh5nT+dKnQafkZRak1BAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mP8DPMEl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RO5PrlBt; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EIdpvdw2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mP8DPMEl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RO5PrlBt"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K0YX2V001140;
+	Fri, 20 Jun 2025 02:54:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=LP7Mf/wuIHPYlFee5v
+	DWUmY3lfWXgt+KdJYckliLeKI=; b=mP8DPMElJ6HZfFKMiwSHmTU7hdL2nZdQ8v
+	E6wmFxRmRVdXyXgYV0GyEKfg9FjO2RZ8t614VTvKjaxdu1gqcvbdIn8mSKB7vnBR
+	ENmZgCsdRfKXE1Ek2sZ8fke3MTl0f36zpsU62W8H9y3tl3UvQDTpxbe+FCraWB2u
+	9JZlfGBFj2/mvas0Oit8c706NGzN5z3+34aEs9N5YFUp+1xPXwyplRE8eVG8WqSd
+	aTfCEQGUznJy9l+Ve/rUOMWAinlGX5pJdoNHGgp1FIYORF3lSvfl4SyFzr1gCqWt
+	Y65icIZ/VqMMKZlAiQt1Q+usMZnZPGi13CMdLNJhgUVcIsI9xqpA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4790ydat0d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 02:54:37 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55K1bwhG018373;
+	Fri, 20 Jun 2025 02:54:37 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2057.outbound.protection.outlook.com [40.107.223.57])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yhcesx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Jun 2025 02:54:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TIFQnHu5KczcUrLajAC+gYhXwQShu39ZAcXAJw9yRIT7r91UQpcHtJpbCE10uNAy4sY3Nxje8cGbH0lkVwWLJ5DB7Tm9V4QisriIEyZh17aCo1VESfIdN9Q28CWU/8p8IZK9p2rOuEwhEj1uCn1a2kDikGbfJ2MjpJgMPRCeyvH6YdNhhY0TQydNF/OFYrY7ZsNddO6ZzKJVkag+R7c/Sor5JSHTtTeRFrGzmXrRdvH1kyx9/+YO/WwP3CfCSVfpJpz3dsSdRNoriCqCdRfrrXyXDjrxvFb58EEYSh7Mx8qObfHCgy5xlAfOHlV/3mpjgXz8R2M8LoEfVGyXJdeYIw==
+ b=Cu5s4vVv5giH1GwgUCjsdC0gewF372vnmbcIufKUKmV+KvLPxKRzaGdZHe+1Xr1oYDKsPQetQ850ufVXodfBSBVp0KSk1+jzMw3I5rmX+/bn0o4X+kCV/kOF8PzcVVi28f01WxfgnO3rh8YJgxTUZshBWzxFY+QQUJBM8XX0sKrZNH4XjGAv8Nb75Q5e0kzvsNOecfhIccdDvmteayHjBpFr+ia+h4oo5ZEgp33foBUrCU1E8wEh8gKBxX5ZTdZAM/CCenWsIFkyVSJq6B/ccr945C2/IQguBGpZawWSRQ42B0W62VPGKeMCUkasKQB30mNQERC52SWWXHkARCS4jQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ybi6O2JQC+F+g7ztsTc98CtmzDIKgIxtU6T3Vkn0dWc=;
- b=RJlmbwmg+iG32r0ITNK+gLTS2VJHIwllG7jsTRBwWvYDuDKM8nb5wX9GvXM9sGnzEruJ/WhpAA6Jyzwneqo5fgEx5H5Xf20TbgSLwhd9SPGC1Wex9oKuLJRpBEgp0mcfGmeYLzZoO4SkppTh2hMOyuQ8n88wxAyi4hGqnHYE5kwmISX8QmdRleCQjyCSd0caVVzD8TFldBW049MjPyzEfjNs5nuW4YLsIEoYP/35TS9t/9kPtkT7SY30trfcm6EIYFMndc6mEwZkKpJnviLAmAJsASy2uE3ECvj37oAdta0drwZVpJhKGV7cZAH2CD6r6fltIQGqL/OnAqhPCQbtww==
+ bh=LP7Mf/wuIHPYlFee5vDWUmY3lfWXgt+KdJYckliLeKI=;
+ b=HfrTeL6rXLOLgwE9V63Ex3GVvifD4jvbtwZoxvRwgBE9Z0xtCGR2Qe/WxidM/PUGsP0lab5vMpQ1gEMuYgrLDu9WTFDW3OlkLmHXFrN5Y217KIA8ND/S95dq1JVQJAlnI+d8qS1IoiiOjh/E3h6ivZVDo0LOf827NXPpRvXIYg7r3gk7URK7LNSSOEAVsWTsFISHJttTPE3ie1m0ihwZHCyEsxGgdlQh8sT8Q3/+6U4wkViTUplD64nQ5f+WqmxNQvFzXwEbwsPMCmC/7vC5rQMZ3g/c1oeP7mFpsztJlf8B0rVuUqwe+ZcTTuwredfTE51jH8QcqwNwFqka62QrZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ybi6O2JQC+F+g7ztsTc98CtmzDIKgIxtU6T3Vkn0dWc=;
- b=EIdpvdw2ssYGE+8b5CxUClEJxdf/aj8JgolFqmKnyl1njNYwVEjUBW5fNQ5tcJkxxFqKE3oZoHOkmF87yMX5R7BwzHWZyD/1qAUzCT35uZwBXfPeZ4fVa+2XsoCyp9SVYb7ULNq0Uue3f/aj1LplxFiJ99n67+ARlwiTKgI9W2k=
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
- MN6PR12MB8589.namprd12.prod.outlook.com (2603:10b6:208:47d::16) with
+ bh=LP7Mf/wuIHPYlFee5vDWUmY3lfWXgt+KdJYckliLeKI=;
+ b=RO5PrlBtknY8ZUbjmJss6lHV5VnNDe0fVzOTuNXhUDihuo3/5bNWj9cLc3RQ7lZE2+CILktkwM7HzbTaZ75X0cyp2TmVYUXzy00ynn4kg1wWxcO7pk4Qc3VyjGikSywmcIWOCc9fvHe0W85c9i7Q+Uzwg12im+jlgiykpXL5hv8=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by CY8PR10MB6634.namprd10.prod.outlook.com (2603:10b6:930:56::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
- 2025 02:52:33 +0000
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e%3]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
- 02:52:33 +0000
-From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, Manivannan Sadhasivam
-	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"cassel@kernel.org" <cassel@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
-	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
-	<thippeswamy.havalige@amd.com>
-Subject: RE: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Thread-Topic: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Thread-Index: AQHbrOylgtMytwVisU+l4ovrQWRiO7QAWL+AgAtiv8A=
-Date: Fri, 20 Jun 2025 02:52:33 +0000
-Message-ID:
- <DM4PR12MB6158AD426CB1E5A7A0101917CD7CA@DM4PR12MB6158.namprd12.prod.outlook.com>
-References: <20250414032304.862779-3-sai.krishna.musham@amd.com>
- <20250612203347.GA926120@bhelgaas>
-In-Reply-To: <20250612203347.GA926120@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-20T02:26:04.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|MN6PR12MB8589:EE_
-x-ms-office365-filtering-correlation-id: bbe08382-f720-4ce4-acd5-08ddafa581a2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?zMWSRXkHqB/RO/rQ9dKY6gog+2FJvJk2rIYCUkIifjAlB3xuzdXzIilTg31X?=
- =?us-ascii?Q?we6EnW7IEIwhk3saybb19t2tXWO/BTMDo9nhvoAQqWA5P4L+3AkWMFL6ODNj?=
- =?us-ascii?Q?FD/oZHPcFxFIwrgO18zgojsoNMdSdMPDHVmKqKcHtQHHeIeAF6PnYAOVxVvV?=
- =?us-ascii?Q?96/rQWI7eCDiMx+gXS/5Qsy18e/iJjmjXA/NJbeMHgu/Mr2JKW9Ctgdl73VF?=
- =?us-ascii?Q?4+UKvcWeMpsMSeWQQ5m4rQvpAAdmp6qrOIp+yr4WJQBEAu/C0rIcY6R67v8Y?=
- =?us-ascii?Q?vXzOv34lqI8snsZyxL4vLG5z0JmBdBOhdYARqQzo5TTXzD8grl8QVz4GdwYq?=
- =?us-ascii?Q?kky9k2pu7nGq6NTl0fd5AYpp0/3PRGJGk7DKfezWnq8NCRcvn1abpbtJAZvs?=
- =?us-ascii?Q?lcDzlEBYs04GaOZlXJXXgub2nkeHNmhMkCJBPGNv5NCDoMyc24vLWPDdEk35?=
- =?us-ascii?Q?1MZWgE9MAIq4N6WNDY3+lkOgofGthymxKB3TJdx/HifYNH4m91vHHI5bu2C/?=
- =?us-ascii?Q?plW06xwfeO0ectelslfkgMi6MSAQzo2eJpVR6nqEGWCCmuPZ38zlEO158hSz?=
- =?us-ascii?Q?Hwn8MCFSUwhNmAq6iTiTfy7YbndElERAXQiUl/gGD1n7J+wskdU5qhhmDfIn?=
- =?us-ascii?Q?khyJTx9S7mEf+quNQzFB2NJf8QGYINAONm9AoTJOHKxqezy42O6QbLaJs+7i?=
- =?us-ascii?Q?qFsGH8Ifd5DTSrz2BT4iZWV9xvHFxq6hdQ4X6bjxHNE6e31by4XVQi1lTESf?=
- =?us-ascii?Q?iVHR5orDX0POR3q3YNEIwepYiD3WbEttw48BYYjfeboaJcj+YlCBhrDfr99t?=
- =?us-ascii?Q?K2AKRrdUP9VnBteK8n+UkVya0UOBwjPViXyKVpUZTLCFBUXsHlsCkvkFO/Fr?=
- =?us-ascii?Q?jBYfssSOJ8YqdezvqPG+tNcvaA7ZO05t9S4H2N+sru8SHk2St4rCfhUZqa4Y?=
- =?us-ascii?Q?Ie8+VevyKwy1OrR5BY/PIT6ZXxOaDVf0WU/lfKdbzASw7c1XFX+Rh+frtQyI?=
- =?us-ascii?Q?xxhDydTVJuaRf+y0thS/JKD00aG3X/xGPr3uyotIOOvku0ER8VPB1KInoGBr?=
- =?us-ascii?Q?NIme7g+Fk1HmAP7lWqM5x7sOEfgoMzBtc8IJ3wOx8EVtB1rv044XprYWjR+5?=
- =?us-ascii?Q?YmE9tlTOAv75tKjxQdui+uc52I9wgvhwLy0v6TCBg6avvWq8scDlLqqEm8+d?=
- =?us-ascii?Q?ypBIxMqc+lBuHsbDD992/IdTggaw7DNTjry9r8K4bgFTLFlV+qbB9XLA4mKt?=
- =?us-ascii?Q?ORb2DOHUw7h+LrHGqHOq8KogOIjcRUtV4p3992sRVgrsIK5qAWuOM50jfaa1?=
- =?us-ascii?Q?GGIKy3ZLJrSfUcrscStYfioQ5zkis3tTwwzuKJ39gMGwSTbT2mtKsd+LUmRx?=
- =?us-ascii?Q?U0UQIrGppE/FjG411JOMF52YYeTbP961KUds2U6FZMCoJcNdocj4epArq4AI?=
- =?us-ascii?Q?IRN48x+6oEe429hG2+TMeBtc9uEW9Y7MYop2GKCneQUkbJIOaNARC1XP0l19?=
- =?us-ascii?Q?maVkm8r9hAOurzA=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?/ScrmomqqzIt0z+igyUyBbI1RE4AbbVzkCTbH44avV+P/mEEjBBXfHnC14Nx?=
- =?us-ascii?Q?WZe1NYBMtD26TaiIXZRRSO9Zdu8EuoDNRwWwWiSuk/tgvcZFdlay7e/ZXCEK?=
- =?us-ascii?Q?bRt6lK0pmb7hYSjYmsExIrCYLnPTc6d9t7TfLB/l1xW4VDzRL3SRxZeAuRPa?=
- =?us-ascii?Q?VdddP3ahEcefOqaDtNJdHGWw7+3Nu2Dc9e92tEuBdL0N40n2FfpQLr6Zja0E?=
- =?us-ascii?Q?E0UiDkE4MZyDMYsG1emM/RY9KG+2FP7gXH275lwpgsTOdeEQkBddoY9kFgiD?=
- =?us-ascii?Q?KZv2TV59Oi/hQlWDjgqiyUqgNNMuhScFQ0EZrRl922Qs37WYrsrv7qnLNYFN?=
- =?us-ascii?Q?vP04XT7NT51/jD+9S1iUvbgiqOyzF9bxjcbETQwsAm4tWA/gPVFlU3ousD19?=
- =?us-ascii?Q?QEx3Vw28QwX+o4r6ii1fVhWRD85s50I1kIXS3IcXX4MoaH6ObcVbnq+MLpK0?=
- =?us-ascii?Q?+SslU/FqWd+E8kHHO/E9TSxMp5vHqdRbQlQmAgkHXLZLSqClR9Vb5BmL4Mhw?=
- =?us-ascii?Q?1M7zg03GKjvhugP9iifMVJvFyAn0OxZCvRZKaScbs6eDqGSDZChTG1vJZXLA?=
- =?us-ascii?Q?HnJnZwlHoScgGYzQ9ei4k2CFS5ZqvWEJv4EP1YtQ7uZGWDF223ExY5xtPXIP?=
- =?us-ascii?Q?dodJO+R4VEEIETZOX0oQtBB85wK3EN+icMYFAzV6JIE4sRKpDoOOL6d3S3w5?=
- =?us-ascii?Q?DrK/b5vKkqdohnILueS8MkigRybXjr0OzIa7vYMdcIvo/N7ARMMuUnxb97ya?=
- =?us-ascii?Q?HKu+7lwCJVaKq3u2BO/NPVvxJX6u6JxPbNiA8ms+VuiwhW6TCQnb6kNWkzST?=
- =?us-ascii?Q?OLvOtiom3w2iNfSS1J8B2fOeW5K+7h9WGzTvShds1JcHAAg2DJ0XxVgxT9vn?=
- =?us-ascii?Q?X2EVfmLkYAZlPi2unvzSwctmo4RJ7EzWxUexHpBBqejsDlcnhVkvUkRMXi3v?=
- =?us-ascii?Q?GLu4FBxudW/IuuijehqUB5qrL/6EbCmEcoptzwxCnHdTg96IOFrl3y4NGrek?=
- =?us-ascii?Q?L1WLkEyPT5Ubnqc1p5xQn7YICA3eTwYcw3/jFuoN3RUPOBWG55VTjGpOnooi?=
- =?us-ascii?Q?g/8k79+qpmPdOEm1AMhdp0+sl3put27liS1fGXorSUFDfkSxcnjTquCh6wjM?=
- =?us-ascii?Q?zvv20FHSPA/m+sVbiZyldJXB2d+CF3FdLzNNsLr6c2+I4uV8ZdG44vgSe4fo?=
- =?us-ascii?Q?iKhn5d3Hg0gw0Jd5QZORZRyf2tDyf0t6LKDf9nlrBx0Cn4r0SVeG2KX0jCZe?=
- =?us-ascii?Q?+/cKkgvzbU4QvZlMrIGIqurYSI9kioFpeHA78jYo03LJRif2UxZrX19BKsf8?=
- =?us-ascii?Q?p3lGipYVmU3NLFJHkhO3KDWD8Z9MXuZ4jza5tATXyhueSQ+mcndAE2gXem2n?=
- =?us-ascii?Q?t1KEsYRM/UtfM0oeRN7mVj7c90I+2KoWUojnbp4d9GFE8NwBXgKj04UmfvgK?=
- =?us-ascii?Q?PC2dFQ1Dj2g4039yin/nRmnalzwesy9frs7X3lyheIGFk/EFK9hU7DtB8QE3?=
- =?us-ascii?Q?Fz0iE3UlJRy6utHKMiLzGzZ5r1eFBqCVtU+vRYh9mITdGBjDB9xDiy1v8x14?=
- =?us-ascii?Q?YJeCAJR5rdV4T5TKDS8=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Fri, 20 Jun
+ 2025 02:54:34 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%7]) with mapi id 15.20.8857.020; Fri, 20 Jun 2025
+ 02:54:34 +0000
+To: Avri Altman <avri.altman@sandisk.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bart Van
+ Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Clear ucd_rsp_ptr for UPIU requests once
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250617095611.89229-2-avri.altman@sandisk.com> (Avri Altman's
+	message of "Tue, 17 Jun 2025 12:56:10 +0300")
+Organization: Oracle Corporation
+Message-ID: <yq1o6ujt95s.fsf@ca-mkp.ca.oracle.com>
+References: <20250617095611.89229-1-avri.altman@sandisk.com>
+	<20250617095611.89229-2-avri.altman@sandisk.com>
+Date: Thu, 19 Jun 2025 22:54:32 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: BN8PR15CA0037.namprd15.prod.outlook.com
+ (2603:10b6:408:80::14) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|CY8PR10MB6634:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a1df718-d717-4283-2c40-08ddafa5c929
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tNOuOasGiNzsmIlyufVeIV21x1ARAtJChJ4/LhbV3JET9zXy/ZxN46vP1OKN?=
+ =?us-ascii?Q?mbc2xWlWSq1iZazXSk/VoYeLJPJK2Se3GaJpeqppc6EEKpVMkQmnN5Aa7g9c?=
+ =?us-ascii?Q?hhN/e9LnvQ5ik53UobOIavoFfF8u/DHB3T5sGSKJChHnTeX1HkEI9oSK1v4e?=
+ =?us-ascii?Q?uvRfHiF2Cl1QJfM6XiXNbYJvPHSaUW0DF7yVA9nC2UNtxKVwiOCV1InPvl59?=
+ =?us-ascii?Q?FcSxZAYpqxr9EYfoJxb0j7XnRhFn96oJiP+hri4iQ5DIB2xtF+SFiA0Nl6h0?=
+ =?us-ascii?Q?2umsbSEZhujvq8ddE3FtIAH1Vd1O4koJ/0KBZzHVWLYkZPChMGn68jQtJGoC?=
+ =?us-ascii?Q?2LEH8Do08lFFTIjbTFPcXQbznzAj9wZ532xGQF8XDq7AoflyZFzXqrWfKem8?=
+ =?us-ascii?Q?kiitCS7hw4QEk31zHuwAr7ssMo7Hy75ssxEvJd3FFvZDDXXjWTGYG9hlWL3q?=
+ =?us-ascii?Q?yizUvKMexpPvO9nrRXh953gscYqEBA7lLds8ejvL/Xn7dvvNOyknY6FqJ1nB?=
+ =?us-ascii?Q?9uRYcQvAgsGUTT2xYtiuQ6+tR/NUlx/c1EWfOxFgz9YNOo5tUz6iGMUDxefC?=
+ =?us-ascii?Q?hEviWJRJRegHZlqXjHIjUOzxFtFu+ddrtqEH/zBjBpeT4xBI8t0k6KzVO5kH?=
+ =?us-ascii?Q?1jphVD7WYlHIbFp4TBVkNy05miTGeKBBHu+Dw/U12sjIgsk2p/Co7L+xNcRx?=
+ =?us-ascii?Q?O+3+cdEgANcvxhHcmagRerB2s2VJouvoLP0mB+AMA9dXm6b5DpMi2cSiK4tW?=
+ =?us-ascii?Q?fRxcwmQjiro/ryT2RCCOqeZlVmyCRmHvjKj4/tFMrQOu7c7Gd82U+CdONK1v?=
+ =?us-ascii?Q?FFo5T/v9x19rXOHQ+KBj7d80jT4m4Aor14VNTjtYoAoGsq6Ed+a8nTMu2d0u?=
+ =?us-ascii?Q?zR83mzZ1oD7y5c1QQrGQlniTrjNBJixi4b5TITGuk7NYmHFup+Z4rHhuTFA+?=
+ =?us-ascii?Q?rqt+OtiVDNgMwbN0Tyvq7GbosaPFcDztH9LOcszOncTYU58/ysheL12szfpz?=
+ =?us-ascii?Q?Suv2hcevsr4LU6u0naxE8vmhWAI5LCSjulRKQPLOl3lB5pO+SByexK50N1MB?=
+ =?us-ascii?Q?TKAYENRwvxAR4BvmhPtFnGqRliw3xcK6gqwvkUAbbpriE+HLw4aHGOONmULB?=
+ =?us-ascii?Q?uS2cCsk808SGGMNjTRC6T1NNw2d7+ueycQ0zgU4iZ8d8eNrz6qR9JWev6YVu?=
+ =?us-ascii?Q?NnIDgXZSKri9qtXFJ2MHeMMuUpUKBh7wx2Px4QuoNEGmApaK+tXuxzxwsEf0?=
+ =?us-ascii?Q?2eclhduNxJLciJ4ydamiQZUFbelRICarZnxqKamMyTj3khDpLaGaKe/3JPdu?=
+ =?us-ascii?Q?3A650ly8fODdTJibb7JvvUnPDmrahOQDodPLltRTfrc2lWWvYWUBhNTgo/JK?=
+ =?us-ascii?Q?Y3rEdHXV7ojLlvbSSDAWZdCpb1O+PIW6x+rGM07JGOG4j2k9peOXU7vjNTjV?=
+ =?us-ascii?Q?nZv9MdWUzFM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gWaUSKRiEj/IDkagXGFFPGmln/KPZ6OYtqr53WGUwLL24EHyAhIMEqCNQY55?=
+ =?us-ascii?Q?NNGXX8+PQ8P1iwBRa1MJLTlSv4QCpApdMIsd0J3BLHo2Upi5FECH/2fGf9Zy?=
+ =?us-ascii?Q?67/XK9+QfyZ88d3ghJYwzukNJyWa9sJJdjzYcCKQ1me3EE32H5owohBfHXAw?=
+ =?us-ascii?Q?HwRot+zxz0hL7KVEqYKwR+GKoMJiQYEhE6bCttdiJZ4BCzXvOibncXmgjg9P?=
+ =?us-ascii?Q?nyG0eir2nrMLsmiFEBCwWvl+h/oP1cZis2rYnOxIqbRO2oHAPHgTHti3kppz?=
+ =?us-ascii?Q?EM/zqvYKaDm0YaSQoTNbUiNMdMAbGmRbyme7q2oFk6pR4C58meLbqCeJjH9h?=
+ =?us-ascii?Q?FoHmk1bjm3pYWMsSqUBfg4gBqAEBnsH1zKNZxlRaYQGjRV/Ud/2yFsAzh5+c?=
+ =?us-ascii?Q?Cfu+NgbGTKgmz2kH4zbzEaRATDelPB03EAwsno1YtpU8+PCeBK8kyGdhTEo0?=
+ =?us-ascii?Q?1wHgGzlF06to52aXQwriEXZ5qAVKiEkLtYOyv16h20m6in8bv3uQxPSg6gpF?=
+ =?us-ascii?Q?HnobroVDV0oEDuza1LUPZ/6hkhgafquSmnkG6+QbLGQn1FCbwz9n9XQQHpxT?=
+ =?us-ascii?Q?gbGGij+MkyvZk3QV7rsjnz9TY7lQLGGzwaaqpJKsgS5Uy+JYboI+v5wzj778?=
+ =?us-ascii?Q?yPJEHYnr1UwFqdHMYYipcyNci2FYD2266RtzlgHE0Co1NE2wl72TnwnfTgWs?=
+ =?us-ascii?Q?5WJL+8NAMPY+ihiVaXETpcwHg0kzScvaFyLLosAb2b9k5EmpxGGC4TtpAl0G?=
+ =?us-ascii?Q?eHIAOeml9kFEf0h5C4F6U/QRBHYRm8hXFshM8WUv3+fQpR4zDhps6jotEfeJ?=
+ =?us-ascii?Q?szfn3pqYYnubFz6UIBcmrIWhYJxZxqwKpQIgkhX9BUQPKevNPvOq+hA7bJ8M?=
+ =?us-ascii?Q?ZpFpk2lgcPM7gTVWTw7mVXRjvrrpfoiDk7ykIbm7QUoRwyd6ugRiUfuOKJCN?=
+ =?us-ascii?Q?BSEBtsMGjGtSCyMBmqdAnbf1y1VAQANySvo6TFafpCPEQTcfc6b0YBple2bj?=
+ =?us-ascii?Q?hgXd8HP2x4l/zjRphs/GT2jlwb7fSfBsYDe7YuKq4Iov4jvzXPS+qAc26mnt?=
+ =?us-ascii?Q?kIvcGqerThcCosPmQF6cQRV67I4CfP+hUNfeZ6VR7SGt/fZwOcXl0svxK/Qc?=
+ =?us-ascii?Q?m2YZX+m7fD5jRmSu20r7S1P3GY71LZ7Z3F0b3xE4IpgRU4WvfckHuqrmDa4M?=
+ =?us-ascii?Q?8m4EN7AZ92FwSUUhl8Ab0qjlRGJdXtHd2lI3MlJ8QaQEFl2zdh2cUNSZUzan?=
+ =?us-ascii?Q?JhpECiXg381YSwsmUwyCr0AWt3W6gSlbYXoh7/xNM9YqxXpOiFZNPsZmcnA1?=
+ =?us-ascii?Q?KOcdV7hKsm3dDW14Cc5MWsXHereRxOLHPcUNQQsRQ6PXRJZ2isWtp2zYvnLQ?=
+ =?us-ascii?Q?08wc3HZhOQZzg47vFrUTTKoZpO0+AB+eXNDfMk2onXT0YIui3YL2NDC3CQIR?=
+ =?us-ascii?Q?2oxPsC3C1DOrVNydGecDCAGVj26HycSQZLwHuV0ylQbNwNlomIBdPcKNJahg?=
+ =?us-ascii?Q?m3BhEB0G6zaYrldUVbn9o5JHjoO9IvLCIGsg8zlf3WRCcBKN+BpV/Mp5J21n?=
+ =?us-ascii?Q?2e0oNFuVjYTizSaCx5upoUfXNuxlgrbz0KEPR+emytvEBCap6myuad/3eZui?=
+ =?us-ascii?Q?ZQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	PLkzg6/sFnSqVALaPfy4AhXPaVI6uwsn4vyEV64fj8GsG8iB5jWNIqqbafVp8doy+CZAOHDOPVdLTEwgupB4SwGgTelJrj5OxqpFshny4GSqoF4KqqmCzdP648LGiv9R9/KHRi3ckiz0vlOtsV2QjiJqM+o83UVUzGhxS/L8YYgIs8b0EVexxThmSIoIDaiZnMU20TBknyaYTckx/2PdCEc/9lkomjQ1+3XJy+tg5efDT0i4HHa8+qskWnM512oPgtB2R+ecfgKNWmLTpv5xMsEwWmmnQWd0zFmY1VIaEoGJJga35YythYpGalMxgAkgP4FbYe74be1Tb5urbKd+yfESpk0ijzbwje0+hDGwr88xVBwYuV6iIAneqHhlOZmquY1X7azENZLryM2aNf0Wuq6KsI3httaSShPJf0u9l0HsMmHZL1rTNbnYFUoMLA1A4sHHpRZC8mkluF63JOE/l7sTFjSZoH4Z3jAqn4oGsWdnelda1vaE3yKsDIDIdOUAL/TDb8gOscVOnURGonvIBWuB8uB9zVe4ClJhrQxU+B+r/hmDPUFCamJS/CjgPbjJp7vl4PD89rPfTRxsuXpC2Rofd3K9B0Lf19oLT5qhxBM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a1df718-d717-4283-2c40-08ddafa5c929
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbe08382-f720-4ce4-acd5-08ddafa581a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 02:52:33.5354
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 02:54:33.9034
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hBIDQt6peF3CqoYx6xrLx87QRQkgawMfwpPFsoanVhclhCd9x97buLvWrooZk/gqmHcYGRI7wcfSaX10htRr1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8589
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zubhv0tUg4S34QMbDb1Jrvi9HxXIahWyK4XKhcriaZBNyYZBg6oaHlCme+2DPM6E4D87Hw3Vl30kfUrOpZ4yI80DLU08m5AuEXPjdbnYvMg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6634
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_01,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=965 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506200020
+X-Proofpoint-GUID: VlgIKNDknKx1FCWZhsW-TUrBmQcsN8Tr
+X-Proofpoint-ORIG-GUID: VlgIKNDknKx1FCWZhsW-TUrBmQcsN8Tr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDAyMCBTYWx0ZWRfX61XilKCaXivd kOa4CVbL0R4hu/SFYDPlJP9IJDKvN+iuju4g438Fq1DpvFFVCLa4DWfKYPecNbPy8ejExVn/+VK jXq2Sm5zklwr1BL19K1899CFIznO3PMn7w5u0pVuIMGFX36/B32rjaqiUpEihXlTRC65C27w7AR
+ tDoqVWYOlWXRScLE/6f/DWgR5LzvuawFsKPMrHvBZPoJ1xOLWWHRPsdwd1SNC5+1evbVOgwRu03 S4LU8bMy/1TM5X6u45KlCM8LVedy9wRQTUQRLN1sozqs3sdz1597oOXB1s0ifSbNw6QUVSK4Rul zTkzWo3CyXCJVG6X4qokNtQft8xzShmGYKB0fSJyEDcDyZIW45kzPPsaQ4QI5Me9A/PUVmNQNOx
+ fuwF3OHnO/YQPEO1JnjHGUemV+7qegmQM6EZDqFqX7SBpHvwdNsHm8I+x/wF0IB5kGpoSxsA
+X-Authority-Analysis: v=2.4 cv=XZGJzJ55 c=1 sm=1 tr=0 ts=6854cd6d b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=cewXuGIsSzsw8c2jRYwA:9
 
-[AMD Official Use Only - AMD Internal Distribution Only]
 
-Hi Bjorn,
+Avri,
 
-Thanks for the review.
+> Previously, the response buffer (ucd_rsp_ptr) was cleared in multiple
+> UPIU preparation functions. Do it once.
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Friday, June 13, 2025 2:04 AM
-> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
-> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
-> conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Michal
-> <michal.simek@amd.com>; Gogada, Bharat Kumar
-> <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
-> <thippeswamy.havalige@amd.com>
-> Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe =
-RP
-> PERST# signal
->
-> Caution: This message originated from an External Source. Use proper caut=
-ion
-> when opening attachments, clicking links, or responding.
->
->
-> On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
-> > Add support for handling the PCIe Root Port (RP) PERST# signal using
-> > the GPIO framework, along with the PCIe IP reset. This reset is
-> > managed by the driver and occurs after the Initial Power Up sequence
-> > (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's probe
-> > function is called.
->
-> Please say something specific here about what this does.  I *think* it
-> asserts both the PCIe IP reset (which I assume resets the host
-> controller) and PERST# (which resets any devices connected to the Root
-> Port), but only for devices that implement the CPM Clock and Reset
-> Control Registers AND describe the address of those registers via
-> DT "cpm_crx" AND describe a GPIO connected to PERST# via DT "reset".
->
+Applied to 6.17/scsi-staging, thanks!
 
-Yes, in Hardware logic both PCIe IP reset and PERST# are reset for CPM
-devices. I will include this in commit message.
-
-> > This reset mechanism is particularly useful in warm reset scenarios,
-> > where the power rails remain stable and only PERST# signal is toggled
-> > through the driver. Applying both the PCIe IP reset and the PERST#
-> > improves the reliability of the reset process by ensuring that both
-> > the Root Port controller and the Endpoint are reset synchronously
-> > and avoid lane errors.
-> >
-> > Adapt the implementation to use the GPIO framework for reset signal
-> > handling and make this reset handling optional, along with the
-> > `cpm_crx` property, to maintain backward compatibility with existing
-> > device tree binaries (DTBs).
->
-> > Additionally, clear Firewall after the link reset for CPM5NC to allow
-> > further PCIe transactions.
->
-> > -static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
-> > +static int xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
-> >  {
-> >       const struct xilinx_cpm_variant *variant =3D port->variant;
-> > +     struct device *dev =3D port->dev;
-> > +     struct gpio_desc *reset_gpio;
-> > +     bool do_reset =3D false;
-> > +
-> > +     if (port->crx_base && (variant->version < CPM5NC_HOST ||
-> > +                            (variant->version =3D=3D CPM5NC_HOST &&
-> > +                             port->cpm5nc_fw_base))) {
->
-> Would be nicer if you could simply test for the feature, not the
-> specific variants, e.g.,
->
->   if (port->crx_base && port->perst_gpio) {
->     writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
->     udelay(100);
->     writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
->     gpiod_set_value(port->perst_gpio, 0);
->     mdelay(PCIE_T_RRS_READY_MS);
->   }
->
->   if (port->firewall_base) {
->     /* Clear Firewall */
->   }
->
-
-Thanks for the suggestion, I will change the test condition as per above.
-
-> If you need to check the variants vs "cpm_crx", I think that should go
-> in xilinx_cpm_pcie_parse_dt().
->
-
-As per suggestion from Manivannan Sadasivam, I will be moving 'reset-gpios'
-to PCIe bridge node, so test with variants will be removed. Thanks.
-https://lore.kernel.org/all/ph5rby7y3jnu4fnbhiojesu6dsnre63vc4hmsjyasajrvur=
-j6g@g6eo7lvjtuax/
-
-> > +             /* Request the GPIO for PCIe reset signal and assert */
-> > +             reset_gpio =3D devm_gpiod_get_optional(dev, "reset",
-> GPIOD_OUT_HIGH);
-> > +             if (IS_ERR(reset_gpio))
-> > +                     return dev_err_probe(dev, PTR_ERR(reset_gpio),
-> > +                                          "Failed to request reset GPI=
-O\n");
-> > +             if (reset_gpio)
-> > +                     do_reset =3D true;
-> > +     }
->
-> Maybe the devm_gpiod_get_optional() could go in
-> xilinx_cpm_pcie_parse_dt() along with other DT stuff, as is done in
-> starfive_pcie_parse_dt()/starfive_pcie_host_init()?
->
-> You'd have to save the port->reset_gpio pointer so we could use it
-> here, but wouldn't have to return error from
-> xilinx_cpm_pcie_init_port().
->
-
-Thanks, I will move devm_gpiod_get_optional() to xilinx_cpm_pcie_parse_dt()=
-,
-save the port->reset_gpio and use it.
-
-> > +
-> > +     if (do_reset) {
-> > +             /* Assert the PCIe IP reset */
-> > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rs=
-t);
-> > +
-> > +             /*
-> > +              * "PERST# active time", as per Table 2-10: Power Sequenc=
-ing
-> > +              * and Reset Signal Timings of the PCIe Electromechanical
-> > +              * Specification, Revision 6.0, symbol "T_PERST".
-> > +              */
-> > +             udelay(100);
->
-> Whatever we need here, this should be a #define from drivers/pci/pci.h
-> instead of 100.
->
-
-Thanks, as per your suggestion, I will add new macro and include a citation
-to the relevant section of the PCIe spec.
-
-> > +
-> > +             /* Deassert the PCIe IP reset */
-> > +             writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rs=
-t);
-> > +
-> > +             /* Deassert the reset signal */
-> > +             gpiod_set_value(reset_gpio, 0);
->
-> I think reset_gpio controls PERST#.  If so, it would be nice to have
-> "perst" in the name to make it less ambiguous.
->
-
-Sure, I will rename variable to "perst_gpio".
-
-> > +             mdelay(PCIE_T_RRS_READY_MS);
->
-> We only wait PCIE_T_RRS_READY_MS for certain variants and only when
-> the optional "cpm_crx" and "reset" properties are present.
->
-> What about the other cases?  Unless there's something that guarantees
-> a delay after the link comes up before we call pci_host_probe(), that
-> sounds like a bug in the existing driver.  If it is a bug, you should
-> fix it in its own separate patch.
->
-
-The PCIe IP reset and PERST# signals are reset in the hardware logic.
-In the driver, we are just toggling the PERST# and PCIe IP reset bits to as=
-sert
-and deassert these resets.
-
-In our current setup, the PCIe link comes up successfully even without the
-"cpm_crx" and "reset" Device Tree properties.
-
-This is not a bug, the reset handling in driver will be useful during warm =
-reboot
-where hardware logic will be not be reprogrammed again.
-
-> > +             if (variant->version =3D=3D CPM5NC_HOST &&
-> > +                 port->cpm5nc_fw_base) {
->
-> Unnecessary to test both variant->version and port->cpm5nc_fw_base
-> here, since only CPM5NC_HOST sets cpm5nc_fw_base.
->
-> The function of the "Firewall" should be explained in the commit log,
-> and it seems like the sort of thing that's likely to appear in future
-> variants, so "cpm5nc_" seems like it might be unnecessarily specific.
-> Maybe consider naming these "firewall_base" and "firewall_reset" so
-> the test and the writes wouldn't have to change for future variants.
->
-
-We're currently discussing internally the possibility of handling the
-CPM5NC firewall control in firmware. If that approach proves viable,
-I may be able to drop Firewall from the driver-side handling altogether.
-
-If firmware-based handling doesn't work out, I'll revise the implementation
-accordingly, including renaming the fields to something more generic like
-"firewall_base" and "firewall_reset", as you suggested, to better support
-future variants.
-
-> > +                     /* Clear Firewall */
-> > +                     writel_relaxed(0x00, port->cpm5nc_fw_base +
-> > +                                    variant->cpm5nc_fw_rst);
-> > +                     writel_relaxed(0x01, port->cpm5nc_fw_base +
-> > +                                    variant->cpm5nc_fw_rst);
-> > +                     writel_relaxed(0x00, port->cpm5nc_fw_base +
-> > +                                    variant->cpm5nc_fw_rst);
-> > +             }
-> > +     }
-> >
-> >       if (variant->version =3D=3D CPM5NC_HOST)
->
-> You didn't change this test, but it would be better if you could test
-> for a *feature* instead of a specific variant.  Then you can avoid
-> changes when future chips have the same feature.
->
-
-At present, CPM5NC doesn't have Error interrupts and will be added in the
-coming patches, so this condition check will be removed soon. Thanks.
-
-> > -             return;
-> > +             return 0;
-> >
-> >       if (cpm_pcie_link_up(port))
-> >               dev_info(port->dev, "PCIe Link is UP\n");
-> > @@ -512,6 +574,8 @@ static void xilinx_cpm_pcie_init_port(struct
-> xilinx_cpm_pcie *port)
-> >       pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> >                  XILINX_CPM_PCIE_REG_RPSC_BEN,
-> >                  XILINX_CPM_PCIE_REG_RPSC);
-> > +
-> > +     return 0;
-> >  }
+-- 
+Martin K. Petersen
