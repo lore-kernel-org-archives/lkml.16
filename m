@@ -1,234 +1,167 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB38422E3FA;
-	Fri, 20 Jun 2025 21:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF070825;
+	Fri, 20 Jun 2025 21:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750453575; cv=none; b=WDLkYQPGLhRh8S1PXA9dGIDp1Q+QtndeP+1rce12M/I4QNl21i1XE1hb8QmvZVRtk4Ov2EyKzPQsTufY+Ke9cjU2BBW+sS/9HQV9Rp/H0LXSvNOKlBh7XLE+TyOJmoun07mOnptToaCqFQ0NKnsnfHjPpfVSzFNNXUrT0TlA2ew=
+	t=1750453642; cv=none; b=PiGokBIUXAr9waN/BLkE+HVN15jNceWAT/Z8R562P6KnpXy/NtflzlY6TY+cnvGky1biBQ+zaoyhd+TlytG9za0sMU+b905ynkk4mV1ArGSJhd/Hw4Fz+KBAHSOPv5hfL/OZDsltPr3eUiubH3AmcvYIi1cjGK/cyDvQmOghvEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750453575; c=relaxed/simple;
-	bh=Qf9aWWDk1rgelGy/nw2y8YtBV+XFwSFwvNGpXSA9zpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uh3Fv5cm6QW1o53sd53qV3VcJiBtLssZmB+JsNg6MwTytgIdO6amIp97IywWuj+Hp/LcTvwWLUns/Gg5eclbC48ePBfDIwnfo2jyl6ccaFrKy4o59ofyxciON9mIoH9wXuT2schOUuk9GowQBRT9zm349XodVyK8lGABOsAVZLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y7FZZqqP; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750453642; c=relaxed/simple;
+	bh=gOYFevN0LEy2D/8b7xY3NrYDJBWaFqN/Mep6tXyQcRE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YWReDl/A4lGVaogMvKLYhhLpg2xk1nV/5dtC1+jSusqIF8zZcrOTdmAR8p70xHB3SRpB2FscA0Ji+4s7+aOPlZHqy8sjblsAO8YhPZ1+xV000aB4IOJ9DqQQkagZijrKKiE6Ns8AFMmtRGQH4mf1Mvb4tb/LiXXVgbxo5bArrHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oSoCKK7z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JPhJarEJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7FZZqqP"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72bc3987a05so1314716a34.1;
-        Fri, 20 Jun 2025 14:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750453573; x=1751058373; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S/HEUkl30GQM2b2jY07fS7ORbU/KCeaIh9AjjPxC8qo=;
-        b=Y7FZZqqPu2/b3wPDEzr3LHbyQLOPKilO2rCa7R6ORssaHzAU5WZBhYd9bmaXZecrbw
-         QFlmU9nOBKp+gLdriHEcOzoYQXivDxB4M33oPtgzlZzxWcGSDBQxJlgIO7EQkB08g7aM
-         NjAtFOuMjxl02ZNDJ2vu/pHbkaa6/0W0/B+x5gWrtWpgvGnn0cbHr7tboojItHB4vhuo
-         JY8qU6gkrlxyhQEJFhXd5FWqHQYj5wNtBm9zmoABJ0QOJ8Gj6Wng0yPojuq0MN1sAes8
-         /R12bUzZDm3WvgG+9+LoHEMr9x+8L2pMCCt39ofR6cwz5eWYOjvyTURc9yZfW7NY/6Gt
-         tHIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750453573; x=1751058373;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S/HEUkl30GQM2b2jY07fS7ORbU/KCeaIh9AjjPxC8qo=;
-        b=BZx3XyhDeWyuGYI+MSpddjsZzt2Fe5m6CbopWVMu5U3MMe142JCNKp6C1Zs75fEsrv
-         We6FS/ni/vsOKa5sb4QL+XqQDYW5JFMu3mQiu9i9S8KMW5EawLP95pu4Iau1qih+43Zp
-         6mJxA0z/d7z/PhpY6Qrly//QMv71NKa84lhwqQD7vFxhAy/gA21NkhxI2XLjYE+0GIh9
-         HpkN+8kRMujOFMPXdO3XY938Qj4cJJCTTPTxKLzWg60uHkuaM7UYYsmUcELHwf0/AMGm
-         JXUDDehDm1AlVsX+xAAAT/WUqDnx9rd/XUhlDXfDTiE8zLfhjZyJUhKek9OgdHFsnEId
-         06Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1gB3CQ9FsuX4+Dx6uSt0spyVtvFe+qkTmEFGOPwh2pFysxiAEaOtKcpPMTdIDj/nVvXjNECFe1v7DCaA=@vger.kernel.org, AJvYcCUuyMNmViU8pN1GaQch021XqLeT5FZajgBfkKZSqx7DUM9Cf36BFKbayBgSFCYP1U3aPC7kV+2UB/cJTdldO7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGSBAmkX7pmAaKlM0MVB9pOGzH3Zqgoco7ZXP4WbQXgTRYzM8+
-	yDtPECfRKYvMlvr89/H0R9w/0ZSofGBfeeRsADFm0n37zq+B/IRYYcRw
-X-Gm-Gg: ASbGncuw93zYtpRRprSsxIdcTSNqITvYWY4sKlXME8P0LaujvYQ6dPtGR/Q8g9GY985
-	ADZThuT8GpfpOhAJIBsBRgLGNTnrpkg4zkHTJSEM/L0hDTpsrOS4lmFwMwEzhdRDW4aHUqmTPB9
-	48daReUqcv1mdL7QETswDIt3y3qXK8t5+FAMfPBx3cg5NFi6vYRP/+5jpvqAy8K8cLv0oSUIlTP
-	hku7eK5i/scI+g+CKlwrkS2s/r4dyhtlN6I0kagjIoc3FwLjrv0pX2gNOyMwbqogzZ9prXZvBXB
-	gTnW3xDE9AohsKqoMpusU2c6lJbdE5PTnVFY6xWGrHZDXXmUu5JDmVcqNb/+AIvHJwbhdLBdAUP
-	TmbrTI/Mx63iG7vtvH6PLw/6VxltnTtwJYA==
-X-Google-Smtp-Source: AGHT+IHabmOuHzbM+hdIHSQO0XLdjw3L4ZxnmcTGpMjCK7p5/Y7slbedP3jLoLU7meuMmN2yz7sGpw==
-X-Received: by 2002:a05:6830:4d87:b0:73a:8a44:6181 with SMTP id 46e09a7af769-73a9314a2c8mr2840207a34.13.1750453572772;
-        Fri, 20 Jun 2025 14:06:12 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-73a90cb7875sm460596a34.56.2025.06.20.14.06.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:06:12 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: jbaron@akamai.com,
-	jim.cromie@gmail.com,
-	daniel.almeida@collabora.com,
-	acourbot@nvidia.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	rostedt@goodmis.org,
-	andrewjballance@gmail.com
-Cc: viresh.kumar@linaro.org,
-	lina+kernel@asahilina.net,
-	tamird@gmail.com,
-	jubalh@iodoru.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 4/4] rust: device: add support for dynamic debug to dev_dbg!
-Date: Fri, 20 Jun 2025 16:05:33 -0500
-Message-ID: <20250620210533.400889-5-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250620210533.400889-1-andrewjballance@gmail.com>
-References: <20250620210533.400889-1-andrewjballance@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oSoCKK7z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPhJarEJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750453638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=egwWRVIQ5L1+Q/QWzj2riLFWuuq+G6oubEW3WKFA2KQ=;
+	b=oSoCKK7z3FOvgltzawlbz6fzYOZIuHhCeJmBk/AKvW6VFki2x06qYX/0CZzxI4K7wl7Ilr
+	/3UcPJc54lLuRRAqyhhKt+iYNqVCzUK59nRwDN/xNNm63D4mx7FgGKRCeTITMEKW0Z7Ezd
+	qHJz6DRZrGlmtsO+QDj7KF2fXm4FZvwpjK97HaLm2d8w0FIXkYwm541ZZ9TQkUG0hmhn+s
+	QmYY2zQZY3Ga+POwavDd/uEh6BtUIYYNZYngmarDhgAjwuorKqDInfK+Xwr7RNeUvZESTP
+	pVK6ExGc8wTlWrttIJUiYU+vZSjCrNrWIAwW8YICdu4qkRHpTfmdSLkp9v6NzA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750453638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=egwWRVIQ5L1+Q/QWzj2riLFWuuq+G6oubEW3WKFA2KQ=;
+	b=JPhJarEJhV3zJnci9PuoGV4FkGAbYIniNeiV39H+6W6znyiNAtYjcywSP7WtT75aegPmzb
+	9KFYYFazha4sszBQ==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] lockdep: Fix inconsistency in irq tracking on NMIs
+In-Reply-To: <20250620125112.33978-2-gmonaco@redhat.com>
+References: <20250620125112.33978-2-gmonaco@redhat.com>
+Date: Fri, 20 Jun 2025 23:07:17 +0200
+Message-ID: <87sejup1fe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-adds support for dynamic debug for the dev_dbg macro.
+On Fri, Jun 20 2025 at 14:51, Gabriele Monaco wrote:
 
-Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
----
- rust/kernel/device.rs | 105 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 103 insertions(+), 2 deletions(-)
+The subject prefix is misleading. The problem is not in lockdep, the
+problem is in the generic entry NMI code, no?
 
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index dea06b79ecb5..829b7ca7bb7b 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -536,11 +536,14 @@ macro_rules! dev_info {
- ///
- /// This level should be used for debug messages.
- ///
--/// Equivalent to the kernel's `dev_dbg` macro, except that it doesn't support dynamic debug yet.
-+/// Equivalent to the kernel's `dev_dbg` macro.
-+///
-+/// This has support for [`dynamic debug`].
- ///
- /// Mimics the interface of [`std::print!`]. More information about the syntax is available from
- /// [`core::fmt`] and [`std::format!`].
- ///
-+/// [`dynamic debug`]: https://docs.kernel.org/admin-guide/dynamic-debug-howto.html
- /// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
- /// [`std::format!`]: https://doc.rust-lang.org/std/macro.format.html
- ///
-@@ -555,5 +558,103 @@ macro_rules! dev_info {
- /// ```
- #[macro_export]
- macro_rules! dev_dbg {
--    ($($f:tt)*) => { $crate::dev_printk!(pr_dbg, $($f)*); }
-+    ($($f:tt)*) => {
-+        #[cfg(any(DYNAMIC_DEBUG_MODULE, CONFIG_DYNAMIC_DEBUG))]
-+        { $crate::dynamic_dev_dbg_unlikely!($($f)*); }
-+
-+        #[cfg(not(any(DYNAMIC_DEBUG_MODULE, CONFIG_DYNAMIC_DEBUG)))]
-+        { $crate::dev_printk!(pr_dbg, $($f)*); }
-+    }
-+}
-+
-+/// this contains all of the code that is used for dynamic debug for dev_dbg!
-+/// this is public but hidden. This code should only be called
-+/// by the `pr_debug!` or `dev_dbg!` macros.
-+#[cfg(CONFIG_DYNAMIC_DEBUG_CORE)]
-+#[doc(hidden)]
-+pub mod dynamic_debug {
-+
-+    use super::Device;
-+    use kernel::c_str;
-+    use kernel::print::dynamic_debug::_Ddebug;
-+
-+    /// a wrapper function around the c function `__dynamic_dev_dbg`.
-+    /// # Safety
-+    /// - descriptor must be a valid pointer to a `static mut` _Ddebug
-+    pub unsafe fn dynamic_dev_dbg(
-+        descriptor: *mut _Ddebug,
-+        dev: &Device,
-+        args: core::fmt::Arguments<'_>,
-+    ) {
-+        // SAFETY:
-+        // - "%pA" is null terminated and is the format for rust printing
-+        // - dev.as_raw() is a valid pointer to struct device
-+        unsafe {
-+            bindings::__dynamic_dev_dbg(
-+                &raw mut (*descriptor).inner,
-+                dev.as_raw(),
-+                c_str!("%pA").as_char_ptr(),
-+                (&raw const args).cast::<ffi::c_void>(),
-+            )
-+        };
-+    }
-+
-+    /// macro for dynamic debug equivalent to the C `dev_dbg` macro
-+    #[doc(hidden)]
-+    #[macro_export]
-+    macro_rules! dynamic_dev_dbg_unlikely {
-+        ($dev:expr, $($f:tt)*) => {{
-+            use $crate::c_str;
-+            use $crate::str::CStr;
-+            use $crate::print::dynamic_debug::{_ddebug, _Ddebug};
-+
-+            const MOD_NAME: &CStr = c_str!(module_path!());
-+            // right now rust does not have a function! macro so hard code this to be
-+            // the name of the macro that is printing
-+            // TODO:
-+            // replace this once either a function! macro exists
-+            // or core::any::type_name becomes const
-+            const FN_NAME: &CStr = c_str!("dev_dbg!");
-+            const FILE_NAME: &CStr = c_str!(file!());
-+            const MESSAGE: &CStr = c_str!(stringify!($($f)*));
-+            const LINE: u32 = line!();
-+
-+            #[used]
-+            #[unsafe(link_section = "__dyndbg")]
-+            static mut DEBUG_INFO: _Ddebug =
-+                _Ddebug::new_unlikely(MOD_NAME, FN_NAME, FILE_NAME, MESSAGE, LINE);
-+
-+            // SAFETY:
-+            // - this is reading from a `static mut` variable
-+            // - key.dd_key_false is a valid static key
-+            let should_print: bool = unsafe {
-+                #[cfg(CONFIG_JUMP_LABEL)]
-+                {
-+                    ::kernel::jump_label::static_branch_unlikely!(
-+                        DEBUG_INFO,
-+                        _Ddebug,
-+                        inner.key.dd_key_false
-+                    )
-+                }
-+                #[cfg(not(CONFIG_JUMP_LABEL))]
-+                {
-+                    // gets the _DPRINTK_FLAGS_PRINT bit
-+                    // use pointers to avoid undefined behavior
-+                    let ptr: *const _ddebug = &raw const DEBUG_INFO.inner;
-+                    (*ptr).flags() & 1 != 0
-+                }
-+            };
-+
-+            if should_print {
-+                // SAFETY: `&mut DEBUG_INFO` is a valid pointer to a static mut _Ddebug
-+                unsafe {
-+                    $crate::device::dynamic_debug::dynamic_dev_dbg(
-+                        &raw mut DEBUG_INFO,
-+                        $dev,
-+                        format_args!($($f)*)
-+                    );
-+                }
-+            }
-+        }};
-+    }
- }
--- 
-2.49.0
+> The irq_enable/irq_disable tracepoints fire only when there's an actual
 
+Now it gets truly confusing. Above you say lockdep, now it's trace
+points...
+
+> transition (enabled->disabled and vice versa), this needs special care
+> in NMIs, as they could potentially start with IRQs already disabled.
+
+s/IRQs/interrupts/ please. This is not twatter.
+
+> The current implementation takes care of this by tracking the lockdep
+> state before the NMI (on nmi_entry) and not tracing on nmi_exit in case
+> IRQs were already disabled, we don't trace on nmi_entry following the
+> tracing_irq_cpu variable, which can be racy:
+
+This sentence does not parse, especially the subordinate clause starting
+with 'we' does not make sense.
+
+> The error is visible with the sncid RV monitor and particularly likely
+> on machines with the following setup:
+> - x86 bare-metal with 40+ CPUs
+> - tuned throughput-performance (activating regular perf NMIs)
+> - workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
+>
+> The presence of the RV monitor is useful to see the error but it is not
+> necessary to trigger it.
+
+Not sure whether this information is useful in the change log itself. It
+can go into the notes section after the '---' seperator.
+
+> @@ -326,13 +326,15 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
+>  	irq_state.lockdep = lockdep_hardirqs_enabled();
+>  
+>  	__nmi_enter();
+> -	lockdep_hardirqs_off(CALLER_ADDR0);
+> +	if (irq_state.lockdep)
+> +		lockdep_hardirqs_off(CALLER_ADDR0);
+
+This avoids the lockdep call, which has nothing to do with your tracing
+problem. lockdep already handles that case. So making this conditional
+is a cosmetic noop, nothing else. It's actually questionable whether
+this conditional makes sense performance wise. It only makes sense when
+the amount of lockdep state == disabled instances is significant.
+Otherwise it introduces an extra conditional into the hot path.
+
+>  	lockdep_hardirq_enter();
+>  	ct_nmi_enter();
+>  
+>  	instrumentation_begin();
+>  	kmsan_unpoison_entry_regs(regs);
+> -	trace_hardirqs_off_finish();
+> +	if (irq_state.lockdep)
+> +		trace_hardirqs_off_finish();
+
+Now this is the real thing you are interested in, because otherwise you
+end up with a trace_irqsoff() event without the corresponding
+trace_irqson() event, right?
+
+So in short what you are trying to explain in the change log is:
+
+irqentry_nmi_enter() tracks the lockdep interrupt state on entry to
+prevent a lockdep_hardirqs_on() invocation in the NMI exit path, when
+lockdep was interrupted by the NMI before it could mark interrupts
+enabled in the lockdep tracking. This works correctly, but a similar
+problem exists for the local_irq_* tracepoints.
+
+local_irq_enable() invokes trace_hardirqs_on(), which invokes
+lockdep_hardirqs_on() after establishing the tracer state.
+
+If the NMI hits before lockdep_hardirqs_on() has established the lockdep
+enabled state, then unconditional trace_hardirqs_off_finish() invocation
+in irqentry_nmi_enter() flips the tracer state to disabled.
+
+In irqentry_nmi_exit() the counterpart trace_hardirqs_on_prepare() is
+only invoked when the lockdep interrupt state on entry was 'enabled',
+which means the trace lacks the corresponding interrupt enable entry.
+
+Fix this by making the invocation of trace_hardirqs_off_finish() in
+irqentry_nmi_enter() conditional on the lockdep state.
+
+Right?
+
+But you missed something completely here. This problem exists also when
+lockdep is disabled and then it is way simpler to trigger. Why?
+
+If lockdep is off, then lockdep_hardirqs_enabled() always returns
+false. So any entry where the tracer state is 'enabled' will record a
+off, but the exit will not record the on.
+
+As you correctly described, the two states are asynchronous in the
+context of NMIs, so the obvious thing is to treat them as seperate
+entities so that the trace really contains the off/on events independent
+of lockdep enablement and lockdep's internal state. No?
+
+The only other sensible option is to remove the trace points from the
+NMI code all together because with the lockdep conditional they are
+inconsistent no matter what.
+
+Aside of that you missed to fix the corresponding problem in the arm64
+entry code, which still has it's own version of the generic entry code.
+
+Thanks,
+
+        tglx
