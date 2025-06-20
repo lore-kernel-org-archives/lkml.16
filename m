@@ -1,102 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF790A923;
-	Fri, 20 Jun 2025 07:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C332253E0;
+	Fri, 20 Jun 2025 07:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403354; cv=none; b=PzLC5qgslV6QarNnslIM2k9OzpXQVisBjNuP4ytNDiy9Osg+KPubIQR7kRlvfxTiIX5sWwrPLDEl9CoT/F3xOWzHOax31T+GiRg/zs06NeXEfsqdpJxY8P413JdJCOruI2btlN4j7dj/YR0OLsPDkrUrufkwTIAlKtpFRbCVtQA=
+	t=1750403380; cv=none; b=ihNK/KMCwqVBEHULArn4r2tp3FGfgnk/4C/KDVhATiwsgAmB5x125cjk6kTVpMTC3JNKYJRanE935xOHf5jSqvaOq/GGBdjGfUwIPqcBJ/METK1LovKEG7YAPaPAwecvV4PL91FuEKApq52s89oJ/FLzqjNf/p2rsEVhPhfxdDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403354; c=relaxed/simple;
-	bh=M0OVidBb/1rU2itOG2o5tpQdcSqZhBs/xPlRD1ZyRcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dkIrb9xSr3zxiMIKxY+2HSNZBJwfQLjPKgvjLjn9Qgr+iTZYyZ4eYMQt4u+W9COuLTdNxQ3emEatGOOaDLOmDsUqr47Ztr08x6wNjpC9mDLVvTIuEUCOBSPYKH18ITDyJ6ZckCadYFLKATKowUsqjHU7rn7JPGkeG4q/ZTS4a0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVy9Mncs; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750403380; c=relaxed/simple;
+	bh=buczXM9TcKcZwQGwqB2wjSqv4KT179kVCnGDwoRveA0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZEU3s2MJc0RwGfZwTwihFyObKrpCUMDM8LOO/sxD+qaN2borWaTu7TeK+bBQdtf++eBaq6V9Pm4M0aq+xPXbsuxvwsAwvb3t7vJ9yZngOujn1XOoJR0IcUnmfyqdN++bSIoA+L2EuH5hNxKe/Ef2ut46Ah0svh8JqFvtnC0X/HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgLv2uEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVy9Mncs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750403353; x=1781939353;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=M0OVidBb/1rU2itOG2o5tpQdcSqZhBs/xPlRD1ZyRcs=;
-  b=BVy9MncsDkWkeB012EfKw5M6gTqxe9hY+fZ+p083K/KJ6swnZXULnsbn
-   MNOC3WNNo8/U4O9b8+7RRYzoPQ6JY6B+Tn5T+SndKJJ+kL7cPl4appm5n
-   s9IdIBxUkBL61N/DeTpwWGbGwVqYL8qHTVaWA8rclJ1gEKC+lwbjhnIKE
-   F8McMrRZeuog8u4eZWk3IJnKnAdHJCBHgexDCZAnp+vuLivwFJCnzsNL+
-   siiQgmvCvXs3YTp+/awh8NV1vNu82/GF/p15ygc9N/7SG69q6T8uPBhlS
-   PDs7IaXFxWH/sed+NOWXZlO6nCHD2Itd8M1DX06uYiftz/YaTDvTDDbOo
-   w==;
-X-CSE-ConnectionGUID: ko7iqLL6QbS2+Oio1pTFPw==
-X-CSE-MsgGUID: LP6AtqlhRkmNEblqAsgKUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51769330"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="51769330"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 00:09:12 -0700
-X-CSE-ConnectionGUID: Gr7O5rRBSOWwJ6j1j3sv5A==
-X-CSE-MsgGUID: e2PD9KtqR6mbu6ctuZd/jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="150324857"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 00:09:08 -0700
-Message-ID: <12894e27-7e80-4b48-97cf-5b1b98b51059@linux.intel.com>
-Date: Fri, 20 Jun 2025 15:09:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgLv2uEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94848C4CEED;
+	Fri, 20 Jun 2025 07:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750403380;
+	bh=buczXM9TcKcZwQGwqB2wjSqv4KT179kVCnGDwoRveA0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=CgLv2uEOoe8C/75KcvBjJGJ7XXQ202YfDHVIzAYoMe6+Lx3bY5XEt1t23QmHoTsIL
+	 1tb/RKeZ6ZIZowM57tYNSKXq9ZjVGhTnOoa/30vl+mnjl0gDd7aF7g1w9sFisT3CKp
+	 szAPsXwBIZNNmucY+/Y0VaqNm/U06z/bEe1lkOP93v7moXRNFCmA1lMJHeITQVZYqE
+	 wOWKcRsEg5p4bSEFU0SwJauZWNlKiMREL+wClLlp5AdmY5X38C+NWWNFBNnYy2Cryk
+	 VzYW5UCqs1zLsqLjQAjwjpeFyxcO9tcaylLwUUVp2U+5DmpI9M0CF05C58kCEcd9zY
+	 HZ7F6MdSwMaSQ==
+Date: Fri, 20 Jun 2025 09:09:37 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Li Chen <me@linux.beauty>
+cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: rate-limit hid_warn to prevent log flooding
+In-Reply-To: <20250620021506.12624-1-me@linux.beauty>
+Message-ID: <446o7on5-8s99-01p9-rq78-4qo9pqo3qpr0@xreary.bet>
+References: <20250620021506.12624-1-me@linux.beauty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] TDX attestation support and GHCI fixup
-To: Paolo Bonzini <pbonzini@redhat.com>, seanjc@google.com
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
- reinette.chatre@intel.com, xiaoyao.li@intel.com, tony.lindgren@intel.com,
- isaku.yamahata@intel.com, yan.y.zhao@intel.com,
- mikko.ylinen@linux.intel.com, kirill.shutemov@intel.com, jiewen.yao@intel.com
-References: <20250619180159.187358-1-pbonzini@redhat.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250619180159.187358-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Fri, 20 Jun 2025, Li Chen wrote:
 
+> From: Li Chen <chenl311@chinatelecom.cn>
+> 
+> Syzkaller can create many uhid devices that trigger
+> repeated warnings like:
+> 
+>   "hid-generic xxxx: unknown main item tag 0x0"
+> 
+> These messages can flood the system log, especially if a crash occurs
+> (e.g., with a slow UART console, leading to soft lockups). To mitigate
+> this, convert `hid_warn()` to use `dev_warn_ratelimited()`.
+> 
+> This helps reduce log noise and improves system stability under fuzzing
+> or faulty device scenarios.
+> 
+> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+> ---
+> Changelog:
+> 
+> v2: Introduce hid_warn_ratelimited to rate-limit the specified log.
+> 
+>  drivers/hid/hid-core.c | 2 +-
+>  include/linux/hid.h    | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index b348d0464314c..aaba7164a8c9a 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -661,7 +661,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+>  			item->tag <= HID_MAIN_ITEM_TAG_RESERVED_MAX)
+>  			hid_warn(parser->device, "reserved main item tag 0x%x\n", item->tag);
+>  		else
+> -			hid_warn(parser->device, "unknown main item tag 0x%x\n", item->tag);
+> +			hid_warn_ratelimited(parser->device, "unknown main item tag 0x%x\n", item->tag);
+>  		ret = 0;
 
-On 6/20/2025 2:01 AM, Paolo Bonzini wrote:
-> This is a refresh of Binbin's patches with a change to the userspace
-> API.  I am consolidating everything into a single KVM_EXIT_TDX and
-> adding to the contract that userspace is free to ignore it *except*
-> for having to reenter the guest with KVM_RUN.
->
-> If in the future this does not work, it should be possible to introduce
-> an opt-in interface.  Hopefully that will not be necessary.
->
-> Paolo
->
-> Binbin Wu (3):
->    KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
->    KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
->    KVM: TDX: Exit to userspace for GetTdVmCallInfo
->
->   Documentation/virt/kvm/api.rst    | 62 ++++++++++++++++++++++++-
->   arch/x86/include/asm/shared/tdx.h |  1 +
->   arch/x86/kvm/vmx/tdx.c            | 77 ++++++++++++++++++++++++++++---
->   include/uapi/linux/kvm.h          | 22 +++++++++
->   4 files changed, 154 insertions(+), 8 deletions(-)
->
-Tested the patch set with the TDX kvm-unit-tests, TDX enhanced KVM selftests,
-booting a Linux TD, and TDX related test cases defined in the LKVS test suite
-as described in:
-https://github.com/intel/lkvs/blob/main/KVM/docs/lkvs_on_avocado.md
+While I agree in principle that we shouldn't be flooding dmesg in case the 
+report descriptor is completely bogus, I think we should be more 
+consistent then.
 
-Xiaoyao has tested the flow for GetQuote and had some comments for small issues
-on qemu patch:
-https://mail.gnu.org/archive/html/qemu-devel/2025-06/msg03154.html
+I am pretty sure syzkaller produce report descriptors that will emit flood 
+of "reserved main item tag", but you don't seem to be addresing that case?
 
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
