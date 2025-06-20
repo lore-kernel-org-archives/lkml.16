@@ -1,150 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495A52D323D;
-	Fri, 20 Jun 2025 15:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87A919A297;
+	Fri, 20 Jun 2025 15:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750433919; cv=none; b=eNCaOd+8dJ150nmQiWet7M0o2jXoJE47vWmDIi94ktN761XACJcZmvIVjxj2u++OLTAlQM2Z7m+ub6kkTtDxXnqFpHFp12kXSQZWjAfB2rA6YIC13uf3WSwdeCSd9opWkcuVAz18/kRAeNoeKTnE5HiTCkkFP1koyE5HpISXdOE=
+	t=1750433943; cv=none; b=BzmJS2E9pTuKYwaBWzb3ZCa1StIynaA3DWZrrR0ao/ChzUbRmdTGtvc5t9Lf+gRDWslTZnh1lFW0t1WWdDE+nJF2C4Yi7Nwhl6UgHj10H1RLW5CL2OpeovAPqmkCEtvFzWdmeZjs9t57on/dwYRcmOf6U3QQGw1I2j5c7gbXklc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750433919; c=relaxed/simple;
-	bh=PAIoPfMTWibH7qafGrXshZ8+nCkKa7tLFKjMpKLkQ8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qenL6gOGGyyJiA1KcNQ1hjjVWf5GWiJfWWAUVed7XGM/6Le8hk5vfqNeKEG3aSqMWqh1ZBaWd/mh8aofz5l7pm9tHBqEX20yCUo2dVb3upUchRhZVtII78FVeiOrj7PcVtxCA7LqVIFIlgMWVPGd2u2uqWrXyCih7bql9C9uP4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHwrajbv; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750433943; c=relaxed/simple;
+	bh=kdiPdMh5+sRzNgtYRKj/S0sAtUte5v+zpvWVg0DO3wo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ch5qtOPcd0Wjabr/4wqjNFw/njH8Ieqj8OhdVuXWLOxYLkvWy21xGEyeavlxnLZUberuBkc3QPWp0S3/6K7/LvqT/6/p1n3kVqb+24Nwwg5rMR2yfXMqZILcJstCZvWYKWMC7vklqdIBwz24wjU3BJaYqamQxOqWjaGNDfT+daA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8C4J6+/; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHwrajbv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750433918; x=1781969918;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PAIoPfMTWibH7qafGrXshZ8+nCkKa7tLFKjMpKLkQ8E=;
-  b=QHwrajbvx3+kHf3nRd8Og4tfXahdz7Z6w5IghMlhO6bZBHjsJQNswK3C
-   7tD8GjyBAWZiqEjqEoPx/uzznoWqdMps+Rrh8sZpDumHNG0DPRCfyhz7V
-   1B8lIndqRkwuaP+0XjjpgnBBvXjdUeZilS/0A3J920otD7wOBtBvmZScE
-   VITre3ODw22GvhVn/B2DcKv84yzvSCqZifitdv9qC904L1bujRaC7T7uu
-   Mek33fEILmWwBd4HQQOhHUP9GxbTxGgkxDa6kp/IJA6CSmofsroI8rwaj
-   ZCsqzvorGV9SvaUxbcU5fSElZUbJlniel1HUQVy/LJM6YIIP1Dfqw/W9N
-   A==;
-X-CSE-ConnectionGUID: 2kmqp/08T5aesxJLVPSz6Q==
-X-CSE-MsgGUID: bj24c5GKSDCGfoaKZz+4nQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="55335852"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="55335852"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 08:38:35 -0700
-X-CSE-ConnectionGUID: l6UZGO/CQFeG0u0UoVQoog==
-X-CSE-MsgGUID: bJVjcbSCRVibreZzqGTa5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151156407"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.136]) ([10.125.108.136])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 08:38:34 -0700
-Message-ID: <61af62d9-4cd0-485f-8f0c-2da981f52695@intel.com>
-Date: Fri, 20 Jun 2025 08:38:33 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8C4J6+/"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so14548045e9.1;
+        Fri, 20 Jun 2025 08:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750433940; x=1751038740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
+        b=f8C4J6+/wg6QDOROSMmYbZ0GaohbAYmB1NCpq+JNCD6g5PzcOwFtYBUIzSyWZ/Wr5U
+         zVaVjhS0AgsvlOebSkSK5BOR48g56bs0DWYnng4UwCXH6s7cwJFVSKreKYC2/hB8xiFd
+         lrp5oTOpchNWDWv+UXs7tNXR7GHOBdnY7LZw9z7pDIDjNi8YFm2zScoIUjNY7kHKsSV4
+         iaM4Lgx7YEezRGkBhozRSl9JLzbjkHN/orKXmzfG4lJPicJ2tU0zkkn5mHuR+8n3xwym
+         MwH9Gcbl3t51tvO0tQah5HrH/KawqhXQHRpxewpGHrCcobwTzKvSOol6csHgXlqkwh8z
+         nLTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750433940; x=1751038740;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
+        b=GJvtxk7fx3+S+adiKpz8GM/yQ8DpkBBWyooNZ0dvwPDlp0t/Pexm4pKPWpRZ0K3DgK
+         G7gONSM5ggooY/BvoDkxBGsF0a7Ihlk3L3eTkkDL2xaaD0ZK/5j9qP6U5CgZ4DTmF3h7
+         FwST8E5flromyBj4j4+30hanoLIN2W5KeB6+IixpPF7xWvNG3OY4VQvdLuwI4aLqq+il
+         Sop875q4yrHa6JcC/Lfy6ftYMGeSHdozR9W3Q1HDl0HfK9xHZQaHZBM7GMe3uHgHnpao
+         ariOXvXCihYoSz0fkNJfubgNMVdsm93mqAbUefJLyx6MUnPDs9fUIQEl6ZiM9Tcabl2N
+         H50Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3YP7tRD3c3jI3ZmOywU1OLxCIhsNVM5okp7RhERaE9GQSkAB1qkaD3Pb6QkKUweHeHU3rwj1AfapK@vger.kernel.org, AJvYcCVVl73jjX6cAuFjEnoyEBMQYdMuRkAUSSTAos0Vfn4op+fBpmuwWDasCNShRjjjCdwgjAj5APJVJNn4SaPreD8=@vger.kernel.org, AJvYcCWBlJIgaSl0qMqDHknpShnN5D/CCW4taphFV70i1Tptadw3x6uF//6HGkUg/O2QDR+8YaEClKUaN/VpMQ==@vger.kernel.org, AJvYcCXqn6+8g2JSq9Qvgn6MV6DQ8MKCHWYM2jvu5VkhJJFsF+gDs5Yac2b9xsZMhOJoqRfcxrTWMUCFrBNCu9S7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ5DVI/slNwimObtWSKpeO9uFD36DGrTbQMgn21PVHUR68s5SN
+	vSu1QTO7jkLxCDFx0k8NuotUAtce1b2vWFAA+IBUAHOcmIi3Ij/RPflX
+X-Gm-Gg: ASbGnct66P1fiE5xef0h9U9R/fm7yrMHkAHvhDOPB8vG4LDrrAIeheSfnVqLrkZVNJg
+	Mv+NQT5SfDJrEz4xmnbRl9mHegfZSGX8b/zbejrmyqaq3NRoJd4ZPqwsgSZWrwbJYp4NzuuZzGW
+	g2M+V/ZJaYMir/aRnWKN0ZUkpVeyDqS5z6QLy4JlYqUgNeQ0Y6pIkqETztZGLog1/1yt1HTSrRl
+	QlPO633LTpmuPigQh0MqU9fh1vmem5UXY0X0vtzGv4h1UbRto7hYBTwDj2ALsdV7KPScrkLYPPq
+	WOq41ci0iluewTqymCrS7+tV/Ipi/Lh+LzVjLKw80mZOEDR/6bgwgANHYjTSqs/rfX5VUctIW+i
+	NQiDjDkn4w2AvFouUhLTf3T09ymtQxyWvIGqV
+X-Google-Smtp-Source: AGHT+IHBTlMifqap8Yx6rGoRjLGMK3thDNHDyszupBIkp4SOG430SYgjLtQZVOEL2dpCSM+Fq0Q+Ww==
+X-Received: by 2002:a05:600c:1c02:b0:453:9b3:5b58 with SMTP id 5b1f17b1804b1-45365e4a008mr26113405e9.4.1750433939906;
+        Fri, 20 Jun 2025 08:38:59 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d117c6b2sm2392627f8f.46.2025.06.20.08.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 08:38:58 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Alex Hung <alex.hung@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Igor Korotin <igor.korotin.linux@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Len Brown <lenb@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>
+Subject: [PATCH v8 5/9] rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
+Date: Fri, 20 Jun 2025 16:36:56 +0100
+Message-ID: <20250620153656.294468-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 00/16] x86: Enable Linear Address Space Separation
- support
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
- Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
- Ingo Molnar <mingo@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Daniel Sneddon <daniel.sneddon@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
- Breno Leitao <leitao@debian.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
- Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
- Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
- Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
- Changbin Du <changbin.du@huawei.com>,
- Huang Shijie <shijie@os.amperecomputing.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/20/25 06:53, Kirill A. Shutemov wrote:
-> Linear Address Space Separation (LASS) is a security feature that intends to
-> prevent malicious virtual address space accesses across user/kernel mode.
+Refactor the `of_id_info` methods in the `Adapter` trait to reduce
+duplication. Previously, the method had two versions selected
+via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
+single method by using `#[cfg]` blocks within the method body.
 
-Most of the cover letter here reads like an Intel whitepaper. That's not
-the worst thing in the world, but I think it glosses over one very
-important point:
+Suggested-by: Benno Lossin <lossin@kernel.org>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ rust/kernel/driver.rs | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
-	Had it been available, LASS alone would have mitigated Meltdown.
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index ec9166cedfa7..cb62b75a0c0e 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -147,30 +147,32 @@ pub trait Adapter {
+     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
+-    #[cfg(CONFIG_OF)]
+     fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+-        let table = Self::of_id_table()?;
++        #[cfg(not(CONFIG_OF))]
++        {
++            let _ = dev;
++            return None;
++        }
+ 
+-        // SAFETY:
+-        // - `table` has static lifetime, hence it's valid for read,
+-        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
+-        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
++        #[cfg(CONFIG_OF)]
++        {
++            let table = Self::of_id_table()?;
+ 
+-        if raw_id.is_null() {
+-            None
+-        } else {
+-            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
+-            // does not add additional invariants, so it's safe to transmute.
+-            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
++            // SAFETY:
++            // - `table` has static lifetime, hence it's valid for read,
++            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
++            let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
+ 
+-            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
+-        }
+-    }
++            if raw_id.is_null() {
++                None
++            } else {
++                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
++                // does not add additional invariants, so it's safe to transmute.
++                let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
+ 
+-    #[cfg(not(CONFIG_OF))]
+-    #[allow(missing_docs)]
+-    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
+-        None
++                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
++            }
++        }
+     }
+ 
+     /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
+-- 
+2.43.0
 
-Could we say this up front in a prominent place, please?
