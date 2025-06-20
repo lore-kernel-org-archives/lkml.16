@@ -1,583 +1,427 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46A22ECD09
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCAA2EAB69
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 20:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750450945; cv=none; b=qs+DLX5QGF3CTmcM/MTmdnQm5Xv4vADHrJB/f+JaQwR4kspqzRrC194iomR5YXq4KGLWO/5YZZBq5sUac/efiy1TeNQdw6l/uwuE8QOTM99mourah/C7ghVAXGo6zUs/QZKxW7EHhqQ4YdZvHjgKt5qskTJYI7x3QZosASZanEI=
+	t=1750450960; cv=none; b=ifZNUq7N6yc5I0YZU5BNOjTxx4Kp7CQj2y1WYKMB7bmtY5fzscypBhY4ZB7/rPm1QiBQX+W8+EDXRvjHJtKcZuAwdYzV9Ky023V4yauALW/jZ9cV+s8m3sMCRY9y6oCDWT7ZxAv1Iig6nYDqeE2hN8M0+enPZD0e7VcAeCRrDCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750450945; c=relaxed/simple;
-	bh=0L/wjxkXqWWOrTF6mI/XPv0iLH/1kpBrrfC6HZculbM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=by1LcLuC/fwcEFfQwPLR5m9icMs94Q7vSjGDXdMbNwKMEE4mzGVqGfOLglj1c0y0e1Y52NH8nATqXLOEheJ3rk7i//GeW9xc1eq4+DwD3h1/rCTPbKVYGPsBG7wvCiPyYviwSCFL2rnNXA/EpIoogCGqzbJ0c4no58Oj1KZD1Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BV4S/vdl; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BV4S/vdl"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235d6de331fso32027575ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750450943; x=1751055743; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3u5ONOsTo4xiMjAYOX1coDWwMwQnRIPf+PtEAf0Ubgs=;
-        b=BV4S/vdl2rhQjBa7vz5toKGsjeI9ro/tMoljJERluuGhVIU3N+7begCIX0f5fk95h/
-         kqBUKL9SJ67HHhw8OHBcgTAEJ8iuTA0TUVcf4oYwrv/9qoUFXVmuntQSYNwzVcTd3K4P
-         3s7oF3+CXTQMJUiRQwho7Z5rxV2eBwKWLPehatplhGBgsQRvvTi+ZnE3do6UphvxBcup
-         lED3fR0D/n3OUEjUtQaaLLBpzBjxVhgT3D6dePT+VuoqEs/V/Zw0a8HV2qoRVyzeV5dO
-         bSbbyfn/VrQceV+tDBvqsVNqE2forpxO7erIbQW88PICLQt5/CcHLY8XEIB+eNy8ok95
-         dDAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750450943; x=1751055743;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3u5ONOsTo4xiMjAYOX1coDWwMwQnRIPf+PtEAf0Ubgs=;
-        b=Rc8oYbIlMgEYP+PRPXwIBYRbNwIOxNVGjhLmbKOKe19n01HaIXclvGWyZ6bKBZnuGG
-         MBft3QD56y7EG8zx3EHyVKSMc+bc9O+p1+rdMz+acjScIGujO9Dg++AT9g3zAdztqkDy
-         NFTqJLA39bcdfjgB2HF2mTbH7Jr6Fw1NhdvTNWaSr+/hnPvD5+8By5G7PIyKcO+T+Kj+
-         IjCp20EE8VQouR2qnJ/Ly786Y+JkTRWp5/fTxP/uMBjHctf9J640ws9AV5lX/EUbkYFg
-         +sWwYbfCNs+p5HpxCLARO91GuHLqCah8DbY0+jIqAYp4tQPKsGEcFHsB+S6HQlhLxyRu
-         PBiw==
-X-Forwarded-Encrypted: i=1; AJvYcCV36GRZCWpL9qhlujqqzo2EJcUQKhe5JZ1JHrTMzGaaY5aWa+PrTqwH5VYBJCiJO8gWLPOnPKTAAAY/02M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDzzOw1qfnrUr/Fbn8Wz4NQHCdlFvifhikHhn3dUQVFVSvI9sv
-	euslCQjMNczC2ViPJ4u3t4CMjk2bexIrMS9UeXBV4RTDVecfH8kagu1JwX9jUIOcmsg=
-X-Gm-Gg: ASbGnctAYT+rxiXb7/a0JPALhRrOpOWkUtvcjDEx4AIzSbrQVFc+B8vwTtp2RP7e4/6
-	UWV4W/S9x865KQdWLYn3vPSD+ItcH851yQmhJr6DQ4CtYKs1B3f4tJckjB/zKuEbBybRJGdFv4N
-	+6LGdZzqyRCAGWsbqcWWJWlzbvaGeLOB7WusVJh9GlIsGwsKRJt7Vrbddu3BmWm5R70pW4yVU9Q
-	ZdwFd39Q0bcwA6TfAtMXNhrtPTYdLlrvtzPNNywKhQm5YxWHVbj4l3MG4B1q80Dl9d/Rh9Weand
-	Tru9dzR4S6pJ2Zsejrlig9+EJfBnANo0ShpTJ6zHER1OBSpr4R45J/cI35Vd0PQ1phwr0Oysfy5
-	+g9Ef81Obhq6J4JvyV2scXbE5rUhHAa/OZ6jA6hlzdrcr
-X-Google-Smtp-Source: AGHT+IF1AidpWULRPKu5iTE+TsMmiHHuryUXvQyrh8oicTTK5UkvbYPx+yhbOI4Jr5aRWM1z7sA7MQ==
-X-Received: by 2002:a17:903:18e:b0:237:7802:da30 with SMTP id d9443c01a7336-237d9a74d4amr67094355ad.31.1750450943166;
-        Fri, 20 Jun 2025 13:22:23 -0700 (PDT)
-Received: from alexghiti.eu.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860fb58sm24239005ad.99.2025.06.20.13.22.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 13:22:22 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Fri, 20 Jun 2025 20:21:59 +0000
-Subject: [PATCH v5 3/3] riscv: Move all duplicate insn parsing macros into
- asm/insn.h
+	s=arc-20240116; t=1750450960; c=relaxed/simple;
+	bh=C+uxgod9CTvG8HEvmlGSRhpd6q3U26YYp5CKertPOT8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IM5lF6EPqqOT0h5MlT5KZAYXbnNUMWvJtN7zkUJAj1yRodB1m4w+tuuiBb5pk0AsxDA24v8PL/rEVkq1Gr0Hu1234ugwfwVLMiGiX7tSbNihGS/NhPz145FQPMnQN9X+acA6IIb6KkKI8s5kaRQa3QDOBEnzWG7JC6UA2nRcSYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1uSiFr-0001je-05; Fri, 20 Jun 2025 22:22:31 +0200
+Message-ID: <3197df27de7438c67558060414bff16662cb155a.camel@pengutronix.de>
+Subject: Re: [PATCH v2 5/6] drm/etnaviv: Add PPU flop reset
+From: Lucas Stach <l.stach@pengutronix.de>
+To: Gert Wollny <gert.wollny@collabora.com>, Russell King
+ <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
+ <christian.gmeiner@gmail.com>
+Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 20 Jun 2025 22:22:30 +0200
+In-Reply-To: <20250618204400.21808-6-gert.wollny@collabora.com>
+References: <20250618204400.21808-1-gert.wollny@collabora.com>
+	 <20250618204400.21808-6-gert.wollny@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-dev-alex-insn_duplicate_v5_manual-v5-3-d865dc9ad180@rivosinc.com>
-References: <20250620-dev-alex-insn_duplicate_v5_manual-v5-0-d865dc9ad180@rivosinc.com>
-In-Reply-To: <20250620-dev-alex-insn_duplicate_v5_manual-v5-0-d865dc9ad180@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Anup Patel <anup@brainfault.org>, 
- Atish Patra <atish.patra@linux.dev>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, 
- Andrew Jones <ajones@ventanamicro.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16348;
- i=alexghiti@rivosinc.com; h=from:subject:message-id;
- bh=0L/wjxkXqWWOrTF6mI/XPv0iLH/1kpBrrfC6HZculbM=;
- b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJCD30Q3lOU5PjMOcz+oanJZ+s2McsUve//nCfyXnl9M
- 0HzzP7ejlIWBjEOBlkxRRYF84SuFvuz9bP/XHoPM4eVCWQIAxenAEyk7Dsjw6IUfo1b0+aaWFzq
- urZV+eb0coXCtko9n93ydjHtD3/s9mFkmM9e5K/DdonFbt8U/u6cSTGWJ5ffYPvx68fPf1f4vi1
- wZAAA
-X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp;
- fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-kernel/traps_misaligned.c and kvm/vcpu_insn.c define the same macros to
-extract information from the instructions.
+Am Mittwoch, dem 18.06.2025 um 22:43 +0200 schrieb Gert Wollny:
+> The PPU flop reset is required on some hardware to clear the
+> temporary registers. This implementation follows the code
+> implemented in the public galcore kernel module code to this
+> for the PPU.
+>=20
+> v2: - Move flop reset data to etnaviv_drm_private and initialize it
+>       from etnaviv_gpu_bind (Lucas)
+>     - Prepare code for more chip IDs and other flop reset types
+>     - do some cleanups and function name renaming
+>=20
+> Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
+> ---
+>  drivers/gpu/drm/etnaviv/Makefile             |   1 +
+>  drivers/gpu/drm/etnaviv/etnaviv_buffer.c     |   6 +
+>  drivers/gpu/drm/etnaviv/etnaviv_drv.c        |   2 +
+>  drivers/gpu/drm/etnaviv/etnaviv_drv.h        |   3 +
+>  drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c | 205 +++++++++++++++++++
+>  drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h |  25 +++
+>  drivers/gpu/drm/etnaviv/etnaviv_gpu.c        |   6 +
+>  7 files changed, 248 insertions(+)
+>  create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
+>  create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
+>=20
+> diff --git a/drivers/gpu/drm/etnaviv/Makefile b/drivers/gpu/drm/etnaviv/M=
+akefile
+> index 46e5ffad69a6..903101e8751a 100644
+> --- a/drivers/gpu/drm/etnaviv/Makefile
+> +++ b/drivers/gpu/drm/etnaviv/Makefile
+> @@ -14,6 +14,7 @@ etnaviv-y :=3D \
+>  	etnaviv_iommu.o \
+>  	etnaviv_mmu.o \
+>  	etnaviv_perfmon.o \
+> +	etnaviv_flop_reset.o \
+>  	etnaviv_sched.o
+> =20
+>  obj-$(CONFIG_DRM_ETNAVIV)	+=3D etnaviv.o
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/e=
+tnaviv/etnaviv_buffer.c
+> index 9e007d977efe..a2da3212592f 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+> @@ -18,6 +18,8 @@
+>  #include "state_3d.xml.h"
+>  #include "cmdstream.xml.h"
+> =20
+> +#include "etnaviv_flop_reset.h"
+> +
+>  static void etnaviv_cmd_select_pipe(struct etnaviv_gpu *gpu,
+>  	struct etnaviv_cmdbuf *buffer, u8 pipe)
+>  {
+> @@ -100,6 +102,10 @@ u16 etnaviv_buffer_init(struct etnaviv_gpu *gpu)
+>  	/* initialize buffer */
+>  	buffer->user_size =3D 0;
+> =20
+> +	/* Queue in PPU flop reset */
+> +	if (etnaviv_flop_reset_ppu_require(&gpu->identity))
+> +		etnaviv_flop_reset_ppu_run(gpu);
+> +
+>  	CMD_WAIT(buffer, gpu->fe_waitcycles);
+>  	CMD_LINK(buffer, 2,
+>  		 etnaviv_cmdbuf_get_va(buffer, &gpu->mmu_context->cmdbuf_mapping)
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etna=
+viv/etnaviv_drv.c
+> index 3e91747ed339..73dc1c00c027 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> @@ -604,6 +604,8 @@ static void etnaviv_unbind(struct device *dev)
+> =20
+>  	xa_destroy(&priv->active_contexts);
+> =20
+> +	kfree(priv->flop_reset_data_ppu);
+> +
+Missing etnaviv_cmdbuf_free().
 
-Let's move the definitions into asm/insn.h to avoid this duplication.
+>  	drm->dev_private =3D NULL;
+>  	kfree(priv);
+> =20
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etna=
+viv/etnaviv_drv.h
+> index b3eb1662e90c..20dad16fd554 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
+> @@ -48,6 +48,9 @@ struct etnaviv_drm_private {
+>  	/* list of GEM objects: */
+>  	struct mutex gem_lock;
+>  	struct list_head gem_list;
+> +
+> +	/* ppu flop reset data */
+> +	struct etnaviv_cmdbuf *flop_reset_data_ppu;
+>  };
+> =20
+>  int etnaviv_ioctl_gem_submit(struct drm_device *dev, void *data,
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c b/drivers/gpu/d=
+rm/etnaviv/etnaviv_flop_reset.c
+> new file mode 100644
+> index 000000000000..c33647e96636
+> --- /dev/null
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
+> @@ -0,0 +1,205 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Etnaviv Project
+> + */
+> +
+> +#include "asm-generic/int-ll64.h"
+> +#include "etnaviv_buffer.h"
+> +#include "etnaviv_cmdbuf.h"
+> +#include "state_3d.xml.h"
+> +
+> +#include "etnaviv_flop_reset.h"
+> +
+> +enum etnaviv_flop_reset_type {
+> +	flop_reset_ppu =3D 1 << 0,
+> +	flop_reset_nn =3D 1 << 1,
+> +	flop_reset_tp =3D 1 << 2
+> +};
+> +
+> +#define PPU_IMAGE_STRIDE 64
+> +#define PPU_IMAGE_XSIZE 64
+> +#define PPU_IMAGE_YSIZE 6
+> +
+> +#define PPU_FLOP_RESET_INSTR_DWORD_COUNT 16
+> +
+> +static void
+> +etnaviv_emit_flop_reset_state_ppu(struct etnaviv_cmdbuf *cmdbuf,
+> +				  u32 buffer_base,
+> +				  u32 input_offset,
+> +				  u32 output_offset,
+> +				  u32 shader_offset,
+> +				  u32 shader_size,
+> +				  u32 shader_register_count)
+> +{
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_API_MODE,
+> +		               VIVS_GL_API_MODE_OPENCL);
+> +	CMD_SEM(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+> +	CMD_STALL(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+> +
+> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(0), 4);
+> +
+> +	OUT(cmdbuf, buffer_base + input_offset);
+> +	OUT(cmdbuf, PPU_IMAGE_STRIDE);
+> +	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
+> +	OUT(cmdbuf, 0x444051f0);
+> +	OUT(cmdbuf, 0xffffffff);
+> +
+> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(4), 4);
+> +	OUT(cmdbuf, buffer_base + output_offset);
+> +	OUT(cmdbuf, PPU_IMAGE_STRIDE);
+> +	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
+> +	OUT(cmdbuf, 0x444051f0);
+> +	OUT(cmdbuf, 0xffffffff);
+> +
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_CONFIG,
+> +		               VIVS_CL_CONFIG_DIMENSIONS(2) |
+> +		               VIVS_CL_CONFIG_VALUE_ORDER(3));
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_INVALIDATE, 0x1f);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_VARYING_NUM_COMPONENTS(0), 0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_TEMP_REGISTER_CONTROL,
+> +		               shader_register_count);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_SAMPLER_BASE, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_UNIFORM_BASE, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_LOW, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_HIGH,
+> +		               shader_size / 16);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INST_ADDR,
+> +		               buffer_base + shader_offset);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_SH_CONFIG,
+> +		               VIVS_SH_CONFIG_RTNE_ROUNDING);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_CONTROL,
+> +		               VIVS_VS_ICACHE_CONTROL_ENABLE);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_COUNT,
+> +		               shader_size / 16 - 1);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INPUT_COUNT, 0x1f01);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_HALTI5_UNK008A0, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PA_VS_OUTPUT_COUNT, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_VARYING_TOTAL_COMPONENTS, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_CONTROL_EXT, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_VS_OUTPUT_COUNT, 0x1);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_HALTI5_SH_SPECIALS, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_PREFETCH, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_UNK00924, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_THREAD_ALLOCATION, 0x1);
+> +
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_X, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Y, 0x0);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Z, 0x0);
+> +
+> +	CMD_LOAD_STATES_START(cmdbuf, VIVS_CL_WORKGROUP_COUNT_X, 9);
+> +	OUT(cmdbuf, 0xf);
+> +	OUT(cmdbuf, 0x5);
+> +	OUT(cmdbuf, 0xffffffff);
+> +	OUT(cmdbuf, 0x0);
+> +	OUT(cmdbuf, 0x0);
+> +	OUT(cmdbuf, 0x3ff);
+> +	OUT(cmdbuf, 0x0);
+> +	OUT(cmdbuf, 0x4);
+> +	OUT(cmdbuf, 0x1);
+> +	OUT(cmdbuf, 0x0);
+> +
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_CL_KICKER, 0xbadabeeb);
+> +	CMD_LOAD_STATE(cmdbuf, VIVS_GL_FLUSH_CACHE,
+> +		               VIVS_GL_FLUSH_CACHE_SHADER_L1 |
+> +		               VIVS_GL_FLUSH_CACHE_UNK10 |
+> +		               VIVS_GL_FLUSH_CACHE_UNK11);
+> +}
+> +
+> +static void
+> +etnaviv_flop_reset_ppu_fill_input(u32 *buffer, u32 size)
+> +{
+> +	for (int i =3D 0; i < size/4; ++i, ++buffer)
+> +		*buffer =3D 0x01010101;
+> +}
+> +
+> +static void
+> +etnaviv_flop_reset_ppu_set_shader(u8 *dest)
+> +{
+> +	const u32 inst[PPU_FLOP_RESET_INSTR_DWORD_COUNT] =3D {
+> +		/* img_load.u8 r1, c0, r0.xy */
+> +		0x78011779, 0x39000804, 0x00A90050, 0x00000000,
+> +		/* img_load.u8 r2, c0, r0.xy */
+> +		0x78021779, 0x39000804, 0x00A90050, 0x00000000,
+> +		/* dp2x8 r1, r1, r2, c3_512 */
+> +		0xB8017145, 0x390018FC, 0x01C90140, 0x40390028,
+> +		/* img_store.u8 r1, c2, r0.xy, r1 */
+> +		0x380007BA, 0x39001804, 0x00A90050, 0x00390018,
+> +	};
+> +	memcpy(dest, inst, sizeof(inst));
+> +}
+> +
+> +static struct etnaviv_flop_reset_entry {
+> +	u16 chip_model;
+> +	u16 revision;
+> +	u32 flags;
+> +} etnaviv_flop_reset_db [] =3D {
+> +	{
+> +		.chip_model =3D 0x8000,
+> +		.revision =3D 0x6205,
+> +		.flags =3D flop_reset_ppu
+> +	},
+> +};
+> +
+> +bool
+> +etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_=
+id)
+> +{
+> +	const struct etnaviv_flop_reset_entry *e =3D etnaviv_flop_reset_db;
+> +
+> +	for (int i =3D 0; i < ARRAY_SIZE(etnaviv_flop_reset_db); ++i, ++e) {
+> +		if (chip_id->model =3D=3D e->chip_model &&
+> +		    chip_id->revision =3D=3D e->revision)
+> +			return (e->flags & flop_reset_ppu) !=3D 0;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static const u32 image_data_size =3D PPU_IMAGE_STRIDE * PPU_IMAGE_YSIZE;
+> +static const u32 output_offset =3D ALIGN(image_data_size, 64);
+> +static const u32 shader_offset =3D ALIGN(output_offset + image_data_size=
+, 64);
+> +static const u32 shader_size =3D PPU_FLOP_RESET_INSTR_DWORD_COUNT * size=
+of(u32);
+> +static const u32 shader_register_count =3D 3;
+> +static const u32 buffer_size =3D shader_offset + shader_size;
+> +
+> +void
+> +etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv)
+> +{
+> +	/* Get some space from the rung buffer to put the payload
+                                   ^ ring
+> +	   (input and output image, and shader), we keep this buffer
+> +	   for the whole life time the driver is bound */
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/insn.h        | 171 ++++++++++++++++++++++++++++++++++-
- arch/riscv/kernel/traps_misaligned.c | 142 -----------------------------
- arch/riscv/kvm/vcpu_insn.c           | 126 --------------------------
- 3 files changed, 166 insertions(+), 273 deletions(-)
+This isn't the comment style used throughout the driver.
 
-diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-index ac3e606feca2584494ce4c41afd64c5f22a65c44..ad26f859cfe5182288aeb57547369bfd1b05735d 100644
---- a/arch/riscv/include/asm/insn.h
-+++ b/arch/riscv/include/asm/insn.h
-@@ -286,11 +286,172 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
- 	       (code & RVC_INSN_J_RS1_MASK) != 0;
- }
- 
--#define RV_IMM_SIGN(x) (-(((x) >> 31) & 1))
--#define RVC_IMM_SIGN(x) (-(((x) >> 12) & 1))
--#define RV_X_mask(X, s, mask)  (((X) >> (s)) & (mask))
--#define RV_X(X, s, n) RV_X_mask(X, s, ((1 << (n)) - 1))
--#define RVC_X(X, s, mask) RV_X_mask(X, s, mask)
-+#define INSN_MATCH_LB		0x3
-+#define INSN_MASK_LB		0x707f
-+#define INSN_MATCH_LH		0x1003
-+#define INSN_MASK_LH		0x707f
-+#define INSN_MATCH_LW		0x2003
-+#define INSN_MASK_LW		0x707f
-+#define INSN_MATCH_LD		0x3003
-+#define INSN_MASK_LD		0x707f
-+#define INSN_MATCH_LBU		0x4003
-+#define INSN_MASK_LBU		0x707f
-+#define INSN_MATCH_LHU		0x5003
-+#define INSN_MASK_LHU		0x707f
-+#define INSN_MATCH_LWU		0x6003
-+#define INSN_MASK_LWU		0x707f
-+#define INSN_MATCH_SB		0x23
-+#define INSN_MASK_SB		0x707f
-+#define INSN_MATCH_SH		0x1023
-+#define INSN_MASK_SH		0x707f
-+#define INSN_MATCH_SW		0x2023
-+#define INSN_MASK_SW		0x707f
-+#define INSN_MATCH_SD		0x3023
-+#define INSN_MASK_SD		0x707f
-+
-+#define INSN_MATCH_C_LD		0x6000
-+#define INSN_MASK_C_LD		0xe003
-+#define INSN_MATCH_C_SD		0xe000
-+#define INSN_MASK_C_SD		0xe003
-+#define INSN_MATCH_C_LW		0x4000
-+#define INSN_MASK_C_LW		0xe003
-+#define INSN_MATCH_C_SW		0xc000
-+#define INSN_MASK_C_SW		0xe003
-+#define INSN_MATCH_C_LDSP	0x6002
-+#define INSN_MASK_C_LDSP	0xe003
-+#define INSN_MATCH_C_SDSP	0xe002
-+#define INSN_MASK_C_SDSP	0xe003
-+#define INSN_MATCH_C_LWSP	0x4002
-+#define INSN_MASK_C_LWSP	0xe003
-+#define INSN_MATCH_C_SWSP	0xc002
-+#define INSN_MASK_C_SWSP	0xe003
-+
-+#define INSN_OPCODE_MASK	0x007c
-+#define INSN_OPCODE_SHIFT	2
-+#define INSN_OPCODE_SYSTEM	28
-+
-+#define INSN_MASK_WFI		0xffffffff
-+#define INSN_MATCH_WFI		0x10500073
-+
-+#define INSN_MASK_WRS		0xffffffff
-+#define INSN_MATCH_WRS		0x00d00073
-+
-+#define INSN_MATCH_CSRRW	0x1073
-+#define INSN_MASK_CSRRW		0x707f
-+#define INSN_MATCH_CSRRS	0x2073
-+#define INSN_MASK_CSRRS		0x707f
-+#define INSN_MATCH_CSRRC	0x3073
-+#define INSN_MASK_CSRRC		0x707f
-+#define INSN_MATCH_CSRRWI	0x5073
-+#define INSN_MASK_CSRRWI	0x707f
-+#define INSN_MATCH_CSRRSI	0x6073
-+#define INSN_MASK_CSRRSI	0x707f
-+#define INSN_MATCH_CSRRCI	0x7073
-+#define INSN_MASK_CSRRCI	0x707f
-+
-+#define INSN_MATCH_FLW		0x2007
-+#define INSN_MASK_FLW		0x707f
-+#define INSN_MATCH_FLD		0x3007
-+#define INSN_MASK_FLD		0x707f
-+#define INSN_MATCH_FLQ		0x4007
-+#define INSN_MASK_FLQ		0x707f
-+#define INSN_MATCH_FSW		0x2027
-+#define INSN_MASK_FSW		0x707f
-+#define INSN_MATCH_FSD		0x3027
-+#define INSN_MASK_FSD		0x707f
-+#define INSN_MATCH_FSQ		0x4027
-+#define INSN_MASK_FSQ		0x707f
-+
-+#define INSN_MATCH_C_FLD	0x2000
-+#define INSN_MASK_C_FLD		0xe003
-+#define INSN_MATCH_C_FLW	0x6000
-+#define INSN_MASK_C_FLW		0xe003
-+#define INSN_MATCH_C_FSD	0xa000
-+#define INSN_MASK_C_FSD		0xe003
-+#define INSN_MATCH_C_FSW	0xe000
-+#define INSN_MASK_C_FSW		0xe003
-+#define INSN_MATCH_C_FLDSP	0x2002
-+#define INSN_MASK_C_FLDSP	0xe003
-+#define INSN_MATCH_C_FSDSP	0xa002
-+#define INSN_MASK_C_FSDSP	0xe003
-+#define INSN_MATCH_C_FLWSP	0x6002
-+#define INSN_MASK_C_FLWSP	0xe003
-+#define INSN_MATCH_C_FSWSP	0xe002
-+#define INSN_MASK_C_FSWSP	0xe003
-+
-+#define INSN_MATCH_C_LHU		0x8400
-+#define INSN_MASK_C_LHU			0xfc43
-+#define INSN_MATCH_C_LH			0x8440
-+#define INSN_MASK_C_LH			0xfc43
-+#define INSN_MATCH_C_SH			0x8c00
-+#define INSN_MASK_C_SH			0xfc43
-+
-+#define INSN_16BIT_MASK		0x3
-+#define INSN_IS_16BIT(insn)	(((insn) & INSN_16BIT_MASK) != INSN_16BIT_MASK)
-+#define INSN_LEN(insn)		(INSN_IS_16BIT(insn) ? 2 : 4)
-+
-+#define SHIFT_RIGHT(x, y)		\
-+	((y) < 0 ? ((x) << -(y)) : ((x) >> (y)))
-+
-+#define REG_MASK			\
-+	((1 << (5 + LOG_REGBYTES)) - (1 << LOG_REGBYTES))
-+
-+#define REG_OFFSET(insn, pos)		\
-+	(SHIFT_RIGHT((insn), (pos) - LOG_REGBYTES) & REG_MASK)
-+
-+#define REG_PTR(insn, pos, regs)	\
-+	((ulong *)((ulong)(regs) + REG_OFFSET(insn, pos)))
-+
-+#define GET_RS1(insn, regs)	(*REG_PTR(insn, SH_RS1, regs))
-+#define GET_RS2(insn, regs)	(*REG_PTR(insn, SH_RS2, regs))
-+#define GET_RS1S(insn, regs)	(*REG_PTR(RVC_RS1S(insn), 0, regs))
-+#define GET_RS2S(insn, regs)	(*REG_PTR(RVC_RS2S(insn), 0, regs))
-+#define GET_RS2C(insn, regs)	(*REG_PTR(insn, SH_RS2C, regs))
-+#define GET_SP(regs)		(*REG_PTR(2, 0, regs))
-+#define SET_RD(insn, regs, val)	(*REG_PTR(insn, SH_RD, regs) = (val))
-+#define IMM_I(insn)		((s32)(insn) >> 20)
-+#define IMM_S(insn)		(((s32)(insn) >> 25 << 5) | \
-+				 (s32)(((insn) >> 7) & 0x1f))
-+
-+#define SH_RD			7
-+#define SH_RS1			15
-+#define SH_RS2			20
-+#define SH_RS2C			2
-+#define MASK_RX			0x1f
-+
-+#if defined(CONFIG_64BIT)
-+#define LOG_REGBYTES		3
-+#else
-+#define LOG_REGBYTES		2
-+#endif
-+
-+#define MASK_FUNCT3		0x7000
-+
-+#define GET_FUNCT3(insn)	(((insn) >> 12) & 7)
-+
-+#define RV_IMM_SIGN(x)		(-(((x) >> 31) & 1))
-+#define RVC_IMM_SIGN(x)		(-(((x) >> 12) & 1))
-+#define RV_X_mask(X, s, mask)	(((X) >> (s)) & (mask))
-+#define RV_X(X, s, n)		RV_X_mask(X, s, ((1 << (n)) - 1))
-+#define RVC_LW_IMM(x)		((RV_X(x, 6, 1) << 2) | \
-+				 (RV_X(x, 10, 3) << 3) | \
-+				 (RV_X(x, 5, 1) << 6))
-+#define RVC_LD_IMM(x)		((RV_X(x, 10, 3) << 3) | \
-+				 (RV_X(x, 5, 2) << 6))
-+#define RVC_LWSP_IMM(x)		((RV_X(x, 4, 3) << 2) | \
-+				 (RV_X(x, 12, 1) << 5) | \
-+				 (RV_X(x, 2, 2) << 6))
-+#define RVC_LDSP_IMM(x)		((RV_X(x, 5, 2) << 3) | \
-+				 (RV_X(x, 12, 1) << 5) | \
-+				 (RV_X(x, 2, 3) << 6))
-+#define RVC_SWSP_IMM(x)		((RV_X(x, 9, 4) << 2) | \
-+				 (RV_X(x, 7, 2) << 6))
-+#define RVC_SDSP_IMM(x)		((RV_X(x, 10, 3) << 3) | \
-+				 (RV_X(x, 7, 3) << 6))
-+#define RVC_RS1S(insn)		(8 + RV_X(insn, SH_RD, 3))
-+#define RVC_RS2S(insn)		(8 + RV_X(insn, SH_RS2C, 3))
-+#define RVC_RS2(insn)		RV_X(insn, SH_RS2C, 5)
-+#define RVC_X(X, s, mask)	RV_X_mask(X, s, mask)
- 
- #define RV_EXTRACT_RS1_REG(x) \
- 	({typeof(x) x_ = (x); \
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-index 1b69b91d7739c8b8ccb7b1605b6b4b88197b30a5..3d4106a6be2f9d593c0b05559436ae4df35e3463 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -20,148 +20,6 @@
- #include <asm/vector.h>
- #include <asm/insn.h>
- 
--#define INSN_MATCH_LB			0x3
--#define INSN_MASK_LB			0x707f
--#define INSN_MATCH_LH			0x1003
--#define INSN_MASK_LH			0x707f
--#define INSN_MATCH_LW			0x2003
--#define INSN_MASK_LW			0x707f
--#define INSN_MATCH_LD			0x3003
--#define INSN_MASK_LD			0x707f
--#define INSN_MATCH_LBU			0x4003
--#define INSN_MASK_LBU			0x707f
--#define INSN_MATCH_LHU			0x5003
--#define INSN_MASK_LHU			0x707f
--#define INSN_MATCH_LWU			0x6003
--#define INSN_MASK_LWU			0x707f
--#define INSN_MATCH_SB			0x23
--#define INSN_MASK_SB			0x707f
--#define INSN_MATCH_SH			0x1023
--#define INSN_MASK_SH			0x707f
--#define INSN_MATCH_SW			0x2023
--#define INSN_MASK_SW			0x707f
--#define INSN_MATCH_SD			0x3023
--#define INSN_MASK_SD			0x707f
--
--#define INSN_MATCH_FLW			0x2007
--#define INSN_MASK_FLW			0x707f
--#define INSN_MATCH_FLD			0x3007
--#define INSN_MASK_FLD			0x707f
--#define INSN_MATCH_FLQ			0x4007
--#define INSN_MASK_FLQ			0x707f
--#define INSN_MATCH_FSW			0x2027
--#define INSN_MASK_FSW			0x707f
--#define INSN_MATCH_FSD			0x3027
--#define INSN_MASK_FSD			0x707f
--#define INSN_MATCH_FSQ			0x4027
--#define INSN_MASK_FSQ			0x707f
--
--#define INSN_MATCH_C_LD			0x6000
--#define INSN_MASK_C_LD			0xe003
--#define INSN_MATCH_C_SD			0xe000
--#define INSN_MASK_C_SD			0xe003
--#define INSN_MATCH_C_LW			0x4000
--#define INSN_MASK_C_LW			0xe003
--#define INSN_MATCH_C_SW			0xc000
--#define INSN_MASK_C_SW			0xe003
--#define INSN_MATCH_C_LDSP		0x6002
--#define INSN_MASK_C_LDSP		0xe003
--#define INSN_MATCH_C_SDSP		0xe002
--#define INSN_MASK_C_SDSP		0xe003
--#define INSN_MATCH_C_LWSP		0x4002
--#define INSN_MASK_C_LWSP		0xe003
--#define INSN_MATCH_C_SWSP		0xc002
--#define INSN_MASK_C_SWSP		0xe003
--
--#define INSN_MATCH_C_FLD		0x2000
--#define INSN_MASK_C_FLD			0xe003
--#define INSN_MATCH_C_FLW		0x6000
--#define INSN_MASK_C_FLW			0xe003
--#define INSN_MATCH_C_FSD		0xa000
--#define INSN_MASK_C_FSD			0xe003
--#define INSN_MATCH_C_FSW		0xe000
--#define INSN_MASK_C_FSW			0xe003
--#define INSN_MATCH_C_FLDSP		0x2002
--#define INSN_MASK_C_FLDSP		0xe003
--#define INSN_MATCH_C_FSDSP		0xa002
--#define INSN_MASK_C_FSDSP		0xe003
--#define INSN_MATCH_C_FLWSP		0x6002
--#define INSN_MASK_C_FLWSP		0xe003
--#define INSN_MATCH_C_FSWSP		0xe002
--#define INSN_MASK_C_FSWSP		0xe003
--
--#define INSN_MATCH_C_LHU		0x8400
--#define INSN_MASK_C_LHU			0xfc43
--#define INSN_MATCH_C_LH			0x8440
--#define INSN_MASK_C_LH			0xfc43
--#define INSN_MATCH_C_SH			0x8c00
--#define INSN_MASK_C_SH			0xfc43
--
--#define INSN_LEN(insn)			((((insn) & 0x3) < 0x3) ? 2 : 4)
--
--#if defined(CONFIG_64BIT)
--#define LOG_REGBYTES			3
--#define XLEN				64
--#else
--#define LOG_REGBYTES			2
--#define XLEN				32
--#endif
--#define REGBYTES			(1 << LOG_REGBYTES)
--#define XLEN_MINUS_16			((XLEN) - 16)
--
--#define SH_RD				7
--#define SH_RS1				15
--#define SH_RS2				20
--#define SH_RS2C				2
--
--#define RVC_LW_IMM(x)			((RV_X(x, 6, 1) << 2) | \
--					 (RV_X(x, 10, 3) << 3) | \
--					 (RV_X(x, 5, 1) << 6))
--#define RVC_LD_IMM(x)			((RV_X(x, 10, 3) << 3) | \
--					 (RV_X(x, 5, 2) << 6))
--#define RVC_LWSP_IMM(x)			((RV_X(x, 4, 3) << 2) | \
--					 (RV_X(x, 12, 1) << 5) | \
--					 (RV_X(x, 2, 2) << 6))
--#define RVC_LDSP_IMM(x)			((RV_X(x, 5, 2) << 3) | \
--					 (RV_X(x, 12, 1) << 5) | \
--					 (RV_X(x, 2, 3) << 6))
--#define RVC_SWSP_IMM(x)			((RV_X(x, 9, 4) << 2) | \
--					 (RV_X(x, 7, 2) << 6))
--#define RVC_SDSP_IMM(x)			((RV_X(x, 10, 3) << 3) | \
--					 (RV_X(x, 7, 3) << 6))
--#define RVC_RS1S(insn)			(8 + RV_X(insn, SH_RD, 3))
--#define RVC_RS2S(insn)			(8 + RV_X(insn, SH_RS2C, 3))
--#define RVC_RS2(insn)			RV_X(insn, SH_RS2C, 5)
--
--#define SHIFT_RIGHT(x, y)		\
--	((y) < 0 ? ((x) << -(y)) : ((x) >> (y)))
--
--#define REG_MASK			\
--	((1 << (5 + LOG_REGBYTES)) - (1 << LOG_REGBYTES))
--
--#define REG_OFFSET(insn, pos)		\
--	(SHIFT_RIGHT((insn), (pos) - LOG_REGBYTES) & REG_MASK)
--
--#define REG_PTR(insn, pos, regs)	\
--	(ulong *)((ulong)(regs) + REG_OFFSET(insn, pos))
--
--#define GET_RS1(insn, regs)		(*REG_PTR(insn, SH_RS1, regs))
--#define GET_RS2(insn, regs)		(*REG_PTR(insn, SH_RS2, regs))
--#define GET_RS1S(insn, regs)		(*REG_PTR(RVC_RS1S(insn), 0, regs))
--#define GET_RS2S(insn, regs)		(*REG_PTR(RVC_RS2S(insn), 0, regs))
--#define GET_RS2C(insn, regs)		(*REG_PTR(insn, SH_RS2C, regs))
--#define GET_SP(regs)			(*REG_PTR(2, 0, regs))
--#define SET_RD(insn, regs, val)		(*REG_PTR(insn, SH_RD, regs) = (val))
--#define IMM_I(insn)			((s32)(insn) >> 20)
--#define IMM_S(insn)			(((s32)(insn) >> 25 << 5) | \
--					 (s32)(((insn) >> 7) & 0x1f))
--#define MASK_FUNCT3			0x7000
--
--#define GET_PRECISION(insn) (((insn) >> 25) & 3)
--#define GET_RM(insn) (((insn) >> 12) & 7)
--#define PRECISION_S 0
--#define PRECISION_D 1
--
- #ifdef CONFIG_FPU
- 
- #define FP_GET_RD(insn)		(insn >> 7 & 0x1F)
-diff --git a/arch/riscv/kvm/vcpu_insn.c b/arch/riscv/kvm/vcpu_insn.c
-index 62cb2ab4b63680d9d436c12bb2faae94e7988761..de1f96ea62251ff8ab45eddcf2e976f0e0d1da29 100644
---- a/arch/riscv/kvm/vcpu_insn.c
-+++ b/arch/riscv/kvm/vcpu_insn.c
-@@ -10,132 +10,6 @@
- #include <asm/cpufeature.h>
- #include <asm/insn.h>
- 
--#define INSN_OPCODE_MASK	0x007c
--#define INSN_OPCODE_SHIFT	2
--#define INSN_OPCODE_SYSTEM	28
--
--#define INSN_MASK_WFI		0xffffffff
--#define INSN_MATCH_WFI		0x10500073
--
--#define INSN_MASK_WRS		0xffffffff
--#define INSN_MATCH_WRS		0x00d00073
--
--#define INSN_MATCH_CSRRW	0x1073
--#define INSN_MASK_CSRRW		0x707f
--#define INSN_MATCH_CSRRS	0x2073
--#define INSN_MASK_CSRRS		0x707f
--#define INSN_MATCH_CSRRC	0x3073
--#define INSN_MASK_CSRRC		0x707f
--#define INSN_MATCH_CSRRWI	0x5073
--#define INSN_MASK_CSRRWI	0x707f
--#define INSN_MATCH_CSRRSI	0x6073
--#define INSN_MASK_CSRRSI	0x707f
--#define INSN_MATCH_CSRRCI	0x7073
--#define INSN_MASK_CSRRCI	0x707f
--
--#define INSN_MATCH_LB		0x3
--#define INSN_MASK_LB		0x707f
--#define INSN_MATCH_LH		0x1003
--#define INSN_MASK_LH		0x707f
--#define INSN_MATCH_LW		0x2003
--#define INSN_MASK_LW		0x707f
--#define INSN_MATCH_LD		0x3003
--#define INSN_MASK_LD		0x707f
--#define INSN_MATCH_LBU		0x4003
--#define INSN_MASK_LBU		0x707f
--#define INSN_MATCH_LHU		0x5003
--#define INSN_MASK_LHU		0x707f
--#define INSN_MATCH_LWU		0x6003
--#define INSN_MASK_LWU		0x707f
--#define INSN_MATCH_SB		0x23
--#define INSN_MASK_SB		0x707f
--#define INSN_MATCH_SH		0x1023
--#define INSN_MASK_SH		0x707f
--#define INSN_MATCH_SW		0x2023
--#define INSN_MASK_SW		0x707f
--#define INSN_MATCH_SD		0x3023
--#define INSN_MASK_SD		0x707f
--
--#define INSN_MATCH_C_LD		0x6000
--#define INSN_MASK_C_LD		0xe003
--#define INSN_MATCH_C_SD		0xe000
--#define INSN_MASK_C_SD		0xe003
--#define INSN_MATCH_C_LW		0x4000
--#define INSN_MASK_C_LW		0xe003
--#define INSN_MATCH_C_SW		0xc000
--#define INSN_MASK_C_SW		0xe003
--#define INSN_MATCH_C_LDSP	0x6002
--#define INSN_MASK_C_LDSP	0xe003
--#define INSN_MATCH_C_SDSP	0xe002
--#define INSN_MASK_C_SDSP	0xe003
--#define INSN_MATCH_C_LWSP	0x4002
--#define INSN_MASK_C_LWSP	0xe003
--#define INSN_MATCH_C_SWSP	0xc002
--#define INSN_MASK_C_SWSP	0xe003
--
--#define INSN_16BIT_MASK		0x3
--
--#define INSN_IS_16BIT(insn)	(((insn) & INSN_16BIT_MASK) != INSN_16BIT_MASK)
--
--#define INSN_LEN(insn)		(INSN_IS_16BIT(insn) ? 2 : 4)
--
--#ifdef CONFIG_64BIT
--#define LOG_REGBYTES		3
--#else
--#define LOG_REGBYTES		2
--#endif
--#define REGBYTES		(1 << LOG_REGBYTES)
--
--#define SH_RD			7
--#define SH_RS1			15
--#define SH_RS2			20
--#define SH_RS2C			2
--#define MASK_RX			0x1f
--
--#define RVC_LW_IMM(x)		((RV_X(x, 6, 1) << 2) | \
--				 (RV_X(x, 10, 3) << 3) | \
--				 (RV_X(x, 5, 1) << 6))
--#define RVC_LD_IMM(x)		((RV_X(x, 10, 3) << 3) | \
--				 (RV_X(x, 5, 2) << 6))
--#define RVC_LWSP_IMM(x)		((RV_X(x, 4, 3) << 2) | \
--				 (RV_X(x, 12, 1) << 5) | \
--				 (RV_X(x, 2, 2) << 6))
--#define RVC_LDSP_IMM(x)		((RV_X(x, 5, 2) << 3) | \
--				 (RV_X(x, 12, 1) << 5) | \
--				 (RV_X(x, 2, 3) << 6))
--#define RVC_SWSP_IMM(x)		((RV_X(x, 9, 4) << 2) | \
--				 (RV_X(x, 7, 2) << 6))
--#define RVC_SDSP_IMM(x)		((RV_X(x, 10, 3) << 3) | \
--				 (RV_X(x, 7, 3) << 6))
--#define RVC_RS1S(insn)		(8 + RV_X(insn, SH_RD, 3))
--#define RVC_RS2S(insn)		(8 + RV_X(insn, SH_RS2C, 3))
--#define RVC_RS2(insn)		RV_X(insn, SH_RS2C, 5)
--
--#define SHIFT_RIGHT(x, y)		\
--	((y) < 0 ? ((x) << -(y)) : ((x) >> (y)))
--
--#define REG_MASK			\
--	((1 << (5 + LOG_REGBYTES)) - (1 << LOG_REGBYTES))
--
--#define REG_OFFSET(insn, pos)		\
--	(SHIFT_RIGHT((insn), (pos) - LOG_REGBYTES) & REG_MASK)
--
--#define REG_PTR(insn, pos, regs)	\
--	((ulong *)((ulong)(regs) + REG_OFFSET(insn, pos)))
--
--#define GET_FUNCT3(insn)	(((insn) >> 12) & 7)
--
--#define GET_RS1(insn, regs)	(*REG_PTR(insn, SH_RS1, regs))
--#define GET_RS2(insn, regs)	(*REG_PTR(insn, SH_RS2, regs))
--#define GET_RS1S(insn, regs)	(*REG_PTR(RVC_RS1S(insn), 0, regs))
--#define GET_RS2S(insn, regs)	(*REG_PTR(RVC_RS2S(insn), 0, regs))
--#define GET_RS2C(insn, regs)	(*REG_PTR(insn, SH_RS2C, regs))
--#define GET_SP(regs)		(*REG_PTR(2, 0, regs))
--#define SET_RD(insn, regs, val)	(*REG_PTR(insn, SH_RD, regs) = (val))
--#define IMM_I(insn)		((s32)(insn) >> 20)
--#define IMM_S(insn)		(((s32)(insn) >> 25 << 5) | \
--				 (s32)(((insn) >> 7) & 0x1f))
--
- struct insn_func {
- 	unsigned long mask;
- 	unsigned long match;
+> +	priv->flop_reset_data_ppu =3D
+> +	  kzalloc(sizeof(*priv->flop_reset_data_ppu), GFP_KERNEL);
+> +
+> +	etnaviv_cmdbuf_init(priv->cmdbuf_suballoc,
+> +			    priv->flop_reset_data_ppu, buffer_size);
+> +
+> +	void *buffer_base =3D priv->flop_reset_data_ppu->vaddr;
+> +
+> +	u32 *input_data =3D (u32 *)buffer_base;
+> +	etnaviv_flop_reset_ppu_fill_input(input_data, image_data_size);
+> +
+> +	u8 *shader_data =3D (u8 *)buffer_base + shader_offset;
+> +	etnaviv_flop_reset_ppu_set_shader(shader_data);
+> +}
+> +
+> +void
+> +etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu)
+> +{
+> +	struct etnaviv_drm_private *priv =3D gpu->drm->dev_private;
+> +
+> +	if (!priv->flop_reset_data_ppu) {
+> +		pr_err("Flop reset data was not initialized, skipping\n");
+> +		return;
+> +	}
+> +
+> +	u32 buffer_base =3D etnaviv_cmdbuf_get_va(priv->flop_reset_data_ppu,
+> +						&gpu->mmu_context->cmdbuf_mapping);
+> +
+> +	etnaviv_emit_flop_reset_state_ppu(&gpu->buffer,
+> +					  buffer_base,
+> +					  0,
+> +					  output_offset,
+> +					  shader_offset,
+> +					  shader_size,
+> +					  shader_register_count);
+> +}
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h b/drivers/gpu/d=
+rm/etnaviv/etnaviv_flop_reset.h
+> new file mode 100644
+> index 000000000000..f51cece75507
+> --- /dev/null
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Etnaviv Project
+> + */
+> +
+> +
+> +#ifndef etnaviv_flop_reset_h
+> +#define etnaviv_flop_reset_h
+> +
+> +#include <linux/types.h>
+> +
+> +struct etnaviv_chip_identity;
+> +struct etnaviv_drm_private;
+> +struct etnaviv_gpu;
+> +
+> +bool
+> +etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_=
+id);
+> +
+> +void
+> +etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv);
+> +
+> +void
+> +etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu);
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etna=
+viv/etnaviv_gpu.c
+> index dc8a7ff3e797..0d1dc1b1d98d 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> @@ -18,6 +18,7 @@
+> =20
+>  #include "etnaviv_cmdbuf.h"
+>  #include "etnaviv_dump.h"
+> +#include "etnaviv_flop_reset.h"
+>  #include "etnaviv_gpu.h"
+>  #include "etnaviv_gem.h"
+>  #include "etnaviv_mmu.h"
+> @@ -1807,6 +1808,11 @@ static int etnaviv_gpu_bind(struct device *dev, st=
+ruct device *master,
+>  		ret =3D -ENXIO;
+>  		goto out_sched;
+>  	}
+> +
+> +	if (etnaviv_flop_reset_ppu_require(&gpu->identity) &&
+> +	    !priv->flop_reset_data_ppu)
+> +		etnaviv_flop_reset_ppu_init(priv);
+> +
+I don't see why you would need to do this in the bind callback. You
+should be able to move this to etnaviv_gpu_init(), so you have the
+needed identification data. gpu_init is also executed serially over all
+GPUs in the device, so there is no problem with potential races there.
 
--- 
-2.34.1
+Regards,
+Lucas
+
+>  	priv->gpu[priv->num_gpus++] =3D gpu;
+> =20
+>  	return 0;
 
