@@ -1,180 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71226233155
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582C6238143;
+	Fri, 20 Jun 2025 21:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750455266; cv=none; b=DVhySRq/R3RHKFcqMzUWTnVOlyMHmS0HdaGv466l4bA3tdnqoCURY8JeLkNCvFoC0XqXLazEDHJJhCl9racHuxEBEQJkH56WkW2JHYovFu+FlVOzh3ChAyZ3pfZGy5Nuh/j2exklxCfnpsNV7WhakkKSyYAIQt15LlTb48A2AKk=
+	t=1750455293; cv=none; b=o0pubHG45htlQyniWrsl8lwfpVm+4DXraB5cLE1yqCWGD4x6zrS/VnoVrLh3DzTgoC6xc882E8c1b7pnmOWJyV55WiZSplQpSS72yuC39cP/K8z2+LCx5rVFNBVCdJ6U1uaACoEDGKKEUDglBFlsZ6HhY7dHc8SuWc7FB0R44YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750455266; c=relaxed/simple;
-	bh=ddeEOwDx9KIEkwLrqjkmYZXL0t1PupX616M914w3kqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6SR0CATkqzYW7Sd+ws8CZOIu4cvrIVDf4xWyvV0aZaJSvGMxBrIFmPZ1GS3WHiIlXfVHDCHCkxjNhe2t9K/YhOIV8O/FTGOW8DQ8g2Cwao66q1uPL8VjXW0HT1Vf/aAP8FUry4YoDuCuJG46bHVFFIDMtwt5YB0urHJDUHKU5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pYjD9sYs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750455293; c=relaxed/simple;
+	bh=JZcPrmMT5XJkv0+F82G6GQ0CgzHmHpYaIi6+hrUGM9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EiK3uoexxySA1ywdBTAag+ieco5OUlG2BSrYI4j/q51Wm3Wm37oeSr6lDdXOn+Xhd/9Ev9qbZSBBzX9n5NvDexakyJpu+wkwDG0Ina+tW9Lk+Wm+wD5+m0mP7tla8J7oYSDDxDt8MXJ+31G/ECGxCwFKMAC4jrA2oL4W0z7TrmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=arbkEczQ; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pYjD9sYs"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55KGVapM031102
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:34:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=I5eUMVemtx+WOtxG7ifeKcbV
-	DLFe5coNfGzblu/bS8Y=; b=pYjD9sYs9RyZ3OEacXtIZo34s/uwKLSE7os3otJL
-	XywyPBWBdd44hpHxqtKSefoK6kfj3ndV3LfdD55+Ugvu3Y2ngdyxceqM6UP05c+y
-	gv0XI3bNjA5v3W689kVZL2VVDr0aGdCa3lnpJmA0OweikRXYLkje5x9HUp0GZBtp
-	P4krv3KP1jrlMD/imeN24LgPuRKTQMFksF+nevf/wc8od6jl+in2FoOLExpqPZr6
-	Q56NKsB9U6gz22H5fi3c8CfmS8Mnd0qjqm1IeK2QVbCXGbHRm/vG58QeACT0/fEu
-	ETvssLpIkHjkVocbU8B1ObByruqcBjxBnfrcxdp1V62OMQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47db82gkxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 21:34:23 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d3e90c3a81so192557885a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:34:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arbkEczQ"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-875f57e0cb9so209778739f.3;
+        Fri, 20 Jun 2025 14:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750455290; x=1751060090; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2bV4/erAwfXPlPi2hHxXtxfl2Kz2FSJD4cbVQEOlp7w=;
+        b=arbkEczQuK7EJVnjmcvBhhySa2YU45a9aVkhxygak+8fzaMV1hFLJX+MlNKJHOS+XE
+         2oOKvg4AqQ/Jxc834nWEbJptZQJgk5ZCavAw5KZRzzVN2js4NS920WivMkoLI516pK8n
+         Oc4kM6xFT1gJ/mFBjCkB1sR4JkoENrclymCbMtDXXaUsyMecReLBvuEfhG3kEdbI1ztE
+         a0cjtsOzNBVHRxQOzuj1Vkz83oy8fHIrEsJf+bZREknMjy+4l2LEw16BbDZkSgEAJEDD
+         f4EIfZSZPVU+sM+5b+U9eQA5s3Fusj5s7Ag3ayIyvHDwBfdpWgVfsTzV8ePWqe8PbMPh
+         HRYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750455262; x=1751060062;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I5eUMVemtx+WOtxG7ifeKcbVDLFe5coNfGzblu/bS8Y=;
-        b=t9xZIVMBTxRisQxQQFhQV/ad+5SU+2Wvb9GCgrK1CUtBVCgpfgYkGJQcYm2x3TTvjg
-         Ed6TJ72Q0+EkwKtcHTYdc/OzhrRdolqvy5VS4HmZ2qMksDBS71Hx1eqrVz1ptG5JiH5U
-         WDvsh6ap1zFaY+uVrI+NYX7GRcaysS0A1d4bPdfh6wSPkRsps7jgl+Y/JSo7rgaw57Ew
-         QJBCtmJKNozPFC0A/LXK5cyvrTlgHDySGRCVrRYIZHYPAt3+mUhij3iE08agr+IM05qt
-         1H+3EvTJrsTsL+E33DzEYh81Q5eazYPMqB+x/nnHKej/Fjx0zaLm1llCcQeUkoz66RC2
-         vcpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOJhOl3E+ItKgDFVqLhTPH2YtZV0DXaIKHKgnaFhfooyPHY/YoMFzI3Fo8sM2hF+5L6oz8iY8MA+o8WiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/QLoIxZXtnmalL+gOo9Is0D4xERbEml7Noed2HBJ29179uJ1s
-	DaSEdJF/VUJLDe9Tg+IE8Ocjb3pjrEWjwBmXvbIct9qd7jDSrvKEhpSZAlPCt+GdgLdThU+jJtr
-	DEjZ35III7zTrEMaFuQ7Bo4yY39tv2FXfjXL5YvA0HambnMJKUdUpljWAinquaR3qHbxWgbPGoe
-	O8iQ==
-X-Gm-Gg: ASbGncsC5RK/Y7ZnXhjswSZ+LINpbpQdXrJgE9iPMiDfgK7GCVUZBaLFnksn0OHpZwC
-	bNo2X6rAJoBy0M/0tR/Cm5binCvCSHUoSNG3IaiH4WlqKEfok0y5KjvKlLUkturlg7iieXCiIpY
-	TPshPpVA4XKrBrN6FZhjfTZ54cTDMLO46ptSlZ230F5lov1iffvR1POpATu863iD27rlmYDqQh1
-	KhqEcg7/6N/Ei0oFiQS4sxh7yjBG5uCWzVbNveUvgioS/sejKp/uhX7yE2uwDWMPvDeq/Xh/JPe
-	bC+j5SbDFZG/a+mVaadMf49ypGBRe1nbbvp71ZIm48hoiKyzUYmVjSDl2yNbLhyR0YrcRyHQ7OQ
-	pBpkO/6xKZQjCKIK89T/30z02IqVtGyZncRY=
-X-Received: by 2002:a05:620a:6187:b0:7d0:984a:d1b4 with SMTP id af79cd13be357-7d3f98d99b4mr612143685a.17.1750455261813;
-        Fri, 20 Jun 2025 14:34:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFQgOg+RQxEGOUR5Axw5ElARrL+47mFou5bAIbvY41SUovy9rbjpZJh1+YdUa1r9WfF2UcAeQ==
-X-Received: by 2002:a05:620a:6187:b0:7d0:984a:d1b4 with SMTP id af79cd13be357-7d3f98d99b4mr612140885a.17.1750455261374;
-        Fri, 20 Jun 2025 14:34:21 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e414cae2sm425057e87.59.2025.06.20.14.34.19
+        d=1e100.net; s=20230601; t=1750455290; x=1751060090;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2bV4/erAwfXPlPi2hHxXtxfl2Kz2FSJD4cbVQEOlp7w=;
+        b=MNtoA9pO9NKrsozM9ypYcHzuyxxyo98n841iOZ9IFXf1iGxNKuhC7+vLZVF3Oa3nqn
+         n058metaCYupGsWRYc5d8uK+vxZQJSN6GV9IkQstbPlRbA73pZdkoXYPpt3IdeEWCblU
+         x/CuA0tnlAzMGvdhtyGVAcvRzFREQJs2FfB+fivTeeJNcjF0kPGPysYYl7CoqY5b4tyr
+         6tw5wt5eZp8xF0T6AlLm0Oky5aN7lWDEf4H1wiJUure93OqpgQ+hwaOj5M0FLPrdXWXJ
+         2sGAASwqIYDVWlFkaAVTMEdi0TWdbfE510qleWSR2SCqB2Q1i261Z+8ZVFIr6ylvnFR9
+         cu+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW14h8M1UYatkB28XVfj8SeBIZVM3lb+k8StwyWWYMKODdmhjAFzFr2hwivMQoe9eVb3qeJ5PFLkzEn@vger.kernel.org, AJvYcCWLYwYsd9aWj/Px4p/WsMBUkDhtl9YrI9FCzi2kybj0nHL9AB4C/dHwXuNFvBxL1UcmJqsH2b/9uaRtfVIg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzc2rY7KYdaMWgx+4Poe198HS6E09Q1aYt4ycmjjTCDBmv4vNJ
+	KBSH7TrQQNfMIQtj5eWvvr6Fj/mbvxWpy10+G9qsvxyBwStn+yZlnOt7zJ7a+Q==
+X-Gm-Gg: ASbGncsKzu+WpLqdcQLeXJTT84Uc8Ik0ftOQyC0ZfW6dpLtkq9bGBYS1Q8kZlKjekjh
+	gj8aSKALy3NwSumtKh5dCthbaszbz9LG+bMaY7Wu7n5irGjMeTQPoTqMf3jp76Z8J4QEqglvpGG
+	bZ0Z+JWOc8vEseQqgSH5Q1hQlGglXwEaoxK4xONAAj/LStNIMZU1JjPW0LtEAnINL/P2319rof6
+	mYowv56gQeQatdFsIZNvP7Y9y7srJdy1U9KkasgVU2G4DDBUuXyTnBiDNTWu+nothe2mWGvaOZh
+	/Dj4oX/BVsIb3/D+Eqt+UgbWNVMhWBpqPWM1q7aqRuvxruAtJgTnlCHD0bWGf8ezHMI+5Xaqe91
+	BgUuQNTDHd2igc1MSv1397uFPDAyirzRV5n3v
+X-Google-Smtp-Source: AGHT+IFXCoHIdC1hxKQ8Wh2O6ePURz9GDmLlEmjUZKSPhjqSp4Y9n5TQYb99KGPA9gmaBHSnoG7uqw==
+X-Received: by 2002:a05:6e02:228e:b0:3dc:87c7:a5a6 with SMTP id e9e14a558f8ab-3de38c1e68cmr54940105ab.4.1750455290137;
+        Fri, 20 Jun 2025 14:34:50 -0700 (PDT)
+Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5019e0d03e7sm546707173.139.2025.06.20.14.34.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 14:34:19 -0700 (PDT)
-Date: Sat, 21 Jun 2025 00:34:17 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: qcom,sm8450-videocc: Add
- minItems property
-Message-ID: <aswg6zjmyi4pcx75uzfj5byadkx5gof2yfpjcu7fspbuniatrg@dy52pmcrgnoc>
-References: <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-0-02e83aeba280@quicinc.com>
- <20250618-sm8450-videocc-camcc-bindings-single-pd-fix-v1-1-02e83aeba280@quicinc.com>
- <4657c6d8-8454-478a-aac3-114c6194b72e@linaro.org>
- <5ed72663-da54-46a4-8f44-1ceda4a7d0d9@quicinc.com>
- <6068badd-8d33-4660-aef8-81de15d9b566@linaro.org>
- <ffe32102-cc55-4f86-b945-ae77a4e163bd@oss.qualcomm.com>
+        Fri, 20 Jun 2025 14:34:49 -0700 (PDT)
+From: Adam Ford <aford173@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com,
+	Adam Ford <aford173@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: imx8mm-beacon: Fix HS400 USDHC clock speed
+Date: Fri, 20 Jun 2025 16:34:45 -0500
+Message-ID: <20250620213447.56392-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffe32102-cc55-4f86-b945-ae77a4e163bd@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: UdjOmUcdxsuE0q-TFZuXkUK1yvX-bA6-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDE0OSBTYWx0ZWRfX9eToMdp472Ey
- dGGFIa3k8UwwLLuEXtthNY1KzPptjyK3h58cci+Mww+qJu9kZ843ICVKATE1c8hzp57djIwf7Uf
- 7F41R9dnDv5GaB5y+FzOow6/ntiStAIgtPZqoOiNbT12X+t4e+Z81DE72FLpViBPDyWwdpP1TiF
- XfInLjcNkF+KbkamNAuhs+fLIOCr/WhATIHlmm00Kjms+pDkTJhb/UJlBck+ZeE6sFGcRsT6iQe
- RsRV0gJQJozibxadwGd4dIGkItEGkihVMJ0BZfeQIjzVOxOke7FCyoTswK5HZuhGatDA4QTKh7Y
- gEwZUxx/wj/InE4dEwsM0Vz1GOFiS3MviJ0HuzexA2pNbvlEPK6oSaoVTY7IFF6isnWBR6o3dwm
- 8/Qy5NRhttH+Y9LxFzigBToSx84bGkssEgXzttyBV4qZpA1m1le3zbuiuLzX/0IyQMJlwdnZ
-X-Authority-Analysis: v=2.4 cv=RaOQC0tv c=1 sm=1 tr=0 ts=6855d3df cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=SDRi_Ghe60FVfvUD7c8A:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: UdjOmUcdxsuE0q-TFZuXkUK1yvX-bA6-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_08,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
- mlxscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- phishscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200149
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 07:39:06PM +0200, Konrad Dybcio wrote:
-> On 6/20/25 7:56 AM, Krzysztof Kozlowski wrote:
-> > On 19/06/2025 12:20, Jagadeesh Kona wrote:
-> >>
-> >>
-> >> On 6/18/2025 11:56 AM, Krzysztof Kozlowski wrote:
-> >>> On 17/06/2025 21:07, Jagadeesh Kona wrote:
-> >>>> Add minItems as 1 for power-domains and required-opps properties
-> >>>> to allow this binding to be compatible with both single and multiple
-> >>>> power domains.
-> >>>
-> >>> This is your hardware, so you know how it works thus I expect here
-> >>> arguments why this is correct from the hardware point of view. Without
-> >>> this, it is impossible to judge whether this is a correct change.
-> >>>
-> >>> If I overlook this now, it will be used in discussions by other qcom
-> >>> engineers, so unfortunately you see, you need to prepare perfect commits
-> >>> now...
-> >>>
-> >>
-> >> These clk controllers mainly require MMCX power domain to be enabled to access
-> >> the clock registers. But to configure the cam & video PLLs in probe, an additional
-> >> MXC power domain also needs to be enabled.
-> > 
-> > 
-> > Then your patch is not correct. Anyway, you should explain the hardware
-> > in commit msg, why this domain is optional in the hardware.
-> > 
-> >>
-> >> Since the initial DTS changes only added MMCX power domain, this change is required
-> >> to be backward compatible with older DTS and avoid ABI breakage as discussed in below
-> >> thread.
-> > 
-> > 
-> > So you send incorrect hardware description allowing something which will
-> > not work? Or how exactly?
-> 
-> So I think there's a mistake in understanding the backwards compatibility
-> paradigm here.
-> 
-> There exists a single, objectively correct and represented in hardware,
-> list of required power-domains and the commit that caused the schema
-> validation errors was essentially "align YAML with reality" which should
-> be coupled with an immediate DT update to match and we forget about the
-> incomplete past
+The reference manual for the i.MX8MM states the clock rate in
+MMC mode is 1/2 of the input clock, therefore to properly run
+at HS400 rates, the input clock must be 400MHz to operate at
+200MHz.  Currently the clock is set to 200MHz which is half the
+rate it should be, so the throughput is half of what it should be
+for HS400 operation.
 
-I'd second that. Let's make sure that the _driver_ works with old DT.
-But we don't have to support old DT in schema.
+Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development kit")
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+index 21bcd82fd092..8287a7f66ed3 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+@@ -294,6 +294,8 @@ &usdhc3 {
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
+ 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	assigned-clocks = <&clk IMX8MM_CLK_USDHC3>;
++	assigned-clock-rates = <400000000>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
 -- 
-With best wishes
-Dmitry
+2.48.1
+
