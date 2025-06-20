@@ -1,50 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D49210FB;
-	Fri, 20 Jun 2025 22:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0BA210FB;
+	Fri, 20 Jun 2025 22:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750459578; cv=none; b=fJcdVOTnMoHX4tTDjg1Jta4DA8xrXzvI8juEmes4KHOl8+bb/phtogpeEEf3xXZiMM5i7QHqozaKVd16qtXeCHmOYMJMVfPqIGG+LJ6leNqRkVFOoKbues1Hg8+eyVq0QjPmIhaDCshp4ccgBKz9M+Mln4m4tIidYjksDp6BBLE=
+	t=1750459999; cv=none; b=UDrAgdmgxieV/GphvxLZn48rxJE13NiJzbUGqT8hyJEgbiq4YlWh0QBDdL8msKY2B/jQNOkeXqaPxb3Xb7pDbColoIUlyhxTD09jyX9oSv87CWSGLWHAFXdwQHT1VtTxCm9bbYbD5iFYROcLZswxt4ILWSiDYi59aIlSiMnOMHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750459578; c=relaxed/simple;
-	bh=3ltDZyrLpr7p5Yw1O4wQRcbJxakPO1ZfhDT2Kf+7TY0=;
+	s=arc-20240116; t=1750459999; c=relaxed/simple;
+	bh=qfpCzB4wclc404l7tLJPX7+oneYlSYtlNEt/tGrUK3c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hmfZjUBHQ5rTLr5uJjAFjJjAEXOW0VNkhmCe6ui9OSF3DKeJcCIjZcMK3HgtH1U5DziU35w+801hdAQ9kJiKc9Dii+JT3xGmrHb1bdkP+DDQfA9hYPJwRMphsz+xWBToQ3OmfcrLq38EHSW/g+MboB79WvhM3+2DPJx9zd2MY9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G9M72Xjs; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=q6D1RFgrdMe7OEwYk/C0CPgtr7y6khJ5gT4GhYh/ZkYVI4qnM5gwo47Mw7H23JHSYAPFcftyVhLuqFHVPSrteJxvaW70xTWhquYCS+gevbfKkuuqpbLTe+bhH10E50FZkDeyxra0Zd0Q3BLaVLISPy9v+9n5hhj5+N7xq+MKzy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QYAqO6y6; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G9M72Xjs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750459577; x=1781995577;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3ltDZyrLpr7p5Yw1O4wQRcbJxakPO1ZfhDT2Kf+7TY0=;
-  b=G9M72Xjsa1+CBguDlnt/s82HZEodmFcxe6JUXRY7xYmds8vw7ZUZ+IvG
-   enOjlfpapEFxLVyzZ0VUloZTZCAxmYo0sVPUdurKVZYPQn5FFiJ/tzfDl
-   oytpzcqfQDnr8N6i8LhpRtZqoxbw6o+S1GkbYvwGsTQNZDJdhYHMrypI5
-   CDwhxwvdLBXeHdTSAU36SoPDzV6IqDIx2XdBOkOPjnrQag4B8OLEQunAx
-   vwSWIK6xe57YVvLyfPEFEiLtxv2CH16sM7P/U0brVwypPmG21UlKuEXUu
-   To6Q7fFQCnBesUv1Vw/BfVT5aCQKq2vKwDKFY4vX2vUhkipTYX9R7VKu1
-   w==;
-X-CSE-ConnectionGUID: khlGXOlkTwKr1U9JjdnP3w==
-X-CSE-MsgGUID: yLxhqetFTP2koLO8avucCw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52437980"
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="52437980"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 15:46:17 -0700
-X-CSE-ConnectionGUID: k7JyIxXjSziBo8N29UjCyA==
-X-CSE-MsgGUID: yrg8bu1wRT23ayQDfi8v0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
-   d="scan'208";a="150463429"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.136]) ([10.125.108.136])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 15:46:13 -0700
-Message-ID: <daa73e1b-2d1e-4b0b-a7c6-1f909c9672ba@intel.com>
-Date: Fri, 20 Jun 2025 15:46:11 -0700
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QYAqO6y6"
+Received: from [IPV6:2601:646:8081:9482:8e69:eb66:369f:ca04] ([IPv6:2601:646:8081:9482:8e69:eb66:369f:ca04])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55KMpi3J2670267
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 20 Jun 2025 15:51:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55KMpi3J2670267
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750459906;
+	bh=dHs5e5KPRTLFRZrGk/aD2kqq/TN2P0Xy+dRkjImcTFE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QYAqO6y6FGlEpC2XyzCDh3BoPOBHGwVPtkK5zpOUU7N+eppGdBi7v/I5Lxhdu8C4v
+	 RC+FM7W/vF/DaeY4RJvr4SW2D84Gj2X7BgiVqP5PLU3rk4mBFEMmMVOfWUL1NAE4nk
+	 8HAd7qiejrsoP/0Gd73iRKMD9aZyVVNmvMlzztWl4wBD5JyCp5TBvAJNvigy65wghe
+	 Kf3pA4Ua2Mh+PStAxCtK2AEUfCT1j9cvB9sWLL7F341iJhl2iyTT9UPpyYFP/6dNvW
+	 rbBjZCMjhdqiBOTUQYRpupwqGFVBJtHQzLYPHQ9DpvzpGND4grxSQ8LwPsstBoxyr+
+	 iBY+X4ocXC0BA==
+Message-ID: <7acedeba-9c90-403c-8985-0247981bf2b5@zytor.com>
+Date: Fri, 20 Jun 2025 15:51:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,99 +41,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 00/16] x86: Enable Linear Address Space Separation
- support
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
- alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
- bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
- christophe.leroy@csgroup.eu, corbet@lwn.net, daniel.sneddon@linux.intel.com,
- dave.hansen@linux.intel.com, ebiggers@google.com, geert+renesas@glider.be,
- houtao1@huawei.com, hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com,
- jpoimboe@kernel.org, kai.huang@intel.com, kees@kernel.org,
- kirill.shutemov@linux.intel.com, leitao@debian.org,
- linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
- luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
- michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
- namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
- sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
- tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
- vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
- xiongwei.song@windriver.com, ytcoode@gmail.com
-References: <61af62d9-4cd0-485f-8f0c-2da981f52695@intel.com>
- <1aa5fb31-ce23-4c9f-ba1b-d5dc93402209@citrix.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v7 02/10] x86/fred: Pass event data to the NMI entry point
+ from KVM
+To: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+ <20250612214849.3950094-3-sohil.mehta@intel.com>
+ <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com>
+ <3281866f-2593-464d-a77e-5893b5e7014f@intel.com>
+ <36374100-0587-47f1-9319-6333f6dfe4db@zytor.com>
+ <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <1aa5fb31-ce23-4c9f-ba1b-d5dc93402209@citrix.com>
-Content-Type: text/plain; charset=UTF-8
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/20/25 15:04, Andrew Cooper wrote:
->> Most of the cover letter here reads like an Intel whitepaper. That's not
->> the worst thing in the world, but I think it glosses over one very
->> important point:
+On 2025-06-19 15:57, Sohil Mehta wrote:
+> On 6/19/2025 3:45 PM, Xin Li wrote:
+>> On 6/19/2025 3:15 PM, Sohil Mehta wrote:
+>>>
+>>> I want to say that the event data for IRQ has to be zero until the
+>>> architecture changes — Similar to the /* Reserved, must be 0 */ comment
+>>> in asm_fred_entry_from_kvm().
+>>>
 >>
->> 	Had it been available, LASS alone would have mitigated Meltdown.
+>> FRED spec says:
 >>
->> Could we say this up front in a prominent place, please?
+>> For any other event, the event data are not currently defined and will
+>> be zero until they are.
+>>
+>> So "Event data not defined for IRQ thus 0."
 > 
-> I'm going to nitpick. :)
+> I am fine with this. Not *defined* removes the ambiguity.
 > 
-> Yes, LASS would have made Meltdown a far less major problem than it was,
-> but I don't think that phrasing is fair.  As I recall, LASS was
-> literally invented as a "what would have been useful?" exercise in the
-> wake of Meltdown.
 
-While being concise, I was also trying to convey that LASS is pretty
-powerful, rather than it being some uniquely genius move by the CPU
-designers. It was absolutely conceived of in hindsight.
+So I was thinking about this, and wonder: how expensive is it to get the 
+event data exit information out of VMX? If it is not very expensive, it 
+would arguably be a good thing to future-proof by fetching that 
+information, even if it is currently always zero.
 
-Do you feel like the changelog is sufficient as-is? Or do you think we
-can beef the changelog up a bit? I just want to make sure folks reading
-it have a clear understanding that it's not fixing purely theoretical
-issues.
+	-hpa
+
