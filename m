@@ -1,122 +1,185 @@
-Received: from pf-012.whm.fr-par.scw.cloud (pf-012.whm.fr-par.scw.cloud [51.159.173.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5BE1E47B7;
-	Fri, 20 Jun 2025 14:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.173.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4351E47B7
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429676; cv=none; b=HBbsoDLnuwhhDg9oiKcFLxCacT69oMEYIvBVZPlFxFxsEdwSdpc2Lbt/0zjzNNuh0YqKr1PDIJWee79JbbDxoVXyv0PlhTTg8AMpbhGayS6svGDnQ/zD3E2FtIQVPXhVdsdB8bTA3/W8LKxSyo08nbS179GPhU8jv7rl5jL+yiI=
+	t=1750429727; cv=none; b=JsjvmY1SPS/EFyuk9bPRG9ki11yuOoa3CUC7rcBE7XJbfy/EsSckboijEHuIVA5jy3EepbNCKsiF4OQDREfW/rjtqukrZ7K92HzDTUa7LI+Tkg64NmwvGjEY3gw5i25k6GC7N9vBo385eIC8+UtHJGLZ53cAQzEWsy//87/goGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429676; c=relaxed/simple;
-	bh=E8Plfmdgq+6cfcuVqI3CT/7JUjKbKcYEKI5VFigoooQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pKPlEUCM2xY10KjHOmmBjy4IAlWdaxeV5y9/0bWrUu495csf3kGMqfgV1U+u2VFGgSyvtEfI0Eau0Wu7v8aFbTG0vTHOTnXHPogDRyArfCrc3KqW3A/S8hmfOYSj+fUE7qWuMcXKyHJ0hbRY2zIYs7iqz3ePR8x+87cKunDrDsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=aWTkQErB; arc=none smtp.client-ip=51.159.173.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
+	s=arc-20240116; t=1750429727; c=relaxed/simple;
+	bh=5wyL4q/HqByPoG55Jg3dJ51bokNAMLu+96sPzGwtyTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrI5rdRybarIPjshAP9wyWAb1UThk8MWcOXeSTu1NAIAiPh9+QzGRmfW34Fm+uI80KYaoTnr3hC2xJyovNs+nyGM1lewppJCU68+p5VGUr9Jo4ynx0P/dZ4FeQAxwl+hBG7Ve7SqntsHodkukdNplKuCl/3lHiYN2fUj+9Iyixs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DxvinQlC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XYg0ko8T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DxvinQlC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XYg0ko8T; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="aWTkQErB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=oss.cyber.gouv.fr; s=default; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0rsZWx+4JUDSAaqG2b4ZgDsynw5G2Gsxxx00bsx043I=; b=aWTkQErBolZRqk+F0wSvZ4NH3q
-	38tFF81DsQDeWA4kuJabfhUG28xB17CVwQLjprdJ8BkwK4carGQIhla14DB2afqsWyAeZ2087VjIa
-	mvj15H1nKIIic4iluUJMKb/gNa42vvPs/ZeWOoluTwpoXhw/Z2oZbbljK9zRw9MaaLz6tLpyIn1Uy
-	U38AehgKnZpaSb6LgxNO7JhyZG6NfeB8YDTOoOI/o8wXVuoVfXVoPdgo/JyqFabJmP4w+Dsi9jLfM
-	iP4CJO2hSUbffGU7ITrvyZ1WADgvW905Zyd8tUXmzILPUOyrTFSse1jHBSYiTvzxvUQlVliPaD3Nj
-	CZ7UgA4w==;
-Received: from laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr ([90.63.246.187]:43571 helo=[10.224.8.110])
-	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <nicolas.bouchinet@oss.cyber.gouv.fr>)
-	id 1uScih-00000007rNQ-1ges;
-	Fri, 20 Jun 2025 16:27:52 +0200
-From: nicolas.bouchinet@oss.cyber.gouv.fr
-Date: Fri, 20 Jun 2025 16:27:19 +0200
-Subject: [RFC PATCH 4/4] usb: core: Add Kconfig option to compile usb
- authorization
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DxvinQlC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XYg0ko8T";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DxvinQlC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XYg0ko8T"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 20A74211AA;
+	Fri, 20 Jun 2025 14:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750429724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDCXy2xUuIpDrZt6lZelut4/OesMx2eGwdtjU0b+qKY=;
+	b=DxvinQlCQT7htDy2x3qJc0l8S9I2wtlZFnrvr2MmCgd+KCWdfllBkOoBzO53nGmxqAQGW+
+	n6IThfqJiNIVIq4K8/K/TU++WyqmptL5cVJjbzMf5RTxXRrtsFwHvGlIlLnj5girryMgWc
+	zrAgVd3LusSS6dS31ymTmxMg+5IkYSI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750429724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDCXy2xUuIpDrZt6lZelut4/OesMx2eGwdtjU0b+qKY=;
+	b=XYg0ko8TqcrK4PThoiWu27rjoKhW5F6wdUaFP7Xpo/XL8ibt9yp8Tr5B5wC4yCILbBDHwb
+	0rsEMIATsgX2hfCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=DxvinQlC;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=XYg0ko8T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750429724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDCXy2xUuIpDrZt6lZelut4/OesMx2eGwdtjU0b+qKY=;
+	b=DxvinQlCQT7htDy2x3qJc0l8S9I2wtlZFnrvr2MmCgd+KCWdfllBkOoBzO53nGmxqAQGW+
+	n6IThfqJiNIVIq4K8/K/TU++WyqmptL5cVJjbzMf5RTxXRrtsFwHvGlIlLnj5girryMgWc
+	zrAgVd3LusSS6dS31ymTmxMg+5IkYSI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750429724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDCXy2xUuIpDrZt6lZelut4/OesMx2eGwdtjU0b+qKY=;
+	b=XYg0ko8TqcrK4PThoiWu27rjoKhW5F6wdUaFP7Xpo/XL8ibt9yp8Tr5B5wC4yCILbBDHwb
+	0rsEMIATsgX2hfCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A9F9D136BA;
+	Fri, 20 Jun 2025 14:28:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hPs4JhtwVWh2TQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 20 Jun 2025 14:28:43 +0000
+Date: Fri, 20 Jun 2025 16:28:42 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
+	Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] mm,hugetlb: Rename anon_rmap to new_anon_folio
+ and make it boolean
+Message-ID: <aFVwGttkfeRmK9Rr@localhost.localdomain>
+References: <20250620123014.29748-1-osalvador@suse.de>
+ <20250620123014.29748-4-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-usb_authentication-v1-4-0d92261a5779@ssi.gouv.fr>
-References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
-In-Reply-To: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, 
- Kannappan R <r.kannappan@intel.com>, 
- Sabyrzhan Tasbolatov <snovitoll@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Stefan Eichenberger <stefan.eichenberger@toradex.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Pawel Laszczak <pawell@cadence.com>, 
- Ma Ke <make_ruc2021@163.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
- Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>, 
- Luc Bonnafoux <luc.bonnafoux@oss.cyber.gouv.fr>, 
- Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, 
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - pf-012.whm.fr-par.scw.cloud
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oss.cyber.gouv.fr
-X-Get-Message-Sender-Via: pf-012.whm.fr-par.scw.cloud: authenticated_id: nicolas.bouchinet@oss.cyber.gouv.fr
-X-Authenticated-Sender: pf-012.whm.fr-par.scw.cloud: nicolas.bouchinet@oss.cyber.gouv.fr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620123014.29748-4-osalvador@suse.de>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 20A74211AA
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+On Fri, Jun 20, 2025 at 02:30:12PM +0200, Oscar Salvador wrote:
+> anon_rmap is used to determine whether the new allocated folio is anonymous.
+> Rename it to something more meaningul like new_anon_folio and make it boolean,
+> as we use it like that.
+> While we are at it, drop 'new_pagecache_folio' as 'new_anon_folio' is enough to
+> check whether we need to restore the consumed reservation.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  mm/hugetlb.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+[...]
+> @@ -6518,6 +6517,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+>  		folio_zero_user(folio, vmf->real_address);
+>  		__folio_mark_uptodate(folio);
+>  		new_folio = true;
+> +		new_anon_folio = !(vma->vm_flags & VM_MAYSHARE);
 
-This enables the usb authentication protocol implementation.
+>  
+>  		if (vma->vm_flags & VM_MAYSHARE) {
+>  			int err = hugetlb_add_to_page_cache(folio, mapping,
+> @@ -6536,10 +6536,8 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+>  				ret = VM_FAULT_SIGBUS;
+>  				goto out;
+>  			}
+> -			new_pagecache_folio = true;
+>  		} else {
+>  			folio_lock(folio);
+> -			anon_rmap = 1;
 
-Co-developed-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
-Signed-off-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
----
- drivers/usb/core/Kconfig  | 8 ++++++++
- drivers/usb/core/Makefile | 4 ++++
- 2 files changed, 12 insertions(+)
+Let's just on top:
 
-diff --git a/drivers/usb/core/Kconfig b/drivers/usb/core/Kconfig
-index 58e3ca7e479392112f656384c664efc36bb1151a..07ba67137b7fe16ecb1e993a51dbbfd4dd3ada88 100644
---- a/drivers/usb/core/Kconfig
-+++ b/drivers/usb/core/Kconfig
-@@ -143,3 +143,11 @@ config USB_DEFAULT_AUTHORIZATION_MODE
- 	  ACPI selecting value 2 is analogous to selecting value 0.
+ diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+ index 57bb8b2dce21..f6ea1864ce5c 100644
+ --- a/mm/hugetlb.c
+ +++ b/mm/hugetlb.c
+ @@ -6517,7 +6517,6 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+                 folio_zero_user(folio, vmf->real_address);
+                 __folio_mark_uptodate(folio);
+                 new_folio = true;
+ -               new_anon_folio = !(vma->vm_flags & VM_MAYSHARE);
  
- 	  If unsure, keep the default value.
-+
-+config USB_AUTHENTICATION
-+	bool "Enable USB authentication function"
-+	default n
-+	depends on USB
-+	help
-+		Enables the USB Authentication function. This activates the
-+		hook points in the USB stack.
-diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-index ac006abd13b3ad8362dc7baa115124c11eaafc84..7ba1a89cf3de7a398889eee1820f2bfbbc4280f5 100644
---- a/drivers/usb/core/Makefile
-+++ b/drivers/usb/core/Makefile
-@@ -8,6 +8,10 @@ usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
- usbcore-y += devio.o notify.o generic.o quirks.o devices.o
- usbcore-y += phy.o port.o
+                 if (vma->vm_flags & VM_MAYSHARE) {
+                         int err = hugetlb_add_to_page_cache(folio, mapping,
+ @@ -6537,6 +6536,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
+                                 goto out;
+                         }
+                 } else {
+ +                       new_anon_folio = true;
+                         folio_lock(folio);
+                 }
+         } else {
+
+which is more explicit :-)
+
  
-+ifdef CONFIG_USB_AUTHENTICATION
-+usbcore-y += authent.o authent_netlink.o
-+endif
-+
- usbcore-$(CONFIG_OF)		+= of.o
- usbcore-$(CONFIG_USB_PCI)		+= hcd-pci.o
- usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
 
 -- 
-2.50.0
-
+Oscar Salvador
+SUSE Labs
