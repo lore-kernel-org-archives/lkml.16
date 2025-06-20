@@ -1,202 +1,154 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D35E56A
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E582E3AE5
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 17:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750440375; cv=none; b=p35JxFox2mueujziLj2doKzXzBHIjMHmN1E23KlmjZ16/TZTvLSonzQT3Nr3LrNJ/bozHqY8/++ltTguv6XLEYfveB/vAiHL270jPDNC55gvrvI/aao9NSur5uNXQJmDveckxTev6xd+zzxiqIcoxMtzLLWAWgiWNUXc6vckcUM=
+	t=1750440393; cv=none; b=rLh9fyM4U33u8WMVvBjP9A39QOf9KGBJXvUhgEggoY36cXjz76LAvEI1Ikk8OVzDp5LAi+UI6DB+bzP7PTEtw+Pxsrq4eLor+g1fz4wKNpoMyQqrqpDwvW6CdWP+LQhRhOxK5NdJC2eKEFmfm2Oe9UvzvX2AyWxDz11VwF3J4PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750440375; c=relaxed/simple;
-	bh=DMDp7KdSg0OADmqXMvg+hhhIHuQ3+bHuc1JTtsSwrkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lkndpjqJKxqWo3X2QWHl8bcWR9YdiepRT5uy9y53cMqnfRs6Jw08bf6NwWvwRj5uct7U/ifcre4GFtPsQNsdzjgXza7VrJYnIYGh5iAFtlqzeDZGhlajN5IzWGK3/9RfdPa+2Hd5YRRk/xAqkJCcOI5OOz+r6GBzYGknug+fyiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D6KCD2ZG; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750440393; c=relaxed/simple;
+	bh=VV2AhUpUmGsjpQfjWSSNhTVUiXyM+8eP7m2M76dktuQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sT901GfT71tUmfGmx2LxboP0iSdSVHNhkkD9opvS6a1qebUjkEfGwUMR39cisbieQSu/zcke0Pdk1EakPhKlkVZJDcksG0Kny13Lg+UT4SDGdQaBayNgtlAjSO9Ul2CKnfKKIXYTV7S0lkezx+5vjrJV63RHGDwblDl08VyKU6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fTagO/T0; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D6KCD2ZG"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-876231b81d5so160786739f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 10:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750440372; x=1751045172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qMdgn8VeeI3SGgeQXZkzCb+QOrUsQueKBj98VA1GvRo=;
-        b=D6KCD2ZGhxNZkKRy/ghsKIDKOMElOtUg7zH0N2/SMptp+uehuSsPsA5xgruyysugoF
-         Ydxr+btzmrm+aGFk/aQTyOhX0+8UVlJR8PqxhphUL9W830Yfjjby6rM/DuJAN5/bg9FY
-         1EsX+TNl0AmwsgtW5/TW9OJU3QsiJ0AAq6LDE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750440372; x=1751045172;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qMdgn8VeeI3SGgeQXZkzCb+QOrUsQueKBj98VA1GvRo=;
-        b=nSZporHcdzWmQJy9M0th4HyzxqnA/AaTUe4MgzLdWZkuTvxrabPH2NqqClr6vS1LAb
-         IQ+elosRt0Oti4B/04IaHNZ1oHEmdXEj2r/BCI7VSnSGRtWqlgyqci9G2Qm3RfDpRgTS
-         K5324CV7yumx2eDw75BdTmKLddHh9hDVf06OiqsuDkfCTlTIySGlRKpxGVlnpkmShKZA
-         D1Jv77plPpIlFO6ECLgaH2vgofxTyg7TiMIBH5MHbnlmYYdR3VV4ff/6YNuRPLUd21t5
-         yEuWONGE55uNVrBb4htx4W83qNcEUqPdSwW5OypzE1jzfLPRZuPnQTx5fcuTDC5xiGOL
-         WL6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWzYAF8vELIuYYxxLrZmVYJOoH/EgMzpMyONmdYIhXav/5M6Uq2OHtCR4aoQLcGaVaK+ngetbBDgtZKXAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3wypyyiQ2TaHAq/K5XTU0HeMNWpHPNUFMU5y2x9qecg8F+yY/
-	8eQqkoKdS1HBWeeQX2K0kyjftKmEefYqDrNxVa6xljwGLeoualL2Z9gtKRE7nS0FiEo=
-X-Gm-Gg: ASbGncudRMpnMm0p/kQJt58M7pLMY2x760lfwsZqYegRvF5TN+ZXAQia4EK3MrfM9Hv
-	gUyWKXCwvi6I4jpfDXQ7vBxg1HXbwuHnkpAC/CdidZDa2LRGPyCoHXRLIWGFoeHkzQGM4A9N1Rz
-	ajUV7R0gC1AGifIN+5A/BYZEi1W8QWaX5iA/7iDDh+pvAgHl0LqSnGteeZVkwuSHEhgDYzEmpTO
-	S39WB1RJTlWQgwkFFD+rBw80UmKJtgpOZ7017ArnSOhYPndDQm0o0UPFt1QQ99oKAn8uNGoruc1
-	QIdzu80oJRtt9mWYDffLQKJmOxZvIEw6JjrrXgtt2TfxJfh/jXRvVh79iaBWykKFju4rCprdOw=
-	=
-X-Google-Smtp-Source: AGHT+IGPqrLcEbc+zJorqkrwKIBd+2amU6zwdAIEOSPTFzmh/L/RFTuNfBUdby9GSMEYeFYE0aSWoQ==
-X-Received: by 2002:a05:6e02:3a03:b0:3de:251c:211e with SMTP id e9e14a558f8ab-3de38cbf701mr36839325ab.17.1750440372219;
-        Fri, 20 Jun 2025 10:26:12 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5019e05048dsm473385173.83.2025.06.20.10.26.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 10:26:11 -0700 (PDT)
-Message-ID: <2e0bbc5a-e74a-4fb5-884c-686dbaf99caf@linuxfoundation.org>
-Date: Fri, 20 Jun 2025 11:26:11 -0600
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fTagO/T0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B19161FD35;
+	Fri, 20 Jun 2025 17:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750440390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c6fqZjW1oWvLkqh+RlLTrzx123aebdEE6NvTpETPRbs=;
+	b=fTagO/T0OTOSnVnshXf2t7eoC1TNsFFRvmJASF050aBRmpJRPng/1jWaqHVE4EV6nLUYkG
+	LXT/aLNHx9qBUC9eL/DZhwOtFzoWXAdPj/1N13PgsZKCkO8XNVXR8fyg7QZGx0pMmNt/MI
+	QftrSf9TvdyWs4oGgeQI1pk5tg4L8bCUpmf6M3t4saZyqmBzng3op7NRmd+R9eQGviVPOF
+	p5uyZgnlMCKkkY5xXbqugJVQ0hrVmVjSU/d0Tuxe1mK1SzPSD1n/F23H2UTsKwDn8sbFyE
+	zNdkaNl5I4YVNp2B7IXTm9y4JXGtCF6BlghMtjHoQrxGFZn8+2eNJn5+uvY2Iw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Fri, 20 Jun 2025 19:26:16 +0200
+Subject: [PATCH v8 4/5] drm/atomic-helper: put the bridge returned by
+ drm_bridge_chain_get_first_bridge()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usbip: convert to use faux_device
-To: Greg KH <gregkh@linuxfoundation.org>, Zongmin Zhou <min_halo@163.com>
-Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- zhouzongmin@kylinos.cn, Shuah Khan <skhan@linuxfoundation.org>
-References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
- <20250604065410.76069-1-min_halo@163.com>
- <2025061926-paycheck-footnote-a2b8@gregkh>
- <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
- <2025062010-hardiness-flashily-cb0f@gregkh>
- <9d95bb75-586c-48dc-9e34-432cc13fd99f@163.com>
- <2025062004-navy-emboss-4743@gregkh>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <2025062004-navy-emboss-4743@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-4-0321845fcafb@bootlin.com>
+References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
+In-Reply-To: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdekleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhin
+ hdrtghomhdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhtvghfrghnsegrghhnvghrrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 6/20/25 03:27, Greg KH wrote:
-> On Fri, Jun 20, 2025 at 05:19:33PM +0800, Zongmin Zhou wrote:
->>
->> On 2025/6/20 12:29, Greg KH wrote:
->>> On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
->>>> On 2025/6/19 19:01, Greg KH wrote:
->>>>> On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
->>>>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>>>
->>>>>> The vhci driver does not need to create a platform device,
->>>>>> it only did so because it was simple to do that in order to
->>>>>> get a place in sysfs to hang some device-specific attributes.
->>>>>> Now the faux device interface is more appropriate,change it
->>>>>> over to use the faux bus instead.
->>>>>>
->>>>>> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>>> ---
->>>>>> Changes in v2:
->>>>>> - don't change faux create api,just call probe on vhci_hcd_init.
->>>>>>
->>>>>>     drivers/usb/usbip/vhci.h             |  4 +-
->>>>>>     drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
->>>>>>     drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
->>>>>>     tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
->>>>>>     4 files changed, 72 insertions(+), 88 deletions(-)
->>>>> I get the following build errors from this patch:
->>>>>
->>>>> drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
->>>>>     1462 | static int vhci_hcd_resume(struct faux_device *fdev)
->>>>>          |            ^~~~~~~~~~~~~~~
->>>>> drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
->>>>>     1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
->>>>>          |            ^~~~~~~~~~~~~~~~
->>>>> cc1: all warnings being treated as errors
->>>>>
->>>>> Are you sure you tested this?
->>>> I apologize for not enabling -Werror, which resulted in missing this error
->>>> warning.
->>>> I have tested usbip feature use the new patch,but not test system
->>>> suspend/resume.
->>>> The faux bus type don't add pm function,and vhci-hcd driver can't register
->>>> it.
->>>> Maybe have to add suspend/resume for it.like below:
->>>> static const struct bus_type faux_bus_type = {
->>>>       .name        = "faux",
->>>>       .match        = faux_match,
->>>>       .probe        = faux_probe,
->>>>       .remove        = faux_remove,
->>>>       .resume     = faux_resume,
->>>>       .suspend    = faux_suspend,
->>>> };
->>>>
->>>> Is that right?
->>>> Your expertise would be greatly valued.
->>> As this is not real hardware, why do you need the suspend/resume
->>> callbacks at all?  What is happening here that requires them?
->> @greg,
->> The vhci_hcd_suspend/vhci_hcd_resume interfaces are not designed for this
->> faux device, but rather to
->> manipulate the HCD_FLAG_HW_ACCESSIBLE bit in the hcd flags associated with
->> the faux device.
->> For example:
->> During system standby: clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
->> During system wakeup: set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
->>
->> Previously, these two functions were registered through platform_driver,
->> but faux bus does not have the relevant interface, so they were not called,
->> resulting in this compilation warning error.
->>
->> This raises the question: Should the faux bus implement PM-related
->> interface?
->> I'm uncertain whether these functions are essential for the vhci-hcd driver
->> or if they can be safely removed.
->>
->> However, during system standby/wakeup tests with remote USB devices bound to
->> the vhci-hcd driver,
->> I observed consistent failure scenarios across both the original platform
->> bus and faux bus patch implementations.
+The bridge returned by drm_bridge_chain_get_first_bridge() is
+refcounted. Put it when done.
 
-suspend and resume hooks have been in the code from beginning
-in the CONFIG_PM path. The original authors are skeptical about
-what should happen during suspend"
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
 
-/* what should happen for USB/IP under suspend/resume? */
-suspend hook checks for active connections and sends EBBUSY
-back to pm core.
+Changes in v8:
+- reworked after the changes in pre_enable/post_disable order:
+  f6ee26f58870 ("drm/atomic-helper: Refactor crtc & encoder-bridge op loops into separate functions")
+  d5bef6430c85 ("drm/atomic-helper: Separate out bridge pre_enable/post_disable from enable/disable")
+  c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
+- Removed R-by Maxime as the diff is not identical, even though it is in
+  principle the same (there are 2 new drm_bridge_chain_get_first_bridge
+  calls, thus added the corresponding drm_bridge_put calls)
 
-Active connection means any of the ports are in USB_PORT_STAT_CONNECTION
-state. So as long as there are active connections between vhci client
-and the host, suspend won't work. So we really don't know what happens
-to the active connections if there are no suspend/resume hooks.
+This patch was added in v7.
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-If there are no active connections, then it will clear the HCD_FLAG_HW_ACCESSIBLE
-bit and returns to pm core to continue with suspend.
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index ef56b474acf599bb9cd341674dc83b04ae247eb7..d5ebe6ea0acbc5a08aef7fa41ecb9ed5d8fa8e80 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -456,6 +456,7 @@ mode_fixup(struct drm_atomic_state *state)
+ 		ret = drm_atomic_bridge_chain_check(bridge,
+ 						    new_crtc_state,
+ 						    new_conn_state);
++		drm_bridge_put(bridge);
+ 		if (ret) {
+ 			drm_dbg_atomic(encoder->dev, "Bridge atomic check failed\n");
+ 			return ret;
+@@ -527,6 +528,7 @@ static enum drm_mode_status mode_valid_path(struct drm_connector *connector,
+ 	bridge = drm_bridge_chain_get_first_bridge(encoder);
+ 	ret = drm_bridge_chain_mode_valid(bridge, &connector->display_info,
+ 					  mode);
++	drm_bridge_put(bridge);
+ 	if (ret != MODE_OK) {
+ 		drm_dbg_atomic(encoder->dev, "[BRIDGE] mode_valid() failed\n");
+ 		return ret;
+@@ -1212,6 +1214,7 @@ encoder_bridge_disable(struct drm_device *dev, struct drm_atomic_state *state)
+ 		 */
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+ 		drm_atomic_bridge_chain_disable(bridge, state);
++		drm_bridge_put(bridge);
+ 
+ 		/* Right function depends upon target state. */
+ 		if (funcs) {
+@@ -1329,6 +1332,7 @@ encoder_bridge_post_disable(struct drm_device *dev, struct drm_atomic_state *sta
+ 		 */
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+ 		drm_atomic_bridge_chain_post_disable(bridge, state);
++		drm_bridge_put(bridge);
+ 	}
+ }
+ 
+@@ -1501,6 +1505,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *state)
+ 
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+ 		drm_bridge_chain_mode_set(bridge, mode, adjusted_mode);
++		drm_bridge_put(bridge);
+ 	}
+ }
+ 
+@@ -1580,6 +1585,7 @@ encoder_bridge_pre_enable(struct drm_device *dev, struct drm_atomic_state *state
+ 		 */
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+ 		drm_atomic_bridge_chain_pre_enable(bridge, state);
++		drm_bridge_put(bridge);
+ 	}
+ }
+ 
+@@ -1655,6 +1661,7 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
+ 		}
+ 
+ 		drm_atomic_bridge_chain_enable(bridge, state);
++		drm_bridge_put(bridge);
+ 	}
+ }
+ 
 
-resume sets the HCD_FLAG_HW_ACCESSIBLE flag to indicate hardware is accessible
-and initiates port status poll.
-
-- suspend hook prevents suspend
-
-With faux device since there is no suspend and resume hook, I would expect
-these hooks are not a factor in suspend and resume.
-
-vhci_hcd is a special case virtual driver as it is a proxy for controlling
-hardware on the host.
-
-Zongmin,
-
-Do suspend/resume work when vhci_hcd is not loaded?
-What happens when when system suspends and resumes with faux device?
-Can you send me dmesg logs and pm logs?
-
-thanks,
--- Shuah
-
-
-
+-- 
+2.49.0
 
