@@ -1,101 +1,110 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A1481E0E0B;
-	Fri, 20 Jun 2025 03:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3118024;
+	Fri, 20 Jun 2025 04:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750391882; cv=none; b=FL1WHdhHOcrvlCGJ2H15bP66N7q6Oz5u+AWtU/Blwq/O6CSJ0VAFJlkHJVRo1PWVr1HiRNMX9ZEIsqS+vZ61sHFvJZ8fKVISS9hG3Y3BrPAQ7vAM+/qp0CGlq+c4yOSkl7TrEPAIGFGUqlFFmz2dP+HhjomHu/upKAPFSaAIhWo=
+	t=1750392496; cv=none; b=nIEe0i79jKMko3nStd04adupVxUtr+SMmsClOrOsLwm+RfYPe7VtzcteHGy8A0091mrkF6kvfAadMHvsb7sNmx7mNS0qYAezarpMf8k+7n/1/ID6xA5n2+4kMVDX0vlCp8Qlf07VMf74BhAMIkHFZeNGCUs+/zooRsFwiH3IkQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750391882; c=relaxed/simple;
-	bh=mGGH4+LX20Lz7gjk338dFdf0YY/zBMdmlsAb6Bg5GUk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R/f19KnUOVSlp8tg+GKgT1kyowCcXh9nMjpJ/3oKmbLX+v+sre+D/n2o7UDOcLzrsiRUkav2Pi4N9mr2q9VYVGI1SJrSc3o1lbiqTM+wIyZUn7Yo9OV9BzOLUfOuy319Bbg3WtAmU/7bpHE0/yV6eWaEVoyFYSMNjythgQx79pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kbYkHeQF; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750392496; c=relaxed/simple;
+	bh=7JkcwPGNxgH1LvLwJizKR2M15gLV4I6zqw4s4RwpCJo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FuFyzWWn5fIqRn84BCe0og67Iya3wbsds+iKpgk4OzjPTy0Ef2tB5jvRqA8dG+Y2rBcM9Qj8HJ/gEccVGTzHtzPKh0xZeKXJp40Bil553jWlJ9nZwZalTqafuhy6pzLTnSj8i9WI7Mq+TjY/0FK4W4MzMaJ8bM25Wx3CJMO4LYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g+z/8JuW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kbYkHeQF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=v1
-	MY5svTzooeYXZdwoxm/E1bt38bsGX5VCg90q6L8DA=; b=kbYkHeQFzyirDC/h4P
-	O0QzhmnGUEfpaPqH2zEdqnEqM4ZhPGO/SrwBIqzZb1Uo5cOcrLcpTKLZWk3iewSm
-	/BRuskOFEhCiqHL+onFQphMiuMnQrpA9kSqQ29hq6E3xnUnN+LjVio25O/3g/Hc0
-	/N11HMhQ+X/Cu9IUhR9Eph/70=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnz7so3FRoiipkAg--.27513S2;
-	Fri, 20 Jun 2025 11:57:29 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: johan@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH] USB: serial: option: add Foxconn T99W640
-Date: Fri, 20 Jun 2025 11:57:21 +0800
-Message-Id: <20250620035721.6450-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g+z/8JuW"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55JIeZjb004996;
+	Fri, 20 Jun 2025 04:08:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=osXx2yeYQBpkRudhyrzx2G
+	8o6ewUMFwFvVT5nW9IZ44=; b=g+z/8JuWdDymOFpd9G/5Rh28qmx5kuy+ySpG4k
+	aFrqOk/sv4D9tI3HXag17R8XthDOr5c38EMploiRxKtlUJI/09IUgdQ99ALva+LW
+	AX+8pzidN0Xm3uqoJKLjbTQnCCExiRRbp5GYMAQ1vI91ygd3eVdPm5VCn1XuucD3
+	2YpXLV4THwDFl2+mBn66uM6/PkXXbht2kabNA/55jpXuD696XNh2agpUtdZ46RWZ
+	W9MY93tKFq9tXlWZtonRUTnJ97PmnMrsDrVadTJTqkWEouy976G/p7kJHbQU/zrj
+	RXvg12Dl/naXHFNhDQzRhoiTfsMxfpSat/Yfk9AJ3cIxnKWg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928msuph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 04:08:04 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55K48357008325
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Jun 2025 04:08:03 GMT
+Received: from cse-cd01-lnx.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 19 Jun 2025 21:07:58 -0700
+From: Wenmeng Liu <quic_wenmliu@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <akapatra@quicinc.com>,
+        <hariramp@quicinc.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_svankada@quicinc.com>, <quic_depengs@quicinc.com>,
+        <quic_vikramsa@quicinc.com>, <quic_wenmliu@quicinc.com>
+Subject: [RFC PATCH 0/3] Add current load setting for qcom camss csiphy
+Date: Fri, 20 Jun 2025 12:07:33 +0800
+Message-ID: <20250620040736.3032667-1-quic_wenmliu@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnz7so3FRoiipkAg--.27513S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur4kJFWUurWDZr47CF4Durg_yoW8Kr1xpF
-	4UJFWavFZ5Xa4YgF9Ikrn7ZayFgan3Wry2gasrXw4SqFWSyws7J34UArWSgrnF9r4Syr4q
-	vr4qk3y8GF97JFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRfcT9UUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiMBxyZGhUvGMQoAABso
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDAyOSBTYWx0ZWRfX8rFA5esmRSHG
+ mYOtRvp9KXPMr2h7Xt6lEgcH1794XmrYKPilk7X+o7+hdvJVGC1+BvtxOoC33OnP6FcJUUKuKW8
+ djXvo4juvkMuwJ7nLJXIQa7JceCWjJli353nBqQrLfNmIvfin1UbcMt55CyA9Orau0lGelbAqEX
+ Bao/IAyzB5jkD0keyOV6h4H2w8BZhZDKNVb/S4AI2YQzjTL9LJX+i7KuRYXoDJOSa8zMHP/s2Ix
+ jji8G6De2CSA8DTuEQwboJnKJOmsj2lciHUsln2IUPIObyPGIGI/oXfApFh0QMdaDQRtEFcl84T
+ /BKMNFjm7Hm6+RqmzNsJE7APqELPufiGQwpXMYWNW9kEPIyOGwkARTqh9zjezZt6IDj1g+nVahi
+ Dx7iR4hgu5B43WAo9H7ax0tPnZNNh6Lhzp7wU6/F5vTsaW97uZVqU4xE08I6TsdZZKz8ZZ7M
+X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=6854dea4 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=5PY4Jy_kNzdOWRqGdsgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: PfYBADR1N-702LMNksSQxQmI3w713Jso
+X-Proofpoint-ORIG-GUID: PfYBADR1N-702LMNksSQxQmI3w713Jso
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-20_01,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=982 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506200029
 
-T99W640 is designed based on Qualconn SDX72 chip. There are 3
-serial ports to be enumerated: Diag, NMEA and AT.
+Currently qcom camss csiphy drivers don’t set regulator’s currents
+load properly using Linux regulator framework. This causes every 
+regulator’s initial mode set as HPM (high current mode), 
+which may have higher power consumption.
+To address this issue, add current configuration for CSIPHY.
 
-Test evidence as below:
-T:  Bus=04 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  2 Spd=5000 MxCh= 0
-D:  Ver= 3.20 Cls=ef(misc ) Sub=02 Prot=01 MxPS= 9 #Cfgs=  1
-P:  Vendor=0489 ProdID=e167 Rev=05.15
-S:  Manufacturer=QCOM
-S:  Product=SDXPINNL USB WWAN Adapter
-S:  SerialNumber=cc1f1d92
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=896mA
-I:  If#= 0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
-E:  Ad=82(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
-E:  Ad=01(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=81(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=40 Driver=option
-E:  Ad=02(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=83(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-I:  If#= 3 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E:  Ad=85(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=40 Driver=option
-E:  Ad=03(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=30 Driver=option
-E:  Ad=04(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+Wenmeng Liu (3):
+  media: dt-bindings: Add regulator current load
+  media: qcom: camss: csiphy: Add regulator current load setting
+  arm64: dts: qcom: qcs6490-rb3gen2: Add csiphy current support
 
-0&1: MBIM, 2:Modem, 3:GNSS(non-serial port), 4: NMEA, 5:Diag
+ .../bindings/media/qcom,sc7280-camss.yaml     |  6 ++++
+ .../qcs6490-rb3gen2-vision-mezzanine.dtso     |  1 +
+ .../media/platform/qcom/camss/camss-csiphy.c  | 29 +++++++++++++++++++
+ .../media/platform/qcom/camss/camss-csiphy.h  |  1 +
+ 4 files changed, 37 insertions(+)
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
- drivers/usb/serial/option.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index 27879cc57536..c0c44e594d36 100644
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -2343,6 +2343,8 @@ static const struct usb_device_id option_ids[] = {
- 	  .driver_info = RSVD(3) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x0489, 0xe145, 0xff),			/* Foxconn T99W651 RNDIS */
- 	  .driver_info = RSVD(5) | RSVD(6) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x0489, 0xe167, 0xff),                     /* Foxconn T99W640 MBIM */
-+	  .driver_info = RSVD(3) },
- 	{ USB_DEVICE(0x1508, 0x1001),						/* Fibocom NL668 (IOT version) */
- 	  .driver_info = RSVD(4) | RSVD(5) | RSVD(6) },
- 	{ USB_DEVICE(0x1782, 0x4d10) },						/* Fibocom L610 (AT mode) */
 -- 
-2.25.1
+2.34.1
 
