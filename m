@@ -1,169 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2DD28DF36;
-	Fri, 20 Jun 2025 13:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ADE28CF76
+	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 13:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424903; cv=none; b=cG5oaUMP/QF32AMvam6GXQJxmM/8lAHkJT3tl5KRMk/GNyZFv0kMFgTgN/PViBTcuYDC4gm1PYeTRE6WrMWwNdn+TJcO32vlGcBniDqRcjamUo95FCjaPa+AMKfLMK3ny7B5u3gWJJ4EcDBOFTHx6YbMGCN0yZWOfzJh/aFtV9k=
+	t=1750424909; cv=none; b=r2SwAglmzIjToR8CA7GqCt0IlxoT4uS1KCuq94r4gJY/A/jISnl/I7CwhTFhplF/367lTnKSOf1Bh5glKhnB7z/7GTDM+tbfILRnrtUbVZBiK300dlO9W+I9onAFGVBtvQ2ZEzzRZU2HWsclsiZuppXwIi4SSLVrOR2JXi7duas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424903; c=relaxed/simple;
-	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qobmUOYLLjndq3wY8xIq/ZcaEA0ZC+li9kXdO1JWokuBBETSm3AQ9D+zRRFgX9iBBR65Mito2/ZEsErA+PV3HxnFAnJ0kPAw5V9f9AvEdnqAzR/kkhfw0fW3kFoYTxsO6Fddysf0dcVxw3mUt/eOba3Z5c0Fk157kzMZ5oZTgQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikYbpV3d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750424909; c=relaxed/simple;
+	bh=/eRyrPSfVH4pb56171VjO8PcLakHMAQoKvhNZP2d87A=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Go6Me/WpyFig40yN4LKWSgZaW856VP2zzNxCtTw2jaeRHGSLX4mjS0G0OfoSab5OY+8tiWkhLcDiyFCjx4nyFkyNw+bbt4oxAGHtUAaXMJ8tOMx1ZNpW4g6J2f3WItozx+0HR9yQzlWwedzIorKYwhCaKblLaVHbYsrv9zTUf7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BhOrnrZe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikYbpV3d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B769C4CEEE;
-	Fri, 20 Jun 2025 13:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750424902;
-	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ikYbpV3djtoMZC4zunIhWqeO+nOC9+2wy9yMZ+uerAs+3IkaRuiJqk4jSIDyDFhGk
-	 RNVkBnOa4IfxYdQQYUTsA25+H3tPbXZZuFHWY/v+472XaOqarx5uvOm+9mHLmfFq6R
-	 govT7oVJnAv5r5fMEn/gw1E5FxTQeQTLvgY0/Fz5AqULmANSd0DPIHWSvl3fkA5yRC
-	 582khYGx4F+6amr9NjTOGnGiQx6wpgYMKC6AhHEZUXwqPodeIAChXqd2tWowLiMl/u
-	 6N68j+25wShwp+gfZMms/GJAHfl0saapqavn+7nVC3Q0L7IY5oreHIfpyweUXUdmDy
-	 3rwYAX/DgZofg==
-Message-ID: <130fe1fc-913b-48cf-b2a4-e9c4952354fd@kernel.org>
-Date: Fri, 20 Jun 2025 15:08:16 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhOrnrZe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750424906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=efezj3LnMENDrFh/B5S35gvfWn7TvlAanxYCoetZO3w=;
+	b=BhOrnrZeqFQT/RphKQgy1jZE58cRPgjN5Kxtrru7d7do2NIWl7gO73iL3bftk+Za961Vfd
+	NuRlfBRG5GN/LMbFsjngz3MxjTnqvfLFAYkdyF73gQSKmM62XlYoQXJm+sQZ0+wzlkG98W
+	gIoMVWHNVLN8eYJ2P3a9lQAnR+Y2Ayg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-93-li-FVJFxM9aHd0M71dKmIg-1; Fri, 20 Jun 2025 09:08:25 -0400
+X-MC-Unique: li-FVJFxM9aHd0M71dKmIg-1
+X-Mimecast-MFC-AGG-ID: li-FVJFxM9aHd0M71dKmIg_1750424904
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so1125467f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 06:08:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750424904; x=1751029704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=efezj3LnMENDrFh/B5S35gvfWn7TvlAanxYCoetZO3w=;
+        b=px7+KHBdicl+OyssDP4LTmlUPoPtYkgut0JzEiAxB7id50uY9N2JkOxK/4amvup9uk
+         3B7ov1ESjp586HoqcXuPbs1Tr9eXOnkcSYawguZhlSOlA0boYQgiJC+WxKh2qfS5zBRe
+         xceEIod9jl0XbsUELXe3EzOnFWwaSE6IqWfaWl38viGv9ZTP2QRuyD9DXfSm1DY/9DaK
+         /20LKmZcvu6VnpO+kOR0kAwwUyf247Ya5FOD00HRXlJ504HwyxBhjJycYpdXBtsIiLLM
+         XSnj7fIbUt1Lc2Nn3Mh4Bz2JxxH48Rb4rjge/mEf4lvuk38VZoP4qHrwqlsMWac+N1Hs
+         Xq8g==
+X-Gm-Message-State: AOJu0YyKo03lYflsqZXDIAi+JoRE5ZBLzt8j/P4qv29pm9U7UU2D/sqE
+	AZcmlMtA1GdzY8luqn/RYm9xQAv74vlGhevF0oLa8bNgqTZ0cdF6bCdWhswASgmx1ibioGQHHZm
+	GGBq3MZkqhLpIa0TYkB9/1FM/GeUP0tSGZjNqzYKvZYtwcnUUpVvaFBsPxrXwvgcXly4G4tj8jg
+	==
+X-Gm-Gg: ASbGncvMWBeVwK8J4HLeWhqLsfasjypg6pqqsMxACAYtSOfckf3u0B0h+2AMu4iXh8F
+	FOKHlRMZhMNHev9/DhjSUYCbRnhBkstEEb+xtw03kJt2qUdlXTVpoZWhKU7kEVMFvvr38RzPO4A
+	Ri/Plb3YsyiuL5r9R2vljOa1IENamWupOdW70HObYbN1+J6022xHEZz4odRzamfLF/jZ1VBT8wm
+	80tcoMu7qS20gffJ/cH3D/AiiCRag6bVTHogj4qWJ2/zxALoxW3dkNRTvzxBaJs4LRM0L5RCgo4
+	OIt9DMVKNy+pYYC3WtjN34/gqSiry4hQXVQ=
+X-Received: by 2002:a05:6000:70d:b0:3a4:ec32:e4f3 with SMTP id ffacd0b85a97d-3a6d12e8d73mr1963674f8f.17.1750424903392;
+        Fri, 20 Jun 2025 06:08:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEvQvIvRiOMOwY6vcPGATBD4+Ygw2boYIIBCDTjikBg4YIpBv3nF1VGt1H//5h9pdOChc4ssw==
+X-Received: by 2002:a05:6000:70d:b0:3a4:ec32:e4f3 with SMTP id ffacd0b85a97d-3a6d12e8d73mr1963604f8f.17.1750424902439;
+        Fri, 20 Jun 2025 06:08:22 -0700 (PDT)
+Received: from localhost.localdomain ([193.207.146.57])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f19f9esm2059296f8f.39.2025.06.20.06.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 06:08:21 -0700 (PDT)
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	linux-integrity@vger.kernel.org,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH v6 0/4] tpm: add support for sync send() and use it in ftpm and svsm drivers
+Date: Fri, 20 Jun 2025 15:08:06 +0200
+Message-ID: <20250620130810.99069-1-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.49.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
- mode support
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>,
- "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "shawnguo@kernel.org" <shawnguo@kernel.org>,
- "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "festevam@gmail.com" <festevam@gmail.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250620031350.674442-1-hongxing.zhu@nxp.com>
- <20250620031350.674442-2-hongxing.zhu@nxp.com>
- <20250620-honored-versed-donkey-6d7ef4@kuoka>
- <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 20/06/2025 10:26, Hongxing Zhu wrote:
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: 2025年6月20日 15:53
->> To: Hongxing Zhu <hongxing.zhu@nxp.com>
->> Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
->> lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
->> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
->> bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
->> kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
->> imx@lists.linux.dev; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
->> mode support
->>
->> On Fri, Jun 20, 2025 at 11:13:49AM GMT, Richard Zhu wrote:
->>> On i.MX, the PCIe reference clock might come from either internal
->>> system PLL or external clock source.
->>> Add the external reference clock source for reference clock.
->>>
->>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
->>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
->>> ---
->>>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
->>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> index ca5f2970f217..c472a5daae6e 100644
->>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> @@ -219,7 +219,12 @@ allOf:
->>>              - const: pcie_bus
->>>              - const: pcie_phy
->>>              - const: pcie_aux
->>> -            - const: ref
->>> +            - description: PCIe reference clock.
->>> +              oneOf:
->>> +                - description: The controller might be configured
->> clocking
->>> +                    coming in from either an internal system PLL or
->> an
->>> +                    external clock source.
->>> +                  enum: [ref, gio]
->>
->> Internal like within PCIe or coming from other SoC block? What does "gio"
->> mean?
-> Internal means that the PCIe reference clock is coming from other
->  internal SoC block, such as system PLL. "gio" is on behalf that the
-> reference clock comes form external crystal oscillator.
+The content of this version is the same of v5, but rebased on current
+linux-tpmdd/next (`git range-diff` on v5 is empty) after the merge
+window since tpm-svsm patches were merged with another tree, so we
+agreed on postpone this series, see
+  https://lore.kernel.org/linux-integrity/aDCb-wkHGoLQ-IGg@kernel.org/
 
-Then what does "ref" mean, if gio is the clock supplied externally? We
-talk here about signals coming to this chip, regardless how they are
-generated.
+This series is a follow-up to the discussion we had about whether or not
+to add send_recv() op in tpm_class_ops[1]. Much boilerplate code has
+already been removed by Jarkko with commit 980a573621ea ("tpm: Make
+chip->{status,cancel,req_canceled} opt"). With this series we try to
+avoid also the temporary buffers needed between send() and recv() for
+devices that do not support interrupts and provide a single operation
+to send the command and receive the response on the same buffer like
+tpm_ftpm_tee.
 
+The biggest advantage for this approach is with tpm_ftpm_tee where we
+remove the local buffer and extra memory copies. For tpm_svsm it does
+not change much since we continue to use the pre-allocated buffer,
+to avoid making an allocation for each command.
 
-Best regards,
-Krzysztof
+Introduce a new flag (TPM_CHIP_FLAG_SYNC) to support synchronous send().
+If that flag is set by the driver, tpm_try_transmit() will use the send()
+callback to send the command and receive the response on the same buffer
+synchronously. In that case send() return the number of bytes of the
+response on success, or -errno on failure.
+
+Thanks,
+Stefano
+
+Changelog
+- v5 -> v6
+  - rebased on linux-tpmdd/next - commit e271ed52b344 ("Merge tag
+    'pm-6.16-rc1-3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm")
+- v4 -> v5: https://lore.kernel.org/linux-integrity/20250514134630.137621-1-sgarzare@redhat.com/
+  - changed order and parameter names to match tpm_try_transmit() [Jarkko]
+  - rebased on next-20250514
+- v3 -> v4: https://lore.kernel.org/linux-integrity/20250509085713.76851-1-sgarzare@redhat.com/
+  - reworked commit descriptions [Jarkko]
+  - added Jarkko's R-b on patch 2
+  - added Sumit's R-b on patch 3
+  - rebased on next-20250508
+- v2 -> v3: https://lore.kernel.org/linux-integrity/20250414145653.239081-1-sgarzare@redhat.com/
+  - fixed comment style [Jarkko]
+  - renamend `out_send_sync` label to `out_sync` [Jarkko]
+- v1 -> v2: https://lore.kernel.org/linux-integrity/20250408083208.43512-1-sgarzare@redhat.com/
+  - changed title since we removed send_recv() op
+  - implemented TPM_CHIP_FLAG_SYNC idea [Jarkko]
+  - removed Jens' T-b
+- RFC -> v1: https://lore.kernel.org/linux-integrity/20250320152433.144083-1-sgarzare@redhat.com/
+  - added Jens' T-b on ftpm driver
+  - removed last patch since [2] is not yet merged and will require a new version
+- RFC: https://lore.kernel.org/linux-integrity/20250311100130.42169-1-sgarzare@redhat.com/
+
+[1] https://lore.kernel.org/linux-integrity/Z8sfiDEhsG6RATiQ@kernel.org/
+[2] https://lore.kernel.org/linux-integrity/20250410135118.133240-1-sgarzare@redhat.com/
+
+Stefano Garzarella (4):
+  tpm: add bufsiz parameter in the .send callback
+  tpm: support devices with synchronous send()
+  tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
+  tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+
+ drivers/char/tpm/tpm_ftpm_tee.h      |  4 --
+ include/linux/tpm.h                  |  4 +-
+ drivers/char/tpm/st33zp24/st33zp24.c |  2 +-
+ drivers/char/tpm/tpm-interface.c     | 22 ++++++++--
+ drivers/char/tpm/tpm_atmel.c         |  3 +-
+ drivers/char/tpm/tpm_crb.c           |  2 +-
+ drivers/char/tpm/tpm_ftpm_tee.c      | 66 +++++++++-------------------
+ drivers/char/tpm/tpm_i2c_atmel.c     |  3 +-
+ drivers/char/tpm/tpm_i2c_infineon.c  |  3 +-
+ drivers/char/tpm/tpm_i2c_nuvoton.c   |  3 +-
+ drivers/char/tpm/tpm_ibmvtpm.c       |  6 ++-
+ drivers/char/tpm/tpm_infineon.c      |  3 +-
+ drivers/char/tpm/tpm_nsc.c           |  3 +-
+ drivers/char/tpm/tpm_svsm.c          | 28 +++++-------
+ drivers/char/tpm/tpm_tis_core.c      |  3 +-
+ drivers/char/tpm/tpm_tis_i2c_cr50.c  |  6 ++-
+ drivers/char/tpm/tpm_vtpm_proxy.c    |  4 +-
+ drivers/char/tpm/xen-tpmfront.c      |  3 +-
+ 18 files changed, 83 insertions(+), 85 deletions(-)
+
+-- 
+2.49.0
+
