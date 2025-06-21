@@ -1,208 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE5121FF48;
-	Sat, 21 Jun 2025 16:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5E920C49E
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522113; cv=none; b=n7FFNZYcq3p9NmUaHj43weJBW+J8UHVW+fNxm5CVRg6EPVU9EjsVq3wdVQh/LZjNejA+FYDPdB/DKsam4T4KWRj4oeLnT8Jok3a5cMkf7OiMU9X172p/K5/Vmft8xVKOR6wOo8khhD/oOZzJCX/5objoGDnTM+xnmES3i3hGZho=
+	t=1750522201; cv=none; b=QaA89EgpKcWJJqlBpZmPRRkzroP824Q1k31NzHSRR+VzuCmCJ/5bBYAjP5V2fVdvvktCNzQCVliE9TkAV67gvoSswIPhLtwhw+C05L0WaR9LqEdIwSIOGP1LhspQK7eEm3p++j0YhD5+QX579Ed2Tu3N/4AqojS+uKAI/L0Z93I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522113; c=relaxed/simple;
-	bh=yJGijM+8o40JqzQz5C3sIfRbs/BciilUWorAgqKr8rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QAgidoRQzC72AAxTpySjT3a0XhadujnrXbAi56xlxWybFx7Vhf4dhnBwEz5uVwFXg4LNCNbMb2FWXv3fkTF/5Dvg2yNjCxKIVUO1HLIwBTEN9I30fNM47PZiDDsXyVcnyHQj8dnD++ELxx1oYhZqnC3+ZybFSaGA2qbM9g8NTro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWPoLFlG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750522201; c=relaxed/simple;
+	bh=hZVmROOzt5gmR/oCOgZdaBilYrkNqyZT7daFih7mQeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4e3tdA4ihEOqBh59XLi7OwYg6aekFNoXLxyef9G8L87x4HiQOjvmA+IBuOoIhk3k+W6ytt2GImryuODr0z2nee4jsY8YnWbxG8jBrD1tRzLvs7/LwOCtg5u5NU/os92RP42NvP1yvGunJc8kT0c1HzIDXUZTGJo+vqqxAmK/po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fIDCT9Qa; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWPoLFlG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F0D3C4CEE7;
-	Sat, 21 Jun 2025 16:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750522113;
-	bh=yJGijM+8o40JqzQz5C3sIfRbs/BciilUWorAgqKr8rc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lWPoLFlG0bPYkIdt7QVAo8TlRCOuhvvQxGWSM+wr9D0qpXYqpscgP0fhp+8sW6bHa
-	 jhdWLUX/d0CjAeYfr5WjjUYH/0l4/WD+/aFKBvorIqndW5sroh+dd4Om61NqU3PYpp
-	 IXoqav7dPipC/6zRG77/5K5OESrUb6Utseoh234t+gtdUW7/Bz837B4MWCmJ7M0eMx
-	 +y61IGNptt+QtHPAdZThcYhIqyPn76HcLjwgJihQWvtT3N7w7jkWTPDeei1SsKf1fl
-	 gb8k+eC/GDvt7Ihb1HBJKMu5G6zdm02bLPcW9DvqBCLd02CYh31EjyC3JomEcLGwMn
-	 YtmqHA0K/iC4A==
-Date: Sat, 21 Jun 2025 17:08:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
-Message-ID: <20250621170824.249c6b0c@jic23-huawei>
-In-Reply-To: <c89f4b2f-0892-4f63-b9b4-5ae55b477c01@baylibre.com>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
-	<20250614110812.39af2c41@jic23-huawei>
-	<c89f4b2f-0892-4f63-b9b4-5ae55b477c01@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fIDCT9Qa"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so469667566b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1750522197; x=1751126997; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bR9CkFS1o49k2KhvLWDphFNGNkDZGgw2MDOOVeB8Wlk=;
+        b=fIDCT9QaxOIFNEU7EpKQrFG1R+u//wjnook0ViX06hlDuFwKz8EXL/bAQQaWRle6Gw
+         wRRUVJUe5tPZ2rmssPUKR3ShJdGvcFIJnw3tgSZApFUFRx2/p4ulzgcMvfQo6Xscf0Rg
+         ULy1fA3A3ZokRE9WO27h1E7y7NLnqb+eNswNI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750522197; x=1751126997;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bR9CkFS1o49k2KhvLWDphFNGNkDZGgw2MDOOVeB8Wlk=;
+        b=GXxOCK2pjmYy7JC3Ij67E9MB8ShjpsX6jmriKJyUeEO5ImKROZaHuNpUZ3YBt0sJES
+         hrMOS5CrZbCeH3L/uPBM//tzT05J7nNMcxVtjyiTiEj4euX8J7l0+7ANdWOJ529Fr1sZ
+         brG759ODTWjlbGJYaBkaFNJZl31ZRU9FI5Xfr2GsmPXO73nz3TtoxNjZYoSgRaBDnTGf
+         FZa8XLAv2eoycU8ClFipEfUN2ghGc6Fq0UpNHcZWRxbWII64PzgkQDzDoyZphaK6k6cY
+         lqV7A5sxxViUuCwtd609JacQn1I+Ws1r29fPo9LUdwxa6gvmjHa/f4is6DQdeNjahO9q
+         0MSA==
+X-Gm-Message-State: AOJu0YwdU68id6oICUuPh2fLyk3tkNL3HipzMltX0YKnTYnQRmeYcqzh
+	kU6bjo1vzFy3RMfMt2yZLsHefM9V92z1mg2VE7SEMJwg/1RnYVSnZZLX3iFhK0vRitGerIqmyC0
+	09+jI7tU=
+X-Gm-Gg: ASbGncsMFfxhUwBtNqH74a0vriamkJm31H119D790sXQxt5BzVSXrfsNf3UJO1LuIhw
+	iRmo1SXrc7Q8k4ECQ3WfUOV8+gUfrzO94snFo8GZIMi+LSG2DYdU+0z/7c2KkXg4WWb31hhr5WM
+	UeRfrvuO68h/MYUKQs4H9zMIU+ToCD/gu17s145gUkk0H0d2j2W+KuHD4K62Cw8uHb9SJ9+mSnb
+	Avf00oIexTjOfYNsRBM7oKnbyGm4epigaeS2F2gj1Y/TuoXFcWUoqAy+2fnoI62sIKDcW6HHrSx
+	H5NzwiZ6z40lqfquHl73UN9+a0H4dhuDM/8Ad8i+P+LzAaJcJNQ24YtHA73WRtpe+uK7rjuyapU
+	SyL8jzVZwKBmqOA0OLeGk4nJGo1g+aHxqjTWW
+X-Google-Smtp-Source: AGHT+IF7j8OROhKGqifUY1Vmr7w8F1EaDnL+6Aa/0V4OlCsioYpwpZp8BnQNw58iSHyU+9gwfdCpwA==
+X-Received: by 2002:a17:907:3e87:b0:ade:32fa:7394 with SMTP id a640c23a62f3a-ae057b6c123mr572769766b.35.1750522197252;
+        Sat, 21 Jun 2025 09:09:57 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054083c95sm394055966b.91.2025.06.21.09.09.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jun 2025 09:09:56 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6077d0b9bbeso4520065a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:09:56 -0700 (PDT)
+X-Received: by 2002:a05:6402:2550:b0:607:116e:108d with SMTP id
+ 4fb4d7f45d1cf-60a1d1676dfmr5557990a12.21.1750522195823; Sat, 21 Jun 2025
+ 09:09:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAH2r5mtz1-JLM8PEZngKOd4bwESBLU+bw8T=ap5aMmJ6LOaNiA@mail.gmail.com>
+ <CAHk-=wjZXRvTnAwO-EcheuHkjOmq2YMua9YC3sbaXYBQ+FC8og@mail.gmail.com> <CAH2r5msQwv4LuaF=kmmy_n=z5paCyat2vTZowOB46WeJxpwhiQ@mail.gmail.com>
+In-Reply-To: <CAH2r5msQwv4LuaF=kmmy_n=z5paCyat2vTZowOB46WeJxpwhiQ@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 21 Jun 2025 09:09:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgReqMNHT8Y8W0jdbnhZBqsY3Omga8wYQJ-yVRumzSDwA@mail.gmail.com>
+X-Gm-Features: AX0GCFshO2Qs5pTCKhyWhLvRvDT1-MxhzQG3NIDdJZYSnFdFeiznfZUuFLm6-W0
+Message-ID: <CAHk-=wgReqMNHT8Y8W0jdbnhZBqsY3Omga8wYQJ-yVRumzSDwA@mail.gmail.com>
+Subject: Re: [GIT PULL] smb3 client fixes
+To: Steve French <smfrench@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 16 Jun 2025 09:54:52 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Sat, 21 Jun 2025 at 09:00, Steve French <smfrench@gmail.com> wrote:
+>
+> I can remove that and resend, handling special files properly can be
+> important (and there is a much more important patch being reviewed for
+> fixing some symlink corner cases) but SMB1 is much lower priority.
 
-> On 6/14/25 5:08 AM, Jonathan Cameron wrote:
-> > On Tue, 10 Jun 2025 09:34:37 +0200
-> > Jorge Marques <jorge.marques@analog.com> wrote:
-> >   
-> >> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit, successive
-> >> approximation register (SAR) analog-to-digital converter (ADC) that
-> >> enables low-power, high-density data acquisition solutions without
-> >> sacrificing precision. This ADC offers a unique balance of performance
-> >> and power efficiency, plus innovative features for seamlessly switching
-> >> between high-resolution and low-power modes tailored to the immediate
-> >> needs of the system. The AD4052/AD4058/AD4050/AD4056 are ideal for
-> >> battery-powered, compact data acquisition and edge sensing applications.
-> >>  
-> 
-> ...
-> 
-> >> +static int ad4052_update_xfer_raw(struct iio_dev *indio_dev,
-> >> +				   struct iio_chan_spec const *chan)
-> >> +{
-> >> +	struct ad4052_state *st = iio_priv(indio_dev);
-> >> +	const struct iio_scan_type *scan_type;
-> >> +	struct spi_transfer *xfer = &st->xfer;
-> >> +
-> >> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-> >> +	if (IS_ERR(scan_type))
-> >> +		return PTR_ERR(scan_type);
-> >> +
-> >> +	xfer->rx_buf = st->raw;
-> >> +	xfer->bits_per_word = scan_type->realbits;
-> >> +	xfer->len = scan_type->realbits == 24 ? 4 : 2;  
-> > 
-> > This is a little odd. I'm not sure what happens with len not dividing
-> > into a whole number of bits per word chunks.
-> > Maybe a comment?  
-> 
-> Even better, there is now spi_bpw_to_bytes() for this.
-> 
-> >   
-> >> +	xfer->speed_hz = AD4052_SPI_MAX_ADC_XFER_SPEED(st->vio_uv);
-> >> +
-> >> +	return 0;
-> >> +}  
-> > 
-> >   
-> 
-> ...
-> 
-> >   
-> >> +static int __ad4052_read_chan_raw(struct ad4052_state *st, int *val)
-> >> +{
-> >> +	struct spi_device *spi = st->spi;
-> >> +	struct spi_transfer t_cnv = {};
-> >> +	int ret;
-> >> +
-> >> +	reinit_completion(&st->completion);
-> >> +
-> >> +	if (st->cnv_gp) {
-> >> +		gpiod_set_value_cansleep(st->cnv_gp, 1);
-> >> +		gpiod_set_value_cansleep(st->cnv_gp, 0);
-> >> +	} else {
-> >> +		ret = spi_sync_transfer(spi, &t_cnv, 1);  
-> > 
-> > Add a comment for this.   I can't immediately spot documentation on what
-> > a content free transfer actually does.  I assume pulses the chip select?
-> > is that true for all SPI controllers?  
-> 
-> Should be. Setting .delay in the xfer would also make it more
-> clear that this is doing.
-> 
-> >   
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
-> >> +	/*
-> >> +	 * Single sample read should be used only for oversampling and
-> >> +	 * sampling frequency pairs that take less than 1 sec.
-> >> +	 */
-> >> +	if (st->gp1_irq) {
-> >> +		ret = wait_for_completion_timeout(&st->completion,
-> >> +						  msecs_to_jiffies(1000));
-> >> +		if (!ret)
-> >> +			return -ETIMEDOUT;
-> >> +	}
-> >> +
-> >> +	ret = spi_sync_transfer(spi, &st->xfer, 1);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	if (st->xfer.len == 2)
-> >> +		*val = sign_extend32(*(u16 *)(st->raw), 15);
-> >> +	else
-> >> +		*val = sign_extend32(*(u32 *)(st->raw), 23);
-> >> +
-> >> +	return ret;
-> >> +}  
-> >   
-> 
-> ...
-> 
-> >> +
-> >> +static int ad4052_debugfs_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-> >> +				     unsigned int writeval, unsigned int *readval)
-> >> +{
-> >> +	struct ad4052_state *st = iio_priv(indio_dev);
-> >> +	int ret;
-> >> +
-> >> +	if (!iio_device_claim_direct(indio_dev))  
-> > 
-> > For these guards in the debugfs callback, please add a comment on why they
-> > are needed.   We've had a lot of questions about these recently and I'd
-> > like it to be clear to people when they should cut and paste these and when
-> > not.  
-> 
-> The reason I started doing this is that running the iio_info command attemps
-> to read register 0x00 via the debug attribute of every single iio device. So
-> if you run iio_info during a buffered read, and 0x00 is a valid register, it
-> would break things without this check.
-> 
-> Ideally, general purpose commands wouldn't be poking debug registers, but
-> that isn't the case. But I suppose we could "fix" iio_info instead.
-> 
+So honestly, if you had explained it as such, I would have taken a
+look and gone "Ok, I don't care, this area hasn't been a problem".
 
-Please do fix iio_info.  It absolutely should not be poking the debug interfaces
-except on specific debug calls.  The user has to know they may be shooting themselves
-in the foot.
+But instead, it was sold as fixes, and I went "that looks odd". So I
+had to go explore, and decided that it looked decidedly like new
+development.
 
-I'm not sure why a read of that register would break buffered capture though.
-Is it a volatile register or is there a sequencing problem with multiple
-accesses in this driver?  If it is multiple accesses then that should be
-prevented via a local lock, not whether we are in buffer mode or not.
+End result: now there is no way in hell that I'm pulling that thing.
 
-So I'm fine with this defense where it is necessary for all register
-accesses, but I would like to see comments on why it is necessary.
+Trying to sneak things in is not ok. Claiming things are "fixes" when
+they aren't, and me having to figure that out just makes me unhappy.
 
-Jonathan
+Just be honest about these things.
 
-> >   
-> >> +		return -EBUSY;
-> >> +
-> >> +	if (readval)
-> >> +		ret = regmap_read(st->regmap, reg, readval);
-> >> +	else
-> >> +		ret = regmap_write(st->regmap, reg, writeval);
-> >> +	iio_device_release_direct(indio_dev);
-> >> +	return ret;
-> >> +}  
-> >   
+Sure, I don't always check, because smb hasn't been a problem, and
+maybe you've done this hundreds of times before.
 
+But that's also exactly the problem: now I feel like I can't trust
+your explanations because they seem to be whitewashing what is
+actually going on.
+
+So instead of a "let it go", it's now a "I guess I will have to waste
+time on these things because I feel like I have to double-check what
+Steve sends me".
+
+Which is what neither of us wants, but here we are.
+
+            Linus
