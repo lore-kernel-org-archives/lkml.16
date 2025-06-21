@@ -1,177 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252E0199BC;
-	Sat, 21 Jun 2025 17:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88D78F5C;
+	Sat, 21 Jun 2025 17:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750525658; cv=none; b=dl8Ri9D9NMs1q0sWwukv64FJsHL0OghgDlIv5RylSS9wGyqYL4EVjc7OoaSU7DfIy2LAt+7fVQk8qe/vXdjb/1dEANfwL8s/FANnCUBeq92MY/LbQMRbLvWRDhHphZubj60jI8rp1cDueLOScuz3gzDOfAXWB8GjcAYADkHQ+yI=
+	t=1750525691; cv=none; b=aJDM+tv/KMoKr5LEiAJA/lAZQpV4Zw374bACwIv4ndIqeMiinLLRkLDBocygnnT+TU5fLxjDs7xmua0aTLavG/bZppO7hlwTuxmFfR9N+/guGpsSrIExIyTssjT5pHxL40vJOUmA8ZTg0R2LevNjVoeGCb27dYyUrFRDg0lvDUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750525658; c=relaxed/simple;
-	bh=DbcR1PO1qUZZWnti6SWzrt52wc+r7RAs3ZfcCuAnuSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lDTPfn6qRzpYBjCB9ndGnbnoEK07ffWiyGmXf/E04gGb4houSUn9kfZC8805qA6iE2mPODkKDavmAr8o2GHraKUOjou+hwh31OOjJQASUJ/naReC5c9qfLTab8y5IrnVy2nK0Y7bO75D7zlZpVia0euZ+bKVBdMrhCogQb6CvmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRe4QcE4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750525691; c=relaxed/simple;
+	bh=TEIzKxs0GNs/VcFKM7BeuHzukEWwgOUFRzKScKCJzFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T4unSr89Ly97BcHUwpkUNSOmKwRG5te7DcZAQonChdzsbCqo6ulcWmKvFQqrSzliqQBbbPWEewMQMwrID4UVDhUNPYIDP/2OHOxiVLU2+WJckOxQ+HU1EPI1UZciHVIAqsB6bp0NGXG67w59qJYdVGR8GokWrLVIZTt02Cv8jxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Met5EmZA; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRe4QcE4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77539C4CEE7;
-	Sat, 21 Jun 2025 17:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750525656;
-	bh=DbcR1PO1qUZZWnti6SWzrt52wc+r7RAs3ZfcCuAnuSU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QRe4QcE4wV75YvwpTGNkwEldPvAlGjsQZTW2oUMLPvDmQMObsEy3Cr+jfu8BjTzc9
-	 xQbW2lqHjHNyQ/gdt1GAJHM7qgczIHBnLZUtgXJgaYe47wvBZfjC8F9rY9fq+IdIAL
-	 MGGUUTf6OeB/ix7l2l7yZ7XreQAk0bSfXs/nPiJxwD8rpg7+9ks36xyLvlXMGtaP/X
-	 OEoanX9P3BTtyBo7aPhAiTNTYzkq0VDExNM+zfZYOErPplmJXyr0VoVNUFX5vrUm7m
-	 /2eioWFWxUWsePSF0TdQAhsIOLY5+NR1TSi1XUAAY1lHjx7tboVBoaWvFd3+5cp6h1
-	 jJni8R+c/tvEQ==
-Date: Sat, 21 Jun 2025 18:07:30 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Jean-Baptiste Maneyrol via B4 Relay
- <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
-Message-ID: <20250621180730.2b517019@jic23-huawei>
-In-Reply-To: <FR3P281MB175789F6AADF5D0D15BC89A1CE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
-	<20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
-	<20250614135304.10d0fee9@jic23-huawei>
-	<FR3P281MB175789F6AADF5D0D15BC89A1CE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Met5EmZA"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso3278795e87.1;
+        Sat, 21 Jun 2025 10:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750525688; x=1751130488; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TEIzKxs0GNs/VcFKM7BeuHzukEWwgOUFRzKScKCJzFA=;
+        b=Met5EmZA6odtQggYnTTcLYw8bwb1YeGSXCxPCLXuEORDBa74vFk5URNLswch1FotTv
+         Ls2FUXlJNx4ZP40wLRjEMnYqk1dTg8Y7P/EDT9tsJKJbGTBm318J1VFFWFKXYaL1j7MX
+         QeH+VPufJWI1FWI4P0lLAQ2uK/JB+gpzJvxji37CFtyc8iN+yR9ESONJ4djCvdBSEMec
+         Sf+e4bGxe4hNeTgLA4xVXsdXMpf0etouEHW61fXhKq8ewLr10MkR7wqOe0VE4IlagMxY
+         ipJ9aLOcZkCzcWJvzfXucl185shhEGwJh5/2vOUs/qkqHA+BDa5f0/11uha6h7f7BSa+
+         7Ggw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750525688; x=1751130488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TEIzKxs0GNs/VcFKM7BeuHzukEWwgOUFRzKScKCJzFA=;
+        b=ID3hF/fSxMKGqeBl08qfyT8bOpY7dQ4SqGcHgxBMq/lT9SDiiw60iZ/qZdN2+g3oJG
+         wBpQg5dPka0aEO5X+6RgaqRQGgLGFDrxem5E496mG2yJJYqMo5abjX29CfmlFzDFEO21
+         xVn3QeNUrphMqsYhWDx6eu9PnkKq/hDWgxbAQ9z1nsnhDsu3fwXF0ikMyK0/CMKRyBXX
+         pErSboQJH+h6RGeD7ZexNmn6siJevmtoyCfIRAc01/m5tWH4YWW8PZ8cNQOxL8CqAH9h
+         9DapKTiIltebQEER+BO3ixbUZH6VTzzlQLboSmhk0FKxcaLkKaz5MyUUPMl/Fvl/VPRr
+         C7hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOhGv6nmYnb91BIStltNwc9eSCjeeba74WGpzfOAdDgNitXKsFvJ/+Ihdz5W9pDGdObTJM+nHNnCFmTjlZ@vger.kernel.org, AJvYcCW9LAuto8wRDIiilEwgWvxHGb9aRA0r/hbXrnev20X0KVI4xqJJJ63Gl412WNKHUxUc7PfHJXIkW+ox@vger.kernel.org
+X-Gm-Message-State: AOJu0YydAMBY3norOePuXklLXPV5CzeamK2gmJfB/05D2TwHAfvwk846
+	/qpnTMc/4l1lEusRGv3gwSfMNK5PcSBtAqS8hjRyLYNeIiGUamZM8j58nXRM6n2y6bq0ntxO+oj
+	dwBThyMDWJJHh/vFHwUBrJnV4dApJPso=
+X-Gm-Gg: ASbGncsOKxUEkersOSEeIDhR/jvdZc95DUOxiikhSHKeutCbSqAiQcDiqx2rawWDko7
+	nzvB/mRbqPHz2l5b0pVZq/pF45yGDhfxr72vrPrXh0qLjcRRixkh7JPf/tQt6rOkZ9KBf7nggAQ
+	oJEEsOJ95QtsJ/IKsNkqttIs+KRDwBh6HpCeTY6LoAXP3GQmsK9+5lTqSO1wh0XPYog7lqCxkTU
+	zU=
+X-Google-Smtp-Source: AGHT+IE9XukBFnfqYPGxv15LwD4aFI78caQyw/4Eu8EFUxN/5Av0fimYLTnJIM5a8dCDg+V1FF7pxxWduBGUw5Lpv/Y=
+X-Received: by 2002:a05:6512:4014:b0:553:acf9:c430 with SMTP id
+ 2adb3069b0e04-553e3ba865emr2715526e87.17.1750525687553; Sat, 21 Jun 2025
+ 10:08:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250621112311.68101-1-aford173@gmail.com>
+In-Reply-To: <20250621112311.68101-1-aford173@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Sat, 21 Jun 2025 14:07:56 -0300
+X-Gm-Features: AX0GCFsyZkLAi_IdniUJd_5FXJgXSkkE5eshqUFluI-nTmyTXyPV2FSCarf00P8
+Message-ID: <CAOMZO5DUVVBmxfrJPjcZPCQGFg-rVNTUch6APWfSKF6LY1DWHQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Configure DMA on UART2
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025 07:42:16 +0000
-Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
+On Sat, Jun 21, 2025 at 8:23=E2=80=AFAM Adam Ford <aford173@gmail.com> wrot=
+e:
+>
+> UART2 is often used as the console, so the DMA was likely left
+> off on purpose, since it's recomended to not use the DMA on the
 
-> >
-> >________________________________________
-> >From:=C2=A0Jonathan Cameron <jic23@kernel.org>
-> >Sent:=C2=A0Saturday, June 14, 2025 14:53
-> >To:=C2=A0Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.mane=
-yrol.tdk.com@kernel.org>
-> >Cc:=C2=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>; Lars-P=
-eter Clausen <lars@metafoo.de>; David Lechner <dlechner@baylibre.com>; Nuno=
- S=C3=A1 <nuno.sa@analog.com>; Andy Shevchenko <andy@kernel.org>; linux-iio=
-@vger.kernel.org <linux-iio@vger.kernel.org>; linux-kernel@vger.kernel.org =
-<linux-kernel@vger.kernel.org>
-> >Subject:=C2=A0Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
-> >=C2=A0
-> >This Message Is From an External Sender
-> >This message came from outside your organization.
-> >=C2=A0
-> >On Fri, 13 Jun 2025 09:34:26 +0200
-> >Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.=
-com@kernel.org> wrote:
-> > =20
-> >> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> >>=20
-> >> Add WoM as accel roc rising x|y|z event.
-> >>=20
-> >> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>=
- =20
-> >Hi Jean-Baptiste.
-> >
-> >A couple of comments inline.
-> >Ideally pull the movement of the timestamp struct to before the DMA safe
-> >buffers to a precursor patch.   That is a bit subtle to have hiding in h=
-ere.
-> >
-> >The guards thing can be for next time you are doing a cleanup series on =
-this
-> >driver if you prefer.
-> >
-> >Jonathan =20
->=20
-> Hello Jonathan,
->=20
-> concerning the full driver rewrite asked by Andy to switch to uXX/sXX ker=
-nel types,
-> can I put it inside this series?
+Typo: recommended
 
-Sure.
 
->=20
-> Otherwise, should it be in a separate patch and perhaps with a fixed tag =
-so it
-> can be backported to enable automatic backport of further fix patches?
+> console. Beacause, the driver checks to see if the UART is used for
 
-It shouldn't be fixes tagged as that won't be a fix as such.
-Backport wise we might need to call it out the first time something is based
-on it but the stable maintainers are pretty good at spotting these sorts
-of broad mechanical changes that enable a later fix so they'll probably just
-pick it up when needed.
+Typo: Because
 
->=20
-> Or can it be after this series is accepted? I would prefer that.
+> the console when determining if it should initialize DMA, it
+> should be safe to enable DMA on UART2 for all users.
 
-I want the end result with the kernel types, but not that fussed on orderin=
-g.
-Whilst it may seem churn heavy this stuff is usually reasonably easy to
-result when fixes cross such a patch.
+The same comment applies to the other patch.
 
-I'll catch up with the other thread as I see there is already such a patch
-being discussed.
-> >>  /**
-> >>   *  struct inv_icm42600_state - driver state variables
-> >>   *  @lock:		lock for serializing multiple registers access.
-> >> @@ -148,9 +156,10 @@ struct inv_icm42600_suspended {
-> >>   *  @suspended:		suspended sensors configuration.
-> >>   *  @indio_gyro:	gyroscope IIO device.
-> >>   *  @indio_accel:	accelerometer IIO device.
-> >> - *  @buffer:		data transfer buffer aligned for DMA.
-> >> - *  @fifo:		FIFO management structure.
-> >>   *  @timestamp:		interrupt timestamps.
-> >> + *  @apex:		APEX (Advanced Pedometer and Event detection) management
-> >> + *  @fifo:		FIFO management structure.
-> >> + *  @buffer:		data transfer buffer aligned for DMA.
-> >>   */
-> >>  struct inv_icm42600_state {
-> >>  	struct mutex lock;
-> >> @@ -164,12 +173,13 @@ struct inv_icm42600_state {
-> >>  	struct inv_icm42600_suspended suspended;
-> >>  	struct iio_dev *indio_gyro;
-> >>  	struct iio_dev *indio_accel;
-> >> -	uint8_t buffer[2] __aligned(IIO_DMA_MINALIGN);
-> >> -	struct inv_icm42600_fifo fifo;
-> >>  	struct {
-> >>  		int64_t gyro;
-> >>  		int64_t accel;
-> >>  	} timestamp; =20
-> >This was a bit subtle and had me going for a minute.
-> >The timestamp should never have been at this location in the structure b=
-ecause
-> >it's mid way through various regions with forced alignment.  It isn't ac=
-tually a bug
-> >I think though (beyond unnecessary padding) because the fifo struct obey=
-ed c spec rule
-> >that anything after it must be aligned to it's largest aligned element w=
-hich was
-> >IIO_DMA_MINALIGN.
-> >
-> >Maybe move this in a precursor patch where you can talk about whether it=
- was a problem
-> >or not? =20
->=20
-> I can move it in a separate patch at the beginning of the series. This fi=
-x was asked
-> by you to avoid potential hard bugs, but it dates sorry.
-
-yeah. I was wrong I think but definitely subtle kind of code that we don't =
-want
-if we can avoid it.  A precursor tidying it up with the reasoning would be =
-good
-from a reviewability point of view.
-
-Jonathan
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
