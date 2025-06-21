@@ -1,84 +1,92 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1190518DB26
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE47B1624E9
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750494285; cv=none; b=GG6U3t4rDEoMI4zvtaPUXhM/1QOpQNtOZmd2P5meGeu7uewmLdMsAW8M38sybBmG6P3XF4fiHayEmRA+8xUD+cxvmfZyGROWdqJiSE9ZgCUm4lohOuCoHyVP24SY9Vq2eTO/lj/kT+/BVaLGe0KLc+ZB6DbEjse9X4RP+6G0LR4=
+	t=1750494436; cv=none; b=NS4yNHpA/RyqN1k4+7LSg0SZ59bIiTa1eV4jqLaU8UxIMCG987/Zv6hhiJZxT0RNbIj4CJgbE3UFIX4TUHlot43fRIjpwuDn969K/ELZPNOSdNwzCScPRRrtaDeL5HLJZW2h7HRJicC+KiU9fbVJ4KVbifIGcOl0Y9dlAv4CGew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750494285; c=relaxed/simple;
-	bh=7n0RFAglSWOxR23I0nQyN0/6VhmDLC2SweABMfse6hs=;
+	s=arc-20240116; t=1750494436; c=relaxed/simple;
+	bh=6HjU2hsPrztZCh50LmvQYW1VnZOsVHqFWf5Pf9ZgXAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b2XLgIVbHe8RICJ4fdSlS+qRjBVyH8tqf1Cvub3xlaEGTzlmJFoIk+s5QWRFg2ze15V2Rf2+AJqpgXK3Xtv8HNJo0HZCXUDKWBFvRFdnRagbSVf2OQknsqmp2qf/Ewzta4uTYS5lRiGzAsjqvCvymhFZDMnCG4j+E+NwmH+nYlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Cibhg5Xx; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBRXDTCji4upWSTmmTaL3iN3+uHXCV82GSH2zGPzkKG1IPIdvpXG+VllM7MsNCfC8/DebiI3S2QaoTJ3tBWjOT8mXeqC2mgvH6Riv9havKF+ZN7W6A2fqAFrJhR+5d4DIR86OHdcYWAYqQ4TE1ORemEpuoxHW+m4AmC8lARsNxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=l11zp3/Y; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Cibhg5Xx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=7n0R
-	FAglSWOxR23I0nQyN0/6VhmDLC2SweABMfse6hs=; b=Cibhg5Xx5U5Eya0oInkl
-	VnkG96RNG+1xn6d5poNegQmdCeMwknwxoHwKNAxx8fzmDhN6MVhvaKyEFqP6UCoz
-	8nHwfh9dpyr+fUs7EA3BLFA/TW/b9P1//k5pUJdMnrWyl5huIQNFOr6elofe5jP0
-	pcAlsPgQZ6cevFZq2ZFrqlgUpS/MBK/YeRsqCqFsKRQsfm0dKJKBen/ruNzGg91q
-	+NJ7/NY61N0jtFUiT1ge8XvQhHR1SjmSiJXpF26d5gHuwaCgROhnNzAtUB31+Ulq
-	kHiPecN/nQgBMrzZCuhhSRPP6rKOh9JazTVu8oHVTBK1crHPujAW76jlsEH9D0Qa
-	Ow==
-Received: (qmail 3046642 invoked from network); 21 Jun 2025 10:24:38 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2025 10:24:38 +0200
-X-UD-Smtp-Session: l3s3148p1@Ss6ZtRA4cNOySS9C
-Date: Sat, 21 Jun 2025 10:24:37 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Faisal Bukhari <faisalbukhari523@gmail.com>
-Cc: jdelvare@suse.com, wsa@kernel.org, linux-i2c@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="l11zp3/Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1750494432; bh=6HjU2hsPrztZCh50LmvQYW1VnZOsVHqFWf5Pf9ZgXAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l11zp3/YQf6lmeEI4vZm9WvJYn+DqzaLGa4IhW7+Y1Vnu2I4Y7ZZj6MgLP3QYbQDS
+	 Kn1g7RsFCw31w8zw3Sgp1/BEzwiMYzVmCXFa1HTrHZ5e5Y+OGoZc04hrTWYox0OwlG
+	 /lf9v69Kb/0wAThZZfcfc/saV68aOB7FD0X61KJo=
+Date: Sat, 21 Jun 2025 10:27:11 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: Fix typo in
- Documentation/i2c/busses/i2c-parport.rst
-Message-ID: <aFZsRY5p0ILZotXH@shikoro>
-References: <20250621080244.158018-1-faisalbukhari523@gmail.com>
+Subject: Re: [PATCH 4/4] tools/nolibc: add missing memchr() to string.h
+Message-ID: <d7b81639-c53c-4186-9e30-04137576a1f1@t-8ch.de>
+References: <20250620100251.9877-1-w@1wt.eu>
+ <20250620100251.9877-5-w@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="maIgzWED4xBPFXVq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250621080244.158018-1-faisalbukhari523@gmail.com>
+In-Reply-To: <20250620100251.9877-5-w@1wt.eu>
 
+On 2025-06-20 12:02:51+0200, Willy Tarreau wrote:
+> Surprisingly we forgot to add this common one. It was added with a
+> per-arch guard allowing to later implement it in arch-specific asm
+> code like was done for a few other ones.
+> 
+> The test verifies that we don't search past the indicated length.
+> 
+> Signed-off-by: Willy Tarreau <w@1wt.eu>
+> ---
+>  tools/include/nolibc/string.h                | 15 +++++++++++++++
+>  tools/testing/selftests/nolibc/nolibc-test.c |  2 ++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/tools/include/nolibc/string.h b/tools/include/nolibc/string.h
+> index 163a17e7dd38b..4000926f44ac4 100644
+> --- a/tools/include/nolibc/string.h
+> +++ b/tools/include/nolibc/string.h
+> @@ -93,6 +93,21 @@ void *memset(void *dst, int b, size_t len)
+>  }
+>  #endif /* #ifndef NOLIBC_ARCH_HAS_MEMSET */
+>  
+> +#ifndef NOLIBC_ARCH_HAS_MEMCHR
 
---maIgzWED4xBPFXVq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So far we only have added these guards when necessary,
+which they aren't here. Can we drop them?
 
-On Sat, Jun 21, 2025 at 01:32:44PM +0530, Faisal Bukhari wrote:
-> Fixes a spelling mistake: "resitors" =E2=86=92 "resistors".
+> +static __attribute__((unused))
+> +void *memchr(const void *s, int c, size_t len)
+> +{
+> +	char *p = (char *)s;
 
-Please always check against linux-next before sending patches.
+The docs say that they are interpreted as "unsigned char".
+Also, can we keep the const?
 
+> +
+> +	while (len--) {
+> +		if (*p == (char)c)
+> +			return p;
+> +		p++;
+> +	}
+> +	return NULL;
+> +}
+> +#endif /* #ifndef NOLIBC_ARCH_HAS_MEMCHR */
+> +
+>  static __attribute__((unused))
+>  char *strchr(const char *s, int c)
+>  {
 
---maIgzWED4xBPFXVq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhWbEEACgkQFA3kzBSg
-KbZStQ/9GoFT6KdvrafsrTaCchXn7rl0wMJ4Y7x40R2E0bslAbgIbFERG0jZr2H3
-1NQe/R5GFhCqTZ3ELG1QcPRumxAblaeSjxywdZxMvuRyDlR04REnjzGcNtadIB4z
-V+6qdupuCggMG6oe5RmlN95lXUWOsimUbzXXh5Ai478Sq3NXE0BVTJYE5UOSFhE8
-n5Kn+xRMBs5XO9TgzaRXTUFPZxxAk409Iz53nZ7ESS8DCYY5JXIZg01k31HQSjUq
-hdDth7jLIkYBacthqRQQjWPlvKDsVSPAsQtvqctBw/6+UaMDX5TMZkPBJHHoEhx0
-lUPPs7owt6TJk7RxpuZH8OTaQIxgoiF2ldN4qJJDAmlj9XIZw6RfttI8nXdKfs1W
-8jVTBmMGTKUvncKVyPuoEO7NlZ9gJbFnETzpy+1kvRegEvGlJn4dPNtMGsXr6Ciz
-KPqPYNk8DtZxcGtuVYCnHLEKYMBkXvQ/nQmO8n93TPSENgymgV2uoOstI0WVzMtd
-W6aPVUopVULAbh/jf7FrCb/+oxin0E2vIqi9lDtcFBmIhZg6asotGkvSGbu+/1kI
-FYku3yTOmItsWZTYK1P8b/XFbRdzLX2NFVFqZ0xIxWvEnimtRpidLEILC2At5egn
-5WHZXyut4EPD/8rmow36rbFMnDmgexQYnE1gorsuXlPFhyt19rg=
-=lzIv
------END PGP SIGNATURE-----
-
---maIgzWED4xBPFXVq--
+<snip>
