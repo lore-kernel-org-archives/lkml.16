@@ -1,137 +1,111 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8CC30E842
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 10:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4412130E842;
+	Sat, 21 Jun 2025 10:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750501903; cv=none; b=RoonS6XvAOmQdZK/8rW1518VOdKlhEcANOscsZW9arsWhvaQZiiXDraCtfndUtVc82WeSK7uuZz5m0v353PhNdoTQw6iLcpYhTpYCAycyasnS2aNQRpu+LUkZPYbu1WZUOxnOwm7deSMqrdTLIQ6/Uh+9KZ1kT/8r9DGPhacH0E=
+	t=1750501949; cv=none; b=L1o4zwaQFUKgiJuYej+86od1HYkgF3zCdWOyU76qVn86sj1Ki3uM1gw/ssTn9Zh3AdG5LJHzh3Sz87VVtJOfeTLwUBJrVewpXPy1uuFh3s+VYhMq4vB9huRh/QKioyyK3/Y5aQU295MI3w0oF1Jw8e3W1/279rQlhVdxZqulc0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750501903; c=relaxed/simple;
-	bh=B6berukrUY7atvfgg8Oi6KVv1rAM7ebSCspc5Xr/FaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s1BZxtnBf1SefE39XcYm7fQ+G8OJOYfXoR/KUAFjdaYP20iu+PKmgxwRQHYKINf1aP27RiWRxeqdNKvKdPAqhnv+k0zwDMRhX7l0YA7X7CXB8hq5DJmqx2x1NEaRTj3LEjJYXltzSorj1ymBELCGCAJq9uYj+M2DOf2izwHGVec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=a81aLC9a; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1750501949; c=relaxed/simple;
+	bh=6zdtW4ZsWVEXC+13yFdtzSL8MneybnvekLwrAzlWTow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q0zRRg/DHo2yeHFZ1c1GtPSptirxkYPM3nauoY+3Mz32uiP7AX0kz0Lnhv307SH1d1+piFCDgsCR6or1sBG2XFCNCBrne3v1GbPpe2RDQJ4+gb1bQBe3nqojlj0O/ChlOR1fGq/kI0TO+Zz7mReLNTyep2HqjacxxBuf56MzXps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqBdapiB; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="a81aLC9a"
-Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id SvUQuoKOu1trMSvUQuSbjP; Sat, 21 Jun 2025 12:30:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1750501827;
-	bh=srPzhV0CtF12Fq8y9js6136ymbzjkGO8KLu1ECLK52o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=a81aLC9aAZYGXvyOMqlWMXUB9cAxxmFWkkKn2No65hRc5jeFifrak6fSookrFvPwj
-	 wn4Fk9+wHSPlNL5endEkyzw7MKIfsD4q5W0HjRFEwTrtIUAzTkwOassgFnfG2i0Z2W
-	 ocB05EEei2i6AgWQQmc1dMSA1xj5SzvTqzVXewRunxNbEAfpGC07g+uB4spk5xm6Ov
-	 Pi4u666p7C+F3PRlmaYiPmawLk1p/VrUWa+hwQunhzV5qc4elEqRH4fagK9HEoxzYj
-	 a/pMFkONcj9BFzjzXmP6rghtDU7hL/vehrj4laCOr+ezjgSvcX7ShFDK2Hiiw7XWTU
-	 V7Ug2d9NLLJ3g==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 21 Jun 2025 12:30:27 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2] mfd: rohm-bd71828: Constify some structures
-Date: Sat, 21 Jun 2025 12:28:38 +0200
-Message-ID: <037e28e587ae899da9acdb45c606d75ec61f858b.1750501700.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqBdapiB"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31c978688dso1458258a12.1;
+        Sat, 21 Jun 2025 03:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750501947; x=1751106747; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=012KofByWzR1UXs6q6FS6IJCSkgS2EX290wo0slGf5Q=;
+        b=iqBdapiBin18QwTSewE52Lxy1xpCoU2op6OXi4eems7Vc2s3ijH3Ly70rBs4a3EoPO
+         nDngRhW5EQPI/ZLhLeYxfc6+MQCYwsJ8ofVRMmPnkTAHEx0DiT0621VZaT0mJFUDJD44
+         O53VArPrmhqsB5Y4Exxf90Hoi44ibWbkUsL3fZXk69Hjq/wDBagqlOzdTPyAizbCX3l5
+         NGr24DQyu7GfD++IsatZfvaunoTnwWiAeyg817NGwGm3HQWS5XD8/JM1urHt0dZxXz7B
+         mZ7xjQyhmH22jfQ0RhbXD1F4g6Rf2xg95x6pIs8sNg11kVUX4eu2BPcDZSv9NDv1QgxJ
+         aLZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750501947; x=1751106747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=012KofByWzR1UXs6q6FS6IJCSkgS2EX290wo0slGf5Q=;
+        b=sJjY49keOSbI8qK0Slu97e4jks2t2JdsIRMExiln99DzBxC3krrX/8n61zEsXJShI9
+         yBu6o2K9RmVbzuoRO/Zb7ouhPuAN+eJgAmwGPyUpyQ1b3MXZnzxjRooRBDT5KQPTz3Fp
+         OZRhmRxU28f9NkunVJhhSpexnVFlky95F6MmFPufEY0HVwlJuILv/xpjG3jmTHzxL0R/
+         2h7o6dQLl1cJSanCFMdzKe089kyYM+PTNR+7F5a6pKiRdBl18Lm9rzOmQ683yP2P8IxI
+         qmHRhAEXOzTeyNHrx+lc4SsH/AJJEYUK5CCW1CFL8cpDp5dOKyYO+DsQLm73GYlvgG93
+         W9dA==
+X-Forwarded-Encrypted: i=1; AJvYcCUL7qBXc5LUP0NTzsQW17zik4sRK53FVzGy5LR0Ud2NyCGzwDz7pGftwArGwv+r+k7URSj2FY6+kEo9uC6L@vger.kernel.org, AJvYcCWPFqNAdvwCuKEAE5ZBuitWbzMsiVrC4QEawoj5VWc/ykgv/+x3PpMD/Uht0o/uOBCIJM6ULp2GCoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCnfyEBaZw2Mx7ftMvhbcLXqwTkb0iCi32JYTNE//5RN9OIYLg
+	gKhXGuwkpK/7I87A+OBEFFLtsOMs9Al+Rjgbkg7zag96AMGZypliznLw16nnq5eN
+X-Gm-Gg: ASbGnctvRdSfk9Paa9R32g2a2nP1N8zHmPcOjMICbJidZ8rgIv83jEblMSfsgyS63wR
+	nMLMiesPiizA344o6VdpEnf7BFbFnC2zBLBi1hrc9eVm28rJUiQG9wPKj69fj9zx49kPYQzvkgy
+	OElFWiH8s51mDFcZloX3KxOo76IK83lD55fszyZ6GarNC8iylEqflsa7jsbrUTIFy9Gr0OK1FBI
+	9MtIzrll1V5XTJ0XES4QAIalJ43EkolQCrgnaoXViErtEi7cnenEOChtdjn17hgdQuFvqp8EUAE
+	4uPgSALP/Q5gnkgqJLX7jDlk41wTlJ3Kml2aSJSQpE3Fds7C24PCIcdE75DkTb8cN72iJcRji/U
+	K42phLXZeBQ==
+X-Google-Smtp-Source: AGHT+IFvir19QObe2nVc1F6Xwx+QcsI5R/E4xY54gUD+iJiKIaJ38TEmYQc1r84maQZfk3j5qrRbZQ==
+X-Received: by 2002:a17:90b:3dd0:b0:313:2768:3f6b with SMTP id 98e67ed59e1d1-3159d8daaecmr9171605a91.27.1750501947373;
+        Sat, 21 Jun 2025 03:32:27 -0700 (PDT)
+Received: from faisal-ThinkPad-T490.. ([49.207.215.194])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a24c3fbsm6177890a91.21.2025.06.21.03.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 03:32:27 -0700 (PDT)
+From: Faisal Bukhari <faisalbukhari523@gmail.com>
+To: sgoutham@marvell.com,
+	lcherian@marvell.com,
+	gakula@marvell.com,
+	jerinj@marvell.com,
+	hkelam@marvell.com,
+	sbhatta@marvell.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	corbet@lwn.net
+Cc: netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix typo in marvell octeontx2 documentation
+Date: Sat, 21 Jun 2025 16:02:04 +0530
+Message-ID: <20250621103204.168461-1-faisalbukhari523@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Several structures are not modified in this driver. Constifying them moves
-some data to a read-only section, so increases overall security, especially
-when the structure holds some function pointers. This is the case for
-'gpio_keys_platform_data' and 'mfd_cell'.
+Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
+Fixes a spelling mistake: "funcionality" → "functionality".
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  18321	  13952	    192	  32465	   7ed1	drivers/mfd/rohm-bd71828.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  22897	   9376	    192	  32465	   7ed1	drivers/mfd/rohm-bd71828.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
 ---
-Compile tested only
+ .../networking/device_drivers/ethernet/marvell/octeontx2.rst    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
-  - Rebase with latest -next because part of this patch was already
-    submitted by someone else, and applied
-  - Update the numbers accordingly
-  - Add R-b tag. (v2 is the same as v1, without hunk 5 which has already
-    been applied)
-
-v1: https://lore.kernel.org/all/d56bac346e94ac91df16a775c59092d1b60efabd.1750005148.git.christophe.jaillet@wanadoo.fr/
----
- drivers/mfd/rohm-bd71828.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index 47e574a57077..a14b7aa69c3c 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -25,7 +25,7 @@ static struct gpio_keys_button button = {
- 	.type = EV_KEY,
- };
+diff --git a/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst b/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
+index af7db0e91f6b..a52850602cd8 100644
+--- a/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
++++ b/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
+@@ -66,7 +66,7 @@ Admin Function driver
+ As mentioned above RVU PF0 is called the admin function (AF), this driver
+ supports resource provisioning and configuration of functional blocks.
+ Doesn't handle any I/O. It sets up few basic stuff but most of the
+-funcionality is achieved via configuration requests from PFs and VFs.
++functionality is achieved via configuration requests from PFs and VFs.
  
--static struct gpio_keys_platform_data bd71828_powerkey_data = {
-+static const struct gpio_keys_platform_data bd71828_powerkey_data = {
- 	.buttons = &button,
- 	.nbuttons = 1,
- 	.name = "bd71828-pwrkey",
-@@ -43,7 +43,7 @@ static const struct resource bd71828_rtc_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC2, "bd70528-rtc-alm-2"),
- };
- 
--static struct resource bd71815_power_irqs[] = {
-+static const struct resource bd71815_power_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71815_INT_DCIN_RMV, "bd71815-dcin-rmv"),
- 	DEFINE_RES_IRQ_NAMED(BD71815_INT_CLPS_OUT, "bd71815-clps-out"),
- 	DEFINE_RES_IRQ_NAMED(BD71815_INT_CLPS_IN, "bd71815-clps-in"),
-@@ -93,7 +93,7 @@ static struct resource bd71815_power_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71815_INT_TEMP_BAT_HI_DET, "bd71815-bat-hi-det"),
- };
- 
--static struct mfd_cell bd71815_mfd_cells[] = {
-+static const struct mfd_cell bd71815_mfd_cells[] = {
- 	{ .name = "bd71815-pmic", },
- 	{ .name = "bd71815-clk", },
- 	{ .name = "bd71815-gpo", },
-@@ -109,7 +109,7 @@ static struct mfd_cell bd71815_mfd_cells[] = {
- 	},
- };
- 
--static struct mfd_cell bd71828_mfd_cells[] = {
-+static const struct mfd_cell bd71828_mfd_cells[] = {
- 	{ .name = "bd71828-pmic", },
- 	{ .name = "bd71828-gpio", },
- 	{ .name = "bd71828-led", .of_compatible = "rohm,bd71828-leds" },
-@@ -493,7 +493,7 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
- 	const struct regmap_config *regmap_config;
- 	const struct regmap_irq_chip *irqchip;
- 	unsigned int chip_type;
--	struct mfd_cell *mfd;
-+	const struct mfd_cell *mfd;
- 	int cells;
- 	int button_irq;
- 	int clkmode_reg;
+ PF/VFs communicates with AF via a shared memory region (mailbox). Upon
+ receiving requests AF does resource provisioning and other HW configuration.
 -- 
-2.49.0
+2.43.0
 
