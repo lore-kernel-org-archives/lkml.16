@@ -1,170 +1,130 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B43A1E487
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F1B1C3039
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750537762; cv=none; b=SUogbZpRh2rB7z4mizx2Fj6c4bCcGRW8a/EG9YfJbyLzKfcDULtgnL3KXkqdJjIFUIcAhplh6Q2644p/JvGf0IWr1ah1ms2ggZoA9+0nxToOG6dqXbBc/qdVrOt4Z1rTxcwsn0jazr6K9YvUzMM+RHyWIiZK/qcSq7BmUo52Rss=
+	t=1750537809; cv=none; b=IjZeFAqpbUEIhvLZYZcPabeLyXhko2Add2LiVN0tePZxfnYdPyZ+vgqOGDXalwfj3uevXflTIPn2+WBsiio6cVBXJgs+D9Dmr3LhNcTJXSfdQQ4UrndeypMgu9C/cGkvzel+7PaVsmNkzzq0xNJaFo1ejJjiIKejD8r2j6LSsVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750537762; c=relaxed/simple;
-	bh=v84buPkTLagC4U7I9fNCwiojqNOCA5dl5didfcPqH+Y=;
+	s=arc-20240116; t=1750537809; c=relaxed/simple;
+	bh=xePuLEyk0NjQMZfHBU8NlfM+NqappG0KcrsNU51lcf4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IPyGmFvN/zVUD1aN4w2sVJjEItnRlFDKoj4RldjGPEcPnQ4QssyKQHW1W5TlXKO4YfSIp9l70lxervgZHRSK/NrCvYjTDzzglGT6zXII/xS7cud2wFUB8MXFPSTKgijEe/Y3VCBtjSZkMGv9SheQGBwH6KdxQu1huko//HjQHuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aQs9pLwT; arc=none smtp.client-ip=91.218.175.172
+	 In-Reply-To:Content-Type; b=jUtjO6U5ypdakkDzNFgxWDTENC2daFvegpEv2MgPT2bhlYhuLhP+H2Q3NKvC4s45x0DuaZiN/fCcXYnHXcEDNVyowKNsRf7f1OFFyT4k2khkdrrluo2CMzxGkp1zvNHQZu0UNx1QUSn27UKKBLA4qv+3iCvPwM8iGdt0sg89uOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eDlPqUYQ; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aQs9pLwT"
-Message-ID: <74a41565-1778-4e68-bc2c-32ae6956343a@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eDlPqUYQ"
+Message-ID: <54771279-ddc6-431d-942a-cc86358f9d2d@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750537746;
+	t=1750537796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zd37vjlTdg+X/jv1wd6e/fvzj2B3M30ssdbW95aFJkg=;
-	b=aQs9pLwT9+mU/cNEgQpaUDkZoPS0rITRDnecsrStdDiNThLQbXApZdtGFsEOYYINg1OjtT
-	qGlsYd4q7XFjTT7/fQgRiFtsb3L2RRBSgKm4syo9CqhvrSQhmbA2CJ38Mx5mfIFC1Y+EJy
-	MrR+YjwcFpZbsFSY2MCvqgjNzCl4FrM=
-Date: Sat, 21 Jun 2025 21:29:05 +0100
+	bh=Z3PmuBMPugCbxMh8aXAiGyluCw5Tp3tBqwd4GASTxto=;
+	b=eDlPqUYQvjTWOUSHJmISXyFKPPXEC+sCL4Zi00uB/se4Bca88nAkLUcntxHRfMqB2Ss3Zt
+	TXT2KDFGiZHdl4iGQjzyCbMmTCCFvlc8pyqzvPg2FN5H/n00BQjp/QAXbymYDf8L83TOSk
+	rnrKghpgDftgcwTiISIWw99uytSVpkk=
+Date: Sat, 21 Jun 2025 21:29:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [patch 06/13] ptp: Split out PTP_SYS_OFFSET_EXTENDED ioctl code
+Subject: Re: [patch 08/13] ptp: Split out PTP_PIN_GETFUNC ioctl code
 To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
 Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
 References: <20250620130144.351492917@linutronix.de>
- <20250620131944.092766931@linutronix.de>
+ <20250620131944.218487429@linutronix.de>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250620131944.092766931@linutronix.de>
+In-Reply-To: <20250620131944.218487429@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 On 20/06/2025 14:24, Thomas Gleixner wrote:
-> Continue the ptp_ioctl() cleanup by splitting out the
-> PTP_SYS_OFFSET_EXTENDED ioctl code into a helper function.
-> 
-> Convert it to __free() to avoid gotos.
+> Continue the ptp_ioctl() cleanup by splitting out the PTP_PIN_GETFUNC ioctl
+> code into a helper function. Convert to lock guard while at it.
 > 
 > No functional change intended.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->   drivers/ptp/ptp_chardev.c |   75 +++++++++++++++++++++++-----------------------
->   1 file changed, 39 insertions(+), 36 deletions(-)
+>   drivers/ptp/ptp_chardev.c |   52 ++++++++++++++++++++--------------------------
+>   1 file changed, 23 insertions(+), 29 deletions(-)
 > 
 > --- a/drivers/ptp/ptp_chardev.c
 > +++ b/drivers/ptp/ptp_chardev.c
-> @@ -319,16 +319,52 @@ static long ptp_sys_offset_precise(struc
->   	return copy_to_user(arg, &precise_offset, sizeof(precise_offset)) ? -EFAULT : 0;
+> @@ -396,6 +396,28 @@ static long ptp_sys_offset(struct ptp_cl
+>   	return copy_to_user(arg, sysoff, sizeof(*sysoff)) ? -EFAULT : 0;
 >   }
 >   
-> +static long ptp_sys_offset_extended(struct ptp_clock *ptp, void __user *arg)
+> +static long ptp_pin_getfunc(struct ptp_clock *ptp, unsigned int cmd, void __user *arg)
 > +{
-> +	struct ptp_sys_offset_extended *extoff __free(kfree) = NULL;
-> +	struct ptp_system_timestamp sts;
+> +	struct ptp_clock_info *ops = ptp->info;
+> +	struct ptp_pin_desc pd;
 > +
-> +	if (!ptp->info->gettimex64)
-> +		return -EOPNOTSUPP;
+> +	if (copy_from_user(&pd, arg, sizeof(pd)))
+> +		return -EFAULT;
 > +
-> +	extoff = memdup_user(arg, sizeof(*extoff));
-> +	if (IS_ERR(extoff))
-> +		return PTR_ERR(extoff);
+> +	if (cmd == PTP_PIN_GETFUNC2 && !mem_is_zero(pd.rsv, sizeof(pd.rsv)))
+> +		return -EINVAL;
+> +	else
+> +		memset(pd.rsv, 0, sizeof(pd.rsv));
 > +
-> +	if (extoff->n_samples > PTP_MAX_SAMPLES ||
-> +	    extoff->rsv[0] || extoff->rsv[1] ||
-> +	    (extoff->clockid != CLOCK_REALTIME &&
-> +	     extoff->clockid != CLOCK_MONOTONIC &&
-> +	     extoff->clockid != CLOCK_MONOTONIC_RAW))
+> +	if (pd.index >= ops->n_pins)
 > +		return -EINVAL;
 > +
-> +	sts.clockid = extoff->clockid;
-> +	for (unsigned int i = 0; i < extoff->n_samples; i++) {
-> +		struct timespec64 ts;
-> +		int err;
+> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &ptp->pincfg_mux)
+> +		pd = ops->pin_config[array_index_nospec(pd.index, ops->n_pins)];
 > +
-> +		err = ptp->info->gettimex64(ptp->info, &ts, &sts);
-> +		if (err)
-> +			return err;
-> +		extoff->ts[i][0].sec = sts.pre_ts.tv_sec;
-> +		extoff->ts[i][0].nsec = sts.pre_ts.tv_nsec;
-> +		extoff->ts[i][1].sec = ts.tv_sec;
-> +		extoff->ts[i][1].nsec = ts.tv_nsec;
-> +		extoff->ts[i][2].sec = sts.post_ts.tv_sec;
-> +		extoff->ts[i][2].nsec = sts.post_ts.tv_nsec;
-> +	}
-> +
-> +	return copy_to_user(arg, extoff, sizeof(*extoff)) ? -EFAULT : 0;
+> +	return copy_to_user(arg, &pd, sizeof(pd)) ? -EFAULT : 0;
 > +}
 > +
 >   long ptp_ioctl(struct posix_clock_context *pccontext, unsigned int cmd,
 >   	       unsigned long arg)
 >   {
->   	struct ptp_clock *ptp =
->   		container_of(pccontext->clk, struct ptp_clock, clock);
-> -	struct ptp_sys_offset_extended *extoff = NULL;
->   	struct ptp_clock_info *ops = ptp->info;
->   	struct ptp_sys_offset *sysoff = NULL;
->   	struct timestamp_event_queue *tsevq;
-> -	struct ptp_system_timestamp sts;
->   	struct ptp_clock_time *pct;
->   	unsigned int i, pin_index;
->   	struct ptp_pin_desc pd;
-> @@ -371,39 +407,7 @@ long ptp_ioctl(struct posix_clock_contex
+> @@ -451,35 +473,7 @@ long ptp_ioctl(struct posix_clock_contex
 >   
->   	case PTP_SYS_OFFSET_EXTENDED:
->   	case PTP_SYS_OFFSET_EXTENDED2:
-> -		if (!ptp->info->gettimex64) {
-> -			err = -EOPNOTSUPP;
+>   	case PTP_PIN_GETFUNC:
+>   	case PTP_PIN_GETFUNC2:
+> -		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
+> -			err = -EFAULT;
 > -			break;
 > -		}
-> -		extoff = memdup_user((void __user *)arg, sizeof(*extoff));
-> -		if (IS_ERR(extoff)) {
-> -			err = PTR_ERR(extoff);
-> -			extoff = NULL;
+> -		if ((pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
+> -				|| pd.rsv[3] || pd.rsv[4])
+> -			&& cmd == PTP_PIN_GETFUNC2) {
+> -			err = -EINVAL;
 > -			break;
+> -		} else if (cmd == PTP_PIN_GETFUNC) {
+> -			pd.rsv[0] = 0;
+> -			pd.rsv[1] = 0;
+> -			pd.rsv[2] = 0;
+> -			pd.rsv[3] = 0;
+> -			pd.rsv[4] = 0;
 > -		}
-> -		if (extoff->n_samples > PTP_MAX_SAMPLES ||
-> -		    extoff->rsv[0] || extoff->rsv[1] ||
-> -		    (extoff->clockid != CLOCK_REALTIME &&
-> -		     extoff->clockid != CLOCK_MONOTONIC &&
-> -		     extoff->clockid != CLOCK_MONOTONIC_RAW)) {
+> -		pin_index = pd.index;
+> -		if (pin_index >= ops->n_pins) {
 > -			err = -EINVAL;
 > -			break;
 > -		}
-> -		sts.clockid = extoff->clockid;
-> -		for (i = 0; i < extoff->n_samples; i++) {
-> -			err = ptp->info->gettimex64(ptp->info, &ts, &sts);
-> -			if (err)
-> -				goto out;
-> -			extoff->ts[i][0].sec = sts.pre_ts.tv_sec;
-> -			extoff->ts[i][0].nsec = sts.pre_ts.tv_nsec;
-> -			extoff->ts[i][1].sec = ts.tv_sec;
-> -			extoff->ts[i][1].nsec = ts.tv_nsec;
-> -			extoff->ts[i][2].sec = sts.post_ts.tv_sec;
-> -			extoff->ts[i][2].nsec = sts.post_ts.tv_nsec;
-> -		}
-> -		if (copy_to_user((void __user *)arg, extoff, sizeof(*extoff)))
+> -		pin_index = array_index_nospec(pin_index, ops->n_pins);
+> -		if (mutex_lock_interruptible(&ptp->pincfg_mux))
+> -			return -ERESTARTSYS;
+> -		pd = ops->pin_config[pin_index];
+> -		mutex_unlock(&ptp->pincfg_mux);
+> -		if (!err && copy_to_user((void __user *)arg, &pd, sizeof(pd)))
 > -			err = -EFAULT;
 > -		break;
-> +		return ptp_sys_offset_extended(ptp, argptr);
+> +		return ptp_pin_getfunc(ptp, cmd, argptr);
 >   
->   	case PTP_SYS_OFFSET:
->   	case PTP_SYS_OFFSET2:
-> @@ -528,7 +532,6 @@ long ptp_ioctl(struct posix_clock_contex
->   	}
->   
->   out:
-> -	kfree(extoff);
->   	kfree(sysoff);
->   	return err;
->   }
+>   	case PTP_PIN_SETFUNC:
+>   	case PTP_PIN_SETFUNC2:
 > 
 Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
