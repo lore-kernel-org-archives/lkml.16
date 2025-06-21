@@ -1,90 +1,83 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1808870824;
-	Sat, 21 Jun 2025 14:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5C070824;
+	Sat, 21 Jun 2025 14:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750517352; cv=none; b=o6DO76DN/HUo2L5CZvAoKuQh3R+lTqBgM+LNNTMp1cllXOkXFHyo36ZUlgenuzz/cUZ8a1wnGxqgg2Cty8EuODFf1rDiH9izxt5rfz0WgINmvRQE73+iavw+2TYMywpkpJGe5XXxFHyxTw56v5DZk7o2ECb4a+4qA0g2yxfnDws=
+	t=1750517418; cv=none; b=DX03F0UAFvkQxq3sRGCeLY8HCv2WM4M+TvVHfsIzuKn/91Z5B8VJJFveoQha2Dy/vJoSBMd+W8JNt6N0SErmDwUAh7fuVRxoNiQX3nTJ/EAKAhkLlpYTB64ChjXQEsS7hVo1gxgKcRRKYd/t9+pfMkAVXtfoFlZkLf/atX0jHYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750517352; c=relaxed/simple;
-	bh=L9jzxKVD973Y+69sXc6ZIMCAeSN0QkdY5s4QXXZhQ+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ke+gxcrL5TyJ4i0c9A7BYW0qZIpZt21DxGuZu2HIxf4OZLEDctbKAt4jM2tlrdoWhMOKAZqNGgEAA3bk0RR9quoBhdi92K4U7XwTNjxKF2Lb1DsROB75f5X6xXxFw9wYYiuonRWlzlkY0hshfp9oixZjm6vup6Q/YTaISGgK3S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TITlQGci; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750517418; c=relaxed/simple;
+	bh=5BWvViw9dbca0AR0nVo9L5I118Dul+39uN9JX6M2uaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zf6jJTZRuxb3csq8vbbRGI5FPtsBoOZNH3Iu1ED6D5NRGZ+4Rrs0CkYjwBWnzRWj5Z0DkQaOJlOGvZDbfMEzrPD+lcSJXJd1VS6o3xl4bjXCn05myd9aHpcbBWphGNlt3WWnXUwds8qqnlJPijEpxe1YqITVJ2zMHceNRTc9b4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1RpMfqw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TITlQGci"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b2ed1bc24fcso427384a12.0;
-        Sat, 21 Jun 2025 07:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750517350; x=1751122150; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1JO/PmxHTS0dVHQZuOxg2POaSrxajCmDCh3CexbgOBU=;
-        b=TITlQGciW2txFXOGe6JT7kPuHUy1CRMz8XHwsfoSWEzDzfw0lM3VT0ehBEps7buMEi
-         QWesnOUdMjlyJdozZkwd92/DGprcQ2LZb5G0IRNSNmUlAg7JPj5cThxR9IYbPvhT4kY/
-         H50KpUEifGUfiqBDD2VQQJOAPKasrXkVpRea0iLwpNSfZWhUMXXHOjDR5lnRABSdG67x
-         PS9hOdERHxDou45qdurxQywWfCIM9dqpFjLmU9BBiiHip9P390z3eGL6bVl1NHUgIuKT
-         xe2lLevkqW/43qyRcpwuKM080sFfLs8yLKe8oZA6VVaXy2uDa1LpYIyvnTc+oZDW1spS
-         37Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750517350; x=1751122150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1JO/PmxHTS0dVHQZuOxg2POaSrxajCmDCh3CexbgOBU=;
-        b=lDOsVzEmtrX9WU+D0BdmJVHdS1wZhH7bUVovEddQutCgPZdVcC8UK6O4Fk2Dw/r/HM
-         28WPCbL97cT0OH1Ol77s2Dh/6oTwUgR5JL8smM09yHEg4CpDT6NO5ESo8c2/I7w6LLAh
-         8xAKbyR7Rhh8pKCxV/2JQi7cFmJ7GbhkNg+Xf6UW7wo/8wSYEyRF6RjEz2MNyjAdXVH3
-         ncRD6c7MF4MJYtx/HvPGI9/MlItgnCBhSllEKXQZClS/AQKDNelhuJWsNpRwdCG0I5jX
-         hJusCVc7PtWcijXi59RBYElhdwfcknqovxSkPOg/BufxX/XpGnHlAhCabpQYh1Wf7REr
-         bBxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeGQTSxgS5nwVSmm59hIPhUp33J7HUPPp8KLCzieoPXr6yp1kcR73ZQ9/ZhkuwAeKZy/EmkZQX0hQSlw==@vger.kernel.org, AJvYcCUfjr2Mw/V8aX8O5+zAjt031KrlApkxONGjTGnBlDxxkH81pVr33zoDDR2Q4HRcylxkjZes6d51G8/dlGCsuA==@vger.kernel.org, AJvYcCUg5JzFM6XLx+gfX3hDLhXjXxVL6Rs0RT/FMay90LKJ6NLq6ncg5cxeKseummlQJiFv2KVD1Dk5/ERaHTRU@vger.kernel.org, AJvYcCV+6G2+lpZL5N2Y+HCwJLV5Di8K2cv6w7XM9LbJJ2ttcXU8h8Auug5uxa68Ia1OEl6ChL54baFuFojeGCA3Q5Y=@vger.kernel.org, AJvYcCWxSFDvRSVD6JKIj9X/t1Ljc7BgXK35OS4ZBosGOvnGvXRu+7G1z7wL4eKqVE8s9m2msrTy+qrUXICeA/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpsGbVNkMjP9MCzk+swRrezqvlIYBaUH24S2ZeKDIrVBZrDuKm
-	F4xy+FPL9rocTz8XhpcZ8ZpBsNH6kPDLsAdOeJbxCIQaDWdYcXpvQuaqlOYVPFYuc3Zhv2SP1/b
-	IWeE9voIhDe/OWM4KDgPm0opLDmuCUrA=
-X-Gm-Gg: ASbGnctJ2iCwv3oOojcY54Dd0ygH/8xRsEZ3tcDRR+0G99abHAKjQAUB+iigAJTB+Bu
-	Lp2SCVxIf/OgsF16J7Bw7lkM/oSstEcVYhzoX58wVYpEI4+FV4hc/O3EZMlwmxBr2WwlqWjjq+d
-	QI
-X-Google-Smtp-Source: AGHT+IEo+CKQk8wHNOSQkclxu85nsW/a1YOusDaFxSgp8kZzrYJrC7dRgm/TGgX963G87fb6N1JTUrgrqpNCW47JYFs=
-X-Received: by 2002:a17:90a:d88c:b0:312:25dd:1c8b with SMTP id
- 98e67ed59e1d1-3159d62a060mr3801838a91.2.1750517348376; Sat, 21 Jun 2025
- 07:49:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1RpMfqw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDFDCC4CEE7;
+	Sat, 21 Jun 2025 14:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750517418;
+	bh=5BWvViw9dbca0AR0nVo9L5I118Dul+39uN9JX6M2uaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i1RpMfqwHAu3tGMI2+gGQ5tCL63uj9Th8WZYlQ1qhOQnyrAKpHDjA6bdvtxNjuFiO
+	 5g22Hw4/2LLmHRhRynm+235QVKFheB50+QLPOSGsypv8+SVOpkRbK267KyYu8yeepx
+	 AcwfD5YqeqlsA/GCmbNHKkPSQ5MXml33dm+GRhCt0KFGeFfu1KDCks5xyrWnvu4ugG
+	 r4zwZrc7NKG42aKveezmi/HpjreRrbQY/lP85PFxkz6W0ZRtLzqAMEVmPsw+cCWYJ0
+	 Ftr4cfhdc5zPOHtKbrWG9sC5/18S2giYHvcz+VAxP1xUUcMivS9MS33psuhhC3+7NZ
+	 AyfmPV/58UhpQ==
+Received: by pali.im (Postfix)
+	id DAE4A3D2; Sat, 21 Jun 2025 16:50:15 +0200 (CEST)
+Date: Sat, 21 Jun 2025 16:50:15 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Rostyslav Khudolii <ros@qtec.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Yazen Ghannam <yazen.ghannam@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Filip =?utf-8?B?xaB0xJtkcm9uc2vDvQ==?= <p@regnarg.cz>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
+Message-ID: <20250621145015.v7vrlckn6jqtfnb3@pali>
+References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+ <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local>
+ <20241219164408.GA1454146@yaz-khff2.amd.com>
+ <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
+ <Z78uOaPESGXWN46M@gmail.com>
+ <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750511018.git.legion@kernel.org> <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
-In-Reply-To: <6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 21 Jun 2025 16:48:56 +0200
-X-Gm-Features: Ac12FXxYM6BOVWg7hJOdAE-osp-Ry_oOUPNZyOxR1nNHyxVYxW4mw0T0N4kIqio
-Message-ID: <CANiq72kZAMGmDyAj33CtRW2-WdEF=vPZcA-4ziMbpd9gYmFsyw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] modpost: Add modname to mod_device_table alias
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 
-On Sat, Jun 21, 2025 at 3:57=E2=80=AFPM Alexey Gladkov <legion@kernel.org> =
-wrote:
->
->  rust/kernel/device_id.rs |  8 ++++----
+Hello Rostyslav, you sent an email addressed to me, but you forgot to
+put my email address into recipients. So I have not received it.
+But luckily, today I found your email by a chance in lkml archive:
+https://lore.kernel.org/lkml/CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com/
 
-Cc'ing maintainers and list.
+On Monday 03 March 2025 10:21:25 Rostyslav Khudolii wrote:
+> Hi,
+> 
+> > Rostyslav, I would like to ask you, do you have patches / updates for
+> > enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
+> > adjust my lspci changes for new machines.
+> 
+> Pali, sorry for the late reply. Do I understand correctly, that even
+> though you have access to the ECS via
+> the MMCFG you still want the legacy (direct IO) to work for the
+> debugging purposes? I can prepare a
+> simple patch that will allow you to do so if that's the case.
 
-Cheers,
-Miguel
+Yes, I would like to get access to ECS via CF8/CFC direct IO for
+debugging purposes, even though MMCFG is enabled and used.
+
+If you can send me a simple patch or any sample / idea how to do it,
+I would be very happy. I was not able to figure out how to enable ECS
+over CF8/CFC.
+
+Pali
