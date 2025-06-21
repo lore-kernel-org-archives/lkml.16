@@ -1,342 +1,193 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011000.outbound.protection.outlook.com [52.101.70.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA2B2036ED;
-	Sat, 21 Jun 2025 18:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750532078; cv=none; b=jIE33rU96arSnJOCQ0wk81pRcXPD5aTeFAAlmeQp9k1iugyrPUsr4sDWrlnGYgqbXPEFAldEBSHUkaex4DoClP7DoL2x3EmHKljUQs2Y0cyPGM3Zuu3UIWNchoB5D3OE2fRpb/yaCDNTfoPQ4Nxyt4VIDpXbOH2HPLuOOtyLa3A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750532078; c=relaxed/simple;
-	bh=I7SHUy6DKxGY4qxGAYqD8q8Jtc1LLybDSKRrQonjoKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W/38gCBKjV34z6zuFh0DDLE6QvjhBAFGpVPEZsuu/VR1Ovfe5J3N2v+Fc8n1Molyz7mmgg9+QdRSu4+dXCI/P3GhLyvv7oC0zG1SdvcKTn3f7jmBvBf4BFDft377mlHYeg+TphxSFooM137VaKj62LXv4VwcOhqYp6+NLIYeLeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i8OYNlCR; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4EB6BFC0;
+	Sat, 21 Jun 2025 19:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750532849; cv=fail; b=iE37sA8qxjDsAqTtZfBLMT6aatKaPB/8cd+H899hOiu559u13FEVusxkgPB8EApv9XRc374MwF5ysiavOmcz4+D6sSYYfmfzfuw2GHaS+l33G6xsC+kFqSmAAXQl1IqEsPcoX/utzAz+1H8E9hVLKgnM8W+A/O+uXueZqomenSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750532849; c=relaxed/simple;
+	bh=q0pw8JOFO6NN76gNdxP5KCs+I/ys8AjSdBOrNJMFuiQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DYYPnzX1Lz1dVCjoo7dDEJtwH1yl9Lmua5NXY+ms90q0k9Ex7YL2msKU3UE/LK0aGcOTxHILxYMNJmFdu+WGj1NBjB9y2q+bESDcaf3P76NaXLhcwapQmKJyF3HvhUTDgNOzozpOo82T/2gAIhawN2DSYOqiiUjMJHOkEtdCSHM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=IhFdAMh9; arc=fail smtp.client-ip=52.101.70.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8OYNlCR"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e83199d55a0so350984276.3;
-        Sat, 21 Jun 2025 11:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750532074; x=1751136874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E2qckyOsqB8VW6uHaBqylbBJUmynOcUW3ziq8cxMk9s=;
-        b=i8OYNlCRCMZwVgLQ9HwaP1LU+1NXDF3YNcEwXQU5izUOZHdVmYRx6er42YsQDa1rCE
-         kp01Q5QBfSXso0ptR+PvkGgGKgbGvsDKlqpVmJfIJJx0kbtF3zx6ZY2tmp4x5lYNjGhY
-         VR4Htgpiux05gHgmHvPvsmhT/xFiTD6UICBEJCISpJyloFka/HxoXRjKZbBvwav0JKll
-         k7SgeFXOZcMWxS+kBlcng5Vjl90NrZq2Y21FNBPBBTAYB0y9Zb2bwtHa4yTTlrI2m0WT
-         jWFT32fDq5V80bisCaD9QyNCMODSQ5uDVappPXU5oMDEMvKCxzQQPVtokJgdNuuH4Pq7
-         TwAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750532074; x=1751136874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E2qckyOsqB8VW6uHaBqylbBJUmynOcUW3ziq8cxMk9s=;
-        b=RdK9aqXGCxfP3VY7MLWeOAvaOSKpBxLjklapK0zrCxcbsmo6c14105jgqrkq0BjRhJ
-         iS16zwifdhn1MsfUug7ustliK+2wlX//IoGrVreDZ1TAkX6Zr9WNBOfpf5T3RVMbvxGc
-         xnXhHzP4ZDRucckdR0UUJLqDcXDnPWNFXbuTlybC2ihDPZnFWykVWYCRFnUA8wK+LSG+
-         WvBb1OxNcbYd9lcedyPyLD7kO3Vh5BA9NrrjpgV9+PCoj8AuTRYXnanpONs2glG7Um2z
-         WywUJN0kADNXex9nkX4KLhL41WbrTrPYPtTTLCq74Nd+TqR0y0BDkOWPge6zBwh8RhFf
-         s7bA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdhukmpV2VQMxJGyfoWCJTmT0J8U3ASSA6GLgPCEKvzc50wgaZgBztHpJCMU9AZvVc2xhEfnlhsW0=@vger.kernel.org, AJvYcCWHjuMsTnisQIDPXPYEUDbTIEvP/QdxkhvbeQAPMM6fkb9iWcOqdWtW2WY4lCihwhtT6KFGMO5EX5l3qKzG@vger.kernel.org, AJvYcCXHlK9lsRMyH/JtCxvsJp83zP+s2G9B0EKrCcKjCxYlYtJQ3MooL9S2+kuXZBqG9/E1ea6RijxlaUTL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBgmrv4yFahcqp/j0r2hEHIW376rnjAyJFw7SbD3mDGp6jcAjf
-	51c08b9gyylIV/FWDRRjS40AEJYIxm9QQb8Bjq+9dsUFvw4mbjO1Z+lTIW4uhvTpwPoriDgcoPo
-	iosxuMI37faEn9I/sZ75JkxoZcN2KhNs=
-X-Gm-Gg: ASbGncv2HQLuqNtx9cd5jGAzrsrU/ABj6Sa7ZBqEUvIOE0G4Gi5lb88WHoJE6jw+2aV
-	THHStbh6Q1mHTXTVGbNCoW1NTbFeQKxBbkFFO9cvVxlIrcFHbjGuyZm2wrB8ANRILRvv8MdIB3s
-	gmmFVmp44CcFtM7PxKQw+ZIVD8qW3WwUXAT+Jz7fHT3F8=
-X-Google-Smtp-Source: AGHT+IFoNdlG6OGyptEDgyQ7J7Y2noHRDxWhWFL0nKAdcsTluhnP2tRcD7MA8Pp6OUa21m6VsanQyquKtk9dxIdzuBQ=
-X-Received: by 2002:a05:690c:6f0b:b0:70e:4cdc:6e7a with SMTP id
- 00721157ae682-712c64f673dmr48997567b3.6.1750532074339; Sat, 21 Jun 2025
- 11:54:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="IhFdAMh9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P3TAT9A40Fx8b9004CAUB1XMmWJXwl3b1T2UyXQuuNBBImxWLeFeImdEf7yQv2su+Zsoes0NMH0++B3PX6k7CwCHlHkbTvUXs/qQbrmcBhgWWJxaHicw9OZq6ICgt6RUfx8RkFVj+Ii5fwiW1aavVZ6nwUwyItYy2NQoW7uVxDng7Bb66Dh9l1MTqbviW4SqcWHdsos3RA11mMDVKY4wgR9nYJyRRSW16hVA9cGBmJC1Q+/K2CwAHKFuBVvHpan78iyXUjT4EXPvTFylabDoLCPoHMwSrEv1yEp2wGhSb4ulTWJsN3VhhNZxGE4/Ofm0jZxB/kuE2/2r8od40C3lzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vH0FhQ3c9hbWJnd3Xj6ppfB/L4R39sOTLQp+N25MDoQ=;
+ b=BInf8wBW17929MPMh3QlVky/3qW4c4tV83FBf0vA4rUx0c4HtH/fgvQs/Gr6gddW7Uhov+OfAnb0qDKSsSKEK/l/FExYFDN/tAvnGdhalt1hmVex9idBTrfTuS+8r0wcua6snYVorenrI0oN4+7eXaZuwYMjrfwDp2aH7aV2VP/ehb1eoTJktXcr2tmR24TaKMAp8zqQ5KYjvbthHjk1lFr76nKSEzD21ivf5klVcnmqpZ67kSRSPJFIWwftEM/YhguBFrrj/XRG2pos0CvyvDvoE5Kr6oQwrmtbwDyCNoRttDvOmAC7rRkHRqbjJpF4uA00lROxqozucncOHg/nog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=leica-geosystems.com; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vH0FhQ3c9hbWJnd3Xj6ppfB/L4R39sOTLQp+N25MDoQ=;
+ b=IhFdAMh99UAh9szn6P+w2m6swNxHnpTDoFHyIPe8OF5+eaTVfIEJqw5q9gQn+LLQ/Pasyo4gq7Hbvudqf+ScfjmFyCLWG+PPzXC/hA9vEFuavVraGeqPoRRoKkcoN+KgYiQ3Qtg3GWNLDZJc9Tr4Cgvw/F4utovnP4bj7btwEJU=
+Received: from AS9PR04CA0112.eurprd04.prod.outlook.com (2603:10a6:20b:531::13)
+ by AS8PR06MB7799.eurprd06.prod.outlook.com (2603:10a6:20b:332::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Sat, 21 Jun
+ 2025 19:07:23 +0000
+Received: from AMS0EPF000001B2.eurprd05.prod.outlook.com
+ (2603:10a6:20b:531:cafe::35) by AS9PR04CA0112.outlook.office365.com
+ (2603:10a6:20b:531::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.27 via Frontend Transport; Sat,
+ 21 Jun 2025 19:07:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
+Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
+ designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.8.40.94; helo=hexagon.com; pr=C
+Received: from hexagon.com (193.8.40.94) by
+ AMS0EPF000001B2.mail.protection.outlook.com (10.167.16.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Sat, 21 Jun 2025 19:07:21 +0000
+Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Sat, 21 Jun 2025 21:07:21 +0200
+From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+Subject: [PATCH 0/3] usb: dwc3: Fix TRB reclaim regression and clean up
+ reclaim logic
+Date: Sat, 21 Jun 2025 21:07:13 +0200
+Message-Id: <20250621-dwc3-fix-gadget-mtp-v1-0-a45e6def71bb@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-9-l.rubusch@gmail.com>
- <aErE0xmlm4qBHg03@smile.fi.intel.com>
-In-Reply-To: <aErE0xmlm4qBHg03@smile.fi.intel.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Sat, 21 Jun 2025 20:53:58 +0200
-X-Gm-Features: AX0GCFuAJvsyydfuvEoWB_tms_BjlTAFOx2hhW_6tF87VW6WKx8Xilr2jgOX7ms
-Message-ID: <CAFXKEHao9xKsizGLMQxikcLbG5Him9n9i3btLtqK2Orj_39a9Q@mail.gmail.com>
-Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOECV2gC/x2MywqAIBAAfyX23IJaSfUr0cF0sz30QKMC6d+Tj
+ gMzkyBSYIrQFwkCXRx53zLIsgC7mM0TsssMSqhGaCXR3bbCmR/0xnk6cT0PrKzojDZTW1sNuTw
+ CZeO/DuP7frWBy6NlAAAA
+X-Change-ID: 20250621-dwc3-fix-gadget-mtp-3c09a6ab84c6
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bsp-development.geo@leica-geosystems.com, 
+ Johannes Schneider <johannes.schneider@leica-geosystems.com>
+X-Mailer: b4 0.14.2
+X-OriginalArrivalTime: 21 Jun 2025 19:07:21.0547 (UTC) FILETIME=[B71FF1B0:01DBE2DF]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001B2:EE_|AS8PR06MB7799:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74676eda-7415-4e0f-989e-08ddb0f6d9c5
+X-SET-LOWER-SCL-SCANNER: YES
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bWxzNFVVaEdadFVpRnlDV1Y3OXdkdk05TEMrZk5VS0phRGVTbUY1T1VuN2pL?=
+ =?utf-8?B?Z2hYeSt6NHMwQUJBWXhBU3dyUWg2OWZBZ1hxWEQ1L2VObTdrYThwTmtNUjBM?=
+ =?utf-8?B?Vk9QWlA5Z241MDV2QWFPMmhlMVQ2RGhKb29reHNhRFQ2aXlpMXdoR2FlQmpK?=
+ =?utf-8?B?aGpZYkZGaEJIS2NWLzhLL3EwSFhPZVVKbmVQODh3cGZWaFh2T1RPYUxOMys0?=
+ =?utf-8?B?ZGV5aEt0WURrRU1DaUtEbWtLa3A3Unlla09pTGxHenJxVUJ0Z0krL1RWQ0Mx?=
+ =?utf-8?B?QTRzZzFkdTlyckxaMnA4WTJZUWlZTHd0dExROGIyaW9oUTh3SzdDRW96UWVI?=
+ =?utf-8?B?TVFrT1Q0RXZTdGE1QVArdis1bkxlSGNIOHpaakR6WjN2VFlzdGJaeG9OOHFB?=
+ =?utf-8?B?R2QrazR6QjJlTjh4enRaQnF6RlhGeWI5UG5VQUpJdmI3c0xEWThjcW1MbzNF?=
+ =?utf-8?B?bVpFT3B0c1ZJaWVCc2thczV4TnRINldCanduKzVvOU15ZDFvUmg3elZvMlpY?=
+ =?utf-8?B?cGppMVhzYUNOcTlsU2VPRi9ZanVIVnhjRW9GWDNXT05MWG5wbFg5Q1hneklU?=
+ =?utf-8?B?dllvMThWdDBRb3ZOS3lDWVBCL0RTNlJsZFNSSDhxa01IdE5BWVVLazJod21r?=
+ =?utf-8?B?OFdCYm5pNUNkZmdJd292OTg3YVpBOVZRcXl3ZHRsdnVoVWxTQ3pEOEZJc3Jp?=
+ =?utf-8?B?UHBPZnNqdHo4Zmhsb3BvbUZHSGdIc0x1OWVCOHFzNktKakFuSzlyTWVISHFG?=
+ =?utf-8?B?eVVSUHo0ZmZBSWVoMmxibWlqVS9JTGxIblRELy9RaXdrVUNiMXhMQzFjT2RG?=
+ =?utf-8?B?WnFIaUZYN2JhRmZ4b0tPWjNiOXRBc29HSjB2RldvMXBMWGlHeFRmM3FWaXZD?=
+ =?utf-8?B?OEhEWGtUbDJPRFFyRE1EZjdXU3IrbURxZm9mU1JTckppY1R1dzZ0Z0JxRWRX?=
+ =?utf-8?B?ZkpjazVTTm00WFpzelJXRFIzMnoraU5ublBoTE9kL3NBVlQ0MkR4MXY5STZi?=
+ =?utf-8?B?SHR2ZU5PZjhncWFaVmpWR2JScHlwdFQ4U0ZJR1RHRmVhaEdiR3VFRVNzTkhv?=
+ =?utf-8?B?dDd5L2dvTVIvS0IzZmVhQlBMVkUxbGhGNUNYMDEyNU8wWFk3c0tDbURyZTlr?=
+ =?utf-8?B?UDgrK016N0EyTVA3WXdmbG1mT29PdEJHZE1PanlmSHU5WFNhRjBNSFF2NlpN?=
+ =?utf-8?B?OE5DLy84Rk1VZ1FWN0cwYmJxSnRpYnJrRk5Ua2lqVUJ1VDRpckdhRkpvZHNa?=
+ =?utf-8?B?M1dNdCsxMVpKZXlHZTBRWThvS1M4S3FOa0tKWUNiVDl1TnozcVpEb2ZrQzNy?=
+ =?utf-8?B?RzFSRVkveWpIdHVEREpDWVNIekdwL0I3cENLckFlWjh0SXJtU3Mxak5lWTVa?=
+ =?utf-8?B?ZjZud1pkMHd4SXNOZVp3VFN1US9zS3BhWFMwdkp2NkpJbnZFWGMxTjYrU2VZ?=
+ =?utf-8?B?TUJ0S0I5SGkxcHE4SSttbmFwbUo5Yjl1bTVYUzM2cGlQekVuNDl0Rzl5VUtl?=
+ =?utf-8?B?V2ExYll6RzVJWERDYUcrK3oxK1RwL0NMYnE5NHkraGdMN1JNZDBHNjJkQmp2?=
+ =?utf-8?B?R0dBQnZ4TmRYZmxhekE5TlcyQ1l4ZGdHQ3lLcGZCM1dvNC9VZG5ZeWtGV0Vl?=
+ =?utf-8?B?aHQxeUg1cjZvcER0bkRLZVpUQzQ4bXNhbG1LZHpKdTZwbnRhRTdMTU5GYWRD?=
+ =?utf-8?B?eEVETmRpcXBHMTYyMHZHODB5QlFuSzBkcEdWZTFkVXpHajQxbk0rR1lXTW82?=
+ =?utf-8?B?L1lNeUtjYnBlUURtdFhLK3ZlWFZkOFN3RkVwNkVVdVE2N0VIQW5ZS09WM1NM?=
+ =?utf-8?B?cy81SzQ0RWdURU9qODl5Y0M1YS8vMFhtcHM2TlFybklWeDJFamJvOGY5cjJL?=
+ =?utf-8?B?NU1RUTJVTlI1UjZaY2RGRGlIaWxVcUhuZU9uUTFQdzJnZzUrUk9jSTJTall0?=
+ =?utf-8?B?ZTlZUk1HeSs2TG1JWXlFVFRuT2ZBaU9xN2xSWUVEbVc1dnp6ejlQUzFHTjVJ?=
+ =?utf-8?B?VWxrZ2lhc1Z1MmVWekVLK3RjUzZGdmIvQkwxK2pabHZjRGt4MWFVbjc5KzJo?=
+ =?utf-8?Q?Rb2BLU?=
+X-Forefront-Antispam-Report:
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2025 19:07:21.7542
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74676eda-7415-4e0f-989e-08ddb0f6d9c5
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001B2.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR06MB7799
 
-On Thu, Jun 12, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Tue, Jun 10, 2025 at 09:59:30PM +0000, Lothar Rubusch wrote:
-> > Add the inactivity feature of the sensor to the driver. When activity
-> > and inactivity are enabled, a link bit will be set linking activity and
-> > inactivity handling. Additionally, the auto-sleep mode will be enabled.
-> > Due to the link bit the sensor is going to auto-sleep when inactivity
-> > was detected.
-> >
-> > Inactivity detection needs a threshold to be configured and a period of
-> > time in seconds. After, it will transition to inactivity state, if
-> > measurements stay below inactivity threshold.
-> >
-> > When a ODR is configured the period for inactivity is adjusted with a
-> > corresponding reasonable default value, in order to have higher
-> > frequencies, lower inactivity times, and lower sample frequency but
-> > give more time until inactivity. Both with reasonable upper and lower
-> > boundaries, since many of the sensor's features (e.g. auto-sleep) will
-> > need to operate between 12.5 Hz and 400 Hz. This is a default setting
-> > when actively changing sample frequency, explicitly setting the time
-> > until inactivity will overwrite the default.
-> >
-> > Similarly, setting the g-range will provide a default value for the
-> > activity and inactivity thresholds. Both are implicit defaults, but
-> > equally can be overwritten to be explicitly configured.
->
-> ...
->
-> > +static const struct iio_event_spec adxl345_fake_chan_events[] =3D {
-> > +     {
-> > +             /* inactivity */
-> > +             .type =3D IIO_EV_TYPE_MAG,
-> > +             .dir =3D IIO_EV_DIR_FALLING,
-> > +             .mask_separate =3D BIT(IIO_EV_INFO_ENABLE),
-> > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_VALUE) |
-> > +                     BIT(IIO_EV_INFO_PERIOD),
->
-> Slightly better
->
->                 .mask_shared_by_type =3D
->                         BIT(IIO_EV_INFO_VALUE) |
->                         BIT(IIO_EV_INFO_PERIOD),
->
-> > +     },
-> > +};
->
-> And the same for other similar cases.
->
-> ...
->
-> > +/**
-> > + * adxl345_set_inact_time - Configure inactivity time explicitly or by=
- ODR.
-> > + * @st: The sensor state instance.
-> > + * @val_s: A desired time value, between 0 and 255.
-> > + *
-> > + * Inactivity time can be configured between 1 and 255 sec. If a val_s=
- of 0
-> > + * is configured by a user, then a default inactivity time will be com=
-puted.
-> > + *
-> > + * In such case, it should take power consumption into consideration. =
-Thus it
-> > + * shall be shorter for higher frequencies and longer for lower freque=
-ncies.
-> > + * Hence, frequencies above 255 Hz shall default to 10 s and frequenci=
-es below
-> > + * 10 Hz shall result in 255 s to detect inactivity.
-> > + *
-> > + * The approach simply subtracts the pre-decimal figure of the configu=
-red
-> > + * sample frequency from 255 s to compute inactivity time [s]. Sub-Hz =
-are thus
-> > + * ignored in this estimation. The recommended ODRs for various featur=
-es
-> > + * (activity/inactivity, sleep modes, free fall, etc.) lie between 12.=
-5 Hz and
-> > + * 400 Hz, thus higher or lower frequencies will result in the boundar=
-y
-> > + * defaults or need to be explicitly specified via val_s.
-> > + *
-> > + * Return: 0 or error value.
-> > + */
-> > +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-> > +{
-> > +     unsigned int max_boundary =3D 255;
-> > +     unsigned int min_boundary =3D 10;
-> > +     unsigned int val =3D min(val_s, max_boundary);
-> > +     enum adxl345_odr odr;
-> > +     unsigned int regval;
-> > +     int ret;
-> > +
-> > +     if (val =3D=3D 0) {
-> > +             ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, &reg=
-val);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
->
-> > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
-> > +                     ? min_boundary : max_boundary - adxl345_odr_tbl[o=
-dr][0];
->
-> clamp() ?
->
+Hoi,
 
-Isn't clamp() dealing with signed ints? Also, I'll take the diff from
-max_boundary here. So, I'll try staying with the current line and hope
-it's fine.
+This patch series fixes a subtle regression introduced in the recent
+scatter-gather cleanup for the DWC3 USB gadget driver, and follows up
+with two clean-up patches to simplify and clarify related logic.
 
-Best,
-L
+Background:
 
-> > +     }
-> > +
-> > +     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> > +}
->
-> ...
->
-> >       if (type =3D=3D ADXL345_ACTIVITY) {
-> >               axis_ctrl =3D ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
-> >                               ADXL345_ACT_Z_EN;
-> >       } else {
-> > -             axis_ctrl =3D 0x00;
-> > +             axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
-> > +                             ADXL345_INACT_Z_EN;
-> >       }
->
-> Now this can be as simple as
->
->         axis_ctrl =3D ADXL345_ACT_X_EN;
->         if (type =3D=3D ADXL345_ACTIVITY)
->                 axis_ctrl |=3D ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
->         else
->                 axis_ctrl |=3D ADXL345_INACT_Y_EN | ADXL345_INACT_Z_EN;
->
-> Yeah, I don't know how to make the diff better (it gets worse), but the e=
-nd
-> result is better.
->
-> One way, which I don't like much is to previously have this conditional w=
-ritten as:
->
->         axis_ctrl =3D ADXL345_ACT_X_EN;
->         if (type =3D=3D ADXL345_ACTIVITY)
->                 axis_ctrl |=3D ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
->         else
->                 axis_ctrl =3D 0;
->
-> ...
->
-> > +     ret =3D regmap_assign_bits(st->regmap, ADXL345_REG_POWER_CTL,
-> > +                              (ADXL345_POWER_CTL_AUTO_SLEEP | ADXL345_=
-POWER_CTL_LINK),
->
-> Unneeded parentheses.
->
-> > +                              en);
-> >       if (ret)
-> >               return ret;
->
-> ...
->
-> >  static int adxl345_set_odr(struct adxl345_state *st, enum adxl345_odr =
-odr)
-> >  {
-> > -     return regmap_update_bits(st->regmap, ADXL345_REG_BW_RATE,
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_update_bits(st->regmap, ADXL345_REG_BW_RATE,
-> >                                ADXL345_BW_RATE_MSK,
-> >                                FIELD_PREP(ADXL345_BW_RATE_MSK, odr));
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* update inactivity time by ODR */
-> > +     return adxl345_set_inact_time(st, 0);
->
-> Okay, in this case the initial form of
->
->         int ret;
->
->         ret =3D ...
->         if (ret)
->                 return ret;
->
->         return 0;
->
->
-> will be better with the respectful comment (as Jonathan suggested) in tha=
-t
-> change that this is not optimal as standalone change, but it will help re=
-duce
-> churn in the next change(s).
->
-> >  }
->
-> ...
->
-> >  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_ra=
-nge range)
-> >  {
-> > -     return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
->
-> Same here.
->
-> > +     unsigned int act_threshold, inact_threshold;
-> > +     unsigned int range_old;
-> > +     unsigned int regval;
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regval)=
-;
-> > +     if (ret)
-> > +             return ret;
-> > +     range_old =3D FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
-> > +
-> > +     ret =3D regmap_read(st->regmap,
-> > +                       adxl345_act_thresh_reg[ADXL345_ACTIVITY],
-> > +                       &act_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_read(st->regmap,
-> > +                       adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-> > +                       &inact_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-> >                                ADXL345_DATA_FORMAT_RANGE,
-> >                                FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, ra=
-nge));
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     act_threshold =3D act_threshold * adxl345_range_factor_tbl[range_=
-old]
-> > +             / adxl345_range_factor_tbl[range];
-> > +     act_threshold =3D min(U8_MAX, max(1, act_threshold));
-> > +
-> > +     inact_threshold =3D inact_threshold * adxl345_range_factor_tbl[ra=
-nge_old]
-> > +             / adxl345_range_factor_tbl[range];
-> > +     inact_threshold =3D min(U8_MAX, max(1, inact_threshold));
-> > +
-> > +     ret =3D regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_A=
-CTIVITY],
-> > +                        act_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_IN=
-ACTIVITY],
-> > +                        inact_threshold);
-> >  }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Commit 61440628a4ff ("usb: dwc3: gadget: Cleanup SG handling") removed
+some redundant state tracking in the DWC3 gadget driver, including how
+scatter-gather TRBs are reclaimed after use. However, the reclaim logic
+began relying on the TRB CHN (chain) bit to determine whether TRBs
+belonged to a chain — which led to missed TRB reclamation in some
+cases.
+
+This broke userspace-facing protocols like MTP (Media Transfer Protocol)
+when used via FunctionFS, causing incomplete transfers due to skipped
+zero-length packets (ZLPs) or improperly reclaimed short TRBs.
+
+The "offending" chunk from 61440628a4ff:
+80                 ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+81 -                               trb, event, status, true);
+82 +                               trb, event, status,
+83 +                               !!(trb->ctrl & DWC3_TRB_CTRL_CHN));
+
+Patch 1 fixes the issue by ensuring the HWO bit is always cleared
+on reclaimed TRBs, regardless of the CHN bit.
+
+Patches 2 and 3 follow up with simplifications:
+- Patch 2 removes the now-redundant `chain` argument to the reclaim function
+- Patch 3 simplifies the logic in `dwc3_needs_extra_trb()` to make the conditions easier to read and maintain
+
+All three patches have been tested on a imx8mp based hardware, with
+userspace MTP (viveris/uMTP-Responder) over FunctionFS and resolve the
+regression while preserving the recent cleanup work.
+
+Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+---
+Johannes Schneider (3):
+      usb: dwc3: gadget: Fix TRB reclaim logic for short transfers and ZLPs
+      usb: dwc3: gadget: Simplify TRB reclaim logic by removing redundant 'chain' argument
+      usb: dwc3: gadget: Simplify logic in dwc3_needs_extra_trb()
+
+ drivers/usb/dwc3/gadget.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+---
+base-commit: d0c22de9995b624f563bc5004d44ac2655712a56
+change-id: 20250621-dwc3-fix-gadget-mtp-3c09a6ab84c6
+
+Best regards,
+-- 
+Johannes Schneider <johannes.schneider@leica-geosystems.com>
+
