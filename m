@@ -1,141 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA56A5D8F0;
-	Sat, 21 Jun 2025 17:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23A41624EA
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 17:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750526261; cv=none; b=sp1UGKpas3GLrcdWoVuQDwsZpxCSaSNrPmfbPGMjgaWMSxk6xDZwgK9+ETrkM6nf5gn3I58Nhn4suVk2d19RAw83qHItDkJXlj4Szu8TLSofQ9oCCbf5NgfNAvQ2scWat5Z0h5sn6TrqzJGRBMwRaX96P6e2Uj/UTnpHpcKfsP0=
+	t=1750526346; cv=none; b=BwPvrk21v2rNEoZ/+pocFfnBWQKoLIibv9d8TISOd+HyvnIouCZ8MqXMzn3ve7j/gBKxfqboMVgANz20sL6NgDr/O7VO/mOnZCRklCL5i8TkA3gW1GZlcpvf3fd/FD8LM8H4MDCyU0CfNFjhdm1/a7OCtCfdCUEGMm/CQEjP9Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750526261; c=relaxed/simple;
-	bh=KLsfWzYYLq9bE5juKZSbNnuRVJ0JexNNbqMjR13cHvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sKPjqqD1MBjHJqWC09N/Gjo/4FrlDCiV8my1K/Ef/Yio7TOAKkeKDBYY5JKovBr72KcdlbluJrEiCrr0vruOv5ZPjbjynuSfCZtm7mILYm9pAfQ8EEu8RkSEVLY2RITxWZVekYlJoJfGItL+xoFhe5361q3qhMDXES/qVbHQTpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUoNbrmi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750526346; c=relaxed/simple;
+	bh=noJk4BiepOb3lVQ04gp/89jM/44GoTx1QuGjHuXHIWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=kp53dqyZSpb9j+gH82CZCW4WbjtXdJrVdBPCU7qpmt9INWeTgATEMs0vBH0YEf1YHkTgOf02BK4YUsQixufASsD2ZSYcl9FVLatu7yaCZfJLCz3CR0zSeqjoBalFyc8Ror04n3SOmG1vU/HxQsVM0/Eh7iY0Tngn4blAaAb5GCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=UvZGBRdS; arc=none smtp.client-ip=66.163.188.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUoNbrmi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573B1C4CEE7;
-	Sat, 21 Jun 2025 17:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750526261;
-	bh=KLsfWzYYLq9bE5juKZSbNnuRVJ0JexNNbqMjR13cHvY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HUoNbrmiix3vYJbIqv+sr1uIPDE7MdcMfjGixDR7FBDGJJPbBBOFCRUnkQYGhkAjm
-	 Ru/ebyVN1qCSaaZzLBkj4Vwlg7Pa4CP/QM2rsJLQAwpljUOQpkRSWIHXwaNQAnX3/+
-	 iREckz371tme76n5ylDyO6fbAAZg7VmiYulSJFyMQ3QkiiTygEoE91PFkp0HYV21Bo
-	 e2ONJM3MCsjaDx75qfNeKpKALxjgR7zbOfGQvTUhzeJodclKi7Riiv2hXh2fuRPxU9
-	 yyPzbCIHZ4mn5hX7Q22t4JKZ3juvKu1KWL8jJHZJSeKEAa0C79t0saEGZTHWPa/T3l
-	 re/Rmrc79NMqw==
-Date: Sat, 21 Jun 2025 18:17:33 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>, linux-iio@vger.kernel.org,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, David Lechner <dlechner@baylibre.com>, Julien Stephan
- <jstephan@baylibre.com>, Peter Zijlstra <peterz@infradead.org>, Salvatore
- Bonaccorso <carnil@debian.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if
- no IRQ connected
-Message-ID: <20250621181733.3cb6111e@jic23-huawei>
-In-Reply-To: <79946c40-e2ce-4fbc-a6b2-b37f6fd69d1d@kernel.org>
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
-	<79946c40-e2ce-4fbc-a6b2-b37f6fd69d1d@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="UvZGBRdS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750526336; bh=f/j3CK3RJdMWlT73UzsrQTZQ4X5MO9hJbzn+JxABBmM=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=UvZGBRdS09fq8Hh6HjYfTj9GOCwfQhLdChXZoY49VKSq5eE8dmXAGIsgfLI5CW8Ynn2tEssrVbKFGzL/IQiwCCx8JK1VqBT/vrGEVyk818Z2JTenuMYH8Br+wAVnCVO/spGlBpsb95/cOyFTUebMQK8x354TV8z/DmmpW8sOVy+lWE+pQGjrj3R7vOrZMLa+tSIcbl8S9qeJpCHUnDQUzGwKwZBXQ8xFF4XUqoTpyPrxdRtcDldnuLDhiLIYAHV6Con7Jsoqvj8hDM/+5lJsXzaKtE+uml3rTo6+WoFSRCKgZ5hO50MEw18ugkeTBlm8nTTQu61EMALOLcT2b7UFUw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750526336; bh=75j5Rpm3u7DSVaa1oefZ5gcAMel8vUd49prKIIGOza6=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=FIwd/MtFaJlJa0WLVDFWiHYq1RrG+8JHM98R42FumuaVLKerHNnY+fXkX1XqMQQCXXwVOcgbamdAUa7kfqbvIMgKvJlIf+HYXKUO318Pi6DsBIBsWyn98i6xIvbVln8TWecZokTZnm7ygZoQ5t91MxjQHetkevezcH0NnYHHiZyARSk6JNeBY0qLT3O98tfh0eGlvCeAuD1h19sIuAi/7zv74mUN7zVK/rnbG2h034gj87fTE3vfRfkApzPjkDN/b5edFBuJjHdbXcNqPxYkt+FxgSakmI8/8Xjw3GMFsBOggpEszWWOwSlAYLGb2K/CMfayodd84FJvxDgEDoa95A==
+X-YMail-OSG: Tp.hPl0VM1lIf.zl5VehtGfN1JXMJZfSQ2_IN3UEFulQCwgLcYe3FfKpUizE1Qs
+ sattV47Z1jESJyRJ5b5Cx7hiNc_2T2Mx7nN7djlQB0Nqrd_mvAezZzUaRBOkyTq5KPyUr_gV0.Yf
+ TYkzh9nVQuN9_x0pvHNFYu0_FSVqKs2XBPoA9ZxJ6mBGteruBeIcZOkLwDB1PATPerRrl_inldXH
+ u9PBm4qxpscedHMu1XyeXqsSuyAePIfn.lAwex02JZB1.wg25sTicKp4J9sRQlKKqBLf51_U7IFD
+ z9E6JowuC3aQGWOhSwTLXy8n4dVzi1nZrEkCsGeiNv_e69RKD.N4JVZlXmtcbqLoMTvMAs4TsKKX
+ 1iq6azc7V5QuWxSHgYiVbz2M7mauKmBwR3Fze4EigAu1Jj6NqzLG4I66dW0HXSCAzM5zupjnWJhI
+ CLv6zMLnpk9UAvW0QC28bpABfRXB7UZK5aNhonODoU36QBeMe4ehf6CoLzmXG6fWoI9NJa0e7yiY
+ lfHUSxBsQEMNz_cFoXwV5RXyAR_KCkgR7NritoTnZX02WBTpWCsJF9AUEycQeLPsAscVFPmTZPbF
+ Qh6SZ81YG.OXVCc4Wvrtg5mxfYg_V5r6hKW2VlR4LuKtDhsNInV_xYbaHKeknv1iJIdDn01APUfS
+ gzXbTywXdOGdMnXlyBmeTcQm_rYETDEWcF5xMdZ.Hy0G322hI1YRlNA_QxOKU76uX4OW9pGe2PPF
+ Ey0ScxXJbcM0BN3HYAv0YT9qD5iiaMMaVZLT4A6wGvAhzME75GXD4WemqT56xG3e3loqUDtkOYRG
+ RLzucSp55EJ.p_YAy.8VRGqKEoUTW5ESy9lqVwK3.vtoP2XOSzore80qet0RuuZ_JLG9PYBc4jE_
+ G9u75PaQRA8ToNzlGN6LdTzd8uEM2QHQjHfaPwWPwihhzolWrYMQO_S0WIMUoQUi9iNbOddjgN6P
+ htJ9Qb1G7RFvE_unvLuE7SC.yfSsVjGRD2iMYA_5KxExuec7ThwFPjFP6AmgnY9Z1s0OHC0ZzD1h
+ wJ4JcBL_QLKOxzJQ1XXIgXH0v.bXHygyFDs06NCFtSyY7nxleqgwYwww0.dfJyQEhLda1MrraRwH
+ weckV.nAWBqWcjljjNUGeSuC.hbHNNoobKCaNCaPu7uv9RYnlRdp7AG6_EeFzbnbOcOPakWt7WqU
+ irisEkvBczXmsdYWIRy8lT9aBWIG_YDiT_Aza4JOytUTSrGU6JsL1AM_UXFdmZQTOU9q.4OwoDA1
+ 8MRegy83oqBKuiiTg67NrNw2kyANPtsweBJJzamAeSOn4VdYNVFa3.bmFFVGqKIMPRVB8Gb0Dbxc
+ SmQDbiM9O3kpMieOG2PJ1NwLOYp0uI2oYejU1Q7zhE_Xktq2Ad8LGGeeMak13tEmFzBFXjrclENP
+ xaP_ps.C7OrtDF05CZFHtE687D2cVlo2sqy_XFzOAwgDGyMfAH5DL6WneKGUm1mp3zwVW57CWdPH
+ 0mtRQjdT6vE1V5pCo2MAuG70aYdZTz5Y9EKhBL9Tbi7mKUZE9Ae1G.maKljHl.Ber6Fg9fYLGbCg
+ dg5N9RK3_ELiLxsn5LphEy7gMGzDFzxu8KNkf337piS10JApIH.bm0l4tV5ZbkMSZbwQvyhJRO_c
+ 23.2v1lPZDdQJrfcaz1dOETozk0EiIt6xsGFyRSk81FiYhqTSLd2jm9WBEw1VeN0Zx17mi9BOQij
+ L1gZW4KWaGh4m82BHdVgAKYhPo2Eu.Ncfqb0V5YGqrMPFf9ZYXnrxtxwl00HQodsNmEzu9fxUsXY
+ VW93_yIPefG8jeN0MZgwr7WlDfbLaVTmzmuLAvPxyt3g4rPcjabHbemgAMjP3OOR8nUyLWsg0L3I
+ i8qvVIQGZ627.IrV5WJtLufd1wWPuAuLr3PXBH02MvPHDtLesFW6t8BnvsMlnW7rJd0XQGPS0Fw5
+ wCk0JOjRBnRCiACpMFbK5jAFmG4jX9gnBqqx2.VSySVygFIe79HiG4u6vywwNDz21MVmfk1l8Y9C
+ Ka9uReXr1yMY_pSsoPJBEXcjsFAuzwhNVb7BP87D1BxCf0R0e9BxR3L4T.lyF44LDV2mOUTgV69K
+ uivWuREsT4ccKIgIhgDKIRaDkSwZ_0Z7m.vpE.imig_pyd.ZyO0_KjXGh1vQ7SAAAn_CYKs_u1H7
+ b1uPCqJVPviXJfDJamvJON7rpv7rTAVe7PzIMza3EYWdJQt2ha7UIjp9GCNZOyhdJZ0olMcrzjE7
+ tZexiqHfzoqfm0m4.TjWwmTOpoyOL18Tcbh4MZPDgrc72_2raJ9xQAxQpGdqdh8qIcFra7G4tqSJ
+ McOO9IzO0uxZ1xIpMEmrQtQ--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 6251a79c-2b83-4ba1-bddc-8c30cde94e3b
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Sat, 21 Jun 2025 17:18:56 +0000
+Received: by hermes--production-gq1-74d64bb7d7-fddgg (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 250c349a2671887e65e0396b7ea9bbf4;
+          Sat, 21 Jun 2025 17:18:54 +0000 (UTC)
+From: Casey Schaufler <casey@schaufler-ca.com>
+To: casey@schaufler-ca.com,
+	paul@paul-moore.com,
+	eparis@redhat.com,
+	linux-security-module@vger.kernel.org,
+	audit@vger.kernel.org
+Cc: jmorris@namei.org,
+	serge@hallyn.com,
+	keescook@chromium.org,
+	john.johansen@canonical.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	stephen.smalley.work@gmail.com,
+	linux-kernel@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [RFC PATCH 00/15] LSM: No exclusive LSMs
+Date: Sat, 21 Jun 2025 10:18:35 -0700
+Message-ID: <20250621171851.5869-1-casey@schaufler-ca.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+References: <20250621171851.5869-1-casey.ref@schaufler-ca.com>
 
-On Mon, 16 Jun 2025 14:42:54 +0200
-Hans de Goede <hansg@kernel.org> wrote:
+Remove all constraints that require Linux Security Modules to
+be marked as "exclusive".
 
-> Hi,
->=20
-> On 13-Jun-25 14:45, Marek Vasut wrote:
-> > The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
-> > which leads to bmc150_accel_core_probe() being called with irq=3D0, whi=
-ch
-> > leads to bmc150_accel_interrupts_setup() never being called, which leads
-> > to struct bmc150_accel_data *data ->interrupts[i].info being left unset
-> > to NULL. Later, userspace can indirectly trigger bmc150_accel_set_inter=
-rupt()
-> > which depends on struct bmc150_accel_data *data ->interrupts[i].info be=
-ing
-> > non-NULL, and which triggers NULL pointer dereference. This is triggered
-> > e.g. from iio-sensor-proxy.
-> >=20
-> > Fix this by skipping the IRQ register configuration in case there is no
-> > IRQ connected in hardware, in a manner similar to what the driver did in
-> > the very first commit which added the driver. =20
->=20
-> ...
->=20
-> > Fixes: 8e22f477e143 ("iio: bmc150: refactor interrupt enabling")
-> > Signed-off-by: Marek Vasut <marek.vasut+bmc150@mailbox.org>
-> > ---
-> > Cc: "Nuno S=C3=A1" <nuno.sa@analog.com>
-> > Cc: Andy Shevchenko <andy@kernel.org>
-> > Cc: David Lechner <dlechner@baylibre.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Julien Stephan <jstephan@baylibre.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Salvatore Bonaccorso <carnil@debian.org>
-> > Cc: linux-iio@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/iio/accel/bmc150-accel-core.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/=
-bmc150-accel-core.c
-> > index 744a034bb8b5..1c3583ade2b4 100644
-> > --- a/drivers/iio/accel/bmc150-accel-core.c
-> > +++ b/drivers/iio/accel/bmc150-accel-core.c
-> > @@ -550,6 +550,9 @@ static int bmc150_accel_set_interrupt(struct bmc150=
-_accel_data *data, int i,
-> >  	if (ret < 0)
-> >  		return ret;
-> > =20
-> > +	if (!info)
-> > +		return 0;
-> > +
-> >  	/* map the interrupt to the appropriate pins */
-> >  	ret =3D regmap_update_bits(data->regmap, info->map_reg, info->map_bit=
-mask,
-> >  				 (state ? info->map_bitmask : 0)); =20
->=20
-> AFAIK the proper fix would be to not register any IIO-triggers. This fix =
-will
-> avoid the problem, but userspace might still try to use non-working trigg=
-ers
-> which will now silently fail.
->=20
-> I'm not an IIO expert, but IIRC other drivers simply skip registering the=
-ir triggers
-> when there is no interrupt support.
+This RFC includes variants of two other patch sets:
+https://github.com/cschaufler/lsm-stacking#audit-6.14-rc1-v4
+https://github.com/cschaufler/lsm-stacking#mount-opts-6.16-rc1
 
-Absolutely. It is annoyingly common for devices to have some or none of the=
- interrupt
-lines actually wired so drivers should not present the interfaces if they a=
-ren't.
-It is acceptable for a new driver to just fail to probe if handling the dev=
-ice with no
-interrupts is particularly complex but in general at least some functionali=
-ty tends
-to be easy to implement so we prefer that.
+Based on patches Paul Moore's LSM initialization patchset.
+https://lore.kernel.org/all/20250409185019.238841-31-paul@paul-moore.com/v3
 
-Thanks,
+There are three components to this change. Patches 01-04
+implement a mechanism to provide auxiliary audit records
+and uses it to supply new records for multiple subject and
+object security contexts. Patches 09-11 allow mount options
+to be supported by multiple LSMs. The remaining patches
+address mechanisms that cannot be used safely by more than
+one LSM.
 
-Jonathan
+Testing has been done using SELinux, Smack and AppArmor on
+Fedora and using AppArmor and Smack on Ubuntu. Using SELinux
+and Smack on Fedora requires a systemd change.
 
->=20
-> Regards,
->=20
-> Hans
->=20
->=20
+Casey Schaufler (15):
+  Audit: Create audit_stamp structure
+  LSM: security_lsmblob_to_secctx module selection
+  Audit: Add record for multiple task security contexts
+  Audit: Add record for multiple object contexts
+  LSM: Single calls in secid hooks
+  LSM: Exclusive secmark usage
+  Audit: Call only the first of the audit rule hooks
+  AppArmor: Remove the exclusive flag
+  LSM: Add mount opts blob size tracking
+  LSM: allocate mnt_opts blobs instead of module specific data
+  LSM: Infrastructure management of the mnt_opts security blob
+  LSM: Allow reservation of netlabel
+  LSM: restrict security_cred_getsecid() to a single LSM
+  Smack: Remove LSM_FLAG_EXCLUSIVE
+  LSM: Remove exclusive LSM flag
+
+ include/linux/audit.h               |  23 +++
+ include/linux/lsm_hooks.h           |   5 +-
+ include/linux/security.h            |   6 +-
+ include/uapi/linux/audit.h          |   2 +
+ kernel/audit.c                      | 274 ++++++++++++++++++++++++----
+ kernel/audit.h                      |  13 +-
+ kernel/auditsc.c                    |  65 ++-----
+ net/netlabel/netlabel_user.c        |   8 +-
+ security/apparmor/include/net.h     |   5 +
+ security/apparmor/lsm.c             |  12 +-
+ security/lsm.h                      |   4 -
+ security/lsm_init.c                 |  36 ++--
+ security/security.c                 | 103 ++++++++---
+ security/selinux/hooks.c            |  82 ++++++---
+ security/selinux/include/netlabel.h |   5 +
+ security/selinux/netlabel.c         |   4 +-
+ security/smack/smack.h              |  10 +
+ security/smack/smack_lsm.c          | 107 ++++++++---
+ security/smack/smack_netfilter.c    |  10 +-
+ security/smack/smackfs.c            |  20 +-
+ 20 files changed, 585 insertions(+), 209 deletions(-)
+
+-- 
+2.47.0
 
