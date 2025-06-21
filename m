@@ -1,131 +1,116 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D671A8BE8
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 13:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BCADDC1;
+	Sat, 21 Jun 2025 13:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750512687; cv=none; b=tDTtyNBnL0kVSDzHJi3anAEWlY+ciHWw2ZsZ6Yqhdo+b7iLgwudWXMElwBKJrtpJhVfrJ2MoXwstHcp0rYfn4BAAxs/U1BTkh1mb9Vmn6Im28gS99KlAzdn4cU+pocDmhYxaSUELFp5eoVy+37uiA1nvQJwM3l02cyB0bDu08a4=
+	t=1750513562; cv=none; b=THXVgtkBegL/jF+PXHHoC91xC3YQB210196DHfJdyEHnG/OB47clHax4HzA7cZp7RhceAFh8G9tSPLRYwju240PWWK5Mlh0uk9juKrNqmikycTgvM817FKohmW6L+B2k9u9pgm7Ht7VYjRY8LXVV6EJBSfUBDR2tYJB5CaqDyuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750512687; c=relaxed/simple;
-	bh=745XbM+R293U6NPlApp30t2HMHXm/4v+Q8H+vE8yLsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pQeWzJn5xIb50kW2wZgtR47AFm+t3lCIQe1eCxzuNxqPTh08UUZe26dySjHZ4n6Z+hrhozgxAWHddMCpgfLTyIEq1vp/hds8xEFymsUAJXMHHZs9Nq5bPWu42J4V/ltjNj3tD3o6cDxv/gHazETkQeLrI1dAwAy+RoSWYolPceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NwJe017W; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750513562; c=relaxed/simple;
+	bh=UxmVwMNn5uY3aRjiNF2e0j3+k2xJ/ByFE2+u+ULLi8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q7ybD7QwgPD8tzxJSMrH30K0LjymXKDZq68s0F6noH7C7tEP9488GhIbYRd+EEY3+wAk3jT3kJnZ35VeLLetyP3BwmUIyoOt7PTPS3w3bFsjJIm75kqT/hfAvbPA84qeY4+1C7hQOuFxQRvczQD9clkfCcT+GGGN+adlAVvYDa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e73cpPQP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NwJe017W"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LCcn5x028658
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 13:31:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	T9imrZN8KkxLJw4ZcE6UYLM4xvLjHma6UdnfjLX804k=; b=NwJe017WtgcjFxiY
-	FvI0KGvr8CIJ0WYscZffC+8JtmHCN3ATnnM83sZaOdVyEOHsBGTkB+GfKUf9z1ad
-	NjOpRHKlsqrNTd0+Zo1rASOr1E4cmBUBO667y+tWFP4eDjS6f8PaBezGRDkQEeuN
-	665QYRJhZmAbtdaiycPnSk+3uiQwCdrQHXneGsIqt8ZYPwuZNiLrL2k2jd31P1OM
-	GxpWQ5sWL1DKvSdeXBApjYvd44oEfMw0uPEe9yQOvuJTA+LuPfNXXKtK443GfeIX
-	69r7jNugbcIk/0z6a1XNwSsHG4NhM5BxtjAiRJKnqgTMFL0KeOo4i1oLmICQdbgj
-	d5SOLg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47dj3q0vtu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 13:31:23 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5af539464so74965385a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 06:31:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750512683; x=1751117483;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9imrZN8KkxLJw4ZcE6UYLM4xvLjHma6UdnfjLX804k=;
-        b=SUndY/2UDGthhM0PJUNOBLHz9/HpTxjHD+dJwl8hxW0LQkC55dRhwGgTPrMGmpQnfa
-         I448SxF73oKF0zVTfVMLRK4jH8cj8EMFtT8jycuAnrTVkDTfSx+wPdn1VuBlQKyO9Ycd
-         0V0ZEsknb9Tsv7jSQttZ5VDJGHCiBh+0hvoR8XhWcryGs79AIiBgqELzKcu57RkdyKxy
-         c1JmjyejPhhPy7in7jLmTfOgmgnlVllF3t9lAVXbd74Mgi/X8ozKJotmRQ6CRHHm/iT5
-         xeqoKivwAsT7zLF45Eh7NF5NjYuaCMQW9MRy7nMv/KmhsrEdp7XgDuF1tcjyNkjwqBfm
-         RSMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWf7TFo/bmAAbZmoNYyz/TLena59HHkYoPtXKwEr283vCwH5F+5H2aZPzcL4MJTrqrTLCoO/ImNRDFAwBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV6QOBdI9evMmR9PQkriRm32POJ/0pY0BQi8X5tbkGmFTYNVI4
-	1AHp7cFzNrjDN16F3wtX6rtxHDqJtZzGGZDJyOOXHe067sxEyce4Jpo3DRzU0ZS/zsVMrg/ugrj
-	jXcm6An9APdmL3NT3fnKdjgZk9J+i7FNm4EEDhUDtGFadW/IiVarZ4z3IrdIdsRfXHJM=
-X-Gm-Gg: ASbGncukOntS+QdWCmIpyNvGEjATENssDlVsOhQEA4FHojyj6J1XVSA9/tw8y6iz9XN
-	kXOkBKBdXWRCf2uoq+a0v6uq0SqieOBZgXquXNLJUAwzw/JDxgqPUvy9x9UXxJdRdZ5MbJghpt6
-	SzVguPADKVf9WSa2CFsq+ZKVVDI9Ks6+JaK4TnQ+6749XXa0RPgsZvcT17BXZz7fuyRGMZCr+vK
-	+7SKjbJlZs+spAu2anX7hNQtGzA8YFIRQ2Q+G6mpZfjA8HSuRj1oVXIQMUqUT0KfX/UNF/BipAy
-	IMDbovtg41xLL4LRYC/kTpU4/wzv/yxy2RzNQ4YDJVXDY1Ug84B/g9LXSmmDxAupgWG5aq2E1s2
-	9NlQ=
-X-Received: by 2002:a05:620a:454d:b0:7ce:e99e:bc87 with SMTP id af79cd13be357-7d3f98e6631mr348325985a.6.1750512682878;
-        Sat, 21 Jun 2025 06:31:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPnraGfBvL4P9bykA/yT+Cv+md6ula2ABkfuQgFa8vkKOqRNiJQoz/xtOasxclp10nTjMA/g==
-X-Received: by 2002:a05:620a:454d:b0:7ce:e99e:bc87 with SMTP id af79cd13be357-7d3f98e6631mr348324585a.6.1750512682368;
-        Sat, 21 Jun 2025 06:31:22 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e7fc5csm371954366b.30.2025.06.21.06.31.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Jun 2025 06:31:21 -0700 (PDT)
-Message-ID: <3e8700fe-7b02-4802-893e-2a297b7b5a58@oss.qualcomm.com>
-Date: Sat, 21 Jun 2025 15:31:19 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e73cpPQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9201CC4CEE7;
+	Sat, 21 Jun 2025 13:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750513562;
+	bh=UxmVwMNn5uY3aRjiNF2e0j3+k2xJ/ByFE2+u+ULLi8w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e73cpPQPW7TPEk+Lvwgt9TLQDsSunVtDrDwzrHKhfkmu/wsI/K1ntMFYs9//YZ2Aa
+	 a1PkGfE340bqenITjYbuBC3Nu2ve5E3pMfGvdmPcprGc1lU5kfY1B+BNVFfGSq9Bya
+	 puuLtsLuzudpu1cmTALnKBJP0GERLq1Hte83uU5pbRZWvJ9SnqPejgcMEHtGZAlbfb
+	 T3h2ejLJHPn5eIRGyuN9o34IrLUXDcuCExWJEBdfpUg4pVmcRjnWKPuGWk8imGTdB7
+	 SBqifzqxiV8NFZ0S2yqzovvgOJ2G0FZbGMtmRXvwg90yysrQVxfcFPuvXRFYePNO6Z
+	 ZUodL6M5YiUoQ==
+Date: Sat, 21 Jun 2025 06:46:00 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v4 0/4] net: selftest: improve test string
+ formatting and checksum handling
+Message-ID: <20250621064600.035b83b3@kernel.org>
+In-Reply-To: <aFU9o5F4RG3QVygb@pengutronix.de>
+References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
+	<20250516184510.2b84fab4@kernel.org>
+	<aFU9o5F4RG3QVygb@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] ARM: dts: qcom: msm8974: Sort header includes
- alphabetically
-To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
-        phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
- <20250621-msm8974-rpmpd-switch-v1-3-0a2cb303c446@lucaweiss.eu>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250621-msm8974-rpmpd-switch-v1-3-0a2cb303c446@lucaweiss.eu>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=BPWzrEQG c=1 sm=1 tr=0 ts=6856b42b cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=dlmhaOwlAAAA:8 a=EUspDBNiAAAA:8
- a=CZQOM7k-GMDgjQxx0LUA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=y4cfut4LVr_MrANMpYTh:22
-X-Proofpoint-ORIG-GUID: LLfLBpxXfW64keHS5s0R0lI7N23DDJMD
-X-Proofpoint-GUID: LLfLBpxXfW64keHS5s0R0lI7N23DDJMD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDA4MiBTYWx0ZWRfXzgisDQlWslZQ
- P0Dp/5DDCXOAWpURytBXiahCUOJNexHk9xsl55MnYFMBya4H2oF0MyGUg15NU7kEzqC8WKLmV5V
- Hyf/f+/dWicAlGlSM+javS7qWznmtcIuifjBzmo7lYH5CpPaxBeBUUYPY4CmnBOZIiTKoTzzo9X
- mBtO82xbJSHnfG72DcYawgxSvBbM3U8GnWebxwGRB0g3SDqRivftzzruT03VTMtpB1M3hffFI41
- kJbjBR99jTi5LCN1yaHnIQLBW6fqJEGjbpckakWoVMMd5lJxgzLlp6vNra4G4YUDBCv6LdMuCS9
- i0rhHBIZ700Og8dy/hphKwjUf090XLjBuoV1R0bE3WDtJKz2loqIpuooUTXeKz5rK7LH1fAzMeu
- TxqwTKLQLUzp8Q15ewUgGQIfDykqOJUPiWD29WKlpa5EuqiiHYLpnttii/y4bsZ1tFbr537k
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-21_03,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 mlxlogscore=700
- priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506210082
 
-On 6/21/25 3:19 PM, Luca Weiss wrote:
-> Before adding more headers in a random order, let's sort the includes
-> once so that's done.
+On Fri, 20 Jun 2025 12:53:23 +0200 Oleksij Rempel wrote:
+> > What device are you talking about? How is this a problem with 
+> > the selftest and not with the stack? If the test is flaky I'd 
+> > think real traffic will suffer too. We pass these selftest packets
+> > thru xmit validation AFAICT, so the stack should compute checksum
+> > for the if the device can't.
+> >   
 > 
-> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
-> ---
+> Let me first describe the setup where this issue was observed and my findings.
+> The problem occurs on a system utilizing a Microchip DSA driver with an STMMAC
+> Ethernet controller attached to the CPU port.
+> 
+> In the current selftest implementation, the TCP checksum validation fails,
+> while the UDP test passes. The existing code prepares the skb for hardware
+> checksum offload by setting skb->ip_summed = CHECKSUM_PARTIAL. For TCP, it sets
+> the thdr->check field to the complement of the pseudo-header checksum, and for
+> UDP, it uses udp4_hwcsum. If I understand it correct, this configuration tells
+> the kernel that the hardware should perform the checksum calculation.
+> 
+> However, during testing, I noticed that "rx-checksumming" is enabled by default
+> on the CPU port, and this leads to the TCP test failure.  Only after disabling
+> "rx-checksumming" on the CPU port did the selftest pass. This suggests that the
+> issue is specifically related to the hardware checksum offload mechanism in
+> this particular setup. The behavior indicates that something on the path
+> recalculated the checksum incorrectly.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Interesting, that sounds like the smoking gun. When rx-checksumming 
+is enabled the packet still reaches the stack right?
+If so does the frame enter the stack with CHECKSUM_COMPLETE or
+UNNECESSARY?
 
-Konrad
+> When examining the loopbacked frames, I observed that the TCP checksum was
+> incorrect. Upon further investigation, the xmit helper in net/dsa/tag_ksz.c
+> includes the following:
+> 
+> if (skb->ip_summed == CHECKSUM_PARTIAL && skb_checksum_help(skb))
+>     return NULL;
+> 
+> I assume skb_checksum_help() is intended to calculate the proper checksum when
+> CHECKSUM_PARTIAL is set, indicating that the software should complete the
+> checksum before handing it to the hardware. My understanding is that the STMMAC
+> hardware then calculates the checksum for egress frames if CHECKSUM_PARTIAL is
+> used.
+
+stmmac shouldn't touch the frame, note that skb_checksum_help() sets
+skb->ip_summed = CHECKSUM_NONE; so the skb should no longer be considered
+for csum offload.
+
+> Since these egress frames are passed from the DSA framework with a
+> tailtag, the checksum calculated by the hardware would then be incorrect for
+> the original packet. The STMMAC then seems to drop ingress packets if they have
+> an incorrect checksum.
+> 
+> I'm still trying to grasp the full picture of checksumming in such complex
+> environments. I would be grateful for your guidance on how this problem should
+> be addressed properly.
+> 
+> Regarding the current patch series, do these tests and the csum_mode
+> implementation make sense to you in this context? I believe it would be good
+> practice to have selftests that can detect these kinds of checksum
+> inconsistencies in drivers.
+
+Not yet, at least. Once we figure out the problem you're seeing we can
+decide whether we should adjust the tests or the tests are failing
+because they are doing their job.
