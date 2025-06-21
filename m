@@ -1,289 +1,329 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4701719A2A3;
-	Sat, 21 Jun 2025 11:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D782642AB4;
+	Sat, 21 Jun 2025 11:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750504219; cv=none; b=HUIAvyXBZ6jkyRE10RJCHa5tQB9Mz+i+AtTg7vCmxvJt2XSSJIHLEvt5vfDnSRsqNF4XBZo0B7D1pIkYsg8qTyzbE/85446pgUdyFMB+EfpnR4yzqlEQ/IFwQ90IOBQxYOSGjklCSQ7YTK3tJbYix+5swPpRiNS1R/Dl+N7LZMY=
+	t=1750504562; cv=none; b=TF8XGgHqVYKMvURdTOmgKI8euPG1Y9sogO6/qgv4Io8z4bVc8oLTGpnVi5RV7bEJ7cCom+mgO3AbPn+LA277GYSXOOLpKIqRxzb/BCr6mZ/wW1jsFEhdwkY2YgUhIw0KKClscZdP0cIbQV5PFz3QhhyjKwpe1ob4gdzHthDSEjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750504219; c=relaxed/simple;
-	bh=ldQYMyu30F91c9EamhYo1fhn0ulnE2mF6Pd/xq6bofo=;
+	s=arc-20240116; t=1750504562; c=relaxed/simple;
+	bh=AglLGwocXb7aYtZZ84ovAUyXmvMiTYg9wjTzyeUCXEM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UoIOP8QKWDfwQur7xWKXhWWMglAnXiLXBBdgsBnK0JiJ507OAy9RbVLjuE3SZD7nijXzv3J9zyvaxnSMXf3cO9PhJWD6OSnfu34f6T8MXY5Mm9yvvPZ5/a6DCC1oSC2L35MKkrtGfvTkIH7VdGVbU/EuU+qT/7lZ2NUFWGy9u98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HpDsmgcz; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=f49fQ92mNgGfDgZpC50qqEWcthK2KR+stB1HZoJJuqqv8B4ijU40rDnNhR6MWr4pD9++vpgeQUWRRcrzYWL4E/azkLqajGJvi/wFG2Xz/yc9Qt90j3Hb1hyGs1ZA97nkXjwD6aJSyO75oECUqi/6DRrGs12Ud67Vi8CbGzWijq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TC9pDlRG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpDsmgcz"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32ae3e94e57so18189401fa.1;
-        Sat, 21 Jun 2025 04:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750504214; x=1751109014; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oCATkS1iFox8++RsOPPrNMNCnqTikPTJEA4op0lJe48=;
-        b=HpDsmgczaW68T59uTfxrSLJHaJbMqOMP6f6tN0D0z8bgFfrG3tvTfYFdLYUcgv7bvj
-         4CkAGWo0KddmrIwP1edKzMK7b/grtb0N9kr/AzGlfy3GfO/QCNqvl+VWybChiYBvt/Ck
-         BLFdiopEv/PcC6HSKwFYt2ZKDfa6UScwqmNKtTIGFzPIjiuRAKs910J5QVv7IPLk83oo
-         RjFR/cSF3ndd3RW1tpgRAgMMZ6NZ+g096j/CgIz9JU3BPsjhPkDL1zR1c5bcmmAp5doQ
-         x244ynLOqLMTUJMMyiwXFU2AgTlBGrIyUFmc8opC/kf2e2TiJ3vSPW55jepN6BF5AS9x
-         A7TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750504214; x=1751109014;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oCATkS1iFox8++RsOPPrNMNCnqTikPTJEA4op0lJe48=;
-        b=kJCftfyll/pg1PzzfmQnHVt4s3MGpOI5PHRlwyf7T2IqdIVOhoAobPNVPh6+RhR/d9
-         UN4q5/qtp1Z9QfJnCquNhQkn5xYZAdascK9Qeyv0Zg7fEto6hilCpSMvhyq78zIF5pnH
-         MyLCRZQzLRa5ernaFWWhtCXd0+7QjRH//zUqrbc5rwB10IDKU1fNz3HVcIGBKaILHEvH
-         RMQZG0FsDUgwrAnmh45jQWnEKZ8vh8d0GuDfn3xQptwmUTSt64kAhZhXZ3RZfsi+Bfsj
-         T8rLariUJosZDRQZQauCwwIVZ1/3CgbUcm0GvkaSImSglTz293YgF3laJseoTY5AYjC9
-         PqRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV01pxZT8EawnN36q9mOzO/J+2FVKgslGJYZhy9r2M9woUvUIt0OVkTYKPUAHAvN0Quehw27ozXcUgU@vger.kernel.org, AJvYcCXiKRRo1U0fIAZsmSwmjAPUKQ5sAh5XcUGKF/ar8Map4B7OsfDP/skyE9bZ6YxFWqaBWSIIa8yxZa7JKpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2uw6MeXcp7UNoAjD7Z3abHVGE99uHZmCO45g0XvFvcfqDCGuP
-	25uQNra0NaGvDShzhCCzgvCXCXaZvhrDC10ee4CFJD6Tk2drtR8z/WPOe1G8sEQaXGpLOwzPx/U
-	qeVI9EFWiFXGU3QwPdnYWdmFprjskuL4=
-X-Gm-Gg: ASbGncuMQkmGKGWcCo5HcVkRV0i21whhEQkeFRJpNIEA204Z7JU3h9q9EGKFLFDdm1y
-	xfeJTsRLdUBSDdm0aj8X35GHyIrfDr9m5M6EmvtjB3gE1zgVB/Fq3Uv1WIMmDv+DxjI1pdaTEJJ
-	ri7+C7ogFODuoXBKJs5qnGLkMaqMnBMuDcFqjz8OvCCQ==
-X-Google-Smtp-Source: AGHT+IEcRGbY27V9LDU9tTnEdUHT83kyWethAu8wzs4LLENYLbhYvB5hnKQ7sgV1vRFpPAr2Hsu1cGDkxrJ4lWmqN84=
-X-Received: by 2002:a05:6512:3b29:b0:553:399d:58e6 with SMTP id
- 2adb3069b0e04-553e3bf3e68mr2312939e87.31.1750504213974; Sat, 21 Jun 2025
- 04:10:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TC9pDlRG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585FBC4CEEF;
+	Sat, 21 Jun 2025 11:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750504561;
+	bh=AglLGwocXb7aYtZZ84ovAUyXmvMiTYg9wjTzyeUCXEM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TC9pDlRGvXMO3W1b7lZBugdA7ZJ7Ubj7gFCB6UhpvJ5FtLuKbaFRmEbgSxzd/YM24
+	 uaHc5XUvl1KsW1VANmRUdwdU4y2xLvoPn/rdSczYAk/9pHe49xCaFD80SFzE6Xja16
+	 RtkSGjSOlUlhZ9jV6QsHaurMbMS8j75Yim+1ue2TsFTdyHKt2T300xbJVwNNrmUL6S
+	 vZrncN2zgTBinBnylJ8RMKzcjQxyyqZgkLC+PBP9iBkSYxEPrDOBj2TRcdDFAI5D9+
+	 HIWzF5XHdPsPQSU6/vVPcSNL7TBt7bcM088N9XImVAo+qOx8Z5Mq0Xko5o/10OErYh
+	 7F2Dmfhg4acoQ==
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-40aa391ce1aso689578b6e.2;
+        Sat, 21 Jun 2025 04:16:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUGgSI6I972xeiIP77tsWjt2YwJoAwfKjQIpxRdb1u4nYKOeTb4X6rBa9R+rfVTqeLq/Ukunhj2zKZj9QZC4o9BhbQ=@vger.kernel.org, AJvYcCUu/g2Hmf9kYU6l5h5FVL+bbww9FyBMl9eFumaUEfxgHZOLyyD116G3SiX4P2R0e0ZihPBDik5Aavjfj+Xu@vger.kernel.org, AJvYcCW8HfCQ2kNswvFoVrYbdxcCCx2kmlEDoh/K67bfPVox77xFyiK2C/jX89ESMHh6YwkFPyjt2jajkOA=@vger.kernel.org, AJvYcCWPnt5+pkRiTS4whqIdt5Eps7Fg8MG+SpH5lhUioaX82cBLpx2H9+u2Y/2Fcmqp8XuatxjcEyizZdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxODi5s/dPYcyxVgESG2YMa+6J7s3bTttqDMLe4dOdAbwbp45SR
+	NstW+GyUX8PkH9vXXbwKEhpxaaf3mgrev/pp8VP8OG5yVwoaTy0g3wm3+YNmpL1/mhR9cl6v62h
+	ryWmOgt4v4+HYgj7CVBWbORwskOdJYL8=
+X-Google-Smtp-Source: AGHT+IFGueWEojM0Zq5uPTqJZRx+6Q38CSHBAAndFQkQXqugs5N7VGTk2OIYJ+3bbjPqEMxxrjyzt3bDH+zW6yF9EMA=
+X-Received: by 2002:a05:6870:a54d:b0:2c1:62e9:584b with SMTP id
+ 586e51a60fabf-2eeee65ae81mr3508649fac.39.1750504560571; Sat, 21 Jun 2025
+ 04:16:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr> <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
-In-Reply-To: <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Sat, 21 Jun 2025 16:09:57 +0500
-X-Gm-Features: AX0GCFvJVISjqcev-lDUZRK6hgKmzgeZVy_yG5gOpNIHjCrFRLOu9HQsvLYwb18
-Message-ID: <CACzwLxiybz489fCY3+CSbU1=yPR7mKXCbDadK1E-p25onDAGkw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] usb: core: Plug the usb authentication capability
-To: nicolas.bouchinet@oss.cyber.gouv.fr
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Kannappan R <r.kannappan@intel.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Pawel Laszczak <pawell@cadence.com>, Ma Ke <make_ruc2021@163.com>, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>, 
-	Luc Bonnafoux <luc.bonnafoux@oss.cyber.gouv.fr>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org
+References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+ <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
+ <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
+ <20250607140600.76e87ea5@jic23-huawei> <CAJZ5v0jqZ6gYKb85dpR-X5RwFeUBcbbcJ_b-AOe+JypBXod-MA@mail.gmail.com>
+ <486a1110-5336-42fd-82b8-a7b1452bad65@tuxon.dev> <CAJZ5v0hqBm4L2V9aUjB0tmW67eRRCnM7FScgdJQ=ihnpAZuMfA@mail.gmail.com>
+ <4360ee7a-d85a-4fa0-a1d6-d09a3b9d57c0@tuxon.dev> <CAJZ5v0jUGf9QO6h6bcBcTX+nUbDeD0XMhWj1Qb-0qAtZ8EbVsA@mail.gmail.com>
+ <1b83c587-76c2-4fa1-aef8-f94575a3627a@tuxon.dev> <CAJZ5v0jZNX+FCmu_FeRPS47F37AmyAN25+7LJvzbqRdvs-aGcQ@mail.gmail.com>
+ <CAPDyKFq9at+aA+OG__ZHvhc3AELfUOyOakH7a=MGHrbAjzL8OA@mail.gmail.com>
+In-Reply-To: <CAPDyKFq9at+aA+OG__ZHvhc3AELfUOyOakH7a=MGHrbAjzL8OA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 21 Jun 2025 13:15:45 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hi2N9iFy-Dh0mkN3zDBytMFXqxosujbPGO5JxnWhBxmg@mail.gmail.com>
+X-Gm-Features: AX0GCFvoJozWLVAwBLoX9Vrp18nN2uNK09JD8vUmh6r6GiFPTGTEkUEj71DQfGc
+Message-ID: <CAJZ5v0hi2N9iFy-Dh0mkN3zDBytMFXqxosujbPGO5JxnWhBxmg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, gregkh@linuxfoundation.org, 
+	dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
+	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 7:27=E2=80=AFPM <nicolas.bouchinet@oss.cyber.gouv.f=
-r> wrote:
+On Thu, Jun 19, 2025 at 2:21=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
 >
-> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> On Mon, 16 Jun 2025 at 13:47, Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+> >
+> > On Mon, Jun 16, 2025 at 1:37=E2=80=AFPM Claudiu Beznea <claudiu.beznea@=
+tuxon.dev> wrote:
+> > >
+> > >
+> > >
+> > > On 16.06.2025 14:18, Rafael J. Wysocki wrote:
+> > > > On Mon, Jun 16, 2025 at 11:37=E2=80=AFAM Claudiu Beznea
+> > > > <claudiu.beznea@tuxon.dev> wrote:
+> > > >>
+> > > >> Hi, Rafael,
+> > > >>
+> > > >> On 13.06.2025 13:02, Rafael J. Wysocki wrote:
+> > > >>> On Fri, Jun 13, 2025 at 9:39=E2=80=AFAM Claudiu Beznea <claudiu.b=
+eznea@tuxon.dev> wrote:
+> > > >>>>
+> > > >>>> Hi, Rafael,
+> > > >>>>
+> > > >>>> On 09.06.2025 22:59, Rafael J. Wysocki wrote:
+> > > >>>>> On Sat, Jun 7, 2025 at 3:06=E2=80=AFPM Jonathan Cameron <jic23@=
+kernel.org> wrote:
+> > > >>>>>>
+> > > >>>>>> On Fri, 6 Jun 2025 22:01:52 +0200
+> > > >>>>>> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> > > >>>>>>
+> > > >>>>>> Hi Rafael,
+> > > >>>>>>
+> > > >>>>>>> On Fri, Jun 6, 2025 at 8:55=E2=80=AFPM Dmitry Torokhov
+> > > >>>>>>> <dmitry.torokhov@gmail.com> wrote:
+> > > >>>>>>>>
+> > > >>>>>>>> On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki =
+wrote:
+> > > >>>>>>>>> On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.bez=
+nea@tuxon.dev> wrote:
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> The dev_pm_domain_attach() function is typically used in b=
+us code alongside
+> > > >>>>>>>>>> dev_pm_domain_detach(), often following patterns like:
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> static int bus_probe(struct device *_dev)
+> > > >>>>>>>>>> {
+> > > >>>>>>>>>>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> > > >>>>>>>>>>     struct bus_device *dev =3D to_bus_device(_dev);
+> > > >>>>>>>>>>     int ret;
+> > > >>>>>>>>>>
+> > > >>>>>>>>>>     // ...
+> > > >>>>>>>>>>
+> > > >>>>>>>>>>     ret =3D dev_pm_domain_attach(_dev, true);
+> > > >>>>>>>>>>     if (ret)
+> > > >>>>>>>>>>         return ret;
+> > > >>>>>>>>>>
+> > > >>>>>>>>>>     if (drv->probe)
+> > > >>>>>>>>>>         ret =3D drv->probe(dev);
+> > > >>>>>>>>>>
+> > > >>>>>>>>>>     // ...
+> > > >>>>>>>>>> }
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> static void bus_remove(struct device *_dev)
+> > > >>>>>>>>>> {
+> > > >>>>>>>>>>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> > > >>>>>>>>>>     struct bus_device *dev =3D to_bus_device(_dev);
+> > > >>>>>>>>>>
+> > > >>>>>>>>>>     if (drv->remove)
+> > > >>>>>>>>>>         drv->remove(dev);
+> > > >>>>>>>>>>     dev_pm_domain_detach(_dev);
+> > > >>>>>>>>>> }
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> When the driver's probe function uses devres-managed resou=
+rces that depend
+> > > >>>>>>>>>> on the power domain state, those resources are released la=
+ter during
+> > > >>>>>>>>>> device_unbind_cleanup().
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> Releasing devres-managed resources that depend on the powe=
+r domain state
+> > > >>>>>>>>>> after detaching the device from its PM domain can cause fa=
+ilures.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> For example, if the driver uses devm_pm_runtime_enable() i=
+n its probe
+> > > >>>>>>>>>> function, and the device's clocks are managed by the PM do=
+main, then
+> > > >>>>>>>>>> during removal the runtime PM is disabled in device_unbind=
+_cleanup() after
+> > > >>>>>>>>>> the clocks have been removed from the PM domain. It may ha=
+ppen that the
+> > > >>>>>>>>>> devm_pm_runtime_enable() action causes the device to be ru=
+ntime-resumed.
+> > > >>>>>>>>>
+> > > >>>>>>>>> Don't use devm_pm_runtime_enable() then.
+> > > >>>>>>>>
+> > > >>>>>>>> What about other devm_ APIs? Are you suggesting that platfor=
+m drivers
+> > > >>>>>>>> should not be using devm_clk*(), devm_regulator_*(),
+> > > >>>>>>>> devm_request_*_irq() and devm_add_action_or_reset()? Because=
+ again,
+> > > >>>>>>>> dev_pm_domain_detach() that is called by platform bus_remove=
+() may shut
+> > > >>>>>>>> off the device too early, before cleanup code has a chance t=
+o execute
+> > > >>>>>>>> proper cleanup.
+> > > >>>>>>>>
+> > > >>>>>>>> The issue is not limited to runtime PM.
+> > > >>>>>>>>
+> > > >>>>>>>>>
+> > > >>>>>>>>>> If the driver specific runtime PM APIs access registers di=
+rectly, this
+> > > >>>>>>>>>> will lead to accessing device registers without clocks bei=
+ng enabled.
+> > > >>>>>>>>>> Similar issues may occur with other devres actions that ac=
+cess device
+> > > >>>>>>>>>> registers.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> Add devm_pm_domain_attach(). When replacing the dev_pm_dom=
+ain_attach() and
+> > > >>>>>>>>>> dev_pm_domain_detach() in bus probe and bus remove, it ens=
+ures that the
+> > > >>>>>>>>>> device is detached from its PM domain in device_unbind_cle=
+anup(), only
+> > > >>>>>>>>>> after all driver's devres-managed resources have been rele=
+ase.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> For flexibility, the implemented devm_pm_domain_attach() h=
+as 2 state
+> > > >>>>>>>>>> arguments, one for the domain state on attach, one for the=
+ domain state on
+> > > >>>>>>>>>> detach.
+> > > >>>>>>>>>
+> > > >>>>>>>>> dev_pm_domain_attach() is not part driver API and I'm not c=
+onvinced at
+> > > >>>>>>>>
+> > > >>>>>>>> Is the concern that devm_pm_domain_attach() will be [ab]used=
+ by drivers?
+> > > >>>>>>>
+> > > >>>>>>> Yes, among other things.
+> > > >>>>>>
+> > > >>>>>> Maybe naming could make abuse at least obvious to spot? e.g.
+> > > >>>>>> pm_domain_attach_with_devm_release()
+> > > >>>>>
+> > > >>>>> If I'm not mistaken, it is not even necessary to use devres for=
+ this.
+> > > >>>>>
+> > > >>>>> You might as well add a dev_pm_domain_detach() call to
+> > > >>>>> device_unbind_cleanup() after devres_release_all().  There is a=
+ slight
+> > > >>>>> complication related to the second argument of it, but I suppos=
+e that
+> > > >>>>> this can be determined at the attach time and stored in a new d=
+evice
+> > > >>>>> PM flag, or similar.
+> > > >>>>>
+> > > >>>>
+> > > >>>> I looked into this solution. I've tested it for all my failure c=
+ases and
+> > > >>>> went good.
+> > > >>>
+> > > >>> OK
+> > > >>>
+> > > >>>>> Note that dev->pm_domain is expected to be cleared by ->detach(=
+), so
+> > > >>>>> this should not cause the domain to be detached twice in a row =
+from
+> > > >>>>> the same device, but that needs to be double-checked.
+> > > >>>>
+> > > >>>> The genpd_dev_pm_detach() calls genpd_remove_device() ->
+> > > >>>> dev_pm_domain_set(dev, NULL) which sets the dev->pm_domain =3D N=
+ULL. I can't
+> > > >>>> find any other detach function in the current code base.
+> > > >>>
+> > > >>> There is also acpi_dev_pm_detach() which can be somewhat hard to =
+find,
+> > > >>> but it calls dev_pm_domain_set(dev, NULL) either.
+> > > >>>
+> > > >>>> The code I've tested for this solution is this one:
+> > > >>>>
+> > > >>>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > >>>> index b526e0e0f52d..5e9750d007b4 100644
+> > > >>>> --- a/drivers/base/dd.c
+> > > >>>> +++ b/drivers/base/dd.c
+> > > >>>> @@ -25,6 +25,7 @@
+> > > >>>>  #include <linux/kthread.h>
+> > > >>>>  #include <linux/wait.h>
+> > > >>>>  #include <linux/async.h>
+> > > >>>> +#include <linux/pm_domain.h>
+> > > >>>>  #include <linux/pm_runtime.h>
+> > > >>>>  #include <linux/pinctrl/devinfo.h>
+> > > >>>>  #include <linux/slab.h>
+> > > >>>> @@ -552,8 +553,11 @@ static void device_unbind_cleanup(struct de=
+vice *dev)
+> > > >>>>         dev->dma_range_map =3D NULL;
+> > > >>>>         device_set_driver(dev, NULL);
+> > > >>>>         dev_set_drvdata(dev, NULL);
+> > > >>>> -       if (dev->pm_domain && dev->pm_domain->dismiss)
+> > > >>>> -               dev->pm_domain->dismiss(dev);
+> > > >>>> +       if (dev->pm_domain) {
+> > > >>>> +               if (dev->pm_domain->dismiss)
+> > > >>>> +                       dev->pm_domain->dismiss(dev);
+> > > >>>> +               dev_pm_domain_detach(dev, dev->pm_domain->detach=
+_power_off);
+> > > >>>
+> > > >>> I would do the "detach" before the "dismiss" to retain the curren=
+t ordering.
+> > > >>
+> > > >> I applied on my local development branch all your suggestions exce=
+pt this
+> > > >> one because genpd_dev_pm_detach() as well as acpi_dev_pm_detach() =
+set
+> > > >> dev->pm_domain =3D NULL.
+> > > >>
+> > > >> Due to this I would call first ->dismiss() then ->detach(), as ini=
+tially
+> > > >> proposed. Please let me know if you consider it otherwise.
+> > > >
+> > > > This is a matter of adding one more dev->pm_domain check AFAICS, bu=
+t OK.
+> > >
+> > > I don't know all the subtleties around this, my concern with adding o=
+ne
+> > > more check on dev->pm_domain was that the
+> > > dev->pm_domain->dismiss() will never be called if the ->detach() func=
+tion
+> > > will be called before ->dismiss() and it will set dev->pm_domain =3D =
+NULL (as
+> > > it does today (though genpd_dev_pm_detach() and acpi_dev_pm_detach())=
+).
+> > >
+> > > For platform drivers that used to call dev_pm_domain_detach() in plat=
+form
+> > > bus remove function, if I'm not wrong, the dev->pm_domain->dismiss() =
+was
+> > > never called previously. If that is a valid scenario, the code propos=
+ed in
+> > > this thread will change the behavior for devices that have ->dismiss(=
+)
+> > > implemented.
+> >
+> > ->dismiss() and ->detach() are supposed to be mutually exclusive, so
+> > this should not be a problem either way and in practice so far the
+> > only user of ->dismiss() has been acpi_lpss_pm_domain which doesn't do
+> > ->detach() at all.
 >
-> Plugs the usb authentication implementation in the usb stack and more
-> particularly in the usb_parse_configuration function after the BOS has
-> been parsed and the usb authentication capacity has been controlled.
+> May I ask if you know if there remains any real good reasons to keep
+> the ->dismiss() callback around?
 >
-> The authentication bulk is implemented by the usb_authenticate_device
-> function.
->
-> The authorization decision enforcement is done via the authorized field o=
-f
-> the usb_device and the associated authorization and deauthorization funct=
-ions.
-> The usb_device also contains an authenticated field that could be used to=
- track
-> the result of the authentication process and allow for more complex secur=
-ity
-> policy: the user could manually authorize a device that failed the
-> authentication or manually deauthorize a device that was previously
-> authenticated.
->
-> The usb_authenticate_device returns 0 or an error code. If 0 is
-> returned, the authorized and authenticated fields of the usb_device are
-> updated with the result of the authentication.
->
-> Co-developed-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
-> Signed-off-by: Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>
-> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
-> ---
->  drivers/usb/core/config.c | 51 +++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  drivers/usb/core/hub.c    |  6 ++++++
->  drivers/usb/core/usb.c    |  5 +++++
->  include/linux/usb.h       |  2 ++
->  4 files changed, 63 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-> index 13bd4ec4ea5f7a6fef615b6f50b1acb3bbe44ba4..45ee8e93e263c41f1bf4271be=
-4e69ccfcac3f650 100644
-> --- a/drivers/usb/core/config.c
-> +++ b/drivers/usb/core/config.c
-> @@ -14,6 +14,7 @@
->  #include <asm/byteorder.h>
->  #include "usb.h"
->
-> +#include "authent.h"
->
->  #define USB_MAXALTSETTING              128     /* Hard limit */
->
-> @@ -824,7 +825,50 @@ static int usb_parse_configuration(struct usb_device=
- *dev, int cfgidx,
->                 kref_init(&intfc->ref);
->         }
->
-> -       /* FIXME: parse the BOS descriptor */
-> +       /* If device USB version is above 2.0, get BOS descriptor */
-> +       /*
-> +        * Requirement for bcdUSB >=3D 2.10 is defined in USB 3.2 =C2=A79=
-.2.6.6
-> +        * "Devices with a value of at least 0210H in the bcdUSB field of=
- their
-> +        * device descriptor shall support GetDescriptor (BOS Descriptor)=
- requests."
-> +        *
-> +        * To discuss, BOS request could be also sent for bcdUSB >=3D 0x0=
-201
-> +        */
-> +       // Set a default value for authenticated at true in order not to =
-block devices
-> +       // that do not support the authentication
-> +       dev->authenticated =3D 1;
-> +
-> +       if (le16_to_cpu(dev->descriptor.bcdUSB) >=3D 0x0201) {
-> +               pr_notice("bcdUSB >=3D 0x0201\n");
-> +               retval =3D usb_get_bos_descriptor(dev);
-> +               if (!retval) {
-> +                       pr_notice("found BOS\n");
-> +#ifdef CONFIG_USB_AUTHENTICATION
-> +                       if (dev->bos->authent_cap) {
-> +                               /* If authentication cap is present, star=
-t device authent */
-> +                               pr_notice("found Authent BOS\n");
-> +                               retval =3D usb_authenticate_device(dev);
-> +                               if (retval !=3D 0) {
-> +                                       pr_err("failed to authenticate th=
-e device: %d\n",
-> +                                              retval);
-> +                               } else if (!dev->authenticated) {
-> +                                       pr_notice("device has been reject=
-ed\n");
-> +                                       // return early from the configur=
-ation process
-> +                                       return 0;
+> Can't acpi_lpss_pm_domain() convert to use the ->detach() callback
+> instead? Just thinking that it would be easier, but maybe it doesn't
+> work.
 
-Returning 0 after rejecting a device leaves udev half-initialised and still
-linked in usb_bus_type (the hub driver only aborts after this call).
-The next hot-plug may oops on dangling pointers.
-Please consider returning -EPERM instead of 0.
-
-> +                               } else {
-> +                                       pr_notice("device has been author=
-ized\n");
-> +                               }
-> +                       } else {
-> +                               // USB authentication unsupported
-> +                               // Apply security policy on failed device=
-s
-> +                               pr_notice("no authentication capability\n=
-");
-> +                       }
-> +#endif
-> +               } else {
-> +                       // Older USB version, authentication not supporte=
-d
-> +                       // Apply security policy on failed devices
-> +                       pr_notice("device does not have a BOS descriptor\=
-n");
-> +               }
-> +       }
->
->         /* Skip over any Class Specific or Vendor Specific descriptors;
->          * find the first interface descriptor */
-> @@ -1051,6 +1095,7 @@ int usb_get_bos_descriptor(struct usb_device *dev)
->         length =3D bos->bLength;
->         total_len =3D le16_to_cpu(bos->wTotalLength);
->         num =3D bos->bNumDeviceCaps;
-> +
->         kfree(bos);
->         if (total_len < length)
->                 return -EINVAL;
-> @@ -1122,6 +1167,10 @@ int usb_get_bos_descriptor(struct usb_device *dev)
->                         dev->bos->ptm_cap =3D
->                                 (struct usb_ptm_cap_descriptor *)buffer;
->                         break;
-> +               case USB_AUTHENT_CAP_TYPE:
-> +                       dev->bos->authent_cap =3D
-> +                               (struct usb_authent_cap_descriptor *)buff=
-er;
-> +                       break;
->                 default:
->                         break;
->                 }
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 0e1dd6ef60a719f59a22d86caeb20f86991b5b29..753e55155ea34a7739b5f530d=
-ad429534e60842d 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -2640,6 +2640,12 @@ int usb_new_device(struct usb_device *udev)
->         udev->dev.devt =3D MKDEV(USB_DEVICE_MAJOR,
->                         (((udev->bus->busnum-1) * 128) + (udev->devnum-1)=
-));
->
-> +       // TODO: Check the device state, we want to avoid semi-initialize=
-d device to userspace.
-> +       if (!udev->authenticated) {
-> +               // If the device is not authenticated, abort the procedur=
-e
-> +               goto fail;
-> +       }
-> +
->         /* Tell the world! */
->         announce_device(udev);
->
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index 0b4685aad2d50337f3cacb2198c95a68ae8eff86..76847c01d3493e2527992a3bb=
-927422519d9a974 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -46,6 +46,7 @@
->  #include <linux/dma-mapping.h>
->
->  #include "hub.h"
-> +#include "authent_netlink.h"
->
->  const char *usbcore_name =3D "usbcore";
->
-> @@ -1080,6 +1081,10 @@ static int __init usb_init(void)
->         usb_debugfs_init();
->
->         usb_acpi_register();
-> +
-> +       // TODO : check error case
-> +       usb_auth_init_netlink();
-> +
->         retval =3D bus_register(&usb_bus_type);
->         if (retval)
->                 goto bus_register_failed;
-> diff --git a/include/linux/usb.h b/include/linux/usb.h
-> index b46738701f8dc46085f251379873b6a8a008d99d..e9037c8120b43556f8610f9ac=
-b3ad4129e847b98 100644
-> --- a/include/linux/usb.h
-> +++ b/include/linux/usb.h
-> @@ -431,6 +431,8 @@ struct usb_host_bos {
->         struct usb_ssp_cap_descriptor   *ssp_cap;
->         struct usb_ss_container_id_descriptor   *ss_id;
->         struct usb_ptm_cap_descriptor   *ptm_cap;
-> +       /* Authentication capability */
-> +       struct usb_authent_cap_descriptor *authent_cap;
->  };
->
->  int __usb_get_extra_descriptor(char *buffer, unsigned size,
->
-> --
-> 2.50.0
->
+It will, but let's just not make too many changes in one go.
