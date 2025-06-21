@@ -1,115 +1,129 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5E920C49E
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411EC2063D2
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 16:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522201; cv=none; b=QaA89EgpKcWJJqlBpZmPRRkzroP824Q1k31NzHSRR+VzuCmCJ/5bBYAjP5V2fVdvvktCNzQCVliE9TkAV67gvoSswIPhLtwhw+C05L0WaR9LqEdIwSIOGP1LhspQK7eEm3p++j0YhD5+QX579Ed2Tu3N/4AqojS+uKAI/L0Z93I=
+	t=1750522211; cv=none; b=i8hp1/2pfKWZY4cZIfF5kZG3VHEYwheRmZHCZXP7nMXBYOdTs+D9A/aNujrJNXhlrBVl4B9AbzFZIMnh8ukWnQA9xmuP0vbEcA66cdVJmnEhf592UBb8M8uzdEaXqAeKffuqwBr/PiCsmaNCjGVJnJXnHDLu9QceJg+e4Q5SUd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522201; c=relaxed/simple;
-	bh=hZVmROOzt5gmR/oCOgZdaBilYrkNqyZT7daFih7mQeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4e3tdA4ihEOqBh59XLi7OwYg6aekFNoXLxyef9G8L87x4HiQOjvmA+IBuOoIhk3k+W6ytt2GImryuODr0z2nee4jsY8YnWbxG8jBrD1tRzLvs7/LwOCtg5u5NU/os92RP42NvP1yvGunJc8kT0c1HzIDXUZTGJo+vqqxAmK/po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fIDCT9Qa; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750522211; c=relaxed/simple;
+	bh=SDTl3xy6j3Dqzdg8SG0MCWZcS3XIFlPcXcqe56Gq4JU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iarApAAj4pMjPWN8dVbPe4zmdhtdgQQzBsCQ7NuwxYww+Sa1Xg1oeQb7n9zl7+eHhymhKxkwt03g0C5sZc98ZOJWoqoVacS+pgydW2puGBFrfRxR2YI6wp80k0Ik8j1IXV+0OSx0lWFyMpRQQzPdyHQzZREMYjZ8LLnwZY4YpVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mcaVUkos; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fIDCT9Qa"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so469667566b.1
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1750522197; x=1751126997; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bR9CkFS1o49k2KhvLWDphFNGNkDZGgw2MDOOVeB8Wlk=;
-        b=fIDCT9QaxOIFNEU7EpKQrFG1R+u//wjnook0ViX06hlDuFwKz8EXL/bAQQaWRle6Gw
-         wRRUVJUe5tPZ2rmssPUKR3ShJdGvcFIJnw3tgSZApFUFRx2/p4ulzgcMvfQo6Xscf0Rg
-         ULy1fA3A3ZokRE9WO27h1E7y7NLnqb+eNswNI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750522197; x=1751126997;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bR9CkFS1o49k2KhvLWDphFNGNkDZGgw2MDOOVeB8Wlk=;
-        b=GXxOCK2pjmYy7JC3Ij67E9MB8ShjpsX6jmriKJyUeEO5ImKROZaHuNpUZ3YBt0sJES
-         hrMOS5CrZbCeH3L/uPBM//tzT05J7nNMcxVtjyiTiEj4euX8J7l0+7ANdWOJ529Fr1sZ
-         brG759ODTWjlbGJYaBkaFNJZl31ZRU9FI5Xfr2GsmPXO73nz3TtoxNjZYoSgRaBDnTGf
-         FZa8XLAv2eoycU8ClFipEfUN2ghGc6Fq0UpNHcZWRxbWII64PzgkQDzDoyZphaK6k6cY
-         lqV7A5sxxViUuCwtd609JacQn1I+Ws1r29fPo9LUdwxa6gvmjHa/f4is6DQdeNjahO9q
-         0MSA==
-X-Gm-Message-State: AOJu0YwdU68id6oICUuPh2fLyk3tkNL3HipzMltX0YKnTYnQRmeYcqzh
-	kU6bjo1vzFy3RMfMt2yZLsHefM9V92z1mg2VE7SEMJwg/1RnYVSnZZLX3iFhK0vRitGerIqmyC0
-	09+jI7tU=
-X-Gm-Gg: ASbGncsMFfxhUwBtNqH74a0vriamkJm31H119D790sXQxt5BzVSXrfsNf3UJO1LuIhw
-	iRmo1SXrc7Q8k4ECQ3WfUOV8+gUfrzO94snFo8GZIMi+LSG2DYdU+0z/7c2KkXg4WWb31hhr5WM
-	UeRfrvuO68h/MYUKQs4H9zMIU+ToCD/gu17s145gUkk0H0d2j2W+KuHD4K62Cw8uHb9SJ9+mSnb
-	Avf00oIexTjOfYNsRBM7oKnbyGm4epigaeS2F2gj1Y/TuoXFcWUoqAy+2fnoI62sIKDcW6HHrSx
-	H5NzwiZ6z40lqfquHl73UN9+a0H4dhuDM/8Ad8i+P+LzAaJcJNQ24YtHA73WRtpe+uK7rjuyapU
-	SyL8jzVZwKBmqOA0OLeGk4nJGo1g+aHxqjTWW
-X-Google-Smtp-Source: AGHT+IF7j8OROhKGqifUY1Vmr7w8F1EaDnL+6Aa/0V4OlCsioYpwpZp8BnQNw58iSHyU+9gwfdCpwA==
-X-Received: by 2002:a17:907:3e87:b0:ade:32fa:7394 with SMTP id a640c23a62f3a-ae057b6c123mr572769766b.35.1750522197252;
-        Sat, 21 Jun 2025 09:09:57 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054083c95sm394055966b.91.2025.06.21.09.09.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Jun 2025 09:09:56 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6077d0b9bbeso4520065a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:09:56 -0700 (PDT)
-X-Received: by 2002:a05:6402:2550:b0:607:116e:108d with SMTP id
- 4fb4d7f45d1cf-60a1d1676dfmr5557990a12.21.1750522195823; Sat, 21 Jun 2025
- 09:09:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mcaVUkos"
+Message-ID: <cd5670d7-b2ba-487b-94c4-bb781a9d0bf1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750522195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZbR8+eD0l+HPJUYQuSGTTOhQsUZE6eRuwbpXbCLLz4Y=;
+	b=mcaVUkosaNLFM1EVr+vpueBjIr/s0OJO6U4bCFy79sMrluP7ZUzGWvPWBFLMezhXruI/uH
+	UxcvrKWSs5PpyU0Ha6csTluxZFKO6VNRrAv16n3UwxzDmfmwSk9bU8d/wZADVwd4mRHud0
+	40uc6jW7FjlVRRI0pihXGr8t6WMjshU=
+Date: Sat, 21 Jun 2025 09:09:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAH2r5mtz1-JLM8PEZngKOd4bwESBLU+bw8T=ap5aMmJ6LOaNiA@mail.gmail.com>
- <CAHk-=wjZXRvTnAwO-EcheuHkjOmq2YMua9YC3sbaXYBQ+FC8og@mail.gmail.com> <CAH2r5msQwv4LuaF=kmmy_n=z5paCyat2vTZowOB46WeJxpwhiQ@mail.gmail.com>
-In-Reply-To: <CAH2r5msQwv4LuaF=kmmy_n=z5paCyat2vTZowOB46WeJxpwhiQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 21 Jun 2025 09:09:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgReqMNHT8Y8W0jdbnhZBqsY3Omga8wYQJ-yVRumzSDwA@mail.gmail.com>
-X-Gm-Features: AX0GCFshO2Qs5pTCKhyWhLvRvDT1-MxhzQG3NIDdJZYSnFdFeiznfZUuFLm6-W0
-Message-ID: <CAHk-=wgReqMNHT8Y8W0jdbnhZBqsY3Omga8wYQJ-yVRumzSDwA@mail.gmail.com>
-Subject: Re: [GIT PULL] smb3 client fixes
-To: Steve French <smfrench@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] RDMA/siw: work around clang stack size warning
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+ Bernard Metzler <bmt@zurich.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>, Showrya M N <showrya@chelsio.com>,
+ Eric Biggers <ebiggers@google.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20250620114332.4072051-1-arnd@kernel.org>
+ <2d04fee6-5d95-4c50-b2b1-ee67f42932e2@linux.dev>
+ <ca2eaa50-c3ed-491d-ab38-65a7c1dc2820@app.fastmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <ca2eaa50-c3ed-491d-ab38-65a7c1dc2820@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, 21 Jun 2025 at 09:00, Steve French <smfrench@gmail.com> wrote:
+
+在 2025/6/21 1:43, Arnd Bergmann 写道:
+> On Sat, Jun 21, 2025, at 06:12, Zhu Yanjun wrote:
+>> 在 2025/6/20 4:43, Arnd Bergmann 写道:
+>>
+>> Because the array of kvec structures in siw_tx_hdt consumes the majority
+>> of the stack space, would it be possible to use kmalloc or a similar
+>> dynamic memory allocation function instead of allocating this memory on
+>> the stack?
+>>
+>> Would using kmalloc (or an equivalent) also effectively resolve the
+>> stack usage issue?
+> Yes, moving the allocation somewhere else (kmalloc, static variable,
+> per siw_sge, per siw_wqe) would avoid the high stack usage effectively,
+> it's a tradeoff and I picked the solution that made the most sense
+> to me, but there is a good chance another alternative is better here.
 >
-> I can remove that and resend, handling special files properly can be
-> important (and there is a much more important patch being reviewed for
-> fixing some symlink corner cases) but SMB1 is much lower priority.
+> The main differences are:
+>
+> - kmalloc() adds runtime overhead that may be expensive in a
+>    fast path
+>
+> - kmalloc() can fail, which adds complexity from error handling.
+>    Note that small allocations with GFP_KERNEL do not fail but instead
+>    wait for memory to become available
+>
+> - If kmalloc() runs into a low-memory situation, it can go through
+>    writeback, which in turn can use more stack space than the
+>    on-stack allocation it was replacing
+>
+> - static allocations bloat the kernel image and require locking that
+>    may be expensive
+>
+> - per-object preallocations can be wasteful if a lot of objects
+>    are created, and can still require locking if the object is used
+>    from multiple threads
+>
+> As I wrote, I mainly picked the 'noinline_for_stack' approach
+> here since that is how the code is known to work with gcc, so
+> there is little risk of my patch causing problems.
+>
+> Moving the both the kvec array and the page array into
+> the siw_wqe is likely better here, I'm not familiar enough
+> with the driver to tell whether that is an overall improvement.Th
+Thank you very much. There are several possible solutions to this issue, 
+and the appropriate one depends on the specific scenario. For the 
+problem in siw, the noinline_for_stack approach has been selected. In my 
+opinion, this appears to be more of a workaround than a true fix. While 
+it does mitigate the issue, the underlying problem in siw still remains.
 
-So honestly, if you had explained it as such, I would have taken a
-look and gone "Ok, I don't care, this area hasn't been a problem".
+That said, now that we have a clearer understanding of the problem and 
+its root cause through discussions and extended analysis, a more robust 
+and long-term solution should eventually be proposed.
 
-But instead, it was sold as fixes, and I went "that looks odd". So I
-had to go explore, and decided that it looked decidedly like new
-development.
+Thanks,
 
-End result: now there is no way in hell that I'm pulling that thing.
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
 
-Trying to sneak things in is not ok. Claiming things are "fixes" when
-they aren't, and me having to figure that out just makes me unhappy.
+Zhu Yanjun
 
-Just be honest about these things.
+>
+> A related change I would like to see is to remove the
+> kmap_local_page() in this driver and instead make it
+> depend on 64BIT or !CONFIG_HIGHMEM, to slowly chip away
+> at the code that is highmem aware throughout the kernel.
+> I'm not sure if that that would also help drop the array
+> here.
+>
+>       Arnd
 
-Sure, I don't always check, because smb hasn't been a problem, and
-maybe you've done this hundreds of times before.
+-- 
+Best Regards,
+Yanjun.Zhu
 
-But that's also exactly the problem: now I feel like I can't trust
-your explanations because they seem to be whitewashing what is
-actually going on.
-
-So instead of a "let it go", it's now a "I guess I will have to waste
-time on these things because I feel like I have to double-check what
-Steve sends me".
-
-Which is what neither of us wants, but here we are.
-
-            Linus
