@@ -1,244 +1,177 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB56B1A2632;
-	Sat, 21 Jun 2025 09:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750499427; cv=fail; b=t7fsieizuOUQpXMmvrpVJpoh4y2H95eRoHQAtOBqQPoJr1BcO2Nn8sddNv171aFo93eL+2uGtH68ddaLf820fZvrIyCDHQU4bG/XInEPpWUYcnM6rutQDjv2KgKGSuS5oM/ElyF8o8yJAF4TILa94DzO8E+HHrJqtGCTaQ3bneI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750499427; c=relaxed/simple;
-	bh=d3oH/jm0hVley4rBqx0hTJxM90/Au7C4bLJz2I2Gozw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KDXtHTjSwUiZkGhPzLSNOvC9//uz4bZfEuXJclq4bg7C3ur3/P/NC69bbqnKb7Jgw9XrBCj72G/QthlPvsmG36IdQT7CTgY81MplFFWjWFvuwYoJd28xQSqkPoK2b6w8kBng8EutcCANKCeHqNKzBimY6QWmPbBpYaG1A0kdQj0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SBMQWhnp; arc=fail smtp.client-ip=40.107.237.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB991A2632
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 09:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750499485; cv=none; b=KVX2nLsoVsNdMH3NRMazFQjKWZ+rv596oJ9m6MHvr714jAA88UsQT2XacpmYb3btZxyC7l2F3J5ccrPNLJkUDTKu1Tgwx/U2Xa6au7O3rOs3AmvEnj4kuvOjQTOk9eD78fadKMR9owcT/MIYmt5MnZPyJ/Ut84Cw8WmqHlTVXrY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750499485; c=relaxed/simple;
+	bh=3ULX4pNN1yhGvSmInOOQo2ojV0oALaYBxzGB5RB/3pk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hCBW/NONsWQKAFdE8mej5t4amhSkpdhAydr898YTW3Bom7fDQKkjNqPL2bXzgy4KWtj/d5qSJ3bSbtMuMdVhV96wQ+1PJNoDRURLHb/lshLvz1+mKaFPhz5Y8+mnidIgZvWuMci1EOPCw1s7t7Kz0g3tQgJUWMFaMJrfIcHMneM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xdpbyMSs; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SBMQWhnp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yc8404Jq/l6nRSZRj7R8FAACFcX/W2QAAKIT/uuMD49mvSZucZPS5cFMbhAjyh0d35PsJT55yC+c0r/oPyTa7QT6E89T/np42sfdIlMUNe/awvxYJCnow5032rfzcZxH4MlkXWnZXpqpRRq71hxzkcGfU6tg37E2YZLJrdySDvLKp7fWq+TaM3jCFw2H3C/UyL7kDRzYaBTy8pkQQk+R4g676cF5Wansv+33Y3MLs60YxJWFC+QwOXOQw32/h7cc2GG/hR5IxtvFR59br+ML7dcYR72ncSybOSYFRQjHskXjih1wl29P13MwOGj6DUZ7e9xGGjD2fThXvm2M0f12Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+aiKXv+BWPK812kC9y//HntNm4rrxvyo6Lw9cyPny2Q=;
- b=Jx0sC2A0qNR7q/nEjBxlfilo90AFhQLz+1N2qzOMcr1Qhoum6fkTZ7CrpuE7/ixCR24KVp/Pz2t+VFPZAyrD4UDsAYMkqkPIjJitCLw5iOCTfOjjnuRTuUb81urlfMzR0Q8G3QhQ4oOod3cY8qT6kv0zVheYT70Oh4bzkPYSDKUszWfWpPsaNVJA6IwJrxZHIc3Ewg+mX4+YZ/Wn3TZfO3KHkqf2LS/yYFXAXwe0oWJ70AWNV5y04RZ6dDilFWiNPlCvBCOq2SnS5fTXSso8KXm/EFNEasd/7HrihPlRRL2f17WasC7VYg0miaRQqoirA0Ywh+YXRkpSu7i+ZBsXJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+aiKXv+BWPK812kC9y//HntNm4rrxvyo6Lw9cyPny2Q=;
- b=SBMQWhnpYFFqye8SS5BMxAeljstkMWplZLG04orRp5fffU+Zhpg87/RZyz5foj5WGbsgQ7xvp8/hadSBW1HP/CcFF/mB4SSb45c3I+Ux9wUFnPvQRYkNVp/6ymg9Zlmprtt6DPu5Jq05B9DEp0Qnxe9wCqt0DzRnkBN4TsxoIJU=
-Received: from SJ0PR03CA0367.namprd03.prod.outlook.com (2603:10b6:a03:3a1::12)
- by BL3PR12MB6643.namprd12.prod.outlook.com (2603:10b6:208:38f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Sat, 21 Jun
- 2025 09:50:20 +0000
-Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::18) by SJ0PR03CA0367.outlook.office365.com
- (2603:10b6:a03:3a1::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.27 via Frontend Transport; Sat,
- 21 Jun 2025 09:50:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8857.21 via Frontend Transport; Sat, 21 Jun 2025 09:50:20 +0000
-Received: from vijendar-linux.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 21 Jun
- 2025 04:50:16 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
-	<tiwai@suse.com>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <venkataprasad.potturu@amd.com>,
-	<Syed.SabaKareem@amd.com>, <linux-sound@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Subject: [PATCH] ASoC: amd: ps: fix for soundwire failures during hibernation exit sequence
-Date: Sat, 21 Jun 2025 15:17:34 +0530
-Message-ID: <20250621095002.1336167-1-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xdpbyMSs"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso4525a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 02:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750499482; x=1751104282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RXiTK9ai0RMYw2I7MTiCd/MyYR0qzc/Wl4Xxa7/KqEI=;
+        b=xdpbyMSsLicNk/eGoapOXUF/e3hn56wpZBDFCpcHHzEM0UeTLKVoeqRiQpLa3r2E4G
+         8oSun1XGF5WmmmKe7zrqHzmGmfXODQT8175EEkAd8QMqZiwFOo/tMS7oDsF0Sq/7F960
+         LHdyBijK1B7orRZIFAkeiJpn2KWXvaiG1B3vi4UusBzBM3zmMjwrrsl23lNCtkytf7jp
+         hvtd7/zV0AXF8Wc1Px7NoXtWHm4UEsgWyXHxUpOwa2Z1bg1iY3JJHb+cxgFvErG+mPXI
+         L5lzOiIw9vIEFOWv8WQ0MGGfiDCM7NP7JVujeLJz08gHR6WzQM6sCrPjn2U3bkUAVdFB
+         aazA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750499482; x=1751104282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RXiTK9ai0RMYw2I7MTiCd/MyYR0qzc/Wl4Xxa7/KqEI=;
+        b=DTj7/bK3PCeX2RxIIQ8estY9sD5a9KwEIcv06h4QL1EIQxTtQp+XcxgflblG5aNOlw
+         br78QkFSpl8BDq+jqM6rgomw9c65aWe8gJgtcg/AoHkT4DA9OljHmLEKtZ7gv4GvTMYb
+         G3kxFHdnOCpqsmio75zNBSGWq3sSHwpwWX25MaDFoejwJ1JScae2jWOixqZegyNH0QTz
+         6e6+BIulHLyIX2sGZssdbRqtHFK79+cjBngB99I+yRYEaY6NR3tickXzssX5m86mWtFi
+         14otlLfaVjd0rxi8oUw6nqCHTxS6q17csG06QY0FAoaM3JPPUxzfwc16acYwwOARBXu5
+         uQ+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXX0gFLdToodISjfXb0yc6TnTDVH/YEPggcVcP9HT3z4+cuHtmLZVa82pIFALWGipd+n2EoKbgp8FIJw3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIvUf+st2M2RvIUxOnF891BORYQTo/B0fFvDF9p/pgjlBVoBnT
+	nyI1abV8o3aQAiqXkEfqP9SQEOCnB5bhf8Y7tbVWi/NNWeY9tDNmnhGSVWm0wxvBTl2lGLMlgZW
+	slxrgQ4XS4EadZ77ERu7xFXZ7RR25mymYrwV1NLsE
+X-Gm-Gg: ASbGnctuHf+qfQHoHGcC2cpwNkv8IFT+21e4TUe8WOdWQU/TdnEzi+zZjbjeujYgili
+	K3ovqyWaaKCgixb3ZwcDXrXm3F7agBjKp7M/xcRZHkxBWDQwEhx9uogrEoiTfsa9Q1iz6mwEgo7
+	5SqCH9UH8nPNvuFv8KUu5packm11xIhx28klfkaXzKiQ==
+X-Google-Smtp-Source: AGHT+IGldXRRyGclzWs2ch/3ldmLdzSY+pLtWdYwUnObWuiqLlq1UyJityOItEmN8ekOKN884+J4tIcOemMnNMFs7c0=
+X-Received: by 2002:a05:6402:1514:b0:609:b4b1:514b with SMTP id
+ 4fb4d7f45d1cf-60b91dee24dmr36620a12.3.1750499481874; Sat, 21 Jun 2025
+ 02:51:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|BL3PR12MB6643:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85143ffb-33fe-47c5-2b71-08ddb0a9090a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6p5xWJ5h8oQfl1o3wwo6ssYA2k7n0g1tm7eJZKGmbHyQOzSzeqeKzpU/iyja?=
- =?us-ascii?Q?F37+492QBRgE7z7S5w1QNWMfFy601TN0A/QtZUSW76y5i+0G5zx++Ls+Sy2t?=
- =?us-ascii?Q?p6bkf3De1R9XNI0TTFmBhYLGmm1m1YEnITOhCCC//kyIT6vL+HGD1hHzB3jK?=
- =?us-ascii?Q?NnNxNPFjRZaHe0PUMVmbi3H5EPQX30/Nk+sRhXx1pQQAhKaBCT51HEZfBnJR?=
- =?us-ascii?Q?aKwa9XkKY7U3yKUYdmpOqpVkuvSBqKVzb3m5rcKGwkYGuT9/g9Sud5i9zB6T?=
- =?us-ascii?Q?j60/M3HMn7crfFhwithS9SccuScY7m6eOpoac2gGK5vcG6QRGqxTmbosYVkX?=
- =?us-ascii?Q?YSTU6D2njjophywWU/kpiHF6mQEmJRDjFRUG3CnaclHOS/rDtaMr1bZ/3l3a?=
- =?us-ascii?Q?csmbafei5Vyhj7/0aAg3ToUTUN8/+OGETldggfBoRWDLhemaiw24KJxekVf1?=
- =?us-ascii?Q?iOSK4pcmIXdASk0Ac/o4HXT7SbQeD8dLbHgf7ZfRxCIT8wMeKxpnuc/eyqhb?=
- =?us-ascii?Q?zF46T7UQ5JVdzrA0hW6PhWSipWD8c2Acn8mJPffF/DFQANqLzXFPFNdfyfF9?=
- =?us-ascii?Q?tTsknV5wFIhyyJMXF5jmiVirD7VQxJycVYe8NdniZeJnb50kEpzqU4oFDRCM?=
- =?us-ascii?Q?hwVfGZQrCN84GleE814efQyhoNfG+gI9iAfDNF2ouB2BWVMbD1BTA6U6cMqJ?=
- =?us-ascii?Q?6262RaPvIRCyK7br5iqMV6pEhPyxpzHTSz4MKSFLyz3Wl4YXKOTpNNPILesa?=
- =?us-ascii?Q?wN5YzHfaPdJpEuKBiW+tOVYl/8I0wSDALdQt+cStzjVHbQzzFDm5Kqsiru83?=
- =?us-ascii?Q?aqp/ELy07+bUiLELfKf609fgZ+RuafumiRRzCFN8Cyy50QbqIsRRrobZaRjT?=
- =?us-ascii?Q?R1VheFFb3ok1yyS8z1EXo8OkMAqVamCOpelGC5lQFaaS6+GGNTWPNiXNm+3I?=
- =?us-ascii?Q?A3NR30jBPVxbryo1qrC1XDbEYEbeUg0VYPZr1QPXx9Eid5gRFN0jIPVJPLXD?=
- =?us-ascii?Q?/xnbzEGkpjjCPY9sY0IB8pXhUGtpayC39x24//PJ16uB6BoCaWZ0U9vwoeoz?=
- =?us-ascii?Q?/yrQllcKfud6Pdh8ro+4JSM6VYSH7aQw0eWfLSUlhJeOl7bTc9fYBXVeYdG/?=
- =?us-ascii?Q?fTO8n5KFX9gn81SEg/eMoubfwtvF0TmxRTADcRxKR9s+g40eHYBWJXYZ+7di?=
- =?us-ascii?Q?B9cEB/EuuIH2tSjvfpcVQsokPrOMCv+DUA78Ilu6T545UkSxMfrFEDEBclYd?=
- =?us-ascii?Q?HeOUp+Ddjx+cN2tCy3KwZAoO0QaHFmvf/Xg4ZYivtKH2N9m7ywgwWyllVDzn?=
- =?us-ascii?Q?fZ3yPij+m0rMO6SGd7fDx4RtNaHsuOE0rOf1xyGFJNRdD5QPz8hMx5wtgfqq?=
- =?us-ascii?Q?NahOk/sYzYHyreSPQHQS9bckb/LA5zZ4wM4zZMA+IS9LMnTZUDkYi/4SPm+v?=
- =?us-ascii?Q?Bren9QzRIgxcBuRpqrYYnjBV+uWWRhMzb3WjZSX+cAodJKP4Q1X4q0E33IMe?=
- =?us-ascii?Q?yF65wNjc5+1DKwewcJb1ou3tQUyl6bFjkiAo?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2025 09:50:20.2763
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85143ffb-33fe-47c5-2b71-08ddb0a9090a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002317.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6643
+References: <20250610214140.2775339-1-mclapinski@google.com> <CAMj1kXErKwmiM5AiGOCE5D39U+3o_MXz5vqJmE5pkjQV308d9w@mail.gmail.com>
+In-Reply-To: <CAMj1kXErKwmiM5AiGOCE5D39U+3o_MXz5vqJmE5pkjQV308d9w@mail.gmail.com>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Sat, 21 Jun 2025 11:51:10 +0200
+X-Gm-Features: Ac12FXzFNlYK9kPHV2cPPfeGTHkBGZk61mIh-96UkeYfbMpEavNzS6zsw9pKyms
+Message-ID: <CAAi7L5dmAYJoB0BfKvoT0iKOeWuc5hLqFPBPQr99TkdEB1dtHg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86/boot/compressed: Fix avoiding memmap in physical KASLR
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-During the hibernate entry sequence, ACP registers will be reset to
-default values and acp ip will be completely powered off including acp
-SoundWire pads. During resume sequence, if acp SoundWire pad keeper enable
-register is not restored along with pad pulldown control register value,
-then SoundWire manager links won't be powered on correctly results in
-peripheral register access failures and completely audio function is
-broken.
+Hi Ard,
 
-Add code to store the acp SoundWire pad keeper enable register and acp pad
-pulldown ctrl register values before entering into suspend state and
-restore the register values during resume sequence based on condition check
-for acp SoundWire pad keeper enable register for ACP6.3, ACP7.0 & ACP7.1
-platforms.
+On Sat, Jun 21, 2025 at 10:19=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
+rote:
+>
+> Hi Michal,
+>
+> On Tue, 10 Jun 2025 at 23:42, Michal Clapinski <mclapinski@google.com> wr=
+ote:
+> >
+> > The intent of the code was to cancel KASLR if there are more than 4
+> > memmap args. Unfortunately, it was only doing that if the memmap args
+> > were comma delimited, not if they were entirely separate.
+> > This change fixes it.
+> >
+> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> > ---
+> > I would like KASLR to support more than 4 memmap args. Do you think
+> > I can just increase the MAX_MEMMAP_REGIONS or should I implement
+> > support for the general case?
+> >
+> >  arch/x86/boot/compressed/kaslr.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compresse=
+d/kaslr.c
+> > index f03d59ea6e40..4aa9c9781ca7 100644
+> > --- a/arch/x86/boot/compressed/kaslr.c
+> > +++ b/arch/x86/boot/compressed/kaslr.c
+> > @@ -162,9 +162,6 @@ static void mem_avoid_memmap(char *str)
+> >  {
+> >         static int i;
+> >
+> > -       if (i >=3D MAX_MEMMAP_REGIONS)
+> > -               return;
+> > -
+>
+> It isn't obvious at all why simply dropping this condition is fine.
+> Could you elaborate?
 
-Fixes: 491628388005 ("ASoC: amd: ps: add callback functions for acp pci driver pm ops")
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/ps/acp63.h     |  5 +++++
- sound/soc/amd/ps/ps-common.c | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+)
+Of course. Let's look at the whole function without my change:
 
-diff --git a/sound/soc/amd/ps/acp63.h b/sound/soc/amd/ps/acp63.h
-index 85feae45c44c..babf2fa7ea27 100644
---- a/sound/soc/amd/ps/acp63.h
-+++ b/sound/soc/amd/ps/acp63.h
-@@ -82,6 +82,7 @@
- #define ACP63_SDW0_DMA_MAX_STREAMS	6
- #define ACP63_SDW1_DMA_MAX_STREAMS	2
- #define ACP63_P1_AUDIO_TX_THRESHOLD	6
-+#define ACP_SW_PAD_KEEPER_EN		0x0001454
- 
- /*
-  * Below entries describes SDW0 instance DMA stream id and DMA irq bit mapping
-@@ -334,6 +335,8 @@ struct acp_hw_ops {
-  * @addr: pci ioremap address
-  * @reg_range: ACP reigister range
-  * @acp_rev: ACP PCI revision id
-+ * @acp_sw_pad_keeper_en: store acp SoundWire pad keeper enable register value
-+ * @acp_pad_pulldown_ctrl: store acp pad pulldown control register value
-  * @acp63_sdw0-dma_intr_stat: DMA interrupt status array for ACP6.3 platform SoundWire
-  * manager-SW0 instance
-  * @acp63_sdw_dma_intr_stat: DMA interrupt status array for ACP6.3 platform SoundWire
-@@ -367,6 +370,8 @@ struct acp63_dev_data {
- 	u32 addr;
- 	u32 reg_range;
- 	u32 acp_rev;
-+	u32 acp_sw_pad_keeper_en;
-+	u32 acp_pad_pulldown_ctrl;
- 	u16 acp63_sdw0_dma_intr_stat[ACP63_SDW0_DMA_MAX_STREAMS];
- 	u16 acp63_sdw1_dma_intr_stat[ACP63_SDW1_DMA_MAX_STREAMS];
- 	u16 acp70_sdw0_dma_intr_stat[ACP70_SDW0_DMA_MAX_STREAMS];
-diff --git a/sound/soc/amd/ps/ps-common.c b/sound/soc/amd/ps/ps-common.c
-index 1c89fb5fe1da..f18d2a0d83aa 100644
---- a/sound/soc/amd/ps/ps-common.c
-+++ b/sound/soc/amd/ps/ps-common.c
-@@ -160,6 +160,8 @@ static int __maybe_unused snd_acp63_suspend(struct device *dev)
- 
- 	adata = dev_get_drvdata(dev);
- 	if (adata->is_sdw_dev) {
-+		adata->acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
-+		adata->acp_pad_pulldown_ctrl = readl(adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
- 		adata->sdw_en_stat = check_acp_sdw_enable_status(adata);
- 		if (adata->sdw_en_stat) {
- 			writel(1, adata->acp63_base + ACP_ZSC_DSP_CTRL);
-@@ -197,6 +199,7 @@ static int __maybe_unused snd_acp63_runtime_resume(struct device *dev)
- static int __maybe_unused snd_acp63_resume(struct device *dev)
- {
- 	struct acp63_dev_data *adata;
-+	u32 acp_sw_pad_keeper_en;
- 	int ret;
- 
- 	adata = dev_get_drvdata(dev);
-@@ -209,6 +212,12 @@ static int __maybe_unused snd_acp63_resume(struct device *dev)
- 	if (ret)
- 		dev_err(dev, "ACP init failed\n");
- 
-+	acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
-+	dev_dbg(dev, "ACP_SW_PAD_KEEPER_EN:0x%x\n", acp_sw_pad_keeper_en);
-+	if (!acp_sw_pad_keeper_en) {
-+		writel(adata->acp_sw_pad_keeper_en, adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
-+		writel(adata->acp_pad_pulldown_ctrl, adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
-+	}
- 	return ret;
- }
- 
-@@ -408,6 +417,8 @@ static int __maybe_unused snd_acp70_suspend(struct device *dev)
- 
- 	adata = dev_get_drvdata(dev);
- 	if (adata->is_sdw_dev) {
-+		adata->acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW0_PAD_KEEPER_EN);
-+		adata->acp_pad_pulldown_ctrl = readl(adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
- 		adata->sdw_en_stat = check_acp_sdw_enable_status(adata);
- 		if (adata->sdw_en_stat) {
- 			writel(1, adata->acp63_base + ACP_ZSC_DSP_CTRL);
-@@ -445,6 +456,7 @@ static int __maybe_unused snd_acp70_runtime_resume(struct device *dev)
- static int __maybe_unused snd_acp70_resume(struct device *dev)
- {
- 	struct acp63_dev_data *adata;
-+	u32 acp_sw_pad_keeper_en;
- 	int ret;
- 
- 	adata = dev_get_drvdata(dev);
-@@ -459,6 +471,12 @@ static int __maybe_unused snd_acp70_resume(struct device *dev)
- 	if (ret)
- 		dev_err(dev, "ACP init failed\n");
- 
-+	acp_sw_pad_keeper_en = readl(adata->acp63_base + ACP_SW_PAD_KEEPER_EN);
-+	dev_dbg(dev, "ACP_SW_PAD_KEEPER_EN:0x%x\n", acp_sw_pad_keeper_en);
-+	if (!acp_sw_pad_keeper_en) {
-+		writel(adata->acp_sw_pad_keeper_en, adata->acp63_base + ACP_SW0_PAD_KEEPER_EN);
-+		writel(adata->acp_pad_pulldown_ctrl, adata->acp63_base + ACP_PAD_PULLDOWN_CTRL);
-+	}
- 	return ret;
- }
- 
--- 
-2.45.2
+static void mem_avoid_memmap(char *str)
+{
+        static int i;
 
+        if (i >=3D MAX_MEMMAP_REGIONS)
+                return;
+
+        while (str && (i < MAX_MEMMAP_REGIONS)) {
+                int rc;
+                u64 start, size;
+                char *k =3D strchr(str, ',');
+
+                if (k)
+                        *k++ =3D 0;
+
+                rc =3D parse_memmap(str, &start, &size);
+                if (rc < 0)
+                        break;
+                str =3D k;
+
+                if (start =3D=3D 0) {
+                        /* Store the specified memory limit if size > 0 */
+                        if (size > 0 && size < mem_limit)
+                                mem_limit =3D size;
+
+                        continue;
+                }
+
+                mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].start =3D start;
+                mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].size =3D size;
+                i++;
+        }
+
+        /* More than 4 memmaps, fail kaslr */
+        if ((i >=3D MAX_MEMMAP_REGIONS) && str)
+                memmap_too_large =3D true;
+}
+
+This function is called for every memmap=3D param. Let's say we supply
+only separate memmap=3D params (instead of comma delimited). Then on the
+4th param, `i` will be equal to MAX_MEMMAP_REGIONS but the last `if`
+won't execute since `str` will be null. Then on the 5th param the
+first `if` (the one I want to remove) will execute and
+`memmap_too_large` will never be set.
+
+With my change, while parsing the 5th param, the `while` loop will be
+skipped since `i` is not smaller than MAX_MEMMAP_REGIONS and the last
+`if` will execute setting `memmap_too_large`. Basically, my change is
+safe because the `if` I want to remove is already baked into the
+`while` loop condition.
+
+
+>
+> >         while (str && (i < MAX_MEMMAP_REGIONS)) {
+> >                 int rc;
+> >                 u64 start, size;
+> > --
+> > 2.50.0.rc0.642.g800a2b2222-goog
+> >
