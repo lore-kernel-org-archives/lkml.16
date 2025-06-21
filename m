@@ -1,516 +1,181 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F165D14D283;
-	Sat, 21 Jun 2025 18:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5C614D283
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750529900; cv=none; b=F4r6rHX5i2lOy1CV/pPBRHP/zl6vCo8+mgNfmCUlL5yuKMC1LfxKmlCuCCLQcCerfGT4hHMyXdTLG9mtviHUwGxUPFSwte2908P7VlQptl2k6UO3crkiDGgW5j0dhAH0ckRES25vFrYG957R9Vs6jDSy3nejNuWxn8utD2O/n50=
+	t=1750530010; cv=none; b=aN5lK3oz90gW5DdfWbblPA2IQLPB8Dc4LCI4bgrCqQfTe/Q81S75eJqGiPsPmSFkhSM5J7b3s71+7F8Qa71HEs5HgdsaggHkON9awo3fByt8+bvwQm+5+eXH3FzPfZWd2J0EqCLhNCg+jD+CzbP0BHUodseotSJtEj5svBP6yLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750529900; c=relaxed/simple;
-	bh=DFHCFplGNW89kgzTndIkPnhHUlbMY+sDutqDZ6Z+JKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ViIW6FsCUlKBTNYUPiQB1/uh+9bzdtTNm+gq7+bcXjJbEVI3RpD9qTHBT841fW+S0zTOnECD9U4qxfsM0/4IFWRUIxIdmHCTlHiUddBXmTVxXMlPoxqsQMlDr45eWJuyi9vFbj+Wp3zsPKxPE8KJENiRspRqPmjIAdYvWoQB4Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PZtJCUfI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750530010; c=relaxed/simple;
+	bh=XwtJM8njzBbdt1liWqcJfFiBjPvnDt2aCZqwDP0aZaI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fH1bH4U8JLmmf5EYlLAIMWqoR88k40yBZq2zoyqaYOEwTJWzkC7bFTSmrIxRyVpFMhPmAgNnSCzQxEmYgIvVNsxCsRwtO80ciu0l2mZM7yLrZeOtn/7/JNkv+ePSzKgsh+lnRjYARnz5B45OXltvB427wNBG3zxGsj0bOMQ0upQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IThhWzhZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PZtJCUfI"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A97E8379;
-	Sat, 21 Jun 2025 20:17:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750529874;
-	bh=DFHCFplGNW89kgzTndIkPnhHUlbMY+sDutqDZ6Z+JKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PZtJCUfI21tHLeTzgJpQzoirlUzJ0Z8xIQJTAdyh1xq4fC7ybT4BVkFaFGsYToIOS
-	 hhBRnQP9F3aiXrzUvI2OEODpBMpWddm6QO8s565WyqPJQ+9KyQEpU3aTzZajjjzBmZ
-	 hdOBpRv1Vly42GfLOEw7EZt3CDGPioOxrcy2V2LA=
-Date: Sat, 21 Jun 2025 21:17:51 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: git@apitzsch.eu
-Cc: Ricardo Ribalda <ribalda@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Ricardo Ribalda <ribalda@chromium.org>
-Subject: Re: [PATCH RESEND v4 3/5] media: i2c: imx214: Make use of CCS PLL
- calculator
-Message-ID: <20250621181751.GA9125@pendragon.ideasonboard.com>
-References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
- <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IThhWzhZ"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LEf2Fe003135
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:20:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=6ny1/i9MpKx34KKyVr32wx
+	2ezhZX9tnwSugxz62UmUc=; b=IThhWzhZM02CaBXcrb9aXqAJ1gFm+/dN8Tl+bT
+	LOIOMfs7tHyDi22egJIIGn92a+WJKO08O+blvwhprIRC5/C1S0UzUyI33FYTed9g
+	tO5ST4Oe9fyjXisJgljjl2nMmlsq+7sqHuyJDx6AoT7rdpeVF6eurACu1VGGaQUO
+	NUJE0IA0X/NldlShSvWIzMotWTryhKko4n4PLWmjC3PU2Nw6zGZNS7CNte3rVxX5
+	EggFiaWK8BGxiOW+AyIXDBH6RYD0GB0t9MemV3NDsx487rNUUAc8DmwrCQZigR6Y
+	n1lbHGXvFl7xkgmICfMBbZWB+9EJLLU+eRcWjT5HgevfcHPA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ducj0exk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 18:20:07 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d3d3f64739so670822785a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 11:20:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750530007; x=1751134807;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6ny1/i9MpKx34KKyVr32wx2ezhZX9tnwSugxz62UmUc=;
+        b=F4csAEYXBuBXKqJVvY6jAEH5DMOidaHuTCJKhJ+x4ffrMacMtyh/EV9DUKllwip7jV
+         Sxwr4t+Mxr8mc57uX4HxjNvIBAu3pvtYNjbo4cy9lTdWonLeLfrB0aGWL+YfTD/OByAa
+         hOdNR9/AZ3zU66pw8P3M8wbUIzO6Gvst5WwTRNCROZusq99LtTsWDepThuaraf/HmysK
+         1ChKtcKoUvsaX/zfUUpqNSQfEaslOqNTi8gj7GUMp02PFO1NaXud1YplFrRu34N+0ed9
+         OXyxigSvejWTP7q4KQiERpsSWkTyJFQFDjkfWL91kv1TQ3Fd4XrWJhUwbHvpGz7oJITZ
+         P28w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSfDu/z7z7+W7Pl5xL45+Sqw2RSiT9BzfQ9MrO+M+mNdKib3gZlxvcx8nPEPX81vtROaTJPnSyZ9Acqik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwocZIglGCOM2HYZWMf7n4oG9js2q/3yzuhNu6amkCmvg24Y/Sn
+	qflToanUwMuf77L55K6u+hYCjk3F1G/AiLPP8xOLmHs29G+4rPGVn8RgnFutK717eKwKWGweOaK
+	x/NH8wBEj+GjiqFJ4eM8mt3B5BffXjyeb5tl3QCmllI+Fy5/eM2/on+mBb1o96jEWoFE=
+X-Gm-Gg: ASbGncs5EaK1Fx+ny1ydotxrtRUlgFjyJit91wr3DXDlBEVw2i3xBho76/kydzWWJJV
+	bAmdx4FHnyr13ihRlzZmtnhJXoQZ4dU7PQBuwH5tZITJGLW3mpRHbsMMPrYJe4FXOu+yDkSjZ2l
+	hzQNcBPamQv7vR7e4DNDQh//O4JLK6H8TIusF/OxURXYaugRSUN2IoKSChj17nO6tMHa9/aNCyM
+	yTaQRPRBd5MqNX1YlvHlsgOTguHfkvR7frGCXt8023C6VOkpanFlWV8UvcTu6/SRvsVdnXptyRn
+	o43P4HOrnxojhBGrtbX03a3Bb0oguk30fmdcloxme0OQCvWV12mbmbdMT7Z7RTGhfyQ4uloKpNp
+	cw3v2EBdPt/We8YpYK+AubLOfAEVPv+FjHPM=
+X-Received: by 2002:a05:620a:c41:b0:7d2:27b0:370d with SMTP id af79cd13be357-7d3f994009fmr984605185a.42.1750530007170;
+        Sat, 21 Jun 2025 11:20:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkwcA2va9FYtfuErFb8AetYbO0QldLKi5r59/m8O7bdX7pIQ7hYBjZRiehOeJk1uml7ANUYg==
+X-Received: by 2002:a05:620a:c41:b0:7d2:27b0:370d with SMTP id af79cd13be357-7d3f994009fmr984601685a.42.1750530006754;
+        Sat, 21 Jun 2025 11:20:06 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e414c4a7sm763995e87.57.2025.06.21.11.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 11:20:04 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sat, 21 Jun 2025 21:20:02 +0300
+Subject: [PATCH] arm64: dts: qcom: sdm845: rename DisplayPort labels
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250621-imx214_ccs_pll-v4-3-12178e5eb989@apitzsch.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250621-sdm845-dp-rename-v1-1-6f7f13443b43@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIANH3VmgC/x3MQQqAIBBA0avIrBtI0cquEi0kx5pFJgoRSHdPW
+ r7F/xUKZaYCs6iQ6ebCV2yQnYDtcHEnZN8MqlemH5TE4s9JG/QJM0V3EgY76kF6a4J10LKUKfD
+ zL5f1fT9H1E/5YgAAAA==
+X-Change-ID: 20250621-sdm845-dp-rename-f97461d95f9a
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1499;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=XwtJM8njzBbdt1liWqcJfFiBjPvnDt2aCZqwDP0aZaI=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoVvfUN9k1vamR2BIUomUPbrLx80hRIGOeeXZ4+
+ etfgrWpuW2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaFb31AAKCRCLPIo+Aiko
+ 1TlCB/9ksLS/KDxXwhDSBqbIqqqPm2wOjS3jL+sCKx9gKWhKyADkH/HdScgE4HVs6DrrN3CQf5N
+ R8nwZn1M1vWOvxdqZLtzTNOCrSj7RH971nrrg855WKnYeV6J9OmpMdzys6oHYLH5E8yer7gH2vm
+ axKTZHU0WGpK1qql7GjLMRlUl2XADFzvhI+CGyexX0kC6YTclz4JL5ik4XgWTFGryD5NDOsxNtb
+ 3WIoGdR/7MB1hEhQAvgm/yWamNd/ckMmEm5VNYvUYLGIFyqof8FCP9aeky1IY2eNQf27NMM0TfJ
+ NC84h3RpGEHxTbCVdYOvruNdeAMxwTpYQolws3nNbgxrKeGh
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDExNiBTYWx0ZWRfXxdsXue2fKj62
+ oaWrUOMlb8lWMJjP017Bojh63flqotyVe2j3U5xdnIrSfvlKhQZKEOIZ18W9lCPZza5ATp+03iS
+ PBtu+gNVcUxbL8B0MFiqBto/aaL1B5dUjg+wzIjlwzorLQ2DzKU3wr3bSLVR6OKNt0YuT7OCO3x
+ x2LtQWhwHs5qmfvSlWjrkChbKbAUnpUaV3EiTnp1F/xX4d7+rFcxxwqslH5rSaM108h52cFHlcc
+ RXzMy0hhtVmKB3x35DXhIAKegkuYJ8+AO4uyqvFwfRzwHR/kQ0VfoXFk1tiqsrAriq6sjVBXbgZ
+ O/5wD5dcZ0A+O6zZe0v08GAHYjxtCzWtdObmcoDIcCxqYIBQ5BNGIyELZuVkTNllYBZWfs6HHip
+ vidUqOnxvE4ixAU129yPgxuLHbvEDlAaqyzNcd1nDisg1xPkk9gzw1kcWsfjJqOEg41yMo03
+X-Authority-Analysis: v=2.4 cv=MPdgmNZl c=1 sm=1 tr=0 ts=6856f7d8 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=WAJOHdNl-RRtu7VvE-sA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: H4cSk7RP0bHvVU8wlsoUlbAknfZVQX_s
+X-Proofpoint-ORIG-GUID: H4cSk7RP0bHvVU8wlsoUlbAknfZVQX_s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-21_06,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 impostorscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=834 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506210116
 
-Hi André,
+Rename DP labels to have mdss_ prefix, so that corresponding device
+nodes are grouped together.
 
-Thank you for the patch.
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On Sat, Jun 21, 2025 at 11:37:27AM +0200, André Apitzsch via B4 Relay wrote:
-> From: André Apitzsch <git@apitzsch.eu>
-> 
-> Calculate PLL parameters based on clock frequency and link frequency.
-> 
-> Acked-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
-> ---
->  drivers/media/i2c/Kconfig  |   1 +
->  drivers/media/i2c/imx214.c | 213 ++++++++++++++++++++++++++++++++++++---------
->  2 files changed, 175 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index e68202954a8fd4711d108cf295d5771246fbc406..08db8abeea218080b0bf5bfe6cf82f1c0b100c4a 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -141,6 +141,7 @@ config VIDEO_IMX214
->  	depends on GPIOLIB
->  	select REGMAP_I2C
->  	select V4L2_CCI_I2C
-> +	select VIDEO_CCS_PLL
->  	help
->  	  This is a Video4Linux2 sensor driver for the Sony
->  	  IMX214 camera.
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index c564c9ca82488dddd6b8f549749042ae44363c0d..fd03650a5b2bbdbbc677d5797380285f1832baa5 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -20,6 +20,8 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "ccs-pll.h"
-> +
->  /* Chip ID */
->  #define IMX214_REG_CHIP_ID		CCI_REG16(0x0016)
->  #define IMX214_CHIP_ID			0x0214
-> @@ -34,7 +36,6 @@
->  #define IMX214_DEFAULT_LINK_FREQ	600000000
->  /* Keep wrong link frequency for backward compatibility */
->  #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
-> -#define IMX214_DEFAULT_PIXEL_RATE ((IMX214_DEFAULT_LINK_FREQ * 8LL) / 10)
->  #define IMX214_FPS 30
->  
->  /* V-TIMING internal */
-> @@ -84,6 +85,7 @@
->  #define IMX214_CSI_DATA_FORMAT_RAW10	0x0A0A
->  #define IMX214_CSI_DATA_FORMAT_COMP6	0x0A06
->  #define IMX214_CSI_DATA_FORMAT_COMP8	0x0A08
-> +#define IMX214_BITS_PER_PIXEL_MASK	0xFF
->  
->  #define IMX214_REG_CSI_LANE_MODE	CCI_REG8(0x0114)
->  #define IMX214_CSI_2_LANE_MODE		1
-> @@ -249,6 +251,10 @@ struct imx214 {
->  	struct clk *xclk;
->  	struct regmap *regmap;
->  
-> +	struct ccs_pll pll;
-> +
-> +	struct v4l2_fwnode_endpoint bus_cfg;
-> +
->  	struct v4l2_subdev sd;
->  	struct media_pad pad;
->  
-> @@ -758,16 +764,22 @@ static int imx214_configure_pll(struct imx214 *imx214)
->  {
->  	int ret = 0;
->  
-> -	cci_write(imx214->regmap, IMX214_REG_VTPXCK_DIV, 5, &ret);
-> -	cci_write(imx214->regmap, IMX214_REG_VTSYCK_DIV, 2, &ret);
-> -	cci_write(imx214->regmap, IMX214_REG_PREPLLCK_VT_DIV, 3, &ret);
-> -	cci_write(imx214->regmap, IMX214_REG_PLL_VT_MPY, 150, &ret);
-> -	cci_write(imx214->regmap, IMX214_REG_OPPXCK_DIV, 10, &ret);
-> -	cci_write(imx214->regmap, IMX214_REG_OPSYCK_DIV, 1, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_VTPXCK_DIV,
-> +		  imx214->pll.vt_bk.pix_clk_div, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_VTSYCK_DIV,
-> +		  imx214->pll.vt_bk.sys_clk_div, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_PREPLLCK_VT_DIV,
-> +		  imx214->pll.vt_fr.pre_pll_clk_div, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_PLL_VT_MPY,
-> +		  imx214->pll.vt_fr.pll_multiplier, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_OPPXCK_DIV,
-> +		  imx214->pll.op_bk.pix_clk_div, &ret);
-> +	cci_write(imx214->regmap, IMX214_REG_OPSYCK_DIV,
-> +		  imx214->pll.op_bk.sys_clk_div, &ret);
->  	cci_write(imx214->regmap, IMX214_REG_PLL_MULT_DRIV,
->  		  IMX214_PLL_SINGLE, &ret);
->  	cci_write(imx214->regmap, IMX214_REG_EXCK_FREQ,
-> -		  IMX214_EXCK_FREQ(IMX214_DEFAULT_CLK_FREQ / 1000000), &ret);
-> +		  IMX214_EXCK_FREQ(imx214->pll.ext_clk_freq_hz / 1000000), &ret);
->  
->  	return ret;
->  }
-> @@ -872,9 +884,6 @@ static const struct v4l2_ctrl_ops imx214_ctrl_ops = {
->  
->  static int imx214_ctrls_init(struct imx214 *imx214)
->  {
-> -	static const s64 link_freq[] = {
-> -		IMX214_DEFAULT_LINK_FREQ
-> -	};
->  	static const struct v4l2_area unit_size = {
->  		.width = 1120,
->  		.height = 1120,
-> @@ -895,15 +904,14 @@ static int imx214_ctrls_init(struct imx214 *imx214)
->  	if (ret)
->  		return ret;
->  
-> -	imx214->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, NULL,
-> -					       V4L2_CID_PIXEL_RATE, 0,
-> -					       IMX214_DEFAULT_PIXEL_RATE, 1,
-> -					       IMX214_DEFAULT_PIXEL_RATE);
-> +	imx214->pixel_rate =
-> +		v4l2_ctrl_new_std(ctrl_hdlr, NULL, V4L2_CID_PIXEL_RATE, 1,
-> +				  INT_MAX, 1, 1);
->  
->  	imx214->link_freq = v4l2_ctrl_new_int_menu(ctrl_hdlr, NULL,
->  						   V4L2_CID_LINK_FREQ,
-> -						   ARRAY_SIZE(link_freq) - 1,
-> -						   0, link_freq);
-> +						   imx214->bus_cfg.nr_of_link_frequencies - 1,
-> +						   0, imx214->bus_cfg.link_frequencies);
->  	if (imx214->link_freq)
->  		imx214->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
->  
-> @@ -1006,6 +1014,7 @@ static int imx214_start_streaming(struct imx214 *imx214)
->  	const struct v4l2_mbus_framefmt *fmt;
->  	struct v4l2_subdev_state *state;
->  	const struct imx214_mode *mode;
-> +	int bit_rate_mbps;
->  	int ret;
->  
->  	ret = cci_multi_reg_write(imx214->regmap, mode_table_common,
-> @@ -1021,8 +1030,10 @@ static int imx214_start_streaming(struct imx214 *imx214)
->  		return ret;
->  	}
->  
-> +	bit_rate_mbps = (imx214->pll.pixel_rate_csi / 1000000)
-> +			* imx214->pll.bits_per_pixel;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index c0f466d966305af21b28d724fc8f0536d8734791..2311ebd515d7fdd919e88f2a9477fca0fb2076dd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4089,7 +4089,7 @@ port@2 {
+ 					reg = <2>;
+ 
+ 					usb_1_qmpphy_dp_in: endpoint {
+-						remote-endpoint = <&dp_out>;
++						remote-endpoint = <&mdss_dp_out>;
+ 					};
+ 				};
+ 			};
+@@ -4603,7 +4603,7 @@ ports {
+ 					port@0 {
+ 						reg = <0>;
+ 						dpu_intf0_out: endpoint {
+-							remote-endpoint = <&dp_in>;
++							remote-endpoint = <&mdss_dp_in>;
+ 						};
+ 					};
+ 
+@@ -4682,14 +4682,14 @@ ports {
+ 					#size-cells = <0>;
+ 					port@0 {
+ 						reg = <0>;
+-						dp_in: endpoint {
++						mdss_dp_in: endpoint {
+ 							remote-endpoint = <&dpu_intf0_out>;
+ 						};
+ 					};
+ 
+ 					port@1 {
+ 						reg = <1>;
+-						dp_out: endpoint {
++						mdss_dp_out: endpoint {
+ 							remote-endpoint = <&usb_1_qmpphy_dp_in>;
+ 						};
+ 					};
 
-	bit_rate_mbps = imx214->pll.pixel_rate_csi / 1000000
-		      * imx214->pll.bits_per_pixel;
+---
+base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
+change-id: 20250621-sdm845-dp-rename-f97461d95f9a
 
->  	ret = cci_write(imx214->regmap, IMX214_REG_REQ_LINK_BIT_RATE,
-> -			IMX214_LINK_BIT_RATE_MBPS(4800), NULL);
-> +			IMX214_LINK_BIT_RATE_MBPS(bit_rate_mbps), NULL);
->  	if (ret) {
->  		dev_err(imx214->dev, "failed to configure link bit rate\n");
->  		return ret;
-> @@ -1105,6 +1116,109 @@ static int imx214_s_stream(struct v4l2_subdev *subdev, int enable)
->  	return ret;
->  }
->  
-> +static int imx214_pll_calculate(struct imx214 *imx214, struct ccs_pll *pll,
-> +				unsigned int link_freq)
-> +{
-> +	struct ccs_pll_limits limits = {
-> +		.min_ext_clk_freq_hz = 6000000,
-> +		.max_ext_clk_freq_hz = 27000000,
-> +
-> +		.vt_fr = {
-> +			.min_pre_pll_clk_div = 1,
-> +			.max_pre_pll_clk_div = 15,
-> +			/* Value is educated guess as we don't have a spec */
-> +			.min_pll_ip_clk_freq_hz = 6000000,
-> +			/* Value is educated guess as we don't have a spec */
-> +			.max_pll_ip_clk_freq_hz = 12000000,
-> +			.min_pll_multiplier = 12,
-> +			.max_pll_multiplier = 1200,
-> +			.min_pll_op_clk_freq_hz = 338000000,
-> +			.max_pll_op_clk_freq_hz = 1200000000,
-> +		},
-> +		.vt_bk = {
-> +			.min_sys_clk_div = 2,
-> +			.max_sys_clk_div = 4,
-> +			.min_pix_clk_div = 5,
-> +			.max_pix_clk_div = 10,
-> +			.min_pix_clk_freq_hz = 30000000,
-> +			.max_pix_clk_freq_hz = 120000000,
-> +		},
-> +		.op_bk = {
-> +			.min_sys_clk_div = 1,
-> +			.max_sys_clk_div = 2,
-> +			.min_pix_clk_div = 6,
-> +			.max_pix_clk_div = 10,
-> +			.min_pix_clk_freq_hz = 30000000,
-> +			.max_pix_clk_freq_hz = 120000000,
-> +		},
-> +
-> +		.min_line_length_pck_bin = IMX214_PPL_DEFAULT,
-> +		.min_line_length_pck = IMX214_PPL_DEFAULT,
-> +	};
-> +	unsigned int num_lanes = imx214->bus_cfg.bus.mipi_csi2.num_data_lanes;
-> +
-> +	/*
-> +	 * There are no documented constraints on the sys clock frequency, for
-> +	 * either branch. Recover them based on the PLL output clock frequency
-> +	 * and sys_clk_div limits on one hand, and the pix clock frequency and
-> +	 * the pix_clk_div limits on the other hand.
-> +	 */
-> +	limits.vt_bk.min_sys_clk_freq_hz =
-> +		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.vt_bk.max_sys_clk_div,
-> +		    limits.vt_bk.min_pix_clk_freq_hz * limits.vt_bk.min_pix_clk_div);
-> +	limits.vt_bk.max_sys_clk_freq_hz =
-> +		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.vt_bk.min_sys_clk_div,
-> +		    limits.vt_bk.max_pix_clk_freq_hz * limits.vt_bk.max_pix_clk_div);
-> +
-> +	limits.op_bk.min_sys_clk_freq_hz =
-> +		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.op_bk.max_sys_clk_div,
-> +		    limits.op_bk.min_pix_clk_freq_hz * limits.op_bk.min_pix_clk_div);
-> +	limits.op_bk.max_sys_clk_freq_hz =
-> +		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.op_bk.min_sys_clk_div,
-> +		    limits.op_bk.max_pix_clk_freq_hz * limits.op_bk.max_pix_clk_div);
-> +
-> +	memset(pll, 0, sizeof(*pll));
-> +
-> +	pll->bus_type = CCS_PLL_BUS_TYPE_CSI2_DPHY;
-> +	pll->op_lanes = num_lanes;
-> +	pll->vt_lanes = num_lanes;
-> +	pll->csi2.lanes = num_lanes;
-> +
-> +	pll->binning_horizontal = 1;
-> +	pll->binning_vertical = 1;
-> +	pll->scale_m = 1;
-> +	pll->scale_n = 1;
-> +	pll->bits_per_pixel =
-> +		IMX214_CSI_DATA_FORMAT_RAW10 & IMX214_BITS_PER_PIXEL_MASK;
-> +	pll->flags = CCS_PLL_FLAG_LANE_SPEED_MODEL;
-> +	pll->link_freq = link_freq;
-> +	pll->ext_clk_freq_hz = clk_get_rate(imx214->xclk);
-> +
-> +	return ccs_pll_calculate(imx214->dev, &limits, pll);
-> +}
-> +
-> +static int imx214_pll_update(struct imx214 *imx214)
-> +{
-> +	u64 link_freq;
-> +	int ret;
-> +
-> +	link_freq = imx214->bus_cfg.link_frequencies[imx214->link_freq->val];
-> +	ret = imx214_pll_calculate(imx214, &imx214->pll, link_freq);
-> +	if (ret) {
-> +		dev_err(imx214->dev, "PLL calculations failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = v4l2_ctrl_s_ctrl_int64(imx214->pixel_rate,
-> +				     imx214->pll.pixel_rate_pixel_array);
-> +	if (ret) {
-> +		dev_err(imx214->dev, "failed to set pixel rate\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int imx214_get_frame_interval(struct v4l2_subdev *subdev,
->  				     struct v4l2_subdev_state *sd_state,
->  				     struct v4l2_subdev_frame_interval *fival)
-> @@ -1211,12 +1325,10 @@ static int imx214_identify_module(struct imx214 *imx214)
->  	return 0;
->  }
->  
-> -static int imx214_parse_fwnode(struct device *dev)
-> +static int imx214_parse_fwnode(struct device *dev, struct imx214 *imx214)
->  {
-
-Drop the dev argument to the function and use imx214->dev with
-
-	struct device *dev = imx214->dev;
-
-if desired.
-
-> +	struct v4l2_fwnode_endpoint *bus_cfg = &imx214->bus_cfg;
->  	struct fwnode_handle *endpoint;
-
-While at it (or in a separate patch) you could write
-
-  	struct fwnode_handle __free(fwnode_handle_put) *endpoint = NULL;
-
-and ...
-
-> -	struct v4l2_fwnode_endpoint bus_cfg = {
-> -		.bus_type = V4L2_MBUS_CSI2_DPHY,
-> -	};
->  	unsigned int i;
->  	int ret;
->  
-> @@ -1224,42 +1336,52 @@ static int imx214_parse_fwnode(struct device *dev)
->  	if (!endpoint)
->  		return dev_err_probe(dev, -EINVAL, "endpoint node not found\n");
->  
-> -	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &bus_cfg);
-> +	bus_cfg->bus_type = V4L2_MBUS_CSI2_DPHY;
-> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, bus_cfg);
-> +	fwnode_handle_put(endpoint);
-
-... drop this. Up to you.
-
->  	if (ret) {
->  		dev_err_probe(dev, ret, "parsing endpoint node failed\n");
-> -		goto done;
-> +		goto error;
-
-You can return ret here.
-
->  	}
->  
->  	/* Check the number of MIPI CSI2 data lanes */
-> -	if (bus_cfg.bus.mipi_csi2.num_data_lanes != 4) {
-> +	if (bus_cfg->bus.mipi_csi2.num_data_lanes != 4) {
->  		ret = dev_err_probe(dev, -EINVAL,
->  				    "only 4 data lanes are currently supported\n");
-> -		goto done;
-> +		goto error;
->  	}
->  
-> -	if (bus_cfg.nr_of_link_frequencies != 1)
-> +	if (bus_cfg->nr_of_link_frequencies != 1)
->  		dev_warn(dev, "Only one link-frequency supported, please review your DT. Continuing anyway\n");
-
-Now that the driver can calculate PLL parameters dynamically, it would
-be nice to lift this restriction and make the link frequency control
-writable, in a separate patch on top of this series.
-
->  
-> -	for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++) {
-> -		if (bus_cfg.link_frequencies[i] == IMX214_DEFAULT_LINK_FREQ)
-> +	for (i = 0; i < bus_cfg->nr_of_link_frequencies; i++) {
-> +		u64 freq = bus_cfg->link_frequencies[i];
-> +		struct ccs_pll pll;
-> +
-> +		if (!imx214_pll_calculate(imx214, &pll, freq))
->  			break;
-> -		if (bus_cfg.link_frequencies[i] ==
-> -		    IMX214_DEFAULT_LINK_FREQ_LEGACY) {
-> +		if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
->  			dev_warn(dev,
->  				 "link-frequencies %d not supported, please review your DT. Continuing anyway\n",
->  				 IMX214_DEFAULT_LINK_FREQ);
-> +			freq = IMX214_DEFAULT_LINK_FREQ;
-> +			if (imx214_pll_calculate(imx214, &pll, freq))
-> +				continue;
-> +			bus_cfg->link_frequencies[i] = freq;
->  			break;
->  		}
-
-How about separating the IMX214_DEFAULT_LINK_FREQ_LEGACY check from the
-PLL calculation ? Something like
-
-		u64 freq = bus_cfg->link_frequencies[i];
-		struct ccs_pll pll;
-
-		if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
-			dev_warn(dev,
-				 "link-frequencies %d not supported, please review your DT. Continuing anyway\n",
-				 IMX214_DEFAULT_LINK_FREQ);
-			freq = IMX214_DEFAULT_LINK_FREQ;
-			bus_cfg->link_frequencies[i] = freq;
-		}
-
-		if (!imx214_pll_calculate(imx214, &pll, freq))
-			break;
-
-It will then become easier to drop this legacy support from the driver.
-What platform(s) are know to specify an incorrect link frequency ?
-
->  	}
->  
-> -	if (i == bus_cfg.nr_of_link_frequencies)
-> +	if (i == bus_cfg->nr_of_link_frequencies)
->  		ret = dev_err_probe(dev, -EINVAL,
-> -				    "link-frequencies %d not supported, please review your DT\n",
-> -				    IMX214_DEFAULT_LINK_FREQ);
-> +				    "link-frequencies %lld not supported, please review your DT\n",
-> +				    bus_cfg->nr_of_link_frequencies ?
-> +				    bus_cfg->link_frequencies[0] : 0);
->  
-> -done:
-> -	v4l2_fwnode_endpoint_free(&bus_cfg);
-> -	fwnode_handle_put(endpoint);
-> +	return 0;
-> +
-> +error:
-> +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
->  	return ret;
->  }
->  
-> @@ -1299,7 +1421,7 @@ static int imx214_probe(struct i2c_client *client)
->  		return dev_err_probe(dev, PTR_ERR(imx214->regmap),
->  				     "failed to initialize CCI\n");
->  
-> -	ret = imx214_parse_fwnode(dev);
-> +	ret = imx214_parse_fwnode(dev, imx214);
->  	if (ret)
->  		return ret;
->  
-> @@ -1310,7 +1432,9 @@ static int imx214_probe(struct i2c_client *client)
->  	 * Enable power initially, to avoid warnings
->  	 * from clk_disable on power_off
->  	 */
-> -	imx214_power_on(imx214->dev);
-> +	ret = imx214_power_on(imx214->dev);
-> +	if (ret < 0)
-> +		goto error_fwnode;
-
-This change seems to belong to a separate patch.
-
->  
->  	ret = imx214_identify_module(imx214);
->  	if (ret)
-> @@ -1341,6 +1465,12 @@ static int imx214_probe(struct i2c_client *client)
->  	pm_runtime_set_active(imx214->dev);
->  	pm_runtime_enable(imx214->dev);
->  
-> +	ret = imx214_pll_update(imx214);
-> +	if (ret < 0) {
-> +		dev_err_probe(dev, ret, "failed to update PLL\n");
-> +		goto error_subdev_cleanup;
-> +	}
-
-I would move this to imx214_ctrls_init().
-
-> +
->  	ret = v4l2_async_register_subdev_sensor(&imx214->sd);
->  	if (ret < 0) {
->  		dev_err_probe(dev, ret,
-> @@ -1366,6 +1496,9 @@ static int imx214_probe(struct i2c_client *client)
->  error_power_off:
->  	imx214_power_off(imx214->dev);
->  
-> +error_fwnode:
-> +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
-> +
->  	return ret;
->  }
->  
-> @@ -1378,6 +1511,8 @@ static void imx214_remove(struct i2c_client *client)
->  	v4l2_subdev_cleanup(sd);
->  	media_entity_cleanup(&imx214->sd.entity);
->  	v4l2_ctrl_handler_free(&imx214->ctrls);
-> +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
-> +
->  	pm_runtime_disable(&client->dev);
->  	if (!pm_runtime_status_suspended(&client->dev)) {
->  		imx214_power_off(imx214->dev);
-
+Best regards,
 -- 
-Regards,
+With best wishes
+Dmitry
 
-Laurent Pinchart
