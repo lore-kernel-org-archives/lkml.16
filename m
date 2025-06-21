@@ -1,100 +1,152 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from forward200d.mail.yandex.net (forward200d.mail.yandex.net [178.154.239.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95B62561BB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39C12036ED;
 	Sat, 21 Jun 2025 18:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750531998; cv=none; b=giJ48X/WsKr+zStQ7s2my7HeJFX4TSOmJ1GrWe9XogiEk2IxCugSARnkiuoy0l9jYu46bJXR0RpNBCfIPdS93MZZwl4ojC1LU9jJ5HrWT+XkSt7mdyvqIkAUSQTNmJzfB7Y1ZLCm3WtSfiabVMO0BP8wObCk01F9s12jDoCoirk=
+	t=1750531999; cv=none; b=DdLCkttVagvYf92H2bdf2Vp3nkLPRokvaOK5wsy4M0t69Nyummqy2k8f7o7wB43zR5jWlR2u2uqLqwdsOC9h4ymPGDPIcW2qdsbno4xbjbSXQugitOrPKbAoCgF9x2x1mUXOjDNWAfd8u/4ivbg+QmV9el8QiLLMGOVW+pTYmkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750531998; c=relaxed/simple;
-	bh=uxoKRcY2W6kCcNzZ8+R+4JIj5r251Ne/rkyNdGnRGY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sY8T9M86MGCp1qfChj2WfbfNd+lHR8q6zAFSby0P6b+4Pkbjh/6bE++QXlvHGdvQ/MhluNlXvkvgy6Aq31bzplbEMup7UW3ioJnlyZdEEBdtgIaMCkV/9CcP5OlC2DMwolblkDGIpnI6BOM8mJIXJHftLkDv6YCWtiZXyjmHp+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=O/Fzwsk3; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750531999; c=relaxed/simple;
+	bh=znL4Zc3S4t3FyzyWArcnH6Jx4XM0uFtnH/0Pcek5cQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m/EZiwKl+GiobymZnYNTBe2MHxtYioLIXPyptkpxNDqIvhx6jxb0/+jAacUccJ2mShPXu55VeXrKc+V6k7FXb0gvBbraeY5Qmo9rcSfQyuX6lJkzygzznTYJ+HXju6dRZcyFa4iJaUguv9LJM9r0spM8canBDE/DwH0qio0xIaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=Cd0G1E9K; arc=none smtp.client-ip=178.154.239.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O/Fzwsk3"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LIYZgV008646;
-	Sat, 21 Jun 2025 18:53:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=Dd9iZj99umaHJEcHImbFxWpsE+0f+
-	IXdMuohHxZlqSE=; b=O/Fzwsk3oCw8QyOBgSkKsURbsi3AIghTBVfbcOBuToQ9i
-	YvOnSzdRxOdpUAbvQ3BiYSFi/pTlNkqFz9YKblD4wGuQby1DUrLHdeN97h0yTyrp
-	pmJ38rziy37BuCKRypH8V7r37RyomFYkCo704U4r9seeGtU5sffX71iR7sbfTJjw
-	X7XjwQ2VbUPTAKBFtlv1dpL7M1cwlnxA5k7HQXy0lRyxO11l6fNNiSRE4KvHw00e
-	Dt4eiXFii2f9UtAxcFYZReJ1EiUw2L5XAyKEh4UUEu7eiweHpFj1T/WiPaOiZPWB
-	9v3+H9wUltsrNMSySW600cm4eCJEsnwOjDr150IBA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds7crchy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 21 Jun 2025 18:53:04 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55LE4TMP034526;
-	Sat, 21 Jun 2025 18:53:03 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47dk67wej7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 21 Jun 2025 18:53:03 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55LIr2XG002700;
-	Sat, 21 Jun 2025 18:53:02 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47dk67wej2-1;
-	Sat, 21 Jun 2025 18:53:02 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: perex@perex.cz, tiwai@suse.com, phasta@kernel.org,
-        andriy.shevchenko@linux.intel.com, linux-sound@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: intel8x0: Fix incorrect codec index usage in mixer for ICH4
-Date: Sat, 21 Jun 2025 11:52:24 -0700
-Message-ID: <20250621185233.4081094-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="Cd0G1E9K"
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
+	by forward200d.mail.yandex.net (Yandex) with ESMTPS id EF48063526;
+	Sat, 21 Jun 2025 21:45:28 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:3b23:0:640:a115:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 926F060975;
+	Sat, 21 Jun 2025 21:45:20 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id uiVAZ68LnCg0-S7mslwtW;
+	Sat, 21 Jun 2025 21:45:18 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750531519;
+	bh=0ipQNjbd7rx7eDMk+d+z9kiN5etFmfMNR8/fpV+diMs=;
+	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
+	b=Cd0G1E9K1gU0MnD3tYM6s46ER3c4buatUv+AWJJzDR/BKeH6UTey00ALcc3FLEd4x
+	 vybDW+tAJnJMtm+qZfy6iT0K5HPgf+eJ6zGmFZWknc2ogHXIM+94ARFPApD2Q6sBB1
+	 mYxKpPz0wWQHj0yjm62QHbEmra0ChtMxCZq40A14=
+Authentication-Results: mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	longman@redhat.com,
+	felipe_life@live.com,
+	daniel@sedlak.dev,
+	bjorn3_gh@protonmail.com,
+	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+Subject: [PATCH v5 1/3] rust: add C wrappers for `ww_mutex` inline functions
+Date: Sat, 21 Jun 2025 21:44:52 +0300
+Message-ID: <20250621184454.8354-2-work@onurozkan.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250621184454.8354-1-work@onurozkan.dev>
+References: <20250621184454.8354-1-work@onurozkan.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-21_06,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
- malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506210119
-X-Proofpoint-GUID: OEZ8hdpfEkdqASKukuF-8mLYe3dSoj20
-X-Proofpoint-ORIG-GUID: OEZ8hdpfEkdqASKukuF-8mLYe3dSoj20
-X-Authority-Analysis: v=2.4 cv=G5McE8k5 c=1 sm=1 tr=0 ts=6856ff90 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=96bbWqfXC7VXjgqvvdgA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDEyMCBTYWx0ZWRfX0w0VY+4531sR T+oMjgoTVRmfuruY4b7xt3sd2AZmPM+NrrDuCbWtUf7DMH60UMQxiNdLt+YegzYucPrscONfQDF LSDqfynpTPGROj1lvBDoOb18SwuJXTtxpNBBhSnpyU3kqQkHbb1hensvGqKXtj2YcXj3ku7TdpM
- r/RfXqDA5MEt9R/3SXCWuGY1DQLQwbCChFpxBjc4HGDzr32sKuC0h5/g1lzaVOKQWnOzNm+PVij XG9T+T6WC6l5e3EdFj1RCQqjM5K3DQtCPxW/QnFUSrrv81Xj1HFVZWpwpEL37PiGs1YoMMLB64M 1Fh2DMErlilAS895llH44+MH9mWZNYbSYRjb4Ah+eg5yA13jpsSSJ9JhVn+55UO9P/POxA6ycpw
- 0MFgB0ZN1xvFLhefLq5xlqRQiTsqB6dqbhqgntM9ZVRTw0EPi5rQHuI8qTWQyTFkehtZbF7l
 
-code mistakenly used a hardcoded index (codec[1]) instead of
-iterating, over the codec array using the loop variable i.
-Use codec[i] instead of codec[1] to match the loop iteration.
+Some of the kernel's `ww_mutex` functions are implemented as
+`static inline`, so they are inaccessible from Rust as bindgen
+can't generate code on them. This patch provides C function wrappers
+around these inline implementations, so bindgen can see them and generate
+the corresponding Rust code.
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Signed-off-by: Onur Özkan <work@onurozkan.dev>
 ---
- sound/pci/intel8x0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/helpers/helpers.c  |  3 ++-
+ rust/helpers/ww_mutex.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 rust/helpers/ww_mutex.c
 
-diff --git a/sound/pci/intel8x0.c b/sound/pci/intel8x0.c
-index 51e7f1f1a48e4..b521cec203336 100644
---- a/sound/pci/intel8x0.c
-+++ b/sound/pci/intel8x0.c
-@@ -2249,7 +2249,7 @@ static int snd_intel8x0_mixer(struct intel8x0 *chip, int ac97_clock,
- 			tmp |= chip->ac97_sdin[0] << ICH_DI1L_SHIFT;
- 			for (i = 1; i < 4; i++) {
- 				if (pcm->r[0].codec[i]) {
--					tmp |= chip->ac97_sdin[pcm->r[0].codec[1]->num] << ICH_DI2L_SHIFT;
-+					tmp |= chip->ac97_sdin[pcm->r[0].codec[i]->num] << ICH_DI2L_SHIFT;
- 					break;
- 				}
- 			}
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 0f1b5d115985..2f82774b34cf 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -27,9 +27,9 @@
+ #include "mm.c"
+ #include "mutex.c"
+ #include "page.c"
+-#include "platform.c"
+ #include "pci.c"
+ #include "pid_namespace.c"
++#include "platform.c"
+ #include "rbtree.c"
+ #include "rcu.c"
+ #include "refcount.c"
+@@ -43,4 +43,5 @@
+ #include "vmalloc.c"
+ #include "wait.c"
+ #include "workqueue.c"
++#include "ww_mutex.c"
+ #include "xarray.c"
+diff --git a/rust/helpers/ww_mutex.c b/rust/helpers/ww_mutex.c
+new file mode 100644
+index 000000000000..61a487653394
+--- /dev/null
++++ b/rust/helpers/ww_mutex.c
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/ww_mutex.h>
++
++void rust_helper_ww_mutex_init(struct ww_mutex *lock, struct ww_class *ww_class)
++{
++	ww_mutex_init(lock, ww_class);
++}
++
++void rust_helper_ww_acquire_init(struct ww_acquire_ctx *ctx, struct ww_class *ww_class)
++{
++	ww_acquire_init(ctx, ww_class);
++}
++
++void rust_helper_ww_acquire_done(struct ww_acquire_ctx *ctx)
++{
++	ww_acquire_done(ctx);
++}
++
++void rust_helper_ww_acquire_fini(struct ww_acquire_ctx *ctx)
++{
++	ww_acquire_fini(ctx);
++}
++
++void rust_helper_ww_mutex_lock_slow(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++{
++	ww_mutex_lock_slow(lock, ctx);
++}
++
++int rust_helper_ww_mutex_lock_slow_interruptible(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++{
++	return ww_mutex_lock_slow_interruptible(lock, ctx);
++}
++
++bool rust_helper_ww_mutex_is_locked(struct ww_mutex *lock)
++{
++	return ww_mutex_is_locked(lock);
++}
++
 -- 
-2.46.0
+2.49.0
 
