@@ -1,65 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4181DE3BA;
-	Sat, 21 Jun 2025 08:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3111A157A67;
+	Sat, 21 Jun 2025 08:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750496195; cv=none; b=Cqta/h3W4gQW4JrK3lhrRsByt6LjdFOamI2uy5TUrd/eT+w/yoZsMUxeNDh9cYGFvS4TdfK/cjtA+EYHqZkAfqEsHmn/GwiO+S8vIgV9ahKYmSCUA/QvRZrltAzd2+8DrRpECyIcm2HFODk1VP2pj4fA3B9HTJUngAL3BGwjR/c=
+	t=1750496237; cv=none; b=g/MQUYT7ag72ObTN/JzGuPAyVPEIrXbNFRNqG/pYHpgf3vUW41DFWSKSI50BgWeupT7m2SE7orp2gFB/Oz8mMTW91Up8OhWZaBP86eph3xSmpn4E2Zj5Q8UXFn+xPGEtAE906t2pwBZzhq2Z1jcnKZOV3w9fEisdV2pbBL2Zcms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750496195; c=relaxed/simple;
-	bh=lozJVjeayu4fuBFr7YB8LDGyPpQu/TGuMPYpYyOubJE=;
+	s=arc-20240116; t=1750496237; c=relaxed/simple;
+	bh=z1609bAgBUIp/jgJsQxGpB32Y6A5jwc17jZ0FZC0UkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PH0VHptS2mT3JiKrQE3J37/92vEL5QGGzrucI4AeaFBsGbl7fNDpQhhK2fENLJuodMV0Zp2l3UwXwKjOgRvr1xG43uY9NTuu430oR7o8W6ctU6Mog8Iy1FN5qaV5qmBeOZ6mPOMoF6VobUGbu2SpSifuRBTDk8gotJ1TP6x/Vto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOcAmgTS; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZXzjTP58Y3n/ZJg1TmeRlIbWuU3438ZcjUtEepaF79ayAsvfGpHrrT/WPpK08hmEmm7djAQP2kB7yZ5QGSwmxM76QFkEoum6+FyRWJE1jljq/VgslrwQJgBh23qbBV1LOp7cRlorb/14r7qw6wKvxM/PAEjn0boqMTWIUNuEX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bstSyS5a; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOcAmgTS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750496193; x=1782032193;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lozJVjeayu4fuBFr7YB8LDGyPpQu/TGuMPYpYyOubJE=;
-  b=JOcAmgTSqsuzUHqVkv4Promp7cQ1Y7544qRf+MlVuq1jRdfogr4JGjbS
-   JkrYz+5rzhg6ZMnlLGmzApW+veItyQvgeFPhgs2JSPcFggwiQrobo30v3
-   AFL6fDSAtPCzNJat4zaGDN7xmxaXCHeNCJHtuDGnmq+BGxR6Rcb5IEXw5
-   3YigTbCaQoN4NW5G7hLbuJ4XsDkAXW+294/GtFSQoW3cAbprLiRy8IiU1
-   XP6PHyyF369qTLXUwJGYM6oNpGkwdE8n2ZwAffLcx/hph2bFRMczNi0Bm
-   qaJg+UHBEu19+9jkQcOgCNEG2PKT24UgOmYlqiePBjepOIT9MVLogongO
-   g==;
-X-CSE-ConnectionGUID: eP5q64BRSwewEkbfn7xvZw==
-X-CSE-MsgGUID: 7Nj52L2aR7m+3LiLzwF3MA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="40359655"
-X-IronPort-AV: E=Sophos;i="6.16,253,1744095600"; 
-   d="scan'208";a="40359655"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 01:56:33 -0700
-X-CSE-ConnectionGUID: UR9IhsTnQHedEH4bECr6Yg==
-X-CSE-MsgGUID: JcJqLz9gSfy5YSgtYqhRzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,253,1744095600"; 
-   d="scan'208";a="151256679"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 21 Jun 2025 01:56:29 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSu1T-000MUk-1Q;
-	Sat, 21 Jun 2025 08:56:27 +0000
-Date: Sat, 21 Jun 2025 16:55:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: liquancin.mereenamathai@in.bosch.com, linux-iio@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, vassilisamir@gmail.com, marcelo.schmitt1@gmail.com,
-	javier.carrasco.cruz@gmail.com, Xu.Zhang@cn.bosch.com,
-	Maoting.Bian@cn.bosch.com, Liquancin.MereenaMathai@in.bosch.com
-Subject: Re: [PATCH v1 1/2] Add the iio driver for bosch pressure sensor
- bmp390. The bmp390 is a pressure sensor module. It will support SPI and I2C
- protocol based on configuration.
-Message-ID: <202506211617.KOMMf9eA-lkp@intel.com>
-References: <20250620045456.1151-2-liquancin.mereenamathai@in.bosch.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bstSyS5a"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lXj6aZd0B3JE/QjD5McyxMpqZnX6HWv51quwI3Qk/SM=; b=bstSyS5ao+0n9VhZ4/1lrbqEju
+	mk9NP8v43SFdpDSpYBiEf4gP0sGo7ChvsPRsM1uiIsy1tqH3P4b8ceaeZhW9Pv2AmRLHi0M+zPDM7
+	IPlSZ2CGeWxkKv6pPc77hap9VfgHMEosvWvK/YEJEGd3eIovqhPYZWx7VPz7AuMDZ4IXW2VYGDGg+
+	2N1hDpPgV6xnYU0qg+OuzLe7y7iaZFhpKvARv03+bt5pln7tTKlBEA8VExCiKx0yvrOL//0B6H9id
+	rxQoGkfVLSQOFQwrlVMUR0S4eY/E12UGBMKViP7F2d/yS/+m6ieFByafsQM9S3VZ8Cp5/p21jdvaa
+	MvG5HwGg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSu28-00000004ssa-2awj;
+	Sat, 21 Jun 2025 08:57:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 921163087E7; Sat, 21 Jun 2025 10:57:06 +0200 (CEST)
+Date: Sat, 21 Jun 2025 10:57:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] lockdep: Fix inconsistency in irq tracking on NMIs
+Message-ID: <20250621085706.GM1613200@noisy.programming.kicks-ass.net>
+References: <20250620125112.33978-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,51 +51,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620045456.1151-2-liquancin.mereenamathai@in.bosch.com>
+In-Reply-To: <20250620125112.33978-2-gmonaco@redhat.com>
 
-Hi,
+On Fri, Jun 20, 2025 at 02:51:13PM +0200, Gabriele Monaco wrote:
 
-kernel test robot noticed the following build warnings:
+>  local_irq_enable()
+>    void trace_hardirqs_on(void)
+>    {
+>    	if (tracing_irq_cpu) {
+>    		trace(irq_enable);
+>    		tracing_irq_cpu = 0;
+>    	}
+> 
+>                 /*
+>                  * NMI here
+>                  * tracing_irq_cpu == 0 (done tracing)
+>                  * lockdep_hardirqs_enabled == 0 (IRQs still disabled)
+>                  */
+> 
+>                                    irqentry_nmi_enter()
+>                                        irq_state.lockdep = 0
+>                                        trace(irq_disable);
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.16-rc2 next-20250620]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+				So you're saying this ^^^^^ is the
+				actual problem?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/liquancin-mereenamathai-in-bosch-com/Add-the-iio-driver-for-bosch-pressure-sensor-bmp390-The-bmp390-is-a-pressure-sensor-module-It-will-support-SPI-and-I2C-p/20250620-125832
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20250620045456.1151-2-liquancin.mereenamathai%40in.bosch.com
-patch subject: [PATCH v1 1/2] Add the iio driver for bosch pressure sensor bmp390. The bmp390 is a pressure sensor module. It will support SPI and I2C protocol based on configuration.
-config: loongarch-randconfig-r122-20250621 (https://download.01.org/0day-ci/archive/20250621/202506211617.KOMMf9eA-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20250621/202506211617.KOMMf9eA-lkp@intel.com/reproduce)
+> 
+>                                    irqentry_nmi_exit()
+>                                        // irq_state.lockdep == 0
+>                                        // do not trace(irq_enable)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506211617.KOMMf9eA-lkp@intel.com/
+                                Because this ^^^^ might lead one to
+				believe the lack of trace(irq_enable)
+				is the problem.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/iio/pressure/bmp390/bmp390_i2c.c:38:16: sparse: sparse: symbol 'iio_i2c_dev' was not declared. Should it be static?
---
->> drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:41:56: sparse: sparse: dereference of noderef expression
->> drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:41:56: sparse: sparse: dereference of noderef expression
-   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:44:40: sparse: sparse: dereference of noderef expression
-   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:44:40: sparse: sparse: dereference of noderef expression
-   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:47:43: sparse: sparse: dereference of noderef expression
-   drivers/iio/pressure/bmp390/bmp390_iio_buffer.c:47:43: sparse: sparse: dereference of noderef expression
+>    	lockdep_hardirqs_on();
+>    }
 
-vim +/iio_i2c_dev +38 drivers/iio/pressure/bmp390/bmp390_i2c.c
 
-    33	
-    34	/*********************************************************************/
-    35	/* global variables */
-    36	/*********************************************************************/
-    37	static struct i2c_client *bmp3_i2c_client;
-  > 38	struct iio_dev *iio_i2c_dev;
-    39	
+Because I'm thinking the trace(irq_disable) is actually correct. We are
+entering an NMI handler, and that very much has IRQs disabled.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Prevent this scenario by checking lockdep_hardirqs_enabled to trace also
+> on nmi_entry.
+> 
+> Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: linux-trace-kernel@vger.kernel.org
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  kernel/entry/common.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+> index a8dd1f27417cf..7369132c00ba4 100644
+> --- a/kernel/entry/common.c
+> +++ b/kernel/entry/common.c
+> @@ -326,13 +326,15 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
+>  	irq_state.lockdep = lockdep_hardirqs_enabled();
+>  
+>  	__nmi_enter();
+> -	lockdep_hardirqs_off(CALLER_ADDR0);
+> +	if (irq_state.lockdep)
+> +		lockdep_hardirqs_off(CALLER_ADDR0);
+
+This isn't needed... it is perfectly fine calling lockdep_hardirq_off()
+again here. You'll hit the redundant_hardirqs_off counter.
+
+>  	lockdep_hardirq_enter();
+>  	ct_nmi_enter();
+>  
+>  	instrumentation_begin();
+>  	kmsan_unpoison_entry_regs(regs);
+> -	trace_hardirqs_off_finish();
+> +	if (irq_state.lockdep)
+> +		trace_hardirqs_off_finish();
+
+So I really think you're doing the wrong thing here. We traced IRQs are
+enabled, but then take an NMI, meaning IRQs are very much disabled. So
+we want this irqs_off to fire.
+
+The much more fun case is:
+
+	if (tracing_irq_cpu) {
+		trace(irq_enable);
+		<NMI>
+
+Because then it will see tracing_irq_cpu set, but also have issued
+irq_enable and not issue irq_disable, and then things are really messed
+up.
+
+
+So yes, you found a fun case, but your solution seemed aimed at pleasing
+the model, rather than reality.
+
