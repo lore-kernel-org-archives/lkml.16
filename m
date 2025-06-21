@@ -1,541 +1,247 @@
-Received: from forward204d.mail.yandex.net (forward204d.mail.yandex.net [178.154.239.217])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AFE149C4A;
-	Sat, 21 Jun 2025 18:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F43318132A;
+	Sat, 21 Jun 2025 18:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750531543; cv=none; b=oj0j8j0don7Pj1jD4/qqrkVo9HCq6q/hF7abUDkzJtkgRCjgcCrsBW7r2Yxy3ZrnRE+MmjCiJFYGu2q0vYvRhHLSmEyow+uB6Xm13XxsioOzs+v09YYT5GrrewOjuCf+TkJapSVE3cyMdxd+JMSUXSu7YNQT1LDQynPt+2uszuA=
+	t=1750531620; cv=none; b=ISCoeOR/50989uEzRHKDc1IdBzRSx+8OlQqmvBYuh0OZ8xES67vcCdh1Ec71t0FFruy7mndfcf7p9dxtii4rF9JGd3ICUvqntpKEMgHXZqAJjECxZzdPKX8eZOItCidCGGpv2inUzeZ4R+U9QqI+SXBVZW4URp5oP19SxCH0DFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750531543; c=relaxed/simple;
-	bh=MwYToA1ViwMn9OJnQpWTqjLN1aNbKLDZn/TyhB72vD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jqRD7+S54kqAAZl4caCjcZ0s9hSWi8DgDSOgY6FSlEnmte9ipmXr7GIDefGHAnKUvBr7w0blqyFC9yB9RiY9yIurGhcZnrW2uJknJJwR1BfZolQtmwmGeea8utU/XmuoZa/Z6paMj9SBguN9hU2Sm6paj7W0D1dgaoiam/bL0M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=DyMgvl8t; arc=none smtp.client-ip=178.154.239.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750531620; c=relaxed/simple;
+	bh=DUg795UGrBsGPK6i2yD/yhU35EMkyaiSm2B/AW01wNM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iFUyZd0q3awKsrsCPGd8zxLyuoOF+B1K5HnpoaidVQ7NEuu0iFsF69V9c7Um/uYMGlnQhW3zqa4qZX3Za8KeGmglXC3SyPEHQipIazYoj4Q6QGGmAS4LsUG1fEmq1rLKSplhQoCZKPFtwj2JPPDRpS1krPFR0OaGdQ3MHz5io+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaRvDKYs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="DyMgvl8t"
-Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
-	by forward204d.mail.yandex.net (Yandex) with ESMTPS id 2C2AA636DB;
-	Sat, 21 Jun 2025 21:45:33 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:3b23:0:640:a115:0])
-	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 1C7D36097F;
-	Sat, 21 Jun 2025 21:45:25 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id uiVAZ68LnCg0-MgdBnASd;
-	Sat, 21 Jun 2025 21:45:23 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750531523;
-	bh=4QAtW8ztVhSVIIbbVebVmmjGfqweU/YmmuzRajEBRpg=;
-	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
-	b=DyMgvl8t71YCwPa1OTDQZXzvo4cLxMFlCSf5H4ihTHwLoQ+CpTGpO1kaz9qlx6b3b
-	 TklyL74iMU0zbrkRzcDvqdvM+B/x0Y5KhwYM8fwl4hewALBz9+UxRJiiwVQs7Qzt+B
-	 0azFAyWosWwGFTscbbIoKPDYuxa53c++v1qYzewg=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-To: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	longman@redhat.com,
-	felipe_life@live.com,
-	daniel@sedlak.dev,
-	bjorn3_gh@protonmail.com,
-	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-Date: Sat, 21 Jun 2025 21:44:53 +0300
-Message-ID: <20250621184454.8354-3-work@onurozkan.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250621184454.8354-1-work@onurozkan.dev>
-References: <20250621184454.8354-1-work@onurozkan.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaRvDKYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17672C4CEE7;
+	Sat, 21 Jun 2025 18:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750531619;
+	bh=DUg795UGrBsGPK6i2yD/yhU35EMkyaiSm2B/AW01wNM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=uaRvDKYsaZvE8uOSGm7C1XcUbiSukDdLKMRLaCtQTMX0j4cwdv9uVgT5Rb0DuQvyv
+	 EwxlLJaezIjMx3nDClnVjtfiuwiUsPEKVJZ3+IcuysqUOghJIDGWqjx5IZOKDS/jQI
+	 OnpepS/OZAtxYsVJQge3DaLgLlrbBs7yoLfrssIIyW1TuOMuqUya1+NPQA/3J7VvzI
+	 34qfUIJwqPmnyDOLZb39G7EuW4D+oUHwZpisb++ZbSLeFQnM+/lyaARXRQQCkr+/vR
+	 OcHX0a2VbfvJGKsAyy7Q1HSE++1gxqwn57uhpr0SuKj2k2B9ZEoLOpLRClSM8yD2P7
+	 tG31g7Skwikag==
+Message-ID: <369459745a8f8e43f80c47bae554829dad8f635c.camel@kernel.org>
+Subject: Re: [PATCH v4 1/2] nfsd: Drop dprintk in blocklayout xdr functions
+From: Jeff Layton <jlayton@kernel.org>
+To: Sergey Bashirov <sergeybashirov@gmail.com>, Chuck Lever
+	 <chuck.lever@oracle.com>, Christoph Hellwig <hch@infradead.org>, NeilBrown
+	 <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Konstantin
+ Evtushenko <koevtushenko@yandex.com>
+Date: Sat, 21 Jun 2025 14:46:58 -0400
+In-Reply-To: <20250621165409.147744-2-sergeybashirov@gmail.com>
+References: <20250621165409.147744-1-sergeybashirov@gmail.com>
+	 <20250621165409.147744-2-sergeybashirov@gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Adds Rust bindings for the kernel's `ww_mutex` infrastructure to enable
-deadlock-free acquisition of multiple related locks.
+On Sat, 2025-06-21 at 19:52 +0300, Sergey Bashirov wrote:
+> Minor clean up. Instead of dprintk there are appropriate error codes.
+>=20
+> Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+> ---
+>  fs/nfsd/blocklayoutxdr.c | 40 +++++++---------------------------------
+>  1 file changed, 7 insertions(+), 33 deletions(-)
+>=20
+> diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+> index 669ff8e6e966..bcf21fde9120 100644
+> --- a/fs/nfsd/blocklayoutxdr.c
+> +++ b/fs/nfsd/blocklayoutxdr.c
+> @@ -139,28 +139,19 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,=
+ struct iomap **iomapp,
+>  	struct iomap *iomaps;
+>  	u32 nr_iomaps, i;
+> =20
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (len < sizeof(u32))
+>  		return nfserr_bad_xdr;
+> -	}
+>  	len -=3D sizeof(u32);
+> -	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array invalid: %u\n", __func__, len);
+> +	if (len % PNFS_BLOCK_EXTENT_SIZE)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	nr_iomaps =3D be32_to_cpup(p++);
+> -	if (nr_iomaps !=3D len / PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, nr_iomaps);
+> +	if (nr_iomaps !=3D len / PNFS_BLOCK_EXTENT_SIZE)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	iomaps =3D kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+> =20
+>  	for (i =3D 0; i < nr_iomaps; i++) {
+>  		struct pnfs_block_extent bex;
+> @@ -170,26 +161,18 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,=
+ struct iomap **iomapp,
+> =20
+>  		p =3D xdr_decode_hyper(p, &bex.foff);
+>  		if (bex.foff & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n",
+> -				__func__, bex.foff);
+>  			goto fail;
+>  		}
+>  		p =3D xdr_decode_hyper(p, &bex.len);
+>  		if (bex.len & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n",
+> -				__func__, bex.foff);
+>  			goto fail;
+>  		}
+>  		p =3D xdr_decode_hyper(p, &bex.soff);
+>  		if (bex.soff & (block_size - 1)) {
+> -			dprintk("%s: unaligned disk offset 0x%llx\n",
+> -				__func__, bex.soff);
+>  			goto fail;
+>  		}
+>  		bex.es =3D be32_to_cpup(p++);
+>  		if (bex.es !=3D PNFS_BLOCK_READWRITE_DATA) {
+> -			dprintk("%s: incorrect extent state %d\n",
+> -				__func__, bex.es);
+>  			goto fail;
+>  		}
+> =20
+> @@ -231,38 +214,29 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, =
+struct iomap **iomapp,
+>  	struct iomap *iomaps;
+>  	u32 nr_iomaps, expected, i;
+> =20
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (len < sizeof(u32))
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	nr_iomaps =3D be32_to_cpup(p++);
+>  	expected =3D sizeof(__be32) + nr_iomaps * PNFS_SCSI_RANGE_SIZE;
+> -	if (len !=3D expected) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, expected);
+> +	if (len !=3D expected)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	iomaps =3D kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+> =20
+>  	for (i =3D 0; i < nr_iomaps; i++) {
+>  		u64 val;
+> =20
+>  		p =3D xdr_decode_hyper(p, &val);
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n", __func__, val);
+>  			goto fail;
+>  		}
+>  		iomaps[i].offset =3D val;
+> =20
+>  		p =3D xdr_decode_hyper(p, &val);
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n", __func__, val);
+>  			goto fail;
+>  		}
+>  		iomaps[i].length =3D val;
 
-The patch abstracts `ww_mutex.h` header and wraps the existing
-C `ww_mutex` with three main types:
-    - `WwClass` for grouping related mutexes
-    - `WwAcquireCtx` for tracking lock acquisition context
-    - `WwMutex<T>` for the actual lock
+Looks sane, and most of these dprintks aren't terribly helpful for day
+to day usage.
 
-Signed-off-by: Onur Özkan <work@onurozkan.dev>
----
- rust/kernel/error.rs              |   1 +
- rust/kernel/sync/lock.rs          |   1 +
- rust/kernel/sync/lock/ww_mutex.rs | 421 ++++++++++++++++++++++++++++++
- 3 files changed, 423 insertions(+)
- create mode 100644 rust/kernel/sync/lock/ww_mutex.rs
-
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index 3dee3139fcd4..28157541e12c 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -64,6 +64,7 @@ macro_rules! declare_err {
-     declare_err!(EPIPE, "Broken pipe.");
-     declare_err!(EDOM, "Math argument out of domain of func.");
-     declare_err!(ERANGE, "Math result not representable.");
-+    declare_err!(EDEADLK, "Resource deadlock avoided.");
-     declare_err!(EOVERFLOW, "Value too large for defined data type.");
-     declare_err!(ERESTARTSYS, "Restart the system call.");
-     declare_err!(ERESTARTNOINTR, "System call was interrupted by a signal and will be restarted.");
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index e82fa5be289c..8824ebc81084 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -15,6 +15,7 @@
- 
- pub mod mutex;
- pub mod spinlock;
-+pub mod ww_mutex;
- 
- pub(super) mod global;
- pub use global::{GlobalGuard, GlobalLock, GlobalLockBackend, GlobalLockedBy};
-diff --git a/rust/kernel/sync/lock/ww_mutex.rs b/rust/kernel/sync/lock/ww_mutex.rs
-new file mode 100644
-index 000000000000..dcb23941813c
---- /dev/null
-+++ b/rust/kernel/sync/lock/ww_mutex.rs
-@@ -0,0 +1,421 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! A kernel Wound/Wait Mutex.
-+//!
-+//! This module provides Rust abstractions for the Linux kernel's `ww_mutex` implementation,
-+//! which provides deadlock avoidance through a wait-wound or wait-die algorithm.
-+//!
-+//! C header: [`include/linux/ww_mutex.h`](srctree/include/linux/ww_mutex.h)
-+//!
-+//! For more information: <https://docs.kernel.org/locking/ww-mutex-design.html>
-+
-+use crate::bindings;
-+use crate::error::to_result;
-+use crate::prelude::*;
-+use crate::types::{NotThreadSafe, Opaque};
-+use core::cell::UnsafeCell;
-+use core::marker::PhantomData;
-+
-+/// Create static [`WwClass`] instances.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// use kernel::{c_str, define_ww_class};
-+///
-+/// define_ww_class!(WOUND_WAIT_GLOBAL_CLASS, wound_wait, c_str!("wound_wait_global_class"));
-+/// define_ww_class!(WAIT_DIE_GLOBAL_CLASS, wait_die, c_str!("wait_die_global_class"));
-+/// ```
-+#[macro_export]
-+macro_rules! define_ww_class {
-+    ($name:ident, wound_wait, $class_name:expr) => {
-+        static $name: $crate::sync::lock::ww_mutex::WwClass =
-+            { $crate::sync::lock::ww_mutex::WwClass::new($class_name, false) };
-+    };
-+    ($name:ident, wait_die, $class_name:expr) => {
-+        static $name: $crate::sync::lock::ww_mutex::WwClass =
-+            { $crate::sync::lock::ww_mutex::WwClass::new($class_name, true) };
-+    };
-+}
-+
-+/// A group of mutexes that can participate in deadlock avoidance together.
-+///
-+/// All mutexes that might be acquired together should use the same class.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// use kernel::sync::lock::ww_mutex::WwClass;
-+/// use kernel::c_str;
-+/// use pin_init::stack_pin_init;
-+///
-+/// stack_pin_init!(let _wait_die_class = WwClass::new_wait_die(c_str!("graphics_buffers")));
-+/// stack_pin_init!(let _wound_wait_class = WwClass::new_wound_wait(c_str!("memory_pools")));
-+///
-+/// # Ok::<(), Error>(())
-+/// ```
-+#[pin_data]
-+pub struct WwClass {
-+    #[pin]
-+    inner: Opaque<bindings::ww_class>,
-+}
-+
-+// SAFETY: [`WwClass`] is set up once and never modified. It's fine to share it across threads.
-+unsafe impl Sync for WwClass {}
-+// SAFETY: Doesn't hold anything thread-specific. It's safe to send to other threads.
-+unsafe impl Send for WwClass {}
-+
-+macro_rules! ww_class_init_helper {
-+    ($name:expr, $is_wait_die:expr) => {
-+        Opaque::new(bindings::ww_class {
-+            stamp: bindings::atomic_long_t { counter: 0 },
-+            acquire_name: $name.as_char_ptr(),
-+            mutex_name: $name.as_char_ptr(),
-+            is_wait_die: $is_wait_die as u32,
-+            // TODO: Replace with `bindings::lock_class_key::default()` once stabilized for `const`.
-+            //
-+            // SAFETY: This is always zero-initialized when defined with `DEFINE_WD_CLASS`
-+            // globally on C side.
-+            //
-+            // Ref: <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/ww_mutex.h?h=v6.16-rc2#n85>
-+            acquire_key: unsafe { core::mem::zeroed() },
-+            // TODO: Replace with `bindings::lock_class_key::default()` once stabilized for `const`.
-+            //
-+            // SAFETY: This is always zero-initialized when defined with `DEFINE_WD_CLASS`
-+            // globally on C side.
-+            //
-+            // Ref: <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/ww_mutex.h?h=v6.16-rc2#n85>
-+            mutex_key: unsafe { core::mem::zeroed() },
-+        })
-+    };
-+}
-+
-+impl WwClass {
-+    /// Creates a [`WwClass`].
-+    ///
-+    /// It's `pub` only so it can be used by the `define_ww_class!` macro.
-+    ///
-+    /// You should not use this function directly. Use the `define_ww_class!`
-+    /// macro or call [`WwClass::new_wait_die`] or [`WwClass::new_wound_wait`] instead.
-+    pub const fn new(name: &'static CStr, is_wait_die: bool) -> Self {
-+        WwClass {
-+            inner: ww_class_init_helper!(name, is_wait_die),
-+        }
-+    }
-+
-+    /// Creates wait-die [`WwClass`].
-+    pub fn new_wait_die(name: &'static CStr) -> impl PinInit<Self> {
-+        pin_init!(WwClass {
-+            inner: ww_class_init_helper!(name, true),
-+        })
-+    }
-+
-+    /// Creates wound-wait [`WwClass`].
-+    pub fn new_wound_wait(name: &'static CStr) -> impl PinInit<Self> {
-+        pin_init!(WwClass {
-+            inner: ww_class_init_helper!(name, false),
-+        })
-+    }
-+}
-+
-+/// An acquire context is used to group multiple mutex acquisitions together
-+/// for deadlock avoidance. It must be used when acquiring multiple mutexes
-+/// of the same class.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// use kernel::sync::lock::ww_mutex::{WwClass, WwAcquireCtx, WwMutex};
-+/// use kernel::c_str;
-+/// use kernel::alloc::KBox;
-+/// use pin_init::stack_pin_init;
-+///
-+/// stack_pin_init!(let class = WwClass::new_wound_wait(c_str!("my_class")));
-+///
-+/// // Create mutexes.
-+/// stack_pin_init!(let mutex1 = WwMutex::new(1, &class));
-+/// stack_pin_init!(let mutex2 = WwMutex::new(2, &class));
-+///
-+/// // Create acquire context for deadlock avoidance.
-+/// let mut ctx = KBox::pin_init(WwAcquireCtx::new(&class), GFP_KERNEL)?;
-+///
-+/// // Acquire multiple locks safely.
-+/// let guard1 = mutex1.lock(Some(&ctx))?;
-+/// let guard2 = mutex2.lock(Some(&ctx))?;
-+///
-+/// // Mark acquisition phase as complete.
-+/// ctx.as_mut().done();
-+///
-+/// # Ok::<(), Error>(())
-+/// ```
-+#[pin_data(PinnedDrop)]
-+pub struct WwAcquireCtx<'a> {
-+    #[pin]
-+    inner: Opaque<bindings::ww_acquire_ctx>,
-+    _p: PhantomData<&'a WwClass>,
-+}
-+
-+// SAFETY: Used in controlled ways during lock acquisition. No race risk.
-+unsafe impl Sync for WwAcquireCtx<'_> {}
-+// SAFETY: Doesn't rely on thread-local state. Safe to move between threads.
-+unsafe impl Send for WwAcquireCtx<'_> {}
-+
-+impl<'ctx> WwAcquireCtx<'ctx> {
-+    /// Initializes `Self` with calling C side `ww_acquire_init` inside.
-+    pub fn new<'class: 'ctx>(ww_class: &'class WwClass) -> impl PinInit<Self> {
-+        let raw_ptr = ww_class.inner.get();
-+        pin_init!(WwAcquireCtx {
-+            inner <- Opaque::ffi_init(|slot: *mut bindings::ww_acquire_ctx| {
-+                // SAFETY: The caller guarantees that `ww_class` remains valid.
-+                unsafe { bindings::ww_acquire_init(slot, raw_ptr) }
-+            }),
-+            _p: PhantomData
-+        })
-+    }
-+
-+    /// Marks the end of the acquire phase with C side `ww_acquire_done`.
-+    ///
-+    /// After calling this function, no more mutexes can be acquired with this context.
-+    pub fn done(self: Pin<&mut Self>) {
-+        // SAFETY: The context is pinned and valid.
-+        unsafe { bindings::ww_acquire_done(self.inner.get()) };
-+    }
-+
-+    /// Returns a raw pointer to the inner `ww_acquire_ctx`.
-+    fn as_ptr(&self) -> *mut bindings::ww_acquire_ctx {
-+        self.inner.get()
-+    }
-+}
-+
-+#[pinned_drop]
-+impl PinnedDrop for WwAcquireCtx<'_> {
-+    fn drop(self: Pin<&mut Self>) {
-+        // SAFETY: The context is being dropped and is pinned.
-+        unsafe { bindings::ww_acquire_fini(self.inner.get()) };
-+    }
-+}
-+
-+/// A wound/wait mutex backed with C side `ww_mutex`.
-+///
-+/// This is a mutual exclusion primitive that provides deadlock avoidance when
-+/// acquiring multiple locks of the same class.
-+///
-+/// # Examples
-+///
-+/// ## Basic Usage
-+///
-+/// ```
-+/// use kernel::sync::lock::ww_mutex::{WwClass, WwMutex};
-+/// use kernel::c_str;
-+/// use pin_init::stack_pin_init;
-+///
-+/// stack_pin_init!(let class = WwClass::new_wound_wait(c_str!("buffer_class")));
-+/// stack_pin_init!(let mutex = WwMutex::new(42, &class));
-+///
-+/// // Simple lock without context.
-+/// let guard = mutex.lock(None)?;
-+/// assert_eq!(*guard, 42);
-+///
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
-+/// ## Multiple Locks
-+///
-+/// ```
-+/// use kernel::c_str;
-+/// use kernel::prelude::*;
-+/// use kernel::sync::lock::ww_mutex::{WwClass, WwAcquireCtx, WwMutex};
-+/// use pin_init::stack_pin_init;
-+///
-+/// stack_pin_init!(let class = WwClass::new_wait_die(c_str!("resource_class")));
-+/// stack_pin_init!(let mutex_a = WwMutex::new("Resource A", &class));
-+/// stack_pin_init!(let mutex_b = WwMutex::new("Resource B", &class));
-+///
-+/// let mut ctx = KBox::pin_init(WwAcquireCtx::new(&class), GFP_KERNEL)?;
-+///
-+/// // Try to acquire both locks.
-+/// let guard_a = match mutex_a.lock(Some(&ctx)) {
-+///     Ok(guard) => guard,
-+///     Err(e) if e == EDEADLK => {
-+///         // Deadlock detected, use slow path.
-+///         mutex_a.lock_slow(&ctx)?
-+///     }
-+///     Err(e) => return Err(e),
-+/// };
-+///
-+/// let guard_b = mutex_b.lock(Some(&ctx))?;
-+/// ctx.as_mut().done();
-+///
-+/// # Ok::<(), Error>(())
-+/// ```
-+#[pin_data]
-+pub struct WwMutex<'a, T: ?Sized> {
-+    _p: PhantomData<&'a WwClass>,
-+    #[pin]
-+    mutex: Opaque<bindings::ww_mutex>,
-+    data: UnsafeCell<T>,
-+}
-+
-+// SAFETY: [`WwMutex`] can be shared between threads.
-+unsafe impl<T: ?Sized + Send> Send for WwMutex<'_, T> {}
-+// SAFETY: [`WwMutex`] can be safely accessed from multiple threads concurrently.
-+unsafe impl<T: ?Sized + Sync> Sync for WwMutex<'_, T> {}
-+
-+impl<'ww_class, T> WwMutex<'ww_class, T> {
-+    /// Creates `Self` with calling `ww_mutex_init` inside.
-+    pub fn new(t: T, ww_class: &'ww_class WwClass) -> impl PinInit<Self> {
-+        let raw_ptr = ww_class.inner.get();
-+        pin_init!(WwMutex {
-+            mutex <- Opaque::ffi_init(|slot: *mut bindings::ww_mutex| {
-+                // SAFETY: The caller guarantees that `ww_class` remains valid.
-+                unsafe { bindings::ww_mutex_init(slot, raw_ptr) }
-+            }),
-+            data: UnsafeCell::new(t),
-+            _p: PhantomData,
-+        })
-+    }
-+}
-+
-+impl<T: ?Sized> WwMutex<'_, T> {
-+    /// Locks the mutex with the given acquire context.
-+    pub fn lock<'a>(&'a self, ctx: Option<&WwAcquireCtx<'_>>) -> Result<WwMutexGuard<'a, T>> {
-+        // SAFETY: The mutex is pinned and valid.
-+        let ret = unsafe {
-+            bindings::ww_mutex_lock(
-+                self.mutex.get(),
-+                ctx.map_or(core::ptr::null_mut(), |c| c.as_ptr()),
-+            )
-+        };
-+
-+        to_result(ret)?;
-+
-+        Ok(WwMutexGuard::new(self))
-+    }
-+
-+    /// Locks the mutex with the given acquire context, interruptible.
-+    ///
-+    /// Similar to `lock`, but can be interrupted by signals.
-+    pub fn lock_interruptible<'a>(
-+        &'a self,
-+        ctx: Option<&WwAcquireCtx<'_>>,
-+    ) -> Result<WwMutexGuard<'a, T>> {
-+        // SAFETY: The mutex is pinned and valid.
-+        let ret = unsafe {
-+            bindings::ww_mutex_lock_interruptible(
-+                self.mutex.get(),
-+                ctx.map_or(core::ptr::null_mut(), |c| c.as_ptr()),
-+            )
-+        };
-+
-+        to_result(ret)?;
-+
-+        Ok(WwMutexGuard::new(self))
-+    }
-+
-+    /// Locks the mutex in the slow path after a die case.
-+    ///
-+    /// This should be called after releasing all held mutexes when `lock` returns [`EDEADLK`].
-+    pub fn lock_slow<'a>(&'a self, ctx: &WwAcquireCtx<'_>) -> Result<WwMutexGuard<'a, T>> {
-+        // SAFETY: The mutex is pinned and valid, and we're in the slow path.
-+        unsafe { bindings::ww_mutex_lock_slow(self.mutex.get(), ctx.as_ptr()) };
-+
-+        Ok(WwMutexGuard::new(self))
-+    }
-+
-+    /// Locks the mutex in the slow path after a die case, interruptible.
-+    pub fn lock_slow_interruptible<'a>(
-+        &'a self,
-+        ctx: &WwAcquireCtx<'_>,
-+    ) -> Result<WwMutexGuard<'a, T>> {
-+        // SAFETY: The mutex is pinned and valid, and we are in the slow path.
-+        let ret =
-+            unsafe { bindings::ww_mutex_lock_slow_interruptible(self.mutex.get(), ctx.as_ptr()) };
-+
-+        to_result(ret)?;
-+
-+        Ok(WwMutexGuard::new(self))
-+    }
-+
-+    /// Tries to lock the mutex without blocking.
-+    pub fn try_lock<'a>(&'a self, ctx: Option<&WwAcquireCtx<'_>>) -> Result<WwMutexGuard<'a, T>> {
-+        // SAFETY: The mutex is pinned and valid.
-+        let ret = unsafe {
-+            bindings::ww_mutex_trylock(
-+                self.mutex.get(),
-+                ctx.map_or(core::ptr::null_mut(), |c| c.as_ptr()),
-+            )
-+        };
-+
-+        if ret == 0 {
-+            return Err(EBUSY);
-+        }
-+
-+        to_result(if ret < 0 { ret } else { 0 })?;
-+
-+        Ok(WwMutexGuard::new(self))
-+    }
-+
-+    /// Checks if the mutex is currently locked.
-+    pub fn is_locked(&self) -> bool {
-+        // SAFETY: The mutex is pinned and valid.
-+        unsafe { bindings::ww_mutex_is_locked(self.mutex.get()) }
-+    }
-+
-+    /// Returns a raw pointer to the inner mutex.
-+    fn as_ptr(&self) -> *mut bindings::ww_mutex {
-+        self.mutex.get()
-+    }
-+}
-+
-+/// A guard that provides exclusive access to the data protected
-+/// by a [`WwMutex`].
-+///
-+/// # Invariants
-+///
-+/// The guard holds an exclusive lock on the associated [`WwMutex`]. The lock is held
-+/// for the entire lifetime of this guard and is automatically released when the
-+/// guard is dropped.
-+#[must_use = "the lock unlocks immediately when the guard is unused"]
-+pub struct WwMutexGuard<'a, T: ?Sized> {
-+    mutex: &'a WwMutex<'a, T>,
-+    _not_send: NotThreadSafe,
-+}
-+
-+// SAFETY: [`WwMutexGuard`] can be transferred across thread boundaries if the data can.
-+unsafe impl<T: ?Sized + Send> Send for WwMutexGuard<'_, T> {}
-+
-+// SAFETY: [`WwMutexGuard`] can be shared between threads if the data can.
-+unsafe impl<T: ?Sized + Send + Sync> Sync for WwMutexGuard<'_, T> {}
-+
-+impl<'a, T: ?Sized> WwMutexGuard<'a, T> {
-+    /// Creates a new guard for a locked mutex.
-+    fn new(mutex: &'a WwMutex<'a, T>) -> Self {
-+        Self {
-+            mutex,
-+            _not_send: NotThreadSafe,
-+        }
-+    }
-+}
-+
-+impl<T: ?Sized> core::ops::Deref for WwMutexGuard<'_, T> {
-+    type Target = T;
-+
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: We hold the lock, so we have exclusive access.
-+        unsafe { &*self.mutex.data.get() }
-+    }
-+}
-+
-+impl<T: ?Sized> core::ops::DerefMut for WwMutexGuard<'_, T> {
-+    fn deref_mut(&mut self) -> &mut Self::Target {
-+        // SAFETY: We hold the lock, so we have exclusive access.
-+        unsafe { &mut *self.mutex.data.get() }
-+    }
-+}
-+
-+impl<T: ?Sized> Drop for WwMutexGuard<'_, T> {
-+    fn drop(&mut self) {
-+        // SAFETY: We hold the lock and are about to release it.
-+        unsafe { bindings::ww_mutex_unlock(self.mutex.as_ptr()) };
-+    }
-+}
--- 
-2.49.0
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
