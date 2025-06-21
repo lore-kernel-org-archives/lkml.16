@@ -1,116 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E2A1A5B92;
-	Sat, 21 Jun 2025 07:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEB5196C7C;
+	Sat, 21 Jun 2025 07:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750492159; cv=none; b=eAvLjPjECO/J6uPdNot+W6t1gvDlEIe1t18kWQZ9r2rdzq2qXTTC4JiuQbkAP2ImePWq6jUIE+20l+EB2dNzMunrqWvcpzm13oybCBNEUMfeGuJ3lsVnhpXzw/RCkA7c/nqLRrZTWmCj1fXm33fTeiYV7hZEvtIr72cM94/VUog=
+	t=1750492292; cv=none; b=VeN9utHadGHfUYGh88vXlMsEhu8vA0CJ7nGjOTOOEXpZtatPcDzZrhNsCiuXSNiWwCHfvWwJbO9HVjFt74jDkY4mDALRBPMj6IErPhhboj+JuoVRVQCEbRQmRJWCaIy/UrTwhHQPaQScvqaNDahh/Q/vOnBZk54HmzzYDfG94mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750492159; c=relaxed/simple;
-	bh=D92eT9Xx7A/mwCmvtvVyVvyYZrjSeDvGxSVWf/q13Vc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqIja9+KSXIKrwrk17NHSqNMyrAV2x0uiPrKNZbngRB7PVXBhuR0Zoj1ek0yGmliJ6TdTNttYy2YvVmdkaEa26L9S8MsfxJkDlR3omXhRTDaec/JgDQriD4fZczh/DxrLMHpgRHFAcicyuCmKBfDIB5hVdP+6BiHS0HNTO4etdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8xiYplK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750492292; c=relaxed/simple;
+	bh=N2liG/VEGn1zE58WPTY+qTYBZrxC0ajqZccxgE1zYhE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nuPA3otU8MFm/WiDDiDgsjy7a+UIvqbJ1AaYy2V4643/plAb7ykrMxausme37KlC68gEk3IROAwjLXSZAxgvS9jLg9hVeDFu66me9V2m+/Dn2n1cfkiP2JaTrqv8VS5/ccZ7kzXo3qnK+DmRWD7Qgz/GY17x4wR0Sipk6AFoFzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef9DDYfl; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8xiYplK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C9AC4CEE7;
-	Sat, 21 Jun 2025 07:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750492159;
-	bh=D92eT9Xx7A/mwCmvtvVyVvyYZrjSeDvGxSVWf/q13Vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b8xiYplKeHRRT583dTNY3TeIFIgxYTewhGYVSF5BzXeVTfy4kV7BqkR87eyo+mGt5
-	 62IxdOEPJ681ntY/t/sDb1BUMSSXoZWfYhf+fXMAcw3LbCl05r9etlDomF54O3mVbZ
-	 FVmbBXn2BoT5QKT+2p0Ff/Vwekvc9hmM/TPtRJLxZDGXaXZiWYsv+NK082wt4jsOkd
-	 PQB9zGdmzS6R8UdYbbNurKh8laxo2V0NDRRud3QvuK31LVGJf+mypuw6uxFBJT0RQf
-	 IYRWePpJdT/SEaUuoDZ3mVsfxDOsrDREdkPQ2A88Xt6W6Gw1f+XLgiwVgt32Pe7wwu
-	 ZYntXXfDXoN6g==
-Date: Sat, 21 Jun 2025 08:49:15 +0100
-From: Simon Horman <horms@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] myri10ge: avoid uninitialized variable use
-Message-ID: <20250621074915.GG9190@horms.kernel.org>
-References: <20250620112633.3505634-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef9DDYfl"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31c6c9959cso2739960a12.1;
+        Sat, 21 Jun 2025 00:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750492291; x=1751097091; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QjH3SClgXI+/6Dzi1H3p1vPtwWYmzgf9jmyxigyRNKs=;
+        b=Ef9DDYfl3ga2FVyggSxWSVmIOodYFddKkFKneC5PqkvrmdrEmqGyT417fDZYiJd+9l
+         1jeAlg4W6typKl+wXqp8Vdu/N9QUUSlMoW2DogvVyWJK5CFAzZ3Nk5zl94758v7sS/7u
+         zFk03XIDTRXMCmEGosCZU8ciW6VGyVCi2kCCB+/O5kMwF+mLwM5AfKzg1CCCcmnCMmY3
+         IEuxBcwePYJsFMbnh2Pe0noc+z2wRGL2RJzDrOn5gcqkVmfEcqpRaCwL5JcH+PqUhphX
+         ZKfUKRUVhQm94GD23qV3qv/0NoqP8EVli92iCKUbCIGERRStxAiw8PcwdPdd6koiuAHa
+         56QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750492291; x=1751097091;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QjH3SClgXI+/6Dzi1H3p1vPtwWYmzgf9jmyxigyRNKs=;
+        b=ZIHeFTW33/gMuT3JyGazBozMMd66XRiW232e9CuYSs1/zsykjOihtQ1n1TAKGLUz41
+         0to28S5NgpE54grKPOLrxInbDMjiX+DMfhfLe8O3kf2Qx1V1ZvsFQgX1L5kR6GoZI4h0
+         EIBoJT1BLkuij1q68d1c8Zxfz4V/ypRMZYbNXSizxG29qx9ZRu1Z4vaYXu4uAzRqumGt
+         PSDLMaNsx+3zsQnEqhL5ap6tDyvuMdTBA3Wubf21jdDEvJXGwAFWIOK+XyvOMnqonNW3
+         Ngg5uUZEkqTTr3ZbFXDIyhk9LOjFW2AD/7wn0ydWUf2B1OjuQ7IkquAd8ixUBichtVTG
+         u6lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGRXjixwPzpeYdE47VLQEy6gqN19cSpUfb4UoZYxROmsbl5f9wWfp43SXTP6w+WCi6pm2OCZ7VNS/qoV7wFzc=@vger.kernel.org, AJvYcCXWVhtRIEStkp7iURvrLIQNMhq+nTK9VC8JHOEqpqWNXSG95QU63OO69rOXElpwrOSocw4wJhuAy1aCABp4@vger.kernel.org, AJvYcCXXINcLINMW0RYE6xKxxH5MbO0+BLSXMz8p+08D8SHdlLrMx9vL1bIZUWNZgFhLcoEIYgZollPKT8M95ForJVHwk5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtrjHhgnZ/hKMr4VhMOwPVfcGP3Of5Pxnx1lsAKbh2wfd0j1ne
+	5o9x8nhO1CyXKwAvcvlo9o4NLA2cCkJP69l5Wsi50PIRurPeTJJNDDyv
+X-Gm-Gg: ASbGncvNdcLGNY2R52rje9hFAaqkCKg6gC5Q2jdyuwuwKnnwhcDVBHegARXtuzgDrXe
+	P6DPu4Fz9mgSm3tNaSq3vqtV6/frTDpWvhF0tXSQG1fNsCqltwqUOLznIHP9fDuYiJPHAW+MgDf
+	z6OH1Xo7iUnbRGV3EXm4PKnf2MgABhG6zbtAj6xFmt5aL96QZB6gJ4NZS331yZUrI3XsE+42dQC
+	W38wsgmHLxrP5wK2DLk+FD048lZ/asE5HK0odjDcxBwd455pBxy41W1lXtpcQEvdZYeBK3en8YK
+	Yekd2+IOWbdZvzOOMBe0xbRl7lOPwBF52CxGi6Mk5OuZTVWPzDgaZMUFb0uc9qlVUZa1Lb1nB2M
+	US+BtzU3+q6kYx3dYkBYttp9Xo50MhTk=
+X-Google-Smtp-Source: AGHT+IEyGXu1Hnb5EyVdRM7a2b3XmM0IodUz97aojyFKVoSTQ6nDz9nCL93hZ+xKfu3PXPQjvFm1Xg==
+X-Received: by 2002:a17:902:f64a:b0:234:b44c:d3c8 with SMTP id d9443c01a7336-237d9a74415mr71122785ad.37.1750492290735;
+        Sat, 21 Jun 2025 00:51:30 -0700 (PDT)
+Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ee9f6sm34823025ad.73.2025.06.21.00.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 00:51:30 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v2 0/2] ARM: dts: Add support for Meta Clemente BMC
+Date: Sat, 21 Jun 2025 15:50:58 +0800
+Message-Id: <20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620112633.3505634-1-arnd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGJkVmgC/5WNQQ6CMBBFr0K6dgytUIWV9zAsyjDIJLYlbSUYw
+ t2t3MDl+/l5bxORAlMUbbGJQAtH9i6DOhUCJ+OeBDxkFqpUdanlDcwwQHzPsw8JRh/AUjKAL7L
+ kEkFvEZpKmko3PdbqIrJnDjTyejQeXeaJY/LhcyQX+Vv/sS8SSqAajdYNUXXt7yNz/q7onTujt
+ 6Lb9/0LFAttqtgAAAA=
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+ Leo Wang <leo.jt.wang@fii-foxconn.com>, Leo Wang <leo.jt.wang@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750492287; l=1084;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=N2liG/VEGn1zE58WPTY+qTYBZrxC0ajqZccxgE1zYhE=;
+ b=fCy/a+Emc3jwuaGbTCnI1u0J6Q4wpXHsYr7ABj3llz3y/iKtON9QG4+bPd2oXl0lGKNnIwxHG
+ 1cKF4oLZlwrADnOQp+1mn6tAnP3IjZ8Ko7b/XEx7cz9N0S9VWrlOWg9
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
-On Fri, Jun 20, 2025 at 01:26:28PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> While compile testing on less common architectures, I noticed that gcc-10 on
-> s390 finds a bug that all other configurations seem to miss:
-> 
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c: In function 'myri10ge_set_multicast_list':
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:391:25: error: 'cmd.data0' is used uninitialized in this function [-Werror=uninitialized]
->   391 |  buf->data0 = htonl(data->data0);
->       |                         ^~
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:392:25: error: '*((void *)&cmd+4)' is used uninitialized in this function [-Werror=uninitialized]
->   392 |  buf->data1 = htonl(data->data1);
->       |                         ^~
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c: In function 'myri10ge_allocate_rings':
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:392:13: error: 'cmd.data1' is used uninitialized in this function [-Werror=uninitialized]
->   392 |  buf->data1 = htonl(data->data1);
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:1939:22: note: 'cmd.data1' was declared here
->  1939 |  struct myri10ge_cmd cmd;
->       |                      ^~~
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:393:13: error: 'cmd.data2' is used uninitialized in this function [-Werror=uninitialized]
->   393 |  buf->data2 = htonl(data->data2);
-> drivers/net/ethernet/myricom/myri10ge/myri10ge.c:1939:22: note: 'cmd.data2' was declared here
->  1939 |  struct myri10ge_cmd cmd;
-> 
-> It would be nice to understand how to make other compilers catch this as
-> well, but for the moment I'll just shut up the warning by fixing the
-> undefined behavior in this driver.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
 
-Hi Arnd,
+Patch 1 documents the compatible string.
+Patch 2 adds the device tree for the board.
 
-That is a lovely mess.
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+---
+Changes in v2:
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
 
-Curiously I was not able to reproduce this on s390 with gcc 10.5.0.
-Perhaps I needed to try harder. Or perhaps the detection is specific to a
-very narrow set of GCC versions.
+---
+Leo Wang (2):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
 
-Regardless I agree with your analysis, but I wonder if the following is
-also needed so that .data0, 1 and 2 are always initialised when used.
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1254 ++++++++++++++++++++
+ 3 files changed, 1256 insertions(+)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
 
-diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-index f9d6ba381361..4743064bc6d4 100644
---- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-+++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-@@ -809,6 +809,7 @@ static int myri10ge_update_mac_address(struct myri10ge_priv *mgp,
- 		     | (addr[2] << 8) | addr[3]);
- 
- 	cmd.data1 = ((addr[4] << 8) | (addr[5]));
-+	cmd.data2 = 0;
- 
- 	status = myri10ge_send_cmd(mgp, MXGEFW_SET_MAC_ADDRESS, &cmd, 0);
- 	return status;
-@@ -820,6 +821,9 @@ static int myri10ge_change_pause(struct myri10ge_priv *mgp, int pause)
- 	int status, ctl;
- 
- 	ctl = pause ? MXGEFW_ENABLE_FLOW_CONTROL : MXGEFW_DISABLE_FLOW_CONTROL;
-+	cmd.data0 = 0,
-+	cmd.data1 = 0,
-+	cmd.data2 = 0,
- 	status = myri10ge_send_cmd(mgp, ctl, &cmd, 0);
- 
- 	if (status) {
+Best regards,
+-- 
+Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-...
