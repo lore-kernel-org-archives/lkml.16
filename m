@@ -1,105 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281EF1426C
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490A11531C1;
+	Sat, 21 Jun 2025 15:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750521136; cv=none; b=O0Iyty1QsvlS14jYEgn1gryAwFZOIVjcY7tdGHLiSFz4hz/MSW2GgethX33wopsFAv8EnOl6DdCqmY9SwD25i7DVbevPc5J1fxOeWlsv0H848OionL+SzZmO3zF8/w3zficS//wuK89qXd6iJt9idky5ahTjzXFV52lK169rMe0=
+	t=1750521144; cv=none; b=kmnOglT5XC/DGwF46cLZdL3JSQfBNQZx71UopaxO8noWnnAbQh2ktXVTLbEUUW0blaqKZcZvKBuZnWAKPzGevs9mtl5ix/M7PtmDa4MNsEHYOdDFdB+zrqZk210eQ2aHmhYrBFSRytoO9ckzZCFt1ilI3cSH85JqCkM1PuE7D3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750521136; c=relaxed/simple;
-	bh=VLhYJJvwC1sREIFtKWid5tXS4FQzHm1yGiA8zdVyCtk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bsw6xk1aYxAO+1vkcVJdFGONifl23y133pPi5iX+VXVs0pR2cYXQxFEsWLuyBOS123I3tm2JFOqlm6zHbqjG+CGbQfIpbipopWL6joPlIDcIt2jiGqZDt6pWurBBY1TJv3EWGKcNquRIkk8/RZ8fAn+7QBcsJpmMbb/lGGDh5fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHF+xY4A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750521144; c=relaxed/simple;
+	bh=WydwX0JZAmT9huK4qTTIQ0UjKIOEmjIxw5ox0gKnLcA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=INQmTSAjUjMkY5qkQhBmOYFP6eGlPN7cjeCZCRwC6bhgHaaUthTyh+EWjdq34zAnEdQzgksS160iGRiWuJNYfiId4Ej8IIXbHHg/YAZ7YxOOSjrT4abPB3LiDmS3MwYO6S52bE7PdNGV6jWS/Yex07RpFwbFykYdccwyp32qKA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXxqCRHn; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHF+xY4A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54191C4CEEF;
-	Sat, 21 Jun 2025 15:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750521135;
-	bh=VLhYJJvwC1sREIFtKWid5tXS4FQzHm1yGiA8zdVyCtk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hHF+xY4A8stbK7vvN8JxRfCB6vYxmNBO5GgI38945Y5S7mfh7qxVVuToCVqSg1KO8
-	 btQD/Z+3Zntfojljq/NHKzNPdNRVJDFp9GhOEdsPdVwdnVzsHFA3z3QiQKenc8gBSg
-	 ZAVBkUwVI1VP1fCiW5XWOROWic5FBl/rjU436T/xmH7kqYtQFgJuE0dXqmBPCg8yxa
-	 dKOZ833Yqs6Jw8R0Y61toZAGWQ+KORe7KrNs23wo90gDWd4KHgZa+JVcXv7np8H50W
-	 l7fFHFY/Od8/cO1aL+7oCipM2/KsDlvAaFixkpXUEO1Wb3iMVfjgBZ+x2KsBaoccrh
-	 fisj3d/Lx+KtA==
-Message-ID: <48ff3e59-db6f-4870-8f0b-3c49dd4d865e@kernel.org>
-Date: Sat, 21 Jun 2025 10:52:12 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXxqCRHn"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7115e32802bso23592047b3.1;
+        Sat, 21 Jun 2025 08:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750521142; x=1751125942; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQ8CkrcNNsUVoneJHIbJkRnJ1Ln8Tw2HezGEVAsNGNQ=;
+        b=bXxqCRHnz5D8d482DWMLgAGs0FWBqcXLHIFhW6Jw9G9gb5Y527w8ljNjyCSIABCsJ3
+         2UAMdn5S9D5gUweq0EDNDupUwlzQWfBZRSbZkEllZFsL0EBsfLMocKgdEABCs8QCzUTj
+         7KfG1m5R2lC7faHgcXHCRh2/y7SiHUXBms9rkBJoxmOY9FXPMSgc3DN1eug3nIWmi619
+         kv8s9WNKjorDYkNmbYH+EKDxdSNAEhaEsMM0QW232pKpEj6vIEucUCvCM1lwkHfBkWwJ
+         UIHgK4ELTayYmFsSJ6Q8z2twBIDdut1etgG6imJzVcZZhZ8/2wRYrVtpm48944myRiCh
+         eYRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750521142; x=1751125942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZQ8CkrcNNsUVoneJHIbJkRnJ1Ln8Tw2HezGEVAsNGNQ=;
+        b=UkFY+XmApeqytlwYPDtKw8FegmIGE8qqsWyDGdRxXgt6cJpljsA2VO/T2ANTJfSaAL
+         ew1oYCb83lQ/I/DJFuGah0ajxI7g7/h7SU6KRekq6L4/CmMXlvidfeVeD+lSPS04ZcY7
+         HSlNfVv0jd57L9qVrOr23bBCazD22HXG7PYRLgYILjBrqUIJtK/ByOdiIOkAvR4A/cdZ
+         mF0f5/l7+kSDegXvFi7F2NoEanb3lP5AAbWFfZOj5CnIsmHBGJDveCXm6jkGlgVGnsx1
+         Nh29SPCLvNLOdkji7XALWMLmFFovA1RP991REkM7GqIj2B4xDb1JBxJcpI9Bjj3t73Lq
+         JELQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUA6YX6N2jiU1ZUKVf2empO4X1P+bMSfdL+hqznWdzJbbbce9waRjq+n9qUoNa4qcMoc9X3VizIfHrPnlc=@vger.kernel.org, AJvYcCVPaSLiYOPsKHx+VzFGJc/jq0dCgY4gqFuy0atQ6CGorM8A9/BRUKQIhRv2U7/UBuxkpJQiYTeFduOS4lE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw61A6dog+ahhhiYHlafP8D/E3W4xihOw+HQnay4IrjoV96Seh8
+	4/Vc4g9uRM/KyLiRI1lLfRAXkx2zHyidMH6h9h3pDqtXTk7ooFLpdSlt
+X-Gm-Gg: ASbGncsORAkhgQLHY0SFB+GUSJp/40AGdAXPS4tQYNhjNmGfRC/1y86YLtvsV6eNXQG
+	vimQ6u1zk5PLU/hVD0x6ytWt/9vRPzqMthQVIGzn5IaQE+hRhJAqRbPE1RD7OXzUpRlsFeTSJkR
+	C6kIBmJM21qOnY/d657OjkbJgjh9mX8WSW3HLI2ZoAMudE98kASvZtcOAB4QPqdGssjJkZj3mhf
+	4lpC/SO1DA0yj/3OWEYC8NfeN4pzsUmseIJuuE5a+CRg88Ib0ion+lsZTr+y1GvSZbTLoG/3ikU
+	vMFfYAHlh8FSaJf8aY2UYV6YDxlgqY9OPycn20JQN59XxFpEbDmMWdLWFxzAfYAuA8hdCk7e8Qp
+	f
+X-Google-Smtp-Source: AGHT+IFEcgCwCLooPL3ro7gv9kjZTIaHBSc31uLgFVLo8IYKmnXV8AAe4vvupw43aJ1SDz+GwLTgKw==
+X-Received: by 2002:a05:690c:6d0b:b0:712:d70b:45d5 with SMTP id 00721157ae682-712d70b47e1mr36652427b3.33.1750521142268;
+        Sat, 21 Jun 2025 08:52:22 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4a21f9esm8598817b3.40.2025.06.21.08.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 08:52:22 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: alexguo1023@gmail.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb-usb-v2: ce6230: fix null-ptr-deref in ce6230_i2c_master_xfer
+Date: Sat, 21 Jun 2025 11:52:19 -0400
+Message-Id: <20250621155219.517909-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: AMDGPU - Regression: Black screen due to commit
- 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a
-To: Walt Holman <waltholman09@gmail.com>,
- linux-kernel <linux-kernel@vger.kernel.org>
-Cc: mario.limonciello@amd.com, alexander.deucher@amd.com
-References: <CAMb39_mAWfeuyDjHR4Ej9fH=PXdH0qUda50R=iqGKVzN1mcHPQ@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAMb39_mAWfeuyDjHR4Ej9fH=PXdH0qUda50R=iqGKVzN1mcHPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+msg is controlled by user. If accessing msg.buf without sanity
+check, null pointer deref would happen. Although there are some
+existing checks on msg.len, they do not cover all buffer access
+points. Therefore, we add an additional check on msg.len to
+prevent potential crashes.
 
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027:
+fix null-ptr-deref in az6027_i2c_xfer()")
 
-On 6/21/25 10:18 AM, Walt Holman wrote:
-> Hello,
-> 
-> With the latest drm fixes this week on 6.16-rc2, I am experiencing a
-> black screen instead of the sddm greeter and the GPU appears to be
-> locked up. I can ssh into the laptop and reboot it, but that's about
-> it. I have bisected the commit to commit id:
-> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a and upon reverting the
-> commit, the system works as normal. The hardware is an Asus Rog
-> Zephyrus G16 with AMD Ryzen AI 9 HX 370 w/ Radeon 890M video. I'm able
-> to test patches etc.. if need be.
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/usb/dvb-usb-v2/ce6230.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi there,
-
-By chance do you have an OLED panel?  If so can you please try the patch 
-attached to this bug?
-
-https://gitlab.freedesktop.org/drm/amd/-/issues/4338
-
-Thanks,
-
-> 
-> 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a is the first bad commit
-> commit 16dc8bc27c2aa3c93905d3e885e27f1e3535f09a (HEAD)
-> Author: Mario Limonciello <mario.limonciello@amd.com>
-> Date:   Thu May 29 09:46:32 2025 -0500
-> 
->      drm/amd/display: Export full brightness range to userspace
-> 
->      [WHY]
->      Userspace currently is offered a range from 0-0xFF but the PWM is
->      programmed from 0-0xFFFF.  This can be limiting to some software
->      that wants to apply greater granularity.
-> 
->      [HOW]
->      Convert internally to firmware values only when mapping custom
->      brightness curves because these are in 0-0xFF range. Advertise full
->      PWM range to userspace.
-> 
->      Cc: Mario Limonciello <mario.limonciello@amd.com>
->      Cc: Alex Deucher <alexander.deucher@amd.com>
->      Reviewed-by: Roman Li <roman.li@amd.com>
->      Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->      Signed-off-by: Alex Hung <alex.hung@amd.com>
->      Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
->      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->      (cherry picked from commit 8dbd72cb790058ce52279af38a43c2b302fdd3e5)
->      Cc: stable@vger.kernel.org
-> 
->   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 41
-> +++++++++++++++++++++++++++--------------
->   1 file changed, 27 insertions(+), 14 deletions(-)
-> 
+diff --git a/drivers/media/usb/dvb-usb-v2/ce6230.c b/drivers/media/usb/dvb-usb-v2/ce6230.c
+index 7ebaf3ee4491..6490003f5a85 100644
+--- a/drivers/media/usb/dvb-usb-v2/ce6230.c
++++ b/drivers/media/usb/dvb-usb-v2/ce6230.c
+@@ -101,7 +101,7 @@ static int ce6230_i2c_master_xfer(struct i2c_adapter *adap,
+ 		if (num > i + 1 && (msg[i+1].flags & I2C_M_RD)) {
+ 			if (msg[i].addr ==
+ 				ce6230_zl10353_config.demod_address) {
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 1 || msg[i+1].len < 1) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+-- 
+2.34.1
 
