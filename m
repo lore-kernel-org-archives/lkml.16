@@ -1,116 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37A4271456;
-	Sat, 21 Jun 2025 19:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0127E1
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 19:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750535522; cv=none; b=qCo9nT9oayIhc01GCbvHKuDo1ecOLrMz2BmxHiDZaEclmKq/klfTiK227iY1pZYaP+3txLsIqNZdpnLE9VDfCeQCXOej5MAnpv+GR7SAnrmG9IIFFU2Rh0Ao9JCrN5aXpYh0W8U0uwNbmcq9fSD3yaTTwbcDapn5mNqvivkrkpo=
+	t=1750535752; cv=none; b=mNpXGXtG1vn9Kww89//Mg98WOyjRZINJ2PP5RxW5n8gbKsz4ScZWtjQ6hliIdnBE8OPXrmtKU2gPYfio5AqpYOn2bBCuA2xq+qePV9lU+VpqKI6Lucr9KNRa8UNRe2IwMQFe5xNZCxBwU9lmsBMX5R9tN29Bcq6zqTb+qy9mccw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750535522; c=relaxed/simple;
-	bh=LVDt14mBWg0lELVOCK+Hfq1+W2xSKm8S17ORApwzmbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ky36cVnmpry2As+G4BvBJs2tHSG2OBl0DWez+nNOdSD1eGkYhc2XU8ZAmmbU9JHKNCGK/fbQUX8sZfB9VlIK9Bj1sNb9nCuwowsmRFjhsxaPSZP9mPyl13pEZsqMMuTlw+z3qTmknLsOpYY5ixhw72GrlvLxM5bUs9yQxYalvDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEE+9IDW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEE+9IDW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8240FC4CEF0;
-	Sat, 21 Jun 2025 19:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750535522;
-	bh=LVDt14mBWg0lELVOCK+Hfq1+W2xSKm8S17ORApwzmbE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SEE+9IDWJ72u5ssBPS95FTKmADMfXy0b452Dg/nJqpTdPRg/21rvdMVni0ofQJb1q
-	 RptHe1Wa2D6vKl8ibFPgTC0YILGokbANMno5oiRmTcjPqWuMe9mXnIZBfiB8Xhlim7
-	 /ijPOUCS+gUYGuxM3rioSfnzGNO6gJF/Q2ppl8YhS9zBnbISw/E2y2hPkrUEz7ly3E
-	 w9vG4X36rgeTb/04aZrwnjR2QPOp5iEBaA9Udz2eSRujxxr+vlxFruffJh8mYbWo/e
-	 7QzWhrEcgGlCz3CEYzMGPQ3YNyuMuwX20rofpLmRwJrBLEeY4NDburiMx1funvqq6N
-	 x6iftko7HcjhA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 8/8] samples: rust: pci: reset pci-testdev in unbind()
-Date: Sat, 21 Jun 2025 21:43:34 +0200
-Message-ID: <20250621195118.124245-9-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250621195118.124245-1-dakr@kernel.org>
-References: <20250621195118.124245-1-dakr@kernel.org>
+	s=arc-20240116; t=1750535752; c=relaxed/simple;
+	bh=XN9dgj8KZxF+ZFA7X5ypPmDNQHGVkzrlJsyw+f1Ohzs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpo4ZE8Hyp46QXDkpnmUA5fKliIEq4YEURD2oNkk1BLuyBqvIywnjwg07IBrzkKN13FCf4ueDGEfIbSJtqUmS7wZbQ/vRvpjy35SnyKbH8OidPxTOM1+8MBDMLMk+m4AAwwvX8gh/VlPJvP2w7lJMmTvYNc1YWp8p+bmiSjQn20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id b672fed3-4ed9-11f0-a5a7-005056bdf889;
+	Sat, 21 Jun 2025 22:55:43 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 21 Jun 2025 22:55:42 +0300
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v9 07/11] iio: accel: adxl345: add activity event feature
+Message-ID: <aFcOPky_EsatfsJu@surfacebook.localdomain>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+ <20250610215933.84795-8-l.rubusch@gmail.com>
+ <aEq_SJMDzPYGSMu6@smile.fi.intel.com>
+ <CAFXKEHbdeomMfEBwO+Cvkn5dkN4h47CEAMfmEGQC2V82zQ+U8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFXKEHbdeomMfEBwO+Cvkn5dkN4h47CEAMfmEGQC2V82zQ+U8Q@mail.gmail.com>
 
-Reset the pci-testdev when the driver is unbound from its device.
+Sat, Jun 21, 2025 at 08:06:49PM +0200, Lothar Rubusch kirjoitti:
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- samples/rust/rust_driver_pci.rs | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 15147e4401b2..062a242f8874 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -18,7 +18,7 @@ impl Regs {
- 
- type Bar0 = pci::Bar<{ Regs::END }>;
- 
--#[derive(Debug)]
-+#[derive(Copy, Clone, Debug)]
- struct TestIndex(u8);
- 
- impl TestIndex {
-@@ -28,6 +28,7 @@ impl TestIndex {
- struct SampleDriver {
-     pdev: ARef<pci::Device>,
-     bar: Devres<Bar0>,
-+    index: TestIndex,
- }
- 
- kernel::pci_device_table!(
-@@ -79,6 +80,7 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
-             Self {
-                 pdev: pdev.into(),
-                 bar,
-+                index: *info,
-             },
-             GFP_KERNEL,
-         )?;
-@@ -92,6 +94,13 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
- 
-         Ok(drvdata.into())
-     }
-+
-+    fn unbind(pdev: &pci::Device<Core>, this: Pin<&Self>) {
-+        if let Ok(bar) = this.bar.access(pdev.as_ref()) {
-+            // Reset pci-testdev by writing a new test index.
-+            bar.write8(this.index.0, Regs::TEST);
-+        }
-+    }
- }
- 
- impl Drop for SampleDriver {
+> > > +     ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &axis_ctrl);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     switch (type) {
+> > > +     case ADXL345_ACTIVITY:
+> > > +             en = FIELD_GET(ADXL345_ACT_X_EN, axis_ctrl) |
+> > > +                     FIELD_GET(ADXL345_ACT_Y_EN, axis_ctrl) |
+> > > +                     FIELD_GET(ADXL345_ACT_Z_EN, axis_ctrl);
+> >
+> > Something happened to the indentation.
+> > Ditto for several places in the code (upper and lower from this).
+> 
+> What is the matter with the indention here? I'm doing `checkpatch.pl
+> --strict --codespell` on that and don't get an issue? Would you expect
+> cases like the FIELD_GET() calls on the next line, linked by a binary
+> OR, to be indented by yet another TAB?
+
+All 'F':s should be on the same column (since the email already mangled
+[not by me], here is just an example).
+
+             en = FIELD_GET(ADXL345_ACT_X_EN, axis_ctrl) |
+                  FIELD_GET(ADXL345_ACT_Y_EN, axis_ctrl) |
+                  FIELD_GET(ADXL345_ACT_Z_EN, axis_ctrl);
+
+> > > +             break;
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     if (!en)
+> > > +             return en;
+> > > +
+> > > +     /* Check if corresponding interrupts are enabled */
+> > > +     ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     return adxl345_act_int_reg[type] & regval;
+> > > +}
+
+...
+
+Really, cut the unrelated context in the replies!
+
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
