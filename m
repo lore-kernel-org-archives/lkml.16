@@ -1,126 +1,96 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF111A76DE
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 20:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6514CE08;
+	Sat, 21 Jun 2025 20:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750537960; cv=none; b=aHVdSPPeFC1WgNxTobdU66ONEoHItIvjy3J0FHOWAxKF7ffvAK7+XsafTGIWZz51npqQRQHX57UDfJPEH+3UdcYkwbCntdNL4evibclRIFzJw+DEeIWrqia46f2o8y5ulvBk1bXZdnKHl+siVzVg1Fx3JqulcFbE0GOnHAAhfgI=
+	t=1750538129; cv=none; b=LmQ5/kx3Plaus5f9hf5yFKy7WReNRYFzymlb4bDvqa2iKED1m5nakgI8H5cLzd4fQh3lWNmAkbdcnE78IwcyhzvcVmnqPeUFWWcEadxgZfBbksFBFLtHYKgKn5Vykn3sm1/5hBDC9DsEMvfQ3bUKkpxKZYDY1esogeEQEq7n0a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750537960; c=relaxed/simple;
-	bh=8F7sWAL3IvLguIKcqjTOoceIv+azFUyktD7ekfWINOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ErnX5bdvypifm0RKK3hkBLcf/go6qcWFlKYHhXML8GtyL8HKRUQnhbszXRaEIfgj818NjecWBnHdt+nFXA/q6UJ5ozHeRi/oW5So1JKdFhdDQaEMqLLbwQZyBA7+WYxaKCeSZi4ORFYJtVhe18vJbkQR3FlxnJOCpfPzX2ml08I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rvb/BsZg; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750538129; c=relaxed/simple;
+	bh=hB8C7L1PxFJv/CZptLAzrkXYJacSm/2OYegNuolirxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rqwn8yMJU2RMT6YtwmmSnkJzMk6nS0vo7tuJykJvo9rgxHzWSH6un+WGkvN5qXsQ0MUiA4/Bb9pnVkT3VSjghv6lXb8aUucVBy7z0SnqDjPoCbHdPZta7AabxKTKp9qH2c87wK01d3oaYJj1oyLnKaNqDAkMES7S1NBm6eoAUIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=HuPcuoG2; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rvb/BsZg"
-Message-ID: <aa17c037-d83d-4f02-b212-ca12e43df577@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750537956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XtNRg6J7lcifqtX0/mWzB0hj5jWuXhrummsApoFZgHM=;
-	b=rvb/BsZgzb1iqKUzX+wQeiIUU8IGS+jnL+2IFktXcQsSZDx1vc3IDREVGmp9IWytT2z9lD
-	QAguudIhZlmPyQ6g72Vh3RKtuVIv3JfKXzKEmmxyVhWXKJhZKj+bUNZav+CJsxYrR9yCWu
-	oxtuISpnF/DlPHQRYdMFg7JIHph+Hxw=
-Date: Sat, 21 Jun 2025 21:32:28 +0100
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="HuPcuoG2"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3373341AD8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1750538127; bh=6N/xqxEEBR9LSu1nywynu4PPNaFbqIPkg71mxrWCLes=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HuPcuoG2dVfHfFh2pB7BD4VStyJXdbpjkx3x+EkLjyXkgjd33Vt06d04SeudOqp99
+	 06ggcFSlgSgGWKZ1+L2REsD6mY3KEtkmmifM/O2sJ2QO+X3ZHemvWFLHI79QA1rDFz
+	 IzG7p4EOmPDMxEt0+Zk7shTXdnbRiWmMwGTDVpULppB3EtRM3da/e+lUYduT2KGWoV
+	 jVad6matOroMrNW+W3JGR76NU0ty/j2KOy7c9ejnvmtAiaIMnoMHoOS/bCDYVrJQqG
+	 A4s0yg90Ng6gfOezzqmyucqh/XaJH3CpDCAea+xnxj9SiJELpD1C9Woz++bmlbL1w9
+	 vE/475G0YwWFw==
+Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
+	by ms.lwn.net (Postfix) with ESMTPA id 3373341AD8;
+	Sat, 21 Jun 2025 20:35:27 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 0/9] docs: kdoc: rework the BODY* processing states
+Date: Sat, 21 Jun 2025 14:35:03 -0600
+Message-ID: <20250621203512.223189-1-corbet@lwn.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [patch 11/13] ptp: Split out PTP_MASK_EN_SINGLE ioctl code
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
-References: <20250620130144.351492917@linutronix.de>
- <20250620131944.408020331@linutronix.de>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250620131944.408020331@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 20/06/2025 14:24, Thomas Gleixner wrote:
-> Finish the ptp_ioctl() cleanup by splitting out the PTP_MASK_EN_SINGLE
-> ioctl code and removing the remaining local variables and return
-> statements.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   drivers/ptp/ptp_chardev.c |   35 +++++++++++++++--------------------
->   1 file changed, 15 insertions(+), 20 deletions(-)
-> 
-> --- a/drivers/ptp/ptp_chardev.c
-> +++ b/drivers/ptp/ptp_chardev.c
-> @@ -448,22 +448,28 @@ static long ptp_mask_clear_all(struct ti
->   	return 0;
->   }
->   
-> +static long ptp_mask_en_single(struct timestamp_event_queue *tsevq, void __user *arg)
-> +{
-> +	unsigned int channel;
-> +
-> +	if (copy_from_user(&channel, arg, sizeof(channel)))
-> +		return -EFAULT;
-> +	if (channel >= PTP_MAX_CHANNELS)
-> +		return -EFAULT;
-> +	set_bit(channel, tsevq->mask);
-> +	return 0;
-> +}
-> +
->   long ptp_ioctl(struct posix_clock_context *pccontext, unsigned int cmd,
->   	       unsigned long arg)
->   {
-> -	struct ptp_clock *ptp =
-> -		container_of(pccontext->clk, struct ptp_clock, clock);
-> -	struct timestamp_event_queue *tsevq;
-> +	struct ptp_clock *ptp = container_of(pccontext->clk, struct ptp_clock, clock);
->   	void __user *argptr;
-> -	unsigned int i;
-> -	int err = 0;
->   
->   	if (in_compat_syscall() && cmd != PTP_ENABLE_PPS && cmd != PTP_ENABLE_PPS2)
->   		arg = (unsigned long)compat_ptr(arg);
->   	argptr = (void __force __user *)arg;
->   
-> -	tsevq = pccontext->private_clkdata;
-> -
->   	switch (cmd) {
->   	case PTP_CLOCK_GETCAPS:
->   	case PTP_CLOCK_GETCAPS2:
-> @@ -513,22 +519,11 @@ long ptp_ioctl(struct posix_clock_contex
->   		return ptp_mask_clear_all(pccontext->private_clkdata);
->   
->   	case PTP_MASK_EN_SINGLE:
-> -		if (copy_from_user(&i, (void __user *)arg, sizeof(i))) {
-> -			err = -EFAULT;
-> -			break;
-> -		}
-> -		if (i >= PTP_MAX_CHANNELS) {
-> -			err = -EFAULT;
-> -			break;
-> -		}
-> -		set_bit(i, tsevq->mask);
-> -		break;
-> +		return ptp_mask_en_single(pccontext->private_clkdata, argptr);
->   
->   	default:
-> -		err = -ENOTTY;
-> -		break;
-> +		return -ENOTTY;
->   	}
-> -	return err;
->   }
->   
->   __poll_t ptp_poll(struct posix_clock_context *pccontext, struct file *fp,
-> 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+This is a continuation of my effort to better understand the new kernel-doc
+script and to clean up some of the legacy cruft brought over from the perl
+version.
+
+There were three states associated with the processing of the body of a
+kerneldoc comment: BODY_MAYBE, BODY_WITH_BLANK_LINE, and BODY.
+Unfortunately, these states did not actually match the state of the parser,
+leading to a lot of deeply nested if-then-else code and special cases.
+I've renamed the states to better reflect their meaning, and changed how
+SPECIAL_SECTION, in particular, is managed.
+
+  BODY_MAYBE becomes DECLARATION - we have seen the first line of the
+  declaration that starts a kerneldoc comment, and don't know if we have
+  hit the end of it or not.
+
+  BODY_WITH_BLANK_LINE becomes SPECIAL_SECTION.  This state was used to
+  recognize the sections within a comment with special rules -
+  specifically, that the section ends with a blank line or the beginning of
+  a new special section.  The declaration of parameters and sections like
+  "Context" fit that description.  The old code recognized these sections
+  at the *end*, with a lot of twisty logic; going into the proper state at
+  the beginning simplifies things.  There are a few output changes, but I
+  think they are all more correct.
+
+  BODY remains BODY - a documentation section that does *not* end at a
+  blank line.
+
+To facilitate these changes, I have also begun the task of pulling more of
+KernelEntry state management into the class itself; there is more to be
+done on that front.
+
+Jonathan Corbet (9):
+  docs: kdoc: Make body_with_blank_line parsing more flexible
+  docs: kdoc: consolidate the "begin section" logic
+  docs: kdoc: separate out the handling of the declaration phase
+  docs: kdoc: split out the special-section state
+  docs: kdoc: coalesce the new-section handling
+  docs: kdoc: rework the handling of SPECIAL_SECTION
+  docs: kdoc: coalesce the end-of-comment processing
+  docs: kdoc: Add some comments to process_decl()
+  docs: kdoc: finish disentangling the BODY and SPECIAL_SECTION states
+
+ scripts/lib/kdoc/kdoc_parser.py | 232 +++++++++++++++++++-------------
+ 1 file changed, 138 insertions(+), 94 deletions(-)
+
+-- 
+2.49.0
+
