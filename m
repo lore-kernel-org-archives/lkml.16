@@ -1,100 +1,71 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2497D7262D;
-	Sat, 21 Jun 2025 15:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E556914B06C
+	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 15:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750518187; cv=none; b=FEXA9Cn6ynpkx4mMEcHpVDMzyP79WKj6jL97pAIbz1eYjaDf6Q7AzrfCWoufj3KAfxIP3+4KftjU8/yZX+CslrSAlIyOG/lPOtr+uEE9DihmXeSQr/H34txUhw8/v8ZzaD8pnPl2fYwfpYIfk5/Uj5pg66ww4YOlgnYkzpgOcYg=
+	t=1750518306; cv=none; b=hWtHUFreNgopI3hQpUjYZ5pj2Yt44cVeTcSsP03Df2Ap7rRsgxOnHzo3yplifeYxV6lvrpB22bSd5uPpUSYwaEeeg/0ovqEYVmf8UZqMaIfUB/hMNt6jfBC2USZzMhRReawE2XMqcRyNHTpQ7scz7M3XIsp50QwoByz2j23ueHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750518187; c=relaxed/simple;
-	bh=g66sLXmUcEXF/ehSdvRAG1Aw/xp6rPKby5bIA+HLI28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OsYMY06lci0TAgJu4RGxRfpigjoQc/b2yRO8QuqG5SkZjjUcKNI7aq8oO/9Ladmfe3FrQ1LNC3zRtMG0C+unKRRudibG/nBP546CuKoU+ulKyJ2U3rLFsnfSGe+cmfJzVjnk/hZNzCLim0+68YJi2YUIsRf+cGc6hpgo4fc9q9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ChvvTk+E; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChvvTk+E"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234b440afa7so29483755ad.0;
-        Sat, 21 Jun 2025 08:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750518185; x=1751122985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZQ2meP6AQOt18RTp1pYruaymRIfMLYo2hgcL5xk8YIk=;
-        b=ChvvTk+ExhntdAFQNPmxjCBrKzx8nfk7UOpy1cRa6HdiPjBhL29bxLNOG41IKjfl28
-         deXvrgCviXYhdmzH8QRhaPSpQaC3+vj2UcHmuOAa6PFNmNruqOeFAo0UXYiiSTUezSay
-         vRvsa9T6obMSmqiP32h2sSDVoYNuGM9kI2jYlNTIKk6rnmDWc5TyDRrSJbNxi9U6/xYC
-         t/cxfuWL4wdEVQd2y7mjdgGIkgC5wz3hJq3mWbWzmrorZE2zEqOH5s+6KuMeBwSA4Y59
-         ZEKmxwuOM7L/zbQQRcMlqXTKVOL4xE1MhuLavnGQcYs7d6UiWbk3ppqTZ+XCnSTsG5f0
-         SOMA==
+	s=arc-20240116; t=1750518306; c=relaxed/simple;
+	bh=uBVRYDdxKtxenU0ssX/gUOOV0ukTaDpwRyDwrLc0lFI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MzyDNo6FMJ9vxhtuqpCVhd1c3K6ny6JiXrohPrncuIhkXCnHWjXMzYfLb6b1PLKji1s5jT3CRVqGOiK/4o6j1vS9gT8O/Weu5vj/MFInGdVjaiV6bZeBz3P48kE7RIM3K00duMyxoySdlk1jq/lDBgk3JuMHAQayiZ46uKgEIrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3de121edd59so66831575ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 08:05:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750518185; x=1751122985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZQ2meP6AQOt18RTp1pYruaymRIfMLYo2hgcL5xk8YIk=;
-        b=oD3/F+nVFkxgMh+M1AXJU8pu9biuzaFFRHk9SDel9FQ1asIPJg9XEuxVKdLr16/v4f
-         uAKXd32KguDN26OUYPd2cs4riGNaKrf5+xs1eyC/yRM4uXFJWmd4cgpbtRppax9NRqvr
-         ilmBC/4mYQrATT0uqpBknOCzEf1Kl4XhN997YdNgoGIJwUteiixWu6JbFiiVGx4Rbr6j
-         Dt4VKBfNalUtFB1cedMpLSEYUUF9qBIz6Nhk35zZboOE+cCynDqzQg2hU4TrEiOO3ei1
-         luKvWiwVaK5kFsrve7RAoP49x/heU7BFbgRfudnZpUWldi2LH1ZsLfrM52VllvpRZnR0
-         NQIg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6h5L7OfY6BSEDHH7dnoX243nHu/MFpDOWk18ad15+Mw0vZZFM9O6iT3vE8Fz3sZEbLjd246r/35pnQw==@vger.kernel.org, AJvYcCWuUXVCv1DPl6YfgxUY4YQFfeM4Mz0yLugnv261bL+eNHQ1BYsjfktSjhFV84lwxrrikd7g7VIKIrodqxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJkeiukOD58KVy75bedSgFtJcn7MavL8MN1e9b/RC669Ed633E
-	D6oEeoOpWkojTF7Xpxs9iB6iQtc1zXrvQqzmY0anzYMXlNVPMYtYZ4CuMgx86A==
-X-Gm-Gg: ASbGnctu2ZTLupXGUJZDvHG25i5PXhE3/IVKhScObQ2URxx5t2qQvehZSdUxj8VKnzC
-	nwfgZ9S3WUPUQCt/gNFs6QISJzPGIvwKAz86bjTu9R8POvvDCsgG5QAr8LY2XxMWLOrzOtwTNBU
-	dpMwr0A0wHhKXqRq/F1csik51ogu7H38M9bKTCirjiDIX8+yJvIulnbXLiefwmpUa5u184OarmC
-	m1TrN63MBggrrEJcBPH9xG7gbgVXc+2xvMPtrH63v/2pgmNSYTsskdnJA8vTY8r0GLvVK3TTd/U
-	m5bwQmwTIgB7KeqtmJvzxzZA6cOIEJHtJQf7Q/zLvNWCiG1heDrdA7KO67aRFQ==
-X-Google-Smtp-Source: AGHT+IEA6XqOqvZVfygiiLvTsTGD9tG4qpIqBoGaxNVST5TuhNXyOINNzuNNRpL9nPwbc/NOtrHvjA==
-X-Received: by 2002:a17:903:32cc:b0:234:8f5d:e3b6 with SMTP id d9443c01a7336-237d96b63b2mr91537635ad.3.1750518185333;
-        Sat, 21 Jun 2025 08:03:05 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83f14a2sm42814815ad.80.2025.06.21.08.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 08:03:04 -0700 (PDT)
-Date: Sat, 21 Jun 2025 11:03:02 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] RDMA: hfi1: cpumasks usage fixes
-Message-ID: <aFbJpqbP-tU4q84P@yury>
-References: <20250604193947.11834-1-yury.norov@gmail.com>
- <20250612081229.GQ10669@unreal>
+        d=1e100.net; s=20230601; t=1750518304; x=1751123104;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gogxPiL1sd1xyjtOpCdCJF3YAA+slE2aN5TETVQMJWI=;
+        b=Xf2Em48d0+dwKTAHLWOf1fKvts40zXz6Vot9pB2lJKaTJ17ciGmzedshDJP1IzWPpY
+         1OmIXP0bdSpREiJ/0R9oxHEapB6jU0ImCkfFibjuN8D1ZlRbNJA28uyyiTtwagYL5sGR
+         gtkmHhl8fG077gX41r8cFbmuURUOt+QQxzUXaN84us83nw5xiQV3VDTNJi8SIaF5ccAh
+         jJhlUKtkYayHxpm/2yXbGAaums/4Cy42638ZNYXXvoEVoHUgEyP82DH6sEUuHg47XnXa
+         11i7neYs0aSmJzJ9EL9J5+D6W8xdUg+BfARPF+4wU8i8jxJFTC4HLuX42GvJ3yoX/ovn
+         jExg==
+X-Gm-Message-State: AOJu0Ywb+ay9qzhLP8+xdG158wCji0ZZ1c34kT/MzQ9O/3ELeT8HP4e2
+	Jg7BEUHskclyi59jdqEsha8F5DX4AzMvIl0RsAkM7/eOVMwu8p5h447hkiBVlkZ60BhoFdWA09F
+	X+/H61mUE2zMezOU0cSDzp4Oie7F3YckkVChK23pwVrANCjb/0Egw6fLZVi8=
+X-Google-Smtp-Source: AGHT+IG3TkxHnt9RheNzYHUUS9YgomSevtO8nMxPHwOmwYsHSokXJ8z2j7obqGXim6BrjiCWLwqzgwwxj0rY5f2g34PfPPjy7Ig0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612081229.GQ10669@unreal>
+X-Received: by 2002:a05:6e02:2703:b0:3dd:cb92:f148 with SMTP id
+ e9e14a558f8ab-3de38ca2f07mr74988625ab.12.1750518304105; Sat, 21 Jun 2025
+ 08:05:04 -0700 (PDT)
+Date: Sat, 21 Jun 2025 08:05:04 -0700
+In-Reply-To: <9a1a4a25-f7cb-4eaa-bcaa-d655a444076f@I-love.SAKURA.ne.jp>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6856ca20.a00a0220.137b3.007a.GAE@google.com>
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in ocfs2_try_remove_refcount_tree
+From: syzbot <syzbot+1fed2de07d8e11a3ec1b@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 12, 2025 at 11:12:29AM +0300, Leon Romanovsky wrote:
-> On Wed, Jun 04, 2025 at 03:39:36PM -0400, Yury Norov wrote:
-> > The driver uses cpumasks API in a non-optimal way; partially because of
-> > absence of proper functions. Fix this and nearby logic.
-> > 
-> > Yury Norov [NVIDIA] (7):
-> >   cpumask: add cpumask_clear_cpus()
-> >   RDMA: hfi1: fix possible divide-by-zero in find_hw_thread_mask()
-> >   RDMA: hfi1: simplify find_hw_thread_mask()
-> >   RDMA: hfi1: simplify init_real_cpu_mask()
-> >   RDMA: hfi1: use rounddown in find_hw_thread_mask()
-> >   RDMA: hfi1: simplify hfi1_get_proc_affinity()
-> >   RDMI: hfi1: drop cpumask_empty() call in hfi1/affinity.c
-> > 
-> >  drivers/infiniband/hw/hfi1/affinity.c | 96 +++++++++++----------------
-> >  include/linux/cpumask.h               | 12 ++++
-> >  2 files changed, 49 insertions(+), 59 deletions(-)
-> 
-> Dennis?
+Hello,
 
-So?.. Any feedback?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+1fed2de07d8e11a3ec1b@syzkaller.appspotmail.com
+Tested-by: syzbot+1fed2de07d8e11a3ec1b@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         3f75bfff Merge tag 'mtd/fixes-for-6.16-rc3' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1730f30c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6a237c32900fc479
+dashboard link: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=158ac182580000
+
+Note: testing is done by a robot and is best-effort only.
