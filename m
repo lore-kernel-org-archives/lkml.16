@@ -1,97 +1,106 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEBF849C
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 00:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2781FDD;
+	Sat, 21 Jun 2025 00:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750464932; cv=none; b=O12+x1/F0H9CVdczb6ii1oVJRupNtRQaUWQtjdiYQD/JBjmdhIsatwyqa9Ze6y3YziD538eKAzGW6kKUKEq/i0eXtJo119NbNDSNCmvQLvx8moAz2yOKd+JbHp7+reHE0Vk5079W4zUtb9rLYWNpgr+smG29+o7SFh4hjfcsP+g=
+	t=1750465832; cv=none; b=ARhycnsARpOrZOMR7IRxPx1nEUfHZqpQ08N5ZfI+D4fVCgydLIJIdt+OctDEqot1UuBHWeE0QxMnhDGXa2EoZUJXpSFKWbRvWYGXaIcjAxHYrVuZqQ0/7xW++UOAlKVqSi9rceuSfs1VQM32prshQF7ywUUj06AFIwDWFnWScOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750464932; c=relaxed/simple;
-	bh=c0MQdQUJ/7PLV4OEIM1qvc7bNbJ+uTYhn9q2lnM0T9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EEuF4RvQtFlk34Be95TwNbSRUgNfcTF4WY5zI+zRf45DTIsbet6jd/lT4wtGN0m1Px7XoZ3lZqadODzzWbL9GBOgCrw/U0TDLFrzyVbGAy0Rrb+ZmM8RSB6UhbbisW0w5cX3tIy+0bzctNicKRQntxU9ZYVPmk3g8c55lNjyysM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y5ncqdnj; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750465832; c=relaxed/simple;
+	bh=KUQEeZCG65Qq2/UpFK4Y9O0RCGYWzgrUXwaF9kyKz9Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JUYTiY0KWOwr0rcEbuHPN64J2599DlUc+6R3wA2LnTGWa/N3pdzJ0DvHFOX4TDZ2WIibsP3Jf3Gyr+aenXkIU+kTcHug85wxjBP4acTEO3LEu5WACfWABI18HMK7Gr0lNrf/Tth0uFO73jcDyDefSKfAD0LyfnSXRq/989/dWzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RK34Sx0t; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y5ncqdnj"
-Date: Fri, 20 Jun 2025 20:15:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750464918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c0MQdQUJ/7PLV4OEIM1qvc7bNbJ+uTYhn9q2lnM0T9g=;
-	b=Y5ncqdnjEoxQfeveIvJ0HysP5k8Ta5dQJNxM39qLZagDStIO1tAAErUzUSqsRkM/uekSX8
-	sf1HTlIbZIPsW0ZV9If8qgFbfl2M9z/V9zsDjzkfP52QfGNrI6mjvdSETrMP74yzEnD9Mo
-	wyzjpASqu8GCKlVimcgwVoA7v0CuUbw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Martin Steigerwald <martin@lichtvoll.de>, 
-	Jani Partanen <jiipee@sotapeli.fi>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc3
-Message-ID: <ztqfbkxiuuvsp7r66kqxlnedca3h5ckm5wscopzo2e4z33rrjg@lyundluol5qq>
-References: <4xkggoquxqprvphz2hwnir7nnuygeybf2xzpr5a4qtj4cko6fk@dlrov4usdlzm>
- <06f75836-8276-428e-b128-8adffd0664ee@sotapeli.fi>
- <ep4g2kphzkxp3gtx6rz5ncbbnmxzkp6jsg6mvfarr5unp5f47h@dmo32t3edh2c>
- <3366564.44csPzL39Z@lichtvoll.de>
- <hewwxyayvr33fcu5nzq4c2zqbyhcvg5ryev42cayh2gukvdiqj@vi36wbwxzhtr>
- <20250620124346.GB3571269@mit.edu>
- <bwhemajjrh7hao5nzs5t2jwcgit6bwyw42ycjbdi5nobjgyj7n@4nscl4fp6cjo>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RK34Sx0t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750465831; x=1782001831;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=KUQEeZCG65Qq2/UpFK4Y9O0RCGYWzgrUXwaF9kyKz9Q=;
+  b=RK34Sx0tkexOBRcP5Fjt2VfwghsFl6VBUVJStSrwgHOGBiHrkS+afR1J
+   e2sqbrCj1JKXyghQ5Gb8/YYkUZqy2vzbSBlxQutOmwp/1KYEs664pY+4p
+   YmWyY7YOqlKuHhQqaV9caSUgLAcJD+Zebvw6TOdd925Bsh6e9UPQkbnAZ
+   euBLYLqKlYHe8uFY9r2Xty0Rf2hV6ubRh2auEj1mZkcwkSS6KgcsTH0V/
+   tstsAhKfbp7GpLuDl5uhXGyhLIXT8MFt/eB8Ih3ITpAnTdoeXjdMAh5uC
+   UlU8u89O1vqrGBktrKtOJdDGr2uR4Y6UYR6G8dXOAY6Tx+PYzgLa6cdle
+   A==;
+X-CSE-ConnectionGUID: XU4EHJSXTkKVbSTBnLhXkA==
+X-CSE-MsgGUID: irhtmPL/TjmczuLJH6d06w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="40346143"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="40346143"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 17:30:30 -0700
+X-CSE-ConnectionGUID: dHoEWLa5Rtuj7WZzVDevBw==
+X-CSE-MsgGUID: LZbx1wcZSwu5Z8DhxUkzIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="181925536"
+Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 17:30:30 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Date: Fri, 20 Jun 2025 17:30:20 -0700
+Subject: [PATCH] tracing/sched: Remove obsolete comment on suffixes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bwhemajjrh7hao5nzs5t2jwcgit6bwyw42ycjbdi5nobjgyj7n@4nscl4fp6cjo>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250620-rneri-tp-comment-fix-v1-1-e0f6495ac33c@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIABv9VWgC/x2MQQqAIBAAvyJ7bsEsw/pKdIjcag9aqEQQ/b2l4
+ wzMPJApMWUY1AOJLs58RIG6UrDsc9wI2QuD0cbqzmhMUQIsJy5HCBQLrnyj9a1rvO5nZz1IeiY
+ S/W/H6X0/Pw92fWYAAAA=
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Ricardo Neri <ricardo.neri@intel.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750465845; l=1053;
+ i=ricardo.neri-calderon@linux.intel.com; s=20250602;
+ h=from:subject:message-id; bh=KUQEeZCG65Qq2/UpFK4Y9O0RCGYWzgrUXwaF9kyKz9Q=;
+ b=Qw6yreS/bvnFqbNnzhjM6pWi/cf30XF3iFTipMyXyqej9kshrefA4ojLNGaOps3ffNB+grsOj
+ awwrpDMsiVKAHlma+ao5dXDV9lbXon22Mo1vWoRZDy71f3a3hqQAUF6
+X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
+ pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
-On Fri, Jun 20, 2025 at 07:35:04PM -0400, Kent Overstreet wrote:
-> So it's hard to fathom what's going on here.
+Commit ac01fa73f530 ("tracepoint: Have tracepoints created with DECLARE_
+TRACE() have _tp suffix") makes it unnecessary to manually add a suffix.
 
-I also need to add that this kind of drama, and these responses to pull
-requests - second guessing technical decisions, outright trash talk -
-have done an incredible amount of damage, and I think it's time to make
-you guys aware of that since it's directly relevant to the story of this
-pull request.
+Remove a now obsolete comment.
 
-I've put a lot of work into building a real community around bcachefs,
-because that's critical to making it the rock solid, dependable
-filesystem, for eeryone, that I intend it to be: building a community
-where people feel free to share observations, bug reports, and where
-people trust that those will be acted on responsibly.
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+ include/trace/events/sched.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-That all gets set back whenever drama like this happens. Last time, the
-casefolding bugfix pull request, ignited a whole vi. vs. emacs holy war.
-Every time this happens, the calm, thoughtful people pull back, and all
-I hear from are the angry, dramatic voices.
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 4e6b2910cec3..f24c373bcc44 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -829,8 +829,6 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+ /*
+  * Following tracepoints are not exported in tracefs and provide hooking
+  * mechanisms only for testing and debugging purposes.
+- *
+- * Postfixed with _tp to make them easily identifiable in the code.
+  */
+ DECLARE_TRACE(pelt_cfs,
+ 	TP_PROTO(struct cfs_rq *cfs_rq),
 
-More than that, I lost a hire because of Linus's constant,
-every-other-pull-request "I'm thinking about removing bcachefs from the
-kernel". It turns out, smart, thoughtful engineers with stable jobs
-become very hesitant about leaving those jobs when that happens, and
-that's all their co-workers are seeing.
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250620-rneri-tp-comment-fix-5d483d09a85d
 
-And the first thing that got cancelled/put aside because of that - work
-that was in progress, and hasn't been completed - was tooling for
-comprehensive programatic fault injection for on disk format errors.
-IOW - the tooling and test coverage that would have caught the subvolume
-deletion bug.
+Best regards,
+-- 
+Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-That's a really painful loss right now.
-
-Even despite that, bcachefs development has been going incredibly
-smoothly, and it's shaping up fast. Like I mentioned before, 100+ TB
-filesystems are commonplace, users are commenting every release on how
-much smoother is getting. We are, I hope, only a year or less from being
-able to take the experimental label off, based on the decline in
-critical bug reports I'm seeing.
-
-The only area that gives me cause for concern - and it causes a _lot_ of
-concern - is upstream.
