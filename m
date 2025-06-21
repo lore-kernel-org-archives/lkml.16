@@ -1,113 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B77D1F4CA1;
-	Sat, 21 Jun 2025 09:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1A30E85B;
+	Sat, 21 Jun 2025 09:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750498691; cv=none; b=rFpC+wYiilVC2X10pW7Uy+nfHsnfMjCKBIyCFcl4n/8cmXlE91EHFDL7Aq0R1xE1ktqZOr5Cey/NHdNRggM8+gjBiFJcqYp5eqOyUKFgM1eXxOwOdVJ3RkpxqbXfbY53Gn/6XLBTenkVd7pVhqTCijbGNIMumJ4KkjDEilQo3zk=
+	t=1750498901; cv=none; b=dvReR/yx3pP249+gwUOJqr2g1JPf76hQgRUhew+vCpbncl6qECQqegu5XfGJByb8R3ANrS72+IE3EGc5Hb24wDsGyMvaxR9Nmt/9vbzmXNLAOJMvVjuoDpVi16Pj2rycwzUkPKyiiF7BdCgLriQ5pINmch3NfEgSa5zzkopRAIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750498691; c=relaxed/simple;
-	bh=Da1Gb2dZps+KwFdbPpKRqU3r4uC8hFgsfk35YLvidZU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sRmGeQQIyvhcZITf0wxFx2k1ovoalHo5EGKR1ezIENv3EjLjbb9QTFPs8Nsi40LLZFm7okKyCSjMqR/uqvkikl9AHuC4QzW/q2yIo0szE9MdLhBHp6HyTAzQt8GwcNnHbFdNARPvE49cf9ALnz49AvvTOy0ACbCJpyesE4gz4as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVNIkf1J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750498901; c=relaxed/simple;
+	bh=m7TJTsHJa6TY4PrTqVO0kYjSdkPRDBut4S3vVyW0uWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PxsiXTqTlr5quUAUWNKP+i+cW9MqYFkvxvyUzpy3VS33t8qrosZttYF9wSviw3bCyslV3Ku+NSNlkjhrW9nJzQQYoNte9twJpkunA6zkeSFsEgnKC6C8vO6ZkqHKv9BUKqyqssyNmNeQTEn8Pqv1UBOIyapVUTAaNK7N29ixwwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WRD9COay; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVNIkf1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E7A9FC4CEF9;
-	Sat, 21 Jun 2025 09:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750498691;
-	bh=Da1Gb2dZps+KwFdbPpKRqU3r4uC8hFgsfk35YLvidZU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VVNIkf1Jg5OqdDEj2DepOGBdrmh3CdEq8mzKT04K66f5wXKta9wM4OgIC5oUQKttp
-	 9M6kK2YDuPfSlRhXBP/XbPc6hr/AhgKXpuG4TLxVWsJn3vVPqVNmLOrHt9nkpJfhC0
-	 Na0oNSQ1pTPXw1eqwl6tjbDriG3u6vaoDxBmI+/tTIBPT+/66ejOFI0bs+/rfSXLr8
-	 hDtAgbXU9IMQhosZDNxJ50P3MO+tV56Fm9iNDLyjs39WFoyKw1ihZ00uEMTF71JA0B
-	 yHxWUcOXyysxvShFi678sqMbz1LHkodKZ1s166SSQHBqXDPLJmRdEQ8ppY/Bi+jLXi
-	 zoz5V6SREVmrw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17CC71157;
-	Sat, 21 Jun 2025 09:38:10 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Sat, 21 Jun 2025 11:37:29 +0200
-Subject: [PATCH RESEND v4 5/5] media: i2c: imx214: Remove hard-coded
- external clock frequency
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WRD9COay"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4zMCTLG4kJDerA+w9GW+UhDLBS5IcHFJTTe8BRiVuPI=; b=WRD9COaye/In2P/qqwHo6+wXXp
+	NNtVnX/0EK3usiitUDi8Z/1DnzuZxNj76BVu0ZfNj5yFlUFEKVvfE2iHXuSuKjs8Qsts+xy/0Q+cw
+	PJfCT6LneGZ1jZ58tZggeKUXVPDsxR3HTCWY4hKTD7DiLFVC5oy45n9KdZjpYOh8acECTNVHsDbPQ
+	aBZ3rRRg5+/B5BUf/R6BoxJY9brGg2JHk0sxwvqdmTGB/Lncs3BSAxMXMcttW8jlYHWIFMUc/X7gd
+	UBk+Ww37KwpNKbevzFPaQdSLKzddRCMn9tuZgwxRR9D1I+WnZKS5b6+Ut9mwInLNySv9u7zDG2fxJ
+	bDYnqunA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSuj9-00000004tB4-0oaN;
+	Sat, 21 Jun 2025 09:41:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4578B3087E7; Sat, 21 Jun 2025 11:41:34 +0200 (CEST)
+Date: Sat, 21 Jun 2025 11:41:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v4 09/13] perf/x86/intel: Setup PEBS data configuration
+ and enable legacy groups
+Message-ID: <20250621094134.GX1613376@noisy.programming.kicks-ass.net>
+References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
+ <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250621-imx214_ccs_pll-v4-5-12178e5eb989@apitzsch.eu>
-References: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
-In-Reply-To: <20250621-imx214_ccs_pll-v4-0-12178e5eb989@apitzsch.eu>
-To: Ricardo Ribalda <ribalda@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750498689; l=1261;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=ZCk329jfG7imBAJxPQK2Y7DPdg0WFnmIjBabbY8xuwc=;
- b=7u9/iEoHxGIF46EnZNgbPzTOeQMipucoawzdnk0Uu4+ERMs4QK/gbqXh6Ux3QTPvvLPnWHk0n
- nUmvF7eV3MnAbUxpZe/RbDaXAbU31N/8oTZemUb3gdaFHgw8psuYmCI
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620103909.1586595-10-dapeng1.mi@linux.intel.com>
 
-From: André Apitzsch <git@apitzsch.eu>
+On Fri, Jun 20, 2025 at 10:39:05AM +0000, Dapeng Mi wrote:
 
-Instead rely on the rate set on the clock (using assigned-clock-rates
-etc.)
+> +static inline void __intel_pmu_update_event_ext(int idx, u64 ext)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	u32 msr = idx < INTEL_PMC_IDX_FIXED ?
+> +		  x86_pmu_cfg_c_addr(idx, true) :
+> +		  x86_pmu_cfg_c_addr(idx - INTEL_PMC_IDX_FIXED, false);
+> +
+> +	cpuc->cfg_c_val[idx] = ext;
+> +	wrmsrq(msr, ext);
+> +}
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
- drivers/media/i2c/imx214.c | 6 ------
- 1 file changed, 6 deletions(-)
+> +static inline unsigned int x86_pmu_cfg_c_addr(int index, bool gp)
+> +{
+> +	u32 base = gp ? MSR_IA32_PMC_V6_GP0_CFG_C : MSR_IA32_PMC_V6_FX0_CFG_C;
+> +
+> +	return base + (x86_pmu.addr_offset ? x86_pmu.addr_offset(index, false) :
+> +					     index * MSR_IA32_PMC_V6_STEP);
+> +}
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index fd03650a5b2bbdbbc677d5797380285f1832baa5..a0cef9e61b41be8ea76a6d6e4b8c9fc4060cfa0f 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -32,7 +32,6 @@
- 
- #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
- 
--#define IMX214_DEFAULT_CLK_FREQ	24000000
- #define IMX214_DEFAULT_LINK_FREQ	600000000
- /* Keep wrong link frequency for backward compatibility */
- #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
-@@ -1402,11 +1401,6 @@ static int imx214_probe(struct i2c_client *client)
- 		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
- 				     "failed to get xclk\n");
- 
--	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
--	if (ret)
--		return dev_err_probe(dev, ret,
--				     "failed to set xclk frequency\n");
--
- 	ret = imx214_get_regulators(dev, imx214);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "failed to get regulators\n");
+This seems like an aweful lot of conditions just to get an ddress.
 
--- 
-2.50.0
+Also, IIRC we have intel_pmu_v6_addr_offset() and that does: index *
+MSR_IA32_PMC_V6_STEP, so something is very redundant here.
 
 
