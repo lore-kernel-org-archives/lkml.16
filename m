@@ -1,75 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B8C382;
-	Sat, 21 Jun 2025 02:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74860433AD;
+	Sat, 21 Jun 2025 02:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750473483; cv=none; b=QwCG+Ye8FS7V8J5Y58uLcu8XTRp+KtWjcNnc2oeMYRvwvCUXSWAIaKo6H/uEKS7h9oKVG5uVW5RsSFmkrk3cJLCs1BFoiliRWMD08krLubaSRLwspymyiSEcGUl9gXKvVEYl3mF6BMyeQ9mTlXI1gcydCmA61iJUwY6oI9D86/I=
+	t=1750473806; cv=none; b=kHW2GdPdekMbV597/1x1exq7urbhLtLwf+BxVdFIqmX56aRxHKhgQWChRwZb+fT+wdKmgdOCzejYXFoIYnCkzAT/zR3wqo4vLGOd7oT34DNchyX4Cv9+HckpP3ae9FhaPfxX9rEEWRfmuoKa/NXAJrRicKfYxu2X+2BCVduOizQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750473483; c=relaxed/simple;
-	bh=BRshq0Sw3kdyROGLHlU0T9SNOnO7vor8RQIBZU60VcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rqa2zLtXWZg/KZM3nqwYl+I7IcstQ4uzDxCqrlpkB8QusLvRfg/Qms8gk3xOXXUhsNHA7YseypHN3eStAfmxBCkRrNXH8ztkFRqCd+snBcaRSsULpA2W6O61Ed6zSzAudsRxY/uS8j0sYJ7kj51VZsPSVQfCCxtuN7KVaMwsqUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1GoAIoZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750473806; c=relaxed/simple;
+	bh=/mUu8wiWZRM27Ynp507EXjtNZKfG8JErGdZOjnS3KN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1K20r+purG0G0rnWBaI3Oa0Org8I1WtJR/7rTyHZYqevhSPZ1rJwl+8RJpEiljKGYsADtPJn5EbEaS6hb9DCJy+5DUPKC5WCTLRPaxWxLP/Au0aGH9d8htJ5sGflGpROlbI7MZ9z6e85R2zN62Myb3C/xesTvC5rya5jKxRxrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cQzNMoWH; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1GoAIoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4332C4CEE3;
-	Sat, 21 Jun 2025 02:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750473482;
-	bh=BRshq0Sw3kdyROGLHlU0T9SNOnO7vor8RQIBZU60VcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z1GoAIoZjvbLrWnTF8AbEJ+PwW58agRljs6lqp1FNO+XWVqzsMpWtF69E91L6ulXm
-	 VaG3P/Nzu1mWIWnsyD9Cmx6JW0WI7LCzJ4bI/mEz9+eWtGYIrBFeBN8Zp4SdO6LmD2
-	 tZOX3OPaXB1RRIkNn4eTvvZRzvnqPY7REQIURgStU1g0DftKKMA0o9Omx2hmhKo+9r
-	 0F+UqqJ/mZNn7A4kAyU4jyXzaNY9Zb3gAfE0eRJ+FxzXZaS9SILoWaLnY52Bb+vHZo
-	 mKiInqaewUo6oSMTMc6JDpcr24mxwrFq9Vm/SfvcZY3+GmgjTSIHF4EjYKnJoHcbZ2
-	 YHNwr50LAyD/Q==
-Date: Fri, 20 Jun 2025 16:38:01 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Song Liu <song@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
-	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org,
-	mattbobrowski@google.com, amir73il@gmail.com,
-	daan.j.demeyer@gmail.com
-Subject: Re: [PATCH bpf-next 1/4] kernfs: Add __kernfs_xattr_get for RCU
- protected access
-Message-ID: <aFYbCVRZyyoOXYa-@slm.duckdns.org>
-References: <20250618233739.189106-1-song@kernel.org>
- <20250618233739.189106-2-song@kernel.org>
- <20250619-kaulquappen-absagen-27377e154bc0@brauner>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cQzNMoWH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=VuSXAJjGHGfDeGAQI0t00L+PSs0s6DTtv7L+mZ2k2xE=; b=cQzNMoWHO+ZRNfu6LICot/mnyK
+	4NMiJ9zNI1mfQoDnUm5PgxqEp6HtcT+Oh7IHtiAQOvL6ZkY7YwByf2nQ1Cy8W06OJlmylqGeIMwaf
+	0nowHA+p3BawmKPcW1XcBscMzyzxv0zn1mz5wAq4ln619wnxK8kiXf2AO2HjVrSRhTnByCqkz5OEA
+	A8jmN/byt7umWpSb0bgc1Sq6pejgvmFA3ls33AoS7+LHxAZWyn5CgI57UD2F2IUN1EaTpyNGQpHv7
+	RuR7ZC6w6ovO7fhnaxRueB/r6hOt/rKIqjPWV+Xi+r5v1Al5+iQUGS24Rcw8WDBvGw4EQp9ZsYAaw
+	M9YsjY9Q==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSoCL-0000000EGH5-3niq;
+	Sat, 21 Jun 2025 02:43:18 +0000
+Message-ID: <969c90d3-eacf-484e-97dc-ab02c52c9453@infradead.org>
+Date: Fri, 20 Jun 2025 19:43:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619-kaulquappen-absagen-27377e154bc0@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Jun 20 (pinctrl-zynq)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+References: <20250620221305.720fedbf@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250620221305.720fedbf@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 12:01:19PM +0200, Christian Brauner wrote:
-> From bdc53435a1cd5c456dc28d8239eff0e7fa4e8dda Mon Sep 17 00:00:00 2001
-> From: Christian Brauner <brauner@kernel.org>
-> Date: Thu, 19 Jun 2025 11:50:26 +0200
-> Subject: [PATCH] kernfs: remove iattr_mutex
+
+
+On 6/20/25 5:13 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> All allocations of struct kernfs_iattrs are serialized through a global
-> mutex. Simply do a racy allocation and let the first one win. I bet most
-> callers are under inode->i_rwsem anyway and it wouldn't be needed but
-> let's not require that.
+> Changes since 20250619:
 > 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Acked-by: Tejun Heo <tj@kernel.org>
+on i386 or x86_64, when:
 
-Thanks.
+# CONFIG_OF is not set
+
+ld: drivers/pinctrl/pinctrl-zynq.o: in function `pinconf_generic_dt_node_to_map_all':
+pinctrl-zynq.c:(.text+0x539): undefined reference to `pinconf_generic_dt_node_to_map'
+
+or
+
+ld: vmlinux.o: in function `pinconf_generic_dt_node_to_map_all':
+include/linux/pinctrl/pinconf-generic.h:231:(.text+0x270bb2c): undefined reference to `pinconf_generic_dt_node_to_map'
 
 -- 
-tejun
+~Randy
+
