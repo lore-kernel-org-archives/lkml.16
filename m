@@ -1,110 +1,115 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929D91B808
-	for <linux-kernel@vger.kernel.org>; Sat, 21 Jun 2025 19:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D632149C4A;
+	Sat, 21 Jun 2025 19:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750533709; cv=none; b=IK6ZtFToVDhWw1wfBPkTVr1mB9aTVUx3B3xU0iGhGaXR3Wh+4pGqw2y/51s9Up/zec+E1xmwTOEraStkH2ajqVKQLdXEvu25dWMMbAb+N6PJc5IPoc3WEw6UIO6ifHiEGTheynf48ynOrSFJ9nga77CPD22o3cno3wmSrYRq2S0=
+	t=1750533919; cv=none; b=qXYDkCuLcXDkGlgm9oPkycfKD5Krjd5MwxuSPsZuxBy+Qx+z5bqeaYJ9E+ebfWSqXM7x/niBxsrMHUFc4WT/ZprhYMeoz8optMYypqRh8oLxvb/muveJ3CxO1Qcn8tUMeuTTBcapvS/vsSkw0PetnGFS+6Qo9d2q4cSLKn4Cd9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750533709; c=relaxed/simple;
-	bh=7YOmcViDMjQUpQfX69bUAC7MW7x0u9ZPwZwJPlmrUP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgbQi9sT7yW9R3fQUy/R5YF7WqNRPLx+L6O9PuYekwwcHZ48YJrfi2HvhYwFjwUQtS0nvZBDQIcksqHGtOu+XjbN1jx3GFBjZ1xvnWY/ceVHfkSrmcOIQ8+wGgz7cDcgR46c53ogd+hxBvOKI5lFWi0mJ6h7/syk7e5MXHZGnm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id D826B2020E5A;
-	Sat, 21 Jun 2025 21:21:45 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C52381EFFA; Sat, 21 Jun 2025 21:21:45 +0200 (CEST)
-Date: Sat, 21 Jun 2025 21:21:45 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ahmed Salem <x0rw3ll@gmail.com>
-Cc: airlied@redhat.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [RFC PATCH] amd64-agp: do not bind to pci driver if probing fails
-Message-ID: <aFcGSaxeaDphIhUU@wunner.de>
-References: <c5kqcudzrcafm24nr5ixgalhxdkxl3uoueerjlp6tbksj3hzy7@klytjugpkvdm>
- <aFZ_YJH30f1WDneD@wunner.de>
- <7rv3j2it6wbv4gu7jgsews3niste5y52h67scwwjpblhy2royh@hqfmpbjzdj77>
+	s=arc-20240116; t=1750533919; c=relaxed/simple;
+	bh=3NVITkTixvEjR5IDowbSLBIV9lH+tQ1XjjE6qpYhyVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c/YzSjEu1sCNCDnnMNTGitOzBz0aeHk5VaLnLUJjk0zCe8GcCRpi13VJ98x2u15mWaoh86nPkpfKfEEjXNJqSI9cFUt/+uRwljG6c0pHHZJ15T4HDXNuYo1TFCEeL5BBLFUHOVW70EGbygq86Z3V6cdvyGqeR879nVDtviTQikw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7zxZgTr; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7zxZgTr"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad572ba1347so470383766b.1;
+        Sat, 21 Jun 2025 12:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750533914; x=1751138714; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H2p0xkDcwjQK+9++i7Y9S6LbGF/qPoK8hHd6+P81clc=;
+        b=d7zxZgTrqjo1IECI9kPH4B6T5H94FiCZa8O8Lbmqbx1E1uXzceH0TUGJsuF+3dm+Cr
+         PChfQEUcgS40laiI09jUM1HbTT0vkPXuBwyVM6ku5MHLXebA0jLaq/vj8nARKDrLkLkg
+         Ny5OaQlTmL8J6jyXQuSgUH400FeOd0I82iSLQ/yjyPIZASpPeNZBg60lks5RqQVACqT6
+         Vh63eVUVP3ikwDuBopU5vdarjJkfZG5PEG0f3uUJiecAp6evh9t41AEciJPI9JUNEe2n
+         wLycFoIhWvfw5aFq0q9wzSuJO7r+fxrAa7d+eiWkNy0Y0/1YrLp5fS+9jXi+LU0Q4TCY
+         jCNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750533914; x=1751138714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H2p0xkDcwjQK+9++i7Y9S6LbGF/qPoK8hHd6+P81clc=;
+        b=DsjyYmVRqAKl3RL5ZWZVFgT0RLsLtjRn6zod553eNxavzaoLqYAR/6z9WRP/iL3FZW
+         kil4d2nR/WOHS0OIA2WhpyJZe6KhK7ZbCR/uBFSRAOwLscNWUAQ5kAyWFW5jfhZkJpKc
+         QiiquFhWjnzXYymjMh1zaztB/qAm6X0MAu9GQRvB6mS6Qv3M5qKRxb7GpObrAExX5RlH
+         S3UEQ8BC4bZglUOkxxWe0fWq3WMTNPT2Y42gf7mZWKPY+MUZUZDQ+U0Fewy42Hhv5Kqk
+         x+yw8b2RzCORiFpRgVynQRjJ9jGNbkF4LZUO2WlPSw/yWlX/YZKKUaTSA9dwCZo7GTzd
+         6hFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWPif0KbfmV+hl29glG1ugm1oOQuTYWDuwXUp2v6CYs0V8A2fpg6kA0XtRQZrS3VV11OhHaL89vY0=@vger.kernel.org, AJvYcCW7+dF1TRLno3wk0txAO+HrpkVYls3GfEfjDm2Sr2+zCseonb+5Ye1h3V9D6sevSq7CdbWqn2LAVCc0mlZz@vger.kernel.org, AJvYcCXWKD7O6y0VxrtQmMy7rFnolG+5ew639y4nVXvgWL6WnXcrrK2CW8H/z8q7NvivvwhMUnyHxkTb6KIR@vger.kernel.org
+X-Gm-Message-State: AOJu0YylUAvYfzQeGmMYZmurTJgIn18DXqfppyID48CYY8Z9RlAOlNT0
+	tGH4+iyJfVJFDjAoYYkHwdARZUIa9xSv0zC4JmgMMzk7utTHU18+rK2+/FU4icEUTCUdgm92v4U
+	2HEcbsUSR53Jdg0ZaKdmscvZh11+RARg=
+X-Gm-Gg: ASbGncupcdvk+u515Mjg5FgVSXHDu8hbgoTNhUt9+NDkv371z9wf/vFlu5r2jl9cgcb
+	yDlN7ks9icF7sOSLhARYC0Bv0usNVf4Hho/czfE1ycR6aH1WpZ+kIDiHQkGgURmILVn1R0zbp5D
+	GvQlwTHgHoVV4ga3OgDZmnQtGPH/en7dOmoPJoJsX+hR0=
+X-Google-Smtp-Source: AGHT+IF9D41jxFD2zo6LUxcBBubPPAUleT+kh/hdbAjAVUOMmdkZ/F5VenVcdT1IDVyTqThiPHuTFSeCZs4WzfP5YVw=
+X-Received: by 2002:a17:907:9087:b0:ad8:a935:b8e8 with SMTP id
+ a640c23a62f3a-ae0579d1a99mr500577366b.5.1750533913577; Sat, 21 Jun 2025
+ 12:25:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7rv3j2it6wbv4gu7jgsews3niste5y52h67scwwjpblhy2royh@hqfmpbjzdj77>
+References: <20250610215933.84795-1-l.rubusch@gmail.com> <20250610215933.84795-9-l.rubusch@gmail.com>
+ <aErE0xmlm4qBHg03@smile.fi.intel.com> <CAFXKEHao9xKsizGLMQxikcLbG5Him9n9i3btLtqK2Orj_39a9Q@mail.gmail.com>
+In-Reply-To: <CAFXKEHao9xKsizGLMQxikcLbG5Him9n9i3btLtqK2Orj_39a9Q@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 21 Jun 2025 22:24:37 +0300
+X-Gm-Features: AX0GCFuId-A4XxZYQA9oJyRLpj9ewhzTQyspj6yopi59uo4loSE3Xf_d9PUBMFE
+Message-ID: <CAHp75VfxqMh8j=TAPFXTDx2PSPVU=No=vDdo+-J-ETDavuYnRA@mail.gmail.com>
+Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, jic23@kernel.org, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 21, 2025 at 07:15:31PM +0300, Ahmed Salem wrote:
-> On 25/06/21 11:46AM, Lukas Wunner wrote:
-> > On Sat, Jun 21, 2025 at 04:55:52AM +0300, Ahmed Salem wrote:
-> > > --- a/drivers/char/agp/amd64-agp.c
-> > > +++ b/drivers/char/agp/amd64-agp.c
-> > > @@ -768,10 +768,15 @@ int __init agp_amd64_init(void)
-> > >  
-> > >  		/* Look for any AGP bridge */
-> > >  		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
-> > > -		err = driver_attach(&agp_amd64_pci_driver.driver);
-> > > -		if (err == 0 && agp_bridges_found == 0) {
-> > > +		if ((int *)agp_amd64_pci_driver.probe != 0) {
-> > >  			pci_unregister_driver(&agp_amd64_pci_driver);
-> > >  			err = -ENODEV;
-> > > +		} else {
-> > > +			err = driver_attach(&agp_amd64_pci_driver.driver);
-> > > +			if (err == 0 && agp_bridges_found == 0) {
-> > > +				pci_unregister_driver(&agp_amd64_pci_driver);
-> > > +				err = -ENODEV;
-> > > +			}
-> > 
-> > Is the "probe" member in agp_amd64_pci_driver overwritten with a
-> > zero pointer anywhere?  I don't see that it is, so it seems the
-> > else-branch is never entered.
-> 
-> That is a great question. I thought since pci_register_driver calls the
-> probe function, it would return with or without a zero, saving that
-> value in the .probe member.
+On Sat, Jun 21, 2025 at 9:54=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com=
+> wrote:
+> On Thu, Jun 12, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Tue, Jun 10, 2025 at 09:59:30PM +0000, Lothar Rubusch wrote:
 
-You'd have to add parentheses and parameters, i.e.
+Please, remove the pieces of email you agree with, or comment on why
+you disagree. Leaving tons of the pieces without comments is confusing
+at bare minimum.
 
-  agp_amd64_pci_driver.probe(...)
+...
 
-to invoke the probe hook directly.  However, that wouldn't be an
-acceptable approach, one needs to go through the API of the
-driver core and not do things behind the driver core's back.
+> > > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
+> > > +                     ? min_boundary : max_boundary - adxl345_odr_tbl=
+[odr][0];
+> >
+> > clamp() ?
+>
+> Isn't clamp() dealing with signed ints?
 
+clamp() is a macro.
 
-> > I had already prepared a fix for this, but waited for 0-day to
-> > crunch through it.  I've just submitted it, so that's what I had
-> > in mind:
-> > 
-> > https://lore.kernel.org/r/f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de/
-> 
-> That one I've seen even prior to catching this one, and this is
-> originally what I had in mind based on what commit 6fd024893911
-> ("amd64-agp: Probe unknown AGP devices the right way") removed (i.e.
-> !pci_find_capability) when you suggested checking for caps beforehand,
-> but I figured "why make other calls when .probe already does it right
-> off the bat?"
+> Also, I'll take the diff from
+> max_boundary here.
 
-Right, it is somewhat silly, but this driver is for 20+ year old hardware
-which is likely no longer in heavy use, the driver itself isn't actively
-maintained anymore and might be dropped in a few years, so this approach
-seemed like the least ugly and most acceptable option.
+How does it affect usage of the clamp()?
 
-The real crime was to probe *any* PCI device and even make that the
-default.  I think vfio_pci is probably the only other driver that
-probes *any* PCI device and it does that only if requested by user
-space I believe.  We'd risk regressing users if we changed the
-"probe everything by default" behavior, so that's not a good option.
+> So, I'll try staying with the current line and hope
+> it's fine.
 
-Thanks,
+I suggest you spend some time thinking about this expression on how to
+make it easier to read and understand. In my opinion clamp() helps a
+lot in this case.
 
-Lukas
+--=20
+With Best Regards,
+Andy Shevchenko
